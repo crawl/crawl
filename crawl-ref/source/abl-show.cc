@@ -39,6 +39,7 @@
 #include "abyss.h"
 #include "beam.h"
 #include "decks.h"
+#include "delay.h"
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
@@ -78,7 +79,7 @@ enum ability_flag_type
 {
     ABFLAG_NONE         = 0x00000000,
     ABFLAG_BREATH       = 0x00000001, // ability uses DUR_BREATH_WEAPON 
-    ABFLAG_DELAY        = 0x00000002, // ability has its own delay (ie glamour)
+    ABFLAG_DELAY        = 0x00000002, // ability has its own delay (ie recite)
     ABFLAG_PAIN         = 0x00000004, // ability must hurt player (ie torment)
     ABFLAG_EXHAUSTION   = 0x00000008, // fails if you.exhausted
     ABFLAG_INSTANT      = 0x00000010, // doesn't take time to use
@@ -110,7 +111,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Zin
-    { ABIL_NON_ABILITY, ABIL_ZIN_SMITING, ABIL_ZIN_REVITALISATION,
+    { ABIL_ZIN_RECITE, ABIL_ZIN_SMITING, ABIL_ZIN_REVITALISATION,
       ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
     // TSO
     { ABIL_TSO_REPEL_UNDEAD, ABIL_TSO_DIVINE_SHIELD, ABIL_TSO_ANNIHILATE_UNDEAD,
@@ -173,7 +174,6 @@ static const ability_def Ability_List[] =
     // NON_ABILITY should always come first
     { ABIL_NON_ABILITY, "No ability", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_SPIT_POISON, "Spit Poison", 0, 0, 40, 0, ABFLAG_BREATH },
-    { ABIL_GLAMOUR, "Glamour", 5, 0, 40, 0, ABFLAG_DELAY },
 
     { ABIL_MAPPING, "Sense Surroundings", 0, 0, 30, 0, ABFLAG_NONE },
     { ABIL_TELEPORTATION, "Teleportation", 3, 0, 200, 0, ABFLAG_NONE },
@@ -232,6 +232,7 @@ static const ability_def Ability_List[] =
 
     // INVOCATIONS:
     // Zin
+    { ABIL_ZIN_RECITE, "Recite", 3, 0, 150, 0, ABFLAG_DELAY },
     { ABIL_ZIN_SMITING, "Smiting",
       3, 0, 50, generic_cost::fixed(2), ABFLAG_NONE },
     { ABIL_ZIN_REVITALISATION, "Revitalisation", 0, 0, 100, 3, ABFLAG_NONE },
@@ -483,10 +484,6 @@ static talent get_talent(ability_type ability, bool check_confused)
         break;
 
     // begin species abilities - some are mutagenic, too {dlb}
-    case ABIL_GLAMOUR:
-        failure = 50 - (you.experience_level * 2);
-        break;
-
     case ABIL_SPIT_POISON:
         failure = ((you.species == SP_NAGA) ? 20 : 40)
                         - 10 * you.mutation[MUT_SPIT_POISON] 
@@ -635,6 +632,7 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 20 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
 
+    case ABIL_ZIN_RECITE:
     case ABIL_TSO_REPEL_UNDEAD:
     case ABIL_KIKU_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
@@ -994,21 +992,6 @@ static bool do_ability(const ability_def& abil)
         you.attribute[ ATTR_DELAYED_FIREBALL ] = 0;
         break;
 
-    case ABIL_GLAMOUR:
-        if (you.duration[DUR_GLAMOUR])
-        {
-            canned_msg(MSG_CANNOT_DO_YET);
-            return (false);
-        }
-
-        mpr("You use your Elvish wiles.");
-
-        cast_glamour( 10 + random2(you.experience_level) 
-                         + random2(you.experience_level) );
-
-        you.duration[DUR_GLAMOUR] = 20 + random2avg(13, 3);
-        break;
-
     case ABIL_SPIT_POISON:      // Naga + spit poison mutation
         if (you.duration[DUR_BREATH_WEAPON])
         {
@@ -1318,6 +1301,18 @@ static bool do_ability(const ability_def& abil)
         break;
 
     // INVOCATIONS:
+
+    case ABIL_ZIN_RECITE:
+    {
+        if (!check_recital_audience())
+        {
+            mpr("There's no-one here to preach to!");
+            return (false);
+        }
+        const int pow = (you.skills[SK_INVOCATIONS] + 12) * (50 + you.piety) / 600;
+        start_delay(DELAY_RECITE, 3, pow, you.hp);
+        break;
+    }
     case ABIL_ZIN_SMITING:
         if (your_spells( SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
                          false ) == SPRET_ABORT)
@@ -1945,13 +1940,6 @@ std::vector<talent> your_talents( bool check_confused )
     // Species-based abilities
     if (you.species == SP_MUMMY && you.experience_level >= 13)
         add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
-
-    if ( ((you.species == SP_GREY_ELF && you.experience_level >= 5) ||
-          (you.species == SP_HIGH_ELF && you.experience_level >= 15)) &&
-         you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE )         
-    {
-        add_talent(talents, ABIL_GLAMOUR, check_confused);
-    }
 
     if (you.species == SP_NAGA)
     {

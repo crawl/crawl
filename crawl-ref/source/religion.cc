@@ -189,7 +189,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // no god
     { "", "", "", "", "" },
     // Zin
-    { "",
+    { "recite Zin's Axioms of Law",
       "smite your foes",
       "call upon Zin for revitalisation",
       "",
@@ -274,7 +274,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // no god
     { "", "", "", "", "" },
     // Zin
-    { "",
+    { "recite Zin's Axioms of Law",
       "smite your foes",
       "call upon Zin for revitalisation",
       "",

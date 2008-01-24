@@ -2558,8 +2558,6 @@ static void decrement_durations()
     if ( decrement_a_duration(DUR_STONESKIN, "Your skin feels tender.") )
         you.redraw_armour_class = true;
 
-    decrement_a_duration(DUR_GLAMOUR);
-
     if ( decrement_a_duration(DUR_TELEPORT) )
     {
         // only to a new area of the abyss sometimes (for abyss teleports)

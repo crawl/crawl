@@ -1978,15 +1978,6 @@
 },
 
 {
-    SPELL_GLAMOUR, "Glamour",
-     SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
-     5,
-     200,
-     NULL
-},
-
-{
     SPELL_EVAPORATE, "Evaporate",
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
      SPFLAG_DIR_OR_TARGET,

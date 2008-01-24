@@ -36,7 +36,6 @@ enum ability_type
 {
     ABIL_NON_ABILITY = -1,
     ABIL_SPIT_POISON = 1,              //    1
-    ABIL_GLAMOUR,
     ABIL_MAPPING,
     ABIL_TELEPORTATION,
     ABIL_BREATHE_FIRE,                 //    5
@@ -75,7 +74,8 @@ enum ability_type
     ABIL_END_TRANSFORMATION,           //   55
     
     // Divine abilities
-    ABIL_ZIN_SMITING = 110,            //  110
+    ABIL_ZIN_RECITE = 110,             //  110
+    ABIL_ZIN_SMITING,   
     ABIL_ZIN_REVITALISATION,
     ABIL_ZIN_SANCTUARY,
     ABIL_TSO_REPEL_UNDEAD = 120,       //  120
@@ -704,6 +704,7 @@ enum delay_type
     DELAY_MULTIDROP,
     DELAY_ASCENDING_STAIRS,
     DELAY_DESCENDING_STAIRS,
+    DELAY_RECITE,  // Zin's Recite invocation
 
     // [dshaligram] Shift-running, resting, travel and macros are now
     // also handled as delays.
@@ -1075,7 +1076,6 @@ enum duration_type
     DUR_SEE_INVISIBLE,
     DUR_WEAPON_BRAND,                  // general "branding" spell counter
     DUR_SILENCE,
-    DUR_GLAMOUR,
     DUR_CONDENSATION_SHIELD,
     DUR_STONESKIN,
     DUR_REPEL_UNDEAD,
@@ -1122,6 +1122,7 @@ enum enchant_type
     ENCH_FATIGUE,        // Post-berserk fatigue.
     ENCH_HELD,           // caught in a net
     ENCH_BATTLE_FRENZY,  // Monster is in a battle frenzy
+    ENCH_NEUTRAL,
     
     NUM_ENCHANTMENTS
 };
@@ -2512,7 +2513,6 @@ enum spell_type
     SPELL_BEND,
     SPELL_BACKLIGHT,
     SPELL_INTOXICATE,   // confusion but only "smart" creatures
-    SPELL_GLAMOUR,      // charm/confuse/sleep but only "smart" creatures 190
     SPELL_EVAPORATE,    // turn a potion into a cloud
     SPELL_ERINGYAS_SURPRISING_BOUQUET, // turn sticks into herbivore food
     SPELL_FRAGMENTATION,               // replacement for "orb of frag"

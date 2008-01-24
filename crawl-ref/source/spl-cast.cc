@@ -1829,10 +1829,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         cast_intoxicate(powc);
         break;
 
-    case SPELL_GLAMOUR:
-        cast_glamour(powc);
-        break;
-
     case SPELL_EVAPORATE:
         if ( !cast_evaporate(powc, beam, potion) )
             return SPRET_ABORT;

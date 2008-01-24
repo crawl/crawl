@@ -37,7 +37,6 @@ void cast_twist(int powc);
 void cast_far_strike(int powc);
 void cast_swap(int powc);
 int cast_apportation(int powc);
-void cast_glamour(int pow);
 void cast_ignite_poison(int pow);
 void cast_intoxicate(int pow);
 void cast_mass_sleep(int pow);

@@ -52,6 +52,140 @@ static void handle_run_delays(const delay_queue_item &delay);
 static void handle_macro_delay();
 static void finish_delay(const delay_queue_item &delay);
 
+// monster cannot be affected in these states
+static bool recite_mons_useless(const monsters *mon)
+{
+    return (mons_is_fleeing(mon)
+            || mons_is_sleeping(mon)
+            || mons_friendly(mon)
+            || mons_neutral(mon)
+            || mon->has_ench(ENCH_BERSERK));
+}
+
+static int recite_to_monsters(int x, int y, int pow, int turn)
+{
+    const int mon = mgrd[x][y];
+    if (mon == NON_MONSTER)
+        return (0);
+
+    monsters *mons = &menv[mon];
+
+    // monster must be intelligent
+    if (mons_intel(mons->type) < I_NORMAL)
+        return (0);
+
+    if (recite_mons_useless(mons))
+        return (0);
+
+    int attempt = 3 - turn;
+    bool bad_effect =
+        (mons_class_holiness(mon) == MH_DEMONIC? !one_chance_in(8)
+                                               : pow < random2(attempt*5));
+
+    // 50% chance nothing happens
+    if (bad_effect && coinflip())
+        return (0);
+
+    bool resist = check_mons_resist_magic(mons, pow);
+
+    if (bad_effect) // can still have positive effects
+    {
+        if (!resist)
+        {
+            if (one_chance_in(3) && mons->add_ench(mon_enchant(ENCH_CONFUSION,
+                                     0, KC_YOU, (16 + random2avg(13, 2)) * 10)))
+            {
+                simple_monster_message(mons, " looks confused.");
+                return (1);
+            }
+            if (one_chance_in(4) && mons->add_ench(ENCH_FEAR))
+            {
+                simple_monster_message(mons, " turns to flee.");
+                return (1);
+            }
+            if (one_chance_in(4))
+            {
+                mons->put_to_sleep();
+                simple_monster_message(mons, " falls asleep!");
+                return (1);
+            }
+        }
+        if (one_chance_in(3) && mons->add_ench(mon_enchant(ENCH_HASTE, 0,
+                                  KC_YOU, (16 + random2avg(13, 2)) * 10)))
+        {
+            simple_monster_message(mons, " is annoyed!");
+            return (1);
+        }
+        if (mons->can_go_berserk()) // seriously annoyed now
+        {
+            mons->go_berserk(true);
+            return (1);
+        }
+        return (0); // no effect
+    }
+
+    if (resist)
+    {
+        simple_monster_message(mons, " resists!");
+        return (0);
+    }
+
+    switch (random2(pow))
+    {
+      default: // nothing happens
+         return (0);
+      case 6:
+      case 7:
+         if (mons->add_ench(ENCH_FEAR))
+         {
+             simple_monster_message(mons, " turns to flee.");
+             return (1);
+         }
+         break;
+      case 8:
+      case 9:
+         mons->put_to_sleep();
+         simple_monster_message(mons, " falls asleep!");
+         return (1);
+      case 10:
+      case 11:
+      case 12:
+         if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
+                             (16 + random2avg(13, 2)) * 10)))
+         {
+             simple_monster_message(mons, " looks confused.");
+             return (1);
+         }
+         break;
+      case 13:
+      case 14:
+         if (mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
+                             (16 + random2avg(13, 2)) * 10)))
+         {
+             simple_monster_message(mons, " is paralyzed!");
+             return (1);
+         }
+         break;
+      case 15:
+      case 16:
+      case 17:
+      case 18:
+         if (mons->add_ench(ENCH_NEUTRAL))
+         {
+             simple_monster_message(mons, " seems impressed!");
+             return (1);
+         }
+         break;
+      case 19:
+      case 20:
+         mons->attitude = ATT_NEUTRAL; // but same message as above
+         simple_monster_message(mons, " seems impressed!"); 
+         return (1);
+    }
+
+    return (0);
+}       // end recite_to_monsters()
+
 // Returns true if this delay can act as a parent to other delays, i.e. if
 // other delays can be spawned while this delay is running. If is_parent_delay
 // returns true, new delays will be pushed immediately to the front of the
@@ -196,6 +330,11 @@ void stop_delay( void )
             mpr( "You stop dropping stuff." );
         pop_delay();
         break;
+        
+    case DELAY_RECITE:
+        mpr( "You stop reciting.");
+        pop_delay();
+        break;
 
     case DELAY_RUN:
     case DELAY_REST:
@@ -295,6 +434,39 @@ bool is_being_butchered(const item_def &item)
     return (false);
 }
 
+// check whether there are monsters who might be influenced by Recite
+bool check_recital_audience()
+{
+    int mid;
+    monsters *mons;
+
+    for (int x = you.x_pos - 8; x <= you.x_pos + 8; x++)
+       for (int y = you.y_pos - 8; y <= you.y_pos + 8; y++)
+       {
+            if (!in_bounds(x,y) || !see_grid(x, y))
+                continue;
+
+            mid = mgrd[x][y];
+            if (mid == NON_MONSTER)
+                continue;
+
+            mons = &menv[mid];
+
+            // can not be affected in these states
+            if (recite_mons_useless(mons))
+                continue;;
+
+            return (true);
+      }
+
+#ifdef DEBUG_DIAGNOSTICS
+   mpr(MSGCH_DIAGNOSTICS, "No audience found!");
+#endif
+
+   // Sorry, no audience found!
+   return (false);
+}
+
 // Xom is amused by a potential food source going to waste, and is
 // more amused the hungrier you are.
 static void xom_check_corpse_waste()
@@ -332,6 +504,12 @@ void handle_delay( void )
             break;
         case DELAY_PASSWALL:
             mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
+            break;
+        case DELAY_RECITE:
+            mprf(MSGCH_MULTITURN_ACTION,
+                 "You begin to recite %s's Axioms of Law.",
+                 god_name(GOD_ZIN).c_str());
+            apply_area_visible(recite_to_monsters, delay.parm1, delay.duration);
             break;
         default:
             break;
@@ -429,6 +607,19 @@ void handle_delay( void )
         }
     }
 
+    if ( delay.type == DELAY_RECITE) 
+    {
+           
+        if (!check_recital_audience()  // maybe no unaffected monsters in LOS?
+            || Options.hp_warning && you.hp*Options.hp_warning <= you.hp_max
+               && delay.parm2*Options.hp_warning > you.hp_max
+            || you.hp*2 < delay.parm2) // or significant health drop
+        {
+            stop_delay();
+            return;
+        }
+    }
+    
     // Handle delay:
     if (delay.duration > 0)
     {
@@ -463,6 +654,11 @@ void handle_delay( void )
         case DELAY_PASSWALL:
             mpr("You continue meditating on the rock.",
                 MSGCH_MULTITURN_ACTION);
+            break;
+        case DELAY_RECITE:
+            mpr("You continue reciting the Axioms of Law.",
+                MSGCH_MULTITURN_ACTION);
+            apply_area_visible(recite_to_monsters, delay.parm1, delay.duration);
             break;
         case DELAY_MULTIDROP:
             drop_item( items_for_multidrop[0].slot,
@@ -563,6 +759,10 @@ static void finish_delay(const delay_queue_item &delay)
         mpr( "You finish memorising." );
         add_spell_to_memory( static_cast<spell_type>( delay.parm1 ) );
         break; 
+        
+    case DELAY_RECITE:
+        mpr( "You finish reciting the Axioms of Law." );
+        break;
 
     case DELAY_PASSWALL:
     {
@@ -1289,8 +1489,8 @@ static const char *delay_names[] =
 {
     "not_delayed", "eat", "armour_on", "armour_off", "jewellery_on",
     "memorise", "butcher", "weapon_swap", "passwall",
-    "drop_item", "multidrop", "ascending_stairs", "descending_stairs", "run",
-    "rest", "travel", "macro", "interruptible", "uninterruptible",
+    "drop_item", "multidrop", "ascending_stairs", "descending_stairs", "recite",
+    "run", "rest", "travel", "macro", "interruptible", "uninterruptible",
 };
 
 // Gets a delay given its name.

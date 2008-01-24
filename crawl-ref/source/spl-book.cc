@@ -1116,7 +1116,6 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_CURE_POISON_II:
         case SPELL_DEATHS_DOOR:
         case SPELL_DRAGON_FORM:
-        case SPELL_GLAMOUR:
         case SPELL_ICE_FORM:
         case SPELL_INTOXICATE:
         case SPELL_NECROMUTATION:

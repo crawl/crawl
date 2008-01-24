@@ -479,6 +479,7 @@ void game_options::set_default_activity_interrupts()
         // the delay will just trash all queued delays, including travel.
         "interrupt_ascending_stairs =",
         "interrupt_descending_stairs =",
+        "interrupt_recite = teleport",
         "interrupt_uninterruptible =",
         "interrupt_weapon_swap =",
 

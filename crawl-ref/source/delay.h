@@ -74,6 +74,7 @@ void start_delay( delay_type type, int turns, int parm1 = 0, int parm2 = 0 );
 void stop_delay( void );
 bool you_are_delayed( void ); 
 delay_type current_delay_action( void ); 
+bool check_recital_audience( void );
 void handle_delay( void );
 
 bool is_run_delay(int delay);

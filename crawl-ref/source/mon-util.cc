@@ -1788,7 +1788,7 @@ bool mons_friendly(const monsters *m)
 
 bool mons_neutral(const monsters *m)
 {
-    return (m->attitude == ATT_NEUTRAL);
+    return (m->attitude == ATT_NEUTRAL || m->has_ench(ENCH_NEUTRAL));
 }
 
 mon_attitude_type mons_attitude(const monsters *m)
@@ -4338,7 +4338,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM: case ENCH_SLEEP_WARY:
         case ENCH_SICK: case ENCH_SLEEPY: case ENCH_PARALYSIS:
-        case ENCH_BATTLE_FRENZY:
+        case ENCH_BATTLE_FRENZY: case ENCH_NEUTRAL:
             lose_ench_levels(i->second, levels);
             break;
 
