@@ -209,7 +209,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 
     // If the swap slot has a bad (but valid) item in it,
     // the swap will be to bare hands.
-    const bool good_swap = item_slot == PROMPT_GOT_SPECIAL
+    const bool good_swap = (item_slot == PROMPT_GOT_SPECIAL)
         || you.inv[item_slot].base_type == OBJ_WEAPONS
         || you.inv[item_slot].base_type == OBJ_STAVES
         || (you.inv[item_slot].base_type == OBJ_MISCELLANY

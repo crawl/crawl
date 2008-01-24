@@ -1558,79 +1558,79 @@ public:
     bool        autoprayer_on;
     bool        show_more_prompt;
 
-    bool        show_turns;     // Show turns used in HUD.
-    bool        show_beam;      // Show targeting beam by default.
+    bool        show_turns;      // Show turns used in HUD.
+    bool        show_beam;       // Show targeting beam by default.
 
-    long        autopickups;    // items to autopickup
+    long        autopickups;     // items to autopickup
     bool        show_inventory_weights; // show weights in inventory listings
-    bool        colour_map;     // add colour to the map
-    bool        clean_map;      // remove unseen clouds/monsters
-    bool        show_uncursed;  // label known uncursed items as "uncursed"
-    bool        easy_open;      // open doors with movement
-    bool        easy_unequip;   // allow auto-removing of armour / jewellery
-    bool        easy_butcher;   // autoswap to butchering tool
-    bool        always_confirm_butcher;    // even if only one corpse
-    bool        list_rotten;    // list slots for rotting corpses/chunks
-    bool        default_target; // start targeting on a real target
-    bool        autopickup_no_burden; // don't autopickup if it changes burden
-    bool        note_all_skill_levels; // take note for all skill levels (1-27)
+    bool        colour_map;      // add colour to the map
+    bool        clean_map;       // remove unseen clouds/monsters
+    bool        show_uncursed;   // label known uncursed items as "uncursed"
+    bool        easy_open;       // open doors with movement
+    bool        easy_unequip;    // allow auto-removing of armour / jewellery
+    bool        easy_butcher;    // autoswap to butchering tool
+    bool        always_confirm_butcher; // even if only one corpse
+    bool        list_rotten;     // list slots for rotting corpses/chunks
+    bool        default_target;  // start targeting on a real target
+    bool        autopickup_no_burden;   // don't autopickup if it changes burden
+    bool        note_all_skill_levels;  // take note for all skill levels (1-27)
     bool        note_skill_max;  // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
     std::string user_note_prefix;// Prefix for user notes
     int         note_hp_percent; // percentage hp for notetaking
     int         ood_interesting; // how many levels OOD is noteworthy?
-    int         easy_confirm;   // make yesno() confirming easier
+    int         easy_confirm;    // make yesno() confirming easier
     int         easy_quit_item_prompts; // make item prompts quitable on space
-    int         colour[16];     // macro fg colours to other colours
-    int         background;     // select default background colour
+    int         colour[16];      // macro fg colours to other colours
+    int         background;      // select default background colour
     int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
-    int         weapon;         // auto-choose weapon for character
-    int         book;           // auto-choose book for character
-    int         chaos_knight;   // choice of god for Chaos Knights (Xom/Makleb)
-    int         death_knight;   // choice of god/necromancy for Death Knights
-    god_type    priest;         // choice of god for priests (Zin/Yred)
-    bool        random_pick;    // randomly generate character
-    int         hp_warning;     // percentage hp for danger warning
+    int         weapon;          // auto-choose weapon for character
+    int         book;            // auto-choose book for character
+    int         chaos_knight;    // choice of god for Chaos Knights (Xom/Makleb)
+    int         death_knight;    // choice of god/necromancy for Death Knights
+    god_type    priest;          // choice of god for priests (Zin/Yred)
+    bool        random_pick;     // randomly generate character
+    int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
-    char        race;           // preselected race
-    char        cls;            // preselected class
-    bool        delay_message_clear; // avoid clearing messages each turn
-    unsigned    friend_brand;   // Attribute for branding friendly monsters
-    bool        no_dark_brand;  // Attribute for branding friendly monsters
-    bool        macro_meta_entry; // Allow user to use numeric sequences when
-                                  // creating macros
+    char        race;            // preselected race
+    char        cls;             // preselected class
+    bool        delay_message_clear;    // avoid clearing messages each turn
+    unsigned    friend_brand;    // Attribute for branding friendly monsters
+    bool        no_dark_brand;   // Attribute for branding friendly monsters
+    bool        macro_meta_entry;// Allow user to use numeric sequences when
+                                 // creating macros
 
-    int         fire_items_start;     // index of first item for fire command
-    std::vector<unsigned> fire_order; // missile search order for 'f' command
+    int         fire_items_start;// index of first item for fire command
+    std::vector<unsigned> fire_order;   // missile search order for 'f' command
 
-    bool        auto_list;      // automatically jump to appropriate item lists
+    bool        auto_list;       // automatically jump to appropriate item lists
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
     char_set_type  char_set;
     FixedVector<unsigned, NUM_DCHAR_TYPES> char_table;
 
-    int         num_colours;    // used for setting up curses colour table (8 or 16)
+    int         num_colours;     // used for setting up curses colour table (8 or 16)
     
 #ifdef WIZARD
-    int         wiz_mode;       // yes, no, never in wiz mode to start
+    int         wiz_mode;        // yes, no, never in wiz mode to start
 #endif
 
     // internal use only:
-    int         sc_entries;     // # of score entries
-    int         sc_format;      // Format for score entries
+    int         sc_entries;      // # of score entries
+    int         sc_format;       // Format for score entries
 
     std::vector<std::pair<int, int> > hp_colour;
     std::vector<std::pair<int, int> > mp_colour;
 
-    std::string map_file_name;  // name of mapping file to use
+    std::string map_file_name;   // name of mapping file to use
     std::vector<text_pattern> never_pickup;   // Objects we'll never pick up
     std::vector<text_pattern> always_pickup;  // Stuff we always pick up
     std::vector<text_pattern> note_monsters;  // Interesting monsters
     std::vector<text_pattern> note_messages;  // Interesting messages
     std::vector<std::pair<text_pattern, std::string> > autoinscriptions;
-    std::vector<text_pattern> note_items; // Objects to note
-    std::vector<int> note_skill_levels; // Skill levels to note
+    std::vector<text_pattern> note_items;     // Objects to note
+    std::vector<int> note_skill_levels;       // Skill levels to note
 
     bool        pickup_thrown;  // Pickup thrown missiles
     bool        pickup_dropped; // Pickup dropped objects
@@ -1689,7 +1689,7 @@ public:
 
     std::vector<menu_sort_condition> sort_menus;
 
-    int         dump_kill_places; // How to dump place information for kills.
+    int         dump_kill_places;   // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
 
     int         dump_item_origins;  // Show where items came from?
@@ -1746,8 +1746,8 @@ public:
 #endif  // WIZARD
     
 #ifdef USE_TILE
-    char        show_items[20];
-    bool        title_screen;
+    char        show_items[20]; // show which item types in tile inventory
+    bool        title_screen;   // display title screen?
     // minimap colours
     char        tile_player_col;
     char        tile_monster_col;

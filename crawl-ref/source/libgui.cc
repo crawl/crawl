@@ -355,7 +355,7 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
     int c;
     
     if (x == you.x_pos && y == you.y_pos)
-        c = Options.tile_player_col; // player position always in white
+        c = Options.tile_player_col; // player position always highlighted
     else if (mgrd[x][y] != NON_MONSTER && mons_friendly(&menv[mgrd[x][y]])
              && upd_tile)
     {
@@ -1276,8 +1276,8 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                     desc += EOL "[L-Click] Pick up (g)";
 
                 if (mitm[ix].base_type == OBJ_CORPSES
-                    && you.inv[ix].sub_type != CORPSE_SKELETON
-                    && !food_is_rotten(you.inv[ix]))
+                    && mitm[ix].sub_type != CORPSE_SKELETON
+                    && !food_is_rotten(mitm[ix]))
                 {
                     desc += EOL "[Shift-L-Click] Dissect (D)";
                     

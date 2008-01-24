@@ -72,6 +72,8 @@ int tileidx_monster_base(int mon_idx, bool detected)
     bool in_water = (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
     
     int type = mon->type;
+    
+    // show only base class for detected monsters
     if (detected)
         type = mons_genus(type);
 
