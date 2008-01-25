@@ -31,6 +31,12 @@ int formatted_string::get_colour(const std::string &tag)
     return (colour != -1? colour : LIGHTGREY);
 }
 
+// Parses a formatted string in much the same way as parse_string, but
+// handles EOL by moving the cursor down to the next line instead of
+// using a literal EOL. This is important if the text is not supposed
+// to clobber existing text to the right of the lines being displayed
+// (some of the tutorial messages need this).
+//
 formatted_string formatted_string::parse_block(
         const std::string &s,
         bool  eol_ends_format,
@@ -206,6 +212,11 @@ std::string formatted_string::html_dump() const
         }
     }
     return s;
+}
+
+bool formatted_string::operator < (const formatted_string &other) const
+{
+    return std::string(*this) < std::string(other);
 }
 
 const formatted_string &

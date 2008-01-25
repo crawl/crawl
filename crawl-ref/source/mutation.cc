@@ -38,6 +38,7 @@
 #include "format.h"
 #include "itemprop.h"
 #include "macro.h"
+#include "menu.h"
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
@@ -1333,10 +1334,10 @@ void display_mutations()
 {
     clrscr();
     gotoxy(1,1);
-    describe_mutations().display();
-    
-    if (getch() == 0)
-        getch();
+
+    const formatted_string mutation_fs = describe_mutations();
+    Menu mutation_menu(mutation_fs);
+    mutation_menu.show();
 }
 
 static int calc_mutation_amusement_value(mutation_type which_mutation)

@@ -1318,19 +1318,58 @@ static int keyhelp_keyfilter(int ch)
     return ch;
 }
 
+///////////////////////////////////////////////////////////////////////////
+// Manual menu highlighter.
+
+class help_highlighter : public MenuHighlighter
+{
+public:
+    help_highlighter();
+    int entry_colour(const MenuEntry *entry) const;
+private:
+    text_pattern pattern;
+    std::string get_species_key() const;
+};
+
+help_highlighter::help_highlighter()
+    : pattern(get_species_key())
+{
+}
+
+int help_highlighter::entry_colour(const MenuEntry *entry) const
+{
+    return !pattern.empty() && pattern.matches(entry->text)? WHITE : -1;
+}
+
+// to highlight species in aptitudes list ('?%')
+std::string help_highlighter::get_species_key() const
+{
+    if (player_genus(GENPC_DRACONIAN) && you.experience_level < 7)
+        return "";
+
+    std::string result = species_name(you.species, you.experience_level);
+    if (player_genus(GENPC_DRACONIAN))
+        strip_tag(result,
+                  species_name(you.species, you.experience_level, true));
+    
+    result += "  ";
+    return (result);
+}
+////////////////////////////////////////////////////////////////////////////
+
 static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
                               bool with_manual, bool easy_exit = false,
                               int hotkey = 0)
 {
     formatted_scroller cmd_help;
-    
+
     // Set flags, and use easy exit if necessary.
     int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP;
     if (easy_exit)
         flags |= MF_EASY_EXIT;
     cmd_help.set_flags(flags, false);
     cmd_help.set_tag("help");
-    
+
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
     cmd_help.set_more( formatted_string::parse_string(
@@ -1339,6 +1378,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
 
     if ( with_manual )
     {
+        cmd_help.set_highlighter(new help_highlighter);
         cmd_help.f_keyfilter = keyhelp_keyfilter;
         column_composer cols(2, 40);
 

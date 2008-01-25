@@ -3945,9 +3945,13 @@ void monsters::load_spells(mon_spellbook_type book)
         }
     }
 #if DEBUG_DIAGNOSTICS
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-        mprf( MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
-              i, spells[i], spell_title(spells[i]) );
+    // Only for ghosts, too spammy to use for all monsters.
+    if (book == MST_GHOST)
+    {
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+            mprf( MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
+                  i, spells[i], spell_title(spells[i]) );
+    }
 #endif
 }
 

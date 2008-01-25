@@ -40,6 +40,7 @@ public:
     std::string::size_type length() const;
     std::string html_dump() const;
 
+    bool operator < ( const formatted_string &other ) const;
     const formatted_string &operator += (const formatted_string &other);
 
 public:
@@ -59,7 +60,6 @@ private:
     int find_last_colour() const;
 
 public:
-    
     struct fs_op
     {
         fs_op_type type;
@@ -89,7 +89,8 @@ public:
         void display() const;
     };
 
-    std::vector<fs_op> ops;
+    typedef std::vector<fs_op> oplist;
+    oplist ops;
 };
 
 int count_linebreaks(const formatted_string& fs);

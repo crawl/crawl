@@ -177,10 +177,26 @@ enum MenuFlag
 // you pass in MUST be allocated with new, or Crawl will crash.
 
 #define NUMBUFSIZ 10
+
+// FIXME: MenuEntry is a large object, and shouldn't be used for
+// showing text files.
+
 class Menu
 {
 public:
     Menu( int flags = MF_MULTISELECT, const std::string& tagname = "" );
+
+    // Initializes a Menu from a formatted_string as follows:
+    // 
+    // 1) Splits the formatted_string on EOL (this is not necessarily \n).
+    // 2) Picks the most recently used non-whitespace colour as the colour
+    //    for the next line (so it can't do multiple colours on one line).
+    // 3) Ignores all cursor movement ops in the formatted_string.
+    //
+    // These are limitations that should be fixed eventually.
+    //
+    Menu( const formatted_string &fs );
+    
     virtual ~Menu();
 
     // Remove all items from the Menu, leave title intact.
@@ -257,6 +273,7 @@ protected:
     int last_selected;
 
 protected:
+    void check_add_formatted_line(int col, std::string &line, bool check_eol);
     void do_menu();
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item( int index ) const;

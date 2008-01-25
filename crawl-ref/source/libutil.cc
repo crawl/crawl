@@ -466,6 +466,12 @@ std::string &trim_string( std::string &str )
     return (str);
 }
 
+std::string &trim_string_right( std::string &str )
+{
+    str.erase( str.find_last_not_of( " \t\n\r" ) + 1 );
+    return (str);
+}
+
 static void add_segment(std::vector<std::string> &segs,
                         std::string s,
                         bool trim,

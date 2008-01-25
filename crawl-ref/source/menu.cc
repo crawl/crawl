@@ -18,27 +18,85 @@
 #include "initfile.h"
 
 Menu::Menu( int _flags, const std::string& tagname )
- :  f_selitem(NULL),
-    f_drawitem(NULL),
-    f_keyfilter(NULL),
-    title(NULL),
-    flags(_flags),
-    tag(tagname),
-    first_entry(0),
-    y_offset(0),
-    pagesize(0),
-    max_pagesize(0),
-    more("-more-", true),
-    items(),
-    sel(),
-    select_filter(),
-    highlighter(new MenuHighlighter),
-    num(-1),
-    lastch(0),
-    alive(false),
-    last_selected(-1)
+ : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL), title(NULL),
+   flags(_flags), tag(tagname), first_entry(0), y_offset(0),
+   pagesize(0), max_pagesize(0), more("-more-", true), items(),
+   sel(), select_filter(), highlighter(new MenuHighlighter), num(-1),
+   lastch(0), alive(false), last_selected(-1)
 {
     set_flags(flags);
+}
+
+Menu::Menu( const formatted_string &fs )
+ : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL), title(NULL),
+
+   // This is a text-viewer menu, init flags to be easy on the user.
+   flags(MF_NOSELECT | MF_EASY_EXIT),
+
+   tag(), first_entry(0), y_offset(0), pagesize(0),
+   max_pagesize(0), more("-more-", true), items(), sel(),
+   select_filter(), highlighter(new MenuHighlighter), num(-1),
+   lastch(0), alive(false), last_selected(-1)
+{
+    int colour = LIGHTGREY;
+    int last_text_colour = LIGHTGREY;
+    std::string line;
+    for (formatted_string::oplist::const_iterator i = fs.ops.begin();
+         i != fs.ops.end(); ++i)
+    {
+        const formatted_string::fs_op &op(*i);
+        switch (op.type)
+        {
+        case FSOP_COLOUR:
+            colour = op.x;
+            break;
+        case FSOP_TEXT:
+            line += op.text;
+            if (op.text.find_first_not_of(" \t\r\n") != std::string::npos)
+                last_text_colour = colour;
+            check_add_formatted_line(last_text_colour, line, true);
+            break;
+        default:
+            break;
+        }
+    }
+    check_add_formatted_line(colour, line, false);
+}
+
+void Menu::check_add_formatted_line(int col, std::string &line, bool check_eol)
+{
+    if (line.empty())
+        return;
+
+    if (check_eol && line.find(EOL) == std::string::npos)
+        return;
+
+    std::vector<std::string> lines = split_string(EOL, line, false, true);
+    int size = lines.size();
+
+    // If we have stuff after EOL, leave that in the line variable and
+    // don't add an entry for it, unless the caller told us not to
+    // check EOL sanity.
+    if (check_eol && !ends_with(line, EOL))
+        line = lines[--size];
+    else
+        line.clear();
+    
+    for (int i = 0; i < size; ++i)
+    {
+        std::string &s(lines[i]);
+        
+        trim_string_right(s);
+
+        MenuEntry *me = new MenuEntry(s);
+        me->colour = col;
+        if (!title)
+            set_title(me);
+        else
+            add_entry(me);
+    }
+
+    line.clear();
 }
 
 Menu::~Menu()
@@ -176,16 +234,12 @@ bool Menu::process_key( int keyin )
     case CK_ENTER:
         return false;
     case CK_ESCAPE:
-#ifdef USE_TILE
     case CK_MOUSE_B2:
-#endif
         sel.clear();
         lastch = keyin;
         return false;
     case ' ': case CK_PGDN: case '>': case '\'':
-#ifdef USE_TILE
     case CK_MOUSE_B1:
-#endif
         nav = true;
         repaint = page_down();
         if (!repaint && !is_set(MF_EASY_EXIT) && !is_set(MF_NOWRAP))
@@ -579,42 +633,11 @@ void Menu::update_title()
     gotoxy(x, y);
 }
 
-// to highlight species in aptitudes list ('?%')
-static std::string get_species_key()
-{
-    if (player_genus(GENPC_DRACONIAN) && you.experience_level < 7)
-        return "";
-
-    std::string result = "";
-    switch (you.species)
-    {
-        case SP_RED_DRACONIAN:     result = "Red"; break;
-        case SP_WHITE_DRACONIAN:   result = "White"; break;
-        case SP_GREEN_DRACONIAN:   result = "Green"; break;
-        case SP_GOLDEN_DRACONIAN:  result = "Yellow"; break;
-        case SP_GREY_DRACONIAN:    result = "Grey"; break;
-        case SP_BLACK_DRACONIAN:   result = "Black"; break;
-        case SP_PURPLE_DRACONIAN:  result = "Purple"; break;
-        case SP_MOTTLED_DRACONIAN: result = "Mottled"; break;
-        case SP_PALE_DRACONIAN:    result = "Pale"; break;
-        default:
-             result = species_name(you.species, 1);
-    }
-    result += "  ";
-    return (result);
-}
-
 int Menu::item_colour(int, const MenuEntry *entry) const
 {
     int icol = -1;
     if (highlighter)
         icol = highlighter->entry_colour(entry);
-    else
-    {
-        text_pattern tp(get_species_key());
-        if (!tp.empty() && tp.matches(entry->text))
-            icol = WHITE;
-    }
 
     return (icol == -1? entry->colour : icol);
 }

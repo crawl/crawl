@@ -91,7 +91,8 @@ typedef void *(*p_compile)(const char *pattern, bool ignore_case);
 typedef void (*p_free)(void *cp);
 typedef bool (*p_match)(void *compiled_pattern, const char *text, int length);
 
-std::string & trim_string( std::string &str );
+std::string &trim_string( std::string &str );
+std::string &trim_string_right( std::string &str );
 std::string trimmed_string( std::string s );
 
 inline bool starts_with(const std::string &s, const std::string &prefix)
