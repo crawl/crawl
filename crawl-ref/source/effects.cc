@@ -2252,7 +2252,8 @@ void handle_time( long time_delta )
         if (you.magic_contamination >= 5
             && random2(25) <= you.magic_contamination)
         {
-            mpr("Your body shudders with the violent release of wild energies!", MSGCH_WARN);
+            mpr("Your body shudders with the violent release "
+                "of wild energies!", MSGCH_WARN);
 
             // for particularly violent releases, make a little boom
             if (you.magic_contamination >= 10 && coinflip())
@@ -2416,6 +2417,145 @@ void handle_time( long time_delta )
     }
 }
 
+// Move monsters around to fake them walking around while player was
+// off-level.
+static void catchup_monster_moves(monsters *mon, int turns)
+{
+    // Summoned monsters might have disappeared
+    if (!mon->alive())
+        return;
+
+    // Don't move non-land or stationary monsters around
+    if (mons_habitat( mon ) != HT_LAND
+        || mons_is_stationary( mon ))
+    {
+        return;
+    }
+
+    // Let sleeping monsters lie
+    if (mon->behaviour == BEH_SLEEP || mons_is_paralysed(mon))
+        return;
+
+    const int range = (turns * mon->speed) / 10;
+    const int moves = (range > 50) ? 50 : range;
+
+    // const bool short_time = (range >= 5 + random2(10));
+    const bool long_time  = (range >= (500 + roll_dice( 2, 500 )));
+
+    const bool ranged_attack = (mons_has_ranged_spell( mon ) 
+                                || mons_has_ranged_attack( mon )); 
+
+#if DEBUG_DIAGNOSTICS
+    // probably too annoying even for DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "mon #%d: range %d; long %d; "
+         "pos (%d,%d); targ %d(%d,%d); flags %ld", 
+         monster_index(mon), range, long_time, mon->x, mon->y, 
+         mon->foe, mon->target_x, mon->target_y, mon->flags );
+#endif 
+
+    if (range <= 0)
+        return;
+
+    if (long_time 
+        && (mon->behaviour == BEH_FLEE 
+            || mon->behaviour == BEH_CORNERED
+            || testbits( mon->flags, MF_BATTY )
+            || ranged_attack
+            || coinflip()))
+    {
+        if (mon->behaviour != BEH_WANDER)
+        {
+            mon->behaviour = BEH_WANDER;
+            mon->foe = MHITNOT;
+            mon->target_x = 10 + random2( GXM - 10 ); 
+            mon->target_y = 10 + random2( GYM - 10 ); 
+        }
+        else 
+        {
+            // monster will be sleeping after we move it
+            mon->behaviour = BEH_SLEEP; 
+        }
+    }
+    else if (ranged_attack)
+    {
+        // if we're doing short time movement and the monster has a 
+        // ranged attack (missile or spell), then the monster will
+        // flee to gain distance if its "too close", else it will 
+        // just shift its position rather than charge the player. -- bwr
+        if (grid_distance(mon->x, mon->y, mon->target_x, mon->target_y) < 3)
+        {
+            mon->behaviour = BEH_FLEE;
+
+            // if the monster is on the target square, fleeing won't work
+            if (mon->x == mon->target_x && mon->y == mon->target_y)
+            {
+                if (you.x_pos != mon->x || you.y_pos != mon->y)
+                {
+                    // flee from player's position if different
+                    mon->target_x = you.x_pos;
+                    mon->target_y = you.y_pos;
+                }
+                else
+                {
+                    // randomize the target so we have a direction to flee
+                    mon->target_x += (random2(3) - 1);
+                    mon->target_y += (random2(3) - 1);
+                }
+            }
+
+#if DEBUG_DIAGNOSTICS
+            mpr( "backing off...", MSGCH_DIAGNOSTICS );
+#endif
+        }
+        else
+        {
+            shift_monster( mon, mon->x, mon->y );
+
+#if DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "shifted to (%d,%d)", mon->x, mon->y);
+#endif
+            return;
+        }
+    }
+
+    coord_def pos(mon->pos());
+    // dirt simple movement:
+    for (int i = 0; i < moves; i++)
+    {
+        coord_def inc(mon->target_pos() - pos);
+        inc = coord_def(sgn(inc.x), sgn(inc.y));
+
+        if (mon->behaviour == BEH_FLEE)
+            inc *= -1;
+
+        if (pos.x + inc.x < 0 || pos.x + inc.x >= GXM)
+            inc.x = 0;
+
+        if (pos.y + inc.y < 0 || pos.y + inc.y >= GYM)
+            inc.y = 0;
+
+        if (inc.origin())
+            break;
+
+        const coord_def next(pos + inc);
+        const dungeon_feature_type feat = grd(next);
+        if (grid_is_solid(feat)
+            || mgrd(next) != NON_MONSTER
+            || !monster_habitable_grid(mon, feat))
+            break;
+
+        pos = next;
+    }
+
+    if (!shift_monster( mon, pos.x, pos.y ))
+        shift_monster( mon, mon->x, mon->y );
+
+#if DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "moved to (%d,%d)", mon->x, mon->y );
+#endif    
+}
+
 //---------------------------------------------------------------
 //
 // update_level
@@ -2425,7 +2565,6 @@ void handle_time( long time_delta )
 //---------------------------------------------------------------
 void update_level( double elapsedTime )
 {
-    int m, i;
     const int turns = static_cast<int>(elapsedTime / 10.0);
 
 #if DEBUG_DIAGNOSTICS
@@ -2447,11 +2586,11 @@ void update_level( double elapsedTime )
     dungeon_events.fire_event(
         dgn_event(DET_TURN_ELAPSED, coord_def(0, 0), turns * 10));
 
-    for (m = 0; m < MAX_MONSTERS; m++)
+    for (int m = 0; m < MAX_MONSTERS; m++)
     {
-        struct monsters *mon = &menv[m];
+        monsters *mon = &menv[m];
 
-        if (mon->type == -1)
+        if (!mon->alive())
             continue;
 
 #if DEBUG_DIAGNOSTICS
@@ -2476,149 +2615,17 @@ void update_level( double elapsedTime )
             heal_monster( mon, (turns / 10), false );
         }
 
-        if (turns >= 10)
+        catchup_monster_moves( mon, turns );
+        
+        if (turns >= 10 && mon->alive())
             mon->timeout_enchantments( turns / 10 );
-
-        // Summoned monsters might have disappeared
-        if (mon->type == -1)
-            continue;
-
-        // Don't move non-land or stationary monsters around
-        if (mons_habitat( mon ) != HT_LAND
-            || mons_is_stationary( mon ))
-        {
-            continue;
-        }
-
-        // Let sleeping monsters lie
-        if (mon->behaviour == BEH_SLEEP || mons_is_paralysed(mon))
-            continue;
-
-        const int range = (turns * mon->speed) / 10;
-        const int moves = (range > 50) ? 50 : range;
-
-        // const bool short_time = (range >= 5 + random2(10));
-        const bool long_time  = (range >= (500 + roll_dice( 2, 500 )));
-
-        const bool ranged_attack = (mons_has_ranged_spell( mon ) 
-                                    || mons_has_ranged_attack( mon )); 
-
-#if DEBUG_DIAGNOSTICS
-        // probably too annoying even for DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "mon #%d: range %d; long %d; "
-             "pos (%d,%d); targ %d(%d,%d); flags %ld", 
-             m, range, long_time, mon->x, mon->y, 
-             mon->foe, mon->target_x, mon->target_y, mon->flags );
-#endif 
-
-        if (range <= 0)
-            continue;
-
-        if (long_time 
-            && (mon->behaviour == BEH_FLEE 
-                || mon->behaviour == BEH_CORNERED
-                || testbits( mon->flags, MF_BATTY )
-                || ranged_attack
-                || coinflip()))
-        {
-            if (mon->behaviour != BEH_WANDER)
-            {
-                mon->behaviour = BEH_WANDER;
-                mon->foe = MHITNOT;
-                mon->target_x = 10 + random2( GXM - 10 ); 
-                mon->target_y = 10 + random2( GYM - 10 ); 
-            }
-            else 
-            {
-                // monster will be sleeping after we move it
-                mon->behaviour = BEH_SLEEP; 
-            }
-        }
-        else if (ranged_attack)
-        {
-            // if we're doing short time movement and the monster has a 
-            // ranged attack (missile or spell), then the monster will
-            // flee to gain distance if its "too close", else it will 
-            // just shift its position rather than charge the player. -- bwr
-            if (grid_distance(mon->x, mon->y, mon->target_x, mon->target_y) < 3)
-            {
-                mon->behaviour = BEH_FLEE;
-
-                // if the monster is on the target square, fleeing won't work
-                if (mon->x == mon->target_x && mon->y == mon->target_y)
-                {
-                    if (you.x_pos != mon->x || you.y_pos != mon->y)
-                    {
-                        // flee from player's position if different
-                        mon->target_x = you.x_pos;
-                        mon->target_y = you.y_pos;
-                    }
-                    else
-                    {
-                        // randomize the target so we have a direction to flee
-                        mon->target_x += (random2(3) - 1);
-                        mon->target_y += (random2(3) - 1);
-                    }
-                }
-
-#if DEBUG_DIAGNOSTICS
-                mpr( "backing off...", MSGCH_DIAGNOSTICS );
-#endif
-            }
-            else
-            {
-                shift_monster( mon, mon->x, mon->y );
-
-#if DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS, "shifted to (%d,%d)", mon->x, mon->y);
-#endif
-                continue;
-            }
-        }
-
-        coord_def pos(mon->pos());
-        // dirt simple movement:
-        for (i = 0; i < moves; i++)
-        {
-            coord_def inc(mon->target_pos() - pos);
-            inc = coord_def(sgn(inc.x), sgn(inc.y));
-
-            if (mon->behaviour == BEH_FLEE)
-                inc *= -1;
-
-            if (pos.x + inc.x < 0 || pos.x + inc.x >= GXM)
-                inc.x = 0;
-
-            if (pos.y + inc.y < 0 || pos.y + inc.y >= GYM)
-                inc.y = 0;
-
-            if (inc.origin())
-                break;
-
-            const coord_def next(pos + inc);
-            const dungeon_feature_type feat = grd(next);
-            if (grid_is_solid(feat)
-                || mgrd(next) != NON_MONSTER
-                || !monster_habitable_grid(mon, feat))
-                break;
-
-            pos = next;
-        }
-
-        if (!shift_monster( mon, pos.x, pos.y ))
-            shift_monster( mon, mon->x, mon->y );
-
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "moved to (%d,%d)", mon->x, mon->y );
-#endif
     }
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "total monsters on level = %d", mons_total );
 #endif
 
-    for (i = 0; i < MAX_CLOUDS; i++)
+    for (int i = 0; i < MAX_CLOUDS; i++)
         delete_cloud( i );
 }
 
