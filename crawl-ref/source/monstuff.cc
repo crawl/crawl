@@ -2560,6 +2560,9 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         break;
 
     case MONS_BALL_LIGHTNING:
+        if (is_sanctuary(monster->x, monster->y))
+            break;
+        
         if (monster->attitude == ATT_HOSTILE
             && distance( you.x_pos, you.y_pos, monster->x, monster->y ) <= 5)
         {
@@ -2568,9 +2571,6 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
             break;
         }
 
-        if (is_sanctuary(monster->x, monster->y))
-            break;
-        
         for (int i = 0; i < MAX_MONSTERS; i++)
         {
             monsters *targ = &menv[i];

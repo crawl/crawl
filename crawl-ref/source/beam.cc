@@ -4568,7 +4568,7 @@ static void explosion1(bolt &pbolt)
 
 void explosion( bolt &beam, bool hole_in_the_middle,
                 bool explode_in_wall, bool stop_at_statues,
-                bool stop_at_walls)
+                bool stop_at_walls, bool show_more)
 {
     if (in_bounds(beam.source_x, beam.source_y)
         && !(beam.source_x == beam.target_x
@@ -4754,7 +4754,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
 
     // duplicate old behaviour - pause after entire explosion
     // has been drawn.
-    if (!beam.is_tracer && seen_anything)
+    if (!beam.is_tracer && seen_anything && show_more)
         more();
 }
 
