@@ -273,7 +273,8 @@ protected:
     int last_selected;
 
 protected:
-    void check_add_formatted_line(int col, std::string &line, bool check_eol);
+    void check_add_formatted_line(int firstcol, int nextcol,
+                                  std::string &line, bool check_eol);
     void do_menu();
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item( int index ) const;

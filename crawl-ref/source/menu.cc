@@ -51,19 +51,35 @@ Menu::Menu( const formatted_string &fs )
             colour = op.x;
             break;
         case FSOP_TEXT:
+        {
             line += op.text;
-            if (op.text.find_first_not_of(" \t\r\n") != std::string::npos)
+
+            const std::string::size_type nonblankp =
+                op.text.find_first_not_of(" \t\r\n");
+            const bool nonblank = nonblankp != std::string::npos;
+            const std::string::size_type eolp = op.text.find(EOL);
+            const bool starts_with_eol =
+                nonblank && eolp != std::string::npos
+                && eolp < nonblankp;
+
+            if (nonblank && !starts_with_eol)
                 last_text_colour = colour;
-            check_add_formatted_line(last_text_colour, line, true);
+            
+            check_add_formatted_line(last_text_colour, colour, line, true);
+
+            if (nonblank && starts_with_eol)
+                last_text_colour = colour;
             break;
+        }
         default:
             break;
         }
     }
-    check_add_formatted_line(colour, line, false);
+    check_add_formatted_line(last_text_colour, colour, line, false);
 }
 
-void Menu::check_add_formatted_line(int col, std::string &line, bool check_eol)
+void Menu::check_add_formatted_line(int firstcol, int nextcol,
+                                    std::string &line, bool check_eol)
 {
     if (line.empty())
         return;
@@ -81,8 +97,8 @@ void Menu::check_add_formatted_line(int col, std::string &line, bool check_eol)
         line = lines[--size];
     else
         line.clear();
-    
-    for (int i = 0; i < size; ++i)
+
+    for (int i = 0, col = firstcol; i < size; ++i, col = nextcol)
     {
         std::string &s(lines[i]);
         
