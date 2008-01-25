@@ -86,7 +86,7 @@ static void list_shop_keys(const std::string &purchasable)
 {
     char buf[200];
     const int numlines = get_number_of_lines();
-    gotoxy(1, numlines - 1);
+    cgotoxy(1, numlines - 1);
 
     std::string pkeys = purchase_keys(purchasable);
     if (!pkeys.empty())
@@ -99,7 +99,7 @@ static void list_shop_keys(const std::string &purchasable)
     formatted_string fs = formatted_string::parse_string(buf);
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
     fs.display();
-    gotoxy(1, numlines);
+    cgotoxy(1, numlines);
 
     fs = formatted_string::parse_string(
             "[<w>?</w>/<w>*</w>]   Inventory  "
@@ -148,7 +148,7 @@ static std::string shop_print_stock( const std::vector<int>& stock,
         const int gp_value = shop_item_value(mitm[stock[i]], shop.greed, id);
         const bool can_afford = (you.gold >= gp_value);
 
-        gotoxy(1, i+1);
+        cgotoxy(1, i+1);
         const char c = i + 'a';
         if (can_afford)
             purchasable += c;
@@ -310,14 +310,14 @@ bool shoptype_identifies_stock(shop_type type)
 
 static void shop_print( const char *shoppy, int sh_lines )
 {
-    gotoxy(1, sh_lines, GOTO_CRT);
+    cgotoxy(1, sh_lines, GOTO_CRT);
     cprintf("%s", shoppy);
     clear_to_end_of_line();
 }
 
 static void more3()
 {
-    gotoxy(70, 20, GOTO_CRT);
+    cgotoxy(70, 20, GOTO_CRT);
     cprintf("-more-");
     get_ch();
     return;

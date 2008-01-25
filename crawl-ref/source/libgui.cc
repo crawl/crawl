@@ -821,7 +821,7 @@ static void libgui_save_prefs()
 static void draw_hgauge(int x, int y, int ofs, int region, int len, int col)
 {
     int i;
-    gotoxy(x, y, region);
+    cgotoxy(x, y, region);
     textcolor(col);
     for (i=0; i < len; i++)
     {
@@ -841,7 +841,7 @@ static void draw_vgauge(int x, int y, int ofs, int region, int len, int col)
     textcolor(col);
     for (i=0; i < len; i++)
     {
-        gotoxy(x, y+i, region);
+        cgotoxy(x, y+i, region);
         cprintf("%02d", ofs+i);
     }
 }
@@ -876,11 +876,11 @@ void edit_prefs()
             region_msg->clear();
 
         textcolor(WHITE);
-        gotoxy (4, 4, GOTO_MSG);
+        cgotoxy (4, 4, GOTO_MSG);
         cprintf("j, k, up, down    : Select pref");
-        gotoxy (4, 5, GOTO_MSG);
+        cgotoxy (4, 5, GOTO_MSG);
         cprintf("h, l, left, right : Decrease/Increase");
-        gotoxy (4, 6, GOTO_MSG);
+        cgotoxy (4, 6, GOTO_MSG);
         cprintf("H, L              : Dec/Inc by 10");
         need_draw_msg = false;
     }
@@ -891,7 +891,7 @@ void edit_prefs()
             for(i=0; i<MAX_EDIT_PREFS;i++)
             {
         struct prefs *p = &pref_data[i];
-            gotoxy(2, i+2, GOTO_STAT);
+            cgotoxy(2, i+2, GOTO_STAT);
             if (i == cur_pos)
             {
                 textcolor(0xf0);
@@ -910,15 +910,15 @@ void edit_prefs()
         textcolor(LIGHTGREY);
 
 #ifdef WIN32TILES
-        gotoxy(4, MAX_EDIT_PREFS+3, GOTO_STAT);
+        cgotoxy(4, MAX_EDIT_PREFS+3, GOTO_STAT);
         cprintf("FONT: %s %d",font_name, font_size);
         if (UseDosChar)
         {
-            gotoxy(4, MAX_EDIT_PREFS+4, GOTO_STAT);
+            cgotoxy(4, MAX_EDIT_PREFS+4, GOTO_STAT);
             cprintf("DOSFONT: %s %d", dos_font_name, dos_font_size);
         }
 #else
-        gotoxy(4, MAX_EDIT_PREFS+3, GOTO_STAT);
+        cgotoxy(4, MAX_EDIT_PREFS+3, GOTO_STAT);
         cprintf("FONT: %s",font_name);
 #endif
 
@@ -1446,7 +1446,7 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
 
         if(mode==REGION_TDNGN)
         {
-            gotoxy(cx+2, cy+1, GOTO_DNGN);
+            cgotoxy(cx+2, cy+1, GOTO_DNGN);
         }
 
         const int gx = view2gridX(cx) + 1;
@@ -1942,7 +1942,7 @@ void clrscr()
         }
     }
 
-    gotoxy(1, 1);
+    cgotoxy(1, 1);
 }
 
 void putch(unsigned char chr)
@@ -2004,7 +2004,7 @@ void get_input_line_gui(char *const buff, int len)
     buff[len] = '\0';
     buff[0] = '\0';
 
-    r->gotoxy(x, y);
+    r->cgotoxy(x, y);
     putch('_');
 
     /* Process input */
@@ -2065,7 +2065,7 @@ void get_input_line_gui(char *const buff, int len)
         buff[k] = '\0';
 
         /* Update the entry */
-        r->gotoxy(x, y);
+        r->cgotoxy(x, y);
         int i;
 
         //addstr(buff);
@@ -2089,7 +2089,7 @@ void get_input_line_gui(char *const buff, int len)
                 putch(c);
         }
         r->addstr((char *)"_             ");
-    r->gotoxy(x+k, y);
+    r->cgotoxy(x+k, y);
     }/* while */
 }
 
@@ -2115,7 +2115,7 @@ void textbackground(int bg)
     TextRegionClass::textbackground(bg);
 }
 
-void gotoxy(int x, int y, int region)
+void cgotoxy(int x, int y, int region)
 {
     if (region == GOTO_LAST)
     {
@@ -2129,7 +2129,7 @@ void gotoxy(int x, int y, int region)
         TextRegionClass::text_mode = region_stat;
 
     TextRegionClass::text_mode->flag = true;
-    TextRegionClass::gotoxy(x, y);
+    TextRegionClass::cgotoxy(x, y);
 }
 
 void _setcursortype(int curstype)
@@ -2192,7 +2192,7 @@ void message_out(int which_line, int colour, const char *s, int firstcol,
     if (!firstcol)
         firstcol = Options.delay_message_clear ? 2 : 1;
 
-    gotoxy(firstcol, which_line + 1, GOTO_MSG);
+    cgotoxy(firstcol, which_line + 1, GOTO_MSG);
     textcolor(colour);
 
     cprintf("%s", s);
@@ -2221,7 +2221,7 @@ void puttext(int sx, int sy, int ex, int ey, unsigned char *buf, bool mono,
 
     int xx, yy;
     unsigned char *ptr = buf;
-    //gotoxy(1, 1, GOTO_CRT);
+    //cgotoxy(1, 1, GOTO_CRT);
     for(yy= sy-1; yy<= ey-1; yy++)
     {
         unsigned char *c = &(r->cbuf[yy*(r->mx)+sx-1]);
@@ -2286,7 +2286,7 @@ void ViewTextFile(const char *name)
 
     while(1)
     {
-        gotoxy(1, 1);
+        cgotoxy(1, 1);
         if (cline == 0)
             cprintf(DELIMITER_END);
         else
@@ -2294,14 +2294,14 @@ void ViewTextFile(const char *name)
 
         puttext(1, 2, 80, max, &buf[cline*80], true, 1);
 
-        gotoxy(1, max);
+        cgotoxy(1, max);
 
         if (cline + max-2 >= nlines)
             cprintf(DELIMITER_END);
         else
             cprintf(DELIMITER_MORE);
 
-        gotoxy(14, max);
+        cgotoxy(14, max);
         cprintf("[j/k/+/-/SPACE/b: scroll   q/ESC/RETURN: exit]");
         mouse_set_mode(MOUSE_MODE_MORE);
         int key = getch();

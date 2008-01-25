@@ -2466,26 +2466,26 @@ void draw_border(void)
     clrscr();
     redraw_skill( you.your_name, player_title() );
 
-    gotoxy(1, 2, GOTO_STAT);
+    cgotoxy(1, 2, GOTO_STAT);
     cprintf( "%s %s",
              species_name( you.species, you.experience_level ).c_str(),
              (you.wizard ? "*WIZARD*" : "" ) );
 
-    gotoxy(1,  3, GOTO_STAT); cprintf("HP:");
-    gotoxy(1,  4, GOTO_STAT); cprintf("Magic:");
-    gotoxy(1,  5, GOTO_STAT); cprintf("AC:");
-    gotoxy(1,  6, GOTO_STAT); cprintf("EV:");
-    gotoxy(1,  7, GOTO_STAT); cprintf("Str:");
-    gotoxy(1,  8, GOTO_STAT); cprintf("Int:");
-    gotoxy(1,  9, GOTO_STAT); cprintf("Dex:");
-    gotoxy(1, 10, GOTO_STAT); cprintf("Gold:");
+    cgotoxy(1,  3, GOTO_STAT); cprintf("HP:");
+    cgotoxy(1,  4, GOTO_STAT); cprintf("Magic:");
+    cgotoxy(1,  5, GOTO_STAT); cprintf("AC:");
+    cgotoxy(1,  6, GOTO_STAT); cprintf("EV:");
+    cgotoxy(1,  7, GOTO_STAT); cprintf("Str:");
+    cgotoxy(1,  8, GOTO_STAT); cprintf("Int:");
+    cgotoxy(1,  9, GOTO_STAT); cprintf("Dex:");
+    cgotoxy(1, 10, GOTO_STAT); cprintf("Gold:");
     if (Options.show_turns)
     {
-        gotoxy(1 + 15, 10, GOTO_STAT);
+        cgotoxy(1 + 15, 10, GOTO_STAT);
         cprintf("Turn:");
     }
-    gotoxy(1, 11, GOTO_STAT); cprintf("Experience:");
-    gotoxy(1, 12, GOTO_STAT); cprintf("Level");
+    cgotoxy(1, 11, GOTO_STAT); cprintf("Experience:");
+    cgotoxy(1, 12, GOTO_STAT); cprintf("Level");
 }                               // end draw_border()
 
 // Determines if the given feature is present at (x, y) in _grid_ coordinates.
@@ -2768,18 +2768,18 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
             formatted_string::parse_string("(Press <w>?</w> for help)");
         const int helplen = std::string(help).length();
 
-        gotoxy(1, 1);
+        cgotoxy(1, 1);
         textcolor(WHITE);
         cprintf("%-*s",
                 get_number_of_cols() - helplen,
                 ("Level " + level_description_string()).c_str());
 
         textcolor(LIGHTGREY);
-        gotoxy(get_number_of_cols() - helplen + 1, 1);
+        cgotoxy(get_number_of_cols() - helplen + 1, 1);
         help.display();
     }
 
-    gotoxy(1, top);
+    cgotoxy(1, top);
 
     for (int screen_y = 0; screen_y < num_lines; screen_y++)
     {
@@ -4343,7 +4343,7 @@ void view_update_at(const coord_def &pos)
         flash_colour = viewmap_flash_colour();
 
 #ifndef USE_TILE
-    gotoxy(vp.x, vp.y);
+    cgotoxy(vp.x, vp.y);
     put_colour_ch(flash_colour? real_colour(flash_colour) : colour, ch);
 
     // Force colour back to normal, else clrscr() will flood screen

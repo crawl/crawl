@@ -27,7 +27,7 @@ public:
 
     void cprintf(const char *s, ...);
     void cprintf(const std::string &s);
-    void gotoxy(int x, int y);
+    void cgotoxy(int x, int y);
     void movexy(int delta_x, int delta_y);
     void add_glyph(const monsters *mons);
     void add_glyph(const item_def *item);

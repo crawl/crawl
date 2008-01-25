@@ -187,7 +187,7 @@ void zap_animation( int colour, const monsters *mon, bool force )
         TileDrawBolt(drawx-1, drawy-1, tileidx_zap(colour));
 #else
         view_update();
-        gotoxy( drawx, drawy , GOTO_DNGN );
+        cgotoxy( drawx, drawy , GOTO_DNGN );
         put_colour_ch( colour, dchar_glyph( DCHAR_FIRED_ZAP ) );
 #endif
 
@@ -1518,7 +1518,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             // bounds check
             if (in_los_bounds(drawx, drawy))
             {
-                gotoxy(drawx, drawy);
+                cgotoxy(drawx, drawy);
                 put_colour_ch(
                     pbolt.colour == BLACK? random_colour() : pbolt.colour,
                     pbolt.type );
@@ -4811,7 +4811,7 @@ static void explosion_cell(bolt &beam, int x, int y, bool drawOnly)
             // bounds check
             if (in_los_bounds(drawx, drawy))
             {
-                gotoxy(drawx, drawy, GOTO_DNGN);
+                cgotoxy(drawx, drawy, GOTO_DNGN);
                 put_colour_ch(
                     beam.colour == BLACK ? random_colour() : beam.colour,
                     dchar_glyph( DCHAR_EXPLOSION ) );

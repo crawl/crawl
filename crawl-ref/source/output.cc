@@ -76,7 +76,7 @@ void update_message_status()
 {
     textcolor(LIGHTBLUE);
 
-    gotoxy(36, 2, GOTO_STAT);
+    cgotoxy(36, 2, GOTO_STAT);
     if (SysEnv.have_messages)
         cprintf("(msg)");
     else
@@ -99,7 +99,7 @@ void update_turn_count()
     // FIXME: Create some kind of layout manager class so we can
     // templatise the heads-up display layout and stop hardcoding
     // these coords.
-    gotoxy(22, 10, GOTO_STAT);
+    cgotoxy(22, 10, GOTO_STAT);
     textcolor(LIGHTGREY);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
@@ -125,7 +125,7 @@ int draw_colour_bar(int val, int max_val, int old_val, int old_disp,
     const int width = crawl_view.hudsz.x - ox - 1;
     int disp = width * val / max_val;
 
-    gotoxy(ox, oy, GOTO_STAT);
+    cgotoxy(ox, oy, GOTO_STAT);
 
     for (int cx=0; cx < width; cx++)
     {
@@ -220,7 +220,7 @@ void print_stats(void)
             }
         }
 
-        gotoxy(5, 3, GOTO_STAT);
+        cgotoxy(5, 3, GOTO_STAT);
 
         cprintf( "%d", you.hp );
 
@@ -260,7 +260,7 @@ void print_stats(void)
                 break;
             }
         }
-        gotoxy(8, 4, GOTO_STAT);
+        cgotoxy(8, 4, GOTO_STAT);
 
         cprintf( "%d", you.magic_points);
 
@@ -290,7 +290,7 @@ void print_stats(void)
         if (you.max_strength > 72)
             you.max_strength = 72;
 
-        gotoxy(6, 7, GOTO_STAT);
+        cgotoxy(6, 7, GOTO_STAT);
 
         if (you.duration[DUR_MIGHT])
             textcolor(LIGHTBLUE);  // no end of effect warning
@@ -320,7 +320,7 @@ void print_stats(void)
         if (you.max_intel > 72)
             you.max_intel = 72;
 
-        gotoxy(6, 8, GOTO_STAT);
+        cgotoxy(6, 8, GOTO_STAT);
 
         if (you.intel < you.max_intel)
             textcolor(YELLOW);
@@ -346,7 +346,7 @@ void print_stats(void)
         if (you.max_dex > 72)
             you.max_dex = 72;
 
-        gotoxy(6, 9, GOTO_STAT);
+        cgotoxy(6, 9, GOTO_STAT);
 
         if (you.dex < you.max_dex)
             textcolor(YELLOW);
@@ -364,7 +364,7 @@ void print_stats(void)
 
     if (you.redraw_armour_class)
     {
-        gotoxy(5, 5, GOTO_STAT);
+        cgotoxy(5, 5, GOTO_STAT);
 
         if (you.duration[DUR_STONEMAIL])
             dur_colour( BLUE, (you.duration[DUR_STONEMAIL] <= 6) );
@@ -374,7 +374,7 @@ void print_stats(void)
         cprintf( "%d  ", player_AC() );
         textcolor( LIGHTGREY );
 
-        gotoxy(11, 5, GOTO_STAT);
+        cgotoxy(11, 5, GOTO_STAT);
 
         if (you.duration[DUR_CONDENSATION_SHIELD]
             || you.duration[DUR_DIVINE_SHIELD])
@@ -389,7 +389,7 @@ void print_stats(void)
 
     if (you.redraw_evasion)
     {
-        gotoxy(5, 6, GOTO_STAT);
+        cgotoxy(5, 6, GOTO_STAT);
 
         if (you.duration[DUR_FORESCRY])
             textcolor(LIGHTBLUE);  // no end of effect warning
@@ -402,14 +402,14 @@ void print_stats(void)
 
     if (you.redraw_gold)
     {
-        gotoxy(7, 10, GOTO_STAT);
+        cgotoxy(7, 10, GOTO_STAT);
         cprintf( "%-8d", you.gold );
         you.redraw_gold = 0;
     }
 
     if (you.redraw_experience)
     {
-        gotoxy(13, 11, GOTO_STAT);
+        cgotoxy(13, 11, GOTO_STAT);
 
 #if DEBUG_DIAGNOSTICS
         cprintf( "%d/%lu  (%d/%d)",
@@ -426,9 +426,9 @@ void print_stats(void)
 
     if (you.wield_change)
     {
-        gotoxy(1, 13, GOTO_STAT);
+        cgotoxy(1, 13, GOTO_STAT);
         clear_to_end_of_line();
-        gotoxy(1, 13, GOTO_STAT);
+        cgotoxy(1, 13, GOTO_STAT);
 
         if (you.weapon())
         {
@@ -462,9 +462,9 @@ void print_stats(void)
 
     if (you.quiver_change)
     {
-        gotoxy(1, 14, GOTO_STAT);
+        cgotoxy(1, 14, GOTO_STAT);
         clear_to_end_of_line();
-        gotoxy(1, 14, GOTO_STAT);
+        cgotoxy(1, 14, GOTO_STAT);
 
         int q = you.quiver[get_quiver_type()] = get_fire_item_index();
 
@@ -496,9 +496,9 @@ void print_stats(void)
 
     if (you.redraw_status_flags & REDRAW_LINE_1_MASK)
     {
-        gotoxy(1, 15, GOTO_STAT);
+        cgotoxy(1, 15, GOTO_STAT);
         clear_to_end_of_line();
-        gotoxy(1, 15, GOTO_STAT);
+        cgotoxy(1, 15, GOTO_STAT);
 
         switch (you.burden_state)
         {
@@ -567,9 +567,9 @@ void print_stats(void)
 
     if (you.redraw_status_flags & REDRAW_LINE_2_MASK)
     {
-        gotoxy(1, 16, GOTO_STAT);
+        cgotoxy(1, 16, GOTO_STAT);
         clear_to_end_of_line();
-        gotoxy(1, 16, GOTO_STAT);
+        cgotoxy(1, 16, GOTO_STAT);
         // Max length of this line = 8 * 5 - 1 = 39
 
         if (you.duration[DUR_PRAYER])
@@ -670,9 +670,9 @@ void print_stats(void)
 
     if (you.redraw_status_flags & REDRAW_LINE_3_MASK)
     {
-        gotoxy(1, 17, GOTO_STAT);
+        cgotoxy(1, 17, GOTO_STAT);
         clear_to_end_of_line();
-        gotoxy(1, 17, GOTO_STAT);
+        cgotoxy(1, 17, GOTO_STAT);
         // Max length of this line = 7 * 5 + 3 - 1 = 37
 
         // Note the usage of bad_ench_colour() correspond to levels that
@@ -758,7 +758,7 @@ void print_stats(void)
 
 #if DEBUG_DIAGNOSTICS
     // debug mode GPS
-    gotoxy(1, 18, GOTO_STAT);
+    cgotoxy(1, 18, GOTO_STAT);
     cprintf( "Position (%2d,%2d)", you.x_pos, you.y_pos );
 #endif
 

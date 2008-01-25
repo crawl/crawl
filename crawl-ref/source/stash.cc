@@ -388,7 +388,7 @@ void StashMenu::draw_title()
 {
     if (title)
     {
-        gotoxy(1, 1);
+        cgotoxy(1, 1);
         textcolor(title->colour);
         cprintf( "%s", title->text.c_str());
         if (title->quantity)
@@ -1488,7 +1488,7 @@ void StashSearchMenu::draw_title()
 {
     if (title)
     {
-        gotoxy(1, 1);
+        cgotoxy(1, 1);
         textcolor(title->colour);
         cprintf("%d %s%s", title->quantity, title->text.c_str(), 
                            title->quantity > 1? "es" : "");

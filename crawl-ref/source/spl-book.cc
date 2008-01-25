@@ -786,7 +786,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         out.cprintf(" - ");
 
         out.cprintf( "%s", spell_title(stype) );
-        out.gotoxy( 35, -1 );
+        out.cgotoxy( 35, -1 );
 
         
         if (action == RBOOK_USE_STAFF)
@@ -808,7 +808,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
             }
         }
 
-        out.gotoxy( 65, -1 );
+        out.cgotoxy( 65, -1 );
 
         char sval[3];
 

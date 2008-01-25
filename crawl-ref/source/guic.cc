@@ -557,7 +557,7 @@ void TextRegionClass::addstr(char *buffer)
             }
         }
     }
-    if (cursor_flag) gotoxy(print_x+1, print_y+1);
+    if (cursor_flag) cgotoxy(print_x+1, print_y+1);
 }
 
 void TextRegionClass::addstr_aux(char *buffer, int len)
@@ -677,7 +677,7 @@ void TextRegionClass::textbackground(int col)
     textcolor(col*16 + (text_col & 0xf));
 }
 
-void TextRegionClass::gotoxy(int x, int y)
+void TextRegionClass::cgotoxy(int x, int y)
 {
     print_x = x-1;
     print_y = y-1;

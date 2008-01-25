@@ -108,7 +108,7 @@ enum ScreenRegion
 /* text display */
 void clrscr(void);
 void textcolor(int color);
-void gotoxy(int x, int y, int region = GOTO_CRT);
+void cgotoxy(int x, int y, int region = GOTO_CRT);
 void message_out(int mline, int colour, const char *str, int firstcol = 0,
                  bool newline = true);
 void clear_message_window();

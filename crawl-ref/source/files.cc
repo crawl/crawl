@@ -348,7 +348,6 @@ static bool create_dirs(const std::string &dir)
     for (int i = 0, size = segments.size(); i < size; ++i)
     {
         path += segments[i];
-        path += FILE_SEPARATOR;
 
         // Handle absolute paths correctly.
         if (i == 0 && dir.size() && dir[0] == FILE_SEPARATOR)
@@ -356,6 +355,8 @@ static bool create_dirs(const std::string &dir)
 
         if (!dir_exists(path) && create_directory(path.c_str()))
             return (false);
+
+        path += FILE_SEPARATOR;        
     }
     return (true);
 }

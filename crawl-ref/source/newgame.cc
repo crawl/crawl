@@ -2093,7 +2093,7 @@ static void show_name_prompt(int where, bool blankOK,
         const std::vector<player_save_info> &existing_chars,
         slider_menu &menu)
 {
-    gotoxy(1, where);
+    cgotoxy(1, where);
     textcolor( CYAN );
     if (blankOK)
     {
@@ -2115,7 +2115,7 @@ static void show_name_prompt(int where, bool blankOK,
         const int name_x = wherex(), name_y = wherey();
         menu.set_limits(name_y + 3, get_number_of_lines());
         menu.display();
-        gotoxy(name_x, name_y);
+        cgotoxy(name_x, name_y);
     }
 
     textcolor( LIGHTGREY );
@@ -2193,11 +2193,11 @@ static bool read_player_name(
 
     for (;;)
     {
-        gotoxy(name_x, name_y);
+        cgotoxy(name_x, name_y);
         if (name_x <= 80)
             cprintf("%-*s", 80 - name_x + 1, "");
 
-        gotoxy(name_x, name_y);
+        cgotoxy(name_x, name_y);
         int ret = reader.read_line(false);
         if (!ret)
             return (true);
@@ -2240,7 +2240,7 @@ static void enter_player_name(bool blankOK)
         existing_chars = find_saved_characters();
         if (existing_chars.empty()) 
         {
-             gotoxy(1,12);
+             cgotoxy(1,12);
              formatted_string::parse_string(
                  "  If you've never been here before, you might want to try "
                  "out" EOL "  the Dungeon Crawl tutorial. To do this, press "
@@ -2276,7 +2276,7 @@ static void enter_player_name(bool blankOK)
 
 #ifdef USE_TILE
             clrscr();
-            gotoxy(1, 1);
+            cgotoxy(1, 1);
 #endif
 
             // Laboriously trim the damn thing.
@@ -3071,7 +3071,7 @@ job_query:
             if (j % 2)
                 cprintf(EOL);
             else
-                gotoxy(31, wherey());
+                cgotoxy(31, wherey());
 
             j++;
         }

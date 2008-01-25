@@ -1439,7 +1439,7 @@ void new_level(void)
 {
     textcolor(LIGHTGREY);
 
-    gotoxy(7, 12, GOTO_STAT);
+    cgotoxy(7, 12, GOTO_STAT);
 
 #if DEBUG_DIAGNOSTICS
     cprintf( "(%d) ", you.your_level + 1 );

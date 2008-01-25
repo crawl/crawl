@@ -3772,7 +3772,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
         title = trimmed_name + ", " + class_name;
     }
 
-    gotoxy(1, 1, GOTO_STAT);
+    cgotoxy(1, 1, GOTO_STAT);
 
     textcolor( LIGHTGREY );
     cprintf( "%-41s", title.c_str() );

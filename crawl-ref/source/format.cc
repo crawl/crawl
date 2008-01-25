@@ -51,7 +51,7 @@ formatted_string formatted_string::parse_block(
         {
             // Artificial newline - some terms erase to eol when printing a
             // newline.
-            fs.gotoxy(1, -1); // CR
+            fs.cgotoxy(1, -1); // CR
             fs.movexy(0, 1);  // LF
         }
         fs += parse_string(lines[i], eol_ends_format, process);
@@ -275,7 +275,7 @@ void formatted_string::display(int s, int e) const
         ops[i].display();
 }
 
-void formatted_string::gotoxy(int x, int y)
+void formatted_string::cgotoxy(int x, int y)
 {
     ops.push_back( fs_op(x, y) );
 }
@@ -368,7 +368,7 @@ void formatted_string::fs_op::display() const
             if (cy == -1)
                 cy = wherey();
         }
-        ::gotoxy(cx, cy);
+        ::cgotoxy(cx, cy);
         break;
     }
     case FSOP_COLOUR:

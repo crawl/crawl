@@ -104,7 +104,7 @@ void print_description( const std::string &d )
     while(currentPos < d.length())
     {
         if (currentPos != 0)
-            gotoxy(1, wherey() + 1);
+            cgotoxy(1, wherey() + 1);
 
         // see if $ sign is within one lineWidth
         nextLine = d.find('$', currentPos);
@@ -1720,7 +1720,7 @@ void describe_item( item_def &item, bool allow_inscribe )
         show_item_description(item);
         if (item.has_spells())
         {
-            gotoxy(1, wherey());
+            cgotoxy(1, wherey());
             textcolor(LIGHTGREY);
             cprintf("Select a spell to read its description.");
             if (describe_spells(item))
@@ -1734,7 +1734,7 @@ void describe_item( item_def &item, bool allow_inscribe )
     if (!Options.tutorial_left && allow_inscribe
         && wherey() <= get_number_of_lines() - 3)
     {
-        gotoxy(1, wherey() + 2);
+        cgotoxy(1, wherey() + 2);
 
         std::string ainscrip;
 
@@ -2564,9 +2564,9 @@ void describe_god( god_type which_god, bool give_title )
     if ( which_god == you.religion )
     {
         if (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE)
-            gotoxy(1, get_number_of_lines(), GOTO_CRT);
+            cgotoxy(1, get_number_of_lines(), GOTO_CRT);
         else
-            gotoxy(1, get_number_of_lines() - 2, GOTO_CRT);
+            cgotoxy(1, get_number_of_lines() - 2, GOTO_CRT);
 
         textcolor(LIGHTGRAY);
         cprintf(get_linebreak_string(religion_help(which_god),

@@ -1341,7 +1341,7 @@ static void input()
     handle_delay();
 
     const coord_def cwhere = grid2view(you.pos());
-    gotoxy(cwhere.x, cwhere.y);
+    cgotoxy(cwhere.x, cwhere.y);
 
     if ( you_are_delayed() )
     {

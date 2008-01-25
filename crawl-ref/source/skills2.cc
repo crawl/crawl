@@ -1795,7 +1795,7 @@ static void display_skill_table(bool show_aptitudes)
     menu_letter lcount = 'a';
     const int num_lines = get_number_of_lines();
 
-    gotoxy(1, 1);
+    cgotoxy(1, 1);
     textcolor(LIGHTGREY);
 
 #if DEBUG_DIAGNOSTICS
@@ -1836,7 +1836,7 @@ static void display_skill_table(bool show_aptitudes)
             continue;
         }
 
-        gotoxy(scrcol, scrln);
+        cgotoxy(scrcol, scrln);
 
 #ifndef DEBUG_DIAGNOSTICS
         if (you.skills[x] > 0)
@@ -1916,7 +1916,7 @@ static void display_skill_table(bool show_aptitudes)
     if (Options.tutorial_left)
     {
         textcolor(MAGENTA);
-        gotoxy(1, bottom_line-5);
+        cgotoxy(1, bottom_line-5);
         formatted_string::parse_block(
             "This screen shows the skill set of your character. You can pick up new" EOL
             "skills by performing the corresponding actions. The number next to the" EOL
@@ -1929,13 +1929,13 @@ static void display_skill_table(bool show_aptitudes)
     else
     {
         // if any more skills added, must adapt letters to go into caps
-        gotoxy(1, bottom_line-1);
+        cgotoxy(1, bottom_line-1);
         textcolor(LIGHTGREY);
         cprintf("Press the letter of a skill to choose "
                 "whether you want to practise it.");
         if (player_knows_aptitudes())
         {
-            gotoxy(1, bottom_line);
+            cgotoxy(1, bottom_line);
             formatted_string::parse_string("Press '!' to toggle between "
                                            "<cyan>progress</cyan> and "
                                            "<red>aptitude</red> "

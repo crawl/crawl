@@ -167,7 +167,7 @@ int c_getch()
 #endif
 }
 
-// Wrapper around gotoxy that can draw a fake cursor for Unix terms where
+// Wrapper around cgotoxy that can draw a fake cursor for Unix terms where
 // cursoring over darkgray or black causes problems.
 void cursorxy(int x, int y)
 {
@@ -177,9 +177,9 @@ void cursorxy(int x, int y)
     if (Options.use_fake_cursor)
         fakecursorxy(x, y);
     else
-        gotoxy(x, y, GOTO_DNGN);
+        cgotoxy(x, y, GOTO_DNGN);
 #else
-    gotoxy(x, y, GOTO_DNGN);
+    cgotoxy(x, y, GOTO_DNGN);
 #endif
 }
 
@@ -216,7 +216,7 @@ int wrapcprintf( int wrapcol, const char *s, ... )
             run[avail] = c;
 
         if ((len -= avail) > 0)
-            gotoxy(1, y + 1);
+            cgotoxy(1, y + 1);
         run += avail;
     }
     return (olen);
@@ -321,7 +321,7 @@ void line_reader::cursorto(int ncx)
 {
     int x = (start_x + ncx - 1) % wrapcol + 1;
     int y = start_y + (start_x + ncx - 1) / wrapcol;
-    ::gotoxy(x, y, GOTO_LAST);
+    ::cgotoxy(x, y, GOTO_LAST);
 }
 
 int line_reader::read_line(bool clear_previous)

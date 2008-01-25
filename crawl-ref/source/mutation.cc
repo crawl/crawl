@@ -1333,7 +1333,7 @@ formatted_string describe_mutations()
 void display_mutations()
 {
     clrscr();
-    gotoxy(1,1);
+    cgotoxy(1,1);
 
     const formatted_string mutation_fs = describe_mutations();
     Menu mutation_menu(mutation_fs);

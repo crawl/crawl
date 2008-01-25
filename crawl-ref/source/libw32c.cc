@@ -151,7 +151,7 @@ void writeChar(char c)
         bFlush();
 
         // reposition
-        gotoxy(1, cy+2);
+        cgotoxy(1, cy+2);
 
         return;
     }
@@ -458,7 +458,7 @@ void _setcursortype_internal(bool curstype)
     // now, if we just changed from NOCURSOR to CURSOR,
     // actually move screen cursor
     if (cursor_is_enabled)
-        gotoxy(cx+1, cy+1);
+        cgotoxy(cx+1, cy+1);
 }
 
 // This will force the cursor down to the next line.
@@ -498,7 +498,7 @@ void clrscr(void)
     WriteConsoleOutput(outbuf, screen, screensize, source, &target);
 
     // reset cursor to 1,1 for convenience
-    gotoxy(1,1);
+    cgotoxy(1,1);
 }
 
 void gotoxy_sys(int x, int y)
@@ -603,7 +603,7 @@ static void scroll_message_window()
 
     // Cursor also scrolls up so prompts don't look brain-damaged.
     if (wherey() == screensize.Y)
-        gotoxy(wherex(), wherey() - 1);
+        cgotoxy(wherex(), wherey() - 1);
 }
 
 void message_out(int which_line, int colour, const char *s, int firstcol,
@@ -612,7 +612,7 @@ void message_out(int which_line, int colour, const char *s, int firstcol,
     if (!firstcol)
         firstcol = Options.delay_message_clear? 2 : 1;
 
-    gotoxy(firstcol - 1 + crawl_view.msgp.x,
+    cgotoxy(firstcol - 1 + crawl_view.msgp.x,
            which_line + crawl_view.msgp.y);
     textcolor(colour);
 
@@ -998,7 +998,7 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
 {
     for (int y = y1; y <= y2; ++y)
     {
-        gotoxy(x1, y);
+        cgotoxy(x1, y);
         for (int x = x1; x <= x2; x++)
         {
             textattr( buf[1] );

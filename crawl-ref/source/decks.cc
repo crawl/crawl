@@ -928,7 +928,7 @@ static void redraw_stacked_cards(const std::vector<card_type>& draws,
 {
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
-        gotoxy(1,i+2);
+        cgotoxy(1,i+2);
         textcolor(selected == i ? WHITE : LIGHTGREY);
         cprintf("%u - %s", i+1, card_name(draws[i]) );
         clear_to_end_of_line();
@@ -994,11 +994,11 @@ bool deck_stack()
     {
         unsigned int selected = draws.size();
         clrscr();
-        gotoxy(1,1);
+        cgotoxy(1,1);
         textcolor(WHITE);
         cprintf("Press a digit to select a card, "
                 "then another digit to swap it.");
-        gotoxy(1,10);
+        cgotoxy(1,10);
         cprintf("Press Enter to accept.");
 
         redraw_stacked_cards(draws, selected);
@@ -1008,12 +1008,12 @@ bool deck_stack()
             const int c = getch();
             if ( c == CK_ENTER )
             {
-                gotoxy(1,11);
+                cgotoxy(1,11);
                 textcolor(LIGHTGREY);
                 cprintf("Are you sure? (press y or Y to confirm)");
                 if ( toupper(getch()) == 'Y' )
                     break;
-                gotoxy(1,11);
+                cgotoxy(1,11);
                 clear_to_end_of_line();
                 continue;
             }

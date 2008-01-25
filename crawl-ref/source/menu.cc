@@ -297,7 +297,7 @@ bool Menu::process_key( int keyin )
         if ( !( flags & MF_ALLOW_FILTER ) )
             break;
         char linebuf[80];
-        gotoxy(1,1);
+        cgotoxy(1,1);
         clear_to_end_of_line();
         textcolor(WHITE);
         cprintf("Select what? (regex) ");
@@ -408,7 +408,7 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
     int x = wherex();
     if (x > get_number_of_cols() || x < 1)
     {
-        gotoxy(oldx, oldy);
+        cgotoxy(oldx, oldy);
         return false;
     }
 
@@ -420,7 +420,7 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
 
     cprintf("%s", towrite.c_str());
     
-    gotoxy( oldx, oldy );
+    cgotoxy( oldx, oldy );
     return true;
 }
     
@@ -540,7 +540,7 @@ void Menu::select_items( int key, int qty )
             }
         }
     }
-    gotoxy( x, y );
+    cgotoxy( x, y );
 }
 
 bool Menu::is_selectable(int item) const
@@ -633,7 +633,7 @@ void Menu::draw_menu()
     }
     if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
     {
-        gotoxy( 1, y_offset + pagesize - count_linebreaks(more) );
+        cgotoxy( 1, y_offset + pagesize - count_linebreaks(more) );
         more.display();
     }
 
@@ -646,7 +646,7 @@ void Menu::update_title()
 {
     int x = wherex(), y = wherey();
     draw_title();
-    gotoxy(x, y);
+    cgotoxy(x, y);
 }
 
 int Menu::item_colour(int, const MenuEntry *entry) const
@@ -662,7 +662,7 @@ void Menu::draw_title()
 {
     if (title)
     {
-        gotoxy(1, 1);
+        cgotoxy(1, 1);
         write_title();
     }
 }
@@ -686,7 +686,7 @@ void Menu::write_title()
 
     const int x = wherex(), y = wherey();
     cprintf("%-*s", get_number_of_cols() - x, "");
-    gotoxy(x, y);
+    cgotoxy(x, y);
 }
 
 bool Menu::in_page(int index) const
@@ -698,7 +698,7 @@ void Menu::draw_item( int index ) const
 {
     if (!in_page(index))
         return;
-    gotoxy( 1, y_offset + index - first_entry );
+    cgotoxy( 1, y_offset + index - first_entry );
 
     draw_index_item(index, items[index]);
 }
@@ -964,7 +964,7 @@ void slider_menu::show_more()
     if (!need_more)
         return ;
     const int end = entry_end();
-    gotoxy( 1, y_offset + pagesize );
+    cgotoxy( 1, y_offset + pagesize );
     if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
         more.display();
     else
@@ -986,7 +986,7 @@ int slider_menu::entry_end() const
 
 void slider_menu::draw_menu()
 {
-    gotoxy(1, starty);
+    cgotoxy(1, starty);
     write_title();
 
     calc_y_offset();
@@ -995,7 +995,7 @@ void slider_menu::draw_menu()
 
     // We're using get_number_of_cols() - 1 because we want to avoid line wrap
     // on DOS (the conio.h functions go batshit if that happens).
-    gotoxy(1, y_offset - 1);
+    cgotoxy(1, y_offset - 1);
 
     show_less();
     
@@ -1005,7 +1005,7 @@ void slider_menu::draw_menu()
     textattr(LIGHTGREY);
     for (int i = end; i < first_entry + pagesize; ++i)
     {
-        gotoxy(1, y_offset + i - first_entry);
+        cgotoxy(1, y_offset + i - first_entry);
         cprintf("%-*s", get_number_of_cols() - 2, "");
     }
 

@@ -189,7 +189,7 @@ void update_tip_text(const char *tip)
 
         if (is_main_screen)
         {
-            region_tip->gotoxy(1, 1 + i);
+            region_tip->cgotoxy(1, 1 + i);
             region_tip->addstr(this_tip);
             region_tip->make_active();
         }
@@ -197,7 +197,7 @@ void update_tip_text(const char *tip)
         {
             ASSERT(i == 0);
             textattr(WHITE);
-            gotoxy(1, get_number_of_lines() + 1);
+            cgotoxy(1, get_number_of_lines() + 1);
             cprintf("%s", this_tip);
             clear_to_end_of_line();
         }

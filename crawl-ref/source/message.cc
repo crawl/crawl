@@ -849,7 +849,7 @@ void replay_messages(void)
     {
         clrscr();
 
-        gotoxy(1, 1, GOTO_CRT);
+        cgotoxy(1, 1, GOTO_CRT);
 
         for (int i = 0; i < num_lines - 2; i++)
         {
@@ -885,7 +885,7 @@ void replay_messages(void)
                         break;
                     case FSOP_TEXT:
                         textcolor( colour );
-                        gotoxy(curcol, wherey(), GOTO_CRT);
+                        cgotoxy(curcol, wherey(), GOTO_CRT);
                         cprintf(fs.ops[j].text.c_str());
                         curcol += multibyte_strlen(fs.ops[j].text);
                         break;

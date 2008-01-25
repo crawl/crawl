@@ -1246,7 +1246,7 @@ void resists_screen()
 
     std::vector<formatted_string> vfs = get_full_detail(false);
     clrscr();
-    gotoxy(1,1);
+    cgotoxy(1,1);
     textcolor(LIGHTGREY);
     
     formatted_scroller scr;

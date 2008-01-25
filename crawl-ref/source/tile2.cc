@@ -1618,7 +1618,7 @@ void TilePlayerEdit()
 
 #define display_parts_idx(part) \
 {                               \
-    gotoxy(10 , part + 1, GOTO_STAT);    \
+    cgotoxy(10 , part + 1, GOTO_STAT);    \
     tilep_part_to_str(dolls[cur_doll].parts[ p_lines[part] ], ibuf);\
     cprintf(ibuf);\
 }
@@ -1664,7 +1664,7 @@ void TilePlayerEdit()
         undo_dolls[j] = dolls[j];
     }
     clrscr();
-    gotoxy(1,1, GOTO_MSG);
+    cgotoxy(1,1, GOTO_MSG);
     mpr("Select Part              : [j][k]or[up][down]");
     mpr("Change Part/Page         : [h][l]or[left][right]/[H][L]");
     mpr("Class-Default            : [CTRL]+[D]");
@@ -1673,12 +1673,12 @@ void TilePlayerEdit()
     mpr("Copy/Paste/Undo          : [CTRL]+[C]/[CTRL]+[V]/[CTRL]+[Z]");
     mpr("Randomize                : [CTRL]+[R]");
 
-    gotoxy(1, 8, GOTO_MSG);
+    cgotoxy(1, 8, GOTO_MSG);
     cprintf("Toggle Startup mode      : [m] (Current mode:%s)",
         ( (mode == TILEP_M_LOADING) ? "Load User's Settings":"Class Default" ));
     for (j=0; j < PARTS_ITEMS; j++)
     {
-        gotoxy(1, 1+j, GOTO_STAT);
+        cgotoxy(1, 1+j, GOTO_STAT);
         cprintf(p_names[j]);
     }
 
@@ -1730,15 +1730,15 @@ void TilePlayerEdit()
         if (cur_part == 0)
         {
             // now selecting doll index
-            gotoxy(10 , 1, GOTO_STAT);
+            cgotoxy(10 , 1, GOTO_STAT);
             cprintf("%02d", cur_doll);
-            gotoxy(10 , 2, GOTO_STAT);
+            cgotoxy(10 , 2, GOTO_STAT);
             current_gender = dolls[cur_doll].parts[TILEP_PART_BASE] % 2;
             cprintf("%s", gender_name[ current_gender ]);
 
             for (i = 2; i<PARTS_ITEMS; i++)
             {
-                gotoxy(10 , i + 1, GOTO_STAT);
+                cgotoxy(10 , i + 1, GOTO_STAT);
                 tilep_part_to_str(dolls[cur_doll].parts[ p_lines[i] ], ibuf);
                 cprintf("%s / %03d", ibuf, tilep_parts_total[ p_lines[i] ]);
             }
@@ -1780,7 +1780,7 @@ void TilePlayerEdit()
                             (3 + cur_doll) * TILE_X, PARTS_Y, 0);
         region_tile->redraw();
 
-        gotoxy(10 , cur_part + 1, GOTO_STAT);
+        cgotoxy(10 , cur_part + 1, GOTO_STAT);
 
         if (cur_part == 1)
         {
@@ -1793,8 +1793,8 @@ void TilePlayerEdit()
             cprintf("%s", ibuf);
         }
 
-        gotoxy(1, pre_part + 1, GOTO_STAT);cprintf("  ");
-        gotoxy(1, cur_part + 1, GOTO_STAT);cprintf("->");
+        cgotoxy(1, pre_part + 1, GOTO_STAT);cprintf("  ");
+        cgotoxy(1, cur_part + 1, GOTO_STAT);cprintf("->");
         pre_part = cur_part;
 
         /* Get a key */
@@ -1844,7 +1844,7 @@ void TilePlayerEdit()
                 else
                     mode = TILEP_M_LOADING;
 
-                gotoxy(1, 8, GOTO_MSG);
+                cgotoxy(1, 8, GOTO_MSG);
                 cprintf("Toggle Startup mode      : [m] (Current mode:%s)",
                     ( (mode == TILEP_M_LOADING) ? "Load User's Settings":"Class Default" ));
                 break;

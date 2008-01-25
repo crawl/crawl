@@ -310,7 +310,7 @@ const int LABYRINTH_BORDER = 4;
 #define KEY_MACRO_ENABLE_MORE  -2
 #define KEY_REPEAT_KEYS        -3
 
-// gotoxy regions
+// cgotoxy regions
 enum GotoRegion
 {
     GOTO_CRT,  // cprintf > crt

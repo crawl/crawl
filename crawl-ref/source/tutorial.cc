@@ -91,7 +91,7 @@ bool pick_tutorial()
 {
     clrscr();
 
-    gotoxy(1,1);
+    cgotoxy(1,1);
     formatted_string::parse_string(
         "<white>You must be new here indeed!</white>"
         EOL EOL
@@ -522,7 +522,7 @@ void tut_starting_screen()
         // map window (starts at 1) or message window (starts at 18)
         y_pos = (i==1 || i==3 ? 18 : 1);
 
-        gotoxy(1,y_pos);
+        cgotoxy(1,y_pos);
 #endif
         if (i==0)
             clrscr();
@@ -547,7 +547,7 @@ void tut_starting_screen()
 #ifdef TUTORIAL_DEBUG
             clrscr();
  #ifndef USE_TILE
-            gotoxy(1,y_pos);
+            cgotoxy(1,y_pos);
  #endif
             tutorial_debug().display();
 #else
@@ -2062,7 +2062,7 @@ void tutorial_describe_item(const item_def &item)
     ostr << "</magenta>";
     std::string broken = ostr.str();
     linebreak_string2(broken, get_tutorial_cols());
-    gotoxy(1, wherey() + 2);
+    cgotoxy(1, wherey() + 2);
     formatted_string::parse_block(broken, false).display();
 } // tutorial_describe_item
 

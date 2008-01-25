@@ -1014,7 +1014,7 @@ static bool do_description(std::string key, std::string footer = "")
         int num_lines = linebreak_string2(footer, numcols);
         num_lines++;
 
-        gotoxy(1, get_number_of_lines() - num_lines);
+        cgotoxy(1, get_number_of_lines() - num_lines);
 
         cprintf(footer.c_str());
     }

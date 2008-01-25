@@ -568,7 +568,7 @@ int snprintf( char *str, size_t size, const char *format, ... )
 #endif
 
 #ifndef USE_TILE
-void gotoxy(int x, int y, int region)
+void cgotoxy(int x, int y, int region)
 {
     switch(region)
     {

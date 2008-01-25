@@ -164,7 +164,7 @@ int snprintf( char *str, size_t size, const char *format, ... );
 #endif
 
 #ifndef USE_TILE
-void gotoxy(int x, int y, int region = GOTO_CRT);
+void cgotoxy(int x, int y, int region = GOTO_CRT);
 #endif
 
 template <typename T>

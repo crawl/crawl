@@ -274,7 +274,7 @@ class TextRegionClass :public RegionClass
     static int cursor_y;
 
     // class methods
-    static void gotoxy(int x, int y);
+    static void cgotoxy(int x, int y);
     static int wherex();
     static int wherey();
     //static int get_number_of_lines(void);
