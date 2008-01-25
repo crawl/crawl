@@ -1566,11 +1566,15 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         pbolt.target_y = oy;
     }
 
-    // canned msg for enchantments that affected no-one
+    // canned msg for enchantments that affected no-one, but only if the
+    // enchantment is yours.
     if (pbolt.name[0] == '0' && pbolt.flavour != BEAM_DIGGING)
     {
-        if (!pbolt.is_tracer && !pbolt.msg_generated && !pbolt.obvious_effect)
+        if (!pbolt.is_tracer && !pbolt.msg_generated && !pbolt.obvious_effect
+            && YOU_KILL(pbolt.thrower))
+        {
             canned_msg(MSG_NOTHING_HAPPENS);
+        }
     }
 
     if (!pbolt.is_tracer && pbolt.beam_source != NON_MONSTER)
@@ -1586,7 +1590,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
     if (!pbolt.is_tracer)
         set_buffering(oldValue);
 #endif
-}                               // end fire_beam();
+}
 
 
 // returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
