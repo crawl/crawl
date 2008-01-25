@@ -1093,7 +1093,8 @@ enum duration_type
     NUM_DURATIONS
 };
 
-// This list must match the enchant_names array in mon-util.cc
+// This list must match the enchant_names array in mon-util.cc or Crawl
+// will CRASH, we kid you not.
 enum enchant_type
 {
     ENCH_NONE = 0,                     //    0
@@ -1123,7 +1124,9 @@ enum enchant_type
     ENCH_HELD,           // caught in a net
     ENCH_BATTLE_FRENZY,  // Monster is in a battle frenzy
     ENCH_NEUTRAL,
-    
+
+    // Update enchantment names in mon-util.cc when adding or removing
+    // enchantments.
     NUM_ENCHANTMENTS
 };
 

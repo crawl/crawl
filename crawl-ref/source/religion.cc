@@ -2284,29 +2284,33 @@ static bool trog_retribution()
         int count = 0;
         int points = 3 + you.experience_level * 3;
 
-        while (points > 0)
         {
-            int cost = random2(8) + 3;
-
-            if (cost > points)
-                cost = points;
-
-            // quick reduction for large values
-            if (points > 20 && coinflip())
+            no_messages msg;
+            
+            while (points > 0)
             {
-                points -= 10;
-                cost = 10;
+                int cost = random2(8) + 3;
+
+                if (cost > points)
+                    cost = points;
+
+                // quick reduction for large values
+                if (points > 20 && coinflip())
+                {
+                    points -= 10;
+                    cost = 10;
+                }
+
+                points -= cost;
+
+                if (summon_berserker(cost * 20, false))
+                    count++;
             }
-
-            points -= cost;
-
-            if (summon_berserker(cost * 20, false))
-                count++;
         }
 
         simple_god_message(count > 1 ? " sends monsters to punish you." :
                            count > 0 ? " sends a monster to punish you." :
-                           " has no time to punish you...now.", god);
+                           " has no time to punish you... now.", god);
     }
     else if ( !one_chance_in(3) )
     {
