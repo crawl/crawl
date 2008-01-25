@@ -1390,9 +1390,14 @@ bool monster_blink(monsters *monster)
 {
     int nx, ny;
 
-    if (!random_near_space(monster->x, monster->y, nx, ny,
-            false, false))
-        return (false);
+    {
+        unwind_var<env_show_grid> visible_grid( env.show );
+        losight(env.show, grd, monster->x, monster->y, true);
+    
+        if (!random_near_space(monster->x, monster->y, nx, ny,
+                               false, true))
+            return (false);
+    }
 
     if (mons_is_caught(monster))
         mons_clear_trapping_net(monster);
@@ -1412,7 +1417,7 @@ bool monster_blink(monsters *monster)
     monster->apply_location_effects();
     
     return (true);
-}                               // end monster_blink()
+}
 
 // allow_adjacent:  allow target to be adjacent to origin
 // restrict_LOS:    restict target to be within PLAYER line of sight
