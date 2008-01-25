@@ -460,7 +460,7 @@ bool check_recital_audience()
       }
 
 #ifdef DEBUG_DIAGNOSTICS
-   mpr(MSGCH_DIAGNOSTICS, "No audience found!");
+   mprf(MSGCH_DIAGNOSTICS, "No audience found!");
 #endif
 
    // Sorry, no audience found!

@@ -4039,7 +4039,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     give_ammo(mons, level_number, item_race);
     give_armour(mons, 1 + level_number / 2);
     give_shield(mons, 1 + level_number / 2);
-}                               // end give_item()
+}
 
 jewellery_type get_random_amulet_type()
 {
