@@ -116,7 +116,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     const dungeon_feature_type new_grid = grd[x][y];
 
     // really must be clear
-    ASSERT( you.can_pass_through( new_grid ) );
+    ASSERT( you.can_pass_through_feat( new_grid ) );
 
     // if (grid_is_solid( new_grid ))
     //     return (false);
@@ -5175,6 +5175,16 @@ bool actor::airborne() const
     return (is_levitating() || (flight_mode() == FL_FLY && !paralysed()));
 }
 
+bool actor::can_pass_through(int x, int y) const
+{
+    return can_pass_through_feat(grd[x][y]);
+}
+
+bool actor::can_pass_through(const coord_def &c) const
+{
+    return can_pass_through_feat(grd(c));
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // player
 
@@ -5455,19 +5465,9 @@ bool player::floundering() const
     return in_water() && !can_swim();
 }
 
-bool player::can_pass_through(const dungeon_feature_type grid) const
+bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
     return !grid_is_solid(grid);
-}
-
-bool player::can_pass_through(const int _x, const int _y) const
-{
-    return can_pass_through(grd[_x][_y]);
-}
-
-bool player::can_pass_through(const coord_def &c) const
-{
-    return can_pass_through(grd(c));
 }
 
 size_type player::body_size(int psize, bool base) const

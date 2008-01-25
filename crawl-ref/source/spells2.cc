@@ -171,7 +171,7 @@ static bool mark_detected_creature(int gridx, int gridy, const monsters *mon,
             gy = gridy + random2(fuzz_diam) - fuzz_radius;
 
             if (map_bounds(gx, gy)
-                && mon->can_pass_through(grd[gx][gy]))
+                && mon->can_pass_through_feat(grd[gx][gy]))
             {
                 found_good = true;
                 break;

@@ -2450,19 +2450,9 @@ bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)
     return !grid_is_solid(grid);
 }
 
-bool monsters::can_pass_through(const dungeon_feature_type grid) const
+bool monsters::can_pass_through_feat(dungeon_feature_type grid) const
 {
     return mons_class_can_pass(type, grid);
-}
-
-bool monsters::can_pass_through(const int _x, const int _y) const
-{
-    return can_pass_through(grd[_x][_y]);
-}
-
-bool monsters::can_pass_through(const coord_def &c) const
-{
-    return can_pass_through(grd(c));
 }
 
 bool monsters::can_drown() const

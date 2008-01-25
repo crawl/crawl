@@ -5288,7 +5288,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
             return false;
         }
     }
-    else if (!monster->can_pass_through(target_grid)
+    else if (!monster->can_pass_through_feat(target_grid)
              || (no_water && target_grid >= DNGN_DEEP_WATER
                  && target_grid <= DNGN_WATER_STUCK))
     {

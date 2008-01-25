@@ -777,22 +777,14 @@ static void finish_delay(const delay_queue_item &delay)
 
             switch (grd[ pass_x ][ pass_y ])
             {
-            case DNGN_ROCK_WALL:
-            case DNGN_STONE_WALL:
-            case DNGN_CLEAR_ROCK_WALL:
-            case DNGN_CLEAR_STONE_WALL:
-            case DNGN_METAL_WALL:
-            case DNGN_GREEN_CRYSTAL_WALL:
-            case DNGN_WAX_WALL:
-                ouch(1 + you.hp, 0, KILLED_BY_PETRIFICATION);
+            default:
+                if (!you.can_pass_through_feat(grd[pass_x][pass_y]))
+                    ouch(1 + you.hp, 0, KILLED_BY_PETRIFICATION);
                 break;
 
             case DNGN_SECRET_DOOR:      // oughtn't happen
             case DNGN_CLOSED_DOOR:      // open the door
                 grd[ pass_x ][ pass_y ] = DNGN_OPEN_DOOR;
-                break;
-
-            default:
                 break;
             }
 

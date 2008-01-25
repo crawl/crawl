@@ -1402,10 +1402,11 @@ static int passwall(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    char dx, dy, nx = x, ny = y;
+    int dx, dy, nx = x, ny = y;
     int howdeep = 0;
     bool done = false;
     int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
+    bool non_rock_barriers = false;
 
     // allow statues as entry points?
     if (grd[x][y] != DNGN_ROCK_WALL && grd[x][y] != DNGN_CLEAR_ROCK_WALL)
@@ -1423,9 +1424,7 @@ static int passwall(int x, int y, int pow, int garbage)
 
     while (!done)
     {
-        // I'm trying to figure proper borders out {dlb}
-        // FIXME: dungeon border?
-        if (nx > (GXM - 1) || ny > (GYM - 1) || nx < 2 || ny < 2)
+        if (!in_bounds(nx, ny))
         {
             mpr("You sense an overwhelming volume of rock.");
             return 0;
@@ -1434,8 +1433,11 @@ static int passwall(int x, int y, int pow, int garbage)
         switch (grd[nx][ny])
         {
         default:
+            if (grid_is_solid(grd[nx][ny]))
+                non_rock_barriers = true;
             done = true;
             break;
+            
         case DNGN_ROCK_WALL:
         case DNGN_CLEAR_ROCK_WALL:
         case DNGN_ORCISH_IDOL:
@@ -1450,13 +1452,14 @@ static int passwall(int x, int y, int pow, int garbage)
 
     int range = shallow + random2(pow) / 25;
 
-    if (howdeep > shallow)
+    if (howdeep > shallow || non_rock_barriers)
     {
-        mpr("This rock feels deep.");
+        mprf("This rock feels %sdeep.",
+             non_rock_barriers || (howdeep > range)? "extremely " : "");
 
         if (yesno("Try anyway?"))
         {
-            if (howdeep > range)
+            if (howdeep > range || non_rock_barriers)
             {
                 ouch(1 + you.hp, 0, KILLED_BY_PETRIFICATION);
                 //jmf: not return; if wizard, successful transport is option
