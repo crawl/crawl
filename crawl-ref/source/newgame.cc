@@ -3241,7 +3241,7 @@ bool give_items_skills()
     {
     case JOB_FIGHTER:
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
+        
         if (you.species == SP_OGRE || you.species == SP_TROLL)
         {
             newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
@@ -3251,38 +3251,37 @@ bool give_items_skills()
             else if (you.species == SP_TROLL)
                 newgame_clear_item(0);
         }
-        else if (you.is_undead || player_genus(GENPC_DRACONIAN))
+        else if (player_genus(GENPC_DRACONIAN))
         {
-            newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-            if (you.species == SP_VAMPIRE && coinflip())
-                you.inv[1].sub_type = ARM_LEATHER_ARMOUR;
-            if (player_genus(GENPC_DRACONIAN) || you.species == SP_MUMMY)
-                newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
-
-            if (player_genus(GENPC_DRACONIAN) && !choose_weapon())
+            if (!choose_weapon())
                 return (false);
+            
+            newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+            newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
         }
         else if (you.species == SP_HALFLING || you.species == SP_KOBOLD ||
-                 you.species == SP_GNOME)
+                 you.species == SP_GNOME || you.species == SP_VAMPIRE)
         {
+            if (!choose_weapon())
+                return false;
+            
             newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                               ARM_LEATHER_ARMOUR);
 
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_DART,
-                              10 + roll_dice( 2, 10 ));
+            if (you.species != SP_VAMPIRE)
+                newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_DART,
+                                  10 + roll_dice( 2, 10 ));
         }
         else
         {
+            if (!choose_weapon())
+                return false;
+
             newgame_make_item(1, EQ_BODY_ARMOUR,
                               OBJ_ARMOUR,
                               ARM_SCALE_MAIL);
 
-            newgame_make_item(2, EQ_SHIELD,
-                              OBJ_ARMOUR,
-                              ARM_SHIELD);
-
-            if (!choose_weapon())
-                return false;
+            newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
         }
 
         you.skills[SK_FIGHTING] = 3;

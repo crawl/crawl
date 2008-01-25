@@ -2440,8 +2440,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         fire_beam(pbolt, &item, !did_return);
 
         // The item can be destroyed before returning.
-        if (returning && thrown_object_destroyed(&item, pbolt.target_x,
-                                                 pbolt.target_y, true))
+        if (did_return && thrown_object_destroyed(&item, pbolt.target_x,
+                                                  pbolt.target_y, true))
         {
             did_return = false;
         }
