@@ -1,0 +1,117 @@
+%%%%
+stash-search.prompt
+
+<h>Searching the stash-tracker</h>
+
+You can search for items and dungeon features by name (or a substring of the
+name). In the list of search results, you can select a search result by its
+hotkey to travel to its location.
+
+You can also examine shops and items in the search results by pressing <w>?</w>
+and then hitting the hotkey for the search result. This will show you a
+description of the item or the contents of the shop.
+
+Some examples of search strings:
+<w>cure mutation</w> find all potions of cure mutation, including potions
+              in shops.
+<w>cloak</w>         find all cloaks in the dungeon.
+<w>Lair:2</w>        find everything known to be on Lair:2.
+<w>Lair:[2-4]</w>    finds everything on Lair:2-4. Regexes are allowed! Note
+              that Lair:[3-10] will not work as intended, since [x-y] is
+              a regex character range.
+<w>.</w>             is a shortcut to find everything on your current level.
+<w>Lair.*axe</w> 
+or
+<w>axe && Lair</w>   both show all axes in the Lair.
+
+
+<h>Searching by item properties:</h>
+
+You can search for spell names (such as <w>Ignite Poison</w>) to find spellbooks
+or rods that contain the spell.
+
+You can search for artefact item properties (such as <w>prevents.*teleport</w>)
+to find artefacts that have the property.
+
+If you're using <w>stash.lua</w>, you can also search by some additional item
+properties:
+<w>artefact</w> will find identified artefacts.
+Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all
+weapons that train that skill.
+
+If you're using stash.lua and have set annotate_item_class = true in your
+init.txt, you can also search by item types such as <w>book</w> or
+<w>jewellery</w>.
+
+
+<h>Finding Dungeon Features:</h>
+
+You can search for dungeon features by name: all shops will be found by a search
+for <w>shop</w> (including shops that do not have "shop" in their name); other
+dungeon features can also be found by name: <w>fountain</w>, <w>axe trap</w>,
+<w>altar</w>, etc. You can also search for altars by deity name: <w>Zin</w>.
+
+
+The stash search string is case-insensitive.
+
+
+<h>Non-regex operators:</h>
+
+You can use !! to negate a search string, && for a boolean AND, || for
+boolean OR, and <<<< >> for grouping.
+
+For instance, to find rings (jewellery) but not ring mail you could use:
+<w>ring && !!mail</w>
+%%%%
+level-map
+
+<h>Level Map ('<w>X</w><h>' in main screen):
+<w>Esc</w> : leave level map (also Space)
+<w>Dir.</w>: move cursor
+<w>/ Dir.</w>, <w>Shift-Dir.</w>: move cursor far
+<w>-</w>/<w>+</w> : scroll level map up/down
+<w>.</w>   : travel (also <w>Enter</w> and <w>,</w> and <w>;</w>)
+       (moves cursor to last travel
+       destination if still on @)
+<w><<</w>/<w>></w> : cycle through up/down stairs
+<w>^</w>   : cycle through traps
+<w>Tab</w> : cycle through shops and portals
+<w>X</w>   : cycle through travel eXclusions
+<w>x</w>   : change the radius of a travel exclusion
+<w>W</w>   : cycle through waypoints
+<w>*</w>   : cycle forward through stashes
+<w>/</w>   : cycle backward through stashes
+<w>_</w>   : cycle through altars
+<w>Ctrl-X</w> : set travel eXclusion
+<w>Ctrl-E</w> : Erase all travel exclusions
+<w>Ctrl-W</w> : set Waypoint
+<w>Ctrl-C</w> : Clear level and main maps
+<w>Ctrl-F</w> : Forget level map
+%%%%
+interlevel-travel.branch.prompt
+
+<h>Interlevel Travel (choose a branch):
+ Use the shortcut letter for a branch to select the branch for travel.
+
+ Once you select a branch, you will be prompted for a depth in that
+ branch (more help is available there).
+
+ <w>Enter</w>  : Repeat last interlevel travel.
+ <w>.</w>      : Travel to a level in the current branch.
+ <w><<</w>      : Go up the nearest stairs.
+ <w>></w>      : Go down the nearest stairs.
+ <w>Ctrl-P</w> : Travel to a level in the branch above this one.
+ <w>*</w>      : Show available waypoints (if any are set).
+ <w>0</w>-<w>9</w>    : Go to the numbered waypoint.
+%%%%
+interlevel-travel.depth.prompt
+
+<h>Interlevel Travel (go to a specific level in the selected branch)
+ Type in the level number you want to go to and hit Enter, or use:
+ <w>Enter</w>  : Go to the default level.
+ <w><<</w>      : Change the default to one level above the current.
+ <w>></w>      : Change default to one level below the current.
+ <w>-</w>/<w>p</w>    : Change default to the branch above this one.
+ <w>$</w>      : Change default to deepest visited level in this branch.
+ <w>^</w>      : Change default to the entrance to the current level.
+%%%%

@@ -35,6 +35,7 @@ enum db_id
 {
     DB_SHOUT,
     DB_SPEAK,
+    DB_HELP,
     MAX_DBID
 };
 
@@ -50,7 +51,8 @@ struct SingleFileDB
 SingleFileDB singleFileDBs[MAX_DBID] = 
 {
     SingleFileDB("shout"),
-    SingleFileDB("speak")
+    SingleFileDB("speak"),
+    SingleFileDB("help")
 };
 
 #define DESC_BASE_NAME "descript"
@@ -233,10 +235,8 @@ static void execute_embedded_lua(std::string &str)
 
         if (clua.execstring(lua.c_str(), "db_embedded_lua", 1))
         {
-            std::string err = "{{" + clua.error;
-            err += "}}";
+            std::string err = "{{" + clua.error + "}}";
             str.replace(pos, lua_full.length(), err);
-
             return;
         }
 
@@ -247,11 +247,6 @@ static void execute_embedded_lua(std::string &str)
 
         pos = str.find("{{", pos + result.length());
     } // while (pos != std::string::npos)
-}
-
-static void trim_right(std::string &s)
-{
-    s.erase(s.find_last_not_of(" \r\t\n") + 1);
 }
 
 static void trim_leading_newlines(std::string &s)
@@ -310,7 +305,7 @@ static void parse_text_db(std::ifstream &inf, DBM *db)
         else
         {
             std::string line = buf;
-            trim_right(line);
+            trim_string_right(line);
             value += line + "\n";
         }
     }
@@ -478,6 +473,27 @@ static std::string getRandomizedStr(DBM *database, const std::string &key,
     return str;
 }
 
+static std::string query_database(DBM *db, std::string key,
+                                  bool canonicalise_key, bool run_lua)
+{
+    if (canonicalise_key)
+    {
+        // We have to canonicalize the key (in case the user typed it
+        // in and got the case wrong.)
+        lowercase(key);
+    }
+    
+    // Query the DB.
+    datum result = database_fetch(db, key);
+    
+    std::string str((const char *)result.dptr, result.dsize);
+
+    if (run_lua)
+        execute_embedded_lua(str);
+    
+    return (str);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Description DB specific functions.
 
@@ -486,19 +502,7 @@ std::string getLongDescription(const std::string &key)
     if (!descriptionDB)
         return ("");
 
-    // We have to canonicalize the key (in case the user typed it
-    // in and got the case wrong.)
-    std::string canonical_key = key;
-    lowercase(canonical_key);
-    
-    // Query the DB.
-    datum result = database_fetch(descriptionDB, canonical_key);
-    
-    // Cons up a (C++) string to return.  The caller must release it.
-    std::string str((const char *)result.dptr, result.dsize);
-
-    execute_embedded_lua(str);
-    return (str);
+    return query_database(descriptionDB, key, true, true);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
@@ -598,3 +602,10 @@ std::string getSpeakString(const std::string &monst)
     return getRandomizedStr(get_dbm(DB_SPEAK), monst, "", num_replacements); 
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// Help DB specific functions.
+
+std::string getHelpString(const std::string &topic)
+{
+    return query_database(get_dbm(DB_HELP), topic, false, true);
+}

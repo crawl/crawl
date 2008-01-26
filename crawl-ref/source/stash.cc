@@ -11,6 +11,7 @@
 #include "chardump.h"
 #include "cio.h"
 #include "clua.h"
+#include "command.h"
 #include "describe.h"
 #include "direct.h"
 #include "food.h"
@@ -1360,8 +1361,7 @@ void StashTracker::show_stash_search_prompt()
     if (level_type_is_stash_trackable(you.level_type)
         && lastsearch != ".")
     {
-        opts.push_back(
-            make_stringf("press . for all items on level"));
+        opts.push_back("? for help");
     }
 
     std::string prompt_qual =
@@ -1373,13 +1373,54 @@ void StashTracker::show_stash_search_prompt()
     mprf(MSGCH_PROMPT, "Search for what%s?\n", prompt_qual.c_str());
 }
 
+class stash_search_reader : public line_reader
+{
+public:
+    stash_search_reader(char *buf, size_t sz,
+                        int wcol = get_number_of_cols())
+        : line_reader(buf, sz, wcol)
+    {
+    }
+protected:
+    int process_key(int ch)
+    {
+        if (ch == '?' && !pos)
+        {
+            *buffer = 0;
+            return (ch);
+        }
+        return line_reader::process_key(ch);
+    }
+};
+
 void StashTracker::search_stashes()
 {
-    show_stash_search_prompt();
-    
     char buf[400];
-    bool validline = 
-        !cancelable_get_line(buf, sizeof buf, 80, &search_history);
+
+    stash_search_reader reader(buf, sizeof buf);
+
+    bool validline = false;
+    while (true)
+    {
+        show_stash_search_prompt();
+
+        int ret = reader.read_line();
+        if (!ret)
+        {
+            validline = true;
+            break;
+        }
+        else if (ret == '?')
+        {
+            show_stash_search_help();
+            redraw_screen();
+        }
+        else
+        {
+            break;
+        }
+    }
+    
     mesclr();
     if (!validline || (!*buf && !lastsearch.length()))
         return;

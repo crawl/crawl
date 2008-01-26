@@ -219,6 +219,7 @@ class line_reader
 public:
     line_reader(char *buffer, size_t bufsz, 
                 int wrap_col = get_number_of_cols());
+    virtual ~line_reader();
 
     typedef int (*keyproc)(int &key);
 
@@ -231,14 +232,14 @@ public:
 
 protected:
     void cursorto(int newcpos);
-    int process_key(int ch);
+    virtual int process_key(int ch);
     void backspace();
     void killword();
     void kill_to_begin();
 
     bool is_wordchar(int c);
 
-private:
+protected:
     char            *buffer;
     size_t          bufsz;
     input_history   *history;

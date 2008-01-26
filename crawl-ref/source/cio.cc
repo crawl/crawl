@@ -302,6 +302,10 @@ line_reader::line_reader(char *buf, size_t sz, int wrap)
 {
 }
 
+line_reader::~line_reader()
+{
+}
+
 std::string line_reader::get_text() const
 {
     return (buffer);

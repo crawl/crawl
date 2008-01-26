@@ -356,7 +356,7 @@ static bool create_dirs(const std::string &dir)
         if (!dir_exists(path) && create_directory(path.c_str()))
             return (false);
 
-        path += FILE_SEPARATOR;        
+        path += FILE_SEPARATOR;
     }
     return (true);
 }

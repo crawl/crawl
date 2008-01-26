@@ -557,30 +557,6 @@ static bool cmdhelp_textfilter(const std::string &tag)
     return (false);
 }
 
-static const char *level_map_help = 
-    "<h>Level Map ('<w>X</w><h>' in main screen):\n"
-    "<w>Esc</w> : leave level map (also Space)\n"
-    "<w>Dir.</w>: move cursor\n"
-    "<w>/ Dir.</w>, <w>Shift-Dir.</w>: move cursor far\n"
-    "<w>-</w>/<w>+</w> : scroll level map up/down\n"
-    "<w>.</w>   : travel (also <w>Enter</w> and <w>,</w> and <w>;</w>)\n"
-    "       (moves cursor to last travel\n"
-    "       destination if still on @)\n"
-    "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
-    "<w>^</w>   : cycle through traps\n"
-    "<w>Tab</w> : cycle through shops and portals\n"
-    "<w>X</w>   : cycle through travel eXclusions\n"
-    "<w>x</w>   : change the radius of a travel exclusion\n"
-    "<w>W</w>   : cycle through waypoints\n"
-    "<w>*</w>   : cycle forward through stashes\n"
-    "<w>/</w>   : cycle backward through stashes\n"
-    "<w>_</w>   : cycle through altars\n"
-    "<w>Ctrl-X</w> : set travel eXclusion\n"
-    "<w>Ctrl-E</w> : Erase all travel exclusions\n"
-    "<w>Ctrl-W</w> : set Waypoint\n"
-    "<w>Ctrl-C</w> : Clear level and main maps\n"
-    "<w>Ctrl-F</w> : Forget level map\n";
-
 static const char *targeting_help_1 =
     "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
     "<w>Esc</w> : cancel (also <w>Space</w>)\n"
@@ -619,32 +595,6 @@ static const char *targeting_help_2 =
     "<w>Ctrl-P</w> : cycle to previous missile.\n"
     "<w>Ctrl-N</w> : cycle to next missile.\n";
     
-
-static const char *interlevel_travel_branch_help =
-    "<h>Interlevel Travel (choose a branch):\n"
-    " Use the shortcut letter for a branch to select the branch for travel.\n"
-    "\n"
-    " Once you select a branch, you will be prompted for a depth in that\n"
-    " branch (more help is available there).\n"
-    "\n"
-   " <w>Enter</w>  : Repeat last interlevel travel.\n"
-    " <w>.</w>      : Travel to a level in the current branch.\n"
-    " <w><<</w>      : Go up the nearest stairs.\n"
-    " <w>></w>      : Go down the nearest stairs.\n"
-    " <w>Ctrl-P</w> : Travel to a level in the branch above this one.\n"
-    " <w>*</w>      : Show available waypoints (if any are set).\n"
-    " <w>0</w>-<w>9</w>    : Go to the numbered waypoint.\n";
-
-static const char *interlevel_travel_depth_help =
-    "<h>Interlevel Travel (go to a specific level in the selected branch)\n"
-    " Type in the level number you want to go to and hit Enter, or use:\n"
-    " <w>Enter</w>  : Go to the default level.\n"
-    " <w><<</w>      : Change the default to one level above the current.\n"
-    " <w>></w>      : Change default to one level below the current.\n"
-    " <w>-</w>/<w>p</w>    : Change default to the branch above this one.\n"
-    " <w>$</w>      : Change default to deepest visited level in this branch.\n"
-    " <w>^</w>      : Change default to the entrance to the current level.\n"
-    "\n";
 
 // Add the contents of the file fp to the scroller menu m.
 // If first_hotkey is nonzero, that will be the hotkey for the
@@ -1469,7 +1419,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
     cmd_help.show();
 }
 
-void show_specific_help( const char* help )
+void show_specific_help( const std::string &help )
 {
     std::vector<std::string> lines = split_string("\n", help, false, true);
     std::vector<formatted_string> formatted_lines;
@@ -1482,7 +1432,7 @@ void show_specific_help( const char* help )
 
 void show_levelmap_help()
 {
-    show_specific_help( level_map_help );
+    show_specific_help( getHelpString("level-map") );
 }
 
 void show_targeting_help()
@@ -1498,12 +1448,17 @@ void show_targeting_help()
 
 void show_interlevel_travel_branch_help()
 {
-    show_specific_help( interlevel_travel_branch_help );
+    show_specific_help( getHelpString("interlevel-travel.branch.prompt") );
 }
 
 void show_interlevel_travel_depth_help()
 {
-    show_specific_help( interlevel_travel_depth_help );
+    show_specific_help( getHelpString("interlevel-travel.depth.prompt") );
+}
+
+void show_stash_search_help()
+{
+    show_specific_help( getHelpString("stash-search.prompt") );
 }
 
 void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
@@ -1532,8 +1487,8 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "or vi keys:\n"
             "              <w>1 2 3      y k u\n"
             "               \\|/        \\|/\n"
-            "              <w>4</w>-5-<w>6</w>"
-                              "      <w>h</w>-.-<w>l</w>\n"
+            "              <w>4</w>-<w>5</w>-<w>6</w>"
+                    "      <w>h</w>-<w>.</w>-<w>l</w>\n"
             "               /|\\        /|\\\n"
             "              <w>7 8 9      b j n\n",
             true, true, cmdhelp_textfilter);
@@ -1619,7 +1574,10 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "\n"
             "Searching in stashes allows regular\n"
             "expressions, and terms like 'altar'\n"
-            "or 'artefact' or 'long blades'.\n",
+            "or 'artefact' or 'long blades'.\n"
+            "\n"
+            "For more help on searching, you can\n"
+            "hit ? at the search prompt.\n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(

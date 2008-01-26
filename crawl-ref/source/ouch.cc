@@ -859,7 +859,7 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     // prevent bogus notes
     activate_notes(false);
 
-    // CONSTRUCT SCOREFILE ENTRY
+    // construct scorefile entry.
     scorefile_entry se(dam, death_source, death_type, aux);
 
 #ifdef SCORE_WIZARD_CHARACTERS
