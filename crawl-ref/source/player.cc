@@ -5926,7 +5926,7 @@ int player::shield_bonus() const
 
 int player::shield_bypass_ability(int tohit) const
 {
-    return (10 + tohit * 2);
+    return (15 + tohit / 2);
 }
 
 void player::shield_block_succeeded()
