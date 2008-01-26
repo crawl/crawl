@@ -809,6 +809,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.hit = 8 + power / 20;                     // 50: 10   100: 13
         pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_NEG;                       // drains levels
+        pbolt.obvious_effect = true;
 
         pbolt.is_beam = true;
         break;
