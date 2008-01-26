@@ -2764,7 +2764,8 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove)
     int prop_int = 0;
 
     // don't warn when putting on an unknown item
-    if (item.base_type == OBJ_JEWELLERY && item_ident( item, ISFLAG_KNOW_PLUSES ))
+    if (item.base_type == OBJ_JEWELLERY
+        && item_ident( item, ISFLAG_KNOW_PLUSES ))
     {
         switch (item.sub_type)
         {
@@ -2794,10 +2795,11 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove)
 
     if (remove)
     {
-        std::string prompt = item.base_type == OBJ_WEAPONS ? "Unwield" : "Remov";
-                    prompt += "ing this item could be fatal. ";
-                    prompt += item.base_type == OBJ_WEAPONS ? "Unwield" : "Remove";
-                    prompt += " anyway? ";
+        std::string prompt =
+            item.base_type == OBJ_WEAPONS ? "Unwield" : "Remov";
+        prompt += "ing this item could be fatal. ";
+        prompt += item.base_type == OBJ_WEAPONS ? "Unwield" : "Remove";
+        prompt += " anyway? ";
 
         if ((prop_str >= you.strength || prop_int >= you.intel ||
              prop_dex >= you.dex)
@@ -2808,10 +2810,11 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove)
     }
     else // put on
     {
-        std::string prompt = item.base_type == OBJ_WEAPONS ? "Wield" : "Wear";
-                    prompt += "ing this item could be fatal. ";
-                    prompt += item.base_type == OBJ_WEAPONS ? "Wield" : "Put on";
-                    prompt += " anyway? ";
+        std::string prompt =
+            item.base_type == OBJ_WEAPONS ? "Wield" : "Wear";
+        prompt += "ing this item could be fatal. ";
+        prompt += item.base_type == OBJ_WEAPONS ? "Wield" : "Put on";
+        prompt += " anyway? ";
                     
         if ((-prop_str >= you.strength || -prop_int >= you.intel ||
              -prop_dex >= you.dex)
@@ -2820,7 +2823,6 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove)
             return (false);
         }
     }
-
 
     return (true);
 }

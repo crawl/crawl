@@ -2178,7 +2178,7 @@ bool curare_hits_monster( const bolt &beam,
                           kill_category who,
                           int levels )
 {
-    const bool res_poison = mons_res_poison(monster);
+    const bool res_poison = mons_res_poison(monster) > 0;
     bool mondied = false;
 
     poison_monster(monster, who, levels, false);
