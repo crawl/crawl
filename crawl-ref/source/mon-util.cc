@@ -2354,8 +2354,8 @@ monsters::monsters()
       ac(0), ev(0), speed(0), speed_increment(0), x(0), y(0),
       target_x(0), target_y(0), inv(), spells(), attitude(ATT_HOSTILE),
       behaviour(BEH_WANDER), foe(MHITYOU), enchantments(), flags(0L),
-      experience(0), number(0), colour(BLACK), foe_memory(0), god(GOD_NO_GOD),
-      ghost(), seen_context("")
+      experience(0), number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
+      god(GOD_NO_GOD), ghost(), seen_context("")
 {
 }
 
@@ -3542,7 +3542,12 @@ int monsters::shield_bonus() const
 
 int monsters::shield_block_penalty() const
 {
-    return (0);
+    return (4 * shield_blocks * shield_blocks);
+}
+
+void monsters::shield_block_succeeded()
+{
+    ++shield_blocks;
 }
 
 int monsters::shield_bypass_ability(int) const

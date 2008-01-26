@@ -2493,6 +2493,10 @@ int melee_attack::player_to_hit(bool random_factor)
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
 
+#ifdef DEBUG_DIAGNOSTICS
+    const int base_to_hit = your_to_hit;
+#endif
+    
     if (water_attack)
         your_to_hit += 5;
 
@@ -2573,8 +2577,9 @@ int melee_attack::player_to_hit(bool random_factor)
     your_to_hit = maybe_random2(your_to_hit, random_factor);
 
 #if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "to hit die: %d; rolled value: %d",
-          roll_hit, your_to_hit );
+    mprf( MSGCH_DIAGNOSTICS,
+          "to hit die: %d; rolled value: %d; base: %d",
+          roll_hit, your_to_hit, base_to_hit );
 #endif
 
     if (hand_half_bonus)
@@ -3678,6 +3683,11 @@ int melee_attack::mons_to_hit()
 {
     const int hd_mult = mons_class_flag(atk->type, M_FIGHTER)? 25 : 15;
     int mhit = 18 + atk->hit_dice * hd_mult / 10;
+
+#ifdef DEBUG_DIAGNOSTICS
+    const int base_hit = mhit;
+#endif
+    
     if (water_attack)
         mhit += 5;
 
@@ -3697,6 +3707,12 @@ int melee_attack::mons_to_hit()
     if (defender->invisible() && !attacker->can_see_invisible())
         mhit = mhit * 65 / 100;
 
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "%s: Base to-hit: %d, Final to-hit: %d",
+         attacker->name(DESC_PLAIN).c_str(),
+         base_hit, mhit);
+#endif
+    
     return (mhit);
 }
 

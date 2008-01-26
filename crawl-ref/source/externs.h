@@ -1023,7 +1023,9 @@ public:
     int           colour;
 
     int foe_memory;                    // how long to 'remember' foe x,y
-                                       // once they go out of sight
+                                       // once they go out of sight.
+
+    int shield_blocks;                 // Count of shield blocks this round.
 
     god_type god;                      // Usually GOD_NO_GOD.
 
@@ -1199,6 +1201,7 @@ public:
     
     int shield_bonus() const;
     int shield_block_penalty() const;
+    void shield_block_succeeded();
     int shield_bypass_ability(int tohit) const;
 
     actor_type atype() const { return ACT_MONSTER; }

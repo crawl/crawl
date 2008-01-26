@@ -4295,6 +4295,8 @@ static void handle_monster_move(int i, monsters *monster)
         }
         old_energy = monster->speed_increment;
 
+        monster->shield_blocks = 0;
+
         if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
             if (monster->has_ench(ENCH_SUBMERGED))
