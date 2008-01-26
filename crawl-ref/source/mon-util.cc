@@ -1863,6 +1863,12 @@ bool mons_looks_distracted(const monsters *m)
 
 bool mons_should_fire(struct bolt &beam)
 {
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "tracer: foes %d, friends %d, foe_ratio: %d, smart: %s",
+         beam.foe_count, beam.fr_count, beam.foe_ratio,
+         beam.smart_monster? "yes" : "no");
+#endif
     // use of foeRatio:
     // the higher this number, the more monsters
     // will _avoid_ collateral damage to their friends.
@@ -1879,12 +1885,9 @@ bool mons_should_fire(struct bolt &beam)
         return (true);
 
     // only fire if they do acceptably low collateral damage
-    // the default for this is 50%;  in other words, don't
-    // hit a foe unless you hit 2 or fewer friends.
-    if (beam.foe_power >= (beam.foe_ratio * beam.fr_power) / 100)
-        return (true);
-
-    return (false);
+    return (beam.foe_power >=
+            div_round_up(beam.foe_ratio * (beam.foe_power + beam.fr_power),
+                         100));
 }
 
 // used to determine whether or not a monster should always

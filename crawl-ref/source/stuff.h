@@ -32,6 +32,7 @@ void pop_rng_state();
 void cf_setseed();
 bool coinflip();
 int div_rand_round( int num, int den );
+int div_round_up( int num, int den );
 bool one_chance_in(int a_million);
 int random2(int randmax);
 int random_range(int low, int high);
