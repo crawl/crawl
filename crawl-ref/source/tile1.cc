@@ -1760,7 +1760,7 @@ int tileidx_feature(int object)
     case DNGN_TRAP_MAGICAL:
         return TILE_DNGN_TRAP_MAGICAL;
     case DNGN_TRAP_NATURAL:
-        return TILE_TODO;
+        return TILE_DNGN_TRAP_SHAFT;
     case DNGN_ENTER_SHOP:
         return TILE_DNGN_ENTER_SHOP;
     case DNGN_ENTER_LABYRINTH:

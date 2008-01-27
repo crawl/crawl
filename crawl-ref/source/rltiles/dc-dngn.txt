@@ -93,6 +93,7 @@ dngn_enter_hell DNGN_ENTER_HELL
 dngn_branch_stairs DNGN_BRANCH_STAIRS
 dngn_trap_mechanical DNGN_TRAP_MECHANICAL
 dngn_trap_magical DNGN_TRAP_MAGICAL
+dngn_trap_shaft DNGN_TRAP_SHAFT
 dngn_trap_iii DNGN_TRAP_III
 ###847 DNGN_UNDISCOVERED_TRAP
 stone_stairs_down DNGN_STONE_STAIRS_DOWN
