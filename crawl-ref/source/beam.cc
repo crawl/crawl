@@ -3245,6 +3245,7 @@ static int affect_player( bolt &beam )
             && beam.flavour != BEAM_INVISIBILITY
             && beam.flavour != BEAM_HEALING
             && beam.flavour != BEAM_POLYMORPH
+            && beam.flavour != BEAM_DISPEL_UNDEAD
             && ((beam.flavour != BEAM_TELEPORT && beam.flavour != BEAM_BANISH)
                 || !beam.aimed_at_feet)
             && you_resist_magic( beam.ench_power ))

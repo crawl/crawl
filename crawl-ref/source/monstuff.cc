@@ -3701,37 +3701,42 @@ static bool handle_spell( monsters *monster, bolt & beem )
     else
     {
         spell_type spell_cast = SPELL_NO_SPELL;
-        monster_spells hspell_pass = monster->spells;
+        monster_spells hspell_pass(monster->spells);
 
         if (!enemies_around(monster))
         {
             // forces the casting of dig when player not visible - this is EVIL!
-            if (hspell_pass[4] == SPELL_DIG && monster->behaviour == BEH_SEEK)
+            if (monster->has_spell(SPELL_DIG)
+                && monster->behaviour == BEH_SEEK)
             {
                 spell_cast = SPELL_DIG;
                 finalAnswer = true;
             }
-            else if (hspell_pass[2] == SPELL_LESSER_HEALING
+            else if ((monster->has_spell(SPELL_LESSER_HEALING)
+                      || monster->has_spell(SPELL_GREATER_HEALING))
                      && monster->hit_points < monster->max_hit_points)
             {
                 // The player's out of sight!  
                 // Quick, let's take a turn to heal ourselves. -- bwr
-                spell_cast = SPELL_LESSER_HEALING;
+                spell_cast =
+                    monster->has_spell(SPELL_GREATER_HEALING)?
+                    SPELL_GREATER_HEALING : SPELL_LESSER_HEALING;
                 finalAnswer = true;
             }
             else if (monster->behaviour == BEH_FLEE)
             {
                 // Since the player isn't around, we'll extend the monster's
                 // normal fleeing choices to include the self-enchant slot.
-                if (ms_useful_fleeing_out_of_sight(monster,hspell_pass[5]))
+
+                int foundcount = 0;
+                for (int i = NUM_MONSTER_SPELL_SLOTS - 1; i >= 0; --i)
                 {
-                    spell_cast = hspell_pass[5];
-                    finalAnswer = true;
-                }
-                else if (ms_useful_fleeing_out_of_sight(monster,hspell_pass[2]))
-                {
-                    spell_cast = hspell_pass[2];
-                    finalAnswer = true;
+                    if (ms_useful_fleeing_out_of_sight(monster, hspell_pass[i])
+                        && one_chance_in(++foundcount))
+                    {
+                        spell_cast = hspell_pass[i];
+                        finalAnswer = true;
+                    }
                 }
             }
             else if (monster->foe == MHITYOU && !monsterNearby)
@@ -3745,11 +3750,11 @@ static bool handle_spell( monsters *monster, bolt & beem )
         if (!finalAnswer && enemies_around(monster) && mons_is_caught(monster)
             && one_chance_in(4))
         {
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
             {
                 if (ms_quick_get_away( monster, hspell_pass[i] ))
                 {
-                    spell_cast = hspell_pass[5];
+                    spell_cast = hspell_pass[i];
                     finalAnswer = true;
                     break;
                 }
@@ -3764,17 +3769,26 @@ static bool handle_spell( monsters *monster, bolt & beem )
             // Note: There should always be at least some chance we don't
             // get here... even if the monster is on its last HP.  That
             // way we don't have to worry about monsters infinitely casting 
-            // Healing on themselves (e.g. orc priests). 
+            // Healing on themselves (e.g. orc high priests).
             if (monster->behaviour == BEH_FLEE
                 && ms_low_hitpoint_cast( monster, hspell_pass[5] ))
             {
                 spell_cast = hspell_pass[5];
                 finalAnswer = true;
             }
-            else if (ms_low_hitpoint_cast( monster, hspell_pass[2] ))
+
+            if (!finalAnswer)
             {
-                spell_cast = hspell_pass[2];
-                finalAnswer = true;
+                int found_spell = 0;
+                for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+                {
+                    if (ms_low_hitpoint_cast( monster, hspell_pass[i] )
+                        && one_chance_in(++found_spell))
+                    {
+                        spell_cast = hspell_pass[i];
+                        finalAnswer = true;
+                    }
+                }
             }
         }
 
@@ -3787,18 +3801,16 @@ static bool handle_spell( monsters *monster, bolt & beem )
                 return (false);
             }
             
-            // should monster not have selected dig by now, it never will:
-            if (hspell_pass[4] == SPELL_DIG)
-                hspell_pass[4] = SPELL_NO_SPELL;
-
             // remove healing/invis/haste if we don't need them
             int num_no_spell = 0;
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
             {
                 if (hspell_pass[i] == SPELL_NO_SPELL)
                     num_no_spell++;    
-                else if (ms_waste_of_time( monster, hspell_pass[i] ))
+                else if (ms_waste_of_time( monster, hspell_pass[i] )
+                // should monster not have selected dig by now, it never will:
+                         || hspell_pass[i] == SPELL_DIG)
                 {
                     hspell_pass[i] = SPELL_NO_SPELL;
                     num_no_spell++;
@@ -3806,8 +3818,11 @@ static bool handle_spell( monsters *monster, bolt & beem )
             }
 
             // If no useful spells... cast no spell.
-            if (num_no_spell == 6 && draco_breath == SPELL_NO_SPELL)
+            if (num_no_spell == NUM_MONSTER_SPELL_SLOTS
+                && draco_breath == SPELL_NO_SPELL)
+            {
                 return (false);
+            }
 
             // up to four tries to pick a spell.
             for (int loopy = 0; loopy < 4; loopy ++)

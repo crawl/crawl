@@ -530,6 +530,14 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     default:
         break;
 
+    case SPELL_GREATER_HEALING:
+        if (heal_monster(monster, 50 + random2avg(monster->hit_dice * 10, 2),
+                         false))
+        {
+            simple_monster_message(monster, " is healed.");
+        }
+        return;
+        
     case SPELL_BERSERKER_RAGE:
         monster->go_berserk(true);
         return;
@@ -854,6 +862,7 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
     switch (spell_cast)
     {
     case SPELL_SUMMON_SMALL_MAMMAL:
+    case SPELL_GREATER_HEALING:
     case SPELL_VAMPIRE_SUMMON:
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_RAKSHASA_SUMMON:
@@ -937,7 +946,8 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
         {
             if (!silent)
                 simple_monster_message(monster, " looks slightly unstable.");
-            monster->add_ench( mon_enchant(ENCH_TP, coinflip()? 3 : 4) );
+            monster->add_ench( mon_enchant(ENCH_TP, 0, KC_OTHER,
+                                           coinflip()? 2 : 3) );
         }
 
         return;

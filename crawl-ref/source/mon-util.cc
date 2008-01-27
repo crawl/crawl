@@ -1924,6 +1924,7 @@ bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
     case SPELL_HASTE:
     case SPELL_INVISIBILITY:
     case SPELL_LESSER_HEALING:
+    case SPELL_GREATER_HEALING:
     case SPELL_ANIMATE_DEAD:
         return (true);
 
@@ -1956,6 +1957,7 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
     case SPELL_TELEPORT_SELF:
     case SPELL_TELEPORT_OTHER:
     case SPELL_LESSER_HEALING:
+    case SPELL_GREATER_HEALING:
         ret = true;
         break;
 
@@ -2036,6 +2038,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         break;
 
     case SPELL_LESSER_HEALING:
+    case SPELL_GREATER_HEALING:
         if (mon->hit_points > mon->max_hit_points / 2)
             ret = true;
         break;
@@ -2125,6 +2128,7 @@ static bool ms_ranged_spell( spell_type monspell )
     {
     case SPELL_HASTE:
     case SPELL_LESSER_HEALING:
+    case SPELL_GREATER_HEALING:
     case SPELL_TELEPORT_SELF:
     case SPELL_INVISIBILITY:
     case SPELL_BLINK:
@@ -4839,7 +4843,7 @@ int monsters::base_speed(int mcls)
         speed = 6 + random2avg(7, 2);
         break;
     case MONS_BEAST:
-        speed = 8 + random2(5);
+        speed = 10 + random2(8);
         break;
     }
 
