@@ -2015,6 +2015,25 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     // handled here as well. -- bwr
     switch (monspell)
     {
+    case SPELL_BOLT_OF_DRAINING:
+    case SPELL_AGONY:
+    case SPELL_SYMBOL_OF_TORMENT:
+    {
+        if (!foe)
+            return (true);
+
+        // Check if the foe *appears* to be immune to negative energy.
+        // We can't just use foe->res_negative_energy() because
+        // that'll mean monsters can just "know" the player is fully
+        // life-protected if he has triple life protection.
+        const mon_holy_type holy = foe->holiness();
+        return (holy == MH_UNDEAD || holy == MH_DEMONIC
+                || holy == MH_NONLIVING || holy == MH_PLANT);
+    }
+
+    case SPELL_DISPEL_UNDEAD:
+        return (!foe || foe->holiness() != MH_UNDEAD);
+
     case SPELL_BACKLIGHT:
     {
         ret = !foe || foe->backlit();

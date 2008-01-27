@@ -131,19 +131,13 @@ int check_your_resists(int hurted, beam_type flavour)
 
     case BEAM_COLD:
         hurted = resist_adjust_damage(&you, flavour,
-                                      player_res_fire(), hurted, true);
-        resist = player_res_cold();
+                                      player_res_cold(), hurted, true);
         if (hurted < original)
-        {
             canned_msg(MSG_YOU_RESIST);
-            hurted /= (1 + (resist * resist));
-        }
         else if (hurted > original)
         {
             mpr("You feel a terrible chill!");
             xom_is_stimulated(200);
-            hurted *= 15;
-            hurted /= 10;
         }
         break;
 

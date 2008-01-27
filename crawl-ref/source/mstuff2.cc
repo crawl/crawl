@@ -1638,6 +1638,16 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
+    case SPELL_DISPEL_UNDEAD:
+        beam.name = "0";
+        beam.flavour = BEAM_DISPEL_UNDEAD;
+        beam.thrower = KILL_MON_MISSILE;
+        beam.range = 7 + random2(8);
+        beam.rangeMax = 9;
+        beam.damage = dice_def( 3, std::min(6 + power / 7, 40) );
+        beam.is_beam = true;
+        break;        
+        
     case SPELL_PARALYSE:
         beam.name = "0";
         beam.range = 5;
