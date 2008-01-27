@@ -400,21 +400,26 @@ static void give_adjusted_experience(monsters *monster, killer_type killer,
                                      unsigned int *avail_gain)
 {
     const int experience = exper_value(monster);
-    const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
-    if (created_friendly)
-        ; // No experience if monster was created friendly
+
+    const bool created_friendly = 
+        testbits(monster->flags, MF_CREATED_FRIENDLY);
+    const bool no_xp = monster->has_ench(ENCH_ABJ);
+    
+    if (created_friendly || no_xp)
+        ; // No experience if monster was created friendly or summoned.
     else if (YOU_KILL(killer))
     {
         int old_lev = you.experience_level;
         gain_exp( experience, exp_gain, avail_gain );
         // Give a message for monsters dying out of sight
-        if (exp_gain > 0 && !mons_near(monster) && you.experience_level == old_lev)
+        if (exp_gain > 0 && !mons_near(monster)
+            && you.experience_level == old_lev)
             mpr("You feel a bit more experienced.");
     }
     else if (pet_kill)
         gain_exp( experience / 2 + 1, exp_gain, avail_gain );
 
-    if (MON_KILL(killer))
+    if (MON_KILL(killer) && !no_xp)
         give_monster_experience( monster, killer_index, experience,
                                  created_friendly );
 }
@@ -515,6 +520,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     bool in_transit = false;
     const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
     const bool drop_items = !hard_reset;
+    const bool gives_xp = !monster->has_ench(ENCH_ABJ);
 
 #ifdef DGL_MILESTONES
     check_kill_milestone(monster, killer, i);
@@ -634,8 +640,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         case KILL_YOU_MISSILE:  /* You kill by missile or beam. */
         case KILL_YOU_CONF:     /* You kill by confusion */
         {
-            bool created_friendly = 
-                        testbits(monster->flags, MF_CREATED_FRIENDLY);
+            const bool created_friendly = 
+                testbits(monster->flags, MF_CREATED_FRIENDLY);
 
             if (death_message)
             {
@@ -644,15 +650,14 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                      monster->name(DESC_NOCAP_THE).c_str());
             }
 
-            if (created_friendly && death_message)
+            if (created_friendly && gives_xp && death_message)
                 mpr("That felt strangely unrewarding.");
 
             // killing triggers tutorial lesson
             tutorial_inspect_kill();
 
             // prevent summoned creatures from being done_good kills,
-            // Only affects monsters friendly when created.
-            if (!created_friendly)
+            if (!created_friendly && gives_xp)
             {
                 if (mons_holiness(monster) == MH_NATURAL)
                     did_god_conduct(DID_KILL_LIVING,
@@ -696,6 +701,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // born-friendly monsters. The mutation still applies, however.
             if (you.mutation[MUT_DEATH_STRENGTH]
                 || (!created_friendly
+                    && gives_xp
                     && (you.religion == GOD_MAKHLEB
                         || you.religion == GOD_SHINING_ONE
                            && is_mons_evil_demonic_or_undead(monster))
@@ -709,7 +715,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
             }
 
-            if (!created_friendly 
+            if (!created_friendly && gives_xp
                 && (you.religion == GOD_MAKHLEB || you.religion == GOD_VEHUMET
                     || you.religion == GOD_SHINING_ONE
                        && is_mons_evil_demonic_or_undead(monster))
@@ -723,6 +729,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             }
 
             if (you.duration[DUR_DEATH_CHANNEL]
+                && gives_xp
                 && mons_holiness(monster) == MH_NATURAL
                 && mons_weight(mons_species(monster->type)))
             {
@@ -754,7 +761,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being being done_good kills.
             // Only affects creatures which were friendly when summoned.
-            if (!testbits(monster->flags, MF_CREATED_FRIENDLY) && pet_kill)
+            if (!testbits(monster->flags, MF_CREATED_FRIENDLY) && gives_xp
+                && pet_kill)
             {
                 bool notice = false;
                 const bool anon = (i == ANON_FRIENDLY_MONSTER);
@@ -830,15 +838,16 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
                 if (you.religion == GOD_SHINING_ONE
                     && is_mons_evil_demonic_or_undead(monster)
-                    && (!player_under_penance() && random2(you.piety) >= 30))
+                    && (!player_under_penance() && random2(you.piety) >= 30)
+                    && i != ANON_FRIENDLY_MONSTER
+                    && i >= 0 && i < MAX_MONSTERS)
                 {
                     monsters *mon = &menv[i];
-                    if (mon->hit_points < mon->max_hit_points)
+                    if (mon->alive() && mon->hit_points < mon->max_hit_points)
                     {
-                        simple_monster_message(mon, " looks healthier.");
-                        mon->hit_points += 1 + random2(monster->hit_dice / 4);
-                        if (mon->hit_points >  mon->max_hit_points)
-                            mon->hit_points = mon->max_hit_points;
+                        simple_monster_message(mon, " looks invigorated.");
+                        heal_monster( mon, 1 + random2(monster->hit_dice / 4),
+                                      false );
                     }
                 }
             }
