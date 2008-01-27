@@ -821,14 +821,6 @@ void extension(int pow)
     if (you.duration[DUR_SLOW])
         potion_effect(POT_SLOWING, pow);
 
-#if 0
-    if (you.duration[DUR_PARALYSIS])
-        potion_effect(POT_PARALYSIS, pow);  // how did you cast extension?
-
-    if (you.duration[DUR_CONF])
-        potion_effect(POT_CONFUSION, pow);  // how did you cast extension?
-#endif
-
     if (you.duration[DUR_MIGHT])
     {
         potion_effect(POT_MIGHT, pow);

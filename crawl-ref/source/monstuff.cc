@@ -2481,8 +2481,9 @@ static void handle_nearby_ability(monsters *monster)
         {
             simple_monster_message(monster, " stares at you.");
 
-            if (you.duration[DUR_PARALYSIS] < 10)
-                you.duration[DUR_PARALYSIS] += 2 + random2(3);
+            int &paralysis(you.duration[DUR_PARALYSIS]);
+            if (!paralysis || (paralysis < 10 && one_chance_in(1 + paralysis)))
+                paralysis += 2 + random2(3);
         }
         break;
 

@@ -6157,14 +6157,16 @@ void player::confuse(int str)
 
 void player::paralyse(int str)
 {
+    int &paralysis(duration[DUR_PARALYSIS]);
+    
     mprf( "You %s the ability to move!",
-          (duration[DUR_PARALYSIS]) ? "still haven't" : "suddenly lose" );
+          paralysis ? "still haven't" : "suddenly lose" );
     
-    if (str > duration[DUR_PARALYSIS])
-        duration[DUR_PARALYSIS] = str;
+    if (str > paralysis && (paralysis < 3 || one_chance_in(paralysis)))
+        paralysis = str;
     
-    if (duration[DUR_PARALYSIS] > 13)
-        duration[DUR_PARALYSIS] = 13;
+    if (paralysis > 13)
+        paralysis = 13;
 }
 
 void player::slow_down(int str)
