@@ -947,7 +947,7 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
             if (!silent)
                 simple_monster_message(monster, " looks slightly unstable.");
             monster->add_ench( mon_enchant(ENCH_TP, 0, KC_OTHER,
-                                           coinflip()? 2 : 3) );
+                                           random_range(20, 30)) );
         }
 
         return;
