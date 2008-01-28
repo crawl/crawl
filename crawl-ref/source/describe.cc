@@ -2855,14 +2855,12 @@ static std::string describe_staff( const item_def &item )
 
         case STAFF_SMITING:
             description +=
-                "allows its wielder to smite foes from afar. The wielder "
-                "must be at least level four to safely use this ability, "
-                "which drains four charges. ";
+                "allows its wielder to smite foes from afar. ";
             break;
 
         case STAFF_VENOM:
             description +=
-                "contains offensive and defensive spells of poison.";
+                "contains offensive and defensive spells of poison. ";
             break;
 
         case STAFF_STRIKING:
