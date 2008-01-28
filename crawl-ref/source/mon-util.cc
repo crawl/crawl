@@ -2221,27 +2221,29 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
 {
     gender_type gender = GENDER_NEUTER;
 
-    if (mons_is_unique( mon_type ) && mon_type != MONS_PLAYER_GHOST)
+    if ((mons_is_unique( mon_type ) && mon_type != MONS_PLAYER_GHOST)
+        || mon_type == MONS_MERMAID)
     {
         switch(mon_type)
         {
-            case MONS_JESSICA:
-            case MONS_PSYCHE:
-            case MONS_JOSEPHINE:
-            case MONS_AGNES:
-            case MONS_MAUD:
-            case MONS_LOUISE:
-            case MONS_FRANCES:
-            case MONS_MARGERY:
-            case MONS_EROLCHA:
-            case MONS_ERICA:
-            case MONS_TIAMAT:
-            case MONS_MERMAID:
-                gender = GENDER_FEMALE;
-                break;
-            default:
-                gender = GENDER_MALE;
-                break;
+        case MONS_JESSICA:
+        case MONS_PSYCHE:
+        case MONS_JOSEPHINE:
+        case MONS_AGNES:
+        case MONS_MAUD:
+        case MONS_LOUISE:
+        case MONS_FRANCES:
+        case MONS_MARGERY:
+        case MONS_EROLCHA:
+        case MONS_ERICA:
+        case MONS_TIAMAT:
+        case MONS_ERESHKIGAL:
+        case MONS_MERMAID:
+            gender = GENDER_FEMALE;
+            break;
+        default:
+            gender = GENDER_MALE;
+            break;
         }
     }
 
