@@ -96,5 +96,6 @@ bool orc_battle_cry(monsters *chief);
 bool orange_statue_effects(monsters *mons);
 bool silver_statue_effects(monsters *mons);
 bool moth_incite_monsters(const monsters *mon);
+void mons_clear_trapping_net(monsters *mons);
 
 #endif

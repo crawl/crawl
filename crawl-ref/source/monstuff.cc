@@ -470,11 +470,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         return;
     
     if (mons_is_caught(monster))
-    {
-        int net = get_trapping_net(monster->x,monster->y);
-        if (net != NON_ITEM)
-            remove_item_stationary(mitm[net]);
-    }
+        mons_clear_trapping_net(monster);
     
     const int monster_killed = monster_index(monster);
     const bool death_message =
@@ -1299,8 +1295,8 @@ bool monster_blink(monsters *monster)
             false, false))
         return (false);
 
-    if (monster->has_ench(ENCH_HELD))
-        monster->del_ench(ENCH_HELD, true);
+    if (mons_is_caught(monster))
+        mons_clear_trapping_net(monster);
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
 

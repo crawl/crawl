@@ -895,8 +895,12 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
         simple_monster_message(monster, " disappears!");
 
     const coord_def oldplace = monster->pos();
+
     // pick the monster up
     mgrd(oldplace) = NON_MONSTER;
+
+    if (mons_is_caught(monster))
+        mons_clear_trapping_net(monster);
 
     int newx, newy;
     while(true)
@@ -942,9 +946,6 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects();
-
-    if (monster->has_ench(ENCH_HELD))
-        monster->del_ench(ENCH_HELD, true);
 
     // Teleporting mimics change form - if they reappear out of LOS, they are
     // no longer known.
@@ -2296,4 +2297,16 @@ bool moth_incite_monsters(const monsters *mon)
     }
 
     return (false);
+}
+
+void mons_clear_trapping_net(monsters *mons)
+{
+    if (!mons_is_caught(mons))
+        return;
+
+    const int net = get_trapping_net(mons->x, mons->y);
+    if (net != NON_ITEM)
+        remove_item_stationary(mitm[net]);
+
+    mons->del_ench(ENCH_HELD, true);
 }
