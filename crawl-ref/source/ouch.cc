@@ -744,14 +744,6 @@ void ouch( int dam, int death_source, kill_method_type death_type,
         return;
     }
 
-    // assumed bug for high damage amounts
-    if (dam > 300)
-    {
-        mprf(MSGCH_DANGER,
-             "Potential bug: Unexpectedly high damage = %d", dam );
-        return;                 
-    }
-
     if (dam > -9000)            // that is, a "death" caused by hp loss {dlb}
     {
         switch (you.religion)
