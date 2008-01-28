@@ -581,7 +581,6 @@ static const char *rand_armour_names[] = {
     " of the Evening Star",
     " of the Seven Stars",
     " of the Seventy-Seven Stars",
-    " of the Seven Hundred Seventy-Seven Stars",
     " of Departure",
     " of Arrival",
     " of Change",
