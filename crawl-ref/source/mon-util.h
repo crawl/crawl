@@ -440,7 +440,7 @@ int mons_res_fire( const monsters *mon );
 int mons_res_poison( const monsters *mon );
 int mons_res_acid( const monsters *mon );
 int mons_res_negative_energy( const monsters *mon );
-
+int mons_res_miasma( const monsters *mon );
 bool mons_res_asphyx( const monsters *mon );
 
 

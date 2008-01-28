@@ -223,7 +223,8 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
  * called from: ability - item_use - spell
  * returns true if messages were generated during the enchantment
  * *********************************************************************** */
-bool mass_enchantment( enchant_type wh_enchant, int pow, int who );
+bool mass_enchantment( enchant_type wh_enchant, int pow, int who,
+                       int *m_succumbed = NULL, int *m_attempted = NULL );
 
 
 /* ***********************************************************************

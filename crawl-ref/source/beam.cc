@@ -1856,11 +1856,20 @@ static bool monster_resists_mass_enchantment(monsters *monster,
 }
 
 // Enchants all monsters in player's sight.
-bool mass_enchantment( enchant_type wh_enchant, int pow, int origin )
+// If m_succumbed is non-NULL, will be set to the number of monsters that
+// were enchanted. If m_attempted is non-NULL, will be set to the number of
+// monsters that we tried to enchant.
+bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
+                       int *m_succumbed, int *m_attempted )
 {
     int i;                      // loop variable {dlb}
     bool msg_generated = false;
     monsters *monster;
+
+    if (m_succumbed)
+        *m_succumbed = 0;
+    if (m_attempted)
+        *m_attempted = 0;
 
     viewwindow(0, false);
 
@@ -1879,11 +1888,17 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin )
         if (monster->has_ench(wh_enchant))
             continue;
 
+        if (m_attempted)
+            ++*m_attempted;
+        
         if (monster_resists_mass_enchantment(monster, wh_enchant, pow))
             continue;        
 
         if (monster->add_ench(mon_enchant(wh_enchant, 0, kc)))
         {
+            if (m_succumbed)
+                ++*m_succumbed;
+            
             if (player_monster_visible( monster ))
             {
                 // turn message on
