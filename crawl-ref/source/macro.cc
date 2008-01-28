@@ -36,6 +36,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include <map>
 #include <deque>
 #include <vector>
@@ -303,8 +304,7 @@ static keyseq parse_keyseq( std::string s )
             else
             {
                 const int key = read_key_code(arg);
-                if (key)
-                    v.push_back(key);
+                v.push_back(key);
             }
 
             state = 0;
@@ -323,7 +323,7 @@ static keyseq parse_keyseq( std::string s )
  */
 static std::string vtostr( const keyseq &seq ) 
 {
-    std::string s;
+    std::ostringstream s;
 
     const keyseq *v = &seq;
     keyseq dummy;
@@ -341,41 +341,21 @@ static std::string vtostr( const keyseq &seq )
     {
         if (*i <= 32 || *i > 127) {
             if (*i == KEY_MACRO_MORE_PROTECT)
-                s += "\\{!more}";
+                s << "\\{!more}";
             else
             {
                 char buff[20];
                 snprintf( buff, sizeof(buff), "\\{%d}", *i );
-                s += std::string( buff );
+                s << buff;
             }
-
-            // Removing the stringstream code because its highly 
-            // non-portable.  For starters, people and compilers 
-            // are supposed to be using the <sstream> implementation
-            // (with the ostringstream class) not the old <strstream>
-            // version, but <sstream> is not as available as it should be.
-            //
-            // The strstream implementation isn't very standard
-            // either:  some compilers require the "ends" marker,
-            // others don't (and potentially fatal errors can 
-            // happen if you don't have it correct for the system...
-            // ie its hard to make portable).  It also isn't a very 
-            // good implementation to begin with. 
-            //
-            // Everyone should have snprintf()... we supply a version
-            // in libutil.cc to make sure of that! -- bwr
-            //
-            // std::ostrstream ss;
-            // ss << "\\{" << *i << "}" << ends;
-            // s += ss.str();
         } else if (*i == '\\') {
-            s += "\\\\";
+            s << "\\\\";
         } else {
-            s += *i;
+            s << static_cast<char>(*i);
         }
-    }    
+    }
     
-    return (s);
+    return (s.str());
 }
 
 /*
