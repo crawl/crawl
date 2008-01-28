@@ -219,11 +219,11 @@ bool Menu::process_key( int keyin )
         clear_to_end_of_line();
         textcolor(WHITE);
         cprintf("Select what? (regex) ");
-        textcolor(DARKGREY);
+        textcolor(LIGHTGREY);
         bool validline = !cancelable_get_line(linebuf, sizeof linebuf, 80);
         if ( validline && linebuf[0] )
         {
-            text_pattern tpat(linebuf);
+            text_pattern tpat(linebuf, true);
             for ( unsigned int i = 0; i < items.size(); ++i )
             {
                 if ( items[i]->level == MEL_ITEM &&

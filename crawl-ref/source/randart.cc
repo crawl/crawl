@@ -733,15 +733,15 @@ static const char *rand_armour_names[] = {
 };
 
 static const char *randart_weapon_appearance[] = {
-    "brightly glowing ", "runed ", "smoking ", "bloodstained ", "twisted ",
+    "brightly glowing ", "iridescent ", "smoking ", "bloodstained ", "twisted ",
     "shimmering ", "warped ", "crystal ", "jewelled ", "transparent ",
     "encrusted ", "pitted ", "slimy ", "polished ", "fine ", "crude ",
     "ancient ", "ichor-stained ", "faintly glowing ", "steaming ", "shiny "
 };
 
 static const char *randart_armour_appearance[] = {
-    "brightly glowing ", "runed ", "smoking ", "bloodstained ", "twisted ",
-    "shimmering ", "warped ", "heavily runed ", "jewelled ",
+    "brightly glowing ", "faintly humming ", "smoking ", "bloodstained ",
+    "twisted ", "shimmering ", "warped ", "heavily runed ", "jewelled ",
     "transparent ", "encrusted ", "pitted ", "slimy ", "polished ", "fine ",
     "crude ", "ancient ", "ichor-stained ", "faintly glowing ",
     "steaming ", "shiny ", "distressingly furry "
