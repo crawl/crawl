@@ -370,7 +370,9 @@ static void dgn_map_colour_fixup()
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
             if (dcgrid[x][y].colour != BLACK
-                && grd[x][y] != dcgrid[x][y].feature)
+                && grd[x][y] != dcgrid[x][y].feature
+                && (grd[x][y] != DNGN_UNDISCOVERED_TRAP
+                    || dcgrid[x][y].feature != DNGN_FLOOR))
             {
                 env.grid_colours[x][y] = BLACK;
             }

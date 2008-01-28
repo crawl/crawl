@@ -1424,14 +1424,16 @@ void spore_goes_pop(struct monsters *monster)
         return;
     }
 
-    if (mons_near(monster))
+    bool nearby = mons_near(monster);
+    
+    if (nearby)
     {
-        viewwindow(1, false);
+        viewwindow(true, false);
         mpr(msg);
     }
 
-    explosion(beam);
-}                               // end spore_goes_pop()
+    explosion(beam, false, false, true, true, nearby);
+}
 
 bolt mons_spells( int spell_cast, int power )
 {

@@ -218,7 +218,7 @@ int cast_fire_storm(int powc, bolt &beam)
     beam.hit = 20 + powc / 10;
     beam.damage = calc_dice( 9, 20 + powc );
 
-    explosion( beam );
+    explosion( beam, false, false, true, true, false );
     mpr("A raging storm of fire appears!");
 
     viewwindow(1, false);
