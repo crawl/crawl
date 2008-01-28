@@ -2165,22 +2165,23 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
     {
         switch(mon_type)
         {
-            case MONS_JESSICA:
-            case MONS_PSYCHE:
-            case MONS_JOSEPHINE:
-            case MONS_AGNES:
-            case MONS_MAUD:
-            case MONS_LOUISE:
-            case MONS_FRANCES:
-            case MONS_MARGERY:
-            case MONS_EROLCHA:
-            case MONS_ERICA:
-            case MONS_TIAMAT:
-                gender = GENDER_FEMALE;
-                break;
-            default:
-                gender = GENDER_MALE;
-                break;
+        case MONS_JESSICA:
+        case MONS_PSYCHE:
+        case MONS_JOSEPHINE:
+        case MONS_AGNES:
+        case MONS_MAUD:
+        case MONS_LOUISE:
+        case MONS_FRANCES:
+        case MONS_MARGERY:
+        case MONS_EROLCHA:
+        case MONS_ERICA:
+        case MONS_TIAMAT:
+        case MONS_ERESHKIGAL:
+            gender = GENDER_FEMALE;
+            break;
+        default:
+            gender = GENDER_MALE;
+            break;
         }
     }
 
