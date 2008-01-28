@@ -39,6 +39,7 @@ Stone Soup 0.3.4 (20080129)
 * Fixed dolinks.sh script for builds on Unix.
 * Fixed monster self-teleport taking 10x as long as intended.
 * Fixed ice statue description.
+* Fixed Crawl being unable to create directories on DOS.
 
 Stone Soup 0.3.3 (20071202)
 ---------------------------
