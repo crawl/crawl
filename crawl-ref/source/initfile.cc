@@ -713,11 +713,12 @@ void game_options::reset_options()
 
     lowercase_invocations  = true; 
 
-    fire_items_start       = 2;           // start at slot 'c'
+    fire_items_start       = 0;           // start at slot 'a'
 
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
-                   "javelin / dart / stone / rock / spear / net / handaxe",
+                   "javelin / dart / stone / rock /"
+                   " spear / net / handaxe / dagger",
                    false);
 
     item_stack_summary_minimum = 5;
@@ -1146,10 +1147,10 @@ void read_options(FILE *f, bool runscript)
     Options.read_options(fl, runscript);
 }
 
-void read_options(const std::string &s, bool runscript)
+void read_options(const std::string &s, bool runscript, bool clear_aliases)
 {
     StringLineInput st(s);
-    Options.read_options(st, runscript);
+    Options.read_options(st, runscript, clear_aliases);
 }
 
 game_options::game_options()
@@ -1157,7 +1158,8 @@ game_options::game_options()
     reset_options();
 }
 
-void game_options::read_options(InitLineInput &il, bool runscript)
+void game_options::read_options(InitLineInput &il, bool runscript,
+                                bool clear_aliases)
 {
     unsigned int line = 0;
     
@@ -1167,7 +1169,8 @@ void game_options::read_options(InitLineInput &il, bool runscript)
 
     bool l_init        = false;
 
-    aliases.clear();
+    if (clear_aliases)
+        aliases.clear();
     
     std::string luacond;
     std::string luacode;
