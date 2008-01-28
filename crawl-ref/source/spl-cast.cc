@@ -2381,6 +2381,7 @@ static void miscast_summoning(int severity, const char* cause)
             }
             break;
         }
+        break;
 
     case 2:         // more bad
         switch (random2(6))

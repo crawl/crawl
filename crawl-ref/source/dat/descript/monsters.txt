@@ -828,9 +828,8 @@ One of the most terrible denizens of the many Hells, the Ice Fiend is a huge icy
 %%%%
 ice statue
 
-An imposing statue carved in glistening crystalline ice. Freezing
-vapours swirl about it.
-It looks brittle.
+An imposing statue carved in glistening ice. Freezing vapours swirl
+about it.
 %%%%
 imp
 
