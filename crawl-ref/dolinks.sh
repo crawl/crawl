@@ -3,7 +3,11 @@
 mkdir -p NORMAL
 mkdir -p WIZARD
 
-pushd NORMAL ; ln -s ../source/util . ; ln -s ../source/*.h ../source/*.cc ../source/makefile* . ; popd
-pushd WIZARD ; ln -s ../source/util . ; ln -s ../source/*.h ../source/*.cc ../source/makefile* . ; popd
+pushd NORMAL ; ln -sf ../source/util . ; ln -sf ../source/*.h ../source/*.cc ../source/makefile* . ; popd
+pushd WIZARD ; ln -sf ../source/util . ; ln -sf ../source/*.h ../source/*.cc ../source/makefile* . ; popd
 
-ln -s source/dat dat
+if [ -d dat ]; then
+	true
+else
+	ln -sf source/dat dat
+fi
