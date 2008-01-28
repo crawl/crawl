@@ -1,3 +1,45 @@
+Stone Soup 0.3.4 (20080129)
+---------------------------
+* "Tele" status is shown when the player is about to teleport.
+* Weapons of reaching cost no magic or hunger to use, do not train
+  Evocations, and do not hit intervening creatures when the reach
+  fails.
+* Autopickup will attempt to pick up every item in the stack even if
+  previous items cannot be picked up.
+* Fired missile auto-id also identifies previously fired missiles on
+  the floor.
+* Escape hatches can be safely used even when confused or overburdened.
+* Removed score bonus for escaping the dungeon without the Orb.
+* Poison ammunition no longer works on sling bullets and throwing nets.
+* Plants on stairs get branded.
+* Drac and Ogre-Mage wanderers get shields instead of bucklers (which
+  they can't wear).
+* Weapon swap (') will also swap to miscellaneous items.
+* (f)ire will ignore wielded items, fire_items_start defaults to 'a' again.
+* Passwall now issues a warning when attempting to phase through rock + stone.
+* Weakened chain paralysis effects from the monster Paralyse spell and
+  giant eyeballs.
+* Fixed poison-vulnerable monsters resisting curare.
+* Fixed wands of draining not auto-identifying.
+* Fixed necromutation not granting torment immunity.
+* Fixed macros not being saved correctly if the key sequences include
+  ASCII NUL.
+* Fixed buggy labyrinth maps.
+* Fixed bad entry levels.
+* Fixed crossbow bolts not being randomly generated.
+* Fixed messages for species unable to wear helmets and boots because
+  of body shape.
+* Fixed detect items not working if the level is magic-mapped.
+* Fixed display glitches when using IBM graphics on Unix.
+* Fixed monsters wielding angering randarts repeatedly going berserk.
+* Fixed strawberry fields always appearing on Lair:3.
+* Fixed some acquirement bugs.
+* Report error messages after cleaning up curses when savefile is invalid.
+* Fixed starting gear choices and kit for fighters.
+* Fixed dolinks.sh script for builds on Unix.
+* Fixed monster self-teleport taking 10x as long as intended.
+* Fixed ice statue description.
+
 Stone Soup 0.3.3 (20071202)
 ---------------------------
 * Fixed crash when draconian callers try to summon drakes.
