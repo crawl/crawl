@@ -1370,7 +1370,10 @@ void StashTracker::show_stash_search_prompt()
     if (!prompt_qual.empty())
         prompt_qual = " [" + prompt_qual + "]";
 
-    mprf(MSGCH_PROMPT, "Search for what%s?\n", prompt_qual.c_str());
+    mprf(MSGCH_PROMPT, "Search for what%s?", prompt_qual.c_str());
+    // Push the cursor down to the next line. Newline on the prompt will not
+    // do the trick on DOS.
+    mpr("", MSGCH_PROMPT);    
 }
 
 class stash_search_reader : public line_reader
