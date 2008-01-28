@@ -459,6 +459,12 @@ void print_stats(void)
             cprintf( "Holy " );
         }
 
+        if (you.duration[DUR_TELEPORT])
+        {
+            textcolor( LIGHTBLUE );
+            cprintf( "Tele " );
+        }        
+
         if (you.duration[DUR_DEFLECT_MISSILES])
         {
 
