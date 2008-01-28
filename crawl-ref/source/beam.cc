@@ -799,6 +799,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.hit = 8 + power / 20;                     // 50: 10   100: 13
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_NEG;                       // drains levels
+        pbolt.obvious_effect = true;
 
         pbolt.is_beam = true;
         break;
@@ -1501,11 +1502,15 @@ void fire_beam( bolt &pbolt, item_def *item )
         pbolt.target_y = oy;
     }
 
-    // canned msg for enchantments that affected no-one
+    // canned msg for enchantments that affected no-one, but only if the
+    // enchantment is yours.
     if (pbolt.name[0] == '0' && pbolt.flavour != BEAM_DIGGING)
     {
-        if (!pbolt.is_tracer && !pbolt.msg_generated && !pbolt.obvious_effect)
+        if (!pbolt.is_tracer && !pbolt.msg_generated && !pbolt.obvious_effect
+            && YOU_KILL(pbolt.thrower))
+        {
             canned_msg(MSG_NOTHING_HAPPENS);
+        }
     }
 
     // that's it!
@@ -1513,7 +1518,7 @@ void fire_beam( bolt &pbolt, item_def *item )
     if (!pbolt.is_tracer)
         set_buffering(oldValue);
 #endif
-}                               // end fire_beam();
+}
 
 
 // returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
@@ -2092,7 +2097,7 @@ bool curare_hits_monster( const bolt &beam,
                           kill_category who,
                           int levels )
 {
-    const bool res_poison = mons_res_poison(monster);
+    const bool res_poison = mons_res_poison(monster) > 0;
     bool mondied = false;
 
     poison_monster(monster, who, levels, false);

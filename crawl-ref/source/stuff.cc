@@ -633,6 +633,11 @@ int div_rand_round( int num, int den )
     return (num / den + (random2(den) < num % den));
 }
 
+int div_round_up( int num, int den )
+{
+    return (num / den + (num % den != 0));
+}
+
 bool one_chance_in(int a_million)
 {
     return (random2(a_million) == 0);

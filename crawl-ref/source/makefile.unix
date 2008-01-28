@@ -239,7 +239,7 @@ ifneq ($(SAVEDIR),)
 	chown $(INSTALL_UGRP) $(SAVEDIR)
 	chmod $(MCHMOD_SAVEDIR) $(SAVEDIR)
 endif
-	ln -s $(INSTALLDIR)/$(GAME) /usr/local/bin/
+	ln -sf $(INSTALLDIR)/$(GAME) /usr/local/bin/
 
 clean:
 	$(DELETE) *.o
