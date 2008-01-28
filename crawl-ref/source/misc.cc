@@ -504,7 +504,8 @@ void up_stairs(dungeon_feature_type force_stair)
         return;
     }
 
-    if (you.burden_state == BS_OVERLOADED)
+    if (you.burden_state == BS_OVERLOADED
+        && !grid_is_rock_stair(stair_find))
     {
         mpr("You are carrying too much to climb upwards.");
         you.turn_is_over = true;
@@ -873,8 +874,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 
     if (!player_is_airborne()
         && you.duration[DUR_CONF] 
-        && (stair_find >= DNGN_STONE_STAIRS_DOWN_I 
-            && stair_find <= DNGN_STONE_STAIRS_DOWN_III)
+        && !grid_is_rock_stair(stair_find)
         && random2(100) > you.dex)
     {
         mpr("In your confused state, you trip and fall down the stairs.");

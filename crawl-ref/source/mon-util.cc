@@ -3281,6 +3281,10 @@ int monsters::shield_bonus() const
     const item_def *shld = const_cast<monsters*>(this)->shield();
     if (shld)
     {
+        // Note that 0 is not quite no-blocking.
+        if (incapacitated())
+            return (0);
+        
         const int shld_c = property(*shld, PARM_AC);
         return (random2(shld_c + random2(hit_dice / 2)) / 2);
     }

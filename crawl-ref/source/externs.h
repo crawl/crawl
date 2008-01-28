@@ -168,7 +168,7 @@ public:
 
     virtual bool incapacitated() const
     {
-        return paralysed() || confused() || caught();
+        return paralysed() || asleep() || confused() || caught();
     }
 
     virtual int holy_aura() const
