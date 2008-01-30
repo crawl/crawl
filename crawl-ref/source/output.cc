@@ -1712,22 +1712,6 @@ std::string status_mut_abilities()
           have_any = true;
           break;
 
-      case SP_GREY_ELF:
-          if (you.experience_level > 4)
-          {
-              text += "charming";
-              have_any = true;
-          }
-          break;
-
-      case SP_HIGH_ELF:
-          if (you.experience_level > 14)
-          {
-              text += "charming";
-              have_any = true;
-          }
-          break;
-
       case SP_KENKU:
           text += "cannot wear helmets";
           if (you.experience_level > 4)

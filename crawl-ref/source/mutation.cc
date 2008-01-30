@@ -1089,22 +1089,6 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
-    case SP_GREY_ELF:
-        if (you.experience_level > 4)
-        {
-            result += "You are very charming." EOL;
-            have_any = true;
-        }
-        break;
-
-    case SP_HIGH_ELF:
-        if (you.experience_level > 14)
-        {
-            result += "You are very charming." EOL;
-            have_any = true;
-        }
-        break;
-
     case SP_KENKU:
         result += "You cannot wear helmets." EOL;
         if (you.experience_level > 4)

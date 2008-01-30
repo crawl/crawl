@@ -2773,12 +2773,6 @@ void level_change(bool skip_ability_increase)
                 break;
 
             case SP_HIGH_ELF:
-                if (you.experience_level == 15)
-                {
-                    //jmf: got Glamour ability
-                    mpr("You feel charming!", MSGCH_INTRINSIC_GAIN);
-                }
-
                 if (you.experience_level % 3)
                     hp_adjust--;
 
@@ -2794,13 +2788,6 @@ void level_change(bool skip_ability_increase)
                 break;
 
             case SP_GREY_ELF:
-                if (you.experience_level == 5)
-                {
-                    //jmf: got Glamour ability
-                    mpr("You feel charming!", MSGCH_INTRINSIC_GAIN);
-                    mp_adjust++;
-                }
-
                 if (you.experience_level < 14)
                     hp_adjust--;
 
