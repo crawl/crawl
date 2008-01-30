@@ -1304,12 +1304,20 @@ static bool do_ability(const ability_def& abil)
 
     case ABIL_ZIN_RECITE:
     {
-        if (!check_recital_audience())
+        int result = check_recital_audience();
+        if (result < 0)
+        {
+            mpr("That's no appreciative audience!");
+            return (false);
+        }
+        else if (result < 1)
         {
             mpr("There's no-one here to preach to!");
             return (false);
         }
-        const int pow = (you.skills[SK_INVOCATIONS] + 12) * (50 + you.piety) / 600;
+//        const int pow = (you.skills[SK_INVOCATIONS] + 12) * (50 + you.piety) / 600;
+        // up to (60 + 33)/3 = 31
+        const int pow = ( 2*skill_bump(SK_INVOCATIONS) + you.piety / 6 ) / 3;
         start_delay(DELAY_RECITE, 3, pow, you.hp);
         break;
     }

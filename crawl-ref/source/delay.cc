@@ -53,137 +53,112 @@ static void handle_macro_delay();
 static void finish_delay(const delay_queue_item &delay);
 
 // monster cannot be affected in these states
+// (all results of Recite, plus friendly)
 static bool recite_mons_useless(const monsters *mon)
 {
-    return (mons_is_fleeing(mon)
+    return (mons_intel(mon->type) < I_NORMAL
+            || mons_is_fleeing(mon)
             || mons_is_sleeping(mon)
             || mons_friendly(mon)
             || mons_neutral(mon)
+            || mons_is_confused(mon)
+            || mons_is_paralysed(mon)
             || mon->has_ench(ENCH_BERSERK));
 }
 
-static int recite_to_monsters(int x, int y, int pow, int turn)
+static int recite_to_monsters(int x, int y, int pow, int unused)
 {
+    UNUSED(unused);
+    
     const int mon = mgrd[x][y];
     if (mon == NON_MONSTER)
         return (0);
 
     monsters *mons = &menv[mon];
 
-    // monster must be intelligent
-    if (mons_intel(mons->type) < I_NORMAL)
-        return (0);
-
     if (recite_mons_useless(mons))
         return (0);
 
-    int attempt = 3 - turn;
-    bool bad_effect =
-        (mons_class_holiness(mon) == MH_DEMONIC? !one_chance_in(8)
-                                               : pow < random2(attempt*5));
-
-    // 50% chance nothing happens
-    if (bad_effect && coinflip())
+    if (coinflip()) // nothing happens
         return (0);
 
-    bool resist = check_mons_resist_magic(mons, pow);
+    const int resist = mons_resist_magic(mons);
+    pow -= resist;
+    
+    // much lower chances at influencing demons
+    if (mons_class_holiness(mon) == MH_DEMONIC)
+        pow -= 3 + random2(5);
 
-    if (bad_effect) // can still have positive effects
+    if (pow > 0)
+        pow = random2avg(pow,2);
+        
+    if (pow <= 0) // Uh oh...
     {
-        if (!resist)
-        {
-            if (one_chance_in(3) && mons->add_ench(mon_enchant(ENCH_CONFUSION,
-                                     0, KC_YOU, (16 + random2avg(13, 2)) * 10)))
-            {
-                simple_monster_message(mons, " looks confused.");
-                return (1);
-            }
-            if (one_chance_in(4) && mons->add_ench(ENCH_FEAR))
-            {
-                simple_monster_message(mons, " turns to flee.");
-                return (1);
-            }
-            if (one_chance_in(4))
-            {
-                mons->put_to_sleep();
-                simple_monster_message(mons, " falls asleep!");
-                return (1);
-            }
-        }
-        if (one_chance_in(3) && mons->add_ench(mon_enchant(ENCH_HASTE, 0,
-                                  KC_YOU, (16 + random2avg(13, 2)) * 10)))
-        {
-            simple_monster_message(mons, " is annoyed!");
-            return (1);
-        }
-        if (mons->can_go_berserk()) // seriously annoyed now
-        {
+        if (one_chance_in(resist+1)) // nothing happens, whew!
+            return (0);
+
+        if (one_chance_in(4) && mons->can_go_berserk())
             mons->go_berserk(true);
-            return (1);
+        else if (mons->add_ench(mon_enchant(ENCH_HASTE, 0,
+                                KC_YOU, (16 + random2avg(13, 2)) * 10)))
+        {
+            simple_monster_message(mons, " speeds up in annoyance!");
         }
-        return (0); // no effect
+        // bad effects stop the recital
+        stop_delay(); 
+        return (1);
     }
 
-    if (resist)
+    switch (pow)
     {
-        simple_monster_message(mons, " resists!");
-        return (0);
-    }
-
-    switch (random2(pow))
-    {
-      default: // nothing happens
-         return (0);
+      case 0:
+          return (0); // handled above
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+          if (!mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
+                              (16 + random2avg(13, 2)) * 10)))
+              return (0);
+          simple_monster_message(mons, " looks confused.");
+          break;
+      case 5:
       case 6:
       case 7:
-         if (mons->add_ench(ENCH_FEAR))
-         {
-             simple_monster_message(mons, " turns to flee.");
-             return (1);
-         }
-         break;
       case 8:
+          mons->put_to_sleep();
+          simple_monster_message(mons, " falls asleep!");
+          break;
       case 9:
-         mons->put_to_sleep();
-         simple_monster_message(mons, " falls asleep!");
-         return (1);
       case 10:
       case 11:
       case 12:
-         if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
-                             (16 + random2avg(13, 2)) * 10)))
-         {
-             simple_monster_message(mons, " looks confused.");
-             return (1);
-         }
-         break;
+          if (!mons->add_ench(ENCH_NEUTRAL))
+              return (0);
+          simple_monster_message(mons, " seems impressed!");
+          break;
       case 13:
       case 14:
-         if (mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
-                             (16 + random2avg(13, 2)) * 10)))
-         {
-             simple_monster_message(mons, " is paralyzed!");
-             return (1);
-         }
-         break;
       case 15:
+          if (!mons->add_ench(ENCH_FEAR))
+              return (0);
+          simple_monster_message(mons, " turns to flee.");
+          break;
       case 16:
       case 17:
-      case 18:
-         if (mons->add_ench(ENCH_NEUTRAL))
-         {
-             simple_monster_message(mons, " seems impressed!");
-             return (1);
-         }
-         break;
-      case 19:
-      case 20:
-         mons->attitude = ATT_NEUTRAL; // but same message as above
-         simple_monster_message(mons, " seems impressed!"); 
-         return (1);
+          if (!mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
+                              (16 + random2avg(13, 2)) * 10)))
+              return (0);
+          simple_monster_message(mons, " freezes in fright!");
+          break;
+      default:
+          // permanently neutral, but same message as enchantment
+          mons->attitude = ATT_NEUTRAL;
+          simple_monster_message(mons, " seems impressed!");
+          break;
     }
 
-    return (0);
+    return (1);
 }       // end recite_to_monsters()
 
 // Returns true if this delay can act as a parent to other delays, i.e. if
@@ -435,10 +410,14 @@ bool is_being_butchered(const item_def &item)
 }
 
 // check whether there are monsters who might be influenced by Recite
-bool check_recital_audience()
+// return 0, if no monsters found
+// return 1, if eligible audience found
+// return -1, if entire audience already affected or too dumb to understand
+int check_recital_audience()
 {
     int mid;
     monsters *mons;
+    bool found_monsters = false;
 
     for (int x = you.x_pos - 8; x <= you.x_pos + 8; x++)
        for (int y = you.y_pos - 8; y <= you.y_pos + 8; y++)
@@ -451,20 +430,29 @@ bool check_recital_audience()
                 continue;
 
             mons = &menv[mid];
+	    if (!found_monsters)
+	        found_monsters = true;
 
             // can not be affected in these states
             if (recite_mons_useless(mons))
-                continue;;
+                continue;
 
-            return (true);
+            return (1);
       }
 
 #ifdef DEBUG_DIAGNOSTICS
-   mprf(MSGCH_DIAGNOSTICS, "No audience found!");
+      if (!found_monsters) 
+          mprf(MSGCH_DIAGNOSTICS, "No audience found!");
+      else
+          mprf(MSGCH_DIAGNOSTICS, "No sensible audience found!");
 #endif
 
+   // no use preaching to the choir, nor to common animals
+   if (found_monsters)
+       return (-1);
+
    // Sorry, no audience found!
-   return (false);
+   return (0);
 }
 
 // Xom is amused by a potential food source going to waste, and is
@@ -509,7 +497,7 @@ void handle_delay( void )
             mprf(MSGCH_MULTITURN_ACTION,
                  "You begin to recite %s's Axioms of Law.",
                  god_name(GOD_ZIN).c_str());
-            apply_area_visible(recite_to_monsters, delay.parm1, delay.duration);
+            apply_area_visible(recite_to_monsters, delay.parm1);
             break;
         default:
             break;
@@ -610,7 +598,7 @@ void handle_delay( void )
     if ( delay.type == DELAY_RECITE) 
     {
            
-        if (!check_recital_audience()  // maybe no unaffected monsters in LOS?
+        if (check_recital_audience() < 1 // maybe you've lost your audience
             || Options.hp_warning && you.hp*Options.hp_warning <= you.hp_max
                && delay.parm2*Options.hp_warning > you.hp_max
             || you.hp*2 < delay.parm2) // or significant health drop
@@ -658,7 +646,7 @@ void handle_delay( void )
         case DELAY_RECITE:
             mpr("You continue reciting the Axioms of Law.",
                 MSGCH_MULTITURN_ACTION);
-            apply_area_visible(recite_to_monsters, delay.parm1, delay.duration);
+            apply_area_visible(recite_to_monsters, delay.parm1);
             break;
         case DELAY_MULTIDROP:
             drop_item( items_for_multidrop[0].slot,
