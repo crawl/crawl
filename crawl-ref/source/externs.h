@@ -1655,6 +1655,7 @@ public:
 
     unsigned    detected_monster_colour;    // Colour of detected monsters
     unsigned    detected_item_colour;       // Colour of detected items
+    unsigned    status_caption_colour;      // Colour of captions in HUD.
 
     unsigned    heap_brand;         // Highlight heaps of items
     unsigned    stab_brand;         // Highlight monsters that are stabbable

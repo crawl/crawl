@@ -693,6 +693,7 @@ void game_options::reset_options()
     // [ds] Default to jazzy colours.
     detected_item_colour   = GREEN;
     detected_monster_colour= LIGHTRED;
+    status_caption_colour  = BROWN;
 
 #ifdef USE_TILE
     classic_item_colours   = true;
@@ -1914,6 +1915,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // See friend_brand option upstairs. no_dark_brand applies
         // here as well.
         heap_brand = curses_attribute(field);
+    }
+    else if (key == "status_caption_colour")
+    {
+        const int col = str_to_colour( field );
+        if (col != -1)
+            status_caption_colour = col;
+        else
+            crawl_state.add_startup_error(
+                make_stringf("Bad status_caption_colour -- %s\n", field.c_str()));
     }
     else if (key == "weapon")
     {

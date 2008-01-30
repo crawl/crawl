@@ -427,9 +427,8 @@ void print_stats(void)
     if (you.wield_change)
     {
         cgotoxy(1, 13, GOTO_STAT);
-        clear_to_end_of_line();
-        cgotoxy(1, 13, GOTO_STAT);
-
+        textcolor(Options.status_caption_colour);
+        cprintf("Wp: ");
         if (you.weapon())
         {
             const item_def& wpn = *you.weapon();
@@ -440,7 +439,9 @@ void print_stats(void)
             if (prefcol != -1)
                 textcolor(prefcol);
 
-            cprintf("%s", wpn.name(DESC_INVENTORY, true).substr(0,38).c_str());
+            cprintf("%s",
+                    wpn.name(DESC_INVENTORY, true)
+                       .substr(0, crawl_view.hudsz.x - 5).c_str());
             textcolor(LIGHTGREY);
         }
         else
@@ -457,32 +458,38 @@ void print_stats(void)
                 cprintf("Nothing wielded");
             }
         }
+        clear_to_end_of_line();
         you.wield_change = false;
     }
 
     if (you.quiver_change)
     {
         cgotoxy(1, 14, GOTO_STAT);
-        clear_to_end_of_line();
-        cgotoxy(1, 14, GOTO_STAT);
-
+        textcolor(Options.status_caption_colour);
+        cprintf("Qv: ");
+        
         int q = you.quiver[get_quiver_type()] = get_fire_item_index();
 
-        if (q == ENDOFPACK)
-            cprintf("Nothing quivered");
-        else
+        if (q != ENDOFPACK)
         {
             const item_def& quiver = you.inv[q];
             textcolor(quiver.colour);
 
             const std::string prefix = menu_colour_item_prefix(quiver);
-            const int prefcol = menu_colour(quiver.name(DESC_INVENTORY), prefix);
+            const int prefcol =
+                menu_colour(quiver.name(DESC_INVENTORY), prefix);
             if (prefcol != -1)
                 textcolor(prefcol);
 
-            cprintf("%s", quiver.name(DESC_INVENTORY, true).substr(0,38).c_str());
+            cprintf("%s",
+                    quiver.name(DESC_INVENTORY, true)
+                          .substr(0, crawl_view.hudsz.x - 5)
+                          .c_str());
             textcolor(LIGHTGREY);
         }
+        else
+            textcolor(LIGHTGREY);
+        clear_to_end_of_line();
         you.quiver_change = false;
     }
     

@@ -171,6 +171,7 @@ stab_brand       = hi:blue
 
 # hp_colour = lightgrey, 50:yellow, 25:red
 # mp_colour = lightgrey, 50:yellow, 25:red
+# status_caption_colour = brown
 # delay_message_clear    = true
 # show_inventory_weights = true
 # show_turns = true

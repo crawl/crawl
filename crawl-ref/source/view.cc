@@ -2471,6 +2471,7 @@ void draw_border(void)
              species_name( you.species, you.experience_level ).c_str(),
              (you.wizard ? "*WIZARD*" : "" ) );
 
+    textcolor(Options.status_caption_colour);
     cgotoxy(1,  3, GOTO_STAT); cprintf("HP:");
     cgotoxy(1,  4, GOTO_STAT); cprintf("Magic:");
     cgotoxy(1,  5, GOTO_STAT); cprintf("AC:");
@@ -2485,6 +2486,7 @@ void draw_border(void)
         cprintf("Turn:");
     }
     cgotoxy(1, 11, GOTO_STAT); cprintf("Experience:");
+    textcolor(LIGHTGREY);
     cgotoxy(1, 12, GOTO_STAT); cprintf("Level");
 }                               // end draw_border()
 
