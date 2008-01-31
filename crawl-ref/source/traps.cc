@@ -461,6 +461,9 @@ void handle_traps(trap_type trt, int i, bool trap_known)
         break;
     }
     learned_something_new(TUT_SEEN_TRAP, you.x_pos, you.y_pos);
+    
+    if (!trap_known) // Now you know...
+        exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
 }                               // end handle_traps()
 
 void disarm_trap( struct dist &disa )

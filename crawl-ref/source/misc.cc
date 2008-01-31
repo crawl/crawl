@@ -299,6 +299,7 @@ void search_around( bool only_adjacent )
                     {
                         grd[srx][sry] = trap_category(env.trap[i].type);
                         mpr("You found a trap!");
+                        exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
                     }
                     else
                     {

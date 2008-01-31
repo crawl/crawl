@@ -60,6 +60,7 @@
 #include "overmap.h"
 #include "player.h"
 #include "religion.h"
+#include "skills.h"
 #include "skills2.h"
 #include "stuff.h"
 #include "spells4.h"
@@ -1201,7 +1202,14 @@ bool check_awaken(monsters* monster)
     if (mons_perc < 0)
         mons_perc = 0;
 
-    return (random2(stealth) <= mons_perc);
+    if (random2(stealth) <= mons_perc)
+        return (true); // Oops, the monster wakes up!
+
+    // You didn't wake the monster!
+    if (one_chance_in(20))
+        exercise(SK_STEALTH, 1);
+        
+    return (false);
 }                               // end check_awaken()
 
 static void set_show_backup( int ex, int ey )
