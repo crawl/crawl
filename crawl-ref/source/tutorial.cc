@@ -242,8 +242,8 @@ static formatted_string tut_starting_info(unsigned int width)
          << " " << get_class_name(get_tutorial_job(Options.tutorial_type))
          <<
         " safely through the depths of the dungeon, retrieving the "
-        "fabled orb of Zot and returning it to the surface. "
-        " In the beginning, however, let discovery be your "
+        "fabled Orb of Zot and returning it to the surface. "
+        "In the beginning, however, let discovery be your "
         "main goal. Try to delve as deeply as possible but beware; "
         "death lurks around every corner." EOL EOL
         "For the moment, just remember the following keys "
@@ -258,7 +258,7 @@ static formatted_string tut_starting_info(unsigned int width)
         EOL
         "  <lightblue>readme.txt</lightblue>         - "
         "A very short guide to Crawl." EOL        
-        "  <lightblue>manual.txt</lightblue>         - "
+        "  <lightblue>crawl_manual.txt</lightblue>   - "
         "This contains all details on races, magic, skills, etc." EOL
         "  <lightblue>crawl_options.txt</lightblue>  - "
         "Crawl's interface is highly configurable. This document " EOL
@@ -712,7 +712,7 @@ void tutorial_finished()
           case 2:
               text =  "The interface can be greatly customised. All options are "
                       "explained in the file <w>crawl_options.txt<magenta> which "
-                      "can be found in the <w>/docs<magenta> directory. The "
+                      "can be found in the <w>docs<magenta> directory. The "
                       "options themselves are set in <w>init.txt<magenta> or "
                       "<w>.crawlrc<magenta>. Crawl will complain if it can't "
                       "find either file.\n";
@@ -896,8 +896,8 @@ void tutorial_first_monster(const monsters &mon)
     text += colour_to_tag(col);
     text += ch;
     text += "<magenta> is a monster, usually depicted by a letter. Some typical "
-            "early monsters look like <brown>r<magenta>, <w>g<magenta>, "
-            "<lightgray>b<magenta> or <brown>K<magenta>. "
+            "early monsters look like <brown>r<magenta>, <lightgray>g<magenta>, "
+            "<darkgray>b<magenta> or <brown>K<magenta>. "
 #else
     // need to highlight monster
     const coord_def ep = grid2view(coord_def(mon.x, mon.y));
@@ -962,7 +962,7 @@ void tutorial_first_item(const item_def &item)
     const coord_def ep = grid2view(coord_def(item.x, item.y));
     tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
-    text += "is an item. If you move there and press <w>g<magenta> or "
+    text += " is an item. If you move there and press <w>g<magenta> or "
             "<w>,<magenta> you will pick it up. "
 #ifndef USE_TILE
             "Generally, items are shown by "
