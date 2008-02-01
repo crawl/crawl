@@ -744,8 +744,8 @@ static void do_god_gift(bool prayed_for)
     
     // Consider a gift if we don't have a timeout and weren't
     // already praying when we prayed.
-    if (!player_under_penance()
-        && (!you.gift_timeout || you.religion == GOD_ZIN))
+    if (!player_under_penance() && !you.gift_timeout
+        || you.religion == GOD_ZIN)
     {
         bool success = false;
         
@@ -3334,7 +3334,22 @@ void offer_items()
         }
 
         int estimated_piety = you.piety + donation_value;
-        std::string result = god_name(GOD_ZIN) + " will soon be ";
+        
+        you.duration[DUR_PIETY_POOL] += donation_value;
+        if (you.duration[DUR_PIETY_POOL] > 500)
+            you.duration[DUR_PIETY_POOL] = 500;
+
+        if (you.penance[GOD_ZIN])
+        {
+            if (estimated_piety >= you.penance[GOD_ZIN])
+                mpr("You feel that soon you will be absolved of all your sins.");
+            else
+                mpr("You feel that soon your burden of sins will be lighter.");
+            return;
+        }
+
+        std::string result = "You feel that " + god_name(GOD_ZIN)
+                             + " will soon be ";
         
         result +=
             (estimated_piety > 130) ? "exalted by your worship" :
@@ -3351,10 +3366,6 @@ void offer_items()
             result += ".";
             
         mpr(result.c_str());
-
-        you.duration[DUR_PIETY_POOL] += donation_value;
-        if (you.duration[DUR_PIETY_POOL] > 500)
-            you.duration[DUR_PIETY_POOL] = 500;
             
         return; // doesn't accept anything else for sacrifice
     }

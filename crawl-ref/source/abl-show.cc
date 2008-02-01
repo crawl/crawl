@@ -1319,6 +1319,8 @@ static bool do_ability(const ability_def& abil)
         // up to (60 + 33)/3 = 31
         const int pow = ( 2*skill_bump(SK_INVOCATIONS) + you.piety / 6 ) / 3;
         start_delay(DELAY_RECITE, 3, pow, you.hp);
+        
+        exercise( SK_INVOCATIONS, (one_chance_in(3)? 2 : 1) );
         break;
     }
     case ABIL_ZIN_SMITING:

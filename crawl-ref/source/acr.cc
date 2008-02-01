@@ -2692,17 +2692,10 @@ static void decrement_durations()
     if (you.duration[DUR_PIETY_POOL] && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--; // decrease even if piety at maximum
-        if (you.piety < 200)
-        {
+        gain_piety(1);
+        
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
-            mpr("Piety increases by 1 due to piety pool.", MSGCH_DIAGNOSTICS);
-#endif
-            you.piety++;
-        }
-#if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
-        else
-            mpr("Piety already at maximum and fails to increase "
-                "from piety pool.", MSGCH_DIAGNOSTICS);
+        mpr("Piety increases by 1 due to piety pool.", MSGCH_DIAGNOSTICS);
             
         if (!you.duration[DUR_PIETY_POOL])
             mpr("Piety pool is now empty.", MSGCH_DIAGNOSTICS);
