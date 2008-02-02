@@ -236,7 +236,7 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
     push_delay( delay ); 
 }
 
-void stop_delay( void )
+void stop_delay( bool stop_stair_travel )
 /*********************/
 {
     if ( you.delay_queue.empty() )
@@ -355,10 +355,19 @@ void stop_delay( void )
         // and would have to have a prompt... this works just fine. -- bwr
         break;
 
-    case DELAY_WEAPON_SWAP:       // one turn... too much trouble 
-    case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_ASCENDING_STAIRS:  // short... and probably what people want
     case DELAY_DESCENDING_STAIRS: // short... and probably what people want
+         if (stop_stair_travel)
+         {
+#ifdef DEBUG_DIAGNOSTICS
+             mpr("Stop ascending/descending stairs.");
+#endif
+             pop_delay();
+         }
+         break;
+             
+    case DELAY_WEAPON_SWAP:       // one turn... too much trouble
+    case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_UNINTERRUPTIBLE:   // never stoppable 
     case DELAY_JEWELLERY_ON:      // one turn
     default:

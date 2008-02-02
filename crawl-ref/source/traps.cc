@@ -17,6 +17,7 @@
 
 #include "beam.h"
 #include "branch.h"
+#include "delay.h"
 #include "direct.h"
 #include "it_use2.h"
 #include "items.h"
@@ -171,6 +172,8 @@ void player_caught_in_net()
             mpr("You fall like a stone!");
             fall_into_a_pool(you.x_pos, you.y_pos, false, grd(you.pos()));
         }
+        
+        stop_delay(true); // even stair delays
     }
 }
 

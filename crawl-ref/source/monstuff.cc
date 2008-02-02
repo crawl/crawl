@@ -2889,6 +2889,15 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
 
     case MONS_MERMAID:
     {
+        // Don't behold player already half down or up the stairs
+        if ( !you.delay_queue.empty() && you.delay_queue.front().type )
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mpr("Taking stairs, don't behold.", MSGCH_DIAGNOSTICS);
+#endif
+            break;
+        }
+
         // won't sing if either of you silenced, or it's friendly or confused
         if (monster->has_ench(ENCH_CONFUSION) || mons_friendly(monster)
             || silenced(monster->x, monster->y) || silenced(you.x_pos, you.y_pos))

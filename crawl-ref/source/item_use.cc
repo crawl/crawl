@@ -617,6 +617,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 break;
 
             case SPWPN_DISTORTION:
+                mpr("Space warps around you for a moment!");
+                
                 if (!was_known)
                     xom_is_stimulated(32);
                 break;
