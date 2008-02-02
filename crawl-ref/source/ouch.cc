@@ -909,6 +909,18 @@ void end_game( scorefile_entry &se )
 {
     bool dead = true;
 
+    for (int i = 0; i < ENDOFPACK; i++)
+        set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].base_type != 0)
+        {
+            set_ident_type( you.inv[i].base_type,
+                            you.inv[i].sub_type, ID_KNOWN_TYPE );
+        }
+    }
+
     if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
@@ -988,18 +1000,6 @@ void end_game( scorefile_entry &se )
 
     if (!crawl_state.seen_hups)
         more();
-
-    for (int i = 0; i < ENDOFPACK; i++)
-        set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].base_type != 0)
-        {
-            set_ident_type( you.inv[i].base_type, 
-                            you.inv[i].sub_type, ID_KNOWN_TYPE );
-        }
-    }
 
     invent( -1, true );
     textcolor( LIGHTGREY );
