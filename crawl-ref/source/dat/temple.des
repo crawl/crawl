@@ -105,8 +105,7 @@ ENDMAP
 # where's the temple?
 #
 NAME: temple_secret_doors
-TAGS: temple_entry
-FLAGS: no_rotate
+TAGS: temple_entry no_rotate
 ORIENT: float
 SUBST: ? : ?:40 T:30 U, ? = T:30 U
 NSUBST: X = 1:= / *=nnn=
@@ -128,9 +127,8 @@ ENDMAP
 # temple in pool
 #
 NAME:    temple_pool_a
-TAGS:    temple_entry no_monster_gen no_pool_fixup
+TAGS:    temple_entry no_monster_gen no_pool_fixup no_rotate
 CHANCE:  3
-FLAGS:   no_rotate
 ORIENT:  float
 SHUFFLE: XY
 SUBST:   Y=w, X=.
@@ -149,9 +147,8 @@ wwwwwwwXwwwwwww.
 ENDMAP
 
 NAME:    temple_pool_b
-TAGS:    temple_entry no_monster_gen
+TAGS:    temple_entry no_monster_gen no_rotate
 CHANCE:  7
-FLAGS:   no_rotate
 ORIENT:  float
 SHUFFLE: ABCDEFGHIJKL
 SUBST:   A=W, B=W, C=W, D=w, E=w, F=w, G=w, H=w, I=w, J=w, K=w, L=w
@@ -182,29 +179,29 @@ SUBST: ? = .:100 3:30 G:5 T U:5 V:5
 SUBST: _=3., -=l.
 MONS: angel, iron devil, plant
 MAP
-........................................xxxxxxxx
-.....................'''''...............-llxxxx
-..................'''''''''''...........-llllxxx
-...............'''''''!!!'''''''........-lll2xxx
-............''''''''!!!!!!!''''''''......-llllxx
-...........'''''''!!!!!!!!!!!'''''''.......-lllx
-..........'''''!!!!!!!!!!!!!!!!!'''''........llx
-.........'''''!!!!!!!!!?!!!!!!!!!'''''........lx
-........'''''!!!!!!!!!???!!!!!!!!!'''''........x
+            ............................xxxxxxxx
+        .............'''''...............-llxxxx
+      ............'''''''''''...........-llllxxx
+    ...........'''''''!!!'''''''........-lll2xxx
+   .........''''''''!!!!!!!''''''''......-llllxx
+   ........'''''''!!!!!!!!!!!'''''''.......-lllx
+  ........'''''!!!!!!!!!!!!!!!!!'''''........llx
+ ........'''''!!!!!!!!!?!!!!!!!!!'''''........lx
+ .......'''''!!!!!!!!!???!!!!!!!!!'''''........x
 .......'''''!!!!!!!!!?????!!!!!!!!!'''''........
 .......''''!!!!!!!!!???????!!!!!!!!!''''........
 .......'''!!!!!!!!!????O????!!!!!!!!!'''........
 .......''''!!!!!!!!!???????!!!!!!!!!''''........
-.......'''''!!!!!!!!!?????!!!!!!!!!'''''........
-x.......'''''!!!!!!!!!???!!!!!!!!!'''''.........
-x........'''''!!!!!!!!!?!!!!!!!!!'''''..........
-xx._......'''''!!!!!!!!!!!!!!!!!'''''...........
-xxxxm......'''''''!!!!!!!!!!!'''''''............
-xxxxxm......''''''''!!!!!!!''''''''.............
-xxxx1m_........'''''''!!!'''''''................
-xxxxxxm_..........'''''''''''...................
-xxxxxxxxxx...........'''''......................
-xxxxxxxxxxxx....................................
+.......'''''!!!!!!!!!?????!!!!!!!!!'''''....... 
+x.......'''''!!!!!!!!!???!!!!!!!!!'''''........ 
+x........'''''!!!!!!!!!?!!!!!!!!!'''''......... 
+xx._......'''''!!!!!!!!!!!!!!!!!'''''.........  
+xxxxm......'''''''!!!!!!!!!!!'''''''..........  
+xxxxxm......''''''''!!!!!!!''''''''..........   
+xxxx1m_........'''''''!!!'''''''.............   
+xxxxxxm_..........'''''''''''...............    
+xxxxxxxxxx...........'''''................      
+xxxxxxxxxxxx...........................         
 ENDMAP
 
 
@@ -215,11 +212,10 @@ ENDMAP
 ##########################################################################
 # Circular temple (David Ploog). 12 = 1 x 12
 
-NAME: circular_temple
-PLACE: Temple
-FLAGS: no_rotate
+NAME:   circular_temple
+PLACE:  Temple
+TAGS:   no_rotate
 ORIENT: encompass
-
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -263,11 +259,10 @@ ENDMAP
 ##############################################################################
 # Three leaves temple (David Ploog). 12 = 3 x 4
 
-NAME: three_leaves__temple
-PLACE: Temple
-FLAGS: no_rotate
+NAME:   three_leaves__temple
+PLACE:  Temple
+TAGS:   no_rotate
 ORIENT: encompass
-
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -307,11 +302,10 @@ ENDMAP
 ##############################################################################
 # Twelve chambers temple (David Ploog). 12 = 12 x 1
 
-NAME: twelve_chambers_temple
-PLACE: Temple
-FLAGS: no_rotate
+NAME:   twelve_chambers_temple
+PLACE:  Temple
+TAGS:   no_rotate
 ORIENT: encompass
-
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -355,11 +349,10 @@ ENDMAP
 ##########################################################################
 # Another temple (David Ploog). 12 + 3 = 1 + 2 + 3 + 4 + 5
 
-NAME: triangle_temple
-PLACE: Temple
-FLAGS: no_rotate
+NAME:   triangle_temple
+PLACE:  Temple
+TAGS:   no_rotate
 ORIENT: encompass
-
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -416,12 +409,10 @@ ENDMAP
 
 ##########################################################################
 # Watery temple (Darshan Shaligram)
-NAME: water_temple
-TAGS: no_pool_fixup
-PLACE: Temple
-FLAGS: no_rotate
+NAME:   water_temple
+TAGS:   no_pool_fixup no_rotate
+PLACE:  Temple
 ORIENT: encompass
-
 MAP
 xcccccccccccccccccccccccccccccccccccccccccccccccccccx
 xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
@@ -450,7 +441,7 @@ ENDMAP
 
 NAME:    five_temple
 PLACE:   Temple
-FLAGS:   no_rotate
+TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: ABC/DEF/GHI/JKL/MNO
 SHUFFLE: ABC, DEF, GHI, JKL, MNO

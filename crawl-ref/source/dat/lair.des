@@ -84,8 +84,7 @@ ENDMAP
 # Obligatory Oklob Plant Lair Entry Vault,
 #
 NAME:   oklobed_lair
-TAGS:   lair_entry no_monster_gen no_pool_fixup
-FLAGS:  no_rotate
+TAGS:   lair_entry no_monster_gen no_pool_fixup no_rotate
 ORIENT: float
 : if you.absdepth() >= 12 then
 MONS:   plant, oklob plant / w:50 plant
@@ -160,10 +159,9 @@ ENDMAP
 # Dragon's Lair, for generous values of Dragon
 #
 NAME: erik_lair_4
-TAGS: lair_entry
+TAGS: lair_entry no_rotate
 MONS: steam dragon / mottled dragon / swamp drake
 MONS: w:20 giant iguana / komodo dragon / giant gecko / giant lizard / nothing
-FLAGS: no_rotate
 SUBST: ? = x.c
 SHUFFLE: %*RO
 ORIENT: float
@@ -214,6 +212,7 @@ NAME:    RatsNest_Lair
 ORIENT:  northeast
 TAGS:    uniq_rats_nest
 DEPTH:   Lair
+CHANCE:  5
 SHUFFLE: 23, 34
 MONS:    rat / green rat / nothing, grey rat / orange rat / nothing
 MONS:    green rat / orange rat / nothing, orange rat / rat
@@ -248,19 +247,14 @@ xxxxxxxx.xxxxx111.xxxx.xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##########################################
-# a pointless little "vault" by Lemuel
+# a pointless little "vaults" by Lemuel
 #
-# edited and varied by Eino. Placing into Lair only because of the floor colour.
-# would be nice to have in the main dungeon, if it once becomes possible to
-# change the floor colour (to green/brown)
-# adapted towards less strawberries (dp). I'm against using these outside Lair.
-#
-NAME: strawberry_fields_big
+NAME:   strawberry_fields_big
 ORIENT: float
-DEPTH: Lair
-SUBST: .= d .:150 1:8 2:4
-MONS: plant, butterfly
-ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+DEPTH:  Lair
+SUBST:  .= d .:150 1:8 2:4
+MONS:   plant, butterfly
+ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 CHANCE: 1
 COLOUR: . = green:20 / brown:15 / none
 MAP
@@ -282,12 +276,12 @@ MAP
 .....................
 ENDMAP
 
-NAME: strawberry_fields_big_rounded
+NAME:   strawberry_fields_big_rounded
 ORIENT: float
-DEPTH: Lair
-SUBST: .= d .:140 1:8 2:4
-MONS: plant, butterfly
-ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+DEPTH:  Lair
+SUBST:  .= d .:140 1:8 2:4
+MONS:   plant, butterfly
+ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 CHANCE: 1
 COLOUR: . = green:20 / brown:15 / none
 MAP
@@ -309,13 +303,13 @@ MAP
        .......
 ENDMAP
 
-NAME: strawberry_fields_round
+NAME:   strawberry_fields_round
 ORIENT: float
-TAGS: allow_dup
-DEPTH: Lair
-SUBST: .= d .:50 1:8 2:4
-MONS: plant, butterfly
-ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+TAGS:   allow_dup
+DEPTH:  Lair
+SUBST:  .= d .:50 1:8 2:4
+MONS:   plant, butterfly
+ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 CHANCE: 4
 COLOUR: . = green:20 / brown:15 / none
 MAP
@@ -329,12 +323,12 @@ MAP
    ....
 ENDMAP
 
-NAME: strawberry_fields_patches_spacepadded
+NAME:   strawberry_fields_patches_spacepadded
 ORIENT: float
-DEPTH: Lair
-SUBST: .= d .:50 1:8 2:4 
-MONS: plant, butterfly
-ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+DEPTH:  Lair
+SUBST:  .= d .:50 1:8 2:4 
+MONS:   plant, butterfly
+ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 CHANCE: 4
 COLOUR: . = green:20 / brown:15 / none
 MAP
@@ -551,6 +545,48 @@ xxxx..;xxx
 xxx....xxx
 ENDMAP
 
+###########################
+# Stranded yaks
+#
+NAME: Lemuel_yak_island_a
+DEPTH: Lair
+TAGS: no_pool_fixup uniq_yak_island
+MONS: yak/w:5 sheep/w:3 death yak
+SUBST: ; : .wW
+SUBST: . : . W:2
+MAP
+..............
+...;;wwww;;...
+..;wwwwwwww;..
+.;wwww..wwww;.
+.;www.1.1www;.
+.www.1>1.1www.
+.;www.1.1www;.
+.;wwww..wwww;.
+..;wwwwwwww;..
+...;;wwww;;...
+..............
+ENDMAP
+
+NAME: Lemuel_yak_island_b
+DEPTH: Swamp, Shoal
+TAGS: no_pool_fixup uniq_yak_island
+MONS: yak/w:5 sheep/w:3 death yak
+SUBST: ; = wW
+SUBST: . : . W:2
+MAP
+   ;;wwww;;   
+  ;wwwwwwww;  
+ ;wwww..wwww; 
+ ;www.1.1www; 
+ www.1>1.1www 
+ ;www.1.1www; 
+ ;wwww..wwww; 
+  ;wwwwwwww;  
+   ;;wwww;;   
+ENDMAP
+
+
 ##############################################################################
 # Branch ends: Shoal, Slime Pit, Snake Pit, Swamp
 # Note that the Shoals usually have a randomised end map; predrawn maps 
@@ -720,6 +756,11 @@ MONS:    royal jelly, acid blob, great orb of eyes / nothing
 SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
 SUBST:   " : " .:3,  " = .c
 SHUFFLE: ([{ 
+LFLAGS:  no_tele_control
+MARKER:  X = lua:mons_dies_change_flags { \
+             level_flags="!no_tele_control", mon_name="royal jelly" \
+         }
+SUBST:  X = .
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -753,7 +794,7 @@ xxxxxxxxxxxx'................"cc**|*cc..cc*|**cc"................'''xxxxxxxxxxxx
 xxxxxxxxxxxx'................"ccc**c|cc4c|c**ccc"..................xxxxxxxxxxxxx
 xxxxxxxxxxx'................."cccccccc.3cccccccc"..................'xxxxxxxxxxxx
 xxxxxxxxxxx'................."c.4.c.4.1..4.c.4.c"..................''xxxxxxxxxxx
-xxxxxxxxxxx'..................2.c.4.c....c.4.c.2....................'xxxxxxxxxxx
+xxxxxxxxxxx'..................2.c.4.c.X..c.4.c.2....................'xxxxxxxxxxx
 xxxxxxxxxx'..........)......."cccccccc3.cccccccc"...................'xxxxxxxxxxx
 xxxxxxxxxx'.................."ccc**c|cc4c|c**ccc"...................'xxxxxxxxxxx
 xxxxxxxxxx'.................."cc**|*cc..cc*|**cc"..................'xxxxxxxxxxxx

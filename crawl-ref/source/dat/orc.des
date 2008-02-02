@@ -117,9 +117,8 @@ ENDMAP
 # Wary orcs
 #
 NAME: david_orc_4
-TAGS: orc_entry
+TAGS: orc_entry no_rotate
 ORIENT: float
-FLAGS: no_rotate
 SHUFFLE: XYZ
 SUBST: ? = I F
 # around 4% of these entries have a dangerous statue
@@ -182,7 +181,7 @@ ENDMAP
 # Caught partying
 #
 NAME:  erik_orc_1
-TAGS:  orc_entry
+TAGS:  orc_entry no_rotate
 MONS:  orc, orc priest/orc wizard, weight:50 orc warrior/ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
 KITEM: 1 = sausage / nothing / animal skin / potion of confusion / potion of paralysis / potion of slowing / potion of degeneration / w:2 potion of speed / w:2 potion of might
@@ -190,7 +189,6 @@ KFEAT: 1 = 1
 ITEM:  club, potion of confusion, slice of pizza, sausage / weight:40 nothing
 ITEM:  potion of confusion / potion of water
 SHUFFLE: defO
-FLAGS: no_rotate
 ORIENT: float
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -208,7 +206,7 @@ ENDMAP
 # C'mon, you *gotta* have a *fort*!
 #
 NAME: erik_orc_2
-TAGS: orc_entry no_pool_fixup
+TAGS: orc_entry no_pool_fixup no_rotate
 MONS: orc warrior, orc priest/orc wizard, weight:100 orc / orc warrior
 : if you.absdepth() >= 10 and crawl.one_chance_in(10) then
 MONS: orc knight
@@ -218,7 +216,6 @@ MONS: orc warrior
 SUBST: G = 4
 : end
 ORIENT: float
-FLAGS: no_rotate
 SUBST: c = c:1000 x
 MAP
 .............................

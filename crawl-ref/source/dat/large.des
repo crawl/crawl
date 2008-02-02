@@ -16,6 +16,7 @@ default-depth: D:12-26
 NAME:    RatsNest_Dungeon
 ORIENT:  northeast
 TAGS:    uniq_rats_nest
+CHANCE:  5
 DEPTH:   D:5-9
 SHUFFLE: 23, 34
 MONS:    rat / nothing, grey rat / nothing
@@ -161,17 +162,9 @@ ENDMAP
 ################################################################################
 #
 # Steading of the Giant Chief
-# Note that the entrance gives you some indication of the boss
 #
-# This is intended mainly for Orc Mines. Can it appear there?
-#
-# Yes, it's a bit tough for the levels where it appears. But it has good loot.
-# And be thankful I got rid of the version with a titan!
-#
-# Lemuel
-#
-NAME:    Giant_Chief
-DEPTH:   D:11-22, Orc:2-4
+NAME:    Giant_Chief_Lemuel
+DEPTH:   D:11-22, Orc:3-4
 ORIENT:  north
 MONS:    stone giant, frost giant, fire giant
 MONS:    hill giant, cyclops
@@ -494,12 +487,13 @@ ENDMAP
 NAME:   thingy_vault
 DEPTH:  D:12-26
 ORIENT: southwest
-FLAGS:  no_rotate
+TAGS:   no_rotate
+NSUBST: ^ = 3:^ / *:.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx^xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx^^^xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx^^^^^xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxx
@@ -538,7 +532,7 @@ ENDMAP
 NAME:   hourglass_vault
 ORIENT: southeast
 DEPTH:  D:12-26
-FLAGS:  no_rotate
+TAGS:   no_rotate
 MAP
 xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx.................xxxxxxxxxxxxxxxxx
@@ -582,6 +576,8 @@ ENDMAP
 NAME:   Angbandy_vault
 ORIENT: northeast
 DEPTH:  D:16-26
+SUBST:  ^ = ^.
+SUBST:  "=.", '=.', '=$, "=*, *=* |:1
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -590,34 +586,34 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ccccccccccccccccccccccccccccccccxxxxxxxx
-c*******cc..9...cc.+8c0c*c.c*c8cxxxxxxxx
-c******cc..cc..cc..cc0c.c.c.c8ccxxxxxxxx
-c*****cc..cc..cc..cc.c$c.c.c8c.cxxxxxxxx
-c****cc9.cc..cc8.cc|c.c|c.c*c0ccxxxxxxxx
-c***cc..cc..cc..cc.c.c.c.c.c.c$cxxxxxxxx
-c**cc..cc8.cc..cc.c*c.c.c.c.c.ccxxxxxxxx
-c+cc9.cc..cc..cc.c.c.c.c*c.c.c.cxxxxxxxx
-c^c..cc..cc..cc.c$c.c.c.c.c.c*ccxxxxxxxx
-c...cc..cc..cc.c.c.c9c$c.c.c.c9cxxxxxxxx
-c..cc..cc..cc$c.c.c*c.c.c.c9c9ccxxxxxxxx
-c.cc..cc..cc.c.c|c.c.c.c.c$c.c9cxxxxxxxx
-ccc..cc..cc.c.c.c.c.c.c.c.c.cc+cxxxxxxxx
-cc..cc..cc.c*c.c.c.c.c.c$c.cc..cxxxxxxxx
-c0.cc..cc.c.c.c.c8c.c*c.c.cc0.ccxxxxxxxx
-c.cc..cc*c.c.c.c.c$c.c.c.cc..cccxxxxxxxx
-c^c..cc.c.c9c.c.c.c.c.c.cc..cc.cxxxxxxxx
-c0..cc$c.c.c*c0c.c.c.c.cc..cc.0cxxxxxxxx
-c..cc.c.c9c.c.c.c$c.c.cc.9cc...cxxxxxxxx
-c.cc9c.c.c.c.c.c.c.c.cc..cc..c^cxxxxxxxx
-ccc.c.c$c.c.c.c.c.c$cc..cc..cc^cxxxxxxxx
-cc$c.c.c.c.c$c.c0c.cc..cc..cc..cxxxxxxxx
-c.c.c.c.c.c.c.c.c.cc9.cc..cc..ccxxxxxxxx
-cc.c8c.c.c$c.c.c.cc..cc..cc0.cccxxxxxxxx
-c.c$c.c$c0c.c.c.cc..cc..cc..cc$cxxxxxxxx
-cc.c.c.c.c.c*c.cc..cc..cc..cc$$cxxxxxxxx
-c.c.c.c.c.c.c.cc..cc0.cc..cc$$$cxxxxxxxx
-cc.c.c.c.c.c$cc..cc..cc..cc$$$$cxxxxxxxx
-c.c.c.c.c.c.cc.8.^..cc....+$$$$cxxxxxxxx
+c*******cc..9...cc.+8c0c"c.c"c8cxxxxxxxx
+c******cc..cc..cc..cc0c.c.c'c8ccxxxxxxxx
+c*****cc..cc..cc..cc'c'c"c.c8c.cxxxxxxxx
+c****cc9.cc..cc8.cc"c.c.c'c"c0ccxxxxxxxx
+c***cc..cc..cc..cc.c.c"c.c.c.c'cxxxxxxxx
+c**cc..cc8.cc..cc.c"c.c.c.c"c.ccxxxxxxxx
+c+cc9.cc..cc..cc"c.c.c.c"c.c.c.cxxxxxxxx
+c^c..cc..cc..cc.c'c.c.c.c.c"c"ccxxxxxxxx
+c^^.cc..cc..cc.c.c.c9c'c"c.c.c9cxxxxxxxx
+c..cc..cc..cc'c.c.c"c.c.c.c9c9ccxxxxxxxx
+c.cc..cc..cc.c.c"c.c.c.c.c'c"c9cxxxxxxxx
+ccc..cc..cc.c.c.c.c.c"c.c.c.cc+cxxxxxxxx
+cc..cc..cc'c"c'c.c.c.c.c'c.cc..cxxxxxxxx
+c0.cc..cc.c.c.c.c8c.c"c.c.cc0.ccxxxxxxxx
+c^cc..cc"c.c.c'c.c'c.c.c.cc..cccxxxxxxxx
+c^c..cc.c.c9c.c.c.c'c.c.cc..cc.cxxxxxxxx
+c0..cc'c.c.c"c0c.c.c.c.cc..cc.0cxxxxxxxx
+c..cc.c.c9c'c.c.c'c'c.cc.9cc...cxxxxxxxx
+c.cc9c.c.c"c.c.c.c.c.cc..cc..c^cxxxxxxxx
+ccc.c'c'c.c.c.c'c.c'cc..cc..cc^cxxxxxxxx
+cc'c.c.c.c'c'c.c0c.cc..cc..cc..cxxxxxxxx
+c.c.c"c.c.c.c.c'c.cc9.cc..cc..ccxxxxxxxx
+cc.c8c.c.c'c.c'c.cc..cc..cc0.cccxxxxxxxx
+c.c'c.c'c0c.c.c"cc..cc..cc..cc$cxxxxxxxx
+cc.c.c.c.c.c"c.cc..cc..cc..cc$$cxxxxxxxx
+c"c.c.c.c'c.c.cc..cc0.cc..cc$$$cxxxxxxxx
+cc.c.c.c.c"c'cc..cc..cc..cc$$$$cxxxxxxxx
+c'c.c.c'c.c.cc.8.^^.cc...^+$$$$cxxxxxxxx
 cccc@cccccccccccccccccccccccccccxxxxxxxx
 ENDMAP
 
@@ -672,6 +668,7 @@ ENDMAP
 NAME:   cross_vault
 DEPTH:  D:12-26
 ORIENT: northwest
+SUBST:  ~=.~, ^=^.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -683,7 +680,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxx............xxxxxxxxxx
 xxxxxxxxxxxxxxx..................xxxxxxx
 xxxxxxxxxxxxx......................xxxxx
-xxxxxxxxxxxx..........w..w..........xxxx
+xxxxxxxxxxxx..........w^^w..........xxxx
 xxxxxxxxxxx........wwww++wwww........xxx
 xxxxxxxxxxx......wwwvvv^^vvvwww......xxx
 xxxxxxxxxx......wwwwv.9..9.vwwww......xx
@@ -705,8 +702,8 @@ xxxxxxxxxx.....wwwwwv......vwwwww.....xx
 xxxxxxxxxxx.....wwwwvvvvvvvvwwww.....xxx
 xxxxxxxxxxx.......wwwwwwwwwwww.......xxx
 xxxxxxxxxxxx.........wwwwww.........xxxx
-xxxxxxxxxxxxx.........~..~.........xxxxx
-xxxxxxxxxxxxxxx.......x++x.......xxxxxxx
+xxxxxxxxxxxxx........^~~~~^........xxxxx
+xxxxxxxxxxxxxxx......^x++x^......xxxxxxx
 xxxxxxxxxxxxxxxxxx...xx..xx...xxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxx
 ENDMAP
@@ -763,9 +760,9 @@ NAME:   impenetrable_vault
 DEPTH:  D:16-26
 ORIENT: southeast
 MAP
-..............@................xxxxxxxxx
-...............................xxxxxxxxx
-...............................xxxxxxxxx
+       .......@................xxxxxxxxx
+       ........................xxxxxxxxx
+       ........................xxxxxxxxx
 ...............................xxxxxxxxx
 ...............................xxxxxxxxx
 .....cccccccccccccccc..........xxxxxxxxx
@@ -785,10 +782,10 @@ MAP
 ........cc9...........^]c......xxxxxxxxx
 .........cccccccccccccccc......xxxxxxxxx
 ...............................xxxxxxxxx
-...............................xxxxxxxxx
-...............................xxxxxxxxx
-...............................xxxxxxxxx
-...............................xxxxxxxxx
+      .........................xxxxxxxxx
+      .........................xxxxxxxxx
+      .........................xxxxxxxxx
+      .........................xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -804,8 +801,8 @@ ENDMAP
 #
 NAME:   orc_temple
 ORIENT: southwest
-FLAGS:  no_rotate
-DEPTH:  D:14-26, Orc
+TAGS:   no_rotate
+DEPTH:  D:14-26, Orc:2-4
 MONS:   orc warlord, orc priest, orc high priest, orc warrior, orc wizard
 MONS:   orc knight, orc sorcerer
 KFEAT:  C = altar_beogh
@@ -1057,8 +1054,7 @@ ENDMAP
 NAME:    erik_rubicon_a
 DEPTH:   D:10-16
 ORIENT:  south
-FLAGS:   no_rotate
-TAGS:    no_pool_fixup uniq_rubicon
+TAGS:    no_pool_fixup no_rotate uniq_rubicon
 CHANCE:  6
 ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
 ITEM:    nothing, nothing, nothing
@@ -1093,8 +1089,7 @@ ENDMAP
 NAME:    erik_rubicon_b
 DEPTH:   D:10-16
 ORIENT:  south
-FLAGS:   no_rotate
-TAGS:    uniq_rubicon
+TAGS:    no_rotate uniq_rubicon
 CHANCE:  4
 ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
 ITEM:    nothing, nothing, nothing, nothing

@@ -51,7 +51,7 @@ MONS: weight:40 nothing / weight:30 yaktaur / yaktaur captain
 MONS: weight:70 nothing / weight:40 ogre / weight:20 two-headed ogre / ogre-mage
 MONS: weight:100 nothing / shapeshifter
 SHUFFLE: 123
-ORIENT: float
+ORIENT:  float
 MAP
 1111..@......
 111..........
@@ -67,10 +67,10 @@ ENDMAP
 ##############################################################################
 # Vaults patterns 0: vanguard
 #
-NAME: david_vaults_3
-TAGS: vault_entry
-ORIENT: float
-MONS: human, human / Donald, human / Michael, human / Norris, human / Wayne
+NAME:    david_vaults_3
+TAGS:    vault_entry
+ORIENT:  float
+MONS:    human, human / Donald, human / Michael, human / Norris, human / Wayne
 SHUFFLE: 2345
 MAP
 @..........@
@@ -88,9 +88,9 @@ ENDMAP
 ##############################################################################
 # Vaults patterns I
 #
-NAME: david_vaults_4
-TAGS: vault_entry
-ORIENT: float
+NAME:    david_vaults_4
+TAGS:    vault_entry
+ORIENT:  float
 SHUFFLE: 123456
 MONS: dragon / golden dragon / ice dragon / iron dragon / shadow dragon / storm dragon
 MONS: freezing wraith / shadow wraith / wight / wraith
@@ -117,8 +117,8 @@ ENDMAP
 ##############################################################################
 # Vaults patterns II
 #
-NAME: david_vaults_5
-TAGS: vault_entry
+NAME:   david_vaults_5
+TAGS:   vault_entry
 ORIENT: float
 SUBST: ! : ! .
 SUBST: ? : ? .
@@ -192,11 +192,16 @@ PLACE:   Vault:8
 ORIENT:  encompass
 #
 # the rune's spot, occassionally put nasty on the rune
-KMONS:   O = 8 / 9
-KFEAT:   O = O
 NSUBST:  O = O / o
+KMONS:   O = 8 / 9
+KMONS:   o = 8 / 9
+KFEAT:   O = O
+: local brnd = crawl.random2(13)
+: if brnd == 12 then
+KFEAT:   o = any shop
+: else
 KITEM:   o = any good_item
-KFEAT:   o = w:120 . / any shop
+: end
 
 #
 # NW

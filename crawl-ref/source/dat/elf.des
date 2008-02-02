@@ -96,7 +96,8 @@ ENDMAP
 NAME:    elf_hall
 PLACE:   Elf:7
 ORIENT:  northwest
-FLAGS:   no_rotate
+TAGS:    no_rotate
+LFLAGS:  no_tele_control
 MONS:    deep elf high priest, deep elf demonologist, deep elf annihilator
 MONS:    deep elf sorcerer, deep elf death mage
 MONS:    deep elf blademaster, deep elf master archer
@@ -113,6 +114,10 @@ SUBST:   v : xvb
 SUBST:   | = | *:2 
 SUBST:   $ = $:20 *:4 |:1
 SUBST:   * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -158,8 +163,8 @@ ENDMAP
 
 NAME:    elf_hall_gauntlet_wide
 PLACE:   Elf:7
-TAGS:    no_pool_fixup
-FLAGS:   no_rotate
+TAGS:    no_pool_fixup no_rotate
+LFLAGS:  no_tele_control
 ORIENT:  float
 CHANCE:  5
 MONS:    deep elf high priest, deep elf demonologist
@@ -179,6 +184,10 @@ KMONS:   A = deep elf master archer
 KFEAT:   A = |
 KMONS:   B = deep elf blademaster
 KFEAT:   B = |
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 cccccccccccccccccccccccccc
 c2ccccccc........ccccccccc
@@ -209,8 +218,7 @@ ENDMAP
 
 NAME:    elf_hall_gauntlet_narrow
 PLACE:   Elf:7
-FLAGS:   no_rotate
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 CHANCE:  5
 MONS:    deep elf high priest, deep elf demonologist
@@ -237,6 +245,11 @@ KITEM:   6 = |
 KITEM:   7 = |
 KFEAT:   6 = 6
 KFEAT:   7 = 7
+LFLAGS:  no_tele_control
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccc
 c2ccccccc.......ccccccccc

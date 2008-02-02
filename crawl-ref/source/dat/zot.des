@@ -52,7 +52,7 @@ ENDMAP
 NAME:   lemuel_halls_of_wrath
 DEPTH:  Zot:1-4
 ORIENT: float
-FLAGS:  no_rotate
+TAGS:   no_rotate
 NSUBST: 1 = 6:2 / *=1
 SUBST:  1 = 1 .:5
 SUBST:  1 = 1 3
@@ -145,7 +145,7 @@ ENDMAP
 #
 NAME:  lemuel_golem_globe
 DEPTH: Zot:*
-FLAGS: no_rotate
+TAGS:  no_rotate
 SUBST: 1 = 1.
 MONS:  electric golem
 MAP
@@ -232,11 +232,17 @@ ENDMAP
 
 
 ##############################################################################
-# hall_of_Zot
+# hall_of_Zot_5
 
 NAME:    hall_of_Zot
 PLACE:   Zot:5
 ORIENT:  north
+LFLAGS:  no_tele_control
+MARKER:  Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="Orb of Zot" \
+         }
+FLOORCOL: magenta
+ROCKCOL:  lightmagenta
 
 #traps
 SUBST:   C = c:1000 =
@@ -303,5 +309,45 @@ xxxxxxxxxxxxccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccxxxxxxxxxxx
 ENDMAP
 
 
+################################################################
+# For colouring the walls and floors of the first four levels
 
+NAME:     hall_of_Zot_1
+PLACE:    Zot:1
+TAGS:     transparent
+ORIENT:   float
+FLOORCOL: lightgrey
+ROCKCOL:  lightgrey
+MAP
+.
+ENDMAP
 
+NAME:     hall_of_Zot_2
+PLACE:    Zot:2
+TAGS:     transparent
+ORIENT:   float
+FLOORCOL: lightgrey
+ROCKCOL:  blue
+MAP
+.
+ENDMAP
+
+NAME:     hall_of_Zot_3
+PLACE:    Zot:3
+TAGS:     transparent
+ORIENT:   float
+FLOORCOL: blue
+ROCKCOL:  lightblue
+MAP
+.
+ENDMAP
+
+NAME:     hall_of_Zot_4
+PLACE:    Zot:4
+TAGS:     transparent
+ORIENT:   float
+FLOORCOL: lightblue
+ROCKCOL:  magenta
+MAP
+.
+ENDMAP

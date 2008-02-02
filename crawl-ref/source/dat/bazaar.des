@@ -2,6 +2,15 @@
 # bazaar.des - Bazaar entry vaults and bazaar layouts.
 ###############################################################################
 
+# To do: 
+# 1) Ideally, the portal duration should depend on absolute depth (the deeper,
+#    the less time the player gets). I suggest a duration of
+#    100 + 10*(30-abs.depth) + rn(100*(30-abs.depth))
+# 2) I think there should be more bazaars: each shop should have a chance of
+#    (abs.depth-10)/30 of becoming a portal (with negative chance==0), and at
+#    most one bazaar per level
+# 3) The above would (and should) include bazaars outside of the dungeon.
+
 ###############################################################################
 # Bazaar entries
 
@@ -164,9 +173,8 @@ ENDMAP
 #########################################
 # Portal by the lakeside (jpeg)
 NAME:    bzr_entry_007
-TAGS:    bzr_entry allow_dup
+TAGS:    bzr_entry allow_dup no_rotate
 ORIENT:  float
-FLAGS:   no_rotate
 MONS:    plant
 SHUFFLE: XY
 SUBST:   a = W .
@@ -203,8 +211,7 @@ ENDMAP
 # General marketplace
 # 4 random shops
 NAME:   bazaar_general_marketplace
-TAGS:   bazaar allow_dup
-FLAGS:  no_rotate
+TAGS:   bazaar allow_dup no_rotate
 ORIENT: encompass
 KFEAT:  A = any shop
 : bazaar_message(_G)
@@ -256,9 +263,8 @@ ENDMAP
 # Another simple one (jpeg)
 # 4 random shops
 NAME:    bazaar_oval
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
-FLAGS:   no_rotate
 SUBST:   A = TVBG
 KFEAT:   B = any shop
 : bazaar_message(_G)
@@ -313,8 +319,7 @@ ENDMAP
 # Wands
 # 2 wand shops, 2 jewellery shops
 NAME:    bazaar_wands
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 KFEAT:   A = wand shop
 KFEAT:   B = distillery shop
@@ -361,8 +366,7 @@ ENDMAP
 # bazaars in a row
 # ~4 shops
 NAME:    bazaar_row
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff
 SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss
@@ -406,8 +410,7 @@ ENDMAP
 # bazaars in a row v2
 # ~4.5 shops
 NAME:    bazaar_row_2
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh
 SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Kk, Gg/Mm
@@ -450,8 +453,7 @@ ENDMAP
 # 5 shops
 NAME:    bazaar_circle_1
 CHANCE:  2
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCD, EFGH
 SUBST:   H=>, A=T, B=T
@@ -491,8 +493,7 @@ ENDMAP
 
 NAME:    bazaar_circle_2
 CHANCE:  2
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: EFGH
 SUBST:   H=>, D=T, C=T
@@ -532,8 +533,7 @@ ENDMAP
 
 NAME:    bazaar_circle_3
 CHANCE:  2
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: EFGH
 SUBST:   A=>, D=T, C=T
@@ -573,8 +573,7 @@ ENDMAP
 
 NAME:    bazaar_circle_4
 CHANCE:  1
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCDEF
 KFEAT:   A = any shop
@@ -613,8 +612,7 @@ ENDMAP
 
 NAME:    bazaar_circle_5
 CHANCE:  2
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 KFEAT:   C = any shop
 KFEAT:   D = any shop
@@ -652,8 +650,7 @@ ENDMAP
 
 NAME:    bazaar_circle_6
 CHANCE:  1
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 KFEAT:   A = any shop / antique armour shop
 KFEAT:   B = any shop / antique weapon shop
@@ -692,9 +689,8 @@ ENDMAP
 # bazaar in honeycomb form (jpeg)
 # 4 shops
 NAME:    bazaar_honeycomb
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
-FLAGS:   no_rotate
 MONS:    plant
 SHUFFLE: ABCDEF
 SUBST:   A = >, B = >
@@ -733,9 +729,8 @@ ENDMAP
 # bazaar lakeside with goldfish (jpeg)
 # 5 shops
 NAME:    bazaar_lake
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
-FLAGS:   no_rotate
 MONS:    giant goldfish
 SUBST:   a = W.
 SHUFFLE: ABCDEF
@@ -800,9 +795,8 @@ ENDMAP
 # Bazaars in cross form (jpeg)
 # 2.25 shops
 NAME:    bazaar_cross1
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 CHANCE:  5
-FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCD
 SUBST:   A = <, B = >
@@ -832,9 +826,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_cross2
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 CHANCE:  5
-FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCD
 SUBST:   A = T E, B = >
@@ -868,8 +861,7 @@ ENDMAP
 # strange pattern (jpeg) 
 # 4 shops
 NAME:    bazaar_ribbon
-TAGS:    bazaar allow_dup
-FLAGS:   no_rotate
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: zZ
 SUBST:   z = ., Z = w
@@ -916,9 +908,8 @@ ENDMAP
 # Nine rooms (jpeg)
 # 5 shops
 NAME:    bazaar_ninerooms1
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 CHANCE:  2
-FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   k : . x
 NSUBST:  A = 2=T:30 V / *:C
@@ -954,9 +945,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_ninerooms2
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 CHANCE:  2
-FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   k : . x
 NSUBST:  A = 2=T:30 V / *:C
@@ -992,9 +982,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_ninerooms3
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 CHANCE:  2
-FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   z = .:50 +
 SUBST:   k : . x
@@ -1031,9 +1020,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_ninerooms4
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 CHANCE:  2
-FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   z = .:50 +
 SUBST:   k : . x
@@ -1070,9 +1058,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_ninerooms5
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 CHANCE:  2
-FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   k : . x
 NSUBST:  A = 1:< / 1:> / 1:T C / 3=T:30 V / *:C
@@ -1111,10 +1098,9 @@ ENDMAP
 # some more bazaars based on triangles (jpeg)
 # 4.4 shops
 NAME:    bazaar_triangles
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 CHANCE:  1
-FLAGS:   no_rotate
 SHUFFLE: ACD
 SUBST:   A = <
 KFEAT:   B = any shop / antique armour shop / jewellery shop
@@ -1134,10 +1120,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_hexagon
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 CHANCE:  4
-FLAGS:   no_rotate
 SHUFFLE: AC, BD
 KFEAT:   A = armour shop / weapon shop / wand shop
 KFEAT:   B = general shop / food shop
@@ -1165,9 +1150,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_triangle_bulge
-TAGS:    bazaar allow_dup
+TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
-FLAGS:   no_rotate
 CHANCE:  5
 SHUFFLE: ABC
 SUBST:   A = <, B = >

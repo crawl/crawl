@@ -14,8 +14,8 @@
 # I    Temples (Multi-altar vaults)
 ######################################
 
-NAME: minitemple
-TAGS: allow_dup
+NAME:   minitemple
+TAGS:   allow_dup
 # More common than the others.
 CHANCE: 20
 MAP
@@ -29,10 +29,10 @@ cBcBcBcBcc
 cccccccccc
 ENDMAP
 
-NAME: jmf_multi_god_temple
+NAME:    jmf_multi_god_temple
 SHUFFLE: abc
-SUBST: a:=, b:x, c:x
-DEPTH: 8-
+SUBST:   a:=, b:x, c:x
+DEPTH:   D:8-21, Vault
 MAP
 ............
 .axxxxxxxxa.
@@ -48,8 +48,8 @@ MAP
 ............
 ENDMAP
 
-NAME: jmf_multi_god_temple2
-DEPTH: 12-
+NAME:  jmf_multi_god_temple2
+DEPTH: D:8-21, Vault
 MAP
 ............
 ..vvvvvvvv..
@@ -87,19 +87,20 @@ MAP
 ...........
 ENDMAP
 
-NAME: lemuel_round_altar
-TAGS: allow_dup
+NAME:    lemuel_round_altar
+TAGS:    allow_dup
 SHUFFLE: cvxx
+SUBST:   X:x.
 MAP
-   xxxxx
+   xxXxx
   xx...xx
  xx.....xx
  x.......x
- x...C...@
+ X...C...@
  x.......x
  xx.....xx
   xx...xx
-   xxxxx
+   xxXxx
 ENDMAP
 
 NAME: lemuel_crystal_altar
@@ -110,16 +111,15 @@ b.b
 b.b
 ENDMAP
 
-NAME: lemuel_altar_in_water
-DEPTH: D:2-18, !Lair, !Hive, !Slime
+NAME:   lemuel_altar_in_water
+DEPTH:  D:2-18, Swamp, Shoal
 CHANCE: 9
-FLAGS: no_rotate
 : local brnd = crawl.random2(13)
 : if brnd > 10 then
-TAGS: no_monster_gen
+TAGS: no_monster_gen no_rotate
 # this case almost always has altar access
 : else
-TAGS: no_monster_gen no_pool_fixup
+TAGS: no_monster_gen no_pool_fixup no_rotate
 : end
 MAP
    .........   
@@ -135,10 +135,9 @@ MAP
    ........  
 ENDMAP
 
-NAME: lemuel_altar_in_water2
-TAGS: no_pool_fixup no_monster_gen
-DEPTH: 2-18
-FLAGS: no_rotate
+NAME:   lemuel_altar_in_water2
+TAGS:   no_pool_fixup no_monster_gen
+DEPTH:  D:2-18, Lair, Snake, Swamp, Shoal
 CHANCE: 1
 MAP
    www
@@ -150,20 +149,20 @@ MAP
    www
 ENDMAP
 
-NAME: lemuel_oklob_altar
-DEPTH: 6-18
-MONS: oklob plant, plant
+NAME:  lemuel_oklob_altar
+DEPTH: D:6-18, Lair, Snake, Shoal
+MONS:  oklob plant, plant
 MAP
  2
 2C1
  2
 ENDMAP
 
-NAME: lemuel_hidden_altar
-DEPTH: 1-18, !Lair, !Orc, !Hive, !Slime
+NAME:    lemuel_hidden_altar
+DEPTH:   D:1-18, Vault, Lair, Elf, Crypt
 SHUFFLE: XY
-SUBST: X = .
-SUBST: Y = =
+SUBST:   X = .
+SUBST:   Y = =
 MAP
 .........
 .xxxXxxx.
@@ -176,9 +175,9 @@ MAP
 .........
 ENDMAP
 
-NAME: lemuel_sealed_altar_a
+NAME:   lemuel_sealed_altar_a
 CHANCE: 3
-DEPTH: 2-18, !Lair, !Orc, !Hive, !Slime
+DEPTH:  D:2-18, Vault, Elf, Crypt
 MAP
 xxxxxxxxxxxxx
 x...........x
@@ -196,7 +195,7 @@ ENDMAP
 
 NAME: lemuel_sealed_altar_b
 CHANCE: 7
-DEPTH: 2-18, !Lair, !Orc, !Hive, !Slime
+DEPTH: D:2-18, Vault, Elf, Crypt
 MAP
 xxxxxxxxxxx
 x.........x
@@ -208,8 +207,9 @@ x.........x
 xxxxxxxxxxx
 ENDMAP
 
-NAME: lemuel_tele_altar
-DEPTH: 2-18, !Lair, !Orc, !Hive, !Slime
+NAME:  lemuel_tele_altar
+DEPTH: D:2-18, Vault 
+SUBST: Y = X x
 KFEAT: X = teleport trap
 MAP
 .............
@@ -217,36 +217,30 @@ MAP
 .x.........x.
 .x.........x.
 .x.........x.
-.X....C....X.
+.Y....C....Y.
 .x.........x.
 .x.........x.
 .x.........x.
-.xxxxxXxxxxx.
+.xxxxxYxxxxx.
 .............
 ENDMAP
 
-NAME: lemuel_statue_altar
-
-# Increased depth from 2-18 because getting a hostile statue can
-# instakill a low-level character.
-
-DEPTH: 10-18, !Lair, !Hive, !Slime
-
+NAME:  lemuel_statue_altar
+DEPTH: 2-18, Vault, Elf
+: if you.absdepth() < 10 then
+SUBST: F = G
+: end
 MAP
-.....
-.cFc.
-.c.c.
-.c.c.
-.c.c.
-.c>c.
-.cCc.
-.ccc.
-.....
+.........
+.ccccccc.
+.F...>Cc.
+.ccccccc.
+.........
 ENDMAP
 
-NAME: lemuel_coloured_pillars_altar
-DEPTH: 2-18, !Lair, !Hive, !Slime, !Orc
-FLAGS: no_rotate
+NAME:   lemuel_coloured_pillars_altar
+DEPTH:  D:2-18, Vault, Elf
+TAGS:   no_rotate
 COLOUR: c = blue / yellow / red / cyan
 MAP
 xxxxxxxxxxxxxxxxxxxx
@@ -258,38 +252,27 @@ c...c...c...c...c..x
 xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: lemuel_upstairs_altar
-DEPTH: 2-12, !Lair, !Hive, !Slime, !Orc
+NAME:   lemuel_upstairs_altar
+DEPTH:  D:2-12, Vault, Elf, Crypt
 ORIENT: float
-SUBST: T:T.
-SUBST: ) = )}]
+SUBST:  T:T., )=)}], c:ccx
 MAP
 ccccccc
 cT...Tc
-c.....c
-c..C..c
-c.....c
+c.....ccccccc
+c..C..+....)c
+c.....ccccccc
 cT...Tc
-ccc+ccc
-  c.c
-  c.c
-  c.c
-  c.c
-  c)c
-  ccc
+ccccccc
 ENDMAP
 
 ######################################
 # III  Special altars
 ######################################
 
-NAME: lemuel_angel_altar
-
-# Moved deeper since being teleported next to the Angel will be a
-# quick death at shallow levels.
-
-DEPTH: 9-18, !Lair, !Orc, !Hive, !Slime
-MONS: angel
+NAME:  lemuel_angel_altar
+DEPTH: D:3-18, Vault
+MONS:  angel/daeva
 KFEAT: C = altar_elyvilon / altar_zin / altar_shining_one
 MAP
    .....
@@ -305,9 +288,9 @@ MAP
    .....
 ENDMAP
 
-NAME: lemuel_hellish_altar
-DEPTH: 2-18, !Lair, !Hive, !Slime
-MONS: iron devil/orange demon, beast/rotting devil, lemure/manes, hellion
+NAME:  lemuel_hellish_altar
+DEPTH: D:2-21, Crypt, Geh
+MONS:  iron devil/orange demon, beast/rotting devil, lemure/manes, hellion
 SUBST: 2 = 23
 SUBST: 2 = 12
 SUBST: 3 = 3L
@@ -319,25 +302,24 @@ SUBST: C = C / P:1
 KFEAT: C = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
 MAP
-....LLllLL.....
-...LllllllLLL..
+  ..LLllLL.... 
+  .LllllllLLL..
 ..Lll323lllLLL.
 .LLl32123lllLL.
 .LLl33C33llLL..
 ..Lll323llLL...
 ..LLll3llL.....
-...LLlllL......
-....LLLL.......
-.....LLLLL.....
-.......LLLL....
+...LLlllL...   
+....LLLL....   
+   ..LLLLL..   
+   ....LLLL.   
 ENDMAP
 
-NAME:    david_defended_altar
-DEPTH:   D:7-20, Orc, Elf, Snake
-SHUFFLE: 1ID/2TC
-TAGS:    allow_dup
-MONS:    orc priest, deep elf priest / w:30 nothing
-KFEAT:   D = altar_beogh / w:2 altar_okawaru / w:2 altar_makhleb
+NAME:  david_defended_altar_orc
+DEPTH: D:7-20, Orc
+MONS:  orc priest
+TAGS:  uniq_defended_altar
+KFEAT: D = altar_beogh / w:1 altar_okawaru / w:1 altar_makhleb / w:1 altar_trog
 MAP
 ccccc...
 c1..c...
@@ -346,11 +328,23 @@ c1..c...
 ccccc...
 ENDMAP
 
-NAME: lemuel_blue_sif_altar
-DEPTH: 2-18, !Lair, !Hive, !Slime, !Orc
-TAGS: no_monster_gen mini_float
+NAME:  david_defended_altar_elf
+DEPTH: D:7-20, Elf
+MONS:  deep elf priest / w:30 nothing
+TAGS:  uniq_defended_altar
+MAP
+ccccc...
+c1..c...
+c1C.+.G@
+c1..c...
+ccccc...
+ENDMAP
+
+NAME:   lemuel_blue_sif_altar
+DEPTH:  D:2-18, Elf, Vault
+TAGS:   no_monster_gen mini_float
 COLOUR: . = blue
-KFEAT: C = altar_sif_muna
+KFEAT:  C = altar_sif_muna
 MAP
 xxxxxxxxxxxxxx
 ...........xxx
@@ -359,9 +353,9 @@ xxxxxxxxxxxxxx
 xxxxxxxxxxxxxx
 ENDMAP
 
-NAME: lemuel_dead_fish_altar
-DEPTH: 2-18, !Hive, !Slime, !Orc
-TAGS: no_pool_fixup
+NAME:  lemuel_dead_fish_altar
+DEPTH: D:2-18, Crypt
+TAGS:  no_pool_fixup
 KMONS: 1 = giant goldfish zombie / big fish zombie / nothing
 KFEAT: 1 = deep_water
 KFEAT: C = altar_kikubaaqudgha / altar_yredelemnul
@@ -377,10 +371,10 @@ ENDMAP
 
 # The mix of deep and shallow water is intended to keep the centaurs from 
 # escaping without requiring the player to be able to cross deep water.
-NAME: lemuel_centaur_altar
-DEPTH: 7-20, Shoal
-TAGS: no_pool_fixup no_monster_gen
-MONS: centaur
+NAME:  lemuel_centaur_altar
+DEPTH: D:7-20, Shoal, Lair
+TAGS:  no_pool_fixup no_monster_gen
+MONS:  centaur
 MAP
 xxxxxxxxxxxxx
 xxxxxxxxxxwxx
@@ -394,15 +388,15 @@ xxxwwwWwWxxxx
 xxx......xxxx
 ENDMAP
 
-NAME: lemuel_mausoleum_altar
-DEPTH: 7-20, Crypt
-MONS: w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
-MONS: w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/w:5 troll skeleton
-MONS: mummy, wight, wraith, necrophage, ghoul
+NAME:   lemuel_mausoleum_altar
+DEPTH:  D:7-20, Crypt
+MONS:   w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
+MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/w:5 troll skeleton
+MONS:   mummy, wight, wraith, necrophage, ghoul
 NSUBST: ? = 1:C / *:1
-SUBST: 1 = 1:25 2 3 4:8 5:6 6:4 7:2
-KFEAT: C = altar_kikubaaqudgha / altar_yredelemnul
-KMONS: C = human zombie
+SUBST:  1 = 1:25 2 3 4:8 5:6 6:4 7:2
+KFEAT:  C = altar_kikubaaqudgha / altar_yredelemnul
+KMONS:  C = human zombie
 MAP
 ccccccc
 c?+.+?c

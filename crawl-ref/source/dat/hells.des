@@ -13,7 +13,7 @@ default-depth: D:12-26
 # Hellmouth (Lemuel)
 # note that other than the imps, the demons here cannot fly
 NAME:   hellmouth_1
-FLAGS:  no_rotate
+TAGS:   no_rotate
 MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil / hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
 ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
@@ -46,15 +46,14 @@ ENDMAP
 # Hellmouth 2 (Lemuel)
 # note that other than the imps, the demons here cannot fly
 NAME:   hellmouth_2
-TAGS:   no_monster_gen
-FLAGS:  no_rotate
+TAGS:   no_monster_gen no_rotate
+ORIENT: float
 MONS:   imp / quasit / shadow imp / manes / lemure
 MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
 ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
 ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / w:30 nothing
 KFEAT:  A = enter_hell
-ORIENT: float
 SUBST:  d=de, ?:?.l, ?=l.
 SUBST:  b : b:30 c v .
 MAP
@@ -89,24 +88,24 @@ ORIENT: float
 KFEAT:  A = enter_hell
 SUBST:  ? : . l ?:40, ?=l.
 MAP
-................??............
-...........................??.
-....??..........l?............
-...?ll?........?l?............
-..?lll?.........l.............
-...?l........??l?.............
-...........??lll?.............
-.........?lllllll?............
-.......?llllllllll??..........
-......?lll111111llll?.........
-......?llll12Ad1lll...........
-.......?lll11111ll?...........
-........?lllll1ll?............
-.........??llllll......?......
-...........?llll?.....ll?.....
-..?.........?ll?.......ll?....
-.?............................
-..................??..........
+              ..??..      ....
+   .....     .......     ..??.
+  ..??...   ....l?..    ......
+ ..?ll?........?l?..   .......
+..?lll?.........l.... .....   
+...?l........??l?.........    
+ ..........??lll?.........    
+ ........?lllllll?........    
+  .....?llllllllll??.....     
+  ....?lll111111llll?....     
+   ...?llll12Ad1lll.......    
+   ....?lll11111ll?.......    
+   .....?lllll1ll?.........   
+ ........??llllll......?....  
+...........?llll?.....ll?...  
+..?..  .....?ll?.......ll?..  
+.?...   ...................   
+....      ........??..        
 ENDMAP
 
 
@@ -175,8 +174,7 @@ ENDMAP
 
 NAME:   lemuel_nasty_pond
 DEPTH:  Tar:*
-TAGS:   no_pool_fixup
-FLAGS:  no_rotate
+TAGS:   no_pool_fixup no_rotate
 MONS:   plant, oklob plant, death ooze, rotting devil, blue death / green death
 SUBST:  W:w.
 SUBST:  Z:w.
@@ -204,15 +202,15 @@ ENDMAP
 # Vestibule of Hell and Geryon
 ##############################################################################
 
-NAME: vestibule_of_hell
-PLACE: Hell
+NAME:   vestibule_of_hell
+PLACE:  Hell
 ORIENT: encompass
 MARKER: D=feat:enter_dis
 MARKER: G=feat:enter_gehenna
 MARKER: C=feat:enter_cocytus
 MARKER: T=feat:enter_tartarus
-SUBST: D=A, G=A, C=A, T=A
-MONS: Geryon
+SUBST:  D=A, G=A, C=A, T=A
+MONS:   Geryon
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -291,12 +289,16 @@ ENDMAP
 # Dispater's castle - rest of level filled up with plan_4 (irregular city)
 ##############################################################################
 
-NAME: castle_dis
-PLACE: Dis:7
-TAGS: dis
+NAME:   castle_dis
+PLACE:  Dis:7
+TAGS:   dis
 ORIENT: north
-MONS: Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle
-MONS: random, random
+LFLAGS: no_tele_control
+MARKER: O = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="iron rune" \
+        }
+MONS:   Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle
+MONS:   random, random
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -341,11 +343,15 @@ ENDMAP
 # Asmodeus
 ##############################################################################
 
-NAME: asmodeus
-PLACE: Geh:7
+NAME:   asmodeus
+PLACE:  Geh:7
 ORIENT: encompass
-MONS: Asmodeus, Fiend, Balrug, molten gargoyle
-MONS: Serpent of Hell, random, random
+LFLAGS: no_tele_control
+MARKER: O = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="obsidian rune" \
+        }
+MONS:   Asmodeus, Fiend, Balrug, molten gargoyle
+MONS:   Serpent of Hell, random, random
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -429,6 +435,10 @@ ENDMAP
 NAME:    antaeus_david_1
 PLACE:   Coc:7
 ORIENT:  encompass
+LFLAGS:  no_tele_control
+MARKER:  O = lua:item_pickup_change_flags { \
+             level_flags="!no_tele_control", item="icy rune" \
+         }
 MONS:    Antaeus, Ice Fiend, ice dragon / nothing
 ITEM:    any, any misc, any misc, any misc
 SHUFFLE: O1d / e0% / f9* / g8|
@@ -517,7 +527,11 @@ PLACE:   Coc:7
 ORIENT:  encompass
 SHUFFLE: $|, 2X
 SUBST:   X=., 3=3.
-MONS: Antaeus, Ice Fiend, ice dragon, Ice Fiend
+MONS:    Antaeus, Ice Fiend, ice dragon, Ice Fiend
+LFLAGS:  no_tele_control
+MARKER:  O = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="icy rune" \
+         }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -596,11 +610,15 @@ ENDMAP
 # Ereshkigal (Tartarus)
 ##############################################################################
 
-NAME: ereshkigal
-PLACE: Tar:7
+NAME:   ereshkigal
+PLACE:  Tar:7
 ORIENT: encompass
-MONS: Ereshkigal, necrophage, wraith, shadow, small zombie
-MONS: small skeleton, Shadow Fiend
+LFLAGS: no_tele_control
+MARKER: O = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="bone rune" \
+        }
+MONS:   Ereshkigal, necrophage, wraith, shadow, small zombie
+MONS:   small skeleton, Shadow Fiend
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

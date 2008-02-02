@@ -7,7 +7,6 @@
 
 ########################
 # Dead fish
-# As of 0.3.2 the fish zombies can't move, they're basically just decorative
 NAME: lemuel_dead_fish_pool
 DEPTH: Crypt:*
 # Lemuel also had Cocytus:*
@@ -495,6 +494,10 @@ ENDMAP
 #
 NAME:    tomb_1
 PLACE:   Tomb:1
+
+# The whole branch starts off with teleport control prevention.
+BFLAGS:  no_tele_control
+
 ORIENT:  encompass
 #
 SHUFFLE: ([{, AB), ]}, FIJKL/fijkl, _-
@@ -704,7 +707,7 @@ ENDMAP
 NAME:    tomb_3
 PLACE:   Tomb:3
 ORIENT:  encompass
-FLAGS:   no_rotate
+TAGS:    no_rotate
 #
 SUBST:   ' : " $ ':80
 SUBST:   ' = " $
@@ -713,6 +716,9 @@ SUBST:   $ = *:2 |:1 $:17
 #
 MONS:    mummy, guardian mummy, mummy priest, greater mummy
 #
+MARKER:  O = lua:item_pickup_change_flags { \
+            branch_flags="!no_tele_control", item="golden rune" \
+         }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
