@@ -63,6 +63,7 @@ static bool recite_mons_useless(const monsters *mon)
             || mons_neutral(mon)
             || mons_is_confused(mon)
             || mons_is_paralysed(mon)
+            || mons_is_caught(mon)
             || mon->has_ench(ENCH_BERSERK));
 }
 
