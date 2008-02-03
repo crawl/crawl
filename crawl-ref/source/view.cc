@@ -787,7 +787,8 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
              && (monster->flags & MF_CONVERT_ATTEMPT)
              && (monster->flags & MF_GOD_GIFT)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
-             && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+             && !mons_is_confused(monster) && !mons_is_paralysed(monster)
+             && !mons_is_caught(monster))
     {      // reconversion if no longer Beogh
                 
         monster->attitude = ATT_HOSTILE;
