@@ -803,7 +803,7 @@ static void deck_from_specs(const char* _specs, item_def &item)
         MISC_DECK_OF_PUNISHMENT,
         MISC_DECK_OF_WAR,
         MISC_DECK_OF_CHANGES,
-        MISC_DECK_OF_DEFENSE,
+        MISC_DECK_OF_DEFENCE,
         NUM_MISCELLANY
     };
 
@@ -834,7 +834,7 @@ static void deck_from_specs(const char* _specs, item_def &item)
 "[a] escape     [b] destruction [c] dungeons [d] summoning [e] wonders",
                 MSGCH_PROMPT);
             mpr(
-"[f] punishment [g] war         [h] changes  [i] defense",
+"[f] punishment [g] war         [h] changes  [i] defence",
                 MSGCH_PROMPT);
             mpr("Which deck (ESC to exit)? ");
 

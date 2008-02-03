@@ -1340,7 +1340,7 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                             break;
                         case OBJ_MISCELLANY + 18:
                             if (you.inv[ix].sub_type >= MISC_DECK_OF_ESCAPE
-                                && you.inv[ix].sub_type <= MISC_DECK_OF_DEFENSE)
+                                && you.inv[ix].sub_type <= MISC_DECK_OF_DEFENCE)
                             {
                                 desc += "Draw a card (E)";
                                 break;

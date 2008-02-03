@@ -244,7 +244,7 @@ enum misc_item_type
     // mixed decks
     MISC_DECK_OF_WAR,
     MISC_DECK_OF_CHANGES,
-    MISC_DECK_OF_DEFENSE,
+    MISC_DECK_OF_DEFENCE,
 
     MISC_RUNE_OF_ZOT,
 

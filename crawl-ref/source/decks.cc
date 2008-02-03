@@ -340,7 +340,7 @@ static const deck_archetype* random_sub_deck(unsigned char deck_type)
         case 2: pdeck = deck_of_wonders;      break;
         }
         break;
-    case MISC_DECK_OF_DEFENSE:
+    case MISC_DECK_OF_DEFENCE:
         pdeck = (coinflip() ? deck_of_emergency : deck_of_battle);
         break;
     }
@@ -2640,7 +2640,7 @@ bool is_deck(const item_def &item)
 {
     return item.base_type == OBJ_MISCELLANY
         && (item.sub_type >= MISC_DECK_OF_ESCAPE &&
-            item.sub_type <= MISC_DECK_OF_DEFENSE);
+            item.sub_type <= MISC_DECK_OF_DEFENCE);
 }
 
 bool bad_deck(const item_def &item)

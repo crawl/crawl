@@ -1488,7 +1488,7 @@ int tileidx_misc(const item_def &item)
     case MISC_DECK_OF_PUNISHMENT:
     case MISC_DECK_OF_WAR:
     case MISC_DECK_OF_CHANGES:
-    case MISC_DECK_OF_DEFENSE:
+    case MISC_DECK_OF_DEFENCE:
         switch (item.special)
         {
         case DECK_RARITY_LEGENDARY:
@@ -2715,7 +2715,7 @@ int tilep_equ_weapon(const item_def &item)
         case MISC_DECK_OF_PUNISHMENT:
         case MISC_DECK_OF_WAR:
         case MISC_DECK_OF_CHANGES:
-        case MISC_DECK_OF_DEFENSE: return TILEP_HAND1_DECK;
+        case MISC_DECK_OF_DEFENCE: return TILEP_HAND1_DECK;
         }
     }
 

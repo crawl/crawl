@@ -79,7 +79,7 @@ enum card_type
     CARD_ELIXIR,                // healing
     CARD_BATTLELUST,            // melee boosts
     CARD_METAMORPHOSIS,         // transformation
-    CARD_HELM,                  // defense
+    CARD_HELM,                  // defence
     CARD_BLADE,                 // weapon boosts
     CARD_SHADOW,                // assassin skills
 

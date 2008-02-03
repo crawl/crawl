@@ -730,7 +730,7 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DECK_OF_PUNISHMENT: return "deck of punishment";
         case MISC_DECK_OF_WAR: return "deck of war";
         case MISC_DECK_OF_CHANGES: return "deck of changes";
-        case MISC_DECK_OF_DEFENSE: return "deck of defense";
+        case MISC_DECK_OF_DEFENCE: return "deck of defence";
 
         case MISC_CRYSTAL_BALL_OF_ENERGY: return "crystal ball of energy";
         case MISC_CRYSTAL_BALL_OF_FIXATION: return "crystal ball of fixation";
@@ -763,7 +763,7 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DECK_OF_PUNISHMENT:
         case MISC_DECK_OF_WAR:
         case MISC_DECK_OF_CHANGES:
-        case MISC_DECK_OF_DEFENSE:
+        case MISC_DECK_OF_DEFENCE:
             return "deck of cards";
         case MISC_CRYSTAL_BALL_OF_ENERGY:
         case MISC_CRYSTAL_BALL_OF_FIXATION:
