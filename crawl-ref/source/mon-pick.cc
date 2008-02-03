@@ -183,6 +183,7 @@ bool mons_abyss(int mcls)
     case MONS_ABOMINATION_SMALL:
     case MONS_AIR_ELEMENTAL:
     case MONS_ANCIENT_LICH:
+    case MONS_ANGEL:
     case MONS_BALRUG:
     case MONS_BLUE_DEATH:
     case MONS_BLUE_DEVIL:
@@ -190,6 +191,7 @@ bool mons_abyss(int mcls)
     case MONS_CACODEMON:
     case MONS_CLAY_GOLEM:
     case MONS_CRYSTAL_GOLEM:
+    case MONS_DAEVA:
     case MONS_DANCING_WEAPON:
     case MONS_DEMONIC_CRAWLER:
     case MONS_EARTH_ELEMENTAL:
@@ -394,9 +396,11 @@ int mons_rare_abyss(int mcls)
     case MONS_REAPER:
         return 8;
 
+    case MONS_DAEVA:
     case MONS_SOUL_EATER:
         return 7;
 
+    case MONS_ANGEL:
     case MONS_IRON_DEVIL:
         return 6;
 
