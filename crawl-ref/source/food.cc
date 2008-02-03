@@ -162,6 +162,21 @@ void weapon_switch( int targ )
 // Returns whether a weapon was switched.
 static bool find_butchering_implement( bool fallback )
 {
+    // If wielding a distortion weapon, never attempt to switch away
+    // automatically.
+    if (const item_def *wpn = you.weapon())
+    {
+        if (wpn->base_type == OBJ_WEAPONS
+            && item_type_known(*wpn)
+            && get_weapon_brand(*wpn) == SPWPN_DISTORTION)
+        {
+            mprf(MSGCH_WARN,
+                 "You're wielding a weapon of distortion, will not autoswap "
+                 "for butchering.");
+            return false;
+        }
+    }
+    
     // look for a butchering implement in your pack
     for (int i = 0; i < ENDOFPACK; ++i)
     {
@@ -171,7 +186,8 @@ static bool find_butchering_implement( bool fallback )
             && item_known_uncursed(you.inv[i])
             && item_type_known(you.inv[i])
             && get_weapon_brand(you.inv[i]) != SPWPN_DISTORTION
-            && !has_warning_inscription(you.inv[i], OPER_WIELD) // don't even ask
+            // don't even ask
+            && !has_warning_inscription(you.inv[i], OPER_WIELD)
             && can_wield( &you.inv[i] ))
         {
             mpr("Switching to a butchering implement.");
@@ -274,7 +290,8 @@ bool butchery(int which_corpse)
         mpr("There isn't anything to dissect here.");
         return false;
     }
-    else if ( !prechosen && (num_corpses > 1 || Options.always_confirm_butcher) )
+    else if ( !prechosen
+              && (num_corpses > 1 || Options.always_confirm_butcher) )
     {
         corpse_id = -1;
         for (int o=igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
