@@ -4455,8 +4455,8 @@ void tile_use_item(int idx, InvAction act)
     else if (act == INV_USE_FLOOR)
     {
         if (mitm[idx].base_type == OBJ_CORPSES
-            && you.inv[idx].sub_type != CORPSE_SKELETON
-            && !food_is_rotten(you.inv[idx]))
+            && mitm[idx].sub_type != CORPSE_SKELETON
+            && !food_is_rotten(mitm[idx]))
         {
             butchery(idx);
         }

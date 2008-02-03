@@ -663,6 +663,9 @@ void handle_delay( void )
                        items_for_multidrop.size() == 1 );
             items_for_multidrop.erase( items_for_multidrop.begin() );
             break;
+        case DELAY_EAT:
+            mpr("You continue eating.", MSGCH_MULTITURN_ACTION);
+            break;
         default:
             break;
         }
