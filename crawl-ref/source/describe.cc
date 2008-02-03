@@ -840,7 +840,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 break;
             case SPWPN_FLAME:
                 description += "It turns projectiles fired from it into "
-                    "bolts of fire. ";
+                    "bolts of flame. ";
                 break;
             case SPWPN_FROST:
                 description += "It turns projectiles fired from it into "
