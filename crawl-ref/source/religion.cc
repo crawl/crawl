@@ -2763,6 +2763,7 @@ static bool beogh_followers_abandon_you()
                         num_followers++;
 
                         if (mons_player_visible(monster)
+                            && !mons_is_sleeping(monster)
                             && !mons_is_confused(monster)
                             && !mons_is_paralysed(monster)
                             && !mons_is_caught(monster))

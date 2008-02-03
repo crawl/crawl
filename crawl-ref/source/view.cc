@@ -755,7 +755,8 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
         && is_orc
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
-        && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+        && !mons_is_confused(monster) && !mons_is_paralysed(monster)
+        && !mons_is_caught(monster))
     {
         monster->flags |= MF_CONVERT_ATTEMPT;
 
