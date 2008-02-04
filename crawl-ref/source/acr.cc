@@ -1518,14 +1518,6 @@ static void go_upstairs()
 
     if (stairs_check_beheld())
         return;
-
-    // Allow both < and > to work for Abyss exits.
-    if (ygrd == DNGN_EXIT_ABYSS)
-    {
-        go_downstairs();
-        return;
-    }
-    
     
     if (you.attribute[ATTR_HELD])
     {
