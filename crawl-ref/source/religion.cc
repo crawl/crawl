@@ -1811,10 +1811,19 @@ void gain_piety(int pgn)
         you.redraw_armour_class = true;
     }    
 
-    if ( you.piety > 160 && old_piety <= 160 &&
-         (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
-          && you.num_gifts[you.religion] == 0 )
-        simple_god_message( " will now bless your weapon at an altar...once.");
+    if (you.piety > 160 && old_piety <= 160)
+    {
+        // When you gain piety of more than 160, you get another chance
+        // to make hostile holy beings neutral.
+        if (is_good_god(you.religion))
+            holy_beings_reconvert();
+
+        if ((you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
+            && you.num_gifts[you.religion] == 0)
+        {
+            simple_god_message( " will now bless your weapon at an altar...once.");
+        }
+    }
 
     do_god_gift(false);
 }

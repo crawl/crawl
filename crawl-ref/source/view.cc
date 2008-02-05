@@ -762,7 +762,8 @@ static void good_god_follower_convert(monsters *monster)
     {
         monster->flags |= MF_CONVERT_ATTEMPT;
 
-        if (you.piety > random2(150) && !you.penance[you.religion])
+        if (!you.penance[you.religion] &&
+            (you.piety > 160 || you.piety > random2(200)))
         {
             int wpn = you.equip[EQ_WEAPON];
             if (wpn != -1
