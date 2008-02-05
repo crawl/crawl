@@ -360,6 +360,7 @@ void dec_penance(god_type god, int val);
 void dec_penance(int val);
 void inc_penance(god_type god, int val);
 void inc_penance(int val);
+static bool holy_beings_reconvert();
 static bool beogh_followers_abandon_you(void);
 static void dock_piety(int piety_loss, int penance);
 
@@ -403,6 +404,11 @@ void dec_penance(god_type god, int val)
             simple_god_message(" seems mollified.", god);
             take_note(Note(NOTE_MOLLIFY_GOD, god));
             you.penance[god] = 0;
+
+            // When you've worked through all your penance, you get
+            // another chance to make hostile holy beings neutral.
+            if (is_good_god(you.religion))
+                holy_beings_reconvert();
 
             // bonuses now once more effective
             if ( god == GOD_BEOGH && you.religion == GOD_BEOGH)
@@ -1791,6 +1797,11 @@ void gain_piety(int pgn)
                 }
                 learned_something_new(TUT_NEW_ABILITY);
             }
+
+            // When you gain a piety level, you get another chance to
+            // make hostile holy beings neutral.
+            if (is_good_god(you.religion))
+                holy_beings_reconvert();
         }
     }
 
@@ -1808,7 +1819,7 @@ void gain_piety(int pgn)
     do_god_gift(false);
 }
 
-static bool is_evil_weapon(const item_def& weap)
+bool is_evil_weapon(const item_def& weap)
 {
     if (weap.base_type != OBJ_WEAPONS)
         return false;
@@ -2694,6 +2705,61 @@ void divine_retribution( god_type god )
     dec_penance( god, 1 + random2(3) );
 }
 
+static bool holy_beings_on_level_reconvert()
+{
+    bool success = false;
+
+    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    {
+        monsters *monster = &menv[i];
+        if (monster->type != -1
+            && mons_class_holiness(monster->type) == MH_HOLY)
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Reconverting: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+
+            // If you worship a good god, you get another chance to make
+            // hostile holy beings neutral.
+            if (is_good_god(you.religion))
+            {
+                if ((monster->flags & MF_CONVERT_ATTEMPT)
+                    && monster->attitude == ATT_HOSTILE)
+                {
+                    monster->flags &= ~MF_CONVERT_ATTEMPT;
+
+                    success = true;
+                }
+            }
+
+            // If you worship an exil god, you make all neutral and
+            // friendly holy beings hostile.
+            if (is_evil_god(you.religion))
+            {
+                if (monster->attitude == ATT_NEUTRAL ||
+                    monster->attitude == ATT_FRIENDLY)
+                {
+                    monster->attitude = ATT_HOSTILE;
+                    monster->behaviour = BEH_HOSTILE;
+                    // for now CREATED_FRIENDLY stays
+
+                    success = true;
+                }
+            }
+        }
+    }
+
+    return success;
+}
+
+static bool holy_beings_reconvert()
+{
+    return apply_to_all_dungeons(holy_beings_on_level_reconvert);
+}
+
 static bool orcish_followers_on_level_abandon_you()
 {
     bool success = false;
@@ -2881,6 +2947,45 @@ void beogh_idol_revenge()
     }
 }
 
+static void good_god_holy_being_conversion_speech(
+    std::ostream &chan,
+    const monsters *holy)
+{
+    switch (random2(3))
+    {
+    case 0:
+        chan << " is calmed by your holy aura.";
+        break;
+    case 1:
+        chan << " relaxes its fighting stance.";
+        break;
+    case 2:
+        chan << " salutes you.";
+        break;
+    }
+    chan << std::endl;
+
+    if (!one_chance_in(3))
+    {
+        std::ostream& tchan = msg::streams(MSGCH_TALK);
+        tchan << holy->pronoun(PRONOUN_CAP) << " ";
+        switch (random2(3))
+        {
+        case 0:
+            tchan << "shouts, \"Continue thy quest, mortal!\"";
+            break;
+        case 1:
+            tchan << "says, \"Forge ahead, servant of "
+                  << god_name(you.religion) << "!\"";
+            break;
+        case 2:
+            tchan << "says, \"Carry on, mortal.\"";
+            break;
+        }
+        tchan << std::endl;
+    }    
+}
+
 static void beogh_orc_emergency_conversion_speech(
     std::ostream &chan,
     const monsters *orc)
@@ -2948,6 +3053,24 @@ static void beogh_orc_spontaneous_conversion_speech(
         }
         tchan << std::endl;
     }    
+}
+
+void good_god_convert_holy(monsters *holy)
+{
+    ASSERT(mons_class_holiness(holy->type) == MH_HOLY);
+
+    if (player_monster_visible(holy)) // show reaction
+    {
+        std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
+        chan << holy->name(DESC_CAP_THE);
+
+        good_god_holy_being_conversion_speech(chan, holy);
+    }
+
+    holy->attitude  = ATT_NEUTRAL;
+    
+    // to avoid immobile "followers"
+    behaviour_event(holy, ME_ALERT, MHITNOT);
 }
 
 void beogh_convert_orc(monsters *orc, bool emergency)
@@ -3599,9 +3722,18 @@ void god_pitch(god_type which_god)
 
     if (is_evil_god(you.religion))
     {
+        // When you leave one of the good gods for an evil god, you make
+        // all neutral and friendly holy beings hostile.
+        if (you.penance[GOD_ZIN] || you.penance[GOD_SHINING_ONE] ||
+            you.penance[GOD_ELYVILON])
+        {
+            if (holy_beings_reconvert())
+                mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
+        }
+
         // Note:  Using worshipped[] we could make this sort of grudge
         // permanent instead of based off of penance. -- bwr
-        if (you.penance[GOD_SHINING_ONE] > 0)
+        if (you.penance[GOD_SHINING_ONE])
         {
             inc_penance(GOD_SHINING_ONE, 30);
             god_speaks(GOD_SHINING_ONE,

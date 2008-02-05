@@ -742,6 +742,68 @@ static bool mons_was_seen_this_turn(const monsters *mons)
             monsters_seen_this_turn.end());
 }
 
+static void good_god_follower_convert(monsters *monster)
+{
+    if (you.is_undead || you.species == SP_DEMONSPAWN)
+        return;
+    
+    const bool is_holy = mons_class_holiness(monster->type) == MH_HOLY;
+    // for followers of good gods, decide whether holy beings will be
+    // neutral towards you
+    if (is_good_god(you.religion)
+        && monster->foe == MHITYOU
+        && !(monster->flags & MF_CONVERT_ATTEMPT)
+        && is_holy
+        && !mons_neutral(monster)
+        && !mons_friendly(monster)
+        && mons_player_visible(monster) && !mons_is_sleeping(monster)
+        && !mons_is_confused(monster) && !mons_is_paralysed(monster)
+        && !mons_is_caught(monster))
+    {
+        monster->flags |= MF_CONVERT_ATTEMPT;
+
+        if (you.piety > random2(200) && !you.penance[you.religion])
+        {
+            int wpn = you.equip[EQ_WEAPON];
+            if (wpn != -1
+                && you.inv[wpn].base_type == OBJ_WEAPONS
+                && is_evil_weapon( you.inv[wpn] )
+                && coinflip()) // 50% chance of conversion failing
+            {
+                msg::stream << monster->name(DESC_CAP_THE)
+                            << " glares at your weapon."
+                            << std::endl;
+                return;
+            }
+            good_god_convert_holy(monster);
+            stop_running();
+        }
+    }
+    else if (is_holy
+             && is_evil_god(you.religion)
+             && (monster->attitude == ATT_NEUTRAL
+             || monster->attitude == ATT_FRIENDLY)
+             && (monster->flags & MF_CONVERT_ATTEMPT)
+             && mons_player_visible(monster) && !mons_is_sleeping(monster)
+             && !mons_is_confused(monster) && !mons_is_paralysed(monster)
+             && !mons_is_caught(monster))
+    {      // reconversion if evil god
+                
+        monster->attitude = ATT_HOSTILE;
+        behaviour_event(monster, ME_ALERT, MHITYOU);
+        // CREATED_FRIENDLY stays -> no piety bonus on killing these
+                
+        // give message only sometimes
+        if (player_monster_visible(monster) && random2(4)) 
+        {
+            msg::streams(MSGCH_MONSTER_ENCHANT)
+                << monster->name(DESC_CAP_THE)
+                << " turns against you."
+                << std::endl;
+        }
+    }
+}
+
 void beogh_follower_convert(monsters *monster, bool orc_hit)
 {
     if (you.species != SP_HILL_ORC)
@@ -1086,6 +1148,7 @@ void monster_grid(bool do_updates)
                 monsters_seen_this_turn.insert(monster);
             }
 
+            good_god_follower_convert(monster);
             beogh_follower_convert(monster);
         }
     }
