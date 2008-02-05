@@ -1,6 +1,6 @@
 /*
  *  File:     delay.cc
- *  Summary:  Functions for handling multi-turn actions.    
+ *  Summary:  Functions for handling multi-turn actions.
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
  *
