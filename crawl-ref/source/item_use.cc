@@ -4237,8 +4237,16 @@ void read_scroll( int slot )
             && !is_fixed_artefact( you.inv[nthing] )
             && get_weapon_brand( you.inv[nthing] ) == SPWPN_ELECTROCUTION)
         {
-            id_the_scroll = !enchant_weapon( ENCHANT_TO_DAM );
-            break;
+            id_the_scroll = enchant_weapon( ENCHANT_TO_DAM );
+
+            if (!item_ident(you.inv[nthing], ISFLAG_KNOW_TYPE))
+	    {
+	        if (item_type_known(scroll))
+		    set_ident_flags(you.inv[nthing], ISFLAG_KNOW_TYPE);
+		else   
+                    id_the_scroll = false;
+            }
+	    break;
         }
 
         if (!recharge_wand())

@@ -1921,7 +1921,8 @@ bool trog_burn_books()
         const int next = mitm[i].link;  // in case we can't get it later.
 
         if (mitm[i].base_type == OBJ_BOOKS
-            && mitm[i].sub_type != BOOK_MANUAL)
+            && mitm[i].sub_type != BOOK_MANUAL
+	    && mitm[i].sub_type != BOOK_DESTRUCTION)
         {
             mpr("Burning your own feet might not be such a smart idea!");
             return (false);
@@ -1959,7 +1960,8 @@ bool trog_burn_books()
                  const int next = mitm[i].link; // in case we can't get it later.
 
                  if (mitm[i].base_type != OBJ_BOOKS
-                     || mitm[i].sub_type == BOOK_MANUAL)
+                     || mitm[i].sub_type == BOOK_MANUAL
+		     || mitm[i].sub_type == BOOK_DESTRUCTION)
                  {
                      i = next;
                      continue;
