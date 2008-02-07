@@ -212,7 +212,7 @@ Features
 
 Note: Due to the level maker having seen incremental improvements over
 the years, there are some inconsistencies. For examples, dangerous
-statues (orange, silver ice) are now genuine monsters. In particular,
+statues (orange, silver, ice) are now genuine monsters. In particular,
 the 'H' and 'S' glyphs should be dispensed with (but many older vaults
 use them, of course) - especially as there's no glyph for ice statues.
 
