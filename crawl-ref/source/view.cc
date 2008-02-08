@@ -752,7 +752,7 @@ static void good_god_follower_convert(monsters *monster)
     // neutral towards you
     if (is_good_god(you.religion)
         && monster->foe == MHITYOU
-        && !(monster->flags & MF_CONVERT_ATTEMPT)
+        && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
         && is_holy
         && !mons_neutral(monster)
         && !mons_friendly(monster)
@@ -760,7 +760,7 @@ static void good_god_follower_convert(monsters *monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster)
         && !mons_is_caught(monster))
     {
-        monster->flags |= MF_CONVERT_ATTEMPT;
+        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 
         if (you.piety > random2(MAX_PIETY) && !you.penance[you.religion])
         {
@@ -781,9 +781,8 @@ static void good_god_follower_convert(monsters *monster)
     }
     else if (is_holy
              && is_evil_god(you.religion)
-             && (monster->attitude == ATT_NEUTRAL
-             || monster->attitude == ATT_FRIENDLY)
-             && (monster->flags & MF_CONVERT_ATTEMPT)
+             && monster->attitude != ATT_HOSTILE
+             && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
              && !mons_is_confused(monster) && !mons_is_paralysed(monster)
              && !mons_is_caught(monster))
@@ -813,14 +812,14 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     // for followers of Beogh, decide whether orcs will join you
     if (you.religion == GOD_BEOGH
         && monster->foe == MHITYOU
-        && !(monster->flags & MF_CONVERT_ATTEMPT)
+        && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
         && is_orc
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster)
         && !mons_is_caught(monster))
     {
-        monster->flags |= MF_CONVERT_ATTEMPT;
+        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 
         const int hd = monster->hit_dice;
 
@@ -846,7 +845,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     else if (is_orc
              && !(you.religion == GOD_BEOGH)
              && monster->attitude == ATT_FRIENDLY
-             && (monster->flags & MF_CONVERT_ATTEMPT)
+             && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
              && (monster->flags & MF_GOD_GIFT)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
              && !mons_is_confused(monster) && !mons_is_paralysed(monster)

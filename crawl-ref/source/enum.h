@@ -1865,8 +1865,10 @@ enum monster_flag_type
                                     // or that the player has inspected with ?
     MF_BANISHED           = 0x200,  // Monster that has been banished.
     MF_HARD_RESET         = 0x400,  // Summoned, should not drop gear on reset
-    MF_CONVERT_ATTEMPT    = 0x800,  // Seen player and was converted
-                                    // (or not)
+    MF_ATT_CHANGE_ATTEMPT = 0x800,  // Saw player and attitude changed (or
+                                    // not); currently used for holy beings
+                                    // (good god worshippers -> neutral)
+                                    // and orcs (Beogh worshippers -> friendly)
     MF_WAS_IN_VIEW        = 0x1000, // Was in view during previous turn
     MF_BAND_MEMBER        = 0x2000  // Created as a member of a band
 };

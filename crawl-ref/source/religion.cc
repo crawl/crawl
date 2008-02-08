@@ -360,7 +360,7 @@ void dec_penance(god_type god, int val);
 void dec_penance(int val);
 void inc_penance(god_type god, int val);
 void inc_penance(int val);
-static bool holy_beings_reconvert();
+static bool holy_beings_attitude_change();
 static bool beogh_followers_abandon_you(void);
 static void dock_piety(int piety_loss, int penance);
 
@@ -408,7 +408,7 @@ void dec_penance(god_type god, int val)
             // When you've worked through all your penance, you get
             // another chance to make hostile holy beings neutral.
             if (is_good_god(you.religion))
-                holy_beings_reconvert();
+                holy_beings_attitude_change();
 
             // bonuses now once more effective
             if ( god == GOD_BEOGH && you.religion == GOD_BEOGH)
@@ -1801,7 +1801,7 @@ void gain_piety(int pgn)
             // When you gain a piety level, you get another chance to
             // make hostile holy beings neutral.
             if (is_good_god(you.religion))
-                holy_beings_reconvert();
+                holy_beings_attitude_change();
         }
     }
 
@@ -1816,7 +1816,7 @@ void gain_piety(int pgn)
         // When you gain piety of more than 160, you get another chance
         // to make hostile holy beings neutral.
         if (is_good_god(you.religion))
-            holy_beings_reconvert();
+            holy_beings_attitude_change();
 
         if ((you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
             && you.num_gifts[you.religion] == 0)
@@ -2716,7 +2716,7 @@ void divine_retribution( god_type god )
     dec_penance( god, 1 + random2(3) );
 }
 
-static bool holy_beings_on_level_reconvert()
+static bool holy_beings_on_level_attitude_change()
 {
     bool success = false;
 
@@ -2724,10 +2724,11 @@ static bool holy_beings_on_level_reconvert()
     {
         monsters *monster = &menv[i];
         if (monster->type != -1
-            && mons_class_holiness(monster->type) == MH_HOLY)
+            && mons_class_holiness(monster->type) == MH_HOLY
+            && (monster->flags & MF_ATT_CHANGE_ATTEMPT))
         {
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Reconverting: %s on level %d, branch %d",
+            mprf(MSGCH_DIAGNOSTICS, "Attitude changing: %s on level %d, branch %d",
                  monster->name(DESC_PLAIN).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
@@ -2737,21 +2738,19 @@ static bool holy_beings_on_level_reconvert()
             // hostile holy beings neutral.
             if (is_good_god(you.religion))
             {
-                if ((monster->flags & MF_CONVERT_ATTEMPT)
-                    && monster->attitude == ATT_HOSTILE)
+                if (monster->attitude == ATT_HOSTILE)
                 {
-                    monster->flags &= ~MF_CONVERT_ATTEMPT;
+                    monster->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
                     success = true;
                 }
             }
 
-            // If you worship an exil god, you make all neutral and
-            // friendly holy beings hostile.
+            // If you worship an evil god, you make all non-hostile holy
+            // beings hostile.
             if (is_evil_god(you.religion))
             {
-                if (monster->attitude == ATT_NEUTRAL ||
-                    monster->attitude == ATT_FRIENDLY)
+                if (monster->attitude != ATT_HOSTILE)
                 {
                     monster->attitude = ATT_HOSTILE;
                     monster->behaviour = BEH_HOSTILE;
@@ -2766,9 +2765,9 @@ static bool holy_beings_on_level_reconvert()
     return success;
 }
 
-static bool holy_beings_reconvert()
+static bool holy_beings_attitude_change()
 {
-    return apply_to_all_dungeons(holy_beings_on_level_reconvert);
+    return apply_to_all_dungeons(holy_beings_on_level_attitude_change);
 }
 
 static bool orcish_followers_on_level_abandon_you()
@@ -2781,7 +2780,7 @@ static bool orcish_followers_on_level_abandon_you()
         if (monster->type != -1
             && mons_species(monster->type) == MONS_ORC
             && monster->attitude == ATT_FRIENDLY
-            && (monster->flags & MF_CONVERT_ATTEMPT))
+            && (monster->flags & MF_ATT_CHANGE_ATTEMPT))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Abandoning: %s on level %d, branch %d",
@@ -2835,7 +2834,7 @@ static bool beogh_followers_abandon_you()
                     monsters *monster = &menv[targ_monst];
                     if (mons_species(monster->type) == MONS_ORC
                         && monster->attitude == ATT_FRIENDLY
-                        && (monster->flags & MF_CONVERT_ATTEMPT))
+                        && (monster->flags & MF_ATT_CHANGE_ATTEMPT))
                     {
                         num_followers++;
 
@@ -3080,6 +3079,8 @@ void good_god_convert_holy(monsters *holy)
 
     holy->attitude  = ATT_NEUTRAL;
     
+    holy->flags |= MF_GOD_GIFT;
+
     // to avoid immobile "followers"
     behaviour_event(holy, ME_ALERT, MHITNOT);
 }
@@ -3734,11 +3735,11 @@ void god_pitch(god_type which_god)
     if (is_evil_god(you.religion))
     {
         // When you leave one of the good gods for an evil god, you make
-        // all neutral and friendly holy beings hostile.
+        // all non-hostile holy beings hostile.
         if (you.penance[GOD_ZIN] || you.penance[GOD_SHINING_ONE] ||
             you.penance[GOD_ELYVILON])
         {
-            if (holy_beings_reconvert())
+            if (holy_beings_attitude_change())
                 mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
         }
 
