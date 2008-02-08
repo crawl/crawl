@@ -1519,7 +1519,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     if (!force_mutation)
     {
         if (wearing_amulet(AMU_RESIST_MUTATION) && !one_chance_in(10)
-            || you.religion == GOD_ZIN && you.piety > random2(200)
+            || you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY)
             || you.mutation[MUT_MUTATION_RESISTANCE] == 3
             || you.mutation[MUT_MUTATION_RESISTANCE] && !one_chance_in(3))
         {

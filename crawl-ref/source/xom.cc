@@ -940,7 +940,7 @@ void xom_acts(bool niceness, int sever)
     }
     
     if (you.religion == GOD_XOM && coinflip())
-        you.piety = 200 - you.piety;
+        you.piety = MAX_PIETY - you.piety;
 }
 
 static void xom_check_less_runes(int runes_gones)
