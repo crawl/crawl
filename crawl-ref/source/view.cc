@@ -757,8 +757,7 @@ static void good_god_follower_convert(monsters *monster)
         && !mons_neutral(monster)
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
-        && !mons_is_confused(monster) && !mons_is_paralysed(monster)
-        && !mons_is_caught(monster))
+        && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -784,8 +783,7 @@ static void good_god_follower_convert(monsters *monster)
              && monster->attitude != ATT_HOSTILE
              && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
-             && !mons_is_confused(monster) && !mons_is_paralysed(monster)
-             && !mons_is_caught(monster))
+             && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {      // reconversion if evil god
                 
         monster->attitude = ATT_HOSTILE;
@@ -816,8 +814,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
         && is_orc
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
-        && !mons_is_confused(monster) && !mons_is_paralysed(monster)
-        && !mons_is_caught(monster))
+        && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -848,8 +845,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
              && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
              && (monster->flags & MF_GOD_GIFT)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
-             && !mons_is_confused(monster) && !mons_is_paralysed(monster)
-             && !mons_is_caught(monster))
+             && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {      // reconversion if no longer Beogh
                 
         monster->attitude = ATT_HOSTILE;
