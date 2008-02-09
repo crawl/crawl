@@ -1816,10 +1816,14 @@ int items( int allow_uniques,       // not just true-false,
         if (get_equip_race(mitm[p]) == ISFLAG_ORCISH && one_chance_in(3))
             set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_POISONED );
 
-        // Un-poison sling bullets, unbrand nets.
+        // Un-poison sling bullets; un-flame and un-ice javelins; unbrand
+        // throwing nets.
         if ((mitm[p].sub_type == MI_SLING_BULLET
-             && get_ammo_brand( mitm[p] ) == SPMSL_POISONED)
-            || mitm[p].sub_type == MI_THROWING_NET)
+               && get_ammo_brand( mitm[p] ) == SPMSL_POISONED)
+             || (mitm[p].sub_type == MI_JAVELIN
+                 && get_ammo_brand( mitm[p] ) == SPMSL_FLAME
+                     || get_ammo_brand( mitm[p] ) == SPMSL_ICE)
+             || mitm[p].sub_type == MI_THROWING_NET)
         {
             set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_NORMAL );
         }
