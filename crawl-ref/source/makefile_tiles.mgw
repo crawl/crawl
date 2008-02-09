@@ -77,7 +77,7 @@ tile.bmp \
 player.bmp \
 wall2d.bmp \
 title.bmp
-DESTTILEFILES = $(TILEFILES:%=dat\tiles\\%)
+DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
 ifeq ($(LEX),)
 DOYACC :=
@@ -140,8 +140,8 @@ endif
 # RLTiles
 #
 
-ORIGTILEHEADERS = $(TILEHEADERS:%=$(RLTILES)\\%)
-ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)\\%)
+ORIGTILEHEADERS = $(TILEHEADERS:%=$(RLTILES)/%)
+ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 
 $(ORIGTILEHEADERS): makerltiles
 
@@ -153,9 +153,9 @@ $(TILEHEADERS): $(ORIGTILEHEADERS)
 
 $(ORIGTILEFILES): makerltiles
 
-dat\tiles\\%.bmp: rltiles\\%.bmp
+dat/tiles/%.bmp: rltiles/%.bmp
 	mkdir dat\tiles 2>nul || echo "" >nul
-	$(COPY) $< $@
+	$(subst /,\,$(COPY) $< $@)
 
 clean-rltiles:
 	pushd $(RLTILES) && $(MAKE) -f makefile.mgw distclean && popd
