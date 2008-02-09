@@ -231,30 +231,33 @@ std::string item_def::name(description_level_type descrip,
             buff << " (around neck)";
             equipped = true;
         }
-    }
+   }
+   
+   if (descrip != DESC_PLAIN && descrip != DESC_BASENAME)
+   {
+        const bool  tried     = (!ident && !equipped && item_type_tried(*this));
+        std::string tried_str = "";
 
-    const bool  tried     = (!ident && !equipped && item_type_tried(*this));
-    std::string tried_str = "";
+        if (tried)
+        {
+            item_type_id_state_type id_type =
+                get_ident_type(this->base_type, this->sub_type);
+            if (id_type == ID_MON_TRIED_TYPE)
+                tried_str = "tried by monster";
+            else
+                tried_str = "tried";
+        }
 
-    if (tried)
-    {
-        item_type_id_state_type id_type =
-            get_ident_type(this->base_type, this->sub_type);
-        if (id_type == ID_MON_TRIED_TYPE)
-            tried_str = "tried by monster";
-        else
-            tried_str = "tried";
+        if ( with_inscription && !(this->inscription.empty()) )
+        {
+            buff << " {";
+            if ( tried )
+                buff << tried_str << ", ";
+            buff << this->inscription << "}";
+        }
+        else if ( tried )
+            buff << " {" << tried_str << "}";
     }
-
-    if ( with_inscription && !(this->inscription.empty()) )
-    {
-        buff << " {";
-        if ( tried )
-            buff << tried_str << ", ";
-        buff << this->inscription << "}";
-    }
-    else if ( tried )
-        buff << " {" << tried_str << "}";
 
     return buff.str();
 }

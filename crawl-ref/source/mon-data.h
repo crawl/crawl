@@ -48,8 +48,8 @@
                         damage from holy wrath/disruption; affected by
                         repel undead and holy word
        MH_DEMONIC    - similar to undead, but holy wrath does even more
-                        damage and disruption and repel undead effects
-                        are ignored -- *no* automatic hellfire resistance
+                        damage and repel undead effects are ignored -- *no*
+                        automatic hellfire resistance
        MH_NONLIVING  - golems and other constructs
        MH_PLANT      - plants
 
