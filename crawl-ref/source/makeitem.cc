@@ -1998,9 +1998,9 @@ static special_armour_type determine_armour_ego(const item_def& item,
         const int tmp = random2(600) + 200 * (item.sub_type != ARM_BOOTS);
 
         rc = (tmp < 200) ? SPARM_RUNNING :
-            (tmp < 400) ? SPARM_LEVITATION :
-            (tmp < 600) ? SPARM_STEALTH :
-            (tmp < 700) ? SPARM_COLD_RESISTANCE : SPARM_FIRE_RESISTANCE;
+             (tmp < 400) ? SPARM_LEVITATION :
+             (tmp < 600) ? SPARM_STEALTH :
+             (tmp < 700) ? SPARM_COLD_RESISTANCE : SPARM_FIRE_RESISTANCE;
         break;
     }
 

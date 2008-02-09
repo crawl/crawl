@@ -1415,7 +1415,7 @@ void randart_wpn_properties( const item_def &item,
     /* prot_life - no necromantic brands on weapons allowed */
     if (!done_powers
         && one_chance_in(4 + power_level)
-        && (aclass != OBJ_JEWELLERY || atype != RING_TELEPORTATION)
+        && (aclass != OBJ_JEWELLERY || atype != RING_LIFE_PROTECTION)
         && proprt[RAP_BRAND] != SPWPN_DRAINING
         && proprt[RAP_BRAND] != SPWPN_VAMPIRICISM
         && proprt[RAP_BRAND] != SPWPN_PAIN)
