@@ -166,14 +166,14 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_FIRE:              return "Fire";
     case RING_ICE:               return "Ice";
     case RING_TELEPORT_CONTROL:  return "cTele";
-    case AMU_RESIST_SLOW:        return "RSlow";
+    case AMU_RESIST_SLOW:        return "rSlow";
     case AMU_CLARITY:            return "Clar";
     case AMU_WARDING:            return "Ward";
     case AMU_RESIST_CORROSION:   return "rCorr";
     case AMU_THE_GOURMAND:       return "Gourm";
     case AMU_CONSERVATION:       return "Cons";
-    case AMU_CONTROLLED_FLIGHT:  return "CFly";
-    case AMU_RESIST_MUTATION:    return "RMut";
+    case AMU_CONTROLLED_FLIGHT:  return "cFly";
+    case AMU_RESIST_MUTATION:    return "rMut";
     }
     return "";
 }
