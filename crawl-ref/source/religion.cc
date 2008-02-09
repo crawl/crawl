@@ -2725,7 +2725,7 @@ static bool holy_beings_on_level_attitude_change()
         monsters *monster = &menv[i];
         if (monster->type != -1
             && mons_class_holiness(monster->type) == MH_HOLY
-            && (monster->flags & MF_ATT_CHANGE_ATTEMPT))
+            && (monster->flags & MF_GOD_GIFT))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Attitude changing: %s on level %d, branch %d",
@@ -2738,7 +2738,8 @@ static bool holy_beings_on_level_attitude_change()
             // hostile holy beings neutral.
             if (is_good_god(you.religion))
             {
-                if (monster->attitude == ATT_HOSTILE)
+                if (monster->attitude == ATT_HOSTILE &&
+                    (monster->flags & MF_ATT_CHANGE_ATTEMPT))
                 {
                     monster->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
@@ -2780,7 +2781,7 @@ static bool orcish_followers_on_level_abandon_you()
         if (monster->type != -1
             && mons_species(monster->type) == MONS_ORC
             && monster->attitude == ATT_FRIENDLY
-            && (monster->flags & MF_ATT_CHANGE_ATTEMPT))
+            && (monster->flags & MF_GOD_GIFT))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Abandoning: %s on level %d, branch %d",
