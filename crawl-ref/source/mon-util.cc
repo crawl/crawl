@@ -1388,10 +1388,16 @@ void define_monster(monsters &mons)
     case MONS_BUTTERFLY:
     case MONS_SPATIAL_VORTEX:
     case MONS_KILLER_KLOWN:
+        if (col != BLACK) // maybe overwritten by the mon_glyph option
+            break;
+            
         col = random_colour();
         break;
 
     case MONS_GILA_MONSTER:
+        if (col != BLACK) // maybe overwritten by the mon_glyph option
+            break;
+            
         temp_rand = random2(7);
 
         col = (temp_rand >= 5 ? LIGHTRED :                   // 2/7
