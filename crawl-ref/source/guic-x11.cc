@@ -329,13 +329,12 @@ void MapRegionClass::draw_data(unsigned char *buf)
         XPutPixel(backbuf, xx, py*dy+dy/2 + y_margin, map_pix[MAP_BLACK]);
     }
 
-    for (int y = 0; y < my; y++)
+    for (int y = 0; y < my - y_margin; y++)
     {
         unsigned char *ptr = &buf[y * (mx2 - x_margin)];
-        for (int x = 0; x < mx; x++)
+        for (int x = 0; x < mx - x_margin; x++)
         {
-            int col = (y >= my2 - y_margin || x >= mx2 - x_margin) ?
-                MAP_BLACK : ptr[x];
+            int col = ptr[x];
             if (col == Options.tile_player_col)
             {
                 px = x;
