@@ -308,7 +308,7 @@ static const char* fixed_artefact_name( const item_def& item, bool ident )
     }
 }
 
-static const char* weapon_brand_name(const item_def& item, bool terse)
+const char* weapon_brand_name(const item_def& item, bool terse)
 {
     switch (get_weapon_brand(item))
     {

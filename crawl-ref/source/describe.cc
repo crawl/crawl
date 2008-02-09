@@ -160,18 +160,18 @@ const char* jewellery_base_ability_string(int subtype)
     switch(subtype)
     {
     case RING_REGENERATION:      return "Regen";
-    case RING_SUSTAIN_ABILITIES: return "SustAbil";
-    case RING_SUSTENANCE:        return "-Hun";
+    case RING_SUSTAIN_ABILITIES: return "SustAb";
+    case RING_SUSTENANCE:        return "Hunger-";
     case RING_WIZARDRY:          return "Wiz";
-    case RING_FIRE:              return "F-Mag";
-    case RING_ICE:               return "I-Mag";
-    case RING_TELEPORT_CONTROL:  return "TC";
+    case RING_FIRE:              return "Fire";
+    case RING_ICE:               return "Ice";
+    case RING_TELEPORT_CONTROL:  return "cTele";
     case AMU_RESIST_SLOW:        return "RSlow";
     case AMU_CLARITY:            return "Clar";
     case AMU_WARDING:            return "Ward";
-    case AMU_RESIST_CORROSION:   return "RA";
+    case AMU_RESIST_CORROSION:   return "rCorr";
     case AMU_THE_GOURMAND:       return "Gourm";
-    case AMU_CONSERVATION:       return "Csrv";
+    case AMU_CONSERVATION:       return "Cons";
     case AMU_CONTROLLED_FLIGHT:  return "CFly";
     case AMU_RESIST_MUTATION:    return "RMut";
     }
@@ -196,46 +196,48 @@ static std::vector<std::string> randart_propnames( const item_def& item )
     
     std::vector<std::string> propnames;
 
+    // list the following in rough order of importance
     const property_annotators propanns[] = {
 
-        // Positive, quantative attributes
-        { "AC",   RAP_AC,                    0 },
-        { "EV",   RAP_EVASION,               0 },
-        { "Str",  RAP_STRENGTH,              0 },
-        { "Dex",  RAP_DEXTERITY,             0 },
-        { "Int",  RAP_INTELLIGENCE,          0 },
-        { "Acc",  RAP_ACCURACY,              0 },
-        { "Dam",  RAP_DAMAGE,                0 },
+        // (Generally) negative attributes
+        // These come first, so they don't get chopped off!
+        { "-CAST",  RAP_PREVENT_SPELLCASTING,  2 },
+        { "-TELE",  RAP_PREVENT_TELEPORTATION, 2 },
+        { "MUT",    RAP_MUTAGENIC,             2 },
+        { "*Rage",  RAP_ANGRY,                 2 },
+        { "*TELE",  RAP_CAUSE_TELEPORTATION,   2 },
+        { "Hunger", RAP_METABOLISM,            1 },
+        { "Noisy",  RAP_NOISES,                2 },
 
-        // Resists
-        { "RF",   RAP_FIRE,                  1 },
-        { "RC",   RAP_COLD,                  1 },
-        { "RE",   RAP_ELECTRICITY,           1 },
-        { "RP",   RAP_POISON,                1 },
-        { "RN",   RAP_NEGATIVE_ENERGY,       1 },
-        { "MR",   RAP_MAGIC,                 2 },
+        // Evokable abilities come second
+        { "+Blink", RAP_BLINK,                 2 },
+        { "+Tele",  RAP_CAN_TELEPORT,          2 },
+        { "+Rage",  RAP_BERSERK,               2 },
+        { "+Inv",   RAP_INVISIBLE,             2 },
+        { "+Lev",   RAP_LEVITATE,              2 },
+        { "+Map",   RAP_MAPPING,               2 },
+
+        // Resists, also really important
+        { "rElec",  RAP_ELECTRICITY,           1 },
+        { "rPois",  RAP_POISON,                2 },
+        { "rF",     RAP_FIRE,                  1 },
+        { "rC",     RAP_COLD,                  1 },
+        { "rN",     RAP_NEGATIVE_ENERGY,       1 },
+        { "MR",     RAP_MAGIC,                 2 },
+
+        // Positive, quantative attributes
+        { "AC",     RAP_AC,                    0 },
+        { "EV",     RAP_EVASION,               0 },
+        { "Str",    RAP_STRENGTH,              0 },
+        { "Dex",    RAP_DEXTERITY,             0 },
+        { "Int",    RAP_INTELLIGENCE,          0 },
+        { "Acc",    RAP_ACCURACY,              0 },
+        { "Dam",    RAP_DAMAGE,                0 },
 
         // Positive, qualitative attributes
-        { "MP",   RAP_MAGICAL_POWER,         0 },
-        { "SInv", RAP_EYESIGHT,              2 },
-        { "Stl",  RAP_STEALTH,               2 },
-
-        // (Generally) negative attributes
-        { "Ang",  RAP_BERSERK,               2 },
-        { "Noi",  RAP_NOISES,                2 },
-        { "-Spl", RAP_PREVENT_SPELLCASTING,  2 },
-        { "-Tp",  RAP_PREVENT_TELEPORTATION, 2 },
-        { "+Tp",  RAP_CAUSE_TELEPORTATION,   2 },
-        { "Hun",  RAP_METABOLISM,            1 },
-        { "Mut",  RAP_MUTAGENIC,             2 },
-
-        // Evokable abilities
-        { "Inv",  RAP_INVISIBLE,             2 },
-        { "Lev",  RAP_LEVITATE,              2 },
-        { "Blk",  RAP_BLINK,                 2 },
-        { "?Tp",  RAP_CAN_TELEPORT,          2 },
-        { "Map",  RAP_MAPPING,               2 }
-
+        { "MP",     RAP_MAGICAL_POWER,         0 },
+        { "SInv",   RAP_EYESIGHT,              2 },
+        { "Stlth",  RAP_STEALTH,               2 }
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -247,6 +249,18 @@ static std::vector<std::string> randart_propnames( const item_def& item )
         if ( !type.empty() )
             propnames.push_back(type);
     }
+    else if (item.base_type == OBJ_WEAPONS
+             && item_ident(item, ISFLAG_KNOW_TYPE))
+    {
+        std::string ego = weapon_brand_name(item, true);
+        if (!ego.empty())
+        {
+            // ugly hack...
+            ego = ego.substr(2, ego.length()-3);
+            ego += ",";
+            propnames.push_back(ego);
+        }
+    }
 
     for ( unsigned i = 0; i < ARRAYSIZE(propanns); ++i )
     {
@@ -256,22 +270,30 @@ static std::vector<std::string> randart_propnames( const item_def& item )
             std::ostringstream work;
             switch ( propanns[i].spell_out )
             {
-            case 0:
-                work << std::showpos << val << propanns[i].name;
+            case 0: // e.g. AC+4
+                work << std::showpos << propanns[i].name << val;
                 break;
-            case 1:
+            case 1: // e.g. F++
             {
-                const int sval = std::min(std::abs(val), 3);
-                work << std::string(sval, (val > 0 ? '+' : '-'))
-                     << propanns[i].name;
+                int sval = std::min(std::abs(val), 3);
+                
+                // list one '+' less for hunger, stealth, and shock resistance
+                if ((propanns[i].prop == RAP_METABOLISM
+                     || propanns[i].prop == RAP_STEALTH
+                     || propanns[i].prop == RAP_ELECTRICITY) && sval > 0)
+                {
+                    sval--;
+                }
+                work << propanns[i].name
+                     << std::string(sval, (val > 0 ? '+' : '-'));
                 break;
             }
-            case 2:
+            case 2: // e.g. rPois or SInv
                 work << propanns[i].name;
                 break;
             }
             propnames.push_back(work.str());
-        }   
+        }
     }
 
     return propnames;
@@ -282,7 +304,7 @@ static std::string randart_auto_inscription( const item_def& item )
     const std::vector<std::string> propnames = randart_propnames(item);
 
     return comma_separated_line(propnames.begin(), propnames.end(),
-                                ", ", ", ");
+                                " ", " ");
 }
 
 // Remove randart auto-inscription.  Do it once for each property
@@ -1775,7 +1797,7 @@ void describe_item( item_def &item, bool allow_inscribe )
             trim_randart_inscrip(item);
 
             if (!item.inscription.empty())
-                item.inscription += " ";
+                item.inscription += ", ";
 
             item.inscription += ainscrip;
         }

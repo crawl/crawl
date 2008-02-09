@@ -107,6 +107,8 @@ bool is_interesting_item( const item_def& item );
 
 std::string make_name( unsigned long seed, bool all_caps );
 
+const char* weapon_brand_name(const item_def& item, bool terse);
+
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
