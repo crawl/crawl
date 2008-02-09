@@ -1276,16 +1276,15 @@ formatted_string describe_mutations()
             result += '>';
             
             result += mutation_name(static_cast<mutation_type>(i));
-            // Gourmand is *not* identical to being saprovorous, therefore...
-            if (i == MUT_SAPROVOROUS
-                && (you.species == SP_TROLL || you.species == SP_OGRE))
-            {
-                result += EOL "You like to eat raw meat.";
-            }
+
             result += "</";
             result += colourname;
             result += '>';
             result += EOL;
+
+            // Gourmand is *not* identical to being saprovorous, therefore...
+            if (i == MUT_SAPROVOROUS && you.omnivorous())
+                result += "<lightblue>You like to eat raw meat.</lightblue>" EOL;
         }
     }
 
