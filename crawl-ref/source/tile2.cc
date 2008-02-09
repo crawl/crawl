@@ -141,7 +141,7 @@ static int *tcache_head;
 
 typedef struct tile_cache
 {
-    unsigned int id[4];
+    unsigned int id[2];
     int idx;
     tile_cache *next;
     tile_cache *prev;
@@ -353,29 +353,31 @@ void TileResizeScreen(int x0, int y0)
     crawl_view.vbuf.size(crawl_view.viewsz);
 }
 
-void clear_tcache(){
-    int i, k, h;
-
-    for(k=0;k<tcache_kind;k++)
+void clear_tcache()
+{
+    for(int k = 0; k < tcache_kind; k++)
     {
         tile_cache *tc =  tcache[k];
 
-    // Decompose pointer string tcache[k] into tc_hash segments
-        for (h=0; h<tc_hash;h++)
+        // Decompose pointer string tcache[k] into tc_hash segments
+        for (int h = 0; h < tc_hash; h++)
         {
-        int i_start = (max_tcache*h)/tc_hash;
-        int i_end   = (max_tcache*(h+1))/tc_hash -1;
+            int i_start = (max_tcache*h)/tc_hash;
+            int i_end   = (max_tcache*(h+1))/tc_hash -1;
             tcache_head[k*tc_hash + h] = i_start;
 
-            for(i=i_start;i<=i_end;i++)
+            for(int i = i_start; i <= i_end; i++)
             {
-                tc[i].id[3] = tc[i].id[2] =
                 tc[i].id[1] = tc[i].id[0] = 0;
-            tc[i].idx = i;
-                if (i==i_start) tc[i].prev =  NULL;
-                   else tc[i].prev = &tc[i-1];
-                if (i==i_end) tc[i].next = NULL;
-                   else tc[i].next = &tc[i+1];
+                tc[i].idx = i;
+                if (i == i_start)
+                    tc[i].prev =  NULL;
+                else
+                    tc[i].prev = &tc[i-1];
+                if (i == i_end)
+                    tc[i].next = NULL;
+                else
+                    tc[i].next = &tc[i+1];
             }
         }
     }
@@ -621,25 +623,16 @@ void update_single_grid(int x, int y)
 // Discard cache containing specific tile
 void redraw_spx_tcache(int tile)
 {
-    int kind, idx, layer, redraw;
-    int fg[4], bg[4];
-    for(kind = 0; kind < tcache_kind; kind++)
+    for (int kind = 0; kind < tcache_kind; kind++)
     {
-        int nlayer = tcache_nlayer_normal[kind];
-
-        for(idx = 0; idx < max_tcache; idx++)
+        for (int idx = 0; idx < max_tcache; idx++)
         {
-            redraw = 0;
-            for(layer = 0; layer < nlayer; layer++)
+            int fg = tcache[kind][idx].id[0];
+            int bg = tcache[kind][idx].id[1];
+            if ((fg & TILE_FLAG_MASK) == tile ||
+                (bg & TILE_FLAG_MASK) == tile)
             {
-                fg[layer] = (tcache[kind][idx].id[layer]-1)>>16;
-                bg[layer] = (tcache[kind][idx].id[layer]-1)&0xffff;
-                if((fg[layer]&TILE_FLAG_MASK) == tile) redraw = 1;
-                if((bg[layer]&TILE_FLAG_MASK) == tile) redraw = 1;
-            }
-            if (redraw)
-            {
-                tcache_compose_normal(idx, fg, bg);
+                tcache_compose_normal(idx, &fg, &bg);
             }
         }
     }
@@ -2040,11 +2033,14 @@ void TilePlayerEdit()
     ImgClear(ScrBufImg);
     redraw_spx_tcache(TILE_PLAYER);
 
-    for(x=0;x<TILE_DAT_XMAX+2;x++){
-    for(y=0;y<TILE_DAT_YMAX+2;y++){
-        t1buf[x][y]=0;
-    t2buf[x][y]=TILE_DNGN_UNSEEN|TILE_FLAG_UNSEEN;
-    }}
+    for(x=0;x<TILE_DAT_XMAX+2;x++)
+    {
+        for(y=0;y<TILE_DAT_YMAX+2;y++)
+        {
+            t1buf[x][y] = 0;
+            t2buf[x][y] = TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN;
+        }
+    }
 
     for(k=0;k<tcache_kind;k++)
         for(x=0;x<tile_xmax*tile_ymax;x++)
