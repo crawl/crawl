@@ -3605,6 +3605,13 @@ void tile_draw_floor()
                         object = (int)grid_secret_door_appearance(gc.x, gc.y);
 
                     tile_dngn[gc.x][gc.y] = tileidx_feature(object);
+
+                    if (is_travelable_stair((dungeon_feature_type)object) &&
+                        !travel_cache.know_stair(gc))
+                    {
+                        tile_dngn[gc.x][gc.y] |= TILE_FLAG_NEW_STAIR;
+                    }
+
                     gv_now[gc.x][gc.y] = object;
                 }
                 bg = tile_dngn[gc.x][gc.y];

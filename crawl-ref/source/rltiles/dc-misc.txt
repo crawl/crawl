@@ -74,6 +74,7 @@ error ERROR
 travel_exclusion TRAVEL_EXCLUSION
 %rim 1
 todo TODO
+new_stair NEW_STAIR
 %rim 0
 
 char20 CHAR00
