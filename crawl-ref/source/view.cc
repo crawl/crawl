@@ -742,7 +742,7 @@ static bool mons_was_seen_this_turn(const monsters *mons)
             monsters_seen_this_turn.end());
 }
 
-static void good_god_follower_convert(monsters *monster)
+static void good_god_follower_attitude_change(monsters *monster)
 {
     if (you.is_undead || you.species == SP_DEMONSPAWN)
         return;
@@ -1143,7 +1143,7 @@ void monster_grid(bool do_updates)
                 monsters_seen_this_turn.insert(monster);
             }
 
-            good_god_follower_convert(monster);
+            good_god_follower_attitude_change(monster);
             beogh_follower_convert(monster);
         }
     }
