@@ -904,6 +904,9 @@ int tileidx_unrand_artifact(int idx)
         case 50: return TILE_URAND_FENCER;
         case 51: return TILE_URAND_MAGE;
         case 52: return TILE_URAND_BLOWGUN;
+        case 53: //return TILE_URAND_WYRMBANE;
+                 return TILE_WPN_SPEAR + 1;
+
     }
     return 0;
 }

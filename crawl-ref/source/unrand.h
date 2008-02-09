@@ -1128,7 +1128,24 @@
 }
 ,
 
-  
+/* 54 */
+{
+    "Wyrmbane", "scale-covered lance",
+        OBJ_WEAPONS, WPN_SPEAR, +4, +2, GREEN,
+    {
+        SPWPN_DRAGON_SLAYING, 5, 0, 0, 0, 0, // AC
+        1, 0, 0, 1, 0, 0,     // res fire, poison
+        0, 0, 0, 0, 0, 1,     // go berserk
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0
+    }
+    ,
+        "",
+        "",
+        ""
+},
+
 /* This is a dummy */
 /* 1 */
 {
