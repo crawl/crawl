@@ -431,8 +431,8 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
 void GmapInit(bool upd_tile)
 {
     int x, y;
-    gmap_min_x = gmap_max_x = you.x_pos -1;
-    gmap_min_y = gmap_max_y = you.y_pos -1;
+    gmap_min_x = gmap_max_x = you.x_pos - 1;
+    gmap_min_y = gmap_max_y = you.y_pos - 1;
 
     for (y = 0; y < GYM; y++)
     {
@@ -447,26 +447,24 @@ void GmapDisplay(int linex, int liney)
 {
     static unsigned char buf2[GXM*GYM];
 
-    int x,y;
-    int count=0;
     int ox, oy;
 
-    for (x = 0; x < GXM*GYM; x++)
+    for (int x = 0; x < GXM*GYM; x++)
     {
         buf2[x] = 0;
     }
 
-    ox = ( gmap_min_x + (GXM -1 - gmap_max_x) ) / 2;
-    oy = ( gmap_min_y + (GYM -1 - gmap_max_y) ) / 2;
-    count = ox + oy * GXM;
+    ox = ( gmap_min_x + (GXM - 1 - gmap_max_x) ) / 2;
+    oy = ( gmap_min_y + (GYM - 1 - gmap_max_y) ) / 2;
+    int count = ox + oy * GXM;
     gmap_ox = ox - gmap_min_x;
     gmap_oy = oy - gmap_min_y;
 
-    for (y = gmap_min_y; y <= gmap_max_y; y++)
+    for (int y = gmap_min_y; y <= gmap_max_y; y++)
     {
-        for (x = gmap_min_x; x <= gmap_max_x; x++, count++)
+        for (int x = gmap_min_x; x <= gmap_max_x; x++, count++)
         {
-            if ( (count>=0)&&(count<GXM*GYM) )
+            if ( (count>=0) && (count<GXM*GYM) )
                 buf2[count] = gmap_data[x][y];
         }
         count += GXM - (gmap_max_x - gmap_min_x + 1);
@@ -477,7 +475,7 @@ void GmapDisplay(int linex, int liney)
         ox += linex - gmap_min_x;
         oy += liney - gmap_min_y;
         // highlight centre of the map
-        buf2[ ox + oy * GXM] = Options.tile_player_col; 
+        buf2[ox + oy * GXM] = Options.tile_player_col; 
     }
 
     region_map->flag = true;
@@ -598,8 +596,8 @@ void libgui_init()
     TextRegionClass::text_mode = region_crt;
 
     region_map =
-        new MapRegionClass(MAP_XMAX-map_margin*2,
-                           MAP_YMAX-map_margin*2,
+        new MapRegionClass(MAP_XMAX+map_margin,
+                           MAP_YMAX+map_margin,
                            map_margin, map_margin,
                            false);
     region_map->id = REGION_MAP;

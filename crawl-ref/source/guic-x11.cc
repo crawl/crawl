@@ -12,6 +12,7 @@
 
 #include "AppHdr.h"
 #include "debug.h"
+#include "externs.h"
 #include "guic.h"
 #include "version.h"
 
@@ -309,53 +310,59 @@ void MapRegionClass::redraw(int x1, int y1, int x2, int y2)
               (x2-x1+1)*dx, (y2-y1+1)*dy);
 }
 
-void MapRegionClass::draw_data(unsigned char *buf){
-    int x, y, xx, yy;
+void MapRegionClass::draw_data(unsigned char *buf)
+{
     static int px = 0;
     static int py = 0;
 
     if (!flag)
         return;
 
-    for(yy=0;yy<dy*2;yy++)
+    const int marker_length = 2;
+
+    for(int yy = 0; yy < dy * marker_length; yy++)
     {
-        XPutPixel(backbuf, px*dx+dx/2, yy, map_pix[MAP_BLACK]);
+        XPutPixel(backbuf, px*dx+dx/2 + x_margin, yy, map_pix[MAP_BLACK]);
     }
-    for(xx=0;xx<dx*2;xx++)
+    for(int xx = 0; xx < dx * marker_length; xx++)
     {
-        XPutPixel(backbuf, xx, py*dy+dy/2, map_pix[MAP_BLACK]);
+        XPutPixel(backbuf, xx, py*dy+dy/2 + y_margin, map_pix[MAP_BLACK]);
     }
 
-    for (y = 0; y < my; y++)
+    for (int y = 0; y < my; y++)
     {
-        unsigned char *ptr =
-        &buf[x_margin  + (y_margin + y)*(mx2 + x_margin*2)];
-        for (x = 0; x < mx; x++)
+        unsigned char *ptr = &buf[y * (mx2 - x_margin)];
+        for (int x = 0; x < mx; x++)
         {
-            int col = ptr[x];
-            // Hack :remember player position
-            if (col == MAP_WHITE)
+            int col = (y >= my2 - y_margin || x >= mx2 - x_margin) ?
+                MAP_BLACK : ptr[x];
+            if (col == Options.tile_player_col)
             {
                 px = x;
                 py = y;
             }
-            if(col != get_col(x, y) || force_redraw)
+            if(col != get_col(x, y) || force_redraw || 
+                x < marker_length || y < marker_length)
             {
-                for(xx=0; xx<dx; xx++)
-                for(yy=0; yy<dy; yy++)
-                XPutPixel(backbuf, x*dx+xx, y*dy+yy, map_pix[col]);
+                for(int xx=0; xx<dx; xx++)
+                    for(int yy=0; yy<dy; yy++)
+                    {
+                        XPutPixel(backbuf, x_margin + x*dx+xx,
+                            y_margin + y*dy+yy, map_pix[col]);
+                    }
 
                 set_col(col, x, y);
             }
         }
     }
-    for(yy=0;yy<dy*2;yy++)
+
+    for(int yy = 0; yy < dy * marker_length; yy++)
     {
-        XPutPixel(backbuf, px*dx+dx/2, yy, map_pix[MAP_WHITE]);
+        XPutPixel(backbuf, px*dx+dx/2 + x_margin, yy, map_pix[MAP_WHITE]);
     }
-    for(xx=0;xx<dx*2;xx++)
+    for(int xx = 0; xx < dx * marker_length; xx++)
     {
-        XPutPixel(backbuf, xx, py*dy+dy/2, map_pix[MAP_WHITE]);
+        XPutPixel(backbuf, xx, py*dy+dy/2 + y_margin, map_pix[MAP_WHITE]);
     }
 
     redraw();

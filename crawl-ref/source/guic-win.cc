@@ -1,3 +1,8 @@
+#include "AppHdr.h"
+#include "debug.h"
+#include "externs.h"
+#include "guic.h"
+
 #include <windows.h>
 #include <commdlg.h>
 #include <commctrl.h>
@@ -9,8 +14,6 @@
 #include <tchar.h>
 
 // WinClass & RegionClass definitions
-#include "guic.h"
-
 static HINSTANCE hInst;
 static int       nCmdShow;
 
@@ -447,9 +450,7 @@ void TileRegionClass::clear()
 
 void MapRegionClass::clear()
 {
-    int i;
-
-    for (i=0; i<mx2*my2; i++)
+    for (int i = 0; i < mx2*my2; i++)
     {
         mbuf[i]=PIX_BLACK;
     }
@@ -505,27 +506,6 @@ BOOL WinClass::create(const char *name)
     }
 
    clear();
-
-#if 0
-   // Init pending backbuf of regions
-   std::vector<RegionClass *>::iterator r;
-
-   for (r = regions.begin();r != regions.end();r++)
-   {
-        if ( (*r)->backbuf != NULL)
-        {
-            img_type b = (*r)->backbuf;
-            HDC hdc1 = GetDC(0);
-            HDC hdc2 = GetDC(hWnd);
-            b->hDib = CreateDIBSection(hdc1, b->pDib, DIB_RGB_COLORS,
-                               (VOID **)&(b->pDibBits), NULL, 0);
-            b->hDC = CreateCompatibleDC(hdc2);
-            SelectObject(b->hDC, b->hDib);
-            ReleaseDC(hWnd, hdc2);
-            ReleaseDC(0, hdc1);
-        }
-   }
-#endif
    return TRUE;
 }
 
@@ -572,19 +552,19 @@ void MapRegionClass::redraw(int x1, int y1, int x2, int y2)
 {
     if (!flag) return;
     if (!is_active()) return;
-    HDC hdc =GetDC(win->hWnd);
+    HDC hdc = GetDC(win->hWnd);
     BitBlt(hdc, ox, oy, dx*mx, dy*my,
            backbuf->hDC, 0, 0, SRCCOPY);
     ReleaseDC(win->hWnd, hdc);
 }
 
-void MapRegionClass::draw_data(unsigned char *buf){
-    int i, j, x, y, col;
-    int dx2, dy2;
+void MapRegionClass::draw_data(unsigned char *buf)
+{
     static int px = 0;
     static int py = 0;
 
-    if(!flag)return;
+    if (!flag)
+        return;
 
     LPBYTE ppix ,dpix;
     int inc_x, inc_y, inc_x0, inc_y0;
@@ -594,71 +574,71 @@ void MapRegionClass::draw_data(unsigned char *buf){
     bufx = (bufx+3)/4;
     bufx *=4;
 #define BUF_IDX(x,y, x1, y1) ((x)*dx-(y)*dy*bufx + (x1) - (y1)*bufx)
-#define BUF_IDX_ISO(x,y, x1, y1) ((x-y+my2-1)*dx-(x+y)*dy*bufx + (x1)-(y1)*bufx)
     // upper left corner
     LPBYTE pDibBit0 = backbuf->pDibBits + bufx*(bufy-1);
 
-    dx2 = dx;
-    dy2 = dy;
     ppix  = pDibBit0;
 
     inc_x = dx;
     inc_x0 = 1;
 
-    // è„Ç…dy ç∂Ç… mmapDibX
     inc_y = - mx2 * inc_x + BUF_IDX(0, 1, 0, 0);
-    // è„Ç…1 ç∂Ç… dx
-    inc_y0 = - dx2 * inc_x0 + BUF_IDX(0, 0, 0, 1);
+    inc_y0 = - dx * inc_x0 + BUF_IDX(0, 0, 0, 1);
 
-    // Draw gauge
-    // erase old
-    for (j = 0; j < dy*2; j++)
+    // erase old markers
+    const int marker_length = 2;
+    for (int j = 0; j < dy * marker_length; j++)
     {
-        *(pDibBit0 + BUF_IDX(px, 0, dx/2, j)) = MAP_BLACK;
+        *(pDibBit0 + BUF_IDX(px, 0, dx/2 + x_margin, j)) = MAP_BLACK;
     }
-    for (j = 0; j < dx*2; j++)
+    for (int j = 0; j < dx * marker_length; j++)
     {
-        *(pDibBit0 + BUF_IDX(0, py, j, dy/2)) = MAP_BLACK;
+        *(pDibBit0 + BUF_IDX(0, py, j, dy/2 + y_margin)) = MAP_BLACK;
     }
 
-    dpix  = ppix;
-    for (j = 0; j < my2; j++)
+    force_redraw = true;
+
+    dpix = ppix;
+    for (int j = 0; j < my2; j++)
     {
-        for (i = 0; i < mx2; i++)
+        unsigned char *ptr = &buf[j * (mx2 - x_margin)];
+        for (int i = 0; i < mx2; i++)
         {
-            col=buf[(i+x_margin) + (j+y_margin)*(mx2 + x_margin*2)];
-            if (col == MAP_WHITE)
+            int col = (j >= my2 - y_margin || i >= mx2 - x_margin) ?
+               MAP_BLACK : ptr[i];
+            if (col == Options.tile_player_col)
             {
                 px = i;
                 py = j;
             }
-            if ( (col != get_col(i,j)) || force_redraw)
+            if ( (col != get_col(i,j)) || force_redraw ||
+                i < marker_length || j < marker_length)    
             {
                 dpix = ppix;
-                for (y=0; y<dy2; y++)
+                for (int y = 0; y < dy; y++)
                 {
-                    for (x=0; x<dx2; x++)
+                    for (int x = 0; x < dx; x++)
                     {
                         *dpix = col;
                         dpix += inc_x0;
                     }
                     dpix += inc_y0;
                 }
-                set_col(col, i,j);
+                set_col(col, i, j);
             }
             ppix += inc_x;
         }
         ppix += inc_y;
     }
 
-    // draw gauge
-    for (j = 0; j < dy*2; j++)
+    // draw new markers
+    for (int j = 0; j < dy * marker_length; j++)
     {
-        *(pDibBit0 + BUF_IDX(px, 0, dx/2, j)) = MAP_WHITE;
+        *(pDibBit0 + BUF_IDX(px, 0, dx/2 + x_margin, j)) = MAP_WHITE;
     }
-    for (j = 0; j < dx*2; j++)
+    for (int j = 0; j < dx * marker_length; j++)
     {
-        *(pDibBit0 + BUF_IDX(0, py, j, dy/2)) = MAP_WHITE;
+        *(pDibBit0 + BUF_IDX(0, py, j, dy/2 + y_margin)) = MAP_WHITE;
     }
 
     redraw();
