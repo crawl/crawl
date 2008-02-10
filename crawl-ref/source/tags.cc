@@ -71,6 +71,7 @@
 
 #include "abl-show.h"
 #include "branch.h"
+#include "describe.h"
 #include "dungeon.h"
 #include "enum.h"
 #include "externs.h"
@@ -1016,10 +1017,10 @@ static void tag_construct_you_items(tagHeader &th)
 
     // item descrip for each type & subtype
     // how many types?
-    marshallByte(th, 5);
+    marshallByte(th, NUM_IDESC);
     // how many subtypes?
     marshallByte(th, 50);
-    for (i = 0; i < 5; ++i)
+    for (i = 0; i < NUM_IDESC; ++i)
     {
         for (j = 0; j < 50; ++j)
             marshallByte(th, you.item_description[i][j]);
@@ -1428,6 +1429,9 @@ static void tag_read_you_items(tagHeader &th, char minorVersion)
                     break;
                 case IDTYPE_POTIONS:
                     set_ident_type(OBJ_POTIONS, j, ch);
+                    break;
+                case IDTYPE_STAVES:
+                    set_ident_type(OBJ_STAVES, j, ch);
                     break;
             }
         }

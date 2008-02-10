@@ -703,6 +703,7 @@ void item_colour( item_def &item )
 
     case OBJ_STAVES:
         item.colour = BROWN;
+        item.special = you.item_description[IDESC_STAVES][item.sub_type];
         break;
 
     case OBJ_ORBS:
@@ -2479,7 +2480,7 @@ static void generate_staff_item(item_def& item, int force_type)
         init_rod_mp( item );
     
     // add different looks
-    item.special = random2(10);
+//  item.special = you.item_description[IDESC_STAVES][item.sub_type];
 }
 
 static bool try_make_jewellery_unrandart(item_def& item, int force_type,

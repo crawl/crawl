@@ -419,10 +419,18 @@ static void initialise_item_descriptions()
     you.item_description[IDESC_POTIONS][POT_WATER] = PDESCS(PDC_CLEAR);
     you.item_description[IDESC_POTIONS][POT_BLOOD] = PDESCS(PDC_RED);
 
+    // The order here must match that of IDESC in describe.h
+    // (I don't really know about scrolls, which is why I left the height value.)
+    const int max_item_number[6] = { NUM_WANDS, NUM_POTIONS,
+                                     you.item_description.height(),
+                                     NUM_JEWELLERY,
+                                     you.item_description.height(),
+                                     NUM_STAVES };
+                                     
     for (int i = 0; i < NUM_IDESC; i++)
     {
-        // We really should only loop until NUM_WANDS, etc., here
-        for (int j = 0; j < you.item_description.height(); j++)
+        // only loop until NUM_WANDS etc.
+        for (int j = 0; j < max_item_number[i]; j++)
         {
             // Don't override predefines
             if (you.item_description[i][j] != 255)
@@ -432,6 +440,7 @@ static void initialise_item_descriptions()
             while (true)
             {
 
+                // The numbers below are always secondary * primary (itemname.cc)
                 switch (i)
                 {
                 case IDESC_WANDS: // wands
@@ -453,6 +462,10 @@ static void initialise_item_descriptions()
                     you.item_description[i][j] = random2( 13 * 13 );
                     if (coinflip())
                         you.item_description[i][j] %= 13;
+                    break;
+
+                case IDESC_STAVES: // staves and rods
+                    you.item_description[i][j] = random2( 10 * 4 );
                     break;
                 }
 
@@ -2464,7 +2477,7 @@ static void make_rod(item_def &item, stave_type rod_type)
     item.base_type = OBJ_STAVES;
     item.sub_type = rod_type;
     item.quantity = 1;
-    item.special = 0;
+    item.special = you.item_description[IDESC_STAVES][rod_type];
     item.colour = BROWN;
     
     init_rod_mp(item);

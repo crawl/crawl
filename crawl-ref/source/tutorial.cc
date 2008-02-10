@@ -1,5 +1,5 @@
 /*
- *  Created for Crawl Reference by JPEG on $Date: 2007-01-11$
+ *  Created for Crawl Reference by j-p-e-g on $Date: 2007-01-11$
  */
 
 #include "tutorial.h"

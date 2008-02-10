@@ -1869,7 +1869,7 @@ bool forget_inventory(bool quiet)
             case OBJ_BOOKS:
             case OBJ_STAVES:
             case OBJ_MISCELLANY:
-                // Don't forget identity of decks if it the player has
+                // Don't forget identity of decks if the player has
                 // used any of its cards, or knows how many are left.
                 if (!is_deck(item) || item.plus2 == 0)
                     unset_ident_flags(item, ISFLAG_KNOW_TYPE);
@@ -2360,6 +2360,8 @@ void handle_time( long time_delta )
         if (random2(100) < total_skill)
         {
             item_def& item = you.inv[you.equip[EQ_WEAPON]];
+            
+            set_ident_type( OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE );
             set_ident_flags( item, ISFLAG_IDENT_MASK );
 
             mprf("You are wielding %s.", item.name(DESC_NOCAP_A).c_str());

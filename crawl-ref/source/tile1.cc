@@ -1611,7 +1611,13 @@ int tileidx_item(const item_def &item)
             return TILE_BOOK_PAPYRUS;
 
     case OBJ_STAVES:
-        return TILE_STAFF_OFFSET + special % 10;
+/*
+        if (id[ IDTYPE_STAVES ][type] == ID_KNOWN_TYPE
+            ||  (item.flags &ISFLAG_KNOW_TYPE ))
+            return TILE_STAFF_WIZARDRY + type;
+*/
+        // try to return an appropriate tile
+        return TILE_STAFF_OFFSET + (special / 4) % 10;
 
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
@@ -3968,6 +3974,13 @@ static int item_unid_type(const item_def &item)
 
         case OBJ_JEWELLERY:
           id0 = id[ IDTYPE_JEWELLERY ][s];
+          if (id0 != ID_KNOWN_TYPE)
+             return 1;
+          else
+             return 0;
+             
+        case OBJ_STAVES:
+          id0 = id[ IDTYPE_STAVES ][s];
           if (id0 != ID_KNOWN_TYPE)
              return 1;
           else

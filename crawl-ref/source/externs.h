@@ -675,7 +675,7 @@ public:
   int  total_skill_points;
   int  exp_available;
 
-  FixedArray<unsigned char, 5, 50> item_description;
+  FixedArray<unsigned char, 6, 50> item_description;
   FixedVector<unique_item_status_type, 50> unique_items;
   FixedVector<bool, NUM_MONSTERS> unique_creatures;
 

@@ -397,7 +397,7 @@ enum stave_type
     STAFF_SUMMONING,
     STAFF_AIR,
     STAFF_EARTH,
-    STAFF_CHANNELING,
+    STAFF_CHANNELING,           // 12
     // rods
     STAFF_SMITING,              // must be first rod!
     STAFF_SPELL_SUMMONING,
@@ -409,8 +409,8 @@ enum stave_type
     STAFF_DISCOVERY,
     STAFF_DEMONOLOGY,
     STAFF_STRIKING,
-    STAFF_VENOM,
-    NUM_STAVES                         // must remain last member {dlb}
+    STAFF_VENOM,                // 23
+    NUM_STAVES                  // must remain last member {dlb}
 };
 
 enum weapon_type

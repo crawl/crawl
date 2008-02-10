@@ -19,6 +19,8 @@
 #include "externs.h"
 #include "enum.h"
 
+// If you add any more description types, remember to also
+// change item_description in externs.h
 enum item_description_type
 {
     IDESC_WANDS = 0,
@@ -26,6 +28,7 @@ enum item_description_type
     IDESC_SCROLLS,                      // special field (like the others)
     IDESC_RINGS,
     IDESC_SCROLLS_II,
+    IDESC_STAVES,
     NUM_IDESC
 };
 

@@ -564,6 +564,7 @@ bool evoke_wielded()
 
                 if (!item_type_known(wpn))
                 {
+                    set_ident_type( OBJ_STAVES, wpn.sub_type, ID_KNOWN_TYPE );
                     set_ident_flags( wpn, ISFLAG_KNOW_TYPE );
 
                     mprf("You are wielding %s.",

@@ -879,22 +879,33 @@ static const char* book_type_name(int booktype)
     }
 }
 
+static const char* staff_secondary_string(int p)
+{
+    switch (p) // general descriptions
+    {
+    case 0: return "crooked ";
+    case 1: return "knobbly ";
+    case 2: return "heavily ";
+    case 3: return "gnarled ";
+    case 4: return "thin ";
+    case 5: return "curved ";
+    case 6: return "twisted ";
+    case 7: return "thick ";
+    case 8: return "long ";
+    case 9: return "short ";
+    default: return "buggily ";
+    }
+}
+
 static const char* staff_primary_string(int p)
 {
-    switch (p)
+    switch (p) // special attributes
     {
-        
-    case 0: return "curved";
-    case 1: return "glowing";
-    case 2: return "thick";
-    case 3: return "thin";
-    case 4: return "long";
-    case 5: return "twisted";
-    case 6: return "jewelled";
-    case 7: return "runed";
-    case 8: return "smoking";
-    case 9: return "gnarled";
-    default: return "buggy";
+    case 0: return "glowing ";
+    case 1: return "jewelled ";
+    case 2: return "runed ";
+    case 3: return "smoking ";
+    default: return "buggy ";
     }
 }
 
@@ -1517,8 +1528,9 @@ std::string item_def::name_aux( description_level_type desc,
         if (!know_type)
         {
             if (!basename)
-                buff << staff_primary_string(this->special) << " ";
-                
+            buff << staff_secondary_string(this->special / 4)
+                 << staff_primary_string(this->special % 4);
+                 
             buff << (item_is_rod( *this ) ? "rod" : "staff");
         }      
         else
@@ -1526,7 +1538,8 @@ std::string item_def::name_aux( description_level_type desc,
             buff << (item_is_rod( *this ) ? "rod" : "staff")
                  << " of " << staff_type_name(item_typ);
 
-            if (item_is_rod(*this) && !basename && !qualname && !dbname)
+            if (item_is_rod(*this) && know_pluses
+                && !basename && !qualname && !dbname)
             {
                 buff << " (" << (this->plus / ROD_CHARGE_MULT)
                      << "/" << (this->plus2 / ROD_CHARGE_MULT)
@@ -1639,6 +1652,7 @@ static item_type_id_type objtype_to_idtype(object_class_type base_type)
     case OBJ_SCROLLS:   return (IDTYPE_SCROLLS);
     case OBJ_JEWELLERY: return (IDTYPE_JEWELLERY);
     case OBJ_POTIONS:   return (IDTYPE_POTIONS);
+    case OBJ_STAVES:    return (IDTYPE_STAVES);
     default:            return (NUM_IDTYPE);
     }
 }
@@ -1754,12 +1768,13 @@ void check_item_knowledge()
 {
     std::vector<const item_def*> items;
 
-    const object_class_type idx_to_objtype[4] = { OBJ_WANDS, OBJ_SCROLLS,
-                                                  OBJ_JEWELLERY, OBJ_POTIONS };
-    const int idx_to_maxtype[4] = { NUM_WANDS, NUM_SCROLLS,
-                                    NUM_JEWELLERY, NUM_POTIONS };
+    const object_class_type idx_to_objtype[5] = { OBJ_WANDS, OBJ_SCROLLS,
+                                                  OBJ_JEWELLERY, OBJ_POTIONS,
+                                                  OBJ_STAVES };
+    const int idx_to_maxtype[5] = { NUM_WANDS, NUM_SCROLLS,
+                                    NUM_JEWELLERY, NUM_POTIONS, NUM_STAVES };
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
     {
         for (int j = 0; j < idx_to_maxtype[i]; j++)
         {

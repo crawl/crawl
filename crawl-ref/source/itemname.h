@@ -28,6 +28,7 @@ enum item_type_id_type
     IDTYPE_SCROLLS,
     IDTYPE_JEWELLERY,
     IDTYPE_POTIONS,
+    IDTYPE_STAVES,
     NUM_IDTYPE
 };
 
