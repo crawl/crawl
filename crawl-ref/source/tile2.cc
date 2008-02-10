@@ -2251,7 +2251,7 @@ void TileGhostInit(const struct ghost_demon &ghost)
 
 void TileInitItems()
 {
-    for(int i=0; i<NUM_POTIONS; i++)
+    for (int i = 0; i < NUM_POTIONS; i++)
     {
         int special = you.item_description[IDESC_POTIONS][i];
         int tile0 = TILE_POTION_OFFSET + special % 14;
@@ -2259,10 +2259,10 @@ void TileInitItems()
 
         ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
         ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
-        ImgCopyToTileImg  (tile1, DollCacheImg, 0, 0, 1);
+        ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
     }
 
-    for(int i=0; i<NUM_WANDS; i++)
+    for (int i = 0; i < NUM_WANDS; i++)
     {
         int special = you.item_description[IDESC_WANDS][i];
         int tile0 = TILE_WAND_OFFSET + special % 12;
@@ -2270,7 +2270,18 @@ void TileInitItems()
 
         ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
         ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
-        ImgCopyToTileImg  (tile1, DollCacheImg, 0, 0, 1);
+        ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
+    }
+
+    for (int i = 0; i < NUM_STAVES; i++)
+    {
+        int special = you.item_description[IDESC_STAVES][i];
+        int tile0 = TILE_STAFF_OFFSET + (special / 4) % 10;
+        int tile1 = TILE_STAFF_WIZARDRY + i;
+
+        ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
+        ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
+        ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
     }
 }
 

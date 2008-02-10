@@ -374,9 +374,9 @@ bone FOOD_BONE
 #################OBJ_UNKNOWN_I
 ##################OBJ_SCROLLS
 %sdir item/scroll
-kernod_wel SCROLL
+scroll SCROLL
 
-%back kernod_wel
+%back scroll
 %sdir item/scroll
 i-identify SCR_IDENTIFY
 i-teleportation SCR_TELEPORTATION
@@ -571,6 +571,32 @@ staff06
 staff07
 staff08
 staff09
+
+i-staff_wizardry STAFF_WIZARDRY
+i-staff_power STAFF_POWER
+i-staff_fire STAFF_FIRE
+i-staff_cold STAFF_COLD
+i-staff_poison STAFF_POISON
+i-staff_energy STAFF_ENERGY
+i-staff_death STAFF_DEATH
+i-staff_conjuration STAFF_CONJURATION
+i-staff_enchantment STAFF_ENCHANTMENT
+i-staff_summoning STAFF_SUMMONING
+i-staff_air STAFF_AIR
+i-staff_earth STAFF_EARTH
+i-staff_channeling STAFF_CHANNELING
+
+i-rod_smiting ROD_SMITING
+i-rod_summoning ROD_SUMMONING
+i-rod_destruction_fire ROD_DESTRUCTION_FIRE
+i-rod_destruction_ice ROD_DESTRUCTION_ICE
+i-rod_destruction_lightning ROD_DESTRUCTION_LIGHTNING
+i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
+i-rod_warding ROD_WARDING
+i-rod_discovery ROD_DISCOVERY
+i-rod_demonology ROD_DEMONOLOGY
+i-rod_striking ROD_STRIKING
+i-rod_venom ROD_VENOM
 
 #OBJ_ORBS
 %sdir item/misc

@@ -1611,12 +1611,13 @@ int tileidx_item(const item_def &item)
             return TILE_BOOK_PAPYRUS;
 
     case OBJ_STAVES:
-/*
         if (id[ IDTYPE_STAVES ][type] == ID_KNOWN_TYPE
-            ||  (item.flags &ISFLAG_KNOW_TYPE ))
+            ||  (item.flags & ISFLAG_KNOW_TYPE ))
+        {
             return TILE_STAFF_WIZARDRY + type;
-*/
-        // try to return an appropriate tile
+        }
+        // Try to return an appropriate tile
+        // Note: We really need separate rod and stave tiles...
         return TILE_STAFF_OFFSET + (special / 4) % 10;
 
     case OBJ_CORPSES:
