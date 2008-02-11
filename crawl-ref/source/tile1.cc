@@ -23,8 +23,6 @@
 
 // tile index cache to reduce tileidx() calls
 static FixedArray < unsigned int, GXM, GYM > tile_dngn;
-// gv backup
-static FixedArray < unsigned char, GXM, GYM > gv_now;
 
 bool is_bazaar()
 {
@@ -3585,7 +3583,6 @@ void tile_clear_buf()
     {
         for (int x = 0; x < GXM; x++)
         {
-            gv_now[x][y]=0;
             tile_dngn[x][y]=TILE_DNGN_UNSEEN;
         }
     }
@@ -3606,20 +3603,15 @@ void tile_draw_floor()
             int object = env.show(ep);
             if (in_bounds(gc) && object != 0)
             {
-                if (object != gv_now[gc.x][gc.y])
+                if (object == DNGN_SECRET_DOOR)
+                    object = (int)grid_secret_door_appearance(gc.x, gc.y);
+
+                tile_dngn[gc.x][gc.y] = tileidx_feature(object);
+
+                if (is_travelable_stair((dungeon_feature_type)object) &&
+                    !travel_cache.know_stair(gc))
                 {
-                    if (object == DNGN_SECRET_DOOR)
-                        object = (int)grid_secret_door_appearance(gc.x, gc.y);
-
-                    tile_dngn[gc.x][gc.y] = tileidx_feature(object);
-
-                    if (is_travelable_stair((dungeon_feature_type)object) &&
-                        !travel_cache.know_stair(gc))
-                    {
-                        tile_dngn[gc.x][gc.y] |= TILE_FLAG_NEW_STAIR;
-                    }
-
-                    gv_now[gc.x][gc.y] = object;
+                    tile_dngn[gc.x][gc.y] |= TILE_FLAG_NEW_STAIR;
                 }
                 bg = tile_dngn[gc.x][gc.y];
             }

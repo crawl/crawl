@@ -773,15 +773,6 @@ void tcache_compose_normal(int ix, int *fg, int *bg)
         status_shift += 5;
     }
 
-    // Don't let the "new stair" icon cover up any existing icons, but
-    // draw it otherwise.
-    if (bg0 & TILE_FLAG_NEW_STAIR && status_shift == 0)
-    {
-        tcache_overlay(tc_img, ix, TILE_NEW_STAIR,
-            TREGION_0_NORMAL, &c, NULL);
-    }
-
-
     if (bg0 & TILE_FLAG_UNSEEN)
     {
         tcache_overlay(tc_img, ix, TILE_MESH, TREGION_0_NORMAL, &c, NULL);
@@ -791,6 +782,14 @@ void tcache_compose_normal(int ix, int *fg, int *bg)
     {
         tcache_overlay(tc_img, ix, TILE_MAGIC_MAP_MESH, TREGION_0_NORMAL, &c, 
             NULL);
+    }
+
+    // Don't let the "new stair" icon cover up any existing icons, but
+    // draw it otherwise.
+    if (bg0 & TILE_FLAG_NEW_STAIR && status_shift == 0)
+    {
+        tcache_overlay(tc_img, ix, TILE_NEW_STAIR,
+            TREGION_0_NORMAL, &c, NULL);
     }
 
     if ((bg0 & TILE_FLAG_TRAVEL_EX) && (bg0 & TILE_FLAG_UNSEEN))
