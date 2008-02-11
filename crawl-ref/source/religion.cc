@@ -3734,15 +3734,6 @@ void god_pitch(god_type which_god)
 
     if (is_evil_god(you.religion))
     {
-        // When you leave one of the good gods for an evil god, you make
-        // all non-hostile holy beings hostile.
-        if (you.penance[GOD_ZIN] || you.penance[GOD_SHINING_ONE] ||
-            you.penance[GOD_ELYVILON])
-        {
-            if (holy_beings_attitude_change())
-                mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
-        }
-
         // Note:  Using worshipped[] we could make this sort of grudge
         // permanent instead of based off of penance. -- bwr
         if (you.penance[GOD_SHINING_ONE])
@@ -3750,6 +3741,15 @@ void god_pitch(god_type which_god)
             inc_penance(GOD_SHINING_ONE, 30);
             god_speaks(GOD_SHINING_ONE,
                        "\"You will pay for your evil ways, mortal!\"");
+        }
+
+        // When you leave one of the good gods for an evil god, you make
+        // all non-hostile holy beings hostile.
+        if (you.penance[GOD_ZIN] || you.penance[GOD_SHINING_ONE] ||
+            you.penance[GOD_ELYVILON])
+        {
+            if (holy_beings_attitude_change())
+                mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
         }
     }
 
