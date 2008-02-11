@@ -280,6 +280,8 @@ static int newwave_armour_colour(const item_def &item)
         item_colour = WHITE;
         break;
       case ARM_SHIELD:
+      case ARM_LARGE_SHIELD:
+      case ARM_BUCKLER:
         item_colour = CYAN;
         break;
       default:

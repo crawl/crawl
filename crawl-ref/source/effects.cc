@@ -1406,15 +1406,28 @@ bool acquirement(object_class_type class_wanted, int agent,
             if ((doodad.base_type == OBJ_WEAPONS
                  && !can_wield(&doodad, false, true))
                 || (doodad.base_type == OBJ_ARMOUR
-                    && !can_wear_armour(doodad, false, true))
-
-                // Trog does not gift the Wrath of Trog.
-                || (agent == GOD_TROG && is_fixed_artefact(doodad)
-                    && doodad.special == SPWPN_WRATH_OF_TROG))
+                    && !can_wear_armour(doodad, false, true)))
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
                 continue;
+            }
+
+            // Trog does not gift the Wrath of Trog, nor
+            // weapons of pain (work together with Necromantic magic)
+            // or holy wrath (blessed by TSO, a god hated by Trog)
+            if (agent == GOD_TROG)
+            {
+                int brand = get_weapon_brand(doodad);
+                if (brand == SPWPN_HOLY_WRATH
+                    || brand == SPWPN_PAIN
+                    || is_fixed_artefact(doodad)
+                       && doodad.special == SPWPN_WRATH_OF_TROG)
+                {
+                    destroy_item(thing_created, true);
+                    thing_created = NON_ITEM;
+                    continue;
+                }
             }
 
             // MT - Check: god-gifted weapons and armor shouldn't kill you.
