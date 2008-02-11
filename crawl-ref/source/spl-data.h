@@ -12,7 +12,7 @@
    This type has a near monopoly on effective and relatively risk-free combat
    spells. All other types of combat spells are either indirect (enchantments),
    risky/detrimental/not versatile (necromancy) or just plain crappy (burn and
-   freeze), although smiting (holy) is not too bad.
+   freeze), although smiting is not too bad.
    Conjuration spells all involve the magical creation of matter and/or energy
    (which are the same thing anyway, right?). They are distinguished from
    summoning spells in that they do not involve the summoning of an entire
