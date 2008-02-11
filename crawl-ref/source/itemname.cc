@@ -885,7 +885,7 @@ static const char* staff_secondary_string(int p)
     {
     case 0: return "crooked ";
     case 1: return "knobbly ";
-    case 2: return "heavily ";
+    case 2: return "weird ";
     case 3: return "gnarled ";
     case 4: return "thin ";
     case 5: return "curved ";

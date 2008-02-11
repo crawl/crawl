@@ -794,9 +794,9 @@ void direction(dist& moves, targeting_type restricts,
 
             {
                 monsters &m = menv[mid];
-                m.attitude = m.attitude == ATT_FRIENDLY? ATT_NEUTRAL :
-                    m.attitude == ATT_HOSTILE? ATT_FRIENDLY :
-                    ATT_HOSTILE;
+                m.attitude = (m.attitude == ATT_FRIENDLY? ATT_NEUTRAL :
+                              m.attitude == ATT_HOSTILE ? ATT_FRIENDLY
+                                                        : ATT_HOSTILE);
 
                 // To update visual branding of friendlies.  Only
                 // seem capabable of adding bolding, not removing it,
@@ -1950,7 +1950,7 @@ static void describe_monster(const monsters *mon)
                 mon->pronoun(PRONOUN_CAP).c_str());
        }
        // hostile with target != you
-       else if (!mons_friendly(mon) && mon->foe != MHITYOU)
+       else if (!mons_friendly(mon) && !mons_neutral(mon) && mon->foe != MHITYOU)
        {
            // special case: batty monsters get set to BEH_WANDER as
            // part of their special behaviour.

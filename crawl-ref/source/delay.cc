@@ -66,6 +66,7 @@ static bool recite_mons_useless(const monsters *mon)
             || mon->has_ench(ENCH_BERSERK));
 }
 
+// power is maximum 50
 static int recite_to_monsters(int x, int y, int pow, int unused)
 {
     UNUSED(unused);
@@ -82,12 +83,24 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
     if (coinflip()) // nothing happens
         return (0);
 
-    const int resist = mons_resist_magic(mons);
+    int resist;
+    const int holiness = mons_holiness(mons);
+    if (holiness == MH_HOLY)
+    {
+        resist = 7 - random2(you.skills[SK_INVOCATIONS]);
+        if (resist < 0)
+            resist = 0;
+    }
+    else
+    {
+        resist = mons_resist_magic(mons);
+        
+        // much lower chances at influencing demons
+        if (holiness == MH_DEMONIC)
+            pow -= 3 + random2(5);
+    }
+
     pow -= resist;
-    
-    // much lower chances at influencing demons
-    if (mons_class_holiness(mon) == MH_DEMONIC)
-        pow -= 3 + random2(5);
 
     if (pow > 0)
         pow = random2avg(pow,2);

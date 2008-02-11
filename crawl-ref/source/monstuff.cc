@@ -1847,14 +1847,14 @@ static void handle_behaviour(monsters *mon)
 {
     bool changed = true;
     bool isFriendly = mons_friendly(mon);
-    bool isNeutral = mons_neutral(mon);
+    bool isNeutral  = mons_neutral(mon);
     bool proxPlayer = mons_near(mon);
     bool proxFoe;
-    bool isHurt = (mon->hit_points <= mon->max_hit_points / 4 - 1);
+    bool isHurt    = (mon->hit_points <= mon->max_hit_points / 4 - 1);
     bool isHealthy = (mon->hit_points > mon->max_hit_points / 2);
-    bool isSmart = (mons_intel(mon->type) > I_ANIMAL);
-    bool isScared = mon->has_ench(ENCH_FEAR);
-    bool isMobile = !mons_is_stationary(mon);
+    bool isSmart   = (mons_intel(mon->type) > I_ANIMAL);
+    bool isScared  = mon->has_ench(ENCH_FEAR);
+    bool isMobile  = !mons_is_stationary(mon);
 
     // check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
