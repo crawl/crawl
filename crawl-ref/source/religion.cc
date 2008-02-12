@@ -2957,7 +2957,7 @@ void beogh_idol_revenge()
     }
 }
 
-static void good_god_holy_being_conversion_speech(
+static void good_god_holy_being_attitude_change_speech(
     std::ostream &chan,
     const monsters *holy)
 {
@@ -3074,7 +3074,7 @@ void good_god_convert_holy(monsters *holy)
         std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
         chan << holy->name(DESC_CAP_THE);
 
-        good_god_holy_being_conversion_speech(chan, holy);
+        good_god_holy_being_attitude_change_speech(chan, holy);
     }
 
     holy->attitude  = ATT_NEUTRAL;
