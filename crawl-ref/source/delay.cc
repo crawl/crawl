@@ -167,6 +167,7 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
       default:
           // permanently neutral, but same message as enchantment
           mons->attitude = ATT_NEUTRAL;
+          mons->flags |= MF_WAS_NEUTRAL;
           simple_monster_message(mons, " seems impressed!");
           break;
     }

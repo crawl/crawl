@@ -2128,7 +2128,7 @@ void tag_missing_level_attitude()
                 break;
         }
 
-        menv[i].attitude = (isFriendly)?ATT_FRIENDLY : ATT_HOSTILE;
+        menv[i].attitude = (isFriendly)? ATT_FRIENDLY : ATT_HOSTILE;
         menv[i].behaviour = static_cast<beh_type>(new_beh);
         menv[i].foe_memory = 0;
     }

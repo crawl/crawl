@@ -641,6 +641,7 @@ enum conduct_type
     DID_KILL_WIZARD,
     DID_KILL_PRIEST,
     DID_KILL_ANGEL,
+    DID_KILL_NEUTRAL,                   // unused
     DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
     DID_LIVING_KILLED_BY_SERVANT,
     DID_UNDEAD_KILLED_BY_SERVANT,
@@ -1865,12 +1866,13 @@ enum monster_flag_type
                                     // or that the player has inspected with ?
     MF_BANISHED           = 0x200,  // Monster that has been banished.
     MF_HARD_RESET         = 0x400,  // Summoned, should not drop gear on reset
-    MF_ATT_CHANGE_ATTEMPT = 0x800,  // Saw player and attitude changed (or
+    MF_WAS_NEUTRAL        = 0x800,  // mirror to CREATED_FRIENDLY for neutrals
+    MF_ATT_CHANGE_ATTEMPT = 0x1000, // Saw player and attitude changed (or
                                     // not); currently used for holy beings
                                     // (good god worshippers -> neutral)
                                     // and orcs (Beogh worshippers -> friendly)
-    MF_WAS_IN_VIEW        = 0x1000, // Was in view during previous turn
-    MF_BAND_MEMBER        = 0x2000  // Created as a member of a band
+    MF_WAS_IN_VIEW        = 0x2000, // Was in view during previous turn
+    MF_BAND_MEMBER        = 0x4000  // Created as a member of a band
 };
 
 // Adding slots breaks saves. YHBW.

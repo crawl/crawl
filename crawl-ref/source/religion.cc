@@ -762,7 +762,7 @@ static void do_god_gift(bool prayed_for)
             break;
 
         case GOD_ZIN:
-            //jmf: "good" god will feed you (a la Nethack)
+            //jmf: this "good" god will feed you (a la Nethack)
             if (you.hunger_state <= HS_STARVING
                 && you.piety >= 30)
             {
@@ -1147,7 +1147,7 @@ void god_speaks( god_type god, const char *mesg )
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
 bool did_god_conduct( conduct_type thing_done, int level, bool known,
-                      const actor *victim )
+                      const monsters *victim )
 {
     bool ret = false;
     int piety_change = 0;
@@ -1217,7 +1217,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
                 break;
             }
             piety_change = -level;
-            if (known)
+            if (known || DID_ATTACK_HOLY && victim->attitude != ATT_HOSTILE)
                 penance = level * ((you.religion == GOD_SHINING_ONE) ? 2 : 1);
             ret = true;
             break;
@@ -1431,9 +1431,13 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
-            level *= 3;
+            if (testbits(victim->flags, MF_CREATED_FRIENDLY)
+                || testbits(victim->flags, MF_WAS_NEUTRAL))
+            {
+                level *= 3;
+                penance = level * ((you.religion == GOD_ZIN) ? 2 : 1);
+            }
             piety_change = -level;
-            penance = level * ((you.religion == GOD_ZIN) ? 2 : 1);
             ret = true;
             break;
 
@@ -1636,6 +1640,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
+    case DID_KILL_NEUTRAL:                      // unused
     case DID_STIMULANTS:                        // unused
     case DID_EAT_MEAT:                          // unused
     case DID_CREATED_LIFE:                      // unused
@@ -2952,7 +2957,7 @@ void beogh_idol_revenge()
             dummy.attitude = ATT_FRIENDLY;
 
             did_god_conduct(DID_ATTACK_FRIEND, 8, true,
-                            static_cast<actor *>(&dummy));
+                            static_cast<const monsters *>(&dummy));
         }
     }
 }
@@ -3080,6 +3085,7 @@ void good_god_convert_holy(monsters *holy)
     holy->attitude  = ATT_NEUTRAL;
     
     holy->flags |= MF_GOD_GIFT;
+    holy->flags |= MF_WAS_NEUTRAL;
 
     // to avoid immobile "followers"
     behaviour_event(holy, ME_ALERT, MHITNOT);

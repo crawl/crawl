@@ -794,9 +794,24 @@ void direction(dist& moves, targeting_type restricts,
 
             {
                 monsters &m = menv[mid];
-                m.attitude = (m.attitude == ATT_FRIENDLY? ATT_NEUTRAL :
-                              m.attitude == ATT_HOSTILE ? ATT_FRIENDLY
-                                                        : ATT_HOSTILE);
+                switch (m.attitude)
+                {
+                 case ATT_FRIENDLY:
+                     m.attitude = ATT_NEUTRAL;
+                     m.flags &= ~MF_CREATED_FRIENDLY;
+                     m.flags |= MF_WAS_NEUTRAL;
+                     break;
+                 case ATT_NEUTRAL:
+                     m.attitude = ATT_HOSTILE;
+                     m.flags &= ~MF_WAS_NEUTRAL;
+                     break;
+                 case ATT_HOSTILE:
+                     m.attitude = ATT_FRIENDLY;
+                     m.flags |= MF_CREATED_FRIENDLY;
+                     break;
+                 default:
+                     break;
+                }
 
                 // To update visual branding of friendlies.  Only
                 // seem capabable of adding bolding, not removing it,

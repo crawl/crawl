@@ -403,9 +403,10 @@ static void give_adjusted_experience(monsters *monster, killer_type killer,
 
     const bool created_friendly = 
         testbits(monster->flags, MF_CREATED_FRIENDLY);
+    const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
     const bool no_xp = monster->has_ench(ENCH_ABJ);
     
-    if (created_friendly || no_xp)
+    if (created_friendly || was_neutral || no_xp)
         ; // No experience if monster was created friendly or summoned.
     else if (YOU_KILL(killer))
     {
@@ -642,6 +643,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         {
             const bool created_friendly = 
                 testbits(monster->flags, MF_CREATED_FRIENDLY);
+            const bool was_neutral =
+                testbits(monster->flags, MF_WAS_NEUTRAL);
 
             if (death_message)
             {
@@ -650,7 +653,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                      monster->name(DESC_NOCAP_THE).c_str());
             }
 
-            if (created_friendly && gives_xp && death_message)
+            if ((created_friendly || was_neutral) && gives_xp && death_message)
                 mpr("That felt strangely unrewarding.");
 
             // killing triggers tutorial lesson
@@ -694,6 +697,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
                 if (mons_holiness(monster) == MH_HOLY)
                     did_god_conduct(DID_KILL_ANGEL, monster->hit_dice,
+                                    true, monster);
+
+                if (created_friendly)
+                    did_god_conduct(DID_KILL_NEUTRAL, monster->hit_dice,
                                     true, monster);
             }
 
