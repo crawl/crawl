@@ -820,7 +820,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
 
         const int hd = monster->hit_dice;
 
-        if (you.piety >= 75 && !you.penance[GOD_BEOGH] &&
+        if (you.piety >= piety_breakpoint(2) && !you.penance[GOD_BEOGH] &&
             random2(you.piety / 15) + random2(4 + you.experience_level / 3)
               > random2(hd) + hd + random2(5))
         {

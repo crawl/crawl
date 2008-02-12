@@ -597,7 +597,7 @@ bool melee_attack::player_attack()
         bool hit_woke_orc = false;
         if (you.religion == GOD_BEOGH && mons_species(def->type) == MONS_ORC
             && def->behaviour == BEH_SLEEP && you.species == SP_HILL_ORC
-            && !player_under_penance() && you.piety >= 75 )
+            && !player_under_penance() && you.piety >= piety_breakpoint(2))
         {
             hit_woke_orc = true;
         }
