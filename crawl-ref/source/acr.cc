@@ -2450,6 +2450,8 @@ static void world_reacts()
         if (!you.duration[DUR_PARALYSIS] && one_chance_in(40))
         {
             mpr("You lose consciousness!", MSGCH_FOOD);
+            stop_running();
+
             you.duration[DUR_PARALYSIS] += 5 + random2(8);
 
             if (you.duration[DUR_PARALYSIS] > 13)
