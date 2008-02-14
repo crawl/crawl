@@ -747,6 +747,8 @@ void tutorial_dissection_reminder(bool healthy)
         learned_something_new(TUT_OFFER_CORPSE);
     else if (one_chance_in(8))
     {
+        Options.tut_just_triggered = true;
+
         std::string text;
         text += "If you don't want to eat it, consider <w>D<magenta>issecting "
                 "this corpse under <w>p<magenta>rayer as a sacrifice to ";
@@ -755,7 +757,6 @@ void tutorial_dissection_reminder(bool healthy)
                 "you can reread this information.";
 
         print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
-        Options.tut_just_triggered = true;
         
         if (is_resting())
             stop_running();
@@ -783,6 +784,8 @@ void tutorial_healing_reminder()
             if (Options.tut_just_triggered)
                 return;
 
+            Options.tut_just_triggered = 1;
+
             std::string text;
             text =  "Remember to rest between fights and to enter unexplored "
                     "terrain with full hitpoints and magic. For resting, "
@@ -796,7 +799,6 @@ void tutorial_healing_reminder()
                       "<w>a<magenta>.";
             }
             print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
-            Options.tut_just_triggered = 1;
             
             if (is_resting())
                 stop_running();
@@ -886,6 +888,10 @@ void tutorial_first_monster(const monsters &mon)
         noisy(1, mon.x, mon.y);
         viewwindow(true, false);
     }
+
+    Options.tutorial_events[TUT_SEEN_MONSTER] = 0;
+    Options.tutorial_left--;
+    Options.tut_just_triggered = true;
     
     std::string text = "<magenta>That ";
 #ifndef USE_TILE
@@ -930,10 +936,6 @@ void tutorial_first_monster(const monsters &mon)
                 "find an explanation of how to do this.";
         print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     }
-
-    Options.tutorial_events[TUT_SEEN_MONSTER] = 0;
-    Options.tutorial_left--;
-    Options.tut_just_triggered = 1;
 }
 
 void tutorial_first_item(const item_def &item)
@@ -947,6 +949,10 @@ void tutorial_first_item(const item_def &item)
     // happens if monster standing on dropped corpse or item
     if (mgrd[item.x][item.y] != NON_MONSTER)
        return;
+
+    Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] = 0;
+    Options.tutorial_left--;
+    Options.tut_just_triggered = true;
 
     std::string text = "<magenta>That ";
 #ifndef USE_TILE
@@ -974,10 +980,6 @@ void tutorial_first_item(const item_def &item)
             "\nAny time you <w>v<magenta>iew an item, you can read about its "
             "properties and description.";
     print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
-
-    Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] = 0;
-    Options.tutorial_left--;
-    Options.tut_just_triggered = 1;
 }
 
 // Here most of the tutorial messages for various triggers are handled.
@@ -1003,6 +1005,10 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     const coord_def ep = grid2view(coord_def(x,y));
 #endif
 
+    Options.tut_just_triggered = true;
+    Options.tutorial_events[seen_what] = 0;
+    Options.tutorial_left--;
+        
     switch(seen_what)
     {
       case TUT_SEEN_POTION:          
@@ -1345,7 +1351,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
           
       case TUT_YOU_SICK:
+          Options.tut_just_triggered = false;
           learned_something_new(TUT_YOU_ENCHANTED);
+          Options.tut_just_triggered = true;
           text << "Corpses can be spoiled or inedible, making you sick. "
                   "Also, some monsters' flesh is less palatable than others'. "
                   "While sick, your hitpoints won't regenerate and sometimes "
@@ -1597,10 +1605,6 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     if (is_resting())
         stop_running();
-        
-    Options.tut_just_triggered = true;
-    Options.tutorial_events[seen_what] = 0;
-    Options.tutorial_left--;
 }
 
 formatted_string tut_abilities_info()
