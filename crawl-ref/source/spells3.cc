@@ -262,6 +262,7 @@ int airstrike(int power, dist &beam)
         else
         {
             hurt_monster(monster, hurted);
+            behaviour_event(monster, ME_ANNOY, MHITYOU, you.x_pos, you.y_pos);
 
             if (monster->hit_points < 1)
                 monster_die(monster, KILL_YOU, 0);
