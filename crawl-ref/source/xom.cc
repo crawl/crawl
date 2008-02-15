@@ -182,9 +182,9 @@ static void _xom_is_stimulated(int maxinterestingness,
         god_speaks(GOD_XOM,
                    ((interestingness > 200) ? message_array[5] :
                     (interestingness > 100) ? message_array[4] :
-                    (interestingness > 75) ? message_array[3] :
-                    (interestingness > 50) ? message_array[2] :
-                    (interestingness > 25) ? message_array[1] :
+                    (interestingness >  75) ? message_array[3] :
+                    (interestingness >  50) ? message_array[2] :
+                    (interestingness >  25) ? message_array[1] :
                     message_array[0]));
 }
 

@@ -995,11 +995,43 @@ static void handle_wizard_command( void )
 
     case '^':
         {
-            int old_piety = you.piety;
+            if (you.religion == GOD_NO_GOD)
+            {
+                mpr("You are not religious!");
+                break;
+            }
+            else if (you.religion == GOD_XOM) // increase amusement instead
+            {
+                xom_is_stimulated(50, XM_NORMAL, true);
+                break;
+            }
 
-            gain_piety(50);
-            mprf("Congratulations, your piety went from %d to %d!",
-                 old_piety, you.piety);
+            const int old_piety   = you.piety;
+            const int old_penance = you.penance[you.religion];
+            if (old_piety >= MAX_PIETY && !old_penance)
+            {
+                mprf("Your piety (%d) is already %s maximum.",
+                     old_piety, old_piety == MAX_PIETY ? "at" : "above");
+            }
+
+            // even at maximum, you can still gain gifts
+            // try at least once f. maximum, or repeat until something happens
+            // Rarely, this might result in several gifts during the same round!
+            do {
+               gain_piety(50); 
+            } while (old_piety < MAX_PIETY && old_piety == you.piety
+                     && old_penance == you.penance[you.religion]);
+            
+            if (old_penance)
+            {
+                mprf("Congratulations, your penance was decreased from %d to %d!",
+                     old_penance, you.penance[you.religion]);
+            }
+            else if (you.piety > old_piety)
+            {
+                mprf("Congratulations, your piety went from %d to %d!",
+                     old_piety, you.piety);
+            }
         }
         break;
 
