@@ -1838,10 +1838,14 @@ bool is_evil_weapon(const item_def& weap)
     if (weap.base_type != OBJ_WEAPONS)
         return false;
 
+    int weap_eff = (is_random_artefact(weap)) ?
+                       randart_wpn_property(weap, RAP_BRAND) :
+                       weap.special;
+
     return (is_demonic(weap)
-            || weap.special == SPWPN_VAMPIRICISM
-            || weap.special == SPWPN_PAIN
-            || weap.special == SPWPN_DRAINING);
+            || weap_eff == SPWPN_VAMPIRICISM
+            || weap_eff == SPWPN_PAIN
+            || weap_eff == SPWPN_DRAINING);
 }
 
 bool ely_destroy_weapons()
