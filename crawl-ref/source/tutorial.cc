@@ -2246,7 +2246,7 @@ bool tutorial_monster_interesting(const monsters *mons)
 
     // monster is (seriously) out of depth
     if (you.level_type == LEVEL_DUNGEON &&
-        mons_level(mons->type) >= you.your_level + Options.ood_interesting)
+        mons_level(mons->type) >= you.your_level + 8)
     {
         return true;
     }
@@ -2272,7 +2272,7 @@ void tutorial_describe_monster(const monsters *mons)
     else
     {
        int level_diff
-           = mons_level(mons->type) - (you.your_level + Options.ood_interesting);
+           = mons_level(mons->type) - (you.your_level + 8);
 
        if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
        {
