@@ -1222,6 +1222,7 @@ static bool cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_INSCRIBE_ITEM:
     case CMD_TOGGLE_AUTOPRAYER:
     case CMD_MAKE_NOTE:
+    case CMD_CYCLE_QUIVER_FORWARD:
         mpr("You can't repeat that command.");
         return false;
 
@@ -2256,6 +2257,18 @@ void process_command( command_type cmd )
     case CMD_MACRO_ADD:
         macro_add_query();
         break;
+
+    case CMD_CYCLE_QUIVER_FORWARD:
+    {
+        const int cur = you.quiver[get_quiver_type()];
+        if (cur != ENDOFPACK)
+        {
+            const int next = get_fire_item_index((cur+1) % ENDOFPACK, true, false);
+            you.quiver[get_quiver_type()] = next;
+            you.quiver_change = true;
+        }
+        break;
+    }
 
     case CMD_LIST_WEAPONS:
         list_weapons();
@@ -3302,8 +3315,8 @@ command_type keycode_to_command( keycode_type key )
     case '{': return CMD_INSCRIBE_ITEM;
     case '[': return CMD_LIST_ARMOUR;
     case ']': return CMD_LIST_EQUIPMENT;
+    case '(': return CMD_CYCLE_QUIVER_FORWARD;
     case ')': return CMD_LIST_WEAPONS;
-    case '(': return CMD_LIST_WEAPONS;
     case '\\': return CMD_DISPLAY_KNOWN_OBJECTS;
     case '\'': return CMD_WEAPON_SWAP;
     case '`': return CMD_PREV_CMD_AGAIN;

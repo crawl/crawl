@@ -1000,7 +1000,7 @@ static int which_spellbook( void )
 
 // Returns false if the player cannot read/memorize from the book,
 // and true otherwise. -- bwr
-static bool player_can_read_spellbook( const item_def &book )
+bool player_can_read_spellbook( const item_def &book )
 {
     if (book.base_type != OBJ_BOOKS)
         return (true);

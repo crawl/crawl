@@ -1621,6 +1621,10 @@ std::string get_item_description( const item_def &item, bool verbose,
         break;
 
     case OBJ_BOOKS:
+        if (! player_can_read_spellbook( item ))
+            description << "This book is beyond your current level of understanding.$$";
+        break;
+
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
     case OBJ_ORBS:
@@ -1686,7 +1690,8 @@ void describe_feature_wide(int x, int y)
         getch();
 }
 
-static void show_item_description(const item_def &item)
+// Return true if spells can be shown to player
+static bool show_item_description(const item_def &item)
 {
     clrscr();
 
@@ -1697,6 +1702,8 @@ static void show_item_description(const item_def &item)
 
     if (item.has_spells())
     {
+        if (item.base_type == OBJ_BOOKS && !player_can_read_spellbook( item ))
+            return false;
         formatted_string fs;
         item_def dup = item;
         spellbook_contents( dup, 
@@ -1705,7 +1712,10 @@ static void show_item_description(const item_def &item)
                   : RBOOK_USE_STAFF, 
                 &fs );
         fs.display(2, -2);
+        return true;
     }
+
+    return false;
 }
 
 static bool describe_spells(const item_def &item)
@@ -1739,8 +1749,9 @@ void describe_item( item_def &item, bool allow_inscribe )
 {
     for (;;)
     {
-        show_item_description(item);
-        if (item.has_spells())
+        const bool spells_shown = show_item_description(item);
+
+        if (spells_shown)
         {
             cgotoxy(1, wherey());
             textcolor(LIGHTGREY);

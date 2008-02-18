@@ -655,22 +655,29 @@ weapon, and b to your bow or something else you need to wield only
 sometimes. Note that this is just a typing shortcut and is not
 functionally different to wielding these items normally.
 
-You can press '(' or ')' to show your primary (wielded) and secondary
+You can press ')' to show your primary (wielded) and secondary
 (slot b) weapons, as well as the preferred missiles (to be shot when 
 using 'f' to fire).
 
 ( Ammunition:
 -------------
-If you would rather pick off monsters from a safe distance, you will 
-need ammunition for your sling, bow, or other appropriate launcher. 
-Several kinds of ammunition, such as javelins, are effective when simply 
-thrown; other kinds require you to wield an appropriate device to 
-inflict worthwhile damage. Ammunition has only one "plus" value, which 
-affects both accuracy and damage. If you have ammunition suitable for 
-what you are wielding, the 'f' command will choose the first lot in your 
-inventory, or you can use the 't' command to throw anything. If you are 
-using the right kind of hand weapon, you will "shoot" the ammunition, 
-otherwise you will "throw" it. At times it is also sensible to throw 
+
+If you would rather pick off monsters from a safe distance, you will
+need ammunition for your sling, bow, or other appropriate launcher.
+Several kinds of ammunition, such as javelins, are effective when simply
+thrown; other kinds require you to wield an appropriate device to
+inflict worthwhile damage. Ammunition has only one "plus" value, which
+affects both accuracy and damage.
+
+The 'f' command fires a piece of ammunition, chosen from lots suitable
+for your weapon and defaulting to your preferred lot (or "quiver"),
+typically the last lot you fired. Use the '(' command if you want to
+change your quiver without firing. Use the 't' command to throw
+anything.
+
+Regardless of their mnemonics, if you are using the right kind of hand
+weapon both 'f' and 't' will make you "shoot" the ammunition.
+Otherwise, you will "throw" it. At times it is also sensible to throw
 weapons like spears, daggers, or hand axes.
 
 The interface for shooting or throwing things is also used for zapping

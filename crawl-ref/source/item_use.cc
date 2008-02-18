@@ -190,12 +190,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     if (!can_wield(NULL, true))
         return (false);
 
-    if (you.duration[DUR_SURE_BLADE])
-    {
-        mpr("The bond with your blade fades away.");
-        you.duration[DUR_SURE_BLADE] = 0;
-    }
-
     int item_slot = 0;          // default is 'a'
 
     if (auto_wield)
@@ -214,9 +208,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         || you.inv[item_slot].base_type == OBJ_STAVES
         || (you.inv[item_slot].base_type == OBJ_MISCELLANY
             && you.inv[item_slot].sub_type != MISC_RUNE_OF_ZOT);
-
-    // Reset the warning counter.
-    you.received_weapon_warning = false;
 
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
@@ -237,10 +228,35 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         canned_msg( MSG_OK );
         return (false);
     }
-    else if (item_slot == PROMPT_GOT_SPECIAL)  // '-' or bare hands
+    else if (item_slot == you.equip[EQ_WEAPON])
+    {
+        mpr("You are already wielding that!");
+        return (true);
+    }
+
+    // now we really change weapons (most likely, at least)
+    if (you.duration[DUR_SURE_BLADE])
+    {
+        mpr("The bond with your blade fades away.");
+        you.duration[DUR_SURE_BLADE] = 0;
+    }
+    // Reset the warning counter.
+    you.received_weapon_warning = false;
+
+    if (item_slot == PROMPT_GOT_SPECIAL)  // '-' or bare hands
     {
         if (you.equip[EQ_WEAPON] != -1)
         {
+            // can we safely unwield this item?
+            if (has_warning_inscription(you.inv[you.equip[EQ_WEAPON]], OPER_WIELD))
+            {
+                std::string prompt = "Really unwield ";
+                prompt += you.inv[you.equip[EQ_WEAPON]].name(DESC_INVENTORY);
+                prompt += '?';
+                if (!yesno(prompt.c_str(), false, 'n'))
+                    return (false);
+            }
+                
             if (!unwield_item(show_weff_messages))
                 return (false);
                     
@@ -256,13 +272,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         return (true);
     }
 
-    if (item_slot == you.equip[EQ_WEAPON])
-    {
-        mpr("You are already wielding that!");
-        return (true);
-    }
-
     if (!can_wield(&you.inv[item_slot], true))
+        return (false);
+
+    // for non-auto_wield cases checked above
+    if (auto_wield && !check_warning_inscriptions(you.inv[item_slot], OPER_WIELD))
         return (false);
 
     if (!safe_to_remove_or_wear(you.inv[item_slot], false))

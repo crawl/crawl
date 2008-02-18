@@ -51,6 +51,8 @@ int read_book( item_def &item, read_book_action_type action );
 bool player_can_memorise(const item_def &book);
 bool learn_spell(int book = -1);
 
+bool player_can_read_spellbook( const item_def &book );
+
 spell_type which_spell_in_book(int sbook_type, int spl);
 
 // returns amount practised (or -1 for abort)

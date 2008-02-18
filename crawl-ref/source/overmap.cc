@@ -325,7 +325,8 @@ std::string overview_description_string()
         disp += shoptype_to_string(ci_shops->second);
         ++column_count;
     }
-    disp += "\n";
+    if (!shops_present.empty())
+        disp += "\n";
 
     // print portals
     if ( !portals_present.empty() )
@@ -420,13 +421,13 @@ std::string overview_description_string()
                     disp += depth_str;
                     disp += ":</white> ";
                     disp += get_level_annotation(li);
-                    disp += + "\n";
+                    disp += "\n";
                 }
             }
         }
     }
 
-    return disp;
+    return disp.substr(0, disp.find_last_not_of('\n')+1);
 }
 
 template <typename Z, typename Key>

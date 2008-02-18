@@ -1593,7 +1593,8 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<h>Player Character Information:\n"
             "<w>@</w> : display character status\n"
             "<w>[</w> : display worn armour\n"
-            "<w>(</w> : display current weapons (also <w>)</w>)\n"
+            "<w>(</w> : cycle current ammunition\n"
+            "<w>)</w> : display current weapons\n"
             "<w>\"</w> : display worn jewellery\n"
             "<w>C</w> : display experience info\n"
             "<w>^</w> : show religion screen\n"
@@ -1611,8 +1612,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>;</w>   : examine occupied tile\n"
             "<w>x</w>   : eXamine surroundings/targets\n"
             "<w>X</w>   : eXamine level map\n"
-            "<w>O</w>   : show dungeon Overview\n"
-            " \n",
+            "<w>O</w>   : show dungeon Overview\n",
             true, true, cmdhelp_textfilter,45);
 
     cols.add_formatted(
@@ -1676,7 +1676,6 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
 
     cols.add_formatted(            
             1, 
-            " \n"
             " \n"
             "Crawl usually considers every item it\n"
             "sees as a stash. When using a value\n"
