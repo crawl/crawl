@@ -181,10 +181,13 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
     cursor_control cs(false);
     
-    if (reuse_selections)
+    if (reuse_selections) {
         get_selected(&sel);
-    else
+    } else {
         deselect_all(false);
+        sel.clear();
+    }
+            
 
     // Lose lines for the title + room for -more- line.
     pagesize = get_number_of_lines() - !!title - 1;
@@ -1275,8 +1278,10 @@ void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
 {
     MenuEntry* me = new MenuEntry;
     me->data = new formatted_string(fs);
-    if ( hotkey )
+    if ( hotkey ) {
         me->add_hotkey(hotkey);
+        me->quantity = 1;
+    }
     add_entry(me);
 }
 
@@ -1571,7 +1576,17 @@ bool formatted_scroller::process_key( int keyin )
         break;
     }
     default:
-        repaint = jump_to_hotkey(keyin);
+        if (is_set(MF_SINGLESELECT))
+        {
+            select_items( keyin, -1 );
+            get_selected( &sel );
+            if (sel.size() >= 1)
+                return false;
+        }
+        else
+        {
+            repaint = jump_to_hotkey(keyin);
+        }
         break;
     }
 

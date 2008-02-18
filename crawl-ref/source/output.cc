@@ -1121,7 +1121,7 @@ void print_overview_screen()
     bool calc_unid = false;
     formatted_scroller cmd_help;
     // Set flags, and don't use easy exit.
-    cmd_help.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
+    cmd_help.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
     cmd_help.set_more( formatted_string::parse_string(
                        "<cyan>[ + : Page down.   - : Page up.   Esc exits.]"));
     cmd_help.set_tag("resists");
@@ -1363,6 +1363,7 @@ void print_overview_screen()
              determine_color_string(rcfli), itosym1(rcfli));
     cols.add_formatted(1, buf, false);
 
+    std::vector<char> equip_chars;
     {
         const int e_order[] =
         {
@@ -1377,11 +1378,14 @@ void print_overview_screen()
 
             if ( you.equip[ e_order[i] ] != -1)
             {
-                const item_def& item = you.inv[you.equip[e_order[i]]];
+                const int item_idx = you.equip[e_order[i]];
+                const item_def& item = you.inv[item_idx];
                 const char* colname = colour_to_str(item.colour);
-                snprintf(buf, sizeof buf, "%-7s: <%s>%s</%s>",
-                         slot, colname,
-                         item.name(DESC_PLAIN).substr(0,37).c_str(), colname);
+                const char equip_char = index_to_letter(item_idx);
+                snprintf(buf, sizeof buf, "%-7s: <w>%c</w> - <%s>%s</%s>",
+                         slot, equip_char, colname,
+                         item.name(DESC_PLAIN).substr(0,33).c_str(), colname);
+                equip_chars.push_back(equip_char);
             }
             else
             {
@@ -1429,12 +1433,30 @@ void print_overview_screen()
     blines = cols.formatted_lines();
 
     for (i = 0; i < blines.size(); ++i )
-        cmd_help.add_item_formatted_string(blines[i]);
+    {
+        // Kind of a hack -- we don't care really what items these
+        // hotkeys go to.  So just pick the first few.
+        const char hotkey = (i < equip_chars.size()) ? equip_chars[i] : 0;
+        cmd_help.add_item_formatted_string(blines[i], hotkey);
+    }
     cmd_help.add_text(" ");
 
     cmd_help.add_text(status_mut_abilities());
-    cmd_help.show();
-    redraw_screen();
+
+    while (true)
+    {
+        std::vector<MenuEntry *> results = cmd_help.show();
+        if (results.size() == 0)
+        {
+            redraw_screen();
+            break;
+        }
+
+        const char c = results[0]->hotkeys[0];
+        item_def& item = you.inv[letter_to_index(c)];
+        describe_item(item, false);
+        // loop around for another go.
+    }
 }
 
 // creates rows of short descriptions for current

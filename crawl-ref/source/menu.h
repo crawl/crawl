@@ -413,9 +413,11 @@ private:
 };
 
 // This class is for when (some of) your items are formatted, and
-// selection is impossible...in other words, you just want a browser.
-// Hotkeys can be set on menu items, in which case you can jump
-// to them by pressing the appropriate key.
+// you want mostly a browser.
+// 
+// If MF_NOSELECT, hotkeys jump to menu items.
+// If MF_SINGLESELECT, hotkeys end the menu immediately.
+// MF_MULTISELECT is not supported.
 class formatted_scroller : public Menu
 {
 public:
