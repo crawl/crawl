@@ -1266,8 +1266,13 @@ bool check_awaken(monsters* monster)
         return (true); // Oops, the monster wakes up!
 
     // You didn't wake the monster!
-    if (one_chance_in(20))
+    if (player_light_armour(true) 
+        && you.burden_state == BS_UNENCUMBERED
+	&& you.special_wield != SPWLD_SHADOW
+	&& one_chance_in(20))
+    {
         exercise(SK_STEALTH, 1);
+    }
         
     return (false);
 }                               // end check_awaken()
