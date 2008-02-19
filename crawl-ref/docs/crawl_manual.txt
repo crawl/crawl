@@ -1653,7 +1653,7 @@ legendary propensity for violence. Basically humanoid with bird-like
 heads and clawed feet, the kenku can wear all types of armour except
 helmets and boots. Despite their lack of wings, powerful kenku can fly,
 and very powerful members of this race can stay in the air for as long
-as they wish to do so.
+as they wish to do so. They fly a bit faster if they carry little load.
 
 They are experts at all forms of fighting, including the magical arts of
 combat (conjurations, summonings and, to a lesser extent, necromancy). 
