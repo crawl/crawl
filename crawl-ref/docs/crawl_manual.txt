@@ -24,6 +24,7 @@ Appendices
 3.      List of Skills
 4.      Keys and Commands
 5.      List of Enchantments 
+6.      Inscriptions
 
 
 ------------------------------------------------------------------------
@@ -560,7 +561,7 @@ There are several general keys for item management:
 '='     reassign item slot (works also for spell slots and abilities)
 'i'     shows inventory
 'v'     examine item
-'{'     inscribe item
+'{'     inscribe item (see Appendix 6)
 '\'     check list of already discovered items
 
 Item usage:
@@ -614,14 +615,7 @@ your inventory.
 Another useful command is the '{' key, which lets you inscribe items 
 with a comment. This is often used to denote special properties of an
 item, making for easier navigation of large quantities of artefacts.
-You can also inscribe commands; in particular inscribing '=k' will 
-cause the item to be completely ignored from then on (it can only be 
-picked up if all items on that square have the '=k' mark). An item with 
-'@w9' can be wielded with the command 'w9', regardless of its actual 
-item slot (here 'w'ield could be replaced by any sensible command key, 
-using '*' signifies all keys at once; and '9' could be substituted by 
-any digit). An item with '!w' demands confirmation before wielding. 
-For more on this, especially auto-inscription, see crawl-options.txt.
+For more details, and how to automatise this process, check Appendix 6.
 
 ) Weapons:
 ----------
@@ -2195,7 +2189,7 @@ Item interaction (inventory):
                         inscribe the item.
         {               Inscribe item (check the autoinscribe option).
                         An empty inscription or inscribing only space 
-                        will remove prior inscriptions.
+                        will remove prior inscriptions. See Appendix 6.
         t               Throw/shoot an item.
         f               Fire first available appropriate missile.
         q               Quaff a potion.      
@@ -2493,3 +2487,139 @@ Ins             You are insulated, i.e. immune to electric shocks.
 
 There are several more enchantment messages for various spells. The 
 description of the spell causing the enchantment will explain these.
+
+
+------------------------------------------------------------------------
+6.                      INSCRIPTIONS
+------------------------------------------------------------------------
+
+You can use the { command to manually inscribe items. Besides simply 
+making comments about items, there are several further uses.
+
+Automatic inscriptions
+----------------------
+These are done by the game to help you to identify items. For example,
+rings or scrolls which did not do anything obvious upon trying will be
+automatically inscribed with "tried".
+
+Inscriptions as shortcuts
+-------------------------
+You can use inscriptions to define shortcuts for easy access to items, 
+regardless of their actual inventory letter. For example, if an item's
+inscription contains "@w9", you can type 'w9' in order to wield it. 
+Instead of the 9, any other digit works as well. And instead of 'w'ield,
+any other command used for handling items can be used: 'e'at, r'ead, 
+'q'uaff, 'z'ap etc. Using "@*9" will make any action command followed 
+by '9' use this item.
+
+Safety inscriptions
+-------------------
+Inscriptions containing the following strings affect the behaviour of 
+some commands:
+  !*   prompt before any action using this item  
+  !w   prompt before wielding and unwielding    
+  !z   prompt before zapping  
+  !e   prompt before eating  
+  !q   prompt before quaffing    
+  !r   prompt before reading  
+  !f   prompt before firing  
+  !t   prompt before throwing
+  !W   prompt before wearing armour
+  !T   prompt before taking off armour
+  !P   prompt before putting on jewelry
+  !R   prompt before removing jewelry
+  !E   prompt before evoking an item
+  !p   prompt Nemelex Xobeh worshippers before sacrificing a stack
+       containing an item with this inscription; if the answer is "No",
+       the whole stack will be skipped, and no item is sacrificed
+  =p   prompt Nemelex Xobeh worshippers before sacrificing this
+       particular item; if the answer is "No", then Crawl will go on 
+       to sacrifice further items in the stack
+  =g   item will be picked up automatically if autopickup is on
+  =k   item will be ignored in all listings on the ground
+       (it can still be picked up if all items on the ground have
+       this inscription)
+  =s   If stash tracking is explicit, then dropping this item will
+       cause a stash to automatically be marked.
+  =f   This item is exempt from cycling ammunition.
+
+You can use the autoinscribe option to have some items automatically 
+inscribed. See crawl_options.txt for details. Some examples are
+  autoinscribe = royal jell:=g
+  autoinscribe = wand of healing:!z
+
+Randart autoinscriptions
+------------------------
+Many players use inscriptions for properties of random artefacts. This 
+makes browsing the inventory or stashes easier. Crawl provides a scheme
+to do this automatically: press 'a' when viewing an identified artefact.
+
+Here, one has to neogatiate between two concurrent objectives: terseness
+for better use of limited line lengths versus verboseness for easier 
+reading. The default inscriptions use the following general ideas:
+  rXXX signifies a resistance
+  +XXX signifies an ability you can invoke via the 'a' command
+  -XXX signifies a suppressed ability
+  XXX+ is a stronger version of property XXX
+  XX+6 means a boost to some numerical stat
+
+Here is the full list:
+
+rC+       one level of cold resistance
+rC++      two levels of cold resistance
+rC-       one level of cold susceptibility
+rF+       one level of fire resistance
+rF++      two levels of fire resistance
+rF-       one level of fire susceptibility
+rN+       one level of negative resistance (life protection)
+rN++      two levels of negative resistance (life protection)
+rPois     poison resistance
+rElec     electricity resistance (insulation)
+
+AC+3      AC (armour class) modifier
+EV+3      EV (evasion) modifier
+Str+3     strength modifier
+Dex+3     dexterity modifier
+Int+3     intelligence modifier
+Dam+3     damage modifier
+Acc+3     accuracy modifier
+
+MR        boost to magical resistance
+Stlth     stealth boost
+Stlth+    higher stealth boost
+
+rSlow     resist slowing
+rCorr     resist corrosion
+rMut      resist mutation
+
++Lev      can invoke levitation
++Inv      can invoke invisibility
++Blink    can invoke blink
++Rage     can invoke berserk
++Tele     can invoke teleport
++Map      can invoke magic mapping (sense surroundings)
+
+*RAGE     uncontrolled berserk (anger)
+*TELE     random teleporting
+-TELE     prevents teleportation
+-CAST     prevents spellcasting
+MUT       mutagenic (will cause mutations)
+MUT+      highly mutagenic
+Noisy     makes noises
+Hunger    increased hunger
+Hunger+   highly increased hunger
+
+Fire      ring of Fire
+Ice       ring of Ice
+SustAb    sustain abilities
+Hunger-   sustenance
+Regen     regeneration
+Wiz       wizardry
+MP        magical power (additional Magic points)
+cTele     controlled teleport
+cFly      controlled flight
+SInv      see invisible
+Clar      clarity
+Cons      conservation
+Gourm     gourmand
+Ward      warding
