@@ -1800,7 +1800,10 @@ void describe_item( item_def &item, bool allow_inscribe )
             char buf[79];
             cprintf("\nInscribe with what? ");
             if (!cancelable_get_line(buf, sizeof buf))
+            {
                 item.inscription = buf;
+                you.quiver_change = true;       // might have added/removed !F 
+            }
         }
         else if (toupper(keyin) == 'A' && allow_autoinscribe)
         {

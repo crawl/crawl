@@ -1300,9 +1300,11 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
     return (false);
 }
 
+static bool Hack_Ignore_F_Inscription = false;    // only for "why can't I fire" feedback
 static bool fire_item_okay(const item_def &item, unsigned flags)
 {
     return (fire_item_matches(item, flags)
+            && (Hack_Ignore_F_Inscription || strstr(item.inscription.c_str(), "=f") == 0)
             && you.equip[EQ_WEAPON] != item.link);
 }
 
@@ -1336,6 +1338,9 @@ quiver_type get_quiver_type()
 
 }
 
+// Search all items in pack for a fire_item_okay item.
+// If check_quiver, quiver item is checked first.
+// Then, check all items in the loop determined by start and forward
 static int find_fire_item_matching(unsigned fire_type, int start,
                                    bool forward, bool check_quiver)
 {
@@ -1528,14 +1533,26 @@ void shoot_thing(void)
 
     if (item == ENDOFPACK)
     {
-        unwind_var<int> festart(Options.fire_items_start, 0);
-        if ((item = get_fire_item_index()) == ENDOFPACK)
+        // Tell the user why we might have skipped their missile
+        unwind_var<int> unwind_festart(Options.fire_items_start, 0);
+        unwind_var<bool> unwind_inscription(Hack_Ignore_F_Inscription, true);
+        const int skipped_item = get_fire_item_index();
+        if (skipped_item == ENDOFPACK)
+        {
             mpr("No suitable missiles.");
-        else
+        }
+        else if (skipped_item < unwind_festart.original_value())
+        {
             mprf("No suitable missiles (fire_items_start = '%c', "
                  "ignoring item on '%c').",
-                 index_to_letter(festart.original_value()),
-                 index_to_letter(item));
+                 index_to_letter(unwind_festart.original_value()),
+                 index_to_letter(skipped_item));
+        }
+        else
+        {
+            mprf("No suitable missiles (ignoring '=f'-inscribed item on '%c').",
+                 index_to_letter(skipped_item));
+        }
         flush_input_buffer( FLUSH_ON_FAILURE );
         return;
     }
@@ -3408,6 +3425,7 @@ void inscribe_item()
             
         you.inv[item_slot].inscription = std::string(buf);
         you.wield_change = true;
+        you.quiver_change = true;
     }
     else
     {

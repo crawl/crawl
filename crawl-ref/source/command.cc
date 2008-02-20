@@ -1356,7 +1356,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>*</w>       Table of contents\n"
             "<w>A</w>.      Overview\n"
             "<w>B</w>.      Starting Screen\n"
-            "<w>C</w>.      Abilities and Stats\n"
+            "<w>C</w>.      Attributes and Stats\n"
             "<w>D</w>.      Dungeon Exploration\n"
             "<w>E</w>.      Experience and Skills\n"
             "<w>F</w>.      Monsters\n"
@@ -1372,7 +1372,8 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>2</w>.      List of Classes\n"
             "<w>3</w>.      List of Skills\n"
             "<w>4</w>.      Keys and Commands\n"
-            "<w>5</w>.      List of Enchantments\n",
+            "<w>5</w>.      List of Enchantments\n"
+            "<w>6</w>.      Inscriptions\n",
             true, true, cmdhelp_textfilter);
         
         std::vector<formatted_string> blines = cols.formatted_lines();
