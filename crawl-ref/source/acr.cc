@@ -3385,6 +3385,20 @@ keycode_type get_next_keycode()
     return (keyin);
 }
 
+// Find all connected cells containing ft, starting at d.
+static void _find_connected_identical(coord_def d, dungeon_feature_type ft,
+                                         std::set<coord_def>& out)
+{
+    if (grd[d.x][d.y] != ft) return;
+    if (out.insert(d).second)
+    {
+        _find_connected_identical(coord_def(d.x+1, d.y), ft, out);
+        _find_connected_identical(coord_def(d.x-1, d.y), ft, out);
+        _find_connected_identical(coord_def(d.x, d.y+1), ft, out);
+        _find_connected_identical(coord_def(d.x, d.y-1), ft, out);
+    }
+}
+
 /*
    Opens doors and handles some aspects of untrapping. If either move_x or
    move_y are non-zero,  the pair carries a specific direction for the door
@@ -3480,30 +3494,40 @@ static void open_door(int move_x, int move_y, bool check_confused)
 
     if (grd[dx][dy] == DNGN_CLOSED_DOOR)
     {
+        std::set<coord_def> all_door;
+        _find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
+        const char* noun = (all_door.size() == 1) ? "door" : "gate";
+
         int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
         if (you.duration[DUR_BERSERKER])
         {
             if (silenced(you.x_pos, you.y_pos))
-                mpr("The door flies open!");
+                mprf("The %s flies open!", noun);
             else
             {
-                mpr("The door flies open with a bang!");
+                // XXX: better flavor for gateways?
+                mprf("The %s flies open with a bang!", noun);
                 noisy( 15, you.x_pos, you.y_pos );
             }
         }
         else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
         {
-            mpr( "As you open the door, it creaks loudly!" );
+            mprf( "As you open the %s, it creaks loudly!", noun );
             noisy( 10, you.x_pos, you.y_pos );
         }
         else
         {
-            mpr( player_is_airborne() ? "You reach down and open the door."
-                                        : "You open the door." );
+            const char* verb = player_is_airborne() ? "reach down and open" : "open";
+            mprf( "You %s the %s.", verb, noun );
         }
 
-        grd[dx][dy] = DNGN_OPEN_DOOR;
+        for (std::set<coord_def>::iterator i = all_door.begin();
+             i != all_door.end(); ++i)
+        {
+            const coord_def& dc = *i;
+            grd[dc.x][dc.y] = DNGN_OPEN_DOOR;
+        }
         you.turn_is_over = true;
     }
     else
@@ -3545,22 +3569,38 @@ static void close_door(int door_x, int door_y)
 
     if (grd[dx][dy] == DNGN_OPEN_DOOR)
     {
-        if (mgrd[dx][dy] != NON_MONSTER)
-        {
-            // Need to make sure that turn_is_over is set if creature is 
-            // invisible
-            mpr("There's a creature in the doorway!");
-            door_move.dx = 0;
-            door_move.dy = 0;
-            return;
-        }
+        std::set<coord_def> all_door;
+        _find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
+        const char* noun = (all_door.size() == 1) ? "door" : "gate";
 
-        if (igrd[dx][dy] != NON_ITEM)
+        const coord_def you_coord(you.x_pos, you.y_pos);
+        for (std::set<coord_def>::iterator i = all_door.begin();
+             i != all_door.end(); ++i)
         {
-            mpr("There's something blocking the doorway.");
-            door_move.dx = 0;
-            door_move.dy = 0;
-            return;
+            const coord_def& dc = *i;
+            if (mgrd[dc.x][dc.y] != NON_MONSTER)
+            {
+                // Need to make sure that turn_is_over is set if creature is 
+                // invisible
+                mprf("There's a creature in the %sway!", noun);
+                door_move.dx = 0;
+                door_move.dy = 0;
+                return;
+            }
+
+            if (igrd[dc.x][dc.y] != NON_ITEM)
+            {
+                mprf("There's something blocking the %sway.", noun);
+                door_move.dx = 0;
+                door_move.dy = 0;
+                return;
+            }
+
+            if (you_coord == dc)
+            {
+                mprf("There's a thickheaded creature in the %sway!", noun);
+                return;
+            }
         }
 
         int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
@@ -3568,25 +3608,30 @@ static void close_door(int door_x, int door_y)
         if (you.duration[DUR_BERSERKER])
         {
             if (silenced(you.x_pos, you.y_pos))
-                mpr("You slam the door shut!");
+                mprf("You slam the %s shut!", noun);
             else
             {
-                mpr("You slam the door shut with an echoing bang!");
+                mprf("You slam the %s shut with an echoing bang!", noun);
                 noisy( 25, you.x_pos, you.y_pos );
             }
         }
         else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
         {
-            mpr("As you close the door, it creaks loudly!");
+            mprf("As you close the %s, it creaks loudly!", noun);
             noisy( 10, you.x_pos, you.y_pos );
         }
         else
         {
-            mpr( player_is_airborne() ? "You reach down and close the door."
-                                        : "You close the door." );
+            const char* verb = player_is_airborne() ? "reach down and close" : "close";
+            mprf( "You %s the %s.", verb, noun );
         }
 
-        grd[dx][dy] = DNGN_CLOSED_DOOR;
+        for (std::set<coord_def>::iterator i = all_door.begin();
+             i != all_door.end(); ++i)
+        {
+            const coord_def& dc = *i;
+            grd[dc.x][dc.y] = DNGN_CLOSED_DOOR;
+        }
         you.turn_is_over = true;
     }
     else
