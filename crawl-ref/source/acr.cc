@@ -3399,6 +3399,19 @@ static void _find_connected_identical(coord_def d, dungeon_feature_type ft,
     }
 }
 
+static std::string get_door_noun(int door_count)
+{
+    switch (door_count)
+    {
+     case 0:  return "buggy opening";
+     case 1:  return "door";
+     case 2:  return "large door";
+     case 3:  return "gate";
+     default: return "huge gate";
+    }
+}
+
+
 /*
    Opens doors and handles some aspects of untrapping. If either move_x or
    move_y are non-zero,  the pair carries a specific direction for the door
@@ -3496,8 +3509,8 @@ static void open_door(int move_x, int move_y, bool check_confused)
     {
         std::set<coord_def> all_door;
         _find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
-        const char* noun = (all_door.size() == 1) ? "door" : "gate";
-
+        const char* noun = get_door_noun(all_door.size()).c_str();
+        
         int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
         if (you.duration[DUR_BERSERKER])
@@ -3571,7 +3584,7 @@ static void close_door(int door_x, int door_y)
     {
         std::set<coord_def> all_door;
         _find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
-        const char* noun = (all_door.size() == 1) ? "door" : "gate";
+        const char* noun = get_door_noun(all_door.size()).c_str();
 
         const coord_def you_coord(you.x_pos, you.y_pos);
         for (std::set<coord_def>::iterator i = all_door.begin();
