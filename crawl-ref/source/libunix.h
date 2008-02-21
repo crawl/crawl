@@ -52,9 +52,6 @@ void textbackground(int bg);
 void textcolor(int col);
 void textattr(int col);
 
-void set_altcharset(bool alt_on);
-bool get_altcharset();
-
 void set_cursor_enabled(bool enabled);
 bool is_cursor_enabled();
 inline void enable_smart_cursor(bool) { }

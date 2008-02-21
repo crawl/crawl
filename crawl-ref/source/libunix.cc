@@ -75,9 +75,6 @@ static struct termios game_term;
     #include CURSES_INCLUDE_FILE
 #endif
 
-// Character set variable
-static int Character_Set = CHARACTER_SET;
-
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
@@ -85,6 +82,7 @@ static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL);
 
 static int curs_fg_attr(int col);
 static int curs_bg_attr(int col);
+static int waddstr_with_altcharset(WINDOW* w, const char* s);
 
 static bool cursor_is_enabled = true;
 
@@ -147,16 +145,6 @@ static short translate_colour( short col )
     default:
         return COLOR_GREEN;
     }
-}
-
-void set_altcharset( bool alt_on )
-{
-    Character_Set = ((alt_on) ? A_ALTCHARSET : 0);
-}
-
-bool get_altcharset( void )
-{
-    return (Character_Set != 0);
 }
 
 static void setup_colour_pairs( void )
@@ -407,7 +395,8 @@ void message_out(int which_line, int color, const char *s, int firstcol,
     else
         firstcol--;
 
-    mvwaddstr(Message_Window, which_line, firstcol, s);
+    wmove(Message_Window, which_line, firstcol);
+    waddstr_with_altcharset(Message_Window, s);
 
     if (newline && which_line == crawl_view.msgsz.y - 1)
     {
@@ -555,11 +544,51 @@ int cprintf(const char *format,...)
     va_start(argp, format);
     vsprintf(buffer, format, argp);
     va_end(argp);
-    i = addstr(buffer);
+    i = waddstr_with_altcharset(stdscr, buffer);
     refresh();
     return (i);
 }
 
+// Wrapper around curses waddstr(); handles switching to the alt charset
+// when necessary, and performing the funny DEC translation.
+// Returns a curses success value.
+static int waddstr_with_altcharset(WINDOW* w, const char* str)
+{
+    int ret = OK;
+    if (Options.char_set == CSET_ASCII || Options.char_set == CSET_UNICODE)
+    {
+        // In ascii, we don't expect any high-bit chars.
+        // In Unicode, str is UTF-8 and we shouldn't touch anything.
+        ret = waddstr(w, str);
+    }    
+    else
+    {
+        // Otherwise, high bit indicates alternate charset.
+        // DEC line-drawing chars don't have the high bit, so
+        // we map them into 0xE0 and above.
+        const bool bDEC = (Options.char_set == CSET_DEC);
+        const char* begin = str;
+
+        while (true)
+        {
+            const char* end = begin;
+            // Output a range of normal characters (the common case)
+            while (*end && (unsigned char)*end <= 127) ++end;
+            if (end-begin) ret = waddnstr(w, begin, end-begin);
+
+            // Then a single high-bit character
+            chtype c = (unsigned char)*end;
+            if (c == 0)
+                break;
+            else if (bDEC && c >= 0xE0)
+                ret = waddch(w, (c & 0x7F) | A_ALTCHARSET);
+            else // if (*end > 127)
+                ret = waddch(w, c | A_ALTCHARSET);
+            begin = end+1;
+        }
+    }
+    return ret;
+}
 
 int putch(unsigned char chr)
 {
@@ -599,32 +628,28 @@ int window(int x1, int y1, int x2, int y2)
     return (refresh());
 }
 
-// NOTE: This affects libunix.cc draw state; use this just before setting
-// textcolour and drawing a character and call set_altcharset(false)
-// after you're done drawing.
-//
-unsigned cset_adjust(unsigned raw)
-{
-    if (Options.char_set != CSET_ASCII && Options.char_set != CSET_UNICODE)
-    {
-        // switch to alternate char set for 8-bit characters:
-        set_altcharset( raw > 127 );
-
-        // shift the DEC line drawing set:
-        if (Options.char_set == CSET_DEC 
-            && raw >= 0xE0)
-        {
-            raw &= 0x7F;
-        }
-    }
-    return (raw);
-}
-
 void put_colour_ch(int colour, unsigned ch)
 {
-    ch = cset_adjust(ch);
-    textattr(colour);
-    putwch(ch);
+    if (Options.char_set == CSET_ASCII || Options.char_set == CSET_UNICODE)
+    {
+        // Unicode can't or-in curses attributes; but it also doesn't have
+        // to fool around with altcharset
+        textattr(colour);
+        putwch(ch);
+    }
+    else
+    {
+        const unsigned oldch = ch;
+        if (oldch & 0x80) ch |= A_ALTCHARSET;
+        // Shift the DEC line drawing set
+        if (oldch >= 0xE0 && Options.char_set == CSET_DEC)
+            ch ^= 0x80;
+        textattr(colour);
+
+        // putch truncates ch to a byte, so don't use it.
+        if ((ch & 0x7f) == 0) ch |= ' ';
+        addch(ch);
+    }
 }
 
 void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
@@ -639,9 +664,7 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
         cgotoxy(x1, y);
         for (int x = x1; x <= x2; ++x)
         {
-            const screen_buffer_t ch = cset_adjust( *buf );
-            textattr( buf[1] );
-            putwch( ch );
+            put_colour_ch( buf[1], buf[0] );
             buf += 2;
         }
     }
@@ -658,7 +681,6 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
 // C++ string class.  -- bwr
 void update_screen(void)
 {
-    set_altcharset(false);
     refresh();
 }
 
@@ -790,7 +812,7 @@ static int curs_fg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    return ( COLOR_PAIR(pair) | flags | Character_Set );
+    return ( COLOR_PAIR(pair) | flags );
 }
 
 void textcolor(int col)
@@ -849,7 +871,7 @@ static int curs_bg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    return ( COLOR_PAIR(pair) | flags | Character_Set );
+    return ( COLOR_PAIR(pair) | flags );
 }
 
 void textbackground(int col)
