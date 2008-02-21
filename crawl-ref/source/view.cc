@@ -4252,10 +4252,10 @@ unsigned get_screen_glyph( int x, int y )
 
 std::string stringize_glyph(unsigned glyph)
 {
-    if (crawl_state.glyph2strfn)
+    if (crawl_state.glyph2strfn && Options.char_set == CSET_UNICODE)
         return (*crawl_state.glyph2strfn)(glyph);
 
-    return std::string(1, glyph);
+    return (std::string(1, glyph));
 }
 
 int multibyte_strlen(const std::string &s)

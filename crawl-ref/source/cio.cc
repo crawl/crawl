@@ -173,7 +173,7 @@ void cursorxy(int x, int y)
 {
 #if defined(USE_TILE)
     tile_place_cursor(x-1, y-1, true);
-#elif defined(UNIX) && !defined(USE_TILE)
+#elif defined(UNIX)
     if (Options.use_fake_cursor)
         fakecursorxy(x, y);
     else

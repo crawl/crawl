@@ -921,18 +921,19 @@ static void flip_colour(cchar_t &ch)
     }
 
     const int newpair = (fg * 8 + bg);
-    ch.attr = COLOR_PAIR(newpair);
+    ch.attr = COLOR_PAIR(newpair) | (ch.attr & A_ALTCHARSET);
 }
 #else // ! UNICODE_GLYPHS
-typedef unsigned char_info;
+typedef unsigned long char_info;
 #define character_at(y,x)    mvinch(y,x)
 #define valid_char(x) (x)
 #define write_char_at(y,x,c) mvaddch(y, x, c)
 
 #define char_info_character(c) ((c) & A_CHARTEXT)
 #define char_info_colour(c)    ((c) & A_COLOR)
-
-static void flip_colour(unsigned &ch)
+#define char_info_attributes(c) ((c) & A_ATTRIBUTES)
+                                  
+static void flip_colour(char_info &ch)
 {
     const unsigned colour = char_info_colour(ch);
     const int pair        = PAIR_NUMBER(colour);
@@ -947,7 +948,8 @@ static void flip_colour(unsigned &ch)
     }
 
     const int newpair = (fg * 8 + bg);
-    ch = ((ch & 127) | COLOR_PAIR(newpair));
+    ch = (char_info_character(ch) | COLOR_PAIR(newpair) |
+          (char_info_attributes(ch) & A_ALTCHARSET));
 }
 #endif
 
