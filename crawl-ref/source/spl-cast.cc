@@ -1245,7 +1245,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_HOLY_WORD:
-        holy_word(50);
+        holy_word(50, HOLY_WORD_SPELL);
         break;
 
     case SPELL_DETECT_CURSE:

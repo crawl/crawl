@@ -60,6 +60,83 @@
 #include "view.h"
 #include "xom.h"
 
+bool holy_word(int pow, int caster, bool silent)
+{
+    bool holy_influenced = false;
+    struct monsters *monster;
+
+    if (!silent)
+        mpr("You speak a Word of immense power!");
+
+    // doubt this will ever happen, but it's here as a safety -- bwr
+    if (pow > 300)
+        pow = 300;
+
+    if (you.is_undead || you.species == SP_DEMONSPAWN)
+    {
+        int hploss = you.hp / 2 - 1;
+        if (hploss >= you.hp)
+            hploss = you.hp - 1;
+        if (hploss < 0)
+            hploss = 0;
+
+        if (hploss)
+        {
+            holy_influenced = true;
+
+            mpr("You are blasted by holy energy!");
+
+            const char *aux = "holy word";
+            if (caster < 0)
+            {
+                switch (caster)
+                {
+                case HOLY_WORD_SCROLL:
+                    aux = "scroll of holy word";
+                    break;
+                }
+                caster = HOLY_WORD_GENERIC;
+            }
+            ouch(hploss, caster,
+                    caster != HOLY_WORD_GENERIC ? KILLED_BY_MONSTER
+                                                : KILLED_BY_SOMETHING,
+                    aux);
+        }
+    }
+
+    for (int tu = 0; tu < MAX_MONSTERS; tu++)
+    {
+        monster = &menv[tu];
+
+        if (monster->type == -1 || !mons_near(monster))
+            continue;
+
+        if (mons_holiness(monster) == MH_UNDEAD
+            || mons_holiness(monster) == MH_DEMONIC)
+        {
+            holy_influenced = true;
+
+            simple_monster_message(monster, " convulses!");
+
+            behaviour_event( monster, ME_ANNOY, MHITYOU );
+            hurt_monster( monster, roll_dice( 2, 15 ) + (random2(pow) / 3) );
+
+            if (monster->hit_points < 1)
+            {
+                monster_die(monster, KILL_YOU, 0);
+                continue;
+            }
+
+            if (monster->speed_increment >= 25)
+                monster->speed_increment -= 20;
+
+            monster->add_ench(ENCH_FEAR);
+        }                       // end "if mons_holiness"
+    }                           // end "for tu"
+
+    return holy_influenced;
+}                               // end holy_word()
+
 // torment_monsters is called with power 0 because torment is
 // UNRESISTABLE except for being undead or having torment
 // resistance!  Even if we used maximum power of 1000, high
@@ -112,9 +189,9 @@ int torment_monsters(int x, int y, int pow, int caster)
                 }
                 caster = TORMENT_GENERIC;
             }
-            ouch(hploss, caster, 
-                    caster != TORMENT_GENERIC? KILLED_BY_MONSTER 
-                                             : KILLED_BY_SOMETHING, 
+            ouch(hploss, caster,
+                    caster != TORMENT_GENERIC ? KILLED_BY_MONSTER
+                                              : KILLED_BY_SOMETHING,
                     aux);
         }
 

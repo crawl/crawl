@@ -1235,6 +1235,7 @@ unsigned int item_value( item_def item, bool ident )
                 valued += 95;
                 break;
             case SCR_TORMENT:
+            case SCR_HOLY_WORD:
                 valued += 75;
                 break;
             case SCR_ENCHANT_WEAPON_II:

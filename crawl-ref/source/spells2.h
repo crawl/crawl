@@ -121,13 +121,6 @@ void drain_life(int pow);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
-void holy_word(int pow, bool silent = false);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
  * called from: ability - food - it_use2 - spell
  * returns TRUE if a stat was restored.
  * *********************************************************************** */

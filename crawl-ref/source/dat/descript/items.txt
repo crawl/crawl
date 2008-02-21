@@ -1141,6 +1141,11 @@ scroll of fog
 
 This scroll surrounds the reader with a dense cloud of fog.
 %%%%
+scroll of holy word
+
+This scroll calls on the powers of Heaven to cause great damage to any
+nearby unholy creature - including you!
+%%%%
 scroll of identify
 
 This useful magic scroll allows you to determine the properties of any

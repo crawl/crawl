@@ -96,6 +96,13 @@ void mons_direct_effect(struct bolt &pbolt, int i);
 void yell(bool force = false);
 
 
+// last updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: item_use - spell
+ * *********************************************************************** */
+bool holy_word(int pow, int caster, bool silent = false);
+
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - decks - fight - it_use3 - item_use - mstuff2 -

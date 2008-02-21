@@ -29,6 +29,7 @@
 #include "direct.h"
 #include "debug.h"
 #include "delay.h"
+#include "effects.h" // holy word
 #include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -46,7 +47,6 @@
 #include "randart.h"
 #include "religion.h"
 #include "spells1.h"
-#include "spells2.h" // holy word
 #include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -895,7 +895,7 @@ bool cast_sanctuary(const int power)
 
     you.flash_colour = WHITE;
     viewwindow( true, false );
-    holy_word( 100, true );
+    holy_word( 100, HOLY_WORD_GENERIC, true );
 #ifndef USE_TILE
     delay(1000);
 #endif

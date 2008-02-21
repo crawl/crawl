@@ -3272,7 +3272,7 @@ static bool bless_weapon( int god, int brand, int colour )
 
         if ( god == GOD_SHINING_ONE )
         {
-            holy_word( 100, true );
+            holy_word( 100, HOLY_WORD_GENERIC, true );
             // un-bloodify surrounding squares
             for (int i=-3;i<=3;i++)
                 for (int j=-3;j<=3;j++)

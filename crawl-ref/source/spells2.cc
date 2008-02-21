@@ -798,46 +798,6 @@ void turn_undead(int pow)
     }                           // end "for tu"
 }                               // end turn_undead()
 
-void holy_word(int pow, bool silent)
-{
-    struct monsters *monster;
-
-    if (!silent)
-        mpr("You speak a Word of immense power!");
-
-    // doubt this will ever happen, but it's here as a safety -- bwr
-    if (pow > 300)
-        pow = 300;
-
-    for (int tu = 0; tu < MAX_MONSTERS; tu++)
-    {
-        monster = &menv[tu];
-
-        if (monster->type == -1 || !mons_near(monster))
-            continue;
-
-        if (mons_holiness(monster) == MH_UNDEAD
-            || mons_holiness(monster) == MH_DEMONIC)
-        {
-            simple_monster_message(monster, " convulses!");
-
-            behaviour_event( monster, ME_ANNOY, MHITYOU );
-            hurt_monster( monster, roll_dice( 2, 15 ) + (random2(pow) / 3) );
-
-            if (monster->hit_points < 1)
-            {
-                monster_die(monster, KILL_YOU, 0);
-                continue;
-            }
-
-            if (monster->speed_increment >= 25)
-                monster->speed_increment -= 20;
-
-            monster->add_ench(ENCH_FEAR);
-        }                       // end "if mons_holiness"
-    }                           // end "for tu"
-}                               // end holy_word()
-
 typedef std::pair<const monsters*,int> counted_monster;
 typedef std::vector<counted_monster> counted_monster_list;
 static void record_monster_by_name(counted_monster_list &list,

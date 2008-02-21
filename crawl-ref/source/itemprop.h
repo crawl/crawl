@@ -320,6 +320,7 @@ enum scroll_type
     SCR_VORPALISE_WEAPON,              //   20
     SCR_RECHARGING,
     SCR_ENCHANT_WEAPON_III,
+    SCR_HOLY_WORD,
     NUM_SCROLLS
 };
 

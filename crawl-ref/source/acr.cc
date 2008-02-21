@@ -2721,7 +2721,7 @@ static void decrement_durations()
     if (you.duration[DUR_BACKLIGHT] > 0 && !--you.duration[DUR_BACKLIGHT] && !you.backlit())
         mpr("You are no longer glowing.", MSGCH_DURATION);
 
-    // Leak piety from the piety pool (currently Zin only) into actual piety.
+    // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
     // (killing monsters, offering items, ...) might be confusing for characters
     // of other religions.

@@ -548,6 +548,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_VORPALISE_WEAPON:   return "vorpalise weapon";
     case SCR_RECHARGING:         return "recharging";
     case SCR_ENCHANT_WEAPON_III: return "enchant weapon III";
+    case SCR_HOLY_WORD:          return "holy word";
     default:                     return "bugginess";
     }
 }

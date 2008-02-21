@@ -1351,7 +1351,7 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_ZIN_HOLY_WORD:
-        holy_word( you.skills[SK_INVOCATIONS] * 8 );
+        holy_word( you.skills[SK_INVOCATIONS] * 8, HOLY_WORD_GENERIC );
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
 

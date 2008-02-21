@@ -1222,6 +1222,13 @@ enum god_type
     GOD_RANDOM  = 100
 };
 
+enum holy_word_source_type
+{
+    HOLY_WORD_GENERIC = -1,
+    HOLY_WORD_SCROLL = -2,
+    HOLY_WORD_SPELL = -3        // SPELL_HOLY_WORD
+};
+
 enum hunger_state                  // you.hunger_state
 {
     HS_RAVENOUS,                       //    0: not used within code, really
