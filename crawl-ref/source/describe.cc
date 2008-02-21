@@ -203,10 +203,10 @@ static std::vector<std::string> randart_propnames( const item_def& item )
         // These come first, so they don't get chopped off!
         { "-CAST",  RAP_PREVENT_SPELLCASTING,  2 },
         { "-TELE",  RAP_PREVENT_TELEPORTATION, 2 },
-        { "MUT",    RAP_MUTAGENIC,             2 },
+        { "MUT",    RAP_MUTAGENIC,             2 }, // handled specially
         { "*Rage",  RAP_ANGRY,                 2 },
         { "*TELE",  RAP_CAUSE_TELEPORTATION,   2 },
-        { "Hunger", RAP_METABOLISM,            1 },
+        { "Hunger", RAP_METABOLISM,            2 }, // handled specially
         { "Noisy",  RAP_NOISES,                2 },
 
         // Evokable abilities come second
@@ -218,7 +218,7 @@ static std::vector<std::string> randart_propnames( const item_def& item )
         { "+Map",   RAP_MAPPING,               2 },
 
         // Resists, also really important
-        { "rElec",  RAP_ELECTRICITY,           1 },
+        { "rElec",  RAP_ELECTRICITY,           2 },
         { "rPois",  RAP_POISON,                2 },
         { "rF",     RAP_FIRE,                  1 },
         { "rC",     RAP_COLD,                  1 },
@@ -237,7 +237,7 @@ static std::vector<std::string> randart_propnames( const item_def& item )
         // Positive, qualitative attributes
         { "MP",     RAP_MAGICAL_POWER,         0 },
         { "SInv",   RAP_EYESIGHT,              2 },
-        { "Stlth",  RAP_STEALTH,               2 }
+        { "Stlth",  RAP_STEALTH,               2 }  // handled specially
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -255,9 +255,17 @@ static std::vector<std::string> randart_propnames( const item_def& item )
         std::string ego = weapon_brand_name(item, true);
         if (!ego.empty())
         {
-            // ugly hack...
+            // ugly hack to remove the brackets...
             ego = ego.substr(2, ego.length()-3);
-            ego += ",";
+            
+            // and another one for adding a comma if needed
+            for ( unsigned i = 0; i < ARRAYSIZE(propanns); ++i )
+                 if (known_proprt(propanns[i].prop))
+                 {
+                     ego += ",";
+                     break;
+                 }
+                 
             propnames.push_back(ego);
         }
     }
@@ -276,20 +284,27 @@ static std::vector<std::string> randart_propnames( const item_def& item )
             case 1: // e.g. F++
             {
                 int sval = std::min(std::abs(val), 3);
-                
-                // list one '+' less for hunger, stealth, and shock resistance
-                if ((propanns[i].prop == RAP_METABOLISM
-                     || propanns[i].prop == RAP_STEALTH
-                     || propanns[i].prop == RAP_ELECTRICITY) && sval > 0)
-                {
-                    sval--;
-                }
                 work << propanns[i].name
                      << std::string(sval, (val > 0 ? '+' : '-'));
                 break;
             }
             case 2: // e.g. rPois or SInv
                 work << propanns[i].name;
+                
+                // these need special handling, so we don't give anything away
+                if (propanns[i].prop == RAP_METABOLISM && val > 2
+                    || propanns[i].prop == RAP_MUTAGENIC && val > 3
+                    || propanns[i].prop == RAP_STEALTH && val > 20)
+                {
+                    work << "+";
+                }
+                else if (propanns[i].prop == RAP_STEALTH && val < 0)
+                {
+                    if (val < -20)
+                        work << "--";
+                    else
+                        work << "-";
+                }
                 break;
             }
             propnames.push_back(work.str());

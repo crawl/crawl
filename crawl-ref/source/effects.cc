@@ -1492,12 +1492,10 @@ bool acquirement(object_class_type class_wanted, int agent,
 
             // Trog does not gift the Wrath of Trog, nor
             // weapons of pain (work together with Necromantic magic)
-            // or holy wrath (blessed by TSO, a god hated by Trog)
             if (agent == GOD_TROG)
             {
                 int brand = get_weapon_brand(doodad);
-                if (brand == SPWPN_HOLY_WRATH
-                    || brand == SPWPN_PAIN
+                if (brand == SPWPN_PAIN
                     || is_fixed_artefact(doodad)
                        && doodad.special == SPWPN_WRATH_OF_TROG)
                 {
