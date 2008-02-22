@@ -10,15 +10,13 @@
 -- {artefact} for identified artefacs.
 -- {ego} for identified branded items.
 -- { <skill> } - the relevant weapon skill for weapons.
+-- { <class> } - item class: gold, weapon, missile, armour, wand, carrion,
+--               food, scroll, jewellery, potion, book, staff, orb, misc
 --
--- You can optionally annotate items with the item class name (such as
--- "weapon" for weapons) by setting
---   annotate_item_class = true
+-- You can optionally disable annotate items with the item class name 
+-- (such as "weapon" for weapons) by setting
+--   annotate_item_class = false
 -- in your init.txt.
---
--- The full list of item class names is:
--- gold, weapon, missile, armour, wand, food, scroll, jewellery, potion,
--- book, staff, orb, misc, carrion
 --
 -- Item annotations are always prefixed to the item name. For instance:
 -- {artefact} the Staff of Wucad Mu
@@ -41,7 +39,7 @@ function ch_stash_search_annotate_item(it)
   end
 
   if ch_annotate_item_class == nil then
-    ch_annotate_item_class = opt_boolean("annotate_item_class")
+    ch_annotate_item_class = opt_boolean("annotate_item_class", true)
   end
   
   if ch_annotate_item_class then
