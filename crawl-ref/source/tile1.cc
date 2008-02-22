@@ -2094,6 +2094,11 @@ void finalize_tile(unsigned int *tile, bool is_special,
         // These types always have four flavors...
         (*tile) = orig + (floor_flv % 4);
     }
+    else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
+    {
+        ASSERT(special_flv >= 0 && special_flv <= 3);
+        (*tile) = orig + special_flv;
+    }
 
     (*tile) |= flag;
 }
@@ -3348,7 +3353,37 @@ void tile_init_flavor()
             env.tile_flavor[x][y].floor = floor_flavor;
             env.tile_flavor[x][y].wall = wall_flavor;
 
-            if (bazaar && env.grid_colours[x][y] == baz_col &&
+            if (grd[x][y] == DNGN_CLOSED_DOOR || grd[x][y] == DNGN_OPEN_DOOR)
+            {
+                // Check for horizontal gates.
+
+                bool door_left = (x > 0 && grd[x-1][y] == grd[x][y]);
+                bool door_right = (x < GXM - 1 && grd[x+1][y] == grd[x][y]);
+                bool door_up = (y > 0 && grd[x][y-1] == grd[x][y]);
+                bool door_down = (y < GYM - 1 && grd[x][y+1] == grd[x][y]);
+
+                if ((door_left || door_right) && !door_up && !door_down)
+                {
+                    int target;
+                    if (door_left && door_right)
+                        target = TILE_DNGN_GATE_CLOSED_MIDDLE;
+                    else if (door_left)
+                        target = TILE_DNGN_GATE_CLOSED_RIGHT;
+                    else
+                        target = TILE_DNGN_GATE_CLOSED_LEFT;
+
+                    // NOTE: this requires that closed gates and open gates
+                    // are positioned in the tile set relative to their
+                    // door counterpart.
+                    env.tile_flavor[x][y].special =
+                        target - TILE_DNGN_CLOSED_DOOR;
+                }
+                else
+                {
+                    env.tile_flavor[x][y].special = 0;
+                }
+            }
+            else if (bazaar && env.grid_colours[x][y] == baz_col &&
                 grd[x][y] == DNGN_FLOOR)
             {
                 int left_grd = (x > 0) ? grd[x-1][y] : DNGN_ROCK_WALL;

@@ -76,7 +76,13 @@ dngn_transparent_wall DNGN_TRANSPARENT_WALL
 #dngn_stone_wall DNGN_STONE_WALL
 
 dngn_closed_door DNGN_CLOSED_DOOR
+gate_closed_left DNGN_GATE_CLOSED_LEFT
+gate_closed_middle DNGN_GATE_CLOSED_MIDDLE
+gate_closed_right DNGN_GATE_CLOSED_RIGHT
 dngn_open_door DNGN_OPEN_DOOR
+gate_open_left DNGN_GATE_OPEN_LEFT
+gate_open_middle DNGN_GATE_OPEN_MIDDLE
+gate_open_right DNGN_GATE_OPEN_RIGHT
 ###dc/wal8 DNGN_SECRET_DOOR
 dngn_orcish_idol DNGN_ORCISH_IDOL
 dngn_silver_statue DNGN_SILVER_STATUE
