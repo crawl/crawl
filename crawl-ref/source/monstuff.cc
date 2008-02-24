@@ -5972,11 +5972,15 @@ static void mons_in_cloud(monsters *monster)
 
         beam.flavour = BEAM_CONFUSION;
         beam.thrower = cloud.beam_thrower();
+
         if (cloud.whose == KC_FRIENDLY)
             beam.beam_source = ANON_FRIENDLY_MONSTER;
 
-        if (1 + random2(27) >= monster->hit_dice)
+        if (mons_class_is_confusable(monster->type)
+            && 1 + random2(27) >= monster->hit_dice)
+        {
             mons_ench_f2(monster, beam);
+        }
 
         hurted += (random2(3) * 10) / speed;
         break;                  // to damage routine at end {dlb}

@@ -1704,6 +1704,10 @@ VISUAL:@The_monster@ grins with merry abandon.
 
 @The_monster@ howls with blood-lust!
 
+@The_monster@ honks.
+
+VISUAL:@The_monster@ pantomimes your execution.
+
 VISUAL:@The_monster@ pokes out @possessive@ tongue.
 
 @The_monster@ says, "Come and play with me!"

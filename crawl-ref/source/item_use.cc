@@ -1467,7 +1467,7 @@ void fire_target_behaviour::announce_new_ammo(bool redraw)
 
 void fire_target_behaviour::find_next_ammo()
 {
-    const int start = item == ENDOFPACK - 1? 0 : item + 1;
+    const int start = (item == ENDOFPACK - 1)? 0 : item + 1;
     const int next = get_fire_item_index(start, true, false);
 
     // We should never get back ENDOFPACK.
@@ -1480,7 +1480,7 @@ void fire_target_behaviour::find_next_ammo()
 
 void fire_target_behaviour::find_prev_ammo()
 {
-    const int start = item == 0? ENDOFPACK - 1 : item - 1;
+    const int start = (item == 0)? ENDOFPACK - 1 : item - 1;
     const int next = get_fire_item_index(start, false, false);
 
     // We should never get back ENDOFPACK.

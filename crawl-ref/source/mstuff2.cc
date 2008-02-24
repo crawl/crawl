@@ -314,14 +314,14 @@ void mons_trap(struct monsters *monster)
         if (mons_friendly(monster))
         {
             beem.colour = ((temp_rand < 3) ? CYAN :  //paralyze - 3 in 16
-                              (temp_rand < 7) ? RED     // confuse - 4 in 16
-                                              : BLACK); //    slow - 9 in 16
+                           (temp_rand < 7) ? RED     // confuse - 4 in 16
+                                           : BLACK); //    slow - 9 in 16
         }
         else
         {
             beem.colour = ((temp_rand < 3) ? BLUE :  //haste - 3 in 16 {dlb}
-                              (temp_rand < 7) ? MAGENTA //invis - 4 in 16 {dlb}
-                                              : GREEN); // heal - 9 in 16 {dlb}
+                           (temp_rand < 7) ? MAGENTA //invis - 4 in 16 {dlb}
+                                           : GREEN); // heal - 9 in 16 {dlb}
         }
 
         mons_ench_f2(monster, beem);

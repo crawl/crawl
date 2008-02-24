@@ -130,9 +130,12 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
       case 2:
       case 3:
       case 4:
-          if (!mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
-                              (16 + random2avg(13, 2)) * 10)))
+          if (!mons_class_is_confusable(mons->type)
+              || !mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
+                                             (16 + random2avg(13, 2)) * 10)))
+          {
               return (0);
+          }
           simple_monster_message(mons, " looks confused.");
           break;
       case 5:

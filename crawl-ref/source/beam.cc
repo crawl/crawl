@@ -1919,6 +1919,12 @@ static bool monster_resists_mass_enchantment(monsters *monster,
     else if (wh_enchant == ENCH_CONFUSION
              || mons_holiness(monster) == MH_NATURAL)
     {
+        if (wh_enchant == ENCH_CONFUSION &&
+            !mons_class_is_confusable(monster->type))
+        {
+            return (true);
+        }
+
         if (check_mons_resist_magic( monster, pow ))
         {
             simple_monster_message(monster, mons_immune_magic(monster) ?
@@ -2094,19 +2100,21 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         return (MON_AFFECTED);
 
     case BEAM_CONFUSION:                   /* 4 = confusion */
+        if (!mons_class_is_confusable(monster->type))
+            return (MON_UNAFFECTED);
+            
         if (monster->add_ench(
                 mon_enchant(ENCH_CONFUSION, 0, whose_kill(pbolt))))
         {
-            // put in an exception for fungi, plants and other things you won't
-            // notice becoming confused.
+            // put in an exception for things you won't notice becoming confused.
             if (simple_monster_message(monster, " appears confused."))
                 pbolt.obvious_effect = true;
         }
         return (MON_AFFECTED);
 
     case BEAM_INVISIBILITY:               /* 5 = invisibility */
-        // Store the monster name before it becomes an "it" -- bwr
     {
+        // Store the monster name before it becomes an "it" -- bwr
         const std::string monster_name = monster->name(DESC_CAP_THE);
         
         if (!monster->has_ench(ENCH_INVIS)
@@ -4054,7 +4062,7 @@ static int affect_monster(bolt &beam, monsters *mon)
 
         /* looks for missiles which aren't poison but
            are poison*ed* */
-        if (beam.name.find("poison") != std::string::npos
+        if (beam.name.find("poisoned") != std::string::npos
             && beam.flavour != BEAM_POISON
             && beam.flavour != BEAM_POISON_ARROW)
         {

@@ -1588,8 +1588,6 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
 
 bool cast_evaporate(int pow, bolt& beem, int potion)
 {
-    // experimenting with allowing the potion to be thrown... we're
-    // still making it have to be "in hands" at this point. -- bwr
     struct dist spelld;
 
     if (potion == -1)
