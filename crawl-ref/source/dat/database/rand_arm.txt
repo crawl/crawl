@@ -1,0 +1,505 @@
+######################################################
+# Randart Names
+# -------------
+# rand_arm.txt: keywords for randart ARMOUR
+#
+# This file contains the lists of keywords (and their
+# weights) for most of the keywords used for randart 
+# armour. You will find others in rand_wpn.txt and
+# rand_all.txt, respectively.
+#
+# See the explanation in the main file, randname.txt,
+# for more details.
+######################################################
+%%%%
+armour_animal
+
+# bacteria
+Amoeba
+
+# insects
+Butterfly
+
+Cricket
+
+Echidna
+
+Ladybird
+
+# invertebrates
+Slug
+
+Snail
+
+Gastropod
+
+# arachnides and clams
+Tarantula
+
+Clam
+
+Barnacle
+
+Lobster
+
+# amphibia and reptiles
+Tortoise
+
+Turtle
+
+Frog
+
+Komodo Dragon
+
+Dragon
+
+# birds
+Turtledove
+
+Nightingale
+
+Meadowlark
+
+# mammals
+Hare
+
+Kangaroo
+
+Elephant
+
+Zebra
+
+Hippo
+
+Monkey
+
+# not strictly an animal... :)
+Monkey's Uncle
+
+%%%%
+flower_name
+
+Lilacs
+
+Daffodils
+
+the Rose
+
+the Garden
+
+%%%%
+# non-Crawl critters
+critter_name
+
+the Slorg
+
+the Alphagorgon
+
+# from the crawl.akrasiac.org patch.
+the Hot Ocelot
+
+Eight Boll Weevils
+
+%%%%
+discomfort_and_inaction
+
+# discomfort
+Minor Irritation
+
+Bitterness
+
+Negation
+
+Failure
+
+Servitude
+
+Submission
+
+# inaction
+Lifelessness
+
+Boredom
+
+Ennui
+
+Restlessness
+
+Omission
+
+Negligence
+
+Inaction
+
+%%%%
+mental_illness_armour
+
+Paranoia
+
+Claustrophobia
+
+Agoraphobia
+
+Dyspraxia
+
+Mental Paralysis
+
+%%%%
+good_or_divine
+
+# good things
+the Good
+
+the Leaf
+
+Leaves
+
+Music
+
+Birdsong
+
+Brilliance
+
+Satisfaction
+
+Fun
+
+Joy
+
+Happiness
+
+Wonder
+
+Surprise
+
+Curiosity
+
+Creativity
+
+Beauty
+
+Life
+
+Liberty
+
+Freedom
+
+Amelioration
+
+# divine events
+Divine Compulsion
+
+the Invisible Hand
+
+Divine Intervention
+
+%%%%
+# in contrast to "wacky_armour_name" these do have some connection to armour and protection
+armour_name_shielding
+
+Shielding
+
+Impermeability
+
+Defence
+
+Death's Door
+
+the Gate
+
+the Saviour
+
+the Untouchables
+
+the Armoured One
+
+Exclusion
+
+Repulsion
+
+Preservation
+
+Conservation
+
+Inviolability
+
+%%%%
+# other armour properties (beside protection)
+armour_property_name
+
+Supple Strength
+
+Resist Death
+
+Grace
+
+Weightlessness
+
+Shadows and Fog
+
+Disguise
+
+Least Resistance
+
+Protective Custody
+
+%%%%
+wacky_armour_name
+
+the Onion
+
+Vlad
+
+the Eternal Fruit
+
+Plasticity
+
+Baldness
+
+Terror
+
+Good Intentions
+
+the Arcane
+
+Anaesthesia
+
+the Armadillo
+
+Weirdness
+
+Pathos
+
+Loss
+
+Hedging
+
+Indemnity
+
+Untold Secrets
+
+the Earth
+
+Limited Liability
+
+Hadjma
+
+Hairiness
+
+Space
+
+the Vacuum
+
+Compression
+
+Decompression
+
+the Loofah
+
+Love and Death
+
+%%%%
+# Lemuel's suggestions
+celestial_bodies
+
+Sun
+
+Moon
+
+Stars
+
+Planets
+
+Pleiades
+
+Morning Star
+
+Evening Star
+
+%%%%
+instrument_name
+
+Trumpets
+
+the Kettle-Drum
+
+the Accordion
+
+the Bagpipe
+
+the Lute
+
+%%%%    
+evil_being
+
+the Devil
+
+Demons
+
+Lesser Demons
+
+Greater Demons
+
+the Iron Devil
+
+the Devil's Advocate
+    
+%%%%
+# um, reeeeally bad weather...
+weather_name
+
+the First Snow
+
+Boiling Hail
+
+Perpetual Drought
+
+the Thunderstorm
+
+%%%%
+profession_name
+
+Guilds
+
+Guild-Master
+
+Apprentice
+
+Blacksmith
+
+Carpenter
+
+Wheelwright
+
+Cooper
+
+Fisher
+
+Hunter
+
+Ditch-Digger
+
+Guardian
+
+Beekeeper
+
+Gardener
+
+%%%%
+# something for Xom
+game_name
+
+# general games
+Fun and Games
+
+the Great Game
+
+# children's games
+Peek-a-Boo
+
+Hide-and-Seek
+
+Leapfrog
+
+# board games etc.
+the Game of Life
+
+Card Tricks
+
+Hangman
+
+the Dice
+
+Jigsaw
+
+Whack-A-Mole
+
+Ladders and Snakes
+
+%%%%
+politics_name_armour
+
+the King
+
+the Queen
+
+Royalty
+
+Nobility
+
+the Republic
+
+the Empire
+
+Coronation
+
+Commoners
+
+Peasants
+
+Townfolk
+
+the City
+
+the Country
+
+the Suburbs
+
+the Mutiny
+
+%%%%
+other_armour_name
+
+w:5
+Grot
+
+w:5
+Grottiness
+
+Filth
+
+# magic
+Magic
+
+Sorcery
+
+# other
+Crawling
+
+the Orb
+
+the Orb Guardian
+
+the Storm King
+
+the Hanged Man
+
+Hedge Wizardry
+
+Feasting
+
+Insatiable Hunger
+
+Imperfection
+
+Trial and Error
+
+Misfortune
+
+Wrong Decisions
+
+Unambiguity
+
+the Lost Path
+
+Misanthrophy
+
+%%%%
+plain_armour_name
+
+Forget-Me-Not
+
+Hero's Friend
+
+%%%%
+

@@ -1907,6 +1907,10 @@ int ring_has_pluses( const item_def &item )
 {
     ASSERT (item.base_type == OBJ_JEWELLERY);
 
+    // not known -> no pluses
+    if (!item_type_known(item))
+        return (0);
+
     switch (item.sub_type)
     {
     case RING_SLAYING:
@@ -2448,6 +2452,8 @@ std::string item_base_name(const item_def &item)
         return Missile_prop[Missile_index[item.sub_type]].name;
     case OBJ_ARMOUR:
         return Armour_prop[Armour_index[item.sub_type]].name;
+    case OBJ_JEWELLERY:
+        return (jewellery_is_amulet(item) ? "amulet" : "ring");
     default:
         return "";
     }

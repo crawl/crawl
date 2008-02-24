@@ -281,6 +281,15 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'Y', true, true },
 
+    { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 5, 27, BFLAG_HAS_ORB, 0,
+      DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
+      "Zot", "the Realm of Zot", "Zot",
+      NULL,
+      false, true, BLACK, BLACK,
+      mons_hallzot_rare, mons_hallzot_level,
+      NULL, NULL, NULL, NULL,
+      1, 'Z', false, true },
+
     { BRANCH_INFERNO, BRANCH_MAIN_DUNGEON, -1, -1, 0, 0,
       NUM_FEATURES, NUM_FEATURES,
       NULL, NULL, NULL,
@@ -298,15 +307,6 @@ Branch branches[] = {
       NULL, NULL,
       NULL, NULL, NULL, NULL,
       0, '0', false, false },
-
-    { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 5, 27, BFLAG_HAS_ORB, 0,
-      DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
-      "Zot", "the Realm of Zot", "Zot",
-      NULL,
-      false, true, BLACK, BLACK,
-      mons_hallzot_rare, mons_hallzot_level,
-      NULL, NULL, NULL, NULL,
-      1, 'Z', false, true },
 
     { BRANCH_CAVERNS, BRANCH_MAIN_DUNGEON, -1, -1, 0, 0,
       NUM_FEATURES, NUM_FEATURES,

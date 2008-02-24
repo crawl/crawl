@@ -980,15 +980,15 @@ std::string item_def::name_aux( description_level_type desc,
                                 unsigned long ignore_flags) const
 {
     // Shortcuts
-    const int item_typ = this->sub_type;
-    const int it_plus = this->plus;
+    const int item_typ   = this->sub_type;
+    const int it_plus    = this->plus;
     const int item_plus2 = this->plus2;
 
     const bool know_type = ident || item_type_known(*this);
 
-    const bool dbname   = desc == DESC_DBNAME;
+    const bool dbname   = (desc == DESC_DBNAME);
     const bool basename = (desc == DESC_BASENAME || (dbname && !know_type));
-    const bool qualname = desc == DESC_QUALNAME;
+    const bool qualname = (desc == DESC_QUALNAME);
     
     const bool know_curse =
         !basename && !qualname && !dbname
@@ -1029,9 +1029,11 @@ std::string item_def::name_aux( description_level_type desc,
             // for the name on the main screen).  If you're going to change
             // this behaviour, *please* make it so that there is an option
             // that maintains this behaviour. -- bwr
+            // Nor for artefacts. Again, the state should be obvious. --jpeg
             if (item_cursed( *this ))
                 buff << "cursed ";
-            else if (Options.show_uncursed && !know_pluses)
+            else if (Options.show_uncursed && !know_pluses
+                     && (!know_type || !is_artefact(*this)))
                 buff << "uncursed ";
         }
 
@@ -1163,7 +1165,7 @@ std::string item_def::name_aux( description_level_type desc,
         // When asking for the base item name, randartism is ignored.
         if (is_random_artefact( *this ) && !basename && !dbname)
         {
-            buff << randart_armour_name(*this);
+            buff << randart_name(*this);
             break;
         }
 
@@ -1378,24 +1380,25 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_JEWELLERY:
+    {
         if (basename)
         {
             if ( jewellery_is_amulet(*this) )
                 buff << "amulet";
-            else                // i.e., an amulet
+            else
                 buff << "ring";
 
             break;
         }
 
-        // not using {tried} here because there are some confusing
-        // issues to work out with how we want to handle jewellery
-        // artefacts and base type id. -- bwr
+        const bool is_randart = is_random_artefact( *this );
+
         if (know_curse)
         {
             if (item_cursed( *this ))
                 buff << "cursed ";
             else if (Options.show_uncursed && !terse
+                     && (!is_randart || !know_type)
                      && (!ring_has_pluses(*this) || !know_pluses)
                      // If the item is worn, its curse status is known,
                      // no need to belabour the obvious.
@@ -1405,9 +1408,9 @@ std::string item_def::name_aux( description_level_type desc,
             }
         }
 
-        if (is_random_artefact( *this ) && !dbname)
+        if (is_randart && !dbname)
         {
-            buff << randart_jewellery_name(*this);
+            buff << randart_name(*this);
             break;
         }
 
@@ -1435,7 +1438,7 @@ std::string item_def::name_aux( description_level_type desc,
                      << amulet_primary_string(this->special % 13)
                      << " amulet";
             }
-            else                // i.e., an amulet
+            else  // i.e., a ring
             {
                 buff << ring_secondary_string(this->special / 13)
                      << ring_primary_string(this->special % 13)
@@ -1443,7 +1446,7 @@ std::string item_def::name_aux( description_level_type desc,
             }
         }
         break;
-
+    }
     case OBJ_MISCELLANY:
         if ( item_typ == MISC_RUNE_OF_ZOT )
         {

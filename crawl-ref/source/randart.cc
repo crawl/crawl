@@ -23,8 +23,13 @@
 #include <stdio.h>
 
 #include "externs.h"
+
+#include "database.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "place.h"
+#include "player.h"
+#include "religion.h"
 #include "stuff.h"
 
 #define KNOWN_PROPS_KEY "randart_known_props"
@@ -34,728 +39,172 @@
    in dungeon.cc and consists of giving it a few random things - plus & plus2
    mainly.
 */
-static const char *rand_wpn_names[] = {
-    " of Blood",
-    " of Death",
-    " of Bloody Death",
-    " of Pain",
-    " of Painful Death",
-    " of Pain & Death",
-    " of Infinite Pain",
-    " of Eternal Torment",
-    " of Power",
-    " of Wrath",
-/* 10: */
-    " of Doom",
-    " of Tender Mercy",
-    " of the Apocalypse",
-    " of the Jester",
-    " of the Ring",
-    " of the Fool",
-    " of the Gods",
-    " of the Imperium",
-    " of Destruction",
-    " of Armageddon",
-/* 20: */
-    " of Cruel Justice",
-    " of Righteous Anger",
-    " of Might",
-    " of the Orb",
-    " of Makhleb",
-    " of Trog",
-    " of Xom",
-    " of the Ancients",
-    " of Mana",
-    " of Nemelex Xobeh",
-/* 30: */
-    " of the Magi",
-    " of the Archmagi",
-    " of the King",
-    " of the Queen",
-    " of the Spheres",
-    " of Circularity",
-    " of Linearity",
-    " of Conflict",
-    " of Battle",
-    " of Honour",
-/* 40: */
-    " of the Butterfly",
-    " of the Wasp",
-    " of the Frog",
-    " of the Weasel",
-    " of the Troglodytes",
-    " of the Pill-Bug",
-    " of Sin",
-    " of Vengeance",
-    " of Execution",
-    " of Arbitration",
-/* 50: */
-    " of the Seeker",
-    " of Truth",
-    " of Lies",
-    " of the Eggplant",
-    " of the Turnip",
-    " of Chance",
-    " of Curses",
-    " of Hell's Wrath",
-    " of the Undead",
-    " of Chaos",
-/* 60: */
-    " of Law",
-    " of Life",
-    " of the Old World",
-    " of the New World",
-    " of the Middle World",
-    " of Crawl",
-    " of Unpleasantness",
-    " of Discomfort",
-    " of Brutal Revenge",
-    " of Triumph",
-/* 70: */
-    " of Evisceration",
-    " of Dismemberment",
-    " of Terror",
-    " of Fear",
-    " of Pride",
-    " of the Volcano",
-    " of Blood-Lust",
-    " of Division",
-    " of Eternal Harmony",
-    " of Peace",
-/* 80: */
-    " of Quick Death",
-    " of Instant Death",
-    " of Misery",
-    " of the Whale",
-    " of the Lobster",
-    " of the Whelk",
-    " of the Penguin",
-    " of the Puffin",
-    " of the Mushroom",
-    " of the Toadstool",
-/* 90: */
-    " of the Little People",
-    " of the Puffball",
-    " of Spores",
-    " of Optimality",
-    " of Pareto-Optimality",
-    " of Greatest Utility",
-    " of Anarcho-Capitalism",
-    " of Ancient Evil",
-    " of the Revolution",
-    " of the People",
-/* 100: */
-    " of the Elves",
-    " of the Dwarves",
-    " of the Orcs",
-    " of the Humans",
-    " of Sludge",
-    " of the Naga",
-    " of the Trolls",
-    " of the Ogres",
-    " of Equitable Redistribution",
-    " of Wealth",
-/* 110: */
-    " of Poverty",
-    " of Reapportionment",
-    " of Fragile Peace",
-    " of Reinforcement",
-    " of Beauty",
-    " of the Slug",
-    " of the Snail",
-    " of the Gastropod",
-    " of Corporal Punishment",
-    " of Capital Punishment",
-/* 120: */
-    " of the Beast",
-    " of Light",
-    " of Darkness",
-    " of Day",
-    " of the Day",
-    " of Night",
-    " of the Night",
-    " of Twilight",
-    " of the Twilight",
-    " of Dawn",
-/* 130: */
-    " of the Dawn",
-    " of the Sun",
-    " of the Moon",
-    " of Distant Worlds",
-    " of the Unseen Realm",
-    " of Pandemonium",
-    " of the Abyss",
-    " of the Nexus",
-    " of the Gulag",
-    " of the Crusades",
-/* 140: */
-    " of Proximity",
-    " of Wounding",
-    " of Peril",
-    " of the Eternal Warrior",
-    " of the Eternal War",
-    " of Evil",
-    " of Pounding",
-    " of Oozing Pus",
-    " of Pestilence",
-    " of Plague",
-/* 150: */
-    " of Negation",
-    " of the Saviour",
-    " of Infection",
-    " of Defence",
-    " of Protection",
-    " of Defence by Offence",
-    " of Expedience",
-    " of Reason",
-    " of Unreason",
-    " of the Heart",
-/* 160: */
-    " of Offence",
-    " of the Leaf",
-    " of Leaves",
-    " of Winter",
-    " of Summer",
-    " of Autumn",
-    " of Spring",
-    " of Midsummer",
-    " of Midwinter",
-    " of Eternal Night",
-/* 170: */
-    " of Shrieking Terror",
-    " of the Lurker",
-    " of the Crawling Thing",
-    " of the Thing",
-    " \"Thing\"",
-    " of the Sea",
-    " of the Forest",
-    " of the Trees",
-    " of Earth",
-    " of the World",
-/* 180: */
-    " of Bread",
-    " of Yeast",
-    " of the Amoeba",
-    " of Deformation",
-    " of Guilt",
-    " of Innocence",
-    " of Ascent",
-    " of Descent",
-    " of Music",
-    " of Brilliance",
-/* 190: */
-    " of Disgust",
-    " of Feasting",
-    " of Sunlight",
-    " of Starshine",
-    " of the Stars",
-    " of Dust",
-    " of the Clouds",
-    " of the Sky",
-    " of Ash",
-    " of Slime",
-/* 200: */
-    " of Clarity",
-    " of Eternal Vigilance",
-    " of Purpose",
-    " of the Moth",
-    " of the Goat",
-    " of Fortitude",
-    " of Equivalence",
-    " of Balance",
-    " of Unbalance",
-    " of Harmony",
-/* 210: */
-    " of Disharmony",
-    " of the Inferno",
-    " of the Omega Point",
-    " of Inflation",
-    " of Deflation",
-    " of Supply",
-    " of Demand",
-    " of Gross Domestic Product",
-    " of Unjust Enrichment",
-    " of Detinue",
-/* 220: */
-    " of Conversion",
-    " of Anton Piller",
-    " of Mandamus",
-    " of Frustration",
-    " of Breach",
-    " of Fundamental Breach",
-    " of Termination",
-    " of Extermination",
-    " of Satisfaction",
-    " of Res Nullius",
-/* 230: */
-    " of Fee Simple",
-    " of Terra Nullius",
-    " of Context",
-    " of Prescription",
-    " of Freehold",
-    " of Tortfeasance",
-    " of Omission",
-    " of Negligence",
-    " of Pains",
-    " of Attainder",
-/* 240: */
-    " of Action",
-    " of Inaction",
-    " of Truncation",
-    " of Defenestration",
-    " of Desertification",
-    " of the Wilderness",
-    " of Psychosis",
-    " of Neurosis",
-    " of Fixation",
-    " of the Open Hand",
-/* 250: */
-    " of the Tooth",
-    " of Honesty",
-    " of Dishonesty",
-    " of Divine Compulsion",
-    " of the Invisible Hand",
-    " of Freedom",
-    " of Liberty",
-    " of Servitude",
-    " of Domination",
-    " of Tension",
-/* 260: */
-    " of Monotheism",
-    " of Atheism",
-    " of Agnosticism",
-    " of Existentialism",
-    " of the Good",
-    " of Relativism",
-    " of Absolutism",
-    " of Absolution",
-    " of Abstinence",
-    " of Abomination",
-/* 270: */
-    " of Mutilation",
-    " of Stasis",
-    " of Wonder",
-    " of Dullness",
-    " of Dim Light",
-    " of the Shining Light",
-    " of Immorality",
-    " of Amorality",
-    " of Precise Incision",
-    " of Orthodoxy",
-/* 280: */
-    " of Faith",
-    " of Untruth",
-    " of the Augurer",
-    " of the Water Diviner",
-    " of the Soothsayer",
-    " of Punishment",
-    " of Amelioration",
-    " of Sulphur",
-    " of the Egg",
-    " of the Globe",
-/* 290: */
-    " of the Candle",
-    " of the Candelabrum",
-    " of the Vampires",
-    " of the Orcs",
-    " of the Halflings",
-    " of World's End",
-    " of Blue Skies",
-    " of Red Skies",
-    " of Orange Skies",
-    " of Purple Skies",
-/* 300: */
-    " of Articulation",
-    " of the Mind",
-    " of the Spider",
-    " of the Lamprey",
-    " of the Beginning",
-    " of the End",
-    " of Severance",
-    " of Sequestration",
-    " of Mourning",
-    " of Death's Door",
-/* 310: */
-    " of the Key",
-    " of Earthquakes",
-    " of Failure",
-    " of Success",
-    " of Intimidation",
-    " of the Mosquito",
-    " of the Gnat",
-    " of the Blowfly",
-    " of the Turtle",
-    " of the Tortoise",
-/* 320: */
-    " of the Pit",
-    " of the Grave",
-    " of Submission",
-    " of Dominance",
-    " of the Messenger",
-    " of Crystal",
-    " of Gravity",
-    " of Levity",
-    " of the Slorg",
-    " of Surprise",
-/* 330: */
-    " of the Maze",
-    " of the Labyrinth",
-    " of Divine Intervention",
-    " of Rotation",
-    " of the Spinneret",
-    " of the Scorpion",
-    " of Demonkind",
-    " of the Genius",
-    " of Bloodstone",
-    " of Grontol",
-/* 340: */
-    " \"Grim Tooth\"",
-    " \"Widowmaker\"",
-    " \"Widowermaker\"",
-    " \"Lifebane\"",
-    " \"Conservator\"",
-    " \"Banisher\"",
-    " \"Tormentor\"",
-    " \"Secret Weapon\"",
-    " \"String\"",
-    " \"Stringbean\"",
-/* 350: */
-    " \"Blob\"",
-    " \"Globulus\"",
-    " \"Hulk\"",
-    " \"Raisin\"",
-    " \"Starlight\"",
-    " \"Giant's Toothpick\"",
-    " \"Pendulum\"",
-    " \"Backscratcher\"",
-    " \"Brush\"",
-    " \"Murmur\"",
-/* 360: */
-    " \"Sarcophage\"",
-    " \"Concordance\"",
-    " \"Dragon's Tongue\"",
-    " \"Arbiter\"",
-    " \"Gram\"",
-    " \"Grom\"",
-    " \"Grim\"",
-    " \"Grum\"",
-    " \"Rummage\"",
-    " \"Omelette\"",
-/* 370: */
-    " \"Egg\"",
-    " \"Aubergine\"",
-    " \"Z\"",
-    " \"X\"",
-    " \"Q\"",
-    " \"Ox\"",
-    " \"Death Rattle\"",
-    " \"Tattletale\"",
-    " \"Fish\"",
-    " \"Bung\"",
-/* 380: */
-    " \"Arcanum\"",
-    " \"Mud Pie of Death\"",
-    " \"Transmigrator\"",
-    " \"Ultimatum\"",
-    " \"Earthworm\"",
-    " \"Worm\"",
-    " \"Worm's Wrath\"",
-    " \"Xom's Favour\"",
-    " \"Bingo\"",
-    " \"Leviticus\"",
-/* 390: */
-    " of Joyful Slaughter"
 
-    // Lemuel's new names
-    " \"Eviscerator\"",
-    " \"Undertaker\"",
-    " \"Embalmer\"",
-    " of Sudden Death",
-    " of Slow Death",
-    " of Certain Death",
-    " of Uncertain Death",
-    " \"Trog's Wrath\"",
-    " \"Ogre's Foe\"",
-    " \"Dragon's Doom\"",
-    " \"Hellblazer\"",
-    " \"Hell-Harrower\"",
-    " of Hacking and Slashing",
-    " of Anger",
-    " of Fury",
-    " of Righteous Fury",
-    " of the Warrior",
-    " of the Doomed Warrior",
-    " of the Warrior-Mage",
+static bool god_fits_artefact(const god_type which_god, const item_def &item)
+{
+    if (which_god == GOD_NO_GOD)
+        return (false);
+        
+    const int brand = get_weapon_brand(item);
+    
+    if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
+        return (false);
+    else if (is_good_god(which_god) && (brand == SPWPN_DRAINING
+              || brand == SPWPN_PAIN || brand == SPWPN_VAMPIRICISM))
+    {
+        return (false);
+    }
 
-    // from the crawl.akrasiac.org patch
-    " of the Alphagorgon",
-    " \"Cookie Cutter\"",
+    switch (which_god)
+    {
+    case GOD_BEOGH:
+         if (brand == SPWPN_ORC_SLAYING)
+             return (false);
+         break;
 
-    " of the Nine Deaths",
-    " of Megalomania",
-    " of Egomania",
-    " of Pyrrhic Victory",
-    " of Irrepressible Laughter",
-    " of Impeachment",
-};
+    case GOD_ELYVILON: // peaceful healer god, no weapons, no berserking
+         if (item.base_type == OBJ_WEAPONS)
+             return (false);
+             
+         if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
+             return (false);
 
-static const char *rand_armour_names[] = {
-/* 0: */
-    " of Shielding",
-    " of Grace",
-    " of Impermeability",
-    " of the Onion",
-    " of Life",
-    " of Defence",
-    " of Nonsense",
-    " of Eternal Vigilance",
-    " of Fun",
-    " of Joy",
-    " of Death's Door",
-    " of the Gate",
-    " of Watchfulness",
-    " of Integrity",
-    " of Bodily Harmony",
-    " of Harmony",
-    " of the Untouchables",
-    " of Grot",
-    " of Grottiness",
-    " of Filth",
-    " of Wonder",
-    " of Wondrous Power",
-    " of Power",
-    " of Vlad",
-    " of the Eternal Fruit",
-    " of Invincibility",
-    " of Hide-and-Seek",
-    " of the Mouse",
-    " of the Saviour",
-    " of Plasticity",
-    " of Baldness",
-    " of Terror",
-    " of the Arcane",
-    " of Resist Death",
-    " of Anaesthesia",
-    " of the Guardian",
-    " of Inviolability",
-    " of the Tortoise",
-    " of the Turtle",
-    " of the Armadillo",
-    " of the Echidna",
-    " of the Armoured One",
-    " of Weirdness",
-    " of Pathos",
-    " of Serendipity",
-    " of Loss",
-    " of Hedging",
-    " of Indemnity",
-    " of Limitation",
-    " of Exclusion",
-    " of Repulsion",
-    " of Untold Secrets",
-    " of the Earth",
-    " of the Turtledove",
-    " of Limited Liability",
-    " of Responsibility",
-    " of Hadjma",
-    " of Glory",
-    " of Preservation",
-    " of Conservation",
-    " of Protective Custody",
-    " of the Clam",
-    " of the Barnacle",
-    " of the Lobster",
-    " of Hairiness",
-    " of Supple Strength",
-    " of Space",
-    " of the Vacuum",
-    " of Compression",
-    " of Decompression",
-    " of the Loofah",
+         if (randart_wpn_property( item, RAP_ANGRY )
+             || randart_wpn_property( item, RAP_BERSERK ))
+         {
+             return (false);
+         }
+         break;
 
-    // Lemuel's new names
-    " of the Sun",
-    " of the Moon",
-    " of the Stars",
-    " of the Planets",
-    " of the Pleiades",
-    " of the Morning Star",
-    " of the Evening Star",
-    " of the Seven Stars",
-    " of the Seventy-Seven Stars",
-    " of Departure",
-    " of Arrival",
-    " of Change",
-    " of Stasis",
-    " of Doubt",
-    " of Uncertainty",
-    " of the Elephant",
-    " of the Donkey",
-    " of the Zebra",
-    " of the Hippo",
-    " of the Giraffe",
-    " of the Monkey",
-    " of the Monkey's Uncle",
-    " of Shadows and Fog",
-    " of Love and Death",
-    " of Crimes and Misdemeanours",
-    " of Courage",
-    " of Cowardice",
-    " of Valour",
-    " of the Extremes",
-    " of the Middle",
-    " of the Median",
-    " of Optimism",
-    " of Pessimism",
-    " of the Man with No Name",
-    " of Crawling",
-    " of Zot",
-    " of the Orb",
-    " of the Orb Guardian",
-    " of the Dragon",
-    " of the Komodo Dragon",
-    " of the Swamp",
-    " of the Islands",
-    " of the Lair",
-    " of the Beasts",
-    " of the Vault",
-    " of the Hive",
-    " of the Beekeeper",
-    " of the Garden",
-    " of the Gardener",
-    " of the Assistant Gardener",
-    " of War",
-    " of Peace",
-    " of Xom",
-    " of Xom's Laughter",
-    " of Xom's Questionable Humour",
-    " of Zin's Displeasure",
-    " of the Gods",
-    " of Atheism",
-    " of Agnosticism",
-    " of Heresy",
-    " of the Nightingale",
-    " of the Meadowlark",
-    " of Analysis",
-    " of the Ego",
-    " of the Id",
-    " of the Empty Set",
-    " with No Name",
-    " with an Unpronounceable Name",
-    " with a Strange-Sounding Name",
-    " of Trumpets",
-    " of the Kettle-Drum",
-    " of the Accordion",
-    " of the Hangman",
-    " of the Hanged Man",
-    " of Insatiable Hunger",
-    " of the Devil",
-    " of Demons",
-    " of Lesser Demons",
-    " of Greater Demons",
-    " of the Iron Devil",
-    " of Terror",
-    " of Annoyance",
-    " of Minor Irritation",
-    " of Boredom",
-    " of Ennui",
-    " of the Springtime",
-    " of Midsummer",
-    " of the Harvest",
-    " of First Snow",
-    " of Boiling Hail",
-    " of Perpetual Drought",
-    " of the Poles",
-    " of the Tropics",
-    " of the Equator",
-    " of the Flat Earth",
-    " of Premature Burial",
-    " of False Imprisonment",
-    " of Moderation",
-    " of Extremism",
-    " of Fun and Games",
-    " of the Great Game",
-    " of the Game of Life",
-    " of the King",
-    " of the Queen",
-    " of Royalty",
-    " of Nobility",
-    " of the Republic",
-    " of the Empire",
-    " of Commoners",
-    " of Peasants",
-    " of Townfolk",
-    " of the City",
-    " of the Country",
-    " of the Suburbs",
-    " \"Hero's Friend\"",
-    " of Calculation",
-    " of Instinct",
-    " of Intuition",
-    " of Magic",
-    " of Sorcery",
-    " of Hedge Wizardry",
-    " of Doom",
-    " of Pride",
-    " of Honour",
-    " of Dishonour",
-    " of Shame",
-    " of Embarrassment",
-    " of Abstract Expressionism",
-    " of Free Expression",
-    " of the Guilds",
-    " of the Guild-Master",
-    " of the Apprentice",
-    " of the Blacksmith",
-    " of the Carpenter",
-    " of the Wheelwright",
-    " of the Cooper",
-    " of the Fisher",
-    " of the Hunter",
-    " of the Ditch-Digger",
-    " of Patience",
-    " of Impatience",
-    " of Anxiety",
-    " of Urgency",
-    " \"Forget-Me-Not\"",
-    " of Lilacs",
-    " of Daffodils",
-    " of the Rose",
+    case GOD_OKAWARU: // precision fighter
+         if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_INACCURACY)
+             return (false);
+         break;
 
-    // from the crawl.akrasiac.org patch.
-    " of the Hot Ocelot",
-    " of Eight Boll Weevils",
+    case GOD_ZIN:
+         if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_HUNGER)
+             return (false); // goes against food theme
 
-    " of Internal Strife",
-    " of Paranoia",
-    " of Claustrophobia",
-    " of Agoraphobia",
-    " of Dyspraxia",
-    " of Mental Paralysis"
-};
+         if (randart_wpn_property( item, RAP_MUTAGENIC ))
+             return (false); // goes against anti-mutagenic theme
+         break;
 
-static const char *randart_weapon_appearance[] = {
-    "brightly glowing ", "iridescent ", "smoking ", "bloodstained ", "twisted ",
-    "shimmering ", "warped ", "crystal ", "jewelled ", "transparent ",
-    "encrusted ", "pitted ", "slimy ", "polished ", "fine ", "crude ",
-    "ancient ", "ichor-stained ", "faintly glowing ", "steaming ", "shiny "
-};
+    case GOD_SIF_MUNA:
+    case GOD_KIKUBAAQUDGHA:
+    case GOD_VEHUMET:
+         if (randart_wpn_property( item, RAP_PREVENT_SPELLCASTING))
+             return (false);
+         break;
 
-static const char *randart_armour_appearance[] = {
-    "brightly glowing ", "faintly humming ", "smoking ", "bloodstained ",
-    "twisted ", "shimmering ", "warped ", "heavily runed ", "jewelled ",
-    "transparent ", "encrusted ", "pitted ", "slimy ", "polished ", "fine ",
-    "crude ", "ancient ", "ichor-stained ", "faintly glowing ",
-    "steaming ", "shiny ", "distressingly furry "
-};
+    case GOD_TROG: // hates anything enhancing magic
+         if (item.base_type == OBJ_JEWELLERY && (item.sub_type == RING_WIZARDRY
+             || item.sub_type == RING_FIRE || item.sub_type == RING_ICE
+             || item.sub_type == RING_MAGICAL_POWER))
+         {
+             return (false);
+         }
+         if (brand == SPWPN_PAIN) // involves magic
+             return (false);
+             
+         if (randart_wpn_property( item, RAP_MAGICAL_POWER))
+             return (false);
 
-static const char *randart_jewellery_appearance[] = {
-    "brightly glowing", "runed", "smoking", "ruby", "twisted",
-    "shimmering", "warped", "crystal", "diamond", "transparent",
-    "encrusted", "pitted", "slimy", "polished", "fine", "crude",
-    "ancient", "emerald", "faintly glowing", "steaming", "shiny",
-    "scintillating", "sparkling", "flickering", "glittering"
-};
+    default:
+         break;
+    }
+    
+    return (true);
+}
+
+static std::string replace_name_parts(const std::string name_in,
+                                      const item_def item)
+{
+    std::string name = name_in;
+    
+    // maybe god gift?
+    god_type god_gift = GOD_NO_GOD;
+    if (item.orig_monnum < 0)
+    {
+        int help = -item.orig_monnum - 2;
+        if (help > GOD_NO_GOD && help < NUM_GODS)
+            god_gift = static_cast<god_type>(help);
+    }
+
+    // Don't allow "player's Doom" type names for god gifts (except Xom!)
+    if (name.find("@player_name@'s", 0) != std::string::npos
+        && god_gift != GOD_NO_GOD && god_gift != GOD_XOM)
+    {
+        // simply overwrite the name with one of type "god's Favour"
+        name = "of ";
+        name += god_name(god_gift, false);
+        name += "'s ";
+        name + getRandNameString("divine_esteem");
+    }
+    name = replace_all(name, "@player_name@", you.your_name);
+
+    name = replace_all(name, "@player_species@",
+                 species_name(static_cast<species_type>(you.species), 1));
+
+    name = replace_all(name, "@race_name@",
+                 species_name(static_cast<species_type>(random2(SP_ELF)),1));
+
+    if (name.find("@branch_name@", 0) != std::string::npos)
+    {
+        std::string place;
+        if (one_chance_in(5))
+        {
+            switch(random2(6))
+            {
+            case 0:
+            case 1:
+            default:
+               place = "the Abyss";
+               break;
+            case 2:
+            case 3:
+               place = "Pandemonium";
+               break;
+            case 4:
+               place = "the Labyrinth";
+               break;
+            case 5:
+               place = "the Portal Chambers";
+               break;
+            }
+        }
+        else
+        {
+            const branch_type branch =
+                     static_cast<branch_type>(random2(BRANCH_INFERNO));
+            place = place_name( get_packed_place(branch, 1, LEVEL_DUNGEON),
+                                true, false );
+        }
+        if (!place.empty())
+            name = replace_all(name, "@branch_name@", place);
+    }
+    
+    // occasionally use long name for Xom (see religion.cc)
+    name = replace_all(name, "@xom_name@", god_name(GOD_XOM, coinflip()));
+    
+    if (name.find("@god_name@", 0) != std::string::npos)
+    {
+        god_type which_god;
+        
+        // God gifts will always get the gifting god's name
+        if (god_gift != GOD_NO_GOD)
+            which_god = god_gift;
+        else
+        {
+           do {
+                which_god = static_cast<god_type>(random2(NUM_GODS));
+           } while (!god_fits_artefact(which_god, item));
+        }
+
+        name = replace_all(name, "@god_name@", god_name(which_god, false));
+    }
+
+    return name;
+}
 
 // Remember: disallow unrandart creation in abyss/pan
 
@@ -1679,9 +1128,42 @@ bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop )
     return known;
 }
 
+static std::string get_artefact_type(const int type)
+{
+    switch (type)
+    {
+     case OBJ_WEAPONS:
+         return "weapon";
+     case OBJ_ARMOUR:
+         return "armour";
+     case OBJ_JEWELLERY:
+         return "jewellery";
+     default:
+         return "artefact";
+    }
+}
+
+static bool pick_db_name(const int type)
+{
+    switch (type)
+    {
+     case OBJ_WEAPONS:
+     case OBJ_ARMOUR:
+         return coinflip();
+     case OBJ_JEWELLERY:
+         return one_chance_in(5);
+     default:
+         return 0;
+    }
+}
+
 std::string randart_name( const item_def &item )
 {
-    ASSERT( item.base_type == OBJ_WEAPONS );
+    ASSERT(is_artefact(item));
+
+    ASSERT(item.base_type == OBJ_WEAPONS
+           || item.base_type == OBJ_ARMOUR
+           || item.base_type == OBJ_JEWELLERY);
 
     if (is_unrandom_artefact( item ))
     {
@@ -1691,129 +1173,70 @@ std::string randart_name( const item_def &item )
 
     const long seed = calc_seed( item );
 
+    std::string lookup;
+    std::string result;
+
+    // use prefix of gifting god, if applicable
+    bool god_gift = false;
+    int item_orig = 0;
+    if (item_type_known(item)) // god prefix not necessary for appearance
+    {
+        item_orig = item.orig_monnum;
+        if (item_orig < 0)
+            item_orig = -item_orig - 2;
+        else
+            item_orig = 0;
+
+        if (item_orig > GOD_NO_GOD && item_orig < NUM_GODS)
+        {
+            lookup += god_name(static_cast<god_type>(item_orig), false) + " ";
+            god_gift = true;
+        }
+    }
+    
+    // get base type
+    lookup += get_artefact_type(item.base_type);
+    
     rng_save_excursion rng_state;
     seed_rng( seed );
-    
-    std::string result;
-    
-    if (!item_type_known(item))
-    {
-        result += RANDOM_ELEMENT(randart_weapon_appearance);
-        result += item_base_name(item);
-        return result;
-    }
-
-    if (coinflip())
-    {
-        result += item_base_name(item);
-        result += RANDOM_ELEMENT(rand_wpn_names);
-    }
-    else
-    {
-        const std::string st_p = make_name(random_int(), false);
-        result += item_base_name(item);
-
-        if (one_chance_in(3))
-        {
-            result += " of ";
-            result += st_p;
-        }
-        else
-        {
-            result += " \"";
-            result += st_p;
-            result += "\"";
-        }
-    }
-
-    return result;
-}
-
-std::string randart_armour_name( const item_def &item )
-{
-    ASSERT( item.base_type == OBJ_ARMOUR );
-
-    if (is_unrandom_artefact( item ))
-    {
-        const unrandart_entry *unrand = seekunrandart( item );
-        return (item_type_known(item) ? unrand->name : unrand->unid_name);
-    }
-
-    const long seed = calc_seed( item );
-
-    rng_save_excursion exc;
-    seed_rng( seed );
-
-    std::string result;
 
     if (!item_type_known(item))
     {
-        result += RANDOM_ELEMENT(randart_armour_appearance);
-        result += item_base_name(item);
-        return result;
-    }
-    
-    if (coinflip())
-    {
-        result += item_base_name(item);
-        result += RANDOM_ELEMENT(rand_armour_names);
-    }
-    else
-    {
-        const std::string st_p = make_name(random_int(), false);
-        result += item_base_name(item);
-        if (one_chance_in(3))
+        std::string appear = getRandNameString(lookup, " appearance");
+        if (appear.empty()) // nothing found for lookup
         {
-            result += " of ";
-            result += st_p;
+            appear = getRandNameString("general appearance");
+            if (appear.empty()) // still nothing found?
+                appear = "non-descript";
         }
-        else
-        {
-            result += " \"";
-            result += st_p;
-            result += "\"";
-        }
-    }
-
-    return result;
-}
-
-std::string randart_jewellery_name( const item_def &item )
-{
-    ASSERT( item.base_type == OBJ_JEWELLERY );
-
-
-    if (is_unrandom_artefact( item ))
-    {
-        const unrandart_entry *unrand = seekunrandart( item );
-        return (item_type_known(item) ? unrand->name : unrand->unid_name);
-    }
-
-    const long seed = calc_seed( item );
-
-    rng_save_excursion exc;
-    seed_rng( seed );
-
-    std::string result;
-
-    if (!item_type_known(item))
-    {
-        result += RANDOM_ELEMENT(randart_jewellery_appearance);
+        result += appear;
         result += " ";
-        result += (jewellery_is_amulet(item) ? "amulet" : "ring");
-
+        result += item_base_name(item);
         return result;
     }
 
-    if (one_chance_in(5))
+    if (pick_db_name(item.base_type))
     {
-        result += (jewellery_is_amulet(item) ? "amulet" : "ring");
-        result += RANDOM_ELEMENT(rand_armour_names);
+        result += item_base_name(item) + " ";
+        std::string name = getRandNameString(lookup);
+        
+        if (name.empty() && god_gift) // if nothing found, try god name alone
+        {
+            name = getRandNameString(god_name(static_cast<god_type>(item_orig), false));
+            
+            if (name.empty()) // if still nothing found, try base type alone
+                name = getRandNameString(get_artefact_type(item.base_type).c_str());
+        }
+        
+        if (name.empty()) // still nothing found?
+            result += "of Bugginess";
+        else
+            result += replace_name_parts(name, item);
     }
     else
     {
         const std::string st_p = make_name(random_int(), false);
-        result += (jewellery_is_amulet(item) ? "amulet" : "ring");
+        result += item_base_name(item);
 
         if (one_chance_in(3))
         {

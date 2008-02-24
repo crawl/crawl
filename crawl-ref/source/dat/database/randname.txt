@@ -1,0 +1,681 @@
+######################################################
+# Randart Names
+# -------------
+# randname.txt: lookup randart type
+#
+# This file contains the lists of keywords (and their
+# weights) for some lookup phrases of randart type,
+# namely "weapon", "armour" and "jewellery" as well as
+# in combination with those gods that occasionally
+# gift randarts, i.e. "Trog weapon", "Okawaru weapon",
+# "Okawaru armour", "Xom weapon", "Xom armour" and
+# "Xom jewellery". Incidentally, they are listed in
+# precisely that order. At the end of the file you
+# will also find a few lists of adjectives used for
+# unidentified randart appearances.
+#
+# The syntax for keywords is the same as that of 
+# monster speech (see monster_speech.txt for the full
+# details). Any phrase encased in '@' symbols is one
+# the database will recognise as a keyword that needs
+# to be replaced. Definitions of such keywords can be
+# found in 4 different places:
+#
+#  o  rand_wpn.txt  – keywords used mainly for weapons
+#  o  rand_arm.txt  - keywords used mainly for armour
+#  o  rand_all.txt  - keywords used for jewellery
+#                     as well as for all three types
+#  o  hardcoded (randart.cc)
+#
+# The latter allows the use of phrases elsewhere 
+# defined in Crawl. The list of hardcoded keywords is
+# as follows:
+#
+#  * player_name     - player-chosen character name
+#  * player_species  - species of the character
+#  * branch_name     – name of a random Crawl branch
+#  * race_name       - name of a random Crawl species
+#  * god_name        - name of a random Crawl god
+#  * xom_name        - one of Xom's long names
+#
+# In the case of god_name this actually allows some 
+# more refined handling. In fact, the god will not be
+# picked entirely at random as there are some 
+# restrictions to make sure that e.g. no good god is
+# chosen for evil weapons, that Beogh isn't matched
+# with orc slaying, or that Zin doesn't get picked for 
+# randarts with mutagenic properties.
+#
+# Note that weapons and armour use database names for
+# only half of all randarts created (the others are
+# entirely random names), for jewellery this is only 
+# the case for one in five randarts. These chances
+# are hardcoded.
+#
+# Feel free to play around with the keywords or their
+# weights. The default weight of an entry is w:10, and
+# an entry is picked with a chance of its weight out
+# of the sum of all weights for entries in a group.
+# Consequently if you set the weight of a keyword to
+# a really high value (say, 10,000) you can test how
+# it looks in the game. Even better, if you have
+# wizard mode compiled in (check the in-game 'V'ersion
+# information) you can use the wizard command '&o' to
+# create objects and '&+' to turn an ordinary object
+# into a randart.
+#
+# Have fun!
+######################################################
+%%%%
+######################################################
+# 1. WEAPONS
+######################################################
+weapon
+
+# weapon specific keywords (see rand_wpn.txt)
+of @power_or_anger@
+
+of @battle_or_war@
+
+w:1
+of @player_name@'s @death_or_doom@
+
+w:9
+of @death_or_doom@
+
+w:16
+of @strategy_or_justice@
+
+w:4
+of the @people_name@
+
+w:8
+of the @weapon_animal@
+
+w:2
+of the @plant_name@
+
+w:7
+of @evil_stuff@
+
+w:5
+of @catastrophe_name@
+
+w:8
+of @chaos_name@
+
+w:8
+of @balance_or_order@
+
+of @economics_or_politics@
+
+w:8
+of @branch_name@
+
+w:7
+of @place_name@
+
+w:5
+of @discomfort_weapon@
+
+w:3
+of @mental_illness_weapon@
+
+w:4
+of the @item_name@
+
+w:1
+of @magic_name@
+
+w:5
+of @substance_name@
+
+w:7
+of @science_name@
+
+w:5
+of @other_weapon_name@
+
+w:30
+"@plain_weapon_name@"
+
+# general keywords (see rand_all.txt)
+w:5
+of @time_name@
+
+w:5
+of @sky_or_light@
+
+w:18
+of @virtue_or_vice@
+
+of @number_or_qualifier@ @thing_names@
+
+w:9
+of @god_name@'s @divine_esteem@
+
+# hardcoded keywords
+w:1
+of @god_name@
+
+of the @race_name@
+
+%%%%
+######################################################
+# 2. ARMOUR
+######################################################
+armour
+
+# armour specific keywords (see rand_arm.txt)
+of @armour_name_shielding@
+
+w:8
+of @armour_property_name@
+
+w:20
+of @wacky_armour_name@
+
+of the @profession_name@
+
+of @politics_name_armour@
+
+w:3
+of @weather_name@
+
+w:17
+of @good_or_divine@
+
+w:5
+of the @celestial_bodies@
+
+w:5
+of @instrument_name@
+
+w:20
+of the @armour_animal@
+
+w:3
+of @flower_name@
+
+w:3
+of @critter_name@
+
+w:5
+of @evil_being@
+
+w:5
+of @mental_illness_armour@
+
+of @discomfort_and_inaction@
+
+of @game_name@
+
+w:15
+of @other_armour_name@
+
+w:1
+"@plain_armour_name@"
+
+# weapon specific keywords (see rand_arm.txt)
+w:25
+of @philosophy_or_science@
+
+w:15
+of @place_name@
+
+# general keywords (see rand_all.txt)
+of @time_name@
+
+w:8
+of @sky_or_light@
+
+w:30
+of @virtue_or_vice@
+
+w:16
+of @number_or_qualifier@ @thing_names@
+
+w:20
+of @god_name@'s @divine_esteem@
+
+# hardcoded keywords
+w:1
+of @god_name@
+
+w:15
+of @branch_name@
+
+%%%%
+######################################################
+# 3. JEWELLERY
+######################################################
+jewellery
+
+# jewellery specials (see rand_all.txt)
+w:3
+of @jewellery_animal@
+
+of @jewellery_special_name@
+
+of @suspicion_name@
+
+# as defined for weapons (see rand_wpn.txt)
+of @people_name@
+
+w:17
+of @balance_or_order@
+
+w:14
+of @philosophy_name@
+
+w:7
+of @mental_illness_weapon@
+
+of @other_weapon_name@
+
+# as defined for armour (see rand_arm.txt)
+w:20
+of @armour_animal@
+
+w:3
+of @flower_name@
+
+w:5
+of @evil_being@
+
+w:20
+of @good_or_divine@
+
+w:12
+of @politics_name_armour@
+
+w:1
+"@plain_armour_name@"
+
+# same for all three types (see rand_all.txt)
+w:13
+of @time_name@
+
+of @sky_or_light@
+
+w:20
+of @god_name@'s @divine_esteem@
+
+of Xom's @xom_esteem@
+
+w:7
+of @virtue_name@
+
+w:13
+of @vice_name@
+
+w:20
+of @name_or_qualifier@ @thing_names@
+
+%%%%
+######################################################
+# GOD GIFT specials
+######################################################
+# TROG (weapons only)
+######################################################
+Trog weapon
+
+# names containing battle and death are more likely
+w:25
+of @power_or_anger@
+
+w:25
+of @battle_or_war@
+
+w:25
+of @death_or_doom@
+
+w:7
+of @strategy_name@
+
+w:15
+of @justice_name@
+
+w:30
+of @virtue_or_vice@
+
+w:1
+of Trog
+
+w:20
+of Trog's @divine_esteem@
+
+of Trog's @anger_name@
+
+w:15
+of the @weapon_animal@
+
+w:15
+of @evil_stuff@
+
+of @catastrophe_name@
+
+w:15
+of @chaos_name@
+
+w:20
+of @balance_or_order@
+
+w:20
+of @economics_or_politics@
+
+w:20
+of the @race_name@
+
+w:15
+of @branch_name@
+
+w:15
+of @place_name@
+
+w:15
+of @time_name@
+
+of @sky_or_light@
+
+w:20
+of @number_or_qualifier@ @thing_names@
+
+of @discomfort_weapon@
+
+of @mental_illness_weapon@
+
+of the @item_name@
+
+w:15
+of @philosophy_name@
+
+of @science_name@
+
+of @other_weapon_name@
+
+of @monster_name@@killer_name@
+
+w:30
+"@plain_weapon_name@"
+
+%%%%
+######################################################
+# OKAWARU weapon
+######################################################
+Okawaru weapon
+
+# basically use normal set
+w:400
+@weapon@
+
+# with a few special cases
+w:2
+of @player_name@'s @valour_name@
+
+w:3
+of Okawaru's @divine_esteem@
+
+# and bonus probability for some of the more harmless themes
+of @strategy_or_justice@
+
+w:5
+of @philosophy_name@
+
+w:3
+of @balance_or_order@
+
+w:5
+of @power_name@
+
+w:2
+of @virtue_name@
+
+w:1
+of the @diviner_name@
+
+w:5
+of the @weapon_animal@
+
+w:5
+of @place_name@
+
+w:2
+of @item_name@
+
+%%%%
+######################################################
+# OKAWARU armour
+######################################################
+Okawaru armour
+
+# again use normal chances with a few exceptions
+w:400
+@armour@
+
+w:2
+of @player_name@'s @valour_name@
+
+w:2
+of Okawaru's @divine_esteem@
+
+w:2
+of @armour_animal@
+
+w:1
+of @good_or_divine@
+
+w:2
+of @armour_name_shielding@
+
+w:1
+of @armour_property_name@
+
+w:1
+of @wacky_armour_name@
+
+w:2
+of @politics_name_armour@
+
+%%%%
+######################################################
+# XOM weapon
+######################################################
+# Xom will basically allow everything
+Xom weapon
+
+# increased chances (obviously!)
+w:5
+of @chaos_name@
+
+w:5
+of @xom_name@'s @xom_esteem@
+
+w:2
+of @xom_name@'s @divine_esteem@
+
+# uses the long name
+w:1
+of @xom_name@
+
+w:1
+of @game_name@
+
+w:400
+@weapon@
+
+# and why not some of the other names?
+@jewellery@
+
+@armour@
+
+%%%%
+######################################################
+# XOM armour
+######################################################
+Xom armour
+
+# increased chances (obviously!)
+w:5
+of @chaos_name@
+
+w:5
+of @xom_name@'s @xom_esteem@
+
+w:2
+of @xom_name@'s @divine_esteem@
+
+# uses the long name
+w:1
+of @xom_name@
+
+w:1
+of @game_name@
+
+w:1
+of @player_name@'s @killer_name@
+
+w:400
+@armour@
+
+# why not some other names? 
+# (sadly, some weapon names don't make sense even for Xom)
+@jewellery@
+
+%%%%
+######################################################
+# XOM jewellery
+######################################################
+Xom jewellery
+
+# increased chances (obviously!)
+w:5
+of @chaos_name@
+
+w:5
+of @xom_name@'s @xom_esteem@
+
+w:2
+of @xom_name@'s @divine_esteem@
+
+# uses the long name
+w:1
+of @xom_name@
+
+w:1
+of @game_name@
+
+w:1
+of @player_name@'s @killer_name@
+
+w:1
+of @player_name@'s @killer_name@
+
+w:300
+@jewellery@
+
+# why not some other names? 
+# (sadly, some weapon names don't make sense even for Xom)
+@armour@
+
+%%%%
+######################################################
+# Library of randart APPEARANCE (un-identified).
+######################################################
+# common to all three types of randarts
+general appearance
+
+brightly glowing
+
+smoking
+
+twisted
+
+shimmering
+
+warped
+
+transparent
+
+encrusted
+
+pitted
+
+slimy
+
+polished
+
+fine
+
+crude
+
+ancient
+
+faintly glowing
+
+steaming
+
+shiny
+
+%%%%
+weapon appearance
+
+iridescent
+
+bloodstained
+
+crystal
+
+jewelled
+
+ichor-stained
+
+# currently 16 entries, so their overall weight amounts 160
+w:160
+@general appearance@
+
+%%%%
+armour appearance
+
+faintly humming
+
+bloodstained
+
+heavily runed
+
+jewelled
+
+ichor-stained
+
+distressingly furry
+
+w:160
+@general appearance@
+
+%%%%
+jewellery appearance
+
+#specific jewels
+ruby
+
+crystal
+
+diamond
+
+emerald
+
+#other descriptions
+runed
+
+scintillating
+
+sparkling
+
+flickering
+
+glittering
+
+w:160
+@general appearance@
+%%%%
+

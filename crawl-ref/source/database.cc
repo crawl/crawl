@@ -26,6 +26,7 @@
 
 db_list openDBList;
 DBM     *descriptionDB;
+DBM     *randartDB;
 
 // shout and speak databases are all generated from a single
 // text file in the data directory and stored as .db files in the
@@ -59,9 +60,15 @@ SingleFileDB singleFileDBs[MAX_DBID] =
 #define DESC_TXT_DIR   "descript"
 #define DESC_DB        (DESC_BASE_NAME ".db")
 
+#define DATABASE_TXT_DIR  "database"
+#define RANDART_BASE_NAME "randart"
+#define RANDART_DB        (RANDART_BASE_NAME ".db")
+
 static std::vector<std::string> description_txt_paths();
-static void store_text_db(const std::string &in, const std::string &out);
+static std::vector<std::string> randart_txt_paths();
 static void generate_description_db();
+static void generate_randart_db();
+static void store_text_db(const std::string &in, const std::string &out);
 static DBM *get_dbm(db_id id);
 
 void databaseSystemInit()
@@ -85,6 +92,25 @@ void databaseSystemInit()
             end(1, true, "Failed to open DB: %s", descriptionPath.c_str());
     }
 
+    if (!randartDB)
+    {
+        std::string randartPath = get_savedir_path(RANDART_DB);
+        std::vector<std::string> textPaths = randart_txt_paths();
+
+        // If any of the randart text files are newer then
+        // aggregated randart db, then regenerate the whole db
+        for (int i = 0, size = textPaths.size(); i < size; i++)
+            if (is_newer(textPaths[i], randartPath))
+            {
+                generate_randart_db();
+                break;
+            }
+
+        randartPath.erase(randartPath.length() - 3);
+        if (!(randartDB = openDB(randartPath.c_str())))
+            end(1, true, "Failed to open DB: %s", randartPath.c_str());
+    }
+
     for (unsigned int i = 0; i < MAX_DBID; i++)
     {
         if (singleFileDBs[i].db)
@@ -92,8 +118,14 @@ void databaseSystemInit()
 
         std::string dbPath = get_savedir_path(
             singleFileDBs[i].base_name + ".db");
-        std::string dbText = datafile_path(
-            singleFileDBs[i].base_name + ".txt");
+
+        std::string filename = DATABASE_TXT_DIR;
+        filename += FILE_SEPARATOR;
+        filename += singleFileDBs[i].base_name;
+        filename += ".txt";
+        
+        std::string dbText = datafile_path(filename);
+            
         std::string dbBase = get_savedir_path(
             singleFileDBs[i].base_name);
 
@@ -121,6 +153,7 @@ void databaseSystemShutdown()
     }
     openDBList.clear();
     descriptionDB = NULL;
+    randartDB = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -573,6 +606,47 @@ static void generate_description_db()
     DO_CHMOD_PRIVATE(full_db_path.c_str());
 }
 
+static std::vector<std::string> randart_txt_paths()
+{
+    std::vector<std::string> txt_file_names;
+    std::vector<std::string> paths;
+
+    txt_file_names.push_back("randname");
+    txt_file_names.push_back("rand_wpn"); // mostly weapons
+    txt_file_names.push_back("rand_arm"); // mostly armour
+    txt_file_names.push_back("rand_all"); // jewellery and general
+
+    for (int i = 0, size = txt_file_names.size(); i < size; i++)
+    {
+        std::string name = DATABASE_TXT_DIR;
+        name += FILE_SEPARATOR;
+        name += txt_file_names[i];
+        name += ".txt";
+
+        std::string txt_path = datafile_path(name);
+
+        if (!txt_path.empty())
+            paths.push_back(txt_path);
+    }
+
+    return (paths);
+}
+
+static void generate_randart_db()
+{
+    std::string db_path = get_savedir_path(RANDART_BASE_NAME);
+    std::string full_db_path = get_savedir_path(RANDART_DB);
+
+    std::vector<std::string> txt_paths = randart_txt_paths();
+
+    file_lock lock(get_savedir_path(RANDART_BASE_NAME ".lk"), "wb");
+    unlink( full_db_path.c_str() );
+
+    for (int i = 0, size = txt_paths.size(); i < size; i++)
+        store_text_db(txt_paths[i], db_path);
+    DO_CHMOD_PRIVATE(full_db_path.c_str());
+}
+
 static DBM *get_dbm(db_id id)
 {
     DBM *ret = singleFileDBs[id].db;
@@ -590,7 +664,7 @@ std::string getShoutString(const std::string &monst,
     int num_replacements = 0;
 
     return getRandomizedStr(get_dbm(DB_SHOUT), monst, suffix, 
-        num_replacements); 
+                            num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -600,6 +674,20 @@ std::string getSpeakString(const std::string &monst)
     int num_replacements = 0;
 
     return getRandomizedStr(get_dbm(DB_SPEAK), monst, "", num_replacements); 
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Randname DB specific functions.
+std::string getRandNameString(const std::string &itemtype,
+                              const std::string &suffix)
+{
+    if (!randartDB)
+        return ("");
+        
+    int num_replacements = 0;
+
+    return getRandomizedStr(randartDB, itemtype, suffix,
+                            num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////

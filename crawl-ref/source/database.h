@@ -3,7 +3,7 @@
  *  Crawl
  *
  *  Created by Peter Berger on 4/15/07.
- *  $Id:$
+ *  $Id$
  */
 
 
@@ -60,6 +60,8 @@ std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
 std::string getShoutString(const std::string &monst,
                            const std::string &suffix = "");
 std::string getSpeakString(const std::string &monst);
+std::string getRandNameString(const std::string &itemtype,
+                              const std::string &suffix = "");
 std::string getHelpString(const std::string &topic);
 
 #endif
