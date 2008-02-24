@@ -125,24 +125,47 @@ hi link desSubstSep    Type
 hi link desOrientation Type
 hi link desTransparent Type
 
-hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=brown
-hi desMapCrystalWall guifg=#009040 term=bold gui=bold ctermfg=green
-hi desMapStoneWall guifg=black gui=bold ctermfg=darkgray
-hi desMapMetalWall guifg=#004090 term=bold gui=bold ctermfg=blue
-hi desMapWaxWall guifg=#a0a000 gui=bold ctermfg=yellow
-hi desMapFloor guifg=#008000 ctermfg=lightgray
-hi desMapMonst guifg=red ctermfg=darkred
-hi desMapLava guifg=red gui=bold ctermfg=red
-hi desMapTrap guifg=red gui=bold ctermfg=red
-hi desMapWater guifg=lightblue ctermfg=darkblue
-hi desMapShallow guifg=lightcyan ctermfg=darkcyan
-hi desMapGold guifg=#c09000 ctermfg=yellow
-hi desMapDoor guifg=brown gui=bold ctermfg=black ctermbg=brown
-hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white ctermbg=black
+" It would be really nice if this worked for people who switch bg
+" post-loading, like "normal" highlights do.  Does someone know how?
+if &bg == "dark"
+  hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=white
+  hi desMapCrystalWall guifg=#009040 term=bold gui=bold ctermfg=green
+  hi desMapStoneWall guifg=black gui=bold ctermfg=gray
+  hi desMapMetalWall guifg=#004090 term=bold gui=bold ctermfg=lightblue
+  hi desMapWaxWall guifg=#a0a000 gui=bold ctermfg=yellow
+  hi desMapFloor guifg=#008000 ctermfg=darkgray
+  hi desMapMonst guifg=red ctermfg=red
+  hi desMapLava guifg=red gui=bold ctermfg=darkred
+  hi desMapTrap guifg=red gui=bold ctermfg=darkred
+  hi desMapWater guifg=lightblue ctermfg=darkblue
+  hi desMapShallow guifg=lightcyan ctermfg=darkcyan
+  hi desMapGold guifg=#c09000 ctermfg=yellow
+  hi desMapDoor guifg=brown gui=bold ctermfg=white
+  hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white ctermbg=black
 
-hi desMapValuable guifg=darkgreen gui=bold ctermfg=lightgreen
-hi desMapRune     guifg=orange gui=bold ctermfg=white
-hi desMapOrb      guibg=gold guifg=black ctermfg=white
+  hi desMapValuable guifg=darkgreen gui=bold ctermfg=yellow
+  hi desMapRune     guifg=orange gui=bold ctermfg=magenta
+  hi desMapOrb      guibg=gold guifg=black ctermfg=magenta
+else
+  hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=brown
+  hi desMapCrystalWall guifg=#009040 term=bold gui=bold ctermfg=green
+  hi desMapStoneWall guifg=black gui=bold ctermfg=darkgray
+  hi desMapMetalWall guifg=#004090 term=bold gui=bold ctermfg=blue
+  hi desMapWaxWall guifg=#a0a000 gui=bold ctermfg=yellow
+  hi desMapFloor guifg=#008000 ctermfg=lightgray
+  hi desMapMonst guifg=red ctermfg=darkred
+  hi desMapLava guifg=red gui=bold ctermfg=red
+  hi desMapTrap guifg=red gui=bold ctermfg=red
+  hi desMapWater guifg=lightblue ctermfg=darkblue
+  hi desMapShallow guifg=lightcyan ctermfg=darkcyan
+  hi desMapGold guifg=#c09000 ctermfg=yellow
+  hi desMapDoor guifg=brown gui=bold ctermfg=black ctermbg=brown
+  hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white ctermbg=black
+
+  hi desMapValuable guifg=darkgreen gui=bold ctermfg=lightgreen
+  hi desMapRune     guifg=orange gui=bold ctermfg=white
+  hi desMapOrb      guibg=gold guifg=black ctermfg=white
+endif
 
 syn sync minlines=45
 
