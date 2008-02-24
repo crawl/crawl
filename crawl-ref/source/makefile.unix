@@ -59,7 +59,7 @@ DBH_FILE  := /usr/include/db.h
 NDBM_FILE := /usr/include/ndbm.h
 
 HAVE_DBH  := $(shell [ -f $(DBH_FILE) ] && echo y)
-HAVE_NDBM := $(shell [ -f $(NDBM_FILE) ] && echo y)
+HAVE_NDBM := $(shell [ -f $(NDBM_FILE) -a "`uname`" = "Darwin" ] && echo y)
 
 ifeq ($(strip $(HAVE_DBH)),y)
 ifneq ($(shell grep dbm_open $(DBH_FILE)),)
