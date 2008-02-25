@@ -3538,7 +3538,7 @@ static int affect_player( bolt &beam )
     }
 
     // poisoning
-    if (beam.name.find("poison") != std::string::npos
+    if (beam.name.find("poisoned") != std::string::npos
         && beam.flavour != BEAM_POISON 
         && beam.flavour != BEAM_POISON_ARROW
         && !player_res_poison())
@@ -3719,13 +3719,13 @@ static int affect_monster(bolt &beam, monsters *mon)
                 mpr("You hear a hideous screaming!", MSGCH_SOUND);
             else
                 mpr("The statue screams as its substance crumbles away!",
-                        MSGCH_SOUND);
+                    MSGCH_SOUND);
         }
         else
         {
             if (see_grid( mon->x, mon->y ))
                 mpr("The statue twists and shakes as its substance "
-                        "crumbles away!");
+                    "crumbles away!");
         }
         beam.obvious_effect = true;
         update_hurt_or_helped(beam, mon);

@@ -138,7 +138,7 @@ static std::string replace_name_parts(const std::string name_in,
         name = "of ";
         name += god_name(god_gift, false);
         name += "'s ";
-        name + getRandNameString("divine_esteem");
+        name += getRandNameString("divine_esteem");
     }
     name = replace_all(name, "@player_name@", you.your_name);
 

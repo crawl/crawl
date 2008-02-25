@@ -1428,14 +1428,15 @@ static void describe_feature(int mx, int my, bool oos)
     if (oos && !is_terrain_seen(mx, my))
         return;
 
-    std::string desc = feature_description(mx, my);
+    dungeon_feature_type grid = grd[mx][my];
+    std::string desc = feature_description(grid);
     if (desc.length())
     {
         if (oos)
             desc = "[" + desc + "]";
 
         msg_channel_type channel = MSGCH_EXAMINE;
-        if (oos || grd[mx][my] == DNGN_FLOOR)
+        if (oos || grid == DNGN_FLOOR)
             channel = MSGCH_EXAMINE_FILTER;
 
         mpr(desc.c_str(), channel);
