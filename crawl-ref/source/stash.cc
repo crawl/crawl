@@ -397,7 +397,7 @@ void StashMenu::draw_title()
                                    title->quantity == 1? "" : "s");
         cprintf(")");
         if (can_travel)
-            cprintf("  [ENTER - travel]");
+            cprintf("  [ENTER: travel]");
     }
 }
 
@@ -1396,6 +1396,45 @@ protected:
     }
 };
 
+// helper for search_stashes
+struct compare_by_distance
+{
+    bool operator()(const stash_search_result& lhs,
+                    const stash_search_result& rhs)
+    {
+        if (lhs.player_distance != rhs.player_distance) {
+            // Sort by increasing distance
+            return (lhs.player_distance < rhs.player_distance);
+        } else if (lhs.matches != rhs.matches) {
+            // Then by decreasing number of matches
+            return (lhs.matches > rhs.matches);
+        } else {
+            return false;
+        }
+    }
+};
+
+// helper for search_stashes
+struct compare_by_name
+{
+    bool operator()(const stash_search_result& lhs,
+                    const stash_search_result& rhs)
+    {
+        if (lhs.match != rhs.match) {
+            // Sort by name
+            return (lhs.match < rhs.match);
+        } else if (lhs.player_distance != rhs.player_distance) {
+            // Then sort by increasing distance
+            return (lhs.player_distance < rhs.player_distance);
+        } else if (lhs.matches != rhs.matches) {
+            // Then by decreasing number of matches
+            return (lhs.matches > rhs.matches);
+        } else {
+            return false;
+        }
+    }
+};
+
 void StashTracker::search_stashes()
 {
     char buf[400];
@@ -1483,7 +1522,22 @@ void StashTracker::search_stashes()
         return;
     }
 
-    display_search_results(results);
+    bool sort_by_dist = true;
+    while (true)
+    {
+        const char* sort_style;
+        if (sort_by_dist) {
+            std::sort(results.begin(), results.end(), compare_by_distance());
+            sort_style = "by dist";
+        } else {
+            std::sort(results.begin(), results.end(), compare_by_name());
+            sort_style = "by name";
+        }
+
+        const bool again = display_search_results(results, sort_style);
+        if (!again) break;
+        sort_by_dist = !sort_by_dist;
+    }
 }
 
 void StashTracker::get_matching_stashes(
@@ -1508,20 +1562,23 @@ void StashTracker::get_matching_stashes(
         
         results[i].player_distance = ldist;
     }
-
-    // Sort stashes so that closer stashes come first and stashes on the same
-    // levels with more items come first.
-    std::sort(results.begin(), results.end());
 }
 
 class StashSearchMenu : public Menu
 {
 public:
-    StashSearchMenu() : Menu(), can_travel(true), meta_key(0) { }
+    StashSearchMenu(const char* sort_style_)
+        : Menu(), can_travel(true),
+          request_toggle_sort_method(false),
+          menu_action(ACT_TRAVEL),
+          sort_style(sort_style_)
+    { }
 
 public:
     bool can_travel;
-    int meta_key;
+    bool request_toggle_sort_method;
+    enum action { ACT_TRAVEL, ACT_EXAMINE, ACT_NUM } menu_action;
+    const char* sort_style;
 
 protected:
     bool process_key(int key);
@@ -1534,13 +1591,17 @@ void StashSearchMenu::draw_title()
     {
         cgotoxy(1, 1);
         textcolor(title->colour);
-        cprintf("%d %s%s", title->quantity, title->text.c_str(), 
-                           title->quantity > 1? "es" : "");
+        cprintf("%d %s%s, sorted %s",
+                title->quantity, title->text.c_str(), 
+                title->quantity > 1? "es" : "",
+                sort_style);
 
-        if (meta_key)
-            draw_title_suffix(" (x - examine)", false);
-        else
-            draw_title_suffix(" (x - travel; ? - examine)", false);
+        char buf[200];
+        snprintf(buf, 200, 
+                 "  [a-z: %s  ?: change action  /: change sort]",
+                 menu_action == ACT_TRAVEL ? "travel" : "examine");
+
+        draw_title_suffix(buf, false);
     }
 }
 
@@ -1549,23 +1610,30 @@ bool StashSearchMenu::process_key(int key)
     if (key == '?')
     {
         sel.clear();
-        meta_key  = !meta_key;
+        menu_action = (action)((menu_action+1) % ACT_NUM);
         update_title();
         return true;
+    }
+    else if (key == '/')
+    {
+        request_toggle_sort_method = true;
+        return false;
     }
     
     return Menu::process_key(key);
 }
 
-void StashTracker::display_search_results(
-        std::vector<stash_search_result> &results)
+// Returns true to request redisplay with a different sort method
+bool StashTracker::display_search_results(
+    std::vector<stash_search_result> &results, 
+    const char* sort_style)
 {
     if (results.empty())
-        return;
+        return false;
     
     bool travelable = can_travel_interlevel();
 
-    StashSearchMenu stashmenu;
+    StashSearchMenu stashmenu(sort_style);
     stashmenu.set_tag("stash");
     stashmenu.can_travel = travelable;
     std::string title = "match";
@@ -1603,7 +1671,12 @@ void StashTracker::display_search_results(
     {
         sel = stashmenu.show();
 
-        if (sel.size() == 1 && stashmenu.meta_key)
+        if (stashmenu.request_toggle_sort_method)
+        {
+            return true;
+        }
+
+        if (sel.size() == 1 && stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
         {
             stash_search_result *res = 
                 static_cast<stash_search_result *>(sel[0]->data);
@@ -1625,7 +1698,7 @@ void StashTracker::display_search_results(
                 redraw_screen();
                 const travel_target lp = res->pos;
                 start_translevel_travel(lp);
-                return ;
+                return false;
             }
             continue;
         }
@@ -1633,15 +1706,15 @@ void StashTracker::display_search_results(
     }
 
     redraw_screen();
-    if (sel.size() == 1 && !stashmenu.meta_key)
+    if (sel.size() == 1 && stashmenu.menu_action == StashSearchMenu::ACT_TRAVEL)
     {
         const stash_search_result *res = 
                 static_cast<stash_search_result *>(sel[0]->data);
         const level_pos lp = res->pos;
         start_translevel_travel(lp);
-        return ;
+        return false;
     }
-
+    return false;
 }
 
 // Global
