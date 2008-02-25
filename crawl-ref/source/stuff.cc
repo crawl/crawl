@@ -297,6 +297,31 @@ int random_choose(int first, ...)
     return (chosen);
 }
 
+// Chooses one of the strings passed in at random. The list of strings
+// must be terminated with NULL.
+const char* random_choose_string(const char* first, ...)
+{
+    va_list args;
+    va_start(args, first);
+
+    const char* chosen = first;
+    int count = 1, nargs = 100;
+
+    while (nargs-- > 0)
+    {
+        char* pick = va_arg(args, char*);
+        if (pick == NULL)
+            break;
+        if (one_chance_in(++count))
+            chosen = pick;
+    }
+
+    ASSERT(nargs > 0);
+    
+    va_end(args);
+    return (chosen);
+}
+
 int random_choose_weighted(int weight, int first, ...)
 {
     va_list args;

@@ -37,6 +37,7 @@ bool one_chance_in(int a_million);
 int random2(int randmax);
 int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
+const char* random_choose_string(const char* first, ...);
 int random_choose(int first, ...);
 int random_choose_weighted(int weight, int first, ...);
 unsigned long random_int();
