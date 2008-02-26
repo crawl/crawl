@@ -26,7 +26,6 @@ format.o \
 ghost.o \
 hiscores.o \
 initfile.o \
-insult.o \
 invent.o \
 it_use2.o \
 it_use3.o \
