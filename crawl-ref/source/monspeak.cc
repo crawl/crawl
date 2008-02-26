@@ -27,7 +27,6 @@
 #include "debug.h"
 #include "fight.h"
 #include "ghost.h"
-#include "insult.h"
 #include "itemname.h"
 #include "message.h"
 #include "misc.h"

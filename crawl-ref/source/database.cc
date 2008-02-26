@@ -27,6 +27,7 @@
 db_list openDBList;
 DBM     *descriptionDB;
 DBM     *randartDB;
+DBM     *speakDB;
 
 // shout and speak databases are all generated from a single
 // text file in the data directory and stored as .db files in the
@@ -35,7 +36,6 @@ DBM     *randartDB;
 enum db_id
 {
     DB_SHOUT,
-    DB_SPEAK,
     DB_HELP,
     MAX_DBID
 };
@@ -52,7 +52,6 @@ struct SingleFileDB
 SingleFileDB singleFileDBs[MAX_DBID] = 
 {
     SingleFileDB("shout"),
-    SingleFileDB("speak"),
     SingleFileDB("help")
 };
 
@@ -62,12 +61,16 @@ SingleFileDB singleFileDBs[MAX_DBID] =
 
 #define DATABASE_TXT_DIR  "database"
 #define RANDART_BASE_NAME "randart"
+#define SPEAK_BASE_NAME   "speak"
 #define RANDART_DB        (RANDART_BASE_NAME ".db")
+#define SPEAK_DB          (SPEAK_BASE_NAME ".db")
 
 static std::vector<std::string> description_txt_paths();
 static std::vector<std::string> randart_txt_paths();
+static std::vector<std::string> speak_txt_paths();
 static void generate_description_db();
 static void generate_randart_db();
+static void generate_speak_db();
 static void store_text_db(const std::string &in, const std::string &out);
 static DBM *get_dbm(db_id id);
 
@@ -111,6 +114,25 @@ void databaseSystemInit()
             end(1, true, "Failed to open DB: %s", randartPath.c_str());
     }
 
+    if (!speakDB)
+    {
+        std::string speakPath = get_savedir_path(SPEAK_DB);
+        std::vector<std::string> textPaths = speak_txt_paths();
+
+        // If any of the speech text files are newer then
+        // aggregated speak db, then regenerate the whole db
+        for (int i = 0, size = textPaths.size(); i < size; i++)
+            if (is_newer(textPaths[i], speakPath))
+            {
+                generate_speak_db();
+                break;
+            }
+
+        speakPath.erase(speakPath.length() - 3);
+        if (!(speakDB = openDB(speakPath.c_str())))
+            end(1, true, "Failed to open DB: %s", speakPath.c_str());
+    }
+    
     for (unsigned int i = 0; i < MAX_DBID; i++)
     {
         if (singleFileDBs[i].db)
@@ -154,6 +176,7 @@ void databaseSystemShutdown()
     openDBList.clear();
     descriptionDB = NULL;
     randartDB = NULL;
+    speakDB = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -647,6 +670,46 @@ static void generate_randart_db()
     DO_CHMOD_PRIVATE(full_db_path.c_str());
 }
 
+static std::vector<std::string> speak_txt_paths()
+{
+    std::vector<std::string> txt_file_names;
+    std::vector<std::string> paths;
+
+    txt_file_names.push_back("speak");  // monster speech
+    txt_file_names.push_back("noise");  // noisy weapon speech
+    txt_file_names.push_back("insult"); // imp/demon taunts
+
+    for (int i = 0, size = txt_file_names.size(); i < size; i++)
+    {
+        std::string name = DATABASE_TXT_DIR;
+        name += FILE_SEPARATOR;
+        name += txt_file_names[i];
+        name += ".txt";
+
+        std::string txt_path = datafile_path(name);
+
+        if (!txt_path.empty())
+            paths.push_back(txt_path);
+    }
+
+    return (paths);
+}
+
+static void generate_speak_db()
+{
+    std::string db_path = get_savedir_path(SPEAK_BASE_NAME);
+    std::string full_db_path = get_savedir_path(SPEAK_DB);
+
+    std::vector<std::string> txt_paths = speak_txt_paths();
+
+    file_lock lock(get_savedir_path(SPEAK_BASE_NAME ".lk"), "wb");
+    unlink( full_db_path.c_str() );
+
+    for (int i = 0, size = txt_paths.size(); i < size; i++)
+        store_text_db(txt_paths[i], db_path);
+    DO_CHMOD_PRIVATE(full_db_path.c_str());
+}
+
 static DBM *get_dbm(db_id id)
 {
     DBM *ret = singleFileDBs[id].db;
@@ -671,9 +734,12 @@ std::string getShoutString(const std::string &monst,
 // Speak DB specific functions.
 std::string getSpeakString(const std::string &monst)
 {
+    if (!speakDB)
+        return ("");
+
     int num_replacements = 0;
 
-    return getRandomizedStr(get_dbm(DB_SPEAK), monst, "", num_replacements); 
+    return getRandomizedStr(speakDB, monst, "", num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////

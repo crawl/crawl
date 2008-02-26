@@ -203,6 +203,12 @@ static std::string replace_name_parts(const std::string name_in,
         name = replace_all(name, "@god_name@", god_name(which_god, false));
     }
 
+    // copied from monster speech handling (mon-util.cc):
+    // The proper possessive for a word ending in an "s" is to
+    // put an apostrophe after the "s": "Chris" -> "Chris'",
+    // not "Chris" -> "Chris's".  Stupid English language...
+    name = replace_all(name, "s's", "s'");
+
     return name;
 }
 

@@ -1,154 +1,221 @@
-As of Dungeon Crawl Stone Soup 0.3 the previously hard-coded 
-monster speech has been outsourced by Matthew Cline into 
-shout.txt and speak.txt. This makes changing existing  
-messages, or adding new ones really easy. This file will 
-hopefully help you in this endeavour.
+Overview
+========
+
+As of Dungeon Crawl Stone Soup 0.3 the previously hard-coded monster
+speech has been outsourced by Matthew Cline into shout.txt and
+speak.txt. This makes changing existing messages, or adding new ones
+really easy. This file will hopefully help you in this endeavour.
 
 shout.txt handles message output for monsters noticing you.
-speak.txt handles messages for monsters communicating, and 
-also the messages for weapon noises.
 
-If you take a look through the two files, you'll see that 
-all entries have basically the same structure. Let's have a 
-look at an example:
+speak.txt handles messages for monsters communicating.
 
-###############
-# Friendly imps
-###############
-%%%%
-# Friendly imps are very common so they speak very rarely
-friendly '5'
+insult.txt handles insults thrown at you by imps and demons.
 
-w:9
-__NONE
-
-w:1
-@_friendly_imp_@
-
-%%%%
+noise.txt handles messages randart weapons with the noisy property.
 
 
-Now let's look at this entry's components in more detail:
+A simple example
+================
 
-# Friendly imps
-  A '#' sign at the beginning of a line means that this line 
-  will be ignored, so it is used to place comments.
+If you take a look through the two files, you'll see that all entries
+have basically the same structure: a key, followed by one or more
+values. Here is an example.
+
+  %%%%
+  # Friendly imps are very common so they speak very rarely
+  friendly '5'
+
+  w:1
+  @The_monster@ laughs.
+
+  w:1
+  @_friendly_imp_@
+
+  __NONE
+  %%%%
+
+Let's look at this entry's components in more detail.
+
+  %%%%
+
+Four percentage signs mark beginning and end of a database entry. If
+you forget to place these, you will get buggy monster speech.
+
+  # Friendly imps are very common so they speak very rarely
+
+A '#' sign at the beginning of a line causes it to be ignored; these
+are comment lines.
+
+  friendly '5'
+
+The first non-comment, non-blank line is interpreted as the key of an
+entry. Most keys are hardcoded but there's place for user defined ones
+as well. In this case, the key is "friendly '5'".
+
+'5' refers to the monster glyph, so the speech will not be entirely
+restricted to imps, though they are by far the most common type of
+minor demons.
+
+  w:1
+  @The_monster@ laughs.
+
+The rest of the entry consists of messages, separated by blank
+lines. This is one of them. Each may be prefixed with an optional
+weight ('w:1'). A message will be chosen with a probability of its
+weight out of the sum of weights for its entry. Weight defaults to 10
+if not specified. In this example, this particular message will be
+selected 1 time out of 12.
+
+  @The_monster@ laughs.
+
+This is the message that will be printed. The '@' markers indicate
+variables that will be substituted before printing. This particular
+variable "@The_monster@" is treated specially by the game; the
+substitution will change based on the monster giving the speech. See
+below for more details.
+
+  w:1
+  @_friendly_imp_@
+
+This is another case of a substitution. Here, "_friendly_imp_" is an
+entry in speak.txt. A random line from that entry will be substituted.
+
+  __NONE
+
+This is a special command; it prints no message.  See below for more
+details on special commands.
 
 
-%%%%
-  The four percentage signs mark beginning and end of a 
-  database entry. If you forget to place these, buggy 
-  monster speech will result.
+Keys in detail
+==============
 
+Key lookup is always case-insensitive. The game looks up several
+different keys when finding monster speech.
 
-friendly '5'
-  The first non-comment, non-clear line is interpreted as 
-  the key of an entry. Most keys are hardcoded but there's 
-  place for user defined ones as well. In this case, the key 
-  is "friendly '5'". 
+1. The actual monster name.
+   Examples: "crystal golem", "default confused moth of wrath"
+2. Then the monster glyph, with prefix "cap-" for capital letters.
+   Examples: "default 'cap-J'", "default confused 'k'"
+3. A group description (such as 'insect' or 'humanoid') defined by the
+   monster's body shape (winged, tailed etc). The latter is entirely
+   hardcoded, though.
+   Examples: "default winged insect"
 
-  '5' refers to the monster glyph, so the speech will not be 
-  entirely restricted to imps, though they are by far the 
-  most common type of minor demons.
-  On the whole there are three ways the game tries to look 
-  for keys in the database. First the actual monster name is 
-  used, then the monster glyph (with prefix "cap-" for 
-  capital letters), then a group description (such as insect 
-  or humanoid) defined by the monster's body shape (winged, 
-  tailed etc). The latter is entirely hardcoded, though.
+"friendly" is one of a couple of allowed prefixes, distinguishing the
+speech from "hostile" (default). These prefixes are optional and
+tested in the following order:
 
-  "friendly" is one of a couple of allowed prefixes, 
-  distinguishing the speech from "hostile" (default).
-
-  These prefixes are optional and tested in the following 
-  order: 
-  
   default friendly/hostile fleeing silenced confused monster
 
-  First the database is searched for the whole prefix 
-  string, then, reading from left to right, combinations are
-  tested, beginning at three prefixes and ending at none, at 
-  which time the prefix "default" is used instead. 
+First the database is searched for the whole prefix string, then,
+reading from left to right, combinations are tested, beginning at
+three prefixes and ending at none, at which time the prefix "default"
+is used instead.
 
-  Only keys that match a searching string perfectly 
-  (ignoring upper/lower cases) will be found!
+Only keys that match a searching string perfectly (ignoring case) will
+be used.
 
-  For the last round (shape comparison, e.g. winged 
-  humanoid) occasionally an additional intelligence estimate 
-  ("stupid", "smart") is prefixed to the search string. If 
-  in this last round still nothing has been found, the 
-  monster stays silent.
+For the last round (shape comparison, e.g. winged humanoid)
+occasionally an additional intelligence estimate ("stupid", "smart")
+is prefixed to the search string. 
 
-  For obvious reasons, weapon noises get by without any such
-  prefixes, and the only hardcoded keywords are 
-  "noisy weapon" for weapons with the noises property, and 
-  "singing sword" for (who'd have guessed?) the Singing 
-  Sword.
+If no matching keys are found after all 3 rounds, the monster stays silent.
 
-w:9
-  After a clear line the actual talk begins. You can skew 
-  the probability of a given message with the weight ('w') 
-  tag. A message will be chosen with a probability of its 
-  weight (defaults to 10 if none set) out of the sum of 
-  weights for this entry. In this case, nine times out of 
-  ten a friendly imp will stay silent. 
+For obvious reasons, weapon noises get by without any such prefixes,
+and the only hardcoded keywords are "noisy weapon" for weapons with
+the noises property, and "singing sword" for (who'd have guessed?) the
+Singing Sword.
 
 
-__NONE
-  Aside from "__NONE" there are a few other hardcoded 
-  markers:
+Values in detail
+================
 
-  __NONE : no message
-  __NEXT : try the next combination of attributes
-  __MORE : enforce a "--more--" prompt
-  __YOU_RESIST : "You resist."
-  __NOTHING_HAPPENS : "Nothing appears to happen."
+Spacing
+-------
 
-  In addition, some more are defined in speak.txt and 
-  shout.txt, such as __RESIST_OR_NOTHING, __SHOUT, and 
-  others. For the shouting messages, Crawl looks up the
-  noises a given monster can produce and looks for keys 
-  that match the string, i.e. __SHOUT, __BARK and so on.
+There have to be blank lines between the different messages. If
+messages are placed directly one after another they will be printed as
+a block. This can be useful, e.g. for outputting first a "spell" and
+then its (fake) result.
 
+Note that this does not work for weapon noises. Here only the first
+part of a paragraph before a carriage return is parsed.
 
-@_friendly_imp_@
-  More variables can be defined in the form of @variable@. 
-  The "@_friendly_imp_@" above is a reference to another 
-  entry in the database that has the key "_friendly_imp_" 
-  (without those '@' signs) that actually has imps talking. 
-  Their speech includes messages such as the following.
+The message entries themselves can be longer than a line, though Crawl
+will simply truncate it should it exceed the screen width (assuming 80
+columns or less). The actual message length will usually differ from
+the one defining an entry as parameters can be stripped from the entry
+or replaced by other values, as explained in the following section.
 
+Variables
+---------
 
-VISUAL:@The_monster@ grins impishly at you.
+Values can contain variable references, which look like text
+surrounded by @@. These variables may be defined by entries in
+shout/speak.txt, in which case they are replaced with a random value
+from the entry; or they may have hardcoded expansions defined by the
+game.
 
-VISUAL:@The_monster@ picks up some beetles from the @surface@ and offers them to you.
+Note that if variable replacement is recursive, so be careful to avoid
+infinite loops.
 
+The following variables are hardcoded:
 
-Again, there have to be clear lines between the different 
-messages. If messages are placed directly one after another 
-they will be printed as a block. This can be useful, e.g. 
-for outputting first a "spell" and then it's (fake) result.
+@monster@     : Plain monster name, e.g. "rat" or "Sigmund"
+@a_monster@   : Indefinite article plus monster name,
+                or only the name if it is unique ("Sigmund").
+@the_monster@ : Definite article plus monster name ("the rat"),
+                or a possessive if it is friendly ("your rat"),
+                or only the name if it is unique ("Sigmund").
+@something@   : Like @monster@, with monster name replaced by "something"
+                if the monster is invisible and the player cannot see invis.
+@a_something@ : similar
+@the_something@ : similar
+@player_name@ : Player name.
+@surface@     : Whatever the monster is standing on.
+@feature@     : The monster's square's feature description.
+@pronoun@     : it, she, he, as appropriate
+@possessive@  : its, her, his, as appropriate
+@imp_taunt@   : imp type insults (see insult.txt)
+@demon_taunt@ : demon type insults (see insult.txt)
+@says@        : synonym of 'say' that fits monster's (hardcoded)
+                speech pattern and noise level.
 
-Note that this does not work for weapon noises. Here only 
-the first part of a paragraph before a carriage return is 
-parsed.
+Capitalized forms (@Monster@, @A_something@, @Possessive@, @Pronoun@)
+are expanded with capitalized text.
 
-The message entries themselves can be longer than a line, 
-though Crawl will simply truncate it should it exceed the 
-screen width (assuming 80 columns or less). The actual 
-message length will usually differ from the one defining an 
-entry as parameters can be stripped from the entry or 
-replaced by other values, as explained in the following 
-section.
+Weapon noises are handled differently in that all of the above
+replacements don't hold. Instead you can use @The_weapon@,
+@the_weapon@, @Your_weapon@, @your_weapon@ and @weapon@ which will get
+replaced by "The (weapon name)", "the (weapon name)", "Your (weapon
+name)", "your (weapon name)" and the plain weapon name,
+respectively. Note that the Singing Sword, being unique, cannot be
+referred to by the possessive variants, so they will be replaced with
+one of the definite article ones.
 
-Monster speech can be greatly customized by the use of 
-several variables. This example already includes a few.
+Pre-defined variables in the database include _high_priest_,
+_mercenary_guard_, _wizard_, _hostile_adventurer_, _friendly_imp_,
+_hostile_imp_, and _tormentor_. There are also a few synonyms defined
+at the beginning of speak.txt such as for @ATTACK@, @pointless@,
+@shouts@, @wails@, and others.
 
+Weapon noises also use a number of synonyms which are defined at the
+end of noise.txt.
+ 
+The best way to learn about how variables and other concepts can be
+used is probably to see how it has been done for existing messages.
 
-VISUAL:
-  This optional parameter at the beginning of a string 
-  decides which message channel a string will be passed 
-  through. The list of allowed tags is as follows:
+Channels
+--------
+
+An optional channel name at the beginning of a string causes messages
+to be sent to that channel. For example:
+
+SPELL:@The_monster@ casts a spell.
+WARN:Your equipment suddenly seems to weigh more.
+
+Here are the defined channels:
 
   TALK    :  MSGCH_TALK (Default value.)
   DANGER  :  MSGCH_DANGER
@@ -159,185 +226,110 @@ VISUAL:
   VISUAL  :  MSGCH_TALK_VISUAL
   WARN    :  MSGCH_WARN
 
-  The channels have been assigned different colours and are
-  sometimes treated differently, e.g. any of MSGCH_TALK,
-  MSGCH_SOUND and MSGCH_TALK_VISUAL will never interrupt 
-  resting or travel unless specifically added in the options
-  file.
+The channels have been assigned different colours and are sometimes
+treated differently, e.g. any of MSGCH_TALK, MSGCH_SOUND and
+MSGCH_TALK_VISUAL will never interrupt resting or travel unless
+specifically added in the options file.
 
-  Note that MSGCH_SOUND and MSGCH_TALK get filtered out 
-  when you are silenced. For similar reasons monster speech 
-  of channel SPELL is muted under silence, along with 
-  ENCHANT and WARN, both of which currently only occur in 
-  combination with SPELL. To allow for silent spells along 
-  with fake warnings and enchantments, you can combine these 
-  with VISUAL and enforce output even when silenced.
+Note that MSGCH_SOUND and MSGCH_TALK get filtered out when you are
+silenced. For similar reasons monster speech of channel SPELL is muted
+under silence, along with ENCHANT and WARN, both of which currently
+only occur in combination with SPELL. To allow for silent spells along
+with fake warnings and enchantments, you can combine these with VISUAL
+and enforce output even when silenced.
 
   VISUAL ENCHANT : MSGCH_MONSTER_ENCHANT
   VISUAL SPELL   : MSGCH_MONSTER_SPELL
   VISUAL WARN    : MSGCH_WARN
 
-  Note, though, that these rarely will take effect as 
-  usually the "silenced humanoid" types will take 
-  precedence. In the case of silenced monsters, first the 
-  database is searched for the monster key along with 
-  several prefixes including "silenced", and only if no 
-  message can be found through all iterations of monster 
-  name, glyph and group description, the search will repeat 
-  ignoring the "silenced" prefix and only then these special 
-  VISUAL cases can apply.
+Note, though, that these rarely will take effect as usually the
+"silenced humanoid" types will take precedence. In the case of
+silenced monsters, first the database is searched for the monster key
+along with several prefixes including "silenced", and only if no
+message can be found through all iterations of monster name, glyph and
+group description, the search will repeat ignoring the "silenced"
+prefix and only then these special VISUAL cases can apply.
 
-  For shouts the default is also MSGCH_TALK which is 
-  automatically changed to MSGCH_TALK_VISUAL for monsters 
-  that can't speak (animals, usually), and manually set to 
-  MSGCH_SOUND for all those variants of "You hear a shout!"
+For shouts the default is also MSGCH_TALK which is automatically
+changed to MSGCH_TALK_VISUAL for monsters that can't speak (animals,
+usually), and manually set to MSGCH_SOUND for all those variants of
+"You hear a shout!"
 
-  For weapon noises only a subset of the above is relevant,
-  as anything including VISUAL and the channel keys SPELL 
-  and ENCHANT are considered invalid and will trigger a 
-  default message instead. Again, the default channel is 
-  MSGCH_TALK.
+For weapon noises only a subset of the above is relevant, as anything
+including VISUAL and the channel keys SPELL and ENCHANT are considered
+invalid and will trigger a default message instead. Again, the default
+channel is MSGCH_TALK.
 
-@The_monster@, @surface@
-  Like with @_friendly_imp_@ above, a number of variables 
-  has been defined to allow for greater flexibility. 
-  Whenever the speech code encounters an '@' sign it will 
-  search the database for a variable of that name and 
-  execute the necessary replacement. Note that recursive 
-  replacement of one variable with another is possible, so 
-  try to avoid loops. The remaining variables it was unable 
-  to find in the database are hardcoded and will be replaced 
-  before output. 
-  If you add a new variable make sure to also add a database 
-  entry for it (without those '@' marks around!); otherwise 
-  it won't get replaced and just look weird.
+Special commands and variables
+------------------------------
 
-  A variable that you will see all over the place is 
-  @The_monster@, which is hardcoded and will be replaced by 
-  the monster's name. This is particularly useful for groups 
-  of monsters that share the same speech pattern. Another 
-  variable you can see in this example is @surface@, which 
-  will be replaced by whatever the monster is standing on.
+Messages may also be one of these special commands. These aren't
+variables, so they aren't surrounded by @@. They are not expanded, but
+rather they produce special game behavior.
 
-The following variables are hardcoded:
+  __NONE : no message
+  __NEXT : try the next combination of attributes
+  __MORE : enforce a "--more--" prompt
+  __YOU_RESIST : "You resist."
+  __NOTHING_HAPPENS : "Nothing appears to happen."
 
-@monster@     : replaced by plain monster name, 
-                e.g. "rat" or "Sigmund"
-@Monster@     : as above, but capitalized
-@the_monster@ : replaced by definite article plus 
-                monster name, or only the name if it is
-                unique, e.g. "the rat" or "Sigmund"
-@The_monster@ : as above, but capitalized
-@a_monster@   : replaced by indefinite article plus
-                monster name, if more than one can exist,
-                e.g. "a rat" or (again) "Sigmund"
-@A_monster@   : as above, but capitalized
-
-For friendly monsters a special case takes effect. Instead
-of adding the definite article for @the_xxx@ constructs, 
-"your" or "Your" is used, respecting both capitalization and 
-grammar.
-
-As an alternative there's also @the_something@, 
-@The_something@, @a_something@, @A_something@, @something@ 
-and @Something@, all of which behave like the corresponding 
-monster definitions above but get replaced by "something" 
-and "Something", respectively, should the monster be 
-invisible and the player be unable to see invisible.
-
-But wait, there's more!
-
-@player_name@ : replaced by player name
-
-@surface@ : replaced by whatever the monster stands on
-@feature@ : replaced by the monster's square's feature 
-            description
-
-@pronoun@     : replaced by it, she, he, as appropriate
-@Pronoun@     : replaced by It, She, He, as appropriate
-@possessive@  : replaced by its, her, his, as appropriate
-@Possessive@  : replaced by Its, Her, His, as appropriate
-
-@imp_taunt@   : replaced by hardcoded imp type insults
-@demon_taunt@ : replaced by hardcoded demon type insults
-
-Also, @says@ will get replaced with a synonym of 'say' that 
-fits a monster's (hardcoded) speech pattern and noise level.
-
-Weapon noises are handled differently in that all of the 
-above replacements don't hold. Instead you can use 
-@The_weapon@, @the_weapon@, @Your_weapon@, @your_weapon@ and
-@weapon@ which will get replaced by "The (weapon name)", 
-"the (weapon name)", "Your (weapon name)", "your (weapon 
-name)" and the plain weapon name, respectively. Note that 
-the Singing Sword, being unique, cannot be referred to by 
-the possessive variants, so they will be replaced with one 
-of the definite article ones.
-
-Pre-defined variables in the database include _high_priest_, 
-_mercenary_guard_, _wizard_, _hostile_adventurer_, 
-_friendly_imp_, _hostile_imp_, and _tormentor_. There are 
-also a few synonyms defined at the beginning of speak.txt 
-such as for @ATTACK@, @pointless@, @shouts@, @wails@, and
-others.
-Weapon noises also use a number of synonyms which are 
-defined at the end of speak.txt.
- 
-The best way to learn about how variables and other concepts
-can be used is probably to see how it has been done for 
-existing messages.
+Some special keys are defined in speak.txt and shout.txt, such as
+__RESIST_OR_NOTHING and __SHOUT. These are normal variable expansions,
+and may be used as such. They are given special-looking names because
+Crawl looks up the noises a given monster can produce and looks for
+keys that match the string, i.e. __SHOUT, __BARK and so on.
 
 
-TESTING YOUR CHANGES
-Should you have a version of Stone Soup that has been 
-compiled with the WIZARD mode defined, this could greatly 
-simplify testing. You can check whether this is the case by 
-pressing '&' during the game. If you are told that this is 
-an "unknown command" you are out of luck and might consider 
-compiling the game for yourself. You can download the source 
-code from the Crawl homepage [1]. 
-Read the "INSTALL" file in the main directory for 
-instructions. Should you, after reading the documentation 
-and checking the archives of the Crawl newsgroup [2], still 
-have any questions, ask away! 
+Testing your changes
+====================
 
-If you have WIZARD mode compiled in, you can simply answer 
-"yes" to the safety question resulting from pressing '&', 
-and then test to your heart's content. Pressing '&' followed 
-by a number of other keys will execute wizard mode commands 
-that are all listed in the wizard help menu (press '&?').
+Get a version of Stone Soup that contains WIZARD mode. You can check
+whether this is the case by pressing '&' during the game. If you are
+told that this is an "unknown command" (likely, since WIZARD builds
+are generally not distributed), you will have to compile the game for
+yourself.
 
-In particular, you can create a monster with '&M', and 
-enforce behaviour on a monster by examining it (with 'x', 
-as usual). In wizard mode this offers several new commands 
-such as 'F' (make monster friendly/unfriendly) and 's' 
-(make monster shout). These last two are of particular 
-interest to monster speech designers.
+To build Crawl yourself, download the source code from the Crawl 
+homepage [1] and read the "INSTALL" file in the main directory for
+instructions. Should you still have any questions after reading the
+documentation and checking the archives of the Crawl newsgroup [2],
+ask away!
 
-The Singing Sword and all other hardcoded artefacts can be 
-created with '&|'. The Elemental Staff and the spear of 
-Voo-Doo are examples of noisy weapons.
+If you have WIZARD mode compiled in, you can simply answer "yes" to
+the safety question resulting from pressing '&', and then test to your
+heart's content. Pressing '&' followed by a number of other keys will
+execute wizard mode commands that are all listed in the wizard help
+menu (press '&?').
 
-You can also temporarily increase the likelihood of a given
-message by adding a high weight value before it, e.g. w:500,
-or equally temporarily push it into another channel (e.g. 
-MSGCH_WARN) to make it more noticeable.
+In particular, you can create a monster with '&M', and enforce
+behaviour on a monster by examining it (with 'x', as usual). In wizard
+mode, examining monsters offers several new sub-commands such as 'F'
+(make monster friendly/unfriendly) and 's' (make monster shout). These
+last two are of particular interest to monster speech designers.
 
+The Singing Sword and all other hardcoded artefacts can be created
+with '&|'. The Elemental Staff and the spear of Voo-Doo are examples
+of noisy weapons.
 
-PUBLISHING YOUR ADDITIONS AND CHANGES
-If you feel that your additions really add something to the
-game and would like to make them available to the general 
-public, you can post them (in the form of a diff file, or in 
-plain text) in the newsgroup [2] or as a feature request on 
-sourceforge.net [1].
+You can also temporarily increase the likelihood of a given message by
+adding a high weight value before it, e.g. w:500, or equally
+temporarily push it into another channel (e.g. MSGCH_WARN) to make it
+more noticeable.
 
 
-[1] http://crawl-ref.sourceforge.net
-    http://sourceforge.net/projects/crawl-ref
+Publishing your changes
+=======================
 
-[2] rec.games.roguelike.misc
-Since this newsgroup is being shared with a number of other 
-roguelike games, it is generally considered polite to flag 
-subjects of posts pertaining only to Crawl with "-crawl-" or 
-a similar marker.
+If you feel that your additions add something to the game and would
+like to make them available to the general public, you can post them
+(in the form of a diff file, or in plain text) as a feature request on
+sourceforge.net [1]_ or in the newsgroup [2]_.
 
+.. [1] http://crawl-ref.sourceforge.net
+   http://sourceforge.net/projects/crawl-ref
+
+.. [2] rec.games.roguelike.misc
+   Since this newsgroup is being shared with a number of other 
+   roguelike games, it is generally considered polite to flag 
+   subjects of posts pertaining only to Crawl with "-crawl-" or 
+   a similar marker.

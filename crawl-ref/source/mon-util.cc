@@ -31,12 +31,12 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "database.h"
 #include "debug.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "fight.h"
 #include "ghost.h"
-#include "insult.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -5383,6 +5383,25 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
         maxduration = duration;
 }
 
+static std::string get_species_insult(const std::string type)
+{
+    std::string lookup = "insult ";
+    // get species genus
+    lookup += species_name(you.species, 1, true);
+    lookup += " ";
+    lookup += type;
+                
+    std::string insult = getSpeakString(lowercase(lookup));
+    if (insult.empty()) // species too specific?
+    {
+        lookup = "insult general ";
+        lookup += type;
+        insult = getSpeakString(lookup);
+    }
+
+    return (insult);
+}
+
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
 std::string do_mon_str_replacements(const std::string &in_msg,
@@ -5474,8 +5493,10 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@possessive@",
                       monster->pronoun(PRONOUN_NOCAP_POSSESSIVE));
 
-    msg = replace_all(msg, "@imp_taunt@",   imp_taunt_str());
-    msg = replace_all(msg, "@demon_taunt@", demon_taunt_str());
+    // replace with species specific insults
+    msg = replace_all(msg, "@species_insult_adj1@", get_species_insult("adj1"));
+    msg = replace_all(msg, "@species_insult_adj2@", get_species_insult("adj2"));
+    msg = replace_all(msg, "@species_insult_noun@", get_species_insult("noun"));
 
     static const char * sound_list[] = 
     {
