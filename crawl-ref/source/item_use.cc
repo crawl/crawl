@@ -1442,6 +1442,7 @@ command_type fire_target_behaviour::get_command(int key)
 
     switch (key)
     {
+    case '(':
     case CONTROL('N'):
         find_next_ammo();
         break;
