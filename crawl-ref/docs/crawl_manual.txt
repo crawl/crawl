@@ -420,10 +420,10 @@ available as well, including this manual. You can also read the logbook
 from there by pressing ':'. Note that both level map mode and targeting
 interface have their own help screens; again, press '?'.
 
-If you don't like the standard keyset (either because some keys do not 
-work properly, or because you want to decrease the amount of typing 
-necessary), you can use keymaps and macros. See macro.txt in the Docs 
-directory, or read it from the in-game help menu.
+If you don't like the standard keyset (either because some keys do not
+work properly, or because you want to decrease the amount of typing
+necessary), you can use keymaps and macros. See crawl_macro.txt in the
+Docs directory, or read it from the in-game help menu.
 
 
 --------------------------------------------------------------------------------

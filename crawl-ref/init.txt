@@ -302,7 +302,7 @@ show_items = !?/%=([)X}+\_.
 #
 # See crawl_options.txt for the options
 # cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any, 
-# feature, mon_glyph
+# feature, mon_glyph, read_options
 
 
 ##### 6-b	DOS and Windows #######################

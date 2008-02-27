@@ -3764,17 +3764,31 @@ static bool initialise(void)
     burden_change();
     make_hungry(0,true);
 
-    you.redraw_strength = true;
+    you.redraw_strength     = true;
     you.redraw_intelligence = true;
-    you.redraw_dexterity = true;
+    you.redraw_dexterity    = true;
     you.redraw_armour_class = true;
-    you.redraw_evasion = true;
-    you.redraw_experience = true;
-    you.redraw_gold = true;
-    you.wield_change = true;
-    you.quiver_change = true;
+    you.redraw_evasion      = true;
+    you.redraw_experience   = true;
+    you.redraw_gold         = true;
+    you.wield_change        = true;
+    you.quiver_change       = true;
 
     you.start_time = time( NULL );      // start timer on session
+
+#ifdef CLUA_BINDINGS
+    clua.runhook("chk_startgame", "b", newc);
+    std::string yname = you.your_name;
+    read_init_file(true);
+    Options.fixup_options();
+    strncpy(you.your_name, yname.c_str(), kNameLen);
+    you.your_name[kNameLen - 1] = 0;
+
+    // In case Lua changed the character set.
+    init_char_table(Options.char_set);
+    init_feature_table();
+    init_monster_symbols();
+#endif
 
     draw_border();
     new_level();
@@ -3792,20 +3806,6 @@ static bool initialise(void)
         // For a new game, wipe out monsters in LOS.
         zap_los_monsters();
     }
-
-#ifdef CLUA_BINDINGS
-    clua.runhook("chk_startgame", "b", newc);
-    std::string yname = you.your_name;
-    read_init_file(true);
-    Options.fixup_options();
-    strncpy(you.your_name, yname.c_str(), kNameLen);
-    you.your_name[kNameLen - 1] = 0;
-
-    // In case Lua changed the character set.
-    init_char_table(Options.char_set);
-    init_feature_table();
-    init_monster_symbols();
-#endif
 
     set_cursor_enabled(false);
     viewwindow(1, false);   // This just puts the view up for the first turn.

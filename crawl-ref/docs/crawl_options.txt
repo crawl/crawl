@@ -94,10 +94,13 @@ The contents of this text are:
                 cset_ibm, cset_dec, cset_unicode, feature, mon_glyph
 6-b     DOS and Windows.
                 dos_use_background_intensity
-6-c     Unix
+6-c     Unix.
                 background, use_fake_cursor
 
 7-  Inline Lua.
+7-a     Executing lua.
+7-b     Conditional options.
+7-c     Including external files.
 
 --------------------------------------------------------------------------------
 
@@ -1241,8 +1244,8 @@ flush.message = false
            command -- whenever the game is about to get the next command
            message -- whenever the game outputs a non-mute message 
 
-4-o     Tiles Options
----------------------
+4-o     Tiles Options.
+----------------------
 In non-tile games the tile options are ignored.
 
 show_items = <glyphs>
@@ -1628,8 +1631,8 @@ dos_use_background_intensity = false
         characters (and setting this option to false may be advisable to
         preserve your sanity in such cases).
 
-6-c     Unix
-------------
+6-c     Unix.
+-------------
 
 background = black
         Sets the default background colour by name (defaults to BLACK). 
@@ -1644,20 +1647,28 @@ use_fake_cursor = false
         darkgrey/black squares.
 
 
-7-  Inline Lua
-==============
+7-  Inline Lua.
+===============
 
-Lua code can be used directly in your init.txt/.crawlrc. You can use Lua
-to selectively include parts of your init.txt (based on character type, 
-for instance) using this syntax:
+7-a     Executing lua.
+----------------------
 
-< Lua code >
-or
-<
-Lua code
->
-or
-: Lua code till end of line
+Lua code can be used directly in your init.txt/.crawlrc. You can
+execute Lua code using the following syntax.
+
+: Single line of lua code
+
+< Possibly multi-line
+  Lua code >
+
+{ Possibly multi-line 
+  Lua code }
+
+In the second and third cases, the restriction is that the delimiter
+characters appear at the beginning and end of a line, respectively.
+The difference between the <> and {} is when the code gets executed.
+Code {}, it is executed right away.  Other Lua code is executed only 
+after the entire init file is read in.
 
 Examples:
 
@@ -1665,21 +1676,41 @@ Examples:
 : crawl.mpr("Hello " .. you.name())
 
 < 
-# Another welcome message
+-- Another welcome message (lua code uses lua comments)
 crawl.mpr("Hi there")
 >
 
-# Controlling visibility of options:
+{
+function ch_autopickup(it) [ ... body omitted ... ] end
+}
+
+7-b     Conditional options.
+----------------------------
+
+You can use Lua to selectively include parts of your init.txt (based
+on character type, for instance) using the same syntax.
+
+Examples:
+
 : if you.race() == "Mummy" then
 autopickup = $?+"/
 : else
 autopickup = $?+"/!%
 : end
 
-   or 
-
 : if you.race() == "Hill Orc" then
 priest = Beogh
 : else
 priest = Yredelemnul
 : end
+
+7-c     Including external files.
+---------------------------------
+
+You can use Lua to include options from other files. This is actually
+just a particularly useful way to use the previously discussed features.
+
+Example:
+
+# Set the monster glyphs back to the way they were in 0.3.4
+: crawl.read_options('docs/monsters_034.rc')

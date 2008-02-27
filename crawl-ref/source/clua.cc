@@ -1774,6 +1774,27 @@ static int crawl_setopt(lua_State *ls)
     return (0);
 }
 
+static int crawl_read_options(lua_State *ls)
+{
+    if (!lua_isstring(ls, 1))
+        return (0);
+    
+    const char* filename = lua_tostring(ls, 1);
+    FILE* f = fopen( filename, "r" );
+    if (f)
+    {
+        FileLineInput fl(f);
+        Options.read_options(fl, true);
+        fclose(f);
+    }
+    else
+    {
+        mprf(MSGCH_WARN, "Warning: could not read options file '%s'", filename);
+    }
+
+    return (0);
+}
+
 static int crawl_bindkey(lua_State *ls)
 {
     const char *s = NULL;
@@ -2008,6 +2029,7 @@ static const struct luaL_reg crawl_lib[] =
     { "runmacro",       crawl_runmacro },
     { "bindkey",        crawl_bindkey },
     { "setopt",         crawl_setopt },
+    { "read_options",   crawl_read_options },
     { "msgch_num",      crawl_msgch_num },
     { "msgch_name",     crawl_msgch_name },
 
