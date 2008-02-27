@@ -2056,8 +2056,8 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         switch (menv[mon].type)
         {
-        case MONS_ICE_STATUE:
-        case MONS_ICE_BEAST: // blast of ice fragments
+        case MONS_ICE_STATUE:           // blast of ice fragments
+        case MONS_ICE_BEAST:
         case MONS_SIMULACRUM_SMALL:
         case MONS_SIMULACRUM_LARGE:
             explode = true;
@@ -2069,9 +2069,11 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
                 blast.damage.num += 1;
             break;
 
-        case MONS_FLYING_SKULL:
+        case MONS_FLYING_SKULL:         // blast of bone
         case MONS_SKELETON_SMALL:
-        case MONS_SKELETON_LARGE:       // blast of bone
+        case MONS_SKELETON_LARGE:
+        case MONS_SKELETAL_DRAGON:
+        case MONS_SKELETAL_WARRIOR:
             explode = true;
 
             mprf("The %s explodes into sharp fragments of bone!",
