@@ -1364,7 +1364,7 @@ int linebreak_string( std::string& s, int wrapcol, int maxcol )
 int linebreak_string2( std::string& s, int maxcol )
 {
     size_t loc = 0;
-    int xpos = 0, spacepos = 0;
+    int xpos = 0, spaceloc = 0;
     int breakcount = 0;
     while ( loc < s.size() )
     {
@@ -1385,32 +1385,39 @@ int linebreak_string2( std::string& s, int maxcol )
         }
         else
         {
-            // user-forced newline
+            // user-forced newline, or one we just stuffed in
             if ( s[loc] == '\n' )
-                xpos = 0;
-            // hard linebreak
-            else if ( xpos >= maxcol )
             {
-                if (spacepos >= xpos-maxcol)
+                xpos = 0;
+                spaceloc = 0;
+                ++loc;
+                continue;
+            }
+
+            // force a wrap?
+            if ( xpos >= maxcol )
+            {
+                if (spaceloc)
                 {
-                    loc = spacepos;
+                    loc = spaceloc;
                     s.replace(loc, 1, "\n");
                 }
                 else
+                {
                     s.insert(loc, "\n");
-                xpos = 0;
+                }
                 ++breakcount;
+                // reset pointers when we come around and see the \n
+                continue;
             }
-            // soft linebreak
-            else if ( s[loc] == ' ' && xpos > 0)
-            {
-                spacepos = loc;
-                ++xpos;
-            }
-            // bog-standard
-            else
-                ++xpos;
 
+            // save possible linebreak location
+            if ( s[loc] == ' ' && xpos > 0)
+            {
+                spaceloc = loc;
+            }
+
+            ++xpos;
             ++loc;
         }
     }
