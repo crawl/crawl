@@ -459,7 +459,7 @@ static void get_symbol( int x, int y,
 }
 
 void get_item_symbol(unsigned int object, unsigned *ch,
-                        unsigned short *colour)
+                     unsigned short *colour)
 {
     if (object < NUM_FEATURES)
     {
@@ -3728,7 +3728,7 @@ void init_feature_table( void )
 
         case DNGN_ORCISH_IDOL:
             Feature[i].dchar = DCHAR_STATUE;
-            Feature[i].colour = DARKGREY;
+            Feature[i].colour = RED; // plain Orc colour
             break;
 
         case DNGN_WAX_WALL:
@@ -3739,7 +3739,7 @@ void init_feature_table( void )
 
         case DNGN_GRANITE_STATUE:
             Feature[i].dchar = DCHAR_STATUE;
-            Feature[i].colour = LIGHTGREY;
+            Feature[i].colour = DARKGREY;
             break;
 
         case DNGN_LAVA:

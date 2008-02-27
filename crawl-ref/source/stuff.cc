@@ -1064,7 +1064,8 @@ int element_colour( int element, bool no_random )
         break;
 
     case EC_BEOGH:
-        ret = (tmp_rand < 60) ? LIGHTRED : BROWN;
+        ret = (tmp_rand < 60) ? RED    // plain Orc (+ orcish idol) colour
+                              : BROWN; // Orcish mines wall colour
         break;
 
     case EC_CRYSTAL:
@@ -1169,8 +1170,8 @@ int element_colour( int element, bool no_random )
         ret = 1 + random2(15);              // always random
         break;
 
-    case EC_FLOOR: // should alredy be handled 
-    case EC_ROCK:  // should alredy be handled 
+    case EC_FLOOR: // should already be handled
+    case EC_ROCK:  // should already be handled
     default:
         break;
     }

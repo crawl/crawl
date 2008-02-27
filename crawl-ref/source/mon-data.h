@@ -148,7 +148,7 @@
 
 // real monsters begin here {dlb}:
 {
-    MONS_GIANT_ANT, 'a', DARKGREY, "giant ant",
+    MONS_GIANT_ANT, 'a', RED, "giant ant",
     M_NO_FLAGS,
     MR_VUL_POISON,
     700, 10, MONS_GIANT_ANT, MONS_GIANT_ANT, MH_NATURAL, -3,
@@ -159,7 +159,7 @@
 },
 
 {
-    MONS_GIANT_BAT, 'b', DARKGREY, "giant bat",
+    MONS_GIANT_BAT, 'b', LIGHTGREY, "giant bat",
     M_FLIES | M_SENSE_INVIS | M_WARM_BLOOD,
     MR_NO_FLAGS,
     150, 4, MONS_GIANT_BAT, MONS_GIANT_BAT, MH_NATURAL, -1,
@@ -225,7 +225,7 @@
 },
 
 {
-    MONS_HOUND, 'h', BROWN, "hound",
+    MONS_HOUND, 'h', YELLOW, "hound",
     M_SENSE_INVIS | M_WARM_BLOOD,
     MR_NO_FLAGS,
     300, 10, MONS_HOUND, MONS_HOUND, MH_NATURAL, -3,
@@ -248,7 +248,7 @@
 },
 
 {
-    MONS_JACKAL, 'j', YELLOW, "jackal",
+    MONS_JACKAL, 'h', BROWN, "jackal",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     200, 10, MONS_HOUND, MONS_JACKAL, MH_NATURAL, -1,
@@ -270,7 +270,7 @@
 },
 
 {
-    MONS_KILLER_BEE_LARVA, 'w', LIGHTGREY, "killer bee larva",
+    MONS_KILLER_BEE_LARVA, 'w', YELLOW, "killer bee larva",
     M_NO_SKELETON,
     MR_VUL_POISON,
     150, 5, MONS_KILLER_BEE_LARVA, MONS_KILLER_BEE_LARVA, MH_NATURAL, -3,
@@ -281,7 +281,7 @@
 },
 
 {
-    MONS_MANTICORE, 'm', BROWN, "manticore",
+    MONS_MANTICORE, 'H', RED, "manticore",
     M_WARM_BLOOD | M_SPECIAL_ABILITY,
     MR_NO_FLAGS,
     1800, 10, MONS_MANTICORE, MONS_MANTICORE, MH_NATURAL, -3,
@@ -293,7 +293,7 @@
 
 // this thing doesn't have nr. 13 for nothing, has it? ($pellbinder)
 {
-    MONS_NECROPHAGE, 'n', DARKGREY, "necrophage",
+    MONS_NECROPHAGE, 'n', LIGHTGREY, "necrophage",
     M_EVIL,
     MR_RES_POISON | MR_RES_COLD,
     500, 10, MONS_GHOUL, MONS_NECROPHAGE, MH_UNDEAD, -5,
@@ -304,7 +304,7 @@
 },
 
 {
-    MONS_ORC, 'o', LIGHTRED, "orc",
+    MONS_ORC, 'o', RED, "orc",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     600, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -3,
@@ -328,7 +328,7 @@
 },
 
 {
-    MONS_QUASIT, 'q', LIGHTGREY, "quasit",
+    MONS_QUASIT, '5', LIGHTGREY, "quasit",
     M_EVIL,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD,
     0, 10, MONS_QUASIT, MONS_QUASIT, MH_DEMONIC, 5,
@@ -350,7 +350,7 @@
 },
 
 {
-    MONS_SCORPION, 's', DARKGREY, "scorpion",
+    MONS_SCORPION, 's', LIGHTGREY, "scorpion",
     M_NO_FLAGS,
     MR_VUL_POISON,
     500, 10, MONS_SCORPION, MONS_SCORPION, MH_NATURAL, -3,
@@ -456,7 +456,7 @@
 },
 
 {
-    MONS_GIANT_BEETLE, 'B', DARKGREY, "giant beetle",
+    MONS_GIANT_BEETLE, 'B', BLUE, "giant beetle",
     M_NO_FLAGS,
     MR_VUL_POISON,
     1000, 10, MONS_GIANT_BEETLE, MONS_GIANT_BEETLE, MH_NATURAL, -3,
@@ -467,7 +467,7 @@
 },
 
 {
-    MONS_CYCLOPS, 'C', BROWN, "cyclops",
+    MONS_CYCLOPS, 'C', YELLOW, "cyclops",
     M_WARM_BLOOD | M_EVIL,
     MR_NO_FLAGS,
     2500, 10, MONS_HILL_GIANT, MONS_CYCLOPS, MH_NATURAL, -3,
@@ -568,7 +568,7 @@
 },
 
 {
-    MONS_LICH, 'L', WHITE, "lich",
+    MONS_LICH, 'L', LIGHTGREY, "lich",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_EVIL,
     MR_RES_POISON | mrd(MR_RES_COLD, 2) | MR_RES_ELEC,
     0, 16, MONS_LICH, MONS_LICH, MH_UNDEAD, -11,
@@ -579,7 +579,7 @@
 },
 
 {
-    MONS_MUMMY, 'M', WHITE, "mummy",
+    MONS_MUMMY, 'M', LIGHTGREY, "mummy",
     M_EVIL,
     MR_RES_POISON | MR_VUL_FIRE | MR_RES_COLD,
     0, 10, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, -5,
@@ -645,7 +645,7 @@
 },
 
 {
-    MONS_SNAKE, 'S', GREEN, "snake",
+    MONS_SNAKE, 'S', LIGHTGREEN, "snake",
     M_COLD_BLOOD | M_AMPHIBIOUS,
     MR_NO_FLAGS,
     200, 10, MONS_SNAKE, MONS_SNAKE, MH_NATURAL, -3,
@@ -689,7 +689,7 @@
 },
 
 {
-    MONS_WRAITH, 'W', DARKGREY, "wraith",
+    MONS_WRAITH, 'W', WHITE, "wraith",
     M_LEVITATE | M_SEE_INVIS | M_EVIL,
     MR_RES_POISON | MR_RES_COLD,
     0, 11, MONS_WRAITH, MONS_WRAITH, MH_UNDEAD, -7,
@@ -735,7 +735,7 @@
 },
 
 {
-    MONS_ORC_WARRIOR, 'o', YELLOW, "orc warrior",
+    MONS_ORC_WARRIOR, 'o', LIGHTRED, "orc warrior",
     M_FIGHTER | M_WARM_BLOOD,
     MR_NO_FLAGS,
     0, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -3,
@@ -768,7 +768,7 @@
 },
 
 {
-    MONS_ORC_KNIGHT, 'o', LIGHTCYAN, "orc knight",
+    MONS_ORC_KNIGHT, 'o', CYAN, "orc knight",
     M_FIGHTER | M_WARM_BLOOD,
     MR_NO_FLAGS,
     0, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -3,
@@ -806,7 +806,7 @@
 },
 
 {
-    MONS_BIG_KOBOLD, 'K', RED, "big kobold",
+    MONS_BIG_KOBOLD, 'K', YELLOW, "big kobold",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     0, 10, MONS_KOBOLD, MONS_BIG_KOBOLD, MH_NATURAL, -3,
@@ -971,7 +971,7 @@
 },
 
 {
-    MONS_HELL_HOUND, 'h', DARKGREY, "hell hound",
+    MONS_HELL_HOUND, 'h', LIGHTCYAN, "hell hound",
     M_SENSE_INVIS | M_EVIL | M_SPECIAL_ABILITY,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 10, MONS_HOUND, MONS_HELL_HOUND, MH_DEMONIC, -3,
@@ -982,7 +982,7 @@
 },
 
 {
-    MONS_MINOTAUR, 'm', LIGHTRED, "minotaur",
+    MONS_MINOTAUR, 't', RED, "minotaur",
     M_FIGHTER | M_WARM_BLOOD,
     MR_NO_FLAGS,
     1500, 10, MONS_MINOTAUR, MONS_MINOTAUR, MH_NATURAL, -3,
@@ -1093,7 +1093,7 @@
 },
 
 {
-    MONS_SOUL_EATER, '2', DARKGREY, "soul eater",
+    MONS_SOUL_EATER, '2', MAGENTA, "soul eater",
     M_LEVITATE | M_SEE_INVIS | M_EVIL,
     MR_RES_POISON | MR_RES_COLD,
     0, 12, MONS_SOUL_EATER, MONS_SOUL_EATER, MH_DEMONIC, -10,
@@ -1193,7 +1193,7 @@
 },
 
 {
-    MONS_STEAM_DRAGON, 'D', LIGHTGREY, "steam dragon",
+    MONS_STEAM_DRAGON, 'D', BLUE, "steam dragon",
     M_SPELLCASTER | M_FLIES,
     MR_RES_STEAM,
     1000, 10, MONS_DRAGON, MONS_STEAM_DRAGON, MH_NATURAL, -3,
@@ -1215,7 +1215,7 @@
 },
 
 {
-    MONS_ORC_SORCERER, 'o', DARKGREY, "orc sorcerer",
+    MONS_ORC_SORCERER, 'o', LIGHTMAGENTA, "orc sorcerer",
     M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_ACTUAL_SPELLS
         | M_WARM_BLOOD | M_EVIL,
     MR_RES_FIRE,
@@ -1295,7 +1295,7 @@
 },
 
 {
-    MONS_NECROMANCER, '@', DARKGREY, "necromancer",
+    MONS_NECROMANCER, '@', WHITE, "necromancer",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_EVIL,
     MR_NO_FLAGS,
     550, 10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -4,
@@ -1317,7 +1317,7 @@
 },
 
 {
-    MONS_ORC_PRIEST, 'o', LIGHTGREEN, "orc priest",
+    MONS_ORC_PRIEST, 'o', GREEN, "orc priest",
     M_SPELLCASTER | M_PRIEST | M_WARM_BLOOD | M_EVIL,
     MR_NO_FLAGS,
     600, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -4,
@@ -1328,7 +1328,7 @@
 },
 
 {
-    MONS_ORC_HIGH_PRIEST, 'o', GREEN, "orc high priest",
+    MONS_ORC_HIGH_PRIEST, 'o', LIGHTGREEN, "orc high priest",
     M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_PRIEST | M_WARM_BLOOD | M_EVIL,
       MR_RES_HELLFIRE,
       600, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -4,
@@ -1410,7 +1410,7 @@
 },
 
 {
-    MONS_CRYSTAL_GOLEM, '8', WHITE, "crystal golem",
+    MONS_CRYSTAL_GOLEM, '8', GREEN, "crystal golem",
     M_SEE_INVIS | M_SPEAKS,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     0, 10, MONS_CLAY_GOLEM, MONS_CRYSTAL_GOLEM, MH_NONLIVING, MAG_IMMUNE,
@@ -1421,7 +1421,7 @@
 },
 
 {
-    MONS_TOENAIL_GOLEM, '8', LIGHTGREY, "toenail golem",
+    MONS_TOENAIL_GOLEM, '8', RED, "toenail golem",
     M_NO_FLAGS,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     0, 10, MONS_CLAY_GOLEM, MONS_TOENAIL_GOLEM, MH_NONLIVING, MAG_IMMUNE,
@@ -1432,7 +1432,7 @@
 },
 
 {
-    MONS_MOTTLED_DRAGON, 'D', MAGENTA, "mottled dragon",
+    MONS_MOTTLED_DRAGON, 'D', LIGHTMAGENTA, "mottled dragon",
     M_SPELLCASTER | M_FLIES,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_STICKY_FLAME,
     1100, 10, MONS_DRAGON, MONS_MOTTLED_DRAGON, MH_NATURAL, -3,
@@ -1489,7 +1489,7 @@
 },
 
 {
-    MONS_SHADOW_FIEND, '1', DARKGREY, "Shadow Fiend",
+    MONS_SHADOW_FIEND, '1', MAGENTA, "Shadow Fiend",
     M_SPELLCASTER | M_LEVITATE | M_SEE_INVIS | M_EVIL,
     MR_RES_POISON | mrd(MR_RES_COLD, 2) | MR_RES_ELEC,
     0, 10, MONS_FIEND, MONS_SHADOW_FIEND, MH_DEMONIC, -13,
@@ -1555,7 +1555,7 @@
 },
 
 {
-    MONS_YAKTAUR, 'c', LIGHTRED, "yaktaur",
+    MONS_YAKTAUR, 'c', RED, "yaktaur",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     2000, 10, MONS_YAKTAUR, MONS_YAKTAUR, MH_NATURAL, -3,
@@ -1566,7 +1566,7 @@
 },
 
 {
-    MONS_DEATH_YAK, 'Y', DARKGREY, "death yak",
+    MONS_DEATH_YAK, 'Y', YELLOW, "death yak",
     M_WARM_BLOOD | M_EVIL,
     MR_NO_FLAGS,
     1500, 10, MONS_YAK, MONS_DEATH_YAK, MH_NATURAL, -5,
@@ -1665,7 +1665,7 @@
 },
 
 {
-    MONS_SPINY_WORM, 'w', DARKGREY, "spiny worm",
+    MONS_SPINY_WORM, 'w', LIGHTGREEN, "spiny worm",
     M_NO_FLAGS,
     MR_VUL_POISON | MR_RES_ACID,
     1300, 13, MONS_WORM, MONS_SPINY_WORM, MH_NATURAL, -3,
@@ -1713,7 +1713,7 @@
 // 147 - dummy monster, used for corpses etc.
 //mv: have to exist because it's (and should be) valid polymorph target.
 {
-    MONS_ELF, 'e', DARKGREY, "elf",
+    MONS_ELF, 'e', RED, "elf",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -3,
@@ -1726,8 +1726,10 @@
 // Used to be "lindworm" and a GREEN 'l'...  I'm hoping that by 
 // making it a 'd' and using an alternate spelling people will 
 // more intuitively know that this isn't a regular lizard. -- bwr
+// Changed back to 'l' for differentiation as the 'd' glyph is
+// packed with draconians already, and a lightcyan l is unique -- jpeg, Feb 08
 {
-    MONS_LINDWURM, 'd', LIGHTGREEN, "lindwurm",
+    MONS_LINDWURM, 'l', LIGHTCYAN, "lindwurm",
     M_SPECIAL_ABILITY,
     MR_NO_FLAGS,
     1000, 11, MONS_DRAGON, MONS_LINDWURM, MH_NATURAL, -3,
@@ -1738,7 +1740,7 @@
 },
 
 {
-    MONS_ELEPHANT_SLUG, 'm', LIGHTGREY, "elephant slug",
+    MONS_ELEPHANT_SLUG, 'j', LIGHTGREY, "elephant slug",
     M_NO_SKELETON,
     MR_VUL_POISON,
     1500, 10, MONS_GIANT_SLUG, MONS_ELEPHANT_SLUG, MH_NATURAL, -3,
@@ -1793,7 +1795,7 @@
 },
 
 {
-    MONS_BLACK_SNAKE, 'S', DARKGREY, "black snake",
+    MONS_BLACK_SNAKE, 'S', BLUE, "black snake",
     M_COLD_BLOOD,
     MR_RES_POISON,
     500, 12, MONS_SNAKE, MONS_BLACK_SNAKE, MH_NATURAL, -3,
@@ -1826,7 +1828,7 @@
 },
 
 {
-    MONS_HOG, 'h', LIGHTRED, "hog",
+    MONS_HOG, 'h', RED, "hog",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     700, 10, MONS_HOG, MONS_HOG, MH_NATURAL, -3,
@@ -1837,7 +1839,7 @@
 },
 
 {
-    MONS_GIANT_MOSQUITO, 'y', DARKGREY, "giant mosquito",
+    MONS_GIANT_MOSQUITO, 'y', WHITE, "giant mosquito",
     M_FLIES,
     MR_VUL_POISON,
     100, 10, MONS_GIANT_MOSQUITO, MONS_GIANT_MOSQUITO, MH_NATURAL, -3,
@@ -1914,7 +1916,7 @@
 },
 
 {
-    MONS_SHADOW_DRAGON, 'D', DARKGREY, "shadow dragon",
+    MONS_SHADOW_DRAGON, 'D', MAGENTA, "shadow dragon",
     M_SPELLCASTER | M_FLIES | M_SEE_INVIS | M_EVIL,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     2000, 12, MONS_DRAGON, MONS_SHADOW_DRAGON, MH_NATURAL, -5,
@@ -1947,7 +1949,7 @@
 },
 
 {
-    MONS_DEEP_TROLL, 'T', DARKGREY, "deep troll",
+    MONS_DEEP_TROLL, 'T', YELLOW, "deep troll",
     M_WARM_BLOOD | M_SENSE_INVIS | M_EVIL,
     MR_NO_FLAGS,
     1500, 12, MONS_TROLL, MONS_DEEP_TROLL, MH_NATURAL, -3,
@@ -2002,7 +2004,7 @@
 },
 
 {
-    MONS_DEATH_DRAKE, 'l', DARKGREY, "death drake",
+    MONS_DEATH_DRAKE, 'l', LIGHTGREY, "death drake",
     M_SPELLCASTER | M_FLIES | M_EVIL,
     MR_RES_POISON,
     900, 11, MONS_DRAGON, MONS_DEATH_DRAKE, MH_NATURAL, -3,
@@ -2035,7 +2037,7 @@
 },
 
 {
-    MONS_QUEEN_ANT, 'Q', DARKGREY, "queen ant",
+    MONS_QUEEN_ANT, 'Q', LIGHTGREY, "queen ant",
     M_NO_FLAGS,
     MR_VUL_POISON,
     1200, 10, MONS_GIANT_ANT, MONS_QUEEN_ANT, MH_NATURAL, -3,
@@ -2112,7 +2114,7 @@
 },
 
 {
-    MONS_SMALL_SNAKE, 'S', LIGHTGREEN, "small snake",
+    MONS_SMALL_SNAKE, 'S', GREEN, "small snake",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
     100, 13, MONS_SNAKE, MONS_SMALL_SNAKE, MH_NATURAL, -1,
@@ -2178,7 +2180,7 @@
 },
 
 {
-    MONS_NEQOXEC, '3', MAGENTA, "neqoxec",
+    MONS_NEQOXEC, '3', LIGHTMAGENTA, "neqoxec",
     M_SPELLCASTER | M_LEVITATE | M_EVIL,
     MR_RES_POISON,
     0, 12, MONS_NEQOXEC, MONS_NEQOXEC, MH_DEMONIC, -6,
@@ -2288,7 +2290,7 @@
 },
 
 {
-    MONS_DEMONIC_CRAWLER, '3', DARKGREY, "demonic crawler",
+    MONS_DEMONIC_CRAWLER, '3', GREEN, "demonic crawler",
     M_SEE_INVIS | M_EVIL,
     MR_RES_ELEC | MR_RES_POISON | MR_RES_COLD | MR_RES_FIRE,
     0, 12, MONS_DEMONIC_CRAWLER, MONS_DEMONIC_CRAWLER, MH_DEMONIC, -6,
@@ -2310,7 +2312,7 @@
 },
 
 {
-    MONS_SHADOW_IMP, '5', DARKGREY, "shadow imp",
+    MONS_SHADOW_IMP, '5', MAGENTA, "shadow imp",
     M_SPELLCASTER | M_FLIES | M_SPEAKS | M_EVIL,
     mrd(MR_RES_COLD, 2) | MR_RES_POISON,
     0, 11, MONS_IMP, MONS_SHADOW_IMP, MH_DEMONIC, -3,
@@ -2321,7 +2323,7 @@
 },
 
 {
-    MONS_SHADOW_DEMON, '3', DARKGREY, "shadow demon",
+    MONS_SHADOW_DEMON, '3', MAGENTA, "shadow demon",
     M_SEE_INVIS | M_INVIS | M_EVIL,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 12, MONS_SHADOW_DEMON, MONS_SHADOW_DEMON, MH_DEMONIC, -7,
@@ -2365,7 +2367,7 @@
 },
 
 {
-    MONS_GIANT_SLUG, 'm', GREEN, "giant slug",
+    MONS_GIANT_SLUG, 'j', GREEN, "giant slug",
     M_NO_SKELETON | M_AMPHIBIOUS,
     MR_NO_FLAGS,
     700, 10, MONS_GIANT_SLUG, MONS_GIANT_SLUG, MH_NATURAL, -3,
@@ -2376,7 +2378,7 @@
 },
 
 {
-    MONS_GIANT_SNAIL, 'm', LIGHTGREEN, "giant snail",
+    MONS_GIANT_SNAIL, 'j', LIGHTGREEN, "giant snail",
     M_NO_SKELETON | M_AMPHIBIOUS,
     MR_NO_FLAGS,
     900, 10, MONS_GIANT_SLUG, MONS_GIANT_SNAIL, MH_NATURAL, -3,
@@ -2420,7 +2422,7 @@
 },
 
 {
-    MONS_GARGOYLE, 'g', DARKGREY, "gargoyle",
+    MONS_GARGOYLE, '9', LIGHTGREY, "gargoyle",
     M_FLIES,
     MR_RES_POISON | MR_RES_ELEC,
     0, 12, MONS_GARGOYLE, MONS_GARGOYLE, MH_NONLIVING, -6,
@@ -2432,7 +2434,7 @@
 
 // only appear in Dis castle
 {
-    MONS_METAL_GARGOYLE, 'g', CYAN, "metal gargoyle",
+    MONS_METAL_GARGOYLE, '9', CYAN, "metal gargoyle",
     M_FLIES,
     MR_RES_POISON | MR_RES_ELEC,
     0, 12, MONS_GARGOYLE, MONS_METAL_GARGOYLE, MH_NONLIVING, -6,
@@ -2444,7 +2446,7 @@
 
 // only appear in Gehenna castle & one minivault
 {
-    MONS_MOLTEN_GARGOYLE, 'g', RED, "molten gargoyle",
+    MONS_MOLTEN_GARGOYLE, '9', RED, "molten gargoyle",
     M_FLIES,
     MR_RES_POISON | MR_RES_ELEC | mrd(MR_RES_FIRE, 3),
     0, 12, MONS_GARGOYLE, MONS_MOLTEN_GARGOYLE, MH_NONLIVING, -6,
@@ -2491,7 +2493,7 @@
 },
 
 {
-    MONS_GLOORX_VLOQ, '&', DARKGREY, "Gloorx Vloq",
+    MONS_GLOORX_VLOQ, '&', LIGHTGREY, "Gloorx Vloq",
     M_FIGHTER | M_LEVITATE | M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS | M_EVIL | M_UNIQUE,
     MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC,
     0, 15, MONS_GLOORX_VLOQ, MONS_GLOORX_VLOQ, MH_DEMONIC, -14,
@@ -2509,7 +2511,7 @@
 ****************************************************************** */
 
 {
-    MONS_NAGA_MAGE, 'N', LIGHTRED, "naga mage",
+    MONS_NAGA_MAGE, 'N', RED, "naga mage",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD,
     MR_RES_POISON,
     750, 13, MONS_NAGA, MONS_NAGA, MH_NATURAL, -6,
@@ -2531,7 +2533,7 @@
 },
 
 {
-    MONS_ORC_WARLORD, 'o', RED, "orc warlord",
+    MONS_ORC_WARLORD, 'o', LIGHTCYAN, "orc warlord",
     M_FIGHTER | M_WARM_BLOOD,
     MR_NO_FLAGS,
     600, 15, MONS_ORC, MONS_ORC, MH_NATURAL, -3,
@@ -2542,7 +2544,7 @@
 },
 
 {
-    MONS_DEEP_ELF_SOLDIER, 'e', CYAN, "deep elf soldier",
+    MONS_DEEP_ELF_SOLDIER, 'e', RED, "deep elf soldier",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_FIGHTER,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2553,7 +2555,7 @@
 },
 
 {
-    MONS_DEEP_ELF_FIGHTER, 'e', LIGHTBLUE, "deep elf fighter",
+    MONS_DEEP_ELF_FIGHTER, 'e', LIGHTRED, "deep elf fighter",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_FIGHTER,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2564,7 +2566,7 @@
 },
 
 {
-    MONS_DEEP_ELF_KNIGHT, 'e', BLUE, "deep elf knight",
+    MONS_DEEP_ELF_KNIGHT, 'e', CYAN, "deep elf knight",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_FIGHTER,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2586,7 +2588,7 @@
 },
 
 {
-    MONS_DEEP_ELF_MASTER_ARCHER, 'e', LIGHTMAGENTA, "deep elf master archer",
+    MONS_DEEP_ELF_MASTER_ARCHER, 'e', LIGHTGREY, "deep elf master archer",
     M_WARM_BLOOD | M_ARCHER,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -5,
@@ -2600,7 +2602,7 @@
     
 
 {
-    MONS_DEEP_ELF_MAGE, 'e', LIGHTRED, "deep elf mage",
+    MONS_DEEP_ELF_MAGE, 'e', MAGENTA, "deep elf mage",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD,
     MR_RES_ELEC,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2611,7 +2613,7 @@
 },
 
 {
-    MONS_DEEP_ELF_SUMMONER, 'e', YELLOW, "deep elf summoner",
+    MONS_DEEP_ELF_SUMMONER, 'e', BROWN, "deep elf summoner",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2622,7 +2624,7 @@
 },
 
 {
-    MONS_DEEP_ELF_CONJURER, 'e', LIGHTGREEN, "deep elf conjurer",
+    MONS_DEEP_ELF_CONJURER, 'e', BLUE, "deep elf conjurer",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD,
     MR_RES_ELEC,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2633,7 +2635,7 @@
 },
 
 {
-    MONS_DEEP_ELF_PRIEST, 'e', LIGHTGREY, "deep elf priest",
+    MONS_DEEP_ELF_PRIEST, 'e', GREEN, "deep elf priest",
     M_SPELLCASTER | M_PRIEST | M_WARM_BLOOD | M_EVIL,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2644,7 +2646,7 @@
 },
 
 {
-    MONS_DEEP_ELF_HIGH_PRIEST, 'e', DARKGREY, "deep elf high priest",
+    MONS_DEEP_ELF_HIGH_PRIEST, 'e', LIGHTGREEN, "deep elf high priest",
     M_SPELLCASTER | M_SPEAKS | M_PRIEST | M_WARM_BLOOD | M_SEE_INVIS | M_EVIL,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2655,7 +2657,7 @@
 },
 
 {
-    MONS_DEEP_ELF_DEMONOLOGIST, 'e', MAGENTA, "deep elf demonologist",
+    MONS_DEEP_ELF_DEMONOLOGIST, 'e', YELLOW, "deep elf demonologist",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SEE_INVIS | M_EVIL,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2666,7 +2668,7 @@
 },
 
 {
-    MONS_DEEP_ELF_ANNIHILATOR, 'e', GREEN, "deep elf annihilator",
+    MONS_DEEP_ELF_ANNIHILATOR, 'e', LIGHTBLUE, "deep elf annihilator",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SEE_INVIS | M_EVIL,
     MR_RES_ELEC,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
@@ -2677,7 +2679,7 @@
 },
 
 {
-    MONS_DEEP_ELF_SORCERER, 'e', RED, "deep elf sorcerer",
+    MONS_DEEP_ELF_SORCERER, 'e', LIGHTMAGENTA, "deep elf sorcerer",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS
         | M_EVIL,
     MR_NO_FLAGS,
@@ -2723,7 +2725,7 @@
 },
 
 {
-    MONS_DEATH_OOZE, 'J', DARKGREY, "death ooze",
+    MONS_DEATH_OOZE, 'J', MAGENTA, "death ooze",
     M_NO_SKELETON | M_SENSE_INVIS | M_EVIL,
     MR_RES_POISON | MR_RES_COLD | MR_RES_ASPHYX | MR_RES_ACID,
     0, 13, MONS_JELLY, MONS_DEATH_OOZE, MH_UNDEAD, -8,
@@ -2856,7 +2858,7 @@
 },
 
 {
-    MONS_URUG, 'o', RED, "Urug",
+    MONS_URUG, 'o', YELLOW, "Urug",
     M_FIGHTER | M_WARM_BLOOD | M_SPEAKS | M_UNIQUE,
     MR_NO_FLAGS,
     0, 20, MONS_ORC, MONS_ORC, MH_NATURAL, -5,
@@ -3071,7 +3073,7 @@
 },
 
 {
-    MONS_FREDERICK, '@', DARKGREY, "Frederick",
+    MONS_FREDERICK, '@', GREEN, "Frederick",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS | M_WARM_BLOOD
         | M_SEE_INVIS | M_EVIL | M_UNIQUE,
     MR_NO_FLAGS,
@@ -3083,7 +3085,7 @@
 },
 
 {
-    MONS_MARGERY, '@', RED, "Margery",
+    MONS_MARGERY, '@', LIGHTRED, "Margery",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS | M_WARM_BLOOD 
         | M_SEE_INVIS | M_UNIQUE,
     MR_NO_FLAGS,
@@ -3164,7 +3166,7 @@
 },
 
 {
-    MONS_ANCIENT_LICH, 'L', DARKGREY, "ancient lich",
+    MONS_ANCIENT_LICH, 'L', WHITE, "ancient lich",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_EVIL,
     MR_RES_POISON | mrd(MR_RES_COLD, 2) | MR_RES_FIRE | MR_RES_ELEC,
     0, 20, MONS_LICH, MONS_LICH, MH_UNDEAD, -14,
@@ -3201,7 +3203,7 @@
 /* These nasties are never randomly generated, only sometimes specially
    placed in the Crypt. */
 {
-    MONS_CURSE_SKULL, 'z', DARKGREY, "curse skull",
+    MONS_CURSE_SKULL, 'z', LIGHTCYAN, "curse skull",
     M_LEVITATE | M_SPELLCASTER | M_SEE_INVIS | M_EVIL,
     MR_RES_ELEC | MR_RES_POISON | MR_RES_HELLFIRE | mrd(MR_RES_COLD, 2),
     0, 50, MONS_LICH, MONS_CURSE_SKULL, MH_UNDEAD, MAG_IMMUNE,
@@ -3279,7 +3281,7 @@
 },
 
 {
-    MONS_GREATER_NAGA, 'N', RED, "greater naga",
+    MONS_GREATER_NAGA, 'N', LIGHTRED, "greater naga",
     M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD,
     MR_RES_POISON,
     750, 10, MONS_NAGA, MONS_NAGA, MH_NATURAL, MAG_IMMUNE,
@@ -3345,7 +3347,7 @@
 },
 
 {
-    MONS_GREATER_MUMMY, 'M', DARKGREY, "greater mummy",
+    MONS_GREATER_MUMMY, 'M', WHITE, "greater mummy",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_EVIL,
     MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC,
     0, 20, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, MAG_IMMUNE,
@@ -3378,7 +3380,7 @@
 },
 
 {
-    MONS_YAKTAUR_CAPTAIN, 'c', RED, "yaktaur captain",
+    MONS_YAKTAUR_CAPTAIN, 'c', LIGHTRED, "yaktaur captain",
     M_WARM_BLOOD | M_FIGHTER,
     MR_NO_FLAGS,
     2000, 10, MONS_YAKTAUR, MONS_YAKTAUR, MH_NATURAL, -3,
@@ -3402,7 +3404,7 @@
 },
 
 {
-    MONS_BLACK_DRACONIAN, 'd', DARKGREY, "black draconian",
+    MONS_BLACK_DRACONIAN, 'd', BLUE, "black draconian",
     M_HUMANOID | M_COLD_BLOOD,
     MR_RES_ELEC,
     900, 10, MONS_DRACONIAN, MONS_BLACK_DRACONIAN, MH_NATURAL, -2,
@@ -3435,7 +3437,7 @@
 },
 
 {
-    MONS_GREEN_DRACONIAN, 'd', LIGHTGREEN, "green draconian", 
+    MONS_GREEN_DRACONIAN, 'd', GREEN, "green draconian", 
     M_HUMANOID | M_COLD_BLOOD,
     MR_RES_POISON,
     900, 10, MONS_DRACONIAN, MONS_GREEN_DRACONIAN, MH_NATURAL, -2,
@@ -3513,7 +3515,7 @@
 },
 
 { 
-    MONS_DRACONIAN_ZEALOT, 'd', LIGHTBLUE, "draconian zealot", 
+    MONS_DRACONIAN_ZEALOT, 'd', LIGHTGREEN, "draconian zealot",
     M_SPELLCASTER | M_HUMANOID | M_PRIEST | M_COLD_BLOOD | M_EVIL,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -3,
@@ -3535,7 +3537,7 @@
 },
 
 {
-    MONS_DRACONIAN_ANNIHILATOR, 'd', GREEN, "draconian annihilator", 
+    MONS_DRACONIAN_ANNIHILATOR, 'd', LIGHTBLUE, "draconian annihilator",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_HUMANOID | M_COLD_BLOOD,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -4,
@@ -3612,7 +3614,7 @@
 },
 
 {
-    MONS_QUOKKA, 'r', LIGHTGREY, "quokka",
+    MONS_QUOKKA, 'r', WHITE, "quokka",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     300, 10, MONS_QUOKKA, MONS_QUOKKA, MH_NATURAL, -1,
@@ -3724,7 +3726,7 @@
 },
 
 {
-    MONS_HELL_HOG, 'h', RED, "hell-hog",
+    MONS_HELL_HOG, 'h', LIGHTRED, "hell-hog",
     M_SPELLCASTER | M_THICK_SKIN | M_EVIL,
     MR_NO_FLAGS,
     0, 10, MONS_HELL_HOG, MONS_HELL_HOG, MH_DEMONIC, -3,
@@ -3746,7 +3748,7 @@
 },
 
 {
-    MONS_BOGGART, 'g', DARKGREY, "boggart",
+    MONS_BOGGART, 'g', MAGENTA, "boggart",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS,
     MR_NO_FLAGS,
     0, 14, MONS_BOGGART, MONS_BOGGART, MH_NATURAL, -7,
@@ -3791,7 +3793,7 @@
 
 /* player ghost - only one per level. stats are stored in ghost struct */
 {
-    MONS_PLAYER_GHOST, 'p', DARKGREY, "player ghost",
+    MONS_PLAYER_GHOST, 'p', WHITE, "player ghost",
     M_FIGHTER | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS | M_FLIES | M_UNIQUE | M_INSUBSTANTIAL,
     MR_RES_POISON,
     0, 15, MONS_PHANTOM, MONS_PLAYER_GHOST, MH_UNDEAD, -5,
@@ -3954,7 +3956,7 @@
 },
 
 {
-    MONS_WARG, 'h', DARKGREY, "warg",
+    MONS_WARG, 'h', WHITE, "warg",
     M_SENSE_INVIS | M_WARM_BLOOD,
     MR_RES_POISON,
     600, 12, MONS_HOUND, MONS_WARG, MH_NATURAL, -6,
@@ -3998,7 +4000,7 @@
 },
 
 {
-    MONS_BLACK_BEAR, 'U', DARKGREY, "black bear",
+    MONS_BLACK_BEAR, 'U', BLUE, "black bear",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     1800, 10, MONS_BEAR, MONS_BLACK_BEAR, MH_NATURAL, -3,

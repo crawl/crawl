@@ -300,10 +300,12 @@ show_items = !?/%=([)X}+\_.
 # colour.lightcyan = cyan
 # colour.yellow    = brown
 #
+# Set the monster glyphs back to the way they were in 0.3.4
+# : crawl.read_options('docs/monster_glyphs.txt')
+
 # See crawl_options.txt for the options
 # cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any, 
-# feature, mon_glyph, read_options
-
+# feature, mon_glyph
 
 ##### 6-b	DOS and Windows #######################
 #

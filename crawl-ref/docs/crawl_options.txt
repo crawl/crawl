@@ -1713,4 +1713,4 @@ just a particularly useful way to use the previously discussed features.
 Example:
 
 # Set the monster glyphs back to the way they were in 0.3.4
-: crawl.read_options('docs/monsters_034.rc')
+: crawl.read_options('docs/monster_glyphs.txt')
