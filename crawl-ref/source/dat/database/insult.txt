@@ -58,6 +58,20 @@ w:1
 important_spiritual_part
 
 %%%%
+will_or_shall
+
+will
+
+shall
+
+%%%%
+feast_or_devour
+
+feast on
+
+devour
+
+%%%%
 #######################################################
 # generic insults consists of three random parts
 #######################################################
@@ -962,6 +976,38 @@ sissy-prig
 pussyfoot
 
 creepsneak
+
+%%%%
+##########################################################
+# noun, Centaur special
+##########################################################
+insult centaur noun
+
+crock
+
+donkey
+
+four-legs
+
+hack
+
+half-breed
+
+horse-flesh
+
+horse meat
+
+horsey face
+
+jade
+
+mule
+
+nag
+
+nightmare
+
+pony
 
 %%%%
 ##########################################################
