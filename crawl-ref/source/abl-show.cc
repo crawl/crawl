@@ -935,6 +935,25 @@ static bool activate_talent(const talent& tal)
         return (false);
     }
 
+    // don't insta-starve the player
+    // (happens at 100, losing consciousness possible from 500 downward)
+    if (hungerCheck)
+    {
+        const int expected_hunger = you.hunger - abil.food_cost * 2;
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "hunger: %d, max. food_cost: %d, expected hunger: %d",
+             you.hunger, abil.food_cost * 2, expected_hunger);
+#endif
+        // safety margin for natural hunger, mutations etc.
+        if (expected_hunger <= 150
+            && !yesno("Invoking this ability might make you starve to death. "
+                      "Continue anyway?", false, 'n'))
+        {
+            crawl_state.zero_turns_taken();
+            return (false);
+        }
+    }
 
     // no turning back now... {dlb}
     if (random2avg(100, 3) < tal.fail)

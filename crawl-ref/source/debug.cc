@@ -1001,7 +1001,7 @@ void create_spec_object()
             class_wanted = OBJ_JEWELLERY;
         else if (keyin == '!')
             class_wanted = OBJ_POTIONS;
-        else if (keyin == ':')
+        else if (keyin == ':' || keyin == '+')
             class_wanted = OBJ_BOOKS;
         else if (keyin == '|')
             class_wanted = OBJ_STAVES;
@@ -1009,7 +1009,7 @@ void create_spec_object()
             class_wanted = OBJ_ORBS;
         else if (keyin == '}' || keyin == '{')
             class_wanted = OBJ_MISCELLANY;
-        else if (keyin == 'X')
+        else if (keyin == 'X' || keyin == '&')
             class_wanted = OBJ_CORPSES;
         else if (keyin == '%')
             class_wanted = OBJ_FOOD;

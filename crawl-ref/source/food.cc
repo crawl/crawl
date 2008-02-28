@@ -633,16 +633,16 @@ static bool food_change(bool suppress_message)
                 learned_something_new(TUT_YOU_STARVING);
                 you.check_awaken(500);
                 break;
-            case HS_HUNGRY:
-                mpr("You are feeling hungry.", MSGCH_FOOD);
+            case HS_NEAR_STARVING:
+                mpr("You are near starving.", MSGCH_FOOD);
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
             case HS_VERY_HUNGRY:
                 mpr("You are feeling very hungry.", MSGCH_FOOD);
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
-            case HS_NEAR_STARVING:
-                mpr("You are near starving.", MSGCH_FOOD);
+            case HS_HUNGRY:
+                mpr("You are feeling hungry.", MSGCH_FOOD);
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
             default:
