@@ -714,7 +714,8 @@ void formatted_message_history(const std::string &st_nocolor, msg_channel_type c
     for (int i=0; i<fss.size(); i++)
     {
         const formatted_string& fs = fss[i];
-        mpr_check_patterns(fs.tostring(), channel, param);
+        const std::string unformatted = fs.tostring();
+        mpr_check_patterns(unformatted, channel, param);
 
         flush_input_buffer( FLUSH_ON_MESSAGE );
 
@@ -724,7 +725,15 @@ void formatted_message_history(const std::string &st_nocolor, msg_channel_type c
             more();
 
         mpr_formatted_output(fs, colour);
-        mpr_store_messages(fs.to_colour_string(), channel, param);
+        
+        // message playback explicitly only handles colors for
+        // the tutorial channel... guess we'll store bare strings
+        // for the rest, then.
+        if (channel == MSGCH_TUTORIAL) {
+            mpr_store_messages(fs.to_colour_string(), channel, param);
+        } else {
+            mpr_store_messages(unformatted, channel, param);
+        }
     }
 }
 
