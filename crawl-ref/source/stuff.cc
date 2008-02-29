@@ -718,7 +718,6 @@ void canned_msg(canned_message_type which_message)
              (you.species == SP_NAGA || you.mutation[MUT_HOOVES])
              ? "before you" : "at your feet");
         break;
-
     case MSG_NOTHING_HAPPENS:
         mpr("Nothing appears to happen.");
         break;
@@ -753,7 +752,7 @@ void canned_msg(canned_message_type which_message)
         mpr("The spell fizzles.");
         break;
     case MSG_HUH:
-        mpr("Huh?");
+        mpr("Huh?", MSGCH_EXAMINE_FILTER);
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_EMPTY_HANDED:

@@ -305,9 +305,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     // time calculations
     you.time_taken /= 2;
 
-    you.wield_change = true;
+    you.wield_change  = true;
     you.quiver_change = true;
-    you.turn_is_over = true;
+    you.turn_is_over  = true;
 
     return (true);
 }
@@ -1380,46 +1380,47 @@ public:
 
 void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
 {
-    bool no_other_items;
-    {
-        const int next_item = get_fire_item_index((item + 1) % ENDOFPACK, true, false);
-        no_other_items = (next_item == ENDOFPACK || next_item == item);
-    }
+    const int next_item
+                = get_fire_item_index((item + 1) % ENDOFPACK, true, false);
+    bool no_other_items = (next_item == ENDOFPACK || next_item == item);
             
     mesclr();
 
     if (pre_text)
-    {
         mpr(pre_text->c_str());
-    }
 
+    std::ostringstream msg;
+    if (item == ENDOFPACK)
+        msg << "Firing ";
+    else
     {
-        std::ostringstream msg;
-        if (item == ENDOFPACK) msg << "Firing ";
-        else {
-            const item_def& item_def = you.inv[item];
-            const launch_retval projected = is_launched(&you, you.weapon(), item_def);
-            if (projected == LRET_FUMBLED)  msg << "Awkwardly throwing ";
-            else if (projected == LRET_LAUNCHED) msg << "Firing ";
-            else if (projected == LRET_THROWN)   msg << "Throwing ";
-            else msg << "Buggy ";
-        }
+        const item_def& item_def = you.inv[item];
+        const launch_retval projected = is_launched(&you, you.weapon(), item_def);
             
-        msg << (no_other_items ? "(i - change)" : "(^n ^p i - change)")
-            << ": ";
-
-        if (item == ENDOFPACK) {
-            msg << "<red>" << _fire_get_noitem_reason() << "</red>";
-        } else {
-            const char* color = (selected_from_inventory ? "grey" : "w");
-            msg << "<" << color << ">"
-                << you.inv[item].name(DESC_INVENTORY_EQUIP)
-                << "</" << color << ">";
-        }
-
-        // XXX: use another channel that doesn't spam the message log?
-        formatted_message_history(msg.str(), MSGCH_PROMPT);
+        if (projected == LRET_FUMBLED)
+            msg << "Awkwardly throwing ";
+        else if (projected == LRET_LAUNCHED)
+            msg << "Firing ";
+        else if (projected == LRET_THROWN)
+            msg << "Throwing ";
+        else
+            msg << "Buggy ";
     }
+
+    msg << (no_other_items ? "(i - change)" : "(Ctrl-N, Ctrl-P, i: change)")
+        << ": ";
+
+    if (item == ENDOFPACK)
+        msg << "<red>" << _fire_get_noitem_reason() << "</red>";
+    else
+    {
+        const char* color = (selected_from_inventory ? "grey" : "w");
+        msg << "<" << color << ">"
+            << you.inv[item].name(DESC_INVENTORY_EQUIP)
+            << "</" << color << ">";
+    }
+
+    formatted_message_history(msg.str(), MSGCH_PROMPT);
 }
 
 bool fire_target_behaviour::should_redraw()
@@ -1439,42 +1440,43 @@ command_type fire_target_behaviour::get_command(int key)
 
     switch (key)
     {
-    case '(':
-    case CONTROL('N'):
-    case CONTROL('P'): {
-        const int direction = (key == CONTROL('N')) ? +1 : -1;
-        const int start = (item + ENDOFPACK + direction) % ENDOFPACK;
-        const int next = get_fire_item_index(start, (direction==1), false);
-        if (next != item && next != ENDOFPACK)
-        {
-            item = next;
-            selected_from_inventory = false;
-        }
-        // Do this stuff unconditionally to make the prompt redraw
-        message_ammo_prompt();
-        need_prompt = true;
-        break;
-    }
-
-    case 'i': {
-        std::string err;
-        const int selected = _fire_prompt_for_item(err);
-        if (selected != ENDOFPACK &&
-            _fire_validate_item(selected, err))
-        {
-            item = selected;
-            selected_from_inventory = true;
-        }
-        message_ammo_prompt( err.length() ? &err : NULL );
-        need_prompt = true;
-        return CMD_NO_CMD;
-    }
-    case '?':
-        show_targeting_help();
-        redraw_screen();
-        message_ammo_prompt();
-        need_prompt = true;
-        return (CMD_NO_CMD);
+      case '(':
+      case CONTROL('N'):
+      case CONTROL('P'):
+      {
+          const int direction = (key == CONTROL('N')) ? +1 : -1;
+          const int start = (item + ENDOFPACK + direction) % ENDOFPACK;
+          const int next = get_fire_item_index(start, (direction==1), false);
+          if (next != item && next != ENDOFPACK)
+          {
+              item = next;
+              selected_from_inventory = false;
+          }
+          // Do this stuff unconditionally to make the prompt redraw
+          message_ammo_prompt();
+          need_prompt = true;
+          break;
+      }
+      case 'i':
+      {
+          std::string err;
+          const int selected = _fire_prompt_for_item(err);
+          if (selected != ENDOFPACK &&
+              _fire_validate_item(selected, err))
+          {
+              item = selected;
+              selected_from_inventory = true;
+          }
+          message_ammo_prompt( err.length() ? &err : NULL );
+          need_prompt = true;
+          return CMD_NO_CMD;
+      }
+      case '?':
+          show_targeting_help();
+          redraw_screen();
+          message_ammo_prompt();
+          need_prompt = true;
+          return (CMD_NO_CMD);
     }
     
     return targeting_behaviour::get_command(key);
