@@ -1630,8 +1630,11 @@ static bool choose_weapon()
     int keyin = 0;
     int num_choices = 4;
 
-    if (you.char_class == JOB_GLADIATOR || you.species == SP_MERFOLK)
+    if ((you.char_class == JOB_GLADIATOR && you.species != SP_KOBOLD)
+        || you.species == SP_MERFOLK)
+    {
         num_choices = 5;
+    }
 
     if (Options.weapon != WPN_UNKNOWN && Options.weapon != WPN_RANDOM
         && (Options.weapon != WPN_TRIDENT || num_choices == 5))
