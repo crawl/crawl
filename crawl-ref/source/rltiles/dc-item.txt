@@ -560,7 +560,7 @@ metal_green
 ############4papi 1
 cloth BOOK_PAPYRUS
 #####################OBJ_STAVES
-%sdir item/wand
+%sdir item/staff
 staff00 STAFF_OFFSET /*curved*/
 staff01
 staff02
@@ -585,6 +585,18 @@ i-staff_summoning STAFF_SUMMONING
 i-staff_air STAFF_AIR
 i-staff_earth STAFF_EARTH
 i-staff_channeling STAFF_CHANNELING
+
+%sdir item/rod
+rod00 ROD_OFFSET
+rod01
+rod02
+rod03
+rod04
+rod05
+rod06
+rod07
+rod08
+rod09
 
 i-rod_smiting ROD_SMITING
 i-rod_summoning ROD_SUMMONING

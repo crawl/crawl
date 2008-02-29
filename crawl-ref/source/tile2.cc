@@ -2272,11 +2272,21 @@ void TileInitItems()
         ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
     }
 
-    for (int i = 0; i < NUM_STAVES; i++)
+    for (int i = 0; i < STAFF_SMITING; i++)
     {
         int special = you.item_description[IDESC_STAVES][i];
         int tile0 = TILE_STAFF_OFFSET + (special / 4) % 10;
         int tile1 = TILE_STAFF_WIZARDRY + i;
+
+        ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
+        ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
+        ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
+    }
+    for (int i = STAFF_SMITING; i < NUM_STAVES; i++)
+    {
+        int special = you.item_description[IDESC_STAVES][i];
+        int tile0 = TILE_ROD_OFFSET + (special / 4) % 10;
+        int tile1 = TILE_ROD_SMITING + i - STAFF_SMITING;
 
         ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
         ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);

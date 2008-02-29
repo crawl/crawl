@@ -2484,9 +2484,6 @@ static void generate_staff_item(item_def& item, int force_type)
     
     if (item_is_rod( item ))
         init_rod_mp( item );
-    
-    // add different looks
-//  item.special = you.item_description[IDESC_STAVES][item.sub_type];
 }
 
 static bool try_make_jewellery_unrandart(item_def& item, int force_type,
