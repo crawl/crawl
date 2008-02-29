@@ -440,7 +440,7 @@ enum command_type
     CMD_EVOKE,
     CMD_WIELD_WEAPON,
     CMD_WEAPON_SWAP,
-    CMD_THROW,
+    CMD_THROW,  // unused now
     CMD_FIRE,
     CMD_WEAR_ARMOUR,
     CMD_REMOVE_ARMOUR,

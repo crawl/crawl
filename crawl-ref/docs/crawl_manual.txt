@@ -542,7 +542,7 @@ you might find in the course of your adventures, how these are
 displayed, and what commands there are to use them:
 
 )       weapons         (use 'w'ield)
-(       ammunition      (use 't'hrow or 'f'ire)
+(       ammunition      (use 'f'ire)
 [       armour          (use 'W'ear and 'T'ake off)
 %       food            (use 'e'at; also 'D'issect for corpses)
 ?       scrolls         (use 'r'ead)
@@ -663,16 +663,17 @@ thrown; other kinds require you to wield an appropriate device to
 inflict worthwhile damage. Ammunition has only one "plus" value, which
 affects both accuracy and damage.
 
-The 'f' command fires a piece of ammunition, chosen from lots suitable
-for your weapon and defaulting to your preferred lot (or "quiver"),
-typically the last lot you fired. Use the '(' command if you want to
-change your quiver without firing. Use the 't' command to throw
-anything.
+The 'f' command fires or throws a piece of ammunition, typically
+chosen from lots suitable for your weapon and defaulting to the last
+lot you fired (your "quiver").
 
-Regardless of their mnemonics, if you are using the right kind of hand
-weapon both 'f' and 't' will make you "shoot" the ammunition.
-Otherwise, you will "throw" it. At times it is also sensible to throw
-weapons like spears, daggers, or hand axes.
+The firing interface also allows you to manually select an item to
+throw; but it may not be very effective if you lack the correct
+launcher. At times it is sensible to throw weapons like spears,
+daggers, or hand axes.
+
+Use the '(' command if you want to change your quiver without
+firing.
 
 The interface for shooting or throwing things is also used for zapping
 wands and casting certain spells, and is described in detail in

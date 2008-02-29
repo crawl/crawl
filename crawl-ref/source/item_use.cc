@@ -28,6 +28,7 @@
 #include "AppHdr.h"
 #include "item_use.h"
 
+#include <sstream>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -81,6 +82,10 @@
 
 static bool drink_fountain();
 static bool enchant_armour();
+
+static int  _fire_prompt_for_item(std::string& err);
+static bool _fire_validate_item(int selected, std::string& err);
+static std::string _fire_get_noitem_reason();
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -1194,53 +1199,6 @@ bool takeoff_armour(int item)
     return true;
 }                               // end takeoff_armour()
 
-void throw_anything( int slot )
-{
-    struct bolt beam;
-    int throw_slot;
-
-    if (you.duration[DUR_BERSERKER])
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-    else if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
-        return;
-    }
-
-    if (slot != -1)
-        throw_slot = slot;
-    else
-        throw_slot = prompt_invent_item( "Throw which item? (* to show all)",
-                                     MT_INVLIST,
-                                     OBJ_MISSILES, true, true, true, 0, NULL,
-                                     OPER_THROW );
-    if (throw_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
-        return;
-    }
-
-    if (throw_slot == you.equip[EQ_WEAPON]
-             && (item_cursed( you.inv[you.equip[EQ_WEAPON]] )))
-    {
-        mpr("That thing is stuck to your hand!");
-        return;
-    }
-    else
-    {
-        if ( wearing_slot(throw_slot) )
-        {
-            mpr("You are wearing that object!");
-            return;
-        }
-    }
-
-    throw_it(beam, throw_slot);
-}                               // end throw_anything()
-
 static bool fire_item_matches(const item_def &item, unsigned fire_type)
 {
     if (!is_valid_item(item))
@@ -1399,31 +1357,70 @@ int get_fire_item_index(int start_from, bool forward, bool check_quiver)
     return (item);
 }
 
-static void announce_ammo(int item)
-{
-    mesclr();
-    mprf("Firing%s: %s",
-         get_fire_item_index((item + 1) % ENDOFPACK, true, false) != item?
-         " (^N/^P - change)" : "",         
-         you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
-}
-
 class fire_target_behaviour : public targeting_behaviour
 {
 public:
-    fire_target_behaviour(int it) : item(it), need_prompt(false) { }
-    command_type get_command(int key = -1);
-    bool should_redraw();
-    void announce_new_ammo(bool redraw = true);
+    fire_target_behaviour()
+        : item(ENDOFPACK), selected_from_inventory(false), need_prompt(false)
+    {
+        item = get_fire_item_index();
+    }
+
+    // targeting_behaviour API
+    virtual command_type get_command(int key = -1);
+    virtual bool should_redraw();
+
+    void message_ammo_prompt(const std::string* pre_text=0);
 
 public:
     int item;
+    bool selected_from_inventory;
     bool need_prompt;
-
-private:
-    void find_next_ammo();
-    void find_prev_ammo();
 };
+
+void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
+{
+    bool no_other_items;
+    {
+        const int next_item = get_fire_item_index((item + 1) % ENDOFPACK, true, false);
+        no_other_items = (next_item == ENDOFPACK || next_item == item);
+    }
+            
+    mesclr();
+
+    if (pre_text)
+    {
+        mpr(pre_text->c_str());
+    }
+
+    {
+        std::ostringstream msg;
+        if (item == ENDOFPACK) msg << "Firing ";
+        else {
+            const item_def& item_def = you.inv[item];
+            const launch_retval projected = is_launched(&you, you.weapon(), item_def);
+            if (projected == LRET_FUMBLED)  msg << "Awkwardly throwing ";
+            else if (projected == LRET_LAUNCHED) msg << "Firing ";
+            else if (projected == LRET_THROWN)   msg << "Throwing ";
+            else msg << "Buggy ";
+        }
+            
+        msg << (no_other_items ? "(i - change)" : "(^n ^p i - change)")
+            << ": ";
+
+        if (item == ENDOFPACK) {
+            msg << "<red>" << _fire_get_noitem_reason() << "</red>";
+        } else {
+            const char* color = (selected_from_inventory ? "grey" : "w");
+            msg << "<" << color << ">"
+                << you.inv[item].name(DESC_INVENTORY_EQUIP)
+                << "</" << color << ">";
+        }
+
+        // XXX: use another channel that doesn't spam the message log?
+        formatted_message_history(msg.str(), MSGCH_PROMPT);
+    }
+}
 
 bool fire_target_behaviour::should_redraw()
 {
@@ -1444,15 +1441,38 @@ command_type fire_target_behaviour::get_command(int key)
     {
     case '(':
     case CONTROL('N'):
-        find_next_ammo();
+    case CONTROL('P'): {
+        const int direction = (key == CONTROL('N')) ? +1 : -1;
+        const int start = (item + ENDOFPACK + direction) % ENDOFPACK;
+        const int next = get_fire_item_index(start, (direction==1), false);
+        if (next != item && next != ENDOFPACK)
+        {
+            item = next;
+            selected_from_inventory = false;
+        }
+        // Do this stuff unconditionally to make the prompt redraw
+        message_ammo_prompt();
+        need_prompt = true;
         break;
-    case CONTROL('P'):
-        find_prev_ammo();
-        break;
+    }
+
+    case 'i': {
+        std::string err;
+        const int selected = _fire_prompt_for_item(err);
+        if (selected != ENDOFPACK &&
+            _fire_validate_item(selected, err))
+        {
+            item = selected;
+            selected_from_inventory = true;
+        }
+        message_ammo_prompt( err.length() ? &err : NULL );
+        need_prompt = true;
+        return CMD_NO_CMD;
+    }
     case '?':
         show_targeting_help();
         redraw_screen();
-        announce_new_ammo(item);
+        message_ammo_prompt();
         need_prompt = true;
         return (CMD_NO_CMD);
     }
@@ -1460,46 +1480,18 @@ command_type fire_target_behaviour::get_command(int key)
     return targeting_behaviour::get_command(key);
 }
 
-void fire_target_behaviour::announce_new_ammo(bool redraw)
+static bool _fire_choose_item_and_target(int& item, dist& target)
 {
-    announce_ammo(item);
-    need_prompt = redraw;
-}
-
-void fire_target_behaviour::find_next_ammo()
-{
-    const int start = (item == ENDOFPACK - 1)? 0 : item + 1;
-    const int next = get_fire_item_index(start, true, false);
-
-    // We should never get back ENDOFPACK.
-    if (next != item)
-    {
-        item = next;
-        announce_new_ammo();
-    }
-}
-
-void fire_target_behaviour::find_prev_ammo()
-{
-    const int start = (item == 0)? ENDOFPACK - 1 : item - 1;
-    const int next = get_fire_item_index(start, false, false);
-
-    // We should never get back ENDOFPACK.
-    if (next != item)
-    {
-        item = next;
-        announce_new_ammo();
-    }
-}
-
-static bool choose_fire_target(dist &target, int &item)
-{
-    announce_ammo(item);
-    message_current_target();
-
-    fire_target_behaviour beh(item);
+    fire_target_behaviour beh;
+    beh.message_ammo_prompt();
+    message_current_target();    // XXX: this stuff should be done by direction()
     direction( target, DIR_NONE, TARG_ENEMY, false, true, NULL, &beh );
     
+    if (beh.item == ENDOFPACK)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
     if (!target.isValid)
     {
         if (target.isCancel)
@@ -1521,48 +1513,136 @@ static bool choose_fire_target(dist &target, int &item)
     return (true);
 }
 
-void shoot_thing(void)
+// Bring up an inventory screen and have user choose an item.
+// Returns an item slot, or ENDOFPACK on abort/failure
+// On failure, returns error text, if any.
+static int _fire_prompt_for_item(std::string& err)
 {
+    if (inv_count() < 1)
+    {
+        // canned_msg(MSG_NOTHING_CARRIED);         // Hmmm... 
+        err = "You aren't carrying anything.";
+        return ENDOFPACK;
+    }
+
+    int slot = prompt_invent_item( "Fire/throw which item? (* to show all)",
+                                   MT_INVLIST,
+                                   OBJ_MISSILES, true, true, true, 0, NULL,
+                                   OPER_THROW );
+    if (slot == PROMPT_ABORT)
+    {
+        err = "Nothing selected.";
+        return ENDOFPACK;
+    }
+    return slot;
+}
+
+// Return false and err text if this item can't be fired.
+static bool _fire_validate_item(int slot, std::string& err)
+{
+    if (slot == you.equip[EQ_WEAPON]
+        && item_cursed(you.inv[slot]))
+    {
+        err = "That thing is stuck to your hand!";
+        return false;
+    }
+    else if ( wearing_slot(slot) )
+    {
+        err = "You are wearing that object!";
+        return false;
+    }
+    return true;
+}
+
+// Return true if warning is given
+static bool _fire_warn_if_impossible()
+{
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        canned_msg(MSG_PRESENT_FORM);
+        return true;
+    }
+    if (you.attribute[ATTR_HELD])
+    {
+        const item_def *weapon = you.weapon();
+        if (!weapon || !is_range_weapon(*weapon))
+        {
+            mpr("You cannot throw anything while held in a net!");
+            return true;
+        }
+        else if (weapon->sub_type != WPN_BLOWGUN)
+        {
+            mprf("You cannot shoot with your %s while held in a net!",
+                 weapon->name(DESC_BASENAME).c_str());
+            return true;
+        }
+        // else shooting is possible
+    }
     if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
+        return true;
+    }
+    return false;
+}
+
+static std::string _fire_get_noitem_reason()
+{
+    const int cur_item = get_fire_item_index();
+    if (cur_item != ENDOFPACK)
+    {
+        // Shouldn't be calling this if there is a good default item!
+        return std::string("Buggy.");
+    }
+
+    // Tell the user why we might have skipped their missile
+    unwind_var<int> unwind_festart(Options.fire_items_start, 0);
+    unwind_var<bool> unwind_inscription(Hack_Ignore_F_Inscription, true);
+    const int skipped_item = get_fire_item_index();
+    char buf[200];
+    if (skipped_item == ENDOFPACK)
+    {
+        return std::string("No suitable missiles.");
+    }
+    else if (skipped_item < unwind_festart.original_value())
+    {
+        // no room for showing index_to_letter(skipped_item);
+        snprintf(buf, 200,
+                 "Nothing suitable (fire_items_start = '%c').",
+                 index_to_letter(unwind_festart.original_value()));
+        return std::string(buf);
+    }
+    else
+    {
+        snprintf(buf, 200,
+                 "Nothing suitable (ignored '=f'-inscribed item on '%c').",
+                 index_to_letter(skipped_item));
+        return std::string(buf);
+    }
+}
+
+// if item == -1, prompt the user.
+void fire_thing(int item)
+{
+    if (_fire_warn_if_impossible())
+    {
         flush_input_buffer( FLUSH_ON_FAILURE );        
         return;
     }
-
-    int item = get_fire_item_index();
-
-    if (item == ENDOFPACK)
-    {
-        // Tell the user why we might have skipped their missile
-        unwind_var<int> unwind_festart(Options.fire_items_start, 0);
-        unwind_var<bool> unwind_inscription(Hack_Ignore_F_Inscription, true);
-        const int skipped_item = get_fire_item_index();
-        if (skipped_item == ENDOFPACK)
-        {
-            mpr("No suitable missiles.");
-        }
-        else if (skipped_item < unwind_festart.original_value())
-        {
-            mprf("No suitable missiles (fire_items_start = '%c', "
-                 "ignoring item on '%c').",
-                 index_to_letter(unwind_festart.original_value()),
-                 index_to_letter(skipped_item));
-        }
-        else
-        {
-            mprf("No suitable missiles (ignoring '=f'-inscribed item on '%c').",
-                 index_to_letter(skipped_item));
-        }
-        flush_input_buffer( FLUSH_ON_FAILURE );
-        return;
-    }
+        
+    if (Options.tutorial_left)
+        Options.tut_throw_counter++;
 
     dist target;
-    bolt beam;
-    if (choose_fire_target(target, item)
-        && check_warning_inscriptions(you.inv[item], OPER_FIRE))
+    if (item == -1)
     {
+        if (! _fire_choose_item_and_target(item, target))
+            return;        
+    }
+
+    if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
+    {
+        bolt beam;
         throw_it( beam, item, false, 0, &target );
     }
 }
@@ -4602,8 +4682,7 @@ void tile_use_item(int idx, InvAction act)
             return;
             
         case OBJ_MISSILES:
-            if (check_warning_inscriptions(you.inv[idx], OPER_THROW))
-                throw_anything(idx);
+            fire_thing(idx);
             return;
 
         case OBJ_ARMOUR:

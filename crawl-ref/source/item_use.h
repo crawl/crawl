@@ -104,14 +104,8 @@ bool remove_ring(int slot = -1, bool announce = false);
  * *********************************************************************** */
 int get_fire_item_index(int start_from = 0, bool forward = true,
                         bool check_quiver = true);
-void shoot_thing(void);
+void fire_thing(int item=-1);
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void throw_anything(int slot = -1);
 
 quiver_type get_quiver_type(void);
 

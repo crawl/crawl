@@ -593,7 +593,9 @@ static const char *targeting_help_1 =
 static const char *targeting_help_2 =
     "<h>Firing or throwing a missile:\n"
     "<w>Ctrl-P</w> : cycle to previous missile.\n"
-    "<w>Ctrl-N</w> : cycle to next missile.\n";
+    "<w>Ctrl-N</w> : cycle to next missile.\n"
+    "<w>i</w>      : choose from inventory.\n"
+;
     
 
 // Add the contents of the file fp to the scroller menu m.
@@ -1523,8 +1525,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>]</w> : show inventory of equipped items\n"
             "<w>v</w> : View item description\n"
             "<w>{</w> : inscribe item\n"
-            "<w>t</w> : Throw/shoot an item\n"
-            "<w>f</w> : Fire first available missile\n"
+            "<w>f</w> : Fire or throw an item\n"
             "<w>e</w> : Eat food (but tries floor first)\n"
             "<w>q</w> : Quaff a potion\n"
             "<w>z</w> : Zap a wand\n"

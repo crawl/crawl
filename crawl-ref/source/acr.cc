@@ -1902,47 +1902,8 @@ void process_command( command_type cmd )
         wield_weapon(false);
         break;
 
-    case CMD_THROW:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-           canned_msg(MSG_PRESENT_FORM);
-           break;
-        }
-        else if (you.attribute[ATTR_HELD])
-        {
-           mpr("You cannot throw anything while held in a net!");
-           break;
-        }
-        if (Options.tutorial_left)
-            Options.tut_throw_counter++;
-        throw_anything();
-        break;
-
     case CMD_FIRE:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-           canned_msg(MSG_PRESENT_FORM);
-           break;
-        }
-        else if (you.attribute[ATTR_HELD])
-        {
-           const item_def *weapon = you.weapon();
-           if (!weapon || !is_range_weapon(*weapon))
-           {
-               mpr("You cannot throw anything while held in a net!");
-               break;
-           }
-           else if (weapon->sub_type != WPN_BLOWGUN)
-           {
-               mprf("You cannot shoot with your %s while held in a net!",
-                    weapon->name(DESC_BASENAME).c_str());
-               break;
-           }
-           // else shooting is possible
-        }
-        if (Options.tutorial_left)
-            Options.tut_throw_counter++;
-        shoot_thing();
+        fire_thing();
         break;
 
     case CMD_WEAR_ARMOUR:
@@ -3261,7 +3222,6 @@ command_type keycode_to_command( keycode_type key )
     case 'q': return CMD_QUAFF;
     case 'r': return CMD_READ;
     case 's': return CMD_SEARCH;
-    case 't': return CMD_THROW;
     case 'v': return CMD_EXAMINE_OBJECT;
     case 'w': return CMD_WIELD_WEAPON;
     case 'x': return CMD_LOOK_AROUND;
