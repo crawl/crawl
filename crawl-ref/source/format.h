@@ -24,6 +24,7 @@ public:
     operator std::string() const;
     void display(int start = 0, int end = -1) const;
     std::string tostring(int start = 0, int end = -1) const;
+    std::string to_colour_string() const;
 
     void cprintf(const char *s, ...);
     void cprintf(const std::string &s);
@@ -46,18 +47,28 @@ public:
 public:
     static formatted_string parse_string(
             const std::string &s,
-            bool  eol_ends_format = true,
+            bool  eot_ends_format = true,
             bool (*process_tag)(const std::string &tag) = NULL );
     
+    static void parse_string_to_multiple(
+            const std::string &s,
+            std::vector<formatted_string> &out);
+            
     static formatted_string parse_block(
             const std::string &s,
-            bool  eol_ends_format = true,
+            bool  eot_ends_format = true,
             bool (*process_tag)(const std::string &tag) = NULL );
 
     static int get_colour(const std::string &tag);
 
 private:
     int find_last_colour() const;
+
+    static void parse_string1(
+            const std::string &s,
+            formatted_string &fs,
+            std::vector<int> &colour_stack,
+            bool (*process_tag)(const std::string &tag));
 
 public:
     struct fs_op

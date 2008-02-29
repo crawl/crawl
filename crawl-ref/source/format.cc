@@ -37,14 +37,23 @@ int formatted_string::get_colour(const std::string &tag)
 // to clobber existing text to the right of the lines being displayed
 // (some of the tutorial messages need this).
 //
+// If eot_ends_format, the end of text will reset the color to default
+// (pop all elements on the color stack) -- this is only useful if the
+// string doesn't have balanced <color></color> tags.
+// 
 formatted_string formatted_string::parse_block(
         const std::string &s,
-        bool  eol_ends_format,
+        bool eot_ends_format,
         bool (*process)(const std::string &tag))
 {
+    // Safe assumption, that incoming color is LIGHTGREY
+    std::vector<int> colour_stack;
+    colour_stack.push_back(LIGHTGREY);
+
     std::vector<std::string> lines = split_string("\n", s, false, true);
 
     formatted_string fs;
+
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
         if (i)
@@ -54,7 +63,13 @@ formatted_string formatted_string::parse_block(
             fs.cgotoxy(1, -1); // CR
             fs.movexy(0, 1);  // LF
         }
-        fs += parse_string(lines[i], eol_ends_format, process);
+        parse_string1(lines[i], fs, colour_stack, process);
+    }
+
+    if (eot_ends_format)
+    {
+        if (colour_stack.back() != colour_stack.front()) 
+            fs.textcolor(colour_stack.front());
     }
 
     return (fs);
@@ -62,22 +77,64 @@ formatted_string formatted_string::parse_block(
 
 formatted_string formatted_string::parse_string(
         const std::string &s,
-        bool  eol_ends_format,
+        bool  eot_ends_format,
+        bool (*process)(const std::string &tag))
+{
+    // Safe assumption, that incoming color is LIGHTGREY
+    std::vector<int> colour_stack;
+    colour_stack.push_back(LIGHTGREY);
+
+    formatted_string fs;
+
+    parse_string1(s, fs, colour_stack, process);
+    if (eot_ends_format)
+    {
+        if (colour_stack.back() != colour_stack.front()) 
+            fs.textcolor(colour_stack.front());
+    }
+    return fs;
+}
+
+// Parses a formatted string in much the same way as parse_string, but
+// handles EOL by creating a new formatted_string.
+void formatted_string::parse_string_to_multiple(
+    const std::string &s,
+    std::vector<formatted_string> &out)
+{
+    std::vector<int> colour_stack;
+    colour_stack.push_back(LIGHTGREY);
+
+    std::vector<std::string> lines = split_string("\n", s, false, true);
+
+    for (int i = 0, size = lines.size(); i < size; ++i)
+    {
+        out.push_back(formatted_string());
+        formatted_string& fs = out.back();
+        fs.textcolor(colour_stack.back());
+        parse_string1(lines[i], fs, colour_stack, NULL);
+        if (colour_stack.back() != colour_stack.front()) 
+            fs.textcolor(colour_stack.front());
+    }
+}
+
+// Helper for the other parse_ methods
+void formatted_string::parse_string1(
+        const std::string &s,
+        formatted_string &fs,
+        std::vector<int> &colour_stack,
         bool (*process)(const std::string &tag))
 {
     // FIXME This is a lame mess, just good enough for the task on hand
     // (keyboard help).
-    formatted_string fs;
     std::string::size_type tag    = std::string::npos;
     std::string::size_type length = s.length();
 
     std::string currs;
-    int curr_colour = LIGHTGREY;
     bool masked = false;
     
     for (tag = 0; tag < length; ++tag)
     {
-        bool invert_colour = false;
+        bool revert_colour = false;
         std::string::size_type endpos = std::string::npos;
 
         // Break string up if it gets too big.
@@ -127,7 +184,7 @@ formatted_string formatted_string::parse_string(
 
         if (tagtext[0] == '/')
         {
-            invert_colour = true;
+            revert_colour = true;
             tagtext = tagtext.substr(1);
             tag++;
         }
@@ -143,22 +200,33 @@ formatted_string formatted_string::parse_string(
             continue;
         }
 
-        const int new_colour = invert_colour? LIGHTGREY : get_colour(tagtext);
         if (!currs.empty())
         {
             fs.cprintf(currs);
             currs.clear();
         }
-        fs.textcolor( curr_colour = new_colour );
+
+	if (revert_colour)
+        {
+	    colour_stack.pop_back();
+            if (colour_stack.size() < 1)
+            {
+                ASSERT(false);
+                colour_stack.push_back(LIGHTRED);
+            }
+        }
+        else
+        {
+	    colour_stack.push_back(get_colour(tagtext));
+        }
+
+        // fs.cprintf("%d%d", colour_stack.size(), colour_stack.back());
+	fs.textcolor(colour_stack.back());
+	    
         tag += tagtext.length() + 1;
     }
     if (currs.length())
         fs.cprintf(currs);
-
-    if (eol_ends_format && curr_colour != LIGHTGREY)
-        fs.textcolor(LIGHTGREY);
-
-    return (fs);
 }
 
 formatted_string::operator std::string() const
@@ -260,6 +328,31 @@ std::string formatted_string::tostring(int s, int e) const
             st += ops[i].text;
     }
     return st;
+}
+
+std::string formatted_string::to_colour_string() const
+{
+    std::string st;
+    const int size = ops.size();
+    for (int i = 0; i < size; ++i)
+    {
+        if (ops[i] == FSOP_TEXT) {
+            // gotta double up those '<' chars ...
+            uint start = st.size();
+            st += ops[i].text;
+            while (true) {
+                const uint left_angle = st.find('<', start);
+                if (left_angle == std::string::npos) break;
+                st.insert(left_angle, "<");
+                start = left_angle + 2;
+            }
+        } else if (ops[i] == FSOP_COLOUR) {
+            st += "<";
+            st += colour_to_str(ops[i].x);
+            st += ">";
+        }
+    }
+	return st;
 }
 
 void formatted_string::display(int s, int e) const

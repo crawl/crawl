@@ -53,7 +53,8 @@ void formatted_mpr(const formatted_string& fs,
                    
 void formatted_message_history(const std::string &st,
                                msg_channel_type channel = MSGCH_PLAIN,
-                               int param = 0);
+                               int param = 0,
+                               int wrap_col = 0);
 
 // mpr() an arbitrarily long list of strings
 void mpr_comma_separated_list(const std::string prefix,

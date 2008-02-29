@@ -18,6 +18,7 @@
 
 #include <cstdarg>
 #include <cstring>
+#include <sstream>
 
 #ifdef DOS
 #include <conio.h>
@@ -40,6 +41,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "menu.h"
 
 // circular buffer for keeping past messages
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
@@ -672,11 +674,15 @@ void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
     mpr_store_messages(imsg, channel, param);
 }
 
-// output given string as formatted message, but check patterns
-// for string stripped of tags and store original tagged string
-// for message history
-void formatted_message_history(const std::string &st, msg_channel_type channel,
-                               int param)
+// output given string as formatted message(s), but check patterns
+// for string stripped of tags and store the original tagged string
+// for message history.  Newlines break the string into multiple
+// messages.
+//
+// If wrap_col > 0, text is wrapped at that column.
+// 
+void formatted_message_history(const std::string &st_nocolor, msg_channel_type channel,
+                               int param, int wrap_col)
 {
     if (suppress_messages)
         return;
@@ -685,20 +691,41 @@ void formatted_message_history(const std::string &st, msg_channel_type channel,
     if (colour == MSGCOL_MUTED)
         return;
 
-    formatted_string fs = formatted_string::parse_string(st);
+    // Apply channel color explicitly, so "foo <w>bar</w> baz"
+    // renders "baz" correctly
+    std::string st;
+    {
+        std::ostringstream text;
+        const std::string colour_str = colour_to_str(colour);
+        text << "<" << colour_str << ">"
+             << st_nocolor
+             << "</" << colour_str << ">";
+        text.str().swap(st);
+    }
 
-    mpr_check_patterns(fs.tostring(), channel, param);
+    if (wrap_col)
+    {
+        linebreak_string2(st, wrap_col);
+    }        
 
-    flush_input_buffer( FLUSH_ON_MESSAGE );
+    std::vector<formatted_string> fss;
+    formatted_string::parse_string_to_multiple(st, fss);
 
-    const int num_lines = crawl_view.msgsz.y;
+    for (int i=0; i<fss.size(); i++)
+    {
+        const formatted_string& fs = fss[i];
+        mpr_check_patterns(fs.tostring(), channel, param);
 
-    if (New_Message_Count == num_lines - 1)
-        more();
+        flush_input_buffer( FLUSH_ON_MESSAGE );
 
-    mpr_formatted_output(fs, colour);
+        const int num_lines = crawl_view.msgsz.y;
 
-    mpr_store_messages(st, channel, param);
+        if (New_Message_Count == num_lines - 1)
+            more();
+
+        mpr_formatted_output(fs, colour);
+        mpr_store_messages(fs.to_colour_string(), channel, param);
+    }
 }
 
 bool any_messages(void)
@@ -874,7 +901,7 @@ void replay_messages(void)
             // allow formatted output of tagged messages
             if (Store_Message[ line ].channel == MSGCH_TUTORIAL)
             {
-                formatted_string fs = formatted_string::parse_string(text);
+                formatted_string fs = formatted_string::parse_string(text, true);
                 int curcol = 1;
                 for ( unsigned int j = 0; j < fs.ops.size(); ++j )
                 {
