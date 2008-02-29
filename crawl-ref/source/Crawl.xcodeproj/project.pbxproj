@@ -51,9 +51,7 @@
 		7B0EFDAC0BD12EEB00002671 /* ltablib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B0EFD740BD12EEB00002671 /* ltablib.c */; };
 		7B0EFDAD0BD12EEB00002671 /* ltm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B0EFD750BD12EEB00002671 /* ltm.c */; };
 		7B0EFDAE0BD12EEB00002671 /* ltm.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B0EFD760BD12EEB00002671 /* ltm.h */; settings = {ATTRIBUTES = (); }; };
-		7B0EFDAF0BD12EEB00002671 /* lua.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B0EFD770BD12EEB00002671 /* lua.c */; };
 		7B0EFDB00BD12EEB00002671 /* lua.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B0EFD780BD12EEB00002671 /* lua.h */; settings = {ATTRIBUTES = (); }; };
-		7B0EFDB10BD12EEB00002671 /* luac.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B0EFD790BD12EEB00002671 /* luac.c */; };
 		7B0EFDB20BD12EEB00002671 /* luaconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B0EFD7A0BD12EEB00002671 /* luaconf.h */; settings = {ATTRIBUTES = (); }; };
 		7B0EFDB30BD12EEB00002671 /* lualib.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B0EFD7B0BD12EEB00002671 /* lualib.h */; settings = {ATTRIBUTES = (); }; };
 		7B0EFDB40BD12EEB00002671 /* lundump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B0EFD7C0BD12EEB00002671 /* lundump.c */; };
@@ -69,8 +67,6 @@
 		7B237E6E0A8EC9D000580F30 /* mon-pick.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DE70A8EC9D000580F30 /* mon-pick.h */; };
 		7B237E6F0A8EC9D000580F30 /* mon-pick.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DE80A8EC9D000580F30 /* mon-pick.cc */; };
 		7B237E700A8EC9D000580F30 /* misc.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DE90A8EC9D000580F30 /* misc.h */; };
-		7B237E710A8EC9D000580F30 /* insult.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DEA0A8EC9D000580F30 /* insult.h */; };
-		7B237E720A8EC9D000580F30 /* insult.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DEB0A8EC9D000580F30 /* insult.cc */; };
 		7B237E730A8EC9D000580F30 /* initfile.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DEC0A8EC9D000580F30 /* initfile.h */; };
 		7B237E740A8EC9D000580F30 /* overmap.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DED0A8EC9D000580F30 /* overmap.h */; };
 		7B237E750A8EC9D000580F30 /* overmap.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DEE0A8EC9D000580F30 /* overmap.cc */; };
@@ -262,7 +258,6 @@
 				7B237E6C0A8EC9D000580F30 /* maps.h in CopyFiles */,
 				7B237E6E0A8EC9D000580F30 /* mon-pick.h in CopyFiles */,
 				7B237E700A8EC9D000580F30 /* misc.h in CopyFiles */,
-				7B237E710A8EC9D000580F30 /* insult.h in CopyFiles */,
 				7B237E730A8EC9D000580F30 /* initfile.h in CopyFiles */,
 				7B237E740A8EC9D000580F30 /* overmap.h in CopyFiles */,
 				7B237E760A8EC9D000580F30 /* output.h in CopyFiles */,
@@ -412,8 +407,6 @@
 		7B237DE70A8EC9D000580F30 /* mon-pick.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "mon-pick.h"; sourceTree = "<group>"; };
 		7B237DE80A8EC9D000580F30 /* mon-pick.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-pick.cc"; sourceTree = "<group>"; };
 		7B237DE90A8EC9D000580F30 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = "<group>"; };
-		7B237DEA0A8EC9D000580F30 /* insult.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = insult.h; sourceTree = "<group>"; };
-		7B237DEB0A8EC9D000580F30 /* insult.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = insult.cc; sourceTree = "<group>"; };
 		7B237DEC0A8EC9D000580F30 /* initfile.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = initfile.h; sourceTree = "<group>"; };
 		7B237DED0A8EC9D000580F30 /* overmap.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = overmap.h; sourceTree = "<group>"; };
 		7B237DEE0A8EC9D000580F30 /* overmap.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = overmap.cc; sourceTree = "<group>"; };
@@ -769,8 +762,6 @@
 				7B237DF20A8EC9D000580F30 /* hiscores.h */,
 				7B237DF10A8EC9D000580F30 /* initfile.cc */,
 				7B237DEC0A8EC9D000580F30 /* initfile.h */,
-				7B237DEB0A8EC9D000580F30 /* insult.cc */,
-				7B237DEA0A8EC9D000580F30 /* insult.h */,
 				7B237E610A8EC9D000580F30 /* invent.cc */,
 				7B237E600A8EC9D000580F30 /* invent.h */,
 				7B237E5F0A8EC9D000580F30 /* it_use2.cc */,
@@ -1060,8 +1051,6 @@
 				7B0EFDAA0BD12EEB00002671 /* ltable.c in Sources */,
 				7B0EFDAC0BD12EEB00002671 /* ltablib.c in Sources */,
 				7B0EFDAD0BD12EEB00002671 /* ltm.c in Sources */,
-				7B0EFDAF0BD12EEB00002671 /* lua.c in Sources */,
-				7B0EFDB10BD12EEB00002671 /* luac.c in Sources */,
 				7B0EFDB40BD12EEB00002671 /* lundump.c in Sources */,
 				7B0EFDB60BD12EEB00002671 /* lvm.c in Sources */,
 				7B0EFDB80BD12EEB00002671 /* lzio.c in Sources */,
@@ -1077,7 +1066,6 @@
 				7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */,
 				7B237E6D0A8EC9D000580F30 /* maps.cc in Sources */,
 				7B237E6F0A8EC9D000580F30 /* mon-pick.cc in Sources */,
-				7B237E720A8EC9D000580F30 /* insult.cc in Sources */,
 				7B237E750A8EC9D000580F30 /* overmap.cc in Sources */,
 				7B237E780A8EC9D000580F30 /* initfile.cc in Sources */,
 				7B237E7A0A8EC9D000580F30 /* hiscores.cc in Sources */,
@@ -1286,9 +1274,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
@@ -1300,6 +1288,7 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
