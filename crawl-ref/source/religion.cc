@@ -1839,11 +1839,18 @@ bool is_evil_weapon(const item_def& weap)
         return false;
 
     int weap_brand = get_weapon_brand(weap);
+    int weap_eff = item_special_wield_effect(weap);
 
     return (is_demonic(weap)
-            || weap_brand == SPWPN_VAMPIRICISM
+            || weap.special == SPWPN_SCEPTRE_OF_ASMODEUS
+            || weap.special == SPWPN_STAFF_OF_DISPATER
+            || weap.special == SPWPN_SWORD_OF_CEREBOV
+            || weap_eff == SPWLD_CURSE
+            || weap_eff == SPWLD_TORMENT
+            || weap_eff == SPWLD_ZONGULDROK
+            || weap_brand == SPWPN_DRAINING
             || weap_brand == SPWPN_PAIN
-            || weap_brand == SPWPN_DRAINING);
+            || weap_brand == SPWPN_VAMPIRICISM);
 }
 
 bool ely_destroy_weapons()
