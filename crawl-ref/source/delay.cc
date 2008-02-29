@@ -53,7 +53,8 @@ static void handle_macro_delay();
 static void finish_delay(const delay_queue_item &delay);
 
 // monster cannot be affected in these states
-// (all results of Recite, plus friendly)
+// (all results of Recite, plus friendly;
+// note that berserk monsters are also hasted)
 static bool recite_mons_useless(const monsters *mon)
 {
     return (mons_intel(mon->type) < I_NORMAL
@@ -63,7 +64,7 @@ static bool recite_mons_useless(const monsters *mon)
             || mons_neutral(mon)
             || mons_is_confused(mon)
             || mons_is_paralysed(mon)
-            || mon->has_ench(ENCH_BERSERK));
+            || mon->has_ench(ENCH_HASTE));
 }
 
 // power is maximum 50
