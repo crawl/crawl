@@ -113,7 +113,7 @@ void torment( int caster, int tx, int ty );
 int torment_monsters(int x, int y, int pow, int caster);
 
 bool forget_inventory(bool quiet = false);
-void vitrify_area(int radius);
+bool vitrify_area(int radius);
 void update_corpses(double elapsedTime);
 void update_level(double elapsedTime);
 void handle_time( long time_delta );

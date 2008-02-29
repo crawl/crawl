@@ -1982,24 +1982,37 @@ bool forget_inventory(bool quiet)
     return (items_forgotten > 0);
 }
 
-void vitrify_area(int radius)
+// returns true if there was a visible change
+bool vitrify_area(int radius)
 {
+    if (radius < 2)
+        return (false);
+        
     const int radius2 = radius * radius;
+    // this hinges on clear wall types having the same order as non-clear ones
+    const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
+    bool something_happened = false;
     for ( int x = X_BOUND_1; x <= X_BOUND_2; ++x )
     {
         for ( int y = Y_BOUND_1; y <= Y_BOUND_2; ++y )
         {
             if ( distance(x,y,you.x_pos,you.y_pos) < radius2 )
             {
-                if ( grd[x][y] == DNGN_ROCK_WALL )
-                    grd[x][y] = DNGN_CLEAR_ROCK_WALL;
-                else if ( grd[x][y] == DNGN_STONE_WALL )
-                    grd[x][y] = DNGN_CLEAR_STONE_WALL;
-                else if ( grd[x][y] == DNGN_PERMAROCK_WALL )
-                    grd[x][y] = DNGN_CLEAR_PERMAROCK_WALL;
+                dungeon_feature_type grid = grd[x][y];
+                
+                if (grid == DNGN_ROCK_WALL
+                    || grid == DNGN_STONE_WALL
+                    || grid == DNGN_PERMAROCK_WALL )
+                {
+                    grd[x][y]
+                        = static_cast<dungeon_feature_type>(grid + clear_plus);
+                    something_happened = true;
+                }
             }
         }
     }
+    
+    return (something_happened);
 }
 
 ///////////////////////////////////////////////////////////////////////

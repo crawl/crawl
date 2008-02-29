@@ -496,12 +496,6 @@ static bool xom_is_good(int sever)
 
     if (random2(sever) <= 1)
     {
-        god_speaks(GOD_XOM, random_choose_string(
-                       "\"Go forth and destroy!\"",
-                       "\"Go forth and cause havoc, mortal!\"",
-                       "Xom grants you a minor favour.",
-                       "Xom smiles on you.", NULL));
-
         potion_type type = (potion_type)random_choose(
             POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED, POT_MIGHT,
             POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE, -1);
@@ -509,7 +503,18 @@ static bool xom_is_good(int sever)
         if (type == POT_EXPERIENCE && !one_chance_in(6))
             type = POT_BERSERK_RAGE;
         if (type == POT_BERSERK_RAGE)
+        {
+            if (!you.can_go_berserk(false)) // no message
+                goto try_again;
             you.berserk_penalty = NO_BERSERK_PENALTY;
+        }
+        
+        god_speaks(GOD_XOM, random_choose_string(
+                       "\"Go forth and destroy!\"",
+                       "\"Go forth and cause havoc, mortal!\"",
+                       "Xom grants you a minor favour.",
+                       "Xom smiles on you.", NULL));
+
         potion_effect(type, 150);
         done = true;
     }
@@ -524,6 +529,7 @@ static bool xom_is_good(int sever)
                        "\"Serve the mortal, my children!\"",
                        "Xom grants you some temporary aid.",
                        "Xom momentarily opens a gate.", NULL));
+                       
         int numdemons = std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
         for (int i = 0; i < numdemons; i++)
         {
@@ -535,11 +541,15 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 4)
     {
-        const int radius = random2avg(sever/2, 3);
+        const int radius = random2avg(sever/2, 3) + 1;
+        if (!vitrify_area(radius)) // can fail with radius 1 or in open areas
+            goto try_again;
+            
         god_speaks(GOD_XOM, random_choose_string(
-                       // XXX need some more creative flavor text
+                       "You feel watched.",
+                       "Everything around seems to assume a strange transparency.",
+                       "All the walls suddenly lose part of their structure.",
                        "Xom alters the dungeon around you.", NULL));
-        vitrify_area(radius);
         done = true;
     }
     else if (random2(sever) <= 5)
@@ -562,7 +572,7 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 7)
     {
-        if (! there_are_monsters_nearby())
+        if (!there_are_monsters_nearby())
             goto try_again;
 
         monsters* mon = get_random_nearby_monster();
