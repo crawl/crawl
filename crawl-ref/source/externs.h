@@ -109,7 +109,8 @@ public:
     virtual item_def *weapon(int which_attack = -1) = 0;
     virtual item_def *shield() = 0;
     virtual item_def *slot_item(equipment_type eq) = 0;
-    virtual const item_def *slot_item(equipment_type eq) const
+    // Just a wrapper; not to be overridden
+    const item_def *slot_item(equipment_type eq) const
     {
         return const_cast<actor*>(this)->slot_item(eq);
     }
