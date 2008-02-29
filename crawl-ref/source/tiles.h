@@ -7,7 +7,7 @@
 
 //**convert in-game data to tile index
 int tileidx(unsigned int object, int extra);
-int tileidx_feature(int object);
+int tileidx_feature(int object, int gx, int gy);
 int tileidx_player(int job);
 int tileidx_unseen(int ch, const coord_def& gc);
 int tileidx_item(const item_def &item);

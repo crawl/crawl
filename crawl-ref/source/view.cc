@@ -683,7 +683,7 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             env.tile_bk_fg[x][y] = 0;
             env.tile_bk_bg[x][y] = is_terrain_known(x, y) ?
                 tile_idx_unseen_terrain(x, y, grd[x][y]) : 
-                tileidx_feature(DNGN_UNSEEN);
+                tileidx_feature(DNGN_UNSEEN, x, y);
 #endif
         }
     }

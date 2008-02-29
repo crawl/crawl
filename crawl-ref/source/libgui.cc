@@ -338,10 +338,7 @@ int tile_idx_unseen_terrain(int x, int y, int what)
     unsigned short grid_color;
     get_item_symbol(feature, &grid_symbol, &grid_color);
 
-    if (feature == DNGN_SECRET_DOOR)
-        feature = (unsigned int)grid_secret_door_appearance(x, y);
-
-    int t = tileidx_feature(feature);
+    int t = tileidx_feature(feature, gc.x, gc.y);
     if (t == TILE_ERROR || what == ' ')
         t = tileidx_unseen(what, gc);
 
@@ -402,7 +399,7 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
         {
             env.tile_bk_fg[x][y]= t;
             if (env.tile_bk_bg[x][y] == 0)
-                env.tile_bk_bg[x][y] = tileidx_feature(DNGN_UNSEEN);
+                env.tile_bk_bg[x][y] = tileidx_feature(DNGN_UNSEEN, x, y);
         }
         else
         {

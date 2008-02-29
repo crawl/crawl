@@ -18,6 +18,7 @@
 #include "terrain.h"
 #include "tiles.h"
 #include "tiledef-p.h"
+#include "traps.h"
 #include "travel.h"
 #include "view.h"
 
@@ -1720,7 +1721,40 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
     return tileidx_item(item);
 }
 
-int tileidx_feature(int object)
+static int tileidx_trap(trap_type type)
+{
+    switch (type)
+    {
+    case TRAP_DART:
+        return TILE_DNGN_TRAP_DART;
+    case TRAP_ARROW:
+        return TILE_DNGN_TRAP_ARROW;
+    case TRAP_SPEAR:
+        return TILE_DNGN_TRAP_SPEAR;
+    case TRAP_AXE:
+        return TILE_DNGN_TRAP_AXE;
+    case TRAP_TELEPORT:
+        return TILE_DNGN_TRAP_TELEPORT;
+    case TRAP_ALARM:
+        return TILE_DNGN_TRAP_ALARM;
+    case TRAP_BLADE:
+        return TILE_DNGN_TRAP_BLADE;
+    case TRAP_BOLT:
+        return TILE_DNGN_TRAP_BOLT;
+    case TRAP_NET:
+        return TILE_DNGN_TRAP_NET;
+    case TRAP_ZOT:
+        return TILE_DNGN_TRAP_ZOT;
+    case TRAP_NEEDLE:
+        return TILE_DNGN_TRAP_NEEDLE;
+    case TRAP_SHAFT:
+        return TILE_DNGN_TRAP_SHAFT;
+    default:
+        return TILE_ERROR;
+    }
+}
+
+int tileidx_feature(int object, int gx, int gy)
 {
     switch (object)
     {
@@ -1728,8 +1762,9 @@ int tileidx_feature(int object)
         return TILE_DNGN_UNSEEN;
     case DNGN_ROCK_WALL:
     case DNGN_PERMAROCK_WALL:
-    case DNGN_SECRET_DOOR:
         return TILE_DNGN_ROCK_WALL_OFS;
+    case DNGN_SECRET_DOOR:
+        return (unsigned int)grid_secret_door_appearance(gx, gy);
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
     case DNGN_CLEAR_PERMAROCK_WALL:
@@ -1764,11 +1799,9 @@ int tileidx_feature(int object)
     case DNGN_OPEN_DOOR:
         return TILE_DNGN_OPEN_DOOR;
     case DNGN_TRAP_MECHANICAL:
-        return TILE_DNGN_TRAP_MECHANICAL;
     case DNGN_TRAP_MAGICAL:
-        return TILE_DNGN_TRAP_MAGICAL;
     case DNGN_TRAP_NATURAL:
-        return TILE_DNGN_TRAP_SHAFT;
+        return tileidx_trap(trap_type_at_xy(gx, gy));
     case DNGN_ENTER_SHOP:
         return TILE_DNGN_ENTER_SHOP;
     case DNGN_ENTER_LABYRINTH:
@@ -2019,7 +2052,7 @@ int tileidx_unseen(int ch, const coord_def& gc)
         case '[':
         case ']': res = TILE_UNSEEN_ARMOUR; break;
         case '\\': res = TILE_STAFF_OFFSET; break;
-        case '^': res = TILE_DNGN_TRAP_MAGICAL; break;
+        case '^': res = TILE_DNGN_TRAP_ZOT; break;
         case '_':
         case 131: res = TILE_UNSEEN_ALTAR; break;
         case '~': res = TILE_UNSEEN_ITEM; break;
@@ -3641,7 +3674,7 @@ void tile_draw_floor()
                 if (object == DNGN_SECRET_DOOR)
                     object = (int)grid_secret_door_appearance(gc.x, gc.y);
 
-                tile_dngn[gc.x][gc.y] = tileidx_feature(object);
+                tile_dngn[gc.x][gc.y] = tileidx_feature(object, gc.x, gc.y);
 
                 if (is_travelable_stair((dungeon_feature_type)object) &&
                     !travel_cache.know_stair(gc))
