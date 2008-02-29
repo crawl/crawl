@@ -1685,7 +1685,7 @@ ENDMAP
 
 NAME: david_027_sounds_slurp
 TAGS: entry no_monster_gen
-MONS: generate_awake jelly
+MONS: generate_awake jelly / kobold
 ITEM: dart
 ORIENT: float
 SHUFFLE: {[(
@@ -1713,7 +1713,7 @@ ENDMAP
 
 NAME: david_028_sounds_drone
 TAGS: entry no_monster_gen no_rotate
-MONS: generate_awake boring beetle
+MONS: generate_awake boring beetle / boring beetle
 ORIENT: float
 SHUFFLE: {<
 MAP
