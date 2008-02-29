@@ -663,6 +663,7 @@ void tutorial_finished()
     text =  "Congrats! You survived until the end of this tutorial - be sure to "
             "try the other ones as well. Note that the help screen (<w>?</w>) "
             "will look different from now on. Here's a last playing hint:";
+            
     formatted_message_history(text, MSGCH_TUTORIAL, 0, get_tutorial_cols());
     more();
 
@@ -932,6 +933,7 @@ void tutorial_first_monster(const monsters &mon)
                 "bow. If you have a look at your bow with <w>v</w>, you'll "
                 "find an explanation of how to do this. First <w>w</w>ield "
                 "it, then follow the instructions.";
+                
         formatted_message_history(text, MSGCH_TUTORIAL, 0, get_tutorial_cols());
     }
     else if (Options.tutorial_type == TUT_MAGIC_CHAR)
@@ -939,6 +941,7 @@ void tutorial_first_monster(const monsters &mon)
         text =  "However, as a conjurer you will want to deal with it using magic. "
                 "If you have a look at your spellbook with <w>v</w>, you'll "
                 "find an explanation of how to do this.";
+                
         formatted_message_history(text, MSGCH_TUTORIAL, 0, get_tutorial_cols());
     }
 }
@@ -966,12 +969,13 @@ void tutorial_first_item(const item_def &item)
     get_item_glyph(&item, &ch, &col);
 
     text += colourize_glyph(col, ch);
+    text += " ";
 #else
     // highlight item
     const coord_def ep = grid2view(coord_def(item.x, item.y));
     tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
-    text += " is an item. If you move there and press <w>g</w> or "
+    text += "is an item. If you move there and press <w>g</w> or "
             "<w>,</w> you will pick it up. "
 #ifndef USE_TILE
             "Generally, items are shown by "
@@ -982,6 +986,7 @@ void tutorial_first_item(const item_def &item)
             "automatically."
             "\nAny time you <w>v</w>iew an item, you can read about its "
             "properties and description.";
+            
     formatted_message_history(text, MSGCH_TUTORIAL, 0, get_tutorial_cols());
 }
 

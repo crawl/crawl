@@ -742,7 +742,7 @@ void canned_msg(canned_message_type which_message)
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_OK:
-        mpr("Okay, then.");
+        mpr("Okay, then.", MSGCH_PROMPT);
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_UNTHINKING_ACT:

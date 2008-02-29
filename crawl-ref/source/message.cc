@@ -529,7 +529,19 @@ static void mpr_check_patterns(const std::string& message,
             }
         }
     }
+}
 
+static bool channel_message_history(msg_channel_type channel)
+{
+    switch (channel)
+    {
+    case MSGCH_PROMPT:
+    case MSGCH_EQUIPMENT:
+    case MSGCH_EXAMINE_FILTER:
+       return (false);
+    default:
+       return (true);
+    }
 }
 
 // adds a given message to the message history
@@ -551,7 +563,7 @@ static void mpr_store_messages(const std::string& message,
     textcolor(LIGHTGREY);
 
     // equipment lists just waste space in the message recall
-    if (channel != MSGCH_EQUIPMENT && channel != MSGCH_EXAMINE_FILTER)
+    if (channel_message_history(channel))
     {
         // Put the message into Store_Message, and move the '---' line forward
         Store_Message[ Next_Message ].text = message;
@@ -711,7 +723,7 @@ void formatted_message_history(const std::string &st_nocolor, msg_channel_type c
     std::vector<formatted_string> fss;
     formatted_string::parse_string_to_multiple(st, fss);
 
-    for (int i=0; i<fss.size(); i++)
+    for (unsigned int i=0; i<fss.size(); i++)
     {
         const formatted_string& fs = fss[i];
         const std::string unformatted = fs.tostring();

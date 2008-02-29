@@ -336,23 +336,33 @@ std::string formatted_string::to_colour_string() const
     const int size = ops.size();
     for (int i = 0; i < size; ++i)
     {
-        if (ops[i] == FSOP_TEXT) {
-            // gotta double up those '<' chars ...
-            uint start = st.size();
+        if (ops[i] == FSOP_TEXT)
+        {
             st += ops[i].text;
-            while (true) {
-                const uint left_angle = st.find('<', start);
-                if (left_angle == std::string::npos) break;
+            
+            // gotta double up those '<' chars ...
+            unsigned int start = st.size();
+            unsigned int left_angle;
+
+            while (true)
+            {
+                left_angle = st.find('<', start);
+                if (left_angle == std::string::npos)
+                    break;
+                    
                 st.insert(left_angle, "<");
                 start = left_angle + 2;
             }
-        } else if (ops[i] == FSOP_COLOUR) {
+        }
+        else if (ops[i] == FSOP_COLOUR)
+        {
             st += "<";
             st += colour_to_str(ops[i].x);
             st += ">";
         }
     }
-	return st;
+    
+    return st;
 }
 
 void formatted_string::display(int s, int e) const
