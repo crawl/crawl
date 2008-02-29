@@ -95,8 +95,10 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
     {
         resist = mons_resist_magic(mons);
         
-        // much lower chances at influencing demons
-        if (holiness == MH_DEMONIC)
+        // much lower chances at influencing undead/demons
+        if (holiness == MH_UNDEAD)
+            pow -= 2 + random2(3);
+        else if (holiness == MH_DEMONIC)
             pow -= 3 + random2(5);
     }
 
