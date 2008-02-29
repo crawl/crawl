@@ -48,6 +48,7 @@
 #include "mtransit.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -5383,6 +5384,22 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
         maxduration = duration;
 }
 
+// replaces @player_god@ and @god_is@ with player's god name
+// special handling for atheists: use "you"/"You" instead
+static std::string replace_god_name(bool need_verb = false, bool capital = false)
+{
+    std::string result =
+          (you.religion == GOD_NO_GOD ? (capital? "You" : "you")
+                                      : god_name(you.religion, false));
+    if (need_verb)
+    {
+        result +=
+          (you.religion == GOD_NO_GOD? " are" : " is");
+    }
+          
+    return (result);
+}
+
 static std::string get_species_insult(const std::string type)
 {
     std::string lookup = "insult ";
@@ -5492,6 +5509,14 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                       monster->pronoun(PRONOUN_CAP_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",
                       monster->pronoun(PRONOUN_NOCAP_POSSESSIVE));
+
+    // replace with "you are" for atheists
+    msg = replace_all(msg, "@god_is@", replace_god_name(true, false));
+    msg = replace_all(msg, "@God_is@", replace_god_name(true, true));
+    
+    // no verb needed
+    msg = replace_all(msg, "@player_god@", replace_god_name(false, false));
+    msg = replace_all(msg, "@Player_god@", replace_god_name(false, true));
 
     // replace with species specific insults
     msg = replace_all(msg, "@species_insult_adj1@", get_species_insult("adj1"));
