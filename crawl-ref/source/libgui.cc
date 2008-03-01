@@ -397,7 +397,7 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
     {
         if (c == PX_I || c == PX_M)
         {
-            env.tile_bk_fg[x][y]= t;
+            env.tile_bk_bg[x][y]= t;
             if (env.tile_bk_bg[x][y] == 0)
                 env.tile_bk_bg[x][y] = tileidx_feature(DNGN_UNSEEN, x, y);
         }
@@ -1086,14 +1086,15 @@ void tile_place_cursor(int x, int y, bool display)
     }
 
     int new_flag = TILE_FLAG_CURSOR1;
-    const coord_def gc = view2grid(coord_def(x+1, y+1));
+    const coord_def ep(x+1, y+1);
+    const coord_def gc = view2grid(ep);
     if (gc.x < 0 || gc.y < 0 || gc.x >= GXM || gc.y >= GYM)
     {
         // off the dungeon...
         tile_cursor_x = -1;
         return;
     }
-    else if (!map_bounds(gc))
+    else if (!map_bounds(gc) || !is_terrain_seen(gc.x, gc.y))
     {
         new_flag = TILE_FLAG_CURSOR2;
     }
