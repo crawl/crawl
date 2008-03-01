@@ -197,15 +197,16 @@ Dexterity:    Affects your accuracy in combat, your ability to dodge
               does directly affect your evasion score (EV).
 
 If any one of these drops to zero for some reason, you die. Note that 
-upon gaining Levels 3, 6, 9 etc. you get to choose one of the attributes
-to raise. Random increases can also occur (which levels give an increase
-is determined by race, as is the attribute(s) to be increased).
+upon gaining Levels 3, 6, 9, etc., you get to choose one of the 
+attributes to raise. Random increases can also occur; which levels give 
+an increase is determined by race, as is the attribute(s) to be 
+increased.
 
 The next numbers provide additional information about your character.
 
 Armour Class: Also called AC; when something injures you, your AC 
-------------- reduces the amount of damage you suffer. The number next
-              to your AC is a measure of how good your shield (if any)
+------------- reduces the amount of damage you suffer. The number next 
+              to your AC is a measure of how good your shield (if any) 
               is at blocking attacks. In both cases, more is better.
 
 Evasion:      Also called EV, this helps you to avoid being hit by 
@@ -215,27 +216,27 @@ Evasion:      Also called EV, this helps you to avoid being hit by
 Gold:         This is how much money you're carrying. Money adds to your 
 -----         final score and can be used to purchase items in shops.
 
-Magic         Affects your ability to resist the effects of enchantments
+Magic         Affects your ability to resist the effects of enchantments 
 Resistance:   and similar magic directed at you. Although your magic 
 -----------   resistance increases with your level to an extent 
               determined by your character's species, the creatures you 
               will meet deeper in the dungeon are better at casting 
-              spells and are more likely to be able to affect you. MR is 
-              an internal variable, so you can't see what yours is, but 
-              you can get a rough idea by pressing '@'.
+              spells, and are more likely to be able to affect you. MR 
+              is an internal variable, so you can't see what yours is, 
+              but you can get a rough idea by pressing '@'.
 
 Stealth:      Another internal variable like Magic Resistance. First, 
 --------      there is a Stealth skill which every character can learn 
               (but again, the different races' aptitudes for this vary 
-              greatly). Next, some armour affects Stealth in a positive 
-              way (all Elven pieces are notable in this regard), while 
+              greatly). Next, some armours affect Stealth in a positive 
+              way (all elven pieces are notable in this regard), while 
               heavy armours will hamper it. Stealth's effects include 
               allowing your character to move through the dungeon 
               undetected.
 
-Sometimes characters will be able to use special abilities, for example
-the Naga's ability to spit poison, or the magical power to turn 
-invisible granted by a ring. These are accessed through the 'a' command.
+Sometimes characters will be able to use special abilities, e.g. the
+naga's ability to spit poison, or the magical power to turn invisible 
+granted by a ring. These are accessed through the 'a' command.
 
 There are many ailments or enchantments that can temporarily befall you.
 These are noted in the stats area below the experience line. Many of 
@@ -1517,7 +1518,7 @@ invisible creatures, and have tough skin, but their tails are relatively
 slow and cannot move them around as quickly as can other creatures' legs
 (this only affects their movement rate; all other actions are at normal 
 speed). Their body shape also prevents them from gaining full protection
-from most armour. A Naga's biggest forte is stealth: Nagas are very good
+from most armour. A naga's biggest forte is stealth: nagas are very good
 at moving unnoticed.
 
 Every now and then, a naga can spit poison; the range, accuracy and
@@ -1722,9 +1723,9 @@ in ancient times, but some of that affinity still remains. The
 instability of their own morphogenic matrix has made them very 
 accomplished transmuters, but most other magics seem foreign to them.
 
-Note:  Some species have special abilities which can be accessed by the 
------  'a' abilities menu. Some also have physical characteristics which
-       allow them to make extra attacks using the Unarmed Combat skill.
+Note: Some species have special abilities which can be accessed by the 
+----- 'a' abilities menu. Some also have physical characteristics which 
+      allow them to make extra attacks using the Unarmed Combat skill.
 
 
 ------------------------------------------------------------------------
@@ -2055,16 +2056,17 @@ penalty.
 
 Stealth:
 --------
-Helps you avoid being noticed. Try not to wear heavy armour or be
+Helps you avoid being noticed. Try not to wear heavy armour or be 
 encumbered if you want to be stealthy. Large creatures (like Trolls) 
-are bad at stealth. The big exception are Nagas, which are unusually
-stealthy. Stealth is trained by simply walking around lightly armoured.
+are bad at stealth. The big exception are nagas, which are unusually 
+stealthy. Stealth is trained by walking around lightly armoured, and 
+especially by walking around unnoticed.
 
 Stabbing:
 ---------
-Lets you make a very powerful first strike against a sleeping/resting
+Lets you make a very powerful first strike against a sleeping/resting 
 monster who hasn't noticed you yet. This is most effective with a 
-dagger, slightly less effective with other short blades, and less useful
+dagger, slightly less effective with other short blades, and less useful 
 (although by no means of negligible effect) with any other weapon.
 
 Shields:
@@ -2075,13 +2077,13 @@ degree to which it hinders you.
 Traps & Doors:
 --------------
 Affects your ability to notice hidden traps and doors and to disarm
-traps when you find them. With this skill at a high level you will
-often find hidden things without actively looking for them. 
-Note that you scan your vicinity in every move (not just with commands
-like 's', '.' or '5'). Without (or with low) Traps & Doors skill, you
-search only the eight adjacent squares. The area covered gets larger 
-with higher skill, as well as the chance to detect something.
- 
+traps when you find them. With this skill at a high level, you will
+often find hidden things without actively looking for them. Note that 
+you scan your vicinity in every move (not just with commands like 's', 
+'.' or '5'). Without (or with low) Traps & Doors skill, you search only 
+the eight adjacent squares. The area covered gets larger with higher 
+skill, as well as the chance to detect something.
+
 Invocations:
 ------------
 An easy-to-learn skill which affects your ability to call on your God 
