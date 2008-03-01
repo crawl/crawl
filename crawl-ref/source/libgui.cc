@@ -1094,7 +1094,7 @@ void tile_place_cursor(int x, int y, bool display)
         tile_cursor_x = -1;
         return;
     }
-    else if (!map_bounds(gc) || !is_terrain_seen(gc.x, gc.y))
+    else if (!map_bounds(gc))
     {
         new_flag = TILE_FLAG_CURSOR2;
     }

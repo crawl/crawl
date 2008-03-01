@@ -697,21 +697,6 @@ void tcache_compose_normal(int ix, int *fg, int *bg)
     if ((bg0 & TILE_FLAG_SANCTUARY) && !(bg0 & TILE_FLAG_UNSEEN))
         tcache_overlay(tc_img, ix, TILE_SANCTUARY, TREGION_0_NORMAL, &c, NULL);
 
-    // Tile cursor
-    if (bg0 & TILE_FLAG_CURSOR)
-    {
-       int type = ((bg0 & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
-            TILE_CURSOR : TILE_CURSOR2;
-
-       if ((bg0 & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
-           type = TILE_CURSOR3;
-
-       tcache_overlay(tc_img, ix, type, TREGION_0_NORMAL, &c, NULL);
-
-       if (type != TILE_CURSOR3)
-           c = 2;
-    }
-
     // Apply the travel exclusion under the foreground if the cell is
     // visible.  It will be applied later if the cell is unseen.
     if ((bg0 & TILE_FLAG_TRAVEL_EX) && !(bg0 & TILE_FLAG_UNSEEN))
@@ -797,13 +782,29 @@ void tcache_compose_normal(int ix, int *fg, int *bg)
         tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c, 
             NULL);
     }
+
+    // Tile cursor
+    if (bg0 & TILE_FLAG_CURSOR)
+    {
+       int type = ((bg0 & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
+            TILE_CURSOR : TILE_CURSOR2;
+
+       if ((bg0 & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
+           type = TILE_CURSOR3;
+
+       tcache_overlay(tc_img, ix, type, TREGION_0_NORMAL, &c, NULL);
+
+       if (type != TILE_CURSOR3)
+           c = 2;
+    }
+
 }
 
 // Tile cursor
 int TileDrawCursor(int x, int y, int cflag)
 {
     int oldc = t2buf[x+1][y+1] & TILE_FLAG_CURSOR;
-    t2buf[x+1][y+1] &= ~ TILE_FLAG_CURSOR;
+    t2buf[x+1][y+1] &= ~TILE_FLAG_CURSOR;
     t2buf[x+1][y+1] |= cflag;
     update_single_grid(x, y);
     return oldc;
