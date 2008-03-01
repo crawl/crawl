@@ -52,10 +52,10 @@ I @will_or_shall@ @feast_or_devour@ thy @body_or_spiritual_part@!
 body_or_spiritual_part
 
 w:3
-important_body_part
+@important_body_part@
 
 w:1
-important_spiritual_part
+@important_spiritual_part@
 
 %%%%
 will_or_shall
@@ -500,6 +500,60 @@ shaky
 prissy
 
 %%%%
+##########################################################
+# adjective1, Ghoul special
+##########################################################
+insult ghoul adj1
+
+# being old and mouldy
+mildewed
+
+mouldy
+
+musty
+
+stale
+
+long-expired
+
+# falling apart
+worm-eaten
+
+moth-eaten
+
+corroded
+
+leprous
+
+cankerous
+
+decaying
+
+decomposing
+
+deteriorating
+
+infectious
+
+diseased
+
+wasted
+
+rotting 
+
+stinking
+
+putrescent
+
+foul-smelling
+
+foetid
+
+gangrenous
+
+foul-breathed
+
+%%%%
 ###############################################################
 # adjective2, usually longer and consisting of two words
 ###############################################################
@@ -698,6 +752,92 @@ magpie-eyed
 mallardish
 
 %%%%
+##########################################################
+# adjective2, Mummy special
+##########################################################
+insult mummy adj2
+
+# pertaining to dryness and flammability
+desiccated
+
+dried
+
+musty 
+
+flammable
+
+inflammable
+
+ignitable
+
+combustible
+
+smouldering
+
+# pertaining to bandages
+shrink-wrapped
+
+crepe-taped
+
+duct-taped
+
+fraying
+
+hand-wound
+
+tightly wound
+
+high-strung
+
+straight-laced
+
+w:30
+@insult undead adj2@
+
+%%%%
+##########################################################
+# adjective2, Vampire special
+##########################################################
+insult vampire adj2
+
+bat-flapping
+
+blood-sucking
+
+light-shying
+
+pallid
+
+sallow
+
+cream-faced
+
+whey-faced
+
+anaemic
+
+bloodless
+
+exsanginous
+
+w:20
+@insult undead adj2@
+
+%%%%
+##########################################################
+# adjective2, undead special
+##########################################################
+insult undead adj2
+
+deathlike
+
+lifeless
+
+undead
+
+corpse-like
+
+%%%%
 ###############################################
 # noun of the insult
 ###############################################
@@ -766,7 +906,6 @@ gnoll-tail
 gudgeon
 
 guttersnipe
-
 
 haggard
 
@@ -1045,3 +1184,66 @@ veal
 
 walking sirloin
 %%%%
+##########################################################
+# noun, Mummy special
+##########################################################
+insult mummy noun
+
+dustbag
+
+linensack
+
+clothbag
+
+tombling
+
+mummylet
+
+shroud
+
+paper wrap
+
+roll of bandages
+
+bundle of gauze
+
+wound roll
+
+cotton waste
+
+wrapping tissue
+
+# susceptibility to fire
+pyre
+
+tinder
+%%%%
+##########################################################
+# noun, Ghoul special
+##########################################################
+insult ghoul noun
+
+flesh wound
+
+running sore
+
+wreck
+
+dirt collector
+
+dust catcher
+
+trash-dump
+
+rubbish heap
+
+garbage dump
+
+walking corpse
+
+corpse eater
+
+scavenger
+
+%%%%
+
