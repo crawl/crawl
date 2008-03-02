@@ -3653,7 +3653,7 @@ bool drink_fountain()
                                 20, 20,
                                 4, 4, 4 };
 
-        ASSERT( ARRAYSIZE(weights) == ARRAYSIZE(effects) );
+        COMPILE_CHECK( ARRAYSIZE(weights) == ARRAYSIZE(effects), c1 );
         fountain_effect =
             effects[choose_random_weighted(weights,
                                            weights + ARRAYSIZE(weights))];

@@ -189,6 +189,8 @@ static void startup_tutorial();
 static void read_messages();
 #endif
 
+static void compile_time_asserts();
+
 /*
    It all starts here. Some initialisations are run first, then straight to
    new_game and then input.
@@ -199,6 +201,7 @@ int old_main( int argc, char *argv[] )
 int main( int argc, char *argv[] )
 #endif
 {
+    compile_time_asserts();     // just to quiet "unused static function" warning
     // Load in the system environment variables
     get_system_environment();
 
@@ -4359,4 +4362,21 @@ static void update_replay_state()
 
     if (!is_processing_macro())
         repeat_again_rec.clear();
+}
+
+
+void compile_time_asserts()
+{
+    // Check that the numbering comments in enum.h haven't been
+    // disturbed accidentally.
+    COMPILE_CHECK(SK_UNARMED_COMBAT == 19       , c1);
+    COMPILE_CHECK(SK_EVOCATIONS == 39           , c2);
+    COMPILE_CHECK(SP_MERFOLK == 35              , c3);
+    COMPILE_CHECK(SPELL_BOLT_OF_MAGMA == 18     , c4);
+    COMPILE_CHECK(SPELL_POISON_ARROW == 94      , c5);
+    COMPILE_CHECK(SPELL_SUMMON_MUSHROOMS == 221 , c6);
+
+    //jmf: NEW ASSERTS: we ought to do a *lot* of these
+    COMPILE_CHECK(NUM_SPELLS < SPELL_NO_SPELL   , c7);
+    COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c8);
 }

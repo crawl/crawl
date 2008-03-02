@@ -36,9 +36,9 @@
 
 
 #ifndef _lint
-#define COMPILE_CHECK(p)                        {struct _CC {char a[(p) ? 1 : -1];};} 0
+#define COMPILE_CHECK(expr, tag) typedef char compile_check_ ## tag[(expr) ? 1 : -1]
 #else
-#define COMPILE_CHECK(p)
+#define COMPILE_CHECK(expr, tag)
 #endif
 
 #if DEBUG

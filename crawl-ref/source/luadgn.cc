@@ -1112,7 +1112,7 @@ const char *dngn_feature_names[] =
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)
 {
-    ASSERT(ARRAYSIZE(dngn_feature_names) == NUM_REAL_FEATURES);
+    COMPILE_CHECK(ARRAYSIZE(dngn_feature_names) == NUM_REAL_FEATURES, c1);
     if (name.empty())
         return (DNGN_UNSEEN);
 
@@ -1127,7 +1127,7 @@ std::vector<std::string> dungeon_feature_matches(const std::string &name)
 {
     std::vector<std::string> matches;
 
-    ASSERT(ARRAYSIZE(dngn_feature_names) == NUM_REAL_FEATURES);
+    COMPILE_CHECK(ARRAYSIZE(dngn_feature_names) == NUM_REAL_FEATURES, c1);
     if (name.empty())
         return (matches);
 

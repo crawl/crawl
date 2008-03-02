@@ -1665,14 +1665,14 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
           "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
           "Kill Mutator Or Rotter", "Kill Wizard", "Kill Priest",
           "Kill Angel", "Kill Neutral", "Undead Slave Kill Living", 
-	  "Servant Kill Living", "Servant Kill Undead", "Servant Kill Demon",
+          "Servant Kill Living", "Servant Kill Undead", "Servant Kill Demon",
           "Servant Kill Natural Evil", "Servant Kill Angel",
           "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
           "Cards", "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
           "Eat Souled Beings", "Create Life", "Deliberate Mutation"
         };
 
-        ASSERT(ARRAYSIZE(conducts) == NUM_CONDUCTS);
+        COMPILE_CHECK(ARRAYSIZE(conducts) == NUM_CONDUCTS, c1);
         mprf( MSGCH_DIAGNOSTICS, 
              "conduct: %s; piety: %d (%+d); penance: %d (%+d)",
              conducts[thing_done], 

@@ -990,10 +990,11 @@ static mutation_def mutation_defs[] = {
     { MUT_PATTERNED_SCALES, 1, 3, false }
 };
 
+COMPILE_CHECK(ARRAYSIZE(mutation_defs) == NUM_MUTATIONS, c1);
+
 #ifdef DEBUG_DIAGNOSTICS
 void sanity_check_mutation_defs()
 {
-    ASSERT(ARRAYSIZE(mutation_defs) == NUM_MUTATIONS);
 
     for (unsigned i = 0; i < ARRAYSIZE(mutation_defs); ++i)
     {

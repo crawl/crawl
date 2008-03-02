@@ -1496,8 +1496,8 @@ static const char *drac_colour_names[] = {
 
 std::string draconian_colour_name(monster_type mtype)
 {
-    ASSERT(ARRAYSIZE(drac_colour_names) ==
-           MONS_PALE_DRACONIAN - MONS_DRACONIAN);
+    COMPILE_CHECK(ARRAYSIZE(drac_colour_names) ==
+                  MONS_PALE_DRACONIAN - MONS_DRACONIAN, c1);
     if (mtype < MONS_BLACK_DRACONIAN || mtype > MONS_PALE_DRACONIAN)
         return "buggy";
     return (drac_colour_names[mtype - MONS_BLACK_DRACONIAN]);
@@ -1505,8 +1505,8 @@ std::string draconian_colour_name(monster_type mtype)
 
 monster_type draconian_colour_by_name(const std::string &name)
 {
-    ASSERT(ARRAYSIZE(drac_colour_names) ==
-           MONS_PALE_DRACONIAN - MONS_DRACONIAN);
+    COMPILE_CHECK(ARRAYSIZE(drac_colour_names) ==
+                  MONS_PALE_DRACONIAN - MONS_DRACONIAN, c1);
     for (unsigned i = 0; i < ARRAYSIZE(drac_colour_names); ++i)
         if (name == drac_colour_names[i])
             return static_cast<monster_type>(i + MONS_BLACK_DRACONIAN);
@@ -5201,8 +5201,7 @@ static const char *enchant_names[] =
 
 const char *mons_enchantment_name(enchant_type ench)
 {
-    ASSERT(NUM_ENCHANTMENTS ==
-           (sizeof(enchant_names) / sizeof(*enchant_names)) - 1);
+    COMPILE_CHECK(ARRAYSIZE(enchant_names) == NUM_ENCHANTMENTS+1, c1);
     
     if (ench > NUM_ENCHANTMENTS)
         ench = NUM_ENCHANTMENTS;

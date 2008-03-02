@@ -1508,6 +1508,14 @@ enum monster_type                      // (int) menv[].type
     MONS_BLUE_DEVIL,
     MONS_BEAST,
     MONS_IRON_DEVIL,                   //   89
+    // 90
+    //
+    //
+    //
+    //
+    // 95
+    //
+    //
     MONS_GLOWING_SHAPESHIFTER = 98,    //   98
     MONS_SHAPESHIFTER,
     MONS_GIANT_MITE,                   //  100
@@ -1585,15 +1593,15 @@ enum monster_type                      // (int) menv[].type
     MONS_SWAMP_DRAKE,
     MONS_DEATH_DRAKE,
     MONS_SOLDIER_ANT,
-    MONS_HILL_GIANT,
-    MONS_QUEEN_ANT,                    //  175
+    MONS_HILL_GIANT,                   //  175
+    MONS_QUEEN_ANT,
     MONS_ANT_LARVA,
     MONS_GIANT_FROG,
     MONS_GIANT_BROWN_FROG,
-    MONS_SPINY_FROG,
-    MONS_BLINK_FROG,                   //  180
+    MONS_SPINY_FROG,                   //  180
+    MONS_BLINK_FROG,
     MONS_GIANT_COCKROACH,
-    MONS_SMALL_SNAKE,                  //  182
+    MONS_SMALL_SNAKE,
     //jmf: new monsters
     MONS_SHUGGOTH, //jmf: added for evil spells
     MONS_WOLF,     //jmf: added
@@ -1601,11 +1609,11 @@ enum monster_type                      // (int) menv[].type
     MONS_BEAR,     //jmf: added bears!
     MONS_GRIZZLY_BEAR,
     MONS_POLAR_BEAR,
-    MONS_BLACK_BEAR,  // 189
+    MONS_BLACK_BEAR,                   //  190
     MONS_SIMULACRUM_SMALL,
     MONS_SIMULACRUM_LARGE,
     MONS_MERFOLK,
-    MONS_MERMAID,     // 193
+    MONS_MERMAID,                      //  194
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,
@@ -1706,26 +1714,26 @@ enum monster_type                      // (int) menv[].type
     // mon-util.cc.
     MONS_BLACK_DRACONIAN,               // Should always be first colour.
     MONS_MOTTLED_DRACONIAN,
-    MONS_YELLOW_DRACONIAN,
-    MONS_GREEN_DRACONIAN,               // 315
+    MONS_YELLOW_DRACONIAN,              //  315
+    MONS_GREEN_DRACONIAN,
     MONS_PURPLE_DRACONIAN,
     MONS_RED_DRACONIAN,
     MONS_WHITE_DRACONIAN,
-    MONS_PALE_DRACONIAN,                // Should always be last colour.
+    MONS_PALE_DRACONIAN,                //  320 Should always be last colour.
 
     // Sync up with monplace.cc's draconian selection if adding more.
     MONS_DRACONIAN_CALLER,
     MONS_DRACONIAN_MONK, 
     MONS_DRACONIAN_ZEALOT,
     MONS_DRACONIAN_SHIFTER,
-    MONS_DRACONIAN_ANNIHILATOR,
-    MONS_DRACONIAN_KNIGHT,              // 325
+    MONS_DRACONIAN_ANNIHILATOR,         //  325
+    MONS_DRACONIAN_KNIGHT,
     MONS_DRACONIAN_SCORCHER,
     
     MONS_MURRAY,
     MONS_TIAMAT,
 
-    MONS_DEEP_ELF_BLADEMASTER,
+    MONS_DEEP_ELF_BLADEMASTER,         //  330
     MONS_DEEP_ELF_MASTER_ARCHER,
 
     // The Lords of Hell:
@@ -1758,11 +1766,11 @@ enum monster_type                      // (int) menv[].type
     MONS_YAKTAUR_CAPTAIN,
     MONS_KILLER_KLOWN,
     MONS_ELECTRIC_GOLEM, // replacing the guardian robot -- bwr
-    MONS_BALL_LIGHTNING, // replacing the dorgi -- bwr
+    MONS_BALL_LIGHTNING, // replacing the dorgi -- bwr  380
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
     MONS_QUOKKA,         // Quokka are a type of wallaby, returned -- bwr 382
-    
-
+    // 383
+    // 384
     MONS_EYE_OF_DEVASTATION = 385,     //  385
     MONS_MOTH_OF_WRATH,
     MONS_DEATH_COB,
@@ -2311,38 +2319,38 @@ enum species_type
     SP_HUMAN = 1,                      //    1
     SP_HIGH_ELF,
     SP_GREY_ELF,
-    SP_DEEP_ELF,                       //    5
-    SP_SLUDGE_ELF,
+    SP_DEEP_ELF,
+    SP_SLUDGE_ELF,                     //    5
     SP_MOUNTAIN_DWARF,
     SP_HALFLING,
-    SP_HILL_ORC,                       //   10
+    SP_HILL_ORC,
     SP_KOBOLD,
-    SP_MUMMY,
+    SP_MUMMY,                          //   10
     SP_NAGA,
     SP_GNOME,
-    SP_OGRE,                           //   15
+    SP_OGRE,
     SP_TROLL,
     SP_OGRE_MAGE,
     SP_RED_DRACONIAN,
     SP_WHITE_DRACONIAN,
-    SP_GREEN_DRACONIAN,                //   20
+    SP_GREEN_DRACONIAN,
     SP_GOLDEN_DRACONIAN,
-    SP_GREY_DRACONIAN,
+    SP_GREY_DRACONIAN,                 //   20
     SP_BLACK_DRACONIAN,
     SP_PURPLE_DRACONIAN,
-    SP_MOTTLED_DRACONIAN,              //   25
+    SP_MOTTLED_DRACONIAN,
     SP_PALE_DRACONIAN,
     SP_UNK0_DRACONIAN,
     SP_UNK1_DRACONIAN,
     SP_BASE_DRACONIAN,
-    SP_CENTAUR,                        //   30
+    SP_CENTAUR,
     SP_DEMIGOD,
-    SP_SPRIGGAN,
+    SP_SPRIGGAN,                       //   30
     SP_MINOTAUR,
     SP_DEMONSPAWN,
-    SP_GHOUL,                          //   35
+    SP_GHOUL,
     SP_KENKU,
-    SP_MERFOLK,
+    SP_MERFOLK,                        //   35
     SP_VAMPIRE,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
@@ -2372,6 +2380,7 @@ enum spell_type
     SPELL_BOLT_OF_COLD,
     SPELL_LIGHTNING_BOLT,
     SPELL_BOLT_OF_MAGMA,               //   18
+    // 19
     SPELL_POLYMORPH_OTHER = 20,        //   20
     SPELL_SLOW,
     SPELL_HASTE,
@@ -2447,6 +2456,7 @@ enum spell_type
     SPELL_ABJURATION_II,
     SPELL_FULSOME_DISTILLATION,        //   93
     SPELL_POISON_ARROW,                //   94
+
     SPELL_TWISTED_RESURRECTION = 110,  //  110
     SPELL_REGENERATION,
     SPELL_BONE_SHARDS,
@@ -2528,17 +2538,17 @@ enum spell_type
     SPELL_BEND,
     SPELL_BACKLIGHT,
     SPELL_INTOXICATE,   // confusion but only "smart" creatures
-    SPELL_EVAPORATE,    // turn a potion into a cloud
+    SPELL_EVAPORATE,    // turn a potion into a cloud 190
     SPELL_ERINGYAS_SURPRISING_BOUQUET, // turn sticks into herbivore food
     SPELL_FRAGMENTATION,               // replacement for "orb of frag"
     SPELL_AIR_WALK,                    // "dematerialize" (air/transmigration)
-    SPELL_SANDBLAST,     // mini-frag; can use stones for material comp   195
+    SPELL_SANDBLAST,     // mini-frag; can use stones for material comp
     SPELL_ROTTING,       // evil god power or necromantic transmigration
     SPELL_MAXWELLS_SILVER_HAMMER,      // vorpal-brand maces etc.
     SPELL_CONDENSATION_SHIELD,         // "shield" of icy vapour
     SPELL_SEMI_CONTROLLED_BLINK,       //jmf: to test effect             
-    SPELL_STONESKIN,                   // 200
-    SPELL_SIMULACRUM,
+    SPELL_STONESKIN,
+    SPELL_SIMULACRUM,                  //  200
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_CHAIN_LIGHTNING,
     SPELL_EXCRUCIATING_WOUNDS,

@@ -1294,16 +1294,14 @@ std::string item_def::name_aux( description_level_type desc,
                 "smoky ", "glowing ", "sedimented ", "metallic ", "murky ",
                 "gluggy ", "oily ", "slimy ", "emulsified "
             };
-            ASSERT( sizeof(potion_qualifiers) / sizeof(*potion_qualifiers)
-                        == PDQ_NQUALS );
+            COMPILE_CHECK( ARRAYSIZE(potion_qualifiers) == PDQ_NQUALS, c1 );
 
             static const char *potion_colours[] = {
                 "clear", "blue", "black", "silvery", "cyan", "purple",
                 "orange", "inky", "red", "yellow", "green", "brown", "pink",
                 "white"
             };
-            ASSERT( sizeof(potion_colours) / sizeof(*potion_colours)
-                        == PDC_NCOLOURS );
+            COMPILE_CHECK( ARRAYSIZE(potion_colours) == PDC_NCOLOURS, c1 );
 
             const char *qualifier = 
                 (pqual < 0 || pqual >= PDQ_NQUALS)? "bug-filled "
