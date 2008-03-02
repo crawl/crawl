@@ -122,8 +122,6 @@ static void give_random_secondary_armour( int slot );
 static bool give_wanderer_weapon( int slot, int wpn_skill );
 static void create_wanderer(void);
 static bool give_items_skills(void);
-static species_type letter_to_species(int keyn);
-static job_type letter_to_class(int keyn);
 
 ////////////////////////////////////////////////////////////////////////
 // Remember player's startup options
@@ -136,20 +134,134 @@ static god_type ng_pr;
 static int ng_weapon;
 static int ng_book;
 
+/* March 2008: change order of species and jobs on character selection screen
+   as suggested by Markus Maier. Summarizing comments below are copied directly
+   from Markus' SourceForge comments. */
+
+// listed in two columns to match the selection screen output
+// Take care to list all valid species here, or they cannot be directly chosen.
+// The red draconian is later replaced by a random variant.
+// The old and new lists are expected to have the same length.
+static species_type old_species_order[] = {
+    SP_HUMAN,       SP_HIGH_ELF,
+    SP_GREY_ELF,    SP_DEEP_ELF,
+    SP_SLUDGE_ELF,  SP_MOUNTAIN_DWARF,
+    SP_HALFLING,    SP_HILL_ORC,
+    SP_KOBOLD,      SP_MUMMY,
+    SP_NAGA,        SP_GNOME,
+    SP_OGRE,        SP_TROLL,
+    SP_OGRE_MAGE,   SP_RED_DRACONIAN,
+    SP_CENTAUR,     SP_DEMIGOD,
+    SP_SPRIGGAN,    SP_MINOTAUR,
+    SP_DEMONSPAWN,  SP_GHOUL,
+    SP_KENKU,       SP_MERFOLK,
+    SP_VAMPIRE
+};
+
+// Fantasy staples and humanoid creatures come first, then dimunitive and
+// stealthy creatures, then monstrous creatures, then planetouched and after
+// all living creatures finally the undead. (MM)
+static species_type new_species_order[] = {
+    // comparatively human-like looks
+    SP_HUMAN,       SP_HIGH_ELF,
+    SP_GREY_ELF,    SP_DEEP_ELF,
+    SP_SLUDGE_ELF,  SP_MOUNTAIN_DWARF,
+    SP_HILL_ORC,    SP_MERFOLK,
+    // small species
+    SP_HALFLING,    SP_GNOME,
+    SP_KOBOLD,      SP_SPRIGGAN,
+    // significantly different body type than human
+    SP_NAGA,        SP_CENTAUR,
+    SP_OGRE,        SP_OGRE_MAGE,
+    SP_TROLL,       SP_MINOTAUR,
+    SP_KENKU,       SP_RED_DRACONIAN,
+    // celestial species
+    SP_DEMIGOD,     SP_DEMONSPAWN,
+    // undead species
+    SP_MUMMY,       SP_GHOUL,
+    SP_VAMPIRE
+};
+
 static species_type random_draconian_species()
 {
-    return static_cast<species_type>(SP_RED_DRACONIAN + random2(9));
+    const int num_drac = SP_PALE_DRACONIAN - SP_RED_DRACONIAN;
+    return static_cast<species_type>(SP_RED_DRACONIAN + random2(num_drac));
+}
+
+static species_type get_species(const int index)
+{
+    if (index < 0 || (unsigned int) index >= ARRAYSIZE(old_species_order))
+    {
+        return (SP_UNKNOWN);
+    }
+
+    return (Options.use_old_selection_order ? old_species_order[index]
+                                            : new_species_order[index]);
+}
+
+// listed in two columns to match the selection screen output
+// Take care to list all valid classes here, or they cannot be directly chosen.
+// The old and new lists are expected to have the same length.
+static job_type old_jobs_order[] = {
+    JOB_FIGHTER,            JOB_WIZARD,
+    JOB_PRIEST,             JOB_THIEF,
+    JOB_GLADIATOR,          JOB_NECROMANCER,
+    JOB_PALADIN,            JOB_ASSASSIN,
+    JOB_BERSERKER,          JOB_HUNTER,
+    JOB_CONJURER,           JOB_ENCHANTER,
+    JOB_FIRE_ELEMENTALIST,  JOB_ICE_ELEMENTALIST,
+    JOB_SUMMONER,           JOB_AIR_ELEMENTALIST,
+    JOB_EARTH_ELEMENTALIST, JOB_CRUSADER,
+    JOB_DEATH_KNIGHT,       JOB_VENOM_MAGE,
+    JOB_CHAOS_KNIGHT,       JOB_TRANSMUTER,
+    JOB_HEALER,             JOB_REAVER,
+    JOB_STALKER,            JOB_MONK,
+    JOB_WARPER,             JOB_WANDERER
+};
+
+// First plain fighters, then religious fighters, then spell-casting
+// fighters, then primary spell-casters, then stabbers and shooters. (MM)
+static job_type new_jobs_order[] = {
+    // fighters
+    JOB_FIGHTER,            JOB_GLADIATOR,
+    JOB_MONK,               JOB_BERSERKER,
+    // religious professions (incl. Berserker above)
+    JOB_PALADIN,            JOB_PRIEST,
+    JOB_CHAOS_KNIGHT,       JOB_DEATH_KNIGHT,
+    JOB_HEALER,             JOB_CRUSADER,
+    // general and niche spellcasters (incl. Crusader above)
+    JOB_REAVER,             JOB_WIZARD,
+    JOB_CONJURER,           JOB_ENCHANTER,
+    JOB_SUMMONER,           JOB_NECROMANCER,
+    JOB_WARPER,             JOB_TRANSMUTER,
+    JOB_FIRE_ELEMENTALIST,  JOB_ICE_ELEMENTALIST,
+    JOB_AIR_ELEMENTALIST,   JOB_EARTH_ELEMENTALIST,
+    // poison specialists and stabbers
+    JOB_VENOM_MAGE,         JOB_STALKER,
+    JOB_THIEF,              JOB_ASSASSIN,
+    JOB_HUNTER,             JOB_WANDERER
+};
+
+static job_type get_class(const int index)
+{
+    if (index < 0 || (unsigned int) index >= ARRAYSIZE(old_jobs_order))
+    {
+       return JOB_UNKNOWN;
+    }
+
+    return (Options.use_old_selection_order? old_jobs_order[index]
+                                           : new_jobs_order[index]);
 }
 
 static void reset_newgame_options(void)
 {
-    ng_race = ng_cls = 0;
+    ng_race   = ng_cls = 0;
     ng_random = false;
-    ng_ck = GOD_NO_GOD;
-    ng_dk = DK_NO_SELECTION;
-    ng_pr = GOD_NO_GOD;
+    ng_ck     = GOD_NO_GOD;
+    ng_dk     = DK_NO_SELECTION;
+    ng_pr     = GOD_NO_GOD;
     ng_weapon = WPN_UNKNOWN;
-    ng_book = SBT_NO_SELECTION;
+    ng_book   = SBT_NO_SELECTION;
 }
 
 static void save_newgame_options(void)
@@ -172,10 +284,10 @@ static void set_startup_options(void)
 {
     Options.race         = Options.prev_race;
     Options.cls          = Options.prev_cls;
-    Options.weapon       = Options.prev_weapon;
-    Options.death_knight = Options.prev_dk;
     Options.chaos_knight = Options.prev_ck;
+    Options.death_knight = Options.prev_dk;
     Options.priest       = Options.prev_pr;
+    Options.weapon       = Options.prev_weapon;
     Options.book         = Options.prev_book;
 }
 
@@ -183,19 +295,19 @@ static bool prev_startup_options_set(void)
 {
     // Are these two enough? They should be, in theory, since we'll
     // remember the player's weapon and god choices.
-    return Options.prev_race && Options.prev_cls;
+    return (Options.prev_race && Options.prev_cls);
 }
 
 static std::string get_opt_race_name(char race)
 {
-    species_type prace = letter_to_species(race);
-    return prace != SP_UNKNOWN? species_name(prace, 1) : "Random";
+    species_type prace = get_species(letter_to_index(race));
+    return (prace == SP_UNKNOWN? "Random" : species_name(prace, 1));
 }
 
 static std::string get_opt_class_name(char oclass)
 {
-    int pcls = letter_to_class(oclass);
-    return pcls != JOB_UNKNOWN? get_class_name(pcls) : "Random";
+    job_type pclass = get_class(letter_to_index(oclass));
+    return (pclass == JOB_UNKNOWN? "Random" : get_class_name(pclass));
 }
 
 static std::string prev_startup_description(void)
@@ -208,6 +320,7 @@ static std::string prev_startup_description(void)
 
     if (Options.prev_cls == '?')
         return "Random " + get_opt_race_name(Options.prev_race);
+        
     return get_opt_race_name(Options.prev_race) + " " +
            get_opt_class_name(Options.prev_cls);
 }
@@ -246,25 +359,18 @@ int give_first_conjuration_book()
 // primarily used to suppress the display of the draconian variants.
 static bool is_species_valid_choice(species_type species, bool display = true)
 {
-    return (species
-            && species != NUM_SPECIES
-            && species != SP_UNKNOWN
-            && !((display?
-                  (species > SP_RED_DRACONIAN
-                   && species <= SP_BASE_DRACONIAN)
-                  : (species >= SP_UNK0_DRACONIAN
-                     && species <= SP_BASE_DRACONIAN))
-                 || species == SP_ELF
-                 || species == SP_HILL_DWARF));
-}
+    if (!species) // species only start at 1
+        return (false);
 
-static species_type random_species()
-{
-    species_type sp = SP_UNKNOWN;
-    do
-        sp = static_cast<species_type>( random2(NUM_SPECIES) );
-    while (!is_species_valid_choice(sp));
-    return (sp);
+    if (species >= SP_ELF) // these are all invalid
+        return (false);
+
+    // no problem with these
+    if (species <= SP_RED_DRACONIAN || species > SP_BASE_DRACONIAN) 
+        return (true);
+
+    // draconians other than red return false if display == true
+    return (!display);
 }
 
 static void pick_random_species_and_class( void )
@@ -376,8 +482,8 @@ static unsigned char random_potion_description()
         // in itemname.cc; this check ensures clear potions don't
         // get odd qualifiers.
     } while ((colour == PDC_CLEAR && nature > PDQ_VISCOUS) 
-            || desc == PDESCS(PDC_CLEAR)
-            || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
+             || desc == PDESCS(PDC_CLEAR)
+             || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
 
     return static_cast<unsigned char>(desc);
 }
@@ -386,26 +492,26 @@ static unsigned char random_potion_description()
 static void initialise_branch_depths()
 {
     branches[BRANCH_ECUMENICAL_TEMPLE].startdepth = random_range(4, 7);
-    branches[BRANCH_ORCISH_MINES].startdepth = random_range(6, 11);
-    branches[BRANCH_ELVEN_HALLS].startdepth = random_range(3, 4);
-    branches[BRANCH_LAIR].startdepth = random_range(8, 13);
-    branches[BRANCH_HIVE].startdepth = random_range(11, 16);
-    branches[BRANCH_SLIME_PITS].startdepth = random_range(8, 10);
+    branches[BRANCH_ORCISH_MINES].startdepth      = random_range(6, 11);
+    branches[BRANCH_ELVEN_HALLS].startdepth       = random_range(3, 4);
+    branches[BRANCH_LAIR].startdepth              = random_range(8, 13);
+    branches[BRANCH_HIVE].startdepth              = random_range(11, 16);
+    branches[BRANCH_SLIME_PITS].startdepth        = random_range(8, 10);
     if ( coinflip() )
     {
-        branches[BRANCH_SWAMP].startdepth = random_range(2, 7);
+        branches[BRANCH_SWAMP].startdepth  = random_range(2, 7);
         branches[BRANCH_SHOALS].startdepth = -1;
     }
     else
     {
-        branches[BRANCH_SWAMP].startdepth = -1;
+        branches[BRANCH_SWAMP].startdepth  = -1;
         branches[BRANCH_SHOALS].startdepth = random_range(2, 7);
     }
-    branches[BRANCH_SNAKE_PIT].startdepth = random_range(3, 8);
-    branches[BRANCH_VAULTS].startdepth = random_range(14, 19);
-    branches[BRANCH_CRYPT].startdepth = random_range(2, 4);
+    branches[BRANCH_SNAKE_PIT].startdepth      = random_range(3, 8);
+    branches[BRANCH_VAULTS].startdepth         = random_range(14, 19);
+    branches[BRANCH_CRYPT].startdepth          = random_range(2, 4);
     branches[BRANCH_HALL_OF_BLADES].startdepth = random_range(4, 6);
-    branches[BRANCH_TOMB].startdepth = random_range(2, 3);
+    branches[BRANCH_TOMB].startdepth           = random_range(2, 3);
 }
 
 static void initialise_item_descriptions()
@@ -513,7 +619,9 @@ static void give_starting_food()
         item.base_type = OBJ_FOOD;
         if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD ||
             you.species == SP_OGRE || you.species == SP_TROLL)
+        {
             item.sub_type = FOOD_MEAT_RATION;
+        }
         else
             item.sub_type = FOOD_BREAD_RATION;
     }
@@ -776,8 +884,8 @@ game_start:
     else
     {
         if (Options.race != 0 && Options.cls != 0
-            && !class_allowed(letter_to_species(Options.race),
-                              letter_to_class(Options.cls)))
+            && !class_allowed(get_species(letter_to_index(Options.race)),
+                              get_class(letter_to_index(Options.cls))))
         {
             end(1, false, "Incompatible race and class specified in "
                 "options file.");
@@ -832,7 +940,7 @@ game_start:
 
     // before we get into the inventory init, set light radius based
     // on species vision. currently, all species see out to 8 squares.
-    you.normal_vision = 8;
+    you.normal_vision  = 8;
     you.current_vision = 8;
 
     jobs_stat_init( you.char_class );
@@ -1522,7 +1630,6 @@ static bool class_allowed( species_type speci, job_type char_class )
             return false;
         }
 
-    case JOB_QUITTER:   // shouldn't happen since 'x' is handled specially
     default:
         return false;
     }
@@ -1566,6 +1673,7 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
         cprintf(EOL "* - Random choice; "
                     "Bksp - Back to species and class selection; "
                     "X - Quit" EOL);
+                    
         if ( Options.prev_book != SBT_NO_SELECTION )
         {
             cprintf("; Enter - %s",
@@ -1731,11 +1839,10 @@ static bool choose_weapon()
     }
 
     you.inv[0].sub_type = startwep[keyin-'a'];
-    ng_weapon = (Options.random_pick || 
-                Options.weapon == WPN_RANDOM || 
-                keyin == '*')
-        ? WPN_RANDOM : you.inv[0].sub_type;
-        
+    ng_weapon = (Options.random_pick || Options.weapon == WPN_RANDOM
+                 || keyin == '*') ? WPN_RANDOM
+                                  : you.inv[0].sub_type;
+
     return true;
 }
 
@@ -1828,8 +1935,6 @@ static void species_stat_init(species_type which_species)
     case SP_PURPLE_DRACONIAN:
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
-    case SP_UNK0_DRACONIAN:
-    case SP_UNK1_DRACONIAN:
     case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
     }
 
@@ -2143,9 +2248,7 @@ static void preprocess_character_name(char *name, bool blankOK)
     }
 
     // '.', '?' and '*' are blanked.
-    if (!name[1] && (*name == '.' ||
-                      *name == '*' ||
-                      *name == '?'))
+    if (!name[1] && (*name == '.' || *name == '*' || *name == '?'))
         *name = 0;
 }
 
@@ -2254,25 +2357,28 @@ static void enter_player_name(bool blankOK)
         {
              cgotoxy(1,12);
              formatted_string::parse_string(
-                 "  If you've never been here before, you might want to try "
-                 "out" EOL "  the Dungeon Crawl tutorial. To do this, press "
-                 "<white>T</white> on the next" EOL "  screen.").display();
-        }    
-
-        MenuEntry *title = new MenuEntry("Or choose an existing character:");
-        title->colour = LIGHTCYAN;
-        char_menu.set_title( title );
-        for (unsigned int i = 0; i < existing_chars.size(); ++i)
-        {
-            std::string desc = " " + existing_chars[i].short_desc();
-            if (static_cast<int>(desc.length()) >= get_number_of_cols())
-                desc = desc.substr(0, get_number_of_cols() - 1);
-
-            MenuEntry *me = new MenuEntry(desc);
-            me->data = &existing_chars[i];
-            char_menu.add_entry(me);
+                "  If you've never been here before, you might want to try out" EOL
+                "  the Dungeon Crawl tutorial. To do this, press "
+                "<white>T</white> on the next" EOL
+                "  screen.").display();
         }
-        char_menu.set_flags(MF_NOWRAP | MF_SINGLESELECT);
+        else
+        {
+             MenuEntry *title = new MenuEntry("Or choose an existing character:");
+             title->colour = LIGHTCYAN;
+             char_menu.set_title( title );
+             for (unsigned int i = 0; i < existing_chars.size(); ++i)
+             {
+                 std::string desc = " " + existing_chars[i].short_desc();
+                 if (static_cast<int>(desc.length()) >= get_number_of_cols())
+                     desc = desc.substr(0, get_number_of_cols() - 1);
+
+                 MenuEntry *me = new MenuEntry(desc);
+                 me->data = &existing_chars[i];
+                 char_menu.add_entry(me);
+             }
+             char_menu.set_flags(MF_NOWRAP | MF_SINGLESELECT);
+        }
     }
 
     do
@@ -2516,8 +2622,10 @@ static void newgame_clear_item(int slot)
 {
     you.inv[slot] = item_def();
     for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
+    {
         if (you.equip[i] == slot)
             you.equip[i] = -1;
+    }
 }
 
 //
@@ -2733,74 +2841,9 @@ static void create_wanderer( void )
     you.equip[EQ_BODY_ARMOUR] = 2;
 }
 
-static job_type letter_to_class(int keyn)
-{
-    switch ( keyn )
-    {
-    case 'a': return JOB_FIGHTER;
-    case 'b': return JOB_WIZARD;
-    case 'c': return JOB_PRIEST;
-    case 'd': return JOB_THIEF;
-    case 'e': return JOB_GLADIATOR;
-    case 'f': return JOB_NECROMANCER;
-    case 'g': return JOB_PALADIN;
-    case 'h': return JOB_ASSASSIN;
-    case 'i': return JOB_BERSERKER;
-    case 'j': return JOB_HUNTER;
-    case 'k': return JOB_CONJURER;
-    case 'l': return JOB_ENCHANTER;
-    case 'm': return JOB_FIRE_ELEMENTALIST;
-    case 'n': return JOB_ICE_ELEMENTALIST;
-    case 'o': return JOB_SUMMONER;
-    case 'p': return JOB_AIR_ELEMENTALIST;
-    case 'q': return JOB_EARTH_ELEMENTALIST;
-    case 'r': return JOB_CRUSADER;
-    case 's': return JOB_DEATH_KNIGHT;
-    case 't': return JOB_VENOM_MAGE;
-    case 'u': return JOB_CHAOS_KNIGHT;
-    case 'v': return JOB_TRANSMUTER;
-    case 'w': return JOB_HEALER;
-    case 'y': return JOB_REAVER;
-    case 'z': return JOB_STALKER;
-    case 'A': return JOB_MONK;
-    case 'B': return JOB_WARPER;
-    case 'C': return JOB_WANDERER;
-    }
-    return JOB_UNKNOWN;
-}
-
-static species_type letter_to_species(int keyn)
-{
-    const int offset = letter_to_index(keyn);
-    if (offset < 0)
-        return (SP_UNKNOWN);
-    
-    int rc;
-    if ( offset + SP_HUMAN < SP_RED_DRACONIAN )
-        rc = offset + SP_HUMAN;
-    else if ( offset + SP_HUMAN == SP_RED_DRACONIAN ) // random draco
-        rc = random_draconian_species();
-    else                        // skip over draconian species
-        rc = offset + (SP_BASE_DRACONIAN - SP_RED_DRACONIAN) + 1;
-    return (rc >= NUM_SPECIES? SP_UNKNOWN : static_cast<species_type>(rc));
-}
-
-static char species_to_letter(int spec)
-{
-    if (spec > SP_RED_DRACONIAN && spec <= SP_BASE_DRACONIAN)
-        spec = SP_RED_DRACONIAN;
-    else if (spec > SP_BASE_DRACONIAN)
-        spec -= SP_BASE_DRACONIAN - SP_RED_DRACONIAN;
-    int letter = 'a' + spec - 1;
-    if (letter > 'z')
-        letter = 'A' + (letter - 'z') - 1;
-    return (letter);
-}
-
 // choose_race returns true if the player should also pick a class.
 // This is done because of the '!' option which will pick a random
 // character, obviating the necessity of choosing a class.
-
 bool choose_race()
 {
     char keyn;
@@ -2809,15 +2852,23 @@ bool choose_race()
 
     if (Options.cls)
     {
-        you.char_class = letter_to_class(Options.cls);
+        you.char_class = get_class(letter_to_index(Options.cls));
         ng_cls = Options.cls;
     }
         
     if (Options.race != 0)
         printed = true;
 
+    // the list musn't be longer than the number of actual species
+    COMPILE_CHECK(ARRAYSIZE(old_species_order) <= NUM_SPECIES, c1);
+    
+    // check whether the two lists have the same size
+    COMPILE_CHECK(ARRAYSIZE(old_species_order) == ARRAYSIZE(new_species_order), c2);
+
+    const int num_species = ARRAYSIZE(old_species_order);
+
 spec_query:
-    bool prevraceok = Options.prev_race == '*';
+    bool prevraceok = (Options.prev_race == '*');
     if (!printed)
     {
         clrscr();
@@ -2846,6 +2897,8 @@ spec_query:
 
             if (!shortgreet)
                 cprintf(".");
+                
+            textcolor( WHITE ); // for the tutorial
         }
         else
         {
@@ -2855,7 +2908,8 @@ spec_query:
         cprintf("  (Press T to enter a tutorial.)");
         cprintf(EOL EOL);
         textcolor( CYAN );
-        cprintf("You can be:  (Press ? for more information, %% for a list of aptitudes)");
+        cprintf("You can be:  "
+                "(Press ? for more information, %% for a list of aptitudes)");
         cprintf(EOL EOL);
 
         textcolor( LIGHTGREY );
@@ -2863,23 +2917,28 @@ spec_query:
         int linec = 0;
         char linebuf[200];
         *linebuf = 0;
-        for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
+               
+        for (int i = 0; i < num_species; ++i)
         {
-            const species_type si = static_cast<species_type>(i);
+            const species_type si = get_species(i);
+            
             if (!is_species_valid_choice(si))
                 continue;
 
-            if (you.char_class != JOB_UNKNOWN && 
+            if (you.char_class != JOB_UNKNOWN &&
                 !class_allowed(si, you.char_class))
+            {
                 continue;
+            }
 
             char buf[100];
-            char sletter = species_to_letter(si);
+            char sletter = index_to_letter(i);
             snprintf(buf, sizeof buf, "%c - %-26s",
-                     sletter,
-                     species_name(si, 1).c_str());
+                     sletter, species_name(si, 1).c_str());
+                     
             if (sletter == Options.prev_race)
                 prevraceok = true;
+                
             strncat(linebuf, buf, sizeof linebuf);
             if (++linec >= 2)
             {
@@ -2907,12 +2966,16 @@ spec_query:
         if (Options.prev_race)
         {
             if (prevraceok)
+            {
                 cprintf("Enter - %s",
                         get_opt_race_name(Options.prev_race).c_str());
+            }
             if (prev_startup_options_set())
+            {
                 cprintf("%sTAB - %s", 
                         prevraceok? "; " : "",
                         prev_startup_description().c_str());
+            }
             cprintf(EOL);
         }
 
@@ -2932,96 +2995,110 @@ spec_query:
         keyn = c_getch();
     }
 
-    if ( keyn == '?' )
+    switch (keyn)
     {
-        list_commands(false, '1');
-        return choose_race();
-    }
-    else if ( keyn == '%' )
-    {
-        list_commands(false, '%');
-        return choose_race();
-    }
-
-    if ((keyn == '\r' || keyn == '\n') && Options.prev_race && prevraceok)
-        keyn = Options.prev_race;
-
-    if (keyn == '\t' && prev_startup_options_set())
-    {
-        if (Options.prev_randpick || 
-            (Options.prev_race == '*' && Options.prev_cls == '*'))
-        {
-            Options.random_pick = true;
-            ng_random = true;
-            pick_random_species_and_class();
-            return false;
-        }
-        set_startup_options();
-        you.species = SP_UNKNOWN;
-        you.char_class = JOB_UNKNOWN;
-        return true;
-    }
-
-    if (keyn == CK_BKSP || keyn == ' ')
-    {
+    case 'X':
+        cprintf(EOL "Goodbye!");
+        end(0);
+        break;
+    case CK_BKSP:
+    case ' ':
         you.species = SP_UNKNOWN;
         Options.race = 0;
         return true;
-    }
-
-    bool randrace = (keyn == '*');
-    if (keyn == '*')
-    {
-        do
-            keyn = species_to_letter(random_species());
-        while (!is_species_valid_choice(letter_to_species(keyn), false)
-               || (you.char_class != JOB_UNKNOWN &&
-                   !class_allowed(letter_to_species(keyn), you.char_class)));
-    }
-    else if (keyn == '!')
-    {
+    case '!':
         pick_random_species_and_class();
         Options.random_pick = true; // used to give random weapon/god as well
         ng_random = true;
         return false;
+    case '\r':
+    case '\n':
+        if (Options.prev_race && prevraceok)
+            keyn = Options.prev_race;
+        break;
+    case '\t':
+        if (prev_startup_options_set())
+        {
+            if (Options.prev_randpick ||
+                (Options.prev_race == '*' && Options.prev_cls == '*'))
+            {
+                Options.random_pick = true;
+                ng_random = true;
+                pick_random_species_and_class();
+                return false;
+            }
+            set_startup_options();
+            you.species = SP_UNKNOWN;
+            you.char_class = JOB_UNKNOWN;
+            return true;
+        }
+        break;
+    // access to the help files
+    case '?':
+        list_commands(false, '1');
+        return choose_race();
+    case '%':
+        list_commands(false, '%');
+        return choose_race();
+    default:
+        break;
     }
-    else if (keyn == 'T')
+
+    // These are handled specially as they _could_ be set
+    // using Options.race or prev_race
+    if (keyn == 'T') // easy to set in init.txt
     {
         return !pick_tutorial();
     }
-
-    if ((you.species = letter_to_species(keyn)) == SP_UNKNOWN
-        || !is_species_valid_choice(you.species, false))
+    
+    bool randrace = (keyn == '*');
+    if (randrace)
     {
-        switch (keyn)
+        int index;
+        do
         {
-        case 'X':
-            cprintf(EOL "Goodbye!");
-            end(0);
-            break;
-        default:
-            if (Options.race != 0)
-            {
-                Options.race = 0;
-                printed = false;
-            }
-            goto spec_query;
+            index = random2(num_species);
         }
+        while (!is_species_valid_choice(get_species(index), false)
+               || (you.char_class != JOB_UNKNOWN &&
+                   !class_allowed(get_species(index), you.char_class)));
+
+        keyn = index_to_letter(index);
     }
-    if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN
-            && !class_allowed(you.species, you.char_class))
+    
+    if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
+    {
+        you.species = get_species(letter_to_index(keyn));
+    }
+        
+    if (!is_species_valid_choice( you.species ))
+    {
+        if (Options.race != 0)
+        {
+            Options.race = 0;
+            printed = false;
+        }
         goto spec_query;
+    }
+
+    if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN
+        && !class_allowed(you.species, you.char_class))
+    {
+        goto spec_query;
+    }
 
     // set to 0 in case we come back from choose_class()
     Options.race = 0;
     ng_race = randrace? '*' : keyn;
+
+    if (you.species == SP_RED_DRACONIAN)
+        you.species = random_draconian_species();
 
     return true;
 }
 
 // returns true if a class was chosen, false if we should go back to
 // race selection.
-
 bool choose_class(void)
 {
     char keyn;
@@ -3035,8 +3112,16 @@ bool choose_class(void)
 
     ng_cls = 0;
     
+    // the list musn't be longer than the number of actual classes
+    COMPILE_CHECK(ARRAYSIZE(old_jobs_order) <= NUM_JOBS, c1);
+
+    // check whether the two lists have the same size
+    COMPILE_CHECK(ARRAYSIZE(old_jobs_order) == ARRAYSIZE(new_jobs_order), c2);
+
+    const int num_classes = ARRAYSIZE(old_jobs_order);
+
 job_query:
-    bool prevclassok = Options.prev_cls == '*';
+    bool prevclassok = (Options.prev_cls == '*');
     if (!printed)
     {
         clrscr();
@@ -3048,8 +3133,8 @@ job_query:
             textcolor( YELLOW );
             if (you.your_name[0])
                 cprintf("%s the ", you.your_name);
-            cprintf("%s.",
-                    species_name(you.species,you.experience_level).c_str());
+            cprintf("%s.", species_name(you.species, 1).c_str());
+            textcolor( WHITE );
         }
         else
         {
@@ -3060,16 +3145,18 @@ job_query:
 
         cprintf(EOL EOL);
         textcolor( CYAN );
-        cprintf("You can be: (Press ? for more information, %% for a list of aptitudes)" EOL EOL);
+        cprintf("You can be:  "
+                "(Press ? for more information, %% for a list of aptitudes)" EOL EOL);
         textcolor( LIGHTGREY );
 
         int j = 0;
-        for (int i = 0; i < NUM_JOBS; i++)
+        for (int i = 0; i < num_classes; i++)
         {
-            if (you.species != SP_UNKNOWN ?
-                !class_allowed(you.species, static_cast<job_type>(i)) :
-                i == JOB_QUITTER)
+            if (you.species != SP_UNKNOWN
+                && !class_allowed(you.species, get_class(i)))
+            {
                 continue;
+            }
 
             char letter = index_to_letter(i);
 
@@ -3078,7 +3165,7 @@ job_query:
             
             putch( letter );
             cprintf( " - " );
-            cprintf( "%s", get_class_name(i) );
+            cprintf( "%s", get_class_name(get_class(i)) );
 
             if (j % 2)
                 cprintf(EOL);
@@ -3093,23 +3180,29 @@ job_query:
 
         textcolor( BROWN );
         if (you.species == SP_UNKNOWN)
+        {
             cprintf(EOL
                     "SPACE - Choose species first; * - Random Class; "
                     "! - Random Character; X - Quit"
                     EOL);
+        }
         else
+        {
             cprintf(EOL
                     "* - Random; Bksp - Back to species selection; X - Quit" 
                     EOL);
+        }
 
         if (Options.prev_cls)
         {
             if (prevclassok)
                 cprintf("Enter - %s", get_opt_class_name(Options.prev_cls).c_str());
             if (prev_startup_options_set())
+            {
                 cprintf("%sTAB - %s", 
                         prevclassok? "; " : "",
                         prev_startup_description().c_str());
+            }
             cprintf(EOL);
         }
         
@@ -3129,101 +3222,100 @@ job_query:
         keyn = c_getch();
     }
 
-    if ( keyn == '?' )
+    switch (keyn)
     {
-        list_commands(false, '2');
-        return choose_class();
-    }
-    else if ( keyn == '%' )
-    {
-        list_commands(false, '%');
-        return choose_class();
-    }
-
-    if ((keyn == '\r' || keyn == '\n') && Options.prev_cls && prevclassok)
-        keyn = Options.prev_cls;
-
-    if (keyn == '\t' && prev_startup_options_set())
-    {
-        if (Options.prev_randpick || 
-                (Options.prev_race == '*' && Options.prev_cls == '*'))
-        {
-            Options.random_pick = true;
-            ng_random = true;
-            pick_random_species_and_class();
-            return true;
-        }
-        set_startup_options();
-
-        // Toss out old species selection, if any.
-        you.species = SP_UNKNOWN;
-        you.char_class = JOB_UNKNOWN;
-
-        return false;
-    }
-    
-    job_type chosen_job = JOB_UNKNOWN;
-    if ((chosen_job = letter_to_class(keyn)) == JOB_UNKNOWN) 
-    {
-        if (keyn == '*')
-        {
-            // pick a job at random... see god retribution for proof this
-            // is uniform. -- bwr
-            int job_count = 0;
-            job_type job = JOB_UNKNOWN;
-
-            for (int i = 0; i < NUM_JOBS; i++)
-            {
-                if ( i == JOB_QUITTER )
-                    continue;
-
-                if (you.species == SP_UNKNOWN ||
-                    class_allowed(you.species, static_cast<job_type>(i)))
-                {
-                    job_count++;
-                    if (one_chance_in( job_count ))
-                        job = static_cast<job_type>(i);
-                }
-            }
-            ASSERT( job != JOB_UNKNOWN );
-            chosen_job = job;
-
-            ng_cls = '*';
-        }
-        else if (keyn == '!')
-        {
-            pick_random_species_and_class();
-            // used to give random weapon/god as well
-            Options.random_pick = true;
-            ng_random = true;
-            return true;
-        }
-        else if (keyn == 'T')
-        {
-            return pick_tutorial();
-        }        
-        else if ((keyn == ' ' && you.species == SP_UNKNOWN) ||
-                    keyn == 'x' || keyn == ESCAPE || keyn == CK_BKSP)
+    case 'X':
+        cprintf(EOL "Goodbye!");
+        end(0);
+        break;
+     case ESCAPE:
+     case CK_BKSP:
+     case ' ':
+        if (keyn != ' ' || you.species == SP_UNKNOWN)
         {
             you.char_class = JOB_UNKNOWN;
             return false;
         }
-        else if (keyn == 'X')
+    case 'T':
+        return pick_tutorial();
+    case '!':
+        pick_random_species_and_class();
+        // used to give random weapon/god as well
+        Options.random_pick = true;
+        ng_random = true;
+        return true;
+    case '\r':
+    case '\n':
+        if (Options.prev_cls && prevclassok)
+            keyn = Options.prev_cls;
+        break;
+    case '\t':
+        if (prev_startup_options_set())
         {
-            cprintf(EOL "Goodbye!");
-            end(0);
-        }
-        else
-        {
-            if (Options.cls != 0)
+            if (Options.prev_randpick ||
+                (Options.prev_race == '*' && Options.prev_cls == '*'))
             {
-                Options.cls = 0;
-                printed = false;
+                Options.random_pick = true;
+                ng_random = true;
+                pick_random_species_and_class();
+                return true;
             }
-            goto job_query;
+            set_startup_options();
+
+            // Toss out old species selection, if any.
+            you.species = SP_UNKNOWN;
+            you.char_class = JOB_UNKNOWN;
+
+            return false;
         }
+        break;
+    // help files
+    case '?':
+        list_commands(false, '2');
+        return choose_class();
+    case '%':
+        list_commands(false, '%');
+        return choose_class();
+    default:
+        break;
     }
 
+    job_type chosen_job = JOB_UNKNOWN;
+    if (keyn == '*')
+    {
+        // pick a job at random... see god retribution for proof this
+        // is uniform. -- bwr
+        int job_count = 0;
+
+        for (int i = 0; i < NUM_JOBS; i++)
+        {
+             if (you.species == SP_UNKNOWN ||
+                 class_allowed(you.species, static_cast<job_type>(i)))
+             {
+                 job_count++;
+                 if (one_chance_in( job_count ))
+                     chosen_job = static_cast<job_type>(i);
+             }
+         }
+         ASSERT( chosen_job != JOB_UNKNOWN );
+
+         ng_cls = '*';
+    }
+    else if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
+    {
+         chosen_job = get_class(letter_to_index(keyn));
+    }
+
+    if (chosen_job == JOB_UNKNOWN)
+    {
+        if (Options.cls != 0)
+        {
+            Options.cls = 0;
+            printed = false;
+        }
+        goto job_query;
+    }
+    
     if (you.species != SP_UNKNOWN
         && !class_allowed(you.species, chosen_job))
     {
@@ -3239,7 +3331,7 @@ job_query:
         ng_cls = keyn;
 
     you.char_class = chosen_job;
-    return you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN;
+    return (you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN);
 }
 
 bool give_items_skills()
@@ -3332,11 +3424,15 @@ bool give_items_skills()
 
             you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;
 
+            you.skills[SK_THROWING] = 2;
+            
             if (you.species != SP_VAMPIRE)
                 you.skills[SK_SHIELDS] = 2;
-            you.skills[SK_THROWING] = 2;
-            you.skills[((coinflip() || you.species == SP_VAMPIRE)?
-                SK_STABBING : SK_SHIELDS)]++;
+                
+            if (you.species == SP_VAMPIRE || coinflip())
+                you.skills[SK_STABBING]++;
+            else
+                you.skills[SK_SHIELDS]++;
         }
         break;
 

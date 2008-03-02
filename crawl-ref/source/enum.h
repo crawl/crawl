@@ -1311,13 +1311,12 @@ enum job_type
     JOB_VENOM_MAGE,
     JOB_CHAOS_KNIGHT,                  //   20
     JOB_TRANSMUTER,
-    JOB_HEALER,                        //   22
-    JOB_QUITTER,                       //   23 -- this is job 'x', don't use
-    JOB_REAVER,                        //   24
-    JOB_STALKER,                       //   25
-    JOB_MONK,
+    JOB_HEALER,
+    JOB_REAVER,
+    JOB_STALKER,
+    JOB_MONK,                          //   25
     JOB_WARPER,
-    JOB_WANDERER,                      //   23
+    JOB_WANDERER,                      //   27
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100
@@ -2330,7 +2329,7 @@ enum species_type
     SP_GNOME,
     SP_OGRE,
     SP_TROLL,
-    SP_OGRE_MAGE,
+    SP_OGRE_MAGE,                      //   15
     SP_RED_DRACONIAN,
     SP_WHITE_DRACONIAN,
     SP_GREEN_DRACONIAN,
@@ -2340,18 +2339,16 @@ enum species_type
     SP_PURPLE_DRACONIAN,
     SP_MOTTLED_DRACONIAN,
     SP_PALE_DRACONIAN,
-    SP_UNK0_DRACONIAN,
-    SP_UNK1_DRACONIAN,
-    SP_BASE_DRACONIAN,
-    SP_CENTAUR,
+    SP_BASE_DRACONIAN,                 //   25
+    SP_CENTAUR,       
     SP_DEMIGOD,
-    SP_SPRIGGAN,                       //   30
+    SP_SPRIGGAN, 
     SP_MINOTAUR,
-    SP_DEMONSPAWN,
-    SP_GHOUL,
+    SP_DEMONSPAWN,                     //   30
+    SP_GHOUL,         
     SP_KENKU,
-    SP_MERFOLK,                        //   35
-    SP_VAMPIRE,
+    SP_MERFOLK,
+    SP_VAMPIRE,                        //   34
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     NUM_SPECIES,                       // always after the last species

@@ -607,23 +607,24 @@ void game_options::reset_options()
 
     center_on_scroll = false;
     symmetric_scroll = true;
-    scroll_margin_x   = 2;
-    scroll_margin_y   = 2;
+    scroll_margin_x  = 2;
+    scroll_margin_y  = 2;
 
     autopickup_on = true;
     autoprayer_on = false;
     show_more_prompt = true;
 
     show_turns = false;
-    show_beam = false;
+    show_beam  = false;
 
-    prev_race = 0;
-    prev_cls  = 0;
-    prev_ck   = GOD_NO_GOD;
-    prev_dk   = DK_NO_SELECTION;
-    prev_pr   = GOD_NO_GOD;
+    use_old_selection_order = false;
+    prev_race   = 0;
+    prev_cls    = 0;
+    prev_ck     = GOD_NO_GOD;
+    prev_dk     = DK_NO_SELECTION;
+    prev_pr     = GOD_NO_GOD;
     prev_weapon = WPN_UNKNOWN;
-    prev_book = SBT_NO_SELECTION;
+    prev_book   = SBT_NO_SELECTION;
     prev_randpick = false;
     remember_name = true;
 
@@ -1715,6 +1716,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         }
     }
 #endif
+    else if (key == "use_old_selection_order")
+    {
+        // use old order of species/classes on selection screen?
+        use_old_selection_order = read_bool( field, use_old_selection_order );
+    }
     else if (key == "default_autopickup")
     {
         // should autopickup default to on or off?

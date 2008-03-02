@@ -398,8 +398,6 @@ bool player_genus(genus_type which_genus, species_type species)
     case SP_PURPLE_DRACONIAN:
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
-    case SP_UNK0_DRACONIAN:
-    case SP_UNK1_DRACONIAN:
     case SP_BASE_DRACONIAN:
         return (which_genus == GENPC_DRACONIAN);
 
@@ -2984,8 +2982,6 @@ void level_change(bool skip_ability_increase)
             case SP_PURPLE_DRACONIAN:
             case SP_MOTTLED_DRACONIAN:
             case SP_PALE_DRACONIAN:
-            case SP_UNK0_DRACONIAN:
-            case SP_UNK1_DRACONIAN:
             case SP_BASE_DRACONIAN:
                 if (you.experience_level == 7)
                 {
@@ -3024,8 +3020,6 @@ void level_change(bool skip_ability_increase)
                     case SP_PALE_DRACONIAN:
                         mpr("Your scales start fading to a pale grey colour.", MSGCH_INTRINSIC_GAIN);
                         break;
-                    case SP_UNK0_DRACONIAN:
-                    case SP_UNK1_DRACONIAN:
                     case SP_BASE_DRACONIAN:
                         mpr("");
                         break;
@@ -3813,8 +3807,6 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
                 case SP_MOTTLED_DRACONIAN: res = "Mottled Draconian"; break;
                 case SP_PALE_DRACONIAN:    res = "Pale Draconian";    break;
 
-                case SP_UNK0_DRACONIAN:
-                case SP_UNK1_DRACONIAN:
                 case SP_BASE_DRACONIAN:
                 default:
                     res = "Draconian";
@@ -4583,9 +4575,12 @@ void set_mp(int new_amount, bool max_too)
 
 static const char * Species_Abbrev_List[ NUM_SPECIES ] = 
     { "XX", "Hu", "HE", "GE", "DE", "SE", "MD", "Ha",
-      "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM", "Dr", "Dr", 
-      "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", 
-      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "HD", "El" };
+      "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM",
+      // the draconians
+      "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
+      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp",
+      // placeholders
+      "HD", "El" };
 
 int get_species_index_by_abbrev( const char *abbrev )
 {
@@ -4641,14 +4636,14 @@ const char *get_species_abbrev( int which_species )
 static const char * Class_Abbrev_List[ NUM_JOBS ] = 
     { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu", 
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM", 
-      "CK", "Tm", "He", "XX", "Re", "St", "Mo", "Wr", "Wn" };
+      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn" };
 
 static const char * Class_Name_List[ NUM_JOBS ] = 
     { "Fighter", "Wizard", "Priest", "Thief", "Gladiator", "Necromancer",
       "Paladin", "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
       "Earth Elementalist", "Crusader", "Death Knight", "Venom Mage",
-      "Chaos Knight", "Transmuter", "Healer", "Quitter", "Reaver", "Stalker",
+      "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
       "Monk", "Warper", "Wanderer" };
 
 int get_class_index_by_abbrev( const char *abbrev )
@@ -4657,9 +4652,6 @@ int get_class_index_by_abbrev( const char *abbrev )
 
     for (i = 0; i < NUM_JOBS; i++)
     {
-        if (i == JOB_QUITTER)
-            continue;
-
         if (tolower( abbrev[0] ) == tolower( Class_Abbrev_List[i][0] )
             && tolower( abbrev[1] ) == tolower( Class_Abbrev_List[i][1] ))
         {
@@ -4672,7 +4664,7 @@ int get_class_index_by_abbrev( const char *abbrev )
 
 const char *get_class_abbrev( int which_job )
 {
-    ASSERT( which_job < NUM_JOBS && which_job != JOB_QUITTER );
+    ASSERT( which_job < NUM_JOBS );
 
     return (Class_Abbrev_List[ which_job ]);
 }
@@ -4691,9 +4683,6 @@ int get_class_index_by_name( const char *name )
 
     for (i = 0; i < NUM_JOBS; i++)
     {
-        if (i == JOB_QUITTER)
-            continue;
-
         strncpy( lowered_class, Class_Name_List[i], sizeof( lowered_class ) );
         strlwr( lowered_class );
 
@@ -4711,7 +4700,7 @@ int get_class_index_by_name( const char *name )
 
 const char *get_class_name( int which_job ) 
 {
-    ASSERT( which_job < NUM_JOBS && which_job != JOB_QUITTER );
+    ASSERT( which_job < NUM_JOBS );
 
     return (Class_Name_List[ which_job ]);
 }

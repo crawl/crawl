@@ -968,8 +968,6 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         case SP_PURPLE_DRACONIAN:
         case SP_MOTTLED_DRACONIAN:
         case SP_PALE_DRACONIAN:
-        case SP_UNK0_DRACONIAN:
-        case SP_UNK1_DRACONIAN:
         case SP_BASE_DRACONIAN:
         case SP_SPRIGGAN:
             if (type_wanted == ARM_GLOVES || type_wanted == ARM_BOOTS

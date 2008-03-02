@@ -5586,8 +5586,6 @@ static mon_body_shape get_ghost_shape(const monsters *mon)
     case SP_PURPLE_DRACONIAN:
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
-    case SP_UNK0_DRACONIAN:
-    case SP_UNK1_DRACONIAN:
     case SP_BASE_DRACONIAN:
         return (MON_SHAPE_HUMANOID_TAILED);
 

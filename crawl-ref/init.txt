@@ -42,6 +42,7 @@
 # race  = (Human |...| Merfolk | random)
 # class = (Fighter |...| Wanderer | random)
 # random_pick = true
+# use_old_selection_order = false
 
 ##### 2-  File System ###############################################
 #

@@ -198,6 +198,9 @@ random_pick = false
         The above options (weapons and class options) will override 
         where appropriate.
 
+use_old_selection_order = false
+        If set to true, the character selection screen will offer 
+	species and classes in the order of version 0.3 and earlier.
 
 2-  File System.
 ================

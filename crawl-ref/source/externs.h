@@ -1573,6 +1573,7 @@ public:
     bool        list_rotten;     // list slots for rotting corpses/chunks
     bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
+    
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
     bool        note_skill_max;  // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
@@ -1584,6 +1585,9 @@ public:
     int         colour[16];      // macro fg colours to other colours
     int         background;      // select default background colour
     int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
+    
+    bool        use_old_selection_order; // use old order of species/classes in
+                                         // selection screen
     int         weapon;          // auto-choose weapon for character
     int         book;            // auto-choose book for character
     int         chaos_knight;    // choice of god for Chaos Knights (Xom/Makleb)
