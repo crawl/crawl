@@ -114,7 +114,7 @@ std::string apply_description(description_level_type desc,
 // the shell can do damage with.
 bool shell_safe(const char *file)
 {
-    int match = strcspn(file, "\\`$*?|><&\n!");
+    int match = strcspn(file, "\\`$*?|><&\n!;");
     return !(match >= 0 && file[match]);
 }
 
