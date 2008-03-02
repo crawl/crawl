@@ -383,6 +383,13 @@ public:
 protected:
     void draw_title();
     bool process_key(int key);
+
+    void draw_stock_item(int index, const MenuEntry *me) const
+    {
+        // Skip inventory draw function, as tiles code can't currently 
+        // handle drawing items that aren't in mitm or in inventory.
+        Menu::draw_stock_item(index, me);
+    }
 };
 
 void StashMenu::draw_title()
