@@ -48,6 +48,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"
+#include "newgame.h"
 #include "ouch.h"
 #include "place.h"
 #include "player.h"

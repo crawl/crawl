@@ -35,6 +35,7 @@
 #
 # name = Delilah
 # remember_name = false
+# use_old_selection_order = false
 # weapon = (random | short sword | hand axe | spear | mace | trident)
 # chaos_knight = (Xom | Makhleb | random)
 # death_knight = (necromancy | Yredelemnul | random)
@@ -42,7 +43,6 @@
 # race  = (Human |...| Merfolk | random)
 # class = (Fighter |...| Wanderer | random)
 # random_pick = true
-# use_old_selection_order = false
 
 ##### 2-  File System ###############################################
 #

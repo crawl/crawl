@@ -3871,14 +3871,14 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
             res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
             break;
 
-        case SP_GNOME:      res = (adj ? "Gnomish" : "Gnome");       break;
-        case SP_OGRE:       res = (adj ? "Ogreish" : "Ogre");        break;
-        case SP_TROLL:      res = (adj ? "Trollish" : "Troll");      break;
-        case SP_DEMIGOD:    res = (adj ? "Divine" : "Demigod");      break;
-        case SP_DEMONSPAWN: res = (adj ? "Demonic" : "Demonspawn" ); break;
-        case SP_GHOUL:      res = (adj ? "Ghoulish" : "Ghoul");      break;
-        case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");  break;
-        default:            res = (adj ? "Yakish" : "Yak");          break;
+        case SP_GNOME:      res = (adj ? "Gnomish"    : "Gnome");       break;
+        case SP_OGRE:       res = (adj ? "Ogreish"    : "Ogre");        break;
+        case SP_TROLL:      res = (adj ? "Trollish"   : "Troll");       break;
+        case SP_DEMIGOD:    res = (adj ? "Divine"     : "Demigod");     break;
+        case SP_DEMONSPAWN: res = (adj ? "Demonic"    : "Demonspawn" ); break;
+        case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");       break;
+        case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");     break;
+        default:            res = (adj ? "Yakish"     : "Yak");         break;
         }
     }
     return res;
@@ -4571,139 +4571,6 @@ void set_mp(int new_amount, bool max_too)
 
     return;
 }                               // end set_mp()
-
-
-static const char * Species_Abbrev_List[ NUM_SPECIES ] = 
-    { "XX", "Hu", "HE", "GE", "DE", "SE", "MD", "Ha",
-      "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM",
-      // the draconians
-      "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
-      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp",
-      // placeholders
-      "HD", "El" };
-
-int get_species_index_by_abbrev( const char *abbrev )
-{
-    int i;
-    ASSERT(ARRAYSIZE(Species_Abbrev_List) == NUM_SPECIES);
-    for (i = SP_HUMAN; i < NUM_SPECIES; i++)
-    {
-        if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[i][0] )
-            && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[i][1] ))
-        {
-            break;
-        }
-    }
-
-    return ((i < NUM_SPECIES) ? i : -1);
-}
-
-int get_species_index_by_name( const char *name )
-{
-    int i;
-    int sp = -1;
-
-    std::string::size_type pos = std::string::npos;
-    char lowered_buff[80];
-
-    strncpy( lowered_buff, name, sizeof( lowered_buff ) );
-    strlwr( lowered_buff );
-
-    for (i = SP_HUMAN; i < NUM_SPECIES; i++)
-    {
-        const std::string lowered_species =
-            lowercase_string(species_name(static_cast<species_type>(i),0));
-        pos = lowered_species.find( lowered_buff );
-        if (pos != std::string::npos)
-        {
-            sp = i;
-            if (pos == 0)  // prefix takes preference
-                break;
-        }
-    }
-
-    return (sp);
-}
-
-const char *get_species_abbrev( int which_species )
-{
-    ASSERT( which_species > 0 && which_species < NUM_SPECIES );
-
-    return (Species_Abbrev_List[ which_species ]);
-}
-
-
-static const char * Class_Abbrev_List[ NUM_JOBS ] = 
-    { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu", 
-      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM", 
-      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn" };
-
-static const char * Class_Name_List[ NUM_JOBS ] = 
-    { "Fighter", "Wizard", "Priest", "Thief", "Gladiator", "Necromancer",
-      "Paladin", "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
-      "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
-      "Earth Elementalist", "Crusader", "Death Knight", "Venom Mage",
-      "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
-      "Monk", "Warper", "Wanderer" };
-
-int get_class_index_by_abbrev( const char *abbrev )
-{
-    int i;
-
-    for (i = 0; i < NUM_JOBS; i++)
-    {
-        if (tolower( abbrev[0] ) == tolower( Class_Abbrev_List[i][0] )
-            && tolower( abbrev[1] ) == tolower( Class_Abbrev_List[i][1] ))
-        {
-            break;
-        }
-    }
-
-    return ((i < NUM_JOBS) ? i : -1);
-}
-
-const char *get_class_abbrev( int which_job )
-{
-    ASSERT( which_job < NUM_JOBS );
-
-    return (Class_Abbrev_List[ which_job ]);
-}
-
-int get_class_index_by_name( const char *name )
-{
-    int i;
-    int cl = -1;
-
-    char *ptr;
-    char lowered_buff[80];
-    char lowered_class[80];
-
-    strncpy( lowered_buff, name, sizeof( lowered_buff ) );
-    strlwr( lowered_buff );
-
-    for (i = 0; i < NUM_JOBS; i++)
-    {
-        strncpy( lowered_class, Class_Name_List[i], sizeof( lowered_class ) );
-        strlwr( lowered_class );
-
-        ptr = strstr( lowered_class, lowered_buff );
-        if (ptr != NULL)
-        {
-            cl = i;
-            if (ptr == lowered_class)  // prefix takes preference
-                break;
-        }
-    }
-
-    return (cl);
-}
-
-const char *get_class_name( int which_job ) 
-{
-    ASSERT( which_job < NUM_JOBS );
-
-    return (Class_Name_List[ which_job ]);
-}
 
 void contaminate_player(int change, bool statusOnly)
 {

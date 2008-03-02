@@ -34,6 +34,7 @@
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
+#include "newgame.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"

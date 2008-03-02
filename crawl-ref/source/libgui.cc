@@ -26,6 +26,7 @@
 #include "guic.h"
 #include "message.h"
 #include "mon-util.h"
+#include "newgame.h"
 #include "player.h"
 #include "stash.h"
 #include "state.h"

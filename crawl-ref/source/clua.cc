@@ -27,6 +27,7 @@
 #include "mapdef.h"
 #include "message.h"
 #include "mon-util.h"
+#include "newgame.h"
 #include "output.h"
 #include "player.h"
 #include "randart.h"

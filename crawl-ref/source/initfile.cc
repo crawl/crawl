@@ -38,6 +38,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"
+#include "newgame.h"
 #include "player.h"
 #include "religion.h"
 #include "stash.h"
@@ -331,12 +332,7 @@ static char str_to_race( const std::string &str )
     if (index == -1)
         index = get_species_index_by_name( str.c_str() );
 
-    // skip over the extra draconians here
-    if (index > SP_RED_DRACONIAN)
-        index -= (SP_CENTAUR - SP_RED_DRACONIAN - 1);
-
-    // SP_HUMAN is at 1, therefore we must subtract one.
-    return ((index != -1) ? index_to_letter( index - 1 ) : 0); 
+    return ((index != -1) ? index_to_letter( index ) : 0);
 }
 
 static int str_to_class( const std::string &str )

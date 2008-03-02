@@ -34,6 +34,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mstuff2.h"
+#include "newgame.h"
 #include "player.h"
 #include "spells2.h"
 #include "spells4.h"

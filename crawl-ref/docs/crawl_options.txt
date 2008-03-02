@@ -7,8 +7,8 @@ Windows and DOS). On Unix systems, you need to set options in the
 The contents of this text are:
 
 1-  Starting Screen.
-                name, remember_name, weapon, book,
-                chaos_knight, death_knight, priest, 
+                name, remember_name, use_old_selection_order,
+		weapon, book, chaos_knight, death_knight, priest, 
                 race, class, random_pick
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, sound
@@ -169,6 +169,12 @@ remember_name = true
         name prompt - hitting Enter at the name prompt will simply 
         reuse your old name if remember_name is set.
         
+use_old_selection_order = false
+        If set to true, the character selection screen will offer 
+	species and classes in the order of version 0.3 and earlier.
+	Note that this needs to be set before the "race" or "class" 
+	options	(see below), or they won't be interpreted correctly.
+
 weapon = (random | short sword | hand axe | spear | mace | trident)
         Specifying the weapon option allows you to bypass the weapon 
         selection screen.  Note that tridents are restricted to only 
@@ -197,10 +203,6 @@ random_pick = false
         The random_pick option will randomly generate a character.
         The above options (weapons and class options) will override 
         where appropriate.
-
-use_old_selection_order = false
-        If set to true, the character selection screen will offer 
-	species and classes in the order of version 0.3 and earlier.
 
 2-  File System.
 ================

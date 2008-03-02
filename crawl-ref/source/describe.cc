@@ -49,6 +49,7 @@
 #include "message.h"
 #include "monstuff.h"
 #include "mon-util.h"
+#include "newgame.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"

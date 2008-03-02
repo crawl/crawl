@@ -57,6 +57,7 @@
 #include "misc.h"
 #include "monstuff.h"
 #include "mon-util.h"
+#include "newgame.h"
 #include "overmap.h"
 #include "player.h"
 #include "religion.h"

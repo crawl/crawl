@@ -75,6 +75,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "newgame.h"
 #include "ouch.h"
 #include "place.h"
 #include "player.h"

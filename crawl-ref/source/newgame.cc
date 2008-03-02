@@ -253,6 +253,150 @@ static job_type get_class(const int index)
                                            : new_jobs_order[index]);
 }
 
+static const char * Species_Abbrev_List[ NUM_SPECIES ] =
+    { "XX", "Hu", "HE", "GE", "DE", "SE", "MD", "Ha",
+      "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM",
+      // the draconians
+      "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
+      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp",
+      // placeholders
+      "HD", "El" };
+
+int get_species_index_by_abbrev( const char *abbrev )
+{
+    COMPILE_CHECK(ARRAYSIZE(Species_Abbrev_List) == NUM_SPECIES, c1);
+    
+    for (unsigned i = 0; i < ARRAYSIZE(old_species_order); i++)
+    {
+        const int sp = (Options.use_old_selection_order ? old_species_order[i]
+                                                        : new_species_order[i]);
+
+        if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[sp][0] )
+            && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[sp][1] ))
+        {
+            return i;
+        }
+    }
+
+    return (-1);
+}
+
+int get_species_index_by_name( const char *name )
+{
+    unsigned int i;
+    int sp = -1;
+
+    std::string::size_type pos = std::string::npos;
+    char lowered_buff[80];
+
+    strncpy( lowered_buff, name, sizeof( lowered_buff ) );
+    strlwr( lowered_buff );
+
+    for (i = 0; i < ARRAYSIZE(old_species_order); i++)
+    {
+        const species_type real_sp
+                   = (Options.use_old_selection_order ? old_species_order[i]
+                                                      : new_species_order[i]);
+
+        const std::string lowered_species =
+            lowercase_string(species_name(real_sp,1));
+        pos = lowered_species.find( lowered_buff );
+        if (pos != std::string::npos)
+        {
+            sp = i;
+            if (pos == 0)  // prefix takes preference
+                break;
+        }
+    }
+
+    return (sp);
+}
+
+const char *get_species_abbrev( int which_species )
+{
+    ASSERT( which_species > 0 && which_species < NUM_SPECIES );
+
+    return (Species_Abbrev_List[ which_species ]);
+}
+
+static const char * Class_Abbrev_List[ NUM_JOBS ] =
+    { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu",
+      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM",
+      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn" };
+
+static const char * Class_Name_List[ NUM_JOBS ] =
+    { "Fighter", "Wizard", "Priest", "Thief", "Gladiator", "Necromancer",
+      "Paladin", "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
+      "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
+      "Earth Elementalist", "Crusader", "Death Knight", "Venom Mage",
+      "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
+      "Monk", "Warper", "Wanderer" };
+
+int get_class_index_by_abbrev( const char *abbrev )
+{
+    COMPILE_CHECK(ARRAYSIZE(Class_Abbrev_List) == NUM_JOBS, c1);
+    COMPILE_CHECK(ARRAYSIZE(Class_Name_List)   == NUM_JOBS, c2);
+    
+    for (unsigned int i = 0; i < ARRAYSIZE(old_jobs_order); i++)
+    {
+        const job_type job
+                   = (Options.use_old_selection_order ? old_jobs_order[i]
+                                                      : new_jobs_order[i]);
+                                                      
+        if (tolower( abbrev[0] ) == tolower( Class_Abbrev_List[job][0] )
+            && tolower( abbrev[1] ) == tolower( Class_Abbrev_List[job][1] ))
+        {
+            return i;
+        }
+    }
+
+    return (-1);
+}
+
+const char *get_class_abbrev( int which_job )
+{
+    ASSERT( which_job < NUM_JOBS );
+
+    return (Class_Abbrev_List[ which_job ]);
+}
+
+int get_class_index_by_name( const char *name )
+{
+    char *ptr;
+    char lowered_buff[80];
+    char lowered_class[80];
+
+    strncpy( lowered_buff, name, sizeof( lowered_buff ) );
+    strlwr( lowered_buff );
+
+    int cl = -1;
+    for (unsigned int i = 0; i < ARRAYSIZE(old_jobs_order); i++)
+    {
+        const int job = (Options.use_old_selection_order ? old_jobs_order[i]
+                                                         : new_jobs_order[i]);
+                                                      
+        strncpy( lowered_class, Class_Name_List[job], sizeof( lowered_class ) );
+        strlwr( lowered_class );
+
+        ptr = strstr( lowered_class, lowered_buff );
+        if (ptr != NULL)
+        {
+            cl = i;
+            if (ptr == lowered_class)  // prefix takes preference
+                break;
+        }
+    }
+
+    return (cl);
+}
+
+const char *get_class_name( int which_job )
+{
+    ASSERT( which_job < NUM_JOBS );
+
+    return (Class_Name_List[ which_job ]);
+}
+
 static void reset_newgame_options(void)
 {
     ng_race   = ng_cls = 0;
@@ -1641,9 +1785,9 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
     int keyin = 0;
     clrscr();
     book.base_type = OBJ_BOOKS;
-    book.quantity = 1;
-    book.plus = 0;
-    book.special = 1;
+    book.quantity  = 1;
+    book.plus      = 0;
+    book.special   = 1;
 
     // using the fact that CONJ_I and MINOR_MAGIC_I are both
     // fire books, CONJ_II and MINOR_MAGIC_II are both ice books
@@ -1693,25 +1837,29 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
 
             keyin = c_getch();
  
-            if (keyin == CK_BKSP || keyin == ' ')
-                return false;
-            if (keyin == 'X')
+            switch (keyin)
             {
+            case 'X':
                 cprintf(EOL "Goodbye!");
                 end(0);
+                break;
+            case CK_BKSP:
+            case ESCAPE:
+            case ' ':
+                return false;
+            case '\r':
+            case '\n':
+                if ( Options.prev_book != SBT_NO_SELECTION )
+                {
+                    if ( Options.prev_book == SBT_RANDOM )
+                        keyin = '*';
+                    else
+                        keyin = ('a' +  Options.prev_book - 1);
+                }
+            default:
+                break;
             }
-        } while (keyin != '*' && 
-                 ((keyin != '\r' && keyin != '\n') ||
-                  Options.prev_book == SBT_NO_SELECTION ) &&
-                 (keyin < 'a' || keyin >= ('a' + numbooks)));
-
-        if ( keyin == '\r' || keyin == '\n' )
-        {
-            if ( Options.prev_book == SBT_RANDOM )
-                keyin = '*';
-            else
-                keyin = ('a' +  Options.prev_book - 1);
-        }
+        } while (keyin != '*' && (keyin < 'a' || keyin >= ('a' + numbooks)));
     }
 
     if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '*')
@@ -1726,7 +1874,6 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
     return true;
 }
     
-
 static bool choose_weapon()
 {
     const weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
@@ -1791,31 +1938,33 @@ static bool choose_weapon()
 
             keyin = c_getch();
 
-            if (keyin == CK_BKSP || keyin == ' ')
-                return false;
-
-            if (keyin == 'X')
+            switch (keyin)
             {
+            case 'X':
                 cprintf(EOL "Goodbye!");
                 end(0);
-            }
+                break;
+            case CK_BKSP:
+            case CK_ESCAPE:
+            case ' ':
+                return false;
+            case '\r':
+            case '\n':
+                if (Options.prev_weapon != WPN_UNKNOWN)
+                {
+                    if (Options.prev_weapon == WPN_RANDOM)
+                        keyin = '*';
+                    else
+                    {
+                        for (int i = 0; i < num_choices; ++i)
+                             if (startwep[i] == Options.prev_weapon)
+                                 keyin = 'a' + i;
+                    }
+                }
+           }
         }
-        while (keyin != '*' && 
-                ((keyin != '\r' && keyin != '\n') 
-                    || Options.prev_weapon == WPN_UNKNOWN) &&
-                (keyin < 'a' || keyin > ('a' + num_choices)));
+        while (keyin != '*' && (keyin < 'a' || keyin > ('a' + num_choices)));
 
-        if (keyin == '\r' || keyin == '\n')
-        {
-            if (Options.prev_weapon == WPN_RANDOM)
-                keyin = '*';
-            else
-            {
-                for (int i = 0; i < num_choices; ++i)
-                    if (startwep[i] == Options.prev_weapon)
-                        keyin = 'a' + i;
-            }
-        }
 
         if (keyin != '*' && effective_stat_bonus(startwep[keyin-'a']) > -4)
         {
@@ -1836,12 +1985,14 @@ static bool choose_weapon()
                 break;
         }
         keyin += 'a';
+        ng_weapon = WPN_RANDOM;
+    }
+    else
+    {
+        ng_weapon = startwep[keyin-'a'];
     }
 
     you.inv[0].sub_type = startwep[keyin-'a'];
-    ng_weapon = (Options.random_pick || Options.weapon == WPN_RANDOM
-                 || keyin == '*') ? WPN_RANDOM
-                                  : you.inv[0].sub_type;
 
     return true;
 }
@@ -2215,14 +2366,18 @@ static void show_name_prompt(int where, bool blankOK,
     if (blankOK)
     {
         if (Options.prev_name.length() && Options.remember_name)
+        {
             cprintf(EOL
                     "Press <Enter> for \"%s\", or . to be prompted later."
                     EOL,
                     Options.prev_name.c_str());
+        }
         else
+        {
             cprintf(EOL 
                     "Press <Enter> to answer this after race and "
                     "class are chosen." EOL);
+        }
     }
 
     cprintf(EOL "What is your name today? ");
@@ -2998,6 +3153,7 @@ spec_query:
     switch (keyn)
     {
     case 'X':
+    case ESCAPE:
         cprintf(EOL "Goodbye!");
         end(0);
         break;
@@ -3228,8 +3384,8 @@ job_query:
         cprintf(EOL "Goodbye!");
         end(0);
         break;
-     case ESCAPE:
      case CK_BKSP:
+     case ESCAPE:
      case ' ':
         if (keyn != ' ' || you.species == SP_UNKNOWN)
         {
@@ -3556,50 +3712,68 @@ bool give_items_skills()
                                                "Random");
                 }
 
-               getkey:
-                keyn = c_getch();
+                do {
+                    keyn = c_getch();
 
-                if ((keyn == '\r' || keyn == '\n')
-                     && Options.prev_pr != GOD_NO_GOD)
-                {
-                     keyn =  Options.prev_pr == GOD_ZIN? 'a' :
-                             Options.prev_pr == GOD_YREDELEMNUL? 'b' :
-                             Options.prev_pr == GOD_BEOGH? 'c' :
-                                                '*';
-
-                }
-            
-                switch (keyn)
-                {
-                case CK_BKSP:
-                case ' ':
-                    return false;
-                case 'X':
-                    cprintf(EOL "Goodbye!");
-                    end(0);
-                    break;
-                case '*':
-                    you.religion = coinflip()? GOD_ZIN : GOD_YREDELEMNUL;
-                    if (you.species == SP_HILL_ORC && coinflip())
-                        you.religion = GOD_BEOGH;
-                    break;
-                case 'a':
-                    you.religion = GOD_ZIN;
-                    break;
-                case 'b':
-                    you.religion = GOD_YREDELEMNUL;
-                    break;
-                case 'c':
-                    if (you.species == SP_HILL_ORC)
+                    if ((keyn == '\r' || keyn == '\n')
+                         && Options.prev_pr != GOD_NO_GOD)
                     {
-                        you.religion = GOD_BEOGH;
-                        break;
-                    } // else fall through
-                default:
-                    goto getkey;
-                }
+                         keyn =  Options.prev_pr == GOD_ZIN? 'a' :
+                                 Options.prev_pr == GOD_YREDELEMNUL? 'b' :
+                                 Options.prev_pr == GOD_BEOGH? 'c' :
+                                                  '*';
 
-                ng_pr = keyn == '*'? GOD_RANDOM : you.religion;
+                    }
+            
+                    switch (keyn)
+                    {
+                    case 'X':
+                        cprintf(EOL "Goodbye!");
+                        end(0);
+                        break;
+                    case CK_BKSP:
+                    case ESCAPE:
+                    case ' ':
+                        return false;
+                    case '\r':
+                    case '\n':
+                        if (Options.prev_pr == GOD_NO_GOD
+                            || Options.prev_pr == GOD_BEOGH
+                               && you.species != SP_HILL_ORC)
+                        {
+                            break;
+                        }
+                        if (Options.prev_pr != GOD_RANDOM)
+                        {
+                            Options.prev_pr
+                                     = static_cast<god_type>(Options.prev_pr);
+                            break;
+                        }
+                        keyn = '*'; // for ng_pr setting
+                        // fall-through for random
+                    case '*':
+                        you.religion = coinflip()? GOD_ZIN : GOD_YREDELEMNUL;
+                        if (you.species == SP_HILL_ORC && coinflip())
+                            you.religion = GOD_BEOGH;
+                        break;
+                    case 'a':
+                        you.religion = GOD_ZIN;
+                        break;
+                    case 'b':
+                        you.religion = GOD_YREDELEMNUL;
+                        break;
+                    case 'c':
+                        if (you.species == SP_HILL_ORC)
+                        {
+                            you.religion = GOD_BEOGH;
+                            break;
+                        } // else fall through
+                    default:
+                        break;
+                    }
+                } while (you.religion == GOD_NO_GOD);
+                
+                ng_pr = (keyn == '*'? GOD_RANDOM : you.religion);
             }
         }
         break;
@@ -4147,41 +4321,46 @@ bool give_items_skills()
                                                            "Random");
             }
 
-          getkey1:
-            keyn = c_getch();
-
-            if ((keyn == '\r' || keyn == '\n')
-                    && Options.prev_dk != DK_NO_SELECTION)
-            {
-                keyn = Options.prev_dk == DK_NECROMANCY? 'a' :
-                       Options.prev_dk == DK_YREDELEMNUL? 'b' :
-                                                          '*';
-            }
+            do {
+                keyn = c_getch();
             
-            switch (keyn)
-            {
-            case CK_BKSP:
-            case ' ':      
-                return false;
-            case 'X':
-                cprintf(EOL "Goodbye!");
-                end(0);
-                break;
-            case '*':
-                choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
-                break;
-            case 'a':
-                cprintf(EOL "Very well.");
-                choice = DK_NECROMANCY;
-                break;
-            case 'b':
-                choice = DK_YREDELEMNUL;
-                break;
-            default:
-                goto getkey1;
-            }
-
-            ng_dk = keyn == '*'? DK_RANDOM : choice;
+                switch (keyn)
+                {
+                case 'X':
+                    cprintf(EOL "Goodbye!");
+                    end(0);
+                    break;
+                case CK_BKSP:
+                case ESCAPE:
+                case ' ':
+                    return false;
+                case '\r':
+                case '\n':
+                    if (Options.prev_dk == DK_NO_SELECTION)
+                        break;
+                        
+                    if (Options.prev_dk != DK_RANDOM)
+                    {
+                        choice = Options.prev_dk;
+                        break;
+                    }
+                    keyn = '*'; // for ng_dk setting
+                    // fall-through for random
+                case '*':
+                    choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
+                    break;
+                case 'a':
+                    cprintf(EOL "Very well.");
+                    choice = DK_NECROMANCY;
+                    break;
+                case 'b':
+                    choice = DK_YREDELEMNUL;
+                default:
+                    break;
+                }
+            } while (choice == DK_NO_SELECTION);
+            
+            ng_dk = (keyn == '*'? DK_RANDOM : choice);
         }
 
         switch (choice)
@@ -4263,47 +4442,53 @@ bool give_items_skills()
             {
                 textcolor(BROWN);
                 cprintf(EOL "Enter - %s" EOL,
-                        Options.prev_ck == GOD_XOM? "Xom" :
-                        Options.prev_ck == GOD_MAKHLEB? "Makhleb" :
-                                                    "Random");
+                        Options.prev_ck == GOD_XOM?     "Xom" :
+                        Options.prev_ck == GOD_MAKHLEB? "Makhleb"
+                                                      : "Random");
                 textcolor(LIGHTGREY);
             }
 
-          getkey2:
-
-            keyn = c_getch();
-
-            if ((keyn == '\r' || keyn == '\n') 
-                    && Options.prev_ck != GOD_NO_GOD)
+            do
             {
-                keyn = Options.prev_ck == GOD_XOM? 'a' :
-                       Options.prev_ck == GOD_MAKHLEB? 'b' :
-                                                    '*';
-            }
+                keyn = c_getch();
 
-            switch (keyn)
-            {
-            case CK_BKSP:
-            case ' ':
-                return false;
-            case 'X':
-                cprintf(EOL "Goodbye!");
-                end(0);
-                break;
-            case '*':
-                you.religion = coinflip()? GOD_XOM : GOD_MAKHLEB;
-                break;
-            case 'a':
-                you.religion = GOD_XOM;
-                break;
-            case 'b':
-                you.religion = GOD_MAKHLEB;
-                break;
-            default:
-                goto getkey2;
-            }
-
-            ng_ck = keyn == '*'? GOD_RANDOM : you.religion;
+                switch (keyn)
+                {
+                case 'X':
+                    cprintf(EOL "Goodbye!");
+                    end(0);
+                    break;
+                case CK_BKSP:
+                case CK_ESCAPE:
+                case ' ':
+                    return false;
+                case '\r':
+                case '\n':
+                    if (Options.prev_ck == GOD_NO_GOD)
+                        break;
+                        
+                    if (Options.prev_ck != GOD_RANDOM)
+                    {
+                        you.religion = static_cast<god_type>(Options.prev_ck);
+                        break;
+                    }
+                    keyn = '*'; // for ng_ck setting
+                    // fall-through for random
+                case '*':
+                    you.religion = (coinflip()? GOD_XOM : GOD_MAKHLEB);
+                    break;
+                case 'a':
+                    you.religion = GOD_XOM;
+                    break;
+                case 'b':
+                    you.religion = GOD_MAKHLEB;
+                    // fall through
+                default:
+                    break;
+                }
+            } while (you.religion == GOD_NO_GOD);
+            
+            ng_ck = (keyn == '*'? GOD_RANDOM : you.religion);
         }
 
         if (you.religion == GOD_XOM)

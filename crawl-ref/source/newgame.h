@@ -13,7 +13,18 @@
 #define NEWGAME_H
 
 
-// last updated 12may2000 {dlb}
+/* ***********************************************************************
+ * called from: initfile
+ * *********************************************************************** */
+int get_species_index_by_abbrev( const char *abbrev );
+int get_species_index_by_name( const char *name );
+const char *get_species_abbrev( int which_species );
+
+int get_class_index_by_abbrev( const char *abbrev );
+int get_class_index_by_name( const char *name );
+const char *get_class_abbrev( int which_job );
+const char *get_class_name( int which_job );
+
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */

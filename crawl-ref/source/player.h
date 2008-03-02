@@ -396,19 +396,6 @@ void set_hp(int new_amount, bool max_too);
  * *********************************************************************** */
 void set_mp(int new_amount, bool max_too);
 
-
-/* ***********************************************************************
- * called from: newgame
- * *********************************************************************** */
-int get_species_index_by_abbrev( const char *abbrev );
-int get_species_index_by_name( const char *name );
-const char *get_species_abbrev( int which_species );
-
-int get_class_index_by_abbrev( const char *abbrev );
-int get_class_index_by_name( const char *name );
-const char *get_class_abbrev( int which_job );
-const char *get_class_name( int which_job );
-
 // last updated 19apr2001 {gdl}
 /* ***********************************************************************
  * called from:
