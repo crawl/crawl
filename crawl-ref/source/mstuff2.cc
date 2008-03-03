@@ -1097,9 +1097,6 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     // accuracy is halved if the dragon is attacking a target that's
     // wielding a weapon of dragon slaying (which makes the
     // dragon/draconian avoid looking at the foe).
-    // 
-    // [ds] FIXME: This effect seems too strong. Perhaps use 75% of
-    // original to-hit instead of 50%.
     if ((mons_genus(monster->type) == MONS_DRAGON
          || mons_genus(monster->type) == MONS_DRACONIAN))
     {
@@ -1108,7 +1105,10 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
             if (const item_def *weapon = foe->weapon())
             {
                 if (get_weapon_brand(*weapon) == SPWPN_DRAGON_SLAYING)
-                    pbolt.hit /= 2;
+                {
+                    pbolt.hit *= 3;
+                    pbolt.hit /= 4;
+		}
             }
         }
     }
