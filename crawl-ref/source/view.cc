@@ -775,7 +775,7 @@ static void good_god_follower_attitude_change(monsters *monster)
                             << std::endl;
                 return;
             }
-            good_god_convert_holy(monster);
+            good_god_holy_attitude_change(monster);
             stop_running();
         }
     }

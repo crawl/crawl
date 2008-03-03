@@ -3079,7 +3079,7 @@ static void beogh_orc_spontaneous_conversion_speech(
     }    
 }
 
-void good_god_convert_holy(monsters *holy)
+void good_god_holy_attitude_change(monsters *holy)
 {
     ASSERT(mons_class_holiness(holy->type) == MH_HOLY);
 
