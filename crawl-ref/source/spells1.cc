@@ -420,10 +420,9 @@ void cast_chain_lightning( int powc )
     more();
 }
 
-void identify(int power)
+void identify(int power, int item_slot)
 {
     int id_used = 1;
-    int item_slot;
 
     // scrolls of identify *may* produce "extra" identifications {dlb}:
     if (power == -1 && one_chance_in(5))
@@ -431,8 +430,9 @@ void identify(int power)
 
     do
     {
-        item_slot = prompt_invent_item( "Identify which item?", MT_INVLIST,
-                                        OSEL_UNIDENT, true, true, false );
+        if (item_slot == -1)
+            item_slot = prompt_invent_item( "Identify which item?", MT_INVLIST,
+                                            OSEL_UNIDENT, true, true, false );
         if (item_slot == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );
@@ -463,6 +463,9 @@ void identify(int power)
 
         if (Options.auto_list && id_used > 0)
             more();
+
+        // in case we get to try again
+        item_slot = -1;
     }
     while (id_used > 0);
 }                               // end identify()

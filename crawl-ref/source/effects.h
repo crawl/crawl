@@ -72,7 +72,7 @@ bool acquirement(object_class_type force_class, int agent,
 /* ***********************************************************************
  * called from: item_use
  * *********************************************************************** */
-bool recharge_wand(void);
+bool recharge_wand(const int item_slot = -1);
 
 
 // last updated 12may2000 {dlb}

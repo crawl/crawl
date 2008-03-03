@@ -27,6 +27,7 @@
 #include "dgnevent.h"
 #include "food.h"
 #include "hiscores.h"
+#include "invent.h"
 #include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
@@ -1697,12 +1698,37 @@ bool acquirement(object_class_type class_wanted, int agent,
     return (true);
 }                               // end acquirement()
 
-bool recharge_wand(void)
+bool recharge_wand(int item_slot)
 {
-    if (you.equip[EQ_WEAPON] == -1)
-        return (false);
+    if (item_slot == -1)
+        item_slot = prompt_invent_item( "Charge which item?", MT_INVLIST,
+                                        OSEL_RECHARGE, true, true, false );
 
-    item_def &wand = you.inv[ you.equip[EQ_WEAPON] ];
+    if (item_slot == PROMPT_ABORT)
+    {
+        canned_msg( MSG_OK );
+        return (false);
+    }
+
+    item_def &wand = you.inv[ item_slot ];
+
+    if (wand.base_type == OBJ_WEAPONS
+        && !is_random_artefact( wand )
+        && !is_fixed_artefact( wand )
+        && get_weapon_brand( wand ) == SPWPN_ELECTROCUTION)
+    {
+        // might fail because of already high enchantment
+        if (enchant_weapon( ENCHANT_TO_DAM, false, item_slot ))
+        {
+            you.wield_change = true;
+
+            if (!item_ident(wand, ISFLAG_KNOW_TYPE))
+                set_ident_flags(wand, ISFLAG_KNOW_TYPE);
+            
+            return (true);
+        }
+        return (false);
+    }
 
     if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
         return (false);

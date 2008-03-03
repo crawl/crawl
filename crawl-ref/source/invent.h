@@ -26,7 +26,9 @@ enum object_selector
     OSEL_WIELD    = -2,
     OSEL_UNIDENT  = -3,
     OSEL_EQUIP    = -4,
-    OSEL_MEMORISE = -5
+    OSEL_MEMORISE = -5,
+    OSEL_RECHARGE = -6,
+    OSEL_ENCH_ARM = -7
 };
 
 #define PROMPT_ABORT        -1

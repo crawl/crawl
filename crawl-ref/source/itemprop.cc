@@ -1284,6 +1284,47 @@ bool check_armour_shape( const item_def &item, bool quiet )
     return (true);
 }
 
+bool item_is_rechargable(const item_def &it, bool known)
+{
+    // These are obvious
+    if (it.base_type == OBJ_WANDS || item_is_rod(it))
+        return (true);
+
+    // ... but electro-weapons can also be charged
+    return ( it.base_type == OBJ_WEAPONS
+             && !is_random_artefact( it )
+             && !is_fixed_artefact( it )
+             && get_weapon_brand( it ) == SPWPN_ELECTROCUTION
+             && (!known || item_type_known(it)) );
+}
+
+bool is_enchantable_armour(const item_def &arm, bool uncurse)
+{
+    if (arm.base_type != OBJ_ARMOUR)
+        return (false);
+
+    // only equipped items should be affected
+//    if (!item_is_equipped(arm))
+//        return (false);
+
+    // artefacts cannot be enchanted
+    if (is_fixed_artefact( arm )
+        || is_random_artefact( arm ))
+    {
+        return (uncurse && item_cursed( arm )); // ?EA may uncurse artefacts
+    }
+
+    // Nor can highly enchanted items
+    if ( arm.plus >= 2
+         && (arm.sub_type >= ARM_CLOAK && arm.sub_type <= ARM_BOOTS
+             || is_shield(arm)) )
+    {
+        return (uncurse && item_cursed( arm )); // ?EA may uncurse item
+    }
+
+    return (true);
+}
+
 //
 // Weapon information and checking functions:
 //

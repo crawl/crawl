@@ -119,7 +119,7 @@ void antimagic();
 /* ***********************************************************************
  * called from: acr (WIZARD only) - item_use - spell
  * *********************************************************************** */
-void identify(int power);
+void identify(int power, int item_slot = -1);
 
 
 // last updated 24may2000 {dlb}

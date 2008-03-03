@@ -81,7 +81,7 @@
 #include "xom.h"
 
 static bool drink_fountain();
-static bool enchant_armour();
+static bool enchant_armour(int item_slot = -1);
 
 static int  _fire_prompt_for_item(std::string& err);
 static bool _fire_validate_item(int selected, std::string& err);
@@ -3788,9 +3788,11 @@ static bool affix_weapon_enchantment()
     return (success);
 }
 
-bool enchant_weapon( enchant_stat_type which_stat, bool quiet )
+bool enchant_weapon( enchant_stat_type which_stat, bool quiet, int wpn )
 {
-    const int wpn = you.equip[ EQ_WEAPON ];
+    if (wpn == -1)
+        wpn = you.equip[ EQ_WEAPON ];
+        
     bool affected = true;
     int enchant_level;
 
@@ -3889,76 +3891,65 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet )
     return (true);
 }
 
-static bool enchant_armour( void )
+static bool enchant_armour( int item_slot )
 {
-    // NOTE: It is assumed that armour which changes in this way does
-    // not change into a form of armour with a different evasion modifier.
-    int nthing = you.equip[EQ_BODY_ARMOUR];
+    if (item_slot == -1)
+        item_slot = prompt_invent_item( "Enchant which item?", MT_INVLIST,
+                                        OSEL_ENCH_ARM, true, true, false );
 
-    if (nthing != -1
-        && (you.inv[nthing].sub_type == ARM_DRAGON_HIDE
-            || you.inv[nthing].sub_type == ARM_ICE_DRAGON_HIDE
-            || you.inv[nthing].sub_type == ARM_STEAM_DRAGON_HIDE
-            || you.inv[nthing].sub_type == ARM_MOTTLED_DRAGON_HIDE
-            || you.inv[nthing].sub_type == ARM_STORM_DRAGON_HIDE
-            || you.inv[nthing].sub_type == ARM_GOLD_DRAGON_HIDE
-            || you.inv[nthing].sub_type == ARM_SWAMP_DRAGON_HIDE
-            || you.inv[nthing].sub_type == ARM_TROLL_HIDE))
+    if (item_slot == PROMPT_ABORT)
     {
-        mprf("%s glows purple and changes!",
-             you.inv[you.equip[EQ_BODY_ARMOUR]].name(DESC_CAP_YOUR).c_str());
-
-        you.redraw_armour_class = 1;
-
-        hide2armour(you.inv[nthing]);
-        return (true);
-    }
-
-    // pick random piece of armour
-    int count = 0;
-    int affected_slot = EQ_WEAPON;
-
-    for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++) 
-    {
-        if (you.equip[i] != -1)
-        {
-            count++;
-            if (one_chance_in( count ))
-                affected_slot = i;
-        }
-    } 
-
-    // no armour == no enchantment
-    if (affected_slot == EQ_WEAPON)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        canned_msg( MSG_OK );
         return (false);
     }
 
-    bool affected = true;
-    item_def &item = you.inv[you.equip[ affected_slot ]];
+    item_def& arm(you.inv[item_slot]);
 
-    if (is_random_artefact( item )
-        || ((item.sub_type >= ARM_CLOAK && item.sub_type <= ARM_BOOTS)
-            && item.plus >= 2)
-        || ((item.sub_type == ARM_SHIELD 
-                || item.sub_type == ARM_BUCKLER
-                || item.sub_type == ARM_LARGE_SHIELD)
-            && item.plus >= 2)
-        || (item.plus >= 3 && random2(8) < item.plus))
+    // cannot be enchanted nor uncursed
+    if (!is_enchantable_armour(arm, true))
     {
-        affected = false;
+        canned_msg( MSG_NOTHING_HAPPENS );
+        return (false);
+    }
+
+    bool is_cursed = item_cursed(arm);
+                
+    // Turn hides into mails where applicable.
+    // NOTE: It is assumed that armour which changes in this way does
+    // not change into a form of armour with a different evasion modifier.
+    if (arm.sub_type == ARM_DRAGON_HIDE
+        || arm.sub_type == ARM_ICE_DRAGON_HIDE
+        || arm.sub_type == ARM_STEAM_DRAGON_HIDE
+        || arm.sub_type == ARM_MOTTLED_DRAGON_HIDE
+        || arm.sub_type == ARM_STORM_DRAGON_HIDE
+        || arm.sub_type == ARM_GOLD_DRAGON_HIDE
+        || arm.sub_type == ARM_SWAMP_DRAGON_HIDE
+        || arm.sub_type == ARM_TROLL_HIDE)
+    {
+        mprf("%s glows purple and changes!",
+             arm.name(DESC_CAP_YOUR).c_str());
+             
+        hide2armour(arm);
+
+        if (is_cursed)
+            do_uncurse_item( arm );
+
+        you.redraw_armour_class = 1;
+
+        // no additional enchantment
+        return (true);
     }
 
     // even if not affected, it may be uncursed.
-    if (!affected)
+    if (!is_enchantable_armour(arm, false)
+        || arm.plus >= 3 && random2(8) < arm.plus)
     {
-        if (item_cursed( item ))
+        if (is_cursed)
         {
             mprf("%s glows silver for a moment.",
-                 item.name(DESC_CAP_YOUR).c_str());
-
-            do_uncurse_item( item );
+                 arm.name(DESC_CAP_YOUR).c_str());
+                 
+            do_uncurse_item( arm );
             return (true);
         }
         else
@@ -3968,13 +3959,15 @@ static bool enchant_armour( void )
         }
     }
 
-    // vVvVv    This is *here* for a reason!
+    // output message before changing enchantment and curse status
     mprf("%s glows green for a moment.",
-         item.name(DESC_CAP_YOUR).c_str());
+         arm.name(DESC_CAP_YOUR).c_str());
 
-    item.plus++;
+    arm.plus++;
 
-    do_uncurse_item( item );
+    if (is_cursed)
+        do_uncurse_item( arm );
+        
     you.redraw_armour_class = 1;
     xom_is_stimulated(16);
     return (true);
@@ -4019,6 +4012,54 @@ static void handle_read_book( int item_slot )
 
         describe_spell( spell );
     }
+}
+
+// returns true if the scroll had an obvious effect and should be identified
+static bool scroll_modify_item(const scroll_type scroll)
+{
+     int item_slot = prompt_invent_item( "Modify which item?", MT_INVLIST,
+                                          OSEL_ANY, true, true, false );
+                                          
+     if (item_slot == PROMPT_ABORT)
+     {
+         canned_msg( MSG_OK );
+         return (false);
+     }
+
+     item_def &item = you.inv[item_slot];
+                                          
+     switch (scroll)
+     {
+     case SCR_IDENTIFY:
+        if ( !fully_identified(item) )
+        {
+            mpr("This is a scroll of identify!");
+            identify(-1, item_slot);
+            return (true);
+        }
+        break;
+     case SCR_RECHARGING:
+        if (item_is_rechargable(item))
+        {
+            mpr("This is a scroll of recharging!");
+            recharge_wand(item_slot);
+            return (true);
+        }
+     case SCR_ENCHANT_ARMOUR:
+        if (is_enchantable_armour(item, true))
+        {
+            // might still fail because of already high enchantment
+            if (enchant_armour(item_slot))
+                return (true);
+            return (false);
+        }
+     default:
+        break;
+     }
+     
+     // Oops, wrong item...
+     canned_msg(MSG_NOTHING_HAPPENS);
+     return (false);
 }
 
 void read_scroll( int slot )
@@ -4096,19 +4137,19 @@ void read_scroll( int slot )
     }
 
     // decrement and handle inventory if any scroll other than paper {dlb}:
-    const int scroll_type = scroll.sub_type;
-    if (scroll_type != SCR_PAPER &&
-        (scroll_type != SCR_IMMOLATION || you.duration[DUR_CONF]))
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
+    if (which_scroll != SCR_PAPER &&
+        (which_scroll != SCR_IMMOLATION || you.duration[DUR_CONF]))
     {
         mpr("As you read the scroll, it crumbles to dust.");
         // Actual removal of scroll done afterwards. -- bwr
     }
 
     const bool alreadyknown = item_type_known(scroll);
-    const bool dangerous = player_in_a_dangerous_place();
+    const bool dangerous    = player_in_a_dangerous_place();
 
     // scrolls of paper are also exempted from this handling {dlb}:
-    if (scroll_type != SCR_PAPER)
+    if (which_scroll != SCR_PAPER)
     {
         if (you.duration[DUR_CONF])
         {
@@ -4125,7 +4166,7 @@ void read_scroll( int slot )
 
     // it is the exception, not the rule, that
     // the scroll will not be identified {dlb}:
-    switch (scroll_type)
+    switch (which_scroll)
     {
     case SCR_PAPER:
         // remember paper scrolls handled as special case above, too:
@@ -4239,22 +4280,6 @@ void read_scroll( int slot )
         explosion(beam);
         break;
 
-    case SCR_IDENTIFY:
-        if ( !item_type_known(scroll) )
-        {
-            mpr("This is a scroll of identify!");
-            more();
-        }
-
-        set_ident_flags( you.inv[item_slot], ISFLAG_IDENT_MASK );
-
-        // important {dlb}
-        set_ident_type( OBJ_SCROLLS, SCR_IDENTIFY, ID_KNOWN_TYPE );
-
-        identify(-1);
-        you.wield_change = true;
-        break;
-
     case SCR_CURSE_WEAPON:
         nthing = you.equip[EQ_WEAPON];
 
@@ -4344,35 +4369,25 @@ void read_scroll( int slot )
         set_item_ego_type( you.inv[nthing], OBJ_WEAPONS, SPWPN_VORPAL );
         break;
 
+    case SCR_IDENTIFY:
+        if ( !item_type_known(scroll) )
+             id_the_scroll = scroll_modify_item(which_scroll);
+        else
+             identify(-1);
+        break;
+
     case SCR_RECHARGING:
-        nthing = you.equip[EQ_WEAPON];
-
-        if (nthing != -1
-            && !is_random_artefact( you.inv[nthing] )
-            && !is_fixed_artefact( you.inv[nthing] )
-            && get_weapon_brand( you.inv[nthing] ) == SPWPN_ELECTROCUTION)
-        {
-            id_the_scroll = enchant_weapon( ENCHANT_TO_DAM );
-
-            if (!item_ident(you.inv[nthing], ISFLAG_KNOW_TYPE))
-	    {
-	        if (item_type_known(scroll))
-		    set_ident_flags(you.inv[nthing], ISFLAG_KNOW_TYPE);
-		else   
-                    id_the_scroll = false;
-            }
-	    break;
-        }
-
-        if (!recharge_wand())
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            id_the_scroll = false;
-        }
+        if ( !item_type_known(scroll) )
+             id_the_scroll = scroll_modify_item(which_scroll);
+        else
+             recharge_wand(-1);
         break;
 
     case SCR_ENCHANT_ARMOUR:
-        id_the_scroll = enchant_armour();
+        if ( !item_type_known(scroll) )
+             id_the_scroll = scroll_modify_item(which_scroll);
+        else
+             enchant_armour(-1);
         break;
 
     case SCR_CURSE_ARMOUR:
@@ -4429,11 +4444,15 @@ void read_scroll( int slot )
                     you.duration[DUR_PIETY_POOL] = 500;
             }
         }
+        break;
+    default:
+        mpr("Read a buggy scroll, please report this.");
+        break;
     }                           // end switch
 
     // finally, destroy and identify the scroll
     // scrolls of immolation were already destroyed earlier
-    if (scroll_type != SCR_PAPER && scroll_type != SCR_IMMOLATION)
+    if (which_scroll != SCR_PAPER && which_scroll != SCR_IMMOLATION)
     {
         if ( id_the_scroll )
             set_ident_flags( scroll, ISFLAG_KNOW_TYPE ); // for notes
@@ -4441,7 +4460,7 @@ void read_scroll( int slot )
         dec_inv_item_quantity( item_slot, 1 );
     }
 
-    set_ident_type( OBJ_SCROLLS, scroll_type, 
+    set_ident_type( OBJ_SCROLLS, which_scroll,
                     (id_the_scroll) ? ID_KNOWN_TYPE : ID_TRIED_TYPE );
 
     if (!alreadyknown && dangerous)

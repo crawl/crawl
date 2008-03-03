@@ -759,6 +759,10 @@ static bool item_class_selected(const item_def &i, int selector)
                 && (i.sub_type != BOOK_DESTRUCTION || !item_type_known(i)));
     case OBJ_SCROLLS:
         return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
+    case OSEL_RECHARGE:
+        return (item_is_rechargable(i), true);
+    case OSEL_ENCH_ARM:
+        return (is_enchantable_armour(i, true));
     case OSEL_EQUIP:
         for (int eq = 0; eq < NUM_EQUIP; eq++)
         {
