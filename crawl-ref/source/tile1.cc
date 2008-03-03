@@ -2535,7 +2535,7 @@ void tilep_job_default(int job, int gender, int *parts)
 
         case JOB_TRANSMUTER:
             parts[TILEP_PART_BODY]= TILEP_BODY_ROBE_RAINBOW;
-            parts[TILEP_PART_HAND1]= TILEP_HAND1_STAFF_MAGE;
+            parts[TILEP_PART_HAND1]= TILEP_HAND1_STAFF_RUBY;
             parts[TILEP_PART_HAND2]= TILEP_HAND2_BOOK_MAGENTA_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
@@ -2543,7 +2543,7 @@ void tilep_job_default(int job, int gender, int *parts)
         case JOB_CONJURER:
             parts[TILEP_PART_BODY]= TILEP_BODY_ROBE_MAGENTA;
             parts[TILEP_PART_HELM] = TILEP_HELM_GANDALF;
-            parts[TILEP_PART_HAND1]= TILEP_HAND1_STAFF_MAGE;
+            parts[TILEP_PART_HAND1]= TILEP_HAND1_STAFF_MAGE2;
             parts[TILEP_PART_HAND2]= TILEP_HAND2_BOOK_RED_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
@@ -2559,7 +2559,7 @@ void tilep_job_default(int job, int gender, int *parts)
         case JOB_SUMMONER:
             parts[TILEP_PART_BODY]= TILEP_BODY_ROBE_BROWN;
             parts[TILEP_PART_HELM] = TILEP_HELM_GANDALF;
-            parts[TILEP_PART_HAND1]= TILEP_HAND1_STAFF_MAGE;
+            parts[TILEP_PART_HAND1]= TILEP_HAND1_STAFF_RING_BLUE;
             parts[TILEP_PART_HAND2]= TILEP_HAND2_BOOK_YELLOW_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
@@ -2741,9 +2741,19 @@ void tilep_print_parts(char *fbuf, int *parts)
  */
 int tilep_equ_weapon(const item_def &item)
 {
-    if (item.base_type == OBJ_STAVES) return TILEP_HAND1_STAFF_MAGE;
+    if (item.base_type == OBJ_STAVES)
+    {
+        if (item_is_rod(item))
+        {
+            return TILEP_HAND1_ROD_BROWN + (item.special / 4) % 10;
+        }
+        else
+        {
+            return TILEP_HAND1_STAFF_LARGE + (item.special / 4) % 10;
+        }
+    }
 
-    if (item.base_type ==OBJ_MISCELLANY)
+    if (item.base_type == OBJ_MISCELLANY)
     {
         switch(item.sub_type)
         {

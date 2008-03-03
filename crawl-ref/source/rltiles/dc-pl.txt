@@ -502,21 +502,40 @@ voodoo VOODOO
 finisher FINISHER
 
 ## staves
-staff_skull STAFF_SKULL
 
+# These 10 staves correspond to the same order as item/staff/
+staff_large STAFF_LARGE
+great_staff GREAT_STAFF
 staff_mage STAFF_MAGE
 staff_mage2 STAFF_MAGE2
-great_staff GREAT_STAFF
+staff_plain STAFF_PLAIN
+staff_organic STAFF_ORGANIC
+staff_skull STAFF_SKULL
+staff_sceptre STAFF_SCEPTRE
+staff_ruby STAFF_RUBY
+staff_fancy STAFF_FANCY
+
 staff_evil STAFF_EVIL
 staff_ring_blue STAFF_RING_BLUE
 staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
-staff_ruby STAFF_RUBY
-staff_large STAFF_LARGE
 elemental_staff ELEMENTAL_STAFF
 asmodeus ASMODEUS
 dispater DISPATER
 olgreb OLGREB
+
+## rods
+# These 10 rods correspond to the same order as item/rod/
+rod_brown ROD_BROWN
+rod_moon ROD_MOON
+rod_aries ROD_ARIES
+rod_blue ROD_BLUE
+rod_magenta ROD_MAGENTA
+rod_hammer ROD_HAMMER
+rod_thick ROD_THICK
+rod_ruby ROD_RUBY
+rod_forked ROD_FORKED
+rod_emerald ROD_EMERALD
 
 ## axes
 axe_small AXE_SMALL
