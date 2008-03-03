@@ -1070,6 +1070,14 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         pbolt.aux_source = "blast of chilling breath";
         scaling = 65;
         break;
+
+    case MONS_PLAYER_GHOST: // draconians only
+        pbolt.name += "blast of negative energy";
+        pbolt.flavour = BEAM_NEG;
+        pbolt.colour = DARKGREY;
+        pbolt.aux_source = "blast of draining breath";
+        scaling = 65;
+        break;
         
     default:
         DEBUGSTR("Bad monster class in setup_dragon()");

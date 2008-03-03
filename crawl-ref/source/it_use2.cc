@@ -268,11 +268,20 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_RESTORE_ABILITIES:
-        // give a message if restore_stat doesn't
-        if (!restore_stat(STAT_ALL, false))
+    {
+        bool nothing_happens = true;
+        if (you.duration[DUR_BREATH_WEAPON])
+        {
+            mpr("You have got your breath back.", MSGCH_RECOVERY);
+            you.duration[DUR_BREATH_WEAPON] = 0;
+            nothing_happens = false;
+        }
+
+        // give a message if no message otherwise
+        if (!restore_stat(STAT_ALL, false) && nothing_happens)
             mpr( "You feel refreshed." );
         break;
-
+    }
     case POT_BERSERK_RAGE:
         if (you.species == SP_VAMPIRE)
         {

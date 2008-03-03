@@ -474,7 +474,7 @@ void create_spec_monster_name(int x, int y)
         ghost.name = "John Doe";
 
         char input_str[80];
-        mpr( "Make player ghost which species? ", MSGCH_PROMPT );
+        mpr( "Make player ghost which species? (case-sensitive) ", MSGCH_PROMPT );
         get_input_line( input_str, sizeof( input_str ) );
 
         int sp_id = get_species_by_abbrev(input_str);
@@ -502,6 +502,7 @@ void create_spec_monster_name(int x, int y)
             class_id = JOB_FIGHTER;
         }
         ghost.job = static_cast<job_type>(class_id);
+        ghost.xl = 7;
 
         mon.set_ghost(ghost);
 

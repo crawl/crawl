@@ -34,6 +34,7 @@
 #include "externs.h"
 
 #include "branch.h"
+#include "cio.h"
 #include "clua.h"
 #include "delay.h"
 #include "dgnevent.h"
@@ -190,10 +191,14 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
             if (stepped && !force && !you.duration[DUR_CONF])
             {
-                bool okay = yesno( "Do you really want to step there?", 
-                                   false, 'n' );
+                mprf(MSGCH_PROMPT,
+                     "Do you really want to step into the %s? "
+                     "(Confirm with \"yes\".) ",
+                     (new_grid == DNGN_LAVA ? "lava" : "deep water"));
 
-                if (!okay)
+                char buf[10];
+                if (cancelable_get_line(buf, sizeof buf)
+                    || strcasecmp(buf, "yes"))
                 {   
                     canned_msg(MSG_OK);
                     return (false);
@@ -3765,12 +3770,14 @@ int str_to_species(const std::string &species)
     if (species.empty())
         return SP_HUMAN;
 
+    // first look for full name (e.g. Green Draconian)
     for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
     {
         if (species == species_name(static_cast<species_type>(i), 10))
             return (i);
     }
 
+    // nothing found, try again with plain name
     for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
     {
         if (species == species_name(static_cast<species_type>(i), 1))

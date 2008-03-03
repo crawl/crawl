@@ -2852,6 +2852,19 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         }
         break;
 
+    case MONS_PLAYER_GHOST:
+    {
+        const ghost_demon &ghost = *(monster->ghost);
+
+        if (ghost.species < SP_RED_DRACONIAN
+            || ghost.species == SP_GREY_DRACONIAN
+            || ghost.species >= SP_BASE_DRACONIAN
+            || ghost.xl < 7
+            || one_chance_in(ghost.xl - 5))
+        {
+            break;
+        }
+    }
     // dragon breath weapon:
     case MONS_DRAGON:
     case MONS_HELL_HOUND:
