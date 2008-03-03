@@ -1569,7 +1569,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 
     // canned msg for enchantments that affected no-one, but only if the
     // enchantment is yours.
-    if (pbolt.name[0] == '0' && pbolt.flavour != BEAM_DIGGING)
+    if (pbolt.name[0] == '0')
     {
         if (!pbolt.is_tracer && !pbolt.msg_generated && !pbolt.obvious_effect
             && YOU_KILL(pbolt.thrower))

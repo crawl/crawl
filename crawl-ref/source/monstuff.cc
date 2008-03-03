@@ -5187,7 +5187,7 @@ static bool is_trap_safe(const monsters *monster, const int trap_x,
     // * permanent friendlies can be assumed to have been warned by the
     //   player about all traps s/he knows about
     // * very intelligent monsters can be assumed to have a high T&D skill
-    //   (or have memorized part of the dungeon layout ;) )
+    //   (or have memorised part of the dungeon layout ;) )
     if (intel >= I_NORMAL && mechanical
         && (is_native_in_branch(monster, you.where_are_you)
             || monster->attitude == ATT_FRIENDLY

@@ -82,7 +82,7 @@ int TileDrawCursor(int x, int y, int flag);
 void TileDrawBolt(int x, int y, int fg);
 // display dungeon: tileb = { fg(0,0),bg(0,0),fg(1,0),bg(1,0), ..
 void TileDrawDungeon(unsigned int *tileb);
-// display memorized dungeon
+// display memorised dungeon
 void TileDrawFarDungeon(int cx, int cy);
 // display map centered on grid coords
 void TileDrawMap(int gx, int gy);

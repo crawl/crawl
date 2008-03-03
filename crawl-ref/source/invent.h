@@ -22,10 +22,11 @@
 
 enum object_selector
 {
-    OSEL_ANY     = -1,
-    OSEL_WIELD   = -2,
-    OSEL_UNIDENT = -3,
-    OSEL_EQUIP   = -4
+    OSEL_ANY      = -1,
+    OSEL_WIELD    = -2,
+    OSEL_UNIDENT  = -3,
+    OSEL_EQUIP    = -4,
+    OSEL_MEMORISE = -5
 };
 
 #define PROMPT_ABORT        -1

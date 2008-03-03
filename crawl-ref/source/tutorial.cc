@@ -1961,7 +1961,7 @@ void tutorial_describe_item(const item_def &item)
                 {
                     if (you.religion == GOD_TROG)
                     {
-                         ostr << "A spellbook! You could <w>M</w>emorize some "
+                         ostr << "A spellbook! You could <w>M</w>emorise some "
                                  "spells and then cast them with <w>Z</w>. ";
                          ostr << "\nAs a worshipper of "
                               << god_name(GOD_TROG)
@@ -1974,7 +1974,7 @@ void tutorial_describe_item(const item_def &item)
                     }
                     else if (!you.skills[SK_SPELLCASTING])
                     {
-                         ostr << "A spellbook! You could <w>M</w>emorize some "
+                         ostr << "A spellbook! You could <w>M</w>emorise some "
                                  "spells and then cast them with <w>Z</w>. ";
                          ostr << "\nFor now, however, that will have to wait "
                                  "until you've learned the basics of Spellcasting "

@@ -830,7 +830,7 @@ static bool spell_is_uncastable(spell_type spell)
         return (true);
     }
 
-    // Normally undead can't memorize these spells, so this check is
+    // Normally undead can't memorise these spells, so this check is
     // to catch those in Lich form.  As such, we allow the Lich form
     // to be extended here. -- bwr
     if (spell != SPELL_NECROMUTATION

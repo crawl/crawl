@@ -1375,7 +1375,7 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                                 && you.inv[ix].sub_type != BOOK_MANUAL
                                 && you.inv[ix].sub_type != BOOK_DESTRUCTION)
                             {
-                                desc += "Memorize (M)";
+                                desc += "Memorise (M)";
                                 break;
                             }
                             // else fall-through

@@ -754,6 +754,9 @@ static bool item_class_selected(const item_def &i, int selector)
     case OSEL_WIELD:
         return (itype == OBJ_WEAPONS || itype == OBJ_STAVES 
                 || itype == OBJ_MISCELLANY);
+    case OSEL_MEMORISE:
+        return (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL
+                && (i.sub_type != BOOK_DESTRUCTION || !item_type_known(i)));
     case OBJ_SCROLLS:
         return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
     case OSEL_EQUIP:

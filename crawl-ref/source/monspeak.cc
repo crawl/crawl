@@ -48,7 +48,7 @@ static std::string get_speak_string(const std::vector<std::string> prefixes,
 {
     std::string prefix = "";
     bool silenced = false;
-    const int   size   = prefixes.size();
+    const int size = prefixes.size();
     for (int i = 0; i < size; i++)
     {
         if (prefixes[i] == "silenced")

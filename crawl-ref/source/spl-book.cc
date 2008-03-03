@@ -975,7 +975,7 @@ static int which_spellbook( void )
          avail_levels, (avail_levels > 1) ? "s" : "" );
 
     book = prompt_invent_item("Memorise from which spellbook?", MT_INVLIST,
-                              OBJ_BOOKS );
+                              OSEL_MEMORISE );
     if (book == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -998,7 +998,7 @@ static int which_spellbook( void )
     return (book);
 }                               // end which_spellbook()
 
-// Returns false if the player cannot read/memorize from the book,
+// Returns false if the player cannot read/memorise from the book,
 // and true otherwise. -- bwr
 bool player_can_read_spellbook( const item_def &book )
 {
