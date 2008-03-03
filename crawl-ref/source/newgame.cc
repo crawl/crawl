@@ -319,6 +319,23 @@ const char *get_species_abbrev( int which_species )
     return (Species_Abbrev_List[ which_species ]);
 }
 
+// needed for debug.cc and hiscores.cc
+int get_species_by_abbrev( const char *abbrev )
+{
+    int i;
+    COMPILE_CHECK(ARRAYSIZE(Species_Abbrev_List) == NUM_SPECIES, c1);
+    for (i = SP_HUMAN; i < NUM_SPECIES; i++)
+    {
+         if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[i][0] )
+             && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[i][1] ))
+         {
+             break;
+         }
+    }
+
+    return ((i < NUM_SPECIES) ? i : -1);
+}
+
 static const char * Class_Abbrev_List[ NUM_JOBS ] =
     { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM",
@@ -335,13 +352,12 @@ static const char * Class_Name_List[ NUM_JOBS ] =
 int get_class_index_by_abbrev( const char *abbrev )
 {
     COMPILE_CHECK(ARRAYSIZE(Class_Abbrev_List) == NUM_JOBS, c1);
-    COMPILE_CHECK(ARRAYSIZE(Class_Name_List)   == NUM_JOBS, c2);
     
+    unsigned int job;
     for (unsigned int i = 0; i < ARRAYSIZE(old_jobs_order); i++)
     {
-        const job_type job
-                   = (Options.use_old_selection_order ? old_jobs_order[i]
-                                                      : new_jobs_order[i]);
+        job = (Options.use_old_selection_order ? old_jobs_order[i]
+                                               : new_jobs_order[i]);
                                                       
         if (tolower( abbrev[0] ) == tolower( Class_Abbrev_List[job][0] )
             && tolower( abbrev[1] ) == tolower( Class_Abbrev_List[job][1] ))
@@ -360,8 +376,26 @@ const char *get_class_abbrev( int which_job )
     return (Class_Abbrev_List[ which_job ]);
 }
 
+int get_class_by_abbrev( const char *abbrev )
+{
+    int i;
+
+    for (i = 0; i < NUM_JOBS; i++)
+    {
+        if (tolower( abbrev[0] ) == tolower( Class_Abbrev_List[i][0] )
+            && tolower( abbrev[1] ) == tolower( Class_Abbrev_List[i][1] ))
+        {
+            break;
+        }
+    }
+
+    return ((i < NUM_JOBS) ? i : -1);
+}
+
 int get_class_index_by_name( const char *name )
 {
+    COMPILE_CHECK(ARRAYSIZE(Class_Name_List)   == NUM_JOBS, c1);
+    
     char *ptr;
     char lowered_buff[80];
     char lowered_class[80];
@@ -370,11 +404,12 @@ int get_class_index_by_name( const char *name )
     strlwr( lowered_buff );
 
     int cl = -1;
+    unsigned int job;
     for (unsigned int i = 0; i < ARRAYSIZE(old_jobs_order); i++)
     {
-        const int job = (Options.use_old_selection_order ? old_jobs_order[i]
-                                                         : new_jobs_order[i]);
-                                                      
+        job = (Options.use_old_selection_order ? old_jobs_order[i]
+                                               : new_jobs_order[i]);
+
         strncpy( lowered_class, Class_Name_List[job], sizeof( lowered_class ) );
         strlwr( lowered_class );
 
@@ -395,6 +430,35 @@ const char *get_class_name( int which_job )
     ASSERT( which_job < NUM_JOBS );
 
     return (Class_Name_List[ which_job ]);
+}
+
+int get_class_by_name( const char *name )
+{
+    int i;
+    int cl = -1;
+
+    char *ptr;
+    char lowered_buff[80];
+    char lowered_class[80];
+
+    strncpy( lowered_buff, name, sizeof( lowered_buff ) );
+    strlwr( lowered_buff );
+
+    for (i = 0; i < NUM_JOBS; i++)
+    {
+        strncpy( lowered_class, Class_Name_List[i], sizeof( lowered_class ) );
+        strlwr( lowered_class );
+
+        ptr = strstr( lowered_class, lowered_buff );
+        if (ptr != NULL)
+        {
+            cl = i;
+            if (ptr == lowered_class)  // prefix takes preference
+                break;
+        }
+    }
+
+    return (cl);
 }
 
 static void reset_newgame_options(void)

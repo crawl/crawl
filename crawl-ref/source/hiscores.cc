@@ -612,7 +612,7 @@ void scorefile_entry::init_with_fields()
     uid    = fields->int_field("uid");
 
     race   = str_to_species(fields->str_field("race"));
-    cls    = get_class_index_by_name(fields->str_field("cls").c_str());
+    cls    = get_class_by_name(fields->str_field("cls").c_str());
 
     lvl    = fields->int_field("xl");
 

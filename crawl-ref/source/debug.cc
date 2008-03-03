@@ -425,7 +425,7 @@ void create_spec_monster_name(int x, int y)
         return;
     }
     
-    const bool force_place = x != -1 && y != -1;
+    const bool force_place = (x != -1 && y != -1);
     if (x == -1)
         x = you.x_pos;
     if (y == -1)
@@ -473,14 +473,28 @@ void create_spec_monster_name(int x, int y)
 
         ghost.name = "John Doe";
 
-        char class_str[80];
-        mpr( "Make player ghost which class? ", MSGCH_PROMPT );
-        get_input_line( class_str, sizeof( class_str ) );
+        char input_str[80];
+        mpr( "Make player ghost which species? ", MSGCH_PROMPT );
+        get_input_line( input_str, sizeof( input_str ) );
 
-        int class_id = get_class_index_by_abbrev(class_str);
+        int sp_id = get_species_by_abbrev(input_str);
+        if (sp_id == -1)
+            sp_id = str_to_species(input_str);
+
+        if (sp_id == -1)
+        {
+            mpr("No such species, making it Human.");
+            sp_id = SP_HUMAN;
+        }
+        ghost.species = static_cast<species_type>(sp_id);
+        
+        mpr( "Make player ghost which class? ", MSGCH_PROMPT );
+        get_input_line( input_str, sizeof( input_str ) );
+
+        int class_id = get_class_by_abbrev(input_str);
 
         if (class_id == -1)
-            class_id = get_class_index_by_name(class_str);
+            class_id = get_class_by_name(input_str);
 
         if (class_id == -1)
         {

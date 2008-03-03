@@ -26,6 +26,14 @@ const char *get_class_abbrev( int which_job );
 const char *get_class_name( int which_job );
 
 /* ***********************************************************************
+ * called from: debug and hiscores
+ * *********************************************************************** */
+int get_species_by_abbrev( const char *abbrev );
+int get_species_by_name( const char *name );
+int get_class_by_abbrev( const char *abbrev  );
+int get_class_by_name( const char *name );
+
+/* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
 bool new_game();
