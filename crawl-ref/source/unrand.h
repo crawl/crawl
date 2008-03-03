@@ -134,7 +134,7 @@
 {
     "Dum", "",
 /* class, type, plus (to-hit), plus2 (depends on class), colour */
-        OBJ_UNASSIGNED, 250, 250, 250, 0,
+        OBJ_UNASSIGNED, 250, 250, 250, BLACK,
 /* Properties, all approx thirty of them: */
     {
 /* brand, +/- to AC, +/- to ev, +/- to str, +/- to int, +/- to dex */
@@ -1146,26 +1146,102 @@
         ""
 },
 
+/* 55 */
+{
+    "Spriggan's Knife", "dainty little knife",
+        OBJ_WEAPONS, WPN_KNIFE, +1, +10, LIGHTCYAN,
+    {
+        0, 0, 4, 0, 0, 4,  // +EV, +Dex
+        0, 0, 0, 0, 0, 20, // +MR
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 50 // +stealth
+    }
+    ,
+        "This knife was made by Spriggans, or for Spriggans, or possibly from "
+        "Spriggans. Anyway, it's in some way associated with those fey folk.",
+        "A dainty little knife.",
+        ""
+},
+
+/* 56 */
+{
+    "Dire Lajatang", "double lajatang",
+        OBJ_WEAPONS, WPN_LAJATANG, -2, +9, RED,
+    {
+        SPWPN_VORPAL, 0, 0, 0, 0, -3, // -Dex
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0
+    }
+    ,
+        "Those who figure out how to use this exceedingly awkward weapon can "
+        "do great damage with its two pairs of razor-sharp blades.",
+        "A double lajatang.",
+        ""
+},
+
+/* 57 */
+{
+    "Brooch of Shielding", "shield-shaped amulet",
+        OBJ_JEWELLERY, AMU_WARDING, 0, 0, LIGHTBLUE,
+    {
+        0, 4, 4, 0, 0, 0, // +AC, EV
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0
+    }
+    ,
+        "Back in the good old days, every adventurer had one of these handy "
+        "devices. That, and a pony.",
+        "A shield-shaped amulet.",
+        ""
+},
+
+/* 58 */
+{
+    "whip \"Serpent-Scourge\"", "forked whip",
+        OBJ_WEAPONS, WPN_WHIP, +5, +7, DARKGREY,
+    {
+        SPWPN_VENOM, 0, 0, 0, 0, 0,
+        0, 0, 0, 1, 0, 0, // rPois
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0
+    }
+    ,
+        "",
+        "A double-ended whip made from the cured hides of the "
+        "Lair of the Beasts' deadly grey snakes.",
+        ""
+},
+
 /* This is a dummy */
 /* 1 */
 {
     "Dum", "",
 /* class, type, plus (to-hit), plus2 (depends on class), colour */
-        OBJ_UNASSIGNED, 250, 250, 250, 0,
+        OBJ_UNASSIGNED, 250, 250, 250, BLACK,
 /* Properties, all approx thirty of them: */
     {
 /* brand, +/- to AC, +/- to ev, +/- to str, +/- to int, +/- to dex */
         0, 0, 0, 0, 0, 0,
 /* res fire, res cold, res elec, res poison, life protection, res magic */
-            0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
 /* see invis, turn invis, levitate, blink, teleport at will, go berserk */
-            0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
 /* sense surroundings, make noise, no spells, teleport, no teleprt */
-            0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
 /* force berserk, speed metabolism, mutate, +/- to hit, +/- to dam (not weapons) */
-            0, 0, 0, 0, 0,
-/* some as yet unused properties */
-            0, 0
+        0, 0, 0, 0, 0,
+/* cursed, stealth */
+        0, 0
     }
     ,
 /* 3 strings for describing the item in the 'V' display. */

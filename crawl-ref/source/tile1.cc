@@ -905,9 +905,16 @@ int tileidx_unrand_artifact(int idx)
         case 52: return TILE_URAND_BLOWGUN;
         case 53: //return TILE_URAND_WYRMBANE;
                  return TILE_WPN_SPEAR + 1;
-
+        case 54: //return TILE_URAND_SPRIGGAN;
+                 return TILE_WPN_KNIFE + 1;
+        case 55: //return TILE_URAND_LAJATANG;
+                 return TILE_WPN_LAJATANG + 1;
+        case 56: //return TILE_URAND_BROOCH;
+                 return TILE_AMU_RANDOM_OFFSET + 2;
+        case 57: //return TILE_URAND_SERPENT_SCOURGE;
+                 return TILE_WPN_WHIP + 1;
+        default: return TILE_TODO;
     }
-    return 0;
 }
 
 int get_etype(const item_def &item)
