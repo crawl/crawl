@@ -2096,10 +2096,10 @@ static void handle_behaviour(monsters *mon)
                     memory = 50 + random2(100);
                     break;
                 case I_ANIMAL:
-                case I_PLANT:
+                case I_INSECT:
                     memory = 25 + random2(75);
                     break;
-                case I_INSECT:
+                case I_PLANT:
                     memory = 10 + random2(50);
                     break;
                 }

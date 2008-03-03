@@ -978,6 +978,26 @@ static void give_species_bonus_mp()
     }
 }
 
+static bool species_is_undead( const species_type speci )
+{
+    return (speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE);
+}
+
+static undead_state_type get_undead_state(const species_type sp)
+{
+    switch(sp)
+    {
+    case SP_MUMMY:
+        return US_UNDEAD;
+    case SP_GHOUL:
+    case SP_VAMPIRE:
+        return US_HUNGRY_DEAD;
+    default:
+        ASSERT(!species_is_undead(sp));
+        return (US_ALIVE);
+    }
+}
+
 bool new_game(void)
 {
     init_player();
@@ -1035,6 +1055,7 @@ game_start:
                 "options file.");
         }
 
+        // repeat until valid race/class combination found
         while (choose_race() && !choose_class());
     }
 
@@ -1077,10 +1098,7 @@ game_start:
 
     species_stat_init( you.species );     // must be down here {dlb}
 
-    you.is_undead = ((you.species == SP_MUMMY) ? US_UNDEAD :
-                     (you.species == SP_GHOUL || you.species == SP_VAMPIRE) ?
-                                                 US_HUNGRY_DEAD :
-                                                 US_ALIVE);
+    you.is_undead = get_undead_state(you.species);
 
     // before we get into the inventory init, set light radius based
     // on species vision. currently, all species see out to 8 squares.
@@ -1184,11 +1202,6 @@ game_start:
     save_newgame_options();
     return (true);
 }                               // end of new_game()
-
-static bool species_is_undead( unsigned char speci )
-{
-    return (speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE);
-}
 
 static bool class_allowed( species_type speci, job_type char_class )
 {
@@ -1824,8 +1837,8 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
                     Options.prev_book == SBT_FIRE   ? "Fire"      :
                     Options.prev_book == SBT_COLD   ? "Cold"      :
                     Options.prev_book == SBT_SUMM   ? "Summoning" :
-                    Options.prev_book == SBT_RANDOM ? "Random"    :
-                    "Buggy Book");
+                    Options.prev_book == SBT_RANDOM ? "Random"
+                                                    : "Buggy Book");
         }
         cprintf(EOL);
             
@@ -1881,7 +1894,7 @@ static bool choose_weapon()
     int keyin = 0;
     int num_choices = 4;
 
-    if ((you.char_class == JOB_GLADIATOR && you.species != SP_KOBOLD)
+    if (you.char_class == JOB_GLADIATOR && you.species != SP_KOBOLD
         || you.species == SP_MERFOLK)
     {
         num_choices = 5;
@@ -3069,10 +3082,7 @@ spec_query:
 
         textcolor( LIGHTGREY );
 
-        int linec = 0;
-        char linebuf[200];
-        *linebuf = 0;
-               
+        int j = 0;
         for (int i = 0; i < num_species; ++i)
         {
             const species_type si = get_species(i);
@@ -3086,25 +3096,23 @@ spec_query:
                 continue;
             }
 
-            char buf[100];
             char sletter = index_to_letter(i);
-            snprintf(buf, sizeof buf, "%c - %-26s",
-                     sletter, species_name(si, 1).c_str());
                      
             if (sletter == Options.prev_race)
                 prevraceok = true;
-                
-            strncat(linebuf, buf, sizeof linebuf);
-            if (++linec >= 2)
-            {
-                cprintf("%s" EOL, linebuf);
-                *linebuf = 0;
-                linec = 0;
-            }
+
+            cprintf( "%c - %s", sletter, species_name(si,1).c_str() );
+
+            if (j % 2)
+                cprintf(EOL);
+            else
+                cgotoxy(31, wherey());
+
+            j++;
         }
         
-        if (linec)
-            cprintf("%s" EOL, linebuf);
+        if (j % 2)
+            cprintf(EOL);
 
         textcolor( BROWN );
         
@@ -3245,7 +3253,7 @@ spec_query:
 
     // set to 0 in case we come back from choose_class()
     Options.race = 0;
-    ng_race = randrace? '*' : keyn;
+    ng_race = (randrace? '*' : keyn);
 
     if (you.species == SP_RED_DRACONIAN)
         you.species = random_draconian_species();
@@ -3318,10 +3326,8 @@ job_query:
 
             if (letter == Options.prev_cls)
                 prevclassok = true;
-            
-            putch( letter );
-            cprintf( " - " );
-            cprintf( "%s", get_class_name(get_class(i)) );
+
+            cprintf( "%c - %s", letter, get_class_name(get_class(i)) );
 
             if (j % 2)
                 cprintf(EOL);
@@ -3706,25 +3712,15 @@ bool give_items_skills()
                 {
                     textcolor(BROWN);
                     cprintf(EOL "Enter - %s" EOL,
-                            Options.prev_pr == GOD_ZIN? "Zin" :
+                            Options.prev_pr == GOD_ZIN?         "Zin" :
                             Options.prev_pr == GOD_YREDELEMNUL? "Yredelemnul" :
-                            Options.prev_pr == GOD_BEOGH? "Beogh" :
-                                               "Random");
+                            Options.prev_pr == GOD_BEOGH?       "Beogh"
+                                                        :       "Random");
                 }
 
                 do {
                     keyn = c_getch();
 
-                    if ((keyn == '\r' || keyn == '\n')
-                         && Options.prev_pr != GOD_NO_GOD)
-                    {
-                         keyn =  Options.prev_pr == GOD_ZIN? 'a' :
-                                 Options.prev_pr == GOD_YREDELEMNUL? 'b' :
-                                 Options.prev_pr == GOD_BEOGH? 'c' :
-                                                  '*';
-
-                    }
-            
                     switch (keyn)
                     {
                     case 'X':
