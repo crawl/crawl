@@ -3671,6 +3671,7 @@ void god_pitch(god_type which_god)
     if ( (you_evil && is_good_god(which_god)) ||
          (you.species != SP_HILL_ORC && which_god == GOD_BEOGH) )
     {
+        you.turn_is_over = false;
         simple_god_message(" does not accept worship from those such as you!",
                            which_god);
         return;
@@ -3691,6 +3692,7 @@ void god_pitch(god_type which_god)
 
     if (!yesno( info, true, 'n' ) || !yesno("Are you sure?", false, 'n'))
     {
+        you.turn_is_over = false; // Okay, opt out.
         redraw_screen();
         return;
     }
