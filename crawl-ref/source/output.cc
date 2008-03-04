@@ -1115,6 +1115,90 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
 
 static std::string status_mut_abilities(void);
 
+// helper for print_verview_screen
+static void _print_overview_screen_equip(
+    column_composer& cols,
+    std::vector<char> equip_chars)
+{
+    const int e_order[] =
+    {
+        EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
+        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
+    };
+
+    char buf[100];
+    for(int i = 0; i < NUM_EQUIP; i++)
+    {
+        int eqslot = e_order[i];
+
+        char slot_name_lwr[15];
+        snprintf(slot_name_lwr, sizeof slot_name_lwr, "%s", equip_slot_to_name(eqslot));
+        strlwr(slot_name_lwr);
+
+        char slot[15] = "";
+        // uncomment (and change 42 to 33) to bring back slot names
+        // snprintf(slot, sizeof slot, "%-7s: ", equip_slot_to_name(eqslot);
+
+        if ( you.equip[ e_order[i] ] != -1)
+        {
+            const int item_idx = you.equip[e_order[i]];
+            const item_def& item = you.inv[item_idx];
+            const char* colname = colour_to_str(item.colour);
+            const char equip_char = index_to_letter(item_idx);
+
+            char buf2[50];
+            if (item.inscription.empty())
+                buf2[0] = 0;
+            else
+                snprintf(buf2, sizeof buf2, " {%s}", item.inscription.c_str());
+
+            snprintf(buf, sizeof buf,
+                     "%s<w>%c</w> - <%s>%s</%s>%s",
+                     slot,
+                     equip_char,
+                     colname,
+                     item.name(DESC_PLAIN, true).substr(0,42).c_str(),
+                     colname,
+                     buf2);
+            equip_chars.push_back(equip_char);
+        }
+        else if (e_order[i] == EQ_WEAPON
+                 && you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        {
+            snprintf(buf, sizeof buf, "%s  - Blade Hands", slot);
+        }
+        else if (e_order[i] == EQ_WEAPON
+                 && you.skills[SK_UNARMED_COMBAT])
+        {
+            snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
+        }
+        else if (!you_can_wear(e_order[i], true))
+        {
+            snprintf(buf, sizeof buf,
+                     "%s<darkgray>(%s unavailable)</darkgray>",
+                     slot, slot_name_lwr);
+        }
+        else if (!you_tran_can_wear(e_order[i], true))
+        {
+            snprintf(buf, sizeof buf,
+                     "%s<darkgray>(%s currently unavailable)</darkgray>",
+                     slot, slot_name_lwr);
+        }
+        else if (!you_can_wear(e_order[i]))
+        {
+            snprintf(buf, sizeof buf,
+                     "%s<lightgray>(%s restricted)</lightgray>",
+                     slot, slot_name_lwr);
+        }
+        else
+        {
+            snprintf(buf, sizeof buf,
+                     "<darkgray>(no %s)</darkgray>", slot_name_lwr);
+        }
+        cols.add_formatted(2, buf, false);
+    }
+}
+
 // new scrollable status overview screen,
 // including stats, mutations etc.
 void print_overview_screen()
@@ -1365,71 +1449,7 @@ void print_overview_screen()
     cols.add_formatted(1, buf, false);
 
     std::vector<char> equip_chars;
-    {
-        const int e_order[] =
-        {
-            EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
-            EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
-        };
-
-        for(i = 0; i < NUM_EQUIP; i++)
-        {
-            int eqslot = e_order[i];
-            const char *slot = equip_slot_to_name( eqslot );
-
-            if ( you.equip[ e_order[i] ] != -1)
-            {
-                const int item_idx = you.equip[e_order[i]];
-                const item_def& item = you.inv[item_idx];
-                const char* colname = colour_to_str(item.colour);
-                const char equip_char = index_to_letter(item_idx);
-                snprintf(buf, sizeof buf, "%-7s: <w>%c</w> - <%s>%s</%s>",
-                         slot, equip_char, colname,
-                         item.name(DESC_PLAIN).substr(0,33).c_str(), colname);
-                equip_chars.push_back(equip_char);
-            }
-            else
-            {
-                if (e_order[i] == EQ_WEAPON)
-                {
-                    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-                        snprintf(buf, sizeof buf, "%-7s: Blade Hands", slot);
-                    else if (you.skills[SK_UNARMED_COMBAT])
-                        snprintf(buf, sizeof buf, "%-7s: Unarmed", slot);
-                    else if (!you_tran_can_wear(EQ_WEAPON))
-                    {
-                        snprintf(buf, sizeof buf, "%-7s: "
-                                 "<darkgray>(currently unavailable)</darkgray>",
-                                 slot);
-                    }
-                    else
-                        snprintf(buf, sizeof buf, "%-7s:", slot);
-                }
-                else if (!you_can_wear(e_order[i], true))
-                {
-                    snprintf(buf, sizeof buf,
-                             "%-7s: <darkgray>(unavailable)</darkgray>", slot);
-                }
-                else if (!you_tran_can_wear(e_order[i], true))
-                {
-                    snprintf(buf, sizeof buf, "%-7s: "
-                             "<darkgray>(currently unavailable)</darkgray>",
-                             slot);
-                }
-                else if (!you_can_wear(e_order[i]))
-                {
-                    snprintf(buf, sizeof buf,
-                             "%-7s: <lightgray>(restricted)</lightgray>",
-                             slot);
-                }
-                else
-                {
-                    snprintf(buf, sizeof buf, "%-7s:", slot);
-                }
-            }
-            cols.add_formatted(2, buf, false);
-        }
-    }
+    _print_overview_screen_equip(cols, equip_chars);
 
     blines = cols.formatted_lines();
 
