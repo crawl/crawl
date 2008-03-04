@@ -469,7 +469,7 @@ void print_stats(void)
         textcolor(Options.status_caption_colour);
         cprintf("Qv: ");
         
-        int q = you.quiver[get_quiver_type()] = get_fire_item_index();
+        int q = you.quiver[get_quiver_type()] = get_current_fire_item();
 
         if (q != ENDOFPACK)
         {

@@ -884,7 +884,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         const char *prompt = get_spell_target_prompt(spell);
         if (spell == SPELL_PORTAL_PROJECTILE)
         {
-            const int idx = get_fire_item_index();
+            const int idx = get_current_fire_item();
             if ( idx == ENDOFPACK )
             {
                 mpr("No suitable missiles.");

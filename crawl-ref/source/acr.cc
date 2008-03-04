@@ -2227,7 +2227,7 @@ void process_command( command_type cmd )
         const int cur = you.quiver[get_quiver_type()];
         if (cur != ENDOFPACK)
         {
-            const int next = get_fire_item_index((cur+1) % ENDOFPACK, true, false);
+            const int next = get_next_fire_item(cur, +1);
             you.quiver[get_quiver_type()] = next;
             you.quiver_change = true;
         }

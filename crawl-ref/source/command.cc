@@ -529,7 +529,7 @@ void list_weapons(void)
     // Now we print out the current default fire weapon
     wstring = "Firing    : ";
 
-    const int item = get_fire_item_index();
+    const int item = get_current_fire_item();
 
     colour = MSGCOL_BLACK;
     if (item == ENDOFPACK)

@@ -2572,7 +2572,7 @@ static bool fsim_ranged_combat(FILE *out, int wskill, int mi,
     long hits = 0L;
     int maxdam = 0;
 
-    const int thrown = missile_slot == -1? get_fire_item_index() : missile_slot;
+    const int thrown = missile_slot == -1? get_current_fire_item() : missile_slot;
     if (thrown == ENDOFPACK || thrown == -1)
     {
         mprf("No suitable missiles for combat simulation.");
@@ -2724,7 +2724,7 @@ static std::string fsim_weapon(int missile_slot)
             if (is_range_weapon(weapon))
             {
                 const int missile = 
-                    missile_slot == -1? get_fire_item_index() :
+                    missile_slot == -1? get_current_fire_item() :
                     missile_slot;
                 if (missile < ENDOFPACK)
                     return item_buf + " with "

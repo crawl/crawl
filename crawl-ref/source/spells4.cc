@@ -2413,7 +2413,7 @@ bool cast_portal_projectile(int pow, bolt& beam)
         return 0;
     }
 
-    const int idx = get_fire_item_index();
+    const int idx = get_current_fire_item();
     if ( idx == ENDOFPACK )
     {
         mpr("No suitable missiles.");

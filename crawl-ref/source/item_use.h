@@ -102,8 +102,8 @@ bool remove_ring(int slot = -1, bool announce = false);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-int get_fire_item_index(int start_from = 0, bool forward = true,
-                        bool check_quiver = true);
+int get_current_fire_item();
+int get_next_fire_item(int current, int offset);
 void fire_thing(int item=-1);
 
 

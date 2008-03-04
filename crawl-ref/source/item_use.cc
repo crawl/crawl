@@ -1258,14 +1258,6 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
     return (false);
 }
 
-static bool Hack_Ignore_F_Inscription = false;    // only for "why can't I fire" feedback
-static bool fire_item_okay(const item_def &item, unsigned flags)
-{
-    return (fire_item_matches(item, flags)
-            && (Hack_Ignore_F_Inscription || strstr(item.inscription.c_str(), "=f") == 0)
-            && you.equip[EQ_WEAPON] != item.link);
-}
-
 quiver_type get_quiver_type()
 {
     const int wielded = you.equip[EQ_WEAPON];
@@ -1296,65 +1288,83 @@ quiver_type get_quiver_type()
 
 }
 
-// Search all items in pack for a fire_item_okay item.
-// If check_quiver, quiver item is checked first.
-// Then, check all items in the loop determined by start and forward
-static int find_fire_item_matching(unsigned fire_type, int start,
-                                   bool forward, bool check_quiver)
+// Not free, but not a performance issue either.
+static bool Hack_Ignore_F_Inscription = false;    // only for "why can't I fire" feedback
+static void _get_fire_order(std::vector<int>& fire_order)
 {
-    if (check_quiver)
+    for (unsigned int i_inv=Options.fire_items_start; i_inv<ENDOFPACK; i_inv++)
     {
-        const int q = you.quiver[get_quiver_type()];
-        if (q >= 0 && q < ENDOFPACK && fire_item_okay(you.inv[q], fire_type))
-            return (q);
+        const item_def& item = you.inv[i_inv];
+        if (!is_valid_item(item))
+            continue;
+        // =f prevents item from being in fire order
+        if (!Hack_Ignore_F_Inscription &&
+            strstr(item.inscription.c_str(), "=f"))
+            continue;
+
+        unsigned int i_flags;
+        for (i_flags=0; i_flags<Options.fire_order.size(); i_flags++)
+        {
+            if (fire_item_matches(item, Options.fire_order[i_flags])
+                && you.equip[EQ_WEAPON] != i_inv)
+            {
+                fire_order.push_back( (i_flags<<16) | (i_inv & 0xffff) );
+                break;
+            }
+        }
+        if (i_flags == Options.fire_order.size())
+        {
+            // Didn't match any flags -- last chance is the +f inscription
+            if (strstr(item.inscription.c_str(), "+f"))
+            {
+                fire_order.push_back( (i_flags<<16) | (i_inv & 0xffff) );
+            }
+        }
     }
 
-    const int dir = forward? 1 : -1;
-    int end = forward? ENDOFPACK : -1;
+    std::sort(fire_order.begin(), fire_order.end());
 
-    for (int i = start; i != end; )
+    for (unsigned int i=0; i<fire_order.size(); i++)
     {
-        if (i >= Options.fire_items_start
-            && fire_item_okay(you.inv[i], fire_type))
-        {
-            return (i);
-        }
-
-        i += dir;
-        if (i == -1)
-        {
-            i   += ENDOFPACK;
-            end = start;
-        }
-        else if (i == ENDOFPACK)
-        {
-            i   = 0;
-            end = start;
-        }
+        fire_order[i] &= 0xffff;
     }
-    return (ENDOFPACK);
 }
 
-// Note: This is a simple implementation, not an efficient one. -- bwr
-//
-// Returns item index or ENDOFPACK if no item found for auto-firing
-int get_fire_item_index(int start_from, bool forward, bool check_quiver)
+int get_next_fire_item(int current, int direction)
 {
-    int item = ENDOFPACK;
+    std::vector<int> fire_order;
+    _get_fire_order(fire_order);
 
-    for (unsigned i = 0; i < Options.fire_order.size(); i++)
+    if (fire_order.size() == 0)
+        return ENDOFPACK;
+    if (current == ENDOFPACK)
+        return fire_order[0];
+
+    for (unsigned i=0; i<fire_order.size(); i++)
     {
-        const unsigned fire_flags = Options.fire_order[i];
-        if ((item =
-             find_fire_item_matching(fire_flags,
-                                     start_from,
-                                     forward,
-                                     check_quiver)) != ENDOFPACK)
-            break;
+        if (fire_order[i] == current)
+        {
+            unsigned next = (i + fire_order.size() + direction) % fire_order.size();
+            return fire_order[next];
+        }
     }
+    return fire_order[0];
+}
 
-    // either item was found or is still ENDOFPACK for no item
-    return (item);
+int get_current_fire_item()
+{
+    std::vector<int> fire_order;
+    _get_fire_order(fire_order);
+
+    if (fire_order.size() == 0)
+        return ENDOFPACK;
+
+    const int q = you.quiver[get_quiver_type()];
+    for (unsigned i = 0; i < fire_order.size(); i++)
+        if (q == fire_order[i])
+            return q;
+
+    return fire_order[0];
 }
 
 class fire_target_behaviour : public targeting_behaviour
@@ -1363,7 +1373,7 @@ public:
     fire_target_behaviour()
         : item(ENDOFPACK), selected_from_inventory(false), need_prompt(false)
     {
-        item = get_fire_item_index();
+        item = get_current_fire_item();
     }
 
     // targeting_behaviour API
@@ -1380,8 +1390,7 @@ public:
 
 void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
 {
-    const int next_item
-                = get_fire_item_index((item + 1) % ENDOFPACK, true, false);
+    const int next_item = get_next_fire_item(item, +1);
     bool no_other_items = (next_item == ENDOFPACK || next_item == item);
             
     mesclr();
@@ -1444,9 +1453,8 @@ command_type fire_target_behaviour::get_command(int key)
       case CONTROL('N'):
       case CONTROL('P'):
       {
-          const int direction = (key == CONTROL('N')) ? +1 : -1;
-          const int start = (item + ENDOFPACK + direction) % ENDOFPACK;
-          const int next = get_fire_item_index(start, (direction==1), false);
+          const int direction = (key == CONTROL('P')) ? -1 : +1;
+          const int next = get_next_fire_item(item, direction);
           if (next != item && next != ENDOFPACK)
           {
               item = next;
@@ -1590,7 +1598,7 @@ static bool _fire_warn_if_impossible()
 
 static std::string _fire_get_noitem_reason()
 {
-    const int cur_item = get_fire_item_index();
+    const int cur_item = get_current_fire_item();
     if (cur_item != ENDOFPACK)
     {
         // Shouldn't be calling this if there is a good default item!
@@ -1600,7 +1608,7 @@ static std::string _fire_get_noitem_reason()
     // Tell the user why we might have skipped their missile
     unwind_var<int> unwind_festart(Options.fire_items_start, 0);
     unwind_var<bool> unwind_inscription(Hack_Ignore_F_Inscription, true);
-    const int skipped_item = get_fire_item_index();
+    const int skipped_item = get_current_fire_item();
     char buf[200];
     if (skipped_item == ENDOFPACK)
     {
