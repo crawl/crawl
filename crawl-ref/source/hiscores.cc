@@ -1300,7 +1300,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
 std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 {
-    bool verbose = verbosity == DDV_VERBOSE;
+    bool verbose = (verbosity == DDV_VERBOSE);
     std::string place;
 
     if (death_type == KILLED_BY_LEAVING || death_type == KILLED_BY_WINNING)
@@ -1346,6 +1346,11 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     return (place);
 }
 
+static bool species_is_undead(int sp)
+{
+    return (sp == SP_MUMMY || sp == SP_GHOUL || sp == SP_VAMPIRE);
+}
+
 std::string 
 scorefile_entry::death_description(death_desc_verbosity verbosity) const
 {
@@ -1353,10 +1358,10 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
     bool needs_called_by_monster_line = false;
     bool needs_damage = false;
 
-    const bool terse   = verbosity == DDV_TERSE;
-    const bool semiverbose = verbosity == DDV_LOGVERBOSE;
-    const bool verbose = verbosity == DDV_VERBOSE || semiverbose;
-    const bool oneline = verbosity == DDV_ONELINE;
+    const bool terse   = (verbosity == DDV_TERSE);
+    const bool semiverbose = (verbosity == DDV_LOGVERBOSE);
+    const bool verbose = (verbosity == DDV_VERBOSE || semiverbose);
+    const bool oneline = (verbosity == DDV_ONELINE);
 
     char scratch[INFO_SIZE];
 
@@ -1481,8 +1486,12 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_STUPIDITY:
-        desc += terse? "stupidity" :
-                (you.is_undead? "Forgot to exist" : "Forgot to breathe");
+        if (terse)
+            desc += "stupidity";
+        else if (species_is_undead(race))
+            desc += "Forgot to exist";
+        else
+            desc += "Forgot to breathe";
         break;
 
     case KILLED_BY_WEAKNESS:
@@ -1513,6 +1522,8 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (num_runes > 0)
                 desc += "Got out of the dungeon";
+            else if (species_is_undead(race))
+                desc += "Safely got out of the dungeon";
             else
                 desc += "Got out of the dungeon alive";
         }
@@ -1697,35 +1708,39 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
             done_damage = true;
         }
 
-        if ((death_type == KILLED_BY_LEAVING 
-                        || death_type == KILLED_BY_WINNING)
-                    && num_runes > 0)
+        if (death_type == KILLED_BY_LEAVING
+            || death_type == KILLED_BY_WINNING)
         {
-            desc += hiscore_newline_string();
-
-            snprintf( scratch, INFO_SIZE, "... %s %d rune%s", 
-                      (death_type == KILLED_BY_WINNING) ? "and" : "with",
-                      num_runes, (num_runes > 1) ? "s" : "" );
-            desc += scratch;
-
-            if (!semiverbose && num_diff_runes > 1)
+            if (num_runes > 0)
             {
-                snprintf( scratch, INFO_SIZE, " (of %d types)",
-                          num_diff_runes );
-                desc += scratch;
-            }
+                desc += hiscore_newline_string();
 
-            if (!semiverbose
-                && death_time > 0 
-                && !hiscore_same_day( birth_time, death_time ))
-            {
-                desc += " on ";
-                hiscore_date_string( death_time, scratch );
+                snprintf( scratch, INFO_SIZE, "... %s %d rune%s",
+                         (death_type == KILLED_BY_WINNING) ? "and" : "with",
+                          num_runes, (num_runes > 1) ? "s" : "" );
                 desc += scratch;
-            }
 
-            desc += "!";
-            desc += hiscore_newline_string();
+                if (!semiverbose && num_diff_runes > 1)
+                {
+                    snprintf( scratch, INFO_SIZE, " (of %d types)",
+                             num_diff_runes );
+                    desc += scratch;
+                }
+
+                if (!semiverbose
+                    && death_time > 0
+                    && !hiscore_same_day( birth_time, death_time ))
+                {
+                    desc += " on ";
+                    hiscore_date_string( death_time, scratch );
+                    desc += scratch;
+                }
+
+                desc += "!";
+                desc += hiscore_newline_string();
+            }
+            else
+                desc += ".";
         }
         else if (death_type != KILLED_BY_QUITTING)
         {
@@ -1782,6 +1797,8 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 if (num_runes > 0)
                     desc += "!";
+                else
+                    desc += ".";
             }
             desc += hiscore_newline_string();
         }
