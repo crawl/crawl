@@ -3822,6 +3822,9 @@ bool monster_attack(int monster_attacking)
     if (mons_friendly(attacker) && !mons_is_confused(attacker))
         return false;
 
+    // in case the monster hasn't noticed you
+    // bumping into will change that
+    behaviour_event( attacker, ME_ALERT, MHITYOU );
     melee_attack attk(attacker, &you);
     attk.attack();
 

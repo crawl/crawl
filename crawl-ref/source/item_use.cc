@@ -4041,9 +4041,10 @@ static bool scroll_modify_item(const scroll_type scroll)
      case SCR_RECHARGING:
         if (item_is_rechargable(item))
         {
-            mpr("This is a scroll of recharging!");
-            recharge_wand(item_slot);
-            return (true);
+            // might still fail on highly enchanted weapons of electrocution
+            if (recharge_wand(item_slot))
+                return (true);
+            return (false);
         }
      case SCR_ENCHANT_ARMOUR:
         if (is_enchantable_armour(item, true))
