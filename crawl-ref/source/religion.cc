@@ -1862,6 +1862,13 @@ bool is_evil_item(const item_def& item)
     case OBJ_SCROLLS:
         retval = (item.sub_type == SCR_TORMENT);
         break;
+    case OBJ_BOOKS:
+        retval = (item.sub_type == BOOK_NECROMANCY
+                    || item.sub_type == BOOK_DEATH
+                    || item.sub_type == BOOK_UNLIFE
+                    || item.sub_type == BOOK_NECRONOMICON
+                    || item.sub_type == BOOK_DEMONOLOGY);
+        break;
     case OBJ_STAVES:
         retval = (item.sub_type == STAFF_DEATH
              || item.sub_type == STAFF_DEMONOLOGY);
