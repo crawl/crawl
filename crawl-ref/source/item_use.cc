@@ -473,7 +473,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
     if (you.inv[item_wield_2].base_type == OBJ_WEAPONS)
     {
-        if (is_evil_weapon(you.inv[item_wield_2])
+        if (is_evil_item(you.inv[item_wield_2])
             && (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE
                 || you.religion == GOD_ELYVILON))
         {

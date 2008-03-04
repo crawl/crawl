@@ -1833,24 +1833,47 @@ void gain_piety(int pgn)
     do_god_gift(false);
 }
 
-bool is_evil_weapon(const item_def& weap)
+bool is_evil_item(const item_def& item)
 {
-    if (weap.base_type != OBJ_WEAPONS)
-        return false;
+    bool retval = false;
 
-    int weap_brand = get_weapon_brand(weap);
-    int weap_eff = item_special_wield_effect(weap);
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        {
+        int item_brand = get_weapon_brand(item);
+        int item_eff = item_special_wield_effect(item);
 
-    return (is_demonic(weap)
-            || weap.special == SPWPN_SCEPTRE_OF_ASMODEUS
-            || weap.special == SPWPN_STAFF_OF_DISPATER
-            || weap.special == SPWPN_SWORD_OF_CEREBOV
-            || weap_eff == SPWLD_CURSE
-            || weap_eff == SPWLD_TORMENT
-            || weap_eff == SPWLD_ZONGULDROK
-            || weap_brand == SPWPN_DRAINING
-            || weap_brand == SPWPN_PAIN
-            || weap_brand == SPWPN_VAMPIRICISM);
+        retval = (is_demonic(item)
+             || item.special == SPWPN_SCEPTRE_OF_ASMODEUS
+             || item.special == SPWPN_STAFF_OF_DISPATER
+             || item.special == SPWPN_SWORD_OF_CEREBOV
+             || item_eff == SPWLD_CURSE
+             || item_eff == SPWLD_TORMENT
+             || item_eff == SPWLD_ZONGULDROK
+             || item_brand == SPWPN_DRAINING
+             || item_brand == SPWPN_PAIN
+             || item_brand == SPWPN_VAMPIRICISM);
+        }
+        break;
+    case OBJ_WANDS:
+        retval = (item.sub_type == WAND_DRAINING);
+        break;
+    case OBJ_SCROLLS:
+        retval = (item.sub_type == SCR_TORMENT);
+        break;
+    case OBJ_STAVES:
+        retval = (item.sub_type == STAFF_DEATH
+             || item.sub_type == STAFF_DEMONOLOGY);
+        break;
+    case OBJ_MISCELLANY:
+        retval = (item.sub_type == MISC_LANTERN_OF_SHADOWS);
+        break;
+    default:
+        break;
+    }
+
+    return retval;
 }
 
 bool ely_destroy_weapons()
@@ -1879,7 +1902,7 @@ bool ely_destroy_weapons()
         mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
 #endif
 
-        if (is_evil_weapon(mitm[i]))
+        if (is_evil_item(mitm[i]))
         {
             simple_god_message(" welcomes the destruction of this evil weapon.",
                                GOD_ELYVILON);
@@ -3379,14 +3402,13 @@ static bool god_likes_items(god_type god)
 {
     switch (god)
     {
-    case GOD_ZIN:      case GOD_KIKUBAAQUDGHA: case GOD_OKAWARU:
-    case GOD_MAKHLEB:  case GOD_SIF_MUNA:      case GOD_TROG:
-    case GOD_NEMELEX_XOBEH:
+    case GOD_ZIN:      case GOD_SHINING_ONE:   case GOD_KIKUBAAQUDGHA:
+    case GOD_OKAWARU:  case GOD_MAKHLEB:       case GOD_SIF_MUNA:
+    case GOD_TROG:     case GOD_NEMELEX_XOBEH:
         return true;
-        
-    case GOD_SHINING_ONE: case GOD_YREDELEMNUL: case GOD_XOM:
-    case GOD_VEHUMET:     case GOD_LUGONU:      case GOD_BEOGH:
-    case GOD_ELYVILON:
+
+    case GOD_YREDELEMNUL: case GOD_XOM:        case GOD_VEHUMET:
+    case GOD_LUGONU:      case GOD_BEOGH:      case GOD_ELYVILON:
         return false;
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM:
@@ -3405,9 +3427,12 @@ static bool god_likes_item(god_type god, const item_def& item)
     {
     case GOD_KIKUBAAQUDGHA: case GOD_TROG:
         return item.base_type == OBJ_CORPSES;
-        
+
     case GOD_NEMELEX_XOBEH:
         return !is_deck(item);
+
+    case GOD_SHINING_ONE:
+        return is_evil_item(item);
 
     case GOD_ZIN:
         return item.base_type == OBJ_GOLD;
@@ -3651,6 +3676,8 @@ void offer_items()
             simple_god_message(" only cares about primal sacrifices!", you.religion);
         else if (you.religion == GOD_NEMELEX_XOBEH)
             simple_god_message(" expects you to use your decks, not offer them!", you.religion);
+        else if (you.religion == GOD_SHINING_ONE)
+            simple_god_message(" only cares about evil items!", you.religion);
         // everyone else was handled above (Zin!) or likes everything
     }
 }

@@ -767,7 +767,7 @@ static void good_god_follower_attitude_change(monsters *monster)
             int wpn = you.equip[EQ_WEAPON];
             if (wpn != -1
                 && you.inv[wpn].base_type == OBJ_WEAPONS
-                && is_evil_weapon( you.inv[wpn] )
+                && is_evil_item( you.inv[wpn] )
                 && coinflip()) // 50% chance of conversion failing
             {
                 msg::stream << monster->name(DESC_CAP_THE)
