@@ -801,7 +801,7 @@ void spellcasting_side_effects(spell_type spell, bool idonly = false)
         did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spell) );
     }
 
-    // Linley says: Condensation Shield needs some disadvantages to keep 
+    // Linley says: Condensation Shield needs some disadvantages to keep
     // it from being a no-brainer... this isn't much, but its a start -- bwr
     if (spell_typematch(spell, SPTYP_FIRE))
         expose_player_to_element(BEAM_FIRE, 0);
@@ -810,13 +810,8 @@ void spellcasting_side_effects(spell_type spell, bool idonly = false)
     {
         did_god_conduct( DID_NECROMANCY, 10 + spell_difficulty(spell) );
 
-        if (spell == SPELL_NECROMUTATION
-            && (you.religion == GOD_ELYVILON 
-                || you.religion == GOD_SHINING_ONE 
-                || you.religion == GOD_ZIN))
-        {
+        if (spell == SPELL_NECROMUTATION && is_good_god(you.religion))
             excommunication();
-        }
     }
 
     alert_nearby_monsters();
