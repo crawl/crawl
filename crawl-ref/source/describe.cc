@@ -1623,7 +1623,7 @@ std::string get_item_description( const item_def &item, bool verbose,
             else
             {
                 description <<
-                    "$Damage rating: 7 $Accuracy rating: +6 "
+                    "$Damage rating: 9 $Accuracy rating: +2 "
                     "$Attack delay: 120%";
 
                 description << "$$It falls into the 'staves' category. ";

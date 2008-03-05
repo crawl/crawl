@@ -236,7 +236,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_SHORT_BLADES, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_SLICING | DAM_PIERCE, 10 },
 
-    // Long swords
+    // Long blades
     { WPN_FALCHION,          "falchion",            8,  2, 13, 170,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },  // or perhaps DAMV_CHOPPING is more apt?
