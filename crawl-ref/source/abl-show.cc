@@ -232,7 +232,7 @@ static const ability_def Ability_List[] =
 
     // INVOCATIONS:
     // Zin
-    { ABIL_ZIN_RECITE, "Recite", 3, 0, 150, 0, ABFLAG_DELAY },
+    { ABIL_ZIN_RECITE, "Recite", 3, 0, 120, 0, ABFLAG_DELAY },
     { ABIL_ZIN_SMITING, "Smiting",
       3, 0, 50, generic_cost::fixed(2), ABFLAG_NONE },
     { ABIL_ZIN_REVITALISATION, "Revitalisation", 0, 0, 100, 3, ABFLAG_NONE },
@@ -1338,7 +1338,7 @@ static bool do_ability(const ability_def& abil)
         const int pow = ( 2*skill_bump(SK_INVOCATIONS) + you.piety / 5 ) / 2;
         start_delay(DELAY_RECITE, 3, pow, you.hp);
         
-        exercise( SK_INVOCATIONS, (one_chance_in(3)? 2 : 1) );
+        exercise( SK_INVOCATIONS, 2 );
         break;
     }
     case ABIL_ZIN_SMITING:

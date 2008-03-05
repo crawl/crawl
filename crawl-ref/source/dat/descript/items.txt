@@ -1177,8 +1177,8 @@ by the sense of achievement you get from getting it to work at all.
 %%%%
 scroll of recharging
 
-This scroll restores the charges of any magical wand wielded by its
-reader.
+This scroll restores the charges of any magical wand or rod chosen by 
+its reader, and can also be used to charge weapons of electrocution.
 %%%%
 scroll of remove curse
 

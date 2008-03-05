@@ -53,17 +53,18 @@ static void handle_macro_delay();
 static void finish_delay(const delay_queue_item &delay);
 
 // monster cannot be affected in these states
-// (all results of Recite, plus friendly;
+// (all results of Recite, plus friendly + stupid;
 // note that berserk monsters are also hasted)
 static bool recite_mons_useless(const monsters *mon)
 {
     return (mons_intel(mon->type) < I_NORMAL
+            || mons_friendly(mon)
             || mons_is_fleeing(mon)
             || mons_is_sleeping(mon)
-            || mons_friendly(mon)
             || mons_neutral(mon)
             || mons_is_confused(mon)
             || mons_is_paralysed(mon)
+	    || mon->has_ench(ENCH_BATTLE_FRENZY)
             || mon->has_ench(ENCH_HASTE));
 }
 
@@ -110,16 +111,26 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
         
     if (pow <= 0) // Uh oh...
     {
-        if (one_chance_in(resist+1)) // nothing happens, whew!
-            return (0);
+        if (one_chance_in(resist+1))
+            return (0);  // nothing happens, whew!
 
-        if (one_chance_in(4) && mons->can_go_berserk())
-            mons->go_berserk(true);
-        else if (mons->add_ench(mon_enchant(ENCH_HASTE, 0,
-                                KC_YOU, (16 + random2avg(13, 2)) * 10)))
+        if (!one_chance_in(4) &&
+             mons->add_ench(mon_enchant(ENCH_HASTE, 0, KC_YOU,
+                            (16 + random2avg(13, 2)) * 10)))
         {
             simple_monster_message(mons, " speeds up in annoyance!");
         }
+        else if (!one_chance_in(3) &&
+                 mons->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, KC_YOU,
+                                            (16 + random2avg(13, 2)) * 10)))
+        {
+            simple_monster_message(mons, " goes into a battle-frenzy!");
+        }
+        else if (mons->can_go_berserk())
+            mons->go_berserk(true);
+        else
+            return (0); // nothing happens
+
         // bad effects stop the recital
         stop_delay(); 
         return (1);

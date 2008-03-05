@@ -1861,11 +1861,11 @@ bool mons_looks_stabbable(const monsters *m)
 bool mons_looks_distracted(const monsters *m)
 {
     return (mons_behaviour_perceptible(m)
-                && !mons_friendly(m)
-                && ((m->foe != MHITYOU && !mons_is_batty(m))
-                    || mons_is_confused(m)
-                    || mons_is_fleeing(m)
-                    || mons_is_caught(m)));
+            && !mons_friendly(m)
+            && ((m->foe != MHITYOU && !mons_is_batty(m) && !mons_neutral(m))
+                || mons_is_confused(m)
+                || mons_is_fleeing(m)
+                || mons_is_caught(m)));
 }
 
 bool mons_should_fire(struct bolt &beam)
