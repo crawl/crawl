@@ -189,6 +189,32 @@ static int count_digits(int val)
 }
 #endif
 
+static std::string describe_hunger()
+{
+    bool vamp = (you.species == SP_VAMPIRE);
+    
+    switch (you.hunger_state)
+    {
+        case HS_ENGORGED:
+            return (vamp? "Alive" : "Engorged");
+        case HS_VERY_FULL:
+            return ("Very Full");
+        case HS_FULL:
+            return ("Full");
+        case HS_SATIATED: // normal
+            return ("");
+        case HS_HUNGRY:
+            return (vamp? "Thirsty" : "Hungry");
+        case HS_VERY_HUNGRY:
+            return (vamp? "Very Thirsty" : "Very Hungry");
+        case HS_NEAR_STARVING:
+            return ("Near Starving");
+        case HS_STARVING:
+        default:
+            return ("Starving");
+    }
+}
+
 void print_stats(void)
 {
     textcolor(LIGHTGREY);
@@ -528,42 +554,27 @@ void print_stats(void)
         {
         case HS_ENGORGED:
             textcolor( LIGHTGREEN );
-            cprintf( "Engorged" );
             break;
 
         case HS_VERY_FULL:
-            textcolor( GREEN );
-            cprintf( "Very Full" );
-            break;
-
         case HS_FULL:
-            textcolor( GREEN );
-            cprintf( "Full" );
-            break;
-
         case HS_SATIATED:
+            textcolor( GREEN );
             break;
 
         case HS_HUNGRY:
-            textcolor( YELLOW );
-            cprintf( "Hungry" );
-            break;
-
         case HS_VERY_HUNGRY:
-            textcolor( YELLOW );
-            cprintf( "Very Hungry" );
-            break;
-
         case HS_NEAR_STARVING:
             textcolor( YELLOW );
-            cprintf( "Near Starving" );
             break;
 
         case HS_STARVING:
             textcolor( RED );
-            cprintf( "Starving" );
             break;
         }
+        const std::string state = describe_hunger();
+        if (!state.empty())
+            cprintf(state.c_str());
 
         textcolor( LIGHTGREY );
 

@@ -590,6 +590,14 @@ bool eat_food(bool run_hook, int slot)
  *                                                *
  **************************************************
 */
+static std::string how_hungry()
+{
+    if (you.hunger_state > HS_SATIATED)
+        return ("full");
+    else if (you.species == SP_VAMPIRE)
+        return ("thirsty");
+    return ("hungry");
+}
 
 static bool food_change(bool suppress_message)
 {
@@ -638,11 +646,11 @@ static bool food_change(bool suppress_message)
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
             case HS_VERY_HUNGRY:
-                mpr("You are feeling very hungry.", MSGCH_FOOD);
+                mprf(MSGCH_FOOD, "You are feeling very %s.", how_hungry().c_str());
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
             case HS_HUNGRY:
-                mpr("You are feeling hungry.", MSGCH_FOOD);
+                mprf(MSGCH_FOOD, "You are feeling %s.", how_hungry().c_str());
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
             default:
@@ -677,7 +685,8 @@ static void describe_food_change(int food_increment)
     else
         msg += "less ";
 
-    msg += ((you.hunger_state > HS_SATIATED) ? "full." : "hungry.");
+    msg += how_hungry().c_str();
+    msg += ".";
     mpr(msg.c_str());
 }                               // end describe_food_change()
 
@@ -959,8 +968,7 @@ static void eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
                 (chunk_effect == CE_ROTTEN) ? "rotting " : "");
 
             if (you.species == SP_GHOUL)
-                heal_from_food(hp_amt, 0, !one_chance_in(4),
-                    one_chance_in(5));
+                heal_from_food(hp_amt, 0, !one_chance_in(4), one_chance_in(5));
 
             do_eat = true;
         }

@@ -695,7 +695,8 @@ void handle_delay( void )
             items_for_multidrop.erase( items_for_multidrop.begin() );
             break;
         case DELAY_EAT:
-            mpr("You continue eating.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue %sing.",
+                 you.species == SP_VAMPIRE ? "drink" : "eat");
             break;
         default:
             break;
@@ -776,10 +777,8 @@ static void finish_delay(const delay_queue_item &delay)
         break;
     }
     case DELAY_EAT:
-        if (you.species == SP_VAMPIRE)
-           mpr( "You finish drinking." );
-        else 
-           mpr( "You finish eating." );
+        mprf("You finish %sing.",
+             you.species == SP_VAMPIRE ? "drink" : "eat");
         // For chunks, warn the player if they're not getting much
         // nutrition.
         if (delay.parm1)

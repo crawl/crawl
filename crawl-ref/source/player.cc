@@ -907,16 +907,23 @@ int player_regen(void)
     // healing depending on satiation
     if (you.species == SP_VAMPIRE)
     {
-        if (you.hunger_state <= HS_STARVING)
-            return 0; // no regeneration for starving vampires
-        else if (you.hunger_state <= HS_HUNGRY)
-            return (rr / 2);
-        else if (you.hunger_state >= HS_FULL)
-            return (rr + 20);
-        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
-                 || you.hunger_state > HS_HUNGRY)
+        switch (you.hunger_state)
         {
-            return rr;
+         case HS_STARVING:
+            if (you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+                return (0); // no regeneration for starving vampires!
+            // intentional fall-through for bat form
+         case HS_NEAR_STARVING:
+         case HS_VERY_HUNGRY:
+         case HS_HUNGRY:
+            return (rr / 2);
+         case HS_SATIATED:
+            return (rr);
+         case HS_FULL:
+         case HS_VERY_FULL:
+            return (rr + 20);
+         case HS_ENGORGED:
+            return (rr + 40);
         }
     }
 
@@ -2785,8 +2792,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 3))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false,
-                        "level gain");
+                                             : STAT_DEXTERITY), 1, false,
+                                 "level gain");
                 }
                 break;
 
@@ -2800,7 +2807,7 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false,
+                                             : STAT_DEXTERITY), 1, false,
                                  "level gain");
                 }
 
@@ -3631,8 +3638,17 @@ void display_char_status()
               " faster than usual." : ".") );
     }
 
-    if (you.disease || you.species == SP_VAMPIRE && you.hunger_state < HS_HUNGRY)
+    if (you.disease || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         mpr("You do not heal.");
+    else if (you.species == SP_VAMPIRE)
+    {
+        if (you.hunger_state <= HS_HUNGRY)
+            mpr("You heal slowly.");
+        else if (you.hunger_state == HS_ENGORGED)
+            mpr("You heal very quickly.");
+        else if (you.hunger_state >= HS_SATIATED)
+            mpr("You heal quickly.");
+    }
         
     // prints a contamination message
     contaminate_player( 0, true );
