@@ -1714,10 +1714,6 @@ int you_max_hunger()
     if (you.species == SP_GHOUL)
         return 6999;
 
-    // vampires can never be engorged
-    if (you.species == SP_VAMPIRE)
-        return 10999;
-
     return 40000;
 }
 

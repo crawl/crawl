@@ -997,7 +997,7 @@ bool melee_attack::player_apply_aux_unarmed()
                     mpr("You feel better.");
                 }
 
-                if (you.hunger_state < HS_ENGORGED) // always the case
+                if (you.hunger_state < HS_ENGORGED)
                 {
                     int food_value = 0;
                     if (chunk_type == CE_CLEAN)
@@ -2057,7 +2057,7 @@ bool melee_attack::apply_damage_brand()
                     mpr("You feel better.");
                 }
 
-                if (you.hunger_state < HS_ENGORGED) // always the case
+                if (you.hunger_state < HS_ENGORGED)
                 {
                     int food_value = 0;
                     if (chunk_type == CE_CLEAN)
