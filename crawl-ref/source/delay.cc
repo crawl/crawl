@@ -867,6 +867,7 @@ static void finish_delay(const delay_queue_item &delay)
                                    "relatives.");
                                    
             if (you.species == SP_VAMPIRE &&
+                mons_corpse_effect(item.plus) != CE_HCL &&
                 (!god_likes_butchery(you.religion) ||
                  !you.duration[DUR_PRAYER]))
             {
