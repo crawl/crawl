@@ -503,13 +503,23 @@ bool prompt_eat_from_inventory(int slot)
         return (false);
     }
 
+    if (slot == -1 && you.species == SP_VAMPIRE)
+    {
+        slot =  prompt_invent_item( "Drain what?",
+                                    MT_INVLIST,
+                                    OSEL_VAMP_EAT,
+                                    true, true, true, 0, NULL,
+                                    OPER_EAT );
+    }
+        
     int which_inventory_slot = (slot != -1)? slot:
             prompt_invent_item(
                     "Eat which item?",
                     MT_INVLIST,
-                    you.species == SP_VAMPIRE ? OBJ_CORPSES : OBJ_FOOD,
+                    OBJ_FOOD,
                     true, true, true, 0, NULL,
                     OPER_EAT );
+                    
     if (which_inventory_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -708,10 +718,13 @@ void eat_from_inventory(int which_inventory_slot)
     item_def& food(you.inv[which_inventory_slot]);
     if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
     {
-        const int mons_type = food.plus;
+        if (you.species != SP_VAMPIRE)
+            return;
+            
+        const int mons_type  = food.plus;
         const int chunk_type = mons_corpse_effect( mons_type );
-        const bool rotten = food_is_rotten(food);
-        const int mass = item_mass( food );
+        const bool rotten    = food_is_rotten(food);
+        const int mass       = mons_weight(food.plus)/150;
 
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
             return;
@@ -726,16 +739,15 @@ void eat_from_inventory(int which_inventory_slot)
             food.special = 90;
             food.colour = LIGHTGREY;
         }
-        // dec_inv_item_quantity( which_inventory_slot, 1 );
         return;
     }
     else if (food.sub_type == FOOD_CHUNK)
     {
-        const int mons_type = food.plus;
-        const bool cannibal = is_player_same_species(mons_type);
-        const int intel = mons_intel(mons_type) - I_ANIMAL;
+        const int mons_type  = food.plus;
+        const bool cannibal  = is_player_same_species(mons_type);
+        const int intel      = mons_intel(mons_type) - I_ANIMAL;
         const int chunk_type = mons_corpse_effect( mons_type );
-        const bool rotten = food_is_rotten(food);
+        const bool rotten    = food_is_rotten(food);
 
         if (!prompt_eat_chunk(food, rotten))
             return;
@@ -753,10 +765,10 @@ void eat_floor_item(int item_link)
     item_def& food(mitm[item_link]);
     if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
     {
-        const int mons_type = food.plus;
+        const int mons_type  = food.plus;
         const int chunk_type = mons_corpse_effect( mons_type );
-        const bool rotten = food_is_rotten(food);
-        const int mass = item_mass( food );
+        const bool rotten    = food_is_rotten(food);
+        const int mass       = mons_weight(food.plus)/150;
 
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
             return;
@@ -768,8 +780,8 @@ void eat_floor_item(int item_link)
         else
         {
             food.sub_type = CORPSE_SKELETON;
-            food.special = 90;
-            food.colour = LIGHTGREY;
+            food.special  = 90;
+            food.colour   = LIGHTGREY;
         }
         // dec_mitm_item_quantity( item_link, 1 );
 
@@ -779,11 +791,13 @@ void eat_floor_item(int item_link)
     else if (food.sub_type == FOOD_CHUNK)
     {
         const int chunk_type = mons_corpse_effect( food.plus );
-        const int intel = mons_intel( food.plus ) - I_ANIMAL;
-        const bool cannibal = is_player_same_species( food.plus );
-        const bool rotten = food_is_rotten(food);
+        const int intel      = mons_intel( food.plus ) - I_ANIMAL;
+        const bool cannibal  = is_player_same_species( food.plus );
+        const bool rotten    = food_is_rotten(food);
+        
         if (!prompt_eat_chunk(food, rotten))
             return;
+            
         eat_chunk(determine_chunk_effect(chunk_type, rotten), cannibal, intel);
     }
     else
@@ -883,18 +897,18 @@ static int chunk_nutrition(bool likes_chunks)
     int nutrition = CHUNK_BASE_NUTRITION;
     
     if (likes_chunks || you.hunger_state < HS_SATIATED)
+    {
         return (likes_chunks? nutrition
                 : apply_herbivore_chunk_effects(nutrition));
+    }
 
     const int gourmand = 
-        wearing_amulet(AMU_THE_GOURMAND)? 
-            you.duration[DUR_GOURMAND]
-          : 0;
+        wearing_amulet(AMU_THE_GOURMAND)? you.duration[DUR_GOURMAND] : 0;
 
     int effective_nutrition = 
-        nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
-                  / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
-
+           nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
+                     / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
+    
 #ifdef DEBUG_DIAGNOSTICS
     const int epercent = effective_nutrition * 100 / nutrition;
     mprf(MSGCH_DIAGNOSTICS, 
@@ -920,10 +934,10 @@ static void eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
 
     bool likes_chunks = (you.omnivorous() ||
                          you.mutation[MUT_CARNIVOROUS]);
-    int nutrition = chunk_nutrition(likes_chunks);
-    int hp_amt = 0;
+    int nutrition     = chunk_nutrition(likes_chunks);
+    int hp_amt        = 0;
     bool suppress_msg = false; // do we display the chunk nutrition message?
-    bool do_eat = false;
+    bool do_eat       = false;
 
     if (you.species == SP_GHOUL)
     {
@@ -1578,8 +1592,8 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     return (this_chunk_effect);
 }                               // end determine_chunk_effect()
 
-static bool vampire_consume_corpse(int mons_type, int mass,
-                                   int chunk_type, bool rotten)
+static bool vampire_consume_corpse(const int mons_type, int max_chunks,
+                                   const int chunk_type, const bool rotten)
 {
     if (chunk_type == CE_HCL)
     {
@@ -1587,10 +1601,27 @@ static bool vampire_consume_corpse(int mons_type, int mass,
         return false;
     }
 
+    // This is the exact formula of corpse nutrition for chunk lovers
+    max_chunks = 1 + random2(max_chunks);
+    int mass = CHUNK_BASE_NUTRITION * max_chunks;
     int food_value = 0, hp_amt = 0, mp_amt = 0;
 
-    if (!rotten)
+    if (rotten)
     {
+        if (wearing_amulet(AMU_THE_GOURMAND))
+        {
+            food_value = mass/2 + random2(you.experience_level * 5);
+            mpr("Slurp.");
+            did_god_conduct(DID_DRINK_BLOOD, 8);
+        }
+        else
+        {
+            mpr("It's not fresh enough.");
+            return false;
+        }
+   }
+   else
+   {
         hp_amt++;
 
         switch (mons_type)
@@ -1632,26 +1663,17 @@ static bool vampire_consume_corpse(int mons_type, int mass,
         }
         did_god_conduct(DID_DRINK_BLOOD, 8);
     }
-    else if (wearing_amulet(AMU_THE_GOURMAND))
-    {
-        food_value = mass/3 + random2(you.experience_level * 5);
-        mpr("Slurp.");
-        did_god_conduct(DID_DRINK_BLOOD, 8);
-    }
-    else
-    {
-        mpr("It's not fresh enough.");
-        return false;
-    }
 
     heal_from_food(hp_amt, mp_amt,
-        !rotten && one_chance_in(4), one_chance_in(3));
+                   !rotten && one_chance_in(4), one_chance_in(3));
 
     lessen_hunger( food_value, true );
     describe_food_change(food_value);
 
-//    start_delay( DELAY_EAT, 3 );
-    start_delay( DELAY_EAT, 1 + mass/300 );
+    // The delay for eating a chunk (mass 1000) is 2
+    // Here the base nutrition value equals that of chunks,
+    // but the delay should be greater.
+    start_delay( DELAY_EAT, mass / 400 ); 
     return true;
 } // end vampire_consume_corpse()
 

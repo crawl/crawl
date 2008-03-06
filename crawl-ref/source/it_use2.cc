@@ -53,7 +53,8 @@ bool potion_effect( potion_type pot_eff, int pow )
     if (pow > 150)
         pow = 150;
 
-    const int factor = (you.species == SP_VAMPIRE ? 2 : 1);
+    const int factor
+        = (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY? 2 : 1);
 
     switch (pot_eff)
     {
@@ -62,39 +63,75 @@ bool potion_effect( potion_type pot_eff, int pow )
         inc_hp( (5 + random2(7)) / factor, false);
         mpr("You feel better.");
 
-        if (you.species == SP_VAMPIRE)
+        // only fix rot when healed to full
+        if (you.hp == you.hp_max)
         {
-           if (!one_chance_in(3))
-               you.rotting = 0;
-           if (!one_chance_in(3))
-               you.duration[DUR_CONF] = 0;
+            unrot_hp(1);
+            set_hp(you.hp_max, false);
         }
-        else
-        {
-            // only fix rot when healed to full 
-            if (you.hp == you.hp_max)
-            {
-                unrot_hp(1);
-                set_hp(you.hp_max, false);
-            }
-            
-            you.duration[DUR_POISONING] = 0;
-            you.rotting = 0;
-            you.disease = 0;
-            you.duration[DUR_CONF] = 0;
-        }
+
+        you.duration[DUR_POISONING] = 0;
+        you.rotting = 0;
+        you.disease = 0;
+        you.duration[DUR_CONF] = 0;
         break;
 
     case POT_HEAL_WOUNDS:
         inc_hp((10 + random2avg(28, 3)) / factor, false);
         mpr("You feel much better.");
 
-        // only fix rot when healed to full 
-        if ( you.species != SP_VAMPIRE && you.hp == you.hp_max )
+        // only fix rot when healed to full
+        if ( you.hp == you.hp_max)
         {
-            unrot_hp( 2 + random2avg(5, 2) );
+            unrot_hp( (2 + random2avg(5, 2)) / factor );
             set_hp(you.hp_max, false);
         }
+        break;
+
+  case POT_BLOOD:
+        if (you.species == SP_VAMPIRE)
+        {
+            const char* names[] = { "human", "rat", "goblin",
+                                    "elf", "goat", "sheep",
+                                    "sheep", "gnoll", "yak" };
+
+            mprf("Yummy - fresh %s blood!", RANDOM_ELEMENT(names));
+            lessen_hunger(1000, true);
+
+            // healing depends on hunger
+            if (you.hunger_state <= HS_HUNGRY) // !heal wounds
+            {
+                inc_hp((10 + random2avg(30,2)) / factor, false);
+                mpr("You feel much better.");
+            }
+            else
+            {
+                if (you.hunger_state <= HS_FULL)
+                    inc_hp(5 + random2(10), false); // !healing
+                else
+                    inc_hp(2 + random2(5), false);
+                mpr("You feel better.");
+            }
+        }
+        else
+        {
+            if (you.omnivorous() || you.mutation[MUT_CARNIVOROUS])
+            {
+                // Likes it
+                mpr("This tastes like blood.");
+                lessen_hunger(200, true);
+            }
+            else
+            {
+                mpr("Blech - this tastes like blood!");
+                if (!you.mutation[MUT_HERBIVOROUS] && one_chance_in(3))
+                    lessen_hunger(100, true);
+                else
+                    disease_player( 50 + random2(100) );
+                xom_is_stimulated(32);
+            }
+        }
+        did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
         break;
 
     case POT_SPEED:
@@ -114,7 +151,7 @@ bool potion_effect( potion_type pot_eff, int pow )
             modify_stat(STAT_STRENGTH, 5, true, "");
 
         // conceivable max gain of +184 {dlb}
-        you.duration[DUR_MIGHT] += 35 + random2(pow);
+        you.duration[DUR_MIGHT] += (35 + random2(pow)) / factor;
         
         // files.cc permits values up to 215, but ... {dlb}
         if (you.duration[DUR_MIGHT] > 80)
@@ -175,8 +212,8 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_PARALYSIS:
-        you.paralyse(2 + random2( 6 + you.duration[DUR_PARALYSIS] ));
-        xom_is_stimulated(64);
+        you.paralyse((2 + random2( 6 + you.duration[DUR_PARALYSIS] )) / factor);
+        xom_is_stimulated(64 / factor);
         break;
 
     case POT_CONFUSION:
@@ -218,22 +255,20 @@ bool potion_effect( potion_type pot_eff, int pow )
     case POT_DEGENERATION:
         if ( pow == 40 )
             mpr("There was something very wrong with that liquid!");
-        if (lose_stat(STAT_RANDOM, 1 + random2avg(4, 2), false,
+        if (lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)) / factor, false,
                       "drinking a potion of degeneration"))
-            xom_is_stimulated(64);
+            xom_is_stimulated(64 / factor);
         break;
 
     // Don't generate randomly - should be rare and interesting
     case POT_DECAY:
-        if (rot_player(10 + random2(10)))
-            xom_is_stimulated(64);
+        if (rot_player((10 + random2(10)) / factor))
+            xom_is_stimulated(64 / factor);
         break;
 
     case POT_WATER:
         if (you.species == SP_VAMPIRE)
-        {
             mpr("Blech - this tastes like water.");
-        }
         else
         {
             mpr("This tastes like water.");
@@ -316,45 +351,13 @@ bool potion_effect( potion_type pot_eff, int pow )
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
         
-  case POT_BLOOD:
-        if (you.species == SP_VAMPIRE)
-        {
-            const char* names[] = { "human", "rat", "goblin",
-                                    "elf", "goat", "sheep",
-                                    "sheep", "gnoll", "yak" };
-            
-            mprf("Yummy - fresh %s blood!", RANDOM_ELEMENT(names));            
-            lessen_hunger(1000, true);
-            mpr("You feel better.");
-            inc_hp(1 + random2(10), false);
-        }
-        else
-        {
-            if (you.omnivorous() || you.mutation[MUT_CARNIVOROUS])
-            {
-                // Likes it
-                mpr("This tastes like blood.");
-                lessen_hunger(200, true);
-            }
-            else
-            {
-                mpr("Blech - this tastes like blood!");
-                if (!you.mutation[MUT_HERBIVOROUS] && one_chance_in(3))
-                    lessen_hunger(100, true);
-                else
-                    disease_player( 50 + random2(100) );
-                xom_is_stimulated(32);
-            }
-        }
-        did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
-        break;
-
     case POT_RESISTANCE:
         mpr("You feel protected.");
-        you.duration[DUR_RESIST_FIRE]   += random2(pow) + 10;
-        you.duration[DUR_RESIST_COLD]   += random2(pow) + 10;
-        you.duration[DUR_RESIST_POISON] += random2(pow) + 10;
-        you.duration[DUR_INSULATION]    += random2(pow) + 10;
+        you.duration[DUR_RESIST_FIRE]   += (random2(pow) + 10) / factor;
+        you.duration[DUR_RESIST_COLD]   += (random2(pow) + 10) / factor;
+        you.duration[DUR_RESIST_POISON] += (random2(pow) + 10) / factor;
+        you.duration[DUR_INSULATION]    += (random2(pow) + 10) / factor;
+        
         // Just one point of contamination. These potions are really rare,
         // and contamination is nastier.
         contaminate_player(1);

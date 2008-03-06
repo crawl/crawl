@@ -450,6 +450,10 @@ int spell_fail(spell_type spell)
             break;
         }
     }
+    
+    // vampires can cast while starving, but with increased difficulty
+    if (you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
+        chance2 += 20;
 
     // Apply the effects of Vehumet prayer and items of wizardry.
     chance2 = apply_spellcasting_success_boosts(spell, chance2);
@@ -661,7 +665,7 @@ bool cast_a_spell()
         return (false);
     }
 
-    if (you.is_undead != US_UNDEAD
+    if (you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE
         && (you.hunger_state <= HS_STARVING
             || you.hunger <= spell_hunger( spell )))
     {

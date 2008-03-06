@@ -94,9 +94,9 @@ void turn_corpse_into_chunks( item_def &item )
         bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
     
     item.base_type = OBJ_FOOD;
-    item.sub_type = FOOD_CHUNK;
-    item.quantity = 1 + random2( max_chunks );
-    item.flags   &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    item.sub_type  = FOOD_CHUNK;
+    item.quantity  = 1 + random2( max_chunks );
+    item.flags    &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     item.quantity = stepdown_value( item.quantity, 4, 4, 12, 12 );
 
@@ -112,11 +112,11 @@ void turn_corpse_into_chunks( item_def &item )
 
         // these values are common to all: {dlb}
         mitm[o].base_type = OBJ_ARMOUR;
-        mitm[o].plus = 0;
-        mitm[o].plus2 = 0;
-        mitm[o].special = 0;
-        mitm[o].flags = 0;
-        mitm[o].colour = mons_class_colour( mons_class );
+        mitm[o].plus      = 0;
+        mitm[o].plus2     = 0;
+        mitm[o].special   = 0;
+        mitm[o].flags     = 0;
+        mitm[o].colour    = mons_class_colour( mons_class );
 
         // these values cannot be set by a reasonable formula: {dlb}
         switch (mons_class)

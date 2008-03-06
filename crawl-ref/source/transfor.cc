@@ -233,7 +233,7 @@ bool transform(int pow, transformation_type which_trans)
                     "gaining the bat transformation" );
    
        you.symbol = 'b';
-       you.colour = DARKGREY;
+       you.colour = (you.species == SP_VAMPIRE ? DARKGREY : LIGHTGREY);
        return (true);
         
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1 

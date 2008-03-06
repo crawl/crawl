@@ -1134,8 +1134,11 @@ int player_res_fire(bool calc_unid)
     rf += scan_randarts(RAP_FIRE, calc_unid);
 
     // species:
-    if (you.species == SP_MUMMY)
+    if (you.species == SP_MUMMY
+        || you.species == SP_VAMPIRE && you.hunger_state <= HS_NEAR_STARVING)
+    {
         rf--;
+    }
 
     // spells:
     if (you.duration[DUR_RESIST_FIRE] > 0)
@@ -1175,6 +1178,16 @@ int player_res_fire(bool calc_unid)
 int player_res_cold(bool calc_unid)
 {
     int rc = 0;
+
+    if (you.species == SP_VAMPIRE)
+    {
+        if (you.hunger_state <= HS_NEAR_STARVING)
+            rc += 2;
+        else if (you.hunger_state <= HS_HUNGRY)
+            rc++;
+    }
+            
+
 
     /* rings of fire resistance/fire */
     rc += player_equip( EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid );
@@ -1342,7 +1355,8 @@ bool player_control_teleport(bool calc_unid) {
 int player_res_torment(bool)
 {
     return (you.mutation[MUT_TORMENT_RESISTANCE] ||
-            you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH);
+            you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH ||
+            you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING);
 }
 
 // funny that no races are susceptible to poisons {dlb}
@@ -1363,7 +1377,7 @@ int player_res_poison(bool calc_unid)
     {
         rp++;
     }
-
+    
     // ego armour:
     rp += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE );
 
@@ -1572,6 +1586,24 @@ int player_prot_life(bool calc_unid)
 {
     int pl = 0;
 
+    if (you.species == SP_VAMPIRE)
+    {
+        switch (you.hunger_state)
+        {
+        case HS_STARVING:
+        case HS_NEAR_STARVING:
+            pl = 3;
+        case HS_VERY_HUNGRY:
+        case HS_HUNGRY:
+            pl = 2;
+        case HS_SATIATED:
+            pl = 1;
+        default:
+            break;
+        }
+    }
+
+
     if (wearing_amulet(AMU_WARDING, calc_unid))
         ++pl;
 
@@ -1580,11 +1612,6 @@ int player_prot_life(bool calc_unid)
 
     // armour: (checks body armour only)
     pl += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY );
-
-    if (you.species == SP_VAMPIRE && you.hunger_state > HS_HUNGRY)
-    {
-        pl += 2;
-    }
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -2368,15 +2395,15 @@ int player_see_invis(bool calc_unid)
 {
     int si = 0;
 
+    /* Vampires can see invisible */
+    if (you.species == SP_VAMPIRE)
+        si++;
+
     si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );
 
     /* armour: (checks head armour only) */
     si += player_equip_ego_type( EQ_HELMET, SPARM_SEE_INVISIBLE );
 
-    /* Vampires can see invisible if not weakened by hunger */
-    if (you.species == SP_VAMPIRE && you.hunger_state > HS_HUNGRY)
-        si++;
-        
     if (you.mutation[MUT_ACUTE_VISION] > 0)
         si += you.mutation[MUT_ACUTE_VISION];
 
@@ -3337,11 +3364,13 @@ int check_stealth(void)
                 stealth += (you.skills[SK_STEALTH] * 12);
                 break;
             case SP_VAMPIRE:
-                if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
-                    || you.hunger_state <= HS_HUNGRY)
+                // Hungry/bat-form vampires are (much) more stealthy
+                if (you.hunger_state <= HS_STARVING)
+                    stealth += (you.skills[SK_STEALTH] * 21);
+                else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+                         || you.hunger_state <= HS_HUNGRY)
                 {
-                    // Hungry/batty vampires are more stealthy
-                    stealth += (you.skills[SK_STEALTH] * 19);
+                    stealth += (you.skills[SK_STEALTH] * 20);
                 }
                 else
                     stealth += (you.skills[SK_STEALTH] * 18);

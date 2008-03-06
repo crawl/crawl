@@ -763,6 +763,9 @@ static bool item_class_selected(const item_def &i, int selector)
         return (item_is_rechargable(i), true);
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true));
+    case OSEL_VAMP_EAT:
+        return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
+                && !food_is_rotten(i));
     case OSEL_EQUIP:
         for (int eq = 0; eq < NUM_EQUIP; eq++)
         {
@@ -1115,7 +1118,8 @@ static std::string operation_verb(operation_types oper)
     case OPER_WIELD:          return "wield";
     case OPER_QUAFF:          return "quaff";
     case OPER_DROP:           return "drop";
-    case OPER_EAT:            return "eat";
+    case OPER_EAT:            return (you.species == SP_VAMPIRE ?
+                                      "drain" : "eat");
     case OPER_TAKEOFF:        return "take off";
     case OPER_WEAR:           return "wear";
     case OPER_PUTON:          return "put on";
