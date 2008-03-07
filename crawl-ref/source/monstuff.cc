@@ -316,14 +316,14 @@ static void place_monster_corpse(const monsters *monster)
     if (o == NON_ITEM)
         return;
 
-    mitm[o].flags = 0;
+    mitm[o].flags     = 0;
     mitm[o].base_type = OBJ_CORPSES;
-    mitm[o].plus = corpse_class;
-    mitm[o].plus2 = 0;                          // butcher work done
-    mitm[o].sub_type = CORPSE_BODY;
-    mitm[o].special = 210;                      // rot time
-    mitm[o].colour = mons_class_colour(corpse_class);
-    mitm[o].quantity = 1;
+    mitm[o].plus      = corpse_class;
+    mitm[o].plus2     = 0;    // butcher work done
+    mitm[o].sub_type  = CORPSE_BODY;
+    mitm[o].special   = 210;  // rot time
+    mitm[o].colour    = mons_class_colour(corpse_class);
+    mitm[o].quantity  = 1;
 
     if (mitm[o].colour == BLACK)
         mitm[o].colour = monster->colour;

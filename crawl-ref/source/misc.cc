@@ -165,7 +165,7 @@ static bool victim_can_bleed(int montype)
     if (montype == -1) // player
     {
         if (you.is_undead && (you.species != SP_VAMPIRE
-                              || you.hunger_state >= HS_FULL))
+                              || you.hunger_state < HS_FULL))
         {
             return (false);
         }
@@ -179,7 +179,7 @@ static bool victim_can_bleed(int montype)
         }
         return (true);
     }
-    
+
     // now check monsters
     return (mons_class_flag(montype, M_COLD_BLOOD)
             || mons_class_flag(montype, M_WARM_BLOOD));

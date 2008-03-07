@@ -2216,10 +2216,10 @@ static void rot_inventory_food(long time_delta)
                 continue;
             }
 
-            you.inv[i].sub_type = CORPSE_SKELETON;
-            you.inv[i].special = 0;
-            you.inv[i].colour = LIGHTGREY;
-            you.wield_change = true;
+            you.inv[i].sub_type   = CORPSE_SKELETON;
+            you.inv[i].special    = 0;
+            you.inv[i].colour     = LIGHTGREY;
+            you.wield_change      = true;
             burden_changed_by_rot = true;
             continue;
         }
@@ -2833,8 +2833,8 @@ void update_corpses(double elapsedTime)
                 else
                 {
                     it.sub_type = CORPSE_SKELETON;
-                    it.special = 200;
-                    it.colour = LIGHTGREY;
+                    it.special  = 200;
+                    it.colour   = LIGHTGREY;
                 }
             }
         }
