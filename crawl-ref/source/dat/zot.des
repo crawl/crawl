@@ -140,23 +140,74 @@ MAP
 ENDMAP
 
 ###########################
-#
 # Globe of electric golems
 #
 NAME:  lemuel_golem_globe
 DEPTH: Zot:*
 TAGS:  no_rotate
+KFEAT: T = teleport trap
 SUBST: 1 = 1.
 MONS:  electric golem
 MAP
   mmmm
  mm..mm
 mm.11.mm
-m.1..1.m
+m.1TT1.m
 mm.11.mm
  mm..mm
   mmmm
 ENDMAP
+
+###################################################################
+# Draconian Sentry Boxes
+# There is an 8/27 chance all three downstairs will be here.
+#
+NAME:   lemuel_draconian_sentries
+DEPTH:  Zot:1-4
+ORIENT: float
+TAGS:   uniq_sentry no_rotate
+MONS:   red draconian scorcher/green draconian zealot/yellow draconian caller
+SUBST:  }=}}> , )=))> , ]=]]> , 1=123, w:w. , m:mn
+MAP
+............................
+..mmm..................mmm..
+..m1m..................m1m..
+..mmm...mmmwwwwwwmmm...mmm..
+........m1mwwwwwwm1m........
+........mmmwwwwwwmmm........
+mmm.....www...}..www.....mmm
+m1m.....www..)...www.....m1m
+mmm.....www...]..www.....mmm
+........mmmwwwwwwmmm........
+........m1mwwwwwwm1m........
+..mmm...mmmwwwwwwmmm...mmm..
+..m1m..................m1m..
+..mmm..................mmm..
+............................
+ENDMAP
+
+NAME:   lemuel_draconian_sentries_small
+DEPTH:  Zot:1-4
+ORIENT: float
+TAGS:   uniq_sentry no_rotate
+MONS:   red draconian scorcher/green draconian zealot/yellow draconian caller
+SUBST: }=}}> , )=))> , ]=]]>, 1=123 , w:w. , m:mn
+MAP
+................
+................
+..mmmwwwwwwmmm..
+..m1mwwwwwwm1m..
+..mmmwwwwwwmmm..
+..www...}..www..
+..www..)...www..
+..www...]..www..
+..mmmwwwwwwmmm..
+..m1mwwwwwwm1m..
+..mmmwwwwwwmmm..
+................
+................
+ENDMAP
+
 
 ###########################
 # Acid trip

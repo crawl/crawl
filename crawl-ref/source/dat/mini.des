@@ -118,18 +118,19 @@ MAP
 .....
 ENDMAP
 
-#####################################################################
-# An average monster in a cage of glass; can get out if it has the
-# ability to dig or blink like a blink-frog.  Also, the player can
-# dig it out.
-NAME:  caged_monster_a
-DEPTH: D, Elf, Snake, Vault
+###################################
+# elevator
+#
+NAME:    lemuel_elevator
+DEPTH:   D, Vault, Elf, Crypt, Zot, Tar, Dis, Geh, Coc
+ORIENT:  float
+TAGS:    allow_dup
+SUBST:   m:mn
+SHUFFLE: {}, ]}) , [{(
 MAP
-.....
-.mmm.
-.m0m.
-.mmm.
-.....
+mmmm
+m{}m
+mmmm
 ENDMAP
 
 ###################################
@@ -181,6 +182,73 @@ MAP
 .;;;;;;::;;?
 .?;;;::;;;.?
 ..???.....?.
+ENDMAP
+
+##################################################################
+# Necromancer has a house with a fridge (and a nice garden) (Eino)
+#
+NAME:  eino_house_with_fridge
+DEPTH: D:8-20, Lair:2-10, Vault:1-4
+TAGS:  no_monster_gen no_item_gen mini_float
+MONS:  necromancer, plant
+MONS:  rat simulacrum / hound simulacrum / sheep simulacrum / bear simulacrum
+MAP
+............
+.xxxxxxxxxx.
+.x333x..%%x.
+.x333+..xxx.
+.x333x....x.
+.xxxxx.3..x.
+.....x..13x.
+.2T2.+....x.
+.....xxxxxx.
+............
+ENDMAP
+
+########################################################################
+# Small gnoll camp 1 
+#
+NAME:  eino_small__gnoll_camp_1
+DEPTH: D:3-10
+TAGS:  uniq_gnoll_camp
+MONS:  gnoll
+# "gnoll seargeant" with guaranteed good gear
+MONS:  gnoll ; potion of healing | potion of heal wounds . whip ego:reaching |whip good_item no_uniq | spear ego:reaching | glaive . scale mail | chain mail
+MONS: jackal / hound
+MAP
+xxxxxxxxxx
+x..3..xTxx
+x..313..xx
++....2..>x
+x..1..x%xx
+x...31x%xx
+xxxxxxxxxx
+ENDMAP
+
+########################################################################
+# Small gnoll camp 2
+#
+NAME:  eino_small_gnoll_camp_2
+PLACE: D:2
+DEPTH: D:3-10
+TAGS:  uniq_gnoll_camp
+MONS:  gnoll
+# "gnoll seargeant" with guaranteed good gear
+MONS:  gnoll ; potion of healing | potion of heal wounds . whip ego:reaching |whip good_item no_uniq | spear ego:reaching | glaive . scale mail | chain mail
+MONS:  jackal / hound
+MAP
+xxxxxxxxxx
+xxxx33+%%x
+xxx...x*$x
+xxx...xxxx
+xxxx.3.xxx
+x21+...1.x
+x11x..1..x
+xxxx....xx
+xxxx..xxxx
+xxxx..xxxx
+xx......xx
+xx......xx
 ENDMAP
 
 #############################################################################

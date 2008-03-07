@@ -169,9 +169,34 @@ xxFxxxx1.x1x.1xxx2..=1x
 xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+##################################################################
+# The Dragons of Dis
+# There is an 8/27 chance all three downstairs will be here.
+#
+NAME:    Lemuel_Dis_Dragons
+DEPTH:   Dis:2-6
+ORIENT:  float
+FLAGS:   no_rotate
+MONS:    iron dragon, iron dragon
+SHUFFLE: ]})
+SUBST:   1=1. , }=}}> , )=))> , ]=]]>
+MAP
+vvvvvvv+++vvvvvvv
+v1.}.1v...v1.].1v
+v.1.1.v...v.1.1.v
+v..1..v.2.v..1..v
+v.....v...v.....v
+v.....v+++v.....v
+v...............v
+v.......1.......v
+v...............v
+v.......).......v
+vvvvvvvvvvvvvvvvv
+ENDMAP
+
 ##############################################################################
 # lemuel_nasty_pond
-
+#
 NAME:   lemuel_nasty_pond
 DEPTH:  Tar:*
 TAGS:   no_pool_fixup no_rotate

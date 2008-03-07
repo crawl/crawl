@@ -295,6 +295,31 @@ xbbbbbbbbbbbbbbbb
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
+#####################################################
+# Lions and Tigers and Bears, oh my! (or at least bears)
+#
+NAME:   lemuel_bear_cage
+DEPTH:  D:7-21
+MONS:   bear / black bear / grizzly bear / polar bear
+MONS:   hippogriff / griffon
+MONS:   yak / sheep / weight:3 death yak
+MONS:   hound / wolf / hog
+SUBST:  1 = 1:30 2 3 4 .:20
+MAP
+cccccccccc
+c1.1.1.1.c
+c.1.1.1.1c
+c1.1.1.1.c
+c.1.1.1.1c
+c1.1.1.1.c
+c.1.1.1.1c
+cnn++++nnc
+..........
+@........@
+..........
+xxxxxxxxxx
+ENDMAP
+
 ##################################
 # Vampire Tower by Lemuel Pitkin
 #

@@ -46,7 +46,7 @@ ENDMAP
 ##############################################################################
 # Elf arrival vault: corridor one (with the hidden toll cashbox)
 
-NAME:    elf_arrival_001
+NAME:    eino_elf_arrival_corridor
 PLACE:   Elf:1
 ORIENT:  float
 SHUFFLE: asd/v$=
@@ -69,7 +69,7 @@ ENDMAP
 ##############################################################################
 # Elf arrival vault: open area
 
-NAME:    elf_arrival_002
+NAME:    eino_elf_arrival_open_area
 PLACE:   Elf:1
 ORIENT:  float
 FLAGS:   no_rotate
@@ -89,6 +89,211 @@ xx.1.....{.....1.xx
 xxxx...........xxxx
 xxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+##############################################################################
+
+NAME:    eino_elf_arrival_customs
+ORIENT:  southwest
+PLACE:   Elf:1
+MONS:    deep elf soldier / deep elf mage / deep elf conjurer w:2
+MONS:    deep elf summoner
+MAP
+xxxxxxxxxxxxxx
+xxxxxx.+.....x
+xxxxxx.x..x..x
+xxxxxx.m.xxx.x
+xxxxxx.x..x..x
+xxxxxx.m1..1.x
+xxxxxx.x.2x..x
+xxxxxx.m1xxx1x
+xxxxxx.x.1x1.x
+xxxxxx{m.1.2.+
+xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:    eino_elf_arrival_shootout
+PLACE:   Elf:1
+ORIENT:  float
+MONS:    deep elf soldier / deep elf mage, deep elf conjurer / deep elf priest / w:2 deep elf summoner
+MAP
+xxxxxxxx@@@xxxxxxxx
+xxxx...........xxxx
+xx......2.1......xx
+x.....1.....1.....x
+xxxx.....G.....xxxx
+xxxxxxxx...xxxxxxxx
+xxx[.....{.....(xxx
+xxxxxxxx...xxxxxxxx
+xxxx.....G.....xxxx
+x.....1.....1.....x
+xx......1.2......xx
+xxxx...........xxxx
+xxxxxxxx@@@xxxxxxxx
+ENDMAP
+
+########################################################################
+
+NAME: eino_elf_arrival_pack_of_fighters_taking_a_sip
+PLACE: Elf:1
+ORIENT: south
+TAGS: no_monster_gen
+KMONS: Z = deep elf fighter / deep elf soldier w:5
+KFEAT: Z = W
+MAP
+ .........
+x..WWWWW..x
+xWWWZWZWWWx
+xWWZWZWZWWx
+xWWWWWWWWWx
+x..WWWWW..x
+x.........x
+x....[....x
+xx...{...xx
+xxx.....xxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME: eino_elf_arrival_the_gate
+PLACE: Elf:1
+ORIENT: south
+MONS: deep elf soldier / deep elf mage
+MONS: deep elf conjurer / deep elf priest / deep elf fighter
+MONS: deep elf summoner / deep elf priest
+MAP
+x.........x
+@.........@
+x...3..2..x
+x..2.1.1..x
+x.G.1.1.G.x
+x.........x
+xxx+++++xxx
+xxx.....xxx
+xxx..[..xxx
+xxx.....xxx
+xxx..{..xxx
+xxxx...xxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+ENDMAP
+
+###########################################################
+# A nice scenic altar
+#
+NAME:    eino_elf_arrival_altar
+ORIENT:  west
+PLACE:   Elf:1
+SHUFFLE: 1/2, 4/5
+KFEAT:   C = altar_vehumet
+MONS:    deep elf soldier, deep elf mage
+MONS:    deep elf priest
+MONS:    deep elf conjurer, deep elf summoner
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
+xxxxxxxxxxxxxxxxxx...xxxxxx.....xxx
+xxxxxxxxxxxxxxxx.22x...xx.........x
+xxxxxxxxxxxxxx...xxxxx.x..1.5.....x
+xxxxxx...xxxxx.xxxxxxx.m...3......x
+xxxxxx.[.......xxxxxx....1..GmG...@
+xxxxxx....xxxxxxxxxxx..m..C.mbm...@
+xxxxxx.{.......xxxxxx....23.GmG...@
+xxxxxx...xxxxx.xxxxxxx.m...4......x
+xxxxxxxxxxxxxx...xxxxx.x.2........x
+xxxxxxxxxxxxxxxx.11x...xx.........x
+xxxxxxxxxxxxxxxxxx...xxxxxx.....xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
+ENDMAP
+
+###########################################################
+
+NAME:   eino_elf_entry_druids_welcome
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant
+MAP
+x1......@......1x
+xw1...........1wx
+xww1.........1wwx
+xwww1...[...1wwwx
+xwwww1.....1wwwwx
+xwwwww1.{.1wwwwwx
+xwwww1.....1wwwwx
+xwww1...(...1wwwx
+xww1.........1wwx
+xw1...........1wx
+x1......@......1x
+ENDMAP
+
+###########################################################
+
+NAME:   eino_elf_entry_tree_alley
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant
+MAP
+xxxxxxxxxxxxxxxxxxx
+.11111111111111111.
+@.....[.{.(.......@
+.11111111111111111.
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###########################################################
+
+NAME:   eino_elf_entry_water_cross
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant
+MAP
+...................
+..1xWx1..[..1xWx1..
+.1xxWxx1...1xxWxx1.
+..WWWWW..{..WWWWW..
+.1xxWxx1...1xxWxx1.
+..1xWx1..(..1xWx1..
+...................
+ENDMAP
+
+###########################################################
+
+NAME:   eino_elf_entry_water_star
+TAGS:   entry no_monster_gen no_rotate
+ORIENT: float
+MAP
+..xxxxxxx@xxxxxxx..
+....xxxx...xxxx....
+x.....x..W..x.....x
+xG..W....W....W..Gx
+xx...W..WWW..W...xx
+x.....WWWWWWW.....x
+....WWWW...WWWW....
+..WWWWW.({[.WWWWW..
+....WWWW...WWWW....
+x.....WWWWWWW.....x
+xx...W..WWW..W...xx
+xG..W....W....W..Gx
+x.....x..W..x.....x
+....xxxx...xxxx....
+..xxxxxxx@xxxxxxx..
+ENDMAP
+
 
 ############################################################################
 # elf_hall
