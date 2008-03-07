@@ -2296,6 +2296,8 @@ static void give_basic_mutations(species_type speci)
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS] = 3;
         you.mutation[MUT_SLOW_METABOLISM] = 1;
+        you.mutation[MUT_ACUTE_VISION] = 1;
+        // This needs to be changed!
         you.mutation[MUT_POISON_RESISTANCE] = 1;
         break;
     default:

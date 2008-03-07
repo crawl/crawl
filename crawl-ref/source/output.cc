@@ -208,10 +208,10 @@ static std::string describe_hunger()
         case HS_VERY_HUNGRY:
             return (vamp? "Very Thirsty" : "Very Hungry");
         case HS_NEAR_STARVING:
-            return ("Near Starving");
+            return (vamp? "Near Bloodless" : "Near Starving");
         case HS_STARVING:
         default:
-            return ("Starving");
+            return (vamp? "Bloodless" : "Starving");
     }
 }
 
@@ -1525,14 +1525,29 @@ std::string status_mut_abilities()
     if (you.duration[DUR_PRAYER])
         text += "praying, ";
 
-    if (you.duration[DUR_REGENERATION]
-        && (you.species != SP_VAMPIRE || you.hunger_state >= HS_HUNGRY)
-        || you.species == SP_VAMPIRE && you.hunger_state >= HS_FULL)
+    if (you.disease && !you.duration[DUR_REGENERATION]
+        || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+    {
+       text += "non-regenerating, ";
+    }
+    else if (you.duration[DUR_REGENERATION]
+             || you.species == SP_VAMPIRE && you.hunger_state != HS_SATIATED)
     {
         if (you.disease)
-            text += "recuperating, ";
+            text += "recuperating";
         else
-            text += "regenerating, ";
+            text += "regenerating";
+            
+        if (you.species == SP_VAMPIRE && you.hunger_state != HS_SATIATED)
+        {
+            if (you.hunger_state <= HS_HUNGRY)
+                text += " slowly";
+            else if (you.hunger_state == HS_ENGORGED)
+                text += " very quickly";
+            else if (you.hunger_state >= HS_FULL)
+                text += " quickly";
+        }
+        text += ", ";
     }
 
 // not used as resistance part already says so
@@ -1647,12 +1662,6 @@ std::string status_mut_abilities()
     else if (!you.duration[DUR_HASTE] && you.duration[DUR_SWIFTNESS])
         text += "swift, ";
 
-    if (you.disease
-        || you.species == SP_VAMPIRE && you.hunger_state < HS_HUNGRY)
-    {
-        text += "non-regenerating, ";
-    }
-
     if (you.attribute[ATTR_HELD])
         text += "held, ";
 
@@ -1717,7 +1726,7 @@ std::string status_mut_abilities()
           text += "\nYou are a cloud of diffuse gas.";
           break;
     }
-
+/*
     const int to_hit = calc_your_to_hit( false ) * 2;
 
     snprintf( info, INFO_SIZE,
@@ -1733,7 +1742,7 @@ std::string status_mut_abilities()
           (to_hit < 100) ? "You feel comfortable with your ability to fight"
                          : "You feel confident with your ability to fight" );
     text += info;
-
+*/
     if (you.duration[DUR_DEATHS_DOOR])
         text += "\nYou are standing in death's doorway.";
 
@@ -1777,6 +1786,10 @@ std::string status_mut_abilities()
           have_any = true;
           break;
 
+      case SP_VAMPIRE:
+          if (you.experience_level < 13 || you.hunger_state > HS_HUNGRY)
+              break;
+          // else fall-through
       case SP_MUMMY:
           text += "in touch with death";
 

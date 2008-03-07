@@ -1196,21 +1196,22 @@ formatted_string describe_mutations()
         break;
 
     case SP_VAMPIRE:
-        if (you.hunger_state >= HS_SATIATED)
+        if (you.hunger_state < HS_SATIATED)
         {
-            result += "<green>";
-            result += "You are";
-            result += (you.experience_level > 25) ?
-                       " strongly" : "";
-            result += " in touch with the powers of death." EOL;
-            result += "You are quite resistant to negative energy." EOL;
-            result += "You can see invisible." EOL;
-            result += "</green>";
+            if (you.experience_level >= 13)
+            {
+                result += "<green>";
+                result += "You are";
+                result += " in touch with the powers of death." EOL;
+                result += "</green>";
+            }
         }
         if (you.hunger_state <= HS_STARVING)
             result += "<green>You do not heal.</green>" EOL;
         else if (you.hunger_state <= HS_HUNGRY)
             result += "<green>You heal slowly.</green>" EOL;
+        else if (you.hunger_state >= HS_ENGORGED)
+            result += "<green>Your natural rate of healing is extremely fast.</green>" EOL;
         else if (you.hunger_state >= HS_FULL)
             result += "<green>Your natural rate of healing is unusually fast.</green>" EOL;
         have_any = true;

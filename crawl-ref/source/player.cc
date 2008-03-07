@@ -1435,13 +1435,9 @@ int player_spec_death()
     }
     else if (you.species == SP_VAMPIRE)
     {
-        // Vampires get bonus only when not hungry
-        if (you.experience_level >= 13 && you.hunger_state > HS_HUNGRY)
-        {
+        // Vampires get bonus only when hungry
+        if (you.experience_level >= 13 && you.hunger_state <= HS_HUNGRY)
             sd++;
-            if (you.experience_level >= 26)
-                sd++;
-        }
     }
 
     // transformations:
@@ -2395,10 +2391,6 @@ int player_see_invis(bool calc_unid)
 {
     int si = 0;
 
-    /* Vampires can see invisible */
-    if (you.species == SP_VAMPIRE)
-        si++;
-
     si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );
 
     /* armour: (checks head armour only) */
@@ -2938,13 +2930,22 @@ void level_change(bool skip_ability_increase)
             case SP_VAMPIRE:
                 if (you.experience_level == 3)
                 {
-                    mpr( "You can now transform into a vampire bat.",
-                          MSGCH_INTRINSIC_GAIN );
+                    if (you.hunger_state == HS_ENGORGED)
+                    {
+                        mpr( "If you weren't so full you could now transform "
+                             "into a vampire bat.", MSGCH_INTRINSIC_GAIN );
+                    }
+                    else
+                    {
+                        mpr( "You can now transform into a vampire bat.",
+                             MSGCH_INTRINSIC_GAIN );
+                    }
                 }
-                else if (you.experience_level == 13 || you.experience_level == 26)
+                else if (you.experience_level == 13)
                 {
-                    mpr( "You feel more in touch with the powers of death.",
-                         MSGCH_INTRINSIC_GAIN );
+                    mprf( MSGCH_INTRINSIC_GAIN,
+                          "You feel %sin touch with the powers of death.",
+                          (you.hunger_state <= HS_HUNGRY ? "" : "strangely "));
                 }
                 break;
             case SP_NAGA:
@@ -3490,7 +3491,9 @@ static void ability_increase()
 
 void display_char_status()
 {
-    if (you.is_undead)
+    if (you.species == SP_VAMPIRE && you.hunger_state == HS_ENGORGED)
+        mpr( "You feel almost alive." );
+    else if (you.is_undead)
         mpr( "You are undead." );
     else if (you.duration[DUR_DEATHS_DOOR])
         mpr( "You are standing in death's doorway." );
@@ -3558,16 +3561,30 @@ void display_char_status()
     if (you.duration[DUR_PRAYER])
         mpr( "You are praying." );
 
+    if (you.disease && !you.duration[DUR_REGENERATION]
+        || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+    {
+        mpr("You do not heal.");
+    }
+    else if (you.species == SP_VAMPIRE)
+    {
+        if (you.hunger_state <= HS_HUNGRY)
+            mpr("You heal slowly.");
+        else if (you.hunger_state == HS_ENGORGED)
+            mpr("You heal very quickly.");
+        else if (you.hunger_state >= HS_FULL)
+            mpr("You heal quickly.");
+    }
+    
     if (you.duration[DUR_REGENERATION]
-        && (you.species != SP_VAMPIRE || you.hunger_state >= HS_HUNGRY)
-        || you.species == SP_VAMPIRE && you.hunger_state >= HS_FULL)
+        && (you.species != SP_VAMPIRE || you.hunger_state > HS_STARVING))
     {
         if (you.disease)
             mpr("You are recuperating from your illness.");
         else
-            mpr( "You are regenerating." );
+            mpr("You are regenerating.");
     }
-
+    
     if (you.duration[DUR_SWIFTNESS])
         mpr( "You can move swiftly." );
 
@@ -3667,18 +3684,6 @@ void display_char_status()
               " faster than usual." : ".") );
     }
 
-    if (you.disease || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
-        mpr("You do not heal.");
-    else if (you.species == SP_VAMPIRE)
-    {
-        if (you.hunger_state <= HS_HUNGRY)
-            mpr("You heal slowly.");
-        else if (you.hunger_state == HS_ENGORGED)
-            mpr("You heal very quickly.");
-        else if (you.hunger_state >= HS_SATIATED)
-            mpr("You heal quickly.");
-    }
-        
     // prints a contamination message
     contaminate_player( 0, true );
 
@@ -3687,7 +3692,7 @@ void display_char_status()
         mprf("Your hands are glowing %s red.",
              (you.duration[DUR_CONFUSING_TOUCH] > 40) ? "an extremely bright" :
              (you.duration[DUR_CONFUSING_TOUCH] > 20) ? "bright"
-                                        : "a soft" );
+                                                      : "a soft" );
     }
 
     if (you.duration[DUR_SURE_BLADE])
@@ -3695,7 +3700,7 @@ void display_char_status()
         mprf("You have a %sbond with your blade.",
              (you.duration[DUR_SURE_BLADE] > 15) ? "strong " :
              (you.duration[DUR_SURE_BLADE] >  5) ? ""
-                                   : "weak " );
+                                                 : "weak " );
     }
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
@@ -3727,7 +3732,7 @@ void display_char_status()
           (move_cost == 10) ? "average" :
           (move_cost <  13) ? "slow" 
                             : "very slow" );
-
+/*
     const int to_hit = calc_your_to_hit( false ) * 2;
     // Messages based largely on percentage chance of missing the 
     // average EV 10 humanoid, and very agile EV 30 (pretty much
@@ -3747,7 +3752,7 @@ void display_char_status()
          (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
          (to_hit < 100) ? "You feel comfortable with your ability to fight" 
                         : "You feel confident with your ability to fight" );
-
+*/
 #if DEBUG_DIAGNOSTICS
     mprf("To-hit: %d", to_hit);
 #endif

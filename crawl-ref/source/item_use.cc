@@ -1292,7 +1292,7 @@ quiver_type get_quiver_type()
 static bool Hack_Ignore_F_Inscription = false;    // only for "why can't I fire" feedback
 static void _get_fire_order(std::vector<int>& fire_order)
 {
-    for (unsigned int i_inv=Options.fire_items_start; i_inv<ENDOFPACK; i_inv++)
+    for (int i_inv=Options.fire_items_start; i_inv<ENDOFPACK; i_inv++)
     {
         const item_def& item = you.inv[i_inv];
         if (!is_valid_item(item))

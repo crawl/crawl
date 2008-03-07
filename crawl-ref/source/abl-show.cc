@@ -825,10 +825,16 @@ bool activate_ability()
     std::vector<talent> talents = your_talents(false);
     if ( talents.empty() )
     {
-        mpr("Sorry, you're not good enough to have a special ability.");
+        // Vampires can't turn into bats when full to the rim with blood.
+        if (you.species == SP_VAMPIRE && you.experience_level >= 3)
+            mpr("Sorry, you're too full to transform right now.");
+        else
+            mpr("Sorry, you're not good enough to have a special ability.");
+            
         crawl_state.zero_turns_taken();
         return false;
     }
+    
     if ( you.duration[DUR_CONF] )
     {
         talents = your_talents(true);
@@ -900,6 +906,7 @@ static bool activate_talent(const talent& tal)
         case ABIL_END_TRANSFORMATION:
         case ABIL_DELAYED_FIREBALL:
         case ABIL_MUMMY_RESTORATION:
+        case ABIL_TRAN_BAT:
             hungerCheck = false;
             break;
         default:
@@ -1991,15 +1998,16 @@ std::vector<talent> your_talents( bool check_confused )
                 (you.species == SP_BLACK_DRACONIAN)  ? ABIL_BREATHE_LIGHTNING :
                 (you.species == SP_PURPLE_DRACONIAN) ? ABIL_BREATHE_POWER :
                 (you.species == SP_PALE_DRACONIAN)   ? ABIL_BREATHE_STEAM :
-                (you.species == SP_MOTTLED_DRACONIAN)? ABIL_BREATHE_STICKY_FLAME:
-                                                     ABIL_NON_ABILITY);
+                (you.species == SP_MOTTLED_DRACONIAN)? ABIL_BREATHE_STICKY_FLAME
+                                                     : ABIL_NON_ABILITY);
             if (ability != ABIL_NON_ABILITY)
                 add_talent(talents, ability, check_confused );
         }
     }
 
-    if (you.species == SP_VAMPIRE && you.experience_level >= 3 &&
-        you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+    if (you.species == SP_VAMPIRE && you.experience_level >= 3
+        && you.hunger_state < HS_ENGORGED
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
     {
         add_talent(talents, ABIL_TRAN_BAT, check_confused );
     }

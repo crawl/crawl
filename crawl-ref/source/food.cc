@@ -569,7 +569,8 @@ bool eat_food(bool run_hook, int slot)
 
     if (you.hunger >= 11000)
     {
-        mpr("You're too full to eat anything.");
+        mprf("You're too full to %s anything.",
+             you.species == SP_VAMPIRE ? "drain" : "eat");
         crawl_state.zero_turns_taken();
         return (false);
     }
@@ -641,18 +642,32 @@ static bool food_change(bool suppress_message)
 
         if (newstate < HS_SATIATED)
             interrupt_activity( AI_HUNGRY );
+        else if (newstate == HS_ENGORGED && you.species == SP_VAMPIRE
+                 && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+                 && you.duration[DUR_TRANSFORMATION] > 2)
+        {
+            mpr("Your bloodfilled body can't sustain your transformation much longer.",
+                MSGCH_WARN);
+            you.duration[DUR_TRANSFORMATION] = 2;
+        }
 
         if (suppress_message == false)
         {
             switch (you.hunger_state)
             {
             case HS_STARVING:
-                mpr("You are starving!", MSGCH_FOOD);
+                if (you.species == SP_VAMPIRE)
+                    mpr("You feel devoid of blood!");
+                else
+                    mpr("You are starving!", MSGCH_FOOD);
                 learned_something_new(TUT_YOU_STARVING);
                 you.check_awaken(500);
                 break;
             case HS_NEAR_STARVING:
-                mpr("You are near starving.", MSGCH_FOOD);
+                if (you.species == SP_VAMPIRE)
+                    mpr("You feel almost devoid of blood!");
+                else
+                    mpr("You are near starving.", MSGCH_FOOD);
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
             case HS_VERY_HUNGRY:
