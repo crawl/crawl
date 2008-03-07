@@ -1506,7 +1506,7 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
                 break;
 
             case 3:
-                // Doing this here causes a odd message later. -- bwr
+                // Doing this here causes an odd message later. -- bwr
                 // this_chunk_effect = CE_ROTTEN;
                 break;
 
