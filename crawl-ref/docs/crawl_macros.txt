@@ -1,256 +1,163 @@
-This document aims at easier Crawling (in Stone Soup) by explaining:
-- macros and keybindings
-- lua snippets in init.txt
+Macros and Keymaps
+==================
 
------------------------------------------------------------------------
-
-Macros and Keymaps.
-===================
-
-Following Brent Ross's phrasing, the simple explanation is:
+What are macros and keymaps? The simple explanation is:
 
 Command macros make keys into commands.
 Keymaps make keys into other keys.
 
-And him a bit more verbose:
+Or a bit more verbose:
 
-For the most part, people will probably want command macros.  They allow 
-for things like making a key run a sequence of commands (e.g. associating
-a key stroke to the casting of a certain spell) without having to worry 
-about messing up what that key does at prompts (e.g. you can macro a 
-number or letter without worrying about it making the substitution when 
-you're trying to drop an item).
+For the most part, people will probably want command macros. They allow
+for things like making a key run a sequence of commands (e.g.
+associating a key stroke to the casting of a certain spell) without
+having to worry about messing up what that key does at prompts (e.g.
+you can macro a number or letter without worrying about it making the
+substitution when you're trying to drop an item).
 
-Keymaps are for when you want to fix layout and behavioural problems on 
-your keyboard (i.e. unrecognised numpad sequences can by mapped into 
-their numbers, foreign keyboard layouts can be modified to be more 
-comfortable). There are also special sets of keymaps for the level-map 
-and targeting modes, which allow for keymaps that are restricted to just
-those situations. 
+Keymaps are for when you want to fix layout and behavioural problems on
+your keyboard (i.e. unrecognised numpad sequences can by mapped into
+their numbers, foreign keyboard layouts can be modified to be more
+comfortable). There are also special sets of keymaps for the level map,
+the targeting mode and confirmation prompts, which allow for mappings
+that are restricted to just those situations.
 
-[The keymap system is currently being overhauled. I hope that the 
-examples below will also work in the new version. 
-From what I gather, the keybindings will be moved to a file (which is
-good). I hope that it will still be possible to define macros in-game:
-this makes testing so convenient. And it should be possible to have
-macros at all three levels (main, level map, targeting).]
 
-How to create macros?
----------------------
-The simplest way is in-game: press the '~' key (this may be a bit
-awkward on certain keyboard layouts). Then choose a key to assign
-for your macro, and enter the command sequence. In some cases, Crawl
-will display a funny number.  These numbers are the key codes for
-certain (non-alpanumeric) keys, and can vary between different
-systems.
+How to create macros and keymaps?
+=================================
 
-The following keys and combinations are sensible to use:
-- The function keys are good choices, possibly modified by Shift, Ctrl, 
-  or Shift-Ctrl.
-- On some systems, it is possible to also incorporate the Alt (meta) key.
-- All alphanumerical keys. Alphanumerical keys can also be combined with 
-  Shift or Ctrl keys (note that usually Ctrl-Shift-A is the same thing as 
-  Ctrl-A). Be careful that you do not redefine important game keys. 
-- All special keys: digits, punctation, etc. These can also be combined 
-  with Ctrl. Alt may also work. Again, do not redefine vital game commands.
+The simplest way is in-game: Press the '~' key (this may be a bit
+awkward on certain keyboard layouts, see below for how to edit the
+macro.txt file directly and for an example how to remap it), select
+'m' to define a macro, then choose a key to assign for your macro and
+enter the command sequence. For some keys (or key combinations), Crawl
+will display a strange number (for example \{13} for the Return key).
+These numbers are the key codes for certain non-alpanumeric keys and
+can vary between different systems.
 
-For example, on my home system (Windows), I get key codes
- F1		    \{368}		A		  A
- Shift-F1	    \{1392}		Ctrl-A		  \{1}
- Ctrl-F1	    \{880}		Alt-A		  a
- Alt-F1		    \{2416}		Ctrl-Shift-A	  \{1}
- Ctrl-Shift-F1	    \{1904}		Ctrl-Shift-Alt-A  \{3905}
- Ctrl-Alt-F1	    \{2928}
- Shift-Alt-F1	    \{3440}
- Ctrl-Shift-Alt-F1  \{3952}
+By default, most upper- and lowercase alphanumeric keys are already
+assigned functions in Crawl. While you are free to remap those keys as
+well, it might be best to start with some of the currently unused keys,
+such as Tab or the function keys (F1 to F12), possibly combined with
+Ctrl, Shift or both. On some systems, it may also be possible to
+incorporate the Alt (Meta) key.
 
-After defining such a macro, you should test it. If you are comfortable
-with the macro you have defined, you should then save the macro.
-To save all macros and keymaps, press '~' and then 's' to save
-macros at the tilde prompt).
+Defining keymaps works in exactly the same way. Just press 'k'
+(default), 'x' (level-map), 't' (targeting) or 'c' (confirmation)
+instead of 'm' after pressing '~'.
 
-The macros are stored in the file macro.txt in your main Crawl directory. 
-(You can change where the file is read from and written to by specifying an
-alternate directory on the command line with -macro <dir>.)
-This file is human readable and editablel you just have to figure out the
-magic numbers as shown above for F1, Ctrl-A, etc. When using strange 
-keys as triggers for a macro, you may need to edit macro.txt manually.
+After defining such a macro or keymap, you should test it. If you are 
+comfortable with it, you should then save the macro. To save all macros 
+and keymaps, press '~' and then 's' to save macros at the tilde prompt).
 
-Note that you can make comments in macro.txt using lines with a
-leading '#'. In this manner, you can remind yourself which keys the
-numbers belong to (on your system).
 
-See below for examples of macro definitions.
+The macro.txt file
+==================
 
-Keymaps work in exactly the same way. There are three different keymaps:
-one for the main view, one for the level map, and one
-for the targeting map. In macro.txt, these are differentiated by
- K  - main screen
- K1 - level map
- K2 - targeting
-However, you should not keymap alphabet letters; otherwise you
-will meet difficulties accessing your inventory!
+Macros and keymaps are stored in a file called macro.txt in your main
+Crawl directory or your home directory. You can change where the file
+is read from and written to by specifying an alternate directory on
+the command line with -macro <dir> or with the crawl_dir option in your
+init file (see crawl_options.txt for details). The macro.txt file is
+human readable and editable, but you might have to figure out the key
+codes for non-alphanumeric keys through in-game experimentation or
+external utilities.
 
-Here are some macros and keymaps that have been considered useful by 
-at least a few players. For the sake of completeness, both key line and 
-command line are given, but you should really substitute your own keys 
-here; these may not always work for you :)
+Lines beginning with the '#' are comments and will be ignored. Note
+that Crawl won't necessarily preserve your comments when saving macros
+and keymaps to the macro.txt file.
 
-Spellcasting.
--------------
-# F1: cast spell a at previous target
-M:\{368}
-A:Zap
+Each macro definition consists of exactly two lines. The first one
+describes the macro trigger key and consists of "M:" followed by the
+character or keycode of that key (for example 'a', 'A' or \{9} for
+the A, Shift-A or Tab keys). The second one describes the macro action
+and consists of "A:" followed by the command sequence to be associated
+with the above key (for example "zap" for zapping the spell in slot a
+at the previous target). Individual macro definitions should be
+separated by empty lines.
 
-#: Shift-F1: cast spell a at nearest target
-M:\{1392}
-A:Za+.	 
+For keymaps just replace the "M:" on the first line of the definiton
+with one of the following:
+"K:"  default, 
+"K1:" level-map, 
+"K2:" targeting or 
+"K3:" confirmation.
 
-Note that you can assign new letters to your spells with '=' so,
-if you like, you can always have you primary attack spell on a. You
-may want to set the option
- target_zero_exp = false
-when using macros like this so that you do not accidentally crystal spear
-a plant.
 
-Easier Nemelex hoovering.
--------------------------
-# F12: Nemelex hoover
-K:\{379}
-A:w0Eyp,y
+Examples
+========
 
-This sets up your portable altar, prays there, confirms, and picks it up 
-again. The sequence assumes that the altar carries the inscription {@w0}. 
-Actually, this can be achieved automatically with the init.txt line
- autoinscribe = portable altar:@w0
-If you have your weapon on slot a, feel free to add 'wa' to the end of
-the sequence.
+This section contains some examples to give you an idea what macros and
+keymaps can be used for. Note that for the sake of completeness, both
+key line and command line are given, but that you should probably
+substitute your own keys here as these may not always work for you.
 
-Easy surroundings mode.
------------------------
-K:0  
-A:x*
 
-K2:0
-A:*
+The first example will map the '0' key to '~', so that you can press
+'0' to define macros in-game as described above, in case you have
+troubles using '~' on your keyboard layout.
 
-Here I use '0' for the numpad, but 'x' would also be a good choice (then 
-you should set K2:x A:* only).
-This makes going through items in the surroundings very easy. You can use
-Enter to go directly to the item under the cursor. 
-Options you may want to check here are
- target_wrap, target_oos, target_los_first.
-If you want to cycle through items out of sight, set 
- stash_tracking = all
- target_oos = true
-(as only out-of-sight _stashes_ will be checked).
+# 0: add macro
+K:0
+A:~
 
-# F5: explore (both in main and target screens)
-K:\{372}
-A:\{15}
 
-K2:\{372}
-A:\{32}\{15}
+'@' is another character that may not work by default on some keyboard
+layouts. The following should remedy that by mapping '@' to '@'.
 
-I find the Ctrl-O key awkward to type, so I have mapped it to F5. The 
-second keymap makes F5 in target mode do two things: leave target mode 
-(\{32} is the Escape key) and then starts exploring. 
-Users of BSD terminals will definitely want to remap Ctrl-O, as the terminal
-intercepts it by default.
-
-General Keybindings.
---------------------
-With my German keyboard layout, the keys '^' and '@' do not work 
-properly. The first problem is dealt with the map
+# @: display character status
 K:\{17}
 A:@
-which maps @ to @ in the main mode :)
-
-Other keymaps I found useful:
-- Tab for ' (switching weapons in slots a and b)
-- Backspace for p (both Praying in main and Previous in target mode)
-  (Unfortunately, Backspace is the same thing as Ctrl-Left. Perhaps 
-  something can be done about this.)
-
-Lua snippets.
-=============
-
-You can copy the following lua code verbatim in your init.txt; it is up 
-to you to apply appropriate modifications. It would be nice of course, 
-if someday these snippets turn into full-grown lua files with their own 
-options.
-
-For a tutorial of the language Lua, refer to the following link:
-         http://lua-users.org/wiki/TutorialDirectory
-
-Advanced autopick: ch_autopickup.
----------------------------------
-Using a Lua script, you can define a function "ch_autopickup" to select 
-additional items for autopickup. Let's say you want autopickup to only 
-grab food if your character can eat it. You could use the following 
-(if '%' is not in the autopickup option):
-
-{
-function ch_autopickup(it)
-    -- The "false" suppresses hunger checks to see if your character is 
-    -- hungry enough to eat food/chunks.
-    return food.can_eat(it, false)
-end
-}
-
-Here's a ch_autopickup that a mummy might find useful:
-
-{
--- The mummy special. Remove % and ! from your autopickup option if you 
--- use this.
-function ch_autopickup(it)
-    return food.can_eat(it, false)
-        or ( item.class(it) == "Potions" and you.race() ~= "Mummy" )
-end
-}
-
-Advanced autopick: conditional ban_pickup.
-------------------------------------------
-
-There is an overlap in functionality with the above mummy function.
-
-# mummies can't quaff or hunger
-<if you.race() == "Mummy" then>
-    	ban_pickup = potion
-    	ban_pickup = sustenance
-<end>
-
-# ban harmful potions for non-Transmuters
-<if you.class() ~= "Transmuter" then>
-    	ban_pickup = degeneration, decay, potions? of poison
-    	ban_pickup = potions? of confusion, potions? of slowing,
-    	ban_pickup = potions? of paralysis, strong poison
-<end>
 
 
-# Trog doesn't like Spellcasting
-#<if you.religion() == "Trog" then> # (doesn't work), so
+Playing a summoner can be annoying because you often need to cast the
+same spells multiple times in a row, each casting requiring multiple
+keystrokes. This macro allows casting the spell in slot 'a' with a
+single keystroke. Note that you can redefine spell slots with the '='
+key. We emphasise again that the F1 key may get a different code on
+your system.
 
-<if you.class() == "Berserker" then>
-  	ban_pickup = book
-<end>
+# F1: cast spell 'a'
+M:\{368}
+A:za
 
-Ignoring certain monsters when running.
----------------------------------------
-Defining a "ch_stop_run" function affects the monster stop condition for *all*
-run modes: shift-running, travel, explore and interlevel travel.
 
-{
-function ch_stop_run(mons)
-    local name = mons.name
-    -- Stop running only if these monsters get closer than 3 squares
-    if name == "swamp worm" or name == "big fish" 
-            or name == "giant goldfish" or name == "lava worm"
-            or name == "butterfly" then
-        -- mons.x and y coords are relative to the player.
-        local dist = mons.x * mons.x + mons.y * mons.y
-        if dist >= 9 then return false end
-    end
-    return true
-end
-}
+Now that we've taken care of summoning, we still need to command our
+summoned creatures. The following macro should make that easier as
+well. Note that this macro assumes that the default_target option is
+set to true (it is by default; see crawl_options.txt for details).
+
+# Tab: Order allies to attack your previous or the nearest target
+M:\{9}
+A:!a.
+
+
+Conjurers need a slightly different macros for casting, such as this
+one, as they need to press '.' or Return to confirm firing at a target.
+Again, this macro assumes that the default_target option is set to
+true.
+
+# F1: cast spell 'a' at your previous or the nearest target
+M:\{368}
+A:za.
+
+
+However, even conjurers might not always want to fire at their previous
+target, so the following set of macros allows them to cast the spell
+in slot 'a' and then cycle through the available targets with the same
+key and then confirming with the same key we used for firing in the
+previous macro. This example also tries to illustrate how to take
+advantage of the fact that keys can have different functions in the
+different keymaps.
+
+# Shift-F1: cast spell 'a'
+M:\{1392}
+A:za
+
+# Shift-F1: cycle through targets when in targetting mode
+K2:\{1392}
+A:+
+
+# F1: fire at target when in targetting mode
+K2:\{368}
+A:.
