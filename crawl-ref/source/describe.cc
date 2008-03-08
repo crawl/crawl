@@ -446,16 +446,13 @@ static std::string randart_descrip( const item_def &item )
             description += "$It emits mutagenic radiation.";
     }
 
-    if (!description.empty())
-        description += "$";
-
     if (is_unrandom_artefact( item ))
     {
         const char *desc = unrandart_descrip( 0, item );
         if (desc[0] != 0)
         {
+            description += "$$";
             description += desc;
-            description += "$";
         }
     }
 
@@ -691,8 +688,6 @@ static std::string describe_weapon( const item_def &item, bool verbose)
     {
         if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
         {
-            description += "$";
-
             switch (item.special)
             {
             case SPWPN_SINGING_SWORD:
@@ -906,11 +901,14 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                     "that it will return to its owner. ";
                 break;
             }
+            description += "$";
         }
 
         if (is_random_artefact( item ))
         {
+            description += "$";
             description += randart_descrip( item );
+            description += "$";
 
             if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
                 && item_type_known(item))
@@ -924,84 +922,9 @@ static std::string describe_weapon( const item_def &item, bool verbose)
         }
     }
 
-    if (item_known_cursed( item ))
-    {
-        description += "$It has a curse placed upon it.";
-    }
-
-    if (verbose && !is_range_weapon(item))
-    {
-        const int str_weight = weapon_str_weight(item.base_type, item.sub_type);
-
-        if (str_weight >= 8)
-            description += "$This weapon is best used by the strong.$";
-        else if (str_weight > 5)
-            description += "$This weapon is better for the strong.$";
-        else if (str_weight <= 2)
-            description += "$This weapon is best used by the dexterous.$";
-        else if (str_weight < 5)
-            description += "$This weapon is better for the dexterous.$";
-
-        switch (hands_reqd(item, player_size()))
-        {
-        case HANDS_ONE:
-            description += "$It is a one handed weapon.";
-            break;
-        case HANDS_HALF:
-            description += "$It can be used with one hand, or more "
-                    "effectively with two (i.e. when not using a shield).";
-            break;
-        case HANDS_TWO:
-            description += "$It is a two handed weapon.";
-            break;
-        case HANDS_DOUBLE:
-            description += "$It is a buggy weapon.";
-            break;
-        }
-        
-        if ( is_demonic(item) )
-            description += "$Demonspawn are more deadly with it.";
-    }
-
-    if (!is_random_artefact( item ))
-    {
-        switch (get_equip_race( item ))
-        {
-        case ISFLAG_DWARVEN:
-            description += "$It is well-crafted and very durable.";
-            description += "$Dwarves are more deadly with it.";
-            break;
-        case ISFLAG_ELVEN:
-            description += "$Elves are more accurate with it.";
-            break;
-        case ISFLAG_ORCISH:
-            description += "$Orcs are more deadly with it.";
-            break;
-        }
-
-        if (is_range_weapon(item))
-        {
-            switch (get_equip_race( item ))
-            {
-            case ISFLAG_DWARVEN:
-                description += "$It is most deadly when used with "
-                    "dwarven ammunition.";
-                break;
-            case ISFLAG_ELVEN:
-                description += "$It is most deadly when used with "
-                    "elven ammunition.";
-                break;
-            case ISFLAG_ORCISH:
-                description += "$It is most deadly when used with "
-                    "orcish ammunition.";
-                break;
-            }
-        }
-    }
-
     if (verbose)
     {
-        description += "$It falls into the";
+        description += "$This weapon falls into the";
 
         const skill_type skill =
             is_range_weapon(item)? range_skill(item) : weapon_skill(item);
@@ -1012,6 +935,79 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                          : skill_name(skill));
     }
 
+    if (verbose && !is_range_weapon(item))
+    {
+        switch (hands_reqd(item, player_size()))
+        {
+        case HANDS_ONE:
+            description += "It is a one handed weapon";
+            break;
+        case HANDS_HALF:
+            description += "It can be used with one hand, or more "
+                    "effectively with two (i.e. when not using a shield)";
+            break;
+        case HANDS_TWO:
+            description += "It is a two handed weapon";
+            break;
+        case HANDS_DOUBLE:
+            description += "It is a buggy weapon";
+            break;
+        }
+
+        const int str_weight = weapon_str_weight(item.base_type, item.sub_type);
+
+        if (str_weight >= 8)
+            description += ", and it is best used by the strong";
+        else if (str_weight > 5)
+            description += ", and it is better for the strong";
+        else if (str_weight <= 2)
+            description += ", and it is best used by the dexterous";
+        else if (str_weight < 5)
+            description += ", and it is better for the dexterous";
+        description += ".";
+
+    }
+
+    if ( is_demonic(item) && !is_range_weapon(item) )
+         description += "$Demonspawn are more deadly with it.";
+    else if (!is_random_artefact( item )
+             && get_equip_race(item) != ISFLAG_NO_RACE)
+    {
+        switch (get_equip_race( item ))
+        {
+        case ISFLAG_DWARVEN:
+            description += "$It is well-crafted and very durable.";
+            description += "$Dwarves are more deadly with it";
+            break;
+        case ISFLAG_ELVEN:
+            description += "$Elves are more accurate with it";
+            break;
+        case ISFLAG_ORCISH:
+            description += "$Orcs are more deadly with it";
+            break;
+        }
+
+        if (is_range_weapon(item))
+        {
+            switch (get_equip_race( item ))
+            {
+            case ISFLAG_DWARVEN:
+                description += ", and it is most deadly when used with "
+                    "dwarven ammunition";
+                break;
+            case ISFLAG_ELVEN:
+                description += ", and it is most deadly when used with "
+                    "elven ammunition";
+                break;
+            case ISFLAG_ORCISH:
+                description += ", and it is most deadly when used with "
+                    "orcish ammunition";
+                break;
+            }
+        }
+        description += ".";
+    }
+    
     return (description);
 }
 
@@ -1048,6 +1044,33 @@ static std::string describe_ammo( const item_def &item )
         description += "It looks ";
         description += how;
         description += ".";
+    }
+
+    if (item.special && item_type_known(item))
+    {
+        description += "$";
+        switch (item.special)
+        {
+        case SPMSL_FLAME:
+            description += "When fired from an appropriate launcher, "
+                "it turns into a bolt of flame. ";
+            break;
+        case SPMSL_ICE:
+            description += "When fired from an appropriate launcher, "
+                "it turns into a bolt of ice. ";
+            break;
+        case SPMSL_POISONED:
+        case SPMSL_POISONED_II:
+            description += "It is coated with poison. ";
+            break;
+        case SPMSL_CURARE:
+            description += "It is tipped with asphyxiating poison. ";
+            break;
+        case SPMSL_RETURNING:
+            description += "A skilled user can throw it in such a way "
+                "that it will return to its owner. ";
+            break;
+        }
     }
 
     if ( has_launcher(item) )
@@ -1087,34 +1110,6 @@ static std::string describe_ammo( const item_def &item )
         }
     }
 
-    if (item.special && item_type_known(item))
-    {
-        switch (item.special)
-        {
-        case SPMSL_FLAME:
-            description += "$When fired from an appropriate launcher, "
-                "it turns into a bolt of flame. ";
-            break;
-        case SPMSL_ICE:
-            description += "$When fired from an appropriate launcher, "
-                "it turns into a bolt of ice. ";
-            break;
-        case SPMSL_POISONED:
-        case SPMSL_POISONED_II:
-            description += "$It is coated with poison. ";
-            break;
-        case SPMSL_CURARE:
-            description += "$It is tipped with asphyxiating poison. ";
-            break;
-        case SPMSL_RETURNING:
-            description += "$A skilled user can throw it in such a way "
-                "that it will return to its owner. ";
-            break;
-        }
-    }
-
-    description += "$";
-
     return (description);
 }
 
@@ -1137,17 +1132,16 @@ static std::string describe_armour( const item_def &item, bool verbose )
     {
         description += "$Armour rating: ";
         append_value(description, property( item, PARM_AC ), false);
+        description += "       ";
 
-        description += "$Evasion modifier: ";
+        description += "Evasion modifier: ";
         append_value(description, property( item, PARM_EVASION ), true);
-
-        description += "$";
     }
 
     const int ego = get_armour_ego_type( item );
     if (ego != SPARM_NORMAL && item_type_known(item) && verbose)
     {
-        description += "$";
+        description += "$$";
 
         switch (ego)
         {
@@ -1218,18 +1212,18 @@ static std::string describe_armour( const item_def &item, bool verbose )
                 "from damage and destruction. ";
             break;
         }
-
-        description += "$";
     }
 
     if (is_random_artefact( item ))
     {
+        description += "$$";
         description += randart_descrip( item );
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
-            description += "$This armour may have some hidden properties.$";
+            description += "$This armour may have some hidden properties.";
     }
-    else 
+    else if (get_equip_race( item ) != ISFLAG_NO_RACE)
     {
+        description += "$";
         switch (get_equip_race( item ))  
         {
         case ISFLAG_ELVEN:
@@ -1258,17 +1252,13 @@ static std::string describe_armour( const item_def &item, bool verbose )
 
     if (verbose && get_armour_slot(item) == EQ_BODY_ARMOUR)
     {
+        description += "$$";
         if ( is_light_armour(item) )
-            description += "$This is a light armour. Wearing it will "
+            description += "This is a light armour. Wearing it will "
                 "exercise Dodging and Stealth.";
         else
-            description += "$This is a heavy armour. Wearing it will "
+            description += "This is a heavy armour. Wearing it will "
                 "exercise Armour.";
-    }
-
-    if (item_known_cursed( item ))
-    {
-        description += "$It has a curse placed upon it.";
     }
 
     return description;
@@ -1352,18 +1342,15 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     // randart properties
     if (is_random_artefact( item ))
     {
+        description += "$$";
         description += randart_descrip(item);
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
+        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES))
         {
-            if (jewellery_is_amulet(item))
-                description += "$This amulet may have hidden properties.$";
-            else
-                description += "$This ring may have hidden properties.$";
+            description += "$This ";
+            description += (jewellery_is_amulet(item) ? "amulet" : "ring");
+            description += " may have hidden properties.";
         }
     }
-
-    if (item_known_cursed( item ))
-        description += "$It has a curse placed upon it.";
 
     return (description);
 }                               // end describe_jewellery()
@@ -1517,7 +1504,8 @@ std::string get_item_description( const item_def &item, bool verbose,
         && strlen(unrandart_descrip(1, item)) != 0)
     {
         description << unrandart_descrip(1, item);
-        description << "$";
+        if (item.base_type != OBJ_JEWELLERY)
+            description << "$";
     }
     else if (is_fixed_artefact(item) && item_type_known(item))
     {
@@ -1553,6 +1541,8 @@ std::string get_item_description( const item_def &item, bool verbose,
             description << db_desc;
 
         if (item.base_type == OBJ_WANDS
+            || item.base_type == OBJ_JEWELLERY
+            || item.base_type == OBJ_MISCELLANY
             || (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK))
         {
             // Get rid of newline at end of description, so that
@@ -1561,8 +1551,6 @@ std::string get_item_description( const item_def &item, bool verbose,
             description.seekp(description.tellp() - (std::streamoff)1);
             description << " ";
         }
-        else
-            description << "$";
     }
 
     switch (item.base_type)
@@ -1581,28 +1569,26 @@ std::string get_item_description( const item_def &item, bool verbose,
 
     case OBJ_WANDS:
         if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus == 0)
-            description << "Unfortunately, it has no charges left. ";
-        description << "$";
+            description << "Unfortunately, it has no charges left.";
         break;
 
     case OBJ_FOOD:
         if (item.sub_type == FOOD_CHUNK)
         {
             if (you.mutation[MUT_SAPROVOROUS] < 3)
-                description << "It looks rather unpleasant. ";
+                description << "It looks rather unpleasant.";
 
             if (food_is_rotten(item))
             {
                 if (you.mutation[MUT_SAPROVOROUS] == 3)
-                    description << "It looks nice and ripe. ";
+                    description << "It looks nice and ripe.";
                 else if (you.is_undead != US_UNDEAD)
                 {
                     description << "In fact, it is "
                         "rotting away before your eyes. "
-                        "Eating it would probably be unwise. ";
+                        "Eating it would probably be unwise.";
                 }
             }
-            description << "$";
         }
         break;
 
@@ -1618,7 +1604,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                 description <<
                     "$It uses its own mana reservoir for casting spells, and "
                     "recharges automatically by channeling mana from its "
-                    "wielder.$";
+                    "wielder.";
             }
             else
             {
@@ -1626,7 +1612,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                     "$Damage rating: 9 $Accuracy rating: +2 "
                     "$Attack delay: 120%";
 
-                description << "$$It falls into the 'staves' category. ";
+                description << "$$It falls into the 'staves' category.";
             }
         }
         break;
@@ -1638,7 +1624,7 @@ std::string get_item_description( const item_def &item, bool verbose,
 
     case OBJ_BOOKS:
         if (! player_can_read_spellbook( item ))
-            description << "This book is beyond your current level of understanding.$$";
+            description << "This book is beyond your current level of understanding.$";
         break;
 
     case OBJ_SCROLLS:
@@ -1651,13 +1637,18 @@ std::string get_item_description( const item_def &item, bool verbose,
 
     default:
         DEBUGSTR("Bad item class");
-        description << "This item should not exist. Mayday! Mayday! ";
+        description << "This item should not exist. Mayday! Mayday!";
     }
+
+    if (item_known_cursed( item ))
+        description << "$$It has a curse placed upon it, and it";
+    else
+        description << "$$It";
 
     if (verbose)
     {
         const int mass = item_mass( item );
-        description << "$It weighs around " << (mass / 10)
+        description << " weighs around " << (mass / 10)
                     << "." << (mass % 10)
                     << " aum. "; // arbitrary unit of mass
 

@@ -2672,7 +2672,7 @@ void jewellery_wear_effects(item_def &item)
     const bool known_pluses = item_ident( item, ISFLAG_KNOW_PLUSES );
     const bool known_cursed = item_known_cursed( item );
     const bool known_bad    = item_type_known( item )
-        && (item_value( item ) <= 2);
+                               && (item_value( item ) <= 2);
 
     switch (item.sub_type)
     {

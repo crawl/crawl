@@ -85,11 +85,13 @@ std::string item_def::name(description_level_type descrip,
     if (descrip == DESC_NONE)
         return ("");
     
+    const bool is_artefact = (is_fixed_artefact( *this )
+                              || (is_random_artefact( *this )));
+                              
     std::ostringstream buff;
-
     const std::string auxname = this->name_aux(descrip, terse, ident,
                                                ignore_flags);
-    const bool startvowel = is_vowel(auxname[0]);
+    const bool startvowel     = is_vowel(auxname[0]);
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
     {
@@ -112,8 +114,7 @@ std::string item_def::name(description_level_type descrip,
         || ( (ident || item_type_known( *this ))
              && ((this->base_type == OBJ_MISCELLANY
                   && this->sub_type == MISC_HORN_OF_GERYON)
-                 || (is_fixed_artefact( *this )
-                     || (is_random_artefact( *this ))))))
+                 || is_artefact)))
     {
         // artefacts always get "the" unless we just want the plain name
         switch (descrip)
@@ -235,7 +236,9 @@ std::string item_def::name(description_level_type descrip,
    
    if (descrip != DESC_PLAIN && descrip != DESC_BASENAME)
    {
-        const bool  tried     = (!ident && !equipped && item_type_tried(*this));
+        const bool  tried     = (!ident && !equipped
+                                 && (is_artefact && !item_type_known(*this)
+                                     || item_type_tried(*this)));
         std::string tried_str = "";
 
         if (tried)
@@ -1705,8 +1708,10 @@ bool item_type_tried( const item_def& item )
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
     if (idt != NUM_IDTYPE && item.sub_type < 50)
+    {
         return ( type_ids[idt][item.sub_type] == ID_TRIED_TYPE
                  || type_ids[idt][item.sub_type] == ID_MON_TRIED_TYPE);
+    }
     else
         return false;
 }

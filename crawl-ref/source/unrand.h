@@ -361,12 +361,12 @@
     "demon blade \"Leech\"", "runed demon blade",
         OBJ_WEAPONS, WPN_DEMON_BLADE, +13, +4, MAGENTA,
     {
-        SPWPN_VAMPIRICISM, -1, -1, -1, -1, -1, // AC, EV, str, int, dex
-        0, 0, 0, 0, 1, 0,                      // life prot
+        SPWPN_VAMPIRICISM, 0, -1, -1, -1, -1, // AC, EV, str, int, dex
+        0, 0, 0, 0, 1, 0,                     // life prot
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
-        1, 0                                   // cursed
+        1, 0                                  // cursed
     }
     ,
         "",

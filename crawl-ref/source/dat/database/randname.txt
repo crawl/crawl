@@ -310,7 +310,7 @@ w:13
 of @vice_name@
 
 w:20
-of @name_or_qualifier@ @thing_names@
+of @number_or_qualifier@ @thing_names@
 
 %%%%
 ######################################################
