@@ -53,7 +53,7 @@ you've not changed the default options. If you don't want to read the
 whole manual and would prefer a short summary of the important points,
 look at the quick-start guide (readme.txt) and learn as you play.
 
-You can also read these documents while playing Crawl, by hitting ? at
+You can also read these documents while playing Crawl, by hitting '?' at
 the help menu.
 
 While Dungeon Crawl is a strict single player game, you can play on a 
@@ -344,7 +344,7 @@ you can examine stuff before you buy it by pressing 'v' and then the
 letter of the item.
 
 If you've lost track of the shops in the dungeon, you can get a list
-of all the shops you've found in the dungeon overview (use 'O').
+of all the shops you've found in the dungeon overview (use 'Ctrl-O').
 
 You can also use the stash search: hitting 'Ctrl-F' and searching for
 "shop" will list all stores. The stash-search menu allows you travel
@@ -370,9 +370,9 @@ previous destination. Hitting Ctrl-G again and following with Enter
 puts the cursor on that square. See Appendix 4 for all commands and
 shortcuts in level-map mode.
 
-Another use of autotravel is exploration: Ctrl-O makes your character
-move to the nearest unexplored area. This can be dangerous - do not use
-it when known hostiles are around! Also note that this algorithm is not
+Another use of autotravel is exploration: 'o' makes your character move
+to the nearest unexplored area. This can be dangerous - do not use it 
+when known hostiles are around! Also note that this algorithm is not
 optimal: by manual exploration you can save turns, but auto-explore will
 usually save real time.
 
@@ -418,8 +418,10 @@ To access Crawl's help menu, press '?'. To get the list of all commands,
 press '?' again. A different, more verbose description of the commands 
 also appears in Appendix 4 of this text. Various other help texts are 
 available as well, including this manual. You can also read the logbook 
-from there by pressing ':'. Note that both level map mode and targeting
-interface have their own help screens; again, press '?'.
+from there by pressing ':'. Note that several commands have their own 
+help screens, among them are targeting ('f'), level map ('X'), travel
+('Ctrl-G') and searching ('Ctrl-F'); again, press '?' when asked for 
+input.
 
 If you don't like the standard keyset (either because some keys do not
 work properly, or because you want to decrease the amount of typing
@@ -545,23 +547,23 @@ displayed, and what commands there are to use them:
 )       weapons         (use 'w'ield)
 (       ammunition      (use 'f'ire)
 [       armour          (use 'W'ear and 'T'ake off)
-%       food            (use 'e'at; also 'D'issect for corpses)
+%       food            (use 'e'at; also 'c'hop up corpses)
 ?       scrolls         (use 'r'ead)
 !       potions         (use 'q'uaff)
-/       wands           (use 'z'ap)
+/       wands           (use 'Z'ap)
 =       rings           (use 'P'ut on and 'R'emove)
 "       amulets         (use 'P'ut on and 'R'emove)
-\ or |  staves, rods    (use 'w'ield for staves; 'E'voke for rods)
-+ or :  spellbooks      (use 'r'ead and 'M'emorise and 'Z'ap)
-}       miscellaneous   (use generally 'w'ield and 'E'voke)
+\ or |  staves, rods    (use 'w'ield for staves; 'v' for evoking rods)
++ or :  spellbooks      (use 'r'ead and 'M'emorise and 'z'ap)
+}       miscellaneous   (use generally 'w'ield and 'v' for evoking)
 
 There are several general keys for item management:
 'd'     drop item
 'g'     pick up item from the ground (also with the comma key ',')
         for several items press 'g' or ',' twice to get a pickup menu
 '='     reassign item slot (works also for spell slots and abilities)
-'i'     shows inventory
-'v'     examine item
+'i'     shows inventory - pressing the key of an item shows additional
+        information
 '{'     inscribe item (see Appendix 6)
 '\'     check list of already discovered items
 
@@ -607,11 +609,10 @@ Once you have discovered the function of such an item, you will remember
 it for the rest of the current game. You can access your item 
 discoveries with the '\' key.
 
-The 'v' key, which gives you a description of what an item does, is very
-useful. Try this when comparing different types of armours and weapons, 
-but don't expect too much information from examining unidentified items.
-You can also examine items by pressing the slot key whenever looking at 
-your inventory.
+In order to get a description of what an item does, bring up the 
+inventory (with 'i') and press the letter of that item. Try this when 
+comparing different types of armours and weapons, but don't expect too 
+much information from examining unidentified items.
 
 Another useful command is the '{' key, which lets you inscribe items 
 with a comment. This is often used to denote special properties of an
@@ -656,7 +657,6 @@ using 'f' to fire).
 
 ( Ammunition:
 -------------
-
 If you would rather pick off monsters from a safe distance, you will
 need ammunition for your sling, bow, or other appropriate launcher.
 Several kinds of ammunition, such as javelins, are effective when simply
@@ -666,7 +666,8 @@ affects both accuracy and damage.
 
 The 'f' command fires or throws a piece of ammunition, typically
 chosen from lots suitable for your weapon and defaulting to the last
-lot you fired (your "quiver").
+lot you fired (your "quiver"). Note that the item you will shoot with
+'f' is display on the main screen beneath your wielded weapon.
 
 The firing interface also allows you to manually select an item to
 throw; but it may not be very effective if you lack the correct
@@ -721,14 +722,14 @@ You may wish to dine on the corpses of your casualties (unless you are
 a Spriggan, and cannot eat meat, or you are a Mummy, who need not, and
 cannot, eat at all). Despite the fact that corpses are represented by
 the same '%' sign as food, you can't eat them without first cutting
-them into pieces with the 'D' command. Being extremely hungry helps
+them into pieces with the 'c' command. Being extremely hungry helps
 you choke down the raw flesh. Even then, you should choose your
-homemade food with great care. In order to dissect a corpse with the
-'D' command, you need to have a proper tool (like a knife or short
+homemade food with great care. In order to chop up a corpse with the
+'c' command, you need to have a proper tool (like a knife or short
 sword), although claws will also do. Cutting off the best parts will
 take some turns and produce a number of 'chunks' eventually. These can
 be eaten with 'e' command as above. Your character will automatically
-switch to an uncursed butchering tool when you type 'D', and will also
+switch to an uncursed butchering tool when you type 'c', and will also
 switch back to your previous weapon unless you get interrupted while
 butchering your food.
 
@@ -755,7 +756,7 @@ potions affect your character in some way. The most common type is the
 simple healing potion, which restores some hit points and cures many 
 ailments, but there are many other varieties of potions to be found. 
 Potions can be quaffed (drunk) with the 'q' command. Try to avoid 
-drinking poisonous potions!  By the way, you can also drink from the
+drinking poisonous potions! By the way, you can also drink from the
 fountains you encounter in the dungeon.
 
 / Wands:
@@ -767,7 +768,7 @@ identify a wand to find out how many uses it has left. This can be
 done with a scroll of identify; characters with a good Evocations
 skill may also deduce the number of charges simply upon zapping the
 wand. Wands are aimed in the same way as missile weapons, and you can
-invoke the power of a wand by 'z'apping it. See section I for targeting. 
+invoke the power of a wand by 'Z'apping it. See section I for targeting. 
 There are also a number of wands that may be useful to zap at yourself, 
 but it is usually prudent to know what you're zapping at yourself before 
 you do so.
@@ -813,7 +814,7 @@ backpack. Unlike other staves, rods are unsuited for physical combat.
 Most books contain magical spells which your character may be able to 
 learn. You can read a book with the 'r' command, which lets you access
 a description of each spell, or memorise spells from it with the 'M' 
-command. Use 'Z' to cast previously memorised spells. For spells 
+command. Use 'z' to cast previously memorised spells. For spells 
 demanding a target, the comments on using missile weapons apply. You
 can also press 'I' to just have a look at all spells memorised. Note 
 that '=' allows you to change what spells are assigned to what keys.
@@ -827,10 +828,10 @@ cause your free experience to go straight into that skill.
 { Miscellaneous:
 ----------------
 These are items which don't fall into any other category. You can use 
-many of them, as well as some special weapons, by wielding and 'E'voking 
-them. Runes, a particular item in this category, have no function 
-whatsoever except to open the endgame. You must collect at least three 
-in order to enter the Realm of Zot.
+many of them, as well as some special weapons, by wielding and then
+evoking them with 'v'. Runes, a particular item in this category, have
+no function whatsoever except to open the endgame. You must collect at 
+least three in order to enter the Realm of Zot.
 
 Racial Items:
 -------------
@@ -910,7 +911,7 @@ memorise the more powerful spells. When casting a spell, you temporarily
 expend some of your magical energy and become hungrier (although more 
 intelligent spellcasters hunger less quickly from using magic).
 
-You activate a memorised spell by pressing 'Z' (for Zap). Use 'I' to
+You activate a memorised spell by pressing 'z' (for Zap). Use 'I' to
 display a list of all memorised spells without actually casting one. The
 spells available are labelled with letters; you are free to change this
 labelling with the '=' command. You can assign both lowercase and
@@ -956,7 +957,7 @@ which monster to target. (The following list assumes the option setting
 default_target = true which is default.)
 
 You can press '?' when asked for a direction; this will bring up a help
-screen.
+screen. Else, you use the following commands:
  - The cursor will target on the monster which is closest to your
    position. Should you have been firing at something previously, with
    the offender still being in sight, the cursor will instead rest on
@@ -986,14 +987,15 @@ It is possible to target yourself: obviously beneficial effects like
 hasting or healing will actually target the cursor on you, leaving to you
 only the pressing of '.', Enter etc. - except if you want to heal or 
 haste someone else. If you target yourself while firing something harmful
-(which can be sensible at times), you will be asked for confirmation.     
+(which can be sensible at times), you will be asked for confirmation.
 
 Finally, there are some more targeting related commands:
 - Ctrl-F changes which monsters are cycled when using '+', '=' or '-': 
   hostiles, friends, or all monsters. 
-- Ctrl-P and Ctrl-N allows to change the ammunition. This is useful when
-  you have several types of appropriate ammunition, say poisoned needles
-  and curare needles. Your last usage will be remembered.
+- ( and ) allow to change the ammunition. This is useful when you have 
+  several types of appropriate ammunition, say poisoned needles and curare
+  needles. Your last usage will be remembered. Note that you can use ( for
+  changing the quiver ammunition even outside of targeting.
 - The ':' key allows you to display the path of your spell/wand/missile.
 
 
@@ -1581,7 +1583,7 @@ on the part of the player.
 
   Red Draconians feel at home in fiery surroundings. They are bad with 
       ice magic but very proficient with fire. 
-  
+
   White Draconians stem from frost-bitten lands, and are naturally 
       resistant to frost. They are versed in ice magic, but bad at fire.
 
@@ -1936,7 +1938,7 @@ display and aptitude display using '!'. You can also read the table of
 aptitudes from the help menu using '?%'.
 
 Fighting skills:
-----------------  
+----------------
 Fighting is the basic skill used in hand-to-hand combat, and applies no
 matter which weapon your character is wielding (if any). Fighting is 
 also the skill that determines the number of hit points your character
@@ -2137,9 +2139,9 @@ Movement:
         Ctrl-G          Interlevel travel (to arbitrary dungeon levels 
                         or waypoints). Remembers old destinations if 
                         interrupted. This command has its own set of
-                        shortcuts; use ? for help on them or see below.
-        Ctrl-O          Auto-explore. Setting the option explore_greedy 
-                        to true makes Ctrl-O also run to interesting 
+                        shortcuts; use ? for help on them.
+        o               Auto-explore. Setting the option explore_greedy 
+                        to true makes auto-explore run to interesting 
                         items (those that get picked up automatically) 
                         or piles (checking the contents). 
                         Autoexploration will open doors on its own 
@@ -2149,17 +2151,19 @@ Movement:
                         waypoint by pressing Ctrl-G and the digit.
 
 Resting and Searching:
-        s, Del          Rests and searches (these are the same) for one 
-                        turn, this is also done with '.' or Numpad-5.
+        s, Del, . or    Rests and searches (these are not distinguished)
+        Numpad 5        for one turn. This is most often used tactically
+                        for waiting a few turns. Serious resting or
+                        searching should be done with the 5 command.
         5 or            Long resting/searching (until both health and 
      Shift-Numpad 5     magic  points are full or something is found or 
                         100 turns are over).
 
 Dungeon interaction:
-        o               Open door. This is usually done automatically by
+        O               Open door. This is usually done automatically by
                         walking into the door, unless you set the option
                         easy_open to false.
-        c               Close door.
+        C               Close door.
      Ctrl-direction     Tries to untrap a known trap on the specified 
      or * direction     square, else opens door if there is one, else 
                         attacks without move (even if nothing is seen).
@@ -2168,17 +2172,17 @@ Dungeon interaction:
         ;               Examine occupied tile, also causes auto-pickup.
         x               Examine surroundings mode, see below. Has ? help.
         X               Examine level map, see below. Has help on ?.
-        O               Show dungeon overview (branches, shops, etc.).
+        Ctrl-O          Show dungeon overview (branches, shops, etc.).
 
 Character information:
 'display' below means usage of the message area,
 'show' means usage of the whole screen.
         @               Display character status.
         [               Display worn armour.
-        ( or )          Display wielded and secondary weapons, 
+        )               Display wielded and secondary weapons, 
                         and missiles (to be shot with the 'f' command).
         "               Display worn jewellery.
-        C               Display experience info.
+        E               Display experience info.
         ^               Show religion screen.
         A               Show abilities/mutations.
         a               Show current abilites menu.
@@ -2198,21 +2202,22 @@ Character information:
                         Pressing the key of a displayed item views it.
 
 Item interaction (inventory):
-        v               View item description. When doing this, you can
-                        inscribe the item.
         {               Inscribe item (check the autoinscribe option).
                         An empty inscription or inscribing only space 
                         will remove prior inscriptions. See Appendix 6.
-        t               Throw/shoot an item.
-        f               Fire first available appropriate missile.
-        q               Quaff a potion.      
+                        You can also inscribe items when viewing them
+                        by pressing their slot key in the inventory.
+        t               Throw/shoot an item. Here, you choose the item,
+        f               Fire quivered missile.
+        (               Cycle quiver to next suitable missile.
+        q               Quaff a potion.
         e               Eat food (tries floor first, inventory next).
-        z               Zap a wand.
+        Z               Zap a wand.
         r               Read a scroll or book.
         M               Memorise a spell from a book.
         w               Wield an item ( - for none).      
         '               Wield item a, or switch to b.
-        E               Evoke power of wielded item.
+        v               Evoke power of wielded item.
         W               Wear armour.
         T               Take off armour.
         P               Put on jewellery.
@@ -2228,37 +2233,46 @@ Item interaction (floor):
                         Use a prefix to pick up smaller quantities. 
                         As with dropping, Ctrl-F allows you to pick up 
                         items matching a regular expression.
-        D               Dissect a corpse. 
+        c               Chop up a corpse. This will switch to an uncursed
+                        edged weapon (unless you have claws or wield such
+                        a weapon already), cut up a single corpse on the
+                        ground and switch back to your primary weapon. In
+                        case there are several corpses on the ground, you 
+                        are prompted one by one. There, you can answer
+                         y, c:      yes (chop up this corpse)
+                         n, Space:  no (skip this corpse)
+                         a:         yes to all (chop up all corpses)
+                         q, Esc:    stop chopping altogether
 
 Other game-playing commands:
         a               Use special ability.
         p               Pray. Also turns prayer off.
-        Z               Cast a spell. 
+        z               Cast a spell. 
         I               List spells. 
-        !               Shout or command allies.
+        t               Tell commands to allies, or shout (the latter
+                        with tt).
         Ctrl-A          Toggle autopickup. Note that encounters with 
                         invisible monsters always turns autopickup off.
                         You need to switch it on with Ctrl-A afterwards.
-        Ctrl-V          Toggle autoprayer. Note that encounters with 
-                        invisible monsters always turns autopickup off.
-                        You need to switch it on with Ctrl-V afterwards.
         `               Re-do previous command
         0               Repeat next command a given number of times
 
 Non-game playing commands:
         ?               The help menu.
-        V               Display version information.
         Ctrl-P          Show previous messages.
         Ctrl-R          Redraw screen.
         Ctrl-C          Clear main and level maps.
         #               Dump character to file (name.txt).
         :               Add note to dump file (see option take_notes).
         ?:              Read the notes in-game.
+        ?V              Display version information.
         ?/              Describe a monster, spell or feature. You can
                         enter a partial name or a regex instead of the
                         full name.
         ~               Add or save macros and key mappings.
         =               Reassign inventory/spell/abilities letters.
+        _               Read messages (when playing online; not for
+                        local games).
 
 Stashes:
         Ctrl-F          Find. This searches in stashes and shops, you 
@@ -2372,16 +2386,15 @@ work, with the exception of Space (which fires).
                         is on by default) this allows to start shooting
                         at an opponent with 'ff' and then keep firing 
                         with 'ff'.
-        :               Toggle display of the beam path.    
+        :               Toggle display of the beam path.
         Ctrl-F          Toggle target modes (between enemies, all, 
                         friends; see also option target_zero_exp).
-        Ctrl-P,         These two commands allow you to change 
-        Ctrl-N          ammunition while targeting. The choice is 
+        (, )            These two commands allow you to change 
+                        ammunition while targeting. The choice is 
                         subject to the fire_order option. Usually, you 
                         change missiles according to your launcher; i.e. 
-                        when wielding a bow, Ctrl-N and Ctrl-P will 
-                        cycle through all stacks of arrows in your 
-                        inventory.
+                        when wielding a bow, ( and ) will cycle through 
+                        all stacks of arrows in your inventory.
   Shift-Direction       Fire straight in that direction. You can go 
                         back to the old targeting mode (allowing 
                         straight firing by pressing just the direction 
@@ -2570,11 +2583,11 @@ to do this automatically: press 'a' when viewing an identified artefact.
 Here, one has to neogatiate between two concurrent objectives: terseness
 for better use of limited line lengths versus verboseness for easier 
 reading. The default inscriptions use the following general ideas:
-  rXXX signifies a resistance
-  +XXX signifies an ability you can invoke via the 'a' command
-  -XXX signifies a suppressed ability
-  XXX+ is a stronger version of property XXX
-  XX+6 means a boost to some numerical stat
+  rXXX   signifies a resistance
+  +XXX   signifies an ability you can invoke via the 'a' command
+  -XXX   signifies a suppressed ability
+  XXX+   is a stronger version of property XXX
+  XX+6   means a boost to some numerical stat (similar with XX-2 etc.)
 
 Here is the full list:
 

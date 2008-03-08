@@ -1,3 +1,6 @@
+Guide to Crawl's options
+========================
+
 This document explains all of the options in the latest version of 
 Dungeon Crawl Stone Soup. These options are set in the init.txt file 
 located in the Crawl directory (the directory containing crawl.exe on 
