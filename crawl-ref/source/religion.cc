@@ -195,7 +195,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "call upon Zin to create a Sanctuary" },
     // TSO
-    { "repel the undead",
+    { "gain power from killing evil in The Shining One's name",
       "call upon The Shining One for a divine shield",
       "dispel the undead",
       "hurl blasts of cleansing flame",
@@ -215,7 +215,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Xom
     { "", "", "", "", "" },
     // Vehumet
-    { "gain power from killing in Vehumet's name",
+    { "gain magical power from killing in Vehumet's name",
       "You can call upon Vehumet to aid your destructive magics with prayer.",
       "During prayer you have some protection from summoned creatures.",
       "", "" },
@@ -280,7 +280,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "call upon Zin to create a Sanctuary" },
     // TSO
-    { "repel the undead",
+    { "gain power from killing evil in The Shining One's name",
       "call upon The Shining One for a divine shield",
       "dispel the undead",
       "hurl blasts of cleansing flame",
@@ -300,7 +300,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Xom
     { "", "", "", "", "" },
     // Vehumet
-    { "gain power from killing in Vehumet's name",
+    { "gain magical power from killing in Vehumet's name",
       "Vehumet will no longer aid your destructive magics.",
       "Vehumet will no longer shield you from summoned creatures.",
       "",

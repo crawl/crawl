@@ -114,7 +114,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_ZIN_RECITE, ABIL_ZIN_SMITING, ABIL_ZIN_REVITALISATION,
       ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
     // TSO
-    { ABIL_TSO_REPEL_UNDEAD, ABIL_TSO_DIVINE_SHIELD, ABIL_TSO_ANNIHILATE_UNDEAD,
+    { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_TSO_ANNIHILATE_UNDEAD,
       ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DAEVA },
     // Kikubaaqudgha
     { ABIL_KIKU_RECALL_UNDEAD_SLAVES, ABIL_NON_ABILITY,
@@ -239,7 +239,6 @@ static const ability_def Ability_List[] =
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
 
     // The Shining One
-    { ABIL_TSO_REPEL_UNDEAD, "Repel Undead", 1, 0, 100, 0, ABFLAG_NONE },
     { ABIL_TSO_DIVINE_SHIELD, "Divine Shield", 3, 0, 50, 2, ABFLAG_NONE },
     { ABIL_TSO_ANNIHILATE_UNDEAD, "Annihilate Undead", 3, 0, 50, 2, ABFLAG_NONE },
     { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame", 5, 0, 100, 2, ABFLAG_NONE },
@@ -633,7 +632,6 @@ static talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_ZIN_RECITE:
-    case ABIL_TSO_REPEL_UNDEAD:
     case ABIL_KIKU_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_OKAWARU_MIGHT:
@@ -1385,7 +1383,6 @@ static bool do_ability(const ability_def& abil)
         summon_ice_beast_etc(you.skills[SK_INVOCATIONS] * 4, MONS_ANGEL, true);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
-*/
 
     case ABIL_TSO_REPEL_UNDEAD:
         turn_undead(you.piety);
@@ -1401,6 +1398,7 @@ static bool do_ability(const ability_def& abil)
 
         exercise(SK_INVOCATIONS, 1);
         break;
+*/
 
     case ABIL_TSO_DIVINE_SHIELD:
         cast_divine_shield();
