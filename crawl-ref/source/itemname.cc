@@ -952,7 +952,7 @@ static const char* staff_type_name(int stafftype)
     }
 }
 
-static const char* racial_description_string(const item_def& item, bool terse)
+const char* racial_description_string(const item_def& item, bool terse)
 {
     switch (get_equip_race( item ))
     {

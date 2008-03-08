@@ -380,7 +380,7 @@ A heavy piece of wood.
 %%%%
 corpse
 
-A corpse
+A corpse.
 %%%%
 crossbow
 
