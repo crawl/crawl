@@ -4305,6 +4305,79 @@ xxxxxxxxxxxxxxG.Gxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+###########################################################
+
+NAME:   eino_entry_druids_welcome
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant
+MAP
+x1......@......1x
+xw1...........1wx
+xww1.........1wwx
+xwww1...[...1wwwx
+xwwww1.....1wwwwx
+xwwwww1.{.1wwwwwx
+xwwww1.....1wwwwx
+xwww1...(...1wwwx
+xww1.........1wwx
+xw1...........1wx
+x1......@......1x
+ENDMAP
+
+###########################################################
+
+NAME:   eino_entry_tree_alley
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant
+MAP
+xxxxxxxxxxxxxxxxxxx
+.11111111111111111.
+@.....[.{.(.......@
+.11111111111111111.
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###########################################################
+
+NAME:   eino_entry_water_cross
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant
+MAP
+...................
+..1xWx1..[..1xWx1..
+.1xxWxx1...1xxWxx1.
+..WWWWW..{..WWWWW..
+.1xxWxx1...1xxWxx1.
+..1xWx1..(..1xWx1..
+...................
+ENDMAP
+
+###########################################################
+
+NAME:   eino_entry_water_star
+TAGS:   entry no_monster_gen no_rotate
+ORIENT: float
+MAP
+..xxxxxxx@xxxxxxx..
+....xxxx...xxxx....
+x.....x..W..x.....x
+xG..W....W....W..Gx
+xx...W..WWW..W...xx
+x.....WWWWWWW.....x
+....WWWW...WWWW....
+..WWWWW.({[.WWWWW..
+....WWWW...WWWW....
+x.....WWWWWWW.....x
+xx...W..WWW..W...xx
+xG..W....W....W..Gx
+x.....x..W..x.....x
+....xxxx...xxxx....
+..xxxxxxx@xxxxxxx..
+ENDMAP
+
 ##############################################################
 # Miscellaneous entries
 ##############################################################

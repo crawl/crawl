@@ -206,9 +206,9 @@ MAP
 ENDMAP
 
 ########################################################################
-# Small gnoll camp 1 
+# Small gnoll camp 1
 #
-NAME:  eino_small__gnoll_camp_1
+NAME:  eino_small_gnoll_camp_1
 DEPTH: D:3-10
 TAGS:  uniq_gnoll_camp
 MONS:  gnoll
@@ -229,7 +229,6 @@ ENDMAP
 # Small gnoll camp 2
 #
 NAME:  eino_small_gnoll_camp_2
-PLACE: D:2
 DEPTH: D:3-10
 TAGS:  uniq_gnoll_camp
 MONS:  gnoll
@@ -358,6 +357,7 @@ ENDMAP
 
 ###################################
 #don't you wish you knew apportation?
+#
 NAME: baited_tele_trap
 DEPTH: !Temple
 KITEM: x = any good_item, any good_item/nothing, any good_item/nothing
@@ -1179,7 +1179,7 @@ ENDMAP
 #
 # Intentionally moved this deeper because explore will gladly run into the
 # room, and being hit by multiple mimics is un-fun.
-# Slight tweak by having a fraction (unknown to the player) of items be 
+# Slight tweak by having a fraction (unknown to the player) of items be
 # real. (dp)
 #
 NAME:  fake_naga_vault
@@ -1439,89 +1439,35 @@ ENDMAP
 #############################################################################
 # Doghouse (Eino)
 
-NAME:    doghouse_v1
+NAME:    doghouse
 DEPTH:   4-8
 SHUFFLE: 1?T
 SUBST:   T : T V:2
 SUBST:   ? : 1:2 .
 MONS:    hound / w:1 nothing / w:2 jackal
-CHANCE:  2
 MAP
-.........
-.xxx+xxx.
-.xxx+xxx.
-.xx...xx.
-.xx?..xx.
-.xx1.Txx.
-.xxxxxxx.
-.xxxxxxx.
-.........
+.......
+.xx+xx.
+.x...x.
+.x?..x.
+.x1.Tx.
+.xxxxx.
+.......
 ENDMAP
 
-NAME:    doghouse_v2
-TAGS:    mini_float
-DEPTH:   4-8
-SHUFFLE: ?1T
-SUBST:   T : T V:2
-SUBST:   ? : 1:2 .
-MONS:    hound / w:1 nothing / w:2 jackal
-CHANCE:  3
-MAP
-xx+xx
-xx+xx
-x...x
-x?1Tx
-x...x
-xx+xx
-xx+xx
-ENDMAP
-
-NAME:    doghouse_v3
-TAGS:    mini_float
-DEPTH:   4-8
-SHUFFLE: ?1T
-SUBST:   T : T V:2
-SUBST:   ? : 1:2 .
-MONS:    hound / w:1 nothing / w:2 jackal
-CHANCE:  3
-MAP
-xxx+xx
-xxx+xx
-xx...x
-++..?x
-xx.T1x
-xxxxxx
-ENDMAP
-
-NAME:    doghouse_v4
-TAGS:    mini_float
-DEPTH:   4-8
-SHUFFLE: ?1T
-SUBST:   T : T V:2
-SUBST:   ? : 1:2 .
-MONS:    hound / w:1 nothing / w:2 jackal
-CHANCE:  2
-MAP
-xxx+xxx
-xxx+xxx
-xx...xx
-++.T.++
-xx?1?xx
-xxxxxxx
-ENDMAP
 
 #############################################################################
-# Small room with statues (Eino)
+# Small intersection with statues (Eino)
 
-NAME:    small_statue_room
-DEPTH:   D:2-26
+NAME:    small_statue_intersection
+DEPTH:   D:2-26, Elf, Crypt
 TAGS:    mini_float allow_dup no_hmirror no_vmirror
 MAP
-xxx.xxx
-xG...Gx
-.......
-xG...Gx
-xxx.xxx
+xx.xx
+xG.Gx
+.....
+xG.Gx
+xx.xx
 ENDMAP
 
 #############################################################################
@@ -1532,26 +1478,26 @@ NAME:   small_chamber_a
 TAGS:   mini_float allow_dup
 DEPTH:  D:4-27
 MAP
- xxxxxxx
-xx.....xx
-x...*...x
-x.......x
-xx.....xx
- x.....x
+ xxxxx
+xx...xx
+x..*..x
+x.....x
+xx...xx
+ x...x
 ENDMAP
 
 NAME:   small_chamber_b
-TAGS:   mini_float allow_dup
+TAGS:   mini_float
 DEPTH:  D:8-27, Elf, Vault, Crypt
 MAP
-xxxxxxxxx
-xxG...Gxx
-x...|...x
-x...9...x
-xx.....xx
-xxT...Txx
-xx.....xx
-xxT...Txx
+xxxxxxx
+xxG.Gxx
+x..|..x
+x..9..x
+xx...xx
+xxT.Txx
+xx...xx
+xxT.Txx
 ENDMAP
 
 NAME:   tiny_chamber_a

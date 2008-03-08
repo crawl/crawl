@@ -44,36 +44,35 @@ MAP
 ENDMAP
 
 ##############################################################################
-# Elf arrival vault: corridor one (with the hidden toll cashbox)
 
-NAME:    eino_elf_arrival_corridor
+NAME:    elf_arrival_001
 PLACE:   Elf:1
-ORIENT:  float
-SHUFFLE: asd/v$=
-SHUFFLE: fgh/v$=
-SUBST:   a = v, s = v, d = v, f = v, g = v, h = v
-MONS:    deep elf soldier, deep elf mage, deep elf conjurer / deep elf priest / deep elf fighter
+ORIENT:  west
+SHUFFLE: asd/x$=
+SHUFFLE: fgh/x$=
+SUBST:   a = x, s = x, d = x, f = x, g = x, h = x
+MONS:    deep elf soldier
+MONS:    deep elf mage, deep elf conjurer / deep elf priest / deep elf fighter
 MONS:    deep elf summoner / deep elf knight w:2
 MAP
-                  aaa
-                  asa
-vvvvvvvvvvvvvvvvvvvvdv
-v...vvvvv..12..3.....@
-v.{........v12..v.4..v
-v...vvvvv..12..3.....@
-vvvvvvvvvvvvvvvvvvvvhv
-                  fgf
-                  fff
+                        aaa
+                        asa
+xxxxxxxxxxxxxxxxxxxxxxxxxdx
+xxxxxx...xxxxx..12..3.....@
+xxxxxx.{........m12..m.4..x
+xxxxxx...xxxxx..12..3.....@
+xxxxxxxxxxxxxxxxxxxxxxxxxhx
+                        fgf
+                        fff
 ENDMAP
 
 ##############################################################################
-# Elf arrival vault: open area
 
-NAME:    eino_elf_arrival_open_area
+NAME:    elf_arrival_002
 PLACE:   Elf:1
-ORIENT:  float
-FLAGS:   no_rotate
-MONS:    deep elf soldier, deep elf mage, deep elf conjurer / deep elf priest / deep elf fighter
+ORIENT:  south
+MONS:    deep elf soldier, deep elf mage
+MONS:    deep elf conjurer / deep elf priest / deep elf fighter
 MONS:    deep elf summoner / deep elf knight w:2
 MAP
 xxxxx@xxx@xxx@xxxxx
@@ -83,10 +82,15 @@ x...1.........1...x
 x.G...2..4..2...G.x
 x.................x
 x.......G.G.......x
-x.................x
+x........[........x
 x.....G.....G.....x
 xx.1.....{.....1.xx
 xxxx...........xxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -121,7 +125,8 @@ ENDMAP
 NAME:    eino_elf_arrival_shootout
 PLACE:   Elf:1
 ORIENT:  float
-MONS:    deep elf soldier / deep elf mage, deep elf conjurer / deep elf priest / w:2 deep elf summoner
+MONS:    deep elf soldier / deep elf mage
+MONS:    deep elf conjurer / deep elf priest / w:2 deep elf summoner
 MAP
 xxxxxxxx@@@xxxxxxxx
 xxxx...........xxxx
@@ -140,12 +145,12 @@ ENDMAP
 
 ########################################################################
 
-NAME: eino_elf_arrival_pack_of_fighters_taking_a_sip
-PLACE: Elf:1
+NAME:   eino_elf_arrival_pack_of_fighters_taking_a_sip
+PLACE:  Elf:1
 ORIENT: south
-TAGS: no_monster_gen
-KMONS: Z = deep elf fighter / deep elf soldier w:5
-KFEAT: Z = W
+TAGS:   no_monster_gen
+KMONS:  Z = deep elf fighter / deep elf soldier w:5
+KFEAT:  Z = W
 MAP
  .........
 x..WWWWW..x
@@ -167,12 +172,12 @@ ENDMAP
 
 ##############################################################################
 
-NAME: eino_elf_arrival_the_gate
-PLACE: Elf:1
+NAME:   eino_elf_arrival_the_gate
+PLACE:  Elf:1
 ORIENT: south
-MONS: deep elf soldier / deep elf mage
-MONS: deep elf conjurer / deep elf priest / deep elf fighter
-MONS: deep elf summoner / deep elf priest
+MONS:   deep elf soldier / deep elf mage
+MONS:   deep elf conjurer / deep elf priest / deep elf fighter
+MONS:   deep elf summoner / deep elf priest
 MAP
 x.........x
 @.........@
@@ -221,78 +226,6 @@ xxxxxxxxxxxxxxxxxx...xxxxxx.....xxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
 ENDMAP
 
-###########################################################
-
-NAME:   eino_elf_entry_druids_welcome
-TAGS:   entry no_monster_gen
-ORIENT: float
-MONS:   plant
-MAP
-x1......@......1x
-xw1...........1wx
-xww1.........1wwx
-xwww1...[...1wwwx
-xwwww1.....1wwwwx
-xwwwww1.{.1wwwwwx
-xwwww1.....1wwwwx
-xwww1...(...1wwwx
-xww1.........1wwx
-xw1...........1wx
-x1......@......1x
-ENDMAP
-
-###########################################################
-
-NAME:   eino_elf_entry_tree_alley
-TAGS:   entry no_monster_gen
-ORIENT: float
-MONS:   plant
-MAP
-xxxxxxxxxxxxxxxxxxx
-.11111111111111111.
-@.....[.{.(.......@
-.11111111111111111.
-xxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-###########################################################
-
-NAME:   eino_elf_entry_water_cross
-TAGS:   entry no_monster_gen
-ORIENT: float
-MONS:   plant
-MAP
-...................
-..1xWx1..[..1xWx1..
-.1xxWxx1...1xxWxx1.
-..WWWWW..{..WWWWW..
-.1xxWxx1...1xxWxx1.
-..1xWx1..(..1xWx1..
-...................
-ENDMAP
-
-###########################################################
-
-NAME:   eino_elf_entry_water_star
-TAGS:   entry no_monster_gen no_rotate
-ORIENT: float
-MAP
-..xxxxxxx@xxxxxxx..
-....xxxx...xxxx....
-x.....x..W..x.....x
-xG..W....W....W..Gx
-xx...W..WWW..W...xx
-x.....WWWWWWW.....x
-....WWWW...WWWW....
-..WWWWW.({[.WWWWW..
-....WWWW...WWWW....
-x.....WWWWWWW.....x
-xx...W..WWW..W...xx
-xG..W....W....W..Gx
-x.....x..W..x.....x
-....xxxx...xxxx....
-..xxxxxxx@xxxxxxx..
-ENDMAP
 
 
 ############################################################################
