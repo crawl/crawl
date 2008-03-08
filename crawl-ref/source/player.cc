@@ -3732,8 +3732,12 @@ void display_char_status()
           (move_cost == 10) ? "average" :
           (move_cost <  13) ? "slow" 
                             : "very slow" );
-/*
+
+#if DEBUG_DIAGNOSTICS
     const int to_hit = calc_your_to_hit( false ) * 2;
+    mprf("To-hit: %d", to_hit);
+#endif
+/*
     // Messages based largely on percentage chance of missing the 
     // average EV 10 humanoid, and very agile EV 30 (pretty much
     // max EV for monsters currently).
@@ -3753,9 +3757,6 @@ void display_char_status()
          (to_hit < 100) ? "You feel comfortable with your ability to fight" 
                         : "You feel confident with your ability to fight" );
 */
-#if DEBUG_DIAGNOSTICS
-    mprf("To-hit: %d", to_hit);
-#endif
 
     // magic resistance
     const int mr = player_res_magic();
