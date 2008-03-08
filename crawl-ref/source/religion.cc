@@ -3862,7 +3862,7 @@ void god_smites_you(god_type god, kill_method_type death_type,
     // Your god won't protect you from his own smiting, and Xom is too
     // capricious to protect you from any god's smiting.
     if (you.religion != god && you.religion != GOD_XOM &&
-        !player_under_penance() && you.piety > random2(400))
+        !player_under_penance() && you.piety > random2(MAX_PIETY * 2))
     {
         snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
                  "of %s... this time.", god_name(god).c_str());
