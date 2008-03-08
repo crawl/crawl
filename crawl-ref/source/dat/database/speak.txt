@@ -1680,6 +1680,27 @@ w:1
 w:2
 @_hostile_imp_@
 %%%%
+##################################
+# The reaper has come for you!
+##################################
+reaper
+
+@The_monster@ whispers, "Time's up, @player_name@!"
+
+VISUAL:@The_monster@ beckons to you.
+
+@The_monster@ shouts, "I have come for you, @player_name@!"
+
+@The_monster@ shouts, "Death awaits you!"
+
+@The_monster@ says, "Everyone has to die one time, and your time is now."
+
+VISUAL:@The_monster@ draws a finger across @possessive@ throat.
+
+@The_monster@ shouts, "You must die NOW!"
+
+@The_monster@ shouts, "Die, @player_name@!"
+%%%%
 # Too many killer bees in the hive to have them give messages, unless
 # they're confused or fleeing.
 killer bee

@@ -2441,7 +2441,7 @@ static void handle_nearby_ability(monsters *monster)
     else if (get_mon_shape(monster) >= MON_SHAPE_QUADRUPED)
     {
         // Non-humanoid-ish monsters have a low chance of speaking
-        // wihtout the M_SPEAKS flag, to give the dungeon some
+        // without the M_SPEAKS flag, to give the dungeon some
         // atmosphere/flavor.
         int chance = MON_SPEAK_CHANCE * 4;
 
