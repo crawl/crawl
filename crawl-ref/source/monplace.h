@@ -1,5 +1,5 @@
 /*
- *  File:       monsplace.cc
+ *  File:       monplace.h
  *  Summary:    Functions used when placing monsters in the dungeon.
  *  Written by: Linley Henzell
  *

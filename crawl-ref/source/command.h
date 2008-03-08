@@ -1,5 +1,5 @@
 /*
- *  File:       command.cc
+ *  File:       command.h
  *  Summary:    Misc commands.
  *  Written by: Linley Henzell
  *

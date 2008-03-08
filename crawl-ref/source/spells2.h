@@ -1,5 +1,5 @@
 /*
- *  File:       spells2.cc
+ *  File:       spells2.h
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
  *

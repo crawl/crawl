@@ -3,7 +3,9 @@
  *  Summary:    Fixed size vector class that asserts if you do something bad.
  *  Written by: Jesse Jones
  *
- *  Change History (most recent first):    
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
+ *  Change History (most recent first):
  *
  *         <2>     7/29/00    JDJ        Added a variable argument ctor.
  *         <1>     6/16/00    JDJ        Created

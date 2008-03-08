@@ -1,5 +1,5 @@
 /*
- *  File:       item_use.cc
+ *  File:       item_use.h
  *  Summary:    Functions for making use of inventory items.
  *  Written by: Linley Henzell
  *

@@ -12,6 +12,7 @@
  *              <2>             -/--/--         JDJ             Added a bunch of debugging macros. Old code is now #if WIZARD.
  *              <1>             -/--/--         LRH             Created
  */
+
 #ifndef DEBUG_H
 #define DEBUG_H
 

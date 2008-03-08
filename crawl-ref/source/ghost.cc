@@ -2,8 +2,10 @@
  * File:    ghost.cc
  * Summary: Player ghost and random Pandemonium demon handling.
  *
- * Created for Dungeon Crawl Reference by $Author:dshaligram $ on
- * $Date$.
+ * Created for Dungeon Crawl Reference by dshaligram on
+ * Thu Mar 15 20:10:20 2007 UTC.
+ *
+ * Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

@@ -1,7 +1,9 @@
 /*
  *  File:       tutorial.h
  *  Summary:    Stuff needed for tutorial
- *  Written by: JPEG
+ *  Written by: j-p-e-g
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Created on 2007-01-11.
  */

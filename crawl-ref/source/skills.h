@@ -1,5 +1,5 @@
 /*
- *  File:       skills.cc
+ *  File:       skills.h
  *  Summary:    Skill exercising functions.
  *  Written by: Linley Henzell
  *

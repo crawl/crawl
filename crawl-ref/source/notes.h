@@ -1,7 +1,9 @@
 /*
- *  File:       notes.cc
+ *  File:       notes.h
  *  Summary:    Notetaking stuff
  *  Written by: Haran Pilpel
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Change History (most recent first):
  *

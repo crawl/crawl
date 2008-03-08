@@ -1,5 +1,5 @@
 /*
- *  File:       religion.cc
+ *  File:       religion.h
  *  Summary:    Misc religion related functions.
  *  Written by: Linley Henzell
  *

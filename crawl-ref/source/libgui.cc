@@ -1,7 +1,9 @@
 /*
- *  File:       libx11.cc
+ *  File:       libgui.cc
  *  Summary:    Functions for x11
  *  Written by: M.Itakura
+ *
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
  *
  *  Change History (most recent first):
  *

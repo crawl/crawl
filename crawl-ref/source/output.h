@@ -1,5 +1,5 @@
 /*
- *  File:       output.cc
+ *  File:       output.h
  *  Summary:    Functions used to print player related info.
  *  Written by: Linley Henzell
  *

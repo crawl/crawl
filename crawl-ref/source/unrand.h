@@ -1,5 +1,5 @@
 /*
- *  File:       unrand.cc
+ *  File:       unrand.h
  *  Summary:    Definitions for unrandom artefacts.
  *  Written by: Linley Henzell
  *

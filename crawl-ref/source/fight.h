@@ -1,5 +1,5 @@
 /*
- *  File:       fight.cc
+ *  File:       fight.h
  *  Summary:    Functions used during combat.
  *  Written by: Linley Henzell
  *

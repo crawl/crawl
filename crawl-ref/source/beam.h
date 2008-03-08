@@ -1,5 +1,5 @@
 /*
- *  File:       beam.cc
+ *  File:       beam.h
  *  Summary:    Functions related to ranged attacks.
  *  Written by: Linley Henzell
  *

@@ -1,5 +1,5 @@
 /*
- *  File:       decks.cc
+ *  File:       decks.h
  *  Summary:    Functions with decks of cards.
  *
  *  Modified for Crawl Reference by $Author$ on $Date$

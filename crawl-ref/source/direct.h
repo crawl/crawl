@@ -1,5 +1,5 @@
 /*
- *  File:       direct.cc
+ *  File:       direct.h
  *  Summary:    Functions used when picking squares.
  *  Written by: Linley Henzell
  *

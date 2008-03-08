@@ -1,3 +1,10 @@
+/*
+ *  File:       guic-win.cc
+ *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
+ *
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
+ */
+
 #ifdef USE_X11
 #include <X11/Xlib.h>
 #include <X11/X.h>

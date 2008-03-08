@@ -1,5 +1,5 @@
 /*
- *  File:       view.cc
+ *  File:       view.h
  *  Summary:    Misc function used to render the dungeon.
  *  Written by: Linley Henzell
  *

@@ -1,3 +1,12 @@
+/*
+ *  File:       mapmark.cc
+ *  Summary:    Level markers (annotations).
+ *  Created by: dshaligram on Sat Jul 21 12:17:29 2007 UTC
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
+ */
+
 #ifndef __MAPMARK_H__
 #define __MAPMARK_H__
 

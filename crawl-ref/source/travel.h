@@ -1,7 +1,9 @@
 /*
- *  File:       travel.cc
+ *  File:       travel.h
  *  Summary:    Travel stuff
  *  Written by: Darshan Shaligram
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Change History (most recent first):
  *

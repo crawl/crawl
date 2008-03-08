@@ -1,5 +1,5 @@
 /*
- *  File:       effects.cc
+ *  File:       effects.h
  *  Summary:    Misc stuff.
  *  Written by: Linley Henzell
  *

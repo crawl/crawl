@@ -1,5 +1,5 @@
 /*
- *  File:       shopping.cc
+ *  File:       shopping.h
  *  Summary:    Shop keeper functions.
  *  Written by: Linley Henzell
  *

@@ -1,9 +1,9 @@
 /*
  *  database.h
- *  Crawl
  *
  *  Created by Peter Berger on 4/15/07.
- *  $Id$
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

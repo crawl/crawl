@@ -1,3 +1,11 @@
+/*
+ *  File:       sqldbm.cc
+ *  Summary:    dbm wrapper for SQLite
+ *  Written by: Darshan Shaligram
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ */
+
 #ifndef SQLDBM_H
 #define SQLDBM_H
 

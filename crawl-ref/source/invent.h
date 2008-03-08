@@ -1,5 +1,5 @@
 /*
- *  File:       invent.cc
+ *  File:       invent.h
  *  Summary:    Functions for inventory related commands.
  *  Written by: Linley Henzell
  *

@@ -1,5 +1,5 @@
 /*
- *  File:       dungeon.cc
+ *  File:       dungeon.h
  *  Summary:    Functions used when building new levels.
  *  Written by: Linley Henzell
  *

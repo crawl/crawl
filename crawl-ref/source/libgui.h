@@ -1,3 +1,11 @@
+/*
+ *  File:       libgui.cc
+ *  Summary:    Functions for x11
+ *  Written by: M.Itakura (?)
+ *
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
+ */
+
 #ifndef LIBGUI_H
 #define LIBGUI_H
 #ifdef USE_TILE

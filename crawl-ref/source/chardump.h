@@ -1,5 +1,5 @@
 /*
- *  File:       chardump.cc
+ *  File:       chardump.h
  *  Summary:    Dumps character info out to the morgue file.
  *  Written by: Linley Henzell
  *

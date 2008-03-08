@@ -3,6 +3,8 @@
  *  Summary:    Misc functions (most of which don't appear to be related to priests).
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created

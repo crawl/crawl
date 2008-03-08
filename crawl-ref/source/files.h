@@ -1,5 +1,5 @@
 /*
- *  File:       files.cc
+ *  File:       files.h
  *  Summary:    Functions used to save and load levels/games.
  *  Written by: Linley Henzell and Alexey Guzeev
  *

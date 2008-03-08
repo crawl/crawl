@@ -1,5 +1,5 @@
 /*
- *  File:       skills2.cc
+ *  File:       skills2.h
  *  Summary:    More skill related functions.
  *  Written by: Linley Henzell
  *

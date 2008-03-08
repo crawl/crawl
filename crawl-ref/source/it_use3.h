@@ -1,7 +1,9 @@
 /*
- *  File:       it_use3.cc
+ *  File:       it_use3.h
  *  Summary:    Functions for using some of the wackier inventory items.
  *  Written by: Linley Henzell
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Change History (most recent first):
  *

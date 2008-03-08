@@ -1,5 +1,5 @@
 /*
- *  File:       spl-cast.cc
+ *  File:       spl-cast.h
  *  Summary:    Spell casting functions.
  *  Written by: Linley Henzell
  *

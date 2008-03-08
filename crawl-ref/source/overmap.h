@@ -1,7 +1,9 @@
 /*
- *  File:       overmap.cc
+ *  File:       overmap.h
  *  Summary:    "Overmap" functionality
  *  Written by: Linley Henzell
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Change History (most recent first):
  *

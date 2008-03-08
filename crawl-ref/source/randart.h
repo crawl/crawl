@@ -1,7 +1,9 @@
 /*
- *  File:       randart.cc
+ *  File:       randart.h
  *  Summary:    Random and unrandom artefact functions.
  *  Written by: Linley Henzell
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Change History (most recent first):
  *

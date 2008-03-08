@@ -1,5 +1,5 @@
 /*
- *  File:       itemname.cc
+ *  File:       itemname.h
  *  Summary:    Misc functions.
  *  Written by: Linley Henzell
  *

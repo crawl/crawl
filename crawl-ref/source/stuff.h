@@ -1,5 +1,5 @@
 /*
- *  File:       stuff.cc
+ *  File:       stuff.h
  *  Summary:    Misc stuff.
  *  Written by: Linley Henzell
  *

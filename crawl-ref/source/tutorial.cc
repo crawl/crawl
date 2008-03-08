@@ -1,5 +1,11 @@
 /*
- *  Created for Crawl Reference by j-p-e-g on $Date: 2007-01-11$
+ *  File:       tutorial.cc
+ *  Summary:    A tutorial mode as an introduction on how to play Dungeon Crawl.
+ *  Written by: j-p-e-g
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
+ *  Created on 2007-01-11.
  */
 
 #include "tutorial.h"

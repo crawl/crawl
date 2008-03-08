@@ -1,5 +1,5 @@
 /*
- *  File:       food.cc
+ *  File:       food.h
  *  Summary:    Functions for eating and butchering.
  *  Written by: Linley Henzell
  *

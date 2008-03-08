@@ -1,5 +1,5 @@
 /*
- *  File:       items.cc
+ *  File:       items.h
  *  Summary:    Misc (mostly) inventory related functions.
  *  Written by: Linley Henzell
  *

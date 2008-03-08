@@ -1,6 +1,11 @@
-/*  1) Image manipulation routines
- *  2) WinClass and RegionClass system independent imprementaions
- *   see guic-*.cc for  system dependent implementations
+/*
+ *  File:       guic-win.cc
+ *  Summary:    1) Image manipulation routines
+ *              2) WinClass and RegionClass system independent imprementaions
+ *              see guic-*.cc for  system dependent implementations
+ *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
+ *
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
  */
 
 #include "AppHdr.h"

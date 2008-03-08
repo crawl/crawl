@@ -2,7 +2,10 @@
  *  File:       stash.h
  *  Summary:    Classes tracking player stashes
  *  Written by: Darshan Shaligram
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
+
 #ifndef STASH_H
 #define STASH_H
 

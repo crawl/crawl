@@ -1,5 +1,5 @@
 /*
- *  File:       spells4.cc
+ *  File:       spells4.h
  *  Summary:    Yet More Spell Function Declarations
  *  Written by: Josh Fishman
  *

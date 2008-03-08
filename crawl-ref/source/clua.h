@@ -1,3 +1,11 @@
+/*
+ *  File:       clua.h
+ *  Created by: dshaligram on Wed Aug 2 12:54:15 2006 UTC
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ */
+
+
 #ifndef __CLUA_H__
 #define __CLUA_H__
 

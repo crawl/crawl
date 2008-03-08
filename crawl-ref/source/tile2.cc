@@ -1,3 +1,10 @@
+/*
+ *  File:       tile2.cc
+ *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
+ *
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
+ */
+ 
 #ifdef USE_TILE
 
 #include <stdio.h>
