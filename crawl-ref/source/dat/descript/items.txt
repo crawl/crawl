@@ -25,7 +25,8 @@ wearer of the benefits of levitation.
 %%%%
 amulet of inaccuracy
 
-This amulet makes its wearer less accurate in hand combat.
+This amulet makes its wearer less accurate in hand combat and when 
+targetting monsters via ranged weapon or spells.
 %%%%
 amulet of rage
 

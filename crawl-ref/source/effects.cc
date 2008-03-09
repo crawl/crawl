@@ -1869,7 +1869,7 @@ void yell(bool force)
     }
 
     mpr("What do you say?", MSGCH_PROMPT);
-    mprf(" ! - %s", cap_shout.c_str());
+    mprf(" t - %s", cap_shout.c_str());
 
     if (!you.duration[DUR_BERSERKER])
     {
@@ -1894,7 +1894,7 @@ void yell(bool force)
 
     switch (keyn)
     {
-    case '!':
+    case 't':
         mprf(MSGCH_SOUND, "You %s for attention!", shout_verb.c_str());
         you.turn_is_over = true;
         noisy( noise_level, you.x_pos, you.y_pos );

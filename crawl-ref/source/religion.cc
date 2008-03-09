@@ -363,6 +363,8 @@ void inc_penance(int val);
 static bool holy_beings_attitude_change();
 static bool beogh_followers_abandon_you(void);
 static void dock_piety(int piety_loss, int penance);
+static bool make_god_gifts_disappear(bool level_only = true);
+static bool make_god_gifts_hostile(bool level_only = true);
 
 bool is_evil_god(god_type god)
 {
@@ -448,12 +450,16 @@ void inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
-        else if (god == GOD_SHINING_ONE && you.duration[DUR_DIVINE_SHIELD])
-        {   // nor does TSO's divine shield
-            mpr("Your divine shield disappears!");
-            you.duration[DUR_DIVINE_SHIELD] = 0;
-            you.attribute[ATTR_DIVINE_SHIELD] = 0;
-            you.redraw_armour_class = true;
+        else if (god == GOD_SHINING_ONE)
+        {
+            if (you.duration[DUR_DIVINE_SHIELD])
+            {   // nor does TSO's divine shield
+                mpr("Your divine shield disappears!");
+                you.duration[DUR_DIVINE_SHIELD] = 0;
+                you.attribute[ATTR_DIVINE_SHIELD] = 0;
+                you.redraw_armour_class = true;
+            }
+            make_god_gifts_disappear(true); // only on level
         }
     }
     
@@ -2815,6 +2821,87 @@ static bool holy_beings_attitude_change()
     return apply_to_all_dungeons(holy_beings_on_level_attitude_change);
 }
 
+// Make summoned (temporary) god gifts disappear on penance
+// or when abandoning the god in question.
+// If seen, only count monsters where the player can see the change and
+// output a message.
+static bool make_god_gifts_on_level_disappear(bool seen = false)
+{
+    int count = 0;
+    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    {
+        monsters *monster = &menv[i];
+        if (monster->type != -1
+            && monster->attitude == ATT_FRIENDLY
+            && monster->has_ench(ENCH_ABJ)
+            && testbits(monster->flags,MF_GOD_GIFT))
+        {
+
+            // monster disappears
+            if (!seen || simple_monster_message(monster, " abandons you!"))
+                count++;
+
+            monster_die(monster, KILL_DISMISSED, 0);
+        }
+    }
+    return (count);
+}
+
+static bool god_gifts_disappear_wrapper()
+{
+    return (make_god_gifts_on_level_disappear());
+}
+
+// Make god gifts disappear on all levels, or on only the current one.
+bool make_god_gifts_disappear(bool level_only)
+{
+   bool success = make_god_gifts_on_level_disappear(true);
+
+   if (level_only)
+       return (success);
+
+   return (apply_to_all_dungeons(god_gifts_disappear_wrapper) || success);
+}
+
+// When abandoning the god in question turn god gifts hostile.
+// If seen, only count monsters where the player can see the change and
+// output a message.
+static bool make_god_gifts_on_level_hostile(bool seen = false)
+{
+    int count = 0;
+    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    {
+        monsters *monster = &menv[i];
+        if (monster->type != -1
+            && monster->attitude == ATT_FRIENDLY
+            && (monster->flags & MF_GOD_GIFT))
+        {
+            // monster changes attitude
+            monster->attitude = ATT_HOSTILE;
+
+            if (!seen || simple_monster_message(monster, " turns against you!"))
+                count++;
+        }
+    }
+    return (count);
+}
+
+static bool god_gifts_hostile_wrapper()
+{
+    return (make_god_gifts_on_level_hostile());
+}
+
+// Make god gifts disappear on all levels, or on only the current one.
+bool make_god_gifts_hostile(bool level_only)
+{
+   bool success = make_god_gifts_on_level_hostile(true);
+   
+   if (level_only)
+       return (success);
+       
+   return (apply_to_all_dungeons(god_gifts_hostile_wrapper) || success);
+}
+
 static bool orcish_followers_on_level_abandon_you()
 {
     bool success = false;
@@ -3214,6 +3301,7 @@ void excommunication(void)
 
     case GOD_TROG:
         simple_god_message( " does not appreciate desertion!", old_god );
+        make_god_gifts_hostile(false);
 
         // Penance has to come before retribution to prevent "mollify"
         inc_penance( old_god, 50 );
@@ -3263,6 +3351,7 @@ void excommunication(void)
             you.attribute[ATTR_DIVINE_SHIELD] = 0;
             you.redraw_armour_class = true;
         }
+        make_god_gifts_hostile(false);
         inc_penance( old_god, 50 );
         break;
 
@@ -3829,6 +3918,7 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     bool praying = (you.duration[DUR_PRAYER] &&
                     random2(you.piety) >= min_piety);
     bool anytime = (one_chance_in(10) || you.piety > random2(1000));
+    bool penance = you.penance[god];
 
     // If actual is true, return HPT_NONE if the given god can protect
     // the player from harm, but doesn't actually do so.
@@ -3838,6 +3928,10 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
         if (!actual || praying)
             return (you.piety >= min_piety) ? HPT_PRAYING :
                                               HPT_NONE;
+        break;
+    case GOD_BEOGH:
+        if (!penance && (!actual || anytime))
+            return HPT_ANYTIME;
         break;
     case GOD_ZIN:
     case GOD_SHINING_ONE:
