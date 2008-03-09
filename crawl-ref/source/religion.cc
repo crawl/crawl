@@ -3926,8 +3926,10 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     {
     case GOD_YREDELEMNUL:
         if (!actual || praying)
-            return (you.piety >= min_piety) ? HPT_PRAYING :
-                                              HPT_NONE;
+        {
+            if (you.piety >= min_piety)
+                return HPT_PRAYING;
+        }
         break;
     case GOD_BEOGH:
         if (!penance && (!actual || anytime))
