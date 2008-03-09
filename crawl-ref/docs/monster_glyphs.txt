@@ -69,6 +69,10 @@ mon_glyph = deep elf sorcerer : red
 mon_glyph = deep elf annihilator : green
 mon_glyph = deep elf master archer : lightmagenta
 
+# lizards
+mon_glyph = giant newt : lightgreen
+mon_glyph = giant lizard : green
+
 # snakes and naga
 mon_glyph = small snake : lightgreen
 mon_glyph = snake : green
@@ -190,6 +194,12 @@ mon_glyph = Frederick : darkgrey
 # deep elf sorcerer       red            lightmagenta
 # deep elf annihilator    green          lightblue
 # deep elf master archer  lightmagenta   lightgrey
+#
+# monster                 old colour     new colour
+# -------                 ----------     ----------
+# lizards
+# giant newt              lightgreen     green
+# giant lizard            green          lightgreen
 #
 # monster                 old colour     new colour
 # -------                 ----------     ----------

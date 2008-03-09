@@ -1451,9 +1451,10 @@ command_type fire_target_behaviour::get_command(int key)
     {
       case '(':
       case CONTROL('N'):
+      case ')':
       case CONTROL('P'):
       {
-          const int direction = (key == CONTROL('P')) ? -1 : +1;
+          const int direction = (key == CONTROL('P') || key == ')') ? -1 : +1;
           const int next = get_next_fire_item(item, direction);
           if (next != item && next != ENDOFPACK)
           {

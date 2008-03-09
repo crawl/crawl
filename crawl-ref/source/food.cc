@@ -287,7 +287,7 @@ bool butchery(int which_corpse)
     // if there are several corpses on the square.
     if ( num_corpses == 0 )
     {
-        mpr("There isn't anything to dissect here.");
+        mpr("There isn't anything to butcher here.");
         return false;
     }
     else if ( !prechosen
@@ -301,7 +301,7 @@ bool butchery(int which_corpse)
                 continue;
             
             // offer the possibility of butchering
-            mprf("Butcher %s? [y/n/q/D]", mitm[o].name(DESC_NOCAP_A).c_str());
+            mprf("Butcher %s? [y/n/q/c]", mitm[o].name(DESC_NOCAP_A).c_str());
             // possible results:
             // 0 - cancel all butchery (quit)
             // 1 - say no to this butchery, continue prompting
@@ -317,8 +317,7 @@ bool butchery(int which_corpse)
                 if (keyin == ' ' || keyin == '\r' || keyin == '\n' ||
                     keyin == 'n' || keyin == 'N')
                     result = 1;
-                if (keyin == 'y' || keyin == 'Y' || keyin == 'd' ||
-                    keyin == 'D')
+                if (keyin == 'y' || keyin == 'Y' || keyin == 'c' || keyin == 'C')
                     result = 2;
             }
 
@@ -444,7 +443,7 @@ bool butchery(int which_corpse)
     if (canceled_butcher)
         canned_msg(MSG_OK);
     else
-        mpr("There isn't anything else to dissect here.");
+        mpr("There isn't anything else to butcher here.");
 
     return false;
 }                               // end butchery()

@@ -213,9 +213,9 @@ void formatted_string::parse_string1(
             currs.clear();
         }
 
-	if (revert_colour)
+        if (revert_colour)
         {
-	    colour_stack.pop_back();
+            colour_stack.pop_back();
             if (colour_stack.size() < 1)
             {
                 ASSERT(false);

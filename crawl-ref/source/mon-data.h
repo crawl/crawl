@@ -821,7 +821,7 @@
 
 // lizards 'l'
 {
-    MONS_GIANT_NEWT, 'l', LIGHTGREEN, "giant newt",
+    MONS_GIANT_NEWT, 'l', GREEN, "giant newt",
     M_COLD_BLOOD | M_AMPHIBIOUS,
     MR_NO_FLAGS,
     150, 10, MONS_GIANT_LIZARD, MONS_GIANT_NEWT, MH_NATURAL, -3,
@@ -854,7 +854,7 @@
 },
 
 {
-    MONS_GIANT_LIZARD, 'l', GREEN, "giant lizard",
+    MONS_GIANT_LIZARD, 'l', LIGHTGREEN, "giant lizard",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
     600, 10, MONS_GIANT_LIZARD, MONS_GIANT_LIZARD, MH_NATURAL, -3,

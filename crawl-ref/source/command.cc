@@ -1511,8 +1511,8 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
             "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : untrap, open door,\n"
             "         attack without move\n"
+            "<w>o</w> : auto-explore\n"
             "<w>Ctrl-G</w> : interlevel travel\n"
-            "<w>Ctrl-O</w> : auto-explore\n"
             "<w>Ctrl-W</w> : set Waypoint\n"
             "<w>Ctrl-F</w> : Find items\n"
             " \n",
@@ -1523,7 +1523,6 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<h>Item Interaction (inventory):\n"
             "<w>i</w> : show Inventory list\n"
             "<w>]</w> : show inventory of equipped items\n"
-            "<w>v</w> : View item description\n"
             "<w>{</w> : inscribe item\n"
             "<w>f</w> : Fire or throw an item\n"
             "<w>e</w> : Eat food (but tries floor first)\n"
@@ -1533,7 +1532,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>M</w> : Memorise a spell from a book\n"
             "<w>w</w> : Wield an item ( <w>-</w> for none)\n"
             "<w>'</w> : wield item a, or switch to b\n"
-            "<w>E</w> : Evoke power of wielded item\n"
+            "<w>v</w> : Evoke power of wielded item\n"
             "<w>W</w> : Wear armour\n"
             "<w>T</w> : Take off armour\n"
             "<w>P</w> : Put on jewellery\n"
@@ -1598,7 +1597,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>(</w> : cycle current ammunition\n"
             "<w>)</w> : display current weapons\n"
             "<w>\"</w> : display worn jewellery\n"
-            "<w>C</w> : display experience info\n"
+            "<w>E</w> : display experience info\n"
             "<w>^</w> : show religion screen\n"
             "<w>A</w> : show Abilities/mutations\n"
             "<w>\\</w> : show item knowledge\n"
@@ -1614,7 +1613,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>;</w>   : examine occupied tile\n"
             "<w>x</w>   : eXamine surroundings/targets\n"
             "<w>X</w>   : eXamine level map\n"
-            "<w>O</w>   : show dungeon Overview\n",
+            "<w>Ctrl-O</w>   : show dungeon Overview\n",
             true, true, cmdhelp_textfilter,45);
 
     cols.add_formatted(
@@ -1624,7 +1623,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "    (press twice for pick up menu) \n"
             "<w>d</w> : Drop an item\n"
             "<w>d#</w>: Drop exact number of items \n"
-            "<w>D</w> : Dissect a corpse \n"
+            "<w>c</w> : chop up a corpse \n"
             "<w>e</w> : Eat food from floor \n",
             true, true, cmdhelp_textfilter);
 
@@ -1634,7 +1633,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>a</w> : use special Ability\n"
             "<w>p</w> : Pray\n"
             "<w>Z</w> : cast a spell\n"
-            "<w>!</w> : shout or command allies\n"
+            "<w>t</w> : shout or command allies\n"
             "<w>`</w> : re-do previous command\n"
             "<w>0</w> : repeat next command # of times\n"
             " \n",
@@ -1647,7 +1646,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>Ctrl-P</w> : show Previous messages\n"
             "<w>Ctrl-R</w> : Redraw screen\n"
             "<w>Ctrl-C</w> : Clear main and level maps\n"
-            "<w>Ctrl-I</w> : annotate the dungeon level\n"
+            "<w>!</w> : annotate the dungeon level\n"
             "<w>#</w> : dump character to file\n"
             "<w>:</w> : add note (use <w>?:</w> to read notes)\n"
             "<w>~</w> : add macro\n"
@@ -1713,9 +1712,9 @@ void list_tutorial_help()
     text <<
         "<h>Item types (and common commands)\n"
         "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-        "<brown>(</brown> : missiles (<w>t</w>hrow or <w>f</w>ire)\n"
+        "<brown>(</brown> : missiles (<w>f</w>ire)\n"
         "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
-        "<brown>%</brown> : food and corpses (<w>e</w>at and <w>D</w>issect)\n"
+        "<brown>%</brown> : food and corpses (<w>c</w>hop and <w>e</w>at)\n"
         "<w>?</w> : scrolls (<w>r</w>ead)\n"
         "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
         "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
@@ -1729,7 +1728,7 @@ void list_tutorial_help()
         "<brown>";
     get_item_symbol(DNGN_ITEM_STAVE, &ch, &colour);
     text << static_cast<char>(ch);
-    text << "</brown> : staves, rods (<w>w</w>ield and <w>E</w>voke)\n"
+    text << "</brown> : staves, rods (<w>w</w>ield and e<w>v</w>oke)\n"
             "\n"
             "<h>Movement and attacking\n"
             "Use the <w>numpad</w> for movement (try both\n"
@@ -1740,7 +1739,6 @@ void list_tutorial_help()
             "with the wielded weapon or barehanded.\n"
             "For ranged attacks use either\n"
             "<w>f</w> to launch missiles (like arrows)\n"
-            "<w>t</w> to throw items by hand (like darts)\n"
             "<w>Z</w> to cast spells (<w>Z?</w> lists spells).\n",
 
     cols.add_formatted(
@@ -1754,21 +1752,21 @@ void list_tutorial_help()
             "<w>s</w> : search for one turn (also <w>.</w> and <w>Del</w>)\n"
             "<w>5</w> : rest full/search longer (<w>Shift-Num 5</w>)\n"
             "<w>x</w> : examine surroundings\n"
-            "<w>v</w> : examine object in inventory\n"
-            "<w>i</w> : list inventory\n"
+            "<w>i</w> : list inventory (select item to view it)\n"
             "<w>g</w> : pick up item from ground (also <w>,</w>)\n"
             "<w>d</w> : drop item\n"
             "<w>X</w> : show map of the whole level\n"
             "<w><<</w> or <w>></w> : ascend/descend the stairs\n"
             "<w>Ctrl-P</w> : show previous messages\n"
             "\n"
+            "\n"
             "<h>Targeting (for spells and missiles)\n"
             "Use <w>+</w> (or <w>=</w>) and <w>-</w> to cycle between\n"
             "hostile monsters. <w>Enter</w> or <w>.</w> or <w>Del</w>\n"
             "all fire at the selected target.\n"
             "If the previous target is still alive\n"
-            "and in sight, one of <w>f</w>, <w>p</w>, <w>t</w> fires\n"
-            "at it again (without selecting anything).\n",
+            "and in sight, one of <w>f</w> or <w>p</w> fires at it\n"
+            "again (without selecting anything).\n",
             true, true, cmdhelp_textfilter, 40);
             
     show_keyhelp_menu(cols.formatted_lines(), false);

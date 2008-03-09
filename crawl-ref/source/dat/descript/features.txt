@@ -10,7 +10,7 @@ A burning altar of Makhleb
 %%%%
 A closed door
 
-A wooden door. To open it, try simply walking into it, or press 'o'.
+A wooden door. To open it, try simply walking into it, or press 'O'.
 %%%%
 A corrupted altar of Lugonu
 
@@ -269,7 +269,7 @@ An iron altar of Okawaru
 %%%%
 An open door
 
-A wooden door. You can close it by standing next to it and pressing 'c'.
+A wooden door. You can close it by standing next to it and pressing 'C'.
 %%%%
 An orcish idol
 

@@ -3213,22 +3213,23 @@ command_type keycode_to_command( keycode_type key )
     case 'y': return CMD_MOVE_UP_LEFT;
 
     case 'a': return CMD_USE_ABILITY;
-    case 'c': return CMD_CLOSE_DOOR;
+    case 'c': return CMD_BUTCHER;
     case 'd': return CMD_DROP;
     case 'e': return CMD_EAT;
     case 'f': return CMD_FIRE;
     case 'g': return CMD_PICKUP;
     case 'i': return CMD_DISPLAY_INVENTORY;
     case 'm': return CMD_DISPLAY_SKILLS;
-    case 'o': return CMD_OPEN_DOOR;
+    case 'o': return CMD_EXPLORE;
     case 'p': return CMD_PRAY;
     case 'q': return CMD_QUAFF;
     case 'r': return CMD_READ;
     case 's': return CMD_SEARCH;
-    case 'v': return CMD_EXAMINE_OBJECT;
+    case 't': return CMD_SHOUT;
+    case 'v': return CMD_EVOKE;
     case 'w': return CMD_WIELD_WEAPON;
     case 'x': return CMD_LOOK_AROUND;
-    case 'z': return CMD_ZAP_WAND;
+    case 'z': return CMD_CAST_SPELL;
 
     case 'B': return CMD_RUN_DOWN_LEFT;
     case 'H': return CMD_RUN_LEFT;
@@ -3240,14 +3241,13 @@ command_type keycode_to_command( keycode_type key )
     case 'Y': return CMD_RUN_UP_LEFT;
 
     case 'A': return CMD_DISPLAY_MUTATIONS;
-    case 'C': return CMD_EXPERIENCE_CHECK;
-    case 'D': return CMD_BUTCHER;
-    case 'E': return CMD_EVOKE;
+    case 'C': return CMD_CLOSE_DOOR;
+    case 'E': return CMD_EXPERIENCE_CHECK;
     case 'F': return CMD_NO_CMD;
     case 'G': return CMD_NO_CMD;
     case 'I': return CMD_DISPLAY_SPELLS;
     case 'M': return CMD_MEMORISE_SPELL;
-    case 'O': return CMD_DISPLAY_OVERMAP;
+    case 'O': return CMD_OPEN_DOOR;
     case 'P': return CMD_WEAR_JEWELLERY;
     case 'Q': return CMD_QUIT;
     case 'R': return CMD_REMOVE_JEWELLERY;
@@ -3256,7 +3256,7 @@ command_type keycode_to_command( keycode_type key )
     case 'V': return CMD_GET_VERSION;
     case 'W': return CMD_WEAR_ARMOUR;
     case 'X': return CMD_DISPLAY_MAP;
-    case 'Z': return CMD_CAST_SPELL;
+    case 'Z': return CMD_ZAP_WAND;
 
     case '.': return CMD_MOVE_NOWHERE;
     case '<': return CMD_GO_UPSTAIRS;
@@ -3267,11 +3267,11 @@ command_type keycode_to_command( keycode_type key )
     case ':': return CMD_MAKE_NOTE;
     case '_': return CMD_READ_MESSAGES;
     case ';': return CMD_INSPECT_FLOOR;
-    case '!': return CMD_SHOUT;
     case '^': return CMD_DISPLAY_RELIGION;
     case '#': return CMD_CHARACTER_DUMP;
     case '=': return CMD_ADJUST_INVENTORY;
     case '?': return CMD_DISPLAY_COMMANDS;
+    case '!': return CMD_ANNOTATE_LEVEL;
     case '~': return CMD_MACRO_ADD;
     case '&': return CMD_WIZARD;
     case '"': return CMD_LIST_JEWELLERY;
@@ -3302,9 +3302,8 @@ command_type keycode_to_command( keycode_type key )
     case CONTROL('E'): return CMD_FORGET_STASH;
     case CONTROL('F'): return CMD_SEARCH_STASHES;
     case CONTROL('G'): return CMD_INTERLEVEL_TRAVEL;
-    case CONTROL('I'): return CMD_ANNOTATE_LEVEL;
     case CONTROL('M'): return CMD_NO_CMD;
-    case CONTROL('O'): return CMD_EXPLORE;
+    case CONTROL('O'): return CMD_DISPLAY_OVERMAP;
     case CONTROL('P'): return CMD_REPLAY_MESSAGES;
 #ifdef USE_TILE
     case CONTROL('Q'): return CMD_EDIT_PREFS;
