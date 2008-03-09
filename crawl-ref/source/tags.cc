@@ -1004,6 +1004,9 @@ static void tag_construct_you(tagHeader &th)
     marshallByte(th, you.beheld_by.size());
     for (unsigned int k = 0; k < you.beheld_by.size(); k++)
          marshallByte(th, you.beheld_by[k]);
+
+    // minorVersion 2 starts here
+    marshallByte(th, you.piety_hysteresis);
 }
 
 static void tag_construct_you_items(tagHeader &th)
@@ -1380,6 +1383,9 @@ static void tag_read_you(tagHeader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
          you.beheld_by.push_back(unmarshallByte(th));
+
+    if (minorVersion >= 2)
+        you.piety_hysteresis = unmarshallByte(th);
 }
 
 static void tag_read_you_items(tagHeader &th, char minorVersion)

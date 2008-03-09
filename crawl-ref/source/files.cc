@@ -106,7 +106,10 @@ void save_level(int level_saved, level_area_type lt,
 
 #define GHOST_MINOR_VERSION 1
 #define LEVEL_MINOR_VERSION 1
-#define YOU_MINOR_VERSION   1
+
+// 1: starting version
+// 2: append piety_hysteresis to TAG_YOU
+#define YOU_MINOR_VERSION   2
 
 const short GHOST_SIGNATURE = static_cast<short>( 0xDC55 );
 

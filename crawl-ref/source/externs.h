@@ -703,6 +703,7 @@ public:
 
   god_type religion;
   unsigned char piety;
+  unsigned char piety_hysteresis;       // amount of stored-up docking
   unsigned char gift_timeout;
   FixedVector<unsigned char, MAX_NUM_GODS>  penance;
   FixedVector<unsigned char, MAX_NUM_GODS>  worshipped;

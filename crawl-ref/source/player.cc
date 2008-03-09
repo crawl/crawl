@@ -5208,6 +5208,7 @@ void player::init()
 
     religion = GOD_NO_GOD;
     piety = 0;
+    piety_hysteresis = 0;
 
     gift_timeout = 0;
 

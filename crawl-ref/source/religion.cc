@@ -85,6 +85,8 @@
 #    define DEBUG_PIETY       1
 #endif
 
+#define PIETY_HYSTERESIS_LIMIT 1
+
 // Item offer messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
@@ -1093,7 +1095,7 @@ void pray()
         do_god_gift(true);
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "piety: %d", you.piety );
+    mprf(MSGCH_DIAGNOSTICS, "piety: %d (-%d)", you.piety, you.piety_hysteresis );
 #endif
 
 }                               // end pray()
@@ -1756,10 +1758,6 @@ void gain_piety(int pgn)
         }
     }
 
-#if DEBUG_PIETY
-    mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d", pgn);
-#endif
-
     // slow down gain at upper levels of piety
     if (you.religion != GOD_SIF_MUNA)
     {
@@ -1781,6 +1779,20 @@ void gain_piety(int pgn)
             do_god_gift(false);
             return;
         }
+    }
+
+    // Apply hysteresis
+    {
+        // piety_hysteresis is the amount of _loss_ stored up, so this
+        // may look backwards.
+        const int old_hysteresis = you.piety_hysteresis;
+        you.piety_hysteresis = (unsigned char)std::max<int>(
+            0, you.piety_hysteresis - pgn);
+        const int pgn_borrowed = (old_hysteresis - you.piety_hysteresis);
+        pgn -= pgn_borrowed;
+#if DEBUG_PIETY
+mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)", pgn, pgn_borrowed);
+#endif
     }
 
     int old_piety = you.piety;
@@ -1971,8 +1983,8 @@ bool trog_burn_books()
         const int next = mitm[i].link;  // in case we can't get it later.
 
         if (mitm[i].base_type == OBJ_BOOKS
-            && mitm[i].sub_type != BOOK_MANUAL
-	    && mitm[i].sub_type != BOOK_DESTRUCTION)
+           && mitm[i].sub_type != BOOK_MANUAL
+           && mitm[i].sub_type != BOOK_DESTRUCTION)
         {
             mpr("Burning your own feet might not be such a smart idea!");
             return (false);
@@ -2011,7 +2023,7 @@ bool trog_burn_books()
 
                  if (mitm[i].base_type != OBJ_BOOKS
                      || mitm[i].sub_type == BOOK_MANUAL
-		     || mitm[i].sub_type == BOOK_DESTRUCTION)
+                     || mitm[i].sub_type == BOOK_DESTRUCTION)
                  {
                      i = next;
                      continue;
@@ -2078,9 +2090,18 @@ void lose_piety(int pgn)
 {
     const int old_piety = you.piety;
 
+    // Apply hysteresis
+    {
+        const int old_hysteresis = you.piety_hysteresis;
+        you.piety_hysteresis = (unsigned char)std::min<int>(
+            PIETY_HYSTERESIS_LIMIT, you.piety_hysteresis + pgn);
+        const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
+        pgn -= pgn_borrowed;
 #if DEBUG_PIETY
-    mprf(MSGCH_DIAGNOSTICS, "Piety decreasing by %d", pgn);
+        mprf(MSGCH_DIAGNOSTICS, "Piety decreasing by %d (and %d added to hysteresis)", pgn, pgn_borrowed);
 #endif
+    }
+
 
     if (you.piety - pgn < 0)
         you.piety = 0;
@@ -3257,6 +3278,7 @@ void excommunication(void)
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.religion = GOD_NO_GOD;
     you.piety = 0;
+    you.piety_hysteresis = 0;
     redraw_skill( you.your_name, player_title() );
 
     mpr("You have lost your religion!");
@@ -3840,6 +3862,7 @@ void god_pitch(god_type which_god)
     else
     {
         you.piety = 15;             // to prevent near instant excommunication
+        you.piety_hysteresis = 0;
         you.gift_timeout = 0;
     }
     
