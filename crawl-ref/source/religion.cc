@@ -3965,8 +3965,10 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
         break;
     case GOD_ELYVILON:
         if (!actual || praying || anytime)
+        {
             return (you.piety >= min_piety) ? HPT_PRAYING_PLUS_ANYTIME :
                                               HPT_ANYTIME;
+        }
         break;
     default:
         break;
