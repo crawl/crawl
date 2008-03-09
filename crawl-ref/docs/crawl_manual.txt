@@ -180,7 +180,7 @@ Level:        Starting characters have experience level 1; the highest
 
 Primary attributes describe the character's abilities to fight, dodge, 
 learn spells, etc. They grow permanently from gaining levels, and may
-increase temporarily from using appropriate artifacts or abilities. They
+increase temporarily from using appropriate artefacts or abilities. They
 may decrease for various reasons, as well. Crawl has only three:
 
 Strength:     Affects the amount of damage you do in combat, as well as
@@ -235,7 +235,7 @@ Stealth:      Another internal variable like Magic Resistance. First,
               undetected.
 
 Sometimes characters will be able to use special abilities, e.g. the
-naga's ability to spit poison, or the magical power to turn invisible 
+Naga's ability to spit poison, or the magical power to turn invisible 
 granted by a ring. These are accessed through the 'a' command.
 
 There are many ailments or enchantments that can temporarily befall you.
@@ -384,7 +384,7 @@ contents.
 
 Stashes and Searching:
 ----------------------
-Since you can only carry 52 items, you will occassionally want to safely
+Since you can only carry 52 items, you will occasionally want to safely
 stash things away (by dropping them with the 'd' command). When you want
 to search for something in your stashes, you can do this with the Find 
 command (Ctrl-F). The parser even accepts regular expressions, although
@@ -406,7 +406,7 @@ The Goal:
 ---------
 Your goal is to locate the Orb of Zot, which is held somewhere deep
 beneath the world's surface. The Orb is an ancient and incredibly 
-powerful artifact, and the legends promise great things for anyone brave
+powerful artefact, and the legends promise great things for anyone brave
 enough to extract it from the fearsome Dungeon. Some say it will grant 
 immortality or even godhood to the one who carries it into the sunlight;
 many undead creatures seek it in the hope that it will restore them to 
@@ -623,7 +623,7 @@ For more details, and how to automatise this process, check Appendix 6.
 ----------
 These are rather important. You will find a variety of weapons in the 
 dungeon, ranging from small and quick daggers to huge, cumbersome 
-battleaxes and pole-arms. Each type of weapon does a different amount 
+battle-axes and polearms. Each type of weapon does a different amount 
 of damage, has a different chance of hitting its target, and takes a 
 different amount of time to swing. There are several weapon skills 
 (press 'm' to show a list of those that you are training) like Short 
@@ -667,7 +667,9 @@ affects both accuracy and damage.
 The 'f' command fires or throws a piece of ammunition, typically
 chosen from lots suitable for your weapon and defaulting to the last
 lot you fired (your "quiver"). Note that the item you will shoot with
-'f' is display on the main screen beneath your wielded weapon.
+'f' is display on the main screen beneath your wielded weapon. See
+Appendix 6 (Inscriptions) for inscriptions which let you fine-tune the
+list of items to choose from.
 
 The firing interface also allows you to manually select an item to
 throw; but it may not be very effective if you lack the correct
@@ -742,7 +744,7 @@ pretentious) Ogre-Mages.
 
 ? Magical Scrolls:
 ------------------
-Scrolls have many different magical spells enscribed on them, some good
+Scrolls have many different magical spells inscribed on them, some good
 and some bad. One of the most useful scrolls is the scroll of Identify, 
 which will tell you the function of any item you have in your inventory;
 save these up for the more powerful and inscrutable magic items, such 
@@ -898,7 +900,7 @@ chance and in many cases the effect as well.
 
 Spells are stored in books, which you will occasionally find in the
 dungeon. You can read books with 'r' to check what spells they contain; 
-doing so will allow you to read the individual spells' desriptions. In
+doing so will allow you to read the individual spells' descriptions. In
 order to try to memorise a certain spell, use the 'M' command. 
 Memorising can take a while and, for high-level spells, be hazardous.
 
@@ -1205,22 +1207,25 @@ The notions of balance, or being imbalanced, are extremely vague. Here
 is our definition: Crawl is designed to be a challenging game, and is
 also renowned for its randomness. However, this does not mean that wins
 are an arbitrary matter of luck: skill of the players will have the
-largest impact. So, yes, there may be situations where you are doomed -
+largest impact. So, yes, there may be situations where you are doomed --
 no action could have saved your life. But then, from the midgame on,
 most deaths are not of this type: by this stage, almost all casualties
 can be traced back to actual mistakes; if not tactical ones, then of a 
 strategical type, like wrong skilling (too broad or too narrow), unwise
 use of resources (too conservative or too liberal) , or wrong decisions 
 about branch/god/gear.
+
 The possibility of unavoidable deaths is a larger topic in computer
-games: Ideally, a game like this would be really challenging and have 
-both random layout and random course of action; yet still be winnable 
-with perfect play. This goal seems out of reach. Thus, computer games 
-can either be soft in the sense that optimal play ensures a win. Apart 
-from puzzles, though, this means that the game is solved from the outset 
--- this is where the lack of a human gamemaster is obvious. Or they can 
-be hard in the sense that unavoidable deaths can occur. We feel that the 
-latter choice provides much more fun in the long run.
+games: Ideally, a game like this would be really challenging and have
+both random layout and random course of action; yet still be winnable
+with perfect play. This goal seems out of reach. Thus, computer games
+can be soft in the sense that optimal play ensures a win. Apart from
+puzzles, though, this means that the game is solved from the outset;
+this is where the lack of a human game-master is obvious.
+Alternatively, they can be hard in the sense that unavoidable deaths
+can occur. We feel that the latter choice provides much more fun in
+the long run.
+
 Crawl has a huge number of handmade vaults/maps to tweak the randomness. 
 While the placement, and often parts of the contents, of such vaults are 
 random as well, they provide several advantages: vaults offer challenges 
@@ -1228,6 +1233,7 @@ that are very hard to get via just random monster and layout generation;
 they may center on some theme, providing additional immersion; finally,
 they will often contain some loot, forcing players to decide between 
 safety and greed.
+
 (The next topic can also be filed under balance; see Replayability for
 what balance does not mean to us.)
 
@@ -1239,9 +1245,9 @@ that's really not an interesting choice at all. And that's a horrible
 lost opportunity for fun. Examples for this are the resistances: there
 are very few permanent sources, most involve a choice (like rings or
 specific armour) or are only semi-permanent (like mutations). Another
-example is the absence of clearcut best items, which comes from the fact
-that most artifacts are randomly generated. Furthermore, even fixed
-artifacts cannot be wished for, as scrolls of acquirement produce random
+example is the absence of clear-cut best items, which comes from the fact
+that most artefacts are randomly generated. Furthermore, even fixed
+artefacts cannot be wished for, as scrolls of acquirement produce random
 items in general. Likewise, there are no sure-fire means of life saving
 (the closest equivalents are controlled blinks, and good religious
 standings for some deities).
@@ -1301,7 +1307,7 @@ to the major design goals. Besides these, there are several other
 points helping to make playing Crawl fun over and over again:
 * Many species, which actually play differently: This is partly due to
 the skills and aptitude system. Similarly important are the built-in
-starting boni/handicaps of races; these often have great impact on
+starting bonuses/handicaps of races; these often have great impact on
 play. To us, balance does not mean that all combinations of class and
 race play equally well! Some are much more challenging than others,
 and this is fine with us. Each race has at least some classes playing
@@ -1408,7 +1414,7 @@ cities far above the Dungeon. They are very robust and excellent at hand
 combat, especially favouring axes or bludgeoning weapons, and are good 
 at using armour and shields. They are poor at missile combat, the single
 exception being crossbows, those being rather mechanical weapons. Since
-pole-arms usually are too big for them to wield comfortably, they make
+polearms usually are too big for them to wield comfortably, they make
 quite bad weapons for Dwarves.
 
 In general, they are rather resistant to magic than capable of dealing
@@ -1520,11 +1526,11 @@ invisible creatures, and have tough skin, but their tails are relatively
 slow and cannot move them around as quickly as can other creatures' legs
 (this only affects their movement rate; all other actions are at normal 
 speed). Their body shape also prevents them from gaining full protection
-from most armour. A naga's biggest forte is stealth: nagas are very good
+from most armour. A Naga's biggest forte is stealth: Nagas are very good
 at moving unnoticed.
 
-Every now and then, a naga can spit poison; the range, accuracy and
-damage of this poison increases with the naga's experience level.
+Every now and then, a Naga can spit poison; the range, accuracy and
+damage of this poison increases with the Naga's experience level.
 
 Ogres and Ogre-Mages:
 ---------------------
@@ -1574,7 +1580,7 @@ an immature form with brown scales, but as they grow in power they take
 on a variety of colours. This happens at an early stage in their career,
 and the colour is determined by chromosomes, not by behaviour.
 
-Some types of draconians have breath weapons or special resistances.
+Some types of Draconians have breath weapons or special resistances.
 Draconians advance very slowly in level, but are reasonably good at all
 skills but armour (most types of which they cannot wear) and missile 
 weapons. Still, each colour has its own strengths and some have 
@@ -1598,7 +1604,7 @@ on the part of the player.
   Grey Draconians have no particular weaknesses or strengths when it 
       comes to learning, and they get no breath weapon. Their scales, 
       however, become particularly hard over time, they gain more HP 
-      than other draconians, and they grow a spiked tail, making them
+      than other Draconians, and they grow a spiked tail, making them
       particularly fit for battle.
 
   Black Draconians command lightning bolts and are naturally insulated.
@@ -1610,7 +1616,7 @@ on the part of the player.
 
   Purple Draconians are highly adapted to all spellcasting in general, 
       and to Enchantments in particular. They are a bit better at 
-      evoking things than most other draconians.
+      evoking things than most other Draconians.
 
   Pale Draconians are slightly biased towards fire magic, and have no 
       restrictions otherwise. They breathe steam and, like their 
@@ -1651,7 +1657,7 @@ They are poor fighters, have little physical resilience, and are
 terrible at destructive magic - conjurations, summonings, necromancy
 and elemental spells. On the other hand, they are excellent at other 
 forms of magic and are very good at moving silently and quickly. So 
-great is their speed that a spriggan can overtake a centaur. Due to 
+great is their speed that a Spriggan can overtake a centaur. Due to 
 their tiny size, they need very little food. However, they are 
 herbivorous and cannot eat meat. Their size also makes them unable to 
 wear most armour.
@@ -1671,7 +1677,7 @@ Demonspawn:
 Demonspawn are horrible half-mortal, half-infernal creatures - the flip
 side of the Demigods. Demonspawn can be created in any number of ways:
 magical experiments, breeding, unholy pacts, etc. Although many 
-demonspawn may be indistinguishable from those of pure mortal stock, 
+Demonspawn may be indistinguishable from those of pure mortal stock, 
 they often grow horns, scales or other unusual features. Powerful 
 members of this class of beings also develop a range of unholy 
 abilities, which are listed as mutations (and can sometimes be 
@@ -1687,8 +1693,8 @@ Kenku:
 ------
 The Kenku are an ancient and feared race of bird-people with a
 legendary propensity for violence. Basically humanoid with bird-like
-heads and clawed feet, the kenku can wear all types of armour except
-helmets and boots. Despite their lack of wings, powerful kenku can fly,
+heads and clawed feet, the Kenku can wear all types of armour except
+helmets and boots. Despite their lack of wings, powerful Kenku can fly,
 and very powerful members of this race can stay in the air for as long
 as they wish to do so. They fly a bit faster if they carry little load.
 
@@ -1703,7 +1709,7 @@ Merfolk:
 --------
 The Merfolk are a hybrid race of half-human, half-fish that typically
 live in the oceans and rivers and seldom come onto the land. The
-merfolk aren't as limited on land as some myths suggest; their tails
+Merfolk aren't as limited on land as some myths suggest; their tails
 will quickly reform into legs once they leave the water (and, likewise,
 their legs will quickly reform into a tail should they ever enter 
 water). Their agility is often misjudged, and they tend to be 
@@ -1720,7 +1726,7 @@ although they can also use longer swords quite well.
 As spellcasters, they tend to be quite good in specific areas. Their
 mystical relationship with water makes it easier for them to use
 divination, poison, and ice magics... which use water occasionally as a
-material component. The legendary water magic of the merfolk was lost
+material component. The legendary water magic of the Merfolk was lost
 in ancient times, but some of that affinity still remains. The 
 instability of their own morphogenic matrix has made them very 
 accomplished transmuters, but most other magics seem foreign to them.
@@ -1959,7 +1965,7 @@ Weapon skills include:
 
 If you are already good at a weapon, say a long sword, and you practise
 for a while with similar weapon such as a short sword, your practise 
-will be speeded up (and will require less experience) until both skills
+will be sped up (and will require less experience) until both skills
 are equal; this is called crosstraining. Similar types of weapons are:
 
      o  Short Blades and Long Blades
@@ -2060,7 +2066,7 @@ Stealth:
 --------
 Helps you avoid being noticed. Try not to wear heavy armour or be 
 encumbered if you want to be stealthy. Large creatures (like Trolls) 
-are bad at stealth. The big exception are nagas, which are unusually 
+are bad at stealth. The big exception are Nagas, which are unusually 
 stealthy. Stealth is trained by walking around lightly armoured, and 
 especially by walking around unnoticed.
 
@@ -2185,7 +2191,7 @@ Character information:
         E               Display experience info.
         ^               Show religion screen.
         A               Show abilities/mutations.
-        a               Show current abilites menu.
+        a               Show current abilities menu.
         \               Show item knowledge.
         m               Show skill screen.
         i               Show inventory list. Inside this list, pressing 
@@ -2279,7 +2285,7 @@ Stashes:
                         can use regular expressions and also terms like
                         'long blades', 'shop', 'altar', 'artefact'.
                         If you are looking for altars to a special god,
-                        a seach for 'Trog' etc. works. If all items are
+                        a search for 'Trog' etc. works. If all items are
                         stashed (the default), then a string like 'D:13'
                         will list all known items on that level.
                         'D:1}' will search for items on level 1 only,
@@ -2453,7 +2459,7 @@ Very Full       You have eaten almost all you can for now.
 Engorged        You can't eat any more for now.
 Sick            You are sick, usually from bad food. Hit points don't
                 regenerate until cured (wait it out or quaff a potion of
-                healing). Occassionally a primary attribute might drop.
+                healing). Occasionally a primary attribute might drop.
 Pois            You are poisoned and continually lose hit points. There
                 are several levels of poisoning. Cure with potions of 
                 healing or by waiting it out.
@@ -2487,7 +2493,7 @@ Lev             You levitate, i.e. hover a few inches above the ground.
                 Levitation provides a speed bonus to swiftness.
 Fly             You fly, gaining the benefits of levitation with none of 
                 the drawbacks. This is only accessible for experienced 
-                kenku, lucky draconians, characters using Dragon form, 
+                Kenku, lucky Draconians, characters using Dragon form, 
                 or those levitating while wearing an amulet of 
                 controlled flight.
 Held            You are held in a net: you cannot move freely and instead 
@@ -2542,14 +2548,13 @@ Safety inscriptions
 -------------------
 Inscriptions containing the following strings affect the behaviour of 
 some commands:
-  !*   prompt before any action using this item  
-  !w   prompt before wielding and unwielding    
-  !z   prompt before zapping  
-  !e   prompt before eating  
-  !q   prompt before quaffing    
-  !r   prompt before reading  
-  !f   prompt before firing  
-  !t   prompt before throwing
+  !*   prompt before any action using this item
+  !w   prompt before wielding and unwielding
+  !z   prompt before zapping
+  !e   prompt before eating
+  !q   prompt before quaffing
+  !r   prompt before reading
+  !f   prompt before firing or throwing
   !W   prompt before wearing armour
   !T   prompt before taking off armour
   !P   prompt before putting on jewelry
@@ -2567,7 +2572,8 @@ some commands:
        this inscription)
   =s   If stash tracking is explicit, then dropping this item will
        cause a stash to automatically be marked.
-  =f   This item is exempt from cycling ammunition.
+  =f   item is excluded when cycling ammunition
+  +f   item is included when cycling ammunition
 
 You can use the autoinscribe option to have some items automatically 
 inscribed. See crawl_options.txt for details. Some examples are
@@ -2580,7 +2586,7 @@ Many players use inscriptions for properties of random artefacts. This
 makes browsing the inventory or stashes easier. Crawl provides a scheme
 to do this automatically: press 'a' when viewing an identified artefact.
 
-Here, one has to neogatiate between two concurrent objectives: terseness
+Here, one has to negotiate between two concurrent objectives: terseness
 for better use of limited line lengths versus verboseness for easier 
 reading. The default inscriptions use the following general ideas:
   rXXX   signifies a resistance
