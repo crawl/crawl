@@ -2601,6 +2601,8 @@ void describe_god( god_type which_god, bool give_title )
     {
         if (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE)
             cgotoxy(1, get_number_of_lines(), GOTO_CRT);
+        else if (you.religion == GOD_BEOGH)
+            cgotoxy(1, get_number_of_lines() - 1, GOTO_CRT);
         else
             cgotoxy(1, get_number_of_lines() - 2, GOTO_CRT);
 
