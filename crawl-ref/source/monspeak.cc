@@ -160,17 +160,6 @@ bool mons_speaks(const monsters *monster)
                                   && monster->has_ench(ENCH_CONFUSION)))
         return false;
 
-    // Dealing with the monster not being silenced while the player
-    // *is* silenced, and is hence able to see the monsters' gestures
-    // and such but not hear any sounds it makes, would be a big
-    // headache to deal with, so skip it.
-    
-    // [jpeg] Why? Only print visible stuff! :p
-/*
-    if (!silenced(monster->x, monster->y)
-        && silenced(you.x_pos, you.y_pos))
-        return false;
-*/
     // Silenced monsters only "speak" 1/3 as often as non-silenced,
     // unless they're normally silent (S_SILENT).  Use
     // get_monster_data(monster->type) to bypass mon_shouts()
@@ -206,6 +195,12 @@ bool mons_speaks(const monsters *monster)
 
     if (monster->has_ench(ENCH_CONFUSION))
         prefixes.push_back("confused");
+        
+    // Add Beogh to list of prefixes for orcs (hostile and friendly) if you
+    // worship Beogh. (This assumes you being a Hill Orc, so might have odd
+    // results in wizard mode.)
+    if (you.religion == GOD_BEOGH && mons_genus(monster->type) == MONS_ORC)
+        prefixes.push_back("beogh");
 
     std::string msg;
 
@@ -226,6 +221,22 @@ bool mons_speaks(const monsters *monster)
 
     if (msg == "__NONE")
         return false;
+
+    // The exact name brought no results, try species.
+    if (msg.empty() || msg == "__NEXT")
+    {
+        msg = get_speak_string(prefixes,
+                       mons_type_name(mons_species(monster->type), DESC_PLAIN),
+                       monster);
+
+        // Still nothing found? Try monster genus!
+        if (msg.empty() || msg == "__NEXT")
+        {
+            msg = get_speak_string(prefixes,
+                           mons_type_name(mons_genus(monster->type), DESC_PLAIN),
+                           monster);
+        }
+    }
 
     // Now that we're not dealing with a specific monster name, include
     // whether or not it can move in the prefix

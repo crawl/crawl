@@ -1827,3 +1827,185 @@ yak
 
 @The_monster@ snorts and paws the @surface@.
 %%%%
+##############################################
+# Special orc speech
+##############################################
+orc_shouts
+
+grunts
+
+@shouts@
+
+@mutters@
+
+complains
+
+cheers
+
+jeers
+
+curses
+%%%%
+loudly_or_repeatedly
+
+loudly
+
+w:5
+repeatedly
+%%%%
+orc_modifier
+
+.
+
+w:4
+, as Orcs often do.
+
+%%%%
+_generic_orc_speech_
+
+w:50
+@The_monster@ @orc_shouts@ @loudly_or_repeatedly@@orc_modifier@
+
+w:20
+@The_monster@ suddenly @orc_shouts@@orc_modifier@
+
+w:5
+@The_monster@ @orc_shouts@ to no one in particular.
+
+@The_monster@ @loudly_or_repeatedly@ @shouts@ encouragement@orc_modifier@
+
+w:2
+@The_monster@ @loudly_or_repeatedly@ @shouts@ encouragement to no one in particular.
+
+@The_monster@ sings a few bars from the Orcish anthem.
+%%%%
+######################################################
+# General, non-descript orcs
+######################################################
+orc
+
+# stay silent most of the time
+w:9
+__NONE
+
+w:1
+@_generic_orc_speech_@
+%%%%
+#######################################################
+# Heretic orcs, not believing in Beogh or doubting the
+# saviour story.
+#######################################################
+beogh orc
+
+# hostile orcs shouldn't be too talkative
+w:60
+__NONE
+
+w:30
+@_generic_orc_speech_@
+
+# unbelievers
+@The_monster@ shouts, "I don't believe in Beogh!"
+
+@The_monster@ sneers, "Orcs don't need Beogh!"
+
+@The_monster@ says, "Beogh's messiah is just a fairy-tale."
+
+# orcs doubting you
+@The_monster@ mutters, "You're NOT the saviour of the Orcs."
+
+@The_monster@ shouts, "You're not the messiah, I am!"
+
+@The_monster@ laughs, "You, our saviour!?"
+
+@The_monster@ grumbles, "You're not even a proper Orc..."
+
+@The_monster@ shouts, "How could Beogh possibly chose you?"
+
+@The_monster@ mutters something uncomplimentary.
+
+@The_monster@ shouts, "Beogh will surely punish you for your arrogance!"
+
+@The_monster@ says, "Even if there was a messiah, it couldn't be you."
+
+@The_monster@ shouts, "Orcs!  @player_name@ is lying!"
+
+@The_monster@ grunts, "You, the messiah? You don't even look the part!"
+
+VISUAL:@The_monster@ grimaces.
+
+VISUAL:@The_monster@ shakes @possessive@ head.
+
+VISUAL:@The_monster@ quizzically stares at you.
+%%%%
+friendly beogh orc
+
+# general friendly speech
+w:30
+@default friendly humanoid@
+
+w:30
+@_generic_orc_speech_@
+
+@The_monster@ says, "Beogh is great, and so are you!"
+
+@The_monster@ shouts, "Orcs kill for Beogh, Orcs die for Beogh!"
+
+# messages submitted by Lemuel
+@The_monster@ says, "I'm proud to serve, I'm ready to die."
+
+@The_monster@ says, "May Beogh smile on you, @player_name@."
+
+@The_monster@ shouts, "Fear not, @player_name@! Beogh smiles on those who fall in battle!"
+
+@The_monster@ lets loose a series of foul curses in the name of Beogh.
+
+@The_monster@ says, "@Monster@ fights for @player_name@, and Beogh rules over all."
+
+@The_monster@ says, "Orcs will kill them all!"
+
+@The_monster@ @shouts@, "Orcs rule!"
+
+@The_monster@ says, "I just want to die in your service, @player_name@!"
+
+@The_monster@ says, "I'd rather not die in your service, @player_name@."
+
+@The_monster@ says, "Um, some of the gold is for me, right?"
+
+@The_monster@ chants, "I shall fear no evil, for @player_name@ is my saviour."
+
+@The_monster@ says, "Beogh doesn't mind all this killing, you know."
+
+@The_monster@ says, "Orcs get a bad rep."
+
+@The_monster@ @mutters@, "It's always elves, elves, elves."
+
+@The_monster@ says, "I'm an Orc, you're an Orc, it's OK."
+
+@The_monster@ seems like @pronoun@ is about to say something to you, then stops.
+
+@The_monster@ says, "When this is all over, I'm going to start a fungus farm."
+%%%%
+friendly beogh orc sorcerer
+
+@_wizard_@
+
+@friendly beogh orc@
+%%%%
+beogh orc sorcerer
+
+@_wizard_@
+
+w:3
+@beogh orc@
+%%%%
+orc sorcerer
+
+@_wizard_@
+
+w:1
+@_generic_orc_@
+
+w:1
+__NONE
+%%%%
