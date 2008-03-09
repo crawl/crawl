@@ -2294,7 +2294,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (wepClass == OBJ_WEAPONS
             || (wepClass == OBJ_MISSILES
                 && (wepType == MI_STONE || wepType == MI_LARGE_ROCK
-                    || wepType == MI_JAVELIN)))
+                    || wepType == MI_DART || wepType == MI_JAVELIN)))
         {
             // elves with elven weapons
             if (get_equip_race(item) == ISFLAG_ELVEN
@@ -2327,6 +2327,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             {
                 switch (wepType)
                 {
+                    case MI_DART:
+                        baseHit += 2;
+                        break;
                     case MI_JAVELIN:
                         baseHit += 1;
                         break;
@@ -2366,10 +2369,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                     baseHit = 1;
                 break;
             case MI_DART:
-                // give an appropriate 'tohit' & damage
-                baseHit = 2;
-                baseDam = property( item, PWPN_DAMAGE );
-
                 exHitBonus = you.skills[SK_DARTS] * 2;
                 exHitBonus += (you.skills[SK_THROWING] * 2) / 3;
                 exDamBonus = you.skills[SK_DARTS] / 3;

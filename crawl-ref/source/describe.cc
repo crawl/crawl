@@ -1060,33 +1060,44 @@ static std::string describe_ammo( const item_def &item )
 
     if (get_equip_race(item) != ISFLAG_NO_RACE)
     {
+        bool can_launch = has_launcher(item);
+        bool can_throw = is_throwable(item);
+
         description += "$";
         if (need_new_line)
             description += "$";
 
-        if ( has_launcher(item) )
-        {
-            description += "It is more effective in conjunction with ";
-            description += racial_description_string(item);
-            description += "launchers.";
-        }
-        else
+        if (can_throw)
         {
             switch ( get_equip_race(item) )
             {
             case ISFLAG_DWARVEN:
                 description +=
-                    "It is most deadly when thrown by dwarves.";
+                    "It is more deadly when thrown by dwarves";
                 break;
             case ISFLAG_ELVEN:
                 description +=
-                    "It is most deadly when thrown by elves.";
+                    "It is more deadly when thrown by elves";
                 break;
             case ISFLAG_ORCISH:
                 description +=
-                    "It is most deadly when thrown by orcs.";
+                    "It is more deadly when thrown by orcs";
                 break;
             }
+        }
+
+        if (can_throw && !can_launch)
+            description += ".";
+        else if (!can_throw && can_launch)
+            description += "It ";
+        else if (can_throw && can_launch)
+            description += ", and it ";
+
+        if (can_launch)
+        {
+            description += "is more effective in conjunction with ";
+            description += racial_description_string(item);
+            description += "launchers.";
         }
     }
     return (description);
