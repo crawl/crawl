@@ -1911,7 +1911,7 @@ bool has_launcher( const item_def &wpn )
 }
 
 // returns true if item can be reasonably thrown without a launcher
-bool is_throwable( const item_def &wpn, size_type bodysize  )
+bool is_throwable( const item_def &wpn, size_type bodysize )
 {
     if (wpn.base_type == OBJ_WEAPONS)
         return (Weapon_prop[ Weapon_index[wpn.sub_type] ].throwable);
