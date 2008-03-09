@@ -1920,7 +1920,7 @@ w:30
 
 @The_monster@ grumbles, "You're not even a proper Orc..."
 
-@The_monster@ shouts, "How could Beogh possibly chose you?"
+@The_monster@ shouts, "How could Beogh possibly choose you?"
 
 @The_monster@ mutters something uncomplimentary.
 
