@@ -2179,6 +2179,15 @@ Dungeon interaction:
         x               Examine surroundings mode, see below. Has ? help.
         X               Examine level map, see below. Has help on ?.
         Ctrl-O          Show dungeon overview (branches, shops, etc.).
+        !               Annotate current level: you can enter any string.
+                        This annotation is then listed in the dungeon 
+                        overview (Ctrl-O) and also shown whenever you 
+                        enter that level again. If you use this command 
+                        when standing on a staircase, you may also 
+                        annotate the level that staircase leads to.
+                        Should your annotation contain an exclamation
+                        mark (!), you will be prompted before entering
+                        the level. An empty string clears any annotation.
 
 Character information:
 'display' below means usage of the message area,
