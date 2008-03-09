@@ -533,6 +533,20 @@ static std::string prev_startup_description(void)
            get_opt_class_name(Options.prev_cls);
 }
 
+// Output full character info when weapons/books/religion are chosen.
+static void print_character_info()
+{
+    // At this point all of name, species and class should be decided.
+    if (strlen(you.your_name) > 0
+        && you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN)
+    {
+        cprintf("Welcome, ");
+        textcolor( YELLOW );
+        cprintf("%s the %s %s." EOL, you.your_name, species_name(you.species, 1).c_str(),
+                get_class_name(you.char_class));
+    }
+}
+
 int give_first_conjuration_book()
 {
     // Assume the fire/earth book, as conjurations is strong with fire -- bwr
@@ -1064,6 +1078,7 @@ static undead_state_type get_undead_state(const species_type sp)
 
 bool new_game(void)
 {
+    clrscr();
     init_player();
 
     if (!crawl_state.startup_errors.empty()
@@ -1112,6 +1127,7 @@ game_start:
     else
     {
         if (Options.race != 0 && Options.cls != 0
+            && Options.race != '*' && Options.cls != '*'
             && !class_allowed(get_species(letter_to_index(Options.race)),
                               get_class(letter_to_index(Options.cls))))
         {
@@ -1880,8 +1896,11 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
 
     if ( !Options.random_pick )
     {
+        clrscr();
+        print_character_info();
+        
         textcolor( CYAN );
-        cprintf(EOL " You have a choice of books:" EOL);
+        cprintf(EOL "You have a choice of books:" EOL);
         textcolor( LIGHTGREY );
 
         for (int i=0; i < numbooks; ++i)
@@ -1975,9 +1994,10 @@ static bool choose_weapon()
     if (!Options.random_pick && Options.weapon != WPN_RANDOM)
     {
         clrscr();
+        print_character_info();
 
         textcolor( CYAN );
-        cprintf(EOL " You have a choice of weapons:" EOL);
+        cprintf(EOL "You have a choice of weapons:" EOL);
         textcolor( LIGHTGREY );
 
         bool prevmatch = false;
@@ -3755,9 +3775,10 @@ bool give_items_skills()
             else
             {
                 clrscr();
-
+                print_character_info();
+                
                 textcolor( CYAN );
-                cprintf(EOL " Which god do you wish to serve?" EOL);
+                cprintf(EOL "Which god do you wish to serve?" EOL);
 
                 textcolor( LIGHTGREY );
                 cprintf("a - Zin (for traditional priests)" EOL);
@@ -4360,9 +4381,10 @@ bool give_items_skills()
         else
         {
             clrscr();
-
+            print_character_info();
+            
             textcolor( CYAN );
-            cprintf(EOL " From where do you draw your power?" EOL);
+            cprintf(EOL "From where do you draw your power?" EOL);
 
             textcolor( LIGHTGREY );
             cprintf("a - Necromantic magic" EOL);
@@ -4486,9 +4508,10 @@ bool give_items_skills()
         else
         {
             clrscr();
+            print_character_info();
 
             textcolor( CYAN );
-            cprintf(EOL " Which god of chaos do you wish to serve?" EOL);
+            cprintf(EOL "Which god of chaos do you wish to serve?" EOL);
 
             textcolor( LIGHTGREY );
             cprintf("a - Xom of Chaos" EOL);

@@ -321,8 +321,11 @@ static fire_type str_to_fire_types( const std::string &str )
 
 static char str_to_race( const std::string &str )
 {
-    int index = -1;
+    if (str == "random")
+        return '*';
 
+    int index = -1;
+    
     if (str.length() == 1)      // old system of using menu letter
         return (str[0]);
     else if (str.length() == 2) // scan abbreviations
@@ -332,11 +335,17 @@ static char str_to_race( const std::string &str )
     if (index == -1)
         index = get_species_index_by_name( str.c_str() );
 
+    if (index == -1)
+        fprintf( stderr, "Unknown race choice: %s\n", str.c_str() );
+        
     return ((index != -1) ? index_to_letter( index ) : 0);
 }
 
 static int str_to_class( const std::string &str )
 {
+    if (str == "random")
+        return '*';
+
     int index = -1;
 
     if (str.length() == 1)      // old system of using menu letter
@@ -348,7 +357,10 @@ static int str_to_class( const std::string &str )
     if (index == -1)
         index = get_class_index_by_name( str.c_str() );
 
-    return ((index != -1) ? index_to_letter( index ) : 0); 
+    if (index == -1)
+        fprintf( stderr, "Unknown class choice: %s\n", str.c_str() );
+
+    return ((index != -1) ? index_to_letter( index ) : 0);
 }
 
 static bool read_bool( const std::string &field, bool def_value )
@@ -2066,16 +2078,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "race")
     {
         race = str_to_race( field );
-
-        if (race == 0)
-            fprintf( stderr, "Unknown race choice: %s\n", field.c_str() );
     }
     else if (key == "class")
     {
         cls = str_to_class( field );
-
-        if (cls == 0)
-            fprintf( stderr, "Unknown class choice: %s\n", field.c_str() );
     }
     else if (key == "auto_list")
     {
