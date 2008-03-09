@@ -197,7 +197,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // TSO
     { "gain power from killing evil in The Shining One's name",
       "call upon The Shining One for a divine shield",
-      "dispel the undead",
+      "",
       "hurl blasts of cleansing flame",
       "summon a divine warrior" },
     // Kikubaaqudgha
@@ -282,7 +282,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // TSO
     { "gain power from killing evil in The Shining One's name",
       "call upon The Shining One for a divine shield",
-      "dispel the undead",
+      "",
       "hurl blasts of cleansing flame",
       "summon a divine warrior" },
     // Kikubaaqudgha

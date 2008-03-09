@@ -114,7 +114,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_ZIN_RECITE, ABIL_ZIN_SMITING, ABIL_ZIN_REVITALISATION,
       ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
     // TSO
-    { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_TSO_ANNIHILATE_UNDEAD,
+    { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_NON_ABILITY,
       ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DAEVA },
     // Kikubaaqudgha
     { ABIL_KIKU_RECALL_UNDEAD_SLAVES, ABIL_NON_ABILITY,
@@ -240,7 +240,6 @@ static const ability_def Ability_List[] =
 
     // The Shining One
     { ABIL_TSO_DIVINE_SHIELD, "Divine Shield", 3, 0, 50, 2, ABFLAG_NONE },
-    { ABIL_TSO_ANNIHILATE_UNDEAD, "Annihilate Undead", 3, 0, 50, 2, ABFLAG_NONE },
     { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame", 5, 0, 100, 2, ABFLAG_NONE },
     { ABIL_TSO_SUMMON_DAEVA, "Summon Daeva", 8, 0, 150, 4, ABFLAG_NONE },
 
@@ -698,7 +697,6 @@ static talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_ZIN_REVITALISATION:
-    case ABIL_TSO_ANNIHILATE_UNDEAD:
     case ABIL_LUGONU_BANISH:
         invoc = true;
         failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
@@ -1398,12 +1396,6 @@ static bool do_ability(const ability_def& abil)
 
         exercise(SK_INVOCATIONS, 1);
         break;
-*/
-
-    case ABIL_TSO_DIVINE_SHIELD:
-        cast_divine_shield();
-        exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
-        break;
 
     case ABIL_TSO_ANNIHILATE_UNDEAD:
         if ( !spell_direction(spd, beam) )
@@ -1413,6 +1405,12 @@ static bool do_ability(const ability_def& abil)
 
         zapping(ZAP_DISPEL_UNDEAD, you.skills[SK_INVOCATIONS] * 6, beam);
         exercise(SK_INVOCATIONS, 2 + random2(4));
+        break;
+*/
+
+    case ABIL_TSO_DIVINE_SHIELD:
+        cast_divine_shield();
+        exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
