@@ -802,7 +802,8 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         break;
 
     case ZAP_NEGATIVE_ENERGY:                           // cap 150
-        pbolt.name = pbolt.effect_known ? "bolt of negative energy" : "bolt";
+        // these always auto-identify, so no generic name
+        pbolt.name = "bolt of negative energy";
         pbolt.colour = DARKGREY;
         pbolt.range = 7 + random2(10);
         pbolt.damage = calc_dice( 4, 15 + (power * 3) / 5 ); 
