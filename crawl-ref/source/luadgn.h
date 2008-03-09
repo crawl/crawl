@@ -12,6 +12,7 @@
 #include "AppHdr.h"
 #include "clua.h"
 
+// Defined in acr.cc
 extern CLua dlua;
 
 // Lua chunks cannot exceed 512K. Which is plenty!

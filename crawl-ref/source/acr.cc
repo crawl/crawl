@@ -140,10 +140,18 @@
 
 #include "tiles.h"
 
-crawl_environment env;
+// ----------------------------------------------------------------------
+// Globals whose construction/destruction order needs to be managed
+// ----------------------------------------------------------------------
+
+CLua clua(true);
+CLua dlua(false);		// Lua interpreter for the dungeon builder.
+crawl_environment env;	// Requires dlua
 player you;
 system_environment SysEnv;
 game_state crawl_state;
+
+
 
 std::string init_file_location; // externed in newgame.cc
 

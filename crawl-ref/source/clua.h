@@ -183,6 +183,7 @@ private:
     static std::string new_fn_name();
 };
 
+// Defined in acr.cc
 extern CLua clua;
 
 void lua_set_exclusive_item(const item_def *item = NULL);

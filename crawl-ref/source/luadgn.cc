@@ -29,9 +29,6 @@
 #include "terrain.h"
 #include "view.h"
 
-// Lua interpreter for the dungeon builder.
-CLua dlua(false);
-
 template <typename list, typename lpush>
 static int dlua_gentable(lua_State *ls, const list &strings, lpush push)
 {
