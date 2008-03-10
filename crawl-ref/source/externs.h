@@ -1524,6 +1524,7 @@ public:
     std::string macro_dir;      // Directory containing macro.txt
     std::string morgue_dir;     // Directory where character dumps and morgue
                                 // dumps are saved. Overrides crawl_dir.
+    std::vector<std::string> additional_macro_files;
 
     std::string player_name;
 

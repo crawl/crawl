@@ -598,6 +598,7 @@ void game_options::reset_options()
 #if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH)
     morgue_dir = "morgue/";
 #endif
+    additional_macro_files.clear();
 
     player_name.clear();
 
@@ -1614,7 +1615,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     trim_string( field );
 
     // Keep unlowercased field around
-    std::string orig_field = field;
+    const std::string orig_field = field;
 
     if (key != "name" && key != "crawl_dir" 
         && key != "race" && key != "class" && key != "ban_pickup"
@@ -2696,7 +2697,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             pickup_mode = read_bool_or_number(field, pickup_mode, "auto:");
     }
-
+    else if (key == "additional_macro_file")
+    {
+        additional_macro_files.push_back(orig_field);
+    }
 #ifdef USE_TILE
     else if (key == "show_items")
     {

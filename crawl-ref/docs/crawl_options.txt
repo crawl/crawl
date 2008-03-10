@@ -73,7 +73,8 @@ The contents of this text are:
 4-m     Inscriptions.
                 autoinscribe
 4-n     Macro related Options.
-                flush.failure, flush.command, flush.message
+                flush.failure, flush.command, flush.message,
+                macro_meta_entry, additional_macro_file
 4-o     Tiles Options.
                 show_items, title_screen, tile_player_col,
                 tile_monster_col, tile_friendly_col, tile_item_col,
@@ -92,9 +93,10 @@ The contents of this text are:
                 note_messages
 6-  Miscellaneous.
 6-a     All OS.
-                macro_meta_entry, mouse_input, wiz_mode, use_ascii,
-                classic_item_colours, colours, char_set, cset_ascii, 
-                cset_ibm, cset_dec, cset_unicode, feature, mon_glyph
+                mouse_input, wiz_mode, use_ascii, classic_item_colours,
+                colours, char_set, cset_ascii, cset_ibm, cset_dec,
+                cset_unicode, feature, mon_glyph
+
 6-b     DOS and Windows.
                 dos_use_background_intensity
 6-c     Unix.
@@ -1252,6 +1254,15 @@ flush.message = false
            command -- whenever the game is about to get the next command
            message -- whenever the game outputs a non-mute message 
 
+macro_meta_entry = true
+        macro_meta_entry lets you specify non-printable keycodes like 
+        \{3} when creating a macro. For instance, if you want to keymap 
+        0 to Escape, you'd use a target keycode of \{27}.
+
+additional_macro_file = path/to/filename
+        Add an additional macro file to be loaded after macro.txt.
+        You can have multiple additional_macro_file lines.
+
 4-o     Tiles Options.
 ----------------------
 In non-tile games the tile options are ignored.
@@ -1453,11 +1464,6 @@ note_messages = <regex list>
 
 6-a     All OS.
 ---------------
-
-macro_meta_entry = true
-        macro_meta_entry lets you specify non-printable keycodes like 
-        \{3} when creating a macro. For instance, if you want to keymap 
-        0 to Escape, you'd use a target keycode of \{27}.
 
 mouse_input = false
         When enabled, the mouse_input option allows the game to use 

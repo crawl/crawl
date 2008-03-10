@@ -825,11 +825,10 @@ void macro_add_query( void )
     redraw_screen();
 }
 
-
 /*
  * Initializes the macros.
  */
-int macro_init( void ) 
+static void _read_macros_from(const char* filename)
 {
     std::string s;
     std::ifstream f;
@@ -837,7 +836,7 @@ int macro_init( void )
     bool keymap = false;
     KeymapContext keymc = KC_DEFAULT;
       
-    f.open( get_macro_file().c_str() );
+    f.open( filename );
     
     while (f >> s) 
     {
@@ -867,9 +866,24 @@ int macro_init( void )
             macro_add( (keymap ? Keymaps[keymc] : Macros), key, action );
         }
     }
-         
-    return (0);
 }
+
+int macro_init( void ) 
+{
+    _read_macros_from(get_macro_file().c_str());
+
+    const std::vector<std::string>& files = Options.additional_macro_files;
+    for (std::vector<std::string>::const_iterator it = files.begin();
+         it != files.end();
+         ++it)
+    {
+        _read_macros_from(it->c_str());
+    }
+
+
+    return 0;
+}
+
 
 void macro_userfn(const char *keys, const char *regname)
 {
