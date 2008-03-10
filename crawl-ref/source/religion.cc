@@ -448,7 +448,7 @@ void inc_penance(god_type god, int val)
     if (you.penance[god] == 0 && val > 0)
     {
         take_note(Note(NOTE_PENANCE, god));
-        
+
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
@@ -464,12 +464,12 @@ void inc_penance(god_type god, int val)
             make_god_gifts_disappear(true); // only on level
         }
     }
-    
+
     if (you.penance[god] + val > 200)
         you.penance[god] = 200;
     else
         you.penance[god] += val;
-        
+
     if ( god == GOD_BEOGH && need_water_walking() && !beogh_water_walk())
     {
          fall_into_a_pool( you.x_pos, you.y_pos, true,
@@ -2915,12 +2915,12 @@ static bool god_gifts_hostile_wrapper()
 // Make god gifts disappear on all levels, or on only the current one.
 bool make_god_gifts_hostile(bool level_only)
 {
-   bool success = make_god_gifts_on_level_hostile(true);
-   
-   if (level_only)
-       return (success);
-       
-   return (apply_to_all_dungeons(god_gifts_hostile_wrapper) || success);
+    bool success = make_god_gifts_on_level_hostile(true);
+
+    if (level_only)
+        return (success);
+
+    return (apply_to_all_dungeons(god_gifts_hostile_wrapper) || success);
 }
 
 static bool orcish_followers_on_level_abandon_you()
@@ -3145,7 +3145,7 @@ static void good_god_holy_being_attitude_change_speech(
             break;
         }
         tchan << std::endl;
-    }    
+    }
 }
 
 static void beogh_orc_emergency_conversion_speech(
@@ -3161,7 +3161,7 @@ static void beogh_orc_emergency_conversion_speech(
                  << " hands in surrender. "; break;
     }
     chan << std::endl;
-    
+
     static const char *mercy_message[] =
     {
         " shouts, \"I'll follow you, let me live!\"",
@@ -3214,7 +3214,7 @@ static void beogh_orc_spontaneous_conversion_speech(
             break;
         }
         tchan << std::endl;
-    }    
+    }
 }
 
 void good_god_holy_attitude_change(monsters *holy)
@@ -3230,7 +3230,7 @@ void good_god_holy_attitude_change(monsters *holy)
     }
 
     holy->attitude  = ATT_NEUTRAL;
-    
+
     holy->flags |= MF_GOD_GIFT;
     holy->flags |= MF_WAS_NEUTRAL;
 
@@ -3241,7 +3241,7 @@ void good_god_holy_attitude_change(monsters *holy)
 void beogh_convert_orc(monsters *orc, bool emergency)
 {
     ASSERT(mons_species(orc->type) == MONS_ORC);
-    
+
     if (player_monster_visible(orc)) // show reaction
     {
         std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
@@ -3254,7 +3254,7 @@ void beogh_convert_orc(monsters *orc, bool emergency)
     }
 
     orc->attitude  = ATT_FRIENDLY;
-    
+
     // not really "created" friendly, but should it become
     // hostile later on, it won't count as a good kill
     orc->flags |= MF_CREATED_FRIENDLY;
@@ -3262,7 +3262,7 @@ void beogh_convert_orc(monsters *orc, bool emergency)
 
     if (orc->hit_points <= 0)
         orc->hit_points = std::min(random_range(1, 4), orc->max_hit_points);
-                   
+
     // to avoid immobile "followers"
     behaviour_event(orc, ME_ALERT, MHITNOT);
 }
