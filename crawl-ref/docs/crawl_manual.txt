@@ -1756,11 +1756,11 @@ They have a good general grounding in the arts of fighting.
 
 Gladiators:
 -----------
-The Gladiator is trained to fight in the ring, and so is an expert in
-the art of fighting but is not so good at anything else. In fact,
-Gladiators are pretty terrible at anything except bashing monsters
-with heavy things. They start with a nasty weapon, a small shield,
-leather armour, and some nets.
+The Gladiator has been trained to fight in the ring, and so is versed 
+in the art of fighting but is not so good at anything else. In fact,
+Gladiators have never learend anything except bashing monsters with 
+heavy things. They start with a nasty weapon, a small shield, leather 
+armour, and some nets.
 
 Berserkers:
 -----------
