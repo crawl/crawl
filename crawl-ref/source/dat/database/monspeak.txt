@@ -2055,7 +2055,7 @@ w:5
 
 @The_monster@ shouts, "All @orc_heathen@s must die!"
 
-@The_monster@ @shouts@, "Let's @kill_or_maim@ those @heathen@s."
+@The_monster@ @shouts@, "Let's @kill_or_maim@ those @orc_heathen@s."
 
 @The_monster@ @orc_says@, "With Beogh's help we'll overthrow the @orc_heathen@s!"
 

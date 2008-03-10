@@ -678,9 +678,9 @@ static std::vector<std::string> speak_txt_paths()
     std::vector<std::string> txt_file_names;
     std::vector<std::string> paths;
 
-    txt_file_names.push_back("speak");  // monster speech
-    txt_file_names.push_back("noise");  // noisy weapon speech
-    txt_file_names.push_back("insult"); // imp/demon taunts
+    txt_file_names.push_back("monspeak"); // monster speech
+    txt_file_names.push_back("wpnnoise"); // noisy weapon speech
+    txt_file_names.push_back("insult");   // imp/demon taunts
 
     for (int i = 0, size = txt_file_names.size(); i < size; i++)
     {
