@@ -2795,8 +2795,7 @@ static bool holy_beings_on_level_attitude_change()
     {
         monsters *monster = &menv[i];
         if (monster->type != -1
-            && mons_class_holiness(monster->type) == MH_HOLY
-            && (monster->flags & MF_GOD_GIFT))
+            && mons_class_holiness(monster->type) == MH_HOLY)
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Attitude changing: %s on level %d, branch %d",
@@ -2854,9 +2853,8 @@ static bool make_god_gifts_on_level_disappear(bool seen = false)
         if (monster->type != -1
             && monster->attitude == ATT_FRIENDLY
             && monster->has_ench(ENCH_ABJ)
-            && testbits(monster->flags,MF_GOD_GIFT))
+            && (monster->flags & MF_GOD_GIFT))
         {
-
             // monster disappears
             if (!seen || simple_monster_message(monster, " abandons you!"))
                 count++;
@@ -2933,8 +2931,7 @@ static bool orcish_followers_on_level_abandon_you()
         monsters *monster = &menv[i];
         if (monster->type != -1
             && mons_species(monster->type) == MONS_ORC
-            && monster->attitude == ATT_FRIENDLY
-            && (monster->flags & MF_GOD_GIFT))
+            && monster->attitude == ATT_FRIENDLY)
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Abandoning: %s on level %d, branch %d",
@@ -3232,7 +3229,8 @@ void good_god_holy_attitude_change(monsters *holy)
 
     holy->attitude  = ATT_NEUTRAL;
 
-    holy->flags |= MF_GOD_GIFT;
+    // not really *created* neutral, but should it become
+    // hostile later on, it won't count as a good kill
     holy->flags |= MF_WAS_NEUTRAL;
 
     // to avoid immobile "followers"
@@ -3259,7 +3257,6 @@ void beogh_convert_orc(monsters *orc, bool emergency)
     // not really "created" friendly, but should it become
     // hostile later on, it won't count as a good kill
     orc->flags |= MF_CREATED_FRIENDLY;
-    orc->flags |= MF_GOD_GIFT;
 
     if (orc->hit_points <= 0)
         orc->hit_points = std::min(random_range(1, 4), orc->max_hit_points);
