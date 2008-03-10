@@ -6,7 +6,7 @@
 #
 # For an explanation of how to read insult.txt and how to 
 # add new messages, see monster_speech.txt in the docs 
-# directory
+# directory.
 ############################################################
 %%%%
 imp_taunt

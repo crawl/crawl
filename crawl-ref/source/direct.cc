@@ -2266,7 +2266,7 @@ command_type targeting_behaviour::get_command(int key)
 
     case CONTROL('F'): return CMD_TARGET_CYCLE_TARGET_MODE;
     case 'p': return CMD_TARGET_PREV_TARGET;
-    case 'f': case 't': return CMD_TARGET_MAYBE_PREV_TARGET;
+    case 'f': return CMD_TARGET_MAYBE_PREV_TARGET;
         
     case '-': return CMD_TARGET_CYCLE_BACK;
     case '+': case '=':  return CMD_TARGET_CYCLE_FORWARD;
