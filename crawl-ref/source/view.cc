@@ -4764,10 +4764,11 @@ void crawl_view_buffer::size(const coord_def &sz)
 //////////////////////////////////////////////////////////////////////////////
 // crawl_view_geometry
 
-const int crawl_view_geometry::message_min_lines;
-const int crawl_view_geometry::hud_min_width;
-const int crawl_view_geometry::hud_min_gutter;
-const int crawl_view_geometry::hud_max_gutter;
+// already defined in header
+// const int crawl_view_geometry::message_min_lines;
+// const int crawl_view_geometry::hud_min_width;
+// const int crawl_view_geometry::hud_min_gutter;
+// const int crawl_view_geometry::hud_max_gutter;
 
 crawl_view_geometry::crawl_view_geometry()
     : termsz(80, 24), viewp(1, 1), viewsz(33, 17),

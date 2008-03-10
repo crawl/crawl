@@ -1330,8 +1330,9 @@ static void fill_exclude_radius(const travel_exclude &exc)
 
 FixedVector<coord_def, GXM * GYM> travel_pathfind::circumference[2];
 
-const int travel_pathfind::UNFOUND_DIST;
-const int travel_pathfind::INFINITE_DIST;
+// already defined in header
+// const int travel_pathfind::UNFOUND_DIST;
+// const int travel_pathfind::INFINITE_DIST;
 
 travel_pathfind::travel_pathfind()
     : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
