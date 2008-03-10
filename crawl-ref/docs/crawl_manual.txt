@@ -504,7 +504,7 @@ spells previously memorised. Again, see the Targeting section.
 
 Some monsters can be friendly; friendly monsters will follow you around 
 and fight on your behalf (you gain half the normal experience points for
-any kills they make). You can command your allies using the '!' key, 
+any kills they make). You can command your allies using the 't' key, 
 which lets you either shout to attract them or tell them who to attack.
 You can also shout to get the attention of all sleeping monsters in 
 range if, for some reason, you want to do that.
