@@ -2842,10 +2842,9 @@ static bool holy_beings_attitude_change()
     return apply_to_all_dungeons(holy_beings_on_level_attitude_change);
 }
 
-// Make summoned (temporary) god gifts disappear on penance
-// or when abandoning the god in question.
-// If seen, only count monsters where the player can see the change and
-// output a message.
+// Make summoned (temporary) friendly god gifts disappear on penance
+// or when abandoning the god in question.  If seen, only count monsters
+// where the player can see the change, and output a message.
 static bool make_god_gifts_on_level_disappear(bool seen = false)
 {
     int count = 0;
@@ -2873,7 +2872,8 @@ static bool god_gifts_disappear_wrapper()
     return (make_god_gifts_on_level_disappear());
 }
 
-// Make god gifts disappear on all levels, or on only the current one.
+// Make friendly god gifts disappear on all levels, or on only the
+// current one.
 bool make_god_gifts_disappear(bool level_only)
 {
    bool success = make_god_gifts_on_level_disappear(true);
@@ -2884,8 +2884,8 @@ bool make_god_gifts_disappear(bool level_only)
    return (apply_to_all_dungeons(god_gifts_disappear_wrapper) || success);
 }
 
-// When abandoning the god in question turn god gifts hostile.
-// If seen, only count monsters where the player can see the change and
+// When abandoning the god in question, turn friendly god gifts hostile.
+// If seen, only count monsters where the player can see the change, and
 // output a message.
 static bool make_god_gifts_on_level_hostile(bool seen = false)
 {
@@ -2912,7 +2912,8 @@ static bool god_gifts_hostile_wrapper()
     return (make_god_gifts_on_level_hostile());
 }
 
-// Make god gifts disappear on all levels, or on only the current one.
+// Make friendly god gifts turn hostile on all levels, or on only the
+// current one.
 bool make_god_gifts_hostile(bool level_only)
 {
     bool success = make_god_gifts_on_level_hostile(true);
