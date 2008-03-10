@@ -2096,7 +2096,7 @@ static void generate_armour_item(item_def& item, bool allow_uniques,
 
         if (!no_ego && (30 + item_level >= random2(350))
             && (force_good || forced_ego
-                || (!get_equip_race(item) == ISFLAG_ORCISH
+                || (get_equip_race(item) != ISFLAG_ORCISH
                     || (item.sub_type <= ARM_PLATE_MAIL && coinflip()))))
         {
             // ...an ego item, in fact.
