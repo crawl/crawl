@@ -824,6 +824,10 @@ VISUAL:@The_monster@ grins evilly.
 %%%%
 Blork the orc
 
+# some chance of generic orc speech
+w:30
+@_generic_orc_speech_@
+
 VISUAL:@The_monster@ grins evilly.
 
 VISUAL:@The_monster@ frowns.
@@ -1585,6 +1589,10 @@ VISUAL:@The_monster@ bares @possessive@ teeth.
 # An orc hired to kill you
 Urug
 
+# some chance of generic orc speech
+w:20
+@_generic_orc_speech_@
+
 VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ roars.
@@ -1593,11 +1601,11 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ says, "Maybe you aren't @player_name@.  It doesn't matter."
 
-@The_monster@ sneers, "Innocent? I'll kill you anyway."
+@The_monster@ sneers, "Innocent?  I'll kill you anyway."
 
 @The_monster@ screams, "Die!"
 
-@The_monster@ screams, "I'm going to kill you! Now!"
+@The_monster@ screams, "I'm going to kill you!  Now!"
 
 @The_monster@ screams, "Blood and destruction!"
 
@@ -1744,10 +1752,6 @@ default orange crystal statue
 
 VISUAL:@The_monster@ glitters in the dim dungeon light.
 %%%%
-orc sorcerer
-
-@_wizard_@
-%%%%
 shadow imp
 
 w:1
@@ -1836,8 +1840,6 @@ grunts
 
 @shouts@
 
-@mutters@
-
 complains
 
 cheers
@@ -1851,15 +1853,20 @@ loudly_or_repeatedly
 loudly
 
 w:5
+noisily
+
+w:5
 repeatedly
 %%%%
 orc_modifier
 
 .
 
-w:4
+w:3
 , as Orcs often do.
 
+w:1
+, in orcish tradition.
 %%%%
 _generic_orc_speech_
 
@@ -1872,12 +1879,43 @@ w:20
 w:5
 @The_monster@ @orc_shouts@ to no one in particular.
 
-@The_monster@ @loudly_or_repeatedly@ @shouts@ encouragement@orc_modifier@
-
 w:2
 @The_monster@ @loudly_or_repeatedly@ @shouts@ encouragement to no one in particular.
 
 @The_monster@ sings a few bars from the Orcish anthem.
+%%%%
+# some synonyms for slandering non-believers
+orc_heathen
+
+heathen
+
+infidel
+
+unbeliever
+
+heretic
+%%%%
+orc_pathetic
+
+sorry
+
+pathetic
+
+miserable
+%%%%
+costumes_or_trick
+
+costumes
+
+disguise
+
+tricks
+%%%%
+fool_or_deceive
+
+fool
+
+deceive
 %%%%
 ######################################################
 # General, non-descript orcs
@@ -1890,6 +1928,34 @@ __NONE
 
 w:1
 @_generic_orc_speech_@
+%%%%
+orc_says
+
+shouts
+
+says
+
+grunts
+
+w:5
+sneers
+%%%%
+says_or_shouts
+
+says
+
+shouts
+%%%%
+kill_or_maim
+
+kill
+
+smash
+
+burn
+
+maim
+
 %%%%
 #######################################################
 # Heretic orcs, not believing in Beogh or doubting the
@@ -1905,38 +1971,57 @@ w:30
 @_generic_orc_speech_@
 
 # unbelievers
-@The_monster@ shouts, "I don't believe in Beogh!"
+@The_monster@ @orc_says@, "I don't believe in Beogh!"
 
-@The_monster@ sneers, "Orcs don't need Beogh!"
+@The_monster@ @orc_says@, "Orcs don't need Beogh!"
 
-@The_monster@ says, "Beogh's messiah is just a fairy-tale."
+@The_monster@ @orc_says@, "Beogh's messiah is just a fairy-tale."
 
 # orcs doubting you
 @The_monster@ mutters, "You're NOT the saviour of the Orcs."
 
-@The_monster@ shouts, "You're not the messiah, I am!"
+@The_monster@ @shouts@, "You're not the messiah, I am!"
 
 @The_monster@ laughs, "You, our saviour!?"
 
 @The_monster@ grumbles, "You're not even a proper Orc..."
 
-@The_monster@ shouts, "How could Beogh possibly choose you?"
+@The_monster@ @orc_says@, "How could Beogh possibly choose you?"
 
 @The_monster@ mutters something uncomplimentary.
 
-@The_monster@ shouts, "Beogh will surely punish you for your arrogance!"
+@The_monster@ @orc_says@, "Beogh will surely punish you for your arrogance!"
 
 @The_monster@ says, "Even if there was a messiah, it couldn't be you."
 
-@The_monster@ shouts, "Orcs!  @player_name@ is lying!"
+@The_monster@ @shouts@, "Orcs!  @player_name@ is lying!"
 
-@The_monster@ grunts, "You, the messiah? You don't even look the part!"
+@The_monster@ grunts, "You, the messiah?  You don't even look the part!"
+
+@The_monster@ @orc_says@, "The messiah will not be a Hill Orc!"
+
+@The_monster@ @orc_says@, "The messiah will be a true Orc!"
+
+@The_monster@ @orc_says@, "Turn back to the hills, deceiver!"
+
+@The_monster@ @orc_says@, "For a messiah, you look rather @orc_pathetic@."
+
+@The_monster@ @orc_says@, "Your @costumes_or_trick@ cannot @fool_or_deceive@ me."
+
+@The_monster@ @orc_says@, "I wonder, will Beogh raise you from the dead?"
+
+@The_monster@ @shouts@, "Die, @orc_heathen@!"
+
+@The_monster@ @shouts@, "Die, @player_name@, for besmirching Beogh's name!"
 
 VISUAL:@The_monster@ grimaces.
 
 VISUAL:@The_monster@ shakes @possessive@ head.
 
-VISUAL:@The_monster@ quizzically stares at you.
+VISUAL:@The_monster@ stares at you quizzically.
+###################################################
+# Orcish followers of Beogh's messiah
+###################################################
 %%%%
 friendly beogh orc
 
@@ -1947,30 +2032,51 @@ w:30
 w:30
 @_generic_orc_speech_@
 
-@The_monster@ says, "Beogh is great, and so are you!"
+w:5
+@The_monster@ @loudly_or_repeatedly@ @shouts@ encouragement@orc_modifier@
+
+@The_monster@ @says_or_shouts@, "Beogh is great, and so is @player_name@!"
 
 @The_monster@ shouts, "Orcs kill for Beogh, Orcs die for Beogh!"
 
+@The_monster@ @says_or_shouts@, "I am so glad I met you."
+
+@The_monster@ says, "Your appearance changed my life!"
+
+@The_monster@ @says_or_shouts@, "Dying for Beogh is much better than random rampage."
+
+@The_monster@ says, "I never had a vision before."
+
+@The_monster@ @says_or_shouts@, "Our fallen brethren won't be forgotten."
+
+@The_monster@ @shouts@, "Blood in Beogh's name!"
+
+@The_monster@ @orc_says@, "A dead @orc_heathen@ will not bedevil my soul."
+
+@The_monster@ shouts, "All @orc_heathen@s must die!"
+
+@The_monster@ @shouts@, "Let's @kill_or_maim@ those @heathen@s."
+
+@The_monster@ @orc_says@, "With Beogh's help we'll overthrow the @orc_heathen@s!"
+
 # messages submitted by Lemuel
-@The_monster@ says, "I'm proud to serve, I'm ready to die."
+@The_monster@ @says_or_shouts@, "I'm proud to serve, I'm ready to die."
 
 @The_monster@ says, "May Beogh smile on you, @player_name@."
 
-@The_monster@ shouts, "Fear not, @player_name@! Beogh smiles on those who fall in battle!"
+@The_monster@ shouts, "Fear not, @player_name@!  Beogh smiles on those who fall in battle!"
 
 @The_monster@ lets loose a series of foul curses in the name of Beogh.
 
-@The_monster@ says, "@Monster@ fights for @player_name@, and Beogh rules over all."
+@The_monster@ @says_or_shouts@, "I fight for @player_name@, for Beogh rules over all!"
 
-@The_monster@ says, "Orcs will kill them all!"
+@The_monster@ @says_or_shouts@, "Orcs will kill them all!"
 
 @The_monster@ @shouts@, "Orcs rule!"
 
 @The_monster@ says, "I just want to die in your service, @player_name@!"
 
 @The_monster@ says, "I'd rather not die in your service, @player_name@."
-
-@The_monster@ says, "Um, some of the gold is for me, right?"
 
 @The_monster@ chants, "I shall fear no evil, for @player_name@ is my saviour."
 
@@ -1986,12 +2092,9 @@ w:30
 
 @The_monster@ says, "When this is all over, I'm going to start a fungus farm."
 %%%%
-friendly beogh orc sorcerer
-
-@_wizard_@
-
-@friendly beogh orc@
-%%%%
+################################################
+# Make this work for other predefined orcs!
+#################################################
 beogh orc sorcerer
 
 @_wizard_@
@@ -2009,3 +2112,26 @@ w:1
 w:1
 __NONE
 %%%%
+# special casing for Blork
+beogh Blork the orc
+
+# behave like normal Blork
+w:2
+@Blork the orc@
+
+# with some Beogh-hostile messages strewn in
+w:1
+@beogh orc@
+%%%%
+# and the same for Urug
+beogh Urug
+
+# behave like normal Urug
+w:2
+@Urug@
+
+# with some Beogh-hostile messages strewn in
+w:1
+@beogh orc@
+%%%%
+

@@ -182,6 +182,8 @@ bool mons_speaks(const monsters *monster)
     std::vector<std::string> prefixes;
     if (monster->attitude == ATT_FRIENDLY)
         prefixes.push_back("friendly");
+    else if (monster->attitude == ATT_NEUTRAL)
+        prefixes.push_back("neutral");
 
     if (monster->behaviour == BEH_FLEE)
         prefixes.push_back("fleeing");

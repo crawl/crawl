@@ -4024,10 +4024,14 @@ static void handle_read_book( int item_slot )
     }
 }
 
-// returns true if the scroll had an obvious effect and should be identified
+// For unidentified scrolls of recharging, identify and enchant armour
+// offer full choice of inventory and only identify the scroll if you chose
+// something that is affected by the scroll. Once they're identified, you'll
+// get the limited inventory listing.
+// Returns true if the scroll had an obvious effect and should be identified.
 static bool scroll_modify_item(const scroll_type scroll)
 {
-     int item_slot = prompt_invent_item( "Modify which item?", MT_INVLIST,
+     int item_slot = prompt_invent_item( "Use on which item?", MT_INVLIST,
                                           OSEL_ANY, true, true, false );
                                           
      if (item_slot == PROMPT_ABORT)
@@ -4041,6 +4045,8 @@ static bool scroll_modify_item(const scroll_type scroll)
      switch (scroll)
      {
      case SCR_IDENTIFY:
+        // This can cause a stupid situation where you try to identify the
+        // very scroll you just read, causing you to waste the scroll.
         if ( !fully_identified(item) )
         {
             mpr("This is a scroll of identify!");
