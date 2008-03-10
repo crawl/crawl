@@ -747,7 +747,7 @@ static void good_god_follower_attitude_change(monsters *monster)
 {
     if (you.is_undead || you.species == SP_DEMONSPAWN)
         return;
-    
+
     const bool is_holy = mons_class_holiness(monster->type) == MH_HOLY;
     // for followers of good gods, decide whether holy beings will be
     // neutral towards you
@@ -785,14 +785,14 @@ static void good_god_follower_attitude_change(monsters *monster)
              && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
              && !mons_is_confused(monster) && !mons_is_paralysed(monster))
-    {      // reconversion if evil god
-                
+    {      // attitude change if evil god
+
         monster->attitude = ATT_HOSTILE;
         behaviour_event(monster, ME_ALERT, MHITYOU);
         // CREATED_FRIENDLY stays -> no piety bonus on killing these
-                
+
         // give message only sometimes
-        if (player_monster_visible(monster) && random2(4)) 
+        if (player_monster_visible(monster) && random2(4))
         {
             msg::streams(MSGCH_MONSTER_ENCHANT)
                 << monster->name(DESC_CAP_THE)
@@ -806,7 +806,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
 {
     if (you.species != SP_HILL_ORC)
         return;
-    
+
     const bool is_orc = mons_species(monster->type) == MONS_ORC;
     // for followers of Beogh, decide whether orcs will join you
     if (you.religion == GOD_BEOGH
@@ -848,13 +848,13 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
              && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {      // reconversion if no longer Beogh
-                
+
         monster->attitude = ATT_HOSTILE;
         behaviour_event(monster, ME_ALERT, MHITYOU);
         // CREATED_FRIENDLY stays -> no piety bonus on killing these
-                
+
         // give message only sometimes
-        if (player_monster_visible(monster) && random2(4)) 
+        if (player_monster_visible(monster) && random2(4))
         {
             msg::streams(MSGCH_MONSTER_ENCHANT)
                 << monster->name(DESC_CAP_THE)
