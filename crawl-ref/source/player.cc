@@ -1089,7 +1089,8 @@ int player_res_magic(void)
     return rm;
 }
 
-int player_res_steam(bool calc_unid)
+// If temp is set to false, temporary sources or resistance won't be counted.
+int player_res_steam(bool calc_unid, bool temp)
 {
     int res = 0;
 
@@ -1099,7 +1100,7 @@ int player_res_steam(bool calc_unid)
     if (player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
         res += 2;
 
-    return (res + player_res_fire(calc_unid) / 2);
+    return (res + player_res_fire(calc_unid, temp) / 2);
 }
 
 bool player_can_smell()
@@ -1107,7 +1108,8 @@ bool player_can_smell()
     return (you.species != SP_MUMMY);
 }
 
-int player_res_fire(bool calc_unid)
+// If temp is set to false, temporary sources or resistance won't be counted.
+int player_res_fire(bool calc_unid, bool temp)
 {
     int rf = 0;
 
@@ -1140,33 +1142,36 @@ int player_res_fire(bool calc_unid)
         rf--;
     }
 
-    // spells:
-    if (you.duration[DUR_RESIST_FIRE] > 0)
-        rf++;
-
     // mutations:
     rf += you.mutation[MUT_HEAT_RESISTANCE];
 
-    if (you.duration[DUR_FIRE_SHIELD])
-        rf += 2;
-
-    // transformations:
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    // spells:
+    if (temp)
     {
-    case TRAN_ICE_BEAST:
-        rf--;
-        break;
-    case TRAN_DRAGON:
-        rf += 2;
-        break;
-    case TRAN_SERPENT_OF_HELL:
-        rf += 2;
-        break;
-    case TRAN_AIR:
-        rf -= 2;
-        break;
-    }
+        if (you.duration[DUR_RESIST_FIRE] > 0)
+            rf++;
 
+        if (you.duration[DUR_FIRE_SHIELD])
+            rf += 2;
+
+        // transformations:
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_ICE_BEAST:
+            rf--;
+            break;
+        case TRAN_DRAGON:
+            rf += 2;
+            break;
+        case TRAN_SERPENT_OF_HELL:
+            rf += 2;
+            break;
+        case TRAN_AIR:
+            rf -= 2;
+            break;
+        }
+    }
+    
     if (rf < -3)
         rf = -3;
     else if (rf > 3)
@@ -1360,7 +1365,8 @@ int player_res_torment(bool)
 }
 
 // funny that no races are susceptible to poisons {dlb}
-int player_res_poison(bool calc_unid)
+// If temp is set to false, temporary sources or resistance won't be counted.
+int player_res_poison(bool calc_unid, bool temp)
 {
     int rp = 0;
 
@@ -1385,27 +1391,30 @@ int player_res_poison(bool calc_unid)
     rp += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
     rp += player_equip( EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR );
 
-    // spells:
-    if (you.duration[DUR_RESIST_POISON] > 0)
-        rp++;
-
     // randart weapons:
     rp += scan_randarts(RAP_POISON, calc_unid);
 
     // mutations:
     rp += you.mutation[MUT_POISON_RESISTANCE];
 
-    // transformations:
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    if (temp)
     {
-    case TRAN_LICH:
-    case TRAN_ICE_BEAST:
-    case TRAN_STATUE:
-    case TRAN_DRAGON:
-    case TRAN_SERPENT_OF_HELL:
-    case TRAN_AIR:
-        rp++;
-        break;
+        // spells:
+        if (you.duration[DUR_RESIST_POISON] > 0)
+            rp++;
+
+        // transformations:
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_LICH:
+        case TRAN_ICE_BEAST:
+        case TRAN_STATUE:
+        case TRAN_DRAGON:
+        case TRAN_SERPENT_OF_HELL:
+        case TRAN_AIR:
+            rp++;
+            break;
+        }
     }
 
     if (rp > 1)
@@ -1578,10 +1587,13 @@ int player_energy()
     return pe;
 }
 
-int player_prot_life(bool calc_unid)
+// If temp is set to false, temporary sources of resistance won't be counted.
+int player_prot_life(bool calc_unid, bool temp)
 {
     int pl = 0;
 
+    // Hunger is temporary, true, but that's something you can control.
+    // (Especially as life protection only increases the hungrier you get.)
     if (you.species == SP_VAMPIRE)
     {
         switch (you.hunger_state)
@@ -1589,16 +1601,42 @@ int player_prot_life(bool calc_unid)
         case HS_STARVING:
         case HS_NEAR_STARVING:
             pl = 3;
+            break;
         case HS_VERY_HUNGRY:
         case HS_HUNGRY:
             pl = 2;
+            break;
         case HS_SATIATED:
             pl = 1;
+            break;
         default:
             break;
         }
     }
 
+    // same here: Your piety status is something you can more or less control.
+    // TSO's protection
+    if (you.religion == GOD_SHINING_ONE && you.piety > pl * 50)
+        pl = you.piety / 50;
+
+    if (temp)
+    {
+        // Now, transformations could stop at any time.
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_STATUE:
+            pl += 1;
+            break;
+        case TRAN_SERPENT_OF_HELL:
+            pl += 2;
+            break;
+        case TRAN_LICH:
+            pl += 3;
+            break;
+        default:
+           break;
+        }
+    }
 
     if (wearing_amulet(AMU_WARDING, calc_unid))
         ++pl;
@@ -1609,33 +1647,11 @@ int player_prot_life(bool calc_unid)
     // armour: (checks body armour only)
     pl += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY );
 
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_STATUE:
-        pl += 1;
-        break;
-
-    case TRAN_SERPENT_OF_HELL:
-        pl += 2;
-        break;
-
-    case TRAN_LICH:
-        pl += 3;
-        break;
-
-    default:
-        break;
-    }
-
     // randart wpns
     pl += scan_randarts(RAP_NEGATIVE_ENERGY, calc_unid);
 
     // undead/demonic power
     pl += you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE];
-
-    // TSO's protection
-    if (you.religion == GOD_SHINING_ONE && you.piety > pl * 50)
-        pl = you.piety / 50;
 
     if (pl > 3)
         pl = 3;

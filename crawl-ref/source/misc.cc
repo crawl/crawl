@@ -1606,13 +1606,21 @@ bool is_damaging_cloud(cloud_type type)
 {
     switch (type)
     {
+    // always harmful
     case CLOUD_FIRE:
-    case CLOUD_STINK:
     case CLOUD_COLD:
-    case CLOUD_POISON:
-    case CLOUD_STEAM:
-    case CLOUD_MIASMA:
         return (true);
+    // only harmful if the player doesn't have the necessary resistances
+    // Takes into account what the player can *know* and what s/he can
+    // also expect to be the case a few turns later (ignores spells).
+    case CLOUD_STINK:
+    case CLOUD_POISON:
+        return (!player_res_poison(false, false));
+    case CLOUD_STEAM:
+        return (player_res_steam(false, false) <= 0);
+    case CLOUD_MIASMA:
+        return (player_prot_life(false, false) <= 2);
+    // smoke, never harmful
     default:
         return (false);
     }

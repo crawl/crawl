@@ -8,11 +8,11 @@ really easy. This file will hopefully help you in this endeavour.
 
 shout.txt handles message output for monsters noticing you.
 
-speak.txt handles messages for monsters communicating.
+monspeak.txt handles messages for monsters communicating.
 
 insult.txt handles insults thrown at you by imps and demons.
 
-noise.txt handles messages randart weapons with the noisy property.
+wpnnoise.txt handles messages randart weapons with the noisy property.
 
 
 A simple example

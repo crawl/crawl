@@ -148,7 +148,7 @@ int player_magical_power( void );
 /* ***********************************************************************
  * called from: fight - misc - ouch - spells
  * *********************************************************************** */
-int player_prot_life(bool calc_unid = true);
+int player_prot_life(bool calc_unid = true, bool temp = true);
 
 
 /* ***********************************************************************
@@ -183,15 +183,15 @@ int player_res_electricity(bool calc_unid = true);
 /* ***********************************************************************
  * called from: acr - fight - misc - ouch - spells
  * *********************************************************************** */
-int player_res_fire(bool calc_unid = true);
-int player_res_steam(bool calc_unid = true);
+int player_res_fire(bool calc_unid = true, bool temp = true);
+int player_res_steam(bool calc_unid = true, bool temp = true);
 
 
 /* ***********************************************************************
  * called from: beam - decks - fight - fod - it_use2 - misc - ouch -
  *              spells - spells2
  * *********************************************************************** */
-int player_res_poison(bool calc_unid = true);
+int player_res_poison(bool calc_unid = true, bool temp = true);
 
 bool player_control_teleport(bool calc_unid = true);
 

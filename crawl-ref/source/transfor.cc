@@ -36,17 +36,6 @@ void extra_hp(int amount_extra);
 
 bool remove_equipment(std::set<equipment_type> removed)
 {
-    // if we're removing body armour, the cloak will come off as well -- bwr
-    if ( removed.find(EQ_BODY_ARMOUR) != removed.end() &&
-         you.equip[EQ_BODY_ARMOUR] != -1 )
-        removed.insert(EQ_CLOAK);
-
-    // if we're removing gloves, the weapon will come off as well -- bwr
-    // but this makes Statue Form odd -- haranp
-    if ( removed.find(EQ_GLOVES) != removed.end() &&
-         you.equip[EQ_GLOVES] != -1 )
-        removed.insert(EQ_WEAPON);
-
     if ( removed.find(EQ_WEAPON) != removed.end() &&
          you.equip[EQ_WEAPON] != -1)
     {
@@ -192,6 +181,13 @@ bool transform(int pow, transformation_type which_trans)
     switch (which_trans)
     {
     case TRAN_SPIDER:           // also AC +3, ev +3, fast_run
+        // spiders CAN wear soft helmets
+        if ( you.equip[EQ_HELMET] == -1
+             || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
+        {
+             rem_stuff.erase(EQ_HELMET);
+        }
+        
         if (check_for_cursed_equipment( rem_stuff ))
             return (false);
 
@@ -212,6 +208,13 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_BAT:
+        // bats CAN wear soft helmets
+        if ( you.equip[EQ_HELMET] == -1
+             || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
+        {
+             rem_stuff.erase(EQ_HELMET);
+        }
+        
         // high ev, low ac, high speed
         if (check_for_cursed_equipment( rem_stuff ))
             return false;
@@ -238,6 +241,12 @@ bool transform(int pow, transformation_type which_trans)
         
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1 
         rem_stuff.erase(EQ_CLOAK);
+        // ice beasts CAN wear soft helmets
+        if ( you.equip[EQ_HELMET] == -1
+             || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
+        {
+             rem_stuff.erase(EQ_HELMET);
+        }
 
         if (check_for_cursed_equipment( rem_stuff ))
             return false;
@@ -284,7 +293,6 @@ bool transform(int pow, transformation_type which_trans)
         rem_stuff.erase(EQ_WEAPON); // can still hold a weapon
         rem_stuff.erase(EQ_CLOAK);
         rem_stuff.erase(EQ_HELMET);
-        rem_stuff.erase(EQ_BOOTS);
 
         if (check_for_cursed_equipment( rem_stuff ))
             return false;

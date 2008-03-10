@@ -3,7 +3,7 @@
 # speech has been outsourced. This makes changing existing 
 # messages, and adding new ones really easy.
 #
-# spnnoise.txt contains the messages of randart weapons with
+# wpnnoise.txt contains the messages of randart weapons with
 # the noise property and of the Singing Sword, one of 
 # Crawl's fixed artefacts.
 #

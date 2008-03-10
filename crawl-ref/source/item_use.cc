@@ -890,15 +890,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             && (ignore_temporary || !player_is_shapechanged()))
         {
             if (verbose)
-               mpr("That helmet does not fit your head!");
+                mpr("That helmet does not fit your head!");
 
             return (false);
         }
     }
-    else if (!can_equip( slot, ignore_temporary ))
+    
+    if (!can_equip( slot, ignore_temporary ))
     {
         if (verbose)
-           mpr("You can't wear that in your present form.");
+            mpr("You can't wear that in your present form.");
 
         return (false);
     }
