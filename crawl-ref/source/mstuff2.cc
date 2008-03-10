@@ -2195,7 +2195,7 @@ static int monster_abjure_square(const coord_def &pos,
         return (0);
     
     monsters *target = &menv[mindex];
-    if (!target->alive() || friendly == mons_friendly(target))
+    if (!target->alive() || ((bool)friendly == mons_friendly(target)))
         return (0);
 
     mon_enchant abj = target->get_ench(ENCH_ABJ);

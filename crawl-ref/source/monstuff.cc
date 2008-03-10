@@ -124,7 +124,7 @@ void get_mimic_item( const monsters *mimic, item_def &item )
             // Override special - this could cause a "bad" (no-properties)
             // randart, but we only need the name anyway. We have to
             // do this in order to get a consistent name for the mimic item.
-            item.special = ((mimic->x << 8 + mimic->y) & RANDART_SEED_MASK);
+            item.special = (((mimic->x << 8) + mimic->y) & RANDART_SEED_MASK);
         }
         else if (prop < 50)
             set_equip_desc( item, ISFLAG_GLOWING );
@@ -148,7 +148,7 @@ void get_mimic_item( const monsters *mimic, item_def &item )
         {
             make_item_randart(item);
             // See comment above for randart weapon mimics.
-            item.special = ((mimic->x << 8 + mimic->y) & RANDART_SEED_MASK);
+            item.special = (((mimic->x << 8) + mimic->y) & RANDART_SEED_MASK);
         }
         else if (prop < 40)
             set_equip_desc( item, ISFLAG_GLOWING );
