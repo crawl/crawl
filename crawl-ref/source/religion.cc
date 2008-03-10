@@ -502,27 +502,27 @@ static monster_type random_servant(god_type god)
     case GOD_YREDELEMNUL:
         // undead
         thing_called = ((temp_rand > 66) ? MONS_WRAITH :            // 33%
-                        (temp_rand > 52) ? MONS_WIGHT :             // 12%
-                        (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 16%
-                        (temp_rand > 31) ? MONS_ROTTING_HULK :      //  9%
-                        (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  8%
-                        (temp_rand > 16) ? MONS_VAMPIRE :           //  7%
-                        (temp_rand > 10) ? MONS_GHOUL :             //  6%
-                        (temp_rand >  4) ? MONS_MUMMY               //  6%
-                                         : MONS_FLAYED_GHOST);      //  5%
+                        (temp_rand > 52) ? MONS_WIGHT :             // 13%
+                        (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 11%
+                        (temp_rand > 31) ? MONS_ROTTING_HULK :      //  8%
+                        (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  7%
+                        (temp_rand > 16) ? MONS_VAMPIRE :           //  6%
+                        (temp_rand > 10) ? MONS_GHOUL :             //  5%
+                        (temp_rand >  4) ? MONS_MUMMY               //  5%
+                                         : MONS_FLAYED_GHOST);      //  4%
         break;
     case GOD_OKAWARU:
         // warriors
-        thing_called = ((temp_rand > 84) ? MONS_ORC_WARRIOR :
-                        (temp_rand > 69) ? MONS_ORC_KNIGHT :
-                        (temp_rand > 59) ? MONS_NAGA_WARRIOR :
-                        (temp_rand > 49) ? MONS_CENTAUR_WARRIOR :
-                        (temp_rand > 39) ? MONS_STONE_GIANT :
-                        (temp_rand > 29) ? MONS_FIRE_GIANT :
-                        (temp_rand > 19) ? MONS_FROST_GIANT :
-                        (temp_rand >  9) ? MONS_CYCLOPS :
-                        (temp_rand >  4) ? MONS_HILL_GIANT
-                                         : MONS_TITAN);
+        thing_called = ((temp_rand > 84) ? MONS_ORC_WARRIOR :       // 15%
+                        (temp_rand > 69) ? MONS_ORC_KNIGHT :        // 14%
+                        (temp_rand > 59) ? MONS_NAGA_WARRIOR :      //  9%
+                        (temp_rand > 49) ? MONS_CENTAUR_WARRIOR :   //  9%
+                        (temp_rand > 39) ? MONS_STONE_GIANT :       //  9%
+                        (temp_rand > 29) ? MONS_FIRE_GIANT :        //  9%
+                        (temp_rand > 19) ? MONS_FROST_GIANT :       //  9%
+                        (temp_rand >  9) ? MONS_CYCLOPS :           //  9%
+                        (temp_rand >  4) ? MONS_HILL_GIANT          //  4%
+                                         : MONS_TITAN);             //  4%
 
         break;
     default:
