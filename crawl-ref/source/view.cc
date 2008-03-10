@@ -796,7 +796,7 @@ static void good_god_follower_attitude_change(monsters *monster)
         {
             msg::streams(MSGCH_MONSTER_ENCHANT)
                 << monster->name(DESC_CAP_THE)
-                << " turns against you."
+                << " turns against you!"
                 << std::endl;
         }
     }
