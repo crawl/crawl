@@ -14,7 +14,7 @@
 
 #include "enum.h"
 
-struct monsters;
+class monsters;
 struct ait_hp_loss;
 
 enum activity_interrupt_payload_type

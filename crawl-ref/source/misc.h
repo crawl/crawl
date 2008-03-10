@@ -99,7 +99,7 @@ bool is_damaging_cloud(cloud_type type);
 
 void curare_hits_player(int agent, int degree);
 
-bool mons_is_safe(const struct monsters *mon, bool want_move = false);
+bool mons_is_safe(const monsters *mon, bool want_move = false);
 bool i_feel_safe(bool announce = false, bool want_move = false);
 
 void setup_environment_effects();

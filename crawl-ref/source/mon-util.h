@@ -425,7 +425,7 @@ bool mons_is_unique(int mclass);
  * called from: describe - fight
  * *********************************************************************** */
 // int exper_value(int mclass, int mHD, int maxhp);
-int exper_value( const struct monsters *monster );
+int exper_value( const monsters *monster );
 
 
 // last updated 12may2000 {dlb}

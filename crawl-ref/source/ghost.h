@@ -16,7 +16,7 @@
 #include "itemprop.h"
 #include "mon-util.h"
 
-struct ghost_demon
+class ghost_demon
 {
 public:
     std::string name;

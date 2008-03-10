@@ -17,12 +17,12 @@
 
 std::string apostrophise(const std::string &name);
 
-struct monsters;
+class monsters;
 
 // Not intended for external use!
 struct kill_monster_desc
 {
-    kill_monster_desc(const struct monsters *);
+    kill_monster_desc(const monsters *);
     kill_monster_desc() { }
 
     void save(FILE*) const;
@@ -52,7 +52,7 @@ struct kill_monster_desc
 class kill_def
 {
 public:
-    kill_def(const struct monsters *mon);
+    kill_def(const monsters *mon);
     kill_def() : kills(0), exp(0)
     {
         // This object just says to the world that it's uninitialized
@@ -61,7 +61,7 @@ public:
     void save(FILE*) const;
     void load(FILE*);
 
-    void add_kill(const struct monsters *mon, unsigned short place);
+    void add_kill(const monsters *mon, unsigned short place);
     void add_place(unsigned short place, bool force = false);
 
     void merge(const kill_def &k, bool unique_monster);
@@ -83,7 +83,7 @@ private:
 class kill_ghost
 {
 public:
-    kill_ghost(const struct monsters *mon);
+    kill_ghost(const monsters *mon);
     kill_ghost() { }
 
     void save(FILE*) const;
@@ -151,7 +151,7 @@ private:
     kill_map    kills;
     ghost_vec   ghosts;
 
-    void record_ghost_kill(const struct monsters *mon);
+    void record_ghost_kill(const monsters *mon);
 };
 
 class KillMaster

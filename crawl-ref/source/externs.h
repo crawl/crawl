@@ -70,9 +70,9 @@ const int kPathLen = 256;
 // penalty (Xom's granted or from a deck of cards).
 #define NO_BERSERK_PENALTY    -1
 
-class item_def;
+struct item_def;
 class melee_attack;
-class coord_def;
+struct coord_def;
 class level_id;
 
 class actor
@@ -1291,7 +1291,7 @@ struct map_cell
 };
 
 class map_marker;
-class tagHeader;
+struct tagHeader;
 class map_markers
 {
 public:
@@ -1868,5 +1868,9 @@ private:
 };
 
 extern game_options  Options;
+
+#if _MSC_VER
+# include "msvc.h"
+#endif
 
 #endif // EXTERNS_H

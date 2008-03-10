@@ -64,7 +64,7 @@
 bool holy_word(int pow, int caster, bool silent)
 {
     bool holy_influenced = false;
-    struct monsters *monster;
+    monsters *monster;
 
     if (!silent)
         mpr("You speak a Word of immense power!");
@@ -205,7 +205,7 @@ int torment_monsters(int x, int y, int pow, int caster)
     if (mon == NON_MONSTER)
         return 0;
 
-    struct monsters *monster = &menv[mon];
+    monsters *monster = &menv[mon];
 
     if (monster->type == -1)
         return 0;
@@ -605,7 +605,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
 {
     // note the translation here - important {dlb}
     int o = menv[i].foe;
-    struct monsters *monster = &menv[o];
+    monsters *monster = &menv[o];
     int damage_taken = 0;
 
     // annoy the target

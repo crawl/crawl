@@ -3183,7 +3183,7 @@ static command_type get_next_cmd()
     // Clamp idle time so that play time is more meaningful.
     if (after - before > IDLE_TIME_CLAMP)
     {
-        you.real_time  += (before - you.start_time) + IDLE_TIME_CLAMP;
+        you.real_time  += int(before - you.start_time) + IDLE_TIME_CLAMP;
         you.start_time  = after;
     }
 
@@ -3925,7 +3925,7 @@ static void move_player(int move_x, int move_y)
 
     if (targ_monst != NON_MONSTER && !mons_is_submerged(&menv[targ_monst]))
     {
-        struct monsters *mon = &menv[targ_monst];
+        monsters *mon = &menv[targ_monst];
 
         if (can_swap_places && !beholder)
         {

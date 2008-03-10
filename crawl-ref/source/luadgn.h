@@ -50,7 +50,7 @@ public:
     static dlua_chunk precompiled(const std::string &compiled);
     
     void clear();
-    void add(int line, const std::string &line);
+    void add(int line, const std::string &line2);
     void set_chunk(const std::string &s);
     
     int load(CLua &interp);

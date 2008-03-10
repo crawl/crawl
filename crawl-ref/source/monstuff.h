@@ -82,13 +82,13 @@ void mons_check_pool(monsters *monster, killer_type killer = KILL_NONE,
 /* ***********************************************************************
    * called from: monstuff - fight
    * *********************************************************************** */
-void monster_cleanup(struct monsters *monster);
+void monster_cleanup(monsters *monster);
 
 
 /* ***********************************************************************
  * called from: monstuff beam effects fight view
  * *********************************************************************** */
-void behaviour_event( struct monsters *mon, int event_type, 
+void behaviour_event( monsters *mon, int event_type, 
                       int src = MHITNOT, int src_x = 0, int src_y = 0 ); 
 
 /* ***********************************************************************
@@ -100,7 +100,7 @@ bool curse_an_item(bool decay_potions);
 /* ***********************************************************************
  * called from: fight
  * *********************************************************************** */
-bool monster_blink(struct monsters *monster);
+bool monster_blink(monsters *monster);
 
 
 /* ***********************************************************************
@@ -124,13 +124,13 @@ bool simple_monster_message(const monsters *monster, const char *event,
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool swap_places(struct monsters *monster);
+bool swap_places(monsters *monster);
 
 
 /* ***********************************************************************
  * called from: bang - beam - direct - fight - spells1 - spells2 - spells3
  * *********************************************************************** */
-void print_wounds(const struct monsters *monster);
+void print_wounds(const monsters *monster);
 
 
 /* ***********************************************************************
@@ -174,14 +174,14 @@ int hurt_monster(monsters *victim, int damage_dealt);
 /* ***********************************************************************
  * called from: beam - fight - files - monstuff - spells1
  * *********************************************************************** */
-bool heal_monster(struct monsters *patient, int health_boost, bool permit_growth);
+bool heal_monster(monsters *patient, int health_boost, bool permit_growth);
 
 /* ***********************************************************************
  * called from: monplace - spells2 - view
  * *********************************************************************** */
-void seen_monster(struct monsters *monster);
+void seen_monster(monsters *monster);
 
-bool shift_monster( struct monsters *mon, int x = 0, int y = 0 );
+bool shift_monster(monsters *mon, int x = 0, int y = 0 );
 
 int mons_weapon_damage_rating(const item_def &launcher);
 int mons_pick_best_missile(monsters *mons, item_def **launcher,

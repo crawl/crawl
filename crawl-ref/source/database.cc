@@ -11,10 +11,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <cstdlib>
 #include <fstream>
+#if !_MSC_VER
+#include <unistd.h>
+#endif
 
 #include "clua.h"
 #include "database.h"

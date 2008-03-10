@@ -2219,7 +2219,7 @@ std::string ghost_description(const monsters &mons, bool concise)
 
     gstr << ghost.name << " the "
          << skill_title( ghost.best_skill,
-                         ghost.best_skill_level,
+                         (unsigned char)ghost.best_skill_level,
                          gspecies,
                          str, dex, GOD_NO_GOD )
          << ", a"

@@ -161,7 +161,7 @@ public:
 
 typedef std::pair<int, int> map_weighted_colour;
 typedef std::vector<map_weighted_colour> map_colour_list;
-struct colour_spec : public map_transformer
+class colour_spec : public map_transformer
 {
 public:
     colour_spec(int _key, bool _fix, const map_colour_list &clist)
@@ -181,8 +181,9 @@ public:
     map_colour_list colours;
 };
 
-struct shuffle_spec : public map_transformer
+class shuffle_spec : public map_transformer
 {
+ public:
     std::string shuffle;
 
     shuffle_spec(const std::string &spec)
@@ -199,8 +200,9 @@ struct shuffle_spec : public map_transformer
     }
 };
 
-struct map_marker_spec : public map_transformer
+class map_marker_spec : public map_transformer
 {
+ public:
     int key;
     std::string marker;
 
@@ -391,8 +393,9 @@ private:
     std::string error;
 };
 
-struct mons_spec
+class mons_spec
 {
+ public:
     int  mid;
     int  monnum;              // The zombified monster for zombies, or head
                               // count for hydras, or colour for draconians.

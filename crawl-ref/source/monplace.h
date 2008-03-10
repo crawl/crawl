@@ -171,7 +171,7 @@ bool drac_colour_incompatible(int drac, int colour);
 /* ***********************************************************************
  * called from: monplace monstuff
  * *********************************************************************** */
-void mark_interesting_monst(struct monsters* monster,
+void mark_interesting_monst(monsters* monster,
                             beh_type behaviour = BEH_SLEEP);
 
 bool grid_compatible(dungeon_feature_type grid_wanted,

@@ -207,11 +207,11 @@ static void shuffle_deck(item_def &deck)
 
     // Don't use std::shuffle(), since we want to apply exactly the
     // same shuffling to both the cards vector and the flags vector.
-    std::vector<long> pos;
+    std::vector<vec_size> pos;
     for (unsigned long i = 0; i < cards.size(); i++)
         pos.push_back(random2(cards.size()));
 
-    for (unsigned long i = 0; i < pos.size(); i++)
+    for (vec_size i = 0; i < pos.size(); i++)
     {
         std::swap(cards[i], cards[pos[i]]);
         std::swap(flags[i], flags[pos[i]]);
@@ -527,13 +527,13 @@ static bool check_buggy_deck(item_def& deck)
     CrawlVector &cards = props["cards"].get_vector();
     CrawlVector &flags = props["card_flags"].get_vector();
 
-    unsigned long num_cards = cards.size();
-    unsigned long num_flags = flags.size();
+    vec_size num_cards = cards.size();
+    vec_size num_flags = flags.size();
 
     unsigned int num_buggy     = 0;
     unsigned int num_marked    = 0;
 
-    for (unsigned long i = 0; i < num_cards; i++)
+    for (vec_size i = 0; i < num_cards; i++)
     {
         unsigned char card   = cards[i].get_byte();
         unsigned char _flags = flags[i].get_byte();
@@ -2671,8 +2671,8 @@ void init_deck(item_def &item)
 
     props.set_default_flags(SFLAG_CONST_TYPE);
 
-    props["cards"].new_vector(SV_BYTE).resize(item.plus);
-    props["card_flags"].new_vector(SV_BYTE).resize(item.plus);
+    props["cards"].new_vector(SV_BYTE).resize((vec_size)item.plus);
+    props["card_flags"].new_vector(SV_BYTE).resize((vec_size)item.plus);
     props["drawn_cards"].new_vector(SV_BYTE);
 
     for (int i = 0; i < item.plus; i++)

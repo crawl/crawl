@@ -44,7 +44,7 @@ bolt mons_spells(int spell_cast, int power);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void setup_dragon(struct monsters *monster, struct bolt &pbolt);
+void setup_dragon(monsters *monster, struct bolt &pbolt);
 
 
 // last updated 13feb2001 {gdl}
@@ -63,7 +63,7 @@ void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used);
+bool mons_throw(monsters *monster, struct bolt &pbolt, int hand_used);
 
 bool mons_thrown_object_destroyed( item_def *item, int x, int y,
                                    bool returning, int midx );
@@ -72,20 +72,20 @@ bool mons_thrown_object_destroyed( item_def *item, int x, int y,
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void setup_generic_throw(struct monsters *monster, struct bolt &pbolt);
+void setup_generic_throw(monsters *monster, struct bolt &pbolt);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void mons_trap(struct monsters *monster);
+void mons_trap(monsters *monster);
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - fight - files - monstuff - mstuff2 - spells4
  * *********************************************************************** */
-void monster_teleport(struct monsters *monster, bool instan, 
+void monster_teleport(monsters *monster, bool instan, 
                       bool silent = false);
 
 
@@ -93,7 +93,7 @@ void monster_teleport(struct monsters *monster, bool instan,
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void spore_goes_pop(struct monsters *monster);
+void spore_goes_pop(monsters *monster);
 
 bool orc_battle_cry(monsters *chief);
 bool orange_statue_effects(monsters *mons);

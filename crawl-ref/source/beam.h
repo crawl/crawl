@@ -18,6 +18,8 @@
 #include "externs.h"
 #include "ray.h"
 
+class monsters;
+
 enum demon_beam_type
 {
     DMNBM_HELLFIRE,                    //    0
@@ -181,8 +183,8 @@ void fire_beam( struct bolt &pbolt, item_def *item = NULL,
 /* ***********************************************************************
  * called from: beam
  * *********************************************************************** */
-bool nasty_beam( struct monsters *mon, struct bolt &beam );
-bool nice_beam( struct monsters *mon, struct bolt &beam );
+bool nasty_beam( monsters *mon, struct bolt &beam );
+bool nice_beam( monsters *mon, struct bolt &beam );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -199,7 +201,7 @@ void explosion( bolt &pbolt, bool hole_in_the_middle = false,
 /* ***********************************************************************
  * called from: effects - spells2 - spells4
  * *********************************************************************** */
-int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
+int mons_adjust_flavoured( monsters *monster, struct bolt &pbolt,
                            int hurted, bool doFlavouredEffects = true );
 
 
@@ -214,7 +216,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int who,
 /* ***********************************************************************
  * called from: fight - monstuff - mstuff2
  * *********************************************************************** */
-int mons_ench_f2( struct monsters *monster, struct bolt &pbolt );
+int mons_ench_f2( monsters *monster, struct bolt &pbolt );
 
 
 /* ***********************************************************************
@@ -234,7 +236,7 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty );
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void mimic_alert( struct monsters *mimic );
+void mimic_alert( monsters *mimic );
 
 
 void zapping( zap_type ztype, int power, struct bolt &pbolt );

@@ -15,7 +15,7 @@
 
 #include "enum.h"
 
-class coord_def;
+struct coord_def;
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

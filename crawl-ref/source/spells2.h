@@ -62,7 +62,7 @@ int corpse_rot(int power);
 int summon_elemental(int pow, int restricted_type, unsigned char unfriendly);
 
 
-class dist;
+struct dist;
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: spell

@@ -84,7 +84,7 @@
 // ... was 5, 12, 21
 // how these are used will be replaced by a function in a second ... :P {dlb}
 
-static void stab_message(struct monsters *defender, int stab_bonus);
+static void stab_message(monsters *defender, int stab_bonus);
 
 static inline int player_weapon_str_weight( void );
 static inline int player_weapon_dex_weight( void );
@@ -3973,7 +3973,7 @@ static inline int calc_stat_to_dam_base( void )
 #endif
 }
 
-static void stab_message( struct monsters *defender, int stab_bonus )
+static void stab_message( monsters *defender, int stab_bonus )
 {
     switch(stab_bonus)
     {

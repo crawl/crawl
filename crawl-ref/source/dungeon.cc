@@ -1160,7 +1160,7 @@ void dgn_set_colours_from_monsters()
             env.floor_colour = LIGHTGREY;
     }
     else
-        env.floor_colour = fix_black_colour(mcolour[env.mons_alloc[9]]);
+        env.floor_colour = fix_black_colour((char)mcolour[env.mons_alloc[9]]);
 
 
     if (env.mons_alloc[8] < 0 || env.mons_alloc[8] == MONS_PROGRAM_BUG

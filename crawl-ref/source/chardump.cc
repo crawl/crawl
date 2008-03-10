@@ -24,7 +24,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#if !defined(__IBMCPP__)
+#if !defined(__IBMCPP__) && !defined(_MSC_VER)
 #include <unistd.h>
 #endif
 #include <ctype.h>
@@ -353,7 +353,7 @@ static void sdump_misc(dump_params &par)
     sdump_visits(par);
 }
 
-#define TO_PERCENT(x, y) (100.0 * ((float) (x)) / ((float) (y)))
+#define TO_PERCENT(x, y) (100.0f * ((float) (x)) / ((float) (y)))
 
 static std::string sdump_turns_place_info(PlaceInfo place_info,
                                           std::string name = "")

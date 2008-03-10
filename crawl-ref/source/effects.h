@@ -19,7 +19,7 @@
 struct bolt;
 
 class monsters;
-class item_def;
+struct item_def;
 
 
 // last updated 12may2000 {dlb}

@@ -771,6 +771,18 @@ const CrawlStoreValue &CrawlStoreValue::operator
 
 /////////////////////
 // Typecast operators
+#if _MSC_VER
+CrawlStoreValue::operator bool&() 			{ return get_bool();   }
+CrawlStoreValue::operator char&() 			{ return get_byte();   }
+CrawlStoreValue::operator short&() 			{ return get_short();  }
+CrawlStoreValue::operator float&() 			{ return get_float();  }
+CrawlStoreValue::operator long&() 			{ return get_long();   }
+CrawlStoreValue::operator std::string&() 	{ return get_string(); }
+CrawlStoreValue::operator coord_def&() 		{ return get_coord();  }
+CrawlStoreValue::operator CrawlHashTable&() { return get_table();  }
+CrawlStoreValue::operator CrawlVector&() 	{ return get_vector(); }
+CrawlStoreValue::operator item_def&() 		{ return get_item();   }
+#else
 &CrawlStoreValue::operator bool()
 {
     return get_bool();
@@ -820,6 +832,7 @@ const CrawlStoreValue &CrawlStoreValue::operator
 {
     return get_item();
 }
+#endif
 
 ///////////////////////////
 // Const typecast operators

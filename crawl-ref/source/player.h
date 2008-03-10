@@ -17,7 +17,7 @@
 #include "externs.h"
 
 class monsters;
-class item_def;
+struct item_def;
 
 enum genus_type
 {

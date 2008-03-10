@@ -96,7 +96,7 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile = false,
 void start_explore(bool grab_items = false);
 
 struct level_pos;
-struct level_id;
+class level_id;
 struct travel_target;
 
 void start_translevel_travel(const travel_target &pos);
@@ -175,7 +175,7 @@ enum explore_stop_type
 // Structs for interlevel travel.
 
 // Identifies a level.
-struct level_id
+class level_id
 {
 public:
     branch_type branch;     // The branch in which the level is.

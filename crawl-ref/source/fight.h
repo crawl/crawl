@@ -70,7 +70,7 @@ int calc_your_to_hit( bool random_factor );
 
 int calc_heavy_armour_penalty( bool random_factor );
 
-struct melee_attack
+class melee_attack
 {
 public:
     // At the moment this only covers players fighting monsters

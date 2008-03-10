@@ -68,7 +68,7 @@ private:
     int oldmode;
 };
 
-class coord_def;
+struct coord_def;
 
 void gui_init_view_params(coord_def &termsz, coord_def &viewsz, 
     coord_def &msgp, coord_def &msgsz, coord_def &hudp, coord_def &hudsz);

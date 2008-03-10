@@ -13,7 +13,7 @@
 #ifndef XOM_H
 #define XOM_H
 
-class item_def;
+struct item_def;
 
 enum xom_message_type
 {

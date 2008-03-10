@@ -21,6 +21,7 @@
 #include "travel.h"
 #include "stuff.h"
 #include <vector>
+#include <algorithm>
 
 enum portal_type
 {
@@ -72,8 +73,9 @@ enum map_mask_type
 class dgn_region;
 typedef std::vector<dgn_region> dgn_region_list;
 
-struct dgn_region
+class dgn_region
 {
+ public:
     // pos is top-left corner.
     coord_def pos, size;
 

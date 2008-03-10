@@ -22,8 +22,8 @@
 struct tagHeader;
 class  CrawlHashTable;
 class  CrawlVector;
-class  item_def;
-class  coord_def;
+struct item_def;
+struct coord_def;
 
 typedef unsigned char hash_size;
 typedef unsigned char vec_size;
@@ -168,6 +168,18 @@ public:
     const CrawlStoreValue &operator [] (const vec_size &index)  const;
 
     // Typecast operators
+#if _MSC_VER
+    operator bool&();
+    operator char&();
+    operator short&();
+    operator long&();
+    operator float&();
+    operator std::string&();
+    operator coord_def&();
+    operator CrawlHashTable&();
+    operator CrawlVector&();
+    operator item_def&();
+#else
     &operator bool();
     &operator char();
     &operator short();
@@ -178,6 +190,7 @@ public:
     &operator CrawlHashTable();
     &operator CrawlVector();
     &operator item_def();
+#endif
 
     operator bool() const;
     operator char() const;
