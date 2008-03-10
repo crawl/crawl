@@ -4509,7 +4509,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     && crawl_view.in_grid_los(gc))
                 {
                     const int object = env.show(ep);
-                    if (object)
+                    if (object && Options.tutorial_left)
                     {
                         if (grid_is_rock_stair(grd(gc)))
                             learned_something_new(

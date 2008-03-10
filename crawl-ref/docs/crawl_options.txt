@@ -636,7 +636,7 @@ travel_avoid_terrain = (shallow water | deep water)
              travel_avoid_terrain = shallow water, deep water
         will prevent travel or explore from going through any water.
 
-explore_greedy = false
+explore_greedy = true
         Greedy explore travels to items that are eligible for autopickup 
         in addition to exploring the level, but is otherwise identical 
         to regular explore. Greedy explore is only available with

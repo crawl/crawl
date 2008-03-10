@@ -127,7 +127,7 @@ stab_brand       = hi:blue
 # travel_delay = 20
 # travel_avoid_terrain = shallow water
 #
-# explore_greedy = true
+# explore_greedy = false
 # explore_stop   = items,greedy_items,stairs,shops,altars,gates
 
 # tc_reachable      = blue

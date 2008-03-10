@@ -738,7 +738,7 @@ void game_options::reset_options()
     explore_stop_prompt    = ES_NONE;
 
     explore_item_greed     = 10;
-    explore_greedy         = false;
+    explore_greedy         = true;
 
     explore_improved       = false;
     

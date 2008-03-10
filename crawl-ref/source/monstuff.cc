@@ -5270,22 +5270,47 @@ static bool is_trap_safe(const monsters *monster, const int trap_x,
 
 static void mons_open_door(monsters* monster, const coord_def &pos)
 {
-    bool was_secret = (grd(pos) == DNGN_SECRET_DOOR);
+    dungeon_feature_type grid = grd(pos);
+    std::string noun = "door";
+    bool was_secret = false;
 
-    if (was_secret && !see_grid(pos))
-        set_terrain_changed(pos);
-    grd(pos) = DNGN_OPEN_DOOR;
+    if (grid == DNGN_SECRET_DOOR)
+    {
+        grid = grid_secret_door_appearance(pos.x, pos.y);
+        grd(pos) = DNGN_OPEN_DOOR; // just a simple door, no gates etc.
+
+        was_secret = true;
+        if (!see_grid(pos))
+            set_terrain_changed(pos);
+    }
+    else // maybe several connected doors -> gate
+    {
+        std::set<coord_def> all_door;
+        _find_connected_identical(pos, grd(pos), all_door);
+        noun = get_door_noun(all_door.size()).c_str();
+    
+        for (std::set<coord_def>::iterator i = all_door.begin();
+             i != all_door.end(); ++i)
+        {
+             const coord_def& dc = *i;
+             grd[dc.x][dc.y] = DNGN_OPEN_DOOR;
+        }
+    }
 
     if (see_grid(pos))
     {
         viewwindow(true, false);
 
         if (was_secret)
-            mpr("The rock wall was actually a secret door!");
+        {
+            mprf("%s was actually a secret door!",
+                 feature_description(grid, NUM_TRAPS, false,
+                                     DESC_CAP_THE, false).c_str());
+        }
 
         if (!you.can_see(monster))
         {
-            mpr("Something unseen opens the door.");
+            mprf("Something unseen opens the %s.", noun.c_str());
             interrupt_activity(AI_FORCE_INTERRUPT);
         }
     }

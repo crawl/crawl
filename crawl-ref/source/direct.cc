@@ -1429,6 +1429,9 @@ static void describe_feature(int mx, int my, bool oos)
         return;
 
     dungeon_feature_type grid = grd[mx][my];
+    if ( grid == DNGN_SECRET_DOOR )
+        grid = grid_secret_door_appearance(mx, my);
+        
     std::string desc = feature_description(grid);
     if (desc.length())
     {
@@ -1809,6 +1812,20 @@ std::string feature_description(int mx, int my, bool bloody,
     dungeon_feature_type grid = grd[mx][my];
     if ( grid == DNGN_SECRET_DOOR )
         grid = grid_secret_door_appearance(mx, my);
+
+    if ( grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR )
+    {
+        std::string desc = (grid == DNGN_OPEN_DOOR) ? "open " : "closed ";
+
+        std::set<coord_def> all_door;
+        _find_connected_identical(coord_def(mx, my), grd[mx][my], all_door);
+        desc += get_door_noun(all_door.size()).c_str();
+
+        if (bloody)
+            desc += ", spattered with blood";
+            
+        return feature_do_grammar(dtype, add_stop, false, desc);
+    }
 
     switch (grid)
     {

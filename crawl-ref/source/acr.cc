@@ -3355,33 +3355,6 @@ keycode_type get_next_keycode()
     return (keyin);
 }
 
-// Find all connected cells containing ft, starting at d.
-static void _find_connected_identical(coord_def d, dungeon_feature_type ft,
-                                         std::set<coord_def>& out)
-{
-    if (grd[d.x][d.y] != ft) return;
-    if (out.insert(d).second)
-    {
-        _find_connected_identical(coord_def(d.x+1, d.y), ft, out);
-        _find_connected_identical(coord_def(d.x-1, d.y), ft, out);
-        _find_connected_identical(coord_def(d.x, d.y+1), ft, out);
-        _find_connected_identical(coord_def(d.x, d.y-1), ft, out);
-    }
-}
-
-static std::string get_door_noun(int door_count)
-{
-    switch (door_count)
-    {
-     case 0:  return "buggy opening";
-     case 1:  return "door";
-     case 2:  return "large door";
-     case 3:  return "gate";
-     default: return "huge gate";
-    }
-}
-
-
 /*
    Opens doors and handles some aspects of untrapping. If either move_x or
    move_y are non-zero,  the pair carries a specific direction for the door
@@ -3522,7 +3495,8 @@ static void open_door(int move_x, int move_y, bool check_confused)
 }                               // end open_door()
 
 /*
-   Similar to open_door. Can you spot the difference?
+ * Similar to open_door. Can you spot the difference?
+ * FIX ME: closing a gate should update all tiles involved!
  */
 static void close_door(int door_x, int door_y)
 {

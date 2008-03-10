@@ -48,7 +48,6 @@ bool potion_effect( potion_type pot_eff, int pow )
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
     bool was_known = item_type_known(OBJ_POTIONS, (int) pot_eff);
-    int new_value = 0;
 
     if (pow > 150)
         pow = 150;
@@ -289,8 +288,9 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;                  // I'll let this slip past robe of archmagi
 
     case POT_MAGIC:
+    {
         mpr( "You feel magical!" );
-        new_value = 5 + random2avg(19, 2);
+        int new_value = 5 + random2avg(19, 2);
 
         // increase intrinsic MP points
         if (you.magic_points + new_value > you.max_magic_points)
@@ -301,7 +301,7 @@ bool potion_effect( potion_type pot_eff, int pow )
 
         inc_mp( new_value, true );
         break;
-
+    }
     case POT_RESTORE_ABILITIES:
     {
         bool nothing_happens = true;
