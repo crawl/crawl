@@ -68,8 +68,6 @@ static int clua_guarded_pcall(lua_State *);
 static int clua_dofile(lua_State *);
 static int clua_loadfile(lua_State *);
 
-const int CLua::MAX_THROTTLE_SLEEPS;
-
 CLua::CLua(bool managed)
     : error(), managed_vm(managed), shutting_down(false),
       throttle_unit_lines(10000),

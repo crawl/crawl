@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crawl-ref", "crawl-ref.vcproj", "{3189AF12-90EF-4D3E-BFEC-4AB90D7D32DA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A61349B6-4099-4688-AA1A-00D91397857D} = {A61349B6-4099-4688-AA1A-00D91397857D}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua", "lua.vcproj", "{A61349B6-4099-4688-AA1A-00D91397857D}"
 EndProject

@@ -1485,7 +1485,7 @@ static int dgn_random_walk(lua_State *ls)
     // Allow movement to all 8 adjacent squares if distance is 1
     // (needed since diagonal moves are distance sqrt(2))
     if (dist == 1)
-        dist_left = SQRT_2;
+        dist_left = (float)SQRT_2;
 
     int moves_left = dist;
     coord_def pos(x, y);

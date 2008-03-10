@@ -48,6 +48,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="AppHdr.h"
 				WarningLevel="3"
+				WarnAsError="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
@@ -123,6 +124,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="AppHdr.h"
 				WarningLevel="3"
+				WarnAsError="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
@@ -884,6 +886,28 @@
 		<File
 			RelativePath="..\sqldbm.h"
 			>
+		</File>
+		<File
+			RelativePath="..\util\sqlite\sqlite3.c"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+					WarningLevel="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+					WarningLevel="0"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\stash.cc"

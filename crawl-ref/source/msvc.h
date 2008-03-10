@@ -16,6 +16,7 @@
 #define stricmp _stricmp
 #define strlwr _strlwr
 #define strncasecmp _strnicmp
+#define strnicmp _strnicmp
 #define unlink _unlink
 
 // No va_copy in MSVC

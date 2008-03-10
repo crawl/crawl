@@ -26,7 +26,9 @@
 #include <string.h>
 
 #if defined(WIN32CONSOLE) || defined(WIN32TILES)
+    #undef ARRAYSIZE
     #include <windows.h>
+    #undef max
 
     #ifdef WINMM_PLAY_SOUNDS
         #include <mmsystem.h>
