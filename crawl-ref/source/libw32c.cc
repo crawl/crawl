@@ -1,3 +1,5 @@
+#include "AppHdr.h"
+
 #if defined(WIN32CONSOLE)
 
 /*
@@ -42,7 +44,6 @@
 #define NOMDI             /* MDI support */
 #define NOCTLMGR          /* Control management and controls */
 #define NOHELP            /* Help support */
-
 /*
  * Exclude parts of WINDOWS.H that are not needed (Win32)
  */
@@ -57,7 +58,9 @@
 
 #include <excpt.h>
 #include <stdarg.h>
+#undef ARRAYSIZE
 #include <windows.h>
+#undef max
 
 // END -- WINDOWS INCLUDES
 
@@ -67,7 +70,6 @@
 
 #include <string.h>
 #include <stdio.h>
-#include "AppHdr.h"
 #include "cio.h"
 #include "defines.h"
 #include "libutil.h"
@@ -866,7 +868,7 @@ int getch_ck(void)
             case KEY_EVENT:
                 kr = &ir.Event.KeyEvent;
                 // ignore if it is a 'key up' - we only want 'key down'
-                if (kr->bKeyDown == true)
+                if (kr->bKeyDown)
                 {
                     key = vk_translate( kr->wVirtualKeyCode,
                                         kr->uChar.AsciiChar,
@@ -1037,5 +1039,112 @@ int get_number_of_cols()
 {
     return (screensize.X);
 }
+
+#if _MSC_VER
+struct DIR
+{
+ public:
+    DIR()
+        : hFind(INVALID_HANDLE_VALUE),
+          wfd_valid(false)
+    {
+        memset(&wfd, 0, sizeof(wfd));
+        memset(&entry, 0, sizeof(entry));
+    }
+
+    ~DIR()
+    {
+        if (hFind != INVALID_HANDLE_VALUE)
+        {
+            FindClose(hFind);
+        }
+    }
+
+    bool init(const char* szFind)
+    {
+        // Check that it's a directory, first
+        {
+            const DWORD dwAttr = GetFileAttributes(szFind);
+            if (dwAttr == INVALID_FILE_ATTRIBUTES)
+                return false;
+            if ((dwAttr & FILE_ATTRIBUTE_DIRECTORY) == 0)
+                return false;
+        }
+
+        find = szFind;
+        find += "\\*";
+
+        hFind = FindFirstFileA(find.c_str(), &wfd);
+        wfd_valid = (hFind != INVALID_HANDLE_VALUE);
+        return true;
+    }
+
+    dirent* readdir()
+    {
+        if (! wfd_valid) return 0;
+
+        _convert_wfd_to_dirent();
+        wfd_valid = (bool) FindNextFileA(hFind, &wfd);
+
+        return &entry;
+    }
+
+ private:
+    void _convert_wfd_to_dirent()
+    {
+        entry.d_reclen = sizeof(dirent);
+        entry.d_namlen = strlen(entry.d_name);
+        entry.d_type = (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            ? DT_DIR : DT_REG;
+        strncpy(entry.d_name, wfd.cFileName, sizeof(entry.d_name));
+        entry.d_name[sizeof(entry.d_name)-1] = 0;
+    }
+
+ private:
+    HANDLE hFind;
+    bool wfd_valid;
+    WIN32_FIND_DATA wfd;
+    std::string find;
+    dirent entry;
+    // since opendir calls FindFirstFile, we need a means of telling the
+    // first call to readdir that we already have a file.
+    // that's the case iff this is == 0; we use a counter rather than a
+    // flag because that allows keeping statistics.
+    int num_entries_scanned;
+};
+
+
+DIR* opendir(char* path)
+{
+    DIR* d = new DIR();
+    if (d->init(path))
+    {
+        return d;
+    }
+    else
+    {
+        delete d;
+        return 0;
+    }
+}
+
+dirent* readdir(DIR* d)
+{
+    return d->readdir();
+}
+
+int closedir(DIR* d)
+{
+    delete d;
+    return 0;
+}
+
+int ftruncate(int fp, int size)
+{
+    ASSERT(false);              // unimplemented
+    return 0;
+}
+
+#endif /* #if _MSC_VER */
 
 #endif /* #if defined(WIN32CONSOLE) */

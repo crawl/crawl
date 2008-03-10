@@ -5,10 +5,9 @@
  *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
  */
 
-#ifdef USE_TILE
-
-#include <stdio.h>
 #include "AppHdr.h"
+#ifdef USE_TILE
+#include <stdio.h>
 #include "decks.h"
 #include "direct.h"
 #include "externs.h"

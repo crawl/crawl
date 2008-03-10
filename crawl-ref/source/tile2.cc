@@ -5,13 +5,13 @@
  *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
  */
  
-#ifdef USE_TILE
+#include "AppHdr.h"
 
+#ifdef USE_TILE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "AppHdr.h"
 #include "branch.h"
 #include "describe.h"
 #include "direct.h"

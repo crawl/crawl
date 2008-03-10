@@ -31,9 +31,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <unistd.h>
 #include <algorithm>
 #include <memory>
+#if !_MSC_VER
+#include <unistd.h>
+#endif
 
 #include "AppHdr.h"
 #include "externs.h"
@@ -61,7 +63,6 @@
 #include "view.h"
 
 #include "skills2.h"
-
 #define SCORE_VERSION "0.1"
 
 #ifdef MULTIUSER
@@ -1001,7 +1002,7 @@ void scorefile_entry::init()
     death_time = time( NULL );         // end time of game
 
     if (you.real_time != -1)
-        real_time = you.real_time + (death_time - you.start_time);
+        real_time = you.real_time + long(death_time - you.start_time);
     else 
         real_time = -1;
 

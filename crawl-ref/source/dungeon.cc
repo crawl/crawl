@@ -1170,7 +1170,7 @@ void dgn_set_colours_from_monsters()
             env.rock_colour = BROWN;
     }
     else
-        env.rock_colour = fix_black_colour(mcolour[env.mons_alloc[8]]);
+        env.rock_colour = fix_black_colour((char)mcolour[env.mons_alloc[8]]);
 }
 
 static void dgn_set_floor_colours()

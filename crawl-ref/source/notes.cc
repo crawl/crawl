@@ -6,11 +6,11 @@
  *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
+#include "AppHdr.h"
 #include <vector>
 #include <sstream>
 #include <iomanip>
 
-#include "AppHdr.h"
 #include "notes.h"
 
 #include "branch.h"

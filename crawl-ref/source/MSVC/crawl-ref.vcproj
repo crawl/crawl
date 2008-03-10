@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -45,7 +45,8 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="AppHdr.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
@@ -119,7 +120,8 @@
 				AdditionalIncludeDirectories="util/lua/src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="AppHdr.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
@@ -190,6 +192,22 @@
 		<File
 			RelativePath="..\acr.cc"
 			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\AppHdr.h"
@@ -254,6 +272,22 @@
 		<File
 			RelativePath="..\database.cc"
 			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\database.h"
@@ -400,14 +434,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\insult.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\insult.h"
-			>
-		</File>
-		<File
 			RelativePath="..\invent.cc"
 			>
 		</File>
@@ -480,30 +506,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\libdos.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\libdos.h"
-			>
-		</File>
-		<File
-			RelativePath="..\libgui.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\libgui.h"
-			>
-		</File>
-		<File
-			RelativePath="..\libunix.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\libunix.h"
-			>
-		</File>
-		<File
 			RelativePath="..\libutil.cc"
 			>
 		</File>
@@ -514,17 +516,25 @@
 		<File
 			RelativePath="..\libw32c.cc"
 			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="2"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="2"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\libw32c.h"
-			>
-		</File>
-		<File
-			RelativePath="..\libwt.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\libx11.cc"
 			>
 		</File>
 		<File
@@ -670,6 +680,22 @@
 		<File
 			RelativePath="..\mt19937ar.cc"
 			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\mt19937ar.h"

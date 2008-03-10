@@ -3613,7 +3613,7 @@ void offer_items()
         if (!yesno("Do you wish to part with all of your money? ", true, 'n'))
             return;
 
-        int donation_value = (int) (you.gold/200 * log(you.gold));
+        int donation_value = (int) (you.gold/200 * log((double)you.gold));
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
         mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
              "increase of piety by %d.", you.gold, donation_value);

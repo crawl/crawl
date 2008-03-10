@@ -14,6 +14,11 @@
 #ifndef FIXVEC_H
 #define FIXVEC_H
 
+#if _MSC_VER
+// Benign: FixedVector has an array in member init list
+# pragma warning(disable : 4351)
+#endif
+
 #include <cstdarg>
 #include <cstring>
 

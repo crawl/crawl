@@ -8,10 +8,12 @@
  *  Created on 2007-01-11.
  */
 
-#include "tutorial.h"
+#include "AppHdr.h"
+
 #include <cstring>
 #include <sstream>
 
+#include "tutorial.h"
 #include "cio.h"
 #include "command.h"
 #include "files.h"

@@ -52,7 +52,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#if !_MSC_VER
+#if _MSC_VER
+// # include <direct.h> conflicts with crawl's header.  Yes this sucks
+# include <c:/Program Files/Microsoft Visual Studio 8/VC/include/direct.h>
+#else
 #include <dirent.h>
 #endif
 
@@ -113,7 +116,7 @@ void save_level(int level_saved, level_area_type lt,
 // 2: append piety_hysteresis to TAG_YOU
 #define YOU_MINOR_VERSION   2
 
-const short GHOST_SIGNATURE = static_cast<short>( 0xDC55 );
+const short GHOST_SIGNATURE = short( 0xDC55 );
 
 static void redraw_all(void)
 {
@@ -333,6 +336,8 @@ static int create_directory(const char *dir)
     return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
 #elif defined(DOS)
     return mkdir(dir, 0755);
+#elif defined(_MSC_VER)
+    return _mkdir(dir);
 #else
     return mkdir(dir);
 #endif

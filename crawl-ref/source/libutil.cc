@@ -395,7 +395,7 @@ std::string number_in_words(unsigned num, int pow)
         return number_in_words(num, 0) + pow_in_words(pow);
 
     unsigned thousands = num % 1000, rest = num / 1000;
-    if (!rest and !thousands)
+    if (!rest && !thousands)
         return ("zero");
 
     return join_strings((rest? number_in_words(rest, pow + 3) : ""),

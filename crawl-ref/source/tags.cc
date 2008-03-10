@@ -1127,9 +1127,9 @@ static void tag_construct_you_dungeon(tagHeader &th)
         marshallPlaceInfo(th, list[k]);
 
     marshall_iterator(th, you.uniq_map_tags.begin(), you.uniq_map_tags.end(),
-                      marshallString);
+                      marshall_string);
     marshall_iterator(th, you.uniq_map_names.begin(), you.uniq_map_names.end(),
-                      marshallString);
+                      marshall_string);
 }
 
 static void marshall_follower(tagHeader &th, const follower &f)
@@ -1566,11 +1566,11 @@ static void tag_read_you_dungeon(tagHeader &th)
     unmarshall_container(th, you.uniq_map_tags,
                          (ssipair (string_set::*)(const std::string &))
                          &string_set::insert,
-                         unmarshallString);
+                         unmarshall_string);
     unmarshall_container(th, you.uniq_map_names,
                          (ssipair (string_set::*)(const std::string &))
                          &string_set::insert,
-                         unmarshallString);
+                         unmarshall_string);
 }
 
 static void tag_read_lost_monsters(tagHeader &th, int minorVersion)

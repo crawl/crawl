@@ -383,7 +383,6 @@
 //jmf: end of new defines
 // ====================== -----------------------------------------------------
 
-
 #ifdef MULTIUSER
     // If you are installing Crawl for multiple users, define SAVE_DIR
     // to the directory where saves, bones, and score file will go...
@@ -439,7 +438,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#endif
+#endif /* MULTIUSER */
 
 #if defined(DGL_SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
 #   error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING
@@ -460,5 +459,8 @@ template < class T >
 inline void UNUSED(const volatile T &)
 {
 }
+
+// And now headers we want precompiled
+#include <externs.h>
 
 #endif

@@ -18,7 +18,9 @@
 #include <cstring>
 #include <cstdlib>
 #include <errno.h>
+#if !_MSC_VER
 #include <unistd.h>
+#endif
 
 #include "dungeon.h"
 #include "enum.h"

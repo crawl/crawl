@@ -2543,7 +2543,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
-    else if (key == "menu_colour" || key == "menu_color")
+    // MSVC has a limit on how many if/else if can be chained together.
+    /* else */ if (key == "menu_colour" || key == "menu_color")
     {
         std::vector<std::string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)

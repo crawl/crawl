@@ -18,7 +18,7 @@
 #include "notes.h"
 
 #include <string.h>
-#if !defined(__IBMCPP__)
+#if !defined(__IBMCPP__) && !defined(_MSC_VER)
 #include <unistd.h>
 #endif
 
@@ -1840,7 +1840,7 @@ void monster_threat_values(double *general, double *highest)
         if (monster->alive() && mons_near(monster) && !mons_friendly(monster))
         {
             const int xp = exper_value(monster);
-            const double log_xp = log(xp);
+            const double log_xp = log((double)xp);
             sum += log_xp;
             if (xp > highest_xp)
             {
@@ -1855,7 +1855,7 @@ void monster_threat_values(double *general, double *highest)
 
 bool player_in_a_dangerous_place()
 {
-    const double logexp = log(you.experience);
+    const double logexp = log((double)you.experience);
     double gen_threat = 0.0, hi_threat = 0.0;
     monster_threat_values(&gen_threat, &hi_threat);
 
