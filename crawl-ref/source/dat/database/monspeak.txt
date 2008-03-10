@@ -2059,6 +2059,8 @@ w:5
 
 @The_monster@ @orc_says@, "With Beogh's help we'll overthrow the @orc_heathen@s!"
 
+@The_monster@ @shouts@, "Smite the @orc_heathen@s!"
+
 # messages submitted by Lemuel
 @The_monster@ @says_or_shouts@, "I'm proud to serve, I'm ready to die."
 
