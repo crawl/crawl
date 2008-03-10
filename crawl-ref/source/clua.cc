@@ -1805,7 +1805,7 @@ static int crawl_bindkey(lua_State *ls)
         s = lua_tostring(ls, 1);
     }
 
-    if (!s || !lua_isfunction(ls, 2) || !lua_gettop(ls) == 2)
+    if (!s || !lua_isfunction(ls, 2) || lua_gettop(ls) != 2)
         return (0);
 
     lua_pushvalue(ls, 2);
