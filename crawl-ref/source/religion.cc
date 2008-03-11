@@ -67,6 +67,7 @@
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
+#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -2162,7 +2163,7 @@ static bool tso_retribution()
     if ( !is_evil_god(you.religion) )
         return false;
 
-    int punishment = random2(3);
+    int punishment = random2(4);
 
     switch (punishment)
     {
@@ -2191,7 +2192,7 @@ static bool tso_retribution()
 
         bolt beam;
         beam.beam_source = NON_MONSTER;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.type = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage = calc_dice( 3, 20 + (you.experience_level * 7) / 3 );
         beam.flavour = BEAM_HOLY;
         beam.target_x = you.x_pos;
@@ -2209,6 +2210,10 @@ static bool tso_retribution()
     case 2:
        simple_god_message(" booms out: \"Turn back to righteousness! REPENT!\"", god);
        noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
+       break;
+    case 3:
+       simple_god_message(" calls a great silence down upon you!", god);
+       cast_silence( 25 );
        break;
     }
     return false;
