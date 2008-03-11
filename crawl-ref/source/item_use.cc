@@ -1417,7 +1417,7 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
             msg << "Buggy ";
     }
 
-    msg << (no_other_items ? "(i - change)" : "(i - inventory. (,) - cycle)")
+    msg << (no_other_items ? "(i - inventory)" : "(i - inventory. (,) - cycle)")
         << ": ";
 
     if (item == ENDOFPACK)
