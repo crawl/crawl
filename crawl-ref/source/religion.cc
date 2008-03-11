@@ -2212,7 +2212,7 @@ static bool tso_retribution()
        noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
        break;
     case 3:
-       simple_god_message(" calls a great silence down upon you!", god);
+       god_speaks(god, "You feel The Shining One's silent rage upon you!");
        cast_silence( 25 );
        break;
     }
