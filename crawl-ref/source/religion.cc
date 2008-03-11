@@ -2186,6 +2186,7 @@ static bool tso_retribution()
         break;
     }
     case 1:
+    {
         simple_god_message(" blasts you with cleansing flame!", god);
 
         bolt beam;
@@ -2204,6 +2205,7 @@ static bool tso_retribution()
         beam.is_explosion = true;
         explosion(beam);
         break;
+    }
     case 2:
        simple_god_message(" booms out: \"Turn back to righteousness! REPENT!\"", god);
        noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
