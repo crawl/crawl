@@ -1269,7 +1269,7 @@ void describe_floor()
         channel = MSGCH_EXAMINE_FILTER;
     }
     mpr((prefix + feat + suffix).c_str(), channel);
-    if (grid == DNGN_ENTER_LABYRINTH)
+    if (grid == DNGN_ENTER_LABYRINTH && you.is_undead != US_UNDEAD)
         mpr("Beware, for starvation awaits!", MSGCH_EXAMINE);
 }
 
