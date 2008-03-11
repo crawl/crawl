@@ -1815,17 +1815,61 @@ int player_speed(void)
     return ps;
 }
 
-int player_AC(void)
+static int player_armour_racial_bonus(const item_def& item)
 {
-    int AC = 0;
-    int i;                      // loop variable
+    if (item.base_type != OBJ_ARMOUR)
+        return 0;
+
+    int racial_bonus = 0;
+    const unsigned long armour_race = get_equip_race(item);
 
     // get the armour race value that corresponds to the character's race:
-    const unsigned long racial_type 
+    const unsigned long racial_type
                             = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
                                                              : 0);
+
+    // Dwarven armour is universally good -- bwr
+    if (armour_race == ISFLAG_DWARVEN)
+        racial_bonus += 4;
+
+    if (racial_type && armour_race == racial_type)
+    {
+        // Elven armour is light, but still gives one level to elves.
+        // Orcish and Dwarven armour are worth +2 to the correct
+        // species, plus the plus that anyone gets with dwarven armour.
+        // -- bwr
+        if (racial_type == ISFLAG_ELVEN)
+            racial_bonus += 2;
+        else
+            racial_bonus += 4;
+
+        // an additional bonus for Beogh worshippers
+        if (you.religion == GOD_BEOGH && !you.penance[GOD_BEOGH])
+        {
+            if (you.piety >= 185)
+                racial_bonus += racial_bonus * 9 / 4;
+            else if (you.piety >= 160)
+                racial_bonus += racial_bonus * 2;
+            else if (you.piety >= 120)
+                racial_bonus += racial_bonus * 7 / 4;
+            else if (you.piety >= 80)
+                racial_bonus += racial_bonus * 5 / 4;
+            else if (you.piety >= 40)
+                racial_bonus += racial_bonus * 3 / 4;
+            else
+                racial_bonus += racial_bonus / 4;
+        }
+    }
+
+    return racial_bonus;
+}
+
+int player_AC(void)
+{
+    int AC = 0;
+    int i;                      // loop variable
 
     for (i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
     {
@@ -1836,52 +1880,15 @@ int player_AC(void)
             continue;
 
         const item_def& item = you.inv[you.equip[i]];
-
-        AC += item.plus * 100;
-
-        // additional *half*-levels of armour skill.
-        int racial_bonus = 0;
-        const unsigned long armour_race = get_equip_race(item);
         const int ac_value = property(item, PARM_AC ) * 100;
-
-        // Dwarven armour is universally good -- bwr
-        if (armour_race == ISFLAG_DWARVEN)
-            racial_bonus += 4;
-
-        if (racial_type && armour_race == racial_type)
-        {
-            // Elven armour is light, but still gives one level 
-            // to elves.  Orcish and Dwarven armour are worth +2
-            // to the correct species, plus the plus that anyone
-            // gets with dwarven armour. -- bwr
-
-            if (racial_type == ISFLAG_ELVEN)
-                racial_bonus += 2;
-            else
-                racial_bonus += 4;
-
-            // an additional bonus for Beogh worshippers
-            if (you.religion == GOD_BEOGH && !you.penance[GOD_BEOGH])
-            {
-                if (you.piety >= 185)
-                    racial_bonus += racial_bonus * 9 / 4;
-                else if (you.piety >= 160)
-                    racial_bonus += racial_bonus * 2;
-                else if (you.piety >= 120)
-                    racial_bonus += racial_bonus * 7 / 4;
-                else if (you.piety >= 80)
-                    racial_bonus += racial_bonus * 5 / 4;
-                else if (you.piety >= 40)
-                    racial_bonus += racial_bonus * 3 / 4;
-                else
-                    racial_bonus += racial_bonus / 4;
-            }
-        }
+        int racial_bonus = player_armour_racial_bonus(item);
 
         AC += ac_value * (30 + 2 * you.skills[SK_ARMOUR] + racial_bonus) / 30;
 
-        /* The deformed don't fit into body armour very well
-           (this includes nagas and centaurs) */
+        AC += item.plus * 100;
+
+        // The deformed don't fit into body armour very well
+        // (this includes nagas and centaurs)
         if (i == EQ_BODY_ARMOUR && you.mutation[MUT_DEFORMED])
             AC -= ac_value / 2;
     }
@@ -2406,7 +2413,9 @@ int player_shield_class(void)   //jmf: changes for new spell
     }
     else
     {
-        switch (you.inv[ shield ].sub_type)
+        const item_def& item = you.inv[shield];
+
+        switch (item.sub_type)
         {
         case ARM_BUCKLER:
             base_shield = 3;   // +3/20 per skill level    max 7
@@ -2419,11 +2428,13 @@ int player_shield_class(void)   //jmf: changes for new spell
             break;
         }
 
+        int racial_bonus = player_armour_racial_bonus(item) * 2 / 3;
+
         // bonus applied only to base, see above for effect:
-        base_shield *= (20 + you.skills[SK_SHIELDS]);
+        base_shield *= (20 + you.skills[SK_SHIELDS] + racial_bonus);
         base_shield /= 20;
 
-        base_shield += you.inv[ shield ].plus;
+        base_shield += item.plus;
     }
 
     if (you.duration[DUR_DIVINE_SHIELD])
