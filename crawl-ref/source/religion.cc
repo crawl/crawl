@@ -2156,13 +2156,17 @@ void lose_piety(int pgn)
 static bool tso_retribution()
 {
     const god_type god = GOD_SHINING_ONE;
-    // daeva/smiting theme
+    // daeva/cleansing theme
 
     // Doesn't care unless you've gone over to evil/destructive gods
     if ( !is_evil_god(you.religion) )
         return false;
 
-    if (coinflip())
+    int punishment = random2(3);
+
+    switch (punishment)
+    {
+    case 0:
     {
         bool success = false;
         int how_many = 1 + random2(you.experience_level / 5) + random2(3);
@@ -2178,10 +2182,33 @@ static bool tso_retribution()
                             "for your evil ways!" :
                             "'s divine host fails to appear.",
                             god );
-    }
-    else
-        god_smites_you(GOD_SHINING_ONE, KILLED_BY_TSO_SMITING);
 
+        break;
+    }
+    case 1:
+        simple_god_message(" blasts you with cleansing flame!", god);
+
+        bolt beam;
+        beam.beam_source = NON_MONSTER;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.damage = calc_dice( 3, 20 + (you.experience_level * 7) / 3 );
+        beam.flavour = BEAM_HOLY;
+        beam.target_x = you.x_pos;
+        beam.target_y = you.y_pos;
+        beam.name = "golden flame";
+        beam.colour = YELLOW;
+        beam.thrower = KILL_MISC;
+        beam.aux_source = "The Shining One's cleansing flame";
+        beam.ex_size = 2;
+        beam.is_tracer = false;
+        beam.is_explosion = true;
+        explosion(beam);
+        break;
+    case 2:
+       simple_god_message(" booms out: \"Turn back to righteousness! REPENT!\"", god);
+       noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
+       break;
+    }
     return false;
 }
 
