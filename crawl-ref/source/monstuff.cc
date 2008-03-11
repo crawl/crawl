@@ -2434,7 +2434,8 @@ static void handle_nearby_ability(monsters *monster)
 #define MON_SPEAK_CHANCE 21
 
     if (mons_class_flag(monster->type, M_SPEAKS)
-        && monster->behaviour != BEH_WANDER && one_chance_in(MON_SPEAK_CHANCE))
+        && (monster->behaviour != BEH_WANDER || monster->attitude == ATT_NEUTRAL)
+        && one_chance_in(MON_SPEAK_CHANCE))
     {
         mons_speaks(monster);
     }

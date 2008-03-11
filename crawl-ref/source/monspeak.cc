@@ -36,6 +36,7 @@
 #include "mstuff2.h"
 #include "newgame.h"
 #include "player.h"
+#include "religion.h"
 #include "spells2.h"
 #include "spells4.h"
 #include "stuff.h"
@@ -62,6 +63,7 @@ static std::string get_speak_string(const std::vector<std::string> prefixes,
     }
 
     std::string msg = "";
+    
     // try string of all prefixes
     msg = getSpeakString(prefix + key);
     if (msg != "")
@@ -184,6 +186,8 @@ bool mons_speaks(const monsters *monster)
         prefixes.push_back("friendly");
     else if (monster->attitude == ATT_NEUTRAL)
         prefixes.push_back("neutral");
+    else
+        prefixes.push_back("hostile");
 
     if (monster->behaviour == BEH_FLEE)
         prefixes.push_back("fleeing");
@@ -203,12 +207,12 @@ bool mons_speaks(const monsters *monster)
     // results in wizard mode.)
     if (you.religion == GOD_BEOGH && mons_genus(monster->type) == MONS_ORC)
         prefixes.push_back("beogh");
+    else if (is_good_god(you.religion))
+        prefixes.push_back("good god");
+    else if (is_evil_god(you.religion))
+        prefixes.push_back("evil god");
 
     std::string msg;
-
-    // __NONE means to be silent, and __NEXT means to try the next,
-    // less exact method of describing the monster to find a speech
-    // string.
 
     // First, try its exact name
     if (monster->type == MONS_PLAYER_GHOST)
@@ -221,24 +225,31 @@ bool mons_speaks(const monsters *monster)
     else
         msg = get_speak_string(prefixes, monster->name(DESC_PLAIN), monster);
 
-    if (msg == "__NONE")
-        return false;
-
     // The exact name brought no results, try species.
     if (msg.empty() || msg == "__NEXT")
     {
-        msg = get_speak_string(prefixes,
+        if (mons_species(monster->type) != monster->type)
+        {
+            msg = get_speak_string(prefixes,
                        mons_type_name(mons_species(monster->type), DESC_PLAIN),
                        monster);
-
+        }
         // Still nothing found? Try monster genus!
-        if (msg.empty() || msg == "__NEXT")
+        if ((msg.empty() || msg == "__NEXT")
+            && mons_genus(monster->type) != monster->type)
         {
             msg = get_speak_string(prefixes,
                            mons_type_name(mons_genus(monster->type), DESC_PLAIN),
                            monster);
         }
     }
+
+    // __NONE means to be silent, and __NEXT means to try the next,
+    // less exact method of describing the monster to find a speech
+    // string.
+
+    if (msg == "__NONE")
+        return false;
 
     // Now that we're not dealing with a specific monster name, include
     // whether or not it can move in the prefix
@@ -270,7 +281,9 @@ bool mons_speaks(const monsters *monster)
     mon_intel_type intel = mons_intel(monster->type);
     if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA
         && intel < I_NORMAL)
+    {
         prefixes.insert(prefixes.begin(), "stupid");
+    }
     else if (shape >= MON_SHAPE_QUADRUPED && shape <= MON_SHAPE_FISH)
     {
         if (mons_char(monster->type) == 'w')
@@ -297,7 +310,9 @@ bool mons_speaks(const monsters *monster)
     }
     else if (shape >= MON_SHAPE_PLANT && shape <= MON_SHAPE_BLOB
              && intel > I_PLANT)
+    {
         prefixes.insert(prefixes.begin(), "smart");
+    }
 
     if (msg == "" || msg == "__NEXT")
         msg = get_speak_string(prefixes, get_mon_shape_str(shape), monster);

@@ -1831,6 +1831,64 @@ yak
 
 @The_monster@ snorts and paws the @surface@.
 %%%%
+################################################
+# Religious messaging
+################################################
+good_god
+
+Zin
+
+The Shining One
+
+Elyvilon
+%%%%
+holy_being
+
+w:2
+SPELL:@The_monster@ intones a prayer.
+SPELL:A sense of peace washes over you.
+
+w:1
+@The_monster@ says, "Thou must remain pure in the battle against evil."
+
+w:1
+@The_monster@ says, "May @player_god@ always shine on thee, @player_name@!"
+
+w:1
+@The_monster@ says, "@player_god@ be with thee, mortal!"
+
+w:1
+@The_monster@ says, "Praised be @good_god@ in the heavens above!"
+%%%%
+neutral good god 'cap-A'
+
+__NONE
+
+w:2
+@holy_being@
+%%%%
+friendly good god 'cap-A'
+
+@default friendly humanoid@
+
+w:4
+@holy_being@
+
+%%%%
+#############################################################
+# evil monsters may also have some choicy things to say...
+#############################################################
+good god '&'
+
+w:20
+@_demon_taunt_@
+
+w:1
+@The_monster@ screams, "@player_god@ won't protect you, @player_name@!"
+
+w:1
+@The_monster@ screams, "@player_god@ is but a nuisance to me, mortal!"
+%%%%
 ##############################################
 # Special orc speech
 ##############################################
