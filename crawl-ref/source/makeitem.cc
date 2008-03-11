@@ -3369,6 +3369,7 @@ static item_make_species_type give_weapon(monsters *mon, int level,
 
     case MONS_ANGEL:
         force_item = true;
+        item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.colour = WHITE;        // forced by force_item above {dlb}
 
@@ -3389,6 +3390,7 @@ static item_make_species_type give_weapon(monsters *mon, int level,
 
     case MONS_DAEVA:
         force_item = true;
+        item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.colour = WHITE;        // forced by force_item above {dlb}
 
@@ -3756,7 +3758,7 @@ void give_shield(monsters *mon, int level)
     {
     case MONS_DAEVA:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
-                              level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
+                              level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
         break;
         
     case MONS_DEEP_ELF_SOLDIER:
