@@ -487,7 +487,7 @@ void cast_summon_large_mammal(int pow)
         switch (temp_rand % 7)
         {
         case 0:
-            if (you.species == SP_HILL_ORC && one_chance_in(3))
+            if (one_chance_in(you.species == SP_HILL_ORC ? 3 : 6))
                 mon = MONS_WARG;
             else
                 mon = MONS_WOLF;
