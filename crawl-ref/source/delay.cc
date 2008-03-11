@@ -64,7 +64,7 @@ static bool recite_mons_useless(const monsters *mon)
             || mons_neutral(mon)
             || mons_is_confused(mon)
             || mons_is_paralysed(mon)
-	    || mon->has_ench(ENCH_BATTLE_FRENZY)
+            || mon->has_ench(ENCH_BATTLE_FRENZY)
             || mon->has_ench(ENCH_HASTE));
 }
 
