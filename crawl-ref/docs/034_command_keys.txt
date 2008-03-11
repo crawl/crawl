@@ -1,0 +1,56 @@
+# This file contains macros for using 0.3.4 command keys instead of the 
+# new set from 0.4.
+
+# If you want to use it, add the following line to your init.txt:
+# : crawl.read_options('docs/034_command_keys.txt')
+
+# Note that the 'v'iew item command is not available anymore. You can
+# get the same functionality by pressing the item slot in the inventor.
+
+# annotate level (Ctrl-I)
+M:\{9}
+A:!
+
+# auto-explore (Ctrl-O)
+M:\{15}
+A:o
+
+# shout/tell allies
+M:!
+A:t
+
+# experience information
+M:C
+A:E
+
+# evoke
+M:E
+A:v
+
+# dungeon overview
+M:O
+A:\{15}
+
+# cast spell
+M:Z
+A:z
+
+# close door
+M:c
+A:C
+
+# open door
+M:o
+A:O
+
+# throw
+M:t
+A:fi
+
+# zap wand
+M:z
+A:Z
+
+# butcher
+M:D
+A:c
