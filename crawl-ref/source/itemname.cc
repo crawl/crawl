@@ -1270,11 +1270,13 @@ std::string item_def::name_aux( description_level_type desc,
 
         if (know_pluses)
             buff << " (" << it_plus << ")";
-        else if (item_plus2 == ZAPCOUNT_EMPTY)
-            buff << " {empty}";
-        else if (item_plus2 > 0)
-            buff << " {zapped: " << item_plus2
-                 << '}';
+        else if (!dbname)
+        {
+            if (item_plus2 == ZAPCOUNT_EMPTY)
+                buff << " {empty}";
+            else if (item_plus2 > 0)
+                buff << " {zapped: " << item_plus2 << '}';
+        }
         break;
 
     case OBJ_POTIONS:
