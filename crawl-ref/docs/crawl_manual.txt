@@ -711,6 +711,10 @@ must be activated with the 'a' command.
 You can wear armour with the 'W' command, and take it off with the 'T'
 command. With '[' you can have a quick look at your current gear.
 
+Most armours can be improved by reading the appropriate scroll. Be aware
+that the limit bonus for all normal pieces of gear is +2, except for
+body armour and bardings.
+
 % Food and Carrion:
 -------------------
 Food is extremely important. You can find many different kinds of food
@@ -741,6 +745,9 @@ Ogres, and Kobolds care less (in different degrees) about the quality
 of the corpse. Ogres, Trolls and Kobolds are happy to eat raw meat at
 any time. This does not apply to the more civilised (and more
 pretentious) Ogre-Mages.
+
+Vampires are a special case. Members of this species can try to drink
+blood from a fresh corpse (use either the 'q' or the 'e' command).
 
 ? Magical Scrolls:
 ------------------
