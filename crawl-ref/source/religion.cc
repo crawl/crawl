@@ -2163,11 +2163,13 @@ static bool tso_retribution()
     if ( !is_evil_god(you.religion) )
         return false;
 
-    int punishment = random2(4);
+    int punishment = random2(7);
 
     switch (punishment)
     {
     case 0:
+    case 1:
+    case 2: // summon daevas
     {
         bool success = false;
         int how_many = 1 + random2(you.experience_level / 5) + random2(3);
@@ -2186,7 +2188,8 @@ static bool tso_retribution()
 
         break;
     }
-    case 1:
+    case 3:
+    case 4: // cleansing flame
     {
         simple_god_message(" blasts you with cleansing flame!", god);
 
@@ -2207,13 +2210,18 @@ static bool tso_retribution()
         explosion(beam);
         break;
     }
-    case 2:
-       simple_god_message(" booms out: \"Turn back to righteousness! REPENT!\"", god);
-       noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
-       break;
-    case 3:
-       god_speaks(god, "You feel The Shining One's silent rage upon you!");
-       cast_silence( 25 );
+    case 5:
+    case 6: // noisiness or silence (anti-noisiness)
+       if (coinflip())
+       {
+           simple_god_message(" booms out: \"Turn back to righteousness! REPENT!\"", god);
+           noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
+       }
+       else
+       {
+           god_speaks(god, "You feel The Shining One's silent rage upon you!");
+           cast_silence( 25 );
+       }
        break;
     }
     return false;
