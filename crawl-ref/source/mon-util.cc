@@ -5418,6 +5418,21 @@ static std::string get_species_insult(const std::string type)
     return (insult);
 }
 
+static std::string pluralise_player_genus()
+{
+    std::string sp = species_name(you.species, 1, true);
+    if (player_genus(GENPC_ELVEN, you.species)
+        || player_genus(GENPC_DWARVEN, you.species))
+    {
+        sp = sp.substr(0, sp.find("f"));
+        sp += "ves";
+    }
+    else if (you.species != SP_DEMONSPAWN)
+        sp += "s";
+
+    return (sp);
+}
+
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
 std::string do_mon_str_replacements(const std::string &in_msg,
@@ -5466,6 +5481,12 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     }
 
     msg = replace_all(msg, "@player_name@", you.your_name);
+    msg = replace_all(msg, "@player_species@",
+                      species_name(you.species, 1).c_str());
+    msg = replace_all(msg, "@player_genus@",
+                      species_name(you.species, 1, true).c_str());
+    msg = replace_all(msg, "@player_genus_plural@",
+                      pluralise_player_genus().c_str());
 
     if (player_monster_visible(monster))
     {
@@ -5518,9 +5539,12 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@Player_god@", replace_god_name(false, true));
 
     // replace with species specific insults
-    msg = replace_all(msg, "@species_insult_adj1@", get_species_insult("adj1"));
-    msg = replace_all(msg, "@species_insult_adj2@", get_species_insult("adj2"));
-    msg = replace_all(msg, "@species_insult_noun@", get_species_insult("noun"));
+    if (msg.find("@species_insult_") != std::string::npos)
+    {
+        msg = replace_all(msg, "@species_insult_adj1@", get_species_insult("adj1"));
+        msg = replace_all(msg, "@species_insult_adj2@", get_species_insult("adj2"));
+        msg = replace_all(msg, "@species_insult_noun@", get_species_insult("noun"));
+    }
 
     static const char * sound_list[] = 
     {
@@ -5618,8 +5642,8 @@ mon_body_shape get_mon_shape(const int type)
     case 'c': // centaurs
         return(MON_SHAPE_CENTAUR);
     case 'd': // draconions and drakes
-        if (mons_genus(type) == MONS_DRACONIAN ||
-            mons_class_flag(type, M_HUMANOID))
+        if (mons_genus(type) == MONS_DRACONIAN
+            || mons_class_flag(type, M_HUMANOID))
         {
             if (mons_class_flag(type, M_FLIES))
                 return(MON_SHAPE_HUMANOID_WINGED_TAILED);
@@ -5640,37 +5664,38 @@ mon_body_shape get_mon_shape(const int type)
         else
             return(MON_SHAPE_HUMANOID);
     case 'h': // hounds
-    case 'j': // jackals
         return(MON_SHAPE_QUADRUPED);
+    case 'j': // snails
+            return(MON_SHAPE_SNAIL);
     case 'k': // killer bees
         return(MON_SHAPE_INSECT_WINGED);
     case 'l': // lizards
         return(MON_SHAPE_QUADRUPED);
-    case 'm': // minotaurs, manticores, and snails/slugs/etc
-        if (type == MONS_MINOTAUR)
-            return(MON_SHAPE_HUMANOID);
-        else if (type == MONS_MANTICORE)
-            return(MON_SHAPE_QUADRUPED);
-        else
-            return(MON_SHAPE_SNAIL);
+    case 'm': // merfolk
+        return(MON_SHAPE_HUMANOID);
     case 'n': // necrophages and ghouls
         return(MON_SHAPE_HUMANOID);
     case 'o': // orcs
         return(MON_SHAPE_HUMANOID);
     case 'p': // ghosts
-        if (type != MONS_INSUBSTANTIAL_WISP &&
-            type != MONS_PLAYER_GHOST)
+        if (type != MONS_INSUBSTANTIAL_WISP
+            && type != MONS_PLAYER_GHOST) // handled elsewhere
+        {
             return(MON_SHAPE_HUMANOID);
+        }
+        break;
     case 'q': // quasists
         return(MON_SHAPE_HUMANOID_TAILED);
     case 'r': // rodents
         return(MON_SHAPE_QUADRUPED);
-    case 's': // arachnids and centidpeds
+    case 's': // arachnids and centipedes
         if (type == MONS_GIANT_CENTIPEDE)
             return(MON_SHAPE_CENTIPEDE);
         else
             return(MON_SHAPE_ARACHNID);
     case 'u': // ugly things are humanoid???
+        return(MON_SHAPE_HUMANOID);
+    case 't': // minotaurs
         return(MON_SHAPE_HUMANOID);
     case 'v': // vortices and elementals
         return(MON_SHAPE_MISC);
@@ -5703,8 +5728,11 @@ mon_body_shape get_mon_shape(const int type)
         return(MON_SHAPE_QUADRUPED_TAILLESS);
     case 'G': // floating eyeballs and orbs
         return(MON_SHAPE_ORB);
-    case 'H': // hippogriffs and griffns
-        return(MON_SHAPE_QUADRUPED_WINGED);
+    case 'H': // manticores, hippogriffs and griffins
+        if (type == MONS_MANTICORE)
+            return(MON_SHAPE_QUADRUPED);
+        else
+            return(MON_SHAPE_QUADRUPED_WINGED);
     case 'I': // ice beasts
         return(MON_SHAPE_QUADRUPED);
     case 'J': // jellies and jellyfish

@@ -859,13 +859,13 @@ static void finish_delay(const delay_queue_item &delay)
                  (you.has_usable_claws() || you.mutation[MUT_FANGS] == 3) ?
                  "ripping" : "chopping");
 
-            if (you.religion == GOD_ZIN && mons_intel(item.plus) >= I_NORMAL)
-                simple_god_message(" expects more respect for this departed "
-                                   "soul.");
-            else if (is_good_god(you.religion) && is_player_same_species(item.plus))
+            if (is_good_god(you.religion) && is_player_same_species(item.plus))
                 simple_god_message(" expects more respect for your departed "
                                    "relatives.");
-                                   
+            else if (you.religion == GOD_ZIN && mons_intel(item.plus) >= I_NORMAL)
+                simple_god_message(" expects more respect for this departed "
+                                   "soul.");
+
             if (you.species == SP_VAMPIRE &&
                 mons_corpse_effect(item.plus) != CE_HCL &&
                 (!god_likes_butchery(you.religion) ||

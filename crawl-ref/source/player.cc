@@ -426,54 +426,83 @@ bool player_genus(genus_type which_genus, species_type species)
     return (false);
 }                               // end player_genus()
 
-bool is_player_same_species(const int mon)
+// If transform is true, compare with current transformation instead
+// of (or in addition to) underlying species.
+// (See mon-data.h for species/genus use.)
+bool is_player_same_species(const int mon, bool transform)
 {
+    if (transform)
+    {
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_AIR:
+            return (false);
+        // unique monsters
+        case TRAN_BAT:
+            return (mon == MONS_GIANT_BAT);
+        case TRAN_ICE_BEAST:
+            return (mon == MONS_ICE_BEAST);
+        case TRAN_SERPENT_OF_HELL:
+            return (mon == MONS_SERPENT_OF_HELL);
+        // compare with monster *species*
+        case TRAN_LICH:
+            return (mons_species(mon) == MONS_LICH);
+        // compare with monster *genus*
+        case TRAN_SPIDER:
+            return (mons_genus(mon) == MONS_WOLF_SPIDER);
+        case TRAN_DRAGON:
+            return (mons_genus(mon) == MONS_DRAGON); // includes all drakes
+        default:
+            break; // check real (non-transformed) form
+        }
+    }
+    
     switch (you.species)
     {
         case SP_HUMAN:
-            if (mons_species(mon) == MONS_HUMAN)
+            if (mons_genus(mon) == MONS_HUMAN)
                 return (true);
             return (false);
         case SP_CENTAUR:
-            if (mons_species(mon) == MONS_CENTAUR)
+            if (mons_genus(mon) == MONS_CENTAUR)
                 return (true);
             return (false);
         case SP_OGRE:
         case SP_OGRE_MAGE:
-            if (mons_species(mon) == MONS_OGRE)
+            if (mons_genus(mon) == MONS_OGRE)
                 return (true);
             return (false);
         case SP_TROLL:
-            if (mons_species(mon) == MONS_TROLL)
+            if (mons_genus(mon) == MONS_TROLL)
                 return (true);
             return (false);
         case SP_MUMMY:
-            if (mons_species(mon) == MONS_MUMMY)
+            if (mons_genus(mon) == MONS_MUMMY)
                 return (true);
             return (false);
-        case SP_GHOUL:
+        case SP_GHOUL: // genus would include necrophage and rotting hulk
             if (mons_species(mon) == MONS_GHOUL)
                 return (true);
             return (false);
         case SP_VAMPIRE:
-            if (mons_species(mon) == MONS_VAMPIRE)
+            if (mons_genus(mon) == MONS_VAMPIRE)
                 return (true);
             return (false);
         case SP_MINOTAUR:
-            if (mons_species(mon) == MONS_MINOTAUR)
+            if (mons_genus(mon) == MONS_MINOTAUR)
                 return (true);
             return (false);
         case SP_NAGA:
-            if (mons_species(mon) == MONS_NAGA)
+            if (mons_genus(mon) == MONS_NAGA)
                 return (true);
             return (false);
         case SP_HILL_ORC:
-            if (mons_species(mon) == MONS_ORC)
+            if (mons_genus(mon) == MONS_ORC)
                 return (true);
             return (false);
         case SP_MERFOLK:
-            if (mons_species(mon) == MONS_MERFOLK
-                || mons_species(mon) == MONS_MERMAID)
+            if (mons_genus(mon) == MONS_MERFOLK
+                || mons_genus(mon) == MONS_MERMAID)
             {
                 return (true);
             }
@@ -483,7 +512,7 @@ bool is_player_same_species(const int mon)
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
-            if (mons_species(mon) == MONS_ELF)
+            if (mons_genus(mon) == MONS_ELF)
                 return (true);
             return (false);
 
@@ -496,12 +525,12 @@ bool is_player_same_species(const int mon)
         case SP_PURPLE_DRACONIAN:
         case SP_MOTTLED_DRACONIAN:
         case SP_PALE_DRACONIAN:
-            if (mons_species(mon) == MONS_DRACONIAN)
+            if (mons_genus(mon) == MONS_DRACONIAN)
                 return (true);
             return (false);
 
         case SP_KOBOLD:
-            if (mons_species(mon) == MONS_KOBOLD)
+            if (mons_genus(mon) == MONS_KOBOLD)
                 return (true);
             return (false);
         default: // no monster equivalent
@@ -3934,7 +3963,8 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
         // We've previously declared that these are radically 
         // different from Ogres... so we're not going to 
         // refer to them as Ogres.  -- bwr
-        case SP_OGRE_MAGE:  res = "Ogre-Mage";                       break;
+        // Not the species, but genus... why not? -- jpeg
+        case SP_OGRE_MAGE:  res = (genus? "Ogre" : "Ogre-Mage");     break;
         case SP_CENTAUR:    res = "Centaur";                         break;
         case SP_SPRIGGAN:   res = "Spriggan";                        break;
         case SP_MINOTAUR:   res = "Minotaur";                        break;

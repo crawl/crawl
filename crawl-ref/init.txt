@@ -4,9 +4,10 @@
 # changes to the interface: command keys, monster colours, and the 
 # butchering interface. (New players should go ignore these lines.)
 #
-# : crawl.read_options('docs/034_command_keys.txt')
 # : crawl.read_options('docs/034_monster_glyphs.txt')
-# always_confirm_butcher = true
+# additional_macro_file   = docs/034_command_keys.txt
+# use_old_selection_order = true
+# always_confirm_butcher  = true
 
 
 
@@ -47,7 +48,7 @@
 #
 # name = Delilah
 # remember_name = false
-# use_old_selection_order = false
+# use_old_selection_order = true
 # weapon = (random | short sword | hand axe | spear | mace | trident)
 # chaos_knight = (Xom | Makhleb | random)
 # death_knight = (necromancy | Yredelemnul | random)

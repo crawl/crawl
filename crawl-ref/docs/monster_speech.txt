@@ -6,20 +6,62 @@ speech has been outsourced by Matthew Cline. This makes changing
 existing messages, or adding new ones really easy. This file will
 hopefully help you in this endeavour.
 
+
 shout.txt handles message output for monsters noticing you.
 
 monspeak.txt handles messages for monsters communicating with you.
 
-insult.txt handles insults thrown at you by imps and demons.
-
 wpnnoise.txt handles randart weapons with the noises property.
+
+insult.txt handles insults thrown at you by imps and demons. 
+
+
+Monster speech probabilities
+============================
+
+Not all monsters are equally likely to speak. Rather there are
+different chances involved depending on several attributes, and most of
+the time the database lookup stage isn't even reached.
+
+The player will only ever hear monsters speak if they are nearby, and
+monsters will only speak if they are not asleep, not submerged in
+water, air or lava, and not wandering around aimlessly (unless neutral).
+
+Berserk monsters are too busy killing and maiming to speak. Also, invisible
+monsters the player can't see (for lack of see invisible) will always stay
+silent, unless confused.
+
+Monsters capable of speech (i.e. all intelligent humanoid monsters, as
+well as all uniques and some non-unique demons) have a base chance of
+1/21 of speaking, while humanoid monsters incapable of speech will
+never communicate with the player in any form.
+
+Non-humanoid monsters get a 1/84 probability of "speaking" per turn
+(non-verbal actions, more like). This chance is divided by another 10,
+if the monster in question was generated as a member of a group.
+Chances are again doubled if this non-humanoid monster is fleeing, and
+doubled again if confused.
+
+Neutral monsters only speak half as often, and for charmed monsters the
+probability is divided by 3. The same applies to silenced monsters, i.e.
+monsters that are not naturally silent will only get to even attempt to speak in
+one out of three tries where the above chances hold.
+
+Note that the definition of which monsters are capable of speech is
+entirely hardcoded. We think we made this apply to all sensible
+monsters, i.e. all intelligent humanoid monsters, but of course it is
+possible we've overlooked something, so if you find that your
+carefully constructed monster speech never gets printed, and this
+documentation also doesn't help you solve the problem, you might want
+to post a bug report on Dungeon Crawl's SourceForge site [1].
 
 
 A simple example
 ================
 
-If you have a look at these files, you'll see that all entries have
-basically the same structure: a key, followed by one or more values.
+If you have a look at some of the speech files, you'll see that all
+entries have basically the same structure: a key, followed by one or
+more values.
 Here is an example.
 
   %%%%
@@ -63,7 +105,7 @@ minor demons.
 
 The rest of the entry consists of messages, separated by blank
 lines. This is one of them. Each may be prefixed with an optional
-weight ('w:1'). A message will be chosen with a probability of its
+weight ("w:1"). A message will be chosen with a probability of its
 weight out of the sum of weights for its entry. Weight defaults to 10
 if not specified. In this example, this particular message will be
 selected 1 time out of 12.
@@ -104,36 +146,58 @@ attributes as prefixes.
 speech from "hostile" or "neutral". All prefixes are optional and
 tested in the following order:
 
-   default <attitude> fleeing silenced confused <player god> <monster>
+  default <attitude> fleeing silenced confused [related] <player god> 
 
 where <attitude> can be any of friendly, neutral or hostile. Note that
-the game generally treats neutral monsters like hostiles as they still
-pose a danger to players.
+the game generally treats neutral monsters like hostiles since they
+still pose a danger to players.
+
+The prefix "related" is added if the player and the monster share the
+same genus, e.g. if you're playing a Sludge Elf, and the monster in
+question is a deep elf blademaster, you both are Elves and the monster
+speech may reflect that. It's currently only used for friendly
+humanoids who will now sometimes mention that you're family, if you
+are.
 
 The <player god> prefix is constructed according to the religious
 belief of the character. If the monster in question is a member of the
 orc species and the character worships Beogh, the prefix "beogh" gets
-added to the list. If you worship one of the good gods (Zin, The
-Shining One, or Elyvilon) the prefix "good god" is used instead.
-Conversely, worshippers of one of the evil gods (Yredelemnul,
-Kikubaaqudgha, Makhleb, Lugonu, Xom, Beogh, or Vehumet) will use the
-prefix "evil god". 
+added to the list. If you worship one of the good gods (Zin, Elyvilon,
+or The Shining One) the prefix "good god" is used instead.
+Conversely, worshippers of one of the evil gods (Yredelemnul, Makhleb,
+Kikubaaqudgha, Lugonu, Xom, Beogh, or Vehumet) will use the prefix
+"evil god". 
 This allows fine-grained handling of monsters depending on your
 character's religion status, e.g. orcs will use special speech for
-Beogh worshippers, and neutral holy beings (Angel, and Daeva) may
+Beogh worshippers, and neutral holy beings (Angel and Daeva) may
 shout messages of encouragement to followers of the good gods, while
 demons will attempt to slander the good gods.
 
-Now that the entire set of prefixes has be constructed, we only need
+Once the entire set of prefixes has been determined, we only need
 to add the monster name and start the database search. 
 
-First we search for the whole database string in combination with the
-monster name. If that didn't yield any results, reading from left to
-right, combinations are tested, beginning at three prefixes and ending
-at none. At this stage the list of prefixes is always prefixed itself
-with "default". This ensures that, for example, fleeing uniques won't
-output their normal menacing speech but rather the default speech
-defined for fleeing humanoids in general.
+First we search for the complete prefix string in combination with the
+monster name. Then we try omitting some very specific prefixes that
+might not be so important, first skipping on "hostile", then also
+ignoring "related", then religion status, and finally "silenced", where
+applicable.
+
+If all of that didn't yield any results, next we'll take the complete
+prefix list again, then, reading from left to right, combinations are
+tested, beginning at three prefixes and ending at none. At this stage
+the list of prefixes is always prepended with "default". This ensures
+that, for example, fleeing uniques won't output their normal menacing
+speech but rather the default speech defined for fleeing humanoids in
+general.
+In practice this means that database keys starting with "default" are
+the fallback solution if the exact look-up has failed. As such, the
+messages should be generic enough to allow for all the possibly skipped
+prefixes, or else those cases should be caught earlier, e.g. if you
+have "default friendly humanoid", you should also define "default
+friendly fleeing humanoid" and "default friendly confused humanoid"
+(and possibly both combined) even if only with "__NONE" (stay silent),
+as the general friendly messages may look odd for a monster such
+afflicted.
 
 Only keys that match a search string perfectly (ignoring case) will
 be used. Once all prefixes have been exhausted and still no match has 
@@ -143,7 +207,7 @@ following order:
 
 1. The actual monster name.
    Examples: "crystal golem", "default confused moth of wrath"
-2. The monster species and genus.
+2. The monster genus.
    Examples: If "friendly ogre-mage" wasn't found, try "friendly ogre"
              instead. Same for "dragon" if "swamp drake" was
              unsuccessful.
@@ -161,14 +225,19 @@ a "stupid humanoid" may still be smarter than a "smart arachnid".
 
 Here's a list of allowed monster shapes that should hopefully be 
 self-explanatory:
-  humanoid, winged humanoid, tailed humanoid, winged tailed humanoid,   
-  centaur, naga, quadruped, tailless quadruped, winged quadruped,
-  bat, snake, fish, insect, winged insect, arachnid, centipede, snail,   
-  plant, fungus, orb, and blob.
+  humanoid, winged humanoid (angels), tailed humanoid (draconians),
+  winged tailed humanoid (gargoyles), centaur, naga, quadruped,
+  tailless quadruped (frogs), winged quadruped (hippogriff), bat,
+  snake (also eels and worms), fish, insect, winged insect, arachnid,
+  centipede, snail, plant, fungus, orb (eyes), and blob (jellies).
+
 
 If no matching keys are found after all of these rounds, the monster
 definitely stays silent.
 
+
+Examples
+--------
 
 Example 1: 
   The monster we want to make "speak" is a "confused killer bee".
@@ -176,7 +245,7 @@ Example 1:
   However, such an entry cannot be found in the database, so the game  
   tries first for "default confused killer bee", then "default killer
   bee", neither of which yields any results. 
-  Species and genus are also plain "killer bee", so that doesn't help
+  The monster genus is also plain "killer bee", so that doesn't help
   us any. For the next round we try again with "confused 'k'", which,
   by itself, also can't be found in the database, but once the prefix
   comparison tries it together with "default", we have a match:
@@ -191,15 +260,18 @@ Example 2:
   This time, we're interested in "friendly fleeing beogh orc wizard".
 
   This obviously made up example also has no direct equivalent in the
-  database, so one after another, we first check for "default friendly
-  fleeing beogh orc wizard", "default friendly fleeing orc wizard",
-  "default friendly beogh orc wizard", "default fleeing beogh orc
-  wizard", "default friendly orc wizard", "default fleeing orc wizard",
-  "default beogh orc wizard" and "default orc wizard", none of which is
-  successful.
-  Both species and genus of the orc wizard is "orc", so we retry the
-  above using "orc" instead of "orc wizard". The same is repeated for
-  "friendly fleeing beogh 'o'", and we still haven't found anything.
+  database, so first we try to remove the less important prefixes,
+  something that in this case only applies to "beogh". Unfortunately,
+  "friendly fleeing orc wizard" also has no corresponding entry in the
+  database, so that, one after another, we now check for "default
+  friendly fleeing beogh orc wizard", "default friendly fleeing orc
+  wizard", "default friendly beogh orc wizard", "default fleeing beogh
+  orc wizard", "default friendly orc wizard", "default fleeing orc
+  wizard", "default beogh orc wizard" and "default orc wizard", none of
+  which is successful.
+  The genus of orc wizards is "orc", so we retry the above using "orc"
+  instead of "orc wizard". The same is repeated for "friendly fleeing
+  beogh 'o'", and we still haven't found anything.
 
   This is starting to get ridiculous, so it's time for desperate
   measures: 
@@ -208,9 +280,11 @@ Example 2:
   Thus, in a final attempt of making this orc wizard speak, we search
   the database for "friendly fleeing beogh humanoid", something that,
   not surprisingly (since Beogh and humanoid don't go well together)
-  doesn't exist. Still, we haven't yet tried the prefix combinations:
-  "default friendly fleeing beogh humanoid" is still unsuccessful, but
-  with "default friendly fleeing humanoid" we finally strike gold:
+  doesn't exist. Annoyingly enough, neither does "friendly fleeing 
+  humanoid". 
+  Still, we haven't yet tried the prefix combinations: "default
+  friendly fleeing beogh humanoid" is still unsuccessful, but with
+  "default friendly fleeing humanoid" we finally strike gold:
 
 %%%%
 default friendly fleeing humanoid
@@ -261,9 +335,10 @@ Variables
 
 Values can contain variable references, which look like text
 surrounded by @@. These variables may be defined by entries in
-shout.txt, monspeak.txt or one of the other files, in which case they
-are replaced with a random value from the entry; or they may have
-hardcoded expansions defined by the game.
+shout.txt for the shouting database, or monspeak.txt or one of the
+other files for the speech database, in which case they are replaced
+with a random value from the entry; or they may have hardcoded
+expansions defined by the game.
 
 Note that variable replacement is recursive, so be careful to avoid
 infinite loops. Though the game will abort after a number of
@@ -283,6 +358,11 @@ The following variables are hardcoded:
 @a_something@   : similar
 @the_something@ : similar
 @player_name@   : Player name.
+@player_species@: Player base species, with Draconian rather than the 
+                  actual subtype.
+@player_genus@  : Player genus, i.e. "Elf" rather than the exact type,
+                  or "Ogre" instead of "Ogre-Mage".
+@player_genus_plural@ : pluralised genus form.
 @player_god@    : Player's god name, or "you" if non-religious.
 @Player_god@    : Player's god name, or "You" if non-religious.
 @god_is@        : replaced with "<god name> is" or "you are", if 
@@ -314,7 +394,7 @@ Examples of pre-defined variables in the database include
 _high_priest_, _mercenary_guard_, _wizard_, _hostile_adventurer_,
 _friendly_imp_, _hostile_imp_, and _tormentor_, but more get added all
 the time. There are also a few synonyms defined at the beginning of
-speak.txt such as for @ATTACK@, @pointless@, @shouts@, @wails@, and
+monspeak.txt such as for @ATTACK@, @pointless@, @shouts@, @wails@, and
 others.
 
 Weapon noises also use a number of synonyms which are defined at the
@@ -363,21 +443,78 @@ and enforce output even when silenced.
   VISUAL SPELL   : MSGCH_MONSTER_SPELL
   VISUAL WARN    : MSGCH_WARN
 
-Note, though, that these only will take effect if the "silenced" prefix
-hasn't been defined for this monster, or at least not in combination
-with the other applying prefixes. In the case of silenced monsters,
-first the database is searched for the monster key along with all its
-prefixes including "silenced", and only if no message has been found,
-the search will repeat ignoring the "silenced" prefix and only then
-these special VISUAL cases can apply.
-This will actually double the amount of rounds the database search
-goes through, so you might expect chances for speaking to be higher.
-In fact, though, the opposite is the case: once a matching message has
-been found, the database search stops, and if this randomly chosen
-speech message doesn't happen to be VISUAL it will simply not be
-printed, so the monster stays silent after all. All in all, chances
-are lower (as is intended) but only VISUAL messages even have a chance
-to be printed under these circumstances.
+Note, though, that these only will take effect if a VISUAL message just
+happens to be chosen. As stated above, the database search doesn't
+really care whether a monster is supposed to be silent, so it may pick
+any noisy monster speech, but the message output will care and refuse
+to print such nonsense, so that in this case the monster will actually
+stay silent after all. 
+All in all, chances of silent "speech" are lower (as is intended) but
+only VISUAL messages even have a chance to be printed under these circumstances.
+
+As explained earlier, "silenced" is one of the prefixes that are
+regarded as "less important" and can be ignored in the exact string
+search. So that both specially defined silenced messages for a
+particular monster and its normal VISUAL messages can sometimes take
+effect, chances for actually skipping on silenced in the direct string
+matching are 50:50.
+
+Example 3:
+  The player has just cast Silence when a Killer Klown wanders into
+  view. (Uh oh!) This "silenced Killer Klown" is now attempting to say
+  something. The exact look-up is unsuccessful, but now there's a 50%
+  chance of skipping on the "silenced" prefix. If this route is chosen
+  we may get results such as
+
+%%%%
+Killer Klown
+
+@The_monster@ giggles crazily.
+
+@The_monster@ laughs merrily.
+
+...
+
+  none of which, if chosen, would actually be printed, but luckily the 
+  "Killer Klown" entry also contains VISUAL statements like the
+  following:
+
+...
+
+VISUAL:@The_monster@ beckons to you.
+
+VISUAL:@The_monster@ does a flip.
+
+...
+
+  If one of these is chosen, we get a non-verbal "speech" statement of
+  this silenced monster.
+
+  However, what happens if the other 50% take effect and we will *not*   
+  ignore the "silenced" prefix? In this case, we'll simply continue
+  like in the earlier examples above, get no results for either of
+  "default silenced Killer Klown" or "default Killer Klown", and try
+  the genus next: human, which cannot be found in the database,
+  silenced or no. Neither will we find anything for the monster glyph
+  '@'. Now all that remains is to check the monster shape, which is
+  "humanoid" again. "silenced humanoid" won't get us any results, nor
+  will simply "humanoid", but "default silenced humanoid" has some
+  statements defined.
+
+%%%%
+default silenced humanoid
+
+w:30
+VISUAL:@The_monster@ says something but you don't hear anything.
+
+w:30
+VISUAL:@The_monster@ gestures.
+
+...
+
+  All of the statements in these predefined "silenced" entries have to
+  be of the type VISUAL; otherwise they'll never get printed.
+
 
 For shouts the default is also MSGCH_TALK which is automatically
 changed to MSGCH_TALK_VISUAL for monsters that can't speak (animals,
@@ -394,16 +531,15 @@ Special commands and variables
 
 Message entries may also be one of several special commands. These
 aren't variables, so they aren't surrounded by @@. Accordingly, they
-are not expanded, but rather they produce special game behavior.
+are not expanded, but rather they produce special game behaviour.
 
   __NONE : no message
-  __NEXT : try the next combination of attributes, or a more 
-           general monster description
+  __NEXT : try a more general monster description
   __MORE : enforce a "--more--" prompt
   __YOU_RESIST : print "You resist."
   __NOTHING_HAPPENS : print "Nothing appears to happen."
 
-Some special keys are defined in speak.txt and shout.txt, such as
+Some special keys are defined in monspeak.txt and shout.txt, such as
 __RESIST_OR_NOTHING and __SHOUT. These are normal variable expansions,
 and may be used as such. They are given special-looking names because
 Crawl looks up the noises a given monster can produce and looks for
@@ -446,22 +582,29 @@ adding a high weight value before it, e.g. w:5000, or equally
 temporarily push it into another channel (e.g. MSGCH_WARN) to make it
 more noticeable.
 
-Note that the definition of which monsters are capable of speech is
-entirely hardcoded. We think we made this apply to all sensible
-monsters, i.e. all intelligent humanoid monsters, but of course it is
-possible we've overlooked something, so if you find that your
-carefully constructed monster speech never gets printed, and this
-documentation also doesn't help you solve the problem, you might want
-to post a bug report on Dungeon Crawl's SourceForge site [1].
+If you successfully got Crawl compiled, you can easily enable more 
+detailed debug information. All you need to do is add 
+
+  #define DEBUG_MONSPEAK
+
+somewhere in AppHdr.h, for example at the beginning of the section
+entitled "Debugging Defines", and then compile the game anew, first
+using "make clean", then "make wizard". 
+If you play with DEBUG_MONSPEAK compiled in, whenever the game is 
+searching the monspeak database you'll get extensive information on all
+keys and prefixes tried. Once you're done testing don't forget to 
+remove (or comment out) the DEBUG_MONSPEAK setting as trying to
+actually play that way would sure be annoying. 
 
 
 Publishing your changes
 =======================
 
-If you feel that your additions add something to the game and would
-like to make them available to the general public, you can post them
-(in the form of a diff file, or in plain text) as a feature request on
-sourceforge.net [1] or in the newsgroup [2].
+If you feel that your additions really add something to the game and
+would like to make them available to the general public, you can post
+them (in the form of a diff file, or in plain text) as a feature
+request on sourceforge.net [1] or in the newsgroup [2].
+
 
 .. [1] http://crawl-ref.sourceforge.net
    http://sourceforge.net/projects/crawl-ref

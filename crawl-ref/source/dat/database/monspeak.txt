@@ -530,6 +530,25 @@ VISUAL:@The_monster@ tries to recover @possessive@ lost courage.
 VISUAL:@The_monster@ looks really @rattled@.
 ## END fleeing humanoid ##
 %%%%
+friendly_family
+
+@The_monster@ says, "I like you, cousin!"
+
+@The_monster@ says, "Family always sticks together, @player_name@!"
+
+@The_monster@ says, "@player_genus@kind's got to stick together!"
+
+@The_monster@ shouts, "@player_genus_plural@ are the best!"
+
+@The_monster@ says happily, "You and me, we're family."
+%%%%
+default friendly related humanoid
+
+w:2
+@friendly_family@
+
+@default friendly humanoid@
+%%%%
 default friendly humanoid
 
 @The_monster@ yells, "Run!  I'll cover you!"
@@ -708,8 +727,6 @@ __NONE
 w:1
 @_friendly_imp_@
 
-%%%%
-
 ####################################################################
 # Player ghost phrases.  Ghosts with different classes can be given 
 # different messages.
@@ -815,7 +832,7 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ screams, "Give me everything and get away!"
 
-@The_monster@ screams, "I want your rings!  And amulets!  And... EVERYTHIGNG!"
+@The_monster@ screams, "I want your rings!  And amulets!  And... EVERYTHING!"
 
 @The_monster@ screams, "I hate dirty adventurers like you!"
 

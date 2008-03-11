@@ -42,34 +42,84 @@
 #include "stuff.h"
 #include "view.h"
 
-static std::string get_speak_string(const std::vector<std::string> prefixes,
+// Try the exact key lookup along with the entire prefix list.
+// If that fails, start ignoring hostile/religion/silence, in that order,
+// first skipping hostile, then hostile *and* religion, then all three.
+static std::string try_exact_string(const std::vector<std::string> prefixes,
                                     const std::string key,
-                                    const monsters *monster,
+                                    bool ignore_hostile  = false,
+                                    bool ignore_related  = false,
+                                    bool ignore_religion = false,
                                     bool ignore_silenced = false)
 {
-    std::string prefix = "";
+    bool hostile  = false;
+    bool related  = false;
+    bool religion = false;
     bool silenced = false;
+
+    std::string prefix = "";
+    std::string msg = "";
     const int size = prefixes.size();
     for (int i = 0; i < size; i++)
     {
-        if (prefixes[i] == "silenced")
-        {
-            if (ignore_silenced)
-                continue;
-            silenced = true;
-        }
-        prefix += prefixes[i];
-        prefix += " ";
+         if (prefixes[i] == "hostile")
+         {
+             if (ignore_hostile)
+                 continue;
+             hostile = true;
+         }
+         else if (prefixes[i] == "related")
+         {
+             if (ignore_related)
+                 continue;
+             related = true;
+         }
+         else if (prefixes[i] == "silenced")
+         {
+             if (ignore_silenced)
+                 continue;
+             silenced = true;
+         }
+         else if (prefixes[i] == "beogh" || prefixes[i] == "good god"
+                  || prefixes[i] == "evil god")
+         {
+             if (ignore_religion)
+                 continue;
+             religion = true;
+         }
+         prefix += prefixes[i];
+         prefix += " ";
     }
-
-    std::string msg = "";
-    
-    // try string of all prefixes
     msg = getSpeakString(prefix + key);
-    if (msg != "")
+
+    if (msg.empty())
+    {
+        if (hostile)
+            msg = try_exact_string(prefixes, key, true);
+        else if (related)
+            msg = try_exact_string(prefixes, key, true, true);
+        else if (religion)
+            msg = try_exact_string(prefixes, key, true, true, true);
+        // 50% use non-verbal monster speech,
+        // 50% try for more general silenced monster message instead
+        else if (silenced && coinflip()) 
+            msg = try_exact_string(prefixes, key, true, true, true, true);
+    }
+    return msg;
+}
+
+static std::string get_speak_string(const std::vector<std::string> prefixes,
+                                    const std::string key,
+                                    const monsters *monster)
+{
+    std::string msg = try_exact_string(prefixes, key);
+    
+    if (!msg.empty())
         return msg;
     
     // Combinations of prefixes by threes
+    const int size = prefixes.size();
+    std::string prefix = "";
     if (size >= 3)
     {
         for (int i = 0; i < (size - 2); i++)
@@ -81,7 +131,8 @@ static std::string get_speak_string(const std::vector<std::string> prefixes,
                     prefix += prefixes[k] + " ";
 
                     msg = getSpeakString("default " + prefix + key);
-                    if (msg != "")
+                    
+                    if (!msg.empty())
                         return msg;
                 }
     }
@@ -96,7 +147,8 @@ static std::string get_speak_string(const std::vector<std::string> prefixes,
                 prefix += prefixes[j] + " ";
 
                 msg = getSpeakString("default " + prefix + key);
-                if (msg != "")
+                
+                if (!msg.empty())
                     return msg;
             }
     }
@@ -109,7 +161,8 @@ static std::string get_speak_string(const std::vector<std::string> prefixes,
             prefix  = prefixes[i] + " ";
 
             msg = getSpeakString("default " + prefix + key);
-            if (msg != "")
+            
+            if (!msg.empty())
                 return msg;
         }
     }
@@ -117,10 +170,6 @@ static std::string get_speak_string(const std::vector<std::string> prefixes,
     // No prefixes
     msg = getSpeakString("default " + key);
 
-    // try the same ignoring silence
-    if (msg == "" && silenced)
-        return get_speak_string(prefixes, key, monster, true);
-        
     return msg;
 }
 
@@ -139,12 +188,11 @@ static std::string player_ghost_speak_str(const monsters *monster,
         prefix += " ";
     }
 
+    // first try together with class name
     std::string msg = getSpeakString(prefix + ghost_class + " player ghost");
 
-    if (msg == "__NONE")
-        return "";
-
-    if (msg == "" || msg == "__NEXT")
+    // else try without class name
+    if (msg.empty() || msg == "__NEXT")
         msg = getSpeakString(prefix + "player ghost");
 
     return msg;
@@ -173,19 +221,24 @@ bool mons_speaks(const monsters *monster)
             return false;
     }
 
-    // charmed monsters aren't too expressive
-    if (monster->has_ench(ENCH_CHARM))
-        return false;
-
     // berserk monsters just want your hide.
     if (monster->has_ench(ENCH_BERSERK))
         return false;
 
+    // charmed monsters aren't too expressive
+    if (monster->has_ench(ENCH_CHARM) && !one_chance_in(3))
+        return false;
+        
+
     std::vector<std::string> prefixes;
-    if (monster->attitude == ATT_FRIENDLY)
-        prefixes.push_back("friendly");
-    else if (monster->attitude == ATT_NEUTRAL)
+    if (mons_neutral(monster))
+    {
+        if (coinflip()) // neutrals speak half as often
+            return false;
         prefixes.push_back("neutral");
+    }
+    else if (mons_friendly(monster))
+        prefixes.push_back("friendly");
     else
         prefixes.push_back("hostile");
 
@@ -201,16 +254,37 @@ bool mons_speaks(const monsters *monster)
 
     if (monster->has_ench(ENCH_CONFUSION))
         prefixes.push_back("confused");
-        
+
+    // only look at the current player form
+    if (is_player_same_species(monster->type, true))
+        prefixes.push_back("related");
+    
     // Add Beogh to list of prefixes for orcs (hostile and friendly) if you
     // worship Beogh. (This assumes you being a Hill Orc, so might have odd
-    // results in wizard mode.)
-    if (you.religion == GOD_BEOGH && mons_genus(monster->type) == MONS_ORC)
+    // results in wizard mode.) Don't count charmed orcs.
+    if (you.religion == GOD_BEOGH && mons_genus(monster->type) == MONS_ORC
+        && !monster->has_ench(ENCH_CHARM))
+    {
         prefixes.push_back("beogh");
+    }
     else if (is_good_god(you.religion))
         prefixes.push_back("good god");
     else if (is_evil_god(you.religion))
         prefixes.push_back("evil god");
+
+#ifdef DEBUG_MONSPEAK
+{
+    std::string prefix = "";
+    const int size = prefixes.size();
+    for (int i = 0; i < size; i++)
+    {
+        prefix += prefixes[i];
+        prefix += " ";
+    }
+    mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s: prefix = %s",
+         monster->name(DESC_PLAIN).c_str(), prefix.c_str());
+}
+#endif
 
     std::string msg;
 
@@ -225,23 +299,13 @@ bool mons_speaks(const monsters *monster)
     else
         msg = get_speak_string(prefixes, monster->name(DESC_PLAIN), monster);
 
-    // The exact name brought no results, try species.
-    if (msg.empty() || msg == "__NEXT")
+    // The exact name brought no results, try monster genus.
+    if ((msg.empty() || msg == "__NEXT")
+        && mons_genus(monster->type) != monster->type)
     {
-        if (mons_species(monster->type) != monster->type)
-        {
-            msg = get_speak_string(prefixes,
-                       mons_type_name(mons_species(monster->type), DESC_PLAIN),
+        msg = get_speak_string(prefixes,
+                       mons_type_name(mons_genus(monster->type), DESC_PLAIN),
                        monster);
-        }
-        // Still nothing found? Try monster genus!
-        if ((msg.empty() || msg == "__NEXT")
-            && mons_genus(monster->type) != monster->type)
-        {
-            msg = get_speak_string(prefixes,
-                           mons_type_name(mons_genus(monster->type), DESC_PLAIN),
-                           monster);
-        }
     }
 
     // __NONE means to be silent, and __NEXT means to try the next,
@@ -249,16 +313,21 @@ bool mons_speaks(const monsters *monster)
     // string.
 
     if (msg == "__NONE")
+    {
+#ifdef DEBUG_MONSPEAK
+        mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
+#endif
         return false;
+    }
 
     // Now that we're not dealing with a specific monster name, include
     // whether or not it can move in the prefix
     if (mons_is_stationary(monster))
         prefixes.insert(prefixes.begin(), "stationary");
 
-    // Names for the monster, its species and its genus all failed,
+    // Names for the exact monster name and its genus have failed,
     // so try the monster's glyph/symbol.
-    if (msg == "" || msg == "__NEXT")
+    if (msg.empty() || msg == "__NEXT")
     {
         std::string key = "'";
 
@@ -271,7 +340,12 @@ bool mons_speaks(const monsters *monster)
         msg = get_speak_string(prefixes, key, monster);
     }
     if (msg == "__NONE")
+    {
+#ifdef DEBUG_MONSPEAK
+        mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
+#endif
         return false;
+    }
 
     // Monster symbol didn't work, try monster shape.  Since we're
     // dealing with just the monster shape, change the prefix to
@@ -314,14 +388,20 @@ bool mons_speaks(const monsters *monster)
         prefixes.insert(prefixes.begin(), "smart");
     }
 
-    if (msg == "" || msg == "__NEXT")
+    if (msg.empty() || msg == "__NEXT")
         msg = get_speak_string(prefixes, get_mon_shape_str(shape), monster);
+        
     if (msg == "__NONE")
+    {
+#ifdef DEBUG_MONSPEAK
+        mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
+#endif
         return false;
+    }
 
     // If we failed to get a message with a winged or tailed humanoid,
     // or a naga or centaur, try moving closer to plain humanoid
-    if ((msg == "" || msg == "__NEXT") && shape > MON_SHAPE_HUMANOID
+    if ((msg.empty() || msg == "__NEXT") && shape > MON_SHAPE_HUMANOID
         && shape <= MON_SHAPE_NAGA)
     {
         // If a humanoid monster has both wings and a tail, try
@@ -335,15 +415,21 @@ bool mons_speaks(const monsters *monster)
                                    monster);
 
             // Only be silent if both tailed and winged return __NONE
-            if (msg == "" || msg == "__NONE" || msg == "__NEXT")
+            if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
             {
                 shape = MON_SHAPE_HUMANOID_WINGED;
                 std::string msg2;
                 msg2 = get_speak_string(prefixes,
                                         get_mon_shape_str(shape),
                                         monster);
+                                        
                 if (msg == "__NONE" && msg2 == "__NONE")
+                {
+#ifdef DEBUG_MONSPEAK
+                    mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
+#endif
                     return false;
+                }
 
                 if (msg2 == "__NONE")
                     msg2 = "";
@@ -351,7 +437,7 @@ bool mons_speaks(const monsters *monster)
                 msg = msg2;
             }
         } // if (shape == MON_SHAPE_HUMANOID_WINGED_TAILED)
-        if (msg == "" || msg == "__NONE" || msg == "__NEXT") 
+        if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
         {
             shape = MON_SHAPE_HUMANOID;
             msg = get_speak_string(prefixes,
@@ -359,8 +445,14 @@ bool mons_speaks(const monsters *monster)
                                    monster);
         }
     }
-    if (msg == "__NONE" || msg == "")
+    if (msg.empty() || msg == "__NONE")
+    {
+#ifdef DEBUG_MONSPEAK
+        mprf(MSGCH_DIAGNOSTICS, "final result: %s!",
+             (msg.empty() ? "empty" : "\"__NONE\""));
+#endif
         return false;
+    }
 
     if (msg == "__NEXT")
     {

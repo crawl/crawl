@@ -650,12 +650,12 @@ void up_stairs(dungeon_feature_type force_stair,
 
     crawl_state.level_annotation_shown = false;
 
-    if (level_annotation_has("WARN", next_level_id)
+    if (level_annotation_has("!", next_level_id)
         && next_level_id != level_id::current()
         && next_level_id.level_type == LEVEL_DUNGEON && !force_stair)
     {
         mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
-        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PROMPT);
+        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PLAIN, YELLOW);
 
         if (!yesno("Enter next level anyway?", true, 0, true, false))
         {
@@ -711,7 +711,7 @@ void up_stairs(dungeon_feature_type force_stair,
         old_level_info.update();
 
     // Make sure we return to our main dungeon level... labyrinth entrances
-    // in the abyss or pandemonium a bit trouble (well the labyrinth does
+    // in the abyss or pandemonium are a bit trouble (well the labyrinth does
     // provide a way out of those places, its really not that bad I suppose)
     if (level_type_exits_up(you.level_type))
         you.level_type = LEVEL_DUNGEON;
@@ -885,6 +885,7 @@ void up_stairs(dungeon_feature_type force_stair,
             }
         }
     }
+    request_autopickup();
 }                               // end up_stairs()
 
 void down_stairs( int old_level, dungeon_feature_type force_stair,
@@ -1031,12 +1032,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     crawl_state.level_annotation_shown = false;
 
-    if (level_annotation_has("WARN", next_level_id)
+    if (level_annotation_has("!", next_level_id)
         && next_level_id != level_id::current()
         && next_level_id.level_type == LEVEL_DUNGEON && !force_stair)
     {
         mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
-        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PROMPT);
+        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PLAIN, YELLOW);
 
         if (!yesno("Enter next level anyways?", true, 0, true, false))
         {
@@ -1393,6 +1394,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             new_level_info.update_stair(you.x_pos, you.y_pos, lp, true);
         }
     }
+    request_autopickup();
 }                               // end down_stairs()
 
 void trackers_init_new_level(bool transit)

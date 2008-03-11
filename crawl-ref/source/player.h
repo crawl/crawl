@@ -326,7 +326,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name);
  * *********************************************************************** */
 bool player_genus( genus_type which_genus,
                    species_type species = SP_UNKNOWN );
-bool is_player_same_species( const int mon );
+bool is_player_same_species( const int mon, bool = false );
 
 bool you_can_wear( int eq, bool special_armour = false );
 bool player_has_feet(void);
