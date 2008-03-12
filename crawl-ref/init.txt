@@ -1,13 +1,16 @@
 # NOTE FOR PLAYERS OF OLD VERSIONS (DCSS 0.3.4 or before):
 #
-# Uncomment the following three options if you want to disable 0.4's
-# changes to the interface: command keys, monster colours, and the 
-# butchering interface. (New players should go ignore these lines.)
+# Uncomment these options if you want to disable some recent changes: 
+# command keys, monster colours, item colours, butchering interface, 
+# targeting interface. 
+# (New players should go ignore these lines.)
 #
-# : crawl.read_options('docs/034_monster_glyphs.txt')
 # additional_macro_file   = docs/034_command_keys.txt
+# : crawl.read_options('docs/034_monster_glyphs.txt')
+# classic_item_colours = true
 # use_old_selection_order = true
 # always_confirm_butcher  = true
+# target_unshifted_dirs = true
 
 
 
@@ -50,6 +53,7 @@
 # remember_name = false
 # use_old_selection_order = true
 # weapon = (random | short sword | hand axe | spear | mace | trident)
+# book = (fire | ice | summ | random)
 # chaos_knight = (Xom | Makhleb | random)
 # death_knight = (necromancy | Yredelemnul | random)
 # priest       = (Zin | Yredelemnul | Beogh | random)
@@ -105,6 +109,7 @@ lua_file = lua/pickup.lua
 #
 # detected_monster_colour = lightred
 # detected_item_colour = green
+# remembered_monster_colour = darkgrey
 # colour_map = false
 # clean_map = true
 
@@ -124,6 +129,7 @@ stab_brand       = hi:blue
 # item_colour = false
 
 ##### 4-f	Viewport Options  ###################
+#
 # view_max_width   = 33
 # view_max_height  = 17
 # view_lock_x      = false
@@ -140,8 +146,9 @@ stab_brand       = hi:blue
 # travel_delay = 20
 # travel_avoid_terrain = shallow water
 #
-# explore_greedy = false
-# explore_stop   = items,greedy_items,stairs,shops,altars,gates
+# explore_greedy   = false
+# explore_stop     = items,greedy_items,stairs,shops,altars,gates
+# explore_improved = true
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan
@@ -185,7 +192,7 @@ stab_brand       = hi:blue
 
 # hp_colour = lightgrey, 50:yellow, 25:red
 # mp_colour = lightgrey, 50:yellow, 25:red
-# status_caption_colour = brown
+# status_caption_colour = yellow
 # delay_message_clear    = true
 # show_inventory_weights = true
 # show_turns = true
@@ -202,8 +209,9 @@ menu_colour = inventory:red: rotting
 # Identified artefacts
 menu_colour = inventory:white:( [-+] the)
 
-# These lines will colour ego items; they require that
-# menu_colour_prefix_id and menu_colour_prefix_class be set to true
+# These lines will colour ego items; they require 
+# menu_colour_prefix_id = true
+# menu_colour_prefix_class = true
 
 # menu_colour_prefix_id    = true
 # menu_colour_prefix_class = true
@@ -242,12 +250,14 @@ message_colour = yellow:fails to return
 ##### 4-m	Inscriptions ##########################
 #
 # autoinscribe = royal jell:=g
+autoinscribe = distortion:=!w
 
 ##### 4-n	Macro related Options #################
 #
 # flush.failure = false
 # flush.command = true
 # flush.message = true
+# macro_meta_entry = false
 
 ##### 4-t	Tile related Options ##################
 
@@ -295,6 +305,7 @@ show_items = !?/%=([)X}+\_.
 # note_all_skill_levels = true
 # note_skill_max  = true
 # note_all_spells = true
+# note_all_spells = true
 
 # The following takes a note whenever the Abyss is left: 
 # note_messages = You pass through the gate 
@@ -303,7 +314,6 @@ show_items = !?/%=([)X}+\_.
 #
 ##### 6-a	All OS ################################
 #
-# macro_meta_entry = false
 # mouse_input      = true
 # wiz_mode         = no
 # char_set         = ascii
