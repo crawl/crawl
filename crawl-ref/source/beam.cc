@@ -1267,8 +1267,8 @@ static bool affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
 
     if (pbolt.is_enchant
         || (!pbolt.is_explosion && !pbolt.is_big_cloud
-            && (grd[tx][ty] != DNGN_METAL_WALL
-                || pbolt.flavour == BEAM_ELECTRICITY)))
+            && (grd[tx][ty] == DNGN_METAL_WALL
+                || pbolt.flavour != BEAM_ELECTRICITY)))
     {
         monsters *mon = &menv[mid];
         if (!mons_is_wall_shielded(mon->type))
