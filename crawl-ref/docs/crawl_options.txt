@@ -757,6 +757,12 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         is easily possible. Defaults to none. For example,
               trapwalk_safe_hp = dart:15, needle:25, spear:50
 
+trap_prompt = true
+        If trap_prompt is set to true Crawl will use the trapwalk_safe_hp
+	values to decide whether the player should be prompted before
+	stepping on a mechanical trap. Note that you'll always be prompted
+	for non-mechanical traps.
+
 4-h     Stashes.
 ----------------
 

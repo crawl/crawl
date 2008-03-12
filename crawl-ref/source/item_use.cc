@@ -3286,6 +3286,7 @@ bool remove_ring(int slot, bool announce)
             return (false);
         }
     }
+    
     if (!check_warning_inscriptions(you.inv[you.equip[hand_used]],
                                          OPER_REMOVE))
     {

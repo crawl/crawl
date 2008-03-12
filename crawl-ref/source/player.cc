@@ -119,15 +119,9 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     // really must be clear
     ASSERT( you.can_pass_through_feat( new_grid ) );
 
-    // if (grid_is_solid( new_grid ))
-    //     return (false);
-
     // better not be an unsubmerged monster either:
     ASSERT( mgrd[x][y] == NON_MONSTER 
             || mons_is_submerged( &menv[ mgrd[x][y] ] ));
-
-    // if (mgrd[x][y] != NON_MONSTER && !mons_is_submerged( &menv[ mgrd[x][y] ] ))
-    //     return (false);
 
     // if we're walking along, give a chance to avoid trap
     if (stepped && !force && !you.confused())
@@ -158,22 +152,49 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
             }
         } // unknown trap
         else if (new_grid == DNGN_TRAP_MAGICAL
+#ifdef CLUA_BINDINGS
+                 || new_grid == DNGN_TRAP_MECHANICAL
+                    && Options.trap_prompt
+#endif
                  || new_grid == DNGN_TRAP_NATURAL)
         {
-            std::string prompt = "Really step ";
-                        prompt += (trap_type_at_xy(x,y) == TRAP_ALARM ?
-                                   "onto" : "into");
-                        prompt += " that ";
-            prompt += feature_description(new_grid, trap_type_at_xy(x,y),
-                                          false, DESC_BASENAME, false);
-            prompt += '?';
-            
-            // Zot traps require capital confirmation
-            bool harmless = (trap_type_at_xy(x,y) != TRAP_ZOT);
-            if (!yesno(prompt.c_str(), harmless, 'n'))
+            if (trap_type_at_xy(x,y) == TRAP_ZOT)
             {
-                you.turn_is_over = false;
-                return (false);
+                mpr("Do you really want to step into the Zot trap? "
+                    "(Confirm with \"yes\".) ", MSGCH_PROMPT);
+
+                char buf[10];
+                if (cancelable_get_line(buf, sizeof buf)
+                    || strcasecmp(buf, "yes"))
+                {
+                    canned_msg(MSG_OK);
+                    you.turn_is_over = false;
+                    return (false);
+                }
+            }
+            else
+#ifdef CLUA_BINDINGS
+                 // prompt for any trap where you might not have enough hp
+                 // as defined in init.txt (see trapwalk.lua)
+                 if (new_grid != DNGN_TRAP_MECHANICAL
+                     || !clua.callbooleanfn(false, "ch_cross_trap",
+                                            "s", trap_name(x, y)))
+#endif
+            {
+                std::string prompt = "Really step ";
+                            prompt += (trap_type_at_xy(x,y) == TRAP_ALARM ?
+                                      "onto" : "into");
+                            prompt += " that ";
+                prompt += feature_description(new_grid, trap_type_at_xy(x,y),
+                                              false, DESC_BASENAME, false);
+                prompt += '?';
+
+                if (!yesno(prompt.c_str(), true, 'n'))
+                {
+                    canned_msg(MSG_OK);
+                    you.turn_is_over = false;
+                    return (false);
+                }
             }
         }
     }

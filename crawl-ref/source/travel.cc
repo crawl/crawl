@@ -187,7 +187,7 @@ static void init_traps()
     traps_inited = true;
 }
 
-static const char *trap_name(int x, int y)
+const char *trap_name(int x, int y)
 {
     if (!traps_inited)
         init_traps();

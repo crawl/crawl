@@ -741,7 +741,8 @@ void game_options::reset_options()
     explore_greedy         = true;
 
     explore_improved       = false;
-    
+    trap_prompt            = true;
+
     target_zero_exp        = false;
     target_wrap            = true;
     target_oos             = true;
@@ -2515,6 +2516,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "explore_improved")
     {
         explore_improved = read_bool(field, explore_improved);
+    }
+    else if (key == "trap_prompt")
+    {
+        trap_prompt = read_bool(field, trap_prompt);
     }
     else if (key == "stash_tracking")
     {

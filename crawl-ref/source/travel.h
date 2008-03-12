@@ -72,6 +72,9 @@ bool is_travelable_stair(dungeon_feature_type gridc);
 command_type direction_to_command( char x, char y );
 bool is_resting( void );
 bool can_travel_interlevel();
+#ifdef CLUA_BINDINGS
+const char *trap_name(int x, int y);
+#endif
 bool is_traversable(dungeon_feature_type grid);
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool is_excluded(const coord_def &p);

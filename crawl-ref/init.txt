@@ -165,6 +165,7 @@ stab_brand       = hi:blue
 # runrest_ignore_poison = 4:100
 # runrest_ignore_monster = fish:3
 # trapwalk_safe_hp = dart:15, needle:25, spear:50
+# trap_prompt = false
 
 ##### 4-h	Stashes ###############################
 #
