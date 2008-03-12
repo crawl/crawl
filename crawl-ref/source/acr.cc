@@ -3280,7 +3280,7 @@ command_type keycode_to_command( keycode_type key )
     case '=': return CMD_ADJUST_INVENTORY;
     case '?': return CMD_DISPLAY_COMMANDS;
     case '!': return CMD_ANNOTATE_LEVEL;
-    case CONTROL('D):
+    case CONTROL('D'):
     case '~': return CMD_MACRO_ADD;
     case '&': return CMD_WIZARD;
     case '"': return CMD_LIST_JEWELLERY;
@@ -3307,7 +3307,6 @@ command_type keycode_to_command( keycode_type key )
 
     case CONTROL('A'): return CMD_TOGGLE_AUTOPICKUP;
     case CONTROL('C'): return CMD_CLEAR_MAP;
-    case CONTROL('D'): return CMD_NO_CMD;
     case CONTROL('E'): return CMD_FORGET_STASH;
     case CONTROL('F'): return CMD_SEARCH_STASHES;
     case CONTROL('G'): return CMD_INTERLEVEL_TRAVEL;
