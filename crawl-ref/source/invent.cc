@@ -1144,6 +1144,38 @@ bool check_warning_inscriptions( const item_def& item,
 {
     if (is_valid_item( item ) && has_warning_inscription(item, oper) )
     {
+        if (oper == OPER_WEAR)
+        {
+            if (item.base_type != OBJ_ARMOUR)
+                return (true);
+
+            // don't ask if item already worn
+            int equip = you.equip[get_armour_slot(item)];
+            if (equip != -1 && item.link == equip)
+                return (check_old_item_warning(item, oper));
+        }
+        else if (oper == OPER_PUTON)
+        {
+            if (item.base_type != OBJ_JEWELLERY)
+                return (true);
+
+            // don't ask if item already worn
+            int equip = -1;
+            if (jewellery_is_amulet(item))
+                equip = you.equip[EQ_AMULET];
+            else
+            {
+                equip = you.equip[EQ_LEFT_RING];
+                if (equip != -1 && item.link == equip)
+                    return (check_old_item_warning(item, oper));
+                // or maybe the other ring?
+                equip = you.equip[EQ_RIGHT_RING];
+            }
+                
+            if (equip != -1 && item.link == equip)
+                return (check_old_item_warning(item, oper));
+        }
+        
         std::string prompt = "Really " + operation_verb(oper) + " ";
         prompt += item.name(DESC_INVENTORY);
         prompt += "? ";

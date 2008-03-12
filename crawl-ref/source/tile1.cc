@@ -4225,13 +4225,15 @@ void finish_inven_data(int n, int *tiles, int *num, int *idx, int *iflag)
         int type = itm->base_type;
 
         if (type == OBJ_FOOD || type == OBJ_SCROLLS
-             || type == OBJ_POTIONS || type == OBJ_MISSILES)
+            || type == OBJ_POTIONS || type == OBJ_MISSILES)
+        {
             q = itm->quantity;
+        }
         if (q==1) q = -1;
 
-        if (type == OBJ_WANDS && 
-              ((itm->flags & ISFLAG_KNOW_PLUSES )!= 0
-               || itm->plus2 == ZAPCOUNT_EMPTY))
+        if ( type == OBJ_WANDS
+             && (!(itm->flags & ISFLAG_KNOW_PLUSES )
+                 || itm->plus2 == ZAPCOUNT_EMPTY) )
         {
             q = itm->plus;
         }

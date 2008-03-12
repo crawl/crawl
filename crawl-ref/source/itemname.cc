@@ -236,9 +236,10 @@ std::string item_def::name(description_level_type descrip,
    
    if (descrip != DESC_PLAIN && descrip != DESC_BASENAME)
    {
-        const bool  tried     = (!ident && !equipped
-                                 && (is_artefact && !item_type_known(*this)
-                                     || item_type_tried(*this)));
+        const bool  tried  =  !ident && !equipped
+                               && (item_type_tried(*this)
+                                   || this->base_type == OBJ_JEWELLERY
+                                      && is_artefact && !item_type_known(*this));
         std::string tried_str = "";
 
         if (tried)

@@ -1361,14 +1361,8 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                             desc += "Remove (R)";
                             break;
                         case OBJ_MISSILES:
-                        {
-                            const item_def *weapon = you.weapon();
-                            if (weapon && you.inv[ix].launched_by(*weapon))
-                                desc += "Fire (f)";
-                            else
-                                desc += "Throw (t)";
+                            desc += "Fire (f)";
                             break;
-                        }
                         case OBJ_WANDS:
                             desc += "Zap (z)";
                             break;

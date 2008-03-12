@@ -255,10 +255,6 @@ bool mons_speaks(const monsters *monster)
     if (monster->has_ench(ENCH_CONFUSION))
         prefixes.push_back("confused");
 
-    // only look at the current player form
-    if (is_player_same_species(monster->type, true))
-        prefixes.push_back("related");
-    
     // Add Beogh to list of prefixes for orcs (hostile and friendly) if you
     // worship Beogh. (This assumes you being a Hill Orc, so might have odd
     // results in wizard mode.) Don't count charmed orcs.
@@ -267,10 +263,17 @@ bool mons_speaks(const monsters *monster)
     {
         prefixes.push_back("beogh");
     }
-    else if (is_good_god(you.religion))
-        prefixes.push_back("good god");
-    else if (is_evil_god(you.religion))
-        prefixes.push_back("evil god");
+    else
+    {
+        // only look at the current player form
+        if (is_player_same_species(monster->type, true))
+            prefixes.push_back("related"); // overkill for Beogh
+
+        if (is_good_god(you.religion))
+            prefixes.push_back("good god");
+        else if (is_evil_god(you.religion))
+            prefixes.push_back("evil god");
+    }
 
 #ifdef DEBUG_MONSPEAK
 {

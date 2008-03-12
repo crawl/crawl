@@ -753,7 +753,7 @@ static bool cloak_is_being_removed( void )
 // wear_armour
 //
 //---------------------------------------------------------------
-void wear_armour( int slot )
+void wear_armour( int slot ) // slot is for tiles
 {
     int armour_wear_2 = 0;
 
@@ -982,6 +982,9 @@ bool do_wear_armour( int item, bool quiet )
 
     if ( wearing_slot(item) )
     {
+        if (Options.easy_unequip)
+            return (!takeoff_armour(item));
+
         if (!quiet)
             mpr("You are already wearing that!");
 
@@ -1495,6 +1498,11 @@ command_type fire_target_behaviour::get_command(int key)
 static bool _fire_choose_item_and_target(int& item, dist& target)
 {
     fire_target_behaviour beh;
+    bool was_chosen = (item != -1);
+
+    if (was_chosen)
+        beh.item = item; // force item to be the prechosen one
+
     beh.message_ammo_prompt();
     message_current_target();    // XXX: this stuff should be done by direction()
     direction( target, DIR_NONE, TARG_ENEMY, false, true, NULL, &beh );
@@ -1512,7 +1520,8 @@ static bool _fire_choose_item_and_target(int& item, dist& target)
     }
 
     // Okay, valid target; if the user chose different ammo, quiver it.
-    if (beh.item != item)
+    // Same for items selected in tile mode.
+    if (was_chosen || beh.item != item)
     {
         item = beh.item;
         if (you.inv[beh.item].quantity > 1)
@@ -1646,11 +1655,8 @@ void fire_thing(int item)
         Options.tut_throw_counter++;
 
     dist target;
-    if (item == -1)
-    {
-        if (! _fire_choose_item_and_target(item, target))
-            return;        
-    }
+    if (!_fire_choose_item_and_target(item, target))
+        return;
 
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
     {
@@ -2416,8 +2422,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // for launchers. Hand-thrown stones and darts do only half
         // base damage. Yet another evil 4.0ism.
         if (wepClass == OBJ_MISSILES
-                && (wepType == MI_DART || wepType == MI_STONE))
+            && (wepType == MI_DART || wepType == MI_STONE))
+        {
             baseDam = div_rand_round(baseDam, 2);
+        }
         
         // exercise skill
         if (coinflip())
@@ -2873,7 +2881,7 @@ static int prompt_ring_to_remove(int new_ring)
     if (c == ESCAPE || c == ' ')
         return (-1);
 
-    const int eqslot = c == lslot? EQ_LEFT_RING : EQ_RIGHT_RING;
+    const int eqslot = (c == lslot)? EQ_LEFT_RING : EQ_RIGHT_RING;
 
     if (!check_warning_inscriptions(you.inv[you.equip[eqslot]], OPER_REMOVE))
         return -1;
@@ -2987,6 +2995,9 @@ bool puton_item(int item_slot, bool prompt_finger)
         || item_slot == you.equip[EQ_RIGHT_RING]
         || item_slot == you.equip[EQ_AMULET])
     {
+        if (Options.easy_unequip)
+            return (!remove_ring(item_slot));
+            
         mpr("You've already put that on!");
         return (true);
     }
@@ -3015,15 +3026,19 @@ bool puton_item(int item_slot, bool prompt_finger)
         }
 
         if (you.equip[EQ_LEFT_RING] != -1
-                && you.equip[EQ_RIGHT_RING] != -1)
+            && you.equip[EQ_RIGHT_RING] != -1)
+        {
             return swap_rings(item_slot);
+        }
     }
     else if (you.equip[EQ_AMULET] != -1)
     {
         if (!check_warning_inscriptions(you.inv[you.equip[EQ_AMULET]],
-                                        OPER_REMOVE) ||
-            !remove_ring( you.equip[EQ_AMULET], true ))
+                                        OPER_REMOVE)
+            || !remove_ring( you.equip[EQ_AMULET], true ))
+        {
             return false;
+        }
 
         if (!safe_to_remove_or_wear(you.inv[item_slot], false))
             return (false);
@@ -3241,11 +3256,11 @@ bool remove_ring(int slot, bool announce)
     if (hand_used == EQ_NONE)
     {
         const int equipn = 
-            slot == -1? prompt_invent_item( "Remove which piece of jewellery?",
-                                            MT_INVLIST,
-                                            OBJ_JEWELLERY, true, true, true,
-                                            0, NULL, OPER_REMOVE)
-                      : slot;
+            (slot == -1)? prompt_invent_item( "Remove which piece of jewellery?",
+                                              MT_INVLIST,
+                                              OBJ_JEWELLERY, true, true, true,
+                                              0, NULL, OPER_REMOVE)
+                        : slot;
 
         if (equipn == PROMPT_ABORT)
         {
@@ -3271,7 +3286,7 @@ bool remove_ring(int slot, bool announce)
             return (false);
         }
     }
-    else if (!check_warning_inscriptions(you.inv[you.equip[hand_used]],
+    if (!check_warning_inscriptions(you.inv[you.equip[hand_used]],
                                          OPER_REMOVE))
     {
         canned_msg(MSG_OK);
