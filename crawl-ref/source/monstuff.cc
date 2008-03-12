@@ -767,8 +767,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                 true, monster);
 
             // Trying to prevent summoning abuse here, so we're trying to
-            // prevent summoned creatures from being being done_good kills.
-            // Only affects creatures which were friendly when summoned.
+            // prevent summoned creatures from being done_good kills. Only
+            // affects creatures which were friendly when summoned.
             if (!testbits(monster->flags, MF_CREATED_FRIENDLY) && gives_xp
                 && pet_kill)
             {
@@ -787,7 +787,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
                 else if (you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
-                         || (!anon && testbits( menv[i].flags, MF_GOD_GIFT )))
+                         || (you.religion == GOD_BEOGH
+                             && mons_species(menv[i].type) == MONS_ORC)
+                         || (!anon && testbits(menv[i].flags, MF_GOD_GIFT)))
                 {
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necromancy vs Summoning (ignoring
