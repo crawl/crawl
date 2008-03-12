@@ -91,7 +91,7 @@
 // Item offer messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
-// First message is if there's no piety gain, second is if piety gain 
+// First message is if there's no piety gain, second is if piety gain
 // is one, third message is for piety gain > 1 (currently unused).
 const char *sacrifice[NUM_GODS][3] =
 {
@@ -221,7 +221,8 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "gain magical power from killing in Vehumet's name",
       "You can call upon Vehumet to aid your destructive magics with prayer.",
       "During prayer you have some protection from summoned creatures.",
-      "", "" },
+      "",
+      "" },
     // Okawaru
     { "give your body great, but temporary strength",
       "",
