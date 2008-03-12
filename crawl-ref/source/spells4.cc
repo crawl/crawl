@@ -2346,6 +2346,9 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             mprf("The %s explodes!", what);
 
         explosion( blast, hole, true );
+
+        if (grid == DNGN_ORCISH_IDOL)
+            beogh_idol_revenge();
     }
     else if (blast.damage.num == 0)
     {
