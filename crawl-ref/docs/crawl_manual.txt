@@ -1157,10 +1157,10 @@ almost all pressings of 'a' in that new way (including dropping and
 wielding etc.), so is not recommended. Macroing 'a' to some other key 
 will only change the command key 'a'.
 
-You can set up key maps and macros in-game with the ~ key; this also 
-allows for saving all current key bindings and macros. Alternatively, 
-you can directly edit the macros.txt file. For more information on both
-and for examples, see crawl_macros.txt.
+You can set up key maps and macros in-game with the ~ key (Ctrl-D will
+also work); this also allows for saving all current key bindings and 
+macros. Alternatively, you can directly edit the macros.txt file. For 
+more information on both and for examples, see crawl_macros.txt.
 
 Crawl supports a large number of options that allow for great
 flexibility in the interface. They are fully documented in the file
@@ -2291,7 +2291,7 @@ Non-game playing commands:
         ?/              Describe a monster, spell or feature. You can
                         enter a partial name or a regex instead of the
                         full name.
-        ~               Add or save macros and key mappings.
+        ~ or Ctrl-D     Add or save macros and key mappings.
         =               Reassign inventory/spell/abilities letters.
         _               Read messages (when playing online; not for
                         local games).

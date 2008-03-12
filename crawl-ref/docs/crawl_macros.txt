@@ -26,9 +26,7 @@ that are restricted to just those situations.
 How to create macros and keymaps?
 =================================
 
-The simplest way is in-game: Press the '~' key (this may be a bit
-awkward on certain keyboard layouts, see below for how to edit the
-macro.txt file directly and for an example how to remap it), select
+The simplest way is in-game: Press either the '~' key or Ctrl-D, select
 'm' to define a macro, then choose a key to assign for your macro and
 enter the command sequence. For some keys (or key combinations), Crawl
 will display a strange number (for example \{13} for the Return key).
@@ -93,16 +91,7 @@ key line and command line are given, but that you should probably
 substitute your own keys here as these may not always work for you.
 
 
-The first example will map the '0' key to '~', so that you can press
-'0' to define macros in-game as described above, in case you have
-troubles using '~' on your keyboard layout.
-
-# 0: add macro
-K:0
-A:~
-
-
-'@' is another character that may not work by default on some keyboard
+'@' is a character that may not work by default on some keyboard
 layouts. The following should remedy that by mapping '@' to '@'.
 
 # @: display character status

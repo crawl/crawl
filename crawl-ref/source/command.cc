@@ -1559,7 +1559,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>!</w> : annotate the dungeon level\n"
             "<w>#</w> : dump character to file\n"
             "<w>:</w> : add note (use <w>?:</w> to read notes)\n"
-            "<w>~</w> : add macro\n"
+            "<w>~</w> : add macro (also <w>Ctrl-D</w>)\n"
             "<w>=</w> : reassign inventory/spell letters\n"
             "<w>_</w> : read messages (online play only)"
             " \n",
