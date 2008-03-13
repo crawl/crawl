@@ -2492,11 +2492,12 @@ bool monsters::can_pass_through_feat(dungeon_feature_type grid) const
 
 bool monsters::can_drown() const
 {
-    // Mummies can fall apart in water; ghouls and demons can drown in
-    // water/lava.
+    // Mummies can fall apart in water; ghouls, vampires, and demons can
+    // drown in water/lava.
     return (!mons_res_asphyx(this)
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
+            || mons_genus(type) == MONS_VAMPIRE
             || holiness() == MH_DEMONIC);
 }
 
