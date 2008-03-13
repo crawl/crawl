@@ -2236,15 +2236,17 @@ static void rot_inventory_food(long time_delta)
     if (!rotten_items.empty())
     {
         std::string msg = "";
-        
+
         // Races that can't smell don't care, and trolls are stupid and
         // don't care.
         if (player_can_smell() && you.species != SP_TROLL)
         {
             int temp_rand = 0; // Grr.
-            switch (you.mutation[MUT_SAPROVOROUS])
+            int level = (you.species == SP_VAMPIRE) ? 1 : you.mutation[MUT_SAPROVOROUS];
+
+            switch (level)
             {
-            // level 1 and level 2 saprovores aren't so touchy
+            // level 1 and level 2 saprovores, as well as vampires, aren't so touchy
             case 1:
             case 2:
                 temp_rand = random2(8);
@@ -2274,7 +2276,7 @@ static void rot_inventory_food(long time_delta)
         }
         else if (Options.list_rotten)
             msg = "Something in your inventory has become rotten.";
-            
+
         if (Options.list_rotten)
         {
             mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
@@ -2285,7 +2287,7 @@ static void rot_inventory_food(long time_delta)
         }
         else if (!msg.empty())
             mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
-            
+
         learned_something_new(TUT_ROTTEN_FOOD);
     }
     if (burden_changed_by_rot)
