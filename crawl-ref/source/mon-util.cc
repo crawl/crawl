@@ -467,42 +467,6 @@ bool mons_is_demon( int mc )
     return (false);
 }
 
-// Used for elven Glamour ability. -- bwr
-bool mons_is_humanoid( int mc )
-{
-    switch (mons_char( mc))
-    {
-    case 'o':   // orcs
-    case 'e':   // elvens (deep)
-    case 'c':   // centaurs
-    case 'C':   // giants
-    case 'O':   // ogres
-    case 'K':   // kobolds
-    case 'N':   // nagas
-    case '@':   // adventuring humans
-    case 'T':   // trolls
-        return (true);
-
-    case 'm':   // merfolk
-        if (mc == MONS_MERFOLK || mc == MONS_MERMAID)
-            return (true);
-        return (false);
-
-    case 'g':   // goblines, hobgoblins, gnolls, boggarts -- but not gargoyles
-        if (mc != MONS_GARGOYLE
-            && mc != MONS_METAL_GARGOYLE
-            && mc != MONS_MOLTEN_GARGOYLE)
-        {
-            return (true);
-        }
-
-    default:
-        break;
-    }
-
-    return (false);
-}
-
 int mons_zombie_size(int mc)
 {
     return (smc->zombie_size);
@@ -5642,8 +5606,7 @@ mon_body_shape get_mon_shape(const int type)
     case 'c': // centaurs
         return(MON_SHAPE_CENTAUR);
     case 'd': // draconions and drakes
-        if (mons_genus(type) == MONS_DRACONIAN
-            || mons_class_flag(type, M_HUMANOID))
+        if (mons_genus(type) == MONS_DRACONIAN)
         {
             if (mons_class_flag(type, M_FLIES))
                 return(MON_SHAPE_HUMANOID_WINGED_TAILED);
