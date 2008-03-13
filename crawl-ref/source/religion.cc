@@ -2158,9 +2158,9 @@ void lose_piety(int pgn)
 static bool tso_retribution()
 {
     const god_type god = GOD_SHINING_ONE;
-    // daeva/cleansing theme
 
-    // Doesn't care unless you've gone over to evil/destructive gods
+    // daevas/cleansing theme
+    // doesn't care unless you've gone over to evil
     if ( !is_evil_god(you.religion) )
         return false;
 
@@ -2174,12 +2174,14 @@ static bool tso_retribution()
     {
         bool success = false;
         int how_many = 1 + random2(you.experience_level / 5) + random2(3);
-        
+
         for (int i = 0; i < how_many; i++)
             if (create_monster( MONS_DAEVA, 0, BEH_HOSTILE,
                                 you.x_pos, you.y_pos, MHITYOU,
                                 MONS_PROGRAM_BUG ) != -1)
+            {
                 success = true;
+            }
 
         simple_god_message( success ?
                             " sends the divine host to punish you "
@@ -2232,13 +2234,13 @@ static bool zin_retribution()
 {
     const god_type god = GOD_ZIN;
 
-    // angels/creeping doom theme:
-    // Doesn't care unless you've gone over to evil
+    // angels/creeping doom theme
+    // doesn't care unless you've gone over to evil
     if (!is_evil_god(you.religion))
         return false;
 
     int punishment = random2(8);
-    
+
     // if little mutated, do something else instead
     if (punishment < 2 && count_mutations() <= random2(3))
         punishment = random2(6)+2;
@@ -2256,14 +2258,14 @@ static bool zin_retribution()
             {
                 success = true;
             }
-              
+
        if (success && !count_mutations())
        {
            simple_god_message(" rids your body of chaos!");
            // lower penance a bit more for being particularly successful
            dec_penance(god, 1);
        }
-           
+
        break;
     }
     case 2:
@@ -2278,7 +2280,9 @@ static bool zin_retribution()
               if (create_monster(MONS_ANGEL, 0, BEH_HOSTILE,
                                  you.x_pos, you.y_pos, MHITYOU,
                                  MONS_PROGRAM_BUG) != -1)
+              {
                   success = true;
+              }
 
            simple_god_message( success ?
                               " sends the divine host to punish you "
