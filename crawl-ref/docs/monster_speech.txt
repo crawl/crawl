@@ -157,16 +157,21 @@ same genus, e.g. if you're playing a Sludge Elf, and the monster in
 question is a deep elf blademaster, you both are Elves and the monster
 speech may reflect that. It's currently only used for friendly
 humanoids who will now sometimes mention that you're family, if you
-are.
+are. Stupid monsters, i.e. animals, will judge your relatedness status
+according to your transformed looks while smart monsters will see
+through that magic, so that e.g. vampires will recognise a vampire in
+bat form as one of their own but a giant bat would think the player
+really is a bat.
 
 The <player god> prefix is constructed according to the religious
 belief of the character. If the monster in question is a member of the
 orc species and the character worships Beogh, the prefix "beogh" gets
-added to the list. If you worship one of the good gods (Zin, Elyvilon,
-or The Shining One) the prefix "good god" is used instead.
-Conversely, worshippers of one of the evil gods (Yredelemnul, Makhleb,
-Kikubaaqudgha, Lugonu, Xom, Beogh, or Vehumet) will use the prefix
-"evil god". 
+added to the list, though not for charmed orcs who will simply use the
+generic friendly statements instead of the orcish followers' cheers.
+If you worship one of the good gods instead (Zin, The Shining One, or
+Elyvilon) the prefix "good god" is used. Conversely, worshippers of one
+of the evil gods (Yredelemnul, Makhleb, Kikubaaqudgha, Lugonu, Xom,
+Beogh, or Vehumet) will use the prefix "evil god". 
 This allows fine-grained handling of monsters depending on your
 character's religion status, e.g. orcs will use special speech for
 Beogh worshippers, and neutral holy beings (Angel and Daeva) may
@@ -179,8 +184,9 @@ to add the monster name and start the database search.
 First we search for the complete prefix string in combination with the
 monster name. Then we try omitting some very specific prefixes that
 might not be so important, first skipping on "hostile", then also
-ignoring "related", then religion status, and finally "silenced", where
-applicable.
+ignoring religion status, then hostile and "related", then all three
+of them, and then finally adding "silenced" to the list of ignored
+prefixes, where applicable.
 
 If all of that didn't yield any results, next we'll take the complete
 prefix list again, then, reading from left to right, combinations are
@@ -244,7 +250,7 @@ Example 1:
 
   However, such an entry cannot be found in the database, so the game  
   tries first for "default confused killer bee", then "default killer
-  bee", neither of which yields any results. 
+  bee", neither of which yields any results.
   The monster genus is also plain "killer bee", so that doesn't help
   us any. For the next round we try again with "confused 'k'", which,
   by itself, also can't be found in the database, but once the prefix
@@ -257,34 +263,54 @@ SOUND:@The_monster@ buzzes around in tight circles.
 %%%%
 
 Example 2:
-  This time, we're interested in "friendly fleeing beogh orc wizard".
+  This time, we're interested in "friendly fleeing related beogh orc
+  wizard".
 
   This obviously made up example also has no direct equivalent in the
-  database, so first we try to remove the less important prefixes,
-  something that in this case only applies to "beogh". Unfortunately,
-  "friendly fleeing orc wizard" also has no corresponding entry in the
-  database, so that, one after another, we now check for "default
-  friendly fleeing beogh orc wizard", "default friendly fleeing orc
-  wizard", "default friendly beogh orc wizard", "default fleeing beogh
-  orc wizard", "default friendly orc wizard", "default fleeing orc
-  wizard", "default beogh orc wizard" and "default orc wizard", none of
-  which is successful.
-  The genus of orc wizards is "orc", so we retry the above using "orc"
-  instead of "orc wizard". The same is repeated for "friendly fleeing
-  beogh 'o'", and we still haven't found anything.
+  database, so first we try to remove the less important prefixes, in 
+  this case "related" and "beogh". Unfortunately, none of "friendly
+  fleeing related orc wizard", "friendly fleeing beogh orc wizard", or
+  "friendly fleeing orc wizard" has any corresponding entry in the
+  database, so that we now check for "default" in combination with, one
+  after another, all combinations of three or less prefixes.
+
+  Three prefixes: "default friendly fleeing related orc wizard",
+  "default friendly fleeing beogh orc wizard", "default friendly
+  related beogh orc wizard", "default fleeing related beogh orc
+  wizard".
+
+  Two prefixes: "default friendly fleeing orc wizard", "default
+  friendly related orc wizard", "default friendly beogh orc wizard",
+  "default fleeing related orc wizard", "default fleeing beogh orc
+  wizard", "default related beogh orc wizard".
+
+  One prefix: "default friendly orc wizard", "default fleeing orc
+  wizard", "default related orc wizard", "default beogh orc wizard".
+
+  No prefix: "default orc wizard". 
+
+  Sadly, none of these is successful. The genus of orc wizards is
+  "orc", so we retry the above using "orc" instead of "orc wizard". The
+  same is repeated for "friendly fleeing beogh 'o'", and we still
+  haven't found anything.
 
   This is starting to get ridiculous, so it's time for desperate
   measures: 
   With the help of some rather complicated functions the game works out
   that orcs can be described as humanoids of average intelligence.
   Thus, in a final attempt of making this orc wizard speak, we search
-  the database for "friendly fleeing beogh humanoid", something that,
-  not surprisingly (since Beogh and humanoid don't go well together)
-  doesn't exist. Annoyingly enough, neither does "friendly fleeing 
-  humanoid". 
+  the database for "friendly fleeing related beogh humanoid", something
+  that, not surprisingly (since Beogh and humanoid don't go well
+  together), doesn't exist. Annoyingly enough, neither do the variants
+  "friendly fleeing related humanoid", "friendly fleeing beogh
+  humanoid" or even "friendly fleeing humanoid". 
+
   Still, we haven't yet tried the prefix combinations: "default
-  friendly fleeing beogh humanoid" is still unsuccessful, but with
-  "default friendly fleeing humanoid" we finally strike gold:
+  friendly fleeing related humanoid" is still unsuccessful, as
+  are "default friendly fleeing beogh humanoid", "default friendly
+  related beogh humanoid", and "default fleeing related beogh
+  humanoid", but with "default friendly fleeing humanoid" we finally
+  strike gold:
 
 %%%%
 default friendly fleeing humanoid
@@ -380,6 +406,20 @@ The following variables are hardcoded:
 
 Capitalized forms (@Monster@, @A_something@, @Possessive@, @Pronoun@)
 are expanded with capitalized text.
+
+Also, in insult.txt you'll find the hardcoded variables
+@species_insult_adj1@, @species_insult_adj2@ and @species_insult_noun@.
+These are sometimes used in the construction of imps' or demons'
+generic insults, and allow for species-dependent handling. If the
+parser encounters such a variable, it will search the database for the
+corresponding specific entry, i.e. "insult <genus> adj1/adj2/noun"
+where <genus> is replaced with the actual genus name, that is
+"draconian", "elf" or "dwarf" instead of the more specific species
+name, "ogre" for "ogre-mage", or the actual species name in all other
+cases.
+If this specific search doesn't yield any results, that is, such an
+entry hasn't been defined for the species in question, the general
+replacements are used instead.
 
 Weapon noises are handled differently in that all of the above
 replacements don't hold. Instead you can use @The_weapon@,
@@ -516,10 +556,10 @@ VISUAL:@The_monster@ gestures.
   be of the type VISUAL; otherwise they'll never get printed.
 
 
-For shouts the default is also MSGCH_TALK which is automatically
-changed to MSGCH_TALK_VISUAL for monsters that can't speak (animals,
-usually), and manually set to MSGCH_SOUND for all those variants of
-"You hear a shout!"
+For shouts the default channel is also MSGCH_TALK, which is
+automatically changed to MSGCH_TALK_VISUAL for monsters that can't
+speak (animals, usually), and manually set to MSGCH_SOUND for all those
+variants of "You hear a shout!"
 
 For weapon noises only a subset of the above is relevant, as anything
 including VISUAL and the channel keys SPELL and ENCHANT are considered

@@ -982,13 +982,14 @@ bool do_wear_armour( int item, bool quiet )
 
     if ( wearing_slot(item) )
     {
-        if (Options.easy_unequip)
+//        if (Options.easy_unequip)
             return (!takeoff_armour(item));
-
+/*
         if (!quiet)
             mpr("You are already wearing that!");
 
         return (false);
+*/
     }
 
     // if you're wielding something,
@@ -2995,11 +2996,11 @@ bool puton_item(int item_slot, bool prompt_finger)
         || item_slot == you.equip[EQ_RIGHT_RING]
         || item_slot == you.equip[EQ_AMULET])
     {
-        if (Options.easy_unequip)
+//        if (Options.easy_unequip)
             return (!remove_ring(item_slot));
             
-        mpr("You've already put that on!");
-        return (true);
+//        mpr("You've already put that on!");
+//        return (true);
     }
 
     if (item_slot == you.equip[EQ_WEAPON])

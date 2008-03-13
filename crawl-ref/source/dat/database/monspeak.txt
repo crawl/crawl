@@ -1874,6 +1874,8 @@ w:1
 w:1
 @The_monster@ says, "@player_god@ be with thee, mortal!"
 
+# The good gods are assumed to work closely together, so a Daeva praising 
+# Elyvilon is actually flavour.
 w:1
 @The_monster@ says, "Praised be @good_god@ in the heavens above!"
 %%%%
@@ -2004,6 +2006,22 @@ __NONE
 w:1
 @_generic_orc_speech_@
 %%%%
+# charmed orcs
+friendly orc
+
+@default friendly humanoid@
+
+w:5
+@_generic_orc_speech_@
+%%%%
+# charmed orcs, for hill orcs (not counting beogh)
+friendly related orc
+
+@default friendly related humanoid@
+
+w:5
+@_generic_orc_speech_@
+%%%%
 orc_says
 
 shouts
@@ -2036,7 +2054,7 @@ maim
 # Heretic orcs, not believing in Beogh or doubting the
 # saviour story.
 #######################################################
-beogh orc
+related beogh orc
 
 # hostile orcs shouldn't be too talkative
 w:60
@@ -2098,7 +2116,7 @@ VISUAL:@The_monster@ stares at you quizzically.
 # Orcish followers of Beogh's messiah
 ###################################################
 %%%%
-friendly beogh orc
+friendly related beogh orc
 
 # general friendly speech
 w:30
@@ -2130,7 +2148,7 @@ w:5
 
 @The_monster@ shouts, "All @orc_heathen@s must die!"
 
-@The_monster@ @shouts@, "Let's @kill_or_maim@ those @orc_heathen@s."
+@The_monster@ @shouts@, "Let's @kill_or_maim@ those @orc_heathen@s!"
 
 @The_monster@ @orc_says@, "With Beogh's help we'll overthrow the @orc_heathen@s!"
 
@@ -2172,12 +2190,12 @@ w:5
 ################################################
 # Make this work for other predefined orcs!
 #################################################
-beogh orc sorcerer
+related beogh orc sorcerer
 
 @_wizard_@
 
 w:3
-@beogh orc@
+@related beogh orc@
 %%%%
 orc sorcerer
 
@@ -2190,7 +2208,7 @@ w:1
 __NONE
 %%%%
 # special casing for Blork
-beogh Blork the orc
+related beogh Blork the orc
 
 # behave like normal Blork
 w:2
@@ -2198,10 +2216,10 @@ w:2
 
 # with some Beogh-hostile messages strewn in
 w:1
-@beogh orc@
+@related beogh orc@
 %%%%
 # and the same for Urug
-beogh Urug
+related beogh Urug
 
 # behave like normal Urug
 w:2
@@ -2209,6 +2227,6 @@ w:2
 
 # with some Beogh-hostile messages strewn in
 w:1
-@beogh orc@
+@related beogh orc@
 %%%%
 

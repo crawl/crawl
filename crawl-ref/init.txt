@@ -1,17 +1,16 @@
 # NOTE FOR PLAYERS OF OLD VERSIONS (DCSS 0.3.4 or before):
 #
 # Uncomment these options if you want to disable some recent changes: 
-# command keys, monster colours, item colours, butchering interface, 
-# targeting interface. 
-# (New players should go ignore these lines.)
+# monster colours, command keys, order on the character selection screen,
+# item colours, butchering interface, targeting interface. 
+# (New players should just ignore these lines.)
 #
-# additional_macro_file   = docs/034_command_keys.txt
 # : crawl.read_options('docs/034_monster_glyphs.txt')
-# classic_item_colours = true
+# additional_macro_file   = docs/034_command_keys.txt
+# classic_item_colours    = true
 # use_old_selection_order = true
 # always_confirm_butcher  = true
-# target_unshifted_dirs = true
-
+# target_unshifted_dirs   = true
 
 
 # Crawl Init file

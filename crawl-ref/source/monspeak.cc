@@ -94,15 +94,20 @@ static std::string try_exact_string(const std::vector<std::string> prefixes,
 
     if (msg.empty())
     {
-        if (hostile)
+        if (hostile) // skip hostile
             msg = try_exact_string(prefixes, key, true);
         else if (related)
-            msg = try_exact_string(prefixes, key, true, true);
-        else if (religion)
+        {
+            if (religion) // skip hostile and religion
+                msg = try_exact_string(prefixes, key, true, false, true);
+            else // skip hostile and related
+                msg = try_exact_string(prefixes, key, true, true);
+        }
+        else if (religion) // skip hostile, related and religion
             msg = try_exact_string(prefixes, key, true, true, true);
         // 50% use non-verbal monster speech,
         // 50% try for more general silenced monster message instead
-        else if (silenced && coinflip()) 
+        else if (silenced && coinflip()) // skip all
             msg = try_exact_string(prefixes, key, true, true, true, true);
     }
     return msg;
@@ -198,7 +203,7 @@ static std::string player_ghost_speak_str(const monsters *monster,
     return msg;
 }
 
-  // returns true if something is said
+// returns true if something is said
 bool mons_speaks(const monsters *monster)
 {
     // Invisible monster tries to remain unnoticed.  Unless they're
@@ -208,7 +213,9 @@ bool mons_speaks(const monsters *monster)
     // player can't see.
     if (monster->invisible() && !(player_monster_visible(monster)
                                   && monster->has_ench(ENCH_CONFUSION)))
+    {
         return false;
+    }
 
     // Silenced monsters only "speak" 1/3 as often as non-silenced,
     // unless they're normally silent (S_SILENT).  Use
@@ -235,6 +242,7 @@ bool mons_speaks(const monsters *monster)
     {
         if (coinflip()) // neutrals speak half as often
             return false;
+            
         prefixes.push_back("neutral");
     }
     else if (mons_friendly(monster))
@@ -255,6 +263,14 @@ bool mons_speaks(const monsters *monster)
     if (monster->has_ench(ENCH_CONFUSION))
         prefixes.push_back("confused");
 
+    // animals only look at the current player form,
+    // smart monsters at the actual player genus
+    if (is_player_same_species(monster->type,
+                               mons_intel(monster->type) <= I_ANIMAL))
+    {
+        prefixes.push_back("related"); // maybe overkill for Beogh?
+    }
+
     // Add Beogh to list of prefixes for orcs (hostile and friendly) if you
     // worship Beogh. (This assumes you being a Hill Orc, so might have odd
     // results in wizard mode.) Don't count charmed orcs.
@@ -265,10 +281,6 @@ bool mons_speaks(const monsters *monster)
     }
     else
     {
-        // only look at the current player form
-        if (is_player_same_species(monster->type, true))
-            prefixes.push_back("related"); // overkill for Beogh
-
         if (is_good_god(you.religion))
             prefixes.push_back("good god");
         else if (is_evil_god(you.religion))
