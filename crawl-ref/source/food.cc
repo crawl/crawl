@@ -502,23 +502,27 @@ bool prompt_eat_from_inventory(int slot)
         return (false);
     }
 
-    if (slot == -1 && you.species == SP_VAMPIRE)
+    int which_inventory_slot;
+
+    if (you.species != SP_VAMPIRE)
     {
-        slot =  prompt_invent_item( "Drain what?",
-                                    MT_INVLIST,
-                                    OSEL_VAMP_EAT,
-                                    true, true, true, 0, NULL,
-                                    OPER_EAT );
+        which_inventory_slot = (slot != -1) ? slot :
+                prompt_invent_item( "Eat which item?",
+                            MT_INVLIST,
+                            OBJ_FOOD,
+                            true, true, true, 0, NULL,
+                            OPER_EAT );
     }
-        
-    int which_inventory_slot = (slot != -1)? slot:
-            prompt_invent_item(
-                    "Eat which item?",
-                    MT_INVLIST,
-                    OBJ_FOOD,
-                    true, true, true, 0, NULL,
-                    OPER_EAT );
-                    
+    else
+    {
+        which_inventory_slot = (slot != -1) ? slot :
+                prompt_invent_item( "Drain what?",
+                            MT_INVLIST,
+                            OSEL_VAMP_EAT,
+                            true, true, true, 0, NULL,
+                            OPER_EAT );
+    }
+
     if (which_inventory_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -533,15 +537,14 @@ bool prompt_eat_from_inventory(int slot)
         mpr("You can't eat that!");
         return (false);
     }
-
-    if (you.species == SP_VAMPIRE &&
+    else if (you.species == SP_VAMPIRE &&
        (you.inv[which_inventory_slot].base_type != OBJ_CORPSES
          || you.inv[which_inventory_slot].sub_type != CORPSE_BODY))
     {
         mpr("You crave blood!");
         return (false);
     }
-       
+
     if (!can_ingest( you.inv[which_inventory_slot].base_type,
                         you.inv[which_inventory_slot].sub_type, false ))
     {
