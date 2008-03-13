@@ -2170,7 +2170,7 @@ static bool tso_retribution()
     {
     case 0:
     case 1:
-    case 2: // summon daevas
+    case 2: // summon daevas (3/7)
     {
         bool success = false;
         int how_many = 1 + random2(you.experience_level / 5) + random2(3);
@@ -2192,7 +2192,7 @@ static bool tso_retribution()
         break;
     }
     case 3:
-    case 4: // cleansing flame
+    case 4: // cleansing flame (2/7)
     {
         simple_god_message(" blasts you with cleansing flame!", god);
 
@@ -2214,7 +2214,7 @@ static bool tso_retribution()
         break;
     }
     case 5:
-    case 6: // noisiness or silence (anti-noisiness)
+    case 6: // either noisiness or silence (2/7)
        if (coinflip())
        {
            simple_god_message(" booms out: \"Turn back to righteousness! REPENT!\"", god);
