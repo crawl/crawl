@@ -221,7 +221,10 @@ bool butchery(int which_corpse)
         static_cast<transformation_type>(you.attribute[ATTR_TRANSFORMATION]);
  
     // Xom probably likes this, occasionally
-    bool teeth_butcher = (you.mutation[MUT_FANGS] == 3);
+    // Vampires fangs are optimised for biting, not for tearing flesh.
+    // Other species with this mutation still might benefit from this.
+    bool teeth_butcher = (you.mutation[MUT_FANGS] == 3
+                          && you.species != SP_VAMPIRE);
 
     bool barehand_butcher = (transform_can_butcher_barehanded(transform)
                              || you.has_claws()) && you.equip[EQ_GLOVES] == -1;
@@ -287,7 +290,9 @@ bool butchery(int which_corpse)
     // if there are several corpses on the square.
     if ( num_corpses == 0 )
     {
-        mpr("There isn't anything to butcher here.");
+        mprf("There isn't anything to %s here.",
+             you.species == SP_VAMPIRE && you.experience_level > 5 ? "bottle"
+             : "butcher");
         return false;
     }
     else if ( !prechosen
@@ -301,13 +306,17 @@ bool butchery(int which_corpse)
                 continue;
             
             // offer the possibility of butchering
-            mprf("Butcher %s? [y/n/q/c]", mitm[o].name(DESC_NOCAP_A).c_str());
+            mprf("%s %s? [y/n/q/c]", can_bottle_blood_from_corpse(mitm[o].plus)?
+                                       "Bottle" : "Butcher",
+                                     mitm[o].name(DESC_NOCAP_A).c_str());
+                 
             // possible results:
             // 0 - cancel all butchery (quit)
             // 1 - say no to this butchery, continue prompting
             // 2 - OK this butchery
             // Yes, this is a hack because it's too annoying to adapt
             // yesnoquit() to this purpose.
+            
             int result = 100;
             while (result == 100)
             {
@@ -443,7 +452,9 @@ bool butchery(int which_corpse)
     if (canceled_butcher)
         canned_msg(MSG_OK);
     else
-        mpr("There isn't anything else to butcher here.");
+        mprf("There isn't anything else to %s here.",
+               you.species == SP_VAMPIRE && you.experience_level >= 6 ?
+               "bottle" : "butcher");
 
     return false;
 }                               // end butchery()
@@ -1433,6 +1444,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     case OBJ_POTIONS: // called by lua
         if (get_ident_type(OBJ_POTIONS, kindof_thing) != ID_KNOWN_TYPE)
             return true;
+            
         switch (kindof_thing)
         {
             case POT_BLOOD:
@@ -1613,18 +1625,20 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     return (this_chunk_effect);
 }                               // end determine_chunk_effect()
 
-static bool vampire_consume_corpse(const int mons_type, int max_chunks,
+static bool vampire_consume_corpse(const int mons_type, const int max_chunks,
                                    const int chunk_type, const bool rotten)
 {
-    if (chunk_type == CE_HCL)
+    if (!mons_has_blood(mons_type))
     {
         mpr( "There is no blood in this body!" );
         return false;
     }
 
     // This is the exact formula of corpse nutrition for chunk lovers
-    max_chunks = 1 + random2(max_chunks);
-    int mass = CHUNK_BASE_NUTRITION * max_chunks;
+    int chunk_amount = 1 + random2(max_chunks);
+        chunk_amount = stepdown_value( chunk_amount, 4, 4, 12, 12 );
+    int mass = CHUNK_BASE_NUTRITION * chunk_amount;
+    
     int food_value = 0, hp_amt = 0, mp_amt = 0;
 
     if (rotten)

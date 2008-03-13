@@ -1608,7 +1608,7 @@ int tileidx_item(const item_def &item)
         }
         else
         {
-            return TILE_POTION_OFFSET + special % 14;
+            return TILE_POTION_OFFSET + item.plus % 14;
         }
 
     case OBJ_BOOKS:
@@ -4229,7 +4229,8 @@ void finish_inven_data(int n, int *tiles, int *num, int *idx, int *iflag)
         {
             q = itm->quantity;
         }
-        if (q==1) q = -1;
+        if (q == 1)
+            q = -1;
 
         if ( type == OBJ_WANDS
              && (!(itm->flags & ISFLAG_KNOW_PLUSES )

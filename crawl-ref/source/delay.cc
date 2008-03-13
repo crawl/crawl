@@ -525,7 +525,9 @@ void handle_delay( void )
             mpr("You start removing your armour.", MSGCH_MULTITURN_ACTION);
             break;
         case DELAY_BUTCHER:
-            mpr("You start butchering the corpse.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You start %s the corpse.",
+                 can_bottle_blood_from_corpse(mitm[delay.parm1].plus)?
+                  "bottling blood from" : "butchering");
             break;
         case DELAY_MEMORISE:
             mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
@@ -673,8 +675,9 @@ void handle_delay( void )
                  you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
             break;
         case DELAY_BUTCHER:
-            mpr("You continue butchering the corpse.",
-                MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue %s the corpse.",
+                 can_bottle_blood_from_corpse(mitm[delay.parm1].plus)?
+                  "bottling blood from" : "butchering");
             break;
         case DELAY_MEMORISE:
             mpr("You continue memorising.", MSGCH_MULTITURN_ACTION);
@@ -841,11 +844,12 @@ static void finish_delay(const delay_queue_item &delay)
         const item_def &item = mitm[delay.parm1];
         if (is_valid_item(item) && item.base_type == OBJ_CORPSES)
         {
-
             if (item.sub_type == CORPSE_SKELETON)
             {
-                mpr("The corpse rots away into a skeleton just before you "
-                    "finish butchering it!");
+                mprf("The corpse rots away into a skeleton just before you "
+                     "finish %s!", can_bottle_blood_from_corpse(item.plus)
+                                   ? "bottling its blood"
+                                   : "butchering");
 
                 if (you.mutation[MUT_SAPROVOROUS] == 3)
                     xom_check_corpse_waste();
@@ -855,36 +859,45 @@ static void finish_delay(const delay_queue_item &delay)
                 break;
             }
 
-            mprf("You finish %s the corpse into pieces.",
-                 (you.has_usable_claws() || you.mutation[MUT_FANGS] == 3) ?
-                 "ripping" : "chopping");
-
-            if (is_good_god(you.religion) && is_player_same_species(item.plus))
-                simple_god_message(" expects more respect for your departed "
-                                   "relatives.");
-            else if (you.religion == GOD_ZIN && mons_intel(item.plus) >= I_NORMAL)
-                simple_god_message(" expects more respect for this departed "
-                                   "soul.");
-
-            if (you.species == SP_VAMPIRE &&
-                mons_corpse_effect(item.plus) != CE_HCL &&
-                (!god_likes_butchery(you.religion) ||
-                 !you.duration[DUR_PRAYER]))
+            if (can_bottle_blood_from_corpse(item.plus))
             {
-                 mpr("What a waste.");
-            }                
-            turn_corpse_into_chunks( mitm[ delay.parm1 ] );
-
-            if (you.duration[DUR_BERSERKER] &&
-                you.berserk_penalty != NO_BERSERK_PENALTY)
+                turn_corpse_into_blood_potions( mitm[ delay.parm1 ] );
+            }
+            else
             {
-                mpr("You enjoyed that.");
-                you.berserk_penalty = 0;
+                mprf("You finish %s the corpse into pieces.",
+                     (you.has_usable_claws() || you.mutation[MUT_FANGS] == 3) ?
+                     "ripping" : "chopping");
+
+                if (is_good_god(you.religion) && is_player_same_species(item.plus))
+                    simple_god_message(" expects more respect for your departed "
+                                       "relatives.");
+                else if (you.religion == GOD_ZIN && mons_intel(item.plus) >= I_NORMAL)
+                    simple_god_message(" expects more respect for this departed "
+                                       "soul.");
+
+                if (you.species == SP_VAMPIRE && you.experience_level < 6
+                    && mons_has_blood(item.plus)
+                    && (!god_likes_butchery(you.religion)
+                        || !you.duration[DUR_PRAYER]))
+                {
+                    mpr("What a waste.");
+                }
+                turn_corpse_into_chunks( mitm[ delay.parm1 ] );
+
+                if (you.duration[DUR_BERSERKER] &&
+                    you.berserk_penalty != NO_BERSERK_PENALTY)
+                {
+                    mpr("You enjoyed that.");
+                    you.berserk_penalty = 0;
+                }
             }
         }
         else
         {
-            mpr("You stop butchering the corpse.");
+            mprf("You stop %s.", can_bottle_blood_from_corpse(item.plus) ?
+                                 "bottling this corpse's blood"
+                                 : "butchering the corpse");
         }
         stashes.update_stash(); // Stash-track the generated item(s)
         break;

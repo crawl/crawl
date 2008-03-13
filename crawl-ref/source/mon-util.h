@@ -651,6 +651,7 @@ bool mons_class_is_slowable(int mc);
 bool mons_is_stationary(const monsters *mon);
 bool mons_is_wall_shielded(int mc);
 bool mons_is_insubstantial(int mc);
+bool mons_has_blood(int mc);
 bool mons_is_submerged( const monsters *mon );
 
 bool invalid_monster(const monsters *mon);

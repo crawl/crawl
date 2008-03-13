@@ -829,12 +829,13 @@ static void give_starting_food()
     if ( you.species == SP_SPRIGGAN )
     {
         item.base_type = OBJ_POTIONS;
-        item.sub_type = POT_PORRIDGE;
+        item.sub_type  = POT_PORRIDGE;
     }
     else if (you.species == SP_VAMPIRE)
     {
         item.base_type = OBJ_POTIONS;
-        item.sub_type = POT_BLOOD;
+        item.sub_type  = POT_BLOOD;
+        item.special   = 1200;
     }
     else
     {

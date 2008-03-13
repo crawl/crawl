@@ -490,9 +490,9 @@ void item_colour( item_def &item )
         break;
 
     case OBJ_POTIONS:
-        item.special = you.item_description[IDESC_POTIONS][item.sub_type];
+        item.plus = you.item_description[IDESC_POTIONS][item.sub_type];
 
-        switch (item.special % 14)
+        switch (item.plus % 14)
         {
         case 0:         //"clear potion"
         default:
@@ -2313,14 +2313,19 @@ static void generate_potion_item(item_def& item, int force_type,
         } while ( (stype == POT_POISON && item_level < 1) ||
                   (stype == POT_STRONG_POISON && item_level < 11) ||
                   (stype == POT_SLOWING && item_level < 7) );
+                  
         if ( stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY ||
              stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE ||
              stype == POT_MAGIC || stype == POT_RESTORE_ABILITIES )
+        {
             item.quantity = 1;
+        }
         item.sub_type = stype;
     }
-
-    item.plus = 0;
+    if (item.sub_type == POT_BLOOD)
+        item.special = 1200;
+    else
+        item.special = 0;
 }
 
 static void generate_scroll_item(item_def& item, int force_type,

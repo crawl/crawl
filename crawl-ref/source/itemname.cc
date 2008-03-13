@@ -1288,12 +1288,17 @@ std::string item_def::name_aux( description_level_type desc,
         }
         if (know_type)
         {
-            buff << "potion of " << potion_type_name(item_typ);
+            buff << "potion of ";
+            
+            if (this->sub_type == POT_BLOOD && this->special < 200)
+                buff << "congealed ";
+
+            buff << potion_type_name(item_typ);
         }
         else
         {
-            const int pqual   = PQUAL(this->special);
-            const int pcolour = PCOLOUR(this->special);
+            const int pqual   = PQUAL(this->plus);
+            const int pcolour = PCOLOUR(this->plus);
 
             static const char *potion_qualifiers[] = {
                 "",  "bubbling ", "fuming ", "fizzy ", "viscous ", "lumpy ",

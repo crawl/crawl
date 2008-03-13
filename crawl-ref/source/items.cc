@@ -1302,7 +1302,9 @@ bool items_stack( const item_def &item1, const item_def &item2,
     // both items must be stackable
     if (!force_merge
         && (!is_stackable_item( item1 ) || !is_stackable_item( item2 )))
+    {
         return (false);
+    }
 
     // base and sub-types must always be the same to stack
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
@@ -1336,19 +1338,30 @@ bool items_stack( const item_def &item1, const item_def &item2,
                           ISFLAG_DROPPED | ISFLAG_THROWN | \
                           ISFLAG_NOTED_ID | ISFLAG_NOTED_GET | \
                           ISFLAG_BEEN_IN_INV)
-    if ((item1.flags & NON_IDENT_FLAGS) !=
-        (item2.flags & NON_IDENT_FLAGS))
+                          
+    if ((item1.flags & NON_IDENT_FLAGS) != (item2.flags & NON_IDENT_FLAGS))
     {
         return false;
     }
 
-    // Thanks to mummy cursing, we can have potions of decay 
-    // that don't look alike... so we don't stack potions 
-    // if either isn't identified and they look different.  -- bwr
-    if (item1.base_type == OBJ_POTIONS && item1.special != item2.special &&
-        (!item_type_known(item1) || !item_type_known(item2)))
+    if (item1.base_type == OBJ_POTIONS)
     {
-        return false;
+        // Thanks to mummy cursing, we can have potions of decay
+        // that don't look alike... so we don't stack potions
+        // if either isn't identified and they look different.  -- bwr
+        if (item1.plus != item2.plus
+            && (!item_type_known(item1) || !item_type_known(item2)))
+        {
+            return false;
+        }
+
+        // Don't stack congealed potions of blood with non-congealed ones.
+        if (item1.sub_type == POT_BLOOD
+            && (item1.special < 200 && item2.special >= 200
+                || item2.special < 200 && item1.special >= 200))
+        {
+            return false;
+        }
     }
 
     // The inscriptions can differ if one of them is blank, but if they
@@ -1524,6 +1537,14 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                     you.inv[m].inscription = mitm[obj].inscription;
                 }
 
+                if (mitm[obj].base_type == OBJ_POTIONS
+                    && mitm[obj].sub_type == POT_BLOOD)
+                {
+                    // use average age
+                    int age = you.inv[m].special * you.inv[m].quantity
+                              + mitm[obj].special * quant_got;
+                    you.inv[m].special = age / (you.inv[m].quantity + quant_got);
+                }
                 inc_inv_item_quantity( m, quant_got );
                 dec_mitm_item_quantity( obj, quant_got );
                 burden_change();
@@ -1726,6 +1747,13 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
         {
             if (items_stack( item, mitm[i] ))
             {
+                if (item.base_type == OBJ_POTIONS && item.sub_type == POT_BLOOD)
+                {
+                    // calculate average age
+                    int age = mitm[i].special * mitm[i].quantity
+                              + item.special * quant_drop;
+                    mitm[i].special = age / (mitm[i].quantity + quant_drop);
+                }
                 inc_mitm_item_quantity( i, quant_drop );
                 
                 // If the items on the floor already have a nonzero slot,

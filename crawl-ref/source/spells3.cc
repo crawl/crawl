@@ -310,9 +310,35 @@ void sublimation(int power)
 {
     unsigned char loopy = 0;    // general purpose loop variable {dlb}
 
-    if (you.equip[EQ_WEAPON] == -1
-        || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_FOOD
-        || you.inv[you.equip[EQ_WEAPON]].sub_type != FOOD_CHUNK)
+    int wielded = you.equip[EQ_WEAPON];
+    if (wielded != -1)
+    {
+        if (you.inv[wielded].base_type == OBJ_FOOD
+            && you.inv[wielded].sub_type == FOOD_CHUNK)
+        {
+            mpr("The chunk of flesh you are holding crumbles to dust.");
+            mpr("A flood of magical energy pours into your mind!");
+
+            inc_mp( 7 + random2(7), false );
+
+            dec_inv_item_quantity( wielded, 1 );
+        }
+        else if (you.inv[wielded].base_type == OBJ_POTIONS
+                 && you.inv[wielded].sub_type == POT_BLOOD)
+        {
+            mprf("The blood within %s frothes and boils.",
+                 you.inv[wielded].quantity == 1 ? "the flask you are holding"
+                                                : "one of your flasks");
+            split_blood_potions_into_decay( wielded, 1 );
+
+            mpr("A flood of magical energy pours into your mind!");
+            inc_mp( 7 + random2(7), false );
+        }
+        else // no appropriate item wielded
+            wielded = -1;
+    }
+    
+    if (wielded == -1)
     {
         if (you.duration[DUR_DEATHS_DOOR])
         {
@@ -342,15 +368,6 @@ void sublimation(int power)
                     break;
             }
         }
-    }
-    else
-    {
-        mpr("The chunk of flesh you are holding crumbles to dust.");
-        mpr("A flood of magical energy pours into your mind!");
-
-        inc_mp( 7 + random2(7), false );
-
-        dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
     }
 
     return;

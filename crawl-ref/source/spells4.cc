@@ -1775,8 +1775,7 @@ void cast_fulsome_distillation( int powc )
         switch (mons_corpse_effect( mitm[corpse].plus ))
         {
         case CE_CLEAN:
-            pot_type = (power_up ? POT_CONFUSION :
-                        one_chance_in(30)? POT_BLOOD : POT_WATER);
+            pot_type = (power_up ? POT_CONFUSION : POT_WATER);
             break;
 
         case CE_CONTAMINATED:

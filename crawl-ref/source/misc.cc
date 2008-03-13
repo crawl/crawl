@@ -80,8 +80,59 @@
 #include "view.h"
 #include "xom.h"
 
-// void place_chunks(int mcls, unsigned char rot_status, unsigned char chx,
-//                   unsigned char chy, unsigned char ch_col)
+static void create_monster_hide(int mons_class)
+{
+    int o = get_item_slot( 100 + random2(200) );
+    if (o == NON_ITEM)
+        return;
+
+    mitm[o].quantity = 1;
+
+    // these values are common to all: {dlb}
+    mitm[o].base_type = OBJ_ARMOUR;
+    mitm[o].plus      = 0;
+    mitm[o].plus2     = 0;
+    mitm[o].special   = 0;
+    mitm[o].flags     = 0;
+    mitm[o].colour    = mons_class_colour( mons_class );
+
+    // these values cannot be set by a reasonable formula: {dlb}
+    switch (mons_class)
+    {
+    case MONS_DRAGON:
+        mitm[o].sub_type = ARM_DRAGON_HIDE;
+        break;
+    case MONS_TROLL:
+        mitm[o].sub_type = ARM_TROLL_HIDE;
+        break;
+    case MONS_ICE_DRAGON:
+        mitm[o].sub_type = ARM_ICE_DRAGON_HIDE;
+        break;
+    case MONS_STEAM_DRAGON:
+        mitm[o].sub_type = ARM_STEAM_DRAGON_HIDE;
+        break;
+    case MONS_MOTTLED_DRAGON:
+        mitm[o].sub_type = ARM_MOTTLED_DRAGON_HIDE;
+        break;
+    case MONS_STORM_DRAGON:
+        mitm[o].sub_type = ARM_STORM_DRAGON_HIDE;
+        break;
+    case MONS_GOLDEN_DRAGON:
+        mitm[o].sub_type = ARM_GOLD_DRAGON_HIDE;
+        break;
+    case MONS_SWAMP_DRAGON:
+        mitm[o].sub_type = ARM_SWAMP_DRAGON_HIDE;
+        break;
+    case MONS_SHEEP:
+    case MONS_YAK:
+    default:
+        mitm[o].sub_type = ARM_ANIMAL_SKIN;
+        break;
+    }
+
+    move_item_to_grid( &o, you.x_pos, you.y_pos );
+}
+
 void turn_corpse_into_chunks( item_def &item )
 {
     ASSERT( item.base_type == OBJ_CORPSES );
@@ -90,74 +141,130 @@ void turn_corpse_into_chunks( item_def &item )
     const int max_chunks = mons_weight( mons_class ) / 150;
 
     // only fresh corpses bleed enough to colour the ground
-    if (item.special >= 100)
+    if (!food_is_rotten(item))
         bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
     
     item.base_type = OBJ_FOOD;
     item.sub_type  = FOOD_CHUNK;
     item.quantity  = 1 + random2( max_chunks );
-    item.flags    &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
-
     item.quantity = stepdown_value( item.quantity, 4, 4, 12, 12 );
 
-    // seems to me that this should come about only
-    // after the corpse has been butchered ... {dlb}
+    if (you.species != SP_VAMPIRE)
+        item.flags    &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+
+    // happens after the corpse has been butchered
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
+        create_monster_hide(mons_class);
+}
+
+bool can_bottle_blood_from_corpse(int mons_type)
+{
+    if (you.species != SP_VAMPIRE || you.experience_level < 6
+        || !mons_has_blood(mons_type))
     {
-        int o = get_item_slot( 100 + random2(200) );
-        if (o == NON_ITEM)
-            return;
+        return (false);
+    }
 
-        mitm[o].quantity = 1;
+    int chunk_type = mons_corpse_effect( mons_type );
+    if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
+        return (true);
+        
+    return (false);
+}
 
-        // these values are common to all: {dlb}
-        mitm[o].base_type = OBJ_ARMOUR;
-        mitm[o].plus      = 0;
-        mitm[o].plus2     = 0;
-        mitm[o].special   = 0;
-        mitm[o].flags     = 0;
-        mitm[o].colour    = mons_class_colour( mons_class );
+void turn_corpse_into_blood_potions( item_def &item )
+{
+    ASSERT( item.base_type == OBJ_CORPSES );
+    ASSERT( !food_is_rotten(item) );
 
-        // these values cannot be set by a reasonable formula: {dlb}
-        switch (mons_class)
+    const int mons_class = item.plus;
+    ASSERT( can_bottle_blood_from_corpse(mons_class) );
+
+    item.base_type = OBJ_POTIONS;
+    item.sub_type  = POT_BLOOD;
+    item.colour    = RED;
+    item.special   = (item.special - 80) * 10; // potion's age
+
+    // max. amount is about one third of the max. amount for chunks
+    const int max_chunks = mons_weight( mons_class ) / 150;
+    item.quantity  = 1 + random2( max_chunks/3 );
+    item.quantity  = stepdown_value( item.quantity, 2, 2, 6, 6 );
+
+    item.flags    &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+
+    // happens after the blood has been bottled
+    if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
+        create_monster_hide(mons_class);
+}
+
+// A variation of the mummy curse: for potions of blood (vital for Vampires!)
+// split the stack and only turn part of it into POT_DECAY.
+void split_blood_potions_into_decay( int obj, int amount )
+{
+    ASSERT(obj != -1);
+    item_def potion = you.inv[obj];
+
+    ASSERT(is_valid_item(potion));
+    ASSERT(potion.base_type == OBJ_POTIONS && potion.sub_type == POT_BLOOD);
+    ASSERT(amount <= potion.quantity);
+
+    if (amount <= 0)
+        amount = random2(potion.quantity) + 1;
+
+    // if entire stack affected just change subtype
+    if (amount == potion.quantity)
+    {
+        you.inv[obj].sub_type = POT_DECAY;
+        return;
+    }
+
+    // try to merge into existing stacks of decayed potions
+    for (int m = 0; m < ENDOFPACK; m++)
+    {
+         if (you.inv[m].base_type == OBJ_POTIONS
+             && you.inv[m].sub_type == POT_DECAY)
+         {
+             inc_inv_item_quantity( m, amount );
+             dec_inv_item_quantity( obj, amount);
+
+             return;
+         }
+    }
+
+    // only bother creating a distinct stack of potions
+    // if it won't get destroyed right away
+    if (!grid_destroys_items(grd[you.x_pos][you.y_pos]))
+    {
+        item_def potion2;
+        potion2.base_type = OBJ_POTIONS;
+        potion2.sub_type  = POT_DECAY;
+        potion2.plus      = potion.plus; // are these even needed?
+        potion2.plus2     = potion.plus2;
+        potion2.flags     = potion.flags;
+        potion2.quantity  = amount;
+        potion2.special   = 0;
+
+        switch (random2(4))
         {
-        case MONS_DRAGON:
-            mitm[o].sub_type = ARM_DRAGON_HIDE;
+        case 0:
+            potion2.colour = RED;
             break;
-        case MONS_TROLL:
-            mitm[o].sub_type = ARM_TROLL_HIDE;
+        case 1:
+            potion2.colour = BROWN;
             break;
-        case MONS_ICE_DRAGON:
-            mitm[o].sub_type = ARM_ICE_DRAGON_HIDE;
+        case 2:
+            potion2.colour = GREEN;
             break;
-        case MONS_STEAM_DRAGON:
-            mitm[o].sub_type = ARM_STEAM_DRAGON_HIDE;
-            break;
-        case MONS_MOTTLED_DRAGON:
-            mitm[o].sub_type = ARM_MOTTLED_DRAGON_HIDE;
-            break;
-        case MONS_STORM_DRAGON:
-            mitm[o].sub_type = ARM_STORM_DRAGON_HIDE;
-            break;
-        case MONS_GOLDEN_DRAGON:
-            mitm[o].sub_type = ARM_GOLD_DRAGON_HIDE;
-            break;
-        case MONS_SWAMP_DRAGON:
-            mitm[o].sub_type = ARM_SWAMP_DRAGON_HIDE;
-            break;
-        case MONS_SHEEP:
-        case MONS_YAK:
-            mitm[o].sub_type = ARM_ANIMAL_SKIN;
-            break;
-        default:
-            // future implementation {dlb}
-            mitm[o].sub_type = ARM_ANIMAL_SKIN;
+        case 3:
+            potion2.colour = LIGHTRED;
             break;
         }
 
-        move_item_to_grid( &o, item.x, item.y );
-    }
-}                               // end place_chunks()
+        copy_item_to_grid( potion2, you.x_pos, you.y_pos );
+   }
+   // is decreased even if the decay stack goes splat
+   dec_inv_item_quantity(obj, amount);
+}
 
 // checks whether the player or a monster is capable of bleeding
 static bool victim_can_bleed(int montype)
@@ -181,8 +288,7 @@ static bool victim_can_bleed(int montype)
     }
 
     // now check monsters
-    return (mons_class_flag(montype, M_COLD_BLOOD)
-            || mons_class_flag(montype, M_WARM_BLOOD));
+    return (mons_has_blood(montype));
 }
 
 static bool allow_bleeding_on_square(int x, int y)

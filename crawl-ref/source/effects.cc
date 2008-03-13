@@ -1542,6 +1542,9 @@ bool acquirement(object_class_type class_wanted, int agent,
             thing.quantity += 150;
         else if (quant > 1)
             thing.quantity = quant;
+            
+        if (thing.base_type == OBJ_POTIONS && thing.sub_type == POT_BLOOD)
+            thing.special = 1200;
     
         // remove curse flag from item
         do_uncurse_item( thing );
@@ -2166,33 +2169,57 @@ static void hell_effects()
     }
 }
 
+static bool food_item_needs_time_check(item_def &item)
+{
+    if (!is_valid_item(item))
+        return false;
+
+    if (item.base_type != OBJ_CORPSES
+        && item.base_type != OBJ_FOOD
+        && item.base_type != OBJ_POTIONS)
+    {
+        return false;
+    }
+
+    if (item.base_type == OBJ_CORPSES
+        && item.sub_type > CORPSE_SKELETON)
+    {
+        return false;
+    }
+
+    if (item.base_type == OBJ_FOOD && item.sub_type != FOOD_CHUNK)
+    {
+        return false;
+    }
+
+    if (item.base_type == OBJ_POTIONS && item.sub_type != POT_BLOOD)
+    {
+        return false;
+    }
+    
+    return true;
+}
+
 static void rot_inventory_food(long time_delta)
 {
     // Update all of the corpses and food chunks in the player's
     // inventory {should be moved elsewhere - dlb}
 
     bool burden_changed_by_rot = false;
+    int blood_num, congealed_blood_num = 0;
     std::vector<char> rotten_items;
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].quantity < 1)
             continue;
 
-        if (you.inv[i].base_type != OBJ_CORPSES && you.inv[i].base_type != OBJ_FOOD)
+        if (!food_item_needs_time_check(you.inv[i]))
             continue;
-
-        if (you.inv[i].base_type == OBJ_CORPSES
-            && you.inv[i].sub_type > CORPSE_SKELETON)
-        {
-            continue;
-        }
-
-        if (you.inv[i].base_type == OBJ_FOOD && you.inv[i].sub_type != FOOD_CHUNK)
-            continue;
-
+            
         if ((time_delta / 20) >= you.inv[i].special)
         {
-            if (you.inv[i].base_type == OBJ_FOOD)
+            if (you.inv[i].base_type == OBJ_FOOD
+                || you.inv[i].base_type == OBJ_POTIONS)
             {
                 if (you.equip[EQ_WEAPON] == i)
                     unwield_item();
@@ -2225,8 +2252,17 @@ static void rot_inventory_food(long time_delta)
 
         you.inv[i].special -= (time_delta / 20);
 
-        if (you.inv[i].special < 100 &&
-            (you.inv[i].special + (time_delta / 20) >=100 ))
+        if (you.inv[i].base_type == OBJ_POTIONS)
+        {
+            blood_num += you.inv[i].quantity;
+            if (you.inv[i].special < 200
+                && you.inv[i].special + (time_delta / 20) >= 200)
+            {
+                congealed_blood_num += you.inv[i].quantity;
+            }
+        }
+        else if (food_is_rotten(you.inv[i])
+                 && (you.inv[i].special + (time_delta / 20) >= 100 ))
         {
             rotten_items.push_back(index_to_letter( i ));
         }
@@ -2290,6 +2326,20 @@ static void rot_inventory_food(long time_delta)
 
         learned_something_new(TUT_ROTTEN_FOOD);
     }
+    
+    if (congealed_blood_num)
+    {
+        std::string msg = "";
+        if (blood_num == 1)
+            mpr("Your potion of blood congeals.", MSGCH_ROTTEN_MEAT);
+        else if (congealed_blood_num == 1)
+            mpr("One of your potions of blood congeals.", MSGCH_ROTTEN_MEAT);
+        else if (congealed_blood_num < blood_num)
+            mpr("Some of your potions of blood congeal.", MSGCH_ROTTEN_MEAT);
+        else
+            mpr("Your potions of blood congeal.", MSGCH_ROTTEN_MEAT);
+    }
+
     if (burden_changed_by_rot)
     {
         mpr("Your equipment suddenly weighs less.", MSGCH_ROTTEN_MEAT);
@@ -2532,7 +2582,7 @@ void handle_time( long time_delta )
         you.put_to_sleep();
     }
 
-    // Update all of the corpses and food chunks on the floor
+    // Update all of the corpses, food chunks and potions of blood on the floor.
     update_corpses(time_delta);
 
     rot_inventory_food(time_delta);
@@ -2799,28 +2849,12 @@ void update_corpses(double elapsedTime)
     {
         item_def &it = mitm[c];
         
-        if (!is_valid_item(it))
+        if (!food_item_needs_time_check(it))
             continue;
-
-        if (it.base_type != OBJ_CORPSES && it.base_type != OBJ_FOOD)
-        {
-            continue;
-        }
-
-        if (it.base_type == OBJ_CORPSES
-            && it.sub_type > CORPSE_SKELETON)
-        {
-            continue;
-        }
-
-        if (it.base_type == OBJ_FOOD && it.sub_type != FOOD_CHUNK)
-        {
-            continue;
-        }
-
+            
         if (rot_time >= it.special && !is_being_butchered(it))
         {
-            if (it.base_type == OBJ_FOOD)
+            if (it.base_type == OBJ_FOOD || it.base_type == OBJ_POTIONS)
             {
                 destroy_item(c);
             }

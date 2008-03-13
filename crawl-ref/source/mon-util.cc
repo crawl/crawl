@@ -407,6 +407,12 @@ bool mons_is_insubstantial(int mc)
     return mons_class_flag(mc, M_INSUBSTANTIAL);
 }
 
+bool mons_has_blood(int mc)
+{
+    return (mons_class_flag(mc, M_COLD_BLOOD)
+            || mons_class_flag(mc, M_WARM_BLOOD));
+}
+
 bool mons_behaviour_perceptible(const monsters *mon)
 {
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)

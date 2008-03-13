@@ -3018,6 +3018,11 @@ void level_change(bool skip_ability_increase)
                              MSGCH_INTRINSIC_GAIN );
                     }
                 }
+                else if (you.experience_level == 6)
+                {
+                    mpr("You can now bottle potions of blood from chopped up "
+                        "corpses.");
+                }
                 else if (you.experience_level == 13)
                 {
                     mprf( MSGCH_INTRINSIC_GAIN,

@@ -243,12 +243,27 @@ bool curse_an_item( bool decay_potions )
     /* don't change you.inv_special (just for fun) */
     if (you.inv[item].base_type == OBJ_POTIONS)
     {
-        // Xom is amused by useful potions being ruined.
-        if (item_value(you.inv[item], true) / you.inv[item].quantity > 2)
-            xom_is_stimulated(32 * you.inv[item].quantity);
+        // Potions of blood are vital to vampires, so make an exception for
+        // for them. (Come to think of it, this would work nicely for all
+        // other potion types as well.)
+        if (you.inv[item].sub_type == POT_BLOOD)
+        {
+            int amount = random2(you.inv[item].quantity) + 1;
+            split_blood_potions_into_decay(item, amount);
+            
+            // Xom is amused if this happens to thirsty vampires
+            if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY)
+                xom_is_stimulated(32 * amount);
+        }
+        else
+        {
+            // Xom is amused by useful potions being ruined.
+            if (item_value(you.inv[item], true) / you.inv[item].quantity > 2)
+                xom_is_stimulated(32 * you.inv[item].quantity);
 
-        you.inv[item].sub_type = POT_DECAY;
-        unset_ident_flags( you.inv[item], ISFLAG_IDENT_MASK ); // all different
+            you.inv[item].sub_type = POT_DECAY;
+            unset_ident_flags( you.inv[item], ISFLAG_IDENT_MASK ); // all different
+        }
     }
     else
         do_curse_item( you.inv[item] );
