@@ -531,18 +531,22 @@ bool prompt_eat_from_inventory(int slot)
 
     // this conditional can later be merged into food::can_ingest() when
     // expanded to handle more than just OBJ_FOOD 16mar200 {dlb}
-    if (you.species != SP_VAMPIRE &&
-        you.inv[which_inventory_slot].base_type != OBJ_FOOD)
+    if (you.species != SP_VAMPIRE)
     {
-        mpr("You can't eat that!");
-        return (false);
+        if (you.inv[which_inventory_slot].base_type != OBJ_FOOD)
+        {
+            mpr("You can't eat that!");
+            return (false);
+        }
     }
-    else if (you.species == SP_VAMPIRE &&
-       (you.inv[which_inventory_slot].base_type != OBJ_CORPSES
-         || you.inv[which_inventory_slot].sub_type != CORPSE_BODY))
+    else
     {
-        mpr("You crave blood!");
-        return (false);
+        if (you.inv[which_inventory_slot].base_type != OBJ_CORPSES
+            || you.inv[which_inventory_slot].sub_type != CORPSE_BODY)
+        {
+            mpr("You crave blood!");
+            return (false);
+        }
     }
 
     if (!can_ingest( you.inv[which_inventory_slot].base_type,
