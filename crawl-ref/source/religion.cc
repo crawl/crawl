@@ -1667,7 +1667,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
 #if DEBUG_DIAGNOSTICS
     if (ret)
     {
-        static const char *conducts[] = 
+        static const char *conducts[] =
         {
           "",
           "Necromancy", "Unholy", "Attack Holy", "Attack Friend",
@@ -3532,7 +3532,7 @@ void altar_prayer(void)
         && you.piety > 160)
     {
         const int wpn = get_player_wielded_weapon();
-        
+
         if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_DISTORTION)
             bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, RED);
     }
@@ -3544,20 +3544,19 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
 {
     if (!fr || fr->kill_alignment() != KC_FRIENDLY)
         return (false);
-    
+
     switch (god)
     {
-    case GOD_ZIN:
-    case GOD_SHINING_ONE:
-    case GOD_ELYVILON:
-    case GOD_OKAWARU:
-        return (true);
-        
-    case GOD_BEOGH: // added penance to avoid killings for loot
-        return (fr && mons_species(fr->id()) == MONS_ORC);
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+        case GOD_ELYVILON:
+        case GOD_OKAWARU:
+            return (true);
+        case GOD_BEOGH: // added penance to avoid killings for loot
+            return (mons_species(fr->id()) == MONS_ORC);
 
-    default:
-        return (false);
+        default:
+            return (false);
     }
 }
 

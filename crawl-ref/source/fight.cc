@@ -1918,16 +1918,12 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_HOLY_WRATH:
-        switch (defender->holiness())
+        if (defender->holiness() == MH_UNDEAD ||
+            defender->holiness() == MH_DEMONIC)
         {
-        case MH_UNDEAD:
-        case MH_DEMONIC:
             special_damage = 1 + (random2(damage_done * 15) / 10);
-            break;
-
-        default:
-            break;
         }
+
         if (special_damage && defender_visible)
         {
             special_damage_message =

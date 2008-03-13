@@ -112,8 +112,7 @@ bool holy_word(int pow, int caster, bool silent)
         if (monster->type == -1 || !mons_near(monster))
             continue;
 
-        if (mons_holiness(monster) == MH_UNDEAD
-            || mons_holiness(monster) == MH_DEMONIC)
+        if (mons_is_unholy(monster))
         {
             holy_influenced = true;
 

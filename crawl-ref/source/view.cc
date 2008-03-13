@@ -1215,11 +1215,11 @@ bool check_awaken(monsters* monster)
     if (you.duration[DUR_BERSERKER])
         return (true);
 
-    // Repel undead is a holy aura, to which evil creatures are sensitive.
-    // Note that even though demons aren't affected by repel undead, they
-    // do sense this type of divine aura. -- bwr
-    if (you.duration[DUR_REPEL_UNDEAD] 
-        && (mon_holy == MH_UNDEAD || mon_holy == MH_DEMONIC))
+    // Repel undead is a holy aura, to which undead and demonic
+    // creatures are sensitive.  Note that even though demons aren't
+    // affected by repel undead, they do sense this type of divine aura.
+    // -- bwr
+    if (you.duration[DUR_REPEL_UNDEAD] && mons_is_unholy(monster))
     {
         return (true);
     }

@@ -879,9 +879,9 @@ int mons_res_elec( const monsters *mon )
 
 bool mons_res_asphyx( const monsters *mon )
 {
-    const int holiness = mons_holiness( mon );
-    return (holiness == MH_UNDEAD 
-                || holiness == MH_DEMONIC
+    const mon_holy_type holiness = mons_holiness( mon );
+
+    return (mons_is_unholy(mon)
                 || holiness == MH_NONLIVING
                 || holiness == MH_PLANT
                 || get_mons_resists(mon).asphyx > 0);
@@ -1005,18 +1005,18 @@ int mons_res_cold( const monsters *mon )
 
 int mons_res_miasma( const monsters *mon )
 {
-    return (mons_holiness(mon) != MH_NATURAL 
+    return (mons_holiness(mon) != MH_NATURAL
             || mon->type == MONS_DEATH_DRAKE ? 3 : 0);
 }
 
 int mons_res_negative_energy( const monsters *mon )
 {
     int mc = mon->type;
+    const mon_holy_type holiness = mons_holiness( mon );
 
-    if (mons_holiness(mon) == MH_UNDEAD 
-        || mons_holiness(mon) == MH_DEMONIC
-        || mons_holiness(mon) == MH_NONLIVING
-        || mons_holiness(mon) == MH_PLANT
+    if (mons_is_unholy(mon)
+        || holiness == MH_NONLIVING
+        || holiness == MH_PLANT
         || mon->type == MONS_SHADOW_DRAGON
         || mon->type == MONS_DEATH_DRAKE
            // TSO protects his warriors' life force
@@ -1051,16 +1051,21 @@ bool mons_is_evil( const monsters *mon )
 
 bool mons_is_unholy( const monsters *mon )
 {
-    const mon_holy_type holy = mons_holiness( mon );
+    const mon_holy_type holiness = mons_holiness( mon );
 
-    return (holy == MH_UNDEAD || holy == MH_DEMONIC);
+    return (holiness == MH_UNDEAD || holiness == MH_DEMONIC);
+}
+
+bool mons_is_evil_or_unholy( const monsters *mons )
+{
+    return (mons_is_evil(mons) || mons_is_unholy(mons));
 }
 
 bool mons_has_lifeforce( const monsters *mon )
 {
-    const int holy = mons_holiness( mon );
+    const mon_holy_type holiness = mons_holiness( mon );
 
-    return (holy == MH_NATURAL || holy == MH_PLANT);
+    return (holiness == MH_NATURAL || holiness == MH_PLANT);
              // && !mon->has_ench(ENCH_PETRIFY));
 }
 
@@ -2016,9 +2021,9 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     {
         return (true);
     }
-    
-    // Eventually, we'll probably want to be able to have monsters 
-    // learn which of their elemental bolts were resisted and have those 
+
+    // Eventually, we'll probably want to be able to have monsters
+    // learn which of their elemental bolts were resisted and have those
     // handled here as well. -- bwr
     switch (monspell)
     {
@@ -2033,9 +2038,9 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         // We can't just use foe->res_negative_energy() because
         // that'll mean monsters can just "know" the player is fully
         // life-protected if he has triple life protection.
-        const mon_holy_type holy = foe->holiness();
-        return (holy == MH_UNDEAD || holy == MH_DEMONIC
-                || holy == MH_NONLIVING || holy == MH_PLANT);
+        const mon_holy_type holiness = foe->holiness();
+        return (holiness == MH_UNDEAD || holiness == MH_DEMONIC
+            || holiness == MH_NONLIVING || holiness == MH_PLANT);
     }
 
     case SPELL_DISPEL_UNDEAD:
@@ -3143,7 +3148,7 @@ bool monsters::wants_weapon(const item_def &weap) const
     {
         return (false);
     }
-    
+
     // XXX: Make this check dependent on creature size.
     // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
     // of course, this also block knives {dlb}:
@@ -3161,16 +3166,10 @@ bool monsters::wants_weapon(const item_def &weap) const
         return (false);
     }
 
-    const int brand = get_weapon_brand(weap);
-    const int holy = holiness();
-
-    if (brand == SPWPN_HOLY_WRATH
-        && (holy == MH_DEMONIC || holy == MH_UNDEAD))
-    {
+    if (get_weapon_brand(weap) == SPWPN_HOLY_WRATH && mons_is_unholy(this))
         return (false);
-    }
 
-    return (true);    
+    return (true);
 }
 
 bool monsters::wants_armour(const item_def &item) const

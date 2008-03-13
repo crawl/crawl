@@ -2853,10 +2853,8 @@ static void give_monster_item(
     mthing.link = NON_ITEM;
     unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
-    const mon_holy_type mholy = mons_holiness(mon);
-    
     if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH
-        && (mholy == MH_UNDEAD || mholy == MH_DEMONIC))
+        && mons_is_unholy(mon))
     {
         set_item_ego_type( mthing, OBJ_WEAPONS, SPWPN_NORMAL );
     }

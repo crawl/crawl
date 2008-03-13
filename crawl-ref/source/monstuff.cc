@@ -470,7 +470,7 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
              monster->hit_dice,
              you.experience_level);
 #endif
-        if (random2(you.piety) > 30
+        if (random2(you.piety) > piety_breakpoint(0)
             && random2(you.experience_level) >= random2(monster->hit_dice)
             // bias beaten-up-conversion towards the stronger orcs.
             && random2(monster->hit_dice) > 2)
@@ -480,13 +480,6 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
         }
     }
     return (false);
-}
-
-bool is_mons_evil_demonic_or_undead(monsters *mons)
-{
-    return (mons_holiness(mons) == MH_UNDEAD
-            || mons_holiness(mons) == MH_DEMONIC
-            || mons_is_evil(mons));
 }
 
 static bool is_mons_mutator_or_rotter(monsters *mons)
@@ -710,7 +703,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 || (!created_friendly && gives_xp
                     && (you.religion == GOD_MAKHLEB
                         || you.religion == GOD_SHINING_ONE
-                           && is_mons_evil_demonic_or_undead(monster))
+                           && mons_is_evil_or_unholy(monster))
                     && (!player_under_penance() &&
                         random2(you.piety) >= piety_breakpoint(0))))
             {
@@ -725,7 +718,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             if (!created_friendly && gives_xp
                 && (you.religion == GOD_MAKHLEB || you.religion == GOD_VEHUMET
                     || you.religion == GOD_SHINING_ONE
-                       && is_mons_evil_demonic_or_undead(monster))
+                       && mons_is_evil_or_unholy(monster))
                 && (!player_under_penance()
                     && random2(you.piety) >= piety_breakpoint(0)))
             {
@@ -807,15 +800,15 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
                         if (mons_class_flag( monster->type, M_EVIL ))
                         {
-                            notice |= 
-                                did_god_conduct( 
+                            notice |=
+                                did_god_conduct(
                                         DID_NATURAL_EVIL_KILLED_BY_SERVANT,
                                         monster->hit_dice );
                         }
                     }
                     else if (targ_holy == MH_DEMONIC)
                     {
-                        notice |= did_god_conduct( DID_DEMON_KILLED_BY_SERVANT, 
+                        notice |= did_god_conduct( DID_DEMON_KILLED_BY_SERVANT,
                                                    monster->hit_dice );
                     }
                     else if (targ_holy == MH_UNDEAD)
@@ -828,17 +821,18 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 // Angel kills are always noticed.
                 if (targ_holy == MH_HOLY)
                 {
-                    notice |= did_god_conduct( DID_ANGEL_KILLED_BY_SERVANT, 
+                    notice |= did_god_conduct( DID_ANGEL_KILLED_BY_SERVANT,
                                                monster->hit_dice );
                 }
 
-                if (you.religion == GOD_VEHUMET 
+                if (you.religion == GOD_VEHUMET
                     && notice
-                    && (!player_under_penance() && random2(you.piety) >= 30))
+                    && (!player_under_penance()
+                        && random2(you.piety) >= piety_breakpoint(0)))
                 {
-                    /* Vehumet - only for non-undead servants (coding
-                       convenience, no real reason except that Vehumet
-                       prefers demons) */
+                    // Vehumet - only for non-undead servants (coding
+                    // convenience, no real reason except that Vehumet
+                    // prefers demons)
                     if (you.magic_points < you.max_magic_points)
                     {
                         mpr("You feel your power returning.");
@@ -847,8 +841,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
 
                 if (you.religion == GOD_SHINING_ONE
-                    && is_mons_evil_demonic_or_undead(monster)
-                    && (!player_under_penance() && random2(you.piety) >= 30)
+                    && mons_is_evil_or_unholy(monster)
+                    && (!player_under_penance()
+                        && random2(you.piety) >= piety_breakpoint(0))
                     && i != ANON_FRIENDLY_MONSTER
                     && i >= 0 && i < MAX_MONSTERS)
                 {
@@ -5150,7 +5145,7 @@ static bool is_native_in_branch(const monsters *monster,
 // randomize potential damage
 static int estimated_trap_damage(trap_type trap)
 {
-    switch (trap) 
+    switch (trap)
     {
         case TRAP_BLADE:
            return (10 + random2(30));

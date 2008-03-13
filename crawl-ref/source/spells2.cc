@@ -1070,9 +1070,7 @@ int vampiric_drain(int pow, const dist &vmove)
 
     monster = &menv[mgr];
 
-    const int holy = mons_holiness(monster);
-
-    if (holy == MH_UNDEAD || holy == MH_DEMONIC)
+    if (mons_is_unholy(monster))
     {
         mpr("Aaaarggghhhhh!");
         dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");

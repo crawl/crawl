@@ -2123,7 +2123,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         {
             // A casting of invisibility erases backlight.
             monster->del_ench(ENCH_BACKLIGHT);
-            
+
             // Can't use simple_monster_message here, since it checks
             // for visibility of the monster (and its now invisible) -- bwr
             if (mons_near( monster ))
@@ -2140,7 +2140,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
     }
     case BEAM_CHARM:             /* 9 = charm */
         if (you.religion == GOD_SHINING_ONE
-            && is_mons_evil_demonic_or_undead(monster))
+            && mons_is_evil_or_unholy(monster))
         {
             simple_monster_message(monster, " is repulsed!");
             return (MON_OTHER);
@@ -4216,7 +4216,7 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
         death_check = true;
     }
 
-    if (beam.flavour == BEAM_ENSLAVE_UNDEAD 
+    if (beam.flavour == BEAM_ENSLAVE_UNDEAD
         && mons_holiness(mon) == MH_UNDEAD)
     {
 #if DEBUG_DIAGNOSTICS

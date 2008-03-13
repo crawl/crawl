@@ -43,16 +43,15 @@
     - mass: if zero, the monster never leaves a corpse (also corpse_thingy)
     - genus: base monster "type" for a classed monsters (i.e. jackal as hound)
     - species: corpse type of monster (i.e. orc for orc wizard)
-    - holiness: 
+    - holiness:
        MH_HOLY       - irritates some gods when killed, immunity from
                         holy wrath weapons
        MH_NATURAL    - baseline monster type
        MH_UNDEAD     - immunity from draining, pain, torment; extra
                         damage from holy wrath/disruption; affected by
                         repel undead and holy word
-       MH_DEMONIC    - similar to undead, but holy wrath does even more
-                        damage and repel undead effects are ignored -- *no*
-                        automatic hellfire resistance
+       MH_DEMONIC    - similar to undead, but repel undead effects are
+                        ignored -- *no* automatic hellfire resistance
        MH_NONLIVING  - golems and other constructs
        MH_PLANT      - plants
 
@@ -82,7 +81,7 @@
      CE_CLEAN,           can be healthily eaten by non-Ghoul characters
      CE_CONTAMINATED,    occasionally causes sickness
      CE_POISONOUS,       hazardous to characters without poison resistance
-     CE_HCL,             causes rotting
+     CE_HCL,             causes rotting in non-Ghoul characters
      CE_MUTAGEN_RANDOM,  mutagenous
      CE_MUTAGEN_GOOD,  // may be worth implementing {dlb}
      CE_MUTAGEN_BAD,   // may be worth implementing {dlb}

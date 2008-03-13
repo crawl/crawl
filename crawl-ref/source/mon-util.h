@@ -633,6 +633,7 @@ bool mons_was_seen(const monsters *m);
 bool mons_is_known_mimic(const monsters *m);
 bool mons_is_evil( const monsters *mon );
 bool mons_is_unholy( const monsters *mon );
+bool mons_is_evil_or_unholy( const monsters *mons );
 bool mons_is_icy(const monsters *mon);
 bool mons_is_icy(int mtype);
 bool mons_has_lifeforce( const monsters *mon );
