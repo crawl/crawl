@@ -789,7 +789,7 @@ static void good_god_follower_attitude_change(monsters *monster)
 
         monster->attitude = ATT_HOSTILE;
         behaviour_event(monster, ME_ALERT, MHITYOU);
-        // CREATED_FRIENDLY stays -> no piety bonus on killing these
+        // WAS_NEUTRAL stays -> no piety bonus on killing these
 
         // give message only sometimes
         if (player_monster_visible(monster) && random2(4))
