@@ -42,7 +42,7 @@ void dec_penance(god_type god, int val);
 bool did_god_conduct(conduct_type thing_done, int pgain, bool known = true,
                      const monsters *victim = NULL);
 
-void excommunication(void);
+void excommunication(god_type new_god = GOD_NO_GOD);
 void gain_piety(int pgn);
 void god_speaks(god_type god, const char *mesg );
 void lose_piety(int pgn);

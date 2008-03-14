@@ -368,6 +368,7 @@ static bool holy_beings_attitude_change();
 static bool beogh_followers_abandon_you(void);
 static void dock_piety(int piety_loss, int penance);
 static bool make_god_gifts_disappear(bool level_only = true);
+static bool make_god_gifts_neutral(bool level_only = true);
 static bool make_god_gifts_hostile(bool level_only = true);
 
 bool is_evil_god(god_type god)
@@ -2863,16 +2864,15 @@ static bool holy_beings_on_level_attitude_change()
                     success = true;
                 }
             }
-
-            // If you worship an evil god, you make all non-hostile holy
-            // beings hostile.
-            if (is_evil_god(you.religion))
+            // If you don't worship a good god, you make all non-hostile
+            // holy beings hostile.
+            else
             {
                 if (monster->attitude != ATT_HOSTILE)
                 {
                     monster->attitude = ATT_HOSTILE;
                     monster->behaviour = BEH_HOSTILE;
-                    // for now CREATED_FRIENDLY stays
+                    // for now WAS_NEUTRAL stays
 
                     success = true;
                 }
@@ -2919,7 +2919,7 @@ static bool god_gifts_disappear_wrapper()
 
 // Make friendly god gifts disappear on all levels, or on only the
 // current one.
-bool make_god_gifts_disappear(bool level_only)
+static bool make_god_gifts_disappear(bool level_only)
 {
    bool success = make_god_gifts_on_level_disappear(true);
 
@@ -2927,6 +2927,46 @@ bool make_god_gifts_disappear(bool level_only)
        return (success);
 
    return (apply_to_all_dungeons(god_gifts_disappear_wrapper) || success);
+}
+
+// When abandoning the god in question, turn friendly god gifts neutral.
+// If seen, only count monsters where the player can see the change, and
+// output a message.
+static bool make_god_gifts_on_level_neutral(bool seen = false)
+{
+    int count = 0;
+    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    {
+        monsters *monster = &menv[i];
+        if (monster->type != -1
+            && monster->attitude == ATT_FRIENDLY
+            && (monster->flags & MF_GOD_GIFT))
+        {
+            // monster changes attitude
+            monster->attitude = ATT_NEUTRAL;
+
+            if (!seen || simple_monster_message(monster, " becomes indifferent."))
+                count++;
+        }
+    }
+    return (count);
+}
+
+static bool god_gifts_neutral_wrapper()
+{
+    return (make_god_gifts_on_level_neutral());
+}
+
+// Make friendly god gifts turn neutral on all levels, or on only the
+// current one.
+static bool make_god_gifts_neutral(bool level_only)
+{
+    bool success = make_god_gifts_on_level_neutral(true);
+
+    if (level_only)
+        return (success);
+
+    return (apply_to_all_dungeons(god_gifts_neutral_wrapper) || success);
 }
 
 // When abandoning the god in question, turn friendly god gifts hostile.
@@ -2959,7 +2999,7 @@ static bool god_gifts_hostile_wrapper()
 
 // Make friendly god gifts turn hostile on all levels, or on only the
 // current one.
-bool make_god_gifts_hostile(bool level_only)
+static bool make_god_gifts_hostile(bool level_only)
 {
     bool success = make_god_gifts_on_level_hostile(true);
 
@@ -3312,7 +3352,7 @@ void beogh_convert_orc(monsters *orc, bool emergency)
     behaviour_event(orc, ME_ALERT, MHITNOT);
 }
 
-void excommunication(void)
+void excommunication(god_type new_god)
 {
     const god_type old_god = you.religion;
     god_acting gdact(old_god, true);
@@ -3418,7 +3458,12 @@ void excommunication(void)
             you.attribute[ATTR_DIVINE_SHIELD] = 0;
             you.redraw_armour_class = true;
         }
-        make_god_gifts_hostile(false);
+
+        if (!is_good_god(new_god))
+            make_god_gifts_hostile(false);
+        else
+            make_god_gifts_neutral(false);
+
         inc_penance( old_god, 50 );
         break;
 
@@ -3429,6 +3474,14 @@ void excommunication(void)
     default:
         inc_penance( old_god, 25 );
         break;
+    }
+
+    // When you leave one of the good gods for a non-good god, or no
+    // god, you make all non-hostile holy beings hostile.
+    if (!is_good_god(new_god))
+    {
+        if (holy_beings_attitude_change())
+            mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
     }
 }                               // end excommunication()
 
@@ -3892,7 +3945,7 @@ void god_pitch(god_type which_god)
 
     // Leave your prior religion first.
     if (you.religion != GOD_NO_GOD)
-        excommunication();
+        excommunication(which_god);
 
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
@@ -3948,15 +4001,6 @@ void god_pitch(god_type which_god)
             inc_penance(GOD_SHINING_ONE, 30);
             god_speaks(GOD_SHINING_ONE,
                        "\"You will pay for your evil ways, mortal!\"");
-        }
-
-        // When you leave one of the good gods for an evil god, you make
-        // all non-hostile holy beings hostile.
-        if (you.penance[GOD_ZIN] || you.penance[GOD_SHINING_ONE] ||
-            you.penance[GOD_ELYVILON])
-        {
-            if (holy_beings_attitude_change())
-                mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
         }
     }
 
