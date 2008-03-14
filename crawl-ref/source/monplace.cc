@@ -1616,7 +1616,7 @@ coord_def find_newmons_square(int mons_class, int x, int y)
         pos.x = empty[0];
         pos.y = empty[1];
     }
-    
+
     return (pos);
 }
 
@@ -1624,7 +1624,7 @@ bool player_angers_monster(monsters *creation)
 {
     // get the drawbacks, not the benefits...
     // (to prevent demon-scumming)
-    if (is_good_god(you.religion) && mons_is_unholy(creation))
+    if (is_good_god(you.religion) && mons_is_evil_or_unholy(creation))
     {
         if ( creation->attitude != ATT_HOSTILE )
         {
