@@ -3828,6 +3828,7 @@ bool give_items_skills()
                         {
                             Options.prev_pr
                                      = static_cast<god_type>(Options.prev_pr);
+                            you.religion = Options.prev_pr;
                             break;
                         }
                         keyn = '*'; // for ng_pr setting
