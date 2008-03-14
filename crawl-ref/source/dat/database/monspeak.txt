@@ -2161,7 +2161,7 @@ w:5
 
 @The_monster@ shouts, "Fear not, @player_name@!  Beogh smiles on those who fall in battle!"
 
-@The_monster@ lets loose a series of foul curses in the name of Beogh.
+@The_monster@ lets loose a series of foul curses in Beogh's name.
 
 @The_monster@ @says_or_shouts@, "I fight for @player_name@, for Beogh rules over all!"
 
