@@ -22,6 +22,7 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "player.h"
+#include "religion.h"
 #include "stuff.h"
 #include "spells4.h"
 #include "terrain.h"
