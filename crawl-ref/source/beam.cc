@@ -2130,7 +2130,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
             {
                 mprf("%s flickers %s",
                      monster_name.c_str(),
-                     player_monster_visible(monster) ? "for a moment." 
+                     player_monster_visible(monster) ? "for a moment."
                                                      : "and vanishes!" );
             }
 
@@ -2139,8 +2139,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         return (MON_AFFECTED);
     }
     case BEAM_CHARM:             /* 9 = charm */
-        if (you.religion == GOD_SHINING_ONE
-            && mons_is_evil_or_unholy(monster))
+        if (is_good_god(you.religion) && mons_is_evil_or_unholy(monster))
         {
             simple_monster_message(monster, " is repulsed!");
             return (MON_OTHER);
@@ -4231,7 +4230,7 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
         beam.obvious_effect = true;
-        if (you.religion == GOD_SHINING_ONE)
+        if (is_good_god(you.religion))
         {
             simple_monster_message(mon, " is repulsed!");
             return (MON_OTHER);
@@ -4244,7 +4243,7 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
         return (MON_AFFECTED);
     }
 
-    if (beam.flavour == BEAM_ENSLAVE_DEMON 
+    if (beam.flavour == BEAM_ENSLAVE_DEMON
         && mons_holiness(mon) == MH_DEMONIC)
     {
 #if DEBUG_DIAGNOSTICS
@@ -4261,9 +4260,9 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
         // already friendly
         if (mons_friendly(mon))
             return (MON_UNAFFECTED);
-        
+
         beam.obvious_effect = true;
-        if (you.religion == GOD_SHINING_ONE)
+        if (is_good_god(you.religion))
         {
             simple_monster_message(mon, " is repulsed!");
             return (MON_OTHER);
