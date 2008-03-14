@@ -1512,7 +1512,7 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 
     case CE_POISONOUS:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-                || player_res_poison() > 0 && you.species != SP_VAMPIRE)
+                || player_res_poison() > 0)
         {
             this_chunk_effect = CE_CLEAN;
         }
@@ -1682,17 +1682,32 @@ static bool vampire_consume_corpse(const int mons_type, const int max_chunks,
                       break;
                   case CE_CONTAMINATED:
                       food_value = mass / (random2(3) + 1);
-                      mpr( "Somehow that blood was not very filling!" );
+                      mpr( "Somehow this blood was not very filling!" );
                       break;
                   case CE_POISONOUS:
-                      food_value = random2(mass) - mass/2;
-                      mpr( "Blech - that blood tastes nasty!" );
+                      food_value = -random2(mass/2);
+                      mpr( "Blech - this blood tastes nasty!" );
+                      if (poison_player( 3 + random2(4) ))
+                          xom_is_stimulated(random2(128));
                       break;
                   case CE_MUTAGEN_RANDOM:
                       food_value = random2(mass);
-                      mpr( "That blood tastes really weird!" );
+                      mpr( "This blood tastes really weird!" );
                       mutate(RANDOM_MUTATION);
+                      did_god_conduct( DID_DELIBERATE_MUTATING, 10);
                       xom_is_stimulated(100);
+                      break;
+                  case CE_MUTAGEN_BAD:
+                      food_value = random2(mass/2);
+                      mpr("This blood tastes *really* weird.");
+                      give_bad_mutation();
+                      did_god_conduct( DID_DELIBERATE_MUTATING, 10);
+                      xom_is_stimulated(random2(200));
+                      break;
+                  case CE_HCL:
+                      rot_player( 10 + random2(10) );
+                      if (disease_player( 50 + random2(100) ))
+                          xom_is_stimulated(random2(100));
                       break;
                }
         }

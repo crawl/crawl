@@ -2036,7 +2036,8 @@ bool melee_attack::apply_damage_brand()
 
             // don't drink poisonous or mutagenic blood
             if (mons_has_blood(def->type)
-                && (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED))
+                && (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
+                    || chunk_type == CE_POISONOUS && player_res_poison() ))
             {
                 mprf( "You draw %s's blood!",
                       def->name(DESC_NOCAP_THE, true).c_str() );

@@ -971,9 +971,9 @@ int player_regen(void)
             return (rr);
          case HS_FULL:
          case HS_VERY_FULL:
-            return (rr + 20);
+            return (rr + 10);
          case HS_ENGORGED:
-            return (rr + 40);
+            return (rr + 20);
         }
     }
 
@@ -1419,6 +1419,10 @@ int player_res_torment(bool)
 int player_res_poison(bool calc_unid, bool temp)
 {
     int rp = 0;
+
+    // only thirsty vampires are naturally poison resistant
+    if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY)
+        rp++;
 
     /* rings of poison resistance */
     rp += player_equip( EQ_RINGS, RING_POISON_RESISTANCE, calc_unid );
@@ -3153,7 +3157,7 @@ void level_change(bool skip_ability_increase)
                     redraw_screen();
                 }
 
-                if (you.experience_level == 18)
+                if (you.experience_level == 14)
                 {
                     switch (you.species)
                     {
@@ -3163,12 +3167,14 @@ void level_change(bool skip_ability_increase)
                     case SP_WHITE_DRACONIAN:
                         perma_mutate(MUT_COLD_RESISTANCE, 1);
                         break;
-                    case SP_BLACK_DRACONIAN:
-                        perma_mutate(MUT_SHOCK_RESISTANCE, 1);
-                        break;
                     default:
                         break;
                     }
+                }
+                else if (you.species == SP_BLACK_DRACONIAN
+                         && you.experience_level == 18)
+                {
+                    perma_mutate(MUT_SHOCK_RESISTANCE, 1);
                 }
 
                 if (!(you.experience_level % 3))
@@ -3581,6 +3587,60 @@ void display_char_status()
         mpr( "You are standing in death's doorway." );
     else
         mpr( "You are alive." );
+        
+    if (you.species == SP_VAMPIRE)
+    {
+        std::string msg = "At your current hunger state you ";
+        std::vector<std::string> attrib;
+        
+        switch (you.hunger_state)
+        {
+           case HS_STARVING:
+               attrib.push_back("resist poison");
+               attrib.push_back("are susceptible to fire");
+               attrib.push_back("significantly resist cold");
+               attrib.push_back("strongly resist negative energy");
+               attrib.push_back("resist torment");
+               if (you.experience_level >= 13)
+                   attrib.push_back("are in touch with the powers of death");
+               attrib.push_back("do not heal!");
+               break;
+           case HS_NEAR_STARVING:
+               attrib.push_back("resist poison");
+               attrib.push_back("significantly resist cold");
+               attrib.push_back("strongly resist negative energy");
+               if (you.experience_level >= 13)
+                   attrib.push_back("are in touch with the powers of death");
+               attrib.push_back("heal slowly!");
+               break;
+           case HS_HUNGRY:
+           case HS_VERY_HUNGRY:
+               attrib.push_back("resist poison");
+               attrib.push_back("resist cold");
+               attrib.push_back("significantly resist negative energy");
+               if (you.experience_level >= 13)
+                   attrib.push_back("are in touch with the powers of death");
+               attrib.push_back("heal slowly!");
+               break;
+           case HS_SATIATED:
+               attrib.push_back("resist negative energy.");
+               break;
+           case HS_FULL:
+           case HS_VERY_FULL:
+               attrib.push_back("heal quickly.");
+               break;
+           case HS_ENGORGED:
+               attrib.push_back("heal extremely quickly.");
+               break;
+        }
+        
+        if (!attrib.empty())
+        {
+            msg += comma_separated_line(attrib.begin(), attrib.end(),
+                                        ", and ", ", ");
+            mpr(msg.c_str());
+        }
+    }
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -3644,18 +3704,9 @@ void display_char_status()
         mpr( "You are praying." );
 
     if (you.disease && !you.duration[DUR_REGENERATION]
-        || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+        && (you.species != SP_VAMPIRE || you.hunger_state > HS_STARVING))
     {
         mpr("You do not heal.");
-    }
-    else if (you.species == SP_VAMPIRE)
-    {
-        if (you.hunger_state <= HS_HUNGRY)
-            mpr("You heal slowly.");
-        else if (you.hunger_state == HS_ENGORGED)
-            mpr("You heal very quickly.");
-        else if (you.hunger_state >= HS_FULL)
-            mpr("You heal quickly.");
     }
     
     if (you.duration[DUR_REGENERATION]
@@ -4998,7 +5049,8 @@ bool rot_player( int amount )
     if (amount <= 0)
         return false;
 
-    if (you.is_undead)
+    if (you.is_undead
+        && (you.species != SP_VAMPIRE || you.hunger_state <= HS_HUNGRY))
     {
         mpr( "You feel terrible." );
         return false;
@@ -5648,9 +5700,9 @@ int player::damage_brand(int)
 
         case TRAN_BAT:
             if (you.species == SP_VAMPIRE && one_chance_in(5))
-            {
                 ret = SPWPN_VAMPIRICISM;
-            } // else fall through
+            break;
+            
         default:
             break;
         }
