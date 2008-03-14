@@ -2204,9 +2204,8 @@ static void rot_inventory_food(long time_delta)
 {
     // Update all of the corpses and food chunks in the player's
     // inventory {should be moved elsewhere - dlb}
-
     bool burden_changed_by_rot = false;
-    int blood_num, congealed_blood_num = 0;
+    int blood_num = 0, congealed_blood_num = 0;
     std::vector<char> rotten_items;
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -2215,7 +2214,7 @@ static void rot_inventory_food(long time_delta)
 
         if (!food_item_needs_time_check(you.inv[i]))
             continue;
-            
+
         if ((time_delta / 20) >= you.inv[i].special)
         {
             if (you.inv[i].base_type == OBJ_FOOD
@@ -2326,7 +2325,7 @@ static void rot_inventory_food(long time_delta)
 
         learned_something_new(TUT_ROTTEN_FOOD);
     }
-    
+
     if (congealed_blood_num)
     {
         std::string msg = "";
@@ -2351,7 +2350,7 @@ static void rot_inventory_food(long time_delta)
 //
 // handle_time
 //
-// Do various time related actions... 
+// Do various time related actions...
 // This function is called about every 20 turns.
 //
 //---------------------------------------------------------------
