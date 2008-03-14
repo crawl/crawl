@@ -2871,7 +2871,7 @@ static bool holy_beings_on_level_attitude_change()
                 if (monster->attitude != ATT_HOSTILE)
                 {
                     monster->attitude = ATT_HOSTILE;
-                    monster->behaviour = BEH_HOSTILE;
+                    behaviour_event(monster, ME_ALERT, MHITYOU);
                     // for now WAS_NEUTRAL stays
 
                     success = true;
@@ -2982,8 +2982,9 @@ static bool make_god_gifts_on_level_hostile(bool seen = false)
             && monster->attitude == ATT_FRIENDLY
             && (monster->flags & MF_GOD_GIFT))
         {
-            // monster changes attitude
+            // monster changes attitude and behaviour
             monster->attitude = ATT_HOSTILE;
+            behaviour_event(monster, ME_ALERT, MHITYOU);
 
             if (!seen || simple_monster_message(monster, " turns against you!"))
                 count++;
@@ -3028,7 +3029,7 @@ static bool orcish_followers_on_level_abandon_you()
 #endif
 
             monster->attitude = ATT_HOSTILE;
-            monster->behaviour = BEH_HOSTILE;
+            behaviour_event(monster, ME_ALERT, MHITYOU);
             // for now CREATED_FRIENDLY stays
 
             success = true;
@@ -3092,7 +3093,7 @@ static bool beogh_followers_abandon_you()
                             }
 
                             monster->attitude = ATT_HOSTILE;
-                            monster->behaviour = BEH_HOSTILE;
+                            behaviour_event(monster, ME_ALERT, MHITYOU);
                             // for now CREATED_FRIENDLY stays
 
                             if (player_monster_visible(monster))
