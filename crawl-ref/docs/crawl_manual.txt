@@ -394,7 +394,7 @@ the search are (or have been) located; you can then travel there or
 examine the pile. The Find command will also search in shop inventories.
 Furthermore, you can search skills like 'long blades' (this will find 
 all weapons training the long blades skill) or general terms like 
-'shop', 'altar', 'portal', 'artefact', 'dart trap' etc.
+'shop', 'altar', 'portal', 'artefact', 'dart trap', etc.
 
 The above assumes that use of the default option 'stash_tracking =
 all'. If for some reasons (e.g. to speed up performance) you've
@@ -627,7 +627,7 @@ battle-axes and polearms. Each type of weapon does a different amount
 of damage, has a different chance of hitting its target, and takes a 
 different amount of time to swing. There are several weapon skills 
 (press 'm' to show a list of those that you are training) like Short 
-Blades, Long Blades, Axes, Unarmed Combat etc. These skills affect 
+Blades, Long Blades, Axes, Unarmed Combat, etc. These skills affect 
 damage, accuracy, and speed.
 
 Weapons can be enchanted; when they are identified, they have values
@@ -687,10 +687,10 @@ section I (Targeting).
 ---------
 This is also rather important. Most worn armour improves your Armour
 Class, which decreases the amount of damage you take when something
-injures you. Body armour (robes, mails etc.) come in two types: light
-armour (e.g. robes and leather armours, also all elven armours) and
-heavy armours (scale mails, ring mails etc.). Both help with damage
-reduction but heavy armours do so more reliable.  Unfortunately, the 
+injures you. Body armour (robes, mails, etc.) come in two types: light
+armours (e.g. robes and leather armours, also all elven armours) and
+heavy armours (scale mails, ring mails, etc.). Both help with damage
+reduction, but heavy armours do so more reliably.  Unfortunately, the 
 heavier types of armour also hamper your melee speed, making it easier 
 for monsters to hit you (i.e. reducing the evasion score) and making 
 it harder for you to hit monsters. These effects can be mitigated by a
@@ -997,7 +997,7 @@ There are some shortcuts while targeting:
 
 It is possible to target yourself: obviously beneficial effects like 
 hasting or healing will actually target the cursor on you, leaving to you
-only the pressing of '.', Enter etc. - except if you want to heal or 
+only the pressing of '.', Enter, etc. - except if you want to heal or 
 haste someone else. If you target yourself while firing something harmful
 (which can be sensible at times), you will be asked for confirmation.
 
@@ -1157,7 +1157,7 @@ keyboard layout makes some key awkward to use. You can also define
 macros: these are command sequences which can make playing a great deal
 more convenient. Note that mapping 'a' to some other key will treat 
 almost all pressings of 'a' in that new way (including dropping and 
-wielding etc.), so is not recommended. Macroing 'a' to some other key 
+wielding, etc.), so is not recommended. Macroing 'a' to some other key 
 will only change the command key 'a'.
 
 You can set up key maps and macros in-game with the ~ key (Ctrl-D will
@@ -2010,7 +2010,7 @@ There are a number of individual weapon skills for missile weapons:
      o  Slings
 
 Throwing is the skill for all things hurled without a launcher: axes,
-spears, stones, nets etc. The other skills refer to various types of
+spears, stones, nets, etc. The other skills refer to various types of
 missiles shot with a launcher. Since stones can be thrown without 
 launchers to good effect, these skills crosstrain:
 
@@ -2067,7 +2067,7 @@ Walking and fighting in heavy armour will train the Armour skill. If the
 Armour skill is high enough to offset the EV penalty, even a heavy 
 armour will train Dodging. Also, Armour skill helps mitigate the bad 
 effects of heavy armour on spellcasting. A really high Armour skill will 
-also increase the AC provided by other types of armour (gloves, cloaks
+also increase the AC provided by other types of armour (gloves, cloaks, 
 etc.). 
 
 Dodging:
@@ -2310,9 +2310,9 @@ Stashes:
                         can use regular expressions and also terms like
                         'long blades', 'shop', 'altar', 'artefact'.
                         If you are looking for altars to a special god,
-                        a search for 'Trog' etc. works. If all items are
-                        stashed (the default), then a string like 'D:13'
-                        will list all known items on that level.
+                        a search for 'Trog' , etc. works. If all items
+                        are stashed (the default), then a string like
+                        'D:13' will list all known items on that level.
                         'D:1}' will search for items on level 1 only,
                         as opposed to 'D:1', which will also list items
                         on D:10 through D:19.
@@ -2360,7 +2360,7 @@ level_map_title option to get rid of that.
                         through all items and piles).
         /               Cycle backward through stashes.
         Ctrl-C          Clear level and main maps (from temporarily 
-                        seen monsters, clouds etc.).
+                        seen monsters, clouds, etc.).
 	Ctrl-F          Forget level map.
 
 Waypoints can be set on the level map. You can travel to waypoints 
@@ -2566,7 +2566,7 @@ regardless of their actual inventory letter. For example, if an item's
 inscription contains "@w9", you can type 'w9' in order to wield it. 
 Instead of the 9, any other digit works as well. And instead of 'w'ield,
 any other command used for handling items can be used: 'e'at, r'ead, 
-'q'uaff, 'z'ap etc. Using "@*9" will make any action command followed 
+'q'uaff, 'z'ap, etc. Using "@*9" will make any action command followed 
 by '9' use this item.
 
 Safety inscriptions
@@ -2618,7 +2618,7 @@ reading. The default inscriptions use the following general ideas:
   +XXX   signifies an ability you can invoke via the 'a' command
   -XXX   signifies a suppressed ability
   XXX+   is a stronger version of property XXX
-  XX+6   means a boost to some numerical stat (similar with XX-2 etc.)
+  XX+6   means a boost to some numerical stat (similar with XX-2, etc.)
 
 Here is the full list:
 
