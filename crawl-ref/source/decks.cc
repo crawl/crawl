@@ -2265,8 +2265,12 @@ static void crusade_card(int power, deck_rarity_type rarity)
                 mons_friendly(monster) ||
                 mons_holiness(monster) != MH_NATURAL ||
                 mons_is_unique(monster->type) ||
-                mons_immune_magic(monster))
+                mons_immune_magic(monster) ||
+                (you.religion == GOD_SHINING_ONE
+                    && mons_is_evil(monster)))
+            {
                 continue;
+            }
 
             // Note that this bypasses the magic resistance
             // (though not immunity) check. Specifically,
