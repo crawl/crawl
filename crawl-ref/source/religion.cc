@@ -364,8 +364,7 @@ void dec_penance(god_type god, int val);
 void dec_penance(int val);
 void inc_penance(god_type god, int val);
 void inc_penance(int val);
-static bool holy_beings_attitude_change();
-static bool evil_beings_attitude_change();
+static bool moral_beings_attitude_change();
 static bool beogh_followers_abandon_you(void);
 static void dock_piety(int piety_loss, int penance);
 static bool make_god_gifts_disappear(bool level_only = true);
@@ -416,7 +415,7 @@ void dec_penance(god_type god, int val)
             // When you've worked through all your penance, you get
             // another chance to make hostile holy beings neutral.
             if (is_good_god(you.religion))
-                holy_beings_attitude_change();
+                moral_beings_attitude_change();
 
             // bonuses now once more effective
             if ( god == GOD_BEOGH && you.religion == GOD_BEOGH)
@@ -1828,7 +1827,7 @@ mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)",
             // When you gain a piety level, you get another chance to
             // make hostile holy beings neutral.
             if (is_good_god(you.religion))
-                holy_beings_attitude_change();
+                moral_beings_attitude_change();
         }
     }
 
@@ -1843,7 +1842,7 @@ mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)",
         // When you gain piety of more than 160, you get another chance
         // to make hostile holy beings neutral.
         if (is_good_god(you.religion))
-            holy_beings_attitude_change();
+            moral_beings_attitude_change();
 
         if ((you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
             && you.num_gifts[you.religion] == 0)
@@ -2836,15 +2835,14 @@ void divine_retribution( god_type god )
     dec_penance( god, 1 + random2(3) );
 }
 
-static bool holy_beings_on_level_attitude_change()
+static bool moral_beings_on_level_attitude_change()
 {
     bool success = false;
 
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
-            && mons_class_holiness(monster->type) == MH_HOLY)
+        if (monster->type != -1)
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Attitude changing: %s on level %d, branch %d",
@@ -2853,10 +2851,11 @@ static bool holy_beings_on_level_attitude_change()
                  static_cast<int>(you.where_are_you));
 #endif
 
-            // If you worship a good god, you get another chance to make
-            // hostile holy beings neutral.
-            if (is_good_god(you.religion))
+            if (mons_class_holiness(monster->type) == MH_HOLY &&
+                is_good_god(you.religion))
             {
+                // If you worship a good god, you get another chance to
+                // make hostile holy beings neutral.
                 if (monster->attitude == ATT_HOSTILE &&
                     (monster->flags & MF_ATT_CHANGE_ATTEMPT))
                 {
@@ -2865,50 +2864,14 @@ static bool holy_beings_on_level_attitude_change()
                     success = true;
                 }
             }
-            // If you don't worship a good god, you make all non-hostile
-            // holy beings hostile.
-            else
-            {
-                if (monster->attitude != ATT_HOSTILE)
-                {
-                    monster->attitude = ATT_HOSTILE;
-                    behaviour_event(monster, ME_ALERT, MHITYOU);
-                    // for now WAS_NEUTRAL stays
-
-                    success = true;
-                }
-            }
-        }
-    }
-
-    return success;
-}
-
-static bool holy_beings_attitude_change()
-{
-    return apply_to_all_dungeons(holy_beings_on_level_attitude_change);
-}
-
-static bool evil_beings_on_level_attitude_change()
-{
-    bool success = false;
-
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
-    {
-        monsters *monster = &menv[i];
-        if (monster->type != -1
-            && mons_is_evil_or_unholy(monster))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Attitude changing: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
-                 static_cast<int>(you.where_are_you));
-#endif
-
-            // If you worship a good god, you make all non-hostile evil
-            // and unholy beings hostile.
-            if (is_good_god(you.religion))
+            // If you don't worship a good god, you make all
+            // non-hostile holy beings hostile.  If you do worship a
+            // good god, you make all non-hostile evil and unholy beings
+            // hostile.
+            else if ((mons_class_holiness(monster->type) == MH_HOLY &&
+                !is_good_god(you.religion)) ||
+                    (mons_is_evil_or_unholy(monster) &&
+                        is_good_god(you.religion)))
             {
                 if (monster->attitude != ATT_HOSTILE)
                 {
@@ -2925,9 +2888,9 @@ static bool evil_beings_on_level_attitude_change()
     return success;
 }
 
-static bool evil_beings_attitude_change()
+static bool moral_beings_attitude_change()
 {
-    return apply_to_all_dungeons(evil_beings_on_level_attitude_change);
+    return apply_to_all_dungeons(moral_beings_on_level_attitude_change);
 }
 
 // Make summoned (temporary) friendly god gifts disappear on penance
@@ -3523,7 +3486,7 @@ void excommunication(god_type new_god)
     // god, you make all non-hostile holy beings hostile.
     if (!is_good_god(new_god))
     {
-        if (holy_beings_attitude_change())
+        if (moral_beings_attitude_change())
             mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
     }
 }                               // end excommunication()
@@ -4039,7 +4002,7 @@ void god_pitch(god_type which_god)
     // evil and unholy beings hostile.
     if (is_good_god(you.religion))
     {
-        if (evil_beings_attitude_change())
+        if (moral_beings_attitude_change())
             mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
     }
 
