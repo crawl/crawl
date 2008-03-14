@@ -687,12 +687,15 @@ section I (Targeting).
 ---------
 This is also rather important. Most worn armour improves your Armour
 Class, which decreases the amount of damage you take when something
-injures you. Unfortunately, the heavier types of armour also hamper your
-melee speed, making it easier for monsters to hit you (i.e. reducing the
-evasion score) and making it harder for you to hit monsters. These 
-effects can be mitigated by a high Armour skill. Wearing heavy armour 
-also increases your chances of miscasting spells, an effect which is not
-reduced by your Armour skill.
+injures you. Body armour (robes, mails etc.) come in two types: light
+armour (e.g. robes and leather armours, also all elven armours) and
+heavy armours (scale mails, ring mails etc.). Both help with damage
+reduction but heavy armours do so more reliable.  Unfortunately, the 
+heavier types of armour also hamper your melee speed, making it easier 
+for monsters to hit you (i.e. reducing the evasion score) and making 
+it harder for you to hit monsters. These effects can be mitigated by a
+high Armour skill. Wearing heavy armour also increases your chances of 
+miscasting spells, an effect which is not reduced by your Armour skill.
 
 A Shield normally affects neither your AC or your evasion, but it lets 
 you block some of the attacks aimed at you and absorbs some of the 
@@ -2050,16 +2053,22 @@ Miscellaneous skills:
 
 Armour:
 -------
+Body armours come in two types: heavy and light. Heavy armours give
+some reliable protection from damage (in contrast to light armours) 
+but have several disadvantages. 
 Having a high Armour skill means that you are used to wearing heavy 
 armour, allowing you to move more freely and gain more protection. When
-you look at an armour's description with the 'v' command, this will in 
-particular show you how cumbersome it is. This is measured by the 
-Evasion modifier. Usually, all armours with EV penalty of 0 or -1 are
-considered light. All others are considered heavy except for Elven 
-armour (which is light). Walking and fighting in heavy armour will train
-the Armour skill. If the Armour skill is high enough to offset the
-EV penalty, even a heavy armour will train Dodging. Also, Armour skill
-helps mitigate the bad effects of heavy armour on spellcasting.
+you look at an armour's description (from within the inventory), you can
+see in particular show you how cumbersome it is. This is measured by the
+Evasion modifier. All armours with EV penalty of 0 or -1 are considered 
+light, and all others are considered heavy -- except for Elven armour 
+(which is light). 
+Walking and fighting in heavy armour will train the Armour skill. If the
+Armour skill is high enough to offset the EV penalty, even a heavy 
+armour will train Dodging. Also, Armour skill helps mitigate the bad 
+effects of heavy armour on spellcasting. A really high Armour skill will 
+also increase the AC provided by other types of armour (gloves, cloaks
+etc.). 
 
 Dodging:
 --------
