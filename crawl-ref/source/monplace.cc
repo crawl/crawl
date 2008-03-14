@@ -1624,10 +1624,7 @@ bool player_angers_monster(monsters *creation)
 {
     // get the drawbacks, not the benefits...
     // (to prevent demon-scumming)
-    if ( (you.religion == GOD_ZIN ||
-          you.religion == GOD_SHINING_ONE ||
-          you.religion == GOD_ELYVILON) &&
-         mons_is_unholy(creation) )
+    if (is_good_god(you.religion) && mons_is_unholy(creation))
     {
         if ( creation->attitude != ATT_HOSTILE )
         {
