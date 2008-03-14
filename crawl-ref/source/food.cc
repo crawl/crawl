@@ -219,9 +219,9 @@ bool butchery(int which_corpse)
 
     const transformation_type transform =
         static_cast<transformation_type>(you.attribute[ATTR_TRANSFORMATION]);
- 
+
     // Xom probably likes this, occasionally
-    // Vampires fangs are optimised for biting, not for tearing flesh.
+    // Vampires' fangs are optimised for biting, not for tearing flesh.
     // Other species with this mutation still might benefit from this.
     bool teeth_butcher = (you.mutation[MUT_FANGS] == 3
                           && you.species != SP_VAMPIRE);
@@ -235,7 +235,7 @@ bool butchery(int which_corpse)
     bool can_butcher = teeth_butcher || barehand_butcher
                        || you.equip[EQ_WEAPON] != -1
                           && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
-    
+
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
     {
         mpr("There isn't anything here!");
