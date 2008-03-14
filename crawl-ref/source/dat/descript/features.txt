@@ -90,7 +90,8 @@ A natural trap
 %%%%
 A metal wall
 
-A wall of bluish-grey metal.
+A wall of bluish-grey metal. As every dungeon electrician knows, this
+stuff will ground.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
