@@ -365,6 +365,7 @@ void dec_penance(int val);
 void inc_penance(god_type god, int val);
 void inc_penance(int val);
 static bool holy_beings_attitude_change();
+static bool evil_beings_attitude_change();
 static bool beogh_followers_abandon_you(void);
 static void dock_piety(int piety_loss, int penance);
 static bool make_god_gifts_disappear(bool level_only = true);
@@ -1724,7 +1725,7 @@ static void dock_piety(int piety_loss, int penance)
     else if (penance)       // only if still in religion
     {
         if (last_penance_lecture != you.num_turns)
-            god_speaks( you.religion, 
+            god_speaks( you.religion,
                         "\"You will pay for your transgression, mortal!\"" );
         last_penance_lecture = you.num_turns;
         inc_penance( penance );
@@ -1736,7 +1737,7 @@ void gain_piety(int pgn)
     // Xom uses piety differently...
     if (you.religion == GOD_XOM || you.religion == GOD_NO_GOD)
         return;
- 
+
     // check to see if we owe anything first
     if (you.penance[you.religion] > 0)
     {
@@ -1835,7 +1836,7 @@ mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)",
     {
         // every piety level change also affects AC from orcish gear
         you.redraw_armour_class = true;
-    }    
+    }
 
     if (you.piety > 160 && old_piety <= 160)
     {
@@ -1960,7 +1961,7 @@ bool ely_destroy_weapons()
             else
                 strm << " shimmer and break into pieces." << std::endl;
         }
-        
+
         destroy_item(i);
         success = true;
         i = next;
@@ -2888,6 +2889,47 @@ static bool holy_beings_attitude_change()
     return apply_to_all_dungeons(holy_beings_on_level_attitude_change);
 }
 
+static bool evil_beings_on_level_attitude_change()
+{
+    bool success = false;
+
+    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    {
+        monsters *monster = &menv[i];
+        if (monster->type != -1
+            && mons_is_evil_or_unholy(monster))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Attitude changing: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+
+            // If you worship a good god, you make all non-hostile evil
+            // and unholy beings hostile.
+            if (is_good_god(you.religion))
+            {
+                if (monster->attitude != ATT_HOSTILE)
+                {
+                    monster->attitude = ATT_HOSTILE;
+                    behaviour_event(monster, ME_ALERT, MHITYOU);
+                    // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+
+                    success = true;
+                }
+            }
+        }
+    }
+
+    return success;
+}
+
+static bool evil_beings_attitude_change()
+{
+    return apply_to_all_dungeons(evil_beings_on_level_attitude_change);
+}
+
 // Make summoned (temporary) friendly god gifts disappear on penance
 // or when abandoning the god in question.  If seen, only count monsters
 // where the player can see the change, and output a message.
@@ -3450,7 +3492,7 @@ void excommunication(god_type new_god)
 
     case GOD_ELYVILON:  // never seeks revenge
         break;
-        
+
     case GOD_SHINING_ONE:
         if (you.duration[DUR_DIVINE_SHIELD])
         {
@@ -3993,9 +4035,17 @@ void god_pitch(god_type which_god)
     // Currently penance is just zeroed, this could be much more interesting.
     you.penance[you.religion] = 0;
 
+    // When you start worshipping a good god, you make all non-hostile
+    // evil and unholy beings hostile.
+    if (is_good_god(you.religion))
+    {
+        if (evil_beings_attitude_change())
+            mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
+    }
+
     if (is_evil_god(you.religion))
     {
-        // Note:  Using worshipped[] we could make this sort of grudge
+        // Note: Using worshipped[] we could make this sort of grudge
         // permanent instead of based off of penance. -- bwr
         if (you.penance[GOD_SHINING_ONE])
         {
