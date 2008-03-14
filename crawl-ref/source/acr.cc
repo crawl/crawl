@@ -331,7 +331,7 @@ static void god_greeting_message( bool game_start )
         simple_god_message( " says: Spread the light, my child." );
         break;
     case GOD_SHINING_ONE:
-        simple_god_message( " says: Smite the infidels!" );
+        simple_god_message( " says: Lead the forces of light to victory!" );
         break;
     case GOD_KIKUBAAQUDGHA:
     case GOD_YREDELEMNUL:
