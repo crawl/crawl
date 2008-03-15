@@ -2311,8 +2311,7 @@ static void generate_potion_item(item_def& item, int force_type,
                                             10, POT_DECAY,
                                             0);
         } while ( (stype == POT_POISON && item_level < 1) ||
-                  (stype == POT_STRONG_POISON && item_level < 11) ||
-                  (stype == POT_MUTATION && item_level < 7) );
+                  (stype == POT_STRONG_POISON && item_level < 11) );
                   
         if ( stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY ||
              stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE ||
