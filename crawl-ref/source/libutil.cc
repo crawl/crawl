@@ -295,6 +295,10 @@ std::string pluralise(const std::string &name,
                 return pluralise(name.substr(0, pos)) + name.substr(pos);
             }
     }
+
+    if (!name.empty() && name[name.length() - 1] == ')'
+        && (pos = name.rfind(" (")) != std::string::npos)
+        return (pluralise(name.substr(0, pos)) + name.substr(pos));
     
     if (ends_with(name, "us"))
         // Fungus, ufetubus, for instance.
