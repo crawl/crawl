@@ -2851,8 +2851,7 @@ static bool moral_beings_on_level_attitude_change()
                  static_cast<int>(you.where_are_you));
 #endif
 
-            if (mons_class_holiness(monster->type) == MH_HOLY &&
-                is_good_god(you.religion))
+            if (mons_is_holy(monster) && is_good_god(you.religion))
             {
                 // If you worship a good god, you get another chance to
                 // make hostile holy beings neutral.
@@ -2868,8 +2867,8 @@ static bool moral_beings_on_level_attitude_change()
             // non-hostile holy beings hostile.  If you do worship a
             // good god, you make all non-hostile evil and unholy beings
             // hostile.
-            else if ((mons_class_holiness(monster->type) == MH_HOLY &&
-                !is_good_god(you.religion)) ||
+            else if ((mons_is_holy(monster) &&
+                        !is_good_god(you.religion)) ||
                     (mons_is_evil_or_unholy(monster) &&
                         is_good_god(you.religion)))
             {
@@ -3310,7 +3309,7 @@ static void beogh_orc_spontaneous_conversion_speech(
 
 void good_god_holy_attitude_change(monsters *holy)
 {
-    ASSERT(mons_class_holiness(holy->type) == MH_HOLY);
+    ASSERT(mons_is_holy(holy));
 
     if (player_monster_visible(holy)) // show reaction
     {

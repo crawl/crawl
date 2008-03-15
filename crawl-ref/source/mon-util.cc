@@ -1014,6 +1014,11 @@ int mons_res_negative_energy( const monsters *mon )
     return (u);
 }                               // end mons_res_negative_energy()
 
+bool mons_is_holy( const monsters *mon )
+{
+    return (mons_holiness( mon ) == MH_HOLY);
+}
+
 bool mons_is_evil( const monsters *mon )
 {
     return (mons_class_flag( mon->type, M_EVIL ));
@@ -1026,9 +1031,9 @@ bool mons_is_unholy( const monsters *mon )
     return (holiness == MH_UNDEAD || holiness == MH_DEMONIC);
 }
 
-bool mons_is_evil_or_unholy( const monsters *mons )
+bool mons_is_evil_or_unholy( const monsters *mon )
 {
-    return (mons_is_evil(mons) || mons_is_unholy(mons));
+    return (mons_is_evil(mon) || mons_is_unholy(mon));
 }
 
 bool mons_has_lifeforce( const monsters *mon )

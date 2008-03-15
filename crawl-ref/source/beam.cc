@@ -3774,8 +3774,8 @@ static int affect_monster(bolt &beam, monsters *mon)
 
                 if (mons_friendly( mon ) && beam.flavour != BEAM_CHARM)
                     did_god_conduct( DID_ATTACK_FRIEND, 5, true, mon );
-                    
-                if (mons_holiness( mon ) == MH_HOLY)
+
+                if (mons_is_holy( mon ))
                     did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, true, mon );
 
                 if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
@@ -3940,11 +3940,11 @@ static int affect_monster(bolt &beam, monsters *mon)
             {
                 remove_sanctuary(true);
             }
-            
+
             if (mons_friendly(mon))
                 conduct.set( DID_ATTACK_FRIEND, 5, !okay, mon );
 
-            if (mons_holiness( mon ) == MH_HOLY)
+            if (mons_is_holy(mon))
                 conduct.set( DID_ATTACK_HOLY, mon->hit_dice, !okay, mon );
         }
 

@@ -703,7 +703,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     did_god_conduct(DID_KILL_PRIEST,
                                     monster->hit_dice, true, monster);
 
-                if (mons_holiness(monster) == MH_HOLY)
+                if (mons_is_holy(monster))
                     did_god_conduct(DID_KILL_ANGEL, monster->hit_dice,
                                     true, monster);
 

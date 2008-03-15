@@ -955,7 +955,7 @@ bool melee_attack::player_apply_aux_unarmed()
 
     aux_damage  = hurt_monster(def, aux_damage);
     damage_done = aux_damage;
-    
+
     if (damage_done > 0)
     {
         player_exercise_combat_skills();
@@ -965,10 +965,10 @@ bool melee_attack::player_apply_aux_unarmed()
              defender->name(DESC_NOCAP_THE).c_str(),
              debug_damage_number().c_str(),
              attack_strength_punctuation().c_str());
-                     
+
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster( def, KC_YOU );
-                    
+
         if (mons_holiness(def) == MH_HOLY)
             did_god_conduct(DID_ATTACK_HOLY, 1, true, def);
 
@@ -983,7 +983,7 @@ bool melee_attack::player_apply_aux_unarmed()
             {
                 mprf( "You draw %s's blood!",
                       def->name(DESC_NOCAP_THE, true).c_str() );
-                      
+
                 if (you.hp < you.hp_max)
                 {
                     int heal = 1 + random2(damage_done);

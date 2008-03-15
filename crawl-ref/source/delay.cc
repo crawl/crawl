@@ -86,7 +86,7 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
         return (0);
 
     int resist;
-    const int holiness = mons_holiness(mons);
+    const mon_holy_type holiness = mons_holiness(mons);
     if (holiness == MH_HOLY)
     {
         resist = 7 - random2(you.skills[SK_INVOCATIONS]);
@@ -96,7 +96,7 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
     else
     {
         resist = mons_resist_magic(mons);
-        
+
         // much lower chances at influencing undead/demons
         if (holiness == MH_UNDEAD)
             pow -= 2 + random2(3);
