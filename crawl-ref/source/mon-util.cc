@@ -586,7 +586,6 @@ bool mons_see_invis(const monsters *mon)
     return (false);
 }                               // end mons_see_invis()
 
-
 // This does NOT do line of sight!  It checks the targ's visibility
 // with respect to mon's perception, but doesn't do walls or range.
 bool mons_monster_visible( const monsters *mon, const monsters *targ )
@@ -643,18 +642,17 @@ int mons_zombie_base(const monsters *monster)
     return (monster->number);
 }
 
+bool mons_class_is_zombified(int mc)
+{
+    return (mc == MONS_ZOMBIE_SMALL || mc == MONS_ZOMBIE_LARGE
+            || mc == MONS_SKELETON_SMALL || mc == MONS_SKELETON_LARGE
+            || mc == MONS_SIMULACRUM_SMALL || mc == MONS_SIMULACRUM_LARGE
+            || mc == MONS_SPECTRAL_THING);
+}
+
 bool mons_is_zombified(const monsters *monster)
 {
-    switch (monster->type)
-    {
-    case MONS_ZOMBIE_SMALL: case MONS_ZOMBIE_LARGE:
-    case MONS_SKELETON_SMALL: case MONS_SKELETON_LARGE:
-    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-    case MONS_SPECTRAL_THING:
-        return (true);
-    default:
-        return (false);
-    }
+    return mons_class_is_zombified(monster->type);
 }
 
 int downscale_zombie_damage(int damage)

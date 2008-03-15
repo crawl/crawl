@@ -1182,14 +1182,11 @@ static bool valid_morph( monsters *monster, int new_mclass )
         || new_mclass == MONS_GLOWING_SHAPESHIFTER
 
         // These require manual setting of mons.number to indicate
-        // what they are a simulacrum/zombie of, which we currently
-        // aren't smart enough to handle.
-        || new_mclass == MONS_SIMULACRUM_LARGE
-        || new_mclass == MONS_SIMULACRUM_SMALL
-        || new_mclass == MONS_ZOMBIE_SMALL
-        || new_mclass == MONS_ZOMBIE_LARGE
+        // what they are a skeleton/zombie/simulacrum/spectral thing of,
+        // which we currently aren't smart enough to handle.
+        || mons_class_is_zombified(new_mclass)
 
-        // These shouldn't happen anyways (demons unaffected + holiness check), 
+        // These shouldn't happen anyways (demons unaffected + holiness check),
         // but if we ever do have polydemon, these will be needed:
         || new_mclass == MONS_PLAYER_GHOST
         || new_mclass == MONS_PANDEMONIUM_DEMON
@@ -4424,18 +4421,14 @@ static void handle_monster_move(int i, monsters *monster)
             continue;
         }
 
-        if (monster->type == MONS_ZOMBIE_SMALL
-            || monster->type == MONS_ZOMBIE_LARGE
-            || monster->type == MONS_SIMULACRUM_SMALL
-            || monster->type == MONS_SIMULACRUM_LARGE
-            || monster->type == MONS_SKELETON_SMALL
-            || monster->type == MONS_SKELETON_LARGE)
+        if (mons_is_zombified(monster)
+            && monster->type != MONS_SPECTRAL_THING)
         {
             monster->max_hit_points = monster->hit_points;
         }
 
         if (igrd[monster->x][monster->y] != NON_ITEM
-            && (mons_itemuse(monster->type) == MONUSE_WEAPONS_ARMOUR 
+            && (mons_itemuse(monster->type) == MONUSE_WEAPONS_ARMOUR
                 || mons_itemuse(monster->type) == MONUSE_EATS_ITEMS
                 || monster->type == MONS_NECROPHAGE
                 || monster->type == MONS_GHOUL))
@@ -5647,13 +5640,7 @@ static bool monster_move(monsters *monster)
             && (mons_intel(monster_index(monster)) == I_HIGH
                 || mons_intel(monster_index(monster)) == I_NORMAL)))
     {
-        if (monster->type == MONS_ZOMBIE_SMALL
-            || monster->type == MONS_ZOMBIE_LARGE
-            || monster->type == MONS_SIMULACRUM_SMALL
-            || monster->type == MONS_SIMULACRUM_LARGE
-            || monster->type == MONS_SKELETON_SMALL
-            || monster->type == MONS_SKELETON_LARGE
-            || monster->type == MONS_SPECTRAL_THING)
+        if (mons_is_zombified(monster))
         {
             // for zombies, monster type is kept in mon->number
             if (mons_itemuse(monster->number) >= MONUSE_OPEN_DOORS)
@@ -6181,16 +6168,16 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor)
 
     if (which_descriptor == MDSC_NOMSG_WOUNDS)
     {
+        if (mons_class_is_zombified(which_class)
+            && which_class != MONS_SPECTRAL_THING)
+        {
+            return (true);
+        }
+
         switch (which_class)
         {
         case MONS_RAKSHASA:
         case MONS_RAKSHASA_FAKE:
-        case MONS_SKELETON_LARGE:
-        case MONS_SKELETON_SMALL:
-        case MONS_ZOMBIE_LARGE:
-        case MONS_ZOMBIE_SMALL:
-        case MONS_SIMULACRUM_SMALL:
-        case MONS_SIMULACRUM_LARGE:
             return (true);
         default:
             return (false);

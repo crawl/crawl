@@ -1918,24 +1918,24 @@ static int rot_undead(int x, int y, int pow, int garbage)
     //     rot, discorporeal undead don't rot. if you wanna
     //     insist that monsters get the same treatment as
     //     players, I demand my player mummies get to worship
-    //     the evil mummy & orc god.
+    //     the evil mummy & orc gods.
     switch (menv[mon].type)
     {
-    case MONS_NECROPHAGE:
     case MONS_ZOMBIE_SMALL:
-    case MONS_LICH:
-    case MONS_MUMMY:
-    case MONS_VAMPIRE:
     case MONS_ZOMBIE_LARGE:
-    case MONS_WIGHT:
-    case MONS_GHOUL:
-    case MONS_BORIS:
-    case MONS_ANCIENT_LICH:
-    case MONS_VAMPIRE_KNIGHT:
-    case MONS_VAMPIRE_MAGE:
+    case MONS_MUMMY:
     case MONS_GUARDIAN_MUMMY:
     case MONS_GREATER_MUMMY:
     case MONS_MUMMY_PRIEST:
+    case MONS_GHOUL:
+    case MONS_NECROPHAGE:
+    case MONS_VAMPIRE:
+    case MONS_VAMPIRE_KNIGHT:
+    case MONS_VAMPIRE_MAGE:
+    case MONS_LICH:
+    case MONS_ANCIENT_LICH:
+    case MONS_WIGHT:
+    case MONS_BORIS:
         break;
     case MONS_ROTTING_HULK:
     default:

@@ -535,6 +535,7 @@ int mons_speed(int mclass);
  * *********************************************************************** */
 int mons_zombie_size(int mc);
 int mons_zombie_base(const monsters *monster);
+bool mons_class_is_zombified(int mc);
 bool mons_is_zombified(const monsters *monster);
 
 // last updated 12may2000 {dlb}

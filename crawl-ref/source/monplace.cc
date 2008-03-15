@@ -769,13 +769,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     mgrd[fx][fy] = id;
 
     // generate a brand shiny new monster, or zombie
-    if (mon_type == MONS_ZOMBIE_SMALL
-        || mon_type == MONS_ZOMBIE_LARGE
-        || mon_type == MONS_SIMULACRUM_SMALL
-        || mon_type == MONS_SIMULACRUM_LARGE
-        || mon_type == MONS_SKELETON_SMALL
-        || mon_type == MONS_SKELETON_LARGE
-        || mon_type == MONS_SPECTRAL_THING)
+    if (mons_class_is_zombified(mon_type))
     {
         define_zombie( id, extra, mon_type, power );
     }
