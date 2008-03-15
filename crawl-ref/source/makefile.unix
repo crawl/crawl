@@ -231,14 +231,15 @@ ifeq ($(DATADIR),)
 	$(error DATADIR not set! Set DATADIR and run make clean install again)
 endif
 	mkdir -p $(DATADIR)/dat
+	mkdir -p $(DATADIR)/dat/lua
 	mkdir -p $(DATADIR)/dat/clua
 	mkdir -p $(DATADIR)/dat/descript
 	mkdir -p $(DATADIR)/dat/database
 	cp dat/*.des $(DATADIR)/dat
+	cp dat/lua/*.lua $(DATADIR)/dat/lua
 	cp dat/clua/*.lua $(DATADIR)/dat/clua
 	cp dat/descript/*.txt $(DATADIR)/dat/descript
 	cp dat/database/*.txt $(DATADIR)/dat/database
-	cp -r lua $(DATADIR)/dat
 	mkdir -p $(DATADIR)/docs
 	cp ../docs/*.txt $(DATADIR)/docs
 	chown -R $(INSTALL_UGRP) $(DATADIR)

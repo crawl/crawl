@@ -14,5 +14,5 @@ fi
 if [ -d dat/lua ]; then
 	true
 else
-	cp -r source/lua dat/lua
+	mkdir -p dat/lua && cp source/lua/*.lua dat/lua
 fi
