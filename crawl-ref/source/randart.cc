@@ -479,6 +479,14 @@ void randart_desc_properties( const item_def &item,
     }
 }
 
+inline static void randart_propset( randart_properties_t &p,
+                                    randart_prop_type pt,
+                                    int value,
+                                    bool neg )
+{
+    p[pt] = neg? -value : value;
+}
+
 static int randart_add_one_property( const item_def &item,
                                      randart_properties_t &proprt )
 {
@@ -522,37 +530,29 @@ static int randart_add_one_property( const item_def &item,
     {
     default:
     case 0:
-        if (negench)
-            proprt[RAP_AC] -= 1 + random2(3) + random2(3) + random2(3);
-        else
-            proprt[RAP_AC] = 1 + random2(3) + random2(3) + random2(3);
+        randart_propset(proprt, RAP_AC,
+                        1 + random2(3) + random2(3) + random2(3),
+                        negench);
         break;
     case 1:
-        if (negench)
-            proprt[RAP_EVASION] -= 1 + random2(3) + random2(3) + random2(3);
-        else
-            proprt[RAP_EVASION] = 1 + random2(3) + random2(3) + random2(3);
+        randart_propset(proprt, RAP_EVASION,
+                        1 + random2(3) + random2(3) + random2(3),
+                        negench);
         break;
     case 2:
-        if (negench)
-            proprt[RAP_STRENGTH] -= 1 + random2(3) + random2(3) 
-                + random2(3);
-        else
-            proprt[RAP_STRENGTH] = 1 + random2(3) + random2(2);
+        randart_propset(proprt, RAP_STRENGTH,
+                        1 + random2(3) + random2(3),
+                        negench);
         break;
     case 3:
-        if (negench)
-            proprt[RAP_INTELLIGENCE] -= 1 + random2(3) + random2(3)
-                + random2(3);
-        else
-            proprt[RAP_INTELLIGENCE] = 1 + random2(3) + random2(2);
+        randart_propset(proprt, RAP_INTELLIGENCE,
+                        1 + random2(3) + random2(3),
+                        negench);
         break;
     case 4:
-        if (negench)
-            proprt[RAP_DEXTERITY] -= 1 + random2(3) + random2(3)
-                + random2(3);
-        else
-            proprt[RAP_DEXTERITY] = 1 + random2(3) + random2(2);
+        randart_propset(proprt, RAP_DEXTERITY,
+                        1 + random2(3) + random2(3),
+                        negench);
         break;
     }
 
