@@ -1815,11 +1815,14 @@ std::string feature_description(int mx, int my, bool bloody,
 
     if ( grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR )
     {
-        std::string desc = (grid == DNGN_OPEN_DOOR) ? "open " : "closed ";
-
         std::set<coord_def> all_door;
-        _find_connected_identical(coord_def(mx, my), grd[mx][my], all_door);
-        desc += get_door_noun(all_door.size()).c_str();
+        find_connected_identical(coord_def(mx, my), grd[mx][my], all_door);
+        const char *adj, *noun;
+        get_door_description(all_door.size(), &adj, &noun);
+
+        std::string desc = adj;
+        desc += (grid == DNGN_OPEN_DOOR) ? "open " : "closed ";
+        desc += noun;
 
         if (bloody)
             desc += ", spattered with blood";

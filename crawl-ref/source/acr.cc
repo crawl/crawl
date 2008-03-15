@@ -3440,9 +3440,16 @@ static void open_door(int move_x, int move_y, bool check_confused)
         dx = you.x_pos + door_move.dx;
         dy = you.y_pos + door_move.dy;
 
-        if (!in_bounds(dx, dy) || grd[dx][dy] != DNGN_CLOSED_DOOR)
+        const dungeon_feature_type feat = 
+            in_bounds(dx, dy) ? grd[dx][dy] : DNGN_UNSEEN;
+        if (feat != DNGN_CLOSED_DOOR)
         {
-            mpr( "There's no door there." );
+            switch (feat) {
+            case DNGN_OPEN_DOOR:
+                mpr("It's already open!"); break;
+            default:
+                mpr("There isn't anything that you can open there!"); break;
+            }
             // Don't lose a turn.
             return;
         }
@@ -3451,31 +3458,34 @@ static void open_door(int move_x, int move_y, bool check_confused)
     if (grd[dx][dy] == DNGN_CLOSED_DOOR)
     {
         std::set<coord_def> all_door;
-        _find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
-        const char* noun = get_door_noun(all_door.size()).c_str();
+        find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
+        const char *adj, *noun;
+        get_door_description(all_door.size(), &adj, &noun);
         
         int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
         if (you.duration[DUR_BERSERKER])
         {
+            // XXX: better flavor for larger doors?
             if (silenced(you.x_pos, you.y_pos))
-                mprf("The %s flies open!", noun);
+            {
+                mprf("The %s%s flies open!", adj, noun);
+            }
             else
             {
-                // XXX: better flavor for gateways?
-                mprf("The %s flies open with a bang!", noun);
+                mprf("The %s%s flies open with a bang!", adj, noun);
                 noisy( 15, you.x_pos, you.y_pos );
             }
         }
         else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
         {
-            mprf( "As you open the %s, it creaks loudly!", noun );
+            mprf( "As you open the %s%s, it creaks loudly!", adj, noun );
             noisy( 10, you.x_pos, you.y_pos );
         }
         else
         {
             const char* verb = player_is_airborne() ? "reach down and open" : "open";
-            mprf( "You %s the %s.", verb, noun );
+            mprf( "You %s the %s%s.", verb, adj, noun );
         }
 
         for (std::set<coord_def>::iterator i = all_door.begin();
@@ -3524,11 +3534,14 @@ static void close_door(int door_x, int door_y)
     dx = you.x_pos + door_move.dx;
     dy = you.y_pos + door_move.dy;
 
-    if (grd[dx][dy] == DNGN_OPEN_DOOR)
+    const dungeon_feature_type feat = 
+        in_bounds(dx, dy) ? grd[dx][dy] : DNGN_UNSEEN;
+    if (feat == DNGN_OPEN_DOOR)
     {
         std::set<coord_def> all_door;
-        _find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
-        const char* noun = get_door_noun(all_door.size()).c_str();
+        find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
+        const char *adj, *noun;
+        get_door_description(all_door.size(), &adj, &noun);
 
         const coord_def you_coord(you.x_pos, you.y_pos);
         for (std::set<coord_def>::iterator i = all_door.begin();
@@ -3565,22 +3578,24 @@ static void close_door(int door_x, int door_y)
         if (you.duration[DUR_BERSERKER])
         {
             if (silenced(you.x_pos, you.y_pos))
-                mprf("You slam the %s shut!", noun);
+            {
+                mprf("You slam the %s%s shut!", adj, noun);
+            }
             else
             {
-                mprf("You slam the %s shut with an echoing bang!", noun);
+                mprf("You slam the %s%s shut with an echoing bang!", adj, noun);
                 noisy( 25, you.x_pos, you.y_pos );
             }
         }
         else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
         {
-            mprf("As you close the %s, it creaks loudly!", noun);
+            mprf("As you close the %s%s, it creaks loudly!", adj, noun);
             noisy( 10, you.x_pos, you.y_pos );
         }
         else
         {
             const char* verb = player_is_airborne() ? "reach down and close" : "close";
-            mprf( "You %s the %s.", verb, noun );
+            mprf( "You %s the %s%s.", verb, adj, noun );
         }
 
         for (std::set<coord_def>::iterator i = all_door.begin();
@@ -3593,7 +3608,13 @@ static void close_door(int door_x, int door_y)
     }
     else
     {
-        mpr("There isn't anything that you can close there!");
+        switch (feat)
+        {
+        case DNGN_CLOSED_DOOR:
+            mpr("It's already closed!"); break;
+        default:
+            mpr("There isn't anything that you can close there!"); break;
+        }
     }
 }                               // end open_door()
 

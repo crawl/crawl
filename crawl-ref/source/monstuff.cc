@@ -5277,7 +5277,8 @@ static bool is_trap_safe(const monsters *monster, const int trap_x,
 static void mons_open_door(monsters* monster, const coord_def &pos)
 {
     dungeon_feature_type grid = grd(pos);
-    std::string noun = "door";
+    const char *adj, *noun="door";
+
     bool was_secret = false;
 
     if (grid == DNGN_SECRET_DOOR)
@@ -5292,8 +5293,8 @@ static void mons_open_door(monsters* monster, const coord_def &pos)
     else // maybe several connected doors -> gate
     {
         std::set<coord_def> all_door;
-        _find_connected_identical(pos, grd(pos), all_door);
-        noun = get_door_noun(all_door.size()).c_str();
+        find_connected_identical(pos, grd(pos), all_door);
+        get_door_description(all_door.size(), &adj, &noun);
     
         for (std::set<coord_def>::iterator i = all_door.begin();
              i != all_door.end(); ++i)
@@ -5316,7 +5317,7 @@ static void mons_open_door(monsters* monster, const coord_def &pos)
 
         if (!you.can_see(monster))
         {
-            mprf("Something unseen opens the %s.", noun.c_str());
+            mprf("Something unseen opens the %s%s.", adj, noun);
             interrupt_activity(AI_FORCE_INTERRUPT);
         }
     }
