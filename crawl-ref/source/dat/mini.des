@@ -47,6 +47,8 @@ ENDMAP
 # behind, but still see the monster you're ducking from (and they can
 # still see you
 NAME:  glass_columns_a
+DEPTH: D, Elf, Crypt
+CHANCE: 5
 MAP
 .....
 .m.m.
@@ -56,6 +58,8 @@ MAP
 ENDMAP
 
 NAME:  glass_columns_b
+DEPTH: D, Elf, Crypt
+CHANCE: 3
 MAP
 .......
 .m.m.m.
@@ -67,6 +71,8 @@ MAP
 ENDMAP
 
 NAME:  glass_columns_c
+DEPTH: D, Elf, Crypt
+CHANCE: 2
 MAP
 .........
 .m.m.m.m.
@@ -82,6 +88,7 @@ ENDMAP
 ##########################################################
 # A feature encased in glass, for flavour.
 NAME:  feat_on_display
+DEPTH: D, Elf, Crypt, Vault
 SUBST: ? = TUl
 TAGS:  no_monster_gen no_item_gen
 MAP
@@ -95,6 +102,7 @@ ENDMAP
 #######################################################################
 # An item encased in glass.  If the player wants it, it can be dug out.
 NAME:  item_on_display_a
+DEPTH: D, Elf, Crypt, Vault
 CHANCE: 9
 TAGS:  no_monster_gen no_item_gen
 MAP
@@ -108,6 +116,7 @@ ENDMAP
 #####################################################################
 # A good item encased in transparent stone.
 NAME:  item_on_display_b
+DEPTH: D, Elf, Crypt, Vault
 CHANCE: 1
 TAGS:  no_monster_gen no_item_gen
 MAP
@@ -341,7 +350,7 @@ ENDMAP
 # Treasure trove with Zot trap
 #
 NAME:    zot_lemuel
-DEPTH:   10-27
+DEPTH:   D:10-27, Elf, Vault, Crypt
 TAGS:    allow_dup
 NSUBST:  Z = 4=. / z
 KFEAT:   z = zot trap
@@ -359,7 +368,7 @@ ENDMAP
 #don't you wish you knew apportation?
 #
 NAME: baited_tele_trap
-DEPTH: !Temple
+DEPTH: !Temple, !Slime
 KITEM: x = any good_item, any good_item/nothing, any good_item/nothing
 KFEAT: x = teleport trap
 MAP
@@ -665,9 +674,13 @@ ENDMAP
 ###################################
 # Evil zoo
 #
+# FIXME This vault is somewhat problematic as the doors are treated as
+#       gateways. The ideal fix would be make sure that (formely) secret
+#       doors are never part of gateways.
+#
 NAME: minivault_9
 TAGS: allow_dup
-DEPTH: 15-27
+DEPTH: D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
 MAP
 ==========
 =x========
@@ -1089,6 +1102,7 @@ ENDMAP
 # Solitary fountain
 #
 NAME: solitary_fountain
+DEPTH: D, Elf, Vault
 TAGS: allow_dup
 SUBST: ?=TUV
 MAP
@@ -1440,7 +1454,7 @@ ENDMAP
 # Doghouse (Eino)
 
 NAME:    doghouse
-DEPTH:   4-8
+DEPTH:   D:4-8
 SHUFFLE: 1?T
 SUBST:   T : T V:2
 SUBST:   ? : 1:2 .
