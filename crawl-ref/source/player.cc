@@ -5377,7 +5377,7 @@ void player::init()
     total_skill_points = 0;
 
     attribute.init(0);
-    quiver.init(0);
+    quiver.init(ENDOFPACK);
     sacrifice_value.init(0);
 
     for (int i = 0; i < ENDOFPACK; i++)
