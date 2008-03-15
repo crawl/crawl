@@ -298,7 +298,7 @@ SUBST: 3 = 3L
 SUBST: 1 = 1:20 4
 : end
 SUBST: L = l.
-SUBST: C = C / P:1
+SUBST: C = C P:1
 KFEAT: C = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
 MAP
