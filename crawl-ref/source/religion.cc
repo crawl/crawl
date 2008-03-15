@@ -418,7 +418,7 @@ void dec_penance(god_type god, int val)
                 moral_beings_attitude_change();
 
             // bonuses now once more effective
-            if ( god == GOD_BEOGH && you.religion == GOD_BEOGH)
+            if (god == GOD_BEOGH && you.religion == GOD_BEOGH)
                  you.redraw_armour_class = true;
         }
         else
@@ -556,7 +556,7 @@ static int ammo_count(const item_def *launcher)
 {
     int count = 0;
     const missile_type mt = launcher? fires_ammo_type(*launcher) : MI_DART;
-    
+
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         if (!is_valid_item(you.inv[i]))
@@ -566,7 +566,7 @@ static int ammo_count(const item_def *launcher)
         if (item.base_type == OBJ_MISSILES && item.sub_type == mt)
             count += item.quantity;
     }
-    
+
     return (count);
 }
 
@@ -667,7 +667,7 @@ static void give_nemelex_gift()
 {
     if ( grid_destroys_items(grd[you.x_pos][you.y_pos]) )
         return;
-    
+
     // Nemelex will give at least one gift early.
     if ((you.num_gifts[GOD_NEMELEX_XOBEH] == 0
          && random2(piety_breakpoint(1)) < you.piety) ||
@@ -694,7 +694,7 @@ static void give_nemelex_gift()
 #endif
         update_sacrifice_weights(choice);
 
-        int thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
+        int thing_created = items( 1, OBJ_MISCELLANY, gift_type,
                                    true, 1, MAKE_ITEM_RANDOM_RACE );
 
         if (thing_created != NON_ITEM)
@@ -732,7 +732,7 @@ static void give_nemelex_gift()
 
             move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
             origin_acquired(deck, you.religion);
-                    
+
             simple_god_message(" grants you a gift!");
             more();
             canned_msg(MSG_SOMETHING_APPEARS);
@@ -748,7 +748,7 @@ static void give_nemelex_gift()
 static void do_god_gift(bool prayed_for)
 {
     ASSERT(you.religion != GOD_NO_GOD);
-    
+
     // Zin worshippers are the only ones that can pray to ask Zin for stuff.
     if (prayed_for != (you.religion == GOD_ZIN))
         return;
@@ -758,15 +758,15 @@ static void do_god_gift(bool prayed_for)
 #if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
     int old_gifts = you.num_gifts[ you.religion ];
 #endif
-    
+
     // Consider a gift if we don't have a timeout and weren't
     // already praying when we prayed.
     if (!player_under_penance() && !you.gift_timeout
         || you.religion == GOD_ZIN)
     {
         bool success = false;
-        
-        //   Remember to check for water/lava
+
+        // Remember to check for water/lava
         switch (you.religion)
         {
         default:
@@ -787,7 +787,7 @@ static void do_god_gift(bool prayed_for)
         case GOD_NEMELEX_XOBEH:
             give_nemelex_gift();
             break;
-        
+
         case GOD_OKAWARU:
         case GOD_TROG:
             if (you.piety > 130
@@ -888,7 +888,7 @@ static void do_god_gift(bool prayed_for)
                     else if (!you.had_book[BOOK_ANNIHILATIONS])
                         gift = BOOK_ANNIHILATIONS;  // conj books
 
-                    if (you.skills[SK_CONJURATIONS] < 
+                    if (you.skills[SK_CONJURATIONS] <
                                     you.skills[SK_SUMMONINGS]
                         || gift == NUM_BOOKS)
                     {
