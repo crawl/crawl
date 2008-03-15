@@ -2048,7 +2048,7 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
         " zombie", " skeleton", " simulacrum", NULL
     };
 
-    // This order must match zombie_types, indexed from one. 
+    // This order must match zombie_types, indexed from one.
     static const monster_type zombie_montypes[][2] =
     {
         { MONS_PROGRAM_BUG, MONS_PROGRAM_BUG },
@@ -2076,7 +2076,7 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
 
     s = s.substr(0, s.length() - strlen(zombie_types[mod - 1]));
     trim_string(s);
-    
+
     spec.monnum = get_monster_by_name(s, true);
 
     const int zombie_size = mons_zombie_size(spec.monnum);

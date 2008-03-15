@@ -2001,13 +2001,12 @@ void describe_monsters(monsters& mons)
     symbol_prefix += "_prefix";
     description << getLongDescription(symbol_prefix);
 
-    
     switch (mons.type)
     {
     case MONS_ZOMBIE_SMALL: case MONS_ZOMBIE_LARGE:
         description << getLongDescription("zombie");
         break;
-        
+
     case MONS_SKELETON_SMALL: case MONS_SKELETON_LARGE:
         description << getLongDescription("skeleton");
         break;

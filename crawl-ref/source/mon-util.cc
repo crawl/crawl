@@ -478,7 +478,6 @@ int mons_zombie_size(int mc)
     return (smc->zombie_size);
 }                               // end mons_zombie_size()
 
-
 int mons_weight(int mc)
 {
     return (smc->weight);
@@ -588,7 +587,7 @@ bool mons_see_invis(const monsters *mon)
 }                               // end mons_see_invis()
 
 
-// This does NOT do line of sight!  It checks the targ's visibility 
+// This does NOT do line of sight!  It checks the targ's visibility
 // with respect to mon's perception, but doesn't do walls or range.
 bool mons_monster_visible( const monsters *mon, const monsters *targ )
 {
@@ -601,7 +600,7 @@ bool mons_monster_visible( const monsters *mon, const monsters *targ )
     return (true);
 }
 
-// This does NOT do line of sight!  It checks the player's visibility 
+// This does NOT do line of sight!  It checks the player's visibility
 // with respect to mon's perception, but doesn't do walls or range.
 bool mons_player_visible( const monsters *mon )
 {
@@ -3442,7 +3441,7 @@ bool monsters::fumbles_attack(bool verbose)
 
     if (mons_is_submerged(this))
         return (true);
-    
+
     return (false);
 }
 

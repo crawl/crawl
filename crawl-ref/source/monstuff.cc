@@ -4410,7 +4410,7 @@ static void handle_monster_move(int i, monsters *monster)
         }
         
         handle_behaviour(monster);
-        
+
         // submerging monsters will hide from clouds
         if (monster_can_submerge(monster, grd[monster->x][monster->y])
             && env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)

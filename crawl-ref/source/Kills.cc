@@ -592,7 +592,6 @@ void kill_ghost::load(FILE *file)
 
 kill_monster_desc::kill_monster_desc(const monsters *mon)
 {
-
     monnum = mon->type;
     modifier = M_NORMAL;
     switch (mon->type)
@@ -613,7 +612,7 @@ kill_monster_desc::kill_monster_desc(const monsters *mon)
     }
     if (modifier != M_NORMAL) monnum = mon->number;
 
-    if (mon->has_ench(ENCH_SHAPESHIFTER) || 
+    if (mon->has_ench(ENCH_SHAPESHIFTER) ||
             mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
         modifier = M_SHAPESHIFTER;
 
