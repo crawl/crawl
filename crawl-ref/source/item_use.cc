@@ -1302,6 +1302,9 @@ static void _get_fire_order(std::vector<int>& fire_order)
         const item_def& item = you.inv[i_inv];
         if (!is_valid_item(item))
             continue;
+        if (you.equip[EQ_WEAPON] == i_inv)
+            continue;
+
         // =f prevents item from being in fire order
         if (!Hack_Ignore_F_Inscription &&
             strstr(item.inscription.c_str(), "=f"))
@@ -1310,8 +1313,7 @@ static void _get_fire_order(std::vector<int>& fire_order)
         unsigned int i_flags;
         for (i_flags=0; i_flags<Options.fire_order.size(); i_flags++)
         {
-            if (fire_item_matches(item, Options.fire_order[i_flags])
-                && you.equip[EQ_WEAPON] != i_inv)
+            if (fire_item_matches(item, Options.fire_order[i_flags]))
             {
                 fire_order.push_back( (i_flags<<16) | (i_inv & 0xffff) );
                 break;
