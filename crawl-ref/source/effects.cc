@@ -1896,6 +1896,7 @@ void yell(bool force)
 
     switch (keyn)
     {
+    case '!':                  // for players using the old keyset
     case 't':
         mprf(MSGCH_SOUND, "You %s for attention!", shout_verb.c_str());
         you.turn_is_over = true;

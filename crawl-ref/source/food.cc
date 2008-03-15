@@ -326,7 +326,8 @@ bool butchery(int which_corpse)
                 if (keyin == ' ' || keyin == '\r' || keyin == '\n' ||
                     keyin == 'n' || keyin == 'N')
                     result = 1;
-                if (keyin == 'y' || keyin == 'Y' || keyin == 'c' || keyin == 'C')
+                if (keyin == 'y' || keyin == 'Y' || keyin == 'c' || keyin == 'C' 
+                    || keyin == 'D' )     // D for users of the old keyset
                     result = 2;
             }
 
