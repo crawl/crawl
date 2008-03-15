@@ -675,8 +675,8 @@ ENDMAP
 # Evil zoo
 #
 # FIXME This vault is somewhat problematic as the doors are treated as
-#       gateways. The ideal fix would be make sure that (formely) secret
-#       doors are never part of gateways.
+#       gateways. The ideal fix would be make sure that (formerly)
+#       secret doors are never part of gateways.
 #
 NAME: minivault_9
 TAGS: allow_dup
