@@ -581,7 +581,7 @@ bool melee_attack::player_attack()
     {
         did_hit = true;
         if (Options.tutorial_left)
-            Options.tut_melee_counter++;        
+            Options.tut_melee_counter++;
 
         const bool shield_blocked = attack_shield_blocked(true);
 
@@ -596,12 +596,12 @@ bool melee_attack::player_attack()
 
         bool hit_woke_orc = false;
         if (you.religion == GOD_BEOGH && mons_species(def->type) == MONS_ORC
-            && def->behaviour == BEH_SLEEP && you.species == SP_HILL_ORC
-            && !player_under_penance() && you.piety >= piety_breakpoint(2))
+            && def->behaviour == BEH_SLEEP && !player_under_penance()
+            && you.piety >= piety_breakpoint(2))
         {
             hit_woke_orc = true;
         }
-        
+
         // always upset monster regardless of damage
         behaviour_event(def, ME_WHACK, MHITYOU);
 
