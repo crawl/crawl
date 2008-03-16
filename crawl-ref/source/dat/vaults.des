@@ -205,7 +205,7 @@ KITEM:   o = any good_item
 
 #
 # NW
-SHUFFLE: AC/BD, EG/FH, IKN/NJL, '"
+SHUFFLE: AC/BD, EG/FH, IKN/MJL, '"
 SUBST:   A=., B=xx=, C=+, D=x, E=+, F=xx=, G=., H=x
 SUBST:   I=., M=xx=, J=x, K=+, N=+, L=xx=
 SUBST:   ':$, ":*, ^=^., a:x.
