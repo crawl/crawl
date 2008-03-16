@@ -3080,34 +3080,34 @@ static bool beogh_followers_abandon_you()
     }
     else
     {
-        int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
-        int yend = you.y_pos + 9, xend = you.x_pos + 9;
-        if ( xstart < 0 ) xstart = 0;
-        if ( ystart < 0 ) ystart = 0;
-        if ( xend >= GXM ) xend = GXM;
-        if ( ystart >= GYM ) yend = GYM;
+        const int radius = 9;
+        int monster = -1;
 
         // monster check
-        for ( int y = ystart; y < yend; ++y )
+        for (int x=-radius; x<=radius; x++)
         {
-            for ( int x = xstart; x < xend; ++x )
+            for (int y=-radius; y<=radius; y++)
             {
-                const unsigned short targ_monst = mgrd[x][y];
-                if ( targ_monst != NON_MONSTER )
+                int posx = you.x_pos + x;
+                int posy = you.y_pos + y;
+
+                if (mons_inside_circle(posx, posy, radius) != -1)
                 {
-                    monsters *monster = &menv[targ_monst];
-                    if (mons_species(monster->type) == MONS_ORC
-                        && monster->attitude == ATT_FRIENDLY
-                        && (monster->flags & MF_ATT_CHANGE_ATTEMPT))
+                    monster = mgrd[posx][posy];
+                    monsters *mon = &menv[monster];
+
+                    if (mons_species(mon->type) == MONS_ORC
+                        && mon->attitude == ATT_FRIENDLY
+                        && (mon->flags & MF_ATT_CHANGE_ATTEMPT))
                     {
                         num_followers++;
 
-                        if (mons_player_visible(monster)
-                            && !mons_is_sleeping(monster)
-                            && !mons_is_confused(monster)
-                            && !mons_is_paralysed(monster))
+                        if (mons_player_visible(mon)
+                            && !mons_is_sleeping(mon)
+                            && !mons_is_confused(mon)
+                            && !mons_is_paralysed(mon))
                         {
-                            const int hd = monster->hit_dice;
+                            const int hd = mon->hit_dice;
 
                             // during penance followers get a saving throw
                             if (random2((you.piety-you.penance[GOD_BEOGH])/18) +
@@ -3117,11 +3117,11 @@ static bool beogh_followers_abandon_you()
                                 continue;
                             }
 
-                            monster->attitude = ATT_HOSTILE;
-                            behaviour_event(monster, ME_ALERT, MHITYOU);
+                            mon->attitude = ATT_HOSTILE;
+                            behaviour_event(mon, ME_ALERT, MHITYOU);
                             // for now CREATED_FRIENDLY stays
 
-                            if (player_monster_visible(monster))
+                            if (player_monster_visible(mon))
                                 num_reconvert++; // only visible ones
 
                             reconvert = true;

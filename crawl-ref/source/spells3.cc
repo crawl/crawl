@@ -929,47 +929,50 @@ bool cast_sanctuary(const int power)
     int monster = -1;
 
     for (int x=-radius; x<=radius; x++)
-         for (int y=-radius; y<=radius; y++)
-         {
-              int posx = you.x_pos + x;
-              int posy = you.y_pos + y;
-              int dist = mons_inside_circle(posx, posy, radius);
+    {
+        for (int y=-radius; y<=radius; y++)
+        {
+            int posx = you.x_pos + x;
+            int posy = you.y_pos + y;
+            int dist = mons_inside_circle(posx, posy, radius);
 
-              // scare all hostile monsters inside sanctuary
-              if (dist != -1)
-              {
-                  monster = mgrd[posx][posy];
-                  monsters *mon = &menv[monster];
+            // scare all hostile monsters inside sanctuary
+            if (dist != -1)
+            {
+                monster = mgrd[posx][posy];
+                monsters *mon = &menv[monster];
 
-                  if (!mons_friendly(mon)
-                      && mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
-                  {
-                      behaviour_event(mon, ME_SCARE, MHITYOU);
-                      count++;
-                  }
-              }
+                if (!mons_friendly(mon)
+                    && mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
+                {
+                    behaviour_event(mon, ME_SCARE, MHITYOU);
+                    count++;
+                }
+            }
 
-              // forming patterns
-              if (pattern == 0    // outward rays
-                    && (x == 0 || y == 0 || x == y || x == -y)
-                  || pattern == 1 // circles
-                    && (dist >= (radius-1)*(radius-1) && dist <= radius*radius
-                        || dist >= (radius/2-1)*(radius/2-1)
-                           && dist <= radius*radius/4)
-                  || pattern == 2 // latticed
-                    && (x%2 == 0 || y%2 == 0)
-                  || pattern == 3 // cross-like
-                    && (abs(x)+abs(y) < 5 && x != y && x != -y))
-              {
-                  env.map[posx][posy].property = FPROP_SANCTUARY_1; // yellow
-              }
-              else
-                  env.map[posx][posy].property = FPROP_SANCTUARY_2; // white
-         }
-         if (count == 1)
-             simple_monster_message(&menv[monster], " turns to flee the light!");
-         else if (count > 0)
-             mpr("The monsters scatter in all directions!");
+            // forming patterns
+            if (pattern == 0    // outward rays
+                  && (x == 0 || y == 0 || x == y || x == -y)
+                || pattern == 1 // circles
+                  && (dist >= (radius-1)*(radius-1) && dist <= radius*radius
+                      || dist >= (radius/2-1)*(radius/2-1)
+                         && dist <= radius*radius/4)
+                || pattern == 2 // latticed
+                  && (x%2 == 0 || y%2 == 0)
+                || pattern == 3 // cross-like
+                  && (abs(x)+abs(y) < 5 && x != y && x != -y))
+            {
+                env.map[posx][posy].property = FPROP_SANCTUARY_1; // yellow
+            }
+            else
+                env.map[posx][posy].property = FPROP_SANCTUARY_2; // white
+        }
+    }
+
+    if (count == 1)
+        simple_monster_message(&menv[monster], " turns to flee the light!");
+    else if (count > 0)
+        mpr("The monsters scatter in all directions!");
 
     return (true);
 }
@@ -979,7 +982,11 @@ int halo_radius()
     if (you.religion == GOD_SHINING_ONE && you.piety >= piety_breakpoint(0)
         && !you.penance[GOD_SHINING_ONE])
     {
-        return you.piety / 20;
+        int radius = you.piety / 20;
+        if (radius > 9)
+            radius = 9;
+
+        return radius;
     }
     else
         return 0;
@@ -998,21 +1005,23 @@ void manage_halo()
         you.duration[DUR_BACKLIGHT] = 1;
 
     for (int x=-radius; x<=radius; x++)
-         for (int y=-radius; y<=radius; y++)
-         {
-              int posx = you.x_pos + x;
-              int posy = you.y_pos + y;
+    {
+        for (int y=-radius; y<=radius; y++)
+        {
+            int posx = you.x_pos + x;
+            int posy = you.y_pos + y;
 
-              // affect all monsters inside the halo
-              if (mons_inside_halo(posx, posy))
-              {
-                  monster = mgrd[posx][posy];
-                  monsters *mon = &menv[monster];
+            // affect all monsters inside the halo
+            if (mons_inside_halo(posx, posy))
+            {
+                monster = mgrd[posx][posy];
+                monsters *mon = &menv[monster];
 
-                  if (!mon->has_ench(ENCH_BACKLIGHT))
-                      mon->add_ench(ENCH_BACKLIGHT);
-              }
-         }
+                if (!mon->has_ench(ENCH_BACKLIGHT))
+                    mon->add_ench(ENCH_BACKLIGHT);
+            }
+        }
+    }
 }
 
 bool mons_inside_halo(int posx, int posy)
