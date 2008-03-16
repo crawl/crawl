@@ -426,7 +426,7 @@ static void handle_wizard_command( void )
         mpr( "If you continue, your game will not be scored!", MSGCH_WARN );
 #endif
 
-        if (!yesno( "Do you really want to enter wizard mode?", false, 'n' ))
+        if (!yesno( "Do you really want to enter wizard mode? ", false, 'n' ))
             return;
 
         you.wizard = true;
@@ -2274,7 +2274,10 @@ void process_command( command_type cmd )
         break;
 
     case CMD_QUIT:
-        quit_game();
+        if (yes_or_no("Are you sure you want to quit"))
+            ouch(INSTANT_DEATH, 0, KILLED_BY_QUITTING);
+        else
+            canned_msg(MSG_OK);
         break;
 
     case CMD_GET_VERSION:

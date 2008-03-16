@@ -763,6 +763,27 @@ void canned_msg(canned_message_type which_message)
     return;
 }                               // end canned_msg()
 
+// Like yesno, but requires a full typed answer.
+// Unlike yesno, prompt should have no trailing space.
+// Returns true if the user typed "yes", false if something else or cancel.
+bool yes_or_no( const char* fmt, ... )
+{
+    char buf[200];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, sizeof buf, fmt, args);
+    va_end(args);
+    buf[sizeof(buf)-1] = 0;
+
+    mprf(MSGCH_PROMPT, "%s? (Confirm with \"yes\".) ", buf);
+
+    if (cancelable_get_line(buf, sizeof buf))
+        return false;
+    if (strcasecmp(buf, "yes") != 0)
+        return false;
+    return true;
+}
+
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
 bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,

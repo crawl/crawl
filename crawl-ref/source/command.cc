@@ -60,17 +60,6 @@ static void list_wizard_commands();
 static const char *command_string( int i );
 #endif
 
-void quit_game(void)
-{
-    char buf[10];
-    mpr("Are you sure you want to quit (enter \"yes\" to confirm)? ",
-        MSGCH_PROMPT);
-    if (!cancelable_get_line(buf, sizeof buf) && !strcasecmp(buf, "yes"))
-        ouch(INSTANT_DEATH, 0, KILLED_BY_QUITTING);
-    else
-        canned_msg(MSG_OK);
-}
-
 static const char *features[] = {
     "Stash-tracking",
 

@@ -160,12 +160,8 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
         {
             if (trap_type_at_xy(x,y) == TRAP_ZOT)
             {
-                mpr("Do you really want to step into the Zot trap? "
-                    "(Confirm with \"yes\".) ", MSGCH_PROMPT);
-
-                char buf[10];
-                if (cancelable_get_line(buf, sizeof buf)
-                    || strcasecmp(buf, "yes"))
+                if (! yes_or_no("Do you really want to step into the %s",
+                                "Zot trap"))
                 {
                     canned_msg(MSG_OK);
                     you.turn_is_over = false;
@@ -212,15 +208,9 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
             if (stepped && !force && !you.duration[DUR_CONF])
             {
-                mprf(MSGCH_PROMPT,
-                     "Do you really want to step into the %s? "
-                     "(Confirm with \"yes\".) ",
-                     (new_grid == DNGN_LAVA ? "lava" : "deep water"));
-
-                char buf[10];
-                if (cancelable_get_line(buf, sizeof buf)
-                    || strcasecmp(buf, "yes"))
-                {   
+                if (! yes_or_no("Do you really want to step into the %s",
+                                (new_grid == DNGN_LAVA ? "lava" : "deep water")))
+                {
                     canned_msg(MSG_OK);
                     return (false);
                 }
