@@ -31,10 +31,6 @@ extern "C" {
 
 #define DPTR_COERCE char *
 
-typedef std::list<DBM *> db_list;
-
-extern db_list openDBList;
-
 void databaseSystemInit();
 void databaseSystemShutdown();
 DBM  *openDB(const char *dbFilename);

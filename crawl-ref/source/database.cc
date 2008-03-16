@@ -27,10 +27,12 @@
 // Convenience functions for (read-only) access to generic
 // berkeley DB databases.
 
-db_list openDBList;
-DBM     *descriptionDB;
-DBM     *randartDB;
-DBM     *speakDB;
+typedef std::list<DBM *> db_list;
+static db_list OpenDBList;
+
+static DBM* DescriptionDB;
+static DBM* RandartDB;
+static DBM* SpeakDB;
 
 // shout and speak databases are all generated from a single
 // text file in the data directory and stored as .db files in the
@@ -79,7 +81,7 @@ static DBM *get_dbm(db_id id);
 
 void databaseSystemInit()
 {
-    if (!descriptionDB)
+    if (!DescriptionDB)
     {
         std::string descriptionPath = get_savedir_path(DESC_DB);
         std::vector<std::string> textPaths = description_txt_paths();
@@ -94,11 +96,11 @@ void databaseSystemInit()
             }
 
         descriptionPath.erase(descriptionPath.length() - 3);
-        if (!(descriptionDB = openDB(descriptionPath.c_str())))
+        if (!(DescriptionDB = openDB(descriptionPath.c_str())))
             end(1, true, "Failed to open DB: %s", descriptionPath.c_str());
     }
 
-    if (!randartDB)
+    if (!RandartDB)
     {
         std::string randartPath = get_savedir_path(RANDART_DB);
         std::vector<std::string> textPaths = randart_txt_paths();
@@ -113,11 +115,11 @@ void databaseSystemInit()
             }
 
         randartPath.erase(randartPath.length() - 3);
-        if (!(randartDB = openDB(randartPath.c_str())))
+        if (!(RandartDB = openDB(randartPath.c_str())))
             end(1, true, "Failed to open DB: %s", randartPath.c_str());
     }
 
-    if (!speakDB)
+    if (!SpeakDB)
     {
         std::string speakPath = get_savedir_path(SPEAK_DB);
         std::vector<std::string> textPaths = speak_txt_paths();
@@ -132,7 +134,7 @@ void databaseSystemInit()
             }
 
         speakPath.erase(speakPath.length() - 3);
-        if (!(speakDB = openDB(speakPath.c_str())))
+        if (!(SpeakDB = openDB(speakPath.c_str())))
             end(1, true, "Failed to open DB: %s", speakPath.c_str());
     }
     
@@ -171,15 +173,15 @@ void databaseSystemInit()
 
 void databaseSystemShutdown()
 {
-    for (db_list::iterator i = openDBList.begin();
-         i != openDBList.end(); ++i)
+    for (db_list::iterator i = OpenDBList.begin();
+         i != OpenDBList.end(); ++i)
     {
         dbm_close(*i);
     }
-    openDBList.clear();
-    descriptionDB = NULL;
-    randartDB = NULL;
-    speakDB = NULL;
+    OpenDBList.clear();
+    DescriptionDB = NULL;
+    RandartDB = NULL;
+    SpeakDB = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -195,7 +197,7 @@ DBM   *openDB(const char *dbFilename)
 {
     DBM *dbToReturn = dbm_open(dbFilename, O_RDONLY, 0660);
     if (dbToReturn)
-        openDBList.push_front(dbToReturn);
+        OpenDBList.push_front(dbToReturn);
 
     return dbToReturn;
 }
@@ -558,34 +560,34 @@ static std::string query_database(DBM *db, std::string key,
 
 std::string getLongDescription(const std::string &key)
 {
-    if (!descriptionDB)
+    if (!DescriptionDB)
         return ("");
 
-    return query_database(descriptionDB, key, true, true);
+    return query_database(DescriptionDB, key, true, true);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
                                                 db_find_filter filter)
 {
-    if (!descriptionDB)
+    if (!DescriptionDB)
     {
         std::vector<std::string> empty;
         return (empty);
     }
 
-    return database_find_keys(descriptionDB, regex, true, filter);
+    return database_find_keys(DescriptionDB, regex, true, filter);
 }
 
 std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
                                                   db_find_filter filter)
 {
-    if (!descriptionDB)
+    if (!DescriptionDB)
     {
         std::vector<std::string> empty;
         return (empty);
     }
 
-    return database_find_bodies(descriptionDB, regex, true, filter);
+    return database_find_bodies(DescriptionDB, regex, true, filter);
 }
 
 static std::vector<std::string> description_txt_paths()
@@ -737,7 +739,7 @@ std::string getShoutString(const std::string &monst,
 // Speak DB specific functions.
 std::string getSpeakString(const std::string &monst)
 {
-    if (!speakDB)
+    if (!SpeakDB)
         return ("");
 
     int num_replacements = 0;
@@ -745,7 +747,7 @@ std::string getSpeakString(const std::string &monst)
 #ifdef DEBUG_MONSPEAK
     mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s", monst.c_str());
 #endif
-    return getRandomizedStr(speakDB, monst, "", num_replacements);
+    return getRandomizedStr(SpeakDB, monst, "", num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -753,12 +755,12 @@ std::string getSpeakString(const std::string &monst)
 std::string getRandNameString(const std::string &itemtype,
                               const std::string &suffix)
 {
-    if (!randartDB)
+    if (!RandartDB)
         return ("");
         
     int num_replacements = 0;
 
-    return getRandomizedStr(randartDB, itemtype, suffix,
+    return getRandomizedStr(RandartDB, itemtype, suffix,
                             num_replacements);
 }
 
