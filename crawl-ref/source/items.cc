@@ -1929,14 +1929,14 @@ static std::string drop_menu_invstatus(const Menu *menu)
             newweight -= item_mass(*item) * se[i]->selected_qty;
         }
 
-        snprintf(buf, sizeof buf, ">%d.%d", newweight / 10, newweight % 10);
+        snprintf(buf, sizeof buf, ">%.0f", newweight * BURDEN_TO_AUM);
         s_newweight = buf;
     }
 
-    snprintf(buf, sizeof buf, "(Inv: %d.%d%s/%d.%d aum)",
-            you.burden / 10, you.burden % 10,
-            s_newweight.c_str(),
-            cap / 10, cap % 10);
+    snprintf(buf, sizeof buf, "(Inv: %.0f%s/%.0f aum)",
+             you.burden * BURDEN_TO_AUM,
+             s_newweight.c_str(),
+             cap * BURDEN_TO_AUM);
     return (buf);
 }
 

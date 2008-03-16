@@ -49,6 +49,8 @@ struct TileFlavor
 
 #define MAX_NUM_GODS    21
 
+#define BURDEN_TO_AUM 0.1f           // scale factor for converting burden to aum
+
 extern char info[INFO_SIZE];         // defined in acr.cc {dlb}
 
 extern unsigned char show_green;     // defined in view.cc {dlb}

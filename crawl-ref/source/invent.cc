@@ -194,7 +194,7 @@ std::string InvEntry::get_text() const
         const int mass = item_mass(*item) * item->quantity;
         tstr << std::setw(get_number_of_cols() - tstr.str().length() - 1)
              << std::right
-             << make_stringf("(%d.%d aum)", mass / 10, mass % 10);
+             << make_stringf("(%.1f aum)", BURDEN_TO_AUM * mass);
     }
     return tstr.str();
 }
@@ -303,16 +303,21 @@ void InvMenu::set_title(const std::string &s)
     std::string stitle = s;
     if (stitle.empty())
     {
+        std::ostringstream default_title;
         const int cap = carrying_capacity(BS_UNENCUMBERED);
 
-        char title_buf[200];
-        snprintf( title_buf, sizeof title_buf,
-                  "Inventory: %d.%d/%d.%d aum (%d%%, %d/52 slots)",
-                    you.burden / 10, you.burden % 10, 
-                    cap / 10, cap % 10,
-                    (you.burden * 100) / cap, 
-                    inv_count() );
-        stitle = title_buf;
+        default_title << make_stringf(
+            "Inventory: %.0f/%.0f aum (%d%%, %d/52 slots)",
+            BURDEN_TO_AUM * you.burden,
+            BURDEN_TO_AUM * cap,
+            (you.burden * 100) / cap, 
+            inv_count() );
+
+        default_title << std::setw(get_number_of_cols() - default_title.str().length() - 1)
+                      << std::right
+                      << "Press item letter to examine.";
+
+        stitle = default_title.str();
     }
     
     set_title(new InvTitle(this, stitle, title_annotate));
