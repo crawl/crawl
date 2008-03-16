@@ -2117,9 +2117,6 @@ int mons_inside_circle(int posx, int posy, int radius)
     if (!inside_level_bounds(posx, posy))
         return -1;
 
-    if (posx < 0 || posx >= GXM || posy < 0 || posy >= GYM)
-        return -1;
-
     int dist = distance(posx, posy, you.x_pos, you.y_pos);
     if (dist > radius*radius)
         return -1;
