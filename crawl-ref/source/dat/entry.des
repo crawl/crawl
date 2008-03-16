@@ -1659,7 +1659,7 @@ SUBST: ' : cxxxv, " : cxxxv
 MAP
 .........................
 .......xxxxx+xxxxx.......
-....xxxxxxxx+xxxxxxxx....
+....xxxxxxxx.xxxxxxxx....
 ...xxxxxx.......xxxxxx...
 ..xxxxx...........xxxxx..
 ..xxxx....'''''....xxxx..
@@ -1671,7 +1671,7 @@ MAP
 .xDx..''.""..."".''..xEx.
 .xDx...'.."""""..'...xEx.
 .BxAx..''.......''..xFxG.
-..xxx...''''+''''...xxx..
+..xxx...''''.''''...xxx..
 ..xxxx....''+''....xxxx..
 ..xxxxx...........xxxxx..
 ...xxxxxx.......xxxxxx...
@@ -3444,7 +3444,7 @@ x.....l.cc+ccccccccccc..l....x
 x.....l.cc..........cc..l....x
 x.....l.ccc.........cc..l....x
 x.....ll.cc.....2.3.cc.ll....x
-x.....l..cccccccc+cccc..l....x
+x.....l..cccccccc.cccc..l....x
 x.....l..cccccccc+cccc..l....x
 x.....ll..cc......cc...ll....x
 x.....l...ccd{[(..cc.4..l....x
