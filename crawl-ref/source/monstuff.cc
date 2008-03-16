@@ -487,7 +487,7 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
 #endif
         if (random2(you.piety) > piety_breakpoint(0)
             && random2(you.experience_level) >= random2(monster->hit_dice)
-            // bias beaten-up-conversion towards the stronger orcs.
+            // Bias beaten-up-conversion towards the stronger orcs.
             && random2(monster->hit_dice) > 2)
         {
             beogh_convert_orc(monster, true);
