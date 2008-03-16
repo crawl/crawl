@@ -474,9 +474,9 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
     if (YOU_KILL(killer)
         && mons_near(monster)
         && !mons_friendly(monster)
+        && you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
-        && you.species == SP_HILL_ORC && you.religion == GOD_BEOGH
-        && !player_under_penance() && you.piety >= 75)
+        && !player_under_penance() && you.piety >= piety_breakpoint(2))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "

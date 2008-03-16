@@ -630,18 +630,18 @@ bool melee_attack::player_attack()
         if (player_check_monster_died())
             return (true);
             
+        player_sustain_passive_damage();
+
+        // At this point, pretend we didn't hit at all.
+        if (shield_blocked)
+            did_hit = false;
+
         if (hit_woke_orc)
         {
             // call function of orcs first noticing you but with
             // beaten-up conversion messages (if applicable)
             beogh_follower_convert(def, true);
         }
-
-        player_sustain_passive_damage();
-
-        // At this point, pretend we didn't hit at all.
-        if (shield_blocked)
-            did_hit = false;
     }
     else
         player_warn_miss();
