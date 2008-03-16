@@ -3406,6 +3406,7 @@ void zap_wand( int slot )
     {
         switch ( wand.sub_type )
         {
+        case WAND_DIGGING:
         case WAND_TELEPORTATION:
             targ_mode = TARG_ANY;
             break;
@@ -3415,7 +3416,7 @@ void zap_wand( int slot )
         case WAND_INVISIBILITY:
             targ_mode = TARG_FRIEND;
             break;
-            
+
         default:
             targ_mode = TARG_ENEMY;
             break;
