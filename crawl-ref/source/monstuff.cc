@@ -494,6 +494,7 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
             return (true);
         }
     }
+
     return (false);
 }
 
@@ -6189,7 +6190,6 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor)
 
 bool message_current_target()
 {
-
     if (crawl_state.is_replaying_keys())
     {
         if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
