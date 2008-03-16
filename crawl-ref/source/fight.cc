@@ -157,8 +157,7 @@ int effective_stat_bonus( int wepType )
 #endif
 }
 
-// returns random2(x) is random_factor is true, otherwise
-// the mean.
+// Returns random2(x) is random_factor is true, otherwise the mean.
 static int maybe_random2( int x, bool random_factor )
 {
     if ( random_factor )
