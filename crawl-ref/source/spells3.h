@@ -67,7 +67,10 @@ bool cast_selective_amnesia(bool force);
 int cast_smiting(int power, dist &);
 bool remove_sanctuary(bool did_attack = false);
 void decrease_sanctuary_radius(void);
-bool cast_sanctuary(int power);
+bool cast_sanctuary(const int power);
+int halo_radius(void);
+void manage_halo(void);
+bool mons_inside_halo(int posx, int posy);
 
 // updated 24may2000 {dlb}
 /* ***********************************************************************

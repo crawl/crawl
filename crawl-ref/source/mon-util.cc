@@ -49,6 +49,7 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
+#include "spells3.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -4091,6 +4092,10 @@ bool monsters::del_ench(enchant_type ench, bool quiet)
 {
     mon_enchant_list::iterator i = enchantments.find(ench);
     if (i == enchantments.end())
+        return (false);
+
+    // monsters inside a halo don't lose backlight
+    if (ench == ENCH_BACKLIGHT && mons_inside_halo(x, y))
         return (false);
 
     const mon_enchant me = i->second;

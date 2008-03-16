@@ -412,14 +412,21 @@ void dec_penance(god_type god, int val)
             take_note(Note(NOTE_MOLLIFY_GOD, god));
             you.penance[god] = 0;
 
-            // When you've worked through all your penance, you get
-            // another chance to make hostile holy beings neutral.
-            if (is_good_god(you.religion))
-                moral_beings_attitude_change();
+            // the halo is once more available
+            if (god == GOD_SHINING_ONE && you.religion == GOD_SHINING_ONE
+                && you.piety >= piety_breakpoint(0))
+            {
+                mpr("Your divine halo starts to return!");
+            }
 
             // bonuses now once more effective
             if (god == GOD_BEOGH && you.religion == GOD_BEOGH)
                  you.redraw_armour_class = true;
+
+            // When you've worked through all your penance, you get
+            // another chance to make hostile holy beings neutral.
+            if (is_good_god(you.religion))
+                moral_beings_attitude_change();
         }
         else
             you.penance[god] -= val;
@@ -455,10 +462,13 @@ void inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
+        // nor does TSO's halo or divine shield
         else if (god == GOD_SHINING_ONE)
         {
+            mpr("Your divine halo starts to fade.");
+
             if (you.duration[DUR_DIVINE_SHIELD])
-            {   // nor does TSO's divine shield
+            {
                 mpr("Your divine shield disappears!");
                 you.duration[DUR_DIVINE_SHIELD] = 0;
                 you.attribute[ATTR_DIVINE_SHIELD] = 0;
@@ -1824,6 +1834,12 @@ mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)",
                 learned_something_new(TUT_NEW_ABILITY);
             }
 
+            if (you.religion == GOD_SHINING_ONE)
+            {
+                if (i == 0)
+                    mpr("A divine halo surrounds you!");
+            }
+
             // When you gain a piety level, you get another chance to
             // make hostile holy beings neutral.
             if (is_good_god(you.religion))
@@ -1839,16 +1855,16 @@ mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)",
 
     if (you.piety > 160 && old_piety <= 160)
     {
-        // When you gain piety of more than 160, you get another chance
-        // to make hostile holy beings neutral.
-        if (is_good_god(you.religion))
-            moral_beings_attitude_change();
-
         if ((you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
             && you.num_gifts[you.religion] == 0)
         {
             simple_god_message( " will now bless your weapon at an altar...once.");
         }
+
+        // When you gain piety of more than 160, you get another chance
+        // to make hostile holy beings neutral.
+        if (is_good_god(you.religion))
+            moral_beings_attitude_change();
     }
 
     do_god_gift(false);
@@ -2139,20 +2155,25 @@ void lose_piety(int pgn)
                     }
                 }
 
+                if (you.religion == GOD_SHINING_ONE)
+                {
+                    if (i == 0)
+                        mpr("Your divine halo starts to fade.");
+                }
+
                 if ( need_water_walking() && !beogh_water_walk() )
                 {
                     fall_into_a_pool( you.x_pos, you.y_pos, true,
                                       grd[you.x_pos][you.y_pos] );
                 }
-
-                if ( you.religion == GOD_BEOGH )
-                {
-                    // every piety level change also affects AC from
-                    // orcish gear
-                    you.redraw_armour_class = true;
-                }
             }
         }
+    }
+
+    if ( you.religion == GOD_BEOGH )
+    {
+        // every piety level change also affects AC from orcish gear
+        you.redraw_armour_class = true;
     }
 }
 
@@ -3456,6 +3477,8 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_SHINING_ONE:
+        mpr("Your divine halo starts to fade.");
+
         if (you.duration[DUR_DIVINE_SHIELD])
         {
             mpr("Your divine shield disappears!");

@@ -2693,8 +2693,12 @@ static void decrement_durations()
         Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
-    if (you.duration[DUR_BACKLIGHT] > 0 && !--you.duration[DUR_BACKLIGHT] && !you.backlit())
+    // players inside a halo don't lose backlight
+    if (you.duration[DUR_BACKLIGHT] > 0 && !halo_radius()
+        && !--you.duration[DUR_BACKLIGHT] && !you.backlit())
+    {
         mpr("You are no longer glowing.", MSGCH_DURATION);
+    }
 
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
@@ -2883,6 +2887,8 @@ static void world_reacts()
     check_shafts();
 
     check_sanctuary();
+
+    manage_halo();
 
     run_environment_effects();
 

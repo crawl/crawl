@@ -2108,3 +2108,21 @@ void reveal_secret_door(int x, int y)
     grd[x][y] = grid_is_opaque(door) ?
         DNGN_CLOSED_DOOR : DNGN_OPEN_DOOR;
 }
+
+// Is there a monster in a circle with the given radius, centered on the
+// player's position?  If so, return the distance to it.  Otherwise,
+// return -1.
+int mons_inside_circle(int posx, int posy, int radius)
+{
+    if (!inside_level_bounds(posx, posy))
+        return -1;
+
+    int dist = distance(posx, posy, you.x_pos, you.y_pos);
+    if (dist > radius*radius)
+        return -1;
+
+    if (mgrd[posx][posy] != NON_MONSTER)
+        return dist;
+
+    return -1;
+}

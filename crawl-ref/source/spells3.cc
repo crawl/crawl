@@ -927,26 +927,20 @@ bool cast_sanctuary(const int power)
     const int pattern = random2(4);
     int count = 0;
     int monster = -1;
-    
+
     for (int x=-radius; x<=radius; x++)
          for (int y=-radius; y<=radius; y++)
          {
               int posx = you.x_pos + x;
               int posy = you.y_pos + y;
-
-              if (!inside_level_bounds(posx, posy))
-                  continue;
-
-              int dist = distance(posx, posy, you.x_pos, you.y_pos);
-              if (dist > radius*radius)
-                  continue;
+              int dist = mons_inside_circle(posx, posy, radius);
 
               // scare all hostile monsters inside sanctuary
-              if (mgrd[posx][posy] != NON_MONSTER)
+              if (dist != -1)
               {
                   monster = mgrd[posx][posy];
                   monsters *mon = &menv[monster];
-                  
+
                   if (!mons_friendly(mon)
                       && mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
                   {
@@ -954,7 +948,7 @@ bool cast_sanctuary(const int power)
                       count++;
                   }
               }
-                  
+
               // forming patterns
               if (pattern == 0    // outward rays
                     && (x == 0 || y == 0 || x == y || x == -y)
@@ -976,8 +970,54 @@ bool cast_sanctuary(const int power)
              simple_monster_message(&menv[monster], " turns to flee the light!");
          else if (count > 0)
              mpr("The monsters scatter in all directions!");
-         
+
     return (true);
+}
+
+int halo_radius()
+{
+    if (you.religion == GOD_SHINING_ONE && you.piety >= piety_breakpoint(0)
+        && !you.penance[GOD_SHINING_ONE])
+    {
+        return you.piety / 20;
+    }
+    else
+        return 0;
+}
+
+void manage_halo()
+{
+    int radius = halo_radius();
+
+    if (radius == 0)
+        return;
+
+    int monster = -1;
+
+    if (!you.duration[DUR_BACKLIGHT])
+        you.duration[DUR_BACKLIGHT] = 1;
+
+    for (int x=-radius; x<=radius; x++)
+         for (int y=-radius; y<=radius; y++)
+         {
+              int posx = you.x_pos + x;
+              int posy = you.y_pos + y;
+
+              // affect all monsters inside the halo
+              if (mons_inside_halo(posx, posy))
+              {
+                  monster = mgrd[posx][posy];
+                  monsters *mon = &menv[monster];
+
+                  if (!mon->has_ench(ENCH_BACKLIGHT))
+                      mon->add_ench(ENCH_BACKLIGHT);
+              }
+         }
+}
+
+bool mons_inside_halo(int posx, int posy)
+{
+    return (mons_inside_circle(posx, posy, halo_radius()) != -1);
 }
 
 void cast_poison_ammo(void)

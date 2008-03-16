@@ -125,9 +125,11 @@ int speed_to_duration(int speed);
 
 bool scramble(void);
 
-bool interrupt_cmd_repeat( activity_interrupt_type ai, 
+bool interrupt_cmd_repeat( activity_interrupt_type ai,
                            const activity_interrupt_data &at );
 
 void reveal_secret_door(int x, int y);
+
+int mons_inside_circle(int posx, int posy, int radius);
 
 #endif
