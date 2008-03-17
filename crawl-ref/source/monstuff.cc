@@ -470,13 +470,31 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
         || monster->hit_dice < 1)
         return (false);
 
-    // Orcs may convert to Beogh under threat of death.
-    if (YOU_KILL(killer)
-        && mons_near(monster)
-        && !mons_friendly(monster)
-        && you.religion == GOD_BEOGH
+    bool convert = false;
+
+    if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
-        && !player_under_penance() && you.piety >= piety_breakpoint(2))
+        && !player_under_penance() && you.piety >= piety_breakpoint(2)
+        && mons_near(monster))
+    {
+        if (YOU_KILL(killer))
+            convert = true;
+        else if (MON_KILL(killer))
+        {
+            monsters *mon = &menv[i];
+            if (mons_species(mon->type) == MONS_ORC && mons_friendly(mon)
+                && !one_chance_in(3))
+            {
+                convert = true;
+            }
+        }
+    }
+
+    // Orcs may convert to Beogh under threat of death, either from you
+    // or, less often, your followers.  In both cases, the checks are
+    // made against your stats.  You're the potential messiah, after
+    // all.
+    if (convert)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
