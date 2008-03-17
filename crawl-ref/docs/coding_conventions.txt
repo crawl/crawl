@@ -1,0 +1,70 @@
+Crawl coding conventions
+========================
+
+This file documents the conventions currently in use in the crawl codebase,
+as well as the conventions new and/or modified code should conform to.
+
+Use 4 spaces to indent, and indent with spaces only (no tabs).
+Use underscores_as_spaces instead of mixedCase.  Other conventions are
+pointed out by example, below:
+
+
+// - Global variables are capitalized and underscored.
+//   Warning: there are currently many globals which don't do this.
+int Some_Global_Variable;
+
+
+// - Internal functions are prefixed with underscores.
+//   Warning: This is a new convention, so much code doesn't follow it.
+static void _remove_from_inventory(item_def* item);
+
+
+// - Functions use underscores_as_spaces, but there are currently
+//   a lot of mixedCase functions.
+void destroy_item(item_def* item)
+{
+    // - Variables use underscores too.
+    int item_weight = /* ... */;
+    
+    if (item_weight > SOME_LIMIT)
+    {
+        // - Braces are put on their own line.
+        do_something();
+    }
+
+    // - It's allowable to omit braces, but be careful.
+    if (item != NULL)
+        _remove_from_inventory(item);
+    else
+        _something_else();
+}
+
+
+// - There's no convention for class/struct names (yet?)
+class TextDB
+{
+ public:
+    // - No rules for static member functions; they're not used often anyway.
+    static void whatever();
+
+    // - Public member functions: named like functions.
+    void* get_value();
+
+ private:
+    // - Internal member functions: also named like functions.
+    void _parse_text_file(const char*);
+
+    // - Member variables get a prefix.
+    DB* m_db;
+
+    // - Static member variables get a prefix, too.
+    std::vector<DB*> sm_all_dbs;
+};
+
+
+// - But structures tend to use underscores
+struct coord_def
+{
+    // - Simple structures don't need the "m_" prefixes
+    int x, y;	
+};
