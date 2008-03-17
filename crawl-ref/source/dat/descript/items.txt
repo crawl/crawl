@@ -26,7 +26,7 @@ wearer of the benefits of levitation.
 amulet of inaccuracy
 
 This amulet makes its wearer less accurate in hand combat and when 
-targetting monsters via ranged weapon or spells.
+targeting monsters via ranged weapon or spells.
 %%%%
 amulet of rage
 
@@ -403,7 +403,7 @@ leaving them helpless for a significant length of time.
 %%%%
 crystal ball of seeing
 
-A magical device which allows one to see the layout of their
+A magical device which allows one to see the layout of one's
 surroundings. It requires a degree of magical ability to be used
 reliably, otherwise it can produce unpredictable and possibly harmful
 results.
@@ -727,12 +727,12 @@ armour.
 %%%%
 mottled dragon hide
 
-The weirdly-patterned scaley skin of a mottled dragon. I suppose you
+The weirdly-patterned scaly skin of a mottled dragon. I suppose you
 could wear it if you really wanted to.
 %%%%
 naga barding
 
-A special armour made for nagas, to wear over their tails.
+A special armour made for Nagas, to wear over their tails.
 %%%%
 necronomicon
 
@@ -816,13 +816,13 @@ A potion of beneficial mutation.
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost
-instantly. If one uses it when they are at or near full health, it can
+instantly. If it is used when one is at or near full health, it can
 also repair permanent injuries.
 %%%%
 potion of healing
 
 A blessed fluid which heals some wounds, clears the mind, and cures
-diseases. If one uses it when they are at or near full health, it can
+diseases. If it is used when one is at or near full health, it can
 also slightly repair permanent injuries.
 %%%%
 potion of invisibility
