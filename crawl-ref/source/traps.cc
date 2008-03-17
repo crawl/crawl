@@ -423,6 +423,17 @@ void handle_traps(trap_type trt, int i, bool trap_known)
     // already know about it, don't let him/her notice it.
     case TRAP_SHAFT:
     {
+        if (!you.will_trigger_shaft())
+        {
+            if (trap_known && !you.airborne())
+                mpr("You don't fall through the shaft.");
+
+            if (!trap_known)
+                grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+
+            return;
+        }
+
         // Paranoia
         if (!is_valid_shaft_level())
         {
@@ -434,23 +445,14 @@ void handle_traps(trap_type trt, int i, bool trap_known)
             return;
         }
 
-        if (!you.will_trigger_shaft())
-        {
-            if (trap_known && !you.airborne())
-                mpr("You don't fall through the shaft..");
-
-            if (!trap_known)
-                grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
-
-            return;
-        }
-
         if (!you.do_shaft())
+        {
             if (!trap_known)
             {
                 grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
                 return;
             }
+        }
 
         break;
     }

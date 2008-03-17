@@ -158,7 +158,8 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 #endif
                  || new_grid == DNGN_TRAP_NATURAL)
         {
-            if (trap_type_at_xy(x,y) == TRAP_ZOT)
+            const trap_type type = trap_type_at_xy(x,y);
+            if (type == TRAP_ZOT)
             {
                 if (! yes_or_no("Do you really want to step into the %s",
                                 "Zot trap"))
@@ -167,6 +168,10 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                     you.turn_is_over = false;
                     return (false);
                 }
+            }
+            else if (type == TRAP_SHAFT && you.airborne())
+            {
+                // No prompt
             }
             else
 #ifdef CLUA_BINDINGS
@@ -177,13 +182,11 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                                             "s", trap_name(x, y)))
 #endif
             {
-                std::string prompt = "Really step ";
-                            prompt += (trap_type_at_xy(x,y) == TRAP_ALARM ?
-                                      "onto" : "into");
-                            prompt += " that ";
-                prompt += feature_description(new_grid, trap_type_at_xy(x,y),
-                                              false, DESC_BASENAME, false);
-                prompt += '?';
+                std::string prompt = make_stringf(
+                    "Really step %s that %s?",
+                    (type == TRAP_ALARM) ? "onto" : "into",
+                    feature_description(new_grid, type,
+                                        false, DESC_BASENAME, false).c_str());
 
                 if (!yesno(prompt.c_str(), true, 'n'))
                 {
