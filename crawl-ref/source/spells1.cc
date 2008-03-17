@@ -446,6 +446,7 @@ void identify(int power, int item_slot)
             mpr("Choose an unidentified item, or Esc to abort.");
             if ( Options.auto_list )
                 more();
+            item_slot = -1;
             continue;
         }
 
