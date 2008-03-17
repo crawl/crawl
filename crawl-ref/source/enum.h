@@ -329,11 +329,13 @@ enum branch_type                // you.where_are_you
     BRANCH_TOMB,
     BRANCH_VESTIBULE_OF_HELL,
     BRANCH_DIS,
+    BRANCH_FIRST_HELL = BRANCH_DIS,
     BRANCH_GEHENNA,
     BRANCH_COCYTUS,
     BRANCH_TARTARUS,
     BRANCH_INFERNO,             // unimplemented
     BRANCH_THE_PIT,             // unimplemented
+    BRANCH_LAST_HELL = BRANCH_THE_PIT,
     BRANCH_HALL_OF_ZOT,
     BRANCH_CAVERNS,             // unimplemented
     NUM_BRANCHES

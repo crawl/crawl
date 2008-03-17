@@ -4399,4 +4399,11 @@ void compile_time_asserts()
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPELLS < SPELL_NO_SPELL   , c7);
     COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c8);
+
+    // Also some runtime stuff; I don't know if the order of branches[]
+    // needs to match the enum, but it currently does.
+    for (int i=0; i<NUM_BRANCHES; i++)
+    {
+        ASSERT(branches[i].id == i);
+    }
 }

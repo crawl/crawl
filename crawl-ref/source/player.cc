@@ -372,9 +372,14 @@ bool player_in_branch( int branch )
 
 bool player_in_hell( void )
 {
+    // No real reason except to draw someone's attention here if they
+    // mess with the branch enum.
+    COMPILE_CHECK(BRANCH_FIRST_HELL == BRANCH_DIS, a);
+    COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_THE_PIT, b);
+
     return (you.level_type == LEVEL_DUNGEON
-            && (you.where_are_you >= BRANCH_DIS 
-                && you.where_are_you <= BRANCH_THE_PIT)
+            && (   you.where_are_you >= BRANCH_FIRST_HELL
+                && you.where_are_you <= BRANCH_LAST_HELL)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
 
