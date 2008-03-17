@@ -1,15 +1,18 @@
 %%%%
 No God
 
-"God is dead." -- Nietzsche (It's a bug if you ever see this.)
+"God is dead." -- Nietzsche
+(It's a bug if you ever see this.)
 %%%%
 random
 
-random (It's a bug if you ever see this.)
+Random
+(It's a bug if you ever see this.)
 %%%%
 Buggy
 
-Buggy (It's a bug if you ever see this.)
+Buggy
+(It's a bug if you ever see this.)
 %%%%
 Zin
 
@@ -19,7 +22,8 @@ particular to abstain from the consumption of corpses of intelligent
 beings, and the use of necromancy and deliberate mutations. They can 
 gain a variety of powers useful against chaos, including a divine 
 refuge. Zin values selflessness and appreciates long-standing faith.
-Zin is a good god, and does not mind switching to another good god.
+Zin is a good God, and does not mind if your worship shifts to 
+another good God.
 %%%%
 The Shining One
 
@@ -29,24 +33,24 @@ dispense the wrath of heaven, but must never use any form of evil
 magic and should fight honourably. The Shining One appreciates 
 long-standing persistence in the endless crusade, as well as the 
 dedicated destruction of unholy creatures. The Shining One is a good 
-god, and does not mind switching to another good god.
+God, and does not mind if your worship shifts to another good God.
 %%%%
 Kikubaaqudgha
 
 Kikubaaqudgha is a terrible Demon-God, served by those who seek
 knowledge of the powers of death. Followers gain special powers over
 the undead, and especially favoured servants can call on mighty demons
-to slay their foes. Kikubaaqudgha requires the deaths of living
-creatures as often as possible, but is not interested in the offering
-of corpses except at an appropriate altar.
+to slay their foes. Kikubaaqudgha is evil, and requires the deaths of
+living creatures as often as possible, but is not interested in the 
+offering of corpses except at an appropriate altar.
 %%%%
 Yredelemnul
 
-Yredelemnul is worshipped by those who seek powers over death and the
-undead without having to learn to use necromancy. Followers can raise
-legions of servile undead and gain a number of other useful (if
-unpleasant) powers. Yredelemnul appreciates killing, but prefers
-corpses to be put to use rather than sacrificed.
+Yredelemnul is an evil God worshipped by those who seek powers over 
+death and the undead without having to learn to use necromancy. 
+Followers can raise legions of servile undead and gain a number 
+of other useful (if unpleasant) powers. Yredelemnul appreciates 
+killing, but prefers corpses to be put to use rather than sacrificed.
 %%%%
 Xom
 
@@ -75,8 +79,8 @@ Makhleb
 
 Makhleb the Destroyer is a fearsome God of chaos and violent death.
 Followers, who must constantly appease Makhleb with blood, stand to
-gain various powers of death and destruction. The Destroyer
-appreciates sacrifices of corpses and valuable items.
+gain various powers of death and destruction. The Destroyer is evil,
+and appreciates sacrifices of corpses and valuable items.
 %%%%
 Sif Muna
 
@@ -107,21 +111,22 @@ Elyvilon the Healer is worshipped by the healers (among others), who
 gain their healing powers by long worship and devotion. Although
 Elyvilon prefers a creed of pacifism, those who crusade against evil
 are not excluded. The Healer appreciates the destruction of weapons.
-Elyvilon is a good god, and does not mind switching to another good god.
+Elyvilon is a good God, and does not mind if your worship shifts to
+a different good God.
 %%%%
 Lugonu
 
 Lugonu the Unformed revels in the chaos of the Abyss. Followers are
 sent out to cause bloodshed and disorder in the world, and must do so
-unflaggingly to earn Lugonu's favour. Lugonu expects followers to
-spread chaos and corruption in the overworld.
+unflaggingly to earn Lugonu's favour. Lugonu is an evil God, and 
+expects followers to spread death and corruption in the overworld.
 %%%%
 Beogh
 
-Beogh is a deity worshipped by the cave orcs native to parts of the
-dungeon. Only orcs may devote their service to Beogh, and must prove
-their devotion by bloodshed and sacrifice. Devout followers of Beogh
-can smite their foes, and especially fervent devotees of Beogh may
-even gain followers of their own, for the orcs still look for their
+Beogh is an evil deity worshipped by the cave orcs native to parts of 
+the dungeon. Only orcs may devote their service to Beogh, and must 
+prove their devotion by bloodshed and sacrifice. Devout followers of 
+Beogh can smite their foes, and especially fervent devotees of Beogh 
+may even gain followers of their own, for the orcs still look for their
 Messiah.
 %%%%
