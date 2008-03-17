@@ -74,8 +74,6 @@ std::string quant_name( const item_def &item, int quant,
     return tmp.name(des, terse);
 }
 
-// buff must be at least ITEMNAME_SIZE if non-NULL. If NULL, a static
-// item buffer will be used.
 std::string item_def::name(description_level_type descrip,
                            bool terse, bool ident,
                            bool with_inscription,
@@ -1290,8 +1288,13 @@ std::string item_def::name_aux( description_level_type desc,
         {
             buff << "potion of ";
             
-            if (this->sub_type == POT_BLOOD && this->special < 200)
+            // rotting corpses don't get special dbnames, so neither do !blood
+            if (this->sub_type == POT_BLOOD
+                && this->special < 200
+                && !dbname)
+            {
                 buff << "congealed ";
+            }
 
             buff << potion_type_name(item_typ);
         }
