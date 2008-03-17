@@ -19,7 +19,8 @@
 #include <string>
 #include <vector>
 
-struct tagHeader;
+class  reader;
+class  writer;
 class  CrawlHashTable;
 class  CrawlVector;
 struct item_def;
@@ -228,8 +229,8 @@ protected:
     CrawlStoreValue(const store_flags flags,
                     const store_val_type type = SV_NONE);
 
-    void write(tagHeader &th) const;
-    void read(tagHeader &th);
+    void write(writer &) const;
+    void read(reader &);
 
     void unset(bool force = false);
 
@@ -271,8 +272,8 @@ protected:
     friend class CrawlStoreValue;
 
 public:
-    void write(tagHeader &th) const;
-    void read(tagHeader &th);
+    void write(writer &) const;
+    void read(reader &);
 
     store_flags    get_default_flags() const;
     store_flags    set_default_flags(store_flags flags);
@@ -337,8 +338,8 @@ protected:
     friend class CrawlStoreValue;
 
 public:
-    void write(tagHeader &th) const;
-    void read(tagHeader &th);
+    void write(writer &) const;
+    void read(reader &);
 
     store_flags    get_default_flags() const;
     store_flags    set_default_flags(store_flags flags);

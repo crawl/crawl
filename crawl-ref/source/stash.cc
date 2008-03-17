@@ -136,14 +136,14 @@ static void fully_identify_item(item_def *item)
 
 static void save_item(FILE *file, const item_def &item)
 {
-    tagHeader th(file);
-    marshallItem(th, item);
+    writer outf(file);
+    marshallItem(outf, item);
 }
 
 static void load_item(FILE *file, item_def &item)
 {
-    tagHeader th(file);
-    unmarshallItem(th, item);
+    reader inf(file);
+    unmarshallItem(inf, item);
 }
 
 bool Stash::aggressive_verify = true;

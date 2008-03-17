@@ -1293,7 +1293,8 @@ struct map_cell
 };
 
 class map_marker;
-struct tagHeader;
+class reader;
+class writer;
 class map_markers
 {
 public:
@@ -1317,8 +1318,8 @@ public:
                             const std::string &key);
     void clear();
 
-    void write(tagHeader &th) const;
-    void read(tagHeader &);
+    void write(writer &) const;
+    void read(reader &);
 
 private:
     typedef std::multimap<coord_def, map_marker *> dgn_marker_map;

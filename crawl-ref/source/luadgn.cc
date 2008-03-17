@@ -1735,7 +1735,7 @@ static int file_marshall(lua_State *ls)
 {
     if (lua_gettop(ls) != 2)
         luaL_error(ls, "Need two arguments: tag header and value");
-    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+    writer &th(*static_cast<writer*>( lua_touserdata(ls, 1) ));
     if (lua_isnumber(ls, 2))
         marshallLong(th, luaL_checklong(ls, 2));
     else if (lua_isstring(ls, 2))
@@ -1751,8 +1751,8 @@ static int file_marshall(lua_State *ls)
 static int file_unmarshall_number(lua_State *ls)
 {
     if (lua_gettop(ls) != 1)
-        luaL_error(ls, "Need tag header as one argument");
-    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+        luaL_error(ls, "Need reader as one argument");
+    reader &th(*static_cast<reader*>( lua_touserdata(ls, 1) ));
     lua_pushnumber(ls, unmarshallLong(th));
     return (1);
 }
@@ -1760,8 +1760,8 @@ static int file_unmarshall_number(lua_State *ls)
 static int file_unmarshall_string(lua_State *ls)
 {
     if (lua_gettop(ls) != 1)
-        luaL_error(ls, "Need tag header as one argument");
-    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+        luaL_error(ls, "Need reader as one argument");
+    reader &th(*static_cast<reader*>( lua_touserdata(ls, 1) ));
     lua_pushstring(ls, unmarshallString(th).c_str());
     return (1);
 }
@@ -1769,8 +1769,8 @@ static int file_unmarshall_string(lua_State *ls)
 static int file_unmarshall_fn(lua_State *ls)
 {
     if (lua_gettop(ls) != 1)
-        luaL_error(ls, "Need tag header as one argument");
-    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+        luaL_error(ls, "Need reader as one argument");
+    reader &th(*static_cast<reader*>( lua_touserdata(ls, 1) ));
     const std::string s(unmarshallString(th, LUA_CHUNK_MAX_SIZE));
     dlua_chunk chunk = dlua_chunk::precompiled(s);
     if (chunk.load(dlua))
@@ -1792,7 +1792,7 @@ static int file_marshall_meta(lua_State *ls)
     if (lua_gettop(ls) != 2)
         luaL_error(ls, "Need two arguments: tag header and value");
     
-    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+    writer &th(*static_cast<writer*>( lua_touserdata(ls, 1) ));
 
     lua_persist_type ptype = LPT_NONE;
     if (lua_isnumber(ls, 2))
@@ -1813,7 +1813,7 @@ static int file_marshall_meta(lua_State *ls)
 
 static int file_unmarshall_meta(lua_State *ls)
 {
-    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+    reader &th(*static_cast<reader*>( lua_touserdata(ls, 1) ));
     const lua_persist_type ptype =
         static_cast<lua_persist_type>(unmarshallByte(th));
     switch (ptype)

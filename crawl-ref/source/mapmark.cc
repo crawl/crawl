@@ -50,13 +50,13 @@ void map_marker::activate(bool)
 {
 }
 
-void map_marker::write(tagHeader &outf) const
+void map_marker::write(writer &outf) const
 {
     marshallShort(outf, type);
     marshallCoord(outf, pos);
 }
 
-void map_marker::read(tagHeader &inf)
+void map_marker::read(reader &inf)
 {
     // Don't read type! The type has to be read by someone who knows how
     // to look up the unmarshall function.
@@ -73,7 +73,7 @@ std::string map_marker::property(const std::string &pname) const
     return ("");
 }
 
-map_marker *map_marker::read_marker(tagHeader &inf)
+map_marker *map_marker::read_marker(reader &inf)
 {
     const map_marker_type type =
         static_cast<map_marker_type>(unmarshallShort(inf));
@@ -110,13 +110,13 @@ map_feature_marker::map_feature_marker(
 {
 }
 
-void map_feature_marker::write(tagHeader &outf) const
+void map_feature_marker::write(writer &outf) const
 {
     this->map_marker::write(outf);
     marshallShort(outf, feat);
 }
 
-void map_feature_marker::read(tagHeader &inf)
+void map_feature_marker::read(reader &inf)
 {
     map_marker::read(inf);
     feat = static_cast<dungeon_feature_type>(unmarshallShort(inf));
@@ -127,7 +127,7 @@ map_marker *map_feature_marker::clone() const
     return new map_feature_marker(pos, feat);
 }
 
-map_marker *map_feature_marker::read(tagHeader &inf, map_marker_type)
+map_marker *map_feature_marker::read(reader &inf, map_marker_type)
 {
     map_marker *mapf = new map_feature_marker();
     mapf->read(inf);
@@ -231,9 +231,9 @@ bool map_lua_marker::get_table() const
     return (lua_istable(dlua, -1));
 }
 
-void map_lua_marker::write(tagHeader &th) const
+void map_lua_marker::write(writer &outf) const
 {
-    map_marker::write(th);
+    map_marker::write(outf);
     
     lua_stack_cleaner clean(dlua);
     bool init = initialised;
@@ -243,7 +243,7 @@ void map_lua_marker::write(tagHeader &th) const
         init = false;
     }
     
-    marshallByte(th, init);
+    marshallByte(outf, init);
     if (!init)
         return;
 
@@ -258,7 +258,7 @@ void map_lua_marker::write(tagHeader &th) const
         end(1, false, "lua_marker: couldn't save read function: %s",
             reader.error.c_str());
 
-    marshallString(th, reader.compiled_chunk());
+    marshallString(outf, reader.compiled_chunk());
 
     // Okay, saved the reader. Now ask the writer to do its thing.
 
@@ -266,28 +266,28 @@ void map_lua_marker::write(tagHeader &th) const
     get_table();
     lua_pushstring(dlua, "write");
     lua_pushlightuserdata(dlua, const_cast<map_lua_marker*>(this));
-    lua_pushlightuserdata(dlua, &th);
+    lua_pushlightuserdata(dlua, &outf);
 
     if (!dlua.callfn("dlua_marker_method", 4))
         end(1, false, "lua_marker::write error: %s", dlua.error.c_str());
 }
 
-void map_lua_marker::read(tagHeader &th)
+void map_lua_marker::read(reader &inf)
 {
-    map_marker::read(th);
+    map_marker::read(inf);
     
-    if (!(initialised = unmarshallByte(th)))
+    if (!(initialised = unmarshallByte(inf)))
         return;
 
     lua_stack_cleaner cln(dlua);
     // Read the Lua chunk we saved.
-    const std::string compiled = unmarshallString(th, LUA_CHUNK_MAX_SIZE);
+    const std::string compiled = unmarshallString(inf, LUA_CHUNK_MAX_SIZE);
 
     dlua_chunk chunk = dlua_chunk::precompiled(compiled);
     if (chunk.load(dlua))
         end(1, false, "lua_marker::read error: %s", chunk.error.c_str());
     dlua_push_userdata(dlua, this, MAPMARK_METATABLE);
-    lua_pushlightuserdata(dlua, &th);
+    lua_pushlightuserdata(dlua, &inf);
     if (!dlua.callfn("dlua_marker_read", 3, 1))
         end(1, false, "lua_marker::read error: %s", dlua.error.c_str());
 
@@ -295,10 +295,10 @@ void map_lua_marker::read(tagHeader &th)
     check_register_table();
 }
 
-map_marker *map_lua_marker::read(tagHeader &th, map_marker_type)
+map_marker *map_lua_marker::read(reader &inf, map_marker_type)
 {
     map_marker *marker = new map_lua_marker;
-    marker->read(th);
+    marker->read(inf);
     return (marker);
 }
 
@@ -412,24 +412,24 @@ map_corruption_marker::map_corruption_marker(const coord_def &p,
 {
 }
 
-void map_corruption_marker::write(tagHeader &out) const
+void map_corruption_marker::write(writer &out) const
 {
     map_marker::write(out);
     marshallShort(out, duration);
     marshallShort(out, radius);
 }
 
-void map_corruption_marker::read(tagHeader &in)
+void map_corruption_marker::read(reader &in)
 {
     map_marker::read(in);
     duration = unmarshallShort(in);
     radius   = unmarshallShort(in);
 }
 
-map_marker *map_corruption_marker::read(tagHeader &th, map_marker_type)
+map_marker *map_corruption_marker::read(reader &in, map_marker_type)
 {
     map_corruption_marker *mc = new map_corruption_marker();
-    mc->read(th);
+    mc->read(in);
     return (mc);
 }
 
@@ -460,7 +460,7 @@ map_wiz_props_marker::map_wiz_props_marker(
 {
 }
 
-void map_wiz_props_marker::write(tagHeader &outf) const
+void map_wiz_props_marker::write(writer &outf) const
 {
     this->map_marker::write(outf);
     marshallShort(outf, properties.size());
@@ -472,7 +472,7 @@ void map_wiz_props_marker::write(tagHeader &outf) const
     }
 }
 
-void map_wiz_props_marker::read(tagHeader &inf)
+void map_wiz_props_marker::read(reader &inf)
 {
     map_marker::read(inf);
 
@@ -515,7 +515,7 @@ map_marker *map_wiz_props_marker::clone() const
     return new map_wiz_props_marker(*this);
 }
 
-map_marker *map_wiz_props_marker::read(tagHeader &inf, map_marker_type)
+map_marker *map_wiz_props_marker::read(reader &inf, map_marker_type)
 {
     map_marker *mapf = new map_wiz_props_marker();
     mapf->read(inf);
@@ -718,22 +718,22 @@ void map_markers::clear()
     markers.clear();
 }
 
-void map_markers::write(tagHeader &th) const
+void map_markers::write(writer &outf) const
 {
     // how many markers
-    marshallShort(th, markers.size());
+    marshallShort(outf, markers.size());
     for (dgn_marker_map::const_iterator i = markers.begin();
          i != markers.end(); ++i)
     {
-        i->second->write(th);
+        i->second->write(outf);
     }
 }
 
-void map_markers::read(tagHeader &th)
+void map_markers::read(reader &inf)
 {
     clear();
-    const int nmarkers = unmarshallShort(th);
+    const int nmarkers = unmarshallShort(inf);
     for (int i = 0; i < nmarkers; ++i)
-        if (map_marker *mark = map_marker::read_marker(th))
+        if (map_marker *mark = map_marker::read_marker(inf))
             add(mark);
 }

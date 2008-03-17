@@ -20,7 +20,8 @@
 //////////////////////////////////////////////////////////////////////////
 // Map markers
 
-struct tagHeader;
+class reader;
+class writer;
 
 class map_marker
 {
@@ -32,13 +33,13 @@ public:
 
     virtual map_marker *clone() const = 0;
     virtual void activate(bool verbose = true);
-    virtual void write(tagHeader &) const;
-    virtual void read(tagHeader &);
+    virtual void write(writer &) const;
+    virtual void read(reader &);
     virtual std::string debug_describe() const = 0;
     virtual std::string feature_description() const;
     virtual std::string property(const std::string &pname) const; 
    
-    static map_marker *read_marker(tagHeader&);
+    static map_marker *read_marker(reader &);
     static map_marker *parse_marker(const std::string &text,
                                     const std::string &ctx = "")
         throw (std::string);
@@ -49,7 +50,7 @@ public:
 protected:
     map_marker_type type;
 
-    typedef map_marker *(*marker_reader)(tagHeader &, map_marker_type);
+    typedef map_marker *(*marker_reader)(reader &, map_marker_type);
     typedef map_marker *(*marker_parser)(const std::string &,
                                          const std::string &);
     static marker_reader readers[NUM_MAP_MARKER_TYPES];
@@ -62,11 +63,11 @@ public:
     map_feature_marker(const coord_def &pos = coord_def(0, 0),
                        dungeon_feature_type feat = DNGN_UNSEEN);
     map_feature_marker(const map_feature_marker &other);
-    void write(tagHeader &) const;
-    void read(tagHeader &);
+    void write(writer &) const;
+    void read(reader &);
     std::string debug_describe() const;
     map_marker *clone() const;
-    static map_marker *read(tagHeader &, map_marker_type);
+    static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const std::string &s, const std::string &)
         throw (std::string);
     
@@ -80,12 +81,12 @@ public:
     map_corruption_marker(const coord_def &pos = coord_def(0, 0),
                           int dur = 0);
 
-    void write(tagHeader &) const;
-    void read(tagHeader &);
+    void write(writer &) const;
+    void read(reader &);
     map_marker *clone() const;
     std::string debug_describe() const;
 
-    static map_marker *read(tagHeader &, map_marker_type);
+    static map_marker *read(reader &, map_marker_type);
 
 public:
     int duration, radius;
@@ -102,8 +103,8 @@ public:
 
     void activate(bool verbose);
 
-    void write(tagHeader &) const;
-    void read(tagHeader &);
+    void write(writer &) const;
+    void read(reader &);
     map_marker *clone() const;
     std::string debug_describe() const;
     std::string feature_description() const;
@@ -111,7 +112,7 @@ public:
     
     void notify_dgn_event(const dgn_event &e);
     
-    static map_marker *read(tagHeader &, map_marker_type);
+    static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const std::string &s, const std::string &)
         throw (std::string);
 private:
@@ -129,14 +130,14 @@ class map_wiz_props_marker : public map_marker
 public:
     map_wiz_props_marker(const coord_def &pos = coord_def(0, 0));
     map_wiz_props_marker(const map_wiz_props_marker &other);
-    void write(tagHeader &) const;
-    void read(tagHeader &);
+    void write(writer &) const;
+    void read(reader &);
     std::string debug_describe() const;
     std::string feature_description() const;
     std::string property(const std::string &pname) const; 
     std::string set_property(const std::string &key, const std::string &val); 
     map_marker *clone() const;
-    static map_marker *read(tagHeader &, map_marker_type);
+    static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const std::string &s, const std::string &)
         throw (std::string);
     

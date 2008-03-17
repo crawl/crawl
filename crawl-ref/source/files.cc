@@ -619,12 +619,10 @@ static void write_version( FILE *dataFile, int majorVersion, int minorVersion,
                            bool extended_version )
 {
     // write version
-    tagHeader versionTag;
-    versionTag.offset = 0;
-    versionTag.tagID = TAG_VERSION;
+    writer outf(dataFile);
 
-    marshallByte(versionTag, majorVersion);
-    marshallByte(versionTag, minorVersion);
+    marshallByte(outf, majorVersion);
+    marshallByte(outf, minorVersion);
 
     // extended_version just pads the version out to four 32-bit words.
     // This makes the bones file compatible with Hearse with no extra
@@ -637,22 +635,18 @@ static void write_version( FILE *dataFile, int majorVersion, int minorVersion,
         // hearse.pl. Crawl-aware hearse.pl will prefix the bones file
         // with the first 16-bits of the Crawl version, and the following
         // 7 16-bit words set to 0.
-        marshallShort(versionTag, GHOST_SIGNATURE);
+        marshallShort(outf, GHOST_SIGNATURE);
         
         // Write the three remaining 32-bit words of padding.
         for (int i = 0; i < 3; ++i)
-            marshallLong(versionTag, 0);
+            marshallLong(outf, 0);
     }
-
-    tag_write(versionTag, dataFile);
 }
 
 static void write_tagged_file( FILE *dataFile, char majorVersion,
                                char minorVersion, int fileType,
                                bool extended_version = false )
 {
-    struct tagHeader th;
-
     // find all relevant tags
     char tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
@@ -664,8 +658,7 @@ static void write_tagged_file( FILE *dataFile, char majorVersion,
     {
         if (tags[i] == 1)
         {
-            tag_construct(th, i);
-            tag_write(th, dataFile);
+            tag_write((tag_type)i, dataFile);
         }
     }
 }
@@ -1575,23 +1568,21 @@ static void restore_version( FILE *restoreFile,
 static void restore_tagged_file( FILE *restoreFile, int fileType, 
                                  char minorVersion )
 {
-    int i;
-
     char tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
 
     while(1)
     {
-        i = tag_read(restoreFile, minorVersion);
-        if (i == 0)                 // no tag!
+        tag_type tt = tag_read(restoreFile, minorVersion);
+        if (tt == TAG_NO_TAG)
             break;
-        tags[i] = 0;                // tag read
+        tags[tt] = 0;                // tag read
         if (fileType == TAGTYPE_PLAYER_NAME)
             break;
     }
 
     // go through and init missing tags
-    for(i=0; i<NUM_TAGS; i++)
+    for (int i=0; i<NUM_TAGS; i++)
     {
         if (tags[i] == 1)           // expected but never read
             tag_missing(i, minorVersion);

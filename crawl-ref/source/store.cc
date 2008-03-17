@@ -351,7 +351,7 @@ store_val_type CrawlStoreValue::get_type() const
 
 //////////////////////////////
 // Read/write from/to savefile
-void CrawlStoreValue::write(tagHeader &th) const
+void CrawlStoreValue::write(writer &th) const
 {
     ASSERT(!(flags & SFLAG_UNSET));
 
@@ -423,7 +423,7 @@ void CrawlStoreValue::write(tagHeader &th) const
     }
 }
 
-void CrawlStoreValue::read(tagHeader &th)
+void CrawlStoreValue::read(reader &th)
 {
     type = static_cast<store_val_type>(unmarshallByte(th));
     flags = (store_flags) unmarshallByte(th);
@@ -1038,7 +1038,7 @@ CrawlHashTable::~CrawlHashTable()
 
 //////////////////////////////
 // Read/write from/to savefile
-void CrawlHashTable::write(tagHeader &th) const
+void CrawlHashTable::write(writer &th) const
 {
     assert_validity();
     if (empty())
@@ -1062,7 +1062,7 @@ void CrawlHashTable::write(tagHeader &th) const
     assert_validity();
 }
 
-void CrawlHashTable::read(tagHeader &th)
+void CrawlHashTable::read(reader &th)
 {
     assert_validity();
 
@@ -1327,7 +1327,7 @@ CrawlVector::~CrawlVector()
 
 //////////////////////////////
 // Read/write from/to savefile
-void CrawlVector::write(tagHeader &th) const
+void CrawlVector::write(writer &th) const
 {
     assert_validity();
     if (empty())
@@ -1352,7 +1352,7 @@ void CrawlVector::write(tagHeader &th) const
     assert_validity();
 }
 
-void CrawlVector::read(tagHeader &th)
+void CrawlVector::read(reader &th)
 {
     assert_validity();
 

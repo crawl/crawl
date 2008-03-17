@@ -18,7 +18,7 @@
 
 enum tag_type   // used during save/load process to identify data blocks
 {
-    TAG_VERSION = 0,                    // should NEVER be read in!
+    TAG_NO_TAG = 0,                     // should NEVER be read in!
     TAG_YOU = 1,                        // 'you' structure
     TAG_YOU_ITEMS,                      // your items
     TAG_YOU_DUNGEON,                    // dungeon specs (stairs, branches, features)
@@ -41,107 +41,82 @@ enum tag_file_type   // file types supported by tag system
     TAGTYPE_PLAYER_NAME         // Used only to read the player name
 };
 
-struct tagHeader 
+/* ***********************************************************************
+ * writer API
+ * *********************************************************************** */
+
+class writer
 {
-    short tagID;
-    long offset;
+public:
+    writer(FILE* output)
+        : _file(output), _pbuf(0) {}
+    writer(std::vector<unsigned char>* poutput)
+        : _file(0), _pbuf(poutput) {}
 
-    // File handle for direct file writes.
-    FILE *file;
-
-    tagHeader() : tagID(0), offset(0L), file(NULL) { }
-    tagHeader(FILE *f) : tagID(0), offset(0L), file(f) { }
-    unsigned char readByte();
     void writeByte(unsigned char byte);
     void write(const void *data, size_t size);
-    void read(void *data, size_t size);
-    void advance(int skip);
+
+private:
+    FILE* _file;
+    std::vector<unsigned char>* _pbuf;
 };
 
-// last updated 22jan2001 {gdl}
+void marshallByte    (writer &, char );
+void marshallShort   (writer &, short );
+void marshallLong    (writer &, long );
+void marshallFloat   (writer &, float );
+void marshallBoolean (writer &, bool );
+void marshallString  (writer &, const std::string &, int maxSize = 0);
+void marshallCoord   (writer &, const coord_def &);
+void marshallItem    (writer &, const item_def &);
+
 /* ***********************************************************************
- * called from: files tags
+ * reader API
  * *********************************************************************** */
-int write2(FILE * file, const char *buffer, unsigned int count);
 
+class reader
+{
+public:
+    reader(FILE* input)
+        : _file(input), _pbuf(0), _read_offset(0) {}
+    reader(const std::vector<unsigned char>& input)
+        : _file(0), _pbuf(&input), _read_offset(0) {}
 
-// last updated 22jan2001 {gdl}
+    unsigned char readByte();
+    void read(void *data, size_t size);
+
+private:
+    FILE* _file;
+    const std::vector<unsigned char>* _pbuf;
+    unsigned int _read_offset;
+};
+
+char        unmarshallByte    (reader &);
+short       unmarshallShort   (reader &);
+long        unmarshallLong    (reader &);
+float       unmarshallFloat   (reader &);
+bool        unmarshallBoolean (reader &);
+int         unmarshallCString (reader &, char *data, int maxSize);
+std::string unmarshallString  (reader &, int maxSize = 1000);
+void        unmarshallCoord   (reader &, coord_def &c);
+void        unmarshallItem    (reader &, item_def &item);
+
 /* ***********************************************************************
- * called from: files tags
+ * Tag interface
  * *********************************************************************** */
-int read2(FILE * file, char *buffer, unsigned int count);
 
-
-// last updated 22jan2001 {gdl}
-/* ***********************************************************************
- * called from: files tags
- * *********************************************************************** */
-void marshallByte(tagHeader &th, char data);
-void marshallShort(tagHeader &th, short data);
-void marshallLong(tagHeader &th, long data);
-void marshallFloat(tagHeader &th, float data);
-void marshallBoolean(tagHeader &th, bool data);
-void marshallString(tagHeader &th, const std::string &data,
-                    int maxSize = 0);
-void marshallCoord(tagHeader &th, const coord_def &c);
-void marshallItem(tagHeader &th, const item_def &item);
-
-// last updated 22jan2001 {gdl}
-/* ***********************************************************************
- * called from: tags files
- * *********************************************************************** */
-char unmarshallByte(tagHeader &th);
-short unmarshallShort(tagHeader &th);
-long unmarshallLong(tagHeader &th);
-float unmarshallFloat(tagHeader &th);
-bool unmarshallBoolean(tagHeader &th);
-int unmarshallCString(tagHeader &th, char *data, int maxSize);
-std::string unmarshallString(tagHeader &th, int maxSize = 1000);
-void unmarshallCoord(tagHeader &th, coord_def &c);
-void unmarshallItem(tagHeader &th, item_def &item);
-
-std::string make_date_string( time_t in_date );
-time_t parse_date_string( char[20] );
-
-// last updated 22jan2001 {gdl}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void tag_init(long largest_tag = 100000);
-
-
-// last updated 22jan2001 {gdl}
-/* ***********************************************************************
- * called from: files
- * *********************************************************************** */
-void tag_construct(tagHeader &th, int i);
-
-
-// last updated 22jan2001 {gdl}
-/* ***********************************************************************
- * called from: files
- * *********************************************************************** */
-void tag_write(tagHeader &th, FILE *saveFile);
-
-
-// last updated 22jan2001 {gdl}
-/* ***********************************************************************
- * called from: files
- * *********************************************************************** */
+tag_type tag_read(FILE* inf, char minorVersion);
+void tag_write(tag_type tagID, FILE* outf);
 void tag_set_expected(char tags[], int fileType);
-
-
-// last updated 22jan2001 {gdl}
-/* ***********************************************************************
- * called from: files
- * *********************************************************************** */
 void tag_missing(int tag, char minorVersion);
 
-
-// last updated 22jan2001 {gdl}
 /* ***********************************************************************
- * called from: files
+ * misc
  * *********************************************************************** */
-int tag_read(FILE *fp, char minorVersion);
+
+int write2(FILE * file, const void *buffer, unsigned int count);
+int read2(FILE * file, void *buffer, unsigned int count);
+std::string make_date_string( time_t in_date );
+time_t parse_date_string( char[20] );
 
 #endif // TAGS_H
