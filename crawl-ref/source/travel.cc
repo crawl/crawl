@@ -1043,7 +1043,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
         {
             const std::string prompt =
                 make_stringf(
-                    "Could not pick up %s here, shall I ignore %s? ",
+                    "Could not pick up %s here; shall I ignore %s?",
                     tried_pickup == 1? "an item" : "some items",
                     tried_pickup == 1? "it" : "them");
             // Make Escape => 'n' and stop run.
@@ -2175,7 +2175,7 @@ static int prompt_travel_branch(int prompt_flags)
 
                     if (msg != "")
                     {
-                        msg += "Go there anyways?";
+                        msg += "Go there anyway?";
                         if(!yesno(msg.c_str()))
                             return (ID_CANCEL);
                     }

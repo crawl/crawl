@@ -2934,10 +2934,10 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove)
     if (remove)
     {
         std::string prompt =
-            item.base_type == OBJ_WEAPONS ? "Unwield" : "Remov";
-        prompt += "ing this item could be fatal. ";
+            item.base_type == OBJ_WEAPONS ? "Unwielding" : "Removing";
+        prompt += " this item could be fatal. ";
         prompt += item.base_type == OBJ_WEAPONS ? "Unwield" : "Remove";
-        prompt += " anyway? ";
+        prompt += " anyway?";
 
         if ((prop_str >= you.strength || prop_int >= you.intel ||
              prop_dex >= you.dex)
@@ -2952,7 +2952,7 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove)
             item.base_type == OBJ_WEAPONS ? "Wield" : "Wear";
         prompt += "ing this item could be fatal. ";
         prompt += item.base_type == OBJ_WEAPONS ? "Wield" : "Put on";
-        prompt += " anyway? ";
+        prompt += " anyway?";
                     
         if ((-prop_str >= you.strength || -prop_int >= you.intel ||
              -prop_dex >= you.dex)

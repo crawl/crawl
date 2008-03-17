@@ -1183,7 +1183,7 @@ bool check_warning_inscriptions( const item_def& item,
         
         std::string prompt = "Really " + operation_verb(oper) + " ";
         prompt += item.name(DESC_INVENTORY);
-        prompt += "? ";
+        prompt += "?";
         return (yesno(prompt.c_str(), false, 'n')
                 && check_old_item_warning(item, oper));
     }

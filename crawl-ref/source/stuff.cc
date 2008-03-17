@@ -793,10 +793,13 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity( AI_FORCE_INTERRUPT );
 
+    std::string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
+    // std::string prompt = make_stringf("%s (y/n) ", str);
+
     for (;;)
     {
         if ( !noprompt )
-            mpr(str, MSGCH_PROMPT);
+            mpr(prompt.c_str(), MSGCH_PROMPT);
 
         int tmp = getchm(KC_CONFIRM);
 

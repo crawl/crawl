@@ -1145,7 +1145,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
         mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PLAIN, YELLOW);
 
-        if (!yesno("Enter next level anyways?", true, 0, true, false))
+        if (!yesno("Enter next level anyway?", true, 0, true, false))
         {
             interrupt_activity( AI_FORCE_INTERRUPT );
             return;

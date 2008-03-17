@@ -3735,7 +3735,7 @@ void offer_items()
             return;
         }
 
-        if (!yesno("Do you wish to part with all of your money? ", true, 'n'))
+        if (!yesno("Do you wish to part with all of your money?", true, 'n'))
             return;
 
         int donation_value = (int) (you.gold/200 * log((double)you.gold));

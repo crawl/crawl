@@ -426,7 +426,7 @@ static void handle_wizard_command( void )
         mpr( "If you continue, your game will not be scored!", MSGCH_WARN );
 #endif
 
-        if (!yesno( "Do you really want to enter wizard mode? ", false, 'n' ))
+        if (!yesno( "Do you really want to enter wizard mode?", false, 'n' ))
             return;
 
         you.wizard = true;
@@ -987,7 +987,7 @@ static void handle_wizard_command( void )
         if (testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
             || testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE))
         {
-            if (!yesno("Force level to be mappable? ", true, 'n'))
+            if (!yesno("Force level to be mappable?", true, 'n'))
             {
                 canned_msg( MSG_OK );
                 return;
@@ -2269,7 +2269,7 @@ void process_command( command_type cmd )
 #endif
 
     case CMD_SAVE_GAME:
-        if (yesno("Save game and exit? ", true, 'n'))
+        if (yesno("Save game and exit?", true, 'n'))
             save_game(true);
         break;
 
@@ -3956,7 +3956,7 @@ static void move_player(int move_x, int move_y)
                 || is_sanctuary(mon->x, mon->y))
             {
                 snprintf(info, INFO_SIZE,
-                         "Really attack %s, despite your sanctuary? ",
+                         "Really attack %s, despite your sanctuary?",
                          mon->name(DESC_NOCAP_THE).c_str());
                          
                 if (!yesno(info, true, 'n'))
