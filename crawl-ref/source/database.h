@@ -33,7 +33,6 @@ extern "C" {
 
 void databaseSystemInit();
 void databaseSystemShutdown();
-DBM  *openDB(const char *dbFilename);
 datum database_fetch(DBM *database, const std::string &key);
 
 typedef bool (*db_find_filter)(std::string key, std::string body);

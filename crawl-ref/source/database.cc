@@ -24,183 +24,165 @@
 #include "libutil.h"
 #include "stuff.h"
 
+// TextDB handles dependency checking the db vs text files, creating the
+// db, loading, and destroying the DB.
+class TextDB
+{
+ public:
+    // db_name is the savedir-relative name of the db file,
+    // minus the "db" extension.
+    TextDB(const char* db_name, ...);
+    ~TextDB() { shutdown(); }
+    void init();
+    void shutdown();
+    DBM* get() { return _db; }
+
+    // Make it easier to migrate from raw DBM* to TextDB
+    operator bool() const { return _db!=0; }
+    operator DBM*() const { return _db; }
+
+ private:
+    bool _needs_update() const;
+    void _regenerate_db();
+
+ private:
+    const char* const _db_name;            // relative to savedir
+    std::vector<std::string> _input_files; // relative to datafile dirs
+    DBM* _db;
+};
+
 // Convenience functions for (read-only) access to generic
 // berkeley DB databases.
-
-typedef std::list<DBM *> db_list;
-static db_list OpenDBList;
-
-static DBM* DescriptionDB;
-static DBM* RandartDB;
-static DBM* SpeakDB;
-
-// shout and speak databases are all generated from a single
-// text file in the data directory and stored as .db files in the
-// save directory.  New databases that follow this same pattern should
-// add themselves to the db_id enum and the singleFileDBs array below.
-enum db_id
-{
-    DB_SHOUT,
-    DB_HELP,
-    MAX_DBID
-};
-
-struct SingleFileDB
-{
-    SingleFileDB(const char *_base_name) :
-        base_name(_base_name), db(NULL) {}
-
-    std::string base_name;
-    DBM *db;
-};
-
-SingleFileDB singleFileDBs[MAX_DBID] = 
-{
-    SingleFileDB("shout"),
-    SingleFileDB("help")
-};
-
-#define DESC_BASE_NAME "descript"
-#define DESC_TXT_DIR   "descript"
-#define DESC_DB        (DESC_BASE_NAME ".db")
-
-#define DATABASE_TXT_DIR  "database"
-#define RANDART_BASE_NAME "randart"
-#define SPEAK_BASE_NAME   "speak"
-#define RANDART_DB        (RANDART_BASE_NAME ".db")
-#define SPEAK_DB          (SPEAK_BASE_NAME ".db")
-
-static std::vector<std::string> description_txt_paths();
-static std::vector<std::string> randart_txt_paths();
-static std::vector<std::string> speak_txt_paths();
-static void generate_description_db();
-static void generate_randart_db();
-static void generate_speak_db();
 static void store_text_db(const std::string &in, const std::string &out);
-static DBM *get_dbm(db_id id);
+
+static TextDB AllDBs[] =
+{
+    TextDB( "db/descriptions",
+            "descript/features.txt",
+            "descript/items.txt",
+            "descript/unident.txt",
+            "descript/monsters.txt",
+            "descript/spells.txt",
+            "descript/gods.txt",
+            "descript/branches.txt",
+            0),
+    TextDB( "db/randart",
+            "database/randname.txt",
+            "database/rand_wpn.txt", // mostly weapons
+            "database/rand_arm.txt", // mostly armour
+            "database/rand_all.txt", // jewellery and general
+            0),
+    TextDB( "db/speak",
+            "database/monspeak.txt", // monster speech
+            "database/wpnnoise.txt", // noisy weapon speech
+            "database/insult.txt",   // imp/demon taunts
+            0),
+    TextDB( "db/shout",
+            "database/shout.txt",
+            "database/insult.txt",   // imp/demon taunts, again
+            0),
+    TextDB( "db/help",  "database/help.txt",  0),
+};
+
+static TextDB& DescriptionDB = AllDBs[0];
+static TextDB& RandartDB = AllDBs[1];
+static TextDB& SpeakDB = AllDBs[2];
+static TextDB& ShoutDB = AllDBs[3];
+static TextDB& HelpDB = AllDBs[4];
+
+// ----------------------------------------------------------------------
+// TextDB
+// ----------------------------------------------------------------------
+
+TextDB::TextDB(const char* db_name, ...)
+    : _db_name(db_name),
+      _db(NULL)
+{
+    va_list args;
+    va_start(args, db_name);
+    while (true)
+    {
+        const char* input_file = va_arg(args, const char *);
+        if (input_file == 0) break;
+        ASSERT( strstr(input_file, ".txt") != 0 );      // probably forgot the terminating 0
+        _input_files.push_back(input_file);
+    }
+    va_end(args);
+}
+
+void TextDB::init()
+{
+    if (_needs_update())
+        _regenerate_db();
+    const std::string full_db_path = get_savedir_path(_db_name);
+    _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
+    if (_db == NULL)
+        end(1, true, "Failed to open DB: %s", full_db_path.c_str());
+}
+
+void TextDB::shutdown()
+{
+    if (_db)
+    {
+        dbm_close(_db);
+        _db = NULL;
+    }
+}
+
+bool TextDB::_needs_update() const
+{
+    std::string full_db_path = get_savedir_path(std::string(_db_name) + ".db");
+    for (unsigned int i=0; i<_input_files.size(); i++)
+    {
+        std::string full_input_path = datafile_path(_input_files[i], true);
+        if (is_newer(full_input_path, full_db_path))
+            return true;
+    }
+    return false;
+}
+
+void TextDB::_regenerate_db()
+{
+    std::string db_path = get_savedir_path(_db_name);
+    std::string full_db_path = db_path + ".db";
+
+    {
+        std::string output_dir = get_parent_directory(db_path);
+        if (!check_dir("DB directory", output_dir))
+            end(1);
+    }
+
+    file_lock lock(db_path + ".lk", "wb");
+    unlink( full_db_path.c_str() );
+
+    for (unsigned int i=0; i<_input_files.size(); i++)
+    {
+        std::string full_input_path = datafile_path(_input_files[i], true);
+        store_text_db(full_input_path, db_path);
+    }
+
+    DO_CHMOD_PRIVATE(full_db_path.c_str());
+}
+
+// ----------------------------------------------------------------------
+// DB system
+// ----------------------------------------------------------------------
 
 void databaseSystemInit()
 {
-    if (!DescriptionDB)
-    {
-        std::string descriptionPath = get_savedir_path(DESC_DB);
-        std::vector<std::string> textPaths = description_txt_paths();
-
-        // If any of the description text files are newer then
-        // aggregated description db, then regenerate the whole db
-        for (int i = 0, size = textPaths.size(); i < size; i++)
-            if (is_newer(textPaths[i], descriptionPath))
-            {
-                generate_description_db();
-                break;
-            }
-
-        descriptionPath.erase(descriptionPath.length() - 3);
-        if (!(DescriptionDB = openDB(descriptionPath.c_str())))
-            end(1, true, "Failed to open DB: %s", descriptionPath.c_str());
-    }
-
-    if (!RandartDB)
-    {
-        std::string randartPath = get_savedir_path(RANDART_DB);
-        std::vector<std::string> textPaths = randart_txt_paths();
-
-        // If any of the randart text files are newer then
-        // aggregated randart db, then regenerate the whole db
-        for (int i = 0, size = textPaths.size(); i < size; i++)
-            if (is_newer(textPaths[i], randartPath))
-            {
-                generate_randart_db();
-                break;
-            }
-
-        randartPath.erase(randartPath.length() - 3);
-        if (!(RandartDB = openDB(randartPath.c_str())))
-            end(1, true, "Failed to open DB: %s", randartPath.c_str());
-    }
-
-    if (!SpeakDB)
-    {
-        std::string speakPath = get_savedir_path(SPEAK_DB);
-        std::vector<std::string> textPaths = speak_txt_paths();
-
-        // If any of the speech text files are newer then
-        // aggregated speak db, then regenerate the whole db
-        for (int i = 0, size = textPaths.size(); i < size; i++)
-            if (is_newer(textPaths[i], speakPath))
-            {
-                generate_speak_db();
-                break;
-            }
-
-        speakPath.erase(speakPath.length() - 3);
-        if (!(SpeakDB = openDB(speakPath.c_str())))
-            end(1, true, "Failed to open DB: %s", speakPath.c_str());
-    }
-    
-    for (unsigned int i = 0; i < MAX_DBID; i++)
-    {
-        if (singleFileDBs[i].db)
-            continue;
-
-        std::string dbPath = get_savedir_path(
-            singleFileDBs[i].base_name + ".db");
-
-        std::string filename = DATABASE_TXT_DIR;
-        filename += FILE_SEPARATOR;
-        filename += singleFileDBs[i].base_name;
-        filename += ".txt";
-        
-        std::string dbText = datafile_path(filename);
-            
-        std::string dbBase = get_savedir_path(
-            singleFileDBs[i].base_name);
-
-        if (!is_newer(dbPath, dbText))
-        {
-            file_lock lock(get_savedir_path(
-                singleFileDBs[i].base_name + ".lk"), "wb");
-            unlink( dbPath.c_str() );
-
-            store_text_db(dbText, dbBase);
-            DO_CHMOD_PRIVATE(dbPath.c_str());
-        }
-
-        if (!(singleFileDBs[i].db = openDB(dbBase.c_str())))
-            end(1, true, "Failed to open DB: %s", dbBase.c_str());
-    }
+    for (unsigned int i=0; i < ARRAYSIZE(AllDBs); i++)
+        AllDBs[i].init();
 }
 
 void databaseSystemShutdown()
 {
-    for (db_list::iterator i = OpenDBList.begin();
-         i != OpenDBList.end(); ++i)
-    {
-        dbm_close(*i);
-    }
-    OpenDBList.clear();
-    DescriptionDB = NULL;
-    RandartDB = NULL;
-    SpeakDB = NULL;
+    for (unsigned int i=0; i < ARRAYSIZE(AllDBs); i++)
+        AllDBs[i].shutdown();
 }
 
 ////////////////////////////////////////////////////////////////////////////
 // Main DB functions
 
-// This is here, and is external, just for future expansion -- if we
-// want to allow external modules to manage their own DB, they can
-// use this for the sake of convenience.  It's arguable that it's
-// morally wrong to have the database module manage the memory here.
-// But hey, life is hard and you can write your own berkeley DB
-// calls if you like.
-DBM   *openDB(const char *dbFilename)
-{
-    DBM *dbToReturn = dbm_open(dbFilename, O_RDONLY, 0660);
-    if (dbToReturn)
-        OpenDBList.push_front(dbToReturn);
-
-    return dbToReturn;
-}
 
 datum database_fetch(DBM *database, const std::string &key)
 {
@@ -560,168 +542,34 @@ static std::string query_database(DBM *db, std::string key,
 
 std::string getLongDescription(const std::string &key)
 {
-    if (!DescriptionDB)
+    if (! DescriptionDB.get())
         return ("");
 
-    return query_database(DescriptionDB, key, true, true);
+    return query_database(DescriptionDB.get(), key, true, true);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
                                                 db_find_filter filter)
 {
-    if (!DescriptionDB)
+    if (!DescriptionDB.get())
     {
         std::vector<std::string> empty;
         return (empty);
     }
 
-    return database_find_keys(DescriptionDB, regex, true, filter);
+    return database_find_keys(DescriptionDB.get(), regex, true, filter);
 }
 
 std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
                                                   db_find_filter filter)
 {
-    if (!DescriptionDB)
+    if (!DescriptionDB.get())
     {
         std::vector<std::string> empty;
         return (empty);
     }
 
-    return database_find_bodies(DescriptionDB, regex, true, filter);
-}
-
-static std::vector<std::string> description_txt_paths()
-{
-    std::vector<std::string> txt_file_names;
-    std::vector<std::string> paths;
-
-    txt_file_names.push_back("features");
-    txt_file_names.push_back("items");
-    txt_file_names.push_back("unident");
-    txt_file_names.push_back("monsters");
-    txt_file_names.push_back("spells");
-    txt_file_names.push_back("gods");
-    txt_file_names.push_back("branches");
-
-    for (int i = 0, size = txt_file_names.size(); i < size; i++)
-    {
-        std::string name = DESC_TXT_DIR;
-        name += FILE_SEPARATOR;
-        name += txt_file_names[i];
-        name += ".txt";
-
-        std::string txt_path = datafile_path(name);
-
-        if (!txt_path.empty())
-            paths.push_back(txt_path);
-    }
-
-    return (paths);
-}
-
-static void generate_description_db()
-{
-    std::string db_path = get_savedir_path(DESC_BASE_NAME);
-    std::string full_db_path = get_savedir_path(DESC_DB);
-
-    std::vector<std::string> txt_paths = description_txt_paths();
-
-    file_lock lock(get_savedir_path(DESC_BASE_NAME ".lk"), "wb");
-    unlink( full_db_path.c_str() );
-
-    for (int i = 0, size = txt_paths.size(); i < size; i++)
-        store_text_db(txt_paths[i], db_path);
-    DO_CHMOD_PRIVATE(full_db_path.c_str());
-}
-
-static std::vector<std::string> randart_txt_paths()
-{
-    std::vector<std::string> txt_file_names;
-    std::vector<std::string> paths;
-
-    txt_file_names.push_back("randname");
-    txt_file_names.push_back("rand_wpn"); // mostly weapons
-    txt_file_names.push_back("rand_arm"); // mostly armour
-    txt_file_names.push_back("rand_all"); // jewellery and general
-
-    for (int i = 0, size = txt_file_names.size(); i < size; i++)
-    {
-        std::string name = DATABASE_TXT_DIR;
-        name += FILE_SEPARATOR;
-        name += txt_file_names[i];
-        name += ".txt";
-
-        std::string txt_path = datafile_path(name);
-
-        if (!txt_path.empty())
-            paths.push_back(txt_path);
-    }
-
-    return (paths);
-}
-
-static void generate_randart_db()
-{
-    std::string db_path = get_savedir_path(RANDART_BASE_NAME);
-    std::string full_db_path = get_savedir_path(RANDART_DB);
-
-    std::vector<std::string> txt_paths = randart_txt_paths();
-
-    file_lock lock(get_savedir_path(RANDART_BASE_NAME ".lk"), "wb");
-    unlink( full_db_path.c_str() );
-
-    for (int i = 0, size = txt_paths.size(); i < size; i++)
-        store_text_db(txt_paths[i], db_path);
-    DO_CHMOD_PRIVATE(full_db_path.c_str());
-}
-
-static std::vector<std::string> speak_txt_paths()
-{
-    std::vector<std::string> txt_file_names;
-    std::vector<std::string> paths;
-
-    txt_file_names.push_back("monspeak"); // monster speech
-    txt_file_names.push_back("wpnnoise"); // noisy weapon speech
-    txt_file_names.push_back("insult");   // imp/demon taunts
-
-    for (int i = 0, size = txt_file_names.size(); i < size; i++)
-    {
-        std::string name = DATABASE_TXT_DIR;
-        name += FILE_SEPARATOR;
-        name += txt_file_names[i];
-        name += ".txt";
-
-        std::string txt_path = datafile_path(name);
-
-        if (!txt_path.empty())
-            paths.push_back(txt_path);
-    }
-
-    return (paths);
-}
-
-static void generate_speak_db()
-{
-    std::string db_path = get_savedir_path(SPEAK_BASE_NAME);
-    std::string full_db_path = get_savedir_path(SPEAK_DB);
-
-    std::vector<std::string> txt_paths = speak_txt_paths();
-
-    file_lock lock(get_savedir_path(SPEAK_BASE_NAME ".lk"), "wb");
-    unlink( full_db_path.c_str() );
-
-    for (int i = 0, size = txt_paths.size(); i < size; i++)
-        store_text_db(txt_paths[i], db_path);
-    DO_CHMOD_PRIVATE(full_db_path.c_str());
-}
-
-static DBM *get_dbm(db_id id)
-{
-    DBM *ret = singleFileDBs[id].db;
-    // If this assertion fires, the database hasn't been initialized
-    // properly in databaseSystemInit().
-    ASSERT(ret);
-    return ret;
+    return database_find_bodies(DescriptionDB.get(), regex, true, filter);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -731,7 +579,7 @@ std::string getShoutString(const std::string &monst,
 {
     int num_replacements = 0;
 
-    return getRandomizedStr(get_dbm(DB_SHOUT), monst, suffix, 
+    return getRandomizedStr(ShoutDB.get(), monst, suffix, 
                             num_replacements);
 }
 
@@ -769,5 +617,5 @@ std::string getRandNameString(const std::string &itemtype,
 
 std::string getHelpString(const std::string &topic)
 {
-    return query_database(get_dbm(DB_HELP), topic, false, true);
+    return query_database(HelpDB.get(), topic, false, true);
 }
