@@ -107,7 +107,7 @@ static const char *xom_generic_beneficence[] =
 
 const char *describe_xom_favour()
 {
-    return (you.piety > 160) ? "A beloved toy of Xom." : 
+    return (you.piety > 160) ? "A beloved toy of Xom." :
            (you.piety > 145) ? "A favourite toy of Xom." :
            (you.piety > 130) ? "A very special toy of Xom." :
            (you.piety > 115) ? "A special toy of Xom." :
@@ -215,14 +215,15 @@ void xom_makes_you_cast_random_spell(int sever)
     const int nxomspells = ARRAYSIZE(xom_spells);
     if (spellenum > nxomspells)
         spellenum = nxomspells;
-    
+
     const spell_type spell = xom_spells[random2(spellenum)];
 
     god_speaks(GOD_XOM, "Xom's power flows through you!");
-    
+
 #if DEBUG_DIAGNOSTICS || DEBUG_RELIGION || DEBUG_XOM
     mprf(MSGCH_DIAGNOSTICS,
-         "Xom_acts();spell: %d, spellenum: %d", spell, spellenum);
+         "xom_makes_you_cast_random_spell(); spell: %d, spellenum: %d",
+         spell, spellenum);
 #endif
 
     your_spells(spell, sever, false);
@@ -235,7 +236,7 @@ static void xom_make_item(object_class_type base,
 {
     int thing_created =
         items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE);
-                
+
     if (thing_created == NON_ITEM)
     {
         god_speaks(GOD_XOM, failmsg);
@@ -343,7 +344,7 @@ static bool xom_annoyance_gift(int power)
 
             const object_class_type objtype =
                 get_unrelated_wield_class(weapon->base_type);
-            
+
             if (power > random2(256))
                 acquirement(objtype, GOD_XOM);
             else
@@ -508,7 +509,7 @@ static bool xom_is_good(int sever)
                 goto try_again;
             you.berserk_penalty = NO_BERSERK_PENALTY;
         }
-        
+
         god_speaks(GOD_XOM, random_choose_string(
                        "\"Go forth and destroy!\"",
                        "\"Go forth and cause havoc, mortal!\"",
@@ -544,7 +545,7 @@ static bool xom_is_good(int sever)
         const int radius = random2avg(sever/2, 3) + 1;
         if (!vitrify_area(radius)) // can fail with radius 1 or in open areas
             goto try_again;
-            
+
         god_speaks(GOD_XOM, random_choose_string(
                        "You feel watched.",
                        "Everything around seems to assume a strange transparency.",
@@ -606,10 +607,10 @@ static bool xom_is_good(int sever)
                        "Xom's power touches on you for a moment.",
                        "You hear Xom's maniacal cackling.", NULL));
         mpr("Your body is suffused with distortional energy.");
-                
+
         set_hp(1 + random2(you.hp), false);
         deflate_hp(you.hp_max / 2, true);
-                
+
         bool failMsg = true;
         for (int i = random2(4); i >= 0; --i)
         {
@@ -621,7 +622,7 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 10)
     {
-        if (create_monster( xom_random_demon(sever, one_chance_in(8)),
+        if (create_monster(xom_random_demon(sever, one_chance_in(8)),
                             0, BEH_GOD_GIFT,
                             you.x_pos, you.y_pos, you.pet_target,
                             MONS_PROGRAM_BUG ) != -1)
@@ -640,7 +641,7 @@ static bool xom_is_good(int sever)
             you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
 
         mpr("The area is suffused with divine lightning!");
-                
+
         bolt beam;
         beam.beam_source = NON_MONSTER;
         beam.type = dchar_glyph(DCHAR_FIRED_BURST);
@@ -656,13 +657,13 @@ static bool xom_is_good(int sever)
         beam.is_tracer = false;
         beam.is_explosion = true;
         explosion(beam);
-                
+
         if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
         {
             mpr("Your divine protection wanes.");
             you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
         }
-                
+
         done = true;
     }
 
@@ -684,9 +685,9 @@ static bool xom_is_bad(int sever)
                            "Xom's attention almost turns to you for a moment.",
                            "Xom's power almost touches on you for a moment.",
                            "You almost hear Xom's maniacal laughter.", NULL));
-                
+
             miscast_effect( SPTYP_RANDOM, 0, 0, 0, "the mischief of Xom" );
-                
+
             done = true;
         }
         else if (random2(sever) <= 3)
@@ -696,10 +697,10 @@ static bool xom_is_bad(int sever)
                            "Xom's attention turns to you for a moment.",
                            "Xom's power touches on you for a moment.",
                            "You hear Xom's maniacal laughter.", NULL));
-                
-            miscast_effect( SPTYP_RANDOM, 0, 0, random2(2), 
+
+            miscast_effect( SPTYP_RANDOM, 0, 0, random2(2),
                             "the capriciousness of Xom" );
-                
+
             done = true;
         }
         else if (random2(sever) <= 4)
@@ -709,10 +710,10 @@ static bool xom_is_bad(int sever)
                            "Xom's malign attention turns to you for a moment.",
                            "Xom's power touches on you for a moment.",
                            "You hear Xom's maniacal laughter.", NULL));
-                
+
             lose_stat(STAT_RANDOM, 1 + random2(3), true,
                       "the capriciousness of Xom" );
-                
+
             done = true;
         }
         else if (random2(sever) <= 5)
@@ -722,10 +723,10 @@ static bool xom_is_bad(int sever)
                            "Xom's attention turns to you for a moment.",
                            "Xom's power touches on you for a moment.",
                            "You hear Xom's maniacal laughter.", NULL));
-                
-            miscast_effect( SPTYP_RANDOM, 0, 0, random2(3), 
+
+            miscast_effect( SPTYP_RANDOM, 0, 0, random2(3),
                             "the capriciousness of Xom" );
-                
+
             done = true;
         }
         else if (random2(sever) <= 6)
@@ -738,10 +739,10 @@ static bool xom_is_bad(int sever)
                            "Xom's power brushes against you for a moment.",
                            "You hear Xom's avuncular chuckle.", NULL));
             mpr("Your body is suffused with distortional energy.");
-                
+
             set_hp(1 + random2(you.hp), false);
             deflate_hp(you.hp_max / 2, true);
-                
+
             bool failMsg = true;
             for (int i = random2(4); i >= 0; --i)
             {
@@ -782,7 +783,7 @@ static bool xom_is_bad(int sever)
                            "\"You have grown too confident for your meagre worth.\"",
                            "Xom's power touches on you for a moment.",
                            "You hear Xom's maniacal laughter.", NULL));
-                
+
             if (one_chance_in(4))
             {
                 drain_exp();
@@ -796,7 +797,7 @@ static bool xom_is_bad(int sever)
                 mpr("A wave of agony tears through your body!");
                 set_hp(1 + (you.hp / 2), false);
             }
-                
+
             done = true;
         }
         else if (random2(sever) <= 9)
@@ -806,7 +807,7 @@ static bool xom_is_bad(int sever)
                            "\"Fight to survive, mortal.\"",
                            "\"Let's see if it's strong enough to survive yet.\"",
                            "You hear Xom's maniacal laughter.", NULL));
-                
+
             if (one_chance_in(4))
                 dancing_weapon(100, true);      // nasty, but fun
             else
@@ -821,7 +822,7 @@ static bool xom_is_bad(int sever)
                         MHITNOT, MONS_PROGRAM_BUG);
                 }
             }
-                
+
             done = true;
         }
         else if (random2(sever) <= 10)
@@ -831,10 +832,10 @@ static bool xom_is_bad(int sever)
                            "Xom's attention turns to you.",
                            "Xom's power touches on you.",
                            "Xom giggles.", NULL));
-                
-            miscast_effect( SPTYP_RANDOM, 0, 0, random2(4), 
+
+            miscast_effect( SPTYP_RANDOM, 0, 0, random2(4),
                             "the severe capriciousness of Xom" );
-                
+
             done = true;
         }
         else if (one_chance_in(sever) && (you.level_type != LEVEL_ABYSS))
@@ -843,9 +844,9 @@ static bool xom_is_bad(int sever)
                            "\"You have grown too comfortable in your little world, mortal!\"",
                            "Xom casts you into the Abyss!",
                            "The world seems to spin as Xom's maniacal laughter rings in your ears.", NULL));
-                
+
             banished(DNGN_ENTER_ABYSS, "Xom");
-                
+
             done = true;
         }
     }
@@ -910,7 +911,7 @@ void xom_acts(bool niceness, int sever)
             you.entry_cause_god = crawl_state.which_god_acting();
         }
     }
-    
+
     if (you.religion == GOD_XOM && coinflip())
         you.piety = MAX_PIETY - you.piety;
 }

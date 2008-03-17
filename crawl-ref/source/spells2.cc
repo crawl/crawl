@@ -1477,7 +1477,7 @@ void summon_scorpions(int pow)
 void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 {
     int numsc = std::min(2 + (random2(pow) / 4), 6);
-    beh_type beha = divine_gift? BEH_GOD_GIFT : BEH_FRIENDLY;
+    beh_type beha = divine_gift ? BEH_GOD_GIFT : BEH_FRIENDLY;
 
     switch (ibc)
     {
@@ -1529,7 +1529,7 @@ bool summon_berserker(int pow, bool god_gift)
     bool success = false;
 
     monster_type mon = MONS_TROLL;
-    
+
     if (pow <= 100)
     {
         // bears
@@ -1578,7 +1578,7 @@ bool summon_berserker(int pow, bool god_gift)
 
     int mons = create_monster( mon, numsc, beha, you.x_pos, you.y_pos,
                                MHITYOU, MONS_PROGRAM_BUG );
-    
+
     if (mons != -1)
     {
         success = true;
@@ -1667,7 +1667,7 @@ bool summon_swarm( int pow, bool unfriendly, bool god_gift )
         else if (!unfriendly && random2(pow) > 7)
             behaviour = BEH_FRIENDLY;
 
-        if (create_monster( thing_called, 3, behaviour, 
+        if (create_monster( thing_called, 3, behaviour,
                             you.x_pos, you.y_pos, MHITYOU,
                             MONS_PROGRAM_BUG, false, false, false, true))
         {
