@@ -651,9 +651,6 @@ help_file help_files[] = {
     { NULL, 0, false }
 };
 
-static std::string list_commands_err = "";
-
-
 static bool compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
     monster_type *a = static_cast<monster_type*>( entry_a->data );
@@ -963,13 +960,15 @@ static bool do_description(std::string key, std::string footer = "")
     return (true);
 }
 
-static bool find_description(bool &again)
+static bool find_description(bool &again, std::string& error_inout)
 {
     again = true;
 
     clrscr();
     viewwindow(true, false);
 
+    if (! error_inout.empty())
+        mpr(error_inout.c_str(), MSGCH_PROMPT);
     mpr("Describe a (M)onster, (S)pell, (I)tem, (F)eature, (G)od "
         "or (B)ranch?", MSGCH_PROMPT);
 
@@ -1028,7 +1027,7 @@ static bool find_description(bool &again)
         break;
 
     default:
-        list_commands_err = "Okay, then.";
+        error_inout = "Okay, then.";
         again = false;
         return (false);
     }
@@ -1044,15 +1043,18 @@ static bool find_description(bool &again)
         char buf[80];
         if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
         {
-            list_commands_err = "Okay, then.";
+            error_inout = "Okay, then.";
             return (false);
         }
 
-        regex = trimmed_string(buf);
+        if (strlen(buf) == 1)
+            regex = buf;
+        else
+            regex = trimmed_string(buf);
 
         if (regex == "")
         {
-            list_commands_err = "Description must contain at least "
+            error_inout = "Description must contain at least "
                 "one non-space.";
             return (false);
         }
@@ -1094,21 +1096,21 @@ static bool find_description(bool &again)
     {
         if (by_mon_symbol)
         {
-            list_commands_err  = "No monsters with symbol '";
-            list_commands_err += regex;
-            list_commands_err += "'";
+            error_inout  = "No monsters with symbol '";
+            error_inout += regex;
+            error_inout += "'";
         }
         else if (by_item_symbol)
         {
-            list_commands_err  = "No items with symbol '";
-            list_commands_err += regex;
-            list_commands_err += "'";
+            error_inout  = "No items with symbol '";
+            error_inout += regex;
+            error_inout += "'";
         }
         else
         {
-            list_commands_err  = "No matching ";
-            list_commands_err += type;
-            list_commands_err += "s";
+            error_inout  = "No matching ";
+            error_inout += type;
+            error_inout += "s";
         }
         return (false);
     }
@@ -1116,16 +1118,16 @@ static bool find_description(bool &again)
     {
         if (by_mon_symbol)
         {
-            list_commands_err  = "Too many monsters with symbol '";
-            list_commands_err += regex;
-            list_commands_err += "' to display";
+            error_inout  = "Too many monsters with symbol '";
+            error_inout += regex;
+            error_inout += "' to display";
         }
         else
         {
             std::ostringstream os;
             os << "Too many matching " << type << "s (" << key_list.size()
                << ") to display.";
-            list_commands_err = os.str();
+            error_inout = os.str();
         }
         return (false);
     }
@@ -1243,12 +1245,15 @@ static int keyhelp_keyfilter(int ch)
     case '/':
     {
         bool again = false;
+        std::string error;
         do {
-            if (find_description(again))
+            if (find_description(again, error))
                 if ( getch() == 0 )
                     getch();
             if (again)
+            {
                 mesclr(true);
+            }
         } while(again);
 
         viewwindow(true, false);
@@ -1630,7 +1635,6 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             true, true, cmdhelp_textfilter);
 
     
-    list_commands_err = "";
     show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
 
     if (do_redraw_screen)
@@ -1638,9 +1642,6 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
         clrscr();
         redraw_screen();
     }
-
-    if (list_commands_err != "")
-        mpr(list_commands_err.c_str());
 }
 
 void list_tutorial_help()

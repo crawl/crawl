@@ -160,7 +160,7 @@ monster_type random_monster_at_grid(dungeon_feature_type grid)
 }
 
 typedef std::map<std::string, unsigned> mon_name_map;
-static mon_name_map mon_name_cache;
+static mon_name_map Mon_Name_Cache;
 
 void init_mon_name_cache()
 {
@@ -172,7 +172,28 @@ void init_mon_name_cache()
         const int          mtype = mondata[i].mc;
         const monster_type mon   = monster_type(mtype);
 
-        mon_name_cache[name] = mon;
+        // Deal sensibly with duplicate entries; refuse or allow the insert,
+        // depending on which should take precedence.  Mostly we don't care,
+        // except looking up "rakshasa" and getting _FAKE breaks ?/M rakshasa.
+        if (Mon_Name_Cache.find(name) != Mon_Name_Cache.end())
+        {
+            if (mon == MONS_RAKSHASA_FAKE ||
+                mon == MONS_ARMOUR_MIMIC ||
+                mon == MONS_SCROLL_MIMIC ||
+                mon == MONS_POTION_MIMIC ||
+                mon == MONS_ABOMINATION_LARGE)
+            {
+                // keep previous entry
+                continue;
+            }
+            else
+            {
+                DEBUGSTR("Un-handled duplicate monster name: %s", name.c_str());
+                ASSERT(false);
+            }
+        }
+
+        Mon_Name_Cache[name] = mon;
     }
 }
 
@@ -182,9 +203,9 @@ monster_type get_monster_by_name(std::string name, bool exact)
 
     if (exact)
     {
-        mon_name_map::iterator i = mon_name_cache.find(name);
+        mon_name_map::iterator i = Mon_Name_Cache.find(name);
 
-        if (i != mon_name_cache.end())
+        if (i != Mon_Name_Cache.end())
             return static_cast<monster_type>(i->second);
 
         return MONS_PROGRAM_BUG;
