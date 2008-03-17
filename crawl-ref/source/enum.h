@@ -332,9 +332,9 @@ enum branch_type                // you.where_are_you
     BRANCH_GEHENNA,
     BRANCH_COCYTUS,
     BRANCH_TARTARUS,
-    BRANCH_HALL_OF_ZOT,
     BRANCH_INFERNO,             // unimplemented
     BRANCH_THE_PIT,             // unimplemented
+    BRANCH_HALL_OF_ZOT,
     BRANCH_CAVERNS,             // unimplemented
     NUM_BRANCHES
 };
