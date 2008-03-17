@@ -460,16 +460,16 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
 {
     const int roll = random2(1000 - (27 - you.experience_level) * 10);
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "xom_random_demon: sever = %d, roll: %d",
+    mprf(MSGCH_DIAGNOSTICS, "xom_random_demon(); sever = %d, roll: %d",
          sever, roll);
-#endif    
+#endif
     const demon_class_type dct =
         roll >= 850 ? DEMON_GREATER :
         roll >= 340 ? DEMON_COMMON  :
         DEMON_LESSER;
     const monster_type demontype =
         summon_any_demon(
-            use_greater_demons || dct != DEMON_GREATER? dct : DEMON_COMMON);
+            use_greater_demons || dct != DEMON_GREATER ? dct : DEMON_COMMON);
     return (demontype);
 }
 
