@@ -6172,9 +6172,6 @@ void player::drain_stat(int stat, int amount, actor* attacker)
 
 void player::rot(actor *who, int rotlevel, int immed_rot)
 {
-    if (is_undead)
-        return;
-
     if (rotlevel)
         rot_player( rotlevel );
     
