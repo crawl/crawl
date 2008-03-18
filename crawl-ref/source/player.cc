@@ -6172,9 +6172,15 @@ void player::drain_stat(int stat, int amount, actor* attacker)
 
 void player::rot(actor *who, int rotlevel, int immed_rot)
 {
+    if (you.is_undead
+        && (you.species != SP_VAMPIRE || you.hunger_state <= HS_HUNGRY))
+    {
+        return;
+    }
+
     if (rotlevel)
-        rot_player( rotlevel );
-    
+        rot_player(rotlevel);
+
     if (immed_rot)
         rot_hp(immed_rot);
 
