@@ -175,10 +175,10 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
 
     your_to_hit = 13 + you.dex / 2 + you.skills[SK_UNARMED_COMBAT] / 2
                   + you.skills[SK_FIGHTING] / 5;
-    
+
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
-    
+
     // vampires know how to bite and aim better when hungry
     if (you.species == SP_VAMPIRE && uattack == UNAT_BITE)
     {
@@ -193,7 +193,7 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
     }
     else if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         your_to_hit -= 3;
-    
+
     your_to_hit += slaying_bonus(PWPN_HIT);
 
     return your_to_hit;
