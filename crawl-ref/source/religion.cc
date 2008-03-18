@@ -3954,7 +3954,7 @@ void god_pitch(god_type which_god)
 
     describe_god( which_god, false );
 
-    snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?"
+    snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?",
               (you.worshipped[which_god]) ? "re" : "" );
 
     if (!yesno( info, true, 'n' ) || !yesno("Are you sure?", false, 'n'))
