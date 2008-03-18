@@ -1145,10 +1145,10 @@ std::string god_name( god_type which_god, bool long_name )
                 "Xom the Capricious", "Xom of Bloodstained Whimsey",
                 "Xom of Enforced Whimsey", "Xom of Bone-Dry Humour",
                 "Xom of Malevolent Giggling", "Xom of Malicious Giggling",
-                "Xom the Psychotic", "Xom the Psychopath",
-                "Xom of Gnomic Intent", "Xom the Fickle",
-                "Xom of Unknown Intention", "The Xom-Meister",
-                "Xom the Begetter of Turbulence"
+                "Xom the Psychotic", "Xom of Gnomic Intent",
+                "Xom the Fickle", "Xom of Unknown Intention",
+                "The Xom-Meister", "Xom the Begetter of Turbulence",
+                "Xom the Begetter of Discontinuities"
             };
             return (one_chance_in(3) ? RANDOM_ELEMENT(xom_names)
                     : "Xom of Chaos");

@@ -45,10 +45,7 @@
 
 // Which spell? First I copied all spells from you_spells(), then I
 // filtered some out (especially conjurations). Then I sorted them in
-// roughly ascending order of power. ([ds] Removed SUMMON_GUARDIAN and
-// SUMMON_DAEVA which are inappropriate for a god of chaos; need to
-// investigate substitutes).
-// 
+// roughly ascending order of power.
 static const spell_type xom_spells[] =
 {
     SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_MAGIC_MAPPING,
@@ -58,12 +55,57 @@ static const spell_type xom_spells[] =
     SPELL_TUKIMAS_VORPAL_BLADE, SPELL_FIRE_BRAND, SPELL_FREEZING_AURA,
     SPELL_POISON_WEAPON, SPELL_STONEMAIL, SPELL_WARP_BRAND, SPELL_ALTER_SELF,
     SPELL_TUKIMAS_DANCE, SPELL_SUMMON_BUTTERFLIES, SPELL_SUMMON_SMALL_MAMMAL,
-    SPELL_CALL_IMP, SPELL_SUMMON_SCORPIONS, SPELL_FLY, SPELL_SPIDER_FORM,
-    SPELL_STATUE_FORM, SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_SWARM,
-    SPELL_SUMMON_WRAITHS, SPELL_SHADOW_CREATURES, SPELL_SUMMON_ELEMENTAL,
+    SPELL_SUMMON_SCORPIONS, SPELL_FLY, SPELL_SPIDER_FORM, SPELL_STATUE_FORM,
+    SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_SWARM, SPELL_SUMMON_WRAITHS,
+    SPELL_SHADOW_CREATURES, SPELL_SUMMON_ELEMENTAL,
     SPELL_SUMMON_HORRIBLE_THINGS, SPELL_SUMMON_LARGE_MAMMAL,
     SPELL_CONJURE_BALL_LIGHTNING, SPELL_SUMMON_DRAGON, SPELL_DEATH_CHANNEL,
     SPELL_NECROMUTATION
+};
+
+static const char *xom_single_summons[] =
+{
+    "\"Serve the mortal, my child!\"",
+    "\"Serve the toy, my child!\"",
+    "Xom opens a gate."
+};
+
+static const char *xom_single_diff_summons[] =
+{
+    "\"Serve the mortal, my confused child!\"",
+    "\"Serve the toy, my child of exile!\"",
+    "Xom calls in a curious servant of another god.",
+    "Xom lures something onto this plane.",
+    "\"A toy for the toy!\"",
+    "\"I wonder which toy lasts longer.\"",
+    "Xom opens a gate."
+};
+
+static const char *xom_multiple_summons[] =
+{
+    "\"Serve the mortal, my children!\"",
+    "Xom grants you some temporary aid.",
+    "Xom momentarily opens a gate."
+};
+
+static const char *xom_multiple_some_diff_summons[] =
+{
+    "Xom calls in some mixed company.",
+    "\"Serve the toy, my motley children!\"",
+    "Xom sends help from the ranks of the outcast.",
+    "\"Oh, what a happy playground.\"",
+    "Xom manages to trick several beings into existence.",
+    "Xom snickers at the variety.",
+    "Xom momentarily opens several gates."
+};
+
+static const char *xom_multiple_all_diff_summons[] =
+{
+    "Xom stirs up dislodged servants of other gods.",
+    "Xom summons wayward servants of other gods.",
+    "Xom tricks other gods for their servants.",
+    "\"Different god, different toy.\"",
+    "Xom momentarily opens a gate."
 };
 
 static const char *xom_try_this[] =
@@ -467,6 +509,11 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
         roll >= 850 ? DEMON_GREATER :
         roll >= 340 ? DEMON_COMMON  :
         DEMON_LESSER;
+
+    // Sometimes, send an angel or daeva instead.
+    if (dct == DEMON_GREATER && coinflip())
+        return (coinflip() ? MONS_ANGEL : MONS_DAEVA);
+
     const monster_type demontype =
         summon_any_demon(
             use_greater_demons || dct != DEMON_GREATER ? dct : DEMON_COMMON);
@@ -526,18 +573,29 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 3)
     {
-        god_speaks(GOD_XOM, random_choose_string(
-                       "\"Serve the mortal, my children!\"",
-                       "Xom grants you some temporary aid.",
-                       "Xom momentarily opens a gate.", NULL));
-                       
         int numdemons = std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
+        int numdifferent = 0;
+
         for (int i = 0; i < numdemons; i++)
         {
-            create_monster(xom_random_demon(sever), 3, BEH_GOD_GIFT,
-                           you.x_pos, you.y_pos, you.pet_target,
-                           MONS_PROGRAM_BUG);
+            monster_type mon = xom_random_demon(sever);
+
+            // If it's not a demon, Xom got it someplace else, so we use
+            // different messages below.
+            if (!mons_is_demon(mon))
+                numdifferent++;
+
+            create_monster(mon, 3, BEH_GOD_GIFT, you.x_pos, you.y_pos,
+                           you.pet_target, MONS_PROGRAM_BUG);
         }
+
+        if (numdifferent == numdemons)
+            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_multiple_all_diff_summons));
+        else if (numdifferent > 0)
+            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_multiple_some_diff_summons));
+        else
+            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_multiple_summons));
+
         done = true;
     }
     else if (random2(sever) <= 4)
@@ -560,14 +618,23 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 6)
     {
-        if (create_monster(xom_random_demon(sever), 6, BEH_GOD_GIFT,
-                           you.x_pos, you.y_pos, you.pet_target,
-                           MONS_PROGRAM_BUG) != -1)
+        bool different = false;
+
+        monster_type mon = xom_random_demon(sever);
+
+        // If it's not a demon, Xom got it someplace else, so we use
+        // different messages below.
+        if (!mons_is_demon(mon))
+            different = true;
+
+        if (create_monster(mon, 6, BEH_GOD_GIFT, you.x_pos, you.y_pos,
+                           you.pet_target, MONS_PROGRAM_BUG) != -1)
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "\"Serve the mortal, my child!\"",
-                           "\"Serve the toy, my child!\"",
-                           "Xom opens a gate.", NULL));
+            if (different)
+                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_diff_summons));
+            else
+                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_summons));
+
             done = true;
         }
     }
