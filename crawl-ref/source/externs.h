@@ -1064,7 +1064,7 @@ public:
     void lose_energy(energy_use_type et);
 
     void scale_hp(int num, int den);
-    void gain_exp(int xp);
+    void gain_exp(int exp);
 
     void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
