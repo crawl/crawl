@@ -1433,6 +1433,47 @@ Thus, many a Mountain Dwarf started career as an elementalist in one of
 those schools. They advance in levels at a similar rate to Grey and Deep
 elves.
 
+Hill Orcs:
+----------
+Hill orcs are orcs from the upper world who, jealous of the riches which
+their cousins the cave orcs possess below the ground, descend in search 
+of plunder and adventure.
+
+Hill orcs are as robust as the mountain dwarves, but have very low 
+reserves of magical energy. Their forte is brute-force fighting, and 
+they are skilled at using most hand weapons (with the exception of short 
+blades, at which they are only fair), although they are not particularly 
+good at using missile weapons. They prefer to use their own weapons. 
+Orcs are poor at using most types of magic, with the exception of 
+conjurations, necromancy, and the elemental magic of earth, fire, and 
+ice. They advance as quickly as humans.
+
+Merfolk:
+--------
+The Merfolk are a hybrid race of half-human, half-fish that typically
+live in the oceans and rivers and seldom come onto the land. The
+Merfolk aren't as limited on land as some myths suggest; their tails
+will quickly reform into legs once they leave the water (and, likewise,
+their legs will quickly reform into a tail should they ever enter 
+water). Their agility is often misjudged, and they tend to be 
+surprisingly nimble on land as well as in the water. Experts at 
+swimming, they need not fear drowning, as they can quickly slip out of 
+any encumbering armour during the transformation into their half-fish 
+form.
+
+The Merfolk have developed their martial arts strongly on thrusting and
+grappling, since those are the most efficient ways to fight underwater.
+They therefore prefer polearms and short swords above all other weapons,
+although they can also use longer swords quite well.
+
+As spellcasters, they tend to be quite good in specific areas. Their
+mystical relationship with water makes it easier for them to use
+divination, poison, and ice magics... which use water occasionally as a
+material component. The legendary water magic of the Merfolk was lost
+in ancient times, but some of that affinity still remains. The 
+instability of their own morphogenic matrix has made them very 
+accomplished transmuters, but most other magics seem foreign to them.
+
 Halflings:
 ----------
 Halflings, who are named for being about half the size of humans, live 
@@ -1462,21 +1503,6 @@ Occasionally, they can use their empathy with the earth to sense their
 surroundings; this ability increases in power as they gain experience 
 levels.
 
-Hill Orcs:
-----------
-Hill orcs are orcs from the upper world who, jealous of the riches which
-their cousins the cave orcs possess below the ground, descend in search 
-of plunder and adventure.
-
-Hill orcs are as robust as the mountain dwarves, but have very low 
-reserves of magical energy. Their forte is brute-force fighting, and 
-they are skilled at using most hand weapons (with the exception of short 
-blades, at which they are only fair), although they are not particularly 
-good at using missile weapons. They prefer to use their own weapons. 
-Orcs are poor at using most types of magic, with the exception of 
-conjurations, necromancy, and the elemental magic of earth, fire, and 
-ice. They advance as quickly as humans.
-
 Kobolds:
 --------
 Kobolds are small, ugly creatures with few redeeming features. They are
@@ -1490,40 +1516,19 @@ live as scavengers, surviving on carrion (which they can eat even when
 not hungry), but are carnivorous and can only eat meat. They advance in 
 levels as quickly as humans.
 
-The Undead:
------------
-As creatures brought back from beyond the grave, the undead are 
-naturally immune to poisons, negative energy and torment; have little 
-warmth left to be affected by cold; and are not susceptible to 
-mutations.
+Spriggans:
+----------
+Spriggans are small magical creatures distantly related to elves. They
+love to frolic and cast mischievous spells. 
 
-There are two types of undead available to players: Mummies and Ghouls.
-
-  Mummies:
-  --------
-  Mummies are undead creatures who travel into the depths in search of 
-  revenge, redemption, or just because they want to.
-
-  Mummies progress very slowly in level, half again as slowly as humans 
-  in all skills except fighting, spellcasting and necromancy. As they 
-  increase in levels, they become increasingly in touch with the powers 
-  of death, but cannot use some types of necromancy which only affect 
-  living creatures. The side effects of necromantic magic tend to be
-  relatively harmless to mummies. However, their dessicated bodies are
-  highly flammable. They also do not need to eat or drink, and in any 
-  case are incapable of doing so.
-
-  Ghouls:
-  -------
-  Ghouls are horrible undead creatures, slowly rotting away. Although 
-  ghouls can sleep in their graves for years on end, when they rise to 
-  walk among the living they must eat flesh to survive. Raw flesh is 
-  preferred, especially rotting or tainted meat, and ghouls gain 
-  strength from consuming it.
-
-  They aren't very good at doing most things, although they make decent
-  fighters and, due to their contact with the grave, can use ice, earth
-  and death magic without too many difficulties.
+They are poor fighters, have little physical resilience, and are
+terrible at destructive magic - conjurations, summonings, necromancy
+and elemental spells. On the other hand, they are excellent at other 
+forms of magic and are very good at moving silently and quickly. So 
+great is their speed that a Spriggan can overtake a centaur. Due to 
+their tiny size, they need very little food. However, they are 
+herbivorous and cannot eat meat. Their size also makes them unable to 
+wear most armour.
 
 Nagas:
 -----
@@ -1541,6 +1546,18 @@ at moving unnoticed.
 
 Every now and then, a Naga can spit poison; the range, accuracy and
 damage of this poison increases with the Naga's experience level.
+
+Centaurs:
+---------
+The Centaurs are another race of hybrid creatures: horses with human 
+torsos. They usually live in forests, surviving by hunting.
+
+Centaurs can move very quickly on their four legs, and are excellent
+with bows and other missile weapons; they are also reasonable at the
+Fighting skill while being slow learners at specific weapon skills. 
+They advance quite slowly in experience level and are rather 
+sub-average at using magic. Due to their large bulk, they need a little
+extra food to survive.
 
 Ogres and Ogre-Mages:
 ---------------------
@@ -1581,6 +1598,32 @@ They can rip creatures apart with their claws, and regenerate very
 quickly from even the most terrible wounds. They learn very slowly
 indeed - even more slowly than high elves - and need a great amount
 of food to survive.
+
+Minotaurs:
+----------
+The Minotaurs are yet another race of hybrids - human bodies with bovine 
+heads. They delve into the Dungeon because of their instinctive love of 
+twisting passageways.
+
+Minotaurs are extremely good at all forms of physical combat, but are 
+awful at using any type of magic. They can wear all armour except for 
+some headgear.
+
+Kenku:
+------
+The Kenku are an ancient and feared race of bird-people with a
+legendary propensity for violence. Basically humanoid with bird-like
+heads and clawed feet, the Kenku can wear all types of armour except
+helmets and boots. Despite their lack of wings, powerful Kenku can fly,
+and very powerful members of this race can stay in the air for as long
+as they wish to do so. They fly a bit faster if they carry little load.
+
+They are experts at all forms of fighting, including the magical arts of
+combat (conjurations, summonings and, to a lesser extent, necromancy). 
+They are good at air and fire elemental magic, but poor at ice and earth
+magic. Kenku do not appreciate any form of servitude, and so are poor at
+using invocations. Their light avian bodies cannot sustain a great deal 
+of injury.
 
 Draconians:
 -----------
@@ -1632,18 +1675,6 @@ on the part of the player.
       restrictions otherwise. They breathe steam and, like their 
       Purple cousins, have a slight advantage at Evocations.
 
-Centaurs:
----------
-The Centaurs are another race of hybrid creatures: horses with human 
-torsos. They usually live in forests, surviving by hunting.
-
-Centaurs can move very quickly on their four legs, and are excellent
-with bows and other missile weapons; they are also reasonable at the
-Fighting skill while being slow learners at specific weapon skills. 
-They advance quite slowly in experience level and are rather 
-sub-average at using magic. Due to their large bulk, they need a little
-extra food to survive.
-
 Demigods:
 ---------
 Demigods are mortals (humans, orcs, or elves, for example) with some
@@ -1657,30 +1688,6 @@ can also draw on great supplies of magical energy. On the downside, they
 advance very slowly in experience, gain skills slightly less quickly 
 than humans, and, due to their status, cannot worship the various Gods 
 and Powers available to other classes of being.
-
-Spriggans:
-----------
-Spriggans are small magical creatures distantly related to elves. They
-love to frolic and cast mischievous spells. 
-
-They are poor fighters, have little physical resilience, and are
-terrible at destructive magic - conjurations, summonings, necromancy
-and elemental spells. On the other hand, they are excellent at other 
-forms of magic and are very good at moving silently and quickly. So 
-great is their speed that a Spriggan can overtake a centaur. Due to 
-their tiny size, they need very little food. However, they are 
-herbivorous and cannot eat meat. Their size also makes them unable to 
-wear most armour.
-
-Minotaurs:
-----------
-The Minotaurs are yet another race of hybrids - human bodies with bovine 
-heads. They delve into the Dungeon because of their instinctive love of 
-twisting passageways.
-
-Minotaurs are extremely good at all forms of physical combat, but are 
-awful at using any type of magic. They can wear all armour except for 
-some headgear.
 
 Demonspawn:
 -----------
@@ -1699,47 +1706,40 @@ at fighting and much better at conjurations, summonings, necromancy and
 invocations. Note that unlike Demigods, they can take on gods, although
 not all of them.
 
-Kenku:
-------
-The Kenku are an ancient and feared race of bird-people with a
-legendary propensity for violence. Basically humanoid with bird-like
-heads and clawed feet, the Kenku can wear all types of armour except
-helmets and boots. Despite their lack of wings, powerful Kenku can fly,
-and very powerful members of this race can stay in the air for as long
-as they wish to do so. They fly a bit faster if they carry little load.
+The Undead:
+-----------
+As creatures brought back from beyond the grave, the undead are 
+naturally immune to poisons, negative energy and torment; have little 
+warmth left to be affected by cold; and are not susceptible to 
+mutations.
 
-They are experts at all forms of fighting, including the magical arts of
-combat (conjurations, summonings and, to a lesser extent, necromancy). 
-They are good at air and fire elemental magic, but poor at ice and earth
-magic. Kenku do not appreciate any form of servitude, and so are poor at
-using invocations. Their light avian bodies cannot sustain a great deal 
-of injury.
+There are two types of undead available to players: Mummies and Ghouls.
 
-Merfolk:
---------
-The Merfolk are a hybrid race of half-human, half-fish that typically
-live in the oceans and rivers and seldom come onto the land. The
-Merfolk aren't as limited on land as some myths suggest; their tails
-will quickly reform into legs once they leave the water (and, likewise,
-their legs will quickly reform into a tail should they ever enter 
-water). Their agility is often misjudged, and they tend to be 
-surprisingly nimble on land as well as in the water. Experts at 
-swimming, they need not fear drowning, as they can quickly slip out of 
-any encumbering armour during the transformation into their half-fish 
-form.
+  Mummies:
+  --------
+  Mummies are undead creatures who travel into the depths in search of 
+  revenge, redemption, or just because they want to.
 
-The Merfolk have developed their martial arts strongly on thrusting and
-grappling, since those are the most efficient ways to fight underwater.
-They therefore prefer polearms and short swords above all other weapons,
-although they can also use longer swords quite well.
+  Mummies progress very slowly in level, half again as slowly as humans 
+  in all skills except fighting, spellcasting and necromancy. As they 
+  increase in levels, they become increasingly in touch with the powers 
+  of death, but cannot use some types of necromancy which only affect 
+  living creatures. The side effects of necromantic magic tend to be
+  relatively harmless to mummies. However, their dessicated bodies are
+  highly flammable. They also do not need to eat or drink, and in any 
+  case are incapable of doing so.
 
-As spellcasters, they tend to be quite good in specific areas. Their
-mystical relationship with water makes it easier for them to use
-divination, poison, and ice magics... which use water occasionally as a
-material component. The legendary water magic of the Merfolk was lost
-in ancient times, but some of that affinity still remains. The 
-instability of their own morphogenic matrix has made them very 
-accomplished transmuters, but most other magics seem foreign to them.
+  Ghouls:
+  -------
+  Ghouls are horrible undead creatures, slowly rotting away. Although 
+  ghouls can sleep in their graves for years on end, when they rise to 
+  walk among the living they must eat flesh to survive. Raw flesh is 
+  preferred, especially rotting or tainted meat, and ghouls gain 
+  strength from consuming it.
+
+  They aren't very good at doing most things, although they make decent
+  fighters and, due to their contact with the grave, can use ice, earth
+  and death magic without too many difficulties.
 
 Note: Some species have special abilities which can be accessed by the 
 ----- 'a' abilities menu. Some also have physical characteristics which 
