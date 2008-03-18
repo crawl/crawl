@@ -3095,8 +3095,7 @@ static bool beogh_followers_abandon_you()
                 {
                     monsters *monster = &menv[targ_monst];
                     if (mons_species(monster->type) == MONS_ORC
-                        && monster->attitude == ATT_FRIENDLY
-                        && (monster->flags & MF_ATT_CHANGE_ATTEMPT))
+                        && monster->attitude == ATT_FRIENDLY)
                     {
                         num_followers++;
 
