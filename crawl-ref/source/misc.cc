@@ -1791,8 +1791,6 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
 
 bool i_feel_safe(bool announce, bool want_move)
 {
-    /* This is probably unnecessary, but I'm not sure that
-       you're always at least 9 away from a wall */
     int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
     int yend = you.y_pos + 9, xend = you.x_pos + 9;
     if ( xstart < 0 ) xstart = 0;
@@ -1813,19 +1811,19 @@ bool i_feel_safe(bool announce, bool want_move)
             return (false);
         }
     }
-    
+
     // no monster will attack you inside a sanctuary,
     // so presence of monsters won't matter
     if (is_sanctuary(you.x_pos, you.y_pos))
         return (true);
 
     std::vector<const monsters *> mons;
-    /* monster check */
+    // monster check
     for ( int y = ystart; y < yend; ++y )
     {
         for ( int x = xstart; x < xend; ++x )
         {
-            // if you can see a nonfriendly monster then you feel unsafe
+            // if you can see an unfriendly monster, then you feel unsafe
             if ( see_grid(x,y) )
             {
                 const unsigned short targ_monst = mgrd[x][y];

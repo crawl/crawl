@@ -459,13 +459,12 @@ bool there_are_monsters_nearby()
     if (xend >= GXM) xend = GXM;
     if (yend >= GYM) yend = GYM;
 
-    /* monster check */
+    // monster check
     for ( int y = ystart; y < yend; ++y )
     {
         for ( int x = xstart; x < xend; ++x )
         {
-            /* if you can see a nonfriendly monster then you feel
-               unsafe */
+            // if you can see an unfriendly monster then you feel unsafe
             if ( see_grid(x,y) )
             {
                 const int targ_monst = mgrd[x][y];
@@ -478,6 +477,7 @@ bool there_are_monsters_nearby()
             }
         }
     }
+
     return (false);
 }
 
@@ -821,12 +821,11 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 7)
         {
-            if (! there_are_monsters_nearby())
+            if (!there_are_monsters_nearby())
                 goto try_again;
 
             monsters* mon = get_random_nearby_monster();
-            ASSERT (mon != NULL);
-            if ( mon->holiness() == MH_NATURAL )
+            if (mon && mon->holiness() == MH_NATURAL)
             {
                 god_speaks(GOD_XOM, random_choose_string(
                                "\"This might be better!\"",
