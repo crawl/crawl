@@ -484,7 +484,7 @@ bool there_are_monsters_nearby()
 monsters *get_random_nearby_monster()
 {
     monsters *monster = NULL;
-    /* not particular efficient, but oh well */
+    /* not particularly efficient, but oh well */
     for (int it = 0, num = 0; it < MAX_MONSTERS; it++)
     {
         monsters *mons = &menv[it];
