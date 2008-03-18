@@ -229,7 +229,7 @@ Stealth:      Another internal variable like Magic Resistance. First,
 --------      there is a Stealth skill which every character can learn 
               (but again, the different races' aptitudes for this vary 
               greatly). Next, some armours affect Stealth in a positive 
-              way (all elven pieces are notable in this regard), while 
+              way (all Elven pieces are notable in this regard), while 
               heavy armours will hamper it. Stealth's effects include 
               allowing your character to move through the dungeon 
               undetected.
@@ -688,7 +688,7 @@ section I (Targeting).
 This is also rather important. Most worn armour improves your Armour
 Class, which decreases the amount of damage you take when something
 injures you. Body armour (robes, mails, etc.) come in two types: light
-armours (e.g. robes and leather armours, also all elven armours) and
+armours (e.g. robes and leather armours, also all Elven armours) and
 heavy armours (scale mails, ring mails, etc.). Both help with damage
 reduction, but heavy armours do so more reliably.  Unfortunately, the 
 heavier types of armour also hamper your melee speed, making it easier 
@@ -851,11 +851,11 @@ Some items have been crafted by members of a gifted race, and have
 special properties.
 
 Dwarven weapons and armours are very durable, and do not rust or
-corrode easily. All species get a bonus when wearing dwarven armours
+corrode easily. All species get a bonus when wearing Dwarven armours
 at the expense that these mails make spellcasting slightly more
 difficult. Dwarves get a larger bonus without the magical hampering.
 
-Orcish (cross)bows do a bit more damage with orcish arrows/bolts. In 
+Orcish (cross)bows do a bit more damage with Orcish arrows/bolts. In 
 general, Orcs do better with gear from their own kin; this applies to
 weapons, as well as to armours.
 
@@ -863,7 +863,7 @@ Elven armour is unusually light, and does not affect the dodging or
 stealth of its wearer to the extent that other armours do. It also is
 less restrictive for spellcasting than other armours. Elven cloaks and 
 boots are particularly useful to those who wish to be stealthy. Elven 
-bows are particularly effective in conjunction with elven arrows. An Elf 
+bows are particularly effective in conjunction with Elven arrows. An Elf 
 does even a bit better whenever using armour or weapons of his own kind.
 
 Centaurs and Nagas have uniquely shaped bodies. With luck, however, a 
@@ -1355,36 +1355,36 @@ more than one way out and successfully escaping is exciting for anyone.
 Humans:
 ------
 Humans tend to be hardworking and industrious, and learn new things
-quickly. The human race is the most versatile of all the species
+quickly. The Human race is the most versatile of all the species
 available to players: humans can be of any class. Humans advance quickly
 in levels and have equal abilities in all skills.
 
 Elves:
 ------
-There are a number of distinct races of elf. Elves are all physically
-slight but long-lived people, quicker-witted than humans but sometimes
+There are a number of distinct races of Elf. Elves are all physically
+slight but long-lived people, quicker-witted than humans, but sometimes
 slower to learn new things. Elves are especially good at using those
 skills which require a degree of finesse, such as stealth,
 sword-fighting and archery, but tend to be poor at using brute force
 and inelegant forms of combat. They find heavy armour to be
 uncomfortable, and make the finest, lightest armours to be found
-anywhere. Elves are particularly good at using elven weapons.
+anywhere. Elves are particularly good at using Elven weapons.
 
-Due to their fey natures, all elves are good at using enchantments and 
+Due to their fey natures, all Elves are good at using enchantments and 
 air elemental magic, and most are poor at using the powers of earth and 
 death (necromancy).
 
   High Elves:
   -----------
-  High elves are a tall and powerful elven race who advance in levels 
-  very slowly, requiring half again as much experience as do humans. 
+  High Elves are a tall and powerful Elven race who advance in levels 
+  very slowly, requiring half again as much experience as do Humans. 
   They have good intelligence and dexterity, but suffer in strength.
-  Compared with humans, they have fewer HP but more magic. Among all
-  elves, they are best with blades and bows.
+  Compared with Humans, they have fewer HP but more magic. Among all
+  Elves, they are best with blades and bows.
 
   Grey Elves:
   -----------
-  Grey elves also advance slowly, but not as slowly as high elves. They 
+  Grey Elves also advance slowly, but not as slowly as High Elves. They 
   are good at using short and long swords and bows, but are poor at 
   other fighting skills. They are excellent at all forms of magic except
   for necromancy. In particular, they are masters of Enchantments and
@@ -1392,20 +1392,20 @@ death (necromancy).
 
   Deep Elves:
   -----------
-  The deep elves are an elven race who long ago fled the overworld to 
-  live in darkness underground. There they developed their mental 
+  The Deep Elves are an Elven race who long ago fled the overworld to 
+  live in darkness underground. There, they developed their mental 
   powers, evolving a natural gift for all forms of magic (including 
   necromancy and earth magic), and adapted physically to their new 
   environment, becoming shorter and weaker than other elves and losing 
-  all colouration. They are poor at hand-to-hand combat but excellent 
-  at fighting from a distance. They advance at the pace of grey elves.
+  all colouration. They are poor at hand-to-hand combat, but excellent 
+  at fighting from a distance. They advance at the pace of Grey Elves.
 
   Sludge Elves:
   -------------
-  Sludge elves are a somewhat degenerate race of elves. They are mirror 
+  Sludge Elves are a somewhat degenerate race of elves. They are mirror 
   images of normal elves in some respects: they have no special 
   proficiency with bows or swords (long or short), nor do they have any
-  aptitude in the traditional areas of high elven magic (enchantments, 
+  aptitude in the traditional areas of High Elven magic (enchantments, 
   conjurations and divinations). On the other hand, they are 
   superlative transmuters, and are comfortable dabbling in necromantic,
   poison and elemental magic. As fighters they are often more dangerous
@@ -1416,7 +1416,7 @@ Mountain Dwarves:
 Dwarves are generally short, hardy people. They love to fight, and often 
 venture forth to seek fame and fortune through battle. Their armour and 
 weapons are very well-crafted and much more durable than the products of
-lesser artisans. Dwarves are particularly dangerous when using dwarven 
+lesser artisans. Dwarves are particularly dangerous when using Dwarven 
 weaponry.
 
 Mountain Dwarves, as opposed to the subterranean specimen, come from 
@@ -1435,11 +1435,11 @@ elves.
 
 Hill Orcs:
 ----------
-Hill orcs are orcs from the upper world who, jealous of the riches which
-their cousins the cave orcs possess below the ground, descend in search 
+Hill Orcs are Orcs from the upper world who, jealous of the riches which
+their cousins the Cave Orcs possess below the ground, descend in search 
 of plunder and adventure.
 
-Hill orcs are as robust as the mountain dwarves, but have very low 
+Hill Orcs are as robust as the Mountain Dwarves, but have very low 
 reserves of magical energy. Their forte is brute-force fighting, and 
 they are skilled at using most hand weapons (with the exception of short 
 blades, at which they are only fair), although they are not particularly 
@@ -1492,9 +1492,9 @@ weapons.
 Gnomes:
 -------
 Gnomes are an underground-dwelling race of creatures, related to the 
-dwarves but even more closely in touch with the earth.
+Dwarves, but even more closely in touch with the earth.
 
-They are quite small, and share many characteristics with halflings
+They are quite small, and share many characteristics with Halflings
 (except for the great agility), although they advance slightly more
 slowly in experience levels. They are okay at most skills, but
 excellent at earth elemental magic and very poor at air magic.
@@ -1507,7 +1507,7 @@ Kobolds:
 --------
 Kobolds are small, ugly creatures with few redeeming features. They are
 not the sort of people you would want to spend much time with, unless 
-you happened to be a kobold yourself.
+you happened to be a Kobold yourself.
 
 They have poor abilities and have similar aptitudes to halflings without
 the excellent agility. However, they are better than halflings at using
@@ -1524,7 +1524,7 @@ love to frolic and cast mischievous spells.
 They are poor fighters, have little physical resilience, and are
 terrible at destructive magic - conjurations, summonings, necromancy
 and elemental spells. On the other hand, they are excellent at other 
-forms of magic and are very good at moving silently and quickly. So 
+forms of magic, and are very good at moving silently and quickly. So 
 great is their speed that a Spriggan can overtake a centaur. Due to 
 their tiny size, they need very little food. However, they are 
 herbivorous and cannot eat meat. Their size also makes them unable to 
@@ -1590,7 +1590,7 @@ group.
 
 Trolls:
 -------
-Trolls are like ogres, but even nastier. They have thick, knobbly skins
+Trolls are like Ogres, but even nastier. They have thick, knobbly skins
 of any colour from putrid green to mucky brown, and their mouths are 
 full of ichor-dripping fangs.
 
@@ -1677,7 +1677,7 @@ on the part of the player.
 
 Demigods:
 ---------
-Demigods are mortals (humans, orcs, or elves, for example) with some
+Demigods are mortals (Humans, Orcs, or Elves, for example) with some
 divine or angelic ancestry, however distant; they can be created by a
 number of processes including magical experiments and the time-honoured
 practice of interplanar miscegenation.
@@ -1725,16 +1725,16 @@ There are two types of undead available to players: Mummies and Ghouls.
   increase in levels, they become increasingly in touch with the powers 
   of death, but cannot use some types of necromancy which only affect 
   living creatures. The side effects of necromantic magic tend to be
-  relatively harmless to mummies. However, their dessicated bodies are
+  relatively harmless to Mummies. However, their dessicated bodies are
   highly flammable. They also do not need to eat or drink, and in any 
   case are incapable of doing so.
 
   Ghouls:
   -------
   Ghouls are horrible undead creatures, slowly rotting away. Although 
-  ghouls can sleep in their graves for years on end, when they rise to 
+  Ghouls can sleep in their graves for years on end, when they rise to 
   walk among the living they must eat flesh to survive. Raw flesh is 
-  preferred, especially rotting or tainted meat, and ghouls gain 
+  preferred, especially rotting or tainted meat, and Ghouls gain 
   strength from consuming it.
 
   They aren't very good at doing most things, although they make decent
