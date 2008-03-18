@@ -2279,7 +2279,15 @@ static void crusade_card(int power, deck_rarity_type rarity)
             {
                 simple_monster_message(monster, " is converted.");
                 if ( one_chance_in(5 - power_level) )
-                    monster->attitude = ATT_FRIENDLY;
+                {
+                    if (you.religion == GOD_BEOGH &&
+                        mons_species(monster->type) == MONS_ORC)
+                    {
+                        beogh_convert_orc(monster, false);
+                    }
+                    else
+                        monster->attitude = ATT_FRIENDLY;
+                }
                 else
                     monster->add_ench(ENCH_CHARM);
             }
