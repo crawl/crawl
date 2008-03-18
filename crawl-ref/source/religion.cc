@@ -949,7 +949,7 @@ static void do_god_gift(bool prayed_for)
                 }                   // end of giving book
             }                       // end of book gods
             break;
-        } 
+        }
     }                           // end of gift giving
 
 #if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
@@ -1033,7 +1033,7 @@ void pray()
             mpr("You are floating high above the altar.");
             return;
         }
-    
+
         if (you.religion != GOD_NO_GOD && altar_god == you.religion)
         {
             altar_prayer();
@@ -1301,7 +1301,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
             if (random2(level + 10) > 5)
                 piety_change = 1;
             break;
-            
+
         default:
             break;
         }
@@ -1313,7 +1313,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_ELYVILON:
             // killing only disapproved during prayer
             if (you.duration[DUR_PRAYER])
-            { 
+            {
                 simple_god_message(" did not appreciate that!");
                 ret = true;
                 piety_change = -level;
@@ -1331,7 +1331,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_LUGONU:
             if (god_hates_attacking_friend(you.religion, victim))
                 break;
-            
+
             simple_god_message(" accepts your kill.");
             ret = true;
             if (random2(level + 18 - you.experience_level / 2) > 5)
@@ -1353,7 +1353,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_LUGONU:
             if (god_hates_attacking_friend(you.religion, victim))
                 break;
-            
+
             simple_god_message(" accepts your kill.");
             ret = true;
             // Holy gods are easier to please this way
@@ -1375,7 +1375,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_MAKHLEB:
             if (god_hates_attacking_friend(you.religion, victim))
                 break;
-            
+
             simple_god_message(" accepts your kill.");
             ret = true;
             // Holy gods are easier to please this way
@@ -1427,12 +1427,12 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
                 piety_change = 1;
         }
         break;
-        
+
     case DID_KILL_WIZARD:
         if (you.religion == GOD_TROG
             && !god_hates_attacking_friend(you.religion, victim))
         {
-            // hooking this up, but is it too good?  
+            // hooking this up, but is it too good?
             // enjoy it while you can -- bwr
             simple_god_message(" appreciates your killing of a magic user.");
             ret = true;
@@ -1441,7 +1441,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    // Note that Angel deaths are special, they are always noticed... 
+    // Note that Angel deaths are special, they are always noticed...
     // if you or any friendly kills one you'll get the credit or the blame.
     case DID_ANGEL_KILLED_BY_SERVANT:
     case DID_KILL_ANGEL:
@@ -1479,7 +1479,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    // Undead slave is any friendly undead... Kiku and Yred pay attention 
+    // Undead slave is any friendly undead... Kiku and Yred pay attention
     // to the undead and both like the death of living things.
     case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
         switch (you.religion)
@@ -1537,7 +1537,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    case DID_DEMON_KILLED_BY_SERVANT: 
+    case DID_DEMON_KILLED_BY_SERVANT:
         switch (you.religion)
         {
         case GOD_SHINING_ONE:
@@ -1557,7 +1557,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         {
             simple_god_message(" accepts your collateral kill.");
             ret = true;
-            
+
             if (random2(level + 10) > 5)
                 piety_change = 1;
         }
@@ -1581,15 +1581,15 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    case DID_SPELL_PRACTISE:    
+    case DID_SPELL_PRACTISE:
         // Like CAST, but for skill advancement.
-        // Level is number of skill points gained... typically 10 * exerise, 
+        // Level is number of skill points gained... typically 10 * exerise,
         // but may be more/less if the skill is at 0 (INT adjustment), or
         // if the PC's pool is low and makes change.
         if (you.religion == GOD_SIF_MUNA)
         {
-            // Old curve: random2(12) <= spell-level, this is similar, 
-            // but faster at low levels (to help ease things for low level 
+            // Old curve: random2(12) <= spell-level, this is similar,
+            // but faster at low levels (to help ease things for low level
             // Power averages about (level * 20 / 3) + 10 / 3 now.  Also
             // note that spell skill practise comes just after XP gain, so
             // magical kills tend to do both at the same time (unlike melee).
@@ -1683,7 +1683,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
           "Friend Died", "Stab", "Poison", "Field Sacrifice",
           "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
           "Kill Mutator Or Rotter", "Kill Wizard", "Kill Priest",
-          "Kill Angel", "Kill Neutral", "Undead Slave Kill Living", 
+          "Kill Angel", "Kill Neutral", "Undead Slave Kill Living",
           "Servant Kill Living", "Servant Kill Undead", "Servant Kill Demon",
           "Servant Kill Natural Evil", "Servant Kill Angel",
           "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
@@ -1692,9 +1692,9 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         };
 
         COMPILE_CHECK(ARRAYSIZE(conducts) == NUM_CONDUCTS, c1);
-        mprf( MSGCH_DIAGNOSTICS, 
+        mprf( MSGCH_DIAGNOSTICS,
              "conduct: %s; piety: %d (%+d); penance: %d (%+d)",
-             conducts[thing_done], 
+             conducts[thing_done],
              you.piety, piety_change, you.penance[you.religion], penance );
 
     }
@@ -1707,7 +1707,7 @@ static void dock_piety(int piety_loss, int penance)
 {
     static long last_piety_lecture = -1L;
     static long last_penance_lecture = -1L;
-    
+
     if (piety_loss <= 0 && penance <= 0)
         return;
 
@@ -2030,7 +2030,7 @@ bool trog_burn_books()
              {
                  continue;
              }
-             
+
              int count = 0;
              int rarity = 0;
              i = igrd[xpos][ypos];
@@ -2055,7 +2055,7 @@ bool trog_burn_books()
                  }
                  else
                      totalpiety += 2;
-                 
+
 #ifdef DEBUG_DIAGNOSTICS
                  mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
 #endif
@@ -2089,7 +2089,7 @@ bool trog_burn_books()
              }
 
         }
-        
+
     if (!totalpiety)
     {
          mpr("There are no books in sight to burn!");
@@ -2430,7 +2430,7 @@ static bool yredelemnul_retribution()
         miscast_effect( SPTYP_NECROMANCY, 5 + you.experience_level,
                         random2avg(88, 3), 100, "the anger of Yredelemnul" );
     }
-    
+
     return true;
 }
 
@@ -2446,7 +2446,7 @@ static bool trog_retribution()
 
         {
             no_messages msg;
-            
+
             while (points > 0)
             {
                 int cost = random2(8) + 3;
@@ -2553,13 +2553,13 @@ static bool beogh_retribution()
             if ( slot == -1 )
                 continue;
 
-            item_def& item = mitm[slot];           
+            item_def& item = mitm[slot];
             set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
 
             // manually override plusses
             item.plus = random2(3);
             item.plus2 = random2(3);
-                      
+
             if (coinflip())
                 item.flags |= ISFLAG_CURSED;
 
@@ -2571,7 +2571,7 @@ static bool beogh_retribution()
             int mons = create_monster( MONS_DANCING_WEAPON, 0, BEH_HOSTILE,
                                        you.x_pos, you.y_pos, MHITYOU,
                                        MONS_PROGRAM_BUG );
-                                       
+
             // hand item information over to monster
             if (mons != -1)
             {
@@ -2611,13 +2611,13 @@ static bool beogh_retribution()
 
         monster_type punisher;
         // "natural" bands
-        if (points >= 30) // min: lvl 7, always: lvl 27 
+        if (points >= 30) // min: lvl 7, always: lvl 27
             punisher = MONS_ORC_WARLORD;
         else if (points >= 24) // min: lvl 6, always: lvl 21
             punisher = MONS_ORC_HIGH_PRIEST;
-        else if (points >= 18) // min: lvl 4, always: lvl 15 
+        else if (points >= 18) // min: lvl 4, always: lvl 15
             punisher = MONS_ORC_KNIGHT;
-        else if (points > 10) // min: lvl 3, always: lvl 8 
+        else if (points > 10) // min: lvl 3, always: lvl 8
             punisher = MONS_ORC_WARRIOR;
         else
             punisher = MONS_ORC;
@@ -2633,7 +2633,7 @@ static bool beogh_retribution()
                            god);
     }
     }
-    
+
     return true;
 }
 
@@ -2700,8 +2700,8 @@ static bool sif_muna_retribution()
         break;
 
     case 9:
-        // This will set all the extendable duration spells to 
-        // a duration of one round, thus potentially exposing 
+        // This will set all the extendable duration spells to
+        // a duration of one round, thus potentially exposing
         // the player to real danger.
         antimagic();
         mpr( "You sense a dampening of magic.", MSGCH_WARN );
@@ -2734,7 +2734,7 @@ static bool lugonu_retribution()
 
         // No return.
     }
-    
+
     // abyssal servant theme
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
@@ -2769,7 +2769,7 @@ static bool lugonu_retribution()
         else
             simple_god_message("'s minions fail to arrive.", god);
     }
-    
+
     return false;
 }
 
@@ -2805,14 +2805,14 @@ void divine_retribution( god_type god )
 
     god_acting gdact(god, true);
 
-    bool do_more = true;   
+    bool do_more = true;
     switch (god)
     {
     // One in ten chance that Xom might do something good...
     case GOD_XOM: xom_acts(one_chance_in(10), abs(you.piety - 100)); break;
     case GOD_SHINING_ONE:   do_more = tso_retribution(); break;
     case GOD_ZIN:           do_more = zin_retribution(); break;
-    case GOD_MAKHLEB:       do_more = makhleb_retribution(); break;        
+    case GOD_MAKHLEB:       do_more = makhleb_retribution(); break;
     case GOD_KIKUBAAQUDGHA: do_more = kikubaaqudgha_retribution(); break;
     case GOD_YREDELEMNUL:   do_more = yredelemnul_retribution(); break;
     case GOD_TROG:          do_more = trog_retribution(); break;
@@ -3550,7 +3550,7 @@ static bool bless_weapon( int god, int brand, int colour )
                          env.map[you.x_pos+i][you.y_pos+j].property = FPROP_NONE;
                 }
         }
-        
+
         delay(1000);
 
         return (true);
@@ -3590,7 +3590,7 @@ void altar_prayer(void)
     {
         const int wpn = get_player_wielded_weapon();
 
-        if (wpn != -1 
+        if (wpn != -1
             && weapon_skill( you.inv[wpn] ) == SK_LONG_BLADES
             && get_weapon_brand( you.inv[wpn] ) != SPWPN_HOLY_WRATH)
         {
@@ -3750,7 +3750,7 @@ void offer_items()
         }
 
         int estimated_piety = you.piety + donation_value;
-        
+
         you.duration[DUR_PIETY_POOL] += donation_value;
         if (you.duration[DUR_PIETY_POOL] > 500)
             you.duration[DUR_PIETY_POOL] = 500;
@@ -3766,7 +3766,7 @@ void offer_items()
 
         std::string result = "You feel that " + god_name(GOD_ZIN)
                              + " will soon be ";
-        
+
         result +=
             (estimated_piety > 130) ? "exalted by your worship" :
             (estimated_piety > 100) ? "extremely pleased with you" :
@@ -3775,14 +3775,14 @@ void offer_items()
             (estimated_piety >  20) ? "pleased with you" :
             (estimated_piety >   5) ? "noncommittal"
                                     : "displeased";
-                                    
+
         if (donation_value >= 30 && you.piety <= 170)
             result += "!";
         else
             result += ".";
-            
+
         mpr(result.c_str());
-            
+
         return; // doesn't accept anything else for sacrifice
     }
 
@@ -3823,7 +3823,7 @@ void offer_items()
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
 #endif
-        
+
         switch (you.religion)
         {
         case GOD_NEMELEX_XOBEH:
@@ -3848,7 +3848,7 @@ void offer_items()
             if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
                 // No sacrifice value for chunks of flesh, since food
                 // value goes towards decks of wonder.
-                ; 
+                ;
             else if (item.base_type == OBJ_CORPSES)
             {
 #if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
@@ -3863,7 +3863,7 @@ void offer_items()
 
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
-            if (mitm[i].base_type == OBJ_CORPSES 
+            if (mitm[i].base_type == OBJ_CORPSES
                 || random2(value) >= 50
                 || player_under_penance())
             {
@@ -3905,7 +3905,7 @@ void offer_items()
         const int new_leading = leading_sacrifice_group();
         if ( old_leading != new_leading || one_chance_in(50) )
             give_sac_group_feedback(new_leading);
-            
+
 #if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
         show_pure_deck_chances();
 #endif
@@ -3954,7 +3954,7 @@ void god_pitch(god_type which_god)
 
     describe_god( which_god, false );
 
-    snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?", 
+    snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?"
               (you.worshipped[which_god]) ? "re" : "" );
 
     if (!yesno( info, true, 'n' ) || !yesno("Are you sure?", false, 'n'))
@@ -3987,17 +3987,17 @@ void god_pitch(god_type which_god)
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
     }
-    
+
     set_god_ability_slots();    // remove old god's slots, reserve new god's
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif
-    snprintf( info, INFO_SIZE, " welcomes you%s!", 
+    snprintf( info, INFO_SIZE, " welcomes you%s!",
               (you.worshipped[which_god]) ? " back" : "" );
-    
+
     simple_god_message( info );
     more();
-    
+
     if (you.religion == GOD_ELYVILON)
     {
         mpr("You can now call upon Elyvilon to destroy weapons "
@@ -4222,7 +4222,7 @@ void handle_god_time(void)
                 size += delta * 2;
                 you.piety = 100 + (good ? size : -size);
             }
-            
+
             // ... but he gets bored... (I re-use gift_timeout for
             // this instead of making a separate field because I don't
             // want to learn how to save and restore a new field). In
