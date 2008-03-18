@@ -1,8 +1,17 @@
 Crawl coding conventions
 ========================
 
-This file documents the conventions currently in use in the crawl codebase,
-as well as the conventions new and/or modified code should conform to.
+Introduction
+------------
+
+This file documents the style conventions currently in use in the crawl
+codebase, as well as the conventions that new and/or modified code should
+conform to.  It is explicitly not meant to be a didactic "how to program
+effectively" treatise.  That is something best left to books and websites
+and experience.
+
+Conventions
+-----------
 
 Use 4 spaces to indent, and indent with spaces only (no tabs).
 Use underscores_as_spaces instead of mixedCase.  Other conventions are
