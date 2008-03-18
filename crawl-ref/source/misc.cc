@@ -1798,7 +1798,7 @@ bool i_feel_safe(bool announce, bool want_move)
     if ( xstart < 0 ) xstart = 0;
     if ( ystart < 0 ) ystart = 0;
     if ( xend >= GXM ) xend = GXM;
-    if ( ystart >= GYM ) yend = GYM;
+    if ( yend >= GYM ) yend = GYM;
 
     if (in_bounds(you.x_pos, you.y_pos)
         && env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
