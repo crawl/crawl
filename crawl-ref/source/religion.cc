@@ -3083,7 +3083,7 @@ static bool beogh_followers_abandon_you()
         if ( xstart < 0 ) xstart = 0;
         if ( ystart < 0 ) ystart = 0;
         if ( xend >= GXM ) xend = GXM;
-        if ( ystart >= GYM ) yend = GYM;
+        if ( yend >= GYM ) yend = GYM;
 
         // monster check
         for ( int y = ystart; y < yend; ++y )
