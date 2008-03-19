@@ -2207,6 +2207,7 @@ static void rot_inventory_food(long time_delta)
     // inventory {should be moved elsewhere - dlb}
     bool burden_changed_by_rot = false;
     int blood_num = 0, congealed_blood_num = 0;
+    int affected_potion = -1;
     std::vector<char> rotten_items;
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -2259,6 +2260,7 @@ static void rot_inventory_food(long time_delta)
                 && you.inv[i].special + (time_delta / 20) >= 200)
             {
                 congealed_blood_num += you.inv[i].quantity;
+                affected_potion = i;
             }
         }
         else if (food_is_rotten(you.inv[i])
@@ -2329,17 +2331,35 @@ static void rot_inventory_food(long time_delta)
 
     if (congealed_blood_num)
     {
+        ASSERT(affected_potion != -1);
+        
         std::string msg = "";
-        if (blood_num == 1)
-            mpr("Your potion of blood congeals.", MSGCH_ROTTEN_MEAT);
-        else if (congealed_blood_num == 1)
-            mpr("One of your potions of blood congeals.", MSGCH_ROTTEN_MEAT);
-        else if (congealed_blood_num < blood_num)
-            mpr("Some of your potions of blood congeal.", MSGCH_ROTTEN_MEAT);
-        else
-            mpr("Your potions of blood congeal.", MSGCH_ROTTEN_MEAT);
-    }
+        // create a dummy stack of potions for message output
+        item_def tmp = you.inv[affected_potion];
+        tmp.quantity = blood_num; // number of all blood potions
+        tmp.special  = 200; // non-congealed
 
+        if (blood_num == congealed_blood_num)
+        {
+            msg += tmp.name(DESC_CAP_YOUR, false);
+        }
+        else
+        {
+            if (congealed_blood_num == 1)
+                msg += "One of ";
+            else
+                msg += "Some of ";
+
+            msg += tmp.name(DESC_NOCAP_YOUR, false);
+        }
+        msg += " congeal";
+        if (congealed_blood_num == 1)
+            msg += "s";
+        msg += ".";
+        
+        mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
+    }
+    
     if (burden_changed_by_rot)
     {
         mpr("Your equipment suddenly weighs less.", MSGCH_ROTTEN_MEAT);

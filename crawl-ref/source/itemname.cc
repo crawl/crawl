@@ -1325,7 +1325,11 @@ std::string item_def::name_aux( description_level_type desc,
                 (pcolour < 0 || pcolour >= PDC_NCOLOURS)? "bogus"
                                     : potion_colours[pcolour];
 
-            buff << qualifier << clr << " potion";
+            if (this->sub_type == POT_BLOOD && this->special < 200)
+                buff << "congealed ";
+            else
+                buff << qualifier;
+            buff << clr << " potion";
         }
         break;
 

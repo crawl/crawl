@@ -3601,7 +3601,11 @@ void display_char_status()
                attrib.push_back("resist torment");
                if (you.experience_level >= 13)
                    attrib.push_back("are in touch with the powers of death");
-               attrib.push_back("do not heal!");
+                   
+               if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+                   attrib.push_back("heal slowly (as a bat)!");
+               else
+                   attrib.push_back("do not heal!");
                break;
            case HS_NEAR_STARVING:
                attrib.push_back("resist poison");

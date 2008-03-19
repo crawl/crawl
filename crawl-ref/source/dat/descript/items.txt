@@ -426,7 +426,7 @@ deck of changes
 A deck of magical cards which induce changes in the user or his
 environment.
 %%%%
-deck of defense
+deck of defence
 
 A deck of magical cards, most of which defend the user from harm in
 various ways.
