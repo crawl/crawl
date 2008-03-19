@@ -1149,11 +1149,7 @@ bool recall(char type_recalled)
         }
         else if (type_recalled == 2) // Beogh
         {
-            if (mons_species(monster->type) != MONS_ORC)
-                continue;
-                
-            // does not include charmed orcs
-            if (monster->attitude != ATT_FRIENDLY)
+            if (!is_orcish_follower(monster))
                 continue;
         }
 
