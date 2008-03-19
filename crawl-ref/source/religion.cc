@@ -1441,10 +1441,10 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    // Note that Angel deaths are special, they are always noticed...
+    // Note that holy deaths are special, they are always noticed...
     // if you or any friendly kills one you'll get the credit or the blame.
-    case DID_ANGEL_KILLED_BY_SERVANT:
-    case DID_KILL_ANGEL:
+    case DID_HOLY_KILLED_BY_SERVANT:
+    case DID_KILL_HOLY:
         switch (you.religion)
         {
         case GOD_ZIN:
@@ -1465,7 +1465,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_MAKHLEB:
         case GOD_LUGONU:
             snprintf( info, INFO_SIZE, " accepts your %skill.",
-                      (thing_done == DID_KILL_ANGEL) ? "" : "collateral " );
+                      (thing_done == DID_KILL_HOLY) ? "" : "collateral " );
 
             simple_god_message( info );
 
@@ -1683,9 +1683,9 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
           "Friend Died", "Stab", "Poison", "Field Sacrifice",
           "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
           "Kill Mutator Or Rotter", "Kill Wizard", "Kill Priest",
-          "Kill Angel", "Kill Neutral", "Undead Slave Kill Living",
+          "Kill Holy", "Kill Neutral", "Undead Slave Kill Living",
           "Servant Kill Living", "Servant Kill Undead", "Servant Kill Demon",
-          "Servant Kill Natural Evil", "Servant Kill Angel",
+          "Servant Kill Natural Evil", "Servant Kill Holy",
           "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
           "Cards", "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
           "Eat Souled Beings", "Create Life", "Deliberate Mutation"

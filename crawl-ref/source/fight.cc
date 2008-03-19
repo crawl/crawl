@@ -1583,7 +1583,7 @@ void melee_attack::player_check_weapon_effects()
 bool melee_attack::player_monattk_hit_effects(bool mondied)
 {
     if (mons_holiness(def) == MH_HOLY)
-        did_god_conduct(mondied? DID_KILL_ANGEL : DID_ATTACK_HOLY, 1,
+        did_god_conduct(mondied? DID_KILL_HOLY : DID_ATTACK_HOLY, 1,
                         true, def);
 
     player_check_weapon_effects();

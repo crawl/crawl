@@ -748,13 +748,12 @@ static void good_god_follower_attitude_change(monsters *monster)
     if (you.is_undead || you.species == SP_DEMONSPAWN)
         return;
 
-    const bool is_holy = mons_class_holiness(monster->type) == MH_HOLY;
     // for followers of good gods, decide whether holy beings will be
     // neutral towards you
     if (is_good_god(you.religion)
         && monster->foe == MHITYOU
         && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
-        && is_holy
+        && mons_is_holy(monster)
         && !mons_neutral(monster)
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
@@ -779,8 +778,8 @@ static void good_god_follower_attitude_change(monsters *monster)
             stop_running();
         }
     }
-    else if (is_holy
-             && !is_good_god(you.religion)
+    else if (!is_good_god(you.religion)
+             && mons_is_holy(monster)
              && monster->attitude != ATT_HOSTILE
              && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
@@ -807,12 +806,11 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     if (you.species != SP_HILL_ORC)
         return;
 
-    const bool is_orc = mons_species(monster->type) == MONS_ORC;
     // for followers of Beogh, decide whether orcs will join you
     if (you.religion == GOD_BEOGH
         && monster->foe == MHITYOU
         && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
-        && is_orc
+        && mons_species(monster->type) == MONS_ORC
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))

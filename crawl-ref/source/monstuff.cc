@@ -720,7 +720,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                     monster->hit_dice, true, monster);
 
                 if (mons_is_holy(monster))
-                    did_god_conduct(DID_KILL_ANGEL, monster->hit_dice,
+                    did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
                                     true, monster);
 
                 if (created_friendly)
@@ -849,10 +849,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     }
                 }
 
-                // Angel kills are always noticed.
+                // Holy kills are always noticed.
                 if (targ_holy == MH_HOLY)
                 {
-                    notice |= did_god_conduct( DID_ANGEL_KILLED_BY_SERVANT,
+                    notice |= did_god_conduct( DID_HOLY_KILLED_BY_SERVANT,
                                                monster->hit_dice );
                 }
 
