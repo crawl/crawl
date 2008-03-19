@@ -198,7 +198,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "call upon Zin to create a Sanctuary" },
     // TSO
-    { "gain power from killing evil in The Shining One's name",
+    { "gain power for yourself and allies by killing evil",
       "call upon The Shining One for a divine shield",
       "",
       "hurl blasts of cleansing flame",
@@ -218,7 +218,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Xom
     { "", "", "", "", "" },
     // Vehumet
-    { "gain magical power from killing in Vehumet's name",
+    { "gain magical power from killing",
       "You can call upon Vehumet to aid your destructive magics with prayer.",
       "During prayer you have some protection from summoned creatures.",
       "",
@@ -230,7 +230,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "haste yourself" },
     // Makhleb
-    { "gain power from killing in Makhleb's name",
+    { "gain power from killing",
       "harness Makhleb's destructive might",
       "summon a lesser servant of Makhleb",
       "hurl Makhleb's greater destruction",
@@ -284,7 +284,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "call upon Zin to create a Sanctuary" },
     // TSO
-    { "gain power from killing evil in The Shining One's name",
+    { "gain power for yourself and allies by killing evil",
       "call upon The Shining One for a divine shield",
       "",
       "hurl blasts of cleansing flame",
@@ -304,7 +304,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Xom
     { "", "", "", "", "" },
     // Vehumet
-    { "gain magical power from killing in Vehumet's name",
+    { "gain magical power from killing",
       "Vehumet will no longer aid your destructive magics.",
       "Vehumet will no longer shield you from summoned creatures.",
       "",
@@ -316,7 +316,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "haste yourself" },
     // Makhleb
-    { "gain power from killing in Makhleb's name",
+    { "gain power from killing",
       "harness Makhleb's destructive might",
       "summon a lesser servant of Makhleb",
       "hurl Makhleb's greater destruction",
