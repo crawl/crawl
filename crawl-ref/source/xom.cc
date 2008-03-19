@@ -487,7 +487,8 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 3)
     {
-        int numdemons = std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
+        const int numdemons =
+            std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
         int numdifferent = 0;
 
         for (int i = 0; i < numdemons; i++)
