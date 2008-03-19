@@ -485,7 +485,7 @@ bool mons_is_demon( int mc )
 {
     const int show_char = mons_char( mc );
 
-    // Not every demonic monster is a demon (ie hell hog, hell hound)
+    // Not every demonic monster is a demon (hell hog, hell hound, etc.).
     if (mons_class_holiness( mc ) == MH_DEMONIC
         && (isdigit( show_char ) || show_char == '&'))
     {
