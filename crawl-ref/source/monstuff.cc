@@ -812,7 +812,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 else if (you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
                          || (you.religion == GOD_BEOGH
-                             && mons_species(menv[i].type) == MONS_ORC)
+                             && is_orcish_follower(&menv[i]))
                          || (!anon && testbits(menv[i].flags, MF_GOD_GIFT)))
                 {
                     // Yes, we are splitting undead pets from the others
