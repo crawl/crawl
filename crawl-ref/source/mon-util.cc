@@ -292,7 +292,7 @@ mon_resist_def get_mons_resists(const monsters *mon)
 {
     if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
         return (mon->ghost->resists);
-    
+
     mon_resist_def resists = get_mons_class_resists(mon->type);
     if ((mons_genus(mon->type) == MONS_DRACONIAN &&
          mon->type != MONS_DRACONIAN) ||
