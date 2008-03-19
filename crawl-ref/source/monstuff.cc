@@ -2321,6 +2321,44 @@ void set_nearest_monster_foe(monsters *mon)
     }
 }
 
+// The default suitable() function for choose_random_nearby_monster().
+bool choose_any_monster(const monsters* mon)
+{
+    return true;
+}
+
+// Find a nearby monster and return its index, including you as a
+// possibility with probability weight.  suitable() should return true
+// for the type of monster wanted.
+int choose_random_nearby_monster(int weight,
+                                 bool (*suitable)(const monsters* mon))
+{
+    int mons_count = weight;
+    int result = NON_MONSTER;
+
+    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
+    int yend = you.y_pos + 9, xend = you.x_pos + 9;
+    if ( xstart < 0 ) xstart = 0;
+    if ( ystart < 0 ) ystart = 0;
+    if ( xend >= GXM ) xend = GXM;
+    if ( yend >= GYM ) yend = GYM;
+
+    // monster check
+    for ( int y = ystart; y < yend; ++y )
+        for ( int x = xstart; x < xend; ++x )
+            if ( see_grid(x,y) && mgrd[x][y] != NON_MONSTER )
+            {
+                result = mgrd[x][y];
+
+                if ( suitable(&menv[result]) && one_chance_in(++mons_count) )
+                    break;
+
+                result = NON_MONSTER;
+            }
+
+    return result;
+}
+
 // note that this function *completely* blocks messaging for monsters
 // distant or invisible to the player ... look elsewhere for a function
 // permitting output of "It" messages for the invisible {dlb}

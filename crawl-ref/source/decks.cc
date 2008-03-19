@@ -1347,30 +1347,6 @@ static void warp_card(int power, deck_rarity_type rarity)
         random_blink(false);
 }
 
-// Find a nearby monster to banish and return its index,
-// including you as a possibility with probability weight.
-static int choose_random_nearby_monster(int weight)
-{
-    int mons_count = weight;
-    int result = NON_MONSTER;
-
-    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
-    int yend = you.y_pos + 9, xend = you.x_pos + 9;
-    if ( xstart < 0 ) xstart = 0;
-    if ( ystart < 0 ) ystart = 0;
-    if ( xend >= GXM ) xend = GXM;
-    if ( yend >= GYM ) yend = GYM;
-
-    /* monster check */
-    for ( int y = ystart; y < yend; ++y )
-        for ( int x = xstart; x < xend; ++x )
-            if ( see_grid(x,y) && mgrd[x][y] != NON_MONSTER )
-                if ( one_chance_in(++mons_count) )
-                    result = mgrd[x][y];
-
-    return result;
-}
-
 static void swap_monster_card(int power, deck_rarity_type rarity)
 {
     // Swap between you and another monster.

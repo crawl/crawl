@@ -481,21 +481,9 @@ bool there_are_monsters_nearby()
     return (false);
 }
 
-monsters *get_random_nearby_monster()
+static bool choose_mutatable_monster(const monsters* mon)
 {
-    monsters *monster = NULL;
-    /* not particularly efficient, but oh well */
-    for (int it = 0, num = 0; it < MAX_MONSTERS; it++)
-    {
-        monsters *mons = &menv[it];
-        if (mons->alive() && mons_near(mons)
-            && !mons_is_submerged(mons)
-            && one_chance_in(++num))
-        {
-            monster = mons;
-        }
-    }
-    return (monster);
+    return (mons_holiness(mon) == MH_NATURAL && !mons_is_submerged(mon));
 }
 
 static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
@@ -643,8 +631,11 @@ static bool xom_is_good(int sever)
         if (!there_are_monsters_nearby())
             goto try_again;
 
-        monsters* mon = get_random_nearby_monster();
-        if (mon && mon->holiness() == MH_NATURAL)
+        int monster = choose_random_nearby_monster(0,
+                          choose_mutatable_monster);
+        monsters* mon = (monster != NON_MONSTER) ? &menv[monster] : NULL;
+
+        if (mon)
         {
             god_speaks(GOD_XOM, random_choose_string(
                            "\"This might be better!\"",
@@ -824,8 +815,11 @@ static bool xom_is_bad(int sever)
             if (!there_are_monsters_nearby())
                 goto try_again;
 
-            monsters* mon = get_random_nearby_monster();
-            if (mon && mon->holiness() == MH_NATURAL)
+            int monster = choose_random_nearby_monster(0,
+                              choose_mutatable_monster);
+            monsters* mon = (monster != NON_MONSTER) ? &menv[monster] : NULL;
+
+            if (mon)
             {
                 god_speaks(GOD_XOM, random_choose_string(
                                "\"This might be better!\"",
