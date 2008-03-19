@@ -4115,10 +4115,6 @@ bool monsters::del_ench(enchant_type ench, bool quiet)
     if (i == enchantments.end())
         return (false);
 
-    // monsters inside a halo don't lose backlight
-    if (ench == ENCH_BACKLIGHT && mons_inside_halo(x, y))
-        return (false);
-
     const mon_enchant me = i->second;
     const enchant_type et = i->first;
     enchantments.erase(et);
@@ -4209,7 +4205,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_BACKLIGHT:
-        if (!quiet)
+        // monsters inside a halo don't lose backlight
+        if (mons_inside_halo(x, y))
+            add_ench(ENCH_BACKLIGHT);
+        else if (!quiet)
         {
             if (player_monster_visible(this))
                 simple_monster_message(this, " stops glowing.");
