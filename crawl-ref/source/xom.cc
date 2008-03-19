@@ -425,8 +425,8 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
 #endif
     const demon_class_type dct =
         roll >= 850 ? DEMON_GREATER :
-        roll >= 340 ? DEMON_COMMON  :
-        DEMON_LESSER;
+        roll >= 340 ? DEMON_COMMON
+                    : DEMON_LESSER;
 
     // Sometimes, send an angel or daeva instead.
     if (dct == DEMON_GREATER && coinflip())
@@ -504,11 +504,11 @@ static bool xom_is_good(int sever)
         for (int i = 0; i < numdemons; i++)
         {
             monster_type mon = xom_random_demon(sever);
-            const bool is_demon = mons_is_demon(mon);
+            const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
             // If it's not a demon, Xom got it someplace else, so use
             // different messages below.
-            if (!is_demon)
+            if (!is_demonic)
                 numdifferent++;
 
             summons[i] = create_monster(mon, 3, BEH_GOD_GIFT,
@@ -523,13 +523,14 @@ static bool xom_is_good(int sever)
                 if (summons[i] != -1 && hostiletype != 0)
                 {
                     monsters *mon = &menv[i];
+                    const bool is_demonic = (mons_holiness(mon) == MH_DEMONIC);
 
                     // Mark factions hostile as appropriate.
-                    if ((mons_is_demon(mon->type) && hostiletype == 1)
-                        || (!mons_is_demon(mon->type) && hostiletype == 2)
+                    if ((is_demonic && hostiletype == 1)
+                        || (!is_demonic && hostiletype == 2)
                         || hostiletype == 3)
                     {
-                            mon->attitude = ATT_HOSTILE;
+                        mon->attitude = ATT_HOSTILE;
                     }
                 }
             }
@@ -570,10 +571,11 @@ static bool xom_is_good(int sever)
                                              // 1/4: hostile
 
         monster_type mon = xom_random_demon(sever);
+        const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
         // If it's not a demon, Xom got it someplace else, so use
-        // different messages below./
-        if (!mons_is_demon(mon))
+        // different messages below.
+        if (is_demonic)
             different = true;
 
         // Mark non-demons hostile as appropriate.
@@ -646,10 +648,11 @@ static bool xom_is_good(int sever)
                                              // 1/4: hostile
 
         monster_type mon = xom_random_demon(sever);
+        const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
         // If it's not a demon, Xom got it someplace else, so use
         // different messages below.
-        if (!mons_is_demon(mon))
+        if (is_demonic)
             different = true;
 
         // Mark non-demons hostile as appropriate.
