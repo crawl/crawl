@@ -604,7 +604,7 @@ static bool xom_is_good(int sever)
 
         if (mon)
         {
-            god_speaks(GOD_XOM, _get_xom_speech("weaker monster polymorph"));
+            god_speaks(GOD_XOM, _get_xom_speech("good monster polymorph"));
 
             if (mons_friendly(mon))
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
@@ -780,7 +780,7 @@ static bool xom_is_bad(int sever)
 
             if (mon)
             {
-                god_speaks(GOD_XOM, _get_xom_speech("stronger monster polymorph"));
+                god_speaks(GOD_XOM, _get_xom_speech("bad monster polymorph"));
 
                 if (mons_friendly(mon))
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);

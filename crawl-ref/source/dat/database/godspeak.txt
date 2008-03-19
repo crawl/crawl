@@ -299,7 +299,7 @@ Xom alters the dungeon around you.
 
 %%%%
 # strengthens friendlies, weakens hostiles
-Xom better monster polymorph
+Xom good monster polymorph
 
 "This might be better!"
 
@@ -311,7 +311,7 @@ You hear Xom's avuncular chuckle.
 
 %%%%
 # weakens friendlies, strengthens hostiles
-Xom worse monster polymorph
+Xom bad monster polymorph
 
 @Xom better monster polymorph@
 %%%%
