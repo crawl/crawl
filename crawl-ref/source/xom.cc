@@ -499,6 +499,8 @@ static bool xom_is_good(int sever)
             (hostile < 11) ? (coinflip() ? 1 : 2) //  2/3: one is hostile
                            : 3;                   // 1/12: both are hostile
 
+        int *summons = new int[numdemons];
+
         for (int i = 0; i < numdemons; i++)
         {
             monster_type mon = xom_random_demon(sever);
@@ -509,16 +511,31 @@ static bool xom_is_good(int sever)
             if (!is_demon)
                 numdifferent++;
 
-            // Mark factions hostile as appropriate.
-            beh_type beh =
-                (hostiletype == 1 && is_demon)  ? BEH_HOSTILE :
-                (hostiletype == 2 && !is_demon) ? BEH_HOSTILE :
-                (hostiletype == 3)              ? BEH_HOSTILE
-                                                : BEH_GOD_GIFT;
-
-            create_monster(mon, 3, beh, you.x_pos, you.y_pos,
-                           you.pet_target, MONS_PROGRAM_BUG);
+            summons[i] = create_monster(mon, 3, BEH_GOD_GIFT,
+                                        you.x_pos, you.y_pos,
+                                        you.pet_target, MONS_PROGRAM_BUG);
         }
+
+        if (numdifferent != numdemons && numdifferent > 0)
+        {
+            for (int i = 0; i < numdemons; ++i)
+            {
+                if (summons[i] != -1 && hostiletype != 0)
+                {
+                    monsters *mon = &menv[i];
+
+                    // Mark factions hostile as appropriate.
+                    if ((mons_is_demon(mon->type) && hostiletype == 1)
+                        || (!mons_is_demon(mon->type) && hostiletype == 2)
+                        || hostiletype == 3)
+                    {
+                            mon->attitude = ATT_HOSTILE;
+                    }
+                }
+            }
+        }
+
+        delete[] summons;
 
         if (numdifferent == numdemons)
             god_speaks(GOD_XOM, _get_xom_speech("multiple holy summons"));
