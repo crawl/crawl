@@ -63,14 +63,14 @@ static const spell_type xom_spells[] =
     SPELL_NECROMUTATION
 };
 
-static const char *xom_single_summons[] =
+static const char *xom_single_normal_summons[] =
 {
     "\"Serve the mortal, my child!\"",
     "\"Serve the toy, my child!\"",
     "Xom opens a gate."
 };
 
-static const char *xom_single_diff_summons[] =
+static const char *xom_single_normal_diff_summons[] =
 {
     "\"Serve the mortal, my confused child!\"",
     "\"Serve the toy, my child of exile!\"",
@@ -78,6 +78,23 @@ static const char *xom_single_diff_summons[] =
     "Xom lures something onto this plane.",
     "\"A toy for the toy!\"",
     "\"I wonder which toy lasts longer.\"",
+    "Xom opens a gate."
+};
+
+static const char *xom_single_high_summons[] =
+{
+    "Xom grants you a demonic assistant.",
+    "Xom grants you a demonic servitor.",
+    "Xom opens a gate."
+};
+
+static const char *xom_single_high_diff_summons[] =
+{
+    "Xom grants you an assistant from another god.",
+    "Xom beguiles another god's servant into helping you.",
+    "\"Where'd that come from? Oh, well.\"",
+    "You wonder where Xom got that toy from.",
+    "Xom seems to have successfully tricked another god.",
     "Xom opens a gate."
 };
 
@@ -619,9 +636,9 @@ static bool xom_is_good(int sever)
                            you.pet_target, MONS_PROGRAM_BUG) != -1)
         {
             if (different)
-                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_diff_summons));
+                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_normal_diff_summons));
             else
-                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_summons));
+                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_normal_summons));
 
             done = true;
         }
@@ -680,15 +697,25 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 10)
     {
+        bool different = false;
+
+        monster_type mon = xom_random_demon(sever);
+
+        // If it's not a demon, Xom got it someplace else, so we use
+        // different messages below.
+        if (!mons_is_demon(mon))
+            different = true;
+
         if (create_monster(xom_random_demon(sever, one_chance_in(8)),
                             0, BEH_GOD_GIFT,
                             you.x_pos, you.y_pos, you.pet_target,
                             MONS_PROGRAM_BUG ) != -1)
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "Xom grants you a demonic assistant.",
-                           "Xom grants you a demonic servitor.",
-                           "Xom opens a gate.", NULL));
+            if (different)
+                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_high_diff_summons));
+            else
+                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_high_summons));
+
             done = true;
         }
     }
