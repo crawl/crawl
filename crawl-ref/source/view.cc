@@ -840,11 +840,9 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
             stop_running();
         }
     }
-    else if (is_orc
-             && !(you.religion == GOD_BEOGH)
-             && monster->attitude == ATT_FRIENDLY
+    else if (you.religion != GOD_BEOGH
+             && is_orcish_follower(monster)
              && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
-             && (monster->flags & MF_GOD_GIFT)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
              && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {      // reconversion if no longer Beogh

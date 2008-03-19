@@ -70,6 +70,8 @@ bool ely_destroy_weapons();
 bool trog_burn_books();
 bool tso_stab_safe_monster(const actor *act);
 
+bool is_orcish_follower(const monsters* mon);
+
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 
 bool is_evil_god(god_type god);

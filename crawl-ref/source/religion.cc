@@ -3040,9 +3040,7 @@ static bool orcish_followers_on_level_abandon_you()
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
-            && mons_species(monster->type) == MONS_ORC
-            && monster->attitude == ATT_FRIENDLY)
+        if (monster->type != -1 && is_orcish_follower(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Abandoning: %s on level %d, branch %d",
@@ -3094,8 +3092,7 @@ static bool beogh_followers_abandon_you()
                 if ( targ_monst != NON_MONSTER )
                 {
                     monsters *monster = &menv[targ_monst];
-                    if (mons_species(monster->type) == MONS_ORC
-                        && monster->attitude == ATT_FRIENDLY)
+                    if (is_orcish_follower(monster))
                     {
                         num_followers++;
 
@@ -3373,6 +3370,12 @@ void beogh_convert_orc(monsters *orc, bool emergency)
 
     // to avoid immobile "followers"
     behaviour_event(orc, ME_ALERT, MHITNOT);
+}
+
+bool is_orcish_follower(const monsters* mon)
+{
+    return (mons_species(mon->type) == MONS_ORC
+        && mon->attitude == ATT_FRIENDLY);
 }
 
 void excommunication(god_type new_god)

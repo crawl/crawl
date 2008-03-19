@@ -3779,8 +3779,8 @@ static int affect_monster(bolt &beam, monsters *mon)
                     did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, true, mon );
 
                 if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
-                    && mon->behaviour == BEH_SLEEP && you.species == SP_HILL_ORC
-                    && !player_under_penance() && you.piety >= piety_breakpoint(2))
+                    && mon->behaviour == BEH_SLEEP && !player_under_penance()
+                    && you.piety >= piety_breakpoint(2) && mons_near(mon))
                 {
                     hit_woke_orc = true;
                 }
@@ -3949,9 +3949,9 @@ static int affect_monster(bolt &beam, monsters *mon)
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
-            && mon->behaviour == BEH_SLEEP && you.species == SP_HILL_ORC
-            && YOU_KILL(beam.thrower) && !player_under_penance()
-            && you.piety >= piety_breakpoint(2))
+            && mon->behaviour == BEH_SLEEP && YOU_KILL(beam.thrower)
+            && !player_under_penance() && you.piety >= piety_breakpoint(2)
+            && mons_near(mon))
         {
             hit_woke_orc = true;
         }

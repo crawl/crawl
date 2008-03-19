@@ -482,11 +482,8 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
         else if (MON_KILL(killer))
         {
             monsters *mon = &menv[i];
-            if (mons_species(mon->type) == MONS_ORC && mons_friendly(mon)
-                && !one_chance_in(3))
-            {
+            if (is_orcish_follower(mon) && !one_chance_in(3))
                 convert = true;
-            }
         }
     }
 
