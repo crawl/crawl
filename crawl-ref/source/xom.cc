@@ -10,6 +10,7 @@
 
 #include "beam.h"
 #include "branch.h"
+#include "database.h"
 #include "effects.h"
 #include "it_use2.h"
 #include "items.h"
@@ -63,107 +64,6 @@ static const spell_type xom_spells[] =
     SPELL_NECROMUTATION
 };
 
-static const char *xom_single_normal_summons[] =
-{
-    "\"Serve the mortal, my child!\"",
-    "\"Serve the toy, my child!\"",
-    "Xom opens a gate."
-};
-
-static const char *xom_single_normal_diff_summons[] =
-{
-    "\"Serve the mortal, my confused child!\"",
-    "\"Serve the toy, my child of exile!\"",
-    "Xom calls in a curious servant of another god.",
-    "Xom lures something onto this plane.",
-    "\"A toy for the toy!\"",
-    "\"I wonder which toy lasts longer.\"",
-    "Xom opens a gate."
-};
-
-static const char *xom_single_high_summons[] =
-{
-    "Xom grants you a demonic assistant.",
-    "Xom grants you a demonic servitor.",
-    "Xom opens a gate."
-};
-
-static const char *xom_single_high_diff_summons[] =
-{
-    "Xom grants you an assistant from another god.",
-    "Xom beguiles another god's servant into helping you.",
-    "\"Where'd that come from? Oh, well.\"",
-    "You wonder where Xom got that toy from.",
-    "Xom seems to have successfully tricked another god.",
-    "Xom opens a gate."
-};
-
-static const char *xom_multiple_summons[] =
-{
-    "\"Serve the mortal, my children!\"",
-    "Xom grants you some temporary aid.",
-    "Xom momentarily opens a gate."
-};
-
-static const char *xom_multiple_some_diff_summons[] =
-{
-    "Xom calls in some mixed company.",
-    "\"Serve the toy, my motley children!\"",
-    "Xom sends help from the ranks of the outcast.",
-    "\"Oh, what a happy playground.\"",
-    "Xom manages to trick several beings into existence.",
-    "Xom snickers at the variety.",
-    "Xom momentarily opens several gates."
-};
-
-static const char *xom_multiple_all_diff_summons[] =
-{
-    "Xom stirs up dislodged servants of other gods.",
-    "Xom summons wayward servants of other gods.",
-    "Xom tricks other gods for their servants.",
-    "\"Different god, different toy.\"",
-    "Xom momentarily opens a gate."
-};
-
-static const char *xom_try_this[] =
-{
-    "\"Perhaps you should try this instead.\"",
-    "\"Maybe this would work better.\"",
-    "\"Catch!\""
-};
-
-static const char *xom_try_this_ring[] =
-{
-    "\"Try this.\"",
-    "\"Catch!\"",
-    "\"Take this!\""
-};
-
-static const char *xom_try_this_other_thing[] =
-{
-    "\"Perhaps you should try this instead.\"",
-    "\"Have you considered using one of these?\"",
-    "\"How about this?\""
-};
-
-static const char *xom_try_these_duds[] =
-{
-    "\"Perhaps you should try this instead.\"",
-    "\"Have you considered wearing one of these?\"",
-    "\"Here you go.\""
-};
-
-static const char *xom_generic_beneficence[] =
-{
-    "Xom grants you a gift!",
-    "\"Here.\"",
-    "Xom's generous nature manifests itself.",
-    "Xom grants you an implement of some kind.",
-    "\"Take this instrument of something!\"",
-    "\"Take this token of my esteem.\"",
-    "Xom smiles on you."
-};
-
 const char *describe_xom_favour()
 {
     return (you.piety > 160) ? "A beloved toy of Xom." :
@@ -207,6 +107,19 @@ static const char* xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
         "Xom is interested."
     }
 };
+
+static const char* _get_xom_speech(const std::string key)
+{
+    std::string result = getSpeakString("Xom " + key);
+    
+    if (result.empty())
+        result = getSpeakString("Xom general effect");
+        
+    if (!result.empty())
+        return (result.c_str());
+        
+    return ("Xom makes something happen.");
+}
 
 static void _xom_is_stimulated(int maxinterestingness,
                                const char* message_array[],
@@ -277,7 +190,7 @@ void xom_makes_you_cast_random_spell(int sever)
 
     const spell_type spell = xom_spells[random2(spellenum)];
 
-    god_speaks(GOD_XOM, "Xom's power flows through you!");
+    god_speaks(GOD_XOM, _get_xom_speech("spell effect"));
 
 #if DEBUG_DIAGNOSTICS || DEBUG_RELIGION || DEBUG_XOM
     mprf(MSGCH_DIAGNOSTICS,
@@ -352,7 +265,7 @@ static bool xom_annoyance_gift(int power)
         {
             // If you are wielding a cursed item then Xom will give
             // you an item of that same type. Ha ha!
-            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this));
+            god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             if (coinflip())
                 // For added humour, give the same sub-type.
                 xom_make_item(weapon->base_type, weapon->sub_type, power * 3);
@@ -368,7 +281,7 @@ static bool xom_annoyance_gift(int power)
             // a ring. Ha ha!
             // 
             // A random ring.  (Not necessarily a good one.)
-            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this));
+            god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
             return (true);
         };
@@ -378,7 +291,7 @@ static bool xom_annoyance_gift(int power)
         {
             // If you are wearing a cursed amulet then Xom will give
             // you an amulet. Ha ha!
-            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this));
+            god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             xom_make_item(OBJ_JEWELLERY, get_random_amulet_type(), power * 3);
             return (true);
         };
@@ -390,7 +303,7 @@ static bool xom_annoyance_gift(int power)
         {
             // If you are wearing a cursed ring then Xom will give you
             // a ring. Ha ha!
-            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this_ring));
+            god_speaks(GOD_XOM, _get_xom_speech("ring gift"));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
             return (true);
         }
@@ -399,7 +312,7 @@ static bool xom_annoyance_gift(int power)
         {
             // Xom will give you a wielded item of a type different
             // than what you are currently wielding.
-            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this_other_thing));
+            god_speaks(GOD_XOM, _get_xom_speech("weapon gift"));
 
             const object_class_type objtype =
                 get_unrelated_wield_class(weapon->base_type);
@@ -425,7 +338,7 @@ bool xom_gives_item(int power)
     {
         // If you are wearing a cursed cloak then Xom will give you a
         // cloak or body armour . Ha ha!
-        god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_these_duds));
+        god_speaks(GOD_XOM, _get_xom_speech("xom armour gift"));
         xom_make_item(OBJ_ARMOUR,
                       random2(10)?
                           get_random_body_armour_type(you.your_level * 2)
@@ -434,7 +347,7 @@ bool xom_gives_item(int power)
         return (true);
     }
 
-    god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_generic_beneficence));
+    god_speaks(GOD_XOM, _get_xom_speech("general gift"));
 
     // There are two kinds of Xom gifts: acquirement and random
     // object. The result from acquirement is very good (usually as
@@ -562,11 +475,7 @@ static bool xom_is_good(int sever)
             you.berserk_penalty = NO_BERSERK_PENALTY;
         }
 
-        god_speaks(GOD_XOM, random_choose_string(
-                       "\"Go forth and destroy!\"",
-                       "\"Go forth and cause havoc, mortal!\"",
-                       "Xom grants you a minor favour.",
-                       "Xom smiles on you.", NULL));
+        god_speaks(GOD_XOM, _get_xom_speech("potion effect"));
 
         potion_effect(type, 150);
         done = true;
@@ -595,11 +504,11 @@ static bool xom_is_good(int sever)
         }
 
         if (numdifferent == numdemons)
-            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_multiple_all_diff_summons));
+            god_speaks(GOD_XOM, _get_xom_speech("multiple holy summons"));
         else if (numdifferent > 0)
-            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_multiple_some_diff_summons));
+            god_speaks(GOD_XOM, _get_xom_speech("multiple mixed summons"));
         else
-            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_multiple_summons));
+            god_speaks(GOD_XOM, _get_xom_speech("multiple summons"));
 
         done = true;
     }
@@ -609,11 +518,7 @@ static bool xom_is_good(int sever)
         if (!vitrify_area(radius)) // can fail with radius 1 or in open areas
             goto try_again;
 
-        god_speaks(GOD_XOM, random_choose_string(
-                       "You feel watched.",
-                       "Everything around seems to assume a strange transparency.",
-                       "All the walls suddenly lose part of their structure.",
-                       "Xom alters the dungeon around you.", NULL));
+        god_speaks(GOD_XOM, _get_xom_speech("vitrification"));
         done = true;
     }
     else if (random2(sever) <= 5)
@@ -636,9 +541,9 @@ static bool xom_is_good(int sever)
                            you.pet_target, MONS_PROGRAM_BUG) != -1)
         {
             if (different)
-                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_normal_diff_summons));
+                god_speaks(GOD_XOM, _get_xom_speech("single holy summon"));
             else
-                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_normal_summons));
+                god_speaks(GOD_XOM, _get_xom_speech("single summon"));
 
             done = true;
         }
@@ -654,11 +559,8 @@ static bool xom_is_good(int sever)
 
         if (mon)
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "\"This might be better!\"",
-                           "\"Hum-dee-hum-dee-hum...\"",
-                           "Xom's power touches on a nearby monster.",
-                           "You hear Xom's avuncular chuckle.", NULL));
+            god_speaks(GOD_XOM, _get_xom_speech("weaker monster polymorph"));
+            
             if (mons_friendly(mon))
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
             else
@@ -676,11 +578,7 @@ static bool xom_is_good(int sever)
         if (you.is_undead)
             goto try_again;
 
-        god_speaks(GOD_XOM, random_choose_string(
-                       "\"You need some minor adjustments, mortal!\"",
-                       "\"Let me alter your pitiful body.\"",
-                       "Xom's power touches on you for a moment.",
-                       "You hear Xom's maniacal cackling.", NULL));
+        god_speaks(GOD_XOM, _get_xom_speech("good mutations"));
         mpr("Your body is suffused with distortional energy.");
 
         set_hp(1 + random2(you.hp), false);
@@ -712,9 +610,9 @@ static bool xom_is_good(int sever)
                             MONS_PROGRAM_BUG ) != -1)
         {
             if (different)
-                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_high_diff_summons));
+                god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
             else
-                god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_single_high_summons));
+	        god_speaks(GOD_XOM, _get_xom_speech("single demon summon"));
 
             done = true;
         }
@@ -765,11 +663,7 @@ static bool xom_is_bad(int sever)
     {
         if (random2(sever) <= 2)
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "Xom almost notices you.",
-                           "Xom's attention almost turns to you for a moment.",
-                           "Xom's power almost touches on you for a moment.",
-                           "You almost hear Xom's maniacal laughter.", NULL));
+            god_speaks(GOD_XOM, _get_xom_speech("zero miscast effect"));
 
             miscast_effect( SPTYP_RANDOM, 0, 0, 0, "the mischief of Xom" );
 
@@ -777,11 +671,7 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 3)
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "Xom notices you.",
-                           "Xom's attention turns to you for a moment.",
-                           "Xom's power touches on you for a moment.",
-                           "You hear Xom's maniacal laughter.", NULL));
+            god_speaks(GOD_XOM, _get_xom_speech("minor miscast effect"));
 
             miscast_effect( SPTYP_RANDOM, 0, 0, random2(2),
                             "the capriciousness of Xom" );
@@ -790,11 +680,7 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 4)
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "\"Suffer!\"",
-                           "Xom's malign attention turns to you for a moment.",
-                           "Xom's power touches on you for a moment.",
-                           "You hear Xom's maniacal laughter.", NULL));
+            god_speaks(GOD_XOM, _get_xom_speech("lose stats"));
 
             lose_stat(STAT_RANDOM, 1 + random2(3), true,
                       "the capriciousness of Xom" );
@@ -803,11 +689,7 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 5)
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "Xom notices you.",
-                           "Xom's attention turns to you for a moment.",
-                           "Xom's power touches on you for a moment.",
-                           "You hear Xom's maniacal laughter.", NULL));
+            god_speaks(GOD_XOM, _get_xom_speech("medium miscast effect"));
 
             miscast_effect( SPTYP_RANDOM, 0, 0, random2(3),
                             "the capriciousness of Xom" );
@@ -818,11 +700,7 @@ static bool xom_is_bad(int sever)
         {
             if (you.is_undead)
                 goto try_again;
-            god_speaks(GOD_XOM, random_choose_string(
-                           "\"You need some minor improvements, mortal!\"",
-                           "\"Let me alter your body.\"",
-                           "Xom's power brushes against you for a moment.",
-                           "You hear Xom's avuncular chuckle.", NULL));
+            god_speaks(GOD_XOM, _get_xom_speech("random mutations"));
             mpr("Your body is suffused with distortional energy.");
 
             set_hp(1 + random2(you.hp), false);
@@ -848,11 +726,7 @@ static bool xom_is_bad(int sever)
 
             if (mon)
             {
-                god_speaks(GOD_XOM, random_choose_string(
-                               "\"This might be better!\"",
-                               "\"Hum-dee-hum-dee-hum...\"",
-                               "Xom's power touches on a nearby monster.",
-                               "You hear Xom's avuncular chuckle.", NULL));
+                god_speaks(GOD_XOM, _get_xom_speech("stronger monster polymorph"));
 
                 if (mons_friendly(mon))
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
@@ -865,11 +739,7 @@ static bool xom_is_bad(int sever)
         {
             if (you.is_undead)
                 goto try_again;
-            god_speaks(GOD_XOM, random_choose_string(
-                           "\"You have displeased me, mortal.\"",
-                           "\"You have grown too confident for your meagre worth.\"",
-                           "Xom's power touches on you for a moment.",
-                           "You hear Xom's maniacal laughter.", NULL));
+            god_speaks(GOD_XOM, _get_xom_speech("draining or torment"));
 
             if (one_chance_in(4))
             {
@@ -889,11 +759,7 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 9)
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "\"Time to have some fun!\"",
-                           "\"Fight to survive, mortal.\"",
-                           "\"Let's see if it's strong enough to survive yet.\"",
-                           "You hear Xom's maniacal laughter.", NULL));
+            god_speaks(GOD_XOM, _get_xom_speech("hostile monster"));
 
             if (one_chance_in(4))
                 dancing_weapon(100, true);      // nasty, but fun
@@ -914,12 +780,8 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 10)
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "\"Try this!\"",
-                           "Xom's attention turns to you.",
-                           "Xom's power touches on you.",
-                           "Xom giggles.", NULL));
-
+            god_speaks(GOD_XOM, _get_xom_speech("major miscast effect"));
+ 
             miscast_effect( SPTYP_RANDOM, 0, 0, random2(4),
                             "the severe capriciousness of Xom" );
 
@@ -927,10 +789,7 @@ static bool xom_is_bad(int sever)
         }
         else if (one_chance_in(sever) && (you.level_type != LEVEL_ABYSS))
         {
-            god_speaks(GOD_XOM, random_choose_string(
-                           "\"You have grown too comfortable in your little world, mortal!\"",
-                           "Xom casts you into the Abyss!",
-                           "The world seems to spin as Xom's maniacal laughter rings in your ears.", NULL));
+            god_speaks(GOD_XOM, _get_xom_speech("banishment"));
 
             banished(DNGN_ENTER_ABYSS, "Xom");
 

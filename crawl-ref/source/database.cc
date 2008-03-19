@@ -66,29 +66,36 @@ static TextDB AllDBs[] =
             "descript/gods.txt",
             "descript/branches.txt",
             0),
+            
     TextDB( "db/randart",
             "database/randname.txt",
             "database/rand_wpn.txt", // mostly weapons
             "database/rand_arm.txt", // mostly armour
             "database/rand_all.txt", // jewellery and general
             0),
+            
     TextDB( "db/speak",
             "database/monspeak.txt", // monster speech
             "database/wpnnoise.txt", // noisy weapon speech
             "database/insult.txt",   // imp/demon taunts
+            "database/godspeak.txt", // god speech
             0),
+            
     TextDB( "db/shout",
             "database/shout.txt",
             "database/insult.txt",   // imp/demon taunts, again
             0),
-    TextDB( "db/help",  "database/help.txt",  0),
+            
+    TextDB( "db/help",
+            "database/help.txt",
+            0),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
-static TextDB& RandartDB = AllDBs[1];
-static TextDB& SpeakDB = AllDBs[2];
-static TextDB& ShoutDB = AllDBs[3];
-static TextDB& HelpDB = AllDBs[4];
+static TextDB& RandartDB     = AllDBs[1];
+static TextDB& SpeakDB       = AllDBs[2];
+static TextDB& ShoutDB       = AllDBs[3];
+static TextDB& HelpDB        = AllDBs[4];
 
 // ----------------------------------------------------------------------
 // TextDB
@@ -103,7 +110,10 @@ TextDB::TextDB(const char* db_name, ...)
     while (true)
     {
         const char* input_file = va_arg(args, const char *);
-        if (input_file == 0) break;
+        
+        if (input_file == 0)
+            break;
+            
         ASSERT( strstr(input_file, ".txt") != 0 );      // probably forgot the terminating 0
         _input_files.push_back(input_file);
     }
@@ -114,8 +124,10 @@ void TextDB::init()
 {
     if (_needs_update())
         _regenerate_db();
+        
     const std::string full_db_path = get_savedir_path(_db_name);
     _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
+    
     if (_db == NULL)
         end(1, true, "Failed to open DB: %s", full_db_path.c_str());
 }
