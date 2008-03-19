@@ -547,6 +547,11 @@ static bool xom_is_good(int sever)
     {
         bool different = false;
 
+        // If we get a non-demon, there's a chance that it may be
+        // hostile.
+        bool hostiletype = one_chance_in(4); // 3/4: friendly
+                                             // 1/4: hostile
+
         monster_type mon = xom_random_demon(sever);
 
         // If it's not a demon, Xom got it someplace else, so we use
@@ -554,7 +559,11 @@ static bool xom_is_good(int sever)
         if (!mons_is_demon(mon))
             different = true;
 
-        if (create_monster(mon, 6, BEH_GOD_GIFT, you.x_pos, you.y_pos,
+        // Mark non-demons hostile as appropriate.
+        beh_type beh = (different && hostiletype) ? BEH_HOSTILE
+                                                  : BEH_GOD_GIFT;
+
+        if (create_monster(mon, 6, beh, you.x_pos, you.y_pos,
                            you.pet_target, MONS_PROGRAM_BUG) != -1)
         {
             if (different)
@@ -577,7 +586,7 @@ static bool xom_is_good(int sever)
         if (mon)
         {
             god_speaks(GOD_XOM, _get_xom_speech("weaker monster polymorph"));
-            
+
             if (mons_friendly(mon))
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
             else
@@ -614,6 +623,11 @@ static bool xom_is_good(int sever)
     {
         bool different = false;
 
+        // If we get a non-demon, there's a chance that it may be
+        // hostile.
+        bool hostiletype = one_chance_in(4); // 3/4: friendly
+                                             // 1/4: hostile
+
         monster_type mon = xom_random_demon(sever);
 
         // If it's not a demon, Xom got it someplace else, so we use
@@ -621,10 +635,13 @@ static bool xom_is_good(int sever)
         if (!mons_is_demon(mon))
             different = true;
 
+        // Mark non-demons hostile as appropriate.
+        beh_type beh = (different && hostiletype) ? BEH_HOSTILE
+                                                  : BEH_GOD_GIFT;
+
         if (create_monster(xom_random_demon(sever, one_chance_in(8)),
-                            0, BEH_GOD_GIFT,
-                            you.x_pos, you.y_pos, you.pet_target,
-                            MONS_PROGRAM_BUG ) != -1)
+                            0, beh, you.x_pos, you.y_pos,
+                            you.pet_target, MONS_PROGRAM_BUG ) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
