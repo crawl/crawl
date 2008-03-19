@@ -220,7 +220,7 @@ bool curse_an_item( bool decay_potions )
             if (item_cursed( you.inv[i] ))
                 continue;
 
-            if (you.inv[i].base_type == OBJ_POTIONS 
+            if (you.inv[i].base_type == OBJ_POTIONS
                 && (!decay_potions || you.inv[i].sub_type == POT_DECAY))
             {
                 continue;
@@ -250,7 +250,7 @@ bool curse_an_item( bool decay_potions )
         {
             int amount = random2(you.inv[item].quantity) + 1;
             split_blood_potions_into_decay(item, amount);
-            
+
             // Xom is amused if this happens to thirsty vampires
             if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY)
                 xom_is_stimulated(32 * amount);
@@ -271,7 +271,7 @@ bool curse_an_item( bool decay_potions )
     return (true);
 }
 
-static void monster_drop_ething(monsters *monster, 
+static void monster_drop_ething(monsters *monster,
                                 bool mark_item_origins = false)
 {
     const bool hostile_grid = grid_destroys_items(grd(monster->pos()));
