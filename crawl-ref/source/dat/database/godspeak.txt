@@ -39,7 +39,7 @@ Xom grants you an implement of some kind.
 Xom smiles on you.
 
 %%%%
-# Xom will give you a ring or amulet you can't currently use due to
+# Xom will give you a ring or amulet you can't currently use, due to
 # cursed equipment.
 Xom cursed gift
 
@@ -50,17 +50,17 @@ Xom cursed gift
 "Catch!"
 
 %%%%
-# If you're wearing a cursed ring Xom will give you another ring.
+# If you're wearing a cursed ring, Xom will give you another ring.
 Xom ring gift
 
 "Try this."
 
-"Catch!"
-
 "Take this!"
 
+"Catch!"
+
 %%%%
-# Xom will choose a weapon of a different subtype than the one you're
+# Xom will choose a weapon of a different subtype from the one you're
 # currently wielding.
 Xom weapon gift
 

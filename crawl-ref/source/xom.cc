@@ -111,7 +111,7 @@ static const char* xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
 static const char* _get_xom_speech(const std::string key)
 {
     std::string result = getSpeakString("Xom " + key);
-    
+
     if (result.empty())
         result = getSpeakString("Xom general effect");
         
@@ -277,9 +277,9 @@ static bool xom_annoyance_gift(int power)
         const item_def *gloves = you.slot_item(EQ_GLOVES);
         if (coinflip() && gloves && gloves->cursed())
         {
-            // If you are wearing cursed gloves then Xom will give you
+            // If you are wearing cursed gloves, then Xom will give you
             // a ring. Ha ha!
-            // 
+            //
             // A random ring.  (Not necessarily a good one.)
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
@@ -289,7 +289,7 @@ static bool xom_annoyance_gift(int power)
         const item_def *amulet = you.slot_item(EQ_AMULET);
         if (coinflip() && amulet && amulet->cursed())
         {
-            // If you are wearing a cursed amulet then Xom will give
+            // If you are wearing a cursed amulet, then Xom will give
             // you an amulet. Ha ha!
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             xom_make_item(OBJ_JEWELLERY, get_random_amulet_type(), power * 3);
@@ -301,7 +301,7 @@ static bool xom_annoyance_gift(int power)
         if (coinflip() && ((left_ring && left_ring->cursed())
                            || (right_ring && right_ring->cursed())))
         {
-            // If you are wearing a cursed ring then Xom will give you
+            // If you are wearing a cursed ring, then Xom will give you
             // a ring. Ha ha!
             god_speaks(GOD_XOM, _get_xom_speech("ring gift"));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
@@ -311,7 +311,7 @@ static bool xom_annoyance_gift(int power)
         if (one_chance_in(5) && weapon)
         {
             // Xom will give you a wielded item of a type different
-            // than what you are currently wielding.
+            // from what you are currently wielding.
             god_speaks(GOD_XOM, _get_xom_speech("weapon gift"));
 
             const object_class_type objtype =
@@ -336,8 +336,8 @@ bool xom_gives_item(int power)
     const item_def *cloak = you.slot_item(EQ_CLOAK);
     if (coinflip() && cloak && cloak->cursed())
     {
-        // If you are wearing a cursed cloak then Xom will give you a
-        // cloak or body armour . Ha ha!
+        // If you are wearing a cursed cloak, then Xom will give you a
+        // cloak or body armour. Ha ha!
         god_speaks(GOD_XOM, _get_xom_speech("xom armour gift"));
         xom_make_item(OBJ_ARMOUR,
                       random2(10)?
@@ -438,8 +438,8 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
     return (demontype);
 }
 
-// Returns a demon suitable for use in Xom's punishments, filtering out the
-// really nasty ones early on.
+// Returns a demon suitable for use in Xom's punishments, filtering out
+// the really nasty ones early on.
 static monster_type xom_random_punishment_demon(int sever)
 {
     monster_type demon = MONS_PROGRAM_BUG;
@@ -506,7 +506,7 @@ static bool xom_is_good(int sever)
             monster_type mon = xom_random_demon(sever);
             const bool is_demon = mons_is_demon(mon);
 
-            // If it's not a demon, Xom got it someplace else, so we use
+            // If it's not a demon, Xom got it someplace else, so use
             // different messages below.
             if (!is_demon)
                 numdifferent++;
@@ -571,8 +571,8 @@ static bool xom_is_good(int sever)
 
         monster_type mon = xom_random_demon(sever);
 
-        // If it's not a demon, Xom got it someplace else, so we use
-        // different messages below.
+        // If it's not a demon, Xom got it someplace else, so use
+        // different messages below./
         if (!mons_is_demon(mon))
             different = true;
 
@@ -647,7 +647,7 @@ static bool xom_is_good(int sever)
 
         monster_type mon = xom_random_demon(sever);
 
-        // If it's not a demon, Xom got it someplace else, so we use
+        // If it's not a demon, Xom got it someplace else, so use
         // different messages below.
         if (!mons_is_demon(mon))
             different = true;
