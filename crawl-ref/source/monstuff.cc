@@ -1574,7 +1574,7 @@ static bool habitat_okay( const monsters *monster, dungeon_feature_type targ )
 // last resort in this function (especially since Tome, Dig, and
 // Summoning can be used to set up death traps).  If worse comes
 // to worse, at least consider making the Swap spell not work
-// when the player is over lava or water (if the player want's to
+// when the player is over lava or water (if the player wants to
 // swap pets to their death, we can let that go). -- bwr
 bool swap_places(monsters *monster)
 {
