@@ -491,16 +491,32 @@ static bool xom_is_good(int sever)
             std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
         int numdifferent = 0;
 
+        // If we get a mix of demons and non-demons, there's a chance
+        // that one or both of the factions may be hostile.
+        int hostile = random2(12);
+        int hostiletype =
+            (hostile <  3) ? 0 :                  //  1/4: both are friendly
+            (hostile < 11) ? (coinflip() ? 1 : 2) //  2/3: one is hostile
+                           : 3;                   // 1/12: both are hostile
+
         for (int i = 0; i < numdemons; i++)
         {
             monster_type mon = xom_random_demon(sever);
+            const bool is_demon = mons_is_demon(mon);
 
             // If it's not a demon, Xom got it someplace else, so we use
             // different messages below.
-            if (!mons_is_demon(mon))
+            if (!is_demon)
                 numdifferent++;
 
-            create_monster(mon, 3, BEH_GOD_GIFT, you.x_pos, you.y_pos,
+            // Mark factions hostile as appropriate.
+            beh_type beh =
+                (hostiletype == 1 && is_demon)  ? BEH_HOSTILE :
+                (hostiletype == 2 && !is_demon) ? BEH_HOSTILE :
+                (hostiletype == 3)              ? BEH_HOSTILE
+                                                : BEH_GOD_GIFT;
+
+            create_monster(mon, 3, beh, you.x_pos, you.y_pos,
                            you.pet_target, MONS_PROGRAM_BUG);
         }
 
