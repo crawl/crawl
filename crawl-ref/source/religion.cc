@@ -3513,7 +3513,7 @@ void excommunication(god_type new_god)
     }
 }                               // end excommunication()
 
-static bool bless_weapon( int god, int brand, int colour )
+static bool bless_weapon( god_type god, int brand, int colour )
 {
     const int wpn = get_player_wielded_weapon();
 
