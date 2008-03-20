@@ -752,8 +752,8 @@ static void good_god_follower_attitude_change(monsters *monster)
     // neutral towards you
     if (is_good_god(you.religion)
         && monster->foe == MHITYOU
-        && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
         && mons_is_holy(monster)
+        && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
         && !mons_neutral(monster)
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
@@ -779,6 +779,7 @@ static void good_god_follower_attitude_change(monsters *monster)
         }
     }
     else if (!is_good_god(you.religion)
+             && monster->alive()
              && mons_is_holy(monster)
              && monster->attitude != ATT_HOSTILE
              && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
@@ -809,8 +810,8 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     // for followers of Beogh, decide whether orcs will join you
     if (you.religion == GOD_BEOGH
         && monster->foe == MHITYOU
-        && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
         && mons_species(monster->type) == MONS_ORC
+        && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
