@@ -505,7 +505,7 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
             // Bias beaten-up-conversion towards the stronger orcs.
             && random2(monster->hit_dice) > 2)
         {
-            beogh_convert_orc(monster, true);
+            beogh_convert_orc(monster, true, MON_KILL(killer));
             return (true);
         }
     }
@@ -6269,13 +6269,13 @@ bool message_current_target()
     }
 
     return (false);
-}                               // end message_current_target()
+}
 
 // aaah, the simple joys of pointer arithmetic! {dlb}:
 unsigned int monster_index(const monsters *monster)
 {
     return (monster - menv.buffer());
-}                               // end monster_index()
+}
 
 int hurt_monster(monsters * victim, int damage_dealt)
 {

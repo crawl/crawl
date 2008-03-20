@@ -130,9 +130,10 @@ static std::string replace_name_parts(const std::string name_in,
             god_gift = static_cast<god_type>(help);
     }
 
-    // Don't allow "player's Doom" type names for god gifts (except Xom!)
-    if (name.find("@player_name@'s", 0) != std::string::npos
-        && god_gift != GOD_NO_GOD && god_gift != GOD_XOM)
+    // Don't allow "player's Death" type names for god gifts (except Xom!)
+    if (god_gift != GOD_NO_GOD && god_gift != GOD_XOM
+        && name.find("@player_name@'s", 0) != std::string::npos
+        && name.find("Death", 0) != std::string::npos)
     {
         // simply overwrite the name with one of type "god's Favour"
         name = "of ";
@@ -153,7 +154,7 @@ static std::string replace_name_parts(const std::string name_in,
         std::string place;
         if (one_chance_in(5))
         {
-            switch(random2(6))
+            switch(random2(8))
             {
             case 0:
             case 1:
@@ -165,9 +166,13 @@ static std::string replace_name_parts(const std::string name_in,
                place = "Pandemonium";
                break;
             case 4:
+            case 5:
+               place = "the Realm of Zot";
+               break;
+            case 6:
                place = "the Labyrinth";
                break;
-            case 5:
+            case 7:
                place = "the Portal Chambers";
                break;
             }
@@ -175,7 +180,7 @@ static std::string replace_name_parts(const std::string name_in,
         else
         {
             const branch_type branch =
-                     static_cast<branch_type>(random2(BRANCH_INFERNO));
+                     static_cast<branch_type>(random2(BRANCH_TARTARUS));
             place = place_name( get_packed_place(branch, 1, LEVEL_DUNGEON),
                                 true, false );
         }

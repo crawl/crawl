@@ -1894,6 +1894,23 @@ w:4
 @holy_being@
 
 %%%%
+good_god_neutral_holy_being_reaction
+
+@The_monster@ is calmed by your holy aura.
+
+@The_monster@ relaxes its fighting stance.
+
+@The_monster@ salutes you.
+
+%%%%
+good_god_neutral_holy_being_speech
+
+@The_monster@ shouts, "Continue thy quest, mortal!"
+
+@The_monster@ says, "Forge ahead, servant of @player_god@!"
+
+@The_monster@ says, "Carry on, mortal."
+%%%%
 #############################################################
 # evil monsters may also have some choicy things to say...
 #############################################################
@@ -2228,5 +2245,58 @@ w:2
 # with some Beogh-hostile messages strewn in
 w:1
 @related beogh orc@
+%%%%
+###############################
+# orc conversion speech 
+###############################
+# on sight
+beogh_converted_orc_reaction_sight
+
+@The_monster@ stares at you in amazement and kneels.
+
+@The_monster@ relaxes @pronoun@ fighting stance and smiles at you.
+
+@The_monster@ falls on @pronoun@ knees before you.
+
+%%%%
+beogh_converted_orc_speech_sight
+
+@Pronoun@ shouts, "I'll follow thee gladly!"
+
+@Pronoun@ shouts, "Surely Beogh must have sent you!"
+
+@Pronoun@ asks, "Are you our saviour?"
+
+@Pronoun@ says, "I'm so glad you are here now."
+
+%%%%
+# through battle
+beogh_converted_orc_reaction_battle
+
+@The_monster@ surrenders.
+
+@The_monster@ falls to @pronoun@ knees.
+
+@The_monster@ raises @pronoun@ hands in surrender.
+
+%%%%
+beogh_converted_orc_speech_battle
+
+@Pronoun@ shouts, "I'll follow you, let me live!"
+
+@Pronoun@ says, "You must be the Messiah, I see it now!"
+
+@Pronoun@ yells, "Beogh is my god, I swear it!"
+%%%%
+########################################################
+# Maybe use different speech if converted by a follower.
+########################################################
+beogh_converted_orc_reaction_battle_follower
+
+@beogh_converted_orc_reaction_battle@
+%%%%
+beogh_converted_orc_reaction_speech_follower
+
+@beogh_converted_orc_reaction_speech@
 %%%%
 

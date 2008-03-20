@@ -64,7 +64,8 @@ void divine_retribution(god_type god);
 bool beogh_water_walk();
 void beogh_idol_revenge();
 void good_god_holy_attitude_change(monsters *holy);
-void beogh_convert_orc(monsters *orc, bool emergency);
+void beogh_convert_orc(monsters *orc, bool emergency,
+                       bool converted_by_follower = false);
 bool is_evil_item(const item_def& item);
 bool ely_destroy_weapons();
 bool trog_burn_books();

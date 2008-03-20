@@ -38,6 +38,7 @@
 #include "beam.h"
 #include "chardump.h"
 #include "cloud.h"
+#include "database.h"
 #include "debug.h"
 #include "decks.h"
 #include "describe.h"
@@ -1005,7 +1006,7 @@ std::string god_prayer_reaction()
         (you.piety >  40) ? "most pleased with you" :
         (you.piety >  20) ? "pleased with you" :
         (you.piety >   5) ? "noncommittal"
-        : "displeased";
+                          : "displeased";
 
     result += ".";
     return result;
@@ -1432,8 +1433,6 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         if (you.religion == GOD_TROG
             && !god_hates_attacking_friend(you.religion, victim))
         {
-            // hooking this up, but is it too good?
-            // enjoy it while you can -- bwr
             simple_god_message(" appreciates your killing of a magic user.");
             ret = true;
             if (random2(level + 10) > 5)
@@ -3157,6 +3156,17 @@ static bool beogh_followers_abandon_you()
     return false;
 }
 
+// currently only used when orcish idols have been destroyed
+static const char* _get_beogh_speech(const std::string key)
+{
+    std::string result = getSpeakString("Beogh " + key);
+
+    if (!result.empty())
+        return (result.c_str());
+
+    return ("Beogh is angry!");
+}
+
 // Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh.
 void beogh_idol_revenge()
 {
@@ -3170,33 +3180,11 @@ void beogh_idol_revenge()
         const char *revenge;
 
         if (you.religion == GOD_BEOGH)
-        {
-            const char *messages[3] = {
-                "Beogh fumes, \"This is no small sin, orc. Repent!\"",
-                "Beogh whispers, \"You will pay for this transgression.\"",
-                "Beogh rages, \"An eye for an eye...\""
-            };
-
-            revenge = RANDOM_ELEMENT(messages);
-        }
+            revenge = _get_beogh_speech("idol follower");
         else if (you.species == SP_HILL_ORC)
-        {
-            const char *messages[2] = {
-                "Beogh's voice booms out: \"Heretic, die!\"",
-                "You hear Beogh's thundering voice: \"Suffer, infidel!\""
-            };
-
-            revenge = RANDOM_ELEMENT(messages);
-        }
+            revenge = _get_beogh_speech("idol hill orc");
         else
-        {
-            const char *messages[2] = {
-                "Beogh is not amused about the destruction of his idols.",
-                "Beogh seems highly displeased."
-            };
-
-            revenge = RANDOM_ELEMENT(messages);
-        }
+            revenge = _get_beogh_speech("idol other");
 
         god_smites_you(GOD_BEOGH, KILLED_BY_BEOGH_SMITING, revenge);
 
@@ -3214,113 +3202,20 @@ void beogh_idol_revenge()
     }
 }
 
-static void good_god_holy_being_attitude_change_speech(
-    std::ostream &chan,
-    const monsters *holy)
+static void _print_good_god_neutral_holy_being_speech(const std::string key,
+                                                      monsters *mon,
+                                                      msg_channel_type channel)
 {
-    switch (random2(3))
-    {
-    case 0:
-        chan << " is calmed by your holy aura.";
-        break;
-    case 1:
-        chan << " relaxes its fighting stance.";
-        break;
-    case 2:
-        chan << " salutes you.";
-        break;
-    }
-    chan << std::endl;
+    std::string msg = getSpeakString("good_god_neutral_holy_being_" + key);
 
-    if (!one_chance_in(3))
+    if (!msg.empty())
     {
-        std::ostream& tchan = msg::streams(MSGCH_TALK);
-        tchan << holy->pronoun(PRONOUN_CAP) << " ";
-        switch (random2(3))
-        {
-        case 0:
-            tchan << "shouts, \"Continue thy quest, mortal!\"";
-            break;
-        case 1:
-            tchan << "says, \"Forge ahead, servant of "
-                  << god_name(you.religion) << "!\"";
-            break;
-        case 2:
-            tchan << "says, \"Carry on, mortal.\"";
-            break;
-        }
-        tchan << std::endl;
+        msg = do_mon_str_replacements(msg, mon);
+        mpr(msg.c_str(), channel);
     }
 }
 
-static void beogh_orc_emergency_conversion_speech(
-    std::ostream &chan,
-    const monsters *orc)
-{
-    switch (random2(3))
-    {
-    case 0: chan << " surrenders. "; break;
-    case 1: chan << " falls to " << orc->pronoun(PRONOUN_NOCAP_POSSESSIVE)
-                 << " knees. "; break;
-    case 2: chan << " raises " << orc->pronoun(PRONOUN_NOCAP_POSSESSIVE)
-                 << " hands in surrender. "; break;
-    }
-    chan << std::endl;
 
-    static const char *mercy_message[] =
-    {
-        " shouts, \"I'll follow you, let me live!\"",
-        " says, \"You must be the Messiah, I see it now!\"",
-        " yells, \"Beogh is my god, I swear it!\""
-    };
-    msg::streams(MSGCH_TALK) << orc->pronoun(PRONOUN_CAP)
-                             << RANDOM_ELEMENT(mercy_message)
-                             << std::endl;
-}
-
-static void beogh_orc_spontaneous_conversion_speech(
-    std::ostream &chan,
-    const monsters *orc)
-{
-    switch (random2(3))
-    {
-    case 0:
-        chan << " stares at you in amazement and kneels.";
-        break;
-    case 1:
-        chan << " relaxes " << orc->pronoun(PRONOUN_NOCAP_POSSESSIVE)
-             << " fighting stance and smiles at you.";
-        break;
-    case 2:
-        chan << " falls on " << orc->pronoun(PRONOUN_NOCAP_POSSESSIVE)
-             << " knees before you.";
-        break;
-    }
-    chan << std::endl;
-
-    if (!one_chance_in(3))
-    {
-        std::ostream& tchan = msg::streams(MSGCH_TALK);
-        tchan << orc->pronoun(PRONOUN_CAP) << " ";
-        switch (random2(4))
-        {
-        case 0:
-            tchan << "shouts, \"I'll follow thee gladly!\"";
-            break;
-        case 1:
-            tchan << "shouts, \"Surely Beogh must have "
-                "sent you!\"";
-            break;
-        case 2:
-            tchan << "asks, \"Are you our saviour?\"";
-            break;
-        case 3:
-            tchan << "says, \"I'm so glad you are here now.\"";
-            break;
-        }
-        tchan << std::endl;
-    }
-}
 
 void good_god_holy_attitude_change(monsters *holy)
 {
@@ -3328,10 +3223,12 @@ void good_god_holy_attitude_change(monsters *holy)
 
     if (player_monster_visible(holy)) // show reaction
     {
-        std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
-        chan << holy->name(DESC_CAP_THE);
+        _print_good_god_neutral_holy_being_speech("reaction", holy,
+                                                 MSGCH_MONSTER_ENCHANT);
 
-        good_god_holy_being_attitude_change_speech(chan, holy);
+        if (!one_chance_in(3))
+            _print_good_god_neutral_holy_being_speech("speech", holy,
+                                                      MSGCH_TALK);
     }
 
     holy->attitude  = ATT_NEUTRAL;
@@ -3344,19 +3241,50 @@ void good_god_holy_attitude_change(monsters *holy)
     behaviour_event(holy, ME_ALERT, MHITNOT);
 }
 
-void beogh_convert_orc(monsters *orc, bool emergency)
+static void _print_converted_orc_speech(const std::string key,
+                                        monsters *mon,
+                                        msg_channel_type channel)
+{
+    std::string msg = getSpeakString("beogh_converted_orc_" + key);
+    
+    if (!msg.empty())
+    {
+        msg = do_mon_str_replacements(msg, mon);
+        mpr(msg.c_str(), channel);
+    }
+}
+
+void beogh_convert_orc(monsters *orc, bool emergency,
+                       bool converted_by_follower)
 {
     ASSERT(mons_species(orc->type) == MONS_ORC);
 
     if (player_monster_visible(orc)) // show reaction
     {
-        std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
-        chan << orc->name(DESC_CAP_THE);
-
         if (emergency || orc->hit_points <= 0)
-            beogh_orc_emergency_conversion_speech(chan, orc);
+        {
+            if (converted_by_follower)
+            {
+                _print_converted_orc_speech("reaction_battle_follower", orc,
+                                            MSGCH_MONSTER_ENCHANT);
+                _print_converted_orc_speech("speech_battle_follower", orc,
+                                            MSGCH_TALK);
+            }
+            else
+            {
+                _print_converted_orc_speech("reaction_battle", orc,
+                                            MSGCH_MONSTER_ENCHANT);
+                _print_converted_orc_speech("speech_battle", orc, MSGCH_TALK);
+            }
+        }
         else
-            beogh_orc_spontaneous_conversion_speech(chan, orc);
+        {
+            _print_converted_orc_speech("reaction_sight", orc,
+                                        MSGCH_MONSTER_ENCHANT);
+            
+            if (!one_chance_in(3))
+                _print_converted_orc_speech("speech_sight", orc, MSGCH_TALK);
+        }
     }
 
     orc->attitude  = ATT_FRIENDLY;

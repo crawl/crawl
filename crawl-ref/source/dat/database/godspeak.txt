@@ -337,4 +337,32 @@ Xom's power brushes against you for a moment.
 You hear Xom's avuncular chuckle.
 
 %%%%
+############################################
+# Beogh rants on destroying an orcish idol #
+############################################
+# Beogh's messiah has destroyed an idol
+Beogh idol follower
+
+Beogh fumes, "This is no small sin, orc. Repent!"
+
+Beogh whispers, "You will pay for this transgression.",
+
+Beogh rages, "An eye for an eye..."
+
+%%%%
+# an unbelieving hill orc has destroyed an idol
+Beogh idol hill orc
+
+Beogh's voice booms out: "Heretic, die!"
+
+You hear Beogh's thundering voice: "Suffer, infidel!"
+
+%%%%
+# a character of another species has destroyed an idol
+Beogh idol other
+
+Beogh is not amused about the destruction of his idols.
+
+Beogh seems highly displeased.
+%%%%
 
