@@ -462,14 +462,73 @@ static bool is_pet_kill(killer_type killer, int i)
             && (me.who == KC_YOU || me.who == KC_FRIENDLY));
 }
 
+static bool ely_heals_monster(monsters *monster, killer_type killer, int i)
+{
+    god_type god = GOD_ELYVILON;
+    ASSERT(you.religion != god);
+    
+    const int ely_penance = you.penance[god];
+    ASSERT(ely_penance > 0);
+
+    if (mons_holiness(monster) != MH_NATURAL
+        || mons_friendly(monster)
+        || !one_chance_in(10))
+    {
+        return (false);
+    }
+    
+    if (MON_KILL(killer))
+    {
+        monsters *mon = &menv[i];
+        if (!mons_friendly(mon) || !one_chance_in(3))
+            return (false);
+            
+        if (!mons_near(monster))
+            return (false);
+    }
+    else if (!YOU_KILL(killer))
+        return (false);
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "monster hp: %d, max hp: %d",
+         monster->hit_points, monster->max_hit_points);
+#endif
+
+    monster->hit_points = std::min(1 + random2(ely_penance/3),
+                                   monster->max_hit_points);
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "new hp: %d, ely penance: %d",
+         monster->hit_points, ely_penance);
+#endif
+
+    snprintf(info, INFO_SIZE, "%s heals %s%s",
+             god_name(god, false).c_str(),
+             monster->name(DESC_NOCAP_THE).c_str(),
+             monster->hit_points * 2 <= monster->max_hit_points ? "." : "!");
+
+    god_speaks(god, info);
+    dec_penance(god, 1 + random2(monster->hit_points/2));
+
+    return (true);
+}
+
 static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
 {
     if (monster->hit_points < -25
         || monster->hit_points < -monster->max_hit_points
         || monster->max_hit_points <= 0
         || monster->hit_dice < 1)
+    {
         return (false);
+    }
 
+    if (you.religion != GOD_ELYVILON && you.penance[GOD_ELYVILON]
+        && ely_heals_monster(monster, killer, i))
+    {
+        return (true);
+    }
+        
     bool convert = false;
 
     if (you.religion == GOD_BEOGH

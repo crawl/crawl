@@ -2793,6 +2793,100 @@ static bool nemelex_retribution()
     return true;
 }
 
+static void ely_destroy_inventory_weapon()
+{
+    int count = 0;
+    int item  = ENDOFPACK;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+         if (!is_valid_item( you.inv[i] ))
+             continue;
+
+         if (you.inv[i].base_type == OBJ_WEAPONS
+             || you.inv[i].base_type == OBJ_MISSILES)
+         {
+             if (is_artefact(you.inv[i]))
+                 continue;
+
+             // item is valid for destroying, so give it a chance
+             count++;
+             if (one_chance_in( count ))
+                 item = i;
+         }
+    }
+
+    // any item to destroy?
+    if (item == ENDOFPACK)
+        return;
+
+    int value = 1;
+    bool wielded = false;
+    
+    // increase value wielded weapons or large stacks of ammo
+    if (you.inv[item].base_type == OBJ_WEAPONS
+        && you.inv[item].link == you.equip[EQ_WEAPON])
+    {
+        wielded = true;
+        value += 2;
+    }
+    else if (you.inv[item].quantity > random2(you.penance[GOD_ELYVILON]))
+        value += 1 + random2(2);
+
+    std::ostream& strm = msg::streams(MSGCH_GOD);
+    strm << you.inv[item].name(DESC_CAP_YOUR);
+
+    if (value == 1)
+        strm << " barely";
+
+    if ( you.inv[item].quantity == 1 )
+         strm << " shimmers and breaks into pieces." << std::endl;
+    else
+         strm << " shimmer and break into pieces." << std::endl;
+
+    if (wielded)
+    {
+        unwield_item(true);
+        you.wield_change = true;
+    }
+    // just in case
+    you.quiver_change = true;
+    
+    destroy_item(you.inv[item]);
+    burden_change();
+
+    dec_penance(GOD_ELYVILON, value);
+}
+
+// comparatively lenient
+static bool elyvilon_retribution()
+{
+    const god_type god = GOD_ELYVILON;
+
+    simple_god_message("'s displeasure finds you.", god);
+
+    // healing theme and interfering with fighting
+    switch (random2(5))
+    {
+    case 0:
+    case 1:
+        confuse_player( 3 + random2(10), false );
+        break;
+
+    case 2: // mostly flavour messages
+        miscast_effect(SPTYP_POISON, 0, 0, one_chance_in(3),
+                       "the will of Elyvilon");
+        break;
+        
+    case 3:
+    case 4: // destroy weapons in your inventory
+        ely_destroy_inventory_weapon();
+        break;
+    }
+    
+    return true;
+}
+
 void divine_retribution( god_type god )
 {
     ASSERT(god != GOD_NO_GOD);
@@ -2821,8 +2915,8 @@ void divine_retribution( god_type god )
     case GOD_VEHUMET:       do_more = vehumet_retribution(); break;
     case GOD_NEMELEX_XOBEH: do_more = nemelex_retribution(); break;
     case GOD_SIF_MUNA:      do_more = sif_muna_retribution(); break;
+    case GOD_ELYVILON:      do_more = elyvilon_retribution(); break;
 
-    case GOD_ELYVILON:  // Elyvilon doesn't seek revenge
     default:
         do_more = false;
         break;
@@ -3401,7 +3495,8 @@ void excommunication(god_type new_god)
         inc_penance(old_god, 50);
         break;
 
-    case GOD_ELYVILON:  // never seeks revenge
+    case GOD_ELYVILON:
+        inc_penance( old_god, 50 );
         break;
 
     case GOD_SHINING_ONE:

@@ -910,7 +910,16 @@ bool melee_attack::player_aux_unarmed()
 
         // XXX We're clobbering did_hit
         did_hit = false;
-        if (to_hit >= def->ev || one_chance_in(30))
+        
+        bool ely_block = false;
+        if (you.religion != GOD_ELYVILON && you.penance[GOD_ELYVILON]
+            && to_hit >= def->ev && one_chance_in(20))
+        {
+            simple_god_message(" blocks your attack.", GOD_ELYVILON);
+            ely_block = true;
+        }
+        
+        if (!ely_block && (to_hit >= def->ev || one_chance_in(30)))
         {
             if (attack_shield_blocked(true))
                 continue;
@@ -927,6 +936,9 @@ bool melee_attack::player_aux_unarmed()
                      miss_verb.empty()? unarmed_attack.c_str()
                      : miss_verb.c_str(),
                      defender->name(DESC_NOCAP_THE).c_str());
+                     
+            if (ely_block)
+                dec_penance(GOD_ELYVILON, 1 + random2(to_hit - def->ev));
         }
     }
 
