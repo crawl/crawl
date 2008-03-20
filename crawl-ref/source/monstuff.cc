@@ -1305,6 +1305,83 @@ static bool is_poly_power_unsuitable(
     }
 }
 
+/* Change one monster type into another. */
+void monster_change_type(monsters *monster, monster_type targetc)
+{
+    const int old_hp = monster->hit_points;
+    const int old_hp_max = monster->max_hit_points;
+    const bool old_mon_caught = mons_is_caught(monster);
+    const char old_ench_countdown = monster->ench_countdown;
+
+    /* deal with mons_sec */
+    monster->type = targetc;
+    monster->number = MONS_PROGRAM_BUG;
+
+    mon_enchant abj = monster->get_ench(ENCH_ABJ);
+    mon_enchant shifter = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
+                                            ENCH_SHAPESHIFTER);
+
+    // Note: define_monster() will clear out all enchantments! -- bwr
+    define_monster( monster_index(monster) );
+
+    monster->add_ench(abj);
+    monster->add_ench(shifter);
+
+    monster->ench_countdown = old_ench_countdown;
+
+    if (mons_class_flag( monster->type, M_INVIS ))
+        monster->add_ench(ENCH_INVIS);
+
+    monster->hit_points = monster->max_hit_points
+                                * ((old_hp * 100) / old_hp_max) / 100;
+
+    monster->fix_speed();
+
+    if (old_mon_caught)
+    {
+        if (monster->body_size(PSIZE_BODY) >= SIZE_GIANT)
+        {
+            int net = get_trapping_net(monster->x, monster->y);
+            if (net != NON_ITEM)
+                destroy_item(net);
+
+            if (see_grid(monster->x, monster->y))
+            {
+                if (player_monster_visible(monster))
+                {
+                    mprf("The net rips apart, and %s comes free!",
+                         monster->name(DESC_NOCAP_THE).c_str());
+                }
+                else
+                {
+                    mpr("All of a sudden the net rips apart!");
+                }
+            }
+        }
+        else if (mons_is_insubstantial(monster->type)
+                 || monster->type == MONS_OOZE
+                 || monster->type == MONS_PULSATING_LUMP)
+        {
+            const int net = get_trapping_net(monster->x, monster->y);
+            if (net != NON_ITEM)
+                remove_item_stationary(mitm[net]);
+
+            if (mons_is_insubstantial(monster->type))
+            {
+                simple_monster_message(monster,
+                                       " drifts right through the net!");
+            }
+            else
+            {
+                simple_monster_message(monster,
+                                       " oozes right through the net!");
+            }
+        }
+        else
+            monster->add_ench(ENCH_HELD);
+    }
+}
+
 /*
  * if targetc == RANDOM_MONSTER then relpower indicates the desired
  * power of the new monster relative to the current monster.
@@ -1318,9 +1395,9 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     int source_power, target_power, relax;
     int tries = 1000;
 
-    // Used to be mons_power, but that just returns hit_dice 
-    // for the monster class.  By using the current hit dice 
-    // the player gets the opportunity to use draining more 
+    // Used to be mons_power, but that just returns hit_dice
+    // for the monster class.  By using the current hit dice
+    // the player gets the opportunity to use draining more
     // effectively against shapeshifters. -- bwr
     source_power = monster->hit_dice;
     relax = 1;
@@ -1362,7 +1439,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     }
 
     // messaging: {dlb}
-    bool invis = (mons_class_flag( targetc, M_INVIS ) 
+    bool invis = (mons_class_flag( targetc, M_INVIS )
                   || monster->invisible()) && !player_see_invis();
 
     if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
@@ -1394,40 +1471,9 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     update_beholders(monster, true);
 
     // the actual polymorphing:
-    const int old_hp = monster->hit_points;
-    const int old_hp_max = monster->max_hit_points;
-    const bool old_mon_caught = mons_is_caught(monster);
-    const char old_ench_countdown = monster->ench_countdown;
+    monster_change_type(monster, targetc);
 
-    /* deal with mons_sec */
-    monster->type = targetc;
-    monster->number = MONS_PROGRAM_BUG;
-
-    mon_enchant abj = monster->get_ench(ENCH_ABJ);
-    mon_enchant shifter = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                            ENCH_SHAPESHIFTER);
-
-    // Note: define_monster() will clear out all enchantments! -- bwr
-    define_monster( monster_index(monster) );
-
-    monster->add_ench(abj);
-    monster->add_ench(shifter);
-
-    monster->ench_countdown = old_ench_countdown;
-
-    if (mons_class_flag( monster->type, M_INVIS ))
-        monster->add_ench(ENCH_INVIS);
-
-    if (!player_messaged && mons_near(monster)
-        && player_monster_visible(monster))
-    {
-        mprf("%s appears out of thin air!", monster->name(DESC_CAP_A).c_str());
-        player_messaged = true;
-    }
-
-    monster->hit_points = monster->max_hit_points
-                                * ((old_hp * 100) / old_hp_max) / 100
-                                + random2(monster->max_hit_points);
+    monster->hit_points += random2(monster->max_hit_points);
 
     if (monster->hit_points > monster->max_hit_points)
         monster->hit_points = monster->max_hit_points;
@@ -1436,6 +1482,13 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
     monster_drop_ething(monster);
 
+    if (!player_messaged && player_monster_visible(monster)
+        && mons_near(monster))
+    {
+        player_messaged = true;
+        mprf("%s appears out of thin air!", monster->name(DESC_CAP_A).c_str());
+    }
+
     // New monster type might be interesting
     mark_interesting_monst(monster);
 
@@ -1443,50 +1496,6 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     if (player_monster_visible(monster) && mons_near(monster))
         seen_monster(monster);
 
-    if (old_mon_caught)
-    {
-        if (monster->body_size(PSIZE_BODY) >= SIZE_GIANT)
-        {
-            int net = get_trapping_net(monster->x, monster->y);
-            if (net != NON_ITEM)
-                destroy_item(net);
-
-            if (see_grid(monster->x, monster->y))
-            {
-                if (player_monster_visible(monster))
-                {
-                    mprf("The net rips apart, and %s comes free!",
-                         monster->name(DESC_NOCAP_THE).c_str());
-                }
-                else
-                {
-                    mpr("All of a sudden the net rips apart!");
-                }
-            }
-        }
-        else if (mons_is_insubstantial(monster->type)
-                 || monster->type == MONS_OOZE
-                 || monster->type == MONS_PULSATING_LUMP)
-        {
-            const int net = get_trapping_net(monster->x, monster->y);
-            if (net != NON_ITEM)
-                remove_item_stationary(mitm[net]);
-                
-            if (mons_is_insubstantial(monster->type))
-            {
-                simple_monster_message(monster,
-                                       " drifts right through the net!");
-            }
-            else
-            {
-                simple_monster_message(monster,
-                                       " oozes right through the net!");
-            }
-        }
-        else
-            monster->add_ench(ENCH_HELD);
-    }
-    
     return (player_messaged);
 }                                        // end monster_polymorph()
 
@@ -1497,7 +1506,7 @@ bool monster_blink(monsters *monster)
     {
         unwind_var<env_show_grid> visible_grid( env.show );
         losight(env.show, grd, monster->x, monster->y, true);
-    
+
         if (!random_near_space(monster->x, monster->y, nx, ny,
                                false, true))
             return (false);

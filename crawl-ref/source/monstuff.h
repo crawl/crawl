@@ -62,6 +62,9 @@ enum poly_power_type {
     PPT_MORE,
     PPT_SAME
 };
+
+void monster_change_type(monsters *monster, monster_type targetc);
+
 bool monster_polymorph(monsters *monster, monster_type targetc,
                        poly_power_type p = PPT_SAME);
 

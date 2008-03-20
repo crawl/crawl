@@ -765,31 +765,12 @@ static bool promote_to_priest(monsters* mon)
     if (priest_type != MONS_PROGRAM_BUG)
     {
         // Turn an ordinary monster into a priestly monster, preserving
-        // important characteristics.  Keep this as generic as possible,
-        // in case more promotions are added.
+        // the flags.
         const unsigned long old_flags = mon->flags;
-        const int old_hp = mon->hit_points;
-        const int old_hp_max = mon->max_hit_points;
-        const char old_ench_countdown = mon->ench_countdown;
-        mon_enchant abj = mon->get_ench(ENCH_ABJ);
-        mon_enchant shifter = mon->get_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                            ENCH_SHAPESHIFTER);
-        const bool old_mon_caught = mons_is_caught(mon);
 
-        mon->type = priest_type;
-        define_monster(monster_index(mon));
+        monster_change_type(mon, priest_type);
 
         mon->flags = old_flags;
-        mon->hit_points = mon->max_hit_points *
-            ((old_hp * 100) / old_hp_max) / 100;
-        mon->ench_countdown = old_ench_countdown;
-        mon->add_ench(abj);
-        mon->add_ench(shifter);
-        if (old_mon_caught)
-            mon->add_ench(ENCH_HELD);
-        if (mons_class_flag(mon->type, M_INVIS))
-            mon->add_ench(ENCH_INVIS);
-        mon->fix_speed();
 
         return true;
     }
