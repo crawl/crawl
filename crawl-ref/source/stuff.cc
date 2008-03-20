@@ -830,7 +830,8 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
 }                               // end yesno()
 
 // like yesno(), but returns 0 for no, 1 for yes, and -1 for quit
-int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
+int yesnoquit( const char* str, bool safe, int safeanswer,
+               bool clear_after, char alt_yes )
 {
     if (!crawl_state.is_repeating_cmd())
         interrupt_activity( AI_FORCE_INTERRUPT );
@@ -862,7 +863,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
 
         if (tmp == 'N')
             return 0;
-        else if (tmp == 'Y')
+        else if (tmp == 'Y' || tmp == alt_yes)
             return 1;
         else
             mpr("[Y]es, [N]o or [Q]uit only, please.");

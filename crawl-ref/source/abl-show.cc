@@ -279,8 +279,8 @@ static const ability_def Ability_List[] =
 
     // Elyvilon
     { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons", 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0, 100, 0,
-      ABFLAG_CONF_OK },
+    { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing",
+      1, 0, 100, generic_cost::range(0, 1), ABFLAG_CONF_OK },
     { ABIL_ELYVILON_PURIFICATION, "Purification", 2, 0, 150, 1,
       ABFLAG_CONF_OK },
     { ABIL_ELYVILON_HEALING, "Healing", 2, 0, 250, 2, ABFLAG_CONF_OK },

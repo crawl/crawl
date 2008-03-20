@@ -1704,5 +1704,6 @@ const char *unrandart_descrip( int which_descrip, const item_def &item )
 
     return ((which_descrip == 0) ? unrand->spec_descrip1 :
             (which_descrip == 1) ? unrand->spec_descrip2 :
-            (which_descrip == 2) ? unrand->spec_descrip3 : "Unknown.");
+            (which_descrip == 2) ? unrand->spec_descrip3
+                                 : "Unknown.");
 }

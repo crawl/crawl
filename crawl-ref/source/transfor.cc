@@ -588,8 +588,12 @@ void untransform(void)
 
     // Removed barding check, no transformed creatures can wear barding
     // anyway.
-    if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+    // *coughs* Ahem, blade hands... -- jpeg
+    if ((you.species == SP_NAGA || you.species == SP_CENTAUR)
+        && you.inv[you.equip[EQ_BOOTS]].sub_type == ARM_BOOTS)
+    {
         remove_one_equip(EQ_BOOTS);
+    }
 
     if (hp_downscale != 10 && you.hp != you.hp_max)
     {

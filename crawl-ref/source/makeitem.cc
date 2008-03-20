@@ -1248,9 +1248,6 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(8))
                 rc = SPWPN_PROTECTION;
 
-            if (one_chance_in(10))
-                rc = SPWPN_ORC_SLAYING;
-
             if (one_chance_in(8))
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
 
@@ -1294,9 +1291,6 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(7))
                 rc = SPWPN_PROTECTION;
 
-            if (one_chance_in(8))
-                rc = SPWPN_ORC_SLAYING;
-
             if (one_chance_in(12))
                 rc = SPWPN_DRAINING;
 
@@ -1339,9 +1333,6 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
             {
                 rc = SPWPN_VORPAL;
             }
-
-            if (one_chance_in(6))
-                rc = SPWPN_ORC_SLAYING;
 
             if (one_chance_in(4))
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
@@ -1403,9 +1394,6 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(5) && (rc == SPWPN_NORMAL || one_chance_in(6)))
                 rc = SPWPN_VORPAL;
-
-            if (one_chance_in(6))
-                rc = SPWPN_ORC_SLAYING;
 
             if (one_chance_in(6))
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
@@ -1752,6 +1740,7 @@ static void generate_missile_item(item_def& item, int force_type,
                                    10, MI_NEEDLE,
                                    5,  MI_SLING_BULLET,
                                    2,  MI_JAVELIN,
+                                   1,  MI_THROWING_NET,
                                    0);
 
     // no fancy rocks -- break out before we get to racial/special stuff
@@ -1762,9 +1751,15 @@ static void generate_missile_item(item_def& item, int force_type,
     }
     else if (item.sub_type == MI_STONE)
     {
-        item.quantity = 1+random2(9) + random2(12) + random2(15) + random2(12);
+        item.quantity = 1+ random2(9) + random2(12) + random2(15) + random2(12);
         return;
     }
+    else if (item.sub_type == MI_THROWING_NET) // no fancy nets, either
+    {
+        item.quantity = 1 + one_chance_in(4); // and only one, rarely two
+        return;
+    }
+
 
     set_equip_race(item, determine_missile_race(item, item_race));
     if (!no_brand)
@@ -1779,9 +1774,9 @@ static void generate_missile_item(item_def& item, int force_type,
         item.quantity = random_range(2, 8);
     }
     else if (get_ammo_brand( item ) != SPMSL_NORMAL)
-        item.quantity = 1+random2(9) + random2(12) + random2(12);
+        item.quantity = 1 + random2(9) + random2(12) + random2(12);
     else
-        item.quantity = 1+random2(9) + random2(12) + random2(12) + random2(15);
+        item.quantity = 1+ random2(9) + random2(12) + random2(12) + random2(15);
 
     if (10 + item_level >= random2(100))
         item.plus += random2(5);
@@ -2772,7 +2767,7 @@ int items( int allow_uniques,       // not just true-false,
     default:
         item.base_type = OBJ_GOLD;
         if (force_good)
-            item.quantity = 150+random2(150) + random2(random2(random2(2000)));
+            item.quantity = 150+ random2(150) + random2(random2(random2(2000)));
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);
         break;

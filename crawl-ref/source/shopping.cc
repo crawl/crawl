@@ -802,10 +802,15 @@ unsigned int item_value( item_def item, bool ident )
         case MI_NEEDLE:
             valued += 2;
             break;
+        case MI_JAVELIN:
+            valued += 8;
+            break;
+        case MI_THROWING_NET:
+            valued += 30;
+            break;
         default:
-            // was: cases 6 through 16 with empty strcat()'s 15jan2000 {dlb}
             valued += 5;
-            break;              //strcat(glog , ""); break;
+            break;
         }
         break;
 

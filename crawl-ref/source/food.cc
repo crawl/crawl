@@ -863,7 +863,7 @@ int eat_from_floor()
         prompt << (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat")
                << ' ' << ((item.quantity > 1) ? "one of " : "")
                << item.name(DESC_NOCAP_A) << '?';
-        const int ans = yesnoquit( prompt.str().c_str(), true, 0, false );
+        const int ans = yesnoquit( prompt.str().c_str(), true, 0, false, 'E' );
         if ( ans == -1 )        // quit
             return -1;
         else if ( ans == 1 )
