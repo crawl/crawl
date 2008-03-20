@@ -59,7 +59,6 @@ void show_interlevel_travel_depth_help();
 void show_stash_search_help();
 void list_commands(bool wizard, int hotkey = 0,
                    bool do_redraw_screen = false);
-void list_tutorial_help(void);
 
 // Actually defined in acr.cc; we may want to move this to command.cc
 void process_command(command_type cmd);

@@ -629,7 +629,7 @@ static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
         // XXX FIXME: there must be a better way to identify sections
         next_is_hotkey = auto_hotkeys &&
             (strstr(buf, "------------------------------------------"
-                    "------------------------------") == buf);
+                         "------------------------------") == buf);
         is_first = false;
     }
 }
@@ -1459,24 +1459,8 @@ void show_stash_search_help()
     show_specific_help( getHelpString("stash-search.prompt") );
 }
 
-void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
+static void add_formatted_keyhelp(column_composer &cols)
 {
-    if (wizard)
-    {
-        list_wizard_commands();
-
-        if (do_redraw_screen)
-            redraw_screen();
-
-        return;
-    }
-
-    // 2 columns, split at column 40.
-    column_composer cols(2, 41);
-
-    // Page size is number of lines - one line for --more-- prompt.
-    cols.set_pagesize(get_number_of_lines() - 1);
-
     cols.add_formatted(
             0,
             "<h>Movement:\n"
@@ -1633,24 +1617,10 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "form of targeting), <w>Ctrl-F</w> and <w>Ctrl-G</w>."
             "\n",
             true, true, cmdhelp_textfilter);
-
-    
-    show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
-
-    if (do_redraw_screen)
-    {
-        clrscr();
-        redraw_screen();
-    }
 }
 
-void list_tutorial_help()
+static void add_formatted_tutorial_help(column_composer &cols)
 {
-    // 2 columns, split at column 40.
-    column_composer cols(2, 41);
-    // Page size is number of lines - one line for --more-- prompt.
-    cols.set_pagesize(get_number_of_lines());
-
     unsigned ch;
     unsigned short colour;
 
@@ -1713,10 +1683,40 @@ void list_tutorial_help()
             "and in sight, one of <w>f</w> or <w>p</w> fires at it\n"
             "again (without selecting anything).\n",
             true, true, cmdhelp_textfilter, 40);
-            
-    show_keyhelp_menu(cols.formatted_lines(), false);
 }
- 
+
+void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
+{
+    if (wizard)
+    {
+        list_wizard_commands();
+
+        if (do_redraw_screen)
+            redraw_screen();
+
+        return;
+    }
+
+    // 2 columns, split at column 40.
+    column_composer cols(2, 41);
+
+    // Page size is number of lines - one line for --more-- prompt.
+    cols.set_pagesize(get_number_of_lines() - 1);
+
+    if (Options.tutorial_left)
+        add_formatted_tutorial_help(cols);
+    else
+        add_formatted_keyhelp(cols);
+    
+    show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
+
+    if (do_redraw_screen)
+    {
+        clrscr();
+        redraw_screen();
+    }
+}
+
 static void list_wizard_commands()
 {
 #ifdef WIZARD

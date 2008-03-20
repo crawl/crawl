@@ -2012,7 +2012,7 @@ void describe_monsters(monsters& mons)
         break;
 
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-        description << getLongDescription("simulacrum");
+        description << getLongDescription("large simulacrum");
         break;
 
     case MONS_SPECTRAL_THING:

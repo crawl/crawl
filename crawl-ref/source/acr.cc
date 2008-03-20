@@ -2152,13 +2152,7 @@ void process_command( command_type cmd )
 #endif
 
     case CMD_DISPLAY_COMMANDS:
-        if (Options.tutorial_left)
-        {
-            list_tutorial_help();
-            redraw_screen();
-        }
-        else
-            list_commands(false, 0, true);
+        list_commands(false, 0, true);
         break;
 
     case CMD_EXPERIENCE_CHECK:

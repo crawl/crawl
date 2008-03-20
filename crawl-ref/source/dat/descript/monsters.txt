@@ -924,6 +924,10 @@ An enormous monitor lizard. It's more than capable of preying on large
 animals. Bits of fetid and rotting flesh from its last few meals are
 stuck in its teeth.
 %%%%
+large simulacrum
+
+An ice replica of a monster that is animated by the powers of necromancy.
+%%%%
 large skeleton
 
 A large skeleton compelled to unlife by the exercise of necromancy.
@@ -1269,10 +1273,6 @@ silver statue
 A beautiful statue of silvery hue. Its eyes glow with an otherworldly
 radiance.
 It looks brittle.
-%%%%
-simulacrum
-
-An ice replica of a monster that is animated by the powers of necromancy.
 %%%%
 skeletal dragon
 
