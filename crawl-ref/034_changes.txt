@@ -1,0 +1,60 @@
+From ploog@mi.fu-berlin.de Wed Mar 19 23:59:13 2008
+Date: Thu, 20 Mar 2008 00:59:07 +0100 (CET)
+From: David Ploog <ploog@mi.fu-berlin.de>
+To: David Ploog <ploog@mi.fu-berlin.de>
+Subject: readme_for_players_of_DCSS_034
+
+Information for players of versions 0.3.4 or earlier
+----------------------------------------------------
+
+There have been many changes to the interface in the new version. Among
+them:
+
+* Swapped some command keys around:
+   z         cast spell       (was Z)
+   Z         zap wand         (was z)
+   o         auto-explore     (was Ctrl-O)
+   Ctrl-O    dungeon overview (was O)
+   O         open door        (was o)
+   C         close door       (was c)
+   c         chop up          (was D, dissect)
+   E         show experience  (was C)
+   v         evoke            (was E)
+   t         tell/yell        (was !)
+   There is a file called "keys.pdf" in the /docs directory. It should be
+   printable and contains a reference sheet for all keys used in Crawl.
+
+* Removed the v command (view item in inventory). Its functionality is
+   provided by pressing i (showing the inventory) and the letter for the
+   item, at the same number of key presses.
+
+* The chop up (formerly dissect) interface is modified: there is no
+   prompt anymore for single corpses. In case of several corpses on the
+   square, you may use 'c' as a synonym for yes, and 'a' will answer yes
+   to this and all further corpses. In particular, all corpses in a square
+   can be sacrificed with 'pca'.
+
+* The colours of many monsters have been changed. Most notably, there are
+   no darkgray monsters anymore. In case darkgray is actually better
+   visible than blue on your system, you can swap these colours using
+     colour: darkblue = darkgray
+   or similar in the init.txt.
+   Apart from that, more dangerous monsters are now generally displayed in
+   lighter colours.
+
+We are sure that all of these changes are genuine improvements. Should
+your brain be hardwired to the old settings, you can effectively enforce
+the 0.3.4 state by using the following options:
+   : crawl.read_options('docs/034_monster_glyphs.txt')
+   additional_macro_file   = docs/034_command_keys.txt
+   always_confirm_butcher  = true
+
+Note that the header of init.txt contains these lines. (It contains some 
+more options for using other old settings.) The options are commented out, 
+so you just need to remove the # in front in order to activate them. You 
+can choose to use only part of these options. In case you decide to use 
+the old keyset, be aware that D is also a synonym for 'yes' in the 
+butcher interface.
+
+In case you choose to go with the new keyset or the new butcher interface, 
+you will want to look through your macro.txt file.
