@@ -1,148 +1,155 @@
-                            Crawl Quick-Start Guide
-                        (Copyright 1999 Linley Henzell)
+Dungeon Crawl Stone Soup
+========================
 
-So, you want to start playing Crawl straight away without bothering with the 
-manual? Read this, the guide to starting Crawl with a minimum of preparation. 
-When you get some more time, you can read crawl_manual.txt in the Docs 
-directory for more detailed information.
+Dungeon Crawl Stone Soup is a game of dungeon exploration, combat and magic, 
+involving characters of diverse skills, worshipping deities of great power and 
+caprice. To win, you'll need to be a master of tactics and strategy, and 
+prevail against overwhelming odds.
 
-I suggest printing it out and following its instructions while playing your 
-first few games (you can also press '?' while playing for a list of commands). 
+Players of versions 0.3.4 and older beware: please read the file
+   034_changes.txt
+in the docs/ directory for a list of the interface changes, and how 
+you could possibly retrieve the 0.3.4 standards.
 
- INTRODUCTION TO CRAWL 
+Contents:
+1. How to get started? (Information for new players)
+2. The file system of this version.
+3. Contact and reporting bugs.
+4. License and history information.
+5. How you can help!
 
-Crawl is a large and very random game of subterranean exploration in a fantasy 
-world of magic and frequent violence. Your quest is to travel into the depths 
-of the Dungeon (which is different each time you play) and retrieve the Orb of 
-Zot. 
+1. Getting started
+------------------
+If you'd like to dive in immediately, your best bets are to
+* start up a game and choose a tutorial (press T when asked for race), or
+* read quickstart.txt (it is in docs/), or
+* for studious readers, browse the manual (see below for all doc files).
 
-Crawl is an RPG of the 'rogue-like' type, one of the descendants of Rogue. Its 
-graphics are simple but highly informative, designed to be understood at a 
-glance, and control is exercised largely through one-keystroke commands. 
+Additionally, you may want to print out the file keys.pdf from the docs/
+folder. Besides a full list of command keys (don't bother with it), it contains 
+two pages of help for new players.
+Note that you can read quickstart.txt and the manual when playing; pressing ? 
+brings up a menu for that.
 
- STARTING OUT 
 
-After starting the program you will be greeted with a message asking for your 
-name. Don't spend too much time over this, as your first character will *not* 
-last very long (sorry, but it's true). 
+2. File system
+--------------
+The following files in the Crawl's main folder are essential:
 
-Next you are given menus of species and character classes from which to 
-choose. A dwarf, orc, ogre or troll Fighter is a good bet. Elves are quite 
-fragile, humans are pretty average at everything, and the weirder species are 
-mostly too tricky for beginning players. Finally, you may be given a choice of 
-weapons. I suggest an axe (axes are fun). 
+* crawl           These start the game. (The actual name depends on your
+* crawl.exe       operating system.)
 
-Now you are in the game. The game screen has three parts:
- - the Map takes up the upper left part of the screen. In its very centre is 
-   the @ sign which represents You. The coloured parts of the Map are the parts 
-   you can see, while places which you have visited before but cannot currently 
-   see are shown in grey.
- - the Message box is the large part of the screen below the map. It describes 
-   events as they happen and asks you questions from time to time. 
- - the Stats area (to the right of the Map) contains various indicators of 
-   your health and abilities. 
+* init.txt        These contain the options for the game. The defaults
+* .crawlrc        play well, so don't bother with this in the beginning.
+                   Permanent death is not an option, but a feature!
 
- EXPLORING 
+* macro.txt       Playing Crawl can be made even more convenient by
+                   redefining keys and assigning macros. Ignore early on.
 
-Try walking around, using either the numeric keypad (try numlock off and on) or 
-the Rogue (hjklyubn) keys. To move in a given direction until you reach 
-something interesting or see a hostile creature, press shift and the direction. 
+The docs/ folder contains the following helpful texts (all of which can be 
+read in-game by bringing up the help menu with '?'):
 
-If you want to know what a certain character on the screen represents, you can 
-use the 'x' (examine) command to get a short description. You use the 'o', 'c' 
-commands to open or close doors, and the '<' (up) and '>' (down) commands to 
-climb staircases. Sometimes doors are hidden, and must be searched out by 
-standing next to walls and resting (a number of commands do the same thing: 
-'s', '.' (period), delete, or '5' on the numeric keypad). 
+* the_manual.txt  The complete manual; describing all aspects in the
+                   detail. Contains appendices on species, classes, etc.
+* options.txt     Describes all options in detail. The structure of
+                   init.txt follows this text.
+* macros.txt      A how-to on using macros and keymappings, with examples.
+* aptitudes.txt   Some numbers defining certain aspects of the races.
+                   Helpful, but not needed for winning.
+* quickstart.txt  A short introduction for new players.
+* ssh_guide.txt   An elaborate introduction on how to get internet play
+                   to work. For Windows only.
+* irc_guide.txt   An elaborate introduction on how to access the IRC
+                   channel ##crawl.
+* keys.pdf        A printable document, listing all commands and it also
+                   contains a very short guide for new players.
 
-The Dungeon gets more dangerous (but more interesting!) as you go down. If you 
-get lost you can access a map of the whole level you are on with the 'X' 
-command, which uses the whole screen. 
 
- ITEMS 
+3. Contact and reporting bugs
+-----------------------------
+The official webpage is
+      http://crawl-ref.sourceforge.net/
+and there you can find both trackers to add bug reports, feature requests, or 
+upload patches as well as sources and binaries. This is the best way to report 
+bugs or mention new ideas.
 
-After walking around for a while, you will no doubt come across some items 
-laying around (you may come across some monsters as well; for help in dealing 
-with them skip to the Monsters section). You can pick up items with the 'g' 
-(get) or ',' commands and drop them again with 'd' (drop), and the 'i' 
-(inventory) command shows you what you're carrying. 
+There is a Usenet newsgroup dealing with roguelikes, including Crawl:
+      rec.games.roguelike.misc
+It is polite to flag your post with -crawl- as other games are discussed over 
+there as well. This is a good place to ask general questions, both from new 
+players as well as for spoilers, or to announce spectacular wins.
 
-There are several different types of items: 
+You can play Crawl online, together with many others. The main server has its 
+homepage at
+      http://crawl.akrasiac.org/
+where you can also read how to connect. That page also has links to spoiler 
+sites etc.
 
- - Weapons, represented by the ) sign. Wield them with the 'w' (wield) 
-command. Some weapons are cursed and cannot be un-wielded without the use of 
-magic.
+If you want to chime in with development, you can read the mailing list
+      crawl-ref-discuss@lists.sourceforge.net
+which can get pretty busy on the occasion.
 
- - Armour ([). Wear it with the 'W' (Wear) command, and remove it with 'T' 
-(Take off). Heavier armours give more protection, but may hamper your ability 
-to fight and to dodge attacks aimed at you. These can also be cursed.
 
- - Ammunition (which has the ( sign). Throw it with 't' (throw). Darts are 
-meant to be thrown by hand; other missiles need an appropriate launcher to be 
-wielded (eg arrows are much more effective when shot with a bow).
+4. License and history information
+----------------------------------
+What you have downloaded is a successor to Linley's Dungeon Crawl. Development 
+of the main branch stalled at version 4.0.26, with a final alpha of 4.1 being 
+released by Brent Ross in 2005. Since 2006, the Dungeon Crawl Stone Soup 
+team continues the development.
 
- - Wands (/), Scrolls (?) and Potions (!) can be very valuable, but have 
-limited uses (scrolls and potions can only be used once each, wands contain 
-only a certain number of charges). Wands are 'z'apped, scrolls are 'r'ead and 
-potions are 'q'uaffed.
- Unfortunately, you won't at first know what a wand, scroll or potion does; it 
-will only be described by its physical appearance. But once you have used, for 
-example, a potion of healing, you will in future recognise all potions of 
-healing. 
+Dungeon Crawl Stone Soup is an open source, freeware roguelike. It is supported 
+on Linux, Windows, OS/X  and, to a lesser extent, on DOS. The source should 
+compile and run on any reasonably modern Unix.
+Stone Soup features both ASCII and Tiles display.
 
- - Rings (=) and Amulets (") often contain powerful magic, but it can be 
-difficult to work out exactly what one does. They are put on with 'P' (put on) 
-and removed with 'R' (remove), but can, like weapons, be cursed. 
+Crawl gladly and gratiously uses the following open-source packages:
+* The Lua script language, see /docs/lualicense.txt.
+* The PCRE library for regular expressions, see /docs/pcre-license.txt.
+* The Mersenne Twister for random number generation, /docs/mt19937.txt.
+* The SQLite library as database enging; it is properly public domain.
+* The ReST light markup language for the documentation.
 
- - Food (%) is vital to your survival. Eat it with the 'e' (eat) command when 
-hungry. Monsters' corpses, also %, can be eaten if chopped up (the 'D' 
-(Dissect) command), but not all of them are healthful, and many species of 
-player-character dislike eating raw flesh unless very hungry. 
+5. How you can help
+-------------------
+If you like the game and you want to help making it better, there are a number 
+of ways to do so:
 
- - Money ($) can be used to buy stuff in shops, and increases your score if 
-you escape. 
+* Playtesting.
+At any time, there will be bugs -- playing and reporting these is a great help. 
+There is a beta server around hosting the most recent version of the current 
+code; the akrasiac page links to it. Besides finding bugs, ideas on how to 
+improve interface or gameplay are welcome as well.
 
-There are a few other types of items, but you will discover these as you play. 
+* Vault making.
+Crawl uses many hand-drawn (but often randomised) maps. Making them is fun and 
+easy. It's best to start with simple entry vaults (glance through 
+dat/entry.des for a first impression). Later, you may want to read 
+docs/level-design.txt for the full power. If you're ambitious, new maps for 
+branch ends are possible, as well.
+If you've made some maps, you can test them on your system (no compiling 
+needed) and then just mail them to the mailing list.
 
-One vital command to remember when dealing with items is 'v' (View), which 
-gives you a short description of any item. Use it on everything you find. The 
-magical Scroll of Identify can also help for identifying magical items of 
-uncertain nature. 
+* Speech.
+Monster talking provides a lot of flavour. Just like vaults, speech depends 
+upon a large set of entries. Since most of the speech has been outsourced, you 
+can add new prose. The syntax is a slightly strange, so you may want to read 
+docs/monster_speech.txt.
+Again, changing or adding speech is possible on your local game. If you 
+have added something, send the files to the list.
 
- MONSTERS 
+* Monster descriptions.
+You can look up that current descriptions in-game with ?/ or just read them in 
+dat/descript/monsters.txt. The following conventions should be more or less 
+obeyed: descriptions ought to contain flavour text, ideally pointing out major 
+weaknesses/strenghts. No numbers, please. Citations are okay, but try to stay 
+away from the most generic ones.
 
-You will also run into monsters (most of which are represented by letters of 
-the alphabet). You can attack a monster by trying to move into the square it 
-is occupying. 
+* Tiles.
+Since version 0.4, tiles are integrated within Crawl. Having variants of 
+often-used glyphs is always good. If you want to give this a shot, please 
+contact us via the mailing list.
 
-When you are wounded you lose hit points (displayed near the top of the stats 
-list); these return gradually over time through the natural process of 
-healing. If you lose all of your hp you die. 
-
-To survive, you will need to develop a few basic tactics:
- - Never fight more than one monster if you can help it. Always back into a 
-   corridor so that they must fight you one-on-one. 
- - If you are badly wounded, you can run away from monsters to buy some time. 
-   Try losing them in corridors, or as a very last resort find a place where 
-   you can run around in circles to heal while the monster chases you. 
- - Remember to use projectiles before engaging monsters in close combat.
- - Rest between encounters. The 's', '.', delete or keypad-5 commands make you 
-   rest for one turn, while pressing '5' or shift-and-keypad-5 make you rest 
-   for a longer time (you will stop resting when fully healed). 
- - Learn when to run away from things you can't handle - this is important! 
-   It is often wise to skip a dangerous level. But don't overdo this.
-
- DEATH 
-
-Before long, you'll probably end up dead. 
- 
-Death in Crawl is permanent; you cannot just reload a saved game and start again
-where you left off. The 'S' (save) command exists only to let you leave a game 
-part-way through and come back to it later. Quitting ('Q') lets you commit
-suicide if you can't even be bothered to help your character escape alive. 
-
-Well, that's it for the quick-start guide. This should help you through your 
-first few games, but Crawl is extremely (some would say excessively) complex 
-and cannot be adequately described in so short a document. So when you feel 
-ready to start playing with magic, skills, and religions, browse the manual.
-Happy Crawling! 
+* Patches.
+If you like to, you can download the source code and apply patches. Both 
+patches for bug fixes as well as implementation of new features is welcome. 
+Please be sure to read docs/coding_conventions.txt first.
