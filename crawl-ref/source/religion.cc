@@ -3426,7 +3426,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
         {
             _print_converted_orc_speech("reaction_sight", orc,
                                         MSGCH_MONSTER_ENCHANT);
-            
+
             if (!one_chance_in(3))
                 _print_converted_orc_speech("speech_sight", orc, MSGCH_TALK);
         }
@@ -3437,6 +3437,8 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     // not really "created" friendly, but should it become
     // hostile later on, it won't count as a good kill
     orc->flags |= MF_CREATED_FRIENDLY;
+
+    orc->flags |= MF_GOD_GIFT;
 
     if (orc->hit_points <= 0)
         orc->hit_points = std::min(random_range(1, 4), orc->max_hit_points);

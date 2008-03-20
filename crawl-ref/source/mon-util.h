@@ -658,6 +658,7 @@ bool mons_is_submerged( const monsters *mon );
 
 bool invalid_monster(const monsters *mon);
 bool invalid_monster_class(int mclass);
+bool invalid_monster_index(int i);
 
 bool monster_shover(const monsters *m);
 bool mons_is_paralysed(const monsters *m);

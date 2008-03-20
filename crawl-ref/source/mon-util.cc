@@ -469,6 +469,13 @@ bool invalid_monster_class(int mclass)
             || mon_entry[mclass] == MONS_PROGRAM_BUG);
 }
 
+bool invalid_monster_index(int i)
+{
+    return (i != ANON_FRIENDLY_MONSTER
+            && i >= 0
+            && i < MAX_MONSTERS);
+}
+
 bool mons_is_statue(int mc)
 {
     return (mc == MONS_ORANGE_STATUE

@@ -466,7 +466,7 @@ static bool ely_heals_monster(monsters *monster, killer_type killer, int i)
 {
     god_type god = GOD_ELYVILON;
     ASSERT(you.religion != god);
-    
+
     const int ely_penance = you.penance[god];
     ASSERT(ely_penance > 0);
 
@@ -477,9 +477,7 @@ static bool ely_heals_monster(monsters *monster, killer_type killer, int i)
         return (false);
     }
 
-    if (MON_KILL(killer)
-        && i != ANON_FRIENDLY_MONSTER
-        && i >= 0 && i < MAX_MONSTERS)
+    if (MON_KILL(killer) && !invalid_monster_index(i))
     {
         monsters *mon = &menv[i];
         if (!mons_friendly(mon) || !one_chance_in(3))
@@ -530,7 +528,7 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
     {
         return (true);
     }
-        
+
     bool convert = false;
 
     if (you.religion == GOD_BEOGH
@@ -540,9 +538,7 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
     {
         if (YOU_KILL(killer))
             convert = true;
-        else if (MON_KILL(killer)
-            && i != ANON_FRIENDLY_MONSTER
-            && i >= 0 && i < MAX_MONSTERS)
+        else if (MON_KILL(killer) && !invalid_monster_index(i))
         {
             monsters *mon = &menv[i];
             if (is_orcish_follower(mon) && !one_chance_in(3))
@@ -728,7 +724,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         case KILL_YOU_MISSILE:  /* You kill by missile or beam. */
         case KILL_YOU_CONF:     /* You kill by confusion */
         {
-            const bool created_friendly = 
+            const bool created_friendly =
                 testbits(monster->flags, MF_CREATED_FRIENDLY);
             const bool was_neutral =
                 testbits(monster->flags, MF_WAS_NEUTRAL);
@@ -868,14 +864,12 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 if (attacker_holy == MH_UNDEAD)
                 {
                     if (targ_holy == MH_NATURAL)
-                        notice |= 
+                        notice |=
                             did_god_conduct(DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
                                         monster->hit_dice);
                 }
                 else if (you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
-                         || (you.religion == GOD_BEOGH
-                             && is_orcish_follower(&menv[i]))
                          || (!anon && testbits(menv[i].flags, MF_GOD_GIFT)))
                 {
                     // Yes, we are splitting undead pets from the others
@@ -938,8 +932,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && mons_is_evil_or_unholy(monster)
                     && (!player_under_penance()
                         && random2(you.piety) >= piety_breakpoint(0))
-                    && i != ANON_FRIENDLY_MONSTER
-                    && i >= 0 && i < MAX_MONSTERS)
+                    && !invalid_monster_index(i))
                 {
                     monsters *mon = &menv[i];
                     if (mon->alive() && mon->hit_points < mon->max_hit_points)
