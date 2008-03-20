@@ -3069,10 +3069,10 @@ static bool make_god_gifts_on_level_disappear(bool seen = false)
             && monster->has_ench(ENCH_ABJ)
             && (monster->flags & MF_GOD_GIFT))
         {
-            // monster disappears
             if (!seen || simple_monster_message(monster, " abandons you!"))
                 count++;
 
+            // monster disappears
             monster_die(monster, KILL_DISMISSED, 0);
         }
     }
@@ -3184,7 +3184,8 @@ static bool orcish_followers_on_level_abandon_you()
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1 && is_orcish_follower(monster))
+        if (monster->type != -1
+            && is_orcish_follower(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Abandoning: %s on level %d, branch %d",
