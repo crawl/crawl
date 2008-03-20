@@ -754,6 +754,49 @@ static void give_nemelex_gift()
     }
 }
 
+static bool promote_to_priest(monsters* mon)
+{
+    monster_type priest_type = MONS_PROGRAM_BUG;
+
+    // Possible promotions.
+    if (mon->type == MONS_ORC)
+        priest_type = MONS_ORC_PRIEST;
+
+    if (priest_type != MONS_PROGRAM_BUG)
+    {
+        // Turn an ordinary monster into a priestly monster, preserving
+        // important characteristics.  Keep this as generic as possible,
+        // in case more promotions are added.
+        const unsigned long old_flags = mon->flags;
+        const int old_hp = mon->hit_points;
+        const int old_hp_max = mon->max_hit_points;
+        const char old_ench_countdown = mon->ench_countdown;
+        mon_enchant abj = mon->get_ench(ENCH_ABJ);
+        mon_enchant shifter = mon->get_ench(ENCH_GLOWING_SHAPESHIFTER,
+                                            ENCH_SHAPESHIFTER);
+        const bool old_mon_caught = mons_is_caught(mon);
+
+        mon->type = priest_type;
+        define_monster(monster_index(mon));
+
+        mon->flags = old_flags;
+        mon->hit_points = mon->max_hit_points *
+            ((old_hp * 100) / old_hp_max) / 100;
+        mon->ench_countdown = old_ench_countdown;
+        mon->add_ench(abj);
+        mon->add_ench(shifter);
+        if (old_mon_caught)
+            mon->add_ench(ENCH_HELD);
+        if (mons_class_flag(mon->type, M_INVIS))
+            mon->add_ench(ENCH_INVIS);
+        mon->fix_speed();
+
+        return true;
+    }
+
+    return false;
+}
+
 void bless_follower(god_type god,
                     bool (*suitable)(const monsters* mon))
 {
@@ -761,39 +804,63 @@ void bless_follower(god_type god,
         return;
 
     int monster = choose_random_nearby_monster(0, suitable);
-    monsters* mon = (monster != NON_MONSTER) ? &menv[monster] : NULL;
 
-    if (mon)
+    if (monster == NON_MONSTER)
+        return;
+
+    monsters* mon = &menv[monster];
+    const char *blessed = mon->name(DESC_NOCAP_A).c_str();
+    const char *result = NULL;
+
+    switch (random2(100))
     {
-        const char *result;
-        bool healing = false;
-        bool vigour = true;
+        // 5% chance: Turn a monster into a priestly monster, if
+        // possible.  This is currently only used for Beogh.
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            if (god == GOD_BEOGH && promote_to_priest(mon))
+            {
+                result = "priesthood";
+                break;
+            }
+            // Deliberate fall through.
 
-        // Full healing.
-        healing = heal_monster(mon, mon->max_hit_points, false);
-
-        if (!healing || coinflip())
+        // 95% chance: full healing.
+        default:
         {
-            // Full healing, plus one added hit point.
-            heal_monster(mon, mon->max_hit_points, true);
+            bool healing = false;
+            bool vigour = true;
 
-            if (coinflip())
-                // Full healing, plus another added hit point.
+            healing = heal_monster(mon, mon->max_hit_points, false);
+
+            if (!healing || coinflip())
+            {
+                // Full healing, plus one added hit point.
                 heal_monster(mon, mon->max_hit_points, true);
 
-            vigour = true;
+                if (coinflip())
+                    // Full healing, plus another added hit point.
+                    heal_monster(mon, mon->max_hit_points, true);
+
+                vigour = true;
+            }
+
+            if (healing && vigour)
+                result = "healing and extra vigour";
+            else if (healing)
+                result = "healing";
+            else
+                result = "extra vigour";
+
+            break;
         }
-
-        if (healing && vigour)
-            result = "healing and extra vigour";
-        else if (healing)
-            result = "healing";
-        else
-            result = "extra vigour";
-
-        mprf(MSGCH_GOD, "%s blesses %s with %s.", god_name(god).c_str(),
-            mon->name(DESC_NOCAP_A).c_str(), result);
     }
+
+    mprf(MSGCH_GOD, "%s blesses %s with %s.", god_name(god).c_str(),
+        blessed, result);
 }
 
 static void do_god_gift(bool prayed_for)
