@@ -3789,7 +3789,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
             || mons_class_flag(monster->type, M_PRIEST))
         && (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER)))
     {
-        return (false);           //jmf: shapeshiftes don't get spells, just
+        return (false);           //jmf: shapeshifters don't get spells, just
                                   //     physical powers.
     }
     else if (monster->has_ench(ENCH_CONFUSION) 
