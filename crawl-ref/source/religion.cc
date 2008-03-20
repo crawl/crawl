@@ -3407,7 +3407,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
     if (player_monster_visible(orc)) // show reaction
     {
-        if (emergency || orc->hit_points <= 0)
+        if (emergency || !orc->alive())
         {
             if (converted_by_follower)
             {
