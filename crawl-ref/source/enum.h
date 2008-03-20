@@ -828,7 +828,7 @@ enum dungeon_char_type
 // * Any: edit dungeon.cc and add a symbol to map_feature() and
 //        vault_grid() for the feature, if you want vault maps to
 //        be able to use it.  If you do, also update
-//        docs/level-design.txt with the new symbol.
+//        docs/level_design.txt with the new symbol.
 // * Any: edit luadgn.cc and add the feature's name to the dngn_feature_names
 //        array, if you want vault map Lua code to be able to use the
 //        feature, and/or you want to be able to create the feature
