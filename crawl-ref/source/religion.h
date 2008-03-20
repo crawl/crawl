@@ -71,6 +71,8 @@ bool ely_destroy_weapons();
 bool trog_burn_books();
 bool tso_stab_safe_monster(const actor *act);
 
+void bless_follower(god_type god,
+                    bool (*suitable)(const monsters* mon));
 bool is_orcish_follower(const monsters* mon);
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);

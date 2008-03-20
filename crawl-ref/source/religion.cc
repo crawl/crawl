@@ -754,6 +754,48 @@ static void give_nemelex_gift()
     }
 }
 
+void bless_follower(god_type god,
+                    bool (*suitable)(const monsters* mon))
+{
+    if (!there_are_monsters_nearby())
+        return;
+
+    int monster = choose_random_nearby_monster(0, suitable);
+    monsters* mon = (monster != NON_MONSTER) ? &menv[monster] : NULL;
+
+    if (mon)
+    {
+        const char *result;
+        bool healing = false;
+        bool vigour = true;
+
+        // Full healing.
+        healing = heal_monster(mon, mon->max_hit_points, false);
+
+        if (!healing || coinflip())
+        {
+            // Full healing, plus one added hit point.
+            heal_monster(mon, mon->max_hit_points, true);
+
+            if (coinflip())
+                // Full healing, plus another added hit point.
+                heal_monster(mon, mon->max_hit_points, true);
+
+            vigour = true;
+        }
+
+        if (healing && vigour)
+            result = "healing and extra vigour";
+        else if (healing)
+            result = "healing";
+        else
+            result = "extra vigour";
+
+        mprf(MSGCH_GOD, "%s blesses %s with %s.", god_name(god).c_str(),
+            mon->name(DESC_NOCAP_A).c_str(), result);
+    }
+}
+
 static void do_god_gift(bool prayed_for)
 {
     ASSERT(you.religion != GOD_NO_GOD);
@@ -949,6 +991,15 @@ static void do_god_gift(bool prayed_for)
                         inc_gift_timeout(10 + random2(10));
                 }                   // end of giving book
             }                       // end of book gods
+            break;
+
+        case GOD_BEOGH:
+            // Blessings for followers.
+            if (you.piety >= piety_breakpoint(2)
+                && random2(you.piety) >= piety_breakpoint(0))
+            {
+                bless_follower(GOD_BEOGH, is_orcish_follower);
+            }
             break;
         }
     }                           // end of gift giving
