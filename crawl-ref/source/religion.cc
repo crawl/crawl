@@ -3302,7 +3302,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
 bool is_orcish_follower(const monsters* mon)
 {
-    return (mons_species(mon->type) == MONS_ORC
+    return (mon->alive() && mons_species(mon->type) == MONS_ORC
         && mon->attitude == ATT_FRIENDLY);
 }
 

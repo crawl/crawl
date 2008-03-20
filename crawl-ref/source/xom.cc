@@ -413,7 +413,8 @@ bool there_are_monsters_nearby()
 
 static bool choose_mutatable_monster(const monsters* mon)
 {
-    return (mons_holiness(mon) == MH_NATURAL && !mons_is_submerged(mon));
+    return (mon->alive() && mons_holiness(mon) == MH_NATURAL
+        && !mons_is_submerged(mon));
 }
 
 static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
