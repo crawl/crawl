@@ -476,13 +476,15 @@ static bool ely_heals_monster(monsters *monster, killer_type killer, int i)
     {
         return (false);
     }
-    
-    if (MON_KILL(killer))
+
+    if (MON_KILL(killer)
+        && i != ANON_FRIENDLY_MONSTER
+        && i >= 0 && i < MAX_MONSTERS)
     {
         monsters *mon = &menv[i];
         if (!mons_friendly(mon) || !one_chance_in(3))
             return (false);
-            
+
         if (!mons_near(monster))
             return (false);
     }
@@ -538,7 +540,9 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
     {
         if (YOU_KILL(killer))
             convert = true;
-        else if (MON_KILL(killer) && i != -1)
+        else if (MON_KILL(killer)
+            && i != ANON_FRIENDLY_MONSTER
+            && i >= 0 && i < MAX_MONSTERS)
         {
             monsters *mon = &menv[i];
             if (is_orcish_follower(mon) && !one_chance_in(3))
