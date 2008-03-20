@@ -140,6 +140,8 @@ public:
     const CrawlVector&    get_vector() const;
     const item_def&       get_item()   const;
 
+#if 0
+    // These don't actually exist
     void set_bool(const bool val);
     void set_byte(const char val);
     void set_short(const short val);
@@ -150,6 +152,7 @@ public:
     void set_table(const CrawlHashTable &val);
     void set_vector(const CrawlVector &val);
     void set_item(const item_def &val);
+#endif
 
 public:
     // NOTE: All operators will assert if the value is of the wrong
