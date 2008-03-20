@@ -599,7 +599,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     update_beholders(monster, true);
     
     const int monster_killed = monster_index(monster);
-    const bool death_message =
+    bool death_message =
         !silent && mons_near(monster) && player_monster_visible(monster);
     bool in_transit = false;
     const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
@@ -681,8 +681,11 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
              || monster->type == MONS_SPATIAL_VORTEX)
     {
         if (!silent)
+        {
             simple_monster_message( monster, " dissipates!",
                                     MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
+            death_message = false;
+        }
 
         if (monster->type == MONS_FIRE_VORTEX)
             place_cloud(CLOUD_FIRE, monster->x, monster->y, 2 + random2(4),
@@ -692,9 +695,12 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
              || monster->type == MONS_SIMULACRUM_LARGE)
     {
         if (!silent)
+        {
             simple_monster_message(
                 monster, " vapourises!", MSGCH_MONSTER_DAMAGE,
                 MDAM_DEAD );
+            death_message = false;
+        }
 
         place_cloud(CLOUD_COLD, monster->x, monster->y, 2 + random2(4),
                     monster->kill_alignment());
@@ -709,6 +715,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             else
                 simple_monster_message(monster, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+            death_message = false;
         }
 
         if (hard_reset)
@@ -716,10 +723,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                          monster->x, monster->y, 1 + random2(3),
                          monster->kill_alignment() );
     }
-    else
+    
+    switch (killer)
     {
-        switch (killer)
-        {
         case KILL_YOU:          /* You kill in combat. */
         case KILL_YOU_MISSILE:  /* You kill by missile or beam. */
         case KILL_YOU_CONF:     /* You kill by confusion */
@@ -734,10 +740,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
                      wounded_damaged(monster->type) ? "destroy" : "kill",
                      monster->name(DESC_NOCAP_THE).c_str());
-            }
 
-            if ((created_friendly || was_neutral) && gives_xp && death_message)
-                mpr("That felt strangely unrewarding.");
+                if ((created_friendly || was_neutral) && gives_xp)
+                    mpr("That felt strangely unrewarding.");
+            }
 
             // killing triggers tutorial lesson
             tutorial_inspect_kill();
@@ -991,7 +997,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         default:
             monster->destroy_inventory();
             break;
-        }
     }
 
     if (monster->type == MONS_MUMMY)
