@@ -396,8 +396,9 @@ static void give_monster_experience( monsters *victim,
                                      int killer_index, int experience,
                                      bool victim_was_born_friendly )
 {
-    if (killer_index < 0 || killer_index >= MAX_MONSTERS)
+    if (invalid_monster_index(killer_index))
         return;
+
     monsters *mons = &menv[killer_index];
     if (!mons->alive())
         return;
@@ -416,11 +417,11 @@ static void give_adjusted_experience(monsters *monster, killer_type killer,
 {
     const int experience = exper_value(monster);
 
-    const bool created_friendly = 
+    const bool created_friendly =
         testbits(monster->flags, MF_CREATED_FRIENDLY);
     const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
     const bool no_xp = monster->has_ench(ENCH_ABJ);
-    
+
     if (created_friendly || was_neutral || no_xp)
         ; // No experience if monster was created friendly or summoned.
     else if (YOU_KILL(killer))
@@ -2757,7 +2758,7 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
 
         if (!mons_player_visible( monster ))
             break;
-            
+
         if (is_sanctuary(you.x_pos, you.y_pos)
             || is_sanctuary(monster->x, monster->y))
         {
@@ -5069,7 +5070,7 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
     if (!mx && !my)
         return (false);
 
-    int targmon = mgrd[mon->x + mx][mon->y + my];    
+    int targmon = mgrd[mon->x + mx][mon->y + my];
     if (targmon == MHITNOT || targmon == MHITYOU)
         return (false);
 
@@ -5082,7 +5083,7 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
         if (one_chance_in(2))
         {
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, 
+            mprf(MSGCH_DIAGNOSTICS,
                  "Alerting monster %s at (%d,%d)",
                  m2->name(DESC_PLAIN).c_str(), m2->x, m2->y);
 #endif
@@ -5568,7 +5569,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
         {
             if (targ_x == monster->x && targ_y == monster->y)
                 return true;
-                
+
             return false; // blocks square
         }
 
