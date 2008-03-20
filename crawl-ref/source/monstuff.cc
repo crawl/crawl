@@ -538,7 +538,7 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
     {
         if (YOU_KILL(killer))
             convert = true;
-        else if (MON_KILL(killer))
+        else if (MON_KILL(killer) && i != -1)
         {
             monsters *mon = &menv[i];
             if (is_orcish_follower(mon) && !one_chance_in(3))
