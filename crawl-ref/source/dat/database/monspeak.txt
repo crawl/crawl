@@ -2254,9 +2254,9 @@ beogh_converted_orc_reaction_sight
 
 @The_monster@ stares at you in amazement and kneels.
 
-@The_monster@ relaxes @pronoun@ fighting stance and smiles at you.
+@The_monster@ relaxes @possessive@ fighting stance and smiles at you.
 
-@The_monster@ falls on @pronoun@ knees before you.
+@The_monster@ falls on @possessive@ knees before you.
 
 %%%%
 beogh_converted_orc_speech_sight
@@ -2275,9 +2275,9 @@ beogh_converted_orc_reaction_battle
 
 @The_monster@ surrenders.
 
-@The_monster@ falls to @pronoun@ knees.
+@The_monster@ falls to @possessive@ knees.
 
-@The_monster@ raises @pronoun@ hands in surrender.
+@The_monster@ raises @possessive@ hands in surrender.
 
 %%%%
 beogh_converted_orc_speech_battle
