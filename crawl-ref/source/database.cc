@@ -65,30 +65,30 @@ static TextDB AllDBs[] =
             "descript/spells.txt",
             "descript/gods.txt",
             "descript/branches.txt",
-            0),
+            NULL),
             
     TextDB( "db/randart",
             "database/randname.txt",
             "database/rand_wpn.txt", // mostly weapons
             "database/rand_arm.txt", // mostly armour
             "database/rand_all.txt", // jewellery and general
-            0),
+            NULL),
             
     TextDB( "db/speak",
             "database/monspeak.txt", // monster speech
             "database/wpnnoise.txt", // noisy weapon speech
             "database/insult.txt",   // imp/demon taunts
             "database/godspeak.txt", // god speech
-            0),
+            NULL),
             
     TextDB( "db/shout",
             "database/shout.txt",
             "database/insult.txt",   // imp/demon taunts, again
-            0),
+            NULL),
             
     TextDB( "db/help",
             "database/help.txt",
-            0),
+            NULL),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
