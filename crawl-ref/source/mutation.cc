@@ -273,10 +273,8 @@ const char *mutation_descrip[][3] = {
      "You have razor-sharp teeth."},
 
     // 60 - leave some space for more demonic powers...
-
     {"You have hooves in place of feet.", "", ""},
     {"You have talons in place of feet.", "", ""},
-    {"You have soft paws in place of feet.", "", ""},
 
     {"You can exhale a cloud of poison.", "", ""},
 
@@ -284,12 +282,12 @@ const char *mutation_descrip[][3] = {
      "Your tail ends in a sharp poisonous barb.",
      "Your tail ends in a wicked poisonous barb."}, //jmf: nagas & dracos
 
-    // 65
     {"Your wings are large and strong.", "", ""},       //jmf: dracos only
 
     //jmf: these next two are for evil gods to mark their followers; good gods
     //     will never accept a 'marked' worshipper
 
+    // 65
     {"There is a blue sigil on each of your hands.",
      "There are several blue sigils on your hands and arms.",
      "Your hands, arms and shoulders are covered in intricate, arcane blue writing."},
@@ -305,19 +303,17 @@ const char *mutation_descrip[][3] = {
      "You are covered in thick fur.",
      "Your thick and shaggy fur keeps you warm."},
      
-    // 70
     {"You have an increased reservoir of magic (+10 percent mp).",
      "You have a strongly increased reservoir of magic (+20 percent mp).",
      "You have an extremely increased reservoir of magic (+30 percent mp)."},
 
+    // 70
     {"Your magical capacity is low (-10 percent mp).",
      "Your magical capacity is very low (-20 percent mp).",
      "Your magical capacity is extremely low (-30 percent mp)."},
 
-    {"You occasionally fall asleep.",
-     "You sometimes fall asleep.",
-     "You frequently fall asleep."},
-    
+    {"", "", ""},
+    {"", "", ""},
     {"", "", ""},
     {"", "", ""},
 
@@ -547,7 +543,6 @@ const char *gain_mutation[][3] = {
     // 60
     {"Your feet shrivel into cloven hooves.", "", ""},
     {"Your feet stretch and sharpen into talons.", "", ""},
-    {"Your feet sprout fur and twist into soft paws.", "", ""},
 
     {"You taste something nasty.", "You taste something very nasty.",
      "You taste something extremely nasty."},
@@ -556,9 +551,9 @@ const char *gain_mutation[][3] = {
      "The barb on your tail looks sharper.",
      "The barb on your tail looks very sharp."},
 
-    // 65
     {"Your wings grow larger and stronger.", "", ""},
 
+    // 65
     {"Your hands itch.", "Your hands and forearms itch.",
      "Your arms, hands and shoulders itch."},
 
@@ -572,15 +567,15 @@ const char *gain_mutation[][3] = {
      "Your fur grows into a thick mane.",
      "Your thick fur grows shaggy and warm."},
 
-    // 70
     {"You feel more energetic.", "You feel more energetic.",
      "You feel more energetic."},
      
+    // 70
     {"You feel less energetic.", "You feel less energetic.",
      "You feel less energetic."},
 
-    {"You feel a bit tired.", "You feel drowsy.", "You feel really drowsy."},
-    
+    {"", "", ""},
+    {"", "", ""},
     {"", "", ""},
     {"", "", ""},
 
@@ -788,13 +783,12 @@ const char *lose_mutation[][3] = {
     // 60
     {"Your hooves expand and flesh out into feet!", "", ""},
     {"Your talons dull and shrink into feet.", "", ""},
-    {"Your paws shed and extend into feet.", "", ""},
 
     {"", "", ""},
     {"", "", ""},
-    
-    // 65
     {"", "", ""},
+
+    // 65
     {"", "", ""},
     {"", "", ""},
     
@@ -805,18 +799,18 @@ const char *lose_mutation[][3] = {
      "Your thick fur recedes somewhat.",
      "Your shaggy fur recedes somewhat."},
 
-    // 70
     {"You feel less energetic.", "You feel less energetic.",
      "You feel less energetic."},
 
+    // 70
     {"You feel more energetic.", "You feel more energetic.",
      "You feel more energetic."},
 
-    {"You feel wide awake.", "You feel more awake.", "You feel more awake."},
-    
     {"", "", ""},
     {"", "", ""},
-    
+    {"", "", ""},
+    {"", "", ""},
+
     // 75
     {"Your red scales disappear.", "Your red scales recede somewhat.",
      "Your red scales recede somewhat."},
@@ -951,23 +945,24 @@ static mutation_def mutation_defs[] = {
 // 60
     { MUT_HOOVES, 1, 1, false },
     { MUT_TALONS, 1, 1, false },
-    { MUT_PAWS, 1, 1, false },
 
     { MUT_BREATHE_POISON, 0, 1, false }, // Naga only
     { MUT_STINGER, 0, 3, false },        // Naga and Draconian only
-// 65
     { MUT_BIG_WINGS, 0, 1, false },      // Draconian only
+// 65
     { MUT_BLUE_MARKS, 0, 3, false },     // used by evil gods to mark followers
     { MUT_GREEN_MARKS, 0, 3, false },
 
     { MUT_SAPROVOROUS, 0, 3, false },    // species-dependent innate mutation
 
     { MUT_SHAGGY_FUR, 2, 3, false },
-// 70
+    
     { MUT_HIGH_MAGIC, 1, 3, false },
+// 70
     { MUT_LOW_MAGIC, 9, 3, true },
-    { MUT_SLEEPINESS, 3, 3, true },
     { RANDOM_MUTATION, 0, 3, false },    
+    { RANDOM_MUTATION, 0, 3, false },
+    { RANDOM_MUTATION, 0, 3, false },
     { RANDOM_MUTATION, 0, 3, false },
 
 // 75 -- scales of various colours and effects
@@ -1368,7 +1363,6 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_FANGS:
     case MUT_HOOVES:
     case MUT_TALONS:
-    case MUT_PAWS:
     case MUT_BREATHE_POISON:
     case MUT_STINGER:
     case MUT_BIG_WINGS:
@@ -1634,7 +1628,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     }
 
     // putting boots on after they are forced off. -- bwr
-    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS || mutat == MUT_PAWS)
+    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS)
          && !player_has_feet())
     {
         return false;
@@ -1786,7 +1780,6 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     //jmf: like horns
     case MUT_HOOVES:
     case MUT_TALONS:
-    case MUT_PAWS:
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         remove_one_equip(EQ_BOOTS);
         break;

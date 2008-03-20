@@ -1144,14 +1144,6 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 return (false);
             }
 
-            if (you.mutation[MUT_PAWS])
-            {
-                if (!quiet)
-                    mpr("Boots don't fit your paws!");
-
-                return (false);
-            }
-
             switch (you.species)
             {
             case SP_NAGA:

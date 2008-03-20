@@ -2172,13 +2172,6 @@ std::string status_mut_abilities()
                 text += info;
                 have_any = true;
                 break;
-            case MUT_SLEEPINESS:
-                if (have_any)
-                    text += ", ";
-                snprintf(info, INFO_SIZE, "sleepiness %d", level);
-                text += info;
-                have_any = true;
-                break;
 
             /* demonspawn mutations */
             case MUT_TORMENT_RESISTANCE:
@@ -2297,12 +2290,6 @@ std::string status_mut_abilities()
                 if (have_any)
                     text += ", ";
                 text += "talons";
-                have_any = true;
-                break;
-            case MUT_PAWS:
-                if (have_any)
-                    text += ", ";
-                text += "soft paws";
                 have_any = true;
                 break;
             case MUT_BREATHE_POISON:

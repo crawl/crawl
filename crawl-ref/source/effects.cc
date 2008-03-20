@@ -2596,11 +2596,6 @@ void handle_time( long time_delta )
     {
         yell(true);
     }
-    else if (you.mutation[MUT_SLEEPINESS]
-             && random2(100) < you.mutation[MUT_SLEEPINESS] * 5)
-    {
-        you.put_to_sleep();
-    }
 
     // Update all of the corpses, food chunks and potions of blood on the floor.
     update_corpses(time_delta);
