@@ -313,7 +313,7 @@ You hear Xom's avuncular chuckle.
 # weakens friendlies, strengthens hostiles
 Xom bad monster polymorph
 
-@Xom better monster polymorph@
+@Xom good monster polymorph@
 %%%%
 Xom good mutations
 
