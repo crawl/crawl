@@ -1,9 +1,3 @@
-From ploog@mi.fu-berlin.de Wed Mar 19 23:59:13 2008
-Date: Thu, 20 Mar 2008 00:59:07 +0100 (CET)
-From: David Ploog <ploog@mi.fu-berlin.de>
-To: David Ploog <ploog@mi.fu-berlin.de>
-Subject: readme_for_players_of_DCSS_034
-
 Information for players of versions 0.3.4 or earlier
 ----------------------------------------------------
 

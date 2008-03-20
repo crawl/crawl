@@ -1,6 +1,8 @@
 # NOTE FOR PLAYERS OF OLD VERSIONS (DCSS 0.3.4 or before):
 #
-# Uncomment these options if you want to disable some recent changes: 
+# DCSS 0.4 introduces several rather drastic changes to the interface; 
+# read 034_changes.txt for details. Uncomment these options if you want 
+# to disable them and go back to the old state: 
 # monster colours, command keys, order on the character selection screen,
 # item colours, butchering interface, targeting interface. 
 # (New players should just ignore these lines.)
@@ -87,7 +89,7 @@ lua_file = lua/pickup.lua
 # autopickup_exceptions = <deck of cards
 #
 # default_autopickup = false
-# autopickup_no_burden = true
+autopickup_no_burden = true
 # pickup_thrown = false
 # pickup_dropped = true
 # assign_item_slot = (forward | backward)
@@ -114,12 +116,12 @@ lua_file = lua/pickup.lua
 
 ##### 4-d	Branding ##############################
 #
-friend_brand     = hi:green
-stab_brand       = hi:blue
-# may_stab_brand   = hi:yellow
-# heap_brand       = reverse
-# feature_item_brand = reverse
-# trap_item_brand  = none
+friend_brand       = hi:green
+stab_brand         = hi:blue
+# may_stab_brand     = hi:yellow
+heap_brand         = reverse
+feature_item_brand = reverse
+trap_item_brand    = reverse
 
 ##### 4-e	Level Map Functions ###################
 #
@@ -155,16 +157,23 @@ stab_brand       = hi:blue
 # tc_excluded       = lightmagenta
 # tc_exclude_circle = red
 
-# The following options are not default. Uncommenting activates them.
-#
-# travel_stop_message = Something appears
-# travel_stop_message = god:wrath finds you
-# runrest_ignore_message = prayer ends
-# runrest_ignore_message = You feel.*sick
-# runrest_ignore_poison = 4:100
-# runrest_ignore_monster = fish:3
-# trapwalk_safe_hp = dart:15, needle:25, spear:50
 # trap_prompt = false
+
+# The following options are not default. 
+#
+travel_stop_message = Something appears
+travel_stop_message = god:wrath finds you
+runrest_ignore_message = prayer ends
+runrest_ignore_message = You feel.*sick
+runrest_ignore_message = disappears in a puff of smoke
+runrest_ignore_message = engulfed in a cloud of smoke
+runrest_ignore_message = safely over a trap
+runrest_ignore_message = You feel.*sick
+runrest_ignore_poison = 2:30
+runrest_ignore_monster = fish:2
+runrest_ignore_monster = butterfly:1
+# runrest_ignore_monster = swamp worm:3
+trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
 ##### 4-h	Stashes ###############################
 #
@@ -209,13 +218,11 @@ menu_colour = inventory:red: rotting
 # Identified artefacts
 menu_colour = inventory:white:( [-+] the)
 
-# These lines will colour ego items; they require 
+# This block colours ego items; it requires annotate_item_class = true
 # menu_colour_prefix_id = true
 # menu_colour_prefix_class = true
-
 # menu_colour_prefix_id    = true
 # menu_colour_prefix_class = true
-
 # menu_colour = inventory:green:(^identified armour .* pair of .* of )
 # menu_colour = inventory:lightgrey:(^identified armour .* pair of )
 # menu_colour = inventory:green:(^identified (weapon|armour) .* of )
@@ -250,7 +257,8 @@ message_colour = yellow:fails to return
 ##### 4-m	Inscriptions ##########################
 #
 # autoinscribe = royal jell:=g
-autoinscribe = distortion:=!w
+# autoinscribe = distortion:!w
+# autoinscribe = potion.*mutation:!q
 
 ##### 4-n	Macro related Options #################
 #
