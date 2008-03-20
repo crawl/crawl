@@ -482,7 +482,7 @@ void inc_penance(god_type god, int val)
     else
         you.penance[god] += val;
 
-    if ( god == GOD_BEOGH && need_water_walking() && !beogh_water_walk())
+    if (god == GOD_BEOGH && need_water_walking() && !beogh_water_walk())
     {
          fall_into_a_pool( you.x_pos, you.y_pos, true,
                            grd[you.x_pos][you.y_pos] );
@@ -2571,7 +2571,7 @@ static bool trog_retribution()
         //    fire magic. -- bwr
         dec_penance(god, 2);
         mpr( "You feel Trog's fiery rage upon you!", MSGCH_WARN );
-        miscast_effect( SPTYP_FIRE, 8 + you.experience_level, 
+        miscast_effect( SPTYP_FIRE, 8 + you.experience_level,
                         random2avg(98, 3), 100, "the fiery rage of Trog" );
     }
 
@@ -3392,7 +3392,7 @@ static void _print_converted_orc_speech(const std::string key,
                                         msg_channel_type channel)
 {
     std::string msg = getSpeakString("beogh_converted_orc_" + key);
-    
+
     if (!msg.empty())
     {
         msg = do_mon_str_replacements(msg, mon);
