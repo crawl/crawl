@@ -3450,7 +3450,8 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
-        && mon->attitude == ATT_FRIENDLY);
+        && mon->attitude == ATT_FRIENDLY
+        && (monster->flags & MF_GOD_GIFT));
 }
 
 void excommunication(god_type new_god)
