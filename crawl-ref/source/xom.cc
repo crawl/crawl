@@ -601,11 +601,12 @@ static bool xom_is_good(int sever)
 
         int monster = choose_random_nearby_monster(0,
                           choose_mutatable_monster);
-        monsters* mon = (monster != NON_MONSTER) ? &menv[monster] : NULL;
 
-        if (mon)
+        if (monster != NON_MONSTER)
         {
             god_speaks(GOD_XOM, _get_xom_speech("good monster polymorph"));
+
+            monsters* mon = &menv[monster];
 
             if (mons_friendly(mon))
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
@@ -777,11 +778,12 @@ static bool xom_is_bad(int sever)
 
             int monster = choose_random_nearby_monster(0,
                               choose_mutatable_monster);
-            monsters* mon = (monster != NON_MONSTER) ? &menv[monster] : NULL;
 
-            if (mon)
+            if (monster != NON_MONSTER)
             {
                 god_speaks(GOD_XOM, _get_xom_speech("bad monster polymorph"));
+
+                monsters* mon = &menv[monster];
 
                 if (mons_friendly(mon))
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
