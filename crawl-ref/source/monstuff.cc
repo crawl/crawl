@@ -940,7 +940,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     monsters *mon = &menv[i];
                     if (mon->alive() && mon->hit_points < mon->max_hit_points)
                     {
-                        simple_monster_message(mon, " looks invigourated.");
+                        simple_monster_message(mon, " looks invigorated.");
                         heal_monster( mon, 1 + random2(monster->hit_dice / 4),
                                       false );
                     }
