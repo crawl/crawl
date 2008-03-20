@@ -500,7 +500,7 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
              monster->hit_dice,
              you.experience_level);
 #endif
-        if (random2(you.piety) > piety_breakpoint(0)
+        if (random2(you.piety) >= piety_breakpoint(0)
             && random2(you.experience_level) >= random2(monster->hit_dice)
             // Bias beaten-up-conversion towards the stronger orcs.
             && random2(monster->hit_dice) > 2)
