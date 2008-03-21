@@ -3484,7 +3484,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
     orc->flags |= MF_GOD_GIFT;
 
-    if (orc->hit_points <= 0)
+    if (!orc->alive())
         orc->hit_points = std::min(random_range(1, 4), orc->max_hit_points);
 
     // to avoid immobile "followers"
