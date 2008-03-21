@@ -741,7 +741,7 @@ bool entomb(int powc)
 
             while (objl != NON_ITEM)
             {
-                // hate to see the orb get  detroyed by accident {dlb}:
+                // hate to see the orb get destroyed by accident {dlb}:
                 if (mitm[objl].base_type == OBJ_ORBS)
                 {
                     proceed = false;
@@ -818,6 +818,25 @@ bool entomb(int powc)
 
     return (number_built > 0);
 }                               // end entomb()
+
+// Is there a monster in a circle with the given radius, centered on the
+// player's position?  If so, return the distance to it.  Otherwise,
+// return -1.
+static int mons_inside_circle(int posx, int posy, int radius)
+{
+    if (!inside_level_bounds(posx, posy))
+        return -1;
+
+    int dist = distance(posx, posy, you.x_pos, you.y_pos);
+    if (dist > radius*radius)
+        return -1;
+
+    if (mgrd[posx][posy] != NON_MONSTER)
+        return dist;
+
+    return -1;
+}
+
 
 bool remove_sanctuary(bool did_attack)
 {

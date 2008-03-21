@@ -85,7 +85,7 @@ void mons_trap(monsters *monster);
 /* ***********************************************************************
  * called from: beam - fight - files - monstuff - mstuff2 - spells4
  * *********************************************************************** */
-void monster_teleport(monsters *monster, bool instan, 
+void monster_teleport(monsters *monster, bool instan,
                       bool silent = false);
 
 

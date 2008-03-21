@@ -130,6 +130,4 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 
 void reveal_secret_door(int x, int y);
 
-int mons_inside_circle(int posx, int posy, int radius);
-
 #endif
