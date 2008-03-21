@@ -75,7 +75,6 @@ enum ability_type
 
     // Divine abilities
     ABIL_ZIN_RECITE = 110,             //  110
-    ABIL_ZIN_SMITING,
     ABIL_ZIN_REVITALISATION,
     ABIL_ZIN_SANCTUARY,
     ABIL_TSO_DIVINE_SHIELD = 120,      //  120

@@ -111,7 +111,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Zin
-    { ABIL_ZIN_RECITE, ABIL_ZIN_SMITING, ABIL_ZIN_REVITALISATION,
+    { ABIL_ZIN_RECITE, ABIL_ZIN_REVITALISATION, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
     // TSO
     { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_NON_ABILITY,
@@ -233,9 +233,7 @@ static const ability_def Ability_List[] =
     // INVOCATIONS:
     // Zin
     { ABIL_ZIN_RECITE, "Recite", 3, 0, 120, 0, ABFLAG_DELAY },
-    { ABIL_ZIN_SMITING, "Smiting",
-      3, 0, 50, generic_cost::fixed(2), ABFLAG_NONE },
-    { ABIL_ZIN_REVITALISATION, "Revitalisation", 0, 0, 100, 3, ABFLAG_NONE },
+    { ABIL_ZIN_REVITALISATION, "Revitalisation", 0, 0, 100, 2, ABFLAG_NONE },
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
 
     // The Shining One
@@ -672,7 +670,7 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
         break;
 
-    case ABIL_ZIN_SMITING:
+    case ABIL_ZIN_REVITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_BEOGH_SMITING:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
@@ -696,7 +694,6 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
-    case ABIL_ZIN_REVITALISATION:
     case ABIL_LUGONU_BANISH:
         invoc = true;
         failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
@@ -1344,13 +1341,6 @@ static bool do_ability(const ability_def& abil)
         exercise( SK_INVOCATIONS, 2 );
         break;
     }
-    case ABIL_ZIN_SMITING:
-        if (your_spells( SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
-                         false ) == SPRET_ABORT)
-            return (false);
-        exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
-        break;
-
     case ABIL_ZIN_REVITALISATION:
         if (cast_revitalisation( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
             exercise(SK_INVOCATIONS, 1 + random2(3));

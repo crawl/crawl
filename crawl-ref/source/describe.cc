@@ -2410,21 +2410,21 @@ void describe_god( god_type which_god, bool give_title )
         if (you.piety > 160)
         {
             cprintf("%s",
-                (which_god == GOD_ZIN) ? "Champion of Law" :
-                (which_god == GOD_SHINING_ONE) ? "Divine Warrior" :
-                (which_god == GOD_ELYVILON) ? "Champion of Light" :
-                (which_god == GOD_OKAWARU) ? "Master of a Thousand Battles" :
-                (which_god == GOD_YREDELEMNUL) ? "Master of Eternal Death" :
+                (which_god == GOD_ZIN)           ? "Champion of Law" :
+                (which_god == GOD_SHINING_ONE)   ? "Divine Warrior" :
+                (which_god == GOD_ELYVILON)      ? "Champion of Light" :
+                (which_god == GOD_OKAWARU)       ? "Master of a Thousand Battles" :
+                (which_god == GOD_YREDELEMNUL)   ? "Master of Eternal Death" :
                 (which_god == GOD_KIKUBAAQUDGHA) ? "Lord of Darkness" :
-                (which_god == GOD_MAKHLEB) ? "Champion of Chaos" :
-                (which_god == GOD_VEHUMET) ? "Lord of Destruction" :
-                (which_god == GOD_TROG) ? "Great Slayer" :
+                (which_god == GOD_MAKHLEB)       ? "Champion of Chaos" :
+                (which_god == GOD_VEHUMET)       ? "Lord of Destruction" :
+                (which_god == GOD_TROG)          ? "Great Slayer" :
                 (which_god == GOD_NEMELEX_XOBEH) ? "Great Trickster" :
-                (which_god == GOD_SIF_MUNA) ? "Master of the Arcane" :
-                (which_god == GOD_LUGONU) ? "Agent of Entropy" :
-                (which_god == GOD_BEOGH) ? "Messiah" :
-                (which_god == GOD_XOM) ? "Teddy Bear" :
-                "Bogy the Lord of the Bugs");
+                (which_god == GOD_SIF_MUNA)      ? "Master of the Arcane" :
+                (which_god == GOD_LUGONU)        ? "Agent of Entropy" :
+                (which_god == GOD_BEOGH)         ? "Messiah" :
+                (which_god == GOD_XOM)           ? "Teddy Bear"
+                                                 : "Bogy the Lord of the Bugs");
         }
         else
         {

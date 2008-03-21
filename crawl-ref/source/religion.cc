@@ -194,8 +194,8 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "", "", "", "", "" },
     // Zin
     { "recite Zin's Axioms of Law",
-      "smite your foes",
       "call upon Zin for revitalisation",
+      "",
       "",
       "call upon Zin to create a Sanctuary" },
     // TSO
@@ -280,8 +280,8 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "", "", "", "", "" },
     // Zin
     { "recite Zin's Axioms of Law",
-      "smite your foes",
       "call upon Zin for revitalisation",
+      "",
       "",
       "call upon Zin to create a Sanctuary" },
     // TSO
@@ -2410,8 +2410,105 @@ static bool zin_retribution()
        simple_god_message(" booms out: \"Return to the light! REPENT!\"", god);
        noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
        break;
-    } // plus Smiting?
+    }
     return false;
+}
+
+static void ely_destroy_inventory_weapon()
+{
+    int count = 0;
+    int item  = ENDOFPACK;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+         if (!is_valid_item( you.inv[i] ))
+             continue;
+
+         if (you.inv[i].base_type == OBJ_WEAPONS
+             || you.inv[i].base_type == OBJ_MISSILES)
+         {
+             if (is_artefact(you.inv[i]))
+                 continue;
+
+             // item is valid for destroying, so give it a chance
+             count++;
+             if (one_chance_in( count ))
+                 item = i;
+         }
+    }
+
+    // any item to destroy?
+    if (item == ENDOFPACK)
+        return;
+
+    int value = 1;
+    bool wielded = false;
+
+    // increase value wielded weapons or large stacks of ammo
+    if (you.inv[item].base_type == OBJ_WEAPONS
+        && you.inv[item].link == you.equip[EQ_WEAPON])
+    {
+        wielded = true;
+        value += 2;
+    }
+    else if (you.inv[item].quantity > random2(you.penance[GOD_ELYVILON]))
+        value += 1 + random2(2);
+
+    std::ostream& strm = msg::streams(MSGCH_GOD);
+    strm << you.inv[item].name(DESC_CAP_YOUR);
+
+    if (value == 1)
+        strm << " barely";
+
+    if ( you.inv[item].quantity == 1 )
+         strm << " shimmers and breaks into pieces." << std::endl;
+    else
+         strm << " shimmer and break into pieces." << std::endl;
+
+    if (wielded)
+    {
+        unwield_item(true);
+        you.wield_change = true;
+    }
+    // just in case
+    you.quiver_change = true;
+
+    destroy_item(you.inv[item]);
+    burden_change();
+
+    dec_penance(GOD_ELYVILON, value);
+}
+
+static bool elyvilon_retribution()
+{
+    // healing theme and interfering with fighting
+    // doesn't care unless you've gone over to evil
+    if ( !is_evil_god(you.religion) )
+        return false;
+
+    const god_type god = GOD_ELYVILON;
+
+    simple_god_message("'s displeasure finds you.", god);
+
+    switch (random2(5))
+    {
+    case 0:
+    case 1:
+        confuse_player( 3 + random2(10), false );
+        break;
+
+    case 2: // mostly flavour messages
+        miscast_effect(SPTYP_POISON, 0, 0, one_chance_in(3),
+                       "the will of Elyvilon");
+        break;
+
+    case 3:
+    case 4: // destroy weapons in your inventory
+        ely_destroy_inventory_weapon();
+        break;
+    }
+
+    return true;
 }
 
 static bool makhleb_retribution()
@@ -2872,100 +2969,6 @@ static bool nemelex_retribution()
     // like Xom, this might actually help the player -- bwr
     simple_god_message(" makes you draw from the Deck of Punishment.", god);
     draw_from_deck_of_punishment();
-    return true;
-}
-
-static void ely_destroy_inventory_weapon()
-{
-    int count = 0;
-    int item  = ENDOFPACK;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-         if (!is_valid_item( you.inv[i] ))
-             continue;
-
-         if (you.inv[i].base_type == OBJ_WEAPONS
-             || you.inv[i].base_type == OBJ_MISSILES)
-         {
-             if (is_artefact(you.inv[i]))
-                 continue;
-
-             // item is valid for destroying, so give it a chance
-             count++;
-             if (one_chance_in( count ))
-                 item = i;
-         }
-    }
-
-    // any item to destroy?
-    if (item == ENDOFPACK)
-        return;
-
-    int value = 1;
-    bool wielded = false;
-    
-    // increase value wielded weapons or large stacks of ammo
-    if (you.inv[item].base_type == OBJ_WEAPONS
-        && you.inv[item].link == you.equip[EQ_WEAPON])
-    {
-        wielded = true;
-        value += 2;
-    }
-    else if (you.inv[item].quantity > random2(you.penance[GOD_ELYVILON]))
-        value += 1 + random2(2);
-
-    std::ostream& strm = msg::streams(MSGCH_GOD);
-    strm << you.inv[item].name(DESC_CAP_YOUR);
-
-    if (value == 1)
-        strm << " barely";
-
-    if ( you.inv[item].quantity == 1 )
-         strm << " shimmers and breaks into pieces." << std::endl;
-    else
-         strm << " shimmer and break into pieces." << std::endl;
-
-    if (wielded)
-    {
-        unwield_item(true);
-        you.wield_change = true;
-    }
-    // just in case
-    you.quiver_change = true;
-    
-    destroy_item(you.inv[item]);
-    burden_change();
-
-    dec_penance(GOD_ELYVILON, value);
-}
-
-// comparatively lenient
-static bool elyvilon_retribution()
-{
-    const god_type god = GOD_ELYVILON;
-
-    simple_god_message("'s displeasure finds you.", god);
-
-    // healing theme and interfering with fighting
-    switch (random2(5))
-    {
-    case 0:
-    case 1:
-        confuse_player( 3 + random2(10), false );
-        break;
-
-    case 2: // mostly flavour messages
-        miscast_effect(SPTYP_POISON, 0, 0, one_chance_in(3),
-                       "the will of Elyvilon");
-        break;
-        
-    case 3:
-    case 4: // destroy weapons in your inventory
-        ely_destroy_inventory_weapon();
-        break;
-    }
-    
     return true;
 }
 
@@ -3489,6 +3492,8 @@ bool is_orcish_follower(const monsters* mon)
 void excommunication(god_type new_god)
 {
     const god_type old_god = you.religion;
+    ASSERT(old_god != new_god);
+    
     god_acting gdact(old_god, true);
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
@@ -3581,13 +3586,7 @@ void excommunication(god_type new_god)
         inc_penance(old_god, 50);
         break;
 
-    case GOD_ELYVILON:
-        inc_penance( old_god, 50 );
-        break;
-
     case GOD_SHINING_ONE:
-        mpr("Your divine halo starts to fade.");
-
         if (you.duration[DUR_DIVINE_SHIELD])
         {
             mpr("Your divine shield disappears!");
@@ -3607,7 +3606,13 @@ void excommunication(god_type new_god)
     case GOD_ZIN:
         if (env.sanctuary_time)
             remove_sanctuary();
-        // deliberate fall-through
+        inc_penance( old_god, 25 );
+        break;
+        
+    case GOD_ELYVILON:
+        inc_penance( old_god, 30 );
+        break;
+
     default:
         inc_penance( old_god, 25 );
         break;
@@ -4080,6 +4085,11 @@ void god_pitch(god_type which_god)
 
     redraw_screen();
 
+    const int old_piety = you.piety;
+    // Are you switching between good gods?
+    const bool good_god_switch = is_good_god(you.religion)
+                                 && is_good_god(which_god);
+    
     // Leave your prior religion first.
     if (you.religion != GOD_NO_GOD)
         excommunication(which_god);
@@ -4095,7 +4105,7 @@ void god_pitch(god_type which_god)
     }
     else
     {
-        you.piety = 15;             // to prevent near instant excommunication
+        you.piety = 15; // to prevent near instant excommunication
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
     }
@@ -4133,11 +4143,14 @@ void god_pitch(god_type which_god)
     // evil and unholy beings hostile.
     if (is_good_god(you.religion))
     {
+        // piety bonus when switching between good gods
+        if (good_god_switch && old_piety > 15)
+            gain_piety(std::min(30, old_piety - 15));
+
         if (moral_beings_attitude_change())
             mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
     }
-
-    if (is_evil_god(you.religion))
+    else if (is_evil_god(you.religion))
     {
         // Note: Using worshipped[] we could make this sort of grudge
         // permanent instead of based off of penance. -- bwr
