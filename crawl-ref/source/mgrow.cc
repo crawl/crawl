@@ -95,39 +95,44 @@ static const monster_level_up *monster_level_up_target(
     return (NULL);
 }
 
+void monsters::change_type(monster_type after, bool adjust_hp)
+{
+    const monsterentry *orig = get_monster_data(type);
+    // Ta-da!
+    type   = after;
+
+    // Initialise a dummy monster to save work.
+    monsters dummy;
+    dummy.type = after;
+    define_monster(dummy);
+
+    colour = dummy.colour;
+    speed  = dummy.speed;
+    spells = dummy.spells;
+    fix_speed();
+
+    const monsterentry *m = get_monster_data(after);
+    ac += m->AC - orig->AC;
+    ev += m->ev - orig->ev;
+
+    if (adjust_hp)
+    {
+        const int minhp = dummy.max_hit_points;
+        if (max_hit_points < minhp)
+        {
+            hit_points    += minhp - max_hit_points;
+            max_hit_points = minhp;
+            hit_points     = std::min(hit_points, max_hit_points);
+        }
+    }
+}
+
 bool monsters::level_up_change()
 {
     if (const monster_level_up *lup =
         monster_level_up_target(static_cast<monster_type>(type), hit_dice))
     {
-        const monsterentry *orig = get_monster_data(type);
-        // Ta-da!
-        type   = lup->after;
-
-        // Initialise a dummy monster to save work.
-        monsters dummy;
-        dummy.type = type;
-        define_monster(dummy);
-
-        colour = dummy.colour;
-        speed  = dummy.speed;
-        spells = dummy.spells;
-        fix_speed();
-
-        const monsterentry *m = get_monster_data(type);
-        ac += m->AC - orig->AC;
-        ev += m->ev - orig->ev;
-
-        if (lup->adjust_hp)
-        {
-            const int minhp = dummy.max_hit_points;
-            if (max_hit_points < minhp)
-            {
-                hit_points    += minhp - max_hit_points;
-                max_hit_points = minhp;
-                hit_points     = std::min(hit_points, max_hit_points);
-            }
-        }
+        change_type(lup->after, lup->adjust_hp);
         return (true);
     }
     return (false);

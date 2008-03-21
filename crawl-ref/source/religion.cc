@@ -764,8 +764,10 @@ static bool promote_to_priest(monsters* mon)
 
     if (priest_type != MONS_PROGRAM_BUG)
     {
-        // Turn an ordinary monster into a priestly monster.
-        monster_change_type(mon, priest_type);
+        // Turn an ordinary monster into a priestly monster, using a
+        // function normally used when going up an experience level.
+        // This is a hack, but there seems to be no better way for now.
+        mon->change_type(priest_type, true);
 
         return true;
     }

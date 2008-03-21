@@ -1305,49 +1305,6 @@ static bool is_poly_power_unsuitable(
     }
 }
 
-// Change one monster type into another.  This preserves as much as
-// possible between types, so, if the two types are radically different,
-// some special handling may be needed after calling this.
-void monster_change_type(monsters *monster, monster_type targetc)
-{
-    const unsigned long old_flags = monster->flags;
-    const unsigned long old_exp = monster->experience;
-    const int old_hp = monster->hit_points;
-    const int old_hp_max = monster->max_hit_points;
-    const char old_ench_countdown = monster->ench_countdown;
-    const bool old_mon_caught = mons_is_caught(monster);
-
-    /* deal with mons_sec */
-    monster->type = targetc;
-    monster->number = MONS_PROGRAM_BUG;
-
-    mon_enchant abj = monster->get_ench(ENCH_ABJ);
-    mon_enchant shifter = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                            ENCH_SHAPESHIFTER);
-
-    // Note: define_monster() will clear out all enchantments! -- bwr
-    define_monster( monster_index(monster) );
-
-    monster->flags = old_flags;
-    monster->gain_exp(old_exp);
-
-    monster->add_ench(abj);
-    monster->add_ench(shifter);
-
-    monster->ench_countdown = old_ench_countdown;
-
-    if (mons_class_flag( monster->type, M_INVIS ))
-        monster->add_ench(ENCH_INVIS);
-
-    monster->hit_points = monster->max_hit_points
-                                * ((old_hp * 100) / old_hp_max) / 100;
-
-    monster->fix_speed();
-
-    if (old_mon_caught)
-        monster->add_ench(ENCH_HELD);
-}
-
 /*
  * if targetc == RANDOM_MONSTER then relpower indicates the desired
  * power of the new monster relative to the current monster.
@@ -1428,7 +1385,6 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     }
 
     bool player_messaged = simple_monster_message(monster, str_polymon.c_str());
-    const bool old_mon_caught = mons_is_caught(monster);
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
@@ -1438,28 +1394,47 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     update_beholders(monster, true);
 
     // the actual polymorphing:
-    monster_change_type(monster, targetc);
+    const int old_hp = monster->hit_points;
+    const int old_hp_max = monster->max_hit_points;
+    const bool old_mon_caught = mons_is_caught(monster);
+    const char old_ench_countdown = monster->ench_countdown;
 
-    // randomize things:
-    monster->flags = 0L;
-    monster->experience = 0L;
+    /* deal with mons_sec */
+    monster->type = targetc;
+    monster->number = MONS_PROGRAM_BUG;
 
-    monster->hit_points += random2(monster->max_hit_points);
+    mon_enchant abj = monster->get_ench(ENCH_ABJ);
+    mon_enchant shifter = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
+                                            ENCH_SHAPESHIFTER);
+
+    // Note: define_monster() will clear out all enchantments! -- bwr
+    define_monster( monster_index(monster) );
+
+    monster->add_ench(abj);
+    monster->add_ench(shifter);
+
+    monster->ench_countdown = old_ench_countdown;
+
+    if (mons_class_flag( monster->type, M_INVIS ))
+        monster->add_ench(ENCH_INVIS);
+
+    if (!player_messaged && mons_near(monster)
+        && player_monster_visible(monster))
+    {
+        mprf("%s appears out of thin air!", monster->name(DESC_CAP_A).c_str());
+        player_messaged = true;
+    }
+
+    monster->hit_points = monster->max_hit_points
+                                * ((old_hp * 100) / old_hp_max) / 100
+                                + random2(monster->max_hit_points);
 
     if (monster->hit_points > monster->max_hit_points)
         monster->hit_points = monster->max_hit_points;
 
     monster->speed_increment = 67 + random2(6);
 
-    // drop entire inventory:
     monster_drop_ething(monster);
-
-    if (!player_messaged && player_monster_visible(monster)
-        && mons_near(monster))
-    {
-        player_messaged = true;
-        mprf("%s appears out of thin air!", monster->name(DESC_CAP_A).c_str());
-    }
 
     // New monster type might be interesting
     mark_interesting_monst(monster);
@@ -1474,10 +1449,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
         {
             int net = get_trapping_net(monster->x, monster->y);
             if (net != NON_ITEM)
-            {
                 destroy_item(net);
-                monster->del_ench(ENCH_HELD, true);
-            }
 
             if (see_grid(monster->x, monster->y))
             {
@@ -1496,8 +1468,10 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
                  || monster->type == MONS_OOZE
                  || monster->type == MONS_PULSATING_LUMP)
         {
-            mons_clear_trapping_net(monster);
-
+            const int net = get_trapping_net(monster->x, monster->y);
+            if (net != NON_ITEM)
+                remove_item_stationary(mitm[net]);
+                
             if (mons_is_insubstantial(monster->type))
             {
                 simple_monster_message(monster,
@@ -1509,6 +1483,8 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
                                        " oozes right through the net!");
             }
         }
+        else
+            monster->add_ench(ENCH_HELD);
     }
 
     return (player_messaged);

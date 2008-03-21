@@ -1210,13 +1210,14 @@ public:
 
     actor_type atype() const { return ACT_MONSTER; }
 
-    // Hack, with a capital H.
+    // Hacks, with a capital H.
     void fix_speed();
     void check_speed();
+    void change_type(monster_type after, bool adjust_hp);
 
     std::string describe_enchantments() const;
 
-    int action_energy(energy_use_type et) const;    
+    int action_energy(energy_use_type et) const;
     static int base_speed(int mcls);
 
     bool do_shaft();
