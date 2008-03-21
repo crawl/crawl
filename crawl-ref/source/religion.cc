@@ -789,9 +789,12 @@ void bless_follower(god_type god,
     const char *result;
 
     // 5% chance: Turn a monster into a priestly monster, if possible.
-    // This is currently only used for Beogh.
-    if (god == GOD_BEOGH && one_chance_in(20) && promote_to_priest(mon))
+    // This is currently only used for Beogh and ordinary orcs.
+    if (god == GOD_BEOGH && one_chance_in(20) && mon->type == MONS_ORC)
+    {
+        promote_to_priest(mon);
         result = "priesthood";
+    }
     // 95% chance: full healing.
     else
     {
