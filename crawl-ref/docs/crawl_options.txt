@@ -514,11 +514,11 @@ friend_brand = none
 
 neutral_brand = none
         Brand neutral monsters in some way. Useful both to get out of
-	a neutral monster's path, and to avoid accidentally killing it.
-	E.g.
-	     neutral_brand = hi:darkgrey
-	shows neutrals with a dark grey background. Since there are
-	no darkgrey monster glyphs anymore, this works fine.	
+        a neutral monster's path, and to avoid accidentally killing it.
+        E.g.
+             neutral_brand = hi:darkgrey
+        shows neutrals with a dark grey background. Since there are
+        no darkgrey monster glyphs anymore, this works fine.	
 
 stab_brand = none
         Some deities object to you stabbing monsters. Certain classes 

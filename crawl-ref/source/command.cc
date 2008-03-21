@@ -1493,8 +1493,8 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>Ctrl-F</w> : Find items\n"
             "<w>Ctrl-W</w> : set Waypoint\n"
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
-            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : untrap, or else\n"
-            "         attack without move\n",
+            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : open/close door, \n"
+            "         untrap, attack without move\n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(

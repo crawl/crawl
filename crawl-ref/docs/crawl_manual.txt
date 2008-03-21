@@ -313,14 +313,14 @@ Doors and Traps:
 ----------------
 Doors can be usually be opened by just walking into them (there is an
 option for disabling this); else this can also be done with either the 
-'o' command or by pressing Ctrl plus a direction or '*', followed by a 
-direction. They can be closed with the 'c' command. If there is no 
-closed door in the indicated space, both Ctrl-direction and * direction
-will attempt to attack any monster which may be standing there (this is
-the only way to attack a friendly creature hand-to-hand). If there is 
-no creature there, you will attempt to disarm any trap in the target
-square. If there is apparently nothing there you will still attack it, 
-just in case there's something invisible lurking around. 
+'O' command. They can be closed with the 'C command. Pressing Ctrl plus
+a direction or '*', followed by a direction, will open/close doors, too.
+If there is no door in the indicated space, both Ctrl-direction and * 
+direction will attempt to attack any monster which may be standing there
+(this is the only way to attack a friendly creature hand-to-hand). If 
+there is no creature there, you will attempt to disarm any trap in the 
+target square. If there is apparently nothing there you will still 
+attack it, just in case there's something invisible lurking around. 
 
 A variety of dangerous and irritating traps are hidden around the
 dungeon. Traps look like normal floor until discovered. Some traps
@@ -2187,8 +2187,9 @@ Dungeon interaction:
                         easy_open to false.
         C               Close door.
      Ctrl-direction     Tries to untrap a known trap on the specified 
-     or * direction     square, else opens door if there is one, else 
-                        attacks without move (even if nothing is seen).
+     or * direction     square, else opens/closes door if there is one, 
+                        else attacks without move (even if no monster is 
+                        seen).
         <               Use staircase to go higher, also enters shops. 
         >               Use staircase to go deeper, or enters branch.  
         ;               Examine occupied tile, also causes auto-pickup.
