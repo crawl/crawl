@@ -1305,15 +1305,17 @@ static bool is_poly_power_unsuitable(
     }
 }
 
-// Change one monster type into another.
+// Change one monster type into another.  This preserves as much as
+// possible between types, so, if the two types are radically different,
+// some special handling may be needed after calling this.
 void monster_change_type(monsters *monster, monster_type targetc)
 {
     const unsigned long old_flags = monster->flags;
     const unsigned long old_exp = monster->experience;
     const int old_hp = monster->hit_points;
     const int old_hp_max = monster->max_hit_points;
-    const bool old_mon_caught = mons_is_caught(monster);
     const char old_ench_countdown = monster->ench_countdown;
+    const bool old_mon_caught = mons_is_caught(monster);
 
     /* deal with mons_sec */
     monster->type = targetc;
@@ -1343,48 +1345,7 @@ void monster_change_type(monsters *monster, monster_type targetc)
     monster->fix_speed();
 
     if (old_mon_caught)
-    {
-        if (monster->body_size(PSIZE_BODY) >= SIZE_GIANT)
-        {
-            int net = get_trapping_net(monster->x, monster->y);
-            if (net != NON_ITEM)
-                destroy_item(net);
-
-            if (see_grid(monster->x, monster->y))
-            {
-                if (player_monster_visible(monster))
-                {
-                    mprf("The net rips apart, and %s comes free!",
-                         monster->name(DESC_NOCAP_THE).c_str());
-                }
-                else
-                {
-                    mpr("All of a sudden the net rips apart!");
-                }
-            }
-        }
-        else if (mons_is_insubstantial(monster->type)
-                 || monster->type == MONS_OOZE
-                 || monster->type == MONS_PULSATING_LUMP)
-        {
-            const int net = get_trapping_net(monster->x, monster->y);
-            if (net != NON_ITEM)
-                remove_item_stationary(mitm[net]);
-
-            if (mons_is_insubstantial(monster->type))
-            {
-                simple_monster_message(monster,
-                                       " drifts right through the net!");
-            }
-            else
-            {
-                simple_monster_message(monster,
-                                       " oozes right through the net!");
-            }
-        }
-        else
-            monster->add_ench(ENCH_HELD);
-    }
+        monster->add_ench(ENCH_HELD);
 }
 
 /*
@@ -1467,6 +1428,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     }
 
     bool player_messaged = simple_monster_message(monster, str_polymon.c_str());
+    const bool old_mon_caught = mons_is_caught(monster);
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
@@ -1505,6 +1467,49 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     // If new monster is visible to player, then we've seen it
     if (player_monster_visible(monster) && mons_near(monster))
         seen_monster(monster);
+
+    if (old_mon_caught)
+    {
+        if (monster->body_size(PSIZE_BODY) >= SIZE_GIANT)
+        {
+            int net = get_trapping_net(monster->x, monster->y);
+            if (net != NON_ITEM)
+            {
+                destroy_item(net);
+                monster->del_ench(ENCH_HELD, true);
+            }
+
+            if (see_grid(monster->x, monster->y))
+            {
+                if (player_monster_visible(monster))
+                {
+                    mprf("The net rips apart, and %s comes free!",
+                         monster->name(DESC_NOCAP_THE).c_str());
+                }
+                else
+                {
+                    mpr("All of a sudden the net rips apart!");
+                }
+            }
+        }
+        else if (mons_is_insubstantial(monster->type)
+                 || monster->type == MONS_OOZE
+                 || monster->type == MONS_PULSATING_LUMP)
+        {
+            mons_clear_trapping_net(monster);
+
+            if (mons_is_insubstantial(monster->type))
+            {
+                simple_monster_message(monster,
+                                       " drifts right through the net!");
+            }
+            else
+            {
+                simple_monster_message(monster,
+                                       " oozes right through the net!");
+            }
+        }
+    }
 
     return (player_messaged);
 }                                        // end monster_polymorph()
