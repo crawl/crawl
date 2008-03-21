@@ -51,13 +51,14 @@ enum kill_method_type
     KILLED_BY_SPORE,
     KILLED_BY_TSO_SMITING,
     KILLED_BY_PETRIFICATION,           // 25
+    // 26
     KILLED_BY_SOMETHING = 27,
     KILLED_BY_FALLING_DOWN_STAIRS,
     KILLED_BY_ACID,
-    KILLED_BY_CURARE,                  
+    KILLED_BY_CURARE,                  // 30
     KILLED_BY_MELTING,
     KILLED_BY_BLEEDING,
-    KILLED_BY_BEOGH_SMITING,
+    KILLED_BY_BEOGH_SMITING,           // 33
 
     NUM_KILLBY
 };
