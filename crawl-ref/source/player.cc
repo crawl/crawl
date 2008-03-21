@@ -96,7 +96,7 @@ std::string pronoun_you(description_level_type desc)
 /* Contains functions which return various player state vars,
    and other stuff related to the player. */
 
-static void ability_increase();
+static void _attribute_increase();
 
 // Use this function whenever the player enters (or lands and thus re-enters)
 // a grid.  
@@ -1834,7 +1834,7 @@ int player_speed(void)
     return ps;
 }
 
-static int player_armour_racial_bonus(const item_def& item)
+static int _player_armour_racial_bonus(const item_def& item)
 {
     if (item.base_type != OBJ_ARMOUR)
         return 0;
@@ -1900,7 +1900,7 @@ int player_AC(void)
 
         const item_def& item = you.inv[you.equip[i]];
         const int ac_value = property(item, PARM_AC ) * 100;
-        int racial_bonus = player_armour_racial_bonus(item);
+        int racial_bonus   = _player_armour_racial_bonus(item);
 
         AC += ac_value * (30 + 2 * you.skills[SK_ARMOUR] + racial_bonus) / 30;
 
@@ -2447,7 +2447,7 @@ int player_shield_class(void)   //jmf: changes for new spell
             break;
         }
 
-        int racial_bonus = player_armour_racial_bonus(item) * 2 / 3;
+        int racial_bonus = _player_armour_racial_bonus(item) * 2 / 3;
 
         // bonus applied only to base, see above for effect:
         base_shield *= (20 + you.skills[SK_SHIELDS] + racial_bonus);
@@ -2802,7 +2802,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         *actual_avail_gain = you.exp_available - old_avail;
 }                               // end gain_exp()
 
-void level_change(bool skip_ability_increase)
+void level_change(bool skip_attribute_increase)
 {
     // necessary for the time being, as level_change() is called
     // directly sometimes {dlb}
@@ -2813,7 +2813,7 @@ void level_change(bool skip_ability_increase)
     {
         bool skip_more = false;
 
-        if (!skip_ability_increase)
+        if (!skip_attribute_increase)
         {
             if (crawl_state.is_replaying_keys() 
                 || crawl_state.is_repeating_cmd())
@@ -2866,8 +2866,8 @@ void level_change(bool skip_ability_increase)
             inc_hp( brek, true );
             inc_mp( 1, true );
 
-            if (!(you.experience_level % 3) && !skip_ability_increase)
-                ability_increase();
+            if (!(you.experience_level % 3) && !skip_attribute_increase)
+                _attribute_increase();
 
             switch (you.species)
             {
@@ -3532,7 +3532,7 @@ int check_stealth(void)
     return (stealth);
 }                               // end check_stealth()
 
-static void ability_increase()
+static void _attribute_increase()
 {
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
@@ -3564,7 +3564,7 @@ static void ability_increase()
             return;
         }
     }
-}                               // end ability_increase()
+}
 
 static const char * _get_rotting_how()
 {
@@ -4139,7 +4139,7 @@ bool player_has_spell( spell_type spell )
     return you.has_spell(spell);
 }
 
-static int species_exp_mod(species_type species)
+static int _species_exp_mod(species_type species)
 {
     if (player_genus(GENPC_DRACONIAN, species))
         return 14;
@@ -4180,7 +4180,7 @@ static int species_exp_mod(species_type species)
         default:
             return 0;
     }
-}                               // end species_exp_mod()
+}
 
 unsigned long exp_needed(int lev)
 {
@@ -4263,7 +4263,7 @@ unsigned long exp_needed(int lev)
         break;
     }
 
-    return ((level - 1) * species_exp_mod(you.species) / 10);
+    return ((level - 1) * _species_exp_mod(you.species) / 10);
 }                               // end exp_needed()
 
 // returns bonuses from rings of slaying, etc.
@@ -5102,7 +5102,7 @@ int count_worn_ego( int which_ego )
     return result;
 }
 
-static int strength_modifier()
+static int _strength_modifier()
 {
     int result = 0;
     if ( you.duration[DUR_MIGHT] )
@@ -5134,7 +5134,7 @@ static int strength_modifier()
     return result;
 }
 
-static int dex_modifier()
+static int _dex_modifier()
 {
     int result = 0;
 
@@ -5174,7 +5174,7 @@ static int dex_modifier()
     return result;
 }
 
-static int int_modifier()
+static int _int_modifier()
 {
     int result = 0;
 
@@ -5196,9 +5196,9 @@ int stat_modifier( stat_type stat )
 {
     switch ( stat )
     {
-    case STAT_STRENGTH:     return strength_modifier();
-    case STAT_DEXTERITY:    return dex_modifier();
-    case STAT_INTELLIGENCE: return int_modifier();
+    case STAT_STRENGTH:     return _strength_modifier();
+    case STAT_DEXTERITY:    return _dex_modifier();
+    case STAT_INTELLIGENCE: return _int_modifier();
     default:
         mprf(MSGCH_DANGER, "Bad stat: %d", stat);
         return 0;
@@ -5817,7 +5817,7 @@ bool player::cannot_fight() const
 // there's a 1/20 chance of it becoming activated whenever you
 // attack a monster. (Same as the berserk mutation at level 1.)
 // The probabilities for actually going berserk are cumulative!
-static bool equipment_make_berserk()
+static bool _equipment_make_berserk()
 {
     for (int eq = EQ_WEAPON; eq < NUM_EQUIP; eq++)
     {
@@ -5852,8 +5852,8 @@ void player::attacking(actor *other)
     }
 
     if (mutation[MUT_BERSERK] &&
-        (random2(100) < (mutation[MUT_BERSERK] * 10) - 5)
-        || equipment_make_berserk())
+         (random2(100) < (mutation[MUT_BERSERK] * 10) - 5)
+        || _equipment_make_berserk())
     {
         go_berserk(false);
     }
@@ -5887,7 +5887,8 @@ bool player::can_go_berserk(bool verbose) const
         return (false);
     }
 
-    if (you.is_undead)
+    if (you.is_undead && (you.species != SP_VAMPIRE
+                          || you.hunger_state < HS_FULL))
     {
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");

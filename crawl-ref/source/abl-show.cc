@@ -88,12 +88,12 @@ enum ability_flag_type
     ABFLAG_CONF_OK      = 0x00000080  // can use even if confused.
 };
 
-static void lugonu_bends_space();
-static int find_ability_slot( ability_type which_ability );
-static bool activate_talent(const talent& tal);
-static bool do_ability(const ability_def& abil);
-static void pay_ability_costs(const ability_def& abil);
-static std::string describe_talent(const talent& tal);
+static void _lugonu_bends_space();
+static int _find_ability_slot( ability_type which_ability );
+static bool _activate_talent(const talent& tal);
+static bool _do_ability(const ability_def& abil);
+static void _pay_ability_costs(const ability_def& abil);
+static std::string _describe_talent(const talent& tal);
 
 // this all needs to be split into data/util/show files
 // and the struct mechanism here needs to be rewritten (again)
@@ -441,7 +441,7 @@ const std::string make_cost_description( ability_type ability )
     return (ret.str());
 }
 
-static talent get_talent(ability_type ability, bool check_confused)
+static talent _get_talent(ability_type ability, bool check_confused)
 {
     ASSERT(ability != ABIL_NON_ABILITY);
 
@@ -464,7 +464,7 @@ static talent get_talent(ability_type ability, bool check_confused)
 
     // Look through the table to see if there's a preference, else 
     // find a new empty slot for this ability. -- bwr
-    const int index = find_ability_slot( ability );
+    const int index = _find_ability_slot( ability );
     if ( index != -1 )
         result.hotkey = index_to_letter(index);
     else
@@ -884,10 +884,10 @@ bool activate_ability()
         }
     }
 
-    return activate_talent(talents[selected]);
+    return _activate_talent(talents[selected]);
 }
 
-static bool activate_talent(const talent& tal)
+static bool _activate_talent(const talent& tal)
 {
     // some abilities don't need a hunger check
     bool hungerCheck = true;
@@ -934,6 +934,13 @@ static bool activate_talent(const talent& tal)
         crawl_state.zero_turns_taken();
         return (false);
     }
+    
+    if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
+        && !you.can_go_berserk(true))
+    {
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
 
     // don't insta-starve the player
     // (happens at 100, losing consciousness possible from 500 downward)
@@ -963,13 +970,13 @@ static bool activate_talent(const talent& tal)
         return (false);
     }
 
-    const bool success = do_ability(abil);
+    const bool success = _do_ability(abil);
     if ( success )
-        pay_ability_costs(abil);
+        _pay_ability_costs(abil);
     return success;
 }
 
-static bool do_ability(const ability_def& abil)
+static bool _do_ability(const ability_def& abil)
 {
     int power;
     struct dist abild;
@@ -1676,7 +1683,7 @@ static bool do_ability(const ability_def& abil)
     }
 
     case ABIL_LUGONU_BEND_SPACE:
-        lugonu_bends_space();
+        _lugonu_bends_space();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -1828,7 +1835,7 @@ static bool do_ability(const ability_def& abil)
     return true;
 }
 
-static void pay_ability_costs(const ability_def& abil)
+static void _pay_ability_costs(const ability_def& abil)
 {
     // currently only delayed fireball is instantaneous -- bwr
     you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
@@ -1883,7 +1890,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
             found_invocations = true;
         else
         {
-            MenuEntry* me = new MenuEntry(describe_talent(talents[i]),
+            MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
                                           MEL_ITEM, 1, talents[i].hotkey);
             me->data = reinterpret_cast<void*>(numbers+i);
             abil_menu.add_entry(me);
@@ -1897,7 +1904,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
         {
             if ( talents[i].is_invocation )
             {
-                MenuEntry* me = new MenuEntry(describe_talent(talents[i]),
+                MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
                                               MEL_ITEM, 1, talents[i].hotkey);
                 me->data = reinterpret_cast<void*>(numbers+i);
                 abil_menu.add_entry(me);
@@ -1932,7 +1939,7 @@ const char* ability_name(ability_type ability)
     return get_ability_def(ability).name;
 }
 
-static std::string describe_talent(const talent& tal)
+static std::string _describe_talent(const talent& tal)
 {
     ASSERT( tal.which != ABIL_NON_ABILITY );
 
@@ -1944,10 +1951,10 @@ static std::string describe_talent(const talent& tal)
     return desc.str();
 }
 
-static void add_talent(std::vector<talent>& vec, const ability_type ability,
-                       bool check_confused)
+static void _add_talent(std::vector<talent>& vec, const ability_type ability,
+                        bool check_confused)
 {
-    const talent t = get_talent(ability, check_confused);
+    const talent t = _get_talent(ability, check_confused);
     if ( t.which != ABIL_NON_ABILITY )
     {
         vec.push_back(t);
@@ -1960,17 +1967,15 @@ std::vector<talent> your_talents( bool check_confused )
 
     // Species-based abilities
     if (you.species == SP_MUMMY && you.experience_level >= 13)
-        add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
+        _add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
 
     if (you.species == SP_NAGA)
     {
-        add_talent(talents, you.mutation[MUT_BREATHE_POISON] ?
-                   ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
+        _add_talent(talents, you.mutation[MUT_BREATHE_POISON] ?
+                    ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
     }
     else if (you.mutation[MUT_SPIT_POISON])
-    {
-        add_talent(talents, ABIL_SPIT_POISON, check_confused );
-    }
+        _add_talent(talents, ABIL_SPIT_POISON, check_confused );
 
     if (player_genus(GENPC_DRACONIAN))
     {
@@ -1987,7 +1992,7 @@ std::vector<talent> your_talents( bool check_confused )
                 (you.species == SP_MOTTLED_DRACONIAN)? ABIL_BREATHE_STICKY_FLAME
                                                      : ABIL_NON_ABILITY);
             if (ability != ABIL_NON_ABILITY)
-                add_talent(talents, ability, check_confused );
+                _add_talent(talents, ability, check_confused );
         }
     }
 
@@ -1995,7 +2000,7 @@ std::vector<talent> your_talents( bool check_confused )
         && you.hunger_state < HS_ENGORGED
         && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
     {
-        add_talent(talents, ABIL_TRAN_BAT, check_confused );
+        _add_talent(talents, ABIL_TRAN_BAT, check_confused );
     }
     
     if (!player_is_airborne())
@@ -2004,65 +2009,65 @@ std::vector<talent> your_talents( bool check_confused )
         // (until level 15, when it becomes permanent until revoked)
         //jmf: "upgrade" for draconians -- expensive flight
         if (you.species == SP_KENKU && you.experience_level >= 5)
-            add_talent(talents, ABIL_FLY, check_confused );
+            _add_talent(talents, ABIL_FLY, check_confused );
         else if (player_genus(GENPC_DRACONIAN) && you.mutation[MUT_BIG_WINGS])
-            add_talent(talents, ABIL_FLY_II, check_confused );
+            _add_talent(talents, ABIL_FLY_II, check_confused );
     }
 
     // Mutations
     if (you.mutation[MUT_MAPPING])
-        add_talent(talents, ABIL_MAPPING, check_confused );
+        _add_talent(talents, ABIL_MAPPING, check_confused );
 
     if (you.mutation[MUT_SUMMON_MINOR_DEMONS])
-        add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused );
+        _add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused );
 
     if (you.mutation[MUT_SUMMON_DEMONS])
-        add_talent(talents, ABIL_SUMMON_DEMONS, check_confused );
+        _add_talent(talents, ABIL_SUMMON_DEMONS, check_confused );
 
     if (you.mutation[MUT_HURL_HELLFIRE])
-        add_talent(talents, ABIL_HELLFIRE, check_confused );
+        _add_talent(talents, ABIL_HELLFIRE, check_confused );
 
     if (you.mutation[MUT_CALL_TORMENT])
-        add_talent(talents, ABIL_TORMENT, check_confused );
+        _add_talent(talents, ABIL_TORMENT, check_confused );
 
     if (you.mutation[MUT_RAISE_DEAD])
-        add_talent(talents, ABIL_RAISE_DEAD, check_confused );
+        _add_talent(talents, ABIL_RAISE_DEAD, check_confused );
 
     if (you.mutation[MUT_CONTROL_DEMONS])
-        add_talent(talents, ABIL_CONTROL_DEMON, check_confused );
+        _add_talent(talents, ABIL_CONTROL_DEMON, check_confused );
 
     if (you.mutation[MUT_PANDEMONIUM])
-        add_talent(talents, ABIL_TO_PANDEMONIUM, check_confused );
+        _add_talent(talents, ABIL_TO_PANDEMONIUM, check_confused );
 
     if (you.mutation[MUT_CHANNEL_HELL])
-        add_talent(talents, ABIL_CHANNELING, check_confused );
+        _add_talent(talents, ABIL_CHANNELING, check_confused );
 
     if (you.mutation[MUT_THROW_FLAMES])
-        add_talent(talents, ABIL_THROW_FLAME, check_confused );
+        _add_talent(talents, ABIL_THROW_FLAME, check_confused );
 
     if (you.mutation[MUT_THROW_FROST])
-        add_talent(talents, ABIL_THROW_FROST, check_confused );
+        _add_talent(talents, ABIL_THROW_FROST, check_confused );
 
     if (you.mutation[MUT_SMITE])
-        add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused );
+        _add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused );
 
     if (you.duration[DUR_TRANSFORMATION])
-        add_talent(talents, ABIL_END_TRANSFORMATION, check_confused );
+        _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused );
 
     if (you.mutation[MUT_BLINK]) 
-        add_talent(talents, ABIL_BLINK, check_confused );
+        _add_talent(talents, ABIL_BLINK, check_confused );
 
     if (you.mutation[MUT_TELEPORT_AT_WILL])
-        add_talent(talents, ABIL_TELEPORTATION, check_confused );
+        _add_talent(talents, ABIL_TELEPORTATION, check_confused );
 
     // Religious abilities
     if (you.religion == GOD_ELYVILON)
     {
-        add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused );
+        _add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused );
     }
     else if (you.religion == GOD_TROG)
     {
-        add_talent(talents, ABIL_TROG_BURN_BOOKS, check_confused );
+        _add_talent(talents, ABIL_TROG_BURN_BOOKS, check_confused );
     }
 
     // gods take abilities away until penance completed -- bwr
@@ -2074,40 +2079,40 @@ std::vector<talent> your_talents( bool check_confused )
             {
                 ability_type abil = god_abilities[you.religion][i];
                 if ( abil != ABIL_NON_ABILITY )
-                    add_talent(talents,abil, check_confused);
+                    _add_talent(talents,abil, check_confused);
             }
         }
     }
 
     // and finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced( you.x_pos, you.y_pos ))
-        add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused );
+        _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused );
 
     //jmf: check for breath weapons -- they're exclusive of each other I hope!
     //     better make better ones first.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
     {
-        add_talent(talents, ABIL_BREATHE_HELLFIRE, check_confused );
+        _add_talent(talents, ABIL_BREATHE_HELLFIRE, check_confused );
     }
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
              || you.mutation[MUT_BREATHE_FLAMES])
     {
-        add_talent(talents, ABIL_BREATHE_FIRE, check_confused );
+        _add_talent(talents, ABIL_BREATHE_FIRE, check_confused );
     }
 
     // checking for unreleased delayed fireball
     if (you.attribute[ ATTR_DELAYED_FIREBALL ])
-        add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused );
+        _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused );
 
     // evocations from items:
     if (scan_randarts(RAP_BLINK))
-        add_talent(talents, ABIL_EVOKE_BLINK, check_confused );
+        _add_talent(talents, ABIL_EVOKE_BLINK, check_confused );
 
     if (wearing_amulet(AMU_RAGE) || scan_randarts(RAP_BERSERK))
-        add_talent(talents, ABIL_EVOKE_BERSERK, check_confused );
+        _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused );
 
     if (scan_randarts( RAP_MAPPING ))
-        add_talent(talents, ABIL_EVOKE_MAPPING, check_confused );
+        _add_talent(talents, ABIL_EVOKE_MAPPING, check_confused );
 
     if (player_equip( EQ_RINGS, RING_INVISIBILITY )
         || player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_DARKNESS )
@@ -2117,9 +2122,9 @@ std::vector<talent> your_talents( bool check_confused )
         // activatable item.  Wands and potions will have to time
         // out. -- bwr
         if (you.duration[DUR_INVIS])
-            add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused );
+            _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused );
         else
-            add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused );
+            _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused );
     }
 
     //jmf: "upgrade" for draconians -- expensive flight
@@ -2132,15 +2137,15 @@ std::vector<talent> your_talents( bool check_confused )
         // activatable item.  Potions and miscast effects will 
         // have to time out (this makes the miscast effect actually
         // a bit annoying). -- bwr
-        add_talent(talents, you.duration[DUR_LEVITATION] ?
-                   ABIL_EVOKE_STOP_LEVITATING : ABIL_EVOKE_LEVITATE,
-                   check_confused);
+        _add_talent(talents, you.duration[DUR_LEVITATION] ?
+                    ABIL_EVOKE_STOP_LEVITATING : ABIL_EVOKE_LEVITATE,
+                    check_confused);
     }
 
     if (player_equip( EQ_RINGS, RING_TELEPORTATION )
         || scan_randarts( RAP_CAN_TELEPORT ))
     {
-        add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused );
+        _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused );
     }
 
     // find hotkeys for the non-hotkeyed talents
@@ -2186,7 +2191,7 @@ std::vector<talent> your_talents( bool check_confused )
 // the old invocation slots void and erase them).  We also try to 
 // protect any bindings the character might have made into the 
 // traditional invocation slots (A-E and X). -- bwr
-static void set_god_ability_helper( ability_type abil, char letter )
+static void _set_god_ability_helper( ability_type abil, char letter )
 {
     int i;
     const int index = letter_to_index( letter );
@@ -2207,7 +2212,7 @@ static void set_god_ability_helper( ability_type abil, char letter )
 
 // return GOD_NO_GOD if it isn't a god ability, otherwise return
 // the index of the god.
-static int is_god_ability(int abil)
+static int _is_god_ability(int abil)
 {
     if ( abil == ABIL_NON_ABILITY )
         return GOD_NO_GOD;
@@ -2224,12 +2229,12 @@ void set_god_ability_slots( void )
 
     int i;
 
-    set_god_ability_helper( ABIL_RENOUNCE_RELIGION, 'X' );
+    _set_god_ability_helper( ABIL_RENOUNCE_RELIGION, 'X' );
 
     // clear out other god invocations
     for (i = 0; i < 52; i++)
     {
-        const int god = is_god_ability(you.ability_letter_table[i]);
+        const int god = _is_god_ability(you.ability_letter_table[i]);
         if ( god != GOD_NO_GOD && god != you.religion )
             you.ability_letter_table[i] = ABIL_NON_ABILITY;
     }
@@ -2240,7 +2245,7 @@ void set_god_ability_slots( void )
     {
         if ( god_abilities[you.religion][i] != ABIL_NON_ABILITY )
         {
-            set_god_ability_helper(god_abilities[you.religion][i], 'a' + num);
+            _set_god_ability_helper(god_abilities[you.religion][i], 'a' + num);
             ++num;
         }
     }
@@ -2249,7 +2254,7 @@ void set_god_ability_slots( void )
 
 // returns an index (0-51) if successful, -1 if you should
 // just use the next one
-static int find_ability_slot( ability_type which_ability )
+static int _find_ability_slot( ability_type which_ability )
 {
     for (int slot = 0; slot < 52; slot++)
     {
@@ -2285,7 +2290,7 @@ static int find_ability_slot( ability_type which_ability )
 
 ////////////////////////////////////////////////////////////////////////////
 
-static int lugonu_warp_monster(int x, int y, int pow, int)
+static int _lugonu_warp_monster(int x, int y, int pow, int)
 {
     if (!in_bounds(x, y) || mgrd[x][y] == NON_MONSTER)
         return (0);
@@ -2317,12 +2322,12 @@ static int lugonu_warp_monster(int x, int y, int pow, int)
     return (1);
 }
 
-static void lugonu_warp_area(int pow)
+static void _lugonu_warp_area(int pow)
 {
-    apply_area_around_square( lugonu_warp_monster, you.x_pos, you.y_pos, pow );
+    apply_area_around_square( _lugonu_warp_monster, you.x_pos, you.y_pos, pow );
 }
 
-static void lugonu_bends_space()
+static void _lugonu_bends_space()
 {
     const int pow = 4 + skill_bump(SK_INVOCATIONS);
     const bool area_warp = random2(pow) > 9;
@@ -2330,7 +2335,7 @@ static void lugonu_bends_space()
     mprf("Space bends %saround you!", area_warp? "sharply " : "");
 
     if (area_warp)
-        lugonu_warp_area(pow);
+        _lugonu_warp_area(pow);
 
     random_blink(false, true);
     

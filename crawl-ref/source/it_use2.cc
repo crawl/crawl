@@ -318,7 +318,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
     }
     case POT_BERSERK_RAGE:
-        if (you.species == SP_VAMPIRE)
+        if (you.species == SP_VAMPIRE && you.hunger_state < HS_FULL)
         {
             mpr("You feel slightly irritated.");
             make_hungry(100, false);
