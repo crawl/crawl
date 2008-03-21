@@ -1327,7 +1327,7 @@ void monster_change_type(monsters *monster, monster_type targetc)
     define_monster( monster_index(monster) );
 
     monster->flags = old_flags;
-    monster->experience = old_exp;
+    monster->gain_exp(old_exp);
 
     monster->add_ench(abj);
     monster->add_ench(shifter);
