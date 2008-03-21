@@ -3451,7 +3451,8 @@ static void open_door(int move_x, int move_y, bool check_confused)
             case DNGN_OPEN_DOOR:
                 mpr("It's already open!"); break;
             default:
-                mpr("There isn't anything that you can open there!"); break;
+                mpr("There isn't anything that you can open there!");
+                break;
             }
             // Don't lose a turn.
             return;
@@ -3505,13 +3506,15 @@ static void open_door(int move_x, int move_y, bool check_confused)
         }
         you.turn_is_over = true;
     }
+    else if (grd[dx][dy] == DNGN_OPEN_DOOR)
+        close_door(move_x, move_y); // for convenience
     else
     {
         mpr("You swing at nothing.");
         make_hungry(3, true);
         you.turn_is_over = true;
     }
-}                               // end open_door()
+}
 
 /*
  * Similar to open_door. Can you spot the difference?
@@ -3545,6 +3548,7 @@ static void close_door(int door_x, int door_y)
 
     const dungeon_feature_type feat = 
         in_bounds(dx, dy) ? grd[dx][dy] : DNGN_UNSEEN;
+        
     if (feat == DNGN_OPEN_DOOR)
     {
         std::set<coord_def> all_door;
@@ -3561,7 +3565,14 @@ static void close_door(int door_x, int door_y)
             {
                 // Need to make sure that turn_is_over is set if creature is 
                 // invisible
-                mprf("There's a creature in the %sway!", noun);
+                if (!player_monster_visible(&menv[mgrd[dc.x][dc.y]]))
+                {
+                    mprf("Something is blocking the %sway!", noun);
+                    you.turn_is_over = true;
+                }
+                else
+                    mprf("There's a creature in the %sway!", noun);
+                    
                 door_move.dx = 0;
                 door_move.dy = 0;
                 return;
@@ -3631,7 +3642,7 @@ static void close_door(int door_x, int door_y)
             mpr("There isn't anything that you can close there!"); break;
         }
     }
-}                               // end open_door()
+}
 
 // initialise whole lot of stuff...
 // returns true if a new character

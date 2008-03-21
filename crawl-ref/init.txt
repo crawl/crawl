@@ -117,6 +117,7 @@ autopickup_no_burden = true
 ##### 4-d	Branding ##############################
 #
 friend_brand       = hi:green
+neutral_brand      = hi:darkgrey
 stab_brand         = hi:blue
 # may_stab_brand     = hi:yellow
 heap_brand         = reverse

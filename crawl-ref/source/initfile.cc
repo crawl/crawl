@@ -786,6 +786,7 @@ void game_options::reset_options()
     sc_format              = -1;
 
     friend_brand       = CHATTR_NORMAL;
+    neutral_brand      = CHATTR_NORMAL;
     stab_brand         = CHATTR_NORMAL;
     may_stab_brand     = CHATTR_NORMAL;
     heap_brand         = CHATTR_REVERSE;
@@ -1902,6 +1903,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // Some may look bad on some terminals.
         // As a suggestion, try "rxvt -rv -fn 10x20" under Un*xes
         friend_brand = curses_attribute(field);
+    }
+    else if (key == "neutral_brand")
+    {
+        neutral_brand = curses_attribute(field);
     }
     else if (key == "stab_brand")
     {

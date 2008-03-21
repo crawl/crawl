@@ -1605,6 +1605,7 @@ public:
     char        cls;             // preselected class
     bool        delay_message_clear;    // avoid clearing messages each turn
     unsigned    friend_brand;    // Attribute for branding friendly monsters
+    unsigned    neutral_brand;   // Attribute for branding neutral monsters
     bool        no_dark_brand;   // Attribute for branding friendly monsters
     bool        macro_meta_entry;// Allow user to use numeric sequences when
                                  // creating macros

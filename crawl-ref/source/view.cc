@@ -301,6 +301,8 @@ static unsigned colflag2brand(int colflag)
         return (Options.heap_brand);
     case COLFLAG_FRIENDLY_MONSTER:
         return (Options.friend_brand);
+    case COLFLAG_NEUTRAL_MONSTER:
+        return (Options.neutral_brand);
     case COLFLAG_WILLSTAB:
         return (Options.stab_brand);
     case COLFLAG_MAYSTAB:
@@ -700,6 +702,10 @@ int get_mons_colour(const monsters *mons)
     if (mons_friendly(mons))
     {
         col |= COLFLAG_FRIENDLY_MONSTER;
+    }
+    else if (mons_neutral(mons))
+    {
+        col |= COLFLAG_NEUTRAL_MONSTER;
     }
     else if (Options.stab_brand != CHATTR_NORMAL
              && mons_looks_stabbable(mons))
