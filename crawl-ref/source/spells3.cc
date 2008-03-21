@@ -554,7 +554,7 @@ void you_teleport(void)
     return;
 }                               // end you_teleport()
 
-static bool teleport_player( bool allow_control, bool new_abyss_area )
+static bool _teleport_player( bool allow_control, bool new_abyss_area )
 {
     bool is_controlled = (allow_control && !you.duration[DUR_CONF]
                           && player_control_teleport()
@@ -679,7 +679,7 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 
 void you_teleport_now( bool allow_control, bool new_abyss_area )
 {
-    const bool randtele = teleport_player(allow_control, new_abyss_area);
+    const bool randtele = _teleport_player(allow_control, new_abyss_area);
 
     // Xom is amused by uncontrolled teleports that land you in a
     // dangerous place, unless the player is in the Abyss and
@@ -822,7 +822,7 @@ bool entomb(int powc)
 // Is there a monster in a circle with the given radius, centered on the
 // player's position?  If so, return the distance to it.  Otherwise,
 // return -1.
-static int mons_inside_circle(int posx, int posy, int radius)
+static int _mons_inside_circle(int posx, int posy, int radius)
 {
     if (!inside_level_bounds(posx, posy))
         return -1;
@@ -953,7 +953,7 @@ bool cast_sanctuary(const int power)
         {
             int posx = you.x_pos + x;
             int posy = you.y_pos + y;
-            int dist = mons_inside_circle(posx, posy, radius);
+            int dist = _mons_inside_circle(posx, posy, radius);
 
             // scare all hostile monsters inside sanctuary
             if (dist != -1)
@@ -1045,7 +1045,7 @@ void manage_halo()
 
 bool mons_inside_halo(int posx, int posy)
 {
-    return (mons_inside_circle(posx, posy, halo_radius()) != -1);
+    return (_mons_inside_circle(posx, posy, halo_radius()) != -1);
 }
 
 void cast_poison_ammo(void)
