@@ -1013,6 +1013,7 @@ void scorefile_entry::init()
     // Bonus for exploring different areas, not for collecting a 
     // huge stack of demonic runes in Pandemonium (gold value 
     // is enough for those). -- bwr
+    
     if (calc_item_values && num_diff_runes >= 3)
         points += ((num_diff_runes + 2) * (num_diff_runes + 2) * 1000);
 

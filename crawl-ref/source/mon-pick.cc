@@ -45,7 +45,7 @@ struct global_level_info
     int                 avg_depth;
 };
 
-static int mons_misc_level(int mcls)
+static int _mons_misc_level(int mcls)
 {
     switch(mons_char(mcls))
     {
@@ -75,6 +75,7 @@ static int mons_misc_level(int mcls)
     {
     case MONS_HUMAN:
     case MONS_ELF:
+    case MONS_DRACONIAN:
         return 1;
 
     case MONS_BIG_FISH:
@@ -125,7 +126,7 @@ static int mons_misc_level(int mcls)
 
 static global_level_info g_lev_infos[] = {
     {mons_standard_level, BRANCH_MAIN_DUNGEON,  1},
-    {mons_misc_level,     BRANCH_MAIN_DUNGEON,  1},
+    {_mons_misc_level,    BRANCH_MAIN_DUNGEON,  1},
     {mons_mineorc_level,  BRANCH_ORCISH_MINES,  8},
     {mons_lair_level,     BRANCH_LAIR,         10},
     {mons_hallelf_level,  BRANCH_ELVEN_HALLS,  11},

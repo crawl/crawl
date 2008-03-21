@@ -1136,6 +1136,10 @@ plant
 
 Few plants can grow in the unpleasant dungeon environment, but some have managed to adapt and even thrive underground in the absence of the sun.
 %%%%
+player ghost
+
+The apparition of an unfortunate adventurer.
+%%%%
 polar bear
 
 A large and very strong bear covered in glistening white fur.
@@ -1289,6 +1293,10 @@ An icky glob of slime, which slithers along the ground.
 small snake
 
 The lesser dungeon snake.
+%%%%
+small simulacrum
+
+An ice replica of a monster that is animated by the powers of necromancy.
 %%%%
 small skeleton
 

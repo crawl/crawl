@@ -84,7 +84,7 @@ static mon_spellbook mspell_list[] = {
 #include "mon-spll.h"
 };
 
-static int mons_exp_mod(int mclass);
+static int _mons_exp_mod(int mclass);
 
 // macro that saves some typing, nothing more
 #define smc get_monster_data(mc)
@@ -125,7 +125,7 @@ dungeon_feature_type habitat2grid(habitat_type ht)
     }
 }
 
-static void initialize_randmons()
+static void _initialize_randmons()
 {
     for (int i = 0; i < NUM_HABITATS; ++i)
     {
@@ -150,7 +150,7 @@ monster_type random_monster_at_grid(int x, int y)
 monster_type random_monster_at_grid(dungeon_feature_type grid)
 {
     if (!initialized_randmons)
-        initialize_randmons();
+        _initialize_randmons();
 
     const habitat_type ht = grid2habitat(grid);
     const std::vector<monster_type> &valid_mons = monsters_by_habitat[ht];
@@ -330,7 +330,7 @@ bool mons_class_flag(int mc, int bf)
     return ((me->bitfields & bf) != 0);
 }                               // end mons_class_flag()
 
-static int scan_mon_inv_randarts( const monsters *mon,
+static int _scan_mon_inv_randarts( const monsters *mon,
                                   randart_prop_type ra_prop)
 {
     int ret = 0;
@@ -365,7 +365,7 @@ static int scan_mon_inv_randarts( const monsters *mon,
 
 // Returns true if a given monster is an abomination
 // created by Twisted Resurrection
-static bool mons_your_abomination(const monsters *mon)
+static bool _mons_your_abomination(const monsters *mon)
 {
     if ( mon->type != MONS_ABOMINATION_SMALL
          && mon->type != MONS_ABOMINATION_LARGE )
@@ -380,7 +380,7 @@ static bool mons_your_abomination(const monsters *mon)
 
 mon_holy_type mons_holiness(const monsters *mon)
 {
-    if (mons_your_abomination(mon))
+    if (_mons_your_abomination(mon))
         return (MH_UNDEAD);
 
     return (mons_class_holiness(mon->type));
@@ -540,7 +540,7 @@ monster_type draco_subspecies( const monsters *mon )
             return MONS_RED_DRACONIAN;
         case WHITE:
             return MONS_WHITE_DRACONIAN;
-        case DARKGREY:          // black
+        case BLUE:  // black
             return MONS_BLACK_DRACONIAN;
         case GREEN:
             return MONS_GREEN_DRACONIAN;
@@ -608,7 +608,7 @@ bool mons_see_invis(const monsters *mon)
         return (mon->ghost->see_invis);
     else if (mons_class_flag(mon->type, M_SEE_INVIS))
         return (true);
-    else if (scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
+    else if (_scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
         return (true);
 
     return (false);
@@ -786,7 +786,7 @@ int mons_resist_magic( const monsters *mon )
         u = mon->hit_dice * -u * 4 / 3;
 
     // randarts have a multiplicative effect
-    u *= (scan_mon_inv_randarts( mon, RAP_MAGIC ) + 100);
+    u *= (_scan_mon_inv_randarts( mon, RAP_MAGIC ) + 100);
     u /= 100;
 
     // ego armour resistance
@@ -858,7 +858,7 @@ int mons_res_elec( const monsters *mon )
     // don't bother checking equipment if the monster can't use it
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += scan_mon_inv_randarts( mon, RAP_ELECTRICITY );
+        u += _scan_mon_inv_randarts( mon, RAP_ELECTRICITY );
 
         // no ego armour, but storm dragon.
         const int armour = mon->inv[MSLOT_ARMOUR];
@@ -895,7 +895,7 @@ int mons_res_poison( const monsters *mon )
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += scan_mon_inv_randarts( mon, RAP_POISON );
+        u += _scan_mon_inv_randarts( mon, RAP_POISON );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
@@ -941,7 +941,7 @@ int mons_res_fire( const monsters *mon )
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += scan_mon_inv_randarts( mon, RAP_FIRE );
+        u += _scan_mon_inv_randarts( mon, RAP_FIRE );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
@@ -974,7 +974,7 @@ int mons_res_cold( const monsters *mon )
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += scan_mon_inv_randarts( mon, RAP_COLD );
+        u += _scan_mon_inv_randarts( mon, RAP_COLD );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
@@ -1025,7 +1025,7 @@ int mons_res_negative_energy( const monsters *mon )
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += scan_mon_inv_randarts( mon, RAP_NEGATIVE_ENERGY );
+        u += _scan_mon_inv_randarts( mon, RAP_NEGATIVE_ENERGY );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
@@ -1102,9 +1102,9 @@ flight_type mons_flies(const monsters *mon)
     const int type = mons_is_zombified(mon)? mons_zombie_base(mon) : mon->type;
     const flight_type ret = mons_class_flies( type );
     return (ret ? ret
-            : (scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? FL_LEVITATE
-            : FL_NONE);
-}                               // end mons_flies()
+            : (_scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? FL_LEVITATE
+                                                              : FL_NONE);
+}
 
 bool mons_amphibious(int mc)
 {
@@ -1149,7 +1149,7 @@ int exper_value( const struct monsters *monster )
 
     // these are some values we care about:
     const int  speed       = mons_speed(mclass);
-    const int  modifier    = mons_exp_mod(mclass);
+    const int  modifier    = _mons_exp_mod(mclass);
     const int  item_usage  = mons_itemuse(mclass);
 
     // XXX: shapeshifters can qualify here, even though they can't cast:
@@ -1503,6 +1503,7 @@ std::string draconian_colour_name(monster_type mtype)
 {
     COMPILE_CHECK(ARRAYSIZE(drac_colour_names) ==
                   MONS_PALE_DRACONIAN - MONS_DRACONIAN, c1);
+                  
     if (mtype < MONS_BLACK_DRACONIAN || mtype > MONS_PALE_DRACONIAN)
         return "buggy";
     return (drac_colour_names[mtype - MONS_BLACK_DRACONIAN]);
@@ -1518,8 +1519,8 @@ monster_type draconian_colour_by_name(const std::string &name)
     return (MONS_PROGRAM_BUG);
 }
 
-static std::string str_monam(const monsters& mon, description_level_type desc,
-                             bool force_seen)
+static std::string _str_monam(const monsters& mon, description_level_type desc,
+                              bool force_seen)
 {
     if (desc == DESC_NONE)
         return ("");
@@ -1604,9 +1605,11 @@ static std::string str_monam(const monsters& mon, description_level_type desc,
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_DRACONIAN_SCORCHER:
-        result +=
-            draconian_colour_name(
-                static_cast<monster_type>( mon.number ) ) + " ";
+        if (mon.number != 0) // database search
+        {
+            result += draconian_colour_name(
+                          static_cast<monster_type>( mon.number ) ) + " ";
+        }
         break;
         
     default:
@@ -1682,18 +1685,18 @@ monsterentry *get_monster_data(int p_monsterid)
         return (&mondata[me]);
     else
         return (NULL);
-}                               // end get_monster_data()
+}
 
-static int mons_exp_mod(int mc)
+static int _mons_exp_mod(int mc)
 {
     return (smc->exp_mod);
-}                               // end mons_exp_mod()
+}
 
 
 int mons_speed(int mc)
 {
     return (smc->speed);
-}                               // end mons_speed()
+}
 
 
 mon_intel_type mons_intel(int mc)
@@ -2153,7 +2156,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     return (ret);    
 }
 
-static bool ms_ranged_spell( spell_type monspell )
+static bool _ms_ranged_spell( spell_type monspell )
 {
     switch (monspell)
     {
@@ -2193,7 +2196,7 @@ bool mons_has_ranged_spell( const monsters *mon )
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
         {
-            if (ms_ranged_spell( mon->spells[i] ))
+            if (_ms_ranged_spell( mon->spells[i] ))
                 return (true);
         }
     }
@@ -2289,7 +2292,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
  * Checks if the monster can use smiting/torment to attack without unimpeded
  * LOS to the player.
  */
-static bool mons_can_smite(const monsters *monster)
+static bool _mons_can_smite(const monsters *monster)
 {
     if (monster->type == MONS_FIEND)
         return (true);
@@ -2327,7 +2330,7 @@ bool monster_shover(const monsters *m)
         return (false);
 
     // Smiters profit from staying back and smiting.
-    if (mons_can_smite(m))
+    if (_mons_can_smite(m))
         return (false);
     
     int mchar = me->showchar;
@@ -3111,7 +3114,7 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
 }
 
 // Arbitrary damage adjustment for quantity of missiles. So sue me.
-static int q_adj_damage(int damage, int qty)
+static int _q_adj_damage(int damage, int qty)
 {
     return (damage * std::min(qty, 8));
 }
@@ -3124,10 +3127,9 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
     item_def *launch = NULL;
     const int exist_missile = mons_pick_best_missile(this, &launch, true);
     if (exist_missile == NON_ITEM
-        || (q_adj_damage(mons_missile_damage(launch, &mitm[exist_missile]),
+        || (_q_adj_damage(mons_missile_damage(launch, &mitm[exist_missile]),
                           mitm[exist_missile].quantity)
-            <
-            q_adj_damage(mons_thrown_weapon_damage(&item), item.quantity)))
+            < _q_adj_damage(mons_thrown_weapon_damage(&item), item.quantity)))
     {
         if (inv[MSLOT_MISSILE] != NON_ITEM && !drop_item(MSLOT_MISSILE, near))
             return (false);
@@ -3179,7 +3181,7 @@ bool monsters::wants_armour(const item_def &item) const
     return (!mslot_item(MSLOT_ARMOUR));
 }
 
-static mon_inv_type equip_slot_to_mslot(equipment_type eq)
+static mon_inv_type _equip_slot_to_mslot(equipment_type eq)
 {
     switch (eq)
     {
@@ -3203,7 +3205,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
         return (false);
 
-    const mon_inv_type mslot = equip_slot_to_mslot(eq);
+    const mon_inv_type mslot = _equip_slot_to_mslot(eq);
     if (mslot == NUM_MONSTER_SLOTS)
         return false;
 
@@ -3393,7 +3395,7 @@ void monsters::wield_melee_weapon(int near)
 
 item_def *monsters::slot_item(equipment_type eq)
 {
-    return mslot_item(equip_slot_to_mslot(eq));
+    return mslot_item(_equip_slot_to_mslot(eq));
 }
 
 item_def *monsters::mslot_item(mon_inv_type mslot) const
@@ -3420,7 +3422,7 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
     if (possessive)
         desc = DESC_NOCAP_THE;
 
-    std::string mname = str_monam(*this, desc, force_vis);
+    std::string mname = _str_monam(*this, desc, force_vis);
     return (possessive? apostrophise(mname) : mname);
 }
 
@@ -4429,7 +4431,7 @@ std::string monsters::describe_enchantments() const
 }
 
 // used to adjust time durations in calc_duration() for monster speed
-static inline int mod_speed( int val, int speed )
+static inline int _mod_speed( int val, int speed )
 {
     if (!speed)
         speed = 10;
@@ -5284,7 +5286,7 @@ int mon_enchant::kill_agent() const
 
 int mon_enchant::modded_speed(const monsters *mons, int hdplus) const
 {
-    return (mod_speed(mons->hit_dice + hdplus, mons->speed));
+    return (_mod_speed(mons->hit_dice + hdplus, mons->speed));
 }
 
 int mon_enchant::calc_duration(const monsters *mons,
@@ -5300,10 +5302,10 @@ int mon_enchant::calc_duration(const monsters *mons,
     switch (ench)
     {
     case ENCH_HASTE:
-        cturn = 1000 / mod_speed(25, mons->speed);
+        cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_INVIS:
-        cturn = 1000 / mod_speed(25, mons->speed);
+        cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
         cturn = 250 / (1 + modded_speed(mons, 10));
@@ -5318,42 +5320,42 @@ int mon_enchant::calc_duration(const monsters *mons,
         cturn = std::max(100 / modded_speed(mons, 5), 3);
         break;
     case ENCH_HELD:
-        cturn = 120 / mod_speed(25, mons->speed);
+        cturn = 120 / _mod_speed(25, mons->speed);
         break;
     case ENCH_POISON:
-        cturn = 1000 * deg / mod_speed(125, mons->speed);
+        cturn = 1000 * deg / _mod_speed(125, mons->speed);
         break;
     case ENCH_STICKY_FLAME:
-        cturn = 1000 * deg / mod_speed(200, mons->speed);
+        cturn = 1000 * deg / _mod_speed(200, mons->speed);
         break;
     case ENCH_ROT:
         if (deg > 1)
-            cturn = 1000 * (deg - 1) / mod_speed(333, mons->speed);
-        cturn += 1000 / mod_speed(250, mons->speed);
+            cturn = 1000 * (deg - 1) / _mod_speed(333, mons->speed);
+        cturn += 1000 / _mod_speed(250, mons->speed);
         break;
     case ENCH_BACKLIGHT:
         if (deg > 1)
-            cturn = 1000 * (deg - 1) / mod_speed(200, mons->speed);
-        cturn += 1000 / mod_speed(100, mons->speed);
+            cturn = 1000 * (deg - 1) / _mod_speed(200, mons->speed);
+        cturn += 1000 / _mod_speed(100, mons->speed);
         break;
     case ENCH_SHORT_LIVED:
-        cturn = 1000 / mod_speed(200, mons->speed);
+        cturn = 1000 / _mod_speed(200, mons->speed);
         break;
     case ENCH_ABJ:
         if (deg >= 6)
-            cturn = 1000 / mod_speed(10, mons->speed);
+            cturn = 1000 / _mod_speed(10, mons->speed);
         if (deg >= 5)
-            cturn += 1000 / mod_speed(20, mons->speed);
-        cturn += 1000 * std::min(4, deg) / mod_speed(100, mons->speed);
+            cturn += 1000 / _mod_speed(20, mons->speed);
+        cturn += 1000 * std::min(4, deg) / _mod_speed(100, mons->speed);
         break;
     case ENCH_CHARM:
         cturn = 500 / modded_speed(mons, 10);
         break;
     case ENCH_TP:
-        cturn = 1000 * deg / mod_speed(1000, mons->speed);
+        cturn = 1000 * deg / _mod_speed(1000, mons->speed);
         break;
     case ENCH_SLEEP_WARY:
-        cturn = 1000 / mod_speed(50, mons->speed);
+        cturn = 1000 / _mod_speed(50, mons->speed);
         break;
     default:
         break;
@@ -5388,7 +5390,7 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
 
 // replaces @player_god@ and @god_is@ with player's god name
 // special handling for atheists: use "you"/"You" instead
-static std::string replace_god_name(bool need_verb = false, bool capital = false)
+static std::string _replace_god_name(bool need_verb = false, bool capital = false)
 {
     std::string result =
           (you.religion == GOD_NO_GOD ? (capital? "You" : "you")
@@ -5402,7 +5404,7 @@ static std::string replace_god_name(bool need_verb = false, bool capital = false
     return (result);
 }
 
-static std::string get_species_insult(const std::string type)
+static std::string _get_species_insult(const std::string type)
 {
     std::string lookup = "insult ";
     // get species genus
@@ -5421,7 +5423,7 @@ static std::string get_species_insult(const std::string type)
     return (insult);
 }
 
-static std::string pluralise_player_genus()
+static std::string _pluralise_player_genus()
 {
     std::string sp = species_name(you.species, 1, true);
     if (player_genus(GENPC_ELVEN, you.species)
@@ -5489,7 +5491,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@player_genus@",
                       species_name(you.species, 1, true).c_str());
     msg = replace_all(msg, "@player_genus_plural@",
-                      pluralise_player_genus().c_str());
+                      _pluralise_player_genus().c_str());
 
     if (player_monster_visible(monster))
     {
@@ -5534,19 +5536,22 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                       monster->pronoun(PRONOUN_NOCAP_POSSESSIVE));
 
     // replace with "you are" for atheists
-    msg = replace_all(msg, "@god_is@", replace_god_name(true, false));
-    msg = replace_all(msg, "@God_is@", replace_god_name(true, true));
+    msg = replace_all(msg, "@god_is@", _replace_god_name(true, false));
+    msg = replace_all(msg, "@God_is@", _replace_god_name(true, true));
     
     // no verb needed
-    msg = replace_all(msg, "@player_god@", replace_god_name(false, false));
-    msg = replace_all(msg, "@Player_god@", replace_god_name(false, true));
+    msg = replace_all(msg, "@player_god@", _replace_god_name(false, false));
+    msg = replace_all(msg, "@Player_god@", _replace_god_name(false, true));
 
     // replace with species specific insults
     if (msg.find("@species_insult_") != std::string::npos)
     {
-        msg = replace_all(msg, "@species_insult_adj1@", get_species_insult("adj1"));
-        msg = replace_all(msg, "@species_insult_adj2@", get_species_insult("adj2"));
-        msg = replace_all(msg, "@species_insult_noun@", get_species_insult("noun"));
+        msg = replace_all(msg, "@species_insult_adj1@",
+                               _get_species_insult("adj1"));
+        msg = replace_all(msg, "@species_insult_adj2@",
+                               _get_species_insult("adj2"));
+        msg = replace_all(msg, "@species_insult_noun@",
+                               _get_species_insult("noun"));
     }
 
     static const char * sound_list[] = 
@@ -5589,7 +5594,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     return msg;
 }
 
-static mon_body_shape get_ghost_shape(const monsters *mon)
+static mon_body_shape _get_ghost_shape(const monsters *mon)
 {
     const ghost_demon &ghost = *(mon->ghost);
 
@@ -5624,7 +5629,7 @@ static mon_body_shape get_ghost_shape(const monsters *mon)
 mon_body_shape get_mon_shape(const monsters *mon)
 {
     if (mon->type == MONS_PLAYER_GHOST)
-        return get_ghost_shape(mon);
+        return _get_ghost_shape(mon);
     else if (mons_is_zombified(mon))
         return get_mon_shape(mon->number);
     else

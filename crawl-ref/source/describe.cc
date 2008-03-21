@@ -72,7 +72,7 @@
 // positive values (itoa always adds - to -ve ones).
 //
 //---------------------------------------------------------------
-static void append_value( std::string & description, int valu, bool plussed )
+static void _append_value( std::string & description, int valu, bool plussed )
 {
     if (valu >= 0 && plussed == 1)
         description += "+";
@@ -82,7 +82,7 @@ static void append_value( std::string & description, int valu, bool plussed )
     itoa( valu, value_str, 10 );
 
     description += value_str;
-}                               // end append_value()
+}
 
 //---------------------------------------------------------------
 //
@@ -189,7 +189,7 @@ struct property_annotators
     int spell_out;              // 0: "+3", 1: "+++", 2: value doesn't matter
 };
 
-static std::vector<std::string> randart_propnames( const item_def& item )
+static std::vector<std::string> _randart_propnames( const item_def& item )
 {
     randart_properties_t  proprt;
     randart_known_props_t known;
@@ -315,9 +315,9 @@ static std::vector<std::string> randart_propnames( const item_def& item )
     return propnames;
 }
 
-static std::string randart_auto_inscription( const item_def& item )
+static std::string _randart_auto_inscription( const item_def& item )
 {
-    const std::vector<std::string> propnames = randart_propnames(item);
+    const std::vector<std::string> propnames = _randart_propnames(item);
 
     return comma_separated_line(propnames.begin(), propnames.end(),
                                 " ", " ");
@@ -327,9 +327,9 @@ static std::string randart_auto_inscription( const item_def& item )
 // string, rather than the return value of randart_auto_inscription(),
 // in case more information about the randart has been learned since
 // the last auto-inscription.
-static void trim_randart_inscrip( item_def& item )
+static void _trim_randart_inscrip( item_def& item )
 {
-    std::vector<std::string> propnames = randart_propnames(item);
+    std::vector<std::string> propnames = _randart_propnames(item);
 
     for (unsigned int i = 0; i < propnames.size(); i++)
     {
@@ -346,7 +346,7 @@ struct property_descriptor
     bool is_graded_resist;
 };
 
-static std::string randart_descrip( const item_def &item )
+static std::string _randart_descrip( const item_def &item )
 {
     std::string description;
 
@@ -505,7 +505,7 @@ int str_to_trap(const std::string &s)
 // Describes the random demons you find in Pandemonium.
 //
 //---------------------------------------------------------------
-static std::string describe_demon(const monsters &mons)
+static std::string _describe_demon(const monsters &mons)
 {
     ASSERT(mons.ghost.get());
     
@@ -676,7 +676,7 @@ static std::string describe_demon(const monsters &mons)
 // describe_weapon
 //
 //---------------------------------------------------------------
-static std::string describe_weapon( const item_def &item, bool verbose)
+static std::string _describe_weapon( const item_def &item, bool verbose)
 {
     std::string description;
 
@@ -773,15 +773,15 @@ static std::string describe_weapon( const item_def &item, bool verbose)
     if (verbose)
     {
         description += "$Damage rating: ";
-        append_value(description, property( item, PWPN_DAMAGE ), false);
+        _append_value(description, property( item, PWPN_DAMAGE ), false);
         description += "   ";
 
         description += "Accuracy rating: ";
-        append_value(description, property( item, PWPN_HIT ), true);
+        _append_value(description, property( item, PWPN_HIT ), true);
         description += "    ";
 
         description += "Base attack delay: ";
-        append_value(description, property( item, PWPN_SPEED ) * 10, false);
+        _append_value(description, property( item, PWPN_SPEED ) * 10, false);
         description += "%";
     }
     
@@ -905,7 +905,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
         if (is_random_artefact( item ))
         {
             description += "$$";
-            description += randart_descrip( item );
+            description += _randart_descrip( item );
 
             if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
                 && item_type_known(item))
@@ -997,7 +997,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
 // describe_ammo
 //
 //---------------------------------------------------------------
-static std::string describe_ammo( const item_def &item )
+static std::string _describe_ammo( const item_def &item )
 {
     std::string description;
 
@@ -1109,7 +1109,7 @@ static std::string describe_ammo( const item_def &item )
 // describe_armour
 //
 //---------------------------------------------------------------
-static std::string describe_armour( const item_def &item, bool verbose )
+static std::string _describe_armour( const item_def &item, bool verbose )
 {
     std::string description;
 
@@ -1121,11 +1121,11 @@ static std::string describe_armour( const item_def &item, bool verbose )
         && item.sub_type != ARM_LARGE_SHIELD)
     {
         description += "$Armour rating: ";
-        append_value(description, property( item, PARM_AC ), false);
+        _append_value(description, property( item, PARM_AC ), false);
         description += "       ";
 
         description += "Evasion modifier: ";
-        append_value(description, property( item, PARM_EVASION ), true);
+        _append_value(description, property( item, PARM_EVASION ), true);
     }
 
     const int ego = get_armour_ego_type( item );
@@ -1207,7 +1207,7 @@ static std::string describe_armour( const item_def &item, bool verbose )
     if (is_random_artefact( item ))
     {
         description += "$$";
-        description += randart_descrip( item );
+        description += _randart_descrip( item );
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
             description += "$This armour may have some hidden properties.";
     }
@@ -1259,7 +1259,7 @@ static std::string describe_armour( const item_def &item, bool verbose )
 // describe_jewellery
 //
 //---------------------------------------------------------------
-static std::string describe_jewellery( const item_def &item, bool verbose)
+static std::string _describe_jewellery( const item_def &item, bool verbose)
 {
     std::string description;
 
@@ -1279,31 +1279,31 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
             {
             case RING_PROTECTION:
                 description += "$It affects your AC (";
-                append_value( description, item.plus, true );
+                _append_value( description, item.plus, true );
                 description += ").";
                 break;
 
             case RING_EVASION:
                 description += "$It affects your evasion (";
-                append_value( description, item.plus, true );
+                _append_value( description, item.plus, true );
                 description += ").";
                 break;
 
             case RING_STRENGTH:
                 description += "$It affects your strength (";
-                append_value( description, item.plus, true );
+                _append_value( description, item.plus, true );
                 description += ").";
                 break;
 
             case RING_INTELLIGENCE:
                 description += "$It affects your intelligence (";
-                append_value( description, item.plus, true );
+                _append_value( description, item.plus, true );
                 description += ").";
                 break;
 
             case RING_DEXTERITY:
                 description += "$It affects your dexterity (";
-                append_value( description, item.plus, true );
+                _append_value( description, item.plus, true );
                 description += ").";
                 break;
 
@@ -1311,14 +1311,14 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
                 if (item.plus != 0 || is_random_artefact( item ))
                 {
                     description += "$It affects your accuracy (";
-                    append_value( description, item.plus, true );
+                    _append_value( description, item.plus, true );
                     description += ").";
                 }
 
                 if (item.plus2 != 0 || is_random_artefact( item ))
                 {
                     description += "$It affects your damage-dealing abilities (";
-                    append_value( description, item.plus2, true );
+                    _append_value( description, item.plus2, true );
                     description += ").";
                 }
                 break;
@@ -1333,7 +1333,7 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     if (is_random_artefact( item ))
     {
         description += "$";
-        description += randart_descrip(item);
+        description += _randart_descrip(item);
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES))
         {
             description += "$This ";
@@ -1546,15 +1546,15 @@ std::string get_item_description( const item_def &item, bool verbose,
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        description << describe_weapon( item, verbose );
+        description << _describe_weapon( item, verbose );
         break;
 
     case OBJ_MISSILES:
-        description << describe_ammo( item );
+        description << _describe_ammo( item );
         break;
 
     case OBJ_ARMOUR:
-        description << describe_armour( item, verbose );
+        description << _describe_armour( item, verbose );
         break;
 
     case OBJ_WANDS:
@@ -1585,7 +1585,7 @@ std::string get_item_description( const item_def &item, bool verbose,
         break;
 
     case OBJ_JEWELLERY:
-        description << describe_jewellery( item, verbose );
+        description << _describe_jewellery( item, verbose );
         break;
 
     case OBJ_STAVES:
@@ -1772,7 +1772,7 @@ void describe_item( item_def &item, bool allow_inscribe )
         std::string ainscrip;
 
         if (is_random_artefact(item))
-            ainscrip = randart_auto_inscription(item);
+            ainscrip = _randart_auto_inscription(item);
 
         // Only allow autoinscription if we don't have all the text
         // already.
@@ -1808,7 +1808,7 @@ void describe_item( item_def &item, bool allow_inscribe )
         else if (toupper(keyin) == 'A' && allow_autoinscribe)
         {
             // Remove previous randart inscription
-            trim_randart_inscrip(item);
+            _trim_randart_inscrip(item);
 
             if (!item.inscription.empty())
                 item.inscription += ", ";
@@ -1938,12 +1938,16 @@ static std::string describe_draconian(const monsters *mon)
     description += "scaled humanoid with wings.";
     
     if (subsp != MONS_DRACONIAN)
+    {
         if (describe_draconian_colour(subsp) != "")
             description += "  " + describe_draconian_colour(subsp);
+    }
 
     if (subsp != mon->type)
+    {
         if (describe_draconian_role(mon) != "")
             description += "  " + describe_draconian_role(mon);
+    }
 
     return (description);
 }
@@ -2087,7 +2091,7 @@ void describe_monsters(monsters& mons)
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        description << describe_demon(mons);
+        description << _describe_demon(mons);
         break;
 
     case MONS_URUG:
@@ -2278,12 +2282,12 @@ static std::string describe_favour_generic(god_type which_god)
 {
     const std::string godname = god_name(which_god);
     return (you.piety > 130) ? "A prized avatar of " + godname + ".":
-        (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
-        (you.piety >  70) ? "A rising star in the eyes of " + godname + "." :
-        (you.piety >  40) ? godname + " is most pleased with you." :
-        (you.piety >  20) ? godname + " has noted your presence." :
-        (you.piety >   5) ? godname + " is noncommittal."
-        : "You are beneath notice.";
+           (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
+           (you.piety >  70) ? "A rising star in the eyes of " + godname + "." :
+           (you.piety >  40) ? godname + " is most pleased with you." :
+           (you.piety >  20) ? godname + " has noted your presence." :
+           (you.piety >   5) ? godname + " is noncommittal."
+                             : "You are beneath notice.";
 }
 
 //---------------------------------------------------------------
