@@ -829,15 +829,66 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
     }
 }                               // end yesno()
 
+static std::string _list_alternative_yes(char yes1, char yes2,
+                                         bool lowered = false,
+                                         bool brackets = false)
+{
+    std::string help = "";
+    bool print_yes = false;
+    if (yes1 != 'Y')
+    {
+        if (lowered)
+            help += tolower(yes1);
+        else
+            help += yes1;
+        print_yes = true;
+    }
+    
+    if (yes2 != 'Y' && yes2 != yes1)
+    {
+        if (print_yes)
+            help += "/";
+            
+        if (lowered)
+            help += tolower(yes2);
+        else
+            help += yes2;
+        print_yes = true;
+    }
+    
+    if (print_yes)
+    {
+        if (brackets)
+            help = " (" + help + ")";
+        else
+            help = "/" + help;
+    }
+    
+    return help;
+}
+
+static const char* _list_allowed_keys(char yes1, char yes2,
+                                      bool lowered = false)
+{
+    std::string result = " [";
+                result += (lowered ? "y" : "Y");
+                result += _list_alternative_yes(yes1, yes2, lowered);
+                result += (lowered ? "/n/q" : "/N/Q");
+                result += "]";
+                
+    return (result.c_str());
+}
+
 // like yesno(), but returns 0 for no, 1 for yes, and -1 for quit
+// alt_yes and alt_yes2 allow up to two synonyms for 'Y'
 int yesnoquit( const char* str, bool safe, int safeanswer,
-               bool clear_after, char alt_yes )
+               bool clear_after, char alt_yes, char alt_yes2 )
 {
     if (!crawl_state.is_repeating_cmd())
         interrupt_activity( AI_FORCE_INTERRUPT );
 
-    std::string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
-    // std::string prompt = make_stringf("%s (y/n/q) ", str);
+    std::string prompt = make_stringf("%s%s ", str ? str : "Buggy prompt?",
+                                      _list_allowed_keys(alt_yes, alt_yes2, safe));
 
     while (1)
     {
@@ -866,7 +917,8 @@ int yesnoquit( const char* str, bool safe, int safeanswer,
         else if (tmp == 'Y' || tmp == alt_yes)
             return 1;
         else
-            mpr("[Y]es, [N]o or [Q]uit only, please.");
+            mprf("[Y]es%s, [N]o or [Q]uit only, please.",
+                 _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
     }
 }    
 

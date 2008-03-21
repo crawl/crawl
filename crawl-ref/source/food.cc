@@ -306,42 +306,23 @@ bool butchery(int which_corpse)
                 continue;
             
             // offer the possibility of butchering
-            mprf("%s %s? [y/n/q/c]", can_bottle_blood_from_corpse(mitm[o].plus)?
-                                       "Bottle" : "Butcher",
-                                     mitm[o].name(DESC_NOCAP_A).c_str());
-                 
-            // possible results:
-            // 0 - cancel all butchery (quit)
-            // 1 - say no to this butchery, continue prompting
-            // 2 - OK this butchery
-            // Yes, this is a hack because it's too annoying to adapt
-            // yesnoquit() to this purpose.
-            
-            int result = 100;
-            while (result == 100)
-            {
-                const int keyin = getchm(KC_CONFIRM);
-                if (keyin == CK_ESCAPE || keyin == 'q' || keyin == 'Q')
-                    result = 0;
-                if (keyin == ' ' || keyin == '\r' || keyin == '\n' ||
-                    keyin == 'n' || keyin == 'N')
-                    result = 1;
-                if (keyin == 'y' || keyin == 'Y' || keyin == 'c' || keyin == 'C' 
-                    || keyin == 'D' )     // D for users of the old keyset
-                    result = 2;
-            }
-
-            if ( result == 0 )
+            snprintf(info, INFO_SIZE, "%s %s?",
+                     can_bottle_blood_from_corpse(mitm[o].plus)? "Bottle" : "Butcher",
+                     mitm[o].name(DESC_NOCAP_A).c_str());
+                     
+            const int result = yesnoquit(info, true, 'N', false, 'C', 'D');
+            if ( result == -1 )
             {
                 canceled_butcher = true;
                 corpse_id = -1;
                 break;
             }
-            else if ( result == 2 )
+            else if ( result == 1 )
             {
                 corpse_id = o;
                 break;
             }
+            // continue loop for 0
         }
     }
    

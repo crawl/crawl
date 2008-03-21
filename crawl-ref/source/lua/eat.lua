@@ -96,7 +96,7 @@ function c_eat(floor, inv)
             if answer == "escape" then
                 return
             end
-            if answer == "y" then
+            if answer == "y" or answer == "e" then
                 food.eat(it)
                 return
             end

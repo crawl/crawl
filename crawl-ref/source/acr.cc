@@ -3920,9 +3920,9 @@ static void move_player(int move_x, int move_y)
         {
              monsters* mon = &menv[you.beheld_by[i]];
              coord_def pos = mon->pos();
-             int olddist = distance(you.x_pos, you.y_pos, pos.x, pos.y);
-             int newdist = distance(you.x_pos + move_x, you.y_pos + move_y,
-                                    pos.x, pos.y);
+             int olddist = grid_distance(you.x_pos, you.y_pos, pos.x, pos.y);
+             int newdist = grid_distance(you.x_pos + move_x, you.y_pos + move_y,
+                                         pos.x, pos.y);
 
              if (olddist < newdist)
              {

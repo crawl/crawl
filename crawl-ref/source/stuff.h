@@ -78,7 +78,7 @@ bool yesno( const char * str, bool safe = true, int safeanswer = 0,
             const explicit_keymap *map = NULL );
 
 int yesnoquit( const char* str, bool safe = true, int safeanswer = 0,
-               bool clear_after = true, char alt_yes = 'Y' );
+               bool clear_after = true, char alt_yes = 'Y', char alt_yes2 = 'Y' );
 
 
 bool in_bounds( int x, int y );
