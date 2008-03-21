@@ -764,13 +764,8 @@ static bool promote_to_priest(monsters* mon)
 
     if (priest_type != MONS_PROGRAM_BUG)
     {
-        // Turn an ordinary monster into a priestly monster, preserving
-        // the flags.
-        const unsigned long old_flags = mon->flags;
-
+        // Turn an ordinary monster into a priestly monster.
         monster_change_type(mon, priest_type);
-
-        mon->flags = old_flags;
 
         return true;
     }

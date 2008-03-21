@@ -1305,9 +1305,10 @@ static bool is_poly_power_unsuitable(
     }
 }
 
-/* Change one monster type into another. */
+// Change one monster type into another.
 void monster_change_type(monsters *monster, monster_type targetc)
 {
+    const unsigned long old_flags = monster->flags;
     const int old_hp = monster->hit_points;
     const int old_hp_max = monster->max_hit_points;
     const bool old_mon_caught = mons_is_caught(monster);
@@ -1323,6 +1324,8 @@ void monster_change_type(monsters *monster, monster_type targetc)
 
     // Note: define_monster() will clear out all enchantments! -- bwr
     define_monster( monster_index(monster) );
+
+    monster->flags = old_flags;
 
     monster->add_ench(abj);
     monster->add_ench(shifter);
@@ -1473,6 +1476,9 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     // the actual polymorphing:
     monster_change_type(monster, targetc);
 
+    // randomize things:
+    monster->flags = 0L;
+
     monster->hit_points += random2(monster->max_hit_points);
 
     if (monster->hit_points > monster->max_hit_points)
@@ -1480,6 +1486,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
     monster->speed_increment = 67 + random2(6);
 
+    // drop entire inventory:
     monster_drop_ething(monster);
 
     if (!player_messaged && player_monster_visible(monster)

@@ -1876,7 +1876,7 @@ enum monster_flag_type
     MF_INTERESTING        = 0x20,   // Player finds monster interesting
     MF_SEEN               = 0x40,   // Player already seen monster
     MF_DIVINE_PROTECTION  = 0x80,   // Monster has divine protection.
-    
+
     MF_KNOWN_MIMIC        = 0x100,  // Mimic that has taken a swing at the PC,
                                     // or that the player has inspected with ?
     MF_BANISHED           = 0x200,  // Monster that has been banished.
