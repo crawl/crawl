@@ -1276,6 +1276,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
     return (true);
 }
 
+// if known is true, only returns true for *known* weapons of electrocution
 bool item_is_rechargable(const item_def &it, bool known)
 {
     // These are obvious

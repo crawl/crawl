@@ -1001,6 +1001,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
             const int cont_points = div_rand_round(nastiness, 500);
 
+            // miscasts are uncontrolled
             contaminate_player( cont_points );
 
             miscast_effect( sptype, spell_mana(spell),

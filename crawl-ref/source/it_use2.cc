@@ -145,7 +145,7 @@ bool potion_effect( potion_type pot_eff, int pow )
              were_mighty ? "mightier" : "very mighty");
 
         if ( were_mighty )
-            contaminate_player(1);
+            contaminate_player(1, was_known);
         else
             modify_stat(STAT_STRENGTH, 5, true, "");
 
@@ -360,7 +360,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         
         // Just one point of contamination. These potions are really rare,
         // and contamination is nastier.
-        contaminate_player(1);
+        contaminate_player(1, was_known);
         break;
 
     case NUM_POTIONS:

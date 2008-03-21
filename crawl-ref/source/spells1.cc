@@ -161,7 +161,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
             // controlling teleport contaminates the player -- bwr
             if (!wizard_blink)
-                contaminate_player( 1 );
+                contaminate_player( 1, true );
         }
 
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && !wizard_blink)
@@ -911,7 +911,7 @@ void extension(int pow)
         cast_condensation_shield(pow);
 
     if (contamination)
-        contaminate_player( contamination );
+        contaminate_player( contamination, true );
 }                               // end extension()
 
 void ice_armour(int pow, bool extending)

@@ -400,7 +400,8 @@ void set_mp(int new_amount, bool max_too);
 /* ***********************************************************************
  * called from:
  * *********************************************************************** */
-void contaminate_player(int change, bool statusOnly = false);
+void contaminate_player(int change, bool controlled = false,
+                        bool status_only = false);
 
 /* @return true iff they were poisoned (false if they are immune) */
 bool poison_player( int amount, bool force = false );

@@ -637,7 +637,7 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
             else
             {
                 // controlling teleport contaminates the player -- bwr
-                contaminate_player(1);
+                contaminate_player(1, true);
             }
         }
     }                           // end "if is_controlled"

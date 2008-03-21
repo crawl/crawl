@@ -657,9 +657,10 @@ enum conduct_type
     DID_DRINK_BLOOD,
     DID_CANNIBALISM,
     DID_EAT_MEAT,                       // unused
-    DID_EAT_SOULED_BEING,  // Zin
+    DID_EAT_SOULED_BEING,     // Zin
+    DID_DELIBERATE_MUTATING,  // Zin
+    DID_CAUSE_GLOWING,        // Zin
     DID_CREATED_LIFE,                   // unused
-    DID_DELIBERATE_MUTATING,
 
     NUM_CONDUCTS
 };

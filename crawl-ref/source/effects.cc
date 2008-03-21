@@ -2437,6 +2437,7 @@ void handle_time( long time_delta )
         added_contamination++;
     }
 
+    bool mutagenic_randart = false;
     if (const int randart_glow = scan_randarts(RAP_MUTAGENIC))
     {
         // Reduced randart glow. Note that one randart will contribute
@@ -2448,13 +2449,16 @@ void handle_time( long time_delta )
         const int mean_glow   = 500 + randart_glow * 40;
         const int actual_glow = mean_glow / 2 + random2(mean_glow);
         added_contamination += div_rand_round(actual_glow, 1000);
+        mutagenic_randart = true;
     }
 
     // we take off about .5 points per turn
     if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE] && coinflip())
         added_contamination -= 1;
 
-    contaminate_player( added_contamination );
+    // only punish if contamination caused by mutagenic randarts
+    // (haste and invisibility already penalized earlier)
+    contaminate_player( added_contamination, mutagenic_randart );
 
     // only check for badness once every other turn
     if (coinflip())

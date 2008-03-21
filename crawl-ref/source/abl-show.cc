@@ -1295,7 +1295,7 @@ static bool do_ability(const ability_def& abil)
         }
 
         potion_effect( POT_INVISIBILITY, 2 * you.skills[SK_EVOCATIONS] + 5 );
-        contaminate_player( 1 + random2(3) );
+        contaminate_player( 1 + random2(3), true );
         exercise( SK_EVOCATIONS, 1 );
         break;
 

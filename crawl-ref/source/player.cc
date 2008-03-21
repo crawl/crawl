@@ -3566,6 +3566,23 @@ static void ability_increase()
     }
 }                               // end ability_increase()
 
+static const char * _get_rotting_how()
+{
+    ASSERT(you.rotting > 0 || you.species == SP_GHOUL);
+
+    if (you.rotting > 15)
+        return (" before your eyes");
+    if (you.rotting > 8)
+        return (" away quickly");
+    if (you.rotting > 4)
+        return (" badly");
+        
+    if (you.species == SP_GHOUL)
+        return (" faster than usual");
+        
+    return("");
+}
+
 void display_char_status()
 {
     if (you.species == SP_VAMPIRE && you.hunger_state == HS_ENGORGED)
@@ -3799,19 +3816,10 @@ void display_char_status()
     }
 
     if (you.rotting || you.species == SP_GHOUL)
-    {
-        // I apologize in advance for the horrendous ugliness about to
-        // transpire.  Avert your eyes!
-        mprf("Your flesh is rotting%s",
-             (you.rotting > 15) ? " before your eyes." :
-             (you.rotting > 8)  ? " away quickly." :
-             (you.rotting > 4)  ? " badly." :
-             ((you.species == SP_GHOUL && you.rotting) ?
-              " faster than usual." : ".") );
-    }
+        mprf("Your flesh is rotting%s.", _get_rotting_how());
 
     // prints a contamination message
-    contaminate_player( 0, true );
+    contaminate_player( 0, false, true );
 
     if (you.duration[DUR_CONFUSING_TOUCH])
     {
@@ -4757,12 +4765,32 @@ void set_mp(int new_amount, bool max_too)
     return;
 }                               // end set_mp()
 
-void contaminate_player(int change, bool statusOnly)
+static int _get_contamination_level()
+{
+    const int glow = you.magic_contamination;
+
+    if (glow > 60)
+        return (glow / 20 + 2);
+    if (glow > 40)
+        return 4;
+    if (glow > 25)
+        return 3;
+    if (glow > 15)
+        return 2;
+    if (glow > 5)
+        return 1;
+
+    return 0;
+}
+
+// controlled is true if the player actively did something to cause
+// contamination (such as drink a known potion of resistance),
+// status_only is true only for the status output
+void contaminate_player(int change, bool controlled, bool status_only)
 {
     // get current contamination level
-    int old_level;
-    int new_level;
-
+    int old_level = _get_contamination_level();
+    int new_level = 0;
 
 #if DEBUG_DIAGNOSTICS
     if (change > 0 || (change < 0 && you.magic_contamination))
@@ -4771,12 +4799,6 @@ void contaminate_player(int change, bool statusOnly)
              change, change + you.magic_contamination );
     }
 #endif
-
-    old_level = (you.magic_contamination > 60)?(you.magic_contamination / 20 + 2) :
-                (you.magic_contamination > 40)?4 :
-                (you.magic_contamination > 25)?3 :
-                (you.magic_contamination > 15)?2 :
-                (you.magic_contamination > 5)?1  : 0;
 
     // make the change
     if (change + you.magic_contamination < 0)
@@ -4790,13 +4812,9 @@ void contaminate_player(int change, bool statusOnly)
     }
 
     // figure out new level
-    new_level = (you.magic_contamination > 60)?(you.magic_contamination / 20 + 2) :
-                (you.magic_contamination > 40)?4 :
-                (you.magic_contamination > 25)?3 :
-                (you.magic_contamination > 15)?2 :
-                (you.magic_contamination > 5)?1  : 0;
+    new_level = _get_contamination_level();
 
-    if (statusOnly)
+    if (status_only)
     {
         if (new_level > 0)
         {
@@ -4818,12 +4836,24 @@ void contaminate_player(int change, bool statusOnly)
         return;
     }
 
-    if (new_level == old_level)
-        return;
+    if (new_level != old_level)
+    {
+        mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
+             "You feel %s contaminated with magical energies.",
+             (change > 0) ? "more" : "less" );
+    }
 
-    mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
-         "You feel %s contaminated with magical energies.", 
-         (change > 0) ? "more" : "less" );
+    // Zin doesn't like mutations or mutagenic radiation.
+    if (you.religion == GOD_ZIN)
+    {
+        // Whenever the glow status is first reached, give a warning message.
+        if (old_level < 1 && new_level >= 1)
+            did_god_conduct(DID_CAUSE_GLOWING, 0, false);
+        // If the player actively did something to increase glowing,
+        // Zin is displeased.
+        else if (controlled && change > 0 && old_level > 0)
+            did_god_conduct(DID_CAUSE_GLOWING, 1 + new_level, true);
+    }
 }
 
 bool poison_player( int amount, bool force )
@@ -4979,7 +5009,7 @@ void haste_player( int amount )
     else
     {
         mpr( "You feel as though your hastened speed will last longer." );
-        contaminate_player(1);
+        contaminate_player(1, true); // always deliberate
     }
 
     you.duration[DUR_HASTE] += amount;

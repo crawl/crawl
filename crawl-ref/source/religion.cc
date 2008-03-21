@@ -1720,10 +1720,23 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
+    case DID_CAUSE_GLOWING:
     case DID_DELIBERATE_MUTATING:
         if (you.religion == GOD_ZIN)
         {
-            if (!known)
+            if (thing_done == DID_CAUSE_GLOWING)
+            {
+                static long last_glowing_lecture = -1L;
+                if (last_glowing_lecture != you.num_turns)
+                {
+                    simple_god_message(" does not appreciate the mutagenic glow "
+                                       "surrounding you!");
+                    last_glowing_lecture = you.num_turns;
+                }
+                if (!known)
+                    break;
+            }
+            else if (!known)
             {
                 simple_god_message(" did not appreciate that!");
                 break;
@@ -1733,11 +1746,14 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
+    // level depends on intelligence: normal -> 1, high -> 2
+    // cannibalism is still worse
     case DID_EAT_SOULED_BEING:
         if (you.religion == GOD_ZIN)
         {
-            piety_change = -level;
-            penance = level * 5;
+            piety_change = -level * 5;
+            if (level > 1)
+                penance = 5;
             ret = true;
         }
         break;
@@ -1788,7 +1804,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
 
 static void dock_piety(int piety_loss, int penance)
 {
-    static long last_piety_lecture = -1L;
+    static long last_piety_lecture   = -1L;
     static long last_penance_lecture = -1L;
 
     if (piety_loss <= 0 && penance <= 0)

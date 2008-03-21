@@ -747,8 +747,8 @@ void print_stats(void)
         if (you.backlit())
         {
             textcolor(
-                you.magic_contamination >= 5?
-                bad_ench_colour( you.magic_contamination, 15, 25 )
+                you.magic_contamination > 5 ?
+                  bad_ench_colour( you.magic_contamination, 15, 25 )
                 : LIGHTBLUE );
             cprintf( "Glow " );
         }

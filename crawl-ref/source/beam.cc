@@ -3325,7 +3325,7 @@ static int affect_player( bolt &beam )
 
         case BEAM_HASTE:
             potion_effect( POT_SPEED, beam.ench_power );
-            contaminate_player( 1 );
+            contaminate_player( 1, beam.effect_known );
             beam.obvious_effect = true;
             nasty = false;
             nice  = true;
@@ -3350,7 +3350,7 @@ static int affect_player( bolt &beam )
 
         case BEAM_INVISIBILITY:
             potion_effect( POT_INVISIBILITY, beam.ench_power );
-            contaminate_player( 1 + random2(2) );
+            contaminate_player( 1 + random2(2), beam.effect_known );
             beam.obvious_effect = true;
             nasty = false;
             nice  = true;
@@ -3932,8 +3932,8 @@ static int affect_monster(bolt &beam, monsters *mon)
         if (YOU_KILL(beam.thrower) && hurt_final > 0)
         {
             const bool okay =
-                beam.aux_source == "reading a scroll of immolation"
-                              && !beam.effect_known;
+                (beam.aux_source == "reading a scroll of immolation"
+                 && !beam.effect_known);
 
             if (is_sanctuary(mon->x, mon->y)
                 || is_sanctuary(you.x_pos, you.y_pos))
@@ -4164,7 +4164,10 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
             beam.obvious_effect = true;
 
         if (YOU_KILL(beam.thrower))
-            did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3), beam.effect_known);
+        {
+            did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3),
+                            beam.effect_known);
+        }
 
         return (MON_AFFECTED);
     }
