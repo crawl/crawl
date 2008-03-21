@@ -786,53 +786,38 @@ void bless_follower(god_type god,
 
     monsters* mon = &menv[monster];
     const char *blessed = mon->name(DESC_NOCAP_A).c_str();
-    const char *result = NULL;
+    const char *result;
 
-    switch (random2(100))
+    // 5% chance: Turn a monster into a priestly monster, if possible.
+    // This is currently only used for Beogh.
+    if (god == GOD_BEOGH && one_chance_in(20) && promote_to_priest(mon))
+        result = "priesthood";
+    // 95% chance: full healing.
+    else
     {
-        // 5% chance: Turn a monster into a priestly monster, if
-        // possible.  This is currently only used for Beogh.
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-            if (god == GOD_BEOGH && promote_to_priest(mon))
-            {
-                result = "priesthood";
-                break;
-            }
-            // Deliberate fall through.
+        bool healing = false;
+        bool vigour = true;
 
-        // 95% chance: full healing.
-        default:
+        healing = heal_monster(mon, mon->max_hit_points, false);
+
+        if (!healing || coinflip())
         {
-            bool healing = false;
-            bool vigour = true;
+            // Full healing, plus one added hit point.
+            heal_monster(mon, mon->max_hit_points, true);
 
-            healing = heal_monster(mon, mon->max_hit_points, false);
-
-            if (!healing || coinflip())
-            {
-                // Full healing, plus one added hit point.
+            if (coinflip())
+                // Full healing, plus another added hit point.
                 heal_monster(mon, mon->max_hit_points, true);
 
-                if (coinflip())
-                    // Full healing, plus another added hit point.
-                    heal_monster(mon, mon->max_hit_points, true);
-
-                vigour = true;
-            }
-
-            if (healing && vigour)
-                result = "healing and extra vigour";
-            else if (healing)
-                result = "healing";
-            else
-                result = "extra vigour";
-
-            break;
+            vigour = true;
         }
+
+        if (healing && vigour)
+            result = "healing and extra vigour";
+        else if (healing)
+            result = "healing";
+        else
+            result = "extra vigour";
     }
 
     mprf(MSGCH_GOD, "%s blesses %s with %s.", god_name(god).c_str(),
