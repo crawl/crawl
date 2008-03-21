@@ -2148,55 +2148,56 @@ terse list of all commands, use '??' in-game. Most modes (targeting,
 level map, interlevel travel) also have help menus via '?' on their own.
 
 Saving games:
-        S               Save game with query and exit.
-        Ctrl-X          Save game without query and exit.
-        Q               Quit without saving (you're asked before).
+    S                   Save game with query and exit.
+    Ctrl-X              Save game without query and exit.
+    Q                   Quit without saving (you're asked before).
 
 Movement:
-        direction       Moves one square, direction is either one of 
+    direction           Moves one square, direction is either one of 
                         the numpad cursor keys (try both Numlock on and 
                         off) or  one of the Rogue vi keys (hjklyubn).
     Shift-direction     This moves straight until something interesting
-    or  / direction     is found (like a monster).
-        Ctrl-G          Interlevel travel (to arbitrary dungeon levels 
+    or  / direction     is found (like a monster). If the first square is
+                        a trap, movement starts nonetheless.
+    Ctrl-G              Interlevel travel (to arbitrary dungeon levels 
                         or waypoints). Remembers old destinations if 
                         interrupted. This command has its own set of
                         shortcuts; use ? for help on them.
-        o               Auto-explore. Setting the option explore_greedy 
+    o                   Auto-explore. Setting the option explore_greedy 
                         to true makes auto-explore run to interesting 
                         items (those that get picked up automatically) 
                         or piles (checking the contents). 
                         Autoexploration will open doors on its own 
                         except if you set easy_open to false.
-        Ctrl-W          Set waypoint (a digit between 0 and 9). Check 
+    Ctrl-W              Set waypoint (a digit between 0 and 9). Check 
                         the option show_waypoints. You can go to a
                         waypoint by pressing Ctrl-G and the digit.
 
 Resting and Searching:
-        s, Del, . or    Rests and searches (these are not distinguished)
-        Numpad 5        for one turn. This is most often used tactically
+    s, Del, . or        Rests and searches (these are not distinguished)
+    Numpad 5            for one turn. This is most often used tactically
                         for waiting a few turns. Serious resting or
                         searching should be done with the 5 command.
-        5 or            Long resting/searching (until both health and 
-     Shift-Numpad 5     magic  points are full or something is found or 
+    5 or                Long resting/searching (until both health and 
+    Shift-Numpad 5      magic  points are full or something is found or 
                         100 turns are over).
 
 Dungeon interaction:
-        O               Open door. This is usually done automatically by
+    O                   Open door. This is usually done automatically by
                         walking into the door, unless you set the option
                         easy_open to false.
-        C               Close door.
-     Ctrl-direction     Tries to untrap a known trap on the specified 
-     or * direction     square, else opens/closes door if there is one, 
+    C                   Close door.
+    Ctrl-direction      Tries to untrap a known trap on the specified 
+    or * direction      square, else opens/closes door if there is one, 
                         else attacks without move (even if no monster is 
                         seen).
-        <               Use staircase to go higher, also enters shops. 
-        >               Use staircase to go deeper, or enters branch.  
-        ;               Examine occupied tile, also causes auto-pickup.
-        x               Examine surroundings mode, see below. Has ? help.
-        X               Examine level map, see below. Has help on ?.
-        Ctrl-O          Show dungeon overview (branches, shops, etc.).
-        !               Annotate current level: you can enter any string.
+    <                   Use staircase to go higher, also enters shops. 
+    >                   Use staircase to go deeper, or enters branch.  
+    ;                   Examine occupied tile, also causes auto-pickup.
+    x                   Examine surroundings mode, see below. Has ? help.
+    X                   Examine level map, see below. Has help on ?.
+    Ctrl-O              Show dungeon overview (branches, shops, etc.).
+    !                   Annotate current level: you can enter any string.
                         This annotation is then listed in the dungeon 
                         overview (Ctrl-O) and also shown whenever you 
                         enter that level again. If you use this command 
@@ -2209,23 +2210,23 @@ Dungeon interaction:
 Character information:
 'display' below means usage of the message area,
 'show' means usage of the whole screen.
-        @               Display character status.
-        [               Display worn armour.
-        )               Display wielded and secondary weapons, 
+    @                   Display character status.
+    [                   Display worn armour.
+    )                   Display wielded and secondary weapons, 
                         and missiles (to be shot with the 'f' command).
-        "               Display worn jewellery.
-        E               Display experience info.
-        ^               Show religion screen.
-        A               Show abilities/mutations.
-        a               Show current abilities menu.
-        \               Show item knowledge.
-        m               Show skill screen.
-        i               Show inventory list. Inside this list, pressing 
+    "                   Display worn jewellery.
+    E                   Display experience info.
+    ^                   Show religion screen.
+    A                   Show abilities/mutations.
+    a                   Show current abilities menu.
+    \                   Show item knowledge.
+    m                   Show skill screen.
+    i                   Show inventory list. Inside this list, pressing 
                         a slot key shows information on that item.
-        ]               Shows a restricted inventory, only containing 
+    ]                   Shows a restricted inventory, only containing 
                         worn and wielded items.
-        I               Show list of memorised spells.
-        %               Show resistances and general character overview,
+    I                   Show list of memorised spells.
+    %                   Show resistances and general character overview,
                         including health, experience, gear, status,
                         mutations, abilities (the latter three more 
                         terse than with the command @, A, a). This is a
@@ -2234,38 +2235,41 @@ Character information:
                         Pressing the key of a displayed item views it.
 
 Item interaction (inventory):
-        {               Inscribe item (check the autoinscribe option).
+    {                   Inscribe item (check the autoinscribe option).
                         An empty inscription or inscribing only space 
                         will remove prior inscriptions. See Appendix 6.
                         You can also inscribe items when viewing them
                         by pressing their slot key in the inventory.
-        t               Throw/shoot an item. Here, you choose the item,
-        f               Fire quivered missile.
-        (               Cycle quiver to next suitable missile.
-        q               Quaff a potion.
-        e               Eat food (tries floor first, inventory next).
-        Z               Zap a wand.
-        r               Read a scroll or book.
-        M               Memorise a spell from a book.
-        w               Wield an item ( - for none).      
-        '               Wield item a, or switch to b.
-        v               Evoke power of wielded item.
-        W               Wear armour.
-        T               Take off armour.
-        P               Put on jewellery.
-        R               Remove jewellery.
+    f                   Fire quivered missile. If some monster is in
+                        sight, either the last target or the nearest
+                        monster will be automatically target. Pressing
+                        f again shoots.
+    (                   Cycle quiver to next suitable missile.
+    q                   Quaff a potion.
+    e                   Eat food (tries floor first, inventory next).
+                        In the eating prompt, e is synonymous to y.
+    Z                   Zap a wand.
+    r                   Read a scroll or book.
+    M                   Memorise a spell from a book.
+    w                   Wield an item ( - for none).      
+    '                   Wield item a, or switch to b.
+    v                   Evoke power of wielded item.
+    W                   Wear armour. Also allows to take off armour.
+    T                   Take off armour.
+    P                   Put on jewellery. Also allows to remove it.
+    R                   Remove jewellery.
 
 Item interaction (floor):
-        d               Drop an item.
+    d                   Drop an item.
                         Within the drop list, you can select slots based
                         on a regular expression by pressing Ctrl-F, 
                         followed by the regex.
-        #d              Drop exact number of items, where # is any number.
-        g or ,          Pick up items; press twice for pick up menu.
+    #d                  Drop exact number of items, where # is any number.
+    g or ,              Pick up items; press twice for pick up menu.
                         Use a prefix to pick up smaller quantities. 
                         As with dropping, Ctrl-F allows you to pick up 
                         items matching a regular expression.
-        c               Chop up a corpse. This will switch to an uncursed
+    c                   Chop up a corpse. This will switch to an uncursed
                         edged weapon (unless you have claws or wield such
                         a weapon already), cut up a single corpse on the
                         ground and switch back to your primary weapon. In
@@ -2277,37 +2281,37 @@ Item interaction (floor):
                          q, Esc:    stop chopping altogether
 
 Other game-playing commands:
-        a               Use special ability.
-        p               Pray. Also turns prayer off.
-        z               Cast a spell. 
-        I               List spells. 
-        t               Tell commands to allies, or shout (the latter
+    a                   Use special ability.
+    p                   Pray. Also turns prayer off.
+    z                   Cast a spell. 
+    I                   List spells. 
+    t                   Tell commands to allies, or shout (the latter
                         with tt).
-        Ctrl-A          Toggle autopickup. Note that encounters with 
+    Ctrl-A              Toggle autopickup. Note that encounters with 
                         invisible monsters always turns autopickup off.
                         You need to switch it on with Ctrl-A afterwards.
-        `               Re-do previous command
-        0               Repeat next command a given number of times
+    `                   Re-do previous command
+    0                   Repeat next command a given number of times
 
 Non-game playing commands:
-        ?               The help menu.
-        Ctrl-P          Show previous messages.
-        Ctrl-R          Redraw screen.
-        Ctrl-C          Clear main and level maps.
-        #               Dump character to file (name.txt).
-        :               Add note to dump file (see option take_notes).
-        ?:              Read the notes in-game.
-        ?V              Display version information.
-        ?/              Describe a monster, spell or feature. You can
+    ?                   The help menu.
+    Ctrl-P              Show previous messages.
+    Ctrl-R              Redraw screen.
+    Ctrl-C              Clear main and level maps.
+    #                   Dump character to file (name.txt).
+    :                   Add note to dump file (see option take_notes).
+    ?:                  Read the notes in-game.
+    ?V                  Display version information.
+    ?/                  Describe a monster, spell or feature. You can
                         enter a partial name or a regex instead of the
                         full name.
-        ~ or Ctrl-D     Add or save macros and key mappings.
-        =               Reassign inventory/spell/abilities letters.
-        _               Read messages (when playing online; not for
+    ~ or Ctrl-D         Add or save macros and key mappings.
+    =                   Reassign inventory/spell/abilities letters.
+    _                   Read messages (when playing online; not for
                         local games).
 
 Stashes:
-        Ctrl-F          Find. This searches in stashes and shops, you 
+    Ctrl-F              Find. This searches in stashes and shops, you 
                         can use regular expressions and also terms like
                         'long blades', 'shop', 'altar', 'artefact'.
                         If you are looking for altars to a special god,
@@ -2321,18 +2325,18 @@ Stashes:
                         you can cause auto-travel to go there (press the
                         associated letter) or you can examine the items
                         (press ? followed by the letter).
-        Ctrl-S          Mark stash (this is only necessary with option
+    Ctrl-S              Mark stash (this is only necessary with option
                         'stash_tracking = explicit').
-        Ctrl-E          Erase stash (ignores the square from stash 
+    Ctrl-E              Erase stash (ignores the square from stash 
                         tracking if using 'stash_tracking = explicit').
 
 Tiles:
-        -               Edit player doll.  This makes it possible to change
+    -                   Edit player doll.  This makes it possible to change
                         the appearance of the player and to override the
                         defaults, which are to mimic the current player's
                         equipment and any species defaults.  These options
                         are saved into the dolls.txt file.
-        Ctrl-Q          Modify screen size preferences.  These changes
+    Ctrl-Q              Modify screen size preferences.  These changes
                         are saved into the wininit.txt file.
 
 Level map ('X')
@@ -2341,40 +2345,40 @@ The level map (brought up by 'X' in the main screen) uses the whole
 screen to show the dungeon. The first line of that screen usually gives
 the name of the level and a hint on the help screen. You can use the
 level_map_title option to get rid of that.
-        Esc, Space      Leave level map.
-        ?               Level map help.
-        -               Scroll level map up
-        +               Scroll level map down
-        Direction       Move cursor.
-  Shift-Direction       Move cursor in bigger steps (check the option 
-   or / Direction       level_map_cursor_step).
-        .               Travel to cursor (also Enter, Del and , and ;)   
+    Esc, Space          Leave level map.
+    ?                   Level map help.
+    -                   Scroll level map up
+    +                   Scroll level map down
+    Direction           Move cursor.
+    Shift-Direction     Move cursor in bigger steps (check the option 
+    or / Direction      level_map_cursor_step).
+    .                   Travel to cursor (also Enter, Del and , and ;)
                         (if the cursor is on the character, move cursor
                         to last travel destination instead).
-        <               Cycle through up stairs.
-        >               Cycle through down stairs.
-        ^               Cycle through traps.
-        _               Cycle through altars.
-        Tab             Cycle through shops and portals.
-        *               Cycle forwards through stashes (if the option
+    <                   Cycle through up stairs.
+    >                   Cycle through down stairs.
+    ^                   Cycle through traps.
+    _                   Cycle through altars.
+    Tab                 Cycle through shops and portals.
+    *                   Cycle forwards through stashes (if the option
                         stash_tracking is set to all, this cycles 
                         through all items and piles).
-        /               Cycle backward through stashes.
-        Ctrl-C          Clear level and main maps (from temporarily 
+    /                   Cycle backward through stashes.
+    Ctrl-C              Clear level and main maps (from temporarily 
                         seen monsters, clouds, etc.).
-	Ctrl-F          Forget level map.
+    Ctrl-F              Forget level map.
 
 Waypoints can be set on the level map. You can travel to waypoints 
 using Ctrl-G. Check the option show_waypoints. The commands are
-        Ctrl-W          Set waypoint.
-        W               Cycle through waypoints.
+    Ctrl-W              Set waypoint.
+    W                   Cycle through waypoints.
 
 Travel exclusions mark certain spots of the map as no-go areas for 
 autotravel and explore.
-        Ctrl-X          Set travel exclusion.
-        Ctrl-E          Erase all travel exclusions at once.
-        X               Cycle through travel exclusions.
-        x               If on an exclusion centre, changes the radius of 
+    Ctrl-X              Set travel exclusion.
+    Ctrl-E              Erase all travel exclusions at once.
+    X                   Cycle through travel exclusions.
+    x                   If on an exclusion centre, changes the radius of 
                         the exclusion disc: 8, 4, 1 squares.
 
 Examining surroundings ('x')
@@ -2383,20 +2387,20 @@ When roaming the dungeon, the surroundings mode is activated by 'x'.
 It lets you have a look at items or monsters in line of sight. You may
 also examine stashed items outside current view using the option
 target_oos = true (if using this, check the option target_los_first).
-        x, Esc, Space   Return to playing mode.
-        ?               Special help screen.
-        * or '          Cycle objects forward.
-        / or ;          Cycle objects backward.
-        + or =          Cycle monsters forward.
-        -               Cycle monsters backward.
-        direction       Move cursor.
-        . or Enter      Travel to cursor (also Del).
-        v               Describe feature or monster under cursor.
+    x, Esc, Space       Return to playing mode.
+    ?    ?              Special help screen.
+    * or '              Cycle objects forward.
+    / or ;              Cycle objects backward.
+    + or =              Cycle monsters forward.
+    -                   Cycle monsters backward.
+    direction           Move cursor.
+    . or Enter          Travel to cursor (also Del).
+    v                   Describe feature or monster under cursor.
                         Some branch entries have special information.
-        >               Cycle downstairs.
-        <               Cycle upstairs.
-        _               Cycle through altars.
-        Tab             Cycle shops and portals.
+    >                   Cycle downstairs.
+    <                   Cycle upstairs.
+    _                   Cycle through altars.
+    Tab                 Cycle shops and portals.
 
 Targeting
 ---------
@@ -2404,30 +2408,30 @@ Targeting mode is similar to examining surroundings. It is activated
 whenever you fire projectiles, zap a wand, or cast spells which use 
 targets. All of the commands described for examination of surroundings 
 work, with the exception of Space (which fires).
-        Esc or x        Stop targeting.
-        ?               Special help screen.
-        . or Enter      Fire at cursor direction (also Del and Space).
-        !               Fire at cursor position, and stop there with 
+    Esc or x            Stop targeting.
+    ?                   Special help screen.
+    . or Enter          Fire at cursor direction (also Del and Space).
+    !                   Fire at cursor position, and stop there with 
                         slightly reduced impact. This can be useful to 
                         avoid damaging pets, or to attack submerged 
                         water creatures. 
-        p               Fire at previous target (if still in sight).
-        f or t          Smart-firing: fire at previous target, if it is
+    p                   Fire at previous target (if still in sight).
+    f or t              Smart-firing: fire at previous target, if it is
                         still in sight; and else fire at the cursor 
                         position. Together with the default_target (which
                         is on by default) this allows to start shooting
                         at an opponent with 'ff' and then keep firing 
                         with 'ff'.
-        :               Toggle display of the beam path.
-        Ctrl-F          Toggle target modes (between enemies, all, 
+    :                   Toggle display of the beam path.
+    Ctrl-F              Toggle target modes (between enemies, all, 
                         friends; see also option target_zero_exp).
-        (, )            These two commands allow you to change 
+    (, )                These two commands allow you to change 
                         ammunition while targeting. The choice is 
                         subject to the fire_order option. Usually, you 
                         change missiles according to your launcher; i.e. 
                         when wielding a bow, ( and ) will cycle through 
                         all stacks of arrows in your inventory.
-  Shift-Direction       Fire straight in that direction. You can go 
+    Shift-Direction     Fire straight in that direction. You can go 
                         back to the old targeting mode (allowing 
                         straight firing by pressing just the direction 
                         key) using the option target_unshifted_dirs.
@@ -2440,24 +2444,24 @@ When dropping (with the drop_mode=multi option), the drop menu accepts
 several shortcuts. The same applies to the pickup menu. In the 
 following, if an item is already selected, the key will deselect it 
 (except for ',' and '-', obviously).
-        (               Select all missiles.
-        )               Select all hand weapons.
-        [               Select all armour.
-        ?               Select all scrolls.
-        %               Select all food.
-        &               Select all carrion.
-        +               Select all books.
-        /               Select all wands.
-        \               Select all staves.
-        !               Select all potions.
-        =               Select all rings.
-        "               Select all amulets.
-        }               Select all miscellaneous items.
-        ,               Global select (subject to drop_filter option).
-        -               Global deselect (subject to drop_filter option).
-        *               Invert selection. This will allow you to select
+    (                   Select all missiles.
+    )                   Select all hand weapons.
+    [                   Select all armour.
+    ?                   Select all scrolls.
+    %                   Select all food.
+    &                   Select all carrion.
+    + or :              Select all books.
+    /    /              Select all wands.
+    \ or |              Select all staves.
+    !                   Select all potions.
+    =                   Select all rings.
+    "                   Select all amulets.
+    }                   Select all miscellaneous items.
+    ,                   Global select (subject to drop_filter option).
+    -                   Global deselect (subject to drop_filter option).
+    *                   Invert selection. This will allow you to select
                         all items even if you use the drop_filter option.
-        .               Selects next item. (If you have pressed the key
+    .                   Selects next item. (If you have pressed the key
                         of an item in the list, '.' will toggle the next
                         item. This can be repeated, quickly selecting
                         several subsequent items).
