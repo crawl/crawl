@@ -42,7 +42,7 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_ANT_LARVA, MONS_GIANT_ANT),
 
     monster_level_up(MONS_KILLER_BEE_LARVA, MONS_KILLER_BEE),
-    
+
     monster_level_up(MONS_CENTAUR, MONS_CENTAUR_WARRIOR),
     monster_level_up(MONS_YAKTAUR, MONS_YAKTAUR_CAPTAIN),
 
@@ -52,10 +52,13 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_DEEP_ELF_SOLDIER, MONS_DEEP_ELF_FIGHTER),
     monster_level_up(MONS_DEEP_ELF_FIGHTER, MONS_DEEP_ELF_KNIGHT),
 
-    // deep elf magi can become either conjurers or summoners.
+    // deep elf magi can become either summoners or conjurers.
     monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_SUMMONER, 500),
     monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_CONJURER),
+
     monster_level_up(MONS_DEEP_ELF_PRIEST, MONS_DEEP_ELF_HIGH_PRIEST),
+    monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_DEMONOLOGIST),
+    monster_level_up(MONS_DEEP_ELF_CONJURER, MONS_DEEP_ELF_SORCERER),
 };
 
 mons_experience_levels::mons_experience_levels()
