@@ -1309,6 +1309,7 @@ static bool is_poly_power_unsuitable(
 void monster_change_type(monsters *monster, monster_type targetc)
 {
     const unsigned long old_flags = monster->flags;
+    const unsigned long old_exp = monster->experience;
     const int old_hp = monster->hit_points;
     const int old_hp_max = monster->max_hit_points;
     const bool old_mon_caught = mons_is_caught(monster);
@@ -1326,6 +1327,7 @@ void monster_change_type(monsters *monster, monster_type targetc)
     define_monster( monster_index(monster) );
 
     monster->flags = old_flags;
+    monster->experience = old_exp;
 
     monster->add_ench(abj);
     monster->add_ench(shifter);
@@ -1478,6 +1480,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
     // randomize things:
     monster->flags = 0L;
+    monster->experience = 0L;
 
     monster->hit_points += random2(monster->max_hit_points);
 
