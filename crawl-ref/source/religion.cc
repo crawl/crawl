@@ -875,7 +875,7 @@ void bless_follower(god_type god,
     }
 
     // 90% chance: either removal of harmful ailments...
-    if (blessing_balms(mon))
+    if (coinflip() && blessing_balms(mon))
     {
         result = "divine balms";
         goto blessing_done;
