@@ -786,12 +786,11 @@ static bool blessing_ac(monsters* mon)
 
     int slot;
 
-    if (armour == NON_ITEM)
-        slot = shield;
-    else if (shield == NON_ITEM)
-        slot = armour;
-    else
+    do
+    {
         slot = (coinflip()) ? armour : shield;
+    }
+    while (slot == NON_ITEM);
 
     item_def& arm(mitm[slot]);
 
