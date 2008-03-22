@@ -777,7 +777,7 @@ static bool blessing_priesthood(monsters* mon)
 
 static bool blessing_ac(monsters* mon)
 {
-    // Pick either the armour or the shield.
+    // Pick either a monster's armour or its shield.
     const int armour = mon->inv[MSLOT_ARMOUR];
     const int shield = mon->inv[MSLOT_SHIELD];
 
@@ -799,6 +799,12 @@ static bool blessing_ac(monsters* mon)
 
     // And enchant it.
     return enchant_armour(ac_change, true, arm);
+}
+
+static bool blessing_healing(monsters *mon, bool extra)
+{
+    // Heal a monster, giving them an extra hit point if extra is true.
+    return heal_monster(mon, mon->max_hit_points, extra);
 }
 
 void bless_follower(god_type god,
@@ -851,17 +857,15 @@ void bless_follower(god_type god,
     // 90% chance: full healing, optionally adding one or two extra hit
     // points.
     {
-        bool healing = false;
-        bool vigour = true;
-
-        healing = heal_monster(mon, mon->max_hit_points, false);
+        bool healing = blessing_healing(mon, false);
+        bool vigour = false;
 
         if (!healing || coinflip())
         {
-            heal_monster(mon, mon->max_hit_points, true);
+            blessing_healing(mon, true);
 
             if (coinflip())
-                heal_monster(mon, mon->max_hit_points, true);
+                blessing_healing(mon, true);
 
             vigour = true;
         }
