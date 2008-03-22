@@ -249,7 +249,7 @@ int airstrike(int power, dist &beam)
 
         hurted = 8 + random2( random2(4) + (random2(power) / 6)
                               + (random2(power) / 7) );
-        
+
         if ( mons_flies(monster) )
         {
             hurted *= 3;
@@ -257,7 +257,7 @@ int airstrike(int power, dist &beam)
         }
 
         hurted -= random2(1 + monster->ac);
-        
+
         if (hurted < 0)
             hurted = 0;
         else
