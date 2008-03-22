@@ -58,7 +58,7 @@ void mons_trap(struct monsters *monster)
 {
     if (!is_trap_square(monster->x, monster->y))
         return;
-    
+
     int temp_rand = 0;          // probability determination {dlb}
 
     // single calculation permissible {dlb}
@@ -66,7 +66,7 @@ void mons_trap(struct monsters *monster)
 
     // new function call {dlb}
     int which_trap = trap_at_xy(monster->x, monster->y);
-    if (which_trap == -1) 
+    if (which_trap == -1)
         return;
 
     bool trapKnown = (grd[monster->x][monster->y] != DNGN_UNDISCOVERED_TRAP);
@@ -151,7 +151,7 @@ void mons_trap(struct monsters *monster)
     case TRAP_ALARM:
         if (!mons_friendly(monster) || silenced(monster->x, monster->y))
         {
-            if (trapKnown && you.can_see(monster) 
+            if (trapKnown && you.can_see(monster)
                 && !silenced(you.x_pos, you.y_pos))
             {
                 mpr("The alarm trap makes no noise.");
@@ -188,7 +188,7 @@ void mons_trap(struct monsters *monster)
             }
             return;             // early return {dlb}
         }
-        
+
         if (random2(monster->ev) > 8
             || trapKnown && intelligent_ally(monster) && random2(monster->ev) > 8)
         {
@@ -239,7 +239,7 @@ void mons_trap(struct monsters *monster)
             }
             return;
         }
-        
+
         if (random2(monster->ev) > 8
             || trapKnown && intelligent_ally(monster) && random2(monster->ev) > 8)
         {
@@ -266,7 +266,7 @@ void mons_trap(struct monsters *monster)
         }
         trap_item( OBJ_MISSILES, MI_THROWING_NET,
                    env.trap[which_trap].x, env.trap[which_trap].y );
-                   
+
         if (mons_is_caught(monster))
             mark_net_trapping(monster->x, monster->y);
 
