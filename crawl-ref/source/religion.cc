@@ -800,6 +800,27 @@ static bool blessing_ac(monsters* mon)
     return enchant_armour(ac_change, true, arm);
 }
 
+static bool blessing_balms(monsters *mon)
+{
+    // Remove poisoning, sickness, confusion, and rotting, like a potion
+    // of healing, but without the healing.
+    bool balms = false;
+
+    if (mon->del_ench(ENCH_POISON))
+        balms = true;
+
+    if (mon->del_ench(ENCH_SICK))
+        balms = true;
+
+    if (mon->del_ench(ENCH_CONFUSION))
+        balms = true;
+
+    if (mon->del_ench(ENCH_ROT))
+        balms = true;
+
+    return balms;
+}
+
 static bool blessing_healing(monsters *mon, bool extra)
 {
     // Heal a monster, giving them an extra hit point if extra is true.
@@ -853,8 +874,15 @@ void bless_follower(god_type god,
         }
     }
 
-    // 90% chance: full healing, optionally adding one or two extra hit
+    // 90% chance: either removal of harmful ailments...
+    if (blessing_balms(mon))
+    {
+        result = "divine balms";
+        goto blessing_done;
+    }
+    // ...or full healing, optionally adding one or two extra hit
     // points.
+    else
     {
         bool healing = blessing_healing(mon, false);
         bool vigour = false;
