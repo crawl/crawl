@@ -162,6 +162,7 @@ bool puton_item(int slot, bool prompt_finger = true);
 
 bool enchant_weapon( enchant_stat_type which_stat, bool quiet = false,
                      int wpn = -1 );
+bool enchant_armour( int &ac_change, bool quiet, item_def &arm );
 
 bool throw_it(bolt &pbolt, int throw_2, bool teleport=false, int acc_bonus=0,
               dist *target = NULL);

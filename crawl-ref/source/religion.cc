@@ -754,7 +754,7 @@ static void give_nemelex_gift()
     }
 }
 
-static bool promote_to_priest(monsters* mon)
+static bool blessing_priesthood(monsters* mon)
 {
     monster_type priest_type = MONS_PROGRAM_BUG;
 
@@ -775,6 +775,32 @@ static bool promote_to_priest(monsters* mon)
     return false;
 }
 
+static bool blessing_ac(monsters* mon)
+{
+    // Pick either the armour or the shield.
+    const int armour = mon->inv[MSLOT_ARMOUR];
+    const int shield = mon->inv[MSLOT_SHIELD];
+
+    if (armour == NON_ITEM && shield == NON_ITEM)
+        return false;
+
+    int slot;
+
+    if (armour == NON_ITEM)
+        slot = shield;
+    else if (shield == NON_ITEM)
+        slot = armour;
+    else
+        slot = (coinflip()) ? armour : shield;
+
+    item_def& arm(mitm[slot]);
+
+    int ac_change;
+
+    // And enchant it.
+    return enchant_armour(ac_change, true, arm);
+}
+
 void bless_follower(god_type god,
                     bool (*suitable)(const monsters* mon))
 {
@@ -792,13 +818,38 @@ void bless_follower(god_type god,
 
     // 5% chance: Turn a monster into a priestly monster, if possible.
     // This is currently only used for Beogh and ordinary orcs.
-    if (god == GOD_BEOGH && one_chance_in(20) && mon->type == MONS_ORC)
+    if (one_chance_in(20))
     {
-        promote_to_priest(mon);
-        result = "priesthood";
+        if (god == GOD_BEOGH && mon->type == MONS_ORC
+            && blessing_priesthood(mon))
+        {
+            result = "priesthood";
+            goto blessing_done;
+        }
     }
-    // 95% chance: full healing.
-    else
+
+    // 5% chance: Enchant a monster's armour or shield by one or two
+    // points, or at least uncurse it, if possible.  The message doesn't
+    // make a distinction.
+    if (one_chance_in(20))
+    {
+        bool ac_effect = blessing_ac(mon);
+
+        if (!ac_effect || coinflip())
+        {
+            if (blessing_ac(mon))
+                ac_effect = true;
+        }
+
+        if (ac_effect)
+        {
+            result = "extra defence";
+            goto blessing_done;
+        }
+    }
+
+    // 90% chance: full healing, optionally adding one or two extra hit
+    // points.
     {
         bool healing = false;
         bool vigour = true;
@@ -807,11 +858,9 @@ void bless_follower(god_type god,
 
         if (!healing || coinflip())
         {
-            // Full healing, plus one added hit point.
             heal_monster(mon, mon->max_hit_points, true);
 
             if (coinflip())
-                // Full healing, plus another added hit point.
                 heal_monster(mon, mon->max_hit_points, true);
 
             vigour = true;
@@ -825,6 +874,7 @@ void bless_follower(god_type god,
             result = "extra vigour";
     }
 
+blessing_done:
     mprf(MSGCH_GOD, "%s blesses %s with %s.", god_name(god).c_str(),
         blessed, result);
 }

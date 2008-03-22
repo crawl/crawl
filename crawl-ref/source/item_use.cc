@@ -81,7 +81,7 @@
 #include "xom.h"
 
 static bool drink_fountain();
-static bool enchant_armour(int item_slot = -1);
+static bool handle_enchant_armour( int item_slot = -1 );
 
 static int  _fire_prompt_for_item(std::string& err);
 static bool _fire_validate_item(int selected, std::string& err);
@@ -3915,7 +3915,72 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, int wpn )
     return (true);
 }
 
-static bool enchant_armour( int item_slot )
+bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
+{
+    ac_change = 0;
+
+    // cannot be enchanted nor uncursed
+    if (!is_enchantable_armour(arm, true))
+        return (false);
+
+    bool is_cursed = item_cursed(arm);
+
+    // Turn hides into mails where applicable.
+    // NOTE: It is assumed that armour which changes in this way does
+    // not change into a form of armour with a different evasion modifier.
+    if (armour_is_hide(arm, false))
+    {
+        mprf("%s glows purple and changes!",
+             arm.name(DESC_CAP_YOUR).c_str());
+
+        ac_change = arm.plus;
+        hide2armour(arm);
+        ac_change = arm.plus - ac_change;
+
+        if (is_cursed)
+            do_uncurse_item( arm );
+
+        // no additional enchantment
+        return (true);
+    }
+
+    // even if not affected, it may be uncursed.
+    if (!is_enchantable_armour(arm, false)
+        || arm.plus >= 3 && random2(8) < arm.plus)
+    {
+        if (is_cursed)
+        {
+            if (!quiet)
+            {
+                mprf("%s glows silver for a moment.",
+                     arm.name(DESC_CAP_YOUR).c_str());
+            }
+
+            do_uncurse_item( arm );
+            return (true);
+        }
+        else
+            return (false);
+    }
+
+    // output message before changing enchantment and curse status
+    if (!quiet)
+    {
+        mprf("%s glows green for a moment.",
+             arm.name(DESC_CAP_YOUR).c_str());
+    }
+
+    arm.plus++;
+    ac_change++;
+
+    if (is_cursed)
+        do_uncurse_item( arm );
+
+    xom_is_stimulated(16);
+    return (true);
+}
+
+static bool handle_enchant_armour( int item_slot )
 {
     if (item_slot == -1)
         item_slot = prompt_invent_item( "Enchant which item?", MT_INVLIST,
@@ -3929,72 +3994,15 @@ static bool enchant_armour( int item_slot )
 
     item_def& arm(you.inv[item_slot]);
 
-    // cannot be enchanted nor uncursed
-    if (!is_enchantable_armour(arm, true))
-    {
+    int ac_change;
+    bool result = enchant_armour(ac_change, false, arm);
+
+    if (!result)
         canned_msg( MSG_NOTHING_HAPPENS );
-        return (false);
-    }
+    else if (ac_change)
+        you.redraw_armour_class = true;
 
-    bool is_cursed = item_cursed(arm);
-                
-    // Turn hides into mails where applicable.
-    // NOTE: It is assumed that armour which changes in this way does
-    // not change into a form of armour with a different evasion modifier.
-    if (arm.sub_type == ARM_DRAGON_HIDE
-        || arm.sub_type == ARM_ICE_DRAGON_HIDE
-        || arm.sub_type == ARM_STEAM_DRAGON_HIDE
-        || arm.sub_type == ARM_MOTTLED_DRAGON_HIDE
-        || arm.sub_type == ARM_STORM_DRAGON_HIDE
-        || arm.sub_type == ARM_GOLD_DRAGON_HIDE
-        || arm.sub_type == ARM_SWAMP_DRAGON_HIDE
-        || arm.sub_type == ARM_TROLL_HIDE)
-    {
-        mprf("%s glows purple and changes!",
-             arm.name(DESC_CAP_YOUR).c_str());
-             
-        hide2armour(arm);
-
-        if (is_cursed)
-            do_uncurse_item( arm );
-
-        you.redraw_armour_class = 1;
-
-        // no additional enchantment
-        return (true);
-    }
-
-    // even if not affected, it may be uncursed.
-    if (!is_enchantable_armour(arm, false)
-        || arm.plus >= 3 && random2(8) < arm.plus)
-    {
-        if (is_cursed)
-        {
-            mprf("%s glows silver for a moment.",
-                 arm.name(DESC_CAP_YOUR).c_str());
-                 
-            do_uncurse_item( arm );
-            return (true);
-        }
-        else
-        {
-            canned_msg( MSG_NOTHING_HAPPENS );
-            return (false);
-        }
-    }
-
-    // output message before changing enchantment and curse status
-    mprf("%s glows green for a moment.",
-         arm.name(DESC_CAP_YOUR).c_str());
-
-    arm.plus++;
-
-    if (is_cursed)
-        do_uncurse_item( arm );
-        
-    you.redraw_armour_class = 1;
-    xom_is_stimulated(16);
-    return (true);
+    return result;
 }
 
 static void handle_read_book( int item_slot )
@@ -4047,7 +4055,7 @@ static bool scroll_modify_item(const scroll_type scroll)
 {
      int item_slot = prompt_invent_item( "Use on which item?", MT_INVLIST,
                                           OSEL_ANY, true, true, false );
-                                          
+
      if (item_slot == PROMPT_ABORT)
      {
          canned_msg( MSG_OK );
@@ -4055,7 +4063,7 @@ static bool scroll_modify_item(const scroll_type scroll)
      }
 
      item_def &item = you.inv[item_slot];
-                                          
+
      switch (scroll)
      {
      case SCR_IDENTIFY:
@@ -4080,7 +4088,7 @@ static bool scroll_modify_item(const scroll_type scroll)
         if (is_enchantable_armour(item, true))
         {
             // might still fail because of already high enchantment
-            if (enchant_armour(item_slot))
+            if (handle_enchant_armour(item_slot))
                 return (true);
             return (false);
         }
@@ -4418,7 +4426,7 @@ void read_scroll( int slot )
         if ( !item_type_known(scroll) )
              id_the_scroll = scroll_modify_item(which_scroll);
         else
-             enchant_armour(-1);
+             handle_enchant_armour(-1);
         break;
 
     case SCR_CURSE_ARMOUR:
