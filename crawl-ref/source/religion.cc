@@ -824,12 +824,10 @@ void bless_follower(god_type god,
 
     int chance = random2(20);
 
-    // Turn a monster into a priestly monster, if possible.  This is
-    // currently only used for Beogh and ordinary orcs.
+    // Turn a monster into a priestly monster, if possible.
     if (chance == 0)
     {
-        if (god == GOD_BEOGH && mon->type == MONS_ORC
-            && blessing_priesthood(mon))
+        if (blessing_priesthood(mon))
         {
             result = "priesthood";
             goto blessing_done;
