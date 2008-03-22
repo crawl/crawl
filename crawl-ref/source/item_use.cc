@@ -3922,7 +3922,8 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
     // cannot be enchanted nor uncursed
     if (!is_enchantable_armour(arm, true))
     {
-        canned_msg( MSG_NOTHING_HAPPENS );
+        if (!quiet)
+            canned_msg( MSG_NOTHING_HAPPENS );
         return (false);
     }
 
@@ -3933,8 +3934,11 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
     // not change into a form of armour with a different evasion modifier.
     if (armour_is_hide(arm, false))
     {
-        mprf("%s glows purple and changes!",
-             arm.name(DESC_CAP_YOUR).c_str());
+        if (!quiet)
+        {
+            mprf("%s glows purple and changes!",
+                 arm.name(DESC_CAP_YOUR).c_str());
+        }
 
         ac_change = arm.plus;
         hide2armour(arm);
@@ -3964,7 +3968,8 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
         }
         else
         {
-            canned_msg( MSG_NOTHING_HAPPENS );
+            if (!quiet)
+                canned_msg( MSG_NOTHING_HAPPENS );
             return (false);
         }
     }
