@@ -54,7 +54,7 @@
 #include "traps.h"
 #include "view.h"
 
-static bool abyss_blocks_teleport(bool cblink)
+static bool _abyss_blocks_teleport(bool cblink)
 {
     // Lugonu worshippers get their perks.
     if (you.religion == GOD_LUGONU)
@@ -83,7 +83,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
     if (scan_randarts(RAP_PREVENT_TELEPORTATION) && !wizard_blink)
         mpr("You feel a weird sense of stasis.");
     else if (you.level_type == LEVEL_ABYSS
-             && abyss_blocks_teleport(high_level_controlled_blink)
+             && _abyss_blocks_teleport(high_level_controlled_blink)
              && !wizard_blink)
     {
         mpr("The power of the Abyss keeps you in your place!");
@@ -1080,7 +1080,7 @@ void missile_prot(int pow)
 
     if (you.duration[DUR_REPEL_MISSILES] > 100)
         you.duration[DUR_REPEL_MISSILES] = 100;
-}                               // end missile_prot()
+}
 
 void deflection(int pow)
 {
@@ -1090,7 +1090,7 @@ void deflection(int pow)
 
     if (you.duration[DUR_DEFLECT_MISSILES] > 100)
         you.duration[DUR_DEFLECT_MISSILES] = 100;
-}                               // end cast_deflection()
+}
 
 void cast_regen(int pow)
 {
@@ -1101,12 +1101,12 @@ void cast_regen(int pow)
 
     if (you.duration[DUR_REGENERATION] > 100)
         you.duration[DUR_REGENERATION] = 100;
-}                               // end cast_regen()
+}
 
 void cast_berserk(void)
 {
     go_berserk(true);
-}                               // end cast_berserk()
+}
 
 void cast_swiftness(int power)
 {
@@ -1177,7 +1177,7 @@ void cast_insulation(int power)
         you.duration[DUR_INSULATION] = 100;
     else
         you.duration[DUR_INSULATION] += dur_incr;
-}                               // end cast_insulation()
+}
 
 void cast_resist_poison(int power)
 {
@@ -1189,7 +1189,7 @@ void cast_resist_poison(int power)
         you.duration[DUR_RESIST_POISON] = 100;
     else
         you.duration[DUR_RESIST_POISON] += dur_incr;
-}                               // end cast_resist_poison()
+}
 
 void cast_teleport_control(int power)
 {
@@ -1201,7 +1201,7 @@ void cast_teleport_control(int power)
         you.duration[DUR_CONTROL_TELEPORT] = 50;
     else
         you.duration[DUR_CONTROL_TELEPORT] += dur_incr;
-}                               // end cast_teleport_control()
+}
 
 void cast_ring_of_flames(int power)
 {
@@ -1213,7 +1213,7 @@ void cast_ring_of_flames(int power)
     mpr("The air around you leaps into flame!");
 
     manage_fire_shield();
-}                               // end cast_ring_of_flames()
+}
 
 void cast_confusing_touch(int power)
 {
@@ -1226,7 +1226,7 @@ void cast_confusing_touch(int power)
     if (you.duration[DUR_CONFUSING_TOUCH] > 50)
         you.duration[DUR_CONFUSING_TOUCH] = 50;
 
-}                               // end cast_confusing_touch()
+}
 
 bool cast_sure_blade(int power)
 {
