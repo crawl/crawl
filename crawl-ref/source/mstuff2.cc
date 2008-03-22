@@ -1501,7 +1501,7 @@ bool mons_thrown_object_destroyed( item_def *item, int x, int y,
 {
     ASSERT( item != NULL );
 
-    bool destroyed = ((item->base_type != OBJ_MISSILES ||
+    bool destroyed = ((item->base_type == OBJ_MISSILES &&
                        item->sub_type != MI_THROWING_NET) && coinflip());
     bool hostile_grid = grid_destroys_items(grd[x][y]);
 
