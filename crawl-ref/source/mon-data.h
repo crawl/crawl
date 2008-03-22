@@ -97,7 +97,7 @@
    - various things monsters can do upon seeing you
 
    intel explanation:
-   - How smart it is: I_PLANT < I_ANIMAL < I_NORMAL < I_HIGH.
+   - How smart it is: I_PLANT < I_INSECT < I_ANIMAL < I_NORMAL < I_HIGH.
    So far, differences here have little effects except for monster's chance
    of seeing you if stealthy and rudimentary trap handling;
    really stupid monsters will walk through clouds

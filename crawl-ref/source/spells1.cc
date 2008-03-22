@@ -42,6 +42,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "skills2.h"
 #include "spells3.h"
 #include "spells4.h"
@@ -571,31 +572,85 @@ int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
     big_cloud( cty, whose,
                beam.target_x, beam.target_y, pow, 8 + random2(3) );
     return (1);
-}                               // end cast_big_c()
+}
 
 void big_cloud(cloud_type cl_type, kill_category whose,
                int cl_x, int cl_y, int pow, int size, int spread_rate)
 {
     apply_area_cloud(make_a_normal_cloud, cl_x, cl_y, pow, size,
                      cl_type, whose, spread_rate);
-}                               // end big_cloud()
+}
 
-static int healing_spell( int healed )
+static bool _mons_hostile(const monsters *mon)
 {
+    // needs to be done this way because of friendly/neutral enchantments
+    return (!mons_friendly(mon) && !mons_neutral(mon));
+}
+
+static bool _can_pacify_monster(const monsters *mon, const int healed)
+{
+    ASSERT(you.religion == GOD_ELYVILON);
+
+    if (healed < 1)
+        return false;
+
+    if (mons_friendly(mon) || mons_neutral(mon))
+        return false;
+
+    // Ely only cares about natural monsters
+    if (mons_holiness(mon) != MH_NATURAL)
+        return false;
+
+    if (mons_intel(mon->type) <= I_PLANT) // no self-awareness
+        return false;
+
+    if (mons_is_sleeping(mon)) // not aware of what is happening
+        return false;
+
+    const int factor = (mons_intel(mon->type) <= I_ANIMAL) ? 3 : // animals
+                       (is_player_same_species(mon->type)) ? 2   // same species
+                                                           : 1;  // other
+
+    const int random_factor = random2(you.skills[SK_INVOCATIONS] * healed/3);
+    
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
+         mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
+         you.skills[SK_INVOCATIONS], healed, random_factor);
+#endif
+
+    if (mon->max_hit_points < factor * random_factor)
+        return true;
+
+    return false;
+}
+
+static int _healing_spell( int healed, int dir_x = 100, int dir_y = 100)
+{
+    ASSERT(healed >= 1);
+
     int mgr = 0;
     struct monsters *monster = 0;       // NULL {dlb}
     struct dist bmove;
 
-    mpr("Which direction?", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR, TARG_FRIEND );
-
+    if (dir_x == 100 || dir_y == 100)
+    {
+        mpr("Which direction?", MSGCH_PROMPT);
+        direction( bmove, DIR_DIR, TARG_FRIEND );
+    }
+    else
+    {
+        bmove.dx = dir_x;
+        bmove.dy = dir_y;
+        bmove.isValid = true;
+    }
+    
     if (!bmove.isValid)
     {
         canned_msg( MSG_OK );
         return 0;
     }
-
-    mgr = mgrd[you.x_pos + bmove.dx][you.y_pos + bmove.dy];
 
     if (bmove.dx == 0 && bmove.dy == 0)
     {
@@ -604,6 +659,8 @@ static int healing_spell( int healed )
         return 1;
     }
 
+    mgr = mgrd[you.x_pos + bmove.dx][you.y_pos + bmove.dy];
+    
     if (mgr == NON_MONSTER)
     {
         mpr("There isn't anything there!");
@@ -611,7 +668,16 @@ static int healing_spell( int healed )
     }
 
     monster = &menv[mgr];
+    
+    // don't heal monster you can't pacify
+    if (you.religion == GOD_ELYVILON && _mons_hostile(monster)
+        && !_can_pacify_monster(monster, healed))
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return -1;
+    }
 
+    bool nothing_happens = true;
     if (heal_monster(monster, healed, false))
     {
         mprf("You heal %s.", monster->name(DESC_NOCAP_THE).c_str());
@@ -623,38 +689,61 @@ static int healing_spell( int healed )
             const monsters *mons = static_cast<const monsters*>(monster);
             print_wounds(mons);
         }
+        
+        if (you.religion == GOD_ELYVILON && !_mons_hostile(monster))
+        {
+            simple_god_message(" appreciates the healing of a fellow creature.");
+            if (one_chance_in(8))
+                gain_piety(1);
+            return 1;
+        }
+        nothing_happens = false;
     }
-    else
+    
+    if (you.religion == GOD_ELYVILON && _mons_hostile(monster))
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        simple_god_message(" supports your offer of peace.");
+        simple_monster_message( monster, " turns neutral." );
+        monster->attitude = ATT_NEUTRAL;
+        monster->flags |= MF_WAS_NEUTRAL;
+
+        // give half of the monster's xp
+        unsigned int exp_gain = 0, avail_gain = 0;
+        gain_exp( exper_value(monster) / 2 + 1, &exp_gain, &avail_gain );
+        monster->flags |= MF_GOT_HALF_XP;
+
+        // finally give a small piety return
+        gain_piety(1 + random2(healed/15));
     }
+    else if (nothing_happens)
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return 1;
-}                               // end healing_spell()
+}                               // end _healing_spell()
 
 #if 0
 char cast_lesser_healing( int pow )
 {
-    return healing_spell(5 + random2avg(7, 2));
-}                               // end lesser healing()
+    return _healing_spell(5 + random2avg(7, 2));
+}
 
 char cast_greater_healing( int pow )
 {
-    return healing_spell(15 + random2avg(29, 2));
-}                               // end cast_greater_healing()
+    return _healing_spell(15 + random2avg(29, 2));
+}
 
 char cast_greatest_healing( int pow )
 {
-    return healing_spell(50 + random2avg(49, 2));
-}                               // end cast_greatest_healing()
+    return _healing_spell(50 + random2avg(49, 2));
+}
 #endif 
 
-int cast_healing( int pow )
+int cast_healing( int pow, int dir_x, int dir_y )
 {
     if (pow > 50)
         pow = 50;
 
-    return (healing_spell( pow + roll_dice( 2, pow ) - 2 )); 
+    return (_healing_spell( pow + roll_dice( 2, pow ) - 2, dir_x, dir_y ));
 }
 
 int cast_revitalisation( int pow )

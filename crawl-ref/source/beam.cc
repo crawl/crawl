@@ -2080,7 +2080,16 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         return (MON_AFFECTED);
 
     case BEAM_HEALING:         /* 2 = healing */
-        if (heal_monster( monster, 5 + roll_dice( pbolt.damage ), false ))
+        if (YOU_KILL(pbolt.thrower))
+        {
+            if (cast_healing(5 + roll_dice( pbolt.damage ),
+                             monster->x - you.x_pos, monster->y - you.y_pos) > 0)
+            {
+                pbolt.obvious_effect = true;
+            }
+            pbolt.msg_generated = true; // to avoid duplicate "nothing happens"
+        }
+        else if (heal_monster( monster, 5 + roll_dice( pbolt.damage ), false ))
         {
             if (monster->hit_points == monster->max_hit_points)
             {

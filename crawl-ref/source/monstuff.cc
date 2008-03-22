@@ -392,7 +392,7 @@ static void check_kill_milestone(const monsters *mons,
 }
 #endif // DGL_MILESTONES
 
-static void give_monster_experience( monsters *victim,
+static void _give_monster_experience( monsters *victim,
                                      int killer_index, int experience,
                                      bool victim_was_born_friendly )
 {
@@ -421,27 +421,34 @@ static void give_adjusted_experience(monsters *monster, killer_type killer,
         testbits(monster->flags, MF_CREATED_FRIENDLY);
     const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
     const bool no_xp = monster->has_ench(ENCH_ABJ);
+    const bool already_got_half_xp = testbits(monster->flags, MF_GOT_HALF_XP);
 
     if (created_friendly || was_neutral || no_xp)
         ; // No experience if monster was created friendly or summoned.
     else if (YOU_KILL(killer))
     {
         int old_lev = you.experience_level;
-        gain_exp( experience, exp_gain, avail_gain );
+        if (already_got_half_xp)
+            gain_exp( experience / 2, exp_gain, avail_gain );
+        else
+            gain_exp( experience, exp_gain, avail_gain );
+
         // Give a message for monsters dying out of sight
         if (exp_gain > 0 && !mons_near(monster)
             && you.experience_level == old_lev)
+        {
             mpr("You feel a bit more experienced.");
+        }
     }
-    else if (pet_kill)
+    else if (pet_kill && !already_got_half_xp)
         gain_exp( experience / 2 + 1, exp_gain, avail_gain );
 
     if (MON_KILL(killer) && !no_xp)
-        give_monster_experience( monster, killer_index, experience,
-                                 created_friendly );
+        _give_monster_experience( monster, killer_index, experience,
+                                  created_friendly );
 }
 
-static bool is_pet_kill(killer_type killer, int i)
+static bool _is_pet_kill(killer_type killer, int i)
 {
     if (!MON_KILL(killer))
         return (false);
@@ -670,7 +677,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     if (killer == KILL_YOU)
         crawl_state.cancel_cmd_repeat();
 
-    const bool pet_kill = is_pet_kill(killer, i);
+    const bool pet_kill = _is_pet_kill(killer, i);
 
     if (monster->type == MONS_GIANT_SPORE
         || monster->type == MONS_BALL_LIGHTNING)
@@ -789,7 +796,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
                                     true, monster);
 
-                if (created_friendly)
+                if (was_neutral)
                     did_god_conduct(DID_KILL_NEUTRAL, monster->hit_dice,
                                     true, monster);
             }

@@ -641,7 +641,7 @@ enum conduct_type
     DID_KILL_WIZARD,
     DID_KILL_PRIEST,
     DID_KILL_HOLY,
-    DID_KILL_NEUTRAL,                   // unused
+    DID_KILL_NEUTRAL,
     DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
     DID_LIVING_KILLED_BY_SERVANT,
     DID_UNDEAD_KILLED_BY_SERVANT,
@@ -1887,7 +1887,8 @@ enum monster_flag_type
                                     // (good god worshippers -> neutral)
                                     // and orcs (Beogh worshippers -> friendly)
     MF_WAS_IN_VIEW        = 0x2000, // Was in view during previous turn
-    MF_BAND_MEMBER        = 0x4000  // Created as a member of a band
+    MF_BAND_MEMBER        = 0x4000, // Created as a member of a band
+    MF_GOT_HALF_XP        = 0x8000  // player already got half xp value earlier
 };
 
 // Adding slots breaks saves. YHBW.
