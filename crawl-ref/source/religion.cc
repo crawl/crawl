@@ -822,9 +822,11 @@ void bless_follower(god_type god,
     const char *blessed = mon->name(DESC_NOCAP_A).c_str();
     const char *result;
 
+    int chance = random2(20);
+
     // 5% chance: Turn a monster into a priestly monster, if possible.
     // This is currently only used for Beogh and ordinary orcs.
-    if (one_chance_in(20))
+    if (chance == 0)
     {
         if (god == GOD_BEOGH && mon->type == MONS_ORC
             && blessing_priesthood(mon))
@@ -837,7 +839,7 @@ void bless_follower(god_type god,
     // 5% chance: Enchant a monster's armour or shield by one or two
     // points, or at least uncurse it, if possible.  The message doesn't
     // make a distinction.
-    if (one_chance_in(20))
+    if (chance <= 1)
     {
         bool ac_effect = blessing_ac(mon);
 
