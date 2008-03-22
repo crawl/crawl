@@ -3921,7 +3921,10 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
 
     // cannot be enchanted nor uncursed
     if (!is_enchantable_armour(arm, true))
+    {
+        canned_msg( MSG_NOTHING_HAPPENS );
         return (false);
+    }
 
     bool is_cursed = item_cursed(arm);
 
@@ -3960,7 +3963,10 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
             return (true);
         }
         else
+        {
+            canned_msg( MSG_NOTHING_HAPPENS );
             return (false);
+        }
     }
 
     // output message before changing enchantment and curse status
@@ -3997,9 +4003,7 @@ static bool handle_enchant_armour( int item_slot )
     int ac_change;
     bool result = enchant_armour(ac_change, false, arm);
 
-    if (!result)
-        canned_msg( MSG_NOTHING_HAPPENS );
-    else if (ac_change)
+    if (ac_change)
         you.redraw_armour_class = true;
 
     return result;
