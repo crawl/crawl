@@ -2238,7 +2238,7 @@
 {
     SPELL_SUMMON_BEAST, "Summon Beast",
     SPTYP_SUMMONING,
-    SPFLAG_NONE,
+    SPFLAG_UNHOLY,
     4,
     0,
     NULL,
