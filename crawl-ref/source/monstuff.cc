@@ -412,7 +412,7 @@ static void _give_monster_experience( monsters *victim,
             if (you.religion == GOD_BEOGH
                 && !player_under_penance()
                 && you.piety >= piety_breakpoint(2)
-                && random2(you.piety) >= piety_breakpoint(0)
+                && random2(you.piety) >= piety_breakpoint(1)
                 && !one_chance_in(3))
             {
                 bless_follower(GOD_BEOGH, is_orcish_follower, mons);
@@ -883,7 +883,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && mons_holiness(monster) == MH_NATURAL)
                 && (!player_under_penance()
                     && you.piety >= piety_breakpoint(2)
-                    && random2(you.piety) >= piety_breakpoint(0)))
+                    && random2(you.piety) >= piety_breakpoint(1)))
             {
                 bless_follower(GOD_BEOGH, is_orcish_follower);
             }
@@ -1017,7 +1017,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                         && mons_holiness(monster) == MH_NATURAL
                     && (!player_under_penance()
                         && you.piety >= piety_breakpoint(2)
-                        && random2(you.piety) >= piety_breakpoint(0)
+                        && random2(you.piety) >= piety_breakpoint(1)
                         && !one_chance_in(3))
                     && !invalid_monster_index(i))
                 {
