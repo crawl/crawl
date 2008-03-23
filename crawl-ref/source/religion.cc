@@ -775,6 +775,21 @@ static bool blessing_priesthood(monsters* mon)
     return false;
 }
 
+static bool blessing_wpn(monsters *mon)
+{
+    // Pick a monster's weapon.
+    const int weapon = mon->inv[MSLOT_WEAPON];
+
+    if (weapon == NON_ITEM)
+        return false;
+
+    item_def& wpn(mitm[weapon]);
+
+    // And enchant or uncurse it.
+    return enchant_weapon((coinflip()) ? ENCHANT_TO_HIT
+                                       : ENCHANT_TO_DAM, true, wpn);
+}
+
 static bool blessing_ac(monsters* mon)
 {
     // Pick either a monster's armour or its shield.
@@ -796,7 +811,7 @@ static bool blessing_ac(monsters* mon)
 
     int ac_change;
 
-    // And enchant it.
+    // And enchant or uncurse it.
     return enchant_armour(ac_change, true, arm);
 }
 
@@ -852,10 +867,10 @@ void bless_follower(god_type god,
         mon = &menv[monster];
     }
 
-    const char *blessed = (follower && !mons_near(follower))
-                              ? "your follower"
-                              : mon->name(DESC_NOCAP_THE).c_str();
-    const char *result;
+    std::string blessed = (follower && !mons_near(follower))
+                                ? "your follower"
+                                : mon->name(DESC_NOCAP_THE).c_str();
+    std::string result;
 
     int chance = random2(20);
 
@@ -869,23 +884,43 @@ void bless_follower(god_type god,
         }
     }
 
-    // Enchant a monster's armour or shield by one or two points, or at
-    // least uncurse it, if possible.  The message doesn't make a
-    // distinction.
+    // Enchant a monster's weapon or armour/shield by one or two points,
+    // or at least uncurse it, if possible.
     if (chance <= 1)
     {
-        bool ac_effect = blessing_ac(mon);
+        bool affected;
 
-        if (!ac_effect || coinflip())
+        if (coinflip())
         {
-            if (blessing_ac(mon))
-                ac_effect = true;
+            affected = blessing_wpn(mon);
+
+            if (!affected || coinflip())
+            {
+                if (blessing_wpn(mon))
+                    affected = true;
+            }
+
+            if (affected)
+            {
+                result = "extra attack power";
+                goto blessing_done;
+            }
         }
-
-        if (ac_effect)
+        else
         {
-            result = "extra defence";
-            goto blessing_done;
+            affected = blessing_ac(mon);
+
+            if (!affected || coinflip())
+            {
+                if (blessing_ac(mon))
+                    affected = true;
+            }
+
+            if (affected)
+            {
+                result = "extra defence";
+                goto blessing_done;
+            }
         }
     }
 
@@ -921,7 +956,8 @@ void bless_follower(god_type god,
     }
 
 blessing_done:
-    snprintf(info, INFO_SIZE, " blesses %s with %s.", blessed, result);
+    snprintf(info, INFO_SIZE, " blesses %s with %s.", blessed.c_str(),
+             result.c_str());
     simple_god_message(info);
 }
 
@@ -3761,8 +3797,8 @@ static bool bless_weapon( god_type god, int brand, int colour )
         you.inv[wpn].colour = colour;
 
         do_uncurse_item( you.inv[wpn] );
-        enchant_weapon( ENCHANT_TO_HIT, true );
-        enchant_weapon( ENCHANT_TO_DAM, true );
+        enchant_weapon( ENCHANT_TO_HIT, true, you.inv[wpn] );
+        enchant_weapon( ENCHANT_TO_DAM, true, you.inv[wpn] );
 
         you.wield_change = true;
         you.num_gifts[god]++;

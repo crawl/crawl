@@ -1715,18 +1715,16 @@ bool recharge_wand(int item_slot)
     item_def &wand = you.inv[ item_slot ];
 
     if (wand.base_type == OBJ_WEAPONS
-        && !is_random_artefact( wand )
-        && !is_fixed_artefact( wand )
         && get_weapon_brand( wand ) == SPWPN_ELECTROCUTION)
     {
         // might fail because of already high enchantment
-        if (enchant_weapon( ENCHANT_TO_DAM, false, item_slot ))
+        if ( enchant_weapon( ENCHANT_TO_DAM, false, wand ))
         {
             you.wield_change = true;
 
             if (!item_ident(wand, ISFLAG_KNOW_TYPE))
                 set_ident_flags(wand, ISFLAG_KNOW_TYPE);
-            
+
             return (true);
         }
         return (false);

@@ -81,6 +81,8 @@
 #include "xom.h"
 
 static bool drink_fountain();
+static bool handle_enchant_weapon( enchant_stat_type which_stat,
+                                   bool quiet = false, int item_slot = -1 );
 static bool handle_enchant_armour( int item_slot = -1 );
 
 static int  _fire_prompt_for_item(std::string& err);
@@ -3812,64 +3814,39 @@ static bool affix_weapon_enchantment()
     return (success);
 }
 
-bool enchant_weapon( enchant_stat_type which_stat, bool quiet, int wpn )
+bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn )
 {
-    if (wpn == -1)
-        wpn = you.equip[ EQ_WEAPON ];
-
-    bool affected = true;
-    int enchant_level;
-
-    if (wpn == -1
-        || (you.inv[ wpn ].base_type != OBJ_WEAPONS
-            && you.inv[ wpn ].base_type != OBJ_MISSILES))
+    // cannot be enchanted nor uncursed
+    if (!is_enchantable_weapon(wpn, true))
     {
         if (!quiet)
-            canned_msg(MSG_NOTHING_HAPPENS);
+            canned_msg( MSG_NOTHING_HAPPENS );
 
         return (false);
     }
 
-    item_def& item = you.inv[wpn];
-
-    you.wield_change = true;
+    const bool is_cursed = item_cursed(wpn);
 
     // missiles only have one stat
-    if (item.base_type == OBJ_MISSILES)
+    if (wpn.base_type == OBJ_MISSILES)
         which_stat = ENCHANT_TO_HIT;
 
-    if (which_stat == ENCHANT_TO_HIT)
-        enchant_level = item.plus;
-    else
-        enchant_level = item.plus2;
+    int enchant_level = (which_stat == ENCHANT_TO_HIT) ? wpn.plus
+                                                       : wpn.plus2;
 
-    // artefacts can't be enchanted, but scrolls still remove curses
-    if (item.base_type == OBJ_WEAPONS
-        && (is_fixed_artefact( you.inv[wpn] )
-            || is_random_artefact( you.inv[wpn] )))
+    // Even if not affected, it may be uncursed.
+    if (!is_enchantable_weapon(wpn, false)
+        || enchant_level >= 4 && random2(9) < enchant_level)
     {
-        affected = false;
-    }
-
-    if (enchant_level >= 4 && random2(9) < enchant_level)
-    {
-        affected = false;
-    }
-
-    // if it isn't affected by the enchantment, it will still
-    // be uncursed.
-    if (!affected)
-    {
-        if (item_cursed(item))
+        if (is_cursed)
         {
             if (!quiet)
             {
                 mprf("%s glows silver for a moment.",
-                     item.name(DESC_CAP_YOUR).c_str());
+                     wpn.name(DESC_CAP_YOUR).c_str());
             }
 
-            do_uncurse_item( you.inv[you.equip[EQ_WEAPON]] );
-
+            do_uncurse_item( wpn );
             return (true);
         }
         else
@@ -3881,41 +3858,60 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, int wpn )
         }
     }
 
-    // Get the item name now before the enchantment changes it.
-    std::string iname = item.name(DESC_CAP_YOUR);
+    // get item name now before changing enchantment
+    std::string iname = wpn.name(DESC_CAP_YOUR);
 
-    do_uncurse_item( item );
-
-    if (item.base_type == OBJ_WEAPONS)
+    if (wpn.base_type == OBJ_WEAPONS)
     {
-        if (which_stat == ENCHANT_TO_DAM)
+        if (which_stat == ENCHANT_TO_HIT)
         {
-            item.plus2++;
-
-            if (!quiet)
-                mprf("%s glows red for a moment.", iname.c_str());
-        }
-        else if (which_stat == ENCHANT_TO_HIT)
-        {
-            item.plus++;
-
             if (!quiet)
                 mprf("%s glows green for a moment.", iname.c_str());
+
+            wpn.plus++;
+        }
+        else
+        {
+            if (!quiet)
+                mprf("%s glows red for a moment.", iname.c_str());
+
+            wpn.plus2++;
         }
     }
-    else if (item.base_type == OBJ_MISSILES)
+    else if (wpn.base_type == OBJ_MISSILES)
     {
         if (!quiet)
         {
             mprf("%s %s red for a moment.", iname.c_str(),
-                 item.quantity > 1 ? "glow" : "glows");
+                 wpn.quantity > 1 ? "glow" : "glows");
         }
 
-        item.plus++;
+        wpn.plus++;
     }
+
+    if (is_cursed)
+        do_uncurse_item( wpn );
 
     xom_is_stimulated(16);
     return (true);
+}
+
+static bool handle_enchant_weapon( enchant_stat_type which_stat,
+                                   bool quiet, int item_slot )
+{
+    if (item_slot == -1)
+        item_slot = you.equip[ EQ_WEAPON ];
+
+    if (item_slot == -1)
+        return (false);
+
+    item_def& wpn(you.inv[item_slot]);
+
+    bool result = enchant_weapon(which_stat, quiet, wpn);
+
+    you.wield_change = true;
+
+    return result;
 }
 
 bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
@@ -3927,10 +3923,11 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
     {
         if (!quiet)
             canned_msg( MSG_NOTHING_HAPPENS );
+
         return (false);
     }
 
-    bool is_cursed = item_cursed(arm);
+    const bool is_cursed = item_cursed(arm);
 
     // Turn hides into mails where applicable.
     // NOTE: It is assumed that armour which changes in this way does
@@ -3973,6 +3970,7 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
         {
             if (!quiet)
                 canned_msg( MSG_NOTHING_HAPPENS );
+
             return (false);
         }
     }
@@ -4000,7 +3998,7 @@ static bool handle_enchant_armour( int item_slot )
         item_slot = prompt_invent_item( "Enchant which item?", MT_INVLIST,
                                         OSEL_ENCH_ARM, true, true, false );
 
-    if (item_slot == PROMPT_ABORT)
+    if (item_slot == -1)
     {
         canned_msg( MSG_OK );
         return (false);
@@ -4353,11 +4351,11 @@ void read_scroll( int slot )
 
     // everything [in the switch] below this line is a nightmare {dlb}:
     case SCR_ENCHANT_WEAPON_I:
-        id_the_scroll = enchant_weapon( ENCHANT_TO_HIT );
+        id_the_scroll = handle_enchant_weapon( ENCHANT_TO_HIT );
         break;
 
     case SCR_ENCHANT_WEAPON_II:
-        id_the_scroll = enchant_weapon( ENCHANT_TO_DAM );
+        id_the_scroll = handle_enchant_weapon( ENCHANT_TO_DAM );
         break;
 
     case SCR_ENCHANT_WEAPON_III:
@@ -4372,17 +4370,17 @@ void read_scroll( int slot )
 
                 mprf("%s glows bright yellow for a while.", iname.c_str() );
 
-                enchant_weapon( ENCHANT_TO_HIT, true );
-
-                if (coinflip())
-                    enchant_weapon( ENCHANT_TO_HIT, true );
-
-                enchant_weapon( ENCHANT_TO_DAM, true );
-
-                if (coinflip())
-                    enchant_weapon( ENCHANT_TO_DAM, true );
-
                 do_uncurse_item( you.inv[you.equip[EQ_WEAPON]] );
+
+                handle_enchant_weapon( ENCHANT_TO_HIT, true );
+
+                if (coinflip())
+                    handle_enchant_weapon( ENCHANT_TO_HIT, true );
+
+                handle_enchant_weapon( ENCHANT_TO_DAM, true );
+
+                if (coinflip())
+                    handle_enchant_weapon( ENCHANT_TO_DAM, true );
             }
         }
         else

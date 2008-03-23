@@ -1291,6 +1291,33 @@ bool item_is_rechargable(const item_def &it, bool known)
              && (!known || item_type_known(it)) );
 }
 
+bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
+{
+    if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES)
+        return (false);
+
+    // only equipped items should be affected
+//    if (!item_is_equipped(wpn))
+//        return (false);
+
+    // artefacts cannot be enchanted (missiles can't be artefacts)
+    if (wpn.base_type == OBJ_WEAPONS
+        && (is_fixed_artefact( wpn )
+            || is_random_artefact( wpn )))
+    {
+        return (uncurse && item_cursed( wpn )); // ?EW may uncurse artefacts
+    }
+
+    // Nor can highly enchanted items (missiles only have one stat)
+    if ( wpn.plus >= 9 ||
+        (wpn.base_type == OBJ_WEAPONS && wpn.plus2 >= 9) )
+    {
+        return (uncurse && item_cursed( wpn )); // ?EW may uncurse items
+    }
+
+    return (true);
+}
+
 bool is_enchantable_armour(const item_def &arm, bool uncurse)
 {
     if (arm.base_type != OBJ_ARMOUR)
@@ -1312,7 +1339,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse)
          && (arm.sub_type >= ARM_CLOAK && arm.sub_type <= ARM_BOOTS
              || is_shield(arm)) )
     {
-        return (uncurse && item_cursed( arm )); // ?EA may uncurse item
+        return (uncurse && item_cursed( arm )); // ?EA may uncurse items
     }
 
     return (true);
