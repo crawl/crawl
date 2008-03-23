@@ -1,3 +1,340 @@
+Stone Soup 0.4.0 (2008????)
+---------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+
+Breaks saves and bones compatibility.
+
+Interface
+---------
+* Overhauled key settings of a number of commands. (See /docs/034_commands.txt.)
+* Overhauled (f)iring interface, abolish (t)hrowing, output quiver in status.
+* Allow selection of equipment slots from '%' overview screen.
+* Improved butchering interface.
+* Allow searching item/monster/spell descriptions ('?\' command).
+* Added Ctrl-D as a synonym for '~' (defining macros).
+* Added commands for repeating commands ('`' and '0').
+* Stepping into lava/deep water/zot traps requires typing "yes".
+* Ask for confirmation before stepping into dangerous traps.
+* Allow autotravel through clouds your character is immune to.
+* (W)ear and (P)ut on menus allow removal of equipped items.
+* easy_butcher won't switch away from distortion weapons.
+* Fixed weapon swap ignoring {!w}.
+* Added inscriptions =p, !p for preventing autosaccing.
+* Arriving via stairs calls autopickup and lists items on square.
+* Output item slots for rotting meat message.
+* Evaporate can now be cancelled during potion/direction choice.
+* greedy_explore now defaults to true.
+
+Gods
+----
+* Overhauled the good gods: Zin/TSO completely new, Elyvilon more interesting.
+* Improved Beogh and Nemelex.
+* Vehumet isn't considered evil anymore.
+* Removed option to stop prayer.
+* Upon failed sacrifice hint on accepted item types.
+* Divine summons will leave on penance, or turn hostile on abandonment.
+
+Characters
+----------
+* Added Vampire species.
+* Removed Glamour.
+* New order of species and classes on the character selection screen.
+* Red/White Draconians gain heat/cold resistance at xl 14 (rather than 18).
+* Removed forgetfulnes; introduce fur, shouting, +mp/-mp mutations.
+* Added +1 damage bonus for orcs and dwarves throwing racial gear.
+* Fixed undead being unable to smite.
+* Necromutation now gives torment resistance again.
+* When transforming only remove armour you can't wear when transformed.
+
+Items
+-----
+* Removed weapons of disruption, improved holy wrath.
+* New weapon brand: dragon slaying, limited to Polearms.
+* Disable random generation of weapons of orc slaying (allowed in randarts).
+* Allow random generation of throwing nets.
+* Make distortion only take effect on unwielding.
+* New scrolls: Holy Word, Fog.
+* Removed scrolls of forgetfulness.
+* Scrolls of recharging and enchant armour now prompt for an item.
+* Potions of restore ability also cancel breath delay.
+* Staves and rods of the same type can now be recognized.
+* Manuals are now visibly different from spell books.
+* Improved artefact autoinscriptions.
+* Several new pre-defined artefacts.
+* Warn before putting on items of potentially fatal stat drain.
+* Added message for returning weapons NOT returning.
+* Equipped randarts can now actually cause berserk.
+* Thrown potions of poison won't poison monsters anymore.
+* Limit racial properties applying to only some fitting item types.
+* Prompt when attempting to sacrifice important items.
+
+Monsters
+--------
+* New glyphs and colours for many monsters. (See /docs/034_monster_glyphs.txt.)
+* Ghosts get freezing cloud.
+* Draconian ghosts of xl >= 7 get the shadow dragon breath attack.
+* Angels and Daevas may appear randomly in the Abyss.
+* Holy monsters may turn neutral if the player follows a good god.
+* Beefed up demon lords.
+* Began changing monster resists to have several levels, like the player's.
+* Removed electricity resistance from several monsters.
+* Daevas now resist negative energy.
+* Fixed Oklob plants being confuseable.
+* Lee's Rapid Deconstruction now works against skeletal dragons.
+* Changed evil/holiness/intelligence flags for a number of monsters.
+* Improved trap handling for intelligent monsters.
+* Fixed friendlies accidentally shooting the player.
+* Monsters won't enter miasma if it harms them.
+* Implemented Dispel Undead for monsters.
+* Monsters may use wands of disintegration and polymorph other (mutates).
+* Give a message for kills out of LOS.
+* No experience for killing summoned monsters.
+* Monster blink is now restricted to their LOS.
+* Made undetected mimic description match that of items.
+* Introduced fish zombies (vault defined only).
+* Fixed several spell/invocation attacks not waking monsters.
+* Improved monster shields.
+* More refined monster speech. (See /docs/monster_speech.txt.)
+
+Levels
+------
+* Several new vaults.
+* Treat adjacent doors as one (large) gate, opening/closing together.
+* Removed amnesia traps.
+* Introduced shafts.
+* Added blood spattering.
+* Slime Pits are now on Lair:8-10.
+
+Tiles
+-----
+* Merged Tiles into Crawl code. 
+* Save files between tile and non-tile games are compatible.
+* Added lots of new tiles, and corrected misdisplayed ones.
+* Tutorial improvement for tiles.
+* Improved mouse-click inventory/dungeon interaction.
+* Show travel exclusion in tile map and mini-map.
+* Added MP colour bar.
+* Fixed ghosts changing icons between saves.
+* Fixed Detect creatures revealing exact monster type.
+* Mimics posing as autopickable items now get marked as such.
+* Clicking on items now respects warning inscriptions.
+* Added item brand for plants.
+* Added '0' significator for empty wands.
+* General improvement.
+
+Miscellaneous
+-------------
+* New scoring system.
+* Train stealth by sneaking around sleeping monsters.
+* Train T&D by setting off traps.
+* Distortion effect now cancels butchering.
+* Better feedback on Detect Traps.
+* Identify post-mortem inventory in morgue.txt.
+* Dump command also dumps level map.
+* init.txt/crawlrc allow loading of external options/macro files.
+* Overhaul of ghost structure.
+* Overhauled and improved the documentation.
+* Outsourced names for random artefacts.
+* General code clean-up.
+* Lots of additional bugs squashed.
+
+
+Stone Soup 0.3.4 (20080129)
+---------------------------
+* "Tele" status is shown when the player is about to teleport.
+* Weapons of reaching cost no magic or hunger to use, do not train
+  Evocations, and do not hit intervening creatures when the reach
+  fails.
+* Autopickup will attempt to pick up every item in the stack even if
+  previous items cannot be picked up.
+* Fired missile auto-id also identifies previously fired missiles on
+  the floor.
+* Escape hatches can be safely used even when confused or overburdened.
+* Removed score bonus for escaping the dungeon without the Orb.
+* Poison ammunition no longer works on sling bullets and throwing nets.
+* Plants on stairs get branded.
+* Drac and Ogre-Mage wanderers get shields instead of bucklers (which
+  they can't wear).
+* Weapon swap (') will also swap to miscellaneous items.
+* (f)ire will ignore wielded items, fire_items_start defaults to 'a' again.
+* Passwall now issues a warning when attempting to phase through rock + stone.
+* Weakened chain paralysis effects from the monster Paralyse spell and
+  giant eyeballs.
+* Fixed poison-vulnerable monsters resisting curare.
+* Fixed wands of draining not auto-identifying.
+* Fixed necromutation not granting torment immunity.
+* Fixed macros not being saved correctly if the key sequences include
+  ASCII NUL.
+* Fixed buggy labyrinth maps.
+* Fixed bad entry levels.
+* Fixed crossbow bolts not being randomly generated.
+* Fixed messages for species unable to wear helmets and boots because
+  of body shape.
+* Fixed detect items not working if the level is magic-mapped.
+* Fixed display glitches when using IBM graphics on Unix.
+* Fixed monsters wielding angering randarts repeatedly going berserk.
+* Fixed strawberry fields always appearing on Lair:3.
+* Fixed some acquirement bugs.
+* Report error messages after cleaning up curses when savefile is invalid.
+* Fixed starting gear choices and kit for fighters.
+* Fixed dolinks.sh script for builds on Unix.
+* Fixed monster self-teleport taking 10x as long as intended.
+* Fixed ice statue description.
+* Fixed Crawl being unable to create directories on DOS.
+
+Stone Soup 0.3.3 (20071202)
+---------------------------
+* Fixed crash when draconian callers try to summon drakes.
+* Fixed crash when shadow creatures is cast in a labyrinth.
+* Fixed crash when monster blinks onto trap and is killed by the trap.
+* Fixed vampires boosting the player's maxhp.
+* Fixed bad monster selection when shadow creatures is cast post-orb-pickup.
+* Fixed buggy Xom mutations.
+* Fixed nets not trapping monsters correctly.
+* Fixed monsters being able to get past plants on level load.
+* Fixed out-of-sight monsters raising dead in the player's line-of-sight.
+* Fixed brand colours flooding screen in DOS.
+* Returning weapons auto-id on use by monsters.
+* Autobutcher respects !w inscriptions.
+* Horns mutation changes helmet slot description to "restricted".
+* Reintroduced Beogh penance for destroying orcish idols.
+* Tutorial fixes.
+* Errors in .crawlrc are reported at startup.
+
+Stone Soup 0.3.2 (20071110)
+---------------------------
+* Fixed tiles crash when visiting shops in the stash-tracker's ^F listings.
+* Reduced frequency of the Damnation card in common decks.
+* Removed Batform from the Metamorphosis card.
+* Fixed two broken entry vaults.
+* Nets are easier to escape from / destroy, and more effective when used by
+  the player.
+* Beogh converts are better behaved, with less message spam.
+* Fixed spell power display for clarity.
+
+
+Stone Soup 0.3.1 (20071103)
+---------------------------
+* Fixed crash when targeting with show_beam = yes.
+* Fixed Orb of Zot being generated in random vault.
+* Fixed buggy handling of some mutations.
+* Fixed penance message sequence.
+* Fixed turn-loss when canceling prayer request.
+* Fixed -morgue option not creating the morgue directory.
+
+
+Stone Soup 0.3.0 (20071031)
+---------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+
+Characters
+----------
+* Removed Hill Dwarf and Elf species.
+* Demigods lose fast metabolism, get better stat gain.
+* Kenku can kick with their taloned feet, and can fly faster than
+  normal when lightly burdened.
+* Kenku and merfolk get an evasion bonus when in their element.
+* Demonspawn get a bonus with demonic weapons.
+
+Gods
+----
+* New god: Beogh, god of Orcs.
+* Changed gods: Nemelex, Xom, Lugonu, Trog, Elyvilon, Okawaru.
+* No need to pray to dedicate kills.
+* Nemelexites no longer need a portable altar in order to sacrifice
+  objects.
+* Nemelexites are granted various deck manipulation abilites as they
+  gain piety.
+* [1761974] Trog gets a Burn Books ability.
+* [1754125] Trog's Hand and Brothers in Arms replace Might and Haste.
+* Elyvilon: Destroy Weapon ability replaces weapon sacrifices.
+* Okawaru loses Minor Healing.
+* Gods won't accept sacrifices of rotten corpses.
+* Good gods no longer punish for unintended draining.
+* Different messages now indicate piety gain for offered items.
+
+Items
+-----
+* New missiles: javelins, sling bullets and throwing nets.
+* Throwing weapons may be generated with the "returning" brand.
+* [1756363] New potion: potion of resistance.
+* [1744612] Introduced weapons of returning.
+* [1789869] Items which the player sees a monster use become
+  identified if they have an obvious effect.
+* Artefact jewellery doesn't autoid anymore, instead "obvious" changes
+  and abilities give a message.
+* [1768865] Added inscription prompt when viewing items.
+* Viewing via inventory listing won't leave the inventory.
+* [1735752] Autoinscribe wands with zap count.
+* Added autoinscriptions for items used by monsters.
+* Warning inscriptions now actually work for all advertised commands
+  ([1795568] !r now prevents scrolls from being read.)
+* [1793698] In the item selection menu, pressing "." will toggle the
+  selection of the item after the previously selected item.
+* [1783003] More menu sorting methods, and fixed jewellery sorting bug.
+* Book shops are less likely to stock duplicate copies.
+* [1746014] Added command to cycle through ammunition when 'f'iring.
+
+Monsters
+--------
+* Abominations created by Twisted Resurrection now count as undead.
+* Increased spawning rate after picking up the Orb.
+* Berserked monsters attack nearby enemies and ignore ally commands.
+* Monsters confused by you that kill themselves or others now give xp.
+* [1779770] Monsters taking stairs are created according to stair
+  destination.
+* Monster descriptions are shorter when looking at them with 'x' and
+  targeting.
+* Unflasked efreets are permanent
+* Mummy priests and greater mummies now have high intelligence.
+
+Levels
+------
+* Added portal vaults, specifically bazaars.
+* Labyrinths look much different now.
+* Changed rock stairs to escape hatches.
+* New trap type: net trap.
+* Added several new vault maps.
+* Monster generation rate in the Vestibule drops with time spent in
+  the Vestibule.
+* Fixed sealed rooms being generated in the Vaults.
+  
+Interface
+---------
+* [1772497] runrest_ignore_monster can be used to ignore distant mosters
+  when running, resting or exploring.
+* Filter talk and sound channels from interrupting resting
+* Filter information from examining your surroundings from message history
+* Three new informational-only hunger states: near starving, very hungry
+  and very full.
+* Added pickup.lua for smarter autopickup
+* Added trap_item_brand for traps hidden by items
+* Added visible beam path for targetting
+* Added warning when trying to fight wielding a non-weapon
+* Interlevel travel also allows travelling to entrances of branches
+* Polearms can be used to attack monsters submerged in shallow water using
+  Ctrl+direction when adjacent.
+* Added support for Unicode glyphs in Unix.
+* Large viewport support for terminals larger than 80x24 if the
+  view_max_width and view_max_height options are set.
+* Quit prompt needs "Yes" to confirm.
+
+Miscellaneous
+-------------
+* Crawl needs Lua - Lua 5.1 sources are included with the Crawl sources.
+* Monster, spell and feature descriptions and monster dialogue are now
+  loaded from text files.
+* [1777426] Explosions can no longer pass through walls.
+* Invisibility is more useful.
+* User Lua scripts now have limits on CPU usage and memory use and are safer
+  to use on public servers.
+* Fixed DOS glitches.
+* Game time reported by Crawl clamps time-per-move at 5 minutes.
+* More fixes for Crawl to play well with dgamelaunch.
+
+
 Stone Soup 0.2.7 (20070611)
 ---------------------------
 * Pandemonium unique demons (Cerebov et al.) were not being generated, fixed.
@@ -118,7 +455,7 @@ Stone Soup 0.2 (20070401)
 * Minor tweaks to some unrand artifacts.
 * Gourmand contaminated -> clean effect is also gradual now.
 * Searching is more effective.
-* New god.
+* New god: Lugonu, god of the Void.
 * Armour training tweaks.
 * Full herbivorousness now happens only at level 3 of the mutation.
 * Incremental butchering works now.
@@ -485,3 +822,4 @@ Stone Soup 0.1 (20060918)
 * Jelly pits
 * Missile weapons are stronger.
 * Evocations no longer increases max MP.
+
