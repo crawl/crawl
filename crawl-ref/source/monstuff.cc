@@ -406,7 +406,16 @@ static void _give_monster_experience( monsters *victim,
     if ((!victim_was_born_friendly || !mons_friendly(mons))
         && !mons_aligned(killer_index, monster_index(victim)))
     {
-        mons->gain_exp(experience);
+        if (mons->gain_exp(experience))
+        {
+            // Blessings for followers.
+            if (you.religion == GOD_BEOGH
+                && you.piety >= piety_breakpoint(2)
+                && random2(you.piety) >= piety_breakpoint(0))
+            {
+                bless_follower(GOD_BEOGH, is_orcish_follower, mons);
+            }
+        }
     }
 }
 

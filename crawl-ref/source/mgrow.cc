@@ -181,22 +181,22 @@ void monsters::init_experience()
     experience = mexplevs[std::min(hit_dice, MAX_MONS_HD)];
 }
 
-void monsters::gain_exp(int exp)
+bool monsters::gain_exp(int exp)
 {
     if (!alive())
-        return;
+        return false;
 
     init_experience();
     if (hit_dice >= MAX_MONS_HD)
-        return;
+        return false;
 
     // Only natural monsters can level-up.
     if (holiness() != MH_NATURAL)
-        return;
-    
+        return false;
+
     // Avoid wrap-around.
     if (experience + exp < experience)
-        return;
+        return false;
 
     experience += exp;
 
@@ -218,4 +218,6 @@ void monsters::gain_exp(int exp)
 
     if (hit_dice < MAX_MONS_HD && experience >= mexplevs[hit_dice + 1])
         experience = (mexplevs[hit_dice] + mexplevs[hit_dice + 1]) / 2;
+
+    return (levels_gained > 0);
 }

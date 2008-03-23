@@ -827,19 +827,32 @@ static bool blessing_healing(monsters *mon, bool extra)
     return heal_monster(mon, mon->max_hit_points, extra);
 }
 
+// Bless a follower within sight of the player.
 void bless_follower(god_type god,
-                    bool (*suitable)(const monsters* mon))
+                    bool (*suitable)(const monsters* mon),
+                    monsters* follower)
 {
+    // If there are no monsters (including followers) in sight, get out.
     if (!there_are_monsters_nearby())
         return;
 
-    int monster = choose_random_nearby_monster(0, suitable);
+    monsters *mon;
 
-    if (monster == NON_MONSTER)
-        return;
+    // If a follower was specified, and it's suitable, pick it.
+    if (follower && suitable(follower))
+        mon = follower;
+    // Otherwise, pick a random follower.
+    else
+    {
+        int monster = choose_random_nearby_monster(0, suitable);
 
-    monsters* mon = &menv[monster];
-    const char *blessed = mon->name(DESC_NOCAP_A).c_str();
+        if (monster == NON_MONSTER)
+            return;
+
+        mon = &menv[monster];
+    }
+
+    const char *blessed = mon->name(DESC_NOCAP_THE).c_str();
     const char *result;
 
     int chance = random2(20);
@@ -906,8 +919,8 @@ void bless_follower(god_type god,
     }
 
 blessing_done:
-    mprf(MSGCH_GOD, "%s blesses %s with %s.", god_name(god).c_str(),
-        blessed, result);
+    snprintf(info, INFO_SIZE, " blesses %s with %s.", blessed, result);
+    simple_god_message(info);
 }
 
 static void do_god_gift(bool prayed_for)
