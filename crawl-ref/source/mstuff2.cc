@@ -551,7 +551,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            int mons = MONS_GIANT_BAT;
+            monster_type mons = MONS_GIANT_BAT;
 
             if (!one_chance_in(3))
             {
@@ -734,7 +734,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
             for (sumcount = 0; sumcount < sumcount2; sumcount++)
             {
-                const int mons = rand_dragon( DRAGON_LIZARD );
+                const monster_type mons = rand_dragon( DRAGON_LIZARD );
                 if (mons == MONS_DRAGON)
                 {
                     monsters.clear();
