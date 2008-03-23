@@ -46,6 +46,11 @@ std::vector<std::string> database_find_bodies(DBM *database,
                                               bool ignore_case = false,
                                               db_find_filter filter = NULL);
 
+
+std::string getWeightedSpeechString(const std::string &key,
+                                    const std::string &suffix,
+                                    const int weight = -1);
+                              
 std::string              getLongDescription(const std::string &key);
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
                                                 db_find_filter filter = NULL);

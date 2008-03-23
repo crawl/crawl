@@ -17,6 +17,7 @@
 
 #include "clua.h"
 #include "command.h"
+#include "database.h"
 #include "delay.h"
 #include "enum.h"
 #include "food.h"
@@ -192,6 +193,18 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
     return (1);
 }       // end recite_to_monsters()
 
+static const char* _get_recite_speech(const std::string key, int weight)
+{
+    const std::string str
+              = getWeightedSpeechString("zin_recite_speech_", key,
+                                        weight + you.x_pos + you.y_pos);
+    
+    if (!str.empty())
+        return (str.c_str());
+
+    return ("reciting the Axioms of Law");
+}
+
 // Returns true if this delay can act as a parent to other delays, i.e. if
 // other delays can be spawned while this delay is running. If is_parent_delay
 // returns true, new delays will be pushed immediately to the front of the
@@ -338,7 +351,8 @@ void stop_delay( bool stop_stair_travel )
         break;
         
     case DELAY_RECITE:
-        mpr( "You stop reciting.");
+        mprf(MSGCH_PLAIN, "You stop %s.",
+             _get_recite_speech("stop", delay.parm1 + delay.parm2));
         pop_delay();
         break;
 
@@ -536,9 +550,8 @@ void handle_delay( void )
             mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
             break;
         case DELAY_RECITE:
-            mprf(MSGCH_MULTITURN_ACTION,
-                 "You begin to recite %s's Axioms of Law.",
-                 god_name(GOD_ZIN).c_str());
+            mprf(MSGCH_PLAIN, "You begin %s.",
+                 _get_recite_speech("start", delay.parm1 + delay.parm2));
             apply_area_visible(recite_to_monsters, delay.parm1);
             break;
         default:
@@ -687,8 +700,8 @@ void handle_delay( void )
                 MSGCH_MULTITURN_ACTION);
             break;
         case DELAY_RECITE:
-            mpr("You continue reciting the Axioms of Law.",
-                MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue %s.",
+                 _get_recite_speech("continue", delay.parm1 + delay.parm2));
             apply_area_visible(recite_to_monsters, delay.parm1);
             break;
         case DELAY_MULTIDROP:
@@ -794,7 +807,8 @@ static void finish_delay(const delay_queue_item &delay)
         break; 
         
     case DELAY_RECITE:
-        mpr( "You finish reciting the Axioms of Law." );
+        mprf(MSGCH_PLAIN, "You finish %s.",
+             _get_recite_speech("finish", delay.parm1 + delay.parm2));
         break;
 
     case DELAY_PASSWALL:

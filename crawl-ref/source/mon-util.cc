@@ -263,7 +263,7 @@ void init_monster_symbols()
         const monsterentry *me = get_monster_data(i);
         if (me)
         {
-            md.glyph = me->showchar;
+            md.glyph  = me->showchar;
             md.colour = me->colour;
         }
     }
@@ -328,7 +328,7 @@ bool mons_class_flag(int mc, int bf)
         return (false);
 
     return ((me->bitfields & bf) != 0);
-}                               // end mons_class_flag()
+}
 
 static int _scan_mon_inv_randarts( const monsters *mon,
                                   randart_prop_type ra_prop)
@@ -590,7 +590,7 @@ shout_type mons_shouts(int mc)
         u = static_cast<shout_type>(random2(NUM_SHOUTS));
 
     return (u);
-}                               // end mons_shouts()
+}
 
 bool mons_is_unique( int mc )
 {

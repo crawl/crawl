@@ -53,7 +53,7 @@ class TextDB
 
 // Convenience functions for (read-only) access to generic
 // berkeley DB databases.
-static void store_text_db(const std::string &in, const std::string &out);
+static void _store_text_db(const std::string &in, const std::string &out);
 
 static TextDB AllDBs[] =
 {
@@ -170,7 +170,7 @@ void TextDB::_regenerate_db()
     for (unsigned int i=0; i<_input_files.size(); i++)
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
-        store_text_db(full_input_path, db_path);
+        _store_text_db(full_input_path, db_path);
     }
 
     DO_CHMOD_PRIVATE(full_db_path.c_str());
@@ -270,7 +270,7 @@ std::vector<std::string> database_find_bodies(DBM *database,
 
 ///////////////////////////////////////////////////////////////////////////
 // Internal DB utility functions
-static void execute_embedded_lua(std::string &str)
+static void _execute_embedded_lua(std::string &str)
 {
     // Execute any lua code found between "{{" and "}}".  The lua code
     // is expected to return a string, with which the lua code and braces
@@ -304,14 +304,14 @@ static void execute_embedded_lua(std::string &str)
     } // while (pos != std::string::npos)
 }
 
-static void trim_leading_newlines(std::string &s)
+static void _trim_leading_newlines(std::string &s)
 {
     s.erase(0, s.find_first_not_of("\n"));
 }
 
-static void add_entry(DBM *db, const std::string &k, std::string &v)
+static void _add_entry(DBM *db, const std::string &k, std::string &v)
 {
-    trim_leading_newlines(v);
+    _trim_leading_newlines(v);
     datum key, value;
     key.dptr = (char *) k.c_str();
     key.dsize = k.length();
@@ -323,7 +323,7 @@ static void add_entry(DBM *db, const std::string &k, std::string &v)
         end(1, true, "Error storing %s", k.c_str());
 }
 
-static void parse_text_db(std::ifstream &inf, DBM *db)
+static void _parse_text_db(std::ifstream &inf, DBM *db)
 {
     char buf[1000];
 
@@ -341,7 +341,7 @@ static void parse_text_db(std::ifstream &inf, DBM *db)
         if (!strncmp(buf, "%%%%", 4))
         {
             if (!key.empty())
-                add_entry(db, key, value);
+                _add_entry(db, key, value);
             key.clear();
             value.clear();
             in_entry = true;
@@ -366,10 +366,10 @@ static void parse_text_db(std::ifstream &inf, DBM *db)
     }
 
     if (!key.empty())
-        add_entry(db, key, value);
+        _add_entry(db, key, value);
 }
 
-static void store_text_db(const std::string &in, const std::string &out)
+static void _store_text_db(const std::string &in, const std::string &out)
 {
     std::ifstream inf(in.c_str());
     if (!inf)
@@ -377,7 +377,7 @@ static void store_text_db(const std::string &in, const std::string &out)
 
     if (DBM *db = dbm_open(out.c_str(), O_RDWR | O_CREAT, 0660))
     {
-        parse_text_db(inf, db);
+        _parse_text_db(inf, db);
         dbm_close(db);
     }
     else
@@ -386,7 +386,7 @@ static void store_text_db(const std::string &in, const std::string &out)
     inf.close();
 }
 
-static std::string chooseStrByWeight(std::string entry)
+static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
 {
     std::vector<std::string> parts;
     std::vector<int>         weights;
@@ -400,6 +400,7 @@ static std::string chooseStrByWeight(std::string entry)
         // blank lines.
         while (i < size && lines[i] == "")
             i++;
+            
         if (i == size)
             break;
 
@@ -431,9 +432,12 @@ static std::string chooseStrByWeight(std::string entry)
     if (parts.size() == 0)
         return("BUG, EMPTY ENTRY");
 
-    int choice = random2(total_weight);
-    std::string str = "";
-
+    int choice = 0;
+    if (fixed_weight != -1)
+        choice = fixed_weight % total_weight;
+    else
+        choice = random2(total_weight);
+                                      
     for (int i = 0, size = parts.size(); i < size; i++)
         if (choice < weights[i])
             return(parts[i]);
@@ -444,19 +448,10 @@ static std::string chooseStrByWeight(std::string entry)
 #define MAX_RECURSION_DEPTH 10
 #define MAX_REPLACEMENTS    100
 
-static std::string getRandomizedStr(DBM *database, const std::string &key,
-                                    const std::string &suffix,
-                                    int &num_replacements,
-                                    int recursion_depth = 0)
+static std::string _getWeightedString(DBM *database, const std::string &key,
+                                      const std::string &suffix,
+                                      int fixed_weight = -1)
 {
-    recursion_depth++;
-    if (recursion_depth > MAX_RECURSION_DEPTH)
-    {
-        mpr("Too many nested replacements, bailing.", MSGCH_DIAGNOSTICS);
-
-        return "TOO MUCH RECURSION";
-    }
-
     // We have to canonicalize the key (in case the user typed it
     // in and got the case wrong.)
     std::string canonical_key = key + suffix;
@@ -481,11 +476,58 @@ static std::string getRandomizedStr(DBM *database, const std::string &key,
     // Cons up a (C++) string to return.  The caller must release it.
     std::string str = std::string((const char *)result.dptr, result.dsize);
 
-    str = chooseStrByWeight(str);
+    return _chooseStrByWeight(str, fixed_weight);
+}
 
-    // Replace any "@foo@" markers that can be found in this database;
-    // those that can't be found are left alone for the caller to deal
-    // with.
+static void _call_recursive_replacement(std::string &str, DBM *database,
+                                        const std::string &suffix,
+                                        int &num_replacements,
+                                        int recursion_depth = 0);
+                                        
+std::string getWeightedSpeechString(const std::string &key,
+                                    const std::string &suffix,
+                                    const int weight)
+{
+    if (!SpeakDB)
+        return ("");
+
+    std::string result = _getWeightedString(SpeakDB, key, suffix, weight);
+    if (result.empty())
+        return "";
+        
+    int num_replacements = 0;
+    _call_recursive_replacement(result, SpeakDB, suffix, num_replacements);
+    return (result);
+}
+
+static std::string _getRandomizedStr(DBM *database, const std::string &key,
+                                     const std::string &suffix,
+                                     int &num_replacements,
+                                     int recursion_depth = 0)
+{
+    recursion_depth++;
+    if (recursion_depth > MAX_RECURSION_DEPTH)
+    {
+        mpr("Too many nested replacements, bailing.", MSGCH_DIAGNOSTICS);
+
+        return "TOO MUCH RECURSION";
+    }
+
+    std::string str = _getWeightedString(database, key, suffix);
+    
+    _call_recursive_replacement(str, database, suffix, num_replacements,
+                                recursion_depth);
+    
+    return str;
+}
+
+// Replace any "@foo@" markers that can be found in this database.
+// Those that can't be found are left alone for the caller to deal with
+static void _call_recursive_replacement(std::string &str, DBM *database,
+                                        const std::string &suffix,
+                                        int &num_replacements,
+                                        int recursion_depth)
+{
     std::string::size_type pos = str.find("@");
     while (pos != std::string::npos)
     {
@@ -493,8 +535,7 @@ static std::string getRandomizedStr(DBM *database, const std::string &key,
         if (num_replacements > MAX_REPLACEMENTS)
         {
             mpr("Too many string replacements, bailing.", MSGCH_DIAGNOSTICS);
-
-            return "TOO MANY REPLACEMENTS";
+            return;
         }
 
         std::string::size_type end = str.find("@", pos + 1);
@@ -508,8 +549,8 @@ static std::string getRandomizedStr(DBM *database, const std::string &key,
         std::string marker      = str.substr(pos + 1, end - pos - 1);
 
         std::string replacement =
-            getRandomizedStr(database, marker, suffix, num_replacements,
-                             recursion_depth);
+            _getRandomizedStr(database, marker, suffix, num_replacements,
+                              recursion_depth);
 
         if (replacement == "")
             // Nothing in database, leave it alone and go onto next @foo@
@@ -524,12 +565,10 @@ static std::string getRandomizedStr(DBM *database, const std::string &key,
             pos = str.find("@", pos);
         }
     } // while (pos != std::string::npos)
-
-    return str;
 }
 
-static std::string query_database(DBM *db, std::string key,
-                                  bool canonicalise_key, bool run_lua)
+static std::string _query_database(DBM *db, std::string key,
+                                   bool canonicalise_key, bool run_lua)
 {
     if (canonicalise_key)
     {
@@ -544,7 +583,7 @@ static std::string query_database(DBM *db, std::string key,
     std::string str((const char *)result.dptr, result.dsize);
 
     if (run_lua)
-        execute_embedded_lua(str);
+        _execute_embedded_lua(str);
     
     return (str);
 }
@@ -557,7 +596,7 @@ std::string getLongDescription(const std::string &key)
     if (! DescriptionDB.get())
         return ("");
 
-    return query_database(DescriptionDB.get(), key, true, true);
+    return _query_database(DescriptionDB.get(), key, true, true);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
@@ -591,8 +630,8 @@ std::string getShoutString(const std::string &monst,
 {
     int num_replacements = 0;
 
-    return getRandomizedStr(ShoutDB.get(), monst, suffix, 
-                            num_replacements);
+    return _getRandomizedStr(ShoutDB.get(), monst, suffix,
+                             num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -607,7 +646,7 @@ std::string getSpeakString(const std::string &monst)
 #ifdef DEBUG_MONSPEAK
     mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s", monst.c_str());
 #endif
-    return getRandomizedStr(SpeakDB, monst, "", num_replacements);
+    return _getRandomizedStr(SpeakDB, monst, "", num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -620,8 +659,8 @@ std::string getRandNameString(const std::string &itemtype,
         
     int num_replacements = 0;
 
-    return getRandomizedStr(RandartDB, itemtype, suffix,
-                            num_replacements);
+    return _getRandomizedStr(RandartDB, itemtype, suffix,
+                             num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -629,5 +668,5 @@ std::string getRandNameString(const std::string &itemtype,
 
 std::string getHelpString(const std::string &topic)
 {
-    return query_database(HelpDB.get(), topic, false, true);
+    return _query_database(HelpDB.get(), topic, false, true);
 }

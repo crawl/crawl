@@ -365,4 +365,48 @@ Beogh is not amused about the destruction of his idols.
 
 Beogh seems highly displeased.
 %%%%
+##########################################################
+# Messages for the *player* using Zin's Recite invocation
+##########################################################
+zin_recite_speech_start
 
+w:40
+reciting @subject@
+
+reciting a poem about @subject@
+
+preaching about @subject@
+
+a @lecture_modifier@ lecture about @subject@
+
+explaining in detail about @subject@
+%%%%
+# the short form of the above, for continuing/stopping/finishing
+# reciting – order and weights must be the same as above!
+zin_recite_speech_
+
+w:50
+reciting
+
+preaching
+
+your lecture
+
+your explanations
+%%%%
+lecture_modifier
+
+lengthy
+
+passionate
+
+stern
+%%%%
+subject
+
+Zin's Axioms of Law
+
+the Axioms of Law
+
+the importance of the Law
+%%%%
