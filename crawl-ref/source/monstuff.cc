@@ -408,10 +408,10 @@ static void _give_monster_experience( monsters *victim,
     {
         if (mons->gain_exp(experience))
         {
-            // Consistent blessings for followers.
+            // Randomly bless the follower who gained experience.
             if (you.religion == GOD_BEOGH
                 && !player_under_penance()
-                && you.piety >= piety_breakpoint(2))
+                && random2(you.piety) >= piety_breakpoint(2))
             {
                 bless_follower(GOD_BEOGH, is_orcish_follower, mons);
             }
@@ -875,6 +875,16 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
             }
 
+            // Randomly bless a follower.
+            if (!created_friendly && gives_xp
+                && (you.religion == GOD_BEOGH
+                    && mons_holiness(monster) == MH_NATURAL)
+                && (!player_under_penance()
+                    && random2(you.piety) >= piety_breakpoint(2)))
+            {
+                bless_follower(GOD_BEOGH, is_orcish_follower);
+            }
+
             if (you.duration[DUR_DEATH_CHANNEL]
                 && gives_xp
                 && mons_holiness(monster) == MH_NATURAL
@@ -985,7 +995,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
 
                 if (you.religion == GOD_SHINING_ONE
-                    && mons_is_evil_or_unholy(monster)
+                        && mons_is_evil_or_unholy(monster)
                     && (!player_under_penance()
                         && random2(you.piety) >= piety_breakpoint(0))
                     && !invalid_monster_index(i))
@@ -998,6 +1008,18 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                       false );
                     }
                 }
+
+                // Randomly bless the follower who killed.
+                if (you.religion == GOD_BEOGH
+                        && mons_holiness(monster) == MH_NATURAL
+                    && (!player_under_penance()
+                        && random2(you.piety) >= piety_breakpoint(2))
+                    && !invalid_monster_index(i))
+                {
+                    monsters *mon = &menv[i];
+                    bless_follower(GOD_BEOGH, is_orcish_follower, mon);
+                }
+
             }
             break;
 

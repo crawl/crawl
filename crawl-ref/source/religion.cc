@@ -852,7 +852,9 @@ void bless_follower(god_type god,
         mon = &menv[monster];
     }
 
-    const char *blessed = mon->name(DESC_NOCAP_THE).c_str();
+    const char *blessed = (follower && !mons_near(follower))
+                              ? "your follower"
+                              : mon->name(DESC_NOCAP_THE).c_str();
     const char *result;
 
     int chance = random2(20);
@@ -1119,15 +1121,6 @@ static void do_god_gift(bool prayed_for)
                         inc_gift_timeout(10 + random2(10));
                 }                   // end of giving book
             }                       // end of book gods
-            break;
-
-        case GOD_BEOGH:
-            // Random blessings for followers.
-            if (you.piety >= piety_breakpoint(2)
-                && random2(you.piety) >= piety_breakpoint(0))
-            {
-                bless_follower(GOD_BEOGH, is_orcish_follower);
-            }
             break;
         }
     }                           // end of gift giving
