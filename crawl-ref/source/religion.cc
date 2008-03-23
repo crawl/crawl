@@ -856,7 +856,7 @@ void bless_follower(god_type god,
     // If a follower was specified, and it's suitable, pick it.
     if (follower && suitable(follower))
         mon = follower;
-    // Otherwise, pick a random follower.
+    // Otherwise, pick a random follower within sight of the player.
     else
     {
         int monster = choose_random_nearby_monster(0, suitable);
