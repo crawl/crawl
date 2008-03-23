@@ -852,8 +852,7 @@ void bless_follower(god_type god,
         mon = &menv[monster];
     }
 
-    const char *blessed = mon->name((follower) ? DESC_NOCAP_THE
-                                               : DESC_NOCAP_A).c_str();
+    const char *blessed = mon->name(DESC_NOCAP_THE).c_str();
     const char *result;
 
     int chance = random2(20);
