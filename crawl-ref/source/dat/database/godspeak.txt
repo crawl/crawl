@@ -382,7 +382,7 @@ a @lecture_modifier@ lecture about @subject@
 explaining in detail about @subject@
 %%%%
 # the short form of the above, for continuing/stopping/finishing
-# reciting – order and weights must be the same as above!
+# reciting - order and weights must be the same as above!
 zin_recite_speech_
 
 w:50

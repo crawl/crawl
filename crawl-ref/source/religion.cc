@@ -914,7 +914,8 @@ static void do_god_gift(bool prayed_for)
 {
     ASSERT(you.religion != GOD_NO_GOD);
 
-    // Zin worshippers are the only ones that can pray to ask Zin for stuff.
+    // Zin worshippers are the only ones who can pray to ask Zin for
+    // stuff.
     if (prayed_for != (you.religion == GOD_ZIN))
         return;
 
