@@ -2083,7 +2083,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         if (YOU_KILL(pbolt.thrower))
         {
             if (cast_healing(5 + roll_dice( pbolt.damage ),
-                             monster->x - you.x_pos, monster->y - you.y_pos) > 0)
+                             monster->x, monster->y) > 0)
             {
                 pbolt.obvious_effect = true;
             }

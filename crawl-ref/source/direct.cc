@@ -470,7 +470,9 @@ void direction(dist& moves, targeting_type restricts,
                  
             if ((mode == TARG_ANY || mode == TARG_FRIEND)
                  && moves.tx == you.x_pos && moves.ty == you.y_pos)
+            {
                 terse_describe_square(moves.target());
+            }
 
             show_prompt = false;
         }

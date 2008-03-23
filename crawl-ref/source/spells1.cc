@@ -626,40 +626,37 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     return false;
 }
 
-static int _healing_spell( int healed, int dir_x = 100, int dir_y = 100)
+static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
 {
     ASSERT(healed >= 1);
 
-    int mgr = 0;
-    struct monsters *monster = 0;       // NULL {dlb}
-    struct dist bmove;
-
-    if (dir_x == 100 || dir_y == 100)
+    dist bmove;
+    if (target_x == -1 || target_y == -1)
     {
-        mpr("Which direction?", MSGCH_PROMPT);
-        direction( bmove, DIR_DIR, TARG_FRIEND );
+        mpr("Heal whom?", MSGCH_PROMPT);
+        direction( bmove, DIR_TARGET, TARG_FRIEND );
     }
     else
     {
-        bmove.dx = dir_x;
-        bmove.dy = dir_y;
+        bmove.tx = target_x;
+        bmove.ty = target_y;
         bmove.isValid = true;
     }
     
-    if (!bmove.isValid)
+    if (!bmove.isValid || !in_bounds(bmove.tx, bmove.ty))
     {
         canned_msg( MSG_OK );
         return 0;
     }
 
-    if (bmove.dx == 0 && bmove.dy == 0)
+    if (bmove.tx == you.x_pos && bmove.ty == you.y_pos)
     {
         mpr("You are healed.");
         inc_hp(healed, false);
         return 1;
     }
 
-    mgr = mgrd[you.x_pos + bmove.dx][you.y_pos + bmove.dy];
+    const int mgr = mgrd[bmove.tx][bmove.ty];
     
     if (mgr == NON_MONSTER)
     {
@@ -667,7 +664,7 @@ static int _healing_spell( int healed, int dir_x = 100, int dir_y = 100)
         return -1;
     }
 
-    monster = &menv[mgr];
+    monsters *monster = &menv[mgr];
     
     // don't heal monster you can't pacify
     if (you.religion == GOD_ELYVILON && _mons_hostile(monster)
@@ -738,12 +735,12 @@ char cast_greatest_healing( int pow )
 }
 #endif 
 
-int cast_healing( int pow, int dir_x, int dir_y )
+int cast_healing( int pow, int target_x, int target_y )
 {
     if (pow > 50)
         pow = 50;
 
-    return (_healing_spell( pow + roll_dice( 2, pow ) - 2, dir_x, dir_y ));
+    return (_healing_spell( pow + roll_dice( 2, pow ) - 2, target_x, target_y ));
 }
 
 int cast_revitalisation( int pow )
@@ -752,7 +749,7 @@ int cast_revitalisation( int pow )
     inc_mp(5, false);
 
     // then cast healing (as in Minor Healing)
-    return cast_healing(pow);
+    return cast_healing(pow, you.x_pos, you.y_pos); // target yourself
 }
 
 bool cast_revivification(int power)

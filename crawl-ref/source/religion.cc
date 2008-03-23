@@ -1434,8 +1434,11 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
     case DID_FRIEND_DIES:
         switch (you.religion)
         {
-        case GOD_ELYVILON:
-            penance = level;    // healer god cares more about this
+        case GOD_ELYVILON: // healer god cares more about this
+            if (you.penance[GOD_ELYVILON])
+                penance = 1;  // if already under penance smaller bonus
+            else
+                penance = level;
             // fall through
         case GOD_ZIN: // in contrast to TSO, who doesn't mind martyrs
         case GOD_OKAWARU:

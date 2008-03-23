@@ -470,13 +470,44 @@ static bool _is_pet_kill(killer_type killer, int i)
             && (me.who == KC_YOU || me.who == KC_FRIENDLY));
 }
 
+// Elyvilon will occasionally (5% chance) protect the life of
+// one of your allies.
+static bool _ely_protects_ally(monsters *monster)
+{
+    ASSERT(you.religion == GOD_ELYVILON);
+    
+    if (mons_holiness(monster) != MH_NATURAL
+        || !mons_friendly(monster)
+        || !one_chance_in(20))
+    {
+        return (false);
+    }
+    
+    if (player_monster_visible(monster) && mons_near(monster))
+    {
+        monster->hit_points = 1;
+        snprintf(info, INFO_SIZE, " protects %s%s from harm!%s",
+                 mons_is_unique(monster->type) ? "" : "your ",
+                 monster->name(DESC_PLAIN).c_str(),
+                 coinflip() ? "" : "  You feel responsible.");
+        simple_god_message(info);
+    }
+    lose_piety(1);
+    
+    return (true);
+}
+
+// Elyvilon retribution effect: heal hostile monsters that were about to
+// be killed by you or one of your friends
 static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
 {
+    ASSERT(you.religion != GOD_ELYVILON);
     god_type god = GOD_ELYVILON;
-    ASSERT(you.religion != god);
+
+    if (!you.penance[god] || !is_evil_god(you.religion))
+        return false;
 
     const int ely_penance = you.penance[god];
-    ASSERT(ely_penance > 0);
 
     if (mons_holiness(monster) != MH_NATURAL
         || mons_friendly(monster)
@@ -531,14 +562,16 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
         return (false);
     }
 
-    if (you.religion != GOD_ELYVILON && you.penance[GOD_ELYVILON]
-        && _ely_heals_monster(monster, killer, i))
-    {
+    // Elyvilon specials
+    if (you.religion == GOD_ELYVILON && _ely_protects_ally(monster))
         return (true);
-    }
 
+    if (you.religion != GOD_ELYVILON && _ely_heals_monster(monster, killer, i))
+        return (true);
+
+    // Beogh special
     bool convert = false;
-
+    
     if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
