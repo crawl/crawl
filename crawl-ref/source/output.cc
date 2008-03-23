@@ -1126,10 +1126,10 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
 
 static std::string status_mut_abilities(void);
 
-// helper for print_verview_screen
+// helper for print_overview_screen
 static void _print_overview_screen_equip(
     column_composer& cols,
-    std::vector<char> equip_chars)
+    std::vector<char>& equip_chars)
 {
     const int e_order[] =
     {
@@ -1210,19 +1210,8 @@ static void _print_overview_screen_equip(
     }
 }
 
-// new scrollable status overview screen,
-// including stats, mutations etc.
-void print_overview_screen()
+static std::string _overview_screen_title()
 {
-    bool calc_unid = false;
-    formatted_scroller cmd_help;
-    // Set flags, and don't use easy exit.
-    cmd_help.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
-    cmd_help.set_more( formatted_string::parse_string(
-                       "<cyan>[ + : Page down.   - : Page up.   Esc exits.]"));
-    cmd_help.set_tag("resists");
-
-    std::string text;
     char title[50];
     snprintf(title, sizeof title, " the %s ", player_title().c_str());
 
@@ -1264,6 +1253,7 @@ void print_overview_screen()
             + strlen(race_class) + strlen(time_turns);
     }
 
+    std::string text;
     text = "<yellow>";
     text += you.your_name;
     text += title;
@@ -1272,8 +1262,23 @@ void print_overview_screen()
     text += time_turns;
     text += "</yellow>\n";
     
-    cmd_help.add_text(text);
-    
+    return text;
+}
+
+// new scrollable status overview screen,
+// including stats, mutations etc.
+void print_overview_screen()
+{
+    bool calc_unid = false;
+    formatted_scroller overview;
+    // Set flags, and don't use easy exit.
+    overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
+    overview.set_more( formatted_string::parse_string(
+                       "<cyan>[ + : Page down.   - : Page up.   Esc exits.]"));
+    overview.set_tag("resists");
+
+    overview.add_text(_overview_screen_title());
+
     char buf[1000];
     // 4 columns
     column_composer cols1(4, 18, 30, 40);
@@ -1355,11 +1360,12 @@ void print_overview_screen()
              you.spell_no, player_spell_levels(), (player_spell_levels() == 1) ? "" : "s");
     cols1.add_formatted(3, buf, false);
 
-    std::vector<formatted_string> blines = cols1.formatted_lines();
-    unsigned i;
-    for (i = 0; i < blines.size(); ++i )
-        cmd_help.add_item_formatted_string(blines[i]);
-    cmd_help.add_text(" ");
+    {
+        std::vector<formatted_string> blines = cols1.formatted_lines();
+        for (unsigned int i = 0; i < blines.size(); ++i )
+            overview.add_item_formatted_string(blines[i]);
+        overview.add_text(" ");
+    }
 
     // 3 columns, splits at columns 21, 38
     column_composer cols(3, 21, 38);
@@ -1462,22 +1468,24 @@ void print_overview_screen()
     std::vector<char> equip_chars;
     _print_overview_screen_equip(cols, equip_chars);
 
-    blines = cols.formatted_lines();
-
-    for (i = 0; i < blines.size(); ++i )
     {
-        // Kind of a hack -- we don't care really what items these
-        // hotkeys go to.  So just pick the first few.
-        const char hotkey = (i < equip_chars.size()) ? equip_chars[i] : 0;
-        cmd_help.add_item_formatted_string(blines[i], hotkey);
+        std::vector<formatted_string> blines = cols.formatted_lines();
+        for (unsigned int i = 0; i < blines.size(); ++i )
+        {
+            // Kind of a hack -- we don't care really what items these
+            // hotkeys go to.  So just pick the first few.
+            const char hotkey = (i < equip_chars.size()) ? equip_chars[i] : 0;
+            overview.add_item_formatted_string(blines[i], hotkey);
+        }
     }
-    cmd_help.add_text(" ");
 
-    cmd_help.add_text(status_mut_abilities());
+    overview.add_text(" ");
+
+    overview.add_text(status_mut_abilities());
 
     while (true)
     {
-        std::vector<MenuEntry *> results = cmd_help.show();
+        std::vector<MenuEntry *> results = overview.show();
         if (results.size() == 0)
         {
             redraw_screen();
