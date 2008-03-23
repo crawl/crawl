@@ -913,7 +913,7 @@ static void finish_delay(const delay_queue_item &delay)
                                  "bottling this corpse's blood"
                                  : "butchering the corpse");
         }
-        stashes.update_stash(); // Stash-track the generated item(s)
+        StashTrack.update_stash(); // Stash-track the generated item(s)
         break;
     }
 

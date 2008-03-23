@@ -140,7 +140,7 @@ static int shop_item_value(const item_def& item, int greed, bool id)
 static std::string shop_print_stock( const std::vector<int>& stock,
                                      const shop_struct& shop )
 {
-    ShopInfo &si = stashes.get_shop(shop.x, shop.y);
+    ShopInfo &si = StashTrack.get_shop(shop.x, shop.y);
     const bool id = shoptype_identifies_stock(shop.type);
     std::string purchasable;
     for (unsigned int i = 0; i < stock.size(); ++i)
@@ -185,7 +185,7 @@ static void in_a_shop( int shopidx )
  
     while ( true )
     {
-        stashes.get_shop(shop.x, shop.y).reset();
+        StashTrack.get_shop(shop.x, shop.y).reset();
         
         std::vector<int> stock = shop_stock(shopidx);
 

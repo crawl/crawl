@@ -1868,23 +1868,23 @@ void process_command( command_type cmd )
     case CMD_DROP:
         drop();
         if (Options.stash_tracking >= STM_DROPPED)
-            stashes.add_stash();
+            StashTrack.add_stash();
         break;
         
     case CMD_SEARCH_STASHES:
         if (Options.tut_stashes)
             Options.tut_stashes = 0;
-        stashes.search_stashes();
+        StashTrack.search_stashes();
         break;
 
     case CMD_MARK_STASH:
         if (Options.stash_tracking >= STM_EXPLICIT)
-            stashes.add_stash(-1, -1, true);
+            StashTrack.add_stash(-1, -1, true);
         break;
 
     case CMD_FORGET_STASH:
         if (Options.stash_tracking >= STM_EXPLICIT)
-            stashes.no_stash();
+            StashTrack.no_stash();
         break;
 
     case CMD_BUTCHER:
@@ -2963,7 +2963,7 @@ static void world_reacts()
     viewwindow(true, true);
 
     if (Options.stash_tracking)
-        stashes.update_visible_stashes(
+        StashTrack.update_visible_stashes(
             Options.stash_tracking == STM_ALL? 
             StashTracker::ST_AGGRESSIVE :
             StashTracker::ST_PASSIVE);

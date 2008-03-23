@@ -1897,7 +1897,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
         item_was_destroyed(you.inv[item_dropped], NON_MONSTER);
     }
     else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
-        stashes.add_stash();
+        StashTrack.add_stash();
    
     dec_inv_item_quantity( item_dropped, quant_drop );
     you.turn_is_over = true;

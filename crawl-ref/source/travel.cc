@@ -847,7 +847,7 @@ static bool is_valid_explore_target(int x, int y)
 
     if (you.running == RMODE_EXPLORE_GREEDY)
     {
-        LevelStashes *lev = stashes.find_current_level();
+        LevelStashes *lev = StashTrack.find_current_level();
         return (lev && lev->needs_visit(x, y));
     }
 
@@ -1118,7 +1118,7 @@ command_type travel()
         if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP
             && you.running == RMODE_EXPLORE_GREEDY)
         {
-            LevelStashes *lev = stashes.find_current_level();
+            LevelStashes *lev = StashTrack.find_current_level();
             if (lev && lev->shop_needs_visit(you.x_pos, you.y_pos))
             {
                 you.running = 0;
@@ -1178,7 +1178,7 @@ command_type travel()
 
             if (new_x == you.running.x && new_y == you.running.y)
             {
-                const LevelStashes *lev = stashes.find_current_level();
+                const LevelStashes *lev = StashTrack.find_current_level();
                 if (lev && lev->needs_visit(new_x, new_y)
                     && !lev->shop_needs_visit(new_x, new_y))
                 {
@@ -1463,7 +1463,7 @@ const coord_def travel_pathfind::pathfind(run_mode_type rmode)
         (rmode == RMODE_EXPLORE_GREEDY && can_autopickup());
 
     if (!ls && (annotate_map || need_for_greed))
-        ls = stashes.find_current_level();
+        ls = StashTrack.find_current_level();
 
     next_travel_move.reset();
     
@@ -4022,7 +4022,7 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
     {
         // The things we need to do...
         if (!current_level)
-            current_level = stashes.find_current_level();
+            current_level = StashTrack.find_current_level();
 
         if (current_level
             && !(Options.explore_stop & ES_GREEDY_ITEM)

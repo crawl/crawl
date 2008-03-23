@@ -45,14 +45,17 @@
 #include <sstream>
 #include <algorithm>
 
+// Global
+StashTracker StashTrack;
+
 #define ST_MAJOR_VER ((unsigned char) 4)
 #define ST_MINOR_VER ((unsigned char) 7)
 
 void stash_init_new_level()
 {
     // If there's an existing stash level for Pan, blow it away.
-    stashes.remove_level( level_id(LEVEL_PANDEMONIUM) );
-    stashes.remove_level( level_id(LEVEL_PORTAL_VAULT) );
+    StashTrack.remove_level( level_id(LEVEL_PANDEMONIUM) );
+    StashTrack.remove_level( level_id(LEVEL_PORTAL_VAULT) );
 }
 
 std::string userdef_annotate_item(const char *s, const item_def *item,
@@ -98,7 +101,7 @@ std::string stash_annotate_item(const char *s,
 
 bool is_stash(int x, int y)
 {
-    LevelStashes *ls = stashes.find_current_level();
+    LevelStashes *ls = StashTrack.find_current_level();
     if (ls)
     {
         Stash *s = ls->find_stash(x, y);
@@ -109,7 +112,7 @@ bool is_stash(int x, int y)
 
 void describe_stash(int x, int y)
 {
-    LevelStashes *ls = stashes.find_current_level();
+    LevelStashes *ls = StashTrack.find_current_level();
     if (ls)
     {
         Stash *s = ls->find_stash(x, y);
@@ -936,13 +939,16 @@ std::ostream &operator << (std::ostream &os, const ShopInfo &s)
     return os;
 }
 
-LevelStashes::LevelStashes() : place(level_id::current()), stashes(), shops()
+LevelStashes::LevelStashes()
+    : m_place(level_id::current()),
+      m_stashes(),
+      m_shops()
 {
 }
 
 level_id LevelStashes::where() const
 {
-    return (place);
+    return m_place;
 }
 
 Stash *LevelStashes::find_stash(int x, int y)
@@ -959,16 +965,16 @@ const Stash *LevelStashes::find_stash(int x, int y) const
         y = you.y_pos;
     }
     const int abspos = (GXM * y) + x;
-    stashes_t::const_iterator st = stashes.find(abspos);
-    return (st == stashes.end()? NULL : &st->second);
+    stashes_t::const_iterator st = m_stashes.find(abspos);
+    return (st == m_stashes.end()? NULL : &st->second);
 }
 
 const ShopInfo *LevelStashes::find_shop(int x, int y) const
 {
-    for (unsigned i = 0; i < shops.size(); ++i)
+    for (unsigned i = 0; i < m_shops.size(); ++i)
     {
-        if (shops[i].isAt(x, y))
-            return (&shops[i]);
+        if (m_shops[i].isAt(x, y))
+            return (&m_shops[i]);
     }
     return (NULL);
 }
@@ -990,14 +996,14 @@ bool LevelStashes::needs_visit(int x, int y) const
 
 ShopInfo &LevelStashes::get_shop(int x, int y)
 {
-    for (unsigned i = 0; i < shops.size(); ++i)
+    for (unsigned i = 0; i < m_shops.size(); ++i)
     {
-        if (shops[i].isAt(x, y))
-            return shops[i];
+        if (m_shops[i].isAt(x, y))
+            return m_shops[i];
     }
     ShopInfo si(x, y);
     si.set_name(shop_name(x, y));
-    shops.push_back(si);
+    m_shops.push_back(si);
     return get_shop(x, y);
 }
 
@@ -1019,7 +1025,7 @@ bool LevelStashes::update_stash(int x, int y)
 // Removes a Stash from the level.
 void LevelStashes::kill_stash(const Stash &s)
 {
-    stashes.erase(s.abs_pos());
+    m_stashes.erase(s.abs_pos());
 }
 
 void LevelStashes::no_stash(int x, int y)
@@ -1038,7 +1044,7 @@ void LevelStashes::no_stash(int x, int y)
         Stash newStash(x, y);
         newStash.enabled = false;
 
-        stashes[ newStash.abs_pos() ] = newStash;
+        m_stashes[ newStash.abs_pos() ] = newStash;
     }
 
     mpr(en? "I'll no longer ignore what I see on this square."
@@ -1058,33 +1064,33 @@ void LevelStashes::add_stash(int x, int y)
     {
         Stash new_stash(x, y);
         if (!new_stash.empty())
-            stashes[ new_stash.abs_pos() ] = new_stash;
+            m_stashes[ new_stash.abs_pos() ] = new_stash;
     }
 }
 
 bool LevelStashes::is_current() const
 {
-    return (place == level_id::current());
+    return (m_place == level_id::current());
 }
 
 std::string LevelStashes::level_name() const
 {
-    return place.describe(true, true);
+    return m_place.describe(true, true);
 }
 
 std::string LevelStashes::short_level_name() const
 {
-    return place.describe();
+    return m_place.describe();
 }
 
-int LevelStashes::count_stashes() const
+int LevelStashes::_num_enabled_stashes() const
 {
-    int rawcount = stashes.size();
+    int rawcount = m_stashes.size();
     if (!rawcount)
         return (0);
 
-    for (stashes_t::const_iterator iter = stashes.begin(); 
-            iter != stashes.end(); iter++)
+    for (stashes_t::const_iterator iter = m_stashes.begin(); 
+            iter != m_stashes.end(); iter++)
     {
         if (!iter->second.enabled)
             --rawcount;
@@ -1097,27 +1103,27 @@ void LevelStashes::get_matching_stashes(
         std::vector<stash_search_result> &results)
     const
 {
-    std::string lplace = "{" + place.describe() + "}";
-    for (stashes_t::const_iterator iter = stashes.begin();
-            iter != stashes.end(); iter++)
+    std::string lplace = "{" + m_place.describe() + "}";
+    for (stashes_t::const_iterator iter = m_stashes.begin();
+            iter != m_stashes.end(); iter++)
     {
         if (iter->second.enabled)
         {
             stash_search_result res;
             if (iter->second.matches_search(lplace, search, res))
             {
-                res.pos.id = place;
+                res.pos.id = m_place;
                 results.push_back(res);
             }
         }
     }
 
-    for (unsigned i = 0; i < shops.size(); ++i)
+    for (unsigned i = 0; i < m_shops.size(); ++i)
     {
         stash_search_result res;
-        if (shops[i].matches_search(lplace, search, res))
+        if (m_shops[i].matches_search(lplace, search, res))
         {
-            res.pos.id = place;
+            res.pos.id = m_place;
             results.push_back(res);
         }
     }
@@ -1128,18 +1134,18 @@ void LevelStashes::write(std::ostream &os, bool identify) const
     if (visible_stash_count() == 0) return ;
     os << level_name() << std::endl;
 
-    for (unsigned i = 0; i < shops.size(); ++i)
+    for (unsigned i = 0; i < m_shops.size(); ++i)
     {
-        shops[i].write(os, identify);
+        m_shops[i].write(os, identify);
     }
 
-    if (stashes.size())
+    if (m_stashes.size())
     {
-        const Stash &s = stashes.begin()->second;
+        const Stash &s = m_stashes.begin()->second;
         int refx = s.getX(), refy = s.getY();
         std::string levname = short_level_name();
-        for (stashes_t::const_iterator iter = stashes.begin(); 
-                iter != stashes.end(); iter++)
+        for (stashes_t::const_iterator iter = m_stashes.begin(); 
+                iter != m_stashes.end(); iter++)
         {
             iter->second.write(os, refx, refy, levname, identify);
         }
@@ -1150,42 +1156,42 @@ void LevelStashes::write(std::ostream &os, bool identify) const
 void LevelStashes::save(FILE *file) const
 {
     // How many stashes on this level?
-    writeShort(file, (short) stashes.size());
+    writeShort(file, (short) m_stashes.size());
 
-    place.save(file);
+    m_place.save(file);
 
     // And write the individual stashes
-    for (stashes_t::const_iterator iter = stashes.begin(); 
-            iter != stashes.end(); iter++)
+    for (stashes_t::const_iterator iter = m_stashes.begin(); 
+            iter != m_stashes.end(); iter++)
         iter->second.save(file);
 
-    writeShort(file, (short) shops.size());
-    for (unsigned i = 0; i < shops.size(); ++i)
-        shops[i].save(file);
+    writeShort(file, (short) m_shops.size());
+    for (unsigned i = 0; i < m_shops.size(); ++i)
+        m_shops[i].save(file);
 }
 
 void LevelStashes::load(FILE *file)
 {
     int size = readShort(file);
 
-    place.load(file);
+    m_place.load(file);
 
-    stashes.clear();
+    m_stashes.clear();
     for (int i = 0; i < size; ++i)
     {
         Stash s;
         s.load(file);
         if (!s.empty())
-            stashes[ s.abs_pos() ] = s;
+            m_stashes[ s.abs_pos() ] = s;
     }
 
-    shops.clear();
+    m_shops.clear();
     int shopc = readShort(file);
     for (int i = 0; i < shopc; ++i)
     {
         ShopInfo si(0, 0);
         si.load(file);
-        shops.push_back(si);
+        m_shops.push_back(si);
     }
 }
 
@@ -1723,6 +1729,3 @@ bool StashTracker::display_search_results(
     }
     return false;
 }
-
-// Global
-StashTracker stashes;

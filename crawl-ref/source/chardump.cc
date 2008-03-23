@@ -1186,7 +1186,7 @@ static bool write_dump(
     std::string stash_file_name;
     stash_file_name = file_name;
     stash_file_name += ".lst";
-    stashes.dump(stash_file_name.c_str(), par.full_id);
+    StashTrack.dump(stash_file_name.c_str(), par.full_id);
 
     std::string map_file_name = file_name + ".map";
     dump_map(map_file_name.c_str());

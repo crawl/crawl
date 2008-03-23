@@ -239,21 +239,22 @@ public:
     std::string level_name() const;
     std::string short_level_name() const;
 
-    int   stash_count() const { return stashes.size() + shops.size(); }
-    int   visible_stash_count() const { return count_stashes() + shops.size(); }
+    int   stash_count() const { return m_stashes.size() + m_shops.size(); }
+    int   visible_stash_count() const { return _num_enabled_stashes() + m_shops.size(); }
 
     bool  is_current() const;
-private:
-    // which level
-    level_id place;
 
+ private:
+    int _num_enabled_stashes() const;
+
+ private:
     typedef std::map<int, Stash>  stashes_t;
     typedef std::vector<ShopInfo> shops_t;
     
-    stashes_t stashes;
-    shops_t   shops;
-
-    int count_stashes() const;
+    // which level
+    level_id m_place;
+    stashes_t m_stashes;
+    shops_t m_shops;
 };
 
 extern std::ostream &operator << (std::ostream &, const LevelStashes &);
@@ -326,7 +327,7 @@ private:
     stash_levels_t levels;
 };
 
-extern StashTracker stashes;
+extern StashTracker StashTrack;
 
 bool is_stash(int x, int y);
 void describe_stash(int x, int y);

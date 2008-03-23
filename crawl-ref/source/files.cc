@@ -1220,7 +1220,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     FILE *stashf = fopen(stashFile.c_str(), "wb");
     if (stashf)
     {
-        stashes.save(stashf);
+        StashTrack.save(stashf);
         fclose(stashf);
         DO_CHMOD_PRIVATE(stashFile.c_str());
     }
@@ -1421,7 +1421,7 @@ void restore_game(void)
     FILE *stashf = fopen(stashFile.c_str(), "rb");
     if (stashf)
     {
-        stashes.load(stashf);
+        StashTrack.load(stashf);
         fclose(stashf);
     }
 
