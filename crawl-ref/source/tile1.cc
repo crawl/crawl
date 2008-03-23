@@ -802,6 +802,7 @@ int tileidx_monster_base(int mon_idx, bool detected)
 
 int tileidx_monster(int mon_idx, bool detected)
 {
+    ASSERT(mon_idx != -1);
     int ch = tileidx_monster_base(mon_idx, detected);
     const monsters* mons = &menv[mon_idx];
 
@@ -1673,7 +1674,7 @@ int tileidx_item(const item_def &item)
   the octant boundary slope tan(pi/8)=sqrt(2)-1 = 0.414 is approximated by 2/5
 
 */
-static int tile_bolt_dir(int dx, int dy)
+static int _tile_bolt_dir(int dx, int dy)
 {
     int ax = abs(dx);
     int ay = abs(dy);
@@ -1693,7 +1694,7 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
     if (item.base_type == OBJ_MISSILES)
     {
         int ch = -1;
-        int dir = tile_bolt_dir(dx, dy);
+        int dir = _tile_bolt_dir(dx, dy);
 
         // Thrown items with multiple directions
         switch(item.sub_type)
@@ -1747,7 +1748,7 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
     return tileidx_item(item);
 }
 
-static int tileidx_trap(trap_type type)
+static int _tileidx_trap(trap_type type)
 {
     switch (type)
     {
@@ -1827,7 +1828,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-        return tileidx_trap(trap_type_at_xy(gx, gy));
+        return _tileidx_trap(trap_type_at_xy(gx, gy));
     case DNGN_ENTER_SHOP:
         return TILE_DNGN_ENTER_SHOP;
     case DNGN_ENTER_LABYRINTH:
@@ -2166,33 +2167,34 @@ void tilep_calc_flags(int parts[], int flag[])
 {
     int i;
 
-    for(i=0;i<TILEP_PARTS_TOTAL;i++) flag[i]=TILEP_FLAG_NORMAL;
+    for (i = 0; i < TILEP_PARTS_TOTAL; i++)
+         flag[i] = TILEP_FLAG_NORMAL;
 
     if (parts[TILEP_PART_HELM]-1 >= TILEP_HELM_HELM_OFS)
-        flag[TILEP_PART_HAIR]=TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAIR] = TILEP_FLAG_HIDE;
 
     if (parts[TILEP_PART_HELM]-1 >= TILEP_HELM_FHELM_OFS)
-        flag[TILEP_PART_BEARD]=TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
-    if(parts[TILEP_PART_BASE]== TILEP_BASE_NAGA ||
-       parts[TILEP_PART_BASE]== TILEP_BASE_NAGA+1)
+    if (parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
+        || parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1)
     {
-        flag[TILEP_PART_BOOTS]=flag[TILEP_PART_LEG]=TILEP_FLAG_HIDE;
-        flag[TILEP_PART_BODY] = TILEP_FLAG_CUT_NAGA;
+        flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_NAGA;
     }
 
-    if(parts[TILEP_PART_BASE]== TILEP_BASE_CENTAUR ||
-       parts[TILEP_PART_BASE]== TILEP_BASE_CENTAUR+1)
+    if (parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
+        || parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1)
     {
-        flag[TILEP_PART_BOOTS]=flag[TILEP_PART_LEG]=TILEP_FLAG_HIDE;
-        flag[TILEP_PART_BODY] = TILEP_FLAG_CUT_CENTAUR;
+        flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;
     }
 
-    if (parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER ||
-        parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER +1)
+    if (parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER
+        || parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER + 1)
     {
-        flag[TILEP_PART_BOOTS] = TILEP_FLAG_HIDE;
-        flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
     }
 }
@@ -2690,38 +2692,37 @@ void tilep_scan_parts(char *fbuf, int *parts)
 
     int gcount = 0;
     int ccount = 0;
-    for(int i = 0; parts_saved[i] != -1; i++)
+    for (int i = 0; parts_saved[i] != -1; i++)
     {
-        int idx;
-        ccount = 0;
-        int p = parts_saved[i];
+         int idx;
+         ccount = 0;
+         int p = parts_saved[i];
 
-        while ( (fbuf[gcount] != ':') && (fbuf[gcount] != '\n')
-            && (ccount<4) && (gcount<48) )
-        {
-            ibuf[ccount] = fbuf[gcount];
-            ccount ++;
-            gcount ++;
-        }
+         while (fbuf[gcount] != ':' && fbuf[gcount] != '\n'
+                && ccount < 4 && gcount < 48)
+         {
+             ibuf[ccount++] = fbuf[gcount++];
+         }
 
-        ibuf[ccount] = '\0';
-        gcount ++;
+         ibuf[ccount] = '\0';
+         gcount++;
 
-        idx = tilep_str_to_part(ibuf);
-        if (p == TILEP_PART_BASE)
-        {
-            int p0 = (parts[p]-1) & (0xfe);
-            if (((1-idx) & 1) == 1) p0++;
-            parts[p] = p0 + 1;
-        }
-        else if (idx == TILEP_SHOW_EQUIP)
-            parts[p] = TILEP_SHOW_EQUIP;
-        else if (idx < 0) // no negative value
-            parts[p] = 0;
-        else if (idx > tilep_parts_total[p]) // bound it
-            parts[p] = tilep_parts_total[p];
-        else
-            parts[p] = idx;
+         idx = tilep_str_to_part(ibuf);
+         if (p == TILEP_PART_BASE)
+         {
+             int p0 = (parts[p]-1) & (0xfe);
+             if (((1-idx) & 1) == 1)
+                 p0++;
+             parts[p] = p0 + 1;
+         }
+         else if (idx == TILEP_SHOW_EQUIP)
+             parts[p] = TILEP_SHOW_EQUIP;
+         else if (idx < 0) // no negative value
+             parts[p] = 0;
+         else if (idx > tilep_parts_total[p]) // bound it
+             parts[p] = tilep_parts_total[p];
+         else
+             parts[p] = idx;
     }
 }
 
@@ -2732,21 +2733,21 @@ void tilep_print_parts(char *fbuf, int *parts)
 {
     int i;
     char *ptr = fbuf;
-    for(i = 0; parts_saved[i] != -1; i++)
+    for (i = 0; parts_saved[i] != -1; i++)
     {
-        int p = parts_saved[i];
-        if (p == TILEP_PART_BASE) // 0:female  1:male
-        {
-            sprintf(ptr, "%03d", parts[p]%2);
-            ptr += 3;
-        }
-        else
-        {
-            tilep_part_to_str(parts[p], ptr);
-            ptr += 3;
-        }
-        *ptr = ':';
-        ptr++;
+         int p = parts_saved[i];
+         if (p == TILEP_PART_BASE) // 0:female  1:male
+         {
+             sprintf(ptr, "%03d", parts[p]%2);
+             ptr += 3;
+         }
+         else
+         {
+             tilep_part_to_str(parts[p], ptr);
+             ptr += 3;
+         }
+         *ptr = ':';
+         ptr++;
     }
     ptr--; // erase the last ':'
     *ptr = 0;
@@ -2760,34 +2761,30 @@ int tilep_equ_weapon(const item_def &item)
     if (item.base_type == OBJ_STAVES)
     {
         if (item_is_rod(item))
-        {
             return TILEP_HAND1_ROD_BROWN + (item.special / 4) % 10;
-        }
         else
-        {
             return TILEP_HAND1_STAFF_LARGE + (item.special / 4) % 10;
-        }
     }
 
     if (item.base_type == OBJ_MISCELLANY)
     {
         switch(item.sub_type)
         {
-        case MISC_BOTTLED_EFREET: return TILEP_HAND1_BOTTLE;
-        case MISC_AIR_ELEMENTAL_FAN: return TILEP_HAND1_FAN;
-        case MISC_STONE_OF_EARTH_ELEMENTALS: return TILEP_HAND1_STONE;
-        case MISC_DISC_OF_STORMS: return TILEP_HAND1_DISC;
+        case MISC_BOTTLED_EFREET:             return TILEP_HAND1_BOTTLE;
+        case MISC_AIR_ELEMENTAL_FAN:          return TILEP_HAND1_FAN;
+        case MISC_STONE_OF_EARTH_ELEMENTALS:  return TILEP_HAND1_STONE;
+        case MISC_DISC_OF_STORMS:             return TILEP_HAND1_DISC;
 
         case MISC_CRYSTAL_BALL_OF_SEEING: 
         case MISC_CRYSTAL_BALL_OF_ENERGY: 
-        case MISC_CRYSTAL_BALL_OF_FIXATION: return TILEP_HAND1_CRYSTAL;
+        case MISC_CRYSTAL_BALL_OF_FIXATION:   return TILEP_HAND1_CRYSTAL;
 
-        case MISC_LAMP_OF_FIRE: return TILEP_HAND1_LANTERN;
-        case MISC_LANTERN_OF_SHADOWS: return TILEP_HAND1_BONE_LANTERN;
-        case MISC_HORN_OF_GERYON: return TILEP_HAND1_HORN;
+        case MISC_LAMP_OF_FIRE:               return TILEP_HAND1_LANTERN;
+        case MISC_LANTERN_OF_SHADOWS:         return TILEP_HAND1_BONE_LANTERN;
+        case MISC_HORN_OF_GERYON:             return TILEP_HAND1_HORN;
 
         case MISC_BOX_OF_BEASTS: 
-        case MISC_EMPTY_EBONY_CASKET: return TILEP_HAND1_BOX;
+        case MISC_EMPTY_EBONY_CASKET:         return TILEP_HAND1_BOX;
 
         case MISC_DECK_OF_ESCAPE:
         case MISC_DECK_OF_DESTRUCTION:
@@ -2797,45 +2794,47 @@ int tilep_equ_weapon(const item_def &item)
         case MISC_DECK_OF_PUNISHMENT:
         case MISC_DECK_OF_WAR:
         case MISC_DECK_OF_CHANGES:
-        case MISC_DECK_OF_DEFENCE: return TILEP_HAND1_DECK;
+        case MISC_DECK_OF_DEFENCE:            return TILEP_HAND1_DECK;
         }
     }
 
-    if (item.base_type != OBJ_WEAPONS) return 0;
+    if (item.base_type != OBJ_WEAPONS)
+        return 0;
 
     if (is_fixed_artefact( item ))
     {
         switch(item.special)
         {
-            case SPWPN_SINGING_SWORD: return TILEP_HAND1_SINGING_SWORD;
-            case SPWPN_WRATH_OF_TROG: return TILEP_HAND1_AXE_TROG;
-            case SPWPN_SCYTHE_OF_CURSES: return TILEP_HAND1_FINISHER;
+            case SPWPN_SINGING_SWORD:       return TILEP_HAND1_SINGING_SWORD;
+            case SPWPN_WRATH_OF_TROG:       return TILEP_HAND1_AXE_TROG;
+            case SPWPN_SCYTHE_OF_CURSES:    return TILEP_HAND1_FINISHER;
             case SPWPN_MACE_OF_VARIABILITY: return TILEP_HAND1_MACE_OF_VARIABILITY;
-            case SPWPN_GLAIVE_OF_PRUNE: return TILEP_HAND1_GLAIVE_OF_PRUNE;
-            case SPWPN_SCEPTRE_OF_TORMENT: return TILEP_HAND1_MACE_RUBY;
+            case SPWPN_GLAIVE_OF_PRUNE:     return TILEP_HAND1_GLAIVE_OF_PRUNE;
+            case SPWPN_SCEPTRE_OF_TORMENT:  return TILEP_HAND1_MACE_RUBY;
             case SPWPN_SWORD_OF_ZONGULDROK: return TILEP_HAND1_ZONGULDROK;
-            case SPWPN_SWORD_OF_CEREBOV: return TILEP_HAND1_SWORD_TWIST;
-            case SPWPN_STAFF_OF_DISPATER: return TILEP_HAND1_DISPATER;
+            case SPWPN_SWORD_OF_CEREBOV:    return TILEP_HAND1_SWORD_TWIST;
+            case SPWPN_STAFF_OF_DISPATER:   return TILEP_HAND1_DISPATER;
             case SPWPN_SCEPTRE_OF_ASMODEUS: return TILEP_HAND1_ASMODEUS;
-            case SPWPN_SWORD_OF_POWER: break;
-            case SPWPN_KNIFE_OF_ACCURACY: break;
-            case SPWPN_STAFF_OF_OLGREB: return TILEP_HAND1_OLGREB;
-            case SPWPN_VAMPIRES_TOOTH: break;
-            case SPWPN_STAFF_OF_WUCAD_MU: break;
+            case SPWPN_STAFF_OF_OLGREB:     return TILEP_HAND1_OLGREB;
+
+            case SPWPN_SWORD_OF_POWER: 
+            case SPWPN_KNIFE_OF_ACCURACY:
+            case SPWPN_VAMPIRES_TOOTH:
+            case SPWPN_STAFF_OF_WUCAD_MU:
+                break;
         }
     }
 
     if (is_unrandom_artefact( item ))
     {
-        int x = find_unrandart_index(item);
-        switch(x+1)
+        switch (find_unrandart_index(item) + 1)
         {
             // Bloodbane
-            case 2: return TILEP_HAND1_BLOODBANE;
+            case 2:  return TILEP_HAND1_BLOODBANE;
             // Flaming Death
-            case 4: return TILEP_HAND1_FLAMING_DEATH;
+            case 4:  return TILEP_HAND1_FLAMING_DEATH;
             //mace of Brilliance
-            case 8: return TILEP_HAND1_MACE_OF_VARIABILITY;
+            case 8:  return TILEP_HAND1_MACE_OF_VARIABILITY;
             //demon blade Leech
             case 12: return TILEP_HAND1_LEECH;
             //dagger of Chilly Death
@@ -2881,80 +2880,81 @@ int tilep_equ_weapon(const item_def &item)
 
     switch (item.sub_type)
     {
-  // Blunt
-  case WPN_CLUB: return TILEP_HAND1_CLUB_SLANT;
-  case WPN_MACE: return TILEP_HAND1_MACE;
-  case WPN_GREAT_MACE: return TILEP_HAND1_GREAT_MACE;
-  case WPN_FLAIL: return TILEP_HAND1_FRAIL;
-  case WPN_SPIKED_FLAIL: return TILEP_HAND1_SPIKED_FRAIL;
-  case WPN_DIRE_FLAIL: return TILEP_HAND1_GREAT_FRAIL;
-  case WPN_MORNINGSTAR: return TILEP_HAND1_MORNINGSTAR;
-  case WPN_EVENINGSTAR: return TILEP_HAND1_EVENINGSTAR;
-  case WPN_GIANT_CLUB: return TILEP_HAND1_GIANT_CLUB_SLANT;
-  case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
-  case WPN_ANCUS: return TILEP_HAND1_MACE;
-  case WPN_WHIP: return TILEP_HAND1_WHIP;
-  case WPN_DEMON_WHIP: return TILEP_HAND1_BLACK_WHIP;
+    // Blunt
+    case WPN_CLUB:              return TILEP_HAND1_CLUB_SLANT;
+    case WPN_MACE:              return TILEP_HAND1_MACE;
+    case WPN_GREAT_MACE:        return TILEP_HAND1_GREAT_MACE;
+    case WPN_FLAIL:             return TILEP_HAND1_FRAIL;
+    case WPN_SPIKED_FLAIL:      return TILEP_HAND1_SPIKED_FRAIL;
+    case WPN_DIRE_FLAIL:        return TILEP_HAND1_GREAT_FRAIL;
+    case WPN_MORNINGSTAR:       return TILEP_HAND1_MORNINGSTAR;
+    case WPN_EVENINGSTAR:       return TILEP_HAND1_EVENINGSTAR;
+    case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_SLANT;
+    case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
+    case WPN_ANCUS:             return TILEP_HAND1_MACE;
+    case WPN_WHIP:              return TILEP_HAND1_WHIP;
+    case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
 
-  // Edge
-  case WPN_KNIFE: return TILEP_HAND1_DAGGER_SLANT;
-  case WPN_DAGGER: return TILEP_HAND1_DAGGER_SLANT;
-  case WPN_SHORT_SWORD: return TILEP_HAND1_SHORT_SWORD_SLANT;
-  case WPN_LONG_SWORD: return TILEP_HAND1_LONG_SWORD_SLANT;
-  case WPN_GREAT_SWORD: return TILEP_HAND1_GREAT_SWORD_SLANT;
-  case WPN_SCIMITAR: return TILEP_HAND1_SCIMITAR;
-  case WPN_FALCHION: return TILEP_HAND1_FALCHION;
-  case WPN_SABRE: return TILEP_HAND1_SABRE;
-  case WPN_DEMON_BLADE: return TILEP_HAND1_SWORD_BLACK;
-  case WPN_QUICK_BLADE: return TILEP_HAND1_DAGGER;
-  case WPN_KATANA: return TILEP_HAND1_KATANA_SLANT;
-  case WPN_DOUBLE_SWORD: return TILEP_HAND1_DOUBLE_SWORD;
-  case WPN_TRIPLE_SWORD: return TILEP_HAND1_TRIPLE_SWORD;
-  case WPN_BLESSED_BLADE: return TILEP_HAND1_BLESSED_BLADE;
+    // Edge
+    case WPN_KNIFE:         return TILEP_HAND1_DAGGER_SLANT;
+    case WPN_DAGGER:        return TILEP_HAND1_DAGGER_SLANT;
+    case WPN_SHORT_SWORD:   return TILEP_HAND1_SHORT_SWORD_SLANT;
+    case WPN_LONG_SWORD:    return TILEP_HAND1_LONG_SWORD_SLANT;
+    case WPN_GREAT_SWORD:   return TILEP_HAND1_GREAT_SWORD_SLANT;
+    case WPN_SCIMITAR:      return TILEP_HAND1_SCIMITAR;
+    case WPN_FALCHION:      return TILEP_HAND1_FALCHION;
+    case WPN_SABRE:         return TILEP_HAND1_SABRE;
+    case WPN_DEMON_BLADE:   return TILEP_HAND1_SWORD_BLACK;
+    case WPN_QUICK_BLADE:   return TILEP_HAND1_DAGGER;
+    case WPN_KATANA:        return TILEP_HAND1_KATANA_SLANT;
+    case WPN_DOUBLE_SWORD:  return TILEP_HAND1_DOUBLE_SWORD;
+    case WPN_TRIPLE_SWORD:  return TILEP_HAND1_TRIPLE_SWORD;
+    case WPN_BLESSED_BLADE: return TILEP_HAND1_BLESSED_BLADE;
 
-  // Axe
-  case WPN_HAND_AXE: return TILEP_HAND1_HAND_AXE;
-  case WPN_BATTLEAXE: return TILEP_HAND1_BATTLEAXE;
-  case WPN_BROAD_AXE: return TILEP_HAND1_BROAD_AXE;
-  case WPN_WAR_AXE: return TILEP_HAND1_WAR_AXE;
-  case WPN_EXECUTIONERS_AXE: return TILEP_HAND1_EXECUTIONERS_AXE;
-  case WPN_BARDICHE: return TILEP_HAND1_GLAIVE3;
+    // Axe
+    case WPN_HAND_AXE:         return TILEP_HAND1_HAND_AXE;
+    case WPN_BATTLEAXE:        return TILEP_HAND1_BATTLEAXE;
+    case WPN_BROAD_AXE:        return TILEP_HAND1_BROAD_AXE;
+    case WPN_WAR_AXE:          return TILEP_HAND1_WAR_AXE;
+    case WPN_EXECUTIONERS_AXE: return TILEP_HAND1_EXECUTIONERS_AXE;
+    case WPN_BARDICHE:         return TILEP_HAND1_GLAIVE3;
 
-  //Pole
-  case WPN_SPEAR: return TILEP_HAND1_SPEAR;
-  case WPN_HALBERD: return TILEP_HAND1_HALBERD;
-  case WPN_GLAIVE: return TILEP_HAND1_GLAIVE;
-  case WPN_QUARTERSTAFF: return TILEP_HAND1_QUARTERSTAFF1;
-  case WPN_SCYTHE: return TILEP_HAND1_SCYTHE;
-  case WPN_HAMMER: return TILEP_HAND1_HAMMER;
-  case WPN_DEMON_TRIDENT: return TILEP_HAND1_DEMON_TRIDENT;
-  case WPN_TRIDENT: return TILEP_HAND1_TRIDENT2;
-  case WPN_LAJATANG: return TILEP_HAND1_D_GLAIVE;
+    //Pole
+    case WPN_SPEAR:         return TILEP_HAND1_SPEAR;
+    case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
+    case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
+    case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
+    case WPN_SCYTHE:        return TILEP_HAND1_SCYTHE;
+    case WPN_HAMMER:        return TILEP_HAND1_HAMMER;
+    case WPN_DEMON_TRIDENT: return TILEP_HAND1_DEMON_TRIDENT;
+    case WPN_TRIDENT:       return TILEP_HAND1_TRIDENT2;
+    case WPN_LAJATANG:      return TILEP_HAND1_D_GLAIVE;
 
-  //Ranged
-  case WPN_SLING: return TILEP_HAND1_SLING;
-  case WPN_BOW: return TILEP_HAND1_BOW2;
-  case WPN_CROSSBOW: return TILEP_HAND1_CROSSBOW;
-  case WPN_HAND_CROSSBOW: return TILEP_HAND1_CROSSBOW;
-  case WPN_BLOWGUN: return TILEP_HAND1_BLOWGUN;
-  case WPN_LONGBOW: return TILEP_HAND1_BOW3;
-        default: return 0;
+    //Ranged
+    case WPN_SLING:         return TILEP_HAND1_SLING;
+    case WPN_BOW:           return TILEP_HAND1_BOW2;
+    case WPN_CROSSBOW:      return TILEP_HAND1_CROSSBOW;
+    case WPN_HAND_CROSSBOW: return TILEP_HAND1_CROSSBOW;
+    case WPN_BLOWGUN:       return TILEP_HAND1_BLOWGUN;
+    case WPN_LONGBOW:       return TILEP_HAND1_BOW3;
+    
+    default: return 0;
     }
 }
 
 int tilep_equ_armour(const item_def &item)
 {
-    if (item.base_type !=OBJ_ARMOUR) return 0;
+    if (item.base_type != OBJ_ARMOUR)
+        return 0;
 
     if (is_unrandom_artefact( item ))
     {
-        int x = find_unrandart_index(item);
-        switch(x+1)
+        switch (find_unrandart_index(item) + 1)
         {
             // Holy Armour of Zin
-            case 6: return TILEP_BODY_ARMOR_MUMMY;
+            case 6:  return TILEP_BODY_ARMOR_MUMMY;
             // robe of Augmentation
-            case 7: return TILEP_BODY_ROBE_RED2;
+            case 7:  return TILEP_BODY_ROBE_RED2;
             // robe of Misfortune
             case 14: return TILEP_BODY_ARWEN;
             // Lear's chain mail
@@ -3000,32 +3000,32 @@ int tilep_equ_armour(const item_def &item)
             default:          return 0;
         }
  
-    case ARM_LEATHER_ARMOUR: return TILEP_BODY_LEATHER_ARMOUR3;
-    case ARM_RING_MAIL: return TILEP_BODY_RINGMAIL;
-    case ARM_CHAIN_MAIL: return TILEP_BODY_CHAINMAIL;
-    case ARM_SCALE_MAIL: return TILEP_BODY_SCALEMAIL;
-    case ARM_SPLINT_MAIL: return TILEP_BODY_BANDED;
-    case ARM_BANDED_MAIL: return TILEP_BODY_BANDED;
-    case ARM_PLATE_MAIL: return TILEP_BODY_PLATE_BLACK;
+    case ARM_LEATHER_ARMOUR:     return TILEP_BODY_LEATHER_ARMOUR3;
+    case ARM_RING_MAIL:          return TILEP_BODY_RINGMAIL;
+    case ARM_CHAIN_MAIL:         return TILEP_BODY_CHAINMAIL;
+    case ARM_SCALE_MAIL:         return TILEP_BODY_SCALEMAIL;
+    case ARM_SPLINT_MAIL:        return TILEP_BODY_BANDED;
+    case ARM_BANDED_MAIL:        return TILEP_BODY_BANDED;
+    case ARM_PLATE_MAIL:         return TILEP_BODY_PLATE_BLACK;
     case ARM_CRYSTAL_PLATE_MAIL: return TILEP_BODY_CRYSTAL_PLATE;
 
-    case ARM_DRAGON_HIDE: return TILEP_BODY_DRAGONSC_GREEN;
-    case ARM_ICE_DRAGON_HIDE: return TILEP_BODY_DRAGONSC_CYAN;
-    case ARM_STEAM_DRAGON_HIDE: return TILEP_BODY_DRAGONSC_WHITE;
+    case ARM_DRAGON_HIDE:         return TILEP_BODY_DRAGONSC_GREEN;
+    case ARM_ICE_DRAGON_HIDE:     return TILEP_BODY_DRAGONSC_CYAN;
+    case ARM_STEAM_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_WHITE;
     case ARM_MOTTLED_DRAGON_HIDE: return TILEP_BODY_DRAGONSC_MAGENTA;
-    case ARM_STORM_DRAGON_HIDE: return TILEP_BODY_DRAGONSC_BLUE;
-    case ARM_GOLD_DRAGON_HIDE: return TILEP_BODY_DRAGONSC_GOLD;
-    case ARM_SWAMP_DRAGON_HIDE: return TILEP_BODY_DRAGONSC_BROWN;
+    case ARM_STORM_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_BLUE;
+    case ARM_GOLD_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GOLD;
+    case ARM_SWAMP_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_BROWN;
 
-    case ARM_DRAGON_ARMOUR: return TILEP_BODY_DRAGONARM_GREEN;
-    case ARM_ICE_DRAGON_ARMOUR: return TILEP_BODY_DRAGONARM_CYAN;
-    case ARM_STEAM_DRAGON_ARMOUR: return TILEP_BODY_DRAGONARM_WHITE;
+    case ARM_DRAGON_ARMOUR:         return TILEP_BODY_DRAGONARM_GREEN;
+    case ARM_ICE_DRAGON_ARMOUR:     return TILEP_BODY_DRAGONARM_CYAN;
+    case ARM_STEAM_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_WHITE;
     case ARM_MOTTLED_DRAGON_ARMOUR: return TILEP_BODY_DRAGONARM_MAGENTA;
-    case ARM_STORM_DRAGON_ARMOUR: return TILEP_BODY_DRAGONARM_BLUE;
-    case ARM_GOLD_DRAGON_ARMOUR: return TILEP_BODY_DRAGONARM_GOLD;
-    case ARM_SWAMP_DRAGON_ARMOUR: return TILEP_BODY_DRAGONARM_BROWN;
+    case ARM_STORM_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_BLUE;
+    case ARM_GOLD_DRAGON_ARMOUR:    return TILEP_BODY_DRAGONARM_GOLD;
+    case ARM_SWAMP_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_BROWN;
 
-    case ARM_ANIMAL_SKIN: return TILEP_BODY_ANIMAL_SKIN;
+    case ARM_ANIMAL_SKIN:          return TILEP_BODY_ANIMAL_SKIN;
     case ARM_TROLL_HIDE: 
     case ARM_TROLL_LEATHER_ARMOUR: return TILEP_BODY_TROLL_HIDE;
 
@@ -3035,16 +3035,18 @@ int tilep_equ_armour(const item_def &item)
 
 int tilep_equ_shield(const item_def &item)
 {
-    if (you.equip[EQ_SHIELD] == -1) return 0;
-    if (item.base_type !=OBJ_ARMOUR) return 0;
+    if (you.equip[EQ_SHIELD] == -1)
+        return 0;
+        
+    if (item.base_type != OBJ_ARMOUR)
+        return 0;
 
     if (is_unrandom_artefact( item ))
     {
-        int x = find_unrandart_index(item);
-        switch(x+1)
+        switch (find_unrandart_index(item) + 1)
         {
             // shield of Ignorance
-            case 5: return TILEP_HAND2_SHIELD_SHAMAN;
+            case 5:  return TILEP_HAND2_SHIELD_SHAMAN;
             // Bullseye
             case 10: return TILEP_HAND2_BULLSEYE;
             // shield of Resistance
@@ -3054,8 +3056,8 @@ int tilep_equ_shield(const item_def &item)
 
     switch (item.sub_type)
     {
-        case ARM_SHIELD: return TILEP_HAND2_SHIELD_KNIGHT_BLUE;
-        case ARM_BUCKLER: return TILEP_HAND2_SHIELD_ROUND_SMALL;
+        case ARM_SHIELD:       return TILEP_HAND2_SHIELD_KNIGHT_BLUE;
+        case ARM_BUCKLER:      return TILEP_HAND2_SHIELD_ROUND_SMALL;
         case ARM_LARGE_SHIELD: return TILEP_HAND2_SHIELD_LONG_RED;
         default: return 0;
     }
@@ -3063,9 +3065,12 @@ int tilep_equ_shield(const item_def &item)
 
 int tilep_equ_cloak(const item_def &item)
 {
-    if (you.equip[EQ_CLOAK] == -1) return 0;
-    if (item.base_type !=OBJ_ARMOUR) return 0;
-    if (item.sub_type != ARM_CLOAK) return 0;
+    if (you.equip[EQ_CLOAK] == -1)
+        return 0;
+        
+    if (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_CLOAK)
+        return 0;
+        
     switch (item.colour)
     {
          case BLACK:
@@ -3097,17 +3102,13 @@ int tilep_equ_helm(const item_def &item)
 
     if (is_unrandom_artefact(item))
     {
-        int idx = find_unrandart_index(item);
-        switch (idx + 1)
+        switch (find_unrandart_index(item) + 1)
         {
-            case 11:
-                // crown of Dyrovepreva
+            case 11: // crown of Dyrovepreva
                 return TILEP_HELM_DYROVEPREVA;
-            case 41:
-                // mask of the Dragon
+            case 41: // mask of the Dragon
                 return TILEP_HELM_ART_DRAGONHELM;
-            case 50:
-                // hat of the Alchemist
+            case 50: // hat of the Alchemist
                 return TILEP_HELM_TURBAN_PURPLE;
         }
 
@@ -3233,15 +3234,12 @@ int tilep_equ_gloves(const item_def &item)
 {
     if (you.equip[EQ_GLOVES] == -1)
         return 0;
-    if (item.base_type != OBJ_ARMOUR)
-        return 0;
-    if (item.sub_type != ARM_GLOVES)
+    if (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_GLOVES)
         return 0;
 
     if (is_unrandom_artefact(item))
     {
-        int idx = find_unrandart_index(item);
-        switch (idx + 1)
+        switch (find_unrandart_index(item) + 1)
         {
             case 30: // gauntlets of War (thick brown)
                 return TILEP_ARM_GLOVE_BLACK;
@@ -3250,8 +3248,7 @@ int tilep_equ_gloves(const item_def &item)
         }
     }
 
-    int etype = get_etype(item);
-    switch (etype)
+    switch (get_etype(item))
     {
         default:
         case 0:
@@ -3291,6 +3288,7 @@ int tilep_equ_boots(const item_def &item)
 
     if (item.sub_type == ARM_NAGA_BARDING)
         return TILEP_BOOTS_NAGA_BARDING + std::min(etype, 3);
+        
     if (item.sub_type == ARM_CENTAUR_BARDING)
         return TILEP_BOOTS_CENTAUR_BARDING + std::min(etype, 3);
 
@@ -3299,8 +3297,8 @@ int tilep_equ_boots(const item_def &item)
 
     if (is_unrandom_artefact(item))
     {
-        int idx = find_unrandart_index(item);
-        switch (idx + 1)
+        // in anticipation of more unrandart boots
+        switch (find_unrandart_index(item) + 1)
         {
             case 23: // boots of the assassin
                 return TILEP_BOOTS_MIDDLE_GRAY;
@@ -3351,8 +3349,11 @@ int get_ctg_idx(char *name)
 {
     int i;
 
-    for(i=0;i<TILEP_PARTS_TOTAL;i++)
-        if(strcmp(name, tilep_parts_name[i])==0) return i;
+    for (i = 0; i < TILEP_PARTS_TOTAL; i++)
+    {
+         if (strcmp(name, tilep_parts_name[i]) == 0)
+             return i;
+    }
     return 0;
 }
 
@@ -3360,8 +3361,11 @@ const char *get_parts_name(int part, int idx)
 {
     static char tmp[10];
     const char *ptr = tilep_comment[ tilep_comment_ofs[part] -1 + idx ];
-    if(idx==0) return "";
-    if(ptr[0]==0)
+    
+    if (idx == 0)
+        return "";
+        
+    if (ptr[0] == 0)
     {
         sprintf(tmp,"%02d",idx);
         return tmp;
@@ -3375,9 +3379,11 @@ int get_parts_idx(int part, char *name)
     int res = atoi(name);
     int i;
 
-    for(i=0;i<tilep_parts_total[part];i++)
-        if(strcmp(name, tilep_comment[ tilep_comment_ofs[part]+i])==0)
-            return i+1;
+    for (i = 0; i < tilep_parts_total[part]; i++)
+    {
+         if (strcmp(name, tilep_comment[ tilep_comment_ofs[part]+i]) == 0)
+             return i+1;
+    }
     return res;
 }
 #endif /* TILEP_DEBUG */
@@ -3389,14 +3395,14 @@ int get_parts_idx(int part, char *name)
 // for clarity
 enum SpecialIdx
 {
-    SPECIAL_N = 0,
-    SPECIAL_NE = 1,
-    SPECIAL_E = 2,
-    SPECIAL_SE = 3,
-    SPECIAL_S = 4,
-    SPECIAL_SW = 5,
-    SPECIAL_W = 6,
-    SPECIAL_NW = 7,
+    SPECIAL_N    = 0,
+    SPECIAL_NE   = 1,
+    SPECIAL_E    = 2,
+    SPECIAL_SE   = 3,
+    SPECIAL_S    = 4,
+    SPECIAL_SW   = 5,
+    SPECIAL_W    = 6,
+    SPECIAL_NW   = 7,
     SPECIAL_FULL = 8
 };
 
@@ -4025,64 +4031,49 @@ void tile_draw_dungeon(unsigned int *tileb)
 #define swapint(a, b) {int tmp = a; a = b; b = tmp;}
 
 // Item is unided(1) or tried(2) or id'ed (0)
-//  Note that Jewellries are never "tried"
-static int item_unid_type(const item_def &item)
+static int _item_unid_type(const item_def &item)
 {
-    int t = item.base_type;
-    int s = item.sub_type;
-    int id0 = 0;
-
-    id_arr& id = get_typeid_array();
-
-    if ((item.flags &ISFLAG_KNOW_TYPE) != 0)
+    if ((item.flags & ISFLAG_KNOW_TYPE) != 0)
         return 0;
 
-    switch (t)
+    const int s = item.sub_type;
+    const id_arr& id = get_typeid_array();
+    int id0 = 0;
+
+    switch (item.base_type)
     {
-        case OBJ_SCROLLS:
-          id0 = id[ IDTYPE_SCROLLS ][s];
-          if (id0 == ID_TRIED_TYPE)
-             return 2;
-          else
-          if (id0 != ID_KNOWN_TYPE)
-             return 1;
-          else
-             return 0;
-
-        case OBJ_WANDS:
-          id0 = id[ IDTYPE_WANDS ][s];
-          if (id0 == ID_TRIED_TYPE)
-             return 2;
-          else
-          if (id0 != ID_KNOWN_TYPE)
-             return 1;
-          else
-             return 0;
-
-        case OBJ_POTIONS:
-          id0 = id[ IDTYPE_POTIONS ][s];
-          if (id0 == ID_TRIED_TYPE)
-             return 2;
-          else
-          if (id0 != ID_KNOWN_TYPE)
-             return 1;
-          else
-             return 0;
-
-        case OBJ_JEWELLERY:
-          id0 = id[ IDTYPE_JEWELLERY ][s];
-          if (id0 != ID_KNOWN_TYPE)
-             return 1;
-          else
-             return 0;
-             
         case OBJ_STAVES:
           id0 = id[ IDTYPE_STAVES ][s];
           if (id0 != ID_KNOWN_TYPE)
              return 1;
           else
              return 0;
+             
+        case OBJ_SCROLLS:
+          id0 = id[ IDTYPE_SCROLLS ][s];
+          break;
+
+        case OBJ_WANDS:
+          id0 = id[ IDTYPE_WANDS ][s];
+          break;
+
+        case OBJ_POTIONS:
+          id0 = id[ IDTYPE_POTIONS ][s];
+          break;
+
+        case OBJ_JEWELLERY:
+          id0 = id[ IDTYPE_JEWELLERY ][s];
+          break;
+          
+        default:
+          return 0;
     }
+    
+    if (id0 == ID_TRIED_TYPE)
+        return 2;
+    else if (id0 != ID_KNOWN_TYPE)
+        return 1;
+
     return 0;
 }
 
@@ -4155,9 +4146,9 @@ int pack_floor_item(int *idx, int *flag, int *isort, int max)
 
     while (o != NON_ITEM)
     {
-        int id0 = item_unid_type(mitm[o]);
+        int id0  = _item_unid_type(mitm[o]);
         int next = mitm[o].link;
-        int typ = mitm[o].base_type;
+        int typ  = mitm[o].base_type;
 
         if (n >= max) break;
 
@@ -4189,7 +4180,7 @@ int pack_floor_item(int *idx, int *flag, int *isort, int max)
 
         // Simple Bubble sort
         int k = n;
-        while( (k > 0) && (isort[k-1] > isort[k]))
+        while (k > 0 && isort[k-1] > isort[k])
         {
             swapint(idx[k-1], idx[k]);
             swapint(isort[k-1], isort[k]);
@@ -4207,16 +4198,16 @@ void finish_inven_data(int n, int *tiles, int *num, int *idx, int *iflag)
 {
     int i;
 
-    for(i = 0; i < n; i++)
+    for (i = 0; i < n; i++)
     {
         int q = -1;
         int j = idx[i];
         item_def *itm;
 
-        if (j==-1)
+        if (j == -1)
         {
-            num[i]=-1;
-            tiles[i]= 0;
+            num[i]   = -1;
+            tiles[i] = 0;
             continue;
         }
 
@@ -4266,7 +4257,8 @@ void tile_draw_inv(int item_type, int flag)
 
     if (flag == -1)
     {
-        flag = (win_main->active_layer == 0) ? REGION_INV1 : REGION_INV2;
+        flag = (win_main->active_layer == 0) ? REGION_INV1
+                                             : REGION_INV2;
     }
 
     TileRegionClass *r = (flag == REGION_INV1) ? region_item:region_item2;
@@ -4308,7 +4300,7 @@ void tile_draw_inv(int item_type, int flag)
         empty += 1-eq_flag[j];
     }
 
-    for (j=0; j<NUM_EQUIP; j++)
+    for (j = 0; j<NUM_EQUIP; j++)
     {
         int eq = you.equip[j];
         if (eq >= 0 && eq < ENDOFPACK)
@@ -4317,21 +4309,21 @@ void tile_draw_inv(int item_type, int flag)
 
     if (item_type >= 0)
         item_chars = syms_table[item_type];
-    else
-    if (item_type == -2)
+    else if (item_type == -2)
         item_chars = obj_syms;
-    else
-    if (item_type == -3)
+    else if (item_type == -3)
         item_chars = ".";
 
-    if (item_chars[0] == 0) return;
+    if (item_chars[0] == 0)
+        return;
 
     for (i=0; i < (int)strlen(item_chars); i++)
     {
         int top = n;
         char ic = item_chars[i];
 
-        if (n >= numInvTiles) break;
+        if (n >= numInvTiles)
+            break;
 
         // Items on the floor
         if (ic == '.')
@@ -4354,7 +4346,7 @@ void tile_draw_inv(int item_type, int flag)
 
         // convert item char to item type
         int type = -1;
-        for (j=0; j < (int)strlen(obj_syms); j++)
+        for (j = 0; j < (int)strlen(obj_syms); j++)
         {
             if (obj_syms[j] == ic)
             {
@@ -4363,7 +4355,8 @@ void tile_draw_inv(int item_type, int flag)
             }
         }
 
-        if (type == -1) continue;
+        if (type == -1)
+            continue;
 
         for (j = 0; j < ENDOFPACK && n < numInvTiles; j++)
         {
@@ -4371,7 +4364,7 @@ void tile_draw_inv(int item_type, int flag)
             {
                 int sval = NUM_EQUIP + you.inv[j].sub_type;
                 int base = 0;
-                int id0 = item_unid_type(you.inv[j]);
+                int id0  = _item_unid_type(you.inv[j]);
 
                 idx[n] = j;
                 iflag[n] = 0;
@@ -4413,7 +4406,7 @@ void tile_draw_inv(int item_type, int flag)
                 isort[n] = sval;
 
                 int k = n;
-                while( (k > top) && (isort[k-1] > isort[k]))
+                while (k > top && isort[k-1] > isort[k])
                 {
                     swapint(idx[k-1], idx[k]);
                     swapint(isort[k-1], isort[k]);
@@ -4428,12 +4421,12 @@ void tile_draw_inv(int item_type, int flag)
 
     finish_inven_data(n, tiles, num, idx, iflag);
 
-    for(i = n; i < numInvTiles; i++)
+    for (i = n; i < numInvTiles; i++)
     {
-        tiles[i] = 0;
-        num[i] = 0;
-        idx[i] = -1;
-        iflag[i] = 0;
+         tiles[i] = 0;
+         num[i] = 0;
+         idx[i] = -1;
+         iflag[i] = 0;
     }
     TileDrawInvData(n, flag, tiles, num, idx, iflag);
 }

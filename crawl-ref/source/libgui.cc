@@ -118,7 +118,7 @@ static int font_size = 12;
 #define PREF_MODE_ISO  2
 #define PREF_MODE_NUM  3
 static const char *pref_mode_name[PREF_MODE_NUM]
-   ={ "Text", "Tile", "Iso"};
+   = { "Text", "Tile", "Iso"};
 
 typedef struct prefs
 {
@@ -157,8 +157,8 @@ struct prefs pref_data[MAX_PREFS] =
 };
 
 static int pref_mode = 0;
-static void libgui_load_prefs();
-static void libgui_save_prefs();
+static void _libgui_load_prefs();
+static void _libgui_save_prefs();
 
 //Internal variables
 
@@ -204,9 +204,9 @@ static int gmap_ox, gmap_oy;
 #define PX_T    12
 #define PX_MS   13
 
-static char gmap_to_colour(char gm)
+static char _gmap_to_colour(char gm)
 {
-    switch(gm)
+    switch (gm)
     {
        case PX_0:  // unseen
        default:
@@ -380,10 +380,10 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
         // In some cases (like smoke), update the gmap with the ground color
         // instead.  This keeps it prettier in the case of lava + smoke.
         case '#':
-            c = gmap_to_colour(gmap_col[grid_symbol & 0xff]);
+            c = _gmap_to_colour(gmap_col[grid_symbol & 0xff]);
             break;
         default:
-            c = gmap_to_colour(gmap_col[what & 0xff]);
+            c = _gmap_to_colour(gmap_col[what & 0xff]);
             break;
         }
 
@@ -488,7 +488,7 @@ void GmapDisplay(int linex, int liney)
 }
 
 /* initialize routines */
-static void do_layout()
+static void _do_layout()
 {
     // buffer between map region and stat region
     const int map_stat_buffer = 5;
@@ -508,10 +508,10 @@ static void do_layout()
     // tile 2d mode
     win_main->placeRegion(region_tile, LAYER_NML, 0, 0);
     win_main->placeRegion(region_msg, LAYER_NML, region_tile, PLACE_BOTTOM,
-        tm, tm, tm, tm);
+                          tm, tm, tm, tm);
 
-    int sx = std::max(region_msg->ex + region_msg->dx, region_tile->ex) +
-        map_stat_buffer;
+    int sx = std::max(region_msg->ex + region_msg->dx, region_tile->ex)
+             + map_stat_buffer;
     int sy = 0;
     win_main->placeRegion(region_stat, LAYER_NML, sx, sy);
 
@@ -523,9 +523,7 @@ static void do_layout()
         lowest = region_tip;
     }
     else
-    {
         lowest = region_map;
-    }
 
     int item_x = (win_main->wx-2*tm) / TILE_X;
     int item_y = (52 + item_x -1) / item_x;
@@ -540,8 +538,8 @@ static void do_layout()
     region_crt->resize(crt_wx, crt_wy);
 
     win_main->placeRegion(region_crt, LAYER_CRT, 0, 0, tm, tm, tm, tm);
-    win_main->placeRegion (region_item2, LAYER_CRT, region_crt, PLACE_BOTTOM,
-        tm, tm, tm, tm);
+    win_main->placeRegion(region_item2, LAYER_CRT, region_crt, PLACE_BOTTOM,
+                          tm, tm, tm, tm);
 
     if (Options.show_items[0] != 0)
     {
@@ -553,15 +551,17 @@ static void do_layout()
         int item_x2 = (win_main->wx - region_msg->ex) / TILE_X;
         int item_y2 = (win_main->wy - region_msg->sy) / TILE_Y;
 
-        if (item_x * item_y < item_x2 * item_y2 &&
-            lowest->ey < region_msg->sy)
+        if (item_x * item_y < item_x2 * item_y2
+            && lowest->ey < region_msg->sy)
         {
             item_x = item_x2;
             item_y = item_y2;
             r0 = region_msg;
             place = PLACE_RIGHT;
         }
-        while(item_x * item_y < 40) item_y++;
+        while (item_x * item_y < 40)
+               item_y++;
+               
         region_item -> resize(item_x, item_y, TILE_X, TILE_Y);
         win_main->placeRegion (region_item, LAYER_NML, r0, place);
     }
@@ -579,7 +579,7 @@ void libgui_init()
 
     pref_mode = PREF_MODE_TILE;
 
-    libgui_load_prefs();
+    _libgui_load_prefs();
 
     // Adjust sizes
     if (dngn_x & 1 ==0) dngn_x++;
@@ -666,10 +666,12 @@ void libgui_init()
     region_stat->init_font(font_name); 
     region_msg->init_font(font_name); 
     region_tip->init_font(font_name);
-    if (region_dngn) region_dngn->init_font(font_name);
+    
+    if (region_dngn)
+        region_dngn->init_font(font_name);
 #endif
 
-    do_layout();
+    _do_layout();
 
     win_main->create((char*)(CRAWL " " VERSION));
 
@@ -677,19 +679,25 @@ void libgui_init()
 
     region_tile -> init_backbuf();
     region_item2->init_backbuf();
-    if (region_item) region_item->init_backbuf();
+    
+    if (region_item)
+        region_item->init_backbuf();
 }
 
 void libgui_shutdown()
 {
 
-    if(TileImg) ImgDestroy(TileImg);
-    if(PlayerImg) ImgDestroy(PlayerImg);
-    if(WallImg) ImgDestroy(WallImg);
-    if(TileIsoImg) ImgDestroy(TileIsoImg);
+    if (TileImg)
+        ImgDestroy(TileImg);
+    if (PlayerImg)
+        ImgDestroy(PlayerImg);
+    if (WallImg)
+        ImgDestroy(WallImg);
+    if (TileIsoImg)
+        ImgDestroy(TileIsoImg);
 
     // do this before delete win_main
-    libgui_save_prefs();
+    _libgui_save_prefs();
 
     std::vector<RegionClass *>::iterator r;
     for (r = win_main->regions.begin();r != win_main->regions.end();r++)
@@ -700,12 +708,11 @@ void libgui_shutdown()
 
     delete win_main;
 
-
     libgui_shutdown_sys();
 }
 
 /***  Save, Load, and Edit window prefs ***/
-static void libgui_load_prefs()
+static void _libgui_load_prefs()
 {
     int i, mode;
     FILE *fp;
@@ -715,7 +722,7 @@ static void libgui_load_prefs()
     // set default
     for (mode = 0; mode < PREF_MODE_NUM; mode++)
     {
-        for(i=0;i<MAX_PREFS;i++)
+        for (i = 0; i < MAX_PREFS; i++)
         {
             struct prefs *p = &pref_data[i];
             int idx = p->dummy_idx;
@@ -733,28 +740,30 @@ static void libgui_load_prefs()
 
     if ( (fp = fopen(winTxt, "r")) != NULL )
     {
-        while(!feof(fp))
+        while (!feof(fp))
         {
             fgets(buf, 250, fp);
             i = 0;
-            while(buf[i] >= 32 && i< 120) i++;
+            while(buf[i] >= 32 && i< 120)
+                  i++;
             buf[i] = 0;
 
-            for(i=0;i<MAX_PREFS;i++)
+            for (i = 0; i < MAX_PREFS; i++)
             {
                 struct prefs *p = &pref_data[i];
                 for (mode = 0; mode < PREF_MODE_NUM; mode++)
                 {
-                    sprintf(tagbuf, "%s:%s",
-                        pref_mode_name[mode], p->tagname);
-                    if(strncmp(buf, tagbuf, strlen(tagbuf)) == 0)
+                    sprintf(tagbuf, "%s:%s", pref_mode_name[mode], p->tagname);
+                    if (strncmp(buf, tagbuf, strlen(tagbuf)) == 0)
                     {
                         char *dat = &buf[strlen(tagbuf)+1];
                         if (p->type == 'I')
                         {
                             int val = atoi(dat);
-                            if (val > p->max) val = p->max;
-                            if (val < p->min) val = p->min;
+                            if (val > p->max)
+                                val = p->max;
+                            if (val < p->min)
+                                val = p->min;
                             dummy_int[mode][p->dummy_idx] = val;
                             if (mode == pref_mode)
                                 *(int *)p->ptr = val;
@@ -762,19 +771,19 @@ static void libgui_load_prefs()
                         if (p->type == 'S')
                         {
                             strncpy(dummy_str[mode][p->dummy_idx], dat,
-                                MAX_PREF_CHAR);
+                                    MAX_PREF_CHAR);
                             if (mode == pref_mode)
                                 strncpy((char *)p->ptr, dat, MAX_PREF_CHAR);
                         }
                         break;
                     }// tag match
-                } //mode
-            }//i
+                }
+            }
         }// while
     }
 }
 
-static void libgui_save_prefs()
+static void _libgui_save_prefs()
 {
     int i, mode;
     FILE *fp;
@@ -785,7 +794,7 @@ static void libgui_save_prefs()
     windows_get_winpos(&winox, &winoy);
 #endif
 
-    for(i=0;i<MAX_PREFS;i++)
+    for (i = 0; i < MAX_PREFS; i++)
     {
     struct prefs *p = &pref_data[i];
     int idx = p->dummy_idx;
@@ -797,52 +806,57 @@ static void libgui_save_prefs()
 
     const char *baseTxt = "wininit.txt";
     std::string winTxtString = datafile_path(baseTxt, false, true);
-    const char *winTxt = winTxtString.c_str()[0] == 0 ?
-        baseTxt : winTxtString.c_str();
+    const char *winTxt = winTxtString.c_str()[0] == 0 ? baseTxt
+                                                      : winTxtString.c_str();
 
     if ( (fp = fopen(winTxt, "w")) != NULL )
     {
         for (mode = 0; mode < PREF_MODE_NUM; mode++)
         {
-            for(i=0;i<MAX_PREFS;i++)
+            for ( i = 0; i < MAX_PREFS; i++)
             {
-                struct prefs *p = &pref_data[i];
-            int idx = p->dummy_idx;
-                if (p->type == 'I')
-                    fprintf(fp, "%s:%s=%d\n", pref_mode_name[mode],
-                            p->tagname, dummy_int[mode][idx]);
-                if (p->type == 'S')
-                    fprintf(fp, "%s:%s=%s\n", pref_mode_name[mode],
-                            p->tagname, dummy_str[mode][idx]);
+                 struct prefs *p = &pref_data[i];
+                 int idx = p->dummy_idx;
+                 
+                 if (p->type == 'I')
+                 {
+                     fprintf(fp, "%s:%s=%d\n", pref_mode_name[mode],
+                             p->tagname, dummy_int[mode][idx]);
+                 }
+                 else if (p->type == 'S')
+                 {
+                     fprintf(fp, "%s:%s=%s\n", pref_mode_name[mode],
+                             p->tagname, dummy_str[mode][idx]);
+                 }
             }
             fprintf(fp, "\n");
-            }
+        }
         fclose(fp);
     }
 }
 
-static void draw_hgauge(int x, int y, int ofs, int region, int len, int col)
+static void _draw_hgauge(int x, int y, int ofs, int region, int len, int col)
 {
     int i;
     cgotoxy(x, y, region);
     textcolor(col);
-    for (i=0; i < len; i++)
+    for (i = 0; i < len; i++)
     {
         switch((i+ ofs) % 10)
         {
-            case 0: cprintf("%c",'+');break;
-            case 4: cprintf("%c",'0' + (1+(i+ofs)/10)%10);break;
-            case 5: cprintf("%c",'0');break;
+            case 0:  cprintf("%c",'+'); break;
+            case 4:  cprintf("%c",'0' + (1+(i+ofs)/10)%10); break;
+            case 5:  cprintf("%c",'0'); break;
             default: cprintf("%c",'-');
         }
     }
 }
 
-static void draw_vgauge(int x, int y, int ofs, int region, int len, int col)
+static void _draw_vgauge(int x, int y, int ofs, int region, int len, int col)
 {
     int i;
     textcolor(col);
-    for (i=0; i < len; i++)
+    for (i = 0; i < len; i++)
     {
         cgotoxy(x, y+i, region);
         cprintf("%02d", ofs+i);
@@ -851,7 +865,6 @@ static void draw_vgauge(int x, int y, int ofs, int region, int len, int col)
 
 void edit_prefs()
 {
-
     int i;
     int cur_pos = 0;
     cursor_control cs(false);
@@ -864,193 +877,205 @@ void edit_prefs()
     region_msg->clear();
     viewwindow(true, false);
 
-    while(1)
+    while (true)
     {
-    bool upd_msg = false;
-    bool upd_dngn = false;
-    bool upd_crt = false;
-    bool upd_map = false;
-    bool need_resize = false;
-    int inc = 0;
+        bool upd_msg  = false;
+        bool upd_dngn = false;
+        bool upd_crt  = false;
+        bool upd_map  = false;
+        bool need_resize = false;
+        int inc = 0;
 
-    if (need_draw_msg)
-    {
-        textcolor(LIGHTGREY);
+        if (need_draw_msg)
+        {
+            textcolor(LIGHTGREY);
             region_msg->clear();
 
-        textcolor(WHITE);
-        cgotoxy (4, 4, GOTO_MSG);
-        cprintf("j, k, up, down    : Select pref");
-        cgotoxy (4, 5, GOTO_MSG);
-        cprintf("h, l, left, right : Decrease/Increase");
-        cgotoxy (4, 6, GOTO_MSG);
-        cprintf("H, L              : Dec/Inc by 10");
-        need_draw_msg = false;
-    }
+            textcolor(WHITE);
+            cgotoxy (4, 4, GOTO_MSG);
+            cprintf("j, k, up, down    : Select pref");
+            cgotoxy (4, 5, GOTO_MSG);
+            cprintf("h, l, left, right : Decrease/Increase");
+            cgotoxy (4, 6, GOTO_MSG);
+            cprintf("H, L              : Dec/Inc by 10");
+            need_draw_msg = false;
+        }
     
-    if (need_draw_stat)
-    {
-            region_stat->clear();
-            for(i=0; i<MAX_EDIT_PREFS;i++)
-            {
-        struct prefs *p = &pref_data[i];
-            cgotoxy(2, i+2, GOTO_STAT);
-            if (i == cur_pos)
-            {
-                textcolor(0xf0);
-                cprintf(">");
-        }
-        else
+        if (need_draw_stat)
         {
-                textcolor(LIGHTGREY);
-                cprintf(" ");
-        }
-            if (pref_data[i].type == 'I')
-                    cprintf(" %s: %3d  ", p->name, *(int *)p->ptr);
-            else
-                    cprintf(" %s: %s", p->name, (char *)p->ptr);
-        }
-        textcolor(LIGHTGREY);
+            region_stat->clear();
+            for (i = 0; i < MAX_EDIT_PREFS; i++)
+            {
+                 struct prefs *p = &pref_data[i];
+                 cgotoxy(2, i+2, GOTO_STAT);
+                 if (i == cur_pos)
+                 {
+                     textcolor(0xf0);
+                     cprintf(">");
+                 }
+                 else
+                 {
+                     textcolor(LIGHTGREY);
+                     cprintf(" ");
+                 }
+                 
+                 if (pref_data[i].type == 'I')
+                     cprintf(" %s: %3d  ", p->name, *(int *)p->ptr);
+                 else
+                     cprintf(" %s: %s", p->name, (char *)p->ptr);
+            }
+            textcolor(LIGHTGREY);
 
 #ifdef WIN32TILES
-        cgotoxy(4, MAX_EDIT_PREFS+3, GOTO_STAT);
-        cprintf("FONT: %s %d",font_name, font_size);
-        if (UseDosChar)
-        {
-            cgotoxy(4, MAX_EDIT_PREFS+4, GOTO_STAT);
-            cprintf("DOSFONT: %s %d", dos_font_name, dos_font_size);
-        }
+            cgotoxy(4, MAX_EDIT_PREFS+3, GOTO_STAT);
+            cprintf("FONT: %s %d",font_name, font_size);
+            if (UseDosChar)
+            {
+                cgotoxy(4, MAX_EDIT_PREFS+4, GOTO_STAT);
+                cprintf("DOSFONT: %s %d", dos_font_name, dos_font_size);
+            }
 #else
-        cgotoxy(4, MAX_EDIT_PREFS+3, GOTO_STAT);
-        cprintf("FONT: %s",font_name);
+            cgotoxy(4, MAX_EDIT_PREFS+3, GOTO_STAT);
+            cprintf("FONT: %s",font_name);
 #endif
 
-
-        int *dat = (int *)pref_data[cur_pos].ptr;
+            int *dat = (int *)pref_data[cur_pos].ptr;
 #define WHITEIF(x) (dat == &x)?0xf0:LIGHTGREY
 
-            draw_hgauge(3, 1, 3, GOTO_MSG, msg_x-2, WHITEIF(msg_x));
-        clear_to_end_of_line();
-            draw_vgauge(1, 1, 1, GOTO_MSG, msg_y, WHITEIF(msg_y));
-        need_draw_stat = false;
+            _draw_hgauge(3, 1, 3, GOTO_MSG, msg_x-2, WHITEIF(msg_x));
+            clear_to_end_of_line();
+            _draw_vgauge(1, 1, 1, GOTO_MSG, msg_y, WHITEIF(msg_y));
+            need_draw_stat = false;
         }
 
-    int key = getch();
+        int key = getch();
 
         struct prefs *p = &pref_data[cur_pos];
-    int *dat = (int *)p->ptr;
+        int *dat = (int *)p->ptr;
 
-    if (key == 0x1b || key == '\r') break;
-    if (key == 'j' || key == CK_DOWN)
-    {
-        cur_pos++;
-        need_draw_stat = true;
-    }
-    if (key == 'k' || key == CK_UP)
-    {
-        cur_pos--;
-        need_draw_stat = true;
-    }
-    if (key == CK_LEFT) key = 'h';
-    if (key == CK_RIGHT) key = 'l';
+        if (key == 0x1b || key == '\r')
+            break;
+            
+        if (key == 'j' || key == CK_DOWN)
+        {
+            cur_pos++;
+            need_draw_stat = true;
+        }
+        if (key == 'k' || key == CK_UP)
+        {
+            cur_pos--;
+            need_draw_stat = true;
+        }
+        if (key == CK_LEFT)
+            key = 'h';
+        if (key == CK_RIGHT)
+            key = 'l';
 
-    cur_pos = (cur_pos + MAX_EDIT_PREFS) % MAX_EDIT_PREFS;
+        cur_pos = (cur_pos + MAX_EDIT_PREFS) % MAX_EDIT_PREFS;
 
-    switch(key)
-    {
-        case 'l': inc=1; break;
-        case 'L': inc=10; break;
-        case 'h': inc=-1; break;
-        case 'H': inc=-10; break;
-    }
+        switch(key)
+        {
+        case 'l': inc =  1;  break;
+        case 'L': inc =  10; break;
+        case 'h': inc = -1;  break;
+        case 'H': inc = -10; break;
+        }
 
-    int crt_x_old = crt_x;
-    int crt_y_old = crt_y;
-    int map_px_old = map_px;
-    int msg_x_old = msg_x;
-    int msg_y_old = msg_y;
-    int dngn_x_old = dngn_x;
-    int dngn_y_old = dngn_y;
+        int crt_x_old = crt_x;
+        int crt_y_old = crt_y;
+        int map_px_old = map_px;
+        int msg_x_old = msg_x;
+        int msg_y_old = msg_y;
+        int dngn_x_old = dngn_x;
+        int dngn_y_old = dngn_y;
         
-    if ( (p->type == 'I') && inc != 0)
-    {
-        if (dat == &dngn_x || dat == &dngn_y )
+        if (p->type == 'I' && inc != 0)
         {
-        if (inc==1) inc=2;
-            if (inc==-1) inc=-2;
+            if (dat == &dngn_x || dat == &dngn_y)
+            {
+                if (inc == 1)
+                    inc++;
+                else if (inc == -1)
+                    inc--;
+            }
+
+            int olddat = *dat;
+            (*dat)+= inc;
+
+            if (*dat > p->max)
+                *dat = p->max;
+            if (*dat < p->min)
+                *dat = p->min;
+
+            if (olddat == *dat)
+                continue;
+            need_resize = true;
         }
-        int olddat = *dat;
-        (*dat)+= inc;
 
-        if (*dat > p->max) *dat = p->max;
-        if (*dat < p->min) *dat = p->min;
-
-        if (olddat == *dat) continue;
-        need_resize = true;
-    }// changed
-
-    if (need_resize)
-    {
-        need_draw_stat = need_draw_msg = true;
-
-        // crt screen layouts
-
-        // resize msg?
-        if (msg_x != msg_x_old || msg_y != msg_y_old)
+        if (need_resize)
         {
-        upd_msg = true;
-        region_msg->resize(msg_x, msg_y);
-        }
-        // resize crt?
-        if (crt_x != crt_x_old || crt_y != crt_y_old)
-        {
-        upd_crt = true;
-            region_crt->resize(crt_x, crt_y);
-        }
-        // resize map?
-        if (map_px != map_px_old)
-        {
+            need_draw_stat = need_draw_msg = true;
+
+            // crt screen layouts
+
+            // resize msg?
+            if (msg_x != msg_x_old || msg_y != msg_y_old)
+            {
+                upd_msg = true;
+                region_msg->resize(msg_x, msg_y);
+            }
+            // resize crt?
+            if (crt_x != crt_x_old || crt_y != crt_y_old)
+            {
+                upd_crt = true;
+                region_crt->resize(crt_x, crt_y);
+            }
+            // resize map?
+            if (map_px != map_px_old)
+            {
                 upd_map = true;
                 region_map->resize( 0, 0, map_px, map_px);
-        }
+            }
 
-        // resize dngn tile screen?
-        if (dngn_x != dngn_x_old || dngn_y != dngn_y_old)
-        {
+            // resize dngn tile screen?
+            if (dngn_x != dngn_x_old || dngn_y != dngn_y_old)
+            {
                 clrscr();
                 upd_dngn = true;
                 tile_dngn_x = dngn_x;
                 tile_dngn_y = dngn_y;
                 region_tile->resize(dngn_x, dngn_y, 0, 0);
-        }
+            }
 
-        do_layout();
-        win_main->resize();
-        win_main->clear();
+            _do_layout();
+            win_main->resize();
+            win_main->clear();
 
-        // Now screens are all black
+            // Now screens are all black
 
-        if (upd_map)
-            region_map->resize_backbuf();
-        if (upd_dngn)
-        {
-            region_tile -> resize_backbuf();
-            tile_set_force_redraw_tiles(true);
-            TileResizeScreen(dngn_x, dngn_y);
-        }
-        if (region_item)
-            region_item->resize_backbuf();
-        if (region_item2)
-            region_item2->resize_backbuf();
-        tile_set_force_redraw_inv(true);
-        tile_draw_inv(-1, REGION_INV1);
+            if (upd_map)
+                region_map->resize_backbuf();
+            if (upd_dngn)
+            {
+                region_tile -> resize_backbuf();
+                tile_set_force_redraw_tiles(true);
+                TileResizeScreen(dngn_x, dngn_y);
+            }
+            if (region_item)
+                region_item->resize_backbuf();
+            if (region_item2)
+                region_item2->resize_backbuf();
+            
+            tile_set_force_redraw_inv(true);
+            tile_draw_inv(-1, REGION_INV1);
 
-        region_map->force_redraw = true;
-        viewwindow(true, true);
-        region_tile->redraw();
-        region_item->redraw();
-    }// need resize
-    }//while
+            region_map->force_redraw = true;
+            viewwindow(true, true);
+            region_tile->redraw();
+            region_item->redraw();
+        } // need resize
+    } // while-loop
+    
     clrscr();
     redraw_screen();
     mpr("Done.");
@@ -1078,7 +1103,7 @@ void tip_grid(int gx, int gy, bool do_null = true, int minimap=0)
 
 int tile_cursor_x = -1;
 int tile_cursor_y = -1;
-int tile_cursor_flag=0;
+int tile_cursor_flag = 0;
 
 void tile_place_cursor(int x, int y, bool display)
 {
@@ -1127,9 +1152,10 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
 
     for (r = w->regions.begin();r != w->regions.end();r++)
     {
-        if (! (*r)->is_active()) continue;
+        if (! (*r)->is_active())
+            continue;
         
-        if ( (*r)->mouse_pos(mx, my, cx, cy))
+        if ( (*r)->mouse_pos(mx, my, cx, cy) )
         {
             id = (*r)->id;
             mx0 = (*r)->mx;
@@ -1144,13 +1170,14 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
     if (id == REGION_TDNGN)
     {
         x--;
-        if (!in_viewport_bounds(x+1,y+1)) return REGION_NONE;
+        if (!in_viewport_bounds(x+1,y+1))
+            return REGION_NONE;
     }
 
     if (id == REGION_MAP)
     {
-        x = x - gmap_ox + region_map->x_margin + 1;
-        y = y - gmap_oy + region_map->y_margin + 1;
+        x -= gmap_ox + region_map->x_margin + 1;
+        y -= gmap_oy + region_map->y_margin + 1;
     }
 
     if (id == REGION_INV1 || id == REGION_INV2)
@@ -1163,7 +1190,7 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
     {
         // Out of LOS range
         if (!in_viewport_bounds(x+1,y+1))
-        return REGION_NONE;
+            return REGION_NONE;
     }
 
     *cx = x;
@@ -1172,7 +1199,7 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
     return id;
 }
 
-static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
+static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
 {
     int cx = -1;
     int cy = -1;
@@ -1527,8 +1554,8 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
     return 0;
 }
 
-static int handle_mouse_button(int mx, int my, int button,
-    bool shift, bool ctrl)
+static int _handle_mouse_button(int mx, int my, int button,
+                                bool shift, bool ctrl)
 {
     int dir;
     const int dx[9]={-1,0,1, -1,0,1, -1,0,1};
@@ -1553,17 +1580,17 @@ static int handle_mouse_button(int mx, int my, int button,
     else if (button == 5)
         trig = CK_MOUSE_B5;
         
-    if (shift) trig |= 512;
-    if (ctrl) trig |= 1024;
+    if (shift)
+        trig |= 512;
+    if (ctrl)
+        trig |= 1024;
 
-    switch(mouse_mode)
+    switch (mouse_mode)
     {
     case MOUSE_MODE_NORMAL:
         return trig;
-        break;
     case MOUSE_MODE_MORE:
         return '\r';
-        break;
     }
 
     int cx,cy;
@@ -1581,7 +1608,8 @@ static int handle_mouse_button(int mx, int my, int button,
     if (mouse_mode==MOUSE_MODE_COMMAND && (button == 4 || button == 5)
         && button == old_button && oldcx == cx && oldcy == cy)
     {
-        if(!enable_wheel) return 0;
+        if (!enable_wheel)
+            return 0;
         if (you.hp < old_hp)
         {
             mpr("Wheel move aborted (rotate opposite to resume)");
@@ -1722,7 +1750,7 @@ static int handle_mouse_button(int mx, int my, int button,
         int adir = -1;
         for (dir = 0; dir < 9; dir++)
         {
-            if (DCX+dx[dir] == cx && DCY+dy[dir]==cy)
+            if (DCX + dx[dir] == cx && DCY + dy[dir] == cy)
             {
                 adir = dir;
                 break;
@@ -1751,7 +1779,7 @@ static int handle_mouse_button(int mx, int my, int button,
         return CK_MOUSE_DONE;
     }
 
-    if (mouse_mode==MOUSE_MODE_COMMAND && mode == REGION_MAP)
+    if (mouse_mode == MOUSE_MODE_COMMAND && mode == REGION_MAP)
     {
         // begin telescope mode
         if (button == 2)
@@ -1762,7 +1790,8 @@ static int handle_mouse_button(int mx, int my, int button,
             return 0;
         }
 
-        if (button != 1) return trig;
+        if (button != 1)
+            return trig;
 
         // L-click: try to travel to the grid
         const coord_def gc(cx-1, cy-1);
@@ -1775,7 +1804,7 @@ static int handle_mouse_button(int mx, int my, int button,
     }
 
     // target selection
-    if((mouse_mode==MOUSE_MODE_TARGET || mouse_mode==MOUSE_MODE_TARGET_DIR)
+    if ((mouse_mode == MOUSE_MODE_TARGET || mouse_mode == MOUSE_MODE_TARGET_DIR)
         && button == 1 && (mode == REGION_DNGN || mode == REGION_TDNGN))
     {
         gui_set_mouse_view_pos(true, cx+1, cy+1);
@@ -1784,13 +1813,15 @@ static int handle_mouse_button(int mx, int my, int button,
 
     gui_set_mouse_view_pos(false, 0, 0);
 
-    if(mouse_mode==MOUSE_MODE_TARGET_DIR && button == 1 &&
-       (mode == REGION_DNGN || mode == REGION_TDNGN))
+    if (mouse_mode == MOUSE_MODE_TARGET_DIR && button == 1
+        && (mode == REGION_DNGN || mode == REGION_TDNGN))
     {
-        if (cx < DCX-1 || cy < DCY-1 || cx > DCX+1 || cy > DCY+1) return 0;
+        if (cx < DCX-1 || cy < DCY-1 || cx > DCX+1 || cy > DCY+1)
+            return 0;
+            
         for (dir = 0; dir < 9; dir++)
         {
-            if( DCX+dx[dir] == cx && DCY+dy[dir]==cy)
+            if (DCX + dx[dir] == cx && DCY + dy[dir] == cy)
                 return cmd_dir[dir];
         }
         return 0;
@@ -1799,12 +1830,10 @@ static int handle_mouse_button(int mx, int my, int button,
     return trig;
 }
 
-static int handle_mouse_unbutton(int mx, int my, int button)
+static int _handle_mouse_unbutton(int mx, int my, int button)
 {
     if (toggle_telescope)
-    {
         TileDrawDungeon(NULL);
-    }
 
     toggle_telescope = false;
     return 0;
@@ -1812,11 +1841,11 @@ static int handle_mouse_unbutton(int mx, int my, int button)
 
 int getch_ck()
 {
-    int etype = 0;
-    int x1,y1,x2,y2;
-    int key;
+    int  etype = 0;
+    int  x1,y1,x2,y2;
+    int  key;
     bool sh, ct;
-    int k;
+    int  k;
 
     while (true)
     {
@@ -1825,15 +1854,15 @@ int getch_ck()
         switch(etype)
         {
         case EV_BUTTON:
-            k = handle_mouse_button(x1, y1, key, sh, ct);
+            k = _handle_mouse_button(x1, y1, key, sh, ct);
             break;
 
         case EV_MOVE:
-            k = handle_mouse_motion(x1, y1, false);
+            k = _handle_mouse_motion(x1, y1, false);
             break;
 
         case EV_UNBUTTON:
-            k = handle_mouse_unbutton(x1, y1, key);
+            k = _handle_mouse_unbutton(x1, y1, key);
             break;
 
         case EV_KEYIN:
@@ -1884,7 +1913,7 @@ void mouse_set_mode(int mode)
 {
     mouse_mode = mode;
     // init cursor etc
-    handle_mouse_motion(0, 0, true);
+    _handle_mouse_motion(0, 0, true);
 }
 
 int mouse_get_mode()
