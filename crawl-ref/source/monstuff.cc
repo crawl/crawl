@@ -408,10 +408,9 @@ static void _give_monster_experience( monsters *victim,
     {
         if (mons->gain_exp(experience))
         {
-            // Blessings for followers.
+            // Consistent blessings for followers.
             if (you.religion == GOD_BEOGH
-                && you.piety >= piety_breakpoint(2)
-                && random2(you.piety) >= piety_breakpoint(0))
+                && you.piety >= piety_breakpoint(2))
             {
                 bless_follower(GOD_BEOGH, is_orcish_follower, mons);
             }
