@@ -805,6 +805,7 @@ void game_options::reset_options()
     // minimap colours
     tile_player_col      = MAP_WHITE;
     tile_monster_col     = MAP_RED;
+    tile_neutral_col     = MAP_RED;
     tile_friendly_col    = MAP_LTRED;
     tile_item_col        = MAP_GREEN;
     tile_unseen_col      = MAP_BLACK;
@@ -2729,6 +2730,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "tile_monster_col")
     {
         tile_monster_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_neutral_col")
+    {
+        tile_neutral_col =
                str_to_tile_colour(field);
     }
     else if (key == "tile_friendly_col")

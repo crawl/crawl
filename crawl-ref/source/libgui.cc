@@ -356,10 +356,15 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
     
     if (x == you.x_pos && y == you.y_pos)
         c = Options.tile_player_col; // player position always highlighted
-    else if (mgrd[x][y] != NON_MONSTER && mons_friendly(&menv[mgrd[x][y]])
-             && upd_tile)
+    else if (mgrd[x][y] != NON_MONSTER && upd_tile)
     {
-        c = Options.tile_friendly_col; // friendly monsters subtly different from hostiles
+        if (mons_friendly(&menv[mgrd[x][y]]))
+            c = Options.tile_friendly_col; // colour friendly monsters
+        else if (mons_neutral(&menv[mgrd[x][y]])
+                 && Options.tile_neutral_col != Options.tile_monster_col)
+        {
+            c = Options.tile_neutral_col;  // colour neutral monsters
+        }
     }
     else
     {
@@ -1333,20 +1338,26 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                         case OBJ_STAVES:
                         case OBJ_MISCELLANY:
                             desc += "Wield (w)";
+                            if (is_throwable(you.inv[ix], player_size(PSIZE_BODY)))
+                                desc += EOL "[Ctrl-L-Click] Fire (f)";
                             break;
                         case OBJ_WEAPONS + 18:
                             desc += "Unwield";
+                            if (is_throwable(you.inv[ix], player_size(PSIZE_BODY)))
+                                desc += EOL "[Ctrl-L-Click] Fire (f)";
                             break;
                         case OBJ_MISCELLANY + 18:
                             if (you.inv[ix].sub_type >= MISC_DECK_OF_ESCAPE
                                 && you.inv[ix].sub_type <= MISC_DECK_OF_DEFENCE)
                             {
                                 desc += "Draw a card (E)";
+                                desc += EOL "[Ctrl-L-Click] Unwield";
                                 break;
                             }
                             // else fall-through
                         case OBJ_STAVES + 18: // rods - other staves handled above
                             desc += "Evoke (E)";
+                            desc += EOL "[Ctrl-L-Click] Unwield";
                             break;
                         case OBJ_ARMOUR:
                             desc += "Wear (W)";
@@ -1533,10 +1544,15 @@ static int handle_mouse_button(int mx, int my, int button,
     const int cmd_dir[9]={'1','2','3','4','5','6','7','8','9'};
 
     int trig = CK_MOUSE_B1;
-    if (button == 2) trig = CK_MOUSE_B2;
-    if (button == 3) trig = CK_MOUSE_B3;
-    if (button == 4) trig = CK_MOUSE_B4;
-    if (button == 5) trig = CK_MOUSE_B5;
+    if (button == 2)
+        trig = CK_MOUSE_B2;
+    else if (button == 3)
+        trig = CK_MOUSE_B3;
+    else if (button == 4)
+        trig = CK_MOUSE_B4;
+    else if (button == 5)
+        trig = CK_MOUSE_B5;
+        
     if (shift) trig |= 512;
     if (ctrl) trig |= 1024;
 
@@ -1608,6 +1624,7 @@ static int handle_mouse_button(int mx, int my, int button,
                 }
                 else
                     gui_set_mouse_inv(ix, INV_VIEW);
+                    
                 TileMoveInvCursor(-1);
                 return CK_MOUSE_B2ITEM;
             }
@@ -1621,13 +1638,18 @@ static int handle_mouse_button(int mx, int my, int button,
                         gui_set_mouse_inv(ix, INV_PICKUP);
                     else
                         gui_set_mouse_inv(ix, INV_USE_FLOOR);
+                        
                     return CK_MOUSE_B1ITEM;
                 }
+                
                 // use item
                 if (shift)
                     gui_set_mouse_inv(ix, INV_DROP);
+                else if (ctrl)
+                    gui_set_mouse_inv(ix, INV_USE2);
                 else
                     gui_set_mouse_inv(ix, INV_USE);
+                    
                 return CK_MOUSE_B1ITEM;
             }
         }
@@ -1698,9 +1720,9 @@ static int handle_mouse_button(int mx, int my, int button,
         // first, check if 3x3 grid around @ is clicked.
         // if so, return equivalent numpad key
         int adir = -1;
-        for(dir=0;dir<9;dir++)
+        for (dir = 0; dir < 9; dir++)
         {
-            if( DCX+dx[dir] == cx && DCY+dy[dir]==cy)
+            if (DCX+dx[dir] == cx && DCY+dy[dir]==cy)
             {
                 adir = dir;
                 break;
@@ -1713,20 +1735,23 @@ static int handle_mouse_button(int mx, int my, int button,
                 return cmd_s[adir];
             else if (ctrl) 
                 return cmd_c[adir];
-            else return cmd_n[dir];
+            else
+                return cmd_n[dir];
         }
-        if (button != 1) return trig;
+        if (button != 1)
+            return trig;
 
         // otherwise travel to that grid
         const coord_def gc = view2grid(coord_def(cx+1, cy+1));
-        if (!map_bounds(gc)) return 0;
+        if (!map_bounds(gc))
+            return 0;
 
         // Activate travel
         start_travel(gc.x, gc.y);
         return CK_MOUSE_DONE;
     }
 
-    if(mouse_mode==MOUSE_MODE_COMMAND && mode == REGION_MAP)
+    if (mouse_mode==MOUSE_MODE_COMMAND && mode == REGION_MAP)
     {
         // begin telescope mode
         if (button == 2)
@@ -1741,7 +1766,8 @@ static int handle_mouse_button(int mx, int my, int button,
 
         // L-click: try to travel to the grid
         const coord_def gc(cx-1, cy-1);
-        if (!map_bounds(gc)) return 0;
+        if (!map_bounds(gc))
+            return 0;
 
         // Activate travel
         start_travel(gc.x, gc.y);
@@ -1762,12 +1788,10 @@ static int handle_mouse_button(int mx, int my, int button,
        (mode == REGION_DNGN || mode == REGION_TDNGN))
     {
         if (cx < DCX-1 || cy < DCY-1 || cx > DCX+1 || cy > DCY+1) return 0;
-        for(dir=0;dir<9;dir++)
+        for (dir = 0; dir < 9; dir++)
         {
             if( DCX+dx[dir] == cx && DCY+dy[dir]==cy)
-            {
                 return cmd_dir[dir];
-            }
         }
         return 0;
     }
@@ -1794,34 +1818,35 @@ int getch_ck()
     bool sh, ct;
     int k;
 
-    while(1)
+    while (true)
     {
-    k = 0;
-    GetNextEvent(&etype, &key, &sh, &ct, &x1, &y1, &x2, &y2);
-    switch(etype)
-    {
+        k = 0;
+        GetNextEvent(&etype, &key, &sh, &ct, &x1, &y1, &x2, &y2);
+        switch(etype)
+        {
         case EV_BUTTON:
             k = handle_mouse_button(x1, y1, key, sh, ct);
-        break;
+            break;
 
         case EV_MOVE:
             k = handle_mouse_motion(x1, y1, false);
-        break;
+            break;
 
         case EV_UNBUTTON:
             k = handle_mouse_unbutton(x1, y1, key);
-        break;
+            break;
 
         case EV_KEYIN:
             k = key;
-        break;
+            break;
 
         default:
-        break;
-    } // switch
+            break;
+        }
 
-    if (k != 0) break;
-    }/*while*/
+        if (k != 0)
+            break;
+    }
 
     return k;
 }
@@ -1867,8 +1892,9 @@ int mouse_get_mode()
     return mouse_mode;
 }
 
-void gui_init_view_params(coord_def &termsz, coord_def &viewsz, 
-    coord_def &msgp, coord_def &msgsz, coord_def &hudp, coord_def &hudsz)
+void gui_init_view_params(coord_def &termsz, coord_def &viewsz,
+                          coord_def &msgp, coord_def &msgsz,
+                          coord_def &hudp, coord_def &hudsz)
 {
     // TODO enne - set these other params too?
     msgsz.x = msg_x;
@@ -1899,19 +1925,23 @@ void clrscr()
     // clear Text regions
     if (!region_lock[REGION_CRT])
         region_crt->clear();
+
     if (region_msg && !region_lock[REGION_MSG])
         region_msg->clear();
+
     if (region_stat && !region_lock[REGION_STAT])
         region_stat->clear();
+
     if (region_dngn && !region_lock[REGION_TDNGN])
         region_dngn->clear();
+
     if (region_tip && !region_lock[REGION_TIP])
         region_tip->clear();
 
     // Hack: Do not erase the backbuffer. Instead just hide it.
     if (region_map)
     {
-        if(region_lock[REGION_MAP]) 
+        if (region_lock[REGION_MAP])
             region_map->redraw();
         else
             region_map->flag = false;

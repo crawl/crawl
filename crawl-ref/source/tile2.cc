@@ -746,6 +746,12 @@ void tcache_compose_normal(int ix, int *fg, int *bg)
         tcache_overlay(tc_img, ix, TILE_HEART, TREGION_0_NORMAL, &c, NULL);
         status_shift += 10;
     }
+    else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_NEUTRAL)
+    {
+        // FIX ME: add real neutral marker!
+        tcache_overlay(tc_img, ix, TILE_NEW_STAIR, TREGION_0_NORMAL, &c, NULL);
+        status_shift += 10;
+    }
     else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_STAB)
     {
         tcache_overlay(tc_img, ix, TILE_STAB_BRAND, TREGION_0_NORMAL, &c, NULL);
@@ -757,7 +763,7 @@ void tcache_compose_normal(int ix, int *fg, int *bg)
             NULL);
         status_shift += 5;
     }
-
+    
     if (fg0 & TILE_FLAG_POISON)
     {
         tcache_overlay(tc_img, ix, TILE_POISON, TREGION_0_NORMAL, &c, NULL,

@@ -4687,10 +4687,27 @@ void tile_use_item(int idx, InvAction act)
         }
         return;
     }
-    else if (act != INV_USE)
+    else if (act == INV_USE2) // secondary item use
     {
+        if (you.inv[idx].base_type == OBJ_WEAPONS
+            && is_throwable(you.inv[idx], player_size(PSIZE_BODY))) 
+        {
+            fire_thing(idx); // fire weapons
+        }
+        else if (you.inv[idx].base_type == OBJ_MISCELLANY
+                 || you.inv[idx].base_type == OBJ_STAVES
+                    && item_is_rod(you.inv[idx])) // unwield rods/misc. items
+        {
+            if (you.equip[EQ_WEAPON] == idx
+                && check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+            {
+                wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+            }
+        }
         return;
     }
+    else if (act != INV_USE)
+        return;
 
     // Equipped?
     bool equipped = false;
@@ -4737,15 +4754,14 @@ void tile_use_item(int idx, InvAction act)
                     wield_weapon(true, idx);
                 return;
             }
-            // evoke misc. items and known rods
-            if (type == OBJ_MISCELLANY
-                ||item_is_rod(you.inv[idx]) && item_type_known(you.inv[idx]))
+            // evoke misc. items and rods
+            if (type == OBJ_MISCELLANY || item_is_rod(you.inv[idx]))
             {
                 if (check_warning_inscriptions(you.inv[idx], OPER_EVOKE))
                     evoke_wielded();
                 return;
             }
-            // unwield unknown rods, other staves or weapons
+            // unwield staves or weapons
             if (check_warning_inscriptions(you.inv[idx], OPER_WIELD))
                 wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
             return;

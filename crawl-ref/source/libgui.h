@@ -80,7 +80,8 @@ bool gui_get_mouse_grid_pos(coord_def &gc);
 enum InvAction
 {
     INV_DROP,
-    INV_USE,
+    INV_USE,  // primary   inventory use
+    INV_USE2, // secondary inventory use
     INV_PICKUP,
     INV_VIEW,
     INV_USE_FLOOR,

@@ -816,6 +816,10 @@ int tileidx_monster(int mon_idx, bool detected)
     {
         ch |= TILE_FLAG_PET;
     }
+    else if (mons_neutral(mons))
+    {
+        ch |= TILE_FLAG_NEUTRAL;
+    }
     else if (mons_looks_stabbable(mons))
     {
         ch |= TILE_FLAG_STAB;
@@ -824,7 +828,6 @@ int tileidx_monster(int mon_idx, bool detected)
     {
         ch |= TILE_FLAG_MAY_STAB;
     }
-
     return ch;
 }
 
