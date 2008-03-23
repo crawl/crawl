@@ -1,0 +1,162 @@
+Guide to online play
+====================
+
+The following guide explains, in layman's terms, how to access server
+play for Dungeon Crawl. It is directed at Windows users as we expect 
+Linux and OS/X users to have simple access to ssh and telnet.
+Written up by Archibald.
+
+Goal: learn how to "ssh to crawl.akrasiac.org (cao)". If you know
+this already, you can stop reading.
+
+Before we go any further here's what playing on the akrasiac server
+allows you to do:
+
+*  play the latest version of crawl stone soup online
+*  watch other players' games
+*  have the ability to chat and comment in-game
+*  have your game stats uploaded/recorded on the homepage
+*  encounter and kill/be killed by other players' ghosts
+
+----
+
+So you've downloaded the latest version of Crawl Stone Soup and have
+been playing offline (or 'local') and you thoroughly enjoy it.  You
+may have noticed from the akrasiac homepage, http://crawl.akrasiac.org/
+or posts in forums that there is a way to enhance your gaming experience 
+by playing 'online' using something called 'SSH'.
+
+If only you could figure out how.  Well, if like me (to begin with)
+you really are at a loss as to where on earth to start with all this
+stuff, what you need is some assistance.  Wouldn't it be nice if
+someone could take the time to write an 'Idiots Guide' - a step by
+step list in easy to understand language, telling you from the very
+beginning exactly what to do...
+
+Oh look! somebody has - done just that! Great, then let's get started.
+
+----
+
+1. Get the PuTTY program
+------------------------
+Firstly you will need a means of accessing the server.  The easiest 
+and most common method is by using an SSH (Secure SHell) connection, 
+we are going to learn here how to use the 'PuTTY' terminal to do this.  
+In laymans terms PuTTY is simply a small programme that acts as your
+interface between you (the player) and the server (the host).
+
+In order to download PuTTY, simply click on the following link:
+  http://www.chiark.greenend.org.uk/~sgtatham/putty/
+
+As you can see, this is the homepage for 'PuTTY: A Free Telnet/SSH
+Client'.
+
+Now go to the downloads section.  Scroll down to the Windows downloads 
+section and look for the first option down - you will see that it is 
+called 'PuTTY'.
+
+That's the one you want, so click on the 'putty.exe' download link and 
+choose to save it to your desktop (well, that's how I did it anyway).  
+This should place an icon on your desktop that resembles two blue screens
+with a yellow connection/electricity bolt joining them - it should be 
+named 'putty'.
+
+2. Configure PuTTY connection: SSH, port 22
+-------------------------------------------
+So far, so good?  Good.  Okay, now double click on the putty icon to
+open the interface which is called  'PuTTY Configuration'. Here you
+will be presented with an interface in a small window.  On the
+left-hand side you will see a 'Category' tree and on the right-hand
+side a series of boxes and radio buttons under the heading 'Basic
+options for your PuTTY session'.
+
+Don't be daunted here by all the technical looking jargon, we're only
+concerned with a couple of easy to do actions and then we're almost
+there!
+
+You will see the cursor flashing in the following box: 'Host Name (or
+IP address)'.  Here you need to type in the following:
+
+crawl.akrasiac.org
+
+Done that? We next need to set one option: There are five radio buttons
+underneath the 'Host Name (or IP address)' fields, called 'Connection 
+type:' Here you need to choose the SSH button; it should be highlighted
+green.  If it's not already, simply click on it so that it is green.  
+When SSH is selected, the Port field will automatically change to 22.
+
+3. Set controls to 'Nethack'
+----------------------------
+That is all we do for the connection part.  Next we need to ensure our
+keyboard will work properly, once connected.  So, to the left of the
+interface (the 'Category' tree) you need to click/select the 'keyboard'
+option.  Doing this will change the options on the right-hand side to
+'Options controlling the effects of keys'.  Mid-way down that section
+under 'Application keypad settings:', click on the 'Nethack' radio
+button so it is highlighted.
+
+4. Saving these options
+-----------------------
+Now, to make life easier for ourselves we are going to save these as
+the default settings, so that every time PuTTY is opened you can dive
+straight into it.  Click back onto the Category tree's top heading
+('Session') and you will see it has taken you back to your initial 
+display.  Look to the right-hand side of the interface under 'Load,
+save or delete a stored session', in the second box down, ensure that 
+'Default Settings' is highlighted and then click on the 'Save' button
+to the right.  That's it - done!
+
+5. Connecting to akrasiac
+--------------------------
+We're ready!  Make sure you are connected to the internet and simply
+click on 'Open' and you will have a black console screen open up and be
+asked to 'login as:', here you need to type in the word 'joshua'. This
+is the default log-in name set by the administrator to connect to CAO.
+Once entered, you will be asked to enter 'jos...@crawl.akrasiac.org.'s 
+password:' - again, type in the word 'joshua' (yes, you guessed it - the 
+default password!).
+
+The screen will refresh and you will now be presented with the
+following initial display:
+
+________________________________________________________________
+
+ ## DGL source code available on ftp://ftp.alt.org/pub/dgamelaunch/or
+ ## http://dev.triplehelix.org/?root=dgamelaunch (development version)
+ ## ** Games on this server are recorded for in-progress viewing and playback!
+ ##
+ ## This crawl server hosted and maintained by Rachel Elizabeth Dillon;
+ ## more information available at http://crawl.akrasiac.org/
+
+   Not logged in.
+
+   l) Login
+   r) Register new user
+   w) Watch games in progress
+   q) Quit
+
+________________________________________________________________
+
+
+6. Creating an account
+----------------------
+Now all you need to do is create an account.  Hit the 'r' key and
+continue as prompted.  When you have chosen your player/user name,
+this will be the name of every character you play with on that
+account.  The rest should be self explanatory and easy to follow.
+
+7. Playing online
+-----------------
+Each time you want to play all you have to do is open PuTTY, log-in to
+CAO with (joshua/joshua) and then log-in with your player details.  
+Dead easy!
+
+For in-game instructions hit '?' and you may need to toggle the
+Num-Pad in order to use it.
+
+Happy Crawling
+
+
+A note on telnet vs SSH from Rachel Elizabeth Dillon: "Using SSH means
+that the data is compressed in transit, reducing bandwidth usage and
+hopefully making the experience a teensy bit faster as well."

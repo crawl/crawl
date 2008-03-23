@@ -105,7 +105,7 @@ Stone Soup features both ASCII and graphical (Tiles) display.
 
 Crawl gladly and gratiously uses the following open-source packages:
 * The Lua script language, see /docs/lualicense.txt.
-* The PCRE library for regular expressions, see /docs/pcre-license.txt.
+* The PCRE library for regular expressions, see /docs/pcre_license.txt.
 * The Mersenne Twister for random number generation, /docs/mt19937.txt.
 * The SQLite library as database enging; it is properly public domain.
 * The ReST light markup language for the documentation.
