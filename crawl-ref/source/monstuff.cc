@@ -410,6 +410,7 @@ static void _give_monster_experience( monsters *victim,
         {
             // Consistent blessings for followers.
             if (you.religion == GOD_BEOGH
+                && !player_under_penance()
                 && you.piety >= piety_breakpoint(2))
             {
                 bless_follower(GOD_BEOGH, is_orcish_follower, mons);
@@ -579,7 +580,7 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
 
     // Beogh special
     bool convert = false;
-    
+
     if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
