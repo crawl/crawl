@@ -5470,7 +5470,7 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
 static void _mons_open_door(monsters* monster, const coord_def &pos)
 {
     dungeon_feature_type grid = grd(pos);
-    const char *adj, *noun="door";
+    const char *adj = "", *noun = "door";
 
     bool was_secret = false;
 
@@ -5488,7 +5488,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
         std::set<coord_def> all_door;
         find_connected_identical(pos, grd(pos), all_door);
         get_door_description(all_door.size(), &adj, &noun);
-    
+
         for (std::set<coord_def>::iterator i = all_door.begin();
              i != all_door.end(); ++i)
         {
