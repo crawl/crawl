@@ -249,7 +249,6 @@ short unmarshallShort(reader &th)
 
 void marshallLong(std::vector<unsigned char>& buf, long data)
 {
-    COMPILE_CHECK(sizeof(data)==4, c1);
     buf.push_back((unsigned char) ((data & 0xFF000000) >> 24));
     buf.push_back((unsigned char) ((data & 0x00FF0000) >> 16));
     buf.push_back((unsigned char) ((data & 0x0000FF00) >>  8));
