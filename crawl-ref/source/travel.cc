@@ -35,6 +35,7 @@
 #include "player.h"
 #include "stash.h"
 #include "stuff.h"
+#include "tags.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tiles.h"
@@ -3004,48 +3005,50 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
     return level_id(br, dep);
 }
 
-void level_id::save(FILE *file) const
+// NOTE: see also marshall_level_id
+void level_id::save(writer& outf) const
 {
-    writeShort(file, branch);
-    writeShort(file, depth);
-    writeShort(file, level_type);
+    marshallShort(outf, branch);
+    marshallShort(outf, depth);
+    marshallShort(outf, level_type);
 }
 
-void level_id::load(FILE *file)
+void level_id::load(reader& inf)
 {
-    branch     = static_cast<branch_type>(readShort(file));
-    depth      = readShort(file);
-    level_type = static_cast<level_area_type>(readShort(file));
+    branch     = static_cast<branch_type>(unmarshallShort(inf));
+    depth      = unmarshallShort(inf);
+    level_type = static_cast<level_area_type>(unmarshallShort(inf));
 }
 
-void level_pos::save(FILE *file) const
+// NOTE: see also marshall_level_pos
+void level_pos::save(writer& outf) const
 {
-    id.save(file);
-    writeCoord(file, pos);
+    id.save(outf);
+    marshallCoord(outf, pos);
 }
 
-void level_pos::load(FILE *file)
+void level_pos::load(reader& inf)
 {
-    id.load(file);
-    readCoord(file, pos);
+    id.load(inf);
+    unmarshallCoord(inf, pos);
 }
 
-void stair_info::save(FILE *file) const
+void stair_info::save(writer& outf) const
 {
-    writeCoord(file, position);
-    writeShort(file, grid);
-    destination.save(file);
-    writeByte(file, guessed_pos? 1 : 0);
-    writeByte(file, type);
+    marshallCoord(outf, position);
+    marshallShort(outf, grid);
+    destination.save(outf);
+    marshallByte(outf, guessed_pos? 1 : 0);
+    marshallByte(outf, type);
 }
 
-void stair_info::load(FILE *file)
+void stair_info::load(reader& inf)
 {
-    readCoord(file, position);
-    grid = static_cast<dungeon_feature_type>(readShort(file));
-    destination.load(file);
-    guessed_pos = readByte(file) != 0;
-    type = static_cast<stair_type>(readByte(file));
+    unmarshallCoord(inf, position);
+    grid = static_cast<dungeon_feature_type>(unmarshallShort(inf));
+    destination.load(inf);
+    guessed_pos = unmarshallByte(inf) != 0;
+    type = static_cast<stair_type>(unmarshallByte(inf));
 }
 
 std::string stair_info::describe() const
@@ -3369,13 +3372,13 @@ bool LevelInfo::is_known_branch(unsigned char branch) const
     return false;
 }
 
-void LevelInfo::save(FILE *file) const
+void LevelInfo::save(writer& outf) const
 {
     int stair_count = stairs.size();
     // How many stairs do we know of?
-    writeShort(file, stair_count);
+    marshallShort(outf, stair_count);
     for (int i = 0; i < stair_count; ++i)
-        stairs[i].save(file);
+        stairs[i].save(outf);
 
     if (stair_count)
     {
@@ -3384,31 +3387,31 @@ void LevelInfo::save(FILE *file) const
         for (int i = 0, n = stair_count * stair_count; i < n; ++i)
         {
             if (i >= sz)
-                writeShort(file, -1);
+                marshallShort(outf, -1);
             else
-                writeShort(file, stair_distances[i]);
+                marshallShort(outf, stair_distances[i]);
         }
     }
 
-    writeShort(file, excludes.size());
+    marshallShort(outf, excludes.size());
     if (excludes.size())
     {
         for (int i = 0, count = excludes.size(); i < count; ++i)
         {
-            writeCoord(file, excludes[i].pos);
-            writeShort(file, excludes[i].radius);
+            marshallCoord(outf, excludes[i].pos);
+            marshallShort(outf, excludes[i].radius);
         }
     }
 }
 
-void LevelInfo::load(FILE *file)
+void LevelInfo::load(reader& inf)
 {
     stairs.clear();
-    int stair_count = readShort(file);
+    int stair_count = unmarshallShort(inf);
     for (int i = 0; i < stair_count; ++i)
     {
         stair_info si;
-        si.load(file);
+        si.load(inf);
         stairs.push_back(si);
 
         if (id.branch == BRANCH_MAIN_DUNGEON &&
@@ -3423,18 +3426,18 @@ void LevelInfo::load(FILE *file)
     {
         stair_distances.reserve(stair_count * stair_count);
         for (int i = stair_count * stair_count - 1; i >= 0; --i)
-            stair_distances.push_back( readShort(file) );
+            stair_distances.push_back( unmarshallShort(inf) );
     }
 
     excludes.clear();
-    int nexcludes = readShort(file);
+    int nexcludes = unmarshallShort(inf);
     if (nexcludes)
     {
         for (int i = 0; i < nexcludes; ++i)
         {
             coord_def c;
-            readCoord(file, c);
-            const int radius = readShort(file);
+            unmarshallCoord(inf, c);
+            const int radius = unmarshallShort(inf);
             excludes.push_back(travel_exclude(c, radius));
         }
     }
@@ -3633,11 +3636,11 @@ bool TravelCache::is_known_branch(unsigned char branch) const
     return false;
 }
 
-void TravelCache::save(FILE *file) const
+void TravelCache::save(writer& outf) const
 {
     // Travel cache version information
-    writeByte(file, TC_MAJOR_VERSION);
-    writeByte(file, TC_MINOR_VERSION);
+    marshallByte(outf, TC_MAJOR_VERSION);
+    marshallByte(outf, TC_MINOR_VERSION);
 
     int level_count = 0;
     for (travel_levels_map::const_iterator i = levels.begin();
@@ -3648,7 +3651,7 @@ void TravelCache::save(FILE *file) const
     }
     
     // Write level count:
-    writeShort(file, level_count);
+    marshallShort(outf, level_count);
 
     // Save all the LEVEL_DUNGEON levels we have
     std::map<level_id, LevelInfo>::const_iterator i =
@@ -3661,39 +3664,39 @@ void TravelCache::save(FILE *file) const
         if (i->first.level_type != LEVEL_DUNGEON)
             continue;
 
-        i->first.save(file);
-        i->second.save(file);
+        i->first.save(outf);
+        i->second.save(outf);
     }
 
     for (int wp = 0; wp < TRAVEL_WAYPOINT_COUNT; ++wp)
-        waypoints[wp].save(file);
+        waypoints[wp].save(outf);
 }
 
-void TravelCache::load(FILE *file)
+void TravelCache::load(reader& inf)
 {
     levels.clear();
 
     // Check version. If not compatible, we just ignore the file altogether.
-    unsigned char major = readByte(file),
-                  minor = readByte(file);
+    unsigned char major = unmarshallByte(inf),
+                  minor = unmarshallByte(inf);
     if (major != TC_MAJOR_VERSION || minor != TC_MINOR_VERSION)
         return ;
 
-    int level_count = readShort(file);
+    int level_count = unmarshallShort(inf);
     for (int i = 0; i < level_count; ++i)
     {
         level_id id;
-        id.load(file);
+        id.load(inf);
         LevelInfo linfo;
         // Must set id before load, or travel_hell_entry will not be
         // correctly set.
         linfo.id = id;
-        linfo.load(file);
+        linfo.load(inf);
         levels[id] = linfo;
     }
 
     for (int wp = 0; wp < TRAVEL_WAYPOINT_COUNT; ++wp)
-        waypoints[wp].load(file);
+        waypoints[wp].load(inf);
 
     fixup_levels();
 }

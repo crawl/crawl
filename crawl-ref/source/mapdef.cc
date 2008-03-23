@@ -16,6 +16,7 @@
 #include "branch.h"
 #include "describe.h"
 #include "direct.h"
+#include "dungeon.h"
 #include "files.h"
 #include "initfile.h"
 #include "invent.h"
@@ -30,7 +31,7 @@
 #include "mon-util.h"
 #include "place.h"
 #include "stuff.h"
-#include "dungeon.h"
+#include "tags.h"
 
 static const char *map_section_names[] = {
     "",
@@ -110,20 +111,20 @@ level_range::level_range(const raw_range &r)
 {
 }
 
-void level_range::write(FILE *outf) const
+void level_range::write(writer& outf) const
 {
-    writeShort(outf, branch);
-    writeShort(outf, shallowest);
-    writeShort(outf, deepest);
-    writeByte(outf, deny);
+    marshallShort(outf, branch);
+    marshallShort(outf, shallowest);
+    marshallShort(outf, deepest);
+    marshallByte(outf, deny);
 }
 
-void level_range::read(FILE *inf)
+void level_range::read(reader& inf)
 {
-    branch     = static_cast<branch_type>( readShort(inf) );
-    shallowest = readShort(inf);
-    deepest    = readShort(inf);
-    deny       = readByte(inf);
+    branch     = static_cast<branch_type>( unmarshallShort(inf) );
+    shallowest = unmarshallShort(inf);
+    deepest    = unmarshallShort(inf);
+    deny       = unmarshallByte(inf);
 }
 
 std::string level_range::str_depth_range() const
@@ -1209,18 +1210,18 @@ int map_def::glyph_at(const coord_def &c) const
     return map(c);
 }
 
-void map_def::write_full(FILE *outf)
+void map_def::write_full(writer& outf)
 {
-    cache_offset = ftell(outf);
-    writeShort(outf, MAP_CACHE_VERSION);   // Level indicator.
-    writeString(outf, name);
+    cache_offset = outf.tell();
+    marshallShort(outf, MAP_CACHE_VERSION);   // Level indicator.
+    marshallString4(outf, name);
     prelude.write(outf);
     main.write(outf);
     validate.write(outf);
     veto.write(outf);
 }
 
-void map_def::read_full(FILE *inf)
+void map_def::read_full(reader& inf)
 {
     // There's a potential race-condition here:
     // - If someone modifies a .des file while there are games in progress,
@@ -1230,11 +1231,16 @@ void map_def::read_full(FILE *inf)
     // reloading the index), but it's easier to save the game at this
     // point and let the player reload.
 
-    if (readShort(inf) != MAP_CACHE_VERSION || readString(inf) != name)
+    const short fp_version = unmarshallShort(inf);
+    std::string fp_name;
+    unmarshallString4(inf, fp_name);
+    if (fp_version != MAP_CACHE_VERSION || fp_name != name)
+    {        
         save_game(true,
                   make_stringf("Level file cache for %s is out-of-sync! "
                                "Please reload your game.",
                                file.c_str()).c_str());
+    }
 
     prelude.read(inf);
     main.read(inf);
@@ -1250,10 +1256,11 @@ void map_def::load()
     const std::string descache_base = get_descache_path(file, "");
     file_lock deslock(descache_base + ".lk", "rb", false);
     const std::string loadfile = descache_base + ".dsc";
-    FILE *inf = fopen(loadfile.c_str(), "rb");
-    fseek(inf, cache_offset, SEEK_SET);
+    FILE *fp = fopen(loadfile.c_str(), "rb");
+    fseek(fp, cache_offset, SEEK_SET);
+    reader inf(fp);
     read_full(inf);
-    fclose(inf);
+    fclose(fp);
 
     index_only = false;
 }
@@ -1273,49 +1280,49 @@ coord_def map_def::find_first_glyph(const std::string &s) const
     return map.find_first_glyph(s);
 }
 
-void map_def::write_index(FILE *outf) const
+void map_def::write_index(writer& outf) const
 {
     if (!cache_offset)
         end(1, false, "Map %s: can't write index - cache offset not set!",
             name.c_str());
-    writeString(outf, name);
-    writeString(outf, place_loaded_from.filename);
-    writeLong(outf, place_loaded_from.lineno);
-    writeShort(outf, orient);
-    writeLong(outf, chance);
-    writeLong(outf, cache_offset);
-    writeString(outf, tags);
+    marshallString4(outf, name);
+    marshallString4(outf, place_loaded_from.filename);
+    marshallLong(outf, place_loaded_from.lineno);
+    marshallShort(outf, orient);
+    marshallLong(outf, chance);
+    marshallLong(outf, cache_offset);
+    marshallString4(outf, tags);
     place.save(outf);
     write_depth_ranges(outf);
     prelude.write(outf);
 }
 
-void map_def::read_index(FILE *inf)
+void map_def::read_index(reader& inf)
 {
-    name         = readString(inf);
-    place_loaded_from.filename = readString(inf);
-    place_loaded_from.lineno   = readLong(inf);
-    orient       = static_cast<map_section_type>( readShort(inf) );
-    chance       = readLong(inf);
-    cache_offset = readLong(inf);
-    tags         = readString(inf);
+    unmarshallString4(inf, name);
+    unmarshallString4(inf, place_loaded_from.filename);
+    place_loaded_from.lineno   = unmarshallLong(inf);
+    orient       = static_cast<map_section_type>( unmarshallShort(inf) );
+    chance       = unmarshallLong(inf);
+    cache_offset = unmarshallLong(inf);
+    unmarshallString4(inf, tags);
     place.load(inf);
     read_depth_ranges(inf);
     prelude.read(inf);
     index_only   = true;
 }
 
-void map_def::write_depth_ranges(FILE *outf) const
+void map_def::write_depth_ranges(writer& outf) const
 {
-    writeShort(outf, depths.size());
+    marshallShort(outf, depths.size());
     for (int i = 0, sz = depths.size(); i < sz; ++i)
         depths[i].write(outf);
 }
 
-void map_def::read_depth_ranges(FILE *inf)
+void map_def::read_depth_ranges(reader& inf)
 {
     depths.clear();
-    const int nranges = readShort(inf);
+    const int nranges = unmarshallShort(inf);
     for (int i = 0; i < nranges; ++i)
     {
         level_range lr;

@@ -18,6 +18,8 @@
 std::string apostrophise(const std::string &name);
 
 class monsters;
+class reader;
+class writer;
 
 // Not intended for external use!
 struct kill_monster_desc
@@ -25,8 +27,8 @@ struct kill_monster_desc
     kill_monster_desc(const monsters *);
     kill_monster_desc() { }
 
-    void save(FILE*) const;
-    void load(FILE*);
+    void save(writer&) const;
+    void load(reader&);
 
     enum name_modifier
     {
@@ -58,8 +60,8 @@ public:
         // This object just says to the world that it's uninitialized
     }
 
-    void save(FILE*) const;
-    void load(FILE*);
+    void save(writer&) const;
+    void load(reader&);
 
     void add_kill(const monsters *mon, unsigned short place);
     void add_place(unsigned short place, bool force = false);
@@ -86,8 +88,8 @@ public:
     kill_ghost(const monsters *mon);
     kill_ghost() { }
 
-    void save(FILE*) const;
-    void load(FILE*);
+    void save(writer&) const;
+    void load(reader&);
 
     std::string info() const;
 
@@ -138,8 +140,8 @@ public:
     void merge(const Kills &k);
 
     bool empty() const;
-    void save(FILE*) const;
-    void load(FILE*);
+    void save(writer&) const;
+    void load(reader&);
 
     long get_kills(std::vector<kill_exp> &v) const;
 private:
@@ -164,8 +166,8 @@ public:
     void record_kill(const monsters *mon, int killer, bool ispet);
 
     bool empty() const;
-    void save(FILE*) const;
-    void load(FILE*);
+    void save(writer&) const;
+    void load(reader&);
 
     std::string kill_info() const;
 private:

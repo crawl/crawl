@@ -96,20 +96,6 @@ void save_ghost( bool force = false );
 std::string make_filename( const char *prefix, int level, branch_type branch,
                            level_area_type lt, bool isGhost );
 
-// Default cap on strings marshalled.
-#define STR_CAP 1000
-
-void writeShort(FILE *file, short s);
-short readShort(FILE *file);
-void writeByte(FILE *file, unsigned char byte);
-unsigned char readByte(FILE *file);
-void writeString(FILE* file, const std::string &s, int cap = STR_CAP);
-std::string readString(FILE *file, int cap = STR_CAP);
-void writeLong(FILE* file, long num);
-long readLong(FILE *file);
-void writeCoord(FILE *file, const coord_def &pos);
-void readCoord(FILE *file, coord_def &pos);
-
 FILE *lk_open(const char *mode, const std::string &file);
 void lk_close(FILE *handle, const char *mode, const std::string &file);
 

@@ -94,46 +94,46 @@ dlua_chunk dlua_chunk::precompiled(const std::string &chunk)
     return (dchunk);
 }
 
-void dlua_chunk::write(FILE *outf) const
+void dlua_chunk::write(writer& outf) const
 {
     if (empty())
     {
-        writeByte(outf, CT_EMPTY);
+        marshallByte(outf, CT_EMPTY);
         return;
     }
     
     if (!compiled.empty())
     {
-        writeByte(outf, CT_COMPILED);
-        writeString(outf, compiled, LUA_CHUNK_MAX_SIZE);
+        marshallByte(outf, CT_COMPILED);
+        marshallString4(outf, compiled);
     }
     else
     {
-        writeByte(outf, CT_SOURCE);
-        writeString(outf, chunk, LUA_CHUNK_MAX_SIZE);
+        marshallByte(outf, CT_SOURCE);
+        marshallString4(outf, chunk);
     }
         
-    writeString(outf, file);
-    writeLong(outf, first);
+    marshallString4(outf, file);
+    marshallLong(outf, first);
 }
 
-void dlua_chunk::read(FILE *inf)
+void dlua_chunk::read(reader& inf)
 {
     clear();
-    chunk_t type = static_cast<chunk_t>(readByte(inf));
+    chunk_t type = static_cast<chunk_t>(unmarshallByte(inf));
     switch (type)
     {
     case CT_EMPTY:
         return;
     case CT_SOURCE:
-        chunk = readString(inf, LUA_CHUNK_MAX_SIZE);
+        unmarshallString4(inf, chunk);
         break;
     case CT_COMPILED:
-        compiled = readString(inf, LUA_CHUNK_MAX_SIZE);
+        unmarshallString4(inf, compiled);
         break;
     }
-    file  = readString(inf);
-    first = readLong(inf);
+    unmarshallString4(inf, file);
+    first = unmarshallLong(inf);
 }
 
 void dlua_chunk::clear()

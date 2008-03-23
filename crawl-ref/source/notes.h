@@ -17,6 +17,9 @@
 #include <vector>
 #include <stdio.h>
 
+class reader;
+class writer;
+
 enum NOTE_TYPES
 {
     NOTE_HP_CHANGE = 0,         /* needs: new hp, max hp */
@@ -51,25 +54,26 @@ struct Note
     Note();
     Note( NOTE_TYPES t, int f = 0, int s = 0, const char* n = 0,
           const char* d = 0);
+    void save(writer& outf) const;
+    void load(reader& inf);
+    std::string describe( bool when = true, bool where = true,
+                          bool what = true ) const;
+    void check_milestone() const;
+
     NOTE_TYPES type;
     int first, second;
     long turn;
     unsigned short packed_place;
     std::string name;
     std::string desc;
-    void load( FILE* fp );
-    void save( FILE* fp ) const;
-    std::string describe( bool when = true, bool where = true,
-                          bool what = true ) const;
-    void check_milestone() const;
 };
 
 extern std::vector<Note> note_list;
 void activate_notes( bool active );
 bool notes_are_active();
 void take_note( const Note& note, bool force = false );
-void save_notes( FILE* fp );
-void load_notes( FILE* fp );
+void save_notes(writer&);
+void load_notes(reader&);
 void make_user_note();
 
 #endif

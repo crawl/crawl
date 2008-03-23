@@ -137,17 +137,9 @@ static void fully_identify_item(item_def *item)
                         ID_KNOWN_TYPE );
 }
 
-static void save_item(FILE *file, const item_def &item)
-{
-    writer outf(file);
-    marshallItem(outf, item);
-}
-
-static void load_item(FILE *file, item_def &item)
-{
-    reader inf(file);
-    unmarshallItem(inf, item);
-}
+// ----------------------------------------------------------------------
+// Stash
+// ----------------------------------------------------------------------
 
 bool Stash::aggressive_verify = true;
 std::vector<item_def> Stash::filters;
@@ -613,44 +605,44 @@ void Stash::write(std::ostream &os,
     activate_notes(true);
 }
 
-void Stash::save(FILE *file) const
+void Stash::save(writer& outf) const
 {
     // How many items on this square?
-    writeShort(file, (short) items.size());
+    marshallShort(outf, (short) items.size());
 
-    writeByte(file, x);
-    writeByte(file, y);
+    marshallByte(outf, x);
+    marshallByte(outf, y);
 
-    writeByte(file, feat);
-    writeByte(file, trap);
+    marshallByte(outf, feat);
+    marshallByte(outf, trap);
 
     // Note: Enabled save value is inverted logic, so that it defaults to true
-    writeByte(file, 
+    marshallByte(outf, 
         (unsigned char) ((verified? 1 : 0) | (!enabled? 2 : 0)) );
 
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
     for (unsigned i = 0; i < items.size(); ++i)
-        save_item(file, items[i]);
+        marshallItem(outf, items[i]);
 }
 
-void Stash::load(FILE *file)
+void Stash::load(reader& inf)
 {
     // How many items?
-    int count = readShort(file);
+    int count = unmarshallShort(inf);
 
-    x = readByte(file);
-    y = readByte(file);
+    x = unmarshallByte(inf);
+    y = unmarshallByte(inf);
 
     feat =
         static_cast<dungeon_feature_type>(
-            static_cast<unsigned char>( readByte(file) ));
+            static_cast<unsigned char>( unmarshallByte(inf) ));
     trap =
         static_cast<trap_type>(
-            static_cast<unsigned char>( readByte(file) ));
+            static_cast<unsigned char>( unmarshallByte(inf) ));
         
 
-    unsigned char flags = readByte(file);
+    unsigned char flags = unmarshallByte(inf);
     verified = (flags & 1) != 0;
 
     // Note: Enabled save value is inverted so it defaults to true.
@@ -664,7 +656,7 @@ void Stash::load(FILE *file)
     for (int i = 0; i < count; ++i)
     {
         item_def item;
-        load_item(file, item);
+        unmarshallItem(inf, item);
 
         items.push_back(item);
     }
@@ -890,45 +882,45 @@ void ShopInfo::write(std::ostream &os, bool identify) const
     activate_notes(true);
 }
 
-void ShopInfo::save(FILE *file) const
+void ShopInfo::save(writer& outf) const
 {
-    writeShort(file, shoptype);
+    marshallShort(outf, shoptype);
 
     int mangledx = (short) x;
     if (!visited)
         mangledx |= 1024;
-    writeShort(file, mangledx);
-    writeShort(file, (short) y);
+    marshallShort(outf, mangledx);
+    marshallShort(outf, (short) y);
 
-    writeShort(file, (short) items.size());
+    marshallShort(outf, (short) items.size());
 
-    writeString(file, name);
+    marshallString4(outf, name);
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
-        save_item(file, items[i].item);
-        writeShort(file, (short) items[i].price );
+        marshallItem(outf, items[i].item);
+        marshallShort(outf, (short) items[i].price );
     }
 }
 
-void ShopInfo::load(FILE *file)
+void ShopInfo::load(reader& inf)
 {
-    shoptype = readShort(file);
+    shoptype = unmarshallShort(inf);
 
-    x = readShort(file);
+    x = unmarshallShort(inf);
     visited = !(x & 1024);
     x &= 0xFF;
 
-    y = readShort(file);
+    y = unmarshallShort(inf);
 
-    int itemcount = readShort(file);
+    int itemcount = unmarshallShort(inf);
 
-    name = readString(file);
+    unmarshallString4(inf, name);
     for (int i = 0; i < itemcount; ++i)
     {
         shop_item item;
-        load_item(file, item.item);
-        item.price = (unsigned) readShort(file);
+        unmarshallItem(inf, item.item);
+        item.price = (unsigned) unmarshallShort(inf);
         items.push_back(item);
     }
 }
@@ -1153,44 +1145,46 @@ void LevelStashes::write(std::ostream &os, bool identify) const
     os << std::endl;
 }
 
-void LevelStashes::save(FILE *file) const
+void LevelStashes::save(writer& outf) const
 {
     // How many stashes on this level?
-    writeShort(file, (short) m_stashes.size());
+    marshallShort(outf, (short) m_stashes.size());
 
-    m_place.save(file);
+    m_place.save(outf);
 
     // And write the individual stashes
     for (stashes_t::const_iterator iter = m_stashes.begin(); 
-            iter != m_stashes.end(); iter++)
-        iter->second.save(file);
+         iter != m_stashes.end(); iter++)
+    {
+        iter->second.save(outf);
+    }
 
-    writeShort(file, (short) m_shops.size());
+    marshallShort(outf, (short) m_shops.size());
     for (unsigned i = 0; i < m_shops.size(); ++i)
-        m_shops[i].save(file);
+        m_shops[i].save(outf);
 }
 
-void LevelStashes::load(FILE *file)
+void LevelStashes::load(reader& inf)
 {
-    int size = readShort(file);
+    int size = unmarshallShort(inf);
 
-    m_place.load(file);
+    m_place.load(inf);
 
     m_stashes.clear();
     for (int i = 0; i < size; ++i)
     {
         Stash s;
-        s.load(file);
+        s.load(inf);
         if (!s.empty())
             m_stashes[ s.abs_pos() ] = s;
     }
 
     m_shops.clear();
-    int shopc = readShort(file);
+    int shopc = unmarshallShort(inf);
     for (int i = 0; i < shopc; ++i)
     {
         ShopInfo si(0, 0);
-        si.load(file);
+        si.load(inf);
         m_shops.push_back(si);
     }
 }
@@ -1292,36 +1286,36 @@ void StashTracker::write(std::ostream &os, bool identify) const
     }
 }
 
-void StashTracker::save(FILE *file) const
+void StashTracker::save(writer& outf) const
 {
     // Write version info first - major + minor
-    writeByte(file, ST_MAJOR_VER);
-    writeByte(file, ST_MINOR_VER);
+    marshallByte(outf, ST_MAJOR_VER);
+    marshallByte(outf, ST_MINOR_VER);
 
     // How many levels have we?
-    writeShort(file, (short) levels.size());
+    marshallShort(outf, (short) levels.size());
 
     // And ask each level to write itself to the tag
     stash_levels_t::const_iterator iter = levels.begin();
     for ( ; iter != levels.end(); iter++)
-        iter->second.save(file);
+        iter->second.save(outf);
 }
 
-void StashTracker::load(FILE *file)
+void StashTracker::load(reader& inf)
 {
     // Check version. Compatibility isn't important, since stash-tracking
     // is non-critical.
-    unsigned char major = readByte(file),
-                  minor = readByte(file);
+    unsigned char major = unmarshallByte(inf),
+                  minor = unmarshallByte(inf);
     if (major != ST_MAJOR_VER || minor != ST_MINOR_VER) return ;
 
-    int count = readShort(file);
+    int count = unmarshallShort(inf);
 
     levels.clear();
     for (int i = 0; i < count; ++i)
     {
         LevelStashes st;
-        st.load(file);
+        st.load(inf);
         if (st.stash_count())
             levels[st.where()] = st;
     }

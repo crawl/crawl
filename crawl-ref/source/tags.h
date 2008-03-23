@@ -55,6 +55,7 @@ public:
 
     void writeByte(unsigned char byte);
     void write(const void *data, size_t size);
+    long tell();
 
 private:
     FILE* _file;
@@ -67,6 +68,7 @@ void marshallLong    (writer &, long );
 void marshallFloat   (writer &, float );
 void marshallBoolean (writer &, bool );
 void marshallString  (writer &, const std::string &, int maxSize = 0);
+void marshallString4 (writer &, const std::string &);
 void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &);
 
@@ -98,6 +100,7 @@ float       unmarshallFloat   (reader &);
 bool        unmarshallBoolean (reader &);
 int         unmarshallCString (reader &, char *data, int maxSize);
 std::string unmarshallString  (reader &, int maxSize = 1000);
+void        unmarshallString4 (reader &, std::string&);
 void        unmarshallCoord   (reader &, coord_def &c);
 void        unmarshallItem    (reader &, item_def &item);
 

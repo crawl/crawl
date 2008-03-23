@@ -16,7 +16,6 @@
 #include "tutorial.h"
 #include "cio.h"
 #include "command.h"
-#include "files.h"
 #include "food.h"
 #include "format.h"
 #include "initfile.h"
@@ -37,6 +36,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "tags.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tiles.h"
@@ -60,26 +60,26 @@ static int get_tutorial_cols()
 #endif
 }
 
-void save_tutorial( FILE* fp )
+void save_tutorial(writer& outf)
 {
-    writeLong( fp, TUTORIAL_VERSION);
-    writeShort( fp, Options.tutorial_type);
+    marshallLong( outf, TUTORIAL_VERSION);
+    marshallShort( outf, Options.tutorial_type);
     for ( long i = 0; i < TUT_EVENTS_NUM; ++i )
-        writeShort( fp, Options.tutorial_events[i] );
+        marshallShort( outf, Options.tutorial_events[i] );
 }
 
-void load_tutorial( FILE* fp )
+void load_tutorial(reader& inf)
 {
     Options.tutorial_left = 0;
 
-    int version = readLong(fp);
+    int version = unmarshallLong(inf);
     if (version != TUTORIAL_VERSION)
         return; 
         
-    Options.tutorial_type = readShort(fp);
+    Options.tutorial_type = unmarshallShort(inf);
     for ( long i = 0; i < TUT_EVENTS_NUM; ++i )
     {
-        Options.tutorial_events[i] = readShort(fp);
+        Options.tutorial_events[i] = unmarshallShort(inf);
         Options.tutorial_left += Options.tutorial_events[i];
     }
 }

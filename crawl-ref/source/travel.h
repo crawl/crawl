@@ -10,13 +10,16 @@
  *     <1>     -/--/--     SD     Created
  */
 #ifndef TRAVEL_H
-#   define TRAVEL_H
+#define TRAVEL_H
 
-#   include "externs.h"
-#   include <stdio.h>
-#   include <string>
-#   include <vector>
-#   include <map>
+#include "externs.h"
+#include <stdio.h>
+#include <string>
+#include <vector>
+#include <map>
+
+class reader;
+class writer;
 
 enum run_check_type
 {
@@ -257,8 +260,8 @@ public:
         return (branch < id.branch) || (branch==id.branch && depth < id.depth);
     }
 
-    void save(FILE *) const;
-    void load(FILE *);
+    void save(writer&) const;
+    void load(reader&);
 };
 
 // A position on a particular level.
@@ -309,8 +312,8 @@ struct level_pos
         pos = coord_def(-1, -1);
     }
 
-    void save(FILE *) const;
-    void load(FILE *);
+    void save(writer&) const;
+    void load(reader&);
 };
 
 struct travel_target
@@ -409,8 +412,8 @@ public:
 
     void clear_distance() { distance = -1; }
 
-    void save(FILE *) const;
-    void load(FILE *);
+    void save(writer&) const;
+    void load(reader&);
 
     std::string describe() const;
 
@@ -440,8 +443,8 @@ struct LevelInfo
     {
     }
 
-    void save(FILE *) const;
-    void load(FILE *);
+    void save(writer&) const;
+    void load(reader&);
 
     std::vector<stair_info> &get_stairs()
     {
@@ -548,8 +551,8 @@ public:
 
     void update();
 
-    void save(FILE *) const;
-    void load(FILE *);
+    void save(writer&) const;
+    void load(reader&);
 
     bool is_known_branch(unsigned char branch) const;
 

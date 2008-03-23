@@ -21,6 +21,8 @@
 #include "travel.h"
 
 class input_history;
+class reader;
+class writer;
 
 // Stash definitions
 void stash_init_new_level();
@@ -46,8 +48,8 @@ public:
 
     static std::string stash_item_name(const item_def &item);
     void update();
-    void save(FILE*) const;
-    void load(FILE*);
+    void save(writer&) const;
+    void load(reader&);
 
     std::string description() const;
     std::string feature_description() const;
@@ -121,9 +123,8 @@ public:
 
     std::string description() const;
 
-    // Note that we aren't bothering to use virtual functions here.
-    void save(FILE*) const;
-    void load(FILE*);
+    void save(writer&) const;
+    void load(reader&);
 
     bool show_menu(const std::string &place, bool can_travel) const;
     bool is_visited() const { return items.size() || visited; }
@@ -232,8 +233,8 @@ public:
 
     void  kill_stash(const Stash &s);
 
-    void  save(FILE *) const;
-    void  load(FILE *);
+    void  save(writer&) const;
+    void  load(reader&);
 
     void  write(std::ostream &os, bool identify = false) const;
     std::string level_name() const;
@@ -308,8 +309,8 @@ public:
     // used if no parameters are supplied.
     void no_stash(int x = -1, int y = -1);
 
-    void save(FILE*) const;
-    void load(FILE*);
+    void save(writer&) const;
+    void load(reader&);
 
     void write(std::ostream &os, bool identify = false) const;
 

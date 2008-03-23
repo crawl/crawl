@@ -26,6 +26,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "spl-util.h"
+#include "tags.h"
 
 #define NOTES_VERSION_NUMBER 1001
 
@@ -385,25 +386,26 @@ void Note::check_milestone() const
 #endif
 }
 
-void Note::save( FILE* fp ) const {
-    writeLong( fp, type );
-    writeLong( fp, turn );
-    writeShort( fp, packed_place );
-    writeLong( fp, first );
-    writeLong( fp, second );
-    writeString( fp, name );
-    writeString( fp, desc );
+void Note::save(writer& outf) const
+{
+    marshallLong( outf, type );
+    marshallLong( outf, turn );
+    marshallShort( outf, packed_place );
+    marshallLong( outf, first );
+    marshallLong( outf, second );
+    marshallString4( outf, name );
+    marshallString4( outf, desc );
 }
 
-void Note::load( FILE* fp )
+void Note::load(reader& inf)
 {
-    type = static_cast<NOTE_TYPES>(readLong( fp ));
-    turn = readLong( fp );
-    packed_place = readShort( fp );
-    first = readLong( fp );
-    second = readLong( fp );
-    name = readString( fp );
-    desc = readString( fp );
+    type = static_cast<NOTE_TYPES>(unmarshallLong( inf ));
+    turn = unmarshallLong( inf );
+    packed_place = unmarshallShort( inf );
+    first = unmarshallLong( inf );
+    second = unmarshallLong( inf );
+    unmarshallString4( inf, name );
+    unmarshallString4( inf, desc );
 }
 
 bool notes_active = false;
@@ -427,24 +429,24 @@ void activate_notes( bool active )
     notes_active = active;
 }
 
-void save_notes( FILE* fp ) 
+void save_notes(writer& outf) 
 {
-    writeLong( fp, NOTES_VERSION_NUMBER );
-    writeLong( fp, note_list.size() );
+    marshallLong( outf, NOTES_VERSION_NUMBER );
+    marshallLong( outf, note_list.size() );
     for ( unsigned i = 0; i < note_list.size(); ++i )
-        note_list[i].save(fp);
+        note_list[i].save(outf);
 }
 
-void load_notes( FILE* fp ) 
+void load_notes(reader& inf) 
 {
-    if ( readLong(fp) != NOTES_VERSION_NUMBER )
+    if ( unmarshallLong(inf) != NOTES_VERSION_NUMBER )
         return;
 
-    const long num_notes = readLong(fp);
+    const long num_notes = unmarshallLong(inf);
     for ( long i = 0; i < num_notes; ++i )
     {
         Note new_note;
-        new_note.load(fp);
+        new_note.load(inf);
         note_list.push_back(new_note);
     }
 }

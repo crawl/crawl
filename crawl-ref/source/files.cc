@@ -1220,7 +1220,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     FILE *stashf = fopen(stashFile.c_str(), "wb");
     if (stashf)
     {
-        StashTrack.save(stashf);
+        writer outf(stashf);
+        StashTrack.save(outf);
         fclose(stashf);
         DO_CHMOD_PRIVATE(stashFile.c_str());
     }
@@ -1238,7 +1239,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     FILE *killf = fopen(killFile.c_str(), "wb");
     if (killf)
     {
-        you.kills->save(killf);
+        writer outf(killf);
+        you.kills->save(outf);
         fclose(killf);
         DO_CHMOD_PRIVATE(killFile.c_str());
     }
@@ -1248,7 +1250,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     FILE *travelf = fopen(travelCacheFile.c_str(), "wb");
     if (travelf)
     {
-        travel_cache.save(travelf);
+        writer outf(travelf);
+        travel_cache.save(outf);
         fclose(travelf);
         DO_CHMOD_PRIVATE(travelCacheFile.c_str());
     }
@@ -1258,7 +1261,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     FILE *notesf = fopen(notesFile.c_str(), "wb");
     if (notesf)
     {
-        save_notes(notesf);
+        writer outf(notesf);
+        save_notes(outf);
         fclose(notesf);
         DO_CHMOD_PRIVATE(notesFile.c_str());
     }
@@ -1269,7 +1273,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     FILE *tutorf = fopen(tutorFile.c_str(), "wb");
     if (tutorf)
     {
-        save_tutorial(tutorf);
+        writer outf(tutorf);
+        save_tutorial(outf);
         fclose(tutorf);
         DO_CHMOD_PRIVATE(tutorFile.c_str());
     }
@@ -1421,7 +1426,8 @@ void restore_game(void)
     FILE *stashf = fopen(stashFile.c_str(), "rb");
     if (stashf)
     {
-        StashTrack.load(stashf);
+        reader inf(stashf);
+        StashTrack.load(inf);
         fclose(stashf);
     }
 
@@ -1434,7 +1440,8 @@ void restore_game(void)
     FILE *killf = fopen(killFile.c_str(), "rb");
     if (killf)
     {
-        you.kills->load(killf);
+        reader inf(killf);
+        you.kills->load(inf);
         fclose(killf);
     }
 
@@ -1442,7 +1449,8 @@ void restore_game(void)
     FILE *travelf = fopen(travelCacheFile.c_str(), "rb");
     if (travelf)
     {
-        travel_cache.load(travelf);
+        reader inf(travelf);
+        travel_cache.load(inf);
         fclose(travelf);
     }
 
@@ -1450,7 +1458,8 @@ void restore_game(void)
     FILE *notesf = fopen(notesFile.c_str(), "rb");
     if (notesf)
     {
-        load_notes(notesf);
+        reader inf(notesf);
+        load_notes(inf);
         fclose(notesf);
     }
 
@@ -1460,7 +1469,8 @@ void restore_game(void)
     FILE *tutorf = fopen(tutorFile.c_str(), "rb");
     if (tutorf)
     {
-        load_tutorial(tutorf);
+        reader inf(tutorf);
+        load_tutorial(inf);
         fclose(tutorf);
     }
 }
@@ -1641,17 +1651,16 @@ static bool determine_ghost_version( FILE *ghostFile,
     majorVersion = buf[0];
     minorVersion = buf[1];
 
+    reader inf(ghostFile);
     // check for the DCSS ghost signature.
-    if (readShort(ghostFile) != GHOST_SIGNATURE)
+    if (unmarshallShort(inf) != GHOST_SIGNATURE)
         return (false);
 
     if (majorVersion == SAVE_MAJOR_VERSION
         && minorVersion <= GHOST_MINOR_VERSION)
     {
         // Discard three more 32-bit words of padding.
-        for (int i = 0; i < 3; ++i)
-            readLong(ghostFile);
-        
+        inf.read(NULL, 3*4);
         return !feof(ghostFile);
     }
 
@@ -1732,95 +1741,6 @@ void generate_random_demon()
     menv[rdem].set_ghost(pandemon);
     menv[rdem].pandemon_init();
 }                               // end generate_random_demon()
-
-void writeShort(FILE *file, short s)
-{
-    char data[2];
-    // High byte first - network order
-    data[0] = static_cast<char>((s >> 8) & 0xFF);
-    data[1] = static_cast<char>(s & 0xFF);
-
-    write2(file, data, sizeof(data));
-}
-
-short readShort(FILE *file)
-{
-    unsigned char data[2];
-    read2(file, (char *) data, 2);
-
-    // High byte first
-    return (((short) data[0]) << 8) | (short) data[1];
-}
-
-void writeByte(FILE *file, unsigned char byte)
-{
-    write2(file, (char *) &byte, sizeof byte);
-}
-
-unsigned char readByte(FILE *file)
-{
-    unsigned char byte;
-    read2(file, (char *) &byte, sizeof byte);
-    return byte;
-}
-
-void writeString(FILE* file, const std::string &s, int cap)
-{
-    int length = s.length();
-    if (length > cap)
-        length = cap;
-    writeLong(file, length);
-    if (length)
-        write2(file, s.c_str(), length);
-}
-
-std::string readString(FILE *file, int cap)
-{
-    const int length = readLong(file);
-    if (length > 0)
-    {
-        if (length <= cap)
-        {
-            char *buf = new char[length];
-            read2(file, buf, length);
-            const std::string s(buf, length);
-            delete [] buf;
-            return (s);
-        }
-
-        end(1, false, "String too long: %d bytes\n", length);
-    }
-
-    return ("");
-}
-
-void writeLong(FILE* file, long num)
-{
-    // High word first, network order
-    writeShort(file, (short) ((num >> 16) & 0xFFFFL));
-    writeShort(file, (short) (num & 0xFFFFL));
-}
-
-long readLong(FILE *file)
-{
-    // We need the unsigned short cast even for the high word because we
-    // might be on a system where long is more than 4 bytes, and we don't want
-    // to sign extend the high short.
-    return ((long) (unsigned short) readShort(file)) << 16 | 
-        (long) (unsigned short) readShort(file);
-}
-
-void writeCoord(FILE *file, const coord_def &pos)
-{
-    writeShort(file, pos.x);
-    writeShort(file, pos.y);
-}
-
-void readCoord(FILE *file, coord_def &pos)
-{
-    pos.x = readShort(file);
-    pos.y = readShort(file);
-}
 
 ////////////////////////////////////////////////////////////////////////////
 // Locking for multiuser systems

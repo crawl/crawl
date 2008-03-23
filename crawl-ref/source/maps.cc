@@ -14,6 +14,7 @@
 
 #include "AppHdr.h"
 #include "maps.h"
+#include "tags.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -511,12 +512,12 @@ std::string get_descache_path(const std::string &file,
 
 static bool verify_file_version(const std::string &file)
 {
-    FILE *inf = fopen(file.c_str(), "rb");
-    if (!inf)
+    FILE *fp = fopen(file.c_str(), "rb");
+    if (!fp)
         return (false);
-
-    const long ver = readLong(inf);
-    fclose(inf);
+    reader inf(fp);
+    const long ver = unmarshallLong(inf);
+    fclose(fp);
 
     return (ver == MAP_CACHE_VERSION);
 }
@@ -534,21 +535,26 @@ static bool verify_map_full(const std::string &base)
 static bool load_map_index(const std::string &base)
 {
     // If there's a global prelude, load that first.
-    FILE *inf = fopen((base + ".lux").c_str(), "rb");
-    if (inf)
     {
-        lc_global_prelude.read(inf);
-        fclose(inf);
+        FILE *fp = fopen((base + ".lux").c_str(), "rb");
+        if (fp)
+        {
+            reader inf(fp);
+            lc_global_prelude.read(inf);
+            fclose(fp);
 
-        global_preludes.push_back( lc_global_prelude );
+            global_preludes.push_back( lc_global_prelude );
+        }
     }
     
-    inf = fopen((base + ".idx").c_str(), "rb");
-    if (!inf)
+    FILE* fp = fopen((base + ".idx").c_str(), "rb");
+    if (!fp)
         end(1, true, "Unable to read %s", (base + ".idx").c_str());
+    reader inf(fp);
+
     // Discard version (it's been checked by verify_map_index).
-    readLong(inf);
-    const int nmaps = readShort(inf);
+    (void) unmarshallLong(inf);
+    const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
     vdefs.resize( nexist + nmaps, map_def() );
     for (int i = 0; i < nmaps; ++i)
@@ -559,7 +565,7 @@ static bool load_map_index(const std::string &base)
         lc_loaded_maps[vdef.name] = vdef.place_loaded_from;
         vdef.place_loaded_from.clear();
     }
-    fclose(inf);
+    fclose(fp);
 
     return (true);
 }
@@ -590,36 +596,39 @@ static void write_map_prelude(const std::string &filebase)
         return;
     }
 
-    FILE *outf = fopen(luafile.c_str(), "wb");
+    FILE *fp = fopen(luafile.c_str(), "wb");
+    writer outf(fp);
     lc_global_prelude.write(outf);
-    fclose(outf);
+    fclose(fp);
 }
 
 static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
 {
     const std::string cfile = filebase + ".dsc";
-    FILE *outf = fopen(cfile.c_str(), "wb");
-    if (!outf)
+    FILE *fp = fopen(cfile.c_str(), "wb");
+    if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
-    writeLong(outf, MAP_CACHE_VERSION);
+    writer outf(fp);
+    marshallLong(outf, MAP_CACHE_VERSION);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
-    fclose(outf);
+    fclose(fp);
 }
 
 static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
 {
     const std::string cfile = filebase + ".idx";
-    FILE *outf = fopen(cfile.c_str(), "wb");
-    if (!outf)
+    FILE *fp = fopen(cfile.c_str(), "wb");
+    if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
-    writeLong(outf, MAP_CACHE_VERSION);
-    writeShort(outf, ve > vs? ve - vs : 0);
+    writer outf(fp);
+    marshallLong(outf, MAP_CACHE_VERSION);
+    marshallShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_index(outf);
-    fclose(outf);
+    fclose(fp);
 }
 
 static void write_map_cache(const std::string &filename, size_t vs, size_t ve)

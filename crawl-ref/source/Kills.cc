@@ -68,27 +68,29 @@ bool KillMaster::empty() const
     return (true);
 }
 
-void KillMaster::save(FILE *file) const
+void KillMaster::save(writer& outf) const
 {
     // Write the version of the kills file
-    writeByte(file, KILLS_MAJOR_VERSION);
-    writeByte(file, KILLS_MINOR_VERSION);
+    marshallByte(outf, KILLS_MAJOR_VERSION);
+    marshallByte(outf, KILLS_MINOR_VERSION);
 
     for (int i = 0; i < KC_NCATEGORIES; ++i)
-        categorized_kills[i].save(file);
+        categorized_kills[i].save(outf);
 }
 
-void KillMaster::load(FILE *file)
+void KillMaster::load(reader& inf)
 {
-    unsigned char major = readByte(file),
-                  minor = readByte(file);
+    unsigned char major = unmarshallByte(inf),
+                  minor = unmarshallByte(inf);
     if (major != KILLS_MAJOR_VERSION || 
-            (minor != KILLS_MINOR_VERSION && minor > 0))
-        return ;
+        (minor != KILLS_MINOR_VERSION && minor > 0))
+    {
+        return;
+    }
 
     for (int i = 0; i < KC_NCATEGORIES; ++i)
     {
-        categorized_kills[i].load(file);
+        categorized_kills[i].load(inf);
         if (!minor)
             break;
     }
@@ -291,45 +293,45 @@ long Kills::get_kills(std::vector<kill_exp> &all_kills) const
     return (count);
 }
 
-void Kills::save(FILE *file) const
+void Kills::save(writer& outf) const
 {
     // How many kill records do we have?
-    writeLong(file, kills.size());
+    marshallLong(outf, kills.size());
 
     for ( kill_map::const_iterator iter = kills.begin();
           iter != kills.end(); ++iter)
     {
-        iter->first.save(file);
-        iter->second.save(file);
+        iter->first.save(outf);
+        iter->second.save(outf);
     }
 
     // How many ghosts do we have?
-    writeShort(file, ghosts.size());
+    marshallShort(outf, ghosts.size());
     for (ghost_vec::const_iterator iter = ghosts.begin(); 
          iter != ghosts.end(); ++iter)
     {
-        iter->save(file);
+        iter->save(outf);
     }
 }
 
-void Kills::load(FILE *file)
+void Kills::load(reader& inf)
 {
     // How many kill records?
-    long kill_count = readLong(file);
+    long kill_count = unmarshallLong(inf);
     kills.clear();
     for (long i = 0; i < kill_count; ++i)
     {
         kill_monster_desc md;
-        md.load(file);
-        kills[md].load(file);
+        md.load(inf);
+        kills[md].load(inf);
     }
 
-    short ghost_count = readShort(file);
+    short ghost_count = unmarshallShort(inf);
     ghosts.clear();
     for (short i = 0; i < ghost_count; ++i)
     {
         kill_ghost kg;
-        kg.load(file);
+        kg.load(inf);
         ghosts.push_back(kg);
     }
 }
@@ -531,29 +533,29 @@ std::string kill_def::append_places(const kill_monster_desc &md,
     return name;
 }
 
-void kill_def::save(FILE *file) const
+void kill_def::save(writer& outf) const
 {
-    writeShort(file, kills);
-    writeShort(file, exp);
+    marshallShort(outf, kills);
+    marshallShort(outf, exp);
 
-    writeShort(file, places.size());
+    marshallShort(outf, places.size());
     for (std::vector<unsigned short>::const_iterator iter = places.begin();
             iter != places.end(); ++iter)
     {
-        writeShort(file, *iter);
+        marshallShort(outf, *iter);
     }
 }
 
-void kill_def::load(FILE *file)
+void kill_def::load(reader& inf)
 {
-    kills = (unsigned short) readShort(file);
-    exp   = readShort(file);
+    kills = (unsigned short) unmarshallShort(inf);
+    exp   = unmarshallShort(inf);
 
     places.clear();
-    short place_count = readShort(file);
+    short place_count = unmarshallShort(inf);
     for (short i = 0; i < place_count; ++i)
     {
-        places.push_back((unsigned short) readShort(file));
+        places.push_back((unsigned short) unmarshallShort(inf));
     }
 }
 
@@ -576,18 +578,18 @@ std::string kill_ghost::info() const
             " (" + short_place_name(place) + ")" : std::string(""));
 }
 
-void kill_ghost::save(FILE *file) const
+void kill_ghost::save(writer& outf) const
 {
-    writeString(file, ghost_name);
-    writeShort(file, (unsigned short) exp);
-    writeShort(file, place);
+    marshallString4(outf, ghost_name);
+    marshallShort(outf, (unsigned short) exp);
+    marshallShort(outf, place);
 }
 
-void kill_ghost::load(FILE *file)
+void kill_ghost::load(reader& inf)
 {
-    ghost_name = readString(file);
-    exp = readShort(file);
-    place = (unsigned short) readShort(file);
+    unmarshallString4(inf, ghost_name);
+    exp = unmarshallShort(inf);
+    place = (unsigned short) unmarshallShort(inf);
 }
 
 kill_monster_desc::kill_monster_desc(const monsters *mon)
@@ -621,16 +623,16 @@ kill_monster_desc::kill_monster_desc(const monsters *mon)
         monnum = MONS_WEAPON_MIMIC;
 }
 
-void kill_monster_desc::save(FILE *file) const
+void kill_monster_desc::save(writer& outf) const
 {
-    writeShort(file, (short) monnum);
-    writeShort(file, (short) modifier);
+    marshallShort(outf, (short) monnum);
+    marshallShort(outf, (short) modifier);
 }
 
-void kill_monster_desc::load(FILE *file)
+void kill_monster_desc::load(reader& inf)
 {
-    monnum = (int) readShort(file);
-    modifier = (name_modifier) readShort(file);
+    monnum = (int) unmarshallShort(inf);
+    modifier = (name_modifier) unmarshallShort(inf);
 }
 
 ///////////////////////////////////////////////////////////////////////////

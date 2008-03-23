@@ -70,8 +70,8 @@ public:
     bool matches(const level_id &) const;
     bool matches(int depth) const;
 
-    void write(FILE *) const;
-    void read(FILE *);
+    void write(writer&) const;
+    void read(reader&);
 
     bool valid() const;
     int span() const;
@@ -642,11 +642,11 @@ public:
     coord_def find_first_glyph(int glyph) const;
     coord_def find_first_glyph(const std::string &glyphs) const;
     
-    void write_index(FILE *) const;
-    void write_full(FILE *);
+    void write_index(writer&) const;
+    void write_full(writer&);
 
-    void read_index(FILE *);
-    void read_full(FILE *);
+    void read_index(reader&);
+    void read_full(reader&);
 
     void set_file(const std::string &s);
     std::string run_lua(bool skip_main);
@@ -725,8 +725,8 @@ public:
     };
     
 private:
-    void write_depth_ranges(FILE *) const;
-    void read_depth_ranges(FILE *);
+    void write_depth_ranges(writer&) const;
+    void read_depth_ranges(reader&);
     bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
     std::string rewrite_chunk_errors(const std::string &s) const;
     

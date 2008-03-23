@@ -20,9 +20,11 @@
 #include "externs.h"
 
 class formatted_string;
+class writer;
+class reader;
 
-void save_tutorial( FILE* fp );
-void load_tutorial( FILE* fp );
+void save_tutorial(writer& outf);
+void load_tutorial(reader& inf);
 void init_tutorial_options(void);
 
 bool pick_tutorial(void);

@@ -145,6 +145,12 @@ void writer::write(const void *data, size_t size)
     }
 }
 
+long writer::tell()
+{
+    ASSERT(_file);
+    return ftell(_file);
+}
+
 
 // static helpers
 static void tag_construct_you(writer &th);
@@ -329,6 +335,7 @@ static void unmarshall_container(reader &th, T_container &container,
         (container.*inserter)(unmarshal(th));
 }
 
+// XXX: redundant with level_id.save()/load()
 void marshall_level_id( writer& th, const level_id& id )
 {
     marshallByte(th, id.branch );
@@ -336,6 +343,7 @@ void marshall_level_id( writer& th, const level_id& id )
     marshallByte(th, id.level_type);
 }
 
+// XXX: redundant with level_pos.save()/load()
 void marshall_level_pos( writer& th, const level_pos& lpos )
 {
     marshallLong(th, lpos.pos.x);
@@ -468,7 +476,7 @@ float unmarshallFloat(reader &th)
     return k.f_num;
 }
 
-// string -- marshall length & string data
+// string -- 2 byte length, string data
 void marshallString(writer &th, const std::string &data, int maxSize)
 {
     // allow for very long strings (well, up to 32K).
@@ -524,6 +532,19 @@ std::string unmarshallString(reader &th, int maxSize)
 static std::string unmarshallStringNoMax(reader &th)
 {
     return unmarshallString(th);
+}
+
+// string -- 4 byte length, non-terminated string data
+void marshallString4(writer &th, const std::string &data)
+{
+    marshallLong(th, data.length());
+    th.write(data.c_str(), data.length());
+}
+void unmarshallString4(reader &th, std::string& s)
+{
+    const int len = unmarshallLong(th);
+    s.resize(len);
+    if (len) th.read(&s.at(0), len);
 }
 
 // boolean (to avoid system-dependant bool implementations)
