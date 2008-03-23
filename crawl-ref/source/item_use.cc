@@ -3816,11 +3816,11 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, int wpn )
 {
     if (wpn == -1)
         wpn = you.equip[ EQ_WEAPON ];
-        
+
     bool affected = true;
     int enchant_level;
 
-    if (wpn == -1 
+    if (wpn == -1
         || (you.inv[ wpn ].base_type != OBJ_WEAPONS
             && you.inv[ wpn ].base_type != OBJ_MISSILES))
     {
@@ -3857,7 +3857,7 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, int wpn )
     }
 
     // if it isn't affected by the enchantment, it will still
-    // be uncursed:
+    // be uncursed.
     if (!affected)
     {
         if (item_cursed(item))
@@ -3905,8 +3905,11 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, int wpn )
     }
     else if (item.base_type == OBJ_MISSILES)
     {
-        mprf("%s %s red for a moment.", iname.c_str(),
-             item.quantity > 1 ? "glow" : "glows");
+        if (!quiet)
+        {
+            mprf("%s %s red for a moment.", iname.c_str(),
+                 item.quantity > 1 ? "glow" : "glows");
+        }
 
         item.plus++;
     }
@@ -3951,7 +3954,7 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
         return (true);
     }
 
-    // even if not affected, it may be uncursed.
+    // Even if not affected, it may be uncursed.
     if (!is_enchantable_armour(arm, false)
         || arm.plus >= 3 && random2(8) < arm.plus)
     {
@@ -4358,7 +4361,7 @@ void read_scroll( int slot )
         break;
 
     case SCR_ENCHANT_WEAPON_III:
-        if (you.equip[ EQ_WEAPON ] != -1) 
+        if (you.equip[ EQ_WEAPON ] != -1)
         {
             // Successfully affixing the enchantment will print
             // its own message.
