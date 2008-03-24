@@ -368,22 +368,55 @@ Beogh seems highly displeased.
 ##########################################################
 # Messages for the *player* using Zin's Recite invocation
 ##########################################################
+recite_start
+
+begin
+
+launch into
+
+embark on
+
+%%%%
+recite_what
+
+a poem about
+
+the sacred texts on
+
+the word of Zin on
+
+sonorously on
+
+loudly on
+
+%%%%
 zin_recite_speech_start
 
 w:40
-reciting @subject@
+begin reciting @axioms_of_law@
 
-reciting a poem about @subject@
+begin reciting @recite_what@ @recite_subject@
 
-preaching about @subject@
+begin preaching about @recite_subject@
 
-a @lecture_modifier@ lecture about @subject@
+@recite_start@ a @lecture_modifier@ lecture about @recite_subject@
 
-explaining in detail about @subject@
+begin explaining in detail about @recite_subject@
+
+begin explaining the importance of @important_subject@
+
+@recite_start@ a @lecture_modifier@ sermon about @recite_subject@
+
+@recite_start@ a @lecture_modifier@ speech about @recite_subject@
+
+w:5
+begin speaking about @recite_subject@
+
 %%%%
 # the short form of the above, for continuing/stopping/finishing
-# reciting - order and weights must be the same as above!
-zin_recite_speech_
+# reciting -- order and weights must be the same as above!
+# doesn't need finishing interpunction
+zin_recite_speech_other
 
 w:50
 reciting
@@ -392,7 +425,14 @@ preaching
 
 your lecture
 
+w:20
 your explanations
+
+your sermon
+
+w:15
+your speech
+
 %%%%
 lecture_modifier
 
@@ -401,12 +441,101 @@ lengthy
 passionate
 
 stern
+
 %%%%
-subject
+axioms_of_law
 
-Zin's Axioms of Law
+Zin's Axioms of Law.
 
-the Axioms of Law
+the Axioms of Law.
 
-the importance of the Law
+the books of the Law.
+
+the sacred Law of Zin.
+
+%%%%
+# used for "explaining the importance of ..."
+important_subject
+
+# law
+w:50
+@axioms_of_law@
+
+the eternal Law.
+
+obedience to the Law.
+
+the one true way.
+
+# purity
+purity of body and mind.
+
+preserving your bodily integrity. 
+
+keeping your body clean and pure. 
+
+proper care of body and soul.
+
+# mutations
+avoiding mutations.
+
+just saying no to mutations.
+
+# respecting intelligent beings
+proper burial practice. 
+
+# demons
+not dealing with demons.
+
+rejecting the service of demons.
+
+%%%%
+# the subject of your recital/lecture/whatever
+# needs the full dot or exclamation mark
+recite_subject
+
+w:120
+@important_subject@
+
+# first, law and order
+w:80
+@axioms_of_law@
+
+the Law and the prophets.
+
+the importance of the Law.
+
+# anti-mutation
+mutations, and how to avoid them. 
+
+potions of Mutation - the devil's brew!
+
+Neqoxecs and Cacodemons -- may they all be destroyed!
+
+# respecting intelligent beings
+a proper diet respecting intelligent beings.
+
+# necromancy and evil
+the evils of necromancy.
+
+undead, and why they are evil.
+
+# the gods
+the fall of Lugonu.
+
+the alliance of Zin and the Shining One.
+
+the evilness of @evil_god@.
+%%%%
+evil_god
+
+Kikubaaqudgha
+
+Makhleb
+
+Yredelmnul
+
+Beogh
+
+Lugonu
 %%%%

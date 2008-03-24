@@ -487,21 +487,21 @@ static bool _ely_protects_ally(monsters *monster)
     ASSERT(you.religion == GOD_ELYVILON);
     
     if (mons_holiness(monster) != MH_NATURAL
+         && mons_holiness(monster) != MH_HOLY
         || !mons_friendly(monster)
+        || !mons_near(monster)
+        || !player_monster_visible(monster) // for simplicity
         || !one_chance_in(20))
     {
         return (false);
     }
     
-    if (player_monster_visible(monster) && mons_near(monster))
-    {
-        monster->hit_points = 1;
-        snprintf(info, INFO_SIZE, " protects %s%s from harm!%s",
-                 mons_is_unique(monster->type) ? "" : "your ",
-                 monster->name(DESC_PLAIN).c_str(),
-                 coinflip() ? "" : "  You feel responsible.");
-        simple_god_message(info);
-    }
+    monster->hit_points = 1;
+    snprintf(info, INFO_SIZE, " protects %s%s from harm!%s",
+             mons_is_unique(monster->type) ? "" : "your ",
+             monster->name(DESC_PLAIN).c_str(),
+             coinflip() ? "" : "  You feel responsible.");
+    simple_god_message(info);
     lose_piety(1);
     
     return (true);
@@ -520,6 +520,7 @@ static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
     const int ely_penance = you.penance[god];
 
     if (mons_holiness(monster) != MH_NATURAL
+         && mons_holiness(monster) != MH_HOLY
         || mons_friendly(monster)
         || !one_chance_in(10))
     {

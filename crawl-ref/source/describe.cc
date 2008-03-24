@@ -2304,9 +2304,9 @@ std::string describe_favour(god_type which_god)
     {
         const int penance = you.penance[which_god];
         return (penance >= 50) ? "Godly wrath is upon you!" :
-            (penance >= 20) ? "You've transgressed heavily! Be penitent!" :
-            (penance >= 5 ) ? "You are under penance." 
-                            : "You should show more discipline.";
+               (penance >= 20) ? "You've transgressed heavily! Be penitent!" :
+               (penance >= 5 ) ? "You are under penance."
+                               : "You should show more discipline.";
     }
 
     return (which_god == GOD_XOM)?
@@ -2365,6 +2365,19 @@ static std::string religion_help( god_type god )
         break;
     }
     return result;
+}
+
+static bool _god_hates_your_god( god_type which_god )
+{
+    // non-good gods always hate your current god
+    if (!is_good_god(which_god))
+        return (true);
+
+    // Zin hates Xom and Makhleb
+    if (which_god == GOD_ZIN && is_chaotic_god(you.religion))
+        return (true);
+
+    return (is_evil_god(you.religion));	
 }
 
 void describe_god( god_type which_god, bool give_title )
@@ -2501,12 +2514,23 @@ void describe_god( god_type which_god, bool give_title )
     if (you.religion != which_god)
     {
         textcolor (colour);
-        cprintf( (you.penance[which_god] >= 50) ? "%s's wrath is upon you!" :
-                 (you.penance[which_god] >= 20) ? "%s is annoyed with you." :
-                 (you.penance[which_god] >=  5) ? "%s well remembers your sins." :
-                 (you.penance[which_god] >   0) ? "%s is ready to forgive your sins." :
-                 (you.worshipped[which_god])    ? "%s is ambivalent towards you." 
-                                                : "%s is neutral towards you.",
+        int which_god_penance = you.penance[which_god];
+        
+        // give more appropriate for the good gods
+        if (which_god_penance > 0 && is_good_god(which_god))
+        {
+            if (is_good_god(you.religion))
+                which_god_penance = 0;
+            else if (!_god_hates_your_god(which_god) && which_god_penance >= 5)
+                which_god_penance = 2; // == "Come back to the one true church!"
+        }
+
+        cprintf( (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
+                 (which_god_penance >= 20)   ? "%s is annoyed with you." :
+                 (which_god_penance >=  5)   ? "%s well remembers your sins." :
+                 (which_god_penance >   0)   ? "%s is ready to forgive your sins." :
+                 (you.worshipped[which_god]) ? "%s is ambivalent towards you."
+                                             : "%s is neutral towards you.",
                  god_name(which_god).c_str() );
     } 
     else

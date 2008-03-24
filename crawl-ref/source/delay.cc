@@ -195,14 +195,17 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
 
 static const char* _get_recite_speech(const std::string key, int weight)
 {
-    const std::string str
-              = getWeightedSpeechString("zin_recite_speech_", key,
-                                        weight + you.x_pos + you.y_pos);
-    
+    seed_rng( weight + you.x_pos + you.y_pos);
+    const std::string str = getSpeakString("zin_recite_speech_" + key);
+
     if (!str.empty())
         return (str.c_str());
-
-    return ("reciting the Axioms of Law");
+        
+    // in case nothing is found
+    if (key == "start")
+        return ("begin reciting the Axioms of Law.");
+        
+    return ("reciting");
 }
 
 // Returns true if this delay can act as a parent to other delays, i.e. if
@@ -352,7 +355,7 @@ void stop_delay( bool stop_stair_travel )
         
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You stop %s.",
-             _get_recite_speech("stop", delay.parm1 + delay.parm2));
+             _get_recite_speech("other", you.num_turns + delay.duration));
         pop_delay();
         break;
 
@@ -484,8 +487,8 @@ int check_recital_audience()
                 continue;
 
             mons = &menv[mid];
-	    if (!found_monsters)
-	        found_monsters = true;
+            if (!found_monsters)
+                found_monsters = true;
 
             // can not be affected in these states
             if (recite_mons_useless(mons))
@@ -550,8 +553,8 @@ void handle_delay( void )
             mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
             break;
         case DELAY_RECITE:
-            mprf(MSGCH_PLAIN, "You begin %s.",
-                 _get_recite_speech("start", delay.parm1 + delay.parm2));
+            mprf(MSGCH_PLAIN, "You %s",
+                 _get_recite_speech("start", you.num_turns + delay.duration));
             apply_area_visible(recite_to_monsters, delay.parm1);
             break;
         default:
@@ -701,7 +704,7 @@ void handle_delay( void )
             break;
         case DELAY_RECITE:
             mprf(MSGCH_MULTITURN_ACTION, "You continue %s.",
-                 _get_recite_speech("continue", delay.parm1 + delay.parm2));
+                 _get_recite_speech("other", you.num_turns + delay.duration+1));
             apply_area_visible(recite_to_monsters, delay.parm1);
             break;
         case DELAY_MULTIDROP:
@@ -808,7 +811,7 @@ static void finish_delay(const delay_queue_item &delay)
         
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You finish %s.",
-             _get_recite_speech("finish", delay.parm1 + delay.parm2));
+             _get_recite_speech("other", you.num_turns + delay.duration));
         break;
 
     case DELAY_PASSWALL:
