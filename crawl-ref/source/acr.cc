@@ -4167,7 +4167,7 @@ static void move_player(int move_x, int move_y)
         you.turn_is_over = 0;
         crawl_state.cancel_cmd_repeat();
     }
-    else if (beholder)
+    else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_NOCAP_THE, true).c_str());

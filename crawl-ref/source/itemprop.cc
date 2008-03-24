@@ -124,8 +124,6 @@ static armour_def Armour_prop[NUM_ARMOURS] =
 
     { ARM_HELMET,               "helmet",                 1,  0,   80, 
         false, EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM },
-    { ARM_HELM,                 "helm",                   1,  0,   80, 
-        false, EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM },
 
     { ARM_CAP,                  "cap",                    0,  0,   40, 
         true,  EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
@@ -817,9 +815,7 @@ bool is_helmet(const item_def& item)
 
 bool is_hard_helmet(const item_def &item)
 {
-    return (item.base_type == OBJ_ARMOUR
-            && (item.sub_type == ARM_HELMET ||
-                item.sub_type == ARM_HELM));
+    return (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET);
 }
 
 void set_helmet_random_desc( item_def &item )
@@ -2404,11 +2400,11 @@ size_type item_size( const item_def &item )
 
     case OBJ_ARMOUR:
         size = SIZE_MEDIUM;
+        
         switch (item.sub_type)
         {
         case ARM_GLOVES:
         case ARM_HELMET:
-        case ARM_HELM:
         case ARM_CAP:
         case ARM_WIZARD_HAT:
         case ARM_BOOTS:

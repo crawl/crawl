@@ -3178,9 +3178,6 @@ int tilep_equ_helm(const item_def &item)
             }
             return 0;
 
-        // Why are there both helms and helmets? -Enne
-        // It'd be like having catsup and ketchup in the same game.
-        case ARM_HELM:
         case ARM_HELMET:
             switch (helmet_desc)
             {

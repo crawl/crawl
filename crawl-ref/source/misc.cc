@@ -302,6 +302,10 @@ static bool allow_bleeding_on_square(int x, int y)
     if (grd[x][y] >= DNGN_LAVA && grd[x][y] < DNGN_FLOOR)
         return (false);
 
+    // no spattering into fountains
+    if (grd[x][y] == DNGN_BLUE_FOUNTAIN || grd[x][y] == DNGN_SPARKLING_FOUNTAIN)
+        return (false);
+
     // the good gods like to keep their altars pristine
     if (is_good_god(grid_altar_god(grd[x][y])))
         return (false);

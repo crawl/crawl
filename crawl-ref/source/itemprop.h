@@ -29,7 +29,6 @@ enum armour_type
     ARM_SHIELD,
     ARM_CLOAK,
     ARM_HELMET,
-    ARM_HELM,
     ARM_CAP,
     ARM_WIZARD_HAT,
     ARM_GLOVES,

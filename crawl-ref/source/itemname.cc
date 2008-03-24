@@ -1219,14 +1219,13 @@ std::string item_def::name_aux( description_level_type desc,
         {
             const short dhelm = get_helmet_desc( *this );
             
-            buff << 
-                (
-                    (dhelm == THELM_DESC_PLAIN)    ? "" :
-                    (dhelm == THELM_DESC_WINGED)   ? "winged " :
-                    (dhelm == THELM_DESC_HORNED)   ? "horned " :
+            buff <<
+                   ((dhelm == THELM_DESC_PLAIN)    ? "" :
+                    (dhelm == THELM_DESC_WINGED)   ? "winged "  :
+                    (dhelm == THELM_DESC_HORNED)   ? "horned "  :
                     (dhelm == THELM_DESC_CRESTED)  ? "crested " :
-                    (dhelm == THELM_DESC_PLUMED)   ? "plumed " :
-                    (dhelm == THELM_DESC_SPIKED)   ? "spiked " :
+                    (dhelm == THELM_DESC_PLUMED)   ? "plumed "  :
+                    (dhelm == THELM_DESC_SPIKED)   ? "spiked "  :
                     (dhelm == THELM_DESC_VISORED)  ? "visored " :
                     (dhelm == THELM_DESC_JEWELLED) ? "jewelled "
                                                    : "buggy ");

@@ -1214,12 +1214,18 @@ std::string randart_name( const item_def &item )
     if (!item_type_known(item))
     {
         std::string appear = getRandNameString(lookup, " appearance");
-        if (appear.empty()) // nothing found for lookup
+        if (appear.empty() // nothing found for lookup
+            // don't allow "jewelled jewelled helmet"
+            || item.base_type == OBJ_ARMOUR
+               && item.sub_type == ARM_HELMET
+               && appear == "jewelled"
+               && get_helmet_desc(item) == THELM_DESC_JEWELLED)
         {
             appear = getRandNameString("general appearance");
             if (appear.empty()) // still nothing found?
                 appear = "non-descript";
         }
+        
         result += appear;
         result += " ";
         result += item_base_name(item);

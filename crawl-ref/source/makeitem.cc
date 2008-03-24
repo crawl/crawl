@@ -262,7 +262,6 @@ static int newwave_armour_colour(const item_def &item)
         item_colour = MAGENTA;
         break;
       case ARM_HELMET:
-      case ARM_HELM:
         item_colour = DARKGREY;
         break;
       case ARM_BOOTS:
@@ -306,7 +305,6 @@ static int classic_armour_colour(const item_def &item)
     case ARM_WIZARD_HAT:
         item_colour = random_colour();
         break;
-    case ARM_HELM:
     case ARM_HELMET:
         item_colour = LIGHTCYAN;
         break;
@@ -1904,7 +1902,6 @@ static item_status_flag_type determine_armour_race(const item_def& item,
                 rc = ISFLAG_ELVEN;
             break;
 
-        case ARM_HELM:
         case ARM_HELMET:
             if (one_chance_in(8))
                 rc = ISFLAG_ORCISH;
@@ -1981,7 +1978,6 @@ static special_armour_type determine_armour_ego(const item_def& item,
         break;
 
     case ARM_HELMET:
-    case ARM_HELM:
     case ARM_CAP:
         rc = coinflip() ? SPARM_SEE_INVISIBLE : SPARM_INTELLIGENCE;
         break;
@@ -4113,14 +4109,31 @@ armour_type get_random_armour_type(int item_level)
     // secondary armours:
     if (one_chance_in(5))
     {
-        armtype = ARM_SHIELD + random2(5);
-        if ( armtype > ARM_HELMET )
-            armtype += 3;
-
-        if ( armtype == ARM_HELMET && one_chance_in(3) )
-            armtype = ARM_HELMET + random2(4);
-
-        if (armtype == ARM_SHIELD)                 // 33.3%
+        // same chance each
+        switch (random2(5))
+        {
+        case 0:
+            armtype = ARM_SHIELD;
+            break;
+        case 1:
+            armtype = ARM_CLOAK;
+            break;
+        case 2:
+            armtype = ARM_HELMET;
+            break;
+        case 3:
+            armtype = ARM_GLOVES;
+            break;
+        case 4:
+            armtype = ARM_BOOTS;
+            break;
+        }
+        
+        if (armtype == ARM_HELMET && one_chance_in(3))
+        {
+            armtype = ARM_HELMET + random2(3);
+        }
+        else if (armtype == ARM_SHIELD)            // 33.3%
         {
             if (coinflip())
                 armtype = ARM_BUCKLER;             // 50.0%
