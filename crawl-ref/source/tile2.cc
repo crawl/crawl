@@ -762,9 +762,8 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
     }
     else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_NEUTRAL)
     {
-        // FIX ME: add real neutral marker!
-        tcache_overlay(tc_img, ix, TILE_NEW_STAIR, TREGION_0_NORMAL, &c, NULL);
-        status_shift += 10;
+        tcache_overlay(tc_img, ix, TILE_NEUTRAL, TREGION_0_NORMAL, &c, NULL);
+        status_shift += 8;
     }
     else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_STAB)
     {

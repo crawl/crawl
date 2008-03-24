@@ -55,6 +55,7 @@ cursor_red CURSOR2
 cursor_green CURSOR3
 %rim 1
 heart HEART
+neutral NEUTRAL
 poison POISON
 %rim 0
 may_stab_brand MAY_STAB_BRAND
