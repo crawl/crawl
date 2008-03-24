@@ -435,6 +435,7 @@ enum command_type
     CMD_DROP,
     CMD_BUTCHER,
     CMD_INSPECT_FLOOR,
+    CMD_FULL_VIEW,
     CMD_EXAMINE_OBJECT,
     CMD_EVOKE,
     CMD_WIELD_WEAPON,

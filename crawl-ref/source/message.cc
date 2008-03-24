@@ -693,7 +693,8 @@ void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
 //
 // If wrap_col > 0, text is wrapped at that column.
 // 
-void formatted_message_history(const std::string &st_nocolor, msg_channel_type channel,
+void formatted_message_history(const std::string &st_nocolor,
+                               msg_channel_type channel,
                                int param, int wrap_col)
 {
     if (suppress_messages)
@@ -741,11 +742,10 @@ void formatted_message_history(const std::string &st_nocolor, msg_channel_type c
         // message playback explicitly only handles colors for
         // the tutorial channel... guess we'll store bare strings
         // for the rest, then.
-        if (channel == MSGCH_TUTORIAL) {
+        if (channel == MSGCH_TUTORIAL)
             mpr_store_messages(fs.to_colour_string(), channel, param);
-        } else {
+        else
             mpr_store_messages(unformatted, channel, param);
-        }
     }
 }
 
@@ -827,13 +827,17 @@ static bool is_channel_dumpworthy(msg_channel_type channel)
 
 std::string get_last_messages(int mcount)
 {
-    if (mcount <= 0) return std::string();
-    if (mcount > NUM_STORED_MESSAGES) mcount = NUM_STORED_MESSAGES;
+    if (mcount <= 0)
+        return std::string();
+        
+    if (mcount > NUM_STORED_MESSAGES)
+        mcount = NUM_STORED_MESSAGES;
 
-    bool full_buffer = Store_Message[ NUM_STORED_MESSAGES - 1 ].text.length() == 0;
+    bool full_buffer
+       = (Store_Message[ NUM_STORED_MESSAGES - 1 ].text.length() == 0);
     int initial = Next_Message - mcount;
     if (initial < 0 || initial > NUM_STORED_MESSAGES)
-        initial = full_buffer? initial + NUM_STORED_MESSAGES : 0;
+        initial = full_buffer ? initial + NUM_STORED_MESSAGES : 0;
 
     std::string text;
     int count = 0;
@@ -853,25 +857,26 @@ std::string get_last_messages(int mcount)
     }
 
     // An extra line of clearance.
-    if (count) text += EOL;
+    if (count)
+        text += EOL;
 
     return text;
 }
 
 void replay_messages(void)
 {
-    int            win_start_line = 0;
-    int            keyin;
+    int        win_start_line = 0;
+    int        keyin;
 
-    bool           full_buffer = true;
-    int            num_msgs = NUM_STORED_MESSAGES;
-    int            first_message = Next_Message;
+    bool       full_buffer = true;
+    int        num_msgs = NUM_STORED_MESSAGES;
+    int        first_message = Next_Message;
 
-    const int      num_lines = get_number_of_lines();
+    const int  num_lines = get_number_of_lines();
 
     if (Store_Message[ NUM_STORED_MESSAGES - 1 ].text.length() == 0)
     {
-        full_buffer = false;
+        full_buffer   = false;
         first_message = 0;
         num_msgs = Next_Message;
     }
@@ -910,8 +915,9 @@ void replay_messages(void)
             if (line == first_message && i != 0)
                 break;
 
-            int colour = channel_to_colour( Store_Message[ line ].channel,
-                                            Store_Message[ line ].param );
+            int colour = prepare_message( Store_Message[ line ].text,
+                                          Store_Message[ line ].channel,
+                                          Store_Message[ line ].param );
             if (colour == MSGCOL_MUTED)
                 continue;
 

@@ -953,10 +953,9 @@ static bool _activate_talent(const talent& tal)
              you.hunger, abil.food_cost * 2, expected_hunger);
 #endif
         // safety margin for natural hunger, mutations etc.
-        if (expected_hunger <= 150
-            && !yesno("Invoking this ability might make you starve to death. "
-                      "Continue anyway?", false, 'n'))
+        if (expected_hunger <= 150)
         {
+            mpr("You're too hungry.");
             crawl_state.zero_turns_taken();
             return (false);
         }

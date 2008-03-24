@@ -1674,6 +1674,138 @@ static void experience_check()
 #endif
 }
 
+static bool _mons_hostile( const monsters *mon)
+{
+    return (!mons_friendly(mon) && !mons_neutral(mon));
+}
+
+static const char* _get_monster_name(const monsters *mon, bool list_a = false)
+{
+    std::string desc = "";
+    bool adj = false;
+    if (mons_friendly(mon))
+    {
+        desc += "friendly ";
+        adj = true;
+    }
+    else if (mons_neutral(mon))
+    {
+        desc += "neutral ";
+        adj = true;
+    }
+
+    if (adj && list_a)
+    {
+        desc = "a " + desc;
+        list_a = false;
+    }
+    desc += mons_type_name(mon->type, (list_a ? DESC_NOCAP_A : DESC_PLAIN));
+
+    return desc.c_str();
+}
+
+// Returns true if the first monster is more aggressive (in terms of
+// hostile/neutral/friendly) than the second or, if both monsters share the
+// same attitude, if the first monster has a lower type.
+// If monster type and attitude are the same, return false.
+static bool _compare_monsters_attitude( const monsters *m1, const monsters *m2 )
+{
+    if (_mons_hostile(m1) && !_mons_hostile(m2))
+        return (true);
+        
+    if (mons_neutral(m1))
+    {
+        if (mons_friendly(m2))
+            return (true);
+        if (_mons_hostile(m2))
+            return (false);
+    }
+
+    if (mons_friendly(m1) && !mons_friendly(m2))
+        return (false);
+
+    // If we get here then monsters have the same attitude.
+    // FIX ME: replace with difficulty comparison
+    return (m1->type < m2->type);
+}
+
+static void _list_monsters()
+{
+    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
+    int yend = you.y_pos + 9, xend = you.x_pos + 9;
+    if ( xstart < 0 ) xstart = 0;
+    if ( ystart < 0 ) ystart = 0;
+    if ( xend >= GXM ) xend = GXM;
+    if ( yend >= GYM ) yend = GYM;
+    
+    std::vector<const monsters*> mons;
+    // monster check
+    for ( int y = ystart; y < yend; ++y )
+        for ( int x = xstart; x < xend; ++x )
+            if ( see_grid(x,y) )
+            {
+                const unsigned short targ_monst = mgrd[x][y];
+                if ( targ_monst != NON_MONSTER )
+                {
+                    const monsters *mon = &menv[targ_monst];
+                    if ( player_monster_visible(mon)
+                         && !mons_is_submerged(mon)
+                         && !mons_is_mimic(mon->type))
+                    {
+                        mons.push_back(mon);
+                    }
+                }
+            }
+
+    if (mons.empty())
+    {
+        mpr("There are no monsters in sight!");
+        return;
+    }
+    else if (mons.size() == 1)
+    {
+        mprf("You can see %s.",
+             mons_type_name(mons[0]->type, DESC_NOCAP_A).c_str());
+        return;
+    }
+    
+    std::sort( mons.begin(), mons.end(), _compare_monsters_attitude );
+    std::vector<std::string> describe;
+    
+    int count = 0;
+    int size = mons.size();
+    for (int i = 0; i < size; ++i)
+    {
+        if (i > 0 && _compare_monsters_attitude(mons[i-1], mons[i]))
+        {
+            if (count == 1)
+                describe.push_back(_get_monster_name(mons[i-1], true));
+            else
+            {
+                describe.push_back(number_in_words(count) + " "
+                                   + pluralise(_get_monster_name(mons[i-1])));
+            }
+            count = 0;
+        }
+        count++;
+    }
+    // handle last monster
+    if (_compare_monsters_attitude(mons[size-2], mons[size-1]))
+        describe.push_back(_get_monster_name(mons[size-1], true));
+    else
+    {
+        describe.push_back(number_in_words(count) + " "
+                           + pluralise(_get_monster_name(mons[size-1])));
+    }
+
+    std::string msg  = "You can see ";
+                msg += comma_separated_line(describe.begin(), describe.end(),
+                                            ", and ", ", ");
+                msg += ".";
+
+    mpr(msg.c_str());
+}
+
 /* note that in some actions, you don't want to clear afterwards.
    e.g. list_jewellery, etc. */
 
@@ -1905,10 +2037,13 @@ void process_command( command_type cmd )
         break;
 
     case CMD_INSPECT_FLOOR:
-        // item_check(';');
         request_autopickup();
         break;
 
+    case CMD_FULL_VIEW:
+        _list_monsters();
+        break;
+        
     case CMD_WIELD_WEAPON:
         wield_weapon(false);
         break;
@@ -3253,8 +3388,9 @@ command_type keycode_to_command( keycode_type key )
 
     case 'A': return CMD_DISPLAY_MUTATIONS;
     case 'C': return CMD_CLOSE_DOOR;
+    case 'D': return CMD_NO_CMD;
     case 'E': return CMD_EXPERIENCE_CHECK;
-    case 'F': return CMD_NO_CMD;
+    case 'F': return CMD_FULL_VIEW;
     case 'G': return CMD_NO_CMD;
     case 'I': return CMD_DISPLAY_SPELLS;
     case 'M': return CMD_MEMORISE_SPELL;
@@ -3313,7 +3449,8 @@ command_type keycode_to_command( keycode_type key )
     case CONTROL('E'): return CMD_FORGET_STASH;
     case CONTROL('F'): return CMD_SEARCH_STASHES;
     case CONTROL('G'): return CMD_INTERLEVEL_TRAVEL;
-    case CONTROL('M'): return CMD_NO_CMD;
+    case CONTROL('I'): return CMD_NO_CMD; // Backspace on most systems
+    case CONTROL('M'): return CMD_NO_CMD; // Enter on most systems
     case CONTROL('O'): return CMD_DISPLAY_OVERMAP;
     case CONTROL('P'): return CMD_REPLAY_MESSAGES;
 #ifdef USE_TILE
@@ -3323,6 +3460,7 @@ command_type keycode_to_command( keycode_type key )
 #endif
     case CONTROL('R'): return CMD_REDRAW_SCREEN;
     case CONTROL('S'): return CMD_MARK_STASH;
+    case CONTROL('T'): return CMD_NO_CMD;
     case CONTROL('V'): return CMD_TOGGLE_AUTOPRAYER;
     case CONTROL('W'): return CMD_FIX_WAYPOINT;
     case CONTROL('X'): return CMD_SAVE_GAME_NOW;
