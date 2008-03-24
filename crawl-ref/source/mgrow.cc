@@ -52,7 +52,7 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_DEEP_ELF_SOLDIER, MONS_DEEP_ELF_FIGHTER),
     monster_level_up(MONS_DEEP_ELF_FIGHTER, MONS_DEEP_ELF_KNIGHT),
 
-    // deep elf magi can become either summoners or conjurers.
+    // Deep elf magi can become either summoners or conjurers.
     monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_SUMMONER, 500),
     monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_CONJURER),
 
