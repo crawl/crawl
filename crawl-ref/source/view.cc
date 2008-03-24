@@ -4777,6 +4777,8 @@ crawl_view_geometry::crawl_view_geometry()
     : termsz(80, 24), viewp(1, 1), viewsz(33, 17),
       hudp(40, 1), hudsz(41, 17),
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
+      mlistp(hudp.x, hudp.y + hudsz.y),
+      mlistsz(hudsz.x, msgp.y - mlistp.y),
       vbuf(), vgrdc(), viewhalfsz(), glos1(), glos2(),
       vlos1(), vlos2(), mousep(), last_player_pos()
 {
@@ -4897,6 +4899,10 @@ void crawl_view_geometry::init_geometry()
         const int hud_increase_max = hud_max_gutter - hud_min_gutter;
         hudp.x += hudmarg > hud_increase_max? hud_increase_max : hudmarg;
     }
+
+    // Monster list takes up all space between the hud and the message pane
+    mlistp = coord_def(hudp.x, hudp.y + hudsz.y);
+    mlistsz = coord_def(termsz.x - mlistp.x, msgp.y - mlistp.y);
 
 #ifdef USE_TILE
     // libgui may redefine these based on its own settings

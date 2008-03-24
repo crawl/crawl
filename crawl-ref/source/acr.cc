@@ -1758,16 +1758,7 @@ void get_visible_monsters(std::vector<std::string>& describe)
             }
 
     if (mons.empty())
-    {
-        mpr("There are no monsters in sight!");
         return;
-    }
-    else if (mons.size() == 1)
-    {
-        mprf("You can see %s.",
-             mons_type_name(mons[0]->type, DESC_NOCAP_A).c_str());
-        return;
-    }
     
     std::sort( mons.begin(), mons.end(), _compare_monsters_attitude );
     
@@ -1789,8 +1780,11 @@ void get_visible_monsters(std::vector<std::string>& describe)
         count++;
     }
     // handle last monster
-    if (_compare_monsters_attitude(mons[size-2], mons[size-1]))
+    if (mons.size() == 1 ||
+        _compare_monsters_attitude(mons[size-2], mons[size-1]))
+    {
         describe.push_back(_get_monster_name(mons[size-1], true));
+    }
     else
     {
         describe.push_back(number_in_words(count) + " "
@@ -1802,11 +1796,25 @@ static void _mpr_monsters()
 {
     std::vector<std::string> describe;
     get_visible_monsters(describe);
-    std::string msg  = "You can see ";
-                msg += comma_separated_line(describe.begin(), describe.end(),
-                                            ", and ", ", ");
-                msg += ".";
-    mpr(msg.c_str());
+
+    if (describe.empty())
+    {
+        mpr("There are no monsters in sight!");
+    }
+    else if (describe.size() == 1)
+    {
+        mprf("You can see %s.", describe[0].c_str());
+    }
+    else
+    {
+        std::string msg  = "You can see ";
+                    msg += comma_separated_line(describe.begin(),
+                                                describe.end(),
+                                                ", and ", ", ");
+                    msg += ".";
+        mpr(msg.c_str());
+    }
+
 }
 
 /* note that in some actions, you don't want to clear afterwards.

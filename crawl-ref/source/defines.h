@@ -318,6 +318,7 @@ enum GotoRegion
     GOTO_MSG,  // cprintf > message
     GOTO_STAT, // cprintf > character status
     GOTO_DNGN, // cprintf > dungeon screen
+    GOTO_MLIST,// cprintf > monster list
     GOTO_LAST  // cprintf > last active region or CRT, if none
 };
 

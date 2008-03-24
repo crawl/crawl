@@ -711,31 +711,31 @@ static void _print_stats_line3()
     textcolor( LIGHTGREY );
 }
 
-static void _print_stats_line4_monsters(int start_row)
+static void _print_stats_line4_monsters()
 {
     // TODO:
     // - print monster glyph, in proper color
     // - get health and friendliness in there (using color and/or text)
-    // - don't squeeze down into the message area
     extern void get_visible_monsters(std::vector<std::string>& );
     std::vector<std::string> describe;
     get_visible_monsters(describe);
 
-    const int max_print = get_number_of_lines()-start_row;
+    const int max_print = crawl_view.mlistsz.y;
     const int num_print = MIN(max_print, int(describe.size()));
+
     // Print the visible monsters
     for (int i=0; i<num_print; i++)
     {
-        cgotoxy(1, start_row+i, GOTO_STAT);
+        cgotoxy(1, i+1, GOTO_MLIST);
         clear_to_end_of_line();
-        cgotoxy(1, start_row+i, GOTO_STAT);
+        cgotoxy(1, i+1, GOTO_MLIST);
         cprintf(describe[i].c_str());
     }
 
     // Clear out the rest
     for (int i=num_print; i<max_print; i++)
     {
-        cgotoxy(1, start_row+i, GOTO_STAT);
+        cgotoxy(1, i+1, GOTO_MLIST);
         clear_to_end_of_line();
     }
 }
@@ -807,8 +807,11 @@ void print_stats(void)
     if (you.redraw_status_flags & REDRAW_LINE_3_MASK)
         _print_stats_line3();
 
+#ifndef USE_TILE
+    // FIXME: implement this for tiles
     if (true /* xxx: expensive? */)
-        _print_stats_line4_monsters(18);
+        _print_stats_line4_monsters();
+#endif
 
     you.redraw_status_flags = 0;
 

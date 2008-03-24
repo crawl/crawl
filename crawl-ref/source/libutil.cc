@@ -576,12 +576,23 @@ int snprintf( char *str, size_t size, const char *format, ... )
 #ifndef USE_TILE
 void cgotoxy(int x, int y, int region)
 {
+    ASSERT(x >= 1);
+    ASSERT(y >= 1);
     switch(region)
     {
+    case GOTO_MLIST:
+        ASSERT(x <= crawl_view.mlistsz.x);
+        ASSERT(y <= crawl_view.mlistsz.y);
+        gotoxy_sys(x + crawl_view.mlistp.x - 1, y + crawl_view.mlistp.y - 1);
+        break;
     case GOTO_STAT:
+        ASSERT(x <= crawl_view.hudsz.x);
+        ASSERT(y <= crawl_view.hudsz.y);
         gotoxy_sys(x + crawl_view.hudp.x - 1, y + crawl_view.hudp.y - 1);
         break;
     case GOTO_MSG:
+        ASSERT(x <= crawl_view.msgsz.x);
+        ASSERT(y <= crawl_view.msgsz.y);
         gotoxy_sys(x + crawl_view.msgp.x - 1, y + crawl_view.msgp.y - 1);
         break;
     case GOTO_CRT:

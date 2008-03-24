@@ -47,6 +47,8 @@ public:
     coord_def hudsz;               // Size of the status area.
     coord_def msgp;                // Left-top pos of the message pane.
     coord_def msgsz;               // Size of the message pane.
+    coord_def mlistp;              // Left-top pos of the monster list.
+    coord_def mlistsz;             // Size of the monster list.
 
     crawl_view_buffer vbuf;        // Buffer for drawing the main game map.
 
