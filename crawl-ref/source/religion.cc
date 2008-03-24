@@ -464,7 +464,8 @@ void inc_penance(god_type god, int val)
         // nor does TSO's halo or divine shield
         else if (god == GOD_SHINING_ONE)
         {
-            mpr("Your divine halo starts to fade.");
+            if (you.piety >= piety_breakpoint(0))
+                mpr("Your divine halo starts to fade.");
 
             if (you.duration[DUR_DIVINE_SHIELD])
             {
@@ -3643,7 +3644,7 @@ void excommunication(god_type new_god)
 {
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
-    
+
     god_acting gdact(old_god, true);
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
@@ -3758,7 +3759,7 @@ void excommunication(god_type new_god)
             remove_sanctuary();
         inc_penance( old_god, 25 );
         break;
-        
+
     case GOD_ELYVILON:
         inc_penance( old_god, 30 );
         break;
