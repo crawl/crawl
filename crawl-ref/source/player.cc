@@ -321,8 +321,10 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
             if (!stepped)
                 trap_known = false;
 
+            // mechanical traps and shafts cannot be set off if the
+	    // player is flying or levitating
             if (!player_is_airborne()
-                || trap_category( env.trap[id].type ) != DNGN_TRAP_MECHANICAL)
+                || trap_category( env.trap[id].type ) == DNGN_TRAP_MAGICAL)
             {
                 handle_traps(env.trap[id].type, id, trap_known);
             }

@@ -356,16 +356,6 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
     
     if (x == you.x_pos && y == you.y_pos)
         c = Options.tile_player_col; // player position always highlighted
-    else if (mgrd[x][y] != NON_MONSTER && upd_tile)
-    {
-        if (mons_friendly(&menv[mgrd[x][y]]))
-            c = Options.tile_friendly_col; // colour friendly monsters
-        else if (mons_neutral(&menv[mgrd[x][y]])
-                 && Options.tile_neutral_col != Options.tile_monster_col)
-        {
-            c = Options.tile_neutral_col;  // colour neutral monsters
-        }
-    }
     else
     {
         const coord_def gc(x,y);
@@ -386,7 +376,18 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
             c = _gmap_to_colour(gmap_col[what & 0xff]);
             break;
         }
-
+        if (c == Options.tile_monster_col && mgrd[x][y] != NON_MONSTER
+            && upd_tile)
+        {
+            if (mons_friendly(&menv[mgrd[x][y]]))
+                c = Options.tile_friendly_col; // colour friendly monsters
+            else if (mons_neutral(&menv[mgrd[x][y]])
+                     && Options.tile_neutral_col != Options.tile_monster_col)
+            {
+                c = Options.tile_neutral_col;  // colour neutral monsters
+            }
+        }
+        
         if (c == Options.tile_floor_col && is_excluded( coord_def(x,y) ))
             c = Options.tile_excluded_col;
     }
