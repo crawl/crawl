@@ -772,7 +772,7 @@ static bool blessing_priesthood(monsters* mon)
         // Turn an ordinary monster into a priestly monster, using a
         // function normally used when going up an experience level.
         // This is a hack, but there seems to be no better way for now.
-        mon->change_type(priest_type, true);
+        mon->upgrade_type(priest_type, true, true);
 
         return true;
     }

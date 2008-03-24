@@ -1202,7 +1202,7 @@ public:
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }
-    
+
     int shield_bonus() const;
     int shield_block_penalty() const;
     void shield_block_succeeded();
@@ -1213,7 +1213,7 @@ public:
     // Hacks, with a capital H.
     void fix_speed();
     void check_speed();
-    void change_type(monster_type after, bool adjust_hp);
+    void upgrade_type(monster_type after, bool adjust_hd, bool adjust_hp);
 
     std::string describe_enchantments() const;
 

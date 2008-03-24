@@ -98,7 +98,8 @@ static const monster_level_up *monster_level_up_target(
     return (NULL);
 }
 
-void monsters::change_type(monster_type after, bool adjust_hp)
+void monsters::upgrade_type(monster_type after, bool adjust_hd,
+                            bool adjust_hp)
 {
     const monsterentry *orig = get_monster_data(type);
     // Ta-da!
@@ -118,6 +119,13 @@ void monsters::change_type(monster_type after, bool adjust_hp)
     ac += m->AC - orig->AC;
     ev += m->ev - orig->ev;
 
+    if (adjust_hd)
+    {
+        const int minhd = dummy.hit_dice;
+        if (hit_dice < minhd)
+            hit_dice      += minhd - hit_dice;
+    }
+
     if (adjust_hp)
     {
         const int minhp = dummy.max_hit_points;
@@ -135,7 +143,7 @@ bool monsters::level_up_change()
     if (const monster_level_up *lup =
         monster_level_up_target(static_cast<monster_type>(type), hit_dice))
     {
-        change_type(lup->after, lup->adjust_hp);
+        upgrade_type(lup->after, false, lup->adjust_hp);
         return (true);
     }
     return (false);

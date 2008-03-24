@@ -19,7 +19,7 @@ struct monster_level_up
     monster_type before, after;
     int chance;     // Chance in 1000 of the monster growing up,
                     // defaults to 1000.
-    
+
     bool adjust_hp; // If hp post growing up is less than minimum, adjust it.
 
     monster_level_up(monster_type _before, monster_type _after,
