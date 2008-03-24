@@ -1791,6 +1791,35 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
     return is_safe;
 }
 
+// Return all monsters in LOS that the player is able to see.
+void get_playervisible_monsters(std::vector<monsters*>& mons)
+{
+    const int ystart = MAX(0,   you.y_pos - LOS_RADIUS);
+    const int yend   = MIN(GYM, you.y_pos + LOS_RADIUS);
+    const int xstart = MAX(0,   you.x_pos - LOS_RADIUS);
+    const int xend   = MIN(GXM, you.x_pos + LOS_RADIUS);
+
+    // monster check
+    for ( int y = ystart; y < yend; ++y )
+    for ( int x = xstart; x < xend; ++x )
+    {
+        const unsigned short targ_monst = env.mgrid[x][y];
+        if ( targ_monst != NON_MONSTER )
+        {
+            if ( see_grid(x,y) )
+            {
+                monsters *mon = &env.mons[targ_monst];
+                if ( player_monster_visible(mon) &&
+                     !mons_is_submerged(mon) &&
+                     !mons_is_mimic(mon->type) )
+                {
+                    mons.push_back(mon);
+                }
+            }
+        }
+    }
+}
+
 bool i_feel_safe(bool announce, bool want_move)
 {
     int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
@@ -1820,7 +1849,9 @@ bool i_feel_safe(bool announce, bool want_move)
         return (true);
 
     std::vector<const monsters *> mons;
+
     // monster check
+    // XXX: refactor this to make use of get_playervisible_monsters()
     for ( int y = ystart; y < yend; ++y )
     {
         for ( int x = xstart; x < xend; ++x )

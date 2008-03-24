@@ -34,6 +34,7 @@
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-util.h"
 #include "newgame.h"
 #include "ouch.h"
 #include "player.h"
@@ -45,6 +46,7 @@
  #include "tiles.h"
  #include "travel.h"
 #endif
+#include "view.h"
 
 static int bad_ench_colour( int lvl, int orange, int red )
 {
@@ -711,32 +713,120 @@ static void _print_stats_line3()
     textcolor( LIGHTGREY );
 }
 
+// Return true if m1 < m2
+static bool
+_by_attitude_and_experience(const monsters* m1, const monsters* m2)
+{
+    // XXX: this doesn't take into account ENCH_NEUTRAL, but that's probably
+    // a bug for mons_attitude, not this.
+    // XXX: also, mons_attitude_type should be sorted hostile/neutral/friendly;
+    // will break saves a little bit though.
+    const mon_attitude_type a1 = mons_attitude(m1);
+    const mon_attitude_type a2 = mons_attitude(m2);
+    if (a1 < a2) return true;
+    else if (a1 > a2) return false;
+
+    // sort by difficulty... but want to avoid information leaks too.  Hm.
+    const int xp1 = mons_type_hit_dice(m1->type);
+    const int xp2 = mons_type_hit_dice(m2->type);
+    if (xp1 > xp2) return true;
+    else if (xp1 < xp2) return false;
+
+    // This last so monsters of the same type clump together
+    if (m1->type < m2->type) return true;
+    else if (m1->type > m2->type) return false;
+
+    return false;
+}
+                                        
+static void
+_print_next_monster_desc(const std::vector<monsters*>& mons,
+                         int& start)
+{
+    // skip forward to the end of the range of identical monsters
+    monsters* m1 = mons[start];
+    unsigned int cur = start;
+    while (true)
+    {
+        if (cur + 1 == mons.size()) break;
+        // If m1 < m2, they can't be "equal"
+        // (and since array is sorted, they are otherwise "equal")
+        if (_by_attitude_and_experience(m1, mons[cur])) break;
+        cur += 1;
+    }
+
+    // start and cur are "equal" monsters.  It shouldn't matter
+    // which one we choose in that range.  I will choose start.
+    {
+        unsigned int glyph;
+        unsigned short glyph_color;
+        get_mons_glyph(m1, &glyph, &glyph_color);
+        textcolor(glyph_color);
+        cprintf( stringize_glyph(glyph).c_str() );
+
+        const int count = (cur - start + 1);
+
+        textcolor(LIGHTGREY);
+        cprintf(" - ");
+
+        if (count == 1)
+        {
+            std::string name = mons_type_name(m1->type, DESC_CAP_A);
+            cprintf("%s", name.c_str());
+        }
+        else
+        {
+            std::string name = pluralise(mons_type_name(m1->type, DESC_PLAIN));
+            cprintf("%d %s", count, name.c_str());
+        }
+
+        // Friendliness -- maybe use color instead?
+        {
+            const mon_attitude_type att = mons_attitude(m1);
+            switch (att) {
+            case ATT_FRIENDLY: cprintf(" (friendly)"); break;
+            case ATT_NEUTRAL: cprintf(" (neutral)"); break;
+            case ATT_HOSTILE: /*cprintf(" (hostile)")*/; break;
+            }
+        }
+    }
+
+    // Increment start to the next un-described monster
+    start = cur + 1;
+    textcolor(LIGHTGREY);
+}
+
 static void _print_stats_line4_monsters()
 {
     // TODO:
-    // - print monster glyph, in proper color
-    // - get health and friendliness in there (using color and/or text)
-    extern void get_visible_monsters(std::vector<std::string>& );
-    std::vector<std::string> describe;
-    get_visible_monsters(describe);
+    // - display rough health (color, or text?)
+    // - fix up issues with the sorting (see _by_attitude_and_experience)
 
+    const int start_row = 1;
     const int max_print = crawl_view.mlistsz.y;
-    const int num_print = MIN(max_print, int(describe.size()));
 
-    // Print the visible monsters
-    for (int i=0; i<num_print; i++)
-    {
-        cgotoxy(1, i+1, GOTO_MLIST);
-        clear_to_end_of_line();
-        cgotoxy(1, i+1, GOTO_MLIST);
-        cprintf(describe[i].c_str());
-    }
+    // Sadly, the defaults don't leave _any_ room for monsters :(
+    if (max_print <= 0)
+        return;
 
-    // Clear out the rest
-    for (int i=num_print; i<max_print; i++)
+    extern void get_playervisible_monsters(std::vector<monsters*>& );
+    std::vector<monsters*> mons;
+    get_playervisible_monsters(mons);
+    std::sort(mons.begin(), mons.end(), _by_attitude_and_experience);
+
+    // Print the monsters!
+    for (int i_print = 0, i_mons=0;
+         i_print < max_print;
+         ++ i_print)
     {
-        cgotoxy(1, i+1, GOTO_MLIST);
+        // i_mons is incremented by _print_next_monster_desc
+        cgotoxy(1, start_row+i_print, GOTO_MLIST);
         clear_to_end_of_line();
+        if (i_mons < (int)mons.size())
+        {
+            cgotoxy(1, start_row+i_print, GOTO_MLIST);
+            _print_next_monster_desc(mons, i_mons);
+        }
     }
 }
 
