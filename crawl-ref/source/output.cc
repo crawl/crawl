@@ -466,6 +466,8 @@ static void _print_stats_qv()
 // - green, light green         for good conditions
 // - blue, light blue           for good enchantments
 // - magenta, light magenta     for "better" enchantments (deflect, fly)
+//
+// Prints burden, hunger
 static void _print_stats_line1()
 {
     cgotoxy(1, 15, GOTO_STAT);
@@ -523,6 +525,8 @@ static void _print_stats_line1()
 }
 
 // For colors, see comment at _print_stats_line1
+// Prints pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
+//   breath, bargain, sage
 static void _print_stats_line2()
 {
     cgotoxy(1, 16, GOTO_STAT);
@@ -627,6 +631,8 @@ static void _print_stats_line2()
 }
 
 // For colors, see comment at _print_stats_line1
+// Prints confused, beheld, fire, poison, disease, rot,
+//   held, glow, swift, fast, slow
 static void _print_stats_line3()
 {
     cgotoxy(1, 17, GOTO_STAT);
@@ -796,7 +802,7 @@ _print_next_monster_desc(const std::vector<monsters*>& mons,
     textcolor(LIGHTGREY);
 }
 
-static void _print_stats_line4_monsters()
+static void _print_stats_monster_pane()
 {
     // TODO:
     // - display rough health (color, or text?)
@@ -899,8 +905,10 @@ void print_stats(void)
 
 #ifndef USE_TILE
     // FIXME: implement this for tiles
-    if (true /* xxx: expensive? */)
-        _print_stats_line4_monsters();
+    // XXX: better check?  I think this skips the update at the very end
+    // of a delay
+    if (you.delay_queue.empty())
+        _print_stats_monster_pane();
 #endif
 
     you.redraw_status_flags = 0;
