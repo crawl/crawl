@@ -1924,7 +1924,8 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
           "Servant Kill Natural Evil", "Servant Kill Holy",
           "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
           "Cards", "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
-          "Eat Souled Beings", "Create Life", "Deliberate Mutation"
+          "Eat Souled Being", "Deliberate Mutation", "Cause Glowing",
+          "Create Life"
         };
 
         COMPILE_CHECK(ARRAYSIZE(conducts) == NUM_CONDUCTS, c1);
