@@ -315,6 +315,8 @@ static fire_type str_to_fire_types( const std::string &str )
         return (FIRE_NET);
     else if (str == "return" || str == "returning")
         return (FIRE_RETURNING);
+    else if (str == "inscribed")
+        return (FIRE_INSCRIBED);
 
     return (FIRE_NONE);
 }
@@ -767,7 +769,7 @@ void game_options::reset_options()
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
                    "javelin / dart / stone / rock /"
-                   " spear / net / handaxe / dagger",
+                   " spear / net / handaxe / dagger, inscribed",
                    false);
 
     item_stack_summary_minimum = 5;

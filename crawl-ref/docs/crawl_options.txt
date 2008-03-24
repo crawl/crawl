@@ -1139,18 +1139,25 @@ fire_items_start = a
         Sets the first inventory item to consider when selecting
         missiles to fire. The default is a.
 
-fire_order  = launcher, return, 
+fire_order  = inscribed, launcher, return
 fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger
+fire_order += inscribed
         Controls the order of items autoselected for firing. Items 
         should be separated by commas and items that appear first get 
         higher priority. You can use multiple fire_order lines - all 
-        lines but the first must use fire_order +=
+        lines but the first must use "fire_order +=".
 
         Items in any position may be slash-separated to indicate that 
         these are of equal priority. If this is the case, the first item 
         in your inventory that fits one of these will be picked for 
         firing.
         
+        'inscribed' refers to any item with the "+f" inscription.  See
+        the "Inscriptions" section of the crawl manual for more information
+        about inscriptions.
+
+        the "Inscriptions"
+
         'launcher' refers to firing the appropriate missile for the 
         wielded weapon (ie crossbow, bow, sling, blowgun). You'll almost 
         certainly want it first, as it'll be ignored when you're not 
@@ -1219,33 +1226,8 @@ if the messages are too verbose.
 4-m     Inscriptions.
 ---------------------
 
-In Crawl, items can be manually inscribed with the '{' command. This 
-adds a note in curly braces to the item inscription.  Inscriptions
-that contain one or more of the following have functional effects:
-
- @w9    -- Typing 'w9' will wield this item.  Any single digit will
-           work, and the item may contain more than one shortcut.
-           This also works with commands besides 'w'.
- @*9    -- Any action command followed by '9' will use this item.
- !w     -- Wielding this item causes a prompt for confirmation.
-           This also works with commands besides 'w'.
- !*     -- Using this item with any command causes a prompt.
- !p     -- Nemelex Xobeh worshippers will be prompted before
-           sacrificing a stack of items containing an item with this
-           inscription; if the answer is "no", the whole stack will be
-           skipped, and none of the items sacrificed.
- =p     -- Nemelex Xobeh worshippers will be prompted before
-           sacrificing this particular item; if the answer is "no",
-           then Crawl will go on to sacrifice further items in the 
-           stack.
- =g     -- Item will be picked up automatically if autopickup is on.
- =k     -- Item will be ignored in all listings on the ground.
-           It can still be picked up if it's the only item on the 
-           ground.
- =f     -- Item will be ignored by the firing prompt and quiver.
-           It can still be fired/thrown using 't'.
- =s     -- If stash tracking is explicit, then dropping this item will
-           cause a stash to automatically be marked.
+See the "Inscriptions" section of the crawl manual for more information
+about inscriptions.
 
 autoinscribe = <regex>:<inscription>
         Any item whose description contains the regex will be 

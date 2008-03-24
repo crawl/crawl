@@ -39,7 +39,8 @@ enum fire_type
     FIRE_CLUB      = 0x0080,
     FIRE_ROCK      = 0x0100,
     FIRE_NET       = 0x0200,
-    FIRE_RETURNING = 0x0400
+    FIRE_RETURNING = 0x0400,
+    FIRE_INSCRIBED = 0x0800    // Only used for _get_fire_order
 };
 
 struct bolt;

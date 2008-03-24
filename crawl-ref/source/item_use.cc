@@ -1199,7 +1199,8 @@ bool takeoff_armour(int item)
     return true;
 }                               // end takeoff_armour()
 
-static bool fire_item_matches(const item_def &item, unsigned fire_type)
+// Helper for _get_fire_order
+static bool _fire_item_matches(const item_def &item, unsigned fire_type)
 {
     if (!is_valid_item(item))
         return (false);
@@ -1217,6 +1218,10 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
         }
         return (false);
     }
+
+    if (fire_type & FIRE_INSCRIBED)
+        if (item.inscription.find("+f", 0) != std::string::npos)
+            return true;
 
     if (item.base_type == OBJ_MISSILES)
     {
@@ -1305,21 +1310,14 @@ static void _get_fire_order(std::vector<int>& fire_order)
             strstr(item.inscription.c_str(), "=f"))
             continue;
 
-        unsigned int i_flags;
-        for (i_flags=0; i_flags<Options.fire_order.size(); i_flags++)
+        for (unsigned int i_flags=0;
+             i_flags<Options.fire_order.size();
+             i_flags++)
         {
-            if (fire_item_matches(item, Options.fire_order[i_flags]))
+            if (_fire_item_matches(item, Options.fire_order[i_flags]))
             {
                 fire_order.push_back( (i_flags<<16) | (i_inv & 0xffff) );
                 break;
-            }
-        }
-        if (i_flags == Options.fire_order.size())
-        {
-            // Didn't match any flags -- last chance is the +f inscription
-            if (strstr(item.inscription.c_str(), "+f"))
-            {
-                fire_order.push_back( (i_flags<<16) | (i_inv & 0xffff) );
             }
         }
     }
