@@ -719,6 +719,12 @@ static void _print_stats_line3()
     textcolor( LIGHTGREY );
 }
 
+static int _average_hp(const monsters* mon)
+{
+    const monsterentry* me = get_monster_data(mon->type);
+    return me->hpdice[0] * (me->hpdice[1] + me->hpdice[2]>>1) + me->hpdice[3];
+}
+
 // Return true if m1 < m2
 static bool
 _by_attitude_and_experience(const monsters* m1, const monsters* m2)
@@ -733,8 +739,8 @@ _by_attitude_and_experience(const monsters* m1, const monsters* m2)
     else if (a1 > a2) return false;
 
     // sort by difficulty... but want to avoid information leaks too.  Hm.
-    const int xp1 = mons_type_hit_dice(m1->type);
-    const int xp2 = mons_type_hit_dice(m2->type);
+    const int xp1 = _average_hp(m1);
+    const int xp2 = _average_hp(m2);
     if (xp1 > xp2) return true;
     else if (xp1 < xp2) return false;
 
@@ -746,49 +752,51 @@ _by_attitude_and_experience(const monsters* m1, const monsters* m2)
 }
                                         
 static void
-_print_next_monster_desc(const std::vector<monsters*>& mons,
-                         int& start)
+_print_next_monster_desc(const std::vector<monsters*>& mons, int& start)
 {
-    // skip forward to the end of the range of identical monsters
-    monsters* m1 = mons[start];
-    unsigned int cur = start;
-    while (true)
+    // skip forward to past the end of the range of identical monsters
+    unsigned int end;
+    for (end=start+1; end < mons.size(); ++end)
     {
-        if (cur + 1 == mons.size()) break;
-        // If m1 < m2, they can't be "equal"
-        // (and since array is sorted, they are otherwise "equal")
-        if (_by_attitude_and_experience(m1, mons[cur])) break;
-        cur += 1;
+        // Array is sorted, so if !(m1 < m2), m1 and m2 are "equal"
+        if (_by_attitude_and_experience(mons[start], mons[end]))
+            break;
     }
+    // Postcondition: all monsters in [start, end) are "equal"
 
-    // start and cur are "equal" monsters.  It shouldn't matter
-    // which one we choose in that range.  I will choose start.
+    // Print one of the monsters we've found; shouldn't matter which.
     {
+        const monsters* mon = mons[start]; // arbitrary
+
         unsigned int glyph;
         unsigned short glyph_color;
-        get_mons_glyph(m1, &glyph, &glyph_color);
+        get_mons_glyph(mon, &glyph, &glyph_color);
         textcolor(glyph_color);
         cprintf( stringize_glyph(glyph).c_str() );
 
-        const int count = (cur - start + 1);
+        const int count = (end - start);
 
         textcolor(LIGHTGREY);
         cprintf(" - ");
 
         if (count == 1)
         {
-            std::string name = mons_type_name(m1->type, DESC_CAP_A);
+            std::string name = mons_type_name(mon->type, DESC_CAP_A);
             cprintf("%s", name.c_str());
         }
         else
         {
-            std::string name = pluralise(mons_type_name(m1->type, DESC_PLAIN));
+            std::string name = pluralise(mons_type_name(mon->type, DESC_PLAIN));
             cprintf("%d %s", count, name.c_str());
         }
 
+#if DEBUG_DIAGNOSTICS
+        cprintf(" av%d %d/%d", _average_hp(mon), mon->hit_points, mon->max_hit_points);
+#endif
+
         // Friendliness -- maybe use color instead?
         {
-            const mon_attitude_type att = mons_attitude(m1);
+            const mon_attitude_type att = mons_attitude(mon);
             switch (att) {
             case ATT_FRIENDLY: cprintf(" (friendly)"); break;
             case ATT_NEUTRAL: cprintf(" (neutral)"); break;
@@ -797,8 +805,8 @@ _print_next_monster_desc(const std::vector<monsters*>& mons,
         }
     }
 
-    // Increment start to the next un-described monster
-    start = cur + 1;
+    // Set start to the next un-described monster
+    start = end;
     textcolor(LIGHTGREY);
 }
 
