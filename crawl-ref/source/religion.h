@@ -80,6 +80,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr);
 
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
+bool is_chaotic_god(god_type god);
 
 // Calls did_god_conduct when the object goes out of scope.
 struct god_conduct_trigger

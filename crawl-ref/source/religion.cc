@@ -398,6 +398,13 @@ bool is_priest_god(god_type god)
         god == GOD_BEOGH;
 }
 
+bool is_chaotic_god(god_type god)
+{
+    return
+        god == GOD_MAKHLEB ||
+        god == GOD_XOM;
+}
+
 void dec_penance(god_type god, int val)
 {
     if (you.penance[god] > 0)
@@ -2487,8 +2494,8 @@ static bool zin_retribution()
     const god_type god = GOD_ZIN;
 
     // angels/creeping doom theme
-    // doesn't care unless you've gone over to evil
-    if (!is_evil_god(you.religion))
+    // doesn't care unless you've gone over to evil or chaos
+    if (!is_evil_god(you.religion) && !is_chaotic_god(you.religion))
         return false;
 
     int punishment = random2(8);
@@ -3738,6 +3745,12 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_SHINING_ONE:
+        if (is_evil_god(new_god))
+        {
+            simple_god_message( " does not appreciate desertion for evil!",
+                                old_god );
+        }
+
         if (you.duration[DUR_DIVINE_SHIELD])
         {
             mpr("Your divine shield disappears!");
@@ -3755,12 +3768,30 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_ZIN:
+        if (is_evil_god(new_god))
+        {
+            simple_god_message( " does not appreciate desertion for evil!",
+                                old_god );
+        }
+        else if (is_chaotic_god(new_god))
+        {
+            simple_god_message( " does not appreciate desertion for chaos!",
+                                old_god );
+        }
+
         if (env.sanctuary_time)
             remove_sanctuary();
+
         inc_penance( old_god, 25 );
         break;
 
     case GOD_ELYVILON:
+        if (is_evil_god(new_god))
+        {
+            simple_god_message( " does not appreciate desertion for evil!",
+                                old_god );
+        }
+
         inc_penance( old_god, 30 );
         break;
 
