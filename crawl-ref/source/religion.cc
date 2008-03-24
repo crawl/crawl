@@ -468,12 +468,9 @@ void inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
-        // nor does TSO's halo or divine shield
+        // nor does TSO's halo (which silently fades) or divine shield
         else if (god == GOD_SHINING_ONE)
         {
-            if (you.piety >= piety_breakpoint(0))
-                mpr("Your divine halo starts to fade.");
-
             if (you.duration[DUR_DIVINE_SHIELD])
             {
                 mpr("Your divine shield disappears!");
@@ -2392,12 +2389,6 @@ void lose_piety(int pgn)
                     }
                 }
 
-                if (you.religion == GOD_SHINING_ONE)
-                {
-                    if (i == 0)
-                        mpr("Your divine halo starts to fade.");
-                }
-
                 if ( need_water_walking() && !beogh_water_walk() )
                 {
                     fall_into_a_pool( you.x_pos, you.y_pos, true,
@@ -4271,7 +4262,7 @@ void god_pitch(god_type which_god)
     // Are you switching between good gods?
     const bool good_god_switch = is_good_god(you.religion)
                                  && is_good_god(which_god);
-    
+
     // Leave your prior religion first.
     if (you.religion != GOD_NO_GOD)
         excommunication(which_god);
