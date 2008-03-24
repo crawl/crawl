@@ -576,7 +576,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 }
             }
 
-            create_monster( mons, 5, SAME_ATTITUDE(monster), 
+            create_monster( mons, 5, SAME_ATTITUDE(monster),
                             monster->x, monster->y, monster->foe,
                             MONS_PROGRAM_BUG );
         }
@@ -601,8 +601,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            create_monster( MONS_RAKSHASA_FAKE, 3, 
-                            SAME_ATTITUDE(monster), monster->x, monster->y, 
+            create_monster( MONS_RAKSHASA_FAKE, 3,
+                            SAME_ATTITUDE(monster), monster->x, monster->y,
                             monster->foe, MONS_PROGRAM_BUG );
         }
         return;
@@ -617,7 +617,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( summon_any_demon(DEMON_COMMON), duration,
-                            SAME_ATTITUDE(monster), monster->x, monster->y, 
+                            SAME_ATTITUDE(monster), monster->x, monster->y,
                             monster->foe, MONS_PROGRAM_BUG );
         }
         return;
@@ -635,7 +635,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( summon_any_demon(DEMON_LESSER), duration,
-                            SAME_ATTITUDE(monster), monster->x, monster->y, 
+                            SAME_ATTITUDE(monster), monster->x, monster->y,
                             monster->foe, MONS_PROGRAM_BUG );
         }
         return;
@@ -668,12 +668,12 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.
         if (mons_abjured(monster, monsterNearby))
             return;
-        
+
         sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 4 + 1 );
 
         duration  = std::min(2 + monster->hit_dice / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
-            create_monster(MONS_WANDERING_MUSHROOM, duration, 
+            create_monster(MONS_WANDERING_MUSHROOM, duration,
                     SAME_ATTITUDE(monster),
                     monster->x, monster->y,
                     monster->foe,

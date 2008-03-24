@@ -11,7 +11,7 @@
 
     Template Format:
 
-        {  
+        {
              bolt spell,
              enchantment,
              self-enchantment,          // 50% tried after others fail

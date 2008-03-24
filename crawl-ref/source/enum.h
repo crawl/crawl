@@ -2543,7 +2543,7 @@ enum spell_type
     SPELL_ROTTING,       // evil god power or necromantic transmigration
     SPELL_MAXWELLS_SILVER_HAMMER,      // vorpal-brand maces etc.
     SPELL_CONDENSATION_SHIELD,         // "shield" of icy vapour
-    SPELL_SEMI_CONTROLLED_BLINK,       //jmf: to test effect             
+    SPELL_SEMI_CONTROLLED_BLINK,       //jmf: to test effect
     SPELL_STONESKIN,
     SPELL_SIMULACRUM,                  //  200
     SPELL_CONJURE_BALL_LIGHTNING,
@@ -2569,7 +2569,7 @@ enum spell_type
     SPELL_SUMMON_DRAKES,
     SPELL_BLINK_OTHER,                // 220
     SPELL_SUMMON_MUSHROOMS,
-    
+
     NUM_SPELLS,
     SPELL_NO_SPELL = 250               //  255 - added 22jan2000 {dlb}
 };

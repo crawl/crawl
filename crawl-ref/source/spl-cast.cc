@@ -1478,7 +1478,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         dancing_weapon(powc, false);
         break;
 
-    case SPELL_HELLFIRE:        
+    case SPELL_HELLFIRE:
         // should only be available from:
         // staff of Dispater & Sceptre of Asmodeus
         zapping(ZAP_HELLFIRE, powc, beam);

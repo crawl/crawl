@@ -60,7 +60,7 @@
    like this:
    experience = hp_max * HD * HD * exp_mod / 10
    I think.
-   
+
    Actually it is
     experience = (16 + maxhp) * HD * HD * exp_mod * (100 + diff) * speed
                  / 100000

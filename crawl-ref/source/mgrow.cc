@@ -154,7 +154,7 @@ bool monsters::level_up()
         int hpboost =
             (hit_dice > 3? max_hit_points / 8 : max_hit_points / 4)
             + random2(5);
-        
+
         // Not less than 3 hp, not more than 25.
         hpboost = std::min(std::max(hpboost, 3), 25);
 
@@ -167,7 +167,7 @@ bool monsters::level_up()
         hit_points     += hpboost;
         hit_points      = std::min(hit_points, max_hit_points);
     }
-    
+
     level_up_change();
 
     return (true);
