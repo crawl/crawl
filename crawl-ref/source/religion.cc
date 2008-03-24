@@ -868,8 +868,8 @@ void bless_follower(god_type god,
     }
 
     std::string blessed = (follower && !mons_near(follower))
-                                ? "your follower"
-                                : mon->name(DESC_NOCAP_THE).c_str();
+                                ? "a follower"
+                                : mon->name(DESC_NOCAP_A).c_str();
     std::string result;
 
     int chance = random2(20);
