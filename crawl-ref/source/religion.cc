@@ -930,8 +930,7 @@ void bless_follower(god_type god,
         result = "divine balms";
         goto blessing_done;
     }
-    // ...or full healing, optionally adding one or two extra hit
-    // points.
+    // ...or full healing, optionally adding one extra hit point.
     else
     {
         bool healing = blessing_healing(mon, false);
@@ -940,9 +939,6 @@ void bless_follower(god_type god,
         if (!healing || coinflip())
         {
             blessing_healing(mon, true);
-
-            if (coinflip())
-                blessing_healing(mon, true);
 
             vigour = true;
         }
