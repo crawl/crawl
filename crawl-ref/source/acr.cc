@@ -1729,7 +1729,7 @@ static bool _compare_monsters_attitude( const monsters *m1, const monsters *m2 )
     return (m1->type < m2->type);
 }
 
-static void _list_monsters()
+void get_visible_monsters(std::vector<std::string>& describe)
 {
     int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
     int yend = you.y_pos + 9, xend = you.x_pos + 9;
@@ -1770,7 +1770,6 @@ static void _list_monsters()
     }
     
     std::sort( mons.begin(), mons.end(), _compare_monsters_attitude );
-    std::vector<std::string> describe;
     
     int count = 0;
     int size = mons.size();
@@ -1797,12 +1796,16 @@ static void _list_monsters()
         describe.push_back(number_in_words(count) + " "
                            + pluralise(_get_monster_name(mons[size-1])));
     }
+}
 
+static void _mpr_monsters()
+{
+    std::vector<std::string> describe;
+    get_visible_monsters(describe);
     std::string msg  = "You can see ";
                 msg += comma_separated_line(describe.begin(), describe.end(),
                                             ", and ", ", ");
                 msg += ".";
-
     mpr(msg.c_str());
 }
 
@@ -2041,7 +2044,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_FULL_VIEW:
-        _list_monsters();
+        _mpr_monsters();
         break;
         
     case CMD_WIELD_WEAPON:
