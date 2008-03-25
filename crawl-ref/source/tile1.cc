@@ -3431,10 +3431,8 @@ void tile_init_flavor()
 
                 bool door_left = (x > 0 && grd[x-1][y] == grd[x][y]);
                 bool door_right = (x < GXM - 1 && grd[x+1][y] == grd[x][y]);
-                bool door_up = (y > 0 && grd[x][y-1] == grd[x][y]);
-                bool door_down = (y < GYM - 1 && grd[x][y+1] == grd[x][y]);
 
-                if ((door_left || door_right) && !door_up && !door_down)
+                if (door_left || door_right)
                 {
                     int target;
                     if (door_left && door_right)

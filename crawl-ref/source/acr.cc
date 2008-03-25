@@ -3649,9 +3649,13 @@ static void open_door(int move_x, int move_y, bool check_confused)
             // Even if some of the door is out of LOS, we want the entire
             // door to be updated.  Hitting this case requires a really big
             // door!
-            // Should set_terrain_changed() be used, too?
             if (is_terrain_seen(dc))
+            {
                 set_envmap_obj(dc.x, dc.y, DNGN_OPEN_DOOR);
+#ifdef USE_TILE
+                tile_place_tile_bk(dc.x, dc.y, TILE_DNGN_OPEN_DOOR);
+#endif
+            }
         }
         you.turn_is_over = true;
     }
@@ -3775,9 +3779,13 @@ static void close_door(int door_x, int door_y)
             // Even if some of the door is out of LOS once it's closed (or even
             // if some of it is out of LOS when it's open), we want the entire
             // door to be updated.
-            // Should set_terrain_changed() be used, too?
             if (is_terrain_seen(dc))
+            {
                 set_envmap_obj(dc.x, dc.y, DNGN_CLOSED_DOOR);
+#ifdef USE_TILE
+                tile_place_tile_bk(dc.x, dc.y, TILE_DNGN_CLOSED_DOOR);
+#endif
+            }
         }
         you.turn_is_over = true;
     }
