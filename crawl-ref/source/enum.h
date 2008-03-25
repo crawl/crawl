@@ -2150,7 +2150,6 @@ enum operation_types
     OPER_READ = 'r',
     OPER_MEMORISE = 'M',
     OPER_ZAP = 'z',
-    OPER_THROW = 't',
     OPER_EXAMINE = 'v',
     OPER_FIRE = 'f',
     OPER_PRAY = 'p',

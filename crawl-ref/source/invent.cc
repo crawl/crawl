@@ -1132,7 +1132,6 @@ static std::string operation_verb(operation_types oper)
     case OPER_READ:           return "read";
     case OPER_MEMORISE:       return "memorise from";
     case OPER_ZAP:            return "zap";
-    case OPER_THROW:          return "throw";
     case OPER_EXAMINE:        return "examine";
     case OPER_FIRE:           return "fire";
     case OPER_PRAY:           return "sacrifice";
