@@ -825,10 +825,8 @@ void stop_running(void)
     you.running.stop();
 #ifdef USE_TILE
     // redraw colour bars now as that's blocked during runmode
-    if (you.hp != you.hp_max)
-        draw_hp_bar(you.hp, you.hp_max);
-    if (you.magic_points != you.max_magic_points)
-        draw_mp_bar(you.magic_points, you.max_magic_points);
+    draw_hp_bar(you.hp, you.hp_max);
+    draw_mp_bar(you.magic_points, you.max_magic_points);
 #endif
 }
 

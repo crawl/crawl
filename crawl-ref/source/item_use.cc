@@ -1497,7 +1497,15 @@ static bool _fire_choose_item_and_target(int& item, dist& target)
     const bool was_chosen = (item != -1);
 
     if (was_chosen)
+    {
+        if (you.equip[EQ_WEAPON] == item
+            && item_cursed(you.inv[item]))
+        {
+            mpr("You can't fire a cursed item!");
+            return false;
+        }
         beh.item = item; // force item to be the prechosen one
+    }
 
     beh.message_ammo_prompt();
     message_current_target();    // XXX: this stuff should be done by direction()
@@ -3511,10 +3519,8 @@ void inscribe_item()
         mpr("You don't have anything to inscribe.");
         return;
     }
-    item_slot = prompt_invent_item(
-                    "Inscribe which item? ", 
-                    MT_INVLIST, 
-                    OSEL_ANY );
+    item_slot = prompt_invent_item("Inscribe which item? ",
+                                   MT_INVLIST, OSEL_ANY );
     if (item_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -3534,7 +3540,7 @@ void inscribe_item()
         }
             
         you.inv[item_slot].inscription = std::string(buf);
-        you.wield_change = true;
+        you.wield_change  = true;
         you.quiver_change = true;
     }
     else

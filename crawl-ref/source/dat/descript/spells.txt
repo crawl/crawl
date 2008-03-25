@@ -307,10 +307,6 @@ Fulsome Distillation
 
 This spell extracts the vile and poisonous essences from a corpse. A rotten corpse may produce a stronger potion. You probably don't want to drink the results. 
 %%%%
-Glamour
-
-This spell is an Elvish magic, which draws upon the viewing creature's credulity and the caster's comeliness to charm, confuse or render comatose. 
-%%%%
 Greater Healing
 
 This spell heals a large amount of damage to the caster's body. 

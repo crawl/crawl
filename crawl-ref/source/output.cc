@@ -48,7 +48,7 @@
 #endif
 #include "view.h"
 
-static int bad_ench_colour( int lvl, int orange, int red )
+static int _bad_ench_colour( int lvl, int orange, int red )
 {
     if (lvl > red)
         return (RED);
@@ -58,7 +58,7 @@ static int bad_ench_colour( int lvl, int orange, int red )
     return (YELLOW);
 }
 
-static void dur_colour( int colour, bool running_out )
+static void _dur_colour( int colour, bool running_out )
 {
     if (running_out)
         textcolor( colour );
@@ -110,19 +110,19 @@ void update_turn_count()
 }
 
 #ifdef USE_TILE
-int draw_colour_bar(int val, int max_val, int old_val, int old_disp,
-    int ox, int oy, unsigned short default_colour,
-    unsigned short change_colour, unsigned short empty_colour)
-
+static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
+                            int ox, int oy, unsigned short default_colour,
+                            unsigned short change_colour,
+                            unsigned short empty_colour)
 {
+    ASSERT(val <= max_val);
+
     if (max_val <= 0)
-    {
         return -1;
-    }
     
-    // Don't redraw colour bars during running/resting
-    // *unless* we'll stop doing so after that
-    if (you.running > 1 && is_resting() && val != max_val)
+    // Don't redraw colour bars while resting
+    // *unless* we'll stop doing so right after that
+    if (you.running >= 2 && is_resting() && val != max_val)
         return -1;
 
     const int width = crawl_view.hudsz.x - ox - 1;
@@ -158,8 +158,8 @@ void draw_mp_bar(int val, int max_val)
     static int old_val  = 0;
     static int old_disp = 0;
 
-    old_disp = draw_colour_bar(val, max_val, old_val, old_disp, ox, oy, 
-        default_colour, change, empty);
+    old_disp = _draw_colour_bar(val, max_val, old_val, old_disp, ox, oy,
+                                default_colour, change, empty);
     old_val = val;
 }
 
@@ -174,12 +174,12 @@ void draw_hp_bar(int val, int max_val)
     static int old_val  = 0;
     static int old_disp = 0;
 
-    old_disp = draw_colour_bar(val, max_val, old_val, old_disp, ox, oy, 
-        default_colour, change, empty);
+    old_disp = _draw_colour_bar(val, max_val, old_val, old_disp, ox, oy,
+                                default_colour, change, empty);
     old_val = val;
 }
 
-static int count_digits(int val)
+static int _count_digits(int val)
 {
     if (val > 999)
         return 4;
@@ -191,7 +191,7 @@ static int count_digits(int val)
 }
 #endif
 
-static std::string describe_hunger()
+static std::string _describe_hunger()
 {
     bool vamp = (you.species == SP_VAMPIRE);
     
@@ -241,8 +241,8 @@ static void _print_stats_mp()
     cprintf("/%d", you.max_magic_points );
 
 #ifdef USE_TILE
-    int col = count_digits(you.magic_points) +
-        count_digits(you.max_magic_points) + 1;
+    int col = _count_digits(you.magic_points)
+              + _count_digits(you.max_magic_points) + 1;
     for (int i = 12-col; i > 0; i--)
         cprintf(" ");
     draw_mp_bar(you.magic_points, you.max_magic_points);
@@ -282,9 +282,9 @@ static void _print_stats_hp()
         cprintf( " (%d)", max_max_hp );
 
 #ifdef USE_TILE
-    int col = count_digits(you.hp)+count_digits(you.hp_max) + 1;
+    int col = _count_digits(you.hp) + _count_digits(you.hp_max) + 1;
     if (max_max_hp != you.hp_max)
-        col += count_digits(max_max_hp) + 3;
+        col += _count_digits(max_max_hp) + 3;
     for (int i = 15-col; i > 0; i--)
         cprintf(" ");
     draw_hp_bar(you.hp, you.hp_max);
@@ -374,7 +374,7 @@ static void _print_stats_ac()
     cgotoxy(5, 5, GOTO_STAT);
 
     if (you.duration[DUR_STONEMAIL])
-        dur_colour( BLUE, (you.duration[DUR_STONEMAIL] <= 6) );
+        _dur_colour( BLUE, (you.duration[DUR_STONEMAIL] <= 6) );
     else if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
         textcolor( LIGHTBLUE );  // no end of effect warning
 
@@ -512,7 +512,7 @@ static void _print_stats_line1()
         textcolor( RED );
         break;
     }
-    const std::string state = describe_hunger();
+    const std::string state = _describe_hunger();
     if (!state.empty())
         cprintf(state.c_str());
 
@@ -525,8 +525,8 @@ static void _print_stats_line1()
 }
 
 // For colors, see comment at _print_stats_line1
-// Prints pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
-//   breath, bargain, sage
+// Prints:  pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
+//   conf. touch, bargain, sage
 static void _print_stats_line2()
 {
     cgotoxy(1, 16, GOTO_STAT);
@@ -542,7 +542,7 @@ static void _print_stats_line2()
 
     if (you.duration[DUR_REPEL_UNDEAD])
     {
-        dur_colour( LIGHTGREY, (you.duration[DUR_REPEL_UNDEAD] <= 4) );
+        _dur_colour( LIGHTGREY, (you.duration[DUR_REPEL_UNDEAD] <= 4) );
         cprintf( "Holy " );
     }
 
@@ -555,24 +555,24 @@ static void _print_stats_line2()
     if (you.duration[DUR_DEFLECT_MISSILES])
     {
 
-        dur_colour( MAGENTA, (you.duration[DUR_DEFLECT_MISSILES] <= 6) );
+        _dur_colour( MAGENTA, (you.duration[DUR_DEFLECT_MISSILES] <= 6) );
         cprintf( "DMsl " );
     }
     else if (you.duration[DUR_REPEL_MISSILES])
     {
-        dur_colour( BLUE, (you.duration[DUR_REPEL_MISSILES] <= 6) );
+        _dur_colour( BLUE, (you.duration[DUR_REPEL_MISSILES] <= 6) );
         cprintf( "RMsl " );
     }
 
     if (you.duration[DUR_REGENERATION])
     {
-        dur_colour( BLUE, (you.duration[DUR_REGENERATION] <= 6) );
+        _dur_colour( BLUE, (you.duration[DUR_REGENERATION] <= 6) );
         cprintf( "Regen " );
     }
 
     if (you.duration[DUR_INSULATION])
     {
-        dur_colour( BLUE, (you.duration[DUR_INSULATION] <= 6) );
+        _dur_colour( BLUE, (you.duration[DUR_INSULATION] <= 6) );
         cprintf( "Ins " );
     }
 
@@ -582,57 +582,59 @@ static void _print_stats_line2()
 
         if (wearing_amulet( AMU_CONTROLLED_FLIGHT ))
         {
-            dur_colour( you.light_flight()? BLUE : MAGENTA,
+            _dur_colour( you.light_flight()? BLUE : MAGENTA,
                         (you.duration[DUR_LEVITATION] <= 10 && !perm) );
             cprintf( "Fly " );
         }
         else
         {
-            dur_colour(BLUE, (you.duration[DUR_LEVITATION] <= 10 && !perm));
+            _dur_colour(BLUE, (you.duration[DUR_LEVITATION] <= 10 && !perm));
             cprintf( "Lev " );
         }
     }
 
     if (you.duration[DUR_INVIS])
     {
-        dur_colour( BLUE, (you.duration[DUR_INVIS] <= 6) );
+        _dur_colour( BLUE, (you.duration[DUR_INVIS] <= 6) );
         cprintf( "Invis " );
     }
 
     if (you.duration[DUR_SILENCE])
     {
-        dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 5) );
+        _dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 5) );
         cprintf( "Sil " );
     }
 
-    // Perhaps this should be reversed to show when it can be used?
-    // In that case, it should be probably be GREEN, and we'd have
-    // to check to see if the player does have a breath weapon. -- bwr
-    if (you.duration[DUR_BREATH_WEAPON] &&
-        wherex() < get_number_of_cols() - 5)
+    if (you.duration[DUR_CONFUSING_TOUCH]
+        && wherex() < get_number_of_cols() - 5)
     {
-        textcolor( YELLOW );  // no warning
-        cprintf( "BWpn " );
+        _dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 20) );
+        cprintf("Touch");
     }
-        
+    
     if (you.duration[DUR_BARGAIN] && wherex() < get_number_of_cols() - 5)
     {
-        dur_colour( BLUE, (you.duration[DUR_BARGAIN] <= 15) );
+        _dur_colour( BLUE, (you.duration[DUR_BARGAIN] <= 15) );
         cprintf( "Brgn " );
     }
 
     if (you.duration[DUR_SAGE] && wherex() < get_number_of_cols() - 5)
     {
-        dur_colour( BLUE, (you.duration[DUR_SAGE] <= 15) );
+        _dur_colour( BLUE, (you.duration[DUR_SAGE] <= 15) );
         cprintf( "Sage " );
     }
 
+    if (you.duration[DUR_SURE_BLADE] && wherex() < get_number_of_cols() - 5)
+    {
+        textcolor( BLUE );
+        cprintf( "Blade " );
+    }
     textcolor( LIGHTGREY );
 }
 
 // For colors, see comment at _print_stats_line1
-// Prints confused, beheld, fire, poison, disease, rot,
-//   held, glow, swift, fast, slow
+// Prints confused, beheld, fire, poison, disease, rot, held, glow,
+//  swift, fast, slow, breath
 static void _print_stats_line3()
 {
     cgotoxy(1, 17, GOTO_STAT);
@@ -668,19 +670,19 @@ static void _print_stats_line3()
         // We skip marking "quite" poisoned and instead mark the
         // levels where the rules for dealing poison damage change
         // significantly.  See acr.cc for that code. -- bwr
-        textcolor( bad_ench_colour( you.duration[DUR_POISONING], 5, 10 ) );
+        textcolor( _bad_ench_colour( you.duration[DUR_POISONING], 5, 10 ) );
         cprintf( "Pois " );
     }
 
     if (you.disease)
     {
-        textcolor( bad_ench_colour( you.disease, 40, 120 ) );
+        textcolor( _bad_ench_colour( you.disease, 40, 120 ) );
         cprintf( "Sick " );
     }
 
     if (you.rotting)
     {
-        textcolor( bad_ench_colour( you.rotting, 4, 8 ) );
+        textcolor( _bad_ench_colour( you.rotting, 4, 8 ) );
         cprintf( "Rot " );
     }
 
@@ -692,16 +694,15 @@ static void _print_stats_line3()
 
     if (you.backlit())
     {
-        textcolor(
-            you.magic_contamination > 5 ?
-            bad_ench_colour( you.magic_contamination, 15, 25 )
-            : LIGHTBLUE );
+        textcolor(you.magic_contamination > 5 ?
+                     _bad_ench_colour( you.magic_contamination, 15, 25 )
+                     : LIGHTBLUE );
         cprintf( "Glow " );
     }
 
     if (you.duration[DUR_SWIFTNESS])
     {
-        dur_colour( BLUE, (you.duration[DUR_SWIFTNESS] <= 6) );
+        _dur_colour( BLUE, (you.duration[DUR_SWIFTNESS] <= 6) );
         cprintf( "Swift " );
     }
 
@@ -712,13 +713,23 @@ static void _print_stats_line3()
     }
     else if (you.duration[DUR_HASTE] && !you.duration[DUR_SLOW])
     {
-        dur_colour( BLUE, (you.duration[DUR_HASTE] <= 6) );
+        _dur_colour( BLUE, (you.duration[DUR_HASTE] <= 6) );
         cprintf( "Fast" );
+    }
+
+    // Perhaps this should be reversed to show when it can be used?
+    // In that case, it should be probably be GREEN, and we'd have
+    // to check to see if the player does have a breath weapon. -- bwr
+    if (you.duration[DUR_BREATH_WEAPON] && wherex() < get_number_of_cols() - 5)
+    {
+        textcolor( YELLOW );  // no warning
+        cprintf( "BWpn " );
     }
 
     textcolor( LIGHTGREY );
 }
 
+#ifndef USE_TILE
 static int _average_hp(const monsters* mon)
 {
     const monsterentry* me = get_monster_data(mon->type);
@@ -735,18 +746,22 @@ _by_attitude_and_experience(const monsters* m1, const monsters* m2)
     // will break saves a little bit though.
     const mon_attitude_type a1 = mons_attitude(m1);
     const mon_attitude_type a2 = mons_attitude(m2);
-    if (a1 < a2) return true;
-    else if (a1 > a2) return false;
+    if (a1 < a2)
+        return true;
+    else if (a1 > a2)
+        return false;
 
     // sort by difficulty... but want to avoid information leaks too.  Hm.
     const int xp1 = _average_hp(m1);
     const int xp2 = _average_hp(m2);
-    if (xp1 > xp2) return true;
-    else if (xp1 < xp2) return false;
+    if (xp1 > xp2)
+        return true;
+    else if (xp1 < xp2)
+        return false;
 
     // This last so monsters of the same type clump together
-    if (m1->type < m2->type) return true;
-    else if (m1->type > m2->type) return false;
+    if (m1->type < m2->type)
+        return true;
 
     return false;
 }
@@ -791,15 +806,17 @@ _print_next_monster_desc(const std::vector<monsters*>& mons, int& start)
         }
 
 #if DEBUG_DIAGNOSTICS
-        cprintf(" av%d %d/%d", _average_hp(mon), mon->hit_points, mon->max_hit_points);
+        cprintf(" av%d %d/%d", _average_hp(mon), mon->hit_points,
+                               mon->max_hit_points);
 #endif
 
         // Friendliness -- maybe use color instead?
         {
             const mon_attitude_type att = mons_attitude(mon);
-            switch (att) {
-            case ATT_FRIENDLY: cprintf(" (friendly)"); break;
-            case ATT_NEUTRAL: cprintf(" (neutral)"); break;
+            switch (att)
+            {
+            case ATT_FRIENDLY:  cprintf(" (friendly)");  break;
+            case ATT_NEUTRAL:   cprintf(" (neutral)");   break;
             case ATT_HOSTILE: /*cprintf(" (hostile)")*/; break;
             }
         }
@@ -829,9 +846,7 @@ static void _print_stats_monster_pane()
     std::sort(mons.begin(), mons.end(), _by_attitude_and_experience);
 
     // Print the monsters!
-    for (int i_print = 0, i_mons=0;
-         i_print < max_print;
-         ++ i_print)
+    for (int i_print = 0, i_mons=0; i_print < max_print; ++i_print)
     {
         // i_mons is incremented by _print_next_monster_desc
         cgotoxy(1, start_row+i_print, GOTO_MLIST);
@@ -843,6 +858,7 @@ static void _print_stats_monster_pane()
         }
     }
 }
+#endif
 
 void print_stats(void)
 {
@@ -968,10 +984,13 @@ const char *equip_slot_to_name(int equip)
 
     if (equip == EQ_BOOTS &&
            (you.species == SP_CENTAUR || you.species == SP_NAGA))
+    {
         return "Barding";
+    }
 
     if (equip < 0 || equip >= NUM_EQUIP)
         return "";
+        
     return s_equip_slot_names[equip];
 }
 
@@ -985,8 +1004,10 @@ int equip_name_to_slot(const char *s)
     return -1;
 }
 
-static const char* determine_color_string( int level ) {
-    switch ( level ) {
+static const char* _determine_color_string( int level )
+{
+    switch ( level )
+    {
     case 3:
     case 2:
         return "<lightgreen>";
@@ -1002,6 +1023,7 @@ static const char* determine_color_string( int level ) {
     }
 }
 
+// old overview screen, now only used for dumping
 std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
 {
     char buf[1000];
@@ -1143,11 +1165,11 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
              "%sLife Prot.: %s\n"
              "%sRes.Poison: %s\n"
              "%sRes.Elec. : %s\n",
-             determine_color_string(rfire), itosym3(rfire),
-             determine_color_string(rcold), itosym3(rcold),
-             determine_color_string(rlife), itosym3(rlife),
-             determine_color_string(rpois), itosym1(rpois),
-             determine_color_string(relec), itosym1(relec));
+             _determine_color_string(rfire), itosym3(rfire),
+             _determine_color_string(rcold), itosym3(rcold),
+             _determine_color_string(rlife), itosym3(rlife),
+             _determine_color_string(rpois), itosym1(rpois),
+             _determine_color_string(relec), itosym1(relec));
     cols.add_formatted(1, buf, false);
 
     const int rsust = player_sust_abil(calc_unid);
@@ -1160,10 +1182,10 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
              "%sRes.Mut.  : %s\n"
              "%sRes.Slow  : %s\n"
              "%sClarity   : %s\n \n",
-             determine_color_string(rsust), itosym1(rsust),
-             determine_color_string(rmuta), itosym1(rmuta),
-             determine_color_string(rslow), itosym1(rslow),
-             determine_color_string(rclar), itosym1(rclar));
+             _determine_color_string(rsust), itosym1(rsust),
+             _determine_color_string(rmuta), itosym1(rmuta),
+             _determine_color_string(rslow), itosym1(rslow),
+             _determine_color_string(rclar), itosym1(rclar));
     cols.add_formatted(1, buf, true);
 
     {
@@ -1218,10 +1240,10 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
              "%sWarding    : %s\n"
              "%sConserve   : %s\n"
              "%sRes.Corr.  : %s\n",
-             determine_color_string(rinvi), itosym1(rinvi),
-             determine_color_string(rward), itosym1(rward),
-             determine_color_string(rcons), itosym1(rcons),
-             determine_color_string(rcorr), itosym1(rcorr));
+             _determine_color_string(rinvi), itosym1(rinvi),
+             _determine_color_string(rward), itosym1(rward),
+             _determine_color_string(rcons), itosym1(rcons),
+             _determine_color_string(rcorr), itosym1(rcorr));
     cols.add_formatted(2, buf, false);
 
     int saplevel = you.mutation[MUT_SAPROVOROUS];
@@ -1239,19 +1261,21 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
         postgourmand = itosym3(saplevel);
     }
     snprintf(buf, sizeof buf, "%s%s%s",
-             determine_color_string(saplevel), pregourmand, postgourmand);
+             _determine_color_string(saplevel), pregourmand, postgourmand);
     cols.add_formatted(2, buf, false);
 
     cols.add_formatted(2, " \n", false);
 
     if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
+    {
         snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
-                 determine_color_string(-1), itosym1(1));
+                 _determine_color_string(-1), itosym1(1));
+    }
     else
     {
         const int rrtel = !!player_teleport(calc_unid);
         snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
-                 determine_color_string(rrtel), itosym1(rrtel));
+                 _determine_color_string(rrtel), itosym1(rrtel));
     }
     cols.add_formatted(2, buf, false);
 
@@ -1262,20 +1286,19 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
              "%sCtrl.Telep.: %s\n"
              "%sLevitation : %s\n"
              "%sCtrl.Flight: %s\n",
-             determine_color_string(rctel), itosym1(rctel),
-             determine_color_string(rlevi), itosym1(rlevi),
-             determine_color_string(rcfli), itosym1(rcfli));
+             _determine_color_string(rctel), itosym1(rctel),
+             _determine_color_string(rlevi), itosym1(rlevi),
+             _determine_color_string(rcfli), itosym1(rcfli));
     cols.add_formatted(2, buf, false);
 
     return cols.formatted_lines();
 }
 
-static std::string status_mut_abilities(void);
+static std::string _status_mut_abilities(void);
 
 // helper for print_overview_screen
-static void _print_overview_screen_equip(
-    column_composer& cols,
-    std::vector<char>& equip_chars)
+static void _print_overview_screen_equip(column_composer& cols,
+                                         std::vector<char>& equip_chars)
 {
     const int e_order[] =
     {
@@ -1538,14 +1561,14 @@ void print_overview_screen()
              "%sSust.Abil.: %s\n"
              "%sRes.Mut.  : %s\n"
              "%sRes.Slow  : %s\n",
-             determine_color_string(rfire), itosym3(rfire),
-             determine_color_string(rcold), itosym3(rcold),
-             determine_color_string(rlife), itosym3(rlife),
-             determine_color_string(rpois), itosym1(rpois),
-             determine_color_string(relec), itosym1(relec),
-             determine_color_string(rsust), itosym1(rsust),
-             determine_color_string(rmuta), itosym1(rmuta),
-             determine_color_string(rslow), itosym1(rslow));
+             _determine_color_string(rfire), itosym3(rfire),
+             _determine_color_string(rcold), itosym3(rcold),
+             _determine_color_string(rlife), itosym3(rlife),
+             _determine_color_string(rpois), itosym1(rpois),
+             _determine_color_string(relec), itosym1(relec),
+             _determine_color_string(rsust), itosym1(rsust),
+             _determine_color_string(rmuta), itosym1(rmuta),
+             _determine_color_string(rslow), itosym1(rslow));
     cols.add_formatted(0, buf, false);
 
     int saplevel = you.mutation[MUT_SAPROVOROUS];
@@ -1563,7 +1586,7 @@ void print_overview_screen()
         postgourmand = itosym3(saplevel);
     }
     snprintf(buf, sizeof buf, "%s%s%s",
-             determine_color_string(saplevel), pregourmand, postgourmand);
+             _determine_color_string(saplevel), pregourmand, postgourmand);
     cols.add_formatted(0, buf, false);
 
 
@@ -1581,21 +1604,21 @@ void print_overview_screen()
              "%sRes.Corr.  : %s\n"
              "%sClarity    : %s\n"
              "\n",
-             determine_color_string(rinvi), itosym1(rinvi),
-             determine_color_string(rward), itosym1(rward),
-             determine_color_string(rcons), itosym1(rcons),
-             determine_color_string(rcorr), itosym1(rcorr),
-             determine_color_string(rclar), itosym1(rclar));
+             _determine_color_string(rinvi), itosym1(rinvi),
+             _determine_color_string(rward), itosym1(rward),
+             _determine_color_string(rcons), itosym1(rcons),
+             _determine_color_string(rcorr), itosym1(rcorr),
+             _determine_color_string(rclar), itosym1(rclar));
     cols.add_formatted(1, buf, false);
 
     if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
         snprintf(buf, sizeof buf, "\n%sPrev.Telep.: %s",
-                 determine_color_string(-1), itosym1(1));
+                 _determine_color_string(-1), itosym1(1));
     else
     {
         const int rrtel = !!player_teleport(calc_unid);
         snprintf(buf, sizeof buf, "\n%sRnd.Telep. : %s",
-                 determine_color_string(rrtel), itosym1(rrtel));
+                 _determine_color_string(rrtel), itosym1(rrtel));
     }
     cols.add_formatted(1, buf, false);
 
@@ -1606,9 +1629,9 @@ void print_overview_screen()
              "%sCtrl.Telep.: %s\n"
              "%sLevitation : %s\n"
              "%sCtrl.Flight: %s\n",
-             determine_color_string(rctel), itosym1(rctel),
-             determine_color_string(rlevi), itosym1(rlevi),
-             determine_color_string(rcfli), itosym1(rcfli));
+             _determine_color_string(rctel), itosym1(rctel),
+             _determine_color_string(rlevi), itosym1(rlevi),
+             _determine_color_string(rcfli), itosym1(rcfli));
     cols.add_formatted(1, buf, false);
 
     std::vector<char> equip_chars;
@@ -1627,7 +1650,7 @@ void print_overview_screen()
 
     overview.add_text(" ");
 
-    overview.add_text(status_mut_abilities());
+    overview.add_text(_status_mut_abilities());
 
     while (true)
     {
@@ -1647,7 +1670,7 @@ void print_overview_screen()
 
 // creates rows of short descriptions for current
 // status, mutations and abilities
-std::string status_mut_abilities()
+std::string _status_mut_abilities()
 {
     //----------------------------
     // print status information

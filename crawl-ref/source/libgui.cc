@@ -1185,6 +1185,49 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
     return id;
 }
 
+// assumes the item is equipped in the first place!
+static bool _is_true_equipped_item(item_def item)
+{
+    // weapons and staves are only truly equipped if wielded
+    if (item.link == you.equip[EQ_WEAPON])
+        return (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
+
+    // cursed armour and rings are only truly equipped if *not* wielded
+    return (item.link != you.equip[EQ_WEAPON]);
+}
+
+// returns whether there's any action you can take with an item in inventory
+// apart from dropping it
+static bool _can_use_item(item_def item, bool equipped)
+{
+    // vampires can drain corpses
+    if (item.base_type == OBJ_CORPSES)
+    {
+        return (you.species == SP_VAMPIRE
+                && item.sub_type != CORPSE_SKELETON
+                && !food_is_rotten(item)
+                && mons_has_blood(item.plus));
+    }
+
+    // mummies can't do anything with food or potions
+    if (you.species == SP_MUMMY)
+        return (item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD);
+
+    if (equipped && item_cursed(item))
+    {
+        // misc. items/rods can always be evoked, cursed or not
+        if (item.base_type == OBJ_MISCELLANY || item_is_rod(item))
+            return true;
+            
+        // you can't unwield/fire a wielded cursed weapon/staff
+        // but cursed armour and rings can be unwielded without problems
+        return (!_is_true_equipped_item(item));
+    }
+        
+    // in all other cases you can use the item in some way
+    return true;
+}
+
 static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
 {
     int cx = -1;
@@ -1308,31 +1351,28 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                     desc += EOL "[Shift-R-Click] Eat (e)";
                 }
             }
-            else
+            else // in inventory
             {
                 desc = you.inv[ix].name(DESC_INVENTORY_EQUIP);
 
+                // FIX ME: Might have to allow wielding as a secondary action
+                // for arrows (Sticks to Snakes), skeletons (Boneshards),
+                // chunks/potions of blood (Sublimation of Blood)
                 if (display_actions)
                 {
                     int type = you.inv[ix].base_type;
+                    const bool equipped = itemlist_iflag[cx] & TILEI_FLAG_EQUIP;
                     desc += EOL;
                     
-                    if ((type != OBJ_CORPSES
-                         || you.species == SP_VAMPIRE
-                            && you.inv[ix].sub_type != CORPSE_SKELETON
-                            && you.inv[ix].special >= 100)
-                         && (you.species != SP_MUMMY
-                             || you.inv[ix].base_type != OBJ_POTIONS
-                                && you.inv[ix].base_type != OBJ_FOOD))
+                    if (_can_use_item(you.inv[ix], equipped))
                     {
                         desc += "[L-Click] ";
 
-                        if (itemlist_iflag[cx] & TILEI_FLAG_EQUIP)
+                        if (equipped)
                         {
                             if (you.equip[EQ_WEAPON] == ix
                                 && type != OBJ_MISCELLANY
-                                && (!item_is_rod(you.inv[ix])
-                                    || !item_type_known(you.inv[ix])))
+                                && !item_is_rod(you.inv[ix]))
                             {
                                 if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
                                     || type == OBJ_WEAPONS || type == OBJ_STAVES)
@@ -1418,7 +1458,12 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                     }
 
                     desc += EOL "[R-Click] Info";
-                    desc += EOL "[Shift-L-Click] Drop (d)";
+                    // has to be non-equipped or non-cursed to drop
+                    if (!equipped || !_is_true_equipped_item(you.inv[ix])
+                        || !item_cursed(you.inv[ix]))
+                    {
+                        desc += EOL "[Shift-L-Click] Drop (d)";
+                    }
                 }
             }
             update_tip_text(desc.c_str());

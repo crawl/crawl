@@ -2040,6 +2040,7 @@ void tutorial_describe_item(const item_def &item)
                     }
                 }
             }
+            ostr << "\n";
             Options.tutorial_events[TUT_SEEN_SPBOOK] = 0;
             break;
 
