@@ -516,7 +516,7 @@ static void tutorial_movement_info()
         "To move your character, use the numpad; try Numlock both on and off. "
         "If your system has no number pad, or if you are familiar with the vi "
         "keys, movement is also possible with <w>hjklyubn</w>. A basic "
-        "command list can be found under <w>?</w>, and the most "
+        "command list can be found under <w>??</w>, and the most "
         "important commands will be explained to you as it becomes necessary.";
     mesclr();
     formatted_message_history(text, MSGCH_TUTORIAL, 0, get_tutorial_cols());
@@ -679,7 +679,7 @@ void tutorial_finished()
 
     Options.tutorial_left = 0;
     text =  "Congrats! You survived until the end of this tutorial - be sure to "
-            "try the other ones as well. Note that the help screen (<w>?</w>) "
+            "try the other ones as well. Note that the help screen (<w>??</w>) "
             "will look different from now on. Here's a last playing hint:";
             
     formatted_message_history(text, MSGCH_TUTORIAL, 0, get_tutorial_cols());
@@ -724,7 +724,7 @@ void tutorial_finished()
               text =  "Crawl has a macro function built in: press <w>~m</w> "
                       "to define a macro by first specifying a trigger key (say, "
                       "<w>F1</w>) and a command sequence, for example "
-                      "<w>Za+.</w>. The latter will make the <w>F1</w> "
+                      "<w>za+.</w>. The latter will make the <w>F1</w> "
                       "key always zap the spell in slot a at the nearest monster. "
                       "For more information on macros, type <w>?~</w>.";
               break;
@@ -1057,7 +1057,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #ifndef USE_TILE
                   " ('<w>/</w>')"
 #endif
-                  ". Type <w>z</w> to zap it.";
+                  ". Type <w>Z</w> to zap it.";
           break;
           
       case TUT_SEEN_SPBOOK:
@@ -1071,7 +1071,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                << "that you can read by typing <w>r</w>. "
                   "If it's a spellbook you'll then be able to memorise "
                   "spells via <w>M</w> and cast a memorised spell with "
-                  "<w>Z</w>.";
+                  "<w>z</w>.";
           
           if (you.religion == GOD_TROG)
           {
@@ -1366,7 +1366,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                       "(the Spellcasting skill also does this). For now, "
                       "you should try to memorise the second spell of your "
                       "starting book with <w>Mcb</w>, which can then be "
-                      "zapped with <w>Zb</w>.";
+                      "zapped with <w>zb</w>.";
           }
           break;
           
@@ -1678,7 +1678,7 @@ static std::string tut_target_mode(bool spells = false)
             "If you miss, <w>";
 
    if (spells)
-       result += "Zap";
+       result += "zap";
    else
        result += "ff";
 
@@ -1916,7 +1916,7 @@ void tutorial_describe_item(const item_def &item)
             break;
        }
        case OBJ_WANDS:
-            ostr << "The magic within can be unleashed by <w>z</w>apping it.";
+            ostr << "The magic within can be unleashed by <w>Z</w>apping it.";
             Options.tutorial_events[TUT_SEEN_WAND] = 0;
             break;
             
