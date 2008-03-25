@@ -2730,7 +2730,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "tile_title_screen")
     {
-        tile_title_screen = _read_bool(field, title_screen);
+        tile_title_screen = _read_bool(field, tile_title_screen);
     }
     else if (key == "tile_player_col")
     {
