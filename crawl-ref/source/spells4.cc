@@ -755,8 +755,12 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
 
     monsters *monster = &menv[which_mons];
 
-    if (!is_domesticated_animal(monster->type) || mons_friendly(monster))
+    if (!is_domesticated_animal(monster->type) || mons_friendly(monster)
+        || (is_good_god(you.religion)
+            && mons_is_evil_or_unholy(monster)))
+    {
         return 0;
+    }
 
     // 50% bonus for dogs
     if (monster->type == MONS_HOUND || monster->type == MONS_WAR_DOG )
