@@ -3899,12 +3899,6 @@ static bool initialise(void)
     you.wizard = true;
 #endif
 
-#ifdef USE_TILE
-    TilePlayerInit();
-    TileInitItems();
-    TileNewLevel(true);
-#endif
-
     init_properties();
     burden_change();
     make_hungry(0,true);
@@ -3951,6 +3945,12 @@ static bool initialise(void)
         // For a new game, wipe out monsters in LOS.
         zap_los_monsters();
     }
+
+#ifdef USE_TILE
+    TilePlayerInit();
+    TileInitItems();
+    TileNewLevel(newc);
+#endif
 
     set_cursor_enabled(false);
     viewwindow(1, false);   // This just puts the view up for the first turn.

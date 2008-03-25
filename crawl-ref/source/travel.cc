@@ -248,12 +248,12 @@ bool is_exclude_root(const coord_def &p)
 static void tile_exclude_gmap_update(const coord_def p)
 {
     for (int x = -8; x < 8; x++)
-       for (int y = -8; y < 8; y++)
-       {
-           int px = p.x+x, py = p.y+y;
-           if (in_bounds(coord_def(px,py)))
-               GmapUpdate(px, py, env.map[px][py].glyph(), true);
-       }
+        for (int y = -8; y < 8; y++)
+        {
+            int px = p.x+x, py = p.y+y;
+            if (in_bounds(coord_def(px,py)))
+                GmapUpdate(px, py, env.map[px][py].glyph(), true);
+        }
     GmapDisplay(p.x,p.y);
 }
 #endif
@@ -291,9 +291,9 @@ void clear_excludes()
 #ifdef USE_TILE
     for (int i = curr_excludes.size()-1; i >= 0; i--)
          toggle_exclude(curr_excludes[i].pos);
-#else
-    curr_excludes.clear();
 #endif
+    curr_excludes.clear();
+
     if (can_travel_interlevel())
     {
         LevelInfo &li = travel_cache.get_level_info(level_id::current());
@@ -314,6 +314,10 @@ void cycle_exclude_radius(const coord_def &p)
         case 4         : curr_radius = LOS_RADIUS; break;
         }
         
+#ifdef USE_TILE
+        tile_exclude_gmap_update(p);
+#endif
+
         if (can_travel_interlevel())
         {
             LevelInfo &li = travel_cache.get_level_info(level_id::current());
