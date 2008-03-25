@@ -256,7 +256,7 @@ static formatted_string tut_starting_info(unsigned int width)
         "death lurks around every corner." EOL EOL
         "For the moment, just remember the following keys "
         "and their functions:" EOL
-        "  <white>?</white> - shows the items and the commands" EOL
+        "  <white>?\?</white> - shows the items and the commands" EOL
         "  <white>S</white> - saves the game, to be resumed later "
         "(but note that death is permanent)" EOL
         "  <white>x</white> - examines something in your vicinity" EOL EOL
@@ -516,7 +516,7 @@ static void tutorial_movement_info()
         "To move your character, use the numpad; try Numlock both on and off. "
         "If your system has no number pad, or if you are familiar with the vi "
         "keys, movement is also possible with <w>hjklyubn</w>. A basic "
-        "command list can be found under <w>??</w>, and the most "
+        "command list can be found under <w>?\?</w>, and the most "
         "important commands will be explained to you as it becomes necessary.";
     mesclr();
     formatted_message_history(text, MSGCH_TUTORIAL, 0, get_tutorial_cols());
@@ -679,7 +679,7 @@ void tutorial_finished()
 
     Options.tutorial_left = 0;
     text =  "Congrats! You survived until the end of this tutorial - be sure to "
-            "try the other ones as well. Note that the help screen (<w>??</w>) "
+            "try the other ones as well. Note that the help screen (<w>?\?</w>) "
             "will look different from now on. Here's a last playing hint:";
             
     formatted_message_history(text, MSGCH_TUTORIAL, 0, get_tutorial_cols());
