@@ -167,17 +167,6 @@ static int mouse_mode = MOUSE_MODE_NORMAL;
 static bool region_lock[NUM_REGIONS];
 static bool toggle_telescope;
 
-#define char_is_wall(ch) (ch == 127 || (ch >= 137 && ch <= 140) \
-    || ch == 177 || ch == 176 || ch == '#') 
-
-#define char_is_item(ch) ( (ch == 33)||(ch == 34)||(ch == 36)||(ch == 37) \
-    ||(ch == 40) ||(ch == 41)||(ch == 43)||(ch == 47)||(ch == 48) \
-    ||(ch == 58) ||(ch == 61)||(ch == 63)||(ch == 88)||(ch == 91) \
-    ||(ch == 92) ||(ch == 93)||(ch == 125) || (ch == '~'))
-
-#define char_is_monster(ch) ( (ch>='@' && ch<='Z') || (ch>='a' && ch<='z') \
-    || ch=='&' || (ch>='1' && ch<='5') || ch == ';')
-
 /***********************************************************/
 //micromap color array
 #define MAP_XMAX GXM
@@ -1120,24 +1109,20 @@ void tile_place_cursor(int x, int y, bool display)
     }
 
     int new_flag = TILE_FLAG_CURSOR1;
-    const coord_def ep(x+1, y+1);
-    const coord_def gc = view2grid(ep);
+    const coord_def vp(x+1, y+1);
+    const coord_def gc = view2grid(vp);
+    const coord_def ep = grid2show(gc);
     if (gc.x < 0 || gc.y < 0 || gc.x >= GXM || gc.y >= GYM)
     {
         // off the dungeon...
         tile_cursor_x = -1;
         return;
     }
-    else if (!map_bounds(gc))
+    else if (!crawl_view.in_grid_los(gc) || !env.show(ep))
     {
         new_flag = TILE_FLAG_CURSOR2;
     }
-    else
-    {
-        unsigned char ch = env.map[gc.x][gc.y].glyph() & 0xff;
-        if (ch==0 || ch==' ' || char_is_wall(ch))
-            new_flag = TILE_FLAG_CURSOR2;
-    }
+
     tile_cursor_x = x;
     tile_cursor_y = y;
     tile_cursor_flag = TileDrawCursor(x, y, new_flag);
