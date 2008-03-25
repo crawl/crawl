@@ -90,7 +90,6 @@ enum InvAction
     INV_NUMACTIONS
 };
 
-void gui_set_mouse_inv(int idx, InvAction act);
 void gui_get_mouse_inv(int &idx, InvAction &act);
 
 void tile_place_cursor(int x, int y, bool display);

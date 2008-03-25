@@ -284,7 +284,7 @@ int mouse_grid_x;
 int mouse_grid_y;
 bool mouse_in_dngn = false;
 
-void gui_set_mouse_view_pos(bool in_dngn, int cx, int cy)
+static void _gui_set_mouse_view_pos(bool in_dngn, int cx, int cy)
 {
     const coord_def& gc = view2grid(coord_def(cx,cy));
     mouse_grid_x = gc.x;
@@ -309,7 +309,7 @@ bool gui_get_mouse_grid_pos(coord_def &gc)
 int inv_idx = 0;
 InvAction inv_action = INV_NUMACTIONS;
 
-void gui_set_mouse_inv(int idx, InvAction act)
+static void _gui_set_mouse_inv(int idx, InvAction act)
 {
     inv_idx = idx;
     inv_action = act;
@@ -1486,15 +1486,15 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
             oldcy = cy;
             oldmode = mode;
 
-            gui_set_mouse_view_pos(true, cx+1, cy+1);
+            _gui_set_mouse_view_pos(true, cx+1, cy+1);
 
             return CK_MOUSE_MOVE;
         }
     }
 
-    gui_set_mouse_view_pos(false, -1, -1);
+    _gui_set_mouse_view_pos(false, -1, -1);
 
-    if (mode==REGION_TDNGN || mode==REGION_DNGN)
+    if (mode == REGION_TDNGN || mode == REGION_DNGN)
     {
         if (mode == oldmode && oldcx == DCX && oldcy == DCY)
             update_tip_text("");
@@ -1675,14 +1675,14 @@ static int _handle_mouse_button(int mx, int my, int button,
                 {
                     if (shift)
                     {
-                        gui_set_mouse_inv(ix, INV_EAT_FLOOR);
+                        _gui_set_mouse_inv(ix, INV_EAT_FLOOR);
                         return CK_MOUSE_B1ITEM;
                     }
                     else
-                        gui_set_mouse_inv(-ix, INV_VIEW);
+                        _gui_set_mouse_inv(-ix, INV_VIEW);
                 }
                 else
-                    gui_set_mouse_inv(ix, INV_VIEW);
+                    _gui_set_mouse_inv(ix, INV_VIEW);
                     
                 TileMoveInvCursor(-1);
                 return CK_MOUSE_B2ITEM;
@@ -1694,20 +1694,20 @@ static int _handle_mouse_button(int mx, int my, int button,
                 {
                     // try pick up one item
                     if (!shift)
-                        gui_set_mouse_inv(ix, INV_PICKUP);
+                        _gui_set_mouse_inv(ix, INV_PICKUP);
                     else
-                        gui_set_mouse_inv(ix, INV_USE_FLOOR);
+                        _gui_set_mouse_inv(ix, INV_USE_FLOOR);
                         
                     return CK_MOUSE_B1ITEM;
                 }
                 
                 // use item
                 if (shift)
-                    gui_set_mouse_inv(ix, INV_DROP);
+                    _gui_set_mouse_inv(ix, INV_DROP);
                 else if (ctrl)
-                    gui_set_mouse_inv(ix, INV_USE2);
+                    _gui_set_mouse_inv(ix, INV_USE2);
                 else
-                    gui_set_mouse_inv(ix, INV_USE);
+                    _gui_set_mouse_inv(ix, INV_USE);
                     
                 return CK_MOUSE_B1ITEM;
             }
@@ -1838,11 +1838,11 @@ static int _handle_mouse_button(int mx, int my, int button,
     if ((mouse_mode == MOUSE_MODE_TARGET || mouse_mode == MOUSE_MODE_TARGET_DIR)
         && button == 1 && (mode == REGION_DNGN || mode == REGION_TDNGN))
     {
-        gui_set_mouse_view_pos(true, cx+1, cy+1);
+        _gui_set_mouse_view_pos(true, cx+1, cy+1);
         return CK_MOUSE_CLICK;
     }
 
-    gui_set_mouse_view_pos(false, 0, 0);
+    _gui_set_mouse_view_pos(false, 0, 0);
 
     if (mouse_mode == MOUSE_MODE_TARGET_DIR && button == 1
         && (mode == REGION_DNGN || mode == REGION_TDNGN))
@@ -2070,7 +2070,8 @@ void get_input_line_gui(char *const buff, int len)
     static char last[128];
     static int lastk = 0;
 
-    if(!r->flag)return;
+    if (!r->flag)
+        return;
 
     /* Locate the cursor */
     x = wherex();
@@ -2099,50 +2100,46 @@ void get_input_line_gui(char *const buff, int len)
         /* Analyze the key */
         switch (kin)
         {
-            case 0x1B:
-                k = 0;
-                done = 1;
-                break;
+        case 0x1B:
+            k = 0;
+            done = true;
+            break;
 
-            case '\n':
-            case '\r':
-                k = strlen(buff);
-                done = 1;
-        lastk = k;
-        strncpy(last, buff, k);
-                break;
+        case '\n':
+        case '\r':
+            k = strlen(buff);
+            done = true;
+            lastk = k;
+            strncpy(last, buff, k);
+            break;
 
         case CK_UP: // history
-        if (lastk != 0)
-        {
-            k = lastk;
-            strncpy(buff, last, k);
-        }
-        break;
-
-            case 0x7F:
-            case '\010':
-                k = prev;
-                break;
-
-            // Escape conversion. (for ^H, etc)
-            case CONTROL('V'):
-                kin = getch();
-                // fallthrough
-
-            default:
+            if (lastk != 0)
             {
-                if (k < len &&
-                     (
-                      isprint(kin)
-                      || (kin >=  CONTROL('A') && kin <= CONTROL('Z'))
-                      || (kin >= 0x80 && kin <=0xff)
-                     )
-                   )
-                     buff[k++] = kin;
-                break;
+                k = lastk;
+                strncpy(buff, last, k);
             }
+            break;
 
+        case 0x7F:
+        case '\010':
+            k = prev;
+            break;
+
+        // Escape conversion. (for ^H, etc)
+        case CONTROL('V'):
+            kin = getch();
+            // fallthrough
+
+        default:
+            if (k < len
+                && (isprint(kin)
+                    || (kin >=  CONTROL('A') && kin <= CONTROL('Z'))
+                    || (kin >= 0x80 && kin <=0xff)))
+            {
+                buff[k++] = kin;
+            }
+            break;
         }
         /* Terminate */
         buff[k] = '\0';
@@ -2152,18 +2149,18 @@ void get_input_line_gui(char *const buff, int len)
         int i;
 
         //addstr(buff);
-        for(i=0;i<k;i++)
+        for (i = 0; i < k; i++)
         {
             prev = i;
             int c = (unsigned char)buff[i];
-            if (c>=0x80)
+            if (c >= 0x80)
             {
-                if (buff[i+1]==0) break;
+                if (buff[i+1] == 0)
+                    break;
                 writeWChar((unsigned char *)&buff[i]);
                 i++;
             }
-            else
-            if (c >= CONTROL('A') && c<= CONTROL('Z'))
+            else if (c >= CONTROL('A') && c <= CONTROL('Z'))
             {
                 putch('^');
                 putch(c + 'A' - 1);
@@ -2172,7 +2169,7 @@ void get_input_line_gui(char *const buff, int len)
                 putch(c);
         }
         r->addstr((char *)"_             ");
-    r->cgotoxy(x+k, y);
+        r->cgotoxy(x+k, y);
     }/* while */
 }
 
@@ -2270,7 +2267,7 @@ int get_number_of_cols()
 }
 
 void message_out(int which_line, int colour, const char *s, int firstcol,
-    bool newline)
+                 bool newline)
 {
     if (!firstcol)
         firstcol = Options.delay_message_clear ? 2 : 1;
@@ -2296,7 +2293,7 @@ void put_colour_ch(int colour, unsigned ch)
 }
 
 void puttext(int sx, int sy, int ex, int ey, unsigned char *buf, bool mono,
-    int where)
+             int where)
 {
     TextRegionClass *r = (where == 1) ?region_crt:region_dngn;
 
@@ -2305,20 +2302,20 @@ void puttext(int sx, int sy, int ex, int ey, unsigned char *buf, bool mono,
     int xx, yy;
     unsigned char *ptr = buf;
     //cgotoxy(1, 1, GOTO_CRT);
-    for(yy= sy-1; yy<= ey-1; yy++)
+    for(yy = sy-1; yy <= ey-1; yy++)
     {
         unsigned char *c = &(r->cbuf[yy*(r->mx)+sx-1]);
         unsigned char *a = &(r->abuf[yy*(r->mx)+sx-1]);
-        for(xx= sx-1; xx<= ex-1; xx++)
+        for (xx = sx-1; xx <= ex-1; xx++)
         {
             *c = *ptr;
-            if (*c==0) *c=32;
+            
+            if (*c==0)
+                *c=32;
+                
             ptr++;
-
             if (mono)
-            {
                 *a = WHITE;
-            }
             else
             {
                 *a = *ptr;
@@ -2367,7 +2364,7 @@ void ViewTextFile(const char *name)
     fclose(fp);
     clrscr();
 
-    while(1)
+    while (true)
     {
         cgotoxy(1, 1);
         if (cline == 0)
@@ -2389,16 +2386,25 @@ void ViewTextFile(const char *name)
         mouse_set_mode(MOUSE_MODE_MORE);
         int key = getch();
         mouse_set_mode(MOUSE_MODE_NORMAL);
-        if (key == 'q' || key == ESCAPE || key =='\r') break;
-        if (key == '-' || key == 'b') cline -= max-2;
-        if (key == 'k') cline --;
-        if (key == '+' || key == ' ') cline += max-2;
-        if (key == 'j') cline ++;
-        if (key == CK_MOUSE_B4) cline--;
-        if (key == CK_MOUSE_B5) cline++;
+        if (key == 'q' || key == ESCAPE || key =='\r')
+            break;
+        else if (key == '-' || key == 'b')
+            cline -= max-2;
+        else if (key == 'k')
+            cline --;
+        else if (key == '+' || key == ' ')
+            cline += max-2;
+        else if (key == 'j')
+            cline++;
+        else if (key == CK_MOUSE_B4)
+            cline--;
+        else if (key == CK_MOUSE_B5)
+            cline++;
 
-        if (cline + max-2 > nlines) cline = nlines-max + 2;
-        if (cline < 0) cline = 0;
+        if (cline + max-2 > nlines)
+            cline = nlines-max + 2;
+        if (cline < 0)
+            cline = 0;
     }
 }
 

@@ -197,8 +197,8 @@ img_type ImgLoadFileSimple(const char *name)
 }
 
 // TileImg macro
-void ImgCopyFromTileImg(int idx, img_type dest, int dx, int dy, int copy,
-                        char *mask = NULL, bool hilite = false)
+void _ImgCopyFromTileImg(int idx, img_type dest, int dx, int dy, int copy,
+                         char *mask = NULL, bool hilite = false)
 {
     int sx = (idx % TILE_PER_ROW)*TILE_X;
     int sy = (idx / TILE_PER_ROW)*TILE_Y;
@@ -220,8 +220,8 @@ void ImgCopyFromTileImg(int idx, img_type dest, int dx, int dy, int copy,
     }
 }
 
-void ImgCopyToTileImg(int idx, img_type src, int sx, int sy, int copy,
-                        char *mask = NULL, bool hilite = false)
+static void _ImgCopyToTileImg(int idx, img_type src, int sx, int sy, int copy,
+                              char *mask = NULL, bool hilite = false)
 {
     int dx = (idx % TILE_PER_ROW)*TILE_X;
     int dy = (idx / TILE_PER_ROW)*TILE_Y;
@@ -409,7 +409,7 @@ void _init_tcache()
 
 // Move a cache to the top of pointer string
 // to shorten the search time
-void lift_tcache(int ix, int kind, int hash)
+static void _lift_tcache(int ix, int kind, int hash)
 {
     int kind_n_hash = kind * tc_hash + hash;
     int head_old=tcache_head[kind_n_hash];
@@ -464,15 +464,15 @@ static int _tcache_find_id_normal(int kind, int *fg, int *bg, int *is_new)
         }
         tc0 = next;
     }
-    lift_tcache(tc0->idx, kind, hash);
+    _lift_tcache(tc0->idx, kind, hash);
 
     return tc0->idx;
 }
 
 
 /*** overlay a tile onto an exsisting image with transpalency operation */
-void tcache_overlay(img_type img, int idx,
-    int tile, int region, int *copy, char *mask, unsigned int shift_left = 0)
+static void _tcache_overlay(img_type img, int idx, int tile, int region,
+                            int *copy, char *mask, unsigned int shift_left = 0)
 {
 
     int x0, y0;
@@ -517,8 +517,8 @@ void tcache_overlay(img_type img, int idx,
     *copy = 0;
 }
 
-void tcache_overlay_player(img_type img, int dx, int dy,
-                        int part, int idx, int ymax, int *copy)
+void _tcache_overlay_player(img_type img, int dx, int dy, int part, int idx,
+                            int ymax, int *copy)
 {
     int xs, ys;
     int tidx = tilep_parts_start[part];
@@ -628,7 +628,7 @@ void _tile_draw_grid(int kind, int xx, int yy)
     }
 }
 
-void update_single_grid(int x, int y)
+static void _update_single_grid(int x, int y)
 {
     int sx, sy, wx, wy;
 
@@ -644,7 +644,7 @@ void update_single_grid(int x, int y)
 
 
 // Discard cache containing specific tile
-void redraw_spx_tcache(int tile)
+static void _redraw_spx_tcache(int tile)
 {
     for (int kind = 0; kind < tcache_kind; kind++)
     {
@@ -661,7 +661,7 @@ void redraw_spx_tcache(int tile)
     }
 }
 
-void get_bbg(int bg, int *new_bg, int *bbg)
+static void _get_bbg(int bg, int *new_bg, int *bbg)
 {
     int bg0 = bg & TILE_FLAG_MASK;
        *bbg = TILE_DNGN_FLOOR;
@@ -679,7 +679,7 @@ void get_bbg(int bg, int *new_bg, int *bbg)
     }
 }
 
-int sink_mask_tile(int bg, int fg)
+static int _sink_mask_tile(int bg, int fg)
 {
     int bg0 = bg & TILE_FLAG_MASK;
 
@@ -706,107 +706,106 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
     int sink;
     img_type tc_img = tcache_image[TCACHE0_NORMAL];
 
-    get_bbg(bg0, &new_bg, &bbg);
+    _get_bbg(bg0, &new_bg, &bbg);
 
     if (bbg)
-        tcache_overlay(tc_img, ix, bbg, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, bbg, TREGION_0_NORMAL, &c, NULL);
 
     if (bg0 & TILE_FLAG_BLOOD)
-        tcache_overlay(tc_img, ix, TILE_BLOOD0, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_BLOOD0, TREGION_0_NORMAL, &c, NULL);
 
     if (new_bg)
-        tcache_overlay(tc_img, ix, new_bg, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, new_bg, TREGION_0_NORMAL, &c, NULL);
 
     if ((bg0 & TILE_FLAG_SANCTUARY) && !(bg0 & TILE_FLAG_UNSEEN))
-        tcache_overlay(tc_img, ix, TILE_SANCTUARY, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_SANCTUARY, TREGION_0_NORMAL, &c, NULL);
 
     // Apply the travel exclusion under the foreground if the cell is
     // visible.  It will be applied later if the cell is unseen.
     if ((bg0 & TILE_FLAG_TRAVEL_EX) && !(bg0 & TILE_FLAG_UNSEEN))
     {
-        tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c, 
-                       NULL);
+        _tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c,
+                        NULL);
     }
 
     if (bg0 & TILE_FLAG_RAY)
-        tcache_overlay(tc_img, ix, TILE_RAY_MESH, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_RAY_MESH, TREGION_0_NORMAL, &c, NULL);
 
     if (fg0)
     {
-        sink = sink_mask_tile(bg0, fg0);
+        sink = _sink_mask_tile(bg0, fg0);
         if (sink)
         {
             int flag = 2;
             _register_tile_mask(sink, TREGION_0_NORMAL, &flag, sink_mask);
-            tcache_overlay(tc_img, ix, fg0, TREGION_0_NORMAL, &c, sink_mask);
+            _tcache_overlay(tc_img, ix, fg0, TREGION_0_NORMAL, &c, sink_mask);
         }
         else
-            tcache_overlay(tc_img, ix, fg0, TREGION_0_NORMAL, &c, NULL);
+            _tcache_overlay(tc_img, ix, fg0, TREGION_0_NORMAL, &c, NULL);
     }
 
     if (fg0 & TILE_FLAG_NET)
-        tcache_overlay(tc_img, ix, TILE_TRAP_NET, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_TRAP_NET, TREGION_0_NORMAL, &c, NULL);
 
     if (fg0 & TILE_FLAG_S_UNDER)
     {
-        tcache_overlay(tc_img, ix, TILE_SOMETHING_UNDER,
-                       TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_SOMETHING_UNDER,
+                        TREGION_0_NORMAL, &c, NULL);
     }
 
     // Pet mark
     int status_shift = 0;
     if (fg0 & TILE_FLAG_PET)
     {
-        tcache_overlay(tc_img, ix, TILE_HEART, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_HEART, TREGION_0_NORMAL, &c, NULL);
         status_shift += 10;
     }
     else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_NEUTRAL)
     {
-        tcache_overlay(tc_img, ix, TILE_NEUTRAL, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_NEUTRAL, TREGION_0_NORMAL, &c, NULL);
         status_shift += 8;
     }
     else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_STAB)
     {
-        tcache_overlay(tc_img, ix, TILE_STAB_BRAND, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_STAB_BRAND, TREGION_0_NORMAL, &c, NULL);
         status_shift += 8;
     }
     else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_MAY_STAB)
     {
-        tcache_overlay(tc_img, ix, TILE_MAY_STAB_BRAND, TREGION_0_NORMAL, &c,
-                       NULL);
+        _tcache_overlay(tc_img, ix, TILE_MAY_STAB_BRAND, TREGION_0_NORMAL, &c,
+                        NULL);
         status_shift += 5;
     }
     
     if (fg0 & TILE_FLAG_POISON)
     {
-        tcache_overlay(tc_img, ix, TILE_POISON, TREGION_0_NORMAL, &c, NULL,
-                       status_shift);
+        _tcache_overlay(tc_img, ix, TILE_POISON, TREGION_0_NORMAL, &c, NULL,
+                        status_shift);
         status_shift += 5;
     }
 
     if (bg0 & TILE_FLAG_UNSEEN)
     {
-        tcache_overlay(tc_img, ix, TILE_MESH, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_MESH, TREGION_0_NORMAL, &c, NULL);
     }
 
     if (bg0 & TILE_FLAG_MM_UNSEEN)
     {
-        tcache_overlay(tc_img, ix, TILE_MAGIC_MAP_MESH, TREGION_0_NORMAL, &c, 
-                       NULL);
+        _tcache_overlay(tc_img, ix, TILE_MAGIC_MAP_MESH, TREGION_0_NORMAL, &c,
+                        NULL);
     }
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.
     if (bg0 & TILE_FLAG_NEW_STAIR && status_shift == 0)
     {
-        tcache_overlay(tc_img, ix, TILE_NEW_STAIR,
-                       TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tc_img, ix, TILE_NEW_STAIR, TREGION_0_NORMAL, &c, NULL);
     }
 
     if ((bg0 & TILE_FLAG_TRAVEL_EX) && (bg0 & TILE_FLAG_UNSEEN))
     {
-        tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c, 
-                       NULL);
+        _tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c,
+                        NULL);
     }
 
     // Tile cursor
@@ -818,7 +817,7 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
        if ((bg0 & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
            type = TILE_CURSOR3;
 
-       tcache_overlay(tc_img, ix, type, TREGION_0_NORMAL, &c, NULL);
+       _tcache_overlay(tc_img, ix, type, TREGION_0_NORMAL, &c, NULL);
 
        if (type != TILE_CURSOR3)
            c = 2;
@@ -832,14 +831,14 @@ int TileDrawCursor(int x, int y, int cflag)
     int oldc = t2buf[x+1][y+1] & TILE_FLAG_CURSOR;
     t2buf[x+1][y+1] &= ~TILE_FLAG_CURSOR;
     t2buf[x+1][y+1] |= cflag;
-    update_single_grid(x, y);
+    _update_single_grid(x, y);
     return oldc;
 }
 
 void TileDrawBolt(int x, int y, int fg){
 
     t1buf[x+1][y+1]=fg | TILE_FLAG_FLYING;
-    update_single_grid(x, y);
+    _update_single_grid(x, y);
 }
 
 void StoreDungeonView(unsigned int *tileb)
@@ -961,7 +960,7 @@ void TileDrawMap(int gx, int gy)
 }
 
 // Load optional wall tile
-static void TileLoadWallAux(int idx_src, int idx_dst, img_type wall)
+static void _TileLoadWallAux(int idx_src, int idx_dst, img_type wall)
 {
     int tile_per_row = ImgWidth(wall) / TILE_X;
 
@@ -971,7 +970,7 @@ static void TileLoadWallAux(int idx_src, int idx_dst, img_type wall)
     sx *= TILE_X;
     sy *= TILE_Y;
 
-    ImgCopyToTileImg(idx_dst, wall, sx, sy, 1);
+    _ImgCopyToTileImg(idx_dst, wall, sx, sy, 1);
 }
 
 void WallIdx(int &wall, int &floor, int &special)
@@ -1247,18 +1246,18 @@ void TileLoadWall(bool wizard)
     int offset = floor_tile_idx;
     for (int i = 0; i < floor_flavors; i++)
     {
-        int idx_src = tile_W2D_start[floor_idx] + i;
-        int idx_dst = offset++;
-        TileLoadWallAux(idx_src, idx_dst, WallImg);
+         int idx_src = tile_W2D_start[floor_idx] + i;
+         int idx_dst = offset++;
+         _TileLoadWallAux(idx_src, idx_dst, WallImg);
     }
 
     wall_tile_idx = offset;
     wall_flavors  = tile_W2D_count[wall_idx];
     for (int i = 0; i < wall_flavors; i++)
     {
-        int idx_src = tile_W2D_start[wall_idx] + i;
-        int idx_dst = offset++;
-        TileLoadWallAux(idx_src, idx_dst, WallImg);
+         int idx_src = tile_W2D_start[wall_idx] + i;
+         int idx_dst = offset++;
+         _TileLoadWallAux(idx_src, idx_dst, WallImg);
     }
 
     if (special_idx != -1)
@@ -1267,9 +1266,9 @@ void TileLoadWall(bool wizard)
         special_flavors = tile_W2D_count[special_idx];
         for (int i = 0; i < special_flavors; i++)
         {
-            int idx_src = tile_W2D_start[special_idx] + i;
-            int idx_dst = offset++;
-            TileLoadWallAux(idx_src, idx_dst, WallImg);
+             int idx_src = tile_W2D_start[special_idx] + i;
+             int idx_dst = offset++;
+             _TileLoadWallAux(idx_src, idx_dst, WallImg);
         }
     }
     else
@@ -1490,17 +1489,17 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
                             TILEP_SHADOW_NAGA_BARDING :
                             TILEP_SHADOW_CENTAUR_BARDING;
                             
-            tcache_overlay_player(img, 0, 0, TILEP_PART_SHADOW,
-                                  tile, TILE_Y, &c);
+            _tcache_overlay_player(img, 0, 0, TILEP_PART_SHADOW,
+                                   tile, TILE_Y, &c);
         }
         else if(parts2[p] && flags[p])
-            tcache_overlay_player(img, 0, 0, p, parts2[p], ymax, &c);
+            _tcache_overlay_player(img, 0, 0, p, parts2[p], ymax, &c);
     }
     return true;
 }
 
-static void load_doll_data(const char *fn, dolls_data *dolls, int max,
-                           int *mode, int *cur)
+static void _load_doll_data(const char *fn, dolls_data *dolls, int max,
+                            int *mode, int *cur)
 {
     char fbuf[1024];
     int cur0 = 0;
@@ -1663,7 +1662,7 @@ void TilePlayerEdit()
     }
 
     // load settings
-    load_doll_data("dolls.txt", dolls, DOLLS_MAX, &mode, &cur_doll);
+    _load_doll_data("dolls.txt", dolls, DOLLS_MAX, &mode, &cur_doll);
     for (j = 0; j < DOLLS_MAX; j++)
         undo_dolls[j] = dolls[j];
 
@@ -1768,26 +1767,27 @@ void TilePlayerEdit()
                 if (index > tilep_parts_total[ p_lines[cur_part] ])
                     index = index - tilep_parts_total[ p_lines[cur_part] ] - 1;
                     
-                tcache_overlay_player(PartsImg, i * TILE_X, 0, 
+                _tcache_overlay_player(PartsImg, i * TILE_X, 0,
                 p_lines[cur_part], index, TILE_Y, &d);
             }
             ImgCopy(PartsImg, 0, 0, ImgWidth(PartsImg), ImgHeight(PartsImg),
                     ScrBufImg, 3 * TILE_X, 4 * TILE_Y, 0);
-            ImgCopyFromTileImg( TILE_CURSOR, ScrBufImg,
-                              (3 + PARTS_DISP_MAX / 2) * TILE_X, 4 * TILE_Y, 0);
+            _ImgCopyFromTileImg( TILE_CURSOR, ScrBufImg,
+                                (3 + PARTS_DISP_MAX / 2) * TILE_X,
+                                4 * TILE_Y, 0);
         }
         _draw_doll(DollCacheImg, &dolls[cur_doll], true);
 
         ImgCopy(DollCacheImg, 0, 0, TILE_X, TILE_Y,
                 DollsListImg, cur_doll*TILE_X, 0, 1);
 
-        ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
-        ImgCopyFromTileImg(TILE_PLAYER, ScrBufImg, 8*TILE_X, 8*TILE_Y, 0);
+        _ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(TILE_PLAYER, ScrBufImg, 8*TILE_X, 8*TILE_Y, 0);
         ImgCopy(DollsListImg, 0, 0,
                 ImgWidth(DollsListImg), ImgHeight(DollsListImg),
                 ScrBufImg, 3 * TILE_X, PARTS_Y, 0);
-        ImgCopyFromTileImg( TILE_CURSOR, ScrBufImg,
-                            (3 + cur_doll) * TILE_X, PARTS_Y, 0);
+        _ImgCopyFromTileImg( TILE_CURSOR, ScrBufImg,
+                             (3 + cur_doll) * TILE_X, PARTS_Y, 0);
         region_tile->redraw();
 
         cgotoxy(10 , cur_part + 1, GOTO_STAT);
@@ -2020,7 +2020,7 @@ void TilePlayerEdit()
 
     current_doll = dolls[cur_doll];
     _draw_doll(DollCacheImg, &current_doll);
-    ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
+    _ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
 
     std::string dollsTxtString = datafile_path("dolls.txt", false, true);
     const char *dollsTxt = (dollsTxtString.c_str()[0] == 0) ?
@@ -2043,7 +2043,7 @@ void TilePlayerEdit()
     ImgDestroy(DollsListImg);
 
     ImgClear(ScrBufImg);
-    redraw_spx_tcache(TILE_PLAYER);
+    _redraw_spx_tcache(TILE_PLAYER);
 
     for (x = 0; x < TILE_DAT_XMAX + 2; x++)
     {
@@ -2069,13 +2069,13 @@ void TilePlayerRefresh()
     if (!_draw_doll(DollCacheImg, &current_doll))
         return; // Not changed
 
-    ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
+    _ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
 
-    redraw_spx_tcache(TILE_PLAYER);
+    _redraw_spx_tcache(TILE_PLAYER);
     force_redraw_tile = true;
 
     const coord_def ep = grid2view(you.pos());
-    update_single_grid(ep.x-1, ep.y-1);
+    _update_single_grid(ep.x-1, ep.y-1);
 }
 
 void TilePlayerInit()
@@ -2091,11 +2091,11 @@ void TilePlayerInit()
     tilep_race_default(you.species, gender, you.experience_level, doll.parts);
     tilep_job_default(you.char_class, gender, doll.parts);
 
-    load_doll_data("dolls.txt", &doll, 1, &mode, &cur_doll); 
+    _load_doll_data("dolls.txt", &doll, 1, &mode, &cur_doll);
     current_doll = doll;
     _draw_doll(DollCacheImg, &doll);
 
-    ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
+    _ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
 }
 
 void TileGhostInit(const struct ghost_demon &ghost)
@@ -2255,11 +2255,11 @@ void TileGhostInit(const struct ghost_demon &ghost)
 
     ImgClear(DollCacheImg);
     // Clear
-    ImgCopyToTileImg(TILE_MONS_PLAYER_GHOST, DollCacheImg, 0, 0, 1);
+    _ImgCopyToTileImg(TILE_MONS_PLAYER_GHOST, DollCacheImg, 0, 0, 1);
 
     _draw_doll(DollCacheImg, &doll);
-    ImgCopyToTileImg(TILE_MONS_PLAYER_GHOST, DollCacheImg, 0, 0, 1, mask, false);
-    redraw_spx_tcache(TILE_MONS_PLAYER_GHOST);
+    _ImgCopyToTileImg(TILE_MONS_PLAYER_GHOST, DollCacheImg, 0, 0, 1, mask, false);
+    _redraw_spx_tcache(TILE_MONS_PLAYER_GHOST);
 }
 
 void TileInitItems()
@@ -2270,9 +2270,9 @@ void TileInitItems()
         int tile0 = TILE_POTION_OFFSET + special % 14;
         int tile1 = TILE_POT_HEALING + i;
 
-        ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
-        ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
-        ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
+        _ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
     }
 
     for (int i = 0; i < NUM_WANDS; i++)
@@ -2281,9 +2281,9 @@ void TileInitItems()
         int tile0 = TILE_WAND_OFFSET + special % 12;
         int tile1 = TILE_WAND_FLAME + i;
 
-        ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
-        ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
-        ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
+        _ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
     }
 
     for (int i = 0; i < STAFF_SMITING; i++)
@@ -2292,9 +2292,9 @@ void TileInitItems()
         int tile0 = TILE_STAFF_OFFSET + (special / 4) % 10;
         int tile1 = TILE_STAFF_WIZARDRY + i;
 
-        ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
-        ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
-        ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
+        _ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
     }
     for (int i = STAFF_SMITING; i < NUM_STAVES; i++)
     {
@@ -2302,9 +2302,9 @@ void TileInitItems()
         int tile0 = TILE_ROD_OFFSET + (special / 4) % 10;
         int tile1 = TILE_ROD_SMITING + i - STAFF_SMITING;
 
-        ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
-        ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
-        ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(tile0, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
+        _ImgCopyToTileImg(tile1, DollCacheImg, 0, 0, 1);
     }
 }
 
@@ -2326,7 +2326,7 @@ mcache mc_data[N_MCACHE];
 
 mcache *mc_head = NULL;
 
-static void ImgCopyDoll(int equ_tile, int hand, int ofs_x, int ofs_y)
+static void _ImgCopyDoll(int equ_tile, int hand, int ofs_x, int ofs_y)
 {
     int handidx = hand == 1 ? TILEP_PART_HAND1 : TILEP_PART_HAND2;
 
@@ -2347,7 +2347,7 @@ static void ImgCopyDoll(int equ_tile, int hand, int ofs_x, int ofs_y)
     ImgCopy(PlayerImg, xs, ys, wx, wy, DollCacheImg, ox, oy, 0);
 }
 
-static void mcache_compose(int tile_idx, int mon_tile, int equ_tile)
+static void _mcache_compose(int tile_idx, int mon_tile, int equ_tile)
 {
     int ofs_x = 0;
     int ofs_y = 0;
@@ -2441,10 +2441,10 @@ static void mcache_compose(int tile_idx, int mon_tile, int equ_tile)
     }
 
     // Copy monster tile
-    ImgCopyFromTileImg(mon_tile, DollCacheImg, 0, 0, 1);
+    _ImgCopyFromTileImg(mon_tile, DollCacheImg, 0, 0, 1);
 
     // Overlay weapon tile
-    ImgCopyDoll(equ_tile, 1, ofs_x, ofs_y);
+    _ImgCopyDoll(equ_tile, 1, ofs_x, ofs_y);
 
     // In some cases, overlay a second weapon tile...
     if (mon_tile == TILE_MONS_DEEP_ELF_BLADEMASTER)
@@ -2463,16 +2463,16 @@ static void mcache_compose(int tile_idx, int mon_tile, int equ_tile)
                 eq2 = TILEP_HAND2_SHORT_SWORD_SLANT;
                 break;
         };
-        ImgCopyDoll(eq2, 2, -ofs_x, ofs_y);
+        _ImgCopyDoll(eq2, 2, -ofs_x, ofs_y);
     }
 
     // Copy to the buffer
-    ImgCopyToTileImg(tile_idx, DollCacheImg, 0, 0, 1);
+    _ImgCopyToTileImg(tile_idx, DollCacheImg, 0, 0, 1);
 
-    redraw_spx_tcache(tile_idx);
+    _redraw_spx_tcache(tile_idx);
 }
 
-static void mcache_compose_draco(int tile_idx, int race, int cls, int w)
+static void _mcache_compose_draco(int tile_idx, int race, int cls, int w)
 {
     extern int draconian_color(int race, int level);
 
@@ -2557,8 +2557,8 @@ static void mcache_compose_draco(int tile_idx, int race, int cls, int w)
     ImgClear(DollCacheImg);
     _draw_doll(DollCacheImg, &doll, true, false);
     // Copy to the buffer
-    ImgCopyToTileImg(tile_idx, DollCacheImg, 0, 0, 1);
-    redraw_spx_tcache(tile_idx);
+    _ImgCopyToTileImg(tile_idx, DollCacheImg, 0, 0, 1);
+    _redraw_spx_tcache(tile_idx);
 }
 
 static void _mcache_init()
@@ -2692,9 +2692,9 @@ int TileMcacheFind(int mon_tile, int equ_tile, int draco)
     // compose new image
     if (draco != 0)
         // race, class, weapon
-        mcache_compose_draco(mc->idx, draco, mon_tile, equ_tile);
+        _mcache_compose_draco(mc->idx, draco, mon_tile, equ_tile);
     else
-        mcache_compose(mc->idx, mon_tile, equ_tile);
+        _mcache_compose(mc->idx, mon_tile, equ_tile);
         
     mc->mon_tile = mon_tile;
     mc->equ_tile = equ_tile;
@@ -2758,7 +2758,7 @@ void TileDrawTitle()
     win_main->removeRegion(&title);
 }
 
-static void TilePutch(int c, img_type Dest, int dx, int dy)
+static void _TilePutch(int c, img_type Dest, int dx, int dy)
 {
     int tidx = TILE_CHAR00 + (c-32)/8;
     int tidx2 = c & 7;
@@ -2807,34 +2807,34 @@ void TileDrawOneItem(int region, int i, char key, int idx,
 
     if (tile == -1)
     {
-        ImgCopyFromTileImg(TILE_DNGN_UNSEEN, r->backbuf, dx, dy, 1);
+        _ImgCopyFromTileImg(TILE_DNGN_UNSEEN, r->backbuf, dx, dy, 1);
         return;
     }
 
     if (floor)
-        ImgCopyFromTileImg(TILE_DNGN_FLOOR, r->backbuf, dx, dy, 1);
+        _ImgCopyFromTileImg(TILE_DNGN_FLOOR, r->backbuf, dx, dy, 1);
     else
-        ImgCopyFromTileImg(TILE_ITEM_SLOT, r->backbuf, dx, dy, 1);
+        _ImgCopyFromTileImg(TILE_ITEM_SLOT, r->backbuf, dx, dy, 1);
 
     if (equip)
     {
         if (cursed)
-            ImgCopyFromTileImg(TILE_ITEM_SLOT_EQUIP_CURSED, r->backbuf, 
-                               dx, dy, 0);
+            _ImgCopyFromTileImg(TILE_ITEM_SLOT_EQUIP_CURSED, r->backbuf,
+                                dx, dy, 0);
         else
-            ImgCopyFromTileImg(TILE_ITEM_SLOT_EQUIP, r->backbuf, dx, dy, 0);
+            _ImgCopyFromTileImg(TILE_ITEM_SLOT_EQUIP, r->backbuf, dx, dy, 0);
     }
     else if (cursed)
-        ImgCopyFromTileImg(TILE_ITEM_SLOT_CURSED, r->backbuf, dx, dy, 0);
+        _ImgCopyFromTileImg(TILE_ITEM_SLOT_CURSED, r->backbuf, dx, dy, 0);
 
     if (select)
-        ImgCopyFromTileImg(TILE_RAY_MESH, r->backbuf, dx, dy, 0);
+        _ImgCopyFromTileImg(TILE_RAY_MESH, r->backbuf, dx, dy, 0);
 
     if (itemlist_iflag[i] & TILEI_FLAG_CURSOR)
-        ImgCopyFromTileImg(TILE_CURSOR, r->backbuf, dx, dy, 0);
+        _ImgCopyFromTileImg(TILE_CURSOR, r->backbuf, dx, dy, 0);
 
     // Item tile
-    ImgCopyFromTileImg(tile, r->backbuf, dx, dy, 0);
+    _ImgCopyFromTileImg(tile, r->backbuf, dx, dy, 0);
 
     // quantity/charge
     if (num != -1)
@@ -2852,24 +2852,24 @@ void TileDrawOneItem(int region, int i, char key, int idx,
         
         if (c100)
         {
-            TilePutch('0' + c100, r->backbuf, dx+offset, dy);
+            _TilePutch('0' + c100, r->backbuf, dx+offset, dy);
             offset += offset_amount;
         }
         
         int c10 = help/10;
         if (c10 || c100)
         {
-            TilePutch('0' + c10, r->backbuf, dx+offset, dy);
+            _TilePutch('0' + c10, r->backbuf, dx+offset, dy);
             offset += offset_amount;
         }
         
         int c1 = help % 10;
-        TilePutch('0' + c1, r->backbuf, dx+offset, dy);
+        _TilePutch('0' + c1, r->backbuf, dx+offset, dy);
     }
 
     // '?' mark
     if (tried)
-        TilePutch('?', r->backbuf, dx, dy + TILE_Y/2);
+        _TilePutch('?', r->backbuf, dx, dy + TILE_Y/2);
 
     // record tile information as we draw it so that we can re-draw it at will
     itemlist[i] = tile;
@@ -2880,12 +2880,16 @@ void TileDrawOneItem(int region, int i, char key, int idx,
     
     if (floor)
         itemlist_iflag[i] |= TILEI_FLAG_FLOOR;
+        
     if (tried)
         itemlist_iflag[i] |= TILEI_FLAG_TRIED;
+        
     if (equip)
         itemlist_iflag[i] |= TILEI_FLAG_EQUIP;
+        
     if (cursed)
         itemlist_iflag[i] |= TILEI_FLAG_CURSE;
+        
     if (select)
         itemlist_iflag[i] |= TILEI_FLAG_SELECT;
 
