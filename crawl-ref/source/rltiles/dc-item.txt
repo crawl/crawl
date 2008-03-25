@@ -395,7 +395,7 @@ i-immolation SCR_IMMOLATION
 i-blinking SCR_BLINKING
 item/scroll/blank_paper SCR_PAPER
 i-magic_mapping SCR_MAGIC_MAPPING
-i-foregetfulness SCR_FORGETFULNESS
+i-fog SCR_FOG
 i-acquirement SCR_ACQUIREMENT
 i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
 i-vorpalize-weapon SCR_VORPALISE_WEAPON
