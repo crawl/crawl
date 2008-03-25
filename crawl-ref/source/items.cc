@@ -78,12 +78,12 @@
 #include "view.h"
 #include "xom.h"
 
-static bool invisible_to_player( const item_def& item );
-static void item_list_on_square( std::vector<const item_def*>& items,
-                                 int obj, bool force_squelch = false );
-static void autoinscribe_item( item_def& item );
-static void autoinscribe_floor_items();
-static void autoinscribe_inventory();
+static bool _invisible_to_player( const item_def& item );
+static void _item_list_on_square( std::vector<const item_def*>& items,
+                                  int obj, bool force_squelch = false );
+static void _autoinscribe_item( item_def& item );
+static void _autoinscribe_floor_items();
+static void _autoinscribe_inventory();
 
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
@@ -133,7 +133,7 @@ void link_items(void)
     }
 }                               // end link_items()
 
-static bool item_ok_to_clean(int item)
+static bool _item_ok_to_clean(int item)
 {
     // never clean food or Orbs
     if (mitm[item].base_type == OBJ_FOOD || mitm[item].base_type == OBJ_ORBS)
@@ -151,7 +151,7 @@ static bool item_ok_to_clean(int item)
 
 // returns index number of first available space, or NON_ITEM for
 // unsuccessful cleanup (should be exceedingly rare!)
-int cull_items(void)
+static int _cull_items(void)
 {
     crawl_state.cancel_cmd_repeat();
 
@@ -192,7 +192,7 @@ int cull_items(void)
             {
                 next = mitm[item].link; // in case we can't get it later.
 
-                if (item_ok_to_clean(item) && random2(100) < 15)
+                if (_item_ok_to_clean(item) && random2(100) < 15)
                 {
                     const item_def& obj(mitm[item]);
                     if (is_fixed_artefact(obj))
@@ -355,7 +355,7 @@ int get_item_slot( int reserve )
 
     if (item >= MAX_ITEMS - reserve)
     {
-        item = (reserve <= 10) ? cull_items() : NON_ITEM;
+        item = (reserve <= 10) ? _cull_items() : NON_ITEM;
 
         if (item == NON_ITEM)
             return (NON_ITEM);
@@ -544,18 +544,22 @@ void destroy_item( int dest, bool never_created )
     destroy_item( mitm[dest], never_created );
 }
 
-static void handle_gone_item(const item_def &item)
+static void _handle_gone_item(const item_def &item)
 {
     if (you.level_type == LEVEL_ABYSS
         && place_type(item.orig_place) == LEVEL_ABYSS
         && !(item.flags & ISFLAG_BEEN_IN_INV))
     {   
         if (item.base_type == OBJ_ORBS)
+        {
             set_unique_item_status(OBJ_ORBS, item.sub_type, 
                                    UNIQ_LOST_IN_ABYSS);
+        }
         else if (is_fixed_artefact(item))
+        {
             set_unique_item_status(OBJ_WEAPONS, item.special, 
                                    UNIQ_LOST_IN_ABYSS);
+        }
     }
 
     if (is_rune(item))
@@ -580,13 +584,13 @@ static void handle_gone_item(const item_def &item)
 
 void item_was_lost(const item_def &item)
 {
-    handle_gone_item( item );
+    _handle_gone_item( item );
     xom_check_lost_item( item );
 }
 
 void item_was_destroyed(const item_def &item, int cause)
 {
-    handle_gone_item( item );
+    _handle_gone_item( item );
     xom_check_destroyed_item( item, cause );
 }
 
@@ -636,15 +640,17 @@ void destroy_item_stack( int x, int y, int cause )
     }
 }
 
-static bool invisible_to_player( const item_def& item ) {
+static bool _invisible_to_player( const item_def& item )
+{
     return strstr(item.inscription.c_str(), "=k") != 0;
 }
 
-static int count_nonsquelched_items( int obj ) {
+static int count_nonsquelched_items( int obj )
+{
     int result = 0;
     while ( obj != NON_ITEM )
     {
-        if ( !invisible_to_player(mitm[obj]) )
+        if ( !_invisible_to_player(mitm[obj]) )
             ++result;
         obj = mitm[obj].link;
     }
@@ -657,16 +663,18 @@ static int count_nonsquelched_items( int obj ) {
    are included. If force_squelch is true, squelched items are
    never displayed.
  */
-static void item_list_on_square( std::vector<const item_def*>& items,
-                                 int obj, bool force_squelch ) {
+static void _item_list_on_square( std::vector<const item_def*>& items,
+                                  int obj, bool force_squelch )
+{
 
     const bool have_nonsquelched = (force_squelch ||
                                     count_nonsquelched_items(obj));
 
     /* loop through the items */
-    while ( obj != NON_ITEM ) {
+    while ( obj != NON_ITEM )
+    {
         /* add them to the items list if they qualify */
-        if ( !have_nonsquelched || !invisible_to_player(mitm[obj]) )
+        if ( !have_nonsquelched || !_invisible_to_player(mitm[obj]) )
         {
             items.push_back( &mitm[obj] );
         }
@@ -755,7 +763,7 @@ void item_check(bool verbose)
 
     std::vector<const item_def*> items;
 
-    item_list_on_square( items, igrd[you.x_pos][you.y_pos], true );
+    _item_list_on_square( items, igrd[you.x_pos][you.y_pos], true );
 
     if (items.size() == 0)
     {
@@ -826,33 +834,21 @@ void item_check(bool verbose)
         learned_something_new(TUT_MULTI_PICKUP);
 }
 
-void show_items()
+static void _pickup_menu(int item_link)
 {
     std::vector<const item_def*> items;
-    item_list_on_square( items, igrd[you.x_pos][you.y_pos], true );
-
-    if ( items.empty() )
-        mpr("There are no items here.");
-    else {
-        select_items( items, "Things that are here:", true );
-        redraw_screen();
-    }
-    
-    describe_floor();
-}
-
-void pickup_menu(int item_link)
-{
-    std::vector<const item_def*> items;
-    item_list_on_square( items, item_link, false );
+    _item_list_on_square( items, item_link, false );
 
     std::vector<SelItem> selected = 
         select_items( items, "Select items to pick up" );
     redraw_screen();
 
-    for (int i = 0, count = selected.size(); i < count; ++i) {
-        for (int j = item_link; j != NON_ITEM; j = mitm[j].link) {
-            if (&mitm[j] == selected[i].item) {
+    for (int i = 0, count = selected.size(); i < count; ++i)
+    {
+        for (int j = item_link; j != NON_ITEM; j = mitm[j].link)
+        {
+            if (&mitm[j] == selected[i].item)
+            {
                 if (j == item_link)
                     item_link = mitm[j].link;
 
@@ -1010,12 +1006,13 @@ void origin_set_monstercorpse(item_def &item, int x, int y)
     item.orig_monnum = first_corpse_monnum(x, y);
 }
 
-void origin_freeze(item_def &item, int x, int y)
+static void _origin_freeze(item_def &item, int x, int y)
 {
     if (!origin_known(item))
     {
         if (!item.orig_monnum && x != -1 && y != -1)
             origin_set_monstercorpse(item, x, y);
+            
         item.orig_place = get_packed_place();
         check_note_item(item);
 #ifdef DGL_MILESTONES
@@ -1024,7 +1021,7 @@ void origin_freeze(item_def &item, int x, int y)
     }
 }
 
-static std::string origin_monster_name(const item_def &item)
+static std::string _origin_monster_name(const item_def &item)
 {
     const int monnum = item.orig_monnum - 1;
     if (monnum == MONS_PLAYER_GHOST)
@@ -1034,12 +1031,12 @@ static std::string origin_monster_name(const item_def &item)
     return mons_type_name(monnum, DESC_NOCAP_A);
 }
 
-static std::string origin_monster_desc(const item_def &item)
+static std::string _origin_monster_desc(const item_def &item)
 {
-    return (origin_monster_name(item));
+    return (_origin_monster_name(item));
 }
 
-static std::string origin_place_desc(const item_def &item)
+static std::string _origin_place_desc(const item_def &item)
 {
     return prep_branch_level_name(item.orig_place);
 }
@@ -1068,13 +1065,13 @@ bool origin_describable(const item_def &item)
             && (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK));
 }
 
-std::string article_it(const item_def &item)
+static std::string _article_it(const item_def &item)
 {
     // "it" is always correct, since gloves and boots also come in pairs.
     return "it";
 }
 
-bool origin_is_original_equip(const item_def &item)
+static bool _origin_is_original_equip(const item_def &item)
 {
     return (item.orig_place == 0xFFFFU && item.orig_monnum == -1);
 }
@@ -1084,7 +1081,7 @@ std::string origin_desc(const item_def &item)
     if (!origin_describable(item))
         return ("");
 
-    if (origin_is_original_equip(item))
+    if (_origin_is_original_equip(item))
         return "Original Equipment";
 
     std::string desc;
@@ -1096,36 +1093,37 @@ std::string origin_desc(const item_def &item)
             switch (iorig)
             {
             case -1:
-                desc += "You bought " + article_it(item) + " in a shop ";
+                desc += "You bought " + _article_it(item) + " in a shop ";
                 break;
             case AQ_SCROLL:
-                desc += "You acquired " + article_it(item) + " ";
+                desc += "You acquired " + _article_it(item) + " ";
                 break;
             case AQ_CARD_GENIE:
                 desc += "You drew the Genie ";
                 break;
             case AQ_WIZMODE:
-                desc += "Your wizardly powers created "+article_it(item)+" ";
+                desc += "Your wizardly powers created "+ _article_it(item)+ " ";
                 break;
             default:
                 if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
                     desc += god_name(static_cast<god_type>(iorig))
-                        + " gifted " + article_it(item) + " to you ";
+                        + " gifted " + _article_it(item) + " to you ";
                 else
                     // Bug really.
-                    desc += "You stumbled upon " + article_it(item) + " ";
+                    desc += "You stumbled upon " + _article_it(item) + " ";
                 break;
             }
         }
         else if (item.orig_monnum - 1 == MONS_DANCING_WEAPON)
             desc += "You subdued it ";
         else
-            desc += "You took " + article_it(item) + " off "
-                    + origin_monster_desc(item) + " ";
+            desc += "You took " + _article_it(item) + " off "
+                    + _origin_monster_desc(item) + " ";
     }
     else
-        desc += "You found " + article_it(item) + " ";
-    desc += origin_place_desc(item);
+        desc += "You found " + _article_it(item) + " ";
+        
+    desc += _origin_place_desc(item);
     return (desc);
 }
 
@@ -1199,10 +1197,10 @@ void pickup()
         // a killed item here
         pickup_single_item(o, mitm[o].quantity);
     }
-    else if (Options.pickup_mode != -1 &&
-             num_nonsquelched >= Options.pickup_mode)
+    else if (Options.pickup_mode != -1
+             && num_nonsquelched >= Options.pickup_mode)
     {
-        pickup_menu(o);
+        _pickup_menu(o);
     }
     else
     {
@@ -1213,7 +1211,7 @@ void pickup()
             // must save this because pickup can destroy the item
             next = mitm[o].link;
 
-            if ( num_nonsquelched && invisible_to_player(mitm[o]) )
+            if ( num_nonsquelched && _invisible_to_player(mitm[o]) )
             {
                 o = next;
                 continue;
@@ -1236,7 +1234,7 @@ void pickup()
 #endif
                 )
             {
-                pickup_menu(o);
+                _pickup_menu(o);
                 break;
             }
 
@@ -1446,7 +1444,7 @@ int find_free_slot(const item_def &i)
 #undef slotisfree
 }
 
-static void got_item(item_def& item, int quant)
+static void _got_item(item_def& item, int quant)
 {
     if (!is_rune(item))
         return;
@@ -1549,7 +1547,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                 dec_mitm_item_quantity( obj, quant_got );
                 burden_change();
 
-                got_item(mitm[obj], quant_got);
+                _got_item(mitm[obj], quant_got);
 
                 if (!quiet)
                     mpr( you.inv[m].name(DESC_INVENTORY).c_str() );
@@ -1590,9 +1588,9 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     if (!item.slot)
         item.slot = index_to_letter(item.link);
 
-    autoinscribe_item( item );
+    _autoinscribe_item( item );
 
-    origin_freeze(item, you.x_pos, you.y_pos);
+    _origin_freeze(item, you.x_pos, you.y_pos);
     check_note_item(item);
 
     item.quantity = quant_got;
@@ -1622,7 +1620,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
         unset_branch_flags(BFLAG_HAS_ORB);
 
-    got_item(item, item.quantity);
+    _got_item(item, item.quantity);
 
     you.turn_is_over = true;
 
@@ -2074,7 +2072,7 @@ void drop(void)
         start_delay( DELAY_MULTIDROP, items_for_multidrop.size() );
 }
 
-static void autoinscribe_item( item_def& item )
+static void _autoinscribe_item( item_def& item )
 {
     std::string iname = item.name(DESC_INVENTORY);
 
@@ -2105,7 +2103,7 @@ static void autoinscribe_item( item_def& item )
     }
 }
 
-static void autoinscribe_floor_items()
+static void _autoinscribe_floor_items()
 {
     int o, next;
     o = igrd[you.x_pos][you.y_pos];
@@ -2113,17 +2111,17 @@ static void autoinscribe_floor_items()
     while (o != NON_ITEM)
     {
         next = mitm[o].link;
-        autoinscribe_item( mitm[o] );
+        _autoinscribe_item( mitm[o] );
         o = next;
     }
 }
 
-static void autoinscribe_inventory()
+static void _autoinscribe_inventory()
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (is_valid_item(you.inv[i]))
-            autoinscribe_item( you.inv[i] );
+            _autoinscribe_item( you.inv[i] );
     }
 }
 
@@ -2139,8 +2137,8 @@ void request_autoinscribe(bool do_inscribe)
 
 void autoinscribe()
 {
-    autoinscribe_floor_items();
-    autoinscribe_inventory();
+    _autoinscribe_floor_items();
+    _autoinscribe_inventory();
 
     will_autoinscribe = false;
 }
@@ -2297,7 +2295,7 @@ static void do_autopickup()
 
 void autopickup()
 {
-    autoinscribe_floor_items();
+    _autoinscribe_floor_items();
     do_autopickup();
 }
 
@@ -2305,7 +2303,7 @@ int inv_count(void)
 {
     int count=0;
 
-    for(int i=0; i< ENDOFPACK; i++)
+    for(int i = 0; i < ENDOFPACK; i++)
     {
         if (is_valid_item( you.inv[i] ))
             count++;

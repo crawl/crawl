@@ -169,35 +169,34 @@ const struct coord_def Compass[8] =
 };
 
 // Functions in main module
-static void do_berserk_no_combat_penalty(void);
-static bool initialise(void);
-static void input(void);
-static void move_player(int move_x, int move_y);
-static void open_door(int move_x, int move_y, bool check_confused = true);
-static void close_door(int move_x, int move_y);
-static void start_running( int dir, int mode );
+static void _do_berserk_no_combat_penalty(void);
+static bool _initialise(void);
+static void _input(void);
+static void _move_player(int move_x, int move_y);
+static void _open_door(int move_x, int move_y, bool check_confused = true);
+static void _close_door(int move_x, int move_y);
+static void _start_running( int dir, int mode );
 
-static void prep_input();
-static void input();
-static void world_reacts();
-static command_type get_next_cmd();
-static keycode_type get_next_keycode();
-static command_type keycode_to_command( keycode_type key );
-static void setup_cmd_repeat();
-static void do_prev_cmd_again();
-static void update_replay_state();
+static void _prep_input();
+static void _world_reacts();
+static command_type _get_next_cmd();
+static keycode_type _get_next_keycode();
+static command_type _keycode_to_command( keycode_type key );
+static void _setup_cmd_repeat();
+static void _do_prev_cmd_again();
+static void _update_replay_state();
 
-static void show_commandline_options_help();
-static void wanderer_startup_message();
-static void god_greeting_message( bool game_start );
-static void take_starting_note();
-static void startup_tutorial();
+static void _show_commandline_options_help();
+static void _wanderer_startup_message();
+static void _god_greeting_message( bool game_start );
+static void _take_starting_note();
+static void _startup_tutorial();
 
 #ifdef DGL_SIMPLE_MESSAGING
-static void read_messages();
+static void _read_messages();
 #endif
 
-static void compile_time_asserts();
+static void _compile_time_asserts();
 
 /*
    It all starts here. Some initialisations are run first, then straight to
@@ -209,14 +208,14 @@ int old_main( int argc, char *argv[] )
 int main( int argc, char *argv[] )
 #endif
 {
-    compile_time_asserts();     // just to quiet "unused static function" warning
+    _compile_time_asserts();     // just to quiet "unused static function" warning
     // Load in the system environment variables
     get_system_environment();
 
     // parse command line args -- look only for initfile & crawl_dir entries
     if (!parse_args(argc, argv, true))
     {
-        show_commandline_options_help();
+        _show_commandline_options_help();
         return 1;
     }
 
@@ -241,7 +240,7 @@ int main( int argc, char *argv[] )
         SysEnv.scorefile.clear();
     }
 
-    const bool game_start = initialise();
+    const bool game_start = _initialise();
 
     // override some options for tutorial
     init_tutorial_options();
@@ -256,9 +255,9 @@ int main( int argc, char *argv[] )
     env.markers.activate_all();
 
     if (game_start && you.char_class == JOB_WANDERER)
-        wanderer_startup_message();
+        _wanderer_startup_message();
 
-    god_greeting_message( game_start );
+    _god_greeting_message( game_start );
 
     // warn player about their weapon, if unsuitable
     wield_warning(false);
@@ -266,12 +265,12 @@ int main( int argc, char *argv[] )
     if ( game_start )   
     {
         if (Options.tutorial_left)
-            startup_tutorial();
-        take_starting_note();
+            _startup_tutorial();
+        _take_starting_note();
     }
 
     while (true)
-        input();
+        _input();
 
     // Should never reach this stage, right?
 #if defined(USE_TILE)
@@ -283,7 +282,7 @@ int main( int argc, char *argv[] )
     return 0;
 }                               // end main()
 
-static void show_commandline_options_help()
+static void _show_commandline_options_help()
 {
     puts("Command line options:");
     puts("  -name <string>   character name");
@@ -306,7 +305,7 @@ static void show_commandline_options_help()
     puts("  -scorefile <filename>  scorefile to report on");
 }
 
-static void wanderer_startup_message()
+static void _wanderer_startup_message()
 {
     int skill_levels = 0;
     for (int i = 0; i < NUM_SKILLS; i++)
@@ -323,7 +322,7 @@ static void wanderer_startup_message()
     }
 }
 
-static void god_greeting_message( bool game_start )
+static void _god_greeting_message( bool game_start )
 {
     switch (you.religion)
     {
@@ -374,7 +373,7 @@ static void god_greeting_message( bool game_start )
     }
 }
 
-static void take_starting_note()
+static void _take_starting_note()
 {
     std::ostringstream notestr;
     notestr << you.your_name << ", the "
@@ -392,23 +391,25 @@ static void take_starting_note()
                    notestr.str().c_str()));
 }
 
-static void startup_tutorial()
+static void _startup_tutorial()
 {
     // don't allow triggering at game start 
     Options.tut_just_triggered = true;
+    
     // print stats and everything
-    prep_input();
+    _prep_input();
+    
     msg::streams(MSGCH_TUTORIAL)
         << "Press any key to start the tutorial intro, or Escape to skip it."
         << std::endl;
+        
     const int ch = c_getch();
-
     if (ch != ESCAPE)
         tut_starting_screen();
 }
 
 #ifdef WIZARD
-static void handle_wizard_command( void )
+static void _handle_wizard_command( void )
 {
     int   wiz_command, i, j, tmp;
     char  specs[256];
@@ -1098,7 +1099,7 @@ static void handle_wizard_command( void )
 #endif
 
 // Set up the running variables for the current run.
-static void start_running( int dir, int mode )
+static void _start_running( int dir, int mode )
 {
     if (Options.tutorial_events[TUT_SHIFT_RUN] && mode == RMODE_START)
         Options.tutorial_events[TUT_SHIFT_RUN] = 0;
@@ -1106,7 +1107,7 @@ static void start_running( int dir, int mode )
         you.running.initialise(dir, mode);
 }
 
-static bool recharge_rod( item_def &rod, bool wielded )
+static bool _recharge_rod( item_def &rod, bool wielded )
 {
     if (!item_is_rod(rod) || rod.plus >= rod.plus2 || !enough_mp(1, true))
         return (false);
@@ -1151,25 +1152,27 @@ static bool recharge_rod( item_def &rod, bool wielded )
     return (true);
 }
 
-static void recharge_rods()
+static void _recharge_rods()
 {
     const int wielded = you.equip[EQ_WEAPON];
     if (wielded != -1)
     {
-        if (recharge_rod( you.inv[wielded], true ))
+        if (_recharge_rod( you.inv[wielded], true ))
             return ;
     }
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         if (i != wielded && is_valid_item(you.inv[i])
-                && one_chance_in(3)
-                && recharge_rod( you.inv[i], false ))
+            && one_chance_in(3)
+            && _recharge_rod( you.inv[i], false ))
+        {
             return;
+        }
     }
 }
 
-static bool cmd_is_repeatable(command_type cmd, bool is_again = false)
+static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 {
     switch(cmd)
     {
@@ -1269,7 +1272,7 @@ static bool cmd_is_repeatable(command_type cmd, bool is_again = false)
             return false;
         }
 
-        return cmd_is_repeatable(crawl_state.prev_cmd, true);
+        return _cmd_is_repeatable(crawl_state.prev_cmd, true);
 
     case CMD_MOVE_NOWHERE:
     case CMD_REST:
@@ -1309,7 +1312,7 @@ bool apply_berserk_penalty = false;
  * This function handles the player's input. It's called from main(),
  * from inside an endless loop.
  */
-static void input()
+static void _input()
 {
     crawl_state.clear_god_acting();
     check_beholders();
@@ -1325,7 +1328,7 @@ static void input()
     }
 
     you.turn_is_over = false;
-    prep_input();
+    _prep_input();
 
     fire_monster_alerts();
 
@@ -1372,7 +1375,7 @@ static void input()
         crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
                                       "repetition.");
 
-        world_reacts();
+        _world_reacts();
         return;
     }
     
@@ -1389,7 +1392,7 @@ static void input()
 
     if ( you_are_delayed() )
     {
-        world_reacts();
+        _world_reacts();
         return;
     }
 
@@ -1397,7 +1400,7 @@ static void input()
 
     if ( you.turn_is_over )
     {
-        world_reacts();
+        _world_reacts();
         return;
     }
 
@@ -1423,7 +1426,7 @@ static void input()
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
         
-        const command_type cmd = get_next_cmd();
+        const command_type cmd = _get_next_cmd();
 
         crawl_state.waiting_for_command = false;
 
@@ -1462,14 +1465,14 @@ static void input()
     if (you.turn_is_over)
     {
         if ( apply_berserk_penalty )
-            do_berserk_no_combat_penalty();
+            _do_berserk_no_combat_penalty();
 
-        world_reacts();
+        _world_reacts();
     }
     else
         viewwindow(true, false);
 
-    update_replay_state();
+    _update_replay_state();
 
     if (you.num_turns != -1)
     {
@@ -1536,14 +1539,14 @@ static void input()
     crawl_state.clear_god_acting();
 }
 
-static bool toggle_flag( bool* flag, const char* flagname )
+static bool _toggle_flag( bool* flag, const char* flagname )
 {
     *flag = !(*flag);
     mprf( "%s is now %s.", flagname, (*flag) ? "on" : "off" );
     return *flag;
 }
 
-static bool stairs_check_beheld()
+static bool _stairs_check_beheld()
 {
     if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF])
     {
@@ -1555,12 +1558,12 @@ static bool stairs_check_beheld()
     return false;
 }
 
-static void go_downstairs();
-static void go_upstairs()
+static void _go_downstairs();
+static void _go_upstairs()
 {
     const dungeon_feature_type ygrd = grd(you.pos());
 
-    if (stairs_check_beheld())
+    if (_stairs_check_beheld())
         return;
     
     if (you.attribute[ATTR_HELD])
@@ -1591,13 +1594,13 @@ static void go_upstairs()
                  1 + (you.burden_state > BS_UNENCUMBERED) );
 }
 
-static void go_downstairs()
+static void _go_downstairs()
 {
     bool shaft = (trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT
                   && grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP);
 
 
-    if (stairs_check_beheld())
+    if (_stairs_check_beheld())
         return;
 
     if (shaft && you.flight_mode() == FL_LEVITATE)
@@ -1635,7 +1638,7 @@ static void go_downstairs()
     }
 }
 
-static void experience_check()
+static void _experience_check()
 {
     mprf("You are a level %d %s %s.",
          you.experience_level,
@@ -1859,59 +1862,61 @@ void process_command( command_type cmd )
         break;
 #endif // USE_TILE
 
-    case CMD_OPEN_DOOR_UP_RIGHT:   open_door(-1, -1); break;
-    case CMD_OPEN_DOOR_UP:         open_door( 0, -1); break;
-    case CMD_OPEN_DOOR_UP_LEFT:    open_door( 1, -1); break;
-    case CMD_OPEN_DOOR_RIGHT:      open_door( 1,  0); break;
-    case CMD_OPEN_DOOR_DOWN_RIGHT: open_door( 1,  1); break;
-    case CMD_OPEN_DOOR_DOWN:       open_door( 0,  1); break;
-    case CMD_OPEN_DOOR_DOWN_LEFT:  open_door(-1,  1); break;
-    case CMD_OPEN_DOOR_LEFT:       open_door(-1,  0); break;
+    case CMD_OPEN_DOOR_UP_RIGHT:   _open_door(-1, -1); break;
+    case CMD_OPEN_DOOR_UP:         _open_door( 0, -1); break;
+    case CMD_OPEN_DOOR_UP_LEFT:    _open_door( 1, -1); break;
+    case CMD_OPEN_DOOR_RIGHT:      _open_door( 1,  0); break;
+    case CMD_OPEN_DOOR_DOWN_RIGHT: _open_door( 1,  1); break;
+    case CMD_OPEN_DOOR_DOWN:       _open_door( 0,  1); break;
+    case CMD_OPEN_DOOR_DOWN_LEFT:  _open_door(-1,  1); break;
+    case CMD_OPEN_DOOR_LEFT:       _open_door(-1,  0); break;
 
-    case CMD_MOVE_DOWN_LEFT:  move_player(-1,  1); break;
-    case CMD_MOVE_DOWN:       move_player( 0,  1); break;
-    case CMD_MOVE_UP_RIGHT:   move_player( 1, -1); break;
-    case CMD_MOVE_UP:         move_player( 0, -1); break;
-    case CMD_MOVE_UP_LEFT:    move_player(-1, -1); break;
-    case CMD_MOVE_LEFT:       move_player(-1,  0); break;
-    case CMD_MOVE_DOWN_RIGHT: move_player( 1,  1); break;
-    case CMD_MOVE_RIGHT:      move_player( 1,  0); break;
+    case CMD_MOVE_DOWN_LEFT:  _move_player(-1,  1); break;
+    case CMD_MOVE_DOWN:       _move_player( 0,  1); break;
+    case CMD_MOVE_UP_RIGHT:   _move_player( 1, -1); break;
+    case CMD_MOVE_UP:         _move_player( 0, -1); break;
+    case CMD_MOVE_UP_LEFT:    _move_player(-1, -1); break;
+    case CMD_MOVE_LEFT:       _move_player(-1,  0); break;
+    case CMD_MOVE_DOWN_RIGHT: _move_player( 1,  1); break;
+    case CMD_MOVE_RIGHT:      _move_player( 1,  0); break;
 
     case CMD_REST:
         if (i_feel_safe())
         {
-            if ( you.hp == you.hp_max &&
-                 you.magic_points == you.max_magic_points )
+            if ( you.hp == you.hp_max
+                 && you.magic_points == you.max_magic_points )
+            {
                 mpr("You start searching.");
+            }
             else
                 mpr("You start resting.");
         }
-        start_running( RDIR_REST, RMODE_REST_DURATION );
+        _start_running( RDIR_REST, RMODE_REST_DURATION );
         break;
 
     case CMD_RUN_DOWN_LEFT:
-        start_running( RDIR_DOWN_LEFT, RMODE_START );
+        _start_running( RDIR_DOWN_LEFT, RMODE_START );
         break;
     case CMD_RUN_DOWN:
-        start_running( RDIR_DOWN, RMODE_START );
+        _start_running( RDIR_DOWN, RMODE_START );
         break;
     case CMD_RUN_UP_RIGHT:
-        start_running( RDIR_UP_RIGHT, RMODE_START );
+        _start_running( RDIR_UP_RIGHT, RMODE_START );
         break;
     case CMD_RUN_UP:
-        start_running( RDIR_UP, RMODE_START );
+        _start_running( RDIR_UP, RMODE_START );
         break;
     case CMD_RUN_UP_LEFT:
-        start_running( RDIR_UP_LEFT, RMODE_START );
+        _start_running( RDIR_UP_LEFT, RMODE_START );
         break;
     case CMD_RUN_LEFT:
-        start_running( RDIR_LEFT, RMODE_START );
+        _start_running( RDIR_LEFT, RMODE_START );
         break;
     case CMD_RUN_DOWN_RIGHT:
-        start_running( RDIR_DOWN_RIGHT, RMODE_START );
+        _start_running( RDIR_DOWN_RIGHT, RMODE_START );
         break;
     case CMD_RUN_RIGHT:
-        start_running( RDIR_RIGHT, RMODE_START );
+        _start_running( RDIR_RIGHT, RMODE_START );
         break;
 
     case CMD_DISABLE_MORE:
@@ -1968,7 +1973,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_TOGGLE_AUTOPICKUP:
-        toggle_flag( &Options.autopickup_on, "Autopickup");
+        _toggle_flag( &Options.autopickup_on, "Autopickup");
         break;
 
     case CMD_TOGGLE_AUTOPRAYER:
@@ -1978,7 +1983,7 @@ void process_command( command_type cmd )
             Options.autoprayer_on = false;
         }
         else
-            toggle_flag( &Options.autoprayer_on, "Autoprayer" );
+            _toggle_flag( &Options.autoprayer_on, "Autoprayer" );
         break;
    
     case CMD_MAKE_NOTE:
@@ -1988,7 +1993,7 @@ void process_command( command_type cmd )
     case CMD_READ_MESSAGES:
 #ifdef DGL_SIMPLE_MESSAGING
         if (SysEnv.have_messages)
-            read_messages();
+            _read_messages();
 #endif
         break;
 
@@ -2002,11 +2007,11 @@ void process_command( command_type cmd )
         }
         break;
 
-    case CMD_GO_UPSTAIRS: go_upstairs(); break;
-    case CMD_GO_DOWNSTAIRS: go_downstairs(); break;
+    case CMD_GO_UPSTAIRS:   _go_upstairs(); break;
+    case CMD_GO_DOWNSTAIRS: _go_downstairs(); break;
     case CMD_DISPLAY_OVERMAP: display_overmap(); break;
-    case CMD_OPEN_DOOR: open_door(0, 0); break;
-    case CMD_CLOSE_DOOR: close_door(0, 0); break;
+    case CMD_OPEN_DOOR:  _open_door(0, 0); break;
+    case CMD_CLOSE_DOOR: _close_door(0, 0); break;
 
     case CMD_DROP:
         drop();
@@ -2302,7 +2307,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_EXPERIENCE_CHECK:
-        experience_check();
+        _experience_check();
         break;
 
     case CMD_SHOUT:
@@ -2404,7 +2409,7 @@ void process_command( command_type cmd )
         
 #ifdef WIZARD
     case CMD_WIZARD:
-        handle_wizard_command();
+        _handle_wizard_command();
         break;
 #endif
 
@@ -2425,11 +2430,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_REPEAT_CMD:
-        setup_cmd_repeat();
+        _setup_cmd_repeat();
         break;
 
     case CMD_PREV_CMD_AGAIN:
-        do_prev_cmd_again();
+        _do_prev_cmd_again();
         break;
 
     case CMD_NO_CMD:
@@ -2446,7 +2451,7 @@ void process_command( command_type cmd )
     }
 }
 
-static void prep_input()
+static void _prep_input()
 {
     you.time_taken = player_speed();
     you.shield_blocks = 0;              // no blocks this round
@@ -2459,10 +2464,10 @@ static void prep_input()
 }
 
 // Decrement a single duration. Print the message if the duration runs out.
-static bool decrement_a_duration(duration_type dur, const char* endmsg = NULL,
-                                 int midpoint = -1, int midloss = 0,
-                                 const char* midmsg = NULL,
-                                 msg_channel_type chan = MSGCH_DURATION )
+static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
+                                  int midpoint = -1, int midloss = 0,
+                                  const char* midmsg = NULL,
+                                  msg_channel_type chan = MSGCH_DURATION )
 {
     bool rc = false;
 
@@ -2488,7 +2493,7 @@ static bool decrement_a_duration(duration_type dur, const char* endmsg = NULL,
     return rc;
 }
 
-static void decrement_durations()
+static void _decrement_durations()
 {
     if (wearing_amulet(AMU_THE_GOURMAND))
     {
@@ -2499,10 +2504,10 @@ static void decrement_durations()
         you.duration[DUR_GOURMAND] = 0;
 
     // must come before might/haste/berserk
-    if (decrement_a_duration(DUR_BUILDING_RAGE))
+    if (_decrement_a_duration(DUR_BUILDING_RAGE))
         go_berserk(false);
 
-    if (decrement_a_duration(DUR_SLEEP))
+    if (_decrement_a_duration(DUR_SLEEP))
         you.awake();
 
     // paradox: it both lasts longer & does more damage overall if you're
@@ -2545,26 +2550,26 @@ static void decrement_durations()
         }
     }
    
-    if (decrement_a_duration(DUR_ICY_ARMOUR, "Your icy armour evaporates."))
+    if (_decrement_a_duration(DUR_ICY_ARMOUR, "Your icy armour evaporates."))
         you.redraw_armour_class = true;
 
-    if (decrement_a_duration(DUR_SILENCE, "Your hearing returns."))
+    if (_decrement_a_duration(DUR_SILENCE, "Your hearing returns."))
         you.attribute[ATTR_WAS_SILENCED] = 0;
 
-    decrement_a_duration(DUR_REPEL_MISSILES,
-                         "You feel less protected from missiles.",
-                         6, coinflip(),
-                         "Your repel missiles spell is about to expire...");
+    _decrement_a_duration(DUR_REPEL_MISSILES,
+                          "You feel less protected from missiles.",
+                          6, coinflip(),
+                          "Your repel missiles spell is about to expire...");
 
-    decrement_a_duration(DUR_DEFLECT_MISSILES,
-                         "You feel less protected from missiles.",
-                         6, coinflip(),
-                         "Your deflect missiles spell is about to expire...");
+    _decrement_a_duration(DUR_DEFLECT_MISSILES,
+                          "You feel less protected from missiles.",
+                          6, coinflip(),
+                          "Your deflect missiles spell is about to expire...");
 
-    decrement_a_duration(DUR_REGENERATION,
-                         "Your skin stops crawling.",
-                         6, coinflip(),
-                         "Your skin is crawling a little less now.");
+    _decrement_a_duration(DUR_REGENERATION,
+                          "Your skin stops crawling.",
+                          6, coinflip(),
+                          "Your skin is crawling a little less now.");
 
     if (you.duration[DUR_PRAYER] > 1)
         you.duration[DUR_PRAYER]--;
@@ -2647,9 +2652,9 @@ static void decrement_durations()
         || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
         || you.duration[DUR_TRANSFORMATION] <= 2)
     {
-        if ( decrement_a_duration(DUR_TRANSFORMATION,
-                                  NULL, 10, random2(3),
-                                  "Your transformation is almost over.") )
+        if ( _decrement_a_duration(DUR_TRANSFORMATION,
+                                   NULL, 10, random2(3),
+                                   "Your transformation is almost over.") )
         {
             untransform();
             you.duration[DUR_BREATH_WEAPON] = 0;
@@ -2657,44 +2662,44 @@ static void decrement_durations()
     }
 
     // must come after transformation duration
-    decrement_a_duration(DUR_BREATH_WEAPON, "You have got your breath back.",
-                         -1, 0, NULL, MSGCH_RECOVERY);
+    _decrement_a_duration(DUR_BREATH_WEAPON, "You have got your breath back.",
+                          -1, 0, NULL, MSGCH_RECOVERY);
 
-    decrement_a_duration(DUR_REPEL_UNDEAD,
-                         "Your holy aura fades away.",
-                         4, random2(3),
-                         "Your holy aura is starting to fade.");
-    decrement_a_duration(DUR_SWIFTNESS,
-                         "You feel sluggish.",
-                         6, coinflip(),
-                         "You start to feel a little slower.");
-    decrement_a_duration(DUR_INSULATION,
-                         "You feel conductive.",
-                         6, coinflip(),
-                         "You start to feel a little less insulated.");
+    _decrement_a_duration(DUR_REPEL_UNDEAD,
+                          "Your holy aura fades away.",
+                          4, random2(3),
+                          "Your holy aura is starting to fade.");
+    _decrement_a_duration(DUR_SWIFTNESS,
+                          "You feel sluggish.",
+                          6, coinflip(),
+                          "You start to feel a little slower.");
+    _decrement_a_duration(DUR_INSULATION,
+                          "You feel conductive.",
+                          6, coinflip(),
+                          "You start to feel a little less insulated.");
 
-    if ( decrement_a_duration(DUR_STONEMAIL,
-                              "Your scaly stone armour disappears.",
-                              6, coinflip(),
-                              "Your scaly stone armour is starting "
-                              "to flake away.") )
+    if ( _decrement_a_duration(DUR_STONEMAIL,
+                               "Your scaly stone armour disappears.",
+                               6, coinflip(),
+                               "Your scaly stone armour is starting "
+                               "to flake away.") )
     {
         you.redraw_armour_class = true;
         burden_change();
     }
 
-    if ( decrement_a_duration(DUR_FORESCRY,
-                              "You feel firmly rooted in the present.") )
+    if ( _decrement_a_duration(DUR_FORESCRY,
+                               "You feel firmly rooted in the present.") )
         you.redraw_evasion = true;
 
-    if ( decrement_a_duration(DUR_SEE_INVISIBLE) && !player_see_invis() )
+    if ( _decrement_a_duration(DUR_SEE_INVISIBLE) && !player_see_invis() )
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
 
-    decrement_a_duration(DUR_SEE_INVISIBLE); // jmf: cute message
-                                             // handled elsewhere
+    _decrement_a_duration(DUR_SEE_INVISIBLE); // jmf: cute message
+                                              // handled elsewhere
 
-    if ( decrement_a_duration(DUR_CONDENSATION_SHIELD,
-                              "Your icy shield evaporates.") )
+    if ( _decrement_a_duration(DUR_CONDENSATION_SHIELD,
+                               "Your icy shield evaporates.") )
         you.redraw_armour_class = true;
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && player_res_cold() < 0)
@@ -2703,57 +2708,57 @@ static void decrement_durations()
         ouch( 2 + random2avg(13, 2), 0, KILLED_BY_FREEZING );
     }
 
-    if ( decrement_a_duration(DUR_MAGIC_SHIELD,
-                              "Your magical shield disappears.") )
+    if ( _decrement_a_duration(DUR_MAGIC_SHIELD,
+                               "Your magical shield disappears.") )
         you.redraw_armour_class = true;
 
-    if ( decrement_a_duration(DUR_STONESKIN, "Your skin feels tender.") )
+    if ( _decrement_a_duration(DUR_STONESKIN, "Your skin feels tender.") )
         you.redraw_armour_class = true;
 
-    if ( decrement_a_duration(DUR_TELEPORT) )
+    if ( _decrement_a_duration(DUR_TELEPORT) )
     {
         // only to a new area of the abyss sometimes (for abyss teleports)
         you_teleport_now( true, one_chance_in(5) );
         untag_followers();
     }
 
-    decrement_a_duration(DUR_CONTROL_TELEPORT,
-                         "You feel uncertain.",
-                         6, coinflip(),
-                         "You start to feel a little uncertain.");
+    _decrement_a_duration(DUR_CONTROL_TELEPORT,
+                          "You feel uncertain.",
+                          6, coinflip(),
+                          "You start to feel a little uncertain.");
 
-    decrement_a_duration(DUR_DEATH_CHANNEL,
-                         "Your unholy channel expires.",
-                         6, coinflip(),
-                         "Your unholy channel is weakening.");
+    _decrement_a_duration(DUR_DEATH_CHANNEL,
+                          "Your unholy channel expires.",
+                          6, coinflip(),
+                          "Your unholy channel is weakening.");
 
-    decrement_a_duration(DUR_SAGE, "You feel less studious.");
-    decrement_a_duration(DUR_STEALTH, "You feel less stealthy.");
-    decrement_a_duration(DUR_RESIST_FIRE, "Your fire resistance expires.");
-    decrement_a_duration(DUR_RESIST_COLD, "Your cold resistance expires.");
-    decrement_a_duration(DUR_RESIST_POISON, "Your poison resistance expires.");
-    decrement_a_duration(DUR_SLAYING, "You feel less lethal.");
+    _decrement_a_duration(DUR_SAGE, "You feel less studious.");
+    _decrement_a_duration(DUR_STEALTH, "You feel less stealthy.");
+    _decrement_a_duration(DUR_RESIST_FIRE, "Your fire resistance expires.");
+    _decrement_a_duration(DUR_RESIST_COLD, "Your cold resistance expires.");
+    _decrement_a_duration(DUR_RESIST_POISON, "Your poison resistance expires.");
+    _decrement_a_duration(DUR_SLAYING, "You feel less lethal.");
     
-    decrement_a_duration(DUR_INVIS, "You flicker back into view.",
-                         6, coinflip(), "You flicker for a moment.");
+    _decrement_a_duration(DUR_INVIS, "You flicker back into view.",
+                          6, coinflip(), "You flicker for a moment.");
 
-    decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
-    decrement_a_duration(DUR_CONF, "You feel less confused.");
+    _decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
+    _decrement_a_duration(DUR_CONF, "You feel less confused.");
     
-    if (decrement_a_duration(DUR_PARALYSIS, "You can move again."))
+    if (_decrement_a_duration(DUR_PARALYSIS, "You can move again."))
         you.redraw_evasion = true;
         
-    decrement_a_duration(DUR_EXHAUSTED, "You feel less fatigued.");
+    _decrement_a_duration(DUR_EXHAUSTED, "You feel less fatigued.");
 
-    decrement_a_duration( DUR_CONFUSING_TOUCH,
+    _decrement_a_duration( DUR_CONFUSING_TOUCH,
                           ((std::string("Your ") + your_hand(true)) +
                           " stop glowing.").c_str() );
 
-    decrement_a_duration( DUR_SURE_BLADE,
+    _decrement_a_duration( DUR_SURE_BLADE,
                           "The bond with your blade fades away." );
 
-    if ( decrement_a_duration( DUR_BEHELD, "You break out of your daze.",
-                               -1, 0, NULL, MSGCH_RECOVERY ))
+    if ( _decrement_a_duration( DUR_BEHELD, "You break out of your daze.",
+                                -1, 0, NULL, MSGCH_RECOVERY ))
     {
         you.beheld_by.clear();
     }
@@ -2761,10 +2766,10 @@ static void decrement_durations()
     dec_slow_player();
     dec_haste_player();
 
-    if (decrement_a_duration(DUR_MIGHT, "You feel a little less mighty now."))
+    if (_decrement_a_duration(DUR_MIGHT, "You feel a little less mighty now."))
         modify_stat(STAT_STRENGTH, -5, true, "might running out");
 
-    if (decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
+    if (_decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
     {
         //jmf: guilty for berserking /after/ berserk
         did_god_conduct( DID_STIMULANTS, 6 + random2(6) );
@@ -2861,10 +2866,10 @@ static void decrement_durations()
 
     if (!you.permanent_levitation())
     {
-        if ( decrement_a_duration(DUR_LEVITATION,
-                                  "You float gracefully downwards.",
-                                  10, random2(6),
-                                  "You are starting to lose your buoyancy!") )
+        if ( _decrement_a_duration(DUR_LEVITATION,
+                                   "You float gracefully downwards.",
+                                   10, random2(6),
+                                   "You are starting to lose your buoyancy!") )
         {
             burden_change();
             // Landing kills controlled flight.
@@ -2875,7 +2880,7 @@ static void decrement_durations()
     }
 
     if (!you.permanent_flight())
-        if ( decrement_a_duration(DUR_CONTROLLED_FLIGHT) && you.airborne() )
+        if ( _decrement_a_duration(DUR_CONTROLLED_FLIGHT) && you.airborne() )
             mpr("You lose control over your flight.", MSGCH_DURATION);
             
     if (you.rotting > 0)
@@ -2967,7 +2972,7 @@ static void decrement_durations()
     }
 }
 
-static void check_banished()
+static void _check_banished()
 {
     if (you.banished)
     {
@@ -2987,7 +2992,7 @@ static void check_banished()
    at some point.
 */
 
-static void check_shafts()
+static void _check_shafts()
 {
     for (int i = 0; i < MAX_TRAPS; i++)
     {
@@ -3002,7 +3007,7 @@ static void check_shafts()
     }
 }
 
-static void check_sanctuary()
+static void _check_sanctuary()
 {
     if (env.sanctuary_time <= 0)
         return;
@@ -3010,7 +3015,7 @@ static void check_sanctuary()
     decrease_sanctuary_radius();
 }
 
-static void world_reacts()
+static void _world_reacts()
 {
     crawl_state.clear_god_acting();
 
@@ -3022,11 +3027,11 @@ static void world_reacts()
             env.turns_on_level++;
         update_turn_count();
     }
-    check_banished();
+    _check_banished();
 
-    check_shafts();
+    _check_shafts();
 
-    check_sanctuary();
+    _check_sanctuary();
 
     manage_halo();
 
@@ -3060,7 +3065,7 @@ static void world_reacts()
     if (env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
         in_a_cloud();
 
-    decrement_durations();
+    _decrement_durations();
 
     const int food_use = player_hunger_rate();
 
@@ -3104,18 +3109,19 @@ static void world_reacts()
     you.magic_points_regeneration = static_cast< unsigned char >( tmp );
 
     // If you're wielding a rod, it'll gradually recharge.
-    recharge_rods();
+    _recharge_rods();
 
     viewwindow(true, true);
 
     if (Options.stash_tracking)
+    {
         StashTrack.update_visible_stashes(
-            Options.stash_tracking == STM_ALL? 
-            StashTracker::ST_AGGRESSIVE :
-            StashTracker::ST_PASSIVE);
+            Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
+                                              : StashTracker::ST_PASSIVE);
+    }
     
     handle_monsters();
-    check_banished();
+    _check_banished();
 
     ASSERT(you.time_taken >= 0);
     // make sure we don't overflow
@@ -3127,7 +3133,7 @@ static void world_reacts()
     {
         handle_time(200 + (you.time_taken - you.synch_time));
         you.synch_time = 200;
-        check_banished();
+        _check_banished();
     }
     else
     {
@@ -3172,7 +3178,7 @@ static void world_reacts()
 
 static struct stat mfilestat;
 
-static void show_message_line(std::string line)
+static void _show_message_line(std::string line)
 {
     const std::string::size_type sender_pos = line.find(":");
     if (sender_pos == std::string::npos)
@@ -3193,7 +3199,7 @@ static void show_message_line(std::string line)
     }
 }
 
-static void read_each_message()
+static void _read_each_message()
 {
     bool say_got_msg = true;
     FILE *mf = fopen(SysEnv.messagefile.c_str(), "r+");
@@ -3230,7 +3236,7 @@ static void read_each_message()
                 say_got_msg = false;
             }
 
-            show_message_line(line);
+            _show_message_line(line);
         }
 
         if (!lock_file_handle(mf, F_RDLCK))
@@ -3262,19 +3268,19 @@ kill_messaging:
     Options.messaging = false;
 }
 
-static void read_messages()
+static void _read_messages()
 {
-    read_each_message();
+    _read_each_message();
     update_message_status();
 }
 
-static void announce_messages()
+static void _announce_messages()
 {
     // XXX: We could do a NetHack-like mail daemon here at some point.
     mprf("Beep! Your pager goes off! Use _ to check your messages.");
 }
 
-static void check_messages()
+static void _check_messages()
 {
     if (!Options.messaging
         || SysEnv.have_messages
@@ -3302,16 +3308,16 @@ static void check_messages()
     
     if (SysEnv.have_messages && !had_messages)
     {
-        announce_messages();
+        _announce_messages();
         update_message_status();
     }
 }
 #endif
 
-static command_type get_next_cmd()
+static command_type _get_next_cmd()
 {
 #ifdef DGL_SIMPLE_MESSAGING
-    check_messages();
+    _check_messages();
 #endif
 
 #if DEBUG_DIAGNOSTICS
@@ -3325,7 +3331,7 @@ static command_type get_next_cmd()
 #endif
 
     const time_t before = time(NULL);
-    keycode_type keyin = get_next_keycode();
+    keycode_type keyin = _get_next_keycode();
     
     const time_t after = time(NULL);
 
@@ -3342,17 +3348,17 @@ static command_type get_next_cmd()
         return (CMD_NEXT_CMD);
     }
 
-    return keycode_to_command(keyin);
+    return _keycode_to_command(keyin);
 }
 
 /* for now, this is an extremely yucky hack */
-command_type keycode_to_command( keycode_type key )
+static command_type _keycode_to_command( keycode_type key )
 {
     switch ( key )
     {
 #ifdef USE_TILE
-    case '-': return CMD_EDIT_PLAYER_TILE;
-    case CK_MOUSE_DONE: return CMD_NEXT_CMD;
+    case '-':             return CMD_EDIT_PLAYER_TILE;
+    case CK_MOUSE_DONE:   return CMD_NEXT_CMD;
     case CK_MOUSE_B1ITEM: return CMD_USE_ITEM;
     case CK_MOUSE_B2ITEM: return CMD_VIEW_ITEM;
 #endif // USE_TILE
@@ -3483,14 +3489,14 @@ command_type keycode_to_command( keycode_type key )
     }
 }
 
-keycode_type get_next_keycode()
+static keycode_type _get_next_keycode()
 {
     keycode_type keyin;
 
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
 
 #ifdef USE_TILE
-    tile_draw_inv(-1, REGION_INV1);
+    tile_draw_inv(REGION_INV1);
  #ifdef USE_X11
     update_screen();
  #endif
@@ -3509,10 +3515,10 @@ keycode_type get_next_keycode()
 
 /*
    Opens doors and handles some aspects of untrapping. If either move_x or
-   move_y are non-zero,  the pair carries a specific direction for the door
+   move_y are non-zero, the pair carries a specific direction for the door
    to be opened (eg if you type ctrl - dir).
  */
-static void open_door(int move_x, int move_y, bool check_confused)
+static void _open_door(int move_x, int move_y, bool check_confused)
 {
     struct dist door_move;
     int dx, dy;             // door x, door y
@@ -3660,7 +3666,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
         you.turn_is_over = true;
     }
     else if (grd[dx][dy] == DNGN_OPEN_DOOR)
-        close_door(move_x, move_y); // for convenience
+        _close_door(move_x, move_y); // for convenience
     else
     {
         mpr("You swing at nothing.");
@@ -3673,7 +3679,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
  * Similar to open_door. Can you spot the difference?
  * FIX ME: closing a gate should update all tiles involved!
  */
-static void close_door(int door_x, int door_y)
+static void _close_door(int door_x, int door_y)
 {
     struct dist door_move;
     int dx, dy;             // door x, door y
@@ -3803,7 +3809,7 @@ static void close_door(int door_x, int door_y)
 
 // initialise whole lot of stuff...
 // returns true if a new character
-static bool initialise(void)
+static bool _initialise(void)
 {
     Options.fixup_options();
     
@@ -3972,7 +3978,7 @@ static bool initialise(void)
 // Total penalty (including the standard one during upkeep is:
 //          2  5  9  14  20  27  35  44
 //
-static void do_berserk_no_combat_penalty(void)
+static void _do_berserk_no_combat_penalty(void)
 {
     // Butchering/eating a corpse will maintain a blood rage.
     const int delay = current_delay_action();
@@ -4019,7 +4025,7 @@ static void do_berserk_no_combat_penalty(void)
 
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
-static void move_player(int move_x, int move_y)
+static void _move_player(int move_x, int move_y)
 {
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
@@ -4161,7 +4167,7 @@ static void move_player(int move_x, int move_y)
     // BCR - Easy doors single move
     if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open && !attacking)
     {
-        open_door(move_x, move_y, false);
+        _open_door(move_x, move_y, false);
         you.prev_move_x = move_x;
         you.prev_move_y = move_y;
     }
@@ -4224,7 +4230,7 @@ static void move_player(int move_x, int move_y)
 }                               // end move_player()
 
 
-static int get_num_and_char_keyfun(int &ch)
+static int _get_num_and_char_keyfun(int &ch)
 {
     if (ch == CK_BKSP || isdigit(ch) || ch >= 128)
         return 1;
@@ -4232,19 +4238,19 @@ static int get_num_and_char_keyfun(int &ch)
     return -1;
 }
 
-static int get_num_and_char(const char* prompt, char* buf, int buf_len)
+static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
 {
     if (prompt != NULL)
         mpr(prompt);
 
     line_reader reader(buf, buf_len);
 
-    reader.set_keyproc(get_num_and_char_keyfun);
+    reader.set_keyproc(_get_num_and_char_keyfun);
 
     return reader.read_line(true);
 }
 
-static void setup_cmd_repeat()
+static void _setup_cmd_repeat()
 {
     if (is_processing_macro())
     {
@@ -4259,8 +4265,8 @@ static void setup_cmd_repeat()
     char buf[80];
 
     // Function ensures that the buffer contains only digits.
-    int ch = get_num_and_char("Number of times to repeat, then command key: ",
-                              buf, 80);
+    int ch = _get_num_and_char("Number of times to repeat, then command key: ",
+                               buf, 80);
 
     if (ch == ESCAPE)
     {
@@ -4360,17 +4366,17 @@ static void setup_cmd_repeat()
 
         crawl_state.waiting_for_command = true;
 
-        ch = get_next_keycode();
+        ch = _get_next_keycode();
 
         crawl_state.waiting_for_command = false;
     }
 
-    command_type cmd = keycode_to_command( (keycode_type) ch);
+    command_type cmd = _keycode_to_command( (keycode_type) ch);
 
     if (cmd != CMD_MOUSE_MOVE)
         c_input_reset(false);
 
-    if (!is_processing_macro() && !cmd_is_repeatable(cmd))
+    if (!is_processing_macro() && !_cmd_is_repeatable(cmd))
     {
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
@@ -4426,7 +4432,7 @@ static void setup_cmd_repeat()
     crawl_state.input_line_strs.clear();
 }
 
-static void do_prev_cmd_again()
+static void _do_prev_cmd_again()
 {
     if (is_processing_macro())
     {
@@ -4471,7 +4477,7 @@ static void do_prev_cmd_again()
 
     bool was_doing_repeats = crawl_state.is_repeating_cmd();
 
-    input();
+    _input();
 
     // crawl_state.doing_prev_cmd_again can be set to false
     // while input() does its stuff if something causes
@@ -4479,7 +4485,7 @@ static void do_prev_cmd_again()
     while (!was_doing_repeats && crawl_state.is_repeating_cmd()
            && crawl_state.doing_prev_cmd_again)
     {
-        input();
+        _input();
     }
 
     if (!was_doing_repeats && crawl_state.is_repeating_cmd()
@@ -4491,7 +4497,7 @@ static void do_prev_cmd_again()
     crawl_state.doing_prev_cmd_again = false;
 }
 
-static void update_replay_state()
+static void _update_replay_state()
 {
     if (crawl_state.is_repeating_cmd())
     {
@@ -4547,7 +4553,7 @@ static void update_replay_state()
 }
 
 
-void compile_time_asserts()
+static void _compile_time_asserts()
 {
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.

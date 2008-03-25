@@ -391,11 +391,11 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
     // since that might be cheating in some cases.  This could be rewritten.
     int t = tile_idx_unseen_terrain(x, y, what);
 
-    if (c!=0 && c!= oldc && upd_tile)
+    if (c != 0 && c!= oldc && upd_tile)
     {
         if (c == PX_I || c == PX_M)
         {
-            env.tile_bk_bg[x][y]= t;
+            env.tile_bk_bg[x][y] = t;
             if (env.tile_bk_bg[x][y] == 0)
                 env.tile_bk_bg[x][y] = tileidx_feature(DNGN_UNSEEN, x, y);
         }
@@ -404,11 +404,11 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
             env.tile_bk_bg[x][y] = t;
         }
     }
-    else if (c==0)
+    else if (c == 0)
     {
         // forget map
-        env.tile_bk_fg[x][y]=0;
-        env.tile_bk_bg[x][y]=t;
+        env.tile_bk_fg[x][y] = 0;
+        env.tile_bk_bg[x][y] = t;
         return;
     }
 
@@ -459,7 +459,7 @@ void GmapDisplay(int linex, int liney)
     {
         for (int x = gmap_min_x; x <= gmap_max_x; x++, count++)
         {
-            if ( (count>=0) && (count<GXM*GYM) )
+            if (count >= 0 && count < GXM*GYM)
                 buf2[count] = gmap_data[x][y];
         }
         count += GXM - (gmap_max_x - gmap_min_x + 1);
@@ -531,7 +531,7 @@ static void _do_layout()
     win_main->placeRegion(region_item2, LAYER_CRT, region_crt, PLACE_BOTTOM,
                           tm, tm, tm, tm);
 
-    if (Options.show_items[0] != 0)
+    if (Options.tile_show_items[0] != 0)
     {
         item_x = (win_main->wx - lowest->sx) / TILE_X;
         item_y = (win_main->wy - lowest->ey) / TILE_Y;
@@ -564,17 +564,17 @@ void libgui_init()
 
     libgui_init_sys();
 
-    for(i=0;i<NUM_REGIONS;i++)
-        region_lock[i] = false;
+    for (i = 0; i < NUM_REGIONS; i++)
+         region_lock[i] = false;
 
     pref_mode = PREF_MODE_TILE;
 
     _libgui_load_prefs();
 
     // Adjust sizes
-    if (dngn_x & 1 ==0) dngn_x++;
-    if (dngn_y & 1 ==0) dngn_y++;
-    if (font_size &1 == 1) font_size--;
+    if (dngn_x & 1 == 0) dngn_x++;
+    if (dngn_y & 1 == 0) dngn_y++;
+    if (font_size & 1 == 1) font_size--;
 
     tile_dngn_x = dngn_x;
     tile_dngn_y = dngn_y;
@@ -605,7 +605,7 @@ void libgui_init()
     TileInitWin();
 #endif
 
-    if (Options.show_items[0] != 0)
+    if (Options.tile_show_items[0] != 0)
     {
         // temporal size
         region_item = new TileRegionClass(1, 1, TILE_X, TILE_Y);
@@ -734,8 +734,8 @@ static void _libgui_load_prefs()
         {
             fgets(buf, 250, fp);
             i = 0;
-            while(buf[i] >= 32 && i< 120)
-                  i++;
+            while (buf[i] >= 32 && i < 120)
+                   i++;
             buf[i] = 0;
 
             for (i = 0; i < MAX_PREFS; i++)
@@ -1057,7 +1057,7 @@ void edit_prefs()
                 region_item2->resize_backbuf();
             
             tile_set_force_redraw_inv(true);
-            tile_draw_inv(-1, REGION_INV1);
+            tile_draw_inv(REGION_INV1);
 
             region_map->force_redraw = true;
             viewwindow(true, true);
@@ -1084,7 +1084,7 @@ typedef struct tip_info
 
 static int old_tip_idx = -1;
 
-void tip_grid(int gx, int gy, bool do_null = true, int minimap=0)
+static void _tip_grid(int gx, int gy, bool do_null = true, int minimap = 0)
 {
     mesclr();
     const coord_def gc(gx,gy);
@@ -1209,10 +1209,6 @@ static bool _can_use_item(item_def item, bool equipped)
                 && mons_has_blood(item.plus));
     }
 
-    // mummies can't do anything with food or potions
-    if (you.species == SP_MUMMY)
-        return (item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD);
-
     if (equipped && item_cursed(item))
     {
         // misc. items/rods can always be evoked, cursed or not
@@ -1224,6 +1220,10 @@ static bool _can_use_item(item_def item, bool equipped)
         return (!_is_true_equipped_item(item));
     }
         
+    // mummies can't do anything with food or potions
+    if (you.species == SP_MUMMY)
+        return (item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD);
+
     // in all other cases you can use the item in some way
     return true;
 }
@@ -1308,7 +1308,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
         oldmode = mode;
         oldcx = cx;
         oldcy = cy;
-        tip_grid(cx-1, cy-1, 1);
+        _tip_grid(cx-1, cy-1, 1);
         TileDrawFarDungeon(cx-1, cy-1);
         return 0;
     }
@@ -1503,18 +1503,15 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
         oldcy = cy;
         oldmode = mode;
 
-        if(mode==REGION_DNGN)
+        if (mode == REGION_DNGN)
             tile_place_cursor(cx, cy, true);
-
-        if(mode==REGION_TDNGN)
-        {
+        else if (mode == REGION_TDNGN)
             cgotoxy(cx+2, cy+1, GOTO_DNGN);
-        }
 
         const int gx = view2gridX(cx) + 1;
         const int gy = view2gridY(cy) + 1;
 
-        tip_grid(gx, gy);
+        _tip_grid(gx, gy);
 
         // mouse-over info on player
         if (cx == DCX && cy == DCY)
@@ -1552,7 +1549,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
         }
         else
         {
-            tip_grid(cx - 1, cy - 1, false, 1);
+            _tip_grid(cx - 1, cy - 1, false, 1);
         }
 
         oldmode = mode;
@@ -1589,17 +1586,17 @@ static int _handle_mouse_button(int mx, int my, int button,
                                 bool shift, bool ctrl)
 {
     int dir;
-    const int dx[9]={-1,0,1, -1,0,1, -1,0,1};
-    const int dy[9]={1,1,1,0,0,0,-1,-1,-1};
+    const int dx[9] = {-1,0,1, -1,0,1, -1,0,1};
+    const int dy[9] = {1,1,1,0,0,0,-1,-1,-1};
 
-    const int cmd_n[9]={'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u'};
-    const int cmd_s[9]={'B', 'J', 'N', 'H', '5', 'L', 'Y', 'K', 'U'};
+    const int cmd_n[9] = {'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u'};
+    const int cmd_s[9] = {'B', 'J', 'N', 'H', '5', 'L', 'Y', 'K', 'U'};
 
-    const int cmd_c[9]={
+    const int cmd_c[9] = {
         CONTROL('B'), CONTROL('J'), CONTROL('N'), CONTROL('H'),
         'X', CONTROL('L'), CONTROL('Y'), CONTROL('K'), CONTROL('U'),
     };
-    const int cmd_dir[9]={'1','2','3','4','5','6','7','8','9'};
+    const int cmd_dir[9] = {'1','2','3','4','5','6','7','8','9'};
 
     int trig = CK_MOUSE_B1;
     if (button == 2)
@@ -1725,8 +1722,8 @@ static int _handle_mouse_button(int mx, int my, int button,
         return '5';
     }
 
-    if((mouse_mode==MOUSE_MODE_COMMAND || mouse_mode == MOUSE_MODE_MACRO) &&
-        (mode == REGION_DNGN || mode == REGION_TDNGN))
+    if ((mouse_mode == MOUSE_MODE_COMMAND || mouse_mode == MOUSE_MODE_MACRO)
+        && (mode == REGION_DNGN || mode == REGION_TDNGN))
     {
         if (button == 1 && cx == DCX && cy == DCY)
         {
@@ -2135,7 +2132,7 @@ void get_input_line_gui(char *const buff, int len)
             if (k < len
                 && (isprint(kin)
                     || (kin >=  CONTROL('A') && kin <= CONTROL('Z'))
-                    || (kin >= 0x80 && kin <=0xff)))
+                    || (kin >= 0x80 && kin <= 0xff)))
             {
                 buff[k++] = kin;
             }
@@ -2297,12 +2294,13 @@ void puttext(int sx, int sy, int ex, int ey, unsigned char *buf, bool mono,
 {
     TextRegionClass *r = (where == 1) ?region_crt:region_dngn;
 
-    if (where==1 && UseDosChar) r=region_xmap;
+    if (where == 1 && UseDosChar)
+        r = region_xmap;
 
     int xx, yy;
     unsigned char *ptr = buf;
     //cgotoxy(1, 1, GOTO_CRT);
-    for(yy = sy-1; yy <= ey-1; yy++)
+    for (yy = sy-1; yy <= ey-1; yy++)
     {
         unsigned char *c = &(r->cbuf[yy*(r->mx)+sx-1]);
         unsigned char *a = &(r->abuf[yy*(r->mx)+sx-1]);
@@ -2310,8 +2308,8 @@ void puttext(int sx, int sy, int ex, int ey, unsigned char *buf, bool mono,
         {
             *c = *ptr;
             
-            if (*c==0)
-                *c=32;
+            if (*c == 0)
+                *c = 32;
                 
             ptr++;
             if (mono)
@@ -2350,14 +2348,20 @@ void ViewTextFile(const char *name)
         return;
     }
 
-    for (i=0; i<80*MAXTEXTLINES; i++) buf[i] = ' ';
+    for (i = 0; i < 80*MAXTEXTLINES; i++)
+         buf[i] = ' ';
 
-    while(nlines<MAXTEXTLINES)
+    while (nlines < MAXTEXTLINES)
     {
         fgets((char *)buf2, 82, fp);
-        if (feof(fp)) break;
+        
+        if (feof(fp))
+            break;
+            
         i = 0;
-        while(i<79 && buf2[i] !=13 && buf2[i] != 10) i++;
+        while (i < 79 && buf2[i] != 13 && buf2[i] != 10)
+               i++;
+        
         memcpy(&buf[nlines*80], buf2, i);
         nlines++;
     }

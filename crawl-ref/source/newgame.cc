@@ -2427,7 +2427,7 @@ static void give_basic_spells(job_type which_job)
 static void openingScreen(void)
 {
 #ifdef USE_TILE
-    if (Options.title_screen)
+    if (Options.tile_title_screen)
         TileDrawTitle();
 #endif
 

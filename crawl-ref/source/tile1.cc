@@ -1650,7 +1650,9 @@ int tileidx_item(const item_def &item)
                 return TILE_RING_RANDOM_OFFSET + color - 1;
             else 
                 return TILE_RING_NORMAL_OFFSET + special % 13;
-        } else {
+        }
+        else
+        {
             if (is_unrandom_artefact( item ))
                 return _tileidx_unrand_artefact(find_unrandart_index(item));
             else if(is_random_artefact( item ))
@@ -2300,9 +2302,9 @@ void tilep_race_default(int race, int gender, int level, int *parts)
 {
     int result;
     int hair;
-    int beard=0;
+    int beard = 0;
 
-    if(gender==TILEP_GENDER_MALE)
+    if (gender == TILEP_GENDER_MALE)
         hair = TILEP_HAIR_SHORT_BLACK;
     else
         hair = TILEP_HAIR_LONG_BLACK;
@@ -2441,7 +2443,7 @@ void tilep_job_default(int job, int gender, int *parts)
     parts[TILEP_PART_LEG]   = 0;
     parts[TILEP_PART_BODY]  = 0;
     parts[TILEP_PART_ARM]   = 0;
-    parts[TILEP_PART_HAND1] =0;
+    parts[TILEP_PART_HAND1] = 0;
     parts[TILEP_PART_HAND2] = 0;
     parts[TILEP_PART_HELM]  = 0;
 
@@ -2715,7 +2717,9 @@ void tilep_part_to_str(int number, char *buf)
 int tilep_str_to_part(char *str)
 {
     //special
-    if (str[0]=='*') return TILEP_SHOW_EQUIP;
+    if (str[0] == '*')
+        return TILEP_SHOW_EQUIP;
+        
     //normal 2 digits
     return atoi(str);
 }
@@ -3741,7 +3745,7 @@ void tile_clear_buf()
     {
         for (int x = 0; x < GXM; x++)
         {
-            tile_dngn[x][y]=TILE_DNGN_UNSEEN;
+            tile_dngn[x][y] = TILE_DNGN_UNSEEN;
         }
     }
 }
@@ -3786,7 +3790,8 @@ void tile_place_item(int x, int y, int idx)
     int t = tileidx_item(mitm[idx]);
     if (mitm[idx].link != NON_ITEM)
         t |= TILE_FLAG_S_UNDER;
-    env.tile_fg[x-1][y-1]=t;
+        
+    env.tile_fg[x-1][y-1] = t;
 
     if (item_needs_autopickup(mitm[idx]))
         env.tile_bg[x-1][y-1] |= TILE_FLAG_CURSOR3;
@@ -4182,11 +4187,11 @@ static int _pack_floor_item(int *idx, int *flag, int *isort, int max)
         ARM_HELMET, ARM_GLOVES, ARM_BOOTS
     };
 
-    int i;
-    for (i=0;i<NUM_WEAPONS;i++)
-        isort_weapon2[isort_weapon[i]] = i;
-    for (i=0;i<NUM_ARMOURS;i++)
-        isort_armour2[isort_armour[i]] = i;
+    for (int i = 0; i < NUM_WEAPONS; i++)
+         isort_weapon2[isort_weapon[i]] = i;
+         
+    for (int i = 0; i < NUM_ARMOURS; i++)
+         isort_armour2[isort_armour[i]] = i;
 
     int o = igrd[you.x_pos][you.y_pos];
     if (o == NON_ITEM) return 0;
@@ -4292,7 +4297,7 @@ extern TileRegionClass *region_item;
 extern TileRegionClass *region_item2;
 extern WinClass *win_main;
 
-void tile_draw_inv(int item_type, int flag)
+void tile_draw_inv(int flag)
 {
     // "inventory" including items on floor
     #define MAXINV 200
@@ -4314,40 +4319,8 @@ void tile_draw_inv(int item_type, int flag)
     if (numInvTiles > MAXINV)
         numInvTiles = MAXINV;
 
-    // item.base_type <-> char conversion table
-    const static char *obj_syms = ")([/%#?=!#+\\0}x";
-
-    const static char *syms_table[] =
-    {
-        ")\\", // weapons and staves
-        "(",   // missile
-        "[",   // armour
-        "/",   // wands
-        "%",   // foods
-        "#",   //  none
-        "?+",  // scrolls and books
-        "=",   // rings/amulets
-        "!",   // potions
-        "#",   //  none
-        "?+",  // books/scrolls
-        ")\\", // weapons and staves
-        "0",
-        "}",
-        "x"
-    };
-
     // which items to show in inventory
-    const char *item_chars = Options.show_items;
-
-    // XXX: What does this do?
-    // tile_draw_inv is only ever called with item_type = -1, flag = REGION_INV1
-    // (in acr.cc and libgui.cc) --jpeg
-    if (item_type >= 0)
-        item_chars = syms_table[item_type];
-    else if (item_type == -2)
-        item_chars = obj_syms;
-    else if (item_type == -3)
-        item_chars = "."; // floor
+    const char *item_chars = Options.tile_show_items;
 
     // show no items, please
     if (item_chars[0] == 0)

@@ -61,12 +61,6 @@ void link_items(void);
  * *********************************************************************** */
 void fix_item_coordinates(void);
 
-// last updated: 19apr2001 {gdl}
-/* ***********************************************************************
- * called from: dungeon
- * *********************************************************************** */
-int cull_items(void);
-
 // last updated: 16oct2001 -- bwr
 int get_item_slot( int reserve = 50 );
 
@@ -121,10 +115,6 @@ void drop(void);
  * *********************************************************************** */
 int inv_count(void);
 
-void show_items();
-
-void cmd_destroy_item( void );
-
 bool pickup_single_item(int link, int qty);
 
 bool drop_item( int item_dropped, int quant_drop, bool try_offer = false );
@@ -133,7 +123,6 @@ int get_equip_slot(const item_def *item);
 
 void origin_set(int x, int y);
 void origin_set_monster(item_def &item, const monsters *monster);
-void origin_freeze(item_def &item, int x, int y);
 bool origin_known(const item_def &item);
 bool origin_describable(const item_def &item);
 std::string origin_desc(const item_def &item);

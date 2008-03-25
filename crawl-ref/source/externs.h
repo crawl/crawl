@@ -1761,8 +1761,8 @@ public:
 #endif  // WIZARD
     
 #ifdef USE_TILE
-    char        show_items[20]; // show which item types in tile inventory
-    bool        title_screen;   // display title screen?
+    char        tile_show_items[20]; // show which item types in tile inventory
+    bool        tile_title_screen;   // display title screen?
     // minimap colours
     char        tile_player_col;
     char        tile_monster_col;

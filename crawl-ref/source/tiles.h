@@ -60,7 +60,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy);
 void tile_draw_dungeon(unsigned int *tileb);
 
 // Tile Inventry display
-void tile_draw_inv(int item_type = -1, int flag = -1);
+void tile_draw_inv(int flag = -1);
 // Multiple pickup
 void tile_pick_menu();
 

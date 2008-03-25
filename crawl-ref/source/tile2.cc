@@ -172,10 +172,10 @@ const int tcache_oy_normal[TCACHE_KIND_NORMAL] = {0};
 const int tcache_nlayer_normal[TCACHE_KIND_NORMAL] = {1};
 
 #define TREGION_0_NORMAL 0
-const int region_sx_normal[1]={0};
-const int region_sy_normal[1]={0};
-const int region_wx_normal[1]={TILE_X};
-const int region_wy_normal[1]={TILE_Y};
+const int region_sx_normal[1] = {0};
+const int region_sy_normal[1] = {0};
+const int region_wx_normal[1] = {TILE_X};
+const int region_wy_normal[1] = {TILE_Y};
 
 // ISO mode sink mask
 static char *sink_mask;
@@ -307,7 +307,7 @@ void TileInit()
 
     for (k = 0; k < tcache_kind; k++)
     {
-        screen_tcach_idx[k]= (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
+        screen_tcach_idx[k] = (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
         tcache[k] = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
         for (x = 0; x < tile_xmax * tile_ymax; x++)
              screen_tcach_idx[k][x] = -1;
@@ -346,7 +346,7 @@ void TileResizeScreen(int x0, int y0)
     for (k = 0; k < tcache_kind; k++)
     {
         free(screen_tcach_idx[k]);
-        screen_tcach_idx[k]= (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
+        screen_tcach_idx[k] = (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
 
         free(tcache[k]);
         tcache[k] = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
@@ -835,9 +835,10 @@ int TileDrawCursor(int x, int y, int cflag)
     return oldc;
 }
 
-void TileDrawBolt(int x, int y, int fg){
+void TileDrawBolt(int x, int y, int fg)
+{
 
-    t1buf[x+1][y+1]=fg | TILE_FLAG_FLYING;
+    t1buf[x+1][y+1] = fg | TILE_FLAG_FLYING;
     _update_single_grid(x, y);
 }
 
@@ -1459,7 +1460,7 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
 
     // Hack: change overlay order of boots/skirts
     for (i = 0; i < TILEP_PARTS_TOTAL; i++)
-         p_order2[i]=p_order[i];
+         p_order2[i] = p_order[i];
 
     // swap boot and leg-armor
     if (parts2[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
@@ -1583,7 +1584,7 @@ static void _load_doll_data(const char *fn, dolls_data *dolls, int max,
 
 void TilePlayerEdit()
 {
-    const int p_lines[PARTS_ITEMS]=
+    const int p_lines[PARTS_ITEMS] =
     {
         TILEP_SELECT_DOLL,
         TILEP_PART_BASE,
@@ -1599,7 +1600,7 @@ void TilePlayerEdit()
         TILEP_PART_CLOAK
     };
 
-    const char *p_names[PARTS_ITEMS]=
+    const char *p_names[PARTS_ITEMS] =
     {
         "  Index:",
         "  Gendr:",
