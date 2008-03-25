@@ -49,7 +49,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans
 
-static void get_inv_items_to_show(
+static void _get_inv_items_to_show(
         std::vector<const item_def*> &v, int selector);
 
 InvTitle::InvTitle( Menu *mn, const std::string &title,
@@ -327,7 +327,7 @@ void InvMenu::load_inv_items(int item_selector,
                              MenuEntry *(*procfn)(MenuEntry *me))
 {
     std::vector<const item_def *> tobeshown;
-    get_inv_items_to_show(tobeshown, item_selector);
+    _get_inv_items_to_show(tobeshown, item_selector);
 
     load_items(tobeshown, procfn);
     if (!item_count())
@@ -451,7 +451,7 @@ bool sort_item_equipped(const InvEntry *a)
     return !a->is_item_equipped();
 }
 
-static bool compare_invmenu_items(const InvEntry *a, const InvEntry *b,
+static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
                                   const item_sort_comparators *cmps)
 {
     for (item_sort_comparators::const_iterator i = cmps->begin();
@@ -478,7 +478,7 @@ struct menu_entry_comparator
     {
         const InvEntry *ia = dynamic_cast<const InvEntry *>(a);
         const InvEntry *ib = dynamic_cast<const InvEntry *>(b);
-        return compare_invmenu_items(ia, ib, &cond->cmp);
+        return _compare_invmenu_items(ia, ib, &cond->cmp);
     }
 };
 
@@ -743,7 +743,7 @@ std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
     return (selected);
 }
 
-static bool item_class_selected(const item_def &i, int selector)
+static bool _item_class_selected(const item_def &i, int selector)
 {
     const int itype = i.base_type;
     if (selector == OSEL_ANY || selector == itype)
@@ -783,7 +783,7 @@ static bool item_class_selected(const item_def &i, int selector)
     }
 }
 
-static bool userdef_item_selected(const item_def &i, int selector)
+static bool _userdef_item_selected(const item_def &i, int selector)
 {
 #if defined(CLUA_BINDINGS)
     const char *luafn = selector == OSEL_WIELD? "ch_item_wieldable" :
@@ -794,17 +794,17 @@ static bool userdef_item_selected(const item_def &i, int selector)
 #endif
 }
 
-static bool is_item_selected(const item_def &i, int selector)
+static bool _is_item_selected(const item_def &i, int selector)
 {
-    return item_class_selected(i, selector)
-        || userdef_item_selected(i, selector);
+    return _item_class_selected(i, selector)
+        || _userdef_item_selected(i, selector);
 }
 
-static void get_inv_items_to_show(std::vector<const item_def*> &v, int selector)
+static void _get_inv_items_to_show(std::vector<const item_def*> &v, int selector)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (is_valid_item(you.inv[i]) && is_item_selected(you.inv[i], selector))
+        if (is_valid_item(you.inv[i]) && _is_item_selected(you.inv[i], selector))
             v.push_back( &you.inv[i] );
     }
 }
@@ -850,7 +850,7 @@ unsigned char invent( int item_class_inv, bool show_price )
 
 // Reads in digits for a count and apprends then to val, the
 // return value is the character that stopped the reading.
-static unsigned char get_invent_quant( unsigned char keyin, int &quant )
+static unsigned char _get_invent_quant( unsigned char keyin, int &quant )
 {
     quant = keyin - '0';
 
@@ -981,7 +981,7 @@ std::vector<SelItem> prompt_invent_items(
         else if (isdigit( keyin ))
         {
             // The "read in quantity" mode
-            keyin = get_invent_quant( keyin, count );
+            keyin = _get_invent_quant( keyin, count );
 
             need_prompt = false;
             need_getch  = false;
@@ -1022,7 +1022,7 @@ std::vector<SelItem> prompt_invent_items(
     return items;
 }
 
-static int digit_to_index( char digit, operation_types oper ) {
+static int _digit_to_index( char digit, operation_types oper ) {
     
     const char iletter = static_cast<char>(oper);
 
@@ -1056,7 +1056,7 @@ bool has_warning_inscription(const item_def& item,
 
 // checks if current item (to be removed) has a warning inscription
 // and prompts the user for confirmation
-static bool check_old_item_warning( const item_def& item,
+static bool _check_old_item_warning( const item_def& item,
                                     operation_types oper )
 {
     item_def old_item;
@@ -1116,7 +1116,7 @@ static bool check_old_item_warning( const item_def& item,
     return yesno(prompt.c_str(), false, 'n');
 }
 
-static std::string operation_verb(operation_types oper)
+static std::string _operation_verb(operation_types oper)
 {
     switch (oper)
     {
@@ -1156,7 +1156,7 @@ bool check_warning_inscriptions( const item_def& item,
             // don't ask if item already worn
             int equip = you.equip[get_armour_slot(item)];
             if (equip != -1 && item.link == equip)
-                return (check_old_item_warning(item, oper));
+                return (_check_old_item_warning(item, oper));
         }
         else if (oper == OPER_PUTON)
         {
@@ -1171,23 +1171,23 @@ bool check_warning_inscriptions( const item_def& item,
             {
                 equip = you.equip[EQ_LEFT_RING];
                 if (equip != -1 && item.link == equip)
-                    return (check_old_item_warning(item, oper));
+                    return (_check_old_item_warning(item, oper));
                 // or maybe the other ring?
                 equip = you.equip[EQ_RIGHT_RING];
             }
                 
             if (equip != -1 && item.link == equip)
-                return (check_old_item_warning(item, oper));
+                return (_check_old_item_warning(item, oper));
         }
         
-        std::string prompt = "Really " + operation_verb(oper) + " ";
+        std::string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += item.name(DESC_INVENTORY);
         prompt += "?";
         return (yesno(prompt.c_str(), false, 'n')
-                && check_old_item_warning(item, oper));
+                && _check_old_item_warning(item, oper));
     }
     else
-        return (check_old_item_warning(item, oper));
+        return (_check_old_item_warning(item, oper));
 }
 
 // This function prompts the user for an item, handles the '?' and '*'
@@ -1278,7 +1278,7 @@ int prompt_invent_item( const char *prompt,
         else if (count != NULL && isdigit( keyin ))
         {
             // The "read in quantity" mode
-            keyin = get_invent_quant( keyin, *count );
+            keyin = _get_invent_quant( keyin, *count );
 
             need_prompt = false;
             need_getch  = false;
@@ -1286,7 +1286,7 @@ int prompt_invent_item( const char *prompt,
         else if ( count == NULL && isdigit( keyin ) )
         {
             /* scan for our item */
-            int res = digit_to_index( keyin, oper );
+            int res = _digit_to_index( keyin, oper );
             if ( res != -1 ) {
                 ret = res;
                 if ( check_warning_inscriptions( you.inv[ret], oper ) )
