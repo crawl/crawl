@@ -271,8 +271,8 @@ message_colour = yellow:fails to return
 
 ##### 4-t	Tile related Options ##################
 
-show_items = !?/%=([)X}+\_.
-# title_screen = false
+tile_show_items = !?/%=([)X}+\_.
+# tile_title_screen = false
 
 # tile_player_col      = white
 # tile_monster_col     = red

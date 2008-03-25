@@ -2844,6 +2844,35 @@ void update_level( double elapsedTime )
         delete_cloud( i );
 }
 
+static void _maybe_restart_fountain_flow(const int x, const int y, int tries)
+{
+     while (0 < tries--)
+     {
+          if (!one_chance_in(100))
+              continue;
+              
+          if (grd[x][y] > DNGN_SPARKLING_FOUNTAIN)
+              grd[x][y] = static_cast<dungeon_feature_type>(grd[x][y] - 1);
+          else // grid == DNGN_DRY_FOUNTAIN_I
+              grd[x][y] = DNGN_BLUE_FOUNTAIN;
+
+          // clean bloody floor
+          if (is_bloodcovered(x,y))
+              env.map[x][y].property = FPROP_NONE;
+              
+          // chance of cleaning adjacent squares
+          for (int i = -1; i <= 1; i++)
+               for (int j =-1; j <= 1; j++)
+               {
+                    if (is_bloodcovered(x+i,y+j)
+                        && one_chance_in(5))
+                    {
+                        env.map[x+i][y+j].property = FPROP_NONE;
+                    }
+               }
+     }
+}
+
 //---------------------------------------------------------------
 //
 // update_corpses
@@ -2892,7 +2921,12 @@ void update_corpses(double elapsedTime)
         }
         else
         {
-            ASSERT(rot_time < 256);
+            // potions of blood have a longer rot time
+            if (it.base_type == OBJ_POTIONS)
+                ASSERT(rot_time < 1500);
+            else
+                ASSERT(rot_time < 256);
+                
             it.special -= rot_time;
         }
     }
@@ -2904,39 +2938,15 @@ void update_corpses(double elapsedTime)
     // dry fountains may start flowing again
     if (fountain_checks > 0)
     {
-        for (cx=0; cx<GXM; cx++)
-        {
-            for (cy=0; cy<GYM; cy++)
+        for (cx = 0; cx < GXM; cx++)
+            for (cy = 0; cy < GYM; cy++)
             {
-                if (grd[cx][cy] > DNGN_SPARKLING_FOUNTAIN
-                    && grd[cx][cy] < DNGN_PERMADRY_FOUNTAIN)
+                if (grd[cx][cy] == DNGN_DRY_FOUNTAIN_I
+                    || grd[cx][cy] > DNGN_SPARKLING_FOUNTAIN
+                       && grd[cx][cy] < DNGN_PERMADRY_FOUNTAIN)
                 {
-                    for (int i=0; i<fountain_checks; i++)
-                    {
-                        if (one_chance_in(100))
-                        {
-                            if (grd[cx][cy] > DNGN_SPARKLING_FOUNTAIN)
-                                grd[cx][cy] =
-                                    static_cast<dungeon_feature_type>(
-                                        grd[cx][cy] - 1);
-                                        
-                            // clean bloody floor
-                            if (is_bloodcovered(cx,cy))
-                                env.map[cx][cy].property = FPROP_NONE;
-                            // chance of cleaning adjacent squares
-                            for (int k=-1; k<=1; k++)
-                            {
-                                 for (int l=-1; l<=1; l++)
-                                      if (is_bloodcovered(cx+k,cy+l)
-                                          && one_chance_in(5))
-                                      {
-                                          env.map[cx+k][cy+l].property = FPROP_NONE;
-                                      }
-                            }
-                        }
-                    }
+                    _maybe_restart_fountain_flow(cx, cy, fountain_checks);
                 }
             }
-        }
     }
 }

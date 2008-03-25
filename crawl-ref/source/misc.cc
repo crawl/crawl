@@ -1714,7 +1714,7 @@ bool go_berserk(bool intentional)
     return true;
 }                               // end go_berserk()
 
-bool is_damaging_cloud(cloud_type type)
+bool is_damaging_cloud(cloud_type type, bool temp)
 {
     switch (type)
     {
@@ -1727,11 +1727,11 @@ bool is_damaging_cloud(cloud_type type)
     // also expect to be the case a few turns later (ignores spells).
     case CLOUD_STINK:
     case CLOUD_POISON:
-        return (!player_res_poison(false, false));
+        return (!player_res_poison(false, temp));
     case CLOUD_STEAM:
-        return (player_res_steam(false, false) <= 0);
+        return (player_res_steam(false, temp) <= 0);
     case CLOUD_MIASMA:
-        return (player_prot_life(false, false) <= 2);
+        return (player_prot_life(false, temp) <= 2);
     // smoke, never harmful
     default:
         return (false);
@@ -1838,7 +1838,7 @@ bool i_feel_safe(bool announce, bool want_move)
     {
         const cloud_type type =
             env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type;
-        if (is_damaging_cloud(type))
+        if (is_damaging_cloud(type, false))
         {
             if (announce)
                 mprf(MSGCH_WARN, "You're standing in a cloud of %s!",

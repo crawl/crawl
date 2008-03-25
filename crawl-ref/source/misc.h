@@ -99,7 +99,7 @@ std::string weird_writing();
 
 
 std::string cloud_name(cloud_type type);
-bool is_damaging_cloud(cloud_type type);
+bool is_damaging_cloud(cloud_type type, bool temp = false);
 
 void curare_hits_player(int agent, int degree);
 

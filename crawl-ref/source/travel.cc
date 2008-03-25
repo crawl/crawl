@@ -491,7 +491,7 @@ static bool is_safe_move(int x, int y)
 
     // We can also safely run through smoke.
     const cloud_type ctype = env.cloud[ cloud ].type;
-    return (!is_damaging_cloud(ctype));
+    return (!is_damaging_cloud(ctype, true));
 }
 
 static void set_pass_feature(unsigned char grid, signed char pass)

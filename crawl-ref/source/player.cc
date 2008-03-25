@@ -123,6 +123,28 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     ASSERT( mgrd[x][y] == NON_MONSTER 
             || mons_is_submerged( &menv[ mgrd[x][y] ] ));
 
+    const int cloud = env.cgrid[x][y];
+    if (cloud != EMPTY_CLOUD)
+    {
+        const cloud_type ctype = env.cloud[ cloud ].type;
+        // don't prompt if already in a cloud of the same type
+        if (is_damaging_cloud(ctype, false)
+            && (env.cgrid[you.x_pos][you.y_pos] == EMPTY_CLOUD
+                || ctype != env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type))
+        {
+            std::string prompt = make_stringf(
+                                    "Really step into that cloud of %s?",
+                                    cloud_name(ctype).c_str());
+
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                you.turn_is_over = false;
+                return (false);
+            }
+        }
+    }
+
     // if we're walking along, give a chance to avoid trap
     if (stepped && !force && !you.confused())
     {
@@ -161,17 +183,16 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
             const trap_type type = trap_type_at_xy(x,y);
             if (type == TRAP_ZOT)
             {
-                if (! yes_or_no("Do you really want to step into the %s",
-                                "Zot trap"))
+                if (!yes_or_no("Do you really want to step into the Zot trap"))
                 {
                     canned_msg(MSG_OK);
                     you.turn_is_over = false;
                     return (false);
                 }
             }
-            else if (type == TRAP_SHAFT && you.airborne())
+            else if (new_grid != DNGN_TRAP_MAGICAL && you.airborne())
             {
-                // No prompt
+                // No prompt (shaft and mechanical traps ineffective, if flying)
             }
             else
 #ifdef CLUA_BINDINGS

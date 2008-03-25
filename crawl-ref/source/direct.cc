@@ -1775,7 +1775,9 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("fountain of sparkling water");
     case DNGN_DRY_FOUNTAIN_I:
     case DNGN_DRY_FOUNTAIN_II:
+    case DNGN_DRY_FOUNTAIN_III:
     case DNGN_DRY_FOUNTAIN_IV:
+    case DNGN_DRY_FOUNTAIN_V:
     case DNGN_DRY_FOUNTAIN_VI:
     case DNGN_DRY_FOUNTAIN_VIII:
     case DNGN_PERMADRY_FOUNTAIN:

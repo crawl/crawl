@@ -4351,6 +4351,10 @@ void tile_draw_inv(int flag)
     }
 
     int n = 0;
+    
+    // item.base_type <-> char conversion table
+    const static char *obj_syms = ")([/%#?=!#+\\0}x";
+    
     for (int i = 0; i < (int)strlen(item_chars); i++)
     {
         int top = n;
