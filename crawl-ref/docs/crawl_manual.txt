@@ -668,15 +668,17 @@ affects both accuracy and damage.
 
 The 'f' command fires or throws a piece of ammunition, typically
 chosen from lots suitable for your weapon and defaulting to the last
-lot you fired (your "quiver"). Note that the item you will shoot with
-'f' is display on the main screen beneath your wielded weapon. See
-Appendix 6 (Inscriptions) for inscriptions which let you fine-tune the
-list of items to choose from.
+lot you fired with that weapon (your "quiver"). Note that the item you
+will shoot with 'f' is displayed on the main screen beneath your
+wielded weapon. See Appendix 6 (Inscriptions) for inscriptions which
+let you fine-tune the list of items to choose from.
 
 The firing interface also allows you to manually select an item to
-throw; but it may not be very effective if you lack the correct
-launcher. At times it is sensible to throw weapons like spears,
-daggers, or hand axes.
+throw with 'i'; but it may not be very effective if you lack the
+correct launcher. At times it is sensible to throw weapons like
+spears, daggers, or hand axes. If you manually select a piece of ammo
+this way, it is assumed to be a one-time use, and your quiver will not
+be changed.
 
 Use the '(' command if you want to change your quiver without
 firing.
@@ -2571,13 +2573,13 @@ automatically inscribed with "tried".
 
 Inscriptions as shortcuts
 -------------------------
-You can use inscriptions to define shortcuts for easy access to items, 
+You can use inscriptions to define shortcuts for easy access to items,
 regardless of their actual inventory letter. For example, if an item's
-inscription contains "@w9", you can type 'w9' in order to wield it. 
-Instead of the 9, any other digit works as well. And instead of 'w'ield,
-any other command used for handling items can be used: 'e'at, r'ead, 
-'q'uaff, 'z'ap, etc. Using "@*9" will make any action command followed 
-by '9' use this item.
+inscription contains "@w9", you can type 'w9' in order to wield it.
+Instead of the 9, any other digit works as well. And instead of
+'w'ield, any other command used for handling items can be used: 'e'at,
+r'ead, 'q'uaff, 'z'ap, 'f'ire, etc. Using "@*9" will make any action
+command followed by '9' use this item.
 
 Safety inscriptions
 -------------------

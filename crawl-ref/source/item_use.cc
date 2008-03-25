@@ -1494,7 +1494,7 @@ command_type fire_target_behaviour::get_command(int key)
 static bool _fire_choose_item_and_target(int& item, dist& target)
 {
     fire_target_behaviour beh;
-    bool was_chosen = (item != -1);
+    const bool was_chosen = (item != -1);
 
     if (was_chosen)
         beh.item = item; // force item to be the prechosen one
@@ -1515,12 +1515,14 @@ static bool _fire_choose_item_and_target(int& item, dist& target)
         return (false);
     }
 
-    // Okay, valid target; if the user chose different ammo, quiver it.
+    // If ammo was chosen via 'fi', it's not supposed to get quivered.
+    // Otherwise, if the user chose different ammo, quiver it.
     // Same for items selected in tile mode.
     if (was_chosen || beh.item != item)
     {
         item = beh.item;
-        if (you.inv[beh.item].quantity > 1)
+
+        if (! beh.selected_from_inventory)
         {
             you.quiver[get_quiver_type()] = beh.item;
             you.quiver_change = true;
@@ -1545,7 +1547,7 @@ static int _fire_prompt_for_item(std::string& err)
     int slot = prompt_invent_item( "Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
                                    OBJ_MISSILES, true, true, true, 0, NULL,
-                                   OPER_THROW );
+                                   OPER_FIRE );
     if (slot == PROMPT_ABORT)
     {
         err = "Nothing selected.";
@@ -1639,6 +1641,7 @@ static std::string _fire_get_noitem_reason()
 }
 
 // if item == -1, prompt the user.
+// if item passed, it will be put into the quiver.
 void fire_thing(int item)
 {
     if (_fire_warn_if_impossible())
