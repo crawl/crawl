@@ -18,45 +18,45 @@
 
 enum armour_type
 {
-    ARM_ROBE,
+    ARM_ROBE,                    //    0
     ARM_LEATHER_ARMOUR,
     ARM_RING_MAIL,
     ARM_SCALE_MAIL,
     ARM_CHAIN_MAIL,
-    ARM_SPLINT_MAIL,
+    ARM_SPLINT_MAIL,             //    5
     ARM_BANDED_MAIL,
     ARM_PLATE_MAIL,
     ARM_SHIELD,
     ARM_CLOAK,
-    ARM_HELMET,
+    ARM_HELMET,                  //   10
     ARM_CAP,
     ARM_WIZARD_HAT,
     ARM_GLOVES,
     ARM_BOOTS,
-    ARM_BUCKLER,
+    ARM_BUCKLER,                 //   15
     ARM_LARGE_SHIELD,
     ARM_DRAGON_HIDE,
     ARM_TROLL_HIDE,
     ARM_CRYSTAL_PLATE_MAIL,
-    ARM_DRAGON_ARMOUR,
+    ARM_DRAGON_ARMOUR,           //   20
     ARM_TROLL_LEATHER_ARMOUR,
     ARM_ICE_DRAGON_HIDE,
     ARM_ICE_DRAGON_ARMOUR,
     ARM_STEAM_DRAGON_HIDE,
-    ARM_STEAM_DRAGON_ARMOUR,
+    ARM_STEAM_DRAGON_ARMOUR,     //   25
     ARM_MOTTLED_DRAGON_HIDE,
     ARM_MOTTLED_DRAGON_ARMOUR,
     ARM_STORM_DRAGON_HIDE,
     ARM_STORM_DRAGON_ARMOUR,
-    ARM_GOLD_DRAGON_HIDE,
+    ARM_GOLD_DRAGON_HIDE,        //   30
     ARM_GOLD_DRAGON_ARMOUR,
     ARM_ANIMAL_SKIN,
     ARM_SWAMP_DRAGON_HIDE,
     ARM_SWAMP_DRAGON_ARMOUR,
-    ARM_CENTAUR_BARDING,
+    ARM_CENTAUR_BARDING,         //   35
     ARM_NAGA_BARDING,
     
-    NUM_ARMOURS
+    NUM_ARMOURS                  //   37
 };
 
 enum armour_property_type
@@ -259,11 +259,11 @@ enum missile_type
     MI_BOLT,
     MI_DART,
     MI_NEEDLE,
-    MI_LARGE_ROCK,
+    MI_LARGE_ROCK,                     //    5
     MI_SLING_BULLET,
     MI_JAVELIN,
     MI_THROWING_NET,
-    NUM_MISSILES,
+    NUM_MISSILES,                      //    9
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
 
@@ -465,8 +465,8 @@ enum weapon_type
     WPN_KNIFE,
     WPN_BLOWGUN,
     WPN_FALCHION,
-    WPN_BLESSED_BLADE,                 //   44
-    WPN_LONGBOW,
+    WPN_BLESSED_BLADE,
+    WPN_LONGBOW,                       //   45
     WPN_LAJATANG,
     WPN_BARDICHE,
 

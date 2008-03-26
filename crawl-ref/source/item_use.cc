@@ -3591,9 +3591,9 @@ void drink( int slot )
         item_slot = slot;
     else
         item_slot = prompt_invent_item( "Drink which item?",
-                                    MT_INVLIST, OBJ_POTIONS,
-                                    true, true, true, 0, NULL,
-                                    OPER_QUAFF );
+                                        MT_INVLIST, OBJ_POTIONS,
+                                        true, true, true, 0, NULL,
+                                        OPER_QUAFF );
     if (item_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -3615,7 +3615,7 @@ void drink( int slot )
         player_in_a_dangerous_place() && (you.experience_level > 1);
     
     if (potion_effect(static_cast<potion_type>(you.inv[item_slot].sub_type),
-                      40))
+                      40, alreadyknown))
     {
         set_ident_flags( you.inv[item_slot], ISFLAG_IDENT_MASK );
 

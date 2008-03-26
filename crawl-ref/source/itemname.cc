@@ -518,6 +518,7 @@ static const char* potion_type_name(int potiontype)
     case POT_CURE_MUTATION:     return "cure mutation";
     case POT_MUTATION:          return "mutation";
     case POT_BLOOD:             return "blood";
+    case POT_BLOOD_COAGULATED:  return "coagulated blood";
     case POT_RESISTANCE:        return "resistance";
     default:                    return "bugginess";
     }
@@ -1285,17 +1286,7 @@ std::string item_def::name_aux( description_level_type desc,
         }
         if (know_type)
         {
-            buff << "potion of ";
-            
-            // rotting corpses don't get special dbnames, so neither do !blood
-            if (this->sub_type == POT_BLOOD
-                && this->special < 200
-                && !dbname)
-            {
-                buff << "congealed ";
-            }
-
-            buff << potion_type_name(item_typ);
+            buff << "potion of " << potion_type_name(item_typ);
         }
         else
         {
@@ -1320,15 +1311,10 @@ std::string item_def::name_aux( description_level_type desc,
                 (pqual < 0 || pqual >= PDQ_NQUALS)? "bug-filled "
                                     : potion_qualifiers[pqual];
 
-            const char *clr =
-                (pcolour < 0 || pcolour >= PDC_NCOLOURS)? "bogus"
-                                    : potion_colours[pcolour];
+            const char *clr =  (pcolour < 0 || pcolour >= PDC_NCOLOURS)?
+                                   "bogus" : potion_colours[pcolour];
 
-            if (this->sub_type == POT_BLOOD && this->special < 200)
-                buff << "congealed ";
-            else
-                buff << qualifier;
-            buff << clr << " potion";
+            buff << qualifier << clr << " potion";
         }
         break;
 

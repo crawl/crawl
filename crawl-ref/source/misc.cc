@@ -205,7 +205,9 @@ void split_blood_potions_into_decay( int obj, int amount )
     item_def potion = you.inv[obj];
 
     ASSERT(is_valid_item(potion));
-    ASSERT(potion.base_type == OBJ_POTIONS && potion.sub_type == POT_BLOOD);
+    ASSERT(potion.base_type == OBJ_POTIONS);
+    ASSERT(potion.sub_type == POT_BLOOD
+           || potion.sub_type == POT_BLOOD_COAGULATED);
     ASSERT(amount <= potion.quantity);
 
     if (amount <= 0)

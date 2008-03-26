@@ -736,16 +736,42 @@ static void initialise_branch_depths()
     branches[BRANCH_TOMB].startdepth           = random_range(2, 3);
 }
 
+static int _get_random_coagulated_blood_desc()
+{
+    potion_description_qualifier_type qualifier = PDQ_NONE;
+    switch (random2(4))
+    {
+    case 0:
+        qualifier = PDQ_GLUGGY;
+        break;
+    case 1:
+        qualifier = PDQ_LUMPY;
+        break;
+    case 2:
+        qualifier = PDQ_SEDIMENTED;
+        break;
+    case 3:
+        qualifier = PDQ_VISCOUS;
+        break;
+    }
+    
+    potion_description_colour_type colour = (coinflip() ? PDC_RED : PDC_BROWN);
+    
+    return PDESCQ(qualifier, colour);
+}
+
 static void initialise_item_descriptions()
 {
     // must remember to check for already existing colours/combinations
     you.item_description.init(255);
 
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE] =
-        PDESCQ(PDQ_GLUGGY, PDC_WHITE);
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
+        = PDESCQ(PDQ_GLUGGY, PDC_WHITE);
 
     you.item_description[IDESC_POTIONS][POT_WATER] = PDESCS(PDC_CLEAR);
     you.item_description[IDESC_POTIONS][POT_BLOOD] = PDESCS(PDC_RED);
+    you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
+         = _get_random_coagulated_blood_desc();
 
     // The order here must match that of IDESC in describe.h
     // (I don't really know about scrolls, which is why I left the height value.)
@@ -2331,8 +2357,11 @@ static void give_basic_mutations(species_type speci)
 static void give_basic_knowledge(job_type which_job)
 {
     if (you.species == SP_VAMPIRE)
+    {
         set_ident_type( OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE );
-        
+        set_ident_type( OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE );
+    }
+
     switch (which_job)
     {
     case JOB_PRIEST:

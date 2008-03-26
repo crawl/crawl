@@ -1238,7 +1238,10 @@ void create_spec_object()
         case OBJ_POTIONS:
             if (mitm[thing_created].sub_type == POT_BLOOD)
                 mitm[thing_created].special = 1200;
-        // fall-through
+            else if (mitm[thing_created].sub_type == POT_BLOOD_COAGULATED)
+                mitm[thing_created].special = 200;
+            // intentional fall-through
+            
         case OBJ_FOOD:
         case OBJ_SCROLLS:
             mitm[thing_created].quantity = 12;

@@ -42,17 +42,18 @@ enum potion_type
     POT_BERSERK_RAGE,
     POT_CURE_MUTATION,
     POT_MUTATION,
-    POT_BLOOD,
     POT_RESISTANCE,
-    NUM_POTIONS
+    POT_BLOOD,                         //   25
+    POT_BLOOD_COAGULATED,
+    NUM_POTIONS                        //   27
 };
+
 
 /* ***********************************************************************
  * called from: ability - beam - decks - item_use - misc - religion -
  *              spell - spells - spells1
  * *********************************************************************** */
-bool potion_effect(potion_type pot_eff, int pow);
-
+bool potion_effect(potion_type pot_eff, int pow, bool was_known = true);
 
 /* ***********************************************************************
  * called from: item_use

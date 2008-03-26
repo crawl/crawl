@@ -44,10 +44,9 @@
 #include "xom.h"
 
 // From an actual potion, pow == 40 -- bwr
-bool potion_effect( potion_type pot_eff, int pow )
+bool potion_effect( potion_type pot_eff, int pow, bool was_known )
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
-    bool was_known = item_type_known(OBJ_POTIONS, (int) pot_eff);
 
     if (pow > 150)
         pow = 150;
@@ -88,13 +87,14 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
   case POT_BLOOD:
+  case POT_BLOOD_COAGULATED:
         if (you.species == SP_VAMPIRE)
         {
-            const char* names[] = { "human", "rat", "goblin",
-                                    "elf", "goat", "sheep",
-                                    "sheep", "gnoll", "yak" };
-
-            mprf("Yummy - fresh %s blood!", RANDOM_ELEMENT(names));
+            if (pot_eff == POT_BLOOD)
+                mpr("Yummy - fresh blood!");
+            else // coagulated
+                mpr("This tastes delicious!");
+                
             lessen_hunger(1000, true);
 
             // healing depends on hunger
@@ -126,8 +126,10 @@ bool potion_effect( potion_type pot_eff, int pow )
                 if (!you.mutation[MUT_HERBIVOROUS] && one_chance_in(3))
                     lessen_hunger(100, true);
                 else
+                {
                     disease_player( 50 + random2(100) );
-                xom_is_stimulated(32);
+                    xom_is_stimulated(32);
+                }
             }
         }
         did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);

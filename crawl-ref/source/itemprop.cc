@@ -408,6 +408,12 @@ static food_def Food_prop[NUM_FOODS] =
 // be accessed correctly.
 void init_properties()
 {
+    // compare with enum comments, to catch changes
+    COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
+    COMPILE_CHECK(NUM_WEAPONS  == 48, c2);
+    COMPILE_CHECK(NUM_MISSILES ==  9, c3);
+    COMPILE_CHECK(NUM_FOODS    == 22, c4);
+
     int i;
 
     for (i = 0; i < NUM_ARMOURS; i++)

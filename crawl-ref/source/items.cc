@@ -1352,14 +1352,6 @@ bool items_stack( const item_def &item1, const item_def &item2,
         {
             return false;
         }
-
-        // Don't stack congealed potions of blood with non-congealed ones.
-        if (item1.sub_type == POT_BLOOD
-            && (item1.special < 200 && item2.special >= 200
-                || item2.special < 200 && item1.special >= 200))
-        {
-            return false;
-        }
     }
 
     // The inscriptions can differ if one of them is blank, but if they
@@ -1536,7 +1528,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                 }
 
                 if (mitm[obj].base_type == OBJ_POTIONS
-                    && mitm[obj].sub_type == POT_BLOOD)
+                    && (mitm[obj].sub_type == POT_BLOOD
+                        || mitm[obj].sub_type == POT_BLOOD_COAGULATED))
                 {
                     // use average age
                     int age = you.inv[m].special * you.inv[m].quantity
@@ -1745,7 +1738,9 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
         {
             if (items_stack( item, mitm[i] ))
             {
-                if (item.base_type == OBJ_POTIONS && item.sub_type == POT_BLOOD)
+                if (item.base_type == OBJ_POTIONS
+                    && (item.sub_type == POT_BLOOD
+                        || item.sub_type == POT_BLOOD_COAGULATED))
                 {
                     // calculate average age
                     int age = mitm[i].special * mitm[i].quantity

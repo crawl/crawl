@@ -1324,16 +1324,18 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
 
     if (you.species == SP_VAMPIRE)
     {
-        if (what_isit == OBJ_CORPSES && kindof_thing == CORPSE_BODY
-            || what_isit == OBJ_POTIONS && kindof_thing == POT_BLOOD)
+        if (what_isit == OBJ_CORPSES && kindof_thing == CORPSE_BODY)
+            return true;
+
+        if (what_isit == OBJ_POTIONS && (kindof_thing == POT_BLOOD
+            || kindof_thing == POT_BLOOD_COAGULATED))
         {
             return (true);
         }
-        else
-        {
-            if (!suppress_msg)
-               mpr("Blech - you need blood!");
-        }
+        
+        if (!suppress_msg)
+            mpr("Blech - you need blood!");
+            
         return (false);
     }
 
@@ -1430,6 +1432,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
         switch (kindof_thing)
         {
             case POT_BLOOD:
+            case POT_BLOOD_COAGULATED:
                 if (ur_herbivorous)
                 {
                     if (!suppress_msg)

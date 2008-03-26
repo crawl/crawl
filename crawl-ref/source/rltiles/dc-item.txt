@@ -514,8 +514,9 @@ i-strong-poison POT_STRONG_POISON
 i-berserk-rage POT_BERSERK_RAGE
 i-cure-mutation POT_CURE_MUTATION
 i-mutation POT_MUTATION
-i-blood POT_BLOOD
 i-resistance POT_RESISTANCE
+i-blood POT_BLOOD
+i-coagulated-blood POT_BLOOD_COAGULATED
 %back none
 %rim 1
 

@@ -38,7 +38,7 @@ enum food_type
     FOOD_CHEESE,
     FOOD_SAUSAGE,                      //   20
     FOOD_CHUNK,
-    NUM_FOODS
+    NUM_FOODS                          //   22
 };
 
 

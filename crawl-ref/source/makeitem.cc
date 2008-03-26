@@ -2258,8 +2258,7 @@ static void generate_food_item(item_def& item, int force_quant, int force_type)
     }
 }
 
-static void generate_potion_item(item_def& item, int force_type,
-                                 int item_level)
+static void generate_potion_item(item_def& item, int force_type, int item_level)
 {
     item.quantity = 1;
 
@@ -2274,7 +2273,8 @@ static void generate_potion_item(item_def& item, int force_type,
     else
     {
         int stype;
-        do {
+        do
+        {
             stype = random_choose_weighted( 1407, POT_HEAL_WOUNDS,
                                             2815, POT_HEALING,
                                             222, POT_CURE_MUTATION,
@@ -2301,8 +2301,9 @@ static void generate_potion_item(item_def& item, int force_type,
                                             278, POT_DEGENERATION,
                                             10, POT_DECAY,
                                             0);
-        } while ( (stype == POT_POISON && item_level < 1) ||
-                  (stype == POT_STRONG_POISON && item_level < 11) );
+        }
+        while ( stype == POT_POISON && item_level < 1
+                || stype == POT_STRONG_POISON && item_level < 11 );
                   
         if ( stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY ||
              stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE ||
@@ -2312,6 +2313,7 @@ static void generate_potion_item(item_def& item, int force_type,
         }
         item.sub_type = stype;
     }
+    
     if (item.sub_type == POT_BLOOD)
         item.special = 1200;
     else

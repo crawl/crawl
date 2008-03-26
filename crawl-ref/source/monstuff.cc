@@ -246,7 +246,8 @@ bool curse_an_item( bool decay_potions )
         // Potions of blood are vital to vampires, so make an exception for
         // for them. (Come to think of it, this would work nicely for all
         // other potion types as well.)
-        if (you.inv[item].sub_type == POT_BLOOD)
+        if (you.inv[item].sub_type == POT_BLOOD
+            || you.inv[item].sub_type == POT_BLOOD_COAGULATED)
         {
             int amount = random2(you.inv[item].quantity) + 1;
             split_blood_potions_into_decay(item, amount);

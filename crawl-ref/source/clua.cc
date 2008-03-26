@@ -1208,6 +1208,8 @@ static int l_item_subtype(lua_State *ls)
             {
                 if (item->sub_type == POT_BLOOD)
                    s = "blood";
+                else if (item->sub_type == POT_BLOOD_COAGULATED)
+                   s = "coagulated blood";
                 else if (item->sub_type == POT_WATER)
                    s = "water";
                 else if (item->sub_type == POT_PORRIDGE)
@@ -1217,7 +1219,9 @@ static int l_item_subtype(lua_State *ls)
                 else if (item->sub_type == POT_GAIN_STRENGTH
                          || item->sub_type == POT_GAIN_DEXTERITY
                          || item->sub_type == POT_GAIN_INTELLIGENCE)
+                {
                    s = "gain ability";
+                }
                 else if (item->sub_type == POT_CURE_MUTATION)
                    s = "cure mutation";
             }
@@ -1281,6 +1285,7 @@ static int l_item_potion_type(lua_State *ls)
             // need more refined handling:
             // for eating habits
             case POT_BLOOD:
+            case POT_BLOOD_COAGULATED:
             case POT_WATER:
             case POT_PORRIDGE:
             // for undead
