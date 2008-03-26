@@ -4445,9 +4445,10 @@ dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
             (rawfeat == 'F') ? DNGN_GRANITE_STATUE :
             (rawfeat == 'I') ? DNGN_ORCISH_IDOL :
             (rawfeat == 'G') ? DNGN_GRANITE_STATUE :
-            (rawfeat == 'T') ? DNGN_BLUE_FOUNTAIN :
-            (rawfeat == 'U') ? DNGN_SPARKLING_FOUNTAIN :
+            (rawfeat == 'T') ? DNGN_FOUNTAIN_BLUE :
+            (rawfeat == 'U') ? DNGN_FOUNTAIN_SPARKLING :
             (rawfeat == 'V') ? DNGN_PERMADRY_FOUNTAIN :
+            (rawfeat == 'Y') ? DNGN_FOUNTAIN_BLOOD :
             (rawfeat == '\0')? DNGN_ROCK_WALL :
             DNGN_FLOOR); // includes everything else
 }
@@ -4546,9 +4547,10 @@ static int vault_grid( vault_placement &place,
                    (vgrid == 'F') ? DNGN_GRANITE_STATUE :
                    (vgrid == 'I') ? DNGN_ORCISH_IDOL :
                    (vgrid == 'G') ? DNGN_GRANITE_STATUE :
-                   (vgrid == 'T') ? DNGN_BLUE_FOUNTAIN :
-                   (vgrid == 'U') ? DNGN_SPARKLING_FOUNTAIN :
+                   (vgrid == 'T') ? DNGN_FOUNTAIN_BLUE :
+                   (vgrid == 'U') ? DNGN_FOUNTAIN_SPARKLING :
                    (vgrid == 'V') ? DNGN_PERMADRY_FOUNTAIN :
+                   (vgrid == 'Y') ? DNGN_FOUNTAIN_BLOOD :
                    (vgrid == '\0')? DNGN_ROCK_WALL :
                                     DNGN_FLOOR); // includes everything else
 

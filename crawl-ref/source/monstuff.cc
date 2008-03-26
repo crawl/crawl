@@ -5615,9 +5615,7 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
 
     // Fire elementals avoid water and cold
     if (monster->type == MONS_FIRE_ELEMENTAL
-        && (target_grid == DNGN_DEEP_WATER
-            || target_grid == DNGN_SHALLOW_WATER
-            || target_grid == DNGN_BLUE_FOUNTAIN
+        && (grid_is_watery(target_grid)
             || targ_cloud_type == CLOUD_COLD))
     {
         return false;

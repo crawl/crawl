@@ -1292,7 +1292,7 @@ int summon_elemental(int pow, int restricted_type,
     }
     else if ((grd[ targ_x ][ targ_y ] == DNGN_DEEP_WATER
             || grd[ targ_x ][ targ_y ] == DNGN_SHALLOW_WATER
-            || grd[ targ_x ][ targ_y ] == DNGN_BLUE_FOUNTAIN)
+            || grd[ targ_x ][ targ_y ] == DNGN_FOUNTAIN_BLUE)
         && (restricted_type == 0 || restricted_type == MONS_WATER_ELEMENTAL))
     {
         type_summoned = MONS_WATER_ELEMENTAL;

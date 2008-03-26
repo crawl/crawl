@@ -2867,17 +2867,27 @@ void update_level( double elapsedTime )
         delete_cloud( i );
 }
 
-static void _maybe_restart_fountain_flow(const int x, const int y, int tries)
+static void _maybe_restart_fountain_flow(const int x, const int y,
+                                         const int tries)
 {
-     while (0 < tries--)
+     dungeon_feature_type grid = grd[x][y];
+     if (grid < DNGN_DRY_FOUNTAIN_BLUE || grid > DNGN_DRY_FOUNTAIN_BLOOD)
+     {
+         return;
+     }
+
+     int i = 0;
+     while (tries > i++)
      {
           if (!one_chance_in(100))
               continue;
-              
-          if (grd[x][y] > DNGN_SPARKLING_FOUNTAIN)
-              grd[x][y] = static_cast<dungeon_feature_type>(grd[x][y] - 1);
-          else // grid == DNGN_DRY_FOUNTAIN_I
-              grd[x][y] = DNGN_BLUE_FOUNTAIN;
+
+          // make it start flowing again
+          grd[x][y] = static_cast<dungeon_feature_type> (grid
+                        - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
+                        
+          if ( is_terrain_seen(coord_def(x,y)) )
+              set_envmap_obj(x, y, grd[x][y]);
 
           // clean bloody floor
           if (is_bloodcovered(x,y))
@@ -2893,6 +2903,8 @@ static void _maybe_restart_fountain_flow(const int x, const int y, int tries)
                         env.map[x+i][y+j].property = FPROP_NONE;
                     }
                }
+
+          return;
      }
 }
 
@@ -2973,9 +2985,8 @@ void update_corpses(double elapsedTime)
         for (cx = 0; cx < GXM; cx++)
             for (cy = 0; cy < GYM; cy++)
             {
-                if (grd[cx][cy] == DNGN_DRY_FOUNTAIN_I
-                    || grd[cx][cy] > DNGN_SPARKLING_FOUNTAIN
-                       && grd[cx][cy] < DNGN_PERMADRY_FOUNTAIN)
+                if (grd[cx][cy] >= DNGN_DRY_FOUNTAIN_BLUE
+                    && grd[cx][cy] < DNGN_PERMADRY_FOUNTAIN)
                 {
                     _maybe_restart_fountain_flow(cx, cy, fountain_checks);
                 }

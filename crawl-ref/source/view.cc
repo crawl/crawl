@@ -4118,18 +4118,24 @@ void init_feature_table( void )
             Feature[i].seen_colour = EC_BEOGH;
             break;
 
-        case DNGN_BLUE_FOUNTAIN:
+        case DNGN_FOUNTAIN_BLUE:
             Feature[i].colour = BLUE;
-            Feature[i].dchar = DCHAR_FOUNTAIN;
+            Feature[i].dchar  = DCHAR_FOUNTAIN;
             break;
 
-        case DNGN_SPARKLING_FOUNTAIN:
+        case DNGN_FOUNTAIN_SPARKLING:
             Feature[i].colour = LIGHTBLUE;
-            Feature[i].dchar = DCHAR_FOUNTAIN;
+            Feature[i].dchar  = DCHAR_FOUNTAIN;
             break;
 
-        case DNGN_DRY_FOUNTAIN_I:
-        case DNGN_DRY_FOUNTAIN_II:
+        case DNGN_FOUNTAIN_BLOOD:
+            Feature[i].colour = RED;
+            Feature[i].dchar  = DCHAR_FOUNTAIN;
+            break;
+
+        case DNGN_DRY_FOUNTAIN_BLUE:
+        case DNGN_DRY_FOUNTAIN_SPARKLING:
+        case DNGN_DRY_FOUNTAIN_BLOOD:
         case DNGN_PERMADRY_FOUNTAIN:
             Feature[i].colour = LIGHTGREY;
             Feature[i].dchar = DCHAR_FOUNTAIN;

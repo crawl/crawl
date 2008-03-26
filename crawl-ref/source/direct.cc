@@ -1769,17 +1769,15 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("corrupted altar of Lugonu");
     case DNGN_ALTAR_BEOGH:
         return ("roughly hewn altar of Beogh");
-    case DNGN_BLUE_FOUNTAIN:
+    case DNGN_FOUNTAIN_BLUE:
         return ("fountain of clear blue water");
-    case DNGN_SPARKLING_FOUNTAIN:
+    case DNGN_FOUNTAIN_SPARKLING:
         return ("fountain of sparkling water");
-    case DNGN_DRY_FOUNTAIN_I:
-    case DNGN_DRY_FOUNTAIN_II:
-    case DNGN_DRY_FOUNTAIN_III:
-    case DNGN_DRY_FOUNTAIN_IV:
-    case DNGN_DRY_FOUNTAIN_V:
-    case DNGN_DRY_FOUNTAIN_VI:
-    case DNGN_DRY_FOUNTAIN_VIII:
+    case DNGN_FOUNTAIN_BLOOD:
+        return ("fountain of blood");
+    case DNGN_DRY_FOUNTAIN_BLUE:
+    case DNGN_DRY_FOUNTAIN_SPARKLING:
+    case DNGN_DRY_FOUNTAIN_BLOOD:
     case DNGN_PERMADRY_FOUNTAIN:
         return ("dry fountain");
     default:

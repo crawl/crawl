@@ -69,7 +69,7 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
     return (grid_wanted == actual_grid
             || (grid_wanted == DNGN_DEEP_WATER
                 && (actual_grid == DNGN_SHALLOW_WATER
-                    || actual_grid == DNGN_BLUE_FOUNTAIN)));
+                    || actual_grid == DNGN_FOUNTAIN_BLUE)));
 }
 
 // Can this monster survive on actual_grid?

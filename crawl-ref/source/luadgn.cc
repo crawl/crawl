@@ -1101,11 +1101,9 @@ const char *dngn_feature_names[] =
     "altar_yredelemnul", "altar_xom", "altar_vehumet",
     "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
     "altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",
-    "altar_beogh", "", "", "", "", "", "", "blue_fountain",
-    "dry_fountain_i", "sparkling_fountain", "dry_fountain_ii",
-    "dry_fountain_iii", "dry_fountain_iv", "dry_fountain_v",
-    "dry_fountain_vi", "dry_fountain_vii", "dry_fountain_viii",
-    "permadry_fountain"
+    "altar_beogh", "", "", "", "", "", "", "fountain_blue",
+    "fountain_sparkling", "fountain_blood", "dry_fountain_blue",
+    "dry_fountain_sparkling", "dry_fountain_blood", "permadry_fountain"
 };
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)

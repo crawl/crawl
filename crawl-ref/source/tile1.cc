@@ -1990,20 +1990,17 @@ int tileidx_feature(int object, int gx, int gy)
         return TILE_DNGN_ALTAR_LUGONU;
     case DNGN_ALTAR_BEOGH:
         return TILE_DNGN_ALTAR_BEOGH;
-    case DNGN_BLUE_FOUNTAIN:
+    case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
-    case DNGN_DRY_FOUNTAIN_I: 
-    case DNGN_DRY_FOUNTAIN_II:
-    case DNGN_DRY_FOUNTAIN_III:
-    case DNGN_DRY_FOUNTAIN_IV:
-    case DNGN_DRY_FOUNTAIN_V:
-    case DNGN_DRY_FOUNTAIN_VI:
-    case DNGN_DRY_FOUNTAIN_VII:
-    case DNGN_DRY_FOUNTAIN_VIII:
-    case DNGN_PERMADRY_FOUNTAIN :
-       return TILE_DNGN_DRY_FOUNTAIN;
-    case DNGN_SPARKLING_FOUNTAIN:
+    case DNGN_FOUNTAIN_SPARKLING:
         return TILE_DNGN_SPARKLING_FOUNTAIN;
+    case DNGN_FOUNTAIN_BLOOD:
+        return TILE_DNGN_BLOOD_FOUNTAIN;
+    case DNGN_DRY_FOUNTAIN_BLUE:
+    case DNGN_DRY_FOUNTAIN_SPARKLING:
+    case DNGN_DRY_FOUNTAIN_BLOOD:
+    case DNGN_PERMADRY_FOUNTAIN:
+       return TILE_DNGN_DRY_FOUNTAIN;
     }
 
     return TILE_ERROR;

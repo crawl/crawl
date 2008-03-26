@@ -203,7 +203,7 @@ bool grid_is_water( dungeon_feature_type grid )
 
 bool grid_is_watery( dungeon_feature_type grid )
 {
-    return (grid_is_water(grid) || grid == DNGN_BLUE_FOUNTAIN);
+    return (grid_is_water(grid) || grid == DNGN_FOUNTAIN_BLUE);
 }
 
 bool grid_destroys_items( dungeon_feature_type grid )

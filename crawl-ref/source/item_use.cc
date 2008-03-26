@@ -3561,8 +3561,8 @@ void drink( int slot )
 
     if (slot == -1)
     {
-        if (grd[you.x_pos][you.y_pos] == DNGN_BLUE_FOUNTAIN
-            || grd[you.x_pos][you.y_pos] == DNGN_SPARKLING_FOUNTAIN)
+        if (grd[you.x_pos][you.y_pos] >= DNGN_FOUNTAIN_BLUE
+            && grd[you.x_pos][you.y_pos] <= DNGN_FOUNTAIN_BLOOD)
         {
             if (drink_fountain())
                 return;
@@ -3644,7 +3644,7 @@ bool drink_fountain()
 {
     const dungeon_feature_type feat = grd[you.x_pos][you.y_pos];
 
-    if ( feat != DNGN_BLUE_FOUNTAIN && feat != DNGN_SPARKLING_FOUNTAIN )
+    if ( feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_FOUNTAIN_BLOOD )
         return false;
 
     if (you.flight_mode() == FL_LEVITATE)
@@ -3654,17 +3654,26 @@ bool drink_fountain()
     }
 
     potion_type fountain_effect = POT_WATER;
-    if ( feat == DNGN_BLUE_FOUNTAIN )
+    if ( feat == DNGN_FOUNTAIN_BLUE )
     {
         if (!yesno("Drink from the fountain?"))
             return false;
-        else
-            mpr("You drink the pure, clear water.");
+            
+        mpr("You drink the pure, clear water.");
+    }
+    else if ( feat == DNGN_FOUNTAIN_BLOOD )
+    {
+        if (!yesno("Drink from the fountain of blood?"))
+            return false;
+            
+        mpr("You drink the blood.");
+        fountain_effect = POT_BLOOD;
     }
     else                        // sparkling fountain
     {
         if (!yesno("Drink from the sparkling fountain?"))
             return false;
+            
         mpr("You drink the sparkling water.");
 
         const potion_type effects[] =
@@ -3692,15 +3701,21 @@ bool drink_fountain()
                                            weights + ARRAYSIZE(weights))];
     }
 
-    if (fountain_effect != POT_WATER)
+    if (fountain_effect != POT_WATER && fountain_effect != POT_BLOOD)
         xom_is_stimulated(64);
 
-    potion_effect(fountain_effect, 100);
+    // good gods do not punish for bad random effects
+    potion_effect(fountain_effect, 100, feat != DNGN_FOUNTAIN_SPARKLING);
 
     bool gone_dry = false;
-    if ( feat == DNGN_BLUE_FOUNTAIN )
+    if ( feat == DNGN_FOUNTAIN_BLUE )
     {
         if ( one_chance_in(20) )
+            gone_dry = true;
+    }
+    else if ( feat == DNGN_FOUNTAIN_BLOOD )
+    {
+        if ( one_chance_in(3) )
             gone_dry = true;
     }
     else                        // sparkling fountain
@@ -3709,7 +3724,7 @@ bool drink_fountain()
             gone_dry = true;
         else if ( random2(50) > 40 ) // no message!
         {
-            grd[you.x_pos][you.y_pos] = DNGN_BLUE_FOUNTAIN;
+            grd[you.x_pos][you.y_pos] = DNGN_FOUNTAIN_BLUE;
             set_terrain_changed(you.x_pos, you.y_pos);
         }
     }
@@ -3717,11 +3732,10 @@ bool drink_fountain()
     if (gone_dry)
     {
         mpr("The fountain dries up!");
-        if (feat == DNGN_BLUE_FOUNTAIN)
-            grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_I;
-        else
-            grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_II;
-
+        
+        grd[you.x_pos][you.y_pos] = static_cast<dungeon_feature_type>(feat
+                         + DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE);
+               
         set_terrain_changed(you.x_pos, you.y_pos);
 
         crawl_state.cancel_cmd_repeat();

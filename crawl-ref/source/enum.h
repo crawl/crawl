@@ -983,24 +983,21 @@ enum dungeon_feature_type
     DNGN_ALTAR_BEOGH,
     DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_BEOGH,
 
-    DNGN_BLUE_FOUNTAIN = 200,          //  200
-    DNGN_DRY_FOUNTAIN_I,
-    DNGN_SPARKLING_FOUNTAIN,           // aka 'Magic Fountain' {dlb}
-    DNGN_DRY_FOUNTAIN_II,
-    DNGN_DRY_FOUNTAIN_III,
-    DNGN_DRY_FOUNTAIN_IV,              //  205
-    DNGN_DRY_FOUNTAIN_V,
-    DNGN_DRY_FOUNTAIN_VI,
-    DNGN_DRY_FOUNTAIN_VII,
-    DNGN_DRY_FOUNTAIN_VIII,
-    DNGN_PERMADRY_FOUNTAIN = 210,  // added (from dungeon.cc/maps.cc) 22jan2000 {dlb}
+    DNGN_FOUNTAIN_BLUE = 200,          //  200
+    DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
+    DNGN_FOUNTAIN_BLOOD,
+    // same order as above!
+    DNGN_DRY_FOUNTAIN_BLUE,
+    DNGN_DRY_FOUNTAIN_SPARKLING,
+    DNGN_DRY_FOUNTAIN_BLOOD,           //  205
+    DNGN_PERMADRY_FOUNTAIN,
 
-    NUM_REAL_FEATURES,
+    NUM_REAL_FEATURES,                 //  207
 
     // Real terrain must all occur before 256 to guarantee it fits
     // into the unsigned char used for the grid!
 
-    // There aren't really terrain, but they're passed in and used 
+    // These aren't really terrain, but they're passed in and used
     // to get their appearance character so I'm putting them here for now.
     DNGN_ITEM_ORB        = 256,
     DNGN_INVIS_EXPOSED   = 257,

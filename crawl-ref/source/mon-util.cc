@@ -5473,7 +5473,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
             msg = replace_all(msg, "@surface@", "lava");
         else if (feat == DNGN_DEEP_WATER || feat == DNGN_SHALLOW_WATER)
             msg = replace_all(msg, "@surface@", "water");
-        else if (feat >= DNGN_ALTAR_ZIN && feat < DNGN_BLUE_FOUNTAIN)
+        else if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
             msg = replace_all(msg, "@surface@", "altar");
         else
             msg = replace_all(msg, "@surface@", "ground");
