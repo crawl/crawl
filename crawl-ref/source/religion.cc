@@ -759,6 +759,20 @@ static void give_nemelex_gift()
     }
 }
 
+static bool blessing_reinforcements(void)
+{
+    // Possible follower band leaders.
+    const monster_type followers[] = {
+        MONS_ORC, MONS_ORC_WARRIOR
+    };
+
+    monster_type follower_type =
+        followers[random2(ARRAYSIZE(followers))];
+
+    return (create_monster(follower_type, 0, BEH_GOD_GIFT, you.x_pos,
+               you.y_pos, MHITYOU, MONS_PROGRAM_BUG, true) != -1);
+}
+
 static bool blessing_priesthood(monsters* mon)
 {
     monster_type priest_type = MONS_PROGRAM_BUG;
@@ -858,6 +872,11 @@ void bless_follower(god_type god,
 
     monsters *mon;
 
+    std::string blessed;
+    std::string result;
+
+    int chance = random2(20);
+
     // If a follower was specified, and it's suitable, pick it.
     if (follower && suitable(follower))
         mon = follower;
@@ -866,18 +885,28 @@ void bless_follower(god_type god,
     {
         int monster = choose_random_nearby_monster(0, suitable);
 
+        // If the follower chosen was you, either send reinforcements or
+        // get out.
         if (monster == NON_MONSTER)
+        {
+            if (chance == 0)
+            {
+                if (blessing_reinforcements())
+                {
+                    blessed = "you";
+                    result = "reinforcements";
+                    goto blessing_done;
+                }
+            }
+
             return;
+        }
 
         mon = &menv[monster];
     }
 
-    std::string blessed = (follower && !mons_near(follower))
-                                ? "a follower"
-                                : mon->name(DESC_NOCAP_A).c_str();
-    std::string result;
-
-    int chance = random2(20);
+    blessed = (follower && !mons_near(follower)) ? "a follower"
+                  : mon->name(DESC_NOCAP_A).c_str();
 
     // Turn a monster into a priestly monster, if possible.
     if (chance == 0)
@@ -929,13 +958,14 @@ void bless_follower(god_type god,
         }
     }
 
-    // 90% chance: either removal of harmful ailments...
+    // Either remove harmful ailments from a monster...
     if (coinflip() && blessing_balms(mon))
     {
         result = "divine balms";
         goto blessing_done;
     }
-    // ...or full healing, optionally adding one extra hit point.
+    // ...or give it full healing, optionally giving it one extra hit
+    // point.
     else
     {
         bool healing = blessing_healing(mon, false);
