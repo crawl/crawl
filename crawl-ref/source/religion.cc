@@ -763,7 +763,7 @@ static bool blessing_reinforcements(void)
 {
     // Possible follower band leaders.
     const monster_type followers[] = {
-        MONS_ORC, MONS_ORC_WARRIOR
+        MONS_ORC
     };
 
     monster_type follower_type =
@@ -891,7 +891,15 @@ void bless_follower(god_type god,
         {
             if (chance == 0)
             {
-                if (blessing_reinforcements())
+                bool reinforced = blessing_reinforcements();
+
+                if (!reinforced || coinflip())
+                {
+                    if (blessing_reinforcements())
+                        reinforced = true;
+                }
+
+                if (reinforced)
                 {
                     blessed = "you";
                     result = "reinforcements";
