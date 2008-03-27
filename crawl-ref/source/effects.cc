@@ -2876,8 +2876,8 @@ static void _maybe_restart_fountain_flow(const int x, const int y,
          return;
      }
 
-     int i = 0;
-     while (tries > i++)
+     int t = 0;
+     while (tries > t++)
      {
           if (!one_chance_in(100))
               continue;
@@ -2885,14 +2885,14 @@ static void _maybe_restart_fountain_flow(const int x, const int y,
           // make it start flowing again
           grd[x][y] = static_cast<dungeon_feature_type> (grid
                         - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
-                        
+
           if ( is_terrain_seen(coord_def(x,y)) )
               set_envmap_obj(x, y, grd[x][y]);
 
           // clean bloody floor
           if (is_bloodcovered(x,y))
               env.map[x][y].property = FPROP_NONE;
-              
+
           // chance of cleaning adjacent squares
           for (int i = -1; i <= 1; i++)
                for (int j =-1; j <= 1; j++)
