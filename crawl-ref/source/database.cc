@@ -593,7 +593,7 @@ static std::string _query_database(DBM *db, std::string key,
 
 std::string getLongDescription(const std::string &key)
 {
-    if (! DescriptionDB.get())
+    if (!DescriptionDB.get())
         return ("");
 
     return _query_database(DescriptionDB.get(), key, true, true);

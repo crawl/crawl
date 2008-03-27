@@ -777,6 +777,12 @@ potion of blood
 A potion containing the essence of life. Vital for all living
 creatures, as well as some undead ones.
 %%%%
+potion of coagulated blood
+
+A potion containing the essence of life. Vital for all living
+creatures, as well as some undead ones. The blood within won't 
+be palatable much longer.
+%%%%
 potion of confusion
 
 A potion which confuses your perceptions and reduces your control over
@@ -1518,3 +1524,4 @@ young poisoner's handbook
 A book of magic spells. Beware, for some of the more powerful
 grimoires are not to be toyed with.
 %%%%
+

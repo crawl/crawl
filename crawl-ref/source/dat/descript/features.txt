@@ -25,6 +25,10 @@ A fountain of clear blue water
 
 'q'uaff to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
 %%%%
+A fountain of blood
+
+'q'uaff to drink from this fountain, if you absolutely wish to.
+%%%%
 A fountain of sparkling water
 
 'q'uaff to drink from this magic fountain. Expect magical effects, as long as it's still magic.
@@ -100,8 +104,8 @@ substance impermanent and whimsical, filled with creatures out
 of nightmare.
 
 "And if you gaze for long into an abyss,
- the abyss gazes also into you.”
-    – Friedrich Nietzsche, "Beyond Good and Evil"
+ the abyss gazes also into you."
+    - Friedrich Nietzsche, "Beyond Good and Evil"
 %%%%
 A rock wall
 
@@ -293,3 +297,4 @@ Some shallow water
 
 This waist-deep, misty water makes movement and combat cumbersome for landlubbers -- sometimes dangerous, but never directly fatal.
 %%%%
+

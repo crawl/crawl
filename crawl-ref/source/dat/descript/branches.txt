@@ -5,11 +5,13 @@ Describe branch here.
 %%%%
 Temple
 
-Describe branch here.
+The Temple of some of the Gods, a place of peace and refuge
+from the insanity of the dungeon.
 %%%%
 Orcish Mines
 
-Describe branch here.
+The mines of the orcs, filled with their gold, but 
+treacherous and easy to get trapped in.
 %%%%
 Elven Halls
 
@@ -21,19 +23,24 @@ Describe branch here.
 %%%%
 Swamp
 
-Describe branch here.
+A swampy waste land, complete with ooze, muck, flies, and
+large slavering carnivorous monsters.
 %%%%
 Shoals
 
-Describe branch here.
+Here be the Shoals: exotic underground beaches, salty spray and
+creatures that bite, stab, and maul.
 %%%%
 Slime Pits
 
-Describe branch here.
+The amorphous realm of acids, jellies and slimes. 
+Any trace of intelligent beings has long been dissolved. Still, 
+there are rumours of great treasures deep down, hidden safely away
+in secret chambers without door or window for acid to leak in.
 %%%%
 Snake Pit
 
-Describe branch here.
+Home of the serpent, lair of the naga.
 %%%%
 Hive
 
@@ -53,7 +60,19 @@ Describe branch here.
 %%%%
 Tomb
 
-Describe branch here.
+The Tomb of the Ancients, a place of damnation, of horrors animated 
+by the vilest necromancy.
+
+"In the depths of every heart, there is a tomb and a dungeon, though
+the lights, the music, and revelry above may cause us to forget their
+existence, and the buried ones, or prisoners whom they hide. But
+sometimes, and oftenest at midnight, those dark receptacles are flung
+wide open. In an hour like this, when the mind has a passive
+sensibility, but no active strength; when the imagination is a mirror,
+imparting vividness to all ideas, without the power of selecting or
+controlling them; then pray that your grieves may slumber, and the
+brotherhood of remorse not break their chain."
+    - Nathaniel Hawthorne
 %%%%
 Hell
 
@@ -79,3 +98,4 @@ Zot
 
 Describe branch here.
 %%%%
+

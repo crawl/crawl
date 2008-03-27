@@ -885,7 +885,13 @@ static void recap_feat_keys(std::vector<std::string> &keys)
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
     {
         dungeon_feature_type type = feat_by_desc(keys[i]);
-        keys[i] = feature_description(type);
+        if (type == DNGN_ENTER_SHOP)
+            keys[i] = "A shop";
+        else
+        {
+            keys[i] = feature_description(type, NUM_TRAPS, false, DESC_CAP_A,
+                                          false);
+        }
         //fprintf(stderr, "%s\n", keys[i].c_str());
     }
 }
