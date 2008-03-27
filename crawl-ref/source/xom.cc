@@ -527,9 +527,9 @@ static bool xom_is_good(int sever)
                     const bool is_demonic = (mons_holiness(mon) == MH_DEMONIC);
 
                     // Mark factions hostile as appropriate.
-                    if ((is_demonic && hostiletype == 1)
-                        || (!is_demonic && hostiletype == 2)
-                        || hostiletype == 3)
+                    if (hostiletype == 3
+                        || (is_demonic && hostiletype == 1)
+                        || (!is_demonic && hostiletype == 2))
                     {
                         mon->attitude = ATT_HOSTILE;
                     }
