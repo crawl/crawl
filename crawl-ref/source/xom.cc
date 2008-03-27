@@ -114,10 +114,10 @@ static const char* _get_xom_speech(const std::string key)
 
     if (result.empty())
         result = getSpeakString("Xom general effect");
-        
+
     if (!result.empty())
         return (result.c_str());
-        
+
     return ("Xom makes something happen.");
 }
 
@@ -532,6 +532,7 @@ static bool xom_is_good(int sever)
                         || (!is_demonic && hostiletype == 2))
                     {
                         mon->attitude = ATT_HOSTILE;
+                        behaviour_event(mon, ME_ALERT, MHITYOU);
                     }
                 }
             }
