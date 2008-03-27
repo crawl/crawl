@@ -517,11 +517,11 @@ static bool xom_is_good(int sever)
                                         you.pet_target, MONS_PROGRAM_BUG);
         }
 
-        if (numdifferent != numdemons && numdifferent > 0)
+        if (numdifferent != numdemons && numdifferent > 0 && hostiletype != 0)
         {
             for (int i = 0; i < numdemons; ++i)
             {
-                if (summons[i] != -1 && hostiletype != 0)
+                if (summons[i] != -1)
                 {
                     monsters *mon = &menv[i];
                     const bool is_demonic = (mons_holiness(mon) == MH_DEMONIC);
