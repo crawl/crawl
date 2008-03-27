@@ -1376,13 +1376,8 @@ void summon_small_mammals(int pow)
         switch (pow_spent)
         {
         case 75: case 74: case 38:
-            // If you worship a good god, don't summon an evil small
-            // mammal.
-            if (!is_good_god(you.religion))
-            {
-                thing_called = MONS_ORANGE_RAT;
-                break;
-            }
+            thing_called = MONS_ORANGE_RAT;
+            break;
 
         case 65: case 64: case 63: case 27: case 26: case 25:
             thing_called = MONS_GREEN_RAT;
