@@ -608,6 +608,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_SUMMON_DEMON: // class 2-4 demons
+    case SPELL_SUMMON_UGLY_THINGS:
         if (mons_abjured(monster, monsterNearby))
             return;
 
@@ -616,8 +617,16 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         duration  = std::min(2 + monster->hit_dice / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            create_monster( summon_any_demon(DEMON_COMMON), duration,
-                            SAME_ATTITUDE(monster), monster->x, monster->y,
+            monster_type mons;
+
+            if (spell_cast == SPELL_SUMMON_DEMON)
+                mons = summon_any_demon(DEMON_COMMON);
+            else
+                mons = one_chance_in(monster->hit_dice / 4) ?
+                                     MONS_VERY_UGLY_THING : MONS_UGLY_THING;
+
+            create_monster( mons, duration, SAME_ATTITUDE(monster),
+                            monster->x, monster->y,
                             monster->foe, MONS_PROGRAM_BUG );
         }
         return;
@@ -867,6 +876,7 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_SUMMON_DEMON:
+    case SPELL_SUMMON_UGLY_THINGS:
     case SPELL_ANIMATE_DEAD:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_UFETUBUS:

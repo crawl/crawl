@@ -2350,6 +2350,17 @@
 },
 
 {
+    SPELL_SUMMON_UGLY_THINGS, "Summon Ugly Things",
+    SPTYP_SUMMONING,
+    SPFLAG_NONE,
+    5,
+    200,
+    NULL,
+    false,
+    false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      0,
