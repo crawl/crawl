@@ -889,7 +889,7 @@ void bless_follower(god_type god,
         // get out.
         if (monster == NON_MONSTER)
         {
-            if (chance == 0)
+            if (chance <= 1)
             {
                 bool reinforced = blessing_reinforcements();
 
