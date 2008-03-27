@@ -1271,7 +1271,7 @@
 {
     MONS_UGLY_THING, 'u', BROWN, "ugly thing",
     M_WARM_BLOOD | M_AMPHIBIOUS,
-    MR_NO_FLAGS,
+    mrd(MR_RES_COLD, 2),
     600, 10, MONS_UGLY_THING, MONS_UGLY_THING, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
@@ -1282,7 +1282,7 @@
 {
     MONS_VERY_UGLY_THING, 'u', RED, "very ugly thing",
     M_WARM_BLOOD | M_AMPHIBIOUS,
-    MR_NO_FLAGS,
+    mrd(MR_RES_COLD, 2),
     750, 10, MONS_UGLY_THING, MONS_VERY_UGLY_THING, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 3, 5, 0 },
