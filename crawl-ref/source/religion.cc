@@ -422,7 +422,7 @@ void dec_penance(god_type god, int val)
             if (god == GOD_SHINING_ONE && you.religion == GOD_SHINING_ONE
                 && you.piety >= piety_breakpoint(0))
             {
-                mpr("Your divine halo starts to return!");
+                mpr("Your divine halo begins to return!");
             }
 
             // bonuses now once more effective
@@ -2110,7 +2110,7 @@ mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)",
             if (you.religion == GOD_SHINING_ONE)
             {
                 if (i == 0)
-                    mpr("A divine halo surrounds you!");
+                    mpr("A divine halo begins to surround you!");
             }
 
             // When you gain a piety level, you get another chance to
