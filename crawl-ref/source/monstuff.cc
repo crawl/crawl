@@ -386,7 +386,7 @@ static void _check_kill_milestone(const monsters *mons,
     else if (mons_is_unique(mons->type))
     {
         mark_milestone("unique",
-                       milestone_kill_verb(killer)
+                       _milestone_kill_verb(killer)
                        + mons->name(DESC_NOCAP_THE, true)
                        + ".");
     }
