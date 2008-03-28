@@ -1406,6 +1406,8 @@ inline static void monster_warning(activity_interrupt_type ai,
              see_grid(mon->x, mon->y)? "yes" : "no");
         formatted_mpr(fs, MSGCH_WARN);
 #endif
+
+        update_monster_pane();
     }
 }
 

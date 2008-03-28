@@ -4504,11 +4504,11 @@ void viewwindow(bool draw_it, bool do_updates)
         if (flash_colour == BLACK)
             flash_colour = viewmap_flash_colour();
 
-        for (count_y = crawl_view.viewp.y; count_y <= crawl_view.viewsz.y;
-             count_y++)
+        for (count_y = crawl_view.viewp.y; 
+             count_y < crawl_view.viewp.y + crawl_view.viewsz.y; count_y++)
         {
-            for (count_x = crawl_view.viewp.x; count_x <= crawl_view.viewsz.x;
-                 count_x++)
+            for (count_x = crawl_view.viewp.x; 
+                 count_x < crawl_view.viewp.x + crawl_view.viewsz.x; count_x++)
             {
                 // in grid coords
                 const coord_def gc(view2grid(coord_def(count_x, count_y)));
@@ -4877,11 +4877,13 @@ void crawl_view_geometry::init_geometry()
     if (viewsz.y < VIEW_MIN_HEIGHT)
         viewsz.y = VIEW_MIN_HEIGHT;
 
-    // The message pane takes all lines not used by the viewport.
-    msgp  = coord_def(1, viewsz.y + 1);
-    msgsz = coord_def(termsz.x, termsz.y - viewsz.y);
+    // Determine if the monster list can have its own column.
+    int freewidth = termsz.x - (viewsz.x + mlist_gutter + 
+        mlist_min_width + hud_min_gutter + hudsz.x);
+    mlist_inline = (freewidth < 0) || Options.mlist_force_inline;
+    if (mlist_inline)
+        freewidth = termsz.x - (hud_min_width + hud_min_gutter);
 
-    int freewidth = termsz.x - (hud_min_width + hud_min_gutter);
     // Make the viewport as wide as possible.
     viewsz.x = freewidth < Options.view_max_width?
         freewidth : Options.view_max_width;
@@ -4894,8 +4896,17 @@ void crawl_view_geometry::init_geometry()
 
     vbuf.size(viewsz);
 
-    // The hud appears after the viewport + gutter.
-    hudp = coord_def(viewsz.x + 1 + hud_min_gutter, 1);
+    if (!mlist_inline)
+    {
+        mlistp = coord_def(1, 1);
+        mlistsz = coord_def(mlist_max_width, viewsz.y);
+        mlistsz.x = std::min(mlist_min_width + freewidth, mlistsz.x);
+
+        viewp.x = mlistp.x + mlistsz.x;
+    }
+
+    // The hud appears after the viewport + gutter and possibly the mlist.
+    hudp = coord_def(viewp.x + viewsz.x + hud_min_gutter, 1);
 
     // HUD size never changes, but we may increase the gutter size (up to
     // the current max of 6).
@@ -4906,9 +4917,29 @@ void crawl_view_geometry::init_geometry()
         hudp.x += hudmarg > hud_increase_max? hud_increase_max : hudmarg;
     }
 
-    // Monster list takes up all space between the hud and the message pane
-    mlistp = coord_def(hudp.x, hudp.y + hudsz.y);
-    mlistsz = coord_def(termsz.x - mlistp.x, msgp.y - mlistp.y);
+    if (mlist_inline)
+    {
+        // Monster list takes up all space between the hud and the message pane
+        mlistp = coord_def(hudp.x, hudp.y + hudsz.y);
+
+        // Try to grow the length of the monster list based on the options,
+        // but only grow if there's room for the minimum message lines.
+        int len = 1 + viewsz.y - mlistp.y;
+        len = std::max(len, Options.mlist_min_height);
+        len = std::min(len, 1 + termsz.y - message_min_lines - (hudp.y + hudsz.y));
+        mlistsz = coord_def(termsz.x - mlistp.x - 1, len);
+
+        // The message pane takes all lines not used by the viewport and
+        // the mlist.
+        int msgstart = mlistp.y + mlistsz.y;
+        msgp  = coord_def(1, msgstart);
+        msgsz = coord_def(termsz.x, termsz.y - msgstart - 1);
+    }
+    else
+    {
+        msgp  = coord_def(1, viewsz.y + 1);
+        msgsz = coord_def(termsz.x, termsz.y - viewsz.y);
+    }
 
 #ifdef USE_TILE
     // libgui may redefine these based on its own settings

@@ -209,6 +209,8 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # show_beam  = true
 # item_stack_summary_minimum = 5
 # list_rotten = false
+# mlist_min_height = 5
+# mlist_force_inline = true
 
 # Colouring for the inventory
 menu_colour = inventory:lightred: cursed.*(worn|neck|hand|weapon)\)

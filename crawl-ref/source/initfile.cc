@@ -612,6 +612,8 @@ void game_options::reset_options()
     
     view_max_width = VIEW_BASE_WIDTH;
     view_max_height = VIEW_MIN_HEIGHT;
+    mlist_min_height = 5;
+    mlist_force_inline = false;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -2139,6 +2141,16 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             view_max_height = VIEW_MIN_HEIGHT;
         else if (view_max_height > GYM + 1)
             view_max_height = GYM + 1;
+    }
+    else if (key == "mlist_min_height")
+    {
+        mlist_min_height = atoi(field.c_str());
+        if (mlist_min_height < 0)
+            view_max_height = 0;
+    }
+    else if (key == "mlist_force_inline")
+    {
+        mlist_force_inline = _read_bool(field, mlist_force_inline);
     }
     else if (key == "view_lock_x")
     {

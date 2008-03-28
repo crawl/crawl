@@ -1542,6 +1542,8 @@ public:
     
     int         view_max_width;
     int         view_max_height;
+    int         mlist_min_height;
+    bool        mlist_force_inline;
 
     // The view lock variables force centering the viewport around the PC @
     // at all times (the default). If view locking is not enabled, the viewport

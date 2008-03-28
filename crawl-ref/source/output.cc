@@ -827,7 +827,7 @@ _print_next_monster_desc(const std::vector<monsters*>& mons, int& start)
     textcolor(LIGHTGREY);
 }
 
-static void _print_stats_monster_pane()
+void update_monster_pane()
 {
     // TODO:
     // - display rough health (color, or text?)
@@ -848,9 +848,15 @@ static void _print_stats_monster_pane()
     // Print the monsters!
     for (int i_print = 0, i_mons=0; i_print < max_print; ++i_print)
     {
-        // i_mons is incremented by _print_next_monster_desc
+        // Can't clear to end of line, as the monster pane
+        // may be to the left of the hud or view pane.
+        for (int x = 1; x <= crawl_view.mlistsz.x; x++)
+        {
+            cgotoxy(x, start_row+i_print, GOTO_MLIST);
+            putch(' ');
+        }
         cgotoxy(1, start_row+i_print, GOTO_MLIST);
-        clear_to_end_of_line();
+        // i_mons is incremented by _print_next_monster_desc
         if (i_mons < (int)mons.size())
         {
             cgotoxy(1, start_row+i_print, GOTO_MLIST);
@@ -858,6 +864,9 @@ static void _print_stats_monster_pane()
         }
     }
 }
+#else
+// FIXME: implement this for tiles
+void update_monster_pane() {}
 #endif
 
 void print_stats(void)
@@ -927,13 +936,10 @@ void print_stats(void)
     if (you.redraw_status_flags & REDRAW_LINE_3_MASK)
         _print_stats_line3();
 
-#ifndef USE_TILE
-    // FIXME: implement this for tiles
     // XXX: better check?  I think this skips the update at the very end
     // of a delay
     if (you.delay_queue.empty())
-        _print_stats_monster_pane();
-#endif
+        update_monster_pane();
 
     you.redraw_status_flags = 0;
 

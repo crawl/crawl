@@ -19,6 +19,7 @@
 #include "menu.h" // For print_formatted_paragraph()
 #include "message.h"
 #include "mon-util.h"
+#include "output.h"
 #include "player.h"
 #include "state.h"
 #include "tutorial.h"
@@ -204,6 +205,8 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
              see_grid(mon->x, mon->y)? "yes" : "no");
         formatted_mpr(fs, MSGCH_WARN);
 #endif
+
+        update_monster_pane();
 
         return true;
     }

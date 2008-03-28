@@ -49,6 +49,7 @@ public:
     coord_def msgsz;               // Size of the message pane.
     coord_def mlistp;              // Left-top pos of the monster list.
     coord_def mlistsz;             // Size of the monster list.
+    bool mlist_inline;             // Is the mlist inline or in its own column?
 
     crawl_view_buffer vbuf;        // Buffer for drawing the main game map.
 
@@ -66,6 +67,9 @@ public:
     static const int hud_min_width  = 41;
     static const int hud_min_gutter = 3;
     static const int hud_max_gutter = 6;
+    static const int mlist_gutter = 1;
+    static const int mlist_min_width = 14;
+    static const int mlist_max_width = 26;
 
 private:
     coord_def last_player_pos;

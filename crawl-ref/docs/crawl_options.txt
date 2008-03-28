@@ -11,7 +11,7 @@ The contents of this text are:
 
 1-  Starting Screen.
                 name, remember_name, use_old_selection_order,
-	        weapon, book, chaos_knight, death_knight, priest, 
+                weapon, book, chaos_knight, death_knight, priest, 
                 race, class, random_pick
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, sound
@@ -177,9 +177,9 @@ remember_name = true
         
 use_old_selection_order = false
         If set to true, the character selection screen will offer 
-	species and classes in the order of version 0.3 and earlier.
-	Note that this needs to be set before the "race" or "class" 
-	options	(see below), or they won't be interpreted correctly.
+        species and classes in the order of version 0.3 and earlier.
+        Note that this needs to be set before the "race" or "class" 
+        options (see below), or they won't be interpreted correctly.
 
 weapon = (random | short sword | hand axe | spear | mace | trident)
         Specifying the weapon option allows you to bypass the weapon 
@@ -518,7 +518,7 @@ neutral_brand = none
         E.g.
              neutral_brand = hi:darkgrey
         shows neutrals with a dark grey background. Since there are
-        no darkgrey monster glyphs anymore, this works fine.	
+        no darkgrey monster glyphs anymore, this works fine.
 
 stab_brand = none
         Some deities object to you stabbing monsters. Certain classes 
@@ -540,9 +540,9 @@ heap_brand = reverse
 
 feature_item_brand = reverse
         Brands features (stairs, shops, altars) that would otherwise be 
-	hidden by items. If you use this brand, the items on the square 
-	are hidden by the feature symbol and the feature symbol is 
-	branded.
+        hidden by items. If you use this brand, the items on the square 
+        are hidden by the feature symbol and the feature symbol is 
+        branded.
 
 trap_item_brand = none
         Brands traps that would otherwise be hidden by items. If you 
@@ -767,9 +767,9 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
 
 trap_prompt = true
         If trap_prompt is set to true Crawl will use the trapwalk_safe_hp
-	values to decide whether the player should be prompted before
-	stepping on a mechanical trap. Note that you'll always be prompted
-	for non-mechanical traps.
+        values to decide whether the player should be prompted before
+        stepping on a mechanical trap. Note that you'll always be prompted
+        for non-mechanical traps.
 
 4-h     Stashes.
 ----------------
@@ -1044,11 +1044,22 @@ item_stack_summary_minimum = 5
 
 list_rotten = true
         Setting this to true will print a list of inventory slots for
-	all corpses and chunks that have become rotten along with the
-	rotting message, in the form of 
-	  "You smell something rotten. (slots f and m)"
+        all corpses and chunks that have become rotten along with the
+        rotting message, in the form of 
+          "You smell something rotten. (slots f and m)"
         Additionally, this option will make a default message appear
-	for Trolls, as well.
+        for Trolls, as well.
+
+mlist_min_height = 5
+        This option controls the minimum number of monsters to display
+        in the monster list.  The number displayed may be smaller than
+        this option if the terminal size is not large enough.
+
+mlist_force_inline = false
+        By default, if the terminal size is large enough, the monster 
+        list will be placed to the left of the view.  If this option is 
+        set to true, the monster list will only appear between the 
+        status hud and the message pane.
 
 menu_colour = <match>:<colour>:<regex>
         This prints a line (of the inventory, a menu, or the discoveries
