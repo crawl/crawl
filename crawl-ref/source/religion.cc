@@ -866,10 +866,6 @@ void bless_follower(god_type god,
                     bool (*suitable)(const monsters* mon),
                     monsters* follower)
 {
-    // If there are no monsters (including followers) in sight, get out.
-    if (!there_are_monsters_nearby())
-        return;
-
     monsters *mon;
 
     std::string blessed;
@@ -889,7 +885,7 @@ void bless_follower(god_type god,
         // get out.
         if (monster == NON_MONSTER)
         {
-            if (chance <= 1)
+            if (chance <= 3)
             {
                 bool reinforced = blessing_reinforcement();
 

@@ -196,13 +196,13 @@ void spawn_random_monsters()
         hell_spawn_random_monsters();
         return;
     }
-    
+
     // place normal dungeon monsters,  but not in player LOS
     if (you.level_type == LEVEL_DUNGEON
         && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
         && one_chance_in((you.char_direction == GDT_DESCENDING) ? 240 : 8))
     {
-        proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS 
+        proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS
                                                  : PROX_AWAY_FROM_PLAYER);
 
         // The rules change once the player has picked up the Orb...
@@ -1462,7 +1462,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
             {
                 interesting = true;
                 break;
-            }    
+            }
         }
     }
     else if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
@@ -1484,7 +1484,7 @@ static int pick_zot_exit_defender()
 {
     if (one_chance_in(11))
         return (MONS_PANDEMONIUM_DEMON);
-    
+
     const int temp_rand = random2(276);
     const int mon_type =
         ((temp_rand > 184) ? MONS_WHITE_IMP + random2(15) :  // 33.33%
@@ -1530,8 +1530,8 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
         permit_bands = true;
     }
 
-    if (permit_bands 
-            || mon_type == RANDOM_MONSTER 
+    if (permit_bands
+            || mon_type == RANDOM_MONSTER
             || level_type == LEVEL_PANDEMONIUM)
         permit_bands = true;
 
@@ -1605,7 +1605,7 @@ coord_def find_newmons_square(int mons_class, int x, int y)
 
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square
-    // is surrounded by water of lava this function would work.  -- bwr 
+    // is surrounded by water of lava this function would work.  -- bwr
     if (empty_surrounds( x, y, spcw, 2, true, empty ))
     {
         pos.x = empty[0];
@@ -1711,7 +1711,7 @@ int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
 
 
 bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,
-                     int radius, bool allow_centre, 
+                     int radius, bool allow_centre,
                      FixedVector < char, 2 > &empty)
 {
     bool success;
