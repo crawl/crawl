@@ -759,59 +759,6 @@ static void give_nemelex_gift()
     }
 }
 
-static bool blessing_reinforcement(void)
-{
-    bool success = false;
-
-    // Possible reinforcement.
-    const monster_type followers[] = {
-        MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
-    };
-
-    int how_many = random2(4) + 1;
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        monster_type follower_type =
-            followers[random2(ARRAYSIZE(followers))];
-
-        int monster = create_monster(follower_type, 0, BEH_GOD_GIFT,
-                                 you.x_pos, you.y_pos, you.pet_target,
-                                 MONS_PROGRAM_BUG);
-        if (monster != -1)
-        {
-            monsters *mon = &menv[monster];
-
-            mon->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-            success = true;
-        }
-    }
-
-    return success;
-}
-
-static bool blessing_priesthood(monsters* mon)
-{
-    monster_type priest_type = MONS_PROGRAM_BUG;
-
-    // Possible promotions.
-    if (mon->type == MONS_ORC)
-        priest_type = MONS_ORC_PRIEST;
-
-    if (priest_type != MONS_PROGRAM_BUG)
-    {
-        // Turn an ordinary monster into a priestly monster, using a
-        // function normally used when going up an experience level.
-        // This is a hack, but there seems to be no better way for now.
-        mon->upgrade_type(priest_type, true, true);
-
-        return true;
-    }
-
-    return false;
-}
-
 static bool blessing_wpn(monsters *mon)
 {
     // Pick a monster's weapon.
@@ -879,6 +826,59 @@ static bool blessing_healing(monsters *mon, bool extra)
     return heal_monster(mon, mon->max_hit_points, extra);
 }
 
+static bool beogh_blessing_reinforcement(void)
+{
+    bool success = false;
+
+    // Possible reinforcement.
+    const monster_type followers[] = {
+        MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
+    };
+
+    int how_many = random2(4) + 1;
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        monster_type follower_type =
+            followers[random2(ARRAYSIZE(followers))];
+
+        int monster = create_monster(follower_type, 0, BEH_GOD_GIFT,
+                                 you.x_pos, you.y_pos, you.pet_target,
+                                 MONS_PROGRAM_BUG);
+        if (monster != -1)
+        {
+            monsters *mon = &menv[monster];
+
+            mon->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+            success = true;
+        }
+    }
+
+    return success;
+}
+
+static bool beogh_blessing_priesthood(monsters* mon)
+{
+    monster_type priest_type = MONS_PROGRAM_BUG;
+
+    // Possible promotions.
+    if (mon->type == MONS_ORC)
+        priest_type = MONS_ORC_PRIEST;
+
+    if (priest_type != MONS_PROGRAM_BUG)
+    {
+        // Turn an ordinary monster into a priestly monster, using a
+        // function normally used when going up an experience level.
+        // This is a hack, but there seems to be no better way for now.
+        mon->upgrade_type(priest_type, true, true);
+
+        return true;
+    }
+
+    return false;
+}
+
 // Bless a follower within sight of the player.
 void bless_follower(god_type god,
                     bool (*suitable)(const monsters* mon),
@@ -903,13 +903,13 @@ void bless_follower(god_type god,
         // get out.
         if (monster == NON_MONSTER)
         {
-            if (chance <= 4)
+            if (god == GOD_BEOGH && chance <= 4)
             {
-                bool reinforced = blessing_reinforcement();
+                bool reinforced = beogh_blessing_reinforcement();
 
                 if (!reinforced || coinflip())
                 {
-                    if (blessing_reinforcement())
+                    if (beogh_blessing_reinforcement())
                         reinforced = true;
                 }
 
@@ -931,9 +931,9 @@ void bless_follower(god_type god,
                   : mon->name(DESC_NOCAP_A).c_str();
 
     // Turn a monster into a priestly monster, if possible.
-    if (chance == 0)
+    if (god == GOD_BEOGH && chance == 0)
     {
-        if (blessing_priesthood(mon))
+        if (beogh_blessing_priesthood(mon))
         {
             result = "priesthood";
             goto blessing_done;
