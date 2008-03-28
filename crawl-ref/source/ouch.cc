@@ -407,8 +407,10 @@ void item_corrode( int itco )
     // handle message output and item damage {dlb}:
     if (!suppress_msg)
     {
-        mprf("%s %s", item.name(DESC_CAP_YOUR).c_str(),
-             (it_resists) ? "resists." : "is eaten away!");
+        if (it_resists)
+            mprf("%s resists.", item.name(DESC_CAP_YOUR).c_str());
+        else
+            mprf("The acid corrodes %s!", item.name(DESC_NOCAP_YOUR).c_str());
     }
 
     if (!it_resists)

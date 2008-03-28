@@ -4145,9 +4145,10 @@ bool wearing_amulet(char amulet, bool calc_unid)
         return false;
 
     if (you.inv[you.equip[EQ_AMULET]].sub_type == amulet
-            && (calc_unid || 
-                item_type_known(you.inv[you.equip[EQ_AMULET]])))
+        && ( calc_unid || item_type_known(you.inv[you.equip[EQ_AMULET]]) ))
+    {
         return true;
+    }
 
     return false;
 }                               // end wearing_amulet()

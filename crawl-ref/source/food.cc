@@ -543,7 +543,7 @@ bool prompt_eat_from_inventory(int slot)
     }
 
     if (!can_ingest( you.inv[which_inventory_slot].base_type,
-                        you.inv[which_inventory_slot].sub_type, false ))
+                     you.inv[which_inventory_slot].sub_type, false ))
     {
         return (false);
     }
@@ -1355,7 +1355,6 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     // a player could be one and not the other IMHO - 13mar2000 {dlb}
     bool ur_chunkslover = ( 
                 (check_hunger? you.hunger_state <= HS_HUNGRY : true)
-                           || wearing_amulet(AMU_THE_GOURMAND, !reqid)
                            || you.omnivorous()
                            || you.mutation[MUT_CARNIVOROUS]);
 
@@ -1406,6 +1405,21 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
             }
             else if (!ur_chunkslover)
             {
+                if (wearing_amulet(AMU_THE_GOURMAND, !reqid))
+                {
+                    const int amulet = you.equip[EQ_AMULET];
+
+                    ASSERT(amulet != -1);
+
+                    if (!item_type_known(you.inv[amulet]))
+                    {
+                        set_ident_flags( you.inv[ amulet], ISFLAG_KNOW_TYPE);
+                        set_ident_type( OBJ_JEWELLERY, AMU_THE_GOURMAND,
+                                        ID_KNOWN_TYPE );
+                        mpr(you.inv[amulet].name(DESC_INVENTORY, false).c_str());
+                    }
+                    return true;
+                }
                 survey_says = false;
                 if (!suppress_msg)
                     mpr("You aren't quite hungry enough to eat that!");
