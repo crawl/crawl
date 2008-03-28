@@ -80,10 +80,10 @@
 #include "view.h"
 #include "xom.h"
 
-static bool drink_fountain();
-static bool handle_enchant_weapon( enchant_stat_type which_stat,
-                                   bool quiet = false, int item_slot = -1 );
-static bool handle_enchant_armour( int item_slot = -1 );
+static bool _drink_fountain();
+static bool _handle_enchant_weapon( enchant_stat_type which_stat,
+                                    bool quiet = false, int item_slot = -1 );
+static bool _handle_enchant_armour( int item_slot = -1 );
 
 static int  _fire_prompt_for_item(std::string& err);
 static bool _fire_validate_item(int selected, std::string& err);
@@ -3564,7 +3564,7 @@ void drink( int slot )
         if (grd[you.x_pos][you.y_pos] >= DNGN_FOUNTAIN_BLUE
             && grd[you.x_pos][you.y_pos] <= DNGN_FOUNTAIN_BLOOD)
         {
-            if (drink_fountain())
+            if (_drink_fountain())
                 return;
         }
     }
@@ -3640,7 +3640,7 @@ void drink( int slot )
     lessen_hunger(40, true);
 }                               // end drink()
 
-bool drink_fountain()
+bool _drink_fountain()
 {
     const dungeon_feature_type feat = grd[you.x_pos][you.y_pos];
 
@@ -3732,10 +3732,10 @@ bool drink_fountain()
     if (gone_dry)
     {
         mpr("The fountain dries up!");
-        
+
         grd[you.x_pos][you.y_pos] = static_cast<dungeon_feature_type>(feat
                          + DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE);
-               
+
         set_terrain_changed(you.x_pos, you.y_pos);
 
         crawl_state.cancel_cmd_repeat();
@@ -3743,7 +3743,7 @@ bool drink_fountain()
 
     you.turn_is_over = true;
     return true;
-}                               // end drink_fountain()
+}                               // end _drink_fountain()
 
 static bool affix_weapon_enchantment()
 {
@@ -3917,7 +3917,7 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn )
     return (true);
 }
 
-static bool handle_enchant_weapon( enchant_stat_type which_stat,
+static bool _handle_enchant_weapon( enchant_stat_type which_stat,
                                    bool quiet, int item_slot )
 {
     if (item_slot == -1)
@@ -4013,7 +4013,7 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
     return (true);
 }
 
-static bool handle_enchant_armour( int item_slot )
+static bool _handle_enchant_armour( int item_slot )
 {
     if (item_slot == -1)
         item_slot = prompt_invent_item( "Enchant which item?", MT_INVLIST,
@@ -4119,7 +4119,7 @@ static bool scroll_modify_item(const scroll_type scroll)
         if (is_enchantable_armour(item, true))
         {
             // might still fail because of already high enchantment
-            if (handle_enchant_armour(item_slot))
+            if (_handle_enchant_armour(item_slot))
                 return (true);
             return (false);
         }
@@ -4372,11 +4372,11 @@ void read_scroll( int slot )
 
     // everything [in the switch] below this line is a nightmare {dlb}:
     case SCR_ENCHANT_WEAPON_I:
-        id_the_scroll = handle_enchant_weapon( ENCHANT_TO_HIT );
+        id_the_scroll = _handle_enchant_weapon( ENCHANT_TO_HIT );
         break;
 
     case SCR_ENCHANT_WEAPON_II:
-        id_the_scroll = handle_enchant_weapon( ENCHANT_TO_DAM );
+        id_the_scroll = _handle_enchant_weapon( ENCHANT_TO_DAM );
         break;
 
     case SCR_ENCHANT_WEAPON_III:
@@ -4393,15 +4393,15 @@ void read_scroll( int slot )
 
                 do_uncurse_item( you.inv[you.equip[EQ_WEAPON]] );
 
-                handle_enchant_weapon( ENCHANT_TO_HIT, true );
+                _handle_enchant_weapon( ENCHANT_TO_HIT, true );
 
                 if (coinflip())
-                    handle_enchant_weapon( ENCHANT_TO_HIT, true );
+                    _handle_enchant_weapon( ENCHANT_TO_HIT, true );
 
-                handle_enchant_weapon( ENCHANT_TO_DAM, true );
+                _handle_enchant_weapon( ENCHANT_TO_DAM, true );
 
                 if (coinflip())
-                    handle_enchant_weapon( ENCHANT_TO_DAM, true );
+                    _handle_enchant_weapon( ENCHANT_TO_DAM, true );
             }
         }
         else
@@ -4457,7 +4457,7 @@ void read_scroll( int slot )
         if ( !item_type_known(scroll) )
              id_the_scroll = scroll_modify_item(which_scroll);
         else
-             handle_enchant_armour(-1);
+             _handle_enchant_armour(-1);
         break;
 
     case SCR_CURSE_ARMOUR:
