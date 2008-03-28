@@ -206,8 +206,6 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         formatted_mpr(fs, MSGCH_WARN);
 #endif
 
-        update_monster_pane();
-
         return true;
     }
         

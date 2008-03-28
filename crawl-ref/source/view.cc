@@ -58,6 +58,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "newgame.h"
+#include "output.h"
 #include "overmap.h"
 #include "player.h"
 #include "religion.h"
@@ -4747,6 +4748,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     crawl_view.viewp.y + crawl_view.viewsz.y - 1,
                     buffy);
 #endif
+            update_monster_pane();
         }
     }
 }                               // end viewwindow()

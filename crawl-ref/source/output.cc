@@ -936,11 +936,6 @@ void print_stats(void)
     if (you.redraw_status_flags & REDRAW_LINE_3_MASK)
         _print_stats_line3();
 
-    // XXX: better check?  I think this skips the update at the very end
-    // of a delay
-    if (you.delay_queue.empty())
-        update_monster_pane();
-
     you.redraw_status_flags = 0;
 
 #if DEBUG_DIAGNOSTICS
