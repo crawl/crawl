@@ -266,7 +266,10 @@ int channel_to_colour( msg_channel_type channel, int param )
             break;
 
         case MSGCH_FOOD:
-            ret = YELLOW;
+            if (param) // positive change
+                ret = GREEN;
+            else
+                ret = YELLOW;
             break;
 
         case MSGCH_INTRINSIC_GAIN:
@@ -589,8 +592,8 @@ static int prepare_message(const std::string& imsg, msg_channel_type channel,
 
     int colour = channel_to_colour( channel, param );
 
-    const std::vector<message_colour_mapping>& mcm =
-        Options.message_colour_mappings;
+    const std::vector<message_colour_mapping>& mcm
+               = Options.message_colour_mappings;
     typedef std::vector<message_colour_mapping>::const_iterator mcmci;
 
     for ( mcmci ci = mcm.begin(); ci != mcm.end(); ++ci )

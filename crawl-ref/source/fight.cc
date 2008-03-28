@@ -562,6 +562,88 @@ bool melee_attack::attack()
                                              mons_attack_mons() );
 }
 
+static bool _vamp_wants_blood_from_monster(const monsters *mon)
+{
+    if (you.species != SP_VAMPIRE)
+        return (false);
+
+    if (you.hunger_state >= HS_ENGORGED)
+        return (false);
+
+    if (!mons_has_blood(mon->type))
+        return (false);
+        
+    const int chunk_type = mons_corpse_effect( mon->type );
+
+    // don't drink poisonous or mutagenic blood
+    return (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
+            || chunk_type == CE_POISONOUS && player_res_poison());
+}
+
+// Should life protection protect from this?
+// Called when stabbing and for bite attacks.
+// Returns true if blood was drawn.
+static bool _player_vampire_draws_blood(const int mons, const int damage,
+                                        bool needs_bite_msg = false)
+{
+    ASSERT(you.species == SP_VAMPIRE);
+    ASSERT(mons != -1);
+    
+    const monsters *mon = &menv[mons];
+    
+    if (!_vamp_wants_blood_from_monster(mon))
+        return (false);
+        
+    const int chunk_type = mons_corpse_effect( mon->type );
+
+    // now print message, need biting unless already done (never for bat form!)
+    if (needs_bite_msg && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+    {
+        mprf( "You bite %s, and draw %s blood!",
+              mon->name(DESC_NOCAP_THE, true).c_str(),
+              mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+    }
+    else
+        mprf( "You draw %s's blood!", mon->name(DESC_NOCAP_THE, true).c_str() );
+
+    // regain hp
+    if (you.hp < you.hp_max)
+    {
+        int heal = 1 + random2(damage);
+        if (heal > you.experience_level)
+            heal = you.experience_level;
+
+        if (chunk_type == CE_CLEAN)
+            heal += 1 + random2(damage);
+
+        inc_hp(heal, false);
+        mprf("You feel %sbetter.", (you.hp == you.hp_max) ? "much " : "");
+    }
+
+    // gain nutrition
+    if (you.hunger_state < HS_ENGORGED)
+    {
+        int food_value = 0;
+        if (chunk_type == CE_CLEAN)
+            food_value = 30 + random2avg(59, 2);
+        else if (chunk_type == CE_CONTAMINATED
+                 || chunk_type == CE_POISONOUS)
+        {
+            food_value = 15 + random2avg(29, 2);
+        }
+
+        // bats get a little less nutrition out of it
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+            food_value -= 5 + random2(16);
+            
+        lessen_hunger(food_value, false);
+    }
+    
+    did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
+    
+    return (true);
+}
+
 bool melee_attack::player_attack()
 {
     potential_damage =
@@ -618,11 +700,12 @@ bool melee_attack::player_attack()
         if (damage_done > 0 || !defender_visible)
             player_announce_hit();
         else if (!shield_blocked && damage_done <= 0)
+        {
             no_damage_message =
-                make_stringf("You %s %s.",
-                             attack_verb.c_str(),
+                make_stringf("You %s %s.", attack_verb.c_str(),
                              defender->name(DESC_NOCAP_THE).c_str());
-
+        }
+        
         if (damage_done)
             player_exercise_combat_skills();
         
@@ -630,6 +713,13 @@ bool melee_attack::player_attack()
             return (true);
             
         player_sustain_passive_damage();
+        
+        // thirsty stabbing vampires get to draw blood
+        if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY
+            && stab_attempt && stab_bonus > 0)
+        {
+            _player_vampire_draws_blood(monster_index(def), damage_done, true);
+        }
 
         // At this point, pretend we didn't hit at all.
         if (shield_blocked)
@@ -666,8 +756,8 @@ bool melee_attack::player_attack()
 // Returns true to end the attack round.
 bool melee_attack::player_aux_unarmed()
 {
-    damage_brand  = SPWPN_NORMAL;
-    int uattack = UNAT_NO_ATTACK;
+    damage_brand = SPWPN_NORMAL;
+    int uattack  = UNAT_NO_ATTACK;
     bool simple_miss_message = false;
     std::string miss_verb;
 
@@ -679,8 +769,10 @@ bool melee_attack::player_aux_unarmed()
             uattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
 
         if (you.mutation[MUT_FANGS]
-               || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+        {
             uattack = UNAT_BITE;
+        }
             
         if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
              || player_genus(GENPC_DRACONIAN)
@@ -705,8 +797,6 @@ bool melee_attack::player_aux_unarmed()
         simple_miss_message = false;
         damage_brand = SPWPN_NORMAL;
         aux_damage = 0;
-        
-        bool vampiric = false;
 
         switch (scount)
         {
@@ -872,28 +962,39 @@ bool melee_attack::player_aux_unarmed()
 
         case 4:
             if (uattack != UNAT_BITE)
-            {
                 continue;
-            }
-            if (!you.mutation[MUT_FANGS] || one_chance_in(5))
+
+            if (!you.mutation[MUT_FANGS])
+                continue;
+
+            if (you.species != SP_VAMPIRE && one_chance_in(5)
+                || one_chance_in(7))
             {
                 continue;
             }
 
             unarmed_attack = "bite";
+            simple_miss_message = true;
             aux_damage += you.mutation[MUT_FANGS] * 2;
 
-            // prob: 1/4 when non-hungry, 1/2 when hungry, 100% when starving
             if (you.species == SP_VAMPIRE)
             {
-                if (you.hunger_state > HS_HUNGRY && coinflip())
-                   break;
-                if (you.hunger_state > HS_STARVING && coinflip())
-                   break;
+                if (_vamp_wants_blood_from_monster(def))
+                {
+                    // prob of vampiric bite:
+                    // 1/4 when non-hungry, 1/2 when hungry, 100% when starving
+                    if (you.hunger_state > HS_HUNGRY && coinflip())
+                        break;
 
-                damage_brand = SPWPN_VAMPIRICISM;
-                vampiric = true;
+                    if (you.hunger_state > HS_STARVING && coinflip())
+                        break;
+
+                    damage_brand = SPWPN_VAMPIRICISM;
+                }
+                else if (!one_chance_in(3)) // monster not interesting bloodwise
+                    continue;
             }
+            
             break;
 
             /* To add more, add to while part of loop below as well */
@@ -902,7 +1003,8 @@ bool melee_attack::player_aux_unarmed()
         }
 
         // unified to-hit calculation
-        to_hit = random2( calc_your_to_hit_unarmed(uattack, vampiric) );
+        to_hit = random2( calc_your_to_hit_unarmed(uattack,
+                          damage_brand == SPWPN_VAMPIRICISM) );
             
         make_hungry(2, true);
 
@@ -983,46 +1085,11 @@ bool melee_attack::player_apply_aux_unarmed()
         if (mons_holiness(def) == MH_HOLY)
             did_god_conduct(DID_ATTACK_HOLY, 1, true, def);
 
-        // normal vampiric biting attack
-        if (damage_brand == SPWPN_VAMPIRICISM
-            && defender->holiness() == MH_NATURAL)
+        // normal vampiric biting attack, not if already got stabbing special
+        if (damage_brand == SPWPN_VAMPIRICISM && you.species == SP_VAMPIRE
+            && (!stab_attempt || stab_bonus <= 0))
         {
-            const int chunk_type = mons_corpse_effect( def->type );
-
-            // don't drink poisonous or mutagenic blood
-            if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
-            {
-                mprf( "You draw %s's blood!",
-                      def->name(DESC_NOCAP_THE, true).c_str() );
-
-                if (you.hp < you.hp_max)
-                {
-                    int heal = 1 + random2(damage_done);
-                    if (heal > you.experience_level)
-                        heal = you.experience_level;
-                
-                    if (chunk_type == CE_CLEAN)
-                        heal +=  1 + random2(damage_done);
-
-                    inc_hp(heal, false);
-                    mpr("You feel better.");
-                }
-
-                if (you.hunger_state < HS_ENGORGED)
-                {
-                    int food_value = 0;
-                    if (chunk_type == CE_CLEAN)
-                        food_value = 45 + random2avg(59, 2);
-                    else if (chunk_type == CE_CONTAMINATED)
-                        food_value = 22 + random2avg(29, 2);
-                        
-                    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-                        food_value -= 5 + random2(16);
-                        
-                    lessen_hunger(food_value, true);
-                }
-                did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
-            }
+            _player_vampire_draws_blood(monster_index(def), damage_done);
         }
     }
     else // no damage was done
@@ -1391,7 +1458,7 @@ int melee_attack::player_weapon_type_modify(int damage)
 
     // All weak hits look the same, except for when the player 
     // has a non-weapon in hand.  -- bwr
-    // Exception: vampire bats only bite to allow for drawing blood
+    // Exception: vampire bats only _bite_ to allow for drawing blood
     if (damage < HIT_WEAK && (you.species != SP_VAMPIRE
         || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT))
     {
@@ -1595,13 +1662,20 @@ void melee_attack::player_check_weapon_effects()
 bool melee_attack::player_monattk_hit_effects(bool mondied)
 {
     if (mons_holiness(def) == MH_HOLY)
-        did_god_conduct(mondied? DID_KILL_HOLY : DID_ATTACK_HOLY, 1,
-                        true, def);
+        did_god_conduct(mondied? DID_KILL_HOLY : DID_ATTACK_HOLY, 1, true, def);
 
     player_check_weapon_effects();
 
-    // Vampiric effects for the killing blow.
-    if (mondied && damage_brand == SPWPN_VAMPIRICISM)
+    // thirsty vampires will try to use a stabbing situation to draw blood
+    if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY
+        && mondied && stab_attempt && stab_bonus > 0
+        && _player_vampire_draws_blood(monster_index(def), damage_done, true))
+    {
+        // no further effects
+    }
+    // Vampiric *weapon* effects for the killing blow.
+    else if (mondied && damage_brand == SPWPN_VAMPIRICISM
+             && you.equip[EQ_WEAPON] != -1)
     {
         if (defender->holiness() == MH_NATURAL
             && damage_done > 0
@@ -1621,7 +1695,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
             inc_hp(heal, false);
 
             if (you.hunger_state != HS_ENGORGED)
-                lessen_hunger(30 + random2avg(59, 2), true);
+                lessen_hunger(30 + random2avg(59, 2), false);
 
             did_god_conduct(DID_NECROMANCY, 2);
         }
@@ -2029,94 +2103,64 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_VAMPIRICISM:
-        if (defender->holiness() != MH_NATURAL ||
-            defender->res_negative_energy() > 0 ||
-            damage_done < 1 || attacker->stat_hp() == attacker->stat_maxhp() ||
-            one_chance_in(5))
+    {
+        // vampire bat form, why the special handling?
+        if (attacker->atype() == ACT_PLAYER && you.species == SP_VAMPIRE
+            && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+            _player_vampire_draws_blood(monster_index(def), damage_done);
+            break;
+        }
+        
+        if (defender->holiness() != MH_NATURAL || !weapon
+            || defender->res_negative_energy() > 0
+            || damage_done < 1 || attacker->stat_hp() == attacker->stat_maxhp()
+            || one_chance_in(5))
         {
             break;
         }
 
         obvious_effect = true;
 
-        // vampire bat form
-        if (you.species == SP_VAMPIRE && attacker->atype() == ACT_PLAYER
-            && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        // handle weapon effects
+        // We only get here if we've done base damage, so no
+        // worries on that score.
+
+        if (attacker->atype() == ACT_PLAYER)
+            mpr("You feel better.");
+        else if (attacker_visible)
         {
-            const int chunk_type = mons_corpse_effect( def->type );
-
-            // don't drink poisonous or mutagenic blood
-            if (mons_has_blood(def->type)
-                && (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
-                    || chunk_type == CE_POISONOUS && player_res_poison() ))
+            if (defender->atype() == ACT_PLAYER)
             {
-                mprf( "You draw %s's blood!",
-                      def->name(DESC_NOCAP_THE, true).c_str() );
-
-                if (you.hp < you.hp_max)
-                {
-                    int heal = 1 + random2(damage_done);
-                    if (heal > you.experience_level)
-                        heal = you.experience_level;
-
-                    if (chunk_type == CE_CLEAN)
-                        heal +=  1 + random2(damage_done);
-
-                    inc_hp(heal, false);
-                    mpr("You feel better.");
-                }
-
-                if (you.hunger_state < HS_ENGORGED)
-                {
-                    int food_value = 0;
-                    if (chunk_type == CE_CLEAN)
-                        food_value = 30 + random2avg(59, 2);
-                    else if (chunk_type == CE_CONTAMINATED)
-                        food_value = 15 + random2avg(29, 2);
-
-                    lessen_hunger(food_value, true);
-                }
-                did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
-            }
-        }
-        else { // handle weapon effects
-            // We only get here if we've done base damage, so no
-            // worries on that score.
-
-            if (attacker->atype() == ACT_PLAYER)
-                mpr("You feel better.");
-            else if (attacker_visible)
-            {
-                if (defender->atype() == ACT_PLAYER)
-                    mprf("%s draws strength from your injuries!",
-                         attacker->name(DESC_CAP_THE).c_str());
-                else
-                    mprf("%s is healed.",
-                        attacker->name(DESC_CAP_THE).c_str());
-            }
-
-            int hp_boost = 0;
-
-            // thus is probably more valuable on larger weapons?
-            if (weapon && is_fixed_artefact( *weapon )
-                && weapon->special == SPWPN_VAMPIRES_TOOTH)
-            {
-                hp_boost = damage_done;
+                mprf("%s draws strength from your injuries!",
+                     attacker->name(DESC_CAP_THE).c_str());
             }
             else
-            {
-                hp_boost = 1 + random2(damage_done);
-            }
-
-            attacker->heal(hp_boost);
-
-            if (attacker->hunger_level() != HS_ENGORGED)
-                attacker->make_hungry(-random2avg(59, 2));
-
-            attacker->god_conduct( DID_NECROMANCY, 2 );
+                mprf("%s is healed.",
+                     attacker->name(DESC_CAP_THE).c_str());
         }
-        break;
 
+        int hp_boost = 0;
+
+        // thus is probably more valuable on larger weapons?
+        if (weapon && is_fixed_artefact( *weapon )
+            && weapon->special == SPWPN_VAMPIRES_TOOTH)
+        {
+            hp_boost = damage_done;
+        }
+        else
+        {
+            hp_boost = 1 + random2(damage_done);
+        }
+
+        attacker->heal(hp_boost);
+
+        if (attacker->hunger_level() != HS_ENGORGED)
+            attacker->make_hungry(-random2avg(59, 2));
+
+        attacker->god_conduct( DID_NECROMANCY, 2 );
+        break;
+    }
     case SPWPN_PAIN:
         if (defender->res_negative_energy() <= 0
             && random2(8) <= attacker->skill(SK_NECROMANCY))
@@ -2444,8 +2488,10 @@ bool melee_attack::player_check_monster_died()
         player_monattk_hit_effects(true);
 
         if (def->type == MONS_GIANT_SPORE || def->type == MONS_BALL_LIGHTNING)
+        {
             msg::stream << "You " << attack_verb << ' '
                         << def->name(DESC_NOCAP_THE) << '.' << std::endl;
+        }
         monster_die(def, KILL_YOU, 0);
 
         return (true);

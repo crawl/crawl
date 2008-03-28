@@ -613,6 +613,7 @@ static bool food_change(bool suppress_message)
 {
     char newstate = HS_ENGORGED;
     bool state_changed = false;
+    bool less_hungry   = false;
 
     you.hunger = std::max(you_min_hunger(), you.hunger);
     you.hunger = std::min(you_max_hunger(), you.hunger);
@@ -636,6 +637,8 @@ static bool food_change(bool suppress_message)
     if (newstate != you.hunger_state)
     {
         state_changed = true;
+        if (newstate > you.hunger_state)
+            less_hungry = true;
         you.hunger_state = newstate;
         set_redraw_status( REDRAW_HUNGER );
 
@@ -645,41 +648,44 @@ static bool food_change(bool suppress_message)
                  && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
                  && you.duration[DUR_TRANSFORMATION] > 2)
         {
-            mpr("Your bloodfilled body can't sustain your transformation much longer.",
-                MSGCH_WARN);
+            mpr("Your bloodfilled body can't sustain your transformation much "
+                "longer.", MSGCH_WARN);
             you.duration[DUR_TRANSFORMATION] = 2;
         }
 
-        if (suppress_message == false)
+        if (!suppress_message)
         {
+            std::string msg = "You ";
             switch (you.hunger_state)
             {
             case HS_STARVING:
                 if (you.species == SP_VAMPIRE)
-                    mpr("You feel devoid of blood!");
+                    msg += "feel devoid of blood!";
                 else
-                    mpr("You are starving!", MSGCH_FOOD);
+                    msg += "are starving!";
                 learned_something_new(TUT_YOU_STARVING);
                 you.check_awaken(500);
                 break;
             case HS_NEAR_STARVING:
                 if (you.species == SP_VAMPIRE)
-                    mpr("You feel almost devoid of blood!");
+                    msg += "feel almost devoid of blood!";
                 else
-                    mpr("You are near starving.", MSGCH_FOOD);
+                    msg += "are near starving!";
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
             case HS_VERY_HUNGRY:
-                mprf(MSGCH_FOOD, "You are feeling very %s.", how_hungry().c_str());
-                learned_something_new(TUT_YOU_HUNGRY);
-                break;
             case HS_HUNGRY:
-                mprf(MSGCH_FOOD, "You are feeling %s.", how_hungry().c_str());
+                msg += "are feeling ";
+                if (you.hunger_state == HS_VERY_HUNGRY)
+                    msg += "very ";
+                msg += how_hungry();
+                msg += ".";
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
             default:
-                break;
+                return (state_changed);
             }
+            mpr(msg.c_str(), MSGCH_FOOD, less_hungry);
         }
     }
 
@@ -736,8 +742,9 @@ void eat_from_inventory(int which_inventory_slot)
             return;
             
         const int mons_type  = food.plus;
-        const int chunk_type = mons_corpse_effect( mons_type );
         const bool rotten    = food_is_rotten(food);
+        const int chunk_type
+            = determine_chunk_effect(mons_corpse_effect( mons_type ), rotten);
         const int mass       = mons_weight(food.plus)/150;
 
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
@@ -780,8 +787,9 @@ void eat_floor_item(int item_link)
     if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
     {
         const int mons_type  = food.plus;
-        const int chunk_type = mons_corpse_effect( mons_type );
         const bool rotten    = food_is_rotten(food);
+        const int chunk_type
+            = determine_chunk_effect(mons_corpse_effect( mons_type ), rotten);
         const int mass       = mons_weight(food.plus)/150;
 
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))

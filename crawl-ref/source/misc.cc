@@ -189,8 +189,17 @@ void turn_corpse_into_blood_potions( item_def &item )
     const int max_chunks = mons_weight( mons_class ) / 150;
     item.quantity  = 1 + random2( max_chunks/3 );
     item.quantity  = stepdown_value( item.quantity, 2, 2, 6, 6 );
+    
+    // lower number of potions obtained from contaminated chunk type corpses
+    if (mons_corpse_effect( mons_class ) == CE_CONTAMINATED)
+    {
+        item.quantity /= random2(3);
+    
+        if (item.quantity < 1)
+            item.quantity = 1;
+    }
 
-    item.flags    &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     // happens after the blood has been bottled
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
