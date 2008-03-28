@@ -776,7 +776,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                          monster->x, monster->y, 1 + random2(3),
                          monster->kill_alignment() );
     }
-    
+
     switch (killer)
     {
         case KILL_YOU:          /* You kill in combat. */

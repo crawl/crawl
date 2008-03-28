@@ -1689,7 +1689,7 @@ int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
 
             if (!force_behaviour && player_angers_monster(creation))
                 beha = BEH_HOSTILE;
-            
+
             if (beha == BEH_CHARMED)
             {
                 creation->attitude = ATT_HOSTILE;
