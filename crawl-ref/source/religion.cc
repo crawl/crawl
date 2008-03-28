@@ -759,7 +759,7 @@ static void give_nemelex_gift()
     }
 }
 
-static bool blessing_reinforcements(void)
+static bool blessing_reinforcement(void)
 {
     // Possible follower band leaders.
     const monster_type followers[] = {
@@ -885,24 +885,24 @@ void bless_follower(god_type god,
     {
         int monster = choose_random_nearby_monster(0, suitable);
 
-        // If the follower chosen was you, either send reinforcements or
+        // If the follower chosen was you, either send reinforcement or
         // get out.
         if (monster == NON_MONSTER)
         {
             if (chance <= 1)
             {
-                bool reinforced = blessing_reinforcements();
+                bool reinforced = blessing_reinforcement();
 
                 if (!reinforced || coinflip())
                 {
-                    if (blessing_reinforcements())
+                    if (blessing_reinforcement())
                         reinforced = true;
                 }
 
                 if (reinforced)
                 {
                     blessed = "you";
-                    result = "reinforcements";
+                    result = "reinforcement";
                     goto blessing_done;
                 }
             }
