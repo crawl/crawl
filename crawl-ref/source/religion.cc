@@ -938,21 +938,31 @@ void bless_follower(god_type god,
         // get out.
         if (monster == NON_MONSTER)
         {
-            if (god == GOD_BEOGH && chance <= 4)
+            if (chance <= 4)
             {
-                bool reinforced = beogh_blessing_reinforcement();
-
-                if (!reinforced || coinflip())
+                switch (god)
                 {
-                    if (beogh_blessing_reinforcement())
-                        reinforced = true;
-                }
+                    case GOD_BEOGH:
+                    {
+                        bool reinforced = beogh_blessing_reinforcement();
 
-                if (reinforced)
-                {
-                    blessed = "you";
-                    result = "reinforcement";
-                    goto blessing_done;
+                        if (!reinforced || coinflip())
+                        {
+                            if (beogh_blessing_reinforcement())
+                                reinforced = true;
+                        }
+
+                        if (reinforced)
+                        {
+                            blessed = "you";
+                            result = "reinforcement";
+                            goto blessing_done;
+                        }
+                        break;
+                   }
+
+                   default:
+                       break;
                 }
             }
 
@@ -978,6 +988,7 @@ void bless_follower(god_type god,
                     goto blessing_done;
                 }
                 break;
+
             case GOD_BEOGH:
                 // Turn a monster into a priestly monster, if possible.
                 if (beogh_blessing_priesthood(mon))
@@ -986,6 +997,7 @@ void bless_follower(god_type god,
                     goto blessing_done;
                 }
                 break;
+
             default:
                 break;
         }
