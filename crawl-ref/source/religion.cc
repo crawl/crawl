@@ -3735,6 +3735,15 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     behaviour_event(orc, ME_ALERT, MHITNOT);
 }
 
+bool is_tso_follower(const monsters* mon)
+{
+    // Don't check for evil or unholy allies here, as that's done
+    // elsewhere.
+    return (mon->alive()
+        && (mon->attitude == ATT_FRIENDLY
+            || mon->has_ench(ENCH_CHARM)));
+}
+
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC

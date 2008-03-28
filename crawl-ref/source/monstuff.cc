@@ -939,6 +939,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
                 else if (you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
+                         || you.religion == GOD_SHINING_ONE
                          || (!anon && testbits(menv[i].flags, MF_GOD_GIFT)))
                 {
                     // Yes, we are splitting undead pets from the others
@@ -997,6 +998,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     }
                 }
 
+                // Give a follower power from killing evil, or randomly
+                // bless it.
                 if (you.religion == GOD_SHINING_ONE
                         && mons_is_evil_or_unholy(monster)
                     && (!player_under_penance()
@@ -1004,12 +1007,15 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && !invalid_monster_index(i))
                 {
                     monsters *mon = &menv[i];
-                    if (mon->alive() && mon->hit_points < mon->max_hit_points)
+                    if (mon->alive() && mon->hit_points < mon->max_hit_points
+                        && !one_chance_in(3))
                     {
                         simple_monster_message(mon, " looks invigorated.");
                         heal_monster( mon, 1 + random2(monster->hit_dice / 4),
                                       false );
                     }
+                    else
+                        bless_follower(GOD_SHINING_ONE, is_tso_follower, mon);
                 }
 
                 // Randomly bless the follower who killed.
