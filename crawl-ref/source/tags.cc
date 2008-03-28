@@ -516,7 +516,7 @@ int unmarshallCString(reader &th, char *data, int maxSize)
 std::string unmarshallString(reader &th, int maxSize)
 {
     if (maxSize <= 0)
-        return ("");    
+        return ("");
     char *buffer = new char [maxSize];
     if (!buffer)
         return ("");
