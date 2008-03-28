@@ -892,7 +892,6 @@ static void recap_feat_keys(std::vector<std::string> &keys)
             keys[i] = feature_description(type, NUM_TRAPS, false, DESC_CAP_A,
                                           false);
         }
-        //fprintf(stderr, "%s\n", keys[i].c_str());
     }
 }
 

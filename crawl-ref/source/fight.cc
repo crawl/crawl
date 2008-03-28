@@ -562,6 +562,38 @@ bool melee_attack::attack()
                                              mons_attack_mons() );
 }
 
+static int _modify_blood_amount(const int damage, const int dam_type)
+{
+    int factor = 0; // DVORP_NONE
+    
+    switch (dam_type)
+    {
+    case DVORP_CRUSHING: // flails, also unarmed
+        factor =  2;
+        break;
+    case DVORP_SLASHING: // whips
+        factor =  4;
+        break;
+    case DVORP_PIERCING: // pole-arms
+        factor =  5;
+        break;
+    case DVORP_STABBING: // knives, daggers
+        factor =  8;
+        break;
+    case DVORP_SLICING:  // other short/long blades, also blade hands
+        factor = 10;
+        break;
+    case DVORP_CHOPPING: // axes
+        factor = 17;
+        break;
+    case DVORP_CLAWING:  // unarmed, claws
+        factor = 24;
+        break;
+    }
+
+    return (damage * factor / 10);
+}
+
 static bool _vamp_wants_blood_from_monster(const monsters *mon)
 {
     if (you.species != SP_VAMPIRE)
@@ -688,7 +720,8 @@ bool melee_attack::player_attack()
 
         if (damage_done > 0)
         {
-            int blood = damage_done;
+            int blood
+                   = _modify_blood_amount(damage_done, attacker->damage_type());
             if (blood > defender->stat_hp())
                 blood = defender->stat_hp();
 
@@ -3688,11 +3721,12 @@ void melee_attack::mons_perform_attack_rounds()
             if (defender->atype() == ACT_MONSTER)
                 type = defender->id();
 
-            int damage = damage_done;
-            if (damage > defender->stat_hp())
-                damage = defender->stat_hp();
+            int blood
+                   = _modify_blood_amount(damage_done, attacker->damage_type());
+            if (blood > defender->stat_hp())
+                blood = defender->stat_hp();
                 
-            bleed_onto_floor(pos.x, pos.y, type, damage, true);
+            bleed_onto_floor(pos.x, pos.y, type, blood, true);
 
             if (decapitate_hydra(damage_done,
                                  attacker->damage_type(attack_number)))

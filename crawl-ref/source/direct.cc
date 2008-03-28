@@ -1625,10 +1625,9 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("translucent unnaturally hard rock wall");    
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
-        {
            return ("idol of Beogh");
-        }
-        return ("orcish idol");
+        else
+           return ("orcish idol");
     case DNGN_WAX_WALL:
         return ("wall of solid wax");
     case DNGN_GRANITE_STATUE:
