@@ -830,17 +830,17 @@ void set_helmet_random_desc( item_def &item )
 
     if (is_hard_helmet(item))
         item.plus2 = random2(THELM_NUM_DESCS);
-    else 
+    else
         item.plus2 = random2(THELM_DESC_MAX_SOFT + 1);
 }
 
-// 
+//
 // Ego item functions:
 //
 bool set_item_ego_type( item_def &item, int item_type, int ego_type )
 {
-    if (item.base_type == item_type 
-        && !is_random_artefact( item ) 
+    if (item.base_type == item_type
+        && !is_random_artefact( item )
         && !is_fixed_artefact( item ))
     {
         item.special = ego_type;

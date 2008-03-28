@@ -840,6 +840,27 @@ static bool blessing_healing(monsters *mon, bool extra)
     return heal_monster(mon, mon->max_hit_points, extra);
 }
 
+static bool tso_blessing_holy_wpn(monsters *mon)
+{
+    // Pick a monster's weapon.
+    const int weapon = mon->inv[MSLOT_WEAPON];
+
+    if (weapon == NON_ITEM)
+        return false;
+
+    item_def& wpn(mitm[weapon]);
+
+    if (get_weapon_brand(wpn) == SPWPN_HOLY_WRATH)
+        return false;
+
+    // And make it holy.
+    set_equip_desc(wpn, ISFLAG_GLOWING);
+    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
+    wpn.colour = YELLOW;
+
+    return true;
+}
+
 static bool beogh_blessing_reinforcement()
 {
     bool success = false;
@@ -944,13 +965,29 @@ void bless_follower(god_type god,
     blessed = (follower && !mons_near(follower)) ? "a follower"
                   : mon->name(DESC_NOCAP_A).c_str();
 
-    // Turn a monster into a priestly monster, if possible.
-    if (god == GOD_BEOGH && chance == 0)
+    if (chance == 0)
     {
-        if (beogh_blessing_priesthood(mon))
+        switch (god)
         {
-            result = "priesthood";
-            goto blessing_done;
+            case GOD_SHINING_ONE:
+                // Brand a monster's weapon with holy wrath, if
+                // possible.
+                if (tso_blessing_holy_wpn(mon))
+                {
+                    result = "holy attack power";
+                    goto blessing_done;
+                }
+                break;
+            case GOD_BEOGH:
+                // Turn a monster into a priestly monster, if possible.
+                if (beogh_blessing_priesthood(mon))
+                {
+                    result = "priesthood";
+                    goto blessing_done;
+                }
+                break;
+            default:
+                break;
         }
     }
 
