@@ -360,13 +360,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "walk on water" }
 };
 
-void altar_prayer(void);
+void altar_prayer();
 void dec_penance(god_type god, int val);
 void dec_penance(int val);
 void inc_penance(god_type god, int val);
 void inc_penance(int val);
 static bool moral_beings_attitude_change();
-static bool beogh_followers_abandon_you(void);
+static bool beogh_followers_abandon_you();
 static void dock_piety(int piety_loss, int penance);
 static bool make_god_gifts_disappear(bool level_only = true);
 static bool make_god_gifts_neutral(bool level_only = true);
@@ -767,11 +767,18 @@ static bool blessing_wpn(monsters *mon)
     if (weapon == NON_ITEM)
         return false;
 
+    bool success;
+
     item_def& wpn(mitm[weapon]);
 
     // And enchant or uncurse it.
-    return enchant_weapon((coinflip()) ? ENCHANT_TO_HIT
-                                       : ENCHANT_TO_DAM, true, wpn);
+    success = enchant_weapon((coinflip()) ? ENCHANT_TO_HIT
+                                          : ENCHANT_TO_DAM, true, wpn);
+
+    if (success)
+        item_set_appearance(wpn);
+
+    return success;
 }
 
 static bool blessing_ac(monsters* mon)
@@ -782,6 +789,8 @@ static bool blessing_ac(monsters* mon)
 
     if (armour == NON_ITEM && shield == NON_ITEM)
         return false;
+
+    bool success;
 
     int slot;
 
@@ -796,7 +805,12 @@ static bool blessing_ac(monsters* mon)
     int ac_change;
 
     // And enchant or uncurse it.
-    return enchant_armour(ac_change, true, arm);
+    success = enchant_armour(ac_change, true, arm);
+
+    if (success)
+        item_set_appearance(arm);
+
+    return success;
 }
 
 static bool blessing_balms(monsters *mon)
@@ -826,7 +840,7 @@ static bool blessing_healing(monsters *mon, bool extra)
     return heal_monster(mon, mon->max_hit_points, extra);
 }
 
-static bool beogh_blessing_reinforcement(void)
+static bool beogh_blessing_reinforcement()
 {
     bool success = false;
 
@@ -3915,7 +3929,7 @@ static std::string sacrifice_message(god_type god, const item_def &item,
     return (replace_all(replace_all(msg, "%", ssuffix), "&", be));
 }
 
-void altar_prayer(void)
+void altar_prayer()
 {
     // different message than when first joining a religion
     mpr( "You prostrate yourself in front of the altar and pray." );
@@ -4501,7 +4515,7 @@ static bool need_free_piety()
 }
 
 //jmf: moved stuff from items::handle_time()
-void handle_god_time(void)
+void handle_god_time()
 {
     if (one_chance_in(100))
     {

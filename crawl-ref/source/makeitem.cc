@@ -26,7 +26,7 @@
 #include "stuff.h"
 #include "view.h"
 
-static void item_set_appearance(item_def &item);
+void item_set_appearance(item_def &item);
 
 static bool got_curare_roll(const int item_level)
 {
@@ -2818,7 +2818,7 @@ void init_rod_mp(item_def &item)
         item.plus2 = random_range(6, 9) * ROD_CHARGE_MULT;
     else
         item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
-    
+
     item.plus = item.plus2;
 }
 
@@ -4085,7 +4085,7 @@ armour_type get_random_body_armour_type(int item_level)
 armour_type get_random_armour_type(int item_level)
 {
     int armtype = random2(3);
-    
+
     if (random2(35) <= item_level + 10)
     {
         armtype = random2(5);
@@ -4130,7 +4130,7 @@ armour_type get_random_armour_type(int item_level)
             armtype = ARM_BOOTS;
             break;
         }
-        
+
         if (armtype == ARM_HELMET && one_chance_in(3))
         {
             armtype = ARM_HELMET + random2(3);
@@ -4148,11 +4148,11 @@ armour_type get_random_armour_type(int item_level)
 }
 
 // Sets item appearance to match brands, if any.
-static void item_set_appearance(item_def &item)
+void item_set_appearance(item_def &item)
 {
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return;
-    
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -4160,7 +4160,7 @@ static void item_set_appearance(item_def &item)
             set_equip_desc( item,
                             (coinflip() ? ISFLAG_GLOWING : ISFLAG_RUNED) );
         break;
-        
+
     case OBJ_ARMOUR:
         // if not given a racial type, and special, give shiny/runed/etc desc.
         if (get_armour_ego_type( item ) != SPARM_NORMAL
@@ -4170,7 +4170,7 @@ static void item_set_appearance(item_def &item)
             {
                 ISFLAG_GLOWING, ISFLAG_RUNED, ISFLAG_EMBROIDERED_SHINY
             };
-            
+
             set_equip_desc( item, RANDOM_ELEMENT(descs) );
         }
         break;

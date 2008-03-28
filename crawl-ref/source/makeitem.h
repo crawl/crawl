@@ -22,7 +22,7 @@ enum item_make_species_type
     MAKE_ITEM_RANDOM_RACE = 250
 };
 
-int items( int allow_uniques, object_class_type force_class, int force_type, 
+int items( int allow_uniques, object_class_type force_class, int force_type,
            bool dont_place, int item_level, int item_race,
            unsigned mapmask = 0, int force_ego = 0 );
 
@@ -34,5 +34,6 @@ jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
 armour_type get_random_body_armour_type(int level);
 armour_type get_random_armour_type(int item_level);
+void item_set_appearance(item_def &item);
 
 #endif
