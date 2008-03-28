@@ -111,7 +111,7 @@ enum proximity_type   // proximity to player to create monster
  *              3 = place the monster near stairs (regardless of player pos)
  * *********************************************************************** */
 int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
-                int px, int py, int level_type = LEVEL_DUNGEON, 
+                int px, int py, int level_type = LEVEL_DUNGEON,
                 proximity_type proximity = PROX_ANYWHERE,
                 int extra = MONS_PROGRAM_BUG,
                 int dur = 0, bool permit_bands = false );
@@ -122,7 +122,7 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
  *              items - monstuff - mstuff2 - religion - spell - spells -
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
-int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y, 
+int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
                     int hitting, int zsec, bool permit_bands = false,
                     bool force_place = false, bool force_behaviour = false,
                     bool player_made = false );

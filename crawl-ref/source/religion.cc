@@ -770,7 +770,7 @@ static bool blessing_reinforcement(void)
         followers[random2(ARRAYSIZE(followers))];
 
     return (create_monster(follower_type, 0, BEH_GOD_GIFT, you.x_pos,
-               you.y_pos, you.pet_target, MONS_PROGRAM_BUG) != -1);
+               you.y_pos, you.pet_target, MONS_PROGRAM_BUG, true) != -1);
 }
 
 static bool blessing_priesthood(monsters* mon)

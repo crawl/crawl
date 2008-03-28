@@ -1721,7 +1721,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     case SPELL_SHADOW_CREATURES:
     {
         mpr( "Wisps of shadow whirl around you..." );
-        create_monster( RANDOM_MONSTER, 2, BEH_FRIENDLY, 
+        create_monster( RANDOM_MONSTER, 2, BEH_FRIENDLY,
                         you.x_pos, you.y_pos, you.pet_target,
                         MONS_PROGRAM_BUG );
         break;
@@ -2313,8 +2313,8 @@ static void miscast_translocation(int severity, const char* cause)
                 const int count = 2 + random2(3);
                 for (int i = 0; i < count; ++i)
                 {
-                    create_monster( MONS_SPATIAL_VORTEX, 3, 
-                                    BEH_HOSTILE, you.x_pos, you.y_pos, 
+                    create_monster( MONS_SPATIAL_VORTEX, 3,
+                                    BEH_HOSTILE, you.x_pos, you.y_pos,
                                     MHITYOU, MONS_PROGRAM_BUG );
                 }
             }
@@ -2432,8 +2432,8 @@ static void miscast_summoning(int severity, const char* cause)
                 const int count = 2 + random2(3);
                 for (int i = 0; i < count; ++i)
                 {
-                    create_monster( MONS_SPATIAL_VORTEX, 3, 
-                                    BEH_HOSTILE, you.x_pos, you.y_pos, 
+                    create_monster( MONS_SPATIAL_VORTEX, 3,
+                                    BEH_HOSTILE, you.x_pos, you.y_pos,
                                     MHITYOU, MONS_PROGRAM_BUG );
                 }
             }
@@ -2454,11 +2454,11 @@ static void miscast_summoning(int severity, const char* cause)
         case 5:
             mpr("A chorus of chattering voices calls out to you!");
             create_monster( summon_any_demon(DEMON_LESSER), 5,
-                            BEH_HOSTILE, you.x_pos, you.y_pos, 
+                            BEH_HOSTILE, you.x_pos, you.y_pos,
                             MHITYOU, MONS_PROGRAM_BUG );
 
             create_monster( summon_any_demon(DEMON_LESSER), 5,
-                            BEH_HOSTILE, you.x_pos, you.y_pos, 
+                            BEH_HOSTILE, you.x_pos, you.y_pos,
                             MHITYOU, MONS_PROGRAM_BUG );
 
             if (coinflip())
@@ -2503,11 +2503,11 @@ static void miscast_summoning(int severity, const char* cause)
             mpr("Something turns its malign attention towards you...");
 
             create_monster( summon_any_demon(DEMON_COMMON), 3,
-                            BEH_HOSTILE, you.x_pos, you.y_pos, 
+                            BEH_HOSTILE, you.x_pos, you.y_pos,
                             MHITYOU, MONS_PROGRAM_BUG );
 
             create_monster( summon_any_demon(DEMON_COMMON), 3,
-                            BEH_HOSTILE, you.x_pos, you.y_pos, 
+                            BEH_HOSTILE, you.x_pos, you.y_pos,
                             MHITYOU, MONS_PROGRAM_BUG );
 
             if (coinflip())
@@ -2715,19 +2715,20 @@ static void miscast_necromancy(int severity, const char* cause)
         case 0:
             mpr("Flickering shadows surround you.");
 
-            create_monster( MONS_SHADOW, 2, BEH_HOSTILE, 
-                            you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
+            create_monster( MONS_SHADOW, 2, BEH_HOSTILE,
+                            you.x_pos, you.y_pos, MHITYOU,
+                            MONS_PROGRAM_BUG );
 
             if (coinflip())
             {
-                create_monster( MONS_SHADOW, 2, BEH_HOSTILE, 
+                create_monster( MONS_SHADOW, 2, BEH_HOSTILE,
                                 you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG ); 
+                                MONS_PROGRAM_BUG );
             }
 
             if (coinflip())
             {
-                create_monster( MONS_SHADOW, 2, BEH_HOSTILE, 
+                create_monster( MONS_SHADOW, 2, BEH_HOSTILE,
                                 you.x_pos, you.y_pos, MHITYOU,
                                 MONS_PROGRAM_BUG );
             }
