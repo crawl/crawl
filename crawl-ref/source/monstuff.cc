@@ -644,13 +644,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
     if (!silent && _monster_avoided_death(monster, killer, i))
         return;
-    
+
     if (mons_is_caught(monster))
         mons_clear_trapping_net(monster);
 
     // update list of monsters beholding player
     update_beholders(monster, true);
-    
+
     const int monster_killed = monster_index(monster);
     bool death_message =
         !silent && mons_near(monster) && player_monster_visible(monster);
@@ -685,7 +685,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                            monster->name(DESC_NOCAP_A, true).c_str()));
         }
     }
-    
+
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.duration[DUR_BERSERKER])
     {
@@ -1069,7 +1069,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
         case KILL_DISMISSED:
             break;
-            
+
         default:
             monster->destroy_inventory();
             break;
@@ -1108,7 +1108,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         {
             // Provide the player with an ingame clue to Boris' return.  -- bwr
             const int tmp = random2(6);
-            simple_monster_message( monster, 
+            simple_monster_message( monster,
                     (tmp == 0) ? " says, \"You haven't seen the last of me!\"" :
                     (tmp == 1) ? " says, \"I'll get you next time!\"" :
                     (tmp == 2) ? " says, \"This isn't over yet!\"" :

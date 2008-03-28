@@ -770,7 +770,7 @@ static bool blessing_reinforcements(void)
         followers[random2(ARRAYSIZE(followers))];
 
     return (create_monster(follower_type, 0, BEH_GOD_GIFT, you.x_pos,
-               you.y_pos, MHITYOU, MONS_PROGRAM_BUG, true) != -1);
+               you.y_pos, you.pet_target, MONS_PROGRAM_BUG, true) != -1);
 }
 
 static bool blessing_priesthood(monsters* mon)
@@ -1051,7 +1051,7 @@ static void do_god_gift(bool prayed_for)
                 && !grid_destroys_items(grd[you.x_pos][you.y_pos])
                 && one_chance_in(4))
             {
-                if (you.religion == GOD_TROG 
+                if (you.religion == GOD_TROG
                     || (you.religion == GOD_OKAWARU && coinflip()))
                 {
                     success = acquirement(OBJ_WEAPONS, you.religion);
@@ -1349,7 +1349,7 @@ void pray()
 
     if (you.religion == GOD_NEMELEX_XOBEH)
         you.duration[DUR_PRAYER] = 1;
-    
+
     if (!was_praying)
         do_god_gift(true);
 

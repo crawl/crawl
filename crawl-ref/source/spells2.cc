@@ -1577,7 +1577,8 @@ bool summon_berserker(int pow, bool god_gift)
     }
 
     int mons = create_monster( mon, numsc, beha, you.x_pos, you.y_pos,
-                               MHITYOU, MONS_PROGRAM_BUG );
+                               god_gift ? you.pet_target : MHITYOU,
+                               MONS_PROGRAM_BUG );
 
     if (mons != -1)
     {
@@ -1668,8 +1669,9 @@ bool summon_swarm( int pow, bool unfriendly, bool god_gift )
             behaviour = BEH_FRIENDLY;
 
         if (create_monster( thing_called, 3, behaviour,
-                            you.x_pos, you.y_pos, MHITYOU,
-                            MONS_PROGRAM_BUG, false, false, false, true))
+                            you.x_pos, you.y_pos,
+                            !unfriendly ? you.pet_target : MHITYOU,
+                            MONS_PROGRAM_BUG, false, false, false, true) != -1)
         {
             summoned = true;
         }
