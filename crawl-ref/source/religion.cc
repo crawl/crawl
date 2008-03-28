@@ -761,16 +761,34 @@ static void give_nemelex_gift()
 
 static bool blessing_reinforcement(void)
 {
-    // Possible follower band leaders.
+    bool success = false;
+
+    // Possible reinforcement.
     const monster_type followers[] = {
-        MONS_ORC
+        MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
     };
 
-    monster_type follower_type =
-        followers[random2(ARRAYSIZE(followers))];
+    int how_many = random2(4) + 1;
 
-    return (create_monster(follower_type, 0, BEH_GOD_GIFT, you.x_pos,
-               you.y_pos, you.pet_target, MONS_PROGRAM_BUG, true) != -1);
+    for (int i = 0; i < how_many; ++i)
+    {
+        monster_type follower_type =
+            followers[random2(ARRAYSIZE(followers))];
+
+        int monster = create_monster(follower_type, 0, BEH_GOD_GIFT,
+                                 you.x_pos, you.y_pos, you.pet_target,
+                                 MONS_PROGRAM_BUG);
+        if (monster != -1)
+        {
+            monsters *mon = &menv[monster];
+
+            mon->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+            success = true;
+        }
+    }
+
+    return success;
 }
 
 static bool blessing_priesthood(monsters* mon)
@@ -838,21 +856,21 @@ static bool blessing_balms(monsters *mon)
 {
     // Remove poisoning, sickness, confusion, and rotting, like a potion
     // of healing, but without the healing.
-    bool balms = false;
+    bool success = false;
 
     if (mon->del_ench(ENCH_POISON))
-        balms = true;
+        success = true;
 
     if (mon->del_ench(ENCH_SICK))
-        balms = true;
+        success = true;
 
     if (mon->del_ench(ENCH_CONFUSION))
-        balms = true;
+        success = true;
 
     if (mon->del_ench(ENCH_ROT))
-        balms = true;
+        success = true;
 
-    return balms;
+    return success;
 }
 
 static bool blessing_healing(monsters *mon, bool extra)
