@@ -13,9 +13,58 @@ and experience.
 Conventions
 -----------
 
-Use 4 spaces to indent, and indent with spaces only (no tabs).
-Use underscores_as_spaces instead of mixedCase.  Other conventions are
-pointed out by example, below:
+A) Indenting
+
+Generally, use 4 spaces to indent, and indent with spaces only (no tabs).
+
+Also, empty lines don't need any spacing at all.
+
+If the parameter list of a function runs longer than a line length (80 columns), 
+the remaining parameters are indented in the lines below.
+
+static void replace_area( int sx, int sy, int ex, int ey,
+                          dungeon_feature_type replace,
+                          dungeon_feature_type feature, unsigned mapmask)
+{
+[...]
+}
+
+The same is true when a function is called:
+
+        // place guardian {dlb}:
+        mons_place( MONS_GUARDIAN_NAGA, BEH_SLEEP, MHITNOT, true, 
+                    sr.x1 + random2( sr.x2 - sr.x1 ), 
+                    sr.y1 + random2( sr.y2 - sr.y1 ) );
+
+
+There are cases where this is not possible because the parameters themselves
+are too long for that, or because the function is already heavily indented,
+but otherwise, this convention should be followed.
+
+In a switch conditional, the case listings don't have to be indented, though
+the conditional statements should be.
+
+                switch (mons_intel(monster_index(mon)))
+                {
+                case I_HIGH:
+                    memory = 100 + random2(200);
+                    break;
+                case I_NORMAL:
+                    memory = 50 + random2(100);
+                    break;
+                case I_ANIMAL:
+                case I_INSECT:
+                    memory = 25 + random2(75);
+                    break;
+                case I_PLANT:
+                    memory = 10 + random2(50);
+                    break;
+                }
+
+B) Variable naming
+
+When naming variables, use underscores_as_spaces instead of mixedCase.  Other 
+conventions are pointed out by example, below:
 
 
 // - Global variables are capitalized and underscored.
@@ -34,18 +83,7 @@ void destroy_item(item_def* item)
 {
     // - Variables use underscores too.
     int item_weight = /* ... */;
-    
-    if (item_weight > SOME_LIMIT)
-    {
-        // - Braces are put on their own line.
-        do_something();
-    }
 
-    // - It's allowable to omit braces, but be careful.
-    if (item != NULL)
-        _remove_from_inventory(item);
-    else
-        _something_else();
 }
 
 
@@ -77,3 +115,136 @@ struct coord_def
     // - Simple structures don't need the "m_" prefixes
     int x, y;	
 };
+
+C) Braces
+
+Braces are always put on their own lines.
+
+    do
+    {
+        curse_an_item(false);
+    }
+    while ( !one_chance_in(3) );
+
+
+If many comparisons are necessary, this can result in a number of nested
+braces. These can sometimes be omitted, as long as the underlying logic isn't
+changed, of course. The following assumes that the conditions are followed by
+single statements.
+
+If both the condition itself and the conditional code are single line 
+statements, the braces may be omitted.
+
+    if (item != NULL)
+        _remove_from_inventory(item);
+    else
+        _something_else();
+
+
+Otherwise, place braces.
+
+        if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
+            || tran == TRAN_AIR || tran == TRAN_LICH
+            || tran == TRAN_SPIDER) // monster spiders don't bleed either
+        {
+            return (false);
+        }
+
+
+    for ( int i = 0; i < power_level * 5 + 2; ++i )
+    {
+        create_monster(result, std::min(power/50, 6),
+                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                       you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG);
+    }
+
+Also place braces if this is only the case because of one or more comment lines.
+
+        for (j = 0; j < num_to_make; j++)
+        {           
+            // places items (eg darts), which will automatically stack
+            itrap(beam, i);
+        }
+
+
+In the case of nested if-conditionals, try to combine the conditions, e.g.
+instead of
+
+   if (A)
+   {
+       if (B)
+           do_something();
+   }
+
+use
+
+   if (A && B)
+       do_something();
+
+Place braces as per the conventions above.
+
+Else, whenever if-conditional nesting can't be avoided, always use braces. I 
+can't find an example where that isn't already necessary for logical reasons, so 
+these should be really rare.
+
+In a row of if-else if-statements or in a switch-case loop, the optional braces 
+should be used if the bigger part of statements needs braces for logical reasons 
+or because of one of the conventions above. Otherwise, they
+may be omitted.
+
+    if (mons_neutral(monster))
+    {
+        if (coinflip()) // neutrals speak half as often
+            return false;
+            
+        prefixes.push_back("neutral");
+    }
+    else if (mons_friendly(monster))
+        prefixes.push_back("friendly");
+    else
+        prefixes.push_back("hostile");
+
+When for-loops are nested and the outer loop has no further statements, the 
+braces may be omitted.
+
+  for (int x = 0; x < GXM; x++)
+      for (int y = 0; y < GYM; y++)
+      {
+          if (grd[x][y] == DNGN_LAVA)
+              lava_spaces++;
+          if (grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == NGN_SHALLOW_WATER)
+              water_spaces++;
+      }
+
+The same is true for combined for- and if-conditionals as long as all statements 
+fill less than four lines.
+
+    for (i = 0; i < MAX_SHOPS; i++)
+        if (env.shop[i].type == SHOP_UNASSIGNED)
+            break;
+
+If the order of if- and for-conditionals is reversed, however, place braces.
+
+    [...]
+    else if (enhanced < 0)
+    {
+        for (ndx = enhanced; ndx < 0; ndx++)
+            power /= 2;
+    }
+
+
+If there are more than three nested statements with optional bracing, use braces 
+to roughly divide them into halves. (See example below.)
+
+Should such nested code be followed by code other than a closing brace, 
+leave a free line between them.
+
+    for (int y = 1; y < GYM; ++y)
+        for (int x = 1; x < GXM; ++x)
+        {
+            if (grd[x][y] == feat)
+                return coord_def(x, y);
+        }
+
+    return coord_def(0, 0);
+
