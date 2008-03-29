@@ -3668,7 +3668,7 @@ static int _name_to_skill_level(const std::string& name)
 
     if (type == SK_DARTS || type == SK_SLINGS)
         return (you.skills[type] + you.skills[SK_THROWING]);
-        
+
     return (2 * you.skills[type]);
 }
 
@@ -3779,7 +3779,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
         // Submerged monsters are unaffected by enchantments.
         if (submerged)
             return (0);
-        
+
         // nasty enchantments will annoy the monster, and are considered
         // naughty (even if a monster might resist)
         if (nasty_beam(mon, beam))
@@ -3948,7 +3948,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
 
     god_conduct_trigger conduct;
     conduct.enabled = false;
-    
+
     if (nasty_beam(mon, beam))
     {
         if (YOU_KILL(beam.thrower) && hurt_final > 0)
