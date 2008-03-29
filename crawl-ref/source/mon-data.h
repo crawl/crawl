@@ -82,7 +82,7 @@
      CE_CONTAMINATED,    occasionally causes sickness
      CE_POISONOUS,       hazardous to characters without poison resistance
      CE_HCL,             causes rotting in non-Ghoul characters
-     CE_MUTAGEN_RANDOM,  mutagenous
+     CE_MUTAGEN_RANDOM,  mutagenic
      CE_MUTAGEN_GOOD,  // may be worth implementing {dlb}
      CE_MUTAGEN_BAD,   // may be worth implementing {dlb}
      CE_RANDOM,        // not used, but may be worth implementing {dlb}
