@@ -979,7 +979,7 @@ static bool beogh_blessing_priesthood(monsters* mon)
 
 // Bless the follower indicated in follower, if any.  If there isn't
 // one, bless a random follower within sight of the player.
-void bless_follower(monsters* follower,
+bool bless_follower(monsters* follower,
                     god_type god,
                     bool (*suitable)(const monsters* mon))
 {
@@ -1030,7 +1030,7 @@ void bless_follower(monsters* follower,
                 }
             }
 
-            return;
+            return false;
         }
 
         mon = &menv[monster];
@@ -1164,6 +1164,8 @@ blessing_done:
     snprintf(info, INFO_SIZE, " blesses %s with %s.", blessed.c_str(),
              result.c_str());
     simple_god_message(info);
+
+    return true;
 }
 
 static void do_god_gift(bool prayed_for)

@@ -858,6 +858,14 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && (!player_under_penance() &&
                         random2(you.piety) >= piety_breakpoint(0))))
             {
+                // For TSO, give health from killing evil, or randomly
+                // bless a follower.
+                if (you.religion == GOD_SHINING_ONE && one_chance_in(3)
+                    && bless_follower())
+                {
+                    break;
+                }
+
                 if (you.hp < you.hp_max)
                 {
                     mpr("You feel a little better.");
@@ -1000,8 +1008,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     }
                 }
 
-                // Give a follower power from killing evil, or randomly
-                // bless it.
                 if (you.religion == GOD_SHINING_ONE
                         && mons_is_evil_or_unholy(monster)
                     && (!player_under_penance()
@@ -1009,15 +1015,18 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && !invalid_monster_index(i))
                 {
                     monsters *mon = &menv[i];
-                    if (mon->alive() && mon->hit_points < mon->max_hit_points
-                        && !one_chance_in(3))
+
+                    // Give a follower health from killing evil, or
+                    // randomly bless it.
+                    if (one_chance_in(3) && bless_follower())
+                        break;
+
+                    if (mon->alive() && mon->hit_points < mon->max_hit_points)
                     {
                         simple_monster_message(mon, " looks invigorated.");
                         heal_monster( mon, 1 + random2(monster->hit_dice / 4),
                                       false );
                     }
-                    else
-                        bless_follower(mon);
                 }
 
                 // Randomly bless the follower who killed.
@@ -1029,6 +1038,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && !invalid_monster_index(i))
                 {
                     monsters *mon = &menv[i];
+
                     bless_follower(mon);
                 }
 
