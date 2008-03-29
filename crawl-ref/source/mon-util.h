@@ -104,7 +104,7 @@ enum mons_class_flags
     M_SPLITS            = (1<<12),        // monster can split
     M_AMPHIBIOUS        = (1<<13),        // monster can swim in water,
     M_THICK_SKIN        = (1<<14),        // monster has more effective AC,
-    M_RESERVED          = (1<<15),        // currently UNUSED
+    M_BLOOD_SCENT       = (1<<15),        // monster can smell blood
     M_COLD_BLOOD        = (1<<16),        // susceptible to cold
     M_WARM_BLOOD        = (1<<17),        // no effect currently
     M_REGEN             = (1<<18),        // regenerates quickly

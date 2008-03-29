@@ -1610,15 +1610,14 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     {
     case BEAM_FIRE:
     case BEAM_STEAM:
-        hurted =
-            resist_adjust_damage(
+        hurted
+            = resist_adjust_damage(
                 monster,
                 pbolt.flavour,
-                pbolt.flavour == BEAM_FIRE
-                ? monster->res_fire()
-                : monster->res_steam(),
-                hurted,
-                true);
+                (pbolt.flavour == BEAM_FIRE) ? monster->res_fire()
+                                             : monster->res_steam(),
+                hurted, true);
+                
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1728,9 +1727,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
             }
         }
         else if (doFlavouredEffects)
-        {
             poison_monster( monster, _whose_kill(pbolt), 4 );
-        }
+
         break;
 
     case BEAM_NEG:
@@ -1761,7 +1759,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
             }
 
             monster->max_hit_points -= 2 + random2(3);
-            monster->hit_points -= 2 + random2(3);
+            monster->hit_points     -= 2 + random2(3);
 
             if (monster->hit_points >= monster->max_hit_points)
                 monster->hit_points = monster->max_hit_points;
@@ -2298,10 +2296,10 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     pbolt.is_tracer = true;
     pbolt.source_x = monster->x;    // always safe to do.
     pbolt.source_y = monster->y;
-    pbolt.beam_source = monster_index(monster);
+    pbolt.beam_source   = monster_index(monster);
     pbolt.can_see_invis = (mons_see_invis(monster) != 0);
-    pbolt.smart_monster = (mons_intel(monster->type) == I_HIGH ||
-                          mons_intel(monster->type) == I_NORMAL);
+    pbolt.smart_monster = (mons_intel(monster->type) == I_HIGH
+                           || mons_intel(monster->type) == I_NORMAL);
     pbolt.attitude = mons_attitude(monster);
 
     // init tracer variables
@@ -3485,10 +3483,11 @@ static int _affect_player( bolt &beam )
 
     const bool engulfs = (beam.is_explosion || beam.is_big_cloud);
     mprf( "The %s %s you!", 
-            beam.name.c_str(), (engulfs) ? "engulfs" : "hits" );
+          beam.name.c_str(), (engulfs) ? "engulfs" : "hits" );
 
     int hurted = 0;
-    int burn_power = (beam.is_explosion) ? 5 : ((beam.is_beam) ? 3 : 2);
+    int burn_power = (beam.is_explosion) ? 5 :
+                          (beam.is_beam) ? 3 : 2;
 
     // Roll the damage
     hurted += roll_dice( beam.damage ); 
@@ -3528,6 +3527,18 @@ static int _affect_player( bolt &beam )
 
     if (hurted < 0)
         hurted = 0;
+
+    // if the beam is an actual missile or of the MMISSILE type (Earth magic)
+    // might bleed on the floor
+    if (!engulfs
+        && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE))
+    {
+        int blood = hurted/2; // assumes DVORP_PIERCING, factor: 0.5
+        if (blood > you.hp)
+            blood = you.hp;
+            
+        bleed_onto_floor(you.x_pos, you.y_pos, -1, blood, true);
+    }
 
     hurted = check_your_resists( hurted, beam.flavour );
 
@@ -3856,8 +3867,10 @@ static int _affect_monster(bolt &beam, monsters *mon)
         if (beam.flavour == BEAM_ELECTRICITY)
         {
             if (see_grid(mon->x, mon->y))
+            {
                 mprf("The %s arcs harmlessly into the water.",
                      beam.name.c_str());
+            }
             return (BEAM_STOP);
         }
 
@@ -4006,6 +4019,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
                 mprf("%s blocks the %s.",
                      mon->name(DESC_CAP_THE).c_str(),
                      beam.name.c_str());
+                     
                 mon->shield_block_succeeded();
                 return (BEAM_STOP);
             }
@@ -4022,17 +4036,18 @@ static int _affect_monster(bolt &beam, monsters *mon)
         mprf("The %s %s %s.",
              beam.name.c_str(),
              engulfs? "engulfs" : "hits",
-             player_monster_visible(&menv[tid])? 
-             mon->name(DESC_NOCAP_THE).c_str()
-             : "something");
+             player_monster_visible(&menv[tid]) ?
+                 mon->name(DESC_NOCAP_THE).c_str() : "something");
     }
     else
     {
         // the player might hear something,
         // if _they_ fired a missile (not beam)
         if (!silenced(you.x_pos, you.y_pos) && beam.flavour == BEAM_MISSILE
-                && YOU_KILL(beam.thrower))
+            && YOU_KILL(beam.thrower))
+        {
             mprf(MSGCH_SOUND, "The %s hits something.", beam.name.c_str());
+        }
     }
 
     if (beam.name.find("throwing net") != std::string::npos)
@@ -4043,9 +4058,22 @@ static int _affect_monster(bolt &beam, monsters *mon)
     // doFlavouredEffects = false above)
     hurt_final = mons_adjust_flavoured(mon, beam, raw_damage);
 
+    // if the beam is an actual missile or of the MMISSILE type (Earth magic)
+    // might bleed on the floor
+    if (!engulfs
+        && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE))
+    {
+        // using raw_damage instead of the flavoured one!
+        int blood = raw_damage/2; // assumes DVORP_PIERCING, factor: 0.5
+        if (blood > mon->hit_points)
+            blood = mon->hit_points;
+
+        bleed_onto_floor(mon->x, mon->y, mon->type, blood, true);
+    }
+
     // now hurt monster
     hurt_monster( mon, hurt_final );
-
+    
     if (mon->hit_points < 1)
     {
         _monster_die(mon, beam);
@@ -4069,8 +4097,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
         }
 
 
-        /* looks for missiles which aren't poison but
-           are poison*ed* */
+        /* looks for missiles which aren't poison but are poison*ed* */
         if (beam.name.find("poisoned") != std::string::npos
             && beam.flavour != BEAM_POISON
             && beam.flavour != BEAM_POISON_ARROW)

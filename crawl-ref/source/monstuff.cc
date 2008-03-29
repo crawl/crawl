@@ -654,8 +654,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     update_beholders(monster, true);
 
     const int monster_killed = monster_index(monster);
-    bool death_message =
-        !silent && mons_near(monster) && player_monster_visible(monster);
+    bool death_message
+        = !silent && mons_near(monster) && player_monster_visible(monster);
     bool in_transit = false;
     const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
     bool drop_items = !hard_reset;
@@ -1452,7 +1452,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     // If old monster is visible to the player, and is interesting,
     // then note why the interesting monster went away.
     if (player_monster_visible(monster) && mons_near(monster)
-            && MONST_INTERESTING(monster))
+        && MONST_INTERESTING(monster))
     {
         take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
                        monster->name(DESC_CAP_A, true).c_str()));
@@ -1964,9 +1964,11 @@ void behaviour_event( monsters *mon, int event, int src,
         // will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // it won't turn friends hostile either.
-        if (mon->behaviour != BEH_CORNERED && mon->behaviour != BEH_PANIC &&
-            mon->behaviour != BEH_FLEE)
+        if (mon->behaviour != BEH_CORNERED && mon->behaviour != BEH_PANIC
+            && mon->behaviour != BEH_FLEE)
+        {
             mon->behaviour = BEH_SEEK;
+        }
 
         if (mon->foe == MHITNOT)
             mon->foe = src;
@@ -3516,8 +3518,8 @@ static bool _handle_wand(monsters *monster, bolt &beem)
     {
         bool niceWand    = false;
         bool zap         = false;
-        bool was_visible =
-            mons_near(monster) && player_monster_visible(monster);
+        bool was_visible
+                 = mons_near(monster) && player_monster_visible(monster);
 
         item_def &wand(mitm[monster->inv[MSLOT_WAND]]);
 
@@ -3936,7 +3938,7 @@ static bool _enemies_around(const monsters *monster)
 static bool _handle_spell( monsters *monster, bolt & beem )
 {
     bool monsterNearby = mons_near(monster);
-    bool finalAnswer = false;   // as in: "Is that your...?" {dlb}
+    bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     const spell_type draco_breath = _get_draconian_breath_spell(monster);
 
     // yes, there is a logic to this ordering {dlb}:

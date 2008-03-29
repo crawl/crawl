@@ -341,6 +341,12 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
 #endif
         if (allow_bleeding_on_square(x,y))
             env.map[x][y].property = FPROP_BLOODY;
+            
+        // if old or new blood on square, the smell reaches further
+        if (env.map[x][y].property == FPROP_BLOODY)
+            blood_smell(12, x, y);
+        else // still allow a lingering smell
+            blood_smell(7, x, y);
 
         if (spatter)
         {

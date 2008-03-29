@@ -3737,9 +3737,10 @@ void monsters::rot(actor *agent, int rotlevel, int immed_rot)
     if (damage > 0)
     {
         if (mons_near(this) && player_monster_visible(this))
-            mprf("%s %s!",
-                 name(DESC_CAP_THE).c_str(),
+        {
+            mprf("%s %s!", name(DESC_CAP_THE).c_str(),
                  rotlevel == 0? "looks less resilient" : "rots");
+        }
         hurt(agent, damage);
         if (alive())
         {
@@ -4102,8 +4103,10 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_SUBMERGED:
         if (type == MONS_AIR_ELEMENTAL && mons_near(this) && !quiet)
+        {
             mprf("%s merges itself into the air.",
                  name(DESC_CAP_A, true).c_str() );
+        }
         break;
         
     case ENCH_CHARM:
@@ -4189,7 +4192,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (mons_class_flag(type, M_INVIS))
             add_ench( mon_enchant(ENCH_INVIS) );
         else if (mons_near(this) && !player_see_invis() 
-                    && !has_ench( ENCH_SUBMERGED ))
+                 && !has_ench( ENCH_SUBMERGED ))
         {
             if (!quiet)
                 mprf("%s appears!", name(DESC_CAP_A, true).c_str() );
@@ -4222,8 +4225,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (player_monster_visible(this))
                 simple_monster_message(this, " stops glowing.");
             else if (has_ench(ENCH_INVIS) && mons_near(this))
+            {
                 mprf("%s stops glowing and disappears.",
                      name(DESC_CAP_THE, true).c_str());
+            }
         }
         break;
 
@@ -5118,8 +5123,10 @@ bool monsters::do_shaft()
             if (mons_near(this))
             {
                 if (player_monster_visible(this))
+                {
                     mprf("A shaft briefly opens up underneath %s!",
                          name(DESC_NOCAP_THE).c_str());
+                }
                 else
                     mpr("A shaft briefly opens up in the floor!");
             }

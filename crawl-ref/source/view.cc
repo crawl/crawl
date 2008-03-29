@@ -1488,7 +1488,6 @@ void cloud_grid(void)
 // Returns true if the PC heard the noise.
 bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 {
-    int p;
     struct monsters *monster = 0;       // NULL {dlb}
     bool ret = false;
 
@@ -1520,7 +1519,7 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
         ret = true;
     }
     
-    for (p = 0; p < MAX_MONSTERS; p++)
+    for (int p = 0; p < MAX_MONSTERS; p++)
     {
         monster = &menv[p];
 
@@ -1541,6 +1540,105 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 
     return (ret);
 }                               // end noisy()
+
+static const char* _player_vampire_smells_blood(int dist)
+{
+    // non-hungry vampires get no clear indication of how close the smell is
+    if (you.hunger_state > HS_HUNGRY)
+        return "";
+
+    if (dist < 16) // 4*4
+        return " near-by";
+
+    if (you.hunger_state <= HS_NEAR_STARVING && dist > 64) // 8*8
+        return " in the distance";
+
+    return "";
+}
+
+void blood_smell( int strength, int blood_x, int blood_y )
+{
+    struct monsters *monster = 0;       // NULL {dlb}
+
+    const int range = strength * strength;
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "blood stain at (%d, %d), range of smell = %d",
+         blood_x, blood_y, range);
+#endif
+
+    // of the player species, only vampires can smell blood
+    if (you.species == SP_VAMPIRE)
+    {
+        // whether they actually do so, depends on their hunger state
+        int vamp_strength = strength - 2 * (you.hunger_state - 1);
+        if (vamp_strength > 0)
+        {
+            int vamp_range = vamp_strength * vamp_strength;
+
+            const int player_distance
+                = distance( you.x_pos, you.y_pos, blood_x, blood_y );
+
+            if (player_distance <= vamp_range)
+            {
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS,
+                     "Player smells blood, pos: (%d, %d), dist = %d)",
+                     you.x_pos, you.y_pos, player_distance);
+#endif
+                you.check_awaken(range - player_distance);
+                // don't message if you can see the square
+                if (!see_grid(blood_x, blood_y))
+                {
+                    mprf("You smell fresh blood%s.",
+                         _player_vampire_smells_blood(player_distance));
+                }
+            }
+        }
+    }
+
+    for (int p = 0; p < MAX_MONSTERS; p++)
+    {
+        monster = &menv[p];
+
+        if (monster->type < 0)
+            continue;
+
+        if (!mons_class_flag(monster->type, M_BLOOD_SCENT))
+            continue;
+
+        if (distance(monster->x, monster->y, blood_x, blood_y) <= range)
+        {
+            // let sleeping hounds lie
+            if (mons_is_sleeping(monster)
+                && mons_species(monster->type) != MONS_VAMPIRE)
+            {
+                // 33% chance of sleeping on
+                // 33% of being disturbed (start BEH_WANDER)
+                // 33% of being alerted   (start BEH_SEEK)
+                if (!one_chance_in(3))
+                {
+                    if (coinflip())
+                    {
+#ifdef DEBUG_DIAGNOSTICS
+                        mprf(MSGCH_DIAGNOSTICS, "disturbing %s (%d, %d)",
+                             monster->name(DESC_PLAIN).c_str(),
+                             monster->x, monster->y);
+#endif
+                        behaviour_event( monster, ME_DISTURB, MHITNOT,
+                                         blood_x, blood_y );
+                    }
+                    continue;
+                }
+            }
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "alerting %s (%d, %d)",
+                 monster->name(DESC_PLAIN).c_str(), monster->x, monster->y);
+#endif
+            behaviour_event( monster, ME_ALERT, MHITNOT, blood_x, blood_y );
+        }
+    }
+}      // end blood_smell()
 
 /* The LOS code now uses raycasting -- haranp */
 
