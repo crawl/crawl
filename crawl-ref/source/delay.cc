@@ -555,7 +555,8 @@ void handle_delay( void )
         case DELAY_RECITE:
             mprf(MSGCH_PLAIN, "You %s",
                  _get_recite_speech("start", you.num_turns + delay.duration));
-            apply_area_visible(recite_to_monsters, delay.parm1);
+            if (apply_area_visible(recite_to_monsters, delay.parm1))
+                viewwindow(true, false);
             break;
         default:
             break;
@@ -705,7 +706,8 @@ void handle_delay( void )
         case DELAY_RECITE:
             mprf(MSGCH_MULTITURN_ACTION, "You continue %s.",
                  _get_recite_speech("other", you.num_turns + delay.duration+1));
-            apply_area_visible(recite_to_monsters, delay.parm1);
+            if (apply_area_visible(recite_to_monsters, delay.parm1))
+                viewwindow(true, false);
             break;
         case DELAY_MULTIDROP:
             drop_item( items_for_multidrop[0].slot,
