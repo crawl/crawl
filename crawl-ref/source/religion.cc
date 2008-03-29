@@ -819,16 +819,16 @@ static bool blessing_balms(monsters *mon)
     // of healing, but without the healing.
     bool success = false;
 
-    if (mon->del_ench(ENCH_POISON))
+    if (mon->del_ench(ENCH_POISON, true))
         success = true;
 
-    if (mon->del_ench(ENCH_SICK))
+    if (mon->del_ench(ENCH_SICK, true))
         success = true;
 
-    if (mon->del_ench(ENCH_CONFUSION))
+    if (mon->del_ench(ENCH_CONFUSION, true))
         success = true;
 
-    if (mon->del_ench(ENCH_ROT))
+    if (mon->del_ench(ENCH_ROT, true))
         success = true;
 
     return success;
@@ -857,6 +857,32 @@ static bool tso_blessing_holy_wpn(monsters *mon)
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
     wpn.colour = YELLOW;
+
+    return true;
+}
+
+static bool tso_blessing_extend_stay(monsters *mon)
+{
+    if (!mon->has_ench(ENCH_ABJ))
+        return false;
+
+    mon_enchant abj = mon->get_ench(ENCH_ABJ);
+
+    abj.duration = abj.duration * 3 / 2;
+
+    mon->update_ench(abj);
+
+    return true;
+}
+
+static bool tso_blessing_friendliness(monsters *mon)
+{
+    if (!mon->has_ench(ENCH_CHARM))
+        return false;
+
+    mon->attitude = ATT_FRIENDLY;
+
+    mon->del_ench(ENCH_CHARM, true);
 
     return true;
 }
@@ -914,7 +940,8 @@ static bool beogh_blessing_priesthood(monsters* mon)
     return false;
 }
 
-// Bless a follower within sight of the player.
+// Bless the follower indicated in follower, if any.  If there isn't
+// one, bless a random follower within sight of the player.
 void bless_follower(god_type god,
                     bool (*suitable)(const monsters* mon),
                     monsters* follower)
@@ -934,8 +961,6 @@ void bless_follower(god_type god,
     {
         int monster = choose_random_nearby_monster(0, suitable);
 
-        // If the follower chosen was you, either send reinforcement or
-        // get out.
         if (monster == NON_MONSTER)
         {
             if (chance <= 4)
@@ -944,6 +969,8 @@ void bless_follower(god_type god,
                 {
                     case GOD_BEOGH:
                     {
+                        // If the follower chosen was you, either send
+                        // reinforcement or get out.
                         bool reinforced = beogh_blessing_reinforcement();
 
                         if (!reinforced || coinflip())
@@ -1049,26 +1076,51 @@ void bless_follower(god_type god,
         result = "divine balms";
         goto blessing_done;
     }
-    // ...or give it full healing, optionally giving it one extra hit
-    // point.
     else
     {
-        bool healing = blessing_healing(mon, false);
-        bool vigour = false;
-
-        if (!healing || coinflip())
+        switch (god)
         {
-            blessing_healing(mon, true);
+            case GOD_SHINING_ONE:
+                // ...extend its stay if it's a temporary summon, or
+                // make it friendly if it's charmed.  If neither is
+                // possible, deliberately fall through.
+                if (coinflip() && tso_blessing_extend_stay(mon))
+                {
+                    result = "more time in this world";
+                    break;
+                }
+                else if (tso_blessing_friendliness(mon))
+                {
+                    result = "friendliness";
+                    break;
+                }
 
-            vigour = true;
+            case GOD_BEOGH:
+            {
+                // ...or give it full healing, optionally giving it one
+                // extra hit point.
+                bool healing = blessing_healing(mon, false);
+                bool vigour = false;
+
+                if (!healing || coinflip())
+                {
+                    blessing_healing(mon, true);
+
+                    vigour = true;
+                }
+
+                if (healing && vigour)
+                    result = "healing and extra vigour";
+                else if (healing)
+                    result = "healing";
+                else
+                    result = "extra vigour";
+                break;
+            }
+
+            default:
+                break;
         }
-
-        if (healing && vigour)
-            result = "healing and extra vigour";
-        else if (healing)
-            result = "healing";
-        else
-            result = "extra vigour";
     }
 
 blessing_done:
