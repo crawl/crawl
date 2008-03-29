@@ -64,7 +64,7 @@ The contents of this text are:
                 menu_colour, menu_colour_prefix_id,
                 menu_colour_prefix_class
 4-k     Missiles.
-                fire_items_start, fire_order, fire_quiver_behavior
+                fire_items_start, fire_order
 4-l     Message Channels.
                 plain, prompt, god, pray, duration, danger, food, warning,
                 recovery, talk, talk_visual, intrinsic_gain, mutation,
@@ -568,18 +568,20 @@ item_colour = true
 
 The viewport is the portion of the map that is displayed during normal
 play. The viewport is 33x17 by default, but if you use larger terminal
-sizes, you can set these options to allow the game to show a larger
+sizes, you can set these options to make the game show a larger
 viewport. (These options are not fully available on DOS.)
 
 None of these options affects gameplay. In particular, your character's
 line-of-sight is unaffected by these options.
 
 view_max_width = 33
-        Sets the maximum width of the viewport.  Making this larger
-        will allow Crawl to show a wider viewport on larger terminals.
+        Sets the maximum width of the viewport (defaults to 33).
+        Making this larger will allow Crawl to show a wider viewport
+        on larger terminals.
 
 view_max_height = 17
-        Similar to view_max_width, but sets the maximum height.
+        Similar to view_max_width, but sets the viewport's maximum 
+        height.
 
 * Note that using large viewports can slow the game down.
 
@@ -1165,19 +1167,13 @@ fire_order += inscribed
         the "Inscriptions" section of the crawl manual for more information
         about inscriptions.
 
+        the "Inscriptions"
+
         'launcher' refers to firing the appropriate missile for the 
         wielded weapon (ie crossbow, bow, sling, blowgun). You'll almost 
         certainly want it first, as it'll be ignored when you're not 
         wielding a ranged weapon. 'return' refers to (identified) 
         weapons of returning.
-
-fire_quiver_best = false
-        Controls the behavior of the quiver.  If false, the quiver
-        contains the previous ammo fired.
-
-        If true, Crawl will always put the best-ranked item in the
-        quiver, as specified by fire_order, current launcher, and
-        inventory ordering.
 
 (See also pickup_thrown in 4-a.)
 

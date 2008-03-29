@@ -6,30 +6,64 @@ speech has been outsourced by Matthew Cline. This makes changing
 existing messages, or adding new ones really easy. This file will
 hopefully help you in this endeavour.
 
+The outsourced messages are used to create two databases out of which
+Crawl randomly draws the necessary speech text. 
 
-shout.txt handles message output for monsters noticing you.
+* shout.db (handling speech when monsters first notice you), and 
+* speak.db (for all other cases). 
 
-monspeak.txt handles messages for monsters communicating with you.
+Because of the amount of definitions necessary, they have been divided
+over a number of different files.
 
-wpnnoise.txt handles randart weapons with the noises property.
+The shout database is constructed from the following two files:
 
-insult.txt handles insults thrown at you by imps and demons. 
+* shout.txt     handles message output for monsters noticing you
+* insult.txt    handles insults thrown at you by imps and demons 
+
+The speak database contains messages defined in these files:
+
+* monspeak.txt  handles messages for monsters communicating with you
+* wpnnoise.txt  handles randart weapons with the noises property
+* godspeak.txt  handles randomized speech by the gods, as well as 
+                speech used for some divine abilities
+* insult.txt    Same file as above.
+
+The messages defined in insult.txt form a part of both databases. 
+Apart from that, keywords and statements defined for one database 
+cannot be automatically accessed from the other. Rather, they have to 
+be defined a second time.
+
+Whenever Dungeon Crawl is started, the game checks whether any of the
+databases needs to be updated. If one of the underlying files has been
+changed since the last check, the database is automatically rerolled. 
+That means that if you'd like to change one of the descriptions or add 
+some new monster speech all you have to do is modify the file, save, and restart the game to test your changes.
 
 
-Monster speech probabilities
-============================
+Contents:
+ A.  Monster speech probabilities
+ B.  A simple example
+ C.  Key lookup in detail
+ D.  Values in detail
+ E.  Testing your changes
+ F.  Publishing your changes
+ APPENDIX: List of monster glyphs
 
-Not all monsters are equally likely to speak. Rather there are
-different chances involved depending on several attributes, and most of
-the time the database lookup stage isn't even reached.
 
-The player will only ever hear monsters speak if they are nearby, and
-monsters will only speak if they are not asleep, not submerged in
-water, air or lava, and not wandering around aimlessly (unless neutral).
+A.  Monster speech probabilities
+================================
 
-Berserk monsters are too busy killing and maiming to speak. Also, invisible
-monsters the player can't see (for lack of see invisible) will always stay
-silent, unless confused.
+Not all monsters are equally likely to speak. Rather there are 
+different chances involved, depending on several attributes, and most
+of the time the database lookup stage isn't even reached.
+
+First, the player will only ever hear monsters speak if they are in line of sight, and monsters will only ever speak if they are not 
+asleep, not submerged in water, air or lava, and not wandering around 
+aimlessly (unless neutral).
+
+Berserk monsters are too busy killing and maiming to speak. Also,
+invisible monsters the player can't see (for lack of see invisible)
+will always stay silent, unless confused.
 
 Monsters capable of speech (i.e. all intelligent humanoid monsters, as
 well as all uniques and some non-unique demons) have a base chance of
@@ -42,10 +76,11 @@ if the monster in question was generated as a member of a group.
 Chances are again doubled if this non-humanoid monster is fleeing, and
 doubled again if confused.
 
-Neutral monsters only speak half as often, and for charmed monsters the
-probability is divided by 3. The same applies to silenced monsters, i.e.
-monsters that are not naturally silent will only get to even attempt to speak in
-one out of three tries where the above chances hold.
+Neutral monsters only speak half as often, and for charmed monsters 
+the probability is divided by 3. The same applies to silenced 
+monsters, i.e. monsters that are not naturally silent will only get to 
+even attempt to speak in one out of three tries where the above 
+chances hold.
 
 Note that the definition of which monsters are capable of speech is
 entirely hardcoded. We think we made this apply to all sensible
@@ -56,8 +91,8 @@ documentation also doesn't help you solve the problem, you might want
 to post a bug report on Dungeon Crawl's SourceForge site [1].
 
 
-A simple example
-================
+B.  A simple example
+====================
 
 If you have a look at some of the speech files, you'll see that all
 entries have basically the same structure: a key, followed by one or
@@ -92,8 +127,8 @@ are comment lines.
   friendly '5'
 
 The first non-comment, non-blank line is interpreted as the key of an
-entry. Most keys are hardcoded but there's place for user defined ones
-as well. More on that later, though. 
+entry. Many keys are hardcoded, but there's place for user defined 
+ones as well. More on that later, though. 
 In this case, the key is "friendly '5'".
 
 '5' refers to the monster glyph, so the speech will not be entirely
@@ -130,8 +165,8 @@ This is a special command; it prints no message. See below for more
 details on special commands.
 
 
-Keys in detail
-==============
+C.  Key lookup in detail
+========================
 
 Key lookup is always case-insensitive. The game will make many
 different attempts when trying to find monster speech, all of which
@@ -169,9 +204,8 @@ orc species and the character worships Beogh, the prefix "beogh" gets
 added to the list, though not for charmed orcs who will simply use the
 generic friendly statements instead of the orcish followers' cheers.
 If you worship one of the good gods instead (Zin, The Shining One, or
-Elyvilon) the prefix "good god" is used. Conversely, worshippers of one
-of the evil gods (Yredelemnul, Makhleb, Kikubaaqudgha, Lugonu, Xom,
-Beogh, or Vehumet) will use the prefix "evil god". 
+Elyvilon) the prefix "good god" is used. Conversely, worshippers of 
+one of the evil gods (Yredelemnul, Makhleb, Kikubaaqudgha, Lugonu, or Beogh) will use the prefix "evil god". 
 This allows fine-grained handling of monsters depending on your
 character's religion status, e.g. orcs will use special speech for
 Beogh worshippers, and neutral holy beings (Angel and Daeva) may
@@ -197,13 +231,13 @@ speech but rather the default speech defined for fleeing humanoids in
 general.
 In practice this means that database keys starting with "default" are
 the fallback solution if the exact look-up has failed. As such, the
-messages should be generic enough to allow for all the possibly skipped
-prefixes, or else those cases should be caught earlier, e.g. if you
-have "default friendly humanoid", you should also define "default
-friendly fleeing humanoid" and "default friendly confused humanoid"
-(and possibly both combined) even if only with "__NONE" (stay silent),
-as the general friendly messages may look odd for a monster such
-afflicted.
+messages should be generic enough to allow for all the possibly 
+skipped prefixes, or else those cases should be caught earlier, e.g. 
+if you have "default friendly humanoid", you should also define 
+"default friendly fleeing humanoid" and "default friendly confused 
+humanoid" (and possibly both combined) even if only with "__NONE" 
+(stay silent), as the general friendly messages may look odd for a 
+monster such afflicted.
 
 Only keys that match a search string perfectly (ignoring case) will
 be used. Once all prefixes have been exhausted and still no match has 
@@ -223,6 +257,15 @@ following order:
    monster's body shape (winged, tailed etc). The definition of the 
    latter is entirely hardcoded, though.
    Examples: "default winged insect", "default confused humanoid"
+
+If you are playing with tiles, you may not know the monster glyphs, 
+but internally the monsters are still treated the same, and even under 
+tiles, the glyph keys used for step 3 are entirely valid. In case you 
+need to know the monster glyphs for your speech definitions you'll 
+find a list of monster glyphs at the end of this file. Also, for many 
+monsters you can find out their glyph in-game by searching the 
+database ('?/') and entering a vague enough monster name. For example, 
+entering "drac" will tell you that all draconians use the symbol 'd'.
 
 For the last round (shape comparison, e.g. winged humanoid)
 occasionally an additional intelligence estimate ("stupid", "smart")
@@ -271,8 +314,8 @@ Example 2:
   this case "related" and "beogh". Unfortunately, none of "friendly
   fleeing related orc wizard", "friendly fleeing beogh orc wizard", or
   "friendly fleeing orc wizard" has any corresponding entry in the
-  database, so that we now check for "default" in combination with, one
-  after another, all combinations of three or less prefixes.
+  database, so that we now check for "default" in combination with, 
+  one after another, all combinations of three or less prefixes.
 
   Three prefixes: "default friendly fleeing related orc wizard",
   "default friendly fleeing beogh orc wizard", "default friendly
@@ -290,20 +333,20 @@ Example 2:
   No prefix: "default orc wizard". 
 
   Sadly, none of these is successful. The genus of orc wizards is
-  "orc", so we retry the above using "orc" instead of "orc wizard". The
-  same is repeated for "friendly fleeing beogh 'o'", and we still
+  "orc", so we retry the above using "orc" instead of "orc wizard". 
+  The same is repeated for "friendly fleeing beogh 'o'", and we still
   haven't found anything.
 
   This is starting to get ridiculous, so it's time for desperate
   measures: 
-  With the help of some rather complicated functions the game works out
-  that orcs can be described as humanoids of average intelligence.
+  With the help of some rather complicated functions the game works 
+  out that orcs can be described as humanoids of average intelligence.
   Thus, in a final attempt of making this orc wizard speak, we search
-  the database for "friendly fleeing related beogh humanoid", something
-  that, not surprisingly (since Beogh and humanoid don't go well
-  together), doesn't exist. Annoyingly enough, neither do the variants
-  "friendly fleeing related humanoid", "friendly fleeing beogh
-  humanoid" or even "friendly fleeing humanoid". 
+  the database for "friendly fleeing related beogh humanoid", 
+  something that, not surprisingly (since Beogh and humanoid don't go 
+  well together), doesn't exist. Annoyingly enough, neither do the 
+  variants "friendly fleeing related humanoid", "friendly fleeing 
+  beogh humanoid" or even "friendly fleeing humanoid". 
 
   Still, we haven't yet tried the prefix combinations: "default
   friendly fleeing related humanoid" is still unsuccessful, as
@@ -335,9 +378,15 @@ and the only hardcoded keywords are "noisy weapon" for weapons with
 the noises property, and "singing sword" for (who'd have guessed?) the
 Singing Sword.
 
+God speech
+----------
+The keys used to search for god speech are entirely hard-coded, though 
+some local synonyms have been defined as well. Hopefully, the comments
+will explain what the different speech messages are used for.
 
-Values in detail
-================
+
+D.  Values in detail
+====================
 
 Spacing
 -------
@@ -408,7 +457,8 @@ Capitalized forms (@Monster@, @A_something@, @Possessive@, @Pronoun@)
 are expanded with capitalized text.
 
 Also, in insult.txt you'll find the hardcoded variables
-@species_insult_adj1@, @species_insult_adj2@ and @species_insult_noun@.
+  @species_insult_adj1@, @species_insult_adj2@, and 
+  @species_insult_noun@.
 These are sometimes used in the construction of imps' or demons'
 generic insults, and allow for species-dependent handling. If the
 parser encounters such a variable, it will search the database for the
@@ -417,7 +467,7 @@ where <genus> is replaced with the actual genus name, that is
 "draconian", "elf" or "dwarf" instead of the more specific species
 name, "ogre" for "ogre-mage", or the actual species name in all other
 cases.
-If this specific search doesn't yield any results, that is, such an
+If this specific search doesn't yield any results, i.e., such an
 entry hasn't been defined for the species in question, the general
 replacements are used instead.
 
@@ -426,9 +476,10 @@ replacements don't hold. Instead you can use @The_weapon@,
 @the_weapon@, @Your_weapon@, @your_weapon@ and @weapon@ which will get
 replaced by "The (weapon name)", "the (weapon name)", "Your (weapon
 name)", "your (weapon name)", and the plain weapon name,
-respectively. Note that the Singing Sword, being unique, cannot be
-referred to by the possessive variants, so they will be replaced with
-the appropriate definite article ones.
+respectively. 
+Note that the Singing Sword, being unique, cannot be referred to by 
+the possessive variants, so they will be replaced with the appropriate 
+definite article ones.
 
 Examples of pre-defined variables in the database include
 _high_priest_, _mercenary_guard_, _wizard_, _hostile_adventurer_,
@@ -483,14 +534,16 @@ and enforce output even when silenced.
   VISUAL SPELL   : MSGCH_MONSTER_SPELL
   VISUAL WARN    : MSGCH_WARN
 
-Note, though, that these only will take effect if a VISUAL message just
-happens to be chosen. As stated above, the database search doesn't
-really care whether a monster is supposed to be silent, so it may pick
-any noisy monster speech, but the message output will care and refuse
-to print such nonsense, so that in this case the monster will actually
-stay silent after all. 
+Note, though, that these only will take effect if a VISUAL message 
+just happens to be chosen. As stated above, the database search 
+doesn't really care whether a monster is supposed to be silent, so it 
+may pick any noisy monster speech, but the message output will care 
+and refuse to print such nonsense, so that in this case the monster 
+will actually stay silent after all. 
+
 All in all, chances of silent "speech" are lower (as is intended) but
-only VISUAL messages even have a chance to be printed under these circumstances.
+only VISUAL messages even have a chance to be printed under these 
+circumstances.
 
 As explained earlier, "silenced" is one of the prefixes that are
 regarded as "less important" and can be ignored in the exact string
@@ -530,7 +583,7 @@ VISUAL:@The_monster@ does a flip.
   If one of these is chosen, we get a non-verbal "speech" statement of
   this silenced monster.
 
-  However, what happens if the other 50% take effect and we will *not*   
+  However, what happens if the other 50% take effect and we will *not* 
   ignore the "silenced" prefix? In this case, we'll simply continue
   like in the earlier examples above, get no results for either of
   "default silenced Killer Klown" or "default Killer Klown", and try
@@ -558,8 +611,8 @@ VISUAL:@The_monster@ gestures.
 
 For shouts the default channel is also MSGCH_TALK, which is
 automatically changed to MSGCH_TALK_VISUAL for monsters that can't
-speak (animals, usually), and manually set to MSGCH_SOUND for all those
-variants of "You hear a shout!"
+speak (animals, usually), and manually set to MSGCH_SOUND for all 
+those variants of "You hear a shout!"
 
 For weapon noises only a subset of the above is relevant, as anything
 including VISUAL and the channel keys SPELL and ENCHANT are considered
@@ -586,8 +639,8 @@ Crawl looks up the noises a given monster can produce and looks for
 keys that match the string, i.e. __SHOUT, __BARK and so on.
 
 
-Testing your changes
-====================
+E.  Testing your changes
+========================
 
 Get a version of Stone Soup that contains WIZARD mode. You can check
 whether this is the case by pressing '&' during the game. If you are
@@ -613,9 +666,9 @@ mode, examining monsters offers several new sub-commands such as 'F'
 (make monster friendly/neutral/hostile) and 's' (make monster shout).
 These last two are of particular interest to monster speech designers.
 
-The Singing Sword and all other hardcoded artefacts can be created
-with '&|'. The Elemental Staff and the spear of Voo-Doo are examples
-of noisy weapons.
+Also, the Singing Sword and all other hardcoded artefacts can be 
+created with '&|'. The Elemental Staff and the spear of Voo-Doo are 
+examples of noisy weapons.
 
 You can also temporarily increase the likelihood of a given message by
 adding a high weight value before it, e.g. w:5000, or equally
@@ -631,14 +684,14 @@ somewhere in AppHdr.h, for example at the beginning of the section
 entitled "Debugging Defines", and then compile the game anew, first
 using "make clean", then "make wizard". 
 If you play with DEBUG_MONSPEAK compiled in, whenever the game is 
-searching the monspeak database you'll get extensive information on all
-keys and prefixes tried. Once you're done testing don't forget to 
+searching the monspeak database you'll get extensive information on 
+all keys and prefixes tried. Once you're done testing don't forget to 
 remove (or comment out) the DEBUG_MONSPEAK setting as trying to
 actually play that way would sure be annoying. 
 
 
-Publishing your changes
-=======================
+F.  Publishing your changes
+===========================
 
 If you feel that your additions really add something to the game and
 would like to make them available to the general public, you can post
@@ -654,3 +707,93 @@ request on sourceforge.net [1] or in the newsgroup [2].
    roguelike games, it is generally considered polite to flag 
    subjects of posts pertaining only to Crawl with "-crawl-" or 
    a similar marker.
+
+
+APPENDIX: List of monster glyphs
+================================
+
+Lowercase letters:
+------------------
+a   giant cockroach, giant ant, soldier ant
+b   giant bat, butterfly
+c   centaur (warrior), yaktaur (captain)
+d   all draconians
+e   all elves
+f   fungus, wandering mushroom
+g   goblin, hobgoblin, gnoll, boggart
+h   all hounds (jackal, hound, wolf, warg, war dog, hell hound)
+        and hogs (hog, hell-hog)
+j   snails: elephant slug, giant slug, giant snail
+k   winged insects: killer bee, bumblebee
+l   lizards (giant newt/gecko/iguana/lizard, gila monster, komodo 
+             dragon), and drakes (swamp drake, firedrake, death drake, 
+                                  lindwurm)
+n   ghouls: necrophage, ghoul, rotting hulk
+o   all orcs
+p   all ghosts, phantom, and insubstantial wisp
+r   all rodents (rats of all colours, and quokka)
+s   arachnides (giant mite, giant centipede, scorpion, wolf spider, 
+                redback)
+t   minotaur
+u   (very) ugly thing
+v   all vortices, and air elemental
+w   all worms and larvae
+x   unseen horror, small abomination
+y   wasps, giant mosquito, giant blowfly, moth of wrath
+z   small zombie/skeleton/simulacrum, skeletal warrior, flying skull,
+    curse skull, and curse toe
+
+Uppercase letters:
+------------------
+A   Angel, Daeva
+B   all beetles
+C   all giants, ettin, cyclops, and titan
+D   all dragons, wyvern, and hydra
+E   efreet
+F   all frogs
+G   all eyes, giant spore, and giant orange brain
+H   hippogriff, manticore, griffon, and sphinx
+I   ice beast
+J   all jellies, oozes, and slime creature, pulsating lump, 
+    giant amoeba, jellyfish, and acid blob
+K   all kobolds
+L   all liches
+M   all mummies
+N   all naga
+O   all ogres
+P   all plants
+Q   queen bee, and queen ant
+R   (fake) rakshasa
+S   all snakes, and salamander
+T   all trolls
+U   all bears
+V   all vampires
+W   all wraiths, wight, and spectral warrior/thing
+X   abomination, tentacled monstrosity, and Orb Guardian
+Y   all yaks, and sheep
+Z   large zombie/skeleton/simulacrum
+
+Numbers:
+--------
+1   all Fiends, Executioner, Blue/Green Death, Balrug, Cacodemon
+2   sun demon, reaper, soul eater, ice devil, and Lorocyproca
+3   hellion, tormentor, blue/iron devil, neqoxec, orange/shadow demon, 
+    hellwing, ynoxinul, and demonic crawler
+4   red/rotting/hairy devil, beast, and smoke demon
+5   all imps, and other minor demons (quasit, lemure, ufetubus, manes, 
+                                      midge)
+8   all golems, and living statues
+9   all gargoyles
+
+Other symbols:
+--------------
+#   earth elemental, fire elemental, and vapour
+{   water elemental
+;   all fish, and electrical eel
+@   all humans, (glowing) shapeshifter, and Killer Klown
+&   all pandemonium lords
+*   ball lightning, and orb of fire
+%   death cob
+    shadow
+
+For uniques, see their monster description for their subtype.

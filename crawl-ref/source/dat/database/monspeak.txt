@@ -585,6 +585,22 @@ VISUAL:@The_monster@ looks friendly.
 ## END friendly humanoid ##
 
 %%%%
+pauses_or_stops
+
+pauses
+
+stops
+%%%%
+hound
+
+@The_monster@ @pauses_or_stops@ to sniff the @surface@.
+%%%%
+friendly hound
+
+@The_monster@ wags @possessive@ tail.
+
+@hound@
+%%%%
 default insect
 
 VISUAL:@The_monster@ waves @possessive@ antennae.

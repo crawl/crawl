@@ -268,7 +268,7 @@ static formatted_string tut_starting_info(unsigned int width)
         "A very short guide to Crawl." EOL        
         "  <lightblue>crawl_manual.txt</lightblue>   - "
         "This contains all details on races, magic, skills, etc." EOL
-        "  <lightblue>crawl_options.txt</lightblue>  - "
+        "  <lightblue>options_guide.txt</lightblue>  - "
         "Crawl's interface is highly configurable. This document " EOL
         "                       explains all the options." EOL
         EOL
@@ -730,7 +730,7 @@ void tutorial_finished()
               break;
           case 2:
               text =  "The interface can be greatly customised. All options are "
-                      "explained in the file <w>crawl_options.txt</w> which "
+                      "explained in the file <w>options_guide.txt</w> which "
                       "can be found in the <w>docs</w> directory. The "
                       "options themselves are set in <w>init.txt</w> or "
                       "<w>.crawlrc</w>. Crawl will complain if it can't "

@@ -450,7 +450,7 @@ several additional activities like Dodging or Stabbing. See Appendix 3
 for a detailed description of all skills present in Crawl. The ease 
 with which a character learns a skill depends solely on race. These 
 aptitudes are hinted at in the list of species (see Appendix 1). For the
-curious, the full table can be checked in tables.txt (also from the
+curious, the full table can be checked in aptitudes.txt (also from the
 help game during play). It is not necessary to bother with the numbers
 in order to win!
 
@@ -1174,11 +1174,11 @@ will only change the command key 'a'.
 You can set up key maps and macros in-game with the ~ key (Ctrl-D will
 also work); this also allows for saving all current key bindings and 
 macros. Alternatively, you can directly edit the macros.txt file. For 
-more information on both and for examples, see crawl_macros.txt.
+more information on both and for examples, see macros_guide.txt.
 
 Crawl supports a large number of options that allow for great
 flexibility in the interface. They are fully documented in the file
-crawl_options.txt. The options themselves are set in the file
+options_guide.txt. The options themselves are set in the file
 ~/.crawlrc (for UNIX systems - copy over init.txt to ~/.crawlrc) or 
 init.txt (for Windows).
 
@@ -2156,7 +2156,7 @@ Crawl has many commands to be issued by single key strokes. This can
 become confusing, since there are also several modes; here is the full 
 list. Some commands are particularly useful in combination with certain
 interface options; such options are mentioned in the list. For a 
-description of them, please look into crawl_options.txt. For a more 
+description of them, please look into options_guide.txt. For a more 
 terse list of all commands, use '??' in-game. Most modes (targeting,
 level map, interlevel travel) also have help menus via '?' on their own.
 
@@ -2620,7 +2620,7 @@ some commands:
   +f   item is included when cycling ammunition
 
 You can use the autoinscribe option to have some items automatically 
-inscribed. See crawl_options.txt for details. Some examples are
+inscribed. See options_guide.txt for details. Some examples are
   autoinscribe = royal jell:=g
   autoinscribe = wand of healing:!z
 

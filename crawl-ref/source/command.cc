@@ -636,11 +636,11 @@ struct help_file
 };
 
 help_file help_files[] = {
-    { "crawl_manual.txt", '*', true },
-    { "tables.txt", '%', false },
-    { "readme.txt", '^', false },
-    { "crawl_macros.txt", '~', false },
-    { "crawl_options.txt", '!', false },
+    { "crawl_manual.txt",  '*', true },
+    { "aptitudes.txt",     '%', false },
+    { "readme.txt",        '^', false },
+    { "macros_guide.txt",  '~', false },
+    { "options_guide.txt", '!', false },
     { NULL, 0, false }
 };
 
