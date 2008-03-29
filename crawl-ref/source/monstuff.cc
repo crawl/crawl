@@ -400,31 +400,24 @@ static void _give_monster_experience( monsters *victim,
     if (invalid_monster_index(killer_index))
         return;
 
-    monsters *mons = &menv[killer_index];
-    if (!mons->alive())
+    monsters *mon = &menv[killer_index];
+    if (!mon->alive())
         return;
 
-    if ((!victim_was_born_friendly || !mons_friendly(mons))
+    if ((!victim_was_born_friendly || !mons_friendly(mon))
         && !mons_aligned(killer_index, monster_index(victim)))
     {
-        if (mons->gain_exp(experience))
+        if (mon->gain_exp(experience))
         {
             // Randomly bless the follower who gained experience.
-            if (you.religion == GOD_SHINING_ONE
+            if (((you.religion == GOD_SHINING_ONE
+                && random2(you.piety) >= piety_breakpoint(0))
+                    || (you.religion == GOD_BEOGH
+                        && random2(you.piety) >= piety_breakpoint(2)))
                 && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0)
                 && !one_chance_in(3))
             {
-                bless_follower(GOD_SHINING_ONE, is_tso_follower, mons);
-            }
-
-            // Randomly bless the follower who gained experience.
-            if (you.religion == GOD_BEOGH
-                && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(2)
-                && !one_chance_in(3))
-            {
-                bless_follower(GOD_BEOGH, is_orcish_follower, mons);
+                bless_follower(mon);
             }
         }
     }
@@ -894,7 +887,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 && (!player_under_penance()
                     && random2(you.piety) >= piety_breakpoint(2)))
             {
-                bless_follower(GOD_BEOGH, is_orcish_follower);
+                bless_follower();
             }
 
             if (you.duration[DUR_DEATH_CHANNEL]
@@ -1024,7 +1017,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                       false );
                     }
                     else
-                        bless_follower(GOD_SHINING_ONE, is_tso_follower, mon);
+                        bless_follower(mon);
                 }
 
                 // Randomly bless the follower who killed.
@@ -1036,7 +1029,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && !invalid_monster_index(i))
                 {
                     monsters *mon = &menv[i];
-                    bless_follower(GOD_BEOGH, is_orcish_follower, mon);
+                    bless_follower(mon);
                 }
 
             }

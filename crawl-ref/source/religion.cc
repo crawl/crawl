@@ -759,6 +759,43 @@ static void give_nemelex_gift()
     }
 }
 
+bool is_tso_follower(const monsters* mon)
+{
+    // Don't check for evil or unholy allies here, as that's done
+    // elsewhere.
+    return (mon->alive()
+        && (mon->attitude == ATT_FRIENDLY
+            || mon->has_ench(ENCH_CHARM)));
+}
+
+bool is_orcish_follower(const monsters* mon)
+{
+    return (mon->alive() && mons_species(mon->type) == MONS_ORC
+        && mon->attitude == ATT_FRIENDLY
+        && (mon->flags & MF_GOD_GIFT));
+}
+
+bool is_follower(const monsters* mon)
+{
+    bool result = false;
+
+    switch (you.religion)
+    {
+        case GOD_SHINING_ONE:
+            result = is_tso_follower(mon);
+            break;
+
+        case GOD_BEOGH:
+            result = is_orcish_follower(mon);
+            break;
+
+        default:
+            break;
+    }
+
+    return result;
+}
+
 static bool blessing_wpn(monsters *mon)
 {
     // Pick a monster's weapon.
@@ -942,9 +979,9 @@ static bool beogh_blessing_priesthood(monsters* mon)
 
 // Bless the follower indicated in follower, if any.  If there isn't
 // one, bless a random follower within sight of the player.
-void bless_follower(god_type god,
-                    bool (*suitable)(const monsters* mon),
-                    monsters* follower)
+void bless_follower(monsters* follower,
+                    god_type god,
+                    bool (*suitable)(const monsters* mon))
 {
     monsters *mon;
 
@@ -3797,22 +3834,6 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
     // to avoid immobile "followers"
     behaviour_event(orc, ME_ALERT, MHITNOT);
-}
-
-bool is_tso_follower(const monsters* mon)
-{
-    // Don't check for evil or unholy allies here, as that's done
-    // elsewhere.
-    return (mon->alive()
-        && (mon->attitude == ATT_FRIENDLY
-            || mon->has_ench(ENCH_CHARM)));
-}
-
-bool is_orcish_follower(const monsters* mon)
-{
-    return (mon->alive() && mons_species(mon->type) == MONS_ORC
-        && mon->attitude == ATT_FRIENDLY
-        && (mon->flags & MF_GOD_GIFT));
 }
 
 void excommunication(god_type new_god)

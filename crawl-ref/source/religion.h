@@ -71,11 +71,12 @@ bool ely_destroy_weapons();
 bool trog_burn_books();
 bool tso_stab_safe_monster(const actor *act);
 
-void bless_follower(god_type god,
-                    bool (*suitable)(const monsters* mon),
-                    monsters* follower = NULL);
 bool is_tso_follower(const monsters* mon);
 bool is_orcish_follower(const monsters* mon);
+bool is_follower(const monsters* mon);
+void bless_follower(monsters* follower = NULL,
+                    god_type god = you.religion,
+                    bool (*suitable)(const monsters* mon) = is_follower);
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 
