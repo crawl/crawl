@@ -4277,7 +4277,7 @@ static void _finish_inven_data(int n, int *tiles, int *num, int *idx,
             q = -1;
 
         if ( type == OBJ_WANDS
-             && (!(itm->flags & ISFLAG_KNOW_PLUSES )
+             && ((itm->flags & ISFLAG_KNOW_PLUSES )
                  || itm->plus2 == ZAPCOUNT_EMPTY) )
         {
             q = itm->plus;
