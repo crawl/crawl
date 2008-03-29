@@ -1075,8 +1075,8 @@ const char *dngn_feature_names[] =
     "open_door", "", "", "trap_mechanical", "trap_magical", "trap_natural",
     "undiscovered_trap", "", "enter_shop", "enter_labyrinth",
     "stone_stairs_down_i", "stone_stairs_down_ii",
-    "stone_stairs_down_iii", "rock_stairs_down", "stone_stairs_up_i",
-    "stone_stairs_up_ii", "stone_stairs_up_iii", "rock_stairs_up", "",
+    "stone_stairs_down_iii", "escape_hatch_down", "stone_stairs_up_i",
+    "stone_stairs_up_ii", "stone_stairs_up_iii", "escape_hatch_up", "",
     "", "enter_dis", "enter_gehenna", "enter_cocytus",
     "enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
     "enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
@@ -1366,7 +1366,7 @@ static int dgn_fixup_stairs(lua_State *ls)
         for (int x = 0; x < GXM; ++x)
         {
             const dungeon_feature_type feat = grd[x][y];
-            if (grid_is_stone_stair(feat) || grid_is_rock_stair(feat))
+            if (grid_is_stone_stair(feat) || grid_is_escape_hatch(feat))
             {
                 dungeon_feature_type new_feat = DNGN_UNSEEN;
 

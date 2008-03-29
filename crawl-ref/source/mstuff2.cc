@@ -56,7 +56,7 @@ static int monster_abjuration(const monsters *mons, bool test);
 //     to be some sort of trap prior to function call: {dlb}
 void mons_trap(struct monsters *monster)
 {
-    if (!is_trap_square(monster->x, monster->y))
+    if (!is_trap_square(grd[monster->x][monster->y]))
         return;
 
     int temp_rand = 0;          // probability determination {dlb}

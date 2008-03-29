@@ -2643,7 +2643,7 @@ bool is_feature(int feature, int x, int y)
     case '<':
         switch (grid)
         {
-        case DNGN_ROCK_STAIRS_UP:
+        case DNGN_ESCAPE_HATCH_UP:
         case DNGN_STONE_STAIRS_UP_I:
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
@@ -2668,7 +2668,7 @@ bool is_feature(int feature, int x, int y)
     case '>':
         switch (grid)
         {
-        case DNGN_ROCK_STAIRS_DOWN:
+        case DNGN_ESCAPE_HATCH_DOWN:
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
@@ -3840,7 +3840,7 @@ void init_feature_table( void )
             Feature[i].seen_colour = EC_SHIMMER_BLUE;
             break;            
 
-        case DNGN_ROCK_STAIRS_DOWN:
+        case DNGN_ESCAPE_HATCH_DOWN:
             Feature[i].dchar = DCHAR_STAIRS_DOWN;
             Feature[i].colour = BROWN;
             Feature[i].map_colour = BROWN;
@@ -3856,7 +3856,7 @@ void init_feature_table( void )
             Feature[i].seen_em_colour = WHITE;
             break;
 
-        case DNGN_ROCK_STAIRS_UP:
+        case DNGN_ESCAPE_HATCH_UP:
             Feature[i].dchar = DCHAR_STAIRS_UP;
             Feature[i].colour = BROWN;
             Feature[i].map_colour = BROWN;
@@ -4521,9 +4521,11 @@ void viewwindow(bool draw_it, bool do_updates)
                     const int object = env.show(ep);
                     if (object && Options.tutorial_left)
                     {
-                        if (grid_is_rock_stair(grd(gc)))
-                            learned_something_new(
-                                TUT_SEEN_ESCAPE_HATCH, gc.x, gc.y);
+                        if (grid_is_escape_hatch(grd(gc)))
+                        {
+                            learned_something_new(TUT_SEEN_ESCAPE_HATCH,
+                                                  gc.x, gc.y);
+                        }
                         else if (is_feature('>', gc.x, gc.y))
                             learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
                         else if (is_feature('_', gc.x, gc.y))

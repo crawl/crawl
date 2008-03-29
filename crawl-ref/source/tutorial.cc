@@ -2148,8 +2148,8 @@ bool tutorial_feat_interesting(dungeon_feature_type feat)
        case DNGN_STONE_STAIRS_UP_I:
        case DNGN_STONE_STAIRS_UP_II:
        case DNGN_STONE_STAIRS_UP_III:
-       case DNGN_ROCK_STAIRS_DOWN:
-       case DNGN_ROCK_STAIRS_UP:
+       case DNGN_ESCAPE_HATCH_DOWN:
+       case DNGN_ESCAPE_HATCH_UP:
             return true;
        default:
             return false;
@@ -2220,8 +2220,8 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             Options.tutorial_events[TUT_SEEN_STAIRS] = 0;
             break;
 
-       case DNGN_ROCK_STAIRS_DOWN:
-       case DNGN_ROCK_STAIRS_UP:
+       case DNGN_ESCAPE_HATCH_DOWN:
+       case DNGN_ESCAPE_HATCH_UP:
             ostr << "Escape hatches can be used to quickly leave a level with "
                     "<w><<</w> and <w>></w>, respectively. Note that "
                     "you will usually be unable to return right away.";

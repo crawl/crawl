@@ -210,8 +210,8 @@ void place_transiting_items()
             pos.y = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
         }
            
-        const coord_def where_to_go =
-            dgn_find_nearby_stair(DNGN_ROCK_STAIRS_DOWN, pos, true);
+        const coord_def where_to_go
+            = dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN, pos, true);
 
         // List of items we couldn't place
         if (!copy_item_to_grid(*item, where_to_go.x, where_to_go.y))
@@ -258,7 +258,7 @@ bool follower::place(bool near_player)
             && in_bounds(m.pos()))
         {
             const coord_def where_to_go =
-                dgn_find_nearby_stair(DNGN_ROCK_STAIRS_DOWN,
+                dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
                                       m.pos(), true);
 
             if (monster_habitable_grid(&m, grd(where_to_go)))

@@ -741,13 +741,13 @@ static void place_player_on_stair(branch_type old_branch,
         stair_taken = DNGN_STONE_STAIRS_UP_I;
     }
     else if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I 
-             && stair_taken <= DNGN_ROCK_STAIRS_DOWN)
+             && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
     {
         // look for coresponding up stair
         stair_taken += (DNGN_STONE_STAIRS_UP_I - DNGN_STONE_STAIRS_DOWN_I);
     }
     else if (stair_taken >= DNGN_STONE_STAIRS_UP_I 
-             && stair_taken <= DNGN_ROCK_STAIRS_UP)
+             && stair_taken <= DNGN_ESCAPE_HATCH_UP)
     {
         // look for coresponding down stair
         stair_taken += (DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I);
@@ -778,7 +778,7 @@ static void place_player_on_stair(branch_type old_branch,
     }
     else if (stair_taken == DNGN_EXIT_PORTAL_VAULT)
     {
-        stair_taken = DNGN_ROCK_STAIRS_DOWN;
+        stair_taken = DNGN_ESCAPE_HATCH_DOWN;
     }
     else if (stair_taken == DNGN_ENTER_LABYRINTH)
     {

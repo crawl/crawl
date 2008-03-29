@@ -553,7 +553,7 @@ static dungeon_feature_type find_appropriate_stairs(bool down)
             if (down)
                 return DNGN_STONE_STAIRS_DOWN_I;
             else
-                return DNGN_ROCK_STAIRS_UP;
+                return DNGN_ESCAPE_HATCH_UP;
         }
         else
         {
@@ -572,7 +572,7 @@ static dungeon_feature_type find_appropriate_stairs(bool down)
             return DNGN_UNSEEN;
         }
         else
-            return DNGN_ROCK_STAIRS_UP;
+            return DNGN_ESCAPE_HATCH_UP;
         break;
 
     case LEVEL_ABYSS:
@@ -3117,8 +3117,7 @@ void debug_make_trap()
 
     place_specific_trap(you.x_pos, you.y_pos, trap);
 
-    mprf("Created a %s trap, marked it undiscovered",
-            trap_name(trap));
+    mprf("Created a %s trap, marked it undiscovered", trap_name(trap));
 }
 
 void debug_make_shop()
@@ -3380,8 +3379,10 @@ void debug_kill_traps()
 {
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
-            if (grid_is_trap(grd[x][y]) || grd[x][y] == DNGN_UNDISCOVERED_TRAP)
+        {
+            if (is_trap_square(grd[x][y]))
                 grd[x][y] = DNGN_FLOOR;
+        }
 }
 
 static int debug_time_explore()

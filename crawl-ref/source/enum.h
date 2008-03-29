@@ -875,6 +875,7 @@ enum dungeon_feature_type
 
     DNGN_LAVA = 61,                    //   61
     DNGN_DEEP_WATER,                   //   62
+    
     DNGN_SHALLOW_WATER = 65,           //   65
     DNGN_WATER_STUCK,
 
@@ -884,6 +885,7 @@ enum dungeon_feature_type
     DNGN_EXIT_HELL,                    //   70
     DNGN_ENTER_HELL,                   //   71
     DNGN_OPEN_DOOR,                    //   72
+    
     DNGN_TRAP_MECHANICAL = 75,         //   75
     DNGN_TRAP_MAGICAL,
     DNGN_TRAP_NATURAL,
@@ -895,13 +897,13 @@ enum dungeon_feature_type
     DNGN_STONE_STAIRS_DOWN_I,
     DNGN_STONE_STAIRS_DOWN_II,
     DNGN_STONE_STAIRS_DOWN_III,
-    DNGN_ROCK_STAIRS_DOWN,             //  85 - now escape hatch (Stonesoup 0.3)
+    DNGN_ESCAPE_HATCH_DOWN,            //  85 - was: rock stairs (Stonesoup 0.3)
 
     // corresponding up stairs (same order as above)
     DNGN_STONE_STAIRS_UP_I,
     DNGN_STONE_STAIRS_UP_II,
     DNGN_STONE_STAIRS_UP_III,
-    DNGN_ROCK_STAIRS_UP,               //  89 - now escape hatch (Stonesoup 0.3)
+    DNGN_ESCAPE_HATCH_UP,              //  89 - was: rock stairs (Stonesoup 0.3)
 
     // Various gates
     DNGN_ENTER_DIS = 92,               //   92

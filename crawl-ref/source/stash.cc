@@ -245,8 +245,8 @@ bool Stash::is_boring_feature(dungeon_feature_type feat)
     case DNGN_LAVA: case DNGN_OPEN_DOOR: case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II: case DNGN_STONE_STAIRS_DOWN_III:
     case DNGN_STONE_STAIRS_UP_I: case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III: case DNGN_ROCK_STAIRS_DOWN:
-    case DNGN_ROCK_STAIRS_UP: case DNGN_ENTER_SHOP:
+    case DNGN_STONE_STAIRS_UP_III: case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_ESCAPE_HATCH_UP: case DNGN_ENTER_SHOP:
     case DNGN_UNDISCOVERED_TRAP:
         return (true);
     default:

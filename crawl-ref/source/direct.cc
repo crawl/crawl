@@ -1267,8 +1267,10 @@ static char find_square( int xps, int yps,
                                false, next_los(direction, los, wrap));
         }
         if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
+        {
             return find_square(minx, maxy, mfp, direction, find_targ, mode,
                                false, next_los(direction, los, wrap));
+        }
 
         if (direction == 1)
         {
@@ -1644,9 +1646,9 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("Floor");
     case DNGN_OPEN_DOOR:
         return ("open door");
-    case DNGN_ROCK_STAIRS_DOWN:
+    case DNGN_ESCAPE_HATCH_DOWN:
         return ("escape hatch in the floor");
-    case DNGN_ROCK_STAIRS_UP:
+    case DNGN_ESCAPE_HATCH_UP:
         return ("escape hatch in the ceiling");
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:

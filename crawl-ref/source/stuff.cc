@@ -1306,7 +1306,7 @@ int near_stairs(const coord_def &p, int max_dist,
             if (is_stair(feat))
             {
                 // shouldn't happen for escape hatches
-                if (grid_is_rock_stair(feat))
+                if (grid_is_escape_hatch(feat))
                     continue;
 
                 stair_type = get_feature_dchar(feat);
@@ -1333,10 +1333,10 @@ int near_stairs(const coord_def &p, int max_dist,
     return false;
 }
 
-bool is_trap_square(int x, int y)
+bool is_trap_square(dungeon_feature_type grid)
 {
-    return (grd[x][y] >= DNGN_TRAP_MECHANICAL
-        && grd[x][y] <= DNGN_UNDISCOVERED_TRAP);
+    return (grid >= DNGN_TRAP_MECHANICAL
+            && grid <= DNGN_UNDISCOVERED_TRAP);
 }
 
 // Does the equivalent of KILL_RESET on all monsters in LOS. Should only be

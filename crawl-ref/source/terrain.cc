@@ -54,16 +54,9 @@ bool grid_is_stone_stair(dungeon_feature_type grid)
     }
 }
 
-bool grid_is_rock_stair(dungeon_feature_type grid)
+bool grid_is_escape_hatch(dungeon_feature_type grid)
 {
-    switch (grid)
-    {
-    case DNGN_ROCK_STAIRS_UP:
-    case DNGN_ROCK_STAIRS_DOWN:
-        return (true);
-    default:
-        return (false);
-    }
+    return (grid == DNGN_ESCAPE_HATCH_UP || grid == DNGN_ESCAPE_HATCH_DOWN);
 }
 
 bool grid_sealable_portal(dungeon_feature_type grid)
@@ -93,7 +86,7 @@ command_type grid_stair_direction(dungeon_feature_type grid)
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_ROCK_STAIRS_UP:
+    case DNGN_ESCAPE_HATCH_UP:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -122,7 +115,7 @@ command_type grid_stair_direction(dungeon_feature_type grid)
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_ROCK_STAIRS_DOWN:
+    case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_ENTER_DIS:
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
@@ -193,7 +186,7 @@ bool grid_is_permarock(dungeon_feature_type grid)
 bool grid_is_trap(dungeon_feature_type grid)
 {
     return (grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_MAGICAL
-              || grid == DNGN_TRAP_NATURAL);
+            || grid == DNGN_TRAP_NATURAL);
 }
 
 bool grid_is_water( dungeon_feature_type grid )

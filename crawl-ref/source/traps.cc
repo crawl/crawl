@@ -1112,10 +1112,11 @@ static trap_type random_trap_default(int level_number, const level_id &place)
 
     // Note we're boosting arrow trap numbers by moving it
     // down the list, and making spear and axe traps rarer.
-    if (type == TRAP_DART?
-        random2(1 + level_number) > 2
-        : one_chance_in(7))
+    if (type == TRAP_DART ? random2(1 + level_number) > 2
+                          : one_chance_in(7))
+    {
         type = TRAP_ARROW;
+    }
         
     if ((type == TRAP_DART || type == TRAP_ARROW) && one_chance_in(15))
         type = TRAP_NET;

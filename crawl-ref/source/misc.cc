@@ -645,7 +645,7 @@ void merfolk_start_swimming(void)
 
 static void exit_stair_message(dungeon_feature_type stair, bool /* going_up */)
 {
-    if (grid_is_rock_stair(stair))
+    if (grid_is_escape_hatch(stair))
         mpr("The hatch slams shut behind you.");
 }
 
@@ -657,7 +657,7 @@ static void climb_message(dungeon_feature_type stair, bool going_up,
 
     if (grid_is_portal(stair))
         mpr("The world spins around you as you enter the gateway.");
-    else if (grid_is_rock_stair(stair))
+    else if (grid_is_escape_hatch(stair))
     {
         if (going_up)
             mpr("A mysterious force pulls you upwards.");
@@ -806,7 +806,7 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     if (you.burden_state == BS_OVERLOADED
-        && !grid_is_rock_stair(stair_find))
+        && !grid_is_escape_hatch(stair_find))
     {
         mpr("You are carrying too much to climb upwards.");
         you.turn_is_over = true;
@@ -1045,7 +1045,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     }
 
     if (stair_find >= DNGN_ENTER_LABYRINTH
-        && stair_find <= DNGN_ROCK_STAIRS_DOWN
+        && stair_find <= DNGN_ESCAPE_HATCH_DOWN
         && player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
         mpr("A mysterious force prevents you from descending the staircase.");
@@ -1260,7 +1260,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (!player_is_airborne()
         && you.duration[DUR_CONF] 
-        && !grid_is_rock_stair(stair_find)
+        && !grid_is_escape_hatch(stair_find)
         && random2(100) > you.dex)
     {
         mpr("In your confused state, you trip and fall down the stairs.");
@@ -1288,7 +1288,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         stair_taken = DNGN_TRANSIT_PANDEMONIUM;
 
     if (shaft)
-        stair_taken = DNGN_ROCK_STAIRS_DOWN;
+        stair_taken = DNGN_ESCAPE_HATCH_DOWN;
 
     switch (you.level_type)
     {

@@ -116,8 +116,8 @@ static signed char curr_traps[GXM][GYM];
 static FixedArray< map_cell, GXM, GYM >  mapshadow;
 
 const signed char TRAVERSABLE = 1;
-const signed char IMPASSABLE = 0;
-const signed char FORBIDDEN = -1;
+const signed char IMPASSABLE  = 0;
+const signed char FORBIDDEN   = -1;
 
 // Map of terrain types that are traversable.
 static signed char traversable_terrain[256];
@@ -147,8 +147,12 @@ inline bool is_trap(int x, int y)
 // Returns true if this feature takes extra time to cross.
 inline int feature_traverse_cost(dungeon_feature_type feature)
 {
-    return (feature == DNGN_SHALLOW_WATER || feature == DNGN_CLOSED_DOOR? 2 :
-            grid_is_trap(feature) ? 3 : 1);
+    if (feature == DNGN_SHALLOW_WATER || feature == DNGN_CLOSED_DOOR)
+        return 2;
+    else if (grid_is_trap(feature))
+        return 3;
+        
+    return 1;
 }
 
 // Returns true if the dungeon feature supplied is an altar.
@@ -566,11 +570,11 @@ void initialise_travel()
     traversable_terrain[DNGN_STONE_STAIRS_DOWN_I] =
     traversable_terrain[DNGN_STONE_STAIRS_DOWN_II] =
     traversable_terrain[DNGN_STONE_STAIRS_DOWN_III] =
-    traversable_terrain[DNGN_ROCK_STAIRS_DOWN] =
+    traversable_terrain[DNGN_ESCAPE_HATCH_DOWN] =
     traversable_terrain[DNGN_STONE_STAIRS_UP_I] =
     traversable_terrain[DNGN_STONE_STAIRS_UP_II] =
     traversable_terrain[DNGN_STONE_STAIRS_UP_III] =
-    traversable_terrain[DNGN_ROCK_STAIRS_UP] =
+    traversable_terrain[DNGN_ESCAPE_HATCH_UP] =
     traversable_terrain[DNGN_ENTER_DIS] =
     traversable_terrain[DNGN_ENTER_GEHENNA] =
     traversable_terrain[DNGN_ENTER_COCYTUS] =
@@ -695,11 +699,11 @@ bool is_travelable_stair(dungeon_feature_type gridc)
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_ROCK_STAIRS_DOWN:
+    case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_ROCK_STAIRS_UP:
+    case DNGN_ESCAPE_HATCH_UP:
     case DNGN_ENTER_DIS:
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
@@ -2640,11 +2644,11 @@ static int find_transtravel_stair(  const level_id &cur,
 
             const level_pos &dest = si.destination;
 
-            // Never use rock stairs as the last leg of the trip, since
+            // Never use escape hatches as the last leg of the trip, since
             // that will leave the player unable to retrace their path.
             // This does not apply if we have a destination with a specific
             // position on the target level travel wants to get to.
-            if (grid_is_rock_stair(si.grid)
+            if (grid_is_escape_hatch(si.grid)
                 && target.pos.x == -1
                 && dest.id == target.id)
             {
@@ -2946,11 +2950,11 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     switch (gridc)
     {
     case DNGN_STONE_STAIRS_DOWN_I:   case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III: case DNGN_ROCK_STAIRS_DOWN:
+    case DNGN_STONE_STAIRS_DOWN_III: case DNGN_ESCAPE_HATCH_DOWN:
         id.depth++;
         break;
     case DNGN_STONE_STAIRS_UP_I:     case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:   case DNGN_ROCK_STAIRS_UP:
+    case DNGN_STONE_STAIRS_UP_III:   case DNGN_ESCAPE_HATCH_UP:
         id.depth--;
         break;
     default:
