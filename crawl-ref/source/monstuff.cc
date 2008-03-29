@@ -410,6 +410,15 @@ static void _give_monster_experience( monsters *victim,
         if (mons->gain_exp(experience))
         {
             // Randomly bless the follower who gained experience.
+            if (you.religion == GOD_SHINING_ONE
+                && !player_under_penance()
+                && random2(you.piety) >= piety_breakpoint(0)
+                && !one_chance_in(3))
+            {
+                bless_follower(GOD_SHINING_ONE, is_tso_follower, mons);
+            }
+
+            // Randomly bless the follower who gained experience.
             if (you.religion == GOD_BEOGH
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(2)
