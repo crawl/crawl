@@ -52,7 +52,7 @@
 #include "version.h"
 #include "view.h"
 
-static void adjust_item(void);
+static void _adjust_item(void);
 static void adjust_spells(void);
 static void adjust_ability(void);
 static void list_wizard_commands();
@@ -107,7 +107,7 @@ void adjust(void)
     const int keyin = tolower( get_ch() );
 
     if (keyin == 'i')
-        adjust_item();
+        _adjust_item();
     else if (keyin == 's')
         adjust_spells();
     else if (keyin == 'a')
@@ -152,18 +152,11 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
     {
         you.wield_change = true;
-        you.quiver_change = true;
     }
-    if (!you.quiver_change)
-    {
-        int quiver = you.quiver[get_quiver_type()];
-        if (to_slot == quiver || from_slot == quiver)
-            you.quiver_change = true;
-    }
-
+    you.quiver_change = true;
 }
 
-static void adjust_item(void)
+static void _adjust_item(void)
 {
     int from_slot, to_slot;
 
@@ -195,7 +188,7 @@ static void adjust_item(void)
     }
 
     swap_inv_slots(from_slot, to_slot, true);
-}                               // end adjust_item()
+}                               // end _adjust_item()
 
 static void adjust_spells(void)
 {

@@ -253,6 +253,7 @@ message_colour = yellow:fails to return
 # fire_order = launcher, return
 # fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger
 # fire_order += inscribed
+# fire_quiver_best = false
 
 ##### 4-l	Channels ##############################
 #

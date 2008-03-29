@@ -547,7 +547,7 @@ you might find in the course of your adventures, how these are
 displayed, and what commands there are to use them:
 
 )       weapons         (use 'w'ield)
-(       ammunition      (use 'f'ire)
+(       missiles        (use 'f'ire)
 [       armour          (use 'W'ear and 'T'ake off)
 %       food            (use 'e'at; also 'c'hop up corpses)
 ?       scrolls         (use 'r'ead)
@@ -657,21 +657,28 @@ You can press ')' to show your primary (wielded) and secondary
 (slot b) weapons, as well as the preferred missiles (to be shot when 
 using 'f' to fire).
 
-( Ammunition
-------------
+( Missiles
+----------
+
+(The following section assumes the option setting 
+fire_quiver_best = false, which is the default.)
+
 If you would rather pick off monsters from a safe distance, you will
-need ammunition for your sling, bow, or other appropriate launcher.
-Several kinds of ammunition, such as javelins, are effective when simply
+need missiles for your sling, bow, or other appropriate launcher.
+Several kinds of missiles, such as javelins, are effective when simply
 thrown; other kinds require you to wield an appropriate device to
-inflict worthwhile damage. Ammunition has only one "plus" value, which
+inflict worthwhile damage. Missiles have only one "plus" value, which
 affects both accuracy and damage.
 
-The 'f' command fires or throws a piece of ammunition, typically
-chosen from lots suitable for your weapon and defaulting to the last
-lot you fired with that weapon (your "quiver"). Note that the item you
-will shoot with 'f' is displayed on the main screen beneath your
-wielded weapon. See Appendix 6 (Inscriptions) for inscriptions which
-let you fine-tune the list of items to choose from.
+The 'f' command fires or throws a missile, typically chosen from lots
+suitable for your weapon. The default lot (your "quiver") is displayed
+on the main screen beneath your wielded weapon. It is either the
+previous item you fired, or the "best" available lot, depending on an
+option setting.
+
+See Appendix 6 (Inscriptions) for inscriptions which let you fine-tune
+the list of items to choose from. See also the "Missiles" section of
+crawl_options.txt.
 
 The firing interface also allows you to manually select an item to
 throw with 'i'; but it may not be very effective if you lack the
@@ -681,7 +688,7 @@ this way, it is assumed to be a one-time use, and your quiver will not
 be changed.
 
 Use the '(' command if you want to change your quiver without
-firing.
+firing. Note that this only applies if you 
 
 The interface for shooting or throwing things is also used for zapping
 wands and casting certain spells, and is described in detail in

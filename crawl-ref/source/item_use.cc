@@ -1359,11 +1359,13 @@ int get_current_fire_item()
     if (fire_order.size() == 0)
         return ENDOFPACK;
 
-    const int q = you.quiver[get_quiver_type()];
-    for (unsigned i = 0; i < fire_order.size(); i++)
-        if (q == fire_order[i])
-            return q;
-
+    if (! Options.fire_quiver_best)
+    {
+        const int q = you.quiver[get_quiver_type()];
+        for (unsigned i = 0; i < fire_order.size(); i++)
+            if (q == fire_order[i])
+                return q;
+    }
     return fire_order[0];
 }
 

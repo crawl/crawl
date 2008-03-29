@@ -2377,6 +2377,11 @@ void process_command( command_type cmd )
 
     case CMD_CYCLE_QUIVER_FORWARD:
     {
+        if (Options.fire_quiver_best)
+        {
+            mpr("Use fire_quiver_best=false if you want manual quiver control.");
+            break;
+        }
         const int cur = you.quiver[get_quiver_type()];
         if (cur != ENDOFPACK)
         {

@@ -767,6 +767,7 @@ void game_options::reset_options()
     flush_input[ FLUSH_LUA ]            = true;
 
     fire_items_start       = 0;           // start at slot 'a'
+    fire_quiver_best       = false;
 
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
@@ -1997,9 +1998,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             fire_items_start = letter_to_index( field[0] ); 
         else
         {
-            fprintf( stderr, "Bad fire item start index -- %s\n",
+            fprintf( stderr, "Bad fire item start index: %s\n",
                      field.c_str() );
         }
+    }
+    else if (key == "fire_quiver_best")
+    {
+        fire_quiver_best = _read_bool(field, fire_quiver_best);
     }
     else if (key == "assign_item_slot")
     {
