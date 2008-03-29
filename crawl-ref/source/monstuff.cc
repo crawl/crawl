@@ -658,7 +658,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         !silent && mons_near(monster) && player_monster_visible(monster);
     bool in_transit = false;
     const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
-    const bool drop_items = !hard_reset;
+    bool drop_items = !hard_reset;
     const bool gives_xp = !monster->has_ench(ENCH_ABJ);
 
 #ifdef DGL_MILESTONES
@@ -839,9 +839,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     did_god_conduct(DID_KILL_PRIEST,
                                     monster->hit_dice, true, monster);
 
+                // Holy beings take their gear with them when they die.
                 if (mons_is_holy(monster))
+                {
                     did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
                                     true, monster);
+                    drop_items = false;
+                }
 
                 if (was_neutral)
                     did_god_conduct(DID_KILL_NEUTRAL, monster->hit_dice,
