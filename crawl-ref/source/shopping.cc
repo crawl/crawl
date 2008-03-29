@@ -15,6 +15,7 @@
 #include "AppHdr.h"
 #include "chardump.h"
 #include "shopping.h"
+#include "message.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,12 +43,25 @@
 #include "stuff.h"
 #include "view.h"
 
-static void in_a_shop(int shopidx);
-static void more3();
-static void purchase( int shop, int item_got, int cost, bool id);
-static void shop_print(const char *shoppy, int sh_line);
+static void _in_a_shop(int shopidx);
+static void _purchase( int shop, int item_got, int cost, bool id);
 
-static std::string hyphenated_suffix(char prev, char last)
+static void _shop_print( const char *shoppy, int line )
+{
+    cgotoxy(1, line+1, GOTO_MSG);
+    cprintf("%s", shoppy);
+    clear_to_end_of_line();
+}
+
+static void _shop_more()
+{
+    cgotoxy(70, 2, GOTO_MSG);
+    cprintf("-more-");
+    get_ch();
+    return;
+}
+
+static std::string _hyphenated_suffix(char prev, char last)
 {
     std::string s;
     if (prev > last + 2)
@@ -60,7 +74,7 @@ static std::string hyphenated_suffix(char prev, char last)
     return (s);
 }
 
-static std::string purchase_keys(const std::string &s)
+static std::string _purchase_keys(const std::string &s)
 {
     if (s.empty())
         return "";
@@ -73,22 +87,22 @@ static std::string purchase_keys(const std::string &s)
             continue;
 
         char prev = s[i - 1];
-        list += hyphenated_suffix(prev, last);
+        list += _hyphenated_suffix(prev, last);
         list += (last = s[i]);
     }
 
-    list += hyphenated_suffix( s[s.length() - 1], last );
+    list += _hyphenated_suffix( s[s.length() - 1], last );
     list += "</w>";
     return (list);
 }
 
-static void list_shop_keys(const std::string &purchasable)
+static void _list_shop_keys(const std::string &purchasable)
 {
     char buf[200];
     const int numlines = get_number_of_lines();
     cgotoxy(1, numlines - 1);
 
-    std::string pkeys = purchase_keys(purchasable);
+    std::string pkeys = _purchase_keys(purchasable);
     if (!pkeys.empty())
         pkeys = "[" + pkeys + "] Buy Item";
 
@@ -108,7 +122,7 @@ static void list_shop_keys(const std::string &purchasable)
     fs.display();
 }
 
-static std::vector<int> shop_stock(int shopidx)
+static std::vector<int> _shop_get_stock(int shopidx)
 {
     std::vector<int> result;
     
@@ -122,7 +136,7 @@ static std::vector<int> shop_stock(int shopidx)
     return result;
 }
 
-static int shop_item_value(const item_def& item, int greed, bool id)
+static int _shop_get_item_value(const item_def& item, int greed, bool id)
 {
     int result = (greed * item_value(item, id) / 10);
     if ( you.duration[DUR_BARGAIN] ) // 20% discount
@@ -137,7 +151,7 @@ static int shop_item_value(const item_def& item, int greed, bool id)
     return result;
 }
 
-static std::string shop_print_stock( const std::vector<int>& stock,
+static std::string _shop_print_stock( const std::vector<int>& stock,
                                      const shop_struct& shop )
 {
     ShopInfo &si = StashTrack.get_shop(shop.x, shop.y);
@@ -145,7 +159,7 @@ static std::string shop_print_stock( const std::vector<int>& stock,
     std::string purchasable;
     for (unsigned int i = 0; i < stock.size(); ++i)
     {
-        const int gp_value = shop_item_value(mitm[stock[i]], shop.greed, id);
+        const int gp_value = _shop_get_item_value(mitm[stock[i]], shop.greed, id);
         const bool can_afford = (you.gold >= gp_value);
 
         cgotoxy(1, i+1);
@@ -166,20 +180,17 @@ static std::string shop_print_stock( const std::vector<int>& stock,
     return purchasable;
 }
 
-static void in_a_shop( int shopidx )
+static void _in_a_shop( int shopidx )
 {
     const shop_struct& shop = env.shop[shopidx];
 
     cursor_control coff(false);
 
-#ifdef USE_TILE
     clrscr();
-#endif
 
     const std::string hello = "Welcome to " + shop_name(shop.x, shop.y) + "!";
-    shop_print(hello.c_str(), 20);
-
-    more3();    
+    _shop_print(hello.c_str(), 1);
+    _shop_more();    
     
     const bool id_stock = shoptype_identifies_stock(shop.type);
  
@@ -187,28 +198,28 @@ static void in_a_shop( int shopidx )
     {
         StashTrack.get_shop(shop.x, shop.y).reset();
         
-        std::vector<int> stock = shop_stock(shopidx);
+        std::vector<int> stock = _shop_get_stock(shopidx);
 
         clrscr();
         if ( stock.empty() )
         {
-            shop_print("I'm sorry, my shop is empty now.", 20);
-            more3();
+            _shop_print("I'm sorry, my shop is empty now.", 1);
+            _shop_more();
             return;
         }
             
-        const std::string purchasable = shop_print_stock(stock, shop);
-        list_shop_keys(purchasable);
+        const std::string purchasable = _shop_print_stock(stock, shop);
+        _list_shop_keys(purchasable);
             
         snprintf( info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
                   (you.gold == 1) ? "" : "s" );
         textcolor(YELLOW);
-        shop_print(info, 19);
+        _shop_print(info, 0);
 
-        snprintf( info, INFO_SIZE, "What would you like to %s?",
+        snprintf( info, INFO_SIZE, "What would you like to %s? ",
                   purchasable.length()? "purchase" : "do");
         textcolor(CYAN);
-        shop_print(info, 20);
+        _shop_print(info, 1);
             
         textcolor(LIGHTGREY);
 
@@ -221,7 +232,7 @@ static void in_a_shop( int shopidx )
         else if (ft == 'v')
         {
             textcolor(CYAN);
-            shop_print("Examine which item?", 20);
+            _shop_print("Examine which item?", 1);
             textcolor(LIGHTGREY);
 
             bool is_ok = true;
@@ -240,8 +251,8 @@ static void in_a_shop( int shopidx )
 
             if ( !is_ok )
             {
-                shop_print("Huh?", 20);
-                more3();
+                _shop_print("Huh?", 1);
+                _shop_more();
                 continue;
             }
 
@@ -265,36 +276,36 @@ static void in_a_shop( int shopidx )
             invent(-1, false);
         else if ( !isalpha(ft) )
         {
-            shop_print("Huh?", 20);
-            more3();
+            _shop_print("Huh?", 1);
+            _shop_more();
         }
         else
         {
             ft = tolower(ft) - 'a';
             if (ft >= static_cast<int>(stock.size()) )
             {
-                shop_print("No such item.", 20);
-                more3();
+                _shop_print("No such item.", 1);
+                _shop_more();
                 continue;
             }
 
             item_def& item = mitm[stock[ft]];
             
-            const int gp_value = shop_item_value(item, shop.greed, id_stock);
+            const int gp_value = _shop_get_item_value(item, shop.greed, id_stock);
             if (gp_value > you.gold)
             {
-                shop_print("I'm sorry, you don't seem to have enough money.",
-                           20);
-                more3();
+                _shop_print("I'm sorry, you don't seem to have enough money.", 1);
+                _shop_more();
             }
             else
             {
-                snprintf(info, INFO_SIZE, "Purchase %s (%d gold)? [y/n]",
+                textcolor(channel_to_colour(MSGCH_PROMPT));
+                snprintf(info, INFO_SIZE, "Purchase %s (%d gold)? (y/n) ",
                          item.name(DESC_NOCAP_A).c_str(), gp_value);
-                shop_print(info, 20);
+                _shop_print(info, 1);
 
                 if ( yesno(NULL, true, 'n', false, false, true) )
-                    purchase( shopidx, stock[ft], gp_value, id_stock );
+                    _purchase( shopidx, stock[ft], gp_value, id_stock );
             }
         }
     }
@@ -308,22 +319,7 @@ bool shoptype_identifies_stock(shop_type type)
         type != SHOP_GENERAL_ANTIQUE;
 }
 
-static void shop_print( const char *shoppy, int sh_lines )
-{
-    cgotoxy(1, sh_lines, GOTO_CRT);
-    cprintf("%s", shoppy);
-    clear_to_end_of_line();
-}
-
-static void more3()
-{
-    cgotoxy(70, 20, GOTO_CRT);
-    cprintf("-more-");
-    get_ch();
-    return;
-}
-
-static void purchase( int shop, int item_got, int cost, bool id )
+static void _purchase( int shop, int item_got, int cost, bool id )
 {
     you.gold -= cost;
 
@@ -350,8 +346,8 @@ static void purchase( int shop, int item_got, int cost, bool id )
                  (quant == 1) ? "it" :
                  (num > 0) ? "the rest" : "these" );
 
-        shop_print( info, 20 );
-        more3();
+        _shop_print(info, 1);
+        _shop_more();
 
         move_item_to_grid( &item_got, env.shop[shop].x, env.shop[shop].y );
     }
@@ -461,8 +457,7 @@ int randart_value( const item_def &item )
 unsigned int item_value( item_def item, bool ident )
 {
     // Note that we pass item in by value, since we want a local
-    // copy to mangle as necessary... maybe that should be fixed,
-    // but this function isn't called too often.
+    // copy to mangle as necessary.
     item.flags = (ident) ? (item.flags | ISFLAG_IDENT_MASK) : (item.flags);
 
     int valued = 0;
@@ -1498,7 +1493,7 @@ void shop()
         return;
     }
 
-    in_a_shop(i);
+    _in_a_shop(i);
     burden_change();
     redraw_screen();
 }                               // end shop()
