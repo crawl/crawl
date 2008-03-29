@@ -345,15 +345,13 @@ std::string formatted_string::to_colour_string() const
     {
         if (ops[i] == FSOP_TEXT)
         {
-            st += ops[i].text;
-            
             // gotta double up those '<' chars ...
             unsigned int start = st.size();
-            unsigned int left_angle;
-
+            st += ops[i].text;
+            
             while (true)
             {
-                left_angle = st.find('<', start);
+                const unsigned int left_angle = st.find('<', start);
                 if (left_angle == std::string::npos)
                     break;
                     
