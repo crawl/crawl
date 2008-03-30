@@ -1141,7 +1141,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                     MSGCH_TALK );
         }
 
-        // Now that Boris is dead, he's a valid target for monster 
+        // Now that Boris is dead, he's a valid target for monster
         // creation again. -- bwr
         you.unique_creatures[ monster->type ] = false;
     }
@@ -1320,9 +1320,9 @@ void alert_nearby_monsters(void)
         // Judging from the above comment, this function isn't
         // intended to wake up monsters, so we're only going to
         // alert monsters that aren't sleeping.  For cases where an
-        // event should wake up monsters and alert them, I'd suggest 
+        // event should wake up monsters and alert them, I'd suggest
         // calling noisy() before calling this function. -- bwr
-        if (monster->type != -1 
+        if (monster->type != -1
             && monster->behaviour != BEH_SLEEP
             && mons_near(monster))
         {
@@ -1498,7 +1498,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     const bool old_mon_caught = mons_is_caught(monster);
     const char old_ench_countdown = monster->ench_countdown;
 
-    /* deal with mons_sec */
+    // deal with mons_sec
     monster->type = targetc;
     monster->number = MONS_PROGRAM_BUG;
 
@@ -1512,6 +1512,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
     monster->add_ench(abj);
     monster->add_ench(shifter);
+    // Only shapeshifters retain the charm enchantment.
     if (old_mon_shifter)
         monster->add_ench(charm);
 
@@ -1621,7 +1622,7 @@ bool monster_blink(monsters *monster)
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects();
-    
+
     return (true);
 }
 
