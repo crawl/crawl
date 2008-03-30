@@ -140,12 +140,6 @@ void print_wounds(const monsters *monster);
 
 
 /* ***********************************************************************
- * called from: fight
- * *********************************************************************** */
-bool wounded_damaged(int wound_class);
-
-
-/* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
 void handle_monsters(void);
@@ -162,29 +156,14 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor);
  * *********************************************************************** */
 bool message_current_target(void);
 
-
-/* ***********************************************************************
- * called from: xxx
- * *********************************************************************** */
 unsigned int monster_index(const monsters *monster);
 
+void mons_get_damage_level(const monsters*, std::string& desc, mon_dam_level_type&);
 
-// last updated 08jun2000 {dlb}
-/* ***********************************************************************
- * called from: bang - beam - effects - fight - monstuff - mstuff2 -
- *              spells2 - spells3 - spells4
- * *********************************************************************** */
 int hurt_monster(monsters *victim, int damage_dealt);
 
-
-/* ***********************************************************************
- * called from: beam - fight - files - monstuff - spells1
- * *********************************************************************** */
 bool heal_monster(monsters *patient, int health_boost, bool permit_growth);
 
-/* ***********************************************************************
- * called from: monplace - spells2 - view
- * *********************************************************************** */
 void seen_monster(monsters *monster);
 
 bool shift_monster(monsters *mon, int x = 0, int y = 0 );

@@ -70,6 +70,7 @@
 #include "stash.h"
 #include "xom.h"
 
+static bool _wounded_damaged(int wound_class);
 static bool _handle_special_ability(monsters *monster, bolt & beem);
 static bool _handle_pickup(monsters *monster);
 static void _handle_behaviour(monsters *monster);
@@ -793,7 +794,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             if (death_message)
             {
                 mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
-                     wounded_damaged(monster->type) ? "destroy" : "kill",
+                     _wounded_damaged(monster->type) ? "destroy" : "kill",
                      monster->name(DESC_NOCAP_THE).c_str());
 
                 if ((created_friendly || was_neutral) && gives_xp)
@@ -922,7 +923,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         case KILL_MON_MISSILE:  /* Monster kills by missile or beam */
             if (!silent)
                 simple_monster_message(monster,
-                                       wounded_damaged(monster->type) ?
+                                       _wounded_damaged(monster->type) ?
                                        " is destroyed!" : " dies!",
                                        MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
@@ -1053,7 +1054,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         case KILL_MISC:
             if (!silent)
                 simple_monster_message(monster,
-                                       wounded_damaged(monster->type) ?
+                                       _wounded_damaged(monster->type) ?
                                        " is destroyed!" : " dies!",
                                        MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
@@ -1817,8 +1818,8 @@ bool swap_places(monsters *monster)
     }
     else
     {
-        // Might not be ideal, but it's better that insta-killing
-        // the monster... maybe try for a short blinki instead? -- bwr
+        // Might not be ideal, but it's better than insta-killing
+        // the monster... maybe try for a short blink instead? -- bwr
         simple_monster_message( monster, " resists." );
         // FIXME: AI_HIT_MONSTER isn't ideal.
         interrupt_activity( AI_HIT_MONSTER, monster );
@@ -1827,12 +1828,44 @@ bool swap_places(monsters *monster)
     return (swap);
 }                               // end swap_places()
 
+void mons_get_damage_level(
+    const monsters* monster,
+    std::string& desc, mon_dam_level_type& dam_level)
+{
+    if (monster->hit_points <= monster->max_hit_points / 6)
+    {
+        desc += "almost ";
+        desc += _wounded_damaged(monster->type) ? "destroyed" : "dead";
+        dam_level = MDAM_ALMOST_DEAD;
+        return;
+    }
+
+    if (monster->hit_points <= monster->max_hit_points / 6)
+    {
+        desc += "horribly ";
+        dam_level = MDAM_HORRIBLY_DAMAGED;
+    }
+    else if (monster->hit_points <= monster->max_hit_points / 3)
+    {
+        desc += "heavily ";
+        dam_level = MDAM_HEAVILY_DAMAGED;
+    }
+    else if (monster->hit_points <= 3 * (monster-> max_hit_points / 4))
+    {
+        desc += "moderately ";
+        dam_level = MDAM_MODERATELY_DAMAGED;
+    }
+    else
+    {
+        desc += "lightly ";
+        dam_level = MDAM_LIGHTLY_DAMAGED;
+    }
+
+    desc += _wounded_damaged(monster->type) ? "damaged" : "wounded";
+}
+
 void print_wounds(const monsters *monster)
 {
-    // prevents segfault -- cannot use info[] here {dlb}
-    char str_wound[INFO_SIZE];
-    int  dam_level;
-
     if (monster->type == -1)
         return;
 
@@ -1845,57 +1878,26 @@ void print_wounds(const monsters *monster)
     if (monster_descriptor(monster->type, MDSC_NOMSG_WOUNDS))
         return;
 
-    strcpy(str_wound, " is ");
+    std::string desc;
+    mon_dam_level_type dam_level;
+    mons_get_damage_level(monster, desc, dam_level);
 
-    if (monster->hit_points <= monster->max_hit_points / 6)
-    {
-        strcat(str_wound, "almost ");
-        strcat(str_wound, wounded_damaged(monster->type) ? "destroyed"
-                                                         : "dead");
-        dam_level = MDAM_ALMOST_DEAD;
-    }
-    else
-    {
-        if (monster->hit_points <= monster->max_hit_points / 6)
-        {
-            strcat(str_wound, "horribly ");
-            dam_level = MDAM_HORRIBLY_DAMAGED;
-        }
-        else if (monster->hit_points <= monster->max_hit_points / 3)
-        {
-            strcat(str_wound, "heavily " );
-            dam_level = MDAM_HEAVILY_DAMAGED;
-        }
-        else if (monster->hit_points <= 3 * (monster-> max_hit_points / 4))
-        {
-            strcat(str_wound, "moderately ");
-            dam_level = MDAM_MODERATELY_DAMAGED;
-        }
-        else
-        {
-            strcat(str_wound, "lightly ");
-            dam_level = MDAM_LIGHTLY_DAMAGED;
-        }
-
-        strcat(str_wound, wounded_damaged(monster->type) ? "damaged"
-                                                         : "wounded");
-    }
-
-    strcat(str_wound, ".");
-    simple_monster_message(monster, str_wound, MSGCH_MONSTER_DAMAGE, dam_level);
+    desc.insert(0, " is ");
+    desc += ".";
+    simple_monster_message(monster, desc.c_str(), MSGCH_MONSTER_DAMAGE, dam_level);
 }                               // end print_wounds()
 
 // (true == 'damaged') [constructs, undead, etc.]
 // and (false == 'wounded') [living creatures, etc.] {dlb}
-bool wounded_damaged(int wound_class)
+static bool _wounded_damaged(int monster_type)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    const mon_holy_type holy = mons_class_holiness(wound_class);
+    const mon_holy_type holy = mons_class_holiness(monster_type);
     if (holy == MH_UNDEAD || holy == MH_NONLIVING || holy == MH_PLANT)
         return (true);
 
     return (false);
-}                               // end wounded_damaged()
+}                               // end _wounded_damaged()
 
 //---------------------------------------------------------------
 //
