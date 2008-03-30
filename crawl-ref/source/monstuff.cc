@@ -6467,7 +6467,7 @@ bool heal_monster(monsters * patient, int health_boost,
         return (false);
     else
     {
-        patient->hit_points += health_boost; 
+        patient->hit_points += health_boost;
 
         if (patient->hit_points > patient->max_hit_points)
         {
@@ -6526,10 +6526,10 @@ void seen_monster(monsters *monster)
 {
     if ( monster->flags & MF_SEEN )
         return;
-    
+
     // First time we've seen this particular monster
     monster->flags |= MF_SEEN;
-    
+
     if ( !mons_is_mimic(monster->type)
          && MONST_INTERESTING(monster)
          && monster->type != MONS_PANDEMONIUM_DEMON
@@ -6545,7 +6545,7 @@ void seen_monster(monsters *monster)
 //
 // shift_monster
 //
-// Moves a monster to approximately (x,y) and returns true 
+// Moves a monster to approximately (x,y) and returns true
 // if monster was moved.
 //
 //---------------------------------------------------------------
