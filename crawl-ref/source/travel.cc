@@ -251,13 +251,14 @@ bool is_exclude_root(const coord_def &p)
 // update Gmap for squares surrounding exclude centre
 static void tile_exclude_gmap_update(const coord_def p)
 {
-    for (int x = -8; x < 8; x++)
-        for (int y = -8; y < 8; y++)
+    for (int x = -8; x <= 8; x++)
+        for (int y = -8; y <= 8; y++)
         {
             int px = p.x+x, py = p.y+y;
             if (in_bounds(coord_def(px,py)))
                 GmapUpdate(px, py, env.map[px][py].glyph(), true);
         }
+        
     GmapDisplay(p.x,p.y);
 }
 #endif

@@ -911,8 +911,10 @@ void up_stairs(dungeon_feature_type force_stair,
     exit_stair_message(stair_find, true);
 
     if (old_where != you.where_are_you && you.level_type == LEVEL_DUNGEON)
+    {
         mprf("Welcome back to %s!",
              branches[you.where_are_you].longname);
+    }
 
 #ifdef USE_TILE
     const bool newlevel =
@@ -924,10 +926,6 @@ void up_stairs(dungeon_feature_type force_stair,
     entry_cause = you.entry_cause;
 
     you.turn_is_over = true;
-
-#ifdef USE_TILE
-    TileNewLevel(newlevel);
-#endif // USE_TILE
 
     save_game_state();
 
@@ -956,6 +954,10 @@ void up_stairs(dungeon_feature_type force_stair,
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level(true);
     
+#ifdef USE_TILE
+    TileNewLevel(newlevel);
+#endif // USE_TILE
+
     if (collect_travel_data)
     {
         // Update stair information for the stairs we just ascended, and the
@@ -986,8 +988,8 @@ void up_stairs(dungeon_feature_type force_stair,
             // to Hell as shortcuts between dungeon levels, which won't work,
             // and will confuse the dickens out of the player (well, it confused
             // the dickens out of me when it happened).
-            if (new_level_id.branch == BRANCH_MAIN_DUNGEON &&
-                    old_level_id.branch == BRANCH_VESTIBULE_OF_HELL)
+            if (new_level_id.branch == BRANCH_MAIN_DUNGEON
+                && old_level_id.branch == BRANCH_VESTIBULE_OF_HELL)
             {
                 lp.id.depth = -1;
                 lp.pos.x = lp.pos.y = -1;
@@ -1019,7 +1021,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
                   entry_cause_type entry_cause )
 {
     int i;
-    const level_area_type      old_level_type = you.level_type;
+    const level_area_type  old_level_type = you.level_type;
     const dungeon_feature_type stair_find =
         force_stair? force_stair : grd[you.x_pos][you.y_pos];
 
@@ -1425,7 +1427,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         you.your_level++;
     else if (level_type_exits_down(you.level_type)
              && !level_type_exits_down(old_level_type))
+    {
         you.your_level--;
+    }
     
 
     switch (you.level_type)
@@ -1469,10 +1473,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         break;
     }
 
-#ifdef USE_TILE
-    TileNewLevel(newlevel);
-#endif
-
     you.turn_is_over = true;
 
     save_game_state();
@@ -1492,6 +1492,11 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
 
     trackers_init_new_level(true);
+
+#ifdef USE_TILE
+    TileNewLevel(newlevel);
+#endif // USE_TILE
+
     if (collect_travel_data)
     {
         // Update stair information for the stairs we just descended, and the
@@ -1506,7 +1511,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
             // First we update the old level's stair.
             level_pos lp;
-            lp.id  = new_level_id;
+            lp.id    = new_level_id;
             lp.pos.x = you.x_pos; 
             lp.pos.y = you.y_pos;
 

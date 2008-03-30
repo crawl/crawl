@@ -294,6 +294,7 @@ tile_show_items = !?/%=([)X}+\_.
 # tile_water_col       = grey
 # tile_lava_col        = grey
 # tile_excluded_col    = darkcyan
+# tile_excl_centre     = darkblue
 
 ##### 5-  Dump File #################################################
 #

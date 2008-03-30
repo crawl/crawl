@@ -2762,7 +2762,6 @@ void forget_map(unsigned char chance_forgotten, bool force)
          return;
 
     for (unsigned char xcount = 0; xcount < GXM; xcount++)
-    {
         for (unsigned char ycount = 0; ycount < GYM; ycount++)
         {
              if (!see_grid(xcount, ycount) &&
@@ -2771,7 +2770,7 @@ void forget_map(unsigned char chance_forgotten, bool force)
                  env.map[xcount][ycount].clear();
              }
         }
-    }
+        
 #ifdef USE_TILE
     GmapInit(false);
     tile_clear_buf();
@@ -5120,9 +5119,12 @@ int count_worn_ego( int which_ego )
 {
     int result = 0;
     for ( int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; ++slot )
-        if (you.equip[slot] != -1 &&
-            get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
+        if (you.equip[slot] != -1
+            && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
+        {
             result++;
+        }
+        
     return result;
 }
 
@@ -6643,17 +6645,21 @@ std::vector<PlaceInfo> player::get_all_place_info(bool visited_only,
 
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
-        if ((visited_only && branch_info[i].num_visits == 0) ||
-            (dungeon_only && branch_info[i].level_type != LEVEL_DUNGEON))
+        if (visited_only && branch_info[i].num_visits == 0
+            || dungeon_only && branch_info[i].level_type != LEVEL_DUNGEON)
+        {
             continue;
+        }
         list.push_back(branch_info[i]);
     }
 
     for (int i = 0; i < (NUM_LEVEL_AREA_TYPES - 1); i++)
     {
-        if ((visited_only && non_branch_info[i].num_visits == 0) ||
-            (dungeon_only && non_branch_info[i].level_type != LEVEL_DUNGEON))
+        if (visited_only && non_branch_info[i].num_visits == 0
+            || dungeon_only && non_branch_info[i].level_type != LEVEL_DUNGEON)
+        {
             continue;
+        }
         list.push_back(non_branch_info[i]);
     }
 

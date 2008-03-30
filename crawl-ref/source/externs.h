@@ -1784,6 +1784,7 @@ public:
     char        tile_water_col;
     char        tile_lava_col;
     char        tile_excluded_col;
+    char        tile_excl_centre_col;
 #endif
 #ifdef WIN32TILES
     bool        use_dos_char;

@@ -825,6 +825,7 @@ void game_options::reset_options()
     tile_water_col       = MAP_MDGREY;
     tile_lava_col        = MAP_MDGREY;
     tile_excluded_col    = MAP_DKCYAN;
+    tile_excl_centre_col = MAP_DKBLUE;
 #endif
 
 #ifdef WIN32TILES
@@ -2832,6 +2833,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "tile_excluded_col")
     {
         tile_excluded_col =
+               _str_to_tile_colour(field);
+    }
+    else if (key == "tile_excl_centre_col" || key == "tile_excl_center_col")
+    {
+        tile_excl_centre_col =
                _str_to_tile_colour(field);
     }
 #endif

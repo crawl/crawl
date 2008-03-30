@@ -311,7 +311,7 @@ InvAction inv_action = INV_NUMACTIONS;
 
 static void _gui_set_mouse_inv(int idx, InvAction act)
 {
-    inv_idx = idx;
+    inv_idx    = idx;
     inv_action = act;
 }
 
@@ -377,8 +377,13 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
             }
         }
         
-        if (c == Options.tile_floor_col && is_excluded( coord_def(x,y) ))
-            c = Options.tile_excluded_col;
+        if (c == Options.tile_floor_col || c == Options.tile_item_col)
+        {
+            if (is_exclude_root( coord_def(x,y) ))
+                c = Options.tile_excl_centre_col;
+            else if (c == Options.tile_floor_col && is_excluded(coord_def(x,y)))
+                c = Options.tile_excluded_col;
+        }
     }
     
     int oldc = gmap_data[x][y];
@@ -430,12 +435,8 @@ void GmapInit(bool upd_tile)
     gmap_min_y = gmap_max_y = you.y_pos - 1;
 
     for (y = 0; y < GYM; y++)
-    {
         for (x = 0; x < GXM; x++)
-        {
              GmapUpdate(x, y, env.map[x][y].glyph(), upd_tile);
-        }
-    }
 }
 
 void GmapDisplay(int linex, int liney)
@@ -445,9 +446,7 @@ void GmapDisplay(int linex, int liney)
     int ox, oy;
 
     for (int x = 0; x < GXM*GYM; x++)
-    {
         buf2[x] = 0;
-    }
 
     ox = ( gmap_min_x + (GXM - 1 - gmap_max_x) ) / 2;
     oy = ( gmap_min_y + (GYM - 1 - gmap_max_y) ) / 2;
