@@ -1568,7 +1568,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
             const int net = get_trapping_net(monster->x, monster->y);
             if (net != NON_ITEM)
                 remove_item_stationary(mitm[net]);
-                
+
             if (mons_is_insubstantial(monster->type))
             {
                 simple_monster_message(monster,
