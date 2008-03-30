@@ -5029,7 +5029,7 @@ void crawl_view_geometry::init_geometry()
         int len = 1 + viewsz.y - mlistp.y;
         len = std::max(len, Options.mlist_min_height);
         len = std::min(len, 1 + termsz.y - message_min_lines - (hudp.y + hudsz.y));
-        mlistsz = coord_def(termsz.x - mlistp.x - 1, len);
+        mlistsz = coord_def(termsz.x - (mlistp.x - 1), len);
 
         // The message pane takes all lines not used by the viewport and
         // the mlist.
