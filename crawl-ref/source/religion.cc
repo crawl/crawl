@@ -423,6 +423,7 @@ void dec_penance(god_type god, int val)
                 && you.piety >= piety_breakpoint(0))
             {
                 mpr("Your divine halo begins to return!");
+                manage_halo();
             }
 
             // bonuses now once more effective
@@ -468,9 +469,13 @@ void inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
-        // nor does TSO's halo (which silently fades) or divine shield
+        // nor does TSO's halo or divine shield
         else if (god == GOD_SHINING_ONE)
         {
+            if (halo_radius())
+                mpr("Your divine halo begins to fade.");
+            manage_halo();
+
             if (you.duration[DUR_DIVINE_SHIELD])
             {
                 mpr("Your divine shield disappears!");
@@ -478,6 +483,7 @@ void inc_penance(god_type god, int val)
                 you.attribute[ATTR_DIVINE_SHIELD] = 0;
                 you.redraw_armour_class = true;
             }
+
             make_god_gifts_disappear(true); // only on level
         }
     }
@@ -2278,7 +2284,10 @@ mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)",
             if (you.religion == GOD_SHINING_ONE)
             {
                 if (i == 0)
+                {
                     mpr("A divine halo begins to surround you!");
+                    manage_halo();
+                }
             }
 
             // When you gain a piety level, you get another chance to
@@ -3843,6 +3852,8 @@ void excommunication(god_type new_god)
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
 
+    const bool old_halo = halo_radius();
+
     god_acting gdact(old_god, true);
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
@@ -3941,6 +3952,10 @@ void excommunication(god_type new_god)
             simple_god_message( " does not appreciate desertion for evil!",
                                 old_god );
         }
+
+        if (old_halo)
+            mpr("Your divine halo begins to fade.");
+        manage_halo();
 
         if (you.duration[DUR_DIVINE_SHIELD])
         {
