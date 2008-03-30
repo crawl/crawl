@@ -4348,20 +4348,20 @@ bool monsters::lose_ench_duration(const mon_enchant &e, int dur)
 // Update a monster's enchantments when the player returns
 // to the level.
 //
-// Management for enchantments... problems with this are the oddities 
-// (monster dying from poison several thousands of turns later), and 
-// game balance.  
+// Management for enchantments... problems with this are the oddities
+// (monster dying from poison several thousands of turns later), and
+// game balance.
 //
-// Consider: Poison/Sticky Flame a monster at range and leave, monster 
-// dies but can't leave level to get to player (implied game balance of 
-// the delayed damage is that the monster could be a danger before 
-// it dies).  This could be fixed by keeping some monsters active 
+// Consider: Poison/Sticky Flame a monster at range and leave, monster
+// dies but can't leave level to get to player (implied game balance of
+// the delayed damage is that the monster could be a danger before
+// it dies).  This could be fixed by keeping some monsters active
 // off level and allowing them to take stairs (a very serious change).
 //
-// Compare this to the current abuse where the player gets 
-// effectively extended duration of these effects (although only 
-// the actual effects only occur on level, the player can leave 
-// and heal up without having the effect disappear).  
+// Compare this to the current abuse where the player gets
+// effectively extended duration of these effects (although only
+// the actual effects only occur on level, the player can leave
+// and heal up without having the effect disappear).
 //
 // This is a simple compromise between the two... the enchantments
 // go away, but the effects don't happen off level.  -- bwr
@@ -4371,7 +4371,7 @@ void monsters::timeout_enchantments(int levels)
 {
     if (enchantments.empty())
         return;
-    
+
     const mon_enchant_list ec = enchantments;
     for (mon_enchant_list::const_iterator i = ec.begin();
          i != ec.end(); ++i)
@@ -4517,7 +4517,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_SLEEP_WARY:
         decay_enchantment(me);
         break;
-            
+
     case ENCH_BATTLE_FRENZY:
         decay_enchantment(me, false);
         break;
