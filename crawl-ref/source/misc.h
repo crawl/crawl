@@ -10,17 +10,14 @@
  *               <1>     -/--/--        LRH             Created
  */
 
-
 #ifndef MISC_H
 #define MISC_H
-
 
 #include "externs.h"
 
 struct bolt;
 struct dist;
 struct activity_interrupt_data;
-
 
 // last updated 08jan2001 {gdl}
 /* ***********************************************************************
@@ -99,19 +96,19 @@ std::string weird_writing();
 
 
 std::string cloud_name(cloud_type type);
+
 bool is_damaging_cloud(cloud_type type, bool temp = false);
 
 void curare_hits_player(int agent, int degree);
 
 bool mons_is_safe(const monsters *mon, bool want_move = false);
+
 bool i_feel_safe(bool announce = false, bool want_move = false);
 
 void setup_environment_effects();
 
 // Lava smokes, swamp water mists.
 void run_environment_effects();
-
-//////////////////////////////////////////////////////////////////////
 
 int str_to_shoptype(const std::string &s);
 
@@ -129,5 +126,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
                            const activity_interrupt_data &at );
 
 void reveal_secret_door(int x, int y);
+
+void get_playervisible_monsters(std::vector<monsters*>& mons);
 
 #endif

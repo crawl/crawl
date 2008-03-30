@@ -1812,7 +1812,8 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
     return is_safe;
 }
 
-// Return all monsters in LOS that the player is able to see.
+// Return all monsters in LOS that the player is able to see
+// and recognize as being a monster.
 void get_playervisible_monsters(std::vector<monsters*>& mons)
 {
     const int ystart = MAX(0,   you.y_pos - LOS_RADIUS);
@@ -1832,7 +1833,8 @@ void get_playervisible_monsters(std::vector<monsters*>& mons)
                 monsters *mon = &env.mons[targ_monst];
                 if ( player_monster_visible(mon) &&
                      !mons_is_submerged(mon) &&
-                     !mons_is_mimic(mon->type) )
+                     (!mons_is_mimic(mon->type) || mons_is_known_mimic(mon))
+                    )
                 {
                     mons.push_back(mon);
                 }
