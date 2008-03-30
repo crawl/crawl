@@ -846,12 +846,11 @@ static int _mons_inside_circle(int posx, int posy, int radius)
     return -1;
 }
 
-
 bool remove_sanctuary(bool did_attack)
 {
     if (env.sanctuary_time)
         env.sanctuary_time = 0;
-    
+
     if (!inside_level_bounds(env.sanctuary_pos))
         return false;
 
@@ -899,11 +898,11 @@ void decrease_sanctuary_radius()
     // for the last (radius-1) turns 33% chance of not decreasing
     if (env.sanctuary_time < radius && one_chance_in(3))
         return;
-        
+
     int size = --env.sanctuary_time;
     if (size >= radius)
         return;
-        
+
     radius = size+1;
     for (int x=-radius; x<=radius; x++)
          for (int y=-radius; y<=radius; y++)
@@ -915,7 +914,7 @@ void decrease_sanctuary_radius()
                   continue;
 
               int dist = distance(posx, posy, env.sanctuary_pos.x, env.sanctuary_pos.y);
-              
+
               // if necessary overwrite sanctuary property
               if (dist > size*size)
                   env.map[posx][posy].property = FPROP_NONE;
@@ -949,7 +948,7 @@ bool cast_sanctuary(const int power)
     env.sanctuary_pos.y = you.y_pos;
     env.sanctuary_time = 7 + you.skills[SK_INVOCATIONS]/2;
 
-    // radius could also be influenced by Inv 
+    // radius could also be influenced by Inv
     // and would then have to be stored globally
     const int radius = 5;
     const int pattern = random2(4);
@@ -1046,7 +1045,7 @@ void manage_halo()
                 monsters *mon = &menv[monster];
 
                 if (!mon->has_ench(ENCH_BACKLIGHT))
-                    mon->add_ench(ENCH_BACKLIGHT);
+                    mon->add_ench(mon_enchant(ENCH_BACKLIGHT, 0, KC_YOU, 1));
             }
         }
     }

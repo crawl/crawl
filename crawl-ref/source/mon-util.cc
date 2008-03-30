@@ -4084,7 +4084,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         // Inflate hp.
         scale_hp(3, 2);
         break;
-    
+
     case ENCH_HASTE:
         if (speed >= 100)
             speed = 100 + ((speed - 100) * 2);
@@ -4108,7 +4108,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
                  name(DESC_CAP_A, true).c_str() );
         }
         break;
-        
+
     case ENCH_CHARM:
         behaviour = BEH_SEEK;
         target_x = you.x_pos;
@@ -4171,7 +4171,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         snprintf( info, INFO_SIZE, " seems to regain %s courage.",
                   mons_pronoun(static_cast<monster_type>(this->type),
                                PRONOUN_NOCAP_POSSESSIVE));
-                  
+
         if (!quiet)
             simple_monster_message(this, info);
 
@@ -4191,12 +4191,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // invisible monsters stay invisible
         if (mons_class_flag(type, M_INVIS))
             add_ench( mon_enchant(ENCH_INVIS) );
-        else if (mons_near(this) && !player_see_invis() 
+        else if (mons_near(this) && !player_see_invis()
                  && !has_ench( ENCH_SUBMERGED ))
         {
             if (!quiet)
                 mprf("%s appears!", name(DESC_CAP_A, true).c_str() );
-            
+
             seen_monster(this);
         }
         break;
@@ -4219,7 +4219,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_BACKLIGHT:
         // monsters inside a halo don't lose backlight
         if (mons_inside_halo(x, y))
-            add_ench(ENCH_BACKLIGHT);
+            add_ench(mon_enchant(ENCH_BACKLIGHT, 0, KC_YOU, 1));
         else if (!quiet)
         {
             if (player_monster_visible(this))
@@ -4252,7 +4252,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         int net = get_trapping_net(x,y);
         if (net != NON_ITEM)
             remove_item_stationary(mitm[net]);
-            
+
         if (!quiet)
             simple_monster_message(this, " breaks free.");
         break;
@@ -4260,7 +4260,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_ABJ:
     case ENCH_SHORT_LIVED:
         add_ench( mon_enchant(ENCH_ABJ) );
- 
+
         // just for flavour
         if ((this->flags & MF_GOD_GIFT) && this->has_ench(ENCH_BERSERK))
             simple_monster_message(this, " is no longer berserk.");
