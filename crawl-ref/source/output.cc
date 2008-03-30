@@ -730,6 +730,10 @@ static void _print_stats_line3()
     }
 
     textcolor( LIGHTGREY );
+
+#if DEBUG_DIAGNOSTICS || 1
+    cprintf( "%2d,%2d", you.x_pos, you.y_pos );
+#endif
 }
 
 void print_stats(void)
@@ -800,12 +804,6 @@ void print_stats(void)
         _print_stats_line3();
 
     you.redraw_status_flags = 0;
-
-#if DEBUG_DIAGNOSTICS
-    // debug mode GPS
-    cgotoxy(1, 18, GOTO_STAT);
-    cprintf( "Position (%2d,%2d)", you.x_pos, you.y_pos );
-#endif
 
     // get curses to redraw screen
     update_screen();
