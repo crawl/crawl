@@ -912,7 +912,7 @@ static bool tso_blessing_extend_stay(monsters *mon)
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
     // Extend the time an abjurable monster has before disappearing.
-    abj.duration += 100 + random2(300);
+    abj.duration += 100 + random2(300) + 1;
 
     // If the extended stay is long enough, make it permanent.
     if (abj.duration > 375)
