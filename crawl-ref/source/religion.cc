@@ -1047,8 +1047,8 @@ bool bless_follower(monsters* follower,
         mon = &menv[monster];
     }
 
-    blessed = (follower && !mons_near(follower)) ? "a follower"
-                  : mon->name(DESC_NOCAP_A).c_str();
+    blessed = (follower && !mons_near(follower)) ? "your follower"
+                  : mon->name(DESC_PLAIN).c_str();
 
     if (chance == 0)
     {
@@ -1182,8 +1182,9 @@ bool bless_follower(monsters* follower,
     }
 
 blessing_done:
-    snprintf(info, INFO_SIZE, " blesses %s with %s.", blessed.c_str(),
-             result.c_str());
+    snprintf(info, INFO_SIZE, " blesses %s%s with %s.",
+             mons_is_unique(mon->type) ? "" : "your ",
+             blessed.c_str(), result.c_str());
     simple_god_message(info);
 
     return true;

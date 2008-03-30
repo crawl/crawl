@@ -499,7 +499,7 @@ static bool _ely_protects_ally(monsters *monster)
     {
         return (false);
     }
-    
+
     monster->hit_points = 1;
     snprintf(info, INFO_SIZE, " protects %s%s from harm!%s",
              mons_is_unique(monster->type) ? "" : "your ",
@@ -507,7 +507,7 @@ static bool _ely_protects_ally(monsters *monster)
              coinflip() ? "" : "  You feel responsible.");
     simple_god_message(info);
     lose_piety(1);
-    
+
     return (true);
 }
 
