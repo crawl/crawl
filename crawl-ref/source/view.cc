@@ -74,6 +74,8 @@
 #include "tutorial.h"
 #include "xom.h"
 
+#define DEBUG_PANE_BOUNDS 0
+
 // These are hidden from the rest of the world... use the functions
 // below to get information about the map grid.
 #define MAP_MAGIC_MAPPED_FLAG   0x01
@@ -4546,6 +4548,35 @@ bool view_update()
     return (false);
 }
 
+static void _debug_pane_bounds()
+{
+#if DEBUG_PANE_BOUNDS
+    // Doesn't work for HUD because print_stats() overwrites it.
+    // To debug HUD, add viewwindow(false,false) at end of _prep_input.
+
+    cgotoxy(1,1, GOTO_MLIST);
+    cprintf("+   L");
+    cgotoxy(crawl_view.mlistsz.x-4, crawl_view.mlistsz.y, GOTO_MLIST);
+    cprintf("L   +");
+
+    cgotoxy(1,1, GOTO_STAT);
+    cprintf("+  H");
+    cgotoxy(crawl_view.hudsz.x-3, crawl_view.hudsz.y, GOTO_STAT);
+    cprintf("H  +");
+
+    cgotoxy(1,1, GOTO_MSG);
+    cprintf("+ M");
+    cgotoxy(crawl_view.msgsz.x-2, crawl_view.msgsz.y, GOTO_MSG);
+    cprintf("M +");
+
+    cgotoxy(crawl_view.viewp.x, crawl_view.viewp.y);
+    cprintf("+V");
+    cgotoxy(crawl_view.viewp.x+crawl_view.viewsz.x-2,
+            crawl_view.viewp.y+crawl_view.viewsz.y-1);
+    cprintf("V+");
+#endif
+}
+
 //---------------------------------------------------------------
 //
 // viewwindow -- now unified and rolled into a single pass
@@ -4851,6 +4882,8 @@ void viewwindow(bool draw_it, bool do_updates)
             update_monster_pane();
         }
     }
+
+    _debug_pane_bounds();
 }                               // end viewwindow()
 
 //////////////////////////////////////////////////////////////////////////////
@@ -4956,6 +4989,12 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 
 void crawl_view_geometry::init_geometry()
 {
+    // Points and sizes can be combined in these ways:
+    // p+p=meaningless, p+sz=p, p-p=sz, p-sz=p
+    // sz+p=p, sz+sz=sz, sz-p=meaningless, sz-sz=sz
+
+    const coord_def termp(1,1);
+
     termsz = coord_def( get_number_of_cols(), get_number_of_lines() );
 
 #ifndef USE_TILE
@@ -5000,9 +5039,10 @@ void crawl_view_geometry::init_geometry()
 
     if (!mlist_inline)
     {
-        mlistp = coord_def(1, 1);
-        mlistsz = coord_def(mlist_max_width, viewsz.y);
-        mlistsz.x = std::min(mlist_min_width + freewidth, mlistsz.x);
+        mlistp = termp;
+        const int _mlist_max_width = mlist_max_width; // work around link problem?
+        mlistsz.x = std::min(mlist_min_width + freewidth, _mlist_max_width);
+        mlistsz.y = viewsz.y;
 
         viewp.x = mlistp.x + mlistsz.x;
     }
@@ -5030,17 +5070,20 @@ void crawl_view_geometry::init_geometry()
         len = std::max(len, Options.mlist_min_height);
         len = std::min(len, 1 + termsz.y - message_min_lines - (hudp.y + hudsz.y));
         mlistsz = coord_def(termsz.x - (mlistp.x - 1), len);
-
-        // The message pane takes all lines not used by the viewport and
-        // the mlist.
-        int msgstart = mlistp.y + mlistsz.y;
-        msgp  = coord_def(1, msgstart);
-        msgsz = coord_def(termsz.x, termsz.y - msgstart - 1);
     }
-    else
+
+    // Calculate message area
     {
-        msgp  = coord_def(1, viewsz.y + 1);
-        msgsz = coord_def(termsz.x, termsz.y - viewsz.y);
+        // Always from lhs of term to rhs of term
+        msgp.x  = termp.x;
+        msgsz.x = termsz.x;
+        // From bottom of mlist or view, whichever is lower, to bottom of term
+        msgp.y  = std::max((mlistp+mlistsz).y, (viewp+viewsz).y);
+        msgsz.y = termsz.y - (msgp-termp).y;
+
+        // Well, actually not to the very bottom.  Drawing the last line causes
+        // the screen to scroll.  If this is fixed, we get another line of message.
+        msgsz.y -= 1;
     }
 
 #ifdef USE_TILE
@@ -5051,6 +5094,23 @@ void crawl_view_geometry::init_geometry()
     viewhalfsz = viewsz / 2;
 
     init_view();
+
+#ifndef USE_TILE
+    // Check that all the panes fit in the view.  Note that currently
+    // no pane is allowed to stretch all the way to the bottom (see
+    // comment by message pane calculation, above.
+    ASSERT( (viewp+viewsz-termp).x <= termsz.x );
+    ASSERT( (viewp+viewsz-termp).y <= termsz.y-1 );
+
+    ASSERT( (hudp+hudsz-termp).x <= termsz.x );
+    ASSERT( (hudp+hudsz-termp).y <= termsz.y-1 );
+
+    ASSERT( (msgp+msgsz-termp).x <= termsz.x );
+    ASSERT( (msgp+msgsz-termp).y <= termsz.y-1 );
+
+    ASSERT( (mlistp+mlistsz-termp).x <= termsz.x );
+    ASSERT( (mlistp+mlistsz-termp).y <= termsz.y-1 );
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////
