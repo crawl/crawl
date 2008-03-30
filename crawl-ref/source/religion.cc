@@ -984,7 +984,7 @@ static bool beogh_blessing_priesthood(monsters* mon)
 }
 
 // Bless the follower indicated in follower, if any.  If there isn't
-// one, bless a random follower within sight of the player.
+// one, bless a random follower within sight of the player, if any.
 bool bless_follower(monsters* follower,
                     god_type god,
                     bool (*suitable)(const monsters* mon))
@@ -1012,7 +1012,7 @@ bool bless_follower(monsters* follower,
                 {
                     case GOD_BEOGH:
                     {
-                        // If the follower chosen was you, either send
+                        // If no follower was chosen, either send
                         // reinforcement or get out.
                         bool reinforced = beogh_blessing_reinforcement();
 
