@@ -38,8 +38,8 @@
 # trimmed. All other whitespace is left intact.
 #
 # For descriptions concerning an option consult the file 
-#    crawl_options.txt 
-# in your docs directory. Also note that the ordering of the options
+#    options_guide.txt 
+# in your /docs directory. Also note that the ordering of the options
 # is taken from that file; this is for presentational reasons only.
 #
 # Note that all boolean options (i.e. values of 'true' or 'false') have
@@ -341,7 +341,7 @@ tile_show_items = !?/%=([)X}+\_.
 # Set the monster glyphs back to the way they were in 0.3.4
 # : crawl.read_options('docs/monster_glyphs.txt')
 
-# See crawl_options.txt for the options
+# See options_guide.txt for the options
 # cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any, 
 # feature, mon_glyph
 

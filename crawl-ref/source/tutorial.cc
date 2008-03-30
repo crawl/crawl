@@ -814,6 +814,12 @@ void tutorial_dissection_reminder(bool healthy)
         text += "If you don't want to eat it, consider <w>c</w>hopping this "
                 "corpse up under <w>p</w>rayer as a sacrifice to ";
         text += god_name(you.religion);
+#ifdef USE_TILE
+        text += ". You can also chop up any corpse that shows in the floor "
+                "part of your inventory tiles by clicking on it with your "
+                "<w>left mouse button</w>";
+#endif
+
         text += ". Whenever you view a corpse while in tutorial mode you can "
                 "reread this information.";
 
@@ -1086,7 +1092,7 @@ void tutorial_first_item(const item_def &item)
             "Once it is in your inventory, you can drop it again with "
 #ifdef USE_TILE
             "a <w>left mouse click</w> while pressing the <w>Shift key</w>. "
-            "Whenever you <w>right-click</w> on an item in your inventory"
+            "Whenever you <w>right-click</w> on an item "
 #else
             "<w>d</w>. Any time you look at an item in your <w>i</w>nventory"
 #endif
@@ -1305,7 +1311,14 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "<w>c</w>hop it up with a sharp implement. Once hungry you "
                   "can then <w>e</w>at the resulting chunks (though they may "
                   "not be healthy).";
-                  
+#ifdef USE_TILE
+          text << " With tiles, you can also chop up any corpse that shows in "
+                  "the floor part of your inventory region, simply by doing a "
+                  "<w>left mouse click</w> while pressing <w>Shift</w>, and "
+                  "then eat the resulting chunks with <w>Shift + right mouse "
+                  "click</w>.";
+
+#endif
           if (god_likes_butchery(you.religion))
           {
               text << " During prayer you can offer corpses to "
@@ -2344,13 +2357,34 @@ void tutorial_describe_item(const item_def &item)
                      << god_name(you.religion)
                      << " (while <w>p</w>raying)";
             }
-
             ostr << ". ";
+
             if (food_is_rotten(item))
             {
                 ostr << "Rotten corpses won't be of any use to you, though, so "
-                        "you might just as well <w>d</w>rop this.";
+                        "you might just as well <w>d</w>rop this. No god will "
+                        "accept such rotten sacrifice, either.";
             }
+#ifdef USE_TILE
+            else
+            {
+                ostr << " For an individual corpse in your inventory, the most "
+                        "practical way to chop it up is to drop it by clicking "
+                        "on it with your <w>left mouse button</w> while "
+                        "<w>Shift</w> is pressed, and then repeat that command "
+                        "for the corpse tile now lying on the floor. If the "
+                        "intent is to eat the chunks (rather than offer the "
+                        "corpse), you can then press <w>Shift + right mouse "
+                        "button</w> to do that.\n"
+                        EOL
+                        "If there are several items in your inventory you'd "
+                        "like to drop, the more convenient way is to use the "
+                        "<w>d</w>rop menu. On a related note, offering several "
+                        "corpses on a floor square is facilitated by using the "
+                        "<w>c</w>hop prompt where <w>c</w> is a valid synonym "
+                        "for <w>y</w>es.";
+            }
+#endif
             Options.tutorial_events[TUT_SEEN_CARRION] = 0;
             break;
 
@@ -2438,6 +2472,33 @@ void tutorial_describe_item(const item_def &item)
     cgotoxy(1, wherey() + 2);
     formatted_string::parse_block(broken, false).display();
 } // tutorial_describe_item
+
+void tutorial_inscription_info(bool autoinscribe)
+{
+    std::ostringstream text;
+    text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    
+    if (!autoinscribe || wherey() <= get_number_of_lines() - 10)
+    {
+        text << EOL
+         "Inscriptions are a powerful concept of Dungeon Crawl." EOL
+         "You can inscribe items to differentiate them, or to comment on them, " EOL
+         "but also to set rules for item interaction. If you are new to Crawl, " EOL
+         "you can safely ignore this feature, though." EOL;
+    }
+       
+    if (autoinscribe && wherey() <= get_number_of_lines() - 6)
+    {
+        text << EOL EOL
+         "Artefacts can be autoinscribed to give a brief overview of their " EOL
+         "known properties. Here, doing a <w>left mouse click</w> will autoinscribe " EOL
+         "this item." EOL;
+    }
+    text << "(In the main screen, press <w>?6</w> for more information.)" EOL;
+    text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    
+    formatted_string::parse_string(text.str()).display();
+}
 
 bool tutorial_feat_interesting(dungeon_feature_type feat)
 {

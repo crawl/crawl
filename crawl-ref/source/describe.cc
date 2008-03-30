@@ -1792,9 +1792,25 @@ void describe_item( item_def &item, bool allow_inscribe )
                 "<cyan>Do you wish to inscribe this item? ").display();
         }
 
+        if (Options.tutorial_left && wherey() <= get_number_of_lines() - 2)
+        {
+            tutorial_inscription_info(allow_autoinscribe);
+
+            if ( allow_autoinscribe )
+            {
+                formatted_string::parse_string(
+                    "<cyan>So, do you wish to inscribe this item? "
+                    "('a' to autoinscribe) ").display();
+            }
+            else
+            {
+                formatted_string::parse_string(
+                    "<cyan>So, do you wish to inscribe this item? ").display();
+            }
+        }
 #ifdef USE_TILE
         const int keyin = getch_ck();
-        if (toupper(keyin) == 'Y' || keyin == CK_MOUSE_B1)
+        if (toupper(keyin) == 'Y')
 #else
         const int keyin = getch();
         if (toupper(keyin) == 'Y')
@@ -1808,7 +1824,8 @@ void describe_item( item_def &item, bool allow_inscribe )
                 you.quiver_change = true;       // might have added/removed !F 
             }
         }
-        else if (toupper(keyin) == 'A' && allow_autoinscribe)
+        else if (allow_autoinscribe
+                 && (toupper(keyin) == 'A' || keyin == CK_MOUSE_B1))
         {
             // Remove previous randart inscription
             _trim_randart_inscrip(item);

@@ -8,7 +8,7 @@ prevail against overwhelming odds.
 
 Players of versions 0.3.4 and older beware: please read the file
    034_changes.txt
-in the docs/ directory for a list of the interface changes, and how 
+in the /docs directory for a list of the interface changes, and how 
 you could possibly retrieve the 0.3.4 standards.
 
 Contents:
@@ -22,10 +22,10 @@ Contents:
 ------------------
 If you'd like to dive in immediately, your best bets are to
 * start up a game and choose a tutorial (press T when asked for race), or
-* read quickstart.txt (it is in docs/), or
+* read quickstart.txt (in the /docs directory), or
 * for studious readers, browse the manual (see below for all doc files).
 
-Additionally, you may want to print out the file keys.pdf from the docs/
+Additionally, you may want to print out the file keys.pdf from the /docs
 folder. Besides a full list of command keys (don't bother with it), it contains 
 two pages of help for new players.
 Note that you can read quickstart.txt and the manual when playing; pressing ? 
@@ -49,20 +49,20 @@ The following files in the Crawl's main folder are essential:
 The docs/ folder contains the following helpful texts (all of which can be 
 read in-game by bringing up the help menu with '?'):
 
-* the_manual.txt  The complete manual; describing all aspects in the
-                  detail. Contains appendices on species, classes, etc.
-* options.txt     Describes all options in detail. The structure of
-                  init.txt follows this text.
-* macros.txt      A how-to on using macros and keymappings, with examples.
-* aptitudes.txt   Some numbers defining certain aspects of the races.
-                  Helpful, but not needed for winning.
-* quickstart.txt  A short introduction for new players.
-* ssh_guide.txt   An elaborate introduction on how to get internet play
-                  to work. For Windows only.
-* irc_guide.txt   An elaborate introduction on how to access the IRC
-                  channel ##crawl.
-* keys.pdf        A printable document, listing all commands and it also
-                  contains a very short guide for new players.
+* crawl_manual.txt   The complete manual; describing all aspects in the
+                     detail. Contains appendices on species, classes, etc.
+* options_guide.txt  Describes all options in detail. The structure of
+                     init.txt follows this text.
+* macros_guide.txt   A how-to on using macros and keymappings, with examples.
+* aptitudes.txt      Some numbers defining certain aspects of the races.
+                     Helpful, but not needed for winning.
+* quickstart.txt     A short introduction for new players.
+* ssh_guide.txt      An elaborate introduction on how to get internet play
+                     to work. For Windows only.
+* irc_guide.txt      An elaborate introduction on how to access the IRC
+                     channel ##crawl.
+* keys.pdf           A printable document, listing all commands and it also
+                     contains a very short guide for new players.
 
 
 3. Contact and reporting bugs

@@ -637,10 +637,14 @@ struct help_file
 
 help_file help_files[] = {
     { "crawl_manual.txt",  '*', true },
+    { "../readme.txt",     '!', false },
     { "aptitudes.txt",     '%', false },
-    { "readme.txt",        '^', false },
+    { "quickstart.txt",    '^', false },
     { "macros_guide.txt",  '~', false },
-    { "options_guide.txt", '!', false },
+    { "options_guide.txt", '&', false },
+#ifdef USE_TILE
+    { "tiles_help.txt",    'T', false },
+#endif
     { NULL, 0, false }
 };
 
@@ -1335,12 +1339,16 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "aspect of Dungeon Crawl.\n"
 
             "<w>?</w>: List of keys\n"
+            "<w>!</w>: Read Me!\n"
             "<w>^</w>: Quickstart Guide\n"
             "<w>:</w>: Browse character notes\n"
             "<w>~</w>: Macros help\n"
-            "<w>!</w>: Options help\n"
+            "<w>&</w>: Options help\n"
             "<w>%</w>: Table of aptitudes\n"
             "<w>/</w>: Lookup description\n"
+#ifdef USE_TILE
+            "<w>T</w>: Tiles key help\n"
+#endif
             "<w>V</w>: Version information\n"
             "<w>Home</w>: This screen\n",
             true, true, cmdhelp_textfilter);

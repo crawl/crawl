@@ -1,0 +1,102 @@
+                  Tiles mouseclick item interaction
+
+If you're playing with Tiles compiled, you'll find several shortcuts to 
+regular commands using mouseclicks. 
+
+
+PLAYER AVATAR
+
+left mouseclick            Pick up items on ground ('g' command). 
+                           A second click will take you to the pickup menu.
+
+right mouseclick           Character overview ('%' command).
+
+Shift + left mouseclick    Take stairs ('<' and '>' commands).
+
+Shift + right mouseclick   View religion information ('^' command).
+
+
+INVENTORY MANAGEMENT
+
+left mouseclick            Execute the most common action for this item type.
+
+  weapons:        wield    ('w')
+  misc. items:    wield    ('w')
+  armour:         Wear     ('W')
+  food:           eat      ('e')
+  scroll, manual: read     ('r')
+  potion:         quaff    ('q')
+  jewellery:      Put on   ('P')
+  spellbook:      Memorise ('M')
+  missiles:       fire     ('f')
+  corpse:         eat      ('e'), for Vampires
+
+wielded items:
+  rod:            evoke    ('v')
+  misc. item:     evoke    ('v')
+  weapon, staff:  unwield  ('w-')
+  armour:         Take off ('T')
+  jewellery:      Remove   ('R')
+  others, as non-wielded
+
+Sometimes alternative denominators are used such as "draw a card"
+instead of evoke for decks of cards, or "drink blood" instead of eat.
+
+right mouseclick           Display item information ('i' + item slot).
+
+Shift + left mouseclick    Drop item ('d').
+
+Shift + right mouseclick   Execute secondary action for some item types.
+
+  weapons:        fire    ('f')
+
+wielded items:
+  rod:            unwield ('w-')
+  misc. item:     unwield ('w-')
+  others, as non-wielded, or nothing
+
+
+FLOOR ITEM INTERACTION
+
+left mouseclick            Pick up this item ('g').
+
+right mouseclick           Display item information.
+
+Shift + left mouseclick    'c'hop up this corpse.
+
+Shift + right mouseclick   'e'at this food item.
+
+
+MAP INTERACTION
+
+left mouseclick            Move there, if empty, or swap places with an ally.
+                           Attack, if adjacent non-friendly monster.
+
+right mouseclick           Display grid information (view).
+
+Ctrl + left mouseclick     Disarm adjacent trap ('Ctrl + Dir.')
+                           Open ('O')/Close ('C') adjacent door.
+
+
+MINIMAP INTERACTION
+
+left mouseclick            Autotravel to any reachable position.
+
+holding right mouseclick   Zoom into distant area.
+
+
+MESSAGE AREA
+
+any mouseclick             Display message history ('Ctrl-P').
+
+
+STAT AREA
+
+any mouseclick             Search / Rest for a while ('5')
+
+
+MENU INTERACTION
+
+left mouseclick            Scroll to next page.
+right mouseclick           Escape (quit menu).
+

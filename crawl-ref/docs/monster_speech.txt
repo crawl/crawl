@@ -267,6 +267,9 @@ monsters you can find out their glyph in-game by searching the
 database ('?/') and entering a vague enough monster name. For example, 
 entering "drac" will tell you that all draconians use the symbol 'd'.
 
+Note that changing monster glyphs using the mon_glyph option may also
+affect speech of this kind.
+
 For the last round (shape comparison, e.g. winged humanoid)
 occasionally an additional intelligence estimate ("stupid", "smart")
 is prefixed to the search string, depending on the monster type, e.g. 

@@ -46,6 +46,7 @@ formatted_string tut_abilities_info();
 
 // additional information for tutorial players
 void tutorial_describe_item(const item_def &item);
+void tutorial_inscription_info(bool autoinscribe);
 bool tutorial_feat_interesting(dungeon_feature_type feat);
 void tutorial_describe_feature(dungeon_feature_type feat);
 bool tutorial_monster_interesting(const monsters *mons);
