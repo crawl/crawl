@@ -3731,7 +3731,7 @@ void monsters::rot(actor *agent, int rotlevel, int immed_rot)
 {
     if (mons_holiness(this) != MH_NATURAL)
         return;
-    
+
     // Apply immediate damage because we can't handle rotting for monsters yet.
     const int damage = immed_rot;
     if (damage > 0)
@@ -4121,7 +4121,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     }
 }
 
-bool monsters::del_ench(enchant_type ench, bool quiet)
+bool monsters::del_ench(enchant_type ench, bool quiet, bool effect)
 {
     mon_enchant_list::iterator i = enchantments.find(ench);
     if (i == enchantments.end())
@@ -4130,7 +4130,8 @@ bool monsters::del_ench(enchant_type ench, bool quiet)
     const mon_enchant me = i->second;
     const enchant_type et = i->first;
     enchantments.erase(et);
-    remove_enchantment_effect(me, quiet);
+    if (effect)
+        remove_enchantment_effect(me, quiet);
     return (true);
 }
 

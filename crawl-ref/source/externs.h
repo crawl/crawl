@@ -1042,23 +1042,23 @@ public:
     void init_experience();
 
     void mark_summoned(int longevity, bool mark_items_summoned );
-    
+
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
     void apply_location_effects();
-    
+
     kill_category kill_alignment() const;
 
     int  foe_distance() const;
     bool needs_berserk(bool check_spells = true) const;
-    
+
     bool has_ench(enchant_type ench) const;
     bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
                          enchant_type ench2 = ENCH_NONE) const;
     bool add_ench(const mon_enchant &);
     void update_ench(const mon_enchant &);
-    bool del_ench(enchant_type ench, bool quiet = false);
+    bool del_ench(enchant_type ench, bool quiet = false, bool effect = true);
     bool lose_ench_duration(const mon_enchant &e, int levels);
     bool lose_ench_levels(const mon_enchant &e, int lev);
     void lose_energy(energy_use_type et);
