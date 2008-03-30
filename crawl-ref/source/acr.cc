@@ -399,6 +399,10 @@ static void _startup_tutorial()
     // print stats and everything
     _prep_input();
     
+#ifdef USE_TILE
+    tile_draw_inv(REGION_INV1);
+#endif
+
     msg::streams(MSGCH_TUTORIAL)
         << "Press any key to start the tutorial intro, or Escape to skip it."
         << std::endl;
@@ -1849,10 +1853,10 @@ void process_command( command_type cmd )
             InvAction act;
             gui_get_mouse_inv(idx, act);
 
-            if (idx < 0)
+            if (idx < 0) // item on floor
                 describe_item(mitm[-idx]);
-            else
-                describe_item(you.inv[idx]);
+            else         // item in inventory
+                describe_item(you.inv[idx], true);
             redraw_screen();
         }
         break;
@@ -2446,7 +2450,8 @@ void process_command( command_type cmd )
     default:
         if (Options.tutorial_left)
         {
-           std::string msg = "Unknown command. (For a list of commands type <w>?<lightgray>.)";
+           std::string msg = "Unknown command. (For a list of commands type "
+                             "<w>?\?<lightgray>.)";
            print_formatted_paragraph(msg, get_number_of_cols());
         }
         else // well, not examine, but...

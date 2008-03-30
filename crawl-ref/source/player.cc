@@ -6354,7 +6354,10 @@ bool player::backlit() const
 void player::mutate()
 {
     if (one_chance_in(5))
-        ::mutate(RANDOM_MUTATION);
+    {
+        if (::mutate(RANDOM_MUTATION))
+            learned_something_new(TUT_YOU_MUTATED);
+    }
     else
         give_bad_mutation();
 }

@@ -40,6 +40,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "tutorial.h"
 #include "view.h"
 #include "xom.h"
 
@@ -163,15 +164,18 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
     }
 
     case POT_GAIN_STRENGTH:
-        mutate(MUT_STRONG);
+        if (mutate(MUT_STRONG))
+            learned_something_new(TUT_YOU_MUTATED);
         break;
 
     case POT_GAIN_DEXTERITY:
-        mutate(MUT_AGILE);
+        if (mutate(MUT_AGILE))
+            learned_something_new(TUT_YOU_MUTATED);
         break;
 
     case POT_GAIN_INTELLIGENCE:
-        mutate(MUT_CLEVER);
+        if (mutate(MUT_CLEVER))
+            learned_something_new(TUT_YOU_MUTATED);
         break;
 
     case POT_LEVITATION:
@@ -349,6 +353,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         for (int i = 0; i < 3; i++)
             mutate(RANDOM_MUTATION, false);
             
+        learned_something_new(TUT_YOU_MUTATED);
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;

@@ -1763,9 +1763,8 @@ void describe_item( item_def &item, bool allow_inscribe )
         break;
     }
     
-    // Don't ask during tutorial, or if there aren't enough rows left
-    if (!Options.tutorial_left && allow_inscribe
-        && wherey() <= get_number_of_lines() - 3)
+    // Don't ask if there aren't enough rows left
+    if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
     {
         cgotoxy(1, wherey() + 2);
 
@@ -1793,9 +1792,13 @@ void describe_item( item_def &item, bool allow_inscribe )
                 "<cyan>Do you wish to inscribe this item? ").display();
         }
 
+#ifdef USE_TILE
+        const int keyin = getch_ck();
+        if (toupper(keyin) == 'Y' || keyin == CK_MOUSE_B1)
+#else
         const int keyin = getch();
-
         if (toupper(keyin) == 'Y')
+#endif
         {
             char buf[79];
             cprintf("\nInscribe with what? ");

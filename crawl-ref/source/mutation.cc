@@ -46,6 +46,7 @@
 #include "skills2.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "tutorial.h"
 #include "view.h"
 #include "xom.h"
 
@@ -1544,7 +1545,8 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
             if (one_chance_in(1000))
                 return false;
-        } while ( !accept_mutation(mutat) );
+        }
+        while ( !accept_mutation(mutat) );
     }
     else if (which_mutation == RANDOM_XOM_MUTATION)
     {
@@ -2561,5 +2563,9 @@ bool give_bad_mutation(bool forceMutation, bool failMsg)
                      (temp_rand ==  1) ? MUT_BLURRY_VISION
                                        : MUT_FRAIL);
 
-    return mutate(which_bad_one, failMsg, forceMutation);
+    const bool result = mutate(which_bad_one, failMsg, forceMutation);
+    if (result)
+        learned_something_new(TUT_YOU_MUTATED);
+        
+    return (result);
 }                               // end give_bad_mutation()
