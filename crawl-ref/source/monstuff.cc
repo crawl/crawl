@@ -1501,6 +1501,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     monster->number = MONS_PROGRAM_BUG;
 
     mon_enchant abj = monster->get_ench(ENCH_ABJ);
+    mon_enchant charm = monster->get_ench(ENCH_CHARM);
     mon_enchant shifter = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                             ENCH_SHAPESHIFTER);
 
@@ -1508,6 +1509,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     define_monster( monster_index(monster) );
 
     monster->add_ench(abj);
+    monster->add_ench(charm);
     monster->add_ench(shifter);
 
     monster->ench_countdown = old_ench_countdown;
