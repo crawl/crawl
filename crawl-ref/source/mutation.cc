@@ -1734,7 +1734,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     case MUT_ACUTE_VISION:
         if (you.mutation[MUT_BLURRY_VISION] > 0)
         {
-            // Should only get here from demonspawn, where our inate
+            // Should only get here from demonspawn, where our innate
             // ability will clear away the counter-mutation.
             while (delete_mutation(MUT_BLURRY_VISION))
                 ;
