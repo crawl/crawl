@@ -911,7 +911,12 @@ static bool tso_blessing_extend_stay(monsters *mon)
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
-    abj.duration = abj.duration * 3 / 2;
+    // Extend the time an abjurable monster has before disappearing.
+    abj.duration += 100 + random2(300);
+
+    // If the extended stay is long enough, make it permanent.
+    if (abj.duration > 370)
+        mon->del_ench(ENCH_ABJ, true);
 
     mon->update_ench(abj);
 
@@ -1124,19 +1129,29 @@ bool bless_follower(monsters* follower,
         switch (god)
         {
             case GOD_SHINING_ONE:
-                // ...extend its stay if it's a temporary summon, or
-                // make it friendly if it's charmed.  If neither is
+            {
+                // ...make it friendly if it's charmed, optionally
+                // extending its stay if it's abjurable.  If neither is
                 // possible, deliberately fall through.
-                if (coinflip() && tso_blessing_extend_stay(mon))
+                bool friendliness = tso_blessing_friendliness(mon);
+                bool more_time = false;
+
+                if (!friendliness || coinflip())
                 {
-                    result = "more time in this world";
-                    break;
+                    if (tso_blessing_extend_stay(mon))
+                        more_time = true;
                 }
-                else if (tso_blessing_friendliness(mon))
-                {
+
+                if (friendliness && more_time)
+                    result = "friendliness and more time in this world";
+                else if (friendliness)
                     result = "friendliness";
+                else if (more_time)
+                    result = "more time in this world";
+
+                if (friendliness || more_time)
                     break;
-                }
+            }
 
             case GOD_BEOGH:
             {
