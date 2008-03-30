@@ -346,7 +346,7 @@ std::string formatted_string::to_colour_string() const
         if (ops[i] == FSOP_TEXT)
         {
             // gotta double up those '<' chars ...
-            unsigned int start = st.size();
+            size_t start = st.size();
             st += ops[i].text;
             
             while (true)
