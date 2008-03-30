@@ -488,7 +488,7 @@ static bool _is_pet_kill(killer_type killer, int i)
 static bool _ely_protects_ally(monsters *monster)
 {
     ASSERT(you.religion == GOD_ELYVILON);
-    
+
     if (mons_holiness(monster) != MH_NATURAL
          && mons_holiness(monster) != MH_HOLY
         || !mons_friendly(monster)
@@ -3567,7 +3567,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
             // disintegration beams can do large amounts of damage.
             beem.damage.size = beem.damage.size * 2 / 3;
             break;
-            
+
             // these have been deemed "too tricky" at this time {dlb}:
         case WAND_ENSLAVEMENT:
         case WAND_DIGGING:

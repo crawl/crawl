@@ -2060,7 +2060,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         if (!mon->needs_berserk(false))
             ret = true;
         break;
-        
+
     case SPELL_HASTE:
         if (mon->has_ench(ENCH_HASTE))
             ret = true;
@@ -4781,7 +4781,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SHAPESHIFTER:     // this ench never runs out
-        if (type == MONS_SHAPESHIFTER 
+        if (type == MONS_SHAPESHIFTER
             || random2(1000) < ( 1000 / ((15 * hit_dice) / 5)))
         {
             monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);

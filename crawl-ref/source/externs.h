@@ -937,7 +937,7 @@ struct player_save_info
 class monster_spells : public FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>
 {
 public:
-    monster_spells() 
+    monster_spells()
         : FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>(SPELL_NO_SPELL)
     { }
     void clear() { init(SPELL_NO_SPELL); }
@@ -960,7 +960,7 @@ public:
 
     killer_type killer() const;
     int kill_agent() const;
-    
+
     operator std::string () const;
     const char *kill_category_desc(kill_category) const;
     void merge_killer(kill_category who);
