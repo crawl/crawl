@@ -915,7 +915,7 @@ static bool tso_blessing_extend_stay(monsters *mon)
     abj.duration += 100 + random2(300);
 
     // If the extended stay is long enough, make it permanent.
-    if (abj.duration > 370)
+    if (abj.duration > 375)
         mon->del_ench(ENCH_ABJ, true);
 
     mon->update_ench(abj);
