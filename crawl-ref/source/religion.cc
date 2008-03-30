@@ -918,7 +918,7 @@ static bool tso_blessing_extend_stay(monsters *mon)
     // that we have to delete the enchantment without removing the
     // enchantment effect, in order to keep the monster from
     // disappearing.
-    if (abj.duration > 375)
+    if (abj.duration > 374)
         mon->del_ench(ENCH_ABJ, true, false);
     else
         mon->update_ench(abj);
