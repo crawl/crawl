@@ -997,12 +997,15 @@ bool bless_follower(monsters* follower,
                     god_type god,
                     bool (*suitable)(const monsters* mon))
 {
-    monsters *mon;
+    monsters *mon = NULL;
 
+    std::string pronoun;
     std::string blessed;
     std::string result;
 
     int chance = random2(20);
+
+    bool is_near = false;
 
     // If a follower was specified, and it's suitable, pick it.
     if (follower && suitable(follower))
@@ -1032,6 +1035,7 @@ bool bless_follower(monsters* follower,
 
                         if (reinforced)
                         {
+                            pronoun = "";
                             blessed = "you";
                             result = "reinforcement";
                             goto blessing_done;
@@ -1050,8 +1054,10 @@ bool bless_follower(monsters* follower,
         mon = &menv[monster];
     }
 
-    blessed = (follower && !mons_near(follower)) ? "your follower"
-                  : mon->name(DESC_PLAIN).c_str();
+    is_near = mons_near(mon);
+
+    pronoun = "your";
+    blessed = (is_near) ? mon->name(DESC_PLAIN).c_str() : "follower";
 
     if (chance == 0)
     {
@@ -1185,10 +1191,26 @@ bool bless_follower(monsters* follower,
     }
 
 blessing_done:
-    snprintf(info, INFO_SIZE, " blesses %s%s with %s.",
-             mons_is_unique(mon->type) ? "" : "your ",
-             blessed.c_str(), result.c_str());
+    snprintf(info, INFO_SIZE, " blesses %s %s with %s.",
+             pronoun.c_str(), blessed.c_str(), result.c_str());
     simple_god_message(info);
+
+#ifndef USE_TILE
+    if (mon && is_near)
+    {
+        int old_flash_colour = you.flash_colour;
+        coord_def c(mon->x, mon->y);
+
+        you.flash_colour = god_colour(god);
+        view_update_at(c);
+
+        update_screen();
+        delay(100);
+
+        you.flash_colour = old_flash_colour;
+        view_update_at(c);
+    }
+#endif
 
     return true;
 }
