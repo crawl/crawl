@@ -1045,7 +1045,7 @@ void manage_halo()
                 monsters *mon = &menv[monster];
 
                 if (!mon->has_ench(ENCH_BACKLIGHT))
-                    mon->add_ench(mon_enchant(ENCH_BACKLIGHT, 0, KC_YOU, 1));
+                    mon->add_ench(mon_enchant(ENCH_BACKLIGHT, 0, KC_YOU, 10));
             }
         }
     }
