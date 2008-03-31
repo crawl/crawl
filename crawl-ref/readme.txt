@@ -21,14 +21,14 @@ Contents:
 1. Getting started
 ------------------
 If you'd like to dive in immediately, your best bets are to
-* start up a game and choose a tutorial (press T when asked for race), or
+* start up a game and choose a tutorial (press 'T' when asked for race), or
 * read quickstart.txt (in the /docs directory), or
 * for studious readers, browse the manual (see below for all doc files).
 
 Additionally, you may want to print out the file keys.pdf from the /docs
 folder. Besides a full list of command keys (don't bother with it), it contains 
 two pages of help for new players.
-Note that you can read quickstart.txt and the manual when playing; pressing ? 
+Note that you can read quickstart.txt and the manual when playing; pressing '?' 
 brings up a menu for that.
 
 
@@ -46,11 +46,11 @@ The following files in the Crawl's main folder are essential:
 * macro.txt       Playing Crawl can be made even more convenient by
                   redefining keys and assigning macros. Ignore early on.
 
-The docs/ folder contains the following helpful texts (all of which can be 
+The /docs folder contains the following helpful texts (all of which can be 
 read in-game by bringing up the help menu with '?'):
 
-* crawl_manual.txt   The complete manual; describing all aspects in the
-                     detail. Contains appendices on species, classes, etc.
+* crawl_manual.txt   The complete manual; describing all aspects in detail.
+                     Contains appendices on species, classes, etc.
 * options_guide.txt  Describes all options in detail. The structure of
                      init.txt follows this text.
 * macros_guide.txt   A how-to on using macros and keymappings, with examples.
@@ -70,7 +70,7 @@ read in-game by bringing up the help menu with '?'):
 The official webpage is
       http://crawl-ref.sourceforge.net/
 and there you can find both trackers to add bug reports, feature requests, or 
-upload patches as well as sources and binaries. This is the best way to report 
+upload patches, as well as sources and binaries. This is the best way to report 
 bugs or mention new ideas.
 
 There is a Usenet newsgroup dealing with roguelikes, including Crawl:
@@ -92,11 +92,11 @@ which can get pretty busy on the occasion.
 
 4. License and history information
 ----------------------------------
-What you have downloaded is a descendant to Linley's Dungeon Crawl. Development
+What you have downloaded is a descendant of Linley's Dungeon Crawl. Development
 of the main branch stalled at version 4.0.0b26, with a final alpha of 4.1 being
 released by Brent Ross in 2005. Since 2006, the Dungeon Crawl Stone Soup team 
-continues the development. See the CREDITS in the mail folder for myriad of 
-contributors, past and present; license.txt contains the legal blurb.
+has been continuing the development. See the CREDITS in the mail folder for a
+myriad of contributors, past and present; license.txt contains the legal blurb.
 
 Dungeon Crawl Stone Soup is an open source, freeware roguelike. It is supported 
 on Linux, Windows, OS/X  and, to a lesser extent, on DOS. The source should 
@@ -107,7 +107,7 @@ Crawl gladly and gratiously uses the following open-source packages:
 * The Lua script language, see /docs/lualicense.txt.
 * The PCRE library for regular expressions, see /docs/pcre_license.txt.
 * The Mersenne Twister for random number generation, /docs/mt19937.txt.
-* The SQLite library as database enging; it is properly public domain.
+* The SQLite library as database engine; it is properly public domain.
 * The ReST light markup language for the documentation.
 
 5. How you can help
@@ -124,8 +124,8 @@ improve interface or gameplay are welcome as well.
 * Vault making.
 Crawl uses many hand-drawn (but often randomised) maps. Making them is fun and 
 easy. It's best to start with simple entry vaults (glance through 
-dat/entry.des for a first impression). Later, you may want to read 
-docs/level_design.txt for the full power. If you're ambitious, new maps for 
+/dat/entry.des for a first impression). Later, you may want to read 
+/docs/level_design.txt for the full power. If you're ambitious, new maps for 
 branch ends are possible, as well.
 If you've made some maps, you can test them on your system (no compiling 
 needed) and then just mail them to the mailing list.
@@ -133,17 +133,19 @@ needed) and then just mail them to the mailing list.
 * Speech.
 Monster talking provides a lot of flavour. Just like vaults, speech depends 
 upon a large set of entries. Since most of the speech has been outsourced, you 
-can add new prose. The syntax is a slightly strange, so you may want to read 
-docs/monster_speech.txt.
+can add new prose. The syntax is effective, but slightly strange, so you may
+want to read /docs/monster_speech.txt.
 Again, changing or adding speech is possible on your local game. If you 
 have added something, send the files to the list.
 
 * Monster descriptions.
-You can look up that current descriptions in-game with ?/ or just read them in 
-dat/descript/monsters.txt. The following conventions should be more or less 
-obeyed: descriptions ought to contain flavour text, ideally pointing out major 
-weaknesses/strenghts. No numbers, please. Citations are okay, but try to stay 
-away from the most generic ones.
+You can look up the current monster descriptions in-game with '?/' or just read
+them in /dat/descript/monsters.txt. The following conventions should be more or
+less obeyed: descriptions ought to contain flavour text, ideally pointing out
+major weaknesses/strenghts. No numbers, please. Citations are okay, but try to
+stay away from the most generic ones.
+If you like, you can similarly modify the descriptions for features, items or
+branches.
 
 * Tiles.
 Since version 0.4, tiles are integrated within Crawl. Having variants of 
@@ -152,5 +154,9 @@ contact us via the mailing list.
 
 * Patches.
 If you like to, you can download the source code and apply patches. Both 
-patches for bug fixes as well as implementation of new features is welcome. 
-Please be sure to read docs/coding_conventions.txt first.
+patches for bug fixes as well as implementation of new features are very much
+welcome. 
+Please be sure to read /docs/coding_conventions.txt first.
+
+Thank you, and have fun crawling!
+

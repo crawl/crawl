@@ -1654,6 +1654,11 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
         beem.flavour = BEAM_POTION_STEAM;
         break;
 
+    case POT_BLOOD:
+    case POT_BLOOD_COAGULATED:
+        if (one_chance_in(3))
+            break; // stinking cloud
+        // deliberate fall through
     case POT_BERSERK_RAGE:
         beem.flavour = (coinflip() ? BEAM_POTION_FIRE : BEAM_POTION_STEAM);
         break;

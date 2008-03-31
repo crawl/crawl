@@ -2138,22 +2138,22 @@ enum object_class_type                 // (unsigned char) mitm[].base_type
 
 enum operation_types
 {
-    OPER_WIELD = 'w',
-    OPER_QUAFF = 'q',
-    OPER_DROP = 'd',
-    OPER_EAT = 'e',
-    OPER_TAKEOFF = 'T',
-    OPER_WEAR = 'W',
-    OPER_PUTON = 'P',
-    OPER_REMOVE = 'R',
-    OPER_READ = 'r',
+    OPER_WIELD    = 'w',
+    OPER_QUAFF    = 'q',
+    OPER_DROP     = 'd',
+    OPER_EAT      = 'e',
+    OPER_TAKEOFF  = 'T',
+    OPER_WEAR     = 'W',
+    OPER_PUTON    = 'P',
+    OPER_REMOVE   = 'R',
+    OPER_READ     = 'r',
     OPER_MEMORISE = 'M',
-    OPER_ZAP = 'z',
-    OPER_EXAMINE = 'v',
-    OPER_FIRE = 'f',
-    OPER_PRAY = 'p',
-    OPER_EVOKE = 'E',
-    OPER_ANY = 0
+    OPER_ZAP      = 'Z',
+    OPER_EXAMINE  = 'v',
+    OPER_FIRE     = 'f',
+    OPER_PRAY     = 'p',
+    OPER_EVOKE    = 'E',
+    OPER_ANY      = 0
 };
 
 enum orb_type

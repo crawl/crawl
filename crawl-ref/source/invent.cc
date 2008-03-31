@@ -1046,11 +1046,19 @@ bool has_warning_inscription(const item_def& item,
                              operation_types oper)
 {
     const char iletter = static_cast<char>(oper);
-    
+
     const std::string& r(item.inscription);
     for ( unsigned int i = 0; i + 1 < r.size(); ++i )
-        if (r[i] == '!' && (r[i+1] == iletter || r[i+1] == '*'))
-            return true;
+    {
+        if (r[i] == '!')
+        {
+            if (r[i+1] == iletter || r[i+1] == '*')
+                return true;
+            else if (oper == OPER_ZAP && r[i+1] == 'z') // for the 0.3.4. keys
+                return true;
+        }
+    }
+
     return false;
 }
 

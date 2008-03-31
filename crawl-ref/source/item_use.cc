@@ -4672,6 +4672,7 @@ bool wearing_slot(int inv_slot)
     for (int i = EQ_CLOAK; i <= EQ_AMULET; ++i)
         if ( inv_slot == you.equip[i] )
             return true;
+            
     return false;
 }
 
