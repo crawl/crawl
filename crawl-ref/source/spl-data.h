@@ -271,7 +271,7 @@
     SPELL_BOLT_OF_FIRE, "Bolt of Fire",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
-     5,
+     6,
      200,
      NULL,
      true
@@ -281,7 +281,7 @@
     SPELL_BOLT_OF_COLD, "Bolt of Cold",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
-     5,
+     6,
      200,
      NULL,
      true
@@ -291,7 +291,7 @@
     SPELL_LIGHTNING_BOLT, "Lightning Bolt",
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
-     6,
+     5,
      200,
      NULL,
      true
@@ -2100,7 +2100,7 @@
   SPELL_CONJURE_BALL_LIGHTNING, "Conjure Ball Lightning",
     SPTYP_AIR | SPTYP_CONJURATION,
     SPFLAG_NONE,
-    8,
+    7,
     200,
      NULL,
      false,
