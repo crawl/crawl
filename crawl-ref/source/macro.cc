@@ -409,19 +409,6 @@ void macro_buf_add( const keyseq &actions, bool reverse)
 
     Buffer.insert( reverse? Buffer.begin() : Buffer.end(),
                    act.begin(), act.end() );
-
-    if (reverse)
-    {
-        for (int i = 0, size_i = recorders.size(); i < size_i; i++)
-            for (int j = act.size() - 1 ; j >= 0; j--)
-                recorders[i]->add_key(act[j], reverse);
-    }
-    else
-    {
-        for (int i = 0, size_i = recorders.size(); i < size_i; i++)
-            for (int j = 0, size_j = act.size(); j < size_j ; j++)
-                recorders[i]->add_key(act[j]);
-    }
 } 
 
 /*
@@ -433,9 +420,6 @@ void macro_buf_add( int key, bool reverse )
         Buffer.push_front( key );
     else
         Buffer.push_back( key );
-
-    for (int i = 0, size = recorders.size(); i < size; i++)
-        recorders[i]->add_key(key, reverse);
 }
 
 
@@ -515,9 +499,6 @@ static void macro_buf_apply_command_macro( void )
 
         if (result.size() > 0)
         {
-            for (int i = 0, size_i = recorders.size(); i < size_i; i++)
-                recorders[i]->remove_trigger_keys(tmp.size());
-
             // Found macro, remove match from front:
             for (unsigned int i = 0; i < tmp.size(); i++)
             {
@@ -560,6 +541,9 @@ static int macro_buf_get( void )
 
     if (macro_keys_left >= 0)
         macro_keys_left--;
+
+    for (int i = 0, size_i = recorders.size(); i < size_i; i++)
+        recorders[i]->add_key(key);
 
     return (key);
 }
