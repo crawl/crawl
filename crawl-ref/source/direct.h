@@ -40,16 +40,16 @@ private:
 struct crawl_view_geometry
 {
 public:
+    coord_def termp;               // Left-top pos of terminal.
     coord_def termsz;              // Size of the terminal.
     coord_def viewp;               // Left-top pos of viewport.
     coord_def viewsz;              // Size of the viewport (play area).
     coord_def hudp;                // Left-top pos of status area.
-    coord_def hudsz;               // Size of the status area.
+    const coord_def hudsz;         // Size of the status area.
     coord_def msgp;                // Left-top pos of the message pane.
     coord_def msgsz;               // Size of the message pane.
     coord_def mlistp;              // Left-top pos of the monster list.
     coord_def mlistsz;             // Size of the monster list.
-    bool mlist_inline;             // Is the mlist inline or in its own column?
 
     crawl_view_buffer vbuf;        // Buffer for drawing the main game map.
 
@@ -62,14 +62,6 @@ public:
     coord_def vlos1, vlos2;        // LOS limit viewport coords (inclusive)
 
     coord_def mousep;              // Where the mouse is.
-
-    static const int message_min_lines = 7;
-    static const int hud_min_width  = 41;
-    static const int hud_min_gutter = 3;
-    static const int hud_max_gutter = 6;
-    static const int mlist_gutter = 1;
-    static const int mlist_min_width = 14;
-    static const int mlist_max_width = 26;
 
 private:
     coord_def last_player_pos;

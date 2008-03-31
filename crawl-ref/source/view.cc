@@ -4554,10 +4554,14 @@ static void _debug_pane_bounds()
     // Doesn't work for HUD because print_stats() overwrites it.
     // To debug HUD, add viewwindow(false,false) at end of _prep_input.
 
-    cgotoxy(1,1, GOTO_MLIST);
-    cprintf("+   L");
-    cgotoxy(crawl_view.mlistsz.x-4, crawl_view.mlistsz.y, GOTO_MLIST);
-    cprintf("L   +");
+    if (crawl_view.mlistsz.y > 0)
+    {
+        textcolor(WHITE);
+        cgotoxy(1,1, GOTO_MLIST);
+        cprintf("+   L");
+        cgotoxy(crawl_view.mlistsz.x-4, crawl_view.mlistsz.y, GOTO_MLIST);
+        cprintf("L   +");
+    }
 
     cgotoxy(1,1, GOTO_STAT);
     cprintf("+  H");
@@ -4574,6 +4578,7 @@ static void _debug_pane_bounds()
     cgotoxy(crawl_view.viewp.x+crawl_view.viewsz.x-2,
             crawl_view.viewp.y+crawl_view.viewsz.y-1);
     cprintf("V+");
+    textcolor(LIGHTGREY);
 #endif
 }
 
@@ -4908,15 +4913,192 @@ void crawl_view_buffer::size(const coord_def &sz)
 //////////////////////////////////////////////////////////////////////////////
 // crawl_view_geometry
 
-// already defined in header
-// const int crawl_view_geometry::message_min_lines;
-// const int crawl_view_geometry::hud_min_width;
-// const int crawl_view_geometry::hud_min_gutter;
-// const int crawl_view_geometry::hud_max_gutter;
+// ----------------------------------------------------------------------
+// Layout helper classes
+// ----------------------------------------------------------------------
+
+// Moved from direct.h, where they didn't need to be.
+// define VIEW_MIN_HEIGHT defined elsewhere
+// define VIEW_MAX_HEIGHT use Options.view_max_height
+// define VIEW_MIN_WIDTH defined elsewhere
+// define VIEW_MAX_WIDTH use Options.view_max_width
+#define HUD_WIDTH  39
+#define HUD_HEIGHT 17
+#define MSG_MIN_HEIGHT 6
+// #define MLIST_MIN_HEIGHT use Options.mlist_min_height
+#define MLIST_MIN_WIDTH 25  /* non-inline layout only */
+#define MLIST_MAX_WIDTH 42
+#define MLIST_GUTTER 1
+#define HUD_MIN_GUTTER 2
+#define HUD_MAX_GUTTER 4
+
+// Helper for layouts.  Tries to increment lvalue without overflowing it.
+static void _increment(int& lvalue, int delta, int max_value)
+{
+    lvalue = std::min(lvalue+delta, max_value);
+}
+
+class _layout
+{
+ public:
+    _layout(coord_def termsz_) :
+        termp(1,1),    termsz(termsz_),
+        viewp(-1,-1),  viewsz(VIEW_MIN_WIDTH, VIEW_MIN_HEIGHT),
+        hudp(-1,-1),   hudsz(HUD_WIDTH, HUD_HEIGHT),
+        msgp(-1,-1),   msgsz(0, MSG_MIN_HEIGHT),
+        mlistp(-1,-1), mlistsz(MLIST_MIN_WIDTH, 0),
+        hud_gutter(HUD_MIN_GUTTER),
+        valid(false) {}
+    
+ protected:
+    void _assert_validity() const
+    {
+#ifndef USE_TILE
+        // Check that all the panes fit in the view.
+        ASSERT( (viewp+viewsz - termp).x <= termsz.x );
+        ASSERT( (viewp+viewsz - termp).y <= termsz.y );
+
+        ASSERT( (hudp+hudsz - termp).x <= termsz.x );
+        ASSERT( (hudp+hudsz - termp).y <= termsz.y );
+
+        ASSERT( (msgp+msgsz - termp).x <= termsz.x );
+        ASSERT( (msgp+msgsz - termp).y <= termsz.y );
+        // Don't stretch message all the way to the bottom-right
+        // character; it causes scrolling and badness.
+        ASSERT( (msgp+msgsz - termp) != termsz );
+
+        ASSERT( (mlistp+mlistsz-termp).x <= termsz.x );
+        ASSERT( (mlistp+mlistsz-termp).y <= termsz.y );
+#endif
+    }
+ public:
+    const coord_def termp, termsz;
+    coord_def viewp, viewsz;
+    coord_def hudp;
+    const coord_def hudsz;
+    coord_def mlistp, mlistsz;
+    coord_def msgp, msgsz;
+    int hud_gutter;
+    bool valid;
+};
+
+// vvvvvvghhh  v=view, g=hud gutter, h=hud, l=list, m=msg
+// vvvvvvghhh
+// vvvvvv lll
+//        lll
+// mmmmmmmmmm
+class _inline_layout : public _layout
+{
+ public:
+    _inline_layout(coord_def c) : _layout(c) { valid = _init(); }
+    bool _init()
+    {
+        // x: View gets leftover; then mlist; then hud gutter
+        if (leftover_x() < 0) return false;
+        _increment(viewsz.x,   leftover_x(), Options.view_max_width);
+        if ((viewsz.x % 2) != 1) --viewsz.x;
+        mlistsz.x = hudsz.x;
+        _increment(mlistsz.x,  leftover_x(), MLIST_MAX_WIDTH);
+        _increment(hud_gutter, leftover_x(), HUD_MAX_GUTTER);
+        _increment(mlistsz.x,  leftover_x(), INT_MAX);
+        msgsz.x = termsz.x-1; // Can't use last character
+
+        // y: View gets leftover; then mlist; then message
+        // mlist might be left with less than MLIST_MIN_HEIGHT, but
+        // that's the breaks.
+        if (leftover_y() < 0) { return false; }
+        {
+            const int saved_leftover_y = leftover_y();
+            _increment(viewsz.y, saved_leftover_y, Options.view_max_height);
+            if ((viewsz.y % 2) != 1) --viewsz.y;
+            if (mlistsz.y < Options.mlist_min_height)
+            {
+                _increment(mlistsz.y, saved_leftover_y, Options.mlist_min_height);
+            }
+        }
+        _increment(msgsz.y,  leftover_y(), INT_MAX);
+
+        // Finish off by doing the positions
+        viewp  = termp;
+        msgp   = termp + coord_def(0, std::max(viewsz.y, hudsz.y+mlistsz.y));
+        hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
+        mlistp = hudp  + coord_def(0, hudsz.y);
+
+        _assert_validity();
+        return true;
+    }
+
+    int leftover_x() const
+    {
+        int width = (viewsz.x + hud_gutter + std::max(hudsz.x, mlistsz.x));
+        return (termsz.x - width);
+    }
+    int leftover_y() const
+    {
+        // hud+mlist can grow longer than the view, believe it or not
+        int height = std::max(viewsz.y, hudsz.y+mlistsz.y) + msgsz.y;
+        return (termsz.y - height);
+    }
+};
+
+// ll vvvvvvghhh  v=view, g=hud gutter, h=hud, l=list, m=msg
+// ll vvvvvvghhh
+// ll vvvvvv 
+// mmmmmmmmmmmmm
+class _mlist_col_layout : public _layout
+{
+ public:
+    _mlist_col_layout(coord_def c) : _layout(c) { valid = _init(); }
+    bool _init()
+    {
+        // Don't let the mlist column steal all the width.  Up front,
+        // take some for the view.  If it makes the layout fail, that's fine.
+        _increment(viewsz.x, MLIST_MIN_WIDTH/2, Options.view_max_width);
+
+        // x: View and mlist share leftover; then hud gutter
+        if (leftover_x() < 0) return false;
+
+        _increment(mlistsz.x,  leftover_x()/2, MLIST_MAX_WIDTH);
+        _increment(viewsz.x,   leftover_x(),   Options.view_max_width);
+        if ((viewsz.x % 2) != 1) --viewsz.x;
+        _increment(mlistsz.x,  leftover_x(),   MLIST_MAX_WIDTH);
+        _increment(hud_gutter, leftover_x(),   HUD_MAX_GUTTER);
+        msgsz.x = termsz.x-1; // Can't use last character
+        
+        // y: View gets leftover; then message
+        if (leftover_y() < 0) return false;
+        _increment(viewsz.y, leftover_y(), Options.view_max_height);
+        if ((viewsz.y % 2) != 1) --viewsz.y;
+        _increment(msgsz.y,  leftover_y(), INT_MAX);
+        mlistsz.y = viewsz.y;
+
+        // Finish off by doing the positions
+        mlistp = termp;
+        viewp  = mlistp+ coord_def(mlistsz.x+MLIST_GUTTER, 0);
+        msgp   = termp + coord_def(0, viewsz.y);
+        hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
+
+        _assert_validity();
+        return true;
+    }
+ private:
+    int leftover_x() const
+    {
+        int width = (mlistsz.x + MLIST_GUTTER + viewsz.x + hud_gutter + hudsz.x);
+        return (termsz.x - width);
+    }
+    int leftover_y() const
+    {
+        const int top_y = std::max(std::max(viewsz.y, hudsz.y), mlistsz.y);
+        const int height = top_y + msgsz.y;
+        return (termsz.y - height);
+    }
+};
 
 crawl_view_geometry::crawl_view_geometry()
-    : termsz(80, 24), viewp(1, 1), viewsz(33, 17),
-      hudp(40, 1), hudsz(41, 17),
+    : termp(1, 1), termsz(80, 24),
+      viewp(1, 1), viewsz(33, 17),
+      hudp(40, 1), hudsz(HUD_WIDTH, HUD_HEIGHT),
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
       mlistp(hudp.x, hudp.y + hudsz.y),
       mlistsz(hudsz.x, msgp.y - mlistp.y),
@@ -4989,102 +5171,37 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 
 void crawl_view_geometry::init_geometry()
 {
-    // Points and sizes can be combined in these ways:
-    // p+p=meaningless, p+sz=p, p-p=sz, p-sz=p
-    // sz+p=p, sz+sz=sz, sz-p=meaningless, sz-sz=sz
-
-    const coord_def termp(1,1);
-
     termsz = coord_def( get_number_of_cols(), get_number_of_lines() );
 
+    const _inline_layout lay_inline(termsz);
+    const _mlist_col_layout lay_mlist(termsz);
+
+    if (! lay_inline.valid)
+    {
 #ifndef USE_TILE
-    // If the terminal is too small, exit with an error.
-    if ((termsz.x < 80 || termsz.y < 24) && !crawl_state.need_save)
-        end(1, false, "Terminal too small (%d,%d), need at least (80,24)",
-            termsz.x, termsz.y);
+        // Terminal too small; exit with an error
+        if (!crawl_state.need_save)
+        {
+            end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
+                termsz.x, termsz.y,
+                termsz.x + std::max(0, -lay_inline.leftover_x()),
+                termsz.y + std::max(0, -lay_inline.leftover_y()));
+        }
 #endif
-
-    int freeheight = termsz.y - message_min_lines;
-
-    // Make the viewport as tall as possible.
-    viewsz.y = freeheight < Options.view_max_height?
-        freeheight : Options.view_max_height;
-
-    // Make sure we're odd-sized.
-    if (!(viewsz.y % 2))
-        --viewsz.y;
-
-    // If the view is too short, force it to minimum height.
-    if (viewsz.y < VIEW_MIN_HEIGHT)
-        viewsz.y = VIEW_MIN_HEIGHT;
-
-    // Determine if the monster list can have its own column.
-    int freewidth = termsz.x - (viewsz.x + mlist_gutter + 
-        mlist_min_width + hud_min_gutter + hudsz.x);
-    mlist_inline = (freewidth < 0) || Options.mlist_force_inline;
-    if (mlist_inline)
-        freewidth = termsz.x - (hud_min_width + hud_min_gutter);
-
-    // Make the viewport as wide as possible.
-    viewsz.x = freewidth < Options.view_max_width?
-        freewidth : Options.view_max_width;
-
-    if (!(viewsz.x % 2))
-        --viewsz.x;
-
-    if (viewsz.x < VIEW_MIN_WIDTH)
-        viewsz.x = VIEW_MIN_WIDTH;
-
-    vbuf.size(viewsz);
-
-    if (!mlist_inline)
-    {
-        mlistp = termp;
-        const int _mlist_max_width = mlist_max_width; // work around link problem?
-        mlistsz.x = std::min(mlist_min_width + freewidth, _mlist_max_width);
-        mlistsz.y = viewsz.y;
-
-        viewp.x = mlistp.x + mlistsz.x;
     }
 
-    // The hud appears after the viewport + gutter and possibly the mlist.
-    hudp = coord_def(viewp.x + viewsz.x + hud_min_gutter, 1);
+    const _layout* winner = &lay_inline;
+    if (!Options.mlist_force_inline && lay_mlist.valid)
+        winner = &lay_mlist;
 
-    // HUD size never changes, but we may increase the gutter size (up to
-    // the current max of 6).
-    if (hudp.x + hudsz.x - 1 < termsz.x)
-    {
-        const int hudmarg = termsz.x - (hudp.x + hudsz.x - 1);
-        const int hud_increase_max = hud_max_gutter - hud_min_gutter;
-        hudp.x += hudmarg > hud_increase_max? hud_increase_max : hudmarg;
-    }
-
-    if (mlist_inline)
-    {
-        // Monster list takes up all space between the hud and the message pane
-        mlistp = coord_def(hudp.x, hudp.y + hudsz.y);
-
-        // Try to grow the length of the monster list based on the options,
-        // but only grow if there's room for the minimum message lines.
-        int len = 1 + viewsz.y - mlistp.y;
-        len = std::max(len, Options.mlist_min_height);
-        len = std::min(len, 1 + termsz.y - message_min_lines - (hudp.y + hudsz.y));
-        mlistsz = coord_def(termsz.x - (mlistp.x - 1), len);
-    }
-
-    // Calculate message area
-    {
-        // Always from lhs of term to rhs of term
-        msgp.x  = termp.x;
-        msgsz.x = termsz.x;
-        // From bottom of mlist or view, whichever is lower, to bottom of term
-        msgp.y  = std::max((mlistp+mlistsz).y, (viewp+viewsz).y);
-        msgsz.y = termsz.y - (msgp-termp).y;
-
-        // Well, actually not to the very bottom.  Drawing the last line causes
-        // the screen to scroll.  If this is fixed, we get another line of message.
-        msgsz.y -= 1;
-    }
+    msgp  = winner->msgp;
+    msgsz = winner->msgsz;
+    viewp = winner->viewp;
+    viewsz = winner->viewsz;
+    hudp = winner->hudp;
+    // hudsz = winner->hudsz; size is constant
+    mlistp = winner->mlistp;
+    mlistsz = winner->mlistsz;
 
 #ifdef USE_TILE
     // libgui may redefine these based on its own settings
@@ -5092,25 +5209,9 @@ void crawl_view_geometry::init_geometry()
 #endif
 
     viewhalfsz = viewsz / 2;
-
+    vbuf.size(viewsz);
     init_view();
-
-#ifndef USE_TILE
-    // Check that all the panes fit in the view.  Note that currently
-    // no pane is allowed to stretch all the way to the bottom (see
-    // comment by message pane calculation, above.
-    ASSERT( (viewp+viewsz-termp).x <= termsz.x );
-    ASSERT( (viewp+viewsz-termp).y <= termsz.y-1 );
-
-    ASSERT( (hudp+hudsz-termp).x <= termsz.x );
-    ASSERT( (hudp+hudsz-termp).y <= termsz.y-1 );
-
-    ASSERT( (msgp+msgsz-termp).x <= termsz.x );
-    ASSERT( (msgp+msgsz-termp).y <= termsz.y-1 );
-
-    ASSERT( (mlistp+mlistsz-termp).x <= termsz.x );
-    ASSERT( (mlistp+mlistsz-termp).y <= termsz.y-1 );
-#endif
+    return;
 }
 
 ////////////////////////////////////////////////////////////////////////////
