@@ -1010,8 +1010,8 @@ int halo_radius()
         && !you.penance[GOD_SHINING_ONE])
     {
         int radius = you.piety / 20;
-        if (radius > 9)
-            radius = 9;
+        if (radius > 8)
+            radius = 8;
 
         return radius;
     }
