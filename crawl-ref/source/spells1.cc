@@ -102,7 +102,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         // query for location {dlb}:
         for (;;)
         {
-            direction(beam, DIR_TARGET, TARG_ANY, false, false,
+            direction(beam, DIR_TARGET, TARG_ANY, -1, false, false,
                       "Blink to where?");
 
             if (!beam.isValid || coord_def(beam.tx, beam.ty) == you.pos())
@@ -489,7 +489,7 @@ bool conjure_flame(int pow)
             done_first_message = true;
         }
 
-        direction( spelld, DIR_TARGET, TARG_ENEMY, false, false );
+        direction( spelld, DIR_TARGET, TARG_ENEMY, -1, false, false );
 
         if (!spelld.isValid)
         {

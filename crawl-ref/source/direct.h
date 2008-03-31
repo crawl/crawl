@@ -147,9 +147,9 @@ struct dist
 };
 
 void direction( dist &moves, targeting_type restricts = DIR_NONE,
-                targ_mode_type mode = TARG_ANY, bool just_looking = false,
-                bool needs_path = true, const char *prompt = NULL,
-                targeting_behaviour *mod = NULL );
+                targ_mode_type mode = TARG_ANY, int range = -1,
+                bool just_looking = false, bool needs_path = true,
+                const char *prompt = NULL, targeting_behaviour *mod = NULL );
 
 bool in_los_bounds(int x, int y);
 bool in_viewport_bounds(int x, int y);

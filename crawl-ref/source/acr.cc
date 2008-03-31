@@ -2180,7 +2180,7 @@ void process_command( command_type cmd )
             MSGCH_PROMPT);
 
         struct dist lmove;      // will be initialized by direction()
-        direction(lmove, DIR_TARGET, TARG_ANY, true);
+        direction(lmove, DIR_TARGET, TARG_ANY, -1, true);
         if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
             start_travel( lmove.tx, lmove.ty );
         break;

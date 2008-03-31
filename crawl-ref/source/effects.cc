@@ -1915,7 +1915,7 @@ void yell(bool force)
         }
 
         mpr("Gang up on whom?", MSGCH_PROMPT);
-        direction( targ, DIR_TARGET, TARG_ENEMY, false, false );
+        direction( targ, DIR_TARGET, TARG_ENEMY, -1, false, false );
 
         if (targ.isCancel)
         {
@@ -2024,7 +2024,6 @@ bool vitrify_area(int radius)
     const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
     bool something_happened = false;
     for ( int x = X_BOUND_1; x <= X_BOUND_2; ++x )
-    {
         for ( int y = Y_BOUND_1; y <= Y_BOUND_2; ++y )
         {
             if ( distance(x,y,you.x_pos,you.y_pos) < radius2 )
@@ -2041,7 +2040,6 @@ bool vitrify_area(int radius)
                 }
             }
         }
-    }
     
     return (something_happened);
 }

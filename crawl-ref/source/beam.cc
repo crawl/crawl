@@ -2347,10 +2347,25 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty )
  */
 void mimic_alert(monsters *mimic)
 {
-    if (mimic->has_ench(ENCH_TP))
-        return;
+    bool should_id = !testbits(mimic->flags, MF_KNOWN_MIMIC)
+                     && player_monster_visible(mimic) && mons_near(mimic);
 
-    monster_teleport( mimic, !one_chance_in(3) );
+    // If we got here, we at least got a resists message, if not
+    // a full wounds printing. Thus, might as well id the mimic.
+    if (mimic->has_ench(ENCH_TP))
+    {
+        if (should_id)
+            mimic->flags |= MF_KNOWN_MIMIC;
+            
+        return;
+    }
+    
+    const bool instant_tele = !one_chance_in(3);
+    monster_teleport( mimic, instant_tele );
+    
+    // at least for this short while, we know it's a mimic
+    if (!instant_tele && should_id)
+        mimic->flags |= MF_KNOWN_MIMIC;
 }                               // end mimic_alert()
 
 static bool _isBouncy(bolt &beam, unsigned char gridtype)

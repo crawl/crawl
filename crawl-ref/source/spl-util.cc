@@ -756,7 +756,7 @@ bool spell_direction( dist &spelld, bolt &pbolt,
     if (restrict != DIR_DIR)
         message_current_target();
 
-    direction( spelld, restrict, mode, false, needs_path, prompt );
+    direction( spelld, restrict, mode, -1, false, needs_path, prompt );
 
     if (!spelld.isValid)
     {
