@@ -86,15 +86,16 @@ static bool surge_identify_boosters(spell_type spell)
             {
                 if (you.equip[i] != -1 &&
                     !item_ident(you.inv[you.equip[i]], ISFLAG_KNOW_PROPERTIES))
+                {
                     ++num_unknown;
+                }
             }
-            
+
             // We can also identify cases with two unknown rings, both
             // of fire (or both of ice)...let's skip it.
             if ( num_unknown == 1 )
             {
                 for ( int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i )
-                {
                     if ( you.equip[i] != -1 )
                     {
                         item_def& ring = you.inv[you.equip[i]];
@@ -109,7 +110,7 @@ static bool surge_identify_boosters(spell_type spell)
                                  ring.name(DESC_INVENTORY_EQUIP).c_str());
                         }
                     }
-                }
+                    
                 return true;
             }
         }
@@ -335,7 +336,7 @@ int spell_fail(spell_type spell)
     }
 
     if (you.equip[EQ_WEAPON] != -1 
-            && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS)
+        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS)
     {
         int wpn_penalty = (3 * (property( you.inv[you.equip[EQ_WEAPON]], PWPN_SPEED ) - 12)) / 2;
 
@@ -989,7 +990,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             do
             {
                 sptype = 1 << (random2(SPTYP_LAST_EXPONENT+1));
-            } while (!spell_typematch(spell, sptype));
+            }
+            while (!spell_typematch(spell, sptype));
 
             // all spell failures give a bit of magical radiation..
             // failure is a function of power squared multiplied
@@ -1494,9 +1496,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         {
             const int num = 7 + random2(5);
             for (int i = 0; i < num; ++i)
-            {
                 summon_ice_beast_etc(powc, summon_any_demon(DEMON_LESSER));
-            }
         }
         break;
 
@@ -2202,9 +2202,11 @@ static void miscast_enchantment(int severity, const char* cause)
         switch (random2(4))
         {
         case 0:
-            do {
+            do
+            {
                 curse_an_item(false);
-            } while ( !one_chance_in(3) );
+            }
+            while ( !one_chance_in(3) );
 
             mpr("You sense an overwhelmingly malignant aura!");
             break;
@@ -3625,13 +3627,13 @@ static int power_to_barcount( int power )
 {
     if ( power == -1 )
         return -1;
+        
     const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
     int result = 0;
     for ( unsigned int i = 0; i < ARRAYSIZE(breakpoints); ++i )
-    {
         if ( power > breakpoints[i] )
             ++result;
-    }
+
     return result + 1;   
 }
 

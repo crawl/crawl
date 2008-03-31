@@ -1646,7 +1646,7 @@ int tileidx_item(const item_def &item)
 
         if (type < AMU_RAGE)
         {
-            if(is_random_artefact( item ))
+            if (is_random_artefact( item ))
                 return TILE_RING_RANDOM_OFFSET + color - 1;
             else 
                 return TILE_RING_NORMAL_OFFSET + special % 13;
@@ -1655,7 +1655,7 @@ int tileidx_item(const item_def &item)
         {
             if (is_unrandom_artefact( item ))
                 return _tileidx_unrand_artefact(find_unrandart_index(item));
-            else if(is_random_artefact( item ))
+            else if (is_random_artefact( item ))
                 return TILE_AMU_RANDOM_OFFSET + color - 1;
             else
                 return TILE_AMU_NORMAL_OFFSET + special % 13;
@@ -3401,10 +3401,9 @@ int get_ctg_idx(char *name)
     int i;
 
     for (i = 0; i < TILEP_PARTS_TOTAL; i++)
-    {
          if (strcmp(name, tilep_parts_name[i]) == 0)
              return i;
-    }
+
     return 0;
 }
 
@@ -3431,10 +3430,9 @@ int get_parts_idx(int part, char *name)
     int i;
 
     for (i = 0; i < tilep_parts_total[part]; i++)
-    {
          if (strcmp(name, tilep_comment[ tilep_comment_ofs[part]+i]) == 0)
              return i+1;
-    }
+
     return res;
 }
 #endif /* TILEP_DEBUG */
@@ -3739,12 +3737,10 @@ void tile_init_flavor()
 void tile_clear_buf()
 {
     for (int y = 0; y < GYM; y++)
-    {
         for (int x = 0; x < GXM; x++)
         {
             tile_dngn[x][y] = TILE_DNGN_UNSEEN;
         }
-    }
 }
 
 /* called from view.cc */
@@ -4004,9 +4000,7 @@ void tile_place_ray(const coord_def& gc)
 void tile_draw_rays(bool resetCount)
 {
     for (unsigned int i = 0; i < tileRayCount; i++)
-    {
         env.tile_bg[tileRays[i].x-1][tileRays[i].y-1] |= TILE_FLAG_RAY;
-    }
 
     if (resetCount)
         tileRayCount = 0;

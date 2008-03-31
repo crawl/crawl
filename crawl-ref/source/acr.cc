@@ -1033,10 +1033,12 @@ static void _handle_wizard_command( void )
             // even at maximum, you can still gain gifts
             // try at least once f. maximum, or repeat until something happens
             // Rarely, this might result in several gifts during the same round!
-            do {
+            do
+            {
                gain_piety(50); 
-            } while (old_piety < MAX_PIETY && old_piety == you.piety
-                     && old_penance == you.penance[you.religion]);
+            }
+            while (old_piety < MAX_PIETY && old_piety == you.piety
+                   && old_penance == you.penance[you.religion]);
             
             if (old_penance)
             {
@@ -1078,7 +1080,6 @@ static void _handle_wizard_command( void )
         mpr("igrid:");
 
         for (i = 0; i < GXM; i++)
-        {
             for (j = 0; j < GYM; j++)
             {
                 if (igrd[i][j] != NON_ITEM)
@@ -1091,7 +1092,7 @@ static void _handle_wizard_command( void )
                          mitm[i].quantity );
                 }
             }
-        }
+
         break;
 
     default:
@@ -2078,7 +2079,7 @@ void process_command( command_type cmd )
 
     case CMD_REMOVE_ARMOUR:
     {
-        int index=0;
+        int index = 0;
 
         if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
             takeoff_armour(index);
@@ -2808,9 +2809,11 @@ static void _decrement_durations()
 
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
-            if ( you.religion == GOD_TROG && you.piety > random2(150) &&
-                 !player_under_penance() )
+            if ( you.religion == GOD_TROG && you.piety > random2(150)
+                 && !player_under_penance() )
+            {
                 mpr("Trog's vigour flows through your veins.");
+            }
             else if ( one_chance_in(chance) )
             {
                 mpr("You pass out from exhaustion.", MSGCH_WARN);
@@ -3612,7 +3615,8 @@ static void _open_door(int move_x, int move_y, bool check_confused)
             in_bounds(dx, dy) ? grd[dx][dy] : DNGN_UNSEEN;
         if (feat != DNGN_CLOSED_DOOR)
         {
-            switch (feat) {
+            switch (feat)
+            {
             case DNGN_OPEN_DOOR:
                 mpr("It's already open!"); break;
             default:
@@ -4217,19 +4221,15 @@ static void _move_player(int move_x, int move_y)
         int ig2 = 0;
 
         for (igly = 0; igly < MAX_ITEMS; igly++)
-        {
             if (is_valid_item( mitm[igly] ))
                 ig2++;
-        }
 
         mprf( MSGCH_DIAGNOSTICS, "Number of items present: %d", ig2 );
 
         ig2 = 0;
         for (igly = 0; igly < MAX_MONSTERS; igly++)
-        {
             if (menv[igly].type != -1)
                 ig2++;
-        }
 
         mprf( MSGCH_DIAGNOSTICS, "Number of monsters present: %d", ig2);
         mprf( MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
@@ -4353,9 +4353,11 @@ static void _setup_cmd_repeat()
         // already in the key rercording buffer, so we just need to
         // discard all the keys saying how many times the command
         // should be repeated.
-        do {
+        do
+        {
             repeat_again_rec.keys.pop_front();
-        } while (repeat_again_rec.keys[0] != ch);
+        }
+        while (repeat_again_rec.keys[0] != ch);
 
         repeat_again_rec.keys.pop_front();
     }
@@ -4580,8 +4582,6 @@ static void _compile_time_asserts()
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.
-    for (int i=0; i<NUM_BRANCHES; i++)
-    {
+    for (int i = 0; i < NUM_BRANCHES; i++)
         ASSERT(branches[i].id == i);
-    }
 }

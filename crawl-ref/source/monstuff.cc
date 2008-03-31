@@ -311,8 +311,7 @@ static void _monster_drop_ething(monsters *monster,
     }
 
     if (destroyed)
-        mprf(MSGCH_SOUND,
-             grid_item_destruction_message(grd(monster->pos())));
+        mprf(MSGCH_SOUND, grid_item_destruction_message(grd(monster->pos())));
 }
 
 static void _place_monster_corpse(const monsters *monster)
@@ -2093,14 +2092,18 @@ static void _handle_behaviour(monsters *mon)
         // now, the corollary to that is that sometimes, if a
         // player is right next to a monster, they will 'see'
         if (grid_distance( you.x_pos, you.y_pos, mon->x, mon->y ) == 1
-                && one_chance_in(3))
+            && one_chance_in(3))
+        {
             proxPlayer = true;
+        }
 
         // [dshaligram] Very smart monsters have a chance of cluing in to
         // invisible players in various ways.
-        else if ((intel == I_NORMAL && one_chance_in(13))
-                || (intel == I_HIGH && one_chance_in(6)))
+        else if (intel == I_NORMAL && one_chance_in(13)
+                 || intel == I_HIGH && one_chance_in(6))
+        {
             proxPlayer = true;
+        }
     }
 
     // set friendly target, if they don't already have one
@@ -3971,17 +3974,17 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                                   //     physical powers.
     }
     else if (monster->has_ench(ENCH_CONFUSION) 
-            && !mons_class_flag(monster->type, M_CONFUSED))
+             && !mons_class_flag(monster->type, M_CONFUSED))
     {
         return (false);
     }
     else if (monster->type == MONS_PANDEMONIUM_DEMON 
-            && !monster->ghost->spellcaster)
+             && !monster->ghost->spellcaster)
     {
         return (false);
     }
     else if (random2(200) > monster->hit_dice + 50
-            || (monster->type == MONS_BALL_LIGHTNING && coinflip()))
+             || (monster->type == MONS_BALL_LIGHTNING && coinflip()))
     {
         return (false);
     }
@@ -4027,9 +4030,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                 }
             }
             else if (monster->foe == MHITYOU && !monsterNearby)
-            {
                 return (false);
-            }
         }
 
         // monsters caught in a net try to get away
@@ -5315,17 +5316,20 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
             if (message)
             {
                 if (grid == DNGN_LAVA)
-                    simple_monster_message(
-                        mons, " is incinerated.",
-                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                {
+                    simple_monster_message( mons, " is incinerated.",
+                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                }
                 else if (mons_genus(mons->type) == MONS_MUMMY)
-                    simple_monster_message(
-                        mons, " falls apart.",
-                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                {
+                    simple_monster_message( mons, " falls apart.",
+                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                }
                 else
-                    simple_monster_message(
-                        mons, " drowns.",
-                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                {
+                    simple_monster_message( mons, " drowns.",
+                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                }
             }
 
             if (killer == KILL_NONE)
@@ -6438,7 +6442,7 @@ bool message_current_target()
         if (mons_near(montarget) && player_monster_visible(montarget))
         {
             mprf( MSGCH_PROMPT, "Current target: %s "
-                  "(use p/t/f to fire at it again.)",
+                  "(use p or f to fire at it again.)",
                   montarget->name(DESC_PLAIN).c_str() );
             return (true);
         }
