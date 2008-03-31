@@ -1850,15 +1850,20 @@ void mons_get_damage_level(
         desc += "heavily ";
         dam_level = MDAM_HEAVILY_DAMAGED;
     }
-    else if (monster->hit_points <= 3 * (monster-> max_hit_points / 4))
+    else if (monster->hit_points <= (monster->max_hit_points * 3) / 4)
     {
         desc += "moderately ";
         dam_level = MDAM_MODERATELY_DAMAGED;
     }
-    else
+    else if (monster->hit_points < monster->max_hit_points)
     {
         desc += "lightly ";
         dam_level = MDAM_LIGHTLY_DAMAGED;
+    }
+    else
+    {
+        desc += "not ";
+        dam_level = MDAM_OKAY;
     }
 
     desc += _wounded_damaged(monster->type) ? "damaged" : "wounded";
