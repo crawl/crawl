@@ -1770,8 +1770,8 @@ Vampires
   quick bats, and later how to draw potions of blood from fresh corpses.
 
 
-Note: Use 'A' to check for which particular pecularities a species might
-      have. Also, some species have special abilities which can be
+Note: Use 'A' to check for which particular peculiarities a species
+      might have. Also, some species have special abilities which can be
       accessed by the 'a' abilities menu. Some also have physical
       characteristics which allow them to make extra attacks using the
       Unarmed Combat skill.
