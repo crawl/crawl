@@ -3689,10 +3689,6 @@ static void _open_door(int move_x, int move_y, bool check_confused)
     }
 }
 
-/*
- * Similar to open_door. Can you spot the difference?
- * FIX ME: closing a gate should update all tiles involved!
- */
 static void _close_door(int door_x, int door_y)
 {
     struct dist door_move;
@@ -3787,7 +3783,8 @@ static void _close_door(int door_x, int door_y)
         }
         else
         {
-            const char* verb = player_is_airborne() ? "reach down and close" : "close";
+            const char* verb = player_is_airborne() ? "reach down and close"
+                                                    : "close";
             mprf( "You %s the %s%s.", verb, adj, noun );
         }
 

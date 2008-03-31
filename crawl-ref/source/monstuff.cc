@@ -1206,6 +1206,17 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
                   monster_index(monster), killer));
 
+    // This is assuming the royal jelly is a unique monster. Is it?
+    // FIXME: Needs check for being at bottom level of the branch.
+    if (monster->type == MONS_ROYAL_JELLY
+        && player_in_branch( BRANCH_SLIME_PITS ))
+    {
+        mpr("Suddenly, all colour oozes out of the surrounding stone!",
+            MSGCH_MONSTER_ENCHANT);
+            
+        replace_area_wrapper(DNGN_STONE_WALL, DNGN_CLEAR_ROCK_WALL);
+    }
+
     const coord_def mwhere = monster->pos();
     if (drop_items)
         _monster_drop_ething(monster, YOU_KILL(killer) || pet_kill);

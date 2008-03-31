@@ -316,6 +316,8 @@ bool is_wall(int feature);
 bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);
 void place_spec_shop(int level_number, int shop_x, int shop_y,
                      int force_s_type, bool representative = false);
+void replace_area_wrapper(dungeon_feature_type old_feat,
+                          dungeon_feature_type new_feat);
 bool unforbidden(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest);

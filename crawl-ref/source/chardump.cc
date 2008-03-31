@@ -576,9 +576,11 @@ static void sdump_notes(dump_params &par)
 static void sdump_location(dump_params &par)
 {
     if (you.your_level == -1 
-            && you.where_are_you == BRANCH_MAIN_DUNGEON
-            && you.level_type == LEVEL_DUNGEON)
+        && you.where_are_you == BRANCH_MAIN_DUNGEON
+        && you.level_type == LEVEL_DUNGEON)
+    {
         par.text += "You escaped";
+    }
     else if (par.se)
         par.text += "You were " + prep_branch_level_name();
     else

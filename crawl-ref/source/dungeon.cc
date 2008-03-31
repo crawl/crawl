@@ -65,6 +65,7 @@
 #include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
+#include "tiles.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -120,7 +121,7 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
 static void _replace_area(int sx, int sy, int ex, int ey,
                           dungeon_feature_type replace,
                           dungeon_feature_type feature,
-                          unsigned mmask = 0);
+                          unsigned mmask = 0, bool needs_update = false);
 static builder_rc_type _builder_by_type(int level_number, char level_type);
 static builder_rc_type _builder_by_branch(int level_number);
 static builder_rc_type _builder_normal(int level_number, char level_type,
@@ -1490,7 +1491,7 @@ static void _prepare_shoals(int level_number)
     if ( at_bottom )
     {
         // Put all the stairs on one island
-        grd[centres[0].x][centres[0].y] = DNGN_STONE_STAIRS_UP_I;
+        grd[centres[0].x  ][centres[0].y] = DNGN_STONE_STAIRS_UP_I;
         grd[centres[0].x+1][centres[0].y] = DNGN_STONE_STAIRS_UP_II;
         grd[centres[0].x-1][centres[0].y] = DNGN_STONE_STAIRS_UP_III;
         
@@ -4675,7 +4676,7 @@ static int _vault_grid( vault_placement &place,
                 }
                 
                 which_class = OBJ_MISCELLANY;
-                which_type = MISC_RUNE_OF_ZOT;
+                which_type  = MISC_RUNE_OF_ZOT;
                 num_runes++;
 
                 if (you.level_type == LEVEL_PANDEMONIUM)
@@ -4756,16 +4757,36 @@ static int _vault_grid( vault_placement &place,
     return (altar_count);
 }                               // end vault_grid()
 
+// Currently only used for Slime: branch end
+//   where it will turn the stone walls into clear rock walls
+//   once the royal jelly has been killed.
+void replace_area_wrapper(dungeon_feature_type old_feat,
+                          dungeon_feature_type new_feat)
+{
+    ASSERT(old_feat != new_feat);
+    _replace_area(0, 0, GXM-1, GYM-1, old_feat, new_feat, 0, true);
+}
+
 static void _replace_area( int sx, int sy, int ex, int ey,
                            dungeon_feature_type replace,
-                           dungeon_feature_type feature, unsigned mapmask)
+                           dungeon_feature_type feature, unsigned mapmask,
+                           bool needs_update)
 {
     int x,y;
     for (x = sx; x <= ex; x++)
         for (y = sy; y <= ey; y++)
         {
             if (grd[x][y] == replace && unforbidden(coord_def(x, y), mapmask))
+            {
                 grd[x][y] = feature;
+                if ( needs_update && is_terrain_seen(coord_def(x,y)) )
+                {
+                    set_envmap_obj(x, y, feature);
+#ifdef USE_TILE
+                    tile_place_tile_bk(x, y, feature);
+#endif
+                }
+            }
         }
 }
 
