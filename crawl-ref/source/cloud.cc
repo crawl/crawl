@@ -297,6 +297,12 @@ bool is_opaque_cloud(unsigned char cloud_idx)
              (ctype >= CLOUD_GREY_SMOKE && ctype <= CLOUD_STEAM) );
 }
 
+cloud_type cloud_type_at(const coord_def &c)
+{
+    const int cloudno = env.cgrid(c);
+    return (cloudno == EMPTY_CLOUD? CLOUD_NONE : env.cloud[cloudno].type);
+}
+
 cloud_type random_smoke_type()
 {
     // excludes black (reproducing existing behaviour)

@@ -4443,6 +4443,35 @@ static void _monster_add_energy(monsters *monster)
     monster->speed_increment += energy_gained;
 }
 
+static int _monster_natural_regen_roll(monsters *monster)
+{
+    // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
+    int divider =
+        std::max(div_rand_round(15 - monster->hit_dice, 4), 1);
+
+    // The undead have a harder time regenerating.
+    switch (monster->holiness())
+    {
+    // The undead don't regenerate easily.
+    case MH_UNDEAD:
+        divider *= 4;
+        break;
+
+    // And golems have it worse.
+    case MH_NONLIVING:
+        divider *= 5;
+        break;
+
+    default:
+        break;
+    }
+
+    const int regen_rate =
+        std::max(div_rand_round(monster->hit_dice, divider), 1);
+
+    return (random2(25) < regen_rate);
+}
+
 // Do natural regeneration for monster.
 static void _monster_regenerate(monsters *monster)
 {
@@ -4455,25 +4484,20 @@ static void _monster_regenerate(monsters *monster)
     {
         return;
     }
-    
-    // regenerate:
+
     if (monster_descriptor(monster->type, MDSC_REGENERATES)
-        
         || (monster->type == MONS_FIRE_ELEMENTAL 
-            && (grd[monster->x][monster->y] == DNGN_LAVA
-                || (env.cgrid(monster->pos()) != EMPTY_CLOUD
-                    && env.cloud[env.cgrid(monster->pos())].type
-                       == CLOUD_FIRE)))
-
+            && (grd(monster->pos()) == DNGN_LAVA
+                || cloud_type_at(monster->pos()) == CLOUD_FIRE))
+        
         || (monster->type == MONS_WATER_ELEMENTAL 
-            && (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
-                || grd[monster->x][monster->y] == DNGN_DEEP_WATER))
-
+            && grid_is_watery(grd(monster->pos())))
+        
         || (monster->type == MONS_AIR_ELEMENTAL
-            && env.cgrid[monster->x][monster->y] == EMPTY_CLOUD
+            && env.cgrid(monster->pos()) == EMPTY_CLOUD
             && one_chance_in(3))
-
-        || one_chance_in(25))
+        
+        || _monster_natural_regen_roll(monster))
     {
         heal_monster(monster, 1, false);
     }
@@ -6463,6 +6487,10 @@ int hurt_monster(monsters * victim, int damage_dealt)
 {
     damage_dealt = std::max(std::min(damage_dealt, victim->hit_points), 0);
     victim->hit_points -= damage_dealt;
+
+    // Allow the victim to exhibit passive damage behaviour (royal jelly).
+    victim->react_to_damage(damage_dealt);
+    
     return (damage_dealt);
 }
 

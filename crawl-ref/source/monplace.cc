@@ -1579,6 +1579,84 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
     return (mid);
 }                               // end mons_place()
 
+static dungeon_feature_type _monster_habitat_feature(int mtype)
+{
+    return ((mtype == RANDOM_MONSTER) ? DNGN_FLOOR
+            : habitat2grid( mons_habitat_by_type(mtype) ));
+}
+
+class newmons_square_find : public travel_pathfind
+{
+private:
+    dungeon_feature_type grid_wanted;
+    coord_def start;
+    int maxdistance;
+
+    int best_distance;
+    int nfound;
+public:
+    // Terrain that we can't spawn on, but that we can skip through.
+    std::set<dungeon_feature_type> passable;
+public:
+    newmons_square_find(dungeon_feature_type grdw,
+                        const coord_def &pos,
+                        int maxdist = 0)
+        :  grid_wanted(grdw), start(pos), maxdistance(maxdist),
+           best_distance(0), nfound(0)
+    {
+    }
+
+    coord_def pathfind()
+    {
+        set_floodseed(start);
+        return travel_pathfind::pathfind(RMODE_EXPLORE);
+    }
+    
+    bool path_flood(const coord_def &c, const coord_def &dc)
+    {
+        if (best_distance && traveled_distance > best_distance)
+            return (true);
+        
+        if (!in_bounds(dc)
+            || (maxdistance > 0 && traveled_distance > maxdistance))
+        {
+            return (false);
+        }
+        if (!grid_compatible(grid_wanted, grd(dc), true))
+        {
+            if (passable.find(grd(dc)) != passable.end())
+                good_square(dc);
+            return (false);
+        }
+        if (mgrd(dc) == NON_MONSTER && dc != you.pos()
+            && one_chance_in(++nfound))
+        {
+            greedy_dist = traveled_distance;
+            greedy_place = dc;
+            best_distance = traveled_distance;
+        }
+        else
+        {
+            good_square(dc);
+        }
+        return (false);
+    }
+};
+
+/*
+ * Finds a square for a monster of the given class, pathfinding
+ * through only contiguous squares of habitable terrain.
+ */
+coord_def find_newmons_square_contiguous(monster_type mons_class,
+                                         const coord_def &start,
+                                         int distance)
+{
+    newmons_square_find nmfind(_monster_habitat_feature(mons_class),
+                               start, distance);
+    const coord_def p = nmfind.pathfind();
+    return (in_bounds(p)? p : coord_def(-1, -1));
+}
+
 coord_def find_newmons_square(int mons_class, int x, int y)
 {
     FixedVector < char, 2 > empty;
@@ -1590,9 +1668,7 @@ coord_def find_newmons_square(int mons_class, int x, int y)
     if (mons_class == WANDERING_MONSTER)
         mons_class = RANDOM_MONSTER;
 
-    dungeon_feature_type spcw =
-        ((mons_class == RANDOM_MONSTER) ? DNGN_FLOOR
-         : habitat2grid( mons_habitat_by_type(mons_class) ));
+    const dungeon_feature_type spcw = _monster_habitat_feature(mons_class);
 
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square

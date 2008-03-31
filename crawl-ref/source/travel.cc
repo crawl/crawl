@@ -1452,7 +1452,7 @@ const coord_def travel_pathfind::unexplored_square() const
  * The travel algorithm is based on the NetHack travel code written by Warwick
  * Allison - used with his permission.
  */
-const coord_def travel_pathfind::pathfind(run_mode_type rmode)
+coord_def travel_pathfind::pathfind(run_mode_type rmode)
 {
     if (rmode == RMODE_INTERLEVEL)
         rmode = RMODE_TRAVEL;

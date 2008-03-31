@@ -728,8 +728,6 @@ bool melee_attack::player_attack()
             bleed_onto_floor(where.x, where.y, defender->id(), blood, true);
         }
 
-        player_hurt_monster();
-
         if (damage_done > 0 || !defender_visible)
             player_announce_hit();
         else if (!shield_blocked && damage_done <= 0)
@@ -738,6 +736,8 @@ bool melee_attack::player_attack()
                 make_stringf("You %s %s.", attack_verb.c_str(),
                              defender->name(DESC_NOCAP_THE).c_str());
         }
+
+        player_hurt_monster();        
         
         if (damage_done)
             player_exercise_combat_skills();

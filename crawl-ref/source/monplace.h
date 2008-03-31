@@ -185,6 +185,9 @@ bool monster_habitable_grid(int monster_class,
                             bool paralysed = false);
 bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid);
 coord_def find_newmons_square(int mons_class, int x, int y);
+coord_def find_newmons_square_contiguous(monster_type mons_class,
+                                         const coord_def &start,
+                                         int maxdistance = 3);
 
 void spawn_random_monsters();
 

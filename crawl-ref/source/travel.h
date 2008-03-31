@@ -576,7 +576,7 @@ public:
     virtual ~travel_pathfind();
 
     // Finds travel direction or explore target.
-    const coord_def pathfind(run_mode_type rt);
+    coord_def pathfind(run_mode_type rt);
 
     // For flood-fills (explore), sets starting (seed) square.
     void set_floodseed(const coord_def &seed, bool double_flood = false);

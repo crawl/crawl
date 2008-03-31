@@ -5201,6 +5201,66 @@ void monsters::lose_energy(energy_use_type et)
     speed_increment -= action_energy(et);
 }
 
+static inline monster_type _royal_jelly_ejectable_monster()
+{
+    return static_cast<monster_type>(
+        random_choose( MONS_ACID_BLOB,
+                       MONS_AZURE_JELLY,
+                       MONS_DEATH_OOZE,
+                       -1 ) );
+}
+
+void monsters::react_to_damage(int damage)
+{
+    // The royal jelly objects to taking damage and will SULK. :-)
+    if (type == MONS_ROYAL_JELLY && alive()
+        && damage > 8 && random2(50) < damage)
+    {
+        const int tospawn =
+            1 + random2avg(1 + std::min((damage - 8) / 8, 5), 2);
+        mprf(MSGCH_DIAGNOSTICS, "Trying to spawn %d jellies.", tospawn);
+        const beh_type sbehaviour = SAME_ATTITUDE(this);
+        int spawned = 0;
+        for (int i = 0; i < tospawn; ++i)
+        {
+            const monster_type jelly = _royal_jelly_ejectable_monster();
+            coord_def jpos = find_newmons_square_contiguous(jelly, pos());
+            if (!in_bounds(jpos))
+                continue;
+            
+            const int nmons =
+                mons_place( jelly, sbehaviour, foe, true, jpos.x, jpos.y,
+                            you.level_type, PROX_ANYWHERE, MONS_PROGRAM_BUG,
+                            0, false );
+            
+            if (nmons != -1 && nmons != NON_MONSTER)
+            {
+                // Don't allow milking the royal jelly.
+                menv[nmons].flags |= MF_CREATED_FRIENDLY;
+                spawned++;
+            }
+        }
+
+        const bool needs_message =
+            spawned && mons_near(this) && player_monster_visible(this);
+        
+        if (needs_message)
+        {
+            const std::string mname = name(DESC_CAP_THE);
+            mprf("%s shudders%s.", mname.c_str(),
+                 spawned >= 5 ? " alarmingly" :
+                 spawned >= 3 ? " violently" :
+                 spawned > 1 ? " vigorously" : "");
+            if (spawned == 1)
+                mprf("%s spits out another jelly.", mname.c_str());
+            else
+                mprf("%s spits out %s more jellies.",
+                     mname.c_str(),
+                     number_in_words(spawned).c_str());
+        }
+    }
+}
+
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant
 

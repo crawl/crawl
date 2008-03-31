@@ -35,6 +35,8 @@ struct fog_machine_data
 
 cloud_type random_smoke_type();
 
+cloud_type cloud_type_at(const coord_def &pos);
+
 void delete_cloud( int cloud );
 void move_cloud( int cloud, int new_x, int new_y );
 

@@ -1066,6 +1066,8 @@ public:
     void scale_hp(int num, int den);
     bool gain_exp(int exp);
 
+    void react_to_damage(int damage);
+
     void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void apply_enchantments();
