@@ -65,7 +65,7 @@ public:
 
 private:
     coord_def last_player_pos;
-    
+
 public:
     crawl_view_geometry();
     void init_geometry();

@@ -836,6 +836,12 @@ static int _inside_circle(int posx, int posy, int radius)
     if (!inside_level_bounds(posx, posy))
         return -1;
 
+    if (posx < you.x_pos - 9 || posx > you.x_pos + 9
+        || posy < you.y_pos - 9 || posy > you.y_pos + 9)
+    {
+        return -1;
+    }
+
     int dist = distance(posx, posy, you.x_pos, you.y_pos);
     if (dist > radius*radius)
         return -1;

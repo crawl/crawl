@@ -146,7 +146,6 @@ bool inside_level_bounds(coord_def &p)
     return (inside_level_bounds(p.x, p.y));
 }
 
-
 inline unsigned get_envmap_char(int x, int y)
 {
     return env.map[x][y].glyph();
