@@ -4976,8 +4976,8 @@ class _layout
     coord_def viewp, viewsz;
     coord_def hudp;
     const coord_def hudsz;
-    coord_def mlistp, mlistsz;
     coord_def msgp, msgsz;
+    coord_def mlistp, mlistsz;
     int hud_gutter;
     bool valid;
 };
