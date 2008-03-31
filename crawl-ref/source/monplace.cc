@@ -150,14 +150,6 @@ static bool need_super_ood(int lev_mons)
             && one_chance_in(5000));
 }
 
-/*
-static bool need_moderate_ood(int lev_mons)
-{
-    return (env.turns_on_level > 700 - lev_mons * 117? one_chance_in(40) :
-            one_chance_in(50));
-}
-*/
-
 static int fuzz_mons_level(int level)
 {
     if (one_chance_in(10))
@@ -252,8 +244,7 @@ monster_type pick_random_monster(const level_id &place,
     if (place.branch == BRANCH_MAIN_DUNGEON
         && lev_mons < 28)
     {
-        if (you.your_level)
-            lev_mons = fuzz_mons_level(lev_mons);
+        lev_mons = fuzz_mons_level(lev_mons);
 
         // potentially nasty surprise, but very rare
         if (need_super_ood(lev_mons))
