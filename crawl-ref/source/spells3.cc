@@ -346,7 +346,7 @@ void sublimation(int power)
         else // no appropriate item wielded
             wielded = -1;
     }
-    
+
     if (wielded == -1)
     {
         if (you.duration[DUR_DEATHS_DOOR])
@@ -385,7 +385,7 @@ void sublimation(int power)
 // Simulacrum
 //
 // This spell extends creating undead to Ice mages, as such it's high
-// level, requires wielding of the material component, and the undead 
+// level, requires wielding of the material component, and the undead
 // aren't overly powerful (they're also vulnerable to fire).  I've put
 // back the abjuration level in order to keep down the army sizes again.
 //
@@ -476,12 +476,12 @@ void dancing_weapon(int pow, bool force_hostile)
 
         // cursed weapons become hostile
         if (item_cursed( you.inv[wpn] ) || force_hostile)
-            behavi = BEH_HOSTILE; 
-        
-        summs = create_monster( MONS_DANCING_WEAPON, numsc, behavi, 
+            behavi = BEH_HOSTILE;
+
+        summs = create_monster( MONS_DANCING_WEAPON, numsc, behavi,
                                 you.x_pos, you.y_pos, you.pet_target, 1 );
         if ( summs == -1 )
-            failed = true;            
+            failed = true;
     }
 
     if ( failed )
