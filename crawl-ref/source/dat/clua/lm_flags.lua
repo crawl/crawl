@@ -81,6 +81,7 @@ function ChangeFlags:new(pars)
   cf.level_flags  = pars.level_flags
   cf.branch_flags = pars.branch_flags
   cf.msg          = pars.msg
+  cf.trigger      = pars.trigger
   cf.props        = { flag_group = pars.group }
 
   return cf
@@ -90,6 +91,10 @@ function ChangeFlags:do_change(marker)
   local did_change1 = false
   local did_change2 = false
   local silent      = self.msg and self.msg ~= ""
+
+  if self.trigger then
+    self.trigger(marker)
+  end
 
   if self.props.flag_group and self.props.flag_group ~= "" then
     local num_markers = dgn.num_matching_markers("flag_group",
@@ -127,6 +132,7 @@ function ChangeFlags:write(marker, th)
   file.marshall(th, self.level_flags)
   file.marshall(th, self.branch_flags)
   file.marshall(th, self.msg)
+  file.marshall_meta(th, self.trigger)
   lmark.marshall_table(th, self.props)
 end
 
@@ -134,6 +140,7 @@ function ChangeFlags:read(marker, th)
   self.level_flags  = file.unmarshall_string(th)
   self.branch_flags = file.unmarshall_string(th)
   self.msg          = file.unmarshall_string(th)
+  self.trigger      = file.unmarshall_meta(th)
   self.props        = lmark.unmarshall_table(th)
   setmetatable(self, ChangeFlags) 
 

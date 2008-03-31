@@ -836,6 +836,13 @@ static int dgn_grid(lua_State *ls)
     PLUARET(number, grd[x][y]);
 }
 
+static int dgn_max_bounds(lua_State *ls)
+{
+    lua_pushnumber(ls, GXM);
+    lua_pushnumber(ls, GYM);
+    return (2);
+}
+
 typedef
 flood_find<map_def::map_feature_finder, map_def::map_bounds_check>
 map_flood_finder;
@@ -1299,9 +1306,14 @@ static int dgn_terrain_changed(lua_State *ls)
         type = dungeon_feature_by_name(lua_tostring(ls, 3));
     const bool affect_player =
         lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
+    const bool preserve_features =
+        lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
+    const bool preserve_items =
+        lua_isboolean(ls, 6)? lua_toboolean(ls, 6) : true;
     dungeon_terrain_changed( coord_def( luaL_checkint(ls, 1),
                                         luaL_checkint(ls, 2) ),
-                             type, affect_player );
+                             type, affect_player,
+                             preserve_features, preserve_items );
     return (0);
 }
 
@@ -1683,7 +1695,10 @@ static const struct luaL_reg dgn_lib[] =
     { "kitem", dgn_kitem },
     { "kmons", dgn_kmons },
     { "kmask", dgn_kmask },
+    
     { "grid", dgn_grid },
+    { "max_bounds", dgn_max_bounds },
+    
     { "terrain_changed", dgn_terrain_changed },
     { "points_connected", dgn_points_connected },
     { "any_point_connected", dgn_any_point_connected },

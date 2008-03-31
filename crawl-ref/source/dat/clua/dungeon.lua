@@ -3,6 +3,8 @@
 -- Dungeoneering functions.
 ------------------------------------------------------------------------------
 
+dgn.GXM, dgn.GYM = dgn.max_bounds()
+
 -- Wraps a map_def into a Lua environment (a table) such that
 -- functions run in the environment (with setfenv) can directly
 -- address the map with function calls such as name(), tags(), etc.
@@ -111,4 +113,35 @@ end
 
 function dgn.orig_gly_points(map, glyph)
    return dgn.orig_fn(map, dgn.gly_points, glyph)
+end
+
+function dgn.fnum(feat)
+  if type(feat) == 'string' then
+    return dgn.feature_number(feat)
+  else
+    return feat
+  end
+end
+
+function dgn.fnum_map(map)
+  local fnmap = { }
+  for k, v in pairs(map) do
+    fnmap[dgn.fnum(k)] = dgn.fnum(v)
+  end
+  return fnmap
+end
+
+-- Replaces all features matching 
+function dgn.replace_feat(rmap)
+  local cmap = dgn.fnum_map(rmap)
+
+  for x = 0, dgn.GXM - 1 do
+    for y = 0, dgn.GYM - 1 do
+      local grid = dgn.grid(x, y)
+      local repl = cmap[grid]
+      if repl then
+        dgn.terrain_changed(x, y, repl)
+      end
+    end
+  end
 end

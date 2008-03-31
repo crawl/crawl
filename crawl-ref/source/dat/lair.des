@@ -3,6 +3,33 @@
 #           branch endings for Shoals, Snake Pit, Slime Pit and Swamp.
 ##############################################################################
 
+lua {{
+
+-- Special effects for Slime:6
+function slime_wall_morph(x)
+  local stone = dgn.feature_number('stone_wall')
+  local inlos = false
+  for x = 0, dgn.GXM - 1 do
+    for y = 0, dgn.GYM - 1 do
+      if dgn.grid(x, y) == stone and you.see_grid(x, y) then
+        inlos = true
+        break
+      end
+    end
+    if inlos then break end
+  end
+  dgn.replace_feat { stone_wall= "clear_rock_wall" }
+  if inlos then
+    crawl.mpr("Suddenly all colour oozes out of the stone walls.",
+              "monster_enchant")
+  else
+    crawl.mpr("You feel a strange vibration for a moment.",
+              "monster_enchant")
+  end
+end
+
+}}
+
 ##############################################################################
 # Lair entries
 ##############################################################################
@@ -755,10 +782,12 @@ ORIENT:  encompass
 MONS:    royal jelly, acid blob, great orb of eyes / nothing
 SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
 SUBST:   " : " .:3,  " = .c
+NSUBST:  P = O / *|
 SHUFFLE: ([{ 
 LFLAGS:  no_tele_control
 MARKER:  X = lua:mons_dies_change_flags { \
-             level_flags="!no_tele_control", mon_name="royal jelly" \
+             level_flags="!no_tele_control", mon_name="royal jelly", \
+             trigger=slime_wall_morph \
          }
 SUBST:  X = .
 MAP
