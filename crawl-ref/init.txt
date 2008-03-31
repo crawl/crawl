@@ -133,7 +133,7 @@ trap_item_brand    = reverse
 ##### 4-f	Viewport Options  ###################
 #
 # view_max_width   = 33
-# view_max_height  = 17
+# view_max_height  = 19
 # view_lock_x      = false
 # view_lock_y      = false
 # view_lock        = false
@@ -210,7 +210,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # item_stack_summary_minimum = 5
 # list_rotten = false
 # mlist_min_height = 5
-# mlist_force_inline = true
+# mlist_force_inline = false
 
 # Colouring for the inventory
 menu_colour = inventory:lightred: cursed.*(worn|neck|hand|weapon)\)
