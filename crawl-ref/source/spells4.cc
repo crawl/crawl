@@ -2651,7 +2651,7 @@ int cast_apportation(int pow)
 
     // Failure should never really happen after all the above checking,
     // but we'll handle it anyways...
-    if (move_top_item( beam.tx, beam.ty, you.x_pos, you.y_pos ))
+    if (move_top_item( beam.target(), you.pos() ))
     {
         if (max_units < mitm[ item ].quantity)
         {

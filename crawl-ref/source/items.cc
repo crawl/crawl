@@ -1792,14 +1792,17 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
 // location.
 //
 //---------------------------------------------------------------
-bool move_top_item( int src_x, int src_y, int dest_x, int dest_y )
+bool move_top_item( const coord_def &pos, const coord_def &dest )
 {
-    int item = igrd[ src_x ][ src_y ];
+    int item = igrd(pos);
     if (item == NON_ITEM)
         return (false);
 
+    dungeon_events.fire_position_event(
+        dgn_event(DET_ITEM_MOVED, pos, 0, item, -1, dest), pos);
+    
     // Now move the item to its new possition...
-    move_item_to_grid( &item, dest_x, dest_y );
+    move_item_to_grid( &item, dest.x, dest.y );
 
     return (true);
 }

@@ -1311,6 +1311,7 @@ public:
     map_marker *find(const coord_def &c, map_marker_type type = MAT_ANY);
     map_marker *find(map_marker_type type);
     void move(const coord_def &from, const coord_def &to);
+    void move_marker(map_marker *marker, const coord_def &to);
     std::vector<map_marker*> get_all(map_marker_type type = MAT_ANY);
     std::vector<map_marker*> get_all(const std::string &key,
                                      const std::string &val = "");
@@ -1327,6 +1328,7 @@ private:
     typedef std::pair<coord_def, map_marker *> dgn_pos_marker;
 
     void init_from(const map_markers &);
+    void unlink_marker(const map_marker *);
 
 private:
     dgn_marker_map markers;

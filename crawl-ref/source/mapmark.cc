@@ -583,7 +583,7 @@ void map_markers::add(map_marker *marker)
     markers.insert(dgn_pos_marker(marker->pos, marker));
 }
 
-void map_markers::remove(map_marker *marker)
+void map_markers::unlink_marker(const map_marker *marker)
 {
     std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
         els = markers.equal_range(marker->pos);
@@ -595,6 +595,11 @@ void map_markers::remove(map_marker *marker)
             break;
         }
     }
+}
+
+void map_markers::remove(map_marker *marker)
+{
+    unlink_marker(marker);
     delete marker;
 }
 
@@ -654,6 +659,13 @@ void map_markers::move(const coord_def &from, const coord_def &to)
         (*i)->pos = to;
         add(*i);
     }
+}
+
+void map_markers::move_marker(map_marker *marker, const coord_def &to)
+{
+    unlink_marker(marker);
+    marker->pos = to;
+    add(marker);
 }
 
 std::vector<map_marker*> map_markers::get_all(map_marker_type mat)

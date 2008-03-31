@@ -101,7 +101,7 @@ function TimedMarker:read(marker, th)
   self.disappear = file.unmarshall_meta(th)
   self.msg  = file.unmarshall_fn(th)(th)
   setmetatable(self, TimedMarker)
-  return self 
+  return self
 end
 
 function TimedMarker:write(marker, th)

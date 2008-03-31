@@ -1161,7 +1161,7 @@ static const char *dgn_event_type_names[] =
 {
     "none", "turn", "mons_move", "player_move", "leave_level",
     "entering_level", "entered_level", "player_los", "player_climb",
-    "monster_dies", "item_pickup", "feat_change"
+    "monster_dies", "item_pickup", "item_moved", "feat_change"
 };
 
 static dgn_event_type dgn_event_type_by_name(const std::string &name)
@@ -1872,6 +1872,14 @@ static int dgnevent_place(lua_State *ls)
     return (2);
 }
 
+static int dgnevent_dest(lua_State *ls)
+{
+    DEVENT(ls, 1, dev);
+    lua_pushnumber(ls, dev->dest.x);
+    lua_pushnumber(ls, dev->dest.y);
+    return (2);
+}
+
 static int dgnevent_ticks(lua_State *ls)
 {
     DEVENT(ls, 1, dev);
@@ -1894,6 +1902,7 @@ static const struct luaL_reg dgnevent_lib[] =
 {
     { "type",  dgnevent_type },
     { "pos",   dgnevent_place },
+    { "dest",  dgnevent_dest },
     { "ticks", dgnevent_ticks },
     { "arg1",  dgnevent_arg1 },
     { "arg2",  dgnevent_arg2 },
@@ -1929,9 +1938,18 @@ static int mapmarker_pos(lua_State *ls)
     return (2);
 }
 
+static int mapmarker_move(lua_State *ls)
+{
+    MAPMARKER(ls, 1, mark);
+    const coord_def dest( luaL_checkint(ls, 2), luaL_checkint(ls, 3) );
+    env.markers.move_marker(mark, dest);
+    return (0);
+}
+
 static const struct luaL_reg mapmarker_lib[] =
 {
     { "pos", mapmarker_pos },
+    { "move", mapmarker_move },
     { NULL, NULL }
 };
 

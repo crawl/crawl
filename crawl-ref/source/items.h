@@ -101,7 +101,7 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
 /* ***********************************************************************
  * called from: spells4.cc
  * *********************************************************************** */
-bool move_top_item( int src_x, int src_y, int dest_x, int dest_y );
+bool move_top_item( const coord_def &src, const coord_def &dest );
 
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************

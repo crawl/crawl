@@ -312,6 +312,8 @@ end
 function ItemPickupChangeFlags:activate(marker)
   dgn.register_listener(dgn.dgn_event_type('item_pickup'), marker,
                         marker:pos())
+  dgn.register_listener(dgn.dgn_event_type('item_moved'), marker,
+                        marker:pos())
 end
 
 function ItemPickupChangeFlags:event(marker, ev)
@@ -323,9 +325,17 @@ function ItemPickupChangeFlags:event(marker, ev)
   end
 
   if item.name(it) == self.item then
-    ChangeFlags.do_change(self, marker)
-    dgn.remove_listener(marker, marker:pos())
-    dgn.remove_marker(marker)
+    local picked_up = ev:type() == dgn.dgn_event_type('item_pickup')
+    if picked_up then
+      ChangeFlags.do_change(self, marker)
+      dgn.remove_listener(marker, marker:pos())
+      dgn.remove_marker(marker)
+    else
+      local x, y = ev:dest()
+      dgn.remove_listener(marker, marker:pos())
+      marker:move(ev:dest())
+      self:activate(marker)
+    end
   end
 end
 

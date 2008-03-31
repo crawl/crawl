@@ -28,7 +28,8 @@ enum dgn_event_type
     DET_PLAYER_CLIMBS   = 0x0080,   // Player climbing stairs.
     DET_MONSTER_DIED    = 0x0100,
     DET_ITEM_PICKUP     = 0x0200,
-    DET_FEAT_CHANGE     = 0x0400
+    DET_ITEM_MOVED      = 0x0400,
+    DET_FEAT_CHANGE     = 0x0800
 };
 
 class dgn_event
@@ -38,11 +39,14 @@ public:
     coord_def      place;
     int            elapsed_ticks;
     long           arg1, arg2;
+    coord_def      dest;
 
 public:
     dgn_event(dgn_event_type t, const coord_def &p = coord_def(),
-              int ticks = you.time_taken, long a1 = 0, long a2 = 0)
-        : type(t), place(p), elapsed_ticks(ticks), arg1(a1), arg2(a2)
+              int ticks = you.time_taken, long a1 = 0, long a2 = 0,
+              const coord_def &d = coord_def())
+        : type(t), place(p), elapsed_ticks(ticks), arg1(a1),
+          arg2(a2), dest(d)
     {
     }
 };
