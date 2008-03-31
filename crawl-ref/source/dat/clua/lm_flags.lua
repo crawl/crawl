@@ -331,7 +331,6 @@ function ItemPickupChangeFlags:event(marker, ev)
       dgn.remove_listener(marker, marker:pos())
       dgn.remove_marker(marker)
     else
-      local x, y = ev:dest()
       dgn.remove_listener(marker, marker:pos())
       marker:move(ev:dest())
       self:activate(marker)
