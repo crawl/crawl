@@ -828,9 +828,9 @@ bool entomb(int powc)
     return (number_built > 0);
 }                               // end entomb()
 
-// Is (posx, posy) inside a circle with the given radius, centered on
-// the player's position?  If so, return the distance to it.  Otherwise,
-// return -1.
+// Is (posx, posy) inside a circle within LOS, with the given radius,
+// centered on the player's position?  If so, return the distance to it.
+// Otherwise, return -1.
 static int _inside_circle(int posx, int posy, int radius)
 {
     if (!inside_level_bounds(posx, posy))
