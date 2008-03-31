@@ -133,7 +133,7 @@ trap_item_brand    = reverse
 ##### 4-f	Viewport Options  ###################
 #
 # view_max_width   = 33
-# view_max_height  = 19
+# view_max_height  = 21
 # view_lock_x      = false
 # view_lock_y      = false
 # view_lock        = false

@@ -610,8 +610,8 @@ void game_options::reset_options()
 
     mouse_input = false;
     
-    view_max_width = VIEW_BASE_WIDTH;
-    view_max_height = VIEW_MIN_HEIGHT;
+    view_max_width = 33;
+    view_max_height = 21;
     mlist_min_height = 5;
     mlist_force_inline = false;
 
