@@ -152,7 +152,7 @@ static bool need_super_ood(int lev_mons)
 
 static int fuzz_mons_level(int level)
 {
-    if (one_chance_in(10))
+    if (one_chance_in(7))
     {
         const int fuzz = random2avg(9, 2);
         return (fuzz > 4? level + fuzz - 4 : level);
