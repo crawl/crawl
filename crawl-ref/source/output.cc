@@ -471,6 +471,7 @@ static void _print_stats_qv()
 // - magenta, light magenta     for "better" enchantments (deflect, fly)
 //
 // Prints burden, hunger
+// Max length: "Encumbered Near Starving (NNN:NNN)" = 34
 static void _print_stats_line1()
 {
     cgotoxy(1, 15, GOTO_STAT);
@@ -523,7 +524,7 @@ static void _print_stats_line1()
 
 #if DEBUG_DIAGNOSTICS
     // debug mode hunger-o-meter
-    cprintf( " (%d:%d) ", you.hunger - you.old_hunger, you.hunger );
+    cprintf( " (%d:%d)", you.hunger - you.old_hunger, you.hunger );
 #endif
 }
 
@@ -557,7 +558,6 @@ static void _print_stats_line2()
 
     if (you.duration[DUR_DEFLECT_MISSILES])
     {
-
         _dur_colour( MAGENTA, (you.duration[DUR_DEFLECT_MISSILES] <= 6) );
         cprintf( "DMsl " );
     }
@@ -609,10 +609,10 @@ static void _print_stats_line2()
     }
 
     if (you.duration[DUR_CONFUSING_TOUCH]
-        && wherex() < get_number_of_cols() - 5)
+        && wherex() < get_number_of_cols() - 6)
     {
         _dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 20) );
-        cprintf("Touch");
+        cprintf("Touch ");
     }
     
     if (you.duration[DUR_BARGAIN] && wherex() < get_number_of_cols() - 5)
@@ -731,7 +731,7 @@ static void _print_stats_line3()
 
     textcolor( LIGHTGREY );
 
-#if DEBUG_DIAGNOSTICS || 1
+#if DEBUG_DIAGNOSTICS
     cprintf( "%2d,%2d", you.x_pos, you.y_pos );
 #endif
 }
