@@ -1056,7 +1056,7 @@ bool bless_follower(monsters* follower,
 
     is_near = mons_near(mon);
 
-    pronoun = "your";
+    pronoun = mons_is_unique(mon->type) ? "" : "your ";
     blessed = (is_near) ? mon->name(DESC_PLAIN).c_str() : "follower";
 
     if (chance == 0)
@@ -1191,14 +1191,14 @@ bool bless_follower(monsters* follower,
     }
 
 blessing_done:
-    snprintf(info, INFO_SIZE, " blesses %s %s with %s.",
+    snprintf(info, INFO_SIZE, " blesses %s%s with %s.",
              pronoun.c_str(), blessed.c_str(), result.c_str());
     simple_god_message(info);
 
 #ifndef USE_TILE
     if (mon && is_near)
     {
-        int old_flash_colour = you.flash_colour;
+        unsigned char old_flash_colour = you.flash_colour;
         coord_def c(mon->x, mon->y);
 
         you.flash_colour = god_colour(god);
