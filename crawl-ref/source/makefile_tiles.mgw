@@ -46,6 +46,7 @@ CFWARN := -Wall -Wwrite-strings \
 CFOTHERS := -fsigned-char \
 		-fstrict-aliasing \
 		-pedantic \
+		-O2 \
 		-D$(OS_TYPE) $(EXTRA_FLAGS) \
 		-DWINMM_PLAY_SOUNDS -DCLUA_BINDINGS \
 		-DUSE_TILE -DWINVER=0x0400 -D_WIN32_IE=0x0400
