@@ -664,7 +664,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
                 && grd[newx][newy] != DNGN_SHALLOW_WATER)
                || mgrd[newx][newy] != NON_MONSTER
                || env.cgrid[newx][newy] != EMPTY_CLOUD);
-               
+
         // no longer held in net
         if (newx != you.x_pos || newy != you.y_pos)
             clear_trapping_net();
@@ -828,10 +828,10 @@ bool entomb(int powc)
     return (number_built > 0);
 }                               // end entomb()
 
-// Is there a monster in a circle with the given radius, centered on the
-// player's position?  If so, return the distance to it.  Otherwise,
+// Is (posx, posy) inside a circle with the given radius, centered on
+// the player's position?  If so, return the distance to it.  Otherwise,
 // return -1.
-static int _mons_inside_circle(int posx, int posy, int radius)
+static int _inside_circle(int posx, int posy, int radius)
 {
     if (!inside_level_bounds(posx, posy))
         return -1;
@@ -840,10 +840,7 @@ static int _mons_inside_circle(int posx, int posy, int radius)
     if (dist > radius*radius)
         return -1;
 
-    if (mgrd[posx][posy] != NON_MONSTER)
-        return dist;
-
-    return -1;
+    return dist;
 }
 
 bool remove_sanctuary(bool did_attack)
@@ -961,19 +958,23 @@ bool cast_sanctuary(const int power)
         {
             int posx = you.x_pos + x;
             int posy = you.y_pos + y;
-            int dist = _mons_inside_circle(posx, posy, radius);
+            int dist = _inside_circle(posx, posy, radius);
 
             // scare all hostile monsters inside sanctuary
             if (dist != -1)
             {
                 monster = mgrd[posx][posy];
-                monsters *mon = &menv[monster];
 
-                if (!mons_friendly(mon)
-                    && mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
+                if (monster != NON_MONSTER)
                 {
-                    behaviour_event(mon, ME_SCARE, MHITYOU);
-                    count++;
+                    monsters *mon = &menv[monster];
+
+                    if (!mons_friendly(mon)
+                        && mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
+                    {
+                        behaviour_event(mon, ME_SCARE, MHITYOU);
+                        count++;
+                    }
                 }
             }
 
@@ -1038,14 +1039,21 @@ void manage_halo()
             int posx = you.x_pos + x;
             int posy = you.y_pos + y;
 
-            // affect all monsters inside the halo
-            if (mons_inside_halo(posx, posy))
+            if (_inside_circle(posx, posy, radius))
             {
                 monster = mgrd[posx][posy];
-                monsters *mon = &menv[monster];
 
-                if (!mon->has_ench(ENCH_BACKLIGHT))
-                    mon->add_ench(mon_enchant(ENCH_BACKLIGHT, 0, KC_YOU, 10));
+                // light up all monsters inside the halo
+                if (monster != NON_MONSTER)
+                {
+                    monsters *mon = &menv[monster];
+
+                    if (!mon->has_ench(ENCH_BACKLIGHT))
+                    {
+                        mon->add_ench(mon_enchant(ENCH_BACKLIGHT, 0,
+                                      KC_YOU, 10));
+                    }
+                }
             }
         }
     }
@@ -1053,7 +1061,8 @@ void manage_halo()
 
 bool mons_inside_halo(int posx, int posy)
 {
-    return (_mons_inside_circle(posx, posy, halo_radius()) != -1);
+    return (_inside_circle(posx, posy, halo_radius()) != -1
+        && mgrd[posx][posy] != NON_MONSTER);
 }
 
 void cast_poison_ammo(void)
