@@ -46,7 +46,7 @@ enum element_type
     EC_BLOOD,           // colours of blood
     EC_SMOKE,           // colours of smoke
     EC_SLIME,           // colours of slime
-    EC_JEWEL,           // colourful 
+    EC_JEWEL,           // colourful
     EC_ELVEN,           // used for colouring elf fabric items
     EC_DWARVEN,         // used for colouring dwarf fabric items
     EC_ORCISH,          // used for colouring orc fabric items

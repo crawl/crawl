@@ -177,7 +177,7 @@ void zap_animation( int colour, const monsters *mon, bool force )
 
     if (!see_grid( x, y ))
         return;
-    
+
     const int drawx = grid2viewX(x);
     const int drawy = grid2viewY(y);
 

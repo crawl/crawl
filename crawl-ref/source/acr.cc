@@ -2833,7 +2833,7 @@ static void _decrement_durations()
         // Don't trigger too many tutorial messages
         const bool tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
         Options.tutorial_events[TUT_YOU_ENCHANTED] = false;
-        
+
         {
             // Don't give duplicate 'You feel yourself slow down' messages.
             no_messages nm;
@@ -2846,7 +2846,7 @@ static void _decrement_durations()
             you.hunger = 50;
 
         calc_hp();
-        
+
         learned_something_new(TUT_POSTBERSERK);
         Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }

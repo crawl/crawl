@@ -104,7 +104,7 @@ void cloud_grid(void);
 void monster_grid(bool do_updates);
 
 static void get_symbol( int x, int y,
-                        int object, unsigned *ch, 
+                        int object, unsigned *ch,
                         unsigned short *colour,
                         bool magic_mapped = false );
 static unsigned get_symbol(int object, unsigned short *colour = NULL,
@@ -323,7 +323,7 @@ static unsigned colflag2brand(int colflag)
 unsigned real_colour(unsigned raw_colour)
 {
     // This order is important - is_element_colour() doesn't want to see the
-    // munged colours returned by dos_brand, so it should always be done 
+    // munged colours returned by dos_brand, so it should always be done
     // before applying DOS brands.
     const int colflags = raw_colour & 0xFF00;
 
@@ -394,7 +394,7 @@ static bool show_bloodcovered(int x, int y)
 }
 
 static void get_symbol( int x, int y,
-                        int object, unsigned *ch, 
+                        int object, unsigned *ch,
                         unsigned short *colour,
                         bool magic_mapped )
 {
@@ -512,7 +512,7 @@ static char get_travel_colour( int x, int y )
            dist < 0?                    Options.tc_dangerous        :
                                         Options.tc_disconnected;
 }
-            
+
 #if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
 static unsigned short dos_reverse_brand(unsigned short colour)
 {
@@ -575,39 +575,38 @@ static unsigned short dos_hilite_brand(unsigned short colour,
 }
 
 unsigned short dos_brand( unsigned short colour,
-                          unsigned brand) 
+                          unsigned brand)
 {
     if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
         return (colour);
 
     colour &= 0xFF;
-    
+
     if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
         return dos_hilite_brand(colour, (brand & CHATTR_COLMASK) >> 8);
     else
         return dos_reverse_brand(colour);
-    
 }
 #endif
 
 // FIXME: Rework this function to use the new terrain known/seen checks
 // These are still env.map coordinates, NOT grid coordinates!
-screen_buffer_t colour_code_map( int x, int y, bool item_colour, 
+screen_buffer_t colour_code_map( int x, int y, bool item_colour,
                                  bool travel_colour )
 {
     const unsigned short map_flags = env.map[x][y].flags;
     if (!(map_flags & MAP_GRID_KNOWN))
         return (BLACK);
-    
+
     const dungeon_feature_type grid_value = grd[x][y];
 
-    unsigned tc = travel_colour? 
+    unsigned tc = travel_colour?
                         get_travel_colour(x, y)
                       : DARKGREY;
-    
+
     if (map_flags & MAP_DETECTED_ITEM)
         return real_colour(Options.detected_item_colour);
-    
+
     if (map_flags & MAP_DETECTED_MONSTER)
     {
         tc = Options.detected_monster_colour;
@@ -650,7 +649,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     {
         tc |= COLFLAG_TRAP_ITEM;
     }
-    
+
     return real_colour(tc);
 }
 
@@ -701,7 +700,7 @@ int get_mons_colour(const monsters *mons)
 
     if (mons->has_ench(ENCH_BERSERK))
         col = RED;
-    
+
     if (mons_friendly(mons))
     {
         col |= COLFLAG_FRIENDLY_MONSTER;
@@ -1395,7 +1394,7 @@ inline static void update_cloud_grid(int cloudno)
     int which_colour = LIGHTGREY;
     const int ex = env.cloud[cloudno].x - you.x_pos + 9;
     const int ey = env.cloud[cloudno].y - you.y_pos + 9;
-                
+
     switch (env.cloud[cloudno].type)
     {
     case CLOUD_FIRE:
@@ -4328,7 +4327,7 @@ void init_feature_table( void )
     for (int i = 0; i < NUM_FEATURES; ++i)
     {
         feature_def &f(Feature[i]);
-        
+
         if (!f.magic_symbol)
             f.magic_symbol = f.symbol;
 
@@ -4343,7 +4342,7 @@ void init_feature_table( void )
     }
 }
 
-unsigned get_screen_glyph( int x, int y ) 
+unsigned get_screen_glyph( int x, int y )
 {
     const coord_def ep = view2show(grid2view(coord_def(x,y)));
 
@@ -4392,7 +4391,7 @@ std::string screenshot( bool fullscreen )
 
     init_char_table(CSET_ASCII);
     init_feature_table();
-    
+
     int firstnonspace = -1;
     int firstpopline  = -1;
     int lastpopline   = -1;
@@ -4401,19 +4400,19 @@ std::string screenshot( bool fullscreen )
     for (int count_y = 1; count_y <= crawl_view.viewsz.y; count_y++)
     {
         int lastnonspace = -1;
-        
+
         for (int count_x = 1; count_x <= crawl_view.viewsz.x; count_x++)
         {
             // in grid coords
             const coord_def gc = view2grid(coord_def(count_x, count_y));
 
             int ch =
-                (!map_bounds(gc)) ? 0 
-                : (!crawl_view.in_grid_los(gc)) ? get_envmap_char(gc.x, gc.y) 
-                : (gc == you.pos()) ? you.symbol 
+                (!map_bounds(gc)) ? 0
+                : (!crawl_view.in_grid_los(gc)) ? get_envmap_char(gc.x, gc.y)
+                : (gc == you.pos()) ? you.symbol
                 : get_screen_glyph(gc.x, gc.y);
-            
-            if (ch && !isprint(ch)) 
+
+            if (ch && !isprint(ch))
             {
                 // [ds] Evil hack time again. Peek at grid, use that character.
                 int object = grd(gc);
@@ -4455,12 +4454,12 @@ std::string screenshot( bool fullscreen )
     init_feature_table();
 
     std::ostringstream ss;
-    if (firstpopline != -1 && lastpopline != -1) 
+    if (firstpopline != -1 && lastpopline != -1)
     {
         if (firstnonspace == -1)
             firstnonspace = 0;
 
-        for (int i = firstpopline; i <= lastpopline; ++i) 
+        for (int i = firstpopline; i <= lastpopline; ++i)
         {
             const std::string &ref = lines[i - 1];
             if (firstnonspace < (int) ref.length())
@@ -4494,7 +4493,7 @@ static void update_env_show(const coord_def &gp, const coord_def &ep)
     const int cloud = env.cgrid(gp);
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE)
         update_cloud_grid(cloud);
-    
+
     const monsters *mons = monster_at(gp);
     if (mons && mons->alive())
         update_monster_grid(mons);
@@ -4515,7 +4514,7 @@ void view_update_at(const coord_def &pos)
 
     if (!object)
         return;
-    
+
     unsigned short  colour = env.show_col(ep);
     unsigned        ch = 0;
 
@@ -4586,7 +4585,7 @@ static void _debug_pane_bounds()
 //
 // viewwindow -- now unified and rolled into a single pass
 //
-// Draws the main window using the character set returned 
+// Draws the main window using the character set returned
 // by get_symbol().
 //
 // This function should not interfere with the game condition,
@@ -4597,11 +4596,11 @@ static void _debug_pane_bounds()
 void viewwindow(bool draw_it, bool do_updates)
 {
 #ifdef USE_TILE
-    std::vector<unsigned int> tileb( 
+    std::vector<unsigned int> tileb(
         crawl_view.viewsz.y * crawl_view.viewsz.x * 2);
 #endif
     screen_buffer_t *buffy(crawl_view.vbuf);
-    
+
     int count_x, count_y;
 
     losight( env.show, grd, you.x_pos, you.y_pos ); // must be done first
@@ -4639,10 +4638,10 @@ void viewwindow(bool draw_it, bool do_updates)
         if (flash_colour == BLACK)
             flash_colour = viewmap_flash_colour();
 
-        for (count_y = crawl_view.viewp.y; 
+        for (count_y = crawl_view.viewp.y;
              count_y < crawl_view.viewp.y + crawl_view.viewsz.y; count_y++)
         {
-            for (count_x = crawl_view.viewp.x; 
+            for (count_x = crawl_view.viewp.x;
                  count_x < crawl_view.viewp.x + crawl_view.viewsz.x; count_x++)
             {
                 // in grid coords
@@ -4795,7 +4794,7 @@ void viewwindow(bool draw_it, bool do_updates)
                         }
 
                         // Check if we're looking to clean_map...
-                        // but don't touch the buffer to clean it, 
+                        // but don't touch the buffer to clean it,
                         // instead we modify the env.map itself so
                         // that the map stays clean as it moves out
                         // of the env.show radius.
@@ -4805,7 +4804,7 @@ void viewwindow(bool draw_it, bool do_updates)
                         // have a monster or cloud on it, and is equal
                         // to the grid before monsters and clouds were
                         // added otherwise.
-                        if (Options.clean_map 
+                        if (Options.clean_map
                             && Show_Backup(ep)
                             && is_terrain_seen( gc.x, gc.y ))
                         {
@@ -4842,7 +4841,7 @@ void viewwindow(bool draw_it, bool do_updates)
                                 tileb[bufcount] =
                                     env.tile_bk_fg[gc.x][gc.y];
                                 tileb[bufcount + 1] =
-                                    env.tile_bk_bg[gc.x][gc.y] 
+                                    env.tile_bk_bg[gc.x][gc.y]
                                     | tile_unseen_flag(gc);
                             }
                             else
@@ -4856,7 +4855,7 @@ void viewwindow(bool draw_it, bool do_updates)
                         }
                     }
                 }
-                
+
                 // alter colour if flashing the characters vision
                 if (flash_colour && buffy[bufcount])
                     buffy[bufcount + 1] =

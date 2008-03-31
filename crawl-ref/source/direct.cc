@@ -467,7 +467,7 @@ void direction(dist& moves, targeting_type restricts,
         {
             mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
                  target_mode_help_text(restricts));
-                 
+
             if ((mode == TARG_ANY || mode == TARG_FRIEND)
                  && moves.tx == you.x_pos && moves.ty == you.y_pos)
             {
