@@ -1001,7 +1001,7 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
     /* Mimics change form/colour when t'ported */
     if (mons_is_mimic( monster->type ))
     {
-        monster->type = MONS_GOLD_MIMIC + random2(5);
+        monster->type   = MONS_GOLD_MIMIC + random2(5);
         monster->colour = get_mimic_colour( monster );
     }
 

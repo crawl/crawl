@@ -1899,16 +1899,22 @@ neutral good god 'cap-A'
 
 __NONE
 
-w:2
+w:1
 @holy_being@
 %%%%
 friendly good god 'cap-A'
 
-@default friendly humanoid@
+w:19
+__NONE
 
-w:4
+w:1
 @holy_being@
 
+%%%%
+# Otherwise, they'll stay silent.
+default 'cap-A'
+
+__NONE
 %%%%
 good_god_neutral_holy_being_reaction
 

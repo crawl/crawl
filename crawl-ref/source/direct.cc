@@ -1127,11 +1127,22 @@ static bool find_monster( int x, int y, int mode, int range = -1)
         
     const int targ_mon = mgrd[ x ][ y ];
     
-    // Is target a (known) monster?
-    if (targ_mon == NON_MONSTER || !in_los(x,y)
-        || !player_monster_visible( &(menv[targ_mon]) )
-        || mons_is_mimic(menv[targ_mon].type)
-           && !(menv[targ_mon].flags & MF_KNOWN_MIMIC))
+    // No monster or outside LOS.
+    if (targ_mon == NON_MONSTER || !in_los(x,y))
+        return (false);
+        
+    // Unseen monsters in shallow water show a "strange disturbance"
+    // (unless flying!)
+    if (!player_monster_visible(&menv[targ_mon]))
+    {
+        // since you can't see the monster, assume it's not a friend
+        return (mode != TARG_FRIEND && grd[x][y] == DNGN_SHALLOW_WATER
+                && !mons_flies(&menv[targ_mon]));
+    }
+
+    // Unknown mimics don't count as monsters, either.
+    if (mons_is_mimic(menv[targ_mon].type)
+        && !(menv[targ_mon].flags & MF_KNOWN_MIMIC))
     {
         return (false);
     }
@@ -1143,12 +1154,13 @@ static bool find_monster( int x, int y, int mode, int range = -1)
     if (mode == TARG_FRIEND)
         return (mons_friendly(&menv[targ_mon] ));
         
-    if (mode != TARG_ENEMY)
+    ASSERT(mode == TARG_ENEMY);
+    if (mons_friendly(&menv[targ_mon]))
         return false;
-        
-    return ( !mons_friendly( &menv[targ_mon] )
-             && (Options.target_zero_exp
-                 || !mons_class_flag( menv[targ_mon].type, M_NO_EXP_GAIN )) );
+
+    // Don't target zero xp monsters, unless target_zero_exp is set.
+    return (Options.target_zero_exp
+            || !mons_class_flag( menv[targ_mon].type, M_NO_EXP_GAIN ));
 }
 
 static bool find_feature( int x, int y, int mode, int /* range */)

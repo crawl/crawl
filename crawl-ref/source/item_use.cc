@@ -1510,7 +1510,7 @@ static bool _fire_choose_item_and_target(int& item, dist& target)
     }
 
     beh.message_ammo_prompt();
-    message_current_target();    // XXX: this stuff should be done by direction()
+    message_current_target();  // XXX: this stuff should be done by direction()
     direction( target, DIR_NONE, TARG_ENEMY, -1, false, true, NULL, &beh );
     
     if (beh.item == ENDOFPACK)
