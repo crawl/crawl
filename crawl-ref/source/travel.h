@@ -204,11 +204,6 @@ public:
     level_id(branch_type br, int dep, level_area_type ltype = LEVEL_DUNGEON)
         : branch(br), depth(dep), level_type(ltype)
     {
-        if (level_type != LEVEL_DUNGEON)
-        {
-            depth = -1;
-            branch = NUM_BRANCHES;
-        }
     }
     level_id(const level_id &ot)
         : branch(ot.branch), depth(ot.depth), level_type(ot.level_type)

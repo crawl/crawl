@@ -1510,6 +1510,9 @@ bool apply_to_level(const level_id &level, bool preserve_current,
     const level_id original = level_id::current();
     if (level != original)
     {
+        if (preserve_current)
+            save_level(you.your_level, you.level_type, you.where_are_you);
+                
         you.where_are_you = level.branch;
         you.your_level = level.absdepth();
         you.level_type = level.level_type;

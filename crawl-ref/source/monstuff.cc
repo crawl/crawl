@@ -640,10 +640,40 @@ static bool _is_mons_mutator_or_rotter(monsters *mons)
     return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT);
 }
 
-static bool _slime_pit_enable_teleport_control()
+static bool _slime_pit_unlock(bool silent)
 {
-    return unset_level_flags(LFLAG_NO_TELE_CONTROL);
+    unset_level_flags(LFLAG_NO_TELE_CONTROL, silent);
+
+    bool in_los = false;
+    if (!silent)
+    {
+        for (int x = 0; x < GXM && !in_los; ++x)
+            for (int y = 0; y < GYM; ++y)
+                if (grd[x][y] == DNGN_STONE_WALL
+                    && see_grid(x, y))
+                {
+                    in_los = true;
+                    break;
+                }
+    }
+
+    replace_area_wrapper(DNGN_STONE_WALL, DNGN_CLEAR_ROCK_WALL);
+
+    if (!silent)
+    {
+        if (in_los)
+            mpr("Suddenly, all colour oozes out of the stone walls.",
+                MSGCH_MONSTER_ENCHANT);
+        else
+            mpr("You feel a strange vibration for a moment.",
+                MSGCH_MONSTER_ENCHANT);
+    }
+    
+    return (true);
 }
+
+static bool _slime_pit_unlock_offlevel() { return _slime_pit_unlock(true); }
+static bool _slime_pit_unlock_onlevel()  { return _slime_pit_unlock(false); }
 
 static void _fire_monster_death_event(monsters *monster,
                                       killer_type killer,
@@ -658,9 +688,15 @@ static void _fire_monster_death_event(monsters *monster,
                       monster_index(monster), killer));
 
         if (monster->type == MONS_ROYAL_JELLY)
-            apply_to_level( level_id(BRANCH_SLIME_PITS, 6),
-                            true,
-                            _slime_pit_enable_teleport_control );
+        {
+            const level_id target(BRANCH_SLIME_PITS, 6);
+            if (is_existing_level(target))
+                apply_to_level(
+                    target,
+                    true,
+                    target == level_id::current()?
+                    _slime_pit_unlock_onlevel : _slime_pit_unlock_offlevel );
+        }
     }
 }
 

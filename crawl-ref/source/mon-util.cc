@@ -3964,6 +3964,7 @@ bool monsters::needs_transit() const
 {
     return ((mons_is_unique(type)
              || (flags & MF_BANISHED)
+             || type == MONS_ROYAL_JELLY
              || (you.level_type == LEVEL_DUNGEON && hit_dice > 8 + random2(25)))
             && !mons_is_summoned(this));
 }
