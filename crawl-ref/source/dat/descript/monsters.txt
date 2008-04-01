@@ -415,8 +415,9 @@ A larger and beefier relative of the common dungeon yak. Its little red eyes gle
 %%%%
 deep elf annihilator
 
-One of the race of elves which inhabits this dreary cave. This deep
-elf exults in conjured mayhem and destruction.
+This deep elf exults in conjured mayhem and destruction. Hated by most 
+passengers with a passion, both for the power and the precision of the 
+destructional magic.
 %%%%
 deep elf blademaster
 
@@ -426,39 +427,32 @@ the deep elves, wielding two blades with lethal grace.
 %%%%
 deep elf conjurer
 
-One of the race of elves which inhabits this dreary cave; this is an
-elf well-versed in destructive magic.
+This is an elf well-versed in destructive magic.
 %%%%
 deep elf death mage
 
-One of the race of elves which inhabits this dreary cave. This one is
-surrounded by a shimmering aura of negative energy.
+This deep elf is surrounded by a shimmering aura of negative energy.
 %%%%
 deep elf demonologist
 
-One of the race of elves which inhabits this dreary cave. A master of
-demonology, this deep elf is marked heavily by long years of contact
-with unnatural demonic forces.
+A master of demonology, this deep elf is marked heavily by long years of 
+contact with unnatural demonic forces.
 %%%%
 deep elf fighter
 
-One of the race of elves which inhabits this dreary cave - a deep elf
-fighter, equipped with weapon and magic.
+This is a deep elf fighter, equipped with weapon and magic.
 %%%%
 deep elf high priest
 
-One of the race of elves which inhabits this dreary cave; this elf is
-an exalted servant of the deep elves' dark god.
+This deep elf is an exalted servant of an ancient dark god.
 %%%%
 deep elf knight
 
-One of the race of elves which inhabits this dreary cave - a
-battle-hardened deep elf reaver.
+A battle-hardened deep elf reaver.
 %%%%
 deep elf mage
 
-One of the race of elves which inhabits this dreary cave; this is a
-deep elf wizard of subtle magic.
+This is a deep elf wizard, learned in the ways of subtle magic.
 %%%%
 deep elf master archer
 
@@ -467,23 +461,24 @@ pursuit of archery, dismissing magic as a frivolous distraction.
 %%%%
 deep elf priest
 
-One of the race of elves which inhabits this dreary cave; this elf is
-a servant of the deep elves' dark god.
+This deep elf is a servant of an ancient dark god. Deep elves are extremely 
+hostile towards any alien outside their tribe, including deep elves from 
+elsewhere. Noone ever made success in understanding the religious standings
+of these elves.
 %%%%
 deep elf soldier
 
-One of the race of elves which inhabits this dreary cave - a common
-soldier of the deep elves.
+While not a natural habitat for most elven-kind, the deep elves managed to 
+settle in this dreary cave. This is a common soldier of the deep elves.
 %%%%
 deep elf sorcerer
 
-One of the race of elves which inhabits this dreary cave. This mighty
-spellcaster draws power from the very Hells.
+Most of these mighty spellcasters draw power from the very Hells, but even 
+those who don't possess lethal arcane abilities.
 %%%%
 deep elf summoner
 
-One of the race of elves which inhabits this dreary cave. This one is
-skilled in the darker aspects of summoning.
+This deep elf is skilled in the darker aspects of summoning.
 %%%%
 deep troll
 
@@ -1129,11 +1124,11 @@ A servant of the ancient and cruel gods of the orcs, dressed in a long robe. It 
 %%%%
 orc sorcerer
 
-An orc who draws magical power from Hell.
+An exceptionally competent orcish wizard. Most of them draw magical power from Hell but some are fueled by other sources.
 %%%%
 orc warlord
 
-A very large and strong looking orc.
+A very large and strong looking orc, able to command large packs of his kin..
 %%%%
 orc warrior
 
