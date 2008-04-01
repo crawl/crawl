@@ -1068,11 +1068,6 @@ bool inside_halo(int posx, int posy)
     return (_inside_circle(posx, posy, halo_radius()) != -1);
 }
 
-bool mons_inside_halo(int posx, int posy)
-{
-    return (inside_halo(posx, posy) && mgrd[posx][posy] != NON_MONSTER);
-}
-
 void cast_poison_ammo(void)
 {
     const int ammo = you.equip[EQ_WEAPON];

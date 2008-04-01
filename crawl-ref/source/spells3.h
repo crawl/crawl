@@ -71,7 +71,6 @@ bool cast_sanctuary(const int power);
 int halo_radius(void);
 void manage_halo(void);
 bool inside_halo(int posx, int posy);
-bool mons_inside_halo(int posx, int posy);
 
 // updated 24may2000 {dlb}
 /* ***********************************************************************

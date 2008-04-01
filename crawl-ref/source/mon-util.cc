@@ -4229,7 +4229,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_BACKLIGHT:
         // monsters inside a halo don't lose backlight
-        if (mons_inside_halo(x, y))
+        if (inside_halo(x, y))
             add_ench(mon_enchant(ENCH_BACKLIGHT, 0, KC_YOU, 10));
         else if (!quiet)
         {
