@@ -3758,7 +3758,7 @@ void give_shield(monsters *mon, int level)
         
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
-        if (one_chance_in(5))
+        if (one_chance_in(6))
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                                   level, MAKE_ITEM_ELVEN);
         break;
@@ -3777,7 +3777,7 @@ void give_shield(monsters *mon, int level)
                                   level, MAKE_ITEM_NO_RACE);
         break;
     case MONS_DEEP_ELF_KNIGHT:
-        if (coinflip())
+        if (one_chance_in(3))
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                                   level, MAKE_ITEM_ELVEN);
         break;

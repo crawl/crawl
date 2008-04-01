@@ -4502,7 +4502,7 @@ static void _monster_add_energy(monsters *monster)
     monster->speed_increment += energy_gained;
 }
 
-static int _monster_natural_regen_roll(monsters *monster)
+int mons_natural_regen_rate(monsters *monster)
 {
     // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
     int divider =
@@ -4525,9 +4525,12 @@ static int _monster_natural_regen_roll(monsters *monster)
         break;
     }
 
-    const int regen_rate =
-        std::max(div_rand_round(monster->hit_dice, divider), 1);
+    return (std::max(div_rand_round(monster->hit_dice, divider), 1));
+}
 
+static inline bool _mons_natural_regen_roll(monsters *monster)
+{
+    const int regen_rate = mons_natural_regen_rate(monster);
     return (random2(25) < regen_rate);
 }
 
@@ -4556,7 +4559,7 @@ static void _monster_regenerate(monsters *monster)
             && env.cgrid(monster->pos()) == EMPTY_CLOUD
             && one_chance_in(3))
         
-        || _monster_natural_regen_roll(monster))
+        || _mons_natural_regen_roll(monster))
     {
         heal_monster(monster, 1, false);
     }

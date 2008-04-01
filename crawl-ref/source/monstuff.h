@@ -175,4 +175,6 @@ int mons_missile_damage(const item_def *launch,
                         const item_def *missile);
 int mons_thrown_weapon_damage(const item_def *weap);
 
+int mons_natural_regen_rate(monsters *monster);
+
 #endif

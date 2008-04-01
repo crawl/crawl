@@ -2847,8 +2847,13 @@ void update_level( double elapsedTime )
             heal_monster( mon, turns, false );
         }
         else
-        {   
-            heal_monster( mon, (turns / 10), false );
+        {
+            // Set a lower ceiling of 0.1 on the regen rate.
+            const int regen_rate =
+                std::max(mons_natural_regen_rate(mon) * 2, 5);
+            
+            heal_monster( mon, div_rand_round(turns * regen_rate, 50),
+                          false );
         }
 
         catchup_monster_moves( mon, turns );
