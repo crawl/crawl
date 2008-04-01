@@ -969,7 +969,8 @@ while doing so.
 %%%%
 ring of levitation
 
-This ring allows its wearer to hover above the floor.
+This ring allows its wearer to hover above the floor. The ring's power
+cannot be invoked while levitating.
 %%%%
 ring of life protection
 
