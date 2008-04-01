@@ -402,7 +402,7 @@ static void get_symbol( int x, int y,
     if (object < NUM_FEATURES)
     {
         const feature_def &fdef = Feature[object];
-        
+
         *ch = magic_mapped? fdef.magic_symbol
                           : fdef.symbol;
 
@@ -659,7 +659,7 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
         {
             // Don't expose new dug out areas:
-            // Note: assumptions are being made here about how 
+            // Note: assumptions are being made here about how
             // terrain can change (eg it used to be solid, and
             // thus monster/item free).
             if (is_terrain_changed(x, y))
@@ -686,7 +686,7 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             set_envmap_obj(x, y, is_terrain_known(x, y)? grd[x][y] : 0);
             env.tile_bk_fg[x][y] = 0;
             env.tile_bk_bg[x][y] = is_terrain_known(x, y) ?
-                tile_idx_unseen_terrain(x, y, grd[x][y]) : 
+                tile_idx_unseen_terrain(x, y, grd[x][y]) :
                 tileidx_feature(DNGN_UNSEEN, x, y);
 #endif
         }
@@ -904,7 +904,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     // player can see them, in which case silence isn't checked for.
     if (!force && (mons_friendly(monster) || mons_neutral(monster))
         || (type == S_SILENT && !player_monster_visible(monster))
-        || (type != S_SILENT && (silenced(you.x_pos, you.y_pos) 
+        || (type != S_SILENT && (silenced(you.x_pos, you.y_pos)
                                  || silenced(monster->x, monster->y))))
         return;
 
