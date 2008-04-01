@@ -358,7 +358,7 @@ butterfly
 A large multicoloured butterfly with beautifully patterned wings, fluttering
 incongruously through the darkness of the cave.
 
-"Happiness is a butterfly, which when pursued, is always just beyond your grasp, but which, if you will sit down quietly, may alight upon youâ"
+"Happiness is a butterfly, which when pursued, is always just beyond your grasp, but which, if you will sit down quietly, may alight upon you."
      -Nathaniel Hawthorne
 %%%%
 centaur
