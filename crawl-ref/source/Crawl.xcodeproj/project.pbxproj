@@ -236,6 +236,10 @@
 		7BF8556C0C9C916800B7C520 /* dgnevent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556A0C9C916800B7C520 /* dgnevent.h */; };
 		7BF855700C9C919100B7C520 /* luadgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8556E0C9C919100B7C520 /* luadgn.cc */; };
 		7BF855710C9C919100B7C520 /* luadgn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556F0C9C919100B7C520 /* luadgn.h */; };
+		D2AE25EF0DA2624E00E15489 /* crawl in Resources */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
+		D2AE25F90DA262DD00E15489 /* crawl in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
+		D2F272350DA1C5AD00445FE9 /* dat in Resources */ = {isa = PBXBuildFile; fileRef = D2F271FE0DA1C5AD00445FE9 /* dat */; };
+		D2F2725B0DA1C61600445FE9 /* docs in Resources */ = {isa = PBXBuildFile; fileRef = D2F2723F0DA1C61600445FE9 /* docs */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -245,6 +249,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7B0EFD410BD12E9200002671;
 			remoteInfo = Lua;
+		};
+		D2F272360DA1C5BC00445FE9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B0EFD410BD12E9200002671;
+			remoteInfo = Lua;
+		};
+		D2F272380DA1C5BC00445FE9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DD76FA90486AB0100D96B5E;
+			remoteInfo = "Crawl-cmd";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -341,6 +359,16 @@
 				7B6164350C9CA8E80054B3D9 /* traps.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		D2AE25F30DA262B100E15489 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				D2AE25F90DA262DD00E15489 /* crawl in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -537,8 +565,6 @@
 		7B352E9E0B00183400CABB32 /* mapdef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mapdef.h; sourceTree = "<group>"; };
 		7B352ED10B001B9E00CABB32 /* levcomp.lpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.lex; name = levcomp.lpp; path = util/levcomp.lpp; sourceTree = "<group>"; };
 		7B352ED20B001B9E00CABB32 /* levcomp.ypp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.yacc; name = levcomp.ypp; path = util/levcomp.ypp; sourceTree = "<group>"; };
-		7B352F1F0B00232500CABB32 /* splev.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = splev.des; path = dat/splev.des; sourceTree = "<group>"; };
-		7B352F200B00232500CABB32 /* vaults.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = vaults.des; path = dat/vaults.des; sourceTree = "<group>"; };
 		7B3B07560BD13A8100F2980E /* libreadline.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libreadline.dylib; path = /usr/lib/libreadline.dylib; sourceTree = "<absolute>"; };
 		7B3B075F0BD13AF000F2980E /* libncurses.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.dylib; path = /usr/lib/libncurses.dylib; sourceTree = "<absolute>"; };
 		7B4896600CD3A5D2004A5F43 /* mgrow.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mgrow.cc; sourceTree = SOURCE_ROOT; };
@@ -582,6 +608,11 @@
 		7BF8556E0C9C919100B7C520 /* luadgn.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = luadgn.cc; sourceTree = SOURCE_ROOT; };
 		7BF8556F0C9C919100B7C520 /* luadgn.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = luadgn.h; sourceTree = SOURCE_ROOT; };
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2AE25EE0DA2624E00E15489 /* crawl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = crawl; path = mac/crawl; sourceTree = "<group>"; };
+		D2F271F60DA1C58C00445FE9 /* Crawl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Crawl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Crawl-Info.plist"; sourceTree = "<group>"; };
+		D2F271FE0DA1C5AD00445FE9 /* dat */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dat; sourceTree = "<group>"; };
+		D2F2723F0DA1C61600445FE9 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = docs; path = ../docs; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -602,6 +633,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D2F271F40DA1C58C00445FE9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -613,6 +651,8 @@
 				7B3B07610BD13B1700F2980E /* Libraries */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
+				D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */,
+				D2AE25EC0DA2621100E15489 /* Mac */,
 			);
 			name = Crawl;
 			sourceTree = "<group>";
@@ -633,6 +673,7 @@
 			children = (
 				8DD76FB20486AB0100D96B5E /* crawl */,
 				7B0EFD420BD12E9200002671 /* liblua.a */,
+				D2F271F60DA1C58C00445FE9 /* Crawl.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -900,18 +941,10 @@
 		7B352F1B0B0022C900CABB32 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7B352F1E0B0022E100CABB32 /* Levels */,
+				D2F2723F0DA1C61600445FE9 /* docs */,
+				D2F271FE0DA1C5AD00445FE9 /* dat */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
-		};
-		7B352F1E0B0022E100CABB32 /* Levels */ = {
-			isa = PBXGroup;
-			children = (
-				7B352F1F0B00232500CABB32 /* splev.des */,
-				7B352F200B00232500CABB32 /* vaults.des */,
-			);
-			name = Levels;
 			sourceTree = "<group>";
 		};
 		7B3B07610BD13B1700F2980E /* Libraries */ = {
@@ -928,6 +961,14 @@
 			children = (
 			);
 			name = Documentation;
+			sourceTree = "<group>";
+		};
+		D2AE25EC0DA2621100E15489 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				D2AE25EE0DA2624E00E15489 /* crawl */,
+			);
+			name = Mac;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -983,9 +1024,9 @@
 			productReference = 7B0EFD420BD12E9200002671 /* liblua.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		8DD76FA90486AB0100D96B5E /* Crawl */ = {
+		8DD76FA90486AB0100D96B5E /* Crawl-cmd */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Crawl" */;
+			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Crawl-cmd" */;
 			buildPhases = (
 				8DD76FAB0486AB0100D96B5E /* Sources */,
 				8DD76FAD0486AB0100D96B5E /* Frameworks */,
@@ -996,11 +1037,32 @@
 			dependencies = (
 				7B0EFD450BD12E9E00002671 /* PBXTargetDependency */,
 			);
-			name = Crawl;
+			name = "Crawl-cmd";
 			productInstallPath = "$(HOME)/bin";
 			productName = Crawl;
 			productReference = 8DD76FB20486AB0100D96B5E /* crawl */;
 			productType = "com.apple.product-type.tool";
+		};
+		D2F271F50DA1C58C00445FE9 /* Crawl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2F271FD0DA1C58C00445FE9 /* Build configuration list for PBXNativeTarget "Crawl" */;
+			buildPhases = (
+				D2F271F20DA1C58C00445FE9 /* Resources */,
+				D2F271F30DA1C58C00445FE9 /* Sources */,
+				D2F271F40DA1C58C00445FE9 /* Frameworks */,
+				D2AE25F10DA2626100E15489 /* ShellScript */,
+				D2AE25F30DA262B100E15489 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D2F272370DA1C5BC00445FE9 /* PBXTargetDependency */,
+				D2F272390DA1C5BC00445FE9 /* PBXTargetDependency */,
+			);
+			name = Crawl;
+			productName = Crawl;
+			productReference = D2F271F60DA1C58C00445FE9 /* Crawl.app */;
+			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
@@ -1015,10 +1077,40 @@
 			projectRoot = "";
 			targets = (
 				7B0EFD410BD12E9200002671 /* Lua */,
-				8DD76FA90486AB0100D96B5E /* Crawl */,
+				8DD76FA90486AB0100D96B5E /* Crawl-cmd */,
+				D2F271F50DA1C58C00445FE9 /* Crawl */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D2F271F20DA1C58C00445FE9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2F272350DA1C5AD00445FE9 /* dat in Resources */,
+				D2F2725B0DA1C61600445FE9 /* docs in Resources */,
+				D2AE25EF0DA2624E00E15489 /* crawl in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D2AE25F10DA2626100E15489 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Copying command-line app into application bundle.\"\n\ncp ${BUILT_PRODUCTS_DIR}/crawl ${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7B0EFD3F0BD12E9200002671 /* Sources */ = {
@@ -1154,6 +1246,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D2F271F30DA1C58C00445FE9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1161,6 +1260,16 @@
 			isa = PBXTargetDependency;
 			target = 7B0EFD410BD12E9200002671 /* Lua */;
 			targetProxy = 7B0EFD440BD12E9E00002671 /* PBXContainerItemProxy */;
+		};
+		D2F272370DA1C5BC00445FE9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7B0EFD410BD12E9200002671 /* Lua */;
+			targetProxy = D2F272360DA1C5BC00445FE9 /* PBXContainerItemProxy */;
+		};
+		D2F272390DA1C5BC00445FE9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DD76FA90486AB0100D96B5E /* Crawl-cmd */;
+			targetProxy = D2F272380DA1C5BC00445FE9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1179,7 +1288,7 @@
 					DB_NDBM,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
@@ -1287,7 +1396,7 @@
 					FULLDEBUG,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
@@ -1347,7 +1456,7 @@
 					DEBUG,
 					DEBUG_ITEM_SCAN,
 				);
-				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
@@ -1406,7 +1515,7 @@
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
-				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
@@ -1449,10 +1558,114 @@
 			};
 			name = Release;
 		};
+		D2F271F90DA1C58C00445FE9 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Crawl-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-O";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Crawl;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		D2F271FA0DA1C58C00445FE9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Crawl-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-O";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Crawl;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		D2F271FB0DA1C58C00445FE9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Crawl-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-O";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Crawl;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		D2F271FC0DA1C58C00445FE9 /* Wizard */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "Crawl-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-O";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Crawl;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Wizard;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Crawl" */ = {
+		1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Crawl-cmd" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB928608733DD80010E9CD /* Development */,
@@ -1481,6 +1694,17 @@
 				7B0EFD480BD12EA700002671 /* Release */,
 				7B0EFD490BD12EA700002671 /* Debug */,
 				7B0EFD4A0BD12EA700002671 /* Wizard */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		D2F271FD0DA1C58C00445FE9 /* Build configuration list for PBXNativeTarget "Crawl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2F271F90DA1C58C00445FE9 /* Development */,
+				D2F271FA0DA1C58C00445FE9 /* Release */,
+				D2F271FB0DA1C58C00445FE9 /* Debug */,
+				D2F271FC0DA1C58C00445FE9 /* Wizard */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;

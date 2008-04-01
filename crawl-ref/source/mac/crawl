@@ -1,0 +1,11 @@
+#!/usr/bin/perl
+
+# This is utter and complete hackery.  But I'm tired
+# of building the mac distribution by hand.
+
+$script= $0;
+$script =~ /(.*)\/MacOS\/(\w+)/;
+$scriptdir = $1;
+$resdir = $scriptdir . "/Resources/";
+$executable = $resdir . "crawl";
+system "/usr/bin/open /Applications/Utilities/Terminal.app $executable";
