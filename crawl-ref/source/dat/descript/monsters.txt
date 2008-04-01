@@ -1128,7 +1128,7 @@ An exceptionally competent orcish wizard. Most of them draw magical power from H
 %%%%
 orc warlord
 
-A very large and strong looking orc, able to command large packs of his kin..
+A very large and strong looking orc, able to command large packs of his kin.
 %%%%
 orc warrior
 
