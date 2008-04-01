@@ -236,6 +236,7 @@
 		7BF8556C0C9C916800B7C520 /* dgnevent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556A0C9C916800B7C520 /* dgnevent.h */; };
 		7BF855700C9C919100B7C520 /* luadgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8556E0C9C919100B7C520 /* luadgn.cc */; };
 		7BF855710C9C919100B7C520 /* luadgn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556F0C9C919100B7C520 /* luadgn.h */; };
+		D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */; };
 		D2AE25EF0DA2624E00E15489 /* crawl in Resources */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
 		D2AE25F90DA262DD00E15489 /* crawl in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
 		D2F272350DA1C5AD00445FE9 /* dat in Resources */ = {isa = PBXBuildFile; fileRef = D2F271FE0DA1C5AD00445FE9 /* dat */; };
@@ -608,6 +609,7 @@
 		7BF8556E0C9C919100B7C520 /* luadgn.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = luadgn.cc; sourceTree = SOURCE_ROOT; };
 		7BF8556F0C9C919100B7C520 /* luadgn.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = luadgn.h; sourceTree = SOURCE_ROOT; };
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Crawl.icns; path = mac/Crawl.icns; sourceTree = "<group>"; };
 		D2AE25EE0DA2624E00E15489 /* crawl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = crawl; path = mac/crawl; sourceTree = "<group>"; };
 		D2F271F60DA1C58C00445FE9 /* Crawl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Crawl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Crawl-Info.plist"; sourceTree = "<group>"; };
@@ -966,6 +968,7 @@
 		D2AE25EC0DA2621100E15489 /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */,
 				D2AE25EE0DA2624E00E15489 /* crawl */,
 			);
 			name = Mac;
@@ -1091,6 +1094,7 @@
 				D2F272350DA1C5AD00445FE9 /* dat in Resources */,
 				D2F2725B0DA1C61600445FE9 /* docs in Resources */,
 				D2AE25EF0DA2624E00E15489 /* crawl in Resources */,
+				D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
