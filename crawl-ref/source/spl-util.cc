@@ -44,7 +44,6 @@
 #include <conio.h>
 #endif
 
-
 static struct spell_desc spelldata[] = {
 #include "spl-data.h"
 };
@@ -298,8 +297,7 @@ int count_bits(unsigned int bits)
 
 const char *spell_title(spell_type spell)
 {
-    const spell_desc *spd = seekspell(spell);
-    return (spd? spd->title : NULL);
+    return (seekspell(spell)->title);
 }
 
 
@@ -881,7 +879,8 @@ int spell_type2skill(unsigned int spelltype)
 static spell_desc *seekspell(spell_type spell)
 {
     const int index = spell_list[spell];
-    return (index != -1? &spelldata[index] : NULL);
+    ASSERT(index != -1);
+    return (&spelldata[index]);
 }
 
 static bool cloud_helper(int (*func)(int, int, int, int, cloud_type,
