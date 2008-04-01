@@ -59,8 +59,6 @@ read in-game by bringing up the help menu with '?'):
 * quickstart.txt     A short introduction for new players.
 * ssh_guide.txt      An elaborate introduction on how to get internet play
                      to work. For Windows only.
-* irc_guide.txt      An elaborate introduction on how to access the IRC
-                     channel ##crawl.
 * keys.pdf           A printable document, listing all commands and it also
                      contains a very short guide for new players.
 
