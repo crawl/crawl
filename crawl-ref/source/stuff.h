@@ -72,7 +72,7 @@ void canned_msg(canned_message_type which_message);
 
 bool yes_or_no( const char* fmt, ... );
 typedef std::map<int, int> explicit_keymap;
-bool yesno( const char * str, bool safe = true, int safeanswer = 0, 
+bool yesno( const char * str, bool safe = true, int safeanswer = 0,
             bool clear_after = true, bool interrupt_delays = true,
             bool noprompt = false,
             const explicit_keymap *map = NULL );
