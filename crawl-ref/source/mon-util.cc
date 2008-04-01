@@ -5218,7 +5218,9 @@ void monsters::react_to_damage(int damage)
     {
         const int tospawn =
             1 + random2avg(1 + std::min((damage - 8) / 8, 5), 2);
+#ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Trying to spawn %d jellies.", tospawn);
+#endif
         const beh_type sbehaviour = SAME_ATTITUDE(this);
         int spawned = 0;
         for (int i = 0; i < tospawn; ++i)
