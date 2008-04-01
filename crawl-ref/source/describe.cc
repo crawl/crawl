@@ -1747,7 +1747,7 @@ static bool describe_spells(const item_def &item)
 //---------------------------------------------------------------
 void describe_item( item_def &item, bool allow_inscribe )
 {
-    for (;;)
+    while (true)
     {
         const bool spells_shown = show_item_description(item);
 

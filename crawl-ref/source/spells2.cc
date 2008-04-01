@@ -1236,7 +1236,7 @@ int summon_elemental(int pow, int restricted_type,
 
     int numsc = std::min(2 + (random2(pow) / 5), 6);
 
-    for (;;) 
+    while (true)
     {
         mpr("Summon from material in which direction?", MSGCH_PROMPT);
 

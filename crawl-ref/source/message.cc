@@ -901,7 +901,7 @@ void replay_messages(void)
     // Turn off the cursor
     cursor_control cursoff(false);
 
-    for(;;)
+    while (true)
     {
         clrscr();
 

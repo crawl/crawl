@@ -1293,11 +1293,11 @@ void tweak_object(void)
     if (item == you.equip[EQ_WEAPON])
         you.wield_change = true;
 
-    for (;;)
+    while (true)
     {
         void *field_ptr = NULL;
 
-        for (;;) 
+        while (true)
         {
             mpr( you.inv[item].name(DESC_INVENTORY_EQUIP).c_str() );
 

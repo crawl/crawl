@@ -2344,7 +2344,7 @@ static travel_target prompt_travel_depth(const level_id &id)
         return travel_target(level_id(target.p.id.branch, 1));
 
     target.p.id.depth = get_nearest_level_depth(target.p.id.branch);
-    for (;;)
+    while (true)
     {
         mesclr(true);
         mprf(MSGCH_PROMPT, "What level of %s? "

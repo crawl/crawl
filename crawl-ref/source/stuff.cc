@@ -794,9 +794,8 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
         interrupt_activity( AI_FORCE_INTERRUPT );
 
     std::string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
-    // std::string prompt = make_stringf("%s (y/n) ", str);
 
-    for (;;)
+    while (true)
     {
         if ( !noprompt )
             mpr(prompt.c_str(), MSGCH_PROMPT);
@@ -806,9 +805,11 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
         if (map && map->find(tmp) != map->end())
             tmp = map->find(tmp)->second;
 
-        if ((tmp == ' ' || tmp == 27 || tmp == '\r' || tmp == '\n') 
-                && safeanswer)
+        if (safeanswer
+            && (tmp == ' ' || tmp == 27 || tmp == '\r' || tmp == '\n'))
+        {
             tmp = safeanswer;
+        }
 
         if (Options.easy_confirm == CONFIRM_ALL_EASY
             || tmp == safeanswer
@@ -888,9 +889,10 @@ int yesnoquit( const char* str, bool safe, int safeanswer,
         interrupt_activity( AI_FORCE_INTERRUPT );
 
     std::string prompt = make_stringf("%s%s ", str ? str : "Buggy prompt?",
-                                      _list_allowed_keys(alt_yes, alt_yes2, safe));
+                                      _list_allowed_keys(alt_yes, alt_yes2,
+                                                         safe));
 
-    while (1)
+    while (true)
     {
         mpr(prompt.c_str(), MSGCH_PROMPT);
 
@@ -917,8 +919,10 @@ int yesnoquit( const char* str, bool safe, int safeanswer,
         else if (tmp == 'Y' || tmp == alt_yes)
             return 1;
         else
+        {
             mprf("[Y]es%s, [N]o or [Q]uit only, please.",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
+        }
     }
 }
 

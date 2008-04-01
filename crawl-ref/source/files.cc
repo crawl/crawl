@@ -1616,11 +1616,12 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
     char tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
 
-    while(1)
+    while (true)
     {
         tag_type tt = tag_read(restoreFile, minorVersion);
         if (tt == TAG_NO_TAG)
             break;
+            
         tags[tt] = 0;                // tag read
         if (fileType == TAGTYPE_PLAYER_NAME)
             break;

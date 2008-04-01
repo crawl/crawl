@@ -103,16 +103,16 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour = false,
 void cloud_grid(void);
 void monster_grid(bool do_updates);
 
-static void get_symbol( int x, int y,
-                        int object, unsigned *ch,
-                        unsigned short *colour,
-                        bool magic_mapped = false );
-static unsigned get_symbol(int object, unsigned short *colour = NULL,
-                           bool magic_mapped = false);
+static void _get_symbol( int x, int y,
+                         int object, unsigned *ch,
+                         unsigned short *colour,
+                         bool magic_mapped = false );
+static unsigned _get_symbol(int object, unsigned short *colour = NULL,
+                            bool magic_mapped = false);
 
-static int get_item_dngn_code(const item_def &item);
-static void set_show_backup( int ex, int ey );
-static int get_viewobj_flags(int viewobj);
+static int _get_item_dngn_code(const item_def &item);
+static void _set_show_backup( int ex, int ey );
+static int _get_viewobj_flags(int viewobj);
 
 const feature_def &get_feature_def(dungeon_feature_type feat)
 {
@@ -123,7 +123,7 @@ unsigned map_cell::glyph() const
 {
     if (!object)
         return (' ');
-    return get_symbol(object, NULL, !(flags & MAP_SEEN_FLAG));
+    return _get_symbol(object, NULL, !(flags & MAP_SEEN_FLAG));
 }
 
 bool map_cell::known() const
@@ -226,12 +226,12 @@ bool is_bloodcovered(int x, int y)
 
 bool is_envmap_item(int x, int y)
 {
-    return (get_viewobj_flags(env.map[x][y].object) & MC_ITEM);
+    return (_get_viewobj_flags(env.map[x][y].object) & MC_ITEM);
 }
 
 bool is_envmap_mons(int x, int y)
 {
-    return (get_viewobj_flags(env.map[x][y].object) & MC_MONS);
+    return (_get_viewobj_flags(env.map[x][y].object) & MC_MONS);
 }
 
 int get_envmap_col(int x, int y)
@@ -295,7 +295,7 @@ bool is_notable_terrain(dungeon_feature_type ftype)
 }
 
 #if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
-static unsigned colflag2brand(int colflag)
+static unsigned _colflag2brand(int colflag)
 {
     switch (colflag)
     {
@@ -333,7 +333,7 @@ unsigned real_colour(unsigned raw_colour)
 #if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
     if (colflags)
     {
-        unsigned brand = colflag2brand(colflags);
+        unsigned brand = _colflag2brand(colflags);
         raw_colour = dos_brand(raw_colour & 0xFF, brand);
     }
 #endif
@@ -346,7 +346,7 @@ unsigned real_colour(unsigned raw_colour)
     return (raw_colour);
 }
 
-static int get_viewobj_flags(int object)
+static int _get_viewobj_flags(int object)
 {
     // Check for monster glyphs.
     if (object >= DNGN_START_OF_MONSTERS)
@@ -361,16 +361,16 @@ static int get_viewobj_flags(int object)
     return (0);
 }
 
-static unsigned get_symbol(int object, unsigned short *colour,
-                           bool magic_mapped)
+static unsigned _get_symbol(int object, unsigned short *colour,
+                            bool magic_mapped)
 {
     unsigned ch;
-    get_symbol(0, 0, object, &ch, NULL, magic_mapped);
+    _get_symbol(0, 0, object, &ch, NULL, magic_mapped);
     return (ch);
 }
 
-static int view_emphasised_colour(int x, int y, dungeon_feature_type feat,
-                                  int oldcolour, int newcolour)
+static int _view_emphasised_colour(int x, int y, dungeon_feature_type feat,
+                                   int oldcolour, int newcolour)
 {
     if (is_travelable_stair(feat) && !travel_cache.know_stair(coord_def(x, y)))
     {
@@ -381,7 +381,7 @@ static int view_emphasised_colour(int x, int y, dungeon_feature_type feat,
     return (oldcolour);
 }
 
-static bool show_bloodcovered(int x, int y)
+static bool _show_bloodcovered(int x, int y)
 {
     if (!is_bloodcovered(x,y))
         return (false);
@@ -392,10 +392,10 @@ static bool show_bloodcovered(int x, int y)
             && !grid_is_portal(grid) && grid != DNGN_ENTER_SHOP);
 }
 
-static void get_symbol( int x, int y,
-                        int object, unsigned *ch,
-                        unsigned short *colour,
-                        bool magic_mapped )
+static void _get_symbol( int x, int y,
+                         int object, unsigned *ch,
+                         unsigned short *colour,
+                         bool magic_mapped )
 {
     ASSERT( ch != NULL );
 
@@ -425,7 +425,7 @@ static void get_symbol( int x, int y,
                         *colour = LIGHTGRAY | colmask; // 1/12
                 }
             }
-            else if (object < NUM_REAL_FEATURES && show_bloodcovered(x,y))
+            else if (object < NUM_REAL_FEATURES && _show_bloodcovered(x,y))
             {
                 *colour = RED | colmask;
             }
@@ -442,7 +442,7 @@ static void get_symbol( int x, int y,
 
                 if (fdef.em_colour != fdef.colour && fdef.em_colour)
                     *colour =
-                        view_emphasised_colour(
+                        _view_emphasised_colour(
                             x, y, static_cast<dungeon_feature_type>(object),
                             *colour, fdef.em_colour | colmask);
             }
@@ -499,7 +499,7 @@ unsigned get_magicmap_char( int feature )
     return (0);
 }
 
-static char get_travel_colour( int x, int y )
+static char _get_travel_colour( int x, int y )
 {
     if (is_waypoint(x, y))
         return LIGHTGREEN;
@@ -513,7 +513,7 @@ static char get_travel_colour( int x, int y )
 }
 
 #if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
-static unsigned short dos_reverse_brand(unsigned short colour)
+static unsigned short _dos_reverse_brand(unsigned short colour)
 {
     if (Options.dos_use_background_intensity)
     {
@@ -560,8 +560,8 @@ static unsigned short dos_reverse_brand(unsigned short colour)
     return (colour);
 }
 
-static unsigned short dos_hilite_brand(unsigned short colour,
-                                       unsigned short hilite)
+static unsigned short _dos_hilite_brand(unsigned short colour,
+                                        unsigned short hilite)
 {
     if (!hilite)
         return (colour);
@@ -582,9 +582,9 @@ unsigned short dos_brand( unsigned short colour,
     colour &= 0xFF;
 
     if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-        return dos_hilite_brand(colour, (brand & CHATTR_COLMASK) >> 8);
+        return _dos_hilite_brand(colour, (brand & CHATTR_COLMASK) >> 8);
     else
-        return dos_reverse_brand(colour);
+        return _dos_reverse_brand(colour);
 }
 #endif
 
@@ -599,9 +599,8 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
 
     const dungeon_feature_type grid_value = grd[x][y];
 
-    unsigned tc = travel_colour?
-                        get_travel_colour(x, y)
-                      : DARKGREY;
+    unsigned tc = travel_colour ? _get_travel_colour(x, y)
+                                : DARKGREY;
 
     if (map_flags & MAP_DETECTED_ITEM)
         return real_colour(Options.detected_item_colour);
@@ -629,8 +628,8 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
         && fdef.seen_em_colour)
     {
         feature_colour =
-            view_emphasised_colour(x, y, grid_value, feature_colour,
-                                   fdef.seen_em_colour);
+            _view_emphasised_colour(x, y, grid_value, feature_colour,
+                                    fdef.seen_em_colour);
     }
 
     if (feature_colour != DARKGREY)
@@ -655,7 +654,6 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
 void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 {
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
-    {
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
         {
             // Don't expose new dug out areas:
@@ -690,7 +688,6 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
                 tileidx_feature(DNGN_UNSEEN, x, y);
 #endif
         }
-    }
 }
 
 int get_mons_colour(const monsters *mons)
@@ -744,13 +741,13 @@ int get_mons_colour(const monsters *mons)
 
 static std::set<const monsters*> monsters_seen_this_turn;
 
-static bool mons_was_seen_this_turn(const monsters *mons)
+static bool _mons_was_seen_this_turn(const monsters *mons)
 {
     return (monsters_seen_this_turn.find(mons) !=
             monsters_seen_this_turn.end());
 }
 
-static void good_god_follower_attitude_change(monsters *monster)
+static void _good_god_follower_attitude_change(monsters *monster)
 {
     if (you.is_undead || you.species == SP_DEMONSPAWN)
         return;
@@ -868,7 +865,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     }
 }
 
-static void handle_seen_interrupt(monsters* monster)
+static void _handle_seen_interrupt(monsters* monster)
 {
     activity_interrupt_data aid(monster);
     if (monster->seen_context != "")
@@ -1066,7 +1063,7 @@ void handle_monster_shouts(monsters* monster, bool force)
             {
                 monster->seen_context = "bursts forth shouting";
                 // Give interrupt message before shout message.
-                handle_seen_interrupt(monster);
+                _handle_seen_interrupt(monster);
             }
         }
 
@@ -1084,7 +1081,7 @@ void force_monster_shout(monsters* monster)
 }
 #endif
 
-inline static bool update_monster_grid(const monsters *monster)
+inline static bool _update_monster_grid(const monsters *monster)
 {
     const int ex = monster->x - you.x_pos + 9;
     const int ey = monster->y - you.y_pos + 9;
@@ -1096,7 +1093,7 @@ inline static bool update_monster_grid(const monsters *monster)
             && !mons_flies(monster)
             && env.cgrid(monster->pos()) == EMPTY_CLOUD)
         {
-            set_show_backup(ex, ey);
+            _set_show_backup(ex, ey);
             env.show[ex][ey] = DNGN_INVIS_EXPOSED;
             env.show_col[ex][ey] = BLUE; 
         }
@@ -1105,7 +1102,7 @@ inline static bool update_monster_grid(const monsters *monster)
 
     // mimics are always left on map
     if (!mons_is_mimic( monster->type ))
-        set_show_backup(ex, ey);
+        _set_show_backup(ex, ey);
 
     env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
     env.show_col[ex][ey] = get_mons_colour( monster );
@@ -1123,16 +1120,15 @@ void monster_grid(bool do_updates)
 
         if (monster->type != -1 && mons_near(monster))
         {
-            if (do_updates 
-                && (monster->behaviour == BEH_SLEEP
-                     || monster->behaviour == BEH_WANDER) 
+            if (do_updates && (monster->behaviour == BEH_SLEEP
+                               || monster->behaviour == BEH_WANDER)
                 && check_awaken(monster))
             {
                 behaviour_event( monster, ME_ALERT, MHITYOU );
                 handle_monster_shouts(monster);
             }
 
-            if (!update_monster_grid(monster))
+            if (!_update_monster_grid(monster))
                 continue;
 
 #ifdef USE_TILE
@@ -1148,7 +1144,7 @@ void monster_grid(bool do_updates)
                 monsters_seen_this_turn.insert(monster);
             }
 
-            good_god_follower_attitude_change(monster);
+            _good_god_follower_attitude_change(monster);
             beogh_follower_convert(monster);
         }
     }
@@ -1165,10 +1161,10 @@ void fire_monster_alerts()
         if (monster->alive() && mons_near(monster))
         {
             if ((player_monster_visible(monster)
-                 || mons_was_seen_this_turn(monster))
+                   || _mons_was_seen_this_turn(monster))
                 && !mons_is_submerged( monster ))
             {
-                handle_seen_interrupt(monster);
+                _handle_seen_interrupt(monster);
 
                 if (mons_attitude(monster) == ATT_HOSTILE)
                     num_hostile++;
@@ -1282,7 +1278,7 @@ bool check_awaken(monsters* monster)
     return (false);
 }                               // end check_awaken()
 
-static void set_show_backup( int ex, int ey )
+static void _set_show_backup( int ex, int ey )
 {
     // Must avoid double setting it.  
     // We want the base terrain/item, not the cloud or monster that replaced it.
@@ -1290,7 +1286,7 @@ static void set_show_backup( int ex, int ey )
         Show_Backup[ex][ey] = env.show[ex][ey];
 }
 
-static int get_item_dngn_code(const item_def &item)
+static int _get_item_dngn_code(const item_def &item)
 {
     switch (item.base_type)
     {
@@ -1327,7 +1323,7 @@ static int get_item_dngn_code(const item_def &item)
    }
 }
 
-inline static void update_item_grid(const coord_def &gp, const coord_def &ep)
+inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
 {
     const item_def &eitem = mitm[igrd(gp)];
     unsigned short &ecol = env.show_col(ep);
@@ -1342,7 +1338,7 @@ inline static void update_item_grid(const coord_def &gp, const coord_def &ep)
         ecol = (grid == DNGN_SHALLOW_WATER)? CYAN : eitem.colour;
         if (eitem.link != NON_ITEM)
             ecol |= COLFLAG_ITEM_HEAP;
-        env.show(ep) = get_item_dngn_code( eitem );
+        env.show(ep) = _get_item_dngn_code( eitem );
     }
 
 #ifdef USE_TILE
@@ -1358,37 +1354,32 @@ void item_grid()
 {
     coord_def gp;
     for (gp.y = (you.y_pos - 8); (gp.y < you.y_pos + 9); gp.y++)
-    {
         for (gp.x = (you.x_pos - 8); (gp.x < you.x_pos + 9); gp.x++)
         {
-            if (in_bounds(gp))
+            if (in_bounds(gp) && igrd(gp) != NON_ITEM)
             {
-                if (igrd(gp) != NON_ITEM)
-                {
-                    const coord_def ep = gp - you.pos() + coord_def(9, 9);
-                    if (env.show(ep))
-                        update_item_grid(gp, ep);
-                }
+                const coord_def ep = gp - you.pos() + coord_def(9, 9);
+                if (env.show(ep))
+                    _update_item_grid(gp, ep);
             }
         }
-    }
 }
 
 void get_item_glyph( const item_def *item, unsigned *glych,
                      unsigned short *glycol )
 {
     *glycol = item->colour;
-    get_symbol( 0, 0, get_item_dngn_code( *item ), glych, glycol );
+    _get_symbol( 0, 0, _get_item_dngn_code( *item ), glych, glycol );
 }
 
 void get_mons_glyph( const monsters *mons, unsigned *glych,
                      unsigned short *glycol )
 {
     *glycol = get_mons_colour( mons );
-    get_symbol( 0, 0, mons->type + DNGN_START_OF_MONSTERS, glych, glycol );
+    _get_symbol( 0, 0, mons->type + DNGN_START_OF_MONSTERS, glych, glycol );
 }
 
-inline static void update_cloud_grid(int cloudno)
+inline static void _update_cloud_grid(int cloudno)
 {
     int which_colour = LIGHTGREY;
     const int ex = env.cloud[cloudno].x - you.x_pos + 9;
@@ -1452,7 +1443,7 @@ inline static void update_cloud_grid(int cloudno)
         break;
     }
 
-    set_show_backup(ex, ey);
+    _set_show_backup(ex, ey);
     env.show[ex][ey] = DNGN_CLOUD;
     env.show_col[ex][ey] = which_colour;    
 
@@ -1477,7 +1468,7 @@ void cloud_grid(void)
         {
             mnc++;
             if (see_grid(env.cloud[s].x, env.cloud[s].y))
-                update_cloud_grid(s);
+                _update_cloud_grid(s);
         }
     }
 }
@@ -1681,7 +1672,7 @@ bool get_bit_in_long_array( const unsigned long* data, int where )
     return ((data[wordloc] & (1UL << bitloc)) != 0);
 }
 
-static void set_bit_in_long_array( unsigned long* data, int where )
+static void _set_bit_in_long_array( unsigned long* data, int where )
 {
     int wordloc = where / LONGSIZE;
     int bitloc = where % LONGSIZE;
@@ -1697,7 +1688,7 @@ bool double_is_zero( const double x )
 // note that slope must be nonnegative!
 // returns 0 if the advance was in x, 1 if it was in y, 2 if it was
 // the diagonal
-static int find_next_intercept(double* accx, double* accy, const double slope)
+static int _find_next_intercept(double* accx, double* accy, const double slope)
 {
 
     // handle perpendiculars
@@ -1888,26 +1879,26 @@ int ray_def::raw_advance()
     {
     case 0:
         // going down-right
-        rc = find_next_intercept( &accx, &accy, slope );
+        rc = _find_next_intercept( &accx, &accy, slope );
         return rc;
     case 1:
         // going down-left
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        rc = find_next_intercept( &accx, &accy, slope );
+        rc   = _find_next_intercept( &accx, &accy, slope );
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
         return rc;
     case 2:
         // going up-left
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        rc = find_next_intercept( &accx, &accy, slope );
+        rc   = _find_next_intercept( &accx, &accy, slope );
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;        
         return rc;
     case 3:
         // going up-right
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        rc = find_next_intercept( &accx, &accy, slope );
+        rc   = _find_next_intercept( &accx, &accy, slope );
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;        
         return rc;
     default:
@@ -1919,14 +1910,14 @@ int ray_def::raw_advance()
 // slope, with a maximum distance (in either x or y coordinate) of
 // maxrange. Store the visited cells in xpos[] and ypos[], and
 // return the number of cells visited.
-static int shoot_ray( double accx, double accy, const double slope,
-                      int maxrange, int xpos[], int ypos[] )
+static int _shoot_ray( double accx, double accy, const double slope,
+                       int maxrange, int xpos[], int ypos[] )
 {
     int curx, cury;
     int cellnum;
     for ( cellnum = 0; true; ++cellnum )
     {
-        find_next_intercept( &accx, &accy, slope );
+        _find_next_intercept( &accx, &accy, slope );
         curx = static_cast<int>(accx);
         cury = static_cast<int>(accy);
         if ( curx > maxrange || cury > maxrange )
@@ -1940,7 +1931,7 @@ static int shoot_ray( double accx, double accy, const double slope,
 }
 
 // check if the passed ray has already been created
-static bool is_duplicate_ray( int len, int xpos[], int ypos[] )
+static bool _is_duplicate_ray( int len, int xpos[], int ypos[] )
 {
     int cur_offset = 0;
     for ( unsigned int i = 0; i < raylengths.size(); ++i )
@@ -1955,9 +1946,11 @@ static bool is_duplicate_ray( int len, int xpos[], int ypos[] )
         int j;
         for ( j = 0; j < len; ++j )
         {
-            if ( ray_coord_x[j + cur_offset] != xpos[j] ||
-                 ray_coord_y[j + cur_offset] != ypos[j] )
+            if (ray_coord_x[j + cur_offset] != xpos[j]
+                || ray_coord_y[j + cur_offset] != ypos[j])
+            {
                 break;
+            }
         }
 
         // exact duplicate?
@@ -1971,7 +1964,7 @@ static bool is_duplicate_ray( int len, int xpos[], int ypos[] )
 }
 
 // is starta...lengtha a subset of startb...lengthb?
-static bool is_subset( int starta, int startb, int lengtha, int lengthb )
+static bool _is_subset( int starta, int startb, int lengtha, int lengthb )
 {
     int cura = starta, curb = startb;
     int enda = starta + lengtha, endb = startb + lengthb;
@@ -1991,7 +1984,7 @@ static bool is_subset( int starta, int startb, int lengtha, int lengthb )
 }
 
 // return a vector which lists all the nonduped cellrays (by index)
-static std::vector<int> find_nonduped_cellrays()
+static std::vector<int> _find_nonduped_cellrays()
 {
     // a cellray c in a fullray f is duped if there is a fullray g
     // such that g contains c and g[:c] is a subset of f[:c]
@@ -1999,7 +1992,7 @@ static std::vector<int> find_nonduped_cellrays()
     bool is_duplicate;
 
     std::vector<int> result;
-    for (curidx=0, raynum=0;
+    for (curidx = 0, raynum = 0;
          raynum < static_cast<int>(raylengths.size());
          curidx += raylengths[raynum++])
     {
@@ -2026,8 +2019,8 @@ static std::vector<int> find_nonduped_cellrays()
                     // bingo!
                     if ( testx == curx && testy == cury )
                     {
-                        is_duplicate = is_subset(testidx, curidx,
-                                                 testcell, cellnum);
+                        is_duplicate = _is_subset(testidx, curidx,
+                                                  testcell, cellnum);
                         break;
                     }
                 }
@@ -2043,13 +2036,13 @@ static std::vector<int> find_nonduped_cellrays()
 
 // Create and register the ray defined by the arguments.
 // Return true if the ray was actually registered (i.e., not a duplicate.)
-static bool register_ray( double accx, double accy, double slope )
+static bool _register_ray( double accx, double accy, double slope )
 {
     int xpos[LOS_MAX_RANGE * 2 + 1], ypos[LOS_MAX_RANGE * 2 + 1];
-    int raylen = shoot_ray( accx, accy, slope, LOS_MAX_RANGE, xpos, ypos );
+    int raylen = _shoot_ray( accx, accy, slope, LOS_MAX_RANGE, xpos, ypos );
 
     // early out if ray already exists
-    if ( is_duplicate_ray(raylen, xpos, ypos) )
+    if ( _is_duplicate_ray(raylen, xpos, ypos) )
         return false;
 
     // not duplicate, register
@@ -2072,11 +2065,11 @@ static bool register_ray( double accx, double accy, double slope )
     return true;
 }
 
-static void create_blockrays()
+static void _create_blockrays()
 {
     // determine nonduplicated rays
-    std::vector<int> nondupe_cellrays = find_nonduped_cellrays();
-    const unsigned int num_nondupe_rays = nondupe_cellrays.size();
+    std::vector<int> nondupe_cellrays    = _find_nonduped_cellrays();
+    const unsigned int num_nondupe_rays  = nondupe_cellrays.size();
     const unsigned int num_nondupe_words =
         (num_nondupe_rays + LONGSIZE - 1) / LONGSIZE;
     const unsigned int num_cellrays = ray_coord_x.size();
@@ -2102,7 +2095,7 @@ static void create_blockrays()
 
             // ...all following cellrays
             for ( int j = i+1; j < raylengths[ray]; ++j )
-                set_bit_in_long_array( inptr, j + cur_offset );
+                _set_bit_in_long_array( inptr, j + cur_offset );
 
         }
         cur_offset += raylengths[ray];
@@ -2127,16 +2120,15 @@ static void create_blockrays()
     unsigned long* oldptr = full_los_blockrays;
     unsigned long* newptr = los_blockrays;
     for ( int x = 0; x <= LOS_MAX_RANGE_X; ++x )
-    {
         for ( int y = 0; y <= LOS_MAX_RANGE_Y; ++y )
         {
             for ( unsigned int i = 0; i < num_nondupe_rays; ++i )
                 if ( get_bit_in_long_array(oldptr, nondupe_cellrays[i]) )
-                    set_bit_in_long_array(newptr, i);
+                    _set_bit_in_long_array(newptr, i);
+                    
             oldptr += num_words;
             newptr += num_nondupe_words;
         }
-    }
 
     // we can throw away full_los_blockrays now
     delete [] full_los_blockrays;
@@ -2150,7 +2142,7 @@ static void create_blockrays()
 #endif
 }
 
-static int gcd( int x, int y )
+static int _gcd( int x, int y )
 {
     int tmp;
     while ( y != 0 )
@@ -2182,8 +2174,8 @@ void raycast()
 
     // register perpendiculars FIRST, to make them top choice
     // when selecting beams
-    register_ray( 0.5, 0.5, 1000.0 );
-    register_ray( 0.5, 0.5, 0.0 );
+    _register_ray( 0.5, 0.5, 1000.0 );
+    _register_ray( 0.5, 0.5, 0.0 );
 
     // For a slope of M = y/x, every x we move on the X axis means
     // that we move y on the y axis. We want to look at the resolution
@@ -2196,8 +2188,10 @@ void raycast()
     std::vector<std::pair<int,int> > xyangles;
     for ( int xangle = 1; xangle <= LOS_MAX_RANGE; ++xangle )
         for ( int yangle = 1; yangle <= LOS_MAX_RANGE; ++yangle )
-            if ( gcd(xangle, yangle) == 1 )
+        {
+            if ( _gcd(xangle, yangle) == 1 )
                 xyangles.push_back(std::pair<int,int>(xangle, yangle));
+        }
 
     std::sort( xyangles.begin(), xyangles.end(), complexity_lt );
     for ( unsigned int i = 0; i < xyangles.size(); ++i )
@@ -2214,18 +2208,19 @@ void raycast()
                 xstart += EPSILON_VALUE / 10.0;
             if ( intercept == yangle )
                 xstart -= EPSILON_VALUE / 10.0;
+                
             // y should be "about to change"            
-            register_ray( xstart, 1.0 - EPSILON_VALUE / 10.0, slope );
+            _register_ray( xstart, 1.0 - EPSILON_VALUE / 10.0, slope );
             // also draw the identical ray in octant 2
-            register_ray( 1.0 - EPSILON_VALUE / 10.0, xstart, rslope );
+            _register_ray( 1.0 - EPSILON_VALUE / 10.0, xstart, rslope );
         }
     }
 
     // Now create the appropriate blockrays array
-    create_blockrays();   
+    _create_blockrays();
 }
 
-static void set_ray_quadrant( ray_def& ray, int sx, int sy, int tx, int ty )
+static void _set_ray_quadrant( ray_def& ray, int sx, int sy, int tx, int ty )
 {
     if ( tx >= sx && ty >= sy )
         ray.quadrant = 0;
@@ -2239,8 +2234,8 @@ static void set_ray_quadrant( ray_def& ray, int sx, int sy, int tx, int ty )
         mpr("Bad ray quadrant!", MSGCH_DIAGNOSTICS);
 }
 
-static int cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
-                          int maxvalue )
+static int _cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
+                           int maxvalue )
 {
     const int i = (int)ui;
     if ( startpoint < 0 )
@@ -2258,7 +2253,7 @@ static int cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
 }
 
 static const double VERTICAL_SLOPE = 10000.0;
-static double calc_slope(double x, double y)
+static double _calc_slope(double x, double y)
 {
     if (double_is_zero(x))
         return (VERTICAL_SLOPE);
@@ -2267,19 +2262,20 @@ static double calc_slope(double x, double y)
     return (slope > VERTICAL_SLOPE? VERTICAL_SLOPE : slope);
 }
 
-static double slope_factor(const ray_def &ray)
+static double _slope_factor(const ray_def &ray)
 {
     double xdiff = fabs(ray.accx - 0.5), ydiff = fabs(ray.accy - 0.5);
 
     if (double_is_zero(xdiff) && double_is_zero(ydiff))
         return ray.slope;
-    const double slope = calc_slope(ydiff, xdiff);
+        
+    const double slope = _calc_slope(ydiff, xdiff);
     return (slope + ray.slope) / 2.0;
 }
 
-static bool superior_ray(int shortest, int imbalance,
-                         int raylen, int rayimbalance,
-                         double slope_diff, double ray_slope_diff)
+static bool _superior_ray(int shortest, int imbalance,
+                          int raylen, int rayimbalance,
+                          double slope_diff, double ray_slope_diff)
 {
     if (shortest != raylen)
         return (shortest > raylen);
@@ -2308,19 +2304,19 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     int cellray, inray;
     const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
     const int signy = ((targety - sourcey >= 0) ? 1 : -1);
-    const int absx = signx * (targetx - sourcex);
-    const int absy = signy * (targety - sourcey);
-    const double want_slope = calc_slope(absx, absy);
-    int cur_offset = 0;
-    int shortest = INFINITE_DISTANCE;
-    int imbalance = INFINITE_DISTANCE;
-    double slope_diff = VERTICAL_SLOPE * 10.0;
+    const int absx  = signx * (targetx - sourcex);
+    const int absy  = signy * (targety - sourcey);
+    int cur_offset  = 0;
+    int shortest    = INFINITE_DISTANCE;
+    int imbalance   = INFINITE_DISTANCE;
+    const double want_slope = _calc_slope(absx, absy);
+    double slope_diff       = VERTICAL_SLOPE * 10.0;
     std::vector<coord_def> unaliased_ray;
     
     for ( unsigned int fray = 0; fray < fullrays.size(); ++fray )
     {
-        const int fullray = cyclic_offset( fray, cycle_dir, ray.fullray_idx,
-                                           fullrays.size() );
+        const int fullray = _cyclic_offset( fray, cycle_dir, ray.fullray_idx,
+                                            fullrays.size() );
         // yeah, yeah, this is O(n^2). I know.
         cur_offset = 0;
         for ( int i = 0; i < fullray; ++i )
@@ -2387,11 +2383,11 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                 if (!blocked && find_shortest && shortest >= real_length)
                 {
                     int diags = 0, straights = 0;
-                    for (int i = 1, size = unaliased_ray.size(); i < size;
-                         ++i)
+                    for (int i = 1, size = unaliased_ray.size(); i < size; ++i)
                     {
                         const int dist =
                             (unaliased_ray[i] - unaliased_ray[i - 1]).abs();
+                            
                         if (dist == 2)
                         {
                             straights = 0;
@@ -2407,16 +2403,14 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                     }
                 }
 
-                const double ray_slope_diff =
-                    find_shortest? fabs(slope_factor(fullrays[fullray])
-                                      - want_slope)
-                    : 0.0;
+                const double ray_slope_diff = find_shortest ?
+                    fabs(_slope_factor(fullrays[fullray]) - want_slope) : 0.0;
 
                 if ( !blocked
                      &&  (!find_shortest
-                          || superior_ray(shortest, imbalance,
-                                          real_length, cimbalance,
-                                          slope_diff, ray_slope_diff)))
+                          || _superior_ray(shortest, imbalance,
+                                           real_length, cimbalance,
+                                           slope_diff, ray_slope_diff)))
                 {
                     // success!
                     ray        = fullrays[fullray];
@@ -2432,7 +2426,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                         ray.accy = 1.0 - ray.accy;
                     ray.accx += sourcex;
                     ray.accy += sourcey;
-                    set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
+                    _set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
                     if (!find_shortest)
                         return true;
                 }
@@ -2456,7 +2450,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
             if ( ray.slope < 0 )
                 ray.slope = -ray.slope;
         }
-        set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
+        _set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
         ray.fullray_idx = -1;
         return true;
     }
@@ -2569,7 +2563,6 @@ void losight(env_show_grid &sh,
         // kill all blocked rays
         const unsigned long* inptr = los_blockrays;
         for ( int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff )
-        {
             for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y;
                  ++ydiff, inptr += num_words )
             {
@@ -2583,6 +2576,7 @@ void losight(env_show_grid &sh,
                 dungeon_feature_type dfeat = gr[realx][realy];
                 if (dfeat == DNGN_SECRET_DOOR)
                     dfeat = grid_secret_door_appearance(realx, realy);
+                    
                 // if this cell is opaque...
                 if ( grid_is_opaque(dfeat)
                      || (clear_walls_block && grid_is_wall(dfeat)))
@@ -2601,7 +2595,6 @@ void losight(env_show_grid &sh,
                     }
                 }
             }
-        }
 
         // ray calculation done, now work out which cells in this
         // quadrant are visible
@@ -2619,10 +2612,12 @@ void losight(env_show_grid &sh,
                     const int realx = xmult * compressed_ray_x[rayidx];
                     const int realy = ymult * compressed_ray_y[rayidx];
                     // update shadow map
-                    if (x_p + realx >= 0 && x_p + realx < 80 &&
-                        y_p + realy >= 0 && y_p + realy < 70 &&
-                        realx * realx + realy * realy <= los_radius_squared )
-                        sh[sh_xo+realx][sh_yo+realy]=gr[x_p+realx][y_p+realy];
+                    if (x_p + realx >= 0 && x_p + realx < 80
+                        && y_p + realy >= 0 && y_p + realy < 70
+                        && realx * realx + realy * realy <= los_radius_squared )
+                    {
+                        sh[sh_xo+realx][sh_yo+realy] = gr[x_p+realx][y_p+realy];
+                    }
                 }
                 ++rayidx;
                 if ( rayidx == num_cellrays )
@@ -2802,7 +2797,7 @@ bool is_feature(int feature, int x, int y)
     }
 }
 
-static int find_feature(int feature, int curs_x, int curs_y, 
+static int _find_feature(int feature, int curs_x, int curs_y,
                          int start_x, int start_y, int anchor_x, int anchor_y,
                          int ignore_count, int *move_x, int *move_y)
 {
@@ -2815,7 +2810,6 @@ static int find_feature(int feature, int curs_x, int curs_y,
     // Find the first occurrence of feature 'feature', spiralling around (x,y)
     int maxradius = GXM > GYM? GXM : GYM;
     for (int radius = 1; radius < maxradius; ++radius)
-    {
         for (int axis = -2; axis < 2; ++axis)
         {
             int rad = radius - (axis < 0);
@@ -2852,7 +2846,6 @@ static int find_feature(int feature, int curs_x, int curs_y,
                 }
             }
         }
-    }
 
     // We found something, but ignored it because of an ignorecount
     if (firstx != -1)
@@ -2865,7 +2858,7 @@ static int find_feature(int feature, int curs_x, int curs_y,
 }
 
 void find_features(const std::vector<coord_def>& features,
-        unsigned char feature, std::vector<coord_def> *found)
+                   unsigned char feature, std::vector<coord_def> *found)
 {
     for (unsigned feat = 0; feat < features.size(); ++feat)
     {
@@ -2875,12 +2868,12 @@ void find_features(const std::vector<coord_def>& features,
     }
 }
 
-static int find_feature( const std::vector<coord_def>& features,
-                         int feature, int curs_x, int curs_y, 
-                         int start_x, int start_y, 
-                         int ignore_count, 
-                         int *move_x, int *move_y,
-                         bool forward)
+static int _find_feature( const std::vector<coord_def>& features,
+                          int feature, int curs_x, int curs_y,
+                          int start_x, int start_y,
+                          int ignore_count,
+                          int *move_x, int *move_y,
+                          bool forward)
 {
     int firstx = -1, firsty = -1, firstmatch = -1;
     int matchcount = 0;
@@ -2918,18 +2911,18 @@ static int find_feature( const std::vector<coord_def>& features,
     return 0;
 }
 
-static int get_number_of_lines_levelmap()
+static int _get_number_of_lines_levelmap()
 {
     return get_number_of_lines() - (Options.level_map_title ? 1 : 0);
 }
 
 #ifndef USE_TILE
-static void draw_level_map(int start_x, int start_y, bool travel_mode)
+static void _draw_level_map(int start_x, int start_y, bool travel_mode)
 {
     int bufcount2 = 0;
     screen_buffer_t buffer2[GYM * GXM * 2];
 
-    int num_lines = get_number_of_lines_levelmap();
+    int num_lines = _get_number_of_lines_levelmap();
     if ( num_lines > GYM )
         num_lines = GYM;
 
@@ -2960,7 +2953,6 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
     cgotoxy(1, top);
 
     for (int screen_y = 0; screen_y < num_lines; screen_y++)
-    {
         for (int screen_x = 0; screen_x < num_cols; screen_x++)
         {
             screen_buffer_t colour = DARKGREY;
@@ -3006,12 +2998,12 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
             
             bufcount2 += 2;
         }
-    }
+        
     puttext(1, top, num_cols, top + num_lines - 1, buffer2);
 }
 #endif // USE_TILE
 
-static void reset_travel_colours(std::vector<coord_def> &features)
+static void _reset_travel_colours(std::vector<coord_def> &features)
 {
     // We now need to redo travel colours
     features.clear();
@@ -3046,13 +3038,12 @@ void show_map( coord_def &spec_place, bool travel_mode )
     char min_x = 80, max_x = 0, min_y = 0, max_y = 0;
     bool found_y = false;
 
-    const int num_lines = get_number_of_lines_levelmap();
+    const int num_lines   = _get_number_of_lines_levelmap();
     const int half_screen = (num_lines - 1) / 2;
 
     const int top = 1 + Options.level_map_title;
 
     for (j = 0; j < GYM; j++)
-    {
         for (i = 0; i < GXM; i++)
         {
             if (env.map[i][j].known())
@@ -3072,7 +3063,6 @@ void show_map( coord_def &spec_place, bool travel_mode )
                     max_x = i;
             }
         }
-    }
 
     const int map_lines = max_y - min_y + 1;
 
@@ -3123,10 +3113,11 @@ void show_map( coord_def &spec_place, bool travel_mode )
             unsigned int cy = start_y + curs_y - 1;
             TileDrawMap(cx, cy);
             GmapDisplay(cx, cy);
-        }
 #else
-            draw_level_map(start_x, start_y, travel_mode);
+            _draw_level_map(start_x, start_y, travel_mode);
+#endif
         }
+#ifndef USE_TILE
         cursorxy(curs_x, curs_y + top - 1);
 #endif
         redraw_map = true;
@@ -3173,7 +3164,8 @@ void show_map( coord_def &spec_place, bool travel_mode )
             const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
             if (is_exclude_root(p))
                 cycle_exclude_radius(p);
-            reset_travel_colours(features);
+                
+            _reset_travel_colours(features);
             move_x = move_y = 0;
             break;
         }
@@ -3187,7 +3179,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
             else
                 clear_excludes();
 
-            reset_travel_colours(features);
+            _reset_travel_colours(features);
             move_x = move_y = 0;
             break;
         }
@@ -3325,16 +3317,20 @@ void show_map( coord_def &spec_place, bool travel_mode )
                 search_found        = 0;
             }
             if (travel_mode)
-                search_found = find_feature(features, getty, curs_x, curs_y, 
-                                            start_x, start_y,
-                                            search_found, 
-                                            &move_x, &move_y,
-                                            forward);
+            {
+                search_found = _find_feature(features, getty, curs_x, curs_y,
+                                             start_x, start_y,
+                                             search_found,
+                                             &move_x, &move_y,
+                                             forward);
+            }
             else
-                search_found = find_feature(getty, curs_x, curs_y,
-                                            start_x, start_y,
-                                            anchor_x, anchor_y,
-                                            search_found, &move_x, &move_y);
+            {
+                search_found = _find_feature(getty, curs_x, curs_y,
+                                             start_x, start_y,
+                                             anchor_x, anchor_y,
+                                             search_found, &move_x, &move_y);
+            }
             break;
         }
 
@@ -3500,7 +3496,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
     const bool wizard_map = map_radius == 1000 && you.wizard;
     for (i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
-    {
         for (j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
         {
             if (proportion < 100 && random2(100) >= proportion)
@@ -3538,7 +3533,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (grid_is_solid(grd[i][j]) && grd[i][j] != DNGN_CLOSED_DOOR)
             {
                 for (k = -1; k <= 1; k++)
-                {
                     for (l = -1; l <= 1; l++)
                     {
                         if (k == 0 && l == 0)
@@ -3554,7 +3548,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                                 && grd[i + k][j + l] != DNGN_CLOSED_DOOR)
                             empty_count--;
                     }
-                }
             }
 
             if (empty_count > 0)
@@ -3576,7 +3569,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 }
             }
         }
-    }
+
 #ifdef USE_TILE
     GmapInit(true); // re-draw tile backup
     tile_clear_buf();
@@ -3709,11 +3702,11 @@ dungeon_char_type dchar_by_name(const std::string &name)
         "item_stave", "item_miscellany", "item_corpse", "item_gold",
         "item_amulet", "cloud"
     };
+    
     for (unsigned i = 0; i < sizeof(dchar_names) / sizeof(*dchar_names); ++i)
-    {
         if (dchar_names[i] == name)
             return dungeon_char_type(i);
-    }
+
     return (NUM_DCHAR_TYPES);
 }
 
@@ -4355,7 +4348,7 @@ unsigned get_screen_glyph( int x, int y )
     if (object == DNGN_SECRET_DOOR)
         object = grid_secret_door_appearance( x, y );
 
-    get_symbol( x, y, object, &ch, &colour );
+    _get_symbol( x, y, object, &ch, &colour );
     return (ch);
 }
 
@@ -4421,7 +4414,7 @@ std::string screenshot( bool fullscreen )
                 if (object == DNGN_SECRET_DOOR)
                     object = grid_secret_door_appearance( gc.x, gc.y );
 
-                get_symbol( gc.x, gc.y, object, &glych, &glycol );
+                _get_symbol( gc.x, gc.y, object, &glych, &glycol );
                 ch = glych;
             }
             
@@ -4470,7 +4463,7 @@ std::string screenshot( bool fullscreen )
     return (ss.str());
 }
 
-static int viewmap_flash_colour()
+static int _viewmap_flash_colour()
 {
     if (you.special_wield == SPWLD_SHADOW)
         return (DARKGREY);
@@ -4480,22 +4473,22 @@ static int viewmap_flash_colour()
     return (BLACK);
 }
 
-static void update_env_show(const coord_def &gp, const coord_def &ep)
+static void _update_env_show(const coord_def &gp, const coord_def &ep)
 {
     // The sequence is grid, items, clouds, monsters.
     env.show(ep) = grd(gp);
     env.show_col(ep) = 0;
 
     if (igrd(gp) != NON_ITEM)
-        update_item_grid(gp, ep);
+        _update_item_grid(gp, ep);
 
     const int cloud = env.cgrid(gp);
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE)
-        update_cloud_grid(cloud);
+        _update_cloud_grid(cloud);
 
     const monsters *mons = monster_at(gp);
     if (mons && mons->alive())
-        update_monster_grid(mons);
+        _update_monster_grid(mons);
 }
 
 // Updates one square of the view area. Should only be called for square
@@ -4507,7 +4500,7 @@ void view_update_at(const coord_def &pos)
 
     const coord_def vp = grid2view(pos);
     const coord_def ep = view2show(vp);
-    update_env_show(pos, ep);
+    _update_env_show(pos, ep);
 
     int object = env.show(ep);
 
@@ -4520,11 +4513,11 @@ void view_update_at(const coord_def &pos)
     if (object == DNGN_SECRET_DOOR)
         object = grid_secret_door_appearance( pos.x, pos.y );
 
-    get_symbol( pos.x, pos.y, object, &ch, &colour );
+    _get_symbol( pos.x, pos.y, object, &ch, &colour );
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
-        flash_colour = viewmap_flash_colour();
+        flash_colour = _viewmap_flash_colour();
 
 #ifndef USE_TILE
     cgotoxy(vp.x, vp.y);
@@ -4635,7 +4628,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
         int flash_colour = you.flash_colour;
         if (flash_colour == BLACK)
-            flash_colour = viewmap_flash_colour();
+            flash_colour = _viewmap_flash_colour();
 
         for (count_y = crawl_view.viewp.y;
              count_y < crawl_view.viewp.y + crawl_view.viewsz.y; count_y++)
@@ -4687,8 +4680,10 @@ void viewwindow(bool draw_it, bool do_updates)
                     buffy[bufcount + 1] = DARKGREY;
 
                     if (Options.colour_map)
+		    {
                         buffy[bufcount + 1] = 
                             colour_code_map(gc.x, gc.y, Options.item_colour);
+                    }
 
 #ifdef USE_TILE
                     unsigned short bg = env.tile_bk_bg[gc.x][gc.y];
@@ -4707,7 +4702,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     int             object = env.show(ep);
                     unsigned short  colour = env.show_col(ep);
                     unsigned        ch;
-                    get_symbol( gc.x, gc.y, object, &ch, &colour );
+                    _get_symbol( gc.x, gc.y, object, &ch, &colour );
 
                     if (map)
                     {
@@ -4749,13 +4744,13 @@ void viewwindow(bool draw_it, bool do_updates)
                     if (object == DNGN_SECRET_DOOR)
                         object = grid_secret_door_appearance( gc.x, gc.y );
 
-                    get_symbol( gc.x, gc.y, object, &ch, &colour );
+                    _get_symbol( gc.x, gc.y, object, &ch, &colour );
 
                     buffy[bufcount] = ch;
                     buffy[bufcount + 1] = colour;
 #ifdef USE_TILE
-                    tileb[bufcount]= env.tile_fg[ep.x-1][ep.y-1];
-                    tileb[bufcount+1]= env.tile_bg[ep.x-1][ep.y-1];
+                    tileb[bufcount]   = env.tile_fg[ep.x-1][ep.y-1];
+                    tileb[bufcount+1] = env.tile_bg[ep.x-1][ep.y-1];
 #endif
 
                     if (map)
@@ -4807,8 +4802,8 @@ void viewwindow(bool draw_it, bool do_updates)
                             && Show_Backup(ep)
                             && is_terrain_seen( gc.x, gc.y ))
                         {
-                            get_symbol( gc.x, gc.y,
-                                        Show_Backup(ep), &ch, &colour );
+                            _get_symbol( gc.x, gc.y,
+                                         Show_Backup(ep), &ch, &colour );
                             set_envmap_glyph( gc.x, gc.y, Show_Backup(ep),
                                               colour );
                         }
@@ -4830,15 +4825,18 @@ void viewwindow(bool draw_it, bool do_updates)
                             buffy[bufcount + 1] = DARKGREY;
 
                             if (Options.colour_map)
+			    {
                                 buffy[bufcount + 1] = 
                                     colour_code_map(gc.x, gc.y,
                                                     Options.item_colour);
+                            }
 #ifdef USE_TILE
-                            if(env.tile_bk_fg[gc.x][gc.y] != 0
+                            if (env.tile_bk_fg[gc.x][gc.y] != 0
                                 || env.tile_bk_bg[gc.x][gc.y] != 0)
                             {
                                 tileb[bufcount] =
                                     env.tile_bk_fg[gc.x][gc.y];
+
                                 tileb[bufcount + 1] =
                                     env.tile_bk_bg[gc.x][gc.y]
                                     | tile_unseen_flag(gc);
@@ -4848,7 +4846,7 @@ void viewwindow(bool draw_it, bool do_updates)
                                 tileb[bufcount] = 0;
                                 tileb[bufcount + 1] =
                                     tileidx_unseen(
-                                    get_envmap_char( gc.x, gc.y ), gc);
+                                        get_envmap_char( gc.x, gc.y ), gc);
                             }
 #endif
                         }

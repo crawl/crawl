@@ -1381,7 +1381,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         oldValue = set_buffering(false);
 #endif
 
-    while(!beamTerminate)
+    while (!beamTerminate)
     {
         tx = ray.x();
         ty = ray.y();
@@ -1415,8 +1415,11 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
                     rangeRemaining -= affect(pbolt, tx, ty);
 
                     do
+                    {
                         ray.regress();
+                    }
                     while (grid_is_solid(grd(ray.pos())));
+                    
                     tx = ray.x();
                     ty = ray.y();
                     break;          // breaks from line tracing
@@ -1425,14 +1428,19 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
                 did_bounce = true;
 
                 // bounce
-                do {
+                do
+                {
                     do
+                    {
                         ray.regress();
+                    }
                     while (grid_is_solid(grd(ray.pos())));
+                    
                     ray.advance_and_bounce();
                     --rangeRemaining;
-                } while ( rangeRemaining > 0 &&
-                          grid_is_solid(grd[ray.x()][ray.y()]) );
+                }
+                while ( rangeRemaining > 0
+                        && grid_is_solid(grd[ray.x()][ray.y()]) );
 
                 if (rangeRemaining < 1)
                     break;
@@ -4771,7 +4779,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
             _explosion_cell(beam, 0, 0, drawing);
  
         // do the rest of it
-        for(int rad = 1; rad <= r; rad ++)
+        for (int rad = 1; rad <= r; rad ++)
         {
             // do sides
             for (int ay = 1 - rad; ay <= rad - 1; ay += 1)
@@ -4809,9 +4817,11 @@ void explosion( bolt &beam, bool hole_in_the_middle,
     bool seen_anything = false;
     for ( int i = -9; i <= 9; ++i )
         for ( int j = -9; j <= 9; ++j )
-            if ( explode_map[i+9][j+9] &&
-                 see_grid(beam.target_x + i, beam.target_y + j) )
+            if ( explode_map[i+9][j+9]
+                 && see_grid(beam.target_x + i, beam.target_y + j) )
+            {
                 seen_anything = true;
+            }
 
     // ---------------- end boom --------------------------
 
@@ -4904,18 +4914,17 @@ static void _explosion_map( bolt &beam, int x, int y,
     // special case: explosion originates from rock/statue
     // (e.g. Lee's rapid deconstruction) - in this case, ignore
     // solid cells at the center of the explosion.
-    if (dngn_feat <= DNGN_MAXWALL)
+    if (dngn_feat <= DNGN_MAXWALL
+        && (x != 0 || y != 0) && !_affects_wall(beam, dngn_feat))
     {
-        if (!(x==0 && y==0) && !_affects_wall(beam, dngn_feat))
-            return;
+        return;
     }
 
     // hmm, I think we're ok
     explode_map[x+9][y+9] = true;
 
-    // now recurse in every direction except the one we
-    // came from
-    for(int i=0; i<4; i++)
+    // now recurse in every direction except the one we came from
+    for (int i = 0; i < 4; i++)
     {
         if (i+1 != dir)
         {

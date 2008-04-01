@@ -65,7 +65,7 @@ bool cast_selective_amnesia(bool force)
     else
     {
         // query - conditional ordering is important {dlb}:
-        for (;;)
+        while (true)
         {
             mpr( "Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT );
 

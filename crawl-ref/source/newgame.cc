@@ -104,24 +104,24 @@ extern std::string init_file_location;
 
 #define MIN_START_STAT       1
 
-static bool class_allowed(species_type speci, job_type char_class);
-static bool validate_player_name(bool verbose);
-static bool choose_weapon(void);
-static void enter_player_name(bool blankOK);
-static void give_basic_knowledge(job_type which_job);
-static void give_basic_spells(job_type which_job);
-static void give_basic_mutations(species_type speci);
-static void give_last_paycheck(job_type which_job);
-static void init_player(void);
-static void jobs_stat_init(job_type which_job);
-static void openingScreen(void);
-static void species_stat_init(species_type which_species);
+static bool _class_allowed(species_type speci, job_type char_class);
+static bool _validate_player_name(bool verbose);
+static bool _choose_weapon(void);
+static void _enter_player_name(bool blankOK);
+static void _give_basic_knowledge(job_type which_job);
+static void _give_basic_spells(job_type which_job);
+static void _give_basic_mutations(species_type speci);
+static void _give_last_paycheck(job_type which_job);
+static void _init_player(void);
+static void _jobs_stat_init(job_type which_job);
+static void _opening_screen(void);
+static void _species_stat_init(species_type which_species);
 
-static void give_random_potion( int slot );
-static void give_random_secondary_armour( int slot );
-static bool give_wanderer_weapon( int slot, int wpn_skill );
-static void create_wanderer(void);
-static bool give_items_skills(void);
+static void _give_random_potion( int slot );
+static void _give_random_secondary_armour( int slot );
+static bool _give_wanderer_weapon( int slot, int wpn_skill );
+static void _create_wanderer(void);
+static bool _give_items_skills(void);
 
 ////////////////////////////////////////////////////////////////////////
 // Remember player's startup options
@@ -129,10 +129,10 @@ static bool give_items_skills(void);
 
 static char ng_race, ng_cls;
 static bool ng_random;
-static int ng_ck, ng_dk;
+static int  ng_ck, ng_dk;
+static int  ng_weapon;
+static int  ng_book;
 static god_type ng_pr;
-static int ng_weapon;
-static int ng_book;
 
 /* March 2008: change order of species and jobs on character selection screen
    as suggested by Markus Maier. Summarizing comments below are copied directly
@@ -182,13 +182,13 @@ static species_type new_species_order[] = {
     SP_VAMPIRE
 };
 
-static species_type random_draconian_species()
+static species_type _random_draconian_species()
 {
     const int num_drac = SP_PALE_DRACONIAN - SP_RED_DRACONIAN;
     return static_cast<species_type>(SP_RED_DRACONIAN + random2(num_drac));
 }
 
-static species_type get_species(const int index)
+static species_type _get_species(const int index)
 {
     if (index < 0 || (unsigned int) index >= ARRAYSIZE(old_species_order))
     {
@@ -242,12 +242,10 @@ static job_type new_jobs_order[] = {
     JOB_HUNTER,             JOB_WANDERER
 };
 
-static job_type get_class(const int index)
+static job_type _get_class(const int index)
 {
     if (index < 0 || (unsigned int) index >= ARRAYSIZE(old_jobs_order))
-    {
        return JOB_UNKNOWN;
-    }
 
     return (Options.use_old_selection_order? old_jobs_order[index]
                                            : new_jobs_order[index]);
@@ -461,7 +459,7 @@ int get_class_by_name( const char *name )
     return (cl);
 }
 
-static void reset_newgame_options(void)
+static void _reset_newgame_options(void)
 {
     ng_race   = ng_cls = 0;
     ng_random = false;
@@ -472,7 +470,7 @@ static void reset_newgame_options(void)
     ng_book   = SBT_NO_SELECTION;
 }
 
-static void save_newgame_options(void)
+static void _save_newgame_options(void)
 {
     // Note that we store race and class directly here, whereas up until
     // now we've been storing the hotkey.
@@ -488,7 +486,7 @@ static void save_newgame_options(void)
     write_newgame_options_file();
 }
 
-static void set_startup_options(void)
+static void _set_startup_options(void)
 {
     Options.race         = Options.prev_race;
     Options.cls          = Options.prev_cls;
@@ -499,26 +497,26 @@ static void set_startup_options(void)
     Options.book         = Options.prev_book;
 }
 
-static bool prev_startup_options_set(void)
+static bool _prev_startup_options_set(void)
 {
     // Are these two enough? They should be, in theory, since we'll
     // remember the player's weapon and god choices.
     return (Options.prev_race && Options.prev_cls);
 }
 
-static std::string get_opt_race_name(char race)
+static std::string _get_opt_race_name(char race)
 {
-    species_type prace = get_species(letter_to_index(race));
+    species_type prace = _get_species(letter_to_index(race));
     return (prace == SP_UNKNOWN? "Random" : species_name(prace, 1));
 }
 
-static std::string get_opt_class_name(char oclass)
+static std::string _get_opt_class_name(char oclass)
 {
-    job_type pclass = get_class(letter_to_index(oclass));
+    job_type pclass = _get_class(letter_to_index(oclass));
     return (pclass == JOB_UNKNOWN? "Random" : get_class_name(pclass));
 }
 
-static std::string prev_startup_description(void)
+static std::string _prev_startup_description(void)
 {
     if (Options.prev_race == '*' && Options.prev_cls == '*')
         Options.prev_randpick = true;
@@ -527,15 +525,17 @@ static std::string prev_startup_description(void)
         return "Random character";
 
     if (Options.prev_cls == '?')
-        return "Random " + get_opt_race_name(Options.prev_race);
+        return "Random " + _get_opt_race_name(Options.prev_race);
         
-    return get_opt_race_name(Options.prev_race) + " " +
-           get_opt_class_name(Options.prev_cls);
+    return _get_opt_race_name(Options.prev_race) + " " +
+           _get_opt_class_name(Options.prev_cls);
 }
 
 // Output full character info when weapons/books/religion are chosen.
-static void print_character_info()
+static void _print_character_info()
 {
+    clrscr();
+    
     // At this point all of name, species and class should be decided.
     if (strlen(you.your_name) > 0
         && you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN)
@@ -579,7 +579,7 @@ int give_first_conjuration_book()
 // Determines if a species is valid. If 'display' is true, returns if
 // the species is displayable in the new game screen - this is
 // primarily used to suppress the display of the draconian variants.
-static bool is_species_valid_choice(species_type species, bool display = true)
+static bool _is_species_valid_choice(species_type species, bool display = true)
 {
     if (!species) // species only start at 1
         return (false);
@@ -595,7 +595,7 @@ static bool is_species_valid_choice(species_type species, bool display = true)
     return (!display);
 }
 
-static void pick_random_species_and_class( void )
+static void _pick_random_species_and_class( void )
 {
     //
     // We pick both species and class at the same time to give each
@@ -612,13 +612,13 @@ static void pick_random_species_and_class( void )
     {
         // we only want draconians counted once in this loop...
         // we'll add the variety lower down -- bwr
-        if (!is_species_valid_choice(static_cast<species_type>(sp)))
+        if (!_is_species_valid_choice(static_cast<species_type>(sp)))
             continue;
 
         for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
         {
-            if (class_allowed(static_cast<species_type>(sp),
-                              static_cast<job_type>(cl)))
+            if (_class_allowed(static_cast<species_type>(sp),
+                               static_cast<job_type>(cl)))
             {
                 job_count++;
                 if (one_chance_in( job_count ))
@@ -635,14 +635,14 @@ static void pick_random_species_and_class( void )
 
     // return draconian variety here
     if (species == SP_RED_DRACONIAN)
-        you.species = random_draconian_species();
+        you.species = _random_draconian_species();
     else
         you.species = species;
 
     you.char_class = job;
 }
 
-static bool check_saved_game(void)
+static bool _check_saved_game(void)
 {
     FILE *handle;
 
@@ -686,7 +686,7 @@ static bool check_saved_game(void)
     return false;
 }
 
-static unsigned char random_potion_description()
+static unsigned char _random_potion_description()
 {
     int desc, nature, colour;
 
@@ -703,15 +703,16 @@ static unsigned char random_potion_description()
         // nature and colour correspond to primary and secondary
         // in itemname.cc; this check ensures clear potions don't
         // get odd qualifiers.
-    } while ((colour == PDC_CLEAR && nature > PDQ_VISCOUS) 
-             || desc == PDESCS(PDC_CLEAR)
-             || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
+    }
+    while ((colour == PDC_CLEAR && nature > PDQ_VISCOUS) 
+           || desc == PDESCS(PDC_CLEAR)
+           || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
 
     return static_cast<unsigned char>(desc);
 }
 
 // Determine starting depths of branches
-static void initialise_branch_depths()
+static void _initialise_branch_depths()
 {
     branches[BRANCH_ECUMENICAL_TEMPLE].startdepth = random_range(4, 7);
     branches[BRANCH_ORCISH_MINES].startdepth      = random_range(6, 11);
@@ -760,7 +761,7 @@ static int _get_random_coagulated_blood_desc()
     return PDESCQ(qualifier, colour);
 }
 
-static void initialise_item_descriptions()
+static void _initialise_item_descriptions()
 {
     // must remember to check for already existing colours/combinations
     you.item_description.init(255);
@@ -793,7 +794,6 @@ static void initialise_item_descriptions()
             // pick a new description until it's good
             while (true)
             {
-
                 // The numbers below are always secondary * primary (itemname.cc)
                 switch (i)
                 {
@@ -804,7 +804,7 @@ static void initialise_item_descriptions()
                     break;
 
                 case IDESC_POTIONS: // potions
-                    you.item_description[i][j] = random_potion_description();
+                    you.item_description[i][j] = _random_potion_description();
                     break;
 
                 case IDESC_SCROLLS: // scrolls
@@ -832,7 +832,7 @@ static void initialise_item_descriptions()
                     if ( p == j )
                         continue;
 
-                    if (you.item_description[i][p]==you.item_description[i][j])
+                    if (you.item_description[i][p] == you.item_description[i][j])
                     {
                         is_ok = false;
                         break;
@@ -845,7 +845,7 @@ static void initialise_item_descriptions()
     }
 }
 
-static void give_starting_food()
+static void _give_starting_food()
 {
     // these undead start with no food
     if (you.species == SP_MUMMY || you.species == SP_GHOUL)
@@ -880,14 +880,14 @@ static void give_starting_food()
     you.inv[slot] = item;       // will ASSERT if couldn't find free slot
 }
 
-static void mark_starting_books()
+static void _mark_starting_books()
 {
     for (int i = 0; i < ENDOFPACK; i++)
         if (is_valid_item(you.inv[i]) && you.inv[i].base_type == OBJ_BOOKS)
             mark_had_book(you.inv[i].sub_type);
 }
 
-static void racialise_starting_equipment()
+static void _racialise_starting_equipment()
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -930,7 +930,7 @@ static void racialise_starting_equipment()
 // Characters are actually granted skill points, not skill levels.
 // Here we take racial aptitudes into account in determining final
 // skill levels.
-static void reassess_starting_skills()
+static void _reassess_starting_skills()
 {
     for (int i = 0; i < NUM_SKILLS; i++)
     {
@@ -963,7 +963,7 @@ static void reassess_starting_skills()
 }
 
 // randomly boost stats a number of times
-static void assign_remaining_stats( int points_left )
+static void _assign_remaining_stats( int points_left )
 {
     // first spend points to get us to the minimum allowed value -- bwr
     if (you.strength < MIN_START_STAT)
@@ -1016,7 +1016,7 @@ static void assign_remaining_stats( int points_left )
     }
 }
 
-static void give_species_bonus_hp()
+static void _give_species_bonus_hp()
 {
     if (player_genus(GENPC_DRACONIAN) || player_genus(GENPC_DWARVEN))
         inc_max_hp(1);
@@ -1065,7 +1065,7 @@ static void give_species_bonus_hp()
     }
 }
 
-static void give_species_bonus_mp()
+static void _give_species_bonus_mp()
 {
     // adjust max_magic_points by species {dlb}
     switch (you.species)
@@ -1083,12 +1083,12 @@ static void give_species_bonus_mp()
     }
 }
 
-static bool species_is_undead( const species_type speci )
+static bool _species_is_undead( const species_type speci )
 {
     return (speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE);
 }
 
-static undead_state_type get_undead_state(const species_type sp)
+static undead_state_type _get_undead_state(const species_type sp)
 {
     switch(sp)
     {
@@ -1098,7 +1098,7 @@ static undead_state_type get_undead_state(const species_type sp)
     case SP_VAMPIRE:
         return US_HUNGRY_DEAD;
     default:
-        ASSERT(!species_is_undead(sp));
+        ASSERT(!_species_is_undead(sp));
         return (US_ALIVE);
     }
 }
@@ -1106,7 +1106,7 @@ static undead_state_type get_undead_state(const species_type sp)
 bool new_game(void)
 {
     clrscr();
-    init_player();
+    _init_player();
 
     if (!crawl_state.startup_errors.empty()
         && !Options.suppress_startup_errors)
@@ -1132,12 +1132,12 @@ bool new_game(void)
         you.your_name[ kNameLen - 1 ] = 0;
     }
 
-    openingScreen();
-    enter_player_name(true);
+    _opening_screen();
+    _enter_player_name(true);
 
     if (you.your_name[0] != 0)
     {
-        if (check_saved_game())
+        if (_check_saved_game())
         {
             save_player_name();
             return (false);
@@ -1145,23 +1145,23 @@ bool new_game(void)
     }
 
 game_start:
-    reset_newgame_options();
+    _reset_newgame_options();
     if (Options.random_pick)
     {
-        pick_random_species_and_class();
+        _pick_random_species_and_class();
         ng_random = true;
     }
     else
     {
         if (Options.race != 0 && Options.cls != 0
             && Options.race != '*' && Options.cls != '*'
-            && !class_allowed(get_species(letter_to_index(Options.race)),
-                              get_class(letter_to_index(Options.cls))))
+            && !_class_allowed(_get_species(letter_to_index(Options.race)),
+                               _get_class(letter_to_index(Options.cls))))
         {
             end(1, false, "Incompatible race and class specified in "
                 "options file.");
         }
-
+        
         // repeat until valid race/class combination found
         while (choose_race() && !choose_class());
     }
@@ -1181,9 +1181,9 @@ game_start:
                  (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
                  you.class_name );
 
-        enter_player_name(false);
+        _enter_player_name(false);
 
-        if (check_saved_game())
+        if (_check_saved_game())
         {
             cprintf(EOL "Do you really want to overwrite your old game?");
             char c = getch();
@@ -1203,24 +1203,24 @@ game_start:
 
 // ************ round-out character statistics and such ************
 
-    species_stat_init( you.species );     // must be down here {dlb}
+    _species_stat_init( you.species );     // must be down here {dlb}
 
-    you.is_undead = get_undead_state(you.species);
+    you.is_undead = _get_undead_state(you.species);
 
     // before we get into the inventory init, set light radius based
     // on species vision. currently, all species see out to 8 squares.
     you.normal_vision  = 8;
     you.current_vision = 8;
 
-    jobs_stat_init( you.char_class );
-    give_last_paycheck( you.char_class );
+    _jobs_stat_init( you.char_class );
+    _give_last_paycheck( you.char_class );
 
-    assign_remaining_stats((you.species == SP_DEMIGOD ||
-                            you.species == SP_DEMONSPAWN) ? 15 : 8);
+    _assign_remaining_stats((you.species == SP_DEMIGOD ||
+                             you.species == SP_DEMONSPAWN) ? 15 : 8);
 
     // this function depends on stats being finalized
     // returns false if Backspace on god/weapon/... selection
-    if (!give_items_skills())
+    if (!_give_items_skills())
     {
         // now choose again, name stays same
         const std::string old_name = you.your_name;
@@ -1233,7 +1233,7 @@ game_start:
         // --> don't need to be changed
 
         // reset stats
-        init_player();
+        _init_player();
 
         Options.reset_startup_options();
         
@@ -1245,21 +1245,21 @@ game_start:
         goto game_start;
     }
 
-    give_species_bonus_hp();
-    give_species_bonus_mp();
+    _give_species_bonus_hp();
+    _give_species_bonus_mp();
 
     // these need to be set above using functions!!! {dlb}
     you.max_dex = you.dex;
     you.max_strength = you.strength;
     you.max_intel = you.intel;
 
-    give_starting_food();
-    mark_starting_books();
-    racialise_starting_equipment();
+    _give_starting_food();
+    _mark_starting_books();
+    _racialise_starting_equipment();
 
-    initialise_item_descriptions();
+    _initialise_item_descriptions();
 
-    reassess_starting_skills();
+    _reassess_starting_skills();
     calc_total_skill_points();
 
     for (int i = 0; i < ENDOFPACK; i++)
@@ -1297,20 +1297,20 @@ game_start:
     set_hp( you.hp_max, false );
     set_mp( you.max_magic_points, false ); 
 
-    give_basic_spells(you.char_class);
-    give_basic_knowledge(you.char_class);
+    _give_basic_spells(you.char_class);
+    _give_basic_knowledge(you.char_class);
 
     // tmpfile purging removed in favour of marking
     tmp_file_pairs.init(false);
     
-    give_basic_mutations(you.species);
-    initialise_branch_depths();
+    _give_basic_mutations(you.species);
+    _initialise_branch_depths();
 
-    save_newgame_options();
+    _save_newgame_options();
     return (true);
 }                               // end of new_game()
 
-static bool class_allowed( species_type speci, job_type char_class )
+static bool _class_allowed( species_type speci, job_type char_class )
 {
     switch (char_class)
     {
@@ -1327,7 +1327,7 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_WIZARD:
         if (speci == SP_MUMMY)
             return true;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1370,7 +1370,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_THIEF:
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1389,7 +1389,7 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_GLADIATOR:
         if (player_genus(GENPC_ELVEN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1468,7 +1468,7 @@ static bool class_allowed( species_type speci, job_type char_class )
             return false;
         if (player_genus(GENPC_DRACONIAN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1521,7 +1521,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_CONJURER:
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1544,7 +1544,7 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_ENCHANTER:
         if (player_genus(GENPC_DRACONIAN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1562,7 +1562,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_FIRE_ELEMENTALIST:
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1582,7 +1582,7 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_ICE_ELEMENTALIST:
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1622,7 +1622,7 @@ static bool class_allowed( species_type speci, job_type char_class )
             return false;
         if (player_genus(GENPC_DRACONIAN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1643,7 +1643,7 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_EARTH_ELEMENTALIST:
         if (player_genus(GENPC_DRACONIAN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1663,7 +1663,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_CRUSADER:
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
         if (player_genus(GENPC_DRACONIAN, speci))
             return false;
@@ -1709,7 +1709,7 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_VENOM_MAGE:
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1730,7 +1730,7 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_CHAOS_KNIGHT:
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1751,7 +1751,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_TRANSMUTER:
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1770,7 +1770,7 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_HEALER:
         if (player_genus(GENPC_DRACONIAN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1791,7 +1791,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_REAVER:
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1813,7 +1813,7 @@ static bool class_allowed( species_type speci, job_type char_class )
             return false;
         if (player_genus(GENPC_DRACONIAN, speci))
             return false;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1830,7 +1830,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_MONK:
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1852,7 +1852,7 @@ static bool class_allowed( species_type speci, job_type char_class )
             return false;
         if (player_genus(GENPC_DRACONIAN, speci))
             return true;
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return false;
 
         switch (speci)
@@ -1871,7 +1871,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_WANDERER:
-        if (species_is_undead( speci ))
+        if (_species_is_undead( speci ))
             return true;
         if (player_genus(GENPC_DRACONIAN, speci))
             return true;
@@ -1900,7 +1900,7 @@ static bool class_allowed( species_type speci, job_type char_class )
 }                               // end class_allowed()
 
 
-static bool choose_book( item_def& book, int firstbook, int numbooks )
+static bool _choose_book( item_def& book, int firstbook, int numbooks )
 {
     int keyin = 0;
     clrscr();
@@ -1923,14 +1923,13 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
 
     if ( !Options.random_pick )
     {
-        clrscr();
-        print_character_info();
+        _print_character_info();
         
         textcolor( CYAN );
         cprintf(EOL "You have a choice of books:" EOL);
         textcolor( LIGHTGREY );
 
-        for (int i=0; i < numbooks; ++i)
+        for (int i = 0; i < numbooks; ++i)
         {
             book.sub_type = firstbook + i;
             cprintf("%c - %s" EOL, 'a' + i, book.name(DESC_PLAIN).c_str());
@@ -1982,7 +1981,8 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
             default:
                 break;
             }
-        } while (keyin != '*' && (keyin < 'a' || keyin >= ('a' + numbooks)));
+        }
+        while (keyin != '*' && (keyin < 'a' || keyin >= ('a' + numbooks)));
     }
 
     if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '*')
@@ -1997,7 +1997,7 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
     return true;
 }
     
-static bool choose_weapon()
+static bool _choose_weapon()
 {
     const weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
                                       WPN_HAND_AXE, WPN_SPEAR, WPN_TRIDENT };
@@ -2020,15 +2020,14 @@ static bool choose_weapon()
 
     if (!Options.random_pick && Options.weapon != WPN_RANDOM)
     {
-        clrscr();
-        print_character_info();
+        _print_character_info();
 
         textcolor( CYAN );
         cprintf(EOL "You have a choice of weapons:" EOL);
         textcolor( LIGHTGREY );
 
         bool prevmatch = false;
-        for(int i=0; i<num_choices; i++)
+        for (int i = 0; i < num_choices; i++)
         {
             int x = effective_stat_bonus(startwep[i]);
             cprintf("%c - %s%s" EOL, 'a' + i,
@@ -2101,7 +2100,7 @@ static bool choose_weapon()
     {
         Options.weapon = WPN_RANDOM;
         // try to choose a decent weapon
-        for(int times=0; times<50; times++)
+        for (int times = 0; times < 50; times++)
         {
             keyin = random2(num_choices);
             int x = effective_stat_bonus(startwep[keyin]);
@@ -2112,21 +2111,19 @@ static bool choose_weapon()
         ng_weapon = WPN_RANDOM;
     }
     else
-    {
         ng_weapon = startwep[keyin-'a'];
-    }
 
     you.inv[0].sub_type = startwep[keyin-'a'];
 
     return true;
 }
 
-static void init_player(void)
+static void _init_player(void)
 {
     you.init();
 }
 
-static void give_last_paycheck(job_type which_job)
+static void _give_last_paycheck(job_type which_job)
 {
     switch (which_job)
     {
@@ -2155,7 +2152,7 @@ static void give_last_paycheck(job_type which_job)
 // requires stuff::modify_all_stats() and works because
 // stats zeroed out by newgame::init_player()... recall
 // that demonspawn & demigods get more later on {dlb}
-static void species_stat_init(species_type which_species)
+static void _species_stat_init(species_type which_species)
 {
     int sb = 0; // strength base
     int ib = 0; // intelligence base
@@ -2216,7 +2213,7 @@ static void species_stat_init(species_type which_species)
     modify_all_stats( sb, ib, db );
 }
 
-static void jobs_stat_init(job_type which_job)
+static void _jobs_stat_init(job_type which_job)
 {
     int s = 0;   // strength mod
     int i = 0;   // intelligence mod
@@ -2271,7 +2268,7 @@ static void jobs_stat_init(job_type which_job)
     set_mp( mp, true );
 }
 
-static void give_basic_mutations(species_type speci)
+static void _give_basic_mutations(species_type speci)
 {
     // We should switch over to a size-based system
     // for the fast/slow metabolism when we get around to it.
@@ -2354,7 +2351,7 @@ static void give_basic_mutations(species_type speci)
         you.demon_pow[i] = you.mutation[i];
 }
 
-static void give_basic_knowledge(job_type which_job)
+static void _give_basic_knowledge(job_type which_job)
 {
     if (you.species == SP_VAMPIRE)
     {
@@ -2397,7 +2394,7 @@ static void give_basic_knowledge(job_type which_job)
     return;
 }                               // end give_basic_knowledge()
 
-static void give_basic_spells(job_type which_job)
+static void _give_basic_spells(job_type which_job)
 {
     // wanderers may or may not already have a spell -- bwr
     if (which_job == JOB_WANDERER)
@@ -2453,9 +2450,10 @@ static void give_basic_spells(job_type which_job)
 }                               // end give_basic_spells()
 
 // eventually, this should be something more grand {dlb}
-static void openingScreen(void)
+static void _opening_screen(void)
 {
 #ifdef USE_TILE
+    // more grand... Like this? ;)
     if (Options.tile_title_screen)
         TileDrawTitle();
 #endif
@@ -2483,7 +2481,7 @@ static void openingScreen(void)
     return;
 }
 
-static void show_name_prompt(int where, bool blankOK, 
+static void _show_name_prompt(int where, bool blankOK,
         const std::vector<player_save_info> &existing_chars,
         slider_menu &menu)
 {
@@ -2519,7 +2517,7 @@ static void show_name_prompt(int where, bool blankOK,
     textcolor( LIGHTGREY );
 }
 
-static void preprocess_character_name(char *name, bool blankOK)
+static void _preprocess_character_name(char *name, bool blankOK)
 {
     if (!*name && blankOK && Options.prev_name.length() &&
             Options.remember_name)
@@ -2533,9 +2531,9 @@ static void preprocess_character_name(char *name, bool blankOK)
         *name = 0;
 }
 
-static bool is_good_name(char *name, bool blankOK, bool verbose)
+static bool _is_good_name(char *name, bool blankOK, bool verbose)
 {
-    preprocess_character_name(name, blankOK);
+    _preprocess_character_name(name, blankOK);
 
     // verification begins here {dlb}:
     if (you.your_name[0] == 0)
@@ -2563,7 +2561,7 @@ static bool is_good_name(char *name, bool blankOK, bool verbose)
         return (false);
     }
 #endif
-    return (validate_player_name(verbose));
+    return (_validate_player_name(verbose));
 }
 
 static int newname_keyfilter(int &ch)
@@ -2573,9 +2571,7 @@ static int newname_keyfilter(int &ch)
     return 1;
 }
 
-static bool read_player_name(
-        char *name, 
-        int len,
+static bool _read_player_name( char *name, int len,
         const std::vector<player_save_info> &existing,
         slider_menu &menu)
 {
@@ -2587,7 +2583,7 @@ static bool read_player_name(
     line_reader reader(name, len);
     reader.set_keyproc(keyfilter);
 
-    for (;;)
+    while (true)
     {
         cgotoxy(name_x, name_y);
         if (name_x <= 80)
@@ -2615,12 +2611,11 @@ static bool read_player_name(
                 return (true);
             }
         }
-
         // Go back and prompt the user.
     }
 }
 
-static void enter_player_name(bool blankOK)
+static void _enter_player_name(bool blankOK)
 {
     int prompt_start = wherey();
     bool ask_name = true;
@@ -2631,7 +2626,7 @@ static void enter_player_name(bool blankOK)
     if (you.your_name[0] != 0)
         ask_name = false;
 
-    if (blankOK && (ask_name || !is_good_name(you.your_name, false, false)))
+    if (blankOK && (ask_name || !_is_good_name(you.your_name, false, false)))
     {
         existing_chars = find_saved_characters();
         if (existing_chars.empty()) 
@@ -2667,10 +2662,10 @@ static void enter_player_name(bool blankOK)
         // prompt for a new name if current one unsatisfactory {dlb}:
         if (ask_name)
         {
-            show_name_prompt(prompt_start, blankOK, existing_chars, char_menu);
+            _show_name_prompt(prompt_start, blankOK, existing_chars, char_menu);
 
             // If the player wants out, we bail out.
-            if (!read_player_name(name, kNameLen, existing_chars, char_menu))
+            if (!_read_player_name(name, kNameLen, existing_chars, char_menu))
                 end(0);
 
 #ifdef USE_TILE
@@ -2685,10 +2680,10 @@ static void enter_player_name(bool blankOK)
             name[kNameLen - 1] = 0;
         }
     }
-    while (ask_name = !is_good_name(you.your_name, blankOK, true));
+    while (ask_name = !_is_good_name(you.your_name, blankOK, true));
 }                               // end enter_player_name()
 
-static bool validate_player_name(bool verbose)
+static bool _validate_player_name(bool verbose)
 {
 #if defined(DOS) || defined(WIN32CONSOLE) || defined(WIN32TILES)
     // quick check for CON -- blows up real good under DOS/Windows
@@ -2725,7 +2720,7 @@ static bool validate_player_name(bool verbose)
     return (true);
 }                               // end validate_player_name()
 
-static void give_random_potion( int slot )
+static void _give_random_potion( int slot )
 {
     // If you can't quaff, you don't care
     if (you.is_undead == US_UNDEAD)
@@ -2763,7 +2758,7 @@ static void give_random_potion( int slot )
     }
 }
 
-static void give_random_secondary_armour( int slot )
+static void _give_random_secondary_armour( int slot )
 {
     you.inv[ slot ].quantity = 1;
     you.inv[ slot ].base_type = OBJ_ARMOUR;
@@ -2805,7 +2800,7 @@ static void give_random_secondary_armour( int slot )
 }
 
 // Returns true if a "good" weapon is given
-static bool give_wanderer_weapon( int slot, int wpn_skill )
+static bool _give_wanderer_weapon( int slot, int wpn_skill )
 {
     bool ret = false;
 
@@ -2858,7 +2853,7 @@ static bool give_wanderer_weapon( int slot, int wpn_skill )
     return (ret);
 }
 
-static void make_rod(item_def &item, stave_type rod_type)
+static void _make_rod(item_def &item, stave_type rod_type)
 {
     item.base_type = OBJ_STAVES;
     item.sub_type = rod_type;
@@ -2869,10 +2864,10 @@ static void make_rod(item_def &item, stave_type rod_type)
     init_rod_mp(item);
 }
 
-static void newgame_make_item(int slot, equipment_type eqslot,
-                              object_class_type base,
-                              int sub_type, int qty = 1,
-                              int plus = 0, int plus2 = 0)
+static void _newgame_make_item(int slot, equipment_type eqslot,
+                               object_class_type base,
+                               int sub_type, int qty = 1,
+                               int plus = 0, int plus2 = 0)
 {
     if (slot == -1)
     {
@@ -2899,14 +2894,13 @@ static void newgame_make_item(int slot, equipment_type eqslot,
         you.equip[eqslot] = slot;
 }
 
-static void newgame_clear_item(int slot)
+static void _newgame_clear_item(int slot)
 {
     you.inv[slot] = item_def();
+
     for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
-    {
         if (you.equip[i] == slot)
             you.equip[i] = -1;
-    }
 }
 
 //
@@ -2919,7 +2913,7 @@ static void newgame_clear_item(int slot)
 // much... so pretty much things should be removed rather than
 // added here. -- bwr
 //
-static void create_wanderer( void )
+static void _create_wanderer( void )
 {
     const skill_type util_skills[] =
         { SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
@@ -3075,17 +3069,17 @@ static void create_wanderer( void )
 
     // Let's try to make an appropriate weapon
     // Start with a template for a weapon
-    newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+    _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
 
     // And a default armour template for a robe (leaving slot 1 open for
     // a secondary weapon).
-    newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+    _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
     // Wanderers have at least seen one type of potion, and if they
     // don't get anything else good, they'll get to keep this one...
     // Note:  even if this is taken away, the knowledge of the potion
     // type is still given to the character.
-    give_random_potion(3);
+    _give_random_potion(3);
 
     if (you.skills[SK_FIGHTING] || total_wpn_skills >= 3)
     {
@@ -3097,25 +3091,25 @@ static void create_wanderer( void )
         }
         else if (you.skills[SK_SHIELDS] && wpn_skill != SK_STAVES)
         {
-            newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR,
+            _newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR,
                 (player_genus(GENPC_DRACONIAN) || you.species == SP_OGRE_MAGE) ?
                     ARM_SHIELD : ARM_BUCKLER);
             you.inv[3].quantity = 0;            // remove potion
         }
         else
         {
-            give_random_secondary_armour(5);
+            _give_random_secondary_armour(5);
         }
 
         // remove potion if good weapon is given:
-        if (give_wanderer_weapon( 0, wpn_skill ))
+        if (_give_wanderer_weapon( 0, wpn_skill ))
             you.inv[3].quantity = 0;
     }
     else
     {
         // Generic wanderer
-        give_wanderer_weapon( 0, wpn_skill );
-        give_random_secondary_armour(5);
+        _give_wanderer_weapon( 0, wpn_skill );
+        _give_random_secondary_armour(5);
     }
 
     you.equip[EQ_WEAPON] = 0;
@@ -3133,7 +3127,7 @@ bool choose_race()
 
     if (Options.cls)
     {
-        you.char_class = get_class(letter_to_index(Options.cls));
+        you.char_class = _get_class(letter_to_index(Options.cls));
         ng_cls = Options.cls;
     }
         
@@ -3198,13 +3192,13 @@ spec_query:
         int j = 0;
         for (int i = 0; i < num_species; ++i)
         {
-            const species_type si = get_species(i);
+            const species_type si = _get_species(i);
             
-            if (!is_species_valid_choice(si))
+            if (!_is_species_valid_choice(si))
                 continue;
 
-            if (you.char_class != JOB_UNKNOWN &&
-                !class_allowed(si, you.char_class))
+            if (you.char_class != JOB_UNKNOWN
+                && !_class_allowed(si, you.char_class))
             {
                 continue;
             }
@@ -3244,13 +3238,13 @@ spec_query:
             if (prevraceok)
             {
                 cprintf("Enter - %s",
-                        get_opt_race_name(Options.prev_race).c_str());
+                        _get_opt_race_name(Options.prev_race).c_str());
             }
-            if (prev_startup_options_set())
+            if (_prev_startup_options_set())
             {
                 cprintf("%sTAB - %s", 
                         prevraceok? "; " : "",
-                        prev_startup_description().c_str());
+                        _prev_startup_description().c_str());
             }
             cprintf(EOL);
         }
@@ -3284,7 +3278,7 @@ spec_query:
         Options.race = 0;
         return true;
     case '!':
-        pick_random_species_and_class();
+        _pick_random_species_and_class();
         Options.random_pick = true; // used to give random weapon/god as well
         ng_random = true;
         return false;
@@ -3294,17 +3288,17 @@ spec_query:
             keyn = Options.prev_race;
         break;
     case '\t':
-        if (prev_startup_options_set())
+        if (_prev_startup_options_set())
         {
             if (Options.prev_randpick ||
                 (Options.prev_race == '*' && Options.prev_cls == '*'))
             {
                 Options.random_pick = true;
                 ng_random = true;
-                pick_random_species_and_class();
+                _pick_random_species_and_class();
                 return false;
             }
-            set_startup_options();
+            _set_startup_options();
             you.species = SP_UNKNOWN;
             you.char_class = JOB_UNKNOWN;
             return true;
@@ -3336,19 +3330,19 @@ spec_query:
         {
             index = random2(num_species);
         }
-        while (!is_species_valid_choice(get_species(index), false)
-               || (you.char_class != JOB_UNKNOWN &&
-                   !class_allowed(get_species(index), you.char_class)));
+        while (!_is_species_valid_choice(_get_species(index), false)
+               || (you.char_class != JOB_UNKNOWN
+                   && !_class_allowed(_get_species(index), you.char_class)));
 
         keyn = index_to_letter(index);
     }
     
     if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
     {
-        you.species = get_species(letter_to_index(keyn));
+        you.species = _get_species(letter_to_index(keyn));
     }
         
-    if (!is_species_valid_choice( you.species ))
+    if (!_is_species_valid_choice( you.species ))
     {
         if (Options.race != 0)
         {
@@ -3359,7 +3353,7 @@ spec_query:
     }
 
     if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN
-        && !class_allowed(you.species, you.char_class))
+        && !_class_allowed(you.species, you.char_class))
     {
         goto spec_query;
     }
@@ -3369,7 +3363,7 @@ spec_query:
     ng_race = (randrace? '*' : keyn);
 
     if (you.species == SP_RED_DRACONIAN)
-        you.species = random_draconian_species();
+        you.species = _random_draconian_species();
 
     return true;
 }
@@ -3430,7 +3424,7 @@ job_query:
         for (int i = 0; i < num_classes; i++)
         {
             if (you.species != SP_UNKNOWN
-                && !class_allowed(you.species, get_class(i)))
+                && !_class_allowed(you.species, _get_class(i)))
             {
                 continue;
             }
@@ -3440,7 +3434,7 @@ job_query:
             if (letter == Options.prev_cls)
                 prevclassok = true;
 
-            cprintf( "%c - %s", letter, get_class_name(get_class(i)) );
+            cprintf( "%c - %s", letter, get_class_name(_get_class(i)) );
 
             if (j % 2)
                 cprintf(EOL);
@@ -3471,12 +3465,15 @@ job_query:
         if (Options.prev_cls)
         {
             if (prevclassok)
-                cprintf("Enter - %s", get_opt_class_name(Options.prev_cls).c_str());
-            if (prev_startup_options_set())
+            {
+                cprintf("Enter - %s",
+                        _get_opt_class_name(Options.prev_cls).c_str());
+            }
+            if (_prev_startup_options_set())
             {
                 cprintf("%sTAB - %s", 
                         prevclassok? "; " : "",
-                        prev_startup_description().c_str());
+                        _prev_startup_description().c_str());
             }
             cprintf(EOL);
         }
@@ -3514,7 +3511,7 @@ job_query:
     case 'T':
         return pick_tutorial();
     case '!':
-        pick_random_species_and_class();
+        _pick_random_species_and_class();
         // used to give random weapon/god as well
         Options.random_pick = true;
         ng_random = true;
@@ -3525,17 +3522,17 @@ job_query:
             keyn = Options.prev_cls;
         break;
     case '\t':
-        if (prev_startup_options_set())
+        if (_prev_startup_options_set())
         {
             if (Options.prev_randpick ||
                 (Options.prev_race == '*' && Options.prev_cls == '*'))
             {
                 Options.random_pick = true;
                 ng_random = true;
-                pick_random_species_and_class();
+                _pick_random_species_and_class();
                 return true;
             }
-            set_startup_options();
+            _set_startup_options();
 
             // Toss out old species selection, if any.
             you.species = SP_UNKNOWN;
@@ -3564,8 +3561,8 @@ job_query:
 
         for (int i = 0; i < NUM_JOBS; i++)
         {
-             if (you.species == SP_UNKNOWN ||
-                 class_allowed(you.species, static_cast<job_type>(i)))
+             if (you.species == SP_UNKNOWN
+                 || _class_allowed(you.species, static_cast<job_type>(i)))
              {
                  job_count++;
                  if (one_chance_in( job_count ))
@@ -3578,7 +3575,7 @@ job_query:
     }
     else if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
     {
-         chosen_job = get_class(letter_to_index(keyn));
+         chosen_job = _get_class(letter_to_index(keyn));
     }
 
     if (chosen_job == JOB_UNKNOWN)
@@ -3592,7 +3589,7 @@ job_query:
     }
     
     if (you.species != SP_UNKNOWN
-        && !class_allowed(you.species, chosen_job))
+        && !_class_allowed(you.species, chosen_job))
     {
         if (Options.cls != 0)
         {
@@ -3609,7 +3606,7 @@ job_query:
     return (you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN);
 }
 
-bool give_items_skills()
+bool _give_items_skills()
 {
     char keyn;
     int weap_skill = 0;
@@ -3619,48 +3616,47 @@ bool give_items_skills()
     switch (you.char_class)
     {
     case JOB_FIGHTER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         
         if (you.species == SP_OGRE || you.species == SP_TROLL)
         {
-            newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
+            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
 
             if (you.species == SP_OGRE)
-                newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANCUS);
+                _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANCUS);
             else if (you.species == SP_TROLL)
-                newgame_clear_item(0);
+                _newgame_clear_item(0);
         }
         else if (player_genus(GENPC_DRACONIAN))
         {
-            if (!choose_weapon())
+            if (!_choose_weapon())
                 return (false);
             
-            newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-            newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
+            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+            _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
         }
-        else if (you.species == SP_HALFLING || you.species == SP_KOBOLD ||
-                 you.species == SP_GNOME || you.species == SP_VAMPIRE)
+        else if (you.species == SP_HALFLING || you.species == SP_KOBOLD
+                 || you.species == SP_GNOME || you.species == SP_VAMPIRE)
         {
-            if (!choose_weapon())
+            if (!_choose_weapon())
                 return false;
             
-            newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
-                              ARM_LEATHER_ARMOUR);
+            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
+                               ARM_LEATHER_ARMOUR);
 
             if (you.species != SP_VAMPIRE)
-                newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_DART,
-                                  10 + roll_dice( 2, 10 ));
+            {
+                _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_DART,
+                                   10 + roll_dice( 2, 10 ));
+            }
         }
         else
         {
-            if (!choose_weapon())
+            if (!_choose_weapon())
                 return false;
 
-            newgame_make_item(1, EQ_BODY_ARMOUR,
-                              OBJ_ARMOUR,
-                              ARM_SCALE_MAIL);
-
-            newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
+            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL);
+            _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
         }
 
         you.skills[SK_FIGHTING] = 3;
@@ -3695,7 +3691,7 @@ bool give_items_skills()
             // for this function to work)
 
             // Elven armour is light, we need to know this up front.
-            racialise_starting_equipment();
+            _racialise_starting_equipment();
 
             you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;
 
@@ -3712,12 +3708,12 @@ bool give_items_skills()
         break;
 
     case JOB_WIZARD:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS,
-                          you.species == SP_OGRE_MAGE? WPN_QUARTERSTAFF :
-                          player_genus(GENPC_DWARVEN)? WPN_HAMMER :
-                          WPN_DAGGER);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS,
+                           you.species == SP_OGRE_MAGE? WPN_QUARTERSTAFF :
+                           player_genus(GENPC_DWARVEN)? WPN_HAMMER :
+                           WPN_DAGGER);
 
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
         switch (random2(7))
         {
@@ -3740,8 +3736,8 @@ bool give_items_skills()
         }
 
         // extra items being tested:
-        if (!choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 ))
-           return false;
+        if (!_choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 ))
+            return false;
 
         you.skills[SK_DODGING] = 1;
         you.skills[SK_STEALTH] = 1;
@@ -3763,14 +3759,14 @@ bool give_items_skills()
     case JOB_PRIEST:
         you.piety = 45;
 
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_MACE);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_MACE);
         if (you.species == SP_KOBOLD || you.species == SP_HALFLING)
             you.inv[0].sub_type = WPN_KNIFE;
 
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
         if (you.is_undead != US_UNDEAD)
-            newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING, 2);
+            _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING, 2);
             
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING] = 1;
@@ -3802,8 +3798,7 @@ bool give_items_skills()
             }
             else
             {
-                clrscr();
-                print_character_info();
+                _print_character_info();
                 
                 textcolor( CYAN );
                 cprintf(EOL "Which god do you wish to serve?" EOL);
@@ -3882,7 +3877,8 @@ bool give_items_skills()
                     default:
                         break;
                     }
-                } while (you.religion == GOD_NO_GOD);
+                }
+                while (you.religion == GOD_NO_GOD);
                 
                 ng_pr = (keyn == '*'? GOD_RANDOM : you.religion);
             }
@@ -3890,12 +3886,12 @@ bool give_items_skills()
         break;
 
     case JOB_THIEF:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_DAGGER);
-        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
-                          10 + roll_dice( 2, 10 ));
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_DAGGER);
+        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
+                           10 + roll_dice( 2, 10 ));
 
         you.skills[SK_FIGHTING] = 1;
         you.skills[SK_SHORT_BLADES] = 2;
@@ -3909,25 +3905,26 @@ bool give_items_skills()
         break;
 
     case JOB_GLADIATOR:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        if (!choose_weapon())
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        
+        if (!_choose_weapon())
             return false;
 
         if (player_genus(GENPC_DRACONIAN) || you.species == SP_OGRE)
         {
-            newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
-            newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
+            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
+            _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
         }
         else
         {
-            newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
-                              ARM_LEATHER_ARMOUR);
-            newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER);
+            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
+                               ARM_LEATHER_ARMOUR);
+            _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER);
         }
 
         if (you.species != SP_KOBOLD)
         {
-            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, 4);
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, 4);
             you.skills[SK_THROWING] = 1;
         }
         else
@@ -3943,9 +3940,9 @@ bool give_items_skills()
 
 
     case JOB_NECROMANCER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
         you.skills[SK_DODGING] = 1;
         you.skills[SK_STEALTH] = 1;
         you.skills[(coinflip()? SK_DODGING : SK_STEALTH)]++;
@@ -3959,10 +3956,10 @@ bool give_items_skills()
         you.religion = GOD_SHINING_ONE;
         you.piety = 28;
 
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_FALCHION);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
-        newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_FALCHION);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
+        _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEALING);
 
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_ARMOUR] = 1;
@@ -3974,11 +3971,11 @@ bool give_items_skills()
         break;
 
     case JOB_ASSASSIN:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, 1,
-                          1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
-        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, 1,
+                           1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
+        _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
+        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
 
         // deep elves get hand crossbows, everyone else gets blowguns
         // (deep elves tend to suck at melee and need something that
@@ -3986,17 +3983,17 @@ bool give_items_skills()
         if (you.species == SP_DEEP_ELF)
         {
             you.inv[1].sub_type = WPN_HAND_CROSSBOW;
-            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
-                              10 + roll_dice( 2, 10 ));
+            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
+                               10 + roll_dice( 2, 10 ));
             set_item_ego_type( you.inv[4], OBJ_MISSILES, SPMSL_POISONED );
         }
         else
         {
-            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE,
-                              5 + roll_dice(2, 5));
+            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE,
+                               5 + roll_dice(2, 5));
             set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
-            newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE,
-                              1 + random2(4));
+            _newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE,
+                               1 + random2(4));
             set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
         }
 
@@ -4021,18 +4018,18 @@ bool give_items_skills()
 
         // WEAPONS
         if (you.species == SP_OGRE)
-            newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANCUS);
+            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANCUS);
         else if (you.species == SP_TROLL)
             you.equip[EQ_WEAPON] = -1;
         else
         {
-            newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_HAND_AXE);
+            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_HAND_AXE);
             for (int i = 2; i <= 4; i++)
-                newgame_make_item(i, EQ_NONE, OBJ_WEAPONS, WPN_SPEAR);
+                _newgame_make_item(i, EQ_NONE, OBJ_WEAPONS, WPN_SPEAR);
         }
 
         // ARMOUR
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
         if (!can_wear_armour(you.inv[1], false, true))
             you.inv[1].sub_type = ARM_ANIMAL_SKIN;
 
@@ -4061,8 +4058,8 @@ bool give_items_skills()
         break;
 
     case JOB_HUNTER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
-        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
+        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
         if (!can_wear_armour(you.inv[2], false, true))
         {
             you.inv[2].sub_type =
@@ -4075,13 +4072,13 @@ bool give_items_skills()
             // possibly allow choice between javelin and net
             you.inv[1] = you.inv[2];
             you.equip[EQ_BODY_ARMOUR] = 1;
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, 6);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, 6);
         }
         else
         {
-            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_ARROW,
-                              15 + random2avg(21, 5));
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_ARROW,
+                               15 + random2avg(21, 5));
+            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
         }
 
         you.skills[SK_FIGHTING] = 2;
@@ -4138,7 +4135,7 @@ bool give_items_skills()
             you.skills[SK_THROWING] += 3;
 
             // And a hunting knife.
-            newgame_make_item(-1, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
+            _newgame_make_item(-1, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
             break;
 
         default:
@@ -4159,8 +4156,8 @@ bool give_items_skills()
     case JOB_AIR_ELEMENTALIST:
     case JOB_EARTH_ELEMENTALIST:
     case JOB_VENOM_MAGE:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         if (you.char_class == JOB_ENCHANTER)
         {
             you.inv[0].plus = 1;
@@ -4170,18 +4167,18 @@ bool give_items_skills()
 
         if ( you.char_class == JOB_CONJURER )
         {
-            if (!choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
+            if (!_choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
                 return false;
         }
 
         switch (you.char_class)
         {
         case JOB_SUMMONER:
-            newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
+            _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
             you.skills[SK_SUMMONINGS] = 4;
             // gets some darts - this class is difficult to start off with
-            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART,
-                              8 + roll_dice( 2, 8 ));
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART,
+                               8 + roll_dice( 2, 8 ));
             break;
 
         case JOB_CONJURER:
@@ -4189,51 +4186,51 @@ bool give_items_skills()
             break;
 
         case JOB_ENCHANTER:
-            newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CHARMS);
+            _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CHARMS);
 
             you.skills[SK_ENCHANTMENTS] = 4;
 
             // gets some darts - this class is difficult to start off with
-            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART,
-                              8 + roll_dice( 2, 8 ), 1);
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART,
+                               8 + roll_dice( 2, 8 ), 1);
 
             if (you.species == SP_SPRIGGAN)
-                make_rod(you.inv[0], STAFF_STRIKING);
+                _make_rod(you.inv[0], STAFF_STRIKING);
             break;
 
         case JOB_FIRE_ELEMENTALIST:
-            newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_FLAMES);
+            _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_FLAMES);
             you.skills[SK_CONJURATIONS] = 1;
             you.skills[SK_FIRE_MAGIC] = 3;
             break;
 
         case JOB_ICE_ELEMENTALIST:
-            newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_FROST);
+            _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_FROST);
             you.skills[SK_CONJURATIONS] = 1;
             you.skills[SK_ICE_MAGIC] = 3;
             break;
 
         case JOB_AIR_ELEMENTALIST:
-            newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_AIR);
+            _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_AIR);
             you.skills[SK_CONJURATIONS] = 1;
             you.skills[SK_AIR_MAGIC] = 3;
             break;
 
         case JOB_EARTH_ELEMENTALIST:
-            newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
-            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, 20);
+            _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, 20);
             
             if (you.species == SP_GNOME)
             {
-                newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-                newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+                _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
+                _newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
             }
             you.skills[SK_TRANSMIGRATION] = 1;
             you.skills[SK_EARTH_MAGIC] = 3;
             break;
 
         case JOB_VENOM_MAGE:
-            newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_YOUNG_POISONERS);
+            _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_YOUNG_POISONERS);
             you.skills[SK_POISON_MAGIC] = 4;
             break;
 
@@ -4291,17 +4288,17 @@ bool give_items_skills()
 
     case JOB_TRANSMUTER:
         // some sticks for sticks to snakes:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW,
-                          6 + roll_dice( 3, 4 ));
-        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
+        _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW,
+                           6 + roll_dice( 3, 4 ));
+        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
         // A little bit of starting ammo for evaporate... don't need too
         // much now that the character can make their own. -- bwr
         //
         // some ammo for evaporate:
-        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, 2);
-        newgame_make_item(5, EQ_NONE, OBJ_POTIONS, POT_POISON);
+        _newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, 2);
+        _newgame_make_item(5, EQ_NONE, OBJ_POTIONS, POT_POISON);
 
         you.equip[EQ_WEAPON] = -1;
 
@@ -4314,7 +4311,7 @@ bool give_items_skills()
 
         if (you.species == SP_SPRIGGAN)
         {
-            make_rod(you.inv[0], STAFF_STRIKING);
+            _make_rod(you.inv[0], STAFF_STRIKING);
 
             you.skills[SK_EVOCATIONS] = 2;
             you.skills[SK_FIGHTING] = 0;
@@ -4326,13 +4323,13 @@ bool give_items_skills()
     case JOB_WARPER:
         if (you.species == SP_SPRIGGAN)
         {
-            make_rod(you.inv[0], STAFF_STRIKING);
+            _make_rod(you.inv[0], STAFF_STRIKING);
 
             you.skills[SK_EVOCATIONS] = 3;
         }
         else
         {
-            newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
             if (you.species == SP_OGRE_MAGE)
                 you.inv[0].sub_type = WPN_QUARTERSTAFF;
 
@@ -4340,19 +4337,19 @@ bool give_items_skills()
             you.skills[SK_FIGHTING] = 1;
         }
 
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
         if (you.species == SP_SPRIGGAN || you.species == SP_OGRE_MAGE
-              || player_genus(GENPC_DRACONIAN))
+            || player_genus(GENPC_DRACONIAN))
         {
             you.inv[1].sub_type = ARM_ROBE;
         }
 
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
 
         // one free escape:
-        newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
-                          10 + roll_dice( 2, 10 ));
+        _newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
+                           10 + roll_dice( 2, 10 ));
 
         you.skills[SK_THROWING] = 1;
         you.skills[SK_DARTS] = 2;
@@ -4363,14 +4360,14 @@ bool give_items_skills()
         break;
 
     case JOB_CRUSADER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         
-        if (!choose_weapon())
+        if (!_choose_weapon())
             return false;
             
         weap_skill = 2;
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
 
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR] = 1;
@@ -4382,15 +4379,15 @@ bool give_items_skills()
 
 
     case JOB_DEATH_KNIGHT:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         
-        if (!choose_weapon())
+        if (!_choose_weapon())
             return false;
 
         weap_skill = 2;
 
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
 
         choice = DK_NO_SELECTION;
 
@@ -4409,8 +4406,7 @@ bool give_items_skills()
         }
         else
         {
-            clrscr();
-            print_character_info();
+            _print_character_info();
             
             textcolor( CYAN );
             cprintf(EOL "From where do you draw your power?" EOL);
@@ -4470,7 +4466,8 @@ bool give_items_skills()
                 default:
                     break;
                 }
-            } while (choice == DK_NO_SELECTION);
+            }
+            while (choice == DK_NO_SELECTION);
             
             ng_dk = (keyn == '*'? DK_RANDOM : choice);
         }
@@ -4501,8 +4498,8 @@ bool give_items_skills()
         break;
 
     case JOB_CHAOS_KNIGHT:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, 1,
-                          random2(3), random2(3));
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, 1,
+                           random2(3), random2(3));
 
         if (one_chance_in(5))
             set_equip_desc( you.inv[0], ISFLAG_RUNED );
@@ -4510,12 +4507,12 @@ bool give_items_skills()
         if (one_chance_in(5))
             set_equip_desc( you.inv[0], ISFLAG_GLOWING );
 
-        if (!choose_weapon())
+        if (!_choose_weapon())
             return false;
 
         weap_skill = 2;
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, 1,
-                          random2(3));
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, 1,
+                           random2(3));
 
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR] = 1;
@@ -4536,8 +4533,7 @@ bool give_items_skills()
         }
         else
         {
-            clrscr();
-            print_character_info();
+            _print_character_info();
 
             textcolor( CYAN );
             cprintf(EOL "Which god of chaos do you wish to serve?" EOL);
@@ -4599,9 +4595,11 @@ bool give_items_skills()
                 default:
                     break;
                 }
-            } while (you.religion == GOD_NO_GOD);
+            }
+            while (you.religion == GOD_NO_GOD);
             
-            ng_ck = (keyn == '*'? GOD_RANDOM : you.religion);
+            ng_ck = (keyn == '*') ? GOD_RANDOM
+                                  : you.religion;
         }
 
         if (you.religion == GOD_XOM)
@@ -4626,10 +4624,10 @@ bool give_items_skills()
         you.religion = GOD_ELYVILON;
         you.piety = 45;
 
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
-        newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+        _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING] = 1;
@@ -4639,14 +4637,14 @@ bool give_items_skills()
         break;
 
     case JOB_REAVER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        if (!choose_weapon())
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        if (!_choose_weapon())
             return false;
 
         weap_skill = 3;
 
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        if (!choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        if (!_choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
             return false;
 
         you.skills[SK_FIGHTING] = 2;
@@ -4659,11 +4657,11 @@ bool give_items_skills()
 
     case JOB_STALKER:
         to_hit_bonus = random2(3);
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, 1,
-                          1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, 1,
+                           1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
 
         you.skills[SK_FIGHTING] = 1;
         you.skills[SK_SHORT_BLADES] = 1;
@@ -4677,7 +4675,7 @@ bool give_items_skills()
         break;
 
     case JOB_MONK:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         you.equip[EQ_WEAPON] = -1;
 
         you.skills[SK_FIGHTING] = 3;
@@ -4687,7 +4685,7 @@ bool give_items_skills()
         break;
 
     case JOB_WANDERER:
-        create_wanderer();
+        _create_wanderer();
         break;
 
     default:
@@ -4699,7 +4697,7 @@ bool give_items_skills()
         you.skills[SK_UNARMED_COMBAT] = 2;
 
     if (weap_skill)
-        you.skills[weapon_skill(OBJ_WEAPONS, you.inv[0].sub_type)]=weap_skill;
+        you.skills[weapon_skill(OBJ_WEAPONS, you.inv[0].sub_type)] = weap_skill;
 
     init_skill_order();
 

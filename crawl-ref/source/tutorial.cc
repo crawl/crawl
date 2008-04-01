@@ -123,7 +123,7 @@ bool pick_tutorial()
         EOL "* - Random tutorial"
         "</brown>" EOL).display();
 
-    while (1)
+    while (true)
     {
         char keyn = c_getch();
 
@@ -402,7 +402,7 @@ static formatted_string _tutorial_debug()
     result += "</white>" EOL EOL;
 
     result += "<lightblue>";
-    for (i=0; i < TUT_EVENTS_NUM; i++)
+    for (i = 0; i < TUT_EVENTS_NUM; i++)
     {
         snprintf(info, INFO_SIZE, "%d: %d (%s)", 
                  i, Options.tutorial_events[i], _tut_debug_list(i).c_str());
@@ -469,7 +469,7 @@ static formatted_string _tutorial_stats_intro()
             "basic one is your health, measured as \n"
             "<w>HP: " << you.hp << "/" << you.hp_max << "</w>. ";
 
-    if (Options.tutorial_type==TUT_MAGIC_CHAR)
+    if (Options.tutorial_type == TUT_MAGIC_CHAR)
         istr << "  ";
 
     istr <<
@@ -547,11 +547,12 @@ void tut_starting_screen()
     {
 #ifndef USE_TILE
         // map window (starts at 1) or message window (starts at 18)
-        y_pos = (i==1 || i==3 ? 18 : 1);
+        // FIXME: This should be done more cleanly using the crawl_view settings
+        y_pos = (i == 1 || i == 3) ? 18 : 1;
 
-        cgotoxy(1,y_pos);
+        cgotoxy(1, y_pos);
 #endif
-        if (i==0)
+        if (i == 0)
             clrscr();
 
         int width = _get_tutorial_cols();
@@ -562,20 +563,20 @@ void tut_starting_screen()
         if (width > 80)
             width = 80;
 #endif
-        if (i==0)
+        if (i == 0)
             _tut_starting_info(width).display();
 #ifdef USE_TILE
         else if (i > 0 && i < 3)
             continue;
 #else
-        else if (i==1)
+        else if (i == 1)
             _tutorial_map_intro().display();
-        else if (i==2)
+        else if (i == 2)
             _tutorial_stats_intro().display();
 #endif
-        else if (i==3)
+        else if (i == 3)
             _tutorial_message_intro();
-        else if (i==4)
+        else if (i == 4)
             _tutorial_movement_info();
         else
         {
@@ -2722,7 +2723,7 @@ void tutorial_describe_monster(const monsters *mons)
                 "possess skills that normal monster wouldn't, so be "
                 "careful.\n\n";
     }
-    else if(mons->type == MONS_PLAYER_GHOST)
+    else if (mons->type == MONS_PLAYER_GHOST)
     {
         ostr << "The ghost of a deceased adventurer, it would like nothing "
                 "better than to send you the same way.\n\n";

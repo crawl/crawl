@@ -42,84 +42,93 @@ static void x11_check_exposure(XEvent *xev);
 extern WinClass *win_main;
 
 void GetNextEvent(int *etype, int *key, bool *shift, bool *ctrl,
-    int *x1, int *y1, int *x2, int *y2)
+                  int *x1, int *y1, int *x2, int *y2)
 {
     XEvent xev;
 
-    while(1)
+    while (true)
     {
         XNextEvent(display, &xev);
 
-        if(xev.type==KeyPress)
-	{
-	    *etype = EV_KEYIN;
-	    *key = x11_keypress(&(xev.xkey));
-	    break;
-	}
-        else if(xev.type==Expose) 
-	{
-	    x11_check_exposure(&xev);
-	}
-	else if(xev.type == ConfigureNotify)
-	{
-	    win_main->ox = xev.xconfigure.x;
-	    win_main->oy = xev.xconfigure.y;
-	    break;
-	}
-	else if(xev.type==ButtonPress)
+        if (xev.type == KeyPress)
         {
-	    *etype = EV_BUTTON;
+            *etype = EV_KEYIN;
+            *key = x11_keypress(&(xev.xkey));
+            break;
+        }
+        else if (xev.type == Expose)
+        {
+            x11_check_exposure(&xev);
+        }
+        else if (xev.type == ConfigureNotify)
+        {
+            win_main->ox = xev.xconfigure.x;
+            win_main->oy = xev.xconfigure.y;
+            break;
+        }
+        else if (xev.type == ButtonPress)
+        {
+            *etype = EV_BUTTON;
             int button = xev.xbutton.button;
             *shift = (xev.xkey.state & ShiftMask)   ? true : false;
             *ctrl  = (xev.xkey.state & ControlMask) ? true : false;
             *x1 = xev.xbutton.x;
             *y1 = xev.xbutton.y;
 
-            if (button == 3) button = 2;
-            else if (button==2) button=3;
+            if (button == 3)
+                button = 2;
+            else if (button == 2)
+                button = 3;
+                
             *key = button;
-	    break;
+            break;
         }
-	else if(xev.type==MotionNotify || xev.type==EnterNotify)
+        else if (xev.type == MotionNotify || xev.type == EnterNotify)
         {
-	    *etype = EV_MOVE;
+            *etype = EV_MOVE;
             *x1 = xev.xbutton.x;
             *y1 = xev.xbutton.y;
-	    break;
+            break;
         }
-	else if (xev.type==LeaveNotify)
-	{
-	    *etype = EV_MOVE;
-	    *x1 = -100;
-	    *y1 = -100;
-	    break;
-	}
-	else if(xev.type==ButtonRelease)
+        else if (xev.type == LeaveNotify)
         {
-	    *etype = EV_UNBUTTON;
+            *etype = EV_MOVE;
+            *x1 = -100;
+            *y1 = -100;
+            break;
+        }
+        else if (xev.type == ButtonRelease)
+        {
+            *etype = EV_UNBUTTON;
             int button = xev.xbutton.button;
-            if (button == 3) button = 2;
-            else if (button==2) button=3;
+            if (button == 3)
+                button = 2;
+            else if (button == 2)
+                button = 3;
 
             *x1 = xev.xbutton.x;
             *y1 = xev.xbutton.y;
             *key = button;
             break;
-	}
-    }/*while*/
+        }
+    }
 }
 
 char *my_getenv(const char *envname, const char *def)
 {
     const char *result = getenv(envname);
-    if (!result) result = def;
+    if (!result)
+        result = def;
+        
     return (char *)result;
 }
 
 int my_getenv_int(const char *envname, int def)
 {
     const char *rstr = getenv(envname);
-    if (!rstr) return def;
+    if (!rstr)
+        return def;
+        
     return atoi(rstr);
 }
 
@@ -137,15 +146,15 @@ void update_tip_text(const char *tip)
 
     const bool is_main_screen = (win_main->active_layer == 0);
     const unsigned int height = is_main_screen ? region_tip->my : 1;
-    const unsigned int width = is_main_screen ? region_tip->mx : region_crt->mx;
+    
+    const unsigned int width  = is_main_screen ? region_tip->mx
+                                               : region_crt->mx;
 
     strncpy(new_tip, tip, tip_size);
     strncpy(old_tip, new_tip, tip_size);
 
     if (is_main_screen)
-    {
         region_tip->clear();
-    }
 
     char *next_tip = new_tip;
     for (unsigned int i = 0; next_tip && i < height; i++)
@@ -160,9 +169,7 @@ void update_tip_text(const char *tip)
             next_tip = pc + 1;
         }
         else
-        {
             next_tip = 0;
-        }
 
         if (strlen(this_tip) > width)
         {
@@ -187,7 +194,7 @@ void update_tip_text(const char *tip)
                 else
                 {
                     // if nothing else...
-                    this_tip[width] = 0;
+                    this_tip[width]   = 0;
                     this_tip[width-1] = '.';
                     this_tip[width-2] = '.';
                 }
@@ -218,15 +225,17 @@ void TileDrawDungeonAux()
 #endif  /* USE_TILE */
 
 /* X11 */
-void x11_check_exposure(XEvent *xev){
+void x11_check_exposure(XEvent *xev)
+{
     int sx, sy, ex, ey;
 
     sx = xev->xexpose.x;
-    ex = xev->xexpose.x + (xev->xexpose.width)-1;
+    ex = xev->xexpose.x + (xev->xexpose.width)  - 1;
     sy = xev->xexpose.y;
-    ey = xev->xexpose.y + (xev->xexpose.height)-1;
+    ey = xev->xexpose.y + (xev->xexpose.height) - 1;
 
-    if (xev->xany.window != win_main->win) return;
+    if (xev->xany.window != win_main->win)
+        return;
 
     win_main->redraw(sx,sy,ex,ey);
 }
@@ -263,27 +272,23 @@ int x11_keypress(XKeyEvent *xev)
 
     /* Extract "modifier flags" */
     mc = (ev->state & ControlMask) ? true : false;
-    ms = (ev->state & ShiftMask) ? true : false;
-    ma = (ev->state & Mod1Mask) ? true : false;
+    ms = (ev->state & ShiftMask)   ? true : false;
+    ma = (ev->state & Mod1Mask)    ? true : false;
 
     /* Normal keys */
     if (n &&  !IsSpecialKey(ks))
     {
         buf[n] = 0;
 
-	//Hack Ctrl+[0-9] etc.
-	if (mc && ((ks>='0' && ks<='9') || buf[0]>=' '))
-	{
-	    return 1024|ks;
-	}
+        // Hack Ctrl + [0-9] etc.
+        if (mc && ((ks >= '0' && ks <= '9') || buf[0] >= ' '))
+            return 1024 | ks;
 
-	if (!ma)
-        {   
-	    return buf[0];
-	}
+        if (!ma)
+            return buf[0];
 
-	/* Alt + ? */
-	return 2048|buf[0];
+        /* Alt + ? */
+        return 2048|buf[0];
     }
 
     /* Hack -- convert into an unsigned int */
@@ -292,105 +297,107 @@ int x11_keypress(XKeyEvent *xev)
     /* Handle a few standard keys (bypass modifiers) XXX XXX XXX */
     base = dir = 0;
     switch (ks1)
-        {
-                case XK_Escape:
-                    base = 0x1b;
-                    break;
-                case XK_Return:
-                    base = '\r';
-                    break;
-                case XK_Tab:
-                    base = '\t';
-                    break;
-                case XK_Delete:
-                case XK_BackSpace:
-                    base = '\010';
-                    break;
+    {
+        case XK_Escape:
+            base = 0x1b;
+            break;
+        case XK_Return:
+            base = '\r';
+            break;
+        case XK_Tab:
+            base = '\t';
+            break;
+        case XK_Delete:
+        case XK_BackSpace:
+            base = '\010';
+            break;
 
-		// for menus
-                case XK_Down:
-		    return CK_DOWN;
-                case XK_Up:
-		    return CK_UP;
-                case XK_Left:
-		    return CK_LEFT;
-                case XK_Right:
-		    return CK_RIGHT;
+        // for menus
+        case XK_Down:
+           return CK_DOWN;
+        case XK_Up:
+           return CK_UP;
+        case XK_Left:
+           return CK_LEFT;
+        case XK_Right:
+           return CK_RIGHT;
 
-		/*
-		 * Keypad
-		 */
-
-                case XK_KP_1:
-                case XK_KP_End:
-		    dir = 1;
-		    break;
-
-                case XK_KP_2:
-                case XK_KP_Down:
-                    dir = 2;
-                    break;
-
-                case XK_KP_3:
-                case XK_KP_Page_Down:
-                    dir = 3;
-                    break;
-
-                case XK_KP_6:
-                case XK_KP_Right:
-                    dir = 6;
-                    break;
-
-                case XK_KP_9:
-                case XK_KP_Page_Up:
-                    dir = 9;
-                    break;
-
-                case XK_KP_8:
-                case XK_KP_Up:
-                    dir = 8;
-                    break;
-
-                case XK_KP_7:
-                case XK_KP_Home:
-                    dir = 7;
-                    break;
-
-                case XK_KP_4:
-                case XK_KP_Left:
-                    dir = 4;
-                    break;
-
-                case XK_KP_5:
-                    dir = 5;
-                    break;
-    }/* switch */
+        // Keypad
+        case XK_KP_1:
+        case XK_KP_End:
+            dir = 1;
+            break;
+            
+        case XK_KP_2:
+        case XK_KP_Down:
+            dir = 2;
+            break;
+            
+        case XK_KP_3:
+        case XK_KP_Page_Down:
+            dir = 3;
+            break;
+            
+        case XK_KP_6:
+        case XK_KP_Right:
+            dir = 6;
+            break;
+            
+        case XK_KP_9:
+        case XK_KP_Page_Up:
+            dir = 9;
+            break;
+            
+        case XK_KP_8:
+        case XK_KP_Up:
+            dir = 8;
+            break;
+            
+        case XK_KP_7:
+        case XK_KP_Home:
+            dir = 7;
+            break;
+            
+        case XK_KP_4:
+        case XK_KP_Left:
+            dir = 4;
+            break;
+            
+        case XK_KP_5:
+            dir = 5;
+            break;
+    }
 
     //Handle keypad first
     if (dir != 0)
     {
-	int result = ck_table[dir-1];
+        int result = ck_table[dir-1];
 
-	if (ms) result += CK_SHIFT_UP - CK_UP;
-	if (mc) result += CK_CTRL_UP - CK_UP;
-	return result;
+        if (ms) result += CK_SHIFT_UP - CK_UP;
+        if (mc) result += CK_CTRL_UP  - CK_UP;
+            
+        return result;
     }
 
     if (base != 0)
     {
-	if (ms) base |= 1024;
-	if (mc) base |= 2048;
-	if (ma) base |= 4096;
-	return base;
+       if (ms) base |= 1024;
+       if (mc) base |= 2048;
+       if (ma) base |= 4096;
+       
+       return base;
     }
+    
     //Hack Special key
     if (ks1 >=0xff00)
     {
-	base = 512 + ks1 - 0xff00;
-	if (ms) base |= 1024;
-	if (mc) base |= 2048;
-	if (ma) base |= 4096;
-	return base;
+        base = 512 + ks1 - 0xff00;
+        
+        if (ms) base |= 1024;
+        if (mc) base |= 2048;
+        if (ma) base |= 4096;
+        
+        return base;
     }
 
     return 0;
@@ -415,8 +422,7 @@ int kbhit()
 {
     XEvent xev;
 
-    if (XCheckMaskEvent(display, 
-        KeyPressMask | ButtonPressMask, &xev))
+    if (XCheckMaskEvent(display, KeyPressMask | ButtonPressMask, &xev))
     {
         XPutBackEvent(display, &xev);
         return 1;
@@ -440,7 +446,7 @@ int itoa(int value, char *strptr, int radix)
     {
         sprintf(strptr, "%i", value);
     }
-    if (radix == 2)             /* int to "binary string" */
+    else if (radix == 2)             /* int to "binary string" */
     {
         while (bitmask)
         {
@@ -449,10 +455,9 @@ int itoa(int value, char *strptr, int radix)
                 startflag = 1;
                 sprintf(strptr + ctr, "1");
             }
-            else
+            else if (startflag)
             {
-                if (startflag)
-                    sprintf(strptr + ctr, "0");
+                sprintf(strptr + ctr, "0");
             }
 
             bitmask = bitmask >> 1;

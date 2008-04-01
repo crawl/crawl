@@ -95,13 +95,11 @@ std::string apply_description(description_level_type desc,
     case DESC_NOCAP_THE:
         return ("the " + name);
     case DESC_CAP_A:
-        return (quantity > 1?
-                number_to_string(quantity, in_words) + name
-                : article_a(name, false));
+        return (quantity > 1 ? number_to_string(quantity, in_words) + name
+                             : article_a(name, false));
     case DESC_NOCAP_A:
-        return (quantity > 1?
-                number_to_string(quantity, in_words) + name
-                : article_a(name, true));
+        return (quantity > 1 ? number_to_string(quantity, in_words) + name
+                             : article_a(name, true));
     case DESC_CAP_YOUR:
         return ("Your " + name);
     case DESC_NOCAP_YOUR:
@@ -126,11 +124,12 @@ void play_sound( const char *file )
     // Check whether file exists, is readable, etc.?
     if (file && *file)
         sndPlaySound(file, SND_ASYNC | SND_NODEFAULT);
+        
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];
     command[0] = 0;
     if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
-            && shell_safe(file))
+        && shell_safe(file))
     {
         snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
         system(command);
@@ -160,6 +159,7 @@ std::string &uppercase(std::string &s)
 {
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)
         s[i] = toupper(s[i]);
+        
     return (s);
 }
 
@@ -167,6 +167,7 @@ std::string &lowercase(std::string &s)
 {
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)
         s[i] = tolower(s[i]);
+        
     return (s);
 }
 
@@ -180,11 +181,11 @@ int ends_with(const std::string &s, const char *suffixes[])
 {
     if (!suffixes)
         return (0);
+        
     for (int i = 0; suffixes[i]; ++i)
-    {
         if (ends_with(s, suffixes[i]))
             return (1 + i);
-    }
+
     return (0);
 }
 
@@ -232,8 +233,11 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
 {
     std::string::size_type pos = s.find(tagprefix);
+    
     while (pos && pos != std::string::npos && !isspace(s[pos - 1]))
+    {
         pos = s.find(tagprefix, pos + 1);
+    }
     
     if (pos == std::string::npos)
         return ("");
@@ -260,8 +264,10 @@ int strip_number_tag(std::string &s, const std::string &tagprefix)
 // Naively prefix A/an to a noun.
 std::string article_a(const std::string &name, bool lowercase)
 {
-    if (!name.length()) return name;
-    const char *a  = lowercase? "a " : "A ";
+    if (!name.length())
+        return name;
+    
+    const char *a  = lowercase? "a "  : "A ";
     const char *an = lowercase? "an " : "An ";
     switch (name[0])
     {
@@ -298,47 +304,75 @@ std::string pluralise(const std::string &name,
 
     if (!name.empty() && name[name.length() - 1] == ')'
         && (pos = name.rfind(" (")) != std::string::npos)
+    {
         return (pluralise(name.substr(0, pos)) + name.substr(pos));
+    }
     
     if (ends_with(name, "us"))
+    {
         // Fungus, ufetubus, for instance.
         return name.substr(0, name.length() - 2) + "i";
+    }
     else if (ends_with(name, "larva") || ends_with(name, "amoeba"))
+    {
         // Giant amoebae sounds a little weird, to tell the truth.
         return name + "e";
+    }
     else if (ends_with(name, "ex"))
+    {
         // Vortex; vortexes is legal, but the classic plural is cooler.
         return name.substr(0, name.length() - 2) + "ices";
+    }
     else if (ends_with(name, "cyclops"))
+    {
         return name.substr(0, name.length() - 1) + "es";
+    }
     else if (ends_with(name, "y"))
+    {
         return name.substr(0, name.length() - 1) + "ies";
+    }
     else if (ends_with(name, "fe"))
+    {
         // knife -> knives
         return name.substr(0, name.length() - 2) + "ves";
+    }
     else if (ends_with(name, "elf") || ends_with(name, "olf"))
+    {
         // Elf, wolf. Dwarfs can stay dwarfs, if there were dwarfs.
         return name.substr(0, name.length() - 1) + "ves";
+    }
     else if (ends_with(name, "mage"))
+    {
         // mage -> magi
         return name.substr(0, name.length() - 1) + "i";
+    }
     else if ( ends_with(name, "sheep") || ends_with(name, "manes")
-            || ends_with(name, "fish") )
+              || ends_with(name, "fish") )
+    {
         // Maybe we should generalise 'manes' to ends_with("es")?
         return name;
+    }
     else if (ends_with(name, "ch") || ends_with(name, "sh") 
-            || ends_with(name, "x"))
-        // To handle cockroaches, fish and sphinxes. Fish will be netted by
-        // the previous check anyway.
+             || ends_with(name, "x"))
+    {
+        // To handle cockroaches and sphinxes, and in case there's some monster
+        // ending with sh (except fish, which are caught in the previous check).
         return name + "es";
+    }
     else if (ends_with(name, "um"))
+    {
         // simulacrum -> simulacra
         return name.substr(0, name.length() - 2) + "a";
+    }
     else if (ends_with(name, "efreet"))
+    {
         // efreet -> efreeti. Not sure this is correct.
         return name + "i";
+    }
     else if (ends_with(name, "staff"))
+    {
         return name.substr(0, name.length() - 2) + "ves";
+    }
 
     return name + "s";
 }
@@ -378,13 +412,15 @@ static std::string tens_in_words(unsigned num)
 
     int ten = num / 10, digit = num % 10;
     return std::string(tens[ten]) 
-        + (digit? std::string("-") + numbers[digit] : "");
+             + (digit ? std::string("-") + numbers[digit] : "");
 }
 
 static std::string join_strings(const std::string &a, const std::string &b)
 {
-    return !a.empty() && !b.empty()? a + " " + b :
-        a.empty()? b : a;
+    if (!a.empty() && !b.empty())
+        return (a + " " + b);
+        
+    return (a.empty() ? b : a);
 }
 
 static std::string hundreds_in_words(unsigned num)
@@ -478,10 +514,10 @@ std::string &trim_string_right( std::string &str )
     return (str);
 }
 
-static void add_segment(std::vector<std::string> &segs,
-                        std::string s,
-                        bool trim,
-                        bool accept_empty)
+static void add_segment( std::vector<std::string> &segs,
+                         std::string s,
+                         bool trim,
+                         bool accept_empty)
 {
     if (trim && !s.empty())
         trim_string(s);
@@ -490,12 +526,11 @@ static void add_segment(std::vector<std::string> &segs,
         segs.push_back(s);
 }
 
-std::vector<std::string> split_string(
-    const std::string &sep, 
-    std::string s,
-    bool trim_segments,
-    bool accept_empty_segments,
-    int nsplits)
+std::vector<std::string> split_string( const std::string &sep,
+                                       std::string s,
+                                       bool trim_segments,
+                                       bool accept_empty_segments,
+                                       int nsplits)
 {
     std::vector<std::string> segments;
     int separator_length = sep.length();
@@ -530,7 +565,7 @@ void usleep(unsigned long time)
 {
     struct timeval timer;
 
-    timer.tv_sec = (time / 1000000L);
+    timer.tv_sec  = (time / 1000000L);
     timer.tv_usec = (time % 1000000L);
 
     select(0, NULL, NULL, NULL, &timer);
@@ -617,7 +652,7 @@ static bool glob_match( const char *pattern, const char *text, bool icase )
     char p, t;
     bool special;
 
-    for (;;)
+    while (true)
     {
         p = pm_lower(*pattern++, icase);
         t = pm_lower(*text++, icase);
@@ -631,13 +666,16 @@ static bool glob_match( const char *pattern, const char *text, bool icase )
         }
 
         if (p == '*' && special)
+        {
             // Try to match exactly at the current text position...
-            return !*pattern || glob_match(pattern, text - 1, icase)? true :
-                // Or skip one character in the text and try the wildcard
-                // match again. If this is the end of the text, the match has
-                // failed.
-                t? glob_match(pattern - 1, text, icase) : false;
-        else if (!t || (p != t && (p != '?' || !special)))
+            if (!*pattern || glob_match(pattern, text - 1, icase))
+                return true;
+                
+            // Or skip one character in the text and try the wildcard match
+            // again. If this is the end of the text, the match has failed.
+            return (t ? glob_match(pattern - 1, text, icase) : false);
+        }
+        else if (!t || p != t && (p != '?' || !special))
             return false;
     }
 }
@@ -702,13 +740,9 @@ bool pattern_match(void *compiled_pattern, const char *text, int length)
 {
     int ovector[42];
     int pcre_rc = pcre_exec(static_cast<pcre *>(compiled_pattern),
-              NULL,
-              text,
-              length,
-              0,
-              0,
-              ovector,
-              sizeof(ovector) / sizeof(*ovector));
+                            NULL,
+                            text, length, 0, 0,
+                            ovector, sizeof(ovector) / sizeof(*ovector));
     return (pcre_rc >= 0);
 }
 

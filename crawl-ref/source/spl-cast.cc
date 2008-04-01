@@ -613,7 +613,7 @@ bool cast_a_spell()
 
     int keyin = 0;              // silence stupid compilers
 
-    for (;;)
+    while (true)
     {
         mpr( "Cast which spell ([?*] list)? ", MSGCH_PROMPT );
 

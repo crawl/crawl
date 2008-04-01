@@ -100,7 +100,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
     else
     {
         // query for location {dlb}:
-        for (;;)
+        while (true)
         {
             direction(beam, DIR_TARGET, TARG_ANY, -1, false, false,
                       "Blink to where?");
@@ -479,7 +479,7 @@ bool conjure_flame(int pow)
 
     bool done_first_message = false;
 
-    for (;;)
+    while (true)
     {
         if (done_first_message)
             mpr("Where would you like to place the cloud?", MSGCH_PROMPT);

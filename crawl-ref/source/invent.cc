@@ -854,7 +854,7 @@ static unsigned char _get_invent_quant( unsigned char keyin, int &quant )
 {
     quant = keyin - '0';
 
-    for(;;)
+    while (true)
     {
         keyin = get_ch();
 
@@ -912,7 +912,7 @@ std::vector<SelItem> prompt_invent_items(
 
     std::vector<SelItem> items;
     int count = -1;
-    for (;;)
+    while (true)
     {
         if (need_redraw)
         {
@@ -1229,7 +1229,7 @@ int prompt_invent_item( const char *prompt,
         keyin       = '?';
     }
 
-    for (;;)
+    while (true)
     {
         if (need_redraw)
         {

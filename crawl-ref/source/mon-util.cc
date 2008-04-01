@@ -1431,7 +1431,9 @@ void define_monster(monsters &mons)
         // White draconians will never be draconian scorchers, but
         // apart from that, anything goes.
         do
+        {
             monnumber = MONS_BLACK_DRACONIAN + random2(8);
+        }
         while (drac_colour_incompatible(mcls, monnumber));
         break;
     }
@@ -1512,11 +1514,13 @@ std::string draconian_colour_name(monster_type mtype)
 
 monster_type draconian_colour_by_name(const std::string &name)
 {
-    COMPILE_CHECK(ARRAYSIZE(drac_colour_names) ==
-                  MONS_PALE_DRACONIAN - MONS_DRACONIAN, c1);
+    COMPILE_CHECK(ARRAYSIZE(drac_colour_names)
+                  == (MONS_PALE_DRACONIAN - MONS_DRACONIAN), c1);
+                  
     for (unsigned i = 0; i < ARRAYSIZE(drac_colour_names); ++i)
         if (name == drac_colour_names[i])
             return static_cast<monster_type>(i + MONS_BLACK_DRACONIAN);
+            
     return (MONS_PROGRAM_BUG);
 }
 
@@ -2185,10 +2189,8 @@ bool mons_is_magic_user( const monsters *mon )
     if (mons_class_flag(mon->type, M_ACTUAL_SPELLS))
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        {
             if (mon->spells[i] != SPELL_NO_SPELL)
                 return (true);
-        }
     }
     return (false);
 }
@@ -2200,10 +2202,8 @@ bool mons_has_ranged_spell( const monsters *mon )
     if (mons_class_flag( mclass, M_SPELLCASTER ))
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-        {
             if (_ms_ranged_spell( mon->spells[i] ))
                 return (true);
-        }
     }
 
     return (false);
@@ -2307,7 +2307,9 @@ static bool _mons_can_smite(const monsters *monster)
         if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT
             || hspell_pass[i] == SPELL_SMITING
             || hspell_pass[i] == SPELL_HELLFIRE_BURST)
+        {
             return (true);
+        }
 
     return (false);
 }
@@ -2699,6 +2701,7 @@ item_def *monsters::launcher()
     item_def *weap = mslot_item(MSLOT_WEAPON);
     if (weap && is_range_weapon(*weap))
         return (weap);
+        
     weap = mslot_item(MSLOT_ALT_WEAPON);
     return (weap && is_range_weapon(*weap)? weap : NULL);
 }
@@ -3104,6 +3107,7 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
         {
             if (is_range_weapon(*weap))
                 continue;
+                
             has_melee = true;
             if (mons_weapon_damage_rating(*weap) < mdam_rating)
                 return (drop_item(i, near) && pickup(item, i, near));
@@ -3369,10 +3373,11 @@ void monsters::swap_weapons(int near)
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
     
-    if (weap)
-        if(!unequip(*weap, MSLOT_WEAPON, near))
-            // Item was cursed
-            return;
+    if (weap && !unequip(*weap, MSLOT_WEAPON, near))
+    {
+        // Item was cursed
+        return;
+    }
 
     swap_slots(MSLOT_WEAPON, MSLOT_ALT_WEAPON);
 
@@ -3527,10 +3532,9 @@ int monsters::holy_aura() const
 bool monsters::has_spell(spell_type spell) const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-    {
         if (spells[i] == spell)
             return (true);
-    }
+
     return (false);
 }
 
@@ -3889,6 +3893,7 @@ bool monsters::find_place_near_player()
     for (int radius = 1; radius < 7; ++radius)
         if (find_home_around(you.pos(), radius))
             return (true);
+            
     return (false);
 }
 
@@ -3900,8 +3905,7 @@ bool monsters::find_home_anywhere()
         x = random_range(6, GXM - 7);
         y = random_range(6, GYM - 7);
     }
-    while ((grd[x][y] != DNGN_FLOOR
-           || mgrd[x][y] != NON_MONSTER)
+    while ((grd[x][y] != DNGN_FLOOR || mgrd[x][y] != NON_MONSTER)
            && tries-- > 0);
 
     return (tries >= 0);
@@ -4004,8 +4008,10 @@ void monsters::load_spells(mon_spellbook_type book)
     if (book == MST_GHOST)
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        {
             mprf( MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
                   i, spells[i], spell_title(spells[i]) );
+        }
     }
 #endif
 }
@@ -4021,10 +4027,9 @@ bool monsters::has_ench(enchant_type ench, enchant_type ench2) const
         ench2 = ench;
 
     for (int i = ench; i <= ench2; ++i)
-    {
         if (has_ench(static_cast<enchant_type>(i)))
             return (true);
-    }
+
     return (false);
 }
 
@@ -4038,6 +4043,7 @@ mon_enchant monsters::get_ench(enchant_type ench1,
     {
         mon_enchant_list::const_iterator i =
             enchantments.find(static_cast<enchant_type>(e));
+            
         if (i != enchantments.end())
             return (i->second);
     }
@@ -4298,13 +4304,17 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     seen_context = "surfaces";
             }
             else if (!quiet)
+            {
                 if (type == MONS_AIR_ELEMENTAL)
+                {
                     mprf("%s forms itself from the air!",
                          name(DESC_CAP_A, true).c_str() );
+                }
+            }
         }
         else if (mons_near(this) && monster_habitable_grid(this, DNGN_FLOOR))
         {
-            mpr("Something invisble bursts forth from the water.");
+            mpr("Something invisible bursts forth from the water.");
             interrupt_activity( AI_FORCE_INTERRUPT );
         }
 
@@ -5184,7 +5194,7 @@ void monsters::check_awaken(int)
 const monsterentry *monsters::find_monsterentry() const
 {
     return (type == -1 || type == MONS_PROGRAM_BUG) ? NULL
-        : get_monster_data(type);
+                                                    : get_monster_data(type);
 }
 
 int monsters::action_energy(energy_use_type et) const
@@ -5977,24 +5987,30 @@ mon_resist_def::mon_resist_def(int flags, short level)
         const short nl = get_default_res_level(1 << i, level);
         switch (flags & (1 << i))
         {
-        case MR_RES_STEAM:   steam = 3; break; 
-        case MR_RES_ELEC:    elec = nl; break;
-        case MR_RES_POISON:  poison = nl; break;
-        case MR_RES_FIRE:    fire = nl; break;
+        // resistances
+        case MR_RES_STEAM:    steam    =  3; break;
+        case MR_RES_ELEC:     elec     = nl; break;
+        case MR_RES_POISON:   poison   = nl; break;
+        case MR_RES_FIRE:     fire     = nl; break;
         case MR_RES_HELLFIRE: hellfire = nl; break;
-        case MR_RES_COLD:    cold = nl; break;
-        case MR_RES_ASPHYX:  asphyx = nl; break;
-        case MR_RES_ACID:    acid = nl; break;
-        case MR_VUL_ELEC:    elec = -nl; break;
-        case MR_VUL_POISON:  poison = -nl; break;
-        case MR_VUL_FIRE:    fire = -nl; break;
-        case MR_VUL_COLD:    cold = -nl; break;
+        case MR_RES_COLD:     cold     = nl; break;
+        case MR_RES_ASPHYX:   asphyx   = nl; break;
+        case MR_RES_ACID:     acid     = nl; break;
         
-        case MR_RES_PIERCE:  pierce = nl; break;
-        case MR_RES_SLICE:   slice = nl; break;
+        // vulnerabilities
+        case MR_VUL_ELEC:     elec     = -nl; break;
+        case MR_VUL_POISON:   poison   = -nl; break;
+        case MR_VUL_FIRE:     fire     = -nl; break;
+        case MR_VUL_COLD:     cold     = -nl; break;
+        
+        // resistance to certain damage types
+        case MR_RES_PIERCE:   pierce   = nl; break;
+        case MR_RES_SLICE:    slice    = nl; break;
         case MR_RES_BLUDGEON: bludgeon = nl; break;
-        case MR_VUL_PIERCE:  pierce = -nl; break;
-        case MR_VUL_SLICE:   slice = -nl; break;
+        
+        // vulnerability to certain damage types
+        case MR_VUL_PIERCE:   pierce   = -nl; break;
+        case MR_VUL_SLICE:    slice    = -nl; break;
         case MR_VUL_BLUDGEON: bludgeon = -nl; break;
 
         case MR_RES_STICKY_FLAME: sticky_flame = true; break;
@@ -6006,16 +6022,16 @@ mon_resist_def::mon_resist_def(int flags, short level)
 
 const mon_resist_def &mon_resist_def::operator |= (const mon_resist_def &o)
 {
-    elec += o.elec;
-    poison += o.poison;
-    fire += o.fire;
-    cold += o.cold;
-    hellfire += o.hellfire;
-    asphyx += o.asphyx;
-    acid += o.acid;
-    pierce += o.pierce;
-    slice += o.slice;
-    bludgeon += o.bludgeon;
+    elec        += o.elec;
+    poison      += o.poison;
+    fire        += o.fire;
+    cold        += o.cold;
+    hellfire    += o.hellfire;
+    asphyx      += o.asphyx;
+    acid        += o.acid;
+    pierce      += o.pierce;
+    slice       += o.slice;
+    bludgeon    += o.bludgeon;
     sticky_flame = sticky_flame || o.sticky_flame;
     return (*this);
 }
