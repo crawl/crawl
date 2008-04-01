@@ -1,7 +1,13 @@
 %%%%
 Dungeon
 
-Describe branch here.
+It is still a mystery how this bizarre place was created. Some claim that it is
+the playground of bored gods, whereas others maintain that it was shaped by all
+kinds of species who fled the overworld and shunned the light.
+No matter what the origin of this cave is, it is filled with riches unheard of 
+as well as with ample dangers to any intruder.
+Few have escaped alive, and even fewer have kept some rest of sanity to tell
+the tale.
 %%%%
 Temple
 
@@ -15,11 +21,15 @@ treacherous and easy to get trapped in.
 %%%%
 Elven Halls
 
-Describe branch here.
+Whereas most elven folk would never move into a dark subterranean complex like
+this, the deep elves did. Their halls are filled with riches but any passersby
+should be aware of the legendary magical prowess of this species.
 %%%%
 Lair
 
-Describe branch here.
+Most adventurers find the lair to be an exciting change of climate. And
+indeed, there is something to be said about getting stabbed, mauled and 
+eaten rather than sliced, burnt or stabbed.
 %%%%
 Swamp
 
@@ -44,19 +54,24 @@ Home of the serpent, lair of the naga.
 %%%%
 Hive
 
-Describe branch here.
+You hear a many-fold buzzing. 
 %%%%
 Vaults
 
-Describe branch here.
+Possibly constructed by some powerful madman, the vaults are said to be home
+to great treasures. The blood spots all around the entrance indicate that
+there is a certain amount of violence, too.
 %%%%
 Hall of Blades
 
-Describe branch here.
+Once upon a time, all the daggers and axes and polearms would gather at the
+time of night and dance the waltz, dreaming of battlefields void of man and
+beast. That time is no more yet the weapons are still there.
 %%%%
 Crypt
 
-Describe branch here.
+You here moans and shrieks of tortured souls, suffering in acts of the
+unspeakable.
 %%%%
 Tomb
 
@@ -76,26 +91,30 @@ brotherhood of remorse not break their chain."
 %%%%
 Hell
 
-Describe branch here.
+The hallway to the four hells, guarded by Geryon.
 %%%%
 Dis
 
-Describe branch here.
+Who will stand the test of iron?
 %%%%
 Gehenna
 
-Describe branch here.
+The fires of Gehenna burnt many a confident hero, and they will burn evermore.
 %%%%
 Cocytus
 
-Describe branch here.
+A grim and frost-bitten hell.
 %%%%
 Tartarus
 
-Describe branch here.
+Over time, the undead, demons and devils of this place drain all life out of 
+treasure-craving visitors.
 %%%%
 Zot
 
-Describe branch here.
+A region of the dungeon complex, safely locked away and referred to usually by
+madness, frenzy, lunacy. Only the most demented adventurers would dare to
+break the seal and press deeper -- in the vain hope for a fabled artefact no 
+man has ever laid eyes on before.
 %%%%
 
