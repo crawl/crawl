@@ -441,6 +441,11 @@ void create_spec_monster_name(int x, int y)
             y = place.y;
         }
     }
+
+    // Wizmode users should be able to conjure up uniques even if they
+    // were already created.
+    if (mons_is_unique(mspec.mid) && you.unique_creatures[mspec.mid])
+        you.unique_creatures[mspec.mid] = false;
     
     if (!dgn_place_monster(mspec, you.your_level, x, y, false))
     {

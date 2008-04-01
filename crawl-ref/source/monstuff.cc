@@ -6486,12 +6486,8 @@ unsigned int monster_index(const monsters *monster)
 int hurt_monster(monsters * victim, int damage_dealt)
 {
     damage_dealt = std::max(std::min(damage_dealt, victim->hit_points), 0);
-    victim->hit_points -= damage_dealt;
 
-    // Allow the victim to exhibit passive damage behaviour (royal jelly).
-    victim->react_to_damage(damage_dealt);
-    
-    return (damage_dealt);
+    return (victim->hurt(NULL, damage_dealt));
 }
 
 bool heal_monster(monsters * patient, int health_boost,

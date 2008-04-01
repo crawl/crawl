@@ -3715,13 +3715,18 @@ god_type monsters::deity() const
     return (god);
 }
 
-void monsters::hurt(const actor *agent, int amount)
+int monsters::hurt(const actor *agent, int amount)
 {
     if (amount <= 0)
-        return;
-    
+        return (0);
+
+    amount = std::min(amount, hit_points);
     hit_points -= amount;
-    if ((hit_points < 1 || hit_dice < 1) && type != -1)
+    
+    // Allow the victim to exhibit passive damage behaviour (royal jelly).
+    react_to_damage(amount);
+    
+    if (agent && (hit_points < 1 || hit_dice < 1) && type != -1)
     {
         if (agent->atype() == ACT_PLAYER)
             monster_die(this, KILL_YOU, 0);
@@ -3729,6 +3734,7 @@ void monsters::hurt(const actor *agent, int amount)
             monster_die(this, KILL_MON,
                         monster_index( dynamic_cast<const monsters*>(agent) ));
     }
+    return (amount);
 }
 
 void monsters::rot(actor *agent, int rotlevel, int immed_rot)

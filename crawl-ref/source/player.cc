@@ -6194,7 +6194,7 @@ void player::teleport(bool now, bool abyss_shift)
         you_teleport();
 }
 
-void player::hurt(const actor *agent, int amount)
+int player::hurt(const actor *agent, int amount)
 {
     const monsters *mon = dynamic_cast<const monsters*>(agent);
     if (agent->atype() == ACT_MONSTER)
@@ -6208,6 +6208,7 @@ void player::hurt(const actor *agent, int amount)
         ASSERT(false);
         ouch(amount, 0, KILLED_BY_SOMETHING);
     }
+    return (amount);
 }
 
 void player::drain_stat(int stat, int amount, actor* attacker)
