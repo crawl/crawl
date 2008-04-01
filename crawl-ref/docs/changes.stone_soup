@@ -8,14 +8,16 @@ Breaks saves and bones compatibility.
 Interface
 ---------
 * Overhauled key settings of a number of commands. (See /docs/034_commands.txt.)
+* Added monster list for monsters in LOS (for big consoles, ASCII only)
 * Overhauled (f)iring interface, abolish (t)hrowing, output quiver in status.
 * Allow selection of equipment slots from '%' overview screen.
 * Improved butchering interface.
 * Allow searching item/monster/spell descriptions ('?\' command).
 * Added Ctrl-D as a synonym for '~' (defining macros).
 * Added commands for repeating commands ('`' and '0').
+* Added command to annotate level ('!' command).
 * Stepping into lava/deep water/zot traps requires typing "yes".
-* Ask for confirmation before stepping into dangerous traps.
+* Ask for confirmation before stepping into dangerous clouds, or traps.
 * Allow autotravel through clouds your character is immune to.
 * (W)ear and (P)ut on menus allow removal of equipped items.
 * easy_butcher won't switch away from distortion weapons.
@@ -54,8 +56,11 @@ Items
 * Disable random generation of weapons of orc slaying (allowed in randarts).
 * Allow random generation of throwing nets.
 * Make distortion only take effect on unwielding.
+* Improved autotargeting for weapons of reaching.
+* Fixed cap acquirement misbehaviour.
 * New scrolls: Holy Word, Fog.
 * Removed scrolls of forgetfulness.
+* Added potions of blood and coagulated blood.
 * Scrolls of recharging and enchant armour now prompt for an item.
 * Potions of restore ability also cancel breath delay.
 * Staves and rods of the same type can now be recognized.
@@ -76,6 +81,7 @@ Monsters
 * Draconian ghosts of xl >= 7 get the shadow dragon breath attack.
 * Angels and Daevas may appear randomly in the Abyss.
 * Holy monsters may turn neutral if the player follows a good god.
+* Unknown mimics are now consistently treated like items.
 * Beefed up demon lords.
 * Began changing monster resists to have several levels, like the player's.
 * Removed electricity resistance from several monsters.
@@ -99,12 +105,16 @@ Monsters
 
 Levels
 ------
+* Added transparent wall types.
+* Guarantee Slime Pits rune.
+* Slime Pits: Modify stone walls at royal jelly's death.
+* Slime Pits are now on Lair:8-10.
 * Several new vaults.
 * Treat adjacent doors as one (large) gate, opening/closing together.
 * Removed amnesia traps.
 * Introduced shafts.
 * Added blood spattering.
-* Slime Pits are now on Lair:8-10.
+* Allow for fountains of blood in vault generation.
 
 Tiles
 -----
