@@ -355,7 +355,11 @@ A very large and fat hairy bee.
 %%%%
 butterfly
 
-A large multicoloured butterfly with beautifully patterned wings.
+A large multicoloured butterfly with beautifully patterned wings, fluttering
+incongruously through the darkness of the cave.
+
+"Happiness is a butterfly, which when pursued, is always just beyond your grasp, but which, if you will sit down quietly, may alight upon youâ"
+     -Nathaniel Hawthorne
 %%%%
 centaur
 
@@ -522,6 +526,9 @@ Before you stands a draconian.
 dragon
 
 A great reptilian beast, covered in thick green scales and with two huge bat-like wings. Little trails of smoke spill from its toothy maw.
+
+"On the other hand, Confucius is made to say to his disciples, 'I know how birds can fly, how fishes can swim, and how animals can run.  But the runner may be snared, the swimmer may be hooked, and the flyer may be shot by the arrow.  But there is the dragon.  I cannot tell how he mounts on the wind through the clouds, and rises to heaven.  Today I have seen Lao-tsze, and can only compare him to the dragon.'"
+     -Life of Confucius
 %%%%
 earth elemental
 
@@ -1179,7 +1186,11 @@ A small marsupial.  Don't call it a rat.
 %%%%
 rakshasa
 
-A type of demon who comes to the material world in search of power and knowledge. Rakshasas are experts in the art of illusion, among other things.
+A demon in the form of a tiger who comes to the material world in search of power and knowledge. Rakshasas are experts in the art of illusion, and are simultaneously intelligent and cruel.
+
+"He is brilliant, yet utterly corrupt.  Like rotten mackerel by moonlight,
+he both shines and stinks."
+     -John Randolph
 %%%%
 rat
 
