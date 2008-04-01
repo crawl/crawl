@@ -3974,11 +3974,16 @@ void give_armour(monsters *mon, int level)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
-    case MONS_TIAMAT:
     case MONS_WIZARD:
         item_race = MAKE_ITEM_NO_RACE;
         mitm[bp].base_type = OBJ_ARMOUR;
         mitm[bp].sub_type = ARM_ROBE;
+        break;
+
+    case MONS_TIAMAT:
+        item_race = MAKE_ITEM_NO_RACE;
+        mitm[bp].base_type = OBJ_ARMOUR;
+        mitm[bp].sub_type = ARM_GOLD_DRAGON_ARMOUR;
         break;
 
     case MONS_ORC_WIZARD:
