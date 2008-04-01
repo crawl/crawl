@@ -8,7 +8,7 @@ Breaks saves and bones compatibility.
 Interface
 ---------
 * Overhauled key settings of a number of commands. (See /docs/034_commands.txt.)
-* Added monster list for monsters in LOS (for big consoles, ASCII only)
+* Added monster list for monsters in LOS (for big consoles, ASCII only).
 * Overhauled (f)iring interface, abolish (t)hrowing, output quiver in status.
 * Allow selection of equipment slots from '%' overview screen.
 * Improved butchering interface.
@@ -66,7 +66,7 @@ Items
 * Staves and rods of the same type can now be recognized.
 * Manuals are now visibly different from spell books.
 * Improved artefact autoinscriptions.
-* Several new pre-defined artefacts.
+* Several new pre-defined (un)randarts.
 * Warn before putting on items of potentially fatal stat drain.
 * Added message for returning weapons NOT returning.
 * Equipped randarts can now actually cause berserk.
@@ -97,7 +97,6 @@ Monsters
 * Give a message for kills out of LOS.
 * No experience for killing summoned monsters.
 * Monster blink is now restricted to their LOS.
-* Made undetected mimic description match that of items.
 * Introduced fish zombies (vault defined only).
 * Fixed several spell/invocation attacks not waking monsters.
 * Improved monster shields.
@@ -126,7 +125,7 @@ Tiles
 * Show travel exclusion in tile map and mini-map.
 * Added MP colour bar.
 * Fixed ghosts changing icons between saves.
-* Fixed Detect creatures revealing exact monster type.
+* Fixed Detect creatures revealing exact monster type. 
 * Mimics posing as autopickable items now get marked as such.
 * Clicking on items now respects warning inscriptions.
 * Added item brand for plants.
@@ -136,8 +135,8 @@ Tiles
 Miscellaneous
 -------------
 * New scoring system.
-* Train stealth by sneaking around sleeping monsters.
-* Train T&D by setting off traps.
+* Train Stealth by sneaking around sleeping monsters.
+* Train Traps & Doors by setting off traps.
 * Distortion effect now cancels butchering.
 * Better feedback on Detect Traps.
 * Identify post-mortem inventory in morgue.txt.
