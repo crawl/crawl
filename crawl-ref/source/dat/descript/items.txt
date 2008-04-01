@@ -74,7 +74,17 @@ The skins of several animals.
 %%%%
 apple
 
-A delicious red or green fruit.
+A delicious, firm red fruit, tart to the tongue.
+
+"MINERVA was the goddess of wisdom, but on one occasion she 
+did a very foolish thing; she entered into competition with 
+Juno and Venus for the prize of beauty. It happened thus: 
+At the nuptials of Peleus and Thetis all the gods were 
+invited with the exception of Eris, or Discord. Enraged 
+at her exclusion, the goddess threw a golden apple among 
+the guests, with the inscription, 'For the fairest.'"
+
+	-Bullfinch's Mythology, Chap. XXVII. a.
 %%%%
 apricot
 
@@ -378,6 +388,9 @@ A cloth cloak.
 club
 
 A heavy piece of wood.
+
+"Speak softly and carry a big stick."
+	-Theodore Roosevelt
 %%%%
 corpse
 
@@ -556,6 +569,14 @@ wanted to.
 gold piece
 
 A pile of glittering gold coins.
+
+"Here it was that the ambassadors of the Samnites, finding him 
+boiling turnips in the chimney corner, offered him a present of 
+gold; but he sent them away with this saying; that he, who was 
+content with such a supper, had no need of gold; and that he 
+thought it more honourable to conquer those who possessed the 
+gold, than to possess the gold itself."
+	-Plutarch, "Marcus Cato"
 %%%%
 grape
 

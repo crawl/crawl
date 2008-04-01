@@ -38,7 +38,9 @@ A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
 Blork the Orc
 
-A particularly fat and ugly orc.
+A particularly fat and ugly orc.  He seems to have scavenged 
+a pair of rainbow-colored suspenders from somewhere.  They're
+not helping.
 %%%%
 Blue Death
 
@@ -873,7 +875,13 @@ about it.
 %%%%
 imp
 
-A small, ugly minor demon.
+A small, ugly minor demon.  Its fanged maw seems locked in a permanent
+malign grin, and its horns protrude obscenely from its scaly pate.
+
+"The Devil, too, sometimes steals human children; it is not infrequent 
+for him to carry away infants within the first six weeks after birth, 
+and to substitute in their place imps."
+	-Martin Luther
 %%%%
 insubstantial wisp
 
@@ -903,7 +911,18 @@ A small, dog-like scavenger. Packs of these creatures roam the underworld, searc
 %%%%
 jelly
 
-A pulsating mass of acidic protoplasm. It can and will eat almost anything, and grows a little each time...
+A pulsating mass of acidic protoplasm. It can and will eat almost 
+anything, and grows a little each time...
+
+"Beware of the Blob!
+It creeps 
+And leaps
+and glides and slides 
+Across the floor 
+Right through the door 
+And all around the wall, 
+A splotch, a blotch..."
+	-Burt Bacharach, "Beware of the Blob"
 %%%%
 jellyfish
 
@@ -1495,7 +1514,15 @@ A huge animated wood statue.
 %%%%
 worm
 
-A giant worm, with unusually large teeth.
+A giant worm, glistening with slime, with unusually large teeth.
+You find yourself surprised that a worm should have teeth at all.
+
+'While the angels, all pallid and wan,	 
+  Uprising, unveiling, affirm	 
+That the play is the tragedy, "Man,"	 
+  And its hero, the Conqueror Worm.'
+
+	-Edgar Allen Poe
 %%%%
 wraith
 
