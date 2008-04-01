@@ -44,9 +44,22 @@
 #include <conio.h>
 #endif
 
-
 static struct spell_desc spelldata[] = {
 #include "spl-data.h"
+};
+
+// Dummy value used when seeking on SPELL_NO_SPELL.
+static spell_desc spell_of_bugginess =
+{
+    SPELL_NO_SPELL,
+    "Mega-Ultra-Super Ray of Bugginess",
+    SPTYP_NONE,
+    SPFLAG_NONE,
+    0,
+    0,
+    NULL,
+    false,
+    false
 };
 
 static int spell_list[NUM_SPELLS];
@@ -832,7 +845,7 @@ int spell_type2skill(unsigned int spelltype)
 static spell_desc *seekspell(spell_type spell)
 {
     const int index = spell_list[spell];
-    return (index != -1? &spelldata[index] : NULL);
+    return (index != -1? &spelldata[index] : &spell_of_bugginess);
 }
 
 static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),

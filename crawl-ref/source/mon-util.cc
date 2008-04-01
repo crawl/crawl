@@ -1890,7 +1890,7 @@ bool ms_direct_nasty(spell_type monspell)
 // the player is not in sight.
 bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
 {
-    if (ms_waste_of_time( mon, monspell ))
+    if (monspell == SPELL_NO_SPELL || ms_waste_of_time( mon, monspell ))
         return (false);
 
     switch (monspell)
@@ -2075,6 +2075,10 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
         break;
 
+    case SPELL_NO_SPELL:
+        ret = true;
+        break;
+        
     default:
         break;
     }
