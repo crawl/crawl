@@ -649,14 +649,19 @@ static void _fire_monster_death_event(monsters *monster,
                                       killer_type killer,
                                       int i)
 {
-    dungeon_events.fire_event(
-        dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
-                  monster_index(monster), killer));
+    // Banished monsters aren't technically dead, so no death event
+    // for them.
+    if (killer != KILL_RESET)
+    {
+        dungeon_events.fire_event(
+            dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
+                      monster_index(monster), killer));
 
-    if (monster->type == MONS_ROYAL_JELLY)
-        apply_to_level( level_id(BRANCH_SLIME_PITS, 6),
-                        true,
-                        _slime_pit_enable_teleport_control );
+        if (monster->type == MONS_ROYAL_JELLY)
+            apply_to_level( level_id(BRANCH_SLIME_PITS, 6),
+                            true,
+                            _slime_pit_enable_teleport_control );
+    }
 }
 
 void monster_die(monsters *monster, killer_type killer, int i, bool silent)
