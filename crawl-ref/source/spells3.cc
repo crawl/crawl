@@ -1041,8 +1041,9 @@ void manage_halo()
         {
             int posx = you.x_pos + x;
             int posy = you.y_pos + y;
+            int dist = _inside_circle(posx, posy, radius);
 
-            if (_inside_circle(posx, posy, radius))
+            if (dist != -1)
             {
                 monster = mgrd[posx][posy];
 
