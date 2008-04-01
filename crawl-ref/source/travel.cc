@@ -2927,6 +2927,11 @@ level_id level_id::current()
     return id;
 }
 
+int level_id::absdepth() const
+{
+    return absdungeon_depth(branch, depth);
+}
+
 level_id level_id::get_next_level_id(const coord_def &pos)
 {
     int gridc = grd[pos.x][pos.y];

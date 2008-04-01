@@ -83,6 +83,14 @@ void restore_game(void);
 
 bool apply_to_all_dungeons(bool (*applicator)());
 
+class level_id;
+
+bool apply_to_level(const level_id &level, bool preserve_current,
+                    bool (*applicator)());
+
+bool is_existing_level(const level_id &level);
+
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: ouch

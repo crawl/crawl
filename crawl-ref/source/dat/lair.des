@@ -786,7 +786,7 @@ NSUBST:  P = O / *|
 SHUFFLE: ([{ 
 LFLAGS:  no_tele_control
 MARKER:  X = lua:mons_dies_change_flags { \
-             level_flags="!no_tele_control", mon_name="royal jelly", \
+             mon_name="royal jelly", \
              trigger=slime_wall_morph \
          }
 SUBST:  X = .

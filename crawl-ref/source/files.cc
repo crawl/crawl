@@ -1475,62 +1475,94 @@ void restore_game(void)
     }
 }
 
+static void _restore_level(const level_id &original)
+{
+    // Reload the original level.
+    you.where_are_you = original.branch;
+    you.your_level = original.absdepth();
+    you.level_type = original.level_type;
+    
+    load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
+          you.level_type, you.your_level, you.where_are_you );
+}
+
+// Given a level in the dungeon (i.e. level_type == LEVEL_DUNGEON),
+// returns true if the level has been created already in this game.
+// Asserts if the level_type is not LEVEL_DUNGEON.
+bool is_existing_level(const level_id &level)
+{
+    ASSERT(level.level_type == LEVEL_DUNGEON);
+    return (tmp_file_pairs[level.absdepth()][level.branch]);
+}
+
+// Applies an operation (applicator) after switching to the specified level.
+// If preserve_current is true, will reload the original level after
+// modifying the target level.
+//
+// If the target level has not already been visited by the player, this
+// function will assert.
+//
+bool apply_to_level(const level_id &level, bool preserve_current,
+                    bool (*applicator)())
+{
+    ASSERT(is_existing_level(level));
+    
+    const level_id original = level_id::current();
+    if (level != original)
+    {
+        you.where_are_you = level.branch;
+        you.your_level = level.absdepth();
+        you.level_type = level.level_type;
+    
+        // Load the dungeon level...
+        load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
+              LEVEL_DUNGEON, original.absdepth(),
+              original.branch );
+    }
+
+    // Apply the change.
+    const bool result = applicator();
+
+    if (level != original)
+    {
+        // And save it back.
+        save_level(you.your_level, you.level_type, you.where_are_you);
+    
+        if (preserve_current)
+            _restore_level(original);
+    }
+
+    return (result);
+}
+
 bool apply_to_all_dungeons(bool (*applicator)())
 {
-    const branch_type original_branch = you.where_are_you;
-    const int original_level = you.your_level;
-    const level_area_type original_type = you.level_type;
-
-    branch_type last_visited_branch = original_branch;
-    int last_visited_level = original_level;
-    const coord_def old_pos(you.pos());
+    const level_id original = level_id::current();
 
     // Apply to current level, then save it out.
     bool success = applicator();
-    save_level(original_level, original_type, original_branch);
-
-    you.level_type = LEVEL_DUNGEON;
+    save_level(original.absdepth(), original.level_type, original.branch);
 
     for ( int i = 0; i < MAX_LEVELS; ++i )
     {
         for ( int j = 0; j < NUM_BRANCHES; ++j )
         {
-            if ( tmp_file_pairs[i][j] )
-            {
-                you.your_level = i;
-                you.where_are_you = static_cast<branch_type>(j);
+            const branch_type br = static_cast<branch_type>(j);
+            const level_id thislevel(br, subdungeon_depth(br, i));
 
-                // Don't apply to the original level - already done up top.
-                if ( original_type == you.level_type &&
-                     original_level == you.your_level &&
-                     original_branch == you.where_are_you )
-                    continue;
+            if (!is_existing_level(thislevel))
+                continue;
+            
+            // Don't apply to the original level - already done up top.
+            if (original == thislevel)
+                continue;
 
-                // Load the dungeon level...
-                load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
-                      LEVEL_DUNGEON, last_visited_level,
-                      last_visited_branch );
-
-                // Modify it...
-                if ( applicator() )
-                    success = true;
-
-                // And save it back.
-                save_level(you.your_level, LEVEL_DUNGEON, you.where_are_you);
-
-                last_visited_branch = you.where_are_you;
-                last_visited_level = you.your_level;
-            }
+            if (apply_to_level(thislevel, false, applicator))
+                success = true;
         }
     }
 
-    // Reload the original level.
-    you.where_are_you = original_branch;
-    you.your_level = original_level;
-    you.level_type = original_type;
-
-    load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
-          original_type, original_level, original_branch );
+    _restore_level(original);
 
     return success;
 }

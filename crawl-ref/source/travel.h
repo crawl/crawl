@@ -260,6 +260,8 @@ public:
         return (branch < id.branch) || (branch==id.branch && depth < id.depth);
     }
 
+    int absdepth() const;
+
     void save(writer&) const;
     void load(reader&);
 };

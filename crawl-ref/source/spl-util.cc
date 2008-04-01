@@ -114,10 +114,10 @@ spell_type spell_by_name(std::string name, bool partial_match)
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type type = static_cast<spell_type>(i);
-        const char *sptitle = spell_title(type);
-        if (!sptitle)
+        if (!is_valid_spell(type))
             continue;
-
+        
+        const char *sptitle = spell_title(type);
         const std::string spell_name = lowercase_string(sptitle);
 
         if (spell_name.find(name) != std::string::npos)

@@ -38,6 +38,7 @@
 #include "describe.h"
 #include "dgnevent.h"
 #include "fight.h"
+#include "files.h"
 #include "ghost.h"
 #include "hiscores.h"
 #include "it_use2.h"
@@ -639,6 +640,25 @@ static bool _is_mons_mutator_or_rotter(monsters *mons)
     return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT);
 }
 
+static bool _slime_pit_enable_teleport_control()
+{
+    return unset_level_flags(LFLAG_NO_TELE_CONTROL);
+}
+
+static void _fire_monster_death_event(monsters *monster,
+                                      killer_type killer,
+                                      int i)
+{
+    dungeon_events.fire_event(
+        dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
+                  monster_index(monster), killer));
+
+    if (monster->type == MONS_ROYAL_JELLY)
+        apply_to_level( level_id(BRANCH_SLIME_PITS, 6),
+                        true,
+                        _slime_pit_enable_teleport_control );
+}
+
 void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 {
     if (monster->type == -1)
@@ -1202,9 +1222,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         }
     }
 
-    dungeon_events.fire_event(
-        dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
-                  monster_index(monster), killer));
+    _fire_monster_death_event(monster, killer, i);
 
     const coord_def mwhere = monster->pos();
     if (drop_items)
@@ -1217,7 +1235,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         view_update_at(mwhere);
         update_screen();
     }
-}                                                   // end monster_die
+}
 
 void monster_cleanup(monsters *monster)
 {

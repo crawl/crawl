@@ -73,8 +73,10 @@ function ChangeFlags:new(pars)
   pars.branch_flags = pars.branch_flags or ""
   pars.msg          = pars.msg          or ""
 
-  if not (pars.level_flags ~= "" or pars.branch_flags ~= "") then
-    error("Must provide at least one of level_flags or branch_flags.")
+  if pars.level_flags == "" and pars.branch_flags == ""
+    and not pars.trigger
+  then
+    error("Must provide at least one of level_flags, branch_flags, or trigger.")
   end
 
   local cf = self:_new()
