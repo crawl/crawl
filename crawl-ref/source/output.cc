@@ -876,11 +876,13 @@ monster_pane_info::less_than(const monster_pane_info& m1,
     else if (m1.m_mon->type > m2.m_mon->type)
         return false;
 
+#if 0 // for now, sort brands together.
     // By descending brands, so no brands sorts to the end
     if (m1.m_brands > m2.m_brands)
         return true;
     else if (m1.m_brands < m2.m_brands)
         return false;
+#endif
 
     return false;
 }
@@ -892,9 +894,10 @@ monster_pane_info::to_string(
     int& desc_color) const
 {
     std::ostringstream out;
+
     if (count == 1)
     {
-        out << mons_type_name(m_mon->type, DESC_CAP_A);
+        out << mons_type_name(m_mon->type, DESC_PLAIN);
     }
     else
     {
@@ -907,22 +910,16 @@ monster_pane_info::to_string(
         << m_mon->hit_points << "/" << m_mon->max_hit_points;
 #endif
 
-    if (m_mon->has_ench(ENCH_BERSERK))
-        out << " (berserk)";
-    else if (mons_looks_stabbable(m_mon))
-        out << " (resting)";
-    else if (mons_looks_distracted(m_mon))
-        out << " (distracted)";
-    else if (m_mon->has_ench(ENCH_INVIS))
-        out << " (invisible)";
-
-    // Damage (maybe too distracting/verbose?)
+    if (count == 1)
     {
-        std::string damage_desc;
-        mon_dam_level_type damage_level;
-        mons_get_damage_level(m_mon, damage_desc, damage_level);
-        if (damage_level != MDAM_OKAY)
-            out << " (" << damage_desc << ")";
+        if (m_mon->has_ench(ENCH_BERSERK))
+            out << " (berserk)";
+        else if (mons_looks_stabbable(m_mon))
+            out << " (resting)";
+        else if (mons_looks_distracted(m_mon))
+            out << " (distracted)";
+        else if (m_mon->has_ench(ENCH_INVIS))
+            out << " (invisible)";
     }
 
     // Friendliness
@@ -958,30 +955,69 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
     }
     // Postcondition: all monsters in [start, end) are "equal"
 
-    // Print one of the monsters we've found; shouldn't matter which.
+    // Print info on the monsters we've found
     {
-        const monster_pane_info& minfo = mons[start]; // arbitrary
-        const monsters* mon = minfo.m_mon;
+        int printed = 0;
 
-        unsigned int glyph;
-        unsigned short glyph_color;
-        get_mons_glyph(mon, &glyph, &glyph_color);
-        textcolor(glyph_color);
-        cprintf( stringize_glyph(glyph).c_str() );
+        // one glyph for each monster
+        for (unsigned int i_mon=start; i_mon<end; i_mon++)
+        {
+            unsigned int glyph;
+            unsigned short glyph_color;
+            get_mons_glyph(mons[i_mon].m_mon, &glyph, &glyph_color);
+            textcolor(glyph_color);
+            cprintf( stringize_glyph(glyph).c_str() );
+            ++ printed;
+        }
+        textcolor(LIGHTGREY);
 
         const int count = (end - start);
 
-        textcolor(LIGHTGREY);
-        cprintf(" - ");
+        if (count == 1)
+        {
+            // Print an "icon" representing damage level
+            std::string damage_desc;
+            mon_dam_level_type damage_level;
+            mons_get_damage_level(mons[start].m_mon, damage_desc, damage_level);
+            int dam_color;
+            switch (damage_level)
+            {
+                // NOTE: in os x, light versions of foreground colors are OK,
+                // but not background colors.  So stick wth standards.
+            case MDAM_DEAD:
+            case MDAM_ALMOST_DEAD:
+            case MDAM_HORRIBLY_DAMAGED:   dam_color = RED;       break;
+            case MDAM_HEAVILY_DAMAGED:    dam_color = MAGENTA;   break;
+            case MDAM_MODERATELY_DAMAGED: dam_color = BROWN;     break;
+            case MDAM_LIGHTLY_DAMAGED:    dam_color = GREEN;     break;
+            case MDAM_OKAY:               dam_color = GREEN;     break;
+            default:                      dam_color = CYAN; break;
+            }
+            cprintf(" ");
+            textbackground(dam_color);
+            textcolor(dam_color);
+            cprintf(" ");
+            textcolor(LIGHTGREY);
+            textbackground(BLACK);
+            cprintf(" ");
+            printed += 3;
+        }
+        else
+        {
+            textcolor(LIGHTGREY);
+            cprintf("  ");
+            printed += 2;
+        }
 
-        int desc_color;
-        std::string desc;
-        minfo.to_string(count, desc, desc_color);
-        textcolor(desc_color);
-
-        // "-4" because 4 chars have been printed already
-        desc.resize(crawl_view.mlistsz.x-4, ' ');
-        cprintf("%s", desc.c_str());
+        if (printed < crawl_view.mlistsz.x)
+        {
+            int desc_color;
+            std::string desc;
+            mons[start].to_string(count, desc, desc_color);
+            textcolor(desc_color);
+            desc.resize(crawl_view.mlistsz.x-printed, ' ');
+            cprintf("%s", desc.c_str());
+        }
     }
 
     // Set start to the next un-described monster
@@ -991,10 +1027,6 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
 
 void update_monster_pane()
 {
-    // TODO:
-    // - display rough health (color, or text?)
-    // - fix up issues with the sorting (see monster_pane_info::less_than)
-
     const int start_row = 1;
     const int max_print = crawl_view.mlistsz.y;
 
@@ -1014,7 +1046,8 @@ void update_monster_pane()
 
     // Print the monsters!
     std::string blank; blank.resize(crawl_view.mlistsz.x, ' ');
-    for (int i_print = 0, i_mons=0; i_print < max_print; ++i_print)
+    int i_mons = 0;
+    for (int i_print = 0; i_print < max_print; ++i_print)
     {
         cgotoxy(1, start_row+i_print, GOTO_MLIST);
         // i_mons is incremented by _print_next_monster_desc
@@ -1024,6 +1057,12 @@ void update_monster_pane()
             cprintf("%s", blank.c_str());
     }
 
+    if (i_mons < (int)mons.size())
+    {
+        // Didn't get to all of them.
+        cgotoxy(crawl_view.mlistsz.x-4, crawl_view.mlistsz.y, GOTO_MLIST);
+        cprintf(" ... ");
+    }
 }
 #else
 // FIXME: implement this for tiles
