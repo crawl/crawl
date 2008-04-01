@@ -1056,7 +1056,7 @@ bool bless_follower(monsters* follower,
 
     is_near = mons_near(mon);
 
-    pronoun = mons_is_unique(mon->type) ? "" : "your ";
+    pronoun = (mons_is_unique(mon->type)) ? "" : "your ";
     blessed = (is_near) ? mon->name(DESC_PLAIN).c_str() : "follower";
 
     if (chance == 0)
