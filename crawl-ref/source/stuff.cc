@@ -920,7 +920,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer,
             mprf("[Y]es%s, [N]o or [Q]uit only, please.",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
     }
-}    
+}
 
 // More accurate than distance() given the actual movement geometry -- bwr
 int grid_distance( int x, int y, int x2, int y2 )
@@ -974,7 +974,7 @@ bool player_can_hear(int x, int y)
 // Returns true if inside the area the player can move and dig (ie exclusive)
 bool in_bounds( int x, int y )
 {
-    return (x > X_BOUND_1 && x < X_BOUND_2 
+    return (x > X_BOUND_1 && x < X_BOUND_2
             && y > Y_BOUND_1 && y < Y_BOUND_2);
 }
 
