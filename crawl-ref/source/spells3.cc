@@ -214,7 +214,7 @@ int cast_smiting(int power, dist &beam)
         hurt_monster(monster, 7 + (random2(power) * 33 / 191));
 
         if (mons_friendly(monster))
-            did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
+            did_god_conduct(DID_ATTACK_FRIEND, 5, monster);
 
         behaviour_event( monster, ME_ANNOY, MHITYOU );
 
@@ -268,7 +268,7 @@ int airstrike(int power, dist &beam)
             hurt_monster(monster, hurted);
 
             if (mons_friendly(monster))
-                did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
+                did_god_conduct(DID_ATTACK_FRIEND, 5, monster);
 
             behaviour_event(monster, ME_ANNOY, MHITYOU, you.x_pos, you.y_pos);
 
