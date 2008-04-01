@@ -1950,7 +1950,7 @@ int mouse_get_mode()
 
 void gui_init_view_params(coord_def &termsz, coord_def &viewsz,
                           coord_def &msgp, coord_def &msgsz,
-                          coord_def &hudp, coord_def &hudsz)
+                          coord_def &hudp, const coord_def &hudsz)
 {
     // TODO enne - set these other params too?
     msgsz.x = msg_x;
