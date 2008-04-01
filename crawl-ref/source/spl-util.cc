@@ -52,7 +52,7 @@ static int spell_list[NUM_SPELLS];
 
 #define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
 
-static struct spell_desc *seekspell(spell_type spellid);
+static struct spell_desc *_seekspell(spell_type spellid);
 static bool cloud_helper(int (*func)(int, int, int, int, cloud_type,
                                      kill_category),
                          int x, int y, int pow, int spread_rate,
@@ -83,10 +83,12 @@ void init_spell_name_cache()
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type type = static_cast<spell_type>(i);
-        const char *sptitle = spell_title(type);
-        if (!sptitle)
-            continue;
 
+        if (!is_valid_spell(type))
+            continue;
+        
+        const char *sptitle = spell_title(type);
+        ASSERT(sptitle);
         const std::string spell_name = lowercase_string(sptitle);
         spell_name_cache[spell_name] = type;
     }
@@ -220,26 +222,26 @@ int spell_hunger(spell_type which_spell)
 
 bool spell_needs_tracer(spell_type spell)
 {
-    return (seekspell(spell)->ms_needs_tracer);
+    return (_seekspell(spell)->ms_needs_tracer);
 }
 
 bool spell_needs_foe(spell_type spell)
 {
-    return (!seekspell(spell)->ms_utility);
+    return (!_seekspell(spell)->ms_utility);
 }
 
 // applied to spell misfires (more power = worse) and triggers
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)
 {
-    return (seekspell(which_spell)->level);
+    return (_seekspell(which_spell)->level);
 }
 
 // applied in naughties (more difficult = higher level knowledge = worse)
 // and triggers for Sif acting (same reasoning as above, just good) {dlb}
 int spell_difficulty(spell_type which_spell)
 {
-    return (seekspell(which_spell)->level);
+    return (_seekspell(which_spell)->level);
 }
 
 int spell_levels_required( spell_type which_spell )
@@ -262,23 +264,23 @@ int spell_levels_required( spell_type which_spell )
 
 unsigned int get_spell_flags( spell_type which_spell )
 {
-    return (seekspell(which_spell)->flags);
+    return (_seekspell(which_spell)->flags);
 }
 
 const char *get_spell_target_prompt( spell_type which_spell )
 {
-    return (seekspell(which_spell)->target_prompt);
+    return (_seekspell(which_spell)->target_prompt);
 }
 
 bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 {
-    return (seekspell(which_spell)->disciplines & which_discipline);
+    return (_seekspell(which_spell)->disciplines & which_discipline);
 }
 
 //jmf: next two for simple bit handling
 unsigned int get_spell_disciplines(spell_type spell)
 {
-    return (seekspell(spell)->disciplines);
+    return (_seekspell(spell)->disciplines);
 }
 
 int count_bits(unsigned int bits)
@@ -297,7 +299,7 @@ int count_bits(unsigned int bits)
 
 const char *spell_title(spell_type spell)
 {
-    return (seekspell(spell)->title);
+    return (_seekspell(spell)->title);
 }
 
 
@@ -876,11 +878,16 @@ int spell_type2skill(unsigned int spelltype)
  */
 
 //jmf: simplified; moved init code to top function, init_spell_descs()
-static spell_desc *seekspell(spell_type spell)
+static spell_desc *_seekspell(spell_type spell)
 {
     const int index = spell_list[spell];
     ASSERT(index != -1);
     return (&spelldata[index]);
+}
+
+bool is_valid_spell(spell_type spell)
+{
+    return (spell < NUM_SPELLS && spell_list[spell] != -1);
 }
 
 static bool cloud_helper(int (*func)(int, int, int, int, cloud_type,
@@ -899,5 +906,5 @@ static bool cloud_helper(int (*func)(int, int, int, int, cloud_type,
 
 int spell_power_cap(spell_type spell)
 {
-    return seekspell(spell)->power_cap;
+    return _seekspell(spell)->power_cap;
 }

@@ -61,6 +61,8 @@ struct spell_desc
 };
 
 
+bool is_valid_spell(spell_type spell);
+
 //* * called from: acr
 void init_spell_descs(void);
 
