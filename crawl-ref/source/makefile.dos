@@ -35,7 +35,7 @@ INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
 
 WORKDIR := $(shell cd)
 
-CFWARN   := -Wall -Wwrite-strings -Wshadow -Werror -pedantic
+CFWARN   := -Wall -Wwrite-strings -Wshadow -pedantic
 CFOTHERS := -D$(OS_TYPE) $(EXTRA_FLAGS) -fsigned-char -fstrict-aliasing \
 			-DCLUA_BINDINGS
 

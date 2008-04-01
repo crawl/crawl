@@ -39,10 +39,7 @@ FSQLLIBA := $(SQLLIB)\$(SQLIBA)
 LIB = -static -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
 INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
 
-CFWARN := -Wall -Wwrite-strings \
-			-Wshadow \
-			-Werror \
-		    -pedantic
+CFWARN := -Wall -Wwrite-strings -Wshadow -pedantic
 
 CFOTHERS := -fsigned-char \
 		-fstrict-aliasing \
