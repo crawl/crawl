@@ -105,7 +105,7 @@ void update_turn_count()
     // FIXME: Create some kind of layout manager class so we can
     // templatise the heads-up display layout and stop hardcoding
     // these coords.
-    cgotoxy(22, 10, GOTO_STAT);
+    cgotoxy(25, 8, GOTO_STAT);
     textcolor(LIGHTGREY);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
