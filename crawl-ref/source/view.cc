@@ -4680,7 +4680,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     buffy[bufcount + 1] = DARKGREY;
 
                     if (Options.colour_map)
-		    {
+                    {
                         buffy[bufcount + 1] = 
                             colour_code_map(gc.x, gc.y, Options.item_colour);
                     }

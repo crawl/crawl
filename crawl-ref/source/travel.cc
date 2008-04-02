@@ -227,7 +227,7 @@ static bool is_excluded(const coord_def &p,
     return (false);
 }
 
-inline bool is_excluded(const coord_def &p)
+bool is_excluded(const coord_def &p)
 {
     return is_excluded(p, curr_excludes);
 }

@@ -615,11 +615,17 @@ void handle_delay( void )
                     mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
                     delay.parm2 = 99; // don't give the message twice
 
-                    if (you.species != SP_VAMPIRE
-                        && you.is_undead != US_UNDEAD
+                    if (you.is_undead != US_UNDEAD
                         && you.mutation[MUT_SAPROVOROUS] < 3)
                     {
                         xom_check_corpse_waste();
+                    }
+                    // Vampires won't continue bottling rotting corpses.
+                    if (can_bottle_blood_from_corpse(mitm[delay.parm1].plus))
+                    {
+                        mpr("You stop bottling this corpse's foul smelling "
+                            "blood!");
+                        delay.duration = 0;
                     }
                 }
 

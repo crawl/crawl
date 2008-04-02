@@ -157,6 +157,9 @@ void turn_corpse_into_chunks( item_def &item )
         create_monster_hide(mons_class);
 }
 
+// Deliberately don't check for rottenness here, so this check
+// can also be used to verify whether you *could* have bottled
+// a now rotten corpse.
 bool can_bottle_blood_from_corpse(int mons_type)
 {
     if (you.species != SP_VAMPIRE || you.experience_level < 6
@@ -172,6 +175,8 @@ bool can_bottle_blood_from_corpse(int mons_type)
     return (false);
 }
 
+// Maybe potions should automatically merge into those already on the floor,
+// or the player's inventory.
 void turn_corpse_into_blood_potions( item_def &item )
 {
     ASSERT( item.base_type == OBJ_CORPSES );
@@ -193,8 +198,8 @@ void turn_corpse_into_blood_potions( item_def &item )
     // lower number of potions obtained from contaminated chunk type corpses
     if (mons_corpse_effect( mons_class ) == CE_CONTAMINATED)
     {
-        item.quantity /= random2(3);
-    
+        item.quantity /= (random2(3) + 1);
+
         if (item.quantity < 1)
             item.quantity = 1;
     }
