@@ -245,7 +245,7 @@ Sigmund
 An evil and spry old man, whose eyes twinkle with sadness, and also with madness. Sigmund 
 wields a nasty-looking scythe.
 
-"But Sigmund turned him about, and he said: 'What aileth thee, son?  Shall ouf life-days 
+"But Sigmund turned him about, and he said: 'What aileth thee, son?  Shall our life-days 
 never be merry, and our labour never be done?'  But Sinfiotli said: 'I have looked, and lo,
 there is death in the cup.'
 
@@ -255,7 +255,7 @@ And the noise and the glee of the people as the sound of the wild woods were
 And the blossoming boughs of the Branstock were the wild trees waving about;
 
 So he said: 'Well seen, my fosterling; let the lip then strain it out.'"
-	-William Morris, _The STory of Sigurd the Volsung and the Fall of the Niblungs. 1891.
+	-William Morris, _The Story of Sigurd the Volsung and the Fall of the Niblungs. 1891.
 %%%%
 Snorg
 
@@ -424,13 +424,13 @@ clay golem
 
 A huge animated clay statue.
 
-"Once upon a time a great Cabbalist lived in Prague called the Rabbi LÃ¶;
+"Once upon a time a great Cabbalist lived in Prague called the Rabbi Lšw
 he made a human figure of clay, and left a small aperture in the lesser 
 brain in which he laid a parchment with the unutterable name of God 
 written on it. The clod immediately arose and was a man; he performed 
 all the duties of a servant for his creator, he fetched water, and hewed 
 wood.  All through the Jews quarter he was known as the Golem of the great 
-Rabbi LÃw. Every Friday evening the Rabbi took the parchment out of his 
+Rabbi Lšw. Every Friday evening the Rabbi took the parchment out of his 
 head, and he was clay until Sunday morning. Once the Rabbi forgot this 
 duty, all were in the Synagogue, the Sabbath hymn was begun, when all the 
 women and children in the assembly started and screamed out, 'the Golem!
