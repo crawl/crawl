@@ -366,7 +366,18 @@ incongruously through the darkness of the cave.
 centaur
 
 A hybrid with the torso of a human atop the body of a large horse.
-"When Peleus, some distance away, saw him torn apart by the frightful wound he shouted: “Accept this tribute to the dead, at least, Crantor, dearest of youths, ” and with his powerful arm, he hurled his ash spear, at full strength, at Demoleon.  It ruptured the ribcage, and stuck quivering in the bone. The centaur pulled out the shaft minus its head (he tried with difficulty to reach that also) but the head was caught in his lung. The pain itself strengthened his will: wounded, he reared up at his enemy and beat the hero down with his hooves. Peleus received the resounding blows on helmet and shield, and defending his upper arms, and controlling the weapon he held out, with one blow through the arm he pierced the bi-formed breast.'"
+
+"When Peleus, some distance away, saw him torn apart by the frightful 
+wound he shouted: 'Accept this tribute to the dead, at least, Crantor, 
+dearest of youths, �' and with his powerful arm, he hurled his ash spear, 
+at full strength, at Demoleon.  It ruptured the ribcage, and stuck 
+quivering in the bone. The centaur pulled out the shaft minus its head 
+(he tried with difficulty to reach that also) but the head was caught 
+in his lung. The pain itself strengthened his will: wounded, he reared 
+up at his enemy and beat the hero down with his hooves. Peleus received 
+the resounding blows on helmet and shield, and defending his upper arms, 
+and controlling the weapon he held out, with one blow through the arm 
+he pierced the bi-formed breast.'"
 	-Ovid, _Metamorphoses_, XII 330
 %%%%
 centaur warrior
@@ -933,7 +944,15 @@ A small, powerless larva of a killer bee.
 %%%%
 kobold
 
-Reputedly the creation of an ancient demon-god, kobolds are small goblin-like creatures with canine heads.
+No one knows where kobolds originated.  Some say they were the creation 
+of an ancient demon-god, while others think they are household spirits
+gone bad.  Kobolds look likesmall, greyish creatures with canine heads.  
+Whatever their origin, this one is not happy to see you.
+
+"The Parts Septentrionall are with these Sp'ryts Much haunted..
+About the places where they dig for Oare. The Greekes and Germans 
+call them Cobali."
+	-Heywood, Hierarch. ix. 568, circa 1635
 %%%%
 kobold demonologist
 
@@ -1038,6 +1057,15 @@ A small dragon with strangely mottled scales.
 mummy
 
 An undead figure covered in bandages and embalming fluids, compelled to walk by an ancient curse. It radiates a malign aura to those who intrude on its domain.
+
+I see Egypt and the Egyptians -- I see the pyramids and obelisks;
+I look on chisel'd histories, songs, philosophies, cut in slabs
+   of sand-stone, or on granite-blocks;
+I see at Memphis mummy-pits, containing mummies, embalm'd, swathed 
+   in linen cloth, lying there many centuries;	 
+I look on the fall'n Theban, the large-ball'd eyes, the side-drooping
+   neck, the hands folded across the breast."
+	-Walt Whitman, "Salut au Monde"
 %%%%
 mummy priest
 
