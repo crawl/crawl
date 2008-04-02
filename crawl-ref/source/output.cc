@@ -1089,9 +1089,9 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
     textcolor(LIGHTGREY);
 }
 
+#define BOTTOM_JUSTIFY_MONSTER_LIST 1
 void update_monster_pane()
 {
-    const int start_row = 1;
     const int max_print = crawl_view.mlistsz.y;
 
     // Sadly, the defaults don't leave _any_ room for monsters :(
@@ -1108,14 +1108,26 @@ void update_monster_pane()
 
     std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
 
+#if BOTTOM_JUSTIFY_MONSTER_LIST
+    // Count how many groups of monsters there are
+    unsigned int lines_needed = mons.size();
+    for (unsigned int i=1; i < mons.size(); i++)
+        if (! monster_pane_info::less_than(mons[i-1], mons[i]))
+            -- lines_needed;
+    const int skip_lines = std::max<int>(0, crawl_view.mlistsz.y-lines_needed);
+#else
+    const int skip_lines = 0;
+#endif
+
     // Print the monsters!
+
     std::string blank; blank.resize(crawl_view.mlistsz.x, ' ');
     int i_mons = 0;
     for (int i_print = 0; i_print < max_print; ++i_print)
     {
-        cgotoxy(1, start_row+i_print, GOTO_MLIST);
+        cgotoxy(1, 1+i_print, GOTO_MLIST);
         // i_mons is incremented by _print_next_monster_desc
-        if (i_mons < (int)mons.size())
+        if ((i_print >= skip_lines) && (i_mons < (int)mons.size()))
             _print_next_monster_desc(mons, i_mons);
         else
             cprintf("%s", blank.c_str());
