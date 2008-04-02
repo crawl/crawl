@@ -385,7 +385,7 @@ covers a wall with its ramifications "
 	-John Overton Choules, _The Cruise of the Steam Yacht
         North Star: A Narrative of the Excursion of Mr. Vanderbilt's
         Party to England, Russia, Denmark, France, Spain, Malta, Turkey,
-        Madeira, Etc.  1854.
+        Madeira, Etc_.  1854.
 %%%%
 chunk of flesh
 
@@ -737,7 +737,7 @@ it is frequently to be seen in the London fruit shops."
 	-John Smith, _A Dictionary of Popular Names of the Plants
         which Furnish the Natural and Acquired Wants of Man, in 
         All Matters of Domestic and General Economy: Their History,
-        Products, & Uses. 1882. 
+        Products, & Uses_. 1882. 
 %%%%
 mace
 
@@ -961,7 +961,7 @@ so sweetly in its clustered beauties of the fruit-dish as the bearded
 and rosy rambutan.
 	-Fitch Waterman Taylor, _A Voyage Round the World And Visits
         to Various Foreign Countries, in the United States Frigate 
-        Columbia.  1847.
+        Columbia_.  1847.
 %%%%
 ring mail
 
