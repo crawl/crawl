@@ -376,6 +376,16 @@ A lump of cheese.
 choko
 
 An almost tasteless green vegetable, which grows on a vine.
+
+"I ought not to omit naming a vegetable which Mr Yates placed on 
+our table, and to which he directed our attention. It was the 
+Tchu-tchu (Sechium edule) called also by the people _pepinella_. 
+It is a small gourd, very much like vegetable marrow; one seed 
+covers a wall with its ramifications "
+	-John Overton Choules, _The Cruise of the Steam Yacht
+        North Star: A Narrative of the Excursion of Mr. Vanderbilt's
+        Party to England, Russia, Denmark, France, Spain, Malta, Turkey,
+        Madeira, Etc.  1854.
 %%%%
 chunk of flesh
 
@@ -714,6 +724,20 @@ a skilled archer can use it to great effect.
 lychee
 
 A tropical fruit.
+
+"The Litchi is the most celebrated native fruit of China.  It is 
+nearly round, about an inch and a half in diameter, the shell is 
+tough, becoming brittle, of a chocolate brown colour covered all 
+over with wart-like protuberances. When fresh it is filled with a 
+white almost transparent, sweet, jelly-like pulp in which lies a 
+rather large, shining, brown seed; the pulp is of a delicious sub-acid 
+flavour when fresh.  The Chinese dry it when it becomes black like 
+a prune and thus preserve it for use throughout the year; in this state 
+it is frequently to be seen in the London fruit shops."
+	-John Smith, _A Dictionary of Popular Names of the Plants
+        which Furnish the Natural and Acquired Wants of Man, in 
+        All Matters of Domestic and General Economy: Their History,
+        Products, & Uses. 1882. 
 %%%%
 mace
 
@@ -924,6 +948,20 @@ rambutan
 
 A small but delicious tropical fruit. How it got into this dungeon is
 anyone's guess.
+
+"The rambutan (_nephelium lappaceum_) is a beautiful fruit to which 
+I have already alluded, as resembling the mammoth arbutus; and you suppose 
+them at first, when at a little distance from you, a delicious dish of 
+some tropical strawberry. But you find on inquiring into the 'particulars 
+within' the outer coat, that there is concealed beneath the red and hairy 
+covering a semi-transparent pulp of a pleasant acid taste, enveloping a 
+single oval and oblong seed. I know not but I am peculiar in my memory 
+of the beautiful fruits of the straits, but none lingers in my recollection 
+so sweetly in its clustered beauties of the fruit-dish as the bearded 
+and rosy rambutan.
+	-Fitch Waterman Taylor, _A Voyage Round the World And Visits
+        to Various Foreign Countries, in the United States Frigate 
+        Columbia.  1847.
 %%%%
 ring mail
 
