@@ -369,7 +369,7 @@ A hybrid with the torso of a human atop the body of a large horse.
 
 "When Peleus, some distance away, saw him torn apart by the frightful 
 wound he shouted: 'Accept this tribute to the dead, at least, Crantor, 
-dearest of youths, â' and with his powerful arm, he hurled his ash spear, 
+dearest of youths, ' and with his powerful arm, he hurled his ash spear, 
 at full strength, at Demoleon.  It ruptured the ribcage, and stuck 
 quivering in the bone. The centaur pulled out the shaft minus its head 
 (he tried with difficulty to reach that also) but the head was caught 
@@ -946,7 +946,7 @@ kobold
 
 No one knows where kobolds originated.  Some say they were the creation 
 of an ancient demon-god, while others think they are household spirits
-gone bad.  Kobolds look likesmall, greyish creatures with canine heads.  
+gone bad.  Kobolds look like small, greyish creatures with canine heads.  
 Whatever their origin, this one is not happy to see you.
 
 "The Parts Septentrionall are with these Sp'ryts Much haunted..
