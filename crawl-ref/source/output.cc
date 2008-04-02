@@ -47,8 +47,8 @@
 #include "transfor.h"
 #ifdef USE_TILE
  #include "tiles.h"
- #include "travel.h"
 #endif
+#include "travel.h"
 #include "view.h"
 
 static int _bad_ench_colour( int lvl, int orange, int red )
@@ -112,7 +112,6 @@ void update_turn_count()
     cprintf("%ld", you.num_turns);
 }
 
-#ifdef USE_TILE
 static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
                             int ox, int oy, unsigned short default_colour,
                             unsigned short change_colour,
@@ -133,30 +132,40 @@ static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
 
     cgotoxy(ox, oy, GOTO_STAT);
 
+    textcolor(BLACK);
     for (int cx=0; cx < width; cx++)
     {
+#ifdef USE_TILE
+        // maybe this should use textbackground too?
         textcolor(BLACK + empty_colour * 16);
 
         if (cx < disp)
             textcolor(BLACK + default_colour * 16);
-        else if (old_val > val && old_disp > disp && cx < old_disp && cx >= val)
+        else if (old_val > val && old_disp > disp && cx < old_disp)
             textcolor(BLACK + change_colour * 16);
+#else
+        textbackground(empty_colour);
 
+        if (cx < disp)
+            textbackground(default_colour);
+        else if (old_val > val && old_disp > disp && cx < old_disp)
+            textbackground(change_colour);
+#endif
         putch(' ');
     }
 
     textcolor(LIGHTGREY);
+    textbackground(BLACK);
 
     return disp;
 }
 
-void draw_mp_bar(int val, int max_val)
+void draw_mp_bar(int ox, int oy, int val, int max_val)
 {
-    const int ox = 20;
-    const int oy = 4;
     const unsigned short default_colour = BLUE;
-    const unsigned short change = LIGHTBLUE;
-    const unsigned short empty  = DARKGRAY;
+    // DARKGRAY and LIGHTBLUE don't show up for me... :-( --pld
+    const unsigned short change = CYAN;
+    const unsigned short empty  = LIGHTGRAY;
 
     static int old_val  = 0;
     static int old_disp = 0;
@@ -166,13 +175,12 @@ void draw_mp_bar(int val, int max_val)
     old_val = val;
 }
 
-void draw_hp_bar(int val, int max_val)
+void draw_hp_bar(int ox, int oy, int val, int max_val)
 {
-    const int ox = 20;
-    const int oy = 3;
     const unsigned short default_colour = GREEN;
     const unsigned short change = RED;
-    const unsigned short empty  = DARKGRAY;
+    // DARKGRAY doesn't show up for me... :-( --pld
+    const unsigned short empty  = LIGHTGRAY;
 
     static int old_val  = 0;
     static int old_disp = 0;
@@ -192,7 +200,6 @@ static int _count_digits(int val)
         return 2;
     return 1;
 }
-#endif
 
 static std::string _describe_hunger()
 {
@@ -220,7 +227,7 @@ static std::string _describe_hunger()
     }
 }
 
-static void _print_stats_mp()
+static void _print_stats_mp(int x, int y)
 {
     int mp_percent;
     if ( you.max_magic_points )
@@ -236,26 +243,22 @@ static void _print_stats_mp()
             break;
         }
     }
-    cgotoxy(8, 4, GOTO_STAT);
+    cgotoxy(x+7, y, GOTO_STAT);
 
     cprintf( "%d", you.magic_points);
 
     textcolor(LIGHTGREY);
     cprintf("/%d", you.max_magic_points );
 
-#ifdef USE_TILE
     int col = _count_digits(you.magic_points)
               + _count_digits(you.max_magic_points) + 1;
-    for (int i = 12-col; i > 0; i--)
+    for (int i = 11-col; i > 0; i--)
         cprintf(" ");
-    draw_mp_bar(you.magic_points, you.max_magic_points);
-#else
-    clear_to_end_of_line();
-#endif
+    draw_mp_bar(19, y, you.magic_points, you.max_magic_points);
 }
 
 // Helper for print_stats
-static void _print_stats_hp()
+static void _print_stats_hp(int x, int y)
 {
     const int max_max_hp = you.hp_max + player_rotted();
     int hp_percent;
@@ -274,8 +277,8 @@ static void _print_stats_hp()
         }
     }
 
-    cgotoxy(5, 3, GOTO_STAT);
-
+    cgotoxy(x+4, y, GOTO_STAT);
+    // int col = -wherex();
     cprintf( "%d", you.hp );
 
     textcolor(LIGHTGREY);
@@ -284,19 +287,17 @@ static void _print_stats_hp()
     if (max_max_hp != you.hp_max)
         cprintf( " (%d)", max_max_hp );
 
-#ifdef USE_TILE
+    // col += wherex();
     int col = _count_digits(you.hp) + _count_digits(you.hp_max) + 1;
     if (max_max_hp != you.hp_max)
         col += _count_digits(max_max_hp) + 3;
-    for (int i = 15-col; i > 0; i--)
+    for (int i = 14-col; i > 0; i--)
         cprintf(" ");
-    draw_hp_bar(you.hp, you.hp_max);
-#else
-    clear_to_end_of_line();
-#endif
+    draw_hp_bar(19, y, you.hp, you.hp_max);
 }
 
-static void _print_stats_str()
+// XXX: alters state!  Does more than just print!
+static void _print_stats_str(int x, int y)
 {
     if (you.strength < 0)
         you.strength = 0;
@@ -306,7 +307,7 @@ static void _print_stats_str()
     if (you.max_strength > 72)
         you.max_strength = 72;
 
-    cgotoxy(6, 7, GOTO_STAT);
+    cgotoxy(x+5, y, GOTO_STAT);
 
     if (you.duration[DUR_MIGHT])
         textcolor(LIGHTBLUE);  // no end of effect warning
@@ -324,7 +325,7 @@ static void _print_stats_str()
     burden_change();
 }
 
-static void _print_stats_int()
+static void _print_stats_int(int x, int y)
 {
     if (you.intel < 0)
         you.intel = 0;
@@ -334,7 +335,7 @@ static void _print_stats_int()
     if (you.max_intel > 72)
         you.max_intel = 72;
 
-    cgotoxy(6, 8, GOTO_STAT);
+    cgotoxy(x+5, y, GOTO_STAT);
 
     if (you.intel < you.max_intel)
         textcolor(YELLOW);
@@ -348,7 +349,7 @@ static void _print_stats_int()
         cprintf( "       " );
 }
 
-static void _print_stats_dex()
+static void _print_stats_dex(int x, int y)
 {
     if (you.dex < 0)
         you.dex = 0;
@@ -358,7 +359,7 @@ static void _print_stats_dex()
     if (you.max_dex > 72)
         you.max_dex = 72;
 
-    cgotoxy(6, 9, GOTO_STAT);
+    cgotoxy(x+5, y, GOTO_STAT);
 
     if (you.dex < you.max_dex)
         textcolor(YELLOW);
@@ -372,32 +373,49 @@ static void _print_stats_dex()
         cprintf( "       " );
 }
 
-static void _print_stats_ac()
+static void _print_stats_ac(int x, int y)
 {
-    cgotoxy(5, 5, GOTO_STAT);
+    cgotoxy(x+4, y, GOTO_STAT);
 
     if (you.duration[DUR_STONEMAIL])
         _dur_colour( BLUE, (you.duration[DUR_STONEMAIL] <= 6) );
     else if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
         textcolor( LIGHTBLUE );  // no end of effect warning
 
-    cprintf( "%d  ", player_AC() );
+    cprintf( "%2d ", player_AC() );
     textcolor( LIGHTGREY );
 
-    cgotoxy(11, 5, GOTO_STAT);
+    cgotoxy(x+4, y+1, GOTO_STAT);
 
     if (you.duration[DUR_CONDENSATION_SHIELD]
        || you.duration[DUR_DIVINE_SHIELD])
     {
         textcolor( LIGHTBLUE );  // no end of effect warning
     }
-    cprintf( "(%d) ", player_shield_class() );
+    if (you.equip[EQ_SHIELD] == -1)
+    {
+        textcolor( DARKGREY );
+        cprintf( " - " );
+    }
+    else
+    {
+        cprintf( "%2d ", player_shield_class() );
+    }
     textcolor( LIGHTGREY );
 }
 
-static void _print_stats_wp()
+static void _print_stats_ev(int x, int y)
 {
-    cgotoxy(1, 13, GOTO_STAT);
+    cgotoxy(x+4, y, GOTO_STAT);
+    if (you.duration[DUR_FORESCRY])
+        textcolor(LIGHTBLUE);  // no end of effect warning
+    cprintf( "%2d ", player_evasion() );
+    textcolor(LIGHTGREY);
+}
+
+static void _print_stats_wp(int y)
+{
+    cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
     cprintf("Wp: ");
     if (you.weapon())
@@ -432,9 +450,9 @@ static void _print_stats_wp()
     clear_to_end_of_line();
 }
 
-static void _print_stats_qv()
+static void _print_stats_qv(int y)
 {
-    cgotoxy(1, 14, GOTO_STAT);
+    cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
     cprintf("Qv: ");
         
@@ -472,11 +490,11 @@ static void _print_stats_qv()
 //
 // Prints burden, hunger
 // Max length: "Encumbered Near Starving (NNN:NNN)" = 34
-static void _print_stats_line1()
+static void _print_stats_line1(int y)
 {
-    cgotoxy(1, 15, GOTO_STAT);
+    cgotoxy(1, y, GOTO_STAT);
     clear_to_end_of_line();
-    cgotoxy(1, 15, GOTO_STAT);
+    cgotoxy(1, y, GOTO_STAT);
 
     switch (you.burden_state)
     {
@@ -531,11 +549,11 @@ static void _print_stats_line1()
 // For colors, see comment at _print_stats_line1
 // Prints:  pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
 //   conf. touch, bargain, sage
-static void _print_stats_line2()
+static void _print_stats_line2(int y)
 {
-    cgotoxy(1, 16, GOTO_STAT);
+    cgotoxy(1, y, GOTO_STAT);
     clear_to_end_of_line();
-    cgotoxy(1, 16, GOTO_STAT);
+    cgotoxy(1, y, GOTO_STAT);
     // Max length of this line = 8 * 5 - 1 = 39
 
     if (you.duration[DUR_PRAYER])
@@ -638,11 +656,11 @@ static void _print_stats_line2()
 // For colors, see comment at _print_stats_line1
 // Prints confused, beheld, fire, poison, disease, rot, held, glow,
 //  swift, fast, slow, breath
-static void _print_stats_line3()
+static void _print_stats_line3(int y)
 {
-    cgotoxy(1, 17, GOTO_STAT);
+    cgotoxy(1, y, GOTO_STAT);
     clear_to_end_of_line();
-    cgotoxy(1, 17, GOTO_STAT);
+    cgotoxy(1, y, GOTO_STAT);
     // Max length of this line = 7 * 5 + 3 - 1 = 37
 
     // Note the usage of bad_ench_colour() correspond to levels that
@@ -749,33 +767,35 @@ void print_stats(void)
     if (you.redraw_dexterity)
         you.redraw_evasion = true;
 
-    if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp();  }
-    if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp();  }
-    if (you.redraw_strength)     { you.redraw_strength = false;     _print_stats_str(); }
-    if (you.redraw_intelligence) { you.redraw_intelligence = false; _print_stats_int(); }
-    if (you.redraw_dexterity)    { you.redraw_dexterity = false;    _print_stats_dex(); }
-    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac();  }
 
-    if (you.redraw_evasion)
-    {
-        cgotoxy(5, 6, GOTO_STAT);
-        if (you.duration[DUR_FORESCRY])
-            textcolor(LIGHTBLUE);  // no end of effect warning
-        cprintf( "%d  ", player_evasion() );
-        textcolor(LIGHTGREY);
-        you.redraw_evasion = 0;
-    }
+    // HP: 910/932 (999)
+    // Magic: 7/7
+    // Str: 13           AC:  3
+    // Int: 15        Sh:  -
+    // Dex: 14        Ev: 12
+    // Gold: 30
+    // Level 1 of the Dungeon
+
+    if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp ( 1, 3); }
+    if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp ( 1, 4); }
+    if (you.redraw_strength)     { you.redraw_strength = false;     _print_stats_str( 1, 5); }
+    if (you.redraw_intelligence) { you.redraw_intelligence = false; _print_stats_int( 1, 6); }
+    if (you.redraw_dexterity)    { you.redraw_dexterity = false;    _print_stats_dex( 1, 7); }
+
+    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (19, 5); }
+    // (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_sh (19, 6); }
+    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (19, 7); }
 
     if (you.redraw_gold)
     {
-        cgotoxy(7, 10, GOTO_STAT);
+        cgotoxy(1+6, 8, GOTO_STAT);
         cprintf( "%-8d", you.gold );
-        you.redraw_gold = 0;
+        you.redraw_gold = false;
     }
 
     if (you.redraw_experience)
     {
-        cgotoxy(13, 11, GOTO_STAT);
+        cgotoxy(1+12, 9, GOTO_STAT);
 
 #if DEBUG_DIAGNOSTICS
         cprintf( "%d/%lu  (%d/%d)",
@@ -790,24 +810,68 @@ void print_stats(void)
         you.redraw_experience = 0;
     }
 
-    if (you.wield_change)  { you.wield_change = false;  _print_stats_wp(); }
-    if (you.quiver_change) { you.quiver_change = false; _print_stats_qv(); }
+    if (you.wield_change)  { you.wield_change = false;  _print_stats_wp(11); }
+    if (you.quiver_change) { you.quiver_change = false; _print_stats_qv(12); }
 
     
     if (you.redraw_status_flags & REDRAW_LINE_1_MASK)
-        _print_stats_line1();
+        _print_stats_line1(13);
 
     if (you.redraw_status_flags & REDRAW_LINE_2_MASK)
-        _print_stats_line2();
+        _print_stats_line2(14);
 
     if (you.redraw_status_flags & REDRAW_LINE_3_MASK)
-        _print_stats_line3();
+        _print_stats_line3(15);
 
     you.redraw_status_flags = 0;
 
     // get curses to redraw screen
     update_screen();
 }                               // end print_stats()
+
+// For some odd reason, only redrawn on level change.
+void print_stats_level(const std::string& description)
+{
+    cgotoxy(7, 10, GOTO_STAT);
+    textcolor(LIGHTGREY);
+#if DEBUG_DIAGNOSTICS
+    cprintf( "(%d) ", you.your_level + 1 );
+#endif
+    cprintf("%s", description.c_str());
+    clear_to_end_of_line();
+}
+
+void draw_border(void)
+{
+    textcolor( BORDER_COLOR );
+    clrscr();
+    redraw_skill( you.your_name, player_title() );
+
+    cgotoxy(1, 2, GOTO_STAT);
+    cprintf( "%s %s",
+             species_name( you.species, you.experience_level ).c_str(),
+             (you.wizard ? "*WIZARD*" : "" ) );
+
+    textcolor(Options.status_caption_colour);
+
+    cgotoxy( 1, 3, GOTO_STAT); cprintf("HP:");
+    cgotoxy( 1, 4, GOTO_STAT); cprintf("Magic:");
+    cgotoxy( 1, 5, GOTO_STAT); cprintf("Str:");
+    cgotoxy( 1, 6, GOTO_STAT); cprintf("Int:");
+    cgotoxy( 1, 7, GOTO_STAT); cprintf("Dex:");
+    cgotoxy( 1, 8, GOTO_STAT); cprintf("Gold:");
+    cgotoxy( 1, 9, GOTO_STAT); cprintf("Experience:");
+
+    cgotoxy(19, 5, GOTO_STAT); cprintf("AC:");
+    cgotoxy(19, 6, GOTO_STAT); cprintf("Sh:");
+    cgotoxy(19, 7, GOTO_STAT); cprintf("Ev:");
+    if (Options.show_turns)
+    {
+        cgotoxy(19, 8, GOTO_STAT); cprintf("Turn:");
+    }
+    textcolor(LIGHTGREY);
+    cgotoxy( 1,10, GOTO_STAT); cprintf("Level");
+}                               // end draw_border()
 
 // ----------------------------------------------------------------------
 // Monster pane

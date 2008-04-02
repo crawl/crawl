@@ -83,12 +83,6 @@ bool mons_near(const monsters *monster, unsigned int foe = MHITYOU);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: acr - player - stuff
- * *********************************************************************** */
-void draw_border(void);
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
  * called from: acr - view
  * *********************************************************************** */
 void item(void);

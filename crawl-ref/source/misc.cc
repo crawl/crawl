@@ -60,6 +60,7 @@
 #include "mon-util.h"
 #include "monstuff.h"
 #include "ouch.h"
+#include "output.h"
 #include "overmap.h"
 #include "place.h"
 #include "player.h"
@@ -1577,18 +1578,8 @@ std::string level_description_string()
 
 void new_level(void)
 {
-    textcolor(LIGHTGREY);
-
-    cgotoxy(7, 12, GOTO_STAT);
-
-#if DEBUG_DIAGNOSTICS
-    cprintf( "(%d) ", you.your_level + 1 );
-#endif
-
     take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
-    cprintf("%s", level_description_string().c_str());
-
-    clear_to_end_of_line();
+    print_stats_level(level_description_string());
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif

@@ -2631,36 +2631,6 @@ void losight(env_show_grid &sh,
 }
 
 
-void draw_border(void)
-{
-    textcolor( BORDER_COLOR );
-    clrscr();
-    redraw_skill( you.your_name, player_title() );
-
-    cgotoxy(1, 2, GOTO_STAT);
-    cprintf( "%s %s",
-             species_name( you.species, you.experience_level ).c_str(),
-             (you.wizard ? "*WIZARD*" : "" ) );
-
-    textcolor(Options.status_caption_colour);
-    cgotoxy(1,  3, GOTO_STAT); cprintf("HP:");
-    cgotoxy(1,  4, GOTO_STAT); cprintf("Magic:");
-    cgotoxy(1,  5, GOTO_STAT); cprintf("AC:");
-    cgotoxy(1,  6, GOTO_STAT); cprintf("EV:");
-    cgotoxy(1,  7, GOTO_STAT); cprintf("Str:");
-    cgotoxy(1,  8, GOTO_STAT); cprintf("Int:");
-    cgotoxy(1,  9, GOTO_STAT); cprintf("Dex:");
-    cgotoxy(1, 10, GOTO_STAT); cprintf("Gold:");
-    if (Options.show_turns)
-    {
-        cgotoxy(1 + 15, 10, GOTO_STAT);
-        cprintf("Turn:");
-    }
-    cgotoxy(1, 11, GOTO_STAT); cprintf("Experience:");
-    textcolor(LIGHTGREY);
-    cgotoxy(1, 12, GOTO_STAT); cprintf("Level");
-}                               // end draw_border()
-
 // Determines if the given feature is present at (x, y) in _grid_ coordinates.
 // If you have map coords, add (1, 1) to get grid coords.
 // Use one of
@@ -4919,8 +4889,15 @@ void crawl_view_buffer::size(const coord_def &sz)
 // define VIEW_MIN_WIDTH defined elsewhere
 // define VIEW_MAX_WIDTH use Options.view_max_width
 #define HUD_WIDTH  39
-#define HUD_HEIGHT 17
+#ifdef USE_TILE
+// Tile mode doesn't need to compress the HUD, and uses this area for
+// other things.  I don't want to risk breaking tiles, so leaving alone --pld
+#  define HUD_HEIGHT 17
+#else
+#  define HUD_HEIGHT 15
+#endif
 #define MSG_MIN_HEIGHT 6
+#define MSG_MAX_HEIGHT 10
 // #define MLIST_MIN_HEIGHT use Options.mlist_min_height
 #define MLIST_MIN_WIDTH 25  /* non-inline layout only */
 #define MLIST_MAX_WIDTH 42
@@ -4999,20 +4976,17 @@ class _inline_layout : public _layout
         _increment(mlistsz.x,  leftover_x(), INT_MAX);
         msgsz.x = termsz.x-1; // Can't use last character
 
-        // y: View gets leftover; then mlist; then message
-        // mlist might be left with less than MLIST_MIN_HEIGHT, but
-        // that's the breaks.
+        // y: View gets as much as it wants
+        // mlist tries to get at least its minimum
+        // msg expands as much as it wants
+        // mlist gets any leftovers
         if (leftover_y() < 0) { return false; }
-        {
-            const int saved_leftover_y = leftover_y();
-            _increment(viewsz.y, saved_leftover_y, Options.view_max_height);
-            if ((viewsz.y % 2) != 1) --viewsz.y;
-            if (mlistsz.y < Options.mlist_min_height)
-            {
-                _increment(mlistsz.y, saved_leftover_y, Options.mlist_min_height);
-            }
-        }
-        _increment(msgsz.y,  leftover_y(), INT_MAX);
+        _increment(viewsz.y, leftover_leftcol_y(), Options.view_max_height);
+        if ((viewsz.y % 2) != 1) --viewsz.y;
+        if (mlistsz.y < Options.mlist_min_height)
+            _increment(mlistsz.y, leftover_rightcol_y(), Options.mlist_min_height);
+        _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
+        _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
 
         // Finish off by doing the positions
         viewp  = termp;
@@ -5029,11 +5003,11 @@ class _inline_layout : public _layout
         int width = (viewsz.x + hud_gutter + std::max(hudsz.x, mlistsz.x));
         return (termsz.x - width);
     }
+    int leftover_rightcol_y() const { return termsz.y-hudsz.y-mlistsz.y-msgsz.y; }
+    int leftover_leftcol_y() const  { return termsz.y-viewsz.y-msgsz.y; }
     int leftover_y() const
     {
-        // hud+mlist can grow longer than the view, believe it or not
-        int height = std::max(viewsz.y, hudsz.y+mlistsz.y) + msgsz.y;
-        return (termsz.y - height);
+        return std::min(leftover_rightcol_y(), leftover_leftcol_y());
     }
 };
 

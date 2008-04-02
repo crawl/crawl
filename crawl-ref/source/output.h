@@ -54,6 +54,8 @@ void draw_mp_bar(int val, int max_val);
 #endif
 
 void print_stats();
+void print_stats_level(const std::string& description);
+void draw_border();
 void update_monster_pane();
 
 std::vector<formatted_string> get_full_detail(bool calc_unid, long score = -1);
