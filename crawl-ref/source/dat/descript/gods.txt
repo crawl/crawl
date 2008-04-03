@@ -16,24 +16,21 @@ Buggy
 %%%%
 Zin
 
-Zin is an ancient and revered God, dedicated to the establishment of
-order. Worshippers are required to remain pure of body and soul, in 
-particular to abstain from the consumption of corpses of intelligent 
-beings, and the use of necromancy and deliberate mutations. They can 
-gain a variety of powers useful against chaos, including a divine 
-refuge. Zin values selflessness and appreciates long-standing faith.
-Zin is a good God, and does not mind if your worship shifts to 
-another good God.
+Zin is a God for those focused on inner strength. Followers must remain
+pure of body and soul, and thus abstain from the use of necromancy and
+mutations, and from the consumption of corpses of intelligent beings. 
+They may preach to the unenlightened, and can ultimately gain a divine 
+refuge. Zin values selflessness and appreciates long-standing faith. 
+Zin's followers can safely convert to Elyvilon and The Shining One.
 %%%%
 The Shining One
 
-The Shining One is a powerful crusading deity. Followers may be 
-granted blessings on their weapons and the ability to summarily 
-dispense the wrath of heaven, but must never use any form of evil 
-magic and should fight honourably. The Shining One appreciates 
-long-standing persistence in the endless crusade, as well as the 
-dedicated destruction of unholy creatures. The Shining One is a good 
-God, and does not mind if your worship shifts to another good God.
+The Shining One is a powerful deity on an endless crusade against all 
+evil. Followers and their allies may be granted various blessings upon
+slaying unholy creatures. Worshippers must never use evil magic, and 
+are expected to prove their moral superiority by fighting honourably.
+This God appreciates long-standing persistence. The Shining One does 
+not mind shifting worship to Elyvilon or Zin.
 %%%%
 Kikubaaqudgha
 
@@ -54,7 +51,7 @@ killing, but prefers corpses to be put to use rather than sacrificed.
 %%%%
 Xom
 
-Xom is a wild and unpredictable God of chaos, who seeks not
+Xom is a wild and unpredictable God of chaos, who seeks not 
 worshippers but playthings to toy with. Many choose to follow Xom in
 the hope of receiving fabulous rewards and mighty powers, but Xom is
 nothing if not capricious.
@@ -107,12 +104,12 @@ time, the Trickster provides certain ways to adjust the fortune.
 %%%%
 Elyvilon
 
-Elyvilon the Healer is worshipped by the healers (among others), who
-gain their healing powers by long worship and devotion. Although
-Elyvilon prefers a creed of pacifism, those who crusade against evil
-are not excluded. The Healer appreciates the destruction of weapons.
-Elyvilon is a good God, and does not mind if your worship shifts to
-a different good God.
+Elyvilon the Healer welcomes all good souls who are prepared for long
+worship and devotion. Those individuals can expect to gain powerful 
+healing abilities. The Healer prefers a creed of pacifism, and helps 
+avoiding bloodshed. Elyvilon appreciates the destruction of weapons. 
+Being a good God, Elyvilon does not mind if worshippers shift to one
+of the two allied Gods, Zin or The Shining One.
 %%%%
 Lugonu
 
@@ -123,10 +120,10 @@ expects followers to spread death and corruption in the overworld.
 %%%%
 Beogh
 
-Beogh is an evil deity worshipped by the cave orcs native to parts of 
-the dungeon. Only orcs may devote their service to Beogh, and must 
-prove their devotion by bloodshed and sacrifice. Devout followers of 
-Beogh can smite their foes, and especially fervent devotees of Beogh 
-may even gain followers of their own, for the orcs still look for their
+Beogh is the deity worshipped by the cave orcs native to parts of the
+dungeon. Only orcs may devote their service to Beogh, and must prove 
+their devotion by bloodshed and sacrifice. Devout followers of Beogh 
+can smite their foes, and especially fervent devotees of Beogh may 
+even gain followers of their own, for the orcs still look for their
 Messiah.
 %%%%
