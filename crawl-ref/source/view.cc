@@ -65,6 +65,7 @@
 #include "skills.h"
 #include "skills2.h"
 #include "stuff.h"
+#include "spells3.h"
 #include "spells4.h"
 #include "stash.h"
 #include "tiles.h"
@@ -445,6 +446,12 @@ static void _get_symbol( int x, int y,
                         _view_emphasised_colour(
                             x, y, static_cast<dungeon_feature_type>(object),
                             *colour, fdef.em_colour | colmask);
+            }
+
+            if (object < NUM_REAL_FEATURES
+                && inside_halo(x,y) && object >= DNGN_MINMOVE)
+            {
+                *colour = YELLOW | colmask;
             }
         }
 
