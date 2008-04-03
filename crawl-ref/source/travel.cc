@@ -824,11 +824,6 @@ void start_running(void)
 void stop_running(void)
 {
     you.running.stop();
-#ifdef USE_TILE
-    // redraw colour bars now as that's blocked during runmode
-    draw_hp_bar(you.hp, you.hp_max);
-    draw_mp_bar(you.magic_points, you.max_magic_points);
-#endif
 }
 
 static bool is_valid_explore_target(int x, int y)
