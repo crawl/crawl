@@ -729,52 +729,64 @@ bool choose_deck_and_draw()
     return true;
 }
 
-static void _deck_peek_ident(item_def& deck)
+static void _deck_ident(item_def& deck)
 {
     if (in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE))
     {
         set_ident_flags(deck, ISFLAG_KNOW_TYPE);
-
         mprf("This is %s.", deck.name(DESC_NOCAP_A).c_str());
-
         you.wield_change = true;
     }
 }
 
-// Peek at a deck (show what the next card will be.)
+// This also shuffles the deck.
+static void _deck_lose_card(item_def& deck)
+{
+    unsigned char flags = 0;
+    // Seen cards are only half as likely to fall out,
+    // marked cards only one-quarter as likely (note that marked
+    // cards are also seen.)
+    do {
+        _shuffle_deck(deck);
+        get_card_and_flags(deck, -1, flags);
+    } while ( ((flags & CFLAG_MARKED) && coinflip()) ||
+              ((flags & CFLAG_SEEN) && coinflip()) );
+
+    _draw_top_card(deck, false, flags);
+    deck.plus2++;
+}
+
+// Peek at two cards in a deck, then shuffle them back in.
 // Return false if the operation was failed/aborted along the way.
 bool deck_peek()
 {
-    if ( !_wielding_deck() )
+    const int slot = _choose_inventory_deck( "Peek at which deck?" );
+    if ( slot == -1 )
     {
-        mpr("You aren't wielding a deck!");
         crawl_state.zero_turns_taken();
         return false;
     }
-    item_def& deck(you.inv[you.equip[EQ_WEAPON]]);
+    item_def& deck(you.inv[slot]);
 
     if (_check_buggy_deck(deck))
         return false;
 
-    if (deck.props["num_marked"].get_byte() > 0)
+    if ( cards_in_deck(deck) > 2 )
     {
-        mpr("You can't peek into a marked deck.");
-        crawl_state.zero_turns_taken();
-        return false;
+        _deck_lose_card(deck);
+        mpr("A card falls out of the deck.");
     }
 
     CrawlVector &cards     = deck.props["cards"];
-    int          num_cards = cards.size();
+    const int    num_cards = cards.size();
 
-    card_type card1, card2, card3;
-    unsigned char flags1, flags2, flags3;
+    card_type card1, card2;
+    unsigned char flags1, flags2;
 
     card1 = get_card_and_flags(deck, 0, flags1);
 
     if (num_cards == 1)
     {
-        _deck_peek_ident(deck);
-
         mpr("There's only one card in the deck!");
 
         _set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN | CFLAG_MARKED);
@@ -787,101 +799,67 @@ bool deck_peek()
 
     card2 = get_card_and_flags(deck, 1, flags2);
 
-    if (num_cards == 2)
-    {
-        deck.props["non_brownie_draws"] = (char) 2;
-        deck.plus2 = -2;
-
-        _deck_peek_ident(deck);
-
-        mprf("Only two cards in the deck: %s and %s.",
-             card_name(card1), card_name(card2));
-
-        mpr("You shuffle the deck.");
-
-        // If both cards are the same, then you know which card you're
-        // going to draw both times.
-        if (card1 == card2)
-        {
-            flags1 |= CFLAG_MARKED;
-            flags2 |= CFLAG_MARKED;
-            you.wield_change = true;
-            deck.props["num_marked"] = (char) 2;
-        }
-
-        // "Shuffle" the two cards (even if they're the same, since
-        // the flags might differ).
-        if (coinflip())
-        {
-            std::swap(card1, card2);
-            std::swap(flags1, flags2);
-        }
-
-        // After the first of two differing cards is drawn, you know
-        // what the second card is going to be.
-        if (card1 != card2)
-        {
-            flags1 |= CFLAG_MARKED;
-            deck.props["num_marked"]++;
-        }
-
-        _set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN);
-        _set_card_and_flags(deck, 1, card2, flags2 | CFLAG_SEEN);
-
-        return true;
-    }
-
-    _deck_peek_ident(deck);
-
-    card3 = get_card_and_flags(deck, 2, flags3);
-
     int already_seen = 0;
     if (flags1 & CFLAG_SEEN)
         already_seen++;
     if (flags2 & CFLAG_SEEN)
         already_seen++;
-    if (flags3 & CFLAG_SEEN)
-        already_seen++;
 
-    if (random2(3) < already_seen)
+    // always increase if seen 2, 50% increase if seen 1
+    if ( coinflip() < already_seen)
         deck.props["non_brownie_draws"]++;
 
-    mprf("You draw three cards from the deck.  They are: %s, %s and %s.",
-         card_name(card1), card_name(card2), card_name(card3));
+    mprf("You draw two cards from the deck. They are: %s and %s.",
+         card_name(card1), card_name(card2));
 
     _set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN);
     _set_card_and_flags(deck, 1, card2, flags2 | CFLAG_SEEN);
-    _set_card_and_flags(deck, 2, card3, flags3 | CFLAG_SEEN);
 
     mpr("You shuffle the cards back into the deck.");
     _shuffle_deck(deck);
 
+    // Peeking identifies the deck.
+    _deck_ident(deck);
+
+    you.wield_change = true;
     return true;
 }
 
 // Mark a deck: look at the next four cards, mark them, and shuffle
-// them back into the deck without losing any cards.  The player won't
-// know what order they're in, and the if the top card is non-marked
-// then the player won't know what the next card is.
-// Return false if the operation was failed/aborted along the way.
+// them back into the deck. The player won't know what order they're
+// in, and the if the top card is non-marked then the player won't
+// know what the next card is.  Return false if the operation was
+// failed/aborted along the way.
 bool deck_mark()
 {
-    if ( !_wielding_deck() )
+    const int slot = _choose_inventory_deck( "Mark which deck?" );
+    if ( slot == -1 )
     {
-        mpr("You aren't wielding a deck!");
         crawl_state.zero_turns_taken();
         return false;
     }
-    item_def& deck(you.inv[you.equip[EQ_WEAPON]]);
+    item_def& deck(you.inv[slot]);
     if (_check_buggy_deck(deck))
         return false;
 
     CrawlHashTable &props = deck.props;
     if (props["num_marked"].get_byte() > 0)
     {
-        mpr("Deck is already marked.");
+        mpr("The deck is already marked.");
         crawl_state.zero_turns_taken();
         return false;
+    }
+
+    // lose some cards, but keep at least two
+    if ( cards_in_deck(deck) > 2 )
+    {
+        const int num_lost = std::min(cards_in_deck(deck)-2, random2(3) + 1);
+        for ( int i = 0; i < num_lost; ++i )
+            _deck_lose_card(deck);
+        if ( num_lost == 1 )
+            mpr("A card falls out of the deck.");
+        else if ( num_lost > 1 )
+            mpr("Some cards fall out of the deck.");
     }
 
     const int num_cards   = cards_in_deck(deck);
@@ -907,9 +885,8 @@ bool deck_mark()
     props["num_marked"] = (char) num_to_mark;
 
     if (num_cards == 1)
-        return true;
-
-    if (num_cards < 4)
+        ;
+    else if (num_cards < 4)
     {
         mprf("You shuffle the deck.");
         deck.plus2 = -num_cards;
@@ -918,6 +895,7 @@ bool deck_mark()
         mprf("You shuffle the cards back into the deck.");
 
     _shuffle_deck(deck);
+    _deck_ident(deck);
     you.wield_change = true;
 
     return true;
@@ -1066,14 +1044,6 @@ bool deck_triple_draw()
 
     if (_check_buggy_deck(deck))
         return false;
-
-    CrawlHashTable &props = deck.props;
-    if (props["num_marked"].get_byte() > 0)
-    {
-        mpr("You can't triple draw from a marked deck.");
-        crawl_state.zero_turns_taken();
-        return false;
-    }
 
     const int num_cards = cards_in_deck(deck);
 

@@ -351,7 +351,7 @@ std::string formatted_string::to_colour_string() const
             
             while (true)
             {
-                const unsigned int left_angle = st.find('<', start);
+                const size_t left_angle = st.find('<', start);
                 if (left_angle == std::string::npos)
                     break;
                     

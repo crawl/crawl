@@ -146,9 +146,9 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_TROG_BERSERK, ABIL_TROG_REGENERATION, ABIL_NON_ABILITY,
       ABIL_TROG_BROTHERS_IN_ARMS, ABIL_NON_ABILITY },
     // Nemelex
-    { ABIL_NEMELEX_PEEK_DECK, ABIL_NEMELEX_DRAW_CARD,
-      ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NEMELEX_MARK_DECK,
-      ABIL_NEMELEX_STACK_DECK },
+    { ABIL_NEMELEX_DRAW_ONE, ABIL_NEMELEX_PEEK_TWO,
+      ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NEMELEX_MARK_FOUR,
+      ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
       ABIL_ELYVILON_HEALING, ABIL_ELYVILON_RESTORATION,
@@ -297,11 +297,11 @@ static const ability_def Ability_List[] =
       9, 0, 500, generic_cost::fixed(35), ABFLAG_NONE },
 
     // Nemelex
-    { ABIL_NEMELEX_PEEK_DECK, "Deck Peek", 3, 0, 0, 1, ABFLAG_INSTANT },
-    { ABIL_NEMELEX_DRAW_CARD, "Draw Card", 2, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_NEMELEX_DRAW_ONE, "Draw One", 2, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_NEMELEX_PEEK_TWO, "Peek at Two", 3, 0, 0, 1, ABFLAG_INSTANT },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, ABFLAG_NONE },
-    { ABIL_NEMELEX_MARK_DECK, "Mark Deck", 4, 0, 125, 5, ABFLAG_NONE },
-    { ABIL_NEMELEX_STACK_DECK, "Stack Deck", 5, 0, 250, 10, ABFLAG_NONE },
+    { ABIL_NEMELEX_MARK_FOUR, "Mark Four", 4, 0, 125, 5, ABFLAG_NONE },
+    { ABIL_NEMELEX_STACK_FIVE, "Stack Five", 5, 0, 250, 10, ABFLAG_NONE },
 
     // Beogh
     { ABIL_BEOGH_SMITING, "Smiting",
@@ -724,12 +724,12 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
-    case ABIL_NEMELEX_STACK_DECK:
+    case ABIL_NEMELEX_STACK_FIVE:
         invoc = true;
         failure = 80 - (you.piety / 25) - (4 * you.skills[SK_EVOCATIONS]);
         break;
         
-    case ABIL_NEMELEX_MARK_DECK:
+    case ABIL_NEMELEX_MARK_FOUR:
         invoc = true;
         failure = 70 - (you.piety * 2 / 45)
             - (9 * you.skills[SK_EVOCATIONS] / 2);
@@ -740,12 +740,12 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 60 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
-    case ABIL_NEMELEX_PEEK_DECK:
+    case ABIL_NEMELEX_PEEK_TWO:
         invoc = true;
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
-    case ABIL_NEMELEX_DRAW_CARD:
+    case ABIL_NEMELEX_DRAW_ONE:
         invoc = true;
         perfect = true;         // Tactically important to allow perfection
         failure = 50 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
@@ -1721,10 +1721,16 @@ static bool _do_ability(const ability_def& abil)
         activate_notes(true);
         break;
 
-    case ABIL_NEMELEX_DRAW_CARD:
+    case ABIL_NEMELEX_DRAW_ONE:
         if ( !choose_deck_and_draw() )
             return false;
         exercise(SK_EVOCATIONS, 1 + random2(2));
+        break;
+
+    case ABIL_NEMELEX_PEEK_TWO:
+        if ( !deck_peek() )
+            return false;
+        exercise(SK_EVOCATIONS, 2 + random2(2));
         break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
@@ -1733,19 +1739,13 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_EVOCATIONS, 3 + random2(3));
         break;
 
-    case ABIL_NEMELEX_PEEK_DECK:
-        if ( !deck_peek() )
-            return false;
-        exercise(SK_EVOCATIONS, 2 + random2(2));
-        break;
-
-    case ABIL_NEMELEX_MARK_DECK:
+    case ABIL_NEMELEX_MARK_FOUR:
         if ( !deck_mark() )
             return false;
         exercise(SK_EVOCATIONS, 4 + random2(4));
         break;
 
-    case ABIL_NEMELEX_STACK_DECK:
+    case ABIL_NEMELEX_STACK_FIVE:
         if ( !deck_stack() )
             return false;
         exercise(SK_EVOCATIONS, 5 + random2(5));

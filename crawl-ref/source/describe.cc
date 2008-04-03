@@ -1377,6 +1377,7 @@ static std::string describe_deck( const item_def &item )
     }
 
     const int num_cards = cards_in_deck(item);
+    int last_known_card = -1;
     if ( top_card_is_known(item) )
     {
         description += "Next card(s): ";
@@ -1389,6 +1390,7 @@ static std::string describe_deck( const item_def &item )
                 if ( i != 0 )
                     description += ", ";
                 description += card_name(card);
+                last_known_card = i;
             }
             else
                 break;
@@ -1396,6 +1398,30 @@ static std::string describe_deck( const item_def &item )
         description += "$";
     }
 
+    // Marked cards which we don't know straight off.
+    std::vector<card_type> marked_cards;
+    for ( int i = last_known_card + 1; i < num_cards; ++i )
+    {
+        unsigned char flags;
+        const card_type card = get_card_and_flags(item, -i-1, flags);
+        if ( flags & CFLAG_MARKED )
+            marked_cards.push_back(card);
+    }
+    if ( !marked_cards.empty() )
+    {
+        std::sort(marked_cards.begin(), marked_cards.end(),
+                  compare_card_names);
+        description += "Marked card(s): ";
+        for ( unsigned int i = 0; i < marked_cards.size(); ++i )
+        {
+            if ( i != 0 )
+                description += ", ";
+            description += card_name(marked_cards[i]);
+        }
+        description += "$";
+    }
+
+    // Seen cards in the deck.
     std::vector<card_type> seen_cards;
     for ( int i = 0; i < num_cards; ++i )
     {
