@@ -143,29 +143,32 @@ static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
             textcolor(BLACK + default_colour * 16);
         else if (old_val > val && old_disp > disp && cx < old_disp)
             textcolor(BLACK + change_colour * 16);
-#else
-        textbackground(empty_colour);
-
-        if (cx < disp)
-            textbackground(default_colour);
-        else if (old_val > val && old_disp > disp && cx < old_disp)
-            textbackground(change_colour);
-#endif
         putch(' ');
+#else
+
+        if (cx < disp) {
+            textcolor(default_colour);
+            putch('-');
+        } else if (old_val > val && old_disp > disp && cx < old_disp) {
+            textcolor(change_colour);
+            putch('-');
+        } else {
+            textcolor(empty_colour);
+            putch('-');
+        }
+#endif
     }
 
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-
     return disp;
 }
 
 void draw_mp_bar(int ox, int oy, int val, int max_val)
 {
     const unsigned short default_colour = BLUE;
-    // DARKGRAY and LIGHTBLUE don't show up for me... :-( --pld
-    const unsigned short change = CYAN;
-    const unsigned short empty  = LIGHTGRAY;
+    const unsigned short change = LIGHTBLUE;
+    const unsigned short empty  = DARKGRAY;
 
     static int old_val  = 0;
     static int old_disp = 0;
@@ -179,8 +182,7 @@ void draw_hp_bar(int ox, int oy, int val, int max_val)
 {
     const unsigned short default_colour = GREEN;
     const unsigned short change = RED;
-    // DARKGRAY doesn't show up for me... :-( --pld
-    const unsigned short empty  = LIGHTGRAY;
+    const unsigned short empty  = DARKGRAY;
 
     static int old_val  = 0;
     static int old_disp = 0;
