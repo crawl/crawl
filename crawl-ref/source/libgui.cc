@@ -1952,9 +1952,11 @@ void gui_init_view_params(coord_def &termsz, coord_def &viewsz,
                           coord_def &msgp, coord_def &msgsz,
                           coord_def &hudp, const coord_def &hudsz)
 {
-    // TODO enne - set these other params too?
     msgsz.x = msg_x;
     msgsz.y = msg_y;
+
+    viewsz.x = tile_dngn_x;
+    viewsz.y = tile_dngn_y;
 }
 
 void lock_region(int r)
