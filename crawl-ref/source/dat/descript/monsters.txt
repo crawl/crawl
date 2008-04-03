@@ -226,7 +226,21 @@ Polyphemus
 %%%%
 Psyche
 
-A fair-haired mage.
+A fair-haired mage, wandering and seemingly half-mad 
+with grief and guilt.
+
+"Let Psyche's corpse be clad in mourning weed
+And set on rock of yonder hill aloft;
+Her husband is no wight of human seed,
+But serpent dire and fierce, as may be thought, 
+Who flies with wings above in starry skies,
+And doth subdue each thing with fiery flight.
+The Gods themselves and powers that seem so wise 
+With mighty love be subject to his might.
+The rivers black and deadly floods of pain
+And darkness eke as thrall to him remain."
+	-Apuleius, _Asinus aureus_, "Cupid and Psyche"
+	circa 160 AD.  William Adlington, Translator, 1566.
 %%%%
 Rupert
 
@@ -245,9 +259,10 @@ Sigmund
 An evil and spry old man, whose eyes twinkle with sadness, and also with madness. Sigmund 
 wields a nasty-looking scythe.
 
-"But Sigmund turned him about, and he said: 'What aileth thee, son?  Shall our life-days 
-never be merry, and our labour never be done?'  But Sinfiotli said: 'I have looked, and lo,
-there is death in the cup.'
+"But Sigmund turned him about, and he said: 'What aileth thee, son?  
+Shall our life-days never be merry, and our labour never be done?'  
+
+But Sinfiotli said: 'I have looked, and lo, there is death in the cup.'
 
 And the song, and the tinkling of harp-strings to the roof-tree winded up;
 And Sigmund was dreamy with wine and the wearing of many a year;

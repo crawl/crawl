@@ -1330,7 +1330,11 @@ A decaying skeleton.
 %%%%
 slice of pizza
 
-A slice of pizza. Don't tell me you don't know what that is!
+A slice of pizza; a flatbread with tomato sauce, mozarella di bufala,
+and basil.. 
+
+"When the moon hits your eye like a big pizza pie, that’s amore."
+	-Jack Brooks, "That's Amore"
 %%%%
 sling
 
