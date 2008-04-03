@@ -836,7 +836,8 @@ static int _inside_circle(int posx, int posy, int radius)
     if (!inside_level_bounds(posx, posy))
         return -1;
 
-    if (!in_los_bounds(posx, posy))
+    const coord_def ep = grid2view(coord_def(posx, posy));
+    if (!in_los_bounds(ep.x, ep.y))
         return -1;
 
     int dist = distance(posx, posy, you.x_pos, you.y_pos);
