@@ -88,7 +88,23 @@ the guests, with the inscription, 'For the fairest.'"
 %%%%
 apricot
 
-A delicious orange fruit.
+A succulent yellow-orange fruit, Prunus armeniaca.
+
+"Apricot Ratafia
+
+This is made two Ways, viz. either by infuſing the Apricots cut in 
+Pieces in Brandy for a Day or two, and then paſſing it thro' the draining 
+Bag, and putting in the uſual Ingredients; or elſe the Apricots may be 
+boil'd in White wine, and by that Means more eaſily clarify'd adding an 
+equal Quantity of Brandy, and a quarter of a pound of Sugar to every quart,
+with Cinnamon, Cloves, Mace, and Kernels of the Apricots. After all 
+the Ingredients have infuſed eight or ten Days the Liquor is to be ſtrain'd 
+again and put into Bottles and ſo kept."
+	-Charles Carter, _The Compleat City and Country Cook:
+	Or, Accomplish'd House-wife_.  1732.
+
+  <a href="http://books.google.com/books?id=yYYEAAAAYAAJ&dq=apricot+date:1000-1800&lr=&pg=RA1-PA203&ci=46,134,779,604&source=bookclip">The Compleat City and Country Cook Or, Accomplish'd House-wife. Containing, Several Hundred of the Most Approv'd Receipts in Cookery, Confectionary, Cordials [etc.] ... Illustrated with Forty-nine Large Copper Plates, Directing the Regular Placing the Various Dishes on the Table ... Also, Bills of Fare According to the Several Seasons for Every Month of the Year ... By Charles Carter</a>
+
 %%%%
 arrow
 
@@ -347,7 +363,16 @@ escape by opening the box's lid.
 %%%%
 bread ration
 
-A filling ration of breads.
+A filling meal of stale, but hearty, bread.
+
+"It is further reported that in the provinces [Caesar] gave banquets 
+constantly in two dining halls, in one of which his officers or Greek 
+companions, in the other Roman civilians and the more distinguished of 
+the provincials reclined at table. He was so punctilious and strict in 
+the management of his household, in small matters as well as in those of 
+greater importance, that he put his baker in irons for serving him with 
+one kind of bread and his guests with another..."
+	-Suetonius, _De Vita Caesarum, Divus Iulius_. 110 CE.
 %%%%
 broad axe
 
@@ -790,7 +815,20 @@ A needle. It can be fired with a blowgun.
 %%%%
 orange
 
-A delicious juicy orange fruit.
+A delicious, juicy orange fruit.
+
+"Conſerve of Orange Peel
+
+HAVING grated the rinds of ſome Seville oranges as thin as you can,
+weigh them, and to every pound of orange rind add three pounds of loaf ſugar.
+Pound the orange rind well in a marble mortar, mix the ſugar by degrees 
+with them and beat all well together.  Put it into gallipots and tie 
+it down ſo as properly to prevent the air getting to it."
+	-Francis Collingwood, John Woollams, _The Universal
+	Cook: And City and Country Housekeeper. 1792.
+
+
+  <a href="http://books.google.com/books?id=xJMEAAAAYAAJ&dq=orange+date:1000-1800&lr=&pg=PA292&ci=89,879,795,332&source=bookclip">The Universal Cook And City and Country Housekeeper By Francis Collingwood,  John Woollams</a>
 %%%%
 orb of zot
 
@@ -1424,7 +1462,15 @@ A small but delicious red fruit.
 %%%%
 sultana
 
-A dried fruit of some sort, possibly a grape.
+A humble raisin.
+
+"A Turkish garden was among the curiosities to which the Jew found access 
+for Bentham. It was a sort of orchard of vines and other trees, without 
+order or apparent arrangement. From that garden Bentham sent specimens 
+of the Sultana raisin to England which he believed to have been the first 
+of that species which had ever reachedahis country."
+	-John Bowring, _The Works of Jeremy Bentham_.  1839.  
+
 %%%%
 swamp dragon armour
 
