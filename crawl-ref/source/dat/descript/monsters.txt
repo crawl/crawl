@@ -1345,7 +1345,7 @@ program bug
 A ravenous and incredibly buggy monster. Please report its existence
 to the DevTeam.
 
-"If builders built buildings the way programmers wrote programs, then the first woodpecker that came along would destroy civilization"
+"If builders built buildings the way programmers wrote programs, then the first woodpecker that came along would destroy civilization."
 	-Gerald Weinberg, Weinberg's Second Law
 %%%%
 pulsating lump
