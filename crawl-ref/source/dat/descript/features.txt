@@ -58,6 +58,9 @@ A gateway to Gehenna
 %%%%
 A gateway to Hell
 
+"Lasciate ogne speranza, voi ch'intrate."
+	-Dante Alighieri, _Divina Commedia_, "L'Inferno", Canto III.
+	circa 1315.
 %%%%
 A gateway to the Iron City of Dis
 
@@ -76,6 +79,21 @@ A glowing white marble altar of Zin
 %%%%
 A granite statue
 
+"I met a traveller from an antique land
+Who said: Two vast and trunkless legs of stone
+Stand in the desert. Near them on the sand,
+Half sunk, a shatter'd visage lies, whose frown
+And wrinkled lip and sneer of cold command
+Tell that its sculptor well those passions read
+Which yet survive, stamp'd on these lifeless things,
+The hand that mock'd them and the heart that fed.
+And on the pedestal these words appear:
+"My name is Ozymandias, king of kings:
+Look on my works, ye Mighty, and despair!"
+Nothing beside remains: round the decay
+Of that colossal wreck, boundless and bare,
+The lone and level sands stretch far away."
+	-Percy Bysshe Shelley, "Ozymandias".  1818.
 %%%%
 A labyrinth entrance
 
@@ -160,7 +178,7 @@ A staircase to the Crypt
 %%%%
 A staircase to the Ecumenical Temple
 
-An entrance to the Temple of the Gods, a place of peace and refuge
+An entrance to the Temple of the Gods, a place of peace, and a refuge
 from the insanity of the dungeon.
 %%%%
 A staircase to the Elven Halls

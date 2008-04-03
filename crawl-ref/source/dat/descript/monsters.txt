@@ -56,6 +56,12 @@ An ancient lich. The air around his shrouded form crackles with evil energy.
 Cacodemon
 
 A hideously ugly demon of rage and legendary power.
+
+"We'll call him Cacodemon, with his black Gib there, his Succuba, his 
+Devil's Seed, his Spawn of Phlegethon, that o' my Conſience was bred 
+o' the Spume of Cocytus."
+    -John Fletcher, _The Knight of Malta_.  1647.
+
 %%%%
 Cerebov
 
@@ -68,6 +74,9 @@ A divine agent of the Shining One, it is a towering winged figure with an aura o
 Dispater
 
 The lord of the Iron City of Dis.
+
+"Hoc idem magis ostendit antiquius Iovis nomen: nam olim Diovis et Diespiter dictus, id est dies pater; a quo dei dicti qui inde, et dius et divum, unde sub divo, Dius Fidius. Itaque inde eius perforatum tectum, ut ea videatur divum, id est caelum. Quidam negant sub tecto per hunc deierare oportere. Aelius Dium Fidium dicebat Diovis filium, ut Graeci Dioskopon Castorem, et putabat hunc esse Sancum ab Sabina lingua et Herculem a Graeca. Idem hic Dis pater dicitur infimus, qui est coniunctus terrae, ubi omnia ut oriuntur ita aboriuntur; quorum quod finis ortuum, Orcus dictus."
+	-Marcus Terentius Varro, _De Lingua Latina_, Liber V, circa 40 BC.
 %%%%
 Donald
 
@@ -117,7 +126,15 @@ A svelte fighter-mage, wearing a gold-rimmed monocle.
 %%%%
 Geryon
 
-A huge, winged arch-demon, guardian of the gates of Hell.
+A huge, three-headed, winged arch-demon, guardian of the gates of Hell.
+
+"Khrysaor, married to Kallirhoe, daughter of glorious Okeanos, was father to the
+triple-headed Geryon, but Geryon was killed by the great strength of Herakles at
+sea-circled Erytheis beside his own shambling cattle on that day when Herakles drove
+those broad-faced cattle toward holy Tiryns, when he crossed the stream of Okeanos and
+had killed Orthos and the oxherd Eurytion out in the gloomy meadow beyond fabulous 
+Okeanos."
+	-Hesiod, _Theogony_, circa 700 BCE.
 %%%%
 Gloorx Vloq
 
@@ -283,6 +300,24 @@ An evil human fighter.
 Tiamat
 
 A powerful dragon with mighty wings.  Her scales seem to shimmer and change colour as you watch.
+
+"He saith that Tiamat our mother hath conceived a hatred for us,
+With all her force she rageth, full of wrath.
+All the gods have turned to her,
+With those, whom ye created, they go at her side.
+They are banded together, and at the side of Tiamat they advance;
+They are furious, they devise mischief without resting night and day.
+They prepare for battle, fuming and raging;
+They have joined their forces and are making war.
+Tiamat who formed all things,
+Made in addition weapons invincible; she spawned monster-serpents,
+Sharp of tooth, and merciless of fang;
+With poison, instead of blood, she filled their bodies.
+Fierce monster-vipers she clothed with terror,
+With splendor she decked them, she made them of lofty stature.
+Whoever beheld them, terror overcame him,
+Their bodies reared up and none could withstand their attack."
+	-Enuma Elish, Third Tablet. circa 668 BCE.
 %%%%
 Urug
 
@@ -404,6 +439,12 @@ A large brown snake.
 bumblebee
 
 A very large and fat hairy bee.
+
+"How doth the little busy Bee 
+     Improve each shining Hour, 
+And gather Honey all the day 
+     From every opening Flower!"
+	-Isaac Watts.  1715.
 %%%%
 butterfly
 
@@ -703,6 +744,18 @@ A hideous stone statue come to life.
 ghoul
 
 An undead humanoid creature created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
+
+"In the desert
+I saw a creature, naked, bestial,
+Who, squatting upon the ground,
+Held his heart in his hands,
+And ate of it.
+I said, 'Is it good, friend?'
+'It is bitter - bitter', he answered,
+'But I like it
+Because it is bitter,
+And because it is my heart.'"
+	-Stephen Crane, _The Black Riders and Other Lines_.  1895.
 %%%%
 giant amoeba
 
@@ -932,7 +985,14 @@ A huge and hideous form, created or summoned by some arcane process.
 %%%%
 human
 
-A remarkably nondescript person.  How odd!
+A remarkably nondescript person.  How odd.
+
+"Do you know
+ Do I know
+ What's this thing called 'man'?
+ God only knows what a man is!
+ I only know his price."
+	-Bertolt Brecht, "The Measures Taken". 1930. 
 %%%%
 hungry ghost
 
@@ -1272,6 +1332,9 @@ Few plants can grow in the unpleasant dungeon environment, but some have managed
 player ghost
 
 The apparition of an unfortunate adventurer.
+
+"Know thyself."
+	-Inscription in the pronaos of the Temple of Apollo at Delphi	
 %%%%
 polar bear
 
@@ -1281,6 +1344,9 @@ program bug
 
 A ravenous and incredibly buggy monster. Please report its existence
 to the DevTeam.
+
+"If builders built buildings the way programmers wrote programs, then the first woodpecker that came along would destroy civilization"
+	-Gerald Weinberg, Weinberg's Second Law
 %%%%
 pulsating lump
 
@@ -1322,7 +1388,7 @@ rat
 
 Wherever there are men, there are rats -- rattus rattus.  This rat has grown large and aggressive in the pestilential dungeon environment.
 
-How now? a rat? Dead, for a ducat, dead!
+"How now? a rat? Dead, for a ducat, dead!"
      -William Shakespeare, Hamlet, Act III, 4
 %%%%
 reaper

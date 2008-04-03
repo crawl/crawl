@@ -102,9 +102,6 @@ the Ingredients have infuſed eight or ten Days the Liquor is to be ſtrain'd
 again and put into Bottles and ſo kept."
 	-Charles Carter, _The Compleat City and Country Cook:
 	Or, Accomplish'd House-wife_.  1732.
-
-  <a href="http://books.google.com/books?id=yYYEAAAAYAAJ&dq=apricot+date:1000-1800&lr=&pg=RA1-PA203&ci=46,134,779,604&source=bookclip">The Compleat City and Country Cook Or, Accomplish'd House-wife. Containing, Several Hundred of the Most Approv'd Receipts in Cookery, Confectionary, Cordials [etc.] ... Illustrated with Forty-nine Large Copper Plates, Directing the Regular Placing the Various Dishes on the Table ... Also, Bills of Fare According to the Several Seasons for Every Month of the Year ... By Charles Carter</a>
-
 %%%%
 arrow
 
@@ -162,8 +159,8 @@ grimoires are not to be toyed with.
 %%%%
 book of cantrips
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells. Unlike most of the other grimoires, 
+this one can be toyed with.
 %%%%
 book of changes
 
@@ -826,9 +823,6 @@ with them and beat all well together.  Put it into gallipots and tie
 it down ſo as properly to prevent the air getting to it."
 	-Francis Collingwood, John Woollams, _The Universal
 	Cook: And City and Country Housekeeper. 1792.
-
-
-  <a href="http://books.google.com/books?id=xJMEAAAAYAAJ&dq=orange+date:1000-1800&lr=&pg=PA292&ci=89,879,795,332&source=bookclip">The Universal Cook And City and Country Housekeeper By Francis Collingwood,  John Woollams</a>
 %%%%
 orb of zot
 
@@ -1474,7 +1468,6 @@ order or apparent arrangement. From that garden Bentham sent specimens
 of the Sultana raisin to England which he believed to have been the first 
 of that species which had ever reachedahis country."
 	-John Bowring, _The Works of Jeremy Bentham_.  1839.  
-
 %%%%
 swamp dragon armour
 
