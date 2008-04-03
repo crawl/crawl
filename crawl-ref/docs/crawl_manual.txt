@@ -1767,7 +1767,8 @@ Vampires
   of regeneration will not work. On the other hand, a Vampire full with
   blood will regenerate very quickly, but lose all undead powers.
   Vampires can never starve. Upon growing, they learn to transform into
-  quick bats, and later how to draw potions of blood from fresh corpses.
+  quick bats (in which form they can heal even when bloodless), and,
+  later, how to draw potions of blood from fresh corpses.
 
 
 Note: Use 'A' to check for which particular peculiarities a species
