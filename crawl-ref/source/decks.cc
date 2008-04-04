@@ -2139,13 +2139,14 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
         if ( grd[you.x_pos][you.y_pos] == DNGN_FLOOR )
         {
             // might get GOD_NO_GOD and no altar
-            grd[you.x_pos][you.y_pos] =
-                altar_for_god(static_cast<god_type>(random2(NUM_GODS)));
+            god_type rgod = static_cast<god_type>(random2(NUM_GODS));
+            grd[you.x_pos][you.y_pos] = altar_for_god(rgod);
 
             if ( grd[you.x_pos][you.y_pos] != DNGN_FLOOR )
             {
                 done_stuff = true;
-                mpr("An altar grows from the floor before you!");
+                mprf("An altar to %s grows from the floor before you!",
+                     god_name(rgod).c_str());
             }
         }
     }
