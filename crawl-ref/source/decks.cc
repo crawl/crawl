@@ -1985,7 +1985,8 @@ static void _experience_card(int power, deck_rarity_type rarity)
 
 static void _helix_card(int power, deck_rarity_type rarity)
 {
-    mutation_type bad_mutations[] = {
+    const int power_level = get_power_level(power, rarity);
+    const mutation_type bad_mutations[] = {
         MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY,
         MUT_TELEPORT, MUT_DEFORMED, MUT_SCREAM, MUT_DETERIORATION,
         MUT_BLURRY_VISION, MUT_FRAIL
@@ -2004,6 +2005,27 @@ static void _helix_card(int power, deck_rarity_type rarity)
         delete_mutation(which_mut);
     else
         mpr("You feel transcendent for a moment.");
+
+    // Playing with genetics is tricky:
+    // You always have a 50% chance of losing an extra mutation,
+    // and a 50% chance of gaining a mutation.
+
+    // With power level 2: extra mutation is random
+    // With power level 1: 50% extra mutation is bad
+    // With power level 0: 75% extra mutation is bad
+    if ( coinflip() )
+         delete_mutation(RANDOM_MUTATION);
+    if ( coinflip() )
+    {
+        if ( (power_level == 0 && one_chance_in(4)) ||
+             (power_level == 1 && coinflip()) ||
+             (power_level == 2) )
+        {
+            mutate(RANDOM_MUTATION);
+        }
+        else
+            mutate( RANDOM_ELEMENT(bad_mutations) );
+    }
 }
 
 static void _sage_card(int power, deck_rarity_type rarity)
