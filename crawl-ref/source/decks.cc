@@ -91,6 +91,7 @@ const deck_archetype deck_of_emergency[] = {
     { CARD_DAMNATION,  {0, 1, 2} },
     { CARD_SOLITUDE,   {5, 5, 5} },
     { CARD_WARPWRIGHT, {5, 5, 5} },
+    { CARD_FLIGHT,     {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -290,6 +291,7 @@ const char* card_name(card_type card)
     case CARD_FAMINE:          return "Famine";
     case CARD_FEAST:           return "the Feast";
     case CARD_WARPWRIGHT:      return "Warpwright";
+    case CARD_FLIGHT:          return "Flight";
     case CARD_VITRIOL:         return "Vitriol";
     case CARD_FLAME:           return "Flame";
     case CARD_FROST:           return "Frost";
@@ -1445,6 +1447,33 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
     }
 }
 
+static void _flight_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    
+    if ( power_level == 0 )
+        transform(random2(power/4), coinflip() ? TRAN_SPIDER : TRAN_BAT);
+    if ( power_level >= 1 )
+    {
+        cast_fly(random2(power/4));
+        cast_swiftness(random2(power/4));
+    }
+    if ( power_level == 2 )
+    {
+        if (is_valid_shaft_level() && grd[you.x_pos][you.y_pos] == DNGN_FLOOR)
+        {
+            if ( place_specific_trap(you.x_pos, you.y_pos, TRAP_SHAFT) )
+            {
+                const int i = trap_at_xy(you.x_pos, you.y_pos);
+                grd[you.x_pos][you.y_pos] = trap_category(env.trap[i].type);
+                mpr("A shaft materializes beneath you!");
+            }
+        }
+    }
+    if ( one_chance_in(4 - power_level) )
+        potion_effect(POT_INVISIBILITY, random2(power)/4);
+}
+
 static void _minefield_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
@@ -2497,6 +2526,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_GENIE:            _genie_card(power, rarity); break;
     case CARD_CURSE:            _curse_card(power, rarity); break;
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;
+    case CARD_FLIGHT:           _flight_card(power, rarity); break;
     case CARD_TOMB:             entomb(power); break;
     case CARD_WRAITH:           drain_exp(false); lose_level(); break;
     case CARD_WRATH:            _godly_wrath(); break;

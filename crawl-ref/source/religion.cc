@@ -4388,7 +4388,10 @@ void offer_items()
                 // when you have low piety.
                 || value/2 >= random2(30 + you.piety/2))
             {
-                gain_piety(1);
+                if ( is_artefact(item) )
+                    gain_piety(2);
+                else
+                    gain_piety(1);
                 gained_piety = true;
             }
 

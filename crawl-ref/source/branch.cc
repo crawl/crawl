@@ -10,6 +10,7 @@
 #include "cloud.h"
 #include "externs.h"
 #include "mon-pick.h"
+#include "place.h"
 #include "player.h"
 #include "spells3.h"
 #include "traps.h"
@@ -17,6 +18,11 @@
 Branch& your_branch()
 {
     return branches[you.where_are_you];
+}
+
+bool at_branch_bottom()
+{
+    return your_branch().depth == player_branch_depth();
 }
 
 branch_type str_to_branch(const std::string &branch, branch_type err)
