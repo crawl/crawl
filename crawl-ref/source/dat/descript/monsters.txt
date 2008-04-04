@@ -1,4 +1,16 @@
 %%%%
+__r_suffix
+
+$"How now? a rat? Dead, for a ducat, dead!"
+     -William Shakespeare, Hamlet, Act III, 4
+%%%%
+__cap-K_suffix
+
+$"The Parts Septentrionall are with these Sp'ryts Much haunted..
+About the places where they dig for Oare. The Greekes and Germans 
+call them Cobali."
+	-Heywood, Hierarch. ix. 568, circa 1635
+%%%%
 __cap-N_suffix
 
 $"The insensible son of Pandu sank down till he reached the Naga kingdom.
@@ -16,6 +28,24 @@ him, he regained his senses, and bursting his fetters, commenced laying
 at us. May it please Your Majesty to enquire who is.'"
 	-_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
+__cap-S_suffix
+
+$"The latter lived in the country, and before his house there was an oak, 
+in which there was a lair of snakes. His servants killed the snakes, but 
+Melampus gathered wood and burnt the reptiles, and reared the young ones. 
+And when the young were full grown, they stood beside him at each of his 
+shoulders as he slept, and they purged his ears with their tongues. He 
+started up in a great fright, but understood the voices of the birds flying 
+overhead, and from what he learned from them he foretold to men what should come to pass."
+	-Apollodurus (apocryphal), Library and Epitome, 1.9.11. circa 150 BC.
+	Sir James George Frazer, translator
+	 
+"A snake, with mottles rare,
+Surveyed my chamber floor,
+In feature as the worm before,
+But ringed with power."	
+	-Emily Dickinson, "In Winter In My Room"
+%%%%
 &
 
 You feel a lump in the pit of your stomach.  
@@ -27,6 +57,14 @@ A lanky warrior.
 Antaeus
 
 A great titan who lives in the depths of Cocytus.
+
+"That country was then ruled by Antaeus, son of Poseidon, who used to 
+kill strangers by forcing them to wrestle. Being forced to wrestle with 
+him, Hercules hugged him, lifted him aloft, broke and killed him; for 
+when he touched earth so it was that he waxed stronger, wherefore some 
+said that he was a son of Earth."
+	-Apollodorus (apocryphal), _Library and Epitome_, 2.5.11, circa 150 BC.
+	Sir James George Frazer, translator.
 %%%%
 Asmodeus
 
@@ -182,7 +220,10 @@ A tall bounty hunter.
 %%%%
 Killer Klown
 
-A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red facepaint or something altogether less pleasant?  Join in the fun, and maybe you'll find out!
+A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red facepaint or something altogether less pleasant?
+
+"All the world loves a clown."
+	-Cole Porter, "Be a Clown".  1948.
 %%%%
 Lom Lobon
 
@@ -215,6 +256,9 @@ A weirdly glowing figure, dancing through the twisted air of Pandemonium.
 Murray
 
 A demonic skull rolling along the dungeon floor.
+
+"Look behind you! A three-headed monkey!"
+	-Guybrush Threepwood, _The Secret of Monkey Island_
 %%%%
 Norbert
 
@@ -867,6 +911,15 @@ A shapeshifter which has lost control over its transformations, and is constantl
 gnoll
 
 A taller and better-equipped relative of goblins and orcs, somewhat doglike in appearance.
+
+"Then he descended softly and beckoned to Nuth.  But the gnoles had
+watched him through knavish holes that they bore in trunks of the
+trees, and the unearthly silence gave way, as it were with a grace, 
+to the rapid screams of Tonker as they picked him up from behind -- screams
+that came faster and faster until they were incoherent.  And where they took 
+him it is not good to ask, and what they did with him I shall not say."
+	-Lord Dunsanay, "How Nuth Would Have Practiced His Art Upon the Gnoles". 
+	1912.
 %%%%
 goblin
 
@@ -1092,11 +1145,6 @@ No one knows where kobolds originated.  Some say they were the creation
 of an ancient demon-god, while others think they are household spirits
 gone bad.  Kobolds look like small, greyish creatures with canine heads.  
 Whatever their origin, this one is not happy to see you.
-
-"The Parts Septentrionall are with these Sp'ryts Much haunted..
-About the places where they dig for Oare. The Greekes and Germans 
-call them Cobali."
-	-Heywood, Hierarch. ix. 568, circa 1635
 %%%%
 kobold demonologist
 
@@ -1387,9 +1435,6 @@ he both shines and stinks."
 rat
 
 Wherever there are men, there are rats -- rattus rattus.  This rat has grown large and aggressive in the pestilential dungeon environment.
-
-"How now? a rat? Dead, for a ducat, dead!"
-     -William Shakespeare, Hamlet, Act III, 4
 %%%%
 reaper
 
