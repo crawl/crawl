@@ -401,6 +401,7 @@ i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
 i-vorpalize-weapon SCR_VORPALISE_WEAPON
 i-recharging SCR_RECHARGING
 i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
+i-holy_word SCR_HOLY_WORD
 %back none
 
 ##################OBJ_JEWELLERY
