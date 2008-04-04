@@ -4901,7 +4901,7 @@ void crawl_view_buffer::size(const coord_def &sz)
 // other things.  I don't want to risk breaking tiles, so leaving alone --pld
 #  define HUD_HEIGHT 17
 #else
-#  define HUD_HEIGHT 15
+#  define HUD_HEIGHT 14
 #endif
 #define MSG_MIN_HEIGHT 6
 #define MSG_MAX_HEIGHT 10

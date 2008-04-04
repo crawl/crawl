@@ -315,12 +315,6 @@ void level_change(bool skip_attribute_increase = false);
 
 
 /* ***********************************************************************
- * called from: skills
- * *********************************************************************** */
-void redraw_skill(const std::string &your_name, const std::string &class_name);
-
-
-/* ***********************************************************************
  * called from: ability - fight - item_use - mutation - newgame - spells0 -
  *              transfor
  * *********************************************************************** */

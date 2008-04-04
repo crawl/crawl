@@ -24,6 +24,7 @@
 
 #include "macro.h"
 #include "notes.h"
+#include "output.h"
 #include "player.h"
 #include "skills2.h"
 #include "stuff.h"

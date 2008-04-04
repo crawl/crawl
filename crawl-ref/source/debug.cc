@@ -77,6 +77,7 @@
 #include "mutation.h"
 #include "newgame.h"
 #include "ouch.h"
+#include "output.h"
 #include "place.h"
 #include "player.h"
 #include "randart.h"

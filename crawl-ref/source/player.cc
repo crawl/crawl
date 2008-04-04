@@ -3945,32 +3945,6 @@ void display_char_status()
 #endif
 }                               // end display_char_status()
 
-void redraw_skill(const std::string &your_name, const std::string &class_name)
-{
-    std::string title = your_name + " the " + class_name;
-
-    int in_len = title.length();
-    if (in_len > 40)
-    {
-        in_len -= 3;  // what we're getting back from removing "the"
-
-        const int name_len = your_name.length();
-        std::string trimmed_name = your_name;
-
-        // squeeze name if required, the "- 8" is to not squeeze too much
-        if (in_len > 40 && (name_len - 8) > (in_len - 40))
-            trimmed_name =
-                trimmed_name.substr(0, name_len - (in_len - 40) - 1);
-
-        title = trimmed_name + ", " + class_name;
-    }
-
-    cgotoxy(1, 1, GOTO_STAT);
-
-    textcolor( LIGHTGREY );
-    cprintf( "%-41s", title.c_str() );
-}
-
 // Does a case-sensitive lookup of the species name supplied.
 int str_to_species(const std::string &species)
 {

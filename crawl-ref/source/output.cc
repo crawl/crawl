@@ -127,7 +127,7 @@ static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
     if (you.running >= 2 && is_resting() && val != max_val)
         return -1;
 
-    const int width = crawl_view.hudsz.x - ox - 1;
+    const int width = crawl_view.hudsz.x - (ox-1);
     int disp = width * val / max_val;
 
     cgotoxy(ox, oy, GOTO_STAT);
@@ -148,7 +148,7 @@ static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
 
         if (cx < disp) {
             textcolor(default_colour);
-            putch('-');
+            putch('=');
         } else if (old_val > val && old_disp > disp && cx < old_disp) {
             textcolor(change_colour);
             putch('-');
@@ -280,7 +280,7 @@ static void _print_stats_hp(int x, int y)
     }
 
     cgotoxy(x+4, y, GOTO_STAT);
-    // int col = -wherex();
+    int col=-wherex();
     cprintf( "%d", you.hp );
 
     textcolor(LIGHTGREY);
@@ -289,12 +289,12 @@ static void _print_stats_hp(int x, int y)
     if (max_max_hp != you.hp_max)
         cprintf( " (%d)", max_max_hp );
 
-    // col += wherex();
-    int col = _count_digits(you.hp) + _count_digits(you.hp_max) + 1;
+    col += wherex();
     if (max_max_hp != you.hp_max)
         col += _count_digits(max_max_hp) + 3;
     for (int i = 14-col; i > 0; i--)
         cprintf(" ");
+
     draw_hp_bar(19, y, you.hp, you.hp_max);
 }
 
@@ -770,12 +770,11 @@ void print_stats(void)
         you.redraw_evasion = true;
 
 
-    // HP: 910/932 (999)
+    // Health: 910/932 (999)
     // Magic: 7/7
-    // Str: 13           AC:  3
+    // Str: 13        AC:  3
     // Int: 15        Sh:  -
     // Dex: 14        Ev: 12
-    // Gold: 30
     // Level 1 of the Dungeon
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp ( 1, 3); }
@@ -787,43 +786,34 @@ void print_stats(void)
     if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (19, 5); }
     // (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_sh (19, 6); }
     if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (19, 7); }
-
-    if (you.redraw_gold)
-    {
-        cgotoxy(1+6, 8, GOTO_STAT);
-        cprintf( "%-8d", you.gold );
-        you.redraw_gold = false;
-    }
-
     if (you.redraw_experience)
     {
-        cgotoxy(1+12, 9, GOTO_STAT);
+        cgotoxy(1+12, 8, GOTO_STAT);
 
 #if DEBUG_DIAGNOSTICS
         cprintf( "%d/%lu  (%d/%d)",
                  you.experience_level, you.experience,
                  you.skill_cost_level, you.exp_available );
 #else
-        cprintf( "%d/%lu  (%d)",
-                 you.experience_level, you.experience, you.exp_available );
+        cprintf( "Level %d  Pool %d",
+                 you.experience_level, you.exp_available );
 #endif
 
         clear_to_end_of_line();
-        you.redraw_experience = 0;
+        you.redraw_experience = false;
     }
-
-    if (you.wield_change)  { you.wield_change = false;  _print_stats_wp(11); }
-    if (you.quiver_change) { you.quiver_change = false; _print_stats_qv(12); }
+    if (you.wield_change)  { you.wield_change = false;  _print_stats_wp(10); }
+    if (you.quiver_change) { you.quiver_change = false; _print_stats_qv(11); }
 
     
     if (you.redraw_status_flags & REDRAW_LINE_1_MASK)
-        _print_stats_line1(13);
+        _print_stats_line1(12);
 
     if (you.redraw_status_flags & REDRAW_LINE_2_MASK)
-        _print_stats_line2(14);
+        _print_stats_line2(13);
 
     if (you.redraw_status_flags & REDRAW_LINE_3_MASK)
-        _print_stats_line3(15);
+        _print_stats_line3(14);
 
     you.redraw_status_flags = 0;
 
@@ -834,7 +824,7 @@ void print_stats(void)
 // For some odd reason, only redrawn on level change.
 void print_stats_level(const std::string& description)
 {
-    cgotoxy(7, 10, GOTO_STAT);
+    cgotoxy(7, 9, GOTO_STAT);
     textcolor(LIGHTGREY);
 #if DEBUG_DIAGNOSTICS
     cprintf( "(%d) ", you.your_level + 1 );
@@ -843,16 +833,49 @@ void print_stats_level(const std::string& description)
     clear_to_end_of_line();
 }
 
+void redraw_skill(const std::string &your_name, const std::string &class_name)
+{
+    std::string title = your_name + " the " + class_name;
+
+    int in_len = title.length();
+    const int WIDTH = 40; // use crawl_view.hudsz.x instead?
+    if (in_len > WIDTH)
+    {
+        in_len -= 3;  // what we're getting back from removing "the"
+
+        const int name_len = your_name.length();
+        std::string trimmed_name = your_name;
+
+        // squeeze name if required, the "- 8" is to not squeeze too much
+        if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
+            trimmed_name =
+                trimmed_name.substr(0, name_len - (in_len - WIDTH) - 1);
+
+        title = trimmed_name + ", " + class_name;
+    }
+
+    cgotoxy(1, 1, GOTO_STAT);
+
+    textcolor( YELLOW );
+    cprintf( "%-41s", title.c_str() );
+
+    cgotoxy(1, 2, GOTO_STAT);
+    cprintf("%s", species_name( you.species, you.experience_level ).c_str());
+    if (you.wizard)
+    {
+        textcolor( LIGHTBLUE );
+        cgotoxy(1 + crawl_view.hudsz.x-9, 2, GOTO_STAT);
+        cprintf(" *WIZARD*");
+    }
+
+    textcolor( LIGHTGREY );
+}
+
 void draw_border(void)
 {
     textcolor( BORDER_COLOR );
     clrscr();
     redraw_skill( you.your_name, player_title() );
-
-    cgotoxy(1, 2, GOTO_STAT);
-    cprintf( "%s %s",
-             species_name( you.species, you.experience_level ).c_str(),
-             (you.wizard ? "*WIZARD*" : "" ) );
 
     textcolor(Options.status_caption_colour);
 
@@ -861,8 +884,7 @@ void draw_border(void)
     cgotoxy( 1, 5, GOTO_STAT); cprintf("Str:");
     cgotoxy( 1, 6, GOTO_STAT); cprintf("Int:");
     cgotoxy( 1, 7, GOTO_STAT); cprintf("Dex:");
-    cgotoxy( 1, 8, GOTO_STAT); cprintf("Gold:");
-    cgotoxy( 1, 9, GOTO_STAT); cprintf("Experience:");
+    cgotoxy( 1, 8, GOTO_STAT); cprintf("Experience:");
 
     cgotoxy(19, 5, GOTO_STAT); cprintf("AC:");
     cgotoxy(19, 6, GOTO_STAT); cprintf("Sh:");
@@ -872,7 +894,7 @@ void draw_border(void)
         cgotoxy(19, 8, GOTO_STAT); cprintf("Turn:");
     }
     textcolor(LIGHTGREY);
-    cgotoxy( 1,10, GOTO_STAT); cprintf("Level");
+    cgotoxy( 1,9, GOTO_STAT); cprintf("Level");
 }                               // end draw_border()
 
 // ----------------------------------------------------------------------
@@ -1657,12 +1679,13 @@ void print_overview_screen()
     else
         snprintf(buf, sizeof buf, "HP %3d/%d (%d)",
                  you.hp, you.hp_max, you.hp_max + player_rotted() );
-
     cols1.add_formatted(0, buf, false);
 
     snprintf(buf, sizeof buf, "MP %3d/%d",
              you.magic_points, you.max_magic_points);
+    cols1.add_formatted(0, buf, false);
 
+    snprintf(buf, sizeof buf, "Gold %d", you.gold);
     cols1.add_formatted(0, buf, false);
 
     if (you.strength == you.max_strength)
@@ -1686,13 +1709,19 @@ void print_overview_screen()
                  you.dex, you.max_dex);
     cols1.add_formatted(1, buf, false);
 
-    snprintf(buf, sizeof buf,
-             "AC %2d\n"
-             "EV %2d\n"
-             "Sh %2d\n",
-             player_AC(),
-             player_evasion(),
-             player_shield_class());
+    snprintf(buf, sizeof buf, "AC %2d" , player_AC());
+    cols1.add_formatted(2, buf, false);
+    if (you.equip[EQ_SHIELD] == -1)
+    {
+        textcolor( DARKGREY );
+        snprintf(buf, sizeof buf, "Sh  <darkgrey>-</darkgrey>");
+    }
+    else
+    {
+        snprintf(buf, sizeof buf, "Sh %2d", player_shield_class());
+    }
+    cols1.add_formatted(2, buf, false);
+    snprintf(buf, sizeof buf, "Ev %2d" , player_evasion());
     cols1.add_formatted(2, buf, false);
 
     char god_colour_tag[20];
@@ -1712,7 +1741,7 @@ void print_overview_screen()
                 prank = 0;
             // Careful about overflow. We erase some of the god's name
             // if necessary.
-            godpowers = godpowers.substr(0, 17 - prank) +
+            godpowers = godpowers.substr(0, 29 - prank) + " " +
                 std::string(prank, '*');
         }
     }
@@ -1720,12 +1749,12 @@ void print_overview_screen()
     int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
     snprintf(buf, sizeof buf,
              "Exp: %d/%lu (%d)%s\n"
-             "God: %s%s<lightgrey>      Gold: %d\n"
+             "God: %s%s<lightgrey>\n"
              "Spells: %2d memorised, %2d level%s left\n",
              you.experience_level, you.experience, you.exp_available,
              (you.experience_level < 27?
               make_stringf(", need: %d", xp_needed).c_str() : ""),
-             god_colour_tag, godpowers.c_str(), you.gold,
+             god_colour_tag, godpowers.c_str(),
              you.spell_no, player_spell_levels(), (player_spell_levels() == 1) ? "" : "s");
     cols1.add_formatted(3, buf, false);
 

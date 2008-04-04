@@ -61,6 +61,7 @@
 #include "newgame.h"
 #include "notes.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "randart.h"
 #include "shopping.h"
