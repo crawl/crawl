@@ -1,4 +1,19 @@
 %%%%
+__c_suffix
+
+$"When Peleus, some distance away, saw him torn apart by the frightful 
+wound he shouted: 'Accept this tribute to the dead, at least, Crantor, 
+dearest of youths, ' and with his powerful arm, he hurled his ash spear, 
+at full strength, at Demoleon.  It ruptured the ribcage, and stuck 
+quivering in the bone. The centaur pulled out the shaft minus its head 
+(he tried with difficulty to reach that also) but the head was caught 
+in his lung. The pain itself strengthened his will: wounded, he reared 
+up at his enemy and beat the hero down with his hooves. Peleus received 
+the resounding blows on helmet and shield, and defending his upper arms, 
+and controlling the weapon he held out, with one blow through the arm 
+he pierced the bi-formed breast.'"
+	-Ovid, _Metamorphoses_, XII 330
+%%%%
 __r_suffix
 
 $"How now? a rat? Dead, for a ducat, dead!"
@@ -28,6 +43,20 @@ him, he regained his senses, and bursting his fetters, commenced laying
 at us. May it please Your Majesty to enquire who is.'"
 	-_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
+__cap-O_suffix
+
+"The little princess, asleep in her cradle, floated on the water, and at 
+last she was cast up on the shore of a beautiful country, where, however, 
+very few people dwelt since the ogre Ravagio and his wife Tourmentine had 
+gone to live there-for they ate up everybody. Ogres are terrible people. 
+When once they have tasted raw human flesh they will hardly eat anything 
+else, and Tourmentine always knew how to make some body come their way, 
+for she was half a fairy."
+	-Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, 
+	"'Orangier et l'Abeille".  1697
+	
+"NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get it? We both have layers."
+	-Shrek.  2001.
 __cap-S_suffix
 
 $"The latter lived in the country, and before his house there was an oak, 
@@ -502,19 +531,6 @@ grasp, but which, if you will sit down quietly, may alight upon you."
 centaur
 
 A hybrid with the torso of a human atop the body of a large horse.
-
-"When Peleus, some distance away, saw him torn apart by the frightful 
-wound he shouted: 'Accept this tribute to the dead, at least, Crantor, 
-dearest of youths, ' and with his powerful arm, he hurled his ash spear, 
-at full strength, at Demoleon.  It ruptured the ribcage, and stuck 
-quivering in the bone. The centaur pulled out the shaft minus its head 
-(he tried with difficulty to reach that also) but the head was caught 
-in his lung. The pain itself strengthened his will: wounded, he reared 
-up at his enemy and beat the hero down with his hooves. Peleus received 
-the resounding blows on helmet and shield, and defending his upper arms, 
-and controlling the weapon he held out, with one blow through the arm 
-he pierced the bi-formed breast.'"
-	-Ovid, _Metamorphoses_, XII 330
 %%%%
 centaur warrior
 
@@ -964,6 +980,13 @@ A very large grey python.
 griffon
 
 A large creature with the hindquarters of a lion and the wings, head, and talons of a great eagle.
+
+"As when a Gryphon through the wilderness,
+With winged course, o'er hill and moory dale,
+Pursues the Arimaspian who by stealth
+Hath from his wakeful custody purloined
+His guarded gold."
+	-Milton, _Paradise Lost_, Book II. 1667.
 %%%%
 grizzly bear
 
