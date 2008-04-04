@@ -67,6 +67,8 @@
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
 
+static void _deck_ident(item_def& deck);
+
 struct card_with_weights
 {
     card_type card;
@@ -447,6 +449,10 @@ static void _remember_drawn_card(item_def& deck, card_type card)
     CrawlHashTable &props = deck.props;
     CrawlVector &drawn = props["drawn_cards"].get_vector();
     drawn.push_back( static_cast<char>(card) );
+
+    // Once you've drawn two cards, you know the deck.
+    if ( drawn.size() >= 2 )
+        _deck_ident(deck);
 }
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck)
@@ -1046,6 +1052,18 @@ bool deck_triple_draw()
 
     if (_check_buggy_deck(deck))
         return false;
+
+    // lose some cards, but keep at least two
+    if ( cards_in_deck(deck) > 2 )
+    {
+        const int num_lost = std::min(cards_in_deck(deck)-2, random2(2) + 1);
+        for ( int i = 0; i < num_lost; ++i )
+            _deck_lose_card(deck);
+        if ( num_lost == 1 )
+            mpr("A card falls out of the deck.");
+        else if ( num_lost > 1 )
+            mpr("Some cards fall out of the deck.");
+    }
 
     const int num_cards = cards_in_deck(deck);
 
