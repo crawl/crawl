@@ -6,16 +6,18 @@ spwpn_wrath_of_trog SPWPN_WRATH_OF_TROG /* This was the favourite weapon of the 
 spwpn_scythe_of_curses SPWPN_SCYTHE_OF_CURSES /* This weapon carries a terrible and highly irritating curse.
 spwpn_mace_of_variability SPWPN_MACE_OF_VARIABILITY /* It is rather unreliable.
 spwpn_glaive_of_prune SPWPN_GLAIVE_OF_PRUNE /* It is the creation of a mad god, and carries a curse which transforms anyone possessing it into a prune. Fortunately, the curse works very slowly, and one can use it briefly with no consequences worse than slightly purple skin and a few wrinkles.
+%rim 1
 spwpn_sceptre_of_torment SPWPN_SCEPTRE_OF_TORMENT /* This truly accursed weapon is an instrument of Hell.
 spwpn_sword_of_zonguldrok SPWPN_SWORD_OF_ZONGULDROK /* This dreadful weapon is used at the user's peril.
 spwpn_sword_of_cerebov SPWPN_SWORD_OF_CEREBOV /* Eerie flames cover its twisted blade. 
 spwpn_staff_of_dispater SPWPN_STAFF_OF_DISPATER /* This legendary item can unleash the fury of Hell.
 spwpn_sceptre_of_asmodeus SPWPN_SCEPTRE_OF_ASMODEUS /* It carries some of the powers of the arch-fiend Asmodeus.
 spwpn_sword_of_power SPWPN_SWORD_OF_POWER /* It rewards the powerful with power and the meek with weakness.
+%rim 0
 spwpn_knife_of_accuracy SPWPN_KNIFE_OF_ACCURACY /* It is almost unerringly accurate.
 spwpn_staff_of_olgreb SPWPN_STAFF_OF_OLGREB /* It was the magical weapon wielded by the mighty wizard Olgreb before he met his fate somewhere within these dungeons. It grants its wielder resistance to the effects of poison and increases their ability to use venomous magic, and carries magical powers which can be evoked.
 spwpn_vampires_tooth SPWPN_VAMPIRES_TOOTH /* It is lethally vampiric.
-quarterstaff SPWPN_STAFF_OF_WUCAD_MU /* Its power varies in proportion to its wielder's intelligence.   Using it can be a bit risky.
+spwpn_wucad_mu SPWPN_STAFF_OF_WUCAD_MU /* Its power varies in proportion to its wielder's intelligence.   Using it can be a bit risky.
 
 ##### Unrandom artifacts
 %include dc-urand.txt
@@ -271,8 +273,10 @@ shield_kite2 ARM_SHIELD_1
 shield_round2 ARM_SHIELD_2
 
 #dwarvish_roundshield ARM_BUCKLER
+%rim 0
 small_shield ARM_BUCKLER /* A small shield.
 small_shield2 ARM_BUCKLER_1
+%rim 1
 
 large_shield ARM_LARGE_SHIELD /* Like a normal shield, only larger. It is very cumbersome to wear, and slows the rate at which you may attack.
 shield_large2 ARM_LARGE_SHIELD_1

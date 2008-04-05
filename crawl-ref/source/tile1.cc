@@ -906,22 +906,17 @@ static int _tileidx_unrand_artefact(int idx)
         case 44: return TILE_URAND_ERCHIDEL;
         case 45: return TILE_URAND_NIGHT;
         case 46: return TILE_URAND_PLUTONIUM;
-        case 47: return TILE_URAND_UNDERADHUNTER;
+        case 47: return TILE_URAND_UNDEADHUNTER;
         case 48: return TILE_URAND_DRAGON_KING;
         case 49: return TILE_URAND_ALCHEMIST;
         case 50: return TILE_URAND_FENCER;
         case 51: return TILE_URAND_MAGE;
         case 52: return TILE_URAND_BLOWGUN;
-        case 53: //return TILE_URAND_WYRMBANE;
-                 return TILE_WPN_SPEAR + 1;
-        case 54: //return TILE_URAND_SPRIGGAN;
-                 return TILE_WPN_KNIFE + 1;
-        case 55: //return TILE_URAND_LAJATANG;
-                 return TILE_WPN_LAJATANG + 1;
-        case 56: //return TILE_URAND_BROOCH;
-                 return TILE_AMU_RANDOM_OFFSET + 2;
-        case 57: //return TILE_URAND_SERPENT_SCOURGE;
-                 return TILE_WPN_WHIP + 1;
+        case 53: return TILE_URAND_WYRMBANE;
+        case 54: return TILE_URAND_SPRIGGANS_KNIFE;
+        case 55: return TILE_URAND_DIRE_LAJATANG;
+        case 56: return TILE_URAND_BROOCH_OF_SHIELDING;
+        case 57: return TILE_URAND_SERPENT_SCOURGE;
         default: return TILE_TODO;
     }
 }
@@ -2871,11 +2866,10 @@ int tilep_equ_weapon(const item_def &item)
             case SPWPN_SCEPTRE_OF_ASMODEUS: return TILEP_HAND1_ASMODEUS;
             case SPWPN_STAFF_OF_OLGREB:     return TILEP_HAND1_OLGREB;
 
-            case SPWPN_SWORD_OF_POWER: 
-            case SPWPN_KNIFE_OF_ACCURACY:
-            case SPWPN_VAMPIRES_TOOTH:
-            case SPWPN_STAFF_OF_WUCAD_MU:
-                break;
+            case SPWPN_SWORD_OF_POWER:      return TILEP_HAND1_SWORD_OF_POWER;
+            case SPWPN_KNIFE_OF_ACCURACY:   return TILEP_HAND1_KNIFE_OF_ACCURACY;
+            case SPWPN_VAMPIRES_TOOTH:      return TILEP_HAND1_VAMPIRES_TOOTH;
+            case SPWPN_STAFF_OF_WUCAD_MU:   return TILEP_HAND1_WUCAD_MU;
         }
     }
 
@@ -2887,48 +2881,54 @@ int tilep_equ_weapon(const item_def &item)
             case 2:  return TILEP_HAND1_BLOODBANE;
             // Flaming Death
             case 4:  return TILEP_HAND1_FLAMING_DEATH;
-            //mace of Brilliance
-            case 8:  return TILEP_HAND1_MACE_OF_VARIABILITY;
-            //demon blade Leech
+            // mace of Brilliance
+            case 8:  return TILEP_HAND1_MACE_OF_BRILLIANCE;
+            // demon blade Leech
             case 12: return TILEP_HAND1_LEECH;
-            //dagger of Chilly Death
+            // dagger of Chilly Death
             case 15: return TILEP_HAND1_CHILLY_DEATH;
-            //dagger \"Morg\"
+            // dagger "Morg"
             case 17: return TILEP_HAND1_MORG;
-            //scythe \"Finisher
+            // scythe "Finisher"
             case 18: return TILEP_HAND1_FINISHER;
-            //sling \"Punk
+            // sling "Punk
             case 19: return TILEP_HAND1_PUNK;
-            //bow of Krishna
+            // bow of Krishna
             case 20: return TILEP_HAND1_KRISHNA;
-            //giant club \"Skullcrusher
-            case 22: break;
-            //glaive of the Guard
-            case 24: break;
-            //sword of Jihad
+            // giant club "Skullcrusher"
+            case 22: return TILEP_HAND1_GIANT_CLUB_SLANT;
+            // glaive of the Guard
+            case 24: return TILEP_HAND1_GLAIVE_OF_THE_GUARD;
+            // sword of Jihad
             case 25: return TILEP_HAND1_JIHAD;
-            //crossbow \"Fiery Devil
+            // crossbow "Fiery Devil"
             case 28: return TILEP_HAND1_FIERY_DEVIL;
-            //sword of Doom Knight
+            // sword of Doom Knight
             case 31: return TILEP_HAND1_DOOM_KNIGHT;
-            //Eos
-            case 35: break;
-            //spear of Voo-Doo
+            // Eos
+            case 35: return TILEP_HAND1_EOS;
+            // spear of Voo-Doo
             case 39: return TILEP_HAND1_VOODOO;
-            //trident of the Octopus king
-            case 40: break;
-            //mithril axe \"Arga
+            // trident of the Octopus king
+            case 40: return TILEP_HAND1_TRIDENT_OCTOPUS_KING;
+            // mithril axe "Arga"
             case 42: return TILEP_HAND1_ARGA;
-            //Elemental Staff
+            // Elemental Staff
             case 43: return TILEP_HAND1_ELEMENTAL_STAFF;
-            //hand crossbow \"Sniper
+            // hand crossbow "Sniper"
             case 44: return TILEP_HAND1_SNIPER;
-            //bow \"Erchidel
+            // bow "Erchidel"
             case 45: return TILEP_HAND1_GREAT_BOW;
-            //plutonium sword
+            // plutonium sword
             case 47: return TILEP_HAND1_PLUTONIUM_SWORD;
-            //mace \"Undeadhunter
-            case 48: return TILEP_HAND1_LARGE_MACE;
+            // mace "Undeadhunter"
+            case 48: return TILEP_HAND1_UNDEADHUNTER;
+            // blowgun of the Assassin
+            case 53: return TILEP_HAND1_BLOWGUN_ASSASSIN;
+            case 54: return TILEP_HAND1_WYRMBANE;
+            case 55: return TILEP_HAND1_SPRIGGANS_KNIFE;
+            case 56: return TILEP_HAND1_DIRE_LAJATANG;
+            case 58: return TILEP_HAND1_SERPENT_SCOURGE;
         }
     }
 
@@ -2943,7 +2943,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_DIRE_FLAIL:        return TILEP_HAND1_GREAT_FRAIL;
     case WPN_MORNINGSTAR:       return TILEP_HAND1_MORNINGSTAR;
     case WPN_EVENINGSTAR:       return TILEP_HAND1_EVENINGSTAR;
-    case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_SLANT;
+    case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
     case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
     case WPN_ANCUS:             return TILEP_HAND1_MACE;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
@@ -2973,7 +2973,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_EXECUTIONERS_AXE: return TILEP_HAND1_EXECUTIONERS_AXE;
     case WPN_BARDICHE:         return TILEP_HAND1_GLAIVE3;
 
-    //Pole
+    // Pole
     case WPN_SPEAR:         return TILEP_HAND1_SPEAR;
     case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
     case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
@@ -2984,7 +2984,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_TRIDENT:       return TILEP_HAND1_TRIDENT2;
     case WPN_LAJATANG:      return TILEP_HAND1_D_GLAIVE;
 
-    //Ranged
+    // Ranged
     case WPN_SLING:         return TILEP_HAND1_SLING;
     case WPN_BOW:           return TILEP_HAND1_BOW2;
     case WPN_CROSSBOW:      return TILEP_HAND1_CROSSBOW;
@@ -3006,11 +3006,11 @@ int tilep_equ_armour(const item_def &item)
         switch (find_unrandart_index(item) + 1)
         {
             // Holy Armour of Zin
-            case 6:  return TILEP_BODY_ARMOR_MUMMY;
+            case 6: return TILEP_BODY_ARMOR_MUMMY;
             // robe of Augmentation
-            case 7:  return TILEP_BODY_ROBE_RED2;
+            case 7: return TILEP_BODY_ROBE_WHITE_BLUE;
             // robe of Misfortune
-            case 14: return TILEP_BODY_ARWEN;
+            case 14: return TILEP_BODY_ROBE_MISFORTUNE;
             // Lear's chain mail
             case 26: return TILEP_BODY_LEARS_CHAIN_MAIL;
             // skin of Zhor
@@ -3018,7 +3018,7 @@ int tilep_equ_armour(const item_def &item)
             // salamander hide armour
             case 29: return TILEP_BODY_LEATHER_RED;
             // robe of Folly
-            case 33: return TILEP_BODY_ROBE_BLACK;
+            case 33: return TILEP_BODY_ROBE_RED2;
             // Edison's patent armour
             case 38: return TILEP_BODY_EDISON;
             // robe of Night
@@ -3100,7 +3100,7 @@ int tilep_equ_shield(const item_def &item)
         switch (find_unrandart_index(item) + 1)
         {
             // shield of Ignorance
-            case 5:  return TILEP_HAND2_SHIELD_SHAMAN;
+            case 5:  return TILEP_HAND2_SHIELD_OF_IGNORANCE;
             // Bullseye
             case 10: return TILEP_HAND2_BULLSEYE;
             // shield of Resistance

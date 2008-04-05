@@ -1,6 +1,6 @@
 %sdir item
 weapon/urand_bloodbane URAND_BLOODBANE
-weapon/urand_fkaming_death URAND_FLAMING_DEATH
+weapon/urand_flaming_death URAND_FLAMING_DEATH
 weapon/urand_brilliance URAND_BRILLIANCE
 weapon/urand_leech URAND_LEECH
 weapon/urand_chilly_death URAND_CHILLY_DEATH
@@ -21,8 +21,14 @@ weapon/urand_elemental URAND_ELEMENTAL
 weapon/urand_sniper URAND_SNIPER
 weapon/urand_erchidel URAND_ERCHIDEL
 weapon/urand_plutonium URAND_PLUTONIUM
-weapon/urand_undeadhunter URAND_UNDERADHUNTER
+weapon/urand_undeadhunter URAND_UNDEADHUNTER
+%rim 1
 weapon/urand_blowgun URAND_BLOWGUN
+weapon/urand_serpent_scourge URAND_SERPENT_SCOURGE
+weapon/urand_dire_lajatang URAND_DIRE_LAJATANG
+weapon/urand_wyrmbane URAND_WYRMBANE
+weapon/urand_spriggans_knife URAND_SPRIGGANS_KNIFE
+%rim 0
 armor/urand_ignorance URAND_IGNORANCE
 armor/urand_zin URAND_ZIN
 armor/urand_augmentation URAND_AUGMENTATION
@@ -51,4 +57,5 @@ ring/urand_mage URAND_MAGE
 amulet/urand_cekugob URAND_CEKUGOB
 amulet/urand_four_winds URAND_FOUR_WINDS
 amulet/urand_bloodlust URAND_BLOODLUST
+amulet/urand_brooch_of_shielding URAND_BROOCH_OF_SHIELDING
 
