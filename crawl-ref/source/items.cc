@@ -1476,7 +1476,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
         if (!quiet)
         {
-            mprf("You pick up %d gold piece%s bringing you to a "
+            mprf("You pick up %d gold piece%s, bringing you to a "
                  "total of %d gold pieces.",
                  quant_got, (quant_got > 1) ? "s" : "", you.gold );
         }
