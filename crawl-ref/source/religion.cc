@@ -1018,7 +1018,7 @@ bool bless_follower(monsters* follower,
 
         if (monster == NON_MONSTER)
         {
-            if (chance <= 4)
+            if (chance <= 1)
             {
                 switch (god)
                 {
