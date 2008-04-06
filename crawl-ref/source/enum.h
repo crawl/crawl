@@ -2006,7 +2006,7 @@ enum mon_spellbook_type
     MST_DRAC_CALLER,
     MST_DRAC_SHIFTER,
     MST_CURSE_TOE,
-    MST_RUPERT,
+    MST_RUPERT,                         // 135
     MST_ICE_STATUE,
     NUM_MSTYPES,
     MST_NO_SPELLS = 250
