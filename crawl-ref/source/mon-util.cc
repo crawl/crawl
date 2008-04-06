@@ -4984,7 +4984,7 @@ bool monsters::can_go_berserk() const
 {
     if (holiness() != MH_NATURAL)
         return (false);
-    
+
     if (has_ench(ENCH_FATIGUE) || has_ench(ENCH_BERSERK))
         return (false);
 
@@ -4992,7 +4992,7 @@ bool monsters::can_go_berserk() const
     const mon_attack_def attk = mons_attack_spec(this, 0);
     if (attk.type == AT_NONE || attk.damage == 0)
         return (false);
-    
+
     return (true);
 }
 
@@ -5000,7 +5000,7 @@ bool monsters::needs_berserk(bool check_spells) const
 {
     if (!can_go_berserk())
         return (false);
-    
+
     if (has_ench(ENCH_HASTE) || has_ench(ENCH_TP))
         return (false);
 
