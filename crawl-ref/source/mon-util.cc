@@ -5000,22 +5000,15 @@ bool monsters::needs_berserk(bool check_spells) const
 {
     if (!can_go_berserk())
         return (false);
-    
+
     if (has_ench(ENCH_HASTE) || has_ench(ENCH_TP))
         return (false);
 
     if (foe_distance() > 3)
         return (false);
 
-    if (check_spells)
-    {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        {
-            const int spell = spells[i];
-            if (spell != SPELL_NO_SPELL && spell != SPELL_BERSERKER_RAGE)
-                return (false);
-        }
-    }
+    if (check_spells && !has_spell(SPELL_BERSERKER_RAGE))
+        return (false);
 
     return (true);
 }
