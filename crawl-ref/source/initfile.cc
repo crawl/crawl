@@ -613,7 +613,7 @@ void game_options::reset_options()
     view_max_width = 33;
     view_max_height = 21;
     mlist_min_height = 5;
-    mlist_force_inline = false;
+    mlist_force_inline = true;
 
     view_lock_x = true;
     view_lock_y = true;
