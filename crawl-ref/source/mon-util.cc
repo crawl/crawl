@@ -1813,7 +1813,7 @@ bool mons_neutral(const monsters *m)
 
 bool mons_good_neutral(const monsters *m)
 {
-    return (mons_neutral(m) && testbits(m->flags, MF_GOD_GIFT));
+    return (m->attitude == ATT_NEUTRAL && testbits(m->flags, MF_GOD_GIFT));
 }
 
 bool mons_wont_attack(const monsters *m)
