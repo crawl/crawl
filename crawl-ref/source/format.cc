@@ -406,6 +406,62 @@ int formatted_string::find_last_colour() const
     return (LIGHTGREY);
 }
 
+formatted_string formatted_string::substr(size_t start, size_t substr_length) const
+{
+    const unsigned int NONE = (unsigned int)-1;
+    unsigned int last_FSOP_COLOUR = NONE;
+    unsigned int last_FSOP_CURSOR = NONE;
+
+    // Find the first string to copy
+    unsigned int i;
+    for (i=0; i<ops.size(); ++i)
+    {
+        const fs_op& op = ops[i];
+        if (op.type == FSOP_COLOUR)
+            last_FSOP_CURSOR = i;
+        else if (op.type == FSOP_CURSOR)
+            last_FSOP_CURSOR = i;
+        else if (op.type == FSOP_TEXT)
+            if (op.text.length() > start)
+                break;
+            else
+                start -= op.text.length();
+    }
+
+    if (i == ops.size())
+        return formatted_string();
+
+    formatted_string result;
+    // set up the state
+    if (last_FSOP_COLOUR != NONE)
+        result.ops.push_back(ops[last_FSOP_COLOUR]);
+    if (last_FSOP_CURSOR != NONE)
+        result.ops.push_back(ops[last_FSOP_CURSOR]);
+
+    // Copy the text
+    for ( ; i<ops.size(); i++)
+    {
+        const fs_op& op = ops[i];
+        if (op.type == FSOP_TEXT)
+        {
+            result.ops.push_back(op);
+            std::string& new_string = result.ops[result.ops.size()-1].text;
+            if (start > 0 || op.text.length() > substr_length)
+                new_string = new_string.substr(start, substr_length);
+
+            substr_length -= new_string.length();
+            if (substr_length == 0)
+                break;
+        }
+        else
+        {
+            result.ops.push_back(op);
+        }
+    }
+
+    return result;
+}
+
 void formatted_string::add_glyph(const item_def *item)
 {
     const int last_col = find_last_colour();

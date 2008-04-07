@@ -1605,10 +1605,10 @@ void StashSearchMenu::draw_title()
 
         char buf[200];
         snprintf(buf, 200, 
-                 "  [a-z: %s  ?: change action  /: change sort]",
+                 "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>: change action  <w>/</w>: change sort]",
                  menu_action == ACT_TRAVEL ? "travel" : "examine");
 
-        draw_title_suffix(buf, false);
+        draw_title_suffix(formatted_string::parse_string(buf), false);
     }
 }
 

@@ -428,6 +428,43 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
     return true;
 }
     
+bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
+{
+    int oldx = wherex(), oldy = wherey();
+
+    if (titlefirst)
+        draw_title();
+
+    int x = wherex();
+    if (x > get_number_of_cols() || x < 1)
+    {
+        cgotoxy(oldx, oldy);
+        return false;
+    }
+
+    // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
+    const unsigned int avail_width = get_number_of_cols() - x + 1;
+    const unsigned int fs_length = fs.length();
+    if (fs_length > avail_width)
+    {
+        formatted_string fs_trunc = fs.substr(0, avail_width);
+        fs_trunc.display();
+    }
+    else
+    {
+        fs.display();
+        if (fs_length < avail_width)
+        {
+            char fmt[20];
+            sprintf(fmt, "%%%ds", avail_width-fs_length);
+            cprintf(fmt, " ");
+        }
+    }
+    
+    cgotoxy( oldx, oldy );
+    return true;
+}
+    
 void Menu::draw_select_count( int count, bool force )
 {
     if (!force && !is_set(MF_MULTISELECT))

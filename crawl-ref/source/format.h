@@ -40,6 +40,7 @@ public:
     void add_glyph(const monsters *mons);
     void add_glyph(const item_def *item);
     void textcolor(int color);
+    formatted_string substr(size_t index, size_t length=std::string::npos) const;
 
     void clear();
 

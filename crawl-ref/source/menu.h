@@ -19,6 +19,8 @@
 #include "defines.h"
 #include "libutil.h"
 
+class formatted_string;
+
 enum MenuEntryLevel
 {
     MEL_NONE = -1,
@@ -218,6 +220,7 @@ public:
     void set_tag(const std::string& t) { tag = t; }
     
     bool draw_title_suffix( const std::string &s, bool titlefirst = true );
+    bool draw_title_suffix( const formatted_string &fs, bool titlefirst = true );
     void update_title();
 
     // Sets a replacement for the --more-- string.
