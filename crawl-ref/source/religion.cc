@@ -23,6 +23,7 @@
 #include "AppHdr.h"
 #include "religion.h"
 
+#include <sstream>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -93,9 +94,15 @@
 // Item offer messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
+// <> and </> are replaced with colors.
 // First message is if there's no piety gain, second is if piety gain
 // is one, third message is for piety gain > 1 (currently unused).
-const char *sacrifice[NUM_GODS][3] =
+enum piety_gain_t
+{
+    PIETY_NONE, PIETY_SOME, PIETY_LOTS,
+    NUM_PIETY_GAIN
+};
+static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
 {
     // No god
     {
@@ -105,9 +112,9 @@ const char *sacrifice[NUM_GODS][3] =
     },
     // Zin
     {
-         " barely glow% and disappear%.",
-         " glow% silver and disappear%.",
-         " glow% blindingly silver and disappear%.",
+         " <>barely glow%</> and disappear%.",
+         " <>glow% silver</> and disappear%.",
+         " <>glow% blindingly silver</> and disappear%.",
     },
     // TSO
     {
@@ -165,15 +172,18 @@ const char *sacrifice[NUM_GODS][3] =
     },
     // Nemelex
     {
-         " disappear% without a glow.",
-         " glow% slightly and disappear%.",
-         " glow% with a rainbow of weird colours and disappear%.",
+         " disappear% <>without a glow</>.",
+         " <>glow% slightly</> and disappear%.",
+         " <>glow% with a rainbow of weird colours</> and disappear%.",
     },
-    // Elyvilon
+    // Elyvilon (no sacrifices, but this is used for weapon destruction)
     {
-         " slowly evaporate%.",
-         " evaporate%.",
-         " glow% and evaporate%.",
+        " <>barely shimmer%</> and break% into pieces.",
+        " <>shimmer%</> and break% into pieces.",
+        " <>turn% into a cloud of bugs</>.",
+        // " <>slowly evaporate%</>.",
+        // " <>evaporate%</>.",
+        // " <>glow% and evaporate%</>.",
     },
     // Lugonu
     {
@@ -372,6 +382,7 @@ static void dock_piety(int piety_loss, int penance);
 static bool make_god_gifts_disappear(bool level_only = true);
 static bool make_god_gifts_neutral(bool level_only = true);
 static bool make_god_gifts_hostile(bool level_only = true);
+static void _print_sacrifice_message(god_type, const item_def &, piety_gain_t);
 
 bool is_evil_god(god_type god)
 {
@@ -2451,27 +2462,20 @@ bool ely_destroy_weapons()
         }
         else
         {
-            bool pgain = false;
+            piety_gain_t pgain = PIETY_NONE;
             if (random2(value) >= random2(250) // artefacts (incl. most randarts)
                 || (random2(value) >= random2(100)
                     && one_chance_in(1 + you.piety/50))
                 || (mitm[i].base_type == OBJ_WEAPONS
                     && (you.piety < 30 || player_under_penance())))
             {
-                pgain = true;
+                pgain = PIETY_SOME;
                 gain_piety(1);
             }
 
-            std::ostream& strm = msg::streams(MSGCH_GOD);
-            strm << mitm[i].name(DESC_CAP_THE);
-
-            if (!pgain)
-                strm << " barely";
-
-            if ( mitm[i].quantity == 1 )
-                strm << " shimmers and breaks into pieces." << std::endl;
-            else
-                strm << " shimmer and break into pieces." << std::endl;
+            // Elyvilon doesn't care about item sacrifices at altars, so
+            // I'm stealing _Sacrifice_Messages.
+            _print_sacrifice_message(GOD_ELYVILON, mitm[i], pgain);
         }
 
         destroy_item(i);
@@ -4111,17 +4115,47 @@ static bool bless_weapon( god_type god, int brand, int colour )
     return (false);
 }
 
-static std::string sacrifice_message(god_type god, const item_def &item,
-                                     bool gained_piety)
+static void _replace(std::string& s,
+                     const std::string &find,
+                     const std::string &repl)
 {
-    const char *msg = sacrifice[god][!!gained_piety];
-    const char *be = item.quantity == 1? "is" : "are";
+    std::string::size_type start = 0;
+    std::string::size_type found;
+   
+    while ((found = s.find(find, start)) != std::string::npos)
+    {
+        s.replace( found, find.length(), repl );
+        start = found + repl.length();
+    }
+}
 
-    // "The bread ration evaporates", "The arrows evaporate" - the s suffix
-    // is for verbs.
-    const char *ssuffix = item.quantity == 1? "s" : "";
-
-    return (replace_all(replace_all(msg, "%", ssuffix), "&", be));
+static void _print_sacrifice_message(god_type god, const item_def &item,
+                                     piety_gain_t piety_gain)
+{
+    std::string msg(_Sacrifice_Messages[god][piety_gain]);
+    _replace(msg, "%", (item.quantity == 1? "s" : ""));
+    _replace(msg, "&", (item.quantity == 1? "is" : "are"));
+    const char *tag_start, *tag_end;
+    switch (piety_gain)
+    {
+    case PIETY_NONE:
+        tag_start = "<lightgrey>";
+        tag_end = "</lightgrey>";
+        break;
+    default:
+    case PIETY_SOME:
+        tag_start = tag_end = "";
+        break;
+    case PIETY_LOTS:
+        tag_start = "<white>";
+        tag_end = "</white>";
+        break;
+    }
+    _replace(msg, "<>", tag_start);
+    _replace(msg, "</>", tag_end);
+    
+    msg.insert(0, item.name(DESC_CAP_THE));
+    formatted_message_history(msg, MSGCH_GOD);
 }
 
 void altar_prayer()
@@ -4370,7 +4404,7 @@ void offer_items()
             }
         }
 
-        bool gained_piety = false;
+        piety_gain_t relative_piety_gain = PIETY_NONE;
 
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
@@ -4394,10 +4428,15 @@ void offer_items()
                 || value/2 >= random2(30 + you.piety/2))
             {
                 if ( is_artefact(item) )
+                {
                     gain_piety(2);
+                    relative_piety_gain = PIETY_LOTS;
+                }
                 else
+                {
                     gain_piety(1);
-                gained_piety = true;
+                    relative_piety_gain = PIETY_SOME;
+                }
             }
 
             if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
@@ -4422,8 +4461,8 @@ void offer_items()
                 || random2(value) >= 50
                 || player_under_penance())
             {
-                gained_piety = true;
                 gain_piety(1);
+                relative_piety_gain = PIETY_SOME;
             }
             break;
 
@@ -4431,24 +4470,21 @@ void offer_items()
             if (value >= 150)
             {
                 gain_piety(1 + random2(3));
-                gained_piety = true;
+                relative_piety_gain = PIETY_SOME;
             }
             break;
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_TROG:
             gain_piety(1);
-            gained_piety = true;
+            relative_piety_gain = PIETY_SOME;
             break;
 
         default:
             break;
         }
 
-        msg::streams(MSGCH_GOD) << mitm[i].name(DESC_CAP_THE)
-                                << sacrifice_message(you.religion, mitm[i],
-                                                     gained_piety)
-                                << std::endl;
+        _print_sacrifice_message(you.religion, mitm[i], relative_piety_gain);
         item_was_destroyed(mitm[i]);
         destroy_item(i);
         i = next;
@@ -4694,8 +4730,7 @@ void offer_corpse(int corpse)
 {
     // We always give the "good" (piety-gain) message when doing
     // dedicated butchery. Uh, call it a feature.
-    mprf(MSGCH_GOD, "%s%s", mitm[corpse].name(DESC_CAP_THE).c_str(),
-         sacrifice_message(you.religion, mitm[corpse], true).c_str());
+    _print_sacrifice_message(you.religion, mitm[corpse], PIETY_SOME);
 
     did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
 
