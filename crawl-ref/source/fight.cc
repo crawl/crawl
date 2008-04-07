@@ -3908,9 +3908,13 @@ bool monster_attack(int monster_attacking)
 {
     monsters *attacker = &menv[monster_attacking];
 
-    // Monsters that normally won't attack you may do so when confused.
-    if (mons_wont_attack(attacker) && !mons_is_confused(attacker))
+    // Friendly monsters and neutral monsters that are god gifts won't
+    // attack unless confused.
+    if ((mons_friendly(attacker) || mons_good_neutral(attacker))
+        && !mons_is_confused(attacker))
+    {
         return false;
+    }
 
     // In case the monster hasn't noticed you, bumping into it will
     // change that.
