@@ -5847,8 +5847,11 @@ void player::attacking(actor *other)
         const monsters *mons = dynamic_cast<monsters*>(other);
         if (mons_friendly(mons))
             did_god_conduct(DID_ATTACK_FRIEND, 5, true, mons);
-        else if (mons_neutral(mons))
+        else if (mons_neutral(mons)
+            && testbits(mons->flags, MF_GOD_GIFT))
+        {
             did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, mons);
+        }
         else
             pet_target = monster_index(mons);
     }
