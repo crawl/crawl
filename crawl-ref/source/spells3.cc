@@ -216,6 +216,9 @@ int cast_smiting(int power, dist &beam)
         if (mons_friendly(monster))
             did_god_conduct(DID_ATTACK_FRIEND, 5, monster);
 
+        if (mons_holiness(monster) == MH_HOLY)
+            did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice, monster);
+
         behaviour_event( monster, ME_ANNOY, MHITYOU );
 
         if (monster->hit_points < 1)
@@ -269,6 +272,9 @@ int airstrike(int power, dist &beam)
 
             if (mons_friendly(monster))
                 did_god_conduct(DID_ATTACK_FRIEND, 5, monster);
+
+            if (mons_holiness(monster) == MH_HOLY)
+                did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice, monster);
 
             behaviour_event(monster, ME_ANNOY, MHITYOU, you.x_pos, you.y_pos);
 
