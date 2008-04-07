@@ -430,7 +430,7 @@ drop_filter = <regex>
 target_zero_exp = false
         Set to false to disable targeting zero exp monsters (i.e. 
         plants) in hostile targeting mode. This is usually convenient to 
-        do.
+        do. This also prevents the monster list from displaying them.
 
 target_oos = true
         When cycling through items with 'x' look-around, setting 
