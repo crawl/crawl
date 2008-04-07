@@ -701,17 +701,23 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
     if (you.religion == GOD_ELYVILON && _mons_hostile(monster))
     {
         simple_god_message(" supports your offer of peace.");
-        simple_monster_message( monster, " turns neutral." );
-        monster->attitude = ATT_NEUTRAL;
-        monster->flags |= MF_WAS_NEUTRAL;
 
-        // give half of the monster's xp
-        unsigned int exp_gain = 0, avail_gain = 0;
-        gain_exp( exper_value(monster) / 2 + 1, &exp_gain, &avail_gain );
-        monster->flags |= MF_GOT_HALF_XP;
+        if (mons_is_holy(monster))
+            good_god_holy_attitude_change(monster);
+        else
+        {
+            simple_monster_message( monster, " turns neutral." );
+            monster->attitude = ATT_NEUTRAL;
+            monster->flags |= MF_WAS_NEUTRAL;
 
-        // finally give a small piety return
-        gain_piety(1 + random2(healed/15));
+            // give half of the monster's xp
+            unsigned int exp_gain = 0, avail_gain = 0;
+            gain_exp( exper_value(monster) / 2 + 1, &exp_gain, &avail_gain );
+            monster->flags |= MF_GOT_HALF_XP;
+
+            // finally give a small piety return
+            gain_piety(1 + random2(healed/15));
+        }
     }
     else if (nothing_happens)
         canned_msg(MSG_NOTHING_HAPPENS);

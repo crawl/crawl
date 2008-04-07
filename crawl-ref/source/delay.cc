@@ -183,16 +183,20 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
           simple_monster_message(mons, " freezes in fright!");
           break;
       default:
-          // permanently neutral, but same message as enchantment
-          mons->attitude = ATT_NEUTRAL;
-          mons->flags |= MF_WAS_NEUTRAL;
-
-          // give half of the monster's xp
-          unsigned int exp_gain = 0, avail_gain = 0;
-          gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );
-          mons->flags |= MF_GOT_HALF_XP;
-
           simple_monster_message(mons, " seems impressed!");
+          if (holiness == MH_HOLY)
+              good_god_holy_attitude_change(mons);
+          else
+          {
+              // permanently neutral, but same message as enchantment
+              mons->attitude = ATT_NEUTRAL;
+              mons->flags |= MF_WAS_NEUTRAL;
+
+              // give half of the monster's xp
+              unsigned int exp_gain = 0, avail_gain = 0;
+              gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );
+              mons->flags |= MF_GOT_HALF_XP;
+          }
           break;
     }
 
@@ -206,11 +210,11 @@ static const char* _get_recite_speech(const std::string key, int weight)
 
     if (!str.empty())
         return (str.c_str());
-        
+
     // in case nothing is found
     if (key == "start")
         return ("begin reciting the Axioms of Law.");
-        
+
     return ("reciting");
 }
 
@@ -231,7 +235,7 @@ static bool is_parent_delay(delay_type delay)
 
 static int push_delay(const delay_queue_item &delay)
 {
-    for (delay_queue_type::iterator i = you.delay_queue.begin(); 
+    for (delay_queue_type::iterator i = you.delay_queue.begin();
             i != you.delay_queue.end();
             ++i)
     {
