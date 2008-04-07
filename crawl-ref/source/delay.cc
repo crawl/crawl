@@ -133,7 +133,7 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
             return (0); // nothing happens
 
         // bad effects stop the recital
-        stop_delay(); 
+        stop_delay();
         return (1);
     }
 
