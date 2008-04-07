@@ -263,7 +263,7 @@ static const char * Species_Abbrev_List[ NUM_SPECIES ] =
 int get_species_index_by_abbrev( const char *abbrev )
 {
     COMPILE_CHECK(ARRAYSIZE(Species_Abbrev_List) == NUM_SPECIES, c1);
-    
+
     for (unsigned i = 0; i < ARRAYSIZE(old_species_order); i++)
     {
         const int sp = (Options.use_old_selection_order ? old_species_order[i]
@@ -350,13 +350,13 @@ static const char * Class_Name_List[ NUM_JOBS ] =
 int get_class_index_by_abbrev( const char *abbrev )
 {
     COMPILE_CHECK(ARRAYSIZE(Class_Abbrev_List) == NUM_JOBS, c1);
-    
+
     unsigned int job;
     for (unsigned int i = 0; i < ARRAYSIZE(old_jobs_order); i++)
     {
         job = (Options.use_old_selection_order ? old_jobs_order[i]
                                                : new_jobs_order[i]);
-                                                      
+
         if (tolower( abbrev[0] ) == tolower( Class_Abbrev_List[job][0] )
             && tolower( abbrev[1] ) == tolower( Class_Abbrev_List[job][1] ))
         {
@@ -393,7 +393,7 @@ int get_class_by_abbrev( const char *abbrev )
 int get_class_index_by_name( const char *name )
 {
     COMPILE_CHECK(ARRAYSIZE(Class_Name_List)   == NUM_JOBS, c1);
-    
+
     char *ptr;
     char lowered_buff[80];
     char lowered_class[80];
@@ -526,7 +526,7 @@ static std::string _prev_startup_description(void)
 
     if (Options.prev_cls == '?')
         return "Random " + _get_opt_race_name(Options.prev_race);
-        
+
     return _get_opt_race_name(Options.prev_race) + " " +
            _get_opt_class_name(Options.prev_cls);
 }
@@ -535,7 +535,7 @@ static std::string _prev_startup_description(void)
 static void _print_character_info()
 {
     clrscr();
-    
+
     // At this point all of name, species and class should be decided.
     if (strlen(you.your_name) > 0
         && you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN)
@@ -567,7 +567,7 @@ int give_first_conjuration_book()
         // choose randomly based on the species weighting, again
         // ignoring air/earth which are secondary in these books.  -- bwr
         if (random2( species_skills( SK_ICE_MAGIC, you.species ) )
-                < random2( species_skills( SK_FIRE_MAGIC, you.species ) )) 
+                < random2( species_skills( SK_FIRE_MAGIC, you.species ) ))
         {
             book = BOOK_CONJURATIONS_II;
         }
@@ -588,7 +588,7 @@ static bool _is_species_valid_choice(species_type species, bool display = true)
         return (false);
 
     // no problem with these
-    if (species <= SP_RED_DRACONIAN || species > SP_BASE_DRACONIAN) 
+    if (species <= SP_RED_DRACONIAN || species > SP_BASE_DRACONIAN)
         return (true);
 
     // draconians other than red return false if display == true
@@ -704,7 +704,7 @@ static unsigned char _random_potion_description()
         // in itemname.cc; this check ensures clear potions don't
         // get odd qualifiers.
     }
-    while ((colour == PDC_CLEAR && nature > PDQ_VISCOUS) 
+    while ((colour == PDC_CLEAR && nature > PDQ_VISCOUS)
            || desc == PDESCS(PDC_CLEAR)
            || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
 
@@ -755,9 +755,9 @@ static int _get_random_coagulated_blood_desc()
         qualifier = PDQ_VISCOUS;
         break;
     }
-    
+
     potion_description_colour_type colour = (coinflip() ? PDC_RED : PDC_BROWN);
-    
+
     return PDESCQ(qualifier, colour);
 }
 
@@ -781,7 +781,7 @@ static void _initialise_item_descriptions()
                                      NUM_JEWELLERY,
                                      you.item_description.height(),
                                      NUM_STAVES };
-                                     
+
     for (int i = 0; i < NUM_IDESC; i++)
     {
         // only loop until NUM_WANDS etc.
@@ -945,7 +945,7 @@ static void _reassess_starting_skills()
         const int sp_diff = species_skills( i, you.species );
         you.skills[i] = 0;
 
-        for (int lvl = 1; lvl <= 8; lvl++) 
+        for (int lvl = 1; lvl <= 8; lvl++)
         {
             if (you.skill_points[i] > (skill_exp_needed(lvl+1) * sp_diff)/100)
                 you.skills[i] = lvl;
@@ -1161,7 +1161,7 @@ game_start:
             end(1, false, "Incompatible race and class specified in "
                 "options file.");
         }
-        
+
         // repeat until valid race/class combination found
         while (choose_race() && !choose_class());
     }
@@ -1177,7 +1177,7 @@ game_start:
         if (specs.length() > 79)
             specs = specs.substr(0, 79);
 
-        cprintf( "You are a%s %s %s." EOL, 
+        cprintf( "You are a%s %s %s." EOL,
                  (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
                  you.class_name );
 
@@ -1224,7 +1224,7 @@ game_start:
     {
         // now choose again, name stays same
         const std::string old_name = you.your_name;
-        
+
         Options.prev_randpick = false;
         Options.prev_race   = ng_race;
         Options.prev_cls    = ng_cls;
@@ -1236,8 +1236,8 @@ game_start:
         _init_player();
 
         Options.reset_startup_options();
-        
-        // Restore old name        
+
+        // Restore old name
         strncpy(you.your_name, old_name.c_str(), kNameLen);
         you.your_name[kNameLen - 1] = 0;
 
@@ -1270,7 +1270,7 @@ game_start:
             you.inv[i].flags |= ISFLAG_BEEN_IN_INV;
 
             // identify all items in pack
-            set_ident_type( you.inv[i].base_type, 
+            set_ident_type( you.inv[i].base_type,
                             you.inv[i].sub_type, ID_KNOWN_TYPE );
             // link properly
             you.inv[i].x = -1;
@@ -1295,14 +1295,14 @@ game_start:
 
     // make sure the starting player is fully charged up
     set_hp( you.hp_max, false );
-    set_mp( you.max_magic_points, false ); 
+    set_mp( you.max_magic_points, false );
 
     _give_basic_spells(you.char_class);
     _give_basic_knowledge(you.char_class);
 
     // tmpfile purging removed in favour of marking
     tmp_file_pairs.init(false);
-    
+
     _give_basic_mutations(you.species);
     _initialise_branch_depths();
 
@@ -1924,7 +1924,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     if ( !Options.random_pick )
     {
         _print_character_info();
-        
+
         textcolor( CYAN );
         cprintf(EOL "You have a choice of books:" EOL);
         textcolor( LIGHTGREY );
@@ -1939,7 +1939,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         cprintf(EOL "* - Random choice; "
                     "Bksp - Back to species and class selection; "
                     "X - Quit" EOL);
-                    
+
         if ( Options.prev_book != SBT_NO_SELECTION )
         {
             cprintf("; Enter - %s",
@@ -1950,7 +1950,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                                                     : "Buggy Book");
         }
         cprintf(EOL);
-            
+
         do
         {
             textcolor( CYAN );
@@ -1958,7 +1958,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
             textcolor( LIGHTGREY );
 
             keyin = c_getch();
- 
+
             switch (keyin)
             {
             case 'X':
@@ -1989,14 +1989,14 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         ng_book = SBT_RANDOM;
     else
         ng_book = keyin - 'a' + 1;
-    
+
     if ( Options.random_pick || keyin == '*' )
         keyin = random2(numbooks) + 'a';
 
     book.sub_type = firstbook + keyin - 'a';
     return true;
 }
-    
+
 static bool _choose_weapon()
 {
     const weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
@@ -2044,7 +2044,7 @@ static bool _choose_weapon()
         cprintf(EOL "* - Random choice; "
                     "Bksp - Back to species and class selection; "
                     "X - Quit" EOL);
-                    
+
         if (Options.prev_weapon != WPN_UNKNOWN)
         {
             cprintf("; Enter - %s",
@@ -2052,7 +2052,7 @@ static bool _choose_weapon()
                     weapon_base_name(Options.prev_weapon));
         }
         cprintf(EOL);
-            
+
         do
         {
             textcolor( CYAN );
@@ -2158,8 +2158,8 @@ static void _species_stat_init(species_type which_species)
     int ib = 0; // intelligence base
     int db = 0; // dexterity base
 
-    // Note: The stats in in this list aren't intended to sum the same 
-    // for all races.  The fact that Mummies and Ghouls are really low 
+    // Note: The stats in in this list aren't intended to sum the same
+    // for all races.  The fact that Mummies and Ghouls are really low
     // is considered acceptable (Mummies don't have to eat, and Ghouls
     // are supposted to be a really hard race).  Also note that Demigods
     // and Demonspawn get seven more random points added later. -- bwr
@@ -2339,7 +2339,6 @@ static void _give_basic_mutations(species_type speci)
         break;
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS] = 3;
-        you.mutation[MUT_SLOW_METABOLISM] = 1;
         you.mutation[MUT_ACUTE_VISION] = 1;
         break;
     default:
@@ -2467,7 +2466,7 @@ static void _opening_screen(void)
 
     const bool init_found =
         (init_file_location.find("not found") == std::string::npos);
-    
+
     if (!init_found)
         msg += "<lightred>Init file ";
     else
@@ -2475,7 +2474,7 @@ static void _opening_screen(void)
 
     msg += init_file_location;
     msg += EOL;
-    
+
     formatted_string::parse_string(msg).display();
     textcolor( LIGHTGREY );
     return;
@@ -2498,7 +2497,7 @@ static void _show_name_prompt(int where, bool blankOK,
         }
         else
         {
-            cprintf(EOL 
+            cprintf(EOL
                     "Press <Enter> to answer this after race and "
                     "class are chosen." EOL);
         }
@@ -2629,7 +2628,7 @@ static void _enter_player_name(bool blankOK)
     if (blankOK && (ask_name || !_is_good_name(you.your_name, false, false)))
     {
         existing_chars = find_saved_characters();
-        if (existing_chars.empty()) 
+        if (existing_chars.empty())
         {
              cgotoxy(1,12);
              formatted_string::parse_string(
@@ -2702,9 +2701,9 @@ static bool _validate_player_name(bool verbose)
     {
         char c = *pn;
         // Note that this includes systems which may be using the
-        // packaging system.  The packaging system is very simple 
+        // packaging system.  The packaging system is very simple
         // and doesn't take the time to escape every characters that
-        // might be a problem for some random shell or OS... so we 
+        // might be a problem for some random shell or OS... so we
         // play it very conservative here.  -- bwr
         if (!isalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
         {
@@ -2860,7 +2859,7 @@ static void _make_rod(item_def &item, stave_type rod_type)
     item.quantity = 1;
     item.special = you.item_description[IDESC_STAVES][rod_type];
     item.colour = BROWN;
-    
+
     init_rod_mp(item);
 }
 
@@ -2881,7 +2880,7 @@ static void _newgame_make_item(int slot, equipment_type eqslot,
         }
         ASSERT(slot != -1);
     }
-    
+
     item_def &item(you.inv[slot]);
     item.base_type = base;
     item.sub_type  = sub_type;
@@ -3015,7 +3014,7 @@ static void _create_wanderer( void )
         you.skills[skill] = you.skills[SK_INVOCATIONS];
         you.skills[SK_INVOCATIONS] = 0;
     }
-    
+
     // ogres and draconians cannot wear armour
     if ((you.species == SP_OGRE_MAGE || player_genus(GENPC_DRACONIAN))
         && you.skills[ SK_ARMOUR ])
@@ -3130,13 +3129,13 @@ bool choose_race()
         you.char_class = _get_class(letter_to_index(Options.cls));
         ng_cls = Options.cls;
     }
-        
+
     if (Options.race != 0)
         printed = true;
 
     // the list musn't be longer than the number of actual species
     COMPILE_CHECK(ARRAYSIZE(old_species_order) <= NUM_SPECIES, c1);
-    
+
     // check whether the two lists have the same size
     COMPILE_CHECK(ARRAYSIZE(old_species_order) == ARRAYSIZE(new_species_order), c2);
 
@@ -3172,7 +3171,7 @@ spec_query:
 
             if (!shortgreet)
                 cprintf(".");
-                
+
             textcolor( WHITE ); // for the tutorial
         }
         else
@@ -3193,7 +3192,7 @@ spec_query:
         for (int i = 0; i < num_species; ++i)
         {
             const species_type si = _get_species(i);
-            
+
             if (!_is_species_valid_choice(si))
                 continue;
 
@@ -3204,7 +3203,7 @@ spec_query:
             }
 
             char sletter = index_to_letter(i);
-                     
+
             if (sletter == Options.prev_race)
                 prevraceok = true;
 
@@ -3217,12 +3216,12 @@ spec_query:
 
             j++;
         }
-        
+
         if (j % 2)
             cprintf(EOL);
 
         textcolor( BROWN );
-        
+
         if (you.char_class == JOB_UNKNOWN)
             cprintf(EOL
                     "SPACE - Choose class first; * - Random Species; "
@@ -3230,7 +3229,7 @@ spec_query:
                     EOL);
         else
             cprintf(EOL
-                    "* - Random; Bksp - Back to class selection; X - Quit" 
+                    "* - Random; Bksp - Back to class selection; X - Quit"
                     EOL);
 
         if (Options.prev_race)
@@ -3242,7 +3241,7 @@ spec_query:
             }
             if (_prev_startup_options_set())
             {
-                cprintf("%sTAB - %s", 
+                cprintf("%sTAB - %s",
                         prevraceok? "; " : "",
                         _prev_startup_description().c_str());
             }
@@ -3321,7 +3320,7 @@ spec_query:
     {
         return !pick_tutorial();
     }
-    
+
     bool randrace = (keyn == '*');
     if (randrace)
     {
@@ -3336,12 +3335,12 @@ spec_query:
 
         keyn = index_to_letter(index);
     }
-    
+
     if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
     {
         you.species = _get_species(letter_to_index(keyn));
     }
-        
+
     if (!_is_species_valid_choice( you.species ))
     {
         if (Options.race != 0)
@@ -3382,7 +3381,7 @@ bool choose_class(void)
         return true;
 
     ng_cls = 0;
-    
+
     // the list musn't be longer than the number of actual classes
     COMPILE_CHECK(ARRAYSIZE(old_jobs_order) <= NUM_JOBS, c1);
 
@@ -3458,7 +3457,7 @@ job_query:
         else
         {
             cprintf(EOL
-                    "* - Random; Bksp - Back to species selection; X - Quit" 
+                    "* - Random; Bksp - Back to species selection; X - Quit"
                     EOL);
         }
 
@@ -3471,13 +3470,13 @@ job_query:
             }
             if (_prev_startup_options_set())
             {
-                cprintf("%sTAB - %s", 
+                cprintf("%sTAB - %s",
                         prevclassok? "; " : "",
                         _prev_startup_description().c_str());
             }
             cprintf(EOL);
         }
-        
+
         textcolor( CYAN );
         cprintf(EOL "Which one? ");
         textcolor( LIGHTGREY );
@@ -3587,7 +3586,7 @@ job_query:
         }
         goto job_query;
     }
-    
+
     if (you.species != SP_UNKNOWN
         && !_class_allowed(you.species, chosen_job))
     {
@@ -3617,7 +3616,7 @@ bool _give_items_skills()
     {
     case JOB_FIGHTER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        
+
         if (you.species == SP_OGRE || you.species == SP_TROLL)
         {
             _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
@@ -3631,7 +3630,7 @@ bool _give_items_skills()
         {
             if (!_choose_weapon())
                 return (false);
-            
+
             _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
             _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
         }
@@ -3640,7 +3639,7 @@ bool _give_items_skills()
         {
             if (!_choose_weapon())
                 return false;
-            
+
             _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                                ARM_LEATHER_ARMOUR);
 
@@ -3678,7 +3677,7 @@ bool _give_items_skills()
         {
             if (you.species == SP_TROLL)  //jmf: these guys get no weapon!
                 you.skills[SK_UNARMED_COMBAT] += 3;
-            else 
+            else
                 you.skills[SK_FIGHTING] += 2;
 
             // BWR sez Ogres & Trolls should probably start w/ Dodge 2 -- GDL
@@ -3696,10 +3695,10 @@ bool _give_items_skills()
             you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;
 
             you.skills[SK_THROWING] = 2;
-            
+
             if (you.species != SP_VAMPIRE)
                 you.skills[SK_SHIELDS] = 2;
-                
+
             if (you.species == SP_VAMPIRE || coinflip())
                 you.skills[SK_STABBING]++;
             else
@@ -3750,7 +3749,7 @@ bool _give_items_skills()
 
         if (player_genus(GENPC_DWARVEN))
             you.skills[SK_MACES_FLAILS] = 1;
-        else 
+        else
             you.skills[SK_SHORT_BLADES] = 1;
 
         you.skills[SK_STAVES] = 1;
@@ -3767,12 +3766,12 @@ bool _give_items_skills()
 
         if (you.is_undead != US_UNDEAD)
             _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING, 2);
-            
+
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING] = 1;
         you.skills[SK_INVOCATIONS] = 4;
         you.skills[ weapon_skill(you.inv[0]) ] = 2;
-        
+
         // set gods
         if (you.species == SP_MUMMY || you.species == SP_DEMONSPAWN)
         {
@@ -3789,17 +3788,17 @@ bool _give_items_skills()
             else if (Options.random_pick || Options.priest == GOD_RANDOM)
             {
                 you.religion = coinflip() ? GOD_YREDELEMNUL : GOD_ZIN;
-            
+
                 // for orcs 50% chance of Beogh instead
                 if (you.species == SP_HILL_ORC && coinflip())
                     you.religion = GOD_BEOGH;
-                
+
                 ng_pr = GOD_RANDOM;
             }
             else
             {
                 _print_character_info();
-                
+
                 textcolor( CYAN );
                 cprintf(EOL "Which god do you wish to serve?" EOL);
 
@@ -3879,7 +3878,7 @@ bool _give_items_skills()
                     }
                 }
                 while (you.religion == GOD_NO_GOD);
-                
+
                 ng_pr = (keyn == '*'? GOD_RANDOM : you.religion);
             }
         }
@@ -3906,7 +3905,7 @@ bool _give_items_skills()
 
     case JOB_GLADIATOR:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        
+
         if (!_choose_weapon())
             return false;
 
@@ -3929,7 +3928,7 @@ bool _give_items_skills()
         }
         else
             you.skills[SK_DODGING] = 1;
-            
+
         you.skills[SK_FIGHTING] = 3;
         weap_skill = 3;
 
@@ -4095,7 +4094,7 @@ bool _give_items_skills()
             you.inv[3].sub_type = MI_LARGE_ROCK;
             you.inv[3].quantity = 4;
             break;
-            
+
         case SP_HALFLING:
         case SP_GNOME:
             you.inv[3].quantity += random2avg(15, 2);
@@ -4219,7 +4218,7 @@ bool _give_items_skills()
         case JOB_EARTH_ELEMENTALIST:
             _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
             _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, 20);
-            
+
             if (you.species == SP_GNOME)
             {
                 _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
@@ -4361,10 +4360,10 @@ bool _give_items_skills()
 
     case JOB_CRUSADER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        
+
         if (!_choose_weapon())
             return false;
-            
+
         weap_skill = 2;
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
@@ -4380,7 +4379,7 @@ bool _give_items_skills()
 
     case JOB_DEATH_KNIGHT:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        
+
         if (!_choose_weapon())
             return false;
 
@@ -4407,7 +4406,7 @@ bool _give_items_skills()
         else
         {
             _print_character_info();
-            
+
             textcolor( CYAN );
             cprintf(EOL "From where do you draw your power?" EOL);
 
@@ -4423,7 +4422,7 @@ bool _give_items_skills()
             if (Options.prev_dk != DK_NO_SELECTION)
             {
                 textcolor(BROWN);
-                cprintf(EOL "Enter - %s" EOL, 
+                cprintf(EOL "Enter - %s" EOL,
                         Options.prev_dk == DK_NECROMANCY? "Necromancy" :
                         Options.prev_dk == DK_YREDELEMNUL? "Yredelemnul" :
                                                            "Random");
@@ -4431,7 +4430,7 @@ bool _give_items_skills()
 
             do {
                 keyn = c_getch();
-            
+
                 switch (keyn)
                 {
                 case 'X':
@@ -4446,7 +4445,7 @@ bool _give_items_skills()
                 case '\n':
                     if (Options.prev_dk == DK_NO_SELECTION)
                         break;
-                        
+
                     if (Options.prev_dk != DK_RANDOM)
                     {
                         choice = Options.prev_dk;
@@ -4468,7 +4467,7 @@ bool _give_items_skills()
                 }
             }
             while (choice == DK_NO_SELECTION);
-            
+
             ng_dk = (keyn == '*'? DK_RANDOM : choice);
         }
 
@@ -4575,7 +4574,7 @@ bool _give_items_skills()
                 case '\n':
                     if (Options.prev_ck == GOD_NO_GOD)
                         break;
-                        
+
                     if (Options.prev_ck != GOD_RANDOM)
                     {
                         you.religion = static_cast<god_type>(Options.prev_ck);
@@ -4597,7 +4596,7 @@ bool _give_items_skills()
                 }
             }
             while (you.religion == GOD_NO_GOD);
-            
+
             ng_ck = (keyn == '*') ? GOD_RANDOM
                                   : you.religion;
         }

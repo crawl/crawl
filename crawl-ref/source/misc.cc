@@ -56,6 +56,7 @@
 #include "items.h"
 #include "lev-pand.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "message.h"
 #include "mon-util.h"
 #include "monstuff.h"
@@ -144,7 +145,7 @@ void turn_corpse_into_chunks( item_def &item )
     // only fresh corpses bleed enough to colour the ground
     if (!food_is_rotten(item))
         bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
-    
+
     item.base_type = OBJ_FOOD;
     item.sub_type  = FOOD_CHUNK;
     item.quantity  = 1 + random2( max_chunks );
@@ -156,6 +157,287 @@ void turn_corpse_into_chunks( item_def &item )
     // happens after the corpse has been butchered
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
         create_monster_hide(mons_class);
+}
+
+// initialize blood potions with a vector of timers
+void init_stack_blood_potions(item_def &stack, int age)
+{
+    ASSERT(stack.base_type == OBJ_POTIONS);
+    ASSERT(stack.sub_type == POT_BLOOD);
+
+    CrawlHashTable &props = stack.props;
+    props.set_default_flags(SFLAG_CONST_TYPE);
+    props["timer"].new_vector(SV_LONG);
+    CrawlVector &timer = props["timer"];
+
+    // for a newly created stack, all potions use the same timer
+    const long max_age = you.num_turns + (age == -1 ? 1200 : age);
+    for (int i = 0; i < stack.quantity; i++)
+        timer.push_back(max_age);
+
+    ASSERT(timer.size() == stack.quantity);
+    props.assert_validity();
+}
+
+// sort a CrawlVector<long>, should probably be done properly with templates
+static void _long_sort(CrawlVector &vec)
+{
+    std::vector<long> help;
+    while (!vec.empty())
+        help.push_back(vec.pop_back());
+
+    std::sort(help.begin(), help.end());
+
+    long val;
+    while (!help.empty())
+    {
+        val = help[help.size() - 1];
+        help.pop_back();
+        vec.push_back(val);
+    }
+}
+
+void maybe_coagulate_blood_floor(item_def &blood)
+{
+    ASSERT(is_valid_item(blood));
+    ASSERT(blood.base_type == OBJ_POTIONS);
+
+    ASSERT (blood.sub_type == POT_BLOOD
+            || blood.sub_type == POT_BLOOD_COAGULATED);
+
+    CrawlHashTable &props = blood.props;
+    ASSERT(props.exists("timer"));
+    CrawlVector &timer = props["timer"];
+    ASSERT(timer.size() == blood.quantity);
+    ASSERT(!timer.empty());
+
+    // blood.sub_type could be POT_BLOOD or POT_BLOOD_COAGULATED
+    // -> need different handling
+    int rot_limit  = you.num_turns;
+    int coag_limit = you.num_turns + 200; // check 200 turns later
+
+    // first count whether coagulating is even necessary
+    int rot_count  = 0;
+    int coag_count = 0;
+    std::vector<long> age_timer;
+    long current;
+    int size = timer.size();
+    for (int i = 0; i < size; i++)
+    {
+        current = timer.pop_back();
+        if (rot_limit >= current)
+            rot_count++;
+        else if (coag_limit >= current)
+        {
+            coag_count++;
+            age_timer.push_back(current);
+        }
+        else // still some time until rotting/coagulating
+        {
+            timer.push_back(current);
+            _long_sort(timer);
+            break;
+        }
+    }
+
+    if (!rot_count && !coag_count)
+        return; // nothing to be done
+
+    if (!coag_count)
+    {
+        dec_mitm_item_quantity(blood.link, rot_count);
+        // timer is already up to date
+        return;
+    }
+
+    // coagulated blood cannot coagulate any further...
+    ASSERT(blood.sub_type == POT_BLOOD);
+
+    // now that coagulating is necessary, check square for !coagulated blood
+    int o = igrd[blood.x][blood.y];
+    while (o != NON_ITEM)
+    {
+        if (mitm[o].base_type == OBJ_POTIONS
+            && mitm[o].sub_type == POT_BLOOD_COAGULATED)
+        {
+            CrawlHashTable &props2 = mitm[o].props;
+            ASSERT(props2.exists("timer"));
+            CrawlVector &timer2 = props2["timer"];
+            ASSERT(timer2.size() == mitm[o].quantity);
+
+            // update timer -> push(pop)
+            long val;
+            while (!age_timer.empty())
+            {
+                val = age_timer[age_timer.size() - 1];
+                age_timer.pop_back();
+                timer2.push_back(val);
+            }
+            _long_sort(timer2);
+            dec_mitm_item_quantity(blood.link, rot_count + coag_count);
+            return;
+        }
+        o = mitm[o].link;
+    }
+
+    // if we got here nothing was found
+    // create a new stack of potions
+    o = get_item_slot( 100 + random2(200) );
+    if (o == NON_ITEM)
+        return;
+
+    // these values are common to all: {dlb}
+    mitm[o].base_type = OBJ_POTIONS;
+    mitm[o].sub_type  = POT_BLOOD_COAGULATED;
+    mitm[o].quantity  = coag_count;
+    mitm[o].plus      = 0;
+    mitm[o].plus2     = 0;
+    mitm[o].special   = 0;
+    mitm[o].flags     = 0;
+    item_colour(mitm[o]);
+
+    CrawlHashTable &props_new = mitm[o].props;
+    props_new.set_default_flags(SFLAG_CONST_TYPE);
+    props_new["timer"].new_vector(SV_LONG);
+    CrawlVector &timer_new = props_new["timer"];
+
+    long val;
+    while (!age_timer.empty())
+    {
+        val = age_timer[age_timer.size() - 1];
+        age_timer.pop_back();
+        timer_new.push_back(val);
+    }
+
+    ASSERT(timer_new.size() == coag_count);
+    props_new.assert_validity();
+    move_item_to_grid( &o, blood.x, blood.y );
+
+    dec_mitm_item_quantity(blood.link, rot_count + coag_count);
+}
+
+// used for (q)uaff, (f)ire, and Evaporate
+void remove_oldest_potion_inv(item_def &stack)
+{
+    ASSERT(is_valid_item(stack));
+    ASSERT(stack.base_type == OBJ_POTIONS);
+
+    ASSERT (stack.sub_type == POT_BLOOD
+            || stack.sub_type == POT_BLOOD_COAGULATED);
+
+    CrawlHashTable &props = stack.props;
+    ASSERT(props.exists("timer"));
+    CrawlVector &timer = props["timer"];
+    ASSERT(timer.size() == stack.quantity);
+    ASSERT(!timer.empty());
+
+    // assuming already sorted, and first (oldest) potion valid
+    timer.pop_back();
+    // the quantity will be decreased elsewhere
+}
+
+// Should be called *after* drop_thing (and only if this returns true)
+// unless the stack has been dropped in its entirety.
+void drop_blood_potions_stack(int item, int quant)
+{
+    ASSERT(quant > 0);
+    // entire stack was dropped?
+    if (!is_valid_item(you.inv[item]))
+        return;
+
+    item_def &stack = you.inv[item];
+    ASSERT(stack.base_type == OBJ_POTIONS);
+    ASSERT(stack.sub_type == POT_BLOOD
+           || stack.sub_type == POT_BLOOD_COAGULATED);
+
+    CrawlHashTable &props = stack.props;
+    ASSERT(props.exists("timer"));
+    CrawlVector &timer = props["timer"];
+    ASSERT(!timer.empty());
+
+    // first check whether we can merge with an existing stack on the floor
+    int o = igrd[you.x_pos][you.y_pos];
+    while (o != NON_ITEM)
+    {
+        if (mitm[o].base_type == OBJ_POTIONS
+            && mitm[o].sub_type == stack.sub_type)
+        {
+            CrawlHashTable &props2 = mitm[o].props;
+            ASSERT(props2.exists("timer"));
+            CrawlVector &timer2 = props2["timer"];
+
+            // update timer -> push(pop)
+            for (int i = 0; i < quant; i++)
+                timer2.push_back(timer.pop_back());
+
+            ASSERT(timer2.size() == mitm[o].quantity);
+            // re-sort timer
+            _long_sort(timer2);
+
+            // now the stack timer should be correct again
+            ASSERT(timer.size() == stack.quantity);
+            return;
+        }
+        o = mitm[o].link;
+    }
+
+    // If we got here nothing was found.
+    // Stuff could have been destroyed or offered, either case we'll
+    // have to reduce the timer vector anyway.
+    while (!timer.empty() && quant-- > 0)
+        timer.pop_back();
+
+    ASSERT(stack.quantity == timer.size());
+}
+
+// Should be called *after* move_item_to_player
+// unless the stack has been picked up in its entirety.
+void pick_up_blood_potions_stack(int item, int quant)
+{
+    ASSERT(quant > 0);
+    // entire stack was taken?
+    if (!is_valid_item(mitm[item]))
+        return;
+
+    item_def &stack = mitm[item];
+    ASSERT(stack.base_type == OBJ_POTIONS);
+    ASSERT(stack.sub_type == POT_BLOOD
+           || stack.sub_type == POT_BLOOD_COAGULATED);
+
+    CrawlHashTable &props = stack.props;
+    ASSERT(props.exists("timer"));
+    CrawlVector &timer = props["timer"];
+    ASSERT(!timer.empty());
+
+    // first check whether we can merge with an existing stack in inventory
+    for (int m = 0; m < ENDOFPACK; m++)
+    {
+        if (!is_valid_item(you.inv[m]))
+            continue;
+
+        if (you.inv[m].base_type == OBJ_POTIONS
+            && you.inv[m].sub_type == stack.sub_type)
+        {
+            CrawlHashTable &props2 = you.inv[m].props;
+            ASSERT(props2.exists("timer"));
+            CrawlVector &timer2 = props2["timer"];
+
+            // update timer -> push(pop)
+            for (int i = 0; i < quant; i++)
+                timer2.push_back(timer.pop_back());
+
+            ASSERT(timer2.size() == you.inv[m].quantity);
+            // re-sort timer
+            _long_sort(timer2);
+
+            // now the stack timer should be correct again
+            ASSERT(timer.size() == stack.quantity);
+            return;
+        }
+    }
+
+    // If we got here nothing was found. Huh?
+    ASSERT(stack.quantity == timer.size());
 }
 
 // Deliberately don't check for rottenness here, so this check
@@ -172,7 +454,7 @@ bool can_bottle_blood_from_corpse(int mons_type)
     int chunk_type = mons_corpse_effect( mons_type );
     if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
         return (true);
-        
+
     return (false);
 }
 
@@ -195,7 +477,7 @@ void turn_corpse_into_blood_potions( item_def &item )
     const int max_chunks = mons_weight( mons_class ) / 150;
     item.quantity  = 1 + random2( max_chunks/3 );
     item.quantity  = stepdown_value( item.quantity, 2, 2, 6, 6 );
-    
+
     // lower number of potions obtained from contaminated chunk type corpses
     if (mons_corpse_effect( mons_class ) == CE_CONTAMINATED)
     {
@@ -326,7 +608,7 @@ static bool allow_bleeding_on_square(int x, int y)
     // the good gods like to keep their altars pristine
     if (is_good_god(grid_altar_god(grd[x][y])))
         return (false);
-            
+
     return (true);
 }
 
@@ -347,7 +629,7 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
 #endif
         if (allow_bleeding_on_square(x,y))
             env.map[x][y].property = FPROP_BLOODY;
-            
+
         // if old or new blood on square, the smell reaches further
         if (env.map[x][y].property == FPROP_BLOODY)
             blood_smell(12, x, y);
@@ -362,7 +644,7 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
                 {
                      if (i == 0 && j == 0) // current square
                          continue;
-                         
+
                      // spattering onto walls etc. less likely
                      if (grd[x+i][y+j] < DNGN_MINMOVE && one_chance_in(3))
                          continue;
@@ -506,7 +788,7 @@ void in_a_cloud()
         if (hurted < 1)
             hurted = 0;
         else
-            ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD, 
+            ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
                     "noxious fumes" );
 
         if (1 + random2(27) >= you.experience_level)
@@ -549,7 +831,7 @@ void in_a_cloud()
         mpr("You are engulfed in poison gas!");
         if (!player_res_poison())
         {
-            ouch( (random2(10) * you.time_taken) / 10, cl, KILLED_BY_CLOUD, 
+            ouch( (random2(10) * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
                   "poison gas" );
             poison_player(1);
         }
@@ -694,7 +976,7 @@ static void leaving_level_now()
     // markers to be discarded.
     const std::string newtype =
         env.markers.property_at(you.pos(), MAT_ANY, "dst");
-    
+
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
@@ -803,14 +1085,14 @@ void up_stairs(dungeon_feature_type force_stair,
     // the overloaded character makes an attempt... so we're doing this
     // check before that one. -- bwr
     if (!player_is_airborne()
-        && you.duration[DUR_CONF] 
-        && (stair_find >= DNGN_STONE_STAIRS_UP_I 
+        && you.duration[DUR_CONF]
+        && (stair_find >= DNGN_STONE_STAIRS_UP_I
             && stair_find <= DNGN_STONE_STAIRS_UP_III)
         && random2(100) > you.dex)
     {
         mpr("In your confused state, you trip and fall back down the stairs.");
 
-        ouch( roll_dice( 3 + you.burden_state, 5 ), 0, 
+        ouch( roll_dice( 3 + you.burden_state, 5 ), 0,
               KILLED_BY_FALLING_DOWN_STAIRS );
 
         you.turn_is_over = true;
@@ -834,7 +1116,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     // Checks are done, the character is committed to moving between levels.
     leaving_level_now();
-    
+
     int old_level  = you.your_level;
 
     // Interlevel travel data:
@@ -859,7 +1141,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
         for (i = 0; i < ENDOFPACK; i++)
         {
-            if (is_valid_item( you.inv[i] ) 
+            if (is_valid_item( you.inv[i] )
                 && you.inv[i].base_type == OBJ_ORBS)
             {
                 ouch(INSTANT_DEATH, 0, KILLED_BY_WINNING);
@@ -959,7 +1241,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level(true);
-    
+
 #ifdef USE_TILE
     TileNewLevel(newlevel);
 #endif // USE_TILE
@@ -972,7 +1254,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
         if (can_travel_interlevel())
         {
-            LevelInfo &new_level_info = 
+            LevelInfo &new_level_info =
                         travel_cache.get_level_info(new_level_id);
             new_level_info.update();
 
@@ -981,7 +1263,7 @@ void up_stairs(dungeon_feature_type force_stair,
             // First we update the old level's stair.
             level_pos lp;
             lp.id  = new_level_id;
-            lp.pos.x = you.x_pos; 
+            lp.pos.x = you.x_pos;
             lp.pos.y = you.y_pos;
 
             bool guess = false;
@@ -1121,7 +1403,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     // Fire level-leaving trigger.
     leaving_level_now();
-    
+
 #ifdef DGL_MILESTONES
     if (!force_stair)
     {
@@ -1195,7 +1477,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     // Preserve abyss uniques now, since this Abyss level will be deleted.
     if (you.level_type == LEVEL_ABYSS)
         save_abyss_uniques();
-    
+
     if (you.level_type != LEVEL_DUNGEON
         && (you.level_type != LEVEL_PANDEMONIUM
             || stair_find != DNGN_TRANSIT_PANDEMONIUM))
@@ -1273,15 +1555,15 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         mprf("Welcome back to %s!", branches[you.where_are_you].longname);
 
     if (!player_is_airborne()
-        && you.duration[DUR_CONF] 
+        && you.duration[DUR_CONF]
         && !grid_is_escape_hatch(stair_find)
         && random2(100) > you.dex)
     {
         mpr("In your confused state, you trip and fall down the stairs.");
 
-        // Nastier than when climbing stairs, but you'll aways get to 
+        // Nastier than when climbing stairs, but you'll aways get to
         // your destination, -- bwr
-        ouch( roll_dice( 6 + you.burden_state, 10 ), 0, 
+        ouch( roll_dice( 6 + you.burden_state, 10 ), 0,
               KILLED_BY_FALLING_DOWN_STAIRS );
     }
 
@@ -1436,7 +1718,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     {
         you.your_level--;
     }
-    
+
 
     switch (you.level_type)
     {
@@ -1491,7 +1773,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         you.beheld_by.clear();
         you.duration[DUR_BEHELD] = 0;
     }
-    
+
     viewwindow(1, true);
 
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
@@ -1511,20 +1793,20 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
         if (can_travel_interlevel())
         {
-            LevelInfo &new_level_info = 
+            LevelInfo &new_level_info =
                             travel_cache.get_level_info(new_level_id);
             new_level_info.update();
 
             // First we update the old level's stair.
             level_pos lp;
             lp.id    = new_level_id;
-            lp.pos.x = you.x_pos; 
+            lp.pos.x = you.x_pos;
             lp.pos.y = you.y_pos;
 
             old_level_info.update_stair(stair_x, stair_y, lp);
 
             // Then the new level's stair, assuming arbitrarily that going
-            // upstairs will land you on the same downstairs you took to begin 
+            // upstairs will land you on the same downstairs you took to begin
             // with (not necessarily true).
             lp.id = old_level_id;
             lp.pos.x = stair_x;
@@ -1557,7 +1839,7 @@ std::string level_description_string()
     {
          if (you.level_type_name == "bazaar")
              return "- a Bazaar";
-             
+
          return "- a Portal Chamber";
     }
 
@@ -1707,7 +1989,7 @@ bool go_berserk(bool intentional)
 
     if (Options.tutorial_left)
         Options.tut_berserk_counter++;
-    
+
     mpr("A red film seems to cover your vision as you go berserk!");
     mpr("You feel yourself moving faster!");
     mpr("You feel mighty!");
@@ -1920,7 +2202,7 @@ bool i_feel_safe(bool announce, bool want_move)
         }
         return (mons.empty());
     }
-    
+
     return true;
 }
 
@@ -1943,7 +2225,7 @@ int str_to_shoptype(const std::string &s)
 {
     if (s == "random" || s == "any")
         return (SHOP_RANDOM);
-    
+
     for (unsigned i = 0; i < sizeof(shop_types) / sizeof (*shop_types); ++i)
     {
         if (s == shop_types[i])
@@ -2051,7 +2333,7 @@ void setup_environment_effects()
                 continue;
 
             const int grid = grd[x][y];
-            if (grid == DNGN_LAVA 
+            if (grid == DNGN_LAVA
                     || (grid == DNGN_SHALLOW_WATER
                         && you.where_are_you == BRANCH_SWAMP))
             {
@@ -2069,10 +2351,10 @@ static void apply_environment_effect(const coord_def &c)
 {
     const int grid = grd[c.x][c.y];
     if (grid == DNGN_LAVA)
-        check_place_cloud( CLOUD_BLACK_SMOKE, 
+        check_place_cloud( CLOUD_BLACK_SMOKE,
                            c.x, c.y, random_range( 4, 8 ), KC_OTHER );
     else if (grid == DNGN_SHALLOW_WATER)
-        check_place_cloud( CLOUD_MIST, 
+        check_place_cloud( CLOUD_MIST,
                            c.x, c.y, random_range( 2, 5 ), KC_OTHER );
 }
 
@@ -2140,7 +2422,7 @@ coord_def pick_adjacent_free_square(int x, int y)
 // Converts a movement speed to a duration. i.e., answers the
 // question: if the monster is so fast, how much time has it spent in
 // its last movement?
-// 
+//
 // If speed is 10 (normal),    one movement is a duration of 10.
 // If speed is 1  (very slow), each movement is a duration of 100.
 // If speed is 15 (50% faster than normal), each movement is a duration of
@@ -2151,7 +2433,7 @@ int speed_to_duration(int speed)
         speed = 10;
     else if (speed > 100)
         speed = 100;
-    
+
     return div_rand_round(100, speed);
 }
 
