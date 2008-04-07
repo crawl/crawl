@@ -1735,9 +1735,10 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         {
         case GOD_ELYVILON:
             simple_god_message(" did not appreciate that!");
-            ret = true;
             piety_change = -(level/2 + 1);
-            penance = std::min(level, 5);
+            if (known)
+                penance = std::min(level, 5);
+            ret = true;
             break;
 
         default:
