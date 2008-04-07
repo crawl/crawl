@@ -2071,7 +2071,7 @@ std::string cloud_name(cloud_type type)
 
 bool mons_is_safe(const struct monsters *mon, bool want_move)
 {
-    bool is_safe = mons_friendly(mon)
+    bool is_safe = mons_wont_attack(mon)
                    || mons_class_flag(mon->type, M_NO_EXP_GAIN);
 
 #ifdef CLUA_BINDINGS
