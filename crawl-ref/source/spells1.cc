@@ -597,8 +597,8 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     if (mons_friendly(mon) || mons_neutral(mon))
         return false;
 
-    // Ely only cares about natural monsters
-    if (mons_holiness(mon) != MH_NATURAL)
+    // Ely only cares about natural/holy monsters
+    if (mons_holiness(mon) != MH_NATURAL && mons_holiness(mon) != MH_HOLY)
         return false;
 
     if (mons_intel(mon->type) <= I_PLANT) // no self-awareness
@@ -608,7 +608,8 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
         return false;
 
     const int factor = (mons_intel(mon->type) <= I_ANIMAL) ? 3 : // animals
-                       (is_player_same_species(mon->type)) ? 2   // same species
+                       (is_player_same_species(mon->type)        // same species
+                         || mons_holiness(mon) == MH_HOLY) ? 2   // holy beings
                                                            : 1;  // other
 
     const int random_factor = random2(you.skills[SK_INVOCATIONS] * healed/3);
