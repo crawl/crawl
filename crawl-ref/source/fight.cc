@@ -3889,7 +3889,7 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
     // attacks; subsequent hits are free.
     if (which_attack > 1)
         return;
-    
+
     // speed adjustment for weapon using monsters
     if (wpn_speed > 0)
     {

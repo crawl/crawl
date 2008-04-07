@@ -3802,8 +3802,6 @@ static void _print_good_god_neutral_holy_being_speech(const std::string key,
     }
 }
 
-
-
 void good_god_holy_attitude_change(monsters *holy)
 {
     ASSERT(mons_is_holy(holy));

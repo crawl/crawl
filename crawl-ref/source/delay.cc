@@ -73,7 +73,7 @@ static bool recite_mons_useless(const monsters *mon)
 static int recite_to_monsters(int x, int y, int pow, int unused)
 {
     UNUSED(unused);
-    
+
     const int mon = mgrd[x][y];
     if (mon == NON_MONSTER)
         return (0);
@@ -109,7 +109,7 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
 
     if (pow > 0)
         pow = random2avg(pow,2);
-        
+
     if (pow <= 0) // Uh oh...
     {
         if (one_chance_in(resist+1))

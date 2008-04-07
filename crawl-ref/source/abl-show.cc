@@ -1599,12 +1599,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TROG_REGENERATION:
-        // Trog abilities don't use or train invocations. 
+        // Trog abilities don't use or train invocations.
         cast_regen(you.piety/2);
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:
-        // Trog abilities don't use or train invocations. 
+        // Trog abilities don't use or train invocations.
         summon_berserker(you.piety +
                          random2(you.piety/4) - random2(you.piety/4),
                          true);

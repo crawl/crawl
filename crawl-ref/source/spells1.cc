@@ -612,7 +612,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
                                                            : 1;  // other
 
     const int random_factor = random2(you.skills[SK_INVOCATIONS] * healed/3);
-    
+
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
@@ -642,7 +642,7 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
         bmove.ty = target_y;
         bmove.isValid = true;
     }
-    
+
     if (!bmove.isValid || !in_bounds(bmove.tx, bmove.ty))
     {
         canned_msg( MSG_OK );
@@ -657,7 +657,7 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
     }
 
     const int mgr = mgrd[bmove.tx][bmove.ty];
-    
+
     if (mgr == NON_MONSTER)
     {
         mpr("There isn't anything there!");
@@ -665,7 +665,7 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
     }
 
     monsters *monster = &menv[mgr];
-    
+
     // don't heal monster you can't pacify
     if (you.religion == GOD_ELYVILON && _mons_hostile(monster)
         && !_can_pacify_monster(monster, healed))
@@ -686,7 +686,7 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
             const monsters *mons = static_cast<const monsters*>(monster);
             print_wounds(mons);
         }
-        
+
         if (you.religion == GOD_ELYVILON && !_mons_hostile(monster))
         {
             simple_god_message(" appreciates the healing of a fellow creature.");
@@ -696,7 +696,7 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
         }
         nothing_happens = false;
     }
-    
+
     if (you.religion == GOD_ELYVILON && _mons_hostile(monster))
     {
         simple_god_message(" supports your offer of peace.");
@@ -733,7 +733,7 @@ char cast_greatest_healing( int pow )
 {
     return _healing_spell(50 + random2avg(49, 2));
 }
-#endif 
+#endif
 
 int cast_healing( int pow, int target_x, int target_y )
 {

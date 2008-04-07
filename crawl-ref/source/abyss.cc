@@ -604,7 +604,7 @@ static bool spawn_corrupted_servant_near(const coord_def &pos)
     }
     return (false);
 }
-                                        
+
 static void apply_corruption_effect(
     map_marker *marker, int duration)
 {

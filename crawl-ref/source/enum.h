@@ -1888,7 +1888,7 @@ enum monster_flag_type
                                     // and orcs (Beogh worshippers -> friendly)
     MF_WAS_IN_VIEW        = 0x2000, // Was in view during previous turn
     MF_BAND_MEMBER        = 0x4000, // Created as a member of a band
-    MF_GOT_HALF_XP        = 0x8000  // player already got half xp value earlier
+    MF_GOT_HALF_XP        = 0x8000  // Player already got half xp value earlier
 };
 
 // Adding slots breaks saves. YHBW.
