@@ -1816,6 +1816,11 @@ bool mons_good_neutral(const monsters *m)
     return (mons_neutral(m) && testbits(m->flags, MF_GOD_GIFT));
 }
 
+bool mons_is_swappable(const monsters *m)
+{
+    return (mons_friendly(m) || mons_good_neutral(m));
+}
+
 mon_attitude_type mons_attitude(const monsters *m)
 {
     return (m->has_ench(ENCH_CHARM)? ATT_FRIENDLY : m->attitude);

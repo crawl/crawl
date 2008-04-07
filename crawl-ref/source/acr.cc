@@ -1674,7 +1674,7 @@ static void _experience_check()
     }
 #ifdef DEBUG_DIAGNOSTICS
     if (wearing_amulet(AMU_THE_GOURMAND))
-        mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d", 
+        mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d",
              you.duration[DUR_GOURMAND]);
 
     mprf(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
@@ -1682,7 +1682,7 @@ static void _experience_check()
 #endif
 }
 
-static bool _mons_hostile( const monsters *mon)
+static bool _mons_hostile(const monsters *mon)
 {
     return (!mons_friendly(mon) && !mons_neutral(mon));
 }
@@ -4079,17 +4079,17 @@ static void _move_player(int move_x, int move_y)
     const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
     const bool           targ_pass  = you.can_pass_through(targ_x, targ_y);
 
-    // you can swap places with a friendly monster if you're not confused
-    // or if both of you are inside a sanctuary
+    // you can swap places with a swappable monster if you're not
+    // confused, or if both of you are inside a sanctuary
     const bool can_swap_places = targ_monst != NON_MONSTER
-                                 && (mons_friendly(&menv[targ_monst])
+                                 && (mons_is_swappable(&menv[targ_monst])
                                        && !you.duration[DUR_CONF]
                                      || is_sanctuary(you.x_pos, you.y_pos)
                                         && is_sanctuary(targ_x, targ_y));
 
     // cannot move away from mermaid but you CAN fight neighbouring squares
     if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF])
-    {   
+    {
         for (unsigned int i = 0; i < you.beheld_by.size(); i++)
         {
              monsters* mon = &menv[you.beheld_by[i]];
@@ -4134,7 +4134,7 @@ static void _move_player(int move_x, int move_y)
                 snprintf(info, INFO_SIZE,
                          "Really attack %s, despite your sanctuary?",
                          mon->name(DESC_NOCAP_THE).c_str());
-                         
+
                 if (!yesno(info, true, 'n'))
                     return;
             }
