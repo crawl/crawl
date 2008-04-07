@@ -1733,11 +1733,22 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
     case DID_ATTACK_NEUTRAL:
         switch (you.religion)
         {
+        case GOD_SHINING_ONE:
         case GOD_ELYVILON:
-            simple_god_message(" did not appreciate that!");
+            if (!known)
+            {
+                simple_god_message(" did not appreciate that!");
+                break;
+            }
+            penance = std::min(level, 5);
+            // deliberate fall through
+        case GOD_ZIN:
+            if (!known)
+            {
+                simple_god_message(" did not appreciate that!");
+                break;
+            }
             piety_change = -(level/2 + 1);
-            if (known)
-                penance = std::min(level, 5);
             ret = true;
             break;
 
