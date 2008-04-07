@@ -89,7 +89,7 @@ lua_file = lua/pickup.lua
 # autopickup_exceptions = <deck of cards
 #
 # default_autopickup = false
-autopickup_no_burden = true
+# autopickup_no_burden = true
 # pickup_thrown = false
 # pickup_dropped = true
 # assign_item_slot = (forward | backward)
@@ -210,8 +210,8 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # item_stack_summary_minimum = 5
 # list_rotten = false
 # mlist_min_height = 5
-# mlist_allow_alternate_layout = false
-# classic_hud = false
+# mlist_allow_alternate_layout = true
+# classic_hud = true
 
 # Colouring for the inventory
 menu_colour = inventory:lightred: cursed.*(worn|neck|hand|weapon)\)
@@ -254,7 +254,7 @@ message_colour = yellow:fails to return
 # fire_order = launcher, return
 # fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger
 # fire_order += inscribed
-# fire_quiver_best = false
+# fire_quiver_best = true
 
 ##### 4-l	Channels ##############################
 #
