@@ -3480,7 +3480,7 @@ static bool moral_beings_on_level_attitude_change()
                 {
                     monster->attitude = ATT_HOSTILE;
                     behaviour_event(monster, ME_ALERT, MHITYOU);
-                    // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+                    // for now CREATED_FRIENDLY/WAS_NEUTRAL/GOT_HALF_XP stays
 
                     success = true;
                 }
@@ -3818,9 +3818,11 @@ void good_god_holy_attitude_change(monsters *holy)
 
     holy->attitude  = ATT_NEUTRAL;
 
-    // not really *created* neutral, but should it become
-    // hostile later on, it won't count as a good kill
+    // not really *created* neutral, and you don't really get half XP
+    // for it, but should it become hostile later on, it won't count as
+    // a good kill
     holy->flags |= MF_WAS_NEUTRAL;
+    holy->flags |= MF_GOT_HALF_XP;
 
     // to avoid immobile "followers"
     behaviour_event(holy, ME_ALERT, MHITNOT);
@@ -3874,8 +3876,8 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
     orc->attitude  = ATT_FRIENDLY;
 
-    // not really "created" friendly, but should it become
-    // hostile later on, it won't count as a good kill
+    // not really "created" friendly, but should it become hostile later
+    // on, it won't count as a good kill
     orc->flags |= MF_CREATED_FRIENDLY;
 
     orc->flags |= MF_GOD_GIFT;

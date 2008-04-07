@@ -3907,12 +3907,19 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
 bool monster_attack(int monster_attacking)
 {
     monsters *attacker = &menv[monster_attacking];
-    
-    if (mons_friendly(attacker) && !mons_is_confused(attacker))
-        return false;
 
-    // in case the monster hasn't noticed you
-    // bumping into will change that
+    // Friendly monsters and neutral monsters that you got half XP from
+    // won't attack unless confused.
+    if ((mons_friendly(attacker)
+        || (mons_neutral(attacker)
+            && testbits(attacker->flags, MF_GOT_HALF_XP)))
+        && !mons_is_confused(attacker))
+    {
+        return false;
+    }
+
+    // In case the monster hasn't noticed you, bumping into it will
+    // change that.
     behaviour_event( attacker, ME_ALERT, MHITYOU );
     melee_attack attk(attacker, &you);
     attk.attack();
