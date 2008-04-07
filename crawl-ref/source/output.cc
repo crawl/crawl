@@ -1134,7 +1134,13 @@ void update_monster_pane()
         std::vector<monsters*> visible;
         get_playervisible_monsters(visible);
         for (unsigned int i=0; i<visible.size(); i++)
-            mons.push_back(monster_pane_info(visible[i]));
+        {
+            if (   Options.target_zero_exp
+                || !mons_class_flag( visible[i]->type, M_NO_EXP_GAIN ))
+            {
+                mons.push_back(monster_pane_info(visible[i]));
+            }
+        }
     }
 
     std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
