@@ -4,12 +4,14 @@
 # read 034_changes.txt for details. Uncomment these options if you want 
 # to disable them and go back to the old state: 
 # monster colours, command keys, order on the character selection screen,
-# item colours, butchering interface, targeting interface. 
+# item colours, appearance of the stat section, butchering interface, 
+# targeting interface. 
 # (New players should just ignore these lines.)
 #
 # : crawl.read_options('docs/034_monster_glyphs.txt')
 # additional_macro_file   = docs/034_command_keys.txt
 # classic_item_colours    = true
+# classic_hud             = true
 # use_old_selection_order = true
 # always_confirm_butcher  = true
 # target_unshifted_dirs   = true
