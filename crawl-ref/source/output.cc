@@ -102,10 +102,7 @@ void update_turn_count()
         return;
     }
 
-    // FIXME: Create some kind of layout manager class so we can
-    // templatise the heads-up display layout and stop hardcoding
-    // these coords.
-    cgotoxy(25, 8, GOTO_STAT);
+    cgotoxy(19+6, 2, GOTO_STAT);
     textcolor(LIGHTGREY);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
@@ -791,17 +788,22 @@ void print_stats(void)
     if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (19, 7); }
     if (you.redraw_experience)
     {
-        cgotoxy(1+12, 8, GOTO_STAT);
+        cgotoxy(1,8, GOTO_STAT);
+        textcolor(Options.status_caption_colour);
+        cprintf("Exp level: ");
+        textcolor(LIGHTGREY);
+        cprintf("%d", you.experience_level);
 
+        cgotoxy(19,8, GOTO_STAT);
+        textcolor(Options.status_caption_colour);
+        cprintf("Pool: ");
+        textcolor(LIGHTGREY);
 #if DEBUG_DIAGNOSTICS
-        cprintf( "%d/%lu  (%d/%d)",
-                 you.experience_level, you.experience,
-                 you.skill_cost_level, you.exp_available );
+        cprintf("%d/%d (%d)",
+                you.skill_cost_level, you.exp_available, you.experience);
 #else
-        cprintf( "Level %d  Pool %d",
-                 you.experience_level, you.exp_available );
+        cprintf("%d", you.exp_available);
 #endif
-
         clear_to_end_of_line();
         you.redraw_experience = false;
     }
@@ -887,14 +889,15 @@ void draw_border(void)
     cgotoxy( 1, 5, GOTO_STAT); cprintf("Str:");
     cgotoxy( 1, 6, GOTO_STAT); cprintf("Int:");
     cgotoxy( 1, 7, GOTO_STAT); cprintf("Dex:");
-    cgotoxy( 1, 8, GOTO_STAT); cprintf("Experience:");
+    // cgotoxy( 1, 8, GOTO_STAT); cprintf("Exp level:");
 
     cgotoxy(19, 5, GOTO_STAT); cprintf("AC:");
     cgotoxy(19, 6, GOTO_STAT); cprintf("Sh:");
     cgotoxy(19, 7, GOTO_STAT); cprintf("Ev:");
+    //cgotoxy(19, 8, GOTO_STAT); cprintf("Pool:");
     if (Options.show_turns)
     {
-        cgotoxy(19, 8, GOTO_STAT); cprintf("Turn:");
+        cgotoxy(19, 2, GOTO_STAT); cprintf("Turn:");
     }
     textcolor(LIGHTGREY);
     cgotoxy( 1,9, GOTO_STAT); cprintf("Level");
