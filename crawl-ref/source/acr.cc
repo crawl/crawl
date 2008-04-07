@@ -2199,7 +2199,7 @@ void process_command( command_type cmd )
             flush_input_buffer( FLUSH_ON_FAILURE );
             break;
         }
-        
+
         if (Options.tutorial_left)
             Options.tut_spell_counter++;
         if (!cast_a_spell())
@@ -4079,10 +4079,10 @@ static void _move_player(int move_x, int move_y)
     const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
     const bool           targ_pass  = you.can_pass_through(targ_x, targ_y);
 
-    // you can swap places with a friendly monster if you're not
-    // confused, or if both of you are inside a sanctuary
+    // you can swap places with a friendly or good neutral monster if
+    // you're not confused, or if both of you are inside a sanctuary
     const bool can_swap_places = targ_monst != NON_MONSTER
-                                 && (mons_friendly(&menv[targ_monst])
+                                 && (mons_wont_attack(&menv[targ_monst])
                                        && !you.duration[DUR_CONF]
                                      || is_sanctuary(you.x_pos, you.y_pos)
                                         && is_sanctuary(targ_x, targ_y));

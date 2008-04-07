@@ -187,8 +187,6 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
           mons->attitude = ATT_NEUTRAL;
           mons->flags |= MF_WAS_NEUTRAL;
 
-          mons->flags |= MF_GOD_GIFT;
-
           // give half of the monster's xp
           unsigned int exp_gain = 0, avail_gain = 0;
           gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );

@@ -310,7 +310,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
 void melee_attack::check_hand_half_bonus_eligible()
 {
-    hand_half_bonus = 
+    hand_half_bonus =
         unarmed_ok
         && !can_do_unarmed
         && !shield
@@ -326,14 +326,14 @@ void melee_attack::init_attack()
 
     if (defender && defender->atype() == ACT_MONSTER)
         def = dynamic_cast<monsters*>(defender);
-    
+
     weapon       = attacker->weapon(attack_number);
     damage_brand = attacker->damage_brand(attack_number);
 
     if (weapon && weapon->base_type == OBJ_WEAPONS
         && is_random_artefact( *weapon ))
     {
-        randart_wpn_properties( *weapon, art_props );    
+        randart_wpn_properties( *weapon, art_props );
     }
 
     wpn_skill = weapon? weapon_skill( *weapon ) : SK_UNARMED_COMBAT;
@@ -3908,8 +3908,8 @@ bool monster_attack(int monster_attacking)
 {
     monsters *attacker = &menv[monster_attacking];
 
-    // Friendly monsters won't attack unless confused.
-    if (mons_friendly(attacker) && !mons_is_confused(attacker))
+    // Friendly and good neutral monsters won't attack unless confused.
+    if (mons_wont_attack(attacker) && !mons_is_confused(attacker))
         return false;
 
     // In case the monster hasn't noticed you, bumping into it will
