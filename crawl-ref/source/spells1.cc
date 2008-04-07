@@ -704,6 +704,8 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
         monster->attitude = ATT_NEUTRAL;
         monster->flags |= MF_WAS_NEUTRAL;
 
+        monster->flags |= MF_GOD_GIFT;
+
         // give half of the monster's xp
         unsigned int exp_gain = 0, avail_gain = 0;
         gain_exp( exper_value(monster) / 2 + 1, &exp_gain, &avail_gain );

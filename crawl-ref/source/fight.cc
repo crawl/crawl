@@ -3908,11 +3908,11 @@ bool monster_attack(int monster_attacking)
 {
     monsters *attacker = &menv[monster_attacking];
 
-    // Friendly monsters and neutral monsters that you got half XP from
-    // won't attack unless confused.
+    // Friendly monsters and neutral monsters that are god gifts won't
+    // attack unless confused.
     if ((mons_friendly(attacker)
         || (mons_neutral(attacker)
-            && testbits(attacker->flags, MF_GOT_HALF_XP)))
+            && testbits(attacker->flags, MF_GOD_GIFT)))
         && !mons_is_confused(attacker))
     {
         return false;

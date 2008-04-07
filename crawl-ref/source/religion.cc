@@ -3823,11 +3823,11 @@ void good_god_holy_attitude_change(monsters *holy)
 
     holy->attitude  = ATT_NEUTRAL;
 
-    // not really *created* neutral, and you don't really get half XP
-    // for it, but should it become hostile later on, it won't count as
-    // a good kill
+    // not really *created* neutral, but should it become hostile later
+    // on, it won't count as a good kill
     holy->flags |= MF_WAS_NEUTRAL;
-    holy->flags |= MF_GOT_HALF_XP;
+
+    holy->flags |= MF_GOD_GIFT;
 
     // to avoid immobile "followers"
     behaviour_event(holy, ME_ALERT, MHITNOT);
