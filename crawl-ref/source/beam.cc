@@ -3817,6 +3817,8 @@ static int _affect_monster(bolt &beam, monsters *mon)
 
                 if (mons_friendly( mon ) && beam.flavour != BEAM_CHARM)
                     did_god_conduct( DID_ATTACK_FRIEND, 5, true, mon );
+                else if (mons_neutral( mon ) && beam.flavour != BEAM_CHARM)
+                    did_god_conduct( DID_ATTACK_NEUTRAL, 5, true, mon );
 
                 if (mons_is_holy( mon ))
                     did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, true, mon );
@@ -3988,6 +3990,8 @@ static int _affect_monster(bolt &beam, monsters *mon)
 
             if (mons_friendly(mon))
                 conduct.set( DID_ATTACK_FRIEND, 5, !okay, mon );
+            else if (mons_neutral(mon))
+                conduct.set( DID_ATTACK_NEUTRAL, 5, !okay, mon );
 
             if (mons_is_holy(mon))
                 conduct.set( DID_ATTACK_HOLY, mon->hit_dice, !okay, mon );

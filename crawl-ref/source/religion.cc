@@ -1730,6 +1730,21 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
+    case DID_ATTACK_NEUTRAL:
+        switch (you.religion)
+        {
+        case GOD_ELYVILON:
+            simple_god_message(" did not appreciate that!");
+            ret = true;
+            piety_change = -(level/2 + 1);
+            penance = std::min(level, 5);
+            break;
+
+        default:
+            break;
+        }
+        break;
+
     case DID_ATTACK_FRIEND:
         if (god_hates_attacking_friend(you.religion, victim))
         {
@@ -1778,21 +1793,6 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
             ret = true;
             if (random2(level + 10) > 5)
                 piety_change = 1;
-            break;
-
-        default:
-            break;
-        }
-        break;
-
-    case DID_KILL_NEUTRAL:
-        switch (you.religion)
-        {
-        case GOD_ELYVILON:
-            simple_god_message(" did not appreciate that!");
-            ret = true;
-            piety_change = -(level/2 + 1);
-            penance = std::min(level, 5);
             break;
 
         default:
@@ -2185,15 +2185,15 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         static const char *conducts[] =
         {
           "",
-          "Necromancy", "Unholy", "Attack Holy", "Attack Friend",
-          "Friend Died", "Stab", "Poison", "Field Sacrifice",
+          "Necromancy", "Unholy", "Attack Holy", "Attack Neutral",
+          "Attack Friend", "Friend Died", "Stab", "Poison", "Field Sacrifice",
           "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
           "Kill Mutator Or Rotter", "Kill Wizard", "Kill Priest",
-          "Kill Holy", "Kill Neutral", "Undead Slave Kill Living",
-          "Servant Kill Living", "Servant Kill Undead", "Servant Kill Demon",
-          "Servant Kill Natural Evil", "Servant Kill Holy",
-          "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
-          "Cards", "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
+          "Kill Holy", "Undead Slave Kill Living", "Servant Kill Living",
+          "Servant Kill Undead", "Servant Kill Demon",
+          "Servant Kill Natural Evil", "Servant Kill Holy", "Spell Memorise",
+          "Spell Cast", "Spell Practise", "Spell Nonutility", "Cards",
+          "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
           "Eat Souled Being", "Deliberate Mutation", "Cause Glowing",
           "Create Life"
         };

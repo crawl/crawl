@@ -628,6 +628,7 @@ enum conduct_type
     DID_NECROMANCY = 1,                 // vamp/drain/pain wpns, Zong/Curses
     DID_UNHOLY,                         // demon wpns, demon spells
     DID_ATTACK_HOLY,
+    DID_ATTACK_NEUTRAL,
     DID_ATTACK_FRIEND,
     DID_FRIEND_DIES,
     DID_STABBING,
@@ -642,7 +643,6 @@ enum conduct_type
     DID_KILL_WIZARD,
     DID_KILL_PRIEST,
     DID_KILL_HOLY,
-    DID_KILL_NEUTRAL,
     DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
     DID_LIVING_KILLED_BY_SERVANT,
     DID_UNDEAD_KILLED_BY_SERVANT,

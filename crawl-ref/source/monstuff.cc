@@ -907,10 +907,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                     true, monster);
                     drop_items = false;
                 }
-
-                if (was_neutral)
-                    did_god_conduct(DID_KILL_NEUTRAL, monster->hit_dice,
-                                    true, monster);
             }
 
             // Divine health and mp restoration doesn't happen when killing

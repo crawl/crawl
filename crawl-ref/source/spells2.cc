@@ -1166,7 +1166,7 @@ char burn_freeze(int pow, beam_type flavour)
                                        : "______",
          monster->name(DESC_NOCAP_THE).c_str());
 
-    int hurted = roll_dice( 1, 3 + pow / 3 ); 
+    int hurted = roll_dice( 1, 3 + pow / 3 );
 
     bolt beam;
 
@@ -1179,7 +1179,9 @@ char burn_freeze(int pow, beam_type flavour)
     {
         if (mons_friendly( monster ))
             did_god_conduct( DID_ATTACK_FRIEND, 5, true, monster );
-        
+        else if (mons_neutral( monster ))
+            did_god_conduct( DID_ATTACK_NEUTRAL, 5, true, monster );
+
         if (mons_holiness( monster ) == MH_HOLY)
             did_god_conduct( DID_ATTACK_HOLY, monster->hit_dice );
     }
