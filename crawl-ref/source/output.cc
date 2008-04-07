@@ -1059,6 +1059,9 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
             textcolor(glyph_color);
             cprintf( stringize_glyph(glyph).c_str() );
             ++ printed;
+            // Printing too many looks pretty bad, though.
+            if (i_mon > 6)
+                break;
         }
         textcolor(LIGHTGREY);
 
