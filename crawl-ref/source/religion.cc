@@ -1740,7 +1740,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
                 simple_god_message(" did not appreciate that!");
                 break;
             }
-            penance = std::min(level, 5);
+            penance = level/2 + 1;
             // deliberate fall through
         case GOD_ZIN:
             if (!known)
