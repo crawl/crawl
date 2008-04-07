@@ -1775,15 +1775,20 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         break;
 
     case DID_KILL_NEUTRAL:
-        if (you.religion == GOD_ELYVILON)
+        switch (you.religion)
         {
-             simple_god_message(" did not appreciate that!");
-             ret = true;
-             piety_change = -(level/2 + 1);
-             penance = std::min(level, 5);
+        case GOD_ELYVILON:
+            simple_god_message(" did not appreciate that!");
+            ret = true;
+            piety_change = -(level/2 + 1);
+            penance = std::min(level, 5);
+            break;
+
+        default:
+            break;
         }
         break;
-            
+
     case DID_KILL_LIVING:
         switch (you.religion)
         {
