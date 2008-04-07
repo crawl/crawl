@@ -154,10 +154,9 @@ Hit points:   A measure of life force. You die if your hit points drop
               to zero or less (although you can die in other ways, too).
               The main screen shows hit points in the format HP: 8/10,
               showing that your character's maximum hit points are 10, 
-              and the character currently has 8. Resting (by pressing 
-              's', '.', Del) will slowly restore hit points; for longer 
-              resting use '5' or Shift-Num-5.
-
+              and the character currently has 8. Usually, you regain 
+              hit points slowly over time. Pressing '5' or Shift-Num-5 
+              lets you wait for a longer period.
               Some very battle-fixated characters may end up with more 
               than 250 hit points, yet some spellcasters are known to 
               have finished the game victorious with less than 100 hit 
@@ -170,7 +169,6 @@ Magic points: A measure of magic or other intrinsic power. This is used
               bad happens if these drop to zero. (Except, of course,
               that you can't cast any spells.) Resting restores these, 
               too.
-
               It is uncommon to have more than 50 magic points (without 
               using external devices).
 
@@ -179,6 +177,15 @@ Level:        Starting characters have experience level 1; the highest
               the stat area after "Experience". Gaining a level nets 
               additional hit and magic points, and will sometimes grant
               spell slots or primary attributes (see immediately below).
+
+Pool:         This is different to all the other figures you can see in 
+              the stat area. The Pool is a highly fluctuating number
+              ranging between 0 and 20000. It is increased whenever you
+              gain some experience (usually by killing monsters). It is
+              decreased by all sorts of action and does train these
+              actions that way. Having an eye on the Pool is important
+              if you want to train specific skills. See Section E for
+              more details.
 
 Primary attributes describe the character's abilities to fight, dodge, 
 learn spells, etc. They grow permanently from gaining levels, and may
@@ -196,7 +203,7 @@ Dexterity:    Affects your accuracy in combat, your ability to dodge
               attacks aimed at you, your general effectiveness with 
               missile weapons, and your ability to use thiefly skills 
               such as backstabbing and disarming traps. Your dexterity
-              does directly affect your evasion score (EV).
+              does directly affect your evasion score (Ev).
 
 If any one of these drops to zero for some reason, you die. Note that 
 upon gaining Levels 3, 6, 9, etc., you get to choose one of the 
@@ -206,17 +213,16 @@ increased.
 
 The next numbers provide additional information about your character.
 
-Armour Class: Also called AC; when something injures you, your AC 
-              reduces the amount of damage you suffer. The number next 
-              to your AC is a measure of how good your shield (if any) 
-              is at blocking attacks. In both cases, more is better.
+Armour Class: Abbreviated to "AC". When something injures you, your AC 
+              reduces the amount of damage you suffer.
 
-Evasion:      Also called EV, this helps you to avoid being hit by 
+Shield:       Abbreviated to "Sh". This number is a measure of how good
+              your shield (if any) is at blocking attacks.
+
+Evasion:      Abbreviated to "Ev". This helps you to avoid being hit by 
               unpleasant things (but will not reduce the amount of 
               damage you suffer if you do get hit).
-
-Gold:         This is how much money you're carrying. Money adds to your 
-              final score and can be used to purchase items in shops.
+              For Armour Class, Shield and Evasion, more is better.
 
 Magic         Affects your ability to resist the effects of enchantments 
 Resistance:   and similar magic directed at you. Although your magic 
@@ -236,14 +242,19 @@ Stealth:      Another internal variable like Magic Resistance. First,
               allowing your character to move through the dungeon 
               undetected.
 
-Sometimes characters will be able to use special abilities, e.g. the
-Naga's ability to spit poison, or the magical power to turn invisible 
-granted by a ring. These are accessed through the 'a' command.
-
 There are many ailments or enchantments that can temporarily befall you.
 These are noted in the stats area below the experience line. Many of 
 them are self-explaining, like Pray, or Hungry. Many others, however, 
 can be subtle, and a full list with explanations is given in Appendix 5.
+
+Monsters within your field of vision are listed on a special panel, the
+monster list. Single monsters also get indicators of their health status
+in the form of a coloured box, and also on effects they enjoy or suffer
+from.
+
+Sometimes characters will be able to use special abilities, e.g. the
+Naga's ability to spit poison, or the magical power to turn invisible 
+granted by a ring. These are accessed through the 'a' command.
 
 
 ------------------------------------------------------------------------
@@ -439,14 +450,17 @@ When you kill monsters, you gain experience points (XP). You receive
 half normal experience for monsters killed by friendly creatures. When 
 you get enough XP, you gain an experience level, making your character 
 more powerful. As they gain levels, characters gain more hit points, 
-magic points, and spell levels.
+magic points, and spell levels. Whenever you are curious about the 
+total amount of experience accumulated so far, or how much experience
+is needed to advance to the next level, press 'E' or '%'.
 
-Additionally, the experience you gain goes into your experience pool. 
-This pool of points is used up whenever you practise a skill. These 
+Additionally, the experience you gain goes into your Pool which is 
+shown next to the Experience level. The Pool is capped at 20000 points.
+This pool pf points is used up whenever you practise a skill. These 
 skills represent proficiency with all areas of endeavour an ambitious 
-adventurer might need in the dungeons. They range from different weapon 
+adventurer might need in the dungeons. They range from different weapon
 skills (both for close and ranged combat) to many magical skills and 
-several additional activities like Dodging or Stabbing. See Appendix 3 
+several additional activities like Dodging or Stabbing. See Appendix 3
 for a detailed description of all skills present in Crawl. The ease 
 with which a character learns a skill depends solely on race. These 
 aptitudes are hinted at in the list of species (see Appendix 1). For the
@@ -558,6 +572,7 @@ displayed, and what commands there are to use them:
 \ or |  staves, rods    (use 'w'ield for staves; 'v' for evoking rods)
 + or :  spellbooks      (use 'r'ead and 'M'emorise and 'z'ap)
 }       miscellaneous   (use generally 'w'ield and 'v' for evoking)
+$       gold            (picking up takes no turns)
 
 There are several general keys for item management:
 'd'     drop item
@@ -855,6 +870,16 @@ many of them, as well as some special weapons, by wielding and then
 evoking them with 'v'. Runes, a particular item in this category, have
 no function whatsoever except to open the endgame. You must collect at 
 least three in order to enter the Realm of Zot.
+
+$ Gold
+------
+Gold can be used to buy items should you run across shops. (Shops do 
+not buy, by the way.) There are also a few more esoteric uses for gold.
+Gold coins do not have any weight in Crawl, and picking up some coins 
+does not take a turn.
+Whenever you pick up gold, your total wealth is shown as well. Should 
+you want to have a glance at your finances at some other opportunity,
+pressing '%' allows you to do so.
 
 Racial Items
 ------------
@@ -2094,7 +2119,7 @@ Having a high Armour skill means that you are used to wearing heavy
 armour, allowing you to move more freely and gain more protection. When
 you look at an armour's description (from within the inventory), you can
 see in particular show you how cumbersome it is. This is measured by the
-Evasion modifier. All armours with EV penalty of 0 or -1 are considered 
+Evasion modifier. All armours with Ev penalty of 0 or -1 are considered 
 light, and all others are considered heavy -- except for Elven armour 
 (which is light). 
 Walking and fighting in heavy armour will train the Armour skill. If the
@@ -2512,12 +2537,11 @@ following, if an item is already selected, the key will deselect it
 5.                      LIST OF ENCHANTMENTS
 ------------------------------------------------------------------------
 
-Below the amount of carried gold, the stats area has room for showing
-the enchantments which you currently enjoy or have to suffer. Quite
-generally, these are only shown for temporary effects. So a Kenku's
-native flying ability is not noted, and neither is the effect of a ring
-of regeneration. Here is a list of these, as some are abbreviations or 
-may not be obvious:
+The stats area has room for showing the enchantments which you currently 
+enjoy or have to suffer. Quite generally, these are only shown for 
+temporary effects. So a Kenku's native flying ability is not noted, and 
+neither is the effect of a ring of regeneration. Here is a list of these,
+as some are abbreviations or may not be obvious:
 
 General enchantments:
 ---------------------
