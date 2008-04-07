@@ -1177,20 +1177,17 @@ char burn_freeze(int pow, beam_type flavour)
 
     if (hurted)
     {
-        if (mons_friendly( monster ))
-            did_god_conduct( DID_ATTACK_FRIEND, 5, true, monster );
-        else if (mons_neutral( monster )
-            && testbits( monster->flags, MF_GOD_GIFT ))
-        {
-            did_god_conduct( DID_ATTACK_NEUTRAL, 5, true, monster );
-        }
+        if (mons_friendly(monster))
+            did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
+        else if (mons_good_neutral(monster))
+            did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
 
-        if (mons_holiness( monster ) == MH_HOLY)
-            did_god_conduct( DID_ATTACK_HOLY, monster->hit_dice );
+        if (mons_holiness(monster) == MH_HOLY)
+            did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice);
     }
 
     if (!mons_friendly(monster) || hurted)
-        behaviour_event( monster, ME_ANNOY, MHITYOU );
+        behaviour_event(monster, ME_ANNOY, MHITYOU);
 
     if (hurted)
     {

@@ -3910,9 +3910,7 @@ bool monster_attack(int monster_attacking)
 
     // Friendly monsters and neutral monsters that are god gifts won't
     // attack unless confused.
-    if ((mons_friendly(attacker)
-        || (mons_neutral(attacker)
-            && testbits(attacker->flags, MF_GOD_GIFT)))
+    if ((mons_friendly(attacker) || mons_good_neutral(attacker))
         && !mons_is_confused(attacker))
     {
         return false;

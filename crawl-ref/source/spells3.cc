@@ -216,11 +216,8 @@ int cast_smiting(int power, dist &beam)
 
         if (mons_friendly(monster))
             did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
-        else if (mons_neutral(monster)
-            && testbits(monster->flags, MF_GOD_GIFT))
-        {
+        else if (mons_good_neutral(monster))
             did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
-        }
 
         if (mons_is_holy(monster))
             did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice, true, monster);
@@ -278,11 +275,8 @@ int airstrike(int power, dist &beam)
 
             if (mons_friendly(monster))
                 did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
-            else if (mons_neutral(monster)
-                && testbits(monster->flags, MF_GOD_GIFT))
-            {
+            else if (mons_good_neutral(monster))
                 did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
-            }
 
             if (mons_is_holy(monster))
                 did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice, true, monster);

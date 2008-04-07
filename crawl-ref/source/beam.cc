@@ -3817,17 +3817,14 @@ static int _affect_monster(bolt &beam, monsters *mon)
 
                 if (beam.flavour != BEAM_CHARM)
                 {
-                    if (mons_friendly( mon ))
-                        did_god_conduct( DID_ATTACK_FRIEND, 5, true, mon );
-                    else if (mons_neutral( mon )
-                        && testbits( mon->flags, MF_GOD_GIFT ))
-                    {
-                        did_god_conduct( DID_ATTACK_NEUTRAL, 5, true, mon );
-                    }
+                    if (mons_friendly(mon))
+                        did_god_conduct(DID_ATTACK_FRIEND, 5, true, mon);
+                    else if (mons_good_neutral(mon))
+                        did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, mon);
                 }
 
-                if (mons_is_holy( mon ))
-                    did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, true, mon );
+                if (mons_is_holy(mon))
+                    did_god_conduct(DID_ATTACK_HOLY, mon->hit_dice, true, mon);
 
                 if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
                     && mon->behaviour == BEH_SLEEP && !player_under_penance()
@@ -3995,12 +3992,9 @@ static int _affect_monster(bolt &beam, monsters *mon)
             }
 
             if (mons_friendly(mon))
-                conduct.set( DID_ATTACK_FRIEND, 5, !okay, mon );
-            else if (mons_neutral(mon)
-                && testbits(mon->flags, MF_GOD_GIFT))
-            {
-                conduct.set( DID_ATTACK_NEUTRAL, 5, !okay, mon );
-            }
+                conduct.set(DID_ATTACK_FRIEND, 5, !okay, mon);
+            else if (mons_good_neutral(mon))
+                conduct.set(DID_ATTACK_NEUTRAL, 5, !okay, mon);
 
             if (mons_is_holy(mon))
                 conduct.set( DID_ATTACK_HOLY, mon->hit_dice, !okay, mon );
