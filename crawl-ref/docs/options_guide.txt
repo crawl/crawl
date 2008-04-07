@@ -1068,11 +1068,14 @@ mlist_min_height = 5
         in the monster list.  The number displayed may be smaller than
         this option if the terminal size is not large enough.
 
-mlist_force_inline = false
-        By default, if the terminal size is large enough, the monster 
-        list will be placed to the left of the view.  If this option is 
-        set to true, the monster list will only appear between the 
-        status hud and the message pane.
+mlist_allow_alternate_layout = false
+        If the terminal size is large enough, allow the monster list
+        to be placed to the left of the view.  By default, the monster
+        list will only appear beween the HUD and the message pane.
+
+classic_hud = false
+        Remove the Health and Magic bars and the monster list, for a
+        more 0.3-like HUD display.
 
 menu_colour = <match>:<colour>:<regex>
         This prints a line (of the inventory, a menu, or the discoveries

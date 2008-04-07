@@ -4990,10 +4990,18 @@ class _inline_layout : public _layout
         if (leftover_y() < 0) { return false; }
         _increment(viewsz.y, leftover_leftcol_y(), Options.view_max_height);
         if ((viewsz.y % 2) != 1) --viewsz.y;
-        if (mlistsz.y < Options.mlist_min_height)
-            _increment(mlistsz.y, leftover_rightcol_y(), Options.mlist_min_height);
-        _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
-        _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
+        if (Options.classic_hud)
+        {
+            mlistsz.y = 0;
+            _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
+        }
+        else
+        {
+            if (mlistsz.y < Options.mlist_min_height)
+                _increment(mlistsz.y, leftover_rightcol_y(), Options.mlist_min_height);
+            _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
+            _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
+        }
 
         // Finish off by doing the positions
         viewp  = termp;
@@ -5168,8 +5176,12 @@ void crawl_view_geometry::init_geometry()
     }
 
     const _layout* winner = &lay_inline;
-    if (!Options.mlist_force_inline && lay_mlist.valid)
+    if (  !Options.mlist_allow_alternate_layout
+       && !Options.classic_hud
+       &&  lay_mlist.valid)
+    {
         winner = &lay_mlist;
+    }
 
     msgp  = winner->msgp;
     msgsz = winner->msgsz;

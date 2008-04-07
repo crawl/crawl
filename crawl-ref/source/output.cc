@@ -256,7 +256,9 @@ static void _print_stats_mp(int x, int y)
               + _count_digits(you.max_magic_points) + 1;
     for (int i = 11-col; i > 0; i--)
         cprintf(" ");
-    draw_mp_bar(19, y, you.magic_points, you.max_magic_points);
+
+    if (! Options.classic_hud)
+        draw_mp_bar(19, y, you.magic_points, you.max_magic_points);
 }
 
 // Helper for print_stats
@@ -295,7 +297,8 @@ static void _print_stats_hp(int x, int y)
     for (int i = 14-col; i > 0; i--)
         cprintf(" ");
 
-    draw_hp_bar(19, y, you.hp, you.hp_max);
+    if (! Options.classic_hud)
+        draw_hp_bar(19, y, you.hp, you.hp_max);
 }
 
 // XXX: alters state!  Does more than just print!

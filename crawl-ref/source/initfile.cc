@@ -613,7 +613,8 @@ void game_options::reset_options()
     view_max_width = 33;
     view_max_height = 21;
     mlist_min_height = 5;
-    mlist_force_inline = true;
+    mlist_allow_alternate_layout = false;
+    classic_hud = false;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -1566,6 +1567,32 @@ void game_options::set_option_fragment(const std::string &s)
 
 void game_options::read_option_line(const std::string &str, bool runscript)
 {
+#define BOOL_OPTION_NAMED(_opt_str, _opt_var)                     \
+    if (key == _opt_str) do {                               \
+        this->_opt_var = _read_bool(field, this->_opt_var); \
+    } while (false)
+#define BOOL_OPTION(_opt) BOOL_OPTION_NAMED(#_opt, _opt)
+
+#define COLOUR_OPTION_NAMED(_opt_str, _opt_var)                               \
+    if (key == _opt_str) do {                                           \
+        const int col = str_to_colour( field );                         \
+        if (col != -1) {                                                \
+            this->_opt_var = col;                                       \
+        } else {                                                        \
+            /*fprintf( stderr, "Bad %s -- %s\n", key, field.c_str() );*/ \
+            crawl_state.add_startup_error(                              \
+                make_stringf("Bad %s -- %s\n",                          \
+                    key.c_str(), field.c_str()));                       \
+        }                                                               \
+    } while (false)
+#define COLOUR_OPTION(_opt) COLOUR_OPTION_NAMED(#_opt, _opt)
+
+#define CURSES_OPTION_NAMED(_opt_str, _opt_var)           \
+    if (key == _opt_str) do {                       \
+        this->_opt_var = curses_attribute(field);   \
+    } while (false)
+#define CURSES_OPTION(_opt) CURSES_OPTION_NAMED(#_opt, _opt)
+
     std::string key = "";
     std::string subkey = "";
     std::string field = "";
@@ -1738,40 +1765,14 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         }
     }
 #endif
-    else if (key == "use_old_selection_order")
-    {
-        // use old order of species/classes on selection screen?
-        use_old_selection_order = _read_bool( field, use_old_selection_order );
-    }
-    else if (key == "default_autopickup")
-    {
-        // should autopickup default to on or off?
-        autopickup_on = _read_bool( field, autopickup_on );
-    }
-    else if (key == "default_autoprayer")
-    {
-        // should autoprayer default to on or off?
-        autoprayer_on = _read_bool( field, autoprayer_on );
-    }
-    else if (key == "show_inventory_weights")
-    {
-        // should weights be shown on inventory items?
-        show_inventory_weights = _read_bool( field, show_inventory_weights );
-    }
-    else if (key == "suppress_startup_errors")
-    {
-        suppress_startup_errors = _read_bool( field, suppress_startup_errors );
-    }
-    else if (key == "clean_map")
-    {
-        // removes monsters/clouds from map
-        clean_map = _read_bool( field, clean_map );
-    }
-    else if (key == "colour_map" || key == "color_map")
-    {
-        // colour-codes play-screen map
-        colour_map = _read_bool( field, colour_map );
-    }
+    else BOOL_OPTION(use_old_selection_order);
+    else BOOL_OPTION_NAMED("default_autopickup", autopickup_on);
+    else BOOL_OPTION_NAMED("default_autoprayer", autoprayer_on);
+    else BOOL_OPTION(show_inventory_weights);
+    else BOOL_OPTION(suppress_startup_errors);
+    else BOOL_OPTION(clean_map);
+    else BOOL_OPTION(colour_map);
+    else BOOL_OPTION_NAMED("color_map", colour_map);  // common misspelling :)
     else if (key == "easy_confirm")
     {
         // allows both 'Y'/'N' and 'y'/'n' on yesno() prompts
@@ -1780,38 +1781,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "safe")
             easy_confirm = CONFIRM_SAFE_EASY;
     }
-    else if (key == "easy_quit_item_lists"
-            || key == "easy_quit_item_prompts")
-    {
-        // allow aborting of item lists with space
-        easy_quit_item_prompts = _read_bool( field,
-                                        easy_quit_item_prompts );
-    }
-    else if (key == "easy_open")
-    {
-        // automatic door opening with movement
-        easy_open = _read_bool( field, easy_open );
-    }
-    else if (key == "easy_armor" 
-             || key == "easy_armour" 
-             || key == "easy_unequip")
-    {
-        // automatic removal of armour when dropping
-        easy_unequip = _read_bool( field, easy_unequip );
-    }
-    else if (key == "easy_butcher")
-    {
-        // automatic knife switching
-        easy_butcher = _read_bool( field, easy_butcher );
-    }
-    else if (key == "always_confirm_butcher")
-    {
-        always_confirm_butcher = _read_bool( field, always_confirm_butcher );
-    }
-    else if (key == "list_rotten")
-    {
-        list_rotten = _read_bool( field, list_rotten );
-    }
+    else BOOL_OPTION(easy_quit_item_prompts);
+    else BOOL_OPTION_NAMED("easy_quit_item_lists", easy_quit_item_prompts);
+    else BOOL_OPTION(easy_open);
+    else BOOL_OPTION(easy_unequip);
+    else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
+    else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
+    else BOOL_OPTION(easy_butcher);
+    else BOOL_OPTION(always_confirm_butcher);
+    else BOOL_OPTION(list_rotten);
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
@@ -1845,36 +1823,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (col == -1)
             fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
     }
-    else if (key == "background")
-    {
-        // change background colour
-        // Experimental! This may look really bad!
-        const int col = str_to_colour( field );
-
-        if (col != -1)
-            background = col;
-        else
-            fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
-
-    }
-    else if (key == "detected_item_colour")
-    {
-        const int col = str_to_colour( field );
-        if (col != -1)
-            detected_item_colour = col;
-        else
-            fprintf( stderr, "Bad detected_item_colour -- %s\n",
-                     field.c_str());
-    }
-    else if (key == "detected_monster_colour")
-    {
-        const int col = str_to_colour( field );
-        if (col != -1)
-            detected_monster_colour = col;
-        else
-            fprintf( stderr, "Bad detected_monster_colour -- %s\n",
-                     field.c_str());
-    }
+    else COLOUR_OPTION(background);
+    else COLOUR_OPTION(detected_item_colour);
+    else COLOUR_OPTION(detected_monster_colour);
     else if (key.find(interrupt_prefix) == 0)
     {
         set_activity_interrupt(key.substr(interrupt_prefix.length()), 
@@ -1908,55 +1859,19 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         split_parse(field, ",", &game_options::add_mon_glyph_override);
     }
-    else if (key == "friend_brand")
-    {
-        // Use curses attributes to mark friend
-        // Some may look bad on some terminals.
-        // As a suggestion, try "rxvt -rv -fn 10x20" under Un*xes
-        friend_brand = curses_attribute(field);
-    }
-    else if (key == "neutral_brand")
-    {
-        neutral_brand = curses_attribute(field);
-    }
-    else if (key == "stab_brand")
-    {
-        stab_brand = curses_attribute(field);
-    }
-    else if (key == "may_stab_brand")
-    {
-        may_stab_brand = curses_attribute(field);
-    }
-    else if (key == "stair_item_brand")
-    {
-        feature_item_brand = curses_attribute(field);
-    }
-    else if (key == "trap_item_brand")
-    {
-        trap_item_brand = curses_attribute(field);
-    }
-    else if (key == "no_dark_brand")
-    {
-        // This is useful for terms where dark grey does
-        // not have standout modes (since it's black on black).
-        // This option will use light-grey instead in these cases.
-        no_dark_brand = _read_bool( field, no_dark_brand );
-    }
-    else if (key == "heap_brand")
-    {
-        // See friend_brand option upstairs. no_dark_brand applies
-        // here as well.
-        heap_brand = curses_attribute(field);
-    }
-    else if (key == "status_caption_colour")
-    {
-        const int col = str_to_colour( field );
-        if (col != -1)
-            status_caption_colour = col;
-        else
-            crawl_state.add_startup_error(
-                make_stringf("Bad status_caption_colour -- %s\n", field.c_str()));
-    }
+    else CURSES_OPTION(friend_brand);
+    else CURSES_OPTION(neutral_brand);
+    else CURSES_OPTION(stab_brand);
+    else CURSES_OPTION(may_stab_brand);
+    else CURSES_OPTION_NAMED("stair_item_brand", feature_item_brand);
+    else CURSES_OPTION(trap_item_brand);
+    // This is useful for terms where dark grey does
+    // not have standout modes (since it's black on black).
+    // This option will use light-grey instead in these cases.
+    else BOOL_OPTION(no_dark_brand);
+    // no_dark_brand applies here as well.
+    else CURSES_OPTION(heap_brand);
+    else COLOUR_OPTION(status_caption_colour);
     else if (key == "weapon")
     {
         // choose this weapon for classes that get choice
@@ -2003,10 +1918,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                      field.c_str() );
         }
     }
-    else if (key == "fire_quiver_best")
-    {
-        fire_quiver_best = _read_bool(field, fire_quiver_best);
-    }
+    else BOOL_OPTION(fire_quiver_best);
     else if (key == "assign_item_slot")
     {
         if (field == "forward")
@@ -2018,15 +1930,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         set_fire_order(field, plus_equal);
     }
-    else if (key == "random_pick")
-    {
-        // randomly generate character
-        random_pick = _read_bool( field, random_pick );
-    }
-    else if (key == "remember_name")
-    {
-        remember_name = _read_bool( field, remember_name );
-    }
+    else BOOL_OPTION(random_pick);
+    else BOOL_OPTION(remember_name);
 #ifndef SAVE_DIR_PATH
     else if (key == "save_dir")
     {
@@ -2035,14 +1940,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         save_dir = field;
     }
 #endif
-    else if (key == "show_turns")
-    {
-        show_turns = _read_bool( field, show_turns );
-    }
-    else if (key == "show_beam")
-    {
-        show_beam = _read_bool( field, show_beam );
-    }
+    else BOOL_OPTION(show_turns);
+    else BOOL_OPTION(show_beam);
 #ifndef SAVE_DIR_PATH
     else if (key == "morgue_dir")
     {
@@ -2105,30 +2004,18 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         cls = _str_to_class( field );
     }
-    else if (key == "auto_list")
-    {
-        auto_list = _read_bool( field, auto_list );
-    }
+    else BOOL_OPTION(auto_list);
     else if (key == "default_target")
     {
         default_target = _read_bool( field, default_target );
         if (default_target)
             target_unshifted_dirs = false;
     }
-    else if (key == "autopickup_no_burden")
-    {
-        autopickup_no_burden = _read_bool( field, autopickup_no_burden );
-    }
+    else BOOL_OPTION(autopickup_no_burden);
 #ifdef DGL_SIMPLE_MESSAGING
-    else if (key == "messaging")
-    {
-        messaging = _read_bool(field, messaging);
-    }
+    else BOOL_OPTION(messaging);
 #endif
-    else if (key == "mouse_input")
-    {
-        mouse_input = _read_bool(field, mouse_input);
-    }
+    else BOOL_OPTION(mouse_input);
     else if (key == "view_max_width")
     {
         view_max_width = atoi(field.c_str());
@@ -2154,31 +2041,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         if (mlist_min_height < 0)
             view_max_height = 0;
     }
-    else if (key == "mlist_force_inline")
-    {
-        mlist_force_inline = _read_bool(field, mlist_force_inline);
-    }
-    else if (key == "view_lock_x")
-    {
-        view_lock_x = _read_bool(field, view_lock_x);
-    }
-    else if (key == "view_lock_y")
-    {
-        view_lock_y = _read_bool(field, view_lock_y);
-    }
+    else BOOL_OPTION(mlist_allow_alternate_layout);
+    else BOOL_OPTION(classic_hud);
+    else BOOL_OPTION(view_lock_x);
+    else BOOL_OPTION(view_lock_y);
     else if (key == "view_lock")
     {
         const bool lock = _read_bool(field, true);
         view_lock_x = view_lock_y = lock;
     }
-    else if (key == "center_on_scroll")
-    {
-        center_on_scroll = _read_bool(field, center_on_scroll);
-    }
-    else if (key == "symmetric_scroll")
-    {
-        symmetric_scroll = _read_bool(field, symmetric_scroll);
-    }
+    else BOOL_OPTION(center_on_scroll);
+    else BOOL_OPTION(symmetric_scroll);
     else if (key == "scroll_margin_x")
     {
         scroll_margin_x = atoi(field.c_str());
@@ -2203,18 +2076,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // field is already cleaned up from trim_string()
         user_note_prefix = field;
     }
-    else if (key == "note_skill_max")
-    {
-        note_skill_max = _read_bool( field, note_skill_max );
-    }
-    else if (key == "note_all_spells")
-    {
-        note_all_spells = _read_bool( field, note_all_spells );
-    }
-    else if (key == "delay_message_clear")
-    {
-        delay_message_clear = _read_bool( field, delay_message_clear );
-    }
+    else BOOL_OPTION(note_skill_max);
+    else BOOL_OPTION(note_all_spells);
+    else BOOL_OPTION(delay_message_clear);
     else if (key == "flush")
     {
         if (subkey == "failure")
@@ -2355,14 +2219,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
-    else if (key == "pickup_thrown")
-    {
-        pickup_thrown = _read_bool(field, pickup_thrown);
-    }
-    else if (key == "pickup_dropped")
-    {
-        pickup_dropped = _read_bool(field, pickup_dropped);
-    }
+    else BOOL_OPTION(pickup_thrown);
+    else BOOL_OPTION(pickup_dropped);
 #ifdef WIZARD
     else if (key == "fsim_kit")
     {
@@ -2424,14 +2282,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         if (level_map_cursor_step > 50)
             level_map_cursor_step = 50;
     }
-    else if (key == "use_fake_cursor")
-    {
-        use_fake_cursor = _read_bool(field, use_fake_cursor);
-    }
-    else if (key == "macro_meta_entry")
-    {
-        macro_meta_entry = _read_bool(field, macro_meta_entry);
-    }
+    else BOOL_OPTION(use_fake_cursor);
+    else BOOL_OPTION(macro_meta_entry);
     else if (key == "stop_travel" || key == "travel_stop_message")
     {
         std::vector<std::string> fragments = split_string(",", field);
@@ -2490,23 +2342,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         tc_disconnected = str_to_colour(field, tc_disconnected);
     }
-    else if (key == "classic_item_colours")
-    {
-        classic_item_colours = _read_bool(field, classic_item_colours);
-    }
-    else if (key == "item_colour" || key == "item_color")
-    {
-        item_colour = _read_bool(field, item_colour);
-    }
-    else if (key == "easy_exit_menu")
-    {
-        easy_exit_menu = _read_bool(field, easy_exit_menu);
-    }
-    else if (key == "dos_use_background_intensity")
-    {
-        dos_use_background_intensity = 
-            _read_bool(field, dos_use_background_intensity);
-    }
+    else BOOL_OPTION(classic_item_colours);
+    else BOOL_OPTION(item_colour);
+    else BOOL_OPTION_NAMED("item_color", item_colour);
+    else BOOL_OPTION(easy_exit_menu);
+    else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
     {
         item_stack_summary_minimum = atoi(field.c_str());
@@ -2540,18 +2380,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (explore_item_greed < -1000)
             explore_item_greed = -1000;
     }
-    else if (key == "explore_greedy")
-    {
-        explore_greedy = _read_bool(field, explore_greedy);
-    }
-    else if (key == "explore_improved")
-    {
-        explore_improved = _read_bool(field, explore_improved);
-    }
-    else if (key == "trap_prompt")
-    {
-        trap_prompt = _read_bool(field, trap_prompt);
-    }
+    else BOOL_OPTION(explore_greedy);
+    else BOOL_OPTION(explore_improved);
+    else BOOL_OPTION(trap_prompt);
     else if (key == "stash_tracking")
     {
         stash_tracking =
@@ -2614,16 +2445,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 menu_colour_mappings.push_back(mapping);
         }
     }
-    else if (key == "menu_colour_prefix_class" ||
-             key == "menu_color_prefix_class")
-    {
-        menu_colour_prefix_class = _read_bool(field, menu_colour_prefix_class);
-    }
-    else if (key == "menu_colour_prefix_id" ||
-             key == "menu_color_prefix_id")
-    {
-        menu_colour_prefix_id = _read_bool(field, menu_colour_prefix_id);
-    }
+    else BOOL_OPTION(menu_colour_prefix_class);
+    else BOOL_OPTION_NAMED("menu_color_prefix_class", menu_colour_prefix_class);
+    else BOOL_OPTION(menu_colour_prefix_id);
+    else BOOL_OPTION_NAMED("menu_color_prefix_id", menu_colour_prefix_id);
     else if (key == "message_colour" || key == "message_color")
     {
         add_message_colour_mappings(field);
@@ -2699,22 +2524,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         if (dump_item_origin_price < -1)
             dump_item_origin_price = -1;
     }
-    else if (key == "level_map_title")
-    {
-        level_map_title = _read_bool(field, level_map_title);
-    }
-    else if (key == "target_zero_exp")
-    {
-        target_zero_exp = _read_bool(field, target_zero_exp);
-    }
-    else if (key == "target_oos")
-    {
-        target_oos = _read_bool(field, target_oos);
-    }
-    else if (key == "target_los_first")
-    {
-        target_los_first = _read_bool(field, target_los_first);
-    }
+    else BOOL_OPTION(level_map_title);
+    else BOOL_OPTION(target_zero_exp);
+    else BOOL_OPTION(target_oos);
+    else BOOL_OPTION(target_los_first);
     else if (key == "target_unshifted_dirs")
     {
         target_unshifted_dirs = _read_bool(field, target_unshifted_dirs);
@@ -2746,10 +2559,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         strncpy(tile_show_items, field.c_str(), 18);
     }
-    else if (key == "tile_title_screen")
-    {
-        tile_title_screen = _read_bool(field, tile_title_screen);
-    }
+    else BOOL_OPTION(tile_title_screen);
     else if (key == "tile_player_col")
     {
         tile_player_col =
@@ -2843,10 +2653,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
 
 #ifdef WIN32TILES
-    else if (key == "use_dos_char")
-    {
-        use_dos_char = _read_bool( field, use_dos_char );
-    }
+    else BOOL_OPTION(use_dos_char);
 #endif
 
     // Catch-all else, copies option into map
