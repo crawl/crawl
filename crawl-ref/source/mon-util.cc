@@ -1816,7 +1816,7 @@ bool mons_good_neutral(const monsters *m)
     return (mons_neutral(m) && testbits(m->flags, MF_GOD_GIFT));
 }
 
-bool mons_is_swappable(const monsters *m)
+bool mons_wont_attack(const monsters *m)
 {
     return (mons_friendly(m) || mons_good_neutral(m));
 }
