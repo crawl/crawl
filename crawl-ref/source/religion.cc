@@ -905,8 +905,11 @@ static bool tso_blessing_holy_wpn(monsters *mon)
 
     item_def& wpn(mitm[weapon]);
 
-    if (get_weapon_brand(wpn) == SPWPN_HOLY_WRATH)
+    if (is_fixed_artefact(wpn) || is_random_artefact(wpn)
+        || get_weapon_brand(wpn) == SPWPN_HOLY_WRATH)
+    {
         return false;
+    }
 
     // And make it holy.
     set_equip_desc(wpn, ISFLAG_GLOWING);
