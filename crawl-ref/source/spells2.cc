@@ -1179,7 +1179,7 @@ char burn_freeze(int pow, beam_type flavour)
     {
         if (mons_friendly(monster))
             did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
-        else if (mons_good_neutral(monster))
+        else if (mons_neutral(monster))
             did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
 
         if (mons_holiness(monster) == MH_HOLY)
