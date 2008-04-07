@@ -622,7 +622,6 @@ bool mons_aligned(int m1, int m2);
 bool mons_friendly(const monsters *m);
 bool mons_neutral(const monsters *m);
 bool mons_good_neutral(const monsters *m);
-bool mons_wont_attack(const monsters *m);
 mon_attitude_type mons_attitude(const monsters *m);
 
 bool mons_behaviour_perceptible(const monsters *mon);
