@@ -644,8 +644,8 @@ battle-axes and polearms. Each type of weapon does a different amount
 of damage, has a different chance of hitting its target, and takes a 
 different amount of time to swing. There are several weapon skills 
 (press 'm' to show a list of those that you are training) like Short 
-Blades, Long Blades, Axes, Unarmed Combat, etc. These skills affect 
-damage, accuracy, and speed.
+Blades, Long Blades, Axes, etc. These skills affect damage, accuracy, 
+and speed. (The same goes for Unarmed Combat.)
 
 Weapons can be enchanted; when they are identified, they have values
 which tell you how much more effective they are than an unenchanted
@@ -840,12 +840,12 @@ quarterstaves.
 
 Spell staves (called "rods" in the game) are a totally different kind of
 item. They hold spells which you can cast without having to memorise
-them first, and consume less food. You must wield a rod like a weapon in
-order to gain from its power. Rods can be invoked with the 'v' command
-while you are wielding them. They have a pool of magical energy which
-regenerates rather quickly when you are wielding it (drawing from your
-own Magic), or at a much slower rate when it just sits in your 
-backpack. Unlike other staves, rods are unsuited for physical combat.
+them first. You must wield a rod like a weapon in order to gain from its
+power. Rods can be invoked with the 'v' command when wielded. They have 
+a pool of magical energy which regenerates rather quickly when you are 
+wielding it (drawing from your own Magic), or at a much slower rate when
+it just sits in your backpack. Unlike other staves, rods are unsuited 
+for physical combat.
 
 +: Books
 --------
