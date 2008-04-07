@@ -3489,7 +3489,7 @@ static bool moral_beings_on_level_attitude_change()
                 {
                     monster->attitude = ATT_HOSTILE;
                     behaviour_event(monster, ME_ALERT, MHITYOU);
-                    // for now CREATED_FRIENDLY/WAS_NEUTRAL/GOT_HALF_XP stays
+                    // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
 
                     success = true;
                 }
