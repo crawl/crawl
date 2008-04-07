@@ -3671,7 +3671,7 @@ void display_char_status()
                 attrib.push_back("significantly resist cold");
                 attrib.push_back("strongly resist negative energy");
                 if (you.experience_level >= 13)
-                    attrib.push_back("are in touch with the powers of death")
+                    attrib.push_back("are in touch with the powers of death");
                 attrib.push_back("have an extremely slow metabolism");
                 attrib.push_back("heal slowly!");
                 break;
