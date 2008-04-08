@@ -432,7 +432,7 @@ static void _print_stats_wp(int y)
 
         cprintf("%s",
                 wpn.name(DESC_INVENTORY, true)
-                .substr(0, crawl_view.hudsz.x - 5).c_str());
+                .substr(0, crawl_view.hudsz.x - 4).c_str());
         textcolor(LIGHTGREY);
     }
     else
@@ -473,7 +473,7 @@ static void _print_stats_qv(int y)
 
         cprintf("%s",
                 quiver.name(DESC_INVENTORY, true)
-                .substr(0, crawl_view.hudsz.x - 5)
+                .substr(0, crawl_view.hudsz.x - 4)
                 .c_str());
         textcolor(LIGHTGREY);
     }
@@ -1093,9 +1093,10 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
             cprintf(" ");
             textbackground(dam_color);
             textcolor(dam_color);
-            cprintf(" ");
-            textcolor(LIGHTGREY);
+            // Temporary, to diagnose 1933260
+            cprintf("_");
             textbackground(BLACK);
+            textcolor(LIGHTGREY);
             cprintf(" ");
             printed += 3;
         }
