@@ -2362,31 +2362,26 @@ std::string describe_favour(god_type which_god)
 static std::string religion_help( god_type god )
 {
     std::string result = "";
-    
+
     switch(god)
     {
     case GOD_ZIN:
         result += "Pray at one of " + god_name(god)
                +  "'s altars to part with your money.";
         break;
-        
-    case GOD_SHINING_ONE:
-        if (!player_under_penance() && you.piety > 160
-            && !you.num_gifts[god])
-        {
-            result += "You can pray at an altar to ask " + god_name(god)
-                   +  " to bless a long sword.";
-        }
-        break;
 
+    case GOD_SHINING_ONE:
     case GOD_LUGONU:
         if (!player_under_penance() && you.piety > 160
             && !you.num_gifts[god])
         {
             result += "You can pray at an altar to ask " + god_name(god)
                    +  " to bless your weapon." EOL;
-        } // fall through
-           
+        }
+        if (god == GOD_SHINING_ONE)
+            break;
+        // fall through
+
     case GOD_OKAWARU:
     case GOD_MAKHLEB:
     case GOD_BEOGH:

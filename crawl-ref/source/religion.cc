@@ -4168,7 +4168,7 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
     }
     _replace(msg, "<>", tag_start);
     _replace(msg, "</>", tag_end);
-    
+
     msg.insert(0, item.name(DESC_CAP_THE));
     formatted_message_history(msg, MSGCH_GOD);
 }
@@ -4191,11 +4191,9 @@ void altar_prayer()
     {
         const int wpn = get_player_wielded_weapon();
 
-        if (wpn != -1
-            && weapon_skill( you.inv[wpn] ) == SK_LONG_BLADES
-            && get_weapon_brand( you.inv[wpn] ) != SPWPN_HOLY_WRATH)
+        if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_HOLY_WRATH)
         {
-            if (bless_weapon( GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW ))
+            if (bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW))
             {
                 // convert those demon blades if blessed:
                 if (you.inv[wpn].sub_type == WPN_DEMON_BLADE)
