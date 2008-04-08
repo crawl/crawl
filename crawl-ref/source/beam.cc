@@ -362,9 +362,9 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
 
     // level 2/3
     //
-    // The following examples should make it clear that in the 
-    // early game this cap is only limiting to serious spellcasters 
-    // (they could easily reach the 20-10-0 example).  
+    // The following examples should make it clear that in the
+    // early game this cap is only limiting to serious spellcasters
+    // (they could easily reach the 20-10-0 example).
     //
     // Example characters with about 50 power:
     //
@@ -430,7 +430,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     //
     // - int 15, skills 27, 3 enhancers (actually, only 146)
     // - int 20, skills 27, 2 enhancers (actually, only 137)
-    // - int 20, skills 21, 3 enhancers 
+    // - int 20, skills 21, 3 enhancers
     // - int 25, skills 26, 2 enhancers
     // - int 30, skills 21, 2 enhancers
     // - int 40, skills 24, 1 enhancer
@@ -1728,7 +1728,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
             {
                 simple_monster_message( monster, " partially resists." );
 
-                // Poison arrow can poison any living thing regardless of 
+                // Poison arrow can poison any living thing regardless of
                 // poison resistance. -- bwr
                 if (mons_has_lifeforce(monster))
                     poison_monster( monster, _whose_kill(pbolt), 2, true );
@@ -3582,7 +3582,7 @@ static int _affect_player( bolt &beam )
 
     // poisoning
     if (beam.name.find("poisoned") != std::string::npos
-        && beam.flavour != BEAM_POISON 
+        && beam.flavour != BEAM_POISON
         && beam.flavour != BEAM_POISON_ARROW
         && !player_res_poison())
     {
@@ -3669,7 +3669,7 @@ static int _affect_player( bolt &beam )
 
 static int _beam_source(const bolt &beam)
 {
-    return MON_KILL(beam.thrower)       ? beam.beam_source : 
+    return MON_KILL(beam.thrower)       ? beam.beam_source :
            beam.thrower == KILL_MISC    ? MHITNOT          :
                                           MHITYOU;
 }
@@ -4344,14 +4344,14 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
             mon->attitude = ATT_FRIENDLY;
         else
             mon->add_ench(ENCH_CHARM);
-        
+
         // break fleeing and suchlike
         mon->behaviour = BEH_SEEK;
         return (MON_AFFECTED);
     }
 
     //
-    // Everything past this point must pass this magic resistance test. 
+    // Everything past this point must pass this magic resistance test.
     //
     // Using check_mons_resist_magic here since things like disintegrate
     // are beyond this point. -- bwr

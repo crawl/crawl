@@ -1390,7 +1390,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
             bonus /= 2;
             
         bonus = stepdown_value( bonus, 10, 10, 30, 30 );
-            
+
         damage += bonus;
     }
     // fall through
@@ -1433,14 +1433,14 @@ int melee_attack::player_stab(int damage)
         // lets make sure we have some damage to work with...
         if (damage < 1)
             damage = 1;
-        
+
         if (def->behaviour == BEH_SLEEP)
         {
             // Sleeping moster wakes up when stabbed but may be groggy
             if (random2(200) <= you.skills[SK_STABBING] + you.dex)
             {
                 int stun = random2( you.dex + 1 );
-                
+
                 if (def->speed_increment > stun)
                     def->speed_increment -= stun;
                 else
@@ -2748,7 +2748,7 @@ void melee_attack::player_stab_check()
     }
 
     // confused (but not perma-confused)
-    if (def->has_ench(ENCH_CONFUSION) 
+    if (def->has_ench(ENCH_CONFUSION)
         && !mons_class_flag(def->type, M_CONFUSED))
     {
         stab_attempt = true;
@@ -2768,6 +2768,14 @@ void melee_attack::player_stab_check()
         if (!mons_sense_invis(def))
             roll -= 15;
         stab_bonus = 2;
+    }
+
+    // paralysed
+    if (def->has_ench(ENCH_PARALYSIS))
+    {
+        stab_attempt = true;
+        roll_needed = false;
+        stab_bonus = 1;
     }
 
     // sleeping
