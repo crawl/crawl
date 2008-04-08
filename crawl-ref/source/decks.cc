@@ -1055,18 +1055,6 @@ bool deck_triple_draw()
     if (_check_buggy_deck(deck))
         return false;
 
-    // lose some cards, but keep at least two
-    if ( cards_in_deck(deck) > 2 )
-    {
-        const int num_lost = std::min(cards_in_deck(deck)-2, random2(2) + 1);
-        for ( int i = 0; i < num_lost; ++i )
-            _deck_lose_card(deck);
-        if ( num_lost == 1 )
-            mpr("A card falls out of the deck.");
-        else if ( num_lost > 1 )
-            mpr("Some cards fall out of the deck.");
-    }
-
     const int num_cards = cards_in_deck(deck);
 
     if (num_cards == 1)
