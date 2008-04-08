@@ -121,6 +121,7 @@
 #include "skills.h"
 #include "skills2.h"
 #include "spells1.h"
+#include "spells2.h"
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-book.h"
@@ -2708,6 +2709,7 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SEE_INVISIBLE); // jmf: cute message
                                               // handled elsewhere
+    _decrement_a_duration(DUR_TELEPATHY, "You feel less empathic.");
 
     if ( _decrement_a_duration(DUR_CONDENSATION_SHIELD,
                                "Your icy shield evaporates.") )
@@ -3077,6 +3079,9 @@ static void _world_reacts()
 
     if (env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
         in_a_cloud();
+
+    if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
+        detect_creatures( 1 + you.duration[DUR_TELEPATHY] / 2, true );
 
     _decrement_durations();
 

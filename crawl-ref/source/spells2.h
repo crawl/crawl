@@ -74,7 +74,7 @@ int vampiric_drain(int pow, const dist &);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-unsigned char detect_creatures( int pow );
+int detect_creatures( int pow, bool telepathic = false );
 
 
 // last updated 24may2000 {dlb}

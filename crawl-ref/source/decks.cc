@@ -2277,7 +2277,10 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     if ( things_to_do[1] )
         detect_traps( random2(power/4) );
     if ( things_to_do[2] )
-        detect_creatures( random2(power/4) );
+    {
+        mpr("You feel telepathic!");
+        you.duration[DUR_TELEPATHY] = random2(power/4);
+    }
 }
 
 static bool _trowel_card(int power, deck_rarity_type rarity)

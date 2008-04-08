@@ -195,20 +195,22 @@ static bool mark_detected_creature(int gridx, int gridy, const monsters *mon,
     return found_good;
 }
 
-unsigned char detect_creatures( int pow )
+int detect_creatures( int pow, bool telepathic )
 {
     int fuzz_radius = 0, fuzz_chance = 0;
-    fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
+    if ( !telepathic )
+        fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
     if (pow > 50)
         pow = 50;
 
-    unsigned char creatures_found = 0;
-    const int     map_radius = 8 + random2(8) + pow;
+    int creatures_found = 0;
+    const int map_radius = 8 + random2(8) + pow;
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
-    clear_map(false);
+    if ( !telepathic )
+        clear_map(false);
 
     for (int i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
     {
@@ -219,7 +221,7 @@ unsigned char detect_creatures( int pow )
 
             if (mgrd[i][j] != NON_MONSTER)
             {
-                struct monsters *mon = &menv[ mgrd[i][j] ];
+                monsters *mon = &menv[ mgrd[i][j] ];
                 if (mark_detected_creature(i, j, mon, fuzz_chance,
                                            fuzz_radius))
                 {

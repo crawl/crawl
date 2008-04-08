@@ -1092,6 +1092,7 @@ enum duration_type
     DUR_MAGIC_SHIELD,
     DUR_SLEEP,
     DUR_SAGE,
+    DUR_TELEPATHY,
     NUM_DURATIONS
 };
 
