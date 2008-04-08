@@ -16,8 +16,8 @@ Buggy
 %%%%
 Zin
 
-Zin is a God for those focused on inner strength. Followers must remain
-pure of body and soul, and thus abstain from the use of necromancy and
+Zin is a God for those focused on inner strength. Followers must remain 
+pure of body and soul, and thus abstain from the use of necromancy and 
 mutations, and from the consumption of corpses of intelligent beings. 
 They may preach to the unenlightened, and can ultimately gain a divine 
 refuge. Zin values selflessness and appreciates long-standing faith. 
@@ -26,18 +26,18 @@ Zin's followers can safely convert to Elyvilon and The Shining One.
 The Shining One
 
 The Shining One is a powerful deity on an endless crusade against all 
-evil. Followers and their allies may be granted various blessings upon
+evil. Followers and their allies may be granted various blessings upon 
 slaying unholy creatures. Worshippers must never use evil magic, and 
-are expected to prove their moral superiority by fighting honourably.
+are expected to prove their moral superiority by fighting honourably. 
 This God appreciates long-standing persistence. The Shining One does 
 not mind shifting worship to Elyvilon or Zin.
 %%%%
 Kikubaaqudgha
 
-Kikubaaqudgha is a terrible Demon-God, served by those who seek
-knowledge of the powers of death. Followers gain special powers over
-the undead, and especially favoured servants can call on mighty demons
-to slay their foes. Kikubaaqudgha is evil, and requires the deaths of
+Kikubaaqudgha is a terrible Demon-God, served by those who seek 
+knowledge of the powers of death. Followers gain special powers over 
+the undead, and especially favoured servants can call on mighty demons 
+to slay their foes. Kikubaaqudgha is evil, and requires the deaths of 
 living creatures as often as possible, but is not interested in the 
 offering of corpses except at an appropriate altar.
 %%%%
@@ -45,53 +45,52 @@ Yredelemnul
 
 Yredelemnul is an evil God worshipped by those who seek powers over 
 death and the undead without having to learn to use necromancy. 
-Followers can raise legions of servile undead and gain a number 
-of other useful (if unpleasant) powers. Yredelemnul appreciates 
-killing, but prefers corpses to be put to use rather than sacrificed.
+Followers can raise legions of servile undead and gain a number of 
+other useful (if unpleasant) powers. Yredelemnul appreciates killing, 
+but prefers corpses to be put to use rather than sacrificed.
 %%%%
 Xom
 
-Xom is a wild and unpredictable God of chaos, who seeks not 
-worshippers but playthings to toy with. Many choose to follow Xom in
-the hope of receiving fabulous rewards and mighty powers, but Xom is
-nothing if not capricious.
+Xom is a wild and unpredictable God of chaos, who seeks not worshippers 
+but playthings to toy with. Many choose to follow Xom in the hope of 
+receiving fabulous rewards and mighty powers, but Xom is nothing if not 
+capricious.
 %%%%
 Vehumet
 
-Vehumet is a God of the destructive powers of magic. Followers gain
-various useful powers to enhance their command of the hermetic arts,
-and the most favoured stand to gain access to some of the fearsome
-spells in Vehumet's library. One's devotion to Vehumet can be proved
-by the causing of as much carnage and destruction as possible.
+Vehumet is a God of the destructive powers of magic. Followers gain 
+various useful powers to enhance their command of the hermetic arts, 
+and the most favoured stand to gain access to some of the fearsome 
+spells in Vehumet's library. One's devotion to Vehumet can be proved by 
+the causing of as much carnage and destruction as possible.
 %%%%
 Okawaru
 
-Okawaru is a dangerous and powerful God of battle. Followers can gain
-a number of powers useful in combat as well as various rewards, but
-must constantly prove themselves through battle and the sacrifice of
-corpses and valuable items. Okawaru despises those who harm their
-allies.
+Okawaru is a dangerous and powerful God of battle. Followers can gain a 
+number of powers useful in combat as well as various rewards, but must 
+constantly prove themselves through battle and the sacrifice of corpses 
+and valuable items. Okawaru despises those who harm their allies.
 %%%%
 Makhleb
 
-Makhleb the Destroyer is a fearsome God of chaos and violent death.
-Followers, who must constantly appease Makhleb with blood, stand to
-gain various powers of death and destruction. The Destroyer is evil,
+Makhleb the Destroyer is a fearsome God of chaos and violent death. 
+Followers, who must constantly appease Makhleb with blood, stand to 
+gain various powers of death and destruction. The Destroyer is evil, 
 and appreciates sacrifices of corpses and valuable items.
 %%%%
 Sif Muna
 
-Sif Muna is a contemplative but powerful deity, served by those who
-seek magical knowledge. Sif Muna appreciates sacrifices of valuable
+Sif Muna is a contemplative but powerful deity, served by those who 
+seek magical knowledge. Sif Muna appreciates sacrifices of valuable 
 items, and the casting of spells as often as possible.
 %%%%
 Trog
 
-Trog is an ancient God of anger and violence. Followers are expected
-to kill in Trog's name and sacrifice the dead, and in return gain
-power in battle and occasional rewards. Trog hates wizards, and loves
-to see their magical books burn. Followers are forbidden the use of
-spell magic.
+Trog is an ancient God of anger and violence. Followers are expected to 
+kill in Trog's name and sacrifice the dead, and in return gain power in 
+battle and occasional rewards. Trog hates wizards, and loves to see 
+their magical books burn. Followers are forbidden the use of spell 
+magic.
 %%%%
 Nemelex Xobeh
 
@@ -104,26 +103,25 @@ time, the Trickster provides certain ways to adjust the fortune.
 %%%%
 Elyvilon
 
-Elyvilon the Healer welcomes all good souls who are prepared for long
+Elyvilon the Healer welcomes all good souls who are prepared for long 
 worship and devotion. Those individuals can expect to gain powerful 
 healing abilities. The Healer prefers a creed of pacifism, and helps 
-avoiding bloodshed. Elyvilon appreciates the destruction of weapons. 
-Being a good God, Elyvilon does not mind if worshippers shift to one
-of the two allied Gods, Zin or The Shining One.
+worshippers avoid bloodshed. Elyvilon appreciates the destruction of 
+weapons. Being a good God, Elyvilon does not mind if worshippers shift 
+to one of the two allied Gods, Zin or The Shining One.
 %%%%
 Lugonu
 
-Lugonu the Unformed revels in the chaos of the Abyss. Followers are
-sent out to cause bloodshed and disorder in the world, and must do so
+Lugonu the Unformed revels in the chaos of the Abyss. Followers are 
+sent out to cause bloodshed and disorder in the world, and must do so 
 unflaggingly to earn Lugonu's favour. Lugonu is an evil God, and 
 expects followers to spread death and corruption in the overworld.
 %%%%
 Beogh
 
-Beogh is the deity worshipped by the cave orcs native to parts of the
+Beogh is the deity worshipped by the cave orcs native to parts of the 
 dungeon. Only orcs may devote their service to Beogh, and must prove 
 their devotion by bloodshed and sacrifice. Devout followers of Beogh 
-can smite their foes, and especially fervent devotees of Beogh may 
-even gain followers of their own, for the orcs still look for their
-Messiah.
+can smite their foes, and especially fervent devotees of Beogh may even 
+gain followers of their own, for the orcs still look for their Messiah.
 %%%%
