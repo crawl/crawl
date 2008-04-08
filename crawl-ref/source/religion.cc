@@ -383,7 +383,7 @@ static bool make_god_gifts_disappear(bool level_only = true);
 static bool make_god_gifts_neutral(bool level_only = true);
 static bool make_god_gifts_hostile(bool level_only = true);
 static void _print_sacrifice_message(god_type, const item_def &,
-            piety_gain_t, bool = false);
+                                     piety_gain_t, bool = false);
 
 bool is_evil_god(god_type god)
 {
