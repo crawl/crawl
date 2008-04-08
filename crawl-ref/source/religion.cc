@@ -180,7 +180,7 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     {
         " <>barely shimmer%</> and break% into pieces.",
         " <>shimmer%</> and break% into pieces.",
-        " <>wildly shimmer%</> and break% into pieces.",
+        " <>shimmer% wildly</> and break% into pieces.",
         // " <>slowly evaporate%</>.",
         // " <>evaporate%</>.",
         // " <>glow% and evaporate%</>.",
