@@ -1746,6 +1746,7 @@ bool recharge_wand(int item_slot)
         {
         case WAND_INVISIBILITY:
         case WAND_FIREBALL:
+        case WAND_TELEPORTATION:
         case WAND_HEALING:
         case WAND_HASTING:
             charge_gain = 3;
@@ -1776,7 +1777,7 @@ bool recharge_wand(int item_slot)
         if (wand.plus > charge_gain * 3)
             wand.plus = charge_gain * 3;
     }
-    else 
+    else
     {
         // This is a rod.
         bool work = false;
@@ -1797,7 +1798,7 @@ bool recharge_wand(int item_slot)
             work = true;
         }
 
-        if (!work) 
+        if (!work)
             return (false);
 
         mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
