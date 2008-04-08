@@ -1455,7 +1455,7 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         // how sad (and stupid)
         if (!silenced(you.pos()) && !quiet)
-            mprf(MSGCH_SOUND, 
+            mprf(MSGCH_SOUND,
                  grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
 
         item_was_destroyed(mitm[igrd[you.x_pos][you.y_pos]], NON_MONSTER);
@@ -1467,12 +1467,12 @@ bool acquirement(object_class_type class_wanted, int agent,
         for (int item_tries = 0; item_tries < 40; item_tries++)
         {
             int type_wanted = find_acquirement_subtype(class_wanted, quant);
-            
+
             // clobber class_wanted for vampires
             if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
                 class_wanted = OBJ_POTIONS;
 
-            thing_created = items( 1, class_wanted, type_wanted, true, 
+            thing_created = items( 1, class_wanted, type_wanted, true,
                                    MAKE_GOOD_ITEM, 250 );
 
             if (thing_created == NON_ITEM)
@@ -1543,7 +1543,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             thing.quantity += 150;
         else if (quant > 1)
             thing.quantity = quant;
-            
+
         if (thing.base_type == OBJ_POTIONS)
         {
             if (thing.sub_type == POT_BLOOD)
@@ -1568,7 +1568,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 thing.plus2 = abs( thing.plus2 );
                 if (thing.plus2 == 0)
                     thing.plus2 = 1;
-                // fall through... 
+                // fall through...
 
             case RING_PROTECTION:
             case RING_STRENGTH:
@@ -1596,7 +1596,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                  && !is_fixed_artefact( thing )
                  && !is_unrandom_artefact( thing ))
         {
-            // HACK: make unwieldable weapons wieldable 
+            // HACK: make unwieldable weapons wieldable
             // Note: messing with fixed artefacts is probably very bad.
             switch (you.species)
             {
@@ -1610,16 +1610,16 @@ bool acquirement(object_class_type class_wanted, int agent,
                     {
                         if (!is_random_artefact( thing ))
                         {
-                            set_item_ego_type( thing, 
+                            set_item_ego_type( thing,
                                                OBJ_WEAPONS, SPWPN_VORPAL );
                         }
                         else
                         {
                             // keep resetting seed until it's good:
-                            for (; brand == SPWPN_HOLY_WRATH; 
+                            for (; brand == SPWPN_HOLY_WRATH;
                                   brand = get_weapon_brand(thing))
                             {
-                                make_item_randart( thing );    
+                                make_item_randart( thing );
                             }
                         }
                     }
@@ -1638,19 +1638,19 @@ bool acquirement(object_class_type class_wanted, int agent,
 
                 case WPN_GREAT_SWORD:
                 case WPN_TRIPLE_SWORD:
-                    thing.sub_type = 
+                    thing.sub_type =
                             (coinflip() ? WPN_FALCHION : WPN_LONG_SWORD);
                     break;
 
                 case WPN_GREAT_MACE:
                 case WPN_DIRE_FLAIL:
-                    thing.sub_type = 
+                    thing.sub_type =
                             (coinflip() ? WPN_MACE : WPN_FLAIL);
                     break;
 
                 case WPN_BATTLEAXE:
                 case WPN_EXECUTIONERS_AXE:
-                    thing.sub_type = 
+                    thing.sub_type =
                             (coinflip() ? WPN_HAND_AXE : WPN_WAR_AXE);
                     break;
 
@@ -1658,7 +1658,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 case WPN_GLAIVE:
                 case WPN_SCYTHE:
                 case WPN_BARDICHE:
-                    thing.sub_type = 
+                    thing.sub_type =
                             (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
                     break;
                 }
@@ -1667,7 +1667,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             default:
                 break;
             }
-            
+
             int plusmod = random2(4);
             // more damage, less accuracy
             if (agent == GOD_TROG)
@@ -1690,7 +1690,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
 
         // This should never actually be NON_ITEM because of the way
-        // move_item_to_grid works (doesn't create a new item ever), 
+        // move_item_to_grid works (doesn't create a new item ever),
         // but we're checking it anyways. -- bwr
         if (thing_created != NON_ITEM)
         {
@@ -1701,7 +1701,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         *item_index = thing_created;
     }
 
-    // Well, the item may have fallen in the drink, but the intent is 
+    // Well, the item may have fallen in the drink, but the intent is
     // that acquirement happened. -- bwr
     return (true);
 }                               // end acquirement()

@@ -532,7 +532,7 @@ enum vorpal_damage_type
     DAMV_MASK           = 0xf000        // strips non-vorpal specification
 };
 
-// NOTE:  This order is very special!  Its basically the same as ZAP_*, 
+// NOTE:  This order is very special!  Its basically the same as ZAP_*,
 // and there are bits of the code that still use that fact.
 // See item_def::zap().
 enum wand_type                         // mitm[].subtype
