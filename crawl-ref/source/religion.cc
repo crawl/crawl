@@ -2692,10 +2692,6 @@ static bool tso_retribution()
     const god_type god = GOD_SHINING_ONE;
 
     // daevas/cleansing theme
-    // doesn't care unless you've gone over to evil
-    if ( !is_evil_god(you.religion) )
-        return false;
-
     int punishment = random2(7);
 
     switch (punishment)
@@ -2767,10 +2763,6 @@ static bool zin_retribution()
     const god_type god = GOD_ZIN;
 
     // angels/creeping doom theme
-    // doesn't care unless you've gone over to evil or chaos
-    if (!is_evil_god(you.religion) && !is_chaotic_god(you.religion))
-        return false;
-
     int punishment = random2(8);
 
     // if little mutated, do something else instead
@@ -2912,11 +2904,7 @@ static void ely_destroy_inventory_weapon()
 
 static bool elyvilon_retribution()
 {
-    // healing theme and interfering with fighting
-    // doesn't care unless you've gone over to evil
-    if ( !is_evil_god(you.religion) )
-        return false;
-
+    // healing/interference with fighting theme
     const god_type god = GOD_ELYVILON;
 
     simple_god_message("'s displeasure finds you.", god);
@@ -2944,9 +2932,9 @@ static bool elyvilon_retribution()
 
 static bool makhleb_retribution()
 {
+    // demonic servant theme
     const god_type god = GOD_MAKHLEB;
 
-     // demonic servant theme
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
         const bool success = create_monster(MONS_EXECUTIONER + random2(5), 0,
@@ -2979,9 +2967,9 @@ static bool makhleb_retribution()
 
 static bool kikubaaqudgha_retribution()
 {
+    // death/necromancy theme
     const god_type god = GOD_KIKUBAAQUDGHA;
 
-    // death/necromancy theme
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
         bool success = false;
@@ -3011,9 +2999,9 @@ static bool kikubaaqudgha_retribution()
 
 static bool yredelemnul_retribution()
 {
+    // undead theme
     const god_type god = GOD_YREDELEMNUL;
 
-    // undead theme
     if (random2(you.experience_level) > 4)
     {
         int count = 0;
@@ -3045,9 +3033,9 @@ static bool yredelemnul_retribution()
 
 static bool trog_retribution()
 {
+    // physical/berserk theme
     const god_type god = GOD_TROG;
 
-    // physical/berserk theme
     if ( coinflip() )
     {
         int count = 0;
@@ -3248,9 +3236,9 @@ static bool beogh_retribution()
 
 static bool okawaru_retribution()
 {
+    // warrior theme
     const god_type god = GOD_OKAWARU;
 
-    // warrior theme
     bool success = false;
     const int how_many = 1 + (you.experience_level / 5);
 
@@ -3274,12 +3262,12 @@ static bool okawaru_retribution()
 
 static bool sif_muna_retribution()
 {
+    // magic/intelligence theme
     const god_type god = GOD_SIF_MUNA;
 
     simple_god_message("'s wrath finds you.", god);
     dec_penance(god, 1);
 
-    // magic and intelligence theme
     switch (random2(10))
     {
     case 0:
@@ -3322,6 +3310,7 @@ static bool sif_muna_retribution()
 
 static bool lugonu_retribution()
 {
+    // abyssal servant theme
     const god_type god = GOD_LUGONU;
 
     if (coinflip())
@@ -3344,7 +3333,6 @@ static bool lugonu_retribution()
         // No return.
     }
 
-    // abyssal servant theme
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
         if (create_monster(MONS_GREEN_DEATH + random2(3), 0,
@@ -3384,9 +3372,9 @@ static bool lugonu_retribution()
 
 static bool vehumet_retribution()
 {
+    // conjuration/summoning theme
     const god_type god = GOD_VEHUMET;
 
-    // conjuration and summoning theme
     simple_god_message("'s vengeance finds you.", god);
     miscast_effect( coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
                     8 + you.experience_level, random2avg(98, 3), 100,
@@ -3396,7 +3384,9 @@ static bool vehumet_retribution()
 
 static bool nemelex_retribution()
 {
+    // card theme
     const god_type god = GOD_NEMELEX_XOBEH;
+
     // like Xom, this might actually help the player -- bwr
     simple_god_message(" makes you draw from the Deck of Punishment.", god);
     draw_from_deck_of_punishment();
@@ -3407,9 +3397,7 @@ void divine_retribution( god_type god )
 {
     ASSERT(god != GOD_NO_GOD);
 
-    // Good gods don't use divine retribution on their followers, they
-    // will consider it for those who have gone astray however.
-    if (god == you.religion && is_good_god(god) )
+    if (!god_hates_your_god(you.religion))
         return;
 
     god_acting gdact(god, true);
@@ -4655,6 +4643,19 @@ void god_pitch(god_type which_god)
 
     redraw_skill( you.your_name, player_title() );
 }                               // end god_pitch()
+
+bool god_hates_your_god(god_type god)
+{
+    // Non-good gods always hate your current god.
+    if (!is_good_god(god))
+        return (true);
+
+    // Zin hates Xom and Makhleb.
+    if (god == GOD_ZIN && is_chaotic_god(you.religion))
+        return (true);
+
+    return (is_evil_god(you.religion));
+}
 
 bool god_likes_butchery(god_type god)
 {

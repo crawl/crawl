@@ -2403,19 +2403,6 @@ static std::string religion_help( god_type god )
     return result;
 }
 
-static bool _god_hates_your_god( god_type which_god )
-{
-    // non-good gods always hate your current god
-    if (!is_good_god(which_god))
-        return (true);
-
-    // Zin hates Xom and Makhleb
-    if (which_god == GOD_ZIN && is_chaotic_god(you.religion))
-        return (true);
-
-    return (is_evil_god(you.religion));
-}
-
 void describe_god( god_type which_god, bool give_title )
 {
     int         colour;      // mv: colour used for some messages
@@ -2549,7 +2536,7 @@ void describe_god( god_type which_god, bool give_title )
     //display favour and will go out
     if (you.religion != which_god)
     {
-        textcolor (colour);
+        textcolor(colour);
         int which_god_penance = you.penance[which_god];
 
         // give more appropriate for the good gods
@@ -2557,7 +2544,7 @@ void describe_god( god_type which_god, bool give_title )
         {
             if (is_good_god(you.religion))
                 which_god_penance = 0;
-            else if (!_god_hates_your_god(which_god) && which_god_penance >= 5)
+            else if (!god_hates_your_god(which_god) && which_god_penance >= 5)
                 which_god_penance = 2; // == "Come back to the one true church!"
         }
 
@@ -2568,7 +2555,7 @@ void describe_god( god_type which_god, bool give_title )
                  (you.worshipped[which_god]) ? "%s is ambivalent towards you."
                                              : "%s is neutral towards you.",
                  god_name(which_god).c_str() );
-    } 
+    }
     else
     {
         cprintf(describe_favour(which_god).c_str());

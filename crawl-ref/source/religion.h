@@ -54,6 +54,7 @@ int god_colour(god_type god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
 void offer_items();
+bool god_hates_your_god(god_type god);
 bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
