@@ -4110,7 +4110,7 @@ static bool bless_weapon( god_type god, int brand, int colour )
         mprf( MSGCH_GOD, "Your weapon shines brightly!" );
         simple_god_message( " booms: Use this gift wisely!" );
 
-        if ( god == GOD_SHINING_ONE )
+        if ( is_good_god(god) )
         {
             holy_word( 100, HOLY_WORD_GENERIC, true );
             // un-bloodify surrounding squares
