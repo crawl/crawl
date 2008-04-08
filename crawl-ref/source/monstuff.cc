@@ -511,8 +511,8 @@ static bool _ely_protects_ally(monsters *monster)
     return (true);
 }
 
-// Elyvilon retribution effect: heal hostile monsters that were about to
-// be killed by you or one of your friends
+// Elyvilon retribution effect: Heal hostile monsters that were about to
+// be killed by you or one of your friends.
 static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
 {
     ASSERT(you.religion != GOD_ELYVILON);
@@ -523,13 +523,8 @@ static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
 
     const int ely_penance = you.penance[god];
 
-    if (mons_holiness(monster) != MH_NATURAL
-         && mons_holiness(monster) != MH_HOLY
-        || mons_friendly(monster)
-        || !one_chance_in(10))
-    {
+    if (mons_friendly(monster) || !one_chance_in(10))
         return (false);
-    }
 
     if (MON_KILL(killer) && !invalid_monster_index(i))
     {
