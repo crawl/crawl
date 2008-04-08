@@ -75,6 +75,106 @@
 #include "tutorial.h"
 #include "view.h"
 
+radius_iterator::radius_iterator( const coord_def& _center, int _radius,
+                                  bool _roguelike_metric, bool _require_los,
+                                  bool _exclude_center )
+    : center(_center), radius(_radius), roguelike_metric(_roguelike_metric),
+      require_los(_require_los), exclude_center(_exclude_center),
+      iter_done(false)
+{
+    location.x = center.x - radius;
+    location.y = center.y - radius;
+    
+    if ( !this->on_valid_square() )
+        ++(*this);
+}
+
+bool radius_iterator::done() const
+{
+    return iter_done;
+}
+
+coord_def radius_iterator::operator *() const
+{
+    return location;
+}
+
+void radius_iterator::step()
+{
+    const int minx = std::max(X_BOUND_1+1, center.x - radius);
+    const int maxx = std::min(X_BOUND_2-1, center.x + radius);
+    const int maxy = std::min(Y_BOUND_2-1, center.y + radius);
+
+    // Sweep L-R, U-D
+    location.x++;
+    if ( location.x > maxx )
+    {
+        location.x = minx;
+        location.y++;
+        if ( location.y > maxy )
+            iter_done = true;
+    }
+}
+
+void radius_iterator::step_back()
+{
+    const int minx = std::max(X_BOUND_1+1, center.x - radius);
+    const int maxx = std::min(X_BOUND_2-1, center.x + radius);
+    const int miny = std::max(Y_BOUND_1+1, center.y - radius);
+
+    location.x--;
+    if ( location.x < minx )
+    {
+        location.x = maxx;
+        location.y--;
+        if ( location.y < miny )
+            iter_done = true;   // hmm
+    }
+}
+
+bool radius_iterator::on_valid_square() const
+{
+    if ( !in_bounds(location) )
+        return false;
+    if ( !roguelike_metric && (location - center).abs() > radius*radius )
+        return false;
+    if ( require_los && !see_grid(location) )
+        return false;
+    if ( exclude_center && location == center )
+        return false;
+    return true;
+}
+
+const radius_iterator& radius_iterator::operator++()
+{
+    do {
+        this->step();
+    } while ( !this->done() && !this->on_valid_square() );
+    return *this;
+}
+
+const radius_iterator& radius_iterator::operator--()
+{
+    do {
+        this->step_back();
+    } while ( !this->done() && !this->on_valid_square() );
+    return *this;
+}
+
+radius_iterator radius_iterator::operator++(int dummy)
+{
+    const radius_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
+radius_iterator radius_iterator::operator--(int dummy)
+{
+    const radius_iterator copy = *this;
+    --(*this);
+    return copy;
+}
+
 // Crude, but functional.
 std::string make_time_string( time_t abs_time, bool terse )
 {

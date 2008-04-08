@@ -48,6 +48,32 @@ int roll_dice( int num, int size );
 int roll_dice( const struct dice_def &dice );
 void scale_dice( dice_def &dice, int threshold = 24 );
 
+class radius_iterator : public std::iterator<std::bidirectional_iterator_tag,
+                        coord_def>
+{
+public:
+    radius_iterator( const coord_def& center, int radius,
+                     bool roguelike_metric = true,
+                     bool require_los = true,
+                     bool exclude_center = false );
+    bool done() const;
+    operator bool() const { return !done(); }
+    coord_def operator *() const;
+
+    const radius_iterator& operator ++ ();
+    const radius_iterator& operator -- ();
+    radius_iterator operator ++ (int);
+    radius_iterator operator -- (int);
+private:
+    void step();
+    void step_back();
+    bool on_valid_square() const;
+
+    coord_def location, center;
+    int radius;
+    bool roguelike_metric, require_los, exclude_center;
+    bool iter_done;
+};
 
 int random2limit(int max, int limit);
 int stepdown_value(int base_value, int stepping, int first_step,

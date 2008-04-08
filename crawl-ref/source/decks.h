@@ -101,6 +101,7 @@ enum card_type
     CARD_SAGE,                  // skill training
     CARD_HELIX,                 // remove one *bad* mutation
 
+    CARD_WATER,                 // flood squares
     CARD_GLASS,                 // make walls transparent
     CARD_MAP,                   // magic mapping
     CARD_DOWSING,               // detect SD/traps/items/monsters

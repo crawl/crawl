@@ -471,6 +471,20 @@ void handle_traps(trap_type trt, int i, bool trap_known)
         exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
 }                               // end handle_traps()
 
+void destroy_trap( const coord_def& pos )
+{
+    for ( int i = 0; i < MAX_TRAPS; ++i )
+    {
+        if ( env.trap[i].x == pos.x && env.trap[i].y == pos.y &&
+             env.trap[i].type != TRAP_UNASSIGNED )
+        {
+            grd(pos) = DNGN_FLOOR;
+            env.trap[i].type = TRAP_UNASSIGNED;
+            return;
+        }
+    }
+}
+
 void disarm_trap( struct dist &disa )
 {
     if (you.duration[DUR_BERSERKER])

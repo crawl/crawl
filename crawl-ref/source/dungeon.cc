@@ -1293,7 +1293,7 @@ static int _count_antifeature_in_box(int x0, int y0, int x1, int y1,
 }
 
 // count how many neighbours of grd[x][y] are the feature feat.
-static int _count_neighbours(int x, int y, dungeon_feature_type feat)
+int count_neighbours(int x, int y, dungeon_feature_type feat)
 {
     return _count_feature_in_box(x-1, y-1, x+2, y+2, feat);
 }
@@ -1431,7 +1431,7 @@ static void _prepare_shoals(int level_number)
     for ( int i = margin; i < GXM - margin; ++i)
         for ( int j = margin; j < GYM - margin; ++j)
             if (grd[i][j] == DNGN_DEEP_WATER
-                && _count_neighbours(i, j, DNGN_FLOOR) > random2(random2(3)+1))
+                && count_neighbours(i, j, DNGN_FLOOR) > random2(random2(3)+1))
             {
                 grd[i][j] = DNGN_SHALLOW_WATER;
             }
@@ -1477,7 +1477,7 @@ static void _prepare_shoals(int level_number)
             for ( int y = margin; y < GYM - margin; ++y )
                 if ( grd[x][y] == DNGN_DEEP_WATER )
                 {
-                    int badness = _count_neighbours(x, y, DNGN_WATER_STUCK);
+                    int badness = count_neighbours(x, y, DNGN_WATER_STUCK);
                     if ( random2(badness) >= 2 && coinflip() )
                         grd[x][y] = DNGN_LAVA;
                 }

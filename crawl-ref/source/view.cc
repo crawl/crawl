@@ -2466,7 +2466,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 
 // Count the number of matching features between two points along
 // a beam-like path; the path will pass through solid features.
-// By default, it exludes enpoints from the count.
+// By default, it excludes enpoints from the count.
 int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
                       dungeon_feature_type min_feat,
                       dungeon_feature_type max_feat,

@@ -42,25 +42,9 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt);
 void player_caught_in_net(void);
 void clear_trapping_net(void);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: misc - mstuff2
- * *********************************************************************** */
 void itrap(struct bolt &pbolt, int trapped);
-
-// last updated 3jun2000 {dlb}
-/* ***********************************************************************
- * called from: acr - misc - mstuff2 - spells3
- * *********************************************************************** */
-int trap_at_xy(int which_x, int which_y);
-
-
-// last updated 3jun2000 {dlb}
-/* ***********************************************************************
- * called from: acr - misc - mstuff2 - spells2 - spells3
- * *********************************************************************** */
+void destroy_trap( const coord_def& pos );
 dungeon_feature_type trap_category(trap_type type);
-
 int trap_at_xy(int x, int y);
 trap_type trap_type_at_xy(int x, int y);
 

@@ -146,6 +146,7 @@ const deck_archetype deck_of_wonders[] = {
 };
 
 const deck_archetype deck_of_dungeons[] = {
+    { CARD_WATER,     {5, 5, 5} },
     { CARD_GLASS,     {5, 5, 5} },
     { CARD_MAP,       {5, 5, 5} },
     { CARD_DOWSING,   {5, 5, 5} },
@@ -278,6 +279,7 @@ const char* card_name(card_type card)
     case CARD_MINEFIELD:       return "the Minefield";
     case CARD_GENIE:           return "the Genie";
     case CARD_TOMB:            return "the Tomb";
+    case CARD_WATER:           return "Water";
     case CARD_GLASS:           return "Vitrification";
     case CARD_MAP:             return "the Map";
     case CARD_BANSHEE:         return "the Banshee";
@@ -2089,6 +2091,108 @@ static void _sage_card(int power, deck_rarity_type rarity)
     }
 }
 
+static void _create_pond(const coord_def& center, int radius, bool allow_deep)
+{
+    radius_iterator ri(center, radius, false);
+    for ( ; ri; ++ri )
+    {
+        const coord_def p = *ri;
+        if ( p != you.pos() && coinflip() )
+        {
+            destroy_trap(p);
+            if ( grd(p) == DNGN_FLOOR )
+            {
+                if ( allow_deep )
+                    grd(p) = coinflip() ? DNGN_SHALLOW_WATER : DNGN_DEEP_WATER;
+                else
+                    grd(p) = DNGN_SHALLOW_WATER;
+            }
+        }
+    }
+}
+
+static void _deepen_water(const coord_def& center, int radius)
+{
+    radius_iterator ri(center, radius, false);
+    for ( ; ri; ++ri )
+    {
+        // FIXME The iteration shouldn't affect the later squares in the
+        // same iteration, i.e., a newly-flooded square shouldn't count
+        // in the decision as to whether to make the next square flooded.
+        const coord_def p = *ri;
+        if ( grd(p) == DNGN_SHALLOW_WATER &&
+             p != you.pos() &&
+             random2(8) < 1 + count_neighbours(p.x, p.y, DNGN_DEEP_WATER) )
+        {
+            grd(p) = DNGN_DEEP_WATER;
+        }
+        if (grd(p) == DNGN_FLOOR &&
+            random2(3) < random2(count_neighbours(p.x,p.y,DNGN_DEEP_WATER) +
+                                 count_neighbours(p.x,p.y,DNGN_SHALLOW_WATER)))
+        {
+            grd(p) = DNGN_SHALLOW_WATER;
+        }
+    }
+}
+
+static void _pond_creature_effect( const coord_def& center, int radius )
+{
+    radius_iterator ri(center, radius, false);
+    bool you_affected = false;
+    for ( ; ri; ++ri )
+    {
+        const coord_def p = *ri;
+        if ( p == you.pos() )
+            you_affected = true;
+        else if ( mgrd(p) != NON_MONSTER )
+            mons_check_pool( &menv[mgrd(p)], KILL_YOU );
+    }
+    if ( you_affected )
+        move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
+}
+
+static void _water_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    if ( power_level == 0 )
+    {
+        mpr("You create a pond!");
+        _create_pond(you.pos(), 4, false);
+        _pond_creature_effect(you.pos(), 4);
+    }
+    else if ( power_level == 1 )
+    {
+        mpr("You feel the tide rushing in!");
+        _create_pond(you.pos(), 6, true);
+        for ( int i = 0; i < 2; ++i )
+            _deepen_water(you.pos(), 6);
+        _pond_creature_effect(you.pos(), 5);
+    }
+    else
+    {
+        mpr("Water floods your area!");
+        // Flood all visible squares
+        radius_iterator ri( you.pos(), LOS_RADIUS, false );
+        for ( ; ri; ++ri )
+        {
+            coord_def p = *ri;
+            destroy_trap(p);
+            if ( grd(p) == DNGN_FLOOR )
+            {
+                dungeon_feature_type new_feature = DNGN_SHALLOW_WATER;
+                if ( p != you.pos() && coinflip() )
+                    new_feature = DNGN_DEEP_WATER;
+                grd(p) = new_feature;
+                // In the future we might want to place all the water first,
+                // if monsters can scramble out.
+                if ( mgrd(p) != NON_MONSTER )
+                    mons_check_pool( &menv[mgrd(p)], KILL_YOU );
+            }
+        }
+        move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
+    }
+}
+
 static void _glass_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
@@ -2560,6 +2664,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_EXPERIENCE:       _experience_card(power, rarity); break;
     case CARD_HELIX:            _helix_card(power, rarity); break;
     case CARD_SAGE:             _sage_card(power, rarity); break;
+    case CARD_WATER:            _water_card(power, rarity); break;
     case CARD_GLASS:            _glass_card(power, rarity); break;
     case CARD_DOWSING:          _dowsing_card(power, rarity); break;
     case CARD_MINEFIELD:        _minefield_card(power, rarity); break;
