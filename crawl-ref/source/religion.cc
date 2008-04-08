@@ -916,6 +916,10 @@ static bool tso_blessing_holy_wpn(monsters *mon)
     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
     wpn.colour = YELLOW;
 
+    // Convert a demon weapon into a blessed blade.
+    if (is_demonic(wpn))
+        wpn.sub_type = WPN_BLESSED_BLADE;
+
     return true;
 }
 
