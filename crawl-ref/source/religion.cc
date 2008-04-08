@@ -180,7 +180,7 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     {
         " <>barely shimmer%</> and break% into pieces.",
         " <>shimmer%</> and break% into pieces.",
-        " <>turn% into a cloud of bugs</>.",
+        " <>glow%</> and break% into pieces.",
         // " <>slowly evaporate%</>.",
         // " <>evaporate%</>.",
         // " <>glow% and evaporate%</>.",
@@ -382,7 +382,8 @@ static void dock_piety(int piety_loss, int penance);
 static bool make_god_gifts_disappear(bool level_only = true);
 static bool make_god_gifts_neutral(bool level_only = true);
 static bool make_god_gifts_hostile(bool level_only = true);
-static void _print_sacrifice_message(god_type, const item_def &, piety_gain_t);
+static void _print_sacrifice_message(god_type, const item_def &,
+            piety_gain_t, bool = false);
 
 bool is_evil_god(god_type god)
 {
@@ -2871,7 +2872,7 @@ static void ely_destroy_inventory_weapon()
     int value = 1;
     bool wielded = false;
 
-    // increase value wielded weapons or large stacks of ammo
+    // increase value of wielded weapons or large stacks of ammo
     if (you.inv[item].base_type == OBJ_WEAPONS
         && you.inv[item].link == you.equip[EQ_WEAPON])
     {
@@ -2881,16 +2882,11 @@ static void ely_destroy_inventory_weapon()
     else if (you.inv[item].quantity > random2(you.penance[GOD_ELYVILON]))
         value += 1 + random2(2);
 
-    std::ostream& strm = msg::streams(MSGCH_GOD);
-    strm << you.inv[item].name(DESC_CAP_YOUR);
+    piety_gain_t pgain = (value == 1) ? PIETY_NONE : PIETY_SOME;
 
-    if (value == 1)
-        strm << " barely";
-
-    if ( you.inv[item].quantity == 1 )
-         strm << " shimmers and breaks into pieces." << std::endl;
-    else
-         strm << " shimmer and break into pieces." << std::endl;
+    // Elyvilon doesn't care about item sacrifices at altars, so I'm
+    // stealing _Sacrifice_Messages.
+    _print_sacrifice_message(GOD_ELYVILON, you.inv[item], pgain, true);
 
     if (wielded)
     {
@@ -4107,7 +4103,7 @@ static void _replace(std::string& s,
 {
     std::string::size_type start = 0;
     std::string::size_type found;
-   
+
     while ((found = s.find(find, start)) != std::string::npos)
     {
         s.replace( found, find.length(), repl );
@@ -4116,7 +4112,7 @@ static void _replace(std::string& s,
 }
 
 static void _print_sacrifice_message(god_type god, const item_def &item,
-                                     piety_gain_t piety_gain)
+                                     piety_gain_t piety_gain, bool your)
 {
     std::string msg(_Sacrifice_Messages[god][piety_gain]);
     _replace(msg, "%", (item.quantity == 1? "s" : ""));
@@ -4140,13 +4136,13 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
     _replace(msg, "<>", tag_start);
     _replace(msg, "</>", tag_end);
 
-    msg.insert(0, item.name(DESC_CAP_THE));
+    msg.insert(0, item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE));
     formatted_message_history(msg, MSGCH_GOD);
 }
 
 void altar_prayer()
 {
-    // different message than when first joining a religion
+    // different message from when first joining a religion
     mpr( "You prostrate yourself in front of the altar and pray." );
 
     if (you.religion == GOD_XOM)
