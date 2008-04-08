@@ -260,10 +260,10 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call in reinforcement",
       "" },
     // Nemelex
-    { "peek at three random cards from a deck",
-      "draw cards from decks in your inventory",
+    { "draw cards from decks in your inventory",
+      "peek at two random cards from a deck",
       "choose one out of three cards",
-      "mark decks",
+      "mark four cards in a deck",
       "order the the top five cards of a deck, forfeiting the rest" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
@@ -346,11 +346,11 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call in reinforcement",
       "" },
     // Nemelex
-    { "peek at three random cards from a deck",
-      "draw cards from decks in your inventory",
+    { "draw cards from decks in your inventory",
+      "peek at random cards",
       "choose one out of three cards",
       "mark decks",
-      "order decks" },
+      "stack decks" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
       "call upon Elyvilon for purification",
