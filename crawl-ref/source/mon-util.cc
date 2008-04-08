@@ -4695,7 +4695,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         // Air elementals are a special case, as their
         // submerging in air isn't up to choice. -- bwr
-        if (type == MONS_AIR_ELEMENTAL) 
+        if (type == MONS_AIR_ELEMENTAL)
         {
             heal_monster( this, 1, one_chance_in(5) );
 

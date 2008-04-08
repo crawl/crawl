@@ -4544,17 +4544,17 @@ static void _monster_regenerate(monsters *monster)
     }
 
     if (monster_descriptor(monster->type, MDSC_REGENERATES)
-        || (monster->type == MONS_FIRE_ELEMENTAL 
+        || (monster->type == MONS_FIRE_ELEMENTAL
             && (grd(monster->pos()) == DNGN_LAVA
                 || cloud_type_at(monster->pos()) == CLOUD_FIRE))
-        
-        || (monster->type == MONS_WATER_ELEMENTAL 
+
+        || (monster->type == MONS_WATER_ELEMENTAL
             && grid_is_watery(grd(monster->pos())))
-        
+
         || (monster->type == MONS_AIR_ELEMENTAL
             && env.cgrid(monster->pos()) == EMPTY_CLOUD
             && one_chance_in(3))
-        
+
         || _mons_natural_regen_roll(monster))
     {
         heal_monster(monster, 1, false);
