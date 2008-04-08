@@ -1431,7 +1431,7 @@ static void _input()
 
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
-        
+
         const command_type cmd = _get_next_cmd();
 
         crawl_state.waiting_for_command = false;
@@ -1484,60 +1484,60 @@ static void _input()
     {
         PlaceInfo& curr_PlaceInfo = you.get_place_info();
         PlaceInfo  delta;
- 
+
         delta.turns_total++;
         delta.elapsed_total += you.time_taken;
- 
+
         switch(you.running)
         {
         case RMODE_INTERLEVEL:
             delta.turns_interlevel++;
             delta.elapsed_interlevel += you.time_taken;
             break;
- 
+
         case RMODE_EXPLORE_GREEDY:
         case RMODE_EXPLORE:
             delta.turns_explore++;
             delta.elapsed_explore += you.time_taken;
             break;
- 
+
         case RMODE_TRAVEL:
             delta.turns_travel++;
             delta.elapsed_travel += you.time_taken;
             break;
- 
+
         default:
             // prev_was_rest is needed so that the turn in which
             // a player is interrupted from resting is counted
             // as a resting turn, rather than "other".
             static bool prev_was_rest = false;
- 
+
             if (!you.delay_queue.empty() &&
                 you.delay_queue.front().type == DELAY_REST)
                 prev_was_rest = true;
- 
+
             if (prev_was_rest)
             {
                 delta.turns_resting++;
                 delta.elapsed_resting += you.time_taken;
- 
+
             }
             else
             {
                 delta.turns_other++;
                 delta.elapsed_other += you.time_taken;
             }
- 
+
             if (you.delay_queue.empty() ||
                 you.delay_queue.front().type != DELAY_REST)
                 prev_was_rest = false;
- 
+
             break;
         }
- 
+
         you.global_info += delta;
         you.global_info.assert_validity();
- 
+
         curr_PlaceInfo += delta;
         curr_PlaceInfo.assert_validity();
     }

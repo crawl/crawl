@@ -976,7 +976,7 @@ static const char* _list_allowed_keys(char yes1, char yes2,
                 result += _list_alternative_yes(yes1, yes2, lowered);
                 result += (lowered ? "/n/q" : "/N/Q");
                 result += "]";
-                
+
     return (result.c_str());
 }
 

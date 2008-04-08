@@ -441,7 +441,7 @@ bool unwield_item(bool showMsgs)
         if (brand != SPWPN_NORMAL)
         {
             const std::string msg = item.name(DESC_CAP_YOUR);
-            
+
             switch (brand)
             {
             case SPWPN_SWORD_OF_CEREBOV:

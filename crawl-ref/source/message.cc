@@ -722,7 +722,7 @@ void formatted_message_history(const std::string &st_nocolor,
     if (wrap_col)
     {
         linebreak_string2(st, wrap_col);
-    }        
+    }
 
     std::vector<formatted_string> fss;
     formatted_string::parse_string_to_multiple(st, fss);
@@ -741,7 +741,7 @@ void formatted_message_history(const std::string &st_nocolor,
             more();
 
         mpr_formatted_output(fs, colour);
-        
+
         // message playback explicitly only handles colors for
         // the tutorial channel... guess we'll store bare strings
         // for the rest, then.
