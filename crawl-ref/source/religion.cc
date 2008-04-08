@@ -1794,7 +1794,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    case DID_DEDICATED_BUTCHERY:  // aka field sacrifice
+    case DID_DEDICATED_BUTCHERY:  // a.k.a. field sacrifice
         switch (you.religion)
         {
         case GOD_ELYVILON:
@@ -2196,7 +2196,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
 
     if (piety_change > 0)
         gain_piety( piety_change );
-    else 
+    else
         dock_piety(-piety_change, penance);
 
 #if DEBUG_DIAGNOSTICS
@@ -4659,14 +4659,18 @@ std::string god_hates_your_god_reaction(god_type god,
 
 bool god_likes_butchery(god_type god)
 {
-    return (god == GOD_OKAWARU || god == GOD_MAKHLEB ||
-            god == GOD_TROG || god == GOD_BEOGH ||
-            god == GOD_LUGONU);
+    return
+        god == GOD_OKAWARU ||
+        god == GOD_MAKHLEB ||
+        god == GOD_TROG ||
+        god == GOD_BEOGH ||
+        god == GOD_LUGONU;
 }
 
 bool god_hates_butchery(god_type god)
 {
-    return (god == GOD_ELYVILON);
+    return
+        god == GOD_ELYVILON;
 }
 
 harm_protection_type god_protects_from_harm(god_type god, bool actual)
