@@ -2378,16 +2378,6 @@ static std::string religion_help( god_type god )
             result += "You can pray at an altar to ask " + god_name(god)
                    +  " to bless your weapon." EOL;
         }
-        if (god == GOD_SHINING_ONE)
-            break;
-        // fall through
-
-    case GOD_OKAWARU:
-    case GOD_MAKHLEB:
-    case GOD_BEOGH:
-    case GOD_TROG:
-        result = "You can sacrifice corpses by dissecting "
-                 "them during prayer.";
         break;
 
     case GOD_NEMELEX_XOBEH:
@@ -2405,6 +2395,11 @@ static std::string religion_help( god_type god )
     default:
         break;
     }
+
+    if (god_likes_butchery(god))
+        result += "You can sacrifice corpses by dissecting"
+                  " them during prayer.";
+
     return result;
 }
 
@@ -2418,7 +2413,7 @@ static bool _god_hates_your_god( god_type which_god )
     if (which_god == GOD_ZIN && is_chaotic_god(you.religion))
         return (true);
 
-    return (is_evil_god(you.religion));	
+    return (is_evil_god(you.religion));
 }
 
 void describe_god( god_type which_god, bool give_title )
@@ -2556,7 +2551,7 @@ void describe_god( god_type which_god, bool give_title )
     {
         textcolor (colour);
         int which_god_penance = you.penance[which_god];
-        
+
         // give more appropriate for the good gods
         if (which_god_penance > 0 && is_good_god(which_god))
         {
