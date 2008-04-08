@@ -1991,15 +1991,22 @@ static void _experience_card(int power, deck_rarity_type rarity)
     level_change();
 }
 
-static void _helix_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = get_power_level(power, rarity);
-    const mutation_type bad_mutations[] = {
-        MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY,
-        MUT_TELEPORT, MUT_DEFORMED, MUT_SCREAM, MUT_DETERIORATION,
-        MUT_BLURRY_VISION, MUT_FRAIL
-    };
+const mutation_type bad_mutations[] = {
+    MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY,
+    MUT_TELEPORT, MUT_DEFORMED, MUT_SCREAM, MUT_DETERIORATION,
+    MUT_BLURRY_VISION, MUT_FRAIL
+};
 
+bool _has_bad_mutation()
+{
+    for ( unsigned int i = 0; i < ARRAYSIZE(bad_mutations); ++i )
+        if (you.mutation[bad_mutations[i]] > you.demon_pow[bad_mutations[i]])
+            return true;
+    return false;
+}
+
+static void _remove_bad_mutation()
+{
     mutation_type which_mut = NUM_MUTATIONS;
     int numfound = 0;
     for ( unsigned int i = 0; i < ARRAYSIZE(bad_mutations); ++i )
@@ -2013,26 +2020,88 @@ static void _helix_card(int power, deck_rarity_type rarity)
         delete_mutation(which_mut);
     else
         mpr("You feel transcendent for a moment.");
+}
 
-    // Playing with genetics is tricky:
-    // You always have a 50% chance of losing an extra mutation,
-    // and a 50% chance of gaining a mutation.
+static void _helix_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
 
-    // With power level 2: extra mutation is random
-    // With power level 1: 50% extra mutation is bad
-    // With power level 0: 75% extra mutation is bad
-    if ( coinflip() )
-         delete_mutation(RANDOM_MUTATION);
-    if ( coinflip() )
+    if ( power_level == 0 )
     {
-        if ( (power_level == 0 && one_chance_in(4)) ||
-             (power_level == 1 && coinflip()) ||
-             (power_level == 2) )
+        switch ( count_mutations() ? random2(3) : 0 )
         {
+        case 0:
             mutate(RANDOM_MUTATION);
+            break;
+        case 1:
+            delete_mutation(RANDOM_MUTATION);
+            mutate(RANDOM_MUTATION);
+            break;
+        case 2:
+            delete_mutation(RANDOM_MUTATION);
+            break;
         }
-        else
-            mutate( RANDOM_ELEMENT(bad_mutations) );
+    }
+    else if ( power_level == 1 )
+    {
+        switch ( count_mutations() ? random2(3) : 0 )
+        {
+        case 0:
+            mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION);
+            break;
+        case 1:
+            if ( coinflip() )
+                _remove_bad_mutation();
+            else
+                delete_mutation( RANDOM_MUTATION );
+            break;
+        case 2:
+            if ( coinflip() )
+            {
+                if ( coinflip() )
+                {
+                    _remove_bad_mutation();
+                    mutate(RANDOM_MUTATION);
+                }
+                else
+                {
+                    delete_mutation(RANDOM_MUTATION);
+                    mutate(RANDOM_GOOD_MUTATION);
+                }
+            }
+            else
+            {
+                delete_mutation(RANDOM_MUTATION);
+                mutate(RANDOM_MUTATION);
+            }
+            break;            
+        }
+    }
+    else
+    {
+        switch ( _has_bad_mutation() ? random2(3) : random2(2) + 1 )
+        {
+        case 0:
+            _remove_bad_mutation();
+            break;
+        case 1:
+            mutate(RANDOM_GOOD_MUTATION);
+            break;
+        case 2:
+            if ( coinflip() )
+            {
+                // If you get unlucky, you could get here with no bad
+                // mutations and simply get a mutation effect. Oh well.
+                _remove_bad_mutation();
+                mutate(RANDOM_MUTATION);
+            }
+            else
+            {
+                delete_mutation(RANDOM_MUTATION);
+                mutate(RANDOM_GOOD_MUTATION);
+            }
+            break;
+        }
     }
 }
 
