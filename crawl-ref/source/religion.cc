@@ -3922,6 +3922,14 @@ void excommunication(god_type new_god)
     mpr("You have lost your religion!");
     more();
 
+    if (god_hates_your_god(old_god, new_god))
+    {
+        snprintf( info, INFO_SIZE, " does not appreciate desertion%s!",
+            god_hates_your_god_reaction(old_god, new_god).c_str() );
+
+        simple_god_message(info, old_god);
+    }
+
     switch (old_god)
     {
     case GOD_XOM:
@@ -3930,21 +3938,18 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        simple_god_message( " does not appreciate desertion!", old_god );
         miscast_effect( SPTYP_NECROMANCY, 5 + you.experience_level,
                         random2avg(88, 3), 100, "the malice of Kikubaaqudgha" );
         inc_penance( old_god, 30 );
         break;
 
     case GOD_YREDELEMNUL:
-        simple_god_message( " does not appreciate desertion!", old_god );
         miscast_effect( SPTYP_NECROMANCY, 5 + you.experience_level,
                         random2avg(88, 3), 100, "the anger of Yredelemnul" );
         inc_penance( old_god, 30 );
         break;
 
     case GOD_VEHUMET:
-        simple_god_message( " does not appreciate desertion!", old_god );
         miscast_effect( (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
                         8 + you.experience_level, random2avg(98, 3), 100,
                         "the wrath of Vehumet" );
@@ -3952,7 +3957,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_MAKHLEB:
-        simple_god_message( " does not appreciate desertion!", old_god );
         miscast_effect( (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
                         8 + you.experience_level, random2avg(98, 3), 100,
                         "the fury of Makhleb" );
@@ -3960,7 +3964,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_TROG:
-        simple_god_message( " does not appreciate desertion!", old_god );
         make_god_gifts_hostile(false);
 
         // Penance has to come before retribution to prevent "mollify"
@@ -3969,7 +3972,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_BEOGH:
-        simple_god_message( " does not appreciate desertion!", old_god );
         beogh_followers_abandon_you(); // friendly orcs around turn hostile
 
         // You might have lost water walking at a bad time...
@@ -4001,12 +4003,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_SHINING_ONE:
-        if (is_evil_god(new_god))
-        {
-            simple_god_message( " does not appreciate desertion for evil!",
-                                old_god );
-        }
-
         if (old_halo)
             mpr("Your divine halo begins to fade.");
         manage_halo();
@@ -4028,17 +4024,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_ZIN:
-        if (is_evil_god(new_god))
-        {
-            simple_god_message( " does not appreciate desertion for evil!",
-                                old_god );
-        }
-        else if (is_chaotic_god(new_god))
-        {
-            simple_god_message( " does not appreciate desertion for chaos!",
-                                old_god );
-        }
-
         if (env.sanctuary_time)
             remove_sanctuary();
 
@@ -4046,12 +4031,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_ELYVILON:
-        if (is_evil_god(new_god))
-        {
-            simple_god_message( " does not appreciate desertion for evil!",
-                                old_god );
-        }
-
         inc_penance( old_god, 30 );
         break;
 
@@ -4644,17 +4623,38 @@ void god_pitch(god_type which_god)
     redraw_skill( you.your_name, player_title() );
 }                               // end god_pitch()
 
-bool god_hates_your_god(god_type god)
+bool god_hates_your_god(god_type god,
+                        god_type your_god)
 {
     // Non-good gods always hate your current god.
     if (!is_good_god(god))
         return (true);
 
     // Zin hates Xom and Makhleb.
-    if (god == GOD_ZIN && is_chaotic_god(you.religion))
+    if (god == GOD_ZIN && is_chaotic_god(your_god))
         return (true);
 
-    return (is_evil_god(you.religion));
+    return (is_evil_god(your_god));
+}
+
+std::string god_hates_your_god_reaction(god_type god,
+                                        god_type your_god)
+{
+    if (god_hates_your_god(god, your_god))
+    {
+        // Non-good gods always hate your current god.
+        if (!is_good_god(god))
+            return "";
+
+        // Zin hates Xom and Makhleb.
+        if (god == GOD_ZIN && is_chaotic_god(your_god))
+            return " for chaos";
+
+        if (is_evil_god(your_god))
+            return " for evil";
+    }
+
+    return "";
 }
 
 bool god_likes_butchery(god_type god)
