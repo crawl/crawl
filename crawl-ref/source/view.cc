@@ -5176,7 +5176,7 @@ void crawl_view_geometry::init_geometry()
     }
 
     const _layout* winner = &lay_inline;
-    if (  !Options.mlist_allow_alternate_layout
+    if (   Options.mlist_allow_alternate_layout
        && !Options.classic_hud
        &&  lay_mlist.valid)
     {
