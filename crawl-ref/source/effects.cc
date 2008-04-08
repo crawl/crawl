@@ -1418,6 +1418,7 @@ bool recharge_wand(void)
         {
         case WAND_INVISIBILITY:
         case WAND_FIREBALL:
+        case WAND_TELEPORTATION:
         case WAND_HEALING:
         case WAND_HASTING:
             charge_gain = 3;
