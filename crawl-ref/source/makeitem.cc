@@ -823,7 +823,7 @@ void item_colour( item_def &item )
         case MISC_EMPTY_EBONY_CASKET:
             item.colour = DARKGREY;
             break;
-          
+
         default:
             item.colour = random_colour();
             break;
@@ -831,7 +831,7 @@ void item_colour( item_def &item )
         break;
 
     case OBJ_CORPSES:
-        // set the appropriate colour of the body: 
+        // set the appropriate colour of the body:
         temp_value = mons_class_colour( item.plus );
         item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
         break;
@@ -1827,13 +1827,13 @@ static bool try_make_armour_artefact(item_def& item, int force_type,
         else
         {
             item.plus = random2(4);
-            
+
             if (one_chance_in(5))
                 item.plus += random2(4);
-            
+
             if (one_chance_in(6))
                 item.plus -= random2(8);
-            
+
             if (item.plus < 0 && !one_chance_in(3))
                 do_curse_item( item );
         }
@@ -2489,10 +2489,10 @@ static bool try_make_jewellery_unrandart(item_def& item, int force_type,
 {
     bool rc = false;
 
-    if (item_level > 2 
+    if (item_level > 2
         && you.level_type != LEVEL_ABYSS
         && you.level_type != LEVEL_PANDEMONIUM
-        && random2(2000) <= 100 + (item_level * 3) 
+        && random2(2000) <= 100 + (item_level * 3)
         && one_chance_in(20))
     {
         // The old generation code did not respect force_type here.
@@ -3816,7 +3816,7 @@ void give_armour(monsters *mon, int level)
     case MONS_DEEP_ELF_BLADEMASTER:
     case MONS_DEEP_ELF_MASTER_ARCHER:
         item_race = MAKE_ITEM_ELVEN;
-        mitm[bp].base_type = OBJ_ARMOUR;        
+        mitm[bp].base_type = OBJ_ARMOUR;
         mitm[bp].sub_type = ARM_LEATHER_ARMOUR;
         break;
 
