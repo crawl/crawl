@@ -4150,7 +4150,7 @@ void altar_prayer()
 
     god_acting gdact;
 
-    // TSO blesses long swords with holy wrath
+    // TSO blesses weapons with holy wrath
     if (you.religion == GOD_SHINING_ONE
         && !you.num_gifts[GOD_SHINING_ONE]
         && !player_under_penance()
@@ -4162,8 +4162,8 @@ void altar_prayer()
         {
             if (bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW))
             {
-                // convert those demon blades if blessed:
-                if (you.inv[wpn].sub_type == WPN_DEMON_BLADE)
+                // convert demon weapons into blessed blades
+                if (is_demonic(you.inv[wpn]))
                     you.inv[wpn].sub_type = WPN_BLESSED_BLADE;
             }
         }
