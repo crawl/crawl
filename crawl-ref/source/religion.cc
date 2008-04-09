@@ -4628,6 +4628,8 @@ void god_pitch(god_type which_god)
 bool god_hates_your_god(god_type god,
                         god_type your_god)
 {
+    ASSERT(god != your_god);
+
     // Non-good gods always hate your current god.
     if (!is_good_god(god))
         return (true);
