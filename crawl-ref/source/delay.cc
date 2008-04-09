@@ -262,7 +262,7 @@ static void clear_pending_delays()
         const delay_queue_item delay =
             you.delay_queue[you.delay_queue.size() - 1];
         you.delay_queue.pop_back();
-        
+
         if (is_run_delay(delay.type) && you.running)
             stop_running();
     }
@@ -1150,8 +1150,8 @@ static void armour_wear_effects(const int item_slot)
     if (eq_slot == EQ_SHIELD)
         warn_shield_penalties();
 
-    you.redraw_armour_class = 1;
-    you.redraw_evasion = 1;
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
 }
 
 static command_type get_running_command()
@@ -1269,7 +1269,7 @@ void run_macro(const char *macroname)
 // Returns 1 if the delay should be interrupted, 0 if the user function
 // had no opinion on the matter, -1 if the delay should not be interrupted.
 static int userdef_interrupt_activity( const delay_queue_item &idelay,
-                                        activity_interrupt_type ai, 
+                                        activity_interrupt_type ai,
                                         const activity_interrupt_data &at )
 {
 #ifdef CLUA_BINDINGS
@@ -1295,7 +1295,7 @@ static int userdef_interrupt_activity( const delay_queue_item &idelay,
         // If we get here, ch_stop_run wasn't defined, fall through to the
         // other handlers.
     }
-    
+
     const char *interrupt_name = activity_interrupt_name(ai);
     const char *act_name = delay_name(delay);
 
@@ -1337,7 +1337,7 @@ static bool should_stop_activity(const delay_queue_item &item,
     if (userd)
         return (userd == 1);
 
-    return (ai == AI_FORCE_INTERRUPT || 
+    return (ai == AI_FORCE_INTERRUPT ||
             (Options.activity_interrupts[item.type][ai]));
 }
 
