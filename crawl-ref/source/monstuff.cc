@@ -2600,7 +2600,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
         && (channel == MSGCH_MONSTER_SPELL || player_monster_visible(monster)))
     {
         char buff[INFO_SIZE];
-        snprintf( buff, sizeof(buff), "%s%s", 
+        snprintf( buff, sizeof(buff), "%s%s",
                   monster->name(descrip).c_str(), event );
 
         mpr( buff, channel, param );
