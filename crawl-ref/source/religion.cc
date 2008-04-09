@@ -3399,7 +3399,7 @@ void divine_retribution( god_type god )
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (!god_hates_your_god(you.religion))
+    if (!god_hates_your_god(god))
         return;
 
     god_acting gdact(god, true);
