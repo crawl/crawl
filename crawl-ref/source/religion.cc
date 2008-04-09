@@ -3335,16 +3335,18 @@ static bool lugonu_retribution()
 
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
+        bool success = false;
         if (create_monster(MONS_GREEN_DEATH + random2(3), 0,
                            BEH_HOSTILE, you.x_pos, you.y_pos,
                            MHITYOU, MONS_PROGRAM_BUG) != -1)
         {
-            simple_god_message(" sends a demon after you!", god);
+            success = true;
         }
-        else
-        {
-            simple_god_message("'s demon is unavoidably detained.", god);
-        }
+
+        simple_god_message(success ?
+                           " sends a demon after you!" :
+                           "'s demon is unavoidably detained.",
+                           god);
     }
     else
     {
@@ -3361,10 +3363,10 @@ static bool lugonu_retribution()
             }
         }
 
-        if (success)
-            simple_god_message(" sends minions to punish you.", god);
-        else
-            simple_god_message("'s minions fail to arrive.", god);
+        simple_god_message(success ?
+                           " sends minions to punish you." :
+                           "'s minions fail to arrive.",
+                           god);
     }
 
     return false;
@@ -3996,7 +3998,7 @@ void excommunication(god_type new_god)
     case GOD_LUGONU:
         if ( you.level_type == LEVEL_DUNGEON )
         {
-            simple_god_message(" casts you back into the Abyss!", old_god);
+            simple_god_message(" casts you into the Abyss!", old_god);
             banished(DNGN_ENTER_ABYSS, "Lugonu's wrath");
         }
         inc_penance(old_god, 50);
