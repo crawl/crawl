@@ -1080,7 +1080,7 @@ asked afterwards if you really want to attend this circle.
 Note that the good gods will not accept demonic or undead devotees.
 
 If you like to start the game with a religion, choose your class from 
-healer, priest, paladin, berserker, chaos knight, or death knight (the 
+Healer, Priest, Paladin, Berserker, Chaos Knight, or Death Knight (the 
 last only if you draw your power from your God, instead of from 
 necromancy).
 
@@ -1851,8 +1851,8 @@ with a sword, a shield, a robe, and a healing potion.
 
 Priests:
 --------
-Priests serve either Zin, the ancient and revered God of Law, or the
-rather less pleasant Death-God Yredelemnul. Hill Orcs may choose to
+Priests serve either Zin, the ancient and revered God of Law, or the 
+rather less pleasant Death-God Yredelemnul. Hill Orcs may choose to 
 follow the Orc god Beogh instead. Although priests enter the dungeon 
 with a mace (as well as a priestly robe and a few healing potions), 
 this is purely the result of an archaic tradition, the reason for which 
