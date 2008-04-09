@@ -2750,7 +2750,7 @@ static bool tso_retribution()
     case 6: // either noisiness or silence (2/7)
        if (coinflip())
        {
-           simple_god_message(" booms out: \"Turn back to righteousness! REPENT!\"", god);
+           simple_god_message(" booms out: \"Take the path of righteousness! REPENT!\"", god);
            noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
        }
        else
@@ -2835,7 +2835,7 @@ static bool zin_retribution()
        make_hungry( you.hunger/2, false );
        break;
     case 7: // noisiness, 12.5%
-       simple_god_message(" booms out: \"Return to the light! REPENT!\"", god);
+       simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
        noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
        break;
     }
