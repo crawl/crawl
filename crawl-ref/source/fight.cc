@@ -565,7 +565,7 @@ bool melee_attack::attack()
 static int _modify_blood_amount(const int damage, const int dam_type)
 {
     int factor = 0; // DVORP_NONE
-    
+
     switch (dam_type)
     {
     case DVORP_CRUSHING: // flails, also unarmed
@@ -604,7 +604,7 @@ static bool _vamp_wants_blood_from_monster(const monsters *mon)
 
     if (!mons_has_blood(mon->type))
         return (false);
-        
+
     const int chunk_type = mons_corpse_effect( mon->type );
 
     // don't drink poisonous or mutagenic blood
@@ -620,7 +620,7 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
 {
     ASSERT(you.species == SP_VAMPIRE);
     ASSERT(mons != -1);
-    
+
     const monsters *mon = &menv[mons];
     
     if (!_vamp_wants_blood_from_monster(mon))
@@ -667,12 +667,12 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
         // bats get a little less nutrition out of it
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
             food_value -= 5 + random2(16);
-            
+
         lessen_hunger(food_value, false);
     }
-    
+
     did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
-    
+
     return (true);
 }
 
@@ -737,16 +737,16 @@ bool melee_attack::player_attack()
                              defender->name(DESC_NOCAP_THE).c_str());
         }
 
-        player_hurt_monster();        
-        
+        player_hurt_monster();
+
         if (damage_done)
             player_exercise_combat_skills();
-        
+
         if (player_check_monster_died())
             return (true);
-            
+
         player_sustain_passive_damage();
-        
+
         // thirsty stabbing vampires get to draw blood
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY
             && stab_attempt && stab_bonus > 0)
@@ -1216,7 +1216,7 @@ void melee_attack::player_warn_miss()
 bool melee_attack::player_hits_monster()
 {
 #if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "your to-hit: %d; defender EV: %d", 
+    mprf( MSGCH_DIAGNOSTICS, "your to-hit: %d; defender EV: %d",
           to_hit, def->ev );
 #endif
 
@@ -1346,11 +1346,11 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
                      orig_damage, damage, damage - orig_damage);
 #endif
             }
-            
+
             if (coinflip())
                 damage++;
         }
-        
+
         if (you.species == SP_DEMONSPAWN
             && (weapon->sub_type == WPN_DEMON_BLADE ||
                 weapon->sub_type == WPN_DEMON_WHIP ||
@@ -1385,10 +1385,10 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     case SK_SHORT_BLADES:
     {
         int bonus = (you.dex * (you.skills[SK_STABBING] + 1)) / 5;
-            
+
         if (weapon->sub_type != WPN_DAGGER)
             bonus /= 2;
-            
+
         bonus = stepdown_value( bonus, 10, 10, 30, 30 );
 
         damage += bonus;
@@ -1463,7 +1463,7 @@ int melee_attack::player_apply_monster_ac(int damage)
         {
             const int ac = def->ac
                 - random2( you.skills[SK_STABBING] / stab_bonus );
-            
+
             if (ac > 0)
                 damage -= random2(1 + ac);
         }
@@ -1480,7 +1480,7 @@ int melee_attack::player_apply_monster_ac(int damage)
 
 int melee_attack::player_weapon_type_modify(int damage)
 {
-    int weap_type = WPN_UNKNOWN;  
+    int weap_type = WPN_UNKNOWN;
 
     if (!weapon)
         weap_type = WPN_UNARMED;
@@ -1688,7 +1688,7 @@ void melee_attack::player_check_weapon_effects()
                 break;
             }
         }
-    }    
+    }
 }
 
 // Returns true if the combat round should end here.
@@ -1738,7 +1738,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         return (true);
 
     // These effects apply only to monsters that are still alive:
-    
+
     if (decapitate_hydra(damage_done))
         return (true);
 
@@ -2539,7 +2539,7 @@ void melee_attack::player_calc_hit_damage()
 
     if (water_attack)
         potential_damage = player_apply_water_attack_bonus(potential_damage);
-    
+
     //  apply damage bonus from ring of slaying
     // (before randomization -- some of these rings
     //  are stupidly powerful) -- GDL
@@ -2770,23 +2770,16 @@ void melee_attack::player_stab_check()
         stab_bonus = 2;
     }
 
-    // paralysed
-    if (def->has_ench(ENCH_PARALYSIS))
+    // trapped in a net, paralysed, or sleeping
+    if (def->has_ench(ENCH_HELD) || def->has_ench(ENCH_PARALYSIS)
+        || def->behaviour == BEH_SLEEP)
     {
         stab_attempt = true;
         roll_needed = false;
         stab_bonus = 1;
     }
 
-    // sleeping
-    if (def->behaviour == BEH_SLEEP)
-    {
-        stab_attempt = true;
-        roll_needed = false;
-        stab_bonus = 1;
-    }
-
-    // helpless (plants, etc)
+    // helpless (plants, etc.)
     if (defender->cannot_fight())
         stab_attempt = false;
 
