@@ -1017,7 +1017,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
 {
     if (!did_pickup && !tried_pickup)
         return;
-    
+
     if (!you.running.is_explore())
         return;
 
@@ -3854,12 +3854,12 @@ bool runrest::run_grids_changed() const
 
 void runrest::stop()
 {
-    bool need_redraw = 
+    bool need_redraw =
         runmode > 0 || (runmode < 0 && Options.travel_delay == -1);
     userdef_run_stoprunning_hook();
     runmode = RMODE_NOT_RUNNING;
 
-    // Kill the delay; this is fine because it's not possible to stack 
+    // Kill the delay; this is fine because it's not possible to stack
     // run/rest/travel on top of other delays.
     stop_delay();
 
@@ -3871,7 +3871,7 @@ void runrest::stop()
 
 bool runrest::is_rest() const
 {
-    return (runmode > 0 && !x && !y);    
+    return (runmode > 0 && !x && !y);
 }
 
 bool runrest::is_explore() const

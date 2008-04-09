@@ -290,7 +290,7 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
             finish_delay(delay);
         return;
     }
-    push_delay( delay ); 
+    push_delay( delay );
 }
 
 void stop_delay( bool stop_stair_travel )
@@ -299,7 +299,7 @@ void stop_delay( bool stop_stair_travel )
     if ( you.delay_queue.empty() )
         return;
 
-    delay_queue_item delay = you.delay_queue.front(); 
+    delay_queue_item delay = you.delay_queue.front();
 
     ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
 
@@ -310,15 +310,15 @@ void stop_delay( bool stop_stair_travel )
 
     const int butcher_swap_weapon =
         butcher_swap_warn? you.delay_queue[1].parm1 : -10;
-    
-    // At the very least we can remove any queued delays, right 
+
+    // At the very least we can remove any queued delays, right
     // now there is no problem with doing this... note that
     // any queuing here can only happen from a single command,
     // as the effect of a delay doesn't normally allow interaction
     // until it is done... it merely chains up individual actions
     // into a single action.  -- bwr
     clear_pending_delays();
-    
+
     switch (delay.type)
     {
     case DELAY_BUTCHER:
@@ -341,14 +341,14 @@ void stop_delay( bool stop_stair_travel )
         break;
 
     case DELAY_MEMORISE:
-        // Losing work here is okay... having to start from 
+        // Losing work here is okay... having to start from
         // scratch is a reasonable behaviour. -- bwr
         mpr( "Your memorisation is interrupted." );
         pop_delay();
         break;
 
-    case DELAY_PASSWALL:        
-        // The lost work here is okay since this spell requires 
+    case DELAY_PASSWALL:
+        // The lost work here is okay since this spell requires
         // the player to "attune to the rock".  If changed, then
         // the delay should be increased to reduce the power of
         // this spell. -- bwr
@@ -362,7 +362,7 @@ void stop_delay( bool stop_stair_travel )
             mpr( "You stop dropping stuff." );
         pop_delay();
         break;
-        
+
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You stop %s.",
              _get_recite_speech("other", you.num_turns + delay.duration));
@@ -378,7 +378,7 @@ void stop_delay( bool stop_stair_travel )
 
         // Keep things consistent, otherwise disturbing phenomena can occur.
         // Note that runrest::stop() will turn around and call stop_delay()
-        // again, but that's okay because the delay is already popped off 
+        // again, but that's okay because the delay is already popped off
         // the queue.
         if (is_run_delay(delay.type) && you.running)
             stop_running();
@@ -387,8 +387,8 @@ void stop_delay( bool stop_stair_travel )
         // to the Lua function, it can't do damage.
         break;
 
-    case DELAY_INTERRUPTIBLE:  
-        // always stoppable by definition... 
+    case DELAY_INTERRUPTIBLE:
+        // always stoppable by definition...
         // try using a more specific type anyways. -- bwr
         pop_delay();
         break;
@@ -396,18 +396,18 @@ void stop_delay( bool stop_stair_travel )
     case DELAY_EAT:
         // XXX: Large problems with object destruction here... food can
         // be from in the inventory or on the ground and these are
-        // still handled quite differently.  Eventually we would like 
+        // still handled quite differently.  Eventually we would like
         // this to be stoppable, with partial food items implemented. -- bwr
-        break; 
+        break;
 
     case DELAY_ARMOUR_ON:
     case DELAY_ARMOUR_OFF:
         // These two have the default action of not being interruptible,
-        // although they will often be chained (remove cloak, remove 
+        // although they will often be chained (remove cloak, remove
         // armour, wear new armour, replace cloak), all of which can
-        // be stopped when complete.  This is a fairly reasonable 
-        // behaviour, although perhaps the character should have 
-        // option of reversing the current action if it would take 
+        // be stopped when complete.  This is a fairly reasonable
+        // behaviour, although perhaps the character should have
+        // option of reversing the current action if it would take
         // less time to get out of the plate mail that's half on
         // than it would take to continue.  Probably too much trouble,
         // and would have to have a prompt... this works just fine. -- bwr
@@ -423,10 +423,10 @@ void stop_delay( bool stop_stair_travel )
              pop_delay();
          }
          break;
-             
+
     case DELAY_WEAPON_SWAP:       // one turn... too much trouble
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
-    case DELAY_UNINTERRUPTIBLE:   // never stoppable 
+    case DELAY_UNINTERRUPTIBLE:   // never stoppable
     case DELAY_JEWELLERY_ON:      // one turn
     default:
         break;
@@ -451,13 +451,13 @@ bool you_are_delayed( void )
 delay_type current_delay_action( void )
 /******************************/
 {
-    return (you_are_delayed() ? you.delay_queue.front().type 
+    return (you_are_delayed() ? you.delay_queue.front().type
                               : DELAY_NOT_DELAYED);
 }
 
 bool is_run_delay(int delay)
 {
-    return (delay == DELAY_RUN || delay == DELAY_REST 
+    return (delay == DELAY_RUN || delay == DELAY_REST
             || delay == DELAY_TRAVEL);
 }
 
@@ -582,7 +582,7 @@ void handle_delay( void )
         // Hack - allow autoprayer to trigger during run delays
         if ( do_autopray() )
             return;
-            
+
         handle_run_delays(delay);
         return;
     }
@@ -1175,7 +1175,7 @@ static command_type get_running_command()
     {
         delay(Options.travel_delay);
     }
-        
+
     return direction_to_command( you.running.x, you.running.y );
 }
 
@@ -1546,7 +1546,7 @@ const char *activity_interrupt_name(activity_interrupt_type ai)
 
 activity_interrupt_type get_activity_interrupt(const std::string &name)
 {
-    ASSERT( sizeof(activity_interrupt_names) 
+    ASSERT( sizeof(activity_interrupt_names)
             / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS );
 
     for (int i = 0; i < NUM_AINTERRUPTS; ++i)

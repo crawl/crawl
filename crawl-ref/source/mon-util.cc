@@ -4488,7 +4488,7 @@ bool monsters::decay_enchantment(const mon_enchant &me, bool decay_degree)
 
     if (!decay_degree)
         return (false);
-    
+
     // Decay degree so that higher degrees decay faster than lower
     // degrees, and a degree of 1 does not decay (it expires when the
     // duration runs out).
@@ -4561,7 +4561,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         {
             break;
         }
-        
+
         int net = get_trapping_net(x,y,true);
 
         if (net == NON_ITEM) // really shouldn't happen!
@@ -4573,7 +4573,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // handled in handle_pickup
         if (mons_itemuse(type) == MONUSE_EATS_ITEMS)
             break;
-        
+
         // the enchantment doubles as the durability of a net
         // the more corroded it gets, the more easily it will break
         const int hold = mitm[net].plus; // this will usually be negative
@@ -4654,7 +4654,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 damage = div_rand_round(damage * speed, spd);
 
             mitm[net].plus -= damage;
-            
+
             if (mitm[net].plus < -7)
             {
                 if (mons_near(this))
@@ -4716,7 +4716,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         else if (hit_points <= max_hit_points / 2)
             break;
         else if (((type == MONS_ELECTRICAL_EEL || type == MONS_LAVA_SNAKE)
-                  && (one_chance_in(50) || (mons_near(this) 
+                  && (one_chance_in(50) || (mons_near(this)
                                             && hit_points == max_hit_points
                                             && !one_chance_in(10))))
                  || one_chance_in(200)
@@ -5111,7 +5111,7 @@ void monsters::check_redraw(const coord_def &old) const
 void monsters::apply_location_effects()
 {
     dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
-    
+
     // monsters stepping on traps:
     mons_trap(this);
 
