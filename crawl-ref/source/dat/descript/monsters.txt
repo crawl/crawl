@@ -19,6 +19,26 @@ __r_suffix
 $"How now? a rat? Dead, for a ducat, dead!"
      -William Shakespeare, Hamlet, Act III, 4
 %%%%
+__cap-D_suffix
+
+$"On the other hand, Confucius is made to say to his disciples, 'I know how birds can fly, how fishes can swim, and how animals can run.  But the runner may be snared, the swimmer may be hooked, and the flyer may be shot by the arrow.  But there is the dragon.  I cannot tell how he mounts on the wind through the clouds, and rises to heaven.  Today I have seen Lao-tsze, and can only compare him to the dragon.'"
+     -Life of Confucius
+
+"This Dragon had Two furious Wings
+   Each one upon each Shoulder;
+With a Sting in his Tail as long as a Flail,
+   Which made him bolder and bolder.
+He had long Claws, and in his Jaws 
+   Four and forty Teeth of Iron;
+With a Hide as tough, as any Buff,
+   Which did him round environ."
+
+	-"An Excellent Ballad of a moſt dreadful Combat, fought between
+	Moore of Moore-Hall, and the Dragon of Wantley", retold by
+	Ambrose Philips, _A Collection of Old Ballads. Corrected from the
+	 Best and Most Ancient Copies Extant. With Introductions Historical, 
+	Critical, Or Humorous_.  1723.
+%%%%
 __cap-K_suffix
 
 $"The Parts Septentrionall are with these Sp'ryts Much haunted..
@@ -448,6 +468,9 @@ A weird and hideous cross between beast and human.
 big fish
 
 A fish of unusual size.
+
+"And what are you, reader, but a Loose-Fish and a Fast-Fish, too?"
+	-Herman Melville, _Moby Dick_. 1851.
 %%%%
 big kobold
 
@@ -581,7 +604,7 @@ A weapon dancing in the air.
 %%%%
 death cob
 
-A dreadful undead cob of corn.
+A dreadful undead cob of maize.
 %%%%
 death drake
 
@@ -705,9 +728,6 @@ Before you stands a draconian.
 dragon
 
 A great reptilian beast, covered in thick green scales and with two huge bat-like wings. Little trails of smoke spill from its toothy maw.
-
-"On the other hand, Confucius is made to say to his disciples, 'I know how birds can fly, how fishes can swim, and how animals can run.  But the runner may be snared, the swimmer may be hooked, and the flyer may be shot by the arrow.  But there is the dragon.  I cannot tell how he mounts on the wind through the clouds, and rises to heaven.  Today I have seen Lao-tsze, and can only compare him to the dragon.'"
-     -Life of Confucius
 %%%%
 earth elemental
 
@@ -1034,7 +1054,7 @@ hobgoblin
 
 A larger and stronger relative of the goblin.
 
-A foolish consistency is the hobgoblin of little minds.
+"A foolish consistency is the hobgoblin of little minds."
      -Ralph Waldo Emerson
 %%%%
 hog
@@ -1511,6 +1531,21 @@ A giant black scorpion, its body covered in thick armour plating, and its tail t
 shadow
 
 An wisp of unliving shadow, drifting on the edge of vision.
+
+"Between the idea
+And the reality
+Between the motion
+And the act
+Falls the Shadow
+     For thine is the Kingdom
+
+Between the conception
+And the creation
+Between the emotion
+And the response
+Falls the Shadow
+    Life is very long"
+	-T.S. Eliot, "The Hollow Men"
 %%%%
 shadow demon
 
@@ -1530,7 +1565,7 @@ A mist-wreathed skeletal shadow hanging in mid-air, this creature is almost invi
 %%%%
 shapeshifter
 
-A weird creature with the power to change its form. It is very rarely observed alive in its natural state.
+A disturbing creature with the power to change its form. It is very rarely observed alive in its natural state.
 %%%%
 sheep
 
