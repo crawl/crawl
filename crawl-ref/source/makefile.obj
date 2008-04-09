@@ -60,6 +60,7 @@ output.o \
 overmap.o \
 place.o \
 player.o \
+quiver.o \
 randart.o \
 religion.o \
 shopping.o \

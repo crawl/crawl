@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4CEF158A0C128CA5002C7D7A /* xom.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF15890C128CA5002C7D7A /* xom.cc */; };
+		6232EBE20DACA55C004F7E9C /* quiver.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6232EBE00DACA55C004F7E9C /* quiver.cc */; };
+		6232EBE30DACA55C004F7E9C /* quiver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6232EBE10DACA55C004F7E9C /* quiver.h */; };
 		7B0EFD840BD12EEB00002671 /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B0EFD4C0BD12EEB00002671 /* lapi.c */; };
 		7B0EFD850BD12EEB00002671 /* lapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B0EFD4D0BD12EEB00002671 /* lapi.h */; settings = {ATTRIBUTES = (); }; };
 		7B0EFD860BD12EEB00002671 /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B0EFD4E0BD12EEB00002671 /* lauxlib.c */; };
@@ -358,6 +360,7 @@
 				7B6164310C9CA8E80054B3D9 /* state.h in CopyFiles */,
 				7B6164330C9CA8E80054B3D9 /* terrain.h in CopyFiles */,
 				7B6164350C9CA8E80054B3D9 /* traps.h in CopyFiles */,
+				6232EBE30DACA55C004F7E9C /* quiver.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -375,6 +378,8 @@
 
 /* Begin PBXFileReference section */
 		4CEF15890C128CA5002C7D7A /* xom.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = xom.cc; sourceTree = "<group>"; };
+		6232EBE00DACA55C004F7E9C /* quiver.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = quiver.cc; sourceTree = "<group>"; };
+		6232EBE10DACA55C004F7E9C /* quiver.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = quiver.h; sourceTree = "<group>"; };
 		7B0EFD420BD12E9200002671 /* liblua.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblua.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B0EFD4C0BD12EEB00002671 /* lapi.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = lapi.c; sourceTree = "<group>"; };
 		7B0EFD4D0BD12EEB00002671 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
@@ -608,11 +613,11 @@
 		7BF8556A0C9C916800B7C520 /* dgnevent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dgnevent.h; sourceTree = SOURCE_ROOT; };
 		7BF8556E0C9C919100B7C520 /* luadgn.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = luadgn.cc; sourceTree = SOURCE_ROOT; };
 		7BF8556F0C9C919100B7C520 /* luadgn.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = luadgn.h; sourceTree = SOURCE_ROOT; };
-		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Crawl.icns; path = mac/Crawl.icns; sourceTree = "<group>"; };
 		D2AE25EE0DA2624E00E15489 /* crawl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = crawl; path = mac/crawl; sourceTree = "<group>"; };
 		D2F271F60DA1C58C00445FE9 /* Crawl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Crawl.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Crawl-Info.plist"; sourceTree = "<group>"; };
+		D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Crawl-Info.plist"; sourceTree = "<group>"; };
 		D2F271FE0DA1C5AD00445FE9 /* dat */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dat; sourceTree = "<group>"; };
 		D2F2723F0DA1C61600445FE9 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = docs; path = ../docs; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -648,6 +653,8 @@
 		08FB7794FE84155DC02AAC07 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
+				6232EBE00DACA55C004F7E9C /* quiver.cc */,
+				6232EBE10DACA55C004F7E9C /* quiver.h */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				7B352F1B0B0022C900CABB32 /* Resources */,
 				7B3B07610BD13B1700F2980E /* Libraries */,
@@ -1247,6 +1254,7 @@
 				7B54B51B0CA8217900612805 /* state.cc in Sources */,
 				7BD222200CC2D51300B475D8 /* store.cc in Sources */,
 				7B4896620CD3A5D2004A5F43 /* mgrow.cc in Sources */,
+				6232EBE20DACA55C004F7E9C /* quiver.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
