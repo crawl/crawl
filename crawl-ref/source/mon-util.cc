@@ -1878,7 +1878,8 @@ bool mons_looks_stabbable(const monsters *m)
     return (mons_behaviour_perceptible(m)
             && !mons_friendly(m)
             && (mons_is_sleeping(m)
-                || mons_is_paralysed(m)));
+                || mons_is_paralysed(m)
+                || mons_is_caught(m)));
 }
 
 bool mons_looks_distracted(const monsters *m)
