@@ -1190,18 +1190,17 @@ bool bless_follower(monsters* follower,
                 bool vigour = false;
 
                 if (!healing || coinflip())
-                {
-                    blessing_healing(mon, true);
-
-                    vigour = true;
-                }
+                    vigour = blessing_healing(mon, true);
 
                 if (healing && vigour)
                     result = "healing and extra vigour";
                 else if (healing)
                     result = "healing";
-                else
+                else if (vigour)
                     result = "extra vigour";
+                else
+                    return false;
+
                 break;
             }
 
