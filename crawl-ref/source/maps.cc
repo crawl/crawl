@@ -178,7 +178,7 @@ static bool bad_map_place(const map_def &map,
             if (lines[y - sy][x - sx] == ' ')
                 continue;
 
-            if (dgn_map_mask[x][y])
+            if (dgn_Map_Mask[x][y])
                 return (true);
 
             if (igrd[x][y] != NON_ITEM || mgrd[x][y] != NON_MONSTER)

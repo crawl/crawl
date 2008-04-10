@@ -163,7 +163,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       5, 'L', false, false },
 
-    { BRANCH_SWAMP, BRANCH_LAIR, 5, 3, 0, 0,
+    { BRANCH_SWAMP, BRANCH_LAIR, 5, 3, BFLAG_ISLANDED, 0,
       DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
       "Swamp", "the Swamp", "Swamp",
       NULL,
@@ -172,7 +172,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'S', false, true },
     
-    { BRANCH_SHOALS, BRANCH_LAIR, 5, 4, 0, 0,
+    { BRANCH_SHOALS, BRANCH_LAIR, 5, 4, BFLAG_ISLANDED, 0,
       DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
       "Shoals", "the Shoals", "Shoal",
       NULL,
@@ -254,7 +254,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'U', false, false },
 
-    { BRANCH_DIS, BRANCH_VESTIBULE_OF_HELL, 7, -1, 0, 0,
+    { BRANCH_DIS, BRANCH_VESTIBULE_OF_HELL, 7, -1, BFLAG_ISLANDED, 0,
       DNGN_ENTER_DIS, NUM_FEATURES, // sentinel
       "Dis", "the Iron City of Dis", "Dis",
       NULL,
@@ -263,7 +263,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'I', true, true },
 
-    { BRANCH_GEHENNA, BRANCH_VESTIBULE_OF_HELL, 7, -1, 0, 0,
+    { BRANCH_GEHENNA, BRANCH_VESTIBULE_OF_HELL, 7, -1, BFLAG_ISLANDED, 0,
       DNGN_ENTER_GEHENNA, NUM_FEATURES, // sentinel
       "Gehenna", "Gehenna", "Geh",
       NULL,
@@ -272,7 +272,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'N', true, true },
 
-    { BRANCH_COCYTUS, BRANCH_VESTIBULE_OF_HELL, 7, -1, 0, 0,
+    { BRANCH_COCYTUS, BRANCH_VESTIBULE_OF_HELL, 7, -1, BFLAG_ISLANDED, 0,
       DNGN_ENTER_COCYTUS, NUM_FEATURES, // sentinel
       "Cocytus", "Cocytus", "Coc",
       NULL,
@@ -281,7 +281,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'X', true, true },
 
-    { BRANCH_TARTARUS, BRANCH_VESTIBULE_OF_HELL, 7, -1, 0, 0,
+    { BRANCH_TARTARUS, BRANCH_VESTIBULE_OF_HELL, 7, -1, BFLAG_ISLANDED, 0,
       DNGN_ENTER_TARTARUS, NUM_FEATURES, // sentinel
       "Tartarus", "Tartarus", "Tar",
       NULL,

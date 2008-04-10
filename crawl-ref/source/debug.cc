@@ -38,6 +38,7 @@
 
 #include "beam.h"
 #include "branch.h"
+#include "chardump.h"
 #include "cio.h"
 #include "decks.h"
 #include "delay.h"
@@ -3737,6 +3738,71 @@ void mapgen_report_map_veto()
     mapgen_map_builds[level_id::current()].second++;    
 }
 
+static map_mask mg_MapMask;
+
+static bool _mg_region_flood(const coord_def &c, int region, bool flag)
+{
+    bool found_exit = false;
+    
+    mg_MapMask(c) = region;
+
+    if (flag)
+    {
+        env.map(c).flags = 0;
+        set_terrain_mapped(c.x, c.y);
+    }
+
+    const dungeon_feature_type ft = grd(c);
+    if (is_travelable_stair(ft))
+        found_exit = true;
+
+    for (int yi = -1; yi <= 1; ++yi)
+        for (int xi = -1; xi <= 1; ++xi)
+        {
+            if (!xi && !yi)
+                continue;
+            
+            coord_def ci = c + coord_def(xi, yi);
+            if (!in_bounds(ci) || mg_MapMask(ci) || !dgn_square_is_passable(ci))
+                continue;
+
+            if (_mg_region_flood(ci, region, flag))
+                found_exit = true;
+        }
+    return (found_exit);
+}
+
+static bool _mg_is_disconnected_level()
+{
+    // Don't care about non-Dungeon levels.
+    if (you.level_type != LEVEL_DUNGEON
+        || (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED))
+        return (false);
+    
+    std::vector<coord_def> region_seeds;
+
+    mg_MapMask.init(0);
+
+    coord_def c;
+    int region = 0;
+    int good_regions = 0;
+    for (c.y = 0; c.y < GYM; ++c.y)
+        for (c.x = 0; c.x < GXM; ++c.x)
+            if (!mg_MapMask(c) && dgn_square_is_passable(c))
+            {
+                if (_mg_region_flood(c, ++region, false))
+                    ++good_regions;
+                else
+                    region_seeds.push_back(c);
+            }
+
+    mg_MapMask.init(0);
+    for (int i = 0, size = region_seeds.size(); i < size; ++i)
+        _mg_region_flood(region_seeds[i], 1, true);
+    
+    return (good_regions < region);
+}
+
 static bool mg_do_build_level(int niters)
 {
     if (niters > 1)
@@ -3761,7 +3827,63 @@ static bool mg_do_build_level(int niters)
 
         ++mg_levels_tried;
         if (!builder(you.your_level, you.level_type))
+        {
             ++mg_levels_failed;
+            continue;
+        }
+
+        for (int y = 0; y < GYM; ++y)
+            for (int x = 0; x < GXM; ++x)
+            {
+                switch (grd[x][y])
+                {
+                case DNGN_SECRET_DOOR:
+                    grd[x][y] = DNGN_CLOSED_DOOR;
+                    break;
+                default:
+                    break;
+                }
+            }
+
+        {
+            unwind_bool wiz(you.wizard, true);
+            magic_mapping(1000, 100, true, true);
+        }
+        if (_mg_is_disconnected_level())
+        {
+            extern std::vector<vault_placement> Level_Vaults;
+            std::string vaults;
+            for (int j = 0, size = Level_Vaults.size(); j < size; ++j)
+            {
+                if (j && !vaults.empty())
+                    vaults += ", ";
+                vaults += Level_Vaults[j].map.name;
+            }
+
+            if (!vaults.empty())
+                vaults = " (" + vaults + ")";
+
+            extern std::string dgn_Build_Method;
+            mprf(MSGCH_WARN,
+                 "Bad (disconnected) level on %s%s",
+                 level_id::current().describe().c_str(),
+                 vaults.c_str());
+            FILE *fp = fopen("map.dump", "w");
+            fprintf(fp, "Bad (disconnected) level (%s) on %s%s.\n\n",
+                    dgn_Build_Method.c_str(),
+                    level_id::current().describe().c_str(),
+                    vaults.c_str());
+
+            // Mapping would only have mapped squares that the player can
+            // reach - explicitly map the full level.
+            for (int y = 0; y < GYM; ++y)
+                for (int x = 0; x < GXM; ++x)
+                    set_envmap_obj(x, y, grd[x][y]);
+            
+            dump_map(fp);
+            
+            return (false);
+        }
     }
     return (true);
 }
@@ -3787,7 +3909,7 @@ static std::vector<level_id> mg_dungeon_places()
     return (places);
 }
 
-static void mg_build_dungeon()
+static bool mg_build_dungeon()
 {
     const std::vector<level_id> places = mg_dungeon_places();
 
@@ -3800,8 +3922,9 @@ static void mg_build_dungeon()
         if (you.level_type == LEVEL_PORTAL_VAULT)
             you.level_type_name = "bazaar";
         if (!mg_do_build_level(1))
-            return;
+            return (false);
     }
+    return (true);
 }
 
 static void mg_build_levels(int niters)
@@ -3824,7 +3947,8 @@ static void mg_build_levels(int niters)
         
         you.uniq_map_tags.clear();
         you.uniq_map_names.clear();
-        mg_build_dungeon();
+        if (!mg_build_dungeon())
+            break;
     }
 }
 

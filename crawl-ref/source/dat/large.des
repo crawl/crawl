@@ -291,8 +291,8 @@ MONS: nothing
 SUBST: *:*$, |=|.
 : end
 : if you.absdepth() > 24 then
-MONS: red draconian/green draconian/yellow draconian/pale draconian/black draconian/grey draconian/purple draconian
-MONS: grey draconian monk/pale draconian knight/green draconian annihilator/purple draconian knight
+MONS: red draconian/green draconian/yellow draconian/pale draconian/black draconian/purple draconian
+MONS: pale draconian knight/green draconian annihilator/purple draconian knight
 MONS: red draconian scorcher/white draconian zealot/yellow draconian caller/black draconian shifter
 MONS: lindwurm/death drake/swamp drake, plant/weight:1 oklob plant
 SUBST: w:wl

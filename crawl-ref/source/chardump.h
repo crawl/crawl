@@ -16,6 +16,7 @@
 #define CHARDUMP_H
 
 #include <string>
+#include <cstdio>
 
 enum item_origin_dump_selector
 {
@@ -36,6 +37,8 @@ bool dump_char(const std::string &fname,
                bool show_prices,
                bool full_id = false,
                const scorefile_entry *se = NULL);
+void dump_map(const char* fname);
+void dump_map(FILE *fp);
 void resists_screen();
 void display_notes();
 std::string munge_description(const std::string &inStr);

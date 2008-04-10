@@ -55,7 +55,7 @@ const int MAKE_GOOD_ITEM = 351;
 typedef char map_type[MAP_SIDE + 1][MAP_SIDE + 1];
 typedef FixedArray<unsigned short, GXM, GYM> map_mask;
 
-extern map_mask dgn_map_mask;
+extern map_mask dgn_Map_Mask;
 
 // Map mask constants.
 
@@ -333,5 +333,12 @@ bool unset_level_flags(unsigned long flags, bool silent = false);
 
 void dgn_set_lt_callback(std::string level_type_name,
                          std::string callback_name);
+
+// Returns true if the given square is okay for use by any character,
+// but always false for squares in non-transparent vaults. This
+// function returns sane results only immediately after dungeon generation
+// (specifically, saving and restoring a game discards information on the
+// vaults used in the current level).
+bool dgn_square_is_passable(const coord_def &c);
 
 #endif
