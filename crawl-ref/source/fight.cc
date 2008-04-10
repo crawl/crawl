@@ -2303,7 +2303,7 @@ bool melee_attack::chop_hydra_head( int dam,
             coord_def pos = defender->pos();
             bleed_onto_floor(pos.x, pos.y, defender->id(),
                              def->hit_points, true);
-                             
+
             defender->hurt(attacker, def->hit_points);
         }
         else

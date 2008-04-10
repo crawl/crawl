@@ -5169,9 +5169,9 @@ static bool _handle_pickup(monsters *monster)
             if (eaten_net)
                 simple_monster_message(monster, " devours the net!");
 
-            if (mons_class_flag( monster->type, M_SPLITS )) 
+            if (mons_class_flag( monster->type, M_SPLITS ))
             {
-                const int reqd = (monster->hit_dice <= 6) 
+                const int reqd = (monster->hit_dice <= 6)
                                             ? 50 : monster->hit_dice * 8;
 
                 if (monster->hit_points >= reqd)
