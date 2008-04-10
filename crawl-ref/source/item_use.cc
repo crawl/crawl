@@ -2607,7 +2607,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else
     {
-        if (returning) // should have returned but didn't
+        // should have returned but didn't
+        if (returning && item_type_known(you.inv[throw_2]))
             msg::stream << item.name(DESC_CAP_THE)
                         << " fails to return to your pack!" << std::endl;
 
@@ -2685,8 +2686,8 @@ void jewellery_wear_effects(item_def &item)
     randart_prop_type       fake_rap     = RAP_NUM_PROPERTIES;
     bool                    learn_pluses = false;
 
-    // Randart jewellery shouldn't auto-ID just because the 
-    // base type is known. Somehow the player should still 
+    // Randart jewellery shouldn't auto-ID just because the
+    // base type is known. Somehow the player should still
     // be told, preferably by message. (jpeg)
     const bool artefact     = is_random_artefact( item );
     const bool known_pluses = item_ident( item, ISFLAG_KNOW_PLUSES );
