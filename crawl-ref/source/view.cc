@@ -448,8 +448,8 @@ static void _get_symbol( int x, int y,
                             *colour, fdef.em_colour | colmask);
             }
 
-            if (object < NUM_REAL_FEATURES
-                && inside_halo(x,y) && object >= DNGN_MINMOVE)
+            if (object < NUM_REAL_FEATURES && inside_halo(x, y)
+                && object >= DNGN_FLOOR_MIN && object <= DNGN_FLOOR_MAX)
             {
                 *colour = YELLOW | colmask;
             }

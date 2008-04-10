@@ -875,17 +875,20 @@ enum dungeon_feature_type
 
     DNGN_LAVA = 61,                    //   61
     DNGN_DEEP_WATER,                   //   62
-    
+
     DNGN_SHALLOW_WATER = 65,           //   65
     DNGN_WATER_STUCK,
 
-    DNGN_FLOOR,                        //   67
-    DNGN_FLOOR_SPECIAL,     // currently only used for colouring bazaars
+    DNGN_FLOOR_MIN = 67,
+    DNGN_FLOOR = DNGN_FLOOR_MIN,
+    DNGN_FLOOR_SPECIAL,        // currently only used for colouring bazaars
     DNGN_FLOOR_RESERVED,
+    DNGN_FLOOR_MAX = DNGN_FLOOR_RESERVED,
+
     DNGN_EXIT_HELL,                    //   70
     DNGN_ENTER_HELL,                   //   71
     DNGN_OPEN_DOOR,                    //   72
-    
+
     DNGN_TRAP_MECHANICAL = 75,         //   75
     DNGN_TRAP_MAGICAL,
     DNGN_TRAP_NATURAL,
@@ -938,7 +941,7 @@ enum dungeon_feature_type
     DNGN_ENTER_SHOALS,
     DNGN_ENTER_RESERVED_2,
     DNGN_ENTER_RESERVED_3,
-    DNGN_ENTER_RESERVED_4,             // 126 
+    DNGN_ENTER_RESERVED_4,             // 126
     DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_RESERVED_4,
 
     // Exits from various branches
