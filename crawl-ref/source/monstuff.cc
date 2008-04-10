@@ -6416,7 +6416,7 @@ static void _mons_in_cloud(monsters *monster)
         // disturbance other than the cloud itself.
         behaviour_event(monster, ME_DISTURB, MHITNOT, monster->x, monster->y);
     }
-    
+
     if (hurted < 0)
         hurted = 0;
     else if (hurted > 0)
