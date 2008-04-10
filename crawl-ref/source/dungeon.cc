@@ -478,8 +478,9 @@ static void _dgn_register_vault(const map_def &map)
 
 bool dgn_square_is_passable(const coord_def &c)
 {
-    return (!(dgn_Map_Mask(c) & MMT_OPAQUE) &&
-            is_travelsafe_square(c.x, c.y, false, true));
+    return (!(dgn_Map_Mask(c) & MMT_OPAQUE)
+            && (is_travelsafe_square(c.x, c.y, false, true)
+                || grd(c) == DNGN_SECRET_DOOR));
 }
 
 static inline void _dgn_point_record_stub(const coord_def &) { }
