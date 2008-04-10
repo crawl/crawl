@@ -3758,9 +3758,14 @@ bool _give_items_skills()
     case JOB_PRIEST:
         you.piety = 45;
 
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_MACE);
         if (you.species == SP_KOBOLD || you.species == SP_HALFLING)
-            you.inv[0].sub_type = WPN_KNIFE;
+            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE, 1, 1, 1);
+        else
+        {
+            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS,
+                (player_genus(GENPC_ELVEN) || you.species == SP_MERFOLK) ?
+                WPN_QUARTERSTAFF : WPN_MACE);
+        }
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
