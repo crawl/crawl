@@ -594,8 +594,10 @@ void direct_effect(struct bolt &pbolt)
 
     // apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
-        ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM, 
+    {
+        ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM,
              pbolt.aux_source.c_str());
+    }
 
     return;
 }                               // end direct_effect()
@@ -1455,9 +1457,10 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         // how sad (and stupid)
         if (!silenced(you.pos()) && !quiet)
+        {
             mprf(MSGCH_SOUND,
                  grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
-
+        }
         item_was_destroyed(mitm[igrd[you.x_pos][you.y_pos]], NON_MONSTER);
         *item_index = NON_ITEM;
     }
@@ -2649,7 +2652,8 @@ void handle_time( long time_delta )
             return;
         }
 
-        if (one_chance_in(18))
+        // diminishing returns for Stealth training by waiting
+        if (you.skills[SK_STEALTH] <= 2 + random2(3) && one_chance_in(18))
             exercise(SK_STEALTH, 1);
     }
 }

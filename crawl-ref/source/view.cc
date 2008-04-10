@@ -898,7 +898,9 @@ void handle_monster_shouts(monsters* monster, bool force)
 {
     if (!force
         && (!you.turn_is_over || random2(30) < you.skills[SK_STEALTH]))
+    {
         return;
+    }
 
     // Get it once, since monster might be S_RANDOM, in which case
     // mons_shouts() will return a different value every time.
@@ -910,7 +912,9 @@ void handle_monster_shouts(monsters* monster, bool force)
         || (type == S_SILENT && !player_monster_visible(monster))
         || (type != S_SILENT && (silenced(you.x_pos, you.y_pos)
                                  || silenced(monster->x, monster->y))))
+    {
         return;
+    }
 
     int         noise_level = get_shout_noise_level(type);
     std::string default_msg_key;
@@ -1227,13 +1231,13 @@ bool check_awaken(monsters* monster)
     // affected by repel undead, they do sense this type of divine aura.
     // -- bwr
     if (you.duration[DUR_REPEL_UNDEAD] && mons_is_unholy(monster))
-    {
         return (true);
-    }
 
     // I assume that creatures who can sense invisible are very perceptive
     mons_perc = 10 + (mons_intel(monster->type) * 4) + monster->hit_dice
                    + mons_sense_invis(monster) * 5;
+
+    bool unnatural_stealthy = false; // "stealthy" only because of invisibility?
 
     // critters that are wandering still have MHITYOU as their foe are
     // still actively on guard for the player, even if they can't see
@@ -1243,7 +1247,10 @@ bool check_awaken(monsters* monster)
         mons_perc += 15;
 
     if (!mons_player_visible(monster))
+    {
         mons_perc -= 75;
+        unnatural_stealthy = true;
+    }
 
     if (monster->behaviour == BEH_SLEEP)
     {
@@ -1274,20 +1281,21 @@ bool check_awaken(monsters* monster)
         return (true); // Oops, the monster wakes up!
 
     // You didn't wake the monster!
-    if (player_light_armour(true) 
+    if (player_light_armour(true)
         && you.burden_state == BS_UNENCUMBERED
-	&& you.special_wield != SPWLD_SHADOW
-	&& one_chance_in(20))
+        && you.special_wield != SPWLD_SHADOW
+        // if invisible, training happens much more rarely
+        && (!unnatural_stealthy && one_chance_in(25) || one_chance_in(100)))
     {
         exercise(SK_STEALTH, 1);
     }
-        
+
     return (false);
 }                               // end check_awaken()
 
 static void _set_show_backup( int ex, int ey )
 {
-    // Must avoid double setting it.  
+    // Must avoid double setting it.
     // We want the base terrain/item, not the cloud or monster that replaced it.
     if (!Show_Backup[ex][ey])
         Show_Backup[ex][ey] = env.show[ex][ey];
@@ -1452,11 +1460,11 @@ inline static void _update_cloud_grid(int cloudno)
 
     _set_show_backup(ex, ey);
     env.show[ex][ey] = DNGN_CLOUD;
-    env.show_col[ex][ey] = which_colour;    
+    env.show_col[ex][ey] = which_colour;
 
 #ifdef USE_TILE
-    tile_place_cloud(ex, ey, env.cloud[cloudno].type, 
-        env.cloud[cloudno].decay);
+    tile_place_cloud(ex, ey, env.cloud[cloudno].type,
+                     env.cloud[cloudno].decay);
 #endif
 }
 

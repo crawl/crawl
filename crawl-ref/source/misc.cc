@@ -202,8 +202,8 @@ void maybe_coagulate_blood_floor(item_def &blood)
     ASSERT(is_valid_item(blood));
     ASSERT(blood.base_type == OBJ_POTIONS);
 
-    ASSERT (blood.sub_type == POT_BLOOD
-            || blood.sub_type == POT_BLOOD_COAGULATED);
+    ASSERT(blood.sub_type == POT_BLOOD
+           || blood.sub_type == POT_BLOOD_COAGULATED);
 
     CrawlHashTable &props = blood.props;
     ASSERT(props.exists("timer"));
@@ -221,13 +221,13 @@ void maybe_coagulate_blood_floor(item_def &blood)
     int coag_count = 0;
     std::vector<long> age_timer;
     long current;
-    int size = timer.size();
+    const int size = timer.size();
     for (int i = 0; i < size; i++)
     {
         current = timer.pop_back();
         if (rot_limit >= current)
             rot_count++;
-        else if (coag_limit >= current)
+        else if (blood.sub_type == POT_BLOOD && coag_limit >= current)
         {
             coag_count++;
             age_timer.push_back(current);
@@ -243,7 +243,7 @@ void maybe_coagulate_blood_floor(item_def &blood)
     if (!rot_count && !coag_count)
         return; // nothing to be done
 
-    if (!coag_count)
+    if (!coag_count) // some potions rotted away
     {
         dec_mitm_item_quantity(blood.link, rot_count);
         // timer is already up to date
@@ -260,6 +260,7 @@ void maybe_coagulate_blood_floor(item_def &blood)
         if (mitm[o].base_type == OBJ_POTIONS
             && mitm[o].sub_type == POT_BLOOD_COAGULATED)
         {
+            // merge with existing stack
             CrawlHashTable &props2 = mitm[o].props;
             ASSERT(props2.exists("timer"));
             CrawlVector &timer2 = props2["timer"];
@@ -274,13 +275,35 @@ void maybe_coagulate_blood_floor(item_def &blood)
                 timer2.push_back(val);
             }
             _long_sort(timer2);
+            inc_mitm_item_quantity(o, coag_count);
+            ASSERT(timer2.size() == mitm[o].quantity);
             dec_mitm_item_quantity(blood.link, rot_count + coag_count);
             return;
         }
         o = mitm[o].link;
     }
+    // If we got here nothing was found!
 
-    // if we got here nothing was found
+    // entire stack is gone, rotted or coagulated.
+    // -> change potions to coagulated type
+    if (rot_count + coag_count == blood.quantity)
+    {
+        ASSERT(timer.empty());
+        // update subtype
+        blood.sub_type = POT_BLOOD_COAGULATED;
+        item_colour(blood);
+        // re-fill vector
+        long val;
+        while (!age_timer.empty())
+        {
+            val = age_timer[age_timer.size() - 1];
+            age_timer.pop_back();
+            timer.push_back(val);
+        }
+        dec_mitm_item_quantity(blood.link, rot_count);
+        ASSERT(timer.size() == blood.quantity);
+    }
+
     // create a new stack of potions
     o = get_item_slot( 100 + random2(200) );
     if (o == NON_ITEM)
@@ -314,6 +337,7 @@ void maybe_coagulate_blood_floor(item_def &blood)
     move_item_to_grid( &o, blood.x, blood.y );
 
     dec_mitm_item_quantity(blood.link, rot_count + coag_count);
+    ASSERT(timer.size() == blood.quantity);
 }
 
 // used for (q)uaff, (f)ire, and Evaporate
