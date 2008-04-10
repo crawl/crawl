@@ -492,23 +492,22 @@ SUBST: 1 = 1.
 SHUFFLE: ab/cd
 SUBST: a = w, b = x, c = x, d = .
 SHUFFLE: 123/567
-SUBST: w:wW.
 SUBST: X=x.
 ORIENT: float
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxXw**wXxxxxxxxxxxxxxxX**XXx
-xXwwwwwXxxxxxxX33xxxxxX423Xx
-xXwww232XxxxxX121xxxxX.13Xxx
-xXXwww2XxxxxxX.1xxxXXw222Xxx
-xxXXwwwwaaXxxxXwxxaaaw1121Xx
-xxxXwww1XaaaaawwaaaxXww211Xx
-xxxxXw23xxxxxawwwxxxXww11XXx
-xxxxXX1XxxxxxxxwwwxxxxX.Xxxx
-xxxxxxX.XxxxXwwwwwxxx...Xxxx
-xxxxxxx..Xxxx2xwwxxX..XXxxxx
+xxXW**wXxxxxxxxxxxxxxxX**XXx
+xXwWwwwXxxxxxxX33xxxxxX423Xx
+xXWww232XxxxxX121xxxxX.13Xxx
+xXXWww2XxxxxxX.1xxxxxw222Xxx
+xxXXWwwwaaxxxxXWxxaaaw1121Xx
+xxxXWww1XaaaaaWwaaaxXWw211Xx
+xxxxXW23xxxxxaWwwxxxXww11XXx
+xxxxXX1XxxxxxxxWwwxxxxX.Xxxx
+xxxxxxX.XxxxXwWwwwxxx...Xxxx
+xxxxxxx..Xxxx2xWwxxX..XXxxxx
 xxxxxxxX.12111xw3X211bxxxxxx
-xxxxxxxxxxXXXxxw2xxxxbbxxxxx
+xxxxxxxxxxXXXxxW2xxxxbbxxxxx
 xxxxxxxxxxxxxxxw1Xxxxxbbxxxx
 xxxxxxxxxxxxxXww1Xxxxxxbxxxx
 xxxxxxxxxxxXwwww111@...Xxxxx
