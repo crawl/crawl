@@ -6553,20 +6553,30 @@ bool heal_monster(monsters * patient, int health_boost,
         return (false);
     else if (!permit_growth && patient->hit_points == patient->max_hit_points)
         return (false);
-    else
+
+    patient->hit_points += health_boost;
+
+    bool success = true;
+
+    if (patient->hit_points > patient->max_hit_points)
     {
-        patient->hit_points += health_boost;
-
-        if (patient->hit_points > patient->max_hit_points)
+        if (permit_growth)
         {
-            if (permit_growth)
-                patient->max_hit_points++;
+            const monsterentry* m = get_monster_data(patient->type);
+            const unsigned maxhp =
+                m->hpdice[0] * (m->hpdice[1] + m->hpdice[2]) + m->hpdice[3];
 
-            patient->hit_points = patient->max_hit_points;
+            // Limit HP growth.
+            if (random2(3 * maxhp) > 2 * patient->max_hit_points)
+                patient->max_hit_points++;
+            else
+                success = false;
         }
+
+        patient->hit_points = patient->max_hit_points;
     }
 
-    return (true);
+    return (success);
 }                               // end heal_monster()
 
 static spell_type _map_wand_to_mspell(int wand_type)
