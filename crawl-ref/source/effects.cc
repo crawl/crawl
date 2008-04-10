@@ -299,7 +299,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
     case DNGN_ENTER_DIS:
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_TARTARUS: 
+    case DNGN_ENTER_TARTARUS:
         if (player_in_hell() || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
         {
             mpr("You feel dizzy for a moment.");
@@ -450,7 +450,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
     // Actually, that code was somewhat flawed.  Several race-class combos
     // can start with a stat lower than three, and this block (which
     // used to say '!=' would actually cause stat gain with the '< 3'
-    // check that used to be above.  Crawl has stat-death code and I 
+    // check that used to be above.  Crawl has stat-death code and I
     // don't see why we shouldn't be using it here.  -- bwr
     if (newValue < *ptr_stat)
     {
@@ -754,7 +754,7 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
 static armour_type random_nonbody_armour_type()
 {
     const armour_type at =
-        static_cast<armour_type>( 
+        static_cast<armour_type>(
             random_choose(ARM_SHIELD, ARM_CLOAK, ARM_HELMET,
                           ARM_GLOVES, ARM_BOOTS, -1));
     return (at);
@@ -764,7 +764,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
                                     int &quantity)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
-    
+
     int type_wanted = OBJ_RANDOM;
     int iteration = 0;
 
@@ -807,7 +807,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             type_wanted = POT_BLOOD;
             quantity = 2 + random2(4);
         }
-        else 
+        else
         {
             // Meat is better than bread (except for herbivores), and
             // by choosing it as the default we don't have to worry
@@ -815,12 +815,12 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             type_wanted = FOOD_MEAT_RATION;
 
             if (you.mutation[MUT_HERBIVOROUS])
-                type_wanted = FOOD_BREAD_RATION; 
+                type_wanted = FOOD_BREAD_RATION;
 
             // If we have some regular rations, then we're probably more
-            // interested in faster foods (especially royal jelly)... 
+            // interested in faster foods (especially royal jelly)...
             // otherwise the regular rations should be a good enough offer.
-            if (already_has[FOOD_MEAT_RATION] 
+            if (already_has[FOOD_MEAT_RATION]
                     + already_has[FOOD_BREAD_RATION] >= 2 || coinflip())
             {
                 type_wanted = one_chance_in(5) ? FOOD_HONEYCOMB
@@ -868,7 +868,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             item_considered.sub_type = i;
 
             const int acqweight = property(item_considered, PWPN_ACQ_WEIGHT);
-            
+
             if (!acqweight)
                 continue;
 
@@ -907,7 +907,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
 
         case SK_CROSSBOWS:
             type_wanted = MI_DART;
-            for (int i = 0; i < ENDOFPACK; i++) 
+            for (int i = 0; i < ENDOFPACK; i++)
             {
                 // Assuming that crossbow in inventory means that they
                 // want bolts for it (not darts for a hand crossbow)...
@@ -925,7 +925,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
 
         case SK_DARTS:
             type_wanted = MI_DART;
-            for (int i = 0; i < ENDOFPACK; i++) 
+            for (int i = 0; i < ENDOFPACK; i++)
             {
                 if (is_valid_item( you.inv[i] )
                     && you.inv[i].base_type == OBJ_WEAPONS
@@ -944,7 +944,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         default:
             type_wanted = MI_DART;
             break;
-        }        
+        }
     }
     else if (class_wanted == OBJ_ARMOUR)
     {
@@ -1003,7 +1003,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             break;
 
         default:
-            if (type_wanted == ARM_CENTAUR_BARDING 
+            if (type_wanted == ARM_CENTAUR_BARDING
                 || type_wanted == ARM_NAGA_BARDING)
             {
                 type_wanted = ARM_BOOTS;
@@ -1037,9 +1037,9 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         if (type_wanted == OBJ_RANDOM || type_wanted == ARM_ROBE)
         {
             // start with normal base armour
-            if (type_wanted == ARM_ROBE) 
+            if (type_wanted == ARM_ROBE)
                 type_wanted = coinflip() ? ARM_ROBE : ARM_ANIMAL_SKIN;
-            else 
+            else
             {
                 type_wanted = ARM_ROBE + random2(8);
 
@@ -1097,7 +1097,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
                 iteration = 1;
                 type_wanted = NUM_BOOKS;
 
-                best_spell = best_skill( SK_SPELLCASTING, (NUM_SKILLS - 1), 
+                best_spell = best_skill( SK_SPELLCASTING, (NUM_SKILLS - 1),
                                          best_spell );
 
               which_book:
@@ -1209,7 +1209,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
                         type_wanted = give_first_conjuration_book();
                     else if (!you.had_book[BOOK_TEMPESTS])
                         type_wanted = BOOK_TEMPESTS;
-                    
+
                     // now a Vehumet special -- bwr
                     // else if (!you.had_book[BOOK_ANNIHILATIONS])
                     //     type_wanted = BOOK_ANNIHILATIONS;
@@ -1308,7 +1308,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
 
                 best_spell = best_skill( SK_SPELLCASTING, (NUM_SKILLS-1), 99 );
 
-                // If we're going to give out an enhancer stave, 
+                // If we're going to give out an enhancer stave,
                 // we should at least bias things towards the
                 // best spell skill. -- bwr
                 switch (best_spell)
@@ -1400,7 +1400,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
                 }
                 break;
 
-            case OBJ_MISCELLANY: 
+            case OBJ_MISCELLANY:
                 do
                     type_wanted = random2(NUM_MISCELLANY);
                 while (type_wanted == MISC_HORN_OF_GERYON
@@ -1968,7 +1968,7 @@ void yell(bool force)
 bool forget_inventory(bool quiet)
 {
     int items_forgotten = 0;
-    
+
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def& item(you.inv[i]);
@@ -2022,7 +2022,7 @@ bool vitrify_area(int radius)
 {
     if (radius < 2)
         return (false);
-        
+
     const int radius2 = radius * radius;
     // this hinges on clear wall types having the same order as non-clear ones
     const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
@@ -2033,7 +2033,7 @@ bool vitrify_area(int radius)
             if ( distance(x,y,you.x_pos,you.y_pos) < radius2 )
             {
                 dungeon_feature_type grid = grd[x][y];
-                
+
                 if (grid == DNGN_ROCK_WALL
                     || grid == DNGN_STONE_WALL
                     || grid == DNGN_PERMAROCK_WALL )
@@ -2044,7 +2044,7 @@ bool vitrify_area(int radius)
                 }
             }
         }
-    
+
     return (something_happened);
 }
 
@@ -2161,7 +2161,7 @@ static void hell_effects()
     // try to summon at least one and up to five random monsters {dlb}
     if (one_chance_in(3))
     {
-        create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE, 
+        create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE,
                         you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
 
         for (int i = 0; i < 4; i++)
@@ -2204,7 +2204,7 @@ static bool food_item_needs_time_check(item_def &item)
     {
         return false;
     }
-    
+
     return true;
 }
 
@@ -2342,7 +2342,7 @@ static void rot_inventory_food(long time_delta)
     if (num_blood_coagulates)
     {
         ASSERT(affected_potion != -1);
-        
+
         std::string msg = "";
 
         if (num_total_blood == num_blood_coagulates)
@@ -2363,9 +2363,9 @@ static void rot_inventory_food(long time_delta)
         if (num_blood_coagulates == 1)
             msg += "s";
         msg += ".";
-        
+
         mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
-        
+
         const bool known_blood = item_type_known(you.inv[affected_potion]);
         you.inv[affected_potion].sub_type = POT_BLOOD_COAGULATED;
         you.inv[affected_potion].plus
@@ -2382,7 +2382,7 @@ static void rot_inventory_food(long time_delta)
             mpr(you.inv[affected_potion].name(DESC_INVENTORY, false).c_str());
         }
     }
-    
+
     if (burden_changed_by_rot)
     {
         mpr("Your equipment suddenly weighs less.", MSGCH_ROTTEN_MEAT);
@@ -2468,7 +2468,7 @@ void handle_time( long time_delta )
         // index of 2 does about 0.58 points of contamination per turn.
         // A randart with a mutagen index of 5 does about 0.7 points of
         // contamination per turn.
-        
+
         const int mean_glow   = 500 + randart_glow * 40;
         const int actual_glow = mean_glow / 2 + random2(mean_glow);
         added_contamination += div_rand_round(actual_glow, 1000);
@@ -2603,7 +2603,7 @@ void handle_time( long time_delta )
         if (random2(100) < total_skill)
         {
             item_def& item = you.inv[you.equip[EQ_WEAPON]];
-            
+
             set_ident_type( OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE );
             set_ident_flags( item, ISFLAG_IDENT_MASK );
 
@@ -2683,23 +2683,23 @@ static void catchup_monster_moves(monsters *mon, int turns)
     // const bool short_time = (range >= 5 + random2(10));
     const bool long_time  = (range >= (500 + roll_dice( 2, 500 )));
 
-    const bool ranged_attack = (mons_has_ranged_spell( mon ) 
-                                || mons_has_ranged_attack( mon )); 
+    const bool ranged_attack = (mons_has_ranged_spell( mon )
+                                || mons_has_ranged_attack( mon ));
 
 #if DEBUG_DIAGNOSTICS
     // probably too annoying even for DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "mon #%d: range %d; long %d; "
-         "pos (%d,%d); targ %d(%d,%d); flags %ld", 
-         monster_index(mon), range, long_time, mon->x, mon->y, 
+         "pos (%d,%d); targ %d(%d,%d); flags %ld",
+         monster_index(mon), range, long_time, mon->x, mon->y,
          mon->foe, mon->target_x, mon->target_y, mon->flags );
-#endif 
+#endif
 
     if (range <= 0)
         return;
 
-    if (long_time 
-        && (mon->behaviour == BEH_FLEE 
+    if (long_time
+        && (mon->behaviour == BEH_FLEE
             || mon->behaviour == BEH_CORNERED
             || testbits( mon->flags, MF_BATTY )
             || ranged_attack
@@ -2709,20 +2709,20 @@ static void catchup_monster_moves(monsters *mon, int turns)
         {
             mon->behaviour = BEH_WANDER;
             mon->foe = MHITNOT;
-            mon->target_x = 10 + random2( GXM - 10 ); 
-            mon->target_y = 10 + random2( GYM - 10 ); 
+            mon->target_x = 10 + random2( GXM - 10 );
+            mon->target_y = 10 + random2( GYM - 10 );
         }
-        else 
+        else
         {
             // monster will be sleeping after we move it
-            mon->behaviour = BEH_SLEEP; 
+            mon->behaviour = BEH_SLEEP;
         }
     }
     else if (ranged_attack)
     {
-        // if we're doing short time movement and the monster has a 
+        // if we're doing short time movement and the monster has a
         // ranged attack (missile or spell), then the monster will
-        // flee to gain distance if its "too close", else it will 
+        // flee to gain distance if its "too close", else it will
         // just shift its position rather than charge the player. -- bwr
         if (grid_distance(mon->x, mon->y, mon->target_x, mon->target_y) < 3)
         {
@@ -2794,7 +2794,7 @@ static void catchup_monster_moves(monsters *mon, int turns)
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "moved to (%d,%d)", mon->x, mon->y );
-#endif    
+#endif
 }
 
 //---------------------------------------------------------------
@@ -2815,7 +2815,7 @@ void update_level( double elapsedTime )
 #endif
 
     update_corpses( elapsedTime );
-     
+
     if (env.sanctuary_time)
     {
         if (turns >= env.sanctuary_time)
@@ -2848,7 +2848,7 @@ void update_level( double elapsedTime )
         // This is the monster healing code, moved here from tag.cc:
         if (monster_descriptor( mon->type, MDSC_REGENERATES )
             || mon->type == MONS_PLAYER_GHOST)
-        {   
+        {
             heal_monster( mon, turns, false );
         }
         else
@@ -2856,13 +2856,13 @@ void update_level( double elapsedTime )
             // Set a lower ceiling of 0.1 on the regen rate.
             const int regen_rate =
                 std::max(mons_natural_regen_rate(mon) * 2, 5);
-            
+
             heal_monster( mon, div_rand_round(turns * regen_rate, 50),
                           false );
         }
 
         catchup_monster_moves( mon, turns );
-        
+
         if (turns >= 10 && mon->alive())
             mon->timeout_enchantments( turns / 10 );
     }
@@ -2937,10 +2937,10 @@ void update_corpses(double elapsedTime)
     for (int c = 0; c < MAX_ITEMS; c++)
     {
         item_def &it = mitm[c];
-        
+
         if (!food_item_needs_time_check(it))
             continue;
-            
+
         if (rot_time >= it.special && !is_being_butchered(it))
         {
             if (it.base_type == OBJ_FOOD || it.base_type == OBJ_POTIONS)
@@ -2967,16 +2967,16 @@ void update_corpses(double elapsedTime)
             // potions of blood have a longer rot time
             if (it.base_type != OBJ_POTIONS)
                 ASSERT(rot_time < 256);
-                
+
             it.special -= rot_time;
-            
+
             if (it.base_type == OBJ_POTIONS
                 && it.sub_type == POT_BLOOD
                 && it.special < 200)
             {
                 ASSERT(rot_time < 1200);
                 it.sub_type = POT_BLOOD_COAGULATED;
-                
+
                 it.plus
                     = you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED];
             }

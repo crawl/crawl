@@ -539,7 +539,7 @@ static unsigned short _dos_reverse_brand(unsigned short colour)
         // background high-intensity bit is actually a blink bit. Blinking is
         // evil, so we strip the background high-intensity bit. This, sadly,
         // limits us to 7 background colours.
-        
+
         // Strip off high-intensity bit.  Special case DARKGREY, since it's the
         // high-intensity counterpart of black, and we don't want black on
         // black.
@@ -1050,7 +1050,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     {
         msg = do_mon_str_replacements(msg, monster);
         msg_channel_type channel = MSGCH_TALK;
-        
+
         std::string param = "";
         std::string::size_type pos = msg.find(":");
 
@@ -1106,7 +1106,7 @@ inline static bool _update_monster_grid(const monsters *monster)
         {
             _set_show_backup(ex, ey);
             env.show[ex][ey] = DNGN_INVIS_EXPOSED;
-            env.show_col[ex][ey] = BLUE; 
+            env.show_col[ex][ey] = BLUE;
         }
         return (false);
     }
@@ -1145,7 +1145,7 @@ void monster_grid(bool do_updates)
 #ifdef USE_TILE
             tile_place_monster(monster->x, monster->y, s, true);
 #endif
-            
+
             if (player_monster_visible(monster)
                 && !mons_is_submerged(monster)
                 && !mons_friendly(monster)
@@ -1262,7 +1262,7 @@ bool check_awaken(monsters* monster)
         }
         else // unnatural creature
         {
-            // Unnatural monsters don't actually "sleep", they just 
+            // Unnatural monsters don't actually "sleep", they just
             // haven't noticed an intruder yet... we'll assume that
             // they're diligently on guard.
             mons_perc += 10;
@@ -1476,7 +1476,7 @@ void cloud_grid(void)
     {
         // can anyone explain this??? {dlb}
         // its an optimization to avoid looking past the last cloud -bwr
-        if (mnc >= env.cloud_no) 
+        if (mnc >= env.cloud_no)
             break;
 
         if (env.cloud[s].type != CLOUD_NONE)
@@ -1488,7 +1488,7 @@ void cloud_grid(void)
     }
 }
 
-// Noisy now has a messenging service for giving messages to the 
+// Noisy now has a messenging service for giving messages to the
 // player is appropriate.
 //
 // Returns true if the PC heard the noise.
@@ -1524,7 +1524,7 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 
         ret = true;
     }
-    
+
     for (int p = 0; p < MAX_MONSTERS; p++)
     {
         monster = &menv[p];
@@ -1825,7 +1825,7 @@ void ray_def::advance_and_bounce()
 
     const bool blocked_x = grid_is_solid(grd[oldx][newy]);
     const bool blocked_y = grid_is_solid(grd[newx][oldy]);
-    
+
     if ( double_is_zero(slope) || slope > 100.0 )
         quadrant = bouncequad[quadrant][2];
     else if ( rc != 2 )
@@ -1861,16 +1861,16 @@ int ray_def::advance(bool shortest_possible, const coord_def *target)
 {
     if (!shortest_possible)
         return (raw_advance());
-    
+
     // If we want to minimize the number of moves on the ray, look one
     // step ahead and see if we can get a diagonal.
-    
+
     const coord_def old(static_cast<int>(accx), static_cast<int>(accy));
     const int ret = raw_advance();
 
     if (ret == 2 || (target && pos() == *target))
         return (ret);
-    
+
     const double maccx = accx, maccy = accy;
     if (raw_advance() != 2)
     {
@@ -1908,13 +1908,13 @@ int ray_def::raw_advance()
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
         rc   = _find_next_intercept( &accx, &accy, slope );
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;        
+        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
         return rc;
     case 3:
         // going up-right
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
         rc   = _find_next_intercept( &accx, &accy, slope );
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;        
+        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
         return rc;
     default:
         return -1;
@@ -2140,7 +2140,7 @@ static void _create_blockrays()
             for ( unsigned int i = 0; i < num_nondupe_rays; ++i )
                 if ( get_bit_in_long_array(oldptr, nondupe_cellrays[i]) )
                     _set_bit_in_long_array(newptr, i);
-                    
+
             oldptr += num_words;
             newptr += num_nondupe_words;
         }
@@ -2150,7 +2150,7 @@ static void _create_blockrays()
 
     dead_rays = new unsigned long[num_nondupe_words];
     smoke_rays = new unsigned long[num_nondupe_words];
-    
+
 #ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
           num_cellrays, raylengths.size(), num_nondupe_rays );
@@ -2182,9 +2182,9 @@ void raycast()
     static bool done_raycast = false;
     if ( done_raycast )
         return;
-    
+
     // Creating all rays for first quadrant
-    // We have a considerable amount of overkill.   
+    // We have a considerable amount of overkill.
     done_raycast = true;
 
     // register perpendiculars FIRST, to make them top choice
@@ -2223,8 +2223,8 @@ void raycast()
                 xstart += EPSILON_VALUE / 10.0;
             if ( intercept == yangle )
                 xstart -= EPSILON_VALUE / 10.0;
-                
-            // y should be "about to change"            
+
+            // y should be "about to change"
             _register_ray( xstart, 1.0 - EPSILON_VALUE / 10.0, slope );
             // also draw the identical ray in octant 2
             _register_ray( 1.0 - EPSILON_VALUE / 10.0, xstart, rslope );
@@ -2283,7 +2283,7 @@ static double _slope_factor(const ray_def &ray)
 
     if (double_is_zero(xdiff) && double_is_zero(ydiff))
         return ray.slope;
-        
+
     const double slope = _calc_slope(ydiff, xdiff);
     return (slope + ray.slope) / 2.0;
 }
@@ -2327,7 +2327,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     const double want_slope = _calc_slope(absx, absy);
     double slope_diff       = VERTICAL_SLOPE * 10.0;
     std::vector<coord_def> unaliased_ray;
-    
+
     for ( unsigned int fray = 0; fray < fullrays.size(); ++fray )
     {
         const int fullray = _cyclic_offset( fray, cycle_dir, ray.fullray_idx,
@@ -2382,7 +2382,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                         }
                         else
                             ++real_length;
-                        
+
                         unaliased_ray.push_back(c3);
                         c1 = unaliased_ray[real_length - 1];
                     }
@@ -2402,7 +2402,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                     {
                         const int dist =
                             (unaliased_ray[i] - unaliased_ray[i - 1]).abs();
-                            
+
                         if (dist == 2)
                         {
                             straights = 0;
@@ -2451,7 +2451,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 
     if (find_shortest && shortest != INFINITE_DISTANCE)
         return (true);
-    
+
     if ( allow_fallback )
     {
         ray.accx = sourcex + 0.5;
@@ -2581,7 +2581,7 @@ void losight(env_show_grid &sh,
             for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y;
                  ++ydiff, inptr += num_words )
             {
-                
+
                 const int realx = x_p + xdiff * xmult;
                 const int realy = y_p + ydiff * ymult;
 
@@ -2591,7 +2591,7 @@ void losight(env_show_grid &sh,
                 dungeon_feature_type dfeat = gr[realx][realy];
                 if (dfeat == DNGN_SECRET_DOOR)
                     dfeat = grid_secret_door_appearance(realx, realy);
-                    
+
                 // if this cell is opaque...
                 if ( grid_is_opaque(dfeat)
                      || (clear_walls_block && grid_is_wall(dfeat)))
@@ -2777,7 +2777,7 @@ bool is_feature(int feature, int x, int y)
         default:
             return false;
         }
-    default: 
+    default:
         return get_envmap_char(x, y) == (unsigned) feature;
     }
 }
@@ -2952,16 +2952,16 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
             else
             {
                 colour = colour_code_map(c.x, c.y,
-                                         Options.item_colour, 
+                                         Options.item_colour,
                                          travel_mode);
 
                 buffer2[bufcount2 + 1] = colour;
                 buffer2[bufcount2] = env.map(c).glyph();
-            
+
                 if (c == you.pos())
                 {
                     // [dshaligram] Draw the @ symbol on the level-map. It's no
-                    // longer saved into the env.map, so we need to draw it 
+                    // longer saved into the env.map, so we need to draw it
                     // directly.
                     buffer2[bufcount2 + 1] = WHITE;
                     buffer2[bufcount2]     = you.symbol;
@@ -2980,10 +2980,10 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
                         bc = ch;
                 }
             }
-            
+
             bufcount2 += 2;
         }
-        
+
     puttext(1, top, num_cols, top + num_lines - 1, buffer2);
 }
 #endif // USE_TILE
@@ -3062,7 +3062,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
     //
     // The num_lines comparisons are done to keep things neat, by
     // keeping things at the top of the screen.  By shifting an
-    // additional one in the num_lines > map_lines case, we can 
+    // additional one in the num_lines > map_lines case, we can
     // keep the top line clear... which makes things look a whole
     // lot better for small maps.
     if (num_lines > map_lines)
@@ -3130,7 +3130,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
         case CONTROL('F'):
             forget_map(100, true);
             break;
-            
+
         case CONTROL('W'):
             travel_cache.add_waypoint(start_x + curs_x - 1,
                                       start_y + curs_y - 1);
@@ -3149,7 +3149,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
             const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
             if (is_exclude_root(p))
                 cycle_exclude_radius(p);
-                
+
             _reset_travel_colours(features);
             move_x = move_y = 0;
             break;
@@ -3322,14 +3322,14 @@ void show_map( coord_def &spec_place, bool travel_mode )
         case CK_MOUSE_MOVE:
             move_x = move_y = 0;
             break;
-        
+
         case CK_MOUSE_CLICK:
         {
             const c_mouse_event cme = get_mouse_event();
             const coord_def curp(start_x + curs_x - 1, start_y + curs_y - 1);
             const coord_def grdp =
                 cme.pos + coord_def(start_x - 1, start_y - top);
-            
+
             if (cme.left_clicked() && in_bounds(grdp))
             {
                 spec_place = grdp;
@@ -3405,7 +3405,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
 
         if (num_lines < map_lines)
         {
-            // Scrolling only happens when we don't have a large enough 
+            // Scrolling only happens when we don't have a large enough
             // display to show the known map.
             if (scroll_y < 0 && ((screen_y += scroll_y) <= min_y + half_screen))
                 screen_y = min_y + half_screen;
@@ -3414,7 +3414,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
                 screen_y = max_y - half_screen;
 
             scroll_y = 0;
-            
+
             if (curs_y + move_y < 1)
             {
                 screen_y += move_y;
@@ -3632,7 +3632,7 @@ bool trans_wall_blocking( const coord_def &p )
     return see_grid(p) && !see_grid_no_trans(p);
 }
 
-static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] = 
+static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
 {
     // CSET_ASCII
     {
@@ -3687,7 +3687,7 @@ dungeon_char_type dchar_by_name(const std::string &name)
         "item_stave", "item_miscellany", "item_corpse", "item_gold",
         "item_amulet", "cloud"
     };
-    
+
     for (unsigned i = 0; i < sizeof(dchar_names) / sizeof(*dchar_names); ++i)
         if (dchar_names[i] == name)
             return dungeon_char_type(i);
@@ -3908,20 +3908,20 @@ void init_feature_table( void )
         case DNGN_ENTER_PORTAL_VAULT:
             Feature[i].flags |= FFT_NOTABLE;
             // fall through
-            
+
         case DNGN_EXIT_PORTAL_VAULT:
             Feature[i].dchar       = DCHAR_ARCH;
             Feature[i].colour      = EC_SHIMMER_BLUE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = EC_SHIMMER_BLUE;
-            break;            
+            break;
 
         case DNGN_ESCAPE_HATCH_DOWN:
             Feature[i].dchar = DCHAR_STAIRS_DOWN;
             Feature[i].colour = BROWN;
             Feature[i].map_colour = BROWN;
             break;
-            
+
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
@@ -3937,7 +3937,7 @@ void init_feature_table( void )
             Feature[i].colour = BROWN;
             Feature[i].map_colour = BROWN;
             break;
-            
+
         case DNGN_STONE_STAIRS_UP_I:
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
@@ -4354,7 +4354,7 @@ int multibyte_strlen(const std::string &s)
 }
 
 // Returns a string containing an ASCII representation of the map. If fullscreen
-// is set to false, only the viewable area is returned. Leading and trailing 
+// is set to false, only the viewable area is returned. Leading and trailing
 // spaces are trimmed from each line. Leading and trailing empty lines are also
 // snipped.
 std::string screenshot( bool fullscreen )
@@ -4402,12 +4402,12 @@ std::string screenshot( bool fullscreen )
                 _get_symbol( gc.x, gc.y, object, &glych, &glycol );
                 ch = glych;
             }
-            
+
             // More mangling to accommodate C strings.
             if (!ch)
                 ch = ' ';
 
-            if (ch != ' ') 
+            if (ch != ' ')
             {
                 lastnonspace = count_x;
                 lastpopline = count_y;
@@ -4666,7 +4666,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
                     if (Options.colour_map)
                     {
-                        buffy[bufcount + 1] = 
+                        buffy[bufcount + 1] =
                             colour_code_map(gc.x, gc.y, Options.item_colour);
                     }
 
@@ -4699,7 +4699,7 @@ void viewwindow(bool draw_it, bool do_updates)
 #ifdef USE_TILE
                     if (map)
                     {
-                        env.tile_bk_bg[gc.x][gc.y] = 
+                        env.tile_bk_bg[gc.x][gc.y] =
                             env.tile_bg[ep.x-1][ep.y-1];
                     }
 
@@ -4716,7 +4716,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     {
                         if (grd(gc) == DNGN_DEEP_WATER)
                             buffy[bufcount + 1] = BLUE;
-                        else 
+                        else
                             buffy[bufcount + 1] = CYAN;
                     }
                 }
@@ -4740,9 +4740,9 @@ void viewwindow(bool draw_it, bool do_updates)
 
                     if (map)
                     {
-                        // This section is very tricky because it 
+                        // This section is very tricky because it
                         // duplicates the old code (which was horrid).
-                        
+
                         // if the grid is in LoS env.show was set and
                         // we set the buffer already, so...
                         if (buffy[bufcount] != 0)
@@ -4793,14 +4793,14 @@ void viewwindow(bool draw_it, bool do_updates)
                                               colour );
                         }
 
-                        // Now we get to filling in both the unseen 
-                        // grids in the env.show radius area as 
+                        // Now we get to filling in both the unseen
+                        // grids in the env.show radius area as
                         // well doing the clean_map.  The clean_map
                         // is done by having the env.map set to the
                         // backup character above, and down here we
                         // procede to override that character if it's
                         // out of LoS!  If it wasn't, buffy would have
-                        // already been set (but we'd still have 
+                        // already been set (but we'd still have
                         // clobbered env.map... which is important
                         // to do for when we move away from the area!)
                         if (buffy[bufcount] == 0)
@@ -4810,8 +4810,8 @@ void viewwindow(bool draw_it, bool do_updates)
                             buffy[bufcount + 1] = DARKGREY;
 
                             if (Options.colour_map)
-			    {
-                                buffy[bufcount + 1] = 
+                            {
+                                buffy[bufcount + 1] =
                                     colour_code_map(gc.x, gc.y,
                                                     Options.item_colour);
                             }
@@ -4937,7 +4937,7 @@ class _layout
         mlistp(-1,-1), mlistsz(MLIST_MIN_WIDTH, 0),
         hud_gutter(HUD_MIN_GUTTER),
         valid(false) {}
-    
+
  protected:
     void _assert_validity() const
     {
@@ -5036,7 +5036,7 @@ class _inline_layout : public _layout
 
 // ll vvvvvvghhh  v=view, g=hud gutter, h=hud, l=list, m=msg
 // ll vvvvvvghhh
-// ll vvvvvv 
+// ll vvvvvv
 // mmmmmmmmmmmmm
 class _mlist_col_layout : public _layout
 {
@@ -5057,7 +5057,7 @@ class _mlist_col_layout : public _layout
         _increment(mlistsz.x,  leftover_x(),   MLIST_MAX_WIDTH);
         _increment(hud_gutter, leftover_x(),   HUD_MAX_GUTTER);
         msgsz.x = termsz.x-1; // Can't use last character
-        
+
         // y: View gets leftover; then message
         if (leftover_y() < 0) return false;
         _increment(viewsz.y, leftover_y(), Options.view_max_height);
@@ -5122,7 +5122,7 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
             Options.scroll_margin_y + LOS_RADIUS <= viewhalfsz.y
             ? Options.scroll_margin_y
             : viewhalfsz.y - LOS_RADIUS;
-        
+
         if (Options.view_lock_x)
             vgrdc.x = c.x;
         else if (c.x - LOS_RADIUS < vgrdc.x - viewhalfsz.x + xmarg)
@@ -5217,12 +5217,12 @@ void crawl_view_geometry::init_geometry()
 void handle_terminal_resize(bool redraw)
 {
     crawl_state.terminal_resized = false;
-    
+
     if (crawl_state.terminal_resize_handler)
         (*crawl_state.terminal_resize_handler)();
     else
         crawl_view.init_geometry();
-    
+
     if (redraw)
         redraw_screen();
 }
