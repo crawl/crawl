@@ -6563,7 +6563,7 @@ bool heal_monster(monsters * patient, int health_boost,
         if (permit_growth)
         {
             const monsterentry* m = get_monster_data(patient->type);
-            const unsigned maxhp =
+            const int maxhp =
                 m->hpdice[0] * (m->hpdice[1] + m->hpdice[2]) + m->hpdice[3];
 
             // Limit HP growth.
