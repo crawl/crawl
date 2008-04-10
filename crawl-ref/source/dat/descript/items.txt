@@ -1357,8 +1357,9 @@ A suit made of splints of metal.
 %%%%
 staff of air
 
-This staff increases the power of air spells cast by its wielder. It
-can shock those struck by it.
+This staff increases the power of air spells cast by its wielder. 
+It also protects the wielder from lightning and in turn may shock
+those struck by it.
 %%%%
 staff of channeling
 
