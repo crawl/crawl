@@ -813,6 +813,7 @@ void game_options::reset_options()
     tile_monster_col     = MAP_RED;
     tile_neutral_col     = MAP_RED;
     tile_friendly_col    = MAP_LTRED;
+    tile_plant_col       = MAP_DKGREEN;
     tile_item_col        = MAP_GREEN;
     tile_unseen_col      = MAP_BLACK;
     tile_floor_col       = MAP_LTGREY;
@@ -2578,6 +2579,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "tile_friendly_col")
     {
         tile_friendly_col =
+               _str_to_tile_colour(field);
+    }
+    else if (key == "tile_plant_col")
+    {
+        tile_plant_col =
                _str_to_tile_colour(field);
     }
     else if (key == "tile_item_col")

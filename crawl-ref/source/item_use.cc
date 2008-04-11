@@ -184,6 +184,51 @@ bool can_wield(const item_def *weapon, bool say_reason,
 #undef SAY
 }
 
+static bool _valid_weapon_swap(const item_def &item)
+{
+    // weapons and staves are valid weapons
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+        return true;
+
+    // misc. items need to be wielded to be evoked
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type != MISC_RUNE_OF_ZOT)
+        return true;
+
+    // some missiles need to be wielded for spells
+    if (item.base_type == OBJ_MISSILES)
+    {
+        if (item.sub_type == MI_STONE)
+            return (player_knows_spell(SPELL_SANDBLAST));
+
+        if (item.sub_type == MI_ARROW)
+            return (player_knows_spell(SPELL_STICKS_TO_SNAKES));
+
+        return false;
+    }
+
+    // Boneshards
+    if (item.base_type == OBJ_CORPSES)
+    {
+        return (item.sub_type == CORPSE_SKELETON
+                && player_knows_spell(SPELL_BONE_SHARDS));
+    }
+
+    // Sublimation of Blood
+    if (!player_knows_spell(SPELL_SUBLIMATION_OF_BLOOD))
+        return false;
+
+    if (item.base_type == OBJ_FOOD)
+        return (item.sub_type == FOOD_CHUNK);
+
+    if (item.base_type == OBJ_POTIONS && item_type_known(item))
+    {
+       return (item.sub_type == POT_BLOOD
+               || item.sub_type == POT_BLOOD_COAGULATED);
+    }
+
+    return false;
+}
+
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 {
     if (inv_count() < 1)
@@ -210,21 +255,18 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 
     // If the swap slot has a bad (but valid) item in it,
     // the swap will be to bare hands.
-    const bool good_swap = (item_slot == PROMPT_GOT_SPECIAL)
-        || you.inv[item_slot].base_type == OBJ_WEAPONS
-        || you.inv[item_slot].base_type == OBJ_STAVES
-        || (you.inv[item_slot].base_type == OBJ_MISCELLANY
-            && you.inv[item_slot].sub_type != MISC_RUNE_OF_ZOT);
+    const bool good_swap = (item_slot == PROMPT_GOT_SPECIAL
+                            || _valid_weapon_swap(you.inv[item_slot]));
 
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
-    if (item_slot != PROMPT_GOT_SPECIAL &&
-        (!auto_wield || !is_valid_item(you.inv[item_slot]) || !good_swap))
+    if (item_slot != PROMPT_GOT_SPECIAL
+        && (!auto_wield || !is_valid_item(you.inv[item_slot]) || !good_swap))
     {
         if (!auto_wield)
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
-                            MT_INVLIST, OSEL_WIELD, 
+                            MT_INVLIST, OSEL_WIELD,
                             true, true, true, '-', NULL, OPER_WIELD);
         else
             item_slot = PROMPT_GOT_SPECIAL;
@@ -4534,21 +4576,36 @@ void tile_use_item(int idx, InvAction act)
     }
     else if (act == INV_USE2) // secondary item use
     {
-        if (you.inv[idx].base_type == OBJ_WEAPONS
-            && is_throwable(you.inv[idx], player_size(PSIZE_BODY))) 
+        const item_def item = you.inv[idx];
+
+        if (item.base_type == OBJ_WEAPONS
+            && is_throwable(item, player_size(PSIZE_BODY)))
         {
-            fire_thing(idx); // fire weapons
+            if (check_warning_inscriptions(item, OPER_FIRE))
+                fire_thing(idx); // fire weapons
         }
-        else if (you.inv[idx].base_type == OBJ_MISCELLANY
-                 || you.inv[idx].base_type == OBJ_STAVES
-                    && item_is_rod(you.inv[idx])) // unwield rods/misc. items
+        else if (item.base_type == OBJ_MISCELLANY
+                 || item.base_type == OBJ_STAVES
+                    && item_is_rod(item)) // unwield rods/misc. items
         {
             if (you.equip[EQ_WEAPON] == idx
-                && check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+                && check_warning_inscriptions(item, OPER_WIELD))
             {
                 wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
             }
         }
+        else if (you.equip[EQ_WEAPON] == idx
+                 && check_warning_inscriptions(item, OPER_WIELD))
+        {
+            wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+        }
+        else if (_valid_weapon_swap(item)
+                 && check_warning_inscriptions(item, OPER_WIELD))
+        {
+            // secondary wield for several spells and such
+            wield_weapon(true, idx); // wield
+        }
+
         return;
     }
     else if (act != INV_USE)
@@ -4557,7 +4614,7 @@ void tile_use_item(int idx, InvAction act)
     // Equipped?
     bool equipped = false;
     bool equipped_weapon = false;
-    for (unsigned int i=0; i< NUM_EQUIP;i++)
+    for (unsigned int i = 0; i < NUM_EQUIP; i++)
     {
         if (you.equip[i] == idx)
         {
@@ -4569,16 +4626,17 @@ void tile_use_item(int idx, InvAction act)
     }
 
     TileMoveInvCursor(-1);
+    const item_def item = you.inv[idx];
 
     // Special case for folks who are wielding something
     // that they shouldn't be wielding.
     // Note that this is only a problem for equipables
     // (otherwise it would only waste a turn)
     if (you.equip[EQ_WEAPON] == idx
-        && (you.inv[idx].base_type == OBJ_ARMOUR
-            || you.inv[idx].base_type == OBJ_JEWELLERY))
+        && (item.base_type == OBJ_ARMOUR
+            || item.base_type == OBJ_JEWELLERY))
     {
-        if (!check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+        if (!check_warning_inscriptions(item, OPER_WIELD))
             return;
 
         wield_weapon(true, PROMPT_GOT_SPECIAL);
@@ -4586,7 +4644,7 @@ void tile_use_item(int idx, InvAction act)
     }
 
     // Use it
-    const int type = you.inv[idx].base_type;
+    const int type = item.base_type;
     switch (type)
     {
         case OBJ_WEAPONS:
@@ -4595,82 +4653,83 @@ void tile_use_item(int idx, InvAction act)
             // wield any unwielded item of these types
             if (!equipped)
             {
-                if (check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+                if (check_warning_inscriptions(item, OPER_WIELD))
                     wield_weapon(true, idx);
                 return;
             }
             // evoke misc. items and rods
-            if (type == OBJ_MISCELLANY || item_is_rod(you.inv[idx]))
+            if (type == OBJ_MISCELLANY || item_is_rod(item))
             {
-                if (check_warning_inscriptions(you.inv[idx], OPER_EVOKE))
+                if (check_warning_inscriptions(item, OPER_EVOKE))
                     evoke_wielded();
                 return;
             }
             // unwield staves or weapons
-            if (check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+            if (check_warning_inscriptions(item, OPER_WIELD))
                 wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
             return;
-            
+
         case OBJ_MISSILES:
-            fire_thing(idx);
+            if (check_warning_inscriptions(item, OPER_FIRE))
+                fire_thing(idx);
             return;
 
         case OBJ_ARMOUR:
             if (equipped && !equipped_weapon)
             {
-                if (check_warning_inscriptions(you.inv[idx], OPER_TAKEOFF))
+                if (check_warning_inscriptions(item, OPER_TAKEOFF))
                     takeoff_armour(idx);
             }
-            else if (check_warning_inscriptions(you.inv[idx], OPER_WEAR))
+            else if (check_warning_inscriptions(item, OPER_WEAR))
                 wear_armour(idx);
             return;
 
         case OBJ_WANDS:
-            if (check_warning_inscriptions(you.inv[idx], OPER_ZAP))
+            if (check_warning_inscriptions(item, OPER_ZAP))
                 zap_wand(idx);
             return;
 
         case OBJ_CORPSES:
             if (you.species != SP_VAMPIRE
-                || you.inv[idx].sub_type == CORPSE_SKELETON
-                || food_is_rotten(you.inv[idx]))
+                || item.sub_type == CORPSE_SKELETON
+                || food_is_rotten(item))
             {
                 break;
             }
             // intentional fall-through for Vampires
         case OBJ_FOOD:
-            if (check_warning_inscriptions(you.inv[idx], OPER_EAT))
+            if (check_warning_inscriptions(item, OPER_EAT))
                 eat_food(false, idx);
             return;
 
         case OBJ_BOOKS:
-            if (you.inv[idx].sub_type == BOOK_MANUAL
-                || you.inv[idx].sub_type == BOOK_DESTRUCTION)
+            if (item.sub_type == BOOK_MANUAL
+                || item.sub_type == BOOK_DESTRUCTION)
             {
-                if (check_warning_inscriptions(you.inv[idx], OPER_READ))
+                if (check_warning_inscriptions(item, OPER_READ))
                     handle_read_book(idx);
             } // else it's a spellbook
-            else if (check_warning_inscriptions(you.inv[idx], OPER_MEMORISE))
+            else if (check_warning_inscriptions(item, OPER_MEMORISE))
                 learn_spell(idx);
             return;
-            
+
         case OBJ_SCROLLS:
-            if (check_warning_inscriptions(you.inv[idx], OPER_READ))
+            if (check_warning_inscriptions(item, OPER_READ))
                 read_scroll(idx);
             return;
 
         case OBJ_JEWELLERY:
             if (equipped && !equipped_weapon)
             {
-                if (check_warning_inscriptions(you.inv[idx], OPER_REMOVE))
+                if (check_warning_inscriptions(item, OPER_REMOVE))
                     remove_ring(idx);
             }
-            else if (check_warning_inscriptions(you.inv[idx], OPER_PUTON))
+            else if (check_warning_inscriptions(item, OPER_PUTON))
                 puton_ring(idx, false);
             return;
 
         case OBJ_POTIONS:
-            if (check_warning_inscriptions(you.inv[idx], OPER_QUAFF))
+            if (check_warning_inscriptions(item, OPER_QUAFF))
                 drink(idx);
             return;
 

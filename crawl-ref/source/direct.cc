@@ -1098,9 +1098,9 @@ static void describe_oos_square(int x, int y)
 
 bool in_vlos(int x, int y)
 {
-    return in_los_bounds(x, y)
-        && (env.show(view2show(coord_def(x, y)))
-            || coord_def(x, y) == grid2view(you.pos()));
+    return (in_los_bounds(x, y)
+            && (env.show(view2show(coord_def(x, y)))
+                || coord_def(x, y) == grid2view(you.pos())));
 }
 
 bool in_vlos(const coord_def &pos)
@@ -1115,28 +1115,30 @@ bool in_los(int x, int y)
 
 static bool find_monster( int x, int y, int mode, int range = -1)
 {
+    // target the player for friendly and general spells
     if ((mode == TARG_FRIEND || mode == TARG_ANY)
          && x == you.x_pos && y == you.y_pos)
     {
         return (true);
     }
-    
+
     // don't target out of range
     if (!_is_target_in_range(x, y, range))
         return (false);
-        
+
     const int targ_mon = mgrd[ x ][ y ];
-    
+
     // No monster or outside LOS.
     if (targ_mon == NON_MONSTER || !in_los(x,y))
         return (false);
-        
+
     // Unseen monsters in shallow water show a "strange disturbance"
     // (unless flying!)
     if (!player_monster_visible(&menv[targ_mon]))
     {
         // since you can't see the monster, assume it's not a friend
-        return (mode != TARG_FRIEND && grd[x][y] == DNGN_SHALLOW_WATER
+        return (mode != TARG_FRIEND
+                && grd[x][y] == DNGN_SHALLOW_WATER
                 && !mons_flies(&menv[targ_mon]));
     }
 

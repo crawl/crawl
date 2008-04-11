@@ -1132,6 +1132,15 @@ int player_spell_levels(void)
     return (sl);
 }
 
+bool player_knows_spell(int spell)
+{
+    for (int i = 0; i < 25; i++)
+        if (you.spells[i] == spell)
+            return true;
+
+    return false;
+}
+
 int player_res_magic(void)
 {
     int rm = 0;

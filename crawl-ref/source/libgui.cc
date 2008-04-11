@@ -21,9 +21,11 @@
 #include "describe.h"
 #include "direct.h"
 #include "files.h"
+#include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "it_use2.h"
 #include "externs.h"
 #include "guic.h"
 #include "message.h"
@@ -368,15 +370,18 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
         if (c == Options.tile_monster_col && mgrd[x][y] != NON_MONSTER
             && upd_tile)
         {
-            if (mons_friendly(&menv[mgrd[x][y]]))
+            const int grid = mgrd[x][y];
+            if (mons_friendly(&menv[grid]))
                 c = Options.tile_friendly_col; // colour friendly monsters
-            else if (mons_neutral(&menv[mgrd[x][y]])
+            else if (mons_neutral(&menv[grid])
                      && Options.tile_neutral_col != Options.tile_monster_col)
             {
                 c = Options.tile_neutral_col;  // colour neutral monsters
             }
+            else if (mons_class_flag( menv[grid].type, M_NO_EXP_GAIN ))
+                c = Options.tile_plant_col;
         }
-        
+
         if (c == Options.tile_floor_col || c == Options.tile_item_col)
         {
             if (is_exclude_root( coord_def(x,y) ))
@@ -1325,25 +1330,27 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
 
             if (itemlist_iflag[cx] & TILEI_FLAG_FLOOR)
             {
+                const item_def item = mitm[ix];
+
                 if (itemlist_key[cx])
                 {
                     desc = itemlist_key[cx];
                     desc +=  " - ";
                 }
-                desc += mitm[ix].name(DESC_NOCAP_A);
+                desc += item.name(DESC_NOCAP_A);
                 if (display_actions)
                     desc += EOL "[L-Click] Pick up (g)";
 
-                if (mitm[ix].base_type == OBJ_CORPSES
-                    && mitm[ix].sub_type != CORPSE_SKELETON
-                    && !food_is_rotten(mitm[ix]))
+                if (item.base_type == OBJ_CORPSES
+                    && item.sub_type != CORPSE_SKELETON
+                    && !food_is_rotten(item))
                 {
                     desc += EOL "[Shift-L-Click] Dissect (D)";
-                    
+
                     if (you.species == SP_VAMPIRE)
                         desc += EOL "[Shift-R-Click] Drink blood (e)";
                 }
-                else if (mitm[ix].base_type == OBJ_FOOD
+                else if (item.base_type == OBJ_FOOD
                          && you.species != SP_VAMPIRE
                          && you.species != SP_MUMMY)
                 {
@@ -1352,26 +1359,26 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
             }
             else // in inventory
             {
-                desc = you.inv[ix].name(DESC_INVENTORY_EQUIP);
+                const item_def item = you.inv[ix];
 
-                // FIX ME: Might have to allow wielding as a secondary action
-                // for arrows (Sticks to Snakes), skeletons (Boneshards),
-                // chunks/potions of blood (Sublimation of Blood)
+                desc = item.name(DESC_INVENTORY_EQUIP);
+
                 if (display_actions)
                 {
-                    int type = you.inv[ix].base_type;
+                    int type = item.base_type;
                     const bool equipped = itemlist_iflag[cx] & TILEI_FLAG_EQUIP;
+                    bool wielded = (you.equip[EQ_WEAPON] == ix);
                     desc += EOL;
-                    
+
                     if (_can_use_item(you.inv[ix], equipped))
                     {
                         desc += "[L-Click] ";
 
                         if (equipped)
                         {
-                            if (you.equip[EQ_WEAPON] == ix
+                            if (wielded
                                 && type != OBJ_MISCELLANY
-                                && !item_is_rod(you.inv[ix]))
+                                && !item_is_rod(item))
                             {
                                 if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
                                     || type == OBJ_WEAPONS || type == OBJ_STAVES)
@@ -1390,17 +1397,17 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                         case OBJ_STAVES:
                         case OBJ_MISCELLANY:
                             desc += "Wield (w)";
-                            if (is_throwable(you.inv[ix], player_size(PSIZE_BODY)))
+                            if (is_throwable(item, player_size(PSIZE_BODY)))
                                 desc += EOL "[Ctrl-L-Click] Fire (f)";
                             break;
                         case OBJ_WEAPONS + 18:
                             desc += "Unwield";
-                            if (is_throwable(you.inv[ix], player_size(PSIZE_BODY)))
+                            if (is_throwable(item, player_size(PSIZE_BODY)))
                                 desc += EOL "[Ctrl-L-Click] Fire (f)";
                             break;
                         case OBJ_MISCELLANY + 18:
-                            if (you.inv[ix].sub_type >= MISC_DECK_OF_ESCAPE
-                                && you.inv[ix].sub_type <= MISC_DECK_OF_DEFENCE)
+                            if (item.sub_type >= MISC_DECK_OF_ESCAPE
+                                && item.sub_type <= MISC_DECK_OF_DEFENCE)
                             {
                                 desc += "Draw a card (E)";
                                 desc += EOL "[Ctrl-L-Click] Unwield";
@@ -1425,35 +1432,92 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                             break;
                         case OBJ_MISSILES:
                             desc += "Fire (f)";
+
+                            if (wielded)
+                                desc += EOL "[Ctrl-L-Click] Unwield";
+                            else if ( item.sub_type == MI_STONE
+                                         && player_knows_spell(SPELL_SANDBLAST)
+                                      || item.sub_type == MI_ARROW
+                                         && player_knows_spell(
+                                                SPELL_STICKS_TO_SNAKES) )
+                            {
+                                // For Sandblast and Sticks to Snakes, respectively.
+                                desc += EOL "[Ctrl-L-Click] Wield (w)";
+                            }
                             break;
                         case OBJ_WANDS:
                             desc += "Zap (z)";
+                            if (wielded)
+                                desc += EOL "[Ctrl-L-Click] Unwield";
                             break;
                         case OBJ_BOOKS:
-                            if (item_type_known(you.inv[ix])
-                                && you.inv[ix].sub_type != BOOK_MANUAL
-                                && you.inv[ix].sub_type != BOOK_DESTRUCTION)
+                            if (item_type_known(item)
+                                && item.sub_type != BOOK_MANUAL
+                                && item.sub_type != BOOK_DESTRUCTION)
                             {
                                 desc += "Memorise (M)";
+                                if (wielded)
+                                    desc += EOL "[Ctrl-L-Click] Unwield";
                                 break;
                             }
                             // else fall-through
                         case OBJ_SCROLLS:
                             desc += "Read (r)";
+                            if (wielded)
+                                desc += EOL "[Ctrl-L-Click] Unwield";
                             break;
                         case OBJ_POTIONS:
                             desc += "Quaff (q)";
+                            // For Sublimation of Blood.
+                            if (wielded)
+                                desc += EOL "[Ctrl-L-Click] Unwield";
+                            else if ( item_type_known(item)
+                                      && (item.sub_type == POT_BLOOD
+                                          || item.sub_type
+                                                 == POT_BLOOD_COAGULATED)
+                                      && player_knows_spell(
+                                            SPELL_SUBLIMATION_OF_BLOOD) )
+                            {
+                                desc += EOL "[Ctrl-L-Click] Wield (w)";
+                            }
                             break;
                         case OBJ_FOOD:
                             desc += "Eat (e)";
+                            // For Sublimation of Blood.
+                            if (wielded)
+                                desc += EOL "[Ctrl-L-Click] Unwield";
+                            else if (item.sub_type == FOOD_CHUNK
+                                     && player_knows_spell(
+                                            SPELL_SUBLIMATION_OF_BLOOD))
+                            {
+                                desc += EOL "[Ctrl-L-Click] Wield (w)";
+                            }
                             break;
                         case OBJ_CORPSES:
                             if (you.species == SP_VAMPIRE)
                                 desc += "Drink blood (e)";
+
+                            if (wielded)
+                            {
+                                if (you.species == SP_VAMPIRE)
+                                    desc += EOL;
+                                desc += "[Ctrl-L-Click] Unwield";
+                            }
                             break;
                         default:
                             desc += "Use";
                         }
+                    }
+
+                    // For Boneshards.
+                    // special handling since skeletons have no primary action
+                    if (item.base_type == OBJ_CORPSES
+                        && item.sub_type == CORPSE_SKELETON)
+                    {
+                        if (wielded)
+                            desc += EOL "[Ctrl-L-Click] Unwield";
+                        else if (player_knows_spell(SPELL_BONE_SHARDS))
+                            desc += EOL "[Ctrl-L-Click] Wield (w)";
                     }
 
                     desc += EOL "[R-Click] Info";

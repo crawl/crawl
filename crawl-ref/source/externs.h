@@ -1778,6 +1778,7 @@ public:
     char        tile_monster_col;
     char        tile_neutral_col;
     char        tile_friendly_col;
+    char        tile_plant_col;
     char        tile_item_col;
     char        tile_unseen_col;
     char        tile_floor_col;
