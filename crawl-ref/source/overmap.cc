@@ -643,7 +643,7 @@ void annotate_level()
     mpr( "Set level annotation to what? ", MSGCH_PROMPT );
 
     char buf[77];
-    get_input_line( buf, sizeof(buf) );
+    cancelable_get_line( buf, sizeof(buf) );
 
     if (strlen(buf) == 0)
     {
