@@ -1151,63 +1151,61 @@ bool bless_follower(monsters* follower,
         }
     }
 
-    // Either remove harmful ailments from a monster...
-    if (coinflip() && blessing_balms(mon))
+    switch (god)
     {
-        result = "divine balms";
-        goto blessing_done;
-    }
-    else
-    {
-        switch (god)
+        case GOD_SHINING_ONE:
         {
-            case GOD_SHINING_ONE:
-            {
-                // ...make it friendly if it's charmed, optionally
-                // extending its stay if it's abjurable.  If neither is
-                // possible, deliberately fall through.
-                bool friendliness = tso_blessing_friendliness(mon);
-                bool more_time = false;
+            // Make a monster friendly if it's charmed, optionally
+            // extending its stay if it's abjurable.  If neither is
+            // possible, deliberately fall through.
+            bool friendliness = tso_blessing_friendliness(mon);
+            bool more_time = false;
 
-                if (!friendliness || coinflip())
-                    more_time = tso_blessing_extend_stay(mon);
+            if (!friendliness || coinflip())
+                more_time = tso_blessing_extend_stay(mon);
 
-                if (friendliness && more_time)
-                    result = "friendliness and more time in this world";
-                else if (friendliness)
-                    result = "friendliness";
-                else if (more_time)
-                    result = "more time in this world";
+            if (friendliness && more_time)
+                result = "friendliness and more time in this world";
+            else if (friendliness)
+                result = "friendliness";
+            else if (more_time)
+                result = "more time in this world";
 
-                if (friendliness || more_time)
-                    break;
-            }
-
-            case GOD_BEOGH:
-            {
-                // ...or give it full healing, optionally giving it one
-                // extra hit point.
-                bool healing = blessing_healing(mon, false);
-                bool vigour = false;
-
-                if (!healing || coinflip())
-                    vigour = blessing_healing(mon, true);
-
-                if (healing && vigour)
-                    result = "healing and extra vigour";
-                else if (healing)
-                    result = "healing";
-                else if (vigour)
-                    result = "extra vigour";
-                else
-                    return false;
-
-                break;
-            }
-
-            default:
+            if (friendliness || more_time)
                 break;
         }
+
+        case GOD_BEOGH:
+        {
+            // Remove harmful ailments from a monster, or give it full
+            // healing, optionally giving it one extra hit point, if
+            // possible.
+            if (coinflip() && blessing_balms(mon))
+            {
+                result = "divine balms";
+                goto blessing_done;
+            }
+
+            bool healing = blessing_healing(mon, false);
+            bool vigour = false;
+
+            if (!healing || coinflip())
+                vigour = blessing_healing(mon, true);
+
+            if (healing && vigour)
+                result = "healing and extra vigour";
+            else if (healing)
+                result = "healing";
+            else if (vigour)
+                result = "extra vigour";
+            else
+                return false;
+
+            break;
+        }
+
+        default:
+            break;
     }
 
 blessing_done:
