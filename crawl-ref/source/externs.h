@@ -76,6 +76,7 @@ struct item_def;
 class melee_attack;
 struct coord_def;
 class level_id;
+class player_quiver;
 
 class actor
 {
@@ -755,6 +756,7 @@ public:
   std::set<std::string> uniq_map_names;
 
   PlaceInfo global_info;
+  player_quiver* m_quiver;
 
 protected:
   FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;

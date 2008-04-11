@@ -43,6 +43,7 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
+#include "quiver.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
@@ -884,11 +885,18 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         const char *prompt = get_spell_target_prompt(spell);
         if (spell == SPELL_PORTAL_PROJECTILE)
         {
-            const int idx = get_current_fire_item();
-            if ( idx == ENDOFPACK )
+            const item_def* item;
+            int idx;
+            you.m_quiver->get_desired_item(&item, &idx);
+            if ( item == NULL )
             {
                 mpr("No suitable missiles.");
                 return (SPRET_ABORT);
+            }
+            else if ( idx == -1 )
+            {
+                mpr("No missiles left.");
+                return SPRET_ABORT;
             }
             mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
                                you.inv[idx].name(DESC_NOCAP_YOUR).c_str());

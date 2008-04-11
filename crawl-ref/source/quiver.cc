@@ -21,9 +21,9 @@
 // bool is_valid_item( const item_def &item )
 
 static int _get_pack_slot(const item_def&);
-static ammo_t _get_weapon_ammo_type();
-static bool _item_matches(const item_def &item, fire_type types);
-
+static ammo_t _get_weapon_ammo_type(const item_def*);
+static bool _item_matches(const item_def &item, fire_type types, const item_def* launcher);
+static bool _items_similar(const item_def& a, const item_def& b);
 // ----------------------------------------------------------------------
 // player_quiver
 // ----------------------------------------------------------------------
@@ -42,28 +42,31 @@ void player_quiver::get_desired_item(const item_def** item_out, int* slot_out) c
 {
     if (m_last_used_type == AMMO_INVALID)
     {
-        *item_out = NULL;
-        *slot_out = -1;
+        if (item_out) *item_out = NULL;
+        if (slot_out) *slot_out = -1;
     }
     else
     {
-        *slot_out = _get_pack_slot(m_last_used_of_type[m_last_used_type]);
-        if (*slot_out == -1)
+        const int slot = _get_pack_slot(m_last_used_of_type[m_last_used_type]);
+        if (slot == -1)
         {
             // Not in inv, but caller can at least get the type of the item.
-            *item_out = &m_last_used_of_type[m_last_used_type];
+            if (item_out) *item_out = &m_last_used_of_type[m_last_used_type];
         }
         else
         {
             // Return the item in inv, since it will have an accurate count
-            *item_out = &you.inv[*slot_out];
+            if (item_out) *item_out = &you.inv[slot];
         }
+        if (slot_out) *slot_out = slot;
     }
 }
 
 // Return inv slot of item that should be fired by default.
-// This is the first item displayed in the fire interface.
-int player_quiver::get_default_slot(std::string& no_item_reason) const
+// This differs from get_desired_item; that method can return
+// an item that is not in inventory, while this one cannot.
+// If no item can be found, return the reason why.
+int player_quiver::get_fire_item(std::string* no_item_reason) const
 {
     int slot;
     const item_def* desired_item;
@@ -74,7 +77,7 @@ int player_quiver::get_default_slot(std::string& no_item_reason) const
     if (slot == -1)
     {
         std::vector<int> order;
-        _get_fire_order(order, false);
+        _get_fire_order(order, false, you.weapon());
         if (order.size())
             slot = order[0];
     }
@@ -83,23 +86,27 @@ int player_quiver::get_default_slot(std::string& no_item_reason) const
     if (slot == -1)
     {
         std::vector<int> full_fire_order;
-        _get_fire_order(full_fire_order, true);
-        if (full_fire_order.size() == 0)
+        _get_fire_order(full_fire_order, true, you.weapon());
+        if (no_item_reason == NULL)
         {
-            no_item_reason = "No suitable missiles.";
+            // nothing
+        }
+        else if (full_fire_order.size() == 0)
+        {
+            *no_item_reason = "No suitable missiles.";
         }            
         else
         {
             const int skipped_item = full_fire_order[0];
             if (skipped_item < Options.fire_items_start)
             {
-                no_item_reason = make_stringf(
+                *no_item_reason = make_stringf(
                     "Nothing suitable (fire_items_start = '%c').",
                     index_to_letter(Options.fire_items_start));
             }
             else
             {
-                no_item_reason = make_stringf(
+                *no_item_reason = make_stringf(
                     "Nothing suitable (ignored '=f'-inscribed item on '%c').",
                     index_to_letter(skipped_item));
             }
@@ -119,40 +126,123 @@ void player_quiver::on_item_fired(const item_def& item)
     
     if (weapon && item.launched_by(*weapon))
     {
-        const ammo_t t = _get_weapon_ammo_type();
+        const ammo_t t = _get_weapon_ammo_type(weapon);
         m_last_used_of_type[t] = item;
-        m_last_used_of_type[t].quantity = 1;    // ensure it's valid
+        m_last_used_of_type[t].quantity = 1;    // 0 makes it invalid :(
+        m_last_used_type = t;
     }
     else
     {
         m_last_used_of_type[AMMO_THROW] = item;
         m_last_used_of_type[AMMO_THROW].quantity = 1;
+        m_last_used_type = AMMO_THROW;
     }
 }
 
-// Notification that ltem was fired with 'f' 't'
-void player_quiver::on_item_thrown(const item_def& item)
+// Notification that ltem was fired with 'f' 'i'
+void player_quiver::on_item_fired_fi(const item_def& item)
 {
-    m_last_used_of_type[AMMO_THROW] = item;
-    m_last_used_of_type[AMMO_THROW].quantity = 1;
+    // currently no difference
+    on_item_fired(item);
 }
 
+// Called when the player might have switched weapons, or might have
+// picked up something interesting.
 void player_quiver::on_weapon_changed()
 {
-    m_last_used_type = _get_weapon_ammo_type();
+    // Only switch m_last_used_type if weapon really changed
+    const item_def* weapon = you.weapon();
+    if (weapon == NULL)
+    {
+        if (m_last_weapon.base_type != OBJ_UNASSIGNED)
+        {
+            m_last_weapon.base_type = OBJ_UNASSIGNED;
+            m_last_used_type = AMMO_THROW;
+        }
+    }
+    else
+    {
+        if (! _items_similar(*weapon, m_last_weapon))
+        {
+            m_last_weapon = *weapon;
+            m_last_used_type = _get_weapon_ammo_type(weapon);
+        }
+    }
+                
+    _maybe_fill_empty_slot();
 }
 
-void player_quiver::_get_fire_order(std::vector<int>& order, bool ignore_inscription_etc) const
+void player_quiver::on_inv_quantity_change(int slot, int amt)
+{
+    if (m_last_used_of_type[m_last_used_type].base_type == OBJ_UNASSIGNED)
+    {
+        // Empty quiver.  Maybe we can fill it now?
+        _maybe_fill_empty_slot();
+        you.quiver_change = true;
+    }
+    else if (m_last_used_of_type[m_last_used_type].base_type !=
+             you.inv[slot].base_type)
+    {
+        // Not our current stack; don't bother
+    }
+    else
+    {
+        // Maybe matches current stack.  Redraw if so.
+        int qv_slot; get_desired_item(NULL, &qv_slot);
+        if (qv_slot == slot)
+            you.quiver_change = true;
+    }
+}
+
+// If current quiver slot is empty, fill it with something useful.
+void player_quiver::_maybe_fill_empty_slot()
+{
+    const item_def* weapon = you.weapon();
+    const ammo_t slot = _get_weapon_ammo_type(weapon);
+    if (! is_valid_item(m_last_used_of_type[slot]))
+    {
+        // const launch_retval desired_ret =
+        //     (weapon && is_range_weapon(*weapon)) ? LRET_LAUNCHED : LRET_THROWN;
+        const launch_retval desired_ret =
+            (slot == AMMO_THROW ? LRET_THROWN : LRET_LAUNCHED);
+        std::vector<int> order;  _get_fire_order(order, false, weapon);
+        for (unsigned int i=0; i<order.size(); i++)
+        {
+            if (is_launched(&you, weapon, you.inv[order[i]]) == desired_ret)
+            {
+                m_last_used_of_type[slot] = you.inv[order[i]];
+                m_last_used_of_type[slot].quantity = 1;
+                break;
+            }
+        }
+    }
+}
+
+void player_quiver::get_fire_order(std::vector<int>& v) const
+{
+    _get_fire_order(v, false, you.weapon());
+}
+
+// Get a sorted list of items to show in the fire interface.
+// 
+// If ignore_inscription_etc, ignore =f and Options.fire_items_start.
+// This is used for generating informational error messages, when the
+// fire order is empty.
+//
+// launcher determines what items match the 'launcher' fire_order type.
+void player_quiver::_get_fire_order(
+    std::vector<int>& order,
+    bool ignore_inscription_etc,
+    const item_def* launcher) const
 {
     const int inv_start = (ignore_inscription_etc ? 0 : Options.fire_items_start);
 
     // If in a net, cannot throw anything, and can only launch from blowgun
     if (you.attribute[ATTR_HELD])
     {
-        const item_def *weapon = you.weapon();
-        if (weapon && weapon->sub_type == WPN_BLOWGUN)
+        if (launcher && launcher->sub_type == WPN_BLOWGUN)
             for (int i_inv=inv_start; i_inv<ENDOFPACK; i_inv++)
-                if (is_valid_item(you.inv[i_inv]) && you.inv[i_inv].launched_by(*weapon))
+                if (is_valid_item(you.inv[i_inv]) && you.inv[i_inv].launched_by(*launcher))
                     order.push_back(i_inv);
         return;
     }
@@ -176,7 +266,7 @@ void player_quiver::_get_fire_order(std::vector<int>& order, bool ignore_inscrip
              i_flags<Options.fire_order.size();
              i_flags++)
         {
-            if (_item_matches(item, (fire_type)Options.fire_order[i_flags]))
+            if (_item_matches(item, (fire_type)Options.fire_order[i_flags], launcher))
             {
                 order.push_back( (i_flags<<16) | (i_inv & 0xffff) );
                 break;
@@ -198,9 +288,9 @@ void player_quiver::_get_fire_order(std::vector<int>& order, bool ignore_inscrip
 
 // Helper for _get_fire_order
 // types may actually contain more than one fire_type
-static bool _item_matches(const item_def &item, fire_type types)
+static bool _item_matches(const item_def &item, fire_type types, const item_def* launcher)
 {
-    ASSERT(!is_valid_item(item));
+    ASSERT(is_valid_item(item));
 
     if (types & FIRE_INSCRIBED)
         if (item.inscription.find("+f", 0) != std::string::npos)
@@ -221,8 +311,7 @@ static bool _item_matches(const item_def &item, fire_type types)
 
         if (types & FIRE_LAUNCHER)
         {
-            const item_def *weapon = you.weapon();
-            if (weapon && item.launched_by(*weapon))
+            if (launcher && item.launched_by(*launcher))
                 return (true);
         }
     }
@@ -256,7 +345,8 @@ static int _get_pack_slot(const item_def& item)
 
     for (int i=0; i<ENDOFPACK; i++)
     {
-        if (items_stack(item, you.inv[i]))
+        const item_def& inv_item = you.inv[i];
+        if (inv_item.quantity && _items_similar(item, you.inv[i]))
             return i;
     }
 
@@ -266,31 +356,33 @@ static int _get_pack_slot(const item_def& item)
 
 // Return the type of ammo used by the player's equipped weapon,
 // or AMMO_THROW if it's not a launcher.
-static ammo_t _get_weapon_ammo_type()
+static ammo_t _get_weapon_ammo_type(const item_def* weapon)
 {
-    const int wielded = you.equip[EQ_WEAPON];
-    if (wielded == -1)
-        return (AMMO_THROW);
+    if (weapon == NULL)
+        return AMMO_THROW;
+    if (weapon->base_type != OBJ_WEAPONS)
+        return AMMO_THROW;
 
-    item_def &weapon = you.inv[wielded];
-
-    if (weapon.base_type != OBJ_WEAPONS)
-        return (AMMO_THROW);
-
-    switch (weapon.sub_type)
+    switch (weapon->sub_type)
     {
         case WPN_BLOWGUN:
-            return (AMMO_BLOWGUN);
+            return AMMO_BLOWGUN;
         case WPN_SLING:
-            return (AMMO_SLING);
+            return AMMO_SLING;
         case WPN_BOW:
         case WPN_LONGBOW:
-            return (AMMO_BOW);
+            return AMMO_BOW;
         case WPN_CROSSBOW:
-            return (AMMO_CROSSBOW);
+            return AMMO_CROSSBOW;
         case WPN_HAND_CROSSBOW:
-            return (AMMO_HAND_CROSSBOW);
+            return AMMO_HAND_CROSSBOW;
         default:
-            return (AMMO_THROW);
+            return AMMO_THROW;
     }
+}
+
+static bool _items_similar(const item_def& a, const item_def& b)
+{
+    // this is a reasonable implementation for now
+    return items_stack(a, b, true);
 }

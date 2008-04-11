@@ -44,6 +44,7 @@
 #include "mstuff2.h"
 #include "ouch.h"
 #include "player.h"
+#include "quiver.h"
 #include "randart.h"
 #include "religion.h"
 #include "skills.h"
@@ -2424,10 +2425,17 @@ bool cast_portal_projectile(int pow, bolt& beam)
         return 0;
     }
 
-    const int idx = get_current_fire_item();
-    if ( idx == ENDOFPACK )
+    int idx;
+    const item_def* item;
+    you.m_quiver->get_desired_item(&item, &idx);
+    if ( item == NULL )
     {
         mpr("No suitable missiles.");
+        return false;
+    }
+    else if ( idx == -1 )
+    {
+        mpr("No missiles left.");
         return false;
     }
 

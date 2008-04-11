@@ -63,6 +63,7 @@
 #include "overmap.h"
 #include "place.h"
 #include "player.h"
+#include "quiver.h"
 #include "randart.h"
 #include "religion.h"
 #include "shopping.h"
@@ -243,8 +244,7 @@ bool dec_inv_item_quantity( int obj, int amount )
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
 
-    if (you.quiver[get_quiver_type()] == obj)
-        you.quiver_change = true;
+    you.m_quiver->on_inv_quantity_change(obj, amount);
 
     if (you.inv[obj].quantity <= amount)
     {
@@ -315,9 +315,7 @@ void inc_inv_item_quantity( int obj, int amount )
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
         
-    if (you.quiver[get_quiver_type()] == obj)
-        you.quiver_change = true;
-
+    you.m_quiver->on_inv_quantity_change(obj, amount);
     you.inv[obj].quantity += amount;
     burden_change();
 }

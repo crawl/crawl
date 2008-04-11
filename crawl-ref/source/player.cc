@@ -55,6 +55,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
+#include "quiver.h"
 #include "randart.h"
 #include "religion.h"
 #include "skills.h"
@@ -5287,30 +5288,41 @@ bool actor::can_pass_through(const coord_def &c) const
 // player
 
 player::player()
+    : m_quiver(0)
 {
     init();
-    kills = new KillMaster();
+    kills = new KillMaster();   // why isn't this done in init()?
 }
 
 player::player(const player &other)
+    : m_quiver(0)
 {
     init();
+
+    // why doesn't this do a copy_from?
+    player_quiver* saved_quiver = m_quiver;
     *this = other;
+    m_quiver = saved_quiver;
 
     kills = new KillMaster(*(other.kills));
+    *m_quiver = *(other.m_quiver);
 }
 
+// why is this not called "operator="?
 void player::copy_from(const player &other)
 {
     if (this == &other)
         return;
 
-    KillMaster *_kills = kills;
+    KillMaster *saved_kills = kills;
+    player_quiver* saved_quiver = m_quiver;
 
     *this = other;
 
-    kills  = _kills;
+    kills  = saved_kills;
     *kills = *(other.kills);
+    m_quiver = saved_quiver;
+    *m_quiver = *(other.m_quiver);
 }
 
 
@@ -5478,6 +5490,9 @@ void player::init()
         non_branch_info[i].branch     = -1;
         non_branch_info[i].assert_validity();
     }
+
+    if (m_quiver) delete m_quiver;
+    m_quiver = new player_quiver;
 }
 
 player_save_info player_save_info::operator=(const player& rhs)

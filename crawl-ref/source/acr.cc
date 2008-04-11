@@ -115,6 +115,7 @@
 #include "output.h"
 #include "overmap.h"
 #include "player.h"
+#include "quiver.h"
 #include "randart.h"
 #include "religion.h"
 #include "shopping.h"
@@ -2383,16 +2384,13 @@ void process_command( command_type cmd )
 
     case CMD_CYCLE_QUIVER_FORWARD:
     {
-        if (Options.fire_quiver_best)
+        int cur;
+        you.m_quiver->get_desired_item(NULL, &cur);
+        const int next = get_next_fire_item(cur, +1);
+        if (next != -1)
         {
-            mpr("Use fire_quiver_best=false if you want manual quiver control.");
-            break;
-        }
-        const int cur = you.quiver[get_quiver_type()];
-        if (cur != ENDOFPACK)
-        {
-            const int next = get_next_fire_item(cur, +1);
-            you.quiver[get_quiver_type()] = next;
+            // kind of a hacky way to get quiver to change
+            you.m_quiver->on_item_fired(you.inv[next]);
             you.quiver_change = true;
         }
         break;

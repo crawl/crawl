@@ -81,6 +81,7 @@
 #include "output.h"
 #include "place.h"
 #include "player.h"
+#include "quiver.h"
 #include "randart.h"
 #include "religion.h"
 #include "skills.h"
@@ -2585,7 +2586,7 @@ static bool fsim_ranged_combat(FILE *out, int wskill, int mi,
     long hits = 0L;
     int maxdam = 0;
 
-    const int thrown = missile_slot == -1? get_current_fire_item() : missile_slot;
+    const int thrown = missile_slot == -1 ? you.m_quiver->get_fire_item() : missile_slot;
     if (thrown == ENDOFPACK || thrown == -1)
     {
         mprf("No suitable missiles for combat simulation.");
@@ -2737,9 +2738,9 @@ static std::string fsim_weapon(int missile_slot)
             if (is_range_weapon(weapon))
             {
                 const int missile = 
-                    missile_slot == -1? get_current_fire_item() :
+                    missile_slot == -1? you.m_quiver->get_fire_item() :
                     missile_slot;
-                if (missile < ENDOFPACK)
+                if (missile < ENDOFPACK && missile >= 0)
                     return item_buf + " with "
                         + you.inv[missile].name(DESC_PLAIN);
             }

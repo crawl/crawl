@@ -42,6 +42,7 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "quiver.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -511,16 +512,26 @@ void list_weapons(void)
     // Now we print out the current default fire weapon
     wstring = "Firing    : ";
 
-    const int item = get_current_fire_item();
+    const item_def* item;
+    int slot;
+    you.m_quiver->get_desired_item(&item, &slot);
 
     colour = MSGCOL_BLACK;
-    if (item == ENDOFPACK)
+    if (slot == -1 && !is_valid_item(*item))
+    {
         wstring += "    nothing";
+    }
+    else if (slot == -1)
+    {
+        wstring += "-) ";
+        wstring += you.inv[slot].name(DESC_PLAIN);
+        wstring += " (empty)";
+    }
     else
     {
-        wstring += you.inv[item].name(DESC_INVENTORY_EQUIP);
+        wstring += you.inv[slot].name(DESC_INVENTORY_EQUIP);
         colour = menu_colour(wstring,
-                             menu_colour_item_prefix(you.inv[item]),
+                             menu_colour_item_prefix(you.inv[slot]),
                              "equip");
     }
 

@@ -61,6 +61,7 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "quiver.h"
 #include "randart.h"
 #include "religion.h"
 #include "shopping.h"
@@ -87,7 +88,6 @@ static bool _handle_enchant_armour( int item_slot = -1 );
 
 static int  _fire_prompt_for_item(std::string& err);
 static bool _fire_validate_item(int selected, std::string& err);
-static std::string _fire_get_noitem_reason();
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -1199,145 +1199,14 @@ bool takeoff_armour(int item)
     return true;
 }                               // end takeoff_armour()
 
-// Helper for _get_fire_order
-static bool _fire_item_matches(const item_def &item, unsigned fire_type)
-{
-    if (!is_valid_item(item))
-        return (false);
-
-    if (you.attribute[ATTR_HELD])
-    {
-        if (item.base_type == OBJ_MISSILES)
-        {
-            const item_def *weapon = you.weapon();
-            if (weapon && weapon->sub_type == WPN_BLOWGUN
-                && item.launched_by(*weapon))
-            {
-                return (true);
-            }
-        }
-        return (false);
-    }
-
-    if (fire_type & FIRE_INSCRIBED)
-        if (item.inscription.find("+f", 0) != std::string::npos)
-            return true;
-
-    if (item.base_type == OBJ_MISSILES)
-    {
-        if ((fire_type & FIRE_DART) && item.sub_type == MI_DART)
-            return (true);
-        if ((fire_type & FIRE_STONE) && item.sub_type == MI_STONE)
-            return (true);
-        if ((fire_type & FIRE_JAVELIN) && item.sub_type == MI_JAVELIN)
-            return (true);
-        if ((fire_type & FIRE_ROCK) && item.sub_type == MI_LARGE_ROCK)
-            return (true);
-        if ((fire_type & FIRE_NET) && item.sub_type == MI_THROWING_NET)
-            return (true);
-
-        if (fire_type & FIRE_LAUNCHER)
-        {
-            const item_def *weapon = you.weapon();
-            if (weapon && item.launched_by(*weapon))
-                return (true);
-        }
-    }
-    else if (item.base_type == OBJ_WEAPONS
-             && is_throwable(item, you.body_size()))
-    {
-        if ((fire_type & FIRE_RETURNING) && item.special == SPWPN_RETURNING
-             && item_ident(item, ISFLAG_KNOW_TYPE))
-        {
-            return (true);
-        }
-        if ((fire_type & FIRE_DAGGER) && item.sub_type == WPN_DAGGER)
-            return (true);
-        if ((fire_type & FIRE_SPEAR) && item.sub_type == WPN_SPEAR)
-            return (true);
-        if ((fire_type & FIRE_HAND_AXE) && item.sub_type == WPN_HAND_AXE)
-            return (true);
-        if ((fire_type & FIRE_CLUB) && item.sub_type == WPN_CLUB)
-            return (true);
-    }
-    return (false);
-}
-
-quiver_type get_quiver_type()
-{
-    const int wielded = you.equip[EQ_WEAPON];
-    if (wielded == -1)
-        return (QUIVER_THROW);
-
-    item_def &weapon = you.inv[wielded];
-
-    if (weapon.base_type != OBJ_WEAPONS)
-        return (QUIVER_THROW);
-
-    switch (weapon.sub_type)
-    {
-        case WPN_BLOWGUN:
-            return (QUIVER_BLOWGUN);
-        case WPN_SLING:
-            return (QUIVER_SLING);
-        case WPN_BOW:
-        case WPN_LONGBOW:
-            return (QUIVER_BOW);
-        case WPN_CROSSBOW:
-            return (QUIVER_CROSSBOW);
-        case WPN_HAND_CROSSBOW:
-            return (QUIVER_HAND_CROSSBOW);
-        default:
-            return (QUIVER_THROW);
-    }
-
-}
-
-// Not free, but not a performance issue either.
-static bool Hack_Ignore_F_Inscription = false;    // only for "why can't I fire" feedback
-static void _get_fire_order(std::vector<int>& fire_order)
-{
-    for (int i_inv=Options.fire_items_start; i_inv<ENDOFPACK; i_inv++)
-    {
-        const item_def& item = you.inv[i_inv];
-        if (!is_valid_item(item))
-            continue;
-        if (you.equip[EQ_WEAPON] == i_inv)
-            continue;
-
-        // =f prevents item from being in fire order
-        if (!Hack_Ignore_F_Inscription &&
-            strstr(item.inscription.c_str(), "=f"))
-            continue;
-
-        for (unsigned int i_flags=0;
-             i_flags<Options.fire_order.size();
-             i_flags++)
-        {
-            if (_fire_item_matches(item, Options.fire_order[i_flags]))
-            {
-                fire_order.push_back( (i_flags<<16) | (i_inv & 0xffff) );
-                break;
-            }
-        }
-    }
-
-    std::sort(fire_order.begin(), fire_order.end());
-
-    for (unsigned int i=0; i<fire_order.size(); i++)
-    {
-        fire_order[i] &= 0xffff;
-    }
-}
-
 int get_next_fire_item(int current, int direction)
 {
     std::vector<int> fire_order;
-    _get_fire_order(fire_order);
+    you.m_quiver->get_fire_order(fire_order);
 
     if (fire_order.size() == 0)
-        return ENDOFPACK;
-    if (current == ENDOFPACK)
+        return -1;
+    if (current == -1)
         return fire_order[0];
 
     for (unsigned i=0; i<fire_order.size(); i++)
@@ -1351,31 +1220,13 @@ int get_next_fire_item(int current, int direction)
     return fire_order[0];
 }
 
-int get_current_fire_item()
-{
-    std::vector<int> fire_order;
-    _get_fire_order(fire_order);
-
-    if (fire_order.size() == 0)
-        return ENDOFPACK;
-
-    if (! Options.fire_quiver_best)
-    {
-        const int q = you.quiver[get_quiver_type()];
-        for (unsigned i = 0; i < fire_order.size(); i++)
-            if (q == fire_order[i])
-                return q;
-    }
-    return fire_order[0];
-}
-
 class fire_target_behaviour : public targeting_behaviour
 {
 public:
     fire_target_behaviour()
-        : item(ENDOFPACK), selected_from_inventory(false), need_prompt(false)
+        : m_slot(-1), selected_from_inventory(false), need_prompt(false)
     {
-        item = get_current_fire_item();
+        m_slot = you.m_quiver->get_fire_item(&m_noitem_reason);
     }
 
     // targeting_behaviour API
@@ -1385,15 +1236,16 @@ public:
     void message_ammo_prompt(const std::string* pre_text=0);
 
 public:
-    int item;
+    int m_slot;
+    std::string m_noitem_reason;
     bool selected_from_inventory;
     bool need_prompt;
 };
 
 void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
 {
-    const int next_item = get_next_fire_item(item, +1);
-    bool no_other_items = (next_item == ENDOFPACK || next_item == item);
+    const int next_item = get_next_fire_item(m_slot, +1);
+    bool no_other_items = (next_item == -1 || next_item == m_slot);
             
     mesclr();
 
@@ -1401,11 +1253,11 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
         mpr(pre_text->c_str());
 
     std::ostringstream msg;
-    if (item == ENDOFPACK)
+    if (m_slot == -1)
         msg << "Firing ";
     else
     {
-        const item_def& item_def = you.inv[item];
+        const item_def& item_def = you.inv[m_slot];
         const launch_retval projected = is_launched(&you, you.weapon(), item_def);
             
         if (projected == LRET_FUMBLED)
@@ -1421,13 +1273,15 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
     msg << (no_other_items ? "(i - inventory)" : "(i - inventory. (,) - cycle)")
         << ": ";
 
-    if (item == ENDOFPACK)
-        msg << "<red>" << _fire_get_noitem_reason() << "</red>";
+    if (m_slot == -1)
+    {
+        msg << "<red>" << m_noitem_reason << "</red>";
+    }
     else
     {
         const char* color = (selected_from_inventory ? "grey" : "w");
         msg << "<" << color << ">"
-            << you.inv[item].name(DESC_INVENTORY_EQUIP)
+            << you.inv[m_slot].name(DESC_INVENTORY_EQUIP)
             << "</" << color << ">";
     }
 
@@ -1457,10 +1311,10 @@ command_type fire_target_behaviour::get_command(int key)
       case CONTROL('P'):
       {
           const int direction = (key == CONTROL('P') || key == ')') ? -1 : +1;
-          const int next = get_next_fire_item(item, direction);
-          if (next != item && next != ENDOFPACK)
+          const int next = get_next_fire_item(m_slot, direction);
+          if (next != m_slot && next != -1)
           {
-              item = next;
+              m_slot = next;
               selected_from_inventory = false;
           }
           // Do this stuff unconditionally to make the prompt redraw
@@ -1472,10 +1326,10 @@ command_type fire_target_behaviour::get_command(int key)
       {
           std::string err;
           const int selected = _fire_prompt_for_item(err);
-          if (selected != ENDOFPACK &&
+          if (selected >= 0 &&
               _fire_validate_item(selected, err))
           {
-              item = selected;
+              m_slot = selected;
               selected_from_inventory = true;
           }
           message_ammo_prompt( err.length() ? &err : NULL );
@@ -1493,27 +1347,27 @@ command_type fire_target_behaviour::get_command(int key)
     return targeting_behaviour::get_command(key);
 }
 
-static bool _fire_choose_item_and_target(int& item, dist& target)
+static bool _fire_choose_item_and_target(int& slot, dist& target)
 {
     fire_target_behaviour beh;
-    const bool was_chosen = (item != -1);
+    const bool was_chosen = (slot != -1);
 
     if (was_chosen)
     {
-        if (you.equip[EQ_WEAPON] == item
-            && item_cursed(you.inv[item]))
+        if (you.equip[EQ_WEAPON] == slot
+            && item_cursed(you.inv[slot]))
         {
             mpr("You can't fire a cursed item!");
             return false;
         }
-        beh.item = item; // force item to be the prechosen one
+        beh.m_slot = slot; // force item to be the prechosen one
     }
 
     beh.message_ammo_prompt();
     message_current_target();  // XXX: this stuff should be done by direction()
     direction( target, DIR_NONE, TARG_ENEMY, -1, false, true, NULL, &beh );
     
-    if (beh.item == ENDOFPACK)
+    if (beh.m_slot == -1)
     {
         canned_msg(MSG_OK);
         return false;
@@ -1528,22 +1382,22 @@ static bool _fire_choose_item_and_target(int& item, dist& target)
     // If ammo was chosen via 'fi', it's not supposed to get quivered.
     // Otherwise, if the user chose different ammo, quiver it.
     // Same for items selected in tile mode.
-    if (was_chosen || beh.item != item)
+    if (was_chosen || ! beh.selected_from_inventory)
     {
-        item = beh.item;
-
-        if (! beh.selected_from_inventory)
-        {
-            you.quiver[get_quiver_type()] = beh.item;
-            you.quiver_change = true;
-        }
+        you.m_quiver->on_item_fired(you.inv[beh.m_slot]);
     }
+    else
+    {
+        you.m_quiver->on_item_fired_fi(you.inv[beh.m_slot]);
+    }
+    you.quiver_change = true;
+    slot = beh.m_slot;
 
     return (true);
 }
 
 // Bring up an inventory screen and have user choose an item.
-// Returns an item slot, or ENDOFPACK on abort/failure
+// Returns an item slot, or -1 on abort/failure
 // On failure, returns error text, if any.
 static int _fire_prompt_for_item(std::string& err)
 {
@@ -1551,7 +1405,7 @@ static int _fire_prompt_for_item(std::string& err)
     {
         // canned_msg(MSG_NOTHING_CARRIED);         // Hmmm... 
         err = "You aren't carrying anything.";
-        return ENDOFPACK;
+        return -1;
     }
 
     int slot = prompt_invent_item( "Fire/throw which item? (* to show all)",
@@ -1561,7 +1415,7 @@ static int _fire_prompt_for_item(std::string& err)
     if (slot == PROMPT_ABORT)
     {
         err = "Nothing selected.";
-        return ENDOFPACK;
+        return -1;
     }
     return slot;
 }
@@ -1613,41 +1467,6 @@ static bool _fire_warn_if_impossible()
         return true;
     }
     return false;
-}
-
-static std::string _fire_get_noitem_reason()
-{
-    const int cur_item = get_current_fire_item();
-    if (cur_item != ENDOFPACK)
-    {
-        // Shouldn't be calling this if there is a good default item!
-        return std::string("Buggy.");
-    }
-
-    // Tell the user why we might have skipped their missile
-    unwind_var<int> unwind_festart(Options.fire_items_start, 0);
-    unwind_var<bool> unwind_inscription(Hack_Ignore_F_Inscription, true);
-    const int skipped_item = get_current_fire_item();
-    char buf[200];
-    if (skipped_item == ENDOFPACK)
-    {
-        return std::string("No suitable missiles.");
-    }
-    else if (skipped_item < unwind_festart.original_value())
-    {
-        // no room for showing index_to_letter(skipped_item);
-        snprintf(buf, 200,
-                 "Nothing suitable (fire_items_start = '%c').",
-                 index_to_letter(unwind_festart.original_value()));
-        return std::string(buf);
-    }
-    else
-    {
-        snprintf(buf, 200,
-                 "Nothing suitable (ignored '=f'-inscribed item on '%c').",
-                 index_to_letter(skipped_item));
-        return std::string(buf);
-    }
 }
 
 // if item == -1, prompt the user.
