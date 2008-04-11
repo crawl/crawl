@@ -489,8 +489,8 @@ static void _print_stats_qv(int y)
     }
     else
     {
-        textcolor(DARKGREY);
-        cprintf("-) (nothing)");
+        textcolor(LIGHTGREY);
+        cprintf("Nothing quivered");
     }
 
     textcolor(LIGHTGREY);
