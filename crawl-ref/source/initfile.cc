@@ -773,7 +773,7 @@ void game_options::reset_options()
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
                    "javelin / dart / stone / rock /"
-                   " spear / net / handaxe / dagger, inscribed",
+                   " spear / net / handaxe / dagger / club, inscribed",
                    false);
 
     item_stack_summary_minimum = 5;
