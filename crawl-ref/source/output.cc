@@ -41,6 +41,7 @@
 #include "newgame.h"
 #include "ouch.h"
 #include "player.h"
+#include "quiver.h"
 #include "religion.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -458,11 +459,14 @@ static void _print_stats_qv(int y)
     textcolor(Options.status_caption_colour);
     cprintf("Qv: ");
         
-    int q = you.quiver[get_quiver_type()] = get_current_fire_item();
+    const item_def* item;
+    int q;
+    you.m_quiver->get_desired_item(&item, &q);
 
-    if (q != ENDOFPACK)
+    ASSERT(q >= -1 && q < ENDOFPACK);
+    if (q != -1)
     {
-        const item_def& quiver = you.inv[q];
+        const item_def& quiver = *item;
         textcolor(quiver.colour);
 
         const std::string prefix = menu_colour_item_prefix(quiver);
@@ -475,10 +479,21 @@ static void _print_stats_qv(int y)
                 quiver.name(DESC_INVENTORY, true)
                 .substr(0, crawl_view.hudsz.x - 4)
                 .c_str());
-        textcolor(LIGHTGREY);
+    }
+    else if (item != NULL && is_valid_item(*item))
+    {
+        textcolor(item->colour);
+        cprintf("-) %s", item->name(DESC_PLAIN, true).c_str());
+        textcolor(RED);
+        cprintf(" (empty)");
     }
     else
-        textcolor(LIGHTGREY);
+    {
+        textcolor(DARKGREY);
+        cprintf("-) (nothing)");
+    }
+
+    textcolor(LIGHTGREY);
     clear_to_end_of_line();
 }
 
@@ -807,9 +822,29 @@ void print_stats(void)
         clear_to_end_of_line();
         you.redraw_experience = false;
     }
-    if (you.wield_change)  { you.wield_change = false;  _print_stats_wp(10); }
-    if (you.quiver_change) { you.quiver_change = false; _print_stats_qv(11); }
 
+    if (you.wield_change)
+    {
+        // weapon_change is set in a billion places; probably not all
+        // of them actually mean the user changed their weapon.  Calling
+        // on_weapon_changed redundantly is normally OK; but if the user
+        // is wielding a bow and throwing javelins, the on_weapon_changed
+        // will switch them back to arrows, which will be annoying.
+        // Perhaps there should be another bool besides wield_change
+        // that's set in fewer places?
+        // Also, it's a little bogus to change simulation state in
+        // render code.  We should find a better place for this.
+        you.m_quiver->on_weapon_changed();
+        _print_stats_wp(10);
+    }
+
+    if (you.quiver_change || you.wield_change)
+    {
+        _print_stats_qv(11);
+    }
+
+    you.wield_change = false;
+    you.quiver_change = false;
     
     if (you.redraw_status_flags & REDRAW_LINE_1_MASK)
         _print_stats_line1(12);
@@ -1675,7 +1710,7 @@ static std::string _overview_screen_title()
 
 // new scrollable status overview screen,
 // including stats, mutations etc.
-void print_overview_screen()
+std::vector<MenuEntry *> _get_overview_screen_results()
 {
     bool calc_unid = false;
     formatted_scroller overview;
@@ -1895,12 +1930,15 @@ void print_overview_screen()
     }
 
     overview.add_text(" ");
-
     overview.add_text(_status_mut_abilities());
+    return overview.show();
+}
 
+void print_overview_screen()
+{
     while (true)
     {
-        std::vector<MenuEntry *> results = overview.show();
+        std::vector<MenuEntry *> results = _get_overview_screen_results();
         if (results.size() == 0)
         {
             redraw_screen();
