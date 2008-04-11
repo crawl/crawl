@@ -95,7 +95,7 @@ int check_your_resists(int hurted, beam_type flavour)
     mprf(MSGCH_DIAGNOSTICS, "checking resistance: flavour=%d", flavour );
 #endif
 
-    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA 
+    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
@@ -146,7 +146,7 @@ int check_your_resists(int hurted, beam_type flavour)
                                       player_res_electricity(),
                                       hurted, true);
 
-        if (hurted < original) 
+        if (hurted < original)
             canned_msg(MSG_YOU_RESIST);
         break;
 
@@ -171,7 +171,7 @@ int check_your_resists(int hurted, beam_type flavour)
         if (!resist)
             poison_player( 4 + random2(3), true );
         else if (!you.is_undead)
-            poison_player( 2 + random2(3), true ); 
+            poison_player( 2 + random2(3), true );
 
         hurted = resist_adjust_damage(&you, flavour, resist, hurted);
         if (hurted < original)
@@ -261,7 +261,7 @@ void splash_with_acid( char acid_strength )
     char splc = 0;
     int  dam = 0;
 
-    const bool wearing_cloak = (you.equip[EQ_CLOAK] != -1);     
+    const bool wearing_cloak = (you.equip[EQ_CLOAK] != -1);
 
     for (splc = EQ_CLOAK; splc <= EQ_BODY_ARMOUR; splc++)
     {
@@ -303,7 +303,7 @@ void weapon_acid( char acid_strength )
     if (hand_thing == -1)
     {
         msg::stream << "Your " << your_hand(true) << " burn!" << std::endl;
-        ouch( roll_dice( 1, acid_strength ), 0, KILLED_BY_ACID );  
+        ouch( roll_dice( 1, acid_strength ), 0, KILLED_BY_ACID );
     }
     else if (random2(20) <= acid_strength)
     {
@@ -316,7 +316,7 @@ void item_corrode( int itco )
     int chance_corr = 0;        // no idea what its full range is {dlb}
     bool it_resists = false;    // code simplifier {dlb}
     bool suppress_msg = false;  // code simplifier {dlb}
-    int how_rusty = ((you.inv[itco].base_type == OBJ_WEAPONS) 
+    int how_rusty = ((you.inv[itco].base_type == OBJ_WEAPONS)
                                 ? you.inv[itco].plus2 : you.inv[itco].plus);
 
     // early return for "oRC and cloak/preservation {dlb}:
@@ -352,7 +352,7 @@ void item_corrode( int itco )
         break;
 
     case OBJ_WEAPONS:
-        if (is_fixed_artefact(item) 
+        if (is_fixed_artefact(item)
             || is_random_artefact(item))
         {
             it_resists = true;
@@ -367,7 +367,7 @@ void item_corrode( int itco )
         break;
 
     case OBJ_MISSILES:
-        if (get_equip_race(item) == ISFLAG_DWARVEN 
+        if (get_equip_race(item) == ISFLAG_DWARVEN
                 && !one_chance_in(5))
         {
             it_resists = true;
@@ -486,7 +486,7 @@ static void expose_invent_to_element( beam_type flavour, int strength )
 
         if (is_valid_item( you.inv[i] )
             && (you.inv[i].base_type == target_class
-                || (target_class == OBJ_FOOD 
+                || (target_class == OBJ_FOOD
                     && you.inv[i].base_type == OBJ_CORPSES)))
         {
             if (player_item_conserve() && !one_chance_in(10))
@@ -542,21 +542,21 @@ static void expose_invent_to_element( beam_type flavour, int strength )
 
 
 // Handle side-effects for exposure to element other than damage.
-// This function exists because some code calculates its own damage 
+// This function exists because some code calculates its own damage
 // instead of using check_resists and we want to isolate all the special
-// code they keep having to do... namely condensation shield checks, 
+// code they keep having to do... namely condensation shield checks,
 // you really can't expect this function to even be called for much else.
 //
 // This function now calls expose_invent_to_element if strength > 0.
 //
 // XXX: this function is far from perfect and a work in progress.
 void expose_player_to_element( beam_type flavour, int strength )
-{ 
-    // Note that BEAM_TELEPORT is sent here when the player 
+{
+    // Note that BEAM_TELEPORT is sent here when the player
     // blinks or teleports.
-    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA 
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG 
-        || flavour == BEAM_TELEPORT || flavour == BEAM_NAPALM 
+    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
+        || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG
+        || flavour == BEAM_TELEPORT || flavour == BEAM_NAPALM
         || flavour == BEAM_STEAM)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
@@ -726,13 +726,13 @@ static void xom_checks_damage(kill_method_type death_type,
      * by a creature of higher level than yourself as well as
      * by a creatured of lower level than yourself. */
     amusementvalue += leveldif * leveldif * dam;
-    
+
     if (!player_monster_visible(monster))
         amusementvalue += 10;
-    
+
     if (monster->speed < (int) player_movement_speed())
         amusementvalue += 8;
-    
+
     if (death_type != KILLED_BY_BEAM)
     {
         if (you.skills[SK_THROWING] <= (you.experience_level / 4))
@@ -746,9 +746,9 @@ static void xom_checks_damage(kill_method_type death_type,
 
     if (player_in_a_dangerous_place())
         amusementvalue += 2;
-            
+
     amusementvalue /= (you.hp > 0) ? you.hp : 1;
-  
+
     xom_is_stimulated(amusementvalue);
 }
 
@@ -761,7 +761,7 @@ void ouch( int dam, int death_source, kill_method_type death_type,
 
     if (dam > 0)
         you.check_awaken(500);
-    
+
     if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
         && death_type != KILLED_BY_WATER)
     {
@@ -809,13 +809,13 @@ void ouch( int dam, int death_source, kill_method_type death_type,
 
             take_note(
                 Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
-                
+
             return;
         } // else hp <= 0
     }
 
 #ifdef WIZARD
-    if (death_type != KILLED_BY_QUITTING 
+    if (death_type != KILLED_BY_QUITTING
         && death_type != KILLED_BY_WINNING
         && death_type != KILLED_BY_LEAVING)
     {
@@ -931,7 +931,7 @@ void end_game( scorefile_entry &se )
             more();
         clrscr();
     }
-    
+
     if (se.death_type == KILLED_BY_LEAVING  ||
         se.death_type == KILLED_BY_QUITTING ||
         se.death_type == KILLED_BY_WINNING)
