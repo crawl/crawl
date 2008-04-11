@@ -116,7 +116,7 @@ void print_description( const std::string &d )
             currentPos = nextLine + 1;
             continue;
         }
-        
+
         // Handle real line breaks.  No substitutions necessary, just update
         // the counts.
         nextLine = d.find('\n', currentPos);
@@ -125,8 +125,8 @@ void print_description( const std::string &d )
             cprintf("%s", (d.substr(currentPos, nextLine-currentPos)).c_str());
             currentPos = nextLine +1;
             continue;
-        }            
-        
+        }
+
         // no newline -- see if rest of string will fit.
         if (currentPos + lineWidth >= d.length())
         {
@@ -194,7 +194,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
     randart_properties_t  proprt;
     randart_known_props_t known;
     randart_desc_properties( item, proprt, known, true );
-    
+
     std::vector<std::string> propnames;
 
     // list the following in rough order of importance
@@ -258,7 +258,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         {
             // ugly hack to remove the brackets...
             ego = ego.substr(2, ego.length()-3);
-            
+
             // and another one for adding a comma if needed
             for ( unsigned i = 0; i < ARRAYSIZE(propanns); ++i )
                  if (known_proprt(propanns[i].prop))
@@ -266,7 +266,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
                      ego += ",";
                      break;
                  }
-                 
+
             propnames.push_back(ego);
         }
     }
@@ -291,7 +291,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
             }
             case 2: // e.g. rPois or SInv
                 work << propanns[i].name;
-                
+
                 // these need special handling, so we don't give anything away
                 if (propanns[i].prop == RAP_METABOLISM && val > 2
                     || propanns[i].prop == RAP_MUTAGENIC && val > 3
@@ -471,7 +471,7 @@ static const char *trap_names[] =
 const char *trap_name(trap_type trap)
 {
     ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
-    
+
     if (trap >= TRAP_DART && trap < NUM_TRAPS)
         return trap_names[ static_cast<int>( trap ) ];
     return (NULL);
@@ -480,7 +480,7 @@ const char *trap_name(trap_type trap)
 int str_to_trap(const std::string &s)
 {
     ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
-    
+
     if (s == "random" || s == "any")
         return (TRAP_RANDOM);
     else if (s == "suitable")
@@ -508,9 +508,9 @@ int str_to_trap(const std::string &s)
 static std::string _describe_demon(const monsters &mons)
 {
     ASSERT(mons.ghost.get());
-    
+
     const ghost_demon &ghost = *mons.ghost;
-    
+
     const long seed =
         std::accumulate(ghost.name.begin(), ghost.name.end(), 0L) *
         ghost.name.length();
@@ -625,7 +625,7 @@ static std::string _describe_demon(const monsters &mons)
     std::ostringstream description;
     description << "A powerful demon, " << ghost.name << " has a"
                 << RANDOM_ELEMENT(body_descs) << "body";
-    
+
     switch (ghost.fly)
     {
     case FL_FLY:
@@ -784,7 +784,7 @@ static std::string _describe_weapon( const item_def &item, bool verbose)
         _append_value(description, property( item, PWPN_SPEED ) * 10, false);
         description += "%";
     }
-    
+
     if (!is_fixed_artefact( item ))
     {
         int spec_ench = get_weapon_brand( item );
@@ -862,7 +862,7 @@ static std::string _describe_weapon( const item_def &item, bool verbose)
                 {
                     description += "Any ";
                     description += ammo_name( item );
-                    description += " fired from it inflicts extra damage."; 
+                    description += " fired from it inflicts extra damage.";
                 }
                 else
                 {
@@ -1116,7 +1116,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
     description.reserve(200);
 
     if (verbose
-        && item.sub_type != ARM_SHIELD 
+        && item.sub_type != ARM_SHIELD
         && item.sub_type != ARM_BUCKLER
         && item.sub_type != ARM_LARGE_SHIELD)
     {
@@ -1214,7 +1214,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
     else if (get_equip_race( item ) != ISFLAG_NO_RACE)
     {
         description += "$";
-        switch (get_equip_race( item ))  
+        switch (get_equip_race( item ))
         {
         case ISFLAG_ELVEN:
             description += "$It is well-crafted and unobstructive";
@@ -1230,7 +1230,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
             description += "$It is well-crafted and very durable.";
             description += "$It fits dwarves well.";
             break;
-        
+
         case ISFLAG_ORCISH:
             description += "$It fits orcs well.";
             break;
@@ -1271,7 +1271,7 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
         // Explicit description of ring power (useful for randarts)
         // Note that for randarts we'll print out the pluses even
         // in the case that its zero, just to avoid confusion. -- bwr
-        if (item.plus != 0 
+        if (item.plus != 0
             || (item.sub_type == RING_SLAYING && item.plus2 != 0)
             || is_random_artefact( item ))
         {
@@ -1322,7 +1322,7 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
                     description += ").";
                 }
                 break;
-            
+
             default:
                 break;
             }
@@ -1466,7 +1466,7 @@ bool is_dumpable_artefact( const item_def &item, bool verbose)
         const int spec_ench = get_armour_ego_type( item );
         ret = (spec_ench >= SPARM_RUNNING && spec_ench <= SPARM_PRESERVATION);
     }
-    else if (item.base_type == OBJ_JEWELLERY 
+    else if (item.base_type == OBJ_JEWELLERY
         && (verbose && item_type_known(item)))
     {
         ret = true;
@@ -1711,7 +1711,7 @@ void describe_feature_wide(int x, int y)
 
     if (Options.tutorial_left)
         tutorial_describe_feature(grd[x][y]);
-        
+
     if ( getch() == 0 )
         getch();
 }
@@ -1732,10 +1732,10 @@ static bool show_item_description(const item_def &item)
             return false;
         formatted_string fs;
         item_def dup = item;
-        spellbook_contents( dup, 
-                item.base_type == OBJ_BOOKS? 
+        spellbook_contents( dup,
+                item.base_type == OBJ_BOOKS?
                     RBOOK_READ_SPELL
-                  : RBOOK_USE_STAFF, 
+                  : RBOOK_USE_STAFF,
                 &fs );
         fs.display(2, -2);
         return true;
@@ -1788,7 +1788,7 @@ void describe_item( item_def &item, bool allow_inscribe )
         }
         break;
     }
-    
+
     // Don't ask if there aren't enough rows left
     if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
     {
@@ -1847,7 +1847,7 @@ void describe_item( item_def &item, bool allow_inscribe )
             if (!cancelable_get_line(buf, sizeof buf))
             {
                 item.inscription = buf;
-                you.quiver_change = true;       // might have added/removed !F 
+                you.quiver_change = true;       // might have added/removed !F
             }
         }
         else if (allow_autoinscribe
@@ -1958,7 +1958,7 @@ static std::string describe_draconian_colour(int species)
 
 static std::string describe_draconian(const monsters *mon)
 {
-    std::string description;      
+    std::string description;
     const int subsp = draco_subspecies( mon );
 
     if (subsp == MONS_DRACONIAN)
@@ -1982,7 +1982,7 @@ static std::string describe_draconian(const monsters *mon)
     }
 
     description += "scaled humanoid with wings.";
-    
+
     if (subsp != MONS_DRACONIAN)
     {
         if (describe_draconian_colour(subsp) != "")
@@ -2016,16 +2016,16 @@ void describe_monsters(monsters& mons)
         describe_item(item);
         return;
     }
-    
+
     std::ostringstream description;
     description << mons.name(DESC_CAP_A) << "$$";
-    
-    // Note: Nearly all of the "long" descriptions have moved to 
+
+    // Note: Nearly all of the "long" descriptions have moved to
     // mon-data.h, in an effort to give them some locality with the
     // rest of the monster definition data, and to get them out of
     // the control logic.  The only sorts of descriptions that should
     // go here are those that require active decisions about what
-    // sort of message to print (eg "It's beautiful" or "It's ugly" 
+    // sort of message to print (eg "It's beautiful" or "It's ugly"
     // depending on player class).  And just between you and me: that's
     // sort of a dumb idea anyway.  So don't add any more of those.
     //
@@ -2130,7 +2130,7 @@ void describe_monsters(monsters& mons)
     case MONS_DRACONIAN_KNIGHT:
     {
         description << describe_draconian( &mons );
-        break;        
+        break;
     }
     case MONS_PLAYER_GHOST:
         description << "The apparition of " << ghost_description(mons) << ".$";
@@ -2235,7 +2235,7 @@ std::string ghost_description(const monsters &mons, bool concise)
     const species_type gspecies = ghost.species;
 
     // We're fudging stats so that unarmed combat gets based off
-    // of the ghost's species, not the player's stats... exact 
+    // of the ghost's species, not the player's stats... exact
     // stats aren't required anyways, all that matters is whether
     // dex >= str. -- bwr
     const int dex = 10;
@@ -2302,7 +2302,7 @@ static bool print_god_abil_desc( int god, int numpower )
     // if no message then no power
     if ( !pmsg[0] )
         return false;
-    
+
     std::ostringstream buf;
 
     if ( isupper(pmsg[0]) )
@@ -2319,7 +2319,7 @@ static bool print_god_abil_desc( int god, int numpower )
         const std::string cost = "(" + make_cost_description(abil) + ")";
         buf << std::setw(spacesleft) << cost;
     }
-    
+
     cprintf( "%s\n", buf.str().c_str() );
     return true;
 }
@@ -2340,7 +2340,7 @@ static std::string describe_favour_generic(god_type which_god)
 //
 // describe_god
 //
-// Describes the player's standing with his deity. 
+// Describes the player's standing with his deity.
 //
 //---------------------------------------------------------------
 
@@ -2516,7 +2516,7 @@ void describe_god( god_type which_god, bool give_title )
                 cprintf("Toy");
             break;
 
-            default: 
+            default:
                 cprintf ("Bug");
             }
         }
@@ -2580,7 +2580,7 @@ void describe_god( god_type which_god, bool give_title )
                 prayer_prot = 100 - 3000/you.piety;
 
             int prot_chance = 10 + you.piety/10 + prayer_prot; // chance * 100
-    
+
             const char *how = (prot_chance >= 85) ? "carefully" :
                               (prot_chance >= 55) ? "often" :
                               (prot_chance >= 25) ? "sometimes" :

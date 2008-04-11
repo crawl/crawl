@@ -389,8 +389,8 @@ static bool _show_bloodcovered(int x, int y)
 
     dungeon_feature_type grid = grd[x][y];
 
-    return (grid_altar_god(grid) == GOD_NO_GOD && !grid_is_trap(grid)
-            && !grid_is_portal(grid) && grid != DNGN_ENTER_SHOP);
+    // altars, stairs (of any kind) and traps should not be coloured red
+    return (!is_critical_feature(grid) && !grid_is_trap(grid));
 }
 
 static void _get_symbol( int x, int y,
