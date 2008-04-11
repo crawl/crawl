@@ -119,7 +119,7 @@ lua_file = lua/pickup.lua
 ##### 4-d	Branding ##############################
 #
 friend_brand       = hi:green
-neutral_brand      = hi:darkgrey
+neutral_brand      = hi:grey
 stab_brand         = hi:blue
 may_stab_brand     = hi:yellow
 heap_brand         = reverse

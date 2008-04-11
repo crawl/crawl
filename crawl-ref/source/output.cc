@@ -1909,7 +1909,7 @@ void print_overview_screen()
 
         const char c = results[0]->hotkeys[0];
         item_def& item = you.inv[letter_to_index(c)];
-        describe_item(item, false);
+        describe_item(item, true);
         // loop around for another go.
     }
 }
