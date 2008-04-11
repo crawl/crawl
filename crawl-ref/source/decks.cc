@@ -1204,8 +1204,10 @@ void evoke_deck( item_def& deck )
                 simple_god_message(" seems to have exchanged this card "
                                    "behind your back!", GOD_NEMELEX_XOBEH);
                 mprf("It's actually %s.", card_name(card));
+                // You never completely appease Nemelex, but the effects
+                // get less frequent.
                 you.penance[GOD_NEMELEX_XOBEH] -=
-                    random2(you.penance[GOD_NEMELEX_XOBEH] / 10);
+                    random2( (you.penance[GOD_NEMELEX_XOBEH]+18) / 10);
             }
         }
     }
