@@ -953,7 +953,11 @@ static bool tso_blessing_friendliness(monsters *mon)
 
     mon->attitude = ATT_FRIENDLY;
 
-    mon->del_ench(ENCH_CHARM, true);
+    // If the monster is charmed, make it permanently friendly.  Note
+    // that we have to delete the enchantment without removing the
+    // enchantment effect, in order to keep the monster from turning
+    // hostile.
+    mon->del_ench(ENCH_CHARM, true, false);
 
     return true;
 }
@@ -1166,10 +1170,7 @@ bool bless_follower(monsters* follower,
                 bool more_time = false;
 
                 if (!friendliness || coinflip())
-                {
-                    if (tso_blessing_extend_stay(mon))
-                        more_time = true;
-                }
+                    more_time = tso_blessing_extend_stay(mon);
 
                 if (friendliness && more_time)
                     result = "friendliness and more time in this world";
