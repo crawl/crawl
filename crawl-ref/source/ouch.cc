@@ -241,12 +241,16 @@ int check_your_resists(int hurted, beam_type flavour)
         break;
 
     case BEAM_HOLY:
-        if (!you.is_undead && you.species != SP_DEMONSPAWN &&
-            !is_evil_god(you.religion))
-        {
-            canned_msg( MSG_YOU_RESIST );
+        if (you.is_undead || you.species != SP_DEMONSPAWN)
+            hurted = (hurted * 3) / 2;
+        else if (is_good_god(you.religion))
             hurted = 0;
-        }
+        else if (!is_evil_god(you.religion))
+            hurted /= 2;
+
+        if (hurted == 0)
+            canned_msg(MSG_YOU_RESIST);
+
         break;
 
     default:

@@ -782,9 +782,7 @@ bool is_tso_follower(const monsters* mon)
 {
     // Don't check for evil or unholy allies here, as that's done
     // elsewhere.
-    return (mon->alive()
-        && (mon->attitude == ATT_FRIENDLY
-            || mon->has_ench(ENCH_CHARM)));
+    return (mon->alive() && mons_friendly(mon));
 }
 
 bool is_orcish_follower(const monsters* mon)
@@ -809,6 +807,8 @@ bool is_follower(const monsters* mon)
             break;
 
         default:
+            // Currently, this is identical to is_tso_follower().
+            result = (mon->alive() && mons_friendly(mon));
             break;
     }
 
