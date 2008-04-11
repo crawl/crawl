@@ -141,7 +141,7 @@ typedef struct prefs
 #define MAX_EDIT_PREFS 5
 static int dummy_int[PREF_MODE_NUM][8];
 static char dummy_str[PREF_MODE_NUM][2][MAX_PREF_CHAR+1];
-struct prefs pref_data[MAX_PREFS] = 
+struct prefs pref_data[MAX_PREFS] =
 {
     {"DUNGEON X", "DngnX", 'I', &dngn_x, 17, 35,  0},
     {"DUNGEON Y", "DngnY", 'I', &dngn_y, 17, 35,  1},
@@ -231,19 +231,19 @@ static char _gmap_to_colour(char gm)
 }
 
 static const char gmap_col[256] = {
-    /* 0x00 */  PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, 
+    /* 0x00 */  PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0,
     /* 0x08 */  PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0,
-    /* 0x10 */  PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, 
+    /* 0x10 */  PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0,
     /* 0x18 */  PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0,
 
     /*           ' '   '!'   '"'   '#'   '$'   '%'   '&'   ''' */
     /* 0x20 */  PX_0, PX_I, PX_I, PX_F, PX_I, PX_I, PX_M, PX_D,
-    /*           '('   ')'   '*'   '+'   ','   '-'   '.'   '/' */  
+    /*           '('   ')'   '*'   '+'   ','   '-'   '.'   '/' */
     /* 0x28 */  PX_I, PX_I, PX_WB,PX_I, PX_F, PX_0, PX_F, PX_I,
     /*           0     1     2     3     4     5     6     7   */
     /* 0x30 */  PX_0, PX_M, PX_M, PX_M, PX_M, PX_M, PX_0, PX_0,
     /*           8     9     :     ;     <     =     >     ?   */
-    /* 0x38 */  PX_MS,PX_0, PX_0, PX_M, PX_US,PX_I, PX_DS,PX_I, 
+    /* 0x38 */  PX_MS,PX_0, PX_0, PX_M, PX_US,PX_I, PX_DS,PX_I,
     /*           @     A     B     C     D     E     F     G   */
     /* 0x40 */  PX_M, PX_M, PX_M, PX_M, PX_M, PX_M, PX_M, PX_M,
     /*           H     I     J     K     L     M     N     O   */
@@ -344,7 +344,7 @@ int tile_idx_unseen_terrain(int x, int y, int what)
 void GmapUpdate(int x, int y, int what, bool upd_tile)
 {
     int c;
-    
+
     if (x == you.x_pos && y == you.y_pos)
         c = Options.tile_player_col; // player position always highlighted
     else
@@ -390,7 +390,7 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
                 c = Options.tile_excluded_col;
         }
     }
-    
+
     int oldc = gmap_data[x][y];
     gmap_data[x][y] = c;
 
@@ -474,7 +474,7 @@ void GmapDisplay(int linex, int liney)
         ox += linex - gmap_min_x;
         oy += liney - gmap_min_y;
         // highlight centre of the map
-        buf2[ox + oy * GXM] = Options.tile_player_col; 
+        buf2[ox + oy * GXM] = Options.tile_player_col;
     }
 
     region_map->flag = true;
@@ -555,7 +555,7 @@ static void _do_layout()
         }
         while (item_x * item_y < 40)
                item_y++;
-               
+
         region_item -> resize(item_x, item_y, TILE_X, TILE_Y);
         win_main->placeRegion (region_item, LAYER_NML, r0, place);
     }
@@ -657,10 +657,10 @@ void libgui_init()
     region_tip->id = REGION_TIP;
 
     region_crt->init_font(font_name);
-    region_stat->init_font(font_name); 
-    region_msg->init_font(font_name); 
+    region_stat->init_font(font_name);
+    region_msg->init_font(font_name);
     region_tip->init_font(font_name);
-    
+
     if (region_dngn)
         region_dngn->init_font(font_name);
 #endif
@@ -673,7 +673,7 @@ void libgui_init()
 
     region_tile -> init_backbuf();
     region_item2->init_backbuf();
-    
+
     if (region_item)
         region_item->init_backbuf();
 }
@@ -811,7 +811,7 @@ static void _libgui_save_prefs()
             {
                  struct prefs *p = &pref_data[i];
                  int idx = p->dummy_idx;
-                 
+
                  if (p->type == 'I')
                  {
                      fprintf(fp, "%s:%s=%d\n", pref_mode_name[mode],
@@ -894,7 +894,7 @@ void edit_prefs()
             cprintf("H, L              : Dec/Inc by 10");
             need_draw_msg = false;
         }
-    
+
         if (need_draw_stat)
         {
             region_stat->clear();
@@ -912,7 +912,7 @@ void edit_prefs()
                      textcolor(LIGHTGREY);
                      cprintf(" ");
                  }
-                 
+
                  if (pref_data[i].type == 'I')
                      cprintf(" %s: %3d  ", p->name, *(int *)p->ptr);
                  else
@@ -949,7 +949,7 @@ void edit_prefs()
 
         if (key == 0x1b || key == '\r')
             break;
-            
+
         if (key == 'j' || key == CK_DOWN)
         {
             cur_pos++;
@@ -982,7 +982,7 @@ void edit_prefs()
         int msg_y_old = msg_y;
         int dngn_x_old = dngn_x;
         int dngn_y_old = dngn_y;
-        
+
         if (p->type == 'I' && inc != 0)
         {
             if (dat == &dngn_x || dat == &dngn_y)
@@ -1059,7 +1059,7 @@ void edit_prefs()
                 region_item->resize_backbuf();
             if (region_item2)
                 region_item2->resize_backbuf();
-            
+
             tile_set_force_redraw_inv(true);
             tile_draw_inv(REGION_INV1);
 
@@ -1069,7 +1069,7 @@ void edit_prefs()
             region_item->redraw();
         } // need resize
     } // while-loop
-    
+
     clrscr();
     redraw_screen();
     mpr("Done.");
@@ -1144,7 +1144,7 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
     {
         if (! (*r)->is_active())
             continue;
-        
+
         if ( (*r)->mouse_pos(mx, my, cx, cy) )
         {
             id = (*r)->id;
@@ -1218,12 +1218,12 @@ static bool _can_use_item(item_def item, bool equipped)
         // misc. items/rods can always be evoked, cursed or not
         if (item.base_type == OBJ_MISCELLANY || item_is_rod(item))
             return true;
-            
+
         // you can't unwield/fire a wielded cursed weapon/staff
         // but cursed armour and rings can be unwielded without problems
         return (!_is_true_equipped_item(item));
     }
-        
+
     // mummies can't do anything with food or potions
     if (you.species == SP_MUMMY)
         return (item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD);
@@ -1269,7 +1269,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
     }
     else
         mode = convert_cursor_pos(mouse_x, mouse_y, &cx, &cy);
-        
+
     if (oldcx == cx && oldcy == cy && oldmode == mode) return 0;
 
     // erase old cursor
@@ -1540,8 +1540,8 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
         return 0;
     }
 
-    if (mouse_mode == MOUSE_MODE_TARGET || 
-        mouse_mode == MOUSE_MODE_TARGET_DIR)
+    if (mouse_mode == MOUSE_MODE_TARGET
+        || mouse_mode == MOUSE_MODE_TARGET_DIR)
     {
         if (mode == REGION_DNGN || mode == REGION_TDNGN)
         {
@@ -1561,7 +1561,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
     {
         if (mode == oldmode && oldcx == DCX && oldcy == DCY)
             update_tip_text("");
-            
+
         oldcx = cx;
         oldcy = cy;
         oldmode = mode;
@@ -1584,7 +1584,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                         desc += get_species_abbrev(you.species);
                         desc += get_class_abbrev(you.char_class);
                         desc += ")";
-                        
+
             if (igrd[you.x_pos][you.y_pos] != NON_ITEM)
                 desc += EOL "[L-Click] Pick up items (g)";
 
@@ -1607,13 +1607,9 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
     if (mode == REGION_MAP && mouse_mode == MOUSE_MODE_COMMAND)
     {
         if (oldmode !=  REGION_MAP)
-        {
             update_tip_text("[L-Click] Travel / [R-Click] View");
-        }
         else
-        {
             _tip_grid(cx - 1, cy - 1, false, 1);
-        }
 
         oldmode = mode;
         oldcx = cx;
@@ -1626,12 +1622,13 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
     {
         if (oldmode != REGION_MSG)
             update_tip_text("[L-Click] Browse message history");
+
         oldmode = mode;
         oldcx = cx;
         oldcy = cy;
         return 0;
     }
-    
+
     if (mode == REGION_STAT && mouse_mode == MOUSE_MODE_COMMAND)
     {
         if (oldmode != REGION_STAT)
@@ -1670,7 +1667,7 @@ static int _handle_mouse_button(int mx, int my, int button,
         trig = CK_MOUSE_B4;
     else if (button == 5)
         trig = CK_MOUSE_B5;
-        
+
     if (shift)
         trig |= 512;
     if (ctrl)
@@ -1696,7 +1693,7 @@ static int _handle_mouse_button(int mx, int my, int button,
     mode = convert_cursor_pos(mx, my, &cx, &cy);
 
     // prevent accidental wheel slip and subsequent char death
-    if (mouse_mode==MOUSE_MODE_COMMAND && (button == 4 || button == 5)
+    if (mouse_mode == MOUSE_MODE_COMMAND && (button == 4 || button == 5)
         && button == old_button && oldcx == cx && oldcy == cy)
     {
         if (!enable_wheel)
@@ -1743,7 +1740,7 @@ static int _handle_mouse_button(int mx, int my, int button,
                 }
                 else
                     _gui_set_mouse_inv(ix, INV_VIEW);
-                    
+
                 TileMoveInvCursor(-1);
                 return CK_MOUSE_B2ITEM;
             }
@@ -1757,10 +1754,10 @@ static int _handle_mouse_button(int mx, int my, int button,
                         _gui_set_mouse_inv(ix, INV_PICKUP);
                     else
                         _gui_set_mouse_inv(ix, INV_USE_FLOOR);
-                        
+
                     return CK_MOUSE_B1ITEM;
                 }
-                
+
                 // use item
                 if (shift)
                     _gui_set_mouse_inv(ix, INV_DROP);
@@ -1768,7 +1765,7 @@ static int _handle_mouse_button(int mx, int my, int button,
                     _gui_set_mouse_inv(ix, INV_USE2);
                 else
                     _gui_set_mouse_inv(ix, INV_USE);
-                    
+
                 return CK_MOUSE_B1ITEM;
             }
         }
@@ -1819,7 +1816,7 @@ static int _handle_mouse_button(int mx, int my, int button,
                 if (you.religion != GOD_NO_GOD)
                     return '^'; // religion screen
             }
-            
+
             // trigger
             if (mouse_mode == MOUSE_MODE_MACRO)
                 return trig;
@@ -1850,9 +1847,9 @@ static int _handle_mouse_button(int mx, int my, int button,
 
         if (adir != -1)
         {
-            if (shift) 
+            if (shift)
                 return cmd_s[adir];
-            else if (ctrl) 
+            else if (ctrl)
                 return cmd_c[adir];
             else
                 return cmd_n[dir];
@@ -1909,7 +1906,7 @@ static int _handle_mouse_button(int mx, int my, int button,
     {
         if (cx < DCX-1 || cy < DCY-1 || cx > DCX+1 || cy > DCY+1)
             return 0;
-            
+
         for (dir = 0; dir < 9; dir++)
         {
             if (DCX + dx[dir] == cx && DCY + dy[dir] == cy)
@@ -1983,10 +1980,10 @@ int getch()
     int keyin = getch_ck();
     if (keyin >= CK_UP && keyin <= CK_CTRL_PGDN)
         return ck_tr[ keyin - CK_UP ];
-        
+
     if (keyin == CK_DELETE)
         return '.';
-        
+
     return keyin;
 }
 
@@ -2077,7 +2074,7 @@ void clrscr()
     }
     if (region_item2)
     {
-        
+
         if (region_lock[REGION_INV2])
             region_item2->redraw();
         else
@@ -2372,10 +2369,10 @@ void puttext(int sx, int sy, int ex, int ey, unsigned char *buf, bool mono,
         for (xx = sx-1; xx <= ex-1; xx++)
         {
             *c = *ptr;
-            
+
             if (*c == 0)
                 *c = 32;
-                
+
             ptr++;
             if (mono)
                 *a = WHITE;
@@ -2419,14 +2416,14 @@ void ViewTextFile(const char *name)
     while (nlines < MAXTEXTLINES)
     {
         fgets((char *)buf2, 82, fp);
-        
+
         if (feof(fp))
             break;
-            
+
         i = 0;
         while (i < 79 && buf2[i] != 13 && buf2[i] != 10)
                i++;
-        
+
         memcpy(&buf[nlines*80], buf2, i);
         nlines++;
     }

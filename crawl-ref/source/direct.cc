@@ -89,14 +89,14 @@ static bool find_object(  int x, int y, int mode, int range );
 static bool find_monster( int x, int y, int mode, int range );
 static bool find_feature( int x, int y, int mode, int range );
 
-static char find_square_wrapper( int tx, int ty, 
+static char find_square_wrapper( int tx, int ty,
                                  FixedVector<char, 2> &mfp, char direction,
                                  bool (*targ)(int, int, int, int),
                                  int mode = TARG_ANY, int range = -1,
                                  bool wrap = false,
                                  int los = LOS_ANY);
 
-static char find_square( int xps, int yps, 
+static char find_square( int xps, int yps,
                          FixedVector<char, 2> &mfp, int direction,
                          bool (*targ)(int, int, int, int),
                          int mode = TARG_ANY, int range = -1,
@@ -131,7 +131,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
             moves.isMe = true;
             break;
         }
-        
+
         const int i = targeting_cmd_to_compass(key_command);
         if ( i != -1 )
         {
@@ -145,7 +145,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
         }
     }
     while ( !moves.isCancel && moves.dx == 0 && moves.dy == 0 );
-    
+
     return;
 }
 
@@ -251,7 +251,7 @@ static bool _is_target_in_range(int x, int y, int range)
     // range doesn't matter
     if (range == -1)
         return true;
-        
+
     return (grid_distance(you.x_pos, you.y_pos, x, y) <= range);
 }
 
@@ -345,7 +345,7 @@ static void direction_again(dist& moves, targeting_type restricts,
                                           "range.");
             return;
         }
-        
+
         moves.tx = you.prev_grd_targ.x;
         moves.ty = you.prev_grd_targ.y;
 
@@ -367,7 +367,7 @@ static void direction_again(dist& moves, targeting_type restricts,
     else
     {
         const monsters *montarget = &menv[you.prev_targ];
-                
+
         if (!mons_near(montarget)
             || !player_monster_visible( montarget ))
         {
@@ -450,7 +450,7 @@ void direction(dist& moves, targeting_type restricts,
     }
 
     cursor_control con(!Options.use_fake_cursor);
-    
+
     int dir = 0;
     bool show_beam = Options.show_beam && !just_looking && needs_path;
     ray_def ray;
@@ -538,8 +538,8 @@ void direction(dist& moves, targeting_type restricts,
 
 #ifdef USE_TILE
         // if a mouse command, update location to mouse position...
-        if ( key_command == CMD_TARGET_MOUSE_MOVE || 
-            key_command == CMD_TARGET_MOUSE_SELECT )
+        if ( key_command == CMD_TARGET_MOUSE_MOVE
+             || key_command == CMD_TARGET_MOUSE_SELECT )
         {
             coord_def gc;
             if (gui_get_mouse_grid_pos(gc))
@@ -547,10 +547,8 @@ void direction(dist& moves, targeting_type restricts,
                 moves.tx = gc.x;
                 moves.ty = gc.y;
 
-                if ( key_command == CMD_TARGET_MOUSE_SELECT )
-                {
+                if (key_command == CMD_TARGET_MOUSE_SELECT)
                     key_command = CMD_TARGET_SELECT;
-                }
             }
             else
             {
@@ -564,7 +562,7 @@ void direction(dist& moves, targeting_type restricts,
         {
             key_command = shift_direction(key_command);
         }
-        
+
         if (target_unshifted &&
             (key_command == CMD_TARGET_CYCLE_FORWARD
              || key_command == CMD_TARGET_CYCLE_BACK
@@ -655,7 +653,7 @@ void direction(dist& moves, targeting_type restricts,
             need_beam_redraw = true;
             break;
 #endif
-            
+
         case CMD_TARGET_HIDE_BEAM:
             if (show_beam)
             {
@@ -670,13 +668,13 @@ void direction(dist& moves, targeting_type restricts,
                          "This spell doesn't need a beam path.");
                     break;
                 }
-                
+
                 show_beam = find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
                                      true, ray, 0, true);
                 need_beam_redraw = show_beam;
             }
             break;
-            
+
         case CMD_TARGET_FIND_YOU:
             moves.tx = you.x_pos;
             moves.ty = you.y_pos;
@@ -714,7 +712,7 @@ void direction(dist& moves, targeting_type restricts,
                   (mode == TARG_ENEMY) ? "enemies" :
                   "friends" );
             break;
-            
+
         case CMD_TARGET_PREV_TARGET:
             // Do we have a previous target?
             if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
@@ -726,7 +724,7 @@ void direction(dist& moves, targeting_type restricts,
             // we have a valid previous target (maybe)
             {
                 const monsters *montarget = &menv[you.prev_targ];
-                
+
                 if (!mons_near(montarget) ||
                     !player_monster_visible( montarget ))
                 {
@@ -764,7 +762,7 @@ void direction(dist& moves, targeting_type restricts,
             loop_done = true;
 
             you.prev_grd_targ = coord_def(0, 0);
- 
+
             // maybe we should except just_looking here?
             mid = mgrd[moves.tx][moves.ty];
 
@@ -794,11 +792,11 @@ void direction(dist& moves, targeting_type restricts,
                     flush_input_buffer(FLUSH_ON_FAILURE);
             }
             break;
-        
+
         case CMD_TARGET_CYCLE_FORWARD:
         case CMD_TARGET_CYCLE_BACK:
             dir = (key_command == CMD_TARGET_CYCLE_BACK) ? -1 : 1;
-            if (find_square_wrapper( moves.tx, moves.ty, monsfind_pos, dir, 
+            if (find_square_wrapper( moves.tx, moves.ty, monsfind_pos, dir,
                                      find_monster, mode, range,
                                      Options.target_wrap))
             {
@@ -875,7 +873,7 @@ void direction(dist& moves, targeting_type restricts,
             wizard_give_monster_item(&menv[mid]);
             break;
 #endif
-            
+
         case CMD_TARGET_DESCRIBE:
             full_describe_square(moves.target());
             force_redraw = true;
@@ -888,11 +886,11 @@ void direction(dist& moves, targeting_type restricts,
             mesclr(true);
             show_prompt = true;
             break;
-            
+
         default:
             break;
         }
-        
+
         if ( loop_done == true )
         {
             // This is where we either finalize everything, or else
@@ -952,7 +950,7 @@ void direction(dist& moves, targeting_type restricts,
 
         if ( force_redraw )
             have_moved = true;
-        
+
         if ( have_moved )
         {
             // If the target x,y has changed, the beam must have changed.
@@ -1088,7 +1086,7 @@ static void extend_move_to_edge(dist &moves)
 static void describe_oos_square(int x, int y)
 {
     mpr("You can't see that place.", MSGCH_EXAMINE_FILTER);
-    
+
     if (!in_bounds(x, y) || !is_terrain_seen(x, y))
         return;
 
@@ -1148,14 +1146,14 @@ static bool find_monster( int x, int y, int mode, int range = -1)
     {
         return (false);
     }
-    
+
     // Now compare target modes.
     if (mode == TARG_ANY)
         return true;
-        
+
     if (mode == TARG_FRIEND)
         return (mons_friendly(&menv[targ_mon] ));
-        
+
     ASSERT(mode == TARG_ENEMY);
     if (mons_friendly(&menv[targ_mon]))
         return false;
@@ -1186,11 +1184,11 @@ static bool find_object(int x, int y, int mode, int /* range */)
     {
         is_mimic = true;
     }
-    
+
     const int item = igrd[x][y];
     if (item == NON_ITEM && !is_mimic)
         return false;
-        
+
     return (in_los(x, y) || Options.target_oos && is_terrain_seen(x, y)
                             && (is_stash(x, y) || is_mimic));
 }
@@ -1218,9 +1216,9 @@ static int next_los(int dir, int los, bool wrap)
         //
         //  * Say the cursor is on the last item in LOS, there are no
         //    items outside LOS, and wrap == true. flipvh is true.
-        //  * We set wrap false and flip from visible to hidden, but there 
+        //  * We set wrap false and flip from visible to hidden, but there
         //    are no hidden items. So now we need to flip back to visible
-        //    so we can go back to the first item in LOS. Unless we set 
+        //    so we can go back to the first item in LOS. Unless we set
         //    fliphv, we can't flip from hidden to visible.
         //
         los = flipvh? LOS_FLIPHV : LOS_FLIPVH;
@@ -1229,7 +1227,7 @@ static int next_los(int dir, int los, bool wrap)
     {
         if (!flipvh && !fliphv)
             return (LOS_NONE);
-        
+
         if (flipvh && vis != (dir == 1))
             return (LOS_NONE);
 
@@ -1255,10 +1253,10 @@ bool in_los_bounds(int x, int y)
 //
 // find_square
 //
-// Finds the next monster/object/whatever (moving in a spiral 
-// outwards from the player, so closer targets are chosen first; 
-// starts to player's left) and puts its coordinates in mfp. 
-// Returns 1 if it found something, zero otherwise. If direction 
+// Finds the next monster/object/whatever (moving in a spiral
+// outwards from the player, so closer targets are chosen first;
+// starts to player's left) and puts its coordinates in mfp.
+// Returns 1 if it found something, zero otherwise. If direction
 // is -1, goes backwards.
 //
 // If the game option target_zero_exp is true, zero experience
@@ -1293,7 +1291,7 @@ static char find_square( int xps, int yps,
             // need to find what we're currently on.
             const bool vis = (env.show(view2show(coord_def(xps, yps)))
                               || view2grid(coord_def(xps, yps)) == you.pos());
-            
+
             if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
             {
                 // We've already flipped over into the other direction,
@@ -1322,7 +1320,7 @@ static char find_square( int xps, int yps,
         radius = crawl_view.viewsz.y - LOS_RADIUS - 1;
 
     const coord_def vyou = grid2view(you.pos());
-    
+
     const int minx = vyou.x - radius, maxx = vyou.x + radius,
               miny = vyou.y - radius, maxy = vyou.y + radius,
               ctrx = vyou.x, ctry = vyou.y;
@@ -1511,7 +1509,7 @@ static void describe_feature(int mx, int my, bool oos)
     dungeon_feature_type grid = grd[mx][my];
     if ( grid == DNGN_SECRET_DOOR )
         grid = grid_secret_door_appearance(mx, my);
-        
+
     std::string desc = feature_description(grid);
     if (desc.length())
     {
@@ -1575,7 +1573,7 @@ void describe_floor()
         return;
 
     msg_channel_type channel = MSGCH_EXAMINE;
-    
+
     // water is not terribly important if you don't mind it
     if ((grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER
         || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER)
@@ -1625,7 +1623,7 @@ static std::string feature_do_grammar(description_level_type dtype,
         return ("");
     default:
         return (desc);
-    }    
+    }
 }
 
 std::string feature_description(dungeon_feature_type grid,
@@ -1676,7 +1674,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
             return ("undefined trap");
         }
     }
-    
+
     switch (grid)
     {
     case DNGN_STONE_WALL:
@@ -1688,7 +1686,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
         else
             return ("rock wall");
     case DNGN_PERMAROCK_WALL:
-        return ("unnaturally hard rock wall");    
+        return ("unnaturally hard rock wall");
     case DNGN_CLOSED_DOOR:
         return ("closed door");
     case DNGN_METAL_WALL:
@@ -1700,7 +1698,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
     case DNGN_CLEAR_STONE_WALL:
         return ("translucent stone wall");
     case DNGN_CLEAR_PERMAROCK_WALL:
-        return ("translucent unnaturally hard rock wall");    
+        return ("translucent unnaturally hard rock wall");
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
            return ("idol of Beogh");
@@ -1905,7 +1903,7 @@ std::string feature_description(int mx, int my, bool bloody,
 
         if (bloody)
             desc += ", spattered with blood";
-            
+
         return feature_do_grammar(dtype, add_stop, false, desc);
     }
 
@@ -1992,7 +1990,7 @@ static std::string describe_monster_weapon(const monsters *mons)
 
     if (name1.empty() && !name2.empty())
         name1.swap(name2);
-    
+
     if (name1 == name2 && weap)
     {
         item_def dup = *weap;
@@ -2004,7 +2002,7 @@ static std::string describe_monster_weapon(const monsters *mons)
 
     if (name1.empty())
         return (desc);
-    
+
     desc += " wielding ";
     desc += name1;
 
@@ -2013,7 +2011,7 @@ static std::string describe_monster_weapon(const monsters *mons)
         desc += " and ";
         desc += name2;
     }
-    
+
     return (desc);
 }
 
@@ -2050,7 +2048,7 @@ static void describe_monster(const monsters *mon)
     }
 
     print_wounds(mon);
-    
+
     if (!mons_is_mimic(mon->type) && mons_behaviour_perceptible(mon))
     {
        if (mon->behaviour == BEH_SLEEP)
@@ -2087,7 +2085,7 @@ static void describe_monster(const monsters *mon)
     std::string desc = "";
     std::string last_desc = "";
     std::string tmp = "";
-    
+
     const bool paralysed = mons_is_paralysed(mon);
     if (paralysed)
         last_desc += "paralysed";
@@ -2104,7 +2102,7 @@ static void describe_monster(const monsters *mon)
              last_desc = tmp;
          }
     }
-    
+
     if (!last_desc.empty())
     {
         if (!desc.empty())
@@ -2148,7 +2146,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
         desc += "wearing ";
         desc += mitm[mon_arm].name(DESC_NOCAP_A);
     }
-    
+
     return desc;
 }
 
@@ -2184,7 +2182,7 @@ static void describe_cell(int mx, int my)
 #endif
 
         describe_monster(&menv[i]);
-        
+
         if (mons_is_mimic( menv[i].type ))
         {
             mimic_item = true;
@@ -2278,7 +2276,7 @@ static void describe_cell(int mx, int my)
     else
     {
         const dungeon_feature_type feat = grd[mx][my];
-        
+
         if (interesting_feature(feat))
             feature_desc += " (Press 'v' for more information.)";
 
@@ -2287,7 +2285,7 @@ static void describe_cell(int mx, int my)
         if ((feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL) && !bloody
             && (monster_described || item_described || cloud_described))
             return;
-        
+
         msg_channel_type channel = MSGCH_EXAMINE;
         if (feat == DNGN_FLOOR
             || feat == DNGN_FLOOR_SPECIAL
@@ -2339,7 +2337,7 @@ command_type targeting_behaviour::get_command(int key)
     case CK_MOUSE_MOVE: return CMD_TARGET_MOUSE_MOVE;
     case CK_MOUSE_CLICK: return CMD_TARGET_MOUSE_SELECT;
 #endif
- 
+
 #ifdef WIZARD
     case 'F': return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
     case 's': return CMD_TARGET_WIZARD_MAKE_SHOUT;
@@ -2392,7 +2390,7 @@ command_type targeting_behaviour::get_command(int key)
     case 'Y': return CMD_TARGET_DIR_UP_LEFT;
 
     default: return CMD_NO_CMD;
-    }    
+    }
 }
 
 bool targeting_behaviour::should_redraw()

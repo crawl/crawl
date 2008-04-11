@@ -56,7 +56,7 @@ extern char info[INFO_SIZE];         // defined in acr.cc {dlb}
 extern unsigned char show_green;     // defined in view.cc {dlb}
 
 // defined in mon-util.cc -- w/o this screen redraws *really* slow {dlb}
-extern FixedVector<unsigned short, 1000> mcolour;  
+extern FixedVector<unsigned short, 1000> mcolour;
 
 const int kNameLen = 30;
 #ifdef SHORT_FILE_NAMES
@@ -88,9 +88,9 @@ public:
 
     virtual kill_category kill_alignment() const = 0;
     virtual god_type  deity() const = 0;
-    
+
     virtual bool      alive() const = 0;
-    
+
     virtual coord_def pos() const = 0;
     virtual bool      swimming() const = 0;
     virtual bool      submerged() const = 0;
@@ -101,12 +101,12 @@ public:
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;
     virtual bool can_pass_through(int x, int y) const;
     virtual bool can_pass_through(const coord_def &c) const;
-    
+
     virtual size_type body_size(int psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
     virtual int       body_weight() const = 0;
     virtual int       total_weight() const = 0;
-    
+
     virtual int       damage_type(int which_attack = -1) = 0;
     virtual int       damage_brand(int which_attack = -1) = 0;
     virtual item_def *weapon(int which_attack = -1) = 0;
@@ -129,7 +129,7 @@ public:
     virtual void lose_energy(energy_use_type)
     {
     }
-    
+
     virtual std::string name(description_level_type type) const = 0;
     virtual std::string pronoun(pronoun_type which_pronoun) const = 0;
     virtual std::string conj_verb(const std::string &verb) const = 0;
@@ -169,7 +169,7 @@ public:
     {
         return (0);
     }
-    
+
     virtual void exercise(skill_type sk, int qty) { }
 
     virtual int stat_hp() const = 0;
@@ -183,7 +183,7 @@ public:
     virtual void shield_block_succeeded() { }
 
     virtual int mons_species() const = 0;
-    
+
     virtual mon_holy_type holiness() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_steam() const = 0;
@@ -195,7 +195,7 @@ public:
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
     virtual bool airborne() const;
-    
+
     virtual bool paralysed() const = 0;
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
@@ -250,7 +250,7 @@ struct coord_def
     }
 
     int distance_from(const coord_def &b) const;
-    
+
     bool operator == (const coord_def &other) const
     {
         return x == other.x && y == other.y;
@@ -279,7 +279,7 @@ struct coord_def
         y += offset;
         return (*this);
     }
-    
+
     const coord_def &operator -= (const coord_def &other)
     {
         x -= other.x;
@@ -307,7 +307,7 @@ struct coord_def
         y *= mul;
         return (*this);
     }
-    
+
     coord_def operator + (const coord_def &other) const
     {
         coord_def copy = *this;
@@ -343,7 +343,7 @@ struct coord_def
         coord_def copy = *this;
         return (copy *= mul);
     }
-    
+
     int abs() const
     {
         return (x * x + y * y);
@@ -387,7 +387,7 @@ struct delay_queue_item
 };
 
 
-struct item_def 
+struct item_def
 {
     object_class_type  base_type;  // basic class (ie OBJ_WEAPON)
     unsigned char  sub_type;   // type within that class (ie WPN_DAGGER)
@@ -398,7 +398,7 @@ struct item_def
     unsigned long  flags;      // item status flags
     short          quantity;   // number of items
 
-    short  x;          // x-location;         for inventory items = -1 
+    short  x;          // x-location;         for inventory items = -1
     short  y;          // y-location;         for inventory items = -1
     short  link;       // link to next item;  for inventory items = slot
     short  slot;       // Inventory letter
@@ -428,14 +428,14 @@ public:
     int  book_number() const;
     int zap() const; // what kind of beam it shoots (if wand).
                      // XXX should really return zap_type!
-    
+
 
     // Returns index in mitm array. Results are undefined if this item is
     // not in the array!
     int  index() const;
 
     int  armour_rating() const;
-    
+
     bool launched_by(const item_def &launcher) const;
 
     void clear()
@@ -546,7 +546,7 @@ class player : public actor
 {
 public:
   bool turn_is_over; // flag signaling that player has performed a timed action
-  
+
   // If true, player is headed to the Abyss.
   bool banished;
   std::string banished_by;
@@ -554,7 +554,7 @@ public:
   std::vector<int> beheld_by; // monsters beholding player
 
   bool just_autoprayed;         // autopray just kicked in
-    
+
   unsigned short prev_targ;
   coord_def     prev_grd_targ;
   char your_name[kNameLen];
@@ -653,7 +653,7 @@ public:
   int your_level; // offset by one (-1 == 0, 0 == 1, etc.) for display
 
   // durational things
-  FixedVector<int, NUM_DURATIONS> duration; 
+  FixedVector<int, NUM_DURATIONS> duration;
 
   int rotting;
 
@@ -724,13 +724,13 @@ public:
 
   unsigned char hell_exit;            // which level plyr goes to on hell exit.
 
-  // This field is here even in non-WIZARD compiles, since the 
+  // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
   bool          wizard;               // true if player has entered wiz mode.
   time_t        birth_time;           // start time of game
 
   time_t        start_time;           // start time of session
-  long          real_time;            // real time played (in seconds) 
+  long          real_time;            // real time played (in seconds)
   long          num_turns;            // number of turns taken
 
   long          last_view_update;     // what turn was the view last updated?
@@ -770,7 +770,7 @@ public:
     void copy_from(const player &other);
 
     void init();
-    
+
     // Low-level move the player to (x, y). Use these functions instead of
     // changing x_pos and y_pos directly.
     void moveto(int x, int y);
@@ -778,7 +778,7 @@ public:
 
     coord_def prev_move() const;
     void reset_prev_move();
-    
+
     bool in_water() const;
     bool can_swim() const;
     bool is_levitating() const;
@@ -895,7 +895,7 @@ public:
 
     int stat_hp() const     { return hp; }
     int stat_maxhp() const  { return hp_max; }
-    
+
     int shield_bonus() const;
     int shield_block_penalty() const;
     int shield_bypass_ability(int tohit) const;
@@ -986,7 +986,7 @@ public:
 
 private:
     int modded_speed(const monsters *mons, int hdplus) const;
-    int calc_duration(const monsters *mons, const mon_enchant *added) const;    
+    int calc_duration(const monsters *mons, const mon_enchant *added) const;
 };
 
 typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
@@ -1076,14 +1076,14 @@ public:
     void apply_enchantment(const mon_enchant &me);
 
     void timeout_enchantments(int levels);
-    
+
     bool needs_transit() const;
     void set_transit(const level_id &destination);
     bool find_place_to_live(bool near_player = false);
     bool find_place_near_player();
     bool find_home_around(const coord_def &c, int radius);
     bool find_home_anywhere();
-        
+
     void set_ghost(const ghost_demon &ghost);
     void ghost_init();
     void pandemon_init();
@@ -1092,10 +1092,10 @@ public:
     void load_spells(mon_spellbook_type spellbook);
 
     actor *get_foe() const;
-    
+
     // actor interface
     int id() const;
-    int       get_experience_level() const;    
+    int       get_experience_level() const;
     god_type  deity() const;
     bool      alive() const;
     coord_def pos() const;
@@ -1141,7 +1141,7 @@ public:
                       bool force = false);
 
     bool      can_use_missile(const item_def &item) const;
-    
+
     std::string name(description_level_type type) const;
     std::string name(description_level_type type, bool force_visible) const;
     std::string pronoun(pronoun_type pro) const;
@@ -1164,7 +1164,7 @@ public:
 
     mon_holy_type holiness() const;
     int res_fire() const;
-    int res_steam() const;    
+    int res_steam() const;
     int res_cold() const;
     int res_elec() const;
     int res_poison() const;
@@ -1237,9 +1237,9 @@ private:
     void equip_armour(item_def &item, int near);
     void unequip_weapon(item_def &item, int near);
     void unequip_armour(item_def &item, int near);
-   
+
     bool decay_enchantment(const mon_enchant &me, bool decay_degree = true);
-    
+
     bool drop_item(int eslot, int near);
     bool wants_weapon(const item_def &item) const;
     bool wants_armour(const item_def &item) const;
@@ -1361,11 +1361,11 @@ public:
 
     // Glyphs of squares that are in LOS.
     env_show_grid show;
-    
+
     // What would be visible, if all of the translucent wall were
     // made opaque.
     env_show_grid no_trans_show;
-    
+
     FixedArray<unsigned short, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
                                              show_col;  // view window colour
 
@@ -1387,7 +1387,7 @@ public:
 
     FixedVector< int, 20 >                   mons_alloc;
     map_markers                              markers;
-    
+
     double                   elapsed_time; // used during level load
 
     // Number of turns the player has spent on this level.
@@ -1408,8 +1408,8 @@ struct message_filter
     int             channel;        // Use -1 to match any channel.
     text_pattern    pattern;        // Empty pattern matches any message
 
-    message_filter( int ch, const std::string &s ) 
-        : channel(ch), pattern(s) 
+    message_filter( int ch, const std::string &s )
+        : channel(ch), pattern(s)
     {
     }
 
@@ -1513,7 +1513,7 @@ struct mon_display
 };
 
 class InitLineInput;
-struct game_options 
+struct game_options
 {
 public:
     game_options();
@@ -1545,7 +1545,7 @@ public:
     bool        suppress_startup_errors;
 
     bool        mouse_input;
-    
+
     int         view_max_width;
     int         view_max_height;
     int         mlist_min_height;
@@ -1588,7 +1588,7 @@ public:
     bool        list_rotten;     // list slots for rotting corpses/chunks
     bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
-    
+
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
     bool        note_skill_max;  // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
@@ -1600,7 +1600,7 @@ public:
     int         colour[16];      // macro fg colours to other colours
     int         background;      // select default background colour
     int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
-    
+
     bool        use_old_selection_order; // use old order of species/classes in
                                          // selection screen
     int         weapon;          // auto-choose weapon for character
@@ -1632,7 +1632,7 @@ public:
     FixedVector<unsigned, NUM_DCHAR_TYPES> char_table;
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
-    
+
 #ifdef WIZARD
     int         wiz_mode;        // yes, no, never in wiz mode to start
 #endif
@@ -1684,7 +1684,7 @@ public:
     unsigned    may_stab_brand;     // Highlight potential stab candidates
     unsigned    feature_item_brand; // Highlight features covered by items.
     unsigned    trap_item_brand;    // Highlight traps covered by items.
-    
+
     bool        trap_prompt;        // Prompt when stepping on mechnical traps
                                     // without enough hp (using trapwalk.lua)
 
@@ -1704,7 +1704,7 @@ public:
 
     // Some experimental improvments to explore
     bool        explore_improved;
-    
+
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
     std::vector<message_colour_mapping> message_colour_mappings;
@@ -1744,14 +1744,14 @@ public:
     int         assign_item_slot;   // How free slots are assigned
 
     std::vector<text_pattern> drop_filter;
-    
+
     FixedArray<bool, NUM_DELAYS, NUM_AINTERRUPTS> activity_interrupts;
 
     // Previous startup options
     bool        remember_name;      // Remember and reprompt with last name
 
     bool        dos_use_background_intensity;
-    
+
     bool        use_fake_cursor;    // Draw a fake cursor instead of relying
                                     // on the term's own cursor.
 
@@ -1769,7 +1769,7 @@ public:
     std::string fsim_mons;
     std::vector<std::string> fsim_kit;
 #endif  // WIZARD
-    
+
 #ifdef USE_TILE
     char        tile_show_items[20]; // show which item types in tile inventory
     bool        tile_title_screen;   // display title screen?
@@ -1797,11 +1797,11 @@ public:
 #ifdef WIN32TILES
     bool        use_dos_char;
 #endif
-    
+
     typedef std::map<std::string, std::string> opt_map;
     opt_map     named_options;          // All options not caught above are
                                         // recorded here.
-        
+
     ///////////////////////////////////////////////////////////////////////
     // These options cannot be directly set by the user. Instead they're
     // set indirectly to the choices the user made for the last character
@@ -1827,14 +1827,14 @@ public:
     unsigned int tut_berserk_counter;
     unsigned int tut_melee_counter;
     unsigned int tut_last_healed;
-    
+
     bool tut_just_triggered;
     unsigned int tutorial_type;
     unsigned int tutorial_left;
 
 private:
     std::map<std::string, std::string> aliases;
-    
+
 public:
     // Convenience accessors for the second-class options in named_options.
     int         o_int(const char *name, int def = 0) const;
@@ -1849,7 +1849,7 @@ public:
 private:
     std::string unalias(const std::string &key) const;
     void add_alias(const std::string &alias, const std::string &name);
-    
+
     void clear_feature_overrides();
     void clear_cset_overrides();
     void add_cset_override(char_set_type set, const std::string &overrides);
@@ -1860,7 +1860,7 @@ private:
     void add_message_colour_mappings(const std::string &);
     void add_message_colour_mapping(const std::string &);
     message_filter parse_message_filter(const std::string &s);
-    
+
     void set_default_activity_interrupts();
     void clear_activity_interrupts(FixedVector<bool, NUM_AINTERRUPTS> &eints);
     void set_activity_interrupt(
@@ -1879,11 +1879,11 @@ private:
 
     void split_parse(const std::string &s, const std::string &separator,
                      void (game_options::*add)(const std::string &));
-    void add_mon_glyph_override(monster_type mtype, mon_display &mdisp);    
+    void add_mon_glyph_override(monster_type mtype, mon_display &mdisp);
     void add_mon_glyph_overrides(const std::string &mons, mon_display &mdisp);
     void add_mon_glyph_override(const std::string &);
     mon_display parse_mon_glyph(const std::string &s) const;
-    void set_option_fragment(const std::string &s);    
+    void set_option_fragment(const std::string &s);
 
     static const std::string interrupt_prefix;
 };

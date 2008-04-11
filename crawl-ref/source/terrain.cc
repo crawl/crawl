@@ -108,7 +108,7 @@ command_type grid_stair_direction(dungeon_feature_type grid)
     case DNGN_EXIT_HELL:
     case DNGN_EXIT_PORTAL_VAULT:
         return (CMD_GO_UPSTAIRS);
-        
+
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_ENTER_HELL:
     case DNGN_ENTER_LABYRINTH:
@@ -143,7 +143,7 @@ command_type grid_stair_direction(dungeon_feature_type grid)
     case DNGN_ENTER_RESERVED_3:
     case DNGN_ENTER_RESERVED_4:
         return (CMD_GO_DOWNSTAIRS);
-        
+
     default:
         return (CMD_NO_CMD);
     }
@@ -282,7 +282,7 @@ dungeon_feature_type grid_secret_door_appearance( int gx, int gy )
         }
     }
 
-    return ((ret == DNGN_FLOOR) ? DNGN_ROCK_WALL 
+    return ((ret == DNGN_FLOOR) ? DNGN_ROCK_WALL
                                 : ret);
 }
 
@@ -299,7 +299,7 @@ static coord_def dgn_find_nearest_square(
     bool (*traversable)(const coord_def &) = NULL)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-    
+
     std::list<coord_def> points[2];
     int iter = 0;
     points[iter].push_back(pos);
@@ -313,7 +313,7 @@ static coord_def dgn_find_nearest_square(
 
             if (p != pos && acceptable(p))
                 return (p);
-            
+
             travel_point_distance[p.x][p.y] = 1;
             for (int yi = -1; yi <= 1; ++yi)
             {
@@ -328,7 +328,7 @@ static coord_def dgn_find_nearest_square(
 
                     if (traversable && !traversable(np))
                         continue;
-                    
+
                     points[!iter].push_back(np);
                 }
             }
@@ -377,7 +377,7 @@ static bool dgn_shift_feature(const coord_def &pos)
     const dungeon_feature_type dfeat = grd(pos);
     if (!is_critical_feature(dfeat) && !env.markers.find(pos, MAT_ANY))
         return (false);
-    
+
     const coord_def dest =
         dgn_find_nearest_square(pos, is_feature_shift_target);
     if (in_bounds(dest) && dest != pos)
@@ -450,13 +450,14 @@ void dungeon_terrain_changed(const coord_def &pos,
     {
         if (preserve_features)
             dgn_shift_feature(pos);
+
         unnotice_feature(level_pos(level_id::current(), pos));
         grd(pos) = nfeat;
         env.grid_colours(pos) = BLACK;
         if (is_notable_terrain(nfeat) && see_grid(pos))
             seen_notable_thing(nfeat, pos.x, pos.y);
     }
-    
+
     dgn_check_terrain_items(pos, preserve_items);
     if (affect_player && pos == you.pos())
     {
@@ -472,7 +473,7 @@ void dungeon_terrain_changed(const coord_def &pos,
 }
 
 // returns true if we manage to scramble free.
-bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift, 
+bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
                        unsigned char terrain )
 {
     bool escape = false;
@@ -484,7 +485,7 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
         merfolk_start_swimming();
         return (false);
     }
-    
+
     // sanity check
     if (terrain != DNGN_LAVA && beogh_water_walk())
         return (false);
@@ -522,7 +523,7 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
     {
         if (allow_shift)
         {
-            if (empty_surrounds( you.x_pos, you.y_pos, DNGN_FLOOR, 1, 
+            if (empty_surrounds( you.x_pos, you.y_pos, DNGN_FLOOR, 1,
                                  false, empty ))
             {
                 escape = true;

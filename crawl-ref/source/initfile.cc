@@ -65,10 +65,10 @@ god_type str_to_god(std::string god)
         return (GOD_NO_GOD);
 
     lowercase(god);
-    
+
     if (god == "random")
         return (GOD_RANDOM);
-    
+
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
         if (lowercase_string(god_name(static_cast<god_type>(i))) == god)
             return (static_cast<god_type>(i));
@@ -101,7 +101,7 @@ static unsigned int _str_to_tile_colour(std::string colour)
         colour = "grey";
     else if (colour == "lightgray")
         colour = "lightgrey";
-        
+
     for (unsigned int i = 0; i < 24; i++)
     {
          if (tile_cols[i] == colour)
@@ -163,7 +163,7 @@ int str_to_colour( const std::string &str, int default_colour,
     if (ret == 16)
     {
         // Maybe we have an element colour attribute.
-        for (unsigned i = 0; i < sizeof(element_cols) / sizeof(*element_cols); 
+        for (unsigned i = 0; i < sizeof(element_cols) / sizeof(*element_cols);
                 ++i)
         {
             if (str == element_cols[i])
@@ -327,7 +327,7 @@ static char _str_to_race( const std::string &str )
         return '*';
 
     int index = -1;
-    
+
     if (str.length() == 1)      // old system of using menu letter
         return (str[0]);
     else if (str.length() == 2) // scan abbreviations
@@ -339,7 +339,7 @@ static char _str_to_race( const std::string &str )
 
     if (index == -1)
         fprintf( stderr, "Unknown race choice: %s\n", str.c_str() );
-        
+
     return ((index != -1) ? index_to_letter( index ) : 0);
 }
 
@@ -422,7 +422,7 @@ static unsigned curses_attribute(const std::string &field)
             crawl_state.add_startup_error(
                 make_stringf("Bad highlight string -- %s\n", field.c_str()));
         else
-            return CHATTR_HILITE | (colour << 8);          
+            return CHATTR_HILITE | (colour << 8);
     }
     else if (field != "none")
         crawl_state.add_startup_error(
@@ -521,8 +521,8 @@ void game_options::set_activity_interrupt(
                 make_stringf("Unknown delay: %s\n", delay_name.c_str()));
             return;
         }
-        
-        FixedVector<bool, NUM_AINTERRUPTS> &refints = 
+
+        FixedVector<bool, NUM_AINTERRUPTS> &refints =
             activity_interrupts[delay];
 
         for (int i = 0; i < NUM_AINTERRUPTS; ++i)
@@ -543,7 +543,7 @@ void game_options::set_activity_interrupt(
 
     eints[ai] = true;
 }
- 
+
 void game_options::set_activity_interrupt(const std::string &activity_name,
                                           const std::string &interrupt_names,
                                           bool append_interrupts,
@@ -575,7 +575,7 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     {
         if (!append_interrupts)
             clear_activity_interrupts(eints);
-        
+
         for (int i = 0, size = interrupts.size(); i < size; ++i)
             set_activity_interrupt(eints, interrupts[i]);
     }
@@ -609,7 +609,7 @@ void game_options::reset_options()
 #endif
 
     mouse_input = false;
-    
+
     view_max_width = 33;
     view_max_height = 21;
     mlist_min_height = 5;
@@ -647,7 +647,7 @@ void game_options::reset_options()
 #else
     char_set               = CSET_IBM;
 #endif
-    
+
     // set it to the .crawlrc default
     autopickups = ((1L << 15) | // gold
                    (1L <<  6) | // scrolls
@@ -658,7 +658,7 @@ void game_options::reset_options()
                    (1L <<  4)); // food
 
     suppress_startup_errors = false;
-    
+
     show_inventory_weights = false;
     colour_map             = true;
     clean_map              = false;
@@ -674,7 +674,7 @@ void game_options::reset_options()
     magic_point_warning    = 0;
     default_target         = true;
     autopickup_no_burden   = false;
-    
+
     user_note_prefix       = "";
     note_all_skill_levels  = false;
     note_skill_max         = false;
@@ -753,7 +753,7 @@ void game_options::reset_options()
     target_oos             = true;
     target_los_first       = true;
     target_unshifted_dirs  = false;
-    
+
     dump_kill_places       = KDO_ONE_PLACE;
     dump_message_count     = 7;
     dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
@@ -844,7 +844,7 @@ void game_options::reset_options()
     for (int i = 0; i < 16; i++)
         colour[i] = i;
 #endif
-    
+
     // map each channel to plain (well, default for now since I'm testing)
     for (int i = 0; i < NUM_MESSAGE_CHANNELS; i++)
         channels[i] = MSGCOL_DEFAULT;
@@ -866,8 +866,8 @@ void game_options::reset_options()
 
     never_pickup.clear();
     always_pickup.clear();
-    note_monsters.clear(); 
-    note_messages.clear(); 
+    note_monsters.clear();
+    note_messages.clear();
     autoinscriptions.clear();
     note_items.clear();
     note_skill_levels.clear();
@@ -960,14 +960,14 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
     int letter = -1;
     if (mons.length() == 1)
         letter = mons[0] == '_' ? ' ' : mons[0];
-    
+
     bool found = false;
     for (int i = 0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
         if (!me || me->mc == MONS_PROGRAM_BUG)
             continue;
-        
+
         if (me->showchar == letter || me->name == mons)
         {
             found = true;
@@ -1015,7 +1015,7 @@ void game_options::add_feature_override(const std::string &text)
     std::string::size_type spos = text.rfind("{", epos);
     if (spos == std::string::npos)
         return;
-    
+
     std::string fname = text.substr(0, spos);
     std::string props = text.substr(spos + 1, epos - spos - 1);
     std::vector<std::string> iprops = split_string(",", props, true, true);
@@ -1036,7 +1036,7 @@ void game_options::add_feature_override(const std::string &text)
     {
         feature_override fov;
         fov.feat = feats[i];
-        
+
         fov.override.symbol         = read_symbol(iprops[0]);
         fov.override.magic_symbol   = read_symbol(iprops[1]);
         fov.override.colour         = str_to_colour(iprops[2], BLACK);
@@ -1058,12 +1058,12 @@ void game_options::add_cset_override(
         std::vector<std::string> mapping = split_string(":", overs[i]);
         if (mapping.size() != 2)
             continue;
-        
+
         dungeon_char_type dc = dchar_by_name(mapping[0]);
         if (dc == NUM_DCHAR_TYPES)
             continue;
-        
-        unsigned symbol = 
+
+        unsigned symbol =
             static_cast<unsigned>(read_symbol(mapping[1]));
 
         if (set == NUM_CSET)
@@ -1227,7 +1227,7 @@ void save_player_name()
     write_newgame_options_file();
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
- 
+
 void read_options(FILE *f, bool runscript)
 {
     FileLineInput fl(f);
@@ -1249,7 +1249,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
                                 bool clear_aliases)
 {
     unsigned int line = 0;
-    
+
     bool inscriptblock = false;
     bool inscriptcond  = false;
     bool isconditional = false;
@@ -1258,7 +1258,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
 
     if (clear_aliases)
         aliases.clear();
-    
+
     std::string luacond;
     std::string luacode;
     while (!il.eof())
@@ -1316,7 +1316,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             }
             continue;
         }
-        else if (inscriptcond && 
+        else if (inscriptcond &&
                 (str.find(">") == str.length() - 1 || str == ">L"))
         {
             inscriptcond = false;
@@ -1359,7 +1359,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
                 luacode.clear();
 #endif
             }
-            
+
             continue;
         }
         else if (inscriptblock && (str == "}Lua" || str == "}"))
@@ -1531,7 +1531,7 @@ void game_options::set_menu_sort(std::string field)
 {
     if (field.empty())
         return;
-    
+
     menu_sort_condition cond(field);
     sort_menus.push_back(cond);
 }
@@ -1549,7 +1549,7 @@ void game_options::set_option_fragment(const std::string &s)
 {
     if (s.empty())
         return;
-    
+
     std::string::size_type st = s.find(':');
     if (st == std::string::npos)
     {
@@ -1608,7 +1608,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         return;
 
     field  = str.substr( first_equals + 1 );
-    
+
     std::string prequal = trimmed_string( str.substr(0, first_equals) );
 
     // Is this a case of key += val?
@@ -1658,10 +1658,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     // Keep unlowercased field around
     const std::string orig_field = field;
 
-    if (key != "name" && key != "crawl_dir" 
+    if (key != "name" && key != "crawl_dir"
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "autopickup_exceptions"
-        && key != "stop_travel" && key != "sound" 
+        && key != "stop_travel" && key != "sound"
         && key != "travel_stop_message"
         && key != "drop_filter" && key != "lua_file"
         && key != "note_items" && key != "autoinscribe"
@@ -1742,7 +1742,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
         if (key == "ascii_display")
         {
-            char_set = 
+            char_set =
                 _read_bool(field, char_set == CSET_ASCII)?
                     CSET_ASCII
                   : CSET_IBM;
@@ -1829,7 +1829,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else COLOUR_OPTION(detected_monster_colour);
     else if (key.find(interrupt_prefix) == 0)
     {
-        set_activity_interrupt(key.substr(interrupt_prefix.length()), 
+        set_activity_interrupt(key.substr(interrupt_prefix.length()),
                                field,
                                plus_equal,
                                minus_equal);
@@ -1912,7 +1912,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "fire_items_start")
     {
         if (isalpha( field[0] ))
-            fire_items_start = letter_to_index( field[0] ); 
+            fire_items_start = letter_to_index( field[0] );
         else
         {
             fprintf( stderr, "Bad fire item start index: %s\n",
@@ -2071,7 +2071,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         if (scrollmarg < 0)
             scrollmarg = 0;
         scroll_margin_x = scroll_margin_y = scrollmarg;
-    }    
+    }
     else if (key == "user_note_prefix")
     {
         // field is already cleaned up from trim_string()
@@ -2084,22 +2084,22 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         if (subkey == "failure")
         {
-            flush_input[FLUSH_ON_FAILURE] 
+            flush_input[FLUSH_ON_FAILURE]
                 = _read_bool(field, flush_input[FLUSH_ON_FAILURE]);
         }
         else if (subkey == "command")
         {
-            flush_input[FLUSH_BEFORE_COMMAND] 
+            flush_input[FLUSH_BEFORE_COMMAND]
                 = _read_bool(field, flush_input[FLUSH_BEFORE_COMMAND]);
         }
         else if (subkey == "message")
         {
-            flush_input[FLUSH_ON_MESSAGE] 
+            flush_input[FLUSH_ON_MESSAGE]
                 = _read_bool(field, flush_input[FLUSH_ON_MESSAGE]);
         }
         else if (subkey == "lua")
         {
-            flush_input[FLUSH_LUA] 
+            flush_input[FLUSH_LUA]
                 = _read_bool(field, flush_input[FLUSH_LUA]);
         }
     }
@@ -2461,7 +2461,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
         new_dump_fields(field, !minus_equal);
     }
-    else if (key == "dump_kill_places") 
+    else if (key == "dump_kill_places")
     {
         dump_kill_places =
             field == "none"? KDO_NO_PLACES :
@@ -2498,10 +2498,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if (ch == "artefacts" || ch == "artifacts"
                     || ch == "artefact" || ch == "artifact")
                 dump_item_origins |= IODS_ARTEFACTS;
-            else if (ch == "ego_arm" || ch == "ego armour" 
+            else if (ch == "ego_arm" || ch == "ego armour"
                     || ch == "ego_armour")
                 dump_item_origins |= IODS_EGO_ARMOUR;
-            else if (ch == "ego_weap" || ch == "ego weapon" 
+            else if (ch == "ego_weap" || ch == "ego weapon"
                     || ch == "ego_weapon" || ch == "ego weapons"
                     || ch == "ego_weapons")
                 dump_item_origins |= IODS_EGO_WEAPON;
@@ -2666,7 +2666,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (runscript)
     {
 #ifdef CLUA_BINDINGS
-        if (!clua.callbooleanfn(false, "c_process_lua_option", "ss", 
+        if (!clua.callbooleanfn(false, "c_process_lua_option", "ss",
                         key.c_str(), orig_field.c_str()))
 #endif
         {
@@ -2760,7 +2760,7 @@ bool arg_seen[num_cmd_ops];
 bool parse_args( int argc, char **argv, bool rc_only )
 {
     set_crawl_base_dir(argv[0]);
-    
+
     if (argc < 2)           // no args!
         return (true);
 
@@ -2776,7 +2776,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
     if (SysEnv.cmd_args.empty())
         for (int i = 1; i < argc; ++i)
             SysEnv.cmd_args.push_back(argv[i]);
-    
+
     while (current < argc)
     {
         // get argument
@@ -2841,7 +2841,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
         case CLO_SCORES:
         case CLO_TSCORES:
         case CLO_VSCORES:
-            if (!next_is_param)      
+            if (!next_is_param)
                 ecount = -1;            // default
             else // optional number given
             {
@@ -2882,7 +2882,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             else
                 SysEnv.map_gen_iters = 100;
             break;
-            
+
         case CLO_MACRO:
             if (!next_is_param)
                 return (false);
@@ -2906,7 +2906,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
                 SysEnv.scorefile = next_arg;
             nextUsed = true;
             break;
-            
+
         case CLO_NAME:
             if (!next_is_param)
                 return (false);

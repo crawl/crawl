@@ -101,7 +101,7 @@ void dlua_chunk::write(writer& outf) const
         marshallByte(outf, CT_EMPTY);
         return;
     }
-    
+
     if (!compiled.empty())
     {
         marshallByte(outf, CT_COMPILED);
@@ -112,7 +112,7 @@ void dlua_chunk::write(writer& outf) const
         marshallByte(outf, CT_SOURCE);
         marshallString4(outf, chunk);
     }
-        
+
     marshallString4(outf, file);
     marshallLong(outf, first);
 }
@@ -187,7 +187,7 @@ int dlua_chunk::load(CLua &interp)
         chunk.clear();
         return (-1000);
     }
-    
+
     int err = check_op( interp,
                         interp.loadstring(chunk.c_str(), context.c_str()) );
     if (err)
@@ -356,7 +356,7 @@ static int dgn_depth_proc(lua_State *ls, depth_ranges &dr, int s)
     {
         PLUARET(string, dgn_depth_list_string(dr).c_str());
     }
-    
+
     if (lua_isnil(ls, s))
     {
         dr.clear();
@@ -607,7 +607,7 @@ static int dgn_map_add_transform(
         }
     }
 
-    return (0);    
+    return (0);
 }
 
 static int dgn_subst(lua_State *ls)
@@ -681,12 +681,12 @@ static int dgn_map(lua_State *ls)
         }
         return (0);
     }
-    
+
     const std::string newline = luaL_checkstring(ls, 3);
     if (which_line < 0)
         luaL_error(ls,
                    make_stringf("Index %d out of range", which_line).c_str());
-    
+
     if (which_line < (int) lines.size())
     {
         lines[which_line] = newline;
@@ -857,7 +857,7 @@ static int dgn_map_pathfind(lua_State *ls, int minargs,
             (ls,
              make_stringf("Not enough points to test connectedness "
                           "(need at least %d)", minargs / 2).c_str());
-    
+
     map_def::map_feature_finder feat_finder(*map);
     map_def::map_bounds_check bounds_checker(*map);
     map_flood_finder finder(feat_finder, bounds_checker);
@@ -870,7 +870,7 @@ static int dgn_map_pathfind(lua_State *ls, int minargs,
     }
 
     const coord_def pos(luaL_checkint(ls, 2), luaL_checkint(ls, 3));
-    PLUARET(boolean, (finder.*f)(pos));    
+    PLUARET(boolean, (finder.*f)(pos));
 }
 
 static int dgn_points_connected(lua_State *ls)
@@ -1144,7 +1144,7 @@ std::vector<std::string> dungeon_feature_matches(const std::string &name)
 const char *dungeon_feature_name(dungeon_feature_type rfeat)
 {
     const unsigned feat = rfeat;
-    
+
     if (feat >= ARRAYSIZE(dngn_feature_names))
         return (NULL);
 
@@ -1183,7 +1183,7 @@ static const char *dgn_event_type_name(unsigned evmask)
 {
     if (evmask == 0)
         return (dgn_event_type_names[0]);
-    
+
     for (unsigned i = 1; i < ARRAYSIZE(dgn_event_type_names); ++i)
         if (evmask & (1 << (i - 1)))
             return (dgn_event_type_names[i]);
@@ -1695,10 +1695,10 @@ static const struct luaL_reg dgn_lib[] =
     { "kitem", dgn_kitem },
     { "kmons", dgn_kmons },
     { "kmask", dgn_kmask },
-    
+
     { "grid", dgn_grid },
     { "max_bounds", dgn_max_bounds },
-    
+
     { "terrain_changed", dgn_terrain_changed },
     { "points_connected", dgn_points_connected },
     { "any_point_connected", dgn_any_point_connected },
@@ -1804,7 +1804,7 @@ static int file_marshall_meta(lua_State *ls)
 {
     if (lua_gettop(ls) != 2)
         luaL_error(ls, "Need two arguments: tag header and value");
-    
+
     writer &th(*static_cast<writer*>( lua_touserdata(ls, 1) ));
 
     lua_persist_type ptype = LPT_NONE;
@@ -1924,7 +1924,7 @@ static const struct luaL_reg dgnevent_lib[] =
     { NULL, NULL }
 };
 
-static void luaopen_setmeta(lua_State *ls, 
+static void luaopen_setmeta(lua_State *ls,
                             const char *global,
                             const luaL_reg *lua_lib,
                             const char *meta)
@@ -1933,7 +1933,7 @@ static void luaopen_setmeta(lua_State *ls,
     lua_setglobal(ls, global);
 
     luaL_openlib(ls, global, lua_lib, 0);
-    
+
     // Do <global>.__index = <global>
     lua_pushstring(ls, "__index");
     lua_pushvalue(ls, -2);
@@ -1976,16 +1976,16 @@ static void luaopen_mapmarker(lua_State *ls)
 void init_dungeon_lua()
 {
     lua_stack_cleaner clean(dlua);
-    
+
     luaL_openlib(dlua, "dgn", dgn_lib, 0);
     // Add additional function to the Crawl module.
     luaL_openlib(dlua, "crawl", crawl_lib, 0);
     luaL_openlib(dlua, "file", file_lib, 0);
     luaL_openlib(dlua, "you", you_lib, 0);
-    
+
     dlua.execfile("clua/dungeon.lua", true, true);
     dlua.execfile("clua/luamark.lua", true, true);
-    
+
     lua_getglobal(dlua, "dgn_run_map");
     luaopen_debug(dlua);
     luaL_newmetatable(dlua, MAP_METATABLE);

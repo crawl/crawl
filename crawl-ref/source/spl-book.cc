@@ -280,7 +280,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 23 - Book of Necromancy 
+    // 23 - Book of Necromancy
     {SPELL_PAIN,
      SPELL_ANIMATE_SKELETON,
      SPELL_VAMPIRIC_DRAINING,
@@ -364,7 +364,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_SILENCE,
      SPELL_DEFLECT_MISSILES,
      SPELL_LIGHTNING_BOLT,
-     SPELL_CONJURE_BALL_LIGHTNING, 
+     SPELL_CONJURE_BALL_LIGHTNING,
      },
 
     // 30 - Book of Divinations
@@ -713,7 +713,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
     bool spell_skills = false;
 
-    for (i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++) 
+    for (i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
     {
         if (you.skills[i])
         {
@@ -763,7 +763,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         {
             if (knowsSpell)
                 colour = LIGHTGREY;
-            else if (you.experience_level >= level_diff 
+            else if (you.experience_level >= level_diff
                         && spell_levels >= levels_req
                         && spell_skills)
             {
@@ -788,7 +788,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         out.cprintf( "%s", spell_title(stype) );
         out.cgotoxy( 35, -1 );
 
-        
+
         if (action == RBOOK_USE_STAFF)
             out.cprintf( "Evocations" );
         else
@@ -1142,10 +1142,10 @@ bool player_can_memorise(const item_def &book)
 {
     if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL)
         return false;
-    
+
     if (!player_spell_levels())
         return false;
-        
+
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
     {
          const spell_type stype = which_spell_in_book(book.book_number(), j);
@@ -1174,7 +1174,7 @@ bool player_can_memorise(const item_def &book)
     }
     return false;
 }
-                         
+
 bool learn_spell(int book)
 {
     int chance = 0;
@@ -1210,7 +1210,7 @@ bool learn_spell(int book)
 
     if (book < 0)
         book = which_spellbook();
-        
+
     if (book < 0) // still -1?
         return (false);
 
@@ -1326,7 +1326,7 @@ bool learn_spell(int book)
         if (you.inv[ book ].sub_type == BOOK_NECRONOMICON)
         {
             mpr("The pages of the Necronomicon glow with a dark malevolence...");
-            miscast_effect( SPTYP_NECROMANCY, 8, random2avg(88, 3), 100, 
+            miscast_effect( SPTYP_NECROMANCY, 8, random2avg(88, 3), 100,
                             "reading the Necronomicon" );
         }
         else if (you.inv[ book ].sub_type == BOOK_DEMONOLOGY)
@@ -1347,7 +1347,7 @@ bool learn_spell(int book)
             return (false);
         else if (!yesno("Memorise anyway?"))
             return (false);
-#else 
+#else
         return (false);
 #endif
     }
@@ -1364,7 +1364,7 @@ int count_staff_spells(const item_def &item, bool need_id)
 {
     if (item.base_type != OBJ_STAVES)
         return (-1);
-    
+
     if (need_id && !item_type_known(item))
         return (0);
 
@@ -1400,12 +1400,12 @@ int rod_shield_leakage()
 int staff_spell( int staff )
 {
     item_def& istaff(you.inv[staff]);
-    // Spell staves are mostly for the benefit of non-spellcasters, so we're 
+    // Spell staves are mostly for the benefit of non-spellcasters, so we're
     // not going to involve INT or Spellcasting skills for power. -- bwr
-    int powc = (5 + you.skills[SK_EVOCATIONS] 
+    int powc = (5 + you.skills[SK_EVOCATIONS]
                  + roll_dice( 2, you.skills[SK_EVOCATIONS] ))
                 * 100
-                / rod_shield_leakage(); 
+                / rod_shield_leakage();
 
     if (!item_is_rod(istaff))
     {
@@ -1451,7 +1451,7 @@ int staff_spell( int staff )
 
         // Note that auto_list is ignored here.
         keyin = get_ch();
-        
+
         if (keyin == '?' || keyin == '*')
         {
             keyin = read_book( you.inv[staff], RBOOK_USE_STAFF );
@@ -1495,14 +1495,14 @@ int staff_spell( int staff )
         if (food < diff * 5)
             food = diff * 5;
     }
-        
+
     if (food && (you.hunger_state <= HS_STARVING || you.hunger <= food))
     {
         mpr("You don't have the energy to cast that spell.");
         crawl_state.zero_turns_taken();
         return (-1);
     }
-    
+
     if (istaff.plus < mana)
     {
         mpr("The rod doesn't have enough magic points.");
@@ -1519,7 +1519,7 @@ int staff_spell( int staff )
     {
         mpr("Something interferes with your magic!");
     }
-    // All checks passed, we can cast the spell    
+    // All checks passed, we can cast the spell
     else if (your_spells(spell, powc, false) == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
