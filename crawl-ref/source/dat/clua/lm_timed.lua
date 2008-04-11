@@ -23,7 +23,7 @@ function TimedMarker:new(pars)
   pars.high = pars.high or pars.low or pars.turns or 1
   pars.low  = pars.low or pars.high or pars.turns or 1
   local dur = crawl.random_range(pars.low, pars.high, pars.navg or 1)
-  local feat = pars.feat or 'floor'
+  local feat = pars.floor or 'floor'
   local fnum = dgn.feature_number(feat)
   if fnum == dgn.feature_number('unseen') then
     error("Bad feature name: " .. feat)
@@ -46,7 +46,7 @@ function TimedMarker:activate(marker, verbose)
   self.msg:init(self, marker, verbose)
 
   dgn.register_listener(dgn.dgn_event_type('turn'), marker)
-  dgn.register_listener(dgn.dgn_event_type('player_climb'), 
+  dgn.register_listener(dgn.dgn_event_type('player_climb'),
                         marker, marker:pos())
 end
 
@@ -54,13 +54,13 @@ function TimedMarker:timeout(marker, verbose, affect_player)
   local x, y = marker:pos()
   if verbose then
     if you.see_grid(marker:pos()) then
-      crawl.mpr( self.disappear or 
+      crawl.mpr( self.disappear or
                  dgn.feature_desc_at(x, y, "The") .. " disappears!")
     else
       crawl.mpr("The walls and floor vibrate strangely for a moment.")
     end
   end
-  dgn.terrain_changed(x, y, self.fnum, affect_player)
+  dgn.terrain_changed(x, y, self.fnum, affect_player, false)
   dgn.remove_listener(marker)
   dgn.remove_listener(marker, marker:pos())
   dgn.remove_marker(marker)
