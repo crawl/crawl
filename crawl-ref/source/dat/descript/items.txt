@@ -84,7 +84,7 @@ invited with the exception of Eris, or Discord. Enraged
 at her exclusion, the goddess threw a golden apple among 
 the guests, with the inscription, 'For the fairest.'"
 
-	-Bullfinch's Mythology, Chap. XXVII. a.
+    -Bullfinch's Mythology, Chap. XXVII. a.
 %%%%
 apricot
 
@@ -100,8 +100,8 @@ equal Quantity of Brandy, and a quarter of a pound of Sugar to every quart,
 with Cinnamon, Cloves, Mace, and Kernels of the Apricots. After all 
 the Ingredients have infuſed eight or ten Days the Liquor is to be ſtrain'd 
 again and put into Bottles and ſo kept."
-	-Charles Carter, _The Compleat City and Country Cook:
-	Or, Accomplish'd House-wife_.  1732.
+    -Charles Carter, _The Compleat City and Country Cook:
+    Or, Accomplish'd House-wife_.  1732.
 %%%%
 arrow
 
@@ -369,7 +369,7 @@ the provincials reclined at table. He was so punctilious and strict in
 the management of his household, in small matters as well as in those of 
 greater importance, that he put his baker in irons for serving him with 
 one kind of bread and his guests with another..."
-	-Suetonius, _De Vita Caesarum, Divus Iulius_. 110 CE.
+    -Suetonius, _De Vita Caesarum, Divus Iulius_. 110 CE.
 %%%%
 broad axe
 
@@ -404,25 +404,35 @@ our table, and to which he directed our attention. It was the
 Tchu-tchu (Sechium edule) called also by the people _pepinella_. 
 It is a small gourd, very much like vegetable marrow; one seed 
 covers a wall with its ramifications "
-	-John Overton Choules, _The Cruise of the Steam Yacht
-        North Star: A Narrative of the Excursion of Mr. Vanderbilt's
-        Party to England, Russia, Denmark, France, Spain, Malta, Turkey,
-        Madeira, Etc_.  1854.
+    -John Overton Choules, _The Cruise of the Steam Yacht
+    North Star: A Narrative of the Excursion of Mr. Vanderbilt's
+    Party to England, Russia, Denmark, France, Spain, Malta, Turkey,
+    Madeira, Etc_.  1854.
 %%%%
 chunk of flesh
 
-A piece of dungeon meat.
+A piece of meat found in the dungeon.
 %%%%
 cloak
 
 A cloth cloak.
+
+"O Bell my wife, why dost thou flyte?	
+  Now is now, and then was then:	
+Seek now all the world throughout,	
+  Thou kens not clowns from gentlemen:	
+They are clad in black, green, yellow and blue,
+  So far above their own degree.	
+Once in my life I’ll take a view;	
+  For I’ll have a new cloak about me."
+    -Anonymous, "The Old Cloak".  16th Century.
 %%%%
 club
 
 A heavy piece of wood.
 
 "Speak softly and carry a big stick."
-	-Theodore Roosevelt
+    -Theodore Roosevelt
 %%%%
 corpse
 
@@ -461,6 +471,18 @@ armour.  It is somewhat resistant to corrosion.
 dagger
 
 A long knife or a very short sword, which can be held or thrown.
+
+"He drew his dagger, that was sae sharp,
+  That was sae sharp and meet,
+And drave it into the nut-browne bride,
+  That fell deid at his feit.
+
+‘Now stay for me, dear Annet,’ he sed,
+  ‘Now stay, my dear,’ he cry’d;
+Then strake the dagger untill his heart,
+  And fell deid by her side."
+    -English traditional ballad, "Lord Thomas and Fair Annet", 
+    circa 1650.
 %%%%
 dart
 
@@ -737,6 +759,17 @@ A yellow fruit.
 long sword
 
 A sword with a long, slashing blade.
+
+"Oh I won't get up, I won't get up,
+  I can't get up for my life
+For you have two long beaten swords
+  And I have but a pocket knife.
+
+Well it's true I have two beaten swords,
+  They cost me deep in the purse
+But you will have the better of them
+  And I will have the worst."
+    -English traditional ballad, "Mattie Groves".  Circa 1600.
 %%%%
 longbow
 
@@ -756,10 +789,10 @@ rather large, shining, brown seed; the pulp is of a delicious sub-acid
 flavour when fresh.  The Chinese dry it when it becomes black like 
 a prune and thus preserve it for use throughout the year; in this state 
 it is frequently to be seen in the London fruit shops."
-	-John Smith, _A Dictionary of Popular Names of the Plants
-        which Furnish the Natural and Acquired Wants of Man, in 
-        All Matters of Domestic and General Economy: Their History,
-        Products, & Uses_. 1882. 
+    -John Smith, _A Dictionary of Popular Names of the Plants
+    which Furnish the Natural and Acquired Wants of Man, in 
+    All Matters of Domestic and General Economy: Their History,
+    Products, & Uses_. 1882. 
 %%%%
 mace
 
@@ -821,8 +854,8 @@ weigh them, and to every pound of orange rind add three pounds of loaf ſugar.
 Pound the orange rind well in a marble mortar, mix the ſugar by degrees 
 with them and beat all well together.  Put it into gallipots and tie 
 it down ſo as properly to prevent the air getting to it."
-	-Francis Collingwood, John Woollams, _The Universal
-	Cook: And City and Country Housekeeper. 1792.
+    -Francis Collingwood, John Woollams, _The Universal
+    Cook: And City and Country Housekeeper. 1792.
 %%%%
 orb of zot
 
@@ -991,9 +1024,9 @@ single oval and oblong seed. I know not but I am peculiar in my memory
 of the beautiful fruits of the straits, but none lingers in my recollection 
 so sweetly in its clustered beauties of the fruit-dish as the bearded 
 and rosy rambutan.
-	-Fitch Waterman Taylor, _A Voyage Round the World And Visits
-        to Various Foreign Countries, in the United States Frigate 
-        Columbia_.  1847.
+    -Fitch Waterman Taylor, _A Voyage Round the World And Visits
+    to Various Foreign Countries, in the United States Frigate 
+    Columbia_.  1847.
 %%%%
 ring mail
 
@@ -1328,7 +1361,7 @@ A slice of pizza; a flatbread with tomato sauce, mozarella di bufala,
 and basil.. 
 
 "When the moon hits your eye like a big pizza pie, that’s amore."
-	-Jack Brooks, "That's Amore"
+    -Jack Brooks, "That's Amore"
 %%%%
 sling
 
@@ -1458,6 +1491,15 @@ suppose you could wear it if you really wanted to.
 strawberry
 
 A small but delicious red fruit.
+
+"A Samurai was out walking when a large tiger began to chase him. The 
+samurai ran for his life, never seeing the cliff under his feet. As 
+he fell, he reached out and caught a vine that hung down. He looked 
+down and saw another tiger circling below; the first tiger waited 
+above. The vine began to give away. The samurai then saw a single 
+strawberry growing on the vine. He reached out and ate the strawberry. 
+How sweet it tasted!"
+    -Attributed to various Japanese buddhist monks.
 %%%%
 sultana
 
@@ -1468,7 +1510,7 @@ for Bentham. It was a sort of orchard of vines and other trees, without
 order or apparent arrangement. From that garden Bentham sent specimens 
 of the Sultana raisin to England which he believed to have been the first 
 of that species which had ever reachedahis country."
-	-John Bowring, _The Works of Jeremy Bentham_.  1839.  
+    -John Bowring, _The Works of Jeremy Bentham_.  1839.  
 %%%%
 swamp dragon armour
 
