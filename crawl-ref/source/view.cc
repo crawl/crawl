@@ -760,7 +760,7 @@ static void _good_god_follower_attitude_change(monsters *monster)
         return;
 
     // for followers of good gods, decide whether holy beings will be
-    // "good neutral" towards you
+    // good neutral towards you
     if (is_good_god(you.religion)
         && monster->foe == MHITYOU
         && mons_is_holy(monster)
