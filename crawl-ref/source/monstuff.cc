@@ -2104,6 +2104,7 @@ static void _handle_behaviour(monsters *mon)
     bool changed = true;
     bool isFriendly = mons_friendly(mon);
     bool isNeutral  = mons_neutral(mon);
+    bool wontAttack = mons_wont_attack(mon);
     bool proxPlayer = mons_near(mon);
     bool proxFoe;
     bool isHurt    = (mon->hit_points <= mon->max_hit_points / 4 - 1);
@@ -2158,7 +2159,7 @@ static void _handle_behaviour(monsters *mon)
 
     // set friendly target, if they don't already have one
     // berserking allies ignore your commands
-    if (isFriendly 
+    if (isFriendly
         && you.pet_target != MHITNOT
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->has_ench(ENCH_BERSERK))
@@ -2189,14 +2190,14 @@ static void _handle_behaviour(monsters *mon)
     if (mon->foe == monster_index(mon))
         mon->foe = MHITNOT;
 
-    // friendly monsters do not attack other friendly monsters
+    // non-attacking monsters do not attack other non-attacking monsters
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
-        if (isFriendly && mons_friendly(&menv[mon->foe]))
+        if (wontAttack && mons_wont_attack(&menv[mon->foe]))
             mon->foe = MHITNOT;
     }
 
-    // neutral monsters prefer not to attack players, or other neutrals.
+    // neutral monsters prefer not to attack players, or other neutrals
     if (mon->foe != MHITNOT && isNeutral
         && (mon->foe == MHITYOU || mons_neutral(&menv[mon->foe])))
     {
@@ -2392,7 +2393,7 @@ static void _handle_behaviour(monsters *mon)
         case BEH_WANDER:
             // is our foe in LOS?
             // Batty monsters don't automatically reseek so that
-            // they'll flitter away, we'll reset them just before 
+            // they'll flitter away, we'll reset them just before
             // they get movement in handle_monsters() instead. -- bwr
             if (proxFoe && !testbits( mon->flags, MF_BATTY ))
             {
@@ -2405,9 +2406,9 @@ static void _handle_behaviour(monsters *mon)
             // XXX: This is really dumb wander behaviour... instead of
             // changing the goal square every turn, better would be to
             // have the monster store a direction and have the monster
-            // head in that direction for a while, then shift the 
-            // direction to the left or right.  We're changing this so 
-            // wandering monsters at least appear to have some sort of 
+            // head in that direction for a while, then shift the
+            // direction to the left or right.  We're changing this so
+            // wandering monsters at least appear to have some sort of
             // attention span.  -- bwr
             if ((mon->x == mon->target_x && mon->y == mon->target_y)
                 || one_chance_in(20)
@@ -2471,7 +2472,7 @@ static void _handle_behaviour(monsters *mon)
                 else
                     new_beh = BEH_WANDER;
             }
-            else 
+            else
             {
                 mon->target_x = foe_x;
                 mon->target_y = foe_y;
