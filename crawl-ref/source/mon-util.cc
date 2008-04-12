@@ -1814,7 +1814,8 @@ bool mons_friendly(const monsters *m)
 
 bool mons_neutral(const monsters *m)
 {
-    return (m->attitude == ATT_NEUTRAL || m->has_ench(ENCH_NEUTRAL));
+    return (m->attitude == ATT_NEUTRAL || m->has_ench(ENCH_NEUTRAL)
+        || m->attitude == ATT_GOOD_NEUTRAL);
 }
 
 bool mons_good_neutral(const monsters *m)
