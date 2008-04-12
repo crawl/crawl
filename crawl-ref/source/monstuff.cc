@@ -5648,13 +5648,13 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
 {
     const int targ_x = monster->x + count_x;
     const int targ_y = monster->y + count_y;
-    
+
     // bounds check - don't consider moving out of grid!
     if (!inside_level_bounds(targ_x, targ_y))
         return false;
-        
-    // hostile monsters won't enter sanctuaries
-    if (!mons_friendly(monster)
+
+    // attacking monsters won't enter sanctuaries
+    if (!mons_wont_attack(monster)
         && is_sanctuary(targ_x, targ_y)
         && !is_sanctuary(monster->x, monster->y))
     {

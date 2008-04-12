@@ -974,7 +974,7 @@ bool cast_sanctuary(const int power)
             int posy = you.y_pos + y;
             int dist = _inside_circle(posx, posy, radius);
 
-            // scare all hostile monsters inside sanctuary
+            // scare all attacking monsters inside sanctuary
             if (dist != -1)
             {
                 monster = mgrd[posx][posy];
@@ -983,7 +983,7 @@ bool cast_sanctuary(const int power)
                 {
                     monsters *mon = &menv[monster];
 
-                    if (!mons_friendly(mon)
+                    if (!mons_wont_attack(mon)
                         && mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
                     {
                         behaviour_event(mon, ME_SCARE, MHITYOU);
