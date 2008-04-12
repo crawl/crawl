@@ -1188,7 +1188,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     (tmp == 2) ? " says, \"This isn't over yet!\"" :
                     (tmp == 3) ? " says, \"I'll be back!\"" :
                     (tmp == 4) ? " says, \"This isn't the end, it's only just beginning!\"" :
-                    (tmp == 5) ? " says, \"Kill me?  I think not!\"" 
+                    (tmp == 5) ? " says, \"Kill me?  I think not!\""
                                : " says, \"You cannot defeat me so easily!\"",
                                     MSGCH_TALK );
         }
@@ -1202,7 +1202,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     {
         you.kills->record_kill(monster, killer, pet_kill);
 
-        kill_category kc = 
+        kill_category kc =
             (killer == KILL_YOU || killer == KILL_YOU_MISSILE) ? KC_YOU :
             (pet_kill)?                                          KC_FRIENDLY :
                                                                  KC_OTHER;
@@ -1961,7 +1961,7 @@ static bool _wounded_damaged(int monster_type)
 // 2. Call handle_behaviour to re-evaluate AI state and target x,y
 //
 //---------------------------------------------------------------
-void behaviour_event( monsters *mon, int event, int src, 
+void behaviour_event( monsters *mon, int event, int src,
                       int src_x, int src_y )
 {
     bool isSmart = (mons_intel(mon->type) > I_ANIMAL);
@@ -1983,9 +1983,9 @@ void behaviour_event( monsters *mon, int event, int src,
             mon->behaviour = BEH_WANDER;
 
         // A bit of code to make Project Noise actually do
-        // something again.  Basically, dumb monsters and 
-        // monsters who aren't otherwise occupied will at 
-        // least consider the (apparent) source of the noise 
+        // something again.  Basically, dumb monsters and
+        // monsters who aren't otherwise occupied will at
+        // least consider the (apparent) source of the noise
         // interesting for a moment. -- bwr
         if (!isSmart || mon->foe == MHITNOT || mon->behaviour == BEH_WANDER)
         {
@@ -2190,7 +2190,8 @@ static void _handle_behaviour(monsters *mon)
     if (mon->foe == monster_index(mon))
         mon->foe = MHITNOT;
 
-    // non-attacking monsters do not attack other non-attacking monsters
+    // non-attacking (friendly and good neutral) monsters do not attack
+    // other non-attacking monsters
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
         if (wontAttack && mons_wont_attack(&menv[mon->foe]))
