@@ -2493,11 +2493,11 @@ static void _handle_behaviour(monsters *mon)
 }                               // end handle_behaviour()
 
 static bool _mons_check_set_foe(monsters *mon, int x, int y,
-                               bool friendly, bool neutral)
+                                bool friendly, bool neutral)
 {
     if (!in_bounds(x, y))
         return (false);
-    
+
     if (!friendly && !neutral && x == you.x_pos && y == you.y_pos
         && mons_player_visible(mon))
     {
