@@ -2190,8 +2190,8 @@ static void _handle_behaviour(monsters *mon)
     if (mon->foe == monster_index(mon))
         mon->foe = MHITNOT;
 
-    // non-attacking (friendly and good neutral) monsters do not attack
-    // other non-attacking monsters
+    // friendly and good neutral monsters do not attack other friendly
+    // and good neutral monsters
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
         if (wontAttack && mons_wont_attack(&menv[mon->foe]))
