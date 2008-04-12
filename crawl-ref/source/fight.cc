@@ -2798,8 +2798,13 @@ void melee_attack::player_stab_check()
         && you.religion == GOD_SHINING_ONE
         && !you.duration[DUR_BERSERKER])
     {
-        if (!tso_stab_safe_monster(defender)
-            && !yesno("Really attack this helpless creature?", false, 'n'))
+        // check for the would-be-stabbed monster's being alive, in case
+        // it was abjured as a result of the attack
+        bool cancel_stab = !defender->alive() ||
+            (!tso_stab_safe_monster(defender)
+                && !yesno("Really attack this helpless creature?", false, 'n'));
+
+        if (cancel_stab)
         {
             stab_attempt  = false;
             cancel_attack = true;
