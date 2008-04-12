@@ -4203,9 +4203,9 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                 }
                 else
                 {
-                    // all direct-effect/summoning/self-enchantments/etc
+                    // all direct-effect/summoning/self-enchantments/etc.
                     spellOK = true;
-                    
+
                     if (is_sanctuary(you.x_pos, you.y_pos)
                         || is_sanctuary(monster->x, monster->y))
                     {
@@ -5230,7 +5230,7 @@ static bool _mons_can_displace(const monsters *mpusher, const monsters *mpushee)
         return (false);
 
     const int ipushee = monster_index(mpushee);
-    if (ipushee < 0 || ipushee >= MAX_MONSTERS)
+    if (invalid_monster_index(ipushee))
         return (false);
 
     if (immobile_monster[ipushee])
@@ -5331,7 +5331,7 @@ static bool _do_move_monster(monsters *monster, int xi, int yi)
         monster_attack( monster_index(monster) );
         return true;
     }
-    
+
     if (!xi && !yi)
     {
         const int mx = monster_index(monster);
@@ -5352,10 +5352,10 @@ static bool _do_move_monster(monsters *monster, int xi, int yi)
     _swim_or_move_energy(monster);
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
-    
+
     monster->x = fx;
     monster->y = fy;
-    
+
     /* need to put in something so that monster picks up multiple
        items (eg ammunition) identical to those it's carrying. */
     mgrd[monster->x][monster->y] = monster_index(monster);
@@ -5499,11 +5499,11 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
                           const int trap_y, bool just_check = false)
 {
     const int intel = mons_intel(monster->type);
-    
+
     // Dumb monsters don't care at all.
     if (intel == I_PLANT)
         return (true);
-        
+
     const trap_struct &trap = env.trap[trap_at_xy(trap_x,trap_y)];
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
@@ -5540,7 +5540,7 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
             // test for corridor-like environment
             const int x = trap_x - monster->x;
             const int y = trap_y - monster->y;
-            
+
             // The question is whether the monster (m) can easily reach its
             // presumable destination (x) without stepping on the trap. Traps
             // in corridors do not allow this. See e.g
@@ -5558,7 +5558,7 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
             // will be made according to later tests (monster hp, trap type, ...)
             // If a monster still gets stuck in a corridor it will usually be
             // because it has less than half its maximum hp
-            
+
             if ((_mon_can_move_to_pos(monster, x-1, y, true)
                    || _mon_can_move_to_pos(monster, x+1,y, true))
                 && (_mon_can_move_to_pos(monster, x,y-1, true)
@@ -5655,7 +5655,8 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
     if (!inside_level_bounds(targ_x, targ_y))
         return false;
 
-    // attacking monsters won't enter sanctuaries
+    // non-friendly and non-good neutral monsters won't enter
+    // sanctuaries
     if (!mons_wont_attack(monster)
         && is_sanctuary(targ_x, targ_y)
         && !is_sanctuary(monster->x, monster->y))
@@ -6182,7 +6183,7 @@ forget_it:
                 ret    = true;
                 mmov_x = 0;
                 mmov_y = 0;
-                
+
 #if DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS,
                      "%s is skipping movement in order to follow.",

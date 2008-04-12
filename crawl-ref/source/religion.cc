@@ -3826,13 +3826,11 @@ void good_god_holy_attitude_change(monsters *holy)
                                                       MSGCH_TALK);
     }
 
-    holy->attitude  = ATT_NEUTRAL;
+    holy->attitude  = ATT_GOOD_NEUTRAL;
 
     // not really *created* neutral, but should it become hostile later
     // on, it won't count as a good kill
     holy->flags |= MF_WAS_NEUTRAL;
-
-    holy->flags |= MF_GOD_GIFT;
 
     // to avoid immobile "followers"
     behaviour_event(holy, ME_ALERT, MHITNOT);

@@ -1758,6 +1758,12 @@ bool mons_aligned(int m1, int m2)
         fr2 = mons_attitude(mon2);
     }
 
+    if (fr1 == ATT_GOOD_NEUTRAL)
+        fr1 = ATT_FRIENDLY;
+
+    if (fr2 == ATT_GOOD_NEUTRAL)
+        fr2 = ATT_FRIENDLY;
+
     return (fr1 == fr2);
 }
 
@@ -1813,7 +1819,7 @@ bool mons_neutral(const monsters *m)
 
 bool mons_good_neutral(const monsters *m)
 {
-    return (m->attitude == ATT_NEUTRAL && testbits(m->flags, MF_GOD_GIFT));
+    return (m->attitude == ATT_GOOD_NEUTRAL);
 }
 
 bool mons_wont_attack(const monsters *m)
@@ -2331,7 +2337,7 @@ static bool _mons_can_smite(const monsters *monster)
  * that trail clouds of badness are ineligible. The shover should also benefit
  * from shoving, so monsters that can smite/torment are ineligible.
  *
- * (Smiters would be eligible for shoving when fleeing if the AI allowed for 
+ * (Smiters would be eligible for shoving when fleeing if the AI allowed for
  * smart monsters to flee.)
  */
 bool monster_shover(const monsters *m)
@@ -2350,7 +2356,7 @@ bool monster_shover(const monsters *m)
     // Smiters profit from staying back and smiting.
     if (_mons_can_smite(m))
         return (false);
-    
+
     int mchar = me->showchar;
     // Somewhat arbitrary: giants and dragons are too big to get past anything,
     // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
@@ -2368,7 +2374,7 @@ bool monster_senior(const monsters *m1, const monsters *m2)
 {
     const monsterentry *me1 = get_monster_data(m1->type),
                        *me2 = get_monster_data(m2->type);
-    
+
     if (!me1 || !me2)
         return (false);
 
@@ -2388,8 +2394,8 @@ bool monster_senior(const monsters *m1, const monsters *m2)
     if (m1->type == MONS_SKELETAL_WARRIOR && (mchar2 == 'z' || mchar2 == 'Z'))
         return (m1->hit_dice > m2->hit_dice);
 
-    if (m1->type == MONS_QUEEN_BEE 
-            && (m2->type == MONS_KILLER_BEE 
+    if (m1->type == MONS_QUEEN_BEE
+            && (m2->type == MONS_KILLER_BEE
                     || m2->type == MONS_KILLER_BEE_LARVA))
         return (true);
 
