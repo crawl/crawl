@@ -2787,6 +2787,13 @@ void melee_attack::player_stab_check()
     if (stab_attempt && roll_needed)
         stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
 
+    // check for invisibility - no stabs on invisible monsters.
+    if (!player_monster_visible( def ))
+    {
+        stab_attempt = false;
+        stab_bonus = 0;
+    }
+
     if (stab_attempt
         && you.religion == GOD_SHINING_ONE
         && !you.duration[DUR_BERSERKER])
@@ -2797,13 +2804,6 @@ void melee_attack::player_stab_check()
             stab_attempt  = false;
             cancel_attack = true;
         }
-    }
-
-    // check for invisibility - no stabs on invisible monsters.
-    if (!player_monster_visible( def ))
-    {
-        stab_attempt = false;
-        stab_bonus = 0;
     }
 }
 
