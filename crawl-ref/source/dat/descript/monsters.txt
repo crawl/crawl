@@ -12,12 +12,12 @@ up at his enemy and beat the hero down with his hooves. Peleus received
 the resounding blows on helmet and shield, and defending his upper arms, 
 and controlling the weapon he held out, with one blow through the arm 
 he pierced the bi-formed breast.'"
-	-Ovid, _Metamorphoses_, XII 330
+    -Ovid, _Metamorphoses_, XII 330
 %%%%
 __r_suffix
 
 $"How now? a rat? Dead, for a ducat, dead!"
-     -William Shakespeare, Hamlet, Act III, 4
+    -William Shakespeare, Hamlet, Act III, 4
 %%%%
 __cap-D_suffix
 
@@ -33,18 +33,18 @@ He had long Claws, and in his Jaws
 With a Hide as tough, as any Buff,
    Which did him round environ."
 
-	-"An Excellent Ballad of a moſt dreadful Combat, fought between
-	Moore of Moore-Hall, and the Dragon of Wantley", retold by
-	Ambrose Philips, _A Collection of Old Ballads. Corrected from the
-	 Best and Most Ancient Copies Extant. With Introductions Historical, 
-	Critical, Or Humorous_.  1723.
+    -"An Excellent Ballad of a moſt dreadful Combat, fought between
+    Moore of Moore-Hall, and the Dragon of Wantley", retold by
+    Ambrose Philips, _A Collection of Old Ballads. Corrected from the
+    Best and Most Ancient Copies Extant. With Introductions Historical, 
+    Critical, Or Humorous_.  1723.
 %%%%
 __cap-K_suffix
 
 $"The Parts Septentrionall are with these Sp'ryts Much haunted..
 About the places where they dig for Oare. The Greekes and Germans 
 call them Cobali."
-	-Heywood, Hierarch. ix. 568, circa 1635
+    -Heywood, Hierarch. ix. 568, circa 1635
 %%%%
 __cap-N_suffix
 
@@ -61,7 +61,7 @@ under the water, bound in chords of shrubs; probably he had drunk poison.
 For when he fell amongst us, he was insensible. But when we began to bite
 him, he regained his senses, and bursting his fetters, commenced laying
 at us. May it please Your Majesty to enquire who is.'"
-	-_The Mahabharata, Sambhava Parva, Section CXXVIII
+    -_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
 __cap-O_suffix
 
@@ -87,14 +87,14 @@ And when the young were full grown, they stood beside him at each of his
 shoulders as he slept, and they purged his ears with their tongues. He 
 started up in a great fright, but understood the voices of the birds flying 
 overhead, and from what he learned from them he foretold to men what should come to pass."
-	-Apollodurus (apocryphal), Library and Epitome, 1.9.11. circa 150 BC.
-	Sir James George Frazer, translator
+    -Apollodurus (apocryphal), Library and Epitome, 1.9.11. circa 150 BC.
+    Sir James George Frazer, translator
 	 
 "A snake, with mottles rare,
 Surveyed my chamber floor,
 In feature as the worm before,
 But ringed with power."	
-	-Emily Dickinson, "In Winter In My Room"
+    -Emily Dickinson, "In Winter In My Room"
 %%%%
 __cap-T_suffix
 
@@ -107,7 +107,7 @@ They launched the ship upon the main,
 Which bellowed like a wrathful bear;
 Down to the bottom the vessel sank,
 A laidly Trold has dragged it there."
-	-George Borrow, _Lavengro_
+    -George Borrow, _Lavengro_
 &
 
 You feel a lump in the pit of your stomach.  
@@ -125,15 +125,15 @@ kill strangers by forcing them to wrestle. Being forced to wrestle with
 him, Hercules hugged him, lifted him aloft, broke and killed him; for 
 when he touched earth so it was that he waxed stronger, wherefore some 
 said that he was a son of Earth."
-	-Apollodorus (apocryphal), _Library and Epitome_, 2.5.11, circa 150 BC.
-	Sir James George Frazer, translator.
+    -Apollodorus (apocryphal), _Library and Epitome_, 2.5.11, circa 150 BC.
+    Sir James George Frazer, translator.
 %%%%
 Asmodeus
 
 One of the arch-demons who dwell in the depths of Hell.
 
 "For myself, I have other occupations:  I make absurd matches; I marry greybeards with minors, masters with servants, girls with small fortunes with tender lovers who have none.  It is I who introduced into this world luxury, debauchery, games of chance, and chemistry.  I am the author of the first cookery book, the inventor of festivals, of dancing, music, plays, and of the newest fashions; in a word, I am ASMODEUS, surnamed The Devil on Two Sticks."
-	-Alain René Le Sage, _Asmodeus: Or,The Devil on Two Sticks.  1707.
+    -Alain René Le Sage, _Asmodeus: Or,The Devil on Two Sticks.  1707.
 %%%%
 Balrug
 
@@ -161,7 +161,6 @@ A hideously ugly demon of rage and legendary power.
 Devil's Seed, his Spawn of Phlegethon, that o' my Conſience was bred 
 o' the Spume of Cocytus."
     -John Fletcher, _The Knight of Malta_.  1647.
-
 %%%%
 Cerebov
 
@@ -176,7 +175,7 @@ Dispater
 The lord of the Iron City of Dis.
 
 "Hoc idem magis ostendit antiquius Iovis nomen: nam olim Diovis et Diespiter dictus, id est dies pater; a quo dei dicti qui inde, et dius et divum, unde sub divo, Dius Fidius. Itaque inde eius perforatum tectum, ut ea videatur divum, id est caelum. Quidam negant sub tecto per hunc deierare oportere. Aelius Dium Fidium dicebat Diovis filium, ut Graeci Dioskopon Castorem, et putabat hunc esse Sancum ab Sabina lingua et Herculem a Graeca. Idem hic Dis pater dicitur infimus, qui est coniunctus terrae, ubi omnia ut oriuntur ita aboriuntur; quorum quod finis ortuum, Orcus dictus."
-	-Marcus Terentius Varro, _De Lingua Latina_, Liber V, circa 40 BC.
+    -Marcus Terentius Varro, _De Lingua Latina_, Liber V, circa 40 BC.
 %%%%
 Donald
 
@@ -194,7 +193,7 @@ A lightly armoured warrior.
 by single combat; but Canute saying that he, a man of small stature, 
 would have little chance against the tall athletic Edmund, proposed, on 
 the contrary, for them to divide the realm as their fathers had done."
-	-Thomas Keightley, _The History of England_. 1839.
+    -Thomas Keightley, _The History of England_. 1839.
 %%%%
 Ereshkigal
 
@@ -234,7 +233,7 @@ sea-circled Erytheis beside his own shambling cattle on that day when Herakles d
 those broad-faced cattle toward holy Tiryns, when he crossed the stream of Okeanos and
 had killed Orthos and the oxherd Eurytion out in the gloomy meadow beyond fabulous 
 Okeanos."
-	-Hesiod, _Theogony_, circa 700 BCE.
+    -Hesiod, _Theogony_, circa 700 BCE.
 %%%%
 Gloorx Vloq
 
@@ -285,7 +284,7 @@ Killer Klown
 A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red facepaint or something altogether less pleasant?
 
 "All the world loves a clown."
-	-Cole Porter, "Be a Clown".  1948.
+    -Cole Porter, "Be a Clown".  1948.
 %%%%
 Lom Lobon
 
@@ -320,7 +319,7 @@ Murray
 A demonic skull rolling along the dungeon floor.
 
 "Look behind you! A three-headed monkey!"
-	-Guybrush Threepwood, _The Secret of Monkey Island_
+    -Guybrush Threepwood, _The Secret of Monkey Island_
 %%%%
 Norbert
 
@@ -345,7 +344,7 @@ A huge winged fiend with incredibly tough skin.
 Polyphemus
 
 ...as soon as he had got through with all his work, he clutched up two more of my men, and began eating them for his morning's meal. Presently, with the utmost ease, he rolled the stone away from the door and drove out his sheep, but he at once put it back again--as easily as though he were merely clapping the lid on to a quiver full of arrows.
-	-Homer, _The Odyssey_, Book IX
+    -Homer, _The Odyssey_, Book IX
 %%%%
 Psyche
 
@@ -362,8 +361,8 @@ The Gods themselves and powers that seem so wise
 With mighty love be subject to his might.
 The rivers black and deadly floods of pain
 And darkness eke as thrall to him remain."
-	-Apuleius, _Asinus aureus_, "Cupid and Psyche"
-	circa 160 AD.  William Adlington, Translator, 1566.
+    -Apuleius, _Asinus aureus_, "Cupid and Psyche"
+    circa 160 AD.  William Adlington, Translator, 1566.
 %%%%
 Rupert
 
@@ -393,7 +392,7 @@ And the noise and the glee of the people as the sound of the wild woods were
 And the blossoming boughs of the Branstock were the wild trees waving about;
 
 So he said: 'Well seen, my fosterling; let the lip then strain it out.'"
-	-William Morris, _The Story of Sigurd the Volsung and the Fall of the Niblungs. 1891.
+    -William Morris, _The Story of Sigurd the Volsung and the Fall of the Niblungs. 1891.
 %%%%
 Snorg
 
@@ -423,7 +422,7 @@ Fierce monster-vipers she clothed with terror,
 With splendor she decked them, she made them of lofty stature.
 Whoever beheld them, terror overcame him,
 Their bodies reared up and none could withstand their attack."
-	-Enuma Elish, Third Tablet. circa 668 BCE.
+    -Enuma Elish, Third Tablet. circa 668 BCE.
 %%%%
 Urug
 
@@ -482,7 +481,7 @@ big fish
 A fish of unusual size.
 
 "And what are you, reader, but a Loose-Fish and a Fast-Fish, too?"
-	-Herman Melville, _Moby Dick_. 1851.
+    -Herman Melville, _Moby Dick_. 1851.
 %%%%
 big kobold
 
@@ -513,7 +512,7 @@ boggart
 A twisted little sprite-goblin. Beware of its magical tricks!
 
 "He thinks every buſh a boggart."
-	-John Ray, _A Compleat Collection of English Proverbs_.  1768. 
+    -John Ray, _A Compleat Collection of English Proverbs_.  1768. 
 
 "A BOGGART intruded himself, upon what pretext or by what authority is unknown, 
 into the house of a quiet, inoffensive, and laborious farmer; and, when once it 
@@ -523,7 +522,7 @@ to have a great aversion to children. As there is no point on which a parent
 feels more acutely than that of the maltreatment of his offspring, the feelings 
 of the father and more particularly of his good dame, were daily, ay, and 
 nightly, harrowed up by the malice of this malignant and invisible boggart."
-	-C.J.T., _Folk-lore and Legends: English.  1890.
+    -C.J.T., _Folk-lore and Legends: English.  1890.
 %%%%
 boring beetle
 
@@ -553,7 +552,7 @@ A very large and fat hairy bee.
      Improve each shining Hour, 
 And gather Honey all the day 
      From every opening Flower!"
-	-Isaac Watts.  1715.
+    -Isaac Watts.  1715.
 %%%%
 butterfly
 
@@ -562,7 +561,7 @@ incongruously through the darkness of the cave.
 
 "Happiness is a butterfly, which when pursued, is always just beyond your 
 grasp, but which, if you will sit down quietly, may alight upon you."
-     -Nathaniel Hawthorne
+    -Nathaniel Hawthorne
 %%%%
 centaur
 
@@ -616,7 +615,7 @@ A weapon dancing in the air.
 %%%%
 death cob
 
-A dreadful undead cob of maize.
+A dreadful undead cob of maize.  Look, this one was probably a mistake.  We're sorry.
 %%%%
 death drake
 
@@ -753,7 +752,7 @@ A huge and muscular figure engulfed in a cloud of searing flame.
 (To the hoopoe, he said,) "Go back to them (and let them know that) we will come to them with forces they cannot imagine. We will evict them, humiliated and debased."
 He said, "O you elders, which of you can bring me her mansion, before they arrive here as submitters?"
 One afrit from the jinns said, "I can bring it to you before you stand up. I am powerful enough to do this."
-	-The Quran, Sura 27 Al-Naml
+    -The Quran, Sura 27 Al-Naml
 %%%%
 electric golem
 
@@ -780,7 +779,7 @@ A large, two-headed humanoid. Most often seen wielding two weapons, so that the 
 I find the smell of an earthly man,
 Be he living, or be he dead,
 His heart this night shall kitchen my bread."
-	-Joseph Jacobs, _The Red Ettin_
+    -Joseph Jacobs, _The Red Ettin_
 %%%%
 eye of devastation
 
@@ -817,6 +816,12 @@ A hideous undead creature, with torn skin hanging from an emaciated body.
 flying skull
 
 Unholy magic keeps this disembodied undead skull hovering above the floor. It has a nasty set of teeth.
+
+"Alas, poor Yorick! I knew him, Horatio, a fellow of infinite
+jest, of most excellent fancy. He hath bore me on his back a
+thousand times, and now how abhorr'd in my imagination it is!
+My gorge rises at it."
+    -William Shakespeare, _Hamlet_, V, 1. 1600.
 %%%%
 freezing wraith
 
@@ -848,7 +853,7 @@ I said, 'Is it good, friend?'
 'But I like it
 Because it is bitter,
 And because it is my heart.'"
-	-Stephen Crane, _The Black Riders and Other Lines_.  1895.
+    -Stephen Crane, _The Black Riders and Other Lines_.  1895.
 %%%%
 giant amoeba
 
@@ -903,7 +908,7 @@ Then you'll be left alone
 
 Oh baby, telephone
 And tell me I'm your own."
-	-Ida Emerson and Joseph E. Howard, "Hello My Baby!"	
+    -Ida Emerson and Joseph E. Howard, "Hello My Baby!"	
 %%%%
 giant gecko
 
@@ -967,8 +972,8 @@ trees, and the unearthly silence gave way, as it were with a grace,
 to the rapid screams of Tonker as they picked him up from behind -- screams
 that came faster and faster until they were incoherent.  And where they took 
 him it is not good to ask, and what they did with him I shall not say."
-	-Lord Dunsanay, "How Nuth Would Have Practiced His Art Upon the Gnoles". 
-	1912.
+    -Lord Dunsanay, "How Nuth Would Have Practiced His Art Upon the Gnoles". 
+    1912.
 %%%%
 goblin
 
@@ -980,7 +985,7 @@ Work, work! Nor dare to shirk,
 While Goblins quaff, and Goblins laugh,
 Round and round far underground
 Below, my lad!"
-     -J.R.R. Tolkien, _The Hobbit_
+    -J.R.R. Tolkien, _The Hobbit_
 %%%%
 golden dragon
 
@@ -1019,7 +1024,7 @@ With winged course, o'er hill and moory dale,
 Pursues the Arimaspian who by stealth
 Hath from his wakeful custody purloined
 His guarded gold."
-	-Milton, _Paradise Lost_, Book II. 1667.
+    -Milton, _Paradise Lost_, Book II. 1667.
 %%%%
 grizzly bear
 
@@ -1067,7 +1072,7 @@ hobgoblin
 A larger and stronger relative of the goblin.
 
 "A foolish consistency is the hobgoblin of little minds."
-     -Ralph Waldo Emerson
+    -Ralph Waldo Emerson
 %%%%
 hog
 
@@ -1075,7 +1080,7 @@ A large, fat and very ugly pig.
 
 "Fern came slowly down the stairs. Her eyes were red from crying. As she approached her chair, the carton wobbled, and there was a scratching noise. Fern looked at her father. Then she lifted the lid of the carton. There, inside, looking up at her, was the newborn pig. It was a white one. The morning light shone through its ears, turning them pink.
 "He's yours," said Mr. Arable. "Saved from an untimely death. And may the good Lord forgive me for this foolishness."
-	-E.B. White, _Charlotte's Web_
+    -E.B. White, _Charlotte's Web_
 %%%%
 hound
 
@@ -1086,7 +1091,7 @@ Half-buried in the snow was found,
 Still grasping in his hand of ice
 That banner with the strange device,
 Excelsior!"
-     -Henry Wadsworth Longfellow, "Excelsior"
+    -Henry Wadsworth Longfellow, "Excelsior"
 %%%%
 huge abomination
 
@@ -1101,7 +1106,7 @@ A remarkably nondescript person.  How odd.
  What's this thing called 'man'?
  God only knows what a man is!
  I only know his price."
-	-Bertolt Brecht, "The Measures Taken". 1930. 
+    -Bertolt Brecht, "The Measures Taken". 1930. 
 %%%%
 hungry ghost
 
@@ -1140,7 +1145,7 @@ malign grin, and its horns protrude obscenely from its scaly pate.
 "The Devil, too, sometimes steals human children; it is not infrequent 
 for him to carry away infants within the first six weeks after birth, 
 and to substitute in their place imps."
-	-Martin Luther
+    -Martin Luther
 %%%%
 insubstantial wisp
 
@@ -1181,7 +1186,7 @@ Across the floor
 Right through the door 
 And all around the wall, 
 A splotch, a blotch..."
-	-Burt Bacharach, "Beware of the Blob"
+    -Burt Bacharach, "Beware of the Blob"
 %%%%
 jellyfish
 
@@ -1257,7 +1262,7 @@ manticore
 A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.
 
 "Ctesias writeth, that in Æthiopia likewise there is a beast which he calleth Mantichora, having three rankes of teeth, which when they meet togither are let in one within another like the teeth of combes: with the face and eares of a man, with red eyes; of colour sanguine, bodied like a lyon, and having a taile armed with a sting like a scorpion: his voice resembleth the noise of a flute and trumpet sounded together: very swift he is, and mans flesh of all others hee most desireth."
-	-Pliny the Elder, _Natural History_, Book 8, Chapter XXI
+    -Pliny the Elder, _Natural History_, Book 8, Chapter XXI
 %%%%
 merfolk fighter
 
@@ -1313,7 +1318,7 @@ I see at Memphis mummy-pits, containing mummies, embalm'd, swathed
    in linen cloth, lying there many centuries;	 
 I look on the fall'n Theban, the large-ball'd eyes, the side-drooping
    neck, the hands folded across the breast."
-	-Walt Whitman, "Salut au Monde"
+    -Walt Whitman, "Salut au Monde"
 %%%%
 mummy priest
 
@@ -1423,7 +1428,7 @@ phantom
 A transparent man-like undead spirit.
 
 "Who wondrous things concerning our welfare, And straunge phantomes doth lett us ofte foresee."
-	-Spenser, _The Faerie Queene_ II. xii. 47 
+    -Spenser, _The Faerie Queene_ II. xii. 47 
 %%%%
 pile of gold coins
 
@@ -1450,7 +1455,7 @@ A ravenous and incredibly buggy monster. Please report its existence
 to the DevTeam.
 
 "If builders built buildings the way programmers wrote programs, then the first woodpecker that came along would destroy civilization."
-	-Gerald Weinberg, Weinberg's Second Law
+    -Gerald Weinberg, Weinberg's Second Law
 %%%%
 pulsating lump
 
@@ -1486,7 +1491,7 @@ A demon in the form of a tiger who comes to the material world in search of powe
 
 "He is brilliant, yet utterly corrupt.  Like rotten mackerel by moonlight,
 he both shines and stinks."
-     -John Randolph
+    -John Randolph
 %%%%
 rat
 
@@ -1549,7 +1554,7 @@ And the reality
 Between the motion
 And the act
 Falls the Shadow
-     For thine is the Kingdom
+    For thine is the Kingdom
 
 Between the conception
 And the creation
@@ -1557,7 +1562,7 @@ Between the emotion
 And the response
 Falls the Shadow
     Life is very long"
-	-T.S. Eliot, "The Hollow Men"
+    -T.S. Eliot, "The Hollow Men"
 %%%%
 shadow demon
 
@@ -1620,6 +1625,17 @@ An ice replica of a monster that is animated by the powers of necromancy.
 small skeleton
 
 A skeleton compelled to unlife by the exercise of necromancy.
+
+"When you hear sweet syncopation
+And the music softly moans
+T’ain’t no sin to take off your skin
+And dance around in your bones.
+
+When it gets too hot for comfort
+And you can’t get ice cream cones
+T’ain’t no sin to take off your skin
+And dance around your bones."
+    -William S. Burroughs and Tom Waits, "T'aint no sin"
 %%%%
 small zombie
 
@@ -1811,7 +1827,7 @@ You find yourself surprised that a worm should have teeth at all.
 That the play is the tragedy, "Man,"	 
   And its hero, the Conqueror Worm.'
 
-	-Edgar Allen Poe
+     -Edgar Allen Poe
 %%%%
 wraith
 
