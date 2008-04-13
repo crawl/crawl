@@ -1859,7 +1859,7 @@ enum mon_attitude_type
     ATT_HOSTILE,                       // 0, default in most cases
     ATT_FRIENDLY,                      // created friendly (or tamed?)
     ATT_NEUTRAL,                       // neutral
-    ATT_GOOD_NEUTRAL                   // like friendly, but can't be ordered
+    ATT_GOOD_NEUTRAL                   // neutral, but won't attack friendlies
 };
 
 enum mon_flight_type
