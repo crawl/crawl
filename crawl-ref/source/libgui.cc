@@ -1345,7 +1345,8 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                     && item.sub_type != CORPSE_SKELETON
                     && !food_is_rotten(item))
                 {
-                    desc += EOL "[Shift-L-Click] Dissect (D)";
+                    // TODO: Differentiate bottle/butcher for vampires.
+                    desc += EOL "[Shift-L-Click] Chop up (c)";
 
                     if (you.species == SP_VAMPIRE)
                         desc += EOL "[Shift-R-Click] Drink blood (e)";
@@ -1409,13 +1410,13 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                             if (item.sub_type >= MISC_DECK_OF_ESCAPE
                                 && item.sub_type <= MISC_DECK_OF_DEFENCE)
                             {
-                                desc += "Draw a card (E)";
+                                desc += "Draw a card (v)";
                                 desc += EOL "[Ctrl-L-Click] Unwield";
                                 break;
                             }
                             // else fall-through
                         case OBJ_STAVES + 18: // rods - other staves handled above
-                            desc += "Evoke (E)";
+                            desc += "Evoke (v)";
                             desc += EOL "[Ctrl-L-Click] Unwield";
                             break;
                         case OBJ_ARMOUR:
@@ -1446,7 +1447,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                             }
                             break;
                         case OBJ_WANDS:
-                            desc += "Zap (z)";
+                            desc += "Zap (Z)";
                             if (wielded)
                                 desc += EOL "[Ctrl-L-Click] Unwield";
                             break;
