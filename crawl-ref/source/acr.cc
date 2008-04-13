@@ -1572,7 +1572,7 @@ static void _go_upstairs()
 
     if (_stairs_check_beheld())
         return;
-    
+
     if (you.attribute[ATTR_HELD])
     {
         mpr("You're held in a net!");
@@ -1597,7 +1597,7 @@ static void _go_upstairs()
     }
 
     tag_followers();  // only those beside us right now can follow
-    start_delay( DELAY_ASCENDING_STAIRS, 
+    start_delay( DELAY_ASCENDING_STAIRS,
                  1 + (you.burden_state > BS_UNENCUMBERED) );
 }
 
@@ -1656,9 +1656,9 @@ static void _experience_check()
     {
         int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
         mprf( "Level %d requires %ld experience (%d point%s to go!)",
-              you.experience_level + 1, 
+              you.experience_level + 1,
               exp_needed(you.experience_level + 2) + 1,
-              xp_needed, 
+              xp_needed,
               (xp_needed > 1) ? "s" : "");
     }
     else

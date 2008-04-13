@@ -6162,7 +6162,7 @@ forget_it:
             mmov_y = 0;
         }
 
-        // If we're following the player through stairs, the only valid 
+        // If we're following the player through stairs, the only valid
         // movement is towards the player. -- bwr
         if (testbits( monster->flags, MF_TAKING_STAIRS ))
         {
