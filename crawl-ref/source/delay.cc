@@ -274,7 +274,7 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
     ASSERT(!crawl_state.is_repeating_cmd() || type == DELAY_MACRO);
 
     delay_queue_item delay;
-    
+
     delay.type = type;
     delay.duration = turns;
     delay.parm1 = parm1;
@@ -508,7 +508,7 @@ int check_recital_audience()
       }
 
 #ifdef DEBUG_DIAGNOSTICS
-      if (!found_monsters) 
+      if (!found_monsters)
           mprf(MSGCH_DIAGNOSTICS, "No audience found!");
       else
           mprf(MSGCH_DIAGNOSTICS, "No sensible audience found!");
@@ -600,7 +600,7 @@ void handle_delay( void )
         // A monster may have raised the corpse you're chopping up! -- bwr
         // Note that a monster could have raised the corpse and another
         // monster could die and create a corpse with the same ID number...
-        // However, it would not be at the player's square like the 
+        // However, it would not be at the player's square like the
         // original and that's why we do it this way.
         if (is_valid_item( mitm[ delay.parm1 ] )
             && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
@@ -656,7 +656,7 @@ void handle_delay( void )
 
         // Throw away invalid items; items usually go invalid because
         // of chunks rotting away.
-        while (!items_for_multidrop.empty() 
+        while (!items_for_multidrop.empty()
                // Don't look for gold in inventory
                && items_for_multidrop[0].slot != PROMPT_GOT_SPECIAL
                && !is_valid_item(you.inv[ items_for_multidrop[0].slot ]))
@@ -670,9 +670,9 @@ void handle_delay( void )
         }
     }
 
-    if ( delay.type == DELAY_RECITE) 
+    if ( delay.type == DELAY_RECITE)
     {
-           
+
         if (check_recital_audience() < 1 // maybe you've lost your audience
             || Options.hp_warning && you.hp*Options.hp_warning <= you.hp_max
                && delay.parm2*Options.hp_warning > you.hp_max
@@ -682,13 +682,13 @@ void handle_delay( void )
             return;
         }
     }
-    
+
     // Handle delay:
     if (delay.duration > 0)
     {
 #if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Delay type: %d (%s), duration: %d", 
-             delay.type, delay_name(delay.type), delay.duration ); 
+        mprf(MSGCH_DIAGNOSTICS, "Delay type: %d (%s), duration: %d",
+             delay.type, delay_name(delay.type), delay.duration );
 #endif
         // delay.duration-- *must* be done before multidrop, because
         // multidrop is now a parent delay, which means other delays
@@ -696,7 +696,7 @@ void handle_delay( void )
         // "delay" reference here, and resulting in tons of debugging
         // fun with valgrind.
         delay.duration--;
-        
+
         switch ( delay.type )
         {
         case DELAY_ARMOUR_ON:
@@ -739,7 +739,7 @@ void handle_delay( void )
             break;
         }
     }
-    else 
+    else
     {
         finish_delay(delay);
     }
@@ -766,7 +766,7 @@ static void finish_delay(const delay_queue_item &delay)
         mprf("You finish taking off %s.",
              you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
 
-        const equipment_type slot = 
+        const equipment_type slot =
             get_armour_slot( you.inv[delay.parm1] );
 
         if (slot == EQ_BODY_ARMOUR)
@@ -820,13 +820,13 @@ static void finish_delay(const delay_queue_item &delay)
         // nutrition.
         if (delay.parm1)
             chunk_nutrition_message(delay.parm1);
-        break; 
+        break;
 
     case DELAY_MEMORISE:
         mpr( "You finish memorising." );
         add_spell_to_memory( static_cast<spell_type>( delay.parm1 ) );
-        break; 
-        
+        break;
+
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You finish %s.",
              _get_recite_speech("other", you.num_turns + delay.duration));
@@ -861,7 +861,7 @@ static void finish_delay(const delay_queue_item &delay)
             if (mon != NON_MONSTER)
             {
                 // one square, a few squares, anywhere...
-                if (!shift_monster(&menv[mon]) 
+                if (!shift_monster(&menv[mon])
                     && !monster_blink(&menv[mon]))
                 {
                     monster_teleport( &menv[mon], true, true );
@@ -871,7 +871,7 @@ static void finish_delay(const delay_queue_item &delay)
             move_player_to_grid(pass_x, pass_y, false, true, true);
             redraw_screen();
         }
-        break; 
+        break;
     }
 
     case DELAY_BUTCHER:
@@ -939,7 +939,7 @@ static void finish_delay(const delay_queue_item &delay)
     }
 
     case DELAY_DROP_ITEM:
-        // Note:  checking if item is droppable is assumed to 
+        // Note:  checking if item is droppable is assumed to
         // be done before setting up this delay... this includes
         // quantity (delay.parm2). -- bwr
 
@@ -947,15 +947,15 @@ static void finish_delay(const delay_queue_item &delay)
         if (!is_valid_item( you.inv[ delay.parm1 ] ))
             break;
 
-        // Must handle unwield_item before we attempt to copy 
+        // Must handle unwield_item before we attempt to copy
         // so that temporary brands and such are cleared. -- bwr
         if (delay.parm1 == you.equip[EQ_WEAPON])
-        {   
+        {
             unwield_item();
             canned_msg( MSG_EMPTY_HANDED );
         }
 
-        if (!copy_item_to_grid( you.inv[ delay.parm1 ], 
+        if (!copy_item_to_grid( you.inv[ delay.parm1 ],
                                 you.x_pos, you.y_pos, delay.parm2,
                                 true ))
         {
@@ -984,7 +984,7 @@ static void finish_delay(const delay_queue_item &delay)
 
     default:
         mpr( "You finish doing something." );
-        break; 
+        break;
     }
 
     you.wield_change = true;
@@ -1047,7 +1047,7 @@ static void armour_wear_effects(const int item_slot)
 
     int ego = get_armour_ego_type( arm );
     if (ego != SPARM_NORMAL)
-    {   
+    {
         switch (ego)
         {
         case SPARM_RUNNING:
@@ -1091,7 +1091,7 @@ static void armour_wear_effects(const int item_slot)
 
         case SPARM_PONDEROUSNESS:
             mpr("You feel rather ponderous.");
-            // you.speed += 2; 
+            // you.speed += 2;
             you.redraw_evasion = 1;
             break;
 
@@ -1396,13 +1396,24 @@ inline static void monster_warning(activity_interrupt_type ai,
             else if (at.context == "surfaces")
                 text += " surfaces.";
             else if (at.context.find("bursts forth") != std::string::npos)
-                text += " bursts forth from the water.";
+            {
+                text += " bursts forth from the ";
+                if (mons_habitat(mon) == HT_LAVA)
+                    text += "lava";
+                else if (mons_habitat(mon) == HT_WATER)
+                    text += "water";
+                else
+                    text += "realm of bugdom";
+                text += ".";
+            }
             else
                 text += " comes into view.";
 
             if (!mweap.empty())
+            {
                 text += " " + mon->pronoun(PRONOUN_CAP)
                     + " is" + mweap + ".";
+            }
             print_formatted_paragraph(text,
                                       get_number_of_cols(),
                                       MSGCH_WARN);
@@ -1462,7 +1473,7 @@ static void paranoid_option_disable( activity_interrupt_type ai,
 }
 
 // Returns true if any activity was stopped.
-bool interrupt_activity( activity_interrupt_type ai, 
+bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &at )
 {
     paranoid_option_disable(ai, at);
@@ -1471,7 +1482,7 @@ bool interrupt_activity( activity_interrupt_type ai,
         return interrupt_cmd_repeat(ai, at);
 
     const int delay = current_delay_action();
-    
+
     if (delay == DELAY_NOT_DELAYED)
         return (false);
 
@@ -1479,7 +1490,7 @@ bool interrupt_activity( activity_interrupt_type ai,
     mprf(MSGCH_DIAGNOSTICS, "Activity interrupt: %s",
          activity_interrupt_name(ai));
 #endif
-    
+
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
 
@@ -1535,7 +1546,7 @@ static const char *activity_interrupt_names[] =
 
 const char *activity_interrupt_name(activity_interrupt_type ai)
 {
-    ASSERT( sizeof(activity_interrupt_names) 
+    ASSERT( sizeof(activity_interrupt_names)
             / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS );
 
     if (ai == NUM_AINTERRUPTS)
