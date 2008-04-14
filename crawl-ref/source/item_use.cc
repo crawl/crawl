@@ -1755,6 +1755,17 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     item.quantity = 1;
     item.slot     = index_to_letter(item.link);
     origin_set_unknown(item);
+    if (item.base_type == OBJ_POTIONS
+        && (item.sub_type == POT_BLOOD
+            || item.sub_type == POT_BLOOD_COAGULATED)
+        && you.inv[throw_2].quantity > 1)
+    {
+        // initialize thrown potion with oldest potion in stack
+        long val = remove_oldest_blood_potion(you.inv[throw_2]);
+        val -= you.num_turns;
+        item.props.clear();
+        init_stack_blood_potions(item, val);
+    }
 
     if (you.duration[DUR_CONF])
     {
@@ -3497,6 +3508,12 @@ void drink( int slot )
         xom_is_stimulated(255);
     }
 
+    if (you.inv[item_slot].sub_type == POT_BLOOD
+        || you.inv[item_slot].sub_type == POT_BLOOD_COAGULATED)
+    {
+        // always drink oldest potion
+        remove_oldest_blood_potion(you.inv[item_slot]);
+    }
     dec_inv_item_quantity( item_slot, 1 );
     you.turn_is_over = true;
 

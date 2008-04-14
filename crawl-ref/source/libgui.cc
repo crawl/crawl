@@ -29,6 +29,7 @@
 #include "externs.h"
 #include "guic.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "newgame.h"
 #include "player.h"
@@ -367,19 +368,19 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
             c = _gmap_to_colour(gmap_col[what & 0xff]);
             break;
         }
-        if (c == Options.tile_monster_col && mgrd[x][y] != NON_MONSTER
-            && upd_tile)
+
+        if (c == Options.tile_monster_col && mgrd[x][y] != NON_MONSTER)
         {
             const int grid = mgrd[x][y];
-            if (mons_friendly(&menv[grid]))
+            if (mons_friendly(&menv[grid]) && upd_tile)
                 c = Options.tile_friendly_col; // colour friendly monsters
-            else if (mons_neutral(&menv[grid])
+            else if (mons_neutral(&menv[grid]) && upd_tile
                      && Options.tile_neutral_col != Options.tile_monster_col)
             {
                 c = Options.tile_neutral_col;  // colour neutral monsters
             }
             else if (mons_class_flag( menv[grid].type, M_NO_EXP_GAIN ))
-                c = Options.tile_plant_col;
+                c = Options.tile_plant_col;    // colour zero xp monsters
         }
 
         if (c == Options.tile_floor_col || c == Options.tile_item_col)
@@ -1345,8 +1346,12 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                     && item.sub_type != CORPSE_SKELETON
                     && !food_is_rotten(item))
                 {
-                    // TODO: Differentiate bottle/butcher for vampires.
-                    desc += EOL "[Shift-L-Click] Chop up (c)";
+                    desc += EOL "[Shift-L-Click] ";
+                    if (can_bottle_blood_from_corpse( item.plus))
+                        desc += "Bottle blood";
+                    else
+                        desc += "Chop up";
+                    desc += " (c)";
 
                     if (you.species == SP_VAMPIRE)
                         desc += EOL "[Shift-R-Click] Drink blood (e)";

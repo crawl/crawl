@@ -86,6 +86,7 @@
 #include "macro.h"
 #include "makeitem.h"
 #include "menu.h"
+#include "misc.h"
 #include "place.h"
 #include "player.h"
 #include "randart.h"
@@ -852,6 +853,7 @@ static void _give_starting_food()
         return;
 
     item_def item;
+    item.quantity = 1;
     if ( you.species == SP_SPRIGGAN )
     {
         item.base_type = OBJ_POTIONS;
@@ -861,7 +863,7 @@ static void _give_starting_food()
     {
         item.base_type = OBJ_POTIONS;
         item.sub_type  = POT_BLOOD;
-        item.special   = 1200;
+        init_stack_blood_potions(item);
     }
     else
     {
@@ -874,7 +876,6 @@ static void _give_starting_food()
         else
             item.sub_type = FOOD_BREAD_RATION;
     }
-    item.quantity = 1;
 
     const int slot = find_free_slot(item);
     you.inv[slot] = item;       // will ASSERT if couldn't find free slot

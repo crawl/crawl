@@ -19,6 +19,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
@@ -2313,11 +2314,9 @@ static void generate_potion_item(item_def& item, int force_type, int item_level)
         }
         item.sub_type = stype;
     }
-    
-    if (item.sub_type == POT_BLOOD)
-        item.special = 1200;
-    else
-        item.special = 0;
+
+    if (item.sub_type == POT_BLOOD || item.sub_type == POT_BLOOD_COAGULATED)
+        init_stack_blood_potions(item);
 }
 
 static void generate_scroll_item(item_def& item, int force_type,

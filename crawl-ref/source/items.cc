@@ -1530,10 +1530,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                     && (mitm[obj].sub_type == POT_BLOOD
                         || mitm[obj].sub_type == POT_BLOOD_COAGULATED))
                 {
-                    // use average age
-                    int age = you.inv[m].special * you.inv[m].quantity
-                              + mitm[obj].special * quant_got;
-                    you.inv[m].special = age / (you.inv[m].quantity + quant_got);
+                    pick_up_blood_potions_stack(mitm[obj], quant_got);
                 }
                 inc_inv_item_quantity( m, quant_got );
                 dec_mitm_item_quantity( obj, quant_got );
@@ -1586,20 +1583,34 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     check_note_item(item);
 
     item.quantity = quant_got;
+    if (mitm[obj].base_type == OBJ_POTIONS
+        && (mitm[obj].sub_type == POT_BLOOD
+            || mitm[obj].sub_type == POT_BLOOD_COAGULATED))
+    {
+        if (quant_got != mitm[obj].quantity)
+        {
+            // remove oldest timers from original stack
+            for (int i = 0; i < quant_got; i++)
+                remove_oldest_blood_potion(mitm[obj]);
+
+            // ... and newest ones from picked up stack
+            remove_newest_blood_potion(item);
+        }
+    }
     dec_mitm_item_quantity( obj, quant_got );
     you.m_quiver->on_inv_quantity_changed(freeslot, quant_got);
     burden_change();
 
     if (!quiet)
         mpr( you.inv[freeslot].name(DESC_INVENTORY).c_str() );
-    
+
     if (Options.tutorial_left)
     {
         taken_new_item(item.base_type);
         if (is_artefact(item) || get_equip_desc( item ) != ISFLAG_NO_DESC)
             learned_something_new(TUT_SEEN_RANDART);
     }
-    
+
     if (item.base_type == OBJ_ORBS
         && you.char_direction == GDT_DESCENDING)
     {
@@ -1737,17 +1748,16 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
         {
             if (items_stack( item, mitm[i] ))
             {
+                inc_mitm_item_quantity( i, quant_drop );
+
                 if (item.base_type == OBJ_POTIONS
                     && (item.sub_type == POT_BLOOD
                         || item.sub_type == POT_BLOOD_COAGULATED))
                 {
-                    // calculate average age
-                    int age = mitm[i].special * mitm[i].quantity
-                              + item.special * quant_drop;
-                    mitm[i].special = age / (mitm[i].quantity + quant_drop);
+                    item_def help = item;
+                    drop_blood_potions_stack(help, quant_drop, x_plos, y_plos);
                 }
-                inc_mitm_item_quantity( i, quant_drop );
-                
+
                 // If the items on the floor already have a nonzero slot,
                 // leave it as such, otherwise set the slot.
                 if (mark_dropped && !mitm[i].slot)
@@ -1780,6 +1790,15 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
     }
 
     move_item_to_grid( &new_item, x_plos, y_plos );
+    if (item.base_type == OBJ_POTIONS
+        && (item.sub_type == POT_BLOOD
+            || item.sub_type == POT_BLOOD_COAGULATED)
+        && item.quantity != quant_drop) // partial drop only
+    {
+        // since only the oldest potions have been dropped,
+        // remove the newest ones
+        remove_newest_blood_potion(mitm[new_item]);
+    }
 
     return (true);
 }                               // end copy_item_to_grid()
@@ -1893,7 +1912,16 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     }
     else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
         StashTrack.add_stash();
-   
+
+    if (you.inv[item_dropped].base_type == OBJ_POTIONS
+        && (you.inv[item_dropped].sub_type == POT_BLOOD
+            || you.inv[item_dropped].sub_type == POT_BLOOD_COAGULATED)
+        && you.inv[item_dropped].quantity != quant_drop)
+    {
+        // oldest potions have been dropped
+        for (int i = 0; i < quant_drop; i++)
+            remove_oldest_blood_potion(you.inv[item_dropped]);
+    }
     dec_inv_item_quantity( item_dropped, quant_drop );
     you.turn_is_over = true;
 

@@ -1702,16 +1702,21 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     fire_beam(beem);
 
     // both old and new code use up a potion:
+    if (you.inv[potion].sub_type == POT_BLOOD
+        || you.inv[potion].sub_type == POT_BLOOD_COAGULATED)
+    {
+        remove_oldest_blood_potion(you.inv[potion]);
+    }
     dec_inv_item_quantity( potion, 1 );
 
     return (true);
 }                               // end cast_evaporate()
 
-// The intent of this spell isn't to produce helpful potions 
+// The intent of this spell isn't to produce helpful potions
 // for drinking, but rather to provide ammo for the Evaporate
-// spell out of corpses, thus potentially making it useful.  
+// spell out of corpses, thus potentially making it useful.
 // Producing helpful potions would break game balance here...
-// and producing more than one potion from a corpse, or not 
+// and producing more than one potion from a corpse, or not
 // using up the corpse might also lead to game balance problems. -- bwr
 void cast_fulsome_distillation( int powc )
 {

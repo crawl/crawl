@@ -2241,7 +2241,7 @@ orc sorcerer
 @_wizard_@
 
 w:1
-@_generic_orc_@
+@_generic_orc_speech@
 
 w:1
 __NONE

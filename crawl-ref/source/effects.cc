@@ -1547,12 +1547,11 @@ bool acquirement(object_class_type class_wanted, int agent,
         else if (quant > 1)
             thing.quantity = quant;
 
-        if (thing.base_type == OBJ_POTIONS)
+        if (thing.base_type == OBJ_POTIONS
+            && (thing.sub_type == POT_BLOOD
+                || thing.sub_type == POT_BLOOD_COAGULATED))
         {
-            if (thing.sub_type == POT_BLOOD)
-                thing.special = 1200;
-            else if (thing.sub_type == POT_BLOOD_COAGULATED)
-                thing.special = 200;
+            init_stack_blood_potions(thing);
         }
 
         // remove curse flag from item
@@ -2213,9 +2212,6 @@ static void rot_inventory_food(long time_delta)
     // Update all of the corpses and food chunks in the player's
     // inventory {should be moved elsewhere - dlb}
     bool burden_changed_by_rot = false;
-    int num_total_blood = 0, num_blood_coagulates = 0;
-    int affected_potion = -1; // stack of coagulating blood potions
-                              // (only one possible at a time)
     std::vector<char> rotten_items;
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -2225,11 +2221,18 @@ static void rot_inventory_food(long time_delta)
         if (!food_item_needs_time_check(you.inv[i]))
             continue;
 
+        if (you.inv[i].base_type == OBJ_POTIONS)
+        {
+            // also handles messaging
+            if (maybe_coagulate_blood_potions_inv(you.inv[i]))
+                burden_changed_by_rot = true;
+            continue;
+        }
+
         // food item timed out -> make it disappear
         if ((time_delta / 20) >= you.inv[i].special)
         {
-            if (you.inv[i].base_type == OBJ_FOOD
-                || you.inv[i].base_type == OBJ_POTIONS)
+            if (you.inv[i].base_type == OBJ_FOOD)
             {
                 if (you.equip[EQ_WEAPON] == i)
                     unwield_item();
@@ -2263,18 +2266,8 @@ static void rot_inventory_food(long time_delta)
         // if it hasn't disappeared, reduce the rotting timer
         you.inv[i].special -= (time_delta / 20);
 
-        if (you.inv[i].base_type == OBJ_POTIONS
-            && you.inv[i].sub_type == POT_BLOOD)
-        {
-            num_total_blood += you.inv[i].quantity;
-            if (you.inv[i].special < 200)
-            {
-                num_blood_coagulates += you.inv[i].quantity;
-                affected_potion = i;
-            }
-        }
-        else if (food_is_rotten(you.inv[i])
-                 && (you.inv[i].special + (time_delta / 20) >= 100 ))
+        if (food_is_rotten(you.inv[i])
+            && (you.inv[i].special + (time_delta / 20) >= 100 ))
         {
             rotten_items.push_back(index_to_letter( i ));
         }
@@ -2337,50 +2330,6 @@ static void rot_inventory_food(long time_delta)
             mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
 
         learned_something_new(TUT_ROTTEN_FOOD);
-    }
-
-    if (num_blood_coagulates)
-    {
-        ASSERT(affected_potion != -1);
-
-        std::string msg = "";
-
-        if (num_total_blood == num_blood_coagulates)
-            msg += you.inv[affected_potion].name(DESC_CAP_YOUR, false);
-/*
-        // this is for later, when part of a stack can coagulate
-        else
-        {
-            if (congealed_blood_num == 1)
-                msg += "One of ";
-            else
-                msg += "Some of ";
-
-            msg += you.inv[affected_potion].name(DESC_NOCAP_YOUR, false);
-        }
-*/
-        msg += " coagulate";
-        if (num_blood_coagulates == 1)
-            msg += "s";
-        msg += ".";
-
-        mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
-
-        const bool known_blood = item_type_known(you.inv[affected_potion]);
-        you.inv[affected_potion].sub_type = POT_BLOOD_COAGULATED;
-        you.inv[affected_potion].plus
-              = you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED];
-        const bool known_coag_blood = item_type_known(you.inv[affected_potion]);
-
-        // identify both blood and coagulated blood, if necessary
-        if (!known_blood)
-            set_ident_type( OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE );
-        if (!known_coag_blood)
-        {
-            set_ident_flags( you.inv[affected_potion], ISFLAG_IDENT_MASK );
-            set_ident_type( OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE );
-            mpr(you.inv[affected_potion].name(DESC_INVENTORY, false).c_str());
-        }
     }
 
     if (burden_changed_by_rot)
@@ -2879,10 +2828,9 @@ static void _maybe_restart_fountain_flow(const int x, const int y,
                                          const int tries)
 {
      dungeon_feature_type grid = grd[x][y];
+
      if (grid < DNGN_DRY_FOUNTAIN_BLUE || grid > DNGN_DRY_FOUNTAIN_BLOOD)
-     {
          return;
-     }
 
      int t = 0;
      while (tries > t++)
@@ -2941,9 +2889,15 @@ void update_corpses(double elapsedTime)
         if (!food_item_needs_time_check(it))
             continue;
 
+        if (it.base_type == OBJ_POTIONS)
+        {
+            maybe_coagulate_blood_potions_floor(c);
+            continue;
+        }
+
         if (rot_time >= it.special && !is_being_butchered(it))
         {
-            if (it.base_type == OBJ_FOOD || it.base_type == OBJ_POTIONS)
+            if (it.base_type == OBJ_FOOD)
             {
                 destroy_item(c);
             }
@@ -2964,22 +2918,7 @@ void update_corpses(double elapsedTime)
         }
         else
         {
-            // potions of blood have a longer rot time
-            if (it.base_type != OBJ_POTIONS)
-                ASSERT(rot_time < 256);
-
             it.special -= rot_time;
-
-            if (it.base_type == OBJ_POTIONS
-                && it.sub_type == POT_BLOOD
-                && it.special < 200)
-            {
-                ASSERT(rot_time < 1200);
-                it.sub_type = POT_BLOOD_COAGULATED;
-
-                it.plus
-                    = you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED];
-            }
         }
     }
 

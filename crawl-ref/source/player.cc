@@ -1243,10 +1243,7 @@ int player_res_fire(bool calc_unid, bool temp)
 
     // species:
     if (you.species == SP_MUMMY
-        || you.species == SP_VAMPIRE && you.hunger_state <= HS_NEAR_STARVING)
-    {
         rf--;
-    }
 
     // mutations:
     rf += you.mutation[MUT_HEAT_RESISTANCE];
@@ -3664,7 +3661,6 @@ void display_char_status()
         {
             case HS_STARVING:
                 attrib.push_back("resist poison");
-                attrib.push_back("are susceptible to fire");
                 attrib.push_back("significantly resist cold");
                 attrib.push_back("strongly resist negative energy");
                 attrib.push_back("resist torment");

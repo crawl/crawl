@@ -163,18 +163,32 @@ void turn_corpse_into_chunks( item_def &item )
 void init_stack_blood_potions(item_def &stack, int age)
 {
     ASSERT(stack.base_type == OBJ_POTIONS);
-    ASSERT(stack.sub_type == POT_BLOOD);
+    ASSERT(stack.sub_type == POT_BLOOD
+           || stack.sub_type == POT_BLOOD_COAGULATED);
 
     CrawlHashTable &props = stack.props;
+    props.clear(); // sanity measure
     props.set_default_flags(SFLAG_CONST_TYPE);
     props["timer"].new_vector(SV_LONG);
-    CrawlVector &timer = props["timer"];
+    CrawlVector &timer = props["timer"].get_vector();
 
+    if (age == -1)
+    {
+        if (stack.sub_type == POT_BLOOD)
+            age = 2000;
+        else // coagulated blood
+            age = 500;
+    }
     // for a newly created stack, all potions use the same timer
-    const long max_age = you.num_turns + (age == -1 ? 1200 : age);
+    const long max_age = you.num_turns + age;
+#ifdef DEBUG_BLOOD_POTIONS
+    mprf(MSGCH_DIAGNOSTICS, "newly created stack will time out at turn %d",
+                            max_age);
+#endif
     for (int i = 0; i < stack.quantity; i++)
         timer.push_back(max_age);
 
+    stack.special = 0;
     ASSERT(timer.size() == stack.quantity);
     props.assert_validity();
 }
@@ -184,21 +198,23 @@ static void _long_sort(CrawlVector &vec)
 {
     std::vector<long> help;
     while (!vec.empty())
-        help.push_back(vec.pop_back());
+    {
+        help.push_back(vec[vec.size()-1].get_long());
+        vec.pop_back();
+    }
 
     std::sort(help.begin(), help.end());
 
-    long val;
     while (!help.empty())
     {
-        val = help[help.size() - 1];
+        vec.push_back(help[help.size()-1]);
         help.pop_back();
-        vec.push_back(val);
     }
 }
 
-void maybe_coagulate_blood_floor(item_def &blood)
+void maybe_coagulate_blood_potions_floor(int obj)
 {
+    item_def &blood = mitm[obj];
     ASSERT(is_valid_item(blood));
     ASSERT(blood.base_type == OBJ_POTIONS);
 
@@ -206,46 +222,61 @@ void maybe_coagulate_blood_floor(item_def &blood)
            || blood.sub_type == POT_BLOOD_COAGULATED);
 
     CrawlHashTable &props = blood.props;
+    if (!props.exists("timer"))
+        init_stack_blood_potions(blood, blood.special);
+
     ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"];
-    ASSERT(timer.size() == blood.quantity);
+    CrawlVector &timer = props["timer"].get_vector();
     ASSERT(!timer.empty());
+    ASSERT(timer.size() == blood.quantity);
 
     // blood.sub_type could be POT_BLOOD or POT_BLOOD_COAGULATED
     // -> need different handling
     int rot_limit  = you.num_turns;
-    int coag_limit = you.num_turns + 200; // check 200 turns later
+    int coag_limit = you.num_turns + 500; // check 500 turns later
 
     // first count whether coagulating is even necessary
     int rot_count  = 0;
     int coag_count = 0;
     std::vector<long> age_timer;
     long current;
-    const int size = timer.size();
-    for (int i = 0; i < size; i++)
+    while (!timer.empty())
     {
-        current = timer.pop_back();
-        if (rot_limit >= current)
+        current = timer[timer.size()-1].get_long();
+        if (current > coag_limit
+            || blood.sub_type == POT_BLOOD_COAGULATED && current > rot_limit)
+        {
+            // still some time until rotting/coagulating
+            break;
+        }
+
+        timer.pop_back();
+        if (current <= rot_limit)
             rot_count++;
-        else if (blood.sub_type == POT_BLOOD && coag_limit >= current)
+        else if (blood.sub_type == POT_BLOOD && current <= coag_limit)
         {
             coag_count++;
             age_timer.push_back(current);
-        }
-        else // still some time until rotting/coagulating
-        {
-            timer.push_back(current);
-            _long_sort(timer);
-            break;
         }
     }
 
     if (!rot_count && !coag_count)
         return; // nothing to be done
 
+#ifdef DEBUG_BLOOD_POTIONS
+    mprf(MSGCH_DIAGNOSTICS, "in maybe_coagulate_blood_potions_FLOOR "
+                            "(turns: %d)", you.num_turns);
+
+    mprf(MSGCH_DIAGNOSTICS, "Something happened at pos (%d, %d)!",
+                            blood.x, blood.y);
+    mprf(MSGCH_DIAGNOSTICS, "coagulated: %d, rotted: %d, total: %d",
+                            coag_count, rot_count, blood.quantity);
+    more();
+#endif
+
     if (!coag_count) // some potions rotted away
     {
-        dec_mitm_item_quantity(blood.link, rot_count);
+        dec_mitm_item_quantity(obj, rot_count);
         // timer is already up to date
         return;
     }
@@ -254,16 +285,19 @@ void maybe_coagulate_blood_floor(item_def &blood)
     ASSERT(blood.sub_type == POT_BLOOD);
 
     // now that coagulating is necessary, check square for !coagulated blood
-    int o = igrd[blood.x][blood.y];
-    while (o != NON_ITEM)
+    ASSERT(blood.x >= 0 && blood.y >= 0);
+    for (int o = igrd[blood.x][blood.y]; o != NON_ITEM; o = mitm[o].link)
     {
         if (mitm[o].base_type == OBJ_POTIONS
             && mitm[o].sub_type == POT_BLOOD_COAGULATED)
         {
             // merge with existing stack
             CrawlHashTable &props2 = mitm[o].props;
+            if (!props2.exists("timer"))
+                init_stack_blood_potions(mitm[o], mitm[o].special);
+
             ASSERT(props2.exists("timer"));
-            CrawlVector &timer2 = props2["timer"];
+            CrawlVector &timer2 = props2["timer"].get_vector();
             ASSERT(timer2.size() == mitm[o].quantity);
 
             // update timer -> push(pop)
@@ -277,10 +311,9 @@ void maybe_coagulate_blood_floor(item_def &blood)
             _long_sort(timer2);
             inc_mitm_item_quantity(o, coag_count);
             ASSERT(timer2.size() == mitm[o].quantity);
-            dec_mitm_item_quantity(blood.link, rot_count + coag_count);
+            dec_mitm_item_quantity(obj, rot_count + coag_count);
             return;
         }
-        o = mitm[o].link;
     }
     // If we got here nothing was found!
 
@@ -289,9 +322,11 @@ void maybe_coagulate_blood_floor(item_def &blood)
     if (rot_count + coag_count == blood.quantity)
     {
         ASSERT(timer.empty());
+
         // update subtype
         blood.sub_type = POT_BLOOD_COAGULATED;
         item_colour(blood);
+
         // re-fill vector
         long val;
         while (!age_timer.empty())
@@ -300,29 +335,30 @@ void maybe_coagulate_blood_floor(item_def &blood)
             age_timer.pop_back();
             timer.push_back(val);
         }
-        dec_mitm_item_quantity(blood.link, rot_count);
+        dec_mitm_item_quantity(obj, rot_count);
         ASSERT(timer.size() == blood.quantity);
+        return;
     }
 
-    // create a new stack of potions
-    o = get_item_slot( 100 + random2(200) );
+    // else, create a new stack of potions
+    int o = get_item_slot( 20 );
     if (o == NON_ITEM)
         return;
 
-    // these values are common to all: {dlb}
-    mitm[o].base_type = OBJ_POTIONS;
-    mitm[o].sub_type  = POT_BLOOD_COAGULATED;
-    mitm[o].quantity  = coag_count;
-    mitm[o].plus      = 0;
-    mitm[o].plus2     = 0;
-    mitm[o].special   = 0;
-    mitm[o].flags     = 0;
-    item_colour(mitm[o]);
+    item_def &item = mitm[o];
+    item.base_type = OBJ_POTIONS;
+    item.sub_type  = POT_BLOOD_COAGULATED;
+    item.quantity  = coag_count;
+    item.plus      = 0;
+    item.plus2     = 0;
+    item.special   = 0;
+    item.flags     = 0;
+    item_colour(item);
 
-    CrawlHashTable &props_new = mitm[o].props;
+    CrawlHashTable &props_new = item.props;
     props_new.set_default_flags(SFLAG_CONST_TYPE);
     props_new["timer"].new_vector(SV_LONG);
-    CrawlVector &timer_new = props_new["timer"];
+    CrawlVector &timer_new = props_new["timer"].get_vector();
 
     long val;
     while (!age_timer.empty())
@@ -336,12 +372,327 @@ void maybe_coagulate_blood_floor(item_def &blood)
     props_new.assert_validity();
     move_item_to_grid( &o, blood.x, blood.y );
 
-    dec_mitm_item_quantity(blood.link, rot_count + coag_count);
+    dec_mitm_item_quantity(obj, rot_count + coag_count);
     ASSERT(timer.size() == blood.quantity);
 }
 
-// used for (q)uaff, (f)ire, and Evaporate
-void remove_oldest_potion_inv(item_def &stack)
+static void _coagulating_blood_message(item_def &blood, int num_coagulated)
+{
+    ASSERT(num_coagulated > 0);
+
+    std::string msg;
+    if (blood.quantity == num_coagulated)
+        msg = blood.name(DESC_CAP_YOUR, false);
+    else
+    {
+        if (num_coagulated == 1)
+            msg = "One of ";
+        else
+            msg = "Some of ";
+
+        msg += blood.name(DESC_NOCAP_YOUR, false);
+    }
+
+    msg += " coagulate";
+    if (num_coagulated == 1)
+        msg += "s";
+    msg += ".";
+
+    mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
+}
+
+// returns true if "equipment weighs less" message needed
+// also handles coagulation messages
+bool maybe_coagulate_blood_potions_inv(item_def &blood)
+{
+    ASSERT(is_valid_item(blood));
+    ASSERT(blood.base_type == OBJ_POTIONS);
+
+    ASSERT(blood.sub_type == POT_BLOOD
+           || blood.sub_type == POT_BLOOD_COAGULATED);
+
+    CrawlHashTable &props = blood.props;
+    if (!props.exists("timer"))
+        init_stack_blood_potions(blood, blood.special);
+
+    ASSERT(props.exists("timer"));
+    CrawlVector &timer = props["timer"].get_vector();
+    ASSERT(timer.size() == blood.quantity);
+    ASSERT(!timer.empty());
+
+    // blood.sub_type could be POT_BLOOD or POT_BLOOD_COAGULATED
+    // -> need different handling
+    int rot_limit  = you.num_turns;
+    int coag_limit = you.num_turns + 500; // check 500 turns later
+
+    // first count whether coagulating is even necessary
+    int rot_count  = 0;
+    int coag_count = 0;
+    std::vector<long> age_timer;
+    long current;
+    const int size = timer.size();
+    for (int i = 0; i < size; i++)
+    {
+        current = timer[timer.size()-1].get_long();
+        if (current > coag_limit
+            || blood.sub_type == POT_BLOOD_COAGULATED && current > rot_limit)
+        {
+            // still some time until rotting/coagulating
+            break;
+        }
+
+        timer.pop_back();
+        if (current <= rot_limit)
+            rot_count++;
+        else if (blood.sub_type == POT_BLOOD && current <= coag_limit)
+        {
+            coag_count++;
+            age_timer.push_back(current);
+        }
+    }
+
+    if (!rot_count && !coag_count)
+        return false; // nothing to be done
+
+#ifdef DEBUG_BLOOD_POTIONS
+    mprf(MSGCH_DIAGNOSTICS, "in maybe_coagulate_blood_potions_INV "
+                            "(turns: %d)", you.num_turns);
+
+    mprf(MSGCH_DIAGNOSTICS, "coagulated: %d, rotted: %d, total: %d",
+                            coag_count, rot_count, blood.quantity);
+    more();
+#endif
+
+    if (!coag_count) // some potions rotted away
+    {
+        blood.quantity -= rot_count;
+        if (blood.quantity < 1)
+            destroy_item(blood);
+        else
+            ASSERT(blood.quantity == timer.size());
+
+        return true;
+    }
+
+    // coagulated blood cannot coagulate any further...
+    ASSERT(blood.sub_type == POT_BLOOD);
+
+    bool knew_blood = get_ident_type(OBJ_POTIONS, POT_BLOOD) == ID_KNOWN_TYPE;
+    bool knew_coag  = (get_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED)
+                           == ID_KNOWN_TYPE);
+
+    _coagulating_blood_message(blood, coag_count);
+
+    // identify both blood and coagulated blood, if necessary
+    if (!knew_blood)
+        set_ident_type( OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE );
+
+    if (!knew_coag)
+        set_ident_type( OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE );
+
+    // now that coagulating is necessary, check inventory for !coagulated blood
+    for (int m = 0; m < ENDOFPACK; m++)
+    {
+        if (!is_valid_item(you.inv[m]))
+            continue;
+
+        if (you.inv[m].base_type == OBJ_POTIONS
+            && you.inv[m].sub_type == POT_BLOOD_COAGULATED)
+        {
+            CrawlHashTable &props2 = you.inv[m].props;
+            if (!props2.exists("timer"))
+                init_stack_blood_potions(you.inv[m], you.inv[m].special);
+
+            ASSERT(props2.exists("timer"));
+            CrawlVector &timer2 = props2["timer"].get_vector();
+
+            blood.quantity -= coag_count + rot_count;
+            if (blood.quantity < 1)
+                destroy_item(blood);
+            else
+            {
+                ASSERT(timer.size() == blood.quantity);
+                if (!knew_blood)
+                    mpr(blood.name(DESC_INVENTORY).c_str());
+            }
+
+            // update timer -> push(pop)
+            long val;
+            while (!age_timer.empty())
+            {
+                val = age_timer[age_timer.size() - 1];
+                age_timer.pop_back();
+                timer2.push_back(val);
+            }
+
+            you.inv[m].quantity += coag_count;
+            ASSERT(timer2.size() == you.inv[m].quantity);
+            if (!knew_coag)
+                mpr(you.inv[m].name(DESC_INVENTORY).c_str());
+
+            // re-sort timer
+            _long_sort(timer2);
+
+            return (rot_count > 0);
+        }
+    }
+
+    // if entire stack has coagulated, simply change subtype
+    if (rot_count + coag_count == blood.quantity)
+    {
+        ASSERT(timer.empty());
+        // update subtype
+        blood.sub_type = POT_BLOOD_COAGULATED;
+        item_colour(blood);
+
+        // re-fill vector
+        long val;
+        while (!age_timer.empty())
+        {
+            val = age_timer[age_timer.size() - 1];
+            age_timer.pop_back();
+            timer.push_back(val);
+        }
+        blood.quantity -= rot_count;
+        // stack still exists because of coag_count
+        ASSERT(timer.size() == blood.quantity);
+
+        if (!knew_coag)
+            mpr(blood.name(DESC_INVENTORY).c_str());
+
+        return (rot_count > 0);
+    }
+
+    // else, create new stack in inventory
+    int freeslot = find_free_slot(blood);
+    if (freeslot >= 0 && freeslot < ENDOFPACK
+        && !is_valid_item(you.inv[freeslot]))
+    {
+        item_def &item = you.inv[freeslot];
+        item.link      = freeslot;
+        item.slot      = index_to_letter(item.link);
+        item.base_type = OBJ_POTIONS;
+        item.sub_type  = POT_BLOOD_COAGULATED;
+        item.quantity  = coag_count;
+        item.x         = -1;
+        item.y         = -1;
+        item.plus      = 0;
+        item.plus2     = 0;
+        item.special   = 0;
+        item.flags     = 0;
+        item_colour(item);
+
+        CrawlHashTable &props_new = item.props;
+        props_new.set_default_flags(SFLAG_CONST_TYPE);
+        props_new["timer"].new_vector(SV_LONG);
+        CrawlVector &timer_new = props_new["timer"].get_vector();
+
+        long val;
+        while (!age_timer.empty())
+        {
+            val = age_timer[age_timer.size() - 1];
+            age_timer.pop_back();
+            timer_new.push_back(val);
+        }
+
+        ASSERT(timer_new.size() == coag_count);
+        props_new.assert_validity();
+
+        blood.quantity -= coag_count + rot_count;
+        ASSERT(timer.size() == blood.quantity);
+
+        if (!knew_blood)
+            mpr(blood.name(DESC_INVENTORY).c_str());
+        if (!knew_coag)
+            mpr(item.name(DESC_INVENTORY).c_str());
+
+        return (rot_count > 0);
+    }
+
+    // no space in inventory, check floor
+    int o = igrd[you.x_pos][you.y_pos];
+    while (o != NON_ITEM)
+    {
+        if (mitm[o].base_type == OBJ_POTIONS
+            && mitm[o].sub_type == POT_BLOOD_COAGULATED)
+        {
+            // merge with existing stack
+            CrawlHashTable &props2 = mitm[o].props;
+            if (!props2.exists("timer"))
+                init_stack_blood_potions(mitm[o], mitm[o].special);
+
+            ASSERT(props2.exists("timer"));
+            CrawlVector &timer2 = props2["timer"].get_vector();
+            ASSERT(timer2.size() == mitm[o].quantity);
+
+            // update timer -> push(pop)
+            long val;
+            while (!age_timer.empty())
+            {
+                val = age_timer[age_timer.size() - 1];
+                age_timer.pop_back();
+                timer2.push_back(val);
+            }
+            _long_sort(timer2);
+
+            inc_mitm_item_quantity(o, coag_count);
+            ASSERT(timer2.size() == mitm[o].quantity);
+            dec_inv_item_quantity(blood.link, rot_count + coag_count);
+            ASSERT(timer.size() == blood.quantity);
+            if (!knew_blood)
+                mpr(blood.name(DESC_INVENTORY).c_str());
+            return true;
+        }
+        o = mitm[o].link;
+    }
+    // If we got here nothing was found!
+
+    // create a new stack of potions
+    o = get_item_slot( 100 + random2(200) );
+    if (o == NON_ITEM)
+        return false;
+
+    // these values are common to all: {dlb}
+    mitm[o].base_type = OBJ_POTIONS;
+    mitm[o].sub_type  = POT_BLOOD_COAGULATED;
+    mitm[o].quantity  = coag_count;
+    mitm[o].plus      = 0;
+    mitm[o].plus2     = 0;
+    mitm[o].special   = 0;
+    mitm[o].flags     = ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    item_colour(mitm[o]);
+
+    CrawlHashTable &props_new = mitm[o].props;
+    props_new.set_default_flags(SFLAG_CONST_TYPE);
+    props_new["timer"].new_vector(SV_LONG);
+    CrawlVector &timer_new = props_new["timer"].get_vector();
+
+    long val;
+    while (!age_timer.empty())
+    {
+        val = age_timer[age_timer.size() - 1];
+        age_timer.pop_back();
+        timer_new.push_back(val);
+    }
+
+    ASSERT(timer_new.size() == coag_count);
+    props_new.assert_validity();
+    move_item_to_grid( &o, you.x_pos, you.y_pos );
+
+    blood.quantity -= rot_count + coag_count;
+    if (blood.quantity < 1)
+        destroy_item(blood);
+    else
+    {
+        ASSERT(timer.size() == blood.quantity);
+        if (!knew_blood)
+            mpr(blood.name(DESC_INVENTORY).c_str());
+    }
+    return true;
+}
+
+// mostly used for (q)uaff, (f)ire, and Evaporate
+long remove_oldest_blood_potion(item_def &stack)
 {
     ASSERT(is_valid_item(stack));
     ASSERT(stack.base_type == OBJ_POTIONS);
@@ -350,56 +701,99 @@ void remove_oldest_potion_inv(item_def &stack)
             || stack.sub_type == POT_BLOOD_COAGULATED);
 
     CrawlHashTable &props = stack.props;
+    if (!props.exists("timer"))
+        init_stack_blood_potions(stack, stack.special);
     ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"];
-    ASSERT(timer.size() == stack.quantity);
+    CrawlVector &timer = props["timer"].get_vector();
     ASSERT(!timer.empty());
 
     // assuming already sorted, and first (oldest) potion valid
+    const long val = timer[timer.size() - 1].get_long();
     timer.pop_back();
     // the quantity will be decreased elsewhere
+    return val;
 }
 
-// Should be called *after* drop_thing (and only if this returns true)
-// unless the stack has been dropped in its entirety.
-void drop_blood_potions_stack(int item, int quant)
+// used whenever copies of blood potions have to be cleaned up
+void remove_newest_blood_potion(item_def &stack, int quant)
 {
-    ASSERT(quant > 0);
-    // entire stack was dropped?
-    if (!is_valid_item(you.inv[item]))
+    ASSERT(is_valid_item(stack));
+    ASSERT(stack.base_type == OBJ_POTIONS);
+
+    ASSERT (stack.sub_type == POT_BLOOD
+            || stack.sub_type == POT_BLOOD_COAGULATED);
+
+    CrawlHashTable &props = stack.props;
+    if (!props.exists("timer"))
+        init_stack_blood_potions(stack, stack.special);
+    ASSERT(props.exists("timer"));
+    CrawlVector &timer = props["timer"].get_vector();
+    ASSERT(!timer.empty());
+
+    if (quant == -1)
+        quant = timer.size() - stack.quantity;
+
+    // overwrite newest potions with oldest ones
+    int repeats = stack.quantity;
+    if (repeats > quant)
+        repeats = quant;
+
+    for (int i = 0; i < repeats; i++)
+    {
+        timer[i] = timer[timer.size() - 1];
+        timer.pop_back();
+    }
+
+    // now remove remaining oldest potions
+    repeats = quant - repeats;
+    for (int i = 0; i < repeats; i++)
+        timer.pop_back();
+
+    // and re-sort
+    _long_sort(timer);
+}
+
+// Called from copy_item_to_grid.
+// Quantities are set afterwards, so don't ASSERT for those.
+void drop_blood_potions_stack(item_def &stack, int quant, int x, int y)
+{
+    if (!is_valid_item(stack))
         return;
 
-    item_def &stack = you.inv[item];
+    ASSERT(quant > 0 && quant <= stack.quantity);
     ASSERT(stack.base_type == OBJ_POTIONS);
     ASSERT(stack.sub_type == POT_BLOOD
            || stack.sub_type == POT_BLOOD_COAGULATED);
 
     CrawlHashTable &props = stack.props;
+    if (!props.exists("timer"))
+        init_stack_blood_potions(stack, stack.special);
     ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"];
+    CrawlVector &timer = props["timer"].get_vector();
     ASSERT(!timer.empty());
 
     // first check whether we can merge with an existing stack on the floor
-    int o = igrd[you.x_pos][you.y_pos];
+    int o = igrd[x][y];
     while (o != NON_ITEM)
     {
         if (mitm[o].base_type == OBJ_POTIONS
             && mitm[o].sub_type == stack.sub_type)
         {
             CrawlHashTable &props2 = mitm[o].props;
+            if (!props2.exists("timer"))
+                init_stack_blood_potions(mitm[o], mitm[o].special);
             ASSERT(props2.exists("timer"));
-            CrawlVector &timer2 = props2["timer"];
+            CrawlVector &timer2 = props2["timer"].get_vector();
 
             // update timer -> push(pop)
             for (int i = 0; i < quant; i++)
-                timer2.push_back(timer.pop_back());
+            {
+                timer2.push_back(timer[timer.size() - 1].get_long());
+                timer.pop_back();
+            }
 
-            ASSERT(timer2.size() == mitm[o].quantity);
             // re-sort timer
             _long_sort(timer2);
-
-            // now the stack timer should be correct again
-            ASSERT(timer.size() == stack.quantity);
             return;
         }
         o = mitm[o].link;
@@ -410,27 +804,25 @@ void drop_blood_potions_stack(int item, int quant)
     // have to reduce the timer vector anyway.
     while (!timer.empty() && quant-- > 0)
         timer.pop_back();
-
-    ASSERT(stack.quantity == timer.size());
 }
 
-// Should be called *after* move_item_to_player
-// unless the stack has been picked up in its entirety.
-void pick_up_blood_potions_stack(int item, int quant)
+// Called from move_item_to_player.
+// Quantities are set afterwards, so don't ASSERT for those.
+void pick_up_blood_potions_stack(item_def &stack, int quant)
 {
-    ASSERT(quant > 0);
-    // entire stack was taken?
-    if (!is_valid_item(mitm[item]))
+    ASSERT(quant > 0 && quant <= stack.quantity);
+    if (!is_valid_item(stack))
         return;
 
-    item_def &stack = mitm[item];
     ASSERT(stack.base_type == OBJ_POTIONS);
     ASSERT(stack.sub_type == POT_BLOOD
            || stack.sub_type == POT_BLOOD_COAGULATED);
 
     CrawlHashTable &props = stack.props;
+    if (!props.exists("timer"))
+        init_stack_blood_potions(stack, stack.special);
     ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"];
+    CrawlVector &timer = props["timer"].get_vector();
     ASSERT(!timer.empty());
 
     // first check whether we can merge with an existing stack in inventory
@@ -443,25 +835,24 @@ void pick_up_blood_potions_stack(int item, int quant)
             && you.inv[m].sub_type == stack.sub_type)
         {
             CrawlHashTable &props2 = you.inv[m].props;
+            if (!props2.exists("timer"))
+                init_stack_blood_potions(you.inv[m], you.inv[m].special);
             ASSERT(props2.exists("timer"));
-            CrawlVector &timer2 = props2["timer"];
+            CrawlVector &timer2 = props2["timer"].get_vector();
 
             // update timer -> push(pop)
             for (int i = 0; i < quant; i++)
-                timer2.push_back(timer.pop_back());
+            {
+                timer2.push_back(timer[timer.size() - 1].get_long());
+                timer.pop_back();
+            }
 
-            ASSERT(timer2.size() == you.inv[m].quantity);
             // re-sort timer
             _long_sort(timer2);
-
-            // now the stack timer should be correct again
-            ASSERT(timer.size() == stack.quantity);
             return;
         }
     }
-
     // If we got here nothing was found. Huh?
-    ASSERT(stack.quantity == timer.size());
 }
 
 // Deliberately don't check for rottenness here, so this check
@@ -494,8 +885,8 @@ void turn_corpse_into_blood_potions( item_def &item )
 
     item.base_type = OBJ_POTIONS;
     item.sub_type  = POT_BLOOD;
-    item.colour    = RED;
-    item.special   = (item.special - 80) * 10; // potion's age
+    item_colour(item);
+    item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     // max. amount is about one third of the max. amount for chunks
     const int max_chunks = mons_weight( mons_class ) / 150;
@@ -511,7 +902,10 @@ void turn_corpse_into_blood_potions( item_def &item )
             item.quantity = 1;
     }
 
-    item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    // initialize timer depending on corpse age
+    // almost rotting: age = 100 --> potion timer =  500 --> will coagulate soon
+    // freshly killed: age = 200 --> potion timer = 2000 --> fresh !blood
+    init_stack_blood_potions(item, (item.special - 100) * 15 + 500);
 
     // happens after the blood has been bottled
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
@@ -534,6 +928,23 @@ void split_blood_potions_into_decay( int obj, int amount )
     if (amount <= 0)
         amount = random2(potion.quantity) + 1;
 
+    // We're being nice here, and only decay the *oldest* potions.
+    for (int i = 0; i < amount; i++)
+        remove_oldest_blood_potion(potion);
+
+    // try to merge into existing stacks of decayed potions
+    for (int m = 0; m < ENDOFPACK; m++)
+    {
+        if (you.inv[m].base_type == OBJ_POTIONS
+            && you.inv[m].sub_type == POT_DECAY
+            && you.inv[m].colour == potion.colour)
+        {
+            you.inv[obj].quantity -= amount;
+            you.inv[m].quantity   += amount;
+            return;
+        }
+    }
+
     // if entire stack affected just change subtype
     if (amount == potion.quantity)
     {
@@ -541,17 +952,42 @@ void split_blood_potions_into_decay( int obj, int amount )
         return;
     }
 
-    // try to merge into existing stacks of decayed potions
-    for (int m = 0; m < ENDOFPACK; m++)
+    // else, create new stack in inventory
+    int freeslot = find_free_slot(you.inv[obj]);
+    if (freeslot >= 0 && freeslot < ENDOFPACK
+        && !is_valid_item(you.inv[freeslot]))
     {
-         if (you.inv[m].base_type == OBJ_POTIONS
-             && you.inv[m].sub_type == POT_DECAY)
-         {
-             inc_inv_item_quantity( m, amount );
-             dec_inv_item_quantity( obj, amount);
+        item_def &item = you.inv[freeslot];
+        item.link      = freeslot;
+        item.slot      = index_to_letter(item.link);
+        item.base_type = OBJ_POTIONS;
+        item.sub_type  = POT_DECAY;
+        item.quantity  = amount;
+        item.x         = -1;
+        item.y         = -1;
+        item.plus      = 0;
+        item.plus2     = 0;
+        item.special   = 0;
+        item.flags     = 0;
 
-             return;
-         }
+        you.inv[obj].quantity -= amount;
+        return;
+    }
+    // Okay, inventory is full.
+
+    // check whether we can merge with an existing stack on the floor
+    int o = igrd[you.x_pos][you.y_pos];
+    while (o != NON_ITEM)
+    {
+        if (mitm[o].base_type == OBJ_POTIONS
+            && mitm[o].sub_type == POT_DECAY
+            && mitm[o].colour == you.inv[obj].colour)
+        {
+            dec_inv_item_quantity(obj, amount);
+            inc_mitm_item_quantity(o, amount);
+            return;
+        }
+        o = mitm[o].link;
     }
 
     // only bother creating a distinct stack of potions

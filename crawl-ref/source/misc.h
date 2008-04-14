@@ -69,10 +69,13 @@ void trackers_init_new_level(bool transit);
 void turn_corpse_into_chunks( item_def &item );
 
 void init_stack_blood_potions( item_def &stack, int age = -1 );
-void maybe_coagulate_blood_potions_floor( item_def &blood );
-void remove_oldest_potion_inv( item_def &stack );
-void drop_blood_potions_stack( int item, int quant );
-void pick_up_blood_potions_stack( int item, int quant );
+void maybe_coagulate_blood_potions_floor( int obj );
+bool maybe_coagulate_blood_potions_inv( item_def &blood );
+long remove_oldest_blood_potion( item_def &stack );
+void remove_newest_blood_potion( item_def &stack, int quant = -1 );
+void drop_blood_potions_stack( item_def &stack, int quant, int x = you.x_pos,
+                               int y = you.y_pos );
+void pick_up_blood_potions_stack( item_def &stack, int quant );
 
 bool can_bottle_blood_from_corpse( int mons_type );
 void turn_corpse_into_blood_potions ( item_def &item );

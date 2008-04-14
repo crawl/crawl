@@ -1645,8 +1645,26 @@ std::string get_item_description( const item_def &item, bool verbose,
             description << "$This book is beyond your current level of understanding.";
         break;
 
-    case OBJ_SCROLLS:
     case OBJ_POTIONS:
+#ifdef DEBUG_BLOOD_POTIONS
+        // list content of timer vector for blood potions
+        if (item.sub_type == POT_BLOOD
+            || item.sub_type == POT_BLOOD_COAGULATED)
+        {
+            item_def stack = static_cast<item_def>(item);
+            CrawlHashTable &props = stack.props;
+            ASSERT(props.exists("timer"));
+            CrawlVector &timer = props["timer"].get_vector();
+            ASSERT(!timer.empty());
+
+            description << "$Quantity: " << stack.quantity
+                        << "        Timer size: " << (int) timer.size();
+            description << "$Timers:$";
+            for (int i = 0; i < timer.size(); i++)
+                 description << (timer[i].get_long()) << "  ";
+        }
+#endif
+    case OBJ_SCROLLS:
     case OBJ_ORBS:
     case OBJ_CORPSES:
     case OBJ_GOLD:
