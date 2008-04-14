@@ -54,6 +54,7 @@
 #ifdef UNICODE_GLYPHS
 #include <wchar.h>
 #include <locale.h>
+#include <langinfo.h>
 #endif
 
 #include <termios.h>
@@ -253,7 +254,7 @@ static int proc_mouse_event(int c, const MEVENT *me)
         cme.bstate |= c_mouse_event::BUTTON4;
     else if (me->bstate & BUTTON4_DOUBLE_CLICKED)
         cme.bstate |= c_mouse_event::BUTTON4_DBL;
-    
+
     if (cme)
     {
         new_mouse_event(cme);
@@ -292,7 +293,7 @@ int m_getch()
         c = raw_m_getch();
     while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
            && !crawl_state.mouse_enabled);
-    
+
     return (c);
 }
 
@@ -336,7 +337,7 @@ static void handle_hangup(int)
 
     if (crawl_state.saving_game || crawl_state.updating_scores)
         return;
-    
+
     crawl_state.saving_game = true;
     if (crawl_state.need_save)
     {
@@ -367,7 +368,7 @@ static void setup_message_window()
         // Never reaches here unless the game didn't need saving.
         end(1, false, "Unable to create message window!");
     }
-    
+
     scrollok(Message_Window, true);
     idlok(Message_Window, true);
 }
@@ -435,7 +436,7 @@ void unixcurses_startup( void )
 #endif
 
     signal(SIGWINCH, handle_sigwinch);
-    
+
 #endif
 
     initscr();
@@ -471,7 +472,7 @@ void unixcurses_shutdown()
         delwin(Message_Window);
         Message_Window = NULL;
     }
-        
+
     // resetty();
     endwin();
 
@@ -560,7 +561,7 @@ static int waddstr_with_altcharset(WINDOW* w, const char* str)
         // In ascii, we don't expect any high-bit chars.
         // In Unicode, str is UTF-8 and we shouldn't touch anything.
         ret = waddstr(w, str);
-    }    
+    }
     else
     {
         // Otherwise, high bit indicates alternate charset.
@@ -658,7 +659,7 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
 
     if (will_scroll)
         scrollok(stdscr, FALSE);
-    
+
     for (int y = y1; y <= y2; ++y)
     {
         cgotoxy(x1, y);
@@ -674,10 +675,10 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
         scrollok(stdscr, TRUE);
 }
 
-// These next four are front functions so that we can reduce 
+// These next four are front functions so that we can reduce
 // the amount of curses special code that occurs outside this
-// this file.  This is good, since there are some issues with 
-// name space collisions between curses macros and the standard 
+// this file.  This is good, since there are some issues with
+// name space collisions between curses macros and the standard
 // C++ string class.  -- bwr
 void update_screen(void)
 {
@@ -780,12 +781,12 @@ static int curs_fg_attr(int col)
         {
             bg = translate_colour(
                     macro_colour( (brand & CHATTR_COLMASK) >> 8 ));
-            
+
             if (fg == bg)
                 fg = COLOR_BLACK;
         }
 
-        // If we can't do a dark grey friend brand, then we'll 
+        // If we can't do a dark grey friend brand, then we'll
         // switch the colour to light grey.
         if (Options.no_dark_brand
                 && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
@@ -843,8 +844,8 @@ static int curs_bg_attr(int col)
             if (fg == bg)
                 fg = COLOR_BLACK;
         }
-        
-        // If we can't do a dark grey friend brand, then we'll 
+
+        // If we can't do a dark grey friend brand, then we'll
         // switch the colour to light grey.
         if (Options.no_dark_brand
                 && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
@@ -933,7 +934,7 @@ typedef unsigned long char_info;
 #define char_info_character(c) ((c) & A_CHARTEXT)
 #define char_info_colour(c)    ((c) & A_COLOR)
 #define char_info_attributes(c) ((c) & A_ATTRIBUTES)
-                                  
+
 static void flip_colour(char_info &ch)
 {
     const unsigned colour = char_info_colour(ch);
@@ -967,7 +968,7 @@ void fakecursorxy(int x, int y)
         else
             return;
     }
-    
+
     char_info c = character_at(y - 1, x - 1);
     oldch   = c;
     faked_x = x - 1;
