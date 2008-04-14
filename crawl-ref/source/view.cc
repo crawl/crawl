@@ -449,7 +449,8 @@ static void _get_symbol( int x, int y,
             }
 
             if (object < NUM_REAL_FEATURES && inside_halo(x, y)
-                && object >= DNGN_FLOOR_MIN && object <= DNGN_FLOOR_MAX)
+                && ((object >= DNGN_FLOOR_MIN && object <= DNGN_FLOOR_MAX)
+                    || object == DNGN_UNDISCOVERED_TRAP))
             {
                 *colour = YELLOW | colmask;
             }
