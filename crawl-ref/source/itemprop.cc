@@ -1607,7 +1607,7 @@ bool demonic2nondemonic( item_def &item )
         return (false);
 
     case WPN_DEMON_BLADE:
-        item.sub_type = WPN_SCIMITAR;
+        item.sub_type = WPN_BLESSED_BLADE;
         break;
 
     case WPN_DEMON_WHIP:
@@ -1644,7 +1644,7 @@ int weapon_impact_mass( const item_def &wpn )
     return ((weapon_str_weight( wpn ) * item_mass( wpn ) + 5) / 10);
 }
 
-int weapon_str_required( const item_def &wpn, bool hand_half ) 
+int weapon_str_required( const item_def &wpn, bool hand_half )
 {
     ASSERT (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
 
