@@ -55,7 +55,7 @@ enum armour_type
     ARM_SWAMP_DRAGON_ARMOUR,
     ARM_CENTAUR_BARDING,         //   35
     ARM_NAGA_BARDING,
-    
+
     NUM_ARMOURS                  //   37
 };
 
