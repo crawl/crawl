@@ -36,6 +36,7 @@
 #include "makeitem.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "quiver.h"
 #include "randart.h"
 #include "skills2.h"
 #include "state.h"
@@ -1724,6 +1725,7 @@ id_arr& get_typeid_array()
 void set_ident_type( object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force )
 {
+    preserve_quiver_slots p;
     // Don't allow overwriting of known type with tried unless forced.
     if (!force 
         && (setting == ID_MON_TRIED_TYPE || setting == ID_TRIED_TYPE)

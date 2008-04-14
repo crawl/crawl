@@ -607,7 +607,7 @@ public:
   char hunger_state;
 
   bool wield_change;          // redraw weapon
-  bool quiver_change;         // redraw quiver
+  bool redraw_quiver;         // redraw quiver
   bool received_weapon_warning;
 
   unsigned long redraw_status_flags;
@@ -1622,7 +1622,6 @@ public:
 
     int         fire_items_start;// index of first item for fire command
     std::vector<unsigned> fire_order;   // missile search order for 'f' command
-    bool        fire_quiver_best;
 
     bool        auto_list;       // automatically jump to appropriate item lists
 

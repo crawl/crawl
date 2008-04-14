@@ -32,6 +32,7 @@
 #include "mon-util.h"
 #include "notes.h"
 #include "player.h"
+#include "quiver.h"
 #include "randart.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -475,8 +476,6 @@ void do_curse_item( item_def &item )
     }
     
     item.flags |= ISFLAG_CURSED;
-    
-    you.quiver_change = true; // potentially affected
 }
 
 void do_uncurse_item( item_def &item )
@@ -531,6 +530,7 @@ bool item_is_critical(const item_def &item)
 
 void set_ident_flags( item_def &item, unsigned long flags )
 {
+    preserve_quiver_slots p;
     if ((item.flags & flags) != flags)
     {
         item.flags |= flags;
@@ -551,6 +551,7 @@ void set_ident_flags( item_def &item, unsigned long flags )
 
 void unset_ident_flags( item_def &item, unsigned long flags )
 {
+    preserve_quiver_slots p;
     item.flags &= (~flags);
 }
 

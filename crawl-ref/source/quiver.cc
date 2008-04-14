@@ -16,6 +16,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "stuff.h"
+#include "tags.h"
 
 // checks base_type for OBJ_UNASSIGNED, and quantity
 // bool is_valid_item( const item_def &item )
@@ -29,17 +30,27 @@ static bool _items_similar(const item_def& a, const item_def& b);
 // ----------------------------------------------------------------------
 
 player_quiver::player_quiver()
-    : m_last_used_type(AMMO_INVALID)
+    : m_last_used_type(AMMO_THROW)
 {
     COMPILE_CHECK(ARRAYSIZE(m_last_used_of_type) == NUM_AMMO, a);
 }
 
-// Return item that we would like to fire by default, and its inv slot
-// (if there are any in inv).  If the item is in inv, its count will
-// be correct.
+// Return:
+//   *slot_out filled in with the inv slot of the item we would like
+//   to fire by default.  If -1, the inv doesn't contain our desired
+//   item.
+//   
+//   *item_out filled in with item we would like to fire by default.
+//   This can be returned even if the item is not in inv (although if
+//   it is in inv, a reference to the inv item, with accurate count,
+//   is returned)
+//
 // This is the item that will be displayed in Qv:
+// 
 void player_quiver::get_desired_item(const item_def** item_out, int* slot_out) const
 {
+    ASSERT(m_last_used_type != AMMO_INVALID);
+    // I'd like to get rid of this first case
     if (m_last_used_type == AMMO_INVALID)
     {
         if (item_out) *item_out = NULL;
@@ -137,6 +148,8 @@ void player_quiver::on_item_fired(const item_def& item)
         m_last_used_of_type[AMMO_THROW].quantity = 1;
         m_last_used_type = AMMO_THROW;
     }
+    
+    you.redraw_quiver = true;
 }
 
 // Notification that ltem was fired with 'f' 'i'
@@ -172,13 +185,13 @@ void player_quiver::on_weapon_changed()
     _maybe_fill_empty_slot();
 }
 
-void player_quiver::on_inv_quantity_change(int slot, int amt)
+void player_quiver::on_inv_quantity_changed(int slot, int amt)
 {
     if (m_last_used_of_type[m_last_used_type].base_type == OBJ_UNASSIGNED)
     {
         // Empty quiver.  Maybe we can fill it now?
         _maybe_fill_empty_slot();
-        you.quiver_change = true;
+        you.redraw_quiver = true;
     }
     else if (m_last_used_of_type[m_last_used_type].base_type !=
              you.inv[slot].base_type)
@@ -188,9 +201,13 @@ void player_quiver::on_inv_quantity_change(int slot, int amt)
     else
     {
         // Maybe matches current stack.  Redraw if so.
-        int qv_slot; get_desired_item(NULL, &qv_slot);
+        // 
+        const item_def* desired;
+        int qv_slot; get_desired_item(&desired, &qv_slot);
         if (qv_slot == slot)
-            you.quiver_change = true;
+        {
+            you.redraw_quiver = true;
+        }
     }
 }
 
@@ -280,6 +297,70 @@ void player_quiver::_get_fire_order(
     {
         order[i] &= 0xffff;
     }
+}
+
+// ----------------------------------------------------------------------
+// Save/load
+// ----------------------------------------------------------------------
+
+static const short QUIVER_COOKIE = 0xb015;
+void player_quiver::save(writer& outf) const
+{
+    marshallShort(outf, QUIVER_COOKIE);
+
+    marshallItem(outf, m_last_weapon);
+    marshallLong(outf, m_last_used_type);
+    marshallLong(outf, ARRAYSIZE(m_last_used_of_type));
+    for (int i=0; i<ARRAYSIZE(m_last_used_of_type); i++)
+    {
+        marshallItem(outf, m_last_used_of_type[i]);
+    }
+}
+
+void player_quiver::load(reader& inf)
+{
+    const short cooky = unmarshallShort(inf);
+    ASSERT(cooky == QUIVER_COOKIE); (void)cooky;
+    
+    unmarshallItem(inf, m_last_weapon);
+    m_last_used_type = (ammo_t)unmarshallLong(inf);
+    ASSERT(m_last_used_type >= AMMO_INVALID && m_last_used_type < NUM_AMMO);
+
+    const long count = unmarshallLong(inf);
+    ASSERT(count <= ARRAYSIZE(m_last_used_of_type));
+    for (int i=0; i<count; i++)
+    {
+        unmarshallItem(inf, m_last_used_of_type[i]);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Identify helper
+// ----------------------------------------------------------------------
+
+preserve_quiver_slots::preserve_quiver_slots()
+{
+    if (! you.m_quiver) return;
+    COMPILE_CHECK(ARRAYSIZE(m_last_used_of_type) ==
+                  ARRAYSIZE(you.m_quiver->m_last_used_of_type), a);
+    for (int i=0; i<ARRAYSIZE(m_last_used_of_type); i++)
+    {
+        you.m_quiver->get_desired_item(NULL, &m_last_used_of_type[i]);
+    }
+}
+
+preserve_quiver_slots::~preserve_quiver_slots()
+{
+    if (! you.m_quiver) return;
+    for (int i=0; i<ARRAYSIZE(m_last_used_of_type); i++)
+    {
+        const int slot = m_last_used_of_type[i];
+        if (slot != -1)
+        {
+            you.m_quiver->m_last_used_of_type[i] = you.inv[slot];
+        }
+    }
+    you.redraw_quiver = true;
 }
 
 // ----------------------------------------------------------------------

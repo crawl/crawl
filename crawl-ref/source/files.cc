@@ -114,7 +114,8 @@ void save_level(int level_saved, level_area_type lt,
 
 // 1: starting version
 // 2: append piety_hysteresis to TAG_YOU
-#define YOU_MINOR_VERSION   2
+// 3: add quiver info.
+#define YOU_MINOR_VERSION   3
 
 const short GHOST_SIGNATURE = short( 0xDC55 );
 

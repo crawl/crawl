@@ -5391,7 +5391,7 @@ void player::init()
     hunger_state = HS_SATIATED;
 
     wield_change = false;
-    quiver_change = false;
+    redraw_quiver = false;
     received_weapon_warning = false;
 
     gold = 0;

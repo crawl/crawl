@@ -44,6 +44,7 @@
 #include "mon-util.h"
 #include "place.h"
 #include "player.h"
+#include "quiver.h"
 #include "randart.h"
 #include "religion.h"
 #include "spells1.h"
@@ -1095,19 +1096,21 @@ void cast_poison_ammo(void)
         return;
     }
 
-    const char *old_desc = you.inv[ammo].name(DESC_CAP_YOUR).c_str();
-    if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_POISONED ))
     {
-        mprf("%s %s covered in a thin film of poison.", old_desc,
-             (you.inv[ammo].quantity == 1) ? "is" : "are");
+        preserve_quiver_slots q;
+        const char *old_desc = you.inv[ammo].name(DESC_CAP_YOUR).c_str();
+        if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_POISONED ))
+        {
+            mprf("%s %s covered in a thin film of poison.", old_desc,
+                 (you.inv[ammo].quantity == 1) ? "is" : "are");
              
-        you.quiver_change = true;
-        if (ammo == you.equip[EQ_WEAPON])
-            you.wield_change = true;
-    }
-    else
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
+            if (ammo == you.equip[EQ_WEAPON])
+                you.wield_change = true;
+        }
+        else
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+        }
     }
 }                               // end cast_poison_ammo()
 

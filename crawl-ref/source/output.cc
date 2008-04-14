@@ -838,13 +838,13 @@ void print_stats(void)
         _print_stats_wp(10);
     }
 
-    if (you.quiver_change || you.wield_change)
+    if (you.redraw_quiver || you.wield_change)
     {
         _print_stats_qv(11);
     }
 
     you.wield_change = false;
-    you.quiver_change = false;
+    you.redraw_quiver = false;
     
     if (you.redraw_status_flags & REDRAW_LINE_1_MASK)
         _print_stats_line1(12);
@@ -1058,6 +1058,7 @@ monster_pane_info::to_string(
         //out << " (friendly)";
         desc_color = GREEN;
         break;
+    case ATT_GOOD_NEUTRAL:
     case ATT_NEUTRAL:
         //out << " (neutral)";
         desc_color = BROWN;

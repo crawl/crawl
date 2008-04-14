@@ -655,7 +655,7 @@ void redraw_screen(void)
     you.redraw_gold = true;
     you.redraw_experience = true;
     you.wield_change = true;
-    you.quiver_change = true;
+    you.redraw_quiver = true;
 
     set_redraw_status(
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK );

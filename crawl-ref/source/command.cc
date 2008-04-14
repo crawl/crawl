@@ -153,8 +153,8 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
     {
         you.wield_change = true;
+        you.m_quiver->on_weapon_changed();
     }
-    you.quiver_change = true;
 }
 
 static void _adjust_item(void)

@@ -829,6 +829,7 @@ static void _handle_wizard_command( void )
         break;
 
     case 'i':
+    {
         mpr( "You feel a rush of knowledge." );
         for (i = 0; i < ENDOFPACK; i++)
         {
@@ -841,10 +842,12 @@ static void _handle_wizard_command( void )
             }
         }
         you.wield_change = true;
-        you.quiver_change = true;
+        you.redraw_quiver = true;
         break;
+    }
 
     case 'I':
+    {
         mpr( "You feel a rush of antiknowledge." );
         for (i = 0; i < ENDOFPACK; i++)
         {
@@ -857,7 +860,7 @@ static void _handle_wizard_command( void )
             }
         }
         you.wield_change = true;
-        you.quiver_change = true;
+        you.redraw_quiver = true;
 
         // Forget things that nearby monsters are carrying, as well
         // (for use with the "give monster an item" wizard targetting
@@ -886,6 +889,7 @@ static void _handle_wizard_command( void )
             }
         }
         break;
+    }
 
     case CONTROL('I'):
         debug_item_statistics();
@@ -2391,7 +2395,6 @@ void process_command( command_type cmd )
         {
             // kind of a hacky way to get quiver to change
             you.m_quiver->on_item_fired(you.inv[next]);
-            you.quiver_change = true;
         }
         break;
     }
@@ -3930,8 +3933,8 @@ static bool _initialise(void)
     you.redraw_evasion      = true;
     you.redraw_experience   = true;
     you.redraw_gold         = true;
+    you.redraw_quiver       = true;
     you.wield_change        = true;
-    you.quiver_change       = true;
 
     you.start_time = time( NULL );      // start timer on session
 

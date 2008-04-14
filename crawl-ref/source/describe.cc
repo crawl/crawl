@@ -1847,7 +1847,6 @@ void describe_item( item_def &item, bool allow_inscribe )
             if (!cancelable_get_line(buf, sizeof buf))
             {
                 item.inscription = buf;
-                you.quiver_change = true;       // might have added/removed !F
             }
         }
         else if (allow_autoinscribe

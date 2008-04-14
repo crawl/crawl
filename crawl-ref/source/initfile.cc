@@ -768,7 +768,6 @@ void game_options::reset_options()
     flush_input[ FLUSH_LUA ]            = true;
 
     fire_items_start       = 0;           // start at slot 'a'
-    fire_quiver_best       = false;
 
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
@@ -1919,7 +1918,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                      field.c_str() );
         }
     }
-    else BOOL_OPTION(fire_quiver_best);
     else if (key == "assign_item_slot")
     {
         if (field == "forward")

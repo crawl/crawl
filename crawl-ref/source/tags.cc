@@ -79,6 +79,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mtransit.h"
+#include "quiver.h"
 #include "randart.h"
 #include "skills.h"
 #include "skills2.h"
@@ -930,10 +931,8 @@ static void tag_construct_you(writer &th)
     for (j = 0; j < NUM_ATTRIBUTES; ++j)
         marshallByte(th,you.attribute[j]);
 
-    // remembered quiver items
-    marshallByte(th, NUM_QUIVER);
-    for (j = 0; j < NUM_QUIVER; ++j)
-        marshallByte(th,you.quiver[j]);
+    // was: remembered quiver items
+    marshallByte(th, 0);
 
     // sacrifice values
     marshallByte(th, NUM_OBJECT_CLASSES);
@@ -1002,6 +1001,9 @@ static void tag_construct_you(writer &th)
 
     // minorVersion 2 starts here
     marshallByte(th, you.piety_hysteresis);
+
+    // minorVersion 3 starts here
+    you.m_quiver->save(th);
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1322,10 +1324,13 @@ static void tag_read_you(reader &th, char minorVersion)
     for (j = 0; j < count_c; ++j)
         you.attribute[j] = unmarshallByte(th);
 
-    // how many quiver types?
+    // old: quiver info.  Discard it.
     count_c = unmarshallByte(th);
+    if (minorVersion >= 3) ASSERT(count_c == 0);
     for (j = 0; j < count_c; ++j)
-        you.quiver[j] = unmarshallByte(th);
+    {
+        unmarshallByte(th);
+    }
 
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
@@ -1381,6 +1386,9 @@ static void tag_read_you(reader &th, char minorVersion)
 
     if (minorVersion >= 2)
         you.piety_hysteresis = unmarshallByte(th);
+
+    if (minorVersion >= 3)
+        you.m_quiver->load(th);
 }
 
 static void tag_read_you_items(reader &th, char minorVersion)

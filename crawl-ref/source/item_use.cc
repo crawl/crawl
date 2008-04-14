@@ -350,7 +350,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     you.time_taken /= 2;
 
     you.wield_change  = true;
-    you.quiver_change = true;
+    you.m_quiver->on_weapon_changed();
     you.turn_is_over  = true;
 
     return (true);
@@ -1432,7 +1432,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target)
     {
         you.m_quiver->on_item_fired_fi(you.inv[beh.m_slot]);
     }
-    you.quiver_change = true;
+    you.redraw_quiver = true;
     slot = beh.m_slot;
 
     return (true);
@@ -3405,7 +3405,6 @@ void inscribe_item()
 
         you.inv[item_slot].inscription = std::string(buf);
         you.wield_change  = true;
-        you.quiver_change = true;
     }
     else
     {

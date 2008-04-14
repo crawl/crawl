@@ -33,6 +33,7 @@
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
+#include "quiver.h"
 #include "randart.h"
 #include "religion.h"
 #include "skills2.h"
@@ -390,7 +391,7 @@ bool unwield_item(bool showMsgs)
     you.equip[EQ_WEAPON] = -1;
     you.special_wield = SPWLD_NONE;
     you.wield_change = true;
-    you.quiver_change = true;
+    you.m_quiver->on_weapon_changed();
 
     item_def &item(you.inv[unw]);
 

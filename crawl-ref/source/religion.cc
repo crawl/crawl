@@ -64,6 +64,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "quiver.h"
 #include "randart.h"
 #include "shopping.h"
 #include "skills2.h"
@@ -2888,9 +2889,8 @@ static void ely_destroy_inventory_weapon()
     {
         unwield_item(true);
         you.wield_change = true;
+        you.m_quiver->on_weapon_changed();
     }
-    // just in case
-    you.quiver_change = true;
 
     destroy_item(you.inv[item]);
     burden_change();
