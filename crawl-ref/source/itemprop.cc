@@ -895,7 +895,7 @@ int get_ammo_brand( const item_def &item )
 special_armour_type get_armour_ego_type( const item_def &item )
 {
     // artefact armours have no ego type, must look up powers separately
-    if (item.base_type != OBJ_ARMOUR 
+    if (item.base_type != OBJ_ARMOUR
         || (is_random_artefact( item ) && !is_unrandom_artefact( item )))
     {
         return (SPARM_NORMAL);
@@ -904,7 +904,7 @@ special_armour_type get_armour_ego_type( const item_def &item )
     return (static_cast<special_armour_type>(item.special));
 }
 
-// 
+//
 // Armour information and checking functions
 //
 bool hide2armour( item_def &item )
@@ -917,36 +917,36 @@ bool hide2armour( item_def &item )
     default:
         return (false);
 
-    case ARM_DRAGON_HIDE: 
-        item.sub_type = ARM_DRAGON_ARMOUR; 
+    case ARM_DRAGON_HIDE:
+        item.sub_type = ARM_DRAGON_ARMOUR;
         break;
 
-    case ARM_TROLL_HIDE: 
-        item.sub_type = ARM_TROLL_LEATHER_ARMOUR; 
+    case ARM_TROLL_HIDE:
+        item.sub_type = ARM_TROLL_LEATHER_ARMOUR;
         break;
 
-    case ARM_ICE_DRAGON_HIDE: 
-        item.sub_type = ARM_ICE_DRAGON_ARMOUR; 
+    case ARM_ICE_DRAGON_HIDE:
+        item.sub_type = ARM_ICE_DRAGON_ARMOUR;
         break;
 
-    case ARM_MOTTLED_DRAGON_HIDE: 
-        item.sub_type = ARM_MOTTLED_DRAGON_ARMOUR; 
+    case ARM_MOTTLED_DRAGON_HIDE:
+        item.sub_type = ARM_MOTTLED_DRAGON_ARMOUR;
         break;
 
-    case ARM_STORM_DRAGON_HIDE: 
-        item.sub_type = ARM_STORM_DRAGON_ARMOUR; 
+    case ARM_STORM_DRAGON_HIDE:
+        item.sub_type = ARM_STORM_DRAGON_ARMOUR;
         break;
 
-    case ARM_GOLD_DRAGON_HIDE: 
-        item.sub_type = ARM_GOLD_DRAGON_ARMOUR; 
+    case ARM_GOLD_DRAGON_HIDE:
+        item.sub_type = ARM_GOLD_DRAGON_ARMOUR;
         break;
 
-    case ARM_SWAMP_DRAGON_HIDE: 
-        item.sub_type = ARM_SWAMP_DRAGON_ARMOUR; 
+    case ARM_SWAMP_DRAGON_HIDE:
+        item.sub_type = ARM_SWAMP_DRAGON_ARMOUR;
         break;
 
-    case ARM_STEAM_DRAGON_HIDE: 
-        item.sub_type = ARM_STEAM_DRAGON_ARMOUR; 
+    case ARM_STEAM_DRAGON_HIDE:
+        item.sub_type = ARM_STEAM_DRAGON_ARMOUR;
         break;
     }
 
@@ -1483,7 +1483,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
     case OBJ_WEAPONS:
         // Merging staff with magical staves for consistency... doing
         // as a special case because we want to be very flexible with
-        // these useful objects (we want spriggans and ogre magi to 
+        // these useful objects (we want spriggans and ogre magi to
         // be able to use them).
         if (item.base_type == OBJ_STAVES || item.sub_type == WPN_QUARTERSTAFF)
         {
@@ -1491,7 +1491,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
                 ret = HANDS_TWO;
             else if (size > SIZE_LARGE)
                 ret = HANDS_ONE;
-            else 
+            else
                 ret = HANDS_HALF;
             break;
         }
@@ -1536,12 +1536,12 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
         ret = HANDS_TWO;
         break;
 
-    case OBJ_ARMOUR:    // barding and body armours are unwieldy 
+    case OBJ_ARMOUR:    // barding and body armours are unwieldy
         if (item.sub_type == ARM_NAGA_BARDING
             || item.sub_type == ARM_CENTAUR_BARDING
             || get_armour_slot( item ) == EQ_BODY_ARMOUR)
         {
-            ret = HANDS_TWO;                    
+            ret = HANDS_TWO;
         }
         break;
 
@@ -1595,6 +1595,32 @@ bool is_demonic( const item_def &item )
 
     return (false);
 }                               // end is_demonic()
+
+bool demonic2nondemonic( item_def &item )
+{
+    if (item.base_type != OBJ_WEAPONS)
+        return (false);
+
+    switch (item.sub_type)
+    {
+    default:
+        return (false);
+
+    case WPN_DEMON_BLADE:
+        item.sub_type = WPN_SCIMITAR;
+        break;
+
+    case WPN_DEMON_WHIP:
+        item.sub_type = WPN_WHIP;
+        break;
+
+    case WPN_DEMON_TRIDENT:
+        item.sub_type = WPN_TRIDENT;
+        break;
+    }
+
+    return (true);
+}                               // end demonic2nondemonic()
 
 int weapon_str_weight( const item_def &wpn )
 {
