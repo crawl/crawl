@@ -39,6 +39,7 @@
 #include "AppHdr.h"
 
 #include <string>
+#include <algorithm>
 
 // I don't seem to need values.h for VACPP..
 #if !defined(__IBMCPP__)
@@ -164,8 +165,8 @@ int stealth;                    // externed in view.cc
 static key_recorder repeat_again_rec;
 
 // Clockwise, around the compass from north (same order as enum RUN_DIR)
-const struct coord_def Compass[8] = 
-{ 
+const struct coord_def Compass[8] =
+{
     coord_def(0, -1), coord_def(1, -1), coord_def(1, 0), coord_def(1, 1),
     coord_def(0, 1), coord_def(-1, 1), coord_def(-1, 0), coord_def(-1, -1),
 };
@@ -223,7 +224,7 @@ int main( int argc, char *argv[] )
 
     // Init monsters up front - needed to handle the mon_glyph option right.
     init_monsters(mcolour);
-    
+
     // Read the init file.
     init_file_location = read_init_file();
 
@@ -264,7 +265,7 @@ int main( int argc, char *argv[] )
     // warn player about their weapon, if unsuitable
     wield_warning(false);
 
-    if ( game_start )   
+    if ( game_start )
     {
         if (Options.tutorial_left)
             _startup_tutorial();
@@ -312,7 +313,7 @@ static void _wanderer_startup_message()
     int skill_levels = 0;
     for (int i = 0; i < NUM_SKILLS; i++)
         skill_levels += you.skills[ i ];
-    
+
     if (skill_levels <= 2)
     {
         // Demigods and Demonspawn wanderers stand to not be
@@ -395,12 +396,12 @@ static void _take_starting_note()
 
 static void _startup_tutorial()
 {
-    // don't allow triggering at game start 
+    // don't allow triggering at game start
     Options.tut_just_triggered = true;
-    
+
     // print stats and everything
     _prep_input();
-    
+
 #ifdef USE_TILE
     tile_draw_inv(REGION_INV1);
 #endif
@@ -408,7 +409,7 @@ static void _startup_tutorial()
     msg::streams(MSGCH_TUTORIAL)
         << "Press any key to start the tutorial intro, or Escape to skip it."
         << std::endl;
-        
+
     const int ch = c_getch();
     if (ch != ESCAPE)
         tut_starting_screen();
@@ -482,14 +483,14 @@ static void _handle_wizard_command( void )
     }
 
     switch (wiz_command)
-    { 
+    {
     case '?':
         list_commands(true, 0, true);  // tell it to list wizard commands
         break;
 
     case CONTROL('G'):
         save_ghost(true);
-        break; 
+        break;
 
     case 'x':
         you.experience = 1 + exp_needed( 2 + you.experience_level );
@@ -536,7 +537,7 @@ static void _handle_wizard_command( void )
         }
         else
         {
-            mprf("randart val: %d", randart_value(you.inv[i])); 
+            mprf("randart val: %d", randart_value(you.inv[i]));
         }
         break;
 
@@ -754,7 +755,7 @@ static void _handle_wizard_command( void )
     case CONTROL('F'):
         debug_fight_statistics(false, true);
         break;
-    
+
     case 'f':
         debug_fight_statistics(false);
         break;
@@ -835,7 +836,7 @@ static void _handle_wizard_command( void )
         {
             if (is_valid_item( you.inv[i] ))
             {
-                set_ident_type( you.inv[i].base_type, you.inv[i].sub_type, 
+                set_ident_type( you.inv[i].base_type, you.inv[i].sub_type,
                                 ID_KNOWN_TYPE );
 
                 set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
@@ -853,7 +854,7 @@ static void _handle_wizard_command( void )
         {
             if (is_valid_item( you.inv[i] ))
             {
-                set_ident_type( you.inv[i].base_type, you.inv[i].sub_type, 
+                set_ident_type( you.inv[i].base_type, you.inv[i].sub_type,
                                 ID_UNKNOWN_TYPE );
 
                 unset_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
@@ -881,7 +882,7 @@ static void _handle_wizard_command( void )
                     if (!is_valid_item(item))
                         continue;
 
-                    set_ident_type( item.base_type, item.sub_type, 
+                    set_ident_type( item.base_type, item.sub_type,
                                 ID_UNKNOWN_TYPE );
 
                     unset_ident_flags( item, ISFLAG_IDENT_MASK );
@@ -1041,11 +1042,11 @@ static void _handle_wizard_command( void )
             // Rarely, this might result in several gifts during the same round!
             do
             {
-               gain_piety(50); 
+               gain_piety(50);
             }
             while (old_piety < MAX_PIETY && old_piety == you.piety
                    && old_penance == you.penance[you.religion]);
-            
+
             if (old_penance)
             {
                 mprf("Congratulations, your penance was decreased from %d to %d!",
@@ -1060,7 +1061,7 @@ static void _handle_wizard_command( void )
         break;
 
     case '=':
-        mprf( "Cost level: %d  Skill points: %d  Next cost level: %d", 
+        mprf( "Cost level: %d  Skill points: %d  Next cost level: %d",
               you.skill_cost_level, you.total_skill_points,
               skill_cost_needed( you.skill_cost_level + 1 ) );
         break;
@@ -1074,12 +1075,12 @@ static void _handle_wizard_command( void )
         {
             if (mitm[i].link == NON_ITEM)
                 continue;
-    
+
             mprf("item:%3d link:%3d cl:%3d ty:%3d pl:%3d pl2:%3d "
                  "sp:%3ld q:%3d",
-                 i, mitm[i].link, 
+                 i, mitm[i].link,
                  mitm[i].base_type, mitm[i].sub_type,
-                 mitm[i].plus, mitm[i].plus2, mitm[i].special, 
+                 mitm[i].plus, mitm[i].plus2, mitm[i].special,
                  mitm[i].quantity );
         }
 
@@ -1091,10 +1092,10 @@ static void _handle_wizard_command( void )
                 if (igrd[i][j] != NON_ITEM)
                 {
                     mprf("%3d at (%2d,%2d), cl:%3d ty:%3d pl:%3d pl2:%3d "
-                         "sp:%3ld q:%3d", 
+                         "sp:%3ld q:%3d",
                          igrd[i][j], i, j,
                          mitm[i].base_type, mitm[i].sub_type,
-                         mitm[i].plus, mitm[i].plus2, mitm[i].special, 
+                         mitm[i].plus, mitm[i].plus2, mitm[i].special,
                          mitm[i].quantity );
                 }
             }
@@ -1376,11 +1377,11 @@ static void _input()
     {
         if (2*you.hp < you.hp_max)
             learned_something_new(TUT_RUN_AWAY);
-            
+
         if (Options.tutorial_type == TUT_MAGIC_CHAR && you.magic_points < 1)
             learned_something_new(TUT_RETREAT_CASTER);
     }
- 
+
     if ( you.cannot_act() )
     {
         crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
@@ -1389,7 +1390,7 @@ static void _input()
         _world_reacts();
         return;
     }
-    
+
     if (need_to_autopickup())
         autopickup();
 
@@ -1726,7 +1727,7 @@ static bool _compare_monsters_attitude( const monsters *m1, const monsters *m2 )
 {
     if (_mons_hostile(m1) && !_mons_hostile(m2))
         return (true);
-        
+
     if (mons_neutral(m1))
     {
         if (mons_friendly(m2))
@@ -1751,7 +1752,7 @@ void get_visible_monsters(std::vector<std::string>& describe)
     if ( ystart < 0 ) ystart = 0;
     if ( xend >= GXM ) xend = GXM;
     if ( yend >= GYM ) yend = GYM;
-    
+
     std::vector<const monsters*> mons;
     // monster check
     for ( int y = ystart; y < yend; ++y )
@@ -1773,9 +1774,9 @@ void get_visible_monsters(std::vector<std::string>& describe)
 
     if (mons.empty())
         return;
-    
+
     std::sort( mons.begin(), mons.end(), _compare_monsters_attitude );
-    
+
     int count = 0;
     int size = mons.size();
     for (int i = 0; i < size; ++i)
@@ -1937,7 +1938,7 @@ void process_command( command_type cmd )
     case CMD_ENABLE_MORE:
         Options.show_more_prompt = true;
         break;
-        
+
     case CMD_REPEAT_KEYS:
         ASSERT(crawl_state.is_repeating_cmd());
 
@@ -1996,7 +1997,7 @@ void process_command( command_type cmd )
         else
             _toggle_flag( &Options.autoprayer_on, "Autoprayer" );
         break;
-   
+
     case CMD_MAKE_NOTE:
         make_user_note();
         break;
@@ -2029,7 +2030,7 @@ void process_command( command_type cmd )
         if (Options.stash_tracking >= STM_DROPPED)
             StashTrack.add_stash();
         break;
-        
+
     case CMD_SEARCH_STASHES:
         if (Options.tut_stashes)
             Options.tut_stashes = 0;
@@ -2070,7 +2071,7 @@ void process_command( command_type cmd )
     case CMD_FULL_VIEW:
         _mpr_monsters();
         break;
-        
+
     case CMD_WIELD_WEAPON:
         wield_weapon(false);
         break;
@@ -2228,7 +2229,7 @@ void process_command( command_type cmd )
     case CMD_FIX_WAYPOINT:
         travel_cache.add_waypoint();
         break;
-        
+
     case CMD_INTERLEVEL_TRAVEL:
         if (Options.tut_travel)
             Options.tut_travel = 0;
@@ -2271,7 +2272,7 @@ void process_command( command_type cmd )
 
             show_map(pos, true);
             redraw_screen();
-            
+
 #ifdef USE_TILE
             mpr("Returning to the game...");
 #endif
@@ -2302,7 +2303,7 @@ void process_command( command_type cmd )
     case CMD_SUSPEND_GAME:
         // CTRL-Z suspend behaviour is implemented here,
         // because we want to have CTRL-Y available...
-        // and unfortunately they tend to be stuck together. 
+        // and unfortunately they tend to be stuck together.
         clrscr();
 #ifndef USE_TILE
         unixcurses_shutdown();
@@ -2361,7 +2362,7 @@ void process_command( command_type cmd )
     case CMD_DISPLAY_CHARACTER_STATUS:
         display_char_status();
         break;
-        
+
     case CMD_RESISTS_SCREEN:
         print_overview_screen();
         break;
@@ -2402,11 +2403,11 @@ void process_command( command_type cmd )
     case CMD_LIST_WEAPONS:
         list_weapons();
         break;
-        
+
     case CMD_LIST_ARMOUR:
         list_armour();
         break;
-        
+
     case CMD_LIST_JEWELLERY:
         list_jewellery();
         break;
@@ -2418,7 +2419,7 @@ void process_command( command_type cmd )
     case CMD_INSCRIBE_ITEM:
         inscribe_item();
         break;
-        
+
 #ifdef WIZARD
     case CMD_WIZARD:
         _handle_wizard_command();
@@ -2562,7 +2563,7 @@ static void _decrement_durations()
             you.redraw_armour_class = true;
         }
     }
-   
+
     if (_decrement_a_duration(DUR_ICY_ARMOUR, "Your icy armour evaporates."))
         you.redraw_armour_class = true;
 
@@ -2599,7 +2600,7 @@ static void _decrement_durations()
             if (--you.duration[DUR_DIVINE_SHIELD] == 1)
                 mpr("Your divine shield starts to fade.");
         }
-        
+
         if (you.duration[DUR_DIVINE_SHIELD] == 1 && !one_chance_in(3))
         {
             you.redraw_armour_class = true;
@@ -2610,7 +2611,7 @@ static void _decrement_durations()
             }
         }
     }
-    
+
     //jmf: more flexible weapon branding code
     if (you.duration[DUR_WEAPON_BRAND] > 1)
         you.duration[DUR_WEAPON_BRAND]--;
@@ -2752,16 +2753,16 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_RESIST_COLD, "Your cold resistance expires.");
     _decrement_a_duration(DUR_RESIST_POISON, "Your poison resistance expires.");
     _decrement_a_duration(DUR_SLAYING, "You feel less lethal.");
-    
+
     _decrement_a_duration(DUR_INVIS, "You flicker back into view.",
                           6, coinflip(), "You flicker for a moment.");
 
     _decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
     _decrement_a_duration(DUR_CONF, "You feel less confused.");
-    
+
     if (_decrement_a_duration(DUR_PARALYSIS, "You can move again."))
         you.redraw_evasion = true;
-        
+
     _decrement_a_duration(DUR_EXHAUSTED, "You feel less fatigued.");
 
     _decrement_a_duration( DUR_CONFUSING_TOUCH,
@@ -2792,7 +2793,7 @@ static void _decrement_durations()
         // Sometimes berserk leaves us physically drained
         //
 
-        // chance of passing out:  
+        // chance of passing out:
         //     - mutation gives a large plus in order to try and
         //       avoid the mutation being a "death sentence" to
         //       certain characters.
@@ -2870,15 +2871,15 @@ static void _decrement_durations()
     {
         you.duration[DUR_PIETY_POOL]--; // decrease even if piety at maximum
         gain_piety(1);
-        
+
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
         mpr("Piety increases by 1 due to piety pool.", MSGCH_DIAGNOSTICS);
-            
+
         if (!you.duration[DUR_PIETY_POOL])
             mpr("Piety pool is now empty.", MSGCH_DIAGNOSTICS);
 #endif
     }
-    
+
 
     if (!you.permanent_levitation())
     {
@@ -2898,10 +2899,10 @@ static void _decrement_durations()
     if (!you.permanent_flight())
         if ( _decrement_a_duration(DUR_CONTROLLED_FLIGHT) && you.airborne() )
             mpr("You lose control over your flight.", MSGCH_DURATION);
-            
+
     if (you.rotting > 0)
     {
-        // XXX: Mummies have an ability (albeit an expensive one) that 
+        // XXX: Mummies have an ability (albeit an expensive one) that
         // can fix rotted HPs now... it's probably impossible for them
         // to even start rotting right now, but that could be changed. -- bwr
         if (you.species == SP_MUMMY)
@@ -3027,7 +3028,7 @@ static void _check_sanctuary()
 {
     if (env.sanctuary_time <= 0)
         return;
-        
+
     decrease_sanctuary_radius();
 }
 
@@ -3138,7 +3139,7 @@ static void _world_reacts()
             Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
                                               : StashTracker::ST_PASSIVE);
     }
-    
+
     handle_monsters();
     _check_banished();
 
@@ -3231,7 +3232,7 @@ static void _read_each_message()
 
     // Read messages, code borrowed from the SIMPLEMAIL patch.
     char line[120];
-    
+
     if (!lock_file_handle(mf, F_RDLCK))
     {
         mprf(MSGCH_WARN, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
@@ -3324,7 +3325,7 @@ static void _check_messages()
             SysEnv.have_messages = true;
         mfilestat.st_mtime = st.st_mtime;
     }
-    
+
     if (SysEnv.have_messages && !had_messages)
     {
         _announce_messages();
@@ -3342,16 +3343,16 @@ static command_type _get_next_cmd()
 #if DEBUG_DIAGNOSTICS
     // save hunger at start of round
     // for use with hunger "delta-meter" in  output.cc
-    you.old_hunger = you.hunger;        
+    you.old_hunger = you.hunger;
 #endif
-    
+
 #if DEBUG_ITEM_SCAN
     debug_item_scan();
 #endif
 
     const time_t before = time(NULL);
     keycode_type keyin = _get_next_keycode();
-    
+
     const time_t after = time(NULL);
 
     // Clamp idle time so that play time is more meaningful.
@@ -3605,8 +3606,8 @@ static void _open_door(int move_x, int move_y, bool check_confused)
             return;
         }
 
-    } 
-    else 
+    }
+    else
     {
         mpr("Which direction?", MSGCH_PROMPT);
         direction( door_move, DIR_DIR );
@@ -3617,7 +3618,7 @@ static void _open_door(int move_x, int move_y, bool check_confused)
         dx = you.x_pos + door_move.dx;
         dy = you.y_pos + door_move.dy;
 
-        const dungeon_feature_type feat = 
+        const dungeon_feature_type feat =
             in_bounds(dx, dy) ? grd[dx][dy] : DNGN_UNSEEN;
         if (feat != DNGN_CLOSED_DOOR)
         {
@@ -3640,7 +3641,7 @@ static void _open_door(int move_x, int move_y, bool check_confused)
         find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
-        
+
         int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
         if (you.duration[DUR_BERSERKER])
@@ -3721,9 +3722,9 @@ static void _close_door(int door_x, int door_y)
     dx = you.x_pos + door_move.dx;
     dy = you.y_pos + door_move.dy;
 
-    const dungeon_feature_type feat = 
+    const dungeon_feature_type feat =
         in_bounds(dx, dy) ? grd[dx][dy] : DNGN_UNSEEN;
-        
+
     if (feat == DNGN_OPEN_DOOR)
     {
         std::set<coord_def> all_door;
@@ -3738,7 +3739,7 @@ static void _close_door(int door_x, int door_y)
             const coord_def& dc = *i;
             if (mgrd[dc.x][dc.y] != NON_MONSTER)
             {
-                // Need to make sure that turn_is_over is set if creature is 
+                // Need to make sure that turn_is_over is set if creature is
                 // invisible
                 if (!player_monster_visible(&menv[mgrd[dc.x][dc.y]]))
                 {
@@ -3747,7 +3748,7 @@ static void _close_door(int door_x, int door_y)
                 }
                 else
                     mprf("There's a creature in the %sway!", noun);
-                    
+
                 door_move.dx = 0;
                 door_move.dy = 0;
                 return;
@@ -3829,11 +3830,11 @@ static void _close_door(int door_x, int door_y)
 static bool _initialise(void)
 {
     Options.fixup_options();
-    
+
     // read the options the player used last time they created a new
     // character.
     read_startup_prefs();
-    
+
     you.symbol = '@';
     you.colour = LIGHTGREY;
 
@@ -3867,7 +3868,7 @@ static bool _initialise(void)
 
     // set up the Lua interpreter for the dungeon builder.
     init_dungeon_lua();
-    
+
     // Read special levels and vaults.
     read_maps();
 
@@ -3877,7 +3878,7 @@ static bool _initialise(void)
     init_feat_desc_cache();
     init_spell_name_cache();
     init_item_name_cache();
-    
+
     cio_init();
 
     // system initialisation stuff:
@@ -3893,7 +3894,7 @@ static bool _initialise(void)
         end(0, false);
     }
 #endif
-    
+
     // sets up a new game:
     const bool newc = new_game();
     if (!newc)
@@ -3901,7 +3902,7 @@ static bool _initialise(void)
 
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();
-    
+
     // Load macros
     macro_init();
 
@@ -4336,7 +4337,7 @@ static void _setup_cmd_repeat()
     }
 
     int count = atoi(buf);
-    
+
     if (crawl_state.doing_prev_cmd_again)
         count = crawl_state.prev_cmd_repeat_goal;
 
@@ -4550,7 +4551,7 @@ static void _update_replay_state()
                     prev.insert(prev.end(), begin, curr.end());
                 }
             }
-            
+
             repeat_again_rec.paused = true;
             macro_buf_add(KEY_REPEAT_KEYS);
         }

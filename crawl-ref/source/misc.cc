@@ -18,6 +18,8 @@
 #include "notes.h"
 
 #include <string.h>
+#include <algorithm>
+
 #if !defined(__IBMCPP__) && !defined(_MSC_VER)
 #include <unistd.h>
 #endif

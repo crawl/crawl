@@ -13,6 +13,7 @@
 #include "decks.h"
 
 #include <iostream>
+#include <algorithm>
 
 #include "externs.h"
 

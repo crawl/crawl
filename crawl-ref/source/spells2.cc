@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sstream>
+#include <algorithm>
 
 #include "externs.h"
 
@@ -233,7 +234,7 @@ int detect_creatures( int pow, bool telepathic )
                 if (mons_intel( mon->type ) == I_HIGH
                     && mons_class_flag( mon->type, M_SPELLCASTER ))
                 {
-                    behaviour_event( mon, ME_DISTURB, MHITYOU, 
+                    behaviour_event( mon, ME_DISTURB, MHITYOU,
                                      you.x_pos, you.y_pos );
                 }
             }
@@ -402,7 +403,7 @@ int animate_dead( actor *caster, int power, beh_type corps_beh,
 
 int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
                       int class_allowed )
-{    
+{
     int rc = 0;
     int objl = igrd[axps][ayps];
     // This searches all the items on the ground for a corpse
@@ -505,10 +506,10 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
     mprf(MSGCH_DIAGNOSTICS, "Mass for abomination: %d", total_mass);
 #endif
 
-    // This is what the old statement pretty much boils down to, 
+    // This is what the old statement pretty much boils down to,
     // the average will be approximately 10 * power (or about 1000
     // at the practical maximum).  That's the same as the mass
-    // of a hippogriff, a spiny frog, or a steam dragon.  Thus, 
+    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
     // material components are far more important to this spell. -- bwr
     total_mass += roll_dice( 20, power );
 
@@ -549,7 +550,7 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
         if (type_resurr == MONS_ABOMINATION_LARGE)
         {
             menv[mon].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
-                                                   (colour == RED)      ? 1000 
+                                                   (colour == RED)      ? 1000
                                                                         : 2500);
 
             if (menv[mon].hit_dice > 30)
@@ -650,7 +651,7 @@ bool brand_weapon(brand_type which_brand, int power)
         // [dshaligram] At level 7 it's costly enough to experiment
         // with removing the miscast effect. We may need to revise the spell
         // to level 8 or 9. XXX.
-        // miscast_effect(SPTYP_TRANSLOCATION, 
+        // miscast_effect(SPTYP_TRANSLOCATION,
         //                9, 90, 100, "distortion branding");
         break;
 
@@ -789,7 +790,7 @@ void turn_undead(int pow)
             simple_monster_message( monster, " is repelled!" );
 
             //mv: must be here to work
-            behaviour_event( monster, ME_SCARE, MHITYOU ); 
+            behaviour_event( monster, ME_SCARE, MHITYOU );
 
             // reduce power based on monster turned
             pow -= monster->hit_dice * 3;
@@ -952,8 +953,8 @@ void cast_refrigeration(int pow)
         mpr("You feel very cold.");
         ouch( hurted, 0, KILLED_BY_FREEZING );
 
-        // Note: this used to be 12!... and it was also applied even if 
-        // the player didn't take damage from the cold, so we're being 
+        // Note: this used to be 12!... and it was also applied even if
+        // the player didn't take damage from the cold, so we're being
         // a lot nicer now.  -- bwr
         expose_player_to_element(BEAM_COLD, 5);
     }
@@ -1269,7 +1270,7 @@ int summon_elemental(int pow, int restricted_type,
         }
         else if (dir_x == 0 && dir_y == 0)
             mpr("You can't summon an elemental from yourself!");
-        else 
+        else
             break;
     }
 
@@ -1473,7 +1474,7 @@ void summon_scorpions(int pow)
         else
         {
             if (create_monster( MONS_SCORPION, 3, BEH_FRIENDLY,
-                                you.x_pos, you.y_pos, 
+                                you.x_pos, you.y_pos,
                                 you.pet_target, MONS_PROGRAM_BUG,
                                 false, false, false, true) != -1)
             {

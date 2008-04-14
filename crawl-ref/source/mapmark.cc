@@ -4,10 +4,13 @@
  *  Created by: dshaligram on Sat Jul 21 12:17:29 2007 UTC
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *  
+ *
  */
 
 #include "AppHdr.h"
+
+#include <algorithm>
+
 #include "mapmark.h"
 
 #include "clua.h"
@@ -234,7 +237,7 @@ bool map_lua_marker::get_table() const
 void map_lua_marker::write(writer &outf) const
 {
     map_marker::write(outf);
-    
+
     lua_stack_cleaner clean(dlua);
     bool init = initialised;
     if (!get_table())
@@ -242,7 +245,7 @@ void map_lua_marker::write(writer &outf) const
         mprf(MSGCH_WARN, "Couldn't find table.");
         init = false;
     }
-    
+
     marshallByte(outf, init);
     if (!init)
         return;
@@ -275,7 +278,7 @@ void map_lua_marker::write(writer &outf) const
 void map_lua_marker::read(reader &inf)
 {
     map_marker::read(inf);
-    
+
     if (!(initialised = unmarshallByte(inf)))
         return;
 
@@ -374,7 +377,7 @@ std::string map_lua_marker::property(const std::string &pname) const
     std::string result;
     if (lua_isstring(dlua, -1))
         result = lua_tostring(dlua, -1);
-    return (result);    
+    return (result);
 }
 
 map_marker *map_lua_marker::parse(
@@ -677,7 +680,7 @@ std::vector<map_marker*> map_markers::get_all(map_marker_type mat)
         if (mat == MAT_ANY || i->second->get_type() == mat)
             rmarkers.push_back(i->second);
     }
-    return (rmarkers);    
+    return (rmarkers);
 }
 
 std::vector<map_marker*> map_markers::get_all(const std::string &key,
@@ -695,7 +698,7 @@ std::vector<map_marker*> map_markers::get_all(const std::string &key,
             rmarkers.push_back(marker);
     }
 
-    return (rmarkers);    
+    return (rmarkers);
 }
 
 std::vector<map_marker*> map_markers::get_markers_at(const coord_def &c)

@@ -13,6 +13,9 @@
  */
 
 #include "AppHdr.h"
+
+#include <algorithm>
+
 #include "externs.h"
 
 #include "branch.h"
@@ -89,7 +92,7 @@ static int spread_cloud(const cloud_struct &cloud)
             const int x = cloud.x + xi;
             const int y = cloud.y + yi;
 
-            if (!in_bounds(x, y) 
+            if (!in_bounds(x, y)
                     || env.cgrid[x][y] != EMPTY_CLOUD
                     || grid_is_solid(grd[x][y]))
                 continue;
@@ -174,7 +177,7 @@ void delete_cloud( int cloud )
 }
 
 // The current use of this function is for shifting in the abyss, so
-// that clouds get moved along with the rest of the map. 
+// that clouds get moved along with the rest of the map.
 void move_cloud( int cloud, int new_x, int new_y )
 {
     if (cloud != EMPTY_CLOUD)
@@ -246,7 +249,7 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
     unsigned char spread_rate = actual_spread_rate( cl_type, _spread_rate );
 
     // too many clouds
-    if (env.cloud_no >= MAX_CLOUDS) 
+    if (env.cloud_no >= MAX_CLOUDS)
     {
         // default to random in case there's no low quality clouds
         int cl_del = random2( MAX_CLOUDS );

@@ -55,6 +55,7 @@
 #include <stdio.h>
 #include <string.h>            // for memcpy
 #include <iterator>
+#include <algorithm>
 
 #ifdef UNIX
 #include <sys/types.h>
@@ -575,7 +576,7 @@ bool unmarshallBoolean(reader &th)
 std::string make_date_string( time_t in_date )
 {
     char buff[20];
-    
+
     if (in_date <= 0)
     {
         buff[0] = 0;
@@ -584,7 +585,7 @@ std::string make_date_string( time_t in_date )
 
     struct tm *date = localtime( &in_date );
 
-    snprintf( buff, sizeof buff, 
+    snprintf( buff, sizeof buff,
               "%4d%02d%02d%02d%02d%02d%s",
               date->tm_year + 1900, date->tm_mon, date->tm_mday,
               date->tm_hour, date->tm_min, date->tm_sec,
@@ -685,7 +686,7 @@ void tag_write(tag_type tagID, FILE* outf)
 // Read a single tagged chunk of data from fp into memory.
 // TAG_NO_TAG is returned if there's nothing left to read in the file
 // (or on an error).
-// 
+//
 // minorVersion is available for any sub-readers that need it
 // (like TAG_LEVEL_MONSTERS)
 tag_type tag_read(FILE *fp, char minorVersion)
@@ -773,7 +774,7 @@ void tag_missing(int tag, char minorVersion)
         case TAG_LEVEL_TILES:
             tag_missing_level_tiles();
             break;
-        default: 
+        default:
             perror("Tag is missing; file is likely corrupt.");
             end(-1);
     }
@@ -993,7 +994,7 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
-    
+
     // list of currently beholding monsters (usually empty)
     marshallByte(th, you.beheld_by.size());
     for (unsigned int k = 0; k < you.beheld_by.size(); k++)
@@ -1133,7 +1134,7 @@ static void marshall_follower(writer &th, const follower &f)
 {
     marshall_monster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-        marshallItem(th, f.items[i]);    
+        marshallItem(th, f.items[i]);
 }
 
 static void unmarshall_follower(reader &th, follower &f)
@@ -1146,7 +1147,7 @@ static void unmarshall_follower(reader &th, follower &f)
 static void marshall_follower_list(writer &th, const m_transit_list &mlist)
 {
     marshallShort( th, mlist.size() );
-    
+
     for (m_transit_list::const_iterator mi = mlist.begin();
          mi != mlist.end(); ++mi)
     {
@@ -1157,7 +1158,7 @@ static void marshall_follower_list(writer &th, const m_transit_list &mlist)
 static void marshall_item_list(writer &th, const i_transit_list &ilist)
 {
     marshallShort( th, ilist.size() );
-    
+
     for (i_transit_list::const_iterator ii = ilist.begin();
          ii != ilist.end(); ++ii)
     {
@@ -1168,7 +1169,7 @@ static void marshall_item_list(writer &th, const i_transit_list &ilist)
 static m_transit_list unmarshall_follower_list(reader &th)
 {
     m_transit_list mlist;
-    
+
     const int size = unmarshallShort(th);
 
     for (int i = 0; i < size; ++i)
@@ -1184,7 +1185,7 @@ static m_transit_list unmarshall_follower_list(reader &th)
 static i_transit_list unmarshall_item_list(reader &th)
 {
     i_transit_list ilist;
-    
+
     const int size = unmarshallShort(th);
 
     for (int i = 0; i < size; ++i)
@@ -1295,7 +1296,7 @@ static void tag_read_you(reader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
         you.spell_letter_table[i] = unmarshallByte(th);
-    
+
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
         you.ability_letter_table[i] =
@@ -1352,7 +1353,7 @@ static void tag_read_you(reader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
         you.worshipped[i] = unmarshallByte(th);
-    
+
     for (i = 0; i < count_c; i++)
         you.num_gifts[i] = unmarshallShort(th);
 
@@ -1378,7 +1379,7 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
-    
+
     // list of currently beholding monsters (usually empty)
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
@@ -1534,7 +1535,7 @@ static void tag_read_you_dungeon(reader &th)
         for (j = 0; j < count_c; ++j)
             tmp_file_pairs[i][j] = unmarshallBoolean(th);
     }
-    
+
     unmarshallMap(th, stair_level,
                   unmarshall_long_as<branch_type>,
                   unmarshall_level_id);
@@ -1579,7 +1580,7 @@ static void tag_read_you_dungeon(reader &th)
 static void tag_read_lost_monsters(reader &th, int minorVersion)
 {
     the_lost_ones.clear();
-    
+
     unmarshallMap(th, the_lost_ones,
                   unmarshall_level_id, unmarshall_follower_list);
 }
@@ -1587,7 +1588,7 @@ static void tag_read_lost_monsters(reader &th, int minorVersion)
 static void tag_read_lost_items(reader &th, int minorVersion)
 {
     transiting_items.clear();
-    
+
     unmarshallMap(th, transiting_items,
                   unmarshall_level_id, unmarshall_item_list);
 }
@@ -1617,7 +1618,7 @@ static void tag_construct_level(writer &th)
         {
             marshallByte(th, grd[count_x][count_y]);
             marshallShort(th, env.map[count_x][count_y].object);
-            marshallShort(th, env.map[count_x][count_y].colour);            
+            marshallShort(th, env.map[count_x][count_y].colour);
             marshallShort(th, env.map[count_x][count_y].flags);
             marshallShort(th, env.map[count_x][count_y].property);
             marshallShort(th, env.cgrid[count_x][count_y]);
@@ -1701,14 +1702,14 @@ void unmarshallItem(reader &th, item_def &item)
     item.x = unmarshallShort(th);
     item.y = unmarshallShort(th);
     item.flags = (unsigned long) unmarshallLong(th);
-        
+
     unmarshallShort(th);  // mitm[].link -- unused
     unmarshallShort(th);  // igrd[item.x][item.y] -- unused
 
     item.slot = unmarshallByte(th);
 
     item.orig_place  = unmarshallShort(th);
-    item.orig_monnum = unmarshallShort(th);        
+    item.orig_monnum = unmarshallShort(th);
     item.inscription = unmarshallString(th, 80);
 
     item.props.clear();
@@ -1873,7 +1874,7 @@ void tag_construct_level_tiles(writer &th)
     marshallShort(th, tile);
     marshallByte(th, rle_count);
 
-    // fg 
+    // fg
     tile = env.tile_bk_fg[0][0];
     rle_count = 0;
     for (int count_x = 0; count_x < GXM; count_x++)
@@ -1932,7 +1933,7 @@ static void tag_read_level( reader &th, char minorVersion )
     const int gy = unmarshallShort(th);
 
     env.turns_on_level = unmarshallLong(th);
-    
+
     for (int i = 0; i < gx; i++)
     {
         for (int j = 0; j < gy; j++)
@@ -2303,7 +2304,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
 static ghost_demon unmarshallGhost( reader &th )
 {
     ghost_demon ghost;
-    
+
     ghost.name = unmarshallString(th, 20);
 
     ghost.species = static_cast<species_type>( unmarshallShort(th) );
@@ -2326,7 +2327,7 @@ static ghost_demon unmarshallGhost( reader &th )
     ghost.fly = static_cast<flight_type>( unmarshallShort(th) );
 
     unmarshallSpells(th, ghost.spells);
-    
+
     return (ghost);
 }
 

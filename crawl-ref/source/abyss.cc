@@ -15,6 +15,7 @@
 #include "abyss.h"
 
 #include <stdlib.h>
+#include <algorithm>
 
 #include "externs.h"
 
@@ -164,7 +165,7 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
                 {
                     if (one_chance_in(200))
                     {
-                        thing_created = items(1, OBJ_MISCELLANY, 
+                        thing_created = items(1, OBJ_MISCELLANY,
                                               MISC_RUNE_OF_ZOT, true, 51, 51);
 #if DEBUG_ABYSS
                         mpr("Placing an Abyssal rune.", MSGCH_DIAGNOSTICS);
@@ -334,7 +335,7 @@ static void abyss_lose_monster(monsters &mons)
 {
     if (mons.needs_transit())
         mons.set_transit( level_id(LEVEL_ABYSS) );
-    
+
     mons.reset();
 }
 
@@ -350,7 +351,7 @@ void area_shift(void)
     for (unsigned int i = 0; i < MAX_MONSTERS; i++)
     {
         monsters &m = menv[i];
-        
+
         if (!m.alive())
             continue;
 
@@ -434,7 +435,7 @@ void area_shift(void)
 
     for (unsigned int mcount = 0; mcount < 15; mcount++)
     {
-        mons_place( RANDOM_MONSTER, BEH_HOSTILE, MHITNOT, false, 1, 1, 
+        mons_place( RANDOM_MONSTER, BEH_HOSTILE, MHITNOT, false, 1, 1,
                     LEVEL_ABYSS, PROX_AWAY_FROM_PLAYER ); // PROX_ANYWHERE?
     }
 
@@ -468,7 +469,7 @@ void abyss_teleport( bool new_area )
             x = 16 + random2( GXM - 32 );
             y = 16 + random2( GYM - 32 );
 
-            if ((grd[x][y] == DNGN_FLOOR 
+            if ((grd[x][y] == DNGN_FLOOR
                     || grd[x][y] == DNGN_SHALLOW_WATER)
                 && mgrd[x][y] == NON_MONSTER
                 && env.cgrid[x][y] == EMPTY_CLOUD)
@@ -502,7 +503,7 @@ void abyss_teleport( bool new_area )
         if (menv[i].alive())
             abyss_lose_monster(menv[i]);
     }
-    
+
     // Orbs and fixed artefacts are marked as "lost in the abyss"
     for (k = 0; k < MAX_ITEMS; k++)
     {
@@ -527,7 +528,7 @@ void abyss_teleport( bool new_area )
         }
     }
 
-    ASSERT( env.cloud_no == 0 ); 
+    ASSERT( env.cloud_no == 0 );
 
     you.moveto(45, 35);
 
@@ -647,9 +648,9 @@ static bool is_grid_corruptible(const coord_def &c)
 {
     if (c == you.pos())
         return (false);
-    
+
     const dungeon_feature_type feat = grd(c);
-    
+
     // Stairs and portals cannot be corrupted.
     if (grid_stair_direction(feat) != CMD_NO_CMD)
         return (false);
@@ -662,19 +663,19 @@ static bool is_grid_corruptible(const coord_def &c)
 
     case DNGN_METAL_WALL:
         return (one_chance_in(5));
-        
+
     case DNGN_STONE_WALL:
         return (one_chance_in(3));
 
     case DNGN_ROCK_WALL:
         return (!one_chance_in(3));
-        
+
     default:
         return (true);
     }
 }
 
-// Returns true if the square has <= 4 traversable neighbours. 
+// Returns true if the square has <= 4 traversable neighbours.
 static bool is_crowded_square(const coord_def &c)
 {
     int neighbours = 0;
@@ -769,7 +770,7 @@ static void corrupt_level_features(const crawl_environment &oenv)
 
     for (int i = 0, size = corrupt_markers.size(); i < size; ++i)
         corrupt_seeds.push_back(corrupt_markers[i]->pos);
-    
+
     for (int y = MAPGEN_BORDER; y < GYM - MAPGEN_BORDER; ++y)
     {
         for (int x = MAPGEN_BORDER; x < GXM - MAPGEN_BORDER; ++x)
@@ -837,7 +838,7 @@ bool lugonu_corrupt_level(int power)
 
     you.flash_colour = EC_MUTAGENIC;
     viewwindow(true, false);
-    
+
     initialise_level_corrupt_seeds(power);
 
     std::auto_ptr<crawl_environment> backup(new crawl_environment(env));
@@ -852,7 +853,7 @@ bool lugonu_corrupt_level(int power)
     backup.reset(NULL);
     dungeon_events.clear();
     env.markers.activate_all(false);
-    
+
     corrupt_level_features(*abyssal);
     run_corruption_effects(300);
 

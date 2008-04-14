@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <algorithm>
 
 #include "externs.h"
 
@@ -1103,7 +1104,7 @@ void cast_poison_ammo(void)
         {
             mprf("%s %s covered in a thin film of poison.", old_desc,
                  (you.inv[ammo].quantity == 1) ? "is" : "are");
-             
+
             if (ammo == you.equip[EQ_WEAPON])
                 you.wield_change = true;
         }

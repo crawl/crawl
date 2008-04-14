@@ -18,13 +18,13 @@
 #include "debug.h"
 
 #include <iostream>
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
 #include <ctype.h>
+#include <algorithm>
 
 #ifdef UNIX
 #include <errno.h>

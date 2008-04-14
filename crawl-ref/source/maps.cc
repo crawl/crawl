@@ -19,6 +19,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <errno.h>
+#include <algorithm>
+
 #if !_MSC_VER
 #include <unistd.h>
 #endif
@@ -33,7 +35,7 @@
 #include "stuff.h"
 #include "terrain.h"
 
-static int write_vault(map_def &mdef, map_type mt, 
+static int write_vault(map_def &mdef, map_type mt,
                        vault_placement &,
                        bool check_place, bool clobber);
 static int apply_vault_definition(
@@ -59,15 +61,15 @@ static std::vector<map_def> vdefs;
 
 // make sure that vault_n, where n is a number, is a vault which can be put
 // anywhere, while other vault names are for specific level ranges, etc.
-int vault_main( 
-        map_type vgrid, 
+int vault_main(
+        map_type vgrid,
         vault_placement &place,
         int which_vault,
         bool check_place,
         bool clobber)
 {
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Generating level: %s (%d,%d)", 
+    mprf(MSGCH_DIAGNOSTICS, "Generating level: %s (%d,%d)",
          vdefs[which_vault].name.c_str(),
          place.pos.x, place.pos.y);
     if (crawl_state.map_stat_gen)
@@ -91,16 +93,16 @@ int vault_main(
                          check_place, clobber ));
 }
 
-static int write_vault(map_def &mdef, map_type map, 
+static int write_vault(map_def &mdef, map_type map,
                        vault_placement &place,
                        bool check_place, bool clobber)
 {
     mdef.load();
-    
+
     // Copy the map so we can monkey with it.
     place.map = mdef;
     place.map.original = &mdef;
-    
+
     // Try so many times to place the map. This will always succeed
     // unless there are conflicting map placements in 'avoid', or there
     // is a map validate Lua hook that keeps rejecting the map.
@@ -145,7 +147,7 @@ static bool resolve_map(map_def &map, const map_def &original)
 
     if (!map.test_lua_validate(false))
         return (false);
-    
+
     // Mirroring is possible for any map that does not explicitly forbid it.
     // Note that mirroring also flips the orientation.
     if (coinflip())
@@ -169,7 +171,7 @@ static bool bad_map_place(const map_def &map,
 {
     if (!check_place || clobber)
         return (false);
-    
+
     const std::vector<std::string> &lines = map.map.get_lines();
     for (int y = sy; y < sy + height; ++y)
     {
@@ -183,7 +185,7 @@ static bool bad_map_place(const map_def &map,
 
             if (igrd[x][y] != NON_ITEM || mgrd[x][y] != NON_MONSTER)
                 return (true);
-            
+
             const dungeon_feature_type grid = grd[x][y];
 
             if (!grid_is_opaque(grid)
@@ -220,7 +222,7 @@ void fit_region_into_map_bounds(coord_def &pos, const coord_def &size)
         pos.y = Y_BOUND_2 - size.y + 1;
 }
 
-static bool apply_vault_grid(map_def &def, map_type map, 
+static bool apply_vault_grid(map_def &def, map_type map,
                              vault_placement &place,
                              bool check_place, bool clobber)
 {
@@ -235,7 +237,7 @@ static bool apply_vault_grid(map_def &def, map_type map,
             || orient == MAP_SOUTHWEST)
         start.y = GYM - height;
 
-    if (orient == MAP_EAST || orient == MAP_NORTHEAST 
+    if (orient == MAP_EAST || orient == MAP_NORTHEAST
             || orient == MAP_SOUTHEAST)
         start.x = GXM - width;
 
@@ -304,7 +306,7 @@ static int apply_vault_definition(
     int orient = def.orient;
     if (orient == MAP_NONE)
         orient = MAP_NORTH;
-    
+
     return (orient);
 }
 
@@ -338,7 +340,7 @@ int find_map_by_name(const std::string &name)
 std::vector<std::string> find_map_matches(const std::string &name)
 {
     std::vector<std::string> matches;
-    
+
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].name.find(name) != std::string::npos)
             matches.push_back(vdefs[i].name);
@@ -370,10 +372,10 @@ int random_map_for_place(const level_id &place, bool want_minivault)
 
     if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
         mapindex = -1;
-    
+
 #ifdef DEBUG_DIAGNOSTICS
     if (mapindex != -1)
-        mprf(MSGCH_DIAGNOSTICS, "Found map %s for %s", 
+        mprf(MSGCH_DIAGNOSTICS, "Found map %s for %s",
              vdefs[mapindex].name.c_str(), place.describe().c_str());
 #endif
 
@@ -406,7 +408,7 @@ int random_map_in_depth(const level_id &place, bool want_minivault)
 
     if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
         mapindex = -1;
-    
+
     return (mapindex);
 }
 
@@ -433,7 +435,7 @@ int random_map_for_tag(const std::string &tag,
 
     if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
         mapindex = -1;
-    
+
 #ifdef DEBUG_DIAGNOSTICS
     if (mapindex != -1)
         mprf(MSGCH_DIAGNOSTICS, "Found map %s tagged '%s'",
@@ -447,7 +449,7 @@ const map_def *map_by_index(int index)
 {
     if (index < 0 || index >= (int) vdefs.size())
         return (NULL);
-    
+
     return &vdefs[index];
 }
 
@@ -494,7 +496,7 @@ static void check_des_index_dir()
 {
     if (checked_des_index_dir)
         return;
-    
+
     std::string desdir = get_savedir_path("des");
     if (!check_dir("Data file cache", desdir, true))
         end(1, true, "Can't create data file cache: %s", desdir.c_str());
@@ -546,7 +548,7 @@ static bool load_map_index(const std::string &base)
             global_preludes.push_back( lc_global_prelude );
         }
     }
-    
+
     FILE* fp = fopen((base + ".idx").c_str(), "rb");
     if (!fp)
         end(1, true, "Unable to read %s", (base + ".idx").c_str());
@@ -574,13 +576,13 @@ static bool load_map_cache(const std::string &filename)
 {
     check_des_index_dir();
     const std::string descache_base = get_descache_path(filename, "");
-    
+
     file_lock deslock(descache_base + ".lk", "rb", false);
 
     if (is_newer(filename, descache_base + ".idx")
         || is_newer(filename, descache_base + ".dsc"))
         return (false);
-    
+
     if (!verify_map_index(descache_base) || !verify_map_full(descache_base))
         return (false);
 
@@ -636,9 +638,9 @@ static void write_map_cache(const std::string &filename, size_t vs, size_t ve)
     check_des_index_dir();
 
     const std::string descache_base = get_descache_path(filename, "");
-    
+
     file_lock deslock(descache_base + ".lk", "wb");
-    
+
     write_map_prelude(descache_base);
     write_map_full(descache_base, vs, ve);
     write_map_index(descache_base, vs, ve);
@@ -651,7 +653,7 @@ static void parse_maps(const std::string &s)
         end(1, false, "Map file %s has already been read.", base.c_str());
 
     map_files_read.insert(base);
-    
+
     if (load_map_cache(s))
         return;
 
@@ -731,7 +733,7 @@ static weighted_map_names mg_find_random_vaults(
     const level_id &place, bool wantmini)
 {
     weighted_map_names wms;
-    
+
     if (!place.is_valid())
         return (wms);
 
@@ -746,7 +748,7 @@ static weighted_map_names mg_find_random_vaults(
             && !vdefs[i].has_tag_suffix("entry")
             && !vdefs[i].has_tag("pan")
             && !vdefs[i].has_tag("unrand")
-            && !vdefs[i].has_tag("bazaar"))        
+            && !vdefs[i].has_tag("bazaar"))
         {
             wms.push_back(
                 weighted_map_name( vdefs[i].name, vdefs[i].chance ) );

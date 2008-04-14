@@ -8,6 +8,8 @@
 
 #include "AppHdr.h"
 
+#include <algorithm>
+
 #include "beam.h"
 #include "branch.h"
 #include "database.h"
@@ -839,7 +841,7 @@ static bool xom_is_bad(int sever)
         else if (random2(sever) <= 10)
         {
             god_speaks(GOD_XOM, _get_xom_speech("major miscast effect"));
- 
+
             miscast_effect( SPTYP_RANDOM, 0, 0, random2(4),
                             "the severe capriciousness of Xom" );
 

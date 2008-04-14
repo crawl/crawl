@@ -8,6 +8,8 @@
 
 #include "AppHdr.h"
 
+#include <algorithm>
+
 #include "enum.h"
 #include "externs.h"
 #include "makeitem.h"

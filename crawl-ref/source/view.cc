@@ -29,6 +29,7 @@
 #include <string.h>
 #include <cmath>
 #include <sstream>
+#include <algorithm>
 
 #ifdef DOS
 #include <conio.h>

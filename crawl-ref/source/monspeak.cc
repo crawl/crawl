@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <algorithm>
 
 #ifdef DOS
 #include <conio.h>
@@ -118,10 +119,10 @@ static std::string _get_speak_string(const std::vector<std::string> prefixes,
                                      const monsters *monster)
 {
     std::string msg = _try_exact_string(prefixes, key);
-    
+
     if (!msg.empty())
         return msg;
-    
+
     // Combinations of prefixes by threes
     const int size = prefixes.size();
     std::string prefix = "";
@@ -136,7 +137,7 @@ static std::string _get_speak_string(const std::vector<std::string> prefixes,
                     prefix += prefixes[k] + " ";
 
                     msg = getSpeakString("default " + prefix + key);
-                    
+
                     if (!msg.empty())
                         return msg;
                 }
@@ -152,7 +153,7 @@ static std::string _get_speak_string(const std::vector<std::string> prefixes,
                 prefix += prefixes[j] + " ";
 
                 msg = getSpeakString("default " + prefix + key);
-                
+
                 if (!msg.empty())
                     return msg;
             }
@@ -166,7 +167,7 @@ static std::string _get_speak_string(const std::vector<std::string> prefixes,
             prefix  = prefixes[i] + " ";
 
             msg = getSpeakString("default " + prefix + key);
-            
+
             if (!msg.empty())
                 return msg;
         }
@@ -235,14 +236,14 @@ bool mons_speaks(const monsters *monster)
     // charmed monsters aren't too expressive
     if (monster->has_ench(ENCH_CHARM) && !one_chance_in(3))
         return false;
-        
+
 
     std::vector<std::string> prefixes;
     if (mons_neutral(monster))
     {
         if (coinflip()) // neutrals speak half as often
             return false;
-            
+
         prefixes.push_back("neutral");
     }
     else if (mons_friendly(monster))
@@ -358,7 +359,7 @@ bool mons_speaks(const monsters *monster)
         key += "'";
         msg = _get_speak_string(prefixes, key, monster);
     }
-    
+
     if (msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
@@ -410,7 +411,7 @@ bool mons_speaks(const monsters *monster)
 
     if (msg.empty() || msg == "__NEXT")
         msg = _get_speak_string(prefixes, get_mon_shape_str(shape), monster);
-        
+
     if (msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
@@ -442,7 +443,7 @@ bool mons_speaks(const monsters *monster)
                 msg2 = _get_speak_string(prefixes,
                                          get_mon_shape_str(shape),
                                          monster);
-                                        
+
                 if (msg == "__NONE" && msg2 == "__NONE")
                 {
 #ifdef DEBUG_MONSPEAK
@@ -490,7 +491,7 @@ bool mons_speaks(const monsters *monster)
     for (int i = 0, size = lines.size(); i < size; i++)
     {
         std::string line = lines[i];
-        
+
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
         // warning to scare the player.  In order to accomidate this

@@ -15,6 +15,8 @@
 #include "externs.h"
 #include "traps.h"
 
+#include <algorithm>
+
 #include "beam.h"
 #include "branch.h"
 #include "delay.h"
@@ -172,7 +174,7 @@ void player_caught_in_net()
             mpr("You fall like a stone!");
             fall_into_a_pool(you.x_pos, you.y_pos, false, grd(you.pos()));
         }
-        
+
         stop_delay(true); // even stair delays
     }
 }
@@ -193,7 +195,7 @@ static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison)
 
     std::string msg = "A" + pbolt.name + " shoots out and ";
 
-    if (random2( 20 + 5 * you.shield_blocks * you.shield_blocks ) 
+    if (random2( 20 + 5 * you.shield_blocks * you.shield_blocks )
                                                 < player_shield_class())
     {
         you.shield_blocks++;
@@ -208,21 +210,21 @@ static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison)
 
         your_dodge = player_evasion() + random2(you.dex) / 3
             - 2 + (you.duration[DUR_REPEL_MISSILES] * 10);
-        
+
         if (trap_hit >= your_dodge && you.duration[DUR_DEFLECT_MISSILES] == 0)
         {
             msg += "hits you!";
             mpr(msg.c_str());
-            
+
             if (poison && random2(100) < 50 - (3 * player_AC()) / 2
                 && !player_res_poison())
             {
                 poison_player( 1 + random2(3) );
             }
-            
+
             damage_taken = roll_dice( pbolt.damage );
             damage_taken -= random2( player_AC() + 1 );
-            
+
             if (damage_taken > 0)
                 ouch( damage_taken, 0, KILLED_BY_TRAP, pbolt.name.c_str() );
         }
@@ -294,7 +296,7 @@ void itrap( struct bolt &pbolt, int trapped )
 void handle_traps(trap_type trt, int i, bool trap_known)
 {
     struct bolt beam;
-    
+
     bool branchtype = false;
     if (trap_category(trt) == DNGN_TRAP_MECHANICAL && trt != TRAP_NET
         && trt != TRAP_BLADE)
@@ -456,7 +458,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
 
         break;
     }
-        
+
     case TRAP_ZOT:
     default:
         mpr((trap_known) ? "You enter the Zot trap."
@@ -466,7 +468,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
         break;
     }
     learned_something_new(TUT_SEEN_TRAP, you.x_pos, you.y_pos);
-    
+
     if (!trap_known) // Now you know...
         exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
 }                               // end handle_traps()
@@ -559,7 +561,7 @@ void disarm_trap( struct dist &disa )
     {
         const int num_to_make = 10 + random2(you.skills[SK_TRAPS_DOORS]);
         for (j = 0; j < num_to_make; j++)
-        {           
+        {
             // places items (eg darts), which will automatically stack
             itrap(beam, i);
         }
@@ -579,7 +581,7 @@ void disarm_trap( struct dist &disa )
 void remove_net_from(monsters *mon)
 {
     you.turn_is_over = true;
-    
+
     int net = get_trapping_net(mon->x, mon->y);
 
     if (net == NON_ITEM)
@@ -592,7 +594,7 @@ void remove_net_from(monsters *mon)
     int paralys = 0;
     if (mons_is_paralysed(mon)) // makes this easier
         paralys = random2(5);
-        
+
     int invis = 0;
     if (!player_monster_visible(mon)) // makes this harder
         invis = 3 + random2(5);
@@ -629,10 +631,10 @@ void remove_net_from(monsters *mon)
             exercise(SK_TRAPS_DOORS, 1 + random2(mon->body_size(PSIZE_BODY)/2));
         return;
     }
-     
+
     mon->del_ench(ENCH_HELD, true);
     remove_item_stationary(mitm[net]);
-    
+
     if (player_monster_visible(mon))
         mprf("You free %s.", mon->name(DESC_NOCAP_THE).c_str());
     else
@@ -652,7 +654,7 @@ static int damage_or_escape_net(int hold)
     // Ogre, Troll, Centaur, Naga: large (-1)
     // transformations: spider, bat: tiny (+3); ice beast: large (-1)
     int escape = SIZE_MEDIUM - you.body_size(PSIZE_BODY);
-    
+
     int damage = -escape;
 
     // your weapon may damage the net, max. bonus of 2
@@ -660,7 +662,7 @@ static int damage_or_escape_net(int hold)
     {
         if (can_cut_meat(you.inv[you.equip[EQ_WEAPON]]))
             damage++;
-            
+
         int brand = get_weapon_brand( you.inv[you.equip[EQ_WEAPON]] );
         if (brand == SPWPN_FLAMING || brand == SPWPN_VORPAL)
             damage++;
@@ -675,7 +677,7 @@ static int damage_or_escape_net(int hold)
         else
             damage += level - 1;
     }
-    
+
     // Berserkers get a fighting bonus
     if (you.duration[DUR_BERSERKER])
         damage += 2;
@@ -704,12 +706,12 @@ static int damage_or_escape_net(int hold)
         else if (damage >= 2)
             damage -= 2;
     }
-    
+
     // damaged nets are easier to destroy
     if (hold < 0)
     {
-        damage += random2(-hold/3 + 1); 
-        
+        damage += random2(-hold/3 + 1);
+
         // ... and easier to slip out of (but only if escape looks feasible)
         if (you.attribute[ATTR_HELD] < 5 || escape >= damage)
             escape += random2(-hold/2) + 1;
@@ -743,14 +745,14 @@ void free_self_from_net()
 #endif
 
     if (do_what <= 0) // you try to destroy the net
-    {                 // for previously undamaged nets this takes at least 2 
+    {                 // for previously undamaged nets this takes at least 2
                       // and at most 8 turns
         bool can_slice = you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
                          || you.equip[EQ_WEAPON] != -1
                             && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
 
         int damage = -do_what;
-        
+
         if (damage < 1)
             damage = 1;
 
@@ -763,7 +765,7 @@ void free_self_from_net()
 
         if (damage > 5)
             damage = 5;
-                    
+
         hold -= damage;
         mitm[net].plus = hold;
 
@@ -772,13 +774,13 @@ void free_self_from_net()
             mprf("You %s the net and break free!",
                  can_slice ? (damage >= 4? "slice" : "cut") :
                              (damage >= 4? "shred" : "rip"));
-                  
+
             destroy_item(net);
 
             you.attribute[ATTR_HELD] = 0;
             return;
         }
-        
+
         if (damage >= 4)
         {
             mprf("You %s into the net.",
@@ -792,7 +794,7 @@ void free_self_from_net()
         if (you.attribute[ATTR_HELD] > 1 && coinflip())
         {
             you.attribute[ATTR_HELD]--;
-            
+
             if (you.attribute[ATTR_HELD] > 1 && hold < -random2(5))
                 you.attribute[ATTR_HELD]--;
         }
@@ -803,26 +805,26 @@ void free_self_from_net()
 
         if (you.duration[DUR_HASTE]) // extra bonus, also Berserk
             escape++;
-            
+
         // medium sized characters are at disadvantage and sometimes get a bonus
         if (you.body_size(PSIZE_BODY) == SIZE_MEDIUM)
             escape += coinflip();
 
         if (escape > 4)
             escape = 4;
-            
+
         if (escape >= you.attribute[ATTR_HELD])
         {
             if (escape >= 3)
                 mpr("You slip out of the net!");
             else
                 mpr("You break free from the net!");
-                
+
             you.attribute[ATTR_HELD] = 0;
             remove_item_stationary(mitm[net]);
             return;
         }
-        
+
         if (escape >= 3)
             mpr("You try to slip out of the net.");
         else
@@ -1131,7 +1133,7 @@ static trap_type random_trap_default(int level_number, const level_id &place)
     {
         type = TRAP_ARROW;
     }
-        
+
     if ((type == TRAP_DART || type == TRAP_ARROW) && one_chance_in(15))
         type = TRAP_NET;
 

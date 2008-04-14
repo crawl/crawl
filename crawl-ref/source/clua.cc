@@ -7,6 +7,8 @@
 
 #include "AppHdr.h"
 
+#include <algorithm>
+
 #include "clua.h"
 
 #include "abl-show.h"
@@ -123,7 +125,7 @@ void CLua::setregistry(const char *name)
     lua_settable(state(), LUA_REGISTRYINDEX);
 }
 
-void CLua::getregistry(const char *name) 
+void CLua::getregistry(const char *name)
 {
     lua_pushstring(state(), name);
     lua_gettable(state(), LUA_REGISTRYINDEX);
@@ -154,7 +156,7 @@ int CLua::file_write(lua_State *ls)
     FILE *f = sf->get_file();
     if (!f)
         return (0);
-    
+
     const char *text = luaL_checkstring(ls, 2);
     if (text)
         fprintf(f, "%s", text);
@@ -169,7 +171,7 @@ FILE *CLua::CLuaSave::get_file()
     return (handle);
 }
 
-void CLua::set_error(int err, lua_State *ls) 
+void CLua::set_error(int err, lua_State *ls)
 {
     if (!err)
     {
@@ -190,7 +192,7 @@ void CLua::init_throttle()
 {
     if (!managed_vm)
         return;
-    
+
     if (throttle_unit_lines <= 0)
         throttle_unit_lines = 500;
 
@@ -199,7 +201,7 @@ void CLua::init_throttle()
 
     if (throttle_sleep_end < throttle_sleep_start)
         throttle_sleep_end = throttle_sleep_start;
-    
+
     if (!mixed_call_depth)
     {
         lua_sethook(_state, clua_throttle_hook,
@@ -226,7 +228,7 @@ int CLua::execstring(const char *s, const char *context, int nresults)
     int err = 0;
     if ((err = loadstring(s, context)))
         return (err);
-    
+
     lua_State *ls = state();
     lua_call_throttle strangler(this);
     err = lua_pcall(ls, 0, nresults, 0);
@@ -254,7 +256,7 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
             make_stringf("invalid filename: %s", filename).c_str());
         return (-1);
     }
-    
+
     std::string file = datafile_path(filename, die_on_fail);
     if (file.empty())
     {
@@ -324,7 +326,7 @@ bool CLua::runhook(const char *hook, const char *params, ...)
 void CLua::fnreturns(const char *format, ...)
 {
     lua_State *ls = _state;
-    
+
     if (!format || !ls)
         return;
 
@@ -345,7 +347,7 @@ void CLua::vfnreturns(const char *format, va_list args)
         format = gs + 1;
     else if ((gs = strchr(format, ':')))
         format = gs + 1;
-    
+
     for (const char *run = format; *run; ++run)
     {
         char argtype = *run;
@@ -456,7 +458,7 @@ int CLua::return_count(lua_State *ls, const char *format)
     const char *gs = strchr(format, '>');
     if (gs)
         return (strlen(gs + 1));
-    
+
     const char *cs = strchr(format, ':');
     if (cs && isdigit(*format))
     {
@@ -473,7 +475,7 @@ int CLua::return_count(lua_State *ls, const char *format)
     return (0);
 }
 
-bool CLua::calltopfn(lua_State *ls, const char *params, va_list args, 
+bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
                      int retc, va_list *copyto)
 {
     // We guarantee to remove the function from the stack
@@ -507,7 +509,7 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
     bool ret = calltopfn(ls, params, args, 1);
     if (!ret)
         CL_RESETSTACK_RETURN(ls, stacktop, def);
-    
+
     def = lua_toboolean(ls, -1);
     CL_RESETSTACK_RETURN(ls, stacktop, def);
 }
@@ -562,7 +564,7 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
             lua_settop(ls, -nargs - 2);
             return (false);
         }
-        
+
         // Slide the function in front of its args and call it.
         if (nargs)
             lua_insert(ls, -nargs - 1);
@@ -574,7 +576,7 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
     return !err;
 }
 
-// Defined in Kills.cc because the kill bindings refer to Kills.cc local 
+// Defined in Kills.cc because the kill bindings refer to Kills.cc local
 // structs
 extern void luaopen_kills(lua_State *ls);
 
@@ -627,7 +629,7 @@ void CLua::init_lua()
     {
         lua_register(_state, "pcall", clua_guarded_pcall);
         execfile("clua/userbase.lua", true, true);
-    }        
+    }
 
     lua_pushboolean(_state, managed_vm);
     setregistry("lua_vm_is_managed");
@@ -657,12 +659,12 @@ void CLua::load_cmacro()
 
 /////////////////////////////////////////////////////////////////////
 
-static void clua_register_metatable(lua_State *ls, const char *tn, 
+static void clua_register_metatable(lua_State *ls, const char *tn,
                                    const luaL_reg *lr,
                                    int (*gcfn)(lua_State *ls) = NULL)
 {
     int top = lua_gettop(ls);
-    
+
     luaL_newmetatable(ls, tn);
     lua_pushstring(ls, "__index");
     lua_pushvalue(ls, -2);
@@ -674,7 +676,7 @@ static void clua_register_metatable(lua_State *ls, const char *tn,
         lua_pushcfunction(ls, gcfn);
         lua_settable(ls, -3);
     }
-    
+
     luaL_openlib(ls, NULL, lr, 0);
 
     lua_settop(ls, top);
@@ -915,7 +917,7 @@ static int l_item_swap_slots(lua_State *ls)
             slot2 < 0 || slot2 >= ENDOFPACK ||
             slot1 == slot2 || !is_valid_item(you.inv[slot1]))
         return (0);
-    
+
     swap_inv_slots(slot1, slot2, verbose);
 
     return (0);
@@ -983,7 +985,7 @@ static int l_item_remove(lua_State *ls)
         mpr("Item is not equipped");
         return (0);
     }
-    
+
     bool result = false;
     if (eq == EQ_WEAPON)
         result = wield_weapon(true, -1);
@@ -1225,7 +1227,7 @@ static int l_item_subtype(lua_State *ls)
                 else if (item->sub_type == POT_CURE_MUTATION)
                    s = "cure mutation";
             }
-            
+
             if (s)
                 lua_pushstring(ls, s);
             else
@@ -1306,7 +1308,7 @@ static int l_item_potion_type(lua_State *ls)
 static int l_item_cursed(lua_State *ls)
 {
     LUA_ITEM(item, 1);
-    bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE) 
+    bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
                     && item_cursed(*item);
     lua_pushboolean(ls, cursed);
     return (1);
@@ -1492,7 +1494,7 @@ static const struct luaL_reg item_lib[] =
     { "equipped_at",       l_item_equipped },
     { "equip_type",        l_item_equip_type },
     { "weap_skill",        l_item_weap_skill },
-    
+
     { NULL, NULL },
 };
 
@@ -1624,7 +1626,7 @@ static int food_ischunk(lua_State *ls)
 {
     LUA_ITEM(item, 1);
     lua_pushboolean(ls,
-            item && item->base_type == OBJ_FOOD 
+            item && item->base_type == OBJ_FOOD
                  && item->sub_type == FOOD_CHUNK);
     return (1);
 }
@@ -1654,7 +1656,7 @@ static int crawl_mpr(lua_State *ls)
 {
     if (!crawl_state.io_inited)
         return (0);
-    
+
     const char *message = luaL_checkstring(ls, 1);
     if (!message)
         return (0);
@@ -1683,7 +1685,7 @@ static int crawl_input_line(lua_State *ls)
 {
     // This is arbitrary, but anybody entering so many characters is psychotic.
     char linebuf[500];
-    
+
     get_input_line(linebuf, sizeof linebuf);
     lua_pushstring(ls, linebuf);
     return (1);
@@ -1692,7 +1694,7 @@ static int crawl_input_line(lua_State *ls)
 static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
-    
+
     bool valid = !cancelable_get_line(linebuf, sizeof linebuf);
     if (valid)
         lua_pushstring(ls, linebuf);
@@ -1768,7 +1770,7 @@ static int crawl_setopt(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
         return (0);
-    
+
     const char *s = lua_tostring(ls, 1);
     if (s)
     {
@@ -1783,7 +1785,7 @@ static int crawl_read_options(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
         return (0);
-    
+
     const char* filename = lua_tostring(ls, 1);
     FILE* f = fopen( filename, "r" );
     if (f)
@@ -1830,7 +1832,7 @@ static int crawl_msgch_num(lua_State *ls)
     int ch = str_to_channel(s);
     if (ch == -1)
         return (0);
-    
+
     lua_pushnumber(ls, ch);
     return (1);
 }
@@ -1852,8 +1854,8 @@ static int crawl_regex(lua_State *ls)
     if (!s)
         return (0);
 
-    
-    text_pattern **tpudata = 
+
+    text_pattern **tpudata =
             clua_new_userdata< text_pattern* >(ls, REGEX_METATABLE);
     if (tpudata)
     {
@@ -1865,11 +1867,11 @@ static int crawl_regex(lua_State *ls)
 
 static int crawl_regex_find(lua_State *ls)
 {
-    text_pattern **pattern = 
+    text_pattern **pattern =
             clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE);
     if (!pattern)
         return (0);
-    
+
     const char *text = luaL_checkstring(ls, -1);
     if (!text)
         return (0);
@@ -1881,7 +1883,7 @@ static int crawl_regex_find(lua_State *ls)
 static int crawl_regex_gc(lua_State *ls)
 {
     text_pattern **pattern =
-        static_cast<text_pattern **>( lua_touserdata(ls, 1) );        
+        static_cast<text_pattern **>( lua_touserdata(ls, 1) );
     if (pattern)
         delete *pattern;
     return (0);
@@ -1900,7 +1902,7 @@ static int crawl_message_filter(lua_State *ls)
         return (0);
 
     int num = lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
-    message_filter **mf = 
+    message_filter **mf =
             clua_new_userdata< message_filter* >( ls, MESSF_METATABLE );
     if (mf)
     {
@@ -1912,11 +1914,11 @@ static int crawl_message_filter(lua_State *ls)
 
 static int crawl_messf_matches(lua_State *ls)
 {
-    message_filter **mf = 
+    message_filter **mf =
             clua_get_userdata< message_filter* >(ls, MESSF_METATABLE);
     if (!mf)
         return (0);
-    
+
     const char *pattern = luaL_checkstring(ls, 2);
     int ch = luaL_checkint(ls, 3);
     if (pattern)
@@ -1960,7 +1962,7 @@ static int crawl_split(lua_State *ls)
                *token = luaL_checkstring(ls, 2);
     if (!s || !token)
         return (0);
-        
+
     std::vector<std::string> segs = split_string(token, s);
     lua_newtable(ls);
     for (int i = 0, count = segs.size(); i < count; ++i)
@@ -2084,7 +2086,7 @@ struct option_handler
     ohandler    handler;
 };
 
-static int option_hboolean(lua_State *ls, const char *name, void *data, 
+static int option_hboolean(lua_State *ls, const char *name, void *data,
                            bool get)
 {
     if (get)
@@ -2125,7 +2127,7 @@ static option_handler handlers[] =
     { "target_zero_exp", &Options.target_zero_exp, option_hboolean },
     { "target_wrap", &Options.target_wrap, option_hboolean },
     { "easy_exit_menu", &Options.easy_exit_menu, option_hboolean },
-    { "dos_use_background_intensity", &Options.dos_use_background_intensity, 
+    { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                     option_hboolean },
 };
 
@@ -2157,7 +2159,7 @@ static int option_get(lua_State *ls)
         lua_pushstring(ls, ov.c_str());
         return (1);
     }
-    
+
     const option_handler *oh = get_handler(opt);
     if (oh)
         return (oh->handler(ls, opt, oh->data, true));
@@ -2271,14 +2273,14 @@ static int monster_set(lua_State *ls)
     return (0);
 }
 
-static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t) 
+static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
 {
     if (!t->data)
     {
         lua_pushnil(ls);
         return 0;
     }
-    
+
     switch (t->apt)
     {
     case AIP_HP_LOSS:
@@ -2396,7 +2398,7 @@ struct lua_pat_op
 {
     const char *token;
     const char *luatok;
-    
+
     bool pretext;       // Does this follow a pattern?
     bool posttext;      // Is this followed by a pattern?
 };
@@ -2500,7 +2502,7 @@ bool lua_text_pattern::translate() const
     {
         return (false);
     }
-    
+
     std::string textp;
     std::string luafn;
     const lua_pat_op *currop = NULL;
@@ -2519,7 +2521,7 @@ bool lua_text_pattern::translate() const
                         textp.erase(0, textp.find_first_not_of(" \r\n\t"));
                     pre_pattern(textp, luafn);
                 }
-                
+
                 currop = &lop;
                 luafn += lop.luatok;
 
@@ -2588,7 +2590,7 @@ static void *clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
     if (nsize > osize && cl->memory_used >= CLUA_MAX_MEMORY_USE * 1024
            && cl->mixed_call_depth)
         return (NULL);
-    
+
     if (!nsize)
     {
         free(ptr);
@@ -2606,7 +2608,7 @@ static void clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
     // fudge it.
     if (!lua)
         lua = &clua;
-    
+
     if (lua)
     {
         if (!lua->throttle_sleep_ms)
@@ -2655,7 +2657,7 @@ CLua *lua_call_throttle::find_clua(lua_State *ls)
 //
 // If we did not intercept pcall, the script could do the equivalent
 // of this:
-// 
+//
 //    while true do
 //      pcall(function () while true do end end)
 //    end
@@ -2676,7 +2678,7 @@ static int clua_guarded_pcall(lua_State *ls)
         if (!errs || strstr(errs, BUGGY_SCRIPT_ERROR))
             luaL_error(ls, errs? errs : BUGGY_PCALL_ERROR);
     }
-    
+
     lua_pushboolean(ls, !err);
     lua_insert(ls, 1);
 

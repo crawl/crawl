@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <string.h>
 #include <stdio.h>
+#include <algorithm>
 
 #include "externs.h"
 

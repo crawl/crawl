@@ -7,6 +7,9 @@
  */
 
 #include "AppHdr.h"
+
+#include <algorithm>
+
 #include "mtransit.h"
 
 #include "dungeon.h"
@@ -141,7 +144,7 @@ static bool place_lost_monster(follower &f)
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Placing lost one: %s",
          f.mons.name(DESC_PLAIN).c_str());
-#endif    
+#endif
     return (f.place(false));
 }
 
@@ -209,7 +212,7 @@ void place_transiting_items()
             pos.x = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
             pos.y = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
         }
-           
+
         const coord_def where_to_go
             = dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN, pos, true);
 
@@ -294,7 +297,7 @@ bool follower::place(bool near_player)
         m.reset();
         break;
     }
-    
+
     return (false);
 }
 

@@ -22,6 +22,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <algorithm>
 
 #include "externs.h"
 
@@ -62,11 +63,11 @@ void seen_notable_thing( dungeon_feature_type which_thing, int x, int y )
 {
     // Tell the world first.
     dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, coord_def(x, y));
-    
+
     // Don't record in temporary terrain
     if (you.level_type != LEVEL_DUNGEON)
         return;
-    
+
     const coord_def pos(x, y);
     const god_type god = grid_altar_god(which_thing);
     if (god != GOD_NO_GOD)
@@ -205,7 +206,7 @@ std::string overview_description_string()
                 disp += EOL;
                 seen_anything = true;
             }
-            
+
             ++branchcount;
 
             snprintf(buffer, sizeof buffer, "<yellow>%-6s</yellow>: %-7s",
@@ -224,7 +225,7 @@ std::string overview_description_string()
     // remove unworthy altars from the list we show the user. Yeah,
     // one more round of map iteration.
     const altar_map_type notable_altars = get_notable_altars(altars_present);
-    
+
     // print altars
     // we loop through everything a dozen times, oh well
     if ( !notable_altars.empty() )
@@ -237,7 +238,7 @@ std::string overview_description_string()
     }
 
     level_id last_id;
-    std::map<level_pos, god_type>::const_iterator ci_altar;    
+    std::map<level_pos, god_type>::const_iterator ci_altar;
     for ( int cur_god = GOD_NO_GOD; cur_god < NUM_GODS; ++cur_god )
     {
         last_id.depth = 10000;  // fake depth to be sure we don't match
@@ -517,7 +518,7 @@ void seen_altar( god_type god, const coord_def& pos )
     // can't record in abyss or pan.
     if ( you.level_type != LEVEL_DUNGEON )
         return;
-    
+
     level_pos where(level_id::current(), pos);
     altars_present[where] = god;
 }

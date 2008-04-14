@@ -27,6 +27,7 @@
 #include <cstring>
 #include <cctype>
 #include <sstream>
+#include <algorithm>
 
 #include "externs.h"
 
@@ -720,7 +721,7 @@ mon_attack_def downscale_zombie_attack(const monsters *mons,
     {
         attk.flavour =  AF_PLAIN;
     }
-    
+
     attk.damage = downscale_zombie_damage(attk.damage);
 
     return (attk);
@@ -730,7 +731,7 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
 {
     int mc = mons->type;
     const bool zombified = mons_is_zombified(mons);
-    
+
     if ((attk_number < 0 || attk_number > 3) || mc == MONS_HYDRA)
         attk_number = 0;
 
@@ -758,7 +759,7 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
         case 5: attk.flavour = AF_BLINK; break;
         }
     }
-    
+
     return (zombified? downscale_zombie_attack(mons, attk) : attk);
 }
 
@@ -792,7 +793,7 @@ int mons_resist_magic( const monsters *mon )
     // ego armour resistance
     const int armour = mon->inv[MSLOT_ARMOUR];
 
-    if (armour != NON_ITEM 
+    if (armour != NON_ITEM
         && get_armour_ego_type( mitm[armour] ) == SPARM_MAGIC_RESISTANCE )
     {
         u += 30;
@@ -839,7 +840,7 @@ bool check_mons_resist_magic( const monsters *monster, int pow )
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "Power: %d, monster's MR: %d, target: %d, roll: %d", 
+         "Power: %d, monster's MR: %d, target: %d, roll: %d",
          pow, mrs, mrchance, mrch2 );
 #endif
 
@@ -936,7 +937,7 @@ int mons_res_fire( const monsters *mon )
     int mc = mon->type;
 
     const mon_resist_def res = get_mons_resists(mon);
-    
+
     int u = std::min(res.fire + res.hellfire * 3, 3);
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -1021,7 +1022,7 @@ int mons_res_negative_energy( const monsters *mon )
     }
 
     int u = 0;
-    
+
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -1235,15 +1236,15 @@ int exper_value( const struct monsters *monster )
     }
 
     // Monsters who can use equipment (even if only the equipment
-    // they are given) can be considerably enhanced because of 
+    // they are given) can be considerably enhanced because of
     // the way weapons work for monsters. -- bwr
-    if (item_usage == MONUSE_STARTING_EQUIPMENT 
+    if (item_usage == MONUSE_STARTING_EQUIPMENT
         || item_usage == MONUSE_WEAPONS_ARMOUR)
     {
         diff += 30;
     }
 
-    // Set a reasonable range on the difficulty modifier... 
+    // Set a reasonable range on the difficulty modifier...
     // Currently 70% - 200% -- bwr
     if (diff > 100)
         diff = 100;
@@ -1388,7 +1389,7 @@ void define_monster(monsters &mons)
         break;
 
     case MONS_DEEP_ELF_CONJURER:
-        spells = 
+        spells =
             (coinflip()? MST_DEEP_ELF_CONJURER_I : MST_DEEP_ELF_CONJURER_II);
         break;
 
@@ -1397,14 +1398,14 @@ void define_monster(monsters &mons)
     case MONS_KILLER_KLOWN:
         if (col != BLACK) // maybe overwritten by the mon_glyph option
             break;
-            
+
         col = random_colour();
         break;
 
     case MONS_GILA_MONSTER:
         if (col != BLACK) // maybe overwritten by the mon_glyph option
             break;
-            
+
         temp_rand = random2(7);
 
         col = (temp_rand >= 5 ? LIGHTRED :                   // 2/7
@@ -1445,16 +1446,16 @@ void define_monster(monsters &mons)
             spells = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
         else if (temp_rand < 9)
             spells = (coinflip() ? MST_NECROMANCER_I : MST_NECROMANCER_II);
-        else 
-            spells = (coinflip() ? MST_DEEP_ELF_CONJURER_I 
+        else
+            spells = (coinflip() ? MST_DEEP_ELF_CONJURER_I
                                  : MST_DEEP_ELF_CONJURER_II);
-        
+
         monnumber = MONS_BLACK_DRACONIAN + random2(8);
         break;
     }
     case MONS_HUMAN:
     case MONS_ELF:
-        // these are supposed to only be created by polymorph 
+        // these are supposed to only be created by polymorph
         hd += random2(10);
         ac += random2(5);
         ev += random2(5);
@@ -1485,11 +1486,11 @@ void define_monster(monsters &mons)
 
     if (mons.number == MONS_PROGRAM_BUG)
         mons.number = monnumber;
-    
+
     mons.flags = 0L;
     mons.experience = 0L;
     mons.colour = col;
-    
+
     mons_load_spells( &mons, spells );
 
     // reset monster enchantments
@@ -1506,7 +1507,7 @@ std::string draconian_colour_name(monster_type mtype)
 {
     COMPILE_CHECK(ARRAYSIZE(drac_colour_names) ==
                   MONS_PALE_DRACONIAN - MONS_DRACONIAN, c1);
-                  
+
     if (mtype < MONS_BLACK_DRACONIAN || mtype > MONS_PALE_DRACONIAN)
         return "buggy";
     return (drac_colour_names[mtype - MONS_BLACK_DRACONIAN]);
@@ -1516,11 +1517,11 @@ monster_type draconian_colour_by_name(const std::string &name)
 {
     COMPILE_CHECK(ARRAYSIZE(drac_colour_names)
                   == (MONS_PALE_DRACONIAN - MONS_DRACONIAN), c1);
-                  
+
     for (unsigned i = 0; i < ARRAYSIZE(drac_colour_names); ++i)
         if (name == drac_colour_names[i])
             return static_cast<monster_type>(i + MONS_BLACK_DRACONIAN);
-            
+
     return (MONS_PROGRAM_BUG);
 }
 
@@ -1529,10 +1530,10 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 {
     if (desc == DESC_NONE)
         return ("");
-    
+
     // Handle non-visible case first
     if ( !force_seen && !player_monster_visible(&mon) )
-    {       
+    {
         switch (desc)
         {
         case DESC_CAP_THE: case DESC_CAP_A:
@@ -1592,7 +1593,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     // Tack on other prefixes.
     switch (mon.type)
     {
-    case MONS_SPECTRAL_THING: 
+    case MONS_SPECTRAL_THING:
         result += "spectral ";
         nametype = mon.number;
         break;
@@ -1616,7 +1617,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
                           static_cast<monster_type>( mon.number ) ) + " ";
         }
         break;
-        
+
     default:
         break;
     }
@@ -1950,7 +1951,7 @@ bool ms_direct_nasty(spell_type monspell)
             && !spell_typematch(monspell, SPTYP_SUMMONING));
 }
 
-// Spells a monster may want to cast if fleeing from the player, and 
+// Spells a monster may want to cast if fleeing from the player, and
 // the player is not in sight.
 bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
 {
@@ -1980,7 +1981,7 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
     bool ret = false;
     bool targ_adj = false;
 
-    if (mon->foe == MHITYOU || mon->foe == MHITNOT) 
+    if (mon->foe == MHITYOU || mon->foe == MHITNOT)
     {
         if (adjacent(you.x_pos, you.y_pos, mon->x, mon->y))
             targ_adj = true;
@@ -2129,7 +2130,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     case SPELL_SLEEP:
         if (monspell == SPELL_SLEEP && (!foe || foe->asleep()))
             return (true);
-        
+
         // occasionally we don't estimate... just fire and see:
         if (one_chance_in(5))
             return (false);
@@ -2152,9 +2153,9 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
             // now randomize (normal intels less accurate than high):
             if (intel == I_NORMAL)
-                est_magic_resist += random2(80) - 40;  
+                est_magic_resist += random2(80) - 40;
             else
-                est_magic_resist += random2(30) - 15;  
+                est_magic_resist += random2(30) - 15;
         }
 
         power = 12 * mon->hit_dice * (monspell == SPELL_PAIN ? 2 : 1);
@@ -2163,8 +2164,8 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         // Determine the amount of chance allowed by the benefit from
         // the spell.  The estimated difficulty is the probability
         // of rolling over 100 + diff on 2d100. -- bwr
-        diff = (monspell == SPELL_PAIN 
-                || monspell == SPELL_SLOW 
+        diff = (monspell == SPELL_PAIN
+                || monspell == SPELL_SLOW
                 || monspell == SPELL_CONFUSE) ? 0 : 50;
 
         if (est_magic_resist - power > diff)
@@ -2175,12 +2176,12 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     case SPELL_NO_SPELL:
         ret = true;
         break;
-        
+
     default:
         break;
     }
 
-    return (ret);    
+    return (ret);
 }
 
 static bool _ms_ranged_spell( spell_type monspell )
@@ -2243,7 +2244,7 @@ bool mons_has_ranged_attack( const monsters *mon )
 
     if (!missile)
         return (false);
-    
+
     return is_launched(mnc, weapon, *missile);
 }
 
@@ -2467,7 +2468,7 @@ void monsters::init_with(const monsters &mon)
     colour            = mon.colour;
     foe_memory        = mon.foe_memory;
     god               = mon.god;
-    
+
     if (mon.ghost.get())
         ghost.reset(new ghost_demon( *mon.ghost ));
     else
@@ -2688,7 +2689,7 @@ int monsters::damage_type(int which_attack)
         const mon_attack_def atk = mons_attack_spec(this, which_attack);
         return (atk.type == AT_CLAW? DVORP_CLAWING : DVORP_CRUSHING);
     }
- 
+
     return (get_vorpal_type(*mweap));
 }
 
@@ -2698,7 +2699,7 @@ int monsters::damage_brand(int which_attack)
 
     if (!mweap)
         return (SPWPN_NORMAL);
-    
+
     return (!is_range_weapon(*mweap)? get_weapon_brand(*mweap) : SPWPN_NORMAL);
 }
 
@@ -2719,7 +2720,7 @@ item_def *monsters::launcher()
     item_def *weap = mslot_item(MSLOT_WEAPON);
     if (weap && is_range_weapon(*weap))
         return (weap);
-        
+
     weap = mslot_item(MSLOT_ALT_WEAPON);
     return (weap && is_range_weapon(*weap)? weap : NULL);
 }
@@ -2728,7 +2729,7 @@ item_def *monsters::weapon(int which_attack)
 {
     if (which_attack > 1)
         which_attack &= 1;
-    
+
     // This randomly picks one of the wielded weapons for monsters that can use
     // two weapons. Not ideal, but better than nothing. fight.cc does it right,
     // for various values of right.
@@ -2781,7 +2782,7 @@ bool monsters::can_use_missile(const item_def &item) const
     // Blademasters don't want to throw stuff.
     if (type == MONS_DEEP_ELF_BLADEMASTER)
         return (false);
-    
+
     if (item.base_type == OBJ_WEAPONS)
         return (is_throwable(item));
 
@@ -2855,7 +2856,7 @@ void monsters::equip_weapon(item_def &item, int near)
         }
         if (message_given)
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
-    }    
+    }
 }
 
 void monsters::equip_armour(item_def &item, int near)
@@ -2937,7 +2938,7 @@ void monsters::unequip_weapon(item_def &item, int near)
         }
         if (message_given)
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
-    }    
+    }
 }
 
 void monsters::unequip_armour(item_def &item, int near)
@@ -2953,10 +2954,10 @@ void monsters::unequip_armour(item_def &item, int near)
 
         const int armour_plus = item.plus;
         ASSERT(abs(armour_plus) < 20);
-        if (abs(armour_plus) < 20) 
+        if (abs(armour_plus) < 20)
             ac -= armour_plus;
     }
-    
+
     ev -= property( item, PARM_EVASION ) / 2;
     if (ev < 1)
         ev = 1;   // This *shouldn't* happen.
@@ -3034,7 +3035,7 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
         dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
                   monster_index(this)),
         pos());
-    
+
     const int index = item.index();
     unlink_item(index);
     inv[slot] = index;
@@ -3093,7 +3094,7 @@ bool monsters::pickup_launcher(item_def &launch, int near)
         {
             if (!is_range_weapon(*elaunch))
                 continue;
-            
+
             return (fires_ammo_type(*elaunch) == mt
                     && mons_weapon_damage_rating(*elaunch) < mdam_rating
                     && drop_item(i, near) && pickup(launch, i, near));
@@ -3125,7 +3126,7 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
         {
             if (is_range_weapon(*weap))
                 continue;
-                
+
             has_melee = true;
             if (mons_weapon_damage_rating(*weap) < mdam_rating)
                 return (drop_item(i, near) && pickup(item, i, near));
@@ -3145,12 +3146,12 @@ static int _q_adj_damage(int damage, int qty)
 {
     return (damage * std::min(qty, 8));
 }
-    
+
 bool monsters::pickup_throwable_weapon(item_def &item, int near)
 {
     if (mslot_item(MSLOT_MISSILE) && pickup(item, MSLOT_MISSILE, near, true))
         return (true);
-    
+
     item_def *launch = NULL;
     const int exist_missile = mons_pick_best_missile(this, &launch, true);
     if (exist_missile == NON_ITEM
@@ -3222,7 +3223,7 @@ static mon_inv_type _equip_slot_to_mslot(equipment_type eq)
 bool monsters::pickup_armour(item_def &item, int near, bool force)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
-    
+
     if (!force && !wants_armour(item))
         return (false);
 
@@ -3253,7 +3254,7 @@ bool monsters::pickup_weapon(item_def &item, int near, bool force)
 {
     if (!force && !wants_weapon(item))
         return (false);
-    
+
     // Weapon pickup involves:
     // - If we have no weapons, always pick this up.
     // - If this is a melee weapon and we already have a melee weapon, pick
@@ -3266,7 +3267,7 @@ bool monsters::pickup_weapon(item_def &item, int near, bool force)
 
     if (is_range_weapon(item))
         return (pickup_launcher(item, near));
-    
+
     if (pickup_melee_weapon(item, near))
         return (true);
 
@@ -3278,16 +3279,16 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
     // XXX: Missile pickup could get a lot smarter if we allow monsters to
     // drop their existing missiles and pick up new stuff, but that's too
     // much work for now.
-    
+
     const item_def *miss = missiles();
-    
+
     // monster may not pick up trapping net
     if (mons_is_caught(this) && item.sub_type == MI_THROWING_NET
         && item_is_stationary(item))
     {
         return (false);
     }
-    
+
     if (miss && items_stack(*miss, item))
         return (pickup(item, MSLOT_MISSILE, near));
 
@@ -3345,7 +3346,7 @@ bool monsters::pickup_misc(item_def &item, int near)
     // Never pick up runes.
     if (item.sub_type == MISC_RUNE_OF_ZOT)
         return (false);
-    
+
     return pickup(item, MSLOT_MISCELLANY, near);
 }
 
@@ -3354,7 +3355,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     // Never pick up stuff when we're in battle.
     if (!force && (behaviour != BEH_WANDER || attitude == ATT_NEUTRAL))
         return (false);
-    
+
     // Jellies are not handled here.
     switch (item.base_type)
     {
@@ -3390,7 +3391,7 @@ void monsters::swap_weapons(int near)
 {
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
-    
+
     if (weap && !unequip(*weap, MSLOT_WEAPON, near))
     {
         // Item was cursed
@@ -3463,10 +3464,10 @@ std::string monsters::conj_verb(const std::string &verb) const
 {
     if (!verb.empty() && verb[0] == '!')
         return (verb.substr(1));
-    
+
     if (verb == "are")
         return ("is");
-    
+
     return (pluralise(verb));
 }
 
@@ -3594,7 +3595,7 @@ int monsters::shield_bonus() const
         // Note that 0 is not quite no-blocking.
         if (incapacitated())
             return (0);
-        
+
         int shld_c = property(*shld, PARM_AC);
         return (random2avg(shld_c + hit_dice * 2 / 3, 2));
     }
@@ -3711,7 +3712,7 @@ int monsters::skill(skill_type sk, bool) const
     {
     case SK_NECROMANCY:
         return (holiness() == MH_UNDEAD? hit_dice / 2 : hit_dice / 3);
-        
+
     default:
         return (0);
     }
@@ -3744,10 +3745,10 @@ int monsters::hurt(const actor *agent, int amount)
 
     amount = std::min(amount, hit_points);
     hit_points -= amount;
-    
+
     // Allow the victim to exhibit passive damage behaviour (royal jelly).
     react_to_damage(amount);
-    
+
     if (agent && (hit_points < 1 || hit_dice < 1) && type != -1)
     {
         if (agent->atype() == ACT_PLAYER)
@@ -3812,7 +3813,7 @@ void monsters::set_ghost(const ghost_demon &g)
 {
 #ifdef USE_TILE
     TileGhostInit(g);
-#endif    
+#endif
     ghost.reset( new ghost_demon(g) );
 }
 
@@ -3911,7 +3912,7 @@ bool monsters::find_place_near_player()
     for (int radius = 1; radius < 7; ++radius)
         if (find_home_around(you.pos(), radius))
             return (true);
-            
+
     return (false);
 }
 
@@ -3956,7 +3957,7 @@ void monsters::destroy_inventory()
 void monsters::reset()
 {
     destroy_inventory();
-    
+
     enchantments.clear();
     ench_countdown = 0;
     inv.init(NON_ITEM);
@@ -4003,13 +4004,13 @@ void monsters::load_spells(mon_spellbook_type book)
         return;
 
 #if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d", 
+    mprf( MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d",
           name(DESC_PLAIN).c_str(), static_cast<int>(book) );
 #endif
 
     if (book == MST_GHOST)
         spells = ghost->spells;
-    else 
+    else
     {
         for (unsigned int i = 0; i < ARRAYSIZE(mspell_list); ++i)
         {
@@ -4061,7 +4062,7 @@ mon_enchant monsters::get_ench(enchant_type ench1,
     {
         mon_enchant_list::const_iterator i =
             enchantments.find(static_cast<enchant_type>(e));
-            
+
         if (i != enchantments.end())
             return (i->second);
     }
@@ -4586,7 +4587,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // the more corroded it gets, the more easily it will break
         const int hold = mitm[net].plus; // this will usually be negative
         const int mon_size = body_size(PSIZE_BODY);
-            
+
         // smaller monsters can escape more quickly
         if (mon_size < random2(SIZE_BIG)  // BIG = 5
             && !has_ench(ENCH_BERSERK) && type != MONS_DANCING_WEAPON)
@@ -4601,14 +4602,14 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 break;
 
             decay_enchantment(me, 2*(NUM_SIZE_LEVELS - mon_size) - hold);
-            
+
             // frayed nets are easier to escape
             if (mon_size <= -(hold-1)/2)
                 decay_enchantment(me, (NUM_SIZE_LEVELS - mon_size));
         }
         else // large (and above) monsters always thrash the net and destroy it
         {    // e.g. ogre, large zombie (large); centaur, nage, hydra (big)
-        
+
             if (mons_near(this) && !player_monster_visible(this))
                 mpr("Something wriggles in the net.");
             else
@@ -4621,7 +4622,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             // nets get destroyed more quickly for larger monsters
             // and if already strongly frayed
             int damage = 0;
-            
+
             // tiny: 1/6, little: 2/5, small: 3/4, medium and above: always
             if (random2(SIZE_GIANT - mon_size) <= mon_size)
                 damage++;
@@ -4634,8 +4635,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 if (can_cut_meat(mitm[inv[MSLOT_WEAPON]]))
                     damage++;
             }
-            
-            
+
+
             // extra damage for large (50%) and big (always)
             if (mon_size == SIZE_BIG || mon_size == SIZE_LARGE && coinflip())
                 damage++;
@@ -4753,7 +4754,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
 #if DEBUG_DIAGNOSTICS
             // for debugging, we don't have this silent.
-            simple_monster_message( this, " takes poison damage.", 
+            simple_monster_message( this, " takes poison damage.",
                                     MSGCH_DIAGNOSTICS );
             mprf(MSGCH_DIAGNOSTICS, "poison damage: %d", dam );
 #endif
@@ -4860,7 +4861,7 @@ void monsters::apply_enchantments()
 {
     if (enchantments.empty())
         return;
-    
+
     const mon_enchant_list ec = enchantments;
     for (mon_enchant_list::const_iterator i = ec.begin(); i != ec.end(); ++i)
     {
@@ -4874,7 +4875,7 @@ void monsters::scale_hp(int num, int den)
 {
     hit_points     = hit_points * num / den;
     max_hit_points = max_hit_points * num / den;
-    
+
     if (hit_points < 1)
         hit_points = 1;
     if (max_hit_points < 1)
@@ -4957,9 +4958,9 @@ void monsters::check_speed()
              speed, speed_increment, hit_dice,
              describe_enchantments().c_str());
 #endif
-        
+
         fix_speed();
-        
+
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Fixed speed for %s to %d",
              name(DESC_PLAIN).c_str(), speed);
@@ -5268,12 +5269,12 @@ void monsters::react_to_damage(int damage)
             coord_def jpos = find_newmons_square_contiguous(jelly, pos());
             if (!in_bounds(jpos))
                 continue;
-            
+
             const int nmons =
                 mons_place( jelly, sbehaviour, foe, true, jpos.x, jpos.y,
                             you.level_type, PROX_ANYWHERE, MONS_PROGRAM_BUG,
                             0, false );
-            
+
             if (nmons != -1 && nmons != NON_MONSTER)
             {
                 // Don't allow milking the royal jelly.
@@ -5284,7 +5285,7 @@ void monsters::react_to_damage(int damage)
 
         const bool needs_message =
             spawned && mons_near(this) && player_monster_visible(this);
-        
+
         if (needs_message)
         {
             const std::string mname = name(DESC_CAP_THE);
@@ -5305,7 +5306,7 @@ void monsters::react_to_damage(int damage)
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant
 
-static const char *enchant_names[] = 
+static const char *enchant_names[] =
 {
     "none", "slow", "haste", "fear", "conf", "inv", "pois", "bers",
     "rot", "summon", "abj", "backlit", "charm", "fire",
@@ -5317,7 +5318,7 @@ static const char *enchant_names[] =
 const char *mons_enchantment_name(enchant_type ench)
 {
     COMPILE_CHECK(ARRAYSIZE(enchant_names) == NUM_ENCHANTMENTS+1, c1);
-    
+
     if (ench > NUM_ENCHANTMENTS)
         ench = NUM_ENCHANTMENTS;
 
@@ -5355,7 +5356,7 @@ void mon_enchant::cap_degree()
     // Sickness is not capped.
     if (ench == ENCH_SICK)
         return;
-    
+
     // Hard cap to simulate old enum behaviour, we should really throw this
     // out entirely.
     const int max = ench == ENCH_ABJ? 6 : 4;
@@ -5403,7 +5404,7 @@ int mon_enchant::calc_duration(const monsters *mons,
                                const mon_enchant *added) const
 {
     int cturn = 0;
-    
+
     const int newdegree = added? added->degree : degree;
     const int deg = newdegree? newdegree : 1;
 
@@ -5470,7 +5471,7 @@ int mon_enchant::calc_duration(const monsters *mons,
     default:
         break;
     }
-    
+
     if (cturn < 2)
         cturn = 2;
 
@@ -5510,7 +5511,7 @@ static std::string _replace_god_name(bool need_verb = false, bool capital = fals
         result +=
           (you.religion == GOD_NO_GOD? " are" : " is");
     }
-          
+
     return (result);
 }
 
@@ -5521,7 +5522,7 @@ static std::string _get_species_insult(const std::string type)
     lookup += species_name(you.species, 1, true);
     lookup += " ";
     lookup += type;
-                
+
     std::string insult = getSpeakString(lowercase(lookup));
     if (insult.empty()) // species too specific?
     {
@@ -5648,7 +5649,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     // replace with "you are" for atheists
     msg = replace_all(msg, "@god_is@", _replace_god_name(true, false));
     msg = replace_all(msg, "@God_is@", _replace_god_name(true, true));
-    
+
     // no verb needed
     msg = replace_all(msg, "@player_god@", _replace_god_name(false, false));
     msg = replace_all(msg, "@Player_god@", _replace_god_name(false, true));
@@ -5664,20 +5665,20 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                                _get_species_insult("noun"));
     }
 
-    static const char * sound_list[] = 
+    static const char * sound_list[] =
     {
         "says",         // actually S_SILENT
-        "shouts", 
-        "barks", 
-        "shouts", 
-        "roars", 
-        "screams", 
-        "bellows", 
-        "screeches", 
-        "buzzes", 
-        "moans", 
-        "whines", 
-        "croaks", 
+        "shouts",
+        "barks",
+        "shouts",
+        "roars",
+        "screams",
+        "bellows",
+        "screeches",
+        "buzzes",
+        "moans",
+        "whines",
+        "croaks",
         "growls",
         "hisses",
         "breathes", // S_VERY_SOFT
@@ -6014,18 +6015,18 @@ mon_resist_def::mon_resist_def(int flags, short level)
         case MR_RES_COLD:     cold     = nl; break;
         case MR_RES_ASPHYX:   asphyx   = nl; break;
         case MR_RES_ACID:     acid     = nl; break;
-        
+
         // vulnerabilities
         case MR_VUL_ELEC:     elec     = -nl; break;
         case MR_VUL_POISON:   poison   = -nl; break;
         case MR_VUL_FIRE:     fire     = -nl; break;
         case MR_VUL_COLD:     cold     = -nl; break;
-        
+
         // resistance to certain damage types
         case MR_RES_PIERCE:   pierce   = nl; break;
         case MR_RES_SLICE:    slice    = nl; break;
         case MR_RES_BLUDGEON: bludgeon = nl; break;
-        
+
         // vulnerability to certain damage types
         case MR_VUL_PIERCE:   pierce   = -nl; break;
         case MR_VUL_SLICE:    slice    = -nl; break;

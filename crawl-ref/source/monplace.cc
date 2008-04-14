@@ -11,6 +11,9 @@
  */
 
 #include "AppHdr.h"
+
+#include <algorithm>
+
 #include "monplace.h"
 
 #include "branch.h"
@@ -47,7 +50,7 @@ static int place_monster_aux(int mon_type, beh_type behaviour, int target,
     int px, int py, int power, int extra, bool first_band_member,
     int dur = 0);
 
-// Returns whether actual_grid is compatible with grid_wanted for monster 
+// Returns whether actual_grid is compatible with grid_wanted for monster
 // movement (or for monster generation, if generation is true).
 bool grid_compatible(dungeon_feature_type grid_wanted,
                      dungeon_feature_type actual_grid, bool generation)
@@ -55,8 +58,8 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
     // XXX What in Xom's name is DNGN_WATER_STUCK? It looks like an artificial
     // device to slow down fiery monsters flying over water.
     if (grid_wanted == DNGN_FLOOR)
-        return actual_grid >= DNGN_FLOOR 
-            || (!generation 
+        return actual_grid >= DNGN_FLOOR
+            || (!generation
                     && actual_grid == DNGN_SHALLOW_WATER);
 
     if (grid_wanted >= DNGN_ROCK_WALL
@@ -230,7 +233,7 @@ monster_type pick_random_monster(const level_id &place,
 {
     if (place.level_type == LEVEL_LABYRINTH)
         return (MONS_PROGRAM_BUG);
-    
+
     monster_type mon_type = MONS_PROGRAM_BUG;
 
     lev_mons = power;
@@ -365,7 +368,7 @@ static int resolve_monster_type(int mon_type, proximity_type proximity,
         mon_type = random_range(MONS_BLACK_DRACONIAN, MONS_PALE_DRACONIAN);
     else if (mon_type == RANDOM_NONBASE_DRACONIAN)
         mon_type = random_range(MONS_DRACONIAN_CALLER, MONS_DRACONIAN_SCORCHER);
-            
+
     // (2) take care of random monsters
     if (mon_type == RANDOM_MONSTER)
     {
@@ -453,7 +456,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     int band_monsters[BIG_BAND];        // band monster types
     int lev_mons = power;               // final 'power'
     int i;
-    
+
     int tries = 0;
     int pval = 0;
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
@@ -507,7 +510,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     if (!summoned)
     {
         tries = 0;
-        
+
         // try to pick px, py that is
         // a) not occupied
         // b) compatible
@@ -527,16 +530,16 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                 return (false);
 
             tries ++;
-            
+
             // placement already decided for PROX_NEAR_STAIRS
             if (proximity != PROX_NEAR_STAIRS)
             {
                 px = 5 + random2(GXM - 10);
                 py = 5 + random2(GYM - 10);
             }
-            
+
             // Let's recheck these even for PROX_NEAR_STAIRS, just in case
-            
+
             // occupied?
             if (mgrd[px][py] != NON_MONSTER
                 || (px == you.x_pos && py == you.y_pos))
@@ -620,7 +623,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         } // end while.. place first monster
     }
 
-    id = place_monster_aux( mon_type, behaviour, target, px, py, lev_mons, 
+    id = place_monster_aux( mon_type, behaviour, target, px, py, lev_mons,
                             extra, true);
 
     // now, forget about banding if the first placement failed, or there's too
@@ -796,7 +799,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     if (monster_can_submerge(&menv[id], grd[fx][fy])
             && !one_chance_in(5))
         menv[id].add_ench(ENCH_SUBMERGED);
-    
+
     menv[id].flags |= MF_JUST_SUMMONED;
 
     if (mon_type == MONS_DANCING_WEAPON && extra != 1) // ie not from spell
@@ -862,7 +865,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     }
 
     mark_interesting_monst(&menv[id], behaviour);
-    
+
     if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
         seen_monster(&menv[id]);
 
@@ -1116,7 +1119,7 @@ static band_type choose_band( int mon_type, int power, int &band_size )
         band_size = 3 + random2(3);
         break;
 
-    // Journey -- Added Draconian Packs  
+    // Journey -- Added Draconian Packs
     case MONS_WHITE_DRACONIAN:
     case MONS_RED_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
@@ -1125,7 +1128,7 @@ static band_type choose_band( int mon_type, int power, int &band_size )
     case MONS_BLACK_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
     case MONS_PALE_DRACONIAN:
-        if (power > 18 && one_chance_in(3) && you.level_type == LEVEL_DUNGEON) 
+        if (power > 18 && one_chance_in(3) && you.level_type == LEVEL_DUNGEON)
         {
             band = BAND_DRACONIAN;
             band_size = random_range(2, 4);
@@ -1404,7 +1407,7 @@ static int band_member(band_type band, int power)
     case BAND_DRACONIAN:
     {
         temp_rand = random2( (power < 24) ? 24 : 37 );
-        mon_type =                  
+        mon_type =
                 ((temp_rand > 35) ? MONS_DRACONIAN_CALLER :     // 1 in 34
                  (temp_rand > 33) ? MONS_DRACONIAN_KNIGHT :     // 2 in 34
                  (temp_rand > 31) ? MONS_DRACONIAN_MONK :       // 2 in 34
@@ -1436,7 +1439,7 @@ static int ood_limit() {
 void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
 {
     bool interesting = false;
-    
+
     // Unique monsters are always intersting
     if ( mons_is_unique(monster->type) )
         interesting = true;
@@ -1445,7 +1448,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
         interesting = false;
     // Don't waste time on moname() if user isn't using this option
     else if ( Options.note_monsters.size() > 0 )
-    {        
+    {
         const std::string iname = mons_type_name(monster->type, DESC_NOCAP_A);
         for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
         {
@@ -1611,12 +1614,12 @@ public:
         set_floodseed(start);
         return travel_pathfind::pathfind(RMODE_EXPLORE);
     }
-    
+
     bool path_flood(const coord_def &c, const coord_def &dc)
     {
         if (best_distance && traveled_distance > best_distance)
             return (true);
-        
+
         if (!in_bounds(dc)
             || (maxdistance > 0 && traveled_distance > maxdistance))
         {
@@ -1903,7 +1906,7 @@ monster_type rand_dragon( dragon_class_type type )
     case DRAGON_LIZARD:
         temp_rand = random2(100);
         summoned = ((temp_rand > 80) ? MONS_SWAMP_DRAKE :
-                    (temp_rand > 59) ? MONS_KOMODO_DRAGON : 
+                    (temp_rand > 59) ? MONS_KOMODO_DRAGON :
                     (temp_rand > 34) ? MONS_FIREDRAKE :
                     (temp_rand > 11) ? MONS_DEATH_DRAKE :
                                        MONS_DRAGON);

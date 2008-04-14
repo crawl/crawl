@@ -26,6 +26,7 @@
 #include <cstdarg>
 #include <iostream>
 #include <set>
+#include <algorithm>
 
 #ifdef DOS
 #include <dos.h>

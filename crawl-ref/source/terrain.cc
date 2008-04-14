@@ -11,9 +11,10 @@
  */
 
 #include "AppHdr.h"
-
 #include "externs.h"
 #include "terrain.h"
+
+#include <algorithm>
 
 #include "dgnevent.h"
 #include "direct.h"

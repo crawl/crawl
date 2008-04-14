@@ -1,5 +1,8 @@
 %{
 
+#include <map>
+#include <algorithm>
+
 #include "AppHdr.h"
 #include "clua.h"
 #include "libutil.h"
@@ -7,7 +10,6 @@
 #include "mapdef.h"
 #include "maps.h"
 #include "stuff.h"
-#include <map>
 
 #define YYERROR_VERBOSE 1
 
@@ -80,9 +82,9 @@ error_seq       : CHARACTER
                     yyerror("Unexpected character sequence.");
                 }
                 ;
-                
+
 def             : defdepth  {}
-                | global_lua  {} 
+                | global_lua  {}
                 ;
 
 defdepth        : DEFAULT_DEPTH STRING
@@ -98,7 +100,7 @@ defdepth        : DEFAULT_DEPTH STRING
 level           : name map_specs
                 {
                     lc_map.set_file(lc_desfile);
-                    
+
                     if (lc_run_global_prelude && !lc_global_prelude.empty())
                     {
                         lc_global_prelude.set_file(lc_desfile);
@@ -130,7 +132,7 @@ name            : NAME STRING
                     lc_map.init();
                     lc_map.name = $2;
 
-                    map_load_info_t::const_iterator i = 
+                    map_load_info_t::const_iterator i =
                         lc_loaded_maps.find($2);
 
                     if (i != lc_loaded_maps.end())
@@ -219,8 +221,8 @@ veto_lua_lines  : /* empty */ { }
 veto_lua_line   : LUA_LINE
                 {
                     lc_map.veto.add(yylineno, $1);
-                }                
-                
+                }
+
 prelude_lua     : PRELUDE prelude_lua_lines { }
 
 prelude_lua_lines : /* empty */ { }
@@ -236,8 +238,8 @@ kfeat           : KFEAT { }
                 | KFEAT STRING
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("kfeat(\"%s\")", 
+                        yylineno,
+                        make_stringf("kfeat(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 
@@ -245,8 +247,8 @@ kmons           : KMONS { }
                 | KMONS STRING
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("kmons(\"%s\")", 
+                        yylineno,
+                        make_stringf("kmons(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 
@@ -254,8 +256,8 @@ kitem           : KITEM { }
                 | KITEM STRING
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("kitem(\"%s\")", 
+                        yylineno,
+                        make_stringf("kitem(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 
@@ -263,12 +265,12 @@ kmask           : KMASK { }
                 | KMASK STRING
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("kmask(\"%s\")", 
+                        yylineno,
+                        make_stringf("kmask(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 
-shuffle         : SHUFFLE shuffle_specifiers {} 
+shuffle         : SHUFFLE shuffle_specifiers {}
                 ;
 
 shuffle_specifiers : shuffle_spec
@@ -278,8 +280,8 @@ shuffle_specifiers : shuffle_spec
 shuffle_spec    : ITEM_INFO
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("shuffle(\"%s\")", 
+                        yylineno,
+                        make_stringf("shuffle(\"%s\")",
                             quote_lua_string($1).c_str()));
                 }
 
@@ -293,8 +295,8 @@ tagstrings      : /* empty */
 tagstring       : STRING
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("tags(\"%s\")", 
+                        yylineno,
+                        make_stringf("tags(\"%s\")",
                             quote_lua_string($1).c_str()));
                 }
                 ;
@@ -317,7 +319,7 @@ bflags          : BFLAGS STRING
                 }
                 ;
 
-marker          : MARKER 
+marker          : MARKER
                 {
                     lc_map.main.add(yylineno, "marker(");
                     start_marker_segment = true;
@@ -337,7 +339,7 @@ mspec_segments  : /* nothing */
 mspec_segment   : STRING
                 {
                     lc_map.main.add(
-                        yylineno, 
+                        yylineno,
                         make_stringf(
                             "%s\"%s\"",
                             start_marker_segment? "" : " .. ",
@@ -379,7 +381,7 @@ colour_specifier  : ITEM_INFO
                               quote_lua_string($1).c_str()));
                   }
                   ;
-                
+
 nsubst          : NSUBST nsubst_specifiers { }
                 ;
 
@@ -390,12 +392,12 @@ nsubst_specifiers : nsubst_spec  { }
 nsubst_spec     : ITEM_INFO
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("nsubst(\"%s\")", 
+                        yylineno,
+                        make_stringf("nsubst(\"%s\")",
                             quote_lua_string($1).c_str()));
                 }
                 ;
-                
+
 subst           : SUBST subst_specifiers { }
                 ;
 
@@ -406,8 +408,8 @@ subst_specifiers : subst_spec
 subst_spec      : ITEM_INFO
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("subst(\"%s\")", 
+                        yylineno,
+                        make_stringf("subst(\"%s\")",
                             quote_lua_string($1).c_str()));
                 }
                 ;
@@ -423,11 +425,11 @@ item_specifiers : item_specifiers COMMA item_specifier
 item_specifier  : ITEM_INFO
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("item(\"%s\")", 
+                        yylineno,
+                        make_stringf("item(\"%s\")",
                             quote_lua_string($1).c_str()));
                 }
-                
+
 mons            : MONS {}
                 | MONS mnames {}
                 ;
@@ -439,8 +441,8 @@ mnames          : mname COMMA mnames
 mname           : MONSTER_NAME
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("mons(\"%s\")", 
+                        yylineno,
+                        make_stringf("mons(\"%s\")",
                             quote_lua_string($1).c_str()));
                 }
                 ;
@@ -448,18 +450,18 @@ mname           : MONSTER_NAME
 place           : PLACE STRING
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("place(\"%s\")", 
+                        yylineno,
+                        make_stringf("place(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
                 ;
 
 depth           : DEPTH {}
-                | DEPTH STRING 
+                | DEPTH STRING
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("depth(\"%s\")", 
+                        yylineno,
+                        make_stringf("depth(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
                 ;
@@ -467,7 +469,7 @@ depth           : DEPTH {}
 chance          : CHANCE INTEGER
                 {
                     lc_map.main.add(
-                        yylineno, 
+                        yylineno,
                         make_stringf("chance(\"%d\")", $2));
                 }
                 ;
@@ -476,8 +478,8 @@ orientation     : ORIENT {}
                 | ORIENT STRING
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("orient(\"%s\")", 
+                        yylineno,
+                        make_stringf("orient(\"%s\")",
                                      quote_lua_string($2).c_str()));
                 }
                 ;
@@ -501,8 +503,8 @@ map_lines       : map_lines map_line
 map_line        : MAP_LINE
                 {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("map(\"%s\")", 
+                        yylineno,
+                        make_stringf("map(\"%s\")",
                                      quote_lua_string($1).c_str()));
                 }
                 ;

@@ -22,6 +22,7 @@
 #include <string>
 #include <string.h>
 #include <stdio.h>
+#include <algorithm>
 
 #include "externs.h"
 
@@ -391,7 +392,7 @@ void mons_trap(struct monsters *monster)
         if (monsterNearby)
         {
             mprf("A%s %s %s%s!",
-                      beem.name.c_str(), 
+                      beem.name.c_str(),
                       (damage_taken >= 0) ? "hits" : "misses",
                       monster->name(DESC_NOCAP_THE).c_str(),
                       (damage_taken == 0) ? ", but does no damage" : "");
@@ -413,7 +414,7 @@ void mons_trap(struct monsters *monster)
     // reveal undiscovered traps, where appropriate: {dlb}
     if (monsterNearby && !trapKnown && revealTrap)
     {
-        grd[env.trap[which_trap].x][env.trap[which_trap].y] 
+        grd[env.trap[which_trap].x][env.trap[which_trap].y]
                      = trap_category(env.trap[which_trap].type);
     }
 
@@ -537,11 +538,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             simple_monster_message(monster, " is healed.");
         }
         return;
-        
+
     case SPELL_BERSERKER_RAGE:
         monster->go_berserk(true);
         return;
-            
+
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_VAMPIRE_SUMMON:
         if ( spell_cast == SPELL_SUMMON_SMALL_MAMMAL )
@@ -724,7 +725,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( summon_any_demon(DEMON_GREATER), duration,
-                            SAME_ATTITUDE(monster), monster->x, monster->y, 
+                            SAME_ATTITUDE(monster), monster->x, monster->y,
                             monster->foe, MONS_PROGRAM_BUG );
         }
         return;
@@ -756,7 +757,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             for (int i = 0, size = monsters.size(); i < size; ++i)
             {
                 create_monster( monsters[i], duration,
-                                SAME_ATTITUDE(monster), 
+                                SAME_ATTITUDE(monster),
                                 monster->x, monster->y, monster->foe,
                                 MONS_PROGRAM_BUG );
             }
@@ -767,7 +768,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     {
         const bool friendly = mons_friendly(monster);
         bool need_friendly_stub = false;
-        // Monster spell of uselessness, just prints a message. 
+        // Monster spell of uselessness, just prints a message.
         // This spell exists so that some monsters with really strong
         // spells (ie orc priest) can be toned down a bit. -- bwr
         //
@@ -791,7 +792,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 mpr( "You feel a wave of unholy energy pass over you." );
             break;
         case 3:
-            simple_monster_message( monster, " looks stronger.", 
+            simple_monster_message( monster, " looks stronger.",
                                     MSGCH_MONSTER_ENCHANT );
             break;
         case 4:
@@ -816,7 +817,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (need_friendly_stub)
             simple_monster_message(monster, " shimmers for a moment.",
                                    MSGCH_MONSTER_ENCHANT);
-        
+
         return;
     }
     }
@@ -916,12 +917,12 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
     pbolt.is_beam = theBeam.is_beam;
     pbolt.source_x = monster->x;
     pbolt.source_y = monster->y;
-    pbolt.is_tracer = false; 
+    pbolt.is_tracer = false;
     pbolt.is_explosion = theBeam.is_explosion;
 
     if (pbolt.name.length() && pbolt.name[0] != '0')
         pbolt.aux_source = pbolt.name;
-    else 
+    else
         pbolt.aux_source.clear();
 
     if (spell_cast == SPELL_HASTE
@@ -1034,7 +1035,7 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
 
 void setup_dragon(struct monsters *monster, struct bolt &pbolt)
 {
-    const int type = (mons_genus( monster->type ) == MONS_DRACONIAN) 
+    const int type = (mons_genus( monster->type ) == MONS_DRACONIAN)
                             ? draco_subspecies( monster ) : monster->type;
     int scaling = 100;
 
@@ -1088,7 +1089,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         pbolt.aux_source = "blast of draining breath";
         scaling = 65;
         break;
-        
+
     default:
         DEBUGSTR("Bad monster class in setup_dragon()");
         break;
@@ -1103,7 +1104,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     pbolt.beam_source = monster_index(monster);
     pbolt.thrower = KILL_MON;
     pbolt.is_beam = true;
-    
+
     // accuracy is halved if the dragon is attacking a target that's
     // wielding a weapon of dragon slaying (which makes the
     // dragon/draconian avoid looking at the foe).
@@ -1227,7 +1228,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             // ammo damage needs adjusting here - OBJ_MISSILES
             // don't get separate tohit/damage bonuses!
             ammoDamBonus = ammoHitBonus;
-            
+
             // [dshaligram] Thrown stones/darts do only half the damage of
             // launched stones/darts. This matches 4.0 behaviour.
             if (wepType == MI_DART || wepType == MI_STONE
@@ -1292,10 +1293,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         exHitBonus = (hitMult * monster->hit_dice) / 10 + 1;
         exDamBonus = (damMult * monster->hit_dice) / 10 + 1;
 
-        // monsters no longer gain unfair advantages with weapons of fire/ice 
+        // monsters no longer gain unfair advantages with weapons of fire/ice
         // and incorrect ammo.  They now have same restriction as players.
 
-        const int bow_brand = 
+        const int bow_brand =
                 get_weapon_brand(mitm[monster->inv[MSLOT_WEAPON]]);
         const int ammo_brand = get_ammo_brand( item );
 
@@ -1410,18 +1411,18 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     if (monster->visible())
         mpr(msg.c_str());
 
-    // [dshaligram] When changing bolt names here, you must edit 
+    // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
-    if (projected == LRET_LAUNCHED) 
+    if (projected == LRET_LAUNCHED)
     {
         snprintf( throw_buff, sizeof(throw_buff), "Shot with a%s %s by %s",
-                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(), 
+                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
                   monster->name(DESC_NOCAP_A).c_str() );
     }
     else
     {
         snprintf( throw_buff, sizeof(throw_buff), "Hit by a%s %s thrown by %s",
-                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(), 
+                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
                   monster->name(DESC_NOCAP_A).c_str() );
     }
 
@@ -1442,13 +1443,13 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     if (monster->has_ench(ENCH_BATTLE_FRENZY))
     {
         const mon_enchant ench = monster->get_ench(ENCH_BATTLE_FRENZY);
-        
+
 #ifdef DEBUG_DIAGNOSTICS
         const dice_def orig_damage = pbolt.damage;
 #endif
-        
+
         pbolt.damage.size = pbolt.damage.size * (115 + ench.degree * 15) / 100;
-        
+
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "%s frenzy damage: %dd%d -> %dd%d",
              monster->name(DESC_PLAIN).c_str(),
@@ -1456,7 +1457,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
              pbolt.damage.num, pbolt.damage.size);
 #endif
     }
-    
+
     // Skilled archers get better to-hit and damage.
     if (skilled)
     {
@@ -1578,7 +1579,7 @@ void spore_goes_pop(struct monsters *monster)
     }
 
     bool nearby = mons_near(monster);
-    
+
     if (nearby)
     {
         viewwindow(true, false);
@@ -1664,8 +1665,8 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 9;
         beam.damage = dice_def( 3, std::min(6 + power / 7, 40) );
         beam.is_beam = true;
-        break;        
-        
+        break;
+
     case SPELL_PARALYSE:
         beam.name = "0";
         beam.range = 5;
@@ -1705,7 +1706,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.thrower = KILL_MON_MISSILE;
         beam.is_beam = true;
         break;
-        
+
     case SPELL_CONFUSE:
         beam.name = "0";
         beam.range = 5;
@@ -1772,7 +1773,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.hit = 17 + power / 25;
         beam.is_beam = true;
         break;
-        
+
     case SPELL_BOLT_OF_FIRE:
         beam.name = "bolt of fire";
         beam.range = 5;
@@ -1798,7 +1799,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.hit     = 17 + power / 25;
         beam.is_beam = true;
         break;
-        
+
     case SPELL_BOLT_OF_COLD:
         beam.name = "bolt of cold";
         beam.range = 5;
@@ -1838,7 +1839,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.hit = 17 + power / 20;
         beam.is_beam = true;
         break;
-        
+
     case SPELL_LIGHTNING_BOLT:
         beam.name = "bolt of lightning";
         beam.range = 7;
@@ -2126,7 +2127,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_big_cloud = true;
         beam.range = beam.rangeMax = 8;
         break;
-        
+
     case SPELL_QUICKSILVER_BOLT:   // Quicksilver dragon
         beam.colour = random_colour();
         beam.name = "bolt of energy";
@@ -2203,7 +2204,7 @@ static int monster_abjure_square(const coord_def &pos,
     const int mindex = mgrd(pos);
     if (mindex == NON_MONSTER)
         return (0);
-    
+
     monsters *target = &menv[mindex];
     if (!target->alive() || ((bool)friendly == mons_friendly(target)))
         return (0);
@@ -2276,14 +2277,14 @@ static int monster_abjuration(const monsters *caster, bool test)
         maffected += number_hit;
 
         // Each affected monster drops power.
-        // 
+        //
         // We could further tune this by the actual amount of abjuration
         // damage done to each summon, but the player will probably never
         // notice. :-)
         //
         while (number_hit-- > 0)
             pow = pow * 90 / 100;
-        
+
         pow /= 2;
     }
     return (maffected);
@@ -2352,7 +2353,7 @@ bool orc_battle_cry(monsters *chief)
                 {
                     const int dur =
                         random_range(12, 20) * speed_to_duration(mons->speed);
-                    
+
                     if (ench.ench != ENCH_NONE)
                     {
                         ench.degree   = level;
@@ -2374,7 +2375,7 @@ bool orc_battle_cry(monsters *chief)
                 }
             }
         }
-        
+
         if (!affected.empty())
         {
             if (you.can_see(chief) && player_can_hear(chief->x, chief->y))
@@ -2442,7 +2443,7 @@ static bool make_monster_angry(const monsters *mon, monsters *targ)
     if (need_message)
         mprf("%s goads %s on!", mon->name(DESC_CAP_THE).c_str(),
              targ->name(DESC_NOCAP_THE).c_str());
-    
+
     targ->go_berserk(false);
 
     return (true);

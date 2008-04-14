@@ -27,6 +27,7 @@
 #include <cstdarg>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
 #include <errno.h>
 #include <stdlib.h>
@@ -84,7 +85,7 @@ radius_iterator::radius_iterator( const coord_def& _center, int _radius,
 {
     location.x = center.x - radius;
     location.y = center.y - radius;
-    
+
     if ( !this->on_valid_square() )
         ++(*this);
 }
@@ -392,7 +393,7 @@ int random_choose(int first, ...)
     }
 
     ASSERT(nargs > 0);
-    
+
     va_end(args);
     return (chosen);
 }
@@ -417,7 +418,7 @@ const char* random_choose_string(const char* first, ...)
     }
 
     ASSERT(nargs > 0);
-    
+
     va_end(args);
     return (chosen);
 }
@@ -441,7 +442,7 @@ int random_choose_weighted(int weight, int first, ...)
     }
 
     ASSERT(nargs > 0);
-    
+
     va_end(args);
     return (chosen);
 }
@@ -515,8 +516,8 @@ int roll_dice( int num, int size )
     int ret = 0;
     int i;
 
-    // If num <= 0 or size <= 0, then we'll just return the default 
-    // value of zero.  This is good behaviour in that it will be 
+    // If num <= 0 or size <= 0, then we'll just return the default
+    // value of zero.  This is good behaviour in that it will be
     // appropriate for calculated values that might be passed in.
     if (num > 0 && size > 0)
     {
@@ -571,7 +572,7 @@ void cio_init()
 #ifdef DOS
     init_libdos();
 #endif
-    
+
     crawl_view.init_geometry();
 
     if (Options.char_set == CSET_UNICODE && !crawl_state.unicode_ok)
@@ -605,7 +606,7 @@ void cio_cleanup()
 void end(int exit_code, bool print_error, const char *format, ...)
 {
     std::string error = print_error? strerror(errno) : "";
-    
+
     cio_cleanup();
     databaseSystemShutdown();
     if (format)
@@ -615,7 +616,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
         char buffer[100];
         vsnprintf(buffer, sizeof buffer, format, arg);
         va_end(arg);
-        
+
         if (error.empty())
             error = std::string(buffer);
         else
@@ -637,7 +638,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
         getchar();
     }
 #endif
-    
+
     exit(exit_code);
 }
 
@@ -737,7 +738,7 @@ int stepdown_value(int base_value, int stepping, int first_step,
 }                               // end stepdown_value()
 
 int skill_bump( int skill )
-{   
+{
     return ((you.skills[skill] < 3) ? you.skills[skill] * 2
                                     : you.skills[skill] + 3);
 }
@@ -944,19 +945,19 @@ static std::string _list_alternative_yes(char yes1, char yes2,
             help += yes1;
         print_yes = true;
     }
-    
+
     if (yes2 != 'Y' && yes2 != yes1)
     {
         if (print_yes)
             help += "/";
-            
+
         if (lowered)
             help += tolower(yes2);
         else
             help += yes2;
         print_yes = true;
     }
-    
+
     if (print_yes)
     {
         if (brackets)
@@ -964,7 +965,7 @@ static std::string _list_alternative_yes(char yes1, char yes2,
         else
             help = "/" + help;
     }
-    
+
     return help;
 }
 
@@ -1000,7 +1001,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer,
 
         if ( tmp == CK_ESCAPE || tmp == 'q' || tmp == 'Q' )
             return -1;
-        
+
         if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
             tmp = safeanswer;
 
@@ -1111,8 +1112,8 @@ void random_in_bounds( int &x_pos, int &y_pos, int terr,
         else if (terr == DNGN_DEEP_WATER
                  && grd[x_pos][y_pos] == DNGN_SHALLOW_WATER)
             done = true;
-        else if (empty 
-                && mgrd[x_pos][y_pos] != NON_MONSTER 
+        else if (empty
+                && mgrd[x_pos][y_pos] != NON_MONSTER
                 && (x_pos != you.x_pos || y_pos != you.y_pos))
         {
             done = true;
@@ -1145,7 +1146,7 @@ bool is_element_colour( int col )
 
 int element_colour( int element, bool no_random )
 {
-    // Doing this so that we don't have to do recursion here at all 
+    // Doing this so that we don't have to do recursion here at all
     // (these were the only cases which had possible double evaluation):
     if (element == EC_FLOOR)
         element = env.floor_colour;
@@ -1159,7 +1160,7 @@ int element_colour( int element, bool no_random )
     int ret = BLACK;
 
     // Setting no_random to true will get the first colour in the cases
-    // below.  This is potentially useful for calls to this function 
+    // below.  This is potentially useful for calls to this function
     // which might want a consistent result.
     int tmp_rand = (no_random ? 0 : random2(120));
 
@@ -1167,13 +1168,13 @@ int element_colour( int element, bool no_random )
     {
     case EC_FIRE:
         ret = (tmp_rand < 40) ? RED :
-              (tmp_rand < 80) ? YELLOW 
+              (tmp_rand < 80) ? YELLOW
                               : LIGHTRED;
         break;
 
     case EC_ICE:
         ret = (tmp_rand < 40) ? LIGHTBLUE :
-              (tmp_rand < 80) ? BLUE 
+              (tmp_rand < 80) ? BLUE
                               : WHITE;
         break;
 
@@ -1187,7 +1188,7 @@ int element_colour( int element, bool no_random )
 
     case EC_ELECTRICITY:
         ret = (tmp_rand < 40) ? LIGHTCYAN :
-              (tmp_rand < 80) ? LIGHTBLUE 
+              (tmp_rand < 80) ? LIGHTBLUE
                               : CYAN;
         break;
 
@@ -1202,7 +1203,7 @@ int element_colour( int element, bool no_random )
     case EC_MAGIC:
         ret = (tmp_rand < 30) ? LIGHTMAGENTA :
               (tmp_rand < 60) ? LIGHTBLUE :
-              (tmp_rand < 90) ? MAGENTA 
+              (tmp_rand < 90) ? MAGENTA
                               : BLUE;
         break;
 
@@ -1242,7 +1243,7 @@ int element_colour( int element, bool no_random )
 
     case EC_VEHUMET:
         ret = (tmp_rand < 40) ? LIGHTRED :
-              (tmp_rand < 80) ? LIGHTMAGENTA 
+              (tmp_rand < 80) ? LIGHTMAGENTA
                               : LIGHTBLUE;
         break;
 
@@ -1253,20 +1254,20 @@ int element_colour( int element, bool no_random )
 
     case EC_CRYSTAL:
         ret = (tmp_rand < 40) ? LIGHTGREY :
-              (tmp_rand < 80) ? GREEN 
+              (tmp_rand < 80) ? GREEN
                               : LIGHTRED;
         break;
 
     case EC_SLIME:
         ret = (tmp_rand < 40) ? GREEN :
-              (tmp_rand < 80) ? BROWN 
+              (tmp_rand < 80) ? BROWN
                               : LIGHTGREEN;
         break;
 
     case EC_SMOKE:
         ret = (tmp_rand < 30) ? LIGHTGREY :
               (tmp_rand < 60) ? DARKGREY :
-              (tmp_rand < 90) ? LIGHTBLUE 
+              (tmp_rand < 90) ? LIGHTBLUE
                               : MAGENTA;
         break;
 
@@ -1279,36 +1280,36 @@ int element_colour( int element, bool no_random )
               (tmp_rand <  72) ? LIGHTBLUE :
               (tmp_rand <  84) ? MAGENTA :
               (tmp_rand <  96) ? RED :
-              (tmp_rand < 108) ? GREEN 
+              (tmp_rand < 108) ? GREEN
                                : BLUE;
         break;
 
     case EC_ELVEN:
         ret = (tmp_rand <  40) ? LIGHTGREEN :
               (tmp_rand <  80) ? GREEN :
-              (tmp_rand < 100) ? LIGHTBLUE 
+              (tmp_rand < 100) ? LIGHTBLUE
                                : BLUE;
         break;
 
     case EC_DWARVEN:
         ret = (tmp_rand <  40) ? BROWN :
               (tmp_rand <  80) ? LIGHTRED :
-              (tmp_rand < 100) ? LIGHTGREY 
+              (tmp_rand < 100) ? LIGHTGREY
                                : CYAN;
         break;
 
     case EC_ORCISH:
         ret = (tmp_rand <  40) ? DARKGREY :
               (tmp_rand <  80) ? RED :
-              (tmp_rand < 100) ? BROWN 
+              (tmp_rand < 100) ? BROWN
                                : MAGENTA;
         break;
 
     case EC_GILA:
         ret = (tmp_rand <  30) ? LIGHTMAGENTA :
               (tmp_rand <  60) ? MAGENTA :
-              (tmp_rand <  90) ? YELLOW : 
-              (tmp_rand < 105) ? LIGHTRED 
+              (tmp_rand <  90) ? YELLOW :
+              (tmp_rand < 105) ? LIGHTRED
                                : RED;
         break;
 
@@ -1414,7 +1415,7 @@ int near_stairs(const coord_def &p, int max_dist,
                     continue;
 
                 stair_type = get_feature_dchar(feat);
-                
+
                 // is it a branch stair?
                 for (int i = 0; i < NUM_BRANCHES; ++i)
                 {
@@ -1466,12 +1467,12 @@ void zap_los_monsters()
                 continue;
 
             int imon = mgrd[gx][gy];
-            
+
             // at tutorial beginning disallow items in line of sight
             if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
             {
                 int item = igrd[gx][gy];
-            
+
                 if (item != NON_ITEM && is_valid_item(mitm[item]) )
                     destroy_item(item);
             }
@@ -1485,7 +1486,7 @@ void zap_los_monsters()
 
             if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
                 continue;
-            
+
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
                  mon->name(DESC_PLAIN, true).c_str() );

@@ -9,6 +9,7 @@
 #include "AppHdr.h"
 
 #include <sstream>
+#include <algorithm>
 
 #include "branch.h"
 #include "clua.h"

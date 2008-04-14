@@ -11,10 +11,12 @@
  */
 
 #include "AppHdr.h"
+
+#include <algorithm>
+
 #include "lev-pand.h"
 
 #include "externs.h"
-
 #include "dungeon.h"
 #include "monplace.h"
 #include "mon-pick.h"

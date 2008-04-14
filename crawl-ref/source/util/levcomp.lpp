@@ -2,14 +2,15 @@
 
 // levcomp.lpp:
 //      Level compiler lexer for Dungeon Crawl Stone Soup.
-// 
+//
 // Based loosely on NetHack's lev_comp.l
 
+#include <algorithm>
+#include <cstring>
+#include <queue>
 #include "AppHdr.h"
 #include "mapdef.h"
 #include "levcomp.tab.h"
-#include <cstring>
-#include <queue>
 
 static bool alloced = false;
 
@@ -127,7 +128,7 @@ NSPACE [^\ \t\r\n]
 <KEYWORDS>[ \t]+    ;
 <KEYWORDS>[ \t]*\r?\n  { BEGIN(INITIAL); }
 
-<ITEM_LIST>[^, \t\r\n][^,\r\n]*[^, \t\r\n] { 
+<ITEM_LIST>[^, \t\r\n][^,\r\n]*[^, \t\r\n] {
                         settext();
                         return ITEM_INFO;
                     }
@@ -143,18 +144,18 @@ NSPACE [^\ \t\r\n]
 
 <MNAME>[\ \t\r]*\n  { BEGIN(INITIAL); }
 
-<MNAME>[^,\ \t\r\n][^,\r\n]+[^,\ \t\r\n] { 
+<MNAME>[^,\ \t\r\n][^,\r\n]+[^,\ \t\r\n] {
                         settext();
-                        return MONSTER_NAME; 
+                        return MONSTER_NAME;
                     }
 
 <MNAME>,            return COMMA;
 <MNAME>[ \t\r]+     ;
 
-<ARGUMENT>{NSPACE}.*{NSPACE} { 
+<ARGUMENT>{NSPACE}.*{NSPACE} {
                         BEGIN(INITIAL);
                         settext();
-                        return STRING; 
+                        return STRING;
                     }
 
 <ARGUMENT>\r?\n     { BEGIN(INITIAL); }
@@ -177,7 +178,7 @@ NSPACE [^\ \t\r\n]
 
 ^[ \t]*:                  { BEGIN(LUA_ONELINER); return MAIN; }
 
-^[ \t]*prelude[ \t]*\{\{  { BEGIN(LUA); return PRELUDE; }      
+^[ \t]*prelude[ \t]*\{\{  { BEGIN(LUA); return PRELUDE; }
 ^[ \t]*lua[ \t]*\{\{      { BEGIN(LUA); return MAIN; }
 ^[ \t]*\{\{         { BEGIN(LUA); return MAIN; }
 ^[ \t]*validate[ \t]*\{\{ { BEGIN(LUA); return VALIDATE; }

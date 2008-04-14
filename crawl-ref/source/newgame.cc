@@ -55,6 +55,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <algorithm>
 
 #ifdef DOS
 #include <conio.h>
