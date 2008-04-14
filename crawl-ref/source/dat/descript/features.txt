@@ -21,6 +21,19 @@ A deep blue altar of Sif Muna
 A dry fountain
 
 %%%%
+A flickering gateway to a bazaar
+
+Aside from the vendors who've set up their stores at various places in the 
+dungeon, there are others trying to make a living by traveling from place 
+to place. Bazaars feature a number of different shops and often have better 
+stock than the sedentary ones, sometimes even at a bargain. 
+Once you hear the clinking of coins, be sure to hurry up and find the 
+impromptu marketplace before the carawan moves on!
+
+Also be warned that their nomadic lifestyle has taught these sellers to 
+appropriate any items an adventurer might leave behind, and then leave 
+quickly, probably to sell them elsewhere.
+%%%%
 A fountain of clear blue water
 
 'q'uaff to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
@@ -47,6 +60,19 @@ A gate leading to the halls of Pandemonium
 %%%%
 A gate to the Realm of Zot
 
+%%%%
+A gateway to a bazaar
+
+Aside from the vendors who've set up their stores at various places in the 
+dungeon, there are others trying to make a living by traveling from place 
+to place. Bazaars feature a number of different shops and often have better 
+stock than the sedentary ones, sometimes even at a bargain. 
+Once you hear the clinking of coins, be sure to hurry up and find the 
+impromptu marketplace before the carawan moves on!
+
+Also be warned that their nomadic lifestyle has taught these sellers to 
+appropriate any items an adventurer might leave behind, and then leave 
+quickly, probably to sell them elsewhere.
 %%%%
 A gateway leading out of the Abyss
 
@@ -100,6 +126,9 @@ A labyrinth entrance
 A gateway to an intricate maze designed by subtle and malicious minds,
 its exit guarded by a fearsome monster, where many a hapless
 adventurer has lost his way and starved to death.
+
+"Maze-treaders, whose vision ahead and behind is severely constricted and fragmented, suffer confusion, whereas maze-viewers who see the pattern whole, from above or in a diagram, are dazzled by its complex artistry. What you see depends on where you stand, and thus, at one and the same time, labyrinths are single (there is one physical structure) and double: they simultaneously incorporate order and disorder, clarity and confusion, unity and multiplicity, artistry and chaos."
+        -Mark Z. Danielewski, "House of Leaves".  2000.
 %%%%
 A magical trap
 
