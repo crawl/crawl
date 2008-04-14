@@ -1097,8 +1097,9 @@ static undead_state_type _get_undead_state(const species_type sp)
     case SP_MUMMY:
         return US_UNDEAD;
     case SP_GHOUL:
-    case SP_VAMPIRE:
         return US_HUNGRY_DEAD;
+    case SP_VAMPIRE:
+        return US_SEMI_UNDEAD;
     default:
         ASSERT(!_species_is_undead(sp));
         return (US_ALIVE);

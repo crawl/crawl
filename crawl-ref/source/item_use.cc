@@ -3515,7 +3515,8 @@ void drink( int slot )
     dec_inv_item_quantity( item_slot, 1 );
     you.turn_is_over = true;
 
-    lessen_hunger(40, true);
+    if (you.species != SP_VAMPIRE)
+        lessen_hunger(40, true);
 }                               // end drink()
 
 bool _drink_fountain()

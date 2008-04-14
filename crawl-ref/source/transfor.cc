@@ -155,7 +155,9 @@ bool transform(int pow, transformation_type which_trans)
     if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
         untransform();
 
-    if (you.is_undead && (you.species != SP_VAMPIRE || which_trans != TRAN_BAT))
+    if (you.is_undead
+        && (you.species != SP_VAMPIRE
+            || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED))
     {
         mpr("Your unliving flesh cannot be transformed in this way.");
         return (false);
@@ -187,7 +189,7 @@ bool transform(int pow, transformation_type which_trans)
         {
              rem_stuff.erase(EQ_HELMET);
         }
-        
+
         if (check_for_cursed_equipment( rem_stuff ))
             return (false);
 
@@ -214,11 +216,11 @@ bool transform(int pow, transformation_type which_trans)
         {
              rem_stuff.erase(EQ_HELMET);
         }
-        
+
         // high ev, low ac, high speed
         if (check_for_cursed_equipment( rem_stuff ))
             return false;
-    
+
         mprf("You turn into a %sbat.",
              you.species == SP_VAMPIRE ? "vampire " : "");
 
@@ -234,12 +236,12 @@ bool transform(int pow, transformation_type which_trans)
                     "gaining the bat transformation");
        modify_stat( STAT_STRENGTH, -5, true,
                     "gaining the bat transformation" );
-   
+
        you.symbol = 'b';
        you.colour = (you.species == SP_VAMPIRE ? DARKGREY : LIGHTGREY);
        return (true);
-        
-    case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1 
+
+    case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1
         rem_stuff.erase(EQ_CLOAK);
         // ice beasts CAN wear soft helmets
         if ( you.equip[EQ_HELMET] == -1
@@ -250,7 +252,7 @@ bool transform(int pow, transformation_type which_trans)
 
         if (check_for_cursed_equipment( rem_stuff ))
             return false;
-            
+
         mpr( "You turn into a creature of crystalline ice." );
 
         remove_equipment( rem_stuff );
@@ -350,7 +352,7 @@ bool transform(int pow, transformation_type which_trans)
 
         you.symbol = 'D';
         you.colour = GREEN;
-        
+
         if (you.attribute[ATTR_HELD])
         {
             mpr("The net rips apart!");
@@ -404,7 +406,7 @@ bool transform(int pow, transformation_type which_trans)
         rem_stuff.insert(EQ_LEFT_RING);
         rem_stuff.insert(EQ_RIGHT_RING);
         rem_stuff.insert(EQ_AMULET);
-        
+
         if (check_for_cursed_equipment( rem_stuff ))
             return false;
 
@@ -426,7 +428,7 @@ bool transform(int pow, transformation_type which_trans)
                      "gaining the air transformation" );
         you.symbol = '#';
         you.colour = DARKGREY;
-        
+
         if (you.attribute[ATTR_HELD])
         {
             mpr("You drift through the net!");
@@ -485,12 +487,12 @@ void untransform(void)
     // must be unset first or else infinite loops might result -- bwr
     const transformation_type old_form =
         static_cast<transformation_type>(you.attribute[ ATTR_TRANSFORMATION ]);
-    
+
     you.attribute[ ATTR_TRANSFORMATION ] = TRAN_NONE;
     you.duration[ DUR_TRANSFORMATION ] = 0;
 
     int hp_downscale = 10;
-    
+
     switch (old_form)
     {
     case TRAN_SPIDER:
@@ -519,7 +521,7 @@ void untransform(void)
         modify_stat( STAT_STRENGTH, -2, true,
                      "losing the statue transformation");
 
-        // Note: if the core goes down, the combined effect soon disappears, 
+        // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_STONEMAIL])
             you.duration[DUR_STONEMAIL] = 1;
@@ -528,19 +530,19 @@ void untransform(void)
             you.duration[DUR_STONESKIN] = 1;
 
         hp_downscale = 15;
-        
+
         break;
 
     case TRAN_ICE_BEAST:
         mpr( "You warm up again.", MSGCH_DURATION );
 
-        // Note: if the core goes down, the combined effect soon disappears, 
+        // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_ICY_ARMOUR])
             you.duration[DUR_ICY_ARMOUR] = 1;
 
         hp_downscale = 12;
-        
+
         break;
 
     case TRAN_DRAGON:
@@ -552,7 +554,7 @@ void untransform(void)
         move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
 
         hp_downscale = 16;
-        
+
         break;
 
     case TRAN_LICH:
@@ -581,7 +583,7 @@ void untransform(void)
 
     if (transform_can_butcher_barehanded(old_form))
         stop_butcher_delay();
-    
+
     // If nagas wear boots while transformed, they fall off again afterwards:
     // I don't believe this is currently possible, and if it is we
     // probably need something better to cover all possibilities.  -bwr
@@ -603,7 +605,7 @@ void untransform(void)
         else if (you.hp > you.hp_max)
             you.hp = you.hp_max;
     }
-    calc_hp();    
+    calc_hp();
 }                               // end untransform()
 
 // XXX: This whole system is a mess as it still relies on special
@@ -651,8 +653,8 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
                     && use_which != EQ_SHIELD);
 
         case TRAN_STATUE:
-            return (use_which == EQ_WEAPON 
-                    || use_which == EQ_CLOAK 
+            return (use_which == EQ_WEAPON
+                    || use_which == EQ_CLOAK
                     || use_which == EQ_HELMET);
 
         case TRAN_ICE_BEAST:
@@ -666,7 +668,7 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
     return (true);
 }                               // end can_equip()
 
-// raw comparison of an item, must use check_armour_shape for full version 
+// raw comparison of an item, must use check_armour_shape for full version
 bool transform_can_equip_type( int eq_slot )
 {
     // FIXME FIXME FIXME
@@ -708,14 +710,14 @@ void drop_everything(void)
 }                               // end drop_everything()
 
 // Used to mark transformations which override species/mutation intrinsics.
-// If phys_scales is true then we're checking to see if the form keeps 
-// the physical (AC/EV) properties from scales... the special intrinsic 
+// If phys_scales is true then we're checking to see if the form keeps
+// the physical (AC/EV) properties from scales... the special intrinsic
 // features (resistances, etc) are lost in those forms however.
 bool transform_changed_physiology( bool phys_scales )
 {
     return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
             && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
-            && (!phys_scales 
+            && (!phys_scales
                 || (you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH
                     && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE)));
 }

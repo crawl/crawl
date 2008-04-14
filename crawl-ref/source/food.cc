@@ -145,7 +145,7 @@ void weapon_switch( int targ )
     // XXX This is a pretty dangerous hack;  I don't like it.--GDL
     //
     // Well yeah, but that's because interacting with the wielding
-    // code is a mess... this whole function's purpose was to 
+    // code is a mess... this whole function's purpose was to
     // isolate this hack until there's a proper way to do things. -- bwr
     if (you.equip[EQ_WEAPON] != -1)
         unwield_item(false);
@@ -176,7 +176,7 @@ static bool find_butchering_implement( bool fallback )
             return false;
         }
     }
-    
+
     // look for a butchering implement in your pack
     for (int i = 0; i < ENDOFPACK; ++i)
     {
@@ -201,12 +201,12 @@ static bool find_butchering_implement( bool fallback )
 
     // if we didn't swap above, then we still can't cut...let's call
     // wield_weapon() in the "prompt the user" way...
-    
+
     // prompt for new weapon
     int old_weapon = you.equip[EQ_WEAPON];
     mpr( "What would you like to use?", MSGCH_PROMPT );
     wield_weapon( false );
-    
+
     // let's see if the user did something...
     return (you.equip[EQ_WEAPON] != old_weapon);
 }
@@ -274,7 +274,7 @@ bool butchery(int which_corpse)
         {
             corpse_id = o;
             num_corpses++;
-            
+
             // return pre-chosen corpse if it exists
             if (prechosen && corpse_id == which_corpse)
                 break;
@@ -285,7 +285,7 @@ bool butchery(int which_corpse)
         prechosen = false;
 
     bool canceled_butcher = false;
-    
+
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
     if ( num_corpses == 0 )
@@ -304,12 +304,12 @@ bool butchery(int which_corpse)
             if ( (mitm[o].base_type != OBJ_CORPSES) ||
                  (mitm[o].sub_type != CORPSE_BODY) )
                 continue;
-            
+
             // offer the possibility of butchering
             snprintf(info, INFO_SIZE, "%s %s?",
                      can_bottle_blood_from_corpse(mitm[o].plus)? "Bottle" : "Butcher",
                      mitm[o].name(DESC_NOCAP_A).c_str());
-                     
+
             const int result = yesnoquit(info, true, 'N', false, 'C', 'D');
             if ( result == -1 )
             {
@@ -325,7 +325,7 @@ bool butchery(int which_corpse)
             // continue loop for 0
         }
     }
-   
+
     // Do the actual butchery, if we found a good corpse.
     if ( corpse_id != -1 )
     {
@@ -333,7 +333,7 @@ bool butchery(int which_corpse)
             && god_likes_butchery(you.religion);
         bool removed_gloves = false;
         bool wpn_switch = false;
-        
+
         if ( Options.easy_butcher && !can_butcher )
         {
             // Try to find a butchering implement.
@@ -355,10 +355,10 @@ bool butchery(int which_corpse)
                     (you.weapon()->base_type == OBJ_WEAPONS) &&
                     item_cursed( *you.weapon() );
             }
-            
+
             // note that if barehanded then the user selected '-' when
             // switching weapons
-            
+
             if (!barehand_butcher && (!wpn_switch ||
                                       you.weapon() == NULL ||
                                       !can_cut_meat(*you.weapon())))
@@ -373,17 +373,17 @@ bool butchery(int which_corpse)
                 }
                 else
                     mpr("Maybe you should try using a sharper implement.");
-                
+
                 if ( !new_cursed && wpn_switch )
                     start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
-                
-                return false;                   
+
+                return false;
             }
-            
+
             // switched to a good butchering knife
             can_butcher = true;
         }
-        
+
         if ( can_butcher )
         {
             const bool rotten = food_is_rotten(mitm[corpse_id]);
@@ -398,12 +398,12 @@ bool butchery(int which_corpse)
                                        "sacrifice!" :
                                        " demands fresh blood!", you.religion);
                 }
-                
+
                 // If we didn't switch weapons, we get in one turn of butchery;
                 // otherwise the work has to happen in the delay.
                 if (!wpn_switch && !removed_gloves)
                     ++mitm[corpse_id].plus2;
-                
+
                 int work_req = 4 - mitm[corpse_id].plus2;
                 if (work_req < 0)
                     work_req = 0;
@@ -427,7 +427,7 @@ bool butchery(int which_corpse)
         if ( removed_gloves )
             start_delay( DELAY_ARMOUR_ON, 1, old_gloves );
 
-        you.turn_is_over = true;    
+        you.turn_is_over = true;
         return true;
     }
 
@@ -644,13 +644,35 @@ static bool food_change(bool suppress_message)
 
         if (newstate < HS_SATIATED)
             interrupt_activity( AI_HUNGRY );
-        else if (newstate == HS_ENGORGED && you.species == SP_VAMPIRE
-                 && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
-                 && you.duration[DUR_TRANSFORMATION] > 2)
+
+        if (you.species == SP_VAMPIRE)
         {
-            mpr("Your bloodfilled body can't sustain your transformation much "
-                "longer.", MSGCH_WARN);
-            you.duration[DUR_TRANSFORMATION] = 2;
+            if (newstate <= HS_SATIATED)
+            {
+                if (you.duration[DUR_BERSERKER] > 1)
+                {
+                    mpr("Your bloodless body can't sustain your rage any "
+                        "longer.", MSGCH_DURATION);
+                    you.duration[DUR_BERSERKER] = 1;
+                }
+                int transform = you.attribute[ATTR_TRANSFORMATION];
+                if (transform != TRAN_NONE && transform != TRAN_BAT
+                    && you.duration[DUR_TRANSFORMATION] > 2)
+                {
+                    mpr("Your bloodless body can't sustain your "
+                        "transformation much longer.", MSGCH_DURATION);
+                    you.duration[DUR_TRANSFORMATION] = 2;
+                }
+            }
+            else if (newstate == HS_ENGORGED
+                     && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+                     && you.duration[DUR_TRANSFORMATION] > 5)
+            {
+                mpr("Your bloodfilled body can't sustain your transformation much "
+                    "longer.", MSGCH_WARN);
+                // give more time because suddenly stopping flying can be lethal
+                you.duration[DUR_TRANSFORMATION] = 5;
+            }
         }
 
         if (!suppress_message)
@@ -740,7 +762,7 @@ void eat_from_inventory(int which_inventory_slot)
     {
         if (you.species != SP_VAMPIRE)
             return;
-            
+
         const int mons_type  = food.plus;
         const bool rotten    = food_is_rotten(food);
         const int chunk_type
@@ -816,10 +838,10 @@ void eat_floor_item(int item_link)
         const int intel      = mons_intel( food.plus ) - I_ANIMAL;
         const bool cannibal  = is_player_same_species( food.plus );
         const bool rotten    = food_is_rotten(food);
-        
+
         if (!prompt_eat_chunk(food, rotten))
             return;
-            
+
         eat_chunk(determine_chunk_effect(chunk_type, rotten), cannibal, intel);
     }
     else
@@ -881,7 +903,7 @@ static const char *chunk_flavour_phrase(bool likes_chunks)
     {
         const int gourmand = you.duration[DUR_GOURMAND];
         if (gourmand >= GOURMAND_MAX)
-            phrase = 
+            phrase =
                 one_chance_in(1000)? "tastes like chicken!"
                                    : "tastes great.";
         else if (gourmand > GOURMAND_MAX * 75 / 100)
@@ -917,23 +939,23 @@ static int apply_herbivore_chunk_effects(int nutrition)
 static int chunk_nutrition(bool likes_chunks)
 {
     int nutrition = CHUNK_BASE_NUTRITION;
-    
+
     if (likes_chunks || you.hunger_state < HS_SATIATED)
     {
         return (likes_chunks? nutrition
                 : apply_herbivore_chunk_effects(nutrition));
     }
 
-    const int gourmand = 
+    const int gourmand =
         wearing_amulet(AMU_THE_GOURMAND)? you.duration[DUR_GOURMAND] : 0;
 
-    int effective_nutrition = 
+    int effective_nutrition =
            nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
                      / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
-    
+
 #ifdef DEBUG_DIAGNOSTICS
     const int epercent = effective_nutrition * 100 / nutrition;
-    mprf(MSGCH_DIAGNOSTICS, 
+    mprf(MSGCH_DIAGNOSTICS,
             "Gourmand factor: %d, chunk base: %d, effective: %d, %%: %d",
                     gourmand,
                     nutrition,
@@ -1038,7 +1060,7 @@ static void eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
         did_god_conduct( DID_CANNIBALISM, 10 );
     else if (mon_intel > 0)
         did_god_conduct( DID_EAT_SOULED_BEING, mon_intel);
-        
+
     if (do_eat)
     {
         start_delay( DELAY_EAT, 2, (suppress_msg) ? 0 : nutrition );
@@ -1256,7 +1278,7 @@ static void eating(unsigned char item_class, int item_type)
                     temp_rand = random2(6) + 2;
                 else
                     temp_rand = random2(9);
-                    
+
                 mprf("Mmm... %s",
                      (temp_rand == 0) ? "Ham and pineapple." :
                      (temp_rand == 2) ? "Vegetable." :
@@ -1340,10 +1362,10 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
         {
             return (true);
         }
-        
+
         if (!suppress_msg)
             mpr("Blech - you need blood!");
-            
+
         return (false);
     }
 
@@ -1353,7 +1375,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
 
     // ur_chunkslover not defined in terms of ur_carnivorous because
     // a player could be one and not the other IMHO - 13mar2000 {dlb}
-    bool ur_chunkslover = ( 
+    bool ur_chunkslover = (
                 (check_hunger? you.hunger_state <= HS_HUNGRY : true)
                            || you.omnivorous()
                            || you.mutation[MUT_CARNIVOROUS]);
@@ -1367,7 +1389,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
                 mpr("Blech - you need blood!");
              return false;
         }
-             
+
         switch (kindof_thing)
         {
         case FOOD_BREAD_RATION:
@@ -1450,7 +1472,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     case OBJ_POTIONS: // called by lua
         if (get_ident_type(OBJ_POTIONS, kindof_thing) != ID_KNOWN_TYPE)
             return true;
-            
+
         switch (kindof_thing)
         {
             case POT_BLOOD:
@@ -1645,7 +1667,7 @@ static bool vampire_consume_corpse(const int mons_type, const int max_chunks,
     int chunk_amount = 1 + random2(max_chunks);
         chunk_amount = stepdown_value( chunk_amount, 4, 4, 12, 12 );
     int mass = CHUNK_BASE_NUTRITION * chunk_amount;
-    
+
     int food_value = 0, hp_amt = 0, mp_amt = 0;
 
     if (rotten)
@@ -1730,7 +1752,7 @@ static bool vampire_consume_corpse(const int mons_type, const int max_chunks,
     // The delay for eating a chunk (mass 1000) is 2
     // Here the base nutrition value equals that of chunks,
     // but the delay should be greater.
-    start_delay( DELAY_EAT, mass / 400 ); 
+    start_delay( DELAY_EAT, mass / 400 );
     return true;
 } // end vampire_consume_corpse()
 

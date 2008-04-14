@@ -69,7 +69,7 @@
  */
 #define WILD_MAGIC_NASTINESS 150
 
-static bool surge_identify_boosters(spell_type spell)
+static bool _surge_identify_boosters(spell_type spell)
 {
     const unsigned int typeflags = get_spell_disciplines(spell);
     if ( (typeflags & SPTYP_FIRE) || (typeflags & SPTYP_ICE) )
@@ -111,7 +111,7 @@ static bool surge_identify_boosters(spell_type spell)
                                  ring.name(DESC_INVENTORY_EQUIP).c_str());
                         }
                     }
-                    
+
                 return true;
             }
         }
@@ -119,11 +119,11 @@ static bool surge_identify_boosters(spell_type spell)
     return false;
 }
 
-static void surge_power(spell_type spell)
+static void _surge_power(spell_type spell)
 {
     int enhanced = 0;
 
-    surge_identify_boosters(spell);
+    _surge_identify_boosters(spell);
 
     //jmf: simplified
     enhanced += spell_enhancement(get_spell_disciplines(spell));
@@ -141,7 +141,7 @@ static void surge_power(spell_type spell)
     }
 }                               // end surge_power()
 
-static std::string spell_base_description(spell_type spell)
+static std::string _spell_base_description(spell_type spell)
 {
     std::ostringstream desc;
 
@@ -160,9 +160,9 @@ static std::string spell_base_description(spell_type spell)
                 desc << '/';
             desc << spelltype_name(1 << i);
             already = true;
-        }        
+        }
     }
-    
+
     const int so_far = desc.str().length();
     if ( so_far < 60 )
         desc << std::string(60 - so_far, ' ');
@@ -174,7 +174,7 @@ static std::string spell_base_description(spell_type spell)
     return desc.str();
 }
 
-static std::string spell_extra_description(spell_type spell)
+static std::string _spell_extra_description(spell_type spell)
 {
     std::ostringstream desc;
 
@@ -214,13 +214,13 @@ int list_spells()
         if (spell != SPELL_NO_SPELL)
         {
             ToggleableMenuEntry* me =
-                new ToggleableMenuEntry(spell_base_description(spell),
-                                        spell_extra_description(spell),
+                new ToggleableMenuEntry(_spell_base_description(spell),
+                                        _spell_extra_description(spell),
                                         MEL_ITEM, 1, letter);
             spell_menu.add_entry(me);
         }
     }
-    
+
     std::vector<MenuEntry*> sel = spell_menu.show();
     redraw_screen();
     if ( sel.empty() )
@@ -235,13 +235,13 @@ int list_spells()
     }
 }
 
-static int apply_spellcasting_success_boosts(spell_type spell, int chance)
+static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 {
     int wizardry = player_mag_abil(false);
     int fail_reduce = 100;
     int wiz_factor = 87;
 
-    if (you.religion == GOD_VEHUMET 
+    if (you.religion == GOD_VEHUMET
         && you.duration[DUR_PRAYER]
         && (!player_under_penance() && you.piety >= 50)
         && (spell_typematch(spell, SPTYP_CONJURATION)
@@ -299,7 +299,7 @@ int spell_fail(spell_type spell)
         //     Truth is, even a much worse penalty than the above can
         //     easily be overcome by gaining spell skills... and a lot
         //     faster than any reasonable rate of bonus here.
-        int lim_str = (you.strength > 30) ? 30 : 
+        int lim_str = (you.strength > 30) ? 30 :
                       (you.strength < 10) ? 10 : you.strength;
 
         armour -= ((you.skills[SK_ARMOUR] * lim_str) / 15);
@@ -336,7 +336,7 @@ int spell_fail(spell_type spell)
             chance += armour;
     }
 
-    if (you.equip[EQ_WEAPON] != -1 
+    if (you.equip[EQ_WEAPON] != -1
         && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS)
     {
         int wpn_penalty = (3 * (property( you.inv[you.equip[EQ_WEAPON]], PWPN_SPEED ) - 12)) / 2;
@@ -452,13 +452,9 @@ int spell_fail(spell_type spell)
             break;
         }
     }
-    
-    // vampires can cast while starving, but with increased difficulty
-    if (you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
-        chance2 += 20;
 
     // Apply the effects of Vehumet prayer and items of wizardry.
-    chance2 = apply_spellcasting_success_boosts(spell, chance2);
+    chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 
     if (chance2 > 100)
         chance2 = 100;
@@ -474,8 +470,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
 
     // When checking failure rates, wizardry is handled after the various
     // stepping calulations.
-    int power = 
-            (you.skills[SK_SPELLCASTING] / 2) 
+    int power =
+            (you.skills[SK_SPELLCASTING] / 2)
             + (fail_rate_check? 0 : player_mag_abil(false));
     int enhanced = 0;
 
@@ -502,7 +498,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
     if (apply_intel)
         power = (power * you.intel) / 10;
 
-    // [dshaligram] Enhancers don't affect fail rates any more, only spell 
+    // [dshaligram] Enhancers don't affect fail rates any more, only spell
     // power. Note that this does not affect Vehumet's boost in castability.
     if (!fail_rate_check)
         enhanced = spell_enhancement( disciplines );
@@ -690,7 +686,7 @@ bool cast_a_spell()
         exercise_spell( spell, true, cast_result == SPRET_SUCCESS );
         did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
     }
-    
+
     dec_mp( spell_mana(spell) );
 
     if (!staff_energy && you.is_undead != US_UNDEAD)
@@ -706,11 +702,11 @@ bool cast_a_spell()
     return (true);
 }                               // end cast_a_spell()
 
-// "Utility" spells for the sake of simplicity are currently ones with 
-// enchantments, translocations, or divinations. 
+// "Utility" spells for the sake of simplicity are currently ones with
+// enchantments, translocations, or divinations.
 bool spell_is_utility_spell( spell_type spell_id )
 {
-    return (spell_typematch( spell_id, 
+    return (spell_typematch( spell_id,
                 SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION | SPTYP_DIVINATION ));
 }
 
@@ -823,7 +819,34 @@ void spellcasting_side_effects(spell_type spell, bool idonly = false)
     alert_nearby_monsters();
 }
 
-static bool spell_is_uncastable(spell_type spell)
+static bool _vampire_cannot_cast(spell_type spell)
+{
+    if (you.species != SP_VAMPIRE)
+        return false;
+
+    if (you.hunger_state >= HS_FULL)
+        return false;
+
+    // Satiated or less
+    switch (spell)
+    {
+    case SPELL_RESIST_POISON:
+    case SPELL_CURE_POISON_II:
+    case SPELL_TAME_BEASTS:
+    case SPELL_BLADE_HANDS:
+    case SPELL_SPIDER_FORM:
+    case SPELL_ICE_FORM:
+    case SPELL_STATUE_FORM:
+    case SPELL_DRAGON_FORM:
+    case SPELL_AIR_WALK:
+    case SPELL_BERSERKER_RAGE:
+        return true;
+    default:
+        return false;
+    }
+}
+
+static bool _spell_is_uncastable(spell_type spell)
 {
     if (you.is_undead && spell_typematch(spell, SPTYP_HOLY))
     {
@@ -847,6 +870,12 @@ static bool spell_is_uncastable(spell_type spell)
         return (true);
     }
 
+    if (_vampire_cannot_cast( spell ))
+    {
+        mpr("Your current blood level is not sufficient to cast that spell.");
+        return (true);
+    }
+
     return (false);
 }
 
@@ -861,7 +890,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch()
 
-    if (spell_is_uncastable(spell))
+    if (_spell_is_uncastable(spell))
         return (SPRET_ABORT);
 
     const int flags = get_spell_flags(spell);
@@ -870,7 +899,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     // XXX: This handles only some of the cases where spells need targeting...
     // there are others that do their own that will be missed by this
-    // (and thus will not properly ESC without cost because of it). 
+    // (and thus will not properly ESC without cost because of it).
     // Hopefully, those will eventually be fixed. -- bwr
     if (flags & SPFLAG_TARGETING_MASK)
     {
@@ -878,8 +907,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
 
         targeting_type dir  =
-            (testbits( flags, SPFLAG_TARGET ) ? DIR_TARGET : 
-             testbits( flags, SPFLAG_GRID )   ? DIR_TARGET : 
+            (testbits( flags, SPFLAG_TARGET ) ? DIR_TARGET :
+             testbits( flags, SPFLAG_GRID )   ? DIR_TARGET :
              testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);
@@ -920,7 +949,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
         const bool needs_path =
              !(testbits(flags, SPFLAG_GRID) || testbits(flags, SPFLAG_TARGET));
-             
+
         if ( !spell_direction( spd, beam, dir, targ, needs_path, prompt ) )
             return (SPRET_ABORT);
 
@@ -931,19 +960,19 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             {
                 mpr( "Sorry, this spell works on others only." );
             }
-            else 
+            else
             {
                 canned_msg(MSG_UNTHINKING_ACT);
             }
 
             return (SPRET_ABORT);
-        }        
+        }
     }
 
     // enhancers only matter for calc_spell_power() and spell_fail()
     // not sure about this: is it flavour or misleading?
     if (powc == 0 || allow_fail)
-        surge_power(spell);
+        _surge_power(spell);
 
     // Added this so that the passed in powc can have meaning -- bwr
     if (powc == 0)
@@ -1063,14 +1092,14 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         crawl_state.cant_cmd_repeat("You can't repeat delayed fireball.");
         // This spell has two main advantages over Fireball:
         //
-        // (1) The release is instantaneous, so monsters will not 
+        // (1) The release is instantaneous, so monsters will not
         //     get an action before the player... this allows the
         //     player to hit monsters with a double fireball (this
         //     is why we only allow one delayed fireball at a time,
-        //     if you want to allow for more, then the release should 
+        //     if you want to allow for more, then the release should
         //     take at least some amount of time).
         //
-        //     The casting of this spell still costs a turn.  So 
+        //     The casting of this spell still costs a turn.  So
         //     casting Delayed Fireball and immediately releasing
         //     the fireball is only slightly different than casting
         //     a regular Fireball (monsters act in the middle instead
@@ -1080,9 +1109,9 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         //     both).
         //
         // (2) When the fireball is released, it is guaranteed to
-        //     go off... the spell only fails at this point.  This can 
-        //     be a large advantage for characters who have difficulty 
-        //     casting Fireball in their standard equipment.  However, 
+        //     go off... the spell only fails at this point.  This can
+        //     be a large advantage for characters who have difficulty
+        //     casting Fireball in their standard equipment.  However,
         //     the power level for the actual fireball is determined at
         //     release, so if you do swap out your enhancers you'll
         //     get a less powerful ball when its released. -- bwr
@@ -1960,7 +1989,7 @@ void exercise_spell( spell_type spell, bool spc, bool success )
 
         const int exercise_amount = exercise( skill, workout );
         exer      += exercise_amount;
-        exer_norm += 
+        exer_norm +=
             exercise_amount * species_skills(skill, you.species) / ref_skill;
     }
 
@@ -1978,11 +2007,11 @@ void exercise_spell( spell_type spell, bool spc, bool success )
 
     if (spc)
     {
-        const int exercise_amount = 
-            exercise(SK_SPELLCASTING, one_chance_in(3) ? 1 
+        const int exercise_amount =
+            exercise(SK_SPELLCASTING, one_chance_in(3) ? 1
                             : random2(1 + random2(diff)));
         exer      += exercise_amount;
-        exer_norm += exercise_amount * 
+        exer_norm += exercise_amount *
             species_skills(SK_SPELLCASTING, you.species) / ref_skill;
     }
 
@@ -1990,7 +2019,7 @@ void exercise_spell( spell_type spell, bool spc, bool success )
         did_god_conduct( DID_SPELL_PRACTISE, exer_norm );
 }                               // end exercise_spell()
 
-static bool send_abyss(const char *cause)
+static bool _send_abyss(const char *cause)
 {
     if (you.level_type != LEVEL_ABYSS)
     {
@@ -2004,7 +2033,7 @@ static bool send_abyss(const char *cause)
     }
 }
 
-static void miscast_conjuration(int severity, const char* cause)
+static void _miscast_conjuration(int severity, const char* cause)
 {
     bolt beam;
     switch (severity)
@@ -2079,7 +2108,7 @@ static void miscast_conjuration(int severity, const char* cause)
             beam.damage = dice_def( 3, 12 );
             beam.flavour = BEAM_MISSILE; // unsure about this
             // BEAM_EXPLOSION instead? {dlb}
-            
+
             beam.target_x = you.x_pos;
             beam.target_y = you.y_pos;
             beam.name = "explosion";
@@ -2091,7 +2120,7 @@ static void miscast_conjuration(int severity, const char* cause)
                 beam.aux_source = cause;
             beam.ex_size = 1;
             beam.is_explosion = true;
-            
+
             explosion(beam);
             break;
         }
@@ -2121,14 +2150,14 @@ static void miscast_conjuration(int severity, const char* cause)
                 beam.aux_source = cause;
             beam.ex_size = coinflip()?1:2;
             beam.is_explosion = true;
-    
+
             explosion(beam);
             break;
         }
     }
 }
 
-static void miscast_enchantment(int severity, const char* cause)
+static void _miscast_enchantment(int severity, const char* cause)
 {
     switch (severity)
     {
@@ -2233,7 +2262,7 @@ static void miscast_enchantment(int severity, const char* cause)
     }
 }
 
-static void miscast_translocation(int severity, const char* cause)
+static void _miscast_translocation(int severity, const char* cause)
 {
     switch (severity)
     {
@@ -2330,7 +2359,7 @@ static void miscast_translocation(int severity, const char* cause)
             }
             break;
         case 6:
-            send_abyss(cause);
+            _send_abyss(cause);
             break;
         }
         break;
@@ -2351,7 +2380,7 @@ static void miscast_translocation(int severity, const char* cause)
             potion_effect(POT_CONFUSION, 60);
             break;
         case 2:
-            send_abyss(cause);
+            _send_abyss(cause);
             break;
         case 3:
             mpr("You feel saturated with unharnessed energies!");
@@ -2362,7 +2391,7 @@ static void miscast_translocation(int severity, const char* cause)
     }
 }
 
-static void miscast_summoning(int severity, const char* cause)
+static void _miscast_summoning(int severity, const char* cause)
 {
     switch (severity)
     {
@@ -2529,14 +2558,14 @@ static void miscast_summoning(int severity, const char* cause)
             break;
 
         case 3:
-            send_abyss(cause);
+            _send_abyss(cause);
             break;
         }
         break;
-    } 
+    }
 }
 
-static void miscast_divination(int severity, const char* cause)
+static void _miscast_divination(int severity, const char* cause)
 {
     switch (severity)
     {
@@ -2600,7 +2629,9 @@ static void miscast_divination(int severity, const char* cause)
                 mpr("You suddenly recall your previous life!");
             else if (lose_stat(STAT_INTELLIGENCE, 1 + random2(3),
                                false, cause))
+            {
                 mpr("You have damaged your brain!");
+            }
             else
                 mpr("You have a terrible headache.");
             break;
@@ -2629,7 +2660,9 @@ static void miscast_divination(int severity, const char* cause)
                 mpr("You suddenly recall your previous life.");
             else if (lose_stat(STAT_INTELLIGENCE, 3 + random2(3),
                                false, cause))
+            {
                 mpr("You have damaged your brain!");
+            }
             else
                 mpr("You have a terrible headache.");
             break;
@@ -2640,7 +2673,7 @@ static void miscast_divination(int severity, const char* cause)
     }
 }
 
-static void miscast_necromancy(int severity, const char* cause)
+static void _miscast_necromancy(int severity, const char* cause)
 {
     if (you.religion == GOD_KIKUBAAQUDGHA
         && (!player_under_penance() && you.piety >= piety_breakpoint(1)
@@ -2815,7 +2848,7 @@ static void miscast_necromancy(int severity, const char* cause)
     }
 }
 
-static void miscast_transmigration(int severity, const char* cause)
+static void _miscast_transmigration(int severity, const char* cause)
 {
     switch (severity)
     {
@@ -2912,7 +2945,7 @@ static void miscast_transmigration(int severity, const char* cause)
             {
                 const bool failMsg = !give_bad_mutation();
                 if (coinflip())
-                    give_bad_mutation(false, failMsg);                
+                    give_bad_mutation(false, failMsg);
                 ouch(5 + random2avg(23, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             }
             break;
@@ -2921,7 +2954,7 @@ static void miscast_transmigration(int severity, const char* cause)
     }
 }
 
-static void miscast_fire(int severity, const char* cause)
+static void _miscast_fire(int severity, const char* cause)
 {
     bolt beam;
     switch (severity)
@@ -3061,7 +3094,7 @@ static void miscast_fire(int severity, const char* cause)
     }
 }
 
-static void miscast_ice(int severity, const char* cause)
+static void _miscast_ice(int severity, const char* cause)
 {
     bolt beam;
     switch (severity)
@@ -3151,7 +3184,7 @@ static void miscast_ice(int severity, const char* cause)
                     beam.aux_source = cause;
             beam.ex_size = 1;
             beam.is_explosion = true;
-            
+
             explosion(beam);
             break;
         }
@@ -3179,7 +3212,7 @@ static void miscast_ice(int severity, const char* cause)
     }
 }
 
-static void miscast_earth(int severity, const char* cause)
+static void _miscast_earth(int severity, const char* cause)
 {
     bolt beam;
     switch (severity)
@@ -3262,12 +3295,12 @@ static void miscast_earth(int severity, const char* cause)
             beam.target_y = you.y_pos;
             beam.name = "explosion";
             beam.colour = CYAN;
-            
+
             if (one_chance_in(5))
                 beam.colour = BROWN;
             if (one_chance_in(5))
                 beam.colour = LIGHTCYAN;
-            
+
             beam.beam_source = NON_MONSTER;
             beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
             beam.aux_source.clear();
@@ -3275,7 +3308,7 @@ static void miscast_earth(int severity, const char* cause)
                 beam.aux_source = cause;
             beam.ex_size = 1;
             beam.is_explosion = true;
-            
+
             explosion(beam);
             break;
         }
@@ -3283,7 +3316,7 @@ static void miscast_earth(int severity, const char* cause)
     }
 }
 
-static void miscast_air(int severity, const char* cause)
+static void _miscast_air(int severity, const char* cause)
 {
     bolt beam;
     switch (severity)
@@ -3381,7 +3414,7 @@ static void miscast_air(int severity, const char* cause)
                 beam.aux_source = cause;
             beam.ex_size = one_chance_in(4)?1:2;
             beam.is_explosion = true;
-            
+
             explosion(beam);
             break;
         case 1:
@@ -3394,7 +3427,7 @@ static void miscast_air(int severity, const char* cause)
     }
 }
 
-static void miscast_poison(int severity, const char* cause)
+static void _miscast_poison(int severity, const char* cause)
 {
     switch (severity)
     {
@@ -3508,7 +3541,7 @@ static void miscast_poison(int severity, const char* cause)
             break;
         case 2:
             if (player_res_poison())
-                canned_msg(MSG_NOTHING_HAPPENS);               
+                canned_msg(MSG_NOTHING_HAPPENS);
             else
                 lose_stat(STAT_RANDOM, 1 + random2avg(5, 2), false, cause);
             break;
@@ -3523,7 +3556,7 @@ static void miscast_poison(int severity, const char* cause)
  *  force_effect forces a certain severity of effect to occur
  *  (set to 100 to avoid forcing.)
  */
-void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail, 
+void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                      int force_effect, const char *cause )
 {
     if (sp_type == SPTYP_RANDOM)
@@ -3554,7 +3587,7 @@ void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
         sever = 0;
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Sptype: %u, failure1: %d, failure2: %d", 
+    mprf(MSGCH_DIAGNOSTICS, "Sptype: %u, failure1: %d, failure2: %d",
          sp_type, old_fail, sever );
 #endif
 
@@ -3563,18 +3596,18 @@ void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
     switch (sp_type)
     {
-    case SPTYP_CONJURATION:    miscast_conjuration(sever, cause);    break;
-    case SPTYP_ENCHANTMENT:    miscast_enchantment(sever, cause);    break;
-    case SPTYP_TRANSLOCATION:  miscast_translocation(sever, cause);  break;
-    case SPTYP_SUMMONING:      miscast_summoning(sever, cause);      break;
-    case SPTYP_DIVINATION:     miscast_divination(sever, cause);     break;
-    case SPTYP_NECROMANCY:     miscast_necromancy(sever, cause);     break;
-    case SPTYP_TRANSMIGRATION: miscast_transmigration(sever, cause); break;
-    case SPTYP_FIRE:           miscast_fire(sever, cause);           break;
-    case SPTYP_ICE:            miscast_ice(sever, cause);            break;
-    case SPTYP_EARTH:          miscast_earth(sever, cause);          break;
-    case SPTYP_AIR:            miscast_air(sever, cause);            break;
-    case SPTYP_POISON:         miscast_poison(sever, cause);         break;
+    case SPTYP_CONJURATION:    _miscast_conjuration(sever, cause);    break;
+    case SPTYP_ENCHANTMENT:    _miscast_enchantment(sever, cause);    break;
+    case SPTYP_TRANSLOCATION:  _miscast_translocation(sever, cause);  break;
+    case SPTYP_SUMMONING:      _miscast_summoning(sever, cause);      break;
+    case SPTYP_DIVINATION:     _miscast_divination(sever, cause);     break;
+    case SPTYP_NECROMANCY:     _miscast_necromancy(sever, cause);     break;
+    case SPTYP_TRANSMIGRATION: _miscast_transmigration(sever, cause); break;
+    case SPTYP_FIRE:           _miscast_fire(sever, cause);           break;
+    case SPTYP_ICE:            _miscast_ice(sever, cause);            break;
+    case SPTYP_EARTH:          _miscast_earth(sever, cause);          break;
+    case SPTYP_AIR:            _miscast_air(sever, cause);            break;
+    case SPTYP_POISON:         _miscast_poison(sever, cause);         break;
     }
 
     xom_is_stimulated(sever);
@@ -3631,18 +3664,18 @@ int spell_power_colour(spell_type spell)
     return GREEN;
 }
 
-static int power_to_barcount( int power )
+static int _power_to_barcount( int power )
 {
     if ( power == -1 )
         return -1;
-        
+
     const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
     int result = 0;
     for ( unsigned int i = 0; i < ARRAYSIZE(breakpoints); ++i )
         if ( power > breakpoints[i] )
             ++result;
 
-    return result + 1;   
+    return result + 1;
 }
 
 int spell_power_bars( spell_type spell )
@@ -3651,13 +3684,13 @@ int spell_power_bars( spell_type spell )
     if ( cap == 0 )
         return -1;
     const int power = std::min(calc_spell_power(spell, true), cap);
-    return power_to_barcount(power);
+    return _power_to_barcount(power);
 }
 
 std::string spell_power_string(spell_type spell)
 {
     const int numbars = spell_power_bars(spell);
-    const int capbars = power_to_barcount(spell_power_cap(spell));
+    const int capbars = _power_to_barcount(spell_power_cap(spell));
     ASSERT( numbars <= capbars );
     if ( numbars < 0 )
         return "N/A";

@@ -158,7 +158,7 @@ enum actor_type
     ACT_PLAYER,
     ACT_MONSTER
 };
- 
+
 enum attribute_type
 {
     ATTR_DIVINE_LIGHTNING_PROTECTION,  //    0
@@ -193,7 +193,7 @@ enum quiver_type
 enum beam_type                  // beam[].flavour
 {
     BEAM_NONE,                    //    0
-    
+
     BEAM_MISSILE,
     BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
@@ -379,7 +379,7 @@ enum char_set_type
     NUM_CSET
 };
 
-enum cloud_type 
+enum cloud_type
 {
     CLOUD_NONE,
     CLOUD_FIRE,
@@ -501,7 +501,7 @@ enum command_type
     CMD_RESISTS_SCREEN,
 
     CMD_READ_MESSAGES,
-    
+
     CMD_MOUSE_MOVE,
     CMD_MOUSE_CLICK,
 
@@ -608,7 +608,7 @@ enum command_type
     // Disable/enable -more- prompts.
     CMD_DISABLE_MORE,
     CMD_ENABLE_MORE,
-    
+
     // [ds] Silently ignored, requests another round of input.
     CMD_NEXT_CMD,
 
@@ -694,8 +694,8 @@ enum startup_book_type
 // happen.
 enum delay_type
 {
-    DELAY_NOT_DELAYED,                  
-    DELAY_EAT,                         
+    DELAY_NOT_DELAYED,
+    DELAY_EAT,
     DELAY_ARMOUR_ON,
     DELAY_ARMOUR_OFF,
     DELAY_JEWELLERY_ON,
@@ -814,12 +814,12 @@ enum dungeon_char_type
     DCHAR_FIRED_ARMOUR,
     DCHAR_FIRED_MISSILE,
     DCHAR_EXPLOSION,
-    
+
     NUM_DCHAR_TYPES
 };
 
 // When adding:
-// 
+//
 // * New stairs/portals: update grid_stair_direction.
 // * Any: edit view.cc and add a glyph and colour for the feature.
 // * Any: edit direct.cc and add a description for the feature.
@@ -1393,7 +1393,7 @@ enum map_marker_type
 enum menu_type
 {
     MT_ANY = -1,
-    
+
     MT_INVLIST,                        // List inventory
     MT_DROP,
 
@@ -1412,7 +1412,7 @@ enum mon_holy_type
 
 enum targ_mode_type
 {
-    TARG_ANY, 
+    TARG_ANY,
     TARG_ENEMY,
     TARG_FRIEND,
     TARG_NUM_MODES
@@ -1726,13 +1726,13 @@ enum monster_type                      // (int) menv[].type
 
     // Sync up with monplace.cc's draconian selection if adding more.
     MONS_DRACONIAN_CALLER,
-    MONS_DRACONIAN_MONK, 
+    MONS_DRACONIAN_MONK,
     MONS_DRACONIAN_ZEALOT,
     MONS_DRACONIAN_SHIFTER,
     MONS_DRACONIAN_ANNIHILATOR,         //  325
     MONS_DRACONIAN_KNIGHT,
     MONS_DRACONIAN_SCORCHER,
-    
+
     MONS_MURRAY,
     MONS_TIAMAT,
 
@@ -1825,13 +1825,13 @@ enum monster_type                      // (int) menv[].type
 
     // A random draconian, either base coloured drac or specialised.
     RANDOM_DRACONIAN,
-    
+
     // Any random base draconian colour.
     RANDOM_BASE_DRACONIAN,
 
     // Any random specialised draconian, such as a draconian knight.
     RANDOM_NONBASE_DRACONIAN,
-    
+
     WANDERING_MONSTER = 2500 // only used in monster placement routines - forced limit checks {dlb}
 
 };
@@ -2077,7 +2077,7 @@ enum mutation_type
     MUT_THROW_FLAMES,                  //   55
     MUT_THROW_FROST,
     MUT_SMITE,
-    MUT_CLAWS,                         
+    MUT_CLAWS,
     MUT_FANGS,      // new in 0.3
     // hooves and talons can replace feet
     MUT_HOOVES,                        //   60
@@ -2091,7 +2091,7 @@ enum mutation_type
     MUT_SHAGGY_FUR, // new in 0.4
     MUT_HIGH_MAGIC, // new in 0.4
     MUT_LOW_MAGIC,  // new in 0.4      --   70
-    
+
     // several types of scales (affect AC and sometimes more)
     MUT_RED_SCALES = 75,               //   75
     MUT_NACREOUS_SCALES,
@@ -2253,7 +2253,7 @@ enum size_type
     SIZE_MEDIUM,            // human/elf/dwarf
     SIZE_LARGE,             // troll/ogre/centaur/naga
     SIZE_BIG,               // large quadrupeds
-    SIZE_GIANT,             // giant 
+    SIZE_GIANT,             // giant
     SIZE_HUGE,              // dragon
     NUM_SIZE_LEVELS,
     SIZE_CHARACTER          // transformations that don't change size
@@ -2343,12 +2343,12 @@ enum species_type
     SP_MOTTLED_DRACONIAN,
     SP_PALE_DRACONIAN,
     SP_BASE_DRACONIAN,                 //   25
-    SP_CENTAUR,       
+    SP_CENTAUR,
     SP_DEMIGOD,
-    SP_SPRIGGAN, 
+    SP_SPRIGGAN,
     SP_MINOTAUR,
     SP_DEMONSPAWN,                     //   30
-    SP_GHOUL,         
+    SP_GHOUL,
     SP_KENKU,
     SP_MERFOLK,
     SP_VAMPIRE,                        //   34
@@ -2654,14 +2654,14 @@ enum tutorial_event_type
     TUT_SEEN_STAIRS,        // 14
     TUT_SEEN_ESCAPE_HATCH,
     TUT_SEEN_TRAP,
-    TUT_SEEN_ALTAR,         
-    TUT_SEEN_SHOP,          
+    TUT_SEEN_ALTAR,
+    TUT_SEEN_SHOP,
     TUT_SEEN_DOOR,
     // other 'first events'
     TUT_SEEN_MONSTER,       // 20
     TUT_MONSTER_BRAND,
     TUT_KILLED_MONSTER,
-    TUT_NEW_LEVEL,       
+    TUT_NEW_LEVEL,
     TUT_SKILL_RAISE,
     TUT_MAKE_CHUNKS,        // 25
     TUT_OFFER_CORPSE,
@@ -2698,13 +2698,14 @@ enum tutorial_types
     TUT_MAGIC_CHAR,
     TUT_RANGER_CHAR,
     TUT_TYPES_NUM   // 3
-};    
+};
 
 enum undead_state_type                // you.is_undead
 {
     US_ALIVE = 0,
-    US_HUNGRY_DEAD,
-    US_UNDEAD
+    US_HUNGRY_DEAD,     // Ghouls
+    US_UNDEAD,          // Mummies
+    US_SEMI_UNDEAD      // Vampires
 };
 
 enum unique_item_status_type
@@ -2723,6 +2724,6 @@ enum wizard_option_type
     WIZ_YES                            // start character in wiz mode
 };
 
-#endif 
+#endif
 
 #endif // ENUM_H

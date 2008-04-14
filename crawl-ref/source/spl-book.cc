@@ -1081,7 +1081,7 @@ bool undead_cannot_memorise(spell_type spell, char being)
 {
     switch (being)
     {
-    case US_HUNGRY_DEAD:
+    case US_HUNGRY_DEAD: // Ghouls
         switch (spell)
         {
         //case SPELL_REGENERATION:
@@ -1106,7 +1106,22 @@ bool undead_cannot_memorise(spell_type spell, char being)
         }
         break;
 
-    case US_UNDEAD:
+    case US_SEMI_UNDEAD: // Vampires
+        switch (spell)
+        {
+        case SPELL_BORGNJORS_REVIVIFICATION:
+        case SPELL_DEATHS_DOOR:
+        case SPELL_NECROMUTATION:
+        case SPELL_ALTER_SELF:
+            return true;
+        default:
+            // also, the above US_HUNGRY_DEAD spells are not castable
+            // when satiated or worse
+            return false;
+        }
+        break;
+
+    case US_UNDEAD: // Mummies
         switch (spell)
         {
         case SPELL_AIR_WALK:
