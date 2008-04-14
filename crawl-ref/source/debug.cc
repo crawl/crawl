@@ -200,7 +200,7 @@ static int debug_prompt_for_skill( const char *prompt )
 
     mpr( prompt, MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
-    
+
     if (specs[0] == '\0')
         return (-1);
 
@@ -239,14 +239,14 @@ static int debug_prompt_for_skill( const char *prompt )
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
-void debug_change_species( void ) 
+void debug_change_species( void )
 {
     char specs[80];
     int i;
 
     mpr( "What species would you like to be now? " , MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
-    
+
     if (specs[0] == '\0')
         return;
     strlwr(specs);
@@ -283,18 +283,18 @@ void debug_change_species( void )
             you.skill_points[i] /= species_skills( i, you.species );
         }
 
-        you.species = sp;         
+        you.species = sp;
         you.is_undead = ((you.species == SP_MUMMY) ? US_UNDEAD :
                          (you.species == SP_GHOUL
                           || you.species == SP_VAMPIRE) ? US_HUNGRY_DEAD
                          : US_ALIVE);
         redraw_screen();
     }
-} 
-#endif 
+}
+#endif
 //---------------------------------------------------------------
 //
-// debug_prompt_for_int 
+// debug_prompt_for_int
 //
 // If nonneg, then it returns a non-negative number or -1 on fail
 // If !nonneg, then it returns an integer, and 0 on fail
@@ -392,11 +392,11 @@ void cast_spec_spell_name(void)
 void create_spec_monster(void)
 {
     int mon = debug_prompt_for_int( "Create which monster by number? ", true );
-    
+
     if (mon == -1)
         canned_msg( MSG_OK );
     else
-        create_monster( mon, 0, BEH_SLEEP, 
+        create_monster( mon, 0, BEH_SLEEP,
                         you.x_pos, you.y_pos, MHITNOT, MONS_PROGRAM_BUG,
                         true );
 }                               // end create_spec_monster()
@@ -421,13 +421,13 @@ void create_spec_monster_name(int x, int y)
 
     mons_list mlist;
     std::string err = mlist.add_mons(specs);
-    
+
     if (!err.empty())
     {
         mpr(err.c_str());
         return;
     }
-    
+
     const bool force_place = (x != -1 && y != -1);
     if (x == -1)
         x = you.x_pos;
@@ -449,7 +449,7 @@ void create_spec_monster_name(int x, int y)
     // were already created.
     if (mons_is_unique(mspec.mid) && you.unique_creatures[mspec.mid])
         you.unique_creatures[mspec.mid] = false;
-    
+
     if (!dgn_place_monster(mspec, you.your_level, x, y, false))
     {
         mpr("Unable to place monster");
@@ -464,9 +464,11 @@ void create_spec_monster_name(int x, int y)
         if (mid >= MAX_MONSTERS || menv[mid].type != MONS_PLAYER_GHOST)
         {
             for (mid = 0; mid < MAX_MONSTERS; mid++)
-                if (menv[mid].type == MONS_PLAYER_GHOST 
+                if (menv[mid].type == MONS_PLAYER_GHOST
                     && menv[mid].alive())
+                {
                     break;
+                }
         }
 
         if (mid >= MAX_MONSTERS)
@@ -495,7 +497,7 @@ void create_spec_monster_name(int x, int y)
             sp_id = SP_HUMAN;
         }
         ghost.species = static_cast<species_type>(sp_id);
-        
+
         mpr( "Make player ghost which class? ", MSGCH_PROMPT );
         get_input_line( input_str, sizeof( input_str ) );
 
@@ -686,7 +688,7 @@ void wizard_interlevel_travel()
 {
     const level_pos pos =
         prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES).p;
-    
+
     if (pos.id.depth < 1 || pos.id.depth > branches[pos.id.branch].depth)
     {
         canned_msg(MSG_OK);
@@ -758,7 +760,7 @@ static void rune_from_specs(const char* _specs, item_def &item)
 
         int keyin = tolower( get_ch() );
 
-        if (keyin == ESCAPE  || keyin == ' ' 
+        if (keyin == ESCAPE  || keyin == ' '
             || keyin == '\r' || keyin == '\n')
         {
             canned_msg( MSG_OK );
@@ -844,7 +846,7 @@ static void deck_from_specs(const char* _specs, item_def &item)
             // Remove "plain " from front
             std::string name = item.name(DESC_PLAIN).substr(6);
             item.props.clear();
-            
+
             if (name.find(type_str) != std::string::npos)
                 break;
         }
@@ -864,7 +866,7 @@ static void deck_from_specs(const char* _specs, item_def &item)
 
             int keyin = tolower( get_ch() );
 
-            if (keyin == ESCAPE  || keyin == ' ' 
+            if (keyin == ESCAPE  || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
             {
                 canned_msg( MSG_OK );
@@ -905,7 +907,7 @@ static void deck_from_specs(const char* _specs, item_def &item)
 
             int keyin = tolower( get_ch() );
 
-            if (keyin == ESCAPE  || keyin == ' ' 
+            if (keyin == ESCAPE  || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
             {
                 canned_msg( MSG_OK );
@@ -942,7 +944,7 @@ static void deck_from_specs(const char* _specs, item_def &item)
         return;
     }
 
-    item.plus = num; 
+    item.plus = num;
 
     init_deck(item);
 }
@@ -962,7 +964,7 @@ static void rune_or_deck_from_specs(const char* specs, item_def &item)
 //---------------------------------------------------------------
 void create_spec_object()
 {
-    static int max_subtype[] = 
+    static int max_subtype[] =
     {
         NUM_WEAPONS,
         NUM_MISSILES,
@@ -998,13 +1000,13 @@ void create_spec_object()
 
     int            thing_created;
 
-    while (class_wanted == OBJ_UNASSIGNED) 
+    while (class_wanted == OBJ_UNASSIGNED)
     {
         mpr(") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls",
              MSGCH_PROMPT);
         mpr("= - jewellery   ! - potions   : - books   | - staves   0  - The Orb",
              MSGCH_PROMPT);
-        mpr("} - miscellany  X - corpses   % - food    $ - gold    ESC - exit", 
+        mpr("} - miscellany  X - corpses   % - food    $ - gold    ESC - exit",
              MSGCH_PROMPT);
 
         mpr("What class of item? ", MSGCH_PROMPT);
@@ -1039,7 +1041,7 @@ void create_spec_object()
             class_wanted = OBJ_FOOD;
         else if (keyin == '$')
             class_wanted = OBJ_GOLD;
-        else if (keyin == ESCAPE || keyin == ' ' 
+        else if (keyin == ESCAPE || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
         {
             canned_msg( MSG_OK );
@@ -1110,8 +1112,8 @@ void create_spec_object()
             return;
         }
 
-        // In order to get the sub-type, we'll fill out the base type... 
-        // then we're going to iterate over all possible subtype values 
+        // In order to get the sub-type, we'll fill out the base type...
+        // then we're going to iterate over all possible subtype values
         // and see if we get a winner. -- bwr
         mitm[thing_created].base_type = class_wanted;
         mitm[thing_created].sub_type  = 0;
@@ -1152,7 +1154,7 @@ void create_spec_object()
                     if (ptr - obj_name < best_index)
                     {
                         mpr( obj_name );
-                        type_wanted = i;    
+                        type_wanted = i;
                         best_index = ptr - obj_name;
                     }
                 }
@@ -1173,10 +1175,10 @@ void create_spec_object()
                 }
                 type_wanted--;
             }
-            
+
             mitm[thing_created].sub_type = type_wanted;
         }
-        
+
         switch (mitm[thing_created].base_type)
         {
         case OBJ_MISSILES:
@@ -1186,7 +1188,7 @@ void create_spec_object()
         case OBJ_ARMOUR:
             mpr( "What ego type? ", MSGCH_PROMPT );
             get_input_line( specs, sizeof( specs ) );
-            
+
             if (specs[0] != '\0')
             {
                 special_wanted = 0;
@@ -1205,7 +1207,7 @@ void create_spec_object()
                         if (ptr - obj_name < best_index)
                         {
                             mpr( obj_name );
-                            special_wanted = i;    
+                            special_wanted = i;
                             best_index = ptr - obj_name;
                         }
                     }
@@ -1225,7 +1227,7 @@ void create_spec_object()
                     mpr( "Sorry, no books on that skill today." );
             }
             break;
-        
+
         case OBJ_WANDS:
             mitm[thing_created].plus = 24;
             break;
@@ -1322,7 +1324,7 @@ void tweak_object(void)
                 field_ptr = &(you.inv[item].quantity);
             else if (keyin == 'e')
                 field_ptr = &(you.inv[item].flags);
-            else if (keyin == ESCAPE || keyin == ' ' 
+            else if (keyin == ESCAPE || keyin == ' '
                     || keyin == '\r' || keyin == '\n')
             {
                 canned_msg( MSG_OK );
@@ -1338,7 +1340,7 @@ void tweak_object(void)
             const short *const ptr = static_cast< short * >( field_ptr );
             mprf("Old value: %d (0x%04x)", *ptr, *ptr );
         }
-        else 
+        else
         {
             const long *const ptr = static_cast< long * >( field_ptr );
             mprf("Old value: %ld (0x%08lx)", *ptr, *ptr );
@@ -1346,7 +1348,7 @@ void tweak_object(void)
 
         mpr( "New value? ", MSGCH_PROMPT );
         get_input_line( specs, sizeof( specs ) );
-        
+
         if (specs[0] == '\0')
             return;
 
@@ -1408,7 +1410,7 @@ void stethoscope(int mwh)
 
         if (env.cgrid[steth_x][steth_y] != EMPTY_CLOUD)
         {
-            mprf(MSGCH_DIAGNOSTICS, "cloud type: %d delay: %d", 
+            mprf(MSGCH_DIAGNOSTICS, "cloud type: %d delay: %d",
                  env.cloud[ env.cgrid[steth_x][steth_y] ].type,
                  env.cloud[ env.cgrid[steth_x][steth_y] ].decay );
         }
@@ -1428,7 +1430,7 @@ void stethoscope(int mwh)
          i, menv[i].type, menv[i].x, menv[i].y,
          ((menv[i].attitude == ATT_FRIENDLY) ? "friendly" :
           (menv[i].attitude == ATT_HOSTILE)  ? "hostile" :
-          (menv[i].attitude == ATT_NEUTRAL)  ? "neutral" 
+          (menv[i].attitude == ATT_NEUTRAL)  ? "neutral"
                                              : "unknown alignment") );
 
     // print stats and other info
@@ -1437,7 +1439,7 @@ void stethoscope(int mwh)
          "energy=%d num=%d flags=%04lx",
          menv[i].hit_dice,
          menv[i].experience,
-         menv[i].hit_points, menv[i].max_hit_points, 
+         menv[i].hit_points, menv[i].max_hit_points,
          menv[i].ac, menv[i].ev,
          mons_resist_magic( &menv[i] ),
          menv[i].speed, menv[i].speed_increment,
@@ -1480,7 +1482,7 @@ void stethoscope(int mwh)
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          menv[i].describe_enchantments().c_str());
 
-    if (menv[i].type == MONS_PLAYER_GHOST 
+    if (menv[i].type == MONS_PLAYER_GHOST
         || menv[i].type == MONS_PANDEMONIUM_DEMON)
     {
         ASSERT(menv[i].ghost.get());
@@ -1583,7 +1585,7 @@ void debug_item_scan( void )
         {
             mpr( "Unlinked item:", MSGCH_WARN );
             dump_item( name, i, mitm[i] );
-            
+
             mprf("igrd(%d,%d) = %d",
                  mitm[i].x, mitm[i].y, igrd[ mitm[i].x ][ mitm[i].y ] );
 
@@ -1594,7 +1596,7 @@ void debug_item_scan( void )
                 {
                     if (menv[j].inv[k] == i)
                     {
-                        mprf("Held by monster #%d: %s at (%d,%d)", 
+                        mprf("Held by monster #%d: %s at (%d,%d)",
                              j, menv[j].name(DESC_CAP_A, true).c_str(),
                              menv[j].x, menv[j].y );
                     }
@@ -1622,20 +1624,20 @@ void debug_item_scan( void )
             mpr( "Bad item:", MSGCH_WARN );
             dump_item( name, i, mitm[i] );
         }
-        else if ((mitm[i].base_type == OBJ_WEAPONS 
-                && (abs(mitm[i].plus) > 30 
+        else if ((mitm[i].base_type == OBJ_WEAPONS
+                && (abs(mitm[i].plus) > 30
                     || abs(mitm[i].plus2) > 30
                     || (!is_random_artefact( mitm[i] )
-                        && (mitm[i].special >= 30 
+                        && (mitm[i].special >= 30
                             && mitm[i].special < 181))))
 
-            || (mitm[i].base_type == OBJ_MISSILES 
-                && (abs(mitm[i].plus) > 25 
-                    || (!is_random_artefact( mitm[i] ) 
+            || (mitm[i].base_type == OBJ_MISSILES
+                && (abs(mitm[i].plus) > 25
+                    || (!is_random_artefact( mitm[i] )
                         && mitm[i].special >= 30)))
 
             || (mitm[i].base_type == OBJ_ARMOUR
-                && (abs(mitm[i].plus) > 25 
+                && (abs(mitm[i].plus) > 25
                     || (!is_random_artefact( mitm[i] )
                         && mitm[i].special >= 30))))
         {
@@ -1659,7 +1661,7 @@ void debug_item_scan( void )
             mprf( MSGCH_WARN,
                   "Buggy monster detected: monster #%d; position (%d,%d)",
                   i, monster.x, monster.y );
-        }   
+        }
     }
 }
 #endif
@@ -1738,7 +1740,7 @@ static void debug_acquirement_stats(FILE *ostat)
         int item_index = NON_ITEM;
 
         if (!acquirement(type, AQ_WIZMODE, true, &item_index)
-            || item_index == NON_ITEM 
+            || item_index == NON_ITEM
             || !is_valid_item(mitm[item_index]))
         {
             mpr("Acquirement failed, stopping early.");
@@ -1881,7 +1883,7 @@ static void debug_rap_stats(FILE *ostat)
         -1, //RAP_CURSED
          0, //RAP_STEALTH
          0  //RAP_MAGICAL_POWER
-    };        
+    };
 
     // No bounds checking to speed things up a bit.
     int all_props[RAP_NUM_PROPERTIES];
@@ -2112,7 +2114,7 @@ void debug_set_skills(void)
             canned_msg( MSG_OK );
         else
         {
-            const int points = (skill_exp_needed( amount + 1 ) 
+            const int points = (skill_exp_needed( amount + 1 )
                                 * species_skills( skill, you.species )) / 100;
 
             you.skill_points[skill] = points + 1;
@@ -2172,13 +2174,13 @@ void debug_set_all_skills(void)
 
         for (i = SK_FIGHTING; i < NUM_SKILLS; i++)
         {
-            if (i == SK_UNUSED_1 
+            if (i == SK_UNUSED_1
                 || (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING))
             {
                 continue;
             }
 
-            const int points = (skill_exp_needed( amount + 1 ) 
+            const int points = (skill_exp_needed( amount + 1 )
                                 * species_skills( i, you.species )) / 100;
 
             you.skill_points[i] = points + 1;
@@ -2349,7 +2351,7 @@ bool debug_add_mutation(void)
     mpr( "Which mutation ('any' for any, 'xom' for xom mutation)? ",
          MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
-    
+
     if (specs[0] == '\0')
         return (false);
 
@@ -2438,7 +2440,7 @@ bool debug_add_mutation(void)
                     success = true;
             }
         }
-        else 
+        else
         {
             for (int i = 0; i < -levels; i++)
             {
@@ -2465,7 +2467,7 @@ void debug_get_religion(void)
 
     mpr( "Which god (by name)? ", MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
-    
+
     if (specs[0] == '\0')
         return;
 
@@ -2506,8 +2508,8 @@ void error_message_to_player(void)
 
 static int create_fsim_monster(int mtype, int hp)
 {
-    const int mi = 
-        create_monster( mtype, 0, BEH_HOSTILE, you.x_pos, you.y_pos, 
+    const int mi =
+        create_monster( mtype, 0, BEH_HOSTILE, you.x_pos, you.y_pos,
                         MHITNOT, MONS_PROGRAM_BUG );
 
     if (mi == -1)
@@ -2538,7 +2540,7 @@ static void fsim_set_ranged_skill(int skill, const item_def *item)
     you.skills[SK_THROWING]        = skill * 15 / 27;
 }
 
-static void fsim_item(FILE *out, 
+static void fsim_item(FILE *out,
                       bool melee,
                       const item_def *weap,
                       const char *wskill,
@@ -2577,9 +2579,9 @@ static void fsim_defence_item(FILE *out, long cum, int hits, int max,
             max,
             100 / speed);
 }
-                              
 
-static bool fsim_ranged_combat(FILE *out, int wskill, int mi, 
+
+static bool fsim_ranged_combat(FILE *out, int wskill, int mi,
                              const item_def *item, int missile_slot)
 {
     monsters &mon = menv[mi];
@@ -2639,7 +2641,7 @@ static bool fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
     long hits = 0L;
     int maxdam = 0;
     no_messages mx;
-        
+
     for (long i = 0; i < Options.fsim_rounds; ++i)
     {
         you.hp = you.hp_max = 5000;
@@ -2660,7 +2662,7 @@ static bool fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
     return (true);
 }
 
-static bool fsim_melee_combat(FILE *out, int wskill, int mi, 
+static bool fsim_melee_combat(FILE *out, int wskill, int mi,
                              const item_def *item)
 {
     monsters &mon = menv[mi];
@@ -2720,8 +2722,8 @@ static std::string fsim_wskill(int missile_slot)
     const item_def *iweap = fsim_weap_item();
     if (!iweap && missile_slot != -1)
         return skill_name(range_skill(you.inv[missile_slot]));
-    
-    return iweap && iweap->base_type == OBJ_WEAPONS 
+
+    return iweap && iweap->base_type == OBJ_WEAPONS
              && is_range_weapon(*iweap)?
                         skill_name( range_skill(*iweap) ) :
             iweap?      skill_name( fsim_melee_skill(iweap) ) :
@@ -2739,7 +2741,7 @@ static std::string fsim_weapon(int missile_slot)
             item_buf = weapon.name(DESC_PLAIN, true);
             if (is_range_weapon(weapon))
             {
-                const int missile = 
+                const int missile =
                     missile_slot == -1? you.m_quiver->get_fire_item() :
                     missile_slot;
                 if (missile < ENDOFPACK && missile >= 0)
@@ -2880,7 +2882,7 @@ static bool fsim_mon_hit_you(FILE *ostat, int mindex, int)
 
     mprf("Done defence simulation with %s",
          menv[mindex].name(DESC_PLAIN).c_str());
-    
+
     return (true);
 }
 
@@ -2894,7 +2896,7 @@ static bool fsim_you_hit_mon(FILE *ostat, int mindex, int missile_slot)
                 fsim_weapon(missile_slot).c_str(), wskill);
         if (!debug_fight_simulate(ostat, wskill, mindex, missile_slot))
             return (false);
-        
+
         fflush(ostat);
         // Not checking in the combat loop itself; that would be more responsive
         // for the user, but slow down the sim with all the calls to kbhit().
@@ -3000,7 +3002,7 @@ int fsim_kit_equip(const std::string &kit)
         {
             if (!is_valid_item(you.inv[i]))
                 continue;
-            
+
             if (you.inv[i].name(DESC_PLAIN).find(missile) != std::string::npos)
             {
                 missile_slot = i;
@@ -3014,7 +3016,7 @@ int fsim_kit_equip(const std::string &kit)
 
 // Writes statistics about a fight to fight.stat in the current directory.
 // For fight purposes, a punching bag is summoned and given lots of hp, and the
-// average damage the player does to the p. bag over 10000 hits is noted, 
+// average damage the player does to the p. bag over 10000 hits is noted,
 // advancing the weapon skill from 0 to 27, and keeping fighting skill to 2/5
 // of current weapon skill.
 void debug_fight_statistics(bool use_defaults, bool defence)
@@ -3031,7 +3033,7 @@ void debug_fight_statistics(bool use_defaults, bool defence)
     }
 
     you.exp_available = 0;
-    
+
     if (!use_defaults || defence)
         debug_fight_sim(mindex, -1,
                         defence? fsim_mon_hit_you : fsim_you_hit_mon);
@@ -3049,7 +3051,7 @@ void debug_fight_statistics(bool use_defaults, bool defence)
                 break;
         }
     }
-    monster_die(&menv[mindex], KILL_DISMISSED, 0);    
+    monster_die(&menv[mindex], KILL_DISMISSED, 0);
 }
 
 static int find_trap_slot()
@@ -3091,7 +3093,7 @@ void debug_make_trap()
     std::vector<std::string> match_names;
     for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
     {
-        if (strstr(requested_trap, 
+        if (strstr(requested_trap,
                    trap_name(trap_type(t))))
         {
             trap = trap_type(t);
@@ -3176,7 +3178,7 @@ void debug_make_shop()
 
     representative = !!strchr(requested_shop, '*');
 
-    place_spec_shop(you.your_level, you.x_pos, you.y_pos, 
+    place_spec_shop(you.your_level, you.x_pos, you.y_pos,
                     new_shop_type, representative);
     link_items();
     mprf("Done.");
@@ -3277,7 +3279,7 @@ void debug_set_xl()
 static void debug_load_map_by_name(std::string name)
 {
     const bool place_on_us = strip_tag(name, "*", true);
-    
+
     level_clear_vault_memory();
     int map = find_map_by_name(name);
     if (map == -1)
@@ -3316,7 +3318,7 @@ static void debug_load_map_by_name(std::string name)
     {
         where = you.pos();
     }
-    
+
     if (dgn_place_map(map, false, true, false, where))
         mprf("Successfully placed %s.", map_by_index(map)->name.c_str());
     else
@@ -3401,7 +3403,7 @@ static int debug_time_explore()
     start_explore(false);
 
     unwind_var<int> es(Options.explore_stop, 0);
-    
+
     const long start = you.num_turns;
     while (you_are_delayed())
     {
@@ -3649,7 +3651,7 @@ void wizard_give_monster_item(monsters *mon)
     }
 
     // Shouldn't be be using MONUSE_MAGIC_ITEMS?
-    if (item_use == MONUSE_STARTING_EQUIPMENT 
+    if (item_use == MONUSE_STARTING_EQUIPMENT
         && !mons_is_unique( mon->type ))
     {
         switch(mon_slot)
@@ -3738,7 +3740,7 @@ void mapgen_report_map_build_start()
 void mapgen_report_map_veto()
 {
     mg_vetoes++;
-    mapgen_map_builds[level_id::current()].second++;    
+    mapgen_map_builds[level_id::current()].second++;
 }
 
 static map_mask mg_MapMask;
@@ -3746,7 +3748,7 @@ static map_mask mg_MapMask;
 static bool _mg_region_flood(const coord_def &c, int region, bool flag)
 {
     bool found_exit = false;
-    
+
     mg_MapMask(c) = region;
 
     if (flag)
@@ -3764,7 +3766,7 @@ static bool _mg_region_flood(const coord_def &c, int region, bool flag)
         {
             if (!xi && !yi)
                 continue;
-            
+
             coord_def ci = c + coord_def(xi, yi);
             if (!in_bounds(ci) || mg_MapMask(ci) || !dgn_square_is_passable(ci))
                 continue;
@@ -3781,7 +3783,7 @@ static bool _mg_is_disconnected_level()
     if (you.level_type != LEVEL_DUNGEON
         || (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED))
         return (false);
-    
+
     std::vector<coord_def> region_seeds;
 
     mg_MapMask.init(0);
@@ -3802,7 +3804,7 @@ static bool _mg_is_disconnected_level()
     mg_MapMask.init(0);
     for (int i = 0, size = region_seeds.size(); i < size; ++i)
         _mg_region_flood(region_seeds[i], 1, true);
-    
+
     return (good_regions < region);
 }
 
@@ -3882,9 +3884,9 @@ static bool mg_do_build_level(int niters)
             for (int y = 0; y < GYM; ++y)
                 for (int x = 0; x < GXM; ++x)
                     set_envmap_obj(x, y, grd[x][y]);
-            
+
             dump_map(fp);
-            
+
             return (false);
         }
     }
@@ -3898,7 +3900,7 @@ static std::vector<level_id> mg_dungeon_places()
     {
         if (branches[br].depth == -1)
             continue;
-        
+
         const branch_type branch = static_cast<branch_type>(br);
         for (int depth = 1; depth <= branches[br].depth; ++depth)
             places.push_back( level_id(branch, depth) );
@@ -3947,7 +3949,7 @@ static void mg_build_levels(int niters)
              mapgen_use_count.size(),
              mg_build_attempts, mg_vetoes,
              mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
-        
+
         you.uniq_map_tags.clear();
         you.uniq_map_names.clear();
         if (!mg_build_dungeon())
@@ -3977,7 +3979,7 @@ static void mapgen_report_avaiable_random_vaults(FILE *outf)
 {
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
-    
+
     const std::vector<level_id> places = mg_dungeon_places();
     fprintf(outf, "\n\nRandom vaults available by dungeon level:\n");
 
@@ -4080,7 +4082,7 @@ static void write_mapgen_stats()
                     vetoes, tries, vetoes * 100.0 / tries);
         }
     }
-    
+
     if (!unused_maps.empty())
     {
         fprintf(outf, "\n\nUnused maps:\n\n");

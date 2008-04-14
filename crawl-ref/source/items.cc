@@ -141,7 +141,7 @@ static bool _item_ok_to_clean(int item)
         return false;
 
     // never clean runes
-    if (mitm[item].base_type == OBJ_MISCELLANY 
+    if (mitm[item].base_type == OBJ_MISCELLANY
         && mitm[item].sub_type == MISC_RUNE_OF_ZOT)
     {
         return false;
@@ -156,7 +156,7 @@ static int _cull_items(void)
 {
     crawl_state.cancel_cmd_repeat();
 
-    // XXX: Not the prettiest of messages, but the player 
+    // XXX: Not the prettiest of messages, but the player
     // deserves to know whenever this kicks in. -- bwr
     mpr( "Too many items on level, removing some.", MSGCH_WARN );
 
@@ -188,7 +188,7 @@ static int _cull_items(void)
 
             int next;
 
-            // iterate through the grids list of items: 
+            // iterate through the grids list of items:
             for (int item = igrd[x][y]; item != NON_ITEM; item = next)
             {
                 next = mitm[item].link; // in case we can't get it later.
@@ -223,18 +223,18 @@ static int _cull_items(void)
     return (first_cleaned);
 }
 
-// Note:  This function is to isolate all the checks to see if 
+// Note:  This function is to isolate all the checks to see if
 //        an item is valid (often just checking the quantity).
 //
-//        It shouldn't be used a a substitute for those cases 
-//        which actually want to check the quantity (as the 
+//        It shouldn't be used a a substitute for those cases
+//        which actually want to check the quantity (as the
 //        rules for unused objects might change).
 bool is_valid_item( const item_def &item )
 {
     return (item.base_type != OBJ_UNASSIGNED && item.quantity > 0);
 }
 
-// Reduce quantity of an inventory item, do cleanup if item goes away.  
+// Reduce quantity of an inventory item, do cleanup if item goes away.
 //
 // Returns true if stack of items no longer exists.
 bool dec_inv_item_quantity( int obj, int amount )
@@ -248,7 +248,7 @@ bool dec_inv_item_quantity( int obj, int amount )
 
     if (you.inv[obj].quantity <= amount)
     {
-        for (int i = 0; i < NUM_EQUIP; i++) 
+        for (int i = 0; i < NUM_EQUIP; i++)
         {
             if (you.equip[i] == obj)
             {
@@ -283,7 +283,7 @@ bool dec_inv_item_quantity( int obj, int amount )
     return (ret);
 }
 
-// Reduce quantity of a monster/grid item, do cleanup if item goes away.  
+// Reduce quantity of a monster/grid item, do cleanup if item goes away.
 //
 // Returns true if stack of items no longer exists.
 bool dec_mitm_item_quantity( int obj, int amount )
@@ -337,7 +337,7 @@ void init_item( int item )
 }
 
 // Returns an unused mitm slot, or NON_ITEM if none available.
-// The reserve is the number of item slots to not check. 
+// The reserve is the number of item slots to not check.
 // Items may be culled if a reserve <= 10 is specified.
 int get_item_slot( int reserve )
 {
@@ -376,7 +376,7 @@ void unlink_item( int dest )
     if (dest == NON_ITEM || !is_valid_item( mitm[dest] ))
         return;
 
-    if (mitm[dest].x == 0 && mitm[dest].y == 0) 
+    if (mitm[dest].x == 0 && mitm[dest].y == 0)
     {
         // (0,0) is where the monster items are (and they're unlinked by igrd),
         // although it also contains items that are not linked in yet.
@@ -410,7 +410,7 @@ void unlink_item( int dest )
         // Always return because this item might just be temporary.
         return;
     }
-    else 
+    else
     {
         // Linked item on map:
         //
@@ -450,11 +450,11 @@ void unlink_item( int dest )
     // Okay, the sane ways are gone... let's warn the player:
     mpr( "BUG WARNING: Problems unlinking item!!!", MSGCH_DANGER );
 
-    // Okay, first we scan all items to see if we have something 
-    // linked to this item.  We're not going to return if we find 
-    // such a case... instead, since things are already out of 
+    // Okay, first we scan all items to see if we have something
+    // linked to this item.  We're not going to return if we find
+    // such a case... instead, since things are already out of
     // alignment, let's assume there might be multiple links as well.
-    bool  linked = false; 
+    bool  linked = false;
     int   old_link = mitm[dest].link; // used to try linking the first
 
     // clean the relevant parts of the object:
@@ -532,7 +532,7 @@ void destroy_item( item_def &item, bool never_created )
 
 void destroy_item( int dest, bool never_created )
 {
-    // Don't destroy non-items, but this function may be called upon 
+    // Don't destroy non-items, but this function may be called upon
     // to remove items reduced to zero quantity, so we allow "invalid"
     // objects in.
     if (dest == NON_ITEM || !is_valid_item( mitm[dest] ))
@@ -547,15 +547,15 @@ static void _handle_gone_item(const item_def &item)
     if (you.level_type == LEVEL_ABYSS
         && place_type(item.orig_place) == LEVEL_ABYSS
         && !(item.flags & ISFLAG_BEEN_IN_INV))
-    {   
+    {
         if (item.base_type == OBJ_ORBS)
         {
-            set_unique_item_status(OBJ_ORBS, item.sub_type, 
+            set_unique_item_status(OBJ_ORBS, item.sub_type,
                                    UNIQ_LOST_IN_ABYSS);
         }
         else if (is_fixed_artefact(item))
         {
-            set_unique_item_status(OBJ_WEAPONS, item.special, 
+            set_unique_item_status(OBJ_WEAPONS, item.special,
                                    UNIQ_LOST_IN_ABYSS);
         }
     }
@@ -730,7 +730,7 @@ static int item_name_specialness(const item_def& item)
 
     std::string itname = item.name(DESC_PLAIN, false, false, false);
     lowercase(itname);
-    
+
     // FIXME Maybe we should replace this with a test of ISFLAG_COSMETIC_MASK?
     const bool item_runed = itname.find("runed ") != std::string::npos;
     const bool heav_runed = itname.find("heavily ") != std::string::npos;
@@ -778,7 +778,7 @@ void item_check(bool verbose)
     }
 
     bool done_init_line = false;
-    
+
     if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
     {
         std::vector<unsigned short int> item_chars;
@@ -786,7 +786,7 @@ void item_check(bool verbose)
         {
             unsigned glyph_char;
             unsigned short glyph_col;
-            get_item_glyph( items[i], &glyph_char, &glyph_col );            
+            get_item_glyph( items[i], &glyph_char, &glyph_col );
             item_chars.push_back( glyph_char * 0x100 +
                                   (10 - item_name_specialness(*(items[i]))) );
         }
@@ -827,7 +827,7 @@ void item_check(bool verbose)
     }
     else if ( !done_init_line )
         strm << "There are many items here." << std::endl;
-    
+
     if ( items.size() > 5 )
         learned_something_new(TUT_MULTI_PICKUP);
 }
@@ -837,7 +837,7 @@ static void _pickup_menu(int item_link)
     std::vector<const item_def*> items;
     _item_list_on_square( items, item_link, false );
 
-    std::vector<SelItem> selected = 
+    std::vector<SelItem> selected =
         select_items( items, "Select items to pick up" );
     redraw_screen();
 
@@ -855,7 +855,7 @@ static void _pickup_menu(int item_link)
                 int result = move_item_to_player( j, selected[i].quantity );
 
                 // If we cleared any flags on the items, but the pickup was
-                // partial, reset the flags for the items that remain on the 
+                // partial, reset the flags for the items that remain on the
                 // floor.
                 if (is_valid_item(mitm[j]))
                     mitm[j].flags = oldflags;
@@ -1010,7 +1010,7 @@ static void _origin_freeze(item_def &item, int x, int y)
     {
         if (!item.orig_monnum && x != -1 && y != -1)
             origin_set_monstercorpse(item, x, y);
-            
+
         item.orig_place = get_packed_place();
         check_note_item(item);
 #ifdef DGL_MILESTONES
@@ -1120,14 +1120,14 @@ std::string origin_desc(const item_def &item)
     }
     else
         desc += "You found " + _article_it(item) + " ";
-        
+
     desc += _origin_place_desc(item);
     return (desc);
 }
 
 bool pickup_single_item(int link, int qty)
 {
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR
         && you.duration[DUR_TRANSFORMATION] > 0)
     {
         mpr("You can't pick up anything in this form!");
@@ -1161,7 +1161,7 @@ bool pickup_single_item(int link, int qty)
         learned_something_new(TUT_HEAVY_LOAD);
         return (false);
     }
-    
+
     return (true);
 }
 
@@ -1169,7 +1169,7 @@ void pickup()
 {
     int keyin = 'x';
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR
         && you.duration[DUR_TRANSFORMATION] > 0)
     {
         mpr("You can't pick up anything in this form!");
@@ -1255,7 +1255,7 @@ void pickup()
                     break;
                 }
             }
-            
+
             o = next;
         }
     }
@@ -1272,7 +1272,7 @@ bool is_stackable_item( const item_def &item )
         || item.base_type == OBJ_POTIONS
         || item.base_type == OBJ_UNKNOWN_II
         || item.base_type == OBJ_GOLD
-        || (item.base_type == OBJ_MISCELLANY 
+        || (item.base_type == OBJ_MISCELLANY
             && item.sub_type == MISC_RUNE_OF_ZOT))
     {
         return (true);
@@ -1334,7 +1334,7 @@ bool items_stack( const item_def &item1, const item_def &item2,
                           ISFLAG_DROPPED | ISFLAG_THROWN | \
                           ISFLAG_NOTED_ID | ISFLAG_NOTED_GET | \
                           ISFLAG_BEEN_IN_INV)
-                          
+
     if ((item1.flags & NON_IDENT_FLAGS) != (item2.flags & NON_IDENT_FLAGS))
     {
         return false;
@@ -1392,9 +1392,11 @@ int find_free_slot(const item_def &i)
 
     // See if the item remembers where it's been. Lua code can play with
     // this field so be extra careful.
-    if ((i.slot >= 'a' && i.slot <= 'z') ||
-            (i.slot >= 'A' && i.slot <= 'Z'))
+    if (i.slot >= 'a' && i.slot <= 'z'
+        || i.slot >= 'A' && i.slot <= 'Z')
+    {
         slot = letter_to_index(i.slot);
+    }
 
     if (slotisfree(slot))
         return slot;
@@ -1408,10 +1410,11 @@ int find_free_slot(const item_def &i)
         {
             if (is_valid_item(you.inv[slot]))
             {
-                if (!accept_empty && slot + 1 < ENDOFPACK &&
-                        !is_valid_item(you.inv[slot + 1]))
+                if (!accept_empty && slot + 1 < ENDOFPACK
+                    && !is_valid_item(you.inv[slot + 1]))
+                {
                     return (slot + 1);
-
+                }
                 accept_empty = true;
             }
             else if (accept_empty)
@@ -1453,7 +1456,7 @@ static void _got_item(item_def& item, int quant)
     item.flags |= ISFLAG_BEEN_IN_INV;
 }
 
-// Returns quantity of items moved into player's inventory and -1 if 
+// Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet )
 {
@@ -1486,7 +1489,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     const int unit_mass = item_mass( mitm[obj] );
     if (quant_got > mitm[obj].quantity || quant_got <= 0)
         quant_got = mitm[obj].quantity;
-    
+
     const int imass = unit_mass * quant_got;
 
     bool partial_pickup = false;
@@ -1505,7 +1508,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
         retval = part;
     }
-    
+
     if (is_stackable_item( mitm[obj] ))
     {
         for (int m = 0; m < ENDOFPACK; m++)
@@ -1556,8 +1559,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         mpr("You can only carry some of what is here.");
 
     int freeslot = find_free_slot(mitm[obj]);
-    if (freeslot < 0 || freeslot >= ENDOFPACK 
-           || is_valid_item(you.inv[freeslot]))
+    if (freeslot < 0 || freeslot >= ENDOFPACK
+        || is_valid_item(you.inv[freeslot]))
     {
         // Something is terribly wrong
         return (-1);
@@ -1641,8 +1644,8 @@ void mark_items_non_pickup_at(const coord_def &pos)
     }
 }
 
-// Moves mitm[obj] to (x,y)... will modify the value of obj to 
-// be the index of the final object (possibly different).  
+// Moves mitm[obj] to (x,y)... will modify the value of obj to
+// be the index of the final object (possibly different).
 //
 // Done this way in the hopes that it will be obvious from
 // calling code that "obj" is possibly modified.
@@ -1660,11 +1663,11 @@ bool move_item_to_grid( int *const obj, int x, int y )
         {
             // check if item already linked here -- don't want to unlink it
             if (*obj == i)
-                return (false);            
+                return (false);
 
             if (items_stack( mitm[*obj], mitm[i] ))
             {
-                // Add quantity to item already here, and dispose 
+                // Add quantity to item already here, and dispose
                 // of obj, while returning the found item. -- bwr
                 inc_mitm_item_quantity( i, mitm[*obj].quantity );
                 destroy_item( *obj );
@@ -1691,7 +1694,7 @@ bool move_item_to_grid( int *const obj, int x, int y )
 
     ASSERT( *obj != NON_ITEM );
 
-    // Need to actually move object, so first unlink from old position. 
+    // Need to actually move object, so first unlink from old position.
     unlink_item( *obj );
 
     // move item to coord:
@@ -1718,7 +1721,7 @@ bool move_item_to_grid( int *const obj, int x, int y )
 
 void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y )
 {
-    // Tell all items in stack what the new coordinate is. 
+    // Tell all items in stack what the new coordinate is.
     for (int o = igrd[x][y]; o != NON_ITEM; o = mitm[o].link)
     {
         mitm[o].x = targ_x;
@@ -1731,7 +1734,7 @@ void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y )
 
 
 // returns quantity dropped
-bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos, 
+bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
                         int quant_drop, bool mark_dropped )
 {
     if (quant_drop == 0)
@@ -1818,7 +1821,7 @@ bool move_top_item( const coord_def &pos, const coord_def &dest )
 
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_MOVED, pos, 0, item, -1, dest), pos);
-    
+
     // Now move the item to its new possition...
     move_item_to_grid( &item, dest.x, dest.y );
 
@@ -1846,7 +1849,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
         return (false);
     }
 
-    if (item_dropped == you.equip[EQ_WEAPON] 
+    if (item_dropped == you.equip[EQ_WEAPON]
         && you.inv[item_dropped].base_type == OBJ_WEAPONS
         && item_cursed( you.inv[item_dropped] ))
     {
@@ -1862,7 +1865,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
             {
                 mpr("You will have to take that off first.");
             }
-            else 
+            else
             {
                 // If we take off the item, cue up the item being dropped
                 if (takeoff_armour( item_dropped ))
@@ -1873,7 +1876,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
             }
 
             // Regardless, we want to return here because either we're
-            // aborting the drop, or the drop is delayed until after 
+            // aborting the drop, or the drop is delayed until after
             // the armour is removed. -- bwr
             return (false);
         }
@@ -1893,7 +1896,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     const dungeon_feature_type my_grid = grd[you.x_pos][you.y_pos];
 
     if ( !grid_destroys_items(my_grid)
-         && !copy_item_to_grid( you.inv[item_dropped], 
+         && !copy_item_to_grid( you.inv[item_dropped],
                                 you.x_pos, you.y_pos, quant_drop, true ))
     {
         mpr( "Too many items on this level, not dropping the item." );
@@ -1902,7 +1905,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     mprf("You drop %s.",
          quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
-    
+
     if ( grid_destroys_items(my_grid) )
     {
         if( !silenced(you.pos()) )
@@ -2007,8 +2010,8 @@ static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
             break;
         }
     }
-    
-    snprintf( buf, sizeof buf, " (%lu%s turn%s)", 
+
+    snprintf( buf, sizeof buf, " (%lu%s turn%s)",
                 (unsigned long) (s->size()),
                 extraturns? "+" : "",
                 s->size() > 1? "s" : "" );
@@ -2054,7 +2057,7 @@ void drop(void)
     }
 
     std::vector<SelItem> tmp_items;
-    tmp_items = prompt_invent_items( "Drop what?", MT_DROP, -1, 
+    tmp_items = prompt_invent_items( "Drop what?", MT_DROP, -1,
                                      drop_menu_title, true, true, 0,
                                      &Options.drop_filter, drop_selitem_text,
                                      &items_for_multidrop );
@@ -2171,7 +2174,7 @@ void autoinscribe()
 static inline std::string autopickup_item_name(const item_def &item)
 {
     return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
-        + item.name(DESC_PLAIN);    
+        + item.name(DESC_PLAIN);
 }
 
 static bool is_denied_autopickup(const item_def &item, std::string &iname)
@@ -2202,7 +2205,7 @@ bool item_needs_autopickup(const item_def &item)
 {
     if (item_is_stationary(item))
         return (false);
-    
+
     if (strstr(item.inscription.c_str(), "=g") != 0)
         return (true);
 
@@ -2218,7 +2221,7 @@ bool item_needs_autopickup(const item_def &item)
             && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
             && !is_denied_autopickup(item, itemname));
 }
-              
+
 bool can_autopickup()
 {
     // [ds] Checking for autopickups == 0 is a bad idea because
@@ -2227,9 +2230,11 @@ bool can_autopickup()
     if (!Options.autopickup_on)
         return (false);
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR
         && you.duration[DUR_TRANSFORMATION] > 0)
+    {
         return (false);
+    }
 
     if (you.flight_mode() == FL_LEVITATE)
         return (false);
@@ -2247,13 +2252,13 @@ static void do_autopickup()
     int n_tried_pickup = 0;
 
     will_autopickup = false;
-    
+
     if (!can_autopickup())
     {
         item_check(false);
         return;
     }
-    
+
     int o = igrd[you.x_pos][you.y_pos];
 
     std::string pickup_warning;
@@ -2314,7 +2319,7 @@ static void do_autopickup()
         you.turn_is_over = true;
 
     item_check(false);
-    
+
     explore_pickup_event(n_did_pickup, n_tried_pickup);
 }
 
@@ -2341,8 +2346,8 @@ static bool find_subtype_by_name(item_def &item,
                                  object_class_type base_type, int ntypes,
                                  const std::string &name)
 {
-    // In order to get the sub-type, we'll fill out the base type... 
-    // then we're going to iterate over all possible subtype values 
+    // In order to get the sub-type, we'll fill out the base type...
+    // then we're going to iterate over all possible subtype values
     // and see if we get a winner. -- bwr
 
     item.base_type = base_type;
@@ -2386,8 +2391,8 @@ item_def find_item_type(object_class_type base_type, std::string name)
 
     if (base_type == OBJ_RANDOM || base_type == OBJ_UNASSIGNED)
         base_type = OBJ_UNASSIGNED;
-    
-    static int max_subtype[] = 
+
+    static int max_subtype[] =
     {
         NUM_WEAPONS,
         NUM_MISSILES,

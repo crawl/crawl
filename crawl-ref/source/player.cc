@@ -1242,7 +1242,7 @@ int player_res_fire(bool calc_unid, bool temp)
     rf += scan_randarts(RAP_FIRE, calc_unid);
 
     // species:
-    if (you.species == SP_MUMMY
+    if (you.species == SP_MUMMY)
         rf--;
 
     // mutations:

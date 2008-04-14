@@ -370,7 +370,7 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
     card_type result = NUM_CARDS;
     while ( pdeck[i].card != NUM_CARDS )
     {
-        const card_with_weights& cww = pdeck[i];        
+        const card_with_weights& cww = pdeck[i];
         totalweight += cww.weight[rarity];
         if ( random2(totalweight) < cww.weight[rarity] )
             result = cww.card;
@@ -646,7 +646,7 @@ static bool _check_buggy_deck(item_def& deck)
 
         strm << "Oops, counted " << static_cast<int>(num_marked)
              << " marked cards, but num_marked is "
-             << (static_cast<int>(props["num_marked"].get_byte()));        
+             << (static_cast<int>(props["num_marked"].get_byte()));
 #else
         strm << "Oops, book-keeping on marked cards is wrong.";
 #endif
@@ -654,7 +654,7 @@ static bool _check_buggy_deck(item_def& deck)
 
         props["num_marked"] = static_cast<char>(num_marked);
         problems = true;
-    }        
+    }
 
     if (deck.plus2 >= 0)
     {
@@ -708,7 +708,7 @@ static int _choose_inventory_deck( const char* prompt )
                                          MT_INVLIST, OBJ_MISCELLANY,
                                          true, true, true, 0, NULL,
                                          OPER_EVOKE );
-    
+
     if ( slot == PROMPT_ABORT )
     {
         canned_msg(MSG_OK);
@@ -759,8 +759,9 @@ static void _deck_lose_card(item_def& deck)
     do {
         _shuffle_deck(deck);
         get_card_and_flags(deck, -1, flags);
-    } while ( ((flags & CFLAG_MARKED) && coinflip()) ||
-              ((flags & CFLAG_SEEN) && coinflip()) );
+    }
+    while ( (flags & CFLAG_MARKED) && coinflip()
+            || (flags & CFLAG_SEEN) && coinflip() );
 
     _draw_top_card(deck, false, flags);
     deck.plus2++;
@@ -973,7 +974,7 @@ bool deck_stack()
         mprf("The deck only has %d cards.", num_to_stack);
     else if (num_cards == 5)
         mpr("The deck has exactly five cards.");
-    else 
+    else
         mprf("You draw the first five cards out of %d and discard the rest.",
              num_cards);
     more();
@@ -990,7 +991,7 @@ bool deck_stack()
         cprintf("Press Enter to accept.");
 
         _redraw_stacked_cards(draws, selected);
-        
+
         // Hand-hacked implementation, instead of using Menu. Oh well.
         while (true)
         {
@@ -1006,19 +1007,19 @@ bool deck_stack()
                 clear_to_end_of_line();
                 continue;
             }
-            
+
             if ( c >= '1' && c <= '0' + static_cast<int>(draws.size()) )
             {
                 const unsigned int new_selected = c - '1';
                 if ( selected < draws.size() )
                 {
                     std::swap(draws[selected], draws[new_selected]);
-                    std::swap(flags[selected], flags[new_selected]); 
+                    std::swap(flags[selected], flags[new_selected]);
                     selected = draws.size();
                 }
                 else
                     selected = new_selected;
-                    
+
                 _redraw_stacked_cards(draws, selected);
             }
         }
@@ -1031,7 +1032,7 @@ bool deck_stack()
         _push_top_card(deck, draws[draws.size() - 1 - i],
                        flags[flags.size() - 1 - i]);
     }
-    
+
     props["num_marked"] = static_cast<char>(num_to_stack);
     you.wield_change = true;
 
@@ -1391,10 +1392,10 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
     int nemelex_bonus = 0;
     if ( you.religion == GOD_NEMELEX_XOBEH && !player_under_penance() )
-        nemelex_bonus = you.piety / 20;    
+        nemelex_bonus = you.piety / 20;
     int extra_targets = power_level + random2(you.skills[SK_EVOCATIONS] +
                                               nemelex_bonus) / 12;
-    
+
     for ( int i = 0; i < 1 + extra_targets; ++i )
     {
         // pick a random monster nearby to banish (or yourself)
@@ -1460,7 +1461,7 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
 static void _flight_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
-    
+
     if ( power_level == 0 )
         transform(random2(power/4), coinflip() ? TRAN_SPIDER : TRAN_BAT);
     if ( power_level >= 1 )
@@ -1500,7 +1501,7 @@ static void _minefield_card(int power, deck_rarity_type rarity)
             const int ry = you.y_pos + dy;
             if ( !in_bounds(rx, ry) )
                 continue;
-                
+
             if ( grd[rx][ry] == DNGN_FLOOR && trap_at_xy(rx,ry) == -1
                  && one_chance_in(4 - power_level) )
             {
@@ -1676,14 +1677,14 @@ static void _metamorphosis_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     transformation_type trans;
-    
+
     if ( power_level >= 2 )
         trans = coinflip() ? TRAN_DRAGON : TRAN_LICH;
     else if ( power_level == 1 )
         trans = coinflip() ? TRAN_STATUE : TRAN_BLADE_HANDS;
     else
         trans = coinflip() ? TRAN_SPIDER : TRAN_ICE_BEAST;
-        
+
     transform(random2(power/4), trans);
 }
 
@@ -1728,7 +1729,7 @@ static void _helm_card(int power, deck_rarity_type rarity)
         const char* resist_names[4] = {
             "poison", "electricity", "fire", "cold"
         };
-        
+
         for ( int i = 0; i < 4 && num_resists; ++i )
         {
             // if there are n left, of which we need to choose
@@ -1839,7 +1840,7 @@ static void _focus_card(int power, deck_rarity_type rarity)
         const int best_diff = *max_statp[i] - *max_statp[best_stat];
         if ( best_diff > 0 || (best_diff == 0 && coinflip()) )
             best_stat = i;
-            
+
         const int worst_diff = *max_statp[i] - *max_statp[worst_stat];
         if ( worst_diff < 0 || (worst_diff == 0 && coinflip()) )
             worst_stat = i;
@@ -1878,7 +1879,7 @@ static void _focus_card(int power, deck_rarity_type rarity)
                 cause = "the 'helpfullness' of " + god_name(which_god);
         }
     }
-                
+
     for ( int i = 0; i < 3; ++i )
         if (*max_statp[i] < 1 || *base_statp[i] < 1)
             ouch(INSTANT_DEATH, 0, kill_types[i], cause.c_str(), true);
@@ -1904,7 +1905,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
         modifiers[i] = stat_modifier(stats[i]);
 
     std::random_shuffle( perm, perm + 3 );
-    
+
     int new_base[3];
     int new_max[3];
     for ( int i = 0; i < 3; ++i )
@@ -1935,7 +1936,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
                 cause = "the 'helpfulness' of " + god_name(which_god);
         }
     }
-                
+
     for ( int i = 0; i < 3; ++i )
         if (new_base[i] < 1 || new_max[i] < 1)
             ouch(INSTANT_DEATH, 0, kill_types[i], cause.c_str(), true);
@@ -2076,7 +2077,7 @@ static void _helix_card(int power, deck_rarity_type rarity)
                 delete_mutation(RANDOM_MUTATION);
                 mutate(RANDOM_MUTATION);
             }
-            break;            
+            break;
         }
     }
     else
@@ -2117,7 +2118,7 @@ static void _sage_card(int power, deck_rarity_type rarity)
         c = random2(10) + 1;
     else
         c = 10;
-    
+
     // FIXME: yet another reproduction of random_choose_weighted
     // Ah for Python:
     // skill = random_choice([x*(40-x)*c/10 for x in skill_levels])
@@ -2498,7 +2499,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
         dct = DEMON_COMMON;
     else
         dct = DEMON_LESSER;
-        
+
     create_monster( summon_any_demon(dct), std::min(power/50,6),
                     BEH_FRIENDLY, you.x_pos, you.y_pos, MHITYOU,
                     MONS_PROGRAM_BUG );
@@ -2527,7 +2528,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
             dy = random2(3) - 1;
         }
         while ( dx == 0 && dy == 0 );
-        
+
         monster_type cur_try;
         do
         {
@@ -2546,7 +2547,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 
     if ( mon_chosen == NUM_MONSTERS ) // should never happen
         return;
-    
+
     if ( power_level == 0 && one_chance_in(4) )
         create_monster( mon_chosen, 3, BEH_HOSTILE,
                         chosen_x, chosen_y, MHITYOU, MONS_PROGRAM_BUG );
@@ -2565,7 +2566,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
                                     friendly ? you.pet_target : MHITYOU,
                                     MONS_PROGRAM_BUG, false, false, false,
                                     true );
-   
+
     // Given the abundance of Nemelex decks, not setting hard reset
     // leaves a trail of weapons behind, most of which just get
     // offered to Nemelex again, adding an unnecessary source of
@@ -2575,7 +2576,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         // Override the weapon
         ASSERT( menv[mon].weapon() != NULL );
         item_def& wpn(*menv[mon].weapon());
-        
+
         // FIXME Mega-hack (breaks encapsulation too)
         wpn.flags &= ~ISFLAG_RACIAL_MASK;
 
@@ -2680,7 +2681,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
 {
     bool rc = true;
     const int power = _card_power(rarity);
-    
+
 #ifdef DEBUG_DIAGNOSTICS
     msg::streams(MSGCH_DIAGNOSTICS) << "Card power: " << power
                                     << ", rarity: " << static_cast<int>(rarity)
@@ -2805,7 +2806,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         god_speaks(GOD_XOM, "\"How boring, let's spice things up a little.\"");
         xom_acts(abs(you.piety - 100));
     }
-    
+
     if (you.religion == GOD_NEMELEX_XOBEH && !rc)
         simple_god_message(" seems disappointed in you.");
 

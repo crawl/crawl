@@ -1288,7 +1288,7 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
 {
     const int next_item = get_next_fire_item(m_slot, +1);
     bool no_other_items = (next_item == -1 || next_item == m_slot);
-            
+
     mesclr();
 
     if (pre_text)
@@ -1408,7 +1408,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target)
     beh.message_ammo_prompt();
     message_current_target();  // XXX: this stuff should be done by direction()
     direction( target, DIR_NONE, TARG_ENEMY, -1, false, true, NULL, &beh );
-    
+
     if (beh.m_slot == -1)
     {
         canned_msg(MSG_OK);
@@ -1713,15 +1713,15 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // launcher weapon sub-type
     weapon_type lnchType;
 
-    int baseHit = 0, baseDam = 0;       // from thrown or ammo
-    int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
-    int lnchHitBonus = 0, lnchDamBonus = 0;     // special add from launcher
-    int exHitBonus = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
-    int effSkill = 0;           // effective launcher skill
-    int dice_mult = 100;
-    bool returning = false;     // item can return to pack
-    bool did_return = false;    // returning item actually does return to pack
-    int slayDam = 0;
+    int baseHit      = 0, baseDam = 0;       // from thrown or ammo
+    int ammoHitBonus = 0, ammoDamBonus = 0;  // from thrown or ammo
+    int lnchHitBonus = 0, lnchDamBonus = 0;  // special add from launcher
+    int exHitBonus   = 0, exDamBonus = 0;    // 'extra' bonus from skill/dex/str
+    int effSkill     = 0;        // effective launcher skill
+    int dice_mult    = 100;
+    bool returning   = false;    // item can return to pack
+    bool did_return  = false;    // returning item actually does return to pack
+    int slayDam      = 0;
 
     if (!teleport)
     {
@@ -1915,9 +1915,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // lower accuracy if held in a net (needs testing)
         if (you.attribute[ATTR_HELD])
-        {
             baseHit--;
-        }
 
         // for all launched weapons, maximum effective specific skill
         // is twice throwing skill.  This models the fact that no matter
@@ -3689,7 +3687,7 @@ static bool affix_weapon_enchantment()
 
         // is only naughty if you know you're doing it
         did_god_conduct(DID_UNHOLY, 10,
-            get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III)==ID_KNOWN_TYPE);
+            get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III) == ID_KNOWN_TYPE);
 
         break;
 

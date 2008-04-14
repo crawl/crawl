@@ -232,7 +232,7 @@ static int shatter_monsters(int x, int y, int pow, int garbage)
 
     if (damage > 0)
         player_hurt_monster( monster, damage );
-    else 
+    else
         damage = 0;
 
     return (damage);
@@ -392,7 +392,7 @@ void cast_shatter(int pow)
 
     apply_area_within_radius(shatter_items, you.x_pos, you.y_pos, pow, rad, 0);
     apply_area_within_radius(shatter_monsters, you.x_pos, you.y_pos, pow, rad, 0);
-    int dest = apply_area_within_radius( shatter_walls, you.x_pos, you.y_pos, 
+    int dest = apply_area_within_radius( shatter_walls, you.x_pos, you.y_pos,
                                          pow, rad, 0 );
 
     if (dest && !sil)
@@ -507,7 +507,7 @@ void cast_summon_large_mammal(int pow)
         }
     }
 
-    create_monster( mon, 3, BEH_FRIENDLY, you.x_pos, you.y_pos, 
+    create_monster( mon, 3, BEH_FRIENDLY, you.x_pos, you.y_pos,
                     you.pet_target, MONS_PROGRAM_BUG,
                     false, false, false, true );
 }
@@ -549,7 +549,7 @@ void cast_sticks_to_snakes(int pow)
                 mon = MONS_SMALL_SNAKE;
             }
 
-            if (create_monster( mon, dur, behaviour, you.x_pos, you.y_pos, 
+            if (create_monster( mon, dur, behaviour, you.x_pos, you.y_pos,
                                 MHITYOU, MONS_PROGRAM_BUG,
                                 false, false, false, true ) != -1)
             {
@@ -674,7 +674,7 @@ void cast_conjure_ball_lightning( int pow )
         int mon = mons_place( MONS_BALL_LIGHTNING, BEH_FRIENDLY, MHITNOT,
                               true, tx, ty );
 
-        // int mon = create_monster( MONS_BALL_LIGHTNING, 0, BEH_FRIENDLY, 
+        // int mon = create_monster( MONS_BALL_LIGHTNING, 0, BEH_FRIENDLY,
         //                           tx, ty, MHITNOT, MONS_PROGRAM_BUG );
 
         if (mon != -1)
@@ -899,7 +899,7 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
     if (ench.ench != ENCH_NONE)
         strength += ench.degree;
 
-    // strength is now the sum of both poison types (although only 
+    // strength is now the sum of both poison types (although only
     // one should actually be present at a given time):
     dam_dice.num += strength;
 
@@ -909,8 +909,8 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
         damage = mons_adjust_flavoured( mon, beam, damage );
 
 #if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Dice: %dd%d; Damage: %d", 
-             dam_dice.num, dam_dice.size, damage );    
+        mprf(MSGCH_DIAGNOSTICS, "Dice: %dd%d; Damage: %d",
+             dam_dice.num, dam_dice.size, damage );
 #endif
 
         if (!player_hurt_monster( mon_index, damage ))
@@ -935,7 +935,7 @@ void cast_ignite_poison(int pow)
     // temp weapon of venom => temp fire brand
     const int wpn = you.equip[EQ_WEAPON];
 
-    if (wpn != -1 
+    if (wpn != -1
         && you.duration[DUR_WEAPON_BRAND]
         && get_weapon_brand( you.inv[wpn] ) == SPWPN_VENOM)
     {
@@ -1082,7 +1082,7 @@ void cast_silence(int pow)
 
     if (you.duration[DUR_SILENCE] > 100)
         you.duration[DUR_SILENCE] = 100;
-        
+
     if (you.duration[DUR_BEHELD])
     {
         mpr("You break out of your daze!", MSGCH_RECOVERY);
@@ -1109,7 +1109,7 @@ static int discharge_monsters( int x, int y, int pow, int garbage )
         if ( player_is_airborne() )
             damage /= 2;
         ouch( damage, 0, KILLED_BY_WILD_MAGIC );
-    } 
+    }
     else if (mon == NON_MONSTER)
         return (0);
     else if (mons_res_elec(&menv[mon]) > 0 || mons_flies(&menv[mon]))
@@ -1133,18 +1133,18 @@ static int discharge_monsters( int x, int y, int pow, int garbage )
     {
         mpr( "The lightning arcs!" );
         pow /= (coinflip() ? 2 : 3);
-        damage += apply_random_around_square( discharge_monsters, x, y, 
-                                              true, pow, 1 ); 
+        damage += apply_random_around_square( discharge_monsters, x, y,
+                                              true, pow, 1 );
     }
     else if (damage > 0)
     {
-        // Only printed if we did damage, so that the messages in 
+        // Only printed if we did damage, so that the messages in
         // cast_discharge() are clean. -- bwr
         mpr( "The lightning grounds out." );
     }
 
     return (damage);
-}                               // end discharge_monsters() 
+}                               // end discharge_monsters()
 
 void cast_discharge( int pow )
 {
@@ -1158,11 +1158,11 @@ void cast_discharge( int pow )
     mprf(MSGCH_DIAGNOSTICS, "Arcs: %d Damage: %d", num_targs, dam );
 #endif
 
-    if (dam == 0) 
+    if (dam == 0)
     {
         if (coinflip())
             mpr("The air around you crackles with electrical energy.");
-        else 
+        else
         {
             const bool plural = coinflip();
             mprf("%s blue arc%s ground%s harmlessly %s you.",
@@ -1195,12 +1195,12 @@ static int distortion_monsters(int x, int y, int pow, int message)
     {
         if (you.skills[SK_TRANSLOCATIONS] < random2(8))
         {
-            miscast_effect( SPTYP_TRANSLOCATION, pow / 9 + 1, pow, 100, 
+            miscast_effect( SPTYP_TRANSLOCATION, pow / 9 + 1, pow, 100,
                             "cast bend on self" );
         }
         else
         {
-            miscast_effect( SPTYP_TRANSLOCATION, 1, 1, 100, 
+            miscast_effect( SPTYP_TRANSLOCATION, 1, 1, 100,
                             "cast bend on self" );
         }
 
@@ -1309,7 +1309,7 @@ int disperse_monsters(int x, int y, int pow, int message)
 
 void cast_dispersal(int pow)
 {
-    if (apply_area_around_square( disperse_monsters, 
+    if (apply_area_around_square( disperse_monsters,
                                   you.x_pos, you.y_pos, pow ) == 0)
     {
         mpr( "There is a brief shimmering in the air around you." );
@@ -1396,7 +1396,7 @@ static int make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
 int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
                         cloud_type ctype, kill_category whose)
 {
-    place_cloud( ctype, x, y, 
+    place_cloud( ctype, x, y,
                  (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
                  whose, spread_rate );
 
@@ -1442,7 +1442,7 @@ static int passwall(int x, int y, int pow, int garbage)
                 non_rock_barriers = true;
             done = true;
             break;
-            
+
         case DNGN_ROCK_WALL:
         case DNGN_CLEAR_ROCK_WALL:
         case DNGN_ORCISH_IDOL:
@@ -1578,14 +1578,14 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
         }
         return (true);
     }
-    
+
     menv[mon].add_ench(mon_enchant(ENCH_BACKLIGHT, 1));
 
     if (lvl == 0)
         simple_monster_message( &menv[mon], " is outlined in light." );
     else if (lvl == 4)
         simple_monster_message( &menv[mon], " glows brighter for a moment." );
-    else 
+    else
         simple_monster_message( &menv[mon], " glows brighter." );
 
     return (true);
@@ -1632,7 +1632,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
         beem.flavour = (coinflip() ? BEAM_POTION_POISON : BEAM_POTION_MIASMA);
         beem.ench_power *= 2;
         break;
-            
+
     case POT_POISON:
         beem.flavour = BEAM_POTION_POISON;
         break;
@@ -1726,13 +1726,13 @@ void cast_fulsome_distillation( int powc )
     int corpse = -1;
 
     // Search items at the players location for corpses.
-    // XXX: Turn this into a separate function and merge with 
-    // the messes over in butchery, animating, and maybe even 
-    // item pickup from stacks (which would make it easier to 
+    // XXX: Turn this into a separate function and merge with
+    // the messes over in butchery, animating, and maybe even
+    // item pickup from stacks (which would make it easier to
     // create a floor stack menu system later) -- bwr
-    for (int curr_item = igrd[you.x_pos][you.y_pos]; 
-             curr_item != NON_ITEM; 
-             curr_item = mitm[curr_item].link) 
+    for (int curr_item = igrd[you.x_pos][you.y_pos];
+             curr_item != NON_ITEM;
+             curr_item = mitm[curr_item].link)
     {
         const item_def& item = mitm[curr_item];
         if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY)
@@ -1801,14 +1801,14 @@ void cast_fulsome_distillation( int powc )
             pot_type = (power_up ? POT_STRONG_POISON : POT_POISON);
             break;
 
-        case CE_MUTAGEN_RANDOM: 
+        case CE_MUTAGEN_RANDOM:
         case CE_MUTAGEN_GOOD:   // unused
         case CE_RANDOM:         // unused
             pot_type = POT_MUTATION;
             break;
 
         case CE_MUTAGEN_BAD:    // unused
-        case CE_ROTTEN:         // actually this only occurs via mangling 
+        case CE_ROTTEN:         // actually this only occurs via mangling
         case CE_HCL:            // necrophage
             pot_type = (power_up ? POT_DECAY : POT_STRONG_POISON);
             break;
@@ -1825,23 +1825,23 @@ void cast_fulsome_distillation( int powc )
     {
         switch (pot_type)
         {
-        case POT_DECAY: 
-        case POT_DEGENERATION: 
-        case POT_STRONG_POISON: 
+        case POT_DECAY:
+        case POT_DEGENERATION:
+        case POT_STRONG_POISON:
             pot_type = POT_POISON;
             break;
 
-        case POT_MUTATION: 
-        case POT_POISON: 
+        case POT_MUTATION:
+        case POT_POISON:
             pot_type = POT_CONFUSION;
             break;
 
-        case POT_PARALYSIS: 
+        case POT_PARALYSIS:
             pot_type = POT_SLOWING;
             break;
 
-        case POT_CONFUSION: 
-        case POT_SLOWING: 
+        case POT_CONFUSION:
+        case POT_SLOWING:
         default:
             pot_type = POT_WATER;
             break;
@@ -2052,7 +2052,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     blast.hit = AUTOMATIC_HIT;
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
-    blast.damage = dice_def( 0, 5 + pow / 10 ); 
+    blast.damage = dice_def( 0, 5 + pow / 10 );
 
     const int grid = grd[beam.tx][beam.ty];
     const int mon  = mgrd[beam.tx][beam.ty];
@@ -2100,11 +2100,11 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             if (random2(50) < (pow / 5))        // potential insta-kill
             {
                 monster_die(&menv[mon], KILL_YOU, 0);
-                blast.damage.num = 4; 
+                blast.damage.num = 4;
             }
             else
             {
-                blast.damage.num = 2; 
+                blast.damage.num = 2;
                 if (player_hurt_monster(mon, roll_dice( blast.damage )))
                     blast.damage.num = 4;
             }
@@ -2114,10 +2114,10 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             explode = false;
             simple_monster_message(&menv[mon], " shudders violently!");
 
-            // We use blast.damage not only for inflicting damage here, 
-            // but so that later on we'll know that the spell didn't 
+            // We use blast.damage not only for inflicting damage here,
+            // but so that later on we'll know that the spell didn't
             // fizzle (since we don't actually explode wood golems). -- bwr
-            blast.damage.num = 2; 
+            blast.damage.num = 2;
             player_hurt_monster( mon, roll_dice( blast.damage ) );
             break;
 
@@ -2165,7 +2165,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
                 int statue_damage = roll_dice(blast.damage) * 2;
                 if (pow >= 50 && one_chance_in(10))
                     statue_damage = menv[mon].hit_points;
-                
+
                 if (player_hurt_monster(mon, statue_damage))
                     blast.damage.num += 2;
             }
@@ -2184,8 +2184,8 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         default:
             blast.damage.num = 1;  // to mark that a monster was targetted
 
-            // Yes, this spell does lousy damage if the 
-            // monster isn't susceptible. -- bwr 
+            // Yes, this spell does lousy damage if the
+            // monster isn't susceptible. -- bwr
             player_hurt_monster( mon, roll_dice( 1, 5 + pow / 25 ) );
             goto do_terrain;
         }
@@ -2231,7 +2231,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             blast.colour = LIGHTGREY;
 
         if (okay_to_dest
-            && (grid == DNGN_ORCISH_IDOL 
+            && (grid == DNGN_ORCISH_IDOL
                 || grid == DNGN_GRANITE_STATUE
                 || (pow >= 40 && grid == DNGN_ROCK_WALL && one_chance_in(3))
                 || (pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
@@ -2251,7 +2251,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     // Metal -- small but nasty explosion
     //
 
-    case DNGN_METAL_WALL:       
+    case DNGN_METAL_WALL:
         what = "metal wall";
         blast.colour = CYAN;
         explode = true;
@@ -2267,7 +2267,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         break;
 
     //
-    // Crystal  
+    // Crystal
     //
 
     case DNGN_GREEN_CRYSTAL_WALL:       // crystal -- large & nasty explosion
@@ -2287,17 +2287,17 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         }
         break;
 
-    // 
+    //
     // Traps
     //
 
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_TRAP_MECHANICAL:
         trap = trap_at_xy( beam.tx, beam.ty );
-        if (trap != -1 
+        if (trap != -1
             && trap_category( env.trap[trap].type ) != DNGN_TRAP_MECHANICAL)
         {
-            // non-mechanical traps don't explode with this spell -- bwr 
+            // non-mechanical traps don't explode with this spell -- bwr
             break;
         }
 
@@ -2344,7 +2344,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     case DNGN_FLOOR:
         explode = false;
         mprf("%s seems to be unnaturally hard.",
-             (grid == DNGN_PERMAROCK_WALL) ? "That wall" 
+             (grid == DNGN_PERMAROCK_WALL) ? "That wall"
                                            : "The dungeon floor");
         break;
 
@@ -2639,7 +2639,7 @@ int cast_apportation(int pow)
         {
             mprf("%s twitches.", menv[mon].name(DESC_CAP_THE).c_str());
         }
-        else 
+        else
             mpr( "This spell does not work on creatures." );
 
         return (0);
@@ -2683,7 +2683,7 @@ int cast_apportation(int pow)
                  (mitm[ item ].quantity > 1) ? "s" : "" );
         }
         done = 1;
-        
+
         // if we apport a net, free the monster under it
         if (mitm[item].base_type == OBJ_MISSILES
             && mitm[item].sub_type == MI_THROWING_NET
@@ -2691,7 +2691,7 @@ int cast_apportation(int pow)
         {
            const int mon = mgrd[ beam.tx ][ beam.ty ];
            remove_item_stationary(mitm[item]);
-           
+
            if (mon != NON_MONSTER)
                (&menv[mon])->del_ench(ENCH_HELD, true);
         }
@@ -2763,14 +2763,14 @@ void cast_divine_shield()
         else
             mpr("A divine shield forms around you!");
     }
-    
+
     // duration of complete shield bonus up to 18 turns
     you.duration[DUR_DIVINE_SHIELD]
        = 5 + (you.skills[SK_SHIELDS] + you.skills[SK_INVOCATIONS]*2)/6;
 
     // shield bonus up to 8
     you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
-        
+
     return;
 }
 
@@ -2815,7 +2815,7 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
 
         if (!see_grid_no_trans(tx, ty))
             continue;
-        
+
         found = true;
         break;
     }
@@ -2840,7 +2840,7 @@ void cast_stoneskin(int pow)
         return;
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE 
+    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
         && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
         && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS)
     {

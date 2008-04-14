@@ -109,10 +109,10 @@ static std::set<std::string> beam_message_cache;
 
 static bool _beam_is_blockable( bolt &pbolt )
 {
-    // BEAM_ELECTRICITY is added here because chain lighting is not 
+    // BEAM_ELECTRICITY is added here because chain lighting is not
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
-    return (!pbolt.is_beam && !pbolt.is_explosion 
+    return (!pbolt.is_beam && !pbolt.is_explosion
             && pbolt.flavour != BEAM_ELECTRICITY);
 }
 
@@ -214,7 +214,7 @@ void zapping(zap_type ztype, int power, bolt &pbolt)
 {
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "zapping: power=%d", power ); 
+    mprf(MSGCH_DIAGNOSTICS, "zapping: power=%d", power );
 #endif
 
     // GDL: note that rangeMax is set to 0, which means that max range is
@@ -266,7 +266,7 @@ dice_def calc_dice( int num_dice, int max_damage )
     }
     else
     {
-        // Divied the damage among the dice, and add one 
+        // Divide the damage among the dice, and add one
         // occasionally to make up for the fractions. -- bwr
         ret.size = max_damage / num_dice;
         ret.size += (random2( num_dice ) < max_damage % num_dice);
@@ -282,15 +282,15 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     int temp_rand = 0;          // probability determination {dlb}
 
     // Note: The incoming power is not linear in the case of spellcasting.
-    // The power curve currently allows for the character to reasonably 
+    // The power curve currently allows for the character to reasonably
     // get up to a power level of about a 100, but more than that will
     // be very hard (and the maximum is 200).  The low level power caps
     // provide the useful feature in that they allow for low level spells
-    // to have quick advancement, but don't cause them to obsolete the 
+    // to have quick advancement, but don't cause them to obsolete the
     // higher level spells. -- bwr
     //
-    // I've added some example characters below to show how little 
-    // people should be concerned about the power caps.  
+    // I've added some example characters below to show how little
+    // people should be concerned about the power caps.
     //
     // The example characters are simplified to three stats:
     //
@@ -299,19 +299,19 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     // - Skills: This represents the character having Spellcasting
     //   and the average of the component skills at this level.
     //   Although, Spellcasting probably isn't quite as high as
-    //   other spell skills for a lot of characters, note that it 
+    //   other spell skills for a lot of characters, note that it
     //   contributes much less to the total power (about 20%).
     //
     // - Enhancers:  These are equipment that the player can use to
     //   apply additional magnifiers (x1.5) to power.  There are
     //   also inhibitors that reduce power (/2.0), but we're not
-    //   concerned about those here.  Anyways, the character can 
+    //   concerned about those here.  Anyways, the character can
     //   currently have up to 3 levels (for x1.5, x2.25, x3.375).
     //   The lists below should help to point out the difficulty
     //   and cost of getting more than one level of enhancement.
     //
     //   Here's a list of current magnifiers:
-    //   
+    //
     //   - rings of fire/cold
     //   - staff of fire/cold/air/earth/poison/death/conjure/enchant/summon
     //   - staff of Olgreb (poison)
@@ -323,7 +323,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     //   The maximum enhancement, by school (but capped at 3):
     //
     //   - Necromancy:  4 (Mummies), 3 (others)
-    //   - Fire:        4 
+    //   - Fire:        4
     //   - Cold:        3
     //   - Conjuration: 2
     //   - Enchantment: 2
@@ -336,9 +336,9 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     switch (z_type)
     {
     // level 1
-    // 
-    // This cap is to keep these easy and very cheap spells from 
-    // becoming too powerful. 
+    //
+    // This cap is to keep these easy and very cheap spells from
+    // becoming too powerful.
     //
     // Example characters with about 25 power:
     //
@@ -387,7 +387,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     // that a high level character can easily have 75 power.
     //
     // Example characters with about 75 power:
-    // 
+    //
     // - int 10, skills 27, 1 enhancer
     // - int 15, skills 27, 0 enhancers
     // - int 15, skills 16, 1 enhancer
@@ -397,9 +397,9 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
 
     // level 4
     //
-    // The following examples should make it clear that this is the 
-    // effective maximum power.  Its not easy to get to 100 power, 
-    // but 20-20-1 or 25-16-1 is certainly attainable by a high level 
+    // The following examples should make it clear that this is the
+    // effective maximum power.  Its not easy to get to 100 power,
+    // but 20-20-1 or 25-16-1 is certainly attainable by a high level
     // spellcaster.  As you can see from the examples at 150 and 200,
     // getting much power beyond this is very difficult.
     //
@@ -423,9 +423,9 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     // levels 5-7
     //
     // These spells used to be capped, but its very hard to raise
-    // power over 100, and these examples should show that. 
+    // power over 100, and these examples should show that.
     // Only the twinkiest of characters are expected to get to 150.
-    // 
+    //
     // Example characters with about 150 power:
     //
     // - int 15, skills 27, 3 enhancers (actually, only 146)
@@ -455,7 +455,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     // levels 8-9
     //
     // These spells are capped at 200 (which is the cap in calc_spell_power).
-    // As an example of how little of a cap that is, consider the fact 
+    // As an example of how little of a cap that is, consider the fact
     // that a 70-27-3 character has an uncapped power of 251.  Characters
     // are never expected to get to this cap.
     //
@@ -543,7 +543,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = dice_def( 1, 5 );                // dam: 5
         pbolt.hit = 8 + power / 10;                     // 25: 10
-        pbolt.type = dchar_glyph(DCHAR_SPACE); 
+        pbolt.type = dchar_glyph(DCHAR_SPACE);
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
         pbolt.obvious_effect = true;
         break;
@@ -588,7 +588,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "0";
         pbolt.flavour = BEAM_DISINTEGRATION;
         pbolt.range = 7 + random2(8);
-        pbolt.damage = dice_def( 1, 4 + power / 5 );    // 25: 1d9 
+        pbolt.damage = dice_def( 1, 4 + power / 5 );    // 25: 1d9
         pbolt.ench_power *= 3;
         break;
 
@@ -722,8 +722,8 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "orb of energy";
         pbolt.colour = LIGHTMAGENTA;
         pbolt.range = 8 + random2(5);
-        pbolt.damage = calc_dice( 2, 15 + (power * 2) / 5 ); 
-        pbolt.hit = 10 + power / 7;                     // 50: 17   100: 24 
+        pbolt.damage = calc_dice( 2, 15 + (power * 2) / 5 );
+        pbolt.hit = 10 + power / 7;                     // 50: 17   100: 24
         pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
 
@@ -806,7 +806,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "bolt of negative energy";
         pbolt.colour = DARKGREY;
         pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 4, 15 + (power * 3) / 5 ); 
+        pbolt.damage = calc_dice( 4, 15 + (power * 3) / 5 );
         pbolt.hit = 8 + power / 20;                     // 50: 10   100: 13
         pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_NEG;                       // drains levels
@@ -1328,13 +1328,13 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
     {
         mprf( MSGCH_DIAGNOSTICS,
              "%s%s%s (%d,%d) to (%d,%d): ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
-                 (pbolt.is_beam) ? "beam" : "missile", 
-                 (pbolt.is_explosion) ? "*" : 
-                     (pbolt.is_big_cloud) ? "+" : "", 
+                 (pbolt.is_beam) ? "beam" : "missile",
+                 (pbolt.is_explosion) ? "*" :
+                     (pbolt.is_big_cloud) ? "+" : "",
                  (pbolt.is_tracer) ? " tracer" : "",
-                 pbolt.source_x, pbolt.source_y, 
-                 pbolt.target_x, pbolt.target_y, 
-                 pbolt.type, pbolt.colour, pbolt.flavour, 
+                 pbolt.source_x, pbolt.source_y,
+                 pbolt.target_x, pbolt.target_y,
+                 pbolt.type, pbolt.colour, pbolt.flavour,
                  pbolt.hit, pbolt.damage.num, pbolt.damage.size,
                  pbolt.range);
     }
@@ -1419,7 +1419,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
                         ray.regress();
                     }
                     while (grid_is_solid(grd(ray.pos())));
-                    
+
                     tx = ray.x();
                     ty = ray.y();
                     break;          // breaks from line tracing
@@ -1435,7 +1435,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
                         ray.regress();
                     }
                     while (grid_is_solid(grd(ray.pos())));
-                    
+
                     ray.advance_and_bounce();
                     --rangeRemaining;
                 }
@@ -1453,7 +1453,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         // couldn't find any path: bouncy, fuzzy, or not - so break.
         if (grid_is_solid(grd[tx][ty]))
             break;
-        
+
         // check for "target termination"
         // occurs when beam can be targetted at empty
         // cell (e.g. a mage wants an explosion to happen
@@ -1557,9 +1557,8 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 
     // leave an object, if applicable
     if (drop_item && item)
-    {
         beam_drop_object( pbolt, item, tx, ty );
-    }
+
     ASSERT(!drop_item || item);
 
     // check for explosion.  NOTE that for tracers, we have to make a copy
@@ -1625,7 +1624,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                 (pbolt.flavour == BEAM_FIRE) ? monster->res_fire()
                                              : monster->res_steam(),
                 hurted, true);
-                
+
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1843,7 +1842,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     case BEAM_LAVA:
         hurted = resist_adjust_damage(monster, pbolt.flavour,
                                       monster->res_fire(), hurted, true);
-        
+
         if (hurted < original)
         {
             if (doFlavouredEffects)
@@ -1985,15 +1984,15 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
 
         if (m_attempted)
             ++*m_attempted;
-        
+
         if (_monster_resists_mass_enchantment(monster, wh_enchant, pow))
-            continue;        
+            continue;
 
         if (monster->add_ench(mon_enchant(wh_enchant, 0, kc)))
         {
             if (m_succumbed)
                 ++*m_succumbed;
-            
+
             if (player_monster_visible( monster ))
             {
                 // turn message on
@@ -2120,7 +2119,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
     case BEAM_CONFUSION:                   /* 4 = confusion */
         if (!mons_class_is_confusable(monster->type))
             return (MON_UNAFFECTED);
-            
+
         if (monster->add_ench(
                 mon_enchant(ENCH_CONFUSION, 0, _whose_kill(pbolt))))
         {
@@ -2134,7 +2133,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
     {
         // Store the monster name before it becomes an "it" -- bwr
         const std::string monster_name = monster->name(DESC_CAP_THE);
-        
+
         if (!monster->has_ench(ENCH_INVIS)
             && monster->add_ench(ENCH_INVIS))
         {
@@ -2259,8 +2258,8 @@ bool poison_monster( monsters *monster,
     // note: order important here
     if (verbose && new_pois.degree > old_pois.degree)
     {
-        simple_monster_message( monster, 
-                                !old_pois.degree? " is poisoned." 
+        simple_monster_message( monster,
+                                !old_pois.degree? " is poisoned."
                                                 : " looks even sicker." );
     }
 
@@ -2343,7 +2342,7 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty )
     // currently we limit the range to 8
     if (dist > MONSTER_LOS_RANGE)
         return (false);
-    
+
     // Note that we are guaranteed to be within the player LOS range,
     // so fallback is unnecessary.
     ray_def ray;
@@ -2366,13 +2365,13 @@ void mimic_alert(monsters *mimic)
     {
         if (should_id)
             mimic->flags |= MF_KNOWN_MIMIC;
-            
+
         return;
     }
-    
+
     const bool instant_tele = !one_chance_in(3);
     monster_teleport( mimic, instant_tele );
-    
+
     // at least for this short while, we know it's a mimic
     if (!instant_tele && should_id)
         mimic->flags |= MF_KNOWN_MIMIC;
@@ -2540,11 +2539,11 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
     if (beam.is_tracer || beam.flavour != BEAM_MISSILE)
         return;
 
-    if ((YOU_KILL(beam.thrower) &&
-             !thrown_object_destroyed(item, x, y, false)) ||
-        (MON_KILL(beam.thrower) &&
-             !mons_thrown_object_destroyed(item, x, y, false,
-                                           beam.beam_source)))
+    if (YOU_KILL(beam.thrower)
+            && !thrown_object_destroyed(item, x, y, false)
+        || MON_KILL(beam.thrower)
+            && !mons_thrown_object_destroyed(item, x, y, false,
+                                             beam.beam_source))
     {
         if (item->sub_type == MI_THROWING_NET)
         {
@@ -2634,7 +2633,7 @@ int affect(bolt &beam, int x, int y)
         {
             rangeUsed += _affect_player( beam );
         }
-        
+
         if (_beam_term_on_target(beam, x, y))
             return (BEAM_STOP);
     }
@@ -2658,7 +2657,7 @@ int affect(bolt &beam, int x, int y)
             {
                 rangeUsed += _affect_monster( beam, &menv[mid] );
             }
-        
+
             if (_beam_term_on_target(beam, x, y))
                 return (BEAM_STOP);
         }
@@ -2690,7 +2689,7 @@ static bool _affects_wall(const bolt &beam, int wall)
     if (beam.flavour == BEAM_DIGGING)
         return (true);
 
-    // Isn't this much nicer than the hack to remove ice bolts, disrupt, 
+    // Isn't this much nicer than the hack to remove ice bolts, disrupt,
     // and needles (just because they were also coloured "white") -- bwr
     if (beam.flavour == BEAM_DISINTEGRATION && beam.damage.num >= 3)
         return (true);
@@ -2726,7 +2725,7 @@ static int _affect_wall(bolt &beam, int x, int y)
         if (grd[x][y] == DNGN_ROCK_WALL || grd[x][y] == DNGN_CLEAR_ROCK_WALL)
         {
             grd[x][y] = DNGN_FLOOR;
-            
+
             // blood does not transfer onto floor
             if (is_bloodcovered(x,y))
                 env.map[x][y].property = FPROP_NONE;
@@ -2746,7 +2745,7 @@ static int _affect_wall(bolt &beam, int x, int y)
         return (rangeUsed);
     }
     // END DIGGING EFFECT
-    
+
     // FIRE effect
     if (_is_fiery(beam))
     {
@@ -2798,8 +2797,8 @@ static int _affect_wall(bolt &beam, int x, int y)
             }
         }
 
-        if (targ_grid == DNGN_ORCISH_IDOL 
-                || targ_grid == DNGN_GRANITE_STATUE)
+        if (targ_grid == DNGN_ORCISH_IDOL
+            || targ_grid == DNGN_GRANITE_STATUE)
         {
             grd[x][y] = DNGN_FLOOR;
 
@@ -2917,7 +2916,7 @@ static int _affect_place_clouds(bolt &beam, int x, int y)
 // following two functions used with explosions:
 static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
 {
-    cloud_type cl_type; 
+    cloud_type cl_type;
     int duration;
 
     // first check: FIRE/COLD over water/lava
@@ -2969,7 +2968,7 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
             break;
 
         case BEAM_POTION_RANDOM:
-            switch (random2(10)) 
+            switch (random2(10))
             {
             case 0:  cl_type = CLOUD_FIRE;           break;
             case 1:  cl_type = CLOUD_STINK;          break;
@@ -3084,12 +3083,12 @@ static void _beam_ouch( int dam, bolt &beam )
         if (beam.flavour == BEAM_SPORE)
             ouch( dam, beam.beam_source, KILLED_BY_SPORE );
         else
-            ouch( dam, beam.beam_source, KILLED_BY_BEAM, 
+            ouch( dam, beam.beam_source, KILLED_BY_BEAM,
                   beam.aux_source.c_str() );
     }
     else // KILL_MISC || (YOU_KILL && aux_source)
     {
-        ouch( dam, beam.beam_source, KILLED_BY_WILD_MAGIC, 
+        ouch( dam, beam.beam_source, KILLED_BY_WILD_MAGIC,
               beam.aux_source.c_str() );
     }
 }
@@ -3099,7 +3098,7 @@ static void _beam_ouch( int dam, bolt &beam )
 static bool _fuzz_invis_tracer(bolt &beem)
 {
     // Did the monster have a rough idea of where you are?
-    int dist = grid_distance(beem.target_x, beem.target_y, 
+    int dist = grid_distance(beem.target_x, beem.target_y,
                              you.x_pos, you.y_pos);
 
     // No, ditch this.
@@ -3109,7 +3108,7 @@ static bool _fuzz_invis_tracer(bolt &beem)
     const int beam_src = _beam_source(beem);
     if (beam_src != MHITNOT && beam_src != MHITYOU)
     {
-        // Monsters that can sense invisible 
+        // Monsters that can sense invisible
         const monsters *mon = &menv[beam_src];
         if (mons_sense_invis(mon))
             return (!dist);
@@ -3166,7 +3165,7 @@ static int _affect_player( bolt &beam )
     // check for tracer
     if (beam.is_tracer)
     {
-        // check can see player 
+        // check can see player
         if (beam.can_see_invis || !you.invisible()
                 || _fuzz_invis_tracer(beam))
         {
@@ -3199,7 +3198,7 @@ static int _affect_player( bolt &beam )
     if (you.invisible() && !beam.can_see_invis)
         beamHit /= 2;
 
-    if (beam.name[0] != '0') 
+    if (beam.name[0] != '0')
     {
         if (!beam.is_explosion && !beam.aimed_at_feet)
         {
@@ -3230,7 +3229,7 @@ static int _affect_player( bolt &beam )
             else if (_beam_is_blockable(beam))
             {
                 // non-beams can be blocked or dodged
-                if (you.equip[EQ_SHIELD] != -1 
+                if (you.equip[EQ_SHIELD] != -1
                         && !beam.aimed_at_feet
                         && player_shield_class() > 0)
                 {
@@ -3281,7 +3280,7 @@ static int _affect_player( bolt &beam )
         bool nasty = true, nice = false;
 
         // BEGIN enchantment beam
-        if (beam.flavour != BEAM_HASTE 
+        if (beam.flavour != BEAM_HASTE
             && beam.flavour != BEAM_INVISIBILITY
             && beam.flavour != BEAM_HEALING
             && beam.flavour != BEAM_POLYMORPH
@@ -3308,7 +3307,7 @@ static int _affect_player( bolt &beam )
         case BEAM_SLEEP:
             you.put_to_sleep(beam.ench_power);
             break;
-            
+
         case BEAM_BACKLIGHT:
             if (!you.duration[DUR_INVIS])
             {
@@ -3316,7 +3315,7 @@ static int _affect_player( bolt &beam )
                     mpr("You glow brighter.");
                 else
                     mpr("You are outlined in light.");
-                
+
                 you.duration[DUR_BACKLIGHT] += random_range(15, 35);
                 if (you.duration[DUR_BACKLIGHT] > 250)
                     you.duration[DUR_BACKLIGHT] = 250;
@@ -3331,7 +3330,7 @@ static int _affect_player( bolt &beam )
                 beam.obvious_effect = true;
             }
             break;
-            
+
         case BEAM_POLYMORPH:
             if (MON_KILL(beam.thrower))
             {
@@ -3507,7 +3506,7 @@ static int _affect_player( bolt &beam )
     // THE BEAM IS NOW GUARANTEED TO BE A NON-ENCHANTMENT WHICH HIT
 
     const bool engulfs = (beam.is_explosion || beam.is_big_cloud);
-    mprf( "The %s %s you!", 
+    mprf( "The %s %s you!",
           beam.name.c_str(), (engulfs) ? "engulfs" : "hits" );
 
     int hurted = 0;
@@ -3515,7 +3514,7 @@ static int _affect_player( bolt &beam )
                           (beam.is_beam) ? 3 : 2;
 
     // Roll the damage
-    hurted += roll_dice( beam.damage ); 
+    hurted += roll_dice( beam.damage );
 
 #if DEBUG_DIAGNOSTICS
     int roll = hurted;
@@ -3561,7 +3560,7 @@ static int _affect_player( bolt &beam )
         int blood = hurted/2; // assumes DVORP_PIERCING, factor: 0.5
         if (blood > you.hp)
             blood = you.hp;
-            
+
         bleed_onto_floor(you.x_pos, you.y_pos, -1, blood, true);
     }
 
@@ -3595,7 +3594,7 @@ static int _affect_player( bolt &beam )
             was_affected = true;
         }
     }
-    
+
     if (beam.name.find("throwing net") != std::string::npos)
     {
         player_caught_in_net();
@@ -3727,7 +3726,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
 {
     const int tid = mgrd[mon->x][mon->y];
     const int mons_type = menv[tid].type;
-    const int thrower = YOU_KILL(beam.thrower)? KILL_YOU_MISSILE 
+    const int thrower = YOU_KILL(beam.thrower)? KILL_YOU_MISSILE
                                               : KILL_MON_MISSILE;
     const bool submerged = mon->submerged();
 
@@ -3935,7 +3934,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
     if (!beam.is_tracer)
     {
         mprf(MSGCH_DIAGNOSTICS,
-             "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d", 
+             "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
              mon->name(DESC_PLAIN).c_str(), hurt, raw_damage, hurt_final);
     }
 #endif
@@ -4009,7 +4008,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
         {
             hit_woke_orc = true;
         }
-        
+
         // Don't annoy friendlies if the player's beam did no damage.
         // Hostiles will still take umbrage.
         if (hurt_final > 0 || !mons_friendly(mon) || !YOU_KILL(beam.thrower))
@@ -4051,7 +4050,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
                 mprf("%s blocks the %s.",
                      mon->name(DESC_CAP_THE).c_str(),
                      beam.name.c_str());
-                     
+
                 mon->shield_block_succeeded();
                 return (BEAM_STOP);
             }
@@ -4061,7 +4060,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
     _update_hurt_or_helped(beam, mon);
 
     conduct.enabled = true;
-    
+
     // the beam hit.
     if (mons_near(mon))
     {
@@ -4105,7 +4104,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
 
     // now hurt monster
     hurt_monster( mon, hurt_final );
-    
+
     if (mon->hit_points < 1)
     {
         _monster_die(mon, beam);
@@ -4363,7 +4362,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
     //
     if (!death_check
         && check_mons_resist_magic( mon, beam.ench_power )
-        && beam.flavour != BEAM_HASTE 
+        && beam.flavour != BEAM_HASTE
         && beam.flavour != BEAM_HEALING
         && beam.flavour != BEAM_INVISIBILITY)
     {
@@ -4409,9 +4408,9 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
     if (beam.flavour == BEAM_SLEEP)
     {
         if (mon->has_ench(ENCH_SLEEP_WARY))  // slept recently
-            return (MON_RESIST);        
+            return (MON_RESIST);
 
-        if (mons_holiness(mon) != MH_NATURAL) // no unnatural 
+        if (mons_holiness(mon) != MH_NATURAL) // no unnatural
             return (MON_UNAFFECTED);
 
         // Cold res monsters resist hibernation (for consistency
@@ -4552,7 +4551,7 @@ static void _explosion1(bolt &pbolt)
         pbolt.flavour = BEAM_HOLY;
         ex_size = 2;
     }
-    
+
     if (pbolt.name == "fireball")
     {
         seeMsg = "The fireball explodes!";
@@ -4672,7 +4671,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
         if (ray.x() == beam.source_x && ray.y() == beam.source_y)
         {
             max_dist--;
-            ray.advance(true); 
+            ray.advance(true);
         }
 
         int dist = 0;
@@ -4743,8 +4742,8 @@ void explosion( bolt &beam, bool hole_in_the_middle,
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d",
-         beam.target_x, beam.target_y, 
-         beam.type, beam.colour, beam.flavour, 
+         beam.target_x, beam.target_y,
+         beam.type, beam.colour, beam.flavour,
          beam.hit, beam.damage.num, beam.damage.size );
 #endif
 
@@ -4786,7 +4785,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
         // do center -- but only if its affected
         if (!hole_in_the_middle)
             _explosion_cell(beam, 0, 0, drawing);
- 
+
         // do the rest of it
         for (int rad = 1; rad <= r; rad ++)
         {
@@ -5009,7 +5008,7 @@ bool nice_beam( monsters *mon, bolt &beam )
 // A constructor for bolt to help guarantee that we start clean (this has
 // caused way too many bugs).  Putting it here since there's no good place to
 // put it, and it doesn't do anything other than initialize it's members.
-// 
+//
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
 bolt::bolt() : range(0), rangeMax(0), type('*'),
@@ -5034,7 +5033,7 @@ killer_type bolt::killer() const
 {
     if (flavour == BEAM_BANISH)
         return (KILL_RESET);
-    
+
     switch (thrower)
     {
     case KILL_YOU:
@@ -5076,5 +5075,5 @@ void bolt::setup_retrace()
     std::swap(source_x, target_x);
     std::swap(source_y, target_y);
     affects_nothing = true;
-    aimed_at_spot   = true;    
+    aimed_at_spot   = true;
 }
