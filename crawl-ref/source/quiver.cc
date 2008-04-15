@@ -49,28 +49,18 @@ player_quiver::player_quiver()
 // 
 void player_quiver::get_desired_item(const item_def** item_out, int* slot_out) const
 {
-    ASSERT(m_last_used_type != AMMO_INVALID);
-    // I'd like to get rid of this first case
-    if (m_last_used_type == AMMO_INVALID)
+    const int slot = _get_pack_slot(m_last_used_of_type[m_last_used_type]);
+    if (slot == -1)
     {
-        if (item_out) *item_out = NULL;
-        if (slot_out) *slot_out = -1;
+        // Not in inv, but caller can at least get the type of the item.
+        if (item_out) *item_out = &m_last_used_of_type[m_last_used_type];
     }
     else
     {
-        const int slot = _get_pack_slot(m_last_used_of_type[m_last_used_type]);
-        if (slot == -1)
-        {
-            // Not in inv, but caller can at least get the type of the item.
-            if (item_out) *item_out = &m_last_used_of_type[m_last_used_type];
-        }
-        else
-        {
-            // Return the item in inv, since it will have an accurate count
-            if (item_out) *item_out = &you.inv[slot];
-        }
-        if (slot_out) *slot_out = slot;
+        // Return the item in inv, since it will have an accurate count
+        if (item_out) *item_out = &you.inv[slot];
     }
+    if (slot_out) *slot_out = slot;
 }
 
 // Return inv slot of item that should be fired by default.
@@ -324,7 +314,7 @@ void player_quiver::load(reader& inf)
     
     unmarshallItem(inf, m_last_weapon);
     m_last_used_type = (ammo_t)unmarshallLong(inf);
-    ASSERT(m_last_used_type >= AMMO_INVALID && m_last_used_type < NUM_AMMO);
+    ASSERT(m_last_used_type >= AMMO_THROW && m_last_used_type < NUM_AMMO);
 
     const long count = unmarshallLong(inf);
     ASSERT(count <= ARRAYSIZE(m_last_used_of_type));
@@ -345,7 +335,8 @@ preserve_quiver_slots::preserve_quiver_slots()
                   ARRAYSIZE(you.m_quiver->m_last_used_of_type), a);
     for (int i=0; i<ARRAYSIZE(m_last_used_of_type); i++)
     {
-        you.m_quiver->get_desired_item(NULL, &m_last_used_of_type[i]);
+        m_last_used_of_type[i] =
+            _get_pack_slot(you.m_quiver->m_last_used_of_type[i]);
     }
 }
 
