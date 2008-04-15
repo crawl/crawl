@@ -2629,7 +2629,7 @@ static void _decrement_durations()
         switch (temp_effect)
         {
         case SPWPN_VORPAL:
-            if (get_vorpal_type(you.inv[you.equip[EQ_WEAPON]])==DVORP_SLICING)
+            if (get_vorpal_type(you.inv[you.equip[EQ_WEAPON]]) == DVORP_SLICING)
                 msg += " seems blunter.";
             else
                 msg += " feels lighter.";

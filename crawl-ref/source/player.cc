@@ -1454,10 +1454,11 @@ bool player_res_asphyx()
     return (false);
 }
 
-bool player_control_teleport(bool calc_unid) {
-    return ( you.duration[DUR_CONTROL_TELEPORT] ||
-             player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid) ||
-             you.mutation[MUT_TELEPORT_CONTROL] );
+bool player_control_teleport(bool calc_unid)
+{
+    return ( you.duration[DUR_CONTROL_TELEPORT]
+             || player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid)
+             || you.mutation[MUT_TELEPORT_CONTROL] );
 }
 
 int player_res_torment(bool)
@@ -2738,7 +2739,8 @@ int burden_change(void)
     {
         you.burden_state = BS_ENCUMBERED;
 
-        if (old_burdenstate != you.burden_state) {
+        if (old_burdenstate != you.burden_state)
+        {
             mpr("You are being weighed down by all of your possessions.");
             learned_something_new(TUT_HEAVY_LOAD);
         }

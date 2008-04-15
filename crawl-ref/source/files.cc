@@ -1306,8 +1306,10 @@ void save_game(bool leave_game, const char *farewellmsg)
     snprintf( cmd_buff, sizeof(cmd_buff),
               SAVE_PACKAGE_CMD, basename.c_str(), basename.c_str() );
 
-    if (system( cmd_buff ) != 0) {
-        cprintf( EOL "Warning: Zip command (SAVE_PACKAGE_CMD) returned non-zero value!" EOL );
+    if (system( cmd_buff ) != 0)
+    {
+        cprintf( EOL "Warning: Zip command (SAVE_PACKAGE_CMD) returned"
+                     "non-zero value!" EOL );
     }
     DO_CHMOD_PRIVATE ( (basename + PACKAGE_SUFFIX).c_str() );
 #endif
@@ -1627,11 +1629,9 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
     }
 
     // go through and init missing tags
-    for (int i=0; i<NUM_TAGS; i++)
-    {
+    for (int i = 0; i < NUM_TAGS; i++)
         if (tags[i] == 1)           // expected but never read
             tag_missing(i, minorVersion);
-    }
 }
 
 static bool determine_level_version( FILE *levelFile,

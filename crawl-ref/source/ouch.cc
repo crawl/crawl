@@ -983,7 +983,8 @@ void end_game( scorefile_entry &se )
 
     const int num_suffixes = sizeof(suffixes) / sizeof(const char*);
 
-    for (int i = 0; i < num_suffixes; ++i) {
+    for (int i = 0; i < num_suffixes; ++i)
+    {
         std::string tmpname = basename + suffixes[i];
         unlink( tmpname.c_str() );
     }

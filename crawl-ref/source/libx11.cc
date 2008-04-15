@@ -79,7 +79,7 @@ void GetNextEvent(int *etype, int *key, bool *shift, bool *ctrl,
                 button = 2;
             else if (button == 2)
                 button = 3;
-                
+
             *key = button;
             break;
         }
@@ -119,7 +119,7 @@ char *my_getenv(const char *envname, const char *def)
     const char *result = getenv(envname);
     if (!result)
         result = def;
-        
+
     return (char *)result;
 }
 
@@ -128,7 +128,7 @@ int my_getenv_int(const char *envname, int def)
     const char *rstr = getenv(envname);
     if (!rstr)
         return def;
-        
+
     return atoi(rstr);
 }
 
@@ -146,7 +146,7 @@ void update_tip_text(const char *tip)
 
     const bool is_main_screen = (win_main->active_layer == 0);
     const unsigned int height = is_main_screen ? region_tip->my : 1;
-    
+
     const unsigned int width  = is_main_screen ? region_tip->mx
                                                : region_crt->mx;
 
@@ -248,7 +248,7 @@ int x11_keypress(XKeyEvent *xev)
 #define IsSpecialKey(keysym) \
   ((unsigned)(keysym) >= 0xFF00)
 
-    const unsigned int ck_table[9]=
+    const unsigned int ck_table[9] =
     {
 	CK_END,  CK_DOWN,   CK_PGDN,
 	CK_LEFT, CK_INSERT, CK_RIGHT,
@@ -327,42 +327,42 @@ int x11_keypress(XKeyEvent *xev)
         case XK_KP_End:
             dir = 1;
             break;
-            
+
         case XK_KP_2:
         case XK_KP_Down:
             dir = 2;
             break;
-            
+
         case XK_KP_3:
         case XK_KP_Page_Down:
             dir = 3;
             break;
-            
+
         case XK_KP_6:
         case XK_KP_Right:
             dir = 6;
             break;
-            
+
         case XK_KP_9:
         case XK_KP_Page_Up:
             dir = 9;
             break;
-            
+
         case XK_KP_8:
         case XK_KP_Up:
             dir = 8;
             break;
-            
+
         case XK_KP_7:
         case XK_KP_Home:
             dir = 7;
             break;
-            
+
         case XK_KP_4:
         case XK_KP_Left:
             dir = 4;
             break;
-            
+
         case XK_KP_5:
             dir = 5;
             break;
@@ -375,7 +375,7 @@ int x11_keypress(XKeyEvent *xev)
 
         if (ms) result += CK_SHIFT_UP - CK_UP;
         if (mc) result += CK_CTRL_UP  - CK_UP;
-            
+
         return result;
     }
 
@@ -384,19 +384,20 @@ int x11_keypress(XKeyEvent *xev)
        if (ms) base |= 1024;
        if (mc) base |= 2048;
        if (ma) base |= 4096;
-       
+
        return base;
     }
-    
+
     //Hack Special key
-    if (ks1 >=0xff00)
+    if (ks1 >=
+0xff00)
     {
         base = 512 + ks1 - 0xff00;
-        
+
         if (ms) base |= 1024;
         if (mc) base |= 2048;
         if (ma) base |= 4096;
-        
+
         return base;
     }
 

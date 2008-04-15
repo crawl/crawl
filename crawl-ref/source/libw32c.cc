@@ -85,9 +85,9 @@ static HANDLE outbuf = NULL;
 static int current_color = -1;
 static bool cursor_is_enabled = false;
 // dirty line (sx,ex,y)
-static int chsx=0, chex=0, chy=-1;
+static int chsx = 0, chex = 0, chy = -1;
 // cursor position (start at 0,0 --> 1,1)
-static int cx=0, cy=0;
+static int cx = 0, cy = 0;
 
 // and now, for the screen buffer
 static CHAR_INFO *screen = NULL;
@@ -684,7 +684,7 @@ int wherey(void)
 void putch(char c)
 {
     // special case: check for '0' char: map to space
-    if (c==0)
+    if (c == 0)
         c = ' ';
 
     writeChar(c);

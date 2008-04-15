@@ -28,7 +28,7 @@ int TextRegionClass::cursor_x;
 int TextRegionClass::cursor_y;
 
 // more logical color naming
-const int map_colors[MAX_MAP_COL][3]=
+const int map_colors[MAX_MAP_COL][3] =
 {
     {  0,   0,   0}, // BLACK
     {128, 128, 128}, // DKGREY
@@ -63,7 +63,7 @@ const int map_colors[MAX_MAP_COL][3]=
     {165,  91,   0},  // BROWN
 };
 
-const int term_colors[MAX_TERM_COL][3]=
+const int term_colors[MAX_TERM_COL][3] =
 {
     {  0,   0,   0}, // BLACK
     {  0,  82, 255}, // BLUE
@@ -134,10 +134,10 @@ void WinClass::placeRegion(RegionClass *r, int layer0,
      int margin_top, int margin_left,
      int margin_bottom, int margin_right)
 {
-    int sx0 =0;
-    int sy0 =0;
-    int ex0 =0;
-    int ey0 =0;
+    int sx0 = 0;
+    int sy0 = 0;
+    int ex0 = 0;
+    int ey0 = 0;
 
     int x = 0;
     int y = 0;
@@ -191,11 +191,11 @@ void WinClass::redraw(int x1, int y1, int x2, int y2)
     int cx1, cx2, cy1, cy2;
     for (r = regions.begin();r != regions.end();r++)
     {
-        if (!(*r)->is_active()) continue;
-        if( (*r)->convert_redraw_rect(x1, y1, x2, y2, &cx1, &cy1, &cx2, &cy2))
-        {
+        if (!(*r)->is_active())
+            continue;
+
+        if ( (*r)->convert_redraw_rect(x1, y1, x2, y2, &cx1, &cy1, &cx2, &cy2) )
             (*r)->redraw(cx1, cy1, cx2, cy2);
-        }
     }
 }
 
@@ -244,10 +244,10 @@ void TextRegionClass::resize(int x, int y)
     free(abuf);
     cbuf = (unsigned char *)malloc(x*y);
     abuf = (unsigned char *)malloc(x*y);
-    for (i=0; i<x*y; i++)
+    for (i = 0; i < x*y; i++)
     {
-        cbuf[i]=' ';
-        abuf[i]=0;
+        cbuf[i] = ' ';
+        abuf[i] = 0;
     }
     mx = x;
     my = y;
@@ -310,10 +310,9 @@ MapRegionClass::MapRegionClass(int x, int y, int o_x, int o_y, bool iso)
 
     mbuf = (unsigned char *)malloc(mx2*my2);
 
-    for (i=0; i<mx2*my2; i++)
-    {
-        mbuf[i]=0;
-    }
+    for (i = 0; i < mx2*my2; i++)
+        mbuf[i] = 0;
+
     x_margin = o_x;
     y_margin = o_y;
     force_redraw = false;
@@ -338,7 +337,8 @@ void MapRegionClass::resize(int mx0, int my0, int dx0, int dy0)
         int i;
         free(mbuf);
         mbuf = (unsigned char *)malloc(mx2*my2);
-        for (i=0; i<mx2*my2; i++) mbuf[i]=0;
+        for (i = 0; i < mx2*my2; i++)
+            mbuf[i] = 0;
     }
 }
 
@@ -404,10 +404,14 @@ bool RegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
     cx2 /= dx;
     cy2 /= dy;
 
-    if(cx2>=mx-1)cx2=mx-1;
-    if(cy2>=my-1)cy2=my-1;
-    if(cx1<0) cx1=0;
-    if(cy1<0) cy1=0;
+    if (cx2 >= mx - 1)
+        cx2 = mx - 1;
+    if (cy2 >= my - 1)
+        cy2 = my - 1;
+    if (cx1 < 0)
+        cx1 = 0;
+    if (cy1 < 0)
+        cy1 = 0;
 
     *rx1 = cx1;
     *ry1 = cy1;
@@ -418,7 +422,8 @@ bool RegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
 }
 
 bool TileRegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
-                  int *rx1, int *ry1, int *rx2, int *ry2)
+                                          int *rx1, int *ry1,
+                                          int *rx2, int *ry2)
 {
     int cx1 = x1-ox;
     int cy1 = y1-oy;
@@ -428,13 +433,17 @@ bool TileRegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
     int wwx = dx*mx;
     int wwy = dy*my;
 
-    if ( (cx2 < 0) || (cy2 < 0) || (cx1 >= wwx) || (cy1 >=wwy))
+    if (cx2 < 0 || cy2 < 0 || cx1 >= wwx || cy1 >=wwy)
         return false;
 
-    if(cx2>=wwx-1)cx2=wwx-1;
-    if(cy2>=wwy-1)cy2=wwy-1;
-    if(cx1<0) cx1=0;
-    if(cy1<0) cy1=0;
+    if (cx2 >= wwx - 1)
+        cx2 = wwx - 1;
+    if (cy2 >= wwy - 1)
+        cy2 = wwy - 1;
+    if (cx1 < 0)
+        cx1 = 0;
+    if (cy1 < 0)
+        cy1 = 0;
 
     *rx1 = cx1;
     *ry1 = cy1;
@@ -497,7 +506,7 @@ void TextRegionClass::scroll()
 {
     int idx;
 
-    if(!flag)
+    if (!flag)
         return;
 
     for (idx = 0; idx < mx*(my-1); idx++)
@@ -530,19 +539,20 @@ void TextRegionClass::addstr(char *buffer)
     char buf2[1024];
     int len = strlen(buffer);
 
-    if(!flag)return;
+    if (!flag)
+        return;
 
     j = 0;
 
     for (i = 0; i < len + 1; i++)
     {
         char c = buffer[i];
-        bool newline=false;
-        if (c== '\n' || c== '\r')
+        bool newline = false;
+        if (c == '\n' || c == '\r')
         {
-            c=0;
+            c = 0;
             newline = true;
-            if (buffer[i+1]=='\n' || buffer[i+1]=='\r')
+            if (buffer[i+1] == '\n' || buffer[i+1] == '\r')
                 i++;
         }
         buf2[j] = c;

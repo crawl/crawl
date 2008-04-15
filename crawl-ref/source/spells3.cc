@@ -869,8 +869,8 @@ bool remove_sanctuary(bool did_attack)
 
     const int radius = 5;
     bool seen_change = false;
-    for (int x=-radius; x<=radius; x++)
-       for (int y=-radius; y<=radius; y++)
+    for (int x = -radius; x <= radius; x++)
+       for (int y = -radius; y <= radius; y++)
        {
           int posx = env.sanctuary_pos.x + x;
           int posy = env.sanctuary_pos.y + y;
@@ -917,8 +917,8 @@ void decrease_sanctuary_radius()
         return;
 
     radius = size+1;
-    for (int x=-radius; x<=radius; x++)
-         for (int y=-radius; y<=radius; y++)
+    for (int x = -radius; x <= radius; x++)
+         for (int y = -radius; y <= radius; y++)
          {
               int posx = env.sanctuary_pos.x + x;
               int posy = env.sanctuary_pos.y + y;
@@ -968,9 +968,8 @@ bool cast_sanctuary(const int power)
     int count = 0;
     int monster = -1;
 
-    for (int x=-radius; x<=radius; x++)
-    {
-        for (int y=-radius; y<=radius; y++)
+    for (int x = -radius; x <= radius; x++)
+        for (int y = -radius; y <= radius; y++)
         {
             int posx = you.x_pos + x;
             int posy = you.y_pos + y;
@@ -1011,7 +1010,6 @@ bool cast_sanctuary(const int power)
             else
                 env.map[posx][posy].property = FPROP_SANCTUARY_2; // white
         }
-    }
 
     if (count == 1)
         simple_monster_message(&menv[monster], " turns to flee the light!");
@@ -1048,9 +1046,8 @@ void manage_halo()
     if (!you.duration[DUR_BACKLIGHT])
         you.duration[DUR_BACKLIGHT] = 1;
 
-    for (int x=-radius; x<=radius; x++)
-    {
-        for (int y=-radius; y<=radius; y++)
+    for (int x = -radius; x <= radius; x++)
+        for (int y = -radius; y <= radius; y++)
         {
             int posx = you.x_pos + x;
             int posy = you.y_pos + y;
@@ -1073,7 +1070,6 @@ void manage_halo()
                 }
             }
         }
-    }
 }
 
 bool inside_halo(int posx, int posy)

@@ -129,9 +129,8 @@ void writer::writeByte(unsigned char ch)
 {
     if (_file)
         fputc(ch, _file);
-    else {
+    else
         _pbuf->push_back(ch);
-    }
 }
 
 void writer::write(const void *data, size_t size)
@@ -226,7 +225,7 @@ char unmarshallByte(reader &th)
 
 void marshallShort(std::vector<unsigned char>& buf, short data)
 {
-    COMPILE_CHECK(sizeof(data)==2, c1);
+    COMPILE_CHECK(sizeof(data) == 2, c1);
     buf.push_back((unsigned char) ((data & 0xFF00) >> 8));
     buf.push_back((unsigned char) ((data & 0x00FF)     ));
 }
@@ -785,13 +784,13 @@ void tag_set_expected(char tags[], int fileType)
 {
     int i;
 
-    for (i=0; i<NUM_TAGS; i++)
+    for (i = 0; i < NUM_TAGS; i++)
     {
         tags[i] = -1;
         switch(fileType)
         {
             case TAGTYPE_PLAYER:
-                if ((i >= TAG_YOU && i <=TAG_YOU_DUNGEON)
+                if (i >= TAG_YOU && i <= TAG_YOU_DUNGEON
                     || i == TAG_LOST_MONSTERS)
                 {
                     tags[i] = 1;

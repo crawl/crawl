@@ -38,7 +38,7 @@ class TextDB
     DBM* get() { return _db; }
 
     // Make it easier to migrate from raw DBM* to TextDB
-    operator bool() const { return _db!=0; }
+    operator bool() const { return _db != 0; }
     operator DBM*() const { return _db; }
 
  private:
@@ -66,26 +66,26 @@ static TextDB AllDBs[] =
             "descript/gods.txt",
             "descript/branches.txt",
             NULL),
-            
+
     TextDB( "db/randart",
             "database/randname.txt",
             "database/rand_wpn.txt", // mostly weapons
             "database/rand_arm.txt", // mostly armour
             "database/rand_all.txt", // jewellery and general
             NULL),
-            
+
     TextDB( "db/speak",
             "database/monspeak.txt", // monster speech
             "database/wpnnoise.txt", // noisy weapon speech
             "database/insult.txt",   // imp/demon taunts
             "database/godspeak.txt", // god speech
             NULL),
-            
+
     TextDB( "db/shout",
             "database/shout.txt",
             "database/insult.txt",   // imp/demon taunts, again
             NULL),
-            
+
     TextDB( "db/help",
             "database/help.txt",
             NULL),
@@ -110,10 +110,10 @@ TextDB::TextDB(const char* db_name, ...)
     while (true)
     {
         const char* input_file = va_arg(args, const char *);
-        
+
         if (input_file == 0)
             break;
-            
+
         ASSERT( strstr(input_file, ".txt") != 0 );      // probably forgot the terminating 0
         _input_files.push_back(input_file);
     }
@@ -124,10 +124,10 @@ void TextDB::init()
 {
     if (_needs_update())
         _regenerate_db();
-        
+
     const std::string full_db_path = get_savedir_path(_db_name);
     _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
-    
+
     if (_db == NULL)
         end(1, true, "Failed to open DB: %s", full_db_path.c_str());
 }
@@ -144,7 +144,7 @@ void TextDB::shutdown()
 bool TextDB::_needs_update() const
 {
     std::string full_db_path = get_savedir_path(std::string(_db_name) + ".db");
-    for (unsigned int i=0; i<_input_files.size(); i++)
+    for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
         if (is_newer(full_input_path, full_db_path))
@@ -167,7 +167,7 @@ void TextDB::_regenerate_db()
     file_lock lock(db_path + ".lk", "wb");
     unlink( full_db_path.c_str() );
 
-    for (unsigned int i=0; i<_input_files.size(); i++)
+    for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
         _store_text_db(full_input_path, db_path);
@@ -182,13 +182,13 @@ void TextDB::_regenerate_db()
 
 void databaseSystemInit()
 {
-    for (unsigned int i=0; i < ARRAYSIZE(AllDBs); i++)
+    for (unsigned int i = 0; i < ARRAYSIZE(AllDBs); i++)
         AllDBs[i].init();
 }
 
 void databaseSystemShutdown()
 {
-    for (unsigned int i=0; i < ARRAYSIZE(AllDBs); i++)
+    for (unsigned int i = 0; i < ARRAYSIZE(AllDBs); i++)
         AllDBs[i].shutdown();
 }
 
@@ -202,12 +202,12 @@ datum database_fetch(DBM *database, const std::string &key)
     result.dptr = NULL;
     result.dsize = 0;
     datum dbKey;
-    
+
     dbKey.dptr = (DPTR_COERCE) key.c_str();
-    dbKey.dsize = key.length(); 
-    
+    dbKey.dsize = key.length();
+
     result = dbm_fetch(database, dbKey);
-    
+
     return result;
 }
 
@@ -400,7 +400,7 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
         // blank lines.
         while (i < size && lines[i] == "")
             i++;
-            
+
         if (i == size)
             break;
 
@@ -437,7 +437,7 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
         choice = fixed_weight % total_weight;
     else
         choice = random2(total_weight);
-                                      
+
     for (int i = 0, size = parts.size(); i < size; i++)
         if (choice < weights[i])
             return(parts[i]);
@@ -483,7 +483,7 @@ static void _call_recursive_replacement(std::string &str, DBM *database,
                                         const std::string &suffix,
                                         int &num_replacements,
                                         int recursion_depth = 0);
-                                        
+
 std::string getWeightedSpeechString(const std::string &key,
                                     const std::string &suffix,
                                     const int weight)
@@ -494,7 +494,7 @@ std::string getWeightedSpeechString(const std::string &key,
     std::string result = _getWeightedString(SpeakDB, key, suffix, weight);
     if (result.empty())
         return "";
-        
+
     int num_replacements = 0;
     _call_recursive_replacement(result, SpeakDB, suffix, num_replacements);
     return (result);
@@ -514,10 +514,10 @@ static std::string _getRandomizedStr(DBM *database, const std::string &key,
     }
 
     std::string str = _getWeightedString(database, key, suffix);
-    
+
     _call_recursive_replacement(str, database, suffix, num_replacements,
                                 recursion_depth);
-    
+
     return str;
 }
 
@@ -576,15 +576,15 @@ static std::string _query_database(DBM *db, std::string key,
         // in and got the case wrong.)
         lowercase(key);
     }
-    
+
     // Query the DB.
     datum result = database_fetch(db, key);
-    
+
     std::string str((const char *)result.dptr, result.dsize);
 
     if (run_lua)
         _execute_embedded_lua(str);
-    
+
     return (str);
 }
 
@@ -656,7 +656,7 @@ std::string getRandNameString(const std::string &itemtype,
 {
     if (!RandartDB)
         return ("");
-        
+
     int num_replacements = 0;
 
     return _getRandomizedStr(RandartDB, itemtype, suffix,

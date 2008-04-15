@@ -1932,7 +1932,7 @@ static void debug_rap_stats(FILE *ostat)
         for (int j = 0; j < RAP_NUM_PROPERTIES; j++)
         {
             const int val = proprt[j];
-            if(val)
+            if (val)
             {
                 num_props++;
                 all_props[j]++;

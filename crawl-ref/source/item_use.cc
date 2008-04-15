@@ -1251,7 +1251,7 @@ int get_next_fire_item(int current, int direction)
     if (current == -1)
         return fire_order[0];
 
-    for (unsigned i=0; i<fire_order.size(); i++)
+    for (unsigned i = 0; i < fire_order.size(); i++)
     {
         if (fire_order[i] == current)
         {
@@ -1275,7 +1275,7 @@ public:
     virtual command_type get_command(int key = -1);
     virtual bool should_redraw();
 
-    void message_ammo_prompt(const std::string* pre_text=0);
+    void message_ammo_prompt(const std::string* pre_text = 0);
 
 public:
     int m_slot;

@@ -131,7 +131,7 @@ static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
     cgotoxy(ox, oy, GOTO_STAT);
 
     textcolor(BLACK);
-    for (int cx=0; cx < width; cx++)
+    for (int cx = 0; cx < width; cx++)
     {
 #ifdef USE_TILE
         // maybe this should use textbackground too?
@@ -144,13 +144,18 @@ static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
         putch(' ');
 #else
 
-        if (cx < disp) {
+        if (cx < disp)
+        {
             textcolor(default_colour);
             putch('=');
-        } else if (old_val > val && old_disp > disp && cx < old_disp) {
+        }
+        else if (old_val > val && old_disp > disp && cx < old_disp)
+        {
             textcolor(change_colour);
             putch('-');
-        } else {
+        }
+        else
+        {
             textcolor(empty_colour);
             putch('-');
         }
@@ -280,7 +285,7 @@ static void _print_stats_hp(int x, int y)
     }
 
     cgotoxy(x+4, y, GOTO_STAT);
-    int col=-wherex();
+    int col = -wherex();
     cprintf( "%d", you.hp );
 
     textcolor(LIGHTGREY);
@@ -1172,9 +1177,9 @@ void update_monster_pane()
     {
         std::vector<monsters*> visible;
         get_playervisible_monsters(visible);
-        for (unsigned int i=0; i<visible.size(); i++)
+        for (unsigned int i = 0; i < visible.size(); i++)
         {
-            if (   Options.target_zero_exp
+            if (Options.target_zero_exp
                 || !mons_class_flag( visible[i]->type, M_NO_EXP_GAIN ))
             {
                 mons.push_back(monster_pane_info(visible[i]));

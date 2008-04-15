@@ -44,9 +44,9 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
 {
     if (which_god == GOD_NO_GOD)
         return (false);
-        
+
     const int brand = get_weapon_brand(item);
-    
+
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
     else if (is_good_god(which_god) && (brand == SPWPN_DRAINING
@@ -65,7 +65,7 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
     case GOD_ELYVILON: // peaceful healer god, no weapons, no berserking
          if (item.base_type == OBJ_WEAPONS)
              return (false);
-             
+
          if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
              return (false);
 
@@ -105,14 +105,14 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
          }
          if (brand == SPWPN_PAIN) // involves magic
              return (false);
-             
+
          if (randart_wpn_property( item, RAP_MAGICAL_POWER))
              return (false);
 
     default:
          break;
     }
-    
+
     return (true);
 }
 
@@ -120,7 +120,7 @@ static std::string replace_name_parts(const std::string name_in,
                                       const item_def item)
 {
     std::string name = name_in;
-    
+
     // maybe god gift?
     god_type god_gift = GOD_NO_GOD;
     if (item.orig_monnum < 0)
@@ -187,14 +187,14 @@ static std::string replace_name_parts(const std::string name_in,
         if (!place.empty())
             name = replace_all(name, "@branch_name@", place);
     }
-    
+
     // occasionally use long name for Xom (see religion.cc)
     name = replace_all(name, "@xom_name@", god_name(GOD_XOM, coinflip()));
-    
+
     if (name.find("@god_name@", 0) != std::string::npos)
     {
         god_type which_god;
-        
+
         // God gifts will always get the gifting god's name
         if (god_gift != GOD_NO_GOD)
             which_god = god_gift;
@@ -284,7 +284,7 @@ bool is_unrandom_artefact( const item_def &item )
 bool is_fixed_artefact( const item_def &item )
 {
     if (!is_random_artefact( item )
-        && item.base_type == OBJ_WEAPONS 
+        && item.base_type == OBJ_WEAPONS
         && item.special >= SPWPN_START_FIXEDARTS)
     {
         return (true);
@@ -320,7 +320,7 @@ static long calc_seed( const item_def &item )
     return (item.special & RANDART_SEED_MASK);
 }
 
-void randart_desc_properties( const item_def &item, 
+void randart_desc_properties( const item_def &item,
                               randart_properties_t &proprt,
                               randart_known_props_t &known,
                               bool force_fake_props)
@@ -564,11 +564,11 @@ static int randart_add_one_property( const item_def &item,
     return negench ? 0 : 1;
 }
 
-void randart_wpn_properties( const item_def &item, 
+void randart_wpn_properties( const item_def &item,
                              randart_properties_t &proprt,
                              randart_known_props_t &known)
 {
-    ASSERT( is_random_artefact( item ) ); 
+    ASSERT( is_random_artefact( item ) );
     ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
     const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
     ASSERT( _val.get_type() == SV_VEC );
@@ -662,7 +662,7 @@ void randart_wpn_properties( const item_def &item,
 
                 proprt[RAP_BRAND] = (tmp >= 18) ? SPWPN_SPEED :
                                     (tmp >= 14) ? SPWPN_PROTECTION :
-                                    (tmp >= 10) ? SPWPN_VENOM                   
+                                    (tmp >= 10) ? SPWPN_VENOM
                                                 : SPWPN_VORPAL + random2(3);
                 if (atype == WPN_BLOWGUN
                     && (proprt[RAP_BRAND] == SPWPN_VORPAL
@@ -1028,12 +1028,12 @@ void randart_wpn_properties( const item_def &item,
         }
     }
 
-    if (one_chance_in(10) 
-        && (aclass != OBJ_ARMOUR 
-            || atype != ARM_CLOAK 
+    if (one_chance_in(10)
+        && (aclass != OBJ_ARMOUR
+            || atype != ARM_CLOAK
             || get_equip_race(item) != ISFLAG_ELVEN)
-        && (aclass != OBJ_ARMOUR 
-            || atype != ARM_BOOTS 
+        && (aclass != OBJ_ARMOUR
+            || atype != ARM_BOOTS
             || get_equip_race(item) != ISFLAG_ELVEN)
         && get_armour_ego_type( item ) != SPARM_STEALTH)
     {
@@ -1042,7 +1042,7 @@ void randart_wpn_properties( const item_def &item,
 
         if (one_chance_in(4))
         {
-            proprt[RAP_STEALTH] = -proprt[RAP_STEALTH] - random2(20);    
+            proprt[RAP_STEALTH] = -proprt[RAP_STEALTH] - random2(20);
             power_level--;
         }
     }
@@ -1054,7 +1054,7 @@ void randart_wpn_properties( const item_def &item,
         proprt[RAP_CURSED] = 1;
 }
 
-void randart_wpn_properties( const item_def &item, 
+void randart_wpn_properties( const item_def &item,
                              randart_properties_t &proprt )
 {
     randart_known_props_t known;
@@ -1117,7 +1117,7 @@ int randart_wpn_num_props( const randart_properties_t &proprt )
 
 void randart_wpn_learn_prop( item_def &item, randart_prop_type prop )
 {
-    ASSERT( is_random_artefact( item ) ); 
+    ASSERT( is_random_artefact( item ) );
     ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
     CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
     ASSERT( _val.get_type() == SV_VEC );
@@ -1204,10 +1204,10 @@ std::string randart_name( const item_def &item )
             god_gift = true;
         }
     }
-    
+
     // get base type
     lookup += get_artefact_type(item.base_type);
-    
+
     rng_save_excursion rng_state;
     seed_rng( seed );
 
@@ -1225,7 +1225,7 @@ std::string randart_name( const item_def &item )
             if (appear.empty()) // still nothing found?
                 appear = "non-descript";
         }
-        
+
         result += appear;
         result += " ";
         result += item_base_name(item);
@@ -1236,15 +1236,15 @@ std::string randart_name( const item_def &item )
     {
         result += item_base_name(item) + " ";
         std::string name = getRandNameString(lookup);
-        
+
         if (name.empty() && god_gift) // if nothing found, try god name alone
         {
             name = getRandNameString(god_name(static_cast<god_type>(item_orig), false));
-            
+
             if (name.empty()) // if still nothing found, try base type alone
                 name = getRandNameString(get_artefact_type(item.base_type).c_str());
         }
-        
+
         if (name.empty()) // still nothing found?
             result += "of Bugginess";
         else
@@ -1273,7 +1273,7 @@ std::string randart_name( const item_def &item )
 
 int find_unrandart_index(const item_def& artefact)
 {
-    for (int i=0; i < NO_UNRANDARTS; i++)
+    for (int i = 0; i < NO_UNRANDARTS; i++)
     {
         const unrandart_entry& candidate = unranddata[i];
         if (candidate.ura_cl == artefact.base_type
@@ -1311,7 +1311,7 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype)
     // base_type and sub_type.
     for (int i = 0, count = 0; i < NO_UNRANDARTS; i++)
     {
-        if (unranddata[i].ura_cl == aclass 
+        if (unranddata[i].ura_cl == aclass
             && !does_unrandart_exist(i)
             && (atype == OBJ_RANDOM || unranddata[i].ura_ty == atype))
         {
@@ -1340,7 +1340,7 @@ bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
     const unique_item_status_type status =
         get_unique_item_status( OBJ_WEAPONS, which );
 
-    if ((status == UNIQ_EXISTS 
+    if ((status == UNIQ_EXISTS
             || (in_abyss && status == UNIQ_NOT_EXISTS)
             || (!in_abyss && status == UNIQ_LOST_IN_ABYSS))
         && !force)
@@ -1578,7 +1578,7 @@ static bool randart_is_redundant( const item_def &item,
 
     if (proprt[provides2] != 0)
         return true;
-    
+
     return false;
 }
 
@@ -1615,7 +1615,7 @@ static bool randart_is_conflicting( const item_def &item,
     case AMU_RAGE:
         conflicts = RAP_STEALTH;
         break;
-    }        
+    }
 
     if (conflicts == RAP_NUM_PROPERTIES)
         return false;
@@ -1631,7 +1631,7 @@ bool randart_is_bad( const item_def &item, randart_properties_t &proprt )
     if (randart_wpn_num_props( proprt ) == 0)
         return true;
 
-    return ( randart_is_redundant( item, proprt ) || 
+    return ( randart_is_redundant( item, proprt ) ||
              randart_is_conflicting( item, proprt ) );
 }
 
@@ -1645,7 +1645,7 @@ bool randart_is_bad( const item_def &item )
 
 bool make_item_randart( item_def &item )
 {
-    if (item.base_type != OBJ_WEAPONS 
+    if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
         && item.base_type != OBJ_JEWELLERY)
     {
@@ -1691,7 +1691,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     item.plus2     = unranddata[unrand_index].ura_pl2;
     item.colour    = unranddata[unrand_index].ura_col;
 
-    item.flags |= ISFLAG_UNRANDART; 
+    item.flags |= ISFLAG_UNRANDART;
     item.special = unranddata[ unrand_index ].prpty[ RAP_BRAND ];
 
     if (unranddata[ unrand_index ].prpty[ RAP_CURSED ])

@@ -4078,8 +4078,8 @@ static bool _bless_weapon( god_type god, int brand, int colour )
         {
             holy_word( 100, HOLY_WORD_GENERIC, true );
             // un-bloodify surrounding squares
-            for (int i=-3;i<=3;i++)
-                for (int j=-3;j<=3;j++)
+            for (int i = -3; i <= 3; i++)
+                for (int j = -3; j <= 3; j++)
                 {
                      if (is_bloodcovered(you.x_pos+i, you.y_pos+j))
                          env.map[you.x_pos+i][you.y_pos+j].property = FPROP_NONE;

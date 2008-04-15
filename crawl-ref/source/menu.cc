@@ -65,7 +65,7 @@ Menu::Menu( const formatted_string &fs )
 
             if (nonblank && !starts_with_eol)
                 last_text_colour = colour;
-            
+
             check_add_formatted_line(last_text_colour, colour, line, true);
 
             if (nonblank && starts_with_eol)
@@ -102,7 +102,7 @@ void Menu::check_add_formatted_line(int firstcol, int nextcol,
     for (int i = 0, col = firstcol; i < size; ++i, col = nextcol)
     {
         std::string &s(lines[i]);
-        
+
         trim_string_right(s);
 
         MenuEntry *me = new MenuEntry(s);
@@ -181,14 +181,17 @@ void Menu::reset()
 std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
     cursor_control cs(false);
-    
-    if (reuse_selections) {
+
+    if (reuse_selections)
+    {
         get_selected(&sel);
-    } else {
+    }
+    else
+    {
         deselect_all(false);
         sel.clear();
     }
-            
+
 
     // Lose lines for the title + room for -more- line.
     pagesize = get_number_of_lines() - !!title - 1;
@@ -239,7 +242,7 @@ bool Menu::process_key( int keyin )
         lastch = keyin;
         return false;
     }
-    
+
     bool nav = false, repaint = false;
 
     if (f_keyfilter)
@@ -361,7 +364,7 @@ bool Menu::process_key( int keyin )
             num = (num == -1)? keyin - '0' :
                                num * 10 + keyin - '0';
         }
-        
+
         select_items( keyin, num );
         get_selected( &sel );
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
@@ -423,11 +426,11 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
                                 s + std::string(avail_width - s.length(), ' ');
 
     cprintf("%s", towrite.c_str());
-    
+
     cgotoxy( oldx, oldy );
     return true;
 }
-    
+
 bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
 {
     int oldx = wherex(), oldy = wherey();
@@ -460,11 +463,11 @@ bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
             cprintf(fmt, " ");
         }
     }
-    
+
     cgotoxy( oldx, oldy );
     return true;
 }
-    
+
 void Menu::draw_select_count( int count, bool force )
 {
     if (!force && !is_set(MF_MULTISELECT))
@@ -478,7 +481,7 @@ void Menu::draw_select_count( int count, bool force )
     {
         char buf[100] = "";
         if (count)
-            snprintf(buf, sizeof buf, "  (%d item%s)  ", count, 
+            snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
                     (count > 1? "s" : ""));
 
         draw_title_suffix( buf );
@@ -495,7 +498,7 @@ std::vector<MenuEntry*> Menu::selected_entries() const
 void Menu::get_selected( std::vector<MenuEntry*> *selected ) const
 {
     selected->clear();
-    
+
     for (int i = 0, count = items.size(); i < count; ++i)
         if (items[i]->selected())
             selected->push_back( items[i] );
@@ -539,7 +542,7 @@ void Menu::select_items( int key, int qty )
     {
         int final = items.size();
         bool selected = false;
-        
+
         // Process all items, in case user hits hotkey for an
         // item not on the current page.
 
@@ -587,7 +590,7 @@ void Menu::select_items( int key, int qty )
 bool Menu::is_selectable(int item) const
 {
     if (select_filter.empty()) return true;
-    
+
     std::string text = items[item]->get_text();
     for (int i = 0, count = select_filter.size(); i < count; ++i)
     {
@@ -634,8 +637,8 @@ void Menu::select_index( int index, int qty )
             }
         }
     }
-    else if (items[si]->level == MEL_ITEM && 
-            (flags & (MF_SINGLESELECT | MF_MULTISELECT))) 
+    else if (items[si]->level == MEL_ITEM &&
+            (flags & (MF_SINGLESELECT | MF_MULTISELECT)))
     {
         last_selected = si;
         items[si]->select( qty );
@@ -667,7 +670,7 @@ void Menu::draw_menu()
 
     int end = first_entry + pagesize;
     if (end > (int) items.size()) end = items.size();
-    
+
     for (int i = first_entry; i < end; ++i)
     {
         draw_item( i );
@@ -853,7 +856,7 @@ void slider_menu::select_search(const std::string &s)
         lowercase(text);
 
         std::string::size_type found = text.find(srch);
-        if (found != std::string::npos 
+        if (found != std::string::npos
                 && found == text.find_first_not_of(" "))
         {
             move_selection(i);
@@ -905,7 +908,7 @@ void slider_menu::adjust_pagesizes(int recurse_depth)
 {
     if (first_entry == 1 && selected == 1)
         first_entry = 0;
-    
+
     need_less = !!first_entry;
     pagesize = endy - starty + 1 - !!title - need_less;
     const int nitems = items.size();
@@ -917,7 +920,7 @@ void slider_menu::adjust_pagesizes(int recurse_depth)
             && (selected < first_entry || selected >= first_entry + pagesize)
             && recurse_depth > 0)
         fix_entry(recurse_depth - 1);
-    
+
     calc_y_offset();
 }
 
@@ -944,7 +947,7 @@ std::vector<MenuEntry *> slider_menu::show()
 
     if (!search.empty())
         select_search(search);
-    
+
     fix_entry();
     do_menu();
 
@@ -992,7 +995,7 @@ void slider_menu::show_less()
 {
     if (!need_less)
         return ;
-    
+
     if (first_entry > 0)
         less.display();
     else
@@ -1015,7 +1018,7 @@ void slider_menu::show_more()
 
 void slider_menu::calc_y_offset()
 {
-    y_offset = starty + !!title + need_less;     
+    y_offset = starty + !!title + need_less;
 }
 
 int slider_menu::entry_end() const
@@ -1039,7 +1042,7 @@ void slider_menu::draw_menu()
     cgotoxy(1, y_offset - 1);
 
     show_less();
-    
+
     for (int i = first_entry; i < end; ++i)
         draw_item( i );
 
@@ -1239,8 +1242,8 @@ void column_composer::add_formatted(
     strip_blank_lines(newlines);
 
     compose_formatted_column(
-            newlines, 
-            col.lines, 
+            newlines,
+            col.lines,
             margin == -1? col.margin : margin);
 
     col.lines += newlines.size();
@@ -1308,7 +1311,7 @@ void formatted_scroller::add_text(const std::string& s)
             break;
         else
             eolpos = newpos + 1;
-    }    
+    }
 }
 
 void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
@@ -1316,7 +1319,8 @@ void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
 {
     MenuEntry* me = new MenuEntry;
     me->data = new formatted_string(fs);
-    if ( hotkey ) {
+    if ( hotkey )
+    {
         me->add_hotkey(hotkey);
         me->quantity = 1;
     }
@@ -1469,10 +1473,10 @@ std::string get_linebreak_string(const std::string& s, int maxcol)
     return r;
 }
 
-// takes a (possibly tagged) string, breaks it into lines and 
+// takes a (possibly tagged) string, breaks it into lines and
 // prints it into the given message channel
 void print_formatted_paragraph(std::string &s, int maxcol,
-                               msg_channel_type channel) 
+                               msg_channel_type channel)
 {
     linebreak_string2(s,maxcol);
     std::string text;
@@ -1480,13 +1484,14 @@ void print_formatted_paragraph(std::string &s, int maxcol,
     size_t loc = 0, oldloc = 0;
     while ( loc < s.size() )
     {
-        if (s[loc] == '\n') {
+        if (s[loc] == '\n')
+        {
             text = s.substr(oldloc, loc-oldloc);
             formatted_message_history( text, channel );
             oldloc = ++loc;
         }
         loc++;
-    }    
+    }
     formatted_message_history( s.substr(oldloc, loc-oldloc), channel );
 }
 
@@ -1567,7 +1572,7 @@ bool formatted_scroller::line_up()
 }
 
 bool formatted_scroller::jump_to_hotkey( int keyin )
-{    
+{
     for ( unsigned int i = 0; i < items.size(); ++i )
         if ( items[i]->is_hotkey(keyin) )
             return jump_to(i);
@@ -1639,7 +1644,7 @@ bool formatted_scroller::process_key( int keyin )
         draw_menu();
     else if (moved && is_set(MF_EASY_EXIT))
         return (false);
-            
+
     return true;
 }
 

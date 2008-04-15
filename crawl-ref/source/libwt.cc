@@ -81,7 +81,7 @@ void libgui_shutdown_sys();
 void update_tip_text(const char *tip);
 
 void GetNextEvent(int *etype, int *key, bool *shift, bool *ctrl,
-        int *x1, int *y1, int *x2, int *y2);
+                  int *x1, int *y1, int *x2, int *y2);
 void TileInitWin();
 void delay(unsigned long ms);
 int kbhit();
@@ -104,14 +104,14 @@ void TileInitWin()
     for (i = 0; i < 256; i++)
     {
         chcol = (TileImg->pDib->bmiColors[i].rgbRed  * 30
-              + TileImg->pDib->bmiColors[i].rgbGreen * 59
-              + TileImg->pDib->bmiColors[i].rgbBlue  * 11)/100;
-    LPBYTE ptr = lpPalettes[1] + i * sizeof(RGBQUAD);
+                + TileImg->pDib->bmiColors[i].rgbGreen * 59
+                + TileImg->pDib->bmiColors[i].rgbBlue  * 11) / 100;
+        LPBYTE ptr = lpPalettes[1] + i * sizeof(RGBQUAD);
         ptr[2] = (BYTE)chcol;
         ptr[0] = (BYTE)( (chcol +1)/6 );
         ptr[1] = (BYTE)( (chcol +1)/6 );
 
-    ptr = lpPalettes[2] + i * sizeof(RGBQUAD);
+        ptr    = lpPalettes[2] + i * sizeof(RGBQUAD);
         ptr[2] = ptr[0] = ptr[1] = (BYTE)chcol;
     }
 }
@@ -120,7 +120,9 @@ void update_tip_text(const char *tip)
 {
 #define MAXTIP 512
     static char oldtip[MAXTIP+1];
-    if (strncmp(oldtip, tip, MAXTIP)==0) return;
+    if (strncmp(oldtip, tip, MAXTIP) == 0)
+        return;
+
     strncpy(oldtip, tip, MAXTIP);
     tiTip.lpszText = (char *)tip;
     SendMessage(hTool, TTM_UPDATETIPTEXT, 0, (LPARAM)&tiTip);
@@ -147,11 +149,12 @@ void GetNextEvent(int *etype, int *key, bool *sh, bool *ct,
     {
         TranslateMessage( &msg );
         DispatchMessage( &msg );
-        if(ev_tail != ev_head) break;
+        if (ev_tail != ev_head)
+            break;
     }
     struct ev_data *e = &ev_cue[ev_head];
     ev_head++;
-    if(ev_head == EV_MAX)
+    if (ev_head == EV_MAX)
         ev_head = 0;
 
     *etype = e->type;
@@ -166,12 +169,12 @@ void ev_push(struct ev_data *e)
 {
     ev_cue[ev_tail] = *e;
     ev_tail++;
-    if(ev_tail == EV_MAX)
+    if (ev_tail == EV_MAX)
         ev_tail = 0;
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-    LPSTR lpCmdLine, int nCmdShow )
+                   LPSTR lpCmdLine, int nCmdShow )
 {
     MSG msg;
 
@@ -187,9 +190,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     // I'll be damned if I have to parse lpCmdLine myself...
     int argc;
     LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
-    char **argv = new char*[argc];
-    int args_len = wcslen(GetCommandLineW()) + argc;
-    char *args = new char[args_len];
+    char **argv   = new char*[argc];
+    int args_len  = wcslen(GetCommandLineW()) + argc;
+    char *args    = new char[args_len];
 
     char *ptr = args;
     for (int i = 0; i < argc; i++)
@@ -243,7 +246,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static int cliy = 0;
 
     // For keypad
-    const unsigned char ck_table[9]=
+    const unsigned char ck_table[9] =
     {
         CK_END,  CK_DOWN,   CK_PGDN,
         CK_LEFT, CK_INSERT, CK_RIGHT,
@@ -288,8 +291,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             ev.x1 = LOWORD(lParam);
             ev.y1 = HIWORD(lParam);
             ev.key = 1;
-            ev.sh = ((GetKeyState(VK_SHIFT) & 0x80)!=0)? true:false;
-            ev.ct = ((GetKeyState(VK_CONTROL) & 0x80)!=0)? true:false;
+            ev.sh = ((GetKeyState(VK_SHIFT)   & 0x80) != 0)? true : false;
+            ev.ct = ((GetKeyState(VK_CONTROL) & 0x80) != 0)? true : false;
             if (message == WM_RBUTTONDOWN) ev.key = 2;
             if (message == WM_MBUTTONDOWN) ev.key = 3;
             ev_push(&ev);
@@ -310,42 +313,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case WM_MOUSEWHEEL:
         {
-            int z = (short)HIWORD(wParam);
-            ev.x1 = LOWORD(lParam) - clix;
-            ev.y1 = HIWORD(lParam) - cliy;
-        ev.type = EV_BUTTON;
-            ev.sh = ((GetKeyState(VK_SHIFT) & 0x80)!=0)? true:false;
-            ev.ct = ((GetKeyState(VK_CONTROL) & 0x80)!=0)? true:false;
-            ev.key = (z>0)? 4:5;
-        ev_push(&ev);
+            int z   = (short)HIWORD(wParam);
+            ev.x1   = LOWORD(lParam) - clix;
+            ev.y1   = HIWORD(lParam) - cliy;
+            ev.type = EV_BUTTON;
+            ev.sh   = ((GetKeyState(VK_SHIFT)   & 0x80) != 0) ? true : false;
+            ev.ct   = ((GetKeyState(VK_CONTROL) & 0x80) != 0) ? true : false;
+            ev.key  = (z > 0) ? 4 : 5;
+            ev_push(&ev);
             return 0;
         }
 
         case WM_MOUSEMOVE:
         {
-        ev.type = EV_MOVE;
+            ev.type = EV_MOVE;
             ev.x1 = LOWORD(lParam);
             ev.y1 = HIWORD(lParam);
-        ev_push(&ev);
+            ev_push(&ev);
             return 0;
         }
 
         case WM_KEYDOWN:
         {
-            int ch=(int)wParam;
+            int ch = (int) wParam;
             int result = 0;
-        int dir = 0;
-            bool fs = ((GetKeyState(VK_SHIFT)  & 0x80)!=0)? true:false;
-            bool fc = ((GetKeyState(VK_CONTROL)& 0x80)!=0)? true:false;
-            bool fa = ((GetKeyState(VK_MENU)   & 0x80)!=0)? true:false;
+            int dir = 0;
+            bool fs = ((GetKeyState(VK_SHIFT)  & 0x80) != 0)? true : false;
+            bool fc = ((GetKeyState(VK_CONTROL)& 0x80) != 0)? true : false;
+            bool fa = ((GetKeyState(VK_MENU)   & 0x80) != 0)? true : false;
 
-        if (ch >= VK_NUMPAD1 && ch <= VK_NUMPAD9)
-        {
-        skip_key = true;
-        dir = ch - VK_NUMPAD0;
-        }
-        else
-            if ((VK_PRIOR <= ch && ch <=VK_DOWN) || (ch == VK_CLEAR) )
+            if (ch >= VK_NUMPAD1 && ch <= VK_NUMPAD9)
+            {
+                skip_key = true;
+                dir = ch - VK_NUMPAD0;
+            }
+            else if (VK_PRIOR <= ch && ch <= VK_DOWN || ch == VK_CLEAR)
             {
                 switch(ch)
                 {
@@ -359,33 +361,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     case VK_END:   dir = 1; break;
                     case VK_CLEAR: dir = 5; break;
                 }
-        }
+            }
 
             if (dir != 0)
             {
-        ch = ck_table[dir-1];
+                ch = ck_table[dir-1];
                 if (fc)
-            ch += CK_CTRL_UP - CK_UP;
+                    ch += CK_CTRL_UP - CK_UP;
                 if (fs)
-            ch += CK_SHIFT_UP - CK_UP;
+                    ch += CK_SHIFT_UP - CK_UP;
 
-                if (fa) ch |= 2048;
+                if (fa)
+                    ch |= 2048;
                 ev.key = ch;
-            ev.type = EV_KEYIN;
-            ev_push(&ev);
+                ev.type = EV_KEYIN;
+                ev_push(&ev);
                 return 0;
             }
-        else if ( ch >= VK_PAUSE
-        && !(ch >= VK_CAPITAL && ch <= VK_SPACE)
-        && ch !=VK_PROCESSKEY
-        && ch != VK_NUMLOCK
-        && !(ch >=VK_LSHIFT && ch<= VK_RMENU)
-        && !(ch >= 0x30 && ch<= 0x39)
-        && !(ch >= 0x41 && ch<= 0x5a)
-        && !(ch >= 0xa6 && ch<= 0xe4)
-           )
+            else if (ch >= VK_PAUSE
+                     && (ch < VK_CAPITAL || ch > VK_SPACE)
+                     && ch != VK_PROCESSKEY
+                     && ch != VK_NUMLOCK
+                     && (ch < VK_LSHIFT || ch > VK_RMENU)
+                     && (ch < 0x30 || ch > 0x39)
+                     && (ch < 0x41 || ch > 0x5a)
+                     && (ch < 0xa6 || ch > 0xe4))
             {
-                result = 300+ch;
+                result = 300 + ch;
             }
 
             if (result)
@@ -403,14 +405,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case WM_CHAR:
         {
-        if (skip_key)
-        {
-        skip_key = false;
-        return 0;
-        }
+            if (skip_key)
+            {
+                skip_key = false;
+                return 0;
+            }
             ev.key = (int)wParam;
-        ev.type = EV_KEYIN;
-        ev_push(&ev);
+            ev.type = EV_KEYIN;
+            ev_push(&ev);
             return 0;
         }
 
@@ -422,12 +424,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             return 0;
         }
 
-    case WM_MOVE:
-    {
-        clix = LOWORD(lParam);
-        cliy = HIWORD(lParam);
-        return 0;
-    }
+        case WM_MOVE:
+        {
+            clix = LOWORD(lParam);
+            cliy = HIWORD(lParam);
+            return 0;
+        }
 
         case WM_COMMAND:
         {
@@ -435,22 +437,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             wmEvent = HIWORD(wParam);
             switch( wmId )
             {
+                // XXX: Isn't that always the case?
                 default:
                     return DefWindowProc( hWnd, message, wParam, lParam );
             }
             return 0;
         }
         case WM_CLOSE:
-            if ( (mouse_get_mode() == MOUSE_MODE_COMMAND)
-               ||(!crawl_state.need_save) )
+            if (mouse_get_mode() == MOUSE_MODE_COMMAND
+                || !crawl_state.need_save )
             {
                 if (crawl_state.need_save)
-                {
                     save_game(true);
-                }
-        libgui_shutdown();
+
+                libgui_shutdown();
             }
             break;
+
         case WM_DESTROY:
         {
             PostQuitMessage( 0 );
@@ -464,16 +467,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 #ifdef USE_TILE
-void TileDrawDungeonAux(){
+void TileDrawDungeonAux()
+{
     dib_pack *pBuf = region_tile->backbuf;
 
-    int new_palette = PAL_STD;
-    if (you.duration[DUR_BERSERKER]) new_palette = PAL_BER;
-    if (you.special_wield == SPWLD_SHADOW) new_palette = PAL_SHA;
+    int new_palette = PAL_STD; // standard
+    if (you.duration[DUR_BERSERKER])
+        new_palette = PAL_BER;
+
+    // XXX: is this supposed to override Berserk?
+    if (you.special_wield == SPWLD_SHADOW)
+        new_palette = PAL_SHA;
 
     if (new_palette != palette)
     {
-    palette = new_palette;
+        palette = new_palette;
         SetDIBColorTable(pBuf->hDC, 0, 256, (RGBQUAD *)lpPalettes[palette]);
     }
 }
@@ -486,33 +494,33 @@ bool windows_change_font(char *font_name, int *font_size, bool dos)
     memset(&cf, 0, sizeof(cf));
     cf.lStructSize = sizeof(cf);
     cf.iPointSize = *font_size;
-    cf.nSizeMin = 8;
-    cf.nSizeMax = 24;
+    cf.nSizeMin  = 8;
+    cf.nSizeMax  = 24;
     cf.Flags = CF_SCREENFONTS | CF_FIXEDPITCHONLY | CF_NOVERTFONTS
-        | CF_INITTOLOGFONTSTRUCT | CF_LIMITSIZE | CF_FORCEFONTEXIST;
+               | CF_INITTOLOGFONTSTRUCT | CF_LIMITSIZE | CF_FORCEFONTEXIST;
 
     LOGFONT lf;
     strcpy(lf.lfFaceName, font_name);
-    lf.lfHeight        = 16;
-    lf.lfWidth         = 0;
-    lf.lfEscapement    = 0;
-    lf.lfOrientation   = lf.lfEscapement;
-    lf.lfWeight        = FW_NORMAL;
-    lf.lfItalic        = FALSE;
-    lf.lfUnderline     = FALSE;
-    lf.lfStrikeOut     = FALSE;
-    lf.lfOutPrecision  = OUT_DEFAULT_PRECIS;
-    lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-    lf.lfQuality       = DEFAULT_QUALITY;
-    lf.lfPitchAndFamily= FF_MODERN|FIXED_PITCH;
-    lf.lfCharSet       = (dos)? OEM_CHARSET:ANSI_CHARSET;
+    lf.lfHeight         = 16;
+    lf.lfWidth          = 0;
+    lf.lfEscapement     = 0;
+    lf.lfOrientation    = lf.lfEscapement;
+    lf.lfWeight         = FW_NORMAL;
+    lf.lfItalic         = FALSE;
+    lf.lfUnderline      = FALSE;
+    lf.lfStrikeOut      = FALSE;
+    lf.lfOutPrecision   = OUT_DEFAULT_PRECIS;
+    lf.lfClipPrecision  = CLIP_DEFAULT_PRECIS;
+    lf.lfQuality        = DEFAULT_QUALITY;
+    lf.lfPitchAndFamily = FF_MODERN | FIXED_PITCH;
+    lf.lfCharSet        = (dos)? OEM_CHARSET:ANSI_CHARSET;
     cf.lpLogFont = &lf;
 
     if (ChooseFont(&cf))
     {
         *font_size = (cf.iPointSize / 10);
         strcpy(font_name, lf.lfFaceName);
-    return true;
+        return true;
     }
     return false;
 }
@@ -524,7 +532,7 @@ void windows_get_winpos(int *x, int *y)
     // set length
     wndpl.length = sizeof( WINDOWPLACEMENT );
 
-    if( GetWindowPlacement( win_main->hWnd, &wndpl ) != 0 )
+    if ( GetWindowPlacement( win_main->hWnd, &wndpl ) != 0 )
     {
         *x = wndpl.rcNormalPosition.top;
         *y = wndpl.rcNormalPosition.left;
@@ -542,7 +550,9 @@ int kbhit()
 
     if (PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_NOREMOVE)
         || PeekMessage(&msg, NULL, WM_KEYDOWN, WM_KEYDOWN, PM_NOREMOVE))
+    {
         return 1;
+    }
     else
         return 0;
 }

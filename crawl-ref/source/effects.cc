@@ -2852,7 +2852,7 @@ static void _maybe_restart_fountain_flow(const int x, const int y,
 
           // chance of cleaning adjacent squares
           for (int i = -1; i <= 1; i++)
-               for (int j =-1; j <= 1; j++)
+               for (int j = -1; j <= 1; j++)
                {
                     if (is_bloodcovered(x+i,y+j)
                         && one_chance_in(5))

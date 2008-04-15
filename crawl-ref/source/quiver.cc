@@ -3,7 +3,7 @@
  *  Summary:    Player quiver functionality
  *
  *  Last modified by $Author: $ on $Date: $
- *  
+ *
  *  - Only change last_used when actually using
  *  - Not changing Qv; nobody knows about internals
  *  - Track last_used of each type so each weapon can do the right thing
@@ -39,14 +39,14 @@ player_quiver::player_quiver()
 //   *slot_out filled in with the inv slot of the item we would like
 //   to fire by default.  If -1, the inv doesn't contain our desired
 //   item.
-//   
+//
 //   *item_out filled in with item we would like to fire by default.
 //   This can be returned even if the item is not in inv (although if
 //   it is in inv, a reference to the inv item, with accurate count,
 //   is returned)
 //
 // This is the item that will be displayed in Qv:
-// 
+//
 void player_quiver::get_desired_item(const item_def** item_out, int* slot_out) const
 {
     const int slot = _get_pack_slot(m_last_used_of_type[m_last_used_type]);
@@ -95,7 +95,7 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
         else if (full_fire_order.size() == 0)
         {
             *no_item_reason = "No suitable missiles.";
-        }            
+        }
         else
         {
             const int skipped_item = full_fire_order[0];
@@ -124,7 +124,7 @@ void player_quiver::on_item_fired(const item_def& item)
     // Otherwise, it goes into last hand-thrown item.
 
     const item_def *weapon = you.weapon();
-    
+
     if (weapon && item.launched_by(*weapon))
     {
         const ammo_t t = _get_weapon_ammo_type(weapon);
@@ -138,7 +138,7 @@ void player_quiver::on_item_fired(const item_def& item)
         m_last_used_of_type[AMMO_THROW].quantity = 1;
         m_last_used_type = AMMO_THROW;
     }
-    
+
     you.redraw_quiver = true;
 }
 
@@ -171,7 +171,7 @@ void player_quiver::on_weapon_changed()
             m_last_used_type = _get_weapon_ammo_type(weapon);
         }
     }
-                
+
     _maybe_fill_empty_slot();
 }
 
@@ -191,7 +191,7 @@ void player_quiver::on_inv_quantity_changed(int slot, int amt)
     else
     {
         // Maybe matches current stack.  Redraw if so.
-        // 
+        //
         const item_def* desired;
         int qv_slot; get_desired_item(&desired, &qv_slot);
         if (qv_slot == slot)
@@ -213,7 +213,7 @@ void player_quiver::_maybe_fill_empty_slot()
         const launch_retval desired_ret =
             (slot == AMMO_THROW ? LRET_THROWN : LRET_LAUNCHED);
         std::vector<int> order;  _get_fire_order(order, false, weapon);
-        for (unsigned int i=0; i<order.size(); i++)
+        for (unsigned int i = 0; i < order.size(); i++)
         {
             if (is_launched(&you, weapon, you.inv[order[i]]) == desired_ret)
             {
@@ -231,7 +231,7 @@ void player_quiver::get_fire_order(std::vector<int>& v) const
 }
 
 // Get a sorted list of items to show in the fire interface.
-// 
+//
 // If ignore_inscription_etc, ignore =f and Options.fire_items_start.
 // This is used for generating informational error messages, when the
 // fire order is empty.
@@ -269,11 +269,12 @@ void player_quiver::_get_fire_order(
             continue;
         }
 
-        for (unsigned int i_flags=0;
-             i_flags<Options.fire_order.size();
+        for (unsigned int i_flags = 0;
+             i_flags < Options.fire_order.size();
              i_flags++)
         {
-            if (_item_matches(item, (fire_type)Options.fire_order[i_flags], launcher))
+            if (_item_matches(item, (fire_type)Options.fire_order[i_flags],
+                              launcher))
             {
                 order.push_back( (i_flags<<16) | (i_inv & 0xffff) );
                 break;
@@ -283,10 +284,8 @@ void player_quiver::_get_fire_order(
 
     std::sort(order.begin(), order.end());
 
-    for (unsigned int i=0; i<order.size(); i++)
-    {
+    for (unsigned int i = 0; i < order.size(); i++)
         order[i] &= 0xffff;
-    }
 }
 
 // ----------------------------------------------------------------------
@@ -301,27 +300,25 @@ void player_quiver::save(writer& outf) const
     marshallItem(outf, m_last_weapon);
     marshallLong(outf, m_last_used_type);
     marshallLong(outf, ARRAYSIZE(m_last_used_of_type));
-    for (int i=0; i<ARRAYSIZE(m_last_used_of_type); i++)
-    {
+
+    for (unsigned int i = 0; i < ARRAYSIZE(m_last_used_of_type); i++)
         marshallItem(outf, m_last_used_of_type[i]);
-    }
 }
 
 void player_quiver::load(reader& inf)
 {
     const short cooky = unmarshallShort(inf);
     ASSERT(cooky == QUIVER_COOKIE); (void)cooky;
-    
+
     unmarshallItem(inf, m_last_weapon);
     m_last_used_type = (ammo_t)unmarshallLong(inf);
     ASSERT(m_last_used_type >= AMMO_THROW && m_last_used_type < NUM_AMMO);
 
-    const long count = unmarshallLong(inf);
+    const unsigned long count = unmarshallLong(inf);
     ASSERT(count <= ARRAYSIZE(m_last_used_of_type));
-    for (int i=0; i<count; i++)
-    {
+
+    for (unsigned int i = 0; i < count; i++)
         unmarshallItem(inf, m_last_used_of_type[i]);
-    }
 }
 
 // ----------------------------------------------------------------------
@@ -330,10 +327,10 @@ void player_quiver::load(reader& inf)
 
 preserve_quiver_slots::preserve_quiver_slots()
 {
-    if (! you.m_quiver) return;
+    if (!you.m_quiver) return;
     COMPILE_CHECK(ARRAYSIZE(m_last_used_of_type) ==
                   ARRAYSIZE(you.m_quiver->m_last_used_of_type), a);
-    for (int i=0; i<ARRAYSIZE(m_last_used_of_type); i++)
+    for (unsigned int i = 0; i < ARRAYSIZE(m_last_used_of_type); i++)
     {
         m_last_used_of_type[i] =
             _get_pack_slot(you.m_quiver->m_last_used_of_type[i]);
@@ -343,13 +340,11 @@ preserve_quiver_slots::preserve_quiver_slots()
 preserve_quiver_slots::~preserve_quiver_slots()
 {
     if (! you.m_quiver) return;
-    for (int i=0; i<ARRAYSIZE(m_last_used_of_type); i++)
+    for (unsigned int i = 0; i < ARRAYSIZE(m_last_used_of_type); i++)
     {
         const int slot = m_last_used_of_type[i];
         if (slot != -1)
-        {
             you.m_quiver->m_last_used_of_type[i] = you.inv[slot];
-        }
     }
     you.redraw_quiver = true;
 }
@@ -415,7 +410,7 @@ static int _get_pack_slot(const item_def& item)
     if (! is_valid_item(item))
         return -1;
 
-    for (int i=0; i<ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; i++)
     {
         const item_def& inv_item = you.inv[i];
         if (inv_item.quantity && _items_similar(item, you.inv[i]))

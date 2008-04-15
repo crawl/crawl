@@ -668,8 +668,14 @@ static bool _slime_pit_unlock(bool silent)
     return (true);
 }
 
-static bool _slime_pit_unlock_offlevel() { return _slime_pit_unlock(true); }
-static bool _slime_pit_unlock_onlevel()  { return _slime_pit_unlock(false); }
+static bool _slime_pit_unlock_offlevel()
+{
+    return _slime_pit_unlock(true);
+}
+static bool _slime_pit_unlock_onlevel()
+{
+    return _slime_pit_unlock(false);
+}
 
 static void _fire_monster_death_event(monsters *monster,
                                       killer_type killer,

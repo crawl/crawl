@@ -93,11 +93,11 @@ int itemlist_idx[MAX_ITEMLIST];
 char itemlist_key[MAX_ITEMLIST];
 int itemlist_iflag[MAX_ITEMLIST];
 int itemlist_flag = -1;
-int itemlist_n=0;
+int itemlist_n    = 0;
 
-static int wall_flavors    = 0;
-static int floor_flavors   = 0;
-static int special_flavors = 0;
+static int wall_flavors     = 0;
+static int floor_flavors    = 0;
+static int special_flavors  = 0;
 static int wall_tile_idx    = 0;
 static int floor_tile_idx   = 0;
 static int special_tile_idx = 0;
@@ -444,7 +444,7 @@ static int _tcache_find_id_normal(int kind, int *fg, int *bg, int *is_new)
     tile_cache *tc = tcache[kind];
     tile_cache *tc0 = &tc[tcache_head[kind_n_hash]];
 
-    *is_new=0;
+    *is_new = 0;
 
     while (true)
     {
@@ -529,13 +529,17 @@ void _tcache_overlay_player(img_type img, int dx, int dy, int part, int idx,
     int wx = TILE_X/nx;
     int wy = TILE_Y/ny;
 
-    if(!idx)return;
-    idx--;
+    if (!idx)
+        return;
 
+    idx--;
     tidx += idx/(nx*ny);
 
-    if (oy+wy > ymax) wy -= oy + wy - ymax;
-    if (wy<=0) return;
+    if (oy+wy > ymax)
+        wy -= oy + wy - ymax;
+
+    if (wy <= 0)
+        return;
 
     xs = (tidx % TILEP_PER_ROW)*TILE_X;
     ys = (tidx / TILEP_PER_ROW)*TILE_Y;
@@ -569,7 +573,7 @@ void _register_tile_mask(int tile, int region, int *copy,
     x0 = (tile % TILE_PER_ROW) * TILE_X;
     y0 = (tile / TILE_PER_ROW) * TILE_Y;
 
-    if (*copy!=0)
+    if (*copy != 0)
         memset(mask, 0, ux*uy);
 
     if (*copy == 2)
@@ -578,13 +582,11 @@ void _register_tile_mask(int tile, int region, int *copy,
             ux = wx;
 
         for (x = 0; x < wx; x++)
-        {
             for (y = 0; y < wy; y++)
             {
                  if (!ImgIsTransparentAt(src, x0+sx+x, y0+sy+y))
                      mask[(y+oy) * ux + (x+ox)] = 1;
             }
-        }
     }
     else
     {
@@ -1493,7 +1495,7 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
             _tcache_overlay_player(img, 0, 0, TILEP_PART_SHADOW,
                                    tile, TILE_Y, &c);
         }
-        else if(parts2[p] && flags[p])
+        else if (parts2[p] && flags[p])
             _tcache_overlay_player(img, 0, 0, p, parts2[p], ymax, &c);
     }
     return true;

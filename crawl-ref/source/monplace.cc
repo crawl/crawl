@@ -695,14 +695,12 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
 {
     int id, i;
     dungeon_feature_type grid_wanted = DNGN_UNSEEN;
-    int fx=0, fy=0;     // final x,y
+    int fx = 0, fy = 0;     // final x,y
 
     // gotta be able to pick an ID
     for (id = 0; id < MAX_MONSTERS; id++)
-    {
         if (menv[id].type == -1)
             break;
-    }
 
     if (id == MAX_MONSTERS)
         return -1;
@@ -1432,7 +1430,8 @@ static int band_member(band_type band, int power)
     return (mon_type);
 }
 
-static int ood_limit() {
+static int ood_limit()
+{
     return Options.ood_interesting;
 }
 

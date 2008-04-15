@@ -661,16 +661,17 @@ unsigned char get_invent( int invent_type )
 {
     unsigned char select;
 
-    while (true) {
-       select = invent_select(NULL, MT_INVLIST, invent_type,
+    while (true)
+    {
+        select = invent_select(NULL, MT_INVLIST, invent_type,
                                          MF_SINGLESELECT);
-       if ( isalpha(select) )
-       {
-           const int invidx = letter_to_index(select);
-           if ( is_valid_item(you.inv[invidx]) )
+        if ( isalpha(select) )
+        {
+            const int invidx = letter_to_index(select);
+            if ( is_valid_item(you.inv[invidx]) )
                describe_item( you.inv[invidx], true );
-       }
-       else break;
+        }
+        else break;
     }
     redraw_screen();
     return select;
@@ -1023,18 +1024,23 @@ std::vector<SelItem> prompt_invent_items(
     return items;
 }
 
-static int _digit_to_index( char digit, operation_types oper ) {
+static int _digit_to_index( char digit, operation_types oper )
+{
 
     const char iletter = static_cast<char>(oper);
 
-    for ( int i = 0; i < ENDOFPACK; ++i ) {
-        if (is_valid_item(you.inv[i])) {
+    for ( int i = 0; i < ENDOFPACK; ++i )
+    {
+        if (is_valid_item(you.inv[i]))
+        {
             const std::string& r(you.inv[i].inscription);
             /* note that r.size() is unsigned */
-            for ( unsigned int j = 0; j + 2 < r.size(); ++j ) {
-                if ( r[j] == '@' &&
-                     (r[j+1] == iletter || r[j+1] == '*') &&
-                     r[j+2] == digit ) {
+            for ( unsigned int j = 0; j + 2 < r.size(); ++j )
+            {
+                if ( r[j] == '@'
+                     && (r[j+1] == iletter || r[j+1] == '*')
+                     && r[j+2] == digit )
+                {
                     return i;
                 }
             }
@@ -1296,7 +1302,8 @@ int prompt_invent_item( const char *prompt,
         {
             /* scan for our item */
             int res = _digit_to_index( keyin, oper );
-            if ( res != -1 ) {
+            if ( res != -1 )
+            {
                 ret = res;
                 if ( check_warning_inscriptions( you.inv[ret], oper ) )
                     break;
@@ -1316,11 +1323,8 @@ int prompt_invent_item( const char *prompt,
 
             if (must_exist && !is_valid_item( you.inv[ret] ))
                 mpr( "You do not have any such object." );
-            else {
-                if ( check_warning_inscriptions( you.inv[ret], oper ) ) {
-                    break;
-                }
-            }
+            else if ( check_warning_inscriptions( you.inv[ret], oper ) )
+                break;
         }
         else if (!isspace( keyin ))
         {

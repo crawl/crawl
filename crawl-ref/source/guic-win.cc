@@ -40,10 +40,10 @@ bool GuicInit(HINSTANCE h, int nCmd)
     hInst = h;
     nCmdShow = nCmd;
 
-    for (i=0; i< MAX_TERM_COL; i++)
+    for (i = 0; i < MAX_TERM_COL; i++)
     {
     int *c = (int *)&term_colors[i];
-        term_pix[i] =PALETTERGB( c[0], c[1], c[2] );
+        term_pix[i] = PALETTERGB( c[0], c[1], c[2] );
     }
     return true;
 }
@@ -409,8 +409,8 @@ void TextRegionClass::draw_cursor(int x, int y)
     ReleaseDC(win->hWnd, hdc);
 }
 
-void TextRegionClass::erase_cursor(){
-
+void TextRegionClass::erase_cursor()
+{
     int x0 = cursor_x;
     int y0 = cursor_y;
     int adrs = y0 * mx + x0;
@@ -481,8 +481,8 @@ void TextRegionClass::clear()
 
     for (i = 0; i < mx*my; i++)
     {
-        cbuf[i] =' ';
-        abuf[i] =0;
+        cbuf[i] = ' ';
+        abuf[i] = 0;
     }
     RegionClass::clear();
 }
@@ -498,8 +498,10 @@ BOOL WinClass::create(const char *name)
 
     //game_state = STAT_NORMAL;
 
-    if ( GetSystemMetrics(SM_CYSCREEN) < (oy + wy) ) oy =0;
-    if ( GetSystemMetrics(SM_CXSCREEN) < (ox + wx) ) ox =0;
+    if ( GetSystemMetrics(SM_CYSCREEN) < (oy + wy) )
+        oy = 0;
+    if ( GetSystemMetrics(SM_CXSCREEN) < (ox + wx) )
+        ox = 0;
 
     AdjustWindowRectEx(&rc,
                        (WS_OVERLAPPED  | WS_SYSMENU | WS_MINIMIZEBOX
@@ -824,7 +826,7 @@ void ImgCopyH(img_type src,  int sx, int sy, int wx, int wy,
     int x, y;
     BYTE pix;
 
-    if(copy)
+    if (copy)
     {
         for (x = 0; x < wx; x++)
             for (y = 0; y < wy; y++)
@@ -861,7 +863,7 @@ void ImgCopyMasked(img_type src,  int sx, int sy, int wx, int wy,
         for (x = 0; x < wx; x++)
         {
             pix = *( dib_ref_pixel(src, sx+x, sy+y) );
-            if (mask[count]==0 && pix != pix_transparent)
+            if (mask[count] == 0 && pix != pix_transparent)
                 *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
             count++;
         }
@@ -880,7 +882,7 @@ void ImgCopyMaskedH(img_type src,  int sx, int sy, int wx, int wy,
             pix = *( dib_ref_pixel(src, sx+x, sy+y) );
             if (pix == pix_rimcolor)
                 pix = pix_magenta;
-            if (mask[count]==0 && pix != pix_transparent)
+            if (mask[count] == 0 && pix != pix_transparent)
                 *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
             count++;
         }

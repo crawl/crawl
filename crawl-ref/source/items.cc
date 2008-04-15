@@ -1428,10 +1428,9 @@ int find_free_slot(const item_def &i)
     // we re-try searching the oposite direction.
 
     // Return first free slot
-    for (slot = 0; slot < ENDOFPACK; ++slot) {
+    for (slot = 0; slot < ENDOFPACK; ++slot)
         if (!is_valid_item(you.inv[slot]))
             return slot;
-    }
 
     return (-1);
 #undef slotisfree
@@ -1908,7 +1907,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     if ( grid_destroys_items(my_grid) )
     {
-        if( !silenced(you.pos()) )
+        if ( !silenced(you.pos()) )
             mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
 
         item_was_destroyed(you.inv[item_dropped], NON_MONSTER);
@@ -2331,7 +2330,7 @@ void autopickup()
 
 int inv_count(void)
 {
-    int count=0;
+    int count = 0;
 
     for (int i = 0; i < ENDOFPACK; i++)
         if (is_valid_item( you.inv[i] ))

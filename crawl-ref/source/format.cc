@@ -47,7 +47,7 @@ int formatted_string::get_colour(const std::string &tag)
 // If eot_ends_format, the end of text will reset the color to default
 // (pop all elements on the color stack) -- this is only useful if the
 // string doesn't have balanced <color></color> tags.
-// 
+//
 formatted_string formatted_string::parse_block(
         const std::string &s,
         bool eot_ends_format,
@@ -75,7 +75,7 @@ formatted_string formatted_string::parse_block(
 
     if (eot_ends_format)
     {
-        if (colour_stack.back() != colour_stack.front()) 
+        if (colour_stack.back() != colour_stack.front())
             fs.textcolor(colour_stack.front());
     }
 
@@ -96,7 +96,7 @@ formatted_string formatted_string::parse_string(
     parse_string1(s, fs, colour_stack, process);
     if (eot_ends_format)
     {
-        if (colour_stack.back() != colour_stack.front()) 
+        if (colour_stack.back() != colour_stack.front())
             fs.textcolor(colour_stack.front());
     }
     return fs;
@@ -119,7 +119,7 @@ void formatted_string::parse_string_to_multiple(
         formatted_string& fs = out.back();
         fs.textcolor(colour_stack.back());
         parse_string1(lines[i], fs, colour_stack, NULL);
-        if (colour_stack.back() != colour_stack.front()) 
+        if (colour_stack.back() != colour_stack.front())
             fs.textcolor(colour_stack.front());
     }
 }
@@ -138,7 +138,7 @@ void formatted_string::parse_string1(
 
     std::string currs;
     bool masked = false;
-    
+
     for (tag = 0; tag < length; ++tag)
     {
         bool revert_colour = false;
@@ -203,7 +203,7 @@ void formatted_string::parse_string1(
             else if (process && !process(tagtext.substr(1)))
                 masked = true;
 
-            tag += tagtext.length() + 1; 
+            tag += tagtext.length() + 1;
             continue;
         }
 
@@ -229,7 +229,7 @@ void formatted_string::parse_string1(
 
         // fs.cprintf("%d%d", colour_stack.size(), colour_stack.back());
 	fs.textcolor(colour_stack.back());
-	    
+
         tag += tagtext.length() + 1;
     }
     if (currs.length())
@@ -324,11 +324,11 @@ inline void cap(int &i, int max)
 std::string formatted_string::tostring(int s, int e) const
 {
     std::string st;
-    
+
     int size = ops.size();
-    cap(s, size);    
+    cap(s, size);
     cap(e, size);
-    
+
     for (int i = s; i <= e && i < size; ++i)
     {
         if (ops[i] == FSOP_TEXT)
@@ -348,13 +348,13 @@ std::string formatted_string::to_colour_string() const
             // gotta double up those '<' chars ...
             size_t start = st.size();
             st += ops[i].text;
-            
+
             while (true)
             {
                 const size_t left_angle = st.find('<', start);
                 if (left_angle == std::string::npos)
                     break;
-                    
+
                 st.insert(left_angle, "<");
                 start = left_angle + 2;
             }
@@ -366,7 +366,7 @@ std::string formatted_string::to_colour_string() const
             st += ">";
         }
     }
-    
+
     return st;
 }
 
@@ -378,7 +378,7 @@ void formatted_string::display(int s, int e) const
 
     cap(s, size);
     cap(e, size);
-    
+
     for (int i = s; i <= e && i < size; ++i)
         ops[i].display();
 }
@@ -414,7 +414,7 @@ formatted_string formatted_string::substr(size_t start, size_t substr_length) co
 
     // Find the first string to copy
     unsigned int i;
-    for (i=0; i<ops.size(); ++i)
+    for (i = 0; i < ops.size(); ++i)
     {
         const fs_op& op = ops[i];
         if (op.type == FSOP_COLOUR)
@@ -422,10 +422,12 @@ formatted_string formatted_string::substr(size_t start, size_t substr_length) co
         else if (op.type == FSOP_CURSOR)
             last_FSOP_CURSOR = i;
         else if (op.type == FSOP_TEXT)
+        {
             if (op.text.length() > start)
                 break;
             else
                 start -= op.text.length();
+        }
     }
 
     if (i == ops.size())
@@ -488,7 +490,7 @@ void formatted_string::textcolor(int color)
 {
     if (!ops.empty() && ops[ ops.size() - 1 ].type == FSOP_COLOUR)
         ops.erase( ops.end() - 1 );
-    
+
     ops.push_back(color);
 }
 

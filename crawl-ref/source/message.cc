@@ -727,7 +727,7 @@ void formatted_message_history(const std::string &st_nocolor,
     std::vector<formatted_string> fss;
     formatted_string::parse_string_to_multiple(st, fss);
 
-    for (unsigned int i=0; i<fss.size(); i++)
+    for (unsigned int i = 0; i < fss.size(); i++)
     {
         const formatted_string& fs = fss[i];
         const std::string unformatted = fs.tostring();

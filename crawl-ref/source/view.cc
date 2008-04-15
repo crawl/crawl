@@ -4984,7 +4984,9 @@ class _inline_layout : public _layout
     bool _init()
     {
         // x: View gets leftover; then mlist; then hud gutter
-        if (leftover_x() < 0) return false;
+        if (leftover_x() < 0)
+            return false;
+
         _increment(viewsz.x,   leftover_x(), Options.view_max_width);
         if ((viewsz.x % 2) != 1) --viewsz.x;
         mlistsz.x = hudsz.x;
@@ -4997,7 +4999,9 @@ class _inline_layout : public _layout
         // mlist tries to get at least its minimum
         // msg expands as much as it wants
         // mlist gets any leftovers
-        if (leftover_y() < 0) { return false; }
+        if (leftover_y() < 0)
+            return false;
+
         _increment(viewsz.y, leftover_leftcol_y(), Options.view_max_height);
         if ((viewsz.y % 2) != 1) --viewsz.y;
         if (Options.classic_hud)

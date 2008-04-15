@@ -342,7 +342,8 @@ static std::string vtostr( const keyseq &seq )
 
     for (keyseq::const_iterator i = v->begin(); i != v->end(); i++)
     {
-        if (*i <= 32 || *i > 127) {
+        if (*i <= 32 || *i > 127)
+        {
             if (*i == KEY_MACRO_MORE_PROTECT)
                 s << "\\{!more}";
             else
@@ -351,11 +352,11 @@ static std::string vtostr( const keyseq &seq )
                 snprintf( buff, sizeof(buff), "\\{%d}", *i );
                 s << buff;
             }
-        } else if (*i == '\\') {
-            s << "\\\\";
-        } else {
-            s << static_cast<char>(*i);
         }
+        else if (*i == '\\')
+            s << "\\\\";
+        else
+            s << static_cast<char>(*i);
     }
 
     return (s.str());
@@ -462,13 +463,15 @@ static void macro_buf_add_long( keyseq actions,
             tmp.pop_back();
         }
 
-        if (tmp.size() == 0) {
+        if (tmp.size() == 0)
+        {
             // Didn't find a macro. Add the first keypress of the sequence
             // into the buffer, remove it from the sequence, and try again.
             macro_buf_add( actions.front() );
             actions.pop_front();
-
-        } else {
+        }
+        else
+        {
             // Found a macro, which has already been added above. Now just
             // remove the macroed keys from the sequence.
             for (unsigned int i = 0; i < tmp.size(); i++)
@@ -572,7 +575,8 @@ void macro_save( void )
 
     f << "# WARNING: This file is entirely auto-generated." << std::endl
       << std::endl << "# Key Mappings:" << std::endl;
-    for (int mc = KC_DEFAULT; mc < KC_CONTEXT_COUNT; ++mc) {
+    for (int mc = KC_DEFAULT; mc < KC_CONTEXT_COUNT; ++mc)
+    {
         char keybuf[30] = "K:";
         if (mc)
             snprintf(keybuf, sizeof keybuf, "K%d:", mc);
@@ -610,7 +614,8 @@ static keyseq getch_mul( int (*rgetch)() = NULL )
 
     // The a == 0 test is legacy code that I don't dare to remove. I
     // have a vague recollection of it being a kludge for conio support.
-    while ((kbhit() || a == 0)) {
+    while (kbhit() || a == 0)
+    {
         keys.push_back( a = rgetch() );
     }
 
@@ -826,26 +831,30 @@ static void _read_macros_from(const char* filename)
     {
         trim_string(s);  // remove white space from ends
 
-        if (s[0] == '#') {
-            continue;                   // skip comments
-
-        } else if (s.substr(0, 2) == "K:") {
+        if (s[0] == '#')
+            continue;    // skip comments
+        else if (s.substr(0, 2) == "K:")
+        {
             key = parse_keyseq(s.substr(2));
             keymap = true;
             keymc  = KC_DEFAULT;
-
-        } else if (s.length() >= 3 && s[0] == 'K' && s[2] == ':') {
+        }
+        else if (s.length() >= 3 && s[0] == 'K' && s[2] == ':')
+        {
             keymc  = KeymapContext( KC_DEFAULT + s[1] - '0' );
-            if (keymc >= KC_DEFAULT && keymc < KC_CONTEXT_COUNT) {
+            if (keymc >= KC_DEFAULT && keymc < KC_CONTEXT_COUNT)
+            {
                 key    = parse_keyseq(s.substr(3));
                 keymap = true;
             }
-
-        } else if (s.substr(0, 2) == "M:") {
+        }
+        else if (s.substr(0, 2) == "M:")
+        {
             key = parse_keyseq(s.substr(2));
             keymap = false;
-
-        } else if (s.substr(0, 2) == "A:") {
+        }
+        else if (s.substr(0, 2) == "A:")
+        {
             action = parse_keyseq(s.substr(2));
             macro_add( (keymap ? Keymaps[keymc] : Macros), key, action );
         }

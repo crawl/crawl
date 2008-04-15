@@ -33,7 +33,7 @@ static FixedArray < unsigned int, GXM, GYM > tile_dngn;
 
 bool is_bazaar()
 {
-    return (you.level_type == LEVEL_PORTAL_VAULT && 
+    return (you.level_type == LEVEL_PORTAL_VAULT &&
             you.level_type_name == "bazaar");
 }
 
@@ -75,9 +75,9 @@ static int _tileidx_monster_base(int mon_idx, bool detected)
     const monsters* mon = &menv[mon_idx];
     int grid = grd[mon->x][mon->y];
     bool in_water = (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
-    
+
     int type = mon->type;
-    
+
     // show only base class for detected monsters
     if (detected)
         type = mons_genus(type);
@@ -852,7 +852,7 @@ static int _tileidx_fixed_artefact(int special)
   case SPWPN_VAMPIRES_TOOTH:      return TILE_SPWPN_VAMPIRES_TOOTH;
   case SPWPN_STAFF_OF_WUCAD_MU:   return TILE_SPWPN_STAFF_OF_WUCAD_MU;
   }
-  
+
   return TILE_ERROR;
 }
 
@@ -1111,7 +1111,7 @@ static int _tileidx_weapon(const item_def &item)
     case WPN_BARDICHE:
         return TILE_WPN_LOCHABER_AXE;
     }
-  
+
     return TILE_ERROR;
 }
 
@@ -1133,12 +1133,12 @@ static int _tileidx_missile(const item_def &item)
             return TILE_MI_DART_P;
         return TILE_MI_DART;
 
-    case MI_NEEDLE: 
+    case MI_NEEDLE:
         if (brand == SPMSL_POISONED || brand == SPMSL_POISONED_II)
             return TILE_MI_NEEDLE_P;
         return TILE_MI_NEEDLE;
   }
-  
+
   return TILE_ERROR;
 }
 
@@ -1158,16 +1158,16 @@ static int _tileidx_armour(const item_def &item)
 
     switch(type)
     {
-    case ARM_ROBE: 
+    case ARM_ROBE:
         return TILE_ARM_ROBE + etable[2][etype];
-        
+
     case ARM_LEATHER_ARMOUR:
         if (race == ISFLAG_ORCISH)
             return TILE_ARM_LEATHER_ARMOUR_ORC;
         if (race == ISFLAG_ELVEN)
             return TILE_ARM_LEATHER_ARMOUR_ELF;
         return TILE_ARM_LEATHER_ARMOUR  + etable[2][etype];
-        
+
     case ARM_RING_MAIL:
         if (race == ISFLAG_ORCISH)
             return TILE_ARM_RING_MAIL_ORC;
@@ -1176,7 +1176,7 @@ static int _tileidx_armour(const item_def &item)
         if (race == ISFLAG_DWARVEN)
             return TILE_ARM_RING_MAIL_DWA;
         return TILE_ARM_RING_MAIL + etable[1][etype];
-        
+
     case ARM_SCALE_MAIL:
         if (race == ISFLAG_ELVEN)
             return TILE_ARM_SCALE_MAIL_ELF;
@@ -1206,7 +1206,7 @@ static int _tileidx_armour(const item_def &item)
     case ARM_SHIELD:
         return TILE_ARM_SHIELD  + etable[2][etype];
 
-    case ARM_CLOAK: 
+    case ARM_CLOAK:
         return TILE_ARM_CLOAK + etable[3][etype];
 
     case ARM_WIZARD_HAT:
@@ -1221,10 +1221,10 @@ static int _tileidx_armour(const item_def &item)
     case ARM_GLOVES:
         return TILE_ARM_GLOVES  + etable[3][etype];
 
-    case ARM_BOOTS: 
+    case ARM_BOOTS:
         return TILE_ARM_BOOTS + etable[3][etype];
 
-    case ARM_BUCKLER: 
+    case ARM_BUCKLER:
         return TILE_ARM_BUCKLER + etable[1][etype];
 
     case ARM_LARGE_SHIELD:
@@ -1239,7 +1239,7 @@ static int _tileidx_armour(const item_def &item)
     case ARM_ANIMAL_SKIN:
         return TILE_ARM_ANIMAL_SKIN + etable[1][etype];
 
-    case ARM_TROLL_HIDE: 
+    case ARM_TROLL_HIDE:
         return TILE_ARM_TROLL_HIDE;
 
     case ARM_TROLL_LEATHER_ARMOUR:
@@ -1317,7 +1317,7 @@ static int _tileidx_food(const item_def &item)
     case FOOD_CHEESE:       return TILE_FOOD_CHEESE;
     case FOOD_SAUSAGE:      return TILE_FOOD_SAUSAGE;
 
-    case FOOD_CHUNK: 
+    case FOOD_CHUNK:
         if (food_is_rotten(item))
             return TILE_FOOD_CHUNK_ROTTEN;
         return TILE_FOOD_CHUNK;
@@ -1357,7 +1357,7 @@ static int _tileidx_corpse(int mon)
 
   // all elves
   case MONS_ELF:                  return TILE_CORPSE_ELF;
-  
+
   case MONS_JACKAL:               return TILE_CORPSE_JACKAL;
   case MONS_HOUND:                return TILE_CORPSE_HOUND;
   case MONS_WAR_DOG:              return TILE_CORPSE_WAR_DOG;
@@ -1390,13 +1390,13 @@ static int _tileidx_corpse(int mon)
 
   case MONS_MERMAID:              return TILE_CORPSE_MERMAID;
   case MONS_MERFOLK:              return TILE_CORPSE_MERFOLK_FIGHTER;
-  
+
   case MONS_NECROPHAGE:           return TILE_CORPSE_NECROPHAGE;
   case MONS_GHOUL:                return TILE_CORPSE_GHOUL;
 
   // all orcs
   case MONS_ORC:                  return TILE_CORPSE_ORC;
-  
+
   case MONS_RAT:                  return TILE_CORPSE_RAT;
   case MONS_QUOKKA:               return TILE_CORPSE_QUOKKA;
   case MONS_GREY_RAT:             return TILE_CORPSE_GREY_RAT;
@@ -1410,7 +1410,7 @@ static int _tileidx_corpse(int mon)
   case MONS_REDBACK:              return TILE_CORPSE_REDBACK;
 
   case MONS_MINOTAUR:             return TILE_CORPSE_MINOTAUR;
-  
+
   case MONS_UGLY_THING:           return TILE_CORPSE_UGLY_THING;
   case MONS_VERY_UGLY_THING:      return TILE_CORPSE_VERY_UGLY_THING;
 
@@ -1466,11 +1466,11 @@ static int _tileidx_corpse(int mon)
   case MONS_GIANT_AMOEBA:         return TILE_CORPSE_GIANT_AMOEBA;
   // all nagas
   case MONS_NAGA:                 return TILE_CORPSE_NAGA;
-  
+
   // including ogre-mage
   case MONS_OGRE:                 return TILE_CORPSE_OGRE;
   case MONS_TWO_HEADED_OGRE:      return TILE_CORPSE_TWO_HEADED_OGRE;
-  
+
   case MONS_QUEEN_BEE:            return TILE_CORPSE_QUEEN_BEE;
   case MONS_QUEEN_ANT:            return TILE_CORPSE_QUEEN_ANT;
 
@@ -1496,13 +1496,13 @@ static int _tileidx_corpse(int mon)
   case MONS_YAK:                  return TILE_CORPSE_YAK;
   case MONS_DEATH_YAK:            return TILE_CORPSE_DEATH_YAK;
 
-  case MONS_GLOWING_SHAPESHIFTER: return TILE_CORPSE_GLOWING_SHAPESHIFTER; 
+  case MONS_GLOWING_SHAPESHIFTER: return TILE_CORPSE_GLOWING_SHAPESHIFTER;
   case MONS_SHAPESHIFTER:         return TILE_CORPSE_SHAPESHIFTER;
 
   // all humans
   case MONS_HUMAN:                return TILE_CORPSE_HUMAN;
   }
-  
+
   return TILE_ERROR;
 }
 
@@ -1581,7 +1581,7 @@ static int _tileidx_misc(const item_def &item)
     case MISC_RUNE_OF_ZOT:
         return TILE_MISC_RUNE_OF_ZOT;
     }
-    
+
     return TILE_ERROR;
 }
 
@@ -1643,7 +1643,7 @@ int tileidx_item(const item_def &item)
         {
             if (is_random_artefact( item ))
                 return TILE_RING_RANDOM_OFFSET + color - 1;
-            else 
+            else
                 return TILE_RING_NORMAL_OFFSET + special % 13;
         }
         else
@@ -1654,7 +1654,7 @@ int tileidx_item(const item_def &item)
                 return TILE_AMU_RANDOM_OFFSET + color - 1;
             else
                 return TILE_AMU_NORMAL_OFFSET + special % 13;
-        } 
+        }
 
     case OBJ_POTIONS:
         if (id[ IDTYPE_POTIONS ][type] == ID_KNOWN_TYPE
@@ -1868,7 +1868,7 @@ int tileidx_feature(int object, int gx, int gy)
         return TILE_DNGN_DEEP_WATER;
     case DNGN_SHALLOW_WATER:
         return TILE_DNGN_SHALLOW_WATER;
-    case DNGN_FLOOR: 
+    case DNGN_FLOOR:
     case DNGN_UNDISCOVERED_TRAP:
        return TILE_DNGN_FLOOR;
     case DNGN_FLOOR_SPECIAL:
@@ -1885,8 +1885,8 @@ int tileidx_feature(int object, int gx, int gy)
         return TILE_DNGN_ENTER_SHOP;
     case DNGN_ENTER_LABYRINTH:
         return TILE_DNGN_ENTER_LABYRINTH;
-    case DNGN_STONE_STAIRS_DOWN_I: 
-    case DNGN_STONE_STAIRS_DOWN_II: 
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
         return TILE_DNGN_STONE_STAIRS_DOWN;
     case DNGN_ESCAPE_HATCH_DOWN:
@@ -2139,14 +2139,14 @@ int tileidx_unseen(int ch, const coord_def& gc)
         case 135: res = TILE_DNGN_DEEP_WATER; break;
         case 133: res = TILE_DNGN_BLUE_FOUNTAIN; break;
         case '}': res = TILE_MISC_CRYSTAL_BALL_OF_SEEING; break;
-        case 128: //old 
+        case 128: //old
         case 254: res = TILE_DNGN_CLOSED_DOOR; break;
         case 129: res = TILE_DNGN_RETURN; break;
         case 132: res = TILE_UNSEEN_ENTRANCE; break;
         case 136: res = TILE_DNGN_ENTER; break;
         case 141: res = TILE_DNGN_LAVA; break;
     }
-    //if(res == TILE_ERROR)printf("undefined mapchar %d [%c]\n",ch,ch);
+    //if (res == TILE_ERROR) printf("undefined mapchar %d [%c]\n",ch,ch);
     return res | tile_unseen_flag(gc);
 }
 
@@ -2187,7 +2187,7 @@ static void _finalize_tile(unsigned int *tile, bool is_special,
         get_num_floor_special_flavors() > 0)
     {
         (*tile) = get_floor_special_tile_idx() + special_flv;
-        ASSERT(special_flv >= 0 && 
+        ASSERT(special_flv >= 0 &&
             special_flv < get_num_floor_special_flavors());
     }
     else if (orig == TILE_DNGN_FLOOR || orig == TILE_DNGN_FLOOR_SPECIAL)
@@ -2252,8 +2252,8 @@ void tilep_calc_flags(int parts[], int flag[])
 }
 
 /*
- * Set default parts of each race 
- * body + optional beard, hair, etc 
+ * Set default parts of each race
+ * body + optional beard, hair, etc
  */
 
 int draconian_color(int race, int level)
@@ -2304,7 +2304,7 @@ void tilep_race_default(int race, int gender, int level, int *parts)
     switch(race)
     {
         case SP_HUMAN:
-            result = TILEP_BASE_HUMAN; 
+            result = TILEP_BASE_HUMAN;
             break;
         case SP_ELF:
         case SP_HIGH_ELF:
@@ -2711,7 +2711,7 @@ int tilep_str_to_part(char *str)
     //special
     if (str[0] == '*')
         return TILEP_SHOW_EQUIP;
-        
+
     //normal 2 digits
     return atoi(str);
 }
@@ -2824,15 +2824,15 @@ int tilep_equ_weapon(const item_def &item)
         case MISC_STONE_OF_EARTH_ELEMENTALS:  return TILEP_HAND1_STONE;
         case MISC_DISC_OF_STORMS:             return TILEP_HAND1_DISC;
 
-        case MISC_CRYSTAL_BALL_OF_SEEING: 
-        case MISC_CRYSTAL_BALL_OF_ENERGY: 
+        case MISC_CRYSTAL_BALL_OF_SEEING:
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
         case MISC_CRYSTAL_BALL_OF_FIXATION:   return TILEP_HAND1_CRYSTAL;
 
         case MISC_LAMP_OF_FIRE:               return TILEP_HAND1_LANTERN;
         case MISC_LANTERN_OF_SHADOWS:         return TILEP_HAND1_BONE_LANTERN;
         case MISC_HORN_OF_GERYON:             return TILEP_HAND1_HORN;
 
-        case MISC_BOX_OF_BEASTS: 
+        case MISC_BOX_OF_BEASTS:
         case MISC_EMPTY_EBONY_CASKET:         return TILEP_HAND1_BOX;
 
         case MISC_DECK_OF_ESCAPE:
@@ -2991,7 +2991,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_HAND_CROSSBOW: return TILEP_HAND1_CROSSBOW;
     case WPN_BLOWGUN:       return TILEP_HAND1_BLOWGUN;
     case WPN_LONGBOW:       return TILEP_HAND1_BOW3;
-    
+
     default: return 0;
     }
 }
@@ -3031,7 +3031,7 @@ int tilep_equ_armour(const item_def &item)
     switch (item.sub_type)
     {
 
-    case ARM_ROBE: 
+    case ARM_ROBE:
         switch(item.colour)
         {
             // We've got a zillion robes; let's use 'em!
@@ -3053,7 +3053,7 @@ int tilep_equ_armour(const item_def &item)
             case WHITE:       return TILEP_BODY_ROBE_WHITE;
             default:          return 0;
         }
- 
+
     case ARM_LEATHER_ARMOUR:     return TILEP_BODY_LEATHER_ARMOUR3;
     case ARM_RING_MAIL:          return TILEP_BODY_RINGMAIL;
     case ARM_CHAIN_MAIL:         return TILEP_BODY_CHAINMAIL;
@@ -3080,7 +3080,7 @@ int tilep_equ_armour(const item_def &item)
     case ARM_SWAMP_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_BROWN;
 
     case ARM_ANIMAL_SKIN:          return TILEP_BODY_ANIMAL_SKIN;
-    case ARM_TROLL_HIDE: 
+    case ARM_TROLL_HIDE:
     case ARM_TROLL_LEATHER_ARMOUR: return TILEP_BODY_TROLL_HIDE;
 
     default: return 0;
@@ -3091,7 +3091,7 @@ int tilep_equ_shield(const item_def &item)
 {
     if (you.equip[EQ_SHIELD] == -1)
         return 0;
-        
+
     if (item.base_type != OBJ_ARMOUR)
         return 0;
 
@@ -3121,10 +3121,10 @@ int tilep_equ_cloak(const item_def &item)
 {
     if (you.equip[EQ_CLOAK] == -1)
         return 0;
-        
+
     if (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_CLOAK)
         return 0;
-        
+
     switch (item.colour)
     {
          case BLACK:
@@ -3339,7 +3339,7 @@ int tilep_equ_boots(const item_def &item)
 
     if (item.sub_type == ARM_NAGA_BARDING)
         return TILEP_BOOTS_NAGA_BARDING + std::min(etype, 3);
-        
+
     if (item.sub_type == ARM_CENTAUR_BARDING)
         return TILEP_BOOTS_CENTAUR_BARDING + std::min(etype, 3);
 
@@ -3411,10 +3411,10 @@ const char *get_parts_name(int part, int idx)
 {
     static char tmp[10];
     const char *ptr = tilep_comment[ tilep_comment_ofs[part] -1 + idx ];
-    
+
     if (idx == 0)
         return "";
-        
+
     if (ptr[0] == 0)
     {
         sprintf(tmp,"%02d",idx);
@@ -3512,9 +3512,9 @@ void tile_init_flavor()
                 int right_grd = (x < GXM - 1) ? grd[x+1][y] : DNGN_ROCK_WALL;
                 int up_grd = (y > 0) ? grd[x][y-1] : DNGN_ROCK_WALL;
                 int down_grd = (y < GYM - 1) ? grd[x][y+1] : DNGN_ROCK_WALL;
-                unsigned short left_col = (x > 0) ? 
+                unsigned short left_col = (x > 0) ?
                     env.grid_colours[x-1][y] : BLACK;
-                unsigned short right_col = (x < GXM - 1) ? 
+                unsigned short right_col = (x < GXM - 1) ?
                     env.grid_colours[x+1][y] : BLACK;
                 unsigned short up_col = (y > 0) ?
                     env.grid_colours[x][y-1] : BLACK;
@@ -3783,7 +3783,7 @@ void tile_place_item(int x, int y, int idx)
     int t = tileidx_item(mitm[idx]);
     if (mitm[idx].link != NON_ITEM)
         t |= TILE_FLAG_S_UNDER;
-        
+
     env.tile_fg[x-1][y-1] = t;
 
     if (item_needs_autopickup(mitm[idx]))
@@ -3820,7 +3820,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     {
         return;
     }
-    
+
     const coord_def gc(gx, gy);
     const coord_def ep = view2show(grid2view(gc));
 
@@ -4068,7 +4068,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
 void tile_draw_dungeon(unsigned int *tileb)
 {
     tile_finish_dngn(tileb, you.x_pos, you.y_pos);
-    TileDrawDungeon(tileb);    
+    TileDrawDungeon(tileb);
 }
 
 #define swapint(a, b) {int tmp = a; a = b; b = tmp;}
@@ -4091,7 +4091,7 @@ static int _item_unid_type(const item_def &item)
              return 1;
           else
              return 0;
-             
+
         case OBJ_SCROLLS:
           id0 = id[ IDTYPE_SCROLLS ][s];
           break;
@@ -4107,11 +4107,11 @@ static int _item_unid_type(const item_def &item)
         case OBJ_JEWELLERY:
           id0 = id[ IDTYPE_JEWELLERY ][s];
           break;
-          
+
         default:
           return 0;
     }
-    
+
     if (id0 == ID_TRIED_TYPE)
         return 2;
     else if (id0 != ID_KNOWN_TYPE)
@@ -4127,7 +4127,7 @@ static int _pack_floor_item(int *idx, int *flag, int *isort, int max)
     static int isort_weapon2[NUM_WEAPONS];
     static int isort_armour2[NUM_ARMOURS];
 
-    static const int isort_weapon[NUM_WEAPONS] = 
+    static const int isort_weapon[NUM_WEAPONS] =
     {
         WPN_WHIP, WPN_CLUB, WPN_HAMMER, WPN_MACE,
         WPN_FLAIL, WPN_DEMON_WHIP,
@@ -4149,13 +4149,13 @@ static int _pack_floor_item(int *idx, int *flag, int *isort, int max)
 
         WPN_SLING, WPN_BOW, WPN_CROSSBOW, WPN_HAND_CROSSBOW
     };
-    static const int isort_armour[NUM_ARMOURS] = 
+    static const int isort_armour[NUM_ARMOURS] =
     {
-        ARM_ROBE, 
+        ARM_ROBE,
         ARM_ANIMAL_SKIN,
         ARM_LEATHER_ARMOUR,
         ARM_TROLL_LEATHER_ARMOUR,
-        ARM_RING_MAIL, ARM_SCALE_MAIL, ARM_CHAIN_MAIL, 
+        ARM_RING_MAIL, ARM_SCALE_MAIL, ARM_CHAIN_MAIL,
         ARM_SPLINT_MAIL, ARM_BANDED_MAIL, ARM_PLATE_MAIL,
         ARM_CRYSTAL_PLATE_MAIL,
         ARM_SWAMP_DRAGON_ARMOUR,
@@ -4180,7 +4180,7 @@ static int _pack_floor_item(int *idx, int *flag, int *isort, int max)
 
     for (int i = 0; i < NUM_WEAPONS; i++)
          isort_weapon2[isort_weapon[i]] = i;
-         
+
     for (int i = 0; i < NUM_ARMOURS; i++)
          isort_armour2[isort_armour[i]] = i;
 
@@ -4342,10 +4342,10 @@ void tile_draw_inv(int flag)
     }
 
     int n = 0;
-    
+
     // item.base_type <-> char conversion table
     const static char *obj_syms = ")([/%#?=!#+\\0}x";
-    
+
     for (int i = 0; i < (int)strlen(item_chars); i++)
     {
         int top = n;

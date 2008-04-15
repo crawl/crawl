@@ -75,7 +75,8 @@ void MapRegionClass::SysInit(int x, int y, int o_x, int o_y)
 void MapRegionClass::SysDeinit()
 {}
 
-void RegionClass::init_font(const char *name){
+void RegionClass::init_font(const char *name)
+{
   /*** Large part of this routine was copied from Hengband ***/
     int ascent, descent, width;
 
@@ -90,7 +91,7 @@ void RegionClass::init_font(const char *name){
     descent = font->descent;
 
     int i;
-    for (i=0;i<MAX_TERM_COL;i++)
+    for (i = 0; i < MAX_TERM_COL; i++)
         XSetFont(display, term_gc[i], font->fid);
 
     fx = dx = width;
@@ -172,7 +173,8 @@ void TextRegionClass::draw_string(int x, int y, unsigned char *buf,
 
 void TextRegionClass::draw_cursor(int x, int y)
 {
-    if(!flag)return;
+    if (!flag)
+        return;
 
     XDrawString(display, win->win, term_gc[0x0f], x*dx+ox, y*dy+asc+oy,
                 "_", 1);
@@ -189,7 +191,8 @@ void TextRegionClass::erase_cursor()
     int adrs = y0 * mx + x0;
     int col = abuf[adrs];
     int x1 = x0;;
-    if(!flag)return;
+    if (!flag)
+        return;
 
     XFillRectangle(display, w->win, term_gc[col>>4],
                       x1*dx + ox, y0*dy +oy, dx*width, dy);
@@ -221,10 +224,8 @@ void MapRegionClass::clear()
 {
     int i;
 
-    for (i=0; i<mx2*my2; i++)
-    {
-        mbuf[i]=PIX_BLACK;
-    }
+    for (i = 0; i < mx2*my2; i++)
+        mbuf[i] = PIX_BLACK;
 
     RegionClass::clear();
 }
@@ -233,10 +234,10 @@ void TextRegionClass::clear()
 {
     int i;
 
-    for (i=0; i<mx*my; i++)
+    for (i = 0; i < mx*my; i++)
     {
-        cbuf[i]=' ';
-        abuf[i]=0;
+        cbuf[i] = ' ';
+        abuf[i] = 0;
     }
 
     RegionClass::clear();
@@ -347,8 +348,8 @@ void MapRegionClass::draw_data(unsigned char *buf)
             if (col != get_col(x, y) || force_redraw
                 || x < marker_length || y < marker_length)
             {
-                for (int xx=0; xx<dx; xx++)
-                    for (int yy=0; yy<dy; yy++)
+                for (int xx = 0; xx < dx; xx++)
+                    for (int yy = 0; yy < dy; yy++)
                     {
                         XPutPixel(backbuf, x_margin + x*dx+xx,
                                   y_margin + y*dy+yy, map_pix[col]);
@@ -376,12 +377,12 @@ void MapRegionClass::draw_data(unsigned char *buf)
 
 bool ImgIsTransparentAt(img_type img, int x, int y)
 {
-    ASSERT(x>=0);
-    ASSERT(y>=0);
-    ASSERT(x<(img->width));
-    ASSERT(y<(img->height));
+    ASSERT(x >= 0);
+    ASSERT(y >= 0);
+    ASSERT(x < img->width);
+    ASSERT(y < img->height);
 
-    return (pix_transparent == XGetPixel(img, x, y)) ? true:false;
+    return (pix_transparent == XGetPixel(img, x, y)) ? true : false;
 }
 
 void ImgSetTransparentPix(img_type img)
@@ -396,12 +397,14 @@ void ImgDestroy(img_type img)
 
 img_type ImgCreateSimple(int wx, int wy)
 {
-    if (wx ==0 || wy == 0) return NULL;
+    if (wx == 0 || wy == 0)
+        return NULL;
+
     char *buf = (char *)malloc(x11_byte_per_pixel_ximage()* wx * wy);
 
-    img_type res= XCreateImage(display, DefaultVisual(display, screen),
-                                  DefaultDepth(display, screen),
-                                  ZPixmap, 0, buf, wx, wy, 8, 0);
+    img_type res = XCreateImage(display, DefaultVisual(display, screen),
+                                         DefaultDepth(display, screen),
+                                         ZPixmap, 0, buf, wx, wy, 8, 0);
     return(res);
 }
 
@@ -633,7 +636,7 @@ void ImgCopyMasked(img_type src,  int sx, int sy, int wx, int wy,
             for (x = 0; x < wx; x++)
             {
                 //X11 specific
-                if(p_src[x] != pix_transparent && mask[count] == 0)
+                if (p_src[x] != pix_transparent && mask[count] == 0)
                     p_dest[x] = p_src[x];
                 count++;
             }
@@ -690,7 +693,7 @@ void ImgCopyMaskedH(img_type src,  int sx, int sy, int wx, int wy,
                 //X11 specific
                 if (p_src[x] == pix_rimcolor)
                     p_dest[x] = pix_hilite;
-                else if(p_src[x] != pix_transparent && mask[count] == 0)
+                else if (p_src[x] != pix_transparent && mask[count] == 0)
                     p_dest[x] = p_src[x];
 
                 count++;

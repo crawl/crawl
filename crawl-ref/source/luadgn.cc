@@ -950,7 +950,8 @@ static int dgn_floor_colour(lua_State *ls)
         {
             error = "Can't set floor to black.";
         }
-        else {
+        else
+        {
             error = "No such colour as '";
             error += s;
             error += "'";
@@ -980,7 +981,8 @@ static int dgn_rock_colour(lua_State *ls)
         {
             error = "Can't set rock to black.";
         }
-        else {
+        else
+        {
             error = "No such colour as '";
             error += s;
             error += "'";
@@ -1019,7 +1021,8 @@ static int dgn_change_floor_colour(lua_State *ls)
         {
             error = "Can't set floor to black.";
         }
-        else {
+        else
+        {
             error = "No such colour as '";
             error += s;
             error += "'";
@@ -1050,7 +1053,8 @@ static int dgn_change_rock_colour(lua_State *ls)
         {
             error = "Can't set rock to black.";
         }
-        else {
+        else
+        {
             error = "No such colour as '";
             error += s;
             error += "'";
@@ -1438,15 +1442,14 @@ static int dgn_floor_halo(lua_State *ls)
     }
 
     for (int y = 0; y < GYM; ++y)
-    {
         for (int x = 0; x < GXM; ++x)
         {
             const dungeon_feature_type feat = grd[x][y];
             if (feat == target)
             {
 
-                for (int i=-1; i<=1; i++)
-                     for (int j=-1; j<=1; j++)
+                for (int i = -1; i <= 1; i++)
+                     for (int j = -1; j <= 1; j++)
                      {
                          if (!map_bounds(x+i, y+j))
                              continue;
@@ -1461,7 +1464,6 @@ static int dgn_floor_halo(lua_State *ls)
                      }
             }
         }
-    }
 
     return (0);
 }

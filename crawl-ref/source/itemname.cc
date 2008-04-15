@@ -83,16 +83,16 @@ std::string item_def::name(description_level_type descrip,
 {
     if (descrip == DESC_NONE)
         return ("");
-    
+
     const bool is_artefact = (is_fixed_artefact( *this )
                               || (is_random_artefact( *this )));
-                              
+
     std::ostringstream buff;
     const std::string auxname = this->name_aux(descrip, terse, ident,
                                                ignore_flags);
     const bool startvowel     = is_vowel(auxname[0]);
 
-    if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
+    if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY)
     {
         if (in_inventory(*this)) // actually in inventory
         {
@@ -102,7 +102,7 @@ std::string item_def::name(description_level_type descrip,
             else
                 buff << " - ";
         }
-        else 
+        else
             descrip = DESC_CAP_A;
     }
 
@@ -232,7 +232,7 @@ std::string item_def::name(description_level_type descrip,
             equipped = true;
         }
    }
-   
+
    if (descrip != DESC_PLAIN && descrip != DESC_BASENAME)
    {
         const bool  tried  =  !ident && !equipped
@@ -289,7 +289,7 @@ static const char* fixed_artefact_name( const item_def& item, bool ident )
         case SPWPN_STAFF_OF_WUCAD_MU:   return "Staff of Wucad Mu";
         default:                        return "Brodale's Buggy Bola";
         }
-    }   
+    }
     else
     {
         switch (item.special)
@@ -365,11 +365,11 @@ const char* weapon_brand_name(const item_def& item, bool terse)
 
 
 static const char* armour_ego_name( special_armour_type sparm, bool terse )
-{   
+{
     if (!terse)
     {
         switch ( sparm )
-        {          
+        {
         case SPARM_RUNNING:           return "running";
         case SPARM_FIRE_RESISTANCE:   return "fire resistance";
         case SPARM_COLD_RESISTANCE:   return "cold resistance";
@@ -450,7 +450,7 @@ static const char* wand_secondary_string(int s)
 {
     switch (s)
     {
-    case 0:  return "";      
+    case 0:  return "";
     case 1:  return "jewelled ";
     case 2:  return "curved ";
     case 3:  return "long ";
@@ -488,7 +488,7 @@ static const char* wand_primary_string(int p)
     case 11: return "plastic";
     default: return "buggy";
     }
-}        
+}
 
 static const char* potion_type_name(int potiontype)
 {
@@ -993,12 +993,12 @@ std::string item_def::name_aux( description_level_type desc,
     const bool dbname   = (desc == DESC_DBNAME);
     const bool basename = (desc == DESC_BASENAME || (dbname && !know_type));
     const bool qualname = (desc == DESC_QUALNAME);
-    
+
     const bool know_curse =
         !basename && !qualname && !dbname
         && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
         && (ident || item_ident(*this, ISFLAG_KNOW_CURSE));
-    
+
     const bool __know_pluses =
         !basename && !qualname && !dbname
         && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
@@ -1082,7 +1082,7 @@ std::string item_def::name_aux( description_level_type desc,
                     buff << "glowing ";
                 break;
             }
-        } 
+        }
 
         if (!basename && !dbname)
             // always give racial type (it does have game effects)
@@ -1094,7 +1094,7 @@ std::string item_def::name_aux( description_level_type desc,
             buff << "vampiric ";
         }
         buff << item_base_name(*this);
-            
+
         if (know_brand)
             buff << weapon_brand_name(*this, terse);
 
@@ -1109,7 +1109,7 @@ std::string item_def::name_aux( description_level_type desc,
         {
             if (brand == SPMSL_POISONED)
                 buff << ((terse) ? "poison " : "poisoned ");
-        
+
             if (brand == SPMSL_CURARE)
                 buff << ((terse) ? "curare " : "curare-tipped ");
         }
@@ -1220,7 +1220,7 @@ std::string item_def::name_aux( description_level_type desc,
         if (!basename && !dbname && is_hard_helmet(*this))
         {
             const short dhelm = get_helmet_desc( *this );
-            
+
             buff <<
                    ((dhelm == THELM_DESC_PLAIN)    ? "" :
                     (dhelm == THELM_DESC_WINGED)   ? "winged "  :
@@ -1308,7 +1308,7 @@ std::string item_def::name_aux( description_level_type desc,
             };
             COMPILE_CHECK( ARRAYSIZE(potion_colours) == PDC_NCOLOURS, c1 );
 
-            const char *qualifier = 
+            const char *qualifier =
                 (pqual < 0 || pqual >= PDQ_NQUALS)? "bug-filled "
                                     : potion_qualifiers[pqual];
 
@@ -1373,8 +1373,8 @@ std::string item_def::name_aux( description_level_type desc,
         }
         else
         {
-            const unsigned long sseed = 
-                this->special 
+            const unsigned long sseed =
+                this->special
                 + (static_cast<unsigned long>(it_plus) << 8)
                 + (static_cast<unsigned long>(OBJ_SCROLLS) << 16);
             buff << "labeled " << make_name(sseed, true);
@@ -1486,7 +1486,7 @@ std::string item_def::name_aux( description_level_type desc,
                 // left.
                 if (this->plus2 != 0)
                 {
-                    if(top_card_is_known(*this))
+                    if (top_card_is_known(*this))
                         buff << ", ";
 
                     if (this->plus2 > 0)
@@ -1536,9 +1536,9 @@ std::string item_def::name_aux( description_level_type desc,
             if (!basename)
             buff << staff_secondary_string(this->special / 4)
                  << staff_primary_string(this->special % 4);
-                 
+
             buff << (item_is_rod( *this ) ? "rod" : "staff");
-        }      
+        }
         else
         {
             buff << (item_is_rod( *this ) ? "rod" : "staff")
@@ -1727,7 +1727,7 @@ void set_ident_type( object_class_type basetype, int subtype,
 {
     preserve_quiver_slots p;
     // Don't allow overwriting of known type with tried unless forced.
-    if (!force 
+    if (!force
         && (setting == ID_MON_TRIED_TYPE || setting == ID_TRIED_TYPE)
         && setting <= get_ident_type( basetype, subtype ))
     {
@@ -1883,8 +1883,8 @@ std::string make_name( unsigned long seed, bool all_cap )
             name[i] = ' ';
         }
         else if (i > 0
-            && (want_vowel 
-                || (i > 1 
+            && (want_vowel
+                || (i > 1
                     && is_random_name_vowel( name[i - 1] )
                     && !is_random_name_vowel( name[i - 2] )
                     && (numb[(k + 4 * j) % 17] % 5) <= 1 )))
@@ -1900,10 +1900,10 @@ std::string make_name( unsigned long seed, bool all_cap )
                     name[i] = retlet( numb[(k + 14 * j) % 17] );
                 }
                 else if (len < 7
-                        || i <= 2 || i >= len - 3 
+                        || i <= 2 || i >= len - 3
                         || is_random_name_space( name[i - 1] )
                         || (i > 1 && is_random_name_space( name[i - 2] ))
-                        || (i > 2 
+                        || (i > 2
                             && !is_random_name_vowel( name[i - 1] )
                             && !is_random_name_vowel( name[i - 2] )))
                 {
@@ -1911,8 +1911,8 @@ std::string make_name( unsigned long seed, bool all_cap )
                     continue;
                 }
             }
-            else if (i > 1 
-                    && name[i] == name[i - 1] 
+            else if (i > 1
+                    && name[i] == name[i - 1]
                     && (name[i] == 'y' || name[i] == 'i'
                         || (numb[(k + 12 * j) % 17] % 5) <= 1))
             {
@@ -1953,7 +1953,7 @@ std::string make_name( unsigned long seed, bool all_cap )
                 case 11: strcat(name, "str"); i++; len++; break;
                 case 12: strcat(name, "shr"); i++; len++; break;
                 case 13: strcat(name, "thr"); i++; len++; break;
-                // start, middle, end 
+                // start, middle, end
                 case 14: strcat(name, "sm"); break;
                 case 15: strcat(name, "sh"); break;
                 case 16: strcat(name, "ch"); break;
@@ -2051,15 +2051,15 @@ std::string make_name( unsigned long seed, bool all_cap )
     }
 
     // catch break and try to give a final letter
-    if (i > 0 
+    if (i > 0
         && !is_random_name_space( name[i - 1] )
-        && name[i - 1] != 'y'  
+        && name[i - 1] != 'y'
         && is_random_name_vowel( name[i - 1] )
         && (count > 9 || (i < 8 && numb[16] % 3)))
     {
         name[i] = retlet( numb[j] );
     }
-    
+
     len = strlen( name );
 
     if (len)
@@ -2068,7 +2068,7 @@ std::string make_name( unsigned long seed, bool all_cap )
         {
             if (!isspace( name[i] ))
                 break;
-            else 
+            else
             {
                 name[i] = '\0';
                 len--;
@@ -2086,7 +2086,7 @@ std::string make_name( unsigned long seed, bool all_cap )
         if (all_cap || i == 0 || name[i - 1] == ' ')
             name[i] = toupper( name[i] );
 
-    return name; 
+    return name;
 }                               // end make_name()
 
 bool is_random_name_space(char let)

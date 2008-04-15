@@ -172,7 +172,7 @@ bool dump_char(const std::string &fname, bool show_prices, bool full_id,
     text.reserve(100 * 80);
 
     dump_params par(text, "", show_prices, full_id, se);
-    
+
     for (int i = 0, size = Options.dump_order.size(); i < size; ++i)
     {
         par.section = Options.dump_order[i];
@@ -203,7 +203,7 @@ static void sdump_stats(dump_params &par)
 static void sdump_burden(dump_params &par)
 {
     std::string verb = par.se? "were" : "are";
-    
+
     switch (you.burden_state)
     {
     case BS_OVERLOADED:
@@ -223,7 +223,7 @@ static void sdump_hunger(dump_params &par)
         par.text += "You were ";
     else
         par.text += "You are ";
-        
+
     par.text += hunger_level();
     par.text += ".\n\n";
 }
@@ -367,7 +367,7 @@ static std::string sdump_turns_place_info(PlaceInfo place_info,
     float a, b, c, d, e, f;
     unsigned int non_interlevel =
         place_info.turns_total - place_info.turns_interlevel;
-    unsigned int global_non_interlevel = 
+    unsigned int global_non_interlevel =
         gi.turns_total - gi.turns_interlevel;
 
 
@@ -561,7 +561,8 @@ static void sdump_notes(dump_params &par)
 
     text += "\nNotes\nTurn   | Place   | Note\n";
     text += "--------------------------------------------------------------\n";
-    for ( unsigned i = 0; i < note_list.size(); ++i ) {
+    for ( unsigned i = 0; i < note_list.size(); ++i )
+    {
         text += note_list[i].describe();
         text += "\n";
     }
@@ -575,7 +576,7 @@ static void sdump_notes(dump_params &par)
  //---------------------------------------------------------------
 static void sdump_location(dump_params &par)
 {
-    if (you.your_level == -1 
+    if (you.your_level == -1
         && you.where_are_you == BRANCH_MAIN_DUNGEON
         && you.level_type == LEVEL_DUNGEON)
     {
@@ -694,7 +695,7 @@ static void sdump_inventory(dump_params &par)
         if (is_valid_item( you.inv[i] ))
         {
             // adds up number of each class in invent.
-            inv_class2[you.inv[i].base_type]++;     
+            inv_class2[you.inv[i].base_type]++;
             inv_count++;
         }
     }
@@ -748,7 +749,7 @@ static void sdump_inventory(dump_params &par)
                         {
                             text += " (";
 
-                            itoa( ival = item_value( you.inv[j], true ), 
+                            itoa( ival = item_value( you.inv[j], true ),
                                   tmp_quant, 10 );
 
                             text += tmp_quant;
@@ -763,7 +764,7 @@ static void sdump_inventory(dump_params &par)
 
                         if (is_dumpable_artefact( you.inv[j], false ))
                         {
-                            text2 = get_item_description( you.inv[j], 
+                            text2 = get_item_description( you.inv[j],
                                                           false,
                                                           true );
 
@@ -810,7 +811,7 @@ static void sdump_skills(dump_params &par)
         if (you.skills[i] > 0)
         {
             text += ( (you.skills[i] == 27)   ? " * " :
-                      (you.practise_skill[i]) ? " + " 
+                      (you.practise_skill[i]) ? " + "
                                               : " - " );
 
             text += "Level ";
@@ -876,13 +877,13 @@ static void sdump_spells(dump_params &par)
     int spell_levels = player_spell_levels();
 
     std::string verb = par.se? "had" : "have";
-    
+
     if (spell_levels == 1)
         text += "You " + verb + " one spell level left.";
     else if (spell_levels == 0)
     {
         verb = par.se? "couldn't" : "cannot";
-        
+
         text += "You " + verb + " memorise any spells.";
     }
     else
@@ -901,7 +902,7 @@ static void sdump_spells(dump_params &par)
     if (!you.spell_no)
     {
         verb = par.se? "didn't" : "don't";
-        
+
         text += "You " + verb + " know any spells.\n\n";
     }
     else
@@ -927,8 +928,8 @@ static void sdump_spells(dump_params &par)
 
                 if ( spell_line.length() > 24 )
                     spell_line = spell_line.substr(0, 24);
-                
-                for (int i = spell_line.length(); i < 26; i++) 
+
+                for (int i = spell_line.length(); i < 26; i++)
                     spell_line += ' ';
 
                 bool already = false;
@@ -1082,7 +1083,7 @@ static void sdump_hiscore(dump_params &par)
 {
     if (!par.se)
         return;
-        
+
     std::string hiscore = hiscores_format_single_long( *(par.se), true );
     trim_string(hiscore);
     par.text += hiscore;
@@ -1157,7 +1158,7 @@ void dump_map(FILE *fp)
                 if ( j < min_y )
                     min_y = j;
             }
-    
+
     for ( int y = min_y; y <= max_y; ++y )
     {
         for ( int x = min_x; x <= max_x; ++x )
@@ -1178,7 +1179,7 @@ void dump_map(const char* fname)
 
     dump_map(fp);
 
-    fclose(fp);    
+    fclose(fp);
 }
 
 static bool write_dump(
@@ -1214,7 +1215,7 @@ static bool write_dump(
     }
     else
         mprf("Error opening file '%s'", file_name.c_str());
-    
+
     return (succeeded);
 }
 
@@ -1256,7 +1257,7 @@ void resists_screen()
     clrscr();
     cgotoxy(1,1);
     textcolor(LIGHTGREY);
-    
+
     formatted_scroller scr;
     scr.set_tag("resists");
     for ( unsigned i = 0; i < vfs.size(); ++i )
