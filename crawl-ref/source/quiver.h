@@ -23,7 +23,7 @@ enum ammo_t
     AMMO_CROSSBOW,        // wielded crossbow -> bolts
     AMMO_HAND_CROSSBOW,   // wielded hand crossbow -> darts
     AMMO_BLOWGUN,         // wielded blowgun -> needles
-    NUM_AMMO,
+    NUM_AMMO
 };
 
 class player_quiver
