@@ -1611,7 +1611,7 @@ bool is_blessed( const item_def &item )
     }
 
     return (false);
-}                               // end is_demonic()
+}                               // end is_blessed()
 
 bool normal2good( item_def &item, bool allow_blessed )
 {
