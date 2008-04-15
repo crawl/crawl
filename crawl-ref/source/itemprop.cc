@@ -236,31 +236,52 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLICING | DAM_PIERCE, 10 },
 
     // Long blades
-    { WPN_FALCHION,          "falchion",            8,  2, 13, 170,  4,
+    { WPN_FALCHION,             "falchion",         8,  2, 13, 170,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 10 },  // or perhaps DAMV_CHOPPING is more apt?
-    { WPN_LONG_SWORD,        "long sword",         10, 1, 14, 160,  3,
+        DAMV_SLICING, 10 },     // or perhaps DAMV_CHOPPING is more apt?
+    { WPN_BLESSED_FALCHION,     "blessed blade",   10,  2, 11, 170,  4,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        DAMV_SLICING, 10 },     // or perhaps DAMV_CHOPPING is more apt?
+    { WPN_LONG_SWORD,           "long sword",      10, 1, 14, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_SCIMITAR,          "scimitar",           11, -1, 14, 170,  3,
+    { WPN_BLESSED_LONG_SWORD,   "blessed blade",   12, 0, 13, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_KATANA,            "katana",             13, 2, 13, 160,  3,
+    { WPN_SCIMITAR,             "scimitar",        11, -1, 14, 170,  3,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        DAMV_SLICING, 10 },
+    { WPN_BLESSED_SCIMITAR,     "blessed blade",   12, -1, 12, 170,  3,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        DAMV_SLICING, 10 },
+    { WPN_KATANA,               "katana",          13, 2, 13, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_DEMON_BLADE,       "demon blade",        13, -1, 15, 200,  4,
+    { WPN_BLESSED_KATANA,       "blessed blade",   14, 1, 13, 160,  3,
+        SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
+        DAMV_SLICING, 2 },
+    { WPN_DEMON_BLADE,          "demon blade",     13, -1, 15, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_BLESSED_BLADE,     "blessed blade",      14, 0, 14, 200,  4,
+    { WPN_BLESSED_BLADE,        "blessed blade",   14, -2, 14, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
-    { WPN_DOUBLE_SWORD,      "double sword",       15, -2, 16, 220,  5,
+    { WPN_DOUBLE_SWORD,         "double sword",    15, -2, 16, 220,  5,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_GREAT_SWORD,       "great sword",        16, -3, 17, 250,  6,
+    { WPN_BLESSED_DOUBLE_SWORD, "blessed blade",   15, -2, 15, 220,  5,
+        SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
+        DAMV_SLICING, 2 },
+    { WPN_GREAT_SWORD,          "great sword",     16, -3, 17, 250,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_TRIPLE_SWORD,      "triple sword",       19, -4, 19, 260,  6,
+    { WPN_BLESSED_GREAT_SWORD,  "blessed blade",   17, -5, 17, 250,  6,
+        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        DAMV_SLICING, 10 },
+    { WPN_TRIPLE_SWORD,         "triple sword",    19, -4, 19, 260,  6,
+        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        DAMV_SLICING, 2 },
+    { WPN_BLESSED_TRIPLE_SWORD, "blessed blade",   19, -5, 18, 260,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
 
@@ -411,7 +432,7 @@ void init_properties()
 {
     // compare with enum comments, to catch changes
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
-    COMPILE_CHECK(NUM_WEAPONS  == 48, c2);
+    COMPILE_CHECK(NUM_WEAPONS  == 55, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
     COMPILE_CHECK(NUM_FOODS    == 22, c4);
 
@@ -1425,7 +1446,14 @@ int weapon_rarity( int w_type )
     case WPN_DEMON_TRIDENT:
     case WPN_DEMON_WHIP:
     case WPN_DEMON_BLADE:
+    case WPN_BLESSED_FALCHION:
+    case WPN_BLESSED_LONG_SWORD:
+    case WPN_BLESSED_SCIMITAR:
+    case WPN_BLESSED_KATANA:
     case WPN_BLESSED_BLADE:
+    case WPN_BLESSED_DOUBLE_SWORD:
+    case WPN_BLESSED_GREAT_SWORD:
+    case WPN_BLESSED_TRIPLE_SWORD:
         // zero value weapons must be placed specially -- see make_item() {dlb}
         return (0);
 
@@ -1602,7 +1630,14 @@ bool is_blessed( const item_def &item )
     {
         switch (item.sub_type)
         {
+        case WPN_BLESSED_FALCHION:
+        case WPN_BLESSED_LONG_SWORD:
+        case WPN_BLESSED_SCIMITAR:
+        case WPN_BLESSED_KATANA:
         case WPN_BLESSED_BLADE:
+        case WPN_BLESSED_DOUBLE_SWORD:
+        case WPN_BLESSED_GREAT_SWORD:
+        case WPN_BLESSED_TRIPLE_SWORD:
             return (true);
 
         default:
@@ -1623,11 +1658,53 @@ bool normal2good( item_def &item, bool allow_blessed )
     default:
         return (false);
 
+    case WPN_FALCHION:
+        if (!allow_blessed)
+            return (false);
+        item.sub_type = WPN_BLESSED_FALCHION;
+        break;
+
+    case WPN_LONG_SWORD:
+        if (!allow_blessed)
+            return (false);
+        item.sub_type = WPN_BLESSED_LONG_SWORD;
+        break;
+
+    case WPN_SCIMITAR:
+        if (!allow_blessed)
+            return (false);
+        item.sub_type = WPN_BLESSED_SCIMITAR;
+        break;
+
     case WPN_DEMON_BLADE:
         if (!allow_blessed)
             item.sub_type = WPN_SCIMITAR;
         else
             item.sub_type = WPN_BLESSED_BLADE;
+        break;
+
+    case WPN_KATANA:
+        if (!allow_blessed)
+            return (false);
+        item.sub_type = WPN_BLESSED_KATANA;
+        break;
+
+    case WPN_DOUBLE_SWORD:
+        if (!allow_blessed)
+            return (false);
+        item.sub_type = WPN_BLESSED_DOUBLE_SWORD;
+        break;
+
+    case WPN_GREAT_SWORD:
+        if (!allow_blessed)
+            return (false);
+        item.sub_type = WPN_BLESSED_GREAT_SWORD;
+        break;
+
+    case WPN_TRIPLE_SWORD:
+        if (!allow_blessed)
+            return (false);
+        item.sub_type = WPN_BLESSED_TRIPLE_SWORD;
         break;
 
     case WPN_DEMON_WHIP:

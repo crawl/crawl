@@ -1482,7 +1482,14 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_VENOM;
             break;
 
-        case WPN_BLESSED_BLADE:     // special gift of TSO
+        case WPN_BLESSED_FALCHION:     // special gifts of TSO
+        case WPN_BLESSED_LONG_SWORD:
+        case WPN_BLESSED_SCIMITAR:
+        case WPN_BLESSED_KATANA:
+        case WPN_BLESSED_BLADE:
+        case WPN_BLESSED_DOUBLE_SWORD:
+        case WPN_BLESSED_GREAT_SWORD:
+        case WPN_BLESSED_TRIPLE_SWORD:
             rc = SPWPN_HOLY_WRATH;
             break;
 
@@ -3401,7 +3408,7 @@ static item_make_species_type give_weapon(monsters *mon, int level,
         item.colour = WHITE;        // forced by force_item above {dlb}
 
         item.sub_type = (one_chance_in(4) ? WPN_BLESSED_BLADE
-                                              : WPN_LONG_SWORD);
+                                              : WPN_BLESSED_LONG_SWORD);
 
         set_equip_desc( item, ISFLAG_GLOWING );
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_HOLY_WRATH );

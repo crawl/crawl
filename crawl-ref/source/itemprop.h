@@ -469,8 +469,15 @@ enum weapon_type
     WPN_LONGBOW,                       //   45
     WPN_LAJATANG,
     WPN_BARDICHE,
+    WPN_BLESSED_FALCHION,
+    WPN_BLESSED_LONG_SWORD,
+    WPN_BLESSED_SCIMITAR,              //   50
+    WPN_BLESSED_KATANA,
+    WPN_BLESSED_DOUBLE_SWORD,
+    WPN_BLESSED_GREAT_SWORD,
+    WPN_BLESSED_TRIPLE_SWORD,
 
-    NUM_WEAPONS,                       //   48 - must be last regular member {dlb}
+    NUM_WEAPONS,                       //   55 - must be last regular member {dlb}
 
 // special cases
     WPN_UNARMED = 500,                 //  500
