@@ -1165,7 +1165,6 @@ void update_monster_pane()
     const int max_print = crawl_view.mlistsz.y;
     textbackground(BLACK);
 
-    // Sadly, the defaults don't leave _any_ room for monsters :(
     if (max_print <= 0)
         return;
 
