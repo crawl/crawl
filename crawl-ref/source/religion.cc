@@ -911,9 +911,10 @@ static bool _tso_blessing_holy_wpn(monsters *mon)
     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
     wpn.colour = YELLOW;
 
-    // Convert demonic weapons into non-demonic weapons.
+    // Convert demonic weapons into non-demonic weapons, not allowing
+    // blessed weapons, since the holy wrath brand is the blessing.
     if (is_demonic(wpn))
-        demonic2nondemonic(wpn);
+        demonic2nondemonic(wpn, false);
 
     return true;
 }

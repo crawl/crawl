@@ -661,7 +661,7 @@ bool is_double_ended( const item_def &item );
 int double_wpn_awkward_speed( const item_def &item );
 
 bool  is_demonic( const item_def &item );
-bool  demonic2nondemonic( item_def &item );
+bool  demonic2nondemonic( item_def &item, bool allow_blessed = true );
 
 int   get_vorpal_type( const item_def &item );
 int   get_damage_type( const item_def &item );

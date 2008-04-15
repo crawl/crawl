@@ -1597,7 +1597,7 @@ bool is_demonic( const item_def &item )
     return (false);
 }                               // end is_demonic()
 
-bool demonic2nondemonic( item_def &item )
+bool demonic2nondemonic( item_def &item, bool allow_blessed )
 {
     if (item.base_type != OBJ_WEAPONS)
         return (false);
@@ -1608,7 +1608,7 @@ bool demonic2nondemonic( item_def &item )
         return (false);
 
     case WPN_DEMON_BLADE:
-        item.sub_type = WPN_BLESSED_BLADE;
+        item.sub_type = (allow_blessed) ? WPN_BLESSED_BLADE : WPN_SCIMITAR;
         break;
 
     case WPN_DEMON_WHIP:
