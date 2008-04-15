@@ -2930,7 +2930,7 @@ static void give_potion(monsters *mon, int level)
         mitm[thing_created].flags = 0;
         give_monster_item(mon, thing_created);
     }
-    if (mons_is_unique( mon->type ) && one_chance_in(3))
+    else if (mons_is_unique( mon->type ) && one_chance_in(3))
     {
         const int thing_created =
             items(0, OBJ_POTIONS, OBJ_RANDOM, true, level, 0);

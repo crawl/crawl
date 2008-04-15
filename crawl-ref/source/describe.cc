@@ -1646,6 +1646,7 @@ std::string get_item_description( const item_def &item, bool verbose,
         break;
 
     case OBJ_POTIONS:
+#ifdef DEBUG_BLOOD_POTIONS
         // list content of timer vector for blood potions
         if (item.sub_type == POT_BLOOD
             || item.sub_type == POT_BLOOD_COAGULATED)
@@ -1662,6 +1663,7 @@ std::string get_item_description( const item_def &item, bool verbose,
             for (int i = 0; i < timer.size(); i++)
                  description << (timer[i].get_long()) << "  ";
         }
+#endif
         break;
 
     case OBJ_SCROLLS:

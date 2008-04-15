@@ -2491,7 +2491,8 @@ void debug_get_religion(void)
     {
         grd[you.x_pos][you.y_pos] =
             static_cast<dungeon_feature_type>( DNGN_ALTAR_FIRST_GOD + god - 1 );
-        god_pitch(god);
+
+        pray();
     }
 }                               // end debug_add_skills()
 #endif
