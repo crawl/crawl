@@ -2779,7 +2779,7 @@ int items( int allow_uniques,       // not just true-false,
         break;
     }
 
-    // Colour the item
+    // Colour the item.
     item_colour( item );
 
     // Set brand appearance.
