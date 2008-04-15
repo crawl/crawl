@@ -42,6 +42,7 @@
 #include "stuff.h"
 #include "view.h"
 #include "menu.h"
+#include "mon-util.h"
 #include "randart.h"
 
 #include "tiles.h"
@@ -53,7 +54,7 @@ static void _get_inv_items_to_show(
         std::vector<const item_def*> &v, int selector);
 
 InvTitle::InvTitle( Menu *mn, const std::string &title,
-          invtitle_annotator tfn ) 
+          invtitle_annotator tfn )
     : MenuEntry( title, MEL_TITLE )
 {
     m       = mn;
@@ -229,7 +230,7 @@ void InvEntry::add_class_hotkeys(const item_def &i)
         add_hotkey('?');
         break;
     case OBJ_JEWELLERY:
-        add_hotkey(i.sub_type >= AMU_RAGE? '"' : '='); 
+        add_hotkey(i.sub_type >= AMU_RAGE? '"' : '=');
         break;
     case OBJ_POTIONS:
         add_hotkey('!');
@@ -310,7 +311,7 @@ void InvMenu::set_title(const std::string &s)
             "Inventory: %.0f/%.0f aum (%d%%, %d/52 slots)",
             BURDEN_TO_AUM * you.burden,
             BURDEN_TO_AUM * cap,
-            (you.burden * 100) / cap, 
+            (you.burden * 100) / cap,
             inv_count() );
 
         default_title << std::setw(get_number_of_cols() - default_title.str().length() - 1)
@@ -319,7 +320,7 @@ void InvMenu::set_title(const std::string &s)
 
         stitle = default_title.str();
     }
-    
+
     set_title(new InvTitle(this, stitle, title_annotate));
 }
 
@@ -468,7 +469,7 @@ static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
 struct menu_entry_comparator
 {
     const menu_sort_condition *cond;
-    
+
     menu_entry_comparator(const menu_sort_condition *c)
         : cond(c)
     {
@@ -511,7 +512,7 @@ void init_item_sort_comparators(item_sort_comparators &list,
         std::string s = cmps[i];
         if (s.empty())
             continue;
-        
+
         const bool negated = s[0] == '>';
         if (s[0] == '<' || s[0] == '>')
             s = s.substr(1);
@@ -542,7 +543,7 @@ void InvMenu::sort_menu(std::vector<InvEntry*> &invitems,
 {
     if (!cond || cond->sort == -1 || (int) invitems.size() < cond->sort)
         return;
-    
+
     std::sort( invitems.begin(), invitems.end(), menu_entry_comparator(cond) );
 }
 
@@ -611,7 +612,7 @@ std::vector<SelItem> InvMenu::get_selitems() const
         InvEntry *inv = dynamic_cast<InvEntry*>(sel[i]);
         selected_items.push_back(
                 SelItem(
-                    inv->hotkeys[0], 
+                    inv->hotkeys[0],
                     inv->selected_qty,
                     inv->item ) );
     }
@@ -620,13 +621,13 @@ std::vector<SelItem> InvMenu::get_selitems() const
 
 bool InvMenu::process_key( int key )
 {
-    if (items.size() 
+    if (items.size()
             && type == MT_DROP
             && (key == CONTROL('D') || key == '@'))
     {
         int newflag =
-            is_set(MF_MULTISELECT)? 
-                MF_SINGLESELECT | MF_ANYPRINTABLE 
+            is_set(MF_MULTISELECT)?
+                MF_SINGLESELECT | MF_ANYPRINTABLE
               : MF_MULTISELECT;
 
         flags &= ~(MF_SINGLESELECT | MF_MULTISELECT | MF_ANYPRINTABLE);
@@ -643,7 +644,7 @@ bool InvMenu::process_key( int key )
 unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
-    if (!isalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?' 
+    if (!isalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
             && mkey != '*' && mkey != ESCAPE)
         mkey = ' ';
     return (mkey);
@@ -659,7 +660,7 @@ bool in_inventory( const item_def &i )
 unsigned char get_invent( int invent_type )
 {
     unsigned char select;
-    
+
     while (true) {
        select = invent_select(NULL, MT_INVLIST, invent_type,
                                          MF_SINGLESELECT);
@@ -770,7 +771,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (is_enchantable_armour(i, true));
     case OSEL_VAMP_EAT:
         return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
-                && !food_is_rotten(i));
+                && !food_is_rotten(i) && mons_has_blood(i.plus));
     case OSEL_EQUIP:
         for (int eq = 0; eq < NUM_EQUIP; eq++)
         {
@@ -809,7 +810,7 @@ static void _get_inv_items_to_show(std::vector<const item_def*> &v, int selector
     }
 }
 
-unsigned char invent_select( 
+unsigned char invent_select(
                       const char *title,
                       menu_type type,
                       int item_selector,
@@ -821,7 +822,7 @@ unsigned char invent_select(
                       const std::vector<SelItem> *pre_select )
 {
     InvMenu menu(flags);
-    
+
     menu.set_preselect(pre_select);
     menu.set_title_annotator(titlefn);
     menu.f_selitem = selitemfn;
@@ -940,7 +941,7 @@ std::vector<SelItem> prompt_invent_items(
         else if (keyin == '?' || keyin == '*' || keyin == ',')
         {
             int selmode =
-                Options.drop_mode == DM_SINGLE 
+                Options.drop_mode == DM_SINGLE
                     && (!pre_select || pre_select->empty())?
                         MF_SINGLESELECT | MF_EASY_EXIT | MF_ANYPRINTABLE :
                         MF_MULTISELECT | MF_ALLOW_FILTER;
@@ -974,7 +975,7 @@ std::vector<SelItem> prompt_invent_items(
                 return (items);
             }
 
-            need_redraw = !(keyin == '?' || keyin == '*' 
+            need_redraw = !(keyin == '?' || keyin == '*'
                             || keyin == ',' || keyin == '+');
             need_prompt = need_redraw;
         }
@@ -994,7 +995,7 @@ std::vector<SelItem> prompt_invent_items(
             ret = PROMPT_ABORT;
             break;
         }
-        else if (isalpha( keyin )) 
+        else if (isalpha( keyin ))
         {
             ret = letter_to_index( keyin );
 
@@ -1023,7 +1024,7 @@ std::vector<SelItem> prompt_invent_items(
 }
 
 static int _digit_to_index( char digit, operation_types oper ) {
-    
+
     const char iletter = static_cast<char>(oper);
 
     for ( int i = 0; i < ENDOFPACK; ++i ) {
@@ -1073,11 +1074,11 @@ static bool _check_old_item_warning( const item_def& item,
     {
         if (you.equip[EQ_WEAPON] == -1)
             return (true);
-            
+
         old_item = you.inv[you.equip[EQ_WEAPON]];
         if (!has_warning_inscription(old_item, OPER_WIELD))
             return (true);
-            
+
         prompt += "Really unwield ";
     }
     else if (oper == OPER_WEAR) // can we safely take off old item?
@@ -1093,14 +1094,14 @@ static bool _check_old_item_warning( const item_def& item,
 
         if (!has_warning_inscription(old_item, OPER_TAKEOFF))
             return (true);
-            
+
         prompt += "Really take off ";
     }
     else if (oper == OPER_PUTON) // can we safely remove old item?
     {
         if (item.base_type != OBJ_JEWELLERY)
             return (true);
-            
+
         if (jewellery_is_amulet(item))
         {
             if (you.equip[EQ_AMULET] == -1)
@@ -1109,7 +1110,7 @@ static bool _check_old_item_warning( const item_def& item,
             old_item = you.inv[you.equip[EQ_AMULET]];
             if (!has_warning_inscription(old_item, OPER_TAKEOFF))
                 return (true);
-                
+
             prompt += "Really remove ";
         }
         else // rings handled in prompt_ring_to_remove
@@ -1150,7 +1151,7 @@ static std::string _operation_verb(operation_types oper)
     }
 }
 
-/* return true if user OK'd it (or no warning), false otherwise */ 
+/* return true if user OK'd it (or no warning), false otherwise */
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
@@ -1183,11 +1184,11 @@ bool check_warning_inscriptions( const item_def& item,
                 // or maybe the other ring?
                 equip = you.equip[EQ_RIGHT_RING];
             }
-                
+
             if (equip != -1 && item.link == equip)
                 return (_check_old_item_warning(item, oper));
         }
-        
+
         std::string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += item.name(DESC_INVENTORY);
         prompt += "?";
@@ -1207,8 +1208,8 @@ bool check_warning_inscriptions( const item_def& item,
 // It returns PROMPT_GOT_SPECIAL if the player hits the "other_valid_char".
 //
 // Note: This function never checks if the item is appropriate.
-int prompt_invent_item( const char *prompt, 
-                        menu_type mtype, int type_expect, 
+int prompt_invent_item( const char *prompt,
+                        menu_type mtype, int type_expect,
                         bool must_exist, bool allow_auto_list,
                         bool allow_easy_quit,
                         const char other_valid_char,
@@ -1261,10 +1262,10 @@ int prompt_invent_item( const char *prompt,
             keyin = invent_select(
                         prompt,
                         mtype,
-                        keyin == '*'? OSEL_ANY : type_expect, 
+                        keyin == '*'? OSEL_ANY : type_expect,
                         MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY
-                            | MF_EASY_EXIT, 
-                        NULL, 
+                            | MF_EASY_EXIT,
+                        NULL,
                         &items );
 
 
@@ -1309,7 +1310,7 @@ int prompt_invent_item( const char *prompt,
             ret = PROMPT_ABORT;
             break;
         }
-        else if (isalpha( keyin )) 
+        else if (isalpha( keyin ))
         {
             ret = letter_to_index( keyin );
 

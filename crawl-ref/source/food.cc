@@ -577,9 +577,7 @@ bool eat_food(bool run_hook, int slot)
     // If user hook ran, we don't know whether something
     // was eaten or not...
     if (run_hook && userdef_eat_food())
-    {
         return (false);
-    }
 
     if (igrd[you.x_pos][you.y_pos] != NON_ITEM && slot == -1)
     {
@@ -859,6 +857,8 @@ int eat_from_floor()
         return 0;
 
     bool need_more = false;
+    int vamp_undrainable_corpse = 0;
+    bool found_valid = false;
     for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
     {
         item_def& item = mitm[o];
@@ -866,18 +866,28 @@ int eat_from_floor()
         if (you.species != SP_VAMPIRE && item.base_type != OBJ_FOOD)
             continue;
 
-        if (you.species == SP_VAMPIRE &&
-            (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY))
-            continue;
+        if (you.species == SP_VAMPIRE)
+        {
+            if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
+                continue;
 
+            if (!mons_has_blood(item.plus))
+            {
+                vamp_undrainable_corpse++;
+                continue;
+            }
+        }
+
+        found_valid = true;
         std::ostringstream prompt;
         prompt << (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat")
                << ' ' << ((item.quantity > 1) ? "one of " : "")
                << item.name(DESC_NOCAP_A) << '?';
+
         const int ans = yesnoquit( prompt.str().c_str(), true, 0, false, 'E' );
         if ( ans == -1 )        // quit
             return -1;
-        else if ( ans == 1 )
+        else if ( ans == 1 )    // yes
         {
             if (can_ingest(item.base_type, item.sub_type, false))
             {
@@ -886,6 +896,15 @@ int eat_from_floor()
             }
             need_more = true;
         }
+        // else no: try next one
+    }
+
+    if (!found_valid && vamp_undrainable_corpse)
+    {
+        mprf("%s devoid of blood.",
+             (vamp_undrainable_corpse == 1) ? "This corpse is"
+                                            : "These corpses are");
+        need_more = true;
     }
 
     if (need_more && Options.auto_list)
