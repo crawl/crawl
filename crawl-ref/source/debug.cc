@@ -2320,8 +2320,8 @@ bool debug_add_mutation(void)
         return (false);
     }
 
-    if (you.mutation[MUT_MUTATION_RESISTANCE] > 0 &&
-        !crawl_state.is_replaying_keys())
+    if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 0
+        && !crawl_state.is_replaying_keys())
     {
         const char* msg;
 
@@ -2339,7 +2339,7 @@ bool debug_add_mutation(void)
 
     bool force = yesno("Force mutation to happen?", true, 'n');
 
-    if (you.mutation[MUT_MUTATION_RESISTANCE] == 3 && !force)
+    if (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3 && !force)
     {
         mpr("Can't mutate when immune to mutations without forcing it.");
         crawl_state.cancel_cmd_repeat();
@@ -2357,13 +2357,16 @@ bool debug_add_mutation(void)
 
     if (strcasecmp(specs, "any") == 0)
     {
-        int old_resist = you.mutation[MUT_MUTATION_RESISTANCE];
+        int old_resist = player_mutation_level(MUT_MUTATION_RESISTANCE);
 
         success = mutate(RANDOM_MUTATION, true, force);
 
-        if (old_resist < you.mutation[MUT_MUTATION_RESISTANCE] && !force)
+        if (old_resist < player_mutation_level(MUT_MUTATION_RESISTANCE)
+            && !force)
+        {
             crawl_state.cancel_cmd_repeat("Your mutation resistance has "
                                           "increased.");
+        }
         return (success);
     }
 

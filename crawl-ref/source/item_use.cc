@@ -865,14 +865,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_BOOTS)
     {
-        if (you.mutation[MUT_HOOVES])
+        if (player_mutation_level(MUT_HOOVES))
         {
             if (verbose)
                 mpr("You can't wear boots with hooves!");
             return (false);
         }
 
-        if (you.mutation[MUT_TALONS])
+        if (player_mutation_level(MUT_TALONS))
         {
             if (verbose)
                 mpr("Boots don't fit your talons!");
@@ -915,7 +915,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (!is_hard_helmet( item ))
             return (true);
 
-        if (you.mutation[MUT_HORNS])
+        if (player_mutation_level(MUT_HORNS))
         {
             if (verbose)
                 mpr("You can't wear that with your horns!");
@@ -4076,10 +4076,10 @@ void read_scroll( int slot )
     you.turn_is_over = true;
 
     // imperfect vision prevents players from reading actual content {dlb}:
-    if (you.mutation[MUT_BLURRY_VISION]
-        && random2(5) < you.mutation[MUT_BLURRY_VISION])
+    if (player_mutation_level(MUT_BLURRY_VISION)
+        && random2(5) < player_mutation_level(MUT_BLURRY_VISION))
     {
-        mpr((you.mutation[MUT_BLURRY_VISION] == 3 && one_chance_in(3))
+        mpr((player_mutation_level(MUT_BLURRY_VISION) == 3 && one_chance_in(3))
                         ? "This scroll appears to be blank."
                         : "The writing blurs in front of your eyes.");
         return;
@@ -4120,7 +4120,7 @@ void read_scroll( int slot )
     case SCR_PAPER:
         // remember paper scrolls handled as special case above, too:
         mpr("This scroll appears to be blank.");
-        if (you.mutation[MUT_BLURRY_VISION] == 3)
+        if (player_mutation_level(MUT_BLURRY_VISION) == 3)
             id_the_scroll = false;
         break;
 

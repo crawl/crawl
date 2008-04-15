@@ -1097,10 +1097,8 @@ static void sdump_mutations(dump_params &par)
     int xz = 0;
 
     for (int xy = 0; xy < NUM_MUTATIONS; ++xy)
-    {
         if (you.mutation[xy] > 0)
             xz++;
-    }
 
     if (xz > 0)
     {

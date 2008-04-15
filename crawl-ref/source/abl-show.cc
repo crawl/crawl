@@ -482,7 +482,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin species abilities - some are mutagenic, too {dlb}
     case ABIL_SPIT_POISON:
         failure = ((you.species == SP_NAGA) ? 20 : 40)
-                        - 10 * you.mutation[MUT_SPIT_POISON]
+                        - 10 * player_mutation_level(MUT_SPIT_POISON)
                         - you.experience_level;
         break;
 
@@ -491,12 +491,13 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_MAPPING:
-        failure = 40 - 10 * you.mutation[MUT_MAPPING] - you.experience_level;
+        failure = 40 - 10 * player_mutation_level(MUT_MAPPING)
+                  - you.experience_level;
         break;
 
     case ABIL_BREATHE_FIRE:
         failure = ((you.species == SP_RED_DRACONIAN) ? 30 : 50)
-                        - 10 * you.mutation[MUT_BREATHE_FLAMES]
+                        - 10 * player_mutation_level(MUT_BREATHE_FLAMES)
                         - you.experience_level;
 
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
@@ -572,11 +573,12 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_BLINK:
-        failure = 30 - (10 * you.mutation[MUT_BLINK]) - you.experience_level;
+        failure = 30 - (10 * player_mutation_level(MUT_BLINK))
+                  - you.experience_level;
         break;
 
     case ABIL_TELEPORTATION:
-        failure = ((you.mutation[MUT_TELEPORT_AT_WILL] > 1) ? 30 : 50)
+        failure = ((player_mutation_level(MUT_TELEPORT_AT_WILL) > 1) ? 30 : 50)
                     - you.experience_level;
         break;
         // end demonic powers {dlb}
@@ -1050,7 +1052,7 @@ static bool _do_ability(const ability_def& abil)
 
             zapping( ZAP_SPIT_POISON,
                      you.experience_level
-                        + you.mutation[MUT_SPIT_POISON] * 5
+                        + player_mutation_level(MUT_SPIT_POISON) * 5
                         + (you.species == SP_NAGA) * 10,
                      beam );
 
@@ -1060,7 +1062,8 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_MAPPING:    // randarts
     case ABIL_MAPPING:          // Gnome + sense surrounds mut
-        if (abil.ability == ABIL_MAPPING && you.mutation[MUT_MAPPING] < 3
+        if (abil.ability == ABIL_MAPPING
+            && player_mutation_level(MUT_MAPPING) < 3
             && (you.level_type == LEVEL_PANDEMONIUM
                 || you.level_type == LEVEL_LABYRINTH))
         {
@@ -1073,7 +1076,7 @@ static bool _do_ability(const ability_def& abil)
 
         if ( magic_mapping(  3 + roll_dice( 2,
                              (abil.ability == ABIL_EVOKE_MAPPING) ? power :
-                             power + you.mutation[MUT_MAPPING] * 10),
+                             power + player_mutation_level(MUT_MAPPING) * 10),
                              40 + roll_dice( 2, power), true) )
         {
             mpr("You sense your surroundings.");
@@ -1087,7 +1090,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
     case ABIL_TELEPORTATION:          // teleport mut
-        if (you.mutation[MUT_TELEPORT_AT_WILL] == 3)
+        if (player_mutation_level(MUT_TELEPORT_AT_WILL) == 3)
             you_teleport_now( true, true ); // instant and to new area of Abyss
         else
             you_teleport();
@@ -1119,7 +1122,7 @@ static bool _do_ability(const ability_def& abil)
         {
         case ABIL_BREATHE_FIRE:
             power = you.experience_level;
-            power += you.mutation[MUT_BREATHE_FLAMES] * 4;
+            power += player_mutation_level(MUT_BREATHE_FLAMES) * 4;
 
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
                 power += 12;
@@ -1987,10 +1990,10 @@ std::vector<talent> your_talents( bool check_confused )
 
     if (you.species == SP_NAGA)
     {
-        _add_talent(talents, you.mutation[MUT_BREATHE_POISON] ?
+        _add_talent(talents, player_mutation_level(MUT_BREATHE_POISON) ?
                     ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
     }
-    else if (you.mutation[MUT_SPIT_POISON])
+    else if (player_mutation_level(MUT_SPIT_POISON))
         _add_talent(talents, ABIL_SPIT_POISON, check_confused );
 
     if (player_genus(GENPC_DRACONIAN))
@@ -2026,54 +2029,57 @@ std::vector<talent> your_talents( bool check_confused )
         //jmf: "upgrade" for draconians -- expensive flight
         if (you.species == SP_KENKU && you.experience_level >= 5)
             _add_talent(talents, ABIL_FLY, check_confused );
-        else if (player_genus(GENPC_DRACONIAN) && you.mutation[MUT_BIG_WINGS])
+        else if (player_genus(GENPC_DRACONIAN)
+                 && player_mutation_level(MUT_BIG_WINGS))
+        {
             _add_talent(talents, ABIL_FLY_II, check_confused );
+        }
     }
 
     // Mutations
-    if (you.mutation[MUT_MAPPING])
+    if (player_mutation_level(MUT_MAPPING))
         _add_talent(talents, ABIL_MAPPING, check_confused );
 
-    if (you.mutation[MUT_SUMMON_MINOR_DEMONS])
+    if (player_mutation_level(MUT_SUMMON_MINOR_DEMONS))
         _add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused );
 
-    if (you.mutation[MUT_SUMMON_DEMONS])
+    if (player_mutation_level(MUT_SUMMON_DEMONS))
         _add_talent(talents, ABIL_SUMMON_DEMONS, check_confused );
 
-    if (you.mutation[MUT_HURL_HELLFIRE])
+    if (player_mutation_level(MUT_HURL_HELLFIRE))
         _add_talent(talents, ABIL_HELLFIRE, check_confused );
 
-    if (you.mutation[MUT_CALL_TORMENT])
+    if (player_mutation_level(MUT_CALL_TORMENT))
         _add_talent(talents, ABIL_TORMENT, check_confused );
 
-    if (you.mutation[MUT_RAISE_DEAD])
+    if (player_mutation_level(MUT_RAISE_DEAD))
         _add_talent(talents, ABIL_RAISE_DEAD, check_confused );
 
-    if (you.mutation[MUT_CONTROL_DEMONS])
+    if (player_mutation_level(MUT_CONTROL_DEMONS))
         _add_talent(talents, ABIL_CONTROL_DEMON, check_confused );
 
-    if (you.mutation[MUT_PANDEMONIUM])
+    if (player_mutation_level(MUT_PANDEMONIUM))
         _add_talent(talents, ABIL_TO_PANDEMONIUM, check_confused );
 
-    if (you.mutation[MUT_CHANNEL_HELL])
+    if (player_mutation_level(MUT_CHANNEL_HELL))
         _add_talent(talents, ABIL_CHANNELING, check_confused );
 
-    if (you.mutation[MUT_THROW_FLAMES])
+    if (player_mutation_level(MUT_THROW_FLAMES))
         _add_talent(talents, ABIL_THROW_FLAME, check_confused );
 
-    if (you.mutation[MUT_THROW_FROST])
+    if (player_mutation_level(MUT_THROW_FROST))
         _add_talent(talents, ABIL_THROW_FROST, check_confused );
 
-    if (you.mutation[MUT_SMITE])
+    if (player_mutation_level(MUT_SMITE))
         _add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused );
 
     if (you.duration[DUR_TRANSFORMATION])
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused );
 
-    if (you.mutation[MUT_BLINK])
+    if (player_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused );
 
-    if (you.mutation[MUT_TELEPORT_AT_WILL])
+    if (player_mutation_level(MUT_TELEPORT_AT_WILL))
         _add_talent(talents, ABIL_TELEPORTATION, check_confused );
 
     // Religious abilities
@@ -2111,7 +2117,7 @@ std::vector<talent> your_talents( bool check_confused )
         _add_talent(talents, ABIL_BREATHE_HELLFIRE, check_confused );
     }
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-             || you.mutation[MUT_BREATHE_FLAMES])
+             || player_mutation_level(MUT_BREATHE_FLAMES))
     {
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused );
     }

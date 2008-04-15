@@ -2006,6 +2006,7 @@ bool _has_bad_mutation()
     for ( unsigned int i = 0; i < ARRAYSIZE(bad_mutations); ++i )
         if (you.mutation[bad_mutations[i]] > you.demon_pow[bad_mutations[i]])
             return true;
+
     return false;
 }
 

@@ -1026,7 +1026,8 @@ void cast_ignite_poison(int pow)
     }
 
     // player is poisonous
-    if (you.mutation[MUT_SPIT_POISON] || you.mutation[MUT_STINGER]
+    if (player_mutation_level(MUT_SPIT_POISON)
+        || player_mutation_level(MUT_STINGER)
         || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER // poison attack
         || (!player_is_shapechanged()
             && (you.species == SP_GREEN_DRACONIAN       // poison breath

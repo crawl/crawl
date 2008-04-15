@@ -22,6 +22,7 @@
 #include "itemprop.h"
 #include "it_use2.h"
 #include "place.h"
+#include "player.h"
 #include "stuff.h"
 #include "tiles.h"
 #include "tilecount-w2d.h"
@@ -1391,9 +1392,9 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
                     else
                         parts2[i] = tilep_equ_helm(you.inv[item]);
 
-                    if (parts2[i] == 0 && you.mutation[MUT_HORNS] > 0)
+                    if (parts2[i] == 0 && player_mutation_level(MUT_HORNS) > 0)
                     {
-                        switch (you.mutation[MUT_HORNS])
+                        switch (player_mutation_level(MUT_HORNS))
                         {
                             case 1:
                                 parts2[i] = TILEP_HELM_HORNS1;
@@ -1416,7 +1417,7 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
                     else
                         parts2[i] = tilep_equ_boots(you.inv[item]);
 
-                    if (parts2[i] == 0 && you.mutation[MUT_HOOVES])
+                    if (parts2[i] == 0 && player_mutation_level(MUT_HOOVES))
                         parts2[i] = TILEP_BOOTS_HOOVES;
                     break;
 
@@ -1430,8 +1431,8 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
                     // There is player_has_claws() but it is not equivalent.
                     // Claws appear if they're big enough to not wear gloves
                     // or on races that have claws.
-                    if (parts2[i] == 0 && (you.mutation[MUT_CLAWS] >= 3 ||
-                        you.species == SP_TROLL || you.species == SP_GHOUL))
+                    if (parts2[i] == 0 && (player_mutation_level(MUT_CLAWS) >= 3
+                        || you.species == SP_TROLL || you.species == SP_GHOUL))
                     {
                         parts2[i] = TILEP_ARM_CLAWS;
                     }

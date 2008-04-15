@@ -610,7 +610,7 @@ void handle_delay( void )
             if (mitm[ delay.parm1 ].sub_type == CORPSE_SKELETON)
             {
                 mpr("The corpse rots away into a skeleton!");
-                if (you.mutation[MUT_SAPROVOROUS] == 3)
+                if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                     xom_check_corpse_waste();
                 else
                     xom_is_stimulated(32);
@@ -626,7 +626,7 @@ void handle_delay( void )
                     delay.parm2 = 99; // don't give the message twice
 
                     if (you.is_undead != US_UNDEAD
-                        && you.mutation[MUT_SAPROVOROUS] < 3)
+                        && player_mutation_level(MUT_SAPROVOROUS) < 3)
                     {
                         xom_check_corpse_waste();
                     }
@@ -886,7 +886,7 @@ static void finish_delay(const delay_queue_item &delay)
                                    ? "bottling its blood"
                                    : "butchering");
 
-                if (you.mutation[MUT_SAPROVOROUS] == 3)
+                if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                     xom_check_corpse_waste();
                 else
                     xom_is_stimulated(64);
@@ -901,7 +901,8 @@ static void finish_delay(const delay_queue_item &delay)
             else
             {
                 mprf("You finish %s the corpse into pieces.",
-                     (you.has_usable_claws() || you.mutation[MUT_FANGS] == 3) ?
+                     (you.has_usable_claws()
+                      || player_mutation_level(MUT_FANGS) == 3) ?
                      "ripping" : "chopping");
 
                 if (is_good_god(you.religion) && is_player_same_species(item.plus))
@@ -1052,7 +1053,7 @@ static void armour_wear_effects(const int item_slot)
         {
         case SPARM_RUNNING:
             mprf("You feel quick%s.",
-                    (you.species == SP_NAGA || you.mutation[MUT_HOOVES])
+                   (you.species == SP_NAGA || player_mutation_level(MUT_HOOVES))
                     ? "" : " on your feet");
             break;
 

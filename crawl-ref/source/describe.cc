@@ -658,7 +658,7 @@ static std::string _describe_demon(const monsters &mons)
                 break;
             case 2:
                 description << " It smells like rotting flesh"
-                            << (you.mutation[MUT_SAPROVOROUS] == 3 ?
+                            << (player_mutation_level(MUT_SAPROVOROUS) == 3 ?
                                 " - yum!" : ".");
                 break;
             }
@@ -1594,7 +1594,7 @@ std::string get_item_description( const item_def &item, bool verbose,
         {
             if (food_is_rotten(item))
             {
-                if (you.mutation[MUT_SAPROVOROUS] == 3)
+                if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                     description << "It looks nice and ripe.";
                 else if (you.is_undead != US_UNDEAD)
                 {
@@ -1603,7 +1603,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                         "Eating it would probably be unwise.";
                 }
             }
-            else if (you.mutation[MUT_SAPROVOROUS] < 3)
+            else if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 description << "It looks rather unpleasant.";
 
             description << "$";
@@ -2091,7 +2091,7 @@ void describe_monsters(monsters& mons)
     case MONS_ROTTING_DEVIL:
         if (player_can_smell())
         {
-            if (you.mutation[MUT_SAPROVOROUS] == 3)
+            if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                 description << "It smells great!";
             else
                 description << "It stinks.";

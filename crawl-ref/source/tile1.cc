@@ -2374,7 +2374,7 @@ void tilep_race_default(int race, int gender, int level, int *parts)
         case SP_MOTTLED_DRACONIAN:
         case SP_PALE_DRACONIAN:
             hair = 0;
-            if (you.mutation[MUT_BIG_WINGS])
+            if (player_mutation_level(MUT_BIG_WINGS))
                 parts[TILEP_PART_DRCWING] = 1 + draconian_color(race, level);
 
             result = TILEP_BASE_DRACONIAN + draconian_color(race, level)*2;

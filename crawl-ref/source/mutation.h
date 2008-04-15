@@ -25,6 +25,8 @@ struct mutation_def
     bool          bad;       // A mutation that's more bad than good. Xom uses
                              // this to decide which mutations to hand out as
                              // rewards.
+    bool          physical;  // A mutation affecting a character's outward
+                             // appearance.
 };
 
 void fixup_mutations();
@@ -43,6 +45,7 @@ bool mutate(mutation_type which_mutation, bool failMsg = true,
  * *********************************************************************** */
 void display_mutations();
 
+bool mutation_is_active(mutation_type mut);
 formatted_string describe_mutations();
 
 

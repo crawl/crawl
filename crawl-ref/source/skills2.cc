@@ -27,7 +27,7 @@
 #include <ctype.h>
 
 #ifdef DOS
-#include <conio.h>
+ #include <conio.h>
 #endif
 
 #include "externs.h"
@@ -1680,7 +1680,7 @@ static const skill_type skill_display_order[] =
     SK_BOWS, SK_CROSSBOWS, SK_THROWING, SK_SLINGS, SK_DARTS,
 
     SK_BLANK_LINE,
-   
+
     SK_ARMOUR, SK_DODGING, SK_STEALTH, SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS,
 
     SK_BLANK_LINE,
@@ -1714,10 +1714,10 @@ static void display_skill_table(bool show_aptitudes)
 
 #if DEBUG_DIAGNOSTICS
     cprintf( "You have %d points of unallocated experience "
-             " (cost lvl %d; total %d)." EOL EOL, 
+             " (cost lvl %d; total %d)." EOL EOL,
              you.exp_available, you.skill_cost_level, you.total_skill_points );
 #else
-    cprintf(" You have %s unallocated experience." EOL EOL, 
+    cprintf(" You have %s unallocated experience." EOL EOL,
             you.exp_available == 0? "no" :
             make_stringf("%d point%s of",
                          you.exp_available,
@@ -1774,7 +1774,7 @@ static void display_skill_table(bool show_aptitudes)
 #endif
 
             cprintf( " %c %-14s Skill %2d",
-                     (you.skills[x] == 0)    ? ' ' : 
+                     (you.skills[x] == 0)    ? ' ' :
                      (you.practise_skill[x]) ? '+' : '-',
                      skill_name(x), you.skills[x] );
 
@@ -1877,21 +1877,21 @@ void show_skills()
             break;
 
         menu_letter lcount = 'a';       // toggle skill practise
-        
+
         for (int i = 0; i < ndisplayed_skills; i++)
         {
             const skill_type x = skill_display_order[i];
             if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
                 continue;
-            
+
             if (you.skills[x] == 0)
                 continue;
-            
+
             if (keyin == lcount)
             {
                 you.practise_skill[x] = !you.practise_skill[x];
                 break;
-            }            
+            }
             ++lcount;
         }
     }
@@ -1916,7 +1916,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
                          int species, int str, int dex, int god )
 {
     // paranoia
-    if (best_skill == SK_UNUSED_1 
+    if (best_skill == SK_UNUSED_1
         || (best_skill > SK_UNARMED_COMBAT && best_skill < SK_SPELLCASTING)
         || best_skill >= NUM_SKILLS)
     {
@@ -1938,9 +1938,9 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
     // translate skill level into skill ranking {dlb}:
     // increment rank by one to "skip" skill name in array {dlb}:
     const int skill_rank = ((skill_lev <= 7)  ? 1 :
-                            (skill_lev <= 14) ? 2 : 
+                            (skill_lev <= 14) ? 2 :
                             (skill_lev <= 20) ? 3 :
-                            (skill_lev <= 26) ? 4 
+                            (skill_lev <= 26) ? 4
                             /* level 27 */    : 5);
 
     std::string result;
@@ -1961,7 +1961,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         case SK_INVOCATIONS:
             if (god == GOD_NO_GOD)
                 result = "Godless";
-            else 
+            else
                 result = skills[best_skill][skill_rank];
             break;
 
@@ -1970,7 +1970,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
             break;
         }
     }
-                      
+
     const std::string::size_type where = result.find("%s");
     if ( where != std::string::npos )
     {
@@ -1997,7 +1997,7 @@ skill_type best_skill( int min_skill, int max_skill, int excl_skill )
     for (int i = min_skill; i <= max_skill; i++)    // careful!!!
     {
         if (i == excl_skill
-            || i == SK_UNUSED_1 
+            || i == SK_UNUSED_1
             || (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING))
         {
             continue;
@@ -2010,7 +2010,7 @@ skill_type best_skill( int min_skill, int max_skill, int excl_skill )
             best_position = you.skill_order[i];
 
         }
-        else if (you.skills[i] == best_skill_level 
+        else if (you.skills[i] == best_skill_level
                 && you.skill_order[i] < best_position)
         {
             ret = i;
@@ -2024,25 +2024,25 @@ skill_type best_skill( int min_skill, int max_skill, int excl_skill )
 // Calculate the skill_order array from scratch.
 //
 // The skill order array is used for breaking ties in best_skill.
-// This is done by ranking each skill by the order in which it 
+// This is done by ranking each skill by the order in which it
 // has attained its current level (the values are the number of
-// skills at or above that level when the current skill reached it). 
+// skills at or above that level when the current skill reached it).
 //
 // In this way, the skill which has been at a level for the longest
 // is judged to be the best skill (thus, nicknames are sticky)...
-// other skills will have to attain the next level higher to be 
+// other skills will have to attain the next level higher to be
 // considered a better skill (thus, the first skill to reach level 27
-// becomes the characters final nickname). 
+// becomes the characters final nickname).
 //
 // As for other uses of best_skill:  this method is still appropriate
 // in that there is no additional advantage anywhere else in the game
-// for partial skill levels.  Besides, its probably best if the player 
+// for partial skill levels.  Besides, its probably best if the player
 // isn't able to micromanage at that level.  -- bwr
 void init_skill_order( void )
 {
     for (int i = SK_FIGHTING; i < NUM_SKILLS; i++)
     {
-        if (i == SK_UNUSED_1 
+        if (i == SK_UNUSED_1
             || (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING))
         {
             you.skill_order[i] = MAX_SKILL_ORDER;
@@ -2057,7 +2057,7 @@ void init_skill_order( void )
         for (int j = SK_FIGHTING; j < NUM_SKILLS; j++)
         {
             if (i == j
-                || j == SK_UNUSED_1 
+                || j == SK_UNUSED_1
                 || (j > SK_UNARMED_COMBAT && j < SK_SPELLCASTING))
             {
                 continue;
@@ -2067,7 +2067,7 @@ void init_skill_order( void )
             const unsigned int j_points = (you.skill_points[j] * 100) / j_diff;
 
             if (you.skills[j] == you.skills[i]
-                && (j_points > i_points 
+                && (j_points > i_points
                     || (j_points == i_points && j > i)))
             {
                 you.skill_order[i]++;
@@ -2111,7 +2111,8 @@ int calc_hp(bool real_hp)
     }
 
     // frail and robust mutations
-    hitp *= (10 + you.mutation[MUT_ROBUST] - you.mutation[MUT_FRAIL]);
+    hitp *= (10 + player_mutation_level(MUT_ROBUST)
+                - player_mutation_level(MUT_FRAIL));
     hitp /= 10;
 
     you.hp_max = hitp;
@@ -2132,18 +2133,18 @@ int calc_mp(bool real_mp)
     int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4;
     int invoc_extra = (you.experience_level * you.skills[SK_INVOCATIONS]) / 6;
 
-    if (spell_extra > invoc_extra) 
+    if (spell_extra > invoc_extra)
         enp += spell_extra;
     else
         enp += invoc_extra;
 
-    you.max_magic_points = stepdown_value( enp, 9, 18, 45, 100 ); 
+    you.max_magic_points = stepdown_value( enp, 9, 18, 45, 100 );
 
     // this is our "rotted" base (applied after scaling):
     you.max_magic_points += (you.base_magic_points - 5000);
 
     // Yes, we really do want this duplication... this is so the stepdown
-    // doesn't truncate before we apply the rotted base.  We're doing this 
+    // doesn't truncate before we apply the rotted base.  We're doing this
     // the nice way. -- bwr
     if (you.max_magic_points > 50)
         you.max_magic_points = 50;
@@ -2153,8 +2154,8 @@ int calc_mp(bool real_mp)
         you.max_magic_points += player_magical_power();
 
     // analogous to ROBUST/FRAIL
-    you.max_magic_points *=
-        (10 + you.mutation[MUT_HIGH_MAGIC] - you.mutation[MUT_LOW_MAGIC]);
+    you.max_magic_points *= (10 + player_mutation_level(MUT_HIGH_MAGIC)
+                                - player_mutation_level(MUT_LOW_MAGIC));
     you.max_magic_points /= 10;
 
     if (you.max_magic_points > 50)

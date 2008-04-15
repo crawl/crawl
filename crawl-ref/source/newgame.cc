@@ -2282,7 +2282,7 @@ static void _give_basic_mutations(species_type speci)
         break;
     case SP_OGRE:
         you.mutation[MUT_FAST_METABOLISM] = 1;
-        you.mutation[MUT_SAPROVOROUS] = 1;
+        you.mutation[MUT_SAPROVOROUS]     = 1;
         break;
     case SP_OGRE_MAGE:
         you.mutation[MUT_FAST_METABOLISM] = 1;
@@ -2294,26 +2294,26 @@ static void _give_basic_mutations(species_type speci)
         you.mutation[MUT_HORNS] = 2;
         break;
     case SP_SPRIGGAN:
-        you.mutation[MUT_ACUTE_VISION] = 1;
-        you.mutation[MUT_FAST] = 3;
-        you.mutation[MUT_HERBIVOROUS] = 3;
+        you.mutation[MUT_ACUTE_VISION]    = 1;
+        you.mutation[MUT_FAST]            = 3;
+        you.mutation[MUT_HERBIVOROUS]     = 3;
         you.mutation[MUT_SLOW_METABOLISM] = 3;
         break;
     case SP_CENTAUR:
-        you.mutation[MUT_FAST] = 2;
-        you.mutation[MUT_DEFORMED] = 1;
+        you.mutation[MUT_FAST]            = 2;
+        you.mutation[MUT_DEFORMED]        = 1;
         you.mutation[MUT_FAST_METABOLISM] = 2;
-        you.mutation[MUT_HOOVES] = 1;
+        you.mutation[MUT_HOOVES]          = 1;
         break;
     case SP_NAGA:
-        you.mutation[MUT_ACUTE_VISION] = 1;
+        you.mutation[MUT_ACUTE_VISION]      = 1;
         you.mutation[MUT_POISON_RESISTANCE] = 1;
-        you.mutation[MUT_DEFORMED] = 1;
+        you.mutation[MUT_DEFORMED]          = 1;
         break;
     case SP_MUMMY:
         you.mutation[MUT_TORMENT_RESISTANCE] = 1;
-        you.mutation[MUT_POISON_RESISTANCE] = 1;
-        you.mutation[MUT_COLD_RESISTANCE] = 1;
+        you.mutation[MUT_POISON_RESISTANCE]  = 1;
+        you.mutation[MUT_COLD_RESISTANCE]    = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         break;
     case SP_GNOME:
@@ -2321,8 +2321,8 @@ static void _give_basic_mutations(species_type speci)
         break;
     case SP_GHOUL:
         you.mutation[MUT_TORMENT_RESISTANCE] = 1;
-        you.mutation[MUT_POISON_RESISTANCE] = 1;
-        you.mutation[MUT_COLD_RESISTANCE] = 1;
+        you.mutation[MUT_POISON_RESISTANCE]  = 1;
+        you.mutation[MUT_COLD_RESISTANCE]    = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         you.mutation[MUT_SAPROVOROUS] = 3;
         you.mutation[MUT_CARNIVOROUS] = 3;
@@ -2331,17 +2331,17 @@ static void _give_basic_mutations(species_type speci)
         you.mutation[MUT_TALONS] = 1;
         break;
     case SP_TROLL:
-        you.mutation[MUT_REGENERATION] = 2;
+        you.mutation[MUT_REGENERATION]    = 2;
         you.mutation[MUT_FAST_METABOLISM] = 3;
-        you.mutation[MUT_SAPROVOROUS] = 2;
-        you.mutation[MUT_SHAGGY_FUR] = 1;
+        you.mutation[MUT_SAPROVOROUS]     = 2;
+        you.mutation[MUT_SHAGGY_FUR]      = 1;
         break;
     case SP_KOBOLD:
         you.mutation[MUT_SAPROVOROUS] = 2;
         you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     case SP_VAMPIRE:
-        you.mutation[MUT_FANGS] = 3;
+        you.mutation[MUT_FANGS]        = 3;
         you.mutation[MUT_ACUTE_VISION] = 1;
         break;
     default:

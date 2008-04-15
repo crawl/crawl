@@ -3532,8 +3532,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                         }
 
                         if (grid_is_opaque( grd[i + k][j + l] )
-                                && grd[i + k][j + l] != DNGN_CLOSED_DOOR)
+                            && grd[i + k][j + l] != DNGN_CLOSED_DOOR)
+                        {
                             empty_count--;
+                        }
                     }
             }
 
@@ -3544,9 +3546,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
                 // Hack to give demonspawn Pandemonium mutation the ability
                 // to detect exits magically.
-                if ((you.mutation[MUT_PANDEMONIUM] > 1
-                     && grd[i][j] == DNGN_EXIT_PANDEMONIUM)
-                    || wizard_map)
+                if (wizard_map
+                    || player_mutation_level(MUT_PANDEMONIUM) > 1
+                       && grd[i][j] == DNGN_EXIT_PANDEMONIUM)
                 {
                     set_terrain_seen( i, j );
                 }
@@ -4842,9 +4844,11 @@ void viewwindow(bool draw_it, bool do_updates)
 
                 // alter colour if flashing the characters vision
                 if (flash_colour && buffy[bufcount])
+                {
                     buffy[bufcount + 1] =
                         see_grid(gc.x, gc.y)?
                         real_colour(flash_colour) : DARKGREY;
+                }
 
                 bufcount += 2;
             }

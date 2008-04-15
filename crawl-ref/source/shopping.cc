@@ -55,7 +55,7 @@ static void _shop_print( const char *shoppy, int line )
 
 static void _shop_more()
 {
-    cgotoxy(70, 2, GOTO_MSG);
+    cgotoxy(65, 2, GOTO_MSG);
     cprintf("-more-");
     get_ch();
     return;
@@ -125,7 +125,7 @@ static void _list_shop_keys(const std::string &purchasable)
 static std::vector<int> _shop_get_stock(int shopidx)
 {
     std::vector<int> result;
-    
+
     int itty = igrd[0][5 + shopidx];
 
     while ( itty != NON_ITEM )
@@ -144,7 +144,7 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
         result *= 8;
         result /= 10;
     }
-    
+
     if (result < 1)
         result = 1;
 
@@ -190,14 +190,14 @@ static void _in_a_shop( int shopidx )
 
     const std::string hello = "Welcome to " + shop_name(shop.x, shop.y) + "!";
     _shop_print(hello.c_str(), 1);
-    _shop_more();    
-    
+    _shop_more();
+
     const bool id_stock = shoptype_identifies_stock(shop.type);
- 
+
     while ( true )
     {
         StashTrack.get_shop(shop.x, shop.y).reset();
-        
+
         std::vector<int> stock = _shop_get_stock(shopidx);
 
         clrscr();
@@ -207,10 +207,10 @@ static void _in_a_shop( int shopidx )
             _shop_more();
             return;
         }
-            
+
         const std::string purchasable = _shop_print_stock(stock, shop);
         _list_shop_keys(purchasable);
-            
+
         snprintf( info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
                   (you.gold == 1) ? "" : "s" );
         textcolor(YELLOW);
@@ -220,11 +220,11 @@ static void _in_a_shop( int shopidx )
                   purchasable.length()? "purchase" : "do");
         textcolor(CYAN);
         _shop_print(info, 1);
-            
+
         textcolor(LIGHTGREY);
 
         int ft = get_ch();
-        
+
         if ( ft == '\\' )
             check_item_knowledge();
         else if (ft == 'x' || ft == ESCAPE)
@@ -290,7 +290,7 @@ static void _in_a_shop( int shopidx )
             }
 
             item_def& item = mitm[stock[ft]];
-            
+
             const int gp_value = _shop_get_item_value(item, shop.greed, id_stock);
             if (gp_value > you.gold)
             {
@@ -353,7 +353,7 @@ static void _purchase( int shop, int item_got, int cost, bool id )
     }
 }                               // end purchase()
 
-// This probably still needs some work.  Rings used to be the only 
+// This probably still needs some work.  Rings used to be the only
 // artefacts which had a change in price, and that value corresponds
 // to returning 50 from this function.  Good artefacts will probably
 // be returning just over 30 right now.  Note that this isn't used
@@ -370,9 +370,9 @@ int randart_value( const item_def &item )
     // Brands are already accounted for via existing ego checks
 
     // This should probably be more complex... but this isn't so bad:
-    ret += 3 * prop[ RAP_AC ] + 3 * prop[ RAP_EVASION ] 
-            + 3 * prop[ RAP_ACCURACY ] + 3 * prop[ RAP_DAMAGE ] 
-            + 6 * prop[ RAP_STRENGTH ] + 6 * prop[ RAP_INTELLIGENCE ] 
+    ret += 3 * prop[ RAP_AC ] + 3 * prop[ RAP_EVASION ]
+            + 3 * prop[ RAP_ACCURACY ] + 3 * prop[ RAP_DAMAGE ]
+            + 6 * prop[ RAP_STRENGTH ] + 6 * prop[ RAP_INTELLIGENCE ]
             + 6 * prop[ RAP_DEXTERITY ];
 
     // These resistances have meaningful levels
@@ -757,10 +757,10 @@ unsigned int item_value( item_def item, bool ident )
         {
             if (item_type_known(item))
                 valued += (7 * randart_value( item ));
-            else 
+            else
                 valued += 50;
         }
-        else if (item_type_known(item) 
+        else if (item_type_known(item)
                 && get_equip_desc(item) != 0)
         {
             valued += 20;
@@ -1078,7 +1078,7 @@ unsigned int item_value( item_def item, bool ident )
             case WAND_POLYMORPH_OTHER:
                 valued += 90;
                 break;
-                
+
             case WAND_CONFUSION:
             case WAND_SLOWING:
                 valued += 70;
@@ -1288,9 +1288,9 @@ unsigned int item_value( item_def item, bool ident )
             valued += 50;
         else
         {
-            if (item_ident( item, ISFLAG_KNOW_PLUSES ) 
+            if (item_ident( item, ISFLAG_KNOW_PLUSES )
                 && (item.sub_type == RING_PROTECTION
-                    || item.sub_type == RING_STRENGTH 
+                    || item.sub_type == RING_STRENGTH
                     || item.sub_type == RING_EVASION
                     || item.sub_type == RING_DEXTERITY
                     || item.sub_type == RING_INTELLIGENCE
@@ -1449,7 +1449,7 @@ unsigned int item_value( item_def item, bool ident )
     case OBJ_STAVES:
         if (!item_type_known(item))
             valued = 120;
-        else if (item.sub_type == STAFF_SMITING 
+        else if (item.sub_type == STAFF_SMITING
                 || item.sub_type == STAFF_STRIKING
                 || item.sub_type == STAFF_WARDING
                 || item.sub_type == STAFF_DISCOVERY)
@@ -1460,7 +1460,7 @@ unsigned int item_value( item_def item, bool ident )
             valued = 250;
 
         if (item_is_rod( item ) && item_ident( item, ISFLAG_KNOW_PLUSES ))
-            valued += 50 * (item.plus2 / ROD_CHARGE_MULT); 
+            valued += 50 * (item.plus2 / ROD_CHARGE_MULT);
 
         break;
 
@@ -1555,7 +1555,7 @@ std::string shop_name(int sx, int sy)
          || shop_type == SHOP_WEAPON_ANTIQUE) ? "Weapon" :
         (shop_type == SHOP_ARMOUR
          || shop_type == SHOP_ARMOUR_ANTIQUE) ? "Armour" :
-        
+
         (shop_type == SHOP_JEWELLERY)         ? "Jewellery" :
         (shop_type == SHOP_WAND)              ? "Magical Wand" :
         (shop_type == SHOP_BOOK)              ? "Book" :

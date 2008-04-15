@@ -1525,7 +1525,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
              _determine_color_string(rcorr), itosym1(rcorr));
     cols.add_formatted(2, buf, false);
 
-    int saplevel = you.mutation[MUT_SAPROVOROUS];
+    int saplevel = player_mutation_level(MUT_SAPROVOROUS);
     const char* pregourmand;
     const char* postgourmand;
     if ( wearing_amulet(AMU_THE_GOURMAND, calc_unid) )
@@ -1833,7 +1833,7 @@ std::vector<MenuEntry *> _get_overview_screen_results()
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
                       || you.religion == GOD_ZIN && you.piety >= 150
-                      || you.mutation[MUT_MUTATION_RESISTANCE] == 3;
+                      || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3;
 
     const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
 
@@ -1857,7 +1857,7 @@ std::vector<MenuEntry *> _get_overview_screen_results()
              _determine_color_string(rslow), itosym1(rslow));
     cols.add_formatted(0, buf, false);
 
-    int saplevel = you.mutation[MUT_SAPROVOROUS];
+    int saplevel = player_mutation_level(MUT_SAPROVOROUS);
     const char* pregourmand;
     const char* postgourmand;
     if ( wearing_amulet(AMU_THE_GOURMAND, calc_unid) )
@@ -2233,7 +2233,7 @@ std::string _status_mut_abilities()
 
       case SP_NAGA:
           // breathe poison replaces spit poison:
-          if (!you.mutation[MUT_BREATHE_POISON])
+          if (!player_mutation_level(MUT_BREATHE_POISON))
               text += "spit poison";
           else
               text += "breathe poison";
@@ -2360,10 +2360,9 @@ std::string _status_mut_abilities()
 
     for (unsigned i = 0; i < NUM_MUTATIONS; i++)
     {
-        if (!you.mutation[i])
+        int level = player_mutation_level((mutation_type) i);
+        if (!level)
             continue;
-
-        int level = you.mutation[ i ];
 
         switch(i)
         {

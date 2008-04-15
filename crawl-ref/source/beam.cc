@@ -3217,9 +3217,11 @@ static int _affect_player( bolt &beam )
 
                 if (you.duration[DUR_DEFLECT_MISSILES])
                     beamHit = random2(beamHit * 2) / 3;
-                else if (you.duration[DUR_REPEL_MISSILES] ||
-                         you.mutation[MUT_REPULSION_FIELD] == 3)
+                else if (you.duration[DUR_REPEL_MISSILES]
+                         || player_mutation_level(MUT_REPULSION_FIELD) == 3)
+                {
                     beamHit -= random2(beamHit / 2);
+                }
 
                 if (!test_beam_hit(beamHit, dodge))
                 {
@@ -3262,10 +3264,11 @@ static int _affect_player( bolt &beam )
 
                 if (you.duration[DUR_DEFLECT_MISSILES])
                     beamHit = random2(beamHit / 2);
-                else if (you.duration[DUR_REPEL_MISSILES] ||
-                         you.mutation[MUT_REPULSION_FIELD] == 3)
+                else if (you.duration[DUR_REPEL_MISSILES]
+                         || player_mutation_level(MUT_REPULSION_FIELD) == 3)
+                {
                     beamHit = random2(beamHit);
-
+                }
 
                 // miss message
                 if (!test_beam_hit(beamHit, dodge))

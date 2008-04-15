@@ -802,16 +802,16 @@ bool melee_attack::player_aux_unarmed()
         else
             uattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
 
-        if (you.mutation[MUT_FANGS]
+        if (player_mutation_level(MUT_FANGS)
             || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
         {
             uattack = UNAT_BITE;
         }
 
         if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-             || player_genus(GENPC_DRACONIAN)
-             || (you.species == SP_MERFOLK && player_is_swimming())
-             || you.mutation[ MUT_STINGER ])
+               || player_genus(GENPC_DRACONIAN)
+               || (you.species == SP_MERFOLK && player_is_swimming())
+               || player_mutation_level( MUT_STINGER ))
             && one_chance_in(3))
         {
             uattack = UNAT_TAILSLAP;
@@ -838,7 +838,8 @@ bool melee_attack::player_aux_unarmed()
         {
             if (uattack != UNAT_KICK)        //jmf: hooves mutation
             {
-                if (!you.mutation[MUT_HOOVES] && !you.mutation[MUT_TALONS]
+                if (!player_mutation_level(MUT_HOOVES)
+                        && !player_mutation_level(MUT_TALONS)
                     || coinflip())
                 {
                     continue;
@@ -855,7 +856,7 @@ bool melee_attack::player_aux_unarmed()
             }
 
             // Kenku have large taloned feet that do good damage.
-            const bool clawed_kick = you.mutation[MUT_TALONS];
+            const bool clawed_kick = player_mutation_level(MUT_TALONS);
 
             if (clawed_kick)
             {
@@ -865,15 +866,16 @@ bool melee_attack::player_aux_unarmed()
             else
                 unarmed_attack = "kick";
 
-            aux_damage = (you.mutation[MUT_HOOVES] ? 10
-                          : clawed_kick            ?  8 : 5);
+            aux_damage = (player_mutation_level(MUT_HOOVES) ? 10
+                          : clawed_kick                     ?  8 : 5);
             break;
         }
 
         case 1:
             if (uattack != UNAT_HEADBUTT)
             {
-                if ((!you.mutation[MUT_HORNS] && you.species != SP_KENKU)
+                if ((!player_mutation_level(MUT_HORNS)
+                        && you.species != SP_KENKU)
                     || !one_chance_in(3))
                 {
                     continue;
@@ -892,7 +894,7 @@ bool melee_attack::player_aux_unarmed()
             unarmed_attack =
                 (you.species == SP_KENKU) ? "peck" : "headbutt";
 
-            aux_damage = 5 + you.mutation[MUT_HORNS] * 3;
+            aux_damage = 5 + player_mutation_level(MUT_HORNS) * 3;
 
             // minotaurs used to get +5 damage here, now they get
             // +6 because of the horns.
@@ -918,7 +920,7 @@ bool melee_attack::player_aux_unarmed()
                 // not draconian, and not wet merfolk
                 if ((!player_genus(GENPC_DRACONIAN)
                      && (!(you.species == SP_MERFOLK && player_is_swimming()))
-                     && !you.mutation[ MUT_STINGER ])
+                     && !player_mutation_level( MUT_STINGER ))
                     || (!one_chance_in(4)))
 
                 {
@@ -936,9 +938,9 @@ bool melee_attack::player_aux_unarmed()
             unarmed_attack = "tail-slap";
             aux_damage = 6;
 
-            if (you.mutation[ MUT_STINGER ] > 0)
+            if (player_mutation_level( MUT_STINGER ) > 0)
             {
-                aux_damage += (you.mutation[ MUT_STINGER ] * 2 - 1);
+                aux_damage += (player_mutation_level( MUT_STINGER ) * 2 - 1);
                 damage_brand  = SPWPN_VENOM;
             }
 
@@ -998,7 +1000,7 @@ bool melee_attack::player_aux_unarmed()
             if (uattack != UNAT_BITE)
                 continue;
 
-            if (!you.mutation[MUT_FANGS])
+            if (!player_mutation_level(MUT_FANGS))
                 continue;
 
             if (you.species != SP_VAMPIRE && one_chance_in(5)
@@ -1009,7 +1011,8 @@ bool melee_attack::player_aux_unarmed()
 
             unarmed_attack = "bite";
             simple_miss_message = true;
-            aux_damage += you.mutation[MUT_FANGS] * 2;
+            // TODO: Maybe unarmed combat factor in
+            aux_damage += player_mutation_level(MUT_FANGS) * 2;
 
             if (you.species == SP_VAMPIRE)
             {
@@ -2973,7 +2976,7 @@ int melee_attack::player_calc_base_unarmed_damage()
         else if (you.species == SP_GHOUL)
             damage += 2;
 
-        damage += (you.mutation[ MUT_CLAWS ] * 2);
+        damage += player_mutation_level(MUT_CLAWS) * 2;
     }
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)

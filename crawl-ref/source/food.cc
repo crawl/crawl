@@ -223,7 +223,7 @@ bool butchery(int which_corpse)
     // Xom probably likes this, occasionally
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // Other species with this mutation still might benefit from this.
-    bool teeth_butcher = (you.mutation[MUT_FANGS] == 3
+    bool teeth_butcher = (player_mutation_level(MUT_FANGS) == 3
                           && you.species != SP_VAMPIRE);
 
     bool barehand_butcher = (transform_can_butcher_barehanded(transform)
@@ -233,8 +233,8 @@ bool butchery(int which_corpse)
                           && !item_cursed(you.inv[you.equip[EQ_GLOVES]]));
 
     bool can_butcher = teeth_butcher || barehand_butcher
-                       || you.equip[EQ_WEAPON] != -1
-                          && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
+                          || you.equip[EQ_WEAPON] != -1
+                        && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
 
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
     {
@@ -742,7 +742,7 @@ static void describe_food_change(int food_increment)
 
 static bool prompt_eat_chunk(const item_def &item, bool rotten)
 {
-    if (rotten && !you.mutation[MUT_SAPROVOROUS]
+    if (rotten && !player_mutation_level(MUT_SAPROVOROUS)
         && !yesno("Are you sure you want to eat this rotten meat?",
                   false, 'n'))
     {
@@ -947,7 +947,7 @@ void chunk_nutrition_message(int nutrition)
 
 static int apply_herbivore_chunk_effects(int nutrition)
 {
-    int how_herbivorous = you.mutation[MUT_HERBIVOROUS];
+    int how_herbivorous = player_mutation_level(MUT_HERBIVOROUS);
 
     while (how_herbivorous--)
         nutrition = nutrition * 80 / 100;
@@ -996,7 +996,7 @@ static void eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
 {
 
     bool likes_chunks = (you.omnivorous() ||
-                         you.mutation[MUT_CARNIVOROUS]);
+                         player_mutation_level(MUT_CARNIVOROUS));
     int nutrition     = chunk_nutrition(likes_chunks);
     int hp_amt        = 0;
     bool suppress_msg = false; // do we display the chunk nutrition message?
@@ -1039,7 +1039,7 @@ static void eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
 
     case CE_ROTTEN:
     case CE_CONTAMINATED:
-        if (you.mutation[MUT_SAPROVOROUS] == 3)
+        if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {
             mprf("This %sflesh tastes delicious!",
                 (chunk_effect == CE_ROTTEN) ? "rotting " : "");
@@ -1059,7 +1059,7 @@ static void eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
 
     case CE_CLEAN:
     {
-        if (you.mutation[MUT_SAPROVOROUS] == 3)
+        if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {
             mpr("This raw flesh tastes good.");
 
@@ -1093,8 +1093,8 @@ static void eating(unsigned char item_class, int item_type)
 {
     int temp_rand;              // probability determination {dlb}
     int food_value = 0;
-    int how_herbivorous = you.mutation[MUT_HERBIVOROUS];
-    int how_carnivorous = you.mutation[MUT_CARNIVOROUS];
+    int how_herbivorous = player_mutation_level(MUT_HERBIVOROUS);
+    int how_carnivorous = player_mutation_level(MUT_CARNIVOROUS);
     int carnivore_modifier = 0;
     int herbivore_modifier = 0;
 
@@ -1388,16 +1388,16 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
         return (false);
     }
 
-    bool ur_carnivorous = (you.mutation[MUT_CARNIVOROUS] == 3);
+    bool ur_carnivorous = (player_mutation_level(MUT_CARNIVOROUS) == 3);
 
-    bool ur_herbivorous = (you.mutation[MUT_HERBIVOROUS] == 3);
+    bool ur_herbivorous = (player_mutation_level(MUT_HERBIVOROUS) == 3);
 
     // ur_chunkslover not defined in terms of ur_carnivorous because
     // a player could be one and not the other IMHO - 13mar2000 {dlb}
     bool ur_chunkslover = (
                 (check_hunger? you.hunger_state <= HS_HUNGRY : true)
                            || you.omnivorous()
-                           || you.mutation[MUT_CARNIVOROUS]);
+                           || player_mutation_level(MUT_CARNIVOROUS));
 
     switch (what_isit)
     {
@@ -1568,13 +1568,13 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 
     case CE_CONTAMINATED:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-                && you.mutation[MUT_SAPROVOROUS] < 3)
+                && player_mutation_level(MUT_SAPROVOROUS) < 3)
         {
             this_chunk_effect = CE_CLEAN;
         }
         else
         {
-            switch (you.mutation[MUT_SAPROVOROUS])
+            switch (player_mutation_level(MUT_SAPROVOROUS))
             {
             case 1:
                 if (!one_chance_in(15))
@@ -1624,13 +1624,13 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     if (this_chunk_effect == CE_ROTTEN)
     {
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-                && you.mutation[MUT_SAPROVOROUS] < 3)
+                && player_mutation_level(MUT_SAPROVOROUS) < 3)
         {
             this_chunk_effect = CE_CLEAN;
         }
         else
         {
-            switch (you.mutation[MUT_SAPROVOROUS])
+            switch (player_mutation_level(MUT_SAPROVOROUS))
             {
             case 1:
                 if (!one_chance_in(5))
@@ -1655,7 +1655,7 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     if (wearing_amulet(AMU_THE_GOURMAND)
         && random2(GOURMAND_MAX) < you.duration[DUR_GOURMAND])
     {
-        if (you.mutation[MUT_SAPROVOROUS] == 3)
+        if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {
             // [dshaligram] Level 3 saprovores relish contaminated meat.
             if (this_chunk_effect == CE_CLEAN)

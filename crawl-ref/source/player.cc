@@ -152,8 +152,8 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
         if (new_grid == DNGN_UNDISCOVERED_TRAP)
         {
             const int skill = 4 + you.skills[SK_TRAPS_DOORS]
-                                + you.mutation[MUT_ACUTE_VISION]
-                                - 2 * you.mutation[MUT_BLURRY_VISION];
+                                + player_mutation_level(MUT_ACUTE_VISION)
+                                - 2 * player_mutation_level(MUT_BLURRY_VISION);
 
             if (random2( skill ) > 6)
             {
@@ -619,7 +619,7 @@ bool you_can_wear(int eq, bool special_armour)
    if (you.species == SP_KENKU && (eq == EQ_HELMET || eq == EQ_BOOTS))
        return false;
 
-   if (you.mutation[MUT_HORNS] && eq == EQ_HELMET)
+   if (player_mutation_level(MUT_HORNS) && eq == EQ_HELMET)
        return (special_armour);
 
    if (you.species == SP_GHOUL && eq == EQ_GLOVES)
@@ -634,7 +634,7 @@ bool player_has_feet()
    if (you.species == SP_NAGA || player_genus(GENPC_DRACONIAN))
        return false;
 
-   if (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS])
+   if (player_mutation_level(MUT_HOOVES) || player_mutation_level(MUT_TALONS))
        return false;
 
    return true;
@@ -649,8 +649,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
            return false;
 
        if (eq == EQ_BOOTS
-           && (player_is_swimming() && you.species == SP_MERFOLK
-               || you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS]))
+           && ( player_is_swimming() && you.species == SP_MERFOLK
+                || player_mutation_level(MUT_HOOVES)
+                || player_mutation_level(MUT_TALONS) ))
        {
            return false;
        }
@@ -926,7 +927,7 @@ int player_teleport(bool calc_unid)
     tp += 8 * player_equip( EQ_RINGS, RING_TELEPORTATION, calc_unid );
 
     /* mutations */
-    tp += you.mutation[MUT_TELEPORT] * 3;
+    tp += player_mutation_level(MUT_TELEPORT) * 3;
 
     /* randart weapons only */
     if (you.equip[EQ_WEAPON] != -1
@@ -959,7 +960,7 @@ int player_regen(void)
         rr += 30;
 
     /* fast heal mutation */
-    rr += you.mutation[MUT_REGENERATION] * 20;
+    rr += player_mutation_level(MUT_REGENERATION) * 20;
 
     /* ghouls heal slowly */
     // dematerialized people heal slowly
@@ -1058,11 +1059,11 @@ int player_hunger_rate(void)
     }
     else
     {
-        hunger += you.mutation[MUT_FAST_METABOLISM];
+        hunger += player_mutation_level(MUT_FAST_METABOLISM);
 
-        if (you.mutation[MUT_SLOW_METABOLISM] > 2)
+        if (player_mutation_level(MUT_SLOW_METABOLISM) > 2)
             hunger -= 2;
-        else if (you.mutation[MUT_SLOW_METABOLISM] > 0)
+        else if (player_mutation_level(MUT_SLOW_METABOLISM) > 0)
             hunger--;
     }
 
@@ -1186,7 +1187,7 @@ int player_res_magic(void)
     rm += 2 * you.skills[SK_ENCHANTMENTS];
 
     /* Mutations */
-    rm += 30 * you.mutation[MUT_MAGIC_RESISTANCE];
+    rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
 
     /* transformations */
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
@@ -1246,7 +1247,7 @@ int player_res_fire(bool calc_unid, bool temp)
         rf--;
 
     // mutations:
-    rf += you.mutation[MUT_HEAT_RESISTANCE];
+    rf += player_mutation_level(MUT_HEAT_RESISTANCE);
 
     // spells:
     if (temp)
@@ -1324,9 +1325,9 @@ int player_res_cold(bool calc_unid)
         rc++;
 
     // mutations:
-    rc += you.mutation[MUT_COLD_RESISTANCE];
+    rc += player_mutation_level(MUT_COLD_RESISTANCE);
 
-    if (you.mutation[MUT_SHAGGY_FUR] == 3)
+    if (player_mutation_level(MUT_SHAGGY_FUR) == 3)
         rc++;
 
     if (you.duration[DUR_FIRE_SHIELD])
@@ -1366,7 +1367,7 @@ int player_res_acid(bool consider_unidentified_gear)
                     && you.experience_level >= 7)
             res += 2;
 
-        res += you.mutation[MUT_YELLOW_SCALES] * 2 / 3;
+        res += player_mutation_level(MUT_YELLOW_SCALES) * 2 / 3;
     }
 
     if (wearing_amulet(AMU_RESIST_CORROSION, consider_unidentified_gear))
@@ -1418,7 +1419,7 @@ int player_res_electricity(bool calc_unid)
         re++;
 
     // mutations:
-    if (you.mutation[MUT_SHOCK_RESISTANCE])
+    if (player_mutation_level(MUT_SHOCK_RESISTANCE))
         re++;
 
     // transformations:
@@ -1458,14 +1459,14 @@ bool player_control_teleport(bool calc_unid)
 {
     return ( you.duration[DUR_CONTROL_TELEPORT]
              || player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid)
-             || you.mutation[MUT_TELEPORT_CONTROL] );
+             || player_mutation_level(MUT_TELEPORT_CONTROL) );
 }
 
 int player_res_torment(bool)
 {
-    return (you.mutation[MUT_TORMENT_RESISTANCE] ||
-            you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH ||
-            you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING);
+    return (player_mutation_level(MUT_TORMENT_RESISTANCE)
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING);
 }
 
 // funny that no races are susceptible to poisons {dlb}
@@ -1503,7 +1504,7 @@ int player_res_poison(bool calc_unid, bool temp)
     rp += scan_randarts(RAP_POISON, calc_unid);
 
     // mutations:
-    rp += you.mutation[MUT_POISON_RESISTANCE];
+    rp += player_mutation_level(MUT_POISON_RESISTANCE);
 
     if (temp)
     {
@@ -1759,7 +1760,7 @@ int player_prot_life(bool calc_unid, bool temp)
     pl += scan_randarts(RAP_NEGATIVE_ENERGY, calc_unid);
 
     // undead/demonic power
-    pl += you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE];
+    pl += player_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE);
 
     if (pl > 3)
         pl = 3;
@@ -1773,8 +1774,8 @@ int player_ghost_base_movement_speed()
 {
     int speed = you.species == SP_NAGA? 8 : 10;
 
-    if (you.mutation[MUT_FAST])
-        speed += you.mutation[MUT_FAST] + 1;
+    if (player_mutation_level(MUT_FAST))
+        speed += player_mutation_level(MUT_FAST) + 1;
 
     if (player_equip_ego_type( EQ_BOOTS, SPARM_RUNNING ))
         speed += 2;
@@ -1834,9 +1835,11 @@ int player_movement_speed(void)
             mv -= (you.flight_mode() == FL_FLY ? 4 : 2);
 
         /* Mutations: -2, -3, -4, unless innate and shapechanged */
-        if (you.mutation[MUT_FAST] > 0 &&
-            (!you.demon_pow[MUT_FAST] || !player_is_shapechanged()))
-            mv -= (you.mutation[MUT_FAST] + 1);
+        if (player_mutation_level(MUT_FAST) > 0
+            && (!you.demon_pow[MUT_FAST] || !player_is_shapechanged()) )
+        {
+            mv -= (player_mutation_level(MUT_FAST) + 1);
+        }
 
         // Burden
         if (you.burden_state == BS_ENCUMBERED)
@@ -1968,7 +1971,7 @@ int player_AC(void)
 
         // The deformed don't fit into body armour very well
         // (this includes nagas and centaurs)
-        if (i == EQ_BODY_ARMOUR && you.mutation[MUT_DEFORMED])
+        if (i == EQ_BODY_ARMOUR && player_mutation_level(MUT_DEFORMED))
             AC -= ac_value / 2;
     }
 
@@ -2039,62 +2042,62 @@ int player_AC(void)
 
         // mutations:
         // these give: +1, +2, +3
-        AC += 100 * you.mutation[MUT_TOUGH_SKIN];
-        AC += 100 * you.mutation[MUT_GREY_SCALES];
-        AC += 100 * you.mutation[MUT_SPECKLED_SCALES];
-        AC += 100 * you.mutation[MUT_IRIDESCENT_SCALES];
-        AC += 100 * you.mutation[MUT_PATTERNED_SCALES];
-        AC += 100 * you.mutation[MUT_BLUE_SCALES];
-        AC += 100 * you.mutation[MUT_SHAGGY_FUR];
+        AC += 100 * player_mutation_level(MUT_TOUGH_SKIN);
+        AC += 100 * player_mutation_level(MUT_GREY_SCALES);
+        AC += 100 * player_mutation_level(MUT_SPECKLED_SCALES);
+        AC += 100 * player_mutation_level(MUT_IRIDESCENT_SCALES);
+        AC += 100 * player_mutation_level(MUT_PATTERNED_SCALES);
+        AC += 100 * player_mutation_level(MUT_BLUE_SCALES);
+        AC += 100 * player_mutation_level(MUT_SHAGGY_FUR);
 
         // these gives: +1, +3, +5
-        if (you.mutation[MUT_GREEN_SCALES] > 0)
-            AC += (you.mutation[MUT_GREEN_SCALES] * 200) - 100;
-        if (you.mutation[MUT_NACREOUS_SCALES] > 0)
-            AC += (you.mutation[MUT_NACREOUS_SCALES] * 200) - 100;
-        if (you.mutation[MUT_BLACK2_SCALES] > 0)
-            AC += (you.mutation[MUT_BLACK2_SCALES] * 200) - 100;
-        if (you.mutation[MUT_WHITE_SCALES] > 0)
-            AC += (you.mutation[MUT_WHITE_SCALES] * 200) - 100;
+        if (player_mutation_level(MUT_GREEN_SCALES) > 0)
+            AC += (player_mutation_level(MUT_GREEN_SCALES) * 200) - 100;
+        if (player_mutation_level(MUT_NACREOUS_SCALES) > 0)
+            AC += (player_mutation_level(MUT_NACREOUS_SCALES) * 200) - 100;
+        if (player_mutation_level(MUT_BLACK2_SCALES) > 0)
+            AC += (player_mutation_level(MUT_BLACK2_SCALES) * 200) - 100;
+        if (player_mutation_level(MUT_WHITE_SCALES) > 0)
+            AC += (player_mutation_level(MUT_WHITE_SCALES) * 200) - 100;
 
         // these give: +2, +4, +6
-        AC += you.mutation[MUT_GREY2_SCALES] * 200;
-        AC += you.mutation[MUT_YELLOW_SCALES] * 200;
-        AC += you.mutation[MUT_PURPLE_SCALES] * 200;
+        AC += player_mutation_level(MUT_GREY2_SCALES) * 200;
+        AC += player_mutation_level(MUT_YELLOW_SCALES) * 200;
+        AC += player_mutation_level(MUT_PURPLE_SCALES) * 200;
 
         // black gives: +3, +6, +9
-        AC += you.mutation[MUT_BLACK_SCALES] * 300;
+        AC += player_mutation_level(MUT_BLACK_SCALES) * 300;
 
         // boney plates give: +2, +3, +4
-        if (you.mutation[MUT_BONEY_PLATES] > 0)
-            AC += 100 * (you.mutation[MUT_BONEY_PLATES] + 1);
+        if (player_mutation_level(MUT_BONEY_PLATES) > 0)
+            AC += 100 * (player_mutation_level(MUT_BONEY_PLATES) + 1);
 
         // red gives +1, +2, +4
-        AC += 100 * (you.mutation[MUT_RED_SCALES]
-                     + (you.mutation[MUT_RED_SCALES] == 3));
+        AC += 100 * (player_mutation_level(MUT_RED_SCALES)
+                     + (player_mutation_level(MUT_RED_SCALES) == 3));
 
         // indigo gives: +2, +3, +5
-        if (you.mutation[MUT_INDIGO_SCALES] > 0)
+        if (player_mutation_level(MUT_INDIGO_SCALES) > 0)
         {
-            AC += 100 * (1 + you.mutation[MUT_INDIGO_SCALES]
-                         + (you.mutation[MUT_INDIGO_SCALES] == 3));
+            AC += 100 * (1 + player_mutation_level(MUT_INDIGO_SCALES)
+                         + (player_mutation_level(MUT_INDIGO_SCALES) == 3));
         }
 
         // brown gives: +2, +4, +5
-        AC += 100 * ((you.mutation[MUT_BROWN_SCALES] * 2)
-                     - (you.mutation[MUT_BROWN_SCALES] == 3));
+        AC += 100 * ((player_mutation_level(MUT_BROWN_SCALES) * 2)
+                     - (player_mutation_level(MUT_BROWN_SCALES) == 3));
 
         // orange gives: +1, +3, +4
-        AC += 100 * (you.mutation[MUT_ORANGE_SCALES]
-                     + (you.mutation[MUT_ORANGE_SCALES] > 1));
+        AC += 100 * (player_mutation_level(MUT_ORANGE_SCALES)
+                     + (player_mutation_level(MUT_ORANGE_SCALES) > 1));
 
         // knobbly red gives: +2, +5, +7
-        AC += 100 * ((you.mutation[MUT_RED2_SCALES] * 2)
-                     + (you.mutation[MUT_RED2_SCALES] > 1));
+        AC += 100 * ((player_mutation_level(MUT_RED2_SCALES) * 2)
+                     + (player_mutation_level(MUT_RED2_SCALES) > 1));
 
         // metallic gives +3, +7, +10
-        AC += 100 * (you.mutation[MUT_METALLIC_SCALES] * 3
-                     + (you.mutation[MUT_METALLIC_SCALES] > 1));
+        AC += 100 * (player_mutation_level(MUT_METALLIC_SCALES) * 3
+                     + (player_mutation_level(MUT_METALLIC_SCALES) > 1));
     }
     else
     {
@@ -2222,8 +2225,8 @@ int player_evasion()
     if (you.paralysed())
     {
         ev = 2 + size_factor;
-        if (you.mutation[MUT_REPULSION_FIELD] > 0)
-            ev += (you.mutation[MUT_REPULSION_FIELD] * 2) - 1;
+        if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
+            ev += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;
         return ((ev < 1) ? 1 : ev);
     }
 
@@ -2301,8 +2304,8 @@ int player_evasion()
     if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_PONDEROUSNESS ))
         ev -= 2;
 
-    if (you.mutation[MUT_REPULSION_FIELD] > 0)
-        ev += (you.mutation[MUT_REPULSION_FIELD] * 2) - 1;
+    if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
+        ev += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;
 
     // transformation penalties/bonuses not covered by size alone:
     switch (you.attribute[ATTR_TRANSFORMATION])
@@ -2365,7 +2368,7 @@ int old_player_evasion(void)
     // We return 2 here to give the player some chance of not being hit,
     // repulsion fields still work while paralysed
     if (you.duration[DUR_PARALYSIS])
-        return (2 + you.mutation[MUT_REPULSION_FIELD] * 2);
+        return (2 + player_mutation_level(MUT_REPULSION_FIELD) * 2);
 
     if (you.species == SP_CENTAUR)
         ev -= 3;
@@ -2408,8 +2411,8 @@ int old_player_evasion(void)
     if (emod > 0)
         ev += emod;
 
-    if (you.mutation[MUT_REPULSION_FIELD] > 0)
-        ev += (you.mutation[MUT_REPULSION_FIELD] * 2) - 1;
+    if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
+        ev += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -2531,8 +2534,8 @@ int player_see_invis(bool calc_unid)
     /* armour: (checks head armour only) */
     si += player_equip_ego_type( EQ_HELMET, SPARM_SEE_INVISIBLE );
 
-    if (you.mutation[MUT_ACUTE_VISION] > 0)
-        si += you.mutation[MUT_ACUTE_VISION];
+    if (player_mutation_level(MUT_ACUTE_VISION) > 0)
+        si += player_mutation_level(MUT_ACUTE_VISION);
 
     //jmf: added see_invisible spell
     if (you.duration[DUR_SEE_INVISIBLE] > 0)
@@ -3574,7 +3577,7 @@ int check_stealth(void)
         else if ( !player_can_swim() )
             stealth /= 2;       // splashy-splashy
     }
-    else if (you.mutation[MUT_HOOVES])
+    else if (player_mutation_level(MUT_HOOVES))
         stealth -= 10;  // clippety-clop
 
     // Radiating silence is the negative complement of shouting all the
@@ -4135,7 +4138,7 @@ bool player_item_conserve(bool calc_unid)
 int player_mental_clarity(bool calc_unid)
 {
     const int ret = 3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid)
-                        + you.mutation[ MUT_CLARITY ];
+                        + player_mutation_level(MUT_CLARITY);
 
     return ((ret > 3) ? 3 : ret);
 }
@@ -4151,7 +4154,7 @@ bool wearing_amulet(char amulet, bool calc_unid)
         return true;
     }
 
-    if (amulet == AMU_CLARITY && you.mutation[MUT_CLARITY])
+    if (amulet == AMU_CLARITY && player_mutation_level(MUT_CLARITY))
         return true;
 
     if (amulet == AMU_RESIST_CORROSION || amulet == AMU_CONSERVATION)
@@ -5101,7 +5104,7 @@ void dec_disease_player( void )
         if (you.disease > 5
             && (you.species == SP_KOBOLD
                 || you.duration[ DUR_REGENERATION ]
-                || you.mutation[ MUT_REGENERATION ] == 3))
+                || player_mutation_level(MUT_REGENERATION) == 3))
         {
             you.disease -= 2;
         }
@@ -5165,8 +5168,10 @@ static int _strength_modifier()
     result += scan_randarts(RAP_STRENGTH);
 
     // mutations
-    result += you.mutation[MUT_STRONG] - you.mutation[MUT_WEAK];
-    result += you.mutation[MUT_STRONG_STIFF]-you.mutation[MUT_FLEXIBLE_WEAK];
+    result += player_mutation_level(MUT_STRONG)
+              - player_mutation_level(MUT_WEAK);
+    result += player_mutation_level(MUT_STRONG_STIFF)
+              - player_mutation_level(MUT_FLEXIBLE_WEAK);
 
     // transformations
     switch ( you.attribute[ATTR_TRANSFORMATION] )
@@ -5195,19 +5200,22 @@ static int _dex_modifier()
     result += scan_randarts(RAP_DEXTERITY);
 
     // mutations
-    result += you.mutation[MUT_AGILE] - you.mutation[MUT_CLUMSY];
-    result += you.mutation[MUT_FLEXIBLE_WEAK]-you.mutation[MUT_STRONG_STIFF];
-    result -= you.mutation[MUT_BLACK_SCALES];
-    result -= you.mutation[MUT_BONEY_PLATES];
+    result += player_mutation_level(MUT_AGILE)
+              - player_mutation_level(MUT_CLUMSY);
+    result += player_mutation_level(MUT_FLEXIBLE_WEAK)
+              - player_mutation_level(MUT_STRONG_STIFF);
+    result -= player_mutation_level(MUT_BLACK_SCALES);
+    result -= player_mutation_level(MUT_BONEY_PLATES);
+
     const int grey2_modifier[]    = { 0, -1, -1, -2 };
     const int metallic_modifier[] = { 0, -2, -3, -4 };
     const int yellow_modifier[]   = { 0,  0, -1, -2 };
     const int red2_modifier[]     = { 0,  0, -1, -2 };
 
-    result -= grey2_modifier[you.mutation[MUT_GREY2_SCALES]];
-    result -= metallic_modifier[you.mutation[MUT_METALLIC_SCALES]];
-    result -= yellow_modifier[you.mutation[MUT_YELLOW_SCALES]];
-    result -= red2_modifier[you.mutation[MUT_RED2_SCALES]];
+    result -= grey2_modifier[player_mutation_level(MUT_GREY2_SCALES)];
+    result -= metallic_modifier[player_mutation_level(MUT_METALLIC_SCALES)];
+    result -= yellow_modifier[player_mutation_level(MUT_YELLOW_SCALES)];
+    result -= red2_modifier[player_mutation_level(MUT_RED2_SCALES)];
 
     // transformations
     switch ( you.attribute[ATTR_TRANSFORMATION] )
@@ -5235,7 +5243,9 @@ static int _int_modifier()
     result += scan_randarts(RAP_INTELLIGENCE);
 
     // mutations
-    result += you.mutation[MUT_CLEVER] - you.mutation[MUT_DOPEY];
+    result += player_mutation_level(MUT_CLEVER)
+              - player_mutation_level(MUT_DOPEY);
+
     return result;
 }
 
@@ -5722,11 +5732,12 @@ std::string player::shout_verb() const
     case TRAN_AIR:
         return "__NONE";
     default: // depends on SCREAM mutation
-        if (you.mutation[MUT_SCREAM] <= 1)
+        int level = player_mutation_level(MUT_SCREAM);
+        if ( level <= 1)
             return "shout";
-        else if (you.mutation[MUT_SCREAM] == 2)
+        else if (level == 2)
             return "yell";
-        else
+        else // level == 3
             return "scream";
     }
 }
@@ -6098,6 +6109,14 @@ mon_holy_type player::holiness() const
         return (MH_UNDEAD);
 
     return (MH_NATURAL);
+}
+
+int player_mutation_level(mutation_type mut)
+{
+    if (!mutation_is_active(mut))
+        return 0;
+
+    return (you.mutation[mut]);
 }
 
 int player::res_fire() const

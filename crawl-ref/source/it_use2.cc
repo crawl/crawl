@@ -96,7 +96,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
                 mpr("Yummy - fresh blood!");
             else // coagulated
                 mpr("This tastes delicious!");
-                
+
             lessen_hunger(1000, true);
 
             // healing depends on hunger
@@ -116,7 +116,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         }
         else
         {
-            if (you.omnivorous() || you.mutation[MUT_CARNIVOROUS])
+            if (you.omnivorous() || player_mutation_level(MUT_CARNIVOROUS))
             {
                 // Likes it
                 mpr("This tastes like blood.");
@@ -125,7 +125,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
             else
             {
                 mpr("Blech - this tastes like blood!");
-                if (!you.mutation[MUT_HERBIVOROUS] && one_chance_in(3))
+                if (!player_mutation_level(MUT_HERBIVOROUS) && one_chance_in(3))
                     lessen_hunger(100, true);
                 else
                 {
@@ -144,7 +144,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
     case POT_MIGHT:
     {
         const bool were_mighty = (you.duration[DUR_MIGHT] > 0);
-        
+
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
 
@@ -155,7 +155,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
 
         // conceivable max gain of +184 {dlb}
         you.duration[DUR_MIGHT] += (35 + random2(pow)) / factor;
-        
+
         // files.cc permits values up to 215, but ... {dlb}
         if (you.duration[DUR_MIGHT] > 80)
             you.duration[DUR_MIGHT] = 80;
@@ -206,7 +206,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
             mprf("That liquid tasted %s nasty...",
                  (pot_eff == POT_POISON) ? "very" : "extremely" );
 
-            poison_player( ((pot_eff == POT_POISON) ? 1 + random2avg(5, 2) 
+            poison_player( ((pot_eff == POT_POISON) ? 1 + random2avg(5, 2)
                                                     : 3 + random2avg(13, 2)) );
             xom_is_stimulated(128);
         }
@@ -247,7 +247,8 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         break;
 
     case POT_PORRIDGE:          // oatmeal - always gluggy white/grey?
-        if (you.species == SP_VAMPIRE || you.mutation[MUT_CARNIVOROUS] == 3)
+        if (you.species == SP_VAMPIRE
+            || player_mutation_level(MUT_CARNIVOROUS) == 3)
         {
             mpr("Blech - that potion was really gluggy!");
         }
@@ -353,19 +354,19 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         mpr("You feel extremely strange.");
         for (int i = 0; i < 3; i++)
             mutate(RANDOM_MUTATION, false);
-            
+
         learned_something_new(TUT_YOU_MUTATED);
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
-        
+
     case POT_RESISTANCE:
         mpr("You feel protected.");
         you.duration[DUR_RESIST_FIRE]   += (random2(pow) + 10) / factor;
         you.duration[DUR_RESIST_COLD]   += (random2(pow) + 10) / factor;
         you.duration[DUR_RESIST_POISON] += (random2(pow) + 10) / factor;
         you.duration[DUR_INSULATION]    += (random2(pow) + 10) / factor;
-        
+
         // Just one point of contamination. These potions are really rare,
         // and contamination is nastier.
         contaminate_player(1, was_known);
@@ -384,7 +385,7 @@ bool unwield_item(bool showMsgs)
     const int unw = you.equip[EQ_WEAPON];
     if ( unw == -1 )
         return (false);
-    
+
     if (!safe_to_remove_or_wear(you.inv[unw], true))
         return (false);
 

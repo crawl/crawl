@@ -160,7 +160,7 @@ const int InvEntry::item_freshness() const
 
     int freshness = item->special;
 
-    if (freshness >= 100 || you.mutation[MUT_SAPROVOROUS])
+    if (freshness >= 100 || player_mutation_level(MUT_SAPROVOROUS))
         freshness -= 300;
 
     // Ensure that chunk freshness is never zero, since zero means

@@ -815,7 +815,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             // about special cases for carnivorous races (e.g. kobolds)
             type_wanted = FOOD_MEAT_RATION;
 
-            if (you.mutation[MUT_HERBIVOROUS])
+            if (player_mutation_level(MUT_HERBIVOROUS))
                 type_wanted = FOOD_BREAD_RATION;
 
             // If we have some regular rations, then we're probably more
@@ -1022,6 +1022,8 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         // Do this here, before acquirement()'s call to can_wear_armour(),
         // so that caps will be just as common as helmets for those
         // that can't wear helmets.
+        // We could use player_mutation_level for the horns, but let's just
+        // check for the mutation directly to avoid acquirement fiddles.
         if (type_wanted == ARM_HELMET
             && ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
                 || player_genus(GENPC_DRACONIAN)
@@ -2284,7 +2286,9 @@ static void rot_inventory_food(long time_delta)
         if (player_can_smell() && you.species != SP_TROLL)
         {
             int temp_rand = 0; // Grr.
-            int level = (you.species == SP_VAMPIRE) ? 1 : you.mutation[MUT_SAPROVOROUS];
+            int level = player_mutation_level(MUT_SAPROVOROUS);
+            if (!level && you.species == SP_VAMPIRE)
+                level = 1;
 
             switch (level)
             {
@@ -2388,8 +2392,8 @@ void handle_time( long time_delta )
     }
 
     // Adjust the player's stats if s/he has the deterioration mutation
-    if (you.mutation[MUT_DETERIORATION]
-        && random2(200) <= you.mutation[MUT_DETERIORATION] * 5 - 2)
+    if (player_mutation_level(MUT_DETERIORATION)
+        && random2(200) <= player_mutation_level(MUT_DETERIORATION) * 5 - 2)
     {
         lose_stat(STAT_RANDOM, 1, false, "deterioration mutation");
     }
@@ -2568,8 +2572,8 @@ void handle_time( long time_delta )
     // jmf: moved huge thing to religion.cc
     handle_god_time();
 
-    if (you.mutation[MUT_SCREAM]
-        && (random2(100) <= 2 + you.mutation[MUT_SCREAM] * 3) )
+    if (player_mutation_level(MUT_SCREAM)
+        && (random2(100) <= 2 + player_mutation_level(MUT_SCREAM) * 3) )
     {
         yell(true);
     }

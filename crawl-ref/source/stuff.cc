@@ -50,13 +50,13 @@
 #endif
 
 #ifdef DOS
-#include <conio.h>
+ #include <conio.h>
 #endif
 
 #ifdef UNIX
-#ifndef USE_TILE
-#include "libunix.h"
-#endif
+ #ifndef USE_TILE
+ #include "libunix.h"
+ #endif
 #endif
 
 #include "branch.h"
@@ -816,7 +816,7 @@ void canned_msg(canned_message_type which_message)
     {
     case MSG_SOMETHING_APPEARS:
         mprf("Something appears %s!",
-             (you.species == SP_NAGA || you.mutation[MUT_HOOVES])
+             (you.species == SP_NAGA || player_mutation_level(MUT_HOOVES))
              ? "before you" : "at your feet");
         break;
     case MSG_NOTHING_HAPPENS:

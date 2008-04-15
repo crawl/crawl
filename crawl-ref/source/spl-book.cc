@@ -21,7 +21,7 @@
 #include <string.h>
 
 #ifdef DOS
-#include <conio.h>
+ #include <conio.h>
 #endif
 
 #include "externs.h"
@@ -1325,8 +1325,8 @@ bool learn_spell(int book)
         return (false);
     }
 
-    if (you.mutation[MUT_BLURRY_VISION] > 0
-        && random2(4) < you.mutation[MUT_BLURRY_VISION])
+    if (player_mutation_level(MUT_BLURRY_VISION) > 0
+        && random2(4) < player_mutation_level(MUT_BLURRY_VISION))
     {
         mpr("The writing blurs into unreadable gibberish.");
         you.turn_is_over = true;

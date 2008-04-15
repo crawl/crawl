@@ -2807,9 +2807,9 @@ static void _decrement_durations()
         {
             const int chance =
                 10 +
-                you.mutation[MUT_BERSERK] * 25 +
-                (wearing_amulet( AMU_RAGE ) ? 10 : 0) +
-                (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
+                player_mutation_level(MUT_BERSERK) * 25
+                + (wearing_amulet( AMU_RAGE ) ? 10 : 0)
+                + (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
 
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
@@ -3054,8 +3054,8 @@ static void _world_reacts()
 
     run_environment_effects();
 
-    if ( !you.cannot_act() && !you.mutation[MUT_BLURRY_VISION] &&
-         random2(50) < you.skills[SK_TRAPS_DOORS] )
+    if ( !you.cannot_act() && !player_mutation_level(MUT_BLURRY_VISION)
+         && random2(50) < you.skills[SK_TRAPS_DOORS] )
     {
         search_around(false); // check nonadjacent squares too
     }

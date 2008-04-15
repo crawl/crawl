@@ -1340,7 +1340,7 @@ static void tag_read_you(reader &th, char minorVersion)
     count_s = unmarshallShort(th);
     for (j = 0; j < count_s; ++j)
     {
-        you.mutation[j] = unmarshallByte(th);
+        you.mutation[j]  = unmarshallByte(th);
         you.demon_pow[j] = unmarshallByte(th);
     }
 

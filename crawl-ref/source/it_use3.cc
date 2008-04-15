@@ -76,7 +76,7 @@ void special_wielded()
     case SPWLD_NOISE:
     {
         makes_noise = (one_chance_in(20) && !silenced(you.x_pos, you.y_pos));
-          
+
         if (makes_noise)
         {
             std::string msg;
@@ -101,14 +101,14 @@ void special_wielded()
                     msg = replace_all(msg, "@your_weapon@", "your @weapon@");
                 }
             }
-            
+
             // set appropriate channel (will usually be TALK)
             msg_channel_type channel = MSGCH_TALK;
 
             // disallow anything with VISUAL in it;
             if (msg != "" && msg.find("VISUAL") != std::string::npos)
                 msg = "";
-                
+
             if (msg != "")
             {
                 std::string param = "";
@@ -138,7 +138,7 @@ void special_wielded()
                         msg = msg.substr(pos + 1);
                 }
             }
-            
+
             if (msg == "") // give default noises
             {
                 if (you.special_wield == SPWLD_SING)
@@ -149,7 +149,7 @@ void special_wielded()
                     msg = "You hear a strange noise.";
                 }
             }
-            
+
             // replace weapon references
             msg = replace_all(msg, "@The_weapon@", "The @weapon@");
             msg = replace_all(msg, "@the_weapon@", "the @weapon@");
@@ -159,8 +159,8 @@ void special_wielded()
 
         } // makes_noise
         break;
-    } 
-    
+    }
+
     case SPWLD_CURSE:
         if (one_chance_in(30))
             curse_an_item(false);
@@ -388,7 +388,7 @@ static bool evoke_sceptre_of_asmodeus()
                                     summon_any_demon(DEMON_COMMON));
         const bool good_summon =
             (create_monster( mtype, 6, BEH_HOSTILE,
-                             you.x_pos, you.y_pos, 
+                             you.x_pos, you.y_pos,
                              MHITYOU, MONS_PROGRAM_BUG) != -1);
 
         if (good_summon)
@@ -462,7 +462,7 @@ bool evoke_wielded()
             switch (wpn.special)
             {
             case SPWPN_STAFF_OF_DISPATER:
-                if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true) 
+                if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true)
                     || !enough_mp(5, true))
                 {
                     break;
@@ -490,7 +490,7 @@ bool evoke_wielded()
                 break;
 
             case SPWPN_STAFF_OF_OLGREB:
-                if (!enough_mp( 4, true ) 
+                if (!enough_mp( 4, true )
                     || you.skills[SK_EVOCATIONS] < random2(6))
                 {
                     break;
@@ -525,7 +525,7 @@ bool evoke_wielded()
 
                 if (one_chance_in(3))
                 {
-                    miscast_effect( SPTYP_DIVINATION, random2(9), 
+                    miscast_effect( SPTYP_DIVINATION, random2(9),
                                     random2(70), 100, "the Staff of Wucad Mu" );
                 }
                 break;
@@ -553,7 +553,7 @@ bool evoke_wielded()
         }
         else if (wpn.sub_type == STAFF_CHANNELING)
         {
-            if (you.magic_points < you.max_magic_points 
+            if (you.magic_points < you.max_magic_points
                 && you.skills[SK_EVOCATIONS] + 10 >= random2(40))
             {
                 mpr("You channel some magical energy.");
@@ -569,7 +569,7 @@ bool evoke_wielded()
 
                     mprf("You are wielding %s.",
                          wpn.name(DESC_NOCAP_A).c_str());
-                         
+
                     more();
 
                     you.wield_change = true;
@@ -584,7 +584,7 @@ bool evoke_wielded()
 
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
-        
+
         if ( is_deck(wpn) )
         {
             evoke_deck(wpn);
@@ -687,19 +687,19 @@ bool evoke_wielded()
 static bool efreet_flask(void)
 {
     const beh_type behaviour =
-        ((you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20)) 
+        ((you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20))
          ? BEH_FRIENDLY : BEH_HOSTILE);
 
     mpr("You open the flask...");
 
-    const int efreet = create_monster( MONS_EFREET, 0, behaviour, 
+    const int efreet = create_monster( MONS_EFREET, 0, behaviour,
                                        you.x_pos, you.y_pos, MHITYOU,
                                        MONS_PROGRAM_BUG,
                                        false, false, true );
     if (efreet != -1)
     {
         monsters *mon = &menv[efreet];
-        
+
         mpr( "...and a huge efreet comes out." );
         player_angers_monster(mon);
         mpr( (mon->attitude == ATT_FRIENDLY)?
@@ -709,7 +709,7 @@ static bool efreet_flask(void)
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );    
+    dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
 
     return (true);
 }                               // end efreet_flask()
@@ -804,8 +804,8 @@ static bool disc_of_storms(void)
 
 void tome_of_power(int slot)
 {
-    int powc = 5 + you.skills[SK_EVOCATIONS] 
-                 + roll_dice( 5, you.skills[SK_EVOCATIONS] ); 
+    int powc = 5 + you.skills[SK_EVOCATIONS]
+                 + roll_dice( 5, you.skills[SK_EVOCATIONS] );
 
     msg::stream << "The book opens to a page covered in "
                 << weird_writing() << '.' << std::endl;
@@ -817,15 +817,15 @@ void tome_of_power(int slot)
 
     set_ident_flags( you.inv[slot], ISFLAG_KNOW_TYPE );
 
-    if (you.mutation[MUT_BLURRY_VISION] > 0
-        && random2(4) < you.mutation[MUT_BLURRY_VISION])
+    if (player_mutation_level(MUT_BLURRY_VISION) > 0
+        && random2(4) < player_mutation_level(MUT_BLURRY_VISION))
     {
         mpr("The page is too blurry for you to read.");
         return;
     }
 
     mpr("You find yourself reciting the magical words!");
-    exercise( SK_EVOCATIONS, 1 ); 
+    exercise( SK_EVOCATIONS, 1 );
 
     if ( random2(50) < 7 )
     {
@@ -891,7 +891,7 @@ void tome_of_power(int slot)
         viewwindow(1, false);
 
         int temp_rand = random2(23) + random2(you.skills[SK_EVOCATIONS] / 3);
-        
+
         if (temp_rand > 25)
             temp_rand = 25;
 
@@ -964,7 +964,7 @@ static bool box_of_beasts()
                   (temp_rand == 6) ? MONS_YAK :
                   (temp_rand == 7) ? MONS_BUTTERFLY :
                   (temp_rand == 8) ? MONS_HELL_HOUND :
-                  (temp_rand == 9) ? MONS_BROWN_SNAKE 
+                  (temp_rand == 9) ? MONS_BROWN_SNAKE
                                    : MONS_GIANT_LIZARD);
 
         beh_type beh = (one_chance_in(you.skills[SK_EVOCATIONS] + 5)
@@ -1023,7 +1023,7 @@ static bool ball_of_energy(void)
         proportional = you.magic_points * 100;
         proportional /= you.max_magic_points;
 
-        if (random2avg(77 - you.skills[SK_EVOCATIONS] * 2, 4) > proportional 
+        if (random2avg(77 - you.skills[SK_EVOCATIONS] * 2, 4) > proportional
             || one_chance_in(25))
         {
             mpr( "You feel your power drain away!" );

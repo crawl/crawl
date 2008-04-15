@@ -630,7 +630,7 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
         }
     }
 
-    if (use_which == EQ_HELMET && you.mutation[MUT_HORNS])
+    if (use_which == EQ_HELMET && player_mutation_level(MUT_HORNS))
         return (false);
 
     if (use_which == EQ_BOOTS && !player_has_feet())
