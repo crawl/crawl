@@ -3375,14 +3375,37 @@ static bool _handle_potion(monsters *monster, bolt & beem)
             }
             break;
 
+        case POT_BLOOD:
+        case POT_BLOOD_COAGULATED:
+            if (mons_species(monster->type) == MONS_VAMPIRE
+                && monster->hit_points <= monster->max_hit_points / 2)
+            {
+                simple_monster_message(monster, " drinks a potion.");
+
+                if (heal_monster(monster, 10 + random2avg(28, 3), false))
+                {
+                    simple_monster_message(monster, " is healed!");
+                    ident = ID_MON_TRIED_TYPE;
+                }
+
+                imbibed = true;
+            }
+            break;
+
         case POT_SPEED:
             // notice that these are the same odd colours used in
             // mons_ench_f2() {dlb}
+            if (monster->has_ench(ENCH_HASTE))
+                break;
+
             beem.colour = BLUE;
             // intentional fall through
         case POT_INVISIBILITY:
             if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_INVISIBILITY)
             {
+                if (monster->has_ench(ENCH_INVIS))
+                    break;
+
                 beem.colour = MAGENTA;
                 // Friendly monsters won't go invisible if the player
                 // can't see invisible. We're being nice.
@@ -3390,15 +3413,10 @@ static bool _handle_potion(monsters *monster, bolt & beem)
                     break;
             }
 
-            // why only drink these if not near player? {dlb}
-            if (!mons_near(monster))
-            {
-                simple_monster_message(monster, " drinks a potion.");
-
-                mons_ench_f2(monster, beem);
-
-                imbibed = true;
-            }
+            // allow monsters to drink these when player in sight (jpeg)
+            simple_monster_message(monster, " drinks a potion.");
+            mons_ench_f2(monster, beem);
+            imbibed = true;
             ident = ID_KNOWN_TYPE;
             break;
         }
@@ -3407,6 +3425,12 @@ static bool _handle_potion(monsters *monster, bolt & beem)
         {
             if (dec_mitm_item_quantity( monster->inv[MSLOT_POTION], 1 ))
                 monster->inv[MSLOT_POTION] = NON_ITEM;
+            else if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_BLOOD
+                     || mitm[monster->inv[MSLOT_POTION]].sub_type
+                            == POT_BLOOD_COAGULATED)
+            {
+                remove_oldest_blood_potion(mitm[monster->inv[MSLOT_POTION]]);
+            }
 
             if (ident != ID_UNKNOWN_TYPE && was_visible)
                 set_ident_type(OBJ_POTIONS, potion_type, ident);

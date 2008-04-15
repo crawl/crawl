@@ -81,6 +81,7 @@ bool can_bottle_blood_from_corpse( int mons_type );
 void turn_corpse_into_blood_potions ( item_def &item );
 void split_blood_potions_into_decay( int obj, int amount = -1 );
 
+bool victim_can_bleed(int montype);
 void bleed_onto_floor(int x, int y, int mon, int damage, bool spatter = false);
 
 // last updated 12may2000 {dlb}

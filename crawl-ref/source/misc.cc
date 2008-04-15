@@ -1028,7 +1028,7 @@ void split_blood_potions_into_decay( int obj, int amount )
 }
 
 // checks whether the player or a monster is capable of bleeding
-static bool victim_can_bleed(int montype)
+bool victim_can_bleed(int montype)
 {
     if (montype == -1) // player
     {

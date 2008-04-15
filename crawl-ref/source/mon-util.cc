@@ -2090,9 +2090,11 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         break;
 
     case SPELL_INVISIBILITY:
-        if (mon->has_ench(ENCH_INVIS) ||
-            (mons_friendly(mon) && !player_see_invis(false)))
+        if (mon->has_ench(ENCH_INVIS)
+            || (mons_friendly(mon) && !player_see_invis(false)))
+        {
             ret = true;
+        }
         break;
 
     case SPELL_LESSER_HEALING:

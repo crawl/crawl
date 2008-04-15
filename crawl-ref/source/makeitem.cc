@@ -2920,6 +2920,16 @@ static void give_wand(monsters *mon, int level)
 static void give_potion(monsters *mon, int level)
 {
     //mv - give potion
+    if (mons_species( mon->type ) == MONS_VAMPIRE && one_chance_in(5))
+    {
+        const int thing_created =
+            items(0, OBJ_POTIONS, POT_BLOOD, true, level, 0);
+        if (thing_created == NON_ITEM)
+            return;
+
+        mitm[thing_created].flags = 0;
+        give_monster_item(mon, thing_created);
+    }
     if (mons_is_unique( mon->type ) && one_chance_in(3))
     {
         const int thing_created =

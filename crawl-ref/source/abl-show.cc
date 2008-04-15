@@ -78,7 +78,7 @@
 enum ability_flag_type
 {
     ABFLAG_NONE         = 0x00000000,
-    ABFLAG_BREATH       = 0x00000001, // ability uses DUR_BREATH_WEAPON 
+    ABFLAG_BREATH       = 0x00000001, // ability uses DUR_BREATH_WEAPON
     ABFLAG_DELAY        = 0x00000002, // ability has its own delay (ie recite)
     ABFLAG_PAIN         = 0x00000004, // ability must hurt player (ie torment)
     ABFLAG_EXHAUSTION   = 0x00000008, // fails if you.exhausted
@@ -165,7 +165,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
 
 // The description screen was way out of date with the actual costs.
 // This table puts all the information in one place... -- bwr
-// 
+//
 // The four numerical fields are: MP, HP, food, and piety.
 // Note:  food_cost  = val + random2avg( val, 2 )
 //        piety_cost = val + random2( (val + 1) / 2 + 1 );
@@ -186,7 +186,7 @@ static const ability_def Ability_List[] =
     { ABIL_BREATHE_POWER, "Breathe Power", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STICKY_FLAME, "Breathe Sticky Flame", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, ABFLAG_BREATH },
-    { ABIL_TRAN_BAT, "Bat Form", 2, 0, 25, 0, ABFLAG_NONE },
+    { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, ABFLAG_NONE },
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
 
@@ -210,12 +210,12 @@ static const ability_def Ability_List[] =
     { ABIL_MUMMY_RESTORATION, "Restoration", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
 
     // EVOKE abilities use Evocations and come from items:
-    // Mapping, Teleportation, and Blink can also come from mutations 
-    // so we have to distinguish them (see above).  The off items 
+    // Mapping, Teleportation, and Blink can also come from mutations
+    // so we have to distinguish them (see above).  The off items
     // below are labeled EVOKE because they only work now if the
     // player has an item with the evocable power (not just because
-    // you used a wand, potion, or miscast effect).  I didn't see 
-    // any reason to label them as "Evoke" in the text, they don't 
+    // you used a wand, potion, or miscast effect).  I didn't see
+    // any reason to label them as "Evoke" in the text, they don't
     // use or train Evocations (the others do).  -- bwr
     { ABIL_EVOKE_MAPPING, "Evoke Sense Surroundings", 0, 0, 30, 0, ABFLAG_NONE },
     { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation", 3, 0, 200, 0, ABFLAG_NONE },
@@ -325,7 +325,7 @@ const struct ability_def & get_ability_def( ability_type abil )
 /****************************************************/
 {
     for (unsigned int i = 0;
-         i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++) 
+         i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
     {
         if (Ability_List[i].ability == abil)
             return (Ability_List[i]);
@@ -354,7 +354,7 @@ std::string print_abilities()
 
     return text;
 }
- 
+
 const std::string make_cost_description( ability_type ability )
 {
     const ability_def& abil = get_ability_def(ability);
@@ -399,7 +399,7 @@ const std::string make_cost_description( ability_type ability )
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << "Breath"; 
+        ret << "Breath";
     }
 
     if (abil.flags & ABFLAG_DELAY)
@@ -462,14 +462,14 @@ static talent _get_talent(ability_type ability, bool check_confused)
         }
     }
 
-    // Look through the table to see if there's a preference, else 
+    // Look through the table to see if there's a preference, else
     // find a new empty slot for this ability. -- bwr
     const int index = _find_ability_slot( ability );
     if ( index != -1 )
         result.hotkey = index_to_letter(index);
     else
         result.hotkey = 0;      // means 'find later on'
-    
+
     switch (ability)
     {
     // begin spell abilities
@@ -482,12 +482,12 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin species abilities - some are mutagenic, too {dlb}
     case ABIL_SPIT_POISON:
         failure = ((you.species == SP_NAGA) ? 20 : 40)
-                        - 10 * you.mutation[MUT_SPIT_POISON] 
+                        - 10 * you.mutation[MUT_SPIT_POISON]
                         - you.experience_level;
         break;
 
     case ABIL_EVOKE_MAPPING:
-        failure = 30 - you.skills[SK_EVOCATIONS]; 
+        failure = 30 - you.skills[SK_EVOCATIONS];
         break;
 
     case ABIL_MAPPING:
@@ -576,7 +576,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_TELEPORTATION:
-        failure = ((you.mutation[MUT_TELEPORT_AT_WILL] > 1) ? 30 : 50) 
+        failure = ((you.mutation[MUT_TELEPORT_AT_WILL] > 1) ? 30 : 50)
                     - you.experience_level;
         break;
         // end demonic powers {dlb}
@@ -614,7 +614,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
         if (you.species == SP_TROLL)
             failure -= 30;
-        else if (player_genus(GENPC_DWARVEN) || you.species == SP_HILL_ORC 
+        else if (player_genus(GENPC_DWARVEN) || you.species == SP_HILL_ORC
                 || you.species == SP_OGRE)
         {
             failure -= 10;
@@ -637,7 +637,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         invoc = true;
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
-        
+
     // destroying stuff doesn't train anything
     case ABIL_ELYVILON_DESTROY_WEAPONS:
         invoc = true;
@@ -648,7 +648,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         invoc = true;
         failure = 0;
         break;
-        
+
     // These three are Trog abilities... Invocations means nothing -- bwr
     case ABIL_TROG_BERSERK:    // piety >= 30
         invoc = true;
@@ -728,7 +728,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         invoc = true;
         failure = 80 - (you.piety / 25) - (4 * you.skills[SK_EVOCATIONS]);
         break;
-        
+
     case ABIL_NEMELEX_MARK_FOUR:
         invoc = true;
         failure = 70 - (you.piety * 2 / 45)
@@ -823,11 +823,11 @@ bool activate_ability()
             mpr("Sorry, you're too full to transform right now.");
         else
             mpr("Sorry, you're not good enough to have a special ability.");
-            
+
         crawl_state.zero_turns_taken();
         return false;
     }
-    
+
     if ( you.duration[DUR_CONF] )
     {
         talents = your_talents(true);
@@ -859,7 +859,7 @@ bool activate_ability()
         else if (keyin == ESCAPE || keyin == ' ' ||
                  keyin == '\r' || keyin == '\n')
         {
-            canned_msg( MSG_OK );    
+            canned_msg( MSG_OK );
             return (false);
         }
         else if ( isalpha(keyin) )
@@ -889,6 +889,23 @@ bool activate_ability()
 
 static bool _activate_talent(const talent& tal)
 {
+    // Doing these would outright kill the player due to stat drain.
+    if (tal.which == ABIL_TRAN_BAT && you.strength <= 5)
+    {
+        mpr("You lack the strength for this transformation.");
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
+    else if (tal.which == ABIL_END_TRANSFORMATION
+             && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+             && you.dex <= 5)
+    {
+        mpr("Turning back with such low dexterity would be fatal!");
+        more();
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
+
     // some abilities don't need a hunger check
     bool hungerCheck = true;
     switch (tal.which)
@@ -927,14 +944,14 @@ static bool _activate_talent(const talent& tal)
         crawl_state.zero_turns_taken();
         return (false);
     }
-    
+
     if (tal.which == ABIL_ZIN_SANCTUARY && env.sanctuary_time)
     {
         mpr("There's already a sanctuary in place on this level.");
         crawl_state.zero_turns_taken();
         return (false);
     }
-    
+
     if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
         && !you.can_go_berserk(true))
     {
@@ -982,7 +999,7 @@ static bool _do_ability(const ability_def& abil)
     struct bolt beam;
     struct dist spd;
 
-    // Note: the costs will not be applied until after this switch 
+    // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! -- bwr
     switch (abil.ability)
     {
@@ -1009,7 +1026,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_DELAYED_FIREBALL:
         if ( !spell_direction(spd, beam, DIR_NONE, TARG_ENEMY) )
             return (false);
-        
+
         // Note: power level of ball calculated at release -- bwr
         fireball( calc_spell_power( SPELL_DELAYED_FIREBALL, true ), beam );
 
@@ -1032,7 +1049,7 @@ static bool _do_ability(const ability_def& abil)
             mpr("You spit poison.");
 
             zapping( ZAP_SPIT_POISON,
-                     you.experience_level 
+                     you.experience_level
                         + you.mutation[MUT_SPIT_POISON] * 5
                         + (you.species == SP_NAGA) * 10,
                      beam );
@@ -1065,7 +1082,7 @@ static bool _do_ability(const ability_def& abil)
             mpr("You feel momentarily disoriented.");
 
         if (abil.ability == ABIL_EVOKE_MAPPING)
-            exercise( SK_EVOCATIONS, 1 ); 
+            exercise( SK_EVOCATIONS, 1 );
         break;
 
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
@@ -1198,9 +1215,9 @@ static bool _do_ability(const ability_def& abil)
         if (you.experience_level > 14)
             mpr("You feel very comfortable in the air.");
         break;
-    
+
     // Fly (Draconians, or anything else with wings)
-    case ABIL_FLY_II: 
+    case ABIL_FLY_II:
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to fly.");
@@ -1229,7 +1246,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_HELLFIRE:
-        if (your_spells(SPELL_HELLFIRE, 
+        if (your_spells(SPELL_HELLFIRE,
                         20 + you.experience_level, false) == SPRET_ABORT)
             return (false);
         break;
@@ -1343,7 +1360,7 @@ static bool _do_ability(const ability_def& abil)
         // up to (60 + 40)/2 = 50
         const int pow = ( 2*skill_bump(SK_INVOCATIONS) + you.piety / 5 ) / 2;
         start_delay(DELAY_RECITE, 3, pow, you.hp);
-        
+
         exercise( SK_INVOCATIONS, 2 );
         break;
     }
@@ -1448,7 +1465,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_YRED_ANIMATE_CORPSE:
         mpr("You call on the dead to walk for you...");
 
-        animate_a_corpse( you.x_pos, you.y_pos, BEH_FRIENDLY, 
+        animate_a_corpse( you.x_pos, you.y_pos, BEH_FRIENDLY,
                           you.pet_target, CORPSE_BODY );
 
         exercise(SK_INVOCATIONS, 2 + random2(4));
@@ -1588,7 +1605,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TROG_BERSERK:
-        // Trog abilities don't use or train invocations. 
+        // Trog abilities don't use or train invocations.
         if (you.hunger_state < HS_SATIATED)
         {
             mpr("You're too hungry to berserk.");
@@ -1669,7 +1686,7 @@ static bool _do_ability(const ability_def& abil)
         // Paranoia.
         if (you.hp_max < 1)
             you.hp_max = 1;
-        
+
         // Deflate HP
         set_hp( 1 + random2(you.hp), false );
 
@@ -1695,7 +1712,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
         zapping( ZAP_BANISHMENT, 16 + you.skills[SK_INVOCATIONS] * 8, beam );
-        exercise(SK_INVOCATIONS, 3 + random2(5));        
+        exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
 
     case ABIL_LUGONU_CORRUPT:
@@ -1785,7 +1802,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        if (your_spells( SPELL_HELLFIRE, 
+        if (your_spells( SPELL_HELLFIRE,
                         20 + you.experience_level, false ) == SPRET_ABORT)
             return (false);
 
@@ -1895,7 +1912,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
             abil_menu.add_entry(me);
         }
     }
-    
+
     if ( found_invocations )
     {
         abil_menu.add_entry(new MenuEntry("    Invocations - ", MEL_SUBTITLE));
@@ -2001,7 +2018,7 @@ std::vector<talent> your_talents( bool check_confused )
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused );
     }
-    
+
     if (!player_is_airborne())
     {
         // kenku can fly, but only from the ground
@@ -2053,7 +2070,7 @@ std::vector<talent> your_talents( bool check_confused )
     if (you.duration[DUR_TRANSFORMATION])
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused );
 
-    if (you.mutation[MUT_BLINK]) 
+    if (you.mutation[MUT_BLINK])
         _add_talent(talents, ABIL_BLINK, check_confused );
 
     if (you.mutation[MUT_TELEPORT_AT_WILL])
@@ -2133,7 +2150,7 @@ std::vector<talent> your_talents( bool check_confused )
         || scan_randarts( RAP_LEVITATE ))
     {
         // Now you can only turn levitation off if you have an
-        // activatable item.  Potions and miscast effects will 
+        // activatable item.  Potions and miscast effects will
         // have to time out (this makes the miscast effect actually
         // a bit annoying). -- bwr
         _add_talent(talents, you.duration[DUR_LEVITATION] ?
@@ -2180,15 +2197,15 @@ std::vector<talent> your_talents( bool check_confused )
         // In theory, we could be left with an unreachable ability
         // here (if you have 53 or more abilities simultaneously.)
     }
-    
+
     return talents;
 }
 
 // Note: we're trying for a behaviour where the player gets
 // to keep their assigned invocation slots if they get excommunicated
-// and then rejoin (but if they spend time with another god we consider 
-// the old invocation slots void and erase them).  We also try to 
-// protect any bindings the character might have made into the 
+// and then rejoin (but if they spend time with another god we consider
+// the old invocation slots void and erase them).  We also try to
+// protect any bindings the character might have made into the
 // traditional invocation slots (A-E and X). -- bwr
 static void _set_god_ability_helper( ability_type abil, char letter )
 {
@@ -2298,7 +2315,7 @@ static int _lugonu_warp_monster(int x, int y, int pow, int)
 
     if (!mons_friendly(&mon))
         behaviour_event( &mon, ME_ANNOY, MHITYOU );
-    
+
     if (check_mons_resist_magic(&mon, pow * 2))
     {
         mprf("%s %s.",
@@ -2337,7 +2354,7 @@ static void _lugonu_bends_space()
         _lugonu_warp_area(pow);
 
     random_blink(false, true);
-    
+
     const int damage = roll_dice(1, 4);
     ouch(damage, 0, KILLED_BY_WILD_MAGIC, "a spatial distortion");
 }
