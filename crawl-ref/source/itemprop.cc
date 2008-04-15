@@ -1577,7 +1577,6 @@ int double_wpn_awkward_speed( const item_def &item )
     return ((base * 30 + 10) / 20 + 2);
 }
 
-
 bool is_demonic( const item_def &item )
 {
     if (item.base_type == OBJ_WEAPONS)
@@ -1597,7 +1596,24 @@ bool is_demonic( const item_def &item )
     return (false);
 }                               // end is_demonic()
 
-bool demonic2nondemonic( item_def &item, bool allow_blessed )
+bool is_blessed( const item_def &item )
+{
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        switch (item.sub_type)
+        {
+        case WPN_BLESSED_BLADE:
+            return (true);
+
+        default:
+            break;
+        }
+    }
+
+    return (false);
+}                               // end is_demonic()
+
+bool normal2good( item_def &item, bool allow_blessed )
 {
     if (item.base_type != OBJ_WEAPONS)
         return (false);
@@ -1608,7 +1624,10 @@ bool demonic2nondemonic( item_def &item, bool allow_blessed )
         return (false);
 
     case WPN_DEMON_BLADE:
-        item.sub_type = (allow_blessed) ? WPN_BLESSED_BLADE : WPN_SCIMITAR;
+        if (!allow_blessed)
+            item.sub_type = WPN_SCIMITAR;
+        else
+            item.sub_type = WPN_BLESSED_BLADE;
         break;
 
     case WPN_DEMON_WHIP:
@@ -1621,7 +1640,7 @@ bool demonic2nondemonic( item_def &item, bool allow_blessed )
     }
 
     return (true);
-}                               // end demonic2nondemonic()
+}                               // end normal2good()
 
 int weapon_str_weight( const item_def &wpn )
 {
@@ -1823,7 +1842,7 @@ bool check_weapon_shape( const item_def &item, bool quiet, bool check_id )
 
     if ((!check_id || item_type_known( item ))
         && ((item.base_type == OBJ_WEAPONS
-                && item.sub_type == WPN_BLESSED_BLADE)
+                && is_blessed(item))
             || brand == SPWPN_HOLY_WRATH)
         && (you.is_undead || you.species == SP_DEMONSPAWN))
     {

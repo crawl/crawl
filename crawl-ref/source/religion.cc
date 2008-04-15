@@ -911,10 +911,9 @@ static bool _tso_blessing_holy_wpn(monsters *mon)
     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
     wpn.colour = YELLOW;
 
-    // Convert demonic weapons into non-demonic weapons, not allowing
-    // blessed weapons, since the holy wrath brand is the blessing.
+    // Convert demonic weapons into non-demonic weapons.
     if (is_demonic(wpn))
-        demonic2nondemonic(wpn, false);
+        normal2good(wpn, false);
 
     return true;
 }
@@ -4065,6 +4064,9 @@ static bool _bless_weapon( god_type god, int brand, int colour )
         enchant_weapon( ENCHANT_TO_HIT, true, you.inv[wpn] );
         enchant_weapon( ENCHANT_TO_DAM, true, you.inv[wpn] );
 
+        if ( is_good_god(god) )
+            normal2good(you.inv[wpn]);
+
         you.wield_change = true;
         you.num_gifts[god]++;
         take_note(Note(NOTE_GOD_GIFT, you.religion));
@@ -4157,14 +4159,7 @@ static void _altar_prayer()
         const int wpn = get_player_wielded_weapon();
 
         if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_HOLY_WRATH)
-        {
-            if (_bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW))
-            {
-                // convert demonic weapons into non-demonic weapons
-                if (is_demonic(you.inv[wpn]))
-                    demonic2nondemonic(you.inv[wpn]);
-            }
-        }
+            _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW);
     }
 
     // Lugonu blesses weapons with distortion

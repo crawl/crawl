@@ -172,7 +172,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
             && (!is_fixed_artefact( *weapon )
                 && (weap_brand == SPWPN_HOLY_WRATH
                     || (weapon->base_type == OBJ_WEAPONS
-                         && weapon->sub_type == WPN_BLESSED_BLADE))))
+                         && is_blessed(*weapon)))))
     {
         SAY(mpr("This weapon will not allow you to wield it."));
         return false;
