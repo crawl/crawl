@@ -2075,11 +2075,14 @@ launchers to good effect, these skills crosstrain:
 
 Magic skills:
 -------------
-Spellcasting is the basic skill for magic use, and affects your 
-reserves of magical energy (MP) in the same way that Fighting affects 
-your hit points. Every time you increase the spellcasting skill you gain
-some magic points and spell levels. Spellcasting is a very difficult 
-skill to learn, and requires a large amount of practice and experience.
+Spellcasting is the basic skill for magic use. It affects your reserves 
+of magical energy (Magic) in the same way that Fighting affects your hit
+points: every time you increase the spellcasting skill you gain some 
+magic points and spell levels. This skills greatly influences the amount
+by which casting causes hunger. Spellcasting also helps with the power 
+of your spells, but to a lesser extent than the more specialised magical
+skills. This skill is very difficult to learn, and requires a large 
+amount of practice and experience.
 
 Only those characters with at least one magic skill at level one or 
 above can learn magical spells. If your character has no magic skills,
