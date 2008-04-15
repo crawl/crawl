@@ -1159,7 +1159,7 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
     textcolor(LIGHTGREY);
 }
 
-#define BOTTOM_JUSTIFY_MONSTER_LIST 1
+#define BOTTOM_JUSTIFY_MONSTER_LIST 0
 void update_monster_pane()
 {
     const int max_print = crawl_view.mlistsz.y;
