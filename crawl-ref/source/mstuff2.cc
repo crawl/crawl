@@ -978,14 +978,14 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
         mons_clear_trapping_net(monster);
 
     int newx, newy;
-    while(true)
+    while (true)
     {
         newx = 10 + random2(GXM - 20);
         newy = 10 + random2(GYM - 20);
 
         // don't land on top of another monster
         if (mgrd[newx][newy] != NON_MONSTER
-            || (newx == you.x_pos && newy == you.y_pos))
+            || newx == you.x_pos && newy == you.y_pos)
         {
             continue;
         }

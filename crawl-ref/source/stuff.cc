@@ -1399,8 +1399,7 @@ int near_stairs(const coord_def &p, int max_dist,
 {
     coord_def inc;
     for (inc.x = -max_dist; inc.x <= max_dist; inc.x++)
-    {
-        for(inc.y = -max_dist; inc.y <= max_dist; inc.y++)
+        for (inc.y = -max_dist; inc.y <= max_dist; inc.y++)
         {
             const coord_def np(p + inc);
 
@@ -1433,7 +1432,6 @@ int near_stairs(const coord_def &p, int max_dist,
                 return (np == you.pos()? 2 : 1);
             }
         }
-    }
 
     return false;
 }

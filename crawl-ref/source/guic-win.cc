@@ -172,31 +172,39 @@ void RegionClass::copy_font(RegionClass *r)
 void RegionClass::set_std_palette(RGBQUAD *pPal)
 {
     int i;
-    for(i=0;i<256;i++)
+    for (i = 0; i < 256; i++)
     {
-    std_palette[i].rgbRed   = pPal[i].rgbRed  ;
-    std_palette[i].rgbGreen = pPal[i].rgbGreen;
-    std_palette[i].rgbBlue  = pPal[i].rgbBlue ;
+        std_palette[i].rgbRed   = pPal[i].rgbRed  ;
+        std_palette[i].rgbGreen = pPal[i].rgbGreen;
+        std_palette[i].rgbBlue  = pPal[i].rgbBlue ;
 
-        if ( (pPal[i].rgbRed   == 0)
-           &&(pPal[i].rgbGreen == 0)
-           &&(pPal[i].rgbBlue  == 0) )
+        if (pPal[i].rgbRed      == 0
+            && pPal[i].rgbGreen == 0
+            && pPal[i].rgbBlue  == 0)
+        {
             pix_black = i;
+        }
 
-        if ( (pPal[i].rgbRed   == 255)
-           &&(pPal[i].rgbGreen == 255)
-           &&(pPal[i].rgbBlue  == 255) )
+        if (pPal[i].rgbRed      == 255
+            && pPal[i].rgbGreen == 255
+            && pPal[i].rgbBlue  == 255)
+        {
             pix_white = i;
+        }
 
-        if ( (pPal[i].rgbRed   == 255)
-           &&(pPal[i].rgbGreen == 0  )
-           &&(pPal[i].rgbBlue  == 255) )
+        if (pPal[i].rgbRed      == 255
+            && pPal[i].rgbGreen == 0
+            && pPal[i].rgbBlue  == 255)
+        {
             pix_magenta = i;
+        }
 
-        if ( (pPal[i].rgbRed   == 1)
-           &&(pPal[i].rgbGreen == 1)
-           &&(pPal[i].rgbBlue  == 1) )
+        if (pPal[i].rgbRed      == 1
+            && pPal[i].rgbGreen == 1
+            && pPal[i].rgbBlue  == 1)
+        {
             pix_rimcolor = i;
+        }
     }
 
     std_palette[pix_transparent].rgbRed   = 0;
@@ -219,15 +227,15 @@ void RegionClass::init_backbuf(RGBQUAD *pPal, int ncolor)
                 (sizeof(BITMAPINFO) + 256 * sizeof(RGBQUAD)) );
 
         // set header data
-        backbuf->pDib->bmiHeader.biSize     = sizeof(BITMAPINFOHEADER);
-        backbuf->pDib->bmiHeader.biPlanes   = 1;
-        backbuf->pDib->bmiHeader.biBitCount = 8;
-        backbuf->pDib->bmiHeader.biCompression=BI_RGB;
-        backbuf->pDib->bmiHeader.biSizeImage=0;
-        backbuf->pDib->bmiHeader.biXPelsPerMeter=0;
-        backbuf->pDib->bmiHeader.biYPelsPerMeter=0;
-        backbuf->pDib->bmiHeader.biClrUsed=0;
-        backbuf->pDib->bmiHeader.biClrImportant=0;
+        backbuf->pDib->bmiHeader.biSize          = sizeof(BITMAPINFOHEADER);
+        backbuf->pDib->bmiHeader.biPlanes        = 1;
+        backbuf->pDib->bmiHeader.biBitCount      = 8;
+        backbuf->pDib->bmiHeader.biCompression   = BI_RGB;
+        backbuf->pDib->bmiHeader.biSizeImage     = 0;
+        backbuf->pDib->bmiHeader.biXPelsPerMeter = 0;
+        backbuf->pDib->bmiHeader.biYPelsPerMeter = 0;
+        backbuf->pDib->bmiHeader.biClrUsed       = 0;
+        backbuf->pDib->bmiHeader.biClrImportant  = 0;
 
         // set palette data
         for (i = 0; i < ncolor; i++)
@@ -260,8 +268,8 @@ void RegionClass::init_backbuf(RGBQUAD *pPal, int ncolor)
             ReleaseDC(0, hdc1);
         }
     }
-    backbuf->pDibZero = (backbuf->pDibBits) 
-    + (backbuf->Height -1) * backbuf->Width;
+    backbuf->pDibZero = (backbuf->pDibBits
+                        + (backbuf->Height -1) * backbuf->Width);
 }
 
 void RegionClass::resize_backbuf()
@@ -273,10 +281,10 @@ void RegionClass::resize_backbuf()
     if (backbuf->hDib != NULL) DeleteObject(backbuf->hDib);
 
     // set dimension
-    backbuf->pDib->bmiHeader.biWidth    = mx*dx;
-    backbuf->pDib->bmiHeader.biHeight   = my*dy;
-    backbuf->Width = mx * dx;
-    backbuf->Height= my * dy;
+    backbuf->pDib->bmiHeader.biWidth  = mx*dx;
+    backbuf->pDib->bmiHeader.biHeight = my*dy;
+    backbuf->Width  = mx * dx;
+    backbuf->Height = my * dy;
 
     HDC hdc1 = GetDC(0);
     HDC hdc2 = GetDC(win->hWnd);
@@ -288,8 +296,8 @@ void RegionClass::resize_backbuf()
     ReleaseDC(win->hWnd, hdc2);
     ReleaseDC(0, hdc1);
 
-    backbuf->pDibZero = (backbuf->pDibBits) 
-    + (backbuf->Height -1) * backbuf->Width;
+    backbuf->pDibZero = (backbuf->pDibBits
+                        + (backbuf->Height -1) * backbuf->Width);
 
     for (i = 0; i< mx*dx*my*dy; i++)
         *(backbuf->pDibBits + i) = pix_black;
@@ -307,20 +315,19 @@ void TileRegionClass::resize_backbuf()
 
 void TextRegionClass::init_backbuf()
 {
-  /* not use */
+  /* not used */
 }
 
 void TileRegionClass::init_backbuf(RGBQUAD *pPal)
 {
     int i;
     if (!pPal)
-       RegionClass::init_backbuf(std_palette, 256);
+        RegionClass::init_backbuf(std_palette, 256);
     else
-       RegionClass::init_backbuf(pPal, 256);
+        RegionClass::init_backbuf(pPal, 256);
 
     for (i = 0; i< mx*dx*my*dy; i++)
         *(backbuf->pDibBits + i) = pix_black;
-
 }
 
 void MapRegionClass::init_backbuf()
@@ -329,12 +336,12 @@ void MapRegionClass::init_backbuf()
     RGBQUAD scol[MAX_MAP_COL];
     int i;
 
-    for (i=0; i< MAX_MAP_COL;i++)
+    for (i = 0; i < MAX_MAP_COL; i++)
     {
-    scol[i].rgbBlue  = map_colors[i][2];
-    scol[i].rgbGreen = map_colors[i][1];
-    scol[i].rgbRed   = map_colors[i][0];
-    scol[i].rgbReserved = 0;
+        scol[i].rgbBlue  = map_colors[i][2];
+        scol[i].rgbGreen = map_colors[i][1];
+        scol[i].rgbRed   = map_colors[i][0];
+        scol[i].rgbReserved = 0;
     }
 
     // just resize
@@ -345,10 +352,12 @@ void MapRegionClass::init_backbuf()
 
     for (i = 0; i < MAX_MAP_COL; i++)
     {
-        if ( (backbuf->pDib->bmiColors[i].rgbRed   == 0)
-           &&(backbuf->pDib->bmiColors[i].rgbGreen == 0)
-           &&(backbuf->pDib->bmiColors[i].rgbBlue  == 0) )
+        if (backbuf->pDib->bmiColors[i].rgbRed      == 0
+            && backbuf->pDib->bmiColors[i].rgbGreen == 0
+            && backbuf->pDib->bmiColors[i].rgbBlue  == 0)
+        {
             black = i;
+        }
     }
 
     for (i = 0; i< mx*dx*my*dy; i++)
@@ -357,19 +366,20 @@ void MapRegionClass::init_backbuf()
 
 // defined to object, not to class
 void TextRegionClass::draw_string(int x, int y, unsigned char *buf,
-           int len, int col)
+                                  int len, int col)
 {
     HDC hdc = GetDC(win->hWnd);
     RECT rc;
-    rc.left = ox + x * dx;
-    rc.right = rc.left + len * dx;
-    rc.top =  oy + y * dy;
+    rc.left   = ox + x * dx;
+    rc.right  = rc.left + len * dx;
+    rc.top    =  oy + y * dy;
     rc.bottom = rc.top + dy;
+
     SelectObject(hdc, font);
     SetBkColor(hdc, term_pix[col>>4]);
     SetTextColor(hdc, term_pix[col&0x0f]);
     ExtTextOut(hdc, rc.left, rc.top,  ETO_CLIPPED, &rc,
-        (char *)buf, len, NULL);
+               (char *)buf, len, NULL);
     ReleaseDC(win->hWnd, hdc);
 }
 
@@ -381,20 +391,21 @@ void TextRegionClass::draw_cursor(int x, int y)
     int cx = x - cx_ofs;
     int cy = y - cy_ofs;
 
-    if(!flag)return;
+    if (!flag)
+        return;
 
-    hdc =GetDC(win->hWnd);
+    hdc = GetDC(win->hWnd);
     SelectObject(hdc, font);
 
-    rc.left = ox + cx * dx ;
-    rc.right = rc.left + (2 * dx);
-    rc.top =  oy + cy * dy;
+    rc.left   = ox + cx * dx ;
+    rc.right  = rc.left + (2 * dx);
+    rc.top    =  oy + cy * dy;
     rc.bottom = rc.top + dy;
 
     SetBkMode(hdc, TRANSPARENT);
     SetTextColor(hdc, term_pix[0x0f]);
     ExtTextOut(hdc, rc.left, rc.top,  ETO_CLIPPED, &rc,
-                           "_ ", 2, NULL);
+               "_ ", 2, NULL);
     ReleaseDC(win->hWnd, hdc);
 }
 
@@ -405,16 +416,17 @@ void TextRegionClass::erase_cursor(){
     int adrs = y0 * mx + x0;
     int col = abuf[adrs];
 
-    if(!flag)return;
+    if (!flag)
+        return;
 
     RECT rc;
-    HDC hdc =GetDC(win->hWnd);
+    HDC hdc = GetDC(win->hWnd);
     SelectObject(hdc, font);
 
     //restore previous cursor cell
-    rc.left = ox + x0 * dx;
-    rc.right= rc.left + (2 * dx);
-    rc.top  = oy + y0 * dy;
+    rc.left   = ox + x0 * dx;
+    rc.right  = rc.left + (2 * dx);
+    rc.top    = oy + y0 * dy;
     rc.bottom = rc.top + dy;
     unsigned char rchar[3];
 
@@ -427,14 +439,14 @@ void TextRegionClass::erase_cursor(){
         rchar[1] = cbuf[adrs+1];
         rchar[2] = '\0';
         ExtTextOut(hdc, rc.left, rc.top,  ETO_CLIPPED, &rc,
-                           (char *)&rchar, 2, NULL);
+                   (char *)&rchar, 2, NULL);
     }
     else
 #endif
     {
         rchar[1] = '\0';
         ExtTextOut(hdc, rc.left, rc.top,  ETO_CLIPPED, &rc,
-                           (char *)&rchar, 1, NULL);
+                   (char *)&rchar, 1, NULL);
     }
     ReleaseDC(win->hWnd, hdc);
 }
@@ -458,9 +470,8 @@ void TileRegionClass::clear()
 void MapRegionClass::clear()
 {
     for (int i = 0; i < mx2*my2; i++)
-    {
-        mbuf[i]=PIX_BLACK;
-    }
+        mbuf[i] = PIX_BLACK;
+
     RegionClass::clear();
 }
 
@@ -468,10 +479,10 @@ void TextRegionClass::clear()
 {
     int i;
 
-    for (i=0; i<mx*my; i++)
+    for (i = 0; i < mx*my; i++)
     {
-        cbuf[i]=' ';
-        abuf[i]=0;
+        cbuf[i] =' ';
+        abuf[i] =0;
     }
     RegionClass::clear();
 }
@@ -491,26 +502,22 @@ BOOL WinClass::create(const char *name)
     if ( GetSystemMetrics(SM_CXSCREEN) < (ox + wx) ) ox =0;
 
     AdjustWindowRectEx(&rc,
-                       (WS_OVERLAPPED  | WS_SYSMENU |
-                        WS_MINIMIZEBOX | WS_CAPTION |
-                        WS_VISIBLE),
+                       (WS_OVERLAPPED  | WS_SYSMENU | WS_MINIMIZEBOX
+                        | WS_CAPTION | WS_VISIBLE),
                        false, 0);
 
     if (hWnd == NULL)
     {
         hWnd = CreateWindowEx(0, "CrawlList",name,
-                          (WS_OVERLAPPED  | WS_SYSMENU |
-                           WS_MINIMIZEBOX | WS_CAPTION |
-                           WS_VISIBLE),
-                           ox, oy, //pos
-                           rc.right - rc.left, rc.bottom - rc.top, //size
-                           HWND_DESKTOP, NULL, hInst, NULL);
+                              (WS_OVERLAPPED  | WS_SYSMENU | WS_MINIMIZEBOX
+                               | WS_CAPTION | WS_VISIBLE),
+                              ox, oy, //pos
+                              rc.right - rc.left, rc.bottom - rc.top, //size
+                              HWND_DESKTOP, NULL, hInst, NULL);
        ShowWindow( hWnd, nCmdShow );
     }
-    if( !hWnd )
-    {
+    if ( !hWnd )
        return FALSE;
-    }
 
    clear();
    return TRUE;
@@ -518,8 +525,8 @@ BOOL WinClass::create(const char *name)
 
 void WinClass::move()
 {
-        SetWindowPos(hWnd, 0, ox, oy, wx, wy, SWP_NOSIZE);
-        UpdateWindow( hWnd );
+    SetWindowPos(hWnd, 0, ox, oy, wx, wy, SWP_NOSIZE);
+    UpdateWindow( hWnd );
 }
 
 void WinClass::resize()
@@ -531,15 +538,15 @@ void WinClass::resize()
     rc.bottom = wy;
 
     AdjustWindowRectEx(&rc,
-                       (WS_OVERLAPPED  | WS_SYSMENU |
-                        WS_MINIMIZEBOX | WS_CAPTION |
-                        WS_VISIBLE),
+                       (WS_OVERLAPPED  | WS_SYSMENU | WS_MINIMIZEBOX
+                        | WS_CAPTION | WS_VISIBLE),
                        false, 0);
 
     SetWindowPos(hWnd, 0, ox, oy,
-        rc.right - rc.left,
-        rc.bottom - rc.top,
-        SWP_NOMOVE);
+                 rc.right - rc.left,
+                 rc.bottom - rc.top,
+                 SWP_NOMOVE);
+
     UpdateWindow( hWnd );
 }
 
@@ -578,30 +585,27 @@ void MapRegionClass::draw_data(unsigned char *buf)
     int bufx = mx * dx;
     int bufy = my * dy;
 
-    bufx = (bufx+3)/4;
-    bufx *=4;
+    bufx  = (bufx+3)/4;
+    bufx *= 4;
 #define BUF_IDX(x,y, x1, y1) ((x)*dx-(y)*dy*bufx + (x1) - (y1)*bufx)
     // upper left corner
     LPBYTE pDibBit0 = backbuf->pDibBits + bufx*(bufy-1);
 
     ppix  = pDibBit0;
 
-    inc_x = dx;
+    inc_x  = dx;
     inc_x0 = 1;
 
-    inc_y = - mx2 * inc_x + BUF_IDX(0, 1, 0, 0);
+    inc_y  = - mx2 * inc_x + BUF_IDX(0, 1, 0, 0);
     inc_y0 = - dx * inc_x0 + BUF_IDX(0, 0, 0, 1);
 
     // erase old markers
     const int marker_length = 2;
     for (int j = 0; j < dy * marker_length; j++)
-    {
         *(pDibBit0 + BUF_IDX(px, 0, dx/2 + x_margin, j)) = MAP_BLACK;
-    }
+
     for (int j = 0; j < dx * marker_length; j++)
-    {
         *(pDibBit0 + BUF_IDX(0, py, j, dy/2 + y_margin)) = MAP_BLACK;
-    }
 
     force_redraw = true;
 
@@ -618,8 +622,8 @@ void MapRegionClass::draw_data(unsigned char *buf)
                 px = i;
                 py = j;
             }
-            if ( (col != get_col(i,j)) || force_redraw ||
-                i < marker_length || j < marker_length)    
+            if ( col != get_col(i,j) || force_redraw
+                 || i < marker_length || j < marker_length)
             {
                 dpix = ppix;
                 for (int y = 0; y < dy; y++)
@@ -640,13 +644,10 @@ void MapRegionClass::draw_data(unsigned char *buf)
 
     // draw new markers
     for (int j = 0; j < dy * marker_length; j++)
-    {
         *(pDibBit0 + BUF_IDX(px, 0, dx/2 + x_margin, j)) = MAP_WHITE;
-    }
+
     for (int j = 0; j < dx * marker_length; j++)
-    {
         *(pDibBit0 + BUF_IDX(0, py, j, dy/2 + y_margin)) = MAP_WHITE;
-    }
 
     redraw();
     force_redraw = false;
@@ -665,7 +666,9 @@ LPBYTE dib_ref_pixel(dib_pack* dib, int x, int y)
 
 bool ImgIsTransparentAt(img_type img, int x, int y)
 {
-    if (pix_transparent == *( dib_ref_pixel(img, x, y) )) return true;
+    if (pix_transparent == *( dib_ref_pixel(img, x, y) ))
+        return true;
+
     return false;
 }
 void ImgSetTransparentPix(img_type img)
@@ -675,7 +678,9 @@ void ImgSetTransparentPix(img_type img)
 
 img_type ImgCreateSimple(int wx, int wy)
 {
-    if (wx ==0 || wy == 0) return NULL;
+    if (wx == 0 || wy == 0)
+        return NULL;
+
     dib_pack *ptr = (dib_pack *)GlobalAlloc(GPTR, sizeof(dib_pack));
 
     ptr->pDibBits = (LPBYTE)GlobalAlloc(GPTR, wx*wy );
@@ -692,7 +697,8 @@ img_type ImgCreateSimple(int wx, int wy)
 
 void ImgDestroy(img_type img)
 {
-    if (!img) return;
+    if (!img)
+        return;
 
     if (img->pDib) GlobalFree(img->pDib);
     if (img->hDC)  DeleteDC  (img->hDC);
@@ -712,17 +718,20 @@ img_type ImgLoadFile(const char *name)
 
     hdc1 = GetDC(0);
 
-    fh=CreateFile(name, GENERIC_READ,0,NULL,OPEN_EXISTING,
-        FILE_ATTRIBUTE_NORMAL,NULL);
-    if (fh == INVALID_HANDLE_VALUE) return NULL;
+    fh = CreateFile(name, GENERIC_READ, 0, NULL, OPEN_EXISTING,
+                    FILE_ATTRIBUTE_NORMAL, NULL);
+
+    if (fh == INVALID_HANDLE_VALUE)
+        return NULL;
 
     SetFilePointer(fh,0,NULL,FILE_BEGIN);
 
     if (!ReadFile(fh,&bmHead, sizeof(BITMAPFILEHEADER), &dummy, NULL))
-    return NULL;
+        return NULL;
 
     img = (dib_pack *) GlobalAlloc(GPTR, sizeof(dib_pack));
-    if (!img) return  NULL;
+    if (!img)
+        return  NULL;
 
     img->pDib = (LPBITMAPINFO)GlobalAlloc(GPTR,
                 (sizeof(BITMAPINFO) + 256 * sizeof(RGBQUAD)) );
@@ -733,8 +742,9 @@ img_type ImgLoadFile(const char *name)
     }
 
     SetFilePointer(fh, sizeof(BITMAPFILEHEADER), NULL, FILE_BEGIN);
-    if (!ReadFile(fh,img->pDib, sizeof(BITMAPINFOHEADER)+ 256 * sizeof(RGBQUAD),
-             &dummy, NULL))
+    if (!ReadFile(fh, img->pDib,
+                  sizeof(BITMAPINFOHEADER) + 256 * sizeof(RGBQUAD),
+                  &dummy, NULL))
     {
         GlobalFree(img->pDib);
         GlobalFree(img);
@@ -781,27 +791,29 @@ void ImgClear(img_type img)
 
 // Copy internal image to another internal image
 void ImgCopy(img_type src,  int sx, int sy, int wx, int wy,
-                    img_type dest, int dx, int dy, int copy)
+             img_type dest, int dx, int dy, int copy)
 {
     int x, y;
     BYTE pix;
 
-    if(copy)
+    if (copy)
     {
-        for(x=0;x<wx;x++){
-        for(y=0;y<wy;y++){
-            pix = *( dib_ref_pixel(src, sx+x, sy+y) );
-            *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
-        }}
+        for (x = 0; x < wx; x++)
+            for (y = 0; y < wy; y++)
+            {
+                pix = *( dib_ref_pixel(src, sx+x, sy+y) );
+                *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
+            }
     }
     else
     {
-        for(x=0;x<wx;x++){
-        for(y=0;y<wy;y++){
-            pix = *( dib_ref_pixel(src, sx+x, sy+y) );
-            if(pix!=pix_transparent)
-                *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
-        }}
+        for (x = 0; x < wx; x++)
+            for (y = 0; y < wy; y++)
+            {
+                pix = *( dib_ref_pixel(src, sx+x, sy+y) );
+                if (pix!=pix_transparent)
+                    *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
+            }
     }
 }
 
@@ -814,21 +826,26 @@ void ImgCopyH(img_type src,  int sx, int sy, int wx, int wy,
 
     if(copy)
     {
-        for(x=0;x<wx;x++){
-        for(y=0;y<wy;y++){
-            pix = *( dib_ref_pixel(src, sx+x, sy+y) );
-            if (pix == pix_rimcolor) pix = pix_magenta;
-            *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
-        }}
+        for (x = 0; x < wx; x++)
+            for (y = 0; y < wy; y++)
+            {
+                pix = *( dib_ref_pixel(src, sx+x, sy+y) );
+                if (pix == pix_rimcolor) pix = pix_magenta;
+                    *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
+            }
     }
     else
     {
-        for(x=0;x<wx;x++){
-        for(y=0;y<wy;y++){
-            pix = *( dib_ref_pixel(src, sx+x, sy+y) );
-            if (pix == pix_rimcolor) pix = pix_magenta;
-            if(pix!=pix_transparent)    *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
-        }}
+        for (x = 0; x < wx; x++)
+            for (y = 0; y < wy; y++)
+            {
+                pix = *( dib_ref_pixel(src, sx+x, sy+y) );
+
+                if (pix == pix_rimcolor)
+                    pix = pix_magenta;
+                if (pix != pix_transparent)
+                    *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
+            }
     }
 }
 
@@ -840,13 +857,14 @@ void ImgCopyMasked(img_type src,  int sx, int sy, int wx, int wy,
     int x, y;
     BYTE pix;
     int count = 0;
-    for(y=0;y<wy;y++){
-    for(x=0;x<wx;x++){
-        pix = *( dib_ref_pixel(src, sx+x, sy+y) );
-        if (mask[count]==0 && pix != pix_transparent)
-            *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
-        count++;
-    }}
+    for (y = 0; y < wy; y++)
+        for (x = 0; x < wx; x++)
+        {
+            pix = *( dib_ref_pixel(src, sx+x, sy+y) );
+            if (mask[count]==0 && pix != pix_transparent)
+                *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
+            count++;
+        }
 }
 
 // Copy internal image to another internal image
@@ -856,14 +874,16 @@ void ImgCopyMaskedH(img_type src,  int sx, int sy, int wx, int wy,
     int x, y;
     BYTE pix;
     int count = 0;
-    for(y=0;y<wy;y++){
-    for(x=0;x<wx;x++){
-        pix = *( dib_ref_pixel(src, sx+x, sy+y) );
-        if (pix == pix_rimcolor) pix = pix_magenta;
-        if (mask[count]==0 && pix != pix_transparent)
-            *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
-        count++;
-    }}
+    for (y = 0; y < wy; y++)
+        for (x = 0; x < wx; x++)
+        {
+            pix = *( dib_ref_pixel(src, sx+x, sy+y) );
+            if (pix == pix_rimcolor)
+                pix = pix_magenta;
+            if (mask[count]==0 && pix != pix_transparent)
+                *( dib_ref_pixel(dest, dx+x, dy+y) ) = pix;
+            count++;
+        }
 }
 
 void WinClass::fillrect(int left, int top, int right, int bottom, int color)
@@ -872,12 +892,12 @@ void WinClass::fillrect(int left, int top, int right, int bottom, int color)
 
     HBRUSH curbrush;
     HDC   curbrushhdc = NULL;
-    RECT   currect;
+    RECT  currect;
     curbrush = CreateSolidBrush(term_pix[color]);
-    currect.left  = left;
-    currect.right = right;
-    currect.top   = top;
-    currect.bottom= bottom;
+    currect.left   = left;
+    currect.right  = right;
+    currect.top    = top;
+    currect.bottom = bottom;
     SelectObject(curbrushhdc, curbrush);
     FillRect(hdc, &currect, curbrush);
     DeleteObject(curbrush);
@@ -899,13 +919,13 @@ void RegionClass::framerect(int left, int top, int right, int bottom, int color)
     HDC hdc = GetDC(win->hWnd);
 
     HBRUSH curbrush;
-    HDC   curbrushhdc = NULL;
+    HDC    curbrushhdc = NULL;
     RECT   currect;
     curbrush = CreateSolidBrush(term_pix[color]);
-    currect.left  = sx+left;
-    currect.right = sx+right;
-    currect.top   = sy+top;
-    currect.bottom= sy+bottom;
+    currect.left   = sx + left;
+    currect.right  = sx + right;
+    currect.top    = sy + top;
+    currect.bottom = sy + bottom;
     SelectObject(curbrushhdc, curbrush);
     FrameRect(hdc, &currect, curbrush);
     DeleteObject(curbrush);
@@ -919,13 +939,13 @@ void TileRegionClass::framerect(int left, int top, int right, int bottom,
 {
     HDC dhdc = backbuf->hDC;
     HBRUSH curbrush;
-    HDC   curbrushhdc = NULL;
+    HDC    curbrushhdc = NULL;
     RECT   currect;
     curbrush = CreateSolidBrush(term_pix[color]);
-    currect.left  = left;
-    currect.right = right;
-    currect.top   = top;
-    currect.bottom= bottom;
+    currect.left   = left;
+    currect.right  = right;
+    currect.top    = top;
+    currect.bottom = bottom;
     SelectObject(curbrushhdc, curbrush);
     FrameRect(dhdc, &currect, curbrush);
     DeleteObject(curbrush);
@@ -937,13 +957,13 @@ void RegionClass::fillrect(int left, int top, int right, int bottom, int color)
     HDC hdc = GetDC(win->hWnd);
 
     HBRUSH curbrush;
-    HDC   curbrushhdc = NULL;
+    HDC    curbrushhdc = NULL;
     RECT   currect;
     curbrush = CreateSolidBrush(term_pix[color]);
-    currect.left  = sx+left;
-    currect.right = sx+right;
-    currect.top   = sy+top;
-    currect.bottom= sy+bottom;
+    currect.left   = sx + left;
+    currect.right  = sx + right;
+    currect.top    = sy + top;
+    currect.bottom = sy + bottom;
     SelectObject(curbrushhdc, curbrush);
     FillRect(hdc, &currect, curbrush);
     DeleteObject(curbrush);
@@ -957,16 +977,15 @@ void  TileRegionClass::fillrect(int left, int top, int right, int bottom,
 {
     HDC dhdc = backbuf->hDC;
     HBRUSH curbrush;
-    HDC   curbrushhdc = NULL;
+    HDC    curbrushhdc = NULL;
     RECT   currect;
     curbrush = CreateSolidBrush(term_pix[color]);
-    currect.left  = left;
-    currect.right = right;
-    currect.top   = top;
-    currect.bottom= bottom;
+    currect.left   = left;
+    currect.right  = right;
+    currect.top    = top;
+    currect.bottom = bottom;
     SelectObject(curbrushhdc, curbrush);
     FillRect(dhdc, &currect, curbrush);
     DeleteObject(curbrush);
     DeleteDC(curbrushhdc);
 }
-

@@ -189,7 +189,7 @@ void WinClass::redraw(int x1, int y1, int x2, int y2)
 {
     std::vector <RegionClass *>::iterator r;
     int cx1, cx2, cy1, cy2;
-    for (r = regions.begin();r != regions.end();r++) 
+    for (r = regions.begin();r != regions.end();r++)
     {
         if (!(*r)->is_active()) continue;
         if( (*r)->convert_redraw_rect(x1, y1, x2, y2, &cx1, &cy1, &cx2, &cy2))
@@ -356,7 +356,7 @@ void RegionClass::make_active()
 {
     if (!flag) return;
     win->active_layer = layer;
-} 
+}
 
 void RegionClass::redraw(int x1, int y1, int x2, int y2)
 {
@@ -388,7 +388,7 @@ int MapRegionClass::get_col(int x, int y)
 }
 
 /*------------------------------------------*/
-bool RegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2, 
+bool RegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
                   int *rx1, int *ry1, int *rx2, int *ry2)
 {
     int cx1 = x1-ox;
@@ -417,7 +417,7 @@ bool RegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
     return true;
 }
 
-bool TileRegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2, 
+bool TileRegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
                   int *rx1, int *ry1, int *rx2, int *ry2)
 {
     int cx1 = x1-ox;
@@ -490,7 +490,7 @@ bool TileRegionClass::mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy)
 }
 
 /*
- * Text related 
+ * Text related
  */
 
 void TextRegionClass::scroll()
@@ -500,13 +500,13 @@ void TextRegionClass::scroll()
     if(!flag)
         return;
 
-    for(idx=0; idx<mx*(my-1);idx++)
+    for (idx = 0; idx < mx*(my-1); idx++)
     {
         cbuf[idx] = cbuf[idx + mx];
         abuf[idx] = abuf[idx + mx];
     }
 
-    for(idx=mx*(my-1);idx<mx*my;idx++)
+    for (idx = mx*(my-1); idx < mx*my; idx++)
     {
         cbuf[idx] = ' ';
         abuf[idx] = 0;
@@ -532,9 +532,9 @@ void TextRegionClass::addstr(char *buffer)
 
     if(!flag)return;
 
-    j=0;
+    j = 0;
 
-    for(i=0;i<len+1;i++)
+    for (i = 0; i < len + 1; i++)
     {
         char c = buffer[i];
         bool newline=false;
@@ -547,7 +547,8 @@ void TextRegionClass::addstr(char *buffer)
         }
         buf2[j] = c;
         j++;
-        if(c==0)
+
+        if (c == 0)
         {
             if (j-1 != 0)
                 addstr_aux(buf2, j - 1); // draw it
@@ -555,14 +556,15 @@ void TextRegionClass::addstr(char *buffer)
             {
                 print_x = cx_ofs;
                 print_y++;
-                j=0;
+                j = 0;
 
-                if(print_y - cy_ofs == my)
+                if (print_y - cy_ofs == my)
                     scroll();
             }
         }
     }
-    if (cursor_flag) cgotoxy(print_x+1, print_y+1);
+    if (cursor_flag)
+        cgotoxy(print_x+1, print_y+1);
 }
 
 void TextRegionClass::addstr_aux(char *buffer, int len)
@@ -574,15 +576,15 @@ void TextRegionClass::addstr_aux(char *buffer, int len)
     int head = x;
     int tail = x + len - 1;
 
-    if(!flag)
+    if (!flag)
         return;
 
     adjust_region(&head, &tail, y);
 
-    for (i=0; i < len && x + i < mx;i++)
+    for (i = 0; i < len && x + i < mx; i++)
     {
-        cbuf[adrs+x+i]=buffer[i];
-        abuf[adrs+x+i]=text_col;
+        cbuf[adrs+x+i] = buffer[i];
+        abuf[adrs+x+i] = text_col;
     }
     draw_string(head, y, &cbuf[adrs+head], tail-head, text_col);
     print_x += len;
@@ -591,10 +593,10 @@ void TextRegionClass::addstr_aux(char *buffer, int len)
 void TextRegionClass::redraw(int x1, int y1, int x2, int y2)
 {
     int x, y;
-    if(!flag)
+    if (!flag)
         return;
 
-    for(y=y1;y<=y2;y++)
+    for (y = y1; y <= y2; y++)
     {
         unsigned char *a = &abuf[y * mx];
         unsigned char *c = &cbuf[y * mx];
@@ -602,16 +604,17 @@ void TextRegionClass::redraw(int x1, int y1, int x2, int y2)
         int tail = x2;
         adjust_region(&head, &tail, y);
 
-        x=head;
+        x = head;
         int col = a[x];
 
-        while (x<=tail)
+        while (x <= tail)
         {
             int oldcol = col;
-            if (x==tail)
+            if (x == tail)
                 col = -1;
             else
                 col = a[x];
+
             if (oldcol != col)
             {
                 draw_string(head, y, &c[head], x-head, oldcol);
@@ -621,7 +624,7 @@ void TextRegionClass::redraw(int x1, int y1, int x2, int y2)
         }
     }
 
-    if(cursor_region == this && cursor_flag == 1)
+    if (cursor_region == this && cursor_flag == 1)
         draw_cursor(cursor_x, cursor_y);
 
     sys_flush();
@@ -635,11 +638,12 @@ void TextRegionClass::clear_to_end_of_line()
     int col = text_col;
     int adrs = cy * mx;
 
-    if(!flag)
+    if (!flag)
         return;
 
     ASSERT(adrs + mx - 1 < mx * my);
-    for(i=cx; i<mx; i++){
+    for (i = cx; i < mx; i++)
+    {
         cbuf[adrs+i] = ' ';
         abuf[adrs+i] = col;
     }
@@ -652,18 +656,21 @@ void TextRegionClass::clear_to_end_of_screen()
     int cy = print_y - cy_ofs;
     int col = text_col;
 
-    if(!flag)return;
+    if (!flag)
+        return;
 
-    for(i=cy*mx; i<mx*my; i++){
-        cbuf[i]=' ';
-        abuf[i]=col;
+    for (i = cy*mx; i < mx*my; i++)
+    {
+        cbuf[i] = ' ';
+        abuf[i] = col;
     }
     redraw(0, cy, mx-1, my-1);
 }
 
 void TextRegionClass::putch(unsigned char ch)
 {
-    if (ch==0) ch=32;
+    if (ch == 0)
+        ch=32;
     addstr_aux((char *)&ch, 1);
 }
 
@@ -716,7 +723,7 @@ void TextRegionClass::_setcursortype(int curstype)
 {
     cursor_flag = curstype;
     if (cursor_region != NULL)
-        cursor_region ->erase_cursor();
+        cursor_region->erase_cursor();
 
     if (curstype)
     {

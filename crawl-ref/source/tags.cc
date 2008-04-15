@@ -785,7 +785,7 @@ void tag_set_expected(char tags[], int fileType)
 {
     int i;
 
-    for(i=0; i<NUM_TAGS; i++)
+    for (i=0; i<NUM_TAGS; i++)
     {
         tags[i] = -1;
         switch(fileType)
@@ -2104,16 +2104,16 @@ void tag_missing_level_attitude()
     // can be used to determine friendly/neutral/
     // hostile.
     int i;
-    bool isFriendly;
+    bool is_friendly;
     unsigned int new_beh = BEH_WANDER;
 
-    for(i=0; i<MAX_MONSTERS; i++)
+    for (i = 0; i < MAX_MONSTERS; i++)
     {
         // only do actual monsters
         if (menv[i].type < 0)
             continue;
 
-        isFriendly = testbits(menv[i].flags, MF_CREATED_FRIENDLY);
+        is_friendly = testbits(menv[i].flags, MF_CREATED_FRIENDLY);
 
         menv[i].foe = MHITNOT;
 
@@ -2132,13 +2132,13 @@ void tag_missing_level_attitude()
                 break;
             case 7:         // old BEH_ENSLAVED
                 if (!menv[i].has_ench(ENCH_CHARM))
-                    isFriendly = true;
+                    is_friendly = true;
                 break;
             default:
                 break;
         }
 
-        menv[i].attitude = (isFriendly)? ATT_FRIENDLY : ATT_HOSTILE;
+        menv[i].attitude = (is_friendly) ? ATT_FRIENDLY : ATT_HOSTILE;
         menv[i].behaviour = static_cast<beh_type>(new_beh);
         menv[i].foe_memory = 0;
     }

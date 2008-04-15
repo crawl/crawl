@@ -71,7 +71,7 @@ static const char *features[] = {
 #ifdef WIZARD
     "Wizard mode",
 #endif
-    
+
 #if defined(REGEX_POSIX)
     "POSIX regexps",
 #elif defined(REGEX_PCRE)
@@ -125,7 +125,7 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     item_def tmp = you.inv[to_slot];
     you.inv[to_slot] = you.inv[from_slot];
     you.inv[from_slot] = tmp;
-    
+
     // slot switching
     tmp.slot = you.inv[to_slot].slot;
     you.inv[to_slot].slot = you.inv[from_slot].slot;
@@ -177,10 +177,10 @@ static void _adjust_item(void)
     mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
     to_slot = prompt_invent_item(
-                    "Adjust to which letter?", 
-                    MT_INVLIST, 
-                    -1, 
-                    false, 
+                    "Adjust to which letter?",
+                    MT_INVLIST,
+                    -1,
+                    false,
                     false );
     if (to_slot == PROMPT_ABORT)
     {
@@ -211,7 +211,7 @@ static void adjust_spells(void)
         if (keyin == '?' || keyin == '*')
             keyin = list_spells();
     }
-    
+
     if ( !isalpha(keyin) )
     {
         canned_msg( MSG_OK );
@@ -319,9 +319,9 @@ static void adjust_ability(void)
                 << std::endl;
 
     const int index1 = letter_to_index(talents[selected].hotkey);
-    
+
     msg::streams(MSGCH_PROMPT) << "Adjust to which letter?" << std::endl;
-    
+
     const int keyin = get_ch();
 
     if ( !isalpha(keyin) )
@@ -351,7 +351,7 @@ static void adjust_ability(void)
             break;
         }
     }
-    
+
     if (!printed_message)
         msg::stream << "Moving to: "
                     << static_cast<char>(keyin) << " - "
@@ -365,10 +365,10 @@ static void adjust_ability(void)
 }
 
 void list_armour()
-{    
+{
     std::ostringstream estr;
     for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
-    {        
+    {
         const int armour_id = you.equip[i];
         int       colour    = MSGCOL_BLACK;
 
@@ -569,7 +569,7 @@ static const char *targeting_help_1 =
     "<h>Targeting (zapping wands, casting spells, etc.):\n"
     "The keys from examine surroundings also work here.\n"
     "In addition, you can use:\n"
-    "<w>.</w> : fire at target (<w>Enter</w>, <w>Del</w>, <w>Space</w>)\n" 
+    "<w>.</w> : fire at target (<w>Enter</w>, <w>Del</w>, <w>Space</w>)\n"
     "<w>!</w> : fire at target and stop there (may hit submerged creatures)\n"
     "<w>p</w> : fire at Previous target (also <w>f</w>)\n"
     "<w>:</w> : show/hide beam path\n"
@@ -589,7 +589,7 @@ static const char *targeting_help_2 =
     "<w>)</w> : cycle to previous suitable missile.\n"
     "<w>i</w> : choose from inventory.\n"
 ;
-    
+
 
 // Add the contents of the file fp to the scroller menu m.
 // If first_hotkey is nonzero, that will be the hotkey for the
@@ -609,7 +609,7 @@ static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
     for ( int i = 0; i < get_number_of_lines(); ++i )
         m.add_entry(new MenuEntry(std::string()));
     m.add_entry(new MenuEntry(std::string(), MEL_TITLE));
-    
+
     while (fgets(buf, sizeof buf, fp))
     {
         MenuEntry* me = new MenuEntry(buf);
@@ -1036,7 +1036,7 @@ static bool find_description(bool &again, std::string& error_inout)
         want_regex     = false;
         want_sort      = false;
         doing_branches = true;
-        
+
         break;
 
     default:
@@ -1246,7 +1246,7 @@ static int keyhelp_keyfilter(int ch)
 {
     switch (ch)
     {
-    case ':':
+      case ':':
         // If the game has begun, show notes.
         if (crawl_state.need_save)
         {
@@ -1255,24 +1255,25 @@ static int keyhelp_keyfilter(int ch)
         }
         break;
 
-    case '/':
-    {
+      case '/':
+      {
         bool again = false;
         std::string error;
-        do {
-            if (find_description(again, error))
-                if ( getch() == 0 )
-                    getch();
+        do
+        {
+            // resets 'again'
+            if (find_description(again, error) && getch() == 0 )
+                getch();
+
             if (again)
-            {
                 mesclr(true);
-            }
-        } while(again);
+        }
+        while (again);
 
         viewwindow(true, false);
 
         return -1;
-    }
+      }
     }
     return ch;
 }
@@ -1310,7 +1311,7 @@ std::string help_highlighter::get_species_key() const
     if (player_genus(GENPC_DRACONIAN))
         strip_tag(result,
                   species_name(you.species, you.experience_level, true));
-    
+
     result += "  ";
     return (result);
 }
@@ -1389,7 +1390,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>5</w>.      List of Enchantments\n"
             "<w>6</w>.      Inscriptions\n",
             true, true, cmdhelp_textfilter);
-        
+
         std::vector<formatted_string> blines = cols.formatted_lines();
         unsigned i;
         for (i = 0; i < blines.size(); ++i )
@@ -1724,7 +1725,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
         add_formatted_tutorial_help(cols);
     else
         add_formatted_keyhelp(cols);
-    
+
     show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
 
     if (do_redraw_screen)
@@ -1770,7 +1771,7 @@ static void list_wizard_commands()
                        "S      : set skill to level\n",
                        true, true);
 
-    cols.add_formatted(1, 
+    cols.add_formatted(1,
                        "t      : tweak object properties\n"
                        "T      : make a trap\n"
                        "v      : show gold value of an item\n"

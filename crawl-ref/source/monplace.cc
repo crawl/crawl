@@ -378,7 +378,7 @@ static int resolve_monster_type(int mon_type, proximity_type proximity,
         {
             int tries = 0;
             int pval = 0;
-            while(++tries <= 320)
+            while (++tries <= 320)
             {
                 px = 5 + random2(GXM - 10);
                 py = 5 + random2(GYM - 10);
@@ -517,7 +517,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         // c) in the 'correct' proximity to the player
         dungeon_feature_type grid_wanted =
             habitat2grid( mons_habitat_by_type(mon_type) );
-        while(true)
+        while (true)
         {
             // handled above, won't change anymore
             if (proximity == PROX_NEAR_STAIRS && tries)
@@ -676,7 +676,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         menv[id].flags |= MF_BAND_MEMBER;
 
     // (5) for each band monster, loop call to place_monster_aux().
-    for(i = 1; i < band_size; i++)
+    for (i = 1; i < band_size; i++)
     {
         const int band_id =
             place_monster_aux( band_monsters[i], behaviour, target, px, py,

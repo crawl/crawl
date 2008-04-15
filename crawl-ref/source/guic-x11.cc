@@ -34,7 +34,7 @@ static unsigned long pix_hilite;
 static unsigned long pix_black;
 static unsigned long pix_rimcolor;
 static int x11_byte_per_pixel_ximage();
-static unsigned long create_pixel(unsigned int red, unsigned int green, 
+static unsigned long create_pixel(unsigned int red, unsigned int green,
                  unsigned int blue);
 static XImage *read_png(const char *fname);
 
@@ -327,14 +327,11 @@ void MapRegionClass::draw_data(unsigned char *buf)
 
     const int marker_length = 2;
 
-    for(int yy = 0; yy < dy * marker_length; yy++)
-    {
+    for (int yy = 0; yy < dy * marker_length; yy++)
         XPutPixel(backbuf, px*dx+dx/2 + x_margin, yy, map_pix[MAP_BLACK]);
-    }
-    for(int xx = 0; xx < dx * marker_length; xx++)
-    {
+
+    for (int xx = 0; xx < dx * marker_length; xx++)
         XPutPixel(backbuf, xx, py*dy+dy/2 + y_margin, map_pix[MAP_BLACK]);
-    }
 
     for (int y = 0; y < my - y_margin; y++)
     {
@@ -347,14 +344,14 @@ void MapRegionClass::draw_data(unsigned char *buf)
                 px = x;
                 py = y;
             }
-            if(col != get_col(x, y) || force_redraw || 
-                x < marker_length || y < marker_length)
+            if (col != get_col(x, y) || force_redraw
+                || x < marker_length || y < marker_length)
             {
-                for(int xx=0; xx<dx; xx++)
-                    for(int yy=0; yy<dy; yy++)
+                for (int xx=0; xx<dx; xx++)
+                    for (int yy=0; yy<dy; yy++)
                     {
                         XPutPixel(backbuf, x_margin + x*dx+xx,
-                            y_margin + y*dy+yy, map_pix[col]);
+                                  y_margin + y*dy+yy, map_pix[col]);
                     }
 
                 set_col(col, x, y);
@@ -362,14 +359,11 @@ void MapRegionClass::draw_data(unsigned char *buf)
         }
     }
 
-    for(int yy = 0; yy < dy * marker_length; yy++)
-    {
+    for (int yy = 0; yy < dy * marker_length; yy++)
         XPutPixel(backbuf, px*dx+dx/2 + x_margin, yy, map_pix[MAP_WHITE]);
-    }
-    for(int xx = 0; xx < dx * marker_length; xx++)
-    {
+
+    for (int xx = 0; xx < dx * marker_length; xx++)
         XPutPixel(backbuf, xx, py*dy+dy/2 + y_margin, map_pix[MAP_WHITE]);
-    }
 
     redraw();
     XFlush(display);
@@ -418,11 +412,11 @@ img_type ImgLoadFile(const char *name)
 
 void ImgClear(img_type img)
 {
-    int x,y;
+    int x, y;
     ASSERT(img != NULL);
-    for(y=0;y<img->height;y++)
-    for(x=0;x<img->width;x++)
-        XPutPixel(img, x, y, pix_transparent);
+    for (x = 0; x < img->width; x++)
+        for (y = 0; y < img->height; y++)
+            XPutPixel(img, x, y, pix_transparent);
 }
 
 // Copy internal image to another internal image
@@ -434,65 +428,72 @@ void ImgCopy(img_type src,  int sx, int sy, int wx, int wy,
     int bpl_s = src->bytes_per_line;
     int bpl_d = dest->bytes_per_line;
 
-    ASSERT(sx>=0);
-    ASSERT(sy>=0);
-    ASSERT(sx+wx<=(src->width));
-    ASSERT(sy+wy<=(src->height));
-    ASSERT(dx>=0);
-    ASSERT(dy>=0);
-    ASSERT(dx+wx<=(dest->width));
-    ASSERT(dy+wy<=(dest->height));
+    ASSERT(sx >= 0);
+    ASSERT(sy >= 0);
+    ASSERT(sx + wx <= src->width);
+    ASSERT(sy + wy <= src->height);
+    ASSERT(dx >= 0);
+    ASSERT(dy >= 0);
+    ASSERT(dx + wx <= dest->width);
+    ASSERT(dy + wy <= dest->height);
 
-    if(copy==1)
+    if (copy == 1)
     {
-        char *p_src = (char *)(src->data + bpl_s * sy + sx * bpp);
+        char *p_src  = (char *)(src->data + bpl_s * sy + sx * bpp);
         char *p_dest = (char *)(dest->data + bpl_d * dy + dx * bpp);
 
-        for(y=0;y<wy;y++){
+        for (y = 0; y < wy; y++)
+        {
             memcpy(p_dest, p_src, wx * bpp);
-            p_src += bpl_s;
+            p_src  += bpl_s;
             p_dest += bpl_d;
         }
     }
-    else if(bpp<=1)
+    else if (bpp <= 1)
     {
-        CARD8 *p_src = (CARD8 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD8 *p_src  = (CARD8 *)(src->data + bpl_s * sy + sx * bpp);
         CARD8 *p_dest = (CARD8 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] != pix_transparent)
+                if (p_src[x] != pix_transparent)
                     p_dest[x] = p_src[x];
             }
-            p_src += bpl_s;
+            p_src  += bpl_s;
             p_dest += bpl_d;
         }
     }
-    else if(bpp<=2)
+    else if (bpp <= 2)
     {
-        CARD16 *p_src = (CARD16 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD16 *p_src  = (CARD16 *)(src->data + bpl_s * sy + sx * bpp);
         CARD16 *p_dest = (CARD16 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] != pix_transparent)
+                if (p_src[x] != pix_transparent)
                     p_dest[x] = p_src[x];
             }
-            p_src += bpl_s/bpp;
+            p_src  += bpl_s/bpp;
             p_dest += bpl_d/bpp;
         }
     }
-    else if(bpp<=4)
+    else if (bpp <= 4)
     {
-        CARD32 *p_src = (CARD32 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD32 *p_src  = (CARD32 *)(src->data + bpl_s * sy + sx * bpp);
         CARD32 *p_dest = (CARD32 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] != pix_transparent)
+                if (p_src[x] != pix_transparent)
                     p_dest[x] = p_src[x];
             }
-            p_src += bpl_s/bpp;
+            p_src  += bpl_s/bpp;
             p_dest += bpl_d/bpp;
         }
     }
@@ -508,74 +509,78 @@ void ImgCopyH(img_type src,  int sx, int sy, int wx, int wy,
     int bpl_s = src->bytes_per_line;
     int bpl_d = dest->bytes_per_line;
 
-    ASSERT(sx>=0);
-    ASSERT(sy>=0);
-    ASSERT(sx+wx<=(src->width));
-    ASSERT(sy+wy<=(src->height));
-    ASSERT(dx>=0);
-    ASSERT(dy>=0);
-    ASSERT(dx+wx<=(dest->width));
-    ASSERT(dy+wy<=(dest->height));
+    ASSERT(sx >= 0);
+    ASSERT(sy >= 0);
+    ASSERT(sx + wx <= src->width);
+    ASSERT(sy + wy <= src->height);
+    ASSERT(dx >= 0);
+    ASSERT(dy >= 0);
+    ASSERT(dx + wx <= dest->width);
+    ASSERT(dy + wy <= dest->height);
 
-    if(copy==1)
+    if (copy == 1)
     {
-        char *p_src = (char *)(src->data + bpl_s * sy + sx * bpp);
+        char *p_src  = (char *)(src->data + bpl_s * sy + sx * bpp);
         char *p_dest = (char *)(dest->data + bpl_d * dy + dx * bpp);
 
-        for(y=0;y<wy;y++){
+        for (y = 0; y < wy; y++)
+        {
             memcpy(p_dest, p_src, wx * bpp);
-            p_src += bpl_s;
+            p_src  += bpl_s;
             p_dest += bpl_d;
         }
     }
-    else if(bpp<=1)
+    else if (bpp <= 1)
     {
-        CARD8 *p_src = (CARD8 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD8 *p_src  = (CARD8 *)(src->data + bpl_s * sy + sx * bpp);
         CARD8 *p_dest = (CARD8 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] == pix_rimcolor)
+                if (p_src[x] == pix_rimcolor)
                     p_dest[x] = pix_hilite;
-
-                else if(p_src[x] != pix_transparent)
+                else if (p_src[x] != pix_transparent)
                     p_dest[x] = p_src[x];
             }
-            p_src += bpl_s;
+            p_src  += bpl_s;
             p_dest += bpl_d;
         }
     }
-    else if(bpp<=2)
+    else if (bpp <= 2)
     {
-        CARD16 *p_src = (CARD16 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD16 *p_src  = (CARD16 *)(src->data + bpl_s * sy + sx * bpp);
         CARD16 *p_dest = (CARD16 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] == pix_rimcolor)
+                if (p_src[x] == pix_rimcolor)
                     p_dest[x] = pix_hilite;
-
-                else if(p_src[x] != pix_transparent)
+                else if (p_src[x] != pix_transparent)
                     p_dest[x] = p_src[x];
             }
-            p_src += bpl_s/bpp;
+            p_src  += bpl_s/bpp;
             p_dest += bpl_d/bpp;
         }
     }
-    else if(bpp<=4)
+    else if (bpp <= 4)
     {
-        CARD32 *p_src = (CARD32 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD32 *p_src  = (CARD32 *)(src->data + bpl_s * sy + sx * bpp);
         CARD32 *p_dest = (CARD32 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] == pix_rimcolor)
+                if (p_src[x] == pix_rimcolor)
                     p_dest[x] = pix_hilite;
-
-                else if(p_src[x] != pix_transparent)
+                else if (p_src[x] != pix_transparent)
                     p_dest[x] = p_src[x];
             }
-            p_src += bpl_s/bpp;
+            p_src  += bpl_s/bpp;
             p_dest += bpl_d/bpp;
         }
     }
@@ -591,64 +596,68 @@ void ImgCopyMasked(img_type src,  int sx, int sy, int wx, int wy,
     int bpp = src->bytes_per_line / src->width;
     int bpl_s = src->bytes_per_line;
     int bpl_d = dest->bytes_per_line;
-    ASSERT(sx>=0);
-    ASSERT(sy>=0);
-    ASSERT(sx+wx<=(src->width));
-    ASSERT(sy+wy<=(src->height));
-    ASSERT(dx>=0);
-    ASSERT(dy>=0);
-    ASSERT(dx+wx<=(dest->width));
-    ASSERT(dy+wy<=(dest->height));
-
+    ASSERT(sx >= 0);
+    ASSERT(sy >= 0);
+    ASSERT(sx + wx <= src->width);
+    ASSERT(sy + wy <= src->height);
+    ASSERT(dx >= 0);
+    ASSERT(dy >= 0);
+    ASSERT(dx + wx <= dest->width);
+    ASSERT(dy + wy <= dest->height);
 
     count = 0;
 
-    if(bpp<=1)
+    if (bpp <= 1)
     {
-        CARD8 *p_src = (CARD8 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD8 *p_src  = (CARD8 *)(src->data + bpl_s * sy + sx * bpp);
         CARD8 *p_dest = (CARD8 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] != pix_transparent && mask[count]==0)
+                if (p_src[x] != pix_transparent && mask[count] == 0)
                     p_dest[x] = p_src[x];
-        count++;
+                count++;
             }
-            p_src += bpl_s;
+            p_src  += bpl_s;
             p_dest += bpl_d;
         }
     }
-    else if(bpp<=2)
+    else if (bpp <= 2)
     {
-        CARD16 *p_src = (CARD16 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD16 *p_src  = (CARD16 *)(src->data + bpl_s * sy + sx * bpp);
         CARD16 *p_dest = (CARD16 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] != pix_transparent && mask[count]==0)
+                if(p_src[x] != pix_transparent && mask[count] == 0)
                     p_dest[x] = p_src[x];
-        count++;
+                count++;
             }
-            p_src += bpl_s/bpp;
+            p_src  += bpl_s/bpp;
             p_dest += bpl_d/bpp;
         }
     }
-    else if(bpp<=4)
+    else if (bpp <= 4)
     {
-        CARD32 *p_src = (CARD32 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD32 *p_src  = (CARD32 *)(src->data + bpl_s * sy + sx * bpp);
         CARD32 *p_dest = (CARD32 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] != pix_transparent && mask[count]==0)
+                if (p_src[x] != pix_transparent && mask[count] == 0)
                     p_dest[x] = p_src[x];
-        count++;
+                count++;
             }
-            p_src += bpl_s/bpp;
+            p_src  += bpl_s/bpp;
             p_dest += bpl_d/bpp;
         }
     }
-
 }
 
 // Copy internal image to another internal image
@@ -659,71 +668,75 @@ void ImgCopyMaskedH(img_type src,  int sx, int sy, int wx, int wy,
     int bpp = src->bytes_per_line / src->width;
     int bpl_s = src->bytes_per_line;
     int bpl_d = dest->bytes_per_line;
-    ASSERT(sx>=0);
-    ASSERT(sy>=0);
-    ASSERT(sx+wx<=(src->width));
-    ASSERT(sy+wy<=(src->height));
-    ASSERT(dx>=0);
-    ASSERT(dy>=0);
-    ASSERT(dx+wx<=(dest->width));
-    ASSERT(dy+wy<=(dest->height));
-
+    ASSERT(sx >= 0);
+    ASSERT(sy >= 0);
+    ASSERT(sx + wx <= src->width);
+    ASSERT(sy + wy <= src->height);
+    ASSERT(dx >= 0);
+    ASSERT(dy >= 0);
+    ASSERT(dx + wx <= dest->width);
+    ASSERT(dy + wy <= dest->height);
 
     count = 0;
 
-    if(bpp<=1)
+    if (bpp <= 1)
     {
-        CARD8 *p_src = (CARD8 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD8 *p_src  = (CARD8 *)(src->data + bpl_s * sy + sx * bpp);
         CARD8 *p_dest = (CARD8 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] == pix_rimcolor)
+                if (p_src[x] == pix_rimcolor)
                     p_dest[x] = pix_hilite;
-                else if(p_src[x] != pix_transparent && mask[count]==0)
+                else if(p_src[x] != pix_transparent && mask[count] == 0)
                     p_dest[x] = p_src[x];
 
-        count++;
+                count++;
             }
-            p_src += bpl_s;
+            p_src  += bpl_s;
             p_dest += bpl_d;
         }
     }
-    else if(bpp<=2)
+    else if (bpp <= 2)
     {
-        CARD16 *p_src = (CARD16 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD16 *p_src  = (CARD16 *)(src->data + bpl_s * sy + sx * bpp);
         CARD16 *p_dest = (CARD16 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] == pix_rimcolor)
+                if (p_src[x] == pix_rimcolor)
                     p_dest[x] = pix_hilite;
-                else if(p_src[x] != pix_transparent && mask[count]==0)
+                else if (p_src[x] != pix_transparent && mask[count] == 0)
                     p_dest[x] = p_src[x];
-        count++;
+                count++;
             }
-            p_src += bpl_s/bpp;
+            p_src  += bpl_s/bpp;
             p_dest += bpl_d/bpp;
         }
     }
-    else if(bpp<=4)
+    else if (bpp <= 4)
     {
-        CARD32 *p_src = (CARD32 *)(src->data + bpl_s * sy + sx * bpp);
+        CARD32 *p_src  = (CARD32 *)(src->data + bpl_s * sy + sx * bpp);
         CARD32 *p_dest = (CARD32 *)(dest->data + bpl_d * dy + dx * bpp);
-        for(y=0;y<wy;y++){
-            for(x=0;x<wx;x++){
+        for (y = 0; y < wy; y++)
+        {
+            for (x = 0; x < wx; x++)
+            {
                 //X11 specific
-                if(p_src[x] == pix_rimcolor)
+                if (p_src[x] == pix_rimcolor)
                     p_dest[x] = pix_hilite;
-                else if(p_src[x] != pix_transparent && mask[count]==0)
+                else if (p_src[x] != pix_transparent && mask[count] == 0)
                     p_dest[x] = p_src[x];
-        count++;
+                count++;
             }
-            p_src += bpl_s/bpp;
+            p_src  += bpl_s/bpp;
             p_dest += bpl_d/bpp;
         }
     }
-
 }
 
 void TileRegionClass::DrawPanel(int left, int top, int width, int height)
@@ -746,12 +759,14 @@ void TileRegionClass::framerect(int left, int top, int right, int bottom,
     int x,y;
     int pix = term_pix[color];
 
-    for (x=left; x<=right; x++){
+    for (x = left; x <= right; x++)
+    {
         XPutPixel(backbuf, x, top, pix);
         XPutPixel(backbuf, x, bottom, pix);
     }
 
-    for (y=top+1; y< bottom; y++){
+    for (y = top+1; y < bottom; y++)
+    {
         XPutPixel(backbuf, left, y, pix);
         XPutPixel(backbuf, right, y, pix);
     }
@@ -777,15 +792,14 @@ void  TileRegionClass::fillrect(int left, int top, int right, int bottom,
     int x,y;
     int pix = term_pix[color];
 
-    ASSERT(left>=0);
-    ASSERT(top>=0);
-    ASSERT(right<mx*dx);
-    ASSERT(bottom<my*dy);
+    ASSERT(left >= 0);
+    ASSERT(top  >= 0);
+    ASSERT(right  < mx*dx);
+    ASSERT(bottom < my*dy);
 
-    for (x=left; x<=right; x++){
-    for (y=top; y<= bottom; y++){
-        XPutPixel(backbuf, x, y, pix);
-    }}
+    for (x = left; x <= right; x++)
+        for (y = top; y <= bottom; y++)
+            XPutPixel(backbuf, x, y, pix);
 }
 
 /********************************************/
@@ -806,25 +820,25 @@ bool GuicInit(Display **d, int *s)
     *s = screen;
 
     // for text display
-    for(i=0;i<MAX_TERM_COL;i++)
+    for (i = 0; i < MAX_TERM_COL; i++)
     {
         const int *c = term_colors[i];
-        term_pix[i] = create_pixel(c[0],c[1],c[2]);
-        term_gc[i]= XCreateGC(display,RootWindow(display,screen),0,0);
+        term_pix[i] = create_pixel(c[0], c[1], c[2]);
+        term_gc[i]  = XCreateGC(display, RootWindow(display,screen), 0, 0);
         XSetForeground(display,term_gc[i], term_pix[i]);
     }
     // for text display
-    for(i=0;i<MAX_MAP_COL;i++)
+    for (i = 0; i < MAX_MAP_COL; i++)
     {
         const int *c = map_colors[i];
-        map_pix[i] = create_pixel(c[0],c[1],c[2]);
-        map_gc[i]= XCreateGC(display,RootWindow(display,screen),0,0);
+        map_pix[i] = create_pixel(c[0], c[1], c[2]);
+        map_gc[i]  = XCreateGC(display, RootWindow(display,screen), 0, 0);
         XSetForeground(display, map_gc[i], map_pix[i]);
     }
 
     // for Image manipulation
-    pix_black = term_pix[PIX_BLACK] ;
-    pix_hilite = term_pix[PIX_LIGHTMAGENTA] ;
+    pix_black    = term_pix[PIX_BLACK] ;
+    pix_hilite   = term_pix[PIX_LIGHTMAGENTA] ;
     pix_rimcolor = create_pixel(1,1,1);
 
     return true;
@@ -834,10 +848,10 @@ void GuicDeinit()
 {
     int i;
 
-    for(i=0;i<MAX_TERM_COL;i++)
+    for (i = 0; i < MAX_TERM_COL; i++)
         XFreeGC(display,term_gc[i]);
 
-    for(i=0;i<MAX_MAP_COL;i++)
+    for (i = 0; i < MAX_MAP_COL; i++)
         XFreeGC(display,map_gc[i]);
 
     XCloseDisplay(display);
@@ -847,19 +861,22 @@ static int x11_byte_per_pixel_ximage()
 {
     int i = 1;
     int j = (DefaultDepth(display, screen) - 1) >> 2;
-    while (j >>= 1) i <<= 1;
+    while (j >>= 1)
+    {
+        i <<= 1;
+    }
     return i;
 }
 
-unsigned long create_pixel(unsigned int red, unsigned int green, 
+unsigned long create_pixel(unsigned int red, unsigned int green,
                  unsigned int blue)
 {
     Colormap cmap = DefaultColormapOfScreen(DefaultScreenOfDisplay(display));
     XColor xcolour;
 
-    xcolour.red = red * 256;
+    xcolour.red   = red * 256;
     xcolour.green = green * 256;
-    xcolour.blue = blue * 256;
+    xcolour.blue  = blue * 256;
     xcolour.flags = DoRed | DoGreen | DoBlue;
 
     XAllocColor(display, cmap, &xcolour);
@@ -903,88 +920,96 @@ unsigned long create_pixel(unsigned int red, unsigned int green,
 
 XImage *read_png (const char *fname)
 {
-  char sig_buf [SIG_CHECK_SIZE];
-  png_struct *png_ptr;
-  png_info *info_ptr;
-  png_byte **png_image;
-  png_byte *png_pixel;
-  unsigned int x, y;
-  int linesize;
-  png_uint_16 c;
-  unsigned int i;
+    char sig_buf [SIG_CHECK_SIZE];
+    png_struct *png_ptr;
+    png_info *info_ptr;
+    png_byte **png_image;
+    png_byte *png_pixel;
+    unsigned int x, y;
+    int linesize;
+    png_uint_16 c;
+    unsigned int i;
 
-  //X11
-  XImage *res;
-  unsigned long pix_table[256];
+    //X11
+    XImage *res;
+    unsigned long pix_table[256];
 
+    FILE *ifp = fopen(fname,"r");
 
-  FILE *ifp = fopen(fname,"r");
-
-  if(!ifp) { fprintf(stderr, "File not found: %s", fname); return NULL; }
-
-  if (fread (sig_buf, 1, SIG_CHECK_SIZE, ifp) != SIG_CHECK_SIZE)
-    pm_error ("input file empty or too short");
-  if (png_sig_cmp ((unsigned char *)sig_buf, (png_size_t) 0, (png_size_t) SIG_CHECK_SIZE) != 0)
-    pm_error ("input file not a PNG file");
-
-  png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-  if (png_ptr == NULL) {
-    pm_error ("cannot allocate LIBPNG structure");
-  }
-  info_ptr = png_create_info_struct (png_ptr);
-  if (info_ptr == NULL) {
-    png_destroy_read_struct (&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
-    pm_error ("cannot allocate LIBPNG structures");
-  }
-
-  if (setjmp (png_ptr->jmpbuf)) {
-    png_destroy_read_struct (&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
-    free (png_ptr);
-    free (info_ptr);
-    pm_error ("setjmp returns error condition");
-  }
-
-  png_init_io (png_ptr, ifp);
-  png_set_sig_bytes (png_ptr, SIG_CHECK_SIZE);
-  png_read_info (png_ptr, info_ptr);
-
-
-
-  png_image = (png_byte **)malloc (info_ptr->height * sizeof (png_byte*));
-  if (png_image == NULL) {
-    free (png_ptr);
-    free (info_ptr);
-    pm_error ("couldn't alloc space for image");
-  }
-
-  if (info_ptr->bit_depth == 16)
-    linesize = 2 * info_ptr->width;
-  else
-    linesize = info_ptr->width;
-
-  if (info_ptr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
-    linesize *= 2;
-  else
-  if (info_ptr->color_type == PNG_COLOR_TYPE_RGB)
-    linesize *= 3;
-  else
-  if (info_ptr->color_type == PNG_COLOR_TYPE_RGB_ALPHA)
-    linesize *= 4;
-
-  for (y = 0 ; y < info_ptr->height ; y++) {
-    png_image[y] = (png_byte *)malloc (linesize);
-    if (png_image[y] == NULL) {
-      for (x = 0 ; x < y ; x++)
-        free (png_image[x]);
-      free (png_image);
-      free (png_ptr);
-      free (info_ptr);
-      pm_error ("couldn't alloc space for image");
+    if (!ifp)
+    {
+        fprintf(stderr, "File not found: %s", fname);
+        return NULL;
     }
-  }
 
-  if (info_ptr->bit_depth < 8)
-    png_set_packing (png_ptr);
+    if (fread (sig_buf, 1, SIG_CHECK_SIZE, ifp) != SIG_CHECK_SIZE)
+        pm_error ("input file empty or too short");
+    if (png_sig_cmp ((unsigned char *)sig_buf, (png_size_t) 0,
+                     (png_size_t) SIG_CHECK_SIZE) != 0)
+    {
+        pm_error ("input file not a PNG file");
+    }
+
+    png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    if (png_ptr == NULL)
+        pm_error ("cannot allocate LIBPNG structure");
+
+    info_ptr = png_create_info_struct (png_ptr);
+    if (info_ptr == NULL)
+    {
+        png_destroy_read_struct (&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
+        pm_error ("cannot allocate LIBPNG structures");
+    }
+
+    if (setjmp (png_ptr->jmpbuf))
+    {
+        png_destroy_read_struct (&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
+        free (png_ptr);
+        free (info_ptr);
+        pm_error ("setjmp returns error condition");
+    }
+
+    png_init_io (png_ptr, ifp);
+    png_set_sig_bytes (png_ptr, SIG_CHECK_SIZE);
+    png_read_info (png_ptr, info_ptr);
+
+    png_image = (png_byte **)malloc (info_ptr->height * sizeof (png_byte*));
+    if (png_image == NULL)
+    {
+        free (png_ptr);
+        free (info_ptr);
+        pm_error ("couldn't alloc space for image");
+    }
+
+    if (info_ptr->bit_depth == 16)
+        linesize = 2 * info_ptr->width;
+    else
+        linesize = info_ptr->width;
+
+    if (info_ptr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+        linesize *= 2;
+    else if (info_ptr->color_type == PNG_COLOR_TYPE_RGB)
+        linesize *= 3;
+    else if (info_ptr->color_type == PNG_COLOR_TYPE_RGB_ALPHA)
+        linesize *= 4;
+
+    for (y = 0 ; y < info_ptr->height ; y++)
+    {
+        png_image[y] = (png_byte *)malloc (linesize);
+        if (png_image[y] == NULL)
+        {
+            for (x = 0; x < y; x++)
+                free (png_image[x]);
+
+            free (png_image);
+            free (png_ptr);
+            free (info_ptr);
+            pm_error ("couldn't alloc space for image");
+        }
+    }
+
+    if (info_ptr->bit_depth < 8)
+        png_set_packing (png_ptr);
 
   /* sBIT handling is very tricky. If we are extracting only the image, we
      can use the sBIT info for grayscale and color images, if the three
@@ -994,69 +1019,75 @@ XImage *read_png (const char *fname)
      so we will use the sBIT info only for transparency, if we know that only
      solid and fully transparent is used */
 
-  if (info_ptr->valid & PNG_INFO_sBIT) {
-
+    if (info_ptr->valid & PNG_INFO_sBIT)
+    {
         if ((info_ptr->color_type == PNG_COLOR_TYPE_PALETTE ||
              info_ptr->color_type == PNG_COLOR_TYPE_RGB ||
              info_ptr->color_type == PNG_COLOR_TYPE_RGB_ALPHA) &&
             (info_ptr->sig_bit.red != info_ptr->sig_bit.green ||
-             info_ptr->sig_bit.red != info_ptr->sig_bit.blue) ) {
-	  pm_message ("different bit depths for color channels not supported");
-	  pm_message ("writing file with %d bit resolution", info_ptr->bit_depth);
-        } else 
-          if ((info_ptr->color_type == PNG_COLOR_TYPE_PALETTE) &&
-	      (info_ptr->sig_bit.red < 255)) {
-	    for (i = 0 ; i < info_ptr->num_palette ; i++) {
-	      info_ptr->palette[i].red   >>= (8 - info_ptr->sig_bit.red);
-	      info_ptr->palette[i].green >>= (8 - info_ptr->sig_bit.green);
-	      info_ptr->palette[i].blue  >>= (8 - info_ptr->sig_bit.blue);
-	    }
-
-          } else 
-          if ((info_ptr->color_type == PNG_COLOR_TYPE_GRAY ||
-               info_ptr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA) &&
-	      (info_ptr->sig_bit.gray < info_ptr->bit_depth)) {
-	    png_set_shift (png_ptr, &(info_ptr->sig_bit));
-          }
-
-
-      }
-
-  if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE) 
-  {
-//X11
-        for (i = 0 ; i < info_ptr->num_palette ; i++) 
-          pix_table[i] = create_pixel(info_ptr->palette[i].red, 
-           info_ptr->palette[i].green, info_ptr->palette[i].blue);
-  }
-  else
-  if (info_ptr->color_type == PNG_COLOR_TYPE_GRAY)
-  {
-        for (i = 0 ; i < 256 ; i++)
-//X11
-          pix_table[i] = create_pixel(i, i, i);
-  }
-
-  png_read_image (png_ptr, png_image);
-  png_read_end (png_ptr, info_ptr);
-
-  res = ImgCreateSimple(info_ptr->width, info_ptr->height);
-
-  for (y = 0 ; y < info_ptr->height ; y++) {
-    png_pixel = png_image[y];
-    for (x = 0 ; x < info_ptr->width ; x++) {
-      c = *png_pixel;
-      png_pixel++;
-      XPutPixel(res, x, y, pix_table[c]);
+             info_ptr->sig_bit.red != info_ptr->sig_bit.blue) )
+        {
+	        pm_message ("different bit depths for color channels not "
+                        "supported");
+	        pm_message ("writing file with %d bit resolution",
+                        info_ptr->bit_depth);
+        }
+        else if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE
+                 && info_ptr->sig_bit.red < 255)
+        {
+            for (i = 0 ; i < info_ptr->num_palette ; i++)
+            {
+	            info_ptr->palette[i].red   >>= (8 - info_ptr->sig_bit.red);
+	            info_ptr->palette[i].green >>= (8 - info_ptr->sig_bit.green);
+	            info_ptr->palette[i].blue  >>= (8 - info_ptr->sig_bit.blue);
+	        }
+        }
+        else if ((info_ptr->color_type == PNG_COLOR_TYPE_GRAY
+                    || info_ptr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+                 && info_ptr->sig_bit.gray < info_ptr->bit_depth)
+        {
+	        png_set_shift (png_ptr, &(info_ptr->sig_bit));
+        }
     }
-  }
 
-  for (y = 0 ; y < info_ptr->height ; y++)
-    free (png_image[y]);
-  free (png_image);
-  free (png_ptr);
-  free (info_ptr);
+    if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
+    {
+        //X11
+        for (i = 0 ; i < info_ptr->num_palette ; i++)
+            pix_table[i] = create_pixel(info_ptr->palette[i].red,
 
-  fclose(ifp);
-  return res;
+        info_ptr->palette[i].green, info_ptr->palette[i].blue);
+    }
+    else if (info_ptr->color_type == PNG_COLOR_TYPE_GRAY)
+    {
+        //X11
+        for (i = 0 ; i < 256 ; i++)
+            pix_table[i] = create_pixel(i, i, i);
+    }
+
+    png_read_image (png_ptr, png_image);
+    png_read_end (png_ptr, info_ptr);
+
+    res = ImgCreateSimple(info_ptr->width, info_ptr->height);
+
+    for (y = 0; y < info_ptr->height; y++)
+    {
+        png_pixel = png_image[y];
+        for (x = 0; x < info_ptr->width; x++)
+        {
+            c = *png_pixel;
+            png_pixel++;
+            XPutPixel(res, x, y, pix_table[c]);
+        }
+    }
+
+    for (y = 0 ; y < info_ptr->height ; y++)
+        free (png_image[y]);
+
+    free (png_image);
+    free (png_ptr);
+    free (info_ptr);
+
+    fclose(ifp);
+    return res;
 }

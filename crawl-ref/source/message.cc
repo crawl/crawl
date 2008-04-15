@@ -109,7 +109,7 @@ namespace msg
     {
         this->muted = m;
     }
-    
+
     // again, can be improved
     int mpr_stream_buf::overflow(int c)
     {
@@ -121,7 +121,7 @@ namespace msg
             // null-terminate and print the string
             internal_buf[internal_count] = 0;
             mpr(internal_buf, channel, param);
-            
+
             internal_count = 0;
 
             // reset to defaults (param changing isn't sticky)
@@ -129,7 +129,7 @@ namespace msg
         }
         else
             internal_buf[internal_count++] = c;
-        
+
         if ( internal_count + 3 > INTERNAL_LENGTH )
         {
             mpr("oops, hit overflow", MSGCH_DANGER);
@@ -226,7 +226,7 @@ int channel_to_colour( msg_channel_type channel, int param )
 {
     if (you.asleep())
         return (DARKGREY);
-    
+
     char ret;
 
     switch (Options.channels[ channel ])
@@ -361,11 +361,11 @@ int channel_to_colour( msg_channel_type channel, int param )
 
 #endif
 
-static void do_message_print( msg_channel_type channel, int param, 
+static void do_message_print( msg_channel_type channel, int param,
                               const char *format, va_list argp )
 {
     char buff[200];
-    vsnprintf( buff, sizeof( buff ), format, argp ); 
+    vsnprintf( buff, sizeof( buff ), format, argp );
     buff[199] = 0;
 
     mpr(buff, channel, param);
@@ -377,7 +377,7 @@ void mprf( msg_channel_type channel, int param, const char *format, ... )
     va_start( argp, format );
     do_message_print( channel, param, format, argp );
     va_end( argp );
-}    
+}
 
 void mprf( msg_channel_type channel, const char *format, ... )
 {
@@ -456,7 +456,7 @@ void mpr_comma_separated_list(const std::string prefix,
     std::string out = prefix;
     unsigned width  = get_number_of_cols() - 1;
 
-    for(int i = 0, size = list.size(); i < size; i++)
+    for (int i = 0, size = list.size(); i < size; i++)
     {
         std::string new_str = list[i];
 
@@ -610,7 +610,7 @@ static int prepare_message(const std::string& imsg, msg_channel_type channel,
         mpr_check_patterns(imsg, channel, param);
         flush_input_buffer( FLUSH_ON_MESSAGE );
         const int num_lines = crawl_view.msgsz.y;
-    
+
         if (New_Message_Count == num_lines - 1)
             more();
     }
@@ -621,7 +621,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
 {
     const std::string imsg = inf;
     const int colour = prepare_message( imsg, channel, param );
-    
+
     if ( colour == MSGCOL_MUTED )
         return;
 
@@ -630,7 +630,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
     {
         return;
     }
-   
+
     if (need_prefix)
     {
         message_out( Message_Line, colour, "-", 1, false );
@@ -695,7 +695,7 @@ void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
 // messages.
 //
 // If wrap_col > 0, text is wrapped at that column.
-// 
+//
 void formatted_message_history(const std::string &st_nocolor,
                                msg_channel_type channel,
                                int param, int wrap_col)
@@ -832,7 +832,7 @@ std::string get_last_messages(int mcount)
 {
     if (mcount <= 0)
         return std::string();
-        
+
     if (mcount > NUM_STORED_MESSAGES)
         mcount = NUM_STORED_MESSAGES;
 
@@ -847,7 +847,7 @@ std::string get_last_messages(int mcount)
     for (int i = initial; i != Next_Message; )
     {
         const message_item &msg = Store_Message[i];
-        
+
         if (msg.text.length() && is_channel_dumpworthy(msg.channel))
         {
             text += msg.text;
@@ -973,7 +973,7 @@ void replay_messages(void)
         }
         else if (win_start_line >= first_message)
             rel_start = win_start_line - first_message + 1;
-        else 
+        else
             rel_start = (win_start_line + NUM_STORED_MESSAGES) - first_message + 1;
 
         int rel_end = rel_start + (num_lines - 2) - 1;
@@ -984,7 +984,7 @@ void replay_messages(void)
         cprintf(EOL);
         cprintf( "<< Lines %d-%d of %d (Up: k<-8, Down: j>+2) >>",
                  rel_start, rel_end, num_msgs );
-                 
+
         keyin = getch();
 
         if ((full_buffer && NUM_STORED_MESSAGES > num_lines - 2)
@@ -1001,7 +1001,7 @@ void replay_messages(void)
             if (keyin == 'k' || keyin == '8' || keyin == '-' || keyin == '<')
             {
                 new_line = win_start_line - (num_lines - 2);
-                
+
                 // end_mark is equivalent to Next_Message, but
                 // is always less than win_start_line.
                 end_mark = first_message;
@@ -1037,7 +1037,7 @@ void replay_messages(void)
 
                 // hit bottom
                 if (new_line >= end_mark - (num_lines - 2))
-                    new_line = end_mark - (num_lines - 2) + 1; 
+                    new_line = end_mark - (num_lines - 2) + 1;
 
                 if (new_line >= NUM_STORED_MESSAGES)
                     new_line -= NUM_STORED_MESSAGES;

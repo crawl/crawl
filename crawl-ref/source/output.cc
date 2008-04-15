@@ -119,7 +119,7 @@ static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
 
     if (max_val <= 0)
         return -1;
-    
+
     // Don't redraw colour bars while resting
     // *unless* we'll stop doing so right after that
     if (you.running >= 2 && is_resting() && val != max_val)
@@ -204,7 +204,7 @@ static int _count_digits(int val)
 static std::string _describe_hunger()
 {
     bool vamp = (you.species == SP_VAMPIRE);
-    
+
     switch (you.hunger_state)
     {
         case HS_ENGORGED:
@@ -458,7 +458,7 @@ static void _print_stats_qv(int y)
     cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
     cprintf("Qv: ");
-        
+
     const item_def* item;
     int q;
     you.m_quiver->get_desired_item(&item, &q);
@@ -649,7 +649,7 @@ static void _print_stats_line2(int y)
         _dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 20) );
         cprintf("Touch ");
     }
-    
+
     if (you.duration[DUR_BARGAIN] && wherex() < get_number_of_cols() - 5)
     {
         _dur_colour( BLUE, (you.duration[DUR_BARGAIN] <= 15) );
@@ -690,7 +690,7 @@ static void _print_stats_line3(int y)
         textcolor( RED );   // no different levels
         cprintf( "Conf " );
     }
-        
+
     if (you.duration[DUR_BEHELD])
     {
         textcolor( RED );   // no different levels
@@ -845,7 +845,7 @@ void print_stats(void)
 
     you.wield_change = false;
     you.redraw_quiver = false;
-    
+
     if (you.redraw_status_flags & REDRAW_LINE_1_MASK)
         _print_stats_line1(12);
 
@@ -1015,7 +1015,7 @@ monster_pane_info::less_than(const monster_pane_info& m1,
 
     return false;
 }
-                                        
+
 void
 monster_pane_info::to_string(
     int count,
@@ -1264,7 +1264,7 @@ const char *equip_slot_to_name(int equip)
 
     if (equip < 0 || equip >= NUM_EQUIP)
         return "";
-        
+
     return s_equip_slot_names[equip];
 }
 
@@ -1327,7 +1327,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
 
     const std::string score =
         (sc > -1? make_stringf(" (%ld points)", sc) : "");
-    
+
     snprintf(buf, sizeof buf,
              "<yellow>%s the %s</yellow>%s\n\n"
              "Race       : %s\n"
@@ -1469,7 +1469,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
             EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
         };
 
-        for(int i = 0; i < NUM_EQUIP; i++)
+        for (int i = 0; i < NUM_EQUIP; i++)
         {
             int eqslot = e_order[i];
             const char *slot = equip_slot_to_name( eqslot );
@@ -1581,7 +1581,7 @@ static void _print_overview_screen_equip(column_composer& cols,
     };
 
     char buf[100];
-    for(int i = 0; i < NUM_EQUIP; i++)
+    for (int i = 0; i < NUM_EQUIP; i++)
     {
         int eqslot = e_order[i];
 
@@ -1704,7 +1704,7 @@ static std::string _overview_screen_title()
     text += std::string(get_number_of_cols() - linelength - 1, ' ');
     text += time_turns;
     text += "</yellow>\n";
-    
+
     return text;
 }
 
@@ -1998,7 +1998,7 @@ std::string _status_mut_abilities()
             text += "recuperating";
         else
             text += "regenerating";
-            
+
         if (you.species == SP_VAMPIRE && you.hunger_state != HS_SATIATED)
         {
             if (you.hunger_state <= HS_HUNGRY)
@@ -2035,10 +2035,10 @@ std::string _status_mut_abilities()
     if (you.duration[DUR_DEATH_CHANNEL])
         text += "death channel, ";
 
-    if (you.duration[DUR_FORESCRY]) 
+    if (you.duration[DUR_FORESCRY])
         text += "forewarned, ";
 
-    if (you.duration[DUR_SILENCE])  
+    if (you.duration[DUR_SILENCE])
         text += "radiating silence, ";
 
     if (you.duration[DUR_INVIS])
@@ -2135,7 +2135,7 @@ std::string _status_mut_abilities()
              (mr < 120) ? "very" :
              (mr < 140) ? "extremely" :
              "incredibly");
-             
+
     text += info;
 
     // character evaluates their ability to sneak around:
@@ -2908,7 +2908,7 @@ std::string _status_mut_abilities()
     //----------------------------
     // print ability information
     //----------------------------
-    
+
     text += print_abilities();
     linebreak_string2(text, get_number_of_cols());
 

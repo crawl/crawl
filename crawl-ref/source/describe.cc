@@ -102,7 +102,7 @@ void print_description( const std::string &d )
 
     textcolor(LIGHTGREY);
 
-    while(currentPos < d.length())
+    while (currentPos < d.length())
     {
         if (currentPos != 0)
             cgotoxy(1, wherey() + 1);

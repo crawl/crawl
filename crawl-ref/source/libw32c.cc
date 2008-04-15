@@ -239,7 +239,7 @@ void set_mouse_enabled(bool enabled)
             inmode |= ENABLE_MOUSE_INPUT;
         else
             inmode &= ~ENABLE_MOUSE_INPUT;
-        
+
         ::SetConsoleMode(inbuf, inmode);
     }
 }
@@ -317,7 +317,7 @@ static void set_w32_screen_size()
         delete [] screen;
         screen = NULL;
     }
-   
+
     screen = new CHAR_INFO[screensize.X * screensize.Y];
 
     COORD topleft;
@@ -378,7 +378,7 @@ void init_libw32c(void)
 
     // set up screen size
     set_w32_screen_size();
-   
+
     // initialise text color
     textcolor(DARKGREY);
 
@@ -390,7 +390,7 @@ void init_libw32c(void)
 
     crawl_state.terminal_resize_handler = w32_term_resizer;
     crawl_state.terminal_resize_check   = w32_check_screen_resize;
-   
+
     // JWM, 06/12/2004: Code page setting, as XP does not use ANSI 437 by
     // default.
     InputCP = GetConsoleCP();
@@ -412,7 +412,7 @@ void deinit_libw32c(void)
     if (inbuf == NULL || outbuf == NULL)
         return;
 
-    // JWM, 06/12/2004: Code page stuff.  If it was the preferred code page, it 
+    // JWM, 06/12/2004: Code page stuff.  If it was the preferred code page, it
     // doesn't need restoring.  Shouldn't be an error and too bad if there is.
     if (InputCP && InputCP != PREFERRED_CODEPAGE)
         SetConsoleCP(InputCP);
@@ -429,7 +429,7 @@ void deinit_libw32c(void)
 
     delete [] screen;
     screen = NULL;
-   
+
     // finally, restore title
     SetConsoleTitle( oldTitle );
 }
@@ -480,15 +480,13 @@ void clrscr(void)
 
     PCHAR_INFO pci = screen;
 
-    for(x = 0; x < screensize.X; x++)
-    {
-        for(y = 0; y < screensize.Y; y++)
+    for (x = 0; x < screensize.X; x++)
+        for (y = 0; y < screensize.Y; y++)
         {
             pci->Char.AsciiChar = ' ';
             pci->Attributes = 0;
             pci++;
         }
-    }
 
     source.X = 0;
     source.Y = 0;
@@ -639,7 +637,7 @@ static void cprintf_aux(const char *s)
 
     // loop through string
     char *p = (char *)s;
-    while(*p)
+    while (*p)
     {
         writeChar(*p++);
     }
@@ -722,7 +720,7 @@ int key_to_command( int keyin )
 {
     if (keyin >= CK_UP && keyin <= CK_CTRL_PGDN)
         return ck_tr[ keyin - CK_UP ];
-    
+
     if (keyin == CK_DELETE)
         return '.';
 
@@ -760,15 +758,16 @@ int vk_translate( WORD VirtCode, CHAR c, DWORD cKeys)
 
     // see if we're a vkey
     int mkey;
-    for(mkey = 0; mkey<VKEY_MAPPINGS; mkey++)
-        if (VirtCode == vk_tr[0][mkey]) break;
+    for (mkey = 0; mkey<VKEY_MAPPINGS; mkey++)
+        if (VirtCode == vk_tr[0][mkey])
+            break;
 
     // step 4 - just return the damn key.
     if (mkey == VKEY_MAPPINGS)
     {
         if (c)
             return c;
-      
+
         // ds -- Icky hacks to allow keymaps with funky keys.
         if (ctrlDown)
             VirtCode |= 512;
@@ -788,7 +787,7 @@ int vk_translate( WORD VirtCode, CHAR c, DWORD cKeys)
     // control key?
     if (ctrlDown)
         return vk_tr[3][mkey];
-   
+
     // shifted?
     if (shftDown)
         return vk_tr[2][mkey];
@@ -807,7 +806,7 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
 
     if (!crawl_state.mouse_enabled)
         return (0);
-    
+
     c_mouse_event cme(pos);
     if (mer.dwEventFlags & MOUSE_MOVED)
         return (CK_MOUSE_MOVE);
@@ -882,7 +881,7 @@ int getch_ck(void)
                     }
                 }
                 break;
-                
+
             case WINDOW_BUFFER_SIZE_EVENT:
                 w32_handle_resize_event();
                 break;

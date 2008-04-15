@@ -28,7 +28,7 @@
 #include "cio.h"
 #include "debug.h"
 #include "externs.h"
-#include "files.h" 
+#include "files.h"
 #include "guic.h"
 #include "itemprop.h"
 #include "state.h"
@@ -143,7 +143,7 @@ void GetNextEvent(int *etype, int *key, bool *sh, bool *ct,
 {
     MSG msg;
 
-    while( GetMessage(&msg, NULL, 0, 0) )
+    while ( GetMessage(&msg, NULL, 0, 0) )
     {
         TranslateMessage( &msg );
         DispatchMessage( &msg );

@@ -135,25 +135,25 @@ static void redraw_all(void)
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
 }
 
-static bool determine_version( FILE *restoreFile, 
+static bool determine_version( FILE *restoreFile,
                                char &majorVersion, char &minorVersion );
 
-static void restore_version( FILE *restoreFile, 
+static void restore_version( FILE *restoreFile,
                              char majorVersion, char minorVersion );
 
-static bool determine_level_version( FILE *levelFile, 
+static bool determine_level_version( FILE *levelFile,
                                      char &majorVersion, char &minorVersion );
 
-static void restore_level_version( FILE *levelFile, 
+static void restore_level_version( FILE *levelFile,
                                    char majorVersion, char minorVersion );
 
-static bool determine_ghost_version( FILE *ghostFile, 
+static bool determine_ghost_version( FILE *ghostFile,
                                      char &majorVersion, char &minorVersion );
 
-static void restore_ghost_version( FILE *ghostFile, 
+static void restore_ghost_version( FILE *ghostFile,
                                    char majorVersion, char minorVersion );
 
-static void restore_tagged_file( FILE *restoreFile, int fileType, 
+static void restore_tagged_file( FILE *restoreFile, int fileType,
                                  char minorVersion );
 
 static void load_ghost();
@@ -181,7 +181,7 @@ static bool is_uid_file(const std::string &name, const std::string &ext)
     save_suffix = save_suffix.substr(Options.save_dir.length());
 
     std::string::size_type suffix_pos = name.find(save_suffix);
-    return (suffix_pos != std::string::npos 
+    return (suffix_pos != std::string::npos
             && suffix_pos == name.length() - save_suffix.length()
             && suffix_pos != 0);
 }
@@ -216,7 +216,7 @@ player_save_info read_character_info(const std::string &savefile)
         const player backup(you);
 
         restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
-        
+
         fromfile = you;
         you.copy_from(backup);
     }
@@ -348,7 +348,7 @@ static bool create_dirs(const std::string &dir)
 {
     std::string sep = " ";
     sep[0] = FILE_SEPARATOR;
-    std::vector<std::string> segments = 
+    std::vector<std::string> segments =
         split_string(
                 sep.c_str(),
                 dir,
@@ -379,10 +379,10 @@ std::string datafile_path(std::string basename,
 #if FILE_SEPARATOR != '/'
     basename = replace_all_of(basename, "/", std::string(1, FILE_SEPARATOR));
 #endif
-    
+
     if (test_base_path && file_exists(basename))
         return (basename);
-    
+
     std::string cdir = !SysEnv.crawl_dir.empty()? SysEnv.crawl_dir : "";
 
     const std::string rawbases[] = {
@@ -435,7 +435,7 @@ std::string datafile_path(std::string basename,
 
     // Die horribly.
     if (croak_on_fail)
-        end(1, false, "Cannot find data file '%s' anywhere, aborting\n", 
+        end(1, false, "Cannot find data file '%s' anywhere, aborting\n",
             basename.c_str());
 
     return ("");
@@ -467,7 +467,7 @@ bool check_dir(const std::string &whatdir, std::string &dir, bool silent)
     return (true);
 }
 
-// Given a simple (relative) name of a save file, returns the full path of 
+// Given a simple (relative) name of a save file, returns the full path of
 // the file in the Crawl saves directory. You can use path segments in
 // shortpath (separated by /) and get_savedir_path will canonicalise them
 // to the platform's native file separator.
@@ -503,7 +503,7 @@ std::vector<player_save_info> find_saved_characters()
         if (!is_packed_save(filename))
             continue;
 
-        std::string basename = 
+        std::string basename =
             filename.substr(
                     0,
                     filename.length() - strlen(PACKAGE_SUFFIX));
@@ -549,7 +549,7 @@ std::string get_savedir()
 }
 
 std::string get_savedir_filename(const std::string &prefix,
-                                 const std::string &suffix, 
+                                 const std::string &suffix,
                                  const std::string &extension,
                                  bool suppress_uid)
 {
@@ -637,7 +637,7 @@ static void write_version( FILE *dataFile, int majorVersion, int minorVersion,
         // with the first 16-bits of the Crawl version, and the following
         // 7 16-bit words set to 0.
         marshallShort(outf, GHOST_SIGNATURE);
-        
+
         // Write the three remaining 32-bit words of padding.
         for (int i = 0; i < 3; ++i)
             marshallLong(outf, 0);
@@ -655,12 +655,10 @@ static void write_tagged_file( FILE *dataFile, char majorVersion,
     write_version( dataFile, majorVersion, minorVersion, extended_version );
 
     // all other tags
-    for(int i=1; i<NUM_TAGS; i++)
+    for (int i = 1; i < NUM_TAGS; i++)
     {
         if (tags[i] == 1)
-        {
             tag_write((tag_type)i, dataFile);
-        }
     }
 }
 
@@ -684,11 +682,11 @@ bool travel_load_map( branch_type branch, int absdepth )
         fclose(levelFile);
         return false;
     }
-    
+
     tag_read(levelFile, minorVersion);
 
     fclose( levelFile );
-    
+
     return true;
 }
 
@@ -718,7 +716,7 @@ static void place_player_on_stair(branch_type old_branch,
     bool find_first = true;
 
     // Order is important here:
-    if (you.level_type == LEVEL_DUNGEON 
+    if (you.level_type == LEVEL_DUNGEON
         && old_branch == BRANCH_VESTIBULE_OF_HELL
         && stair_taken == DNGN_STONE_STAIRS_UP_I)
     {
@@ -741,13 +739,13 @@ static void place_player_on_stair(branch_type old_branch,
         // the vestibule and labyrith always start from this stair
         stair_taken = DNGN_STONE_STAIRS_UP_I;
     }
-    else if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I 
+    else if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
              && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
     {
         // look for coresponding up stair
         stair_taken += (DNGN_STONE_STAIRS_UP_I - DNGN_STONE_STAIRS_DOWN_I);
     }
-    else if (stair_taken >= DNGN_STONE_STAIRS_UP_I 
+    else if (stair_taken >= DNGN_STONE_STAIRS_UP_I
              && stair_taken <= DNGN_ESCAPE_HATCH_UP)
     {
         // look for coresponding down stair
@@ -763,11 +761,11 @@ static void place_player_on_stair(branch_type old_branch,
     else if (stair_taken >= DNGN_ENTER_FIRST_BRANCH
              && stair_taken < DNGN_RETURN_FROM_FIRST_BRANCH)
     {
-        // find exit staircase from subdungeon when entering 
+        // find exit staircase from subdungeon when entering
         stair_taken += (DNGN_RETURN_FROM_FIRST_BRANCH
                         - DNGN_ENTER_FIRST_BRANCH);
     }
-    else if (stair_taken >= DNGN_ENTER_DIS 
+    else if (stair_taken >= DNGN_ENTER_DIS
              && stair_taken <= DNGN_TRANSIT_PANDEMONIUM)
     {
         // when entering a hell or pandemonium
@@ -792,7 +790,7 @@ static void place_player_on_stair(branch_type old_branch,
         stair_taken = DNGN_FLOOR;
         find_first = false;
     }
-    
+
     const coord_def where_to_go =
         dgn_find_nearby_stair(static_cast<dungeon_feature_type>(stair_taken),
                               you.pos(), find_first);
@@ -834,11 +832,11 @@ static bool grab_follower_at(const coord_def &pos)
 {
     if (pos == you.pos())
         return (false);
-    
+
     monsters *fmenv = monster_at(pos);
     if (!fmenv || !fmenv->alive())
         return (false);
-        
+
     // monster has to be already tagged in order to follow:
     if (!testbits( fmenv->flags, MF_TAKING_STAIRS ))
         return (false);
@@ -922,7 +920,7 @@ static void do_lost_items(level_area_type old_level_type)
 {
     if (old_level_type == LEVEL_DUNGEON)
         return;
-    
+
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         item_def& item(mitm[i]);
@@ -952,7 +950,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     const bool make_changes =
         (load_mode != LOAD_RESTART_GAME && load_mode != LOAD_VISITOR);
-    
+
     bool just_created_level = false;
 
     std::string cha_fil = make_filename( you.your_name, you.your_level,
@@ -1098,7 +1096,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         if (just_created_level)
             level_welcome_messages();
-        
+
         // Activate markers that want activating, but only when
         // entering a new level in an existing game. If we're starting
         // a new game, or reloading an existing game,
@@ -1111,9 +1109,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         // Centaurs have difficulty with stairs
         int timeval = ((you.species != SP_CENTAUR) ? player_movement_speed()
-                                                   : 15); 
+                                                   : 15);
 
-        // new levels have less wary monsters: 
+        // new levels have less wary monsters:
         if (just_created_level)
             timeval /= 2;
 
@@ -1215,7 +1213,7 @@ void save_level(int level_saved, level_area_type old_ltype,
 void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
-    
+
     /* Stashes */
     std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
     FILE *stashf = fopen(stashFile.c_str(), "wb");
@@ -1256,7 +1254,7 @@ void save_game(bool leave_game, const char *farewellmsg)
         fclose(travelf);
         DO_CHMOD_PRIVATE(travelCacheFile.c_str());
     }
-    
+
     /* notes */
     std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
     FILE *notesf = fopen(notesFile.c_str(), "wb");
@@ -1269,7 +1267,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     }
 
     /* tutorial */
-    
+
     std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
     FILE *tutorf = fopen(tutorFile.c_str(), "wb");
     if (tutorf)
@@ -1305,7 +1303,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     std::string basename = get_savedir_filename(you.your_name, "", "");
     char cmd_buff[1024];
 
-    snprintf( cmd_buff, sizeof(cmd_buff), 
+    snprintf( cmd_buff, sizeof(cmd_buff),
               SAVE_PACKAGE_CMD, basename.c_str(), basename.c_str() );
 
     if (system( cmd_buff ) != 0) {
@@ -1358,7 +1356,7 @@ void load_ghost(void)
     if (majorVersion != SAVE_MAJOR_VERSION
         || minorVersion != GHOST_MINOR_VERSION)
     {
-        
+
         fclose(gfile);
         unlink(cha_fil.c_str());
         return;
@@ -1397,7 +1395,7 @@ void load_ghost(void)
         menv[imn].set_ghost(ghosts[0]);
         menv[imn].ghost_init();
 
-        ghosts.erase(ghosts.begin());        
+        ghosts.erase(ghosts.begin());
     }
 }
 
@@ -1465,7 +1463,7 @@ void restore_game(void)
     }
 
     /* tutorial */
-    
+
     std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
     FILE *tutorf = fopen(tutorFile.c_str(), "rb");
     if (tutorf)
@@ -1482,7 +1480,7 @@ static void _restore_level(const level_id &original)
     you.where_are_you = original.branch;
     you.your_level = original.absdepth();
     you.level_type = original.level_type;
-    
+
     load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
           you.level_type, you.your_level, you.where_are_you );
 }
@@ -1507,17 +1505,17 @@ bool apply_to_level(const level_id &level, bool preserve_current,
                     bool (*applicator)())
 {
     ASSERT(is_existing_level(level));
-    
+
     const level_id original = level_id::current();
     if (level != original)
     {
         if (preserve_current)
             save_level(you.your_level, you.level_type, you.where_are_you);
-                
+
         you.where_are_you = level.branch;
         you.your_level = level.absdepth();
         you.level_type = level.level_type;
-    
+
         // Load the dungeon level...
         load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
               LEVEL_DUNGEON, original.absdepth(),
@@ -1531,7 +1529,7 @@ bool apply_to_level(const level_id &level, bool preserve_current,
     {
         // And save it back.
         save_level(you.your_level, you.level_type, you.where_are_you);
-    
+
         if (preserve_current)
             _restore_level(original);
     }
@@ -1556,7 +1554,7 @@ bool apply_to_all_dungeons(bool (*applicator)())
 
             if (!is_existing_level(thislevel))
                 continue;
-            
+
             // Don't apply to the original level - already done up top.
             if (original == thislevel)
                 continue;
@@ -1571,7 +1569,7 @@ bool apply_to_all_dungeons(bool (*applicator)())
     return success;
 }
 
-static bool determine_version( FILE *restoreFile, 
+static bool determine_version( FILE *restoreFile,
                                char &majorVersion, char &minorVersion )
 {
     // read first two bytes.
@@ -1589,7 +1587,7 @@ static bool determine_version( FILE *restoreFile,
     return false;   // if it's not 0, no idea
 }
 
-static void restore_version( FILE *restoreFile, 
+static void restore_version( FILE *restoreFile,
                              char majorVersion, char minorVersion )
 {
     // assuming the following check can be removed once we can read all
@@ -1611,7 +1609,7 @@ static void restore_version( FILE *restoreFile,
 }
 
 // generic v4 restore function
-static void restore_tagged_file( FILE *restoreFile, int fileType, 
+static void restore_tagged_file( FILE *restoreFile, int fileType,
                                  char minorVersion )
 {
     char tags[NUM_TAGS];
@@ -1622,7 +1620,7 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
         tag_type tt = tag_read(restoreFile, minorVersion);
         if (tt == TAG_NO_TAG)
             break;
-            
+
         tags[tt] = 0;                // tag read
         if (fileType == TAGTYPE_PLAYER_NAME)
             break;
@@ -1636,7 +1634,7 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
     }
 }
 
-static bool determine_level_version( FILE *levelFile, 
+static bool determine_level_version( FILE *levelFile,
                                      char &majorVersion, char &minorVersion )
 {
     // read first two bytes.
@@ -1654,7 +1652,7 @@ static bool determine_level_version( FILE *levelFile,
     return false;   // if its not SAVE_MAJOR_VERSION, no idea
 }
 
-static void restore_level_version( FILE *levelFile, 
+static void restore_level_version( FILE *levelFile,
                                    char majorVersion, char minorVersion )
 {
     // assuming the following check can be removed once we can read all
@@ -1676,7 +1674,7 @@ static void restore_level_version( FILE *levelFile,
     }
 }
 
-static bool determine_ghost_version( FILE *ghostFile, 
+static bool determine_ghost_version( FILE *ghostFile,
                                      char &majorVersion, char &minorVersion )
 {
     // read first two bytes.
@@ -1704,7 +1702,7 @@ static bool determine_ghost_version( FILE *ghostFile,
     return false;   // if its not SAVE_MAJOR_VERSION, no idea!
 }
 
-static void restore_ghost_version( FILE *ghostFile, 
+static void restore_ghost_version( FILE *ghostFile,
                                    char majorVersion, char minorVersion )
 {
     switch(majorVersion)
@@ -1737,7 +1735,7 @@ void save_ghost( bool force )
     }
 
     ghosts = ghost_demon::find_ghosts();
-    
+
     gfile = lk_open("wb", cha_fil);
 
     if (gfile == NULL)

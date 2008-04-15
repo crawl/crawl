@@ -314,7 +314,7 @@ void inc_inv_item_quantity( int obj, int amount )
 {
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
-        
+
     you.m_quiver->on_inv_quantity_changed(obj, amount);
     you.inv[obj].quantity += amount;
     burden_change();
@@ -2333,11 +2333,9 @@ int inv_count(void)
 {
     int count=0;
 
-    for(int i = 0; i < ENDOFPACK; i++)
-    {
+    for (int i = 0; i < ENDOFPACK; i++)
         if (is_valid_item( you.inv[i] ))
             count++;
-    }
 
     return count;
 }
