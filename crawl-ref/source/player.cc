@@ -6111,12 +6111,30 @@ mon_holy_type player::holiness() const
     return (MH_NATURAL);
 }
 
+// Output active level of player mutation.
+// Might be lower than real mutation for non-"Alive" Vampires.
 int player_mutation_level(mutation_type mut)
 {
-    if (!mutation_is_active(mut))
-        return 0;
+    const int mlevel = you.mutation[mut];
 
-    return (you.mutation[mut]);
+    if (mutation_is_fully_active(mut))
+        return (mlevel);
+
+    // For now, dynamic mutation only apply to vampires.
+    ASSERT(you.species == SP_VAMPIRE);
+
+    // Assumption: stat mutations are physical, and thus always fully active.
+    switch (you.hunger_state)
+    {
+    case HS_ENGORGED:
+        return (mlevel);
+    case HS_VERY_FULL:
+    case HS_FULL:
+        return (std::min(mlevel, 2));
+    case HS_SATIATED:
+        return (std::min(mlevel, 1));
+    }
+    return (0);
 }
 
 int player::res_fire() const

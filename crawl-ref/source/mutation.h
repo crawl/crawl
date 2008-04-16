@@ -45,7 +45,7 @@ bool mutate(mutation_type which_mutation, bool failMsg = true,
  * *********************************************************************** */
 void display_mutations();
 
-bool mutation_is_active(mutation_type mut);
+bool mutation_is_fully_active(mutation_type mut);
 formatted_string describe_mutations();
 
 

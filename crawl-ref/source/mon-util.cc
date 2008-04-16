@@ -3350,6 +3350,13 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
     if (mons_has_ranged_spell(this))
         return (false);
 
+    // Monsters in a fight will only pick up missiles if doing so is worthwhile.
+    if (behaviour != BEH_WANDER
+        && (item.quantity < 5 || miss && miss->quantity >= 3))
+    {
+        return (false);
+    }
+
     if (miss && items_stack(*miss, item))
         return (pickup(item, MSLOT_MISSILE, near));
 

@@ -1015,22 +1015,31 @@ void fixup_mutations()
         mutation_defs[MUT_BIG_WINGS].rarity = 1;
 }
 
-bool mutation_is_active(mutation_type mut)
+bool mutation_is_fully_active(mutation_type mut)
 {
     // for all species except vampires their mutations always apply
     if (you.species != SP_VAMPIRE)
-        return true;
+        return (true);
 
     // innate mutations are always active
     if (you.demon_pow[mut])
-        return true;
+        return (true);
 
-    // ... as do mutations for non-thirsty vampires
-    if (you.hunger_state >= HS_SATIATED)
-        return true;
+    // ... as are physical mutations
+    if (mutation_defs[mut].physical)
+        return (true);
 
-    // for thirsty (or worse) vampires, only physical mutations are active
-    return (mutation_defs[mut].physical);
+    // ... as well as all mutations for vampires at Alive
+    if (you.hunger_state == HS_ENGORGED)
+        return (true);
+
+    return (false);
+}
+
+static bool _mutation_is_fully_inactive(mutation_type mut)
+{
+    return (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
+            && !you.demon_pow[mut] && !mutation_defs[mut].physical);
 }
 
 formatted_string describe_mutations()
@@ -1284,17 +1293,31 @@ formatted_string describe_mutations()
             if (you.species == SP_CENTAUR && i == MUT_DEFORMED)
                 continue;
 
+            const bool fully_active
+                        = mutation_is_fully_active((mutation_type) i);
+            bool fully_inactive = false;
+            if (!fully_active)
+                fully_inactive = _mutation_is_fully_inactive((mutation_type) i);
+
             const char* colourname = "";
             if ( you.species == SP_DEMONSPAWN )
             {
-                if ( you.demon_pow[i] < you.mutation[i] )
+                if (fully_inactive)
+                    colourname = "darkgray";
+                else if (!fully_active)
+                    colourname = "yellow";
+                else if ( you.demon_pow[i] < you.mutation[i] )
                     colourname = "lightred";
                 else
                     colourname = "red";
             }
             else            // innate ability
             {
-                if ( you.demon_pow[i] < you.mutation[i] )
+                if (fully_inactive)
+                    colourname = "darkgray";
+                else if (!fully_active)
+                    colourname = "blue";
+                else if ( you.demon_pow[i] < you.mutation[i] )
                     colourname = "cyan";
                 else
                     colourname = "lightblue";
@@ -1303,9 +1326,13 @@ formatted_string describe_mutations()
             result += '<';
             result += colourname;
             result += '>';
+            if (fully_inactive)
+                result += "(";
 
             result += mutation_name(static_cast<mutation_type>(i));
 
+            if (fully_inactive)
+                result += ")";
             result += "</";
             result += colourname;
             result += '>';
@@ -1334,15 +1361,26 @@ formatted_string describe_mutations()
             have_any = true;
 
             // not currently active?
-            const bool is_greyed_out = !mutation_is_active((mutation_type) i);
-
-            if (is_greyed_out)
-                result += "<darkgrey>(";
+            const bool need_grey = !mutation_is_fully_active((mutation_type) i);
+            bool inactive = false;
+            if (need_grey)
+            {
+                result += "<darkgrey>";
+                if (_mutation_is_fully_inactive((mutation_type) i))
+                {
+                    inactive = true;
+                    result += "(";
+                }
+            }
 
             result += mutation_name(static_cast<mutation_type>(i));
 
-            if (is_greyed_out)
-                result += ")</darkgrey>";
+            if (need_grey)
+            {
+                if (inactive)
+                    result += ")";
+                result += "</darkgrey>";
+            }
             result += EOL;
         }
     }
@@ -1528,8 +1566,37 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         force_mutation = true;
 
     bool rotting = you.is_undead;
-    if (you.species == SP_VAMPIRE && you.hunger_state >= HS_SATIATED)
-        rotting = false;
+    if (you.species == SP_VAMPIRE)
+    {
+        // The stat gain mutation always come through at Satiated or higher
+        // (mostly for convenience), and for consistency also their
+        // negative counterparts.
+        if (which_mutation == MUT_STRONG || which_mutation == MUT_CLEVER
+            || which_mutation == MUT_AGILE || which_mutation == MUT_WEAK
+            || which_mutation == MUT_DOPEY || which_mutation == MUT_CLUMSY)
+        {
+            if (you.hunger_state >= HS_FULL)
+                rotting = false;
+        }
+        else
+        {
+            // Else, chances depend on hunger state.
+            switch (you.hunger_state)
+            {
+            case HS_SATIATED:
+                rotting = !one_chance_in(3);
+                break;
+            case HS_FULL:
+                rotting = coinflip();
+                break;
+            case HS_VERY_FULL:
+                rotting = one_chance_in(3);
+                break;
+            case HS_ENGORGED:
+                rotting = false;
+            }
+        }
+    }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
@@ -2237,7 +2304,12 @@ const char *mutation_name(mutation_type which_mutat, int level)
 
     // level == -1 means default action of current level
     if (level == -1)
-        level = you.mutation[ which_mutat ];
+    {
+        if (!_mutation_is_fully_inactive(which_mutat))
+            level = player_mutation_level(which_mutat);
+        else // give description of fully active mutation
+            level = you.mutation[ which_mutat ];
+    }
 
     if (which_mutat == MUT_STRONG || which_mutat == MUT_CLEVER
         || which_mutat == MUT_AGILE || which_mutat == MUT_WEAK

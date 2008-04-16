@@ -16,6 +16,10 @@
 
 #include <stdlib.h>
 #include <sstream>
+//#include <cstdlib>
+//#include <string.h>
+//#include <stdio.h>
+//#include <algorithm>
 
 #ifdef DOS
 #include <conio.h>
@@ -2217,39 +2221,37 @@ std::string _status_mut_abilities()
     //----------------------------
     text += "\n<w>A:</w> ";
 
-    bool have_any = false;
-    int AC_change = 0;
-    int EV_change = 0;
+    int AC_change  = 0;
+    int EV_change  = 0;
     int Str_change = 0;
     int Int_change = 0;
     int Dex_change = 0;
 
+    std::vector<std::string> mutations;
+
     switch (you.species)   //mv: following code shows innate abilities - if any
     {
       case SP_MERFOLK:
-          text += "change form in water";
-          have_any = true;
+          mutations.push_back("change form in water");
           break;
 
       case SP_NAGA:
           // breathe poison replaces spit poison:
           if (!player_mutation_level(MUT_BREATHE_POISON))
-              text += "spit poison";
+              mutations.push_back("spit poison");
           else
-              text += "breathe poison";
-
-          have_any = true;
+              mutations.push_back("breathe poison");
           break;
 
       case SP_KENKU:
-          text += "cannot wear helmets";
+          mutations.push_back("cannot wear helmets");
           if (you.experience_level > 4)
           {
-              text += ", able to fly";
+              std::string help = "able to fly";
               if (you.experience_level > 14)
-                  text += " continuously";
+                  help += " continuously";
+              mutations.push_back(help);
           }
-          have_any = true;
           break;
 
       case SP_VAMPIRE:
@@ -2257,82 +2259,55 @@ std::string _status_mut_abilities()
               break;
           // else fall-through
       case SP_MUMMY:
-          text += "in touch with death";
-
-          have_any = true;
+          mutations.push_back("in touch with death");
           break;
 
       case SP_GREY_DRACONIAN:
           if (you.experience_level > 6)
-          {
-              text += "spiky tail";
-              have_any = true;
-          }
+              mutations.push_back("spiky tail");
           break;
 
       case SP_GREEN_DRACONIAN:
           if (you.experience_level > 6)
-          {
-              text += "breathe poison";
-              have_any = true;
-          }
+              mutations.push_back("breathe poison");
           break;
 
       case SP_RED_DRACONIAN:
           if (you.experience_level > 6)
-          {
-              text += "breathe fire";
-              have_any = true;
-          }
+              mutations.push_back("breathe fire");
           break;
 
       case SP_WHITE_DRACONIAN:
           if (you.experience_level > 6)
-          {
-              text += "breathe frost";
-              have_any = true;
-          }
+              mutations.push_back("breathe frost");
           break;
 
       case SP_BLACK_DRACONIAN:
           if (you.experience_level > 6)
-          {
-              text += "breathe lightning";
-              have_any = true;
-          }
+              mutations.push_back("breathe lightning");
           break;
 
       case SP_GOLDEN_DRACONIAN:
           if (you.experience_level > 6)
           {
-              text += "spit acid";
-              text += ", acid resistance";
-              have_any = true;
+              mutations.push_back("spit acid");
+              mutations.push_back("acid resistance");
           }
           break;
 
       case SP_PURPLE_DRACONIAN:
           if (you.experience_level > 6)
-          {
-              text += "breathe power";
-              have_any = true;
-          }
+              mutations.push_back("breathe power");
           break;
 
       case SP_MOTTLED_DRACONIAN:
           if (you.experience_level > 6)
-          {
-              text += "breathe sticky flames";
-              have_any = true;
-          }
+              mutations.push_back("breathe sticky flames");
           break;
 
       case SP_PALE_DRACONIAN:
           if (you.experience_level > 6)
-          {
-              text += "breathe steam";
-              have_any = true;
-          }
+              mutations.push_back("breathe steam");
           break;
 
       default:
@@ -2340,31 +2315,25 @@ std::string _status_mut_abilities()
     }                           //end switch - innate abilities
 
     // a bit more stuff
-    if ( (you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE) ||
-         player_genus(GENPC_DRACONIAN) ||
-         you.species == SP_SPRIGGAN )
+    if ( you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE
+         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN )
     {
-        if (have_any)
-            text += ", ";
-        text += "unfitting armour";
-        have_any = true;
+        mutations.push_back("unfitting armour");
     }
 
     if ( beogh_water_walk() )
-    {
-        if (have_any)
-            text += ", ";
-        text += "water walking";
-        have_any = true;
-    }
+        mutations.push_back("water walking");
 
+    std::string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; i++)
     {
         int level = player_mutation_level((mutation_type) i);
         if (!level)
             continue;
 
-        switch(i)
+        current = "";
+        bool lowered = (level < you.mutation[i]);
+        switch (i)
         {
             case MUT_TOUGH_SKIN:
                 AC_change += level;
@@ -2395,80 +2364,45 @@ std::string _status_mut_abilities()
             case MUT_REPULSION_FIELD:
                 EV_change += 2*level-1;
                 if (level == 3)
-                {
-                    if (have_any)
-                        text += ", ";
-                    text += "repel missiles";
-                    have_any = true;
-                }
+                    current = "repel missiles";
                 break;
             case MUT_POISON_RESISTANCE:
-                if (have_any)
-                    text += ", ";
-                text += "poison resistance";
-                have_any = true;
+                current = "poison resistance";
                 break;
             case MUT_SAPROVOROUS:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "saprovore %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_CARNIVOROUS:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "carnivore %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_HERBIVOROUS:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "herbivore %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_HEAT_RESISTANCE:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "fire resistance %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_COLD_RESISTANCE:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "cold resistance %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_SHOCK_RESISTANCE:
-                if (have_any)
-                    text += ", ";
-                text += "electricity resistance";
-                have_any = true;
+                current = "electricity resistance";
                 break;
             case MUT_REGENERATION:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "regeneration %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_FAST_METABOLISM:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "fast metabolism %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_SLOW_METABOLISM:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "slow metabolism %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_WEAK:
                 Str_change -= level;
@@ -2480,84 +2414,48 @@ std::string _status_mut_abilities()
                 Dex_change -= level;
                 break;
             case MUT_TELEPORT_CONTROL:
-                if (have_any)
-                    text += ", ";
-                text += "teleport control";
-                have_any = true;
+                current = "teleport control";
                 break;
             case MUT_TELEPORT:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "teleportitis %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_MAGIC_RESISTANCE:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "magic resistance %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_FAST:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "speed %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_ACUTE_VISION:
-                if (have_any)
-                    text += ", ";
-                text += "see invisible";
-                have_any = true;
+                current = "see invisible";
                 break;
             case MUT_DEFORMED:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "deformed body %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_TELEPORT_AT_WILL:
                 snprintf(info, INFO_SIZE, "teleport at will %d", level);
-                if (have_any)
-                    text += ", ";
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_SPIT_POISON:
-                if (have_any)
-                    text += ", ";
-                text += "spit poison";
-                have_any = true;
+                current = "spit poison";
                 break;
             case MUT_MAPPING:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "sense surroundings %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_BREATHE_FLAMES:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "breathe flames %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_BLINK:
-                if (have_any)
-                    text += ", ";
-                text += "blink";
-                have_any = true;
+                current = "blink";
                 break;
             case MUT_HORNS:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "horns %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_STRONG_STIFF:
                 Str_change += level;
@@ -2568,227 +2466,126 @@ std::string _status_mut_abilities()
                 Dex_change += level;
                 break;
             case MUT_SCREAM:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "screaming %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_CLARITY:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "clarity %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_BERSERK:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "berserk %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_DETERIORATION:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "deterioration %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_BLURRY_VISION:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "blurry vision %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_MUTATION_RESISTANCE:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "mutation resistance %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_FRAIL:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "-%d%% hp", level*10);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_ROBUST:
-                if (have_any)
-                    text += ", ";
-                snprintf(info, INFO_SIZE, "+%d hp%%", level*10);
-                text += info;
-                have_any = true;
+                snprintf(info, INFO_SIZE, "+%d%% hp", level*10);
+                current = info;
                 break;
             case MUT_LOW_MAGIC:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "-%d%% mp", level*10);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_HIGH_MAGIC:
-                if (have_any)
-                    text += ", ";
-                snprintf(info, INFO_SIZE, "+%d mp%%", level*10);
-                text += info;
-                have_any = true;
+                snprintf(info, INFO_SIZE, "+%d%% mp", level*10);
+                current = info;
                 break;
 
             /* demonspawn mutations */
             case MUT_TORMENT_RESISTANCE:
-                if (have_any)
-                    text += ", ";
-                text += "torment resistance";
-                have_any = true;
+                current = "torment resistance";
                 break;
             case MUT_NEGATIVE_ENERGY_RESISTANCE:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "life protection %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_SUMMON_MINOR_DEMONS:
-                if (have_any)
-                    text += ", ";
-                text += "summon minor demons";
-                have_any = true;
+                current = "summon minor demons";
                 break;
             case MUT_SUMMON_DEMONS:
-                if (have_any)
-                    text += ", ";
-                text += "summon demons";
-                have_any = true;
+                current = "summon demons";
                 break;
             case MUT_HURL_HELLFIRE:
-                if (have_any)
-                    text += ", ";
-                text += "hurl hellfire";
-                have_any = true;
+                current = "hurl hellfire";
                 break;
             case MUT_CALL_TORMENT:
-                if (have_any)
-                    text += ", ";
-                text += "call torment";
-                have_any = true;
+                current = "call torment";
                 break;
             case MUT_RAISE_DEAD:
-                if (have_any)
-                    text += ", ";
-                text += "raise dead";
-                have_any = true;
+                current = "raise dead";
                 break;
             case MUT_CONTROL_DEMONS:
-                if (have_any)
-                    text += ", ";
-                text += "control demons";
-                have_any = true;
+                current = "control demons";
                 break;
             case MUT_PANDEMONIUM:
-                if (have_any)
-                    text += ", ";
-                text += "portal to Pandemonium";
-                have_any = true;
+                current = "portal to Pandemonium";
                 break;
             case MUT_DEATH_STRENGTH:
-                if (have_any)
-                    text += ", ";
-                text += "draw strength from death and destruction";
-                have_any = true;
+                current = "draw strength from death and destruction";
                 break;
             case MUT_CHANNEL_HELL:
-                if (have_any)
-                    text += ", ";
-                text += "channel magical energy from Hell";
-                have_any = true;
+                current = "channel magical energy from Hell";
                 break;
             case MUT_DRAIN_LIFE:
-                if (have_any)
-                    text += ", ";
-                text += "drain life";
-                have_any = true;
+                current = "drain life";
                 break;
             case MUT_THROW_FLAMES:
-                if (have_any)
-                    text += ", ";
-                text += "throw flames of Gehenna";
-                have_any = true;
+                current = "throw flames of Gehenna";
                 break;
             case MUT_THROW_FROST:
-                if (have_any)
-                    text += ", ";
-                text += "throw frost of Cocytus";
-                have_any = true;
+                current = "throw frost of Cocytus";
                 break;
             case MUT_SMITE:
-                if (have_any)
-                    text += ", ";
-                text += "invoke powers of Tartarus";
-                have_any = true;
+                current = "invoke powers of Tartarus";
                 break;
             /* end of demonspawn mutations */
+
             case MUT_CLAWS:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "claws %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_FANGS:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "sharp teeth %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_HOOVES:
-                if (have_any)
-                    text += ", ";
-                text += "hooves";
-                have_any = true;
+                current = "hooves";
                 break;
             case MUT_TALONS:
-                if (have_any)
-                    text += ", ";
-                text += "talons";
-                have_any = true;
+                current = "talons";
                 break;
             case MUT_BREATHE_POISON:
-                if (have_any)
-                    text += ", ";
-                text += "breathe poison";
-                have_any = true;
+                current = "breathe poison";
                 break;
             case MUT_STINGER:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "stinger %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_BIG_WINGS:
-                if (have_any)
-                    text += ", ";
-                text += "large and strong wings";
-                have_any = true;
+                current = "large and strong wings";
                 break;
             case MUT_BLUE_MARKS:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "blue evil mark %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
             case MUT_GREEN_MARKS:
-                if (have_any)
-                    text += ", ";
                 snprintf(info, INFO_SIZE, "green evil mark %d", level);
-                text += info;
-                have_any = true;
+                current = info;
                 break;
 
             // scales etc. -> calculate sum of AC bonus
@@ -2860,54 +2657,53 @@ std::string _status_mut_abilities()
                 break;
             case MUT_SHAGGY_FUR:
                 AC_change += level;
+                if (level == 3)
+                    current = "shaggy fur";
                 break;
             default: break;
+        }
+
+        if (!current.empty())
+        {
+            if (lowered)
+                current = "<darkgrey>" + current + "</darkgrey>";
+            mutations.push_back(current);
         }
     }
 
     if (AC_change)
     {
-        if (have_any)
-            text += ", ";
         snprintf(info, INFO_SIZE, "AC %s%d", (AC_change > 0 ? "+" : ""), AC_change);
-        text += info;
-        have_any = true;
+        mutations.push_back(info);
     }
     if (EV_change)
     {
-        if (have_any)
-            text += ", ";
         snprintf(info, INFO_SIZE, "EV +%d", EV_change);
-        text += info;
-        have_any = true;
+        mutations.push_back(info);
     }
     if (Str_change)
     {
-        if (have_any)
-            text += ", ";
         snprintf(info, INFO_SIZE, "Str %s%d", (Str_change > 0 ? "+" : ""), Str_change);
-        text += info;
-        have_any = true;
+        mutations.push_back(info);
     }
     if (Int_change)
     {
-        if (have_any)
-            text += ", ";
         snprintf(info, INFO_SIZE, "Int %s%d", (Int_change > 0 ? "+" : ""), Int_change);
-        text += info;
-        have_any = true;
+        mutations.push_back(info);
     }
     if (Dex_change)
     {
-        if (have_any)
-            text += ", ";
         snprintf(info, INFO_SIZE, "Dex %s%d", (Dex_change > 0 ? "+" : ""), Dex_change);
-        text += info;
-        have_any = true;
+        mutations.push_back(info);
     }
 
-    if (!have_any)
+    if (mutations.empty())
         text +=  "no striking features";
+    else
+    {
+        text += comma_separated_line(mutations.begin(), mutations.end(),
+                                     ", ", ", ");
+    }
 
     //----------------------------
     // print ability information
