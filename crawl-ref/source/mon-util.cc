@@ -3007,10 +3007,12 @@ void monsters::lose_pickup_energy()
 void monsters::pickup_message(const item_def &item, int near)
 {
     if (need_message(near))
+    {
         mprf("%s picks up %s.",
              name(DESC_CAP_THE).c_str(),
              item.base_type == OBJ_GOLD? "some gold"
              : item.name(DESC_NOCAP_A).c_str());
+    }
 }
 
 bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
@@ -3236,9 +3238,9 @@ static mon_inv_type _equip_slot_to_mslot(equipment_type eq)
 {
     switch (eq)
     {
-    case EQ_WEAPON: return MSLOT_WEAPON;
+    case EQ_WEAPON:      return MSLOT_WEAPON;
     case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
-    case EQ_SHIELD: return MSLOT_SHIELD;
+    case EQ_SHIELD:      return MSLOT_SHIELD;
     default: return (NUM_MONSTER_SLOTS);
     }
 }
@@ -3250,7 +3252,30 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     if (!force && !wants_armour(item))
         return (false);
 
-    const equipment_type eq = get_armour_slot(item);
+    equipment_type eq = EQ_NONE;
+
+    // Hack to allow nagas/centaurs to wear bardings. (jpeg)
+    switch(item.sub_type)
+    {
+    case ARM_NAGA_BARDING:
+        if (::mons_species(this->type) == MONS_NAGA)
+            eq = EQ_BODY_ARMOUR;
+        break;
+    case ARM_CENTAUR_BARDING:
+        if (::mons_species(this->type) == MONS_CENTAUR
+            || ::mons_species(this->type) == MONS_YAKTAUR)
+        {
+            eq = EQ_BODY_ARMOUR;
+        }
+        break;
+    default:
+        eq = get_armour_slot(item);
+    }
+
+    // Bardings are only wearable by the appropriate monster.
+    if (eq == EQ_NONE)
+        return false;
+
     // XXX: Monsters can only equip body armour and shields (as of 0.4).
     // They can still be forced to wear stuff - this is needed for bardings.
     if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
@@ -3305,12 +3330,20 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
 
     const item_def *miss = missiles();
 
-    // monster may not pick up trapping net
-    if (mons_is_caught(this) && item.sub_type == MI_THROWING_NET
-        && item_is_stationary(item))
+    if (item.sub_type == MI_THROWING_NET)
     {
-        return (false);
+        // monster may not pick up trapping net
+        if (mons_is_caught(this) && item_is_stationary(item))
+            return (false);
+
+        // else always pick up if no other missiles
+        if (!miss)
+            return true;
     }
+
+    // Spellcasters should not waste time with ammunition.
+    if (mons_has_ranged_spell(this))
+        return (false);
 
     if (miss && items_stack(*miss, item))
         return (pickup(item, MSLOT_MISSILE, near));
@@ -3324,31 +3357,43 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
 bool monsters::pickup_wand(item_def &item, int near)
 {
     // Only low-HD monsters bother with wands.
-    return hit_dice < 14 && pickup(item, MSLOT_WAND, near);
+    return (hit_dice < 14 && pickup(item, MSLOT_WAND, near));
 }
 
 bool monsters::pickup_scroll(item_def &item, int near)
 {
+    if (item.sub_type != SCR_TELEPORTATION
+        && item.sub_type != SCR_BLINKING
+        && item.sub_type != SCR_SUMMONING)
+    {
+        return false;
+    }
     return pickup(item, MSLOT_SCROLL, near);
 }
 
 bool monsters::pickup_potion(item_def &item, int near)
 {
-    // only allow monsters to pick up healing potions
-    // if they can actually use them
-    if ((item.sub_type == POT_HEALING || item.sub_type == POT_HEAL_WOUNDS)
-        && (mons_holiness(this) == MH_UNDEAD
+    // Only allow monsters to pick up potions if they can actually use them.
+    switch(item.sub_type)
+    {
+    case POT_HEALING:
+    case POT_HEAL_WOUNDS:
+        if (mons_holiness(this) == MH_UNDEAD
             || mons_holiness(this) == MH_NONLIVING
-            || mons_holiness(this) == MH_PLANT))
-    {
-        return false;
-    }
-
-
-    if (::mons_species(this->type) != MONS_VAMPIRE
-        && (item.sub_type == POT_BLOOD
-            || item.sub_type == POT_BLOOD_COAGULATED))
-    {
+            || mons_holiness(this) == MH_PLANT)
+        {
+            return false;
+        }
+        break;
+    case POT_BLOOD:
+    case POT_BLOOD_COAGULATED:
+        if (::mons_species(this->type) != MONS_VAMPIRE)
+            return false;
+        break;
+    case POT_SPEED:
+    case POT_INVISIBILITY:
+        break;
+    default:
         return false;
     }
 
@@ -3394,17 +3439,55 @@ bool monsters::pickup_misc(item_def &item, int near)
 bool monsters::pickup_item(item_def &item, int near, bool force)
 {
     // Never pick up stuff when we're in battle.
-    if (!force && (behaviour != BEH_WANDER || attitude == ATT_NEUTRAL))
-        return (false);
+//    if (!force && (behaviour != BEH_WANDER || attitude == ATT_NEUTRAL))
+//        return (false);
+
+    if (!force)
+    {
+        if (attitude == ATT_NEUTRAL)
+            return (false);
+
+        bool wandering = (behaviour == BEH_WANDER);
+
+        // Weak(ened) monsters won't stop to pick up things as long as they
+        // feel unsafe.
+        if (!wandering && (hit_points * 10 < max_hit_points || hit_points <= 10)
+            && mon_enemies_around(this))
+        {
+            return false;
+        }
+
+        // These are not important enough for pickup when seeking, fleeing etc.
+        const int itype = item.base_type;
+        if (!wandering
+            && (itype == OBJ_ARMOUR || itype == OBJ_CORPSES
+                || itype == OBJ_MISCELLANY || itype == OBJ_GOLD))
+        {
+            return false;
+        }
+    }
 
     // Jellies are not handled here.
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
-        return pickup_weapon(item, near, force);
+    // pickup some stuff only if WANDERING
     case OBJ_ARMOUR:
         return pickup_armour(item, near, force);
+    case OBJ_CORPSES:
+        return eat_corpse(item, near);
+    case OBJ_MISCELLANY:
+        return pickup_misc(item, near);
+    case OBJ_GOLD:
+        return pickup_gold(item, near);
+    // other types can always be picked up
+    // (barring other checks depending on subtype, of course)
+    case OBJ_WEAPONS:
+        if (behaviour == BEH_FLEEING)
+            return false;
+        return pickup_weapon(item, near, force);
     case OBJ_MISSILES:
+        if (behaviour == BEH_FLEEING)
+            return false;
         return pickup_missile(item, near, force);
     case OBJ_WANDS:
         return pickup_wand(item, near);
@@ -3412,12 +3495,6 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
         return pickup_scroll(item, near);
     case OBJ_POTIONS:
         return pickup_potion(item, near);
-    case OBJ_CORPSES:
-        return eat_corpse(item, near);
-    case OBJ_MISCELLANY:
-        return pickup_misc(item, near);
-    case OBJ_GOLD:
-        return pickup_gold(item, near);
     default:
         return (false);
     }

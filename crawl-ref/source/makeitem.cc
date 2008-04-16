@@ -3960,7 +3960,7 @@ void give_armour(monsters *mon, int level)
         if ( one_chance_in( mon->type == MONS_NAGA         ?  800 :
                             mon->type == MONS_NAGA_WARRIOR ?  300 :
                             mon->type == MONS_NAGA_MAGE    ?  200
-                                                           :  100))
+                                                           :  100 ))
         {
             mitm[bp].base_type = OBJ_ARMOUR;
             mitm[bp].sub_type = ARM_NAGA_BARDING;

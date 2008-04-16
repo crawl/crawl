@@ -3600,6 +3600,14 @@ bool mons_near(const monsters *monster, unsigned int foe)
     return (false);
 }                               // end mons_near()
 
+bool mon_enemies_around(const monsters *monster)
+{
+    if (mons_friendly(monster))
+        return (!mons_near(monster) || !i_feel_safe());
+    else
+        return (mons_near(monster));
+}
+
 bool see_grid( const env_show_grid &show,
                const coord_def &c,
                const coord_def &pos )

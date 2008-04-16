@@ -2007,10 +2007,14 @@ void behaviour_event( monsters *mon, int event, int src,
         // are BOTH friendly and stupid, or else fleeing anyway.
         // Hitting someone over the head, of course,
         // always triggers this code.
-        if ( event == ME_WHACK ||
-             ((isFriendly != sourceFriendly || isSmart) &&
-              (mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC)))
+        if (event == ME_WHACK
+            || ((isFriendly != sourceFriendly || isSmart)
+                && mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC))
         {
+            // (plain) plants and fungi cannot flee or fight back
+            if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT)
+                return;
+
             mon->foe = src;
 
             if (mon->behaviour != BEH_CORNERED)
@@ -4018,14 +4022,6 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
     return (true);
 }
 
-static bool _enemies_around(const monsters *monster)
-{
-    if (mons_friendly(monster))
-        return (!mons_near(monster) || !i_feel_safe());
-    else
-        return (mons_near(monster));
-}
-
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -4076,7 +4072,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
         spell_type spell_cast = SPELL_NO_SPELL;
         monster_spells hspell_pass(monster->spells);
 
-        if (!_enemies_around(monster))
+        if (!mon_enemies_around(monster))
         {
             // forces the casting of dig when player not visible - this is EVIL!
             if (monster->has_spell(SPELL_DIG)
@@ -4118,8 +4114,8 @@ static bool _handle_spell( monsters *monster, bolt & beem )
 
         // monsters caught in a net try to get away
         // this is only urgent if enemies are around
-        if (!finalAnswer && _enemies_around(monster) && mons_is_caught(monster)
-            && one_chance_in(4))
+        if (!finalAnswer && mon_enemies_around(monster)
+            && mons_is_caught(monster) && one_chance_in(4))
         {
             for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
             {
@@ -4166,7 +4162,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
         if (!finalAnswer)
         {
             // if nothing found by now, safe friendlies will rarely cast
-            if (mons_friendly(monster) && !_enemies_around(monster)
+            if (mons_friendly(monster) && !mon_enemies_around(monster)
                 && !one_chance_in(8))
             {
                 return (false);
@@ -4805,7 +4801,6 @@ static void _handle_monster_move(int i, monsters *monster)
 
                  int pfound = 0;
                  for (int yi = -1; yi <= 1; ++yi)
-                 {
                      for (int xi = -1; xi <= 1; ++xi)
                      {
                          coord_def c = monster->pos() + coord_def(xi, yi);
@@ -4816,7 +4811,6 @@ static void _handle_monster_move(int i, monsters *monster)
                              mmov_y = yi;
                          }
                      }
-                 }
 
                  if (random2(2 + pfound) < 2)
                      mmov_x = mmov_y = 0;
@@ -4824,7 +4818,7 @@ static void _handle_monster_move(int i, monsters *monster)
                  // bounds check: don't let confused monsters try to run
                  // off the map
                  if (monster->x + mmov_x < 0
-                         || monster->x + mmov_x >= GXM)
+                    || monster->x + mmov_x >= GXM)
                  {
                      mmov_x = 0;
                  }
@@ -4845,8 +4839,7 @@ static void _handle_monster_move(int i, monsters *monster)
                      && !is_sanctuary(monster->x, monster->y)
                      && (mmov_x != 0 || mmov_y != 0))
                  {
-                     monsters_fight(
-                         i,
+                     monsters_fight(i,
                          mgrd[monster->x + mmov_x][monster->y + mmov_y]);
 
                      brkk = true;

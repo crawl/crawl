@@ -58,7 +58,7 @@
    exp_mod: see give_adjusted_experience() in monstuff.cc
    - the experience given for killing this monster is calculated something
    like this:
-   experience = hp_max * HD * HD * exp_mod / 10
+     experience = hp_max * HD * HD * exp_mod / 10
    I think.
 
    Actually it is
@@ -119,6 +119,12 @@
      MONUSE_WEAPONS_ARMOUR,
      MONUSE_MAGIC_ITEMS
 
+    From MONUSE_STARTING_EQUIPMENT on, monsters are capable of handling items.
+    Contrary to what one might expect MONUSE_WEAPONS_ARMOUR also means a
+    monster is capable of using wands and will also pick them up, something
+    that those with MONUSE_STARTING_EQUIPMENT won't do.
+    MONUSE_MAGIC_ITEMS is currently never used anywhere.
+
    size:
      SIZE_TINY,              // rat/bat
      SIZE_LITTLE,            // spriggan
@@ -168,7 +174,7 @@
     700, 10, MONS_GIANT_ANT, MONS_GIANT_ANT, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 5, 0 },
-    4, 10, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_INSECT, 
+    4, 10, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_INSECT,
     HT_LAND, 12, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_LITTLE,
 },
 
@@ -191,7 +197,7 @@
     150, 4, MONS_GIANT_BAT, MONS_GIANT_BAT, MH_NATURAL, -1,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 2, 3, 0 },
-    1, 14, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
+    1, 14, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL,
     HT_LAND, 30, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_TINY
 },
 
@@ -214,7 +220,7 @@
     1500, 10, MONS_CENTAUR, MONS_CENTAUR, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 3, 5, 0 },
-    3, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL, 
+    3, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL,
     HT_LAND, 15, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 },
 

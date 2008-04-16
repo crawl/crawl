@@ -3394,7 +3394,8 @@ void divine_retribution( god_type god )
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (!god_hates_your_god(god))
+    // allow retribution during god's own penance
+    if (god != you.religion && !god_hates_your_god(god))
         return;
 
     god_acting gdact(god, true);
@@ -4802,8 +4803,8 @@ void handle_god_time()
         {
             // Nemelex penance is special: it's only "active"
             // when penance > 100, else it's passive.
-            if (you.penance[i] && (i != GOD_NEMELEX_XOBEH ||
-                                   you.penance[i] > 100))
+            if (you.penance[i] && (i != GOD_NEMELEX_XOBEH
+                                   || you.penance[i] > 100))
             {
                 count++;
                 if (one_chance_in(count))

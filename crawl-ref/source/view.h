@@ -79,7 +79,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit = false);
  *              mstuff2 - spells1 - spells2
  * *********************************************************************** */
 bool mons_near(const monsters *monster, unsigned int foe = MHITYOU);
-
+bool mon_enemies_around(const monsters *monster);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
