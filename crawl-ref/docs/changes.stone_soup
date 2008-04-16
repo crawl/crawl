@@ -13,6 +13,7 @@ Interface
 * Allow selection of equipment slots from '%' overview screen.
 * Improved butchering interface.
 * Allow searching item/monster/spell descriptions ('?\' command).
+* Allow swapping (' command) to non-weapons that need to be wielded for spells.
 * Added Ctrl-D as a synonym for '~' (defining macros).
 * Added commands for repeating commands ('`' and '0').
 * Added command to annotate level ('!' command).
@@ -48,6 +49,7 @@ Characters
 * Fixed undead being unable to smite.
 * Necromutation now gives torment resistance again.
 * When transforming only remove armour you can't wear when transformed.
+* Improve Priests' starting weapons.
 
 Items
 -----
@@ -90,9 +92,11 @@ Monsters
 * Lee's Rapid Deconstruction now works against skeletal dragons.
 * Changed evil/holiness/intelligence flags for a number of monsters.
 * Improved trap handling for intelligent monsters.
+* Smarter pickup handling.
 * Fixed friendlies accidentally shooting the player.
 * Monsters won't enter miasma if it harms them.
 * Implemented Dispel Undead for monsters.
+* Fix nagas/centaurs never being generating with bardings.
 * Monsters may use wands of disintegration and polymorph other (mutates).
 * Give a message for kills out of LOS.
 * No experience for killing summoned monsters.
@@ -142,6 +146,7 @@ Miscellaneous
 * Identify post-mortem inventory in morgue.txt.
 * Dump command also dumps level map.
 * init.txt/crawlrc allow loading of external options/macro files.
+* Changed stat display to be more compact and visually appealing.
 * Overhaul of ghost structure.
 * Overhauled and improved the documentation.
 * Outsourced names for random artefacts.
