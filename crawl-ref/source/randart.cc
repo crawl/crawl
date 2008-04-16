@@ -89,17 +89,19 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
              return (false); // goes against anti-mutagenic theme
          break;
 
-    case GOD_SHINING_ONE:
-         if (brand != SPWPN_HOLY_WRATH)
-             return (false); // goes against holiness theme
+    case GOD_SHINING_ONE: // holiness/honourable combat theme
 
-         if (brand == SPWPN_VENOM)
-             return (false); // goes against honourable combat theme
+         if (brand != SPWPN_HOLY_WRATH || brand == SPWPN_VENOM)
+             return (false);
 
-         if (randart_wpn_property( item, RAP_STEALTH ) > 0
-             || randart_wpn_property( item, RAP_CAUSE_TELEPORTATION ))
+         if (randart_wpn_property( item, RAP_INVISIBLE )
+             || randart_wpn_property( item, RAP_BLINK )
+             || randart_wpn_property( item, RAP_CAN_TELEPORT )
+             || randart_wpn_property( item, RAP_CAUSE_TELEPORTATION )
+             || randart_wpn_property( item, RAP_CURSED )
+             || randart_wpn_property( item, RAP_STEALTH ) > 0)
          {
-             return (false); // goes against honourable combat theme
+             return (false);
          }
          break;
 
