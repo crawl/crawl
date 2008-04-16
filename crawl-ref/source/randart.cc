@@ -1544,7 +1544,7 @@ static bool randart_is_redundant( const item_def &item,
         break;
 
     case RING_SEE_INVISIBLE:
-        provides = RAP_ACCURACY;
+        provides = RAP_EYESIGHT;
         break;
 
     case RING_INVISIBILITY:
