@@ -59,7 +59,7 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
     {
     case GOD_BEOGH:
          if (brand == SPWPN_ORC_SLAYING)
-             return (false);
+             return (false); // goes against orcish theme
          break;
 
     case GOD_ELYVILON: // peaceful healer god, no weapons, no berserking
@@ -89,6 +89,14 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
              return (false); // goes against anti-mutagenic theme
          break;
 
+    case GOD_SHINING_ONE:
+         if (brand == SPWPN_VENOM)
+             return (false); // goes against anti-poison theme
+
+         if (brand != SPWPN_HOLY_WRATH)
+             return (false); // goes against holiness theme
+         break;
+
     case GOD_SIF_MUNA:
     case GOD_KIKUBAAQUDGHA:
     case GOD_VEHUMET:
@@ -116,19 +124,27 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
     return (true);
 }
 
-static std::string replace_name_parts(const std::string name_in,
-                                      const item_def item)
+static god_type gift_from_god(const item_def item)
 {
-    std::string name = name_in;
-
     // maybe god gift?
     god_type god_gift = GOD_NO_GOD;
+
     if (item.orig_monnum < 0)
     {
         int help = -item.orig_monnum - 2;
         if (help > GOD_NO_GOD && help < NUM_GODS)
             god_gift = static_cast<god_type>(help);
     }
+
+    return god_gift;
+}
+
+static std::string replace_name_parts(const std::string name_in,
+                                      const item_def item)
+{
+    std::string name = name_in;
+
+    god_type god_gift = gift_from_god(item);
 
     // Don't allow "player's Death" type names for god gifts (except Xom!)
     if (god_gift != GOD_NO_GOD && god_gift != GOD_XOM
@@ -1238,13 +1254,7 @@ std::string randart_name( const item_def &item )
     {
         result += item_base_name(item) + " ";
 
-        std::string name;
-
-        // special case for blessed artefact weapons, since they're unique
-        if (is_blessed(item))
-            name = "of @player_name@";
-        else
-            name = getRandNameString(lookup);
+        std::string name = getRandNameString(lookup);
 
         if (name.empty() && god_gift) // if nothing found, try god name alone
         {
@@ -1275,6 +1285,13 @@ std::string randart_name( const item_def &item )
             result += st_p;
             result += "\"";
         }
+    }
+
+    if (is_blessed(item) && god_gift)
+    {
+        result = item_base_name(item) + " ";
+        std::string name = "of @player_name@";
+        result += replace_name_parts(name, item);
     }
 
     return result;
@@ -1676,11 +1693,14 @@ bool make_item_randart( item_def &item )
 
     item.flags |= ISFLAG_RANDART;
 
+    god_type god_gift = gift_from_god(item);
+
     do
     {
         item.special = (random_int() & RANDART_SEED_MASK);
     }
-    while (randart_is_bad( item ));
+    while (randart_is_bad(item)
+        || (god_gift != GOD_NO_GOD && !god_fits_artefact(god_gift, item)));
 
     return (true);
 }

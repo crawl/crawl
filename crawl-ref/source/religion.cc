@@ -4070,7 +4070,10 @@ static bool _bless_weapon( god_type god, int brand, int colour )
             normal2good(you.inv[wpn]);
 
             if (is_blessed(you.inv[wpn]))
+            {
+                origin_acquired(you.inv[wpn], GOD_SHINING_ONE);
                 make_item_randart(you.inv[wpn]);
+            }
         }
 
         you.wield_change = true;
