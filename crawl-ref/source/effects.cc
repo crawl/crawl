@@ -1495,6 +1495,18 @@ bool acquirement(object_class_type class_wanted, int agent,
                 continue;
             }
 
+            // Only TSO gifts blessed weapons, and currently
+            // not through acquirement, but make sure of this anyway
+            if (agent != GOD_SHINING_ONE)
+            {
+                if (is_blessed(doodad))
+                {
+                    destroy_item(thing_created, true);
+                    thing_created = NON_ITEM;
+                    continue;
+                }
+            }
+
             // Trog does not gift the Wrath of Trog, nor
             // weapons of pain (work together with Necromantic magic)
             if (agent == GOD_TROG)
