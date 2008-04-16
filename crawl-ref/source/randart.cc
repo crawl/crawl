@@ -1643,7 +1643,7 @@ bool randart_is_bad( const item_def &item )
     return randart_is_bad( item, proprt);
 }
 
-bool make_item_randart( item_def &item )
+bool make_item_randart( item_def &item, bool randomise )
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
@@ -1666,10 +1666,14 @@ bool make_item_randart( item_def &item )
         known[i] = (bool) false;
 
     item.flags |= ISFLAG_RANDART;
-    do
+
+    if (randomise)
     {
-        item.special = (random_int() & RANDART_SEED_MASK);
-    } while (randart_is_bad( item ));
+        do
+        {
+            item.special = (random_int() & RANDART_SEED_MASK);
+        } while (randart_is_bad( item ));
+    }
 
     return (true);
 }

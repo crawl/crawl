@@ -4066,7 +4066,12 @@ static bool _bless_weapon( god_type god, int brand, int colour )
         enchant_weapon( ENCHANT_TO_DAM, true, you.inv[wpn] );
 
         if ( is_good_god(god) )
+        {
             normal2good(you.inv[wpn]);
+
+            if (is_blessed(you.inv[wpn]))
+                make_item_randart(you.inv[wpn], false);
+        }
 
         you.wield_change = true;
         you.num_gifts[god]++;
