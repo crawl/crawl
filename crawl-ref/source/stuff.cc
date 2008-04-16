@@ -148,17 +148,23 @@ bool radius_iterator::on_valid_square() const
 
 const radius_iterator& radius_iterator::operator++()
 {
-    do {
+    do
+    {
         this->step();
-    } while ( !this->done() && !this->on_valid_square() );
+    }
+    while ( !this->done() && !this->on_valid_square() );
+
     return *this;
 }
 
 const radius_iterator& radius_iterator::operator--()
 {
-    do {
+    do
+    {
         this->step_back();
-    } while ( !this->done() && !this->on_valid_square() );
+    }
+    while ( !this->done() && !this->on_valid_square() );
+
     return *this;
 }
 

@@ -123,8 +123,6 @@ void ghost_demon::reset()
     see_invis        = false;
     brand            = SPWPN_NORMAL;
     resists          = mon_resist_def();
-    // HACKY: demons and ghosts always resist poison
-//    resists.poison   = 1;
     spellcaster      = false;
     cycle_colours    = false;
     fly              = FL_NONE;
@@ -174,17 +172,19 @@ void ghost_demon::init_random_demon()
 
     if (!one_chance_in(3))
     {
-        do {
+        do
+        {
             brand = static_cast<brand_type>( random2(MAX_PAN_LORD_BRANDS) );
             /* some brands inappropriate (e.g. holy wrath) */
-        } while (brand == SPWPN_HOLY_WRATH
-                 || (brand == SPWPN_ORC_SLAYING
-                     && you.mons_species() != MONS_ORC)
-                 || (brand == SPWPN_DRAGON_SLAYING
-                     && you.mons_species() != MONS_DRACONIAN)
-                 || brand == SPWPN_PROTECTION
-                 || brand == SPWPN_FLAME
-                 || brand == SPWPN_FROST);
+        }
+        while (brand == SPWPN_HOLY_WRATH
+               || (brand == SPWPN_ORC_SLAYING
+                   && you.mons_species() != MONS_ORC)
+               || (brand == SPWPN_DRAGON_SLAYING
+                   && you.mons_species() != MONS_DRACONIAN)
+               || brand == SPWPN_PROTECTION
+               || brand == SPWPN_FLAME
+               || brand == SPWPN_FROST);
     }
 
     // is demon a spellcaster?

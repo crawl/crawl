@@ -955,12 +955,14 @@ static void explore_find_target_square()
             coord_def delta  = Compass[anti_zigzag_dir];
 
             dungeon_feature_type feature;
-            do {
+            do
+            {
                 target += delta;
                 feature = grd(target);
-            } while (is_travelsafe_square(target.x, target.y)
-                     && is_traversable(feature)
-                     && feature_traverse_cost(feature) == 1);
+            }
+            while (is_travelsafe_square(target.x, target.y)
+                   && is_traversable(feature)
+                   && feature_traverse_cost(feature) == 1);
 
             target -= delta;
 
@@ -1999,13 +2001,14 @@ static int get_nearest_level_depth(unsigned char branch)
     do
     {
         find_parent_branch(id.branch, id.depth,
-                &id.branch, &id.depth);
+                           &id.branch, &id.depth);
         if (id.depth && id.branch == branch)
         {
             depth = id.depth;
             break;
         }
-    } while (id.depth);
+    }
+    while (id.depth);
 
     return depth;
 }

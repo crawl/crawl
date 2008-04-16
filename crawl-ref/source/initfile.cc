@@ -1593,11 +1593,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     } while (false)
 #define CURSES_OPTION(_opt) CURSES_OPTION_NAMED(#_opt, _opt)
 
-    std::string key = "";
+    std::string key    = "";
     std::string subkey = "";
-    std::string field = "";
+    std::string field  = "";
 
-    bool plus_equal = false;
+    bool plus_equal  = false;
     bool minus_equal = false;
 
     const int first_equals = str.find('=');

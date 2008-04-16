@@ -757,7 +757,8 @@ static void _deck_lose_card(item_def& deck)
     // Seen cards are only half as likely to fall out,
     // marked cards only one-quarter as likely (note that marked
     // cards are also seen.)
-    do {
+    do
+    {
         _shuffle_deck(deck);
         get_card_and_flags(deck, -1, flags);
     }

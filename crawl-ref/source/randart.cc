@@ -200,9 +200,11 @@ static std::string replace_name_parts(const std::string name_in,
             which_god = god_gift;
         else
         {
-           do {
+           do
+           {
                 which_god = static_cast<god_type>(random2(NUM_GODS));
-           } while (!god_fits_artefact(which_god, item));
+           }
+           while (!god_fits_artefact(which_god, item));
         }
 
         name = replace_all(name, "@god_name@", god_name(which_god, false));
@@ -1672,7 +1674,8 @@ bool make_item_randart( item_def &item, bool randomise )
         do
         {
             item.special = (random_int() & RANDART_SEED_MASK);
-        } while (randart_is_bad( item ));
+        }
+        while (randart_is_bad( item ));
     }
 
     return (true);

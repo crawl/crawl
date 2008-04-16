@@ -3834,7 +3834,8 @@ bool _give_items_skills()
                                                         :       "Random");
                 }
 
-                do {
+                do
+                {
                     keyn = c_getch();
 
                     switch (keyn)
@@ -4436,7 +4437,8 @@ bool _give_items_skills()
                                                            "Random");
             }
 
-            do {
+            do
+            {
                 keyn = c_getch();
 
                 switch (keyn)

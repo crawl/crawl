@@ -1094,18 +1094,26 @@ void slider_menu::new_selection(int nsel)
     if (nsel < 0)
     {
         if ( !is_set(MF_NOWRAP) )
-            do {
+        {
+            do
+            {
                 nsel += items.size();
-            } while ( nsel < 0 );
+            }
+            while ( nsel < 0 );
+        }
         else
             nsel = 0;
     }
     if (nsel >= static_cast<int>(items.size()))
     {
         if ( !is_set(MF_NOWRAP) )
-            do {
+        {
+            do
+            {
                 nsel -= items.size();
-            } while ( nsel >= static_cast<int>(items.size()) );
+            }
+            while ( nsel >= static_cast<int>(items.size()) );
+        }
         else
             nsel = items.size() - 1;
     }
