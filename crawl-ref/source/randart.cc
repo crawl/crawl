@@ -122,7 +122,7 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
          if (brand == SPWPN_PAIN) // involves magic
              return (false);
 
-         if (randart_wpn_property( item, RAP_MAGICAL_POWER))
+         if (randart_wpn_property( item, RAP_MAGICAL_POWER ))
              return (false);
 
     default:
