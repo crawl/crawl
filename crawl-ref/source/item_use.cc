@@ -2771,8 +2771,9 @@ static int prompt_ring_to_remove(int new_ring)
 
 // Checks whether a to-be-worn or to-be-removed item affects
 // character stats and whether wearing/removing it could be fatal.
-// If so, warns the player.
-bool safe_to_remove_or_wear(const item_def &item, bool remove)
+// If so, warns the player, or just returns false if quiet is true.
+bool safe_to_remove_or_wear(const item_def &item, bool remove,
+                            bool quiet)
 {
     int prop_str = 0;
     int prop_dex = 0;
@@ -2818,7 +2819,7 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove)
 
         if ((prop_str >= you.strength || prop_int >= you.intel ||
              prop_dex >= you.dex)
-            && !yesno(prompt.c_str(), false, 'n'))
+            && (quiet || !yesno(prompt.c_str(), false, 'n')))
         {
             return (false);
         }
@@ -2833,7 +2834,7 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove)
 
         if ((-prop_str >= you.strength || -prop_int >= you.intel ||
              -prop_dex >= you.dex)
-            && !yesno(prompt.c_str(), false, 'n'))
+            && (quiet || !yesno(prompt.c_str(), false, 'n')))
         {
             return (false);
         }

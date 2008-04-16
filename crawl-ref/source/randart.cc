@@ -27,6 +27,7 @@
 #include "database.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "place.h"
 #include "player.h"
 #include "religion.h"
@@ -103,6 +104,13 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
          {
              return (false);
          }
+
+         // Hack: Since TSO gifts change the wielded weapon, make sure
+         // that any drains to strength, intelligence, or dexterity
+         // don't kill the player.
+         if (!safe_to_remove_or_wear(item, false, true))
+             return (false);
+
          break;
 
     case GOD_SIF_MUNA:
