@@ -2846,10 +2846,9 @@ static bool weapon_is_visibly_special(const item_def &item)
         && get_equip_desc(item) == ISFLAG_NO_DESC;
 }
 
-static void give_monster_item(
-    monsters *mon, int thing,
-    bool force_item = false,
-    bool (monsters::*pickupfn)(item_def&, int) = NULL)
+static void give_monster_item(monsters *mon, int thing,
+                              bool force_item = false,
+                              bool (monsters::*pickupfn)(item_def&, int) = NULL)
 {
     item_def &mthing = mitm[thing];
 

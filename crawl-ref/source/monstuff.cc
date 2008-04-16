@@ -3628,23 +3628,23 @@ static bool _handle_wand(monsters *monster, bolt &beem)
             return (false);
 
         // set up the beam
-        int power = 30 + monster->hit_dice;
+        int power    = 30 + monster->hit_dice;
         bolt theBeam = mons_spells(mzap, power);
 
-        beem.name = theBeam.name;
-        beem.beam_source = monster_index(monster);
-        beem.source_x = monster->x;
-        beem.source_y = monster->y;
-        beem.colour = theBeam.colour;
-        beem.range = theBeam.range;
-        beem.rangeMax = theBeam.rangeMax;
-        beem.damage = theBeam.damage;
-        beem.ench_power = theBeam.ench_power;
-        beem.hit = theBeam.hit;
-        beem.type = theBeam.type;
-        beem.flavour = theBeam.flavour;
-        beem.thrower = theBeam.thrower;
-        beem.is_beam = theBeam.is_beam;
+        beem.name         = theBeam.name;
+        beem.beam_source  = monster_index(monster);
+        beem.source_x     = monster->x;
+        beem.source_y     = monster->y;
+        beem.colour       = theBeam.colour;
+        beem.range        = theBeam.range;
+        beem.rangeMax     = theBeam.rangeMax;
+        beem.damage       = theBeam.damage;
+        beem.ench_power   = theBeam.ench_power;
+        beem.hit          = theBeam.hit;
+        beem.type         = theBeam.type;
+        beem.flavour      = theBeam.flavour;
+        beem.thrower      = theBeam.thrower;
+        beem.is_beam      = theBeam.is_beam;
         beem.is_explosion = theBeam.is_explosion;
 
 #if HISCORE_WEAPON_DETAIL

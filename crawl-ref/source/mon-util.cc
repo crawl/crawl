@@ -41,6 +41,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "it_use2.h"
 #include "Kills.h"
 #include "message.h"
 #include "misc.h"
@@ -3108,6 +3109,23 @@ bool monsters::pickup_launcher(item_def &launch, int near)
     return (eslot == -1? false : pickup(launch, eslot, near));
 }
 
+static bool _is_unique_weapon(monsters *monster, const item_def &weapon)
+{
+    if (is_fixed_artefact(weapon))
+    {
+        switch (weapon.special)
+        {
+        case SPWPN_SCEPTRE_OF_ASMODEUS:
+            return (monster->type == MONS_ASMODEUS);
+        case SPWPN_STAFF_OF_DISPATER:
+            return (monster->type == MONS_DISPATER);
+        case SPWPN_SWORD_OF_CEREBOV:
+            return (monster->type == MONS_CEREBOV);
+        }
+    }
+    return false;
+}
+
 bool monsters::pickup_melee_weapon(item_def &item, int near)
 {
     if (mons_wields_two_weapons(this))
@@ -3127,6 +3145,9 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
         if (const item_def *weap = mslot_item(static_cast<mon_inv_type>(i)))
         {
             if (is_range_weapon(*weap))
+                continue;
+
+            if (_is_unique_weapon(this, *weap))
                 continue;
 
             has_melee = true;
@@ -3313,6 +3334,24 @@ bool monsters::pickup_scroll(item_def &item, int near)
 
 bool monsters::pickup_potion(item_def &item, int near)
 {
+    // only allow monsters to pick up healing potions
+    // if they can actually use them
+    if ((item.sub_type == POT_HEALING || item.sub_type == POT_HEAL_WOUNDS)
+        && (mons_holiness(this) == MH_UNDEAD
+            || mons_holiness(this) == MH_NONLIVING
+            || mons_holiness(this) == MH_PLANT))
+    {
+        return false;
+    }
+
+
+    if (::mons_species(this->type) != MONS_VAMPIRE
+        && (item.sub_type == POT_BLOOD
+            || item.sub_type == POT_BLOOD_COAGULATED))
+    {
+        return false;
+    }
+
     return pickup(item, MSLOT_POTION, near);
 }
 
@@ -3372,7 +3411,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     case OBJ_SCROLLS:
         return pickup_scroll(item, near);
     case OBJ_POTIONS:
-        return pickup(item, MSLOT_POTION, near);
+        return pickup_potion(item, near);
     case OBJ_CORPSES:
         return eat_corpse(item, near);
     case OBJ_MISCELLANY:

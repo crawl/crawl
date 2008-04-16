@@ -671,7 +671,7 @@
        SPELL_CALL_IMP,
        SPELL_SUMMON_DEMON,
        SPELL_CANTRIP  },           // this should be cute -- bw
-         },
+    },
 
     {  MST_NAGA,
       {
