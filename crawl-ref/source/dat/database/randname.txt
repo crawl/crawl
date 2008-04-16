@@ -479,6 +479,25 @@ of @politics_name_armour@
 
 %%%%
 ######################################################
+# THE SHINING ONE (blessed weapons only)
+######################################################
+The Shining One weapon
+
+w:200
+of The Shining One's @divine_esteem@
+
+of @player_name@'s @valour_name@
+
+w:100
+of The Shining One
+
+of @player_name@
+
+w:100
+of @virtue_name@
+
+%%%%
+######################################################
 # XOM weapon
 ######################################################
 # Xom will basically allow everything

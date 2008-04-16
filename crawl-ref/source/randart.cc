@@ -1172,17 +1172,20 @@ static std::string get_artefact_type(const int type)
     }
 }
 
-static bool pick_db_name(const int type)
+static bool pick_db_name( const item_def &item )
 {
-    switch (type)
+    if (is_blessed(item))
+        return true;
+
+    switch (item.base_type)
     {
-     case OBJ_WEAPONS:
-     case OBJ_ARMOUR:
-         return coinflip();
-     case OBJ_JEWELLERY:
-         return one_chance_in(5);
-     default:
-         return 0;
+    case OBJ_WEAPONS:
+    case OBJ_ARMOUR:
+        return coinflip();
+    case OBJ_JEWELLERY:
+        return one_chance_in(5);
+    default:
+        return false;
     }
 }
 
@@ -1250,7 +1253,7 @@ std::string randart_name( const item_def &item )
         return result;
     }
 
-    if (pick_db_name(item.base_type))
+    if (pick_db_name(item))
     {
         result += item_base_name(item) + " ";
 
@@ -1285,13 +1288,6 @@ std::string randart_name( const item_def &item )
             result += st_p;
             result += "\"";
         }
-    }
-
-    if (is_blessed(item) && god_gift)
-    {
-        result = item_base_name(item) + " ";
-        std::string name = "of @player_name@";
-        result += replace_name_parts(name, item);
     }
 
     return result;
