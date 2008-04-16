@@ -2048,8 +2048,12 @@ void behaviour_event( monsters *mon, int event, int src,
         break;
 
     case ME_SCARE:
-        // Berserking monsters don't flee
+        // Berserking monsters don't flee.
         if (mon->has_ench(ENCH_BERSERK))
+            break;
+
+        // Neither do wandering mushrooms.
+        if (mon->type == MONS_WANDERING_MUSHROOM)
             break;
 
         mon->foe = src;
@@ -2062,6 +2066,9 @@ void behaviour_event( monsters *mon, int event, int src,
         break;
 
     case ME_CORNERED:
+        if (mon->type == MONS_WANDERING_MUSHROOM)
+            break;
+
         // just set behaviour.. foe doesn't change.
         if (mon->behaviour != BEH_CORNERED && !mon->has_ench(ENCH_FEAR))
             simple_monster_message(mon, " turns to fight!");
@@ -6241,7 +6248,7 @@ forget_it:
         }
 
         if (monster->type == MONS_ROTTING_DEVIL
-                || monster->type == MONS_CURSE_TOE)
+            || monster->type == MONS_CURSE_TOE)
         {
             place_cloud( CLOUD_MIASMA, monster->x, monster->y,
                          2 + random2(3), monster->kill_alignment() );

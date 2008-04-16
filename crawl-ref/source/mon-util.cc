@@ -3286,6 +3286,8 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
         return false;
 
     // XXX: Very simplistic armour evaluation for the moment.
+    // Because of the way wants_armour() is handled above, this armour exchange
+    // currently only takes place if forced by wizard mode.
     if (const item_def *existing_armour = slot_item(eq))
     {
         if (!force && existing_armour->armour_rating() >= item.armour_rating())
@@ -3436,12 +3438,10 @@ bool monsters::pickup_misc(item_def &item, int near)
     return pickup(item, MSLOT_MISCELLANY, near);
 }
 
+// Jellies are handled elsewhere, in _handle_pickup()) in monstuff.cc.
 bool monsters::pickup_item(item_def &item, int near, bool force)
 {
-    // Never pick up stuff when we're in battle.
-//    if (!force && (behaviour != BEH_WANDER || attitude == ATT_NEUTRAL))
-//        return (false);
-
+    // Equipping stuff can be forced when initially equipping monsters.
     if (!force)
     {
         if (attitude == ATT_NEUTRAL)
@@ -3465,12 +3465,17 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
         {
             return false;
         }
+
+        if (behaviour == BEH_FLEE
+            && (itype == OBJ_WEAPONS || itype == OBJ_MISSILES))
+        {
+            return (false);
+        }
     }
 
-    // Jellies are not handled here.
     switch (item.base_type)
     {
-    // pickup some stuff only if WANDERING
+    // Pickup some stuff only if WANDERING.
     case OBJ_ARMOUR:
         return pickup_armour(item, near, force);
     case OBJ_CORPSES:
@@ -3479,16 +3484,13 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
         return pickup_misc(item, near);
     case OBJ_GOLD:
         return pickup_gold(item, near);
-    // other types can always be picked up
-    // (barring other checks depending on subtype, of course)
+    // Fleeing monsters won't pick up these.
     case OBJ_WEAPONS:
-        if (behaviour == BEH_FLEEING)
-            return false;
         return pickup_weapon(item, near, force);
     case OBJ_MISSILES:
-        if (behaviour == BEH_FLEEING)
-            return false;
         return pickup_missile(item, near, force);
+    // Other types can always be picked up
+    // (barring other checks depending on subtype, of course).
     case OBJ_WANDS:
         return pickup_wand(item, near);
     case OBJ_SCROLLS:
