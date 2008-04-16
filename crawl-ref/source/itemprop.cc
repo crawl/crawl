@@ -1648,6 +1648,30 @@ bool is_blessed( const item_def &item )
     return (false);
 }                               // end is_blessed()
 
+bool is_blessable( const item_def &item )
+{
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        switch (item.sub_type)
+        {
+        case WPN_FALCHION:
+        case WPN_LONG_SWORD:
+        case WPN_SCIMITAR:
+        case WPN_KATANA:
+        case WPN_DEMON_BLADE:
+        case WPN_DOUBLE_SWORD:
+        case WPN_GREAT_SWORD:
+        case WPN_TRIPLE_SWORD:
+            return (true);
+
+        default:
+            break;
+        }
+    }
+
+    return (false);
+}                               // end is_blessable()
+
 bool normal2good( item_def &item, bool allow_blessed )
 {
     if (item.base_type != OBJ_WEAPONS)

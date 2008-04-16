@@ -4150,7 +4150,7 @@ static void _altar_prayer()
 
     god_acting gdact;
 
-    // TSO blesses weapons with holy wrath
+    // TSO blesses weapons with holy wrath, and long blades specially
     if (you.religion == GOD_SHINING_ONE
         && !you.num_gifts[GOD_SHINING_ONE]
         && !player_under_penance()
@@ -4158,8 +4158,12 @@ static void _altar_prayer()
     {
         const int wpn = get_player_wielded_weapon();
 
-        if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_HOLY_WRATH)
+        if (wpn != -1
+            && (get_weapon_brand(you.inv[wpn]) != SPWPN_HOLY_WRATH
+                || is_blessable(you.inv[wpn])))
+        {
             _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW);
+        }
     }
 
     // Lugonu blesses weapons with distortion
