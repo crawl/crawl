@@ -4074,6 +4074,8 @@ static bool _bless_weapon( god_type god, int brand, int colour )
                 origin_acquired(you.inv[wpn], GOD_SHINING_ONE);
                 make_item_randart(you.inv[wpn]);
             }
+
+            burden_change();
         }
 
         you.wield_change = true;
