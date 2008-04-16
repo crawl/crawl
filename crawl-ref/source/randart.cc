@@ -89,7 +89,7 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
              return (false); // goes against anti-mutagenic theme
          break;
 
-    case GOD_SHINING_ONE: // holiness and honourable combat theme
+    case GOD_SHINING_ONE: // holiness, honourable combat
          if (brand != SPWPN_HOLY_WRATH || brand == SPWPN_VENOM)
              return (false);
 
