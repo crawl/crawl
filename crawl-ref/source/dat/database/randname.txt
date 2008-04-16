@@ -21,7 +21,7 @@
 # to be replaced. Definitions of such keywords can be
 # found in 4 different places:
 #
-#  o  rand_wpn.txt  – keywords used mainly for weapons
+#  o  rand_wpn.txt  - keywords used mainly for weapons
 #  o  rand_arm.txt  - keywords used mainly for armour
 #  o  rand_all.txt  - keywords used for jewellery
 #                     as well as for all three types
@@ -33,7 +33,7 @@
 #
 #  * player_name     - player-chosen character name
 #  * player_species  - species of the character
-#  * branch_name     – name of a random Crawl branch
+#  * branch_name     - name of a random Crawl branch
 #  * race_name       - name of a random Crawl species
 #  * god_name        - name of a random Crawl god
 #  * xom_name        - one of Xom's long names
