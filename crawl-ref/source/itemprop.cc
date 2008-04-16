@@ -1650,6 +1650,9 @@ bool is_blessed( const item_def &item )
 
 bool is_blessable( const item_def &item )
 {
+    if (is_blessed(item) && !is_artefact(item))
+        return (true);
+
     if (item.base_type == OBJ_WEAPONS)
     {
         switch (item.sub_type)
