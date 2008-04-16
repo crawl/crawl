@@ -900,11 +900,8 @@ static bool _tso_blessing_holy_wpn(monsters *mon)
 
     item_def& wpn(mitm[weapon]);
 
-    if (is_fixed_artefact(wpn) || is_random_artefact(wpn)
-        || get_weapon_brand(wpn) == SPWPN_HOLY_WRATH)
-    {
+    if (is_artefact(wpn) || get_weapon_brand(wpn) == SPWPN_HOLY_WRATH)
         return false;
-    }
 
     // And make it holy.
     set_equip_desc(wpn, ISFLAG_GLOWING);
@@ -4050,10 +4047,7 @@ static bool _bless_weapon( god_type god, int brand, int colour )
 {
     const int wpn = get_player_wielded_weapon();
 
-    // Assuming the type of weapon is correct, we only need to check
-    // to see if it's an artefact we can successfully clobber:
-    if (!is_fixed_artefact( you.inv[wpn] )
-        && !is_random_artefact( you.inv[wpn] ))
+    if (!is_artefact( you.inv[wpn] ))
     {
         you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
@@ -4069,7 +4063,7 @@ static bool _bless_weapon( god_type god, int brand, int colour )
         {
             normal2good(you.inv[wpn]);
 
-            if (is_blessed(you.inv[wpn]))
+            if (is_blessable(you.inv[wpn]))
             {
                 origin_acquired(you.inv[wpn], GOD_SHINING_ONE);
                 make_item_randart(you.inv[wpn]);
