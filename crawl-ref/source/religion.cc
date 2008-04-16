@@ -4065,12 +4065,12 @@ static bool _bless_weapon( god_type god, int brand, int colour )
         enchant_weapon( ENCHANT_TO_HIT, true, you.inv[wpn] );
         enchant_weapon( ENCHANT_TO_DAM, true, you.inv[wpn] );
 
-        if ( is_good_god(god) )
+        if ( god == GOD_SHINING_ONE )
         {
             normal2good(you.inv[wpn]);
 
             if (is_blessed(you.inv[wpn]))
-                make_item_randart(you.inv[wpn], false);
+                make_item_randart(you.inv[wpn]);
         }
 
         you.wield_change = true;
@@ -4083,7 +4083,7 @@ static bool _bless_weapon( god_type god, int brand, int colour )
         mprf( MSGCH_GOD, "Your weapon shines brightly!" );
         simple_god_message( " booms: Use this gift wisely!" );
 
-        if ( is_good_god(god) )
+        if ( god == GOD_SHINING_ONE )
         {
             holy_word( 100, HOLY_WORD_GENERIC, true );
             // un-bloodify surrounding squares

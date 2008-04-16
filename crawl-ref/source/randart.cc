@@ -1237,7 +1237,14 @@ std::string randart_name( const item_def &item )
     if (pick_db_name(item.base_type))
     {
         result += item_base_name(item) + " ";
-        std::string name = getRandNameString(lookup);
+
+        std::string name;
+
+        // special case for blessed artefact weapons, since they're unique
+        if (is_blessed(item))
+            name = "of @player_name@";
+        else
+            name = getRandNameString(lookup);
 
         if (name.empty() && god_gift) // if nothing found, try god name alone
         {
@@ -1645,7 +1652,7 @@ bool randart_is_bad( const item_def &item )
     return randart_is_bad( item, proprt);
 }
 
-bool make_item_randart( item_def &item, bool randomise )
+bool make_item_randart( item_def &item )
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
@@ -1669,14 +1676,11 @@ bool make_item_randart( item_def &item, bool randomise )
 
     item.flags |= ISFLAG_RANDART;
 
-    if (randomise)
+    do
     {
-        do
-        {
-            item.special = (random_int() & RANDART_SEED_MASK);
-        }
-        while (randart_is_bad( item ));
+        item.special = (random_int() & RANDART_SEED_MASK);
     }
+    while (randart_is_bad( item ));
 
     return (true);
 }

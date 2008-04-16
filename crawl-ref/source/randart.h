@@ -87,7 +87,7 @@ bool randart_wpn_known_prop( item_def &item, randart_prop_type prop );
  * *********************************************************************** */
 bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which = 0 );
 
-bool make_item_randart( item_def &item, bool randomise = true );
+bool make_item_randart( item_def &item );
 bool make_item_unrandart( item_def &item, int unrand_index );
 
 /* ***********************************************************************
