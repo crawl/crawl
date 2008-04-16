@@ -666,7 +666,7 @@ void set_equip_race( item_def &item, unsigned long flags )
             || item.sub_type == WPN_DEMON_BLADE
             || item.sub_type == WPN_DEMON_WHIP
             || item.sub_type == WPN_DEMON_TRIDENT
-            || item.sub_type == WPN_BLESSED_BLADE)
+            || is_blessed(item))
         {
             return;
         }
@@ -1739,6 +1739,9 @@ bool normal2good( item_def &item, bool allow_blessed )
         item.sub_type = WPN_TRIDENT;
         break;
     }
+
+    if (is_blessed(item))
+        item.flags &= ~ISFLAG_RACIAL_MASK;
 
     return (true);
 }                               // end normal2good()
