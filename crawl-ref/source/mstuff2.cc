@@ -815,8 +815,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         }
 
         if (need_friendly_stub)
+        {
             simple_monster_message(monster, " shimmers for a moment.",
                                    MSGCH_MONSTER_ENCHANT);
+        }
 
         return;
     }
@@ -900,25 +902,27 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
     // Need to correct this for power of spellcaster
     int power = 12 * monster->hit_dice;
 
-    bolt theBeam = mons_spells(spell_cast, power);
+    bolt theBeam         = mons_spells(spell_cast, power);
 
-    pbolt.colour = theBeam.colour;
-    pbolt.range = theBeam.range;
-    pbolt.rangeMax = theBeam.rangeMax;
-    pbolt.hit = theBeam.hit;
-    pbolt.damage = theBeam.damage;
+    pbolt.colour         = theBeam.colour;
+    pbolt.range          = theBeam.range;
+    pbolt.rangeMax       = theBeam.rangeMax;
+    pbolt.hit            = theBeam.hit;
+    pbolt.damage         = theBeam.damage;
+
     if (theBeam.ench_power != -1)
         pbolt.ench_power = theBeam.ench_power;
-    pbolt.type = theBeam.type;
-    pbolt.flavour = theBeam.flavour;
-    pbolt.thrower = theBeam.thrower;
+
+    pbolt.type           = theBeam.type;
+    pbolt.flavour        = theBeam.flavour;
+    pbolt.thrower        = theBeam.thrower;
     pbolt.aux_source.clear();
-    pbolt.name = theBeam.name;
-    pbolt.is_beam = theBeam.is_beam;
-    pbolt.source_x = monster->x;
-    pbolt.source_y = monster->y;
-    pbolt.is_tracer = false;
-    pbolt.is_explosion = theBeam.is_explosion;
+    pbolt.name           = theBeam.name;
+    pbolt.is_beam        = theBeam.is_beam;
+    pbolt.source_x       = monster->x;
+    pbolt.source_y       = monster->y;
+    pbolt.is_tracer      = false;
+    pbolt.is_explosion   = theBeam.is_explosion;
 
     if (pbolt.name.length() && pbolt.name[0] != '0')
         pbolt.aux_source = pbolt.name;

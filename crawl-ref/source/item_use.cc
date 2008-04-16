@@ -3895,8 +3895,10 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
 static bool _handle_enchant_armour( int item_slot )
 {
     if (item_slot == -1)
+    {
         item_slot = prompt_invent_item( "Enchant which item?", MT_INVLIST,
                                         OSEL_ENCH_ARM, true, true, false );
+    }
 
     if (item_slot == -1)
     {
@@ -3982,6 +3984,7 @@ static bool scroll_modify_item(const scroll_type scroll)
         if ( !fully_identified(item) )
         {
             mpr("This is a scroll of identify!");
+            set_ident_type( OBJ_SCROLLS, SCR_IDENTIFY, ID_KNOWN_TYPE );
             identify(-1, item_slot);
             return (true);
         }

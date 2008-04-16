@@ -292,13 +292,16 @@ const mon_resist_def &get_mons_class_resists(int mc)
 
 mon_resist_def get_mons_resists(const monsters *mon)
 {
+    mon_resist_def resists;
     if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
-        return (mon->ghost->resists);
+        resists = (mon->ghost->resists);
+    else
+        resists = mon_resist_def();
 
-    mon_resist_def resists = get_mons_class_resists(mon->type);
-    if ((mons_genus(mon->type) == MONS_DRACONIAN &&
-         mon->type != MONS_DRACONIAN) ||
-        mon->type == MONS_TIAMAT)
+    resists |= get_mons_class_resists(mon->type);
+
+    if (mons_genus(mon->type) == MONS_DRACONIAN && mon->type != MONS_DRACONIAN
+        || mon->type == MONS_TIAMAT)
     {
         monster_type draco_species = draco_subspecies(mon);
         if (draco_species != mon->type)

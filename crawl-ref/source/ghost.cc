@@ -88,7 +88,7 @@ static spell_type search_order_misc[] = {
 /* 0 */
     SPELL_AGONY,
     SPELL_BANISHMENT,
-    SPELL_FREEZING_CLOUD,    
+    SPELL_FREEZING_CLOUD,
     SPELL_PARALYSE,
     SPELL_CONFUSE,
     SPELL_MEPHITIC_CLOUD,
@@ -110,22 +110,24 @@ ghost_demon::ghost_demon()
 void ghost_demon::reset()
 {
     name.clear();
-    species = SP_UNKNOWN;
-    job = JOB_UNKNOWN;
-    best_skill = SK_FIGHTING;
+    species          = SP_UNKNOWN;
+    job              = JOB_UNKNOWN;
+    best_skill       = SK_FIGHTING;
     best_skill_level = 0;
-    xl = 0;
-    max_hp = 0;
-    ev = 0;
-    ac = 0;
-    damage = 0;
-    speed = 10;
-    see_invis = false;
-    brand = SPWPN_NORMAL;
-    resists = mon_resist_def();
-    spellcaster = false;
-    cycle_colours = false;
-    fly = FL_NONE;
+    xl               = 0;
+    max_hp           = 0;
+    ev               = 0;
+    ac               = 0;
+    damage           = 0;
+    speed            = 10;
+    see_invis        = false;
+    brand            = SPWPN_NORMAL;
+    resists          = mon_resist_def();
+    // HACKY: demons and ghosts always resist poison
+//    resists.poison   = 1;
+    spellcaster      = false;
+    cycle_colours    = false;
+    fly              = FL_NONE;
 }
 
 void ghost_demon::init_random_demon()
@@ -175,13 +177,13 @@ void ghost_demon::init_random_demon()
         do {
             brand = static_cast<brand_type>( random2(MAX_PAN_LORD_BRANDS) );
             /* some brands inappropriate (e.g. holy wrath) */
-        } while (brand == SPWPN_HOLY_WRATH 
+        } while (brand == SPWPN_HOLY_WRATH
                  || (brand == SPWPN_ORC_SLAYING
                      && you.mons_species() != MONS_ORC)
                  || (brand == SPWPN_DRAGON_SLAYING
                      && you.mons_species() != MONS_DRACONIAN)
-                 || brand == SPWPN_PROTECTION 
-                 || brand == SPWPN_FLAME 
+                 || brand == SPWPN_PROTECTION
+                 || brand == SPWPN_FLAME
                  || brand == SPWPN_FROST);
     }
 
@@ -193,7 +195,7 @@ void ghost_demon::init_random_demon()
     // does demon fly?
     fly = (one_chance_in(3)? FL_NONE :
            one_chance_in(5)? FL_LEVITATE : FL_FLY);
-    
+
     // hit dice:
     xl = 10 + roll_dice(2, 10);
 
@@ -206,7 +208,7 @@ void ghost_demon::init_random_demon()
        for the demon, then converts those spells to the monster spell indices.
        Some special monster-only spells are at the end. */
     if (spellcaster)
-    {       
+    {
         if (coinflip())
             spells[0] = RANDOM_ELEMENT(search_order_conj);
 
@@ -222,7 +224,7 @@ void ghost_demon::init_random_demon()
             spells[3] = RANDOM_ELEMENT(search_order_misc);
             if ( spells[3] == SPELL_DIG )
                 spells[3] = SPELL_NO_SPELL;
-        } 
+        }
 
         if (coinflip())
             spells[4] = RANDOM_ELEMENT(search_order_misc);
@@ -277,7 +279,7 @@ void ghost_demon::init_random_demon()
 
 void ghost_demon::init_player_ghost()
 {
-    name = you.your_name;
+    name   = you.your_name;
     max_hp = ((you.hp_max >= 400) ? 400 : you.hp_max);
     ev     = player_evasion();
     ac     = player_AC();
@@ -285,11 +287,11 @@ void ghost_demon::init_player_ghost()
     if (ev > 60)
         ev = 60;
 
-    see_invis = player_see_invis();
-    resists.fire = player_res_fire();
-    resists.cold = player_res_cold();
-    resists.elec = player_res_electricity();
-    speed = player_ghost_base_movement_speed();
+    see_invis      = player_see_invis();
+    resists.fire   = player_res_fire();
+    resists.cold   = player_res_cold();
+    resists.elec   = player_res_electricity();
+    speed          = player_ghost_base_movement_speed();
 
     int d = 4;
     int e = SPWPN_NORMAL;
@@ -424,7 +426,7 @@ void ghost_demon::add_spells( )
         spells[ 4 ] = SPELL_DIG;
 
     /* Looks for blink/tport for emergency slot */
-    if (player_has_spell( SPELL_CONTROLLED_BLINK ) 
+    if (player_has_spell( SPELL_CONTROLLED_BLINK )
         || player_has_spell( SPELL_BLINK ))
     {
         spells[ 5 ] = SPELL_CONTROLLED_BLINK;
@@ -533,7 +535,7 @@ int ghost_demon::n_extra_ghosts()
 {
     const int lev = you.your_level + 1;
     const int subdepth = subdungeon_depth(you.where_are_you, you.your_level);
-    
+
     if (you.level_type == LEVEL_PANDEMONIUM
         || you.level_type == LEVEL_ABYSS
         || (you.level_type == LEVEL_DUNGEON
@@ -548,7 +550,7 @@ int ghost_demon::n_extra_ghosts()
 
     if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE)
         return (0);
-    
+
     // No multiple ghosts until level 9 of the Main Dungeon.
     if ((lev < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON)
         || (subdepth < 2 && you.where_are_you == BRANCH_LAIR)

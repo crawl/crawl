@@ -3849,6 +3849,7 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
     for (int i = 0; i < 5; ++i)
         if (msp[i] == spell)
             return (false);
+
     return (msp[5] == spell);
 }
 
@@ -3937,9 +3938,11 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
                         // ones in monspeak.cc... has the problem
                         // that it doesn't suggest a vocal component. -- bwr
                         if (player_monster_visible(monster))
+                        {
                             simple_monster_message( monster,
                                                     " gestures wildly.",
                                                     MSGCH_MONSTER_SPELL );
+                        }
                         break;
                     case 1:
                         simple_monster_message( monster,
@@ -4314,7 +4317,9 @@ static bool _handle_spell( monsters *monster, bolt & beem )
 
         if (!_mons_announce_cast(monster, monsterNearby,
                                  spell_cast, draco_breath))
+        {
             return (false);
+        }
 
         // FINALLY! determine primary spell effects {dlb}:
         if (spell_cast == SPELL_BLINK)
