@@ -2619,8 +2619,8 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
         }
 
         // no monster will attack you inside a sanctuary,
-        // so presence of monsters won't matter
-        if (is_sanctuary(you.x_pos, you.y_pos))
+        // so presence of monsters won't matter - until it starts shrinking
+        if (is_sanctuary(you.x_pos, you.y_pos) && env.sanctuary_time >= 5)
             return (true);
     }
 

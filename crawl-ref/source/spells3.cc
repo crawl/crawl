@@ -916,6 +916,12 @@ void decrease_sanctuary_radius()
     if (size >= radius)
         return;
 
+    if (you.running && is_sanctuary(you.x_pos, you.y_pos))
+    {
+        mpr("The sanctuary starts shrinking.");
+        stop_running();
+    }
+
     radius = size+1;
     for (int x = -radius; x <= radius; x++)
          for (int y = -radius; y <= radius; y++)
@@ -926,7 +932,8 @@ void decrease_sanctuary_radius()
               if (!inside_level_bounds(posx,posy))
                   continue;
 
-              int dist = distance(posx, posy, env.sanctuary_pos.x, env.sanctuary_pos.y);
+              int dist = distance(posx, posy, env.sanctuary_pos.x,
+                                  env.sanctuary_pos.y);
 
               // if necessary overwrite sanctuary property
               if (dist > size*size)
