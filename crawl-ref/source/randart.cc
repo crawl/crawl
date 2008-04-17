@@ -27,7 +27,6 @@
 #include "database.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "item_use.h"
 #include "place.h"
 #include "player.h"
 #include "religion.h"
