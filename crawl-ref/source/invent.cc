@@ -537,6 +537,7 @@ const menu_sort_condition *InvMenu::find_menu_sort_condition() const
     for (int i = 0, size = Options.sort_menus.size(); i < size; ++i)
         if (Options.sort_menus[i].matches(type))
             return &Options.sort_menus[i];
+
     return (NULL);
 }
 

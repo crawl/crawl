@@ -247,6 +247,19 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
 #endif
 }
 
+// Unseen monsters in shallow water show a "strange disturbance".
+// (Unless flying!)
+static bool _mon_submerged_in_water(const monsters *mon)
+{
+    if (!mon)
+        return false;
+
+    return (grd[mon->x][mon->y] == DNGN_SHALLOW_WATER
+            && see_grid(mon->x, mon->y)
+            && !player_monster_visible(mon)
+            && !mons_flies(mon));
+}
+
 static bool _is_target_in_range(int x, int y, int range)
 {
     // range doesn't matter
@@ -564,11 +577,11 @@ void direction(dist& moves, targeting_type restricts,
             key_command = shift_direction(key_command);
         }
 
-        if (target_unshifted &&
-            (key_command == CMD_TARGET_CYCLE_FORWARD
-             || key_command == CMD_TARGET_CYCLE_BACK
-             || key_command == CMD_TARGET_OBJ_CYCLE_FORWARD
-             || key_command == CMD_TARGET_OBJ_CYCLE_BACK))
+        if (target_unshifted
+            && (key_command == CMD_TARGET_CYCLE_FORWARD
+                || key_command == CMD_TARGET_CYCLE_BACK
+                || key_command == CMD_TARGET_OBJ_CYCLE_FORWARD
+                || key_command == CMD_TARGET_OBJ_CYCLE_BACK))
         {
             target_unshifted = false;
         }
@@ -710,8 +723,8 @@ void direction(dist& moves, targeting_type restricts,
             mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
             mprf( "Targeting mode is now: %s",
                   (mode == TARG_ANY)   ? "any" :
-                  (mode == TARG_ENEMY) ? "enemies" :
-                  "friends" );
+                  (mode == TARG_ENEMY) ? "enemies"
+                                       : "friends" );
             break;
 
         case CMD_TARGET_PREV_TARGET:
@@ -758,7 +771,13 @@ void direction(dist& moves, targeting_type restricts,
             moves.isEndpoint = true;
             // intentional fall-through
         case CMD_TARGET_SELECT: // finalize current choice
-            moves.isValid = true;
+            if (!moves.isEndpoint
+                && mgrd[moves.tx][moves.ty] != NON_MONSTER
+                && _mon_submerged_in_water(&menv[mgrd[moves.tx][moves.ty]]))
+            {
+                moves.isEndpoint = true;
+            }
+            moves.isValid  = true;
             moves.isTarget = true;
             loop_done = true;
 
@@ -919,8 +938,8 @@ void direction(dist& moves, targeting_type restricts,
                     MSGCH_EXAMINE_FILTER);
             }
             // Ask for confirmation if we're quitting for some odd reason
-            else if ( moves.isValid || moves.isCancel ||
-                      yesno("Are you sure you want to fizzle?", false, 'n') )
+            else if ( moves.isValid || moves.isCancel
+                      || yesno("Are you sure you want to fizzle?", false, 'n') )
             {
                 // Finalize whatever is inside the loop
                 // (moves-internal finalizations can be done later)
@@ -966,17 +985,18 @@ void direction(dist& moves, targeting_type restricts,
 
 #ifdef USE_TILE
         // tiles always need a beam redraw if show_beam is true (and if valid...)
-        if (show_beam && find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
-            true, ray, 0, true) || need_beam_redraw )
+        if ( need_beam_redraw
+             || show_beam && find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
+                                      true, ray, 0, true) )
         {
 #else
         if ( need_beam_redraw )
         {
             viewwindow(true, false);
 #endif
-            if ( show_beam &&
-                 in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) &&
-                 moves.target() != you.pos() )
+            if ( show_beam
+                 && in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty))
+                 && moves.target() != you.pos() )
             {
                 // Draw the new ray with magenta '*'s, not including
                 // your square or the target square.
@@ -996,7 +1016,7 @@ void direction(dist& moves, targeting_type restricts,
                 textcolor(LIGHTGREY);
 #ifdef USE_TILE
                 draw_ray_glyph(moves.target(), MAGENTA, '*',
-                    MAGENTA | COLFLAG_REVERSE);
+                               MAGENTA | COLFLAG_REVERSE);
             }
             viewwindow(true, false);
 #else
@@ -1131,21 +1151,25 @@ static bool find_monster( int x, int y, int mode, int range = -1)
     if (targ_mon == NON_MONSTER || !in_los(x,y))
         return (false);
 
-    // Unseen monsters in shallow water show a "strange disturbance"
-    // (unless flying!)
-    if (!player_monster_visible(&menv[targ_mon]))
-    {
-        // since you can't see the monster, assume it's not a friend
-        return (mode != TARG_FRIEND
-                && grd[x][y] == DNGN_SHALLOW_WATER
-                && !mons_flies(&menv[targ_mon]));
-    }
+    monsters *mon = &menv[targ_mon];
 
     // Unknown mimics don't count as monsters, either.
-    if (mons_is_mimic(menv[targ_mon].type)
-        && !(menv[targ_mon].flags & MF_KNOWN_MIMIC))
+    if (mons_is_mimic(mon->type)
+        && !(mon->flags & MF_KNOWN_MIMIC))
     {
         return (false);
+    }
+
+    // Don't usually target unseen monsters...
+    if (!player_monster_visible(mon))
+    {
+        // ... unless it creates a "disturbance in the water".
+        // Since you can't see the monster, assume it's not a friend.
+        // Also don't target submerged monsters if there are other targets
+        // in sight. (This might be too restrictive.)
+        return (mode != TARG_FRIEND
+                && _mon_submerged_in_water(mon)
+                && i_feel_safe(false, false, true, range));
     }
 
     // Now compare target modes.

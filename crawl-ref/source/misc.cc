@@ -2537,10 +2537,10 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
                    || mons_class_flag(mon->type, M_NO_EXP_GAIN);
 
 #ifdef CLUA_BINDINGS
-    bool moving = ((!you.delay_queue.empty() &&
-                   is_run_delay(you.delay_queue.front().type) &&
-                   you.delay_queue.front().type != DELAY_REST) ||
-                   you.running < RMODE_NOT_RUNNING || want_move);
+    bool moving = ((!you.delay_queue.empty()
+                       && is_run_delay(you.delay_queue.front().type)
+                       && you.delay_queue.front().type != DELAY_REST)
+                   || you.running < RMODE_NOT_RUNNING || want_move);
 
     int  dist   = grid_distance(you.x_pos, you.y_pos,
                                 mon->x, mon->y);
@@ -2559,113 +2559,97 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
 
 // Return all monsters in LOS that the player is able to see
 // and recognize as being a monster.
-void get_playervisible_monsters(std::vector<monsters*>& mons)
+void get_playervisible_monsters(std::vector<monsters*> &mons, bool want_move,
+                                bool just_check, bool dangerous, int range)
 {
-    const int ystart = MAX(0,   you.y_pos - LOS_RADIUS);
-    const int yend   = MIN(GYM, you.y_pos + LOS_RADIUS);
-    const int xstart = MAX(0,   you.x_pos - LOS_RADIUS);
-    const int xend   = MIN(GXM, you.x_pos + LOS_RADIUS);
+    if (range == -1)
+        range = LOS_RADIUS;
+
+    const int ystart = MAX(0,   you.y_pos - range);
+    const int yend   = MIN(GYM, you.y_pos + range);
+    const int xstart = MAX(0,   you.x_pos - range);
+    const int xend   = MIN(GXM, you.x_pos + range);
 
     // monster check
     for ( int y = ystart; y < yend; ++y )
-    for ( int x = xstart; x < xend; ++x )
-    {
-        const unsigned short targ_monst = env.mgrid[x][y];
-        if ( targ_monst != NON_MONSTER )
-        {
-            if ( see_grid(x,y) )
-            {
-                monsters *mon = &env.mons[targ_monst];
-                if ( player_monster_visible(mon) &&
-                     !mons_is_submerged(mon) &&
-                     (!mons_is_mimic(mon->type) || mons_is_known_mimic(mon))
-                    )
-                {
-                    mons.push_back(mon);
-                }
-            }
-        }
-    }
-}
-
-bool i_feel_safe(bool announce, bool want_move)
-{
-    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
-    int yend = you.y_pos + 9, xend = you.x_pos + 9;
-    if ( xstart < 0 ) xstart = 0;
-    if ( ystart < 0 ) ystart = 0;
-    if ( xend >= GXM ) xend = GXM;
-    if ( yend >= GYM ) yend = GYM;
-
-    if (in_bounds(you.x_pos, you.y_pos)
-        && env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
-    {
-        const cloud_type type =
-            env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type;
-        if (is_damaging_cloud(type, false))
-        {
-            if (announce)
-                mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
-                     cloud_name(type).c_str());
-            return (false);
-        }
-    }
-
-    // no monster will attack you inside a sanctuary,
-    // so presence of monsters won't matter
-    if (is_sanctuary(you.x_pos, you.y_pos))
-        return (true);
-
-    std::vector<const monsters *> mons;
-
-    // monster check
-    // XXX: refactor this to make use of get_playervisible_monsters()
-    for ( int y = ystart; y < yend; ++y )
-    {
         for ( int x = xstart; x < xend; ++x )
         {
-            // if you can see an unfriendly monster, then you feel unsafe
-            if ( see_grid(x,y) )
+            const unsigned short targ_monst = env.mgrid[x][y];
+            if ( targ_monst != NON_MONSTER )
             {
-                const unsigned short targ_monst = mgrd[x][y];
-                if ( targ_monst != NON_MONSTER )
+                if ( see_grid(x,y) )
                 {
-                    const monsters *mon = &menv[targ_monst];
-                    if ( player_monster_visible(mon) &&
-                         !mons_is_submerged(mon) &&
-                         !mons_is_mimic(mon->type) &&
-                         !mons_is_safe(mon, want_move))
+                    monsters *mon = &env.mons[targ_monst];
+                    if ( player_monster_visible(mon)
+                        && !mons_is_submerged(mon)
+                        && (!mons_is_mimic(mon->type)
+                            || mons_is_known_mimic(mon))
+                        && (!dangerous || !mons_is_safe(mon, want_move)))
                     {
-                        if (announce)
-                            mons.push_back(mon);
-                        else
+                        mons.push_back(mon);
+                        if (just_check)
                         {
-                            tutorial_first_monster(*mon);
-                            return false;
+                            // one monster found, that's enough
+                            return;
                         }
                     }
                 }
             }
         }
-    }
+}
 
-    if (announce)
+bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
+{
+    if (!just_monsters)
     {
-        // Announce the presence of monsters (Eidolos).
-        if (mons.size() == 1)
+        if (in_bounds(you.x_pos, you.y_pos)
+            && env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
         {
-            const monsters &m = *mons[0];
-            mprf(MSGCH_WARN, "Not with %s in view!",
-                 m.name(DESC_NOCAP_A).c_str());
+            const cloud_type type =
+                    env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type;
+            if (is_damaging_cloud(type, false))
+            {
+                if (announce)
+                {
+                    mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
+                         cloud_name(type).c_str());
+                }
+                return (false);
+            }
         }
-        else if (mons.size() > 1)
-        {
-            mprf(MSGCH_WARN, "Not with these monsters around!");
-        }
-        return (mons.empty());
+
+        // no monster will attack you inside a sanctuary,
+        // so presence of monsters won't matter
+        if (is_sanctuary(you.x_pos, you.y_pos))
+            return (true);
     }
 
-    return true;
+    // monster check
+    std::vector<monsters*> visible;
+    get_playervisible_monsters(visible, !announce, want_move, true, range);
+
+    // No monsters found.
+    if (visible.empty())
+        return true;
+
+    // Announce the presence of monsters (Eidolos).
+    if (visible.size() == 1)
+    {
+        const monsters &m = *visible[0];
+        if (announce)
+        {
+            mprf(MSGCH_WARN, "Not with %s in view!",
+                m.name(DESC_NOCAP_A).c_str());
+        }
+        else
+            tutorial_first_monster(m);
+    }
+    else if (announce && visible.size() > 1)
+    {
+        mprf(MSGCH_WARN, "Not with these monsters around!");
+    }
+
+    return (false);
 }
 
 static const char *shop_types[] = {

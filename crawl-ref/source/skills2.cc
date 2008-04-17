@@ -1698,13 +1698,13 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static bool player_knows_aptitudes()
+static bool _player_knows_aptitudes()
 {
     return !player_genus(GENPC_DRACONIAN) || you.max_level >= 7;
 
 }
 
-static void display_skill_table(bool show_aptitudes)
+static void _display_skill_table(bool show_aptitudes)
 {
     menu_letter lcount = 'a';
     const int num_lines = get_number_of_lines();
@@ -1847,7 +1847,7 @@ static void display_skill_table(bool show_aptitudes)
         textcolor(LIGHTGREY);
         cprintf("Press the letter of a skill to choose "
                 "whether you want to practise it.");
-        if (player_knows_aptitudes())
+        if (_player_knows_aptitudes())
         {
             cgotoxy(1, bottom_line);
             formatted_string::parse_string("Press '!' to toggle between "
@@ -1864,10 +1864,10 @@ void show_skills()
     clrscr();
     while (true)
     {
-        display_skill_table(show_aptitudes);
+        _display_skill_table(show_aptitudes);
 
         const int keyin = getch();
-        if (keyin == '!' && player_knows_aptitudes())
+        if (keyin == '!' && _player_knows_aptitudes())
         {
             show_aptitudes = !show_aptitudes;
             continue;
