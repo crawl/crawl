@@ -4013,9 +4013,9 @@ static int _affect_monster(bolt &beam, monsters *mon)
             hit_woke_orc = true;
         }
 
-        // Don't annoy friendlies if the player's beam did no damage.
-        // Hostiles will still take umbrage.
-        if (hurt_final > 0 || !mons_friendly(mon) || !YOU_KILL(beam.thrower))
+        // Don't annoy friendlies or good neutrals if the player's beam
+        // did no damage. Hostiles will still take umbrage.
+        if (hurt_final > 0 || !mons_wont_attack(mon) || !YOU_KILL(beam.thrower))
             behaviour_event(mon, ME_ANNOY, _beam_source(beam) );
     }
 
