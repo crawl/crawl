@@ -115,8 +115,6 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
              || randart_wpn_property( item, RAP_ANGRY )
              || randart_wpn_property( item, RAP_METABOLISM )
              || randart_wpn_property( item, RAP_MUTAGENIC )
-             || randart_wpn_property( item, RAP_ACCURACY ) < 0
-             || randart_wpn_property( item, RAP_DAMAGE ) < 0
              || randart_wpn_property( item, RAP_MAGICAL_POWER ))
          {
              return (false); // goes against blessed theme
