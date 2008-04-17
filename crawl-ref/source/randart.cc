@@ -50,7 +50,8 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
     else if (is_good_god(which_god) && (brand == SPWPN_DRAINING
-              || brand == SPWPN_PAIN || brand == SPWPN_VAMPIRICISM))
+              || brand == SPWPN_PAIN || brand == SPWPN_VAMPIRICISM)
+              || randart_wpn_property( item, RAP_CURSED ))
     {
         return (false);
     }
@@ -100,7 +101,6 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
              return (false);
 
          if (randart_wpn_property( item, RAP_INVISIBLE )
-             || randart_wpn_property( item, RAP_CURSED )
              || randart_wpn_property( item, RAP_STEALTH ) > 0)
          {
              return (false);
