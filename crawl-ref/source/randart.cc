@@ -1572,8 +1572,8 @@ static bool randart_is_redundant( const item_def &item,
         break;
 
     case RING_TELEPORTATION:
-        provides = RAP_CAN_TELEPORT;
-        provides = RAP_CAUSE_TELEPORTATION;
+        provides  = RAP_CAN_TELEPORT;
+        provides2 = RAP_CAUSE_TELEPORTATION;
         break;
 
     case RING_EVASION:
