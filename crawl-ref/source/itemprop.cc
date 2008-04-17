@@ -1624,30 +1624,6 @@ bool is_demonic( const item_def &item )
     return (false);
 }                               // end is_demonic()
 
-bool is_unblessed( const item_def &item )
-{
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        switch (item.sub_type)
-        {
-        case WPN_FALCHION:
-        case WPN_LONG_SWORD:
-        case WPN_SCIMITAR:
-        case WPN_KATANA:
-        case WPN_DEMON_BLADE:
-        case WPN_DOUBLE_SWORD:
-        case WPN_GREAT_SWORD:
-        case WPN_TRIPLE_SWORD:
-            return (true);
-
-        default:
-            break;
-        }
-    }
-
-    return (false);
-}                               // end is_unblessed()
-
 bool is_blessed( const item_def &item )
 {
     if (item.base_type == OBJ_WEAPONS)
@@ -1674,7 +1650,10 @@ bool is_blessed( const item_def &item )
 
 bool is_blessable( const item_def &item )
 {
-    return ((is_unblessed(item) || is_blessed(item)) && !is_artefact(item));
+    return (!is_artefact(item)
+        && (item.base_type == OBJ_WEAPONS
+            && (is_demonic(item)
+                || weapon_skill(item) == SK_LONG_BLADES)));
 }                               // end is_blessable()
 
 bool normal2good( item_def &item, bool allow_blessed )

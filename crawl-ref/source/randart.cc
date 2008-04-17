@@ -90,6 +90,12 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
          break;
 
     case GOD_SHINING_ONE: // holiness, honourable combat
+         if (item.base_type != OBJ_WEAPONS
+             || weapon_skill(item) != SK_LONG_BLADES)
+         {
+             return (false);
+         }
+
          if (brand != SPWPN_HOLY_WRATH)
              return (false);
 
