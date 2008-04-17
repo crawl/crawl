@@ -325,7 +325,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 2 },
 
-    { WPN_QUARTERSTAFF,      "quarterstaff",        9,  2, 12, 180,  7,
+    { WPN_QUARTERSTAFF,      "quarterstaff",        7,  6, 12, 180,  7,
         SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
     { WPN_LAJATANG,          "lajatang",           14, -3, 14, 200,  3,
