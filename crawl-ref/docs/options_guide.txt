@@ -1096,7 +1096,8 @@ menu_colour = <match>:<colour>:<regex>
            description   (the \ screen)
            equip         (the [, (, ), " screens)
            help          (the manual)
-           inventory
+           inventory     (inventory and pickup menus)
+           pickup        (specific to pickup menus)
            notes         (the ?: screen)
            resists       (the % screen)
            spell         (the Z and I screens)

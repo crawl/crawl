@@ -221,6 +221,9 @@ menu_colour = inventory:green:(worn|neck|hand|weapon)\)
 menu_colour = inventory:red: cursed
 menu_colour = inventory:red: rotting
 
+# Colouring of autoinscribed god gifts
+menu_colour = pickup:green:god gift
+
 # Identified artefacts
 menu_colour = inventory:white:( [-+] the)
 
