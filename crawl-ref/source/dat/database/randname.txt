@@ -483,17 +483,13 @@ of @politics_name_armour@
 ######################################################
 The Shining One weapon
 
-w:4
 of The Shining One's @divine_esteem@
 
-w:3
 of The Shining One's @anger_name@
 
-w:2
-of @player_name@'s @valour_name@
+of The Shining One's @valour_name@
 
-w:1
-of @player_name@'s @virtue_name@
+of The Shining One's @virtue_name@
 
 %%%%
 ######################################################
