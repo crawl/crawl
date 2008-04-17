@@ -108,22 +108,16 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
              || randart_wpn_property( item, RAP_DEXTERITY ) < 0
              || randart_wpn_property( item, RAP_FIRE ) < 0
              || randart_wpn_property( item, RAP_COLD ) < 0
-             || randart_wpn_property( item, RAP_ELECTRICITY ) < 0
-             || randart_wpn_property( item, RAP_POISON ) < 0
-             || randart_wpn_property( item, RAP_NEGATIVE_ENERGY ) < 0
-             || randart_wpn_property( item, RAP_MAGIC ) < 0
-             || randart_wpn_property( item, RAP_LEVITATE )
-             || randart_wpn_property( item, RAP_BLINK )
              || randart_wpn_property( item, RAP_CAN_TELEPORT )
              || randart_wpn_property( item, RAP_NOISES )
              || randart_wpn_property( item, RAP_PREVENT_SPELLCASTING )
              || randart_wpn_property( item, RAP_CAUSE_TELEPORTATION )
              || randart_wpn_property( item, RAP_PREVENT_TELEPORTATION )
-             || randart_wpn_property( item, RAP_METABOLISM ) < 0
+             || randart_wpn_property( item, RAP_METABOLISM )
              || randart_wpn_property( item, RAP_MUTAGENIC )
              || randart_wpn_property( item, RAP_ACCURACY ) < 0
              || randart_wpn_property( item, RAP_DAMAGE ) < 0
-             || randart_wpn_property( item, RAP_MAGICAL_POWER ) < 0)
+             || randart_wpn_property( item, RAP_MAGICAL_POWER ))
          {
              return (false); // goes against blessed theme
          }
