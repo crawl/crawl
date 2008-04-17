@@ -4440,7 +4440,7 @@ std::string screenshot( bool fullscreen )
             lines[count_y - 1].erase(lastnonspace + 1);
     }
 
-    // Restore char and feature tables
+    // Restore char and feature tables.
     Options.char_table = char_table_bk;
     init_feature_table();
 
