@@ -1286,6 +1286,8 @@ bool check_awaken(monsters* monster)
     if (player_light_armour(true)
         && you.burden_state == BS_UNENCUMBERED
         && you.special_wield != SPWLD_SHADOW
+        && !mons_friendly(monster)
+        && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
         // if invisible, training happens much more rarely
         && (!unnatural_stealthy && one_chance_in(25) || one_chance_in(100)))
     {

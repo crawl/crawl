@@ -16,10 +16,6 @@
 
 #include <stdlib.h>
 #include <sstream>
-//#include <cstdlib>
-//#include <string.h>
-//#include <stdio.h>
-//#include <algorithm>
 
 #ifdef DOS
 #include <conio.h>

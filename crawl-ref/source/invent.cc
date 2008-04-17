@@ -526,8 +526,10 @@ void init_item_sort_comparators(item_sort_comparators &list,
     }
 
     if (list.empty())
+    {
         list.push_back(
             item_comparator(compare_item_str<sort_item_fullname>));
+    }
 }
 
 const menu_sort_condition *InvMenu::find_menu_sort_condition() const

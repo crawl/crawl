@@ -2928,8 +2928,10 @@ static void give_potion(monsters *mon, int level)
     //mv - give potion
     if (mons_species( mon->type ) == MONS_VAMPIRE && one_chance_in(5))
     {
+        // This handles initialization of stack timer.
         const int thing_created =
             items(0, OBJ_POTIONS, POT_BLOOD, true, level, 0);
+
         if (thing_created == NON_ITEM)
             return;
 

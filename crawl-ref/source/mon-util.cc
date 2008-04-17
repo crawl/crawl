@@ -3340,23 +3340,21 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
         // monster may not pick up trapping net
         if (mons_is_caught(this) && item_is_stationary(item))
             return (false);
-
-        // else always pick up if no other missiles
-        if (!miss)
-            return true;
     }
-
-    // Spellcasters should not waste time with ammunition.
-    if (mons_has_ranged_spell(this))
-        return (false);
-
-    // Monsters in a fight will only pick up missiles if doing so is worthwhile.
-    if (behaviour != BEH_WANDER
-        && (item.quantity < 5 || miss && miss->quantity >= 3))
+    else // None of these exceptions hold for throwing nets.
     {
-        return (false);
-    }
+        // Spellcasters should not waste time with ammunition.
+        if (mons_has_ranged_spell(this))
+            return (false);
 
+        // Monsters in a fight will only pick up missiles if doing so
+        // is worthwhile.
+        if (behaviour != BEH_WANDER
+            && (item.quantity < 5 || miss && miss->quantity >= 7))
+        {
+            return (false);
+        }
+    }
     if (miss && items_stack(*miss, item))
         return (pickup(item, MSLOT_MISSILE, near));
 
@@ -3461,7 +3459,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
 
         // Weak(ened) monsters won't stop to pick up things as long as they
         // feel unsafe.
-        if (!wandering && (hit_points * 10 < max_hit_points || hit_points <= 10)
+        if (!wandering && (hit_points * 10 < max_hit_points || hit_points < 10)
             && mon_enemies_around(this))
         {
             return false;
@@ -3476,6 +3474,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
             return false;
         }
 
+        // Fleeing monster only pick up emergency equipment.
         if (behaviour == BEH_FLEE
             && (itype == OBJ_WEAPONS || itype == OBJ_MISSILES))
         {
