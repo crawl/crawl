@@ -98,7 +98,6 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
              || randart_wpn_property( item, RAP_BLINK )
              || randart_wpn_property( item, RAP_CAN_TELEPORT )
              || randart_wpn_property( item, RAP_CAUSE_TELEPORTATION )
-             || randart_wpn_property( item, RAP_MUTAGENIC )
              || randart_wpn_property( item, RAP_CURSED )
              || randart_wpn_property( item, RAP_STEALTH ) > 0)
          {
@@ -107,7 +106,7 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
 
          // Hack: Since TSO gifts change the wielded weapon, make sure
          // that any drains to strength, intelligence, or dexterity
-         // don't kill the player.
+         // that are on it don't kill the player.
          if (!safe_to_remove_or_wear(item, false, true))
              return (false);
 
