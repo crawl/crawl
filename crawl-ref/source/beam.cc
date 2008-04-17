@@ -4982,13 +4982,12 @@ bool nasty_beam(monsters *mon, bolt &beam)
     if (beam.flavour == BEAM_ENSLAVE_DEMON)
         return (mons_holiness(mon) == MH_DEMONIC);
 
-    // haste
-    if (beam.flavour == BEAM_HASTE)
+    // haste/healing/invisibility
+    if (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_HEALING
+        || beam.flavour == BEAM_INVISIBILITY)
+    {
         return (false);
-
-    // healing
-    if (beam.flavour == BEAM_HEALING || beam.flavour == BEAM_INVISIBILITY)
-        return (false);
+     }
 
     // everything else is considered nasty by everyone
     return (true);
@@ -4996,7 +4995,7 @@ bool nasty_beam(monsters *mon, bolt &beam)
 
 bool nice_beam( monsters *mon, bolt &beam )
 {
-    // haste
+    // haste/healing/invisibility
     if (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_HEALING
         || beam.flavour == BEAM_INVISIBILITY)
     {
