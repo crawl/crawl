@@ -90,14 +90,14 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
          break;
 
     case GOD_SHINING_ONE:
-         if (brand != SPWPN_HOLY_WRATH)
-             return (false); // goes against holiness theme
+         if (brand != SPWPN_HOLY_WRATH) // holiness, honourable combat
+             return (false);
 
          if (randart_wpn_property( item, RAP_INVISIBLE )
              || randart_wpn_property( item, RAP_CURSED )
              || randart_wpn_property( item, RAP_STEALTH ) > 0)
          {
-             return (false); // goes against honourable combat theme
+             return (false);
          }
 
          if (randart_wpn_property( item, RAP_AC ) < 0
