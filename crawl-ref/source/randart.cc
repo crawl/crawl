@@ -90,25 +90,43 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
              return (false); // goes against anti-mutagenic theme
          break;
 
-    case GOD_SHINING_ONE: // holiness, honourable combat
-         if (brand != SPWPN_HOLY_WRATH || brand == SPWPN_VENOM)
-             return (false);
+    case GOD_SHINING_ONE:
+         if (brand != SPWPN_HOLY_WRATH)
+             return (false); // goes against holiness theme
 
          if (randart_wpn_property( item, RAP_INVISIBLE )
-             || randart_wpn_property( item, RAP_BLINK )
-             || randart_wpn_property( item, RAP_CAN_TELEPORT )
-             || randart_wpn_property( item, RAP_CAUSE_TELEPORTATION )
              || randart_wpn_property( item, RAP_CURSED )
              || randart_wpn_property( item, RAP_STEALTH ) > 0)
          {
-             return (false);
+             return (false); // goes against honourable combat theme
          }
 
-         // Hack: Since TSO gifts change the wielded weapon, make sure
-         // that any drains to strength, intelligence, or dexterity
-         // that are on it don't kill the player.
-         if (!safe_to_remove_or_wear(item, false, true))
-             return (false);
+         if (randart_wpn_property( item, RAP_AC ) < 0
+             || randart_wpn_property( item, RAP_EVASION ) < 0
+             || randart_wpn_property( item, RAP_STRENGTH ) < 0
+             || randart_wpn_property( item, RAP_INTELLIGENCE ) < 0
+             || randart_wpn_property( item, RAP_DEXTERITY ) < 0
+             || randart_wpn_property( item, RAP_FIRE ) < 0
+             || randart_wpn_property( item, RAP_COLD ) < 0
+             || randart_wpn_property( item, RAP_ELECTRICITY ) < 0
+             || randart_wpn_property( item, RAP_POISON ) < 0
+             || randart_wpn_property( item, RAP_NEGATIVE_ENERGY ) < 0
+             || randart_wpn_property( item, RAP_MAGIC ) < 0
+             || randart_wpn_property( item, RAP_LEVITATE )
+             || randart_wpn_property( item, RAP_BLINK )
+             || randart_wpn_property( item, RAP_CAN_TELEPORT )
+             || randart_wpn_property( item, RAP_NOISES )
+             || randart_wpn_property( item, RAP_PREVENT_SPELLCASTING )
+             || randart_wpn_property( item, RAP_CAUSE_TELEPORTATION )
+             || randart_wpn_property( item, RAP_PREVENT_TELEPORTATION )
+             || randart_wpn_property( item, RAP_METABOLISM ) < 0
+             || randart_wpn_property( item, RAP_MUTAGENIC )
+             || randart_wpn_property( item, RAP_ACCURACY ) < 0
+             || randart_wpn_property( item, RAP_DAMAGE ) < 0
+             || randart_wpn_property( item, RAP_MAGICAL_POWER ) < 0)
+         {
+             return (false); // goes against blessed theme
+         }
 
          break;
 
@@ -1129,7 +1147,6 @@ int randart_known_wpn_property( const item_def &item, randart_prop_type prop )
     else
         return (0);
 }
-
 
 int randart_wpn_num_props( const item_def &item )
 {
