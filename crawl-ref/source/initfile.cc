@@ -2445,9 +2445,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
 
             colour_mapping mapping;
-            mapping.tag = tagname;
+            mapping.tag     = tagname;
             mapping.pattern = patname;
-            mapping.colour = str_to_colour(colname);
+            mapping.colour  = str_to_colour(colname);
 
             if (mapping.colour != -1)
                 menu_colour_mappings.push_back(mapping);

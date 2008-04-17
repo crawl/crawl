@@ -664,7 +664,6 @@ static int count_nonsquelched_items( int obj )
 static void _item_list_on_square( std::vector<const item_def*>& items,
                                   int obj, bool force_squelch )
 {
-
     const bool have_nonsquelched = (force_squelch ||
                                     count_nonsquelched_items(obj));
 

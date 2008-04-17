@@ -558,19 +558,20 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
 
     menu_letter ckey;
     std::vector<InvEntry*> items_in_class;
-
     const menu_sort_condition *cond = find_menu_sort_condition();
 
     for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
-        if (!inv_class[i]) continue;
+        if (!inv_class[i])
+            continue;
 
         add_entry( new MenuEntry( item_class_name(i), MEL_SUBTITLE ) );
         items_in_class.clear();
 
         for (int j = 0, count = mitems.size(); j < count; ++j)
         {
-            if (mitems[j]->base_type != i) continue;
+            if (mitems[j]->base_type != i)
+                continue;
             items_in_class.push_back( new InvEntry(*mitems[j]) );
         }
 
@@ -579,6 +580,8 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
         for (unsigned int j = 0; j < items_in_class.size(); ++j)
         {
             InvEntry *ie = items_in_class[j];
+            if (this->tag == "pickup")
+                ie->tag = "pickup";
             // If there's no hotkey, provide one.
             if (ie->hotkeys[0] == ' ')
                 ie->hotkeys[0] = ckey++;
@@ -738,6 +741,8 @@ std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
         InvMenu menu;
         menu.set_type(mtype);
         menu.set_title(title);
+        if (mtype == MT_PICKUP)
+            menu.set_tag("pickup");
         menu.load_items(items);
         menu.set_flags(noselect ? MF_NOSELECT | MF_SHOW_PAGENUMBERS :
                        MF_MULTISELECT | MF_ALLOW_FILTER | MF_SHOW_PAGENUMBERS);

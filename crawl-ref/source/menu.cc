@@ -1169,8 +1169,9 @@ int menu_colour(const std::string &text, const std::string &prefix,
     for (unsigned int i = 0; i < Options.menu_colour_mappings.size(); ++i)
     {
         const colour_mapping &cm = Options.menu_colour_mappings[i];
-        if ( (cm.tag.empty() || cm.tag == "any" || cm.tag == tag) &&
-             cm.pattern.matches(tmp_text) )
+        if ( (cm.tag.empty() || cm.tag == "any" || cm.tag == tag
+              || cm.tag == "inventory" && tag == "pickup")
+            && cm.pattern.matches(tmp_text) )
         {
             return (cm.colour);
         }

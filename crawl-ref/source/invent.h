@@ -43,7 +43,7 @@ struct SelItem
 
     SelItem() : slot(0), quantity(0), item(NULL) { }
     SelItem( int s, int q, const item_def *it = NULL )
-        : slot(s), quantity(q), item(it) 
+        : slot(s), quantity(q), item(it)
     {
     }
 };
@@ -55,7 +55,7 @@ struct InvTitle : public MenuEntry
 {
     Menu *m;
     invtitle_annotator titlefn;
-    
+
     InvTitle( Menu *mn, const std::string &title,
               invtitle_annotator tfn );
 
@@ -71,7 +71,7 @@ private:
 
     mutable std::string basename;
     mutable std::string qualname;
-    
+
     friend class InvShowPrices;
 
 public:
@@ -112,7 +112,7 @@ public:
 class InvMenu : public Menu
 {
 public:
-    InvMenu(int mflags = MF_MULTISELECT) 
+    InvMenu(int mflags = MF_MULTISELECT)
         : Menu(mflags, "inventory"), type(MT_INVLIST), pre_select(NULL),
           title_annotate(NULL)
     {
@@ -169,15 +169,15 @@ protected:
 int prompt_invent_item( const char *prompt,
                         menu_type type,
                         int type_expect,
-                        bool must_exist = true, 
-                        bool allow_auto_list = true, 
+                        bool must_exist = true,
+                        bool allow_auto_list = true,
                         bool allow_easy_quit = true,
                         const char other_valid_char = '\0',
                         int *const count = NULL,
                         operation_types oper = OPER_ANY );
 
 std::vector<SelItem> select_items(
-                        const std::vector<const item_def*> &items, 
+                        const std::vector<const item_def*> &items,
                         const char *title, bool noselect = false,
                         menu_type mtype = MT_PICKUP );
 

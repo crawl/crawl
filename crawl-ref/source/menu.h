@@ -37,7 +37,7 @@ struct menu_letter
     menu_letter(char c) : letter(c) { }
 
     operator char () const { return letter; }
-    
+
     const menu_letter &operator ++ ()
     {
         letter = letter == 'z'? 'A' :
@@ -79,15 +79,16 @@ struct MenuEntry
         text(txt), quantity(qty), selected_qty(0), colour(-1),
         hotkeys(), level(lev), data(NULL)
     {
-        colour = lev == MEL_ITEM?       LIGHTGREY :
-                 lev == MEL_SUBTITLE?   BLUE  :
-                                        WHITE;
+        colour = (lev == MEL_ITEM     ?  LIGHTGREY :
+                  lev == MEL_SUBTITLE ?  BLUE  :
+                                         WHITE);
         if (hotk)
             hotkeys.push_back( hotk );
     }
     virtual ~MenuEntry() { }
 
-    bool operator<( const MenuEntry& rhs ) const {
+    bool operator<( const MenuEntry& rhs ) const
+    {
         return text < rhs.text;
     }
 
@@ -96,7 +97,7 @@ struct MenuEntry
         if (key && !is_hotkey(key))
             hotkeys.push_back( key );
     }
-    
+
     bool is_hotkey( int key ) const
     {
         return find( hotkeys.begin(), hotkeys.end(), key ) != hotkeys.end();
@@ -106,7 +107,7 @@ struct MenuEntry
     {
         return hotkeys.size()? hotkeys[0] == key : false;
     }
-    
+
     virtual std::string get_text() const
     {
         if (level == MEL_ITEM && hotkeys.size())
@@ -165,7 +166,7 @@ enum MenuFlag
     MF_SINGLESELECT     = 0x0001,   // Select just one item
     MF_MULTISELECT      = 0x0002,   // Select multiple items
     MF_NO_SELECT_QTY    = 0x0004,   // Disallow partial selections
-    MF_ANYPRINTABLE     = 0x0008,   // Any printable character is valid, and 
+    MF_ANYPRINTABLE     = 0x0008,   // Any printable character is valid, and
                                     // closes the menu.
     MF_SELECT_BY_PAGE   = 0x0010,   // Allow selections to occur only on
                                     // currently visible page.
@@ -197,7 +198,7 @@ public:
     Menu( int flags = MF_MULTISELECT, const std::string& tagname = "" );
 
     // Initializes a Menu from a formatted_string as follows:
-    // 
+    //
     // 1) Splits the formatted_string on EOL (this is not necessarily \n).
     // 2) Picks the most recently used non-whitespace colour as the colour
     //    for the next line (so it can't do multiple colours on one line).
@@ -206,7 +207,7 @@ public:
     // These are limitations that should be fixed eventually.
     //
     Menu( const formatted_string &fs );
-    
+
     virtual ~Menu();
 
     // Remove all items from the Menu, leave title intact.
@@ -218,14 +219,14 @@ public:
     int  get_flags() const        { return flags; }
     virtual bool is_set( int flag ) const;
     void set_tag(const std::string& t) { tag = t; }
-    
+
     bool draw_title_suffix( const std::string &s, bool titlefirst = true );
     bool draw_title_suffix( const formatted_string &fs, bool titlefirst = true );
     void update_title();
 
     // Sets a replacement for the --more-- string.
     void set_more(const formatted_string &more);
-    
+
     void set_highlighter( MenuHighlighter *h );
     void set_title( MenuEntry *e );
     void add_entry( MenuEntry *entry );
@@ -262,7 +263,7 @@ protected:
     MenuEntry *title;
     int flags;
     std::string tag;
-    
+
     int first_entry, y_offset;
     int pagesize, max_pagesize;
 
@@ -313,7 +314,7 @@ protected:
     bool is_selectable(int index) const;
 
     virtual int item_colour(int index, const MenuEntry *me) const;
-    
+
     virtual bool process_key( int keyin );
 };
 
@@ -390,7 +391,7 @@ public:
     column_composer(int ncols, ...);
 
     void clear();
-    void add_formatted(int ncol, 
+    void add_formatted(int ncol,
             const std::string &tagged_text,
             bool  add_separator = true,
             bool  eol_ends_format = true,
@@ -425,7 +426,7 @@ private:
 
 // This class is for when (some of) your items are formatted, and
 // you want mostly a browser.
-// 
+//
 // If MF_NOSELECT, hotkeys jump to menu items.
 // If MF_SINGLESELECT, hotkeys end the menu immediately.
 // MF_MULTISELECT is not supported.

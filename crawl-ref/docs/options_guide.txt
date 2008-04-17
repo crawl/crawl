@@ -897,8 +897,9 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         will be ordered by inventory letter (or in the order they're
         stacked for items on the floor).
 
-        When sort_menus = true, items are sorted by base name, qualified
-        name, curse status and quantity.
+        When sort_menus = true, items are sorted according to the specified
+	sort_order, with the default being:
+	     equipped, basename, qualname, curse, qty
 
         If sort_menus = auto:X, items are sorted if there are at least
         X items in the same category. For instance:
@@ -909,14 +910,16 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
 
         You can explicitly specify sort criteria in the sort_menus
         option as:
-             sort_menus = true : basename, qualname, curse, qty
+             sort_menus = true : art, basename, qualname, curse, qty
 
         Two items will be compared based on the first sort criteria
         where they differ.  So with the sort_menus line given above,
-        if the basenames of two different items are different they
-        will be alphabetically compared using their basenames; if
-        the basenames are the same but the qualified names different
-        it will compare their qualified names, and so on.
+        if only one of two different items is a known artefact, it will be 
+	listed first, else (if both or neither are artefacts) if their
+        basenames are different they will be alphabetically compared 
+	using their basenames; if the basenames are the same but the 
+	qualified names different it will compare their qualified 
+	names, and so on.
 
         The available sort criteria are:
         
@@ -970,9 +973,6 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           basename and qualname, then non-chunk food items will be
           sorted between the non-rotting and rotting chunks.
 
-        The default sort criteria are: 
-          "equipped, basename, qualname, curse, qty".
-
         You can ask for a descending order sort by prefixing one or more
         sort criteria with > as:
              sort_menus = true : basename, >qty
@@ -983,6 +983,10 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
              sort_menus = inv: true
         (Menu types must be specified as name:, with no space between
         name and colon.)
+
+        By default only pickup menus are sorted, and the sort criteria are: 
+          "basename, qualname, curse, qty".
+	All other menus (drop, inv) will be sorted by inventory letter.
 
         The menu selectors available are:
 
@@ -1114,7 +1118,7 @@ menu_colour = <match>:<colour>:<regex>
         To quickly check what potions were trashed by a mummy curse, use
           menu_colour = inventory:lightred:potions? of (degeneration|decay)
 
-        If you like to see rotten chunks and corpses at a glance, use
+        If you'd like to see rotten chunks and corpses at a glance, use
           menu_colour = inventory:red: rotting
 
         menu_colour can also be applied to colour the in-game notes (to 
