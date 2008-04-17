@@ -758,6 +758,7 @@ static void _give_nemelex_gift()
 
             deck.special = rarity;
             deck.colour  = deck_rarity_to_color(rarity);
+            deck.inscription = "god gift";
 
             move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
             origin_acquired(deck, you.religion);
@@ -783,8 +784,8 @@ bool is_tso_follower(const monsters* mon)
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
-        && mon->attitude == ATT_FRIENDLY
-        && (mon->flags & MF_GOD_GIFT));
+            && mon->attitude == ATT_FRIENDLY
+            && (mon->flags & MF_GOD_GIFT));
 }
 
 bool is_follower(const monsters* mon)
@@ -1401,6 +1402,7 @@ static void _do_god_gift(bool prayed_for)
                         if (thing_created != NON_ITEM)
                         {
                             success = true;
+                            mitm[thing_created].inscription = "god gift";
                             origin_acquired(mitm[thing_created], you.religion);
                         }
                     }

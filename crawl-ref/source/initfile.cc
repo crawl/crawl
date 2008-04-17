@@ -1532,6 +1532,15 @@ void game_options::set_menu_sort(std::string field)
         return;
 
     menu_sort_condition cond(field);
+    // Override existing values, if necessary.
+    for (unsigned int i = 0; i < sort_menus.size(); i++)
+        if (sort_menus[i].mtype == cond.mtype)
+        {
+            sort_menus[i].sort = cond.sort;
+            sort_menus[i].cmp  = cond.cmp;
+            return;
+        }
+
     sort_menus.push_back(cond);
 }
 

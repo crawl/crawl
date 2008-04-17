@@ -1705,6 +1705,8 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
         }
 
+        if (agent == you.religion)
+            thing.inscription = "god gift";
         move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
 
         // This should never actually be NON_ITEM because of the way
