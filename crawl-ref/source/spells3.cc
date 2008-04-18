@@ -1061,7 +1061,8 @@ void manage_halo()
 
     int monster = -1;
 
-    if (!you.duration[DUR_BACKLIGHT])
+    // illuminate an invisible player inside the halo
+    if (you.duration[DUR_INVIS] && !you.duration[DUR_BACKLIGHT])
         you.duration[DUR_BACKLIGHT] = 1;
 
     for (int x = -radius; x <= radius; x++)
@@ -1075,13 +1076,12 @@ void manage_halo()
             {
                 monster = mgrd[posx][posy];
 
-                // light up all non-friendly and non-good neutral
-                // monsters inside the halo
+                // illuminate all invisible monsters inside the halo
                 if (monster != NON_MONSTER)
                 {
                     monsters *mon = &menv[monster];
 
-                    if (!mons_wont_attack(mon)
+                    if (mon->has_ench(ENCH_INVIS)
                         && !mon->has_ench(ENCH_BACKLIGHT))
                     {
                         mon->add_ench(mon_enchant(ENCH_BACKLIGHT, 0,

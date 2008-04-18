@@ -2855,8 +2855,9 @@ static void _decrement_durations()
         Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
-    // players inside a halo don't lose backlight
-    if (you.duration[DUR_BACKLIGHT] > 0 && !halo_radius()
+    // invisible players inside a halo don't lose backlight
+    if (you.duration[DUR_BACKLIGHT] > 0
+        && (!halo_radius() || !you.duration[DUR_INVIS])
         && !--you.duration[DUR_BACKLIGHT] && !you.backlit())
     {
         mpr("You are no longer glowing.", MSGCH_DURATION);
