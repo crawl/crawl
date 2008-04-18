@@ -3514,10 +3514,12 @@ int check_stealth(void)
                 if (you.hunger_state <= HS_STARVING)
                     stealth += (you.skills[SK_STEALTH] * 21);
                 else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
-                         || you.hunger_state <= HS_HUNGRY)
+                         || you.hunger_state <= HS_NEAR_STARVING)
                 {
                     stealth += (you.skills[SK_STEALTH] * 20);
                 }
+                else if (you.hunger_state <= HS_HUNGRY)
+                    stealth += (you.skills[SK_STEALTH] * 19);
                 else
                     stealth += (you.skills[SK_STEALTH] * 18);
                 break;

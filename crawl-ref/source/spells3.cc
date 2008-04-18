@@ -366,6 +366,11 @@ void sublimation(int power)
             mpr( "A conflicting enchantment prevents the spell from "
                  "coming into effect." );
         }
+        else if (you.species == SP_VAMPIRE && you.hunger_state < HS_FULL)
+        {
+            mpr("You don't have enough blood to draw power from your "
+                "own body.");
+        }
         else if (!enough_hp( 2, true ))
         {
              mpr("Your attempt to draw power from your own body fails.");
@@ -374,10 +379,15 @@ void sublimation(int power)
         {
             mpr("You draw magical energy from your own body!");
 
-            while (you.magic_points < you.max_magic_points && you.hp > 1)
+            int food = 0; // for Vampires
+            while (you.magic_points < you.max_magic_points && you.hp > 1
+                   && (you.species != SP_VAMPIRE || you.hunger - food >= 7000))
             {
                 inc_mp(1, false);
                 dec_hp(1, false);
+
+                if (you.species == SP_VAMPIRE)
+                    food += 15;
 
                 for (loopy = 0; loopy < (you.hp > 1 ? 3 : 0); loopy++)
                 {
@@ -388,6 +398,7 @@ void sublimation(int power)
                 if (random2(power) < 6)
                     break;
             }
+            make_hungry(food, false);
         }
     }
 

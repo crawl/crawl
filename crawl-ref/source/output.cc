@@ -112,7 +112,7 @@ class colour_bar
 
             if (cx < disp)
                 textcolor(BLACK + m_default * 16);
-            else if (old_val > val && old_disp > disp && cx < old_disp)
+            else if (/*old_val > val &&*/ old_disp > disp && cx < old_disp)
                 textcolor(BLACK + m_change_neg * 16);
             putch(' ');
 #else
@@ -566,7 +566,7 @@ struct status_light
 //   conf. touch, bargain, sage
 // confused, beheld, fire, poison, disease, rot, held, glow,
 //  swift, fast, slow, breath
-//  
+//
 // Note the usage of bad_ench_colour() correspond to levels that
 // can be found in player.cc, ie those that the player can tell by
 // using the '@' command.  Things like confusion and sticky flame

@@ -1309,8 +1309,10 @@ std::string help_highlighter::get_species_key() const
 
     std::string result = species_name(you.species, you.experience_level);
     if (player_genus(GENPC_DRACONIAN))
+    {
         strip_tag(result,
                   species_name(you.species, you.experience_level, true));
+    }
 
     result += "  ";
     return (result);

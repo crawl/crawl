@@ -1388,7 +1388,111 @@ formatted_string describe_mutations()
     if (!have_any)
         result +=  "You are rather mundane." EOL;
 
+    if (you.species == SP_VAMPIRE)
+    {
+        result += EOL EOL;
+        result += EOL EOL;
+        result += "Press '<w>!</w>' to toggle between mutations and properties depending on your" EOL
+                  "hunger status." EOL;
+    }
+
     return formatted_string::parse_string(result);
+}
+
+static void _display_vampire_attributes()
+{
+    clrscr();
+    cgotoxy(1,1);
+
+    std::string result;
+
+    std::string column[9][7] =
+    {
+       {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
+        "Satiated  ", "<yellow>Thirsty</yellow>  ", "<yellow>Near...</yellow>  ",
+        "<lightred>Bloodless</lightred>"},
+                                //Alive          Full        Satiated       Thirsty    Near...      Bloodless
+       {"Metabolism           ", "very fast  ", "fast    ", "fast      ",  "normal   ", "slow     ", "none"},
+
+       {"Regeneration         ", "very fast  ", "fast    ", "normal    ",  "normal   ", "slow     ", "none"},
+
+       {"Poison resistance    ", "           ", "        ", " +        ",  " +       ", " +       ", " +   "},
+
+       {"Cold resistance      ", "           ", "        ", "          ",  " +       ", " +       ", " ++  "},
+
+       {"Negative resistance  ", "           ", "        ", "          ",  " +       ", " ++      ", " +++ "},
+
+       {"Torment resistance   ", "           ", "        ", "          ",  "         ", "         ", " +   "},
+
+       {"Mutation effects     ", "full       ", "capped  ", "capped    ",  "none     ", "none     ", "none "},
+
+       {"Stealth boost        ", "none       ", "none    ", "none      ",  "minor    ", "major    ", "large"}
+    };
+
+    int current = 0;
+    switch (you.hunger_state)
+    {
+    case HS_ENGORGED:
+        current = 1;
+        break;
+    case HS_VERY_FULL:
+    case HS_FULL:
+        current = 2;
+        break;
+    case HS_SATIATED:
+        current = 3;
+        break;
+    case HS_HUNGRY:
+    case HS_VERY_HUNGRY:
+        current = 4;
+        break;
+    case HS_NEAR_STARVING:
+        current = 5;
+        break;
+    case HS_STARVING:
+        current = 6;
+    }
+
+    for (int y = 0; y < 9; y++)      // lines   (properties)
+    {
+        for (int x = 0; x < 7; x++)  // columns (hunger states)
+        {
+             if (y > 0 && x == current)
+                 result += "<w>";
+             result += column[y][x];
+             if (y > 0 && x == current)
+                 result += "</w>";
+        }
+        result += EOL;
+    }
+/*
+    result = "                     <lightgreen>Alive</lightgreen>      <green>Full</green>    Satiated  "
+                                  "<yellow>Thirsty  Near...</yellow>  <lightred>Bloodless</lightred>" EOL
+             "Metabolism           very fast  fast    fast      normal   slow     none " EOL
+             "Regeneration         very fast  fast    normal    normal   slow     none " EOL
+             "Poison resistance                        +         +        +        +   " EOL
+             "Cold resistance                                    +        +        ++  " EOL
+             "Negative resistance                                +        ++       +++ " EOL
+             "Torment resistance                                                   +   " EOL
+             "Mutation effects     full       capped  capped    none     none     none " EOL
+             "Stealth boost        none       none    none      minor    major    large" EOL;
+*/
+
+    result += EOL EOL;
+    result += EOL EOL;
+    result += EOL EOL;
+    result += "Press '<w>!</w>' to toggle between mutations and properties depending on your " EOL
+              "hunger status." EOL;
+
+    const formatted_string vp_props = formatted_string::parse_string(result);
+    vp_props.display();
+
+    if (you.species == SP_VAMPIRE)
+    {
+        const int keyin = getch();
+        if (keyin == '!')
+            display_mutations();
+    }
 }
 
 void display_mutations()
@@ -1397,8 +1501,19 @@ void display_mutations()
     cgotoxy(1,1);
 
     const formatted_string mutation_fs = describe_mutations();
-    Menu mutation_menu(mutation_fs);
-    mutation_menu.show();
+
+    if (you.species == SP_VAMPIRE)
+    {
+        mutation_fs.display();
+        const int keyin = getch();
+        if (keyin == '!')
+            _display_vampire_attributes();
+    }
+    else
+    {
+        Menu mutation_menu(mutation_fs);
+        mutation_menu.show();
+    }
 }
 
 static int calc_mutation_amusement_value(mutation_type which_mutation)

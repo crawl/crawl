@@ -205,8 +205,8 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
                      (flavour == BEAM_DISPEL_UNDEAD) ? EC_HOLY :
                      (flavour == BEAM_POLYMORPH)     ? EC_MUTAGENIC :
                      (flavour == BEAM_TELEPORT
-                          || flavour == BEAM_BANISH
-                          || flavour == BEAM_BLINK)  ? EC_WARP
+                        || flavour == BEAM_BANISH
+                        || flavour == BEAM_BLINK)    ? EC_WARP
                                                      : EC_ENCHANT;
     zap_animation( element_colour( elem ), mon, force );
 }
@@ -3453,6 +3453,16 @@ static int _affect_player( bolt &beam )
             if (beam.aux_source.empty())
                 beam.aux_source = "by dispel undead";
 
+            if (you.species == SP_VAMPIRE)
+            {
+                if (you.hunger_state == HS_ENGORGED)
+                    beam.damage.size /= 2;
+                else if (you.hunger_state > HS_SATIATED)
+                {
+                    beam.damage.size *= 2;
+                    beam.damage.size /= 3;
+                }
+            }
             _beam_ouch( roll_dice( beam.damage ), beam );
             beam.obvious_effect = true;
             break;

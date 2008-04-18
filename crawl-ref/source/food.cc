@@ -78,6 +78,9 @@ void make_hungry( int hunger_amount, bool suppress_msg )
     if (you.is_undead == US_UNDEAD)
         return;
 
+    if (hunger_amount == 0)
+        return;
+
 #if DEBUG_DIAGNOSTICS
     set_redraw_status( REDRAW_HUNGER );
 #endif

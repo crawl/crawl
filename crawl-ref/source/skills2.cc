@@ -1836,7 +1836,7 @@ static void _display_skill_table(bool show_aptitudes)
             "skills by performing the corresponding actions. The number next to the" EOL
             "skill is your current level, the higher the better. The blue percent  " EOL
             "value shows your progress towards the next skill level. You can toggle" EOL
-            "which skills to train by pressing their slot letters. A <darkgrey>greyish<magenta> skill " EOL
+            "which skills to train by pressing their slot letters. A <darkgrey>greyish</darkgrey> skill " EOL
             "will increase at a decidedly slower rate and ease training of others. ",
             false).display();
     }
