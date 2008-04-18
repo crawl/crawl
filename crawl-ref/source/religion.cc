@@ -507,12 +507,12 @@ static void _inc_penance(god_type god, int val)
          fall_into_a_pool( you.x_pos, you.y_pos, true,
                            grd[you.x_pos][you.y_pos] );
     }
-}                               // end inc_penance()
+}                               // end _inc_penance()
 
 static void _inc_penance(int val)
 {
     _inc_penance(you.religion, val);
-}                               // end inc_penance()
+}                               // end _inc_penance()
 
 static void _inc_gift_timeout(int val)
 {
@@ -4191,7 +4191,7 @@ static void _altar_prayer()
     }
 
     offer_items();
-}                               // end altar_prayer()
+}                               // end _altar_prayer()
 
 bool god_hates_attacking_friend(god_type god, const actor *fr)
 {
