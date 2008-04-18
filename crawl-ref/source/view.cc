@@ -740,7 +740,7 @@ int get_mons_colour(const monsters *mons)
 
     // Backlit monsters are fuzzy and override brands.
     if (!player_see_invis() && mons->has_ench(ENCH_INVIS)
-        && mons->has_ench(ENCH_BACKLIGHT))
+        && mons->backlit())
     {
         col = DARKGREY;
     }
