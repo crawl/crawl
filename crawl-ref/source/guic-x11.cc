@@ -392,7 +392,8 @@ void ImgSetTransparentPix(img_type img)
 
 void ImgDestroy(img_type img)
 {
-    XDestroyImage(img);
+    if (img)
+        XDestroyImage(img);
 }
 
 img_type ImgCreateSimple(int wx, int wy)

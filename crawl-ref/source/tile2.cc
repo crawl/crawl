@@ -137,7 +137,7 @@ int get_floor_special_tile_idx()
 static int last_cursor = -1;
 
 //Internal cache Image buffer
-static img_type tcache_image;
+static img_type tcache_image = 0;
 
 //Start of a pointer string
 static int tcache_head;
@@ -322,19 +322,18 @@ void TileResizeScreen(int x0, int y0)
 {
     tile_xmax = x0;
     tile_ymax = y0;
-#if 0
     max_tcache = 4*tile_xmax*tile_ymax;
 
     free(screen_tcache_idx);
     screen_tcache_idx = (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
 
-    free(tcache[k]);
-    tcache[k] = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
+    free(tcache);
+    tcache = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
 
     for (int x = 0; x < tile_xmax * tile_ymax; x++)
         screen_tcache_idx[x] = -1;
-    _clear_tcache();
-#endif
+    _init_tcache();
+
     crawl_view.viewsz.x = tile_xmax;
     crawl_view.viewsz.y = tile_ymax;
     crawl_view.vbuf.size(crawl_view.viewsz);
@@ -363,6 +362,7 @@ void _clear_tcache()
 void _init_tcache()
 {
     _clear_tcache();
+    ImgDestroy(tcache_image);
     tcache_image = ImgCreateSimple(tcache_wx_normal,
                                    max_tcache*tcache_wy_normal);
 }
