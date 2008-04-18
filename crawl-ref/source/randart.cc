@@ -59,98 +59,100 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
     switch (which_god)
     {
     case GOD_BEOGH:
-         if (brand == SPWPN_ORC_SLAYING)
-             return (false); // goes against orcish theme
-         break;
+        if (brand == SPWPN_ORC_SLAYING)
+            return (false); // goes against orcish theme
+        break;
 
     case GOD_ELYVILON: // peaceful healer god, no weapons, no berserking
-         if (item.base_type == OBJ_WEAPONS)
-             return (false);
+        if (item.base_type == OBJ_WEAPONS)
+            return (false);
 
-         if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
-             return (false);
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
+            return (false);
 
-         if (randart_wpn_property( item, RAP_ANGRY )
-             || randart_wpn_property( item, RAP_BERSERK ))
-         {
-             return (false);
-         }
-         break;
+        if (randart_wpn_property( item, RAP_ANGRY )
+            || randart_wpn_property( item, RAP_BERSERK ))
+        {
+            return (false);
+        }
+        break;
 
     case GOD_OKAWARU: // precision fighter
-         if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_INACCURACY)
-             return (false);
-         break;
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_INACCURACY)
+            return (false);
+        break;
 
     case GOD_ZIN:
-         if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_HUNGER)
-             return (false); // goes against food theme
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_HUNGER)
+            return (false); // goes against food theme
 
-         if (randart_wpn_property( item, RAP_MUTAGENIC ))
-             return (false); // goes against anti-mutagenic theme
-         break;
+        if (randart_wpn_property( item, RAP_MUTAGENIC ))
+            return (false); // goes against anti-mutagenic theme
+        break;
 
     case GOD_SHINING_ONE: // holiness, honourable combat
-         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_HOLY_WRATH)
-         {
-             return (false);
-         }
+        if (item.base_type == OBJ_WEAPONS && brand != SPWPN_HOLY_WRATH)
+        {
+            return (false);
+        }
 
-         if (randart_wpn_property( item, RAP_INVISIBLE )
-             || randart_wpn_property( item, RAP_STEALTH ) > 0)
-         {
-             return (false);
-         }
+        if (randart_wpn_property( item, RAP_INVISIBLE )
+            || randart_wpn_property( item, RAP_STEALTH ) > 0)
+        {
+            return (false);
+        }
 
-         if (randart_wpn_property( item, RAP_AC ) < 0
-             || randart_wpn_property( item, RAP_EVASION ) < 0
-             || randart_wpn_property( item, RAP_STRENGTH ) < 0
-             || randart_wpn_property( item, RAP_INTELLIGENCE ) < 0
-             || randart_wpn_property( item, RAP_DEXTERITY ) < 0
-             || randart_wpn_property( item, RAP_FIRE ) < 0
-             || randart_wpn_property( item, RAP_COLD ) < 0
-             || randart_wpn_property( item, RAP_NOISES )
-             || randart_wpn_property( item, RAP_PREVENT_SPELLCASTING )
-             || randart_wpn_property( item, RAP_CAUSE_TELEPORTATION )
-             || randart_wpn_property( item, RAP_PREVENT_TELEPORTATION )
-             || randart_wpn_property( item, RAP_ANGRY )
-             || randart_wpn_property( item, RAP_METABOLISM )
-             || randart_wpn_property( item, RAP_MUTAGENIC )
-             || randart_wpn_property( item, RAP_ACCURACY ) < 0
-             || randart_wpn_property( item, RAP_DAMAGE ) < 0)
-         {
-             return (false); // filter out negative effects
-         }
-
-         break;
+        if (is_blessed(item)) // remove negative effects on blessed weapons
+        {
+            if (randart_wpn_property( item, RAP_AC ) < 0
+                || randart_wpn_property( item, RAP_EVASION ) < 0
+                || randart_wpn_property( item, RAP_STRENGTH ) < 0
+                || randart_wpn_property( item, RAP_INTELLIGENCE ) < 0
+                || randart_wpn_property( item, RAP_DEXTERITY ) < 0
+                || randart_wpn_property( item, RAP_FIRE ) < 0
+                || randart_wpn_property( item, RAP_COLD ) < 0
+                || randart_wpn_property( item, RAP_NOISES )
+                || randart_wpn_property( item, RAP_PREVENT_SPELLCASTING )
+                || randart_wpn_property( item, RAP_CAUSE_TELEPORTATION )
+                || randart_wpn_property( item, RAP_PREVENT_TELEPORTATION )
+                || randart_wpn_property( item, RAP_ANGRY )
+                || randart_wpn_property( item, RAP_METABOLISM )
+                || randart_wpn_property( item, RAP_MUTAGENIC )
+                || randart_wpn_property( item, RAP_ACCURACY ) < 0
+                || randart_wpn_property( item, RAP_DAMAGE ) < 0)
+            {
+                return (false);
+            }
+        }
+        break;
 
     case GOD_LUGONU: // corruption
-         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_DISTORTION)
-             return (false);
-         break;
+        if (item.base_type == OBJ_WEAPONS && brand != SPWPN_DISTORTION)
+            return (false);
+        break;
 
     case GOD_SIF_MUNA:
     case GOD_KIKUBAAQUDGHA:
     case GOD_VEHUMET:
-         if (randart_wpn_property( item, RAP_PREVENT_SPELLCASTING ))
-             return (false);
-         break;
+        if (randart_wpn_property( item, RAP_PREVENT_SPELLCASTING ))
+            return (false);
+        break;
 
     case GOD_TROG: // hates anything enhancing magic
-         if (item.base_type == OBJ_JEWELLERY && (item.sub_type == RING_WIZARDRY
-             || item.sub_type == RING_FIRE || item.sub_type == RING_ICE
-             || item.sub_type == RING_MAGICAL_POWER))
-         {
-             return (false);
-         }
-         if (brand == SPWPN_PAIN) // involves magic
-             return (false);
+        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == RING_WIZARDRY
+            || item.sub_type == RING_FIRE || item.sub_type == RING_ICE
+            || item.sub_type == RING_MAGICAL_POWER))
+        {
+            return (false);
+        }
+        if (brand == SPWPN_PAIN) // involves magic
+            return (false);
 
-         if (randart_wpn_property( item, RAP_MAGICAL_POWER ))
-             return (false);
+        if (randart_wpn_property( item, RAP_MAGICAL_POWER ))
+            return (false);
 
     default:
-         break;
+        break;
     }
 
     return (true);
