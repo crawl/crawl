@@ -4237,6 +4237,10 @@ bool monsters::add_ench(const mon_enchant &ench)
     if (new_enchantment)
         add_enchantment_effect(ench);
 
+    // Invisible monsters inside a halo get backlight.
+    if (inside_halo(x, y))
+        manage_halo();
+
     return (true);
 }
 
