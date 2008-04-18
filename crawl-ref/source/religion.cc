@@ -3393,9 +3393,14 @@ void divine_retribution( god_type god )
 {
     ASSERT(god != GOD_NO_GOD);
 
-    // allow retribution during god's own penance
-    if (god != you.religion && !god_hates_your_god(god))
+    // Good gods don't use divine retribution on their followers, and
+    // other gods don't use divine retribution on followers of gods they
+    // don't hate.
+    if ((god == you.religion && is_good_god(god))
+        || (god != you.religion && !god_hates_your_god(god)))
+    {
         return;
+    }
 
     god_acting gdact(god, true);
 
