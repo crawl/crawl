@@ -720,9 +720,13 @@ static bool is_sealed_square(const coord_def &c)
 
 static void corrupt_square(const crawl_environment &oenv, const coord_def &c)
 {
+    // To prevent the destruction of, say, branch entries.
+    bool preserve_feat = true;
     dungeon_feature_type feat = DNGN_UNSEEN;
     if (grid_altar_god(grd(c)) != GOD_NO_GOD)
     {
+        // altars may be safely overwritten, ha!
+        preserve_feat = false;
         if (!one_chance_in(3))
             feat = DNGN_ALTAR_LUGONU;
     }
@@ -738,10 +742,12 @@ static void corrupt_square(const crawl_environment &oenv, const coord_def &c)
     if (!is_traversable(grd(c)) && is_traversable(feat) && is_sealed_square(c))
         return;
 
+    // What's this supposed to achieve? (jpeg)
+    // I mean, won't exits from the Abyss only turn up in the Abyss itself?
     if (feat == DNGN_EXIT_ABYSS)
         feat = DNGN_ENTER_ABYSS;
 
-    dungeon_terrain_changed(c, feat, true, true, true);
+    dungeon_terrain_changed(c, feat, preserve_feat, true, true);
     if (feat == DNGN_ROCK_WALL)
         env.grid_colours(c) = oenv.rock_colour;
     else if (feat == DNGN_FLOOR)
@@ -772,7 +778,6 @@ static void corrupt_level_features(const crawl_environment &oenv)
         corrupt_seeds.push_back(corrupt_markers[i]->pos);
 
     for (int y = MAPGEN_BORDER; y < GYM - MAPGEN_BORDER; ++y)
-    {
         for (int x = MAPGEN_BORDER; x < GXM - MAPGEN_BORDER; ++x)
         {
             const coord_def c(x, y);
@@ -790,7 +795,6 @@ static void corrupt_level_features(const crawl_environment &oenv)
                 corrupt_square(oenv, c);
             }
         }
-    }
 }
 
 static bool is_level_corrupted()
@@ -799,7 +803,9 @@ static bool is_level_corrupted()
         || you.level_type == LEVEL_PANDEMONIUM
         || player_in_hell()
         || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+    {
         return (true);
+    }
 
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
 }
