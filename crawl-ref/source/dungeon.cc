@@ -3451,7 +3451,7 @@ static bool _safe_minivault_place(int v1x, int v1y,
 
             // Don't overwrite features other than floor, rock wall, doors,
             // nor water, if !water_ok.
-            if (_may_overwrite_feature(dfeat, water_ok))
+            if (!_may_overwrite_feature(dfeat, water_ok))
                 return (false);
 
             // Don't overwrite items or monsters, either!
