@@ -462,7 +462,10 @@ public:
     runrest();
     void initialise(int rdir, int mode);
 
+    // returns runmode
     operator int () const;
+
+    // sets runmode
     const runrest &operator = (int newrunmode);
 
     // Returns true if we're currently resting.
@@ -1549,6 +1552,7 @@ public:
     int         view_max_width;
     int         view_max_height;
     int         mlist_min_height;
+    int         msg_max_height;
     bool        mlist_allow_alternate_layout;
     bool        classic_hud;
 

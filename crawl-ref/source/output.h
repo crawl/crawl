@@ -48,11 +48,6 @@ void update_message_status();
 
 void update_turn_count();
 
-#ifdef USE_TILE
-void draw_hp_bar(int val, int max_val);
-void draw_mp_bar(int val, int max_val);
-#endif
-
 void print_stats();
 void print_stats_level(const std::string& description);
 void draw_border();

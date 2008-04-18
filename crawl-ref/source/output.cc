@@ -52,6 +52,125 @@
 #include "travel.h"
 #include "view.h"
 
+// ----------------------------------------------------------------------
+// colour_bar
+// ----------------------------------------------------------------------
+
+class colour_bar
+{
+    typedef unsigned short color_t;
+ public:
+    colour_bar(color_t default_colour,
+               color_t change_pos,
+               color_t change_neg,
+               color_t empty)
+        : m_default(default_colour), m_change_pos(change_pos),
+          m_change_neg(change_neg), m_empty(empty),
+          m_old_disp(-1),
+          m_request_redraw_after(0)
+    {
+        // m_old_disp < 0 means it's invalid and needs to be initialized
+    }
+
+    bool wants_redraw() const
+    {
+        return (m_request_redraw_after && you.num_turns >= m_request_redraw_after);
+    }
+
+    void draw(int ox, int oy, int val, int max_val)
+    {
+        ASSERT(val <= max_val);
+        if (max_val <= 0)
+        {
+            m_old_disp = -1;
+            return;
+        }
+
+#ifdef USE_TILE
+        // Don't redraw colour bars while resting
+        // *unless* we'll stop doing so right after that
+        if (you.running >= 2 && is_resting() && val != max_val)
+        {
+            m_old_disp = -1;
+            return;
+        }
+#endif
+
+        const int width = crawl_view.hudsz.x - (ox-1);
+        const int disp = width * val / max_val;
+        const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
+        m_old_disp = disp;
+
+        cgotoxy(ox, oy, GOTO_STAT);
+
+        textcolor(BLACK);
+        for (int cx = 0; cx < width; cx++)
+        {
+#ifdef USE_TILE
+            // maybe this should use textbackground too?
+            textcolor(BLACK + m_empty * 16);
+
+            if (cx < disp)
+                textcolor(BLACK + m_default * 16);
+            else if (old_val > val && old_disp > disp && cx < old_disp)
+                textcolor(BLACK + m_change_neg * 16);
+            putch(' ');
+#else
+            if (cx < disp && cx < old_disp)
+            {
+                textcolor(m_default);
+                putch('=');
+            }
+            else if (/* old_disp <= cx && */ cx < disp)
+            {
+                textcolor(m_change_pos);
+                putch('=');
+            }
+            else if (/* disp <= cx && */ cx < old_disp)
+            {
+                textcolor(m_change_neg);
+                putch('-');
+            }
+            else
+            {
+                textcolor(m_empty);
+                putch('-');
+            }
+
+            // If some change colour was rendered, redraw in a few
+            // turns to clear it out.
+            if (old_disp != disp)
+                m_request_redraw_after = you.num_turns + 4;
+            else
+                m_request_redraw_after = 0;
+#endif
+        }
+
+        textcolor(LIGHTGREY);
+        textbackground(BLACK);
+    }
+
+ private:
+    const color_t m_default;
+    const color_t m_change_pos;
+    const color_t m_change_neg;
+    const color_t m_empty;
+    int m_old_disp;
+    int m_request_redraw_after; // force a redraw at this turn count
+};
+
+colour_bar HP_Bar(GREEN, LIGHTGREEN, RED, DARKGRAY);
+
+#ifdef USE_TILE
+colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGRAY);
+#else
+colour_bar MP_Bar(BLUE, LIGHTBLUE, MAGENTA, DARKGRAY);
+#endif
+
+// ----------------------------------------------------------------------
+// Status display
+// ----------------------------------------------------------------------
+
 static int _bad_ench_colour( int lvl, int orange, int red )
 {
     if (lvl > red)
@@ -62,18 +181,21 @@ static int _bad_ench_colour( int lvl, int orange, int red )
     return (YELLOW);
 }
 
-static void _dur_colour( int colour, bool running_out )
+static int _dur_colour( int running_out_color, bool running_out )
 {
     if (running_out)
-        textcolor( colour );
+    {
+        return running_out_color;
+    }
     else
     {
-        switch (colour)
+        switch (running_out_color)
         {
-        case GREEN:     textcolor( LIGHTGREEN );        break;
-        case BLUE:      textcolor( LIGHTBLUE );         break;
-        case MAGENTA:   textcolor( LIGHTMAGENTA );      break;
-        case LIGHTGREY: textcolor( WHITE );             break;
+        case GREEN:     return ( LIGHTGREEN );
+        case BLUE:      return ( LIGHTBLUE );
+        case MAGENTA:   return ( LIGHTMAGENTA );
+        case LIGHTGREY: return ( WHITE );
+        default: return running_out_color;
         }
     }
 }
@@ -110,91 +232,6 @@ void update_turn_count()
     cprintf("%ld", you.num_turns);
 }
 
-static int _draw_colour_bar(int val, int max_val, int old_val, int old_disp,
-                            int ox, int oy, unsigned short default_colour,
-                            unsigned short change_colour,
-                            unsigned short empty_colour)
-{
-    ASSERT(val <= max_val);
-
-    if (max_val <= 0)
-        return -1;
-
-    // Don't redraw colour bars while resting
-    // *unless* we'll stop doing so right after that
-    if (you.running >= 2 && is_resting() && val != max_val)
-        return -1;
-
-    const int width = crawl_view.hudsz.x - (ox-1);
-    int disp = width * val / max_val;
-
-    cgotoxy(ox, oy, GOTO_STAT);
-
-    textcolor(BLACK);
-    for (int cx = 0; cx < width; cx++)
-    {
-#ifdef USE_TILE
-        // maybe this should use textbackground too?
-        textcolor(BLACK + empty_colour * 16);
-
-        if (cx < disp)
-            textcolor(BLACK + default_colour * 16);
-        else if (old_val > val && old_disp > disp && cx < old_disp)
-            textcolor(BLACK + change_colour * 16);
-        putch(' ');
-#else
-
-        if (cx < disp)
-        {
-            textcolor(default_colour);
-            putch('=');
-        }
-        else if (old_val > val && old_disp > disp && cx < old_disp)
-        {
-            textcolor(change_colour);
-            putch('-');
-        }
-        else
-        {
-            textcolor(empty_colour);
-            putch('-');
-        }
-#endif
-    }
-
-    textcolor(LIGHTGREY);
-    textbackground(BLACK);
-    return disp;
-}
-
-void draw_mp_bar(int ox, int oy, int val, int max_val)
-{
-    const unsigned short default_colour = BLUE;
-    const unsigned short change = LIGHTBLUE;
-    const unsigned short empty  = DARKGRAY;
-
-    static int old_val  = 0;
-    static int old_disp = 0;
-
-    old_disp = _draw_colour_bar(val, max_val, old_val, old_disp, ox, oy,
-                                default_colour, change, empty);
-    old_val = val;
-}
-
-void draw_hp_bar(int ox, int oy, int val, int max_val)
-{
-    const unsigned short default_colour = GREEN;
-    const unsigned short change = RED;
-    const unsigned short empty  = DARKGRAY;
-
-    static int old_val  = 0;
-    static int old_disp = 0;
-
-    old_disp = _draw_colour_bar(val, max_val, old_val, old_disp, ox, oy,
-                                default_colour, change, empty);
-    old_val = val;
-}
-
 static int _count_digits(int val)
 {
     if (val > 999)
@@ -206,28 +243,36 @@ static int _count_digits(int val)
     return 1;
 }
 
-static std::string _describe_hunger()
+static const char* _describe_hunger(int& color)
 {
     bool vamp = (you.species == SP_VAMPIRE);
 
     switch (you.hunger_state)
     {
         case HS_ENGORGED:
+            color = LIGHTGREEN;
             return (vamp? "Alive" : "Engorged");
         case HS_VERY_FULL:
+            color = GREEN;
             return ("Very Full");
         case HS_FULL:
+            color = GREEN;
             return ("Full");
         case HS_SATIATED: // normal
-            return ("");
+            color = GREEN;
+            return NULL;
         case HS_HUNGRY:
+            color = YELLOW;
             return (vamp? "Thirsty" : "Hungry");
         case HS_VERY_HUNGRY:
+            color = YELLOW;
             return (vamp? "Very Thirsty" : "Very Hungry");
         case HS_NEAR_STARVING:
+            color = YELLOW;
             return (vamp? "Near Bloodless" : "Near Starving");
         case HS_STARVING:
         default:
+            color = RED;
             return (vamp? "Bloodless" : "Starving");
     }
 }
@@ -261,10 +306,9 @@ static void _print_stats_mp(int x, int y)
         cprintf(" ");
 
     if (! Options.classic_hud)
-        draw_mp_bar(19, y, you.magic_points, you.max_magic_points);
+        MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 }
 
-// Helper for print_stats
 static void _print_stats_hp(int x, int y)
 {
     const int max_max_hp = you.hp_max + player_rotted();
@@ -301,7 +345,7 @@ static void _print_stats_hp(int x, int y)
         cprintf(" ");
 
     if (! Options.classic_hud)
-        draw_hp_bar(19, y, you.hp, you.hp_max);
+        HP_Bar.draw(19, y, you.hp, you.hp_max);
 }
 
 // XXX: alters state!  Does more than just print!
@@ -386,7 +430,7 @@ static void _print_stats_ac(int x, int y)
     cgotoxy(x+4, y, GOTO_STAT);
 
     if (you.duration[DUR_STONEMAIL])
-        _dur_colour( BLUE, (you.duration[DUR_STONEMAIL] <= 6) );
+        textcolor(_dur_colour( BLUE, (you.duration[DUR_STONEMAIL] <= 6) ));
     else if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
         textcolor( LIGHTBLUE );  // no end of effect warning
 
@@ -502,6 +546,13 @@ static void _print_stats_qv(int y)
     clear_to_end_of_line();
 }
 
+struct status_light
+{
+    status_light(int c, const char* t) : color(c), text(t) {}
+    int color;
+    const char* text;
+};
+
 // The colour scheme for these flags is currently:
 //
 // - yellow, "orange", red      for bad conditions
@@ -510,270 +561,247 @@ static void _print_stats_qv(int y)
 // - blue, light blue           for good enchantments
 // - magenta, light magenta     for "better" enchantments (deflect, fly)
 //
-// Prints burden, hunger
-// Max length: "Encumbered Near Starving (NNN:NNN)" = 34
-static void _print_stats_line1(int y)
+// Prints burden, hunger,
+// pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
+//   conf. touch, bargain, sage
+// confused, beheld, fire, poison, disease, rot, held, glow,
+//  swift, fast, slow, breath
+//  
+// Note the usage of bad_ench_colour() correspond to levels that
+// can be found in player.cc, ie those that the player can tell by
+// using the '@' command.  Things like confusion and sticky flame
+// hide their amounts and are thus always the same colour (so
+// we're not really exposing any new information). --bwr
+static void _get_status_lights(std::vector<status_light>& out)
 {
-    cgotoxy(1, y, GOTO_STAT);
-    clear_to_end_of_line();
-    cgotoxy(1, y, GOTO_STAT);
+#if DEBUG_DIAGNOSTICS
+    {
+        static char static_pos_buf[80];
+        snprintf(static_pos_buf, sizeof(static_pos_buf),
+                 "%2d,%2d", you.x_pos, you.y_pos );
+        out.push_back(status_light(LIGHTGREY, static_pos_buf));
+
+        static char static_hunger_buf[80];
+        snprintf(static_hunger_buf, sizeof(static_hunger_buf),
+                 "(%d:%d)", you.hunger - you.old_hunger, you.hunger );
+        out.push_back(status_light(LIGHTGREY, static_hunger_buf));
+    }
+#endif
 
     switch (you.burden_state)
     {
     case BS_OVERLOADED:
-        textcolor( RED );
-        cprintf( "Overloaded " );
+        out.push_back(status_light(RED, "Overloaded"));
         break;
 
     case BS_ENCUMBERED:
-        textcolor( LIGHTRED );
-        cprintf( "Encumbered " );
+        out.push_back(status_light(LIGHTRED, "Encumbered"));
         break;
 
     case BS_UNENCUMBERED:
         break;
     }
 
-    switch (you.hunger_state)
     {
-    case HS_ENGORGED:
-        textcolor( LIGHTGREEN );
-        break;
-
-    case HS_VERY_FULL:
-    case HS_FULL:
-    case HS_SATIATED:
-        textcolor( GREEN );
-        break;
-
-    case HS_HUNGRY:
-    case HS_VERY_HUNGRY:
-    case HS_NEAR_STARVING:
-        textcolor( YELLOW );
-        break;
-
-    case HS_STARVING:
-        textcolor( RED );
-        break;
+        int hunger_color;
+        const char* hunger_text = _describe_hunger(hunger_color);
+        if (hunger_text)
+            out.push_back(status_light(hunger_color, hunger_text));
     }
-    const std::string state = _describe_hunger();
-    if (!state.empty())
-        cprintf(state.c_str());
-
-    textcolor( LIGHTGREY );
-
-#if DEBUG_DIAGNOSTICS
-    // debug mode hunger-o-meter
-    cprintf( " (%d:%d)", you.hunger - you.old_hunger, you.hunger );
-#endif
-}
-
-// For colors, see comment at _print_stats_line1
-// Prints:  pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
-//   conf. touch, bargain, sage
-static void _print_stats_line2(int y)
-{
-    cgotoxy(1, y, GOTO_STAT);
-    clear_to_end_of_line();
-    cgotoxy(1, y, GOTO_STAT);
-    // Max length of this line = 8 * 5 - 1 = 39
 
     if (you.duration[DUR_PRAYER])
     {
-        textcolor( WHITE );  // no end of effect warning
-        cprintf( "Pray " );
+        out.push_back(status_light(WHITE, "Pray"));  // no end of effect warning
     }
 
     if (you.duration[DUR_REPEL_UNDEAD])
     {
-        _dur_colour( LIGHTGREY, (you.duration[DUR_REPEL_UNDEAD] <= 4) );
-        cprintf( "Holy " );
+        int color = _dur_colour( LIGHTGREY, (you.duration[DUR_REPEL_UNDEAD] <= 4) );
+        out.push_back(status_light(color, "Holy"));
     }
 
     if (you.duration[DUR_TELEPORT])
     {
-        textcolor( LIGHTBLUE );
-        cprintf( "Tele " );
+        out.push_back(status_light(LIGHTBLUE, "Tele"));
     }
 
     if (you.duration[DUR_DEFLECT_MISSILES])
     {
-        _dur_colour( MAGENTA, (you.duration[DUR_DEFLECT_MISSILES] <= 6) );
-        cprintf( "DMsl " );
+        int color = _dur_colour( MAGENTA, (you.duration[DUR_DEFLECT_MISSILES] <= 6) );
+        out.push_back(status_light(color, "DMsl"));
     }
     else if (you.duration[DUR_REPEL_MISSILES])
     {
-        _dur_colour( BLUE, (you.duration[DUR_REPEL_MISSILES] <= 6) );
-        cprintf( "RMsl " );
+        int color = _dur_colour( BLUE, (you.duration[DUR_REPEL_MISSILES] <= 6) );
+        out.push_back(status_light(color, "RMsl"));
     }
 
     if (you.duration[DUR_REGENERATION])
     {
-        _dur_colour( BLUE, (you.duration[DUR_REGENERATION] <= 6) );
-        cprintf( "Regen " );
+        int color = _dur_colour( BLUE, (you.duration[DUR_REGENERATION] <= 6) );
+        out.push_back(status_light(color, "Regen"));
     }
 
     if (you.duration[DUR_INSULATION])
     {
-        _dur_colour( BLUE, (you.duration[DUR_INSULATION] <= 6) );
-        cprintf( "Ins " );
+        int color = _dur_colour( BLUE, (you.duration[DUR_INSULATION] <= 6) );
+        out.push_back(status_light(color, "Ins"));
     }
 
     if (player_is_airborne())
     {
         const bool perm = you.permanent_flight();
-
         if (wearing_amulet( AMU_CONTROLLED_FLIGHT ))
         {
-            _dur_colour( you.light_flight()? BLUE : MAGENTA,
+            int color = _dur_colour( you.light_flight()? BLUE : MAGENTA,
                         (you.duration[DUR_LEVITATION] <= 10 && !perm) );
-            cprintf( "Fly " );
+            out.push_back(status_light(color, "Fly"));
         }
         else
         {
-            _dur_colour(BLUE, (you.duration[DUR_LEVITATION] <= 10 && !perm));
-            cprintf( "Lev " );
+            int color = _dur_colour(BLUE, (you.duration[DUR_LEVITATION] <= 10 && !perm));
+            out.push_back(status_light(color, "Lev"));
         }
     }
 
     if (you.duration[DUR_INVIS])
     {
-        _dur_colour( BLUE, (you.duration[DUR_INVIS] <= 6) );
-        cprintf( "Invis " );
+        int color = _dur_colour( BLUE, (you.duration[DUR_INVIS] <= 6) );
+        out.push_back(status_light(color, "Invis"));
     }
 
     if (you.duration[DUR_SILENCE])
     {
-        _dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 5) );
-        cprintf( "Sil " );
+        int color = _dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 5) );
+        out.push_back(status_light(color, "Sil"));
     }
 
-    if (you.duration[DUR_CONFUSING_TOUCH]
-        && wherex() < get_number_of_cols() - 6)
+    if (you.duration[DUR_CONFUSING_TOUCH])
     {
-        _dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 20) );
-        cprintf("Touch ");
+        int color = _dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 20) );
+        out.push_back(status_light(color, "Touch"));
     }
 
-    if (you.duration[DUR_BARGAIN] && wherex() < get_number_of_cols() - 5)
+    if (you.duration[DUR_BARGAIN])
     {
-        _dur_colour( BLUE, (you.duration[DUR_BARGAIN] <= 15) );
-        cprintf( "Brgn " );
+        int color = _dur_colour( BLUE, (you.duration[DUR_BARGAIN] <= 15) );
+        out.push_back(status_light(color, "Brgn"));
     }
 
-    if (you.duration[DUR_SAGE] && wherex() < get_number_of_cols() - 5)
+    if (you.duration[DUR_SAGE])
     {
-        _dur_colour( BLUE, (you.duration[DUR_SAGE] <= 15) );
-        cprintf( "Sage " );
+        int color = _dur_colour( BLUE, (you.duration[DUR_SAGE] <= 15) );
+        out.push_back(status_light(color, "Sage"));
     }
 
-    if (you.duration[DUR_SURE_BLADE] && wherex() < get_number_of_cols() - 5)
+    if (you.duration[DUR_SURE_BLADE])
     {
-        textcolor( BLUE );
-        cprintf( "Blade " );
+        out.push_back(status_light(BLUE, "Blade"));
     }
-    textcolor( LIGHTGREY );
-}
 
-// For colors, see comment at _print_stats_line1
-// Prints confused, beheld, fire, poison, disease, rot, held, glow,
-//  swift, fast, slow, breath
-static void _print_stats_line3(int y)
-{
-    cgotoxy(1, y, GOTO_STAT);
-    clear_to_end_of_line();
-    cgotoxy(1, y, GOTO_STAT);
-    // Max length of this line = 7 * 5 + 3 - 1 = 37
-
-    // Note the usage of bad_ench_colour() correspond to levels that
-    // can be found in player.cc, ie those that the player can tell by
-    // using the '@' command.  Things like confusion and sticky flame
-    // hide their amounts and are thus always the same colour (so
-    // we're not really exposing any new information). --bwr
     if (you.duration[DUR_CONF])
     {
-        textcolor( RED );   // no different levels
-        cprintf( "Conf " );
+        out.push_back(status_light(RED, "Conf"));
     }
 
     if (you.duration[DUR_BEHELD])
     {
-        textcolor( RED );   // no different levels
-        cprintf( "Bhld " );
+        out.push_back(status_light(RED, "Bhld"));
     }
 
     if (you.duration[DUR_LIQUID_FLAMES])
     {
-        textcolor( RED );   // no different levels
-        cprintf( "Fire " );
+        out.push_back(status_light(RED, "Fire"));
     }
 
     if (you.duration[DUR_POISONING])
     {
-        // We skip marking "quite" poisoned and instead mark the
-        // levels where the rules for dealing poison damage change
-        // significantly.  See acr.cc for that code. -- bwr
-        textcolor( _bad_ench_colour( you.duration[DUR_POISONING], 5, 10 ) );
-        cprintf( "Pois " );
+        int color = _bad_ench_colour( you.duration[DUR_POISONING], 5, 10 );
+        out.push_back(status_light(color, "Pois"));
     }
 
     if (you.disease)
     {
-        textcolor( _bad_ench_colour( you.disease, 40, 120 ) );
-        cprintf( "Sick " );
+        int color = _bad_ench_colour( you.disease, 40, 120 );
+        out.push_back(status_light(color, "Sick"));
     }
 
     if (you.rotting)
     {
-        textcolor( _bad_ench_colour( you.rotting, 4, 8 ) );
-        cprintf( "Rot " );
+        int color = _bad_ench_colour( you.rotting, 4, 8 );
+        out.push_back(status_light(color, "Rot"));
     }
 
     if (you.attribute[ATTR_HELD])
     {
-        textcolor( RED );
-        cprintf( "Held " );
+        out.push_back(status_light(RED, "Held"));
     }
 
     if (you.backlit())
     {
-        textcolor(you.magic_contamination > 5 ?
-                     _bad_ench_colour( you.magic_contamination, 15, 25 )
-                     : LIGHTBLUE );
-        cprintf( "Glow " );
+        int color = you.magic_contamination > 5
+            ? _bad_ench_colour( you.magic_contamination, 15, 25 )
+            : LIGHTBLUE;
+        out.push_back(status_light(color, "Glow"));
     }
 
     if (you.duration[DUR_SWIFTNESS])
     {
-        _dur_colour( BLUE, (you.duration[DUR_SWIFTNESS] <= 6) );
-        cprintf( "Swift " );
+        int color = _dur_colour( BLUE, (you.duration[DUR_SWIFTNESS] <= 6) );
+        out.push_back(status_light(color, "Swift"));
     }
 
     if (you.duration[DUR_SLOW] && !you.duration[DUR_HASTE])
     {
-        textcolor( RED );  // no end of effect warning
-        cprintf( "Slow" );
+        out.push_back(status_light(RED, "Slow"));
     }
     else if (you.duration[DUR_HASTE] && !you.duration[DUR_SLOW])
     {
-        _dur_colour( BLUE, (you.duration[DUR_HASTE] <= 6) );
-        cprintf( "Fast" );
+        int color = _dur_colour( BLUE, (you.duration[DUR_HASTE] <= 6) );
+        out.push_back(status_light(color, "Fast"));
     }
 
-    // Perhaps this should be reversed to show when it can be used?
-    // In that case, it should be probably be GREEN, and we'd have
-    // to check to see if the player does have a breath weapon. -- bwr
-    if (you.duration[DUR_BREATH_WEAPON] && wherex() < get_number_of_cols() - 5)
+    if (you.duration[DUR_BREATH_WEAPON])
     {
-        textcolor( YELLOW );  // no warning
-        cprintf( "BWpn " );
+        out.push_back(status_light(YELLOW, "BWpn"));
     }
 
-    textcolor( LIGHTGREY );
+}
 
-#if DEBUG_DIAGNOSTICS
-    cprintf( "%2d,%2d", you.x_pos, you.y_pos );
-#endif
+static void _print_status_lights(int y)
+{
+    you.redraw_status_flags = 0;
+
+    std::vector<status_light> lights;
+    size_t line_cur = y;
+    const size_t line_end = crawl_view.hudsz.y+1;
+    size_t i_light = 0;
+
+    _get_status_lights(lights);
+    cgotoxy(1, line_cur, GOTO_STAT);
+    ASSERT(wherex()-crawl_view.hudp.x == 0);
+    while (true)
+    {
+        const int end_x = (wherex() - crawl_view.hudp.x) +
+            (i_light < lights.size() ? strlen(lights[i_light].text) : 10000);
+
+        if (end_x <= crawl_view.hudsz.x)
+        {
+            textcolor(lights[i_light].color);
+            cprintf("%s", lights[i_light].text);
+            if (end_x < crawl_view.hudsz.x)
+                cprintf(" ");
+            ++ i_light;
+        }
+        else
+        {
+            clear_to_end_of_line();
+            ++ line_cur;
+            // Careful not to trip the )#(*$ cgotoxy ASSERT
+            if (line_cur == line_end) break;
+            cgotoxy(1, line_cur, GOTO_STAT);
+        }
+    }
 }
 
 void print_stats(void)
@@ -789,13 +817,8 @@ void print_stats(void)
     if (you.redraw_dexterity)
         you.redraw_evasion = true;
 
-
-    // Health: 910/932 (999)
-    // Magic: 7/7
-    // Str: 13        AC:  3
-    // Int: 15        Sh:  -
-    // Dex: 14        Ev: 12
-    // Level 1 of the Dungeon
+    if (HP_Bar.wants_redraw()) you.redraw_hit_points = true;
+    if (MP_Bar.wants_redraw()) you.redraw_magic_points = true;
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp ( 1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp ( 1, 4); }
@@ -834,7 +857,7 @@ void print_stats(void)
         // of them actually mean the user changed their weapon.  Calling
         // on_weapon_changed redundantly is normally OK; but if the user
         // is wielding a bow and throwing javelins, the on_weapon_changed
-        // will switch them back to arrows, which will be annoying.
+        // will switch them back to arrows, which is annoying.
         // Perhaps there should be another bool besides wield_change
         // that's set in fewer places?
         // Also, it's a little bogus to change simulation state in
@@ -847,24 +870,17 @@ void print_stats(void)
     {
         _print_stats_qv(11);
     }
-
     you.wield_change = false;
     you.redraw_quiver = false;
 
-    if (you.redraw_status_flags & REDRAW_LINE_1_MASK)
-        _print_stats_line1(12);
+    if (you.redraw_status_flags)
+    {
+        you.redraw_status_flags = 0;
+        _print_status_lights(12);
+    }
 
-    if (you.redraw_status_flags & REDRAW_LINE_2_MASK)
-        _print_stats_line2(13);
-
-    if (you.redraw_status_flags & REDRAW_LINE_3_MASK)
-        _print_stats_line3(14);
-
-    you.redraw_status_flags = 0;
-
-    // get curses to redraw screen
     update_screen();
-}                               // end print_stats()
+}
 
 // For some odd reason, only redrawn on level change.
 void print_stats_level(const std::string& description)

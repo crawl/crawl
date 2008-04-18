@@ -613,6 +613,7 @@ void game_options::reset_options()
     view_max_width = 33;
     view_max_height = 21;
     mlist_min_height = 5;
+    msg_max_height = 10;
     mlist_allow_alternate_layout = false;
     classic_hud = false;
 
@@ -1576,13 +1577,13 @@ void game_options::set_option_fragment(const std::string &s)
 
 void game_options::read_option_line(const std::string &str, bool runscript)
 {
-#define BOOL_OPTION_NAMED(_opt_str, _opt_var)                     \
+#define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
     if (key == _opt_str) do {                               \
         this->_opt_var = _read_bool(field, this->_opt_var); \
     } while (false)
 #define BOOL_OPTION(_opt) BOOL_OPTION_NAMED(#_opt, _opt)
 
-#define COLOUR_OPTION_NAMED(_opt_str, _opt_var)                               \
+#define COLOUR_OPTION_NAMED(_opt_str, _opt_var)                         \
     if (key == _opt_str) do {                                           \
         const int col = str_to_colour( field );                         \
         if (col != -1) {                                                \
@@ -1596,11 +1597,30 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     } while (false)
 #define COLOUR_OPTION(_opt) COLOUR_OPTION_NAMED(#_opt, _opt)
 
-#define CURSES_OPTION_NAMED(_opt_str, _opt_var)           \
+#define CURSES_OPTION_NAMED(_opt_str, _opt_var)     \
     if (key == _opt_str) do {                       \
         this->_opt_var = curses_attribute(field);   \
     } while (false)
 #define CURSES_OPTION(_opt) CURSES_OPTION_NAMED(#_opt, _opt)
+
+#define INT_OPTION_NAMED(_opt_str, _opt_var, _min_val, _max_val)        \
+    if (key == _opt_str) do {                                           \
+        const int min_val = (_min_val);                                 \
+        const int max_val = (_max_val);                                 \
+        int val = atoi(field.c_str());                                  \
+        if (val < min_val) {                                            \
+            crawl_state.add_startup_error(                              \
+                make_stringf("Bad %s: %d < %d", _opt_str, val, min_val)); \
+            val = min_val;                                              \
+        } else if (val > max_val) {                                     \
+            crawl_state.add_startup_error(                              \
+                make_stringf("Bad %s: %d > %d", _opt_str, val, max_val)); \
+            val = max_val;                                              \
+        }                                                               \
+        this->_opt_var = val;                                           \
+    } while (false)
+#define INT_OPTION(_opt, _min_val, _max_val) \
+    INT_OPTION_NAMED(#_opt, _opt, _min_val, _max_val)
 
     std::string key    = "";
     std::string subkey = "";
@@ -2043,12 +2063,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (view_max_height > GYM + 1)
             view_max_height = GYM + 1;
     }
-    else if (key == "mlist_min_height")
-    {
-        mlist_min_height = atoi(field.c_str());
-        if (mlist_min_height < 0)
-            view_max_height = 0;
-    }
+    else INT_OPTION(mlist_min_height, 0, INT_MAX);
+    else INT_OPTION(msg_max_height, 6, INT_MAX);
     else BOOL_OPTION(mlist_allow_alternate_layout);
     else BOOL_OPTION(classic_hud);
     else BOOL_OPTION(view_lock_x);

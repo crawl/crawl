@@ -4919,17 +4919,18 @@ void crawl_view_buffer::size(const coord_def &sz)
 // define VIEW_MAX_HEIGHT use Options.view_max_height
 // define VIEW_MIN_WIDTH defined elsewhere
 // define VIEW_MAX_WIDTH use Options.view_max_width
-#define HUD_WIDTH  39
 #ifdef USE_TILE
 // Tile mode doesn't need to compress the HUD, and uses this area for
 // other things.  I don't want to risk breaking tiles, so leaving alone --pld
+#  define HUD_WIDTH  39
 #  define HUD_HEIGHT 17
 #else
-#  define HUD_HEIGHT 14
+#  define HUD_WIDTH  42
+#  define HUD_HEIGHT 13
 #endif
 #define MSG_MIN_HEIGHT 6
-#define MSG_MAX_HEIGHT 10
-// #define MLIST_MIN_HEIGHT use Options.mlist_min_height
+#define MSG_MAX_HEIGHT Options.msg_max_height
+#define MLIST_MIN_HEIGHT Options.mlist_min_height
 #define MLIST_MIN_WIDTH 25  /* non-inline layout only */
 #define MLIST_MAX_WIDTH 42
 #define MLIST_GUTTER 1
@@ -4979,7 +4980,7 @@ class _layout
     const coord_def termp, termsz;
     coord_def viewp, viewsz;
     coord_def hudp;
-    const coord_def hudsz;
+    coord_def hudsz;
     coord_def msgp, msgsz;
     coord_def mlistp, mlistsz;
     int hud_gutter;
@@ -5025,8 +5026,8 @@ class _inline_layout : public _layout
         }
         else
         {
-            if (mlistsz.y < Options.mlist_min_height)
-                _increment(mlistsz.y, leftover_rightcol_y(), Options.mlist_min_height);
+            if (mlistsz.y < MLIST_MIN_HEIGHT)
+                _increment(mlistsz.y, leftover_rightcol_y(), MLIST_MIN_HEIGHT);
             _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
             _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
         }

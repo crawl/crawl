@@ -2557,10 +2557,19 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
     return is_safe;
 }
 
-// Return all monsters in LOS that the player is able to see
+// Return all monsters in range (default: LOS) that the player is able to see
 // and recognize as being a monster.
-void get_playervisible_monsters(std::vector<monsters*> &mons, bool want_move,
-                                bool just_check, bool dangerous, int range)
+// 
+// want_move       (??) Somehow affects what monsters are considered dangerous
+// just_check      Return zero or one monsters only
+// dangerous_only  Return only "dangerous" monsters
+// range           search radius (defaults: LOS)
+// 
+void get_playervisible_monsters(std::vector<monsters*> &mons,
+                                bool want_move,
+                                bool just_check,
+                                bool dangerous_only,
+                                int range)
 {
     if (range == -1)
         range = LOS_RADIUS;
@@ -2572,30 +2581,30 @@ void get_playervisible_monsters(std::vector<monsters*> &mons, bool want_move,
 
     // monster check
     for ( int y = ystart; y < yend; ++y )
-        for ( int x = xstart; x < xend; ++x )
+    for ( int x = xstart; x < xend; ++x )
+    {
+        const unsigned short targ_monst = env.mgrid[x][y];
+        if ( targ_monst != NON_MONSTER )
         {
-            const unsigned short targ_monst = env.mgrid[x][y];
-            if ( targ_monst != NON_MONSTER )
+            if ( see_grid(x,y) )
             {
-                if ( see_grid(x,y) )
+                monsters *mon = &env.mons[targ_monst];
+                if ( player_monster_visible(mon)
+                    && !mons_is_submerged(mon)
+                    && (!mons_is_mimic(mon->type)
+                        || mons_is_known_mimic(mon))
+                    && (!dangerous_only || !mons_is_safe(mon, want_move)))
                 {
-                    monsters *mon = &env.mons[targ_monst];
-                    if ( player_monster_visible(mon)
-                        && !mons_is_submerged(mon)
-                        && (!mons_is_mimic(mon->type)
-                            || mons_is_known_mimic(mon))
-                        && (!dangerous || !mons_is_safe(mon, want_move)))
+                    mons.push_back(mon);
+                    if (just_check)
                     {
-                        mons.push_back(mon);
-                        if (just_check)
-                        {
-                            // one monster found, that's enough
-                            return;
-                        }
+                        // one monster found, that's enough
+                        return;
                     }
                 }
             }
         }
+    }
 }
 
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
