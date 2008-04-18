@@ -6425,9 +6425,10 @@ bool player::can_see(const actor *target) const
     return (mons_near(mon) && target->visible_to(this));
 }
 
-bool player::backlit() const
+bool player::backlit(bool check_halo) const
 {
-    return (magic_contamination >= 5 || duration[DUR_BACKLIGHT]);
+    return (magic_contamination >= 5 || duration[DUR_BACKLIGHT]
+        || ((check_halo) ? halo_radius() : false));
 }
 
 void player::mutate()

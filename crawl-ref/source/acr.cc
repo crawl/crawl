@@ -2855,12 +2855,14 @@ static void _decrement_durations()
         Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
-    // invisible players inside a halo don't lose backlight
-    if (you.duration[DUR_BACKLIGHT] > 0
-        && (!halo_radius() || !you.duration[DUR_INVIS])
-        && !--you.duration[DUR_BACKLIGHT] && !you.backlit())
+    if (you.duration[DUR_BACKLIGHT] > 0 && !--you.duration[DUR_BACKLIGHT]
+        && !you.backlit())
     {
-        mpr("You are no longer glowing.", MSGCH_DURATION);
+        // An invisible player inside a halo doesn't lose backlight.
+        if (you.duration[DUR_INVIS] && halo_radius())
+            you.duration[DUR_BACKLIGHT] = 1;
+        else
+            mpr("You are no longer glowing.", MSGCH_DURATION);
     }
 
     // Leak piety from the piety pool into actual piety.

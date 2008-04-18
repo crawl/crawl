@@ -737,7 +737,8 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(RED, "Held"));
     }
 
-    if (you.backlit())
+    // Don't display "Glow" for a visible player inside a halo.
+    if (you.backlit(you.duration[DUR_INVIS]))
     {
         int color = you.magic_contamination > 5
             ? _bad_ench_colour( you.magic_contamination, 15, 25 )

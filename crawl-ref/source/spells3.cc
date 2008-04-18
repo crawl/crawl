@@ -1061,7 +1061,7 @@ void manage_halo()
 
     int monster = -1;
 
-    // illuminate an invisible player inside the halo
+    // Backlight an invisible player inside a halo.
     if (you.duration[DUR_INVIS] && !you.duration[DUR_BACKLIGHT])
         you.duration[DUR_BACKLIGHT] = 1;
 
@@ -1076,7 +1076,7 @@ void manage_halo()
             {
                 monster = mgrd[posx][posy];
 
-                // illuminate all invisible monsters inside the halo
+                // Backlight invisible monsters inside a halo.
                 if (monster != NON_MONSTER)
                 {
                     monsters *mon = &menv[monster];
