@@ -5820,6 +5820,17 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         }
     }
 
+    // friendlies shouldn't try to move onto the player's
+    // location, if they are aiming for some other target
+    if (mons_wont_attack(monster)
+        && monster->foe != MHITNOT
+        && monster->foe != MHITYOU
+        && targ_x == you.x_pos
+        && targ_y == you.y_pos)
+    {
+        return false;
+    }
+
     // wandering through a trap is OK if we're pretty healthy,
     // really stupid, or immune to the trap
     const int which_trap = trap_at_xy(targ_x,targ_y);

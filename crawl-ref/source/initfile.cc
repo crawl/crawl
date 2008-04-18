@@ -1533,6 +1533,11 @@ void game_options::set_menu_sort(std::string field)
         return;
 
     menu_sort_condition cond(field);
+
+    // Overrides all previous settings.
+    if (cond.mtype == MT_ANY)
+        sort_menus.clear();
+
     // Override existing values, if necessary.
     for (unsigned int i = 0; i < sort_menus.size(); i++)
         if (sort_menus[i].mtype == cond.mtype)
