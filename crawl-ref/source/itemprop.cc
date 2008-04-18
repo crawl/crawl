@@ -1648,15 +1648,15 @@ bool is_blessed( const item_def &item )
     return (false);
 }                               // end is_blessed()
 
-bool is_blessable( const item_def &item )
+bool is_convertible( const item_def &item )
 {
     return (!is_artefact(item)
         && (item.base_type == OBJ_WEAPONS
             && (is_demonic(item)
                 || weapon_skill(item) == SK_LONG_BLADES)));
-}                               // end is_blessable()
+}                               // end is_convertible()
 
-bool normal2good( item_def &item, bool allow_blessed )
+bool convert2good( item_def &item, bool allow_blessed )
 {
     if (item.base_type != OBJ_WEAPONS)
         return (false);
@@ -1728,7 +1728,7 @@ bool normal2good( item_def &item, bool allow_blessed )
         item.flags &= ~ISFLAG_RACIAL_MASK;
 
     return (true);
-}                               // end normal2good()
+}                               // end convert2good()
 
 int weapon_str_weight( const item_def &wpn )
 {

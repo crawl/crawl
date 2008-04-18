@@ -911,7 +911,7 @@ static bool _tso_blessing_holy_wpn(monsters *mon)
 
     // Convert demonic weapons into non-demonic weapons.
     if (is_demonic(wpn))
-        normal2good(wpn, false);
+        convert2good(wpn, false);
 
     return true;
 }
@@ -4068,9 +4068,9 @@ static bool _bless_weapon( god_type god, int brand, int colour )
 
         if ( god == GOD_SHINING_ONE )
         {
-            normal2good(you.inv[wpn]);
+            convert2good(you.inv[wpn]);
 
-            if (is_blessable(you.inv[wpn]))
+            if (is_convertible(you.inv[wpn]))
             {
                 origin_acquired(you.inv[wpn], GOD_SHINING_ONE);
                 make_item_randart(you.inv[wpn]);
@@ -4172,7 +4172,7 @@ static void _altar_prayer()
 
         if (wpn != -1
             && (get_weapon_brand(you.inv[wpn]) != SPWPN_HOLY_WRATH
-                || is_blessable(you.inv[wpn])))
+                || is_convertible(you.inv[wpn])))
         {
             _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW);
         }
