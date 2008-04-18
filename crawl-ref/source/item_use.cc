@@ -1134,6 +1134,12 @@ bool takeoff_armour(int item)
         return false;
     }
 
+    if (you.duration[DUR_BERSERKER])
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return false;
+    }
+
     if (item_cursed( you.inv[item] ))
     {
         for (int loopy = EQ_CLOAK; loopy <= EQ_BODY_ARMOUR; loopy++)
@@ -3530,6 +3536,12 @@ bool _drink_fountain()
     if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You're floating high above the fountain.");
+        return false;
+    }
+
+    if (you.duration[DUR_BERSERKER])
+    {
+        canned_msg(MSG_TOO_BERSERK);
         return false;
     }
 

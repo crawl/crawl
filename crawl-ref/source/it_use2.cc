@@ -386,12 +386,18 @@ bool unwield_item(bool showMsgs)
     if ( unw == -1 )
         return (false);
 
+    if (you.duration[DUR_BERSERKER])
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return (false);
+    }
+
     if (!safe_to_remove_or_wear(you.inv[unw], true))
         return (false);
 
     you.equip[EQ_WEAPON] = -1;
     you.special_wield = SPWLD_NONE;
-    you.wield_change = true;
+    you.wield_change  = true;
     you.m_quiver->on_weapon_changed();
 
     item_def &item(you.inv[unw]);

@@ -1876,8 +1876,9 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         return false;
 
     // Vampires' hunger rate depends on their blood level.
-    if ((mutat == MUT_SLOW_METABOLISM || mutat == MUT_FAST_METABOLISM)
-        && you.species == SP_VAMPIRE)
+    if (you.species == SP_VAMPIRE
+        && (mutat == MUT_SLOW_METABOLISM || mutat == MUT_FAST_METABOLISM
+            || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
     {
         return false;
     }

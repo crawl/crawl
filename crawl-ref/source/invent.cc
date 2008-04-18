@@ -628,8 +628,8 @@ std::vector<SelItem> InvMenu::get_selitems() const
 bool InvMenu::process_key( int key )
 {
     if (items.size()
-            && type == MT_DROP
-            && (key == CONTROL('D') || key == '@'))
+        && type == MT_DROP
+        && (key == CONTROL('D') || key == '@'))
     {
         int newflag =
             is_set(MF_MULTISELECT)?
@@ -954,6 +954,7 @@ std::vector<SelItem> prompt_invent_items(
                     && (!pre_select || pre_select->empty())?
                         MF_SINGLESELECT | MF_EASY_EXIT | MF_ANYPRINTABLE :
                         MF_MULTISELECT | MF_ALLOW_FILTER;
+
             // The "view inventory listing" mode.
             int ch = invent_select(
                         prompt,
