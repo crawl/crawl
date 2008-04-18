@@ -292,7 +292,7 @@ void player_quiver::_get_fire_order(
 // Save/load
 // ----------------------------------------------------------------------
 
-static const short QUIVER_COOKIE = 0xb015;
+static const short QUIVER_COOKIE = static_cast<short>(0xb015);
 void player_quiver::save(writer& outf) const
 {
     marshallShort(outf, QUIVER_COOKIE);
