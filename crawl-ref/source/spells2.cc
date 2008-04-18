@@ -1525,8 +1525,19 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 
     }
 
-    create_monster( ibc, numsc, beha, you.x_pos, you.y_pos, MHITYOU,
-                    MONS_PROGRAM_BUG, false, false, false, true);
+    int monster = create_monster( ibc, numsc, beha,
+                                  you.x_pos, you.y_pos, MHITYOU,
+                                  MONS_PROGRAM_BUG, false, false,
+                                  false, true );
+    if (monster != -1)
+    {
+        if (ibc == MONS_DAEVA)
+        {
+            monsters *mon = &menv[monster];
+
+            mon->flags |= MF_ATT_CHANGE_ATTEMPT;
+        }
+    }
 }                               // end summon_ice_beast_etc()
 
 // Trog sends some fighting buddies for his followers (or enemies if
