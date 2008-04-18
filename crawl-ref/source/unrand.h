@@ -5,11 +5,11 @@
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
  *
- *  Change History (most recent first): 
+ *  Change History (most recent first):
  *               <3>     7 Aug 2001      MV             Added many new items
  *               <2>     5/09/99        JDJ             Cekugob no longer has fire and cold
- *                                                                      resistances. 
- *               <1>     -/--/--        LRH             Created 
+ *                                                                      resistances.
+ *               <1>     -/--/--        LRH             Created
  */
 #ifndef UNRAND_H
 #define UNRAND_H
@@ -69,7 +69,7 @@
    and no susceptibility here either.
    Range: 0 or 1.
 
-   res magic: This is cumulative, but no susceptibility. To be meaningful, 
+   res magic: This is cumulative, but no susceptibility. To be meaningful,
    should be set to about 20 - 60.
    Range: 0 to MAXINT probably, but about 100 is a realistic ceiling.
 
@@ -100,7 +100,7 @@
    +/- to-hit/to-dam: Obvious. Affects both melee and missile. Should be left
    at 0 for weapons, which get +s normally.
 
-   cursed: 0 or 1.  Sets the item's initial curse status.  Cursed items 
+   cursed: 0 or 1.  Sets the item's initial curse status.  Cursed items
    will tend to recurse themselves when rewielded.  Maybe this should be
    made to be a value that determines how often it will recurse? -- bwr
 
@@ -162,7 +162,7 @@
 
 
 /* 2 */
-{                               
+{
     "long sword \"Bloodbane\"", "blackened long sword",
         OBJ_WEAPONS, WPN_LONG_SWORD, +7, +8, DARKGREY,
     {
@@ -181,7 +181,7 @@
 ,
 
 /* 3 */
-{ 
+{
     "ring of Shadows", "black ring",
         OBJ_JEWELLERY, RING_INVISIBILITY, 0, 0, DARKGREY,
     {
@@ -190,7 +190,7 @@
         1, 0, 0, 0, 0, 0,       // see invis
         0, 0, 0, 0, 0,
         0, 0, 0, -3, 0,         // to hit
-        0, 10                   // stealth
+        0, 40                   // stealth
     }
     ,
         "",
@@ -201,8 +201,8 @@
 
 /* 4 */
 {
-    "long sword of Flaming Death", "smoking long sword",
-        OBJ_WEAPONS, WPN_LONG_SWORD, +6, +2, RED,
+    "scimitar of Flaming Death", "smoking scimitar",
+        OBJ_WEAPONS, WPN_SCIMITAR, +7, +5, RED,
     {
         SPWPN_FLAMING, 0, 0, 0, 0, 0,
         2, -1, 0, 1, 0, 20,     // res fire, cold, poison, magic
@@ -281,7 +281,7 @@
     "mace of Brilliance", "brightly glowing mace",
         OBJ_WEAPONS, WPN_MACE, +5, +5, WHITE,
     {
-        SPWPN_HOLY_WRATH, 3, 0, 0, 0, 0,        // AC
+        SPWPN_HOLY_WRATH, 5, 0, 0, 5, 0,        // AC, int
         0, 0, 0, 0, 1, 0,                       // life prot
         1, 0, 0, 0, 0, 0,                       // see invis
         0, 0, 0, 0, 0,
@@ -314,15 +314,12 @@
 }
 ,
 
-
-
-
 /* 10 */
 {
-    "buckler \"Bullseye\"", "round buckler",
-        OBJ_ARMOUR, ARM_BUCKLER, +10, 0, RED,
+    "shield \"Bullseye\"", "round shield",
+        OBJ_ARMOUR, ARM_SHIELD, +10, 0, RED,
     {
-        0, 0, -3, 0, 0, 0,      // EV
+        0, 0, -5, 0, 0, 0,      // EV
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
@@ -339,7 +336,7 @@
 /* 11 */
 {
     "crown of Dyrovepreva", "jewelled bronze crown",
-        OBJ_ARMOUR, ARM_HELMET, +3, 0, BROWN,
+        OBJ_ARMOUR, ARM_CAP, +3, 0, BROWN,
     {
         0, 0, 0, 0, 2, 0,       // int
         0, 0, 1, 0, 0, 0,       // res elec
@@ -417,7 +414,7 @@
 /* 15 */
 {
     "dagger of Chilly Death", "sapphire dagger",
-        OBJ_WEAPONS, WPN_DAGGER, +2, +6, LIGHTBLUE,
+        OBJ_WEAPONS, WPN_DAGGER, +5, +7, LIGHTBLUE,
     {
         SPWPN_FREEZING, 0, 0, 0, 0, 0,
         -1, 2, 0, 1, 0, 20,     // res fire, cold, poison, magic
@@ -493,7 +490,7 @@
 /* 19 */
 {
     "sling \"Punk\"", "blue sling",
-        OBJ_WEAPONS, WPN_SLING, +3, +4, LIGHTBLUE,
+        OBJ_WEAPONS, WPN_SLING, +9, +12, LIGHTBLUE,
     {
         SPWPN_FROST, 0, 0, 0, 0, 0,
         0, 1, 0, 0, 0, 0,               // res cold
@@ -530,7 +527,7 @@
 /* 21 */
 {
     "cloak of Flash", "vibrating cloak",
-        OBJ_ARMOUR, ARM_CLOAK, +2, 0, RED,
+        OBJ_ARMOUR, ARM_CLOAK, +3, 0, RED,
     {
         0, 0, 4, 0, 0, 0,       // EV
         0, 0, 0, 0, 0, 0,
@@ -550,7 +547,7 @@
     "giant club \"Skullcrusher\"", "brutal giant club",
         OBJ_WEAPONS, WPN_GIANT_CLUB, +0, +5, BROWN,
     {
-        SPWPN_VORPAL, 0, 0, 5, 0, 0,       // str
+        SPWPN_SPEED, 0, 0, 5, 0, 0,       // str
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
@@ -586,7 +583,7 @@
     "glaive of the Guard", "polished glaive",
         OBJ_WEAPONS, WPN_GLAIVE, +5, +8, LIGHTCYAN,
     {
-        SPWPN_PROTECTION, 0, 0, 0, 0, 0,
+        SPWPN_ELECTROCUTION, 5, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0,
         1, 0, 0, 0, 0, 1,       // see invis, go berserk
         0, 0, 0, 0, 0,
@@ -603,7 +600,7 @@
 /* 25 */
 {
     "sword of Jihad", "crystal sword",
-        OBJ_WEAPONS, WPN_LONG_SWORD, +4, +4, WHITE,
+        OBJ_WEAPONS, WPN_LONG_SWORD, +12, +10, WHITE,
     {
         SPWPN_HOLY_WRATH, 0, 3, 0, 0, 0,        // EV
         0, 0, 0, 0, 1, 20,                      // life prot, res magic
@@ -660,7 +657,7 @@
         OBJ_WEAPONS, WPN_CROSSBOW, +6, +9, LIGHTRED,
     {
         SPWPN_FLAME, 0, 0, 0, 0, 0,
-        2, -1, 0, 0, 0, 0,              // +2 fire, -1 cold
+        2, -1, 0, 0, 0, 40,              // +2 fire, -1 cold, res magic
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
@@ -679,7 +676,7 @@
     {
         0, 0, 0, 0, 0, 0,
         2, 0, 0, 0, 0, 0,       // res fire
-        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0
@@ -710,8 +707,8 @@
 ,
 /* 31 */
 {
-    "sword of Doom Knight", "adamantine great sword",
-        OBJ_WEAPONS, WPN_GREAT_SWORD, +4, +4, BLUE,
+    "sword of the Doom Knight", "adamantine great sword",
+        OBJ_WEAPONS, WPN_GREAT_SWORD, +13, +13, BLUE,
     {
         SPWPN_PAIN, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 50,      // res magic
@@ -836,7 +833,7 @@
 ,
 /* 38 */
 {
-    "Edison's patent armour", "weird-looking armour",
+    "Maxwell's patent armour", "weird-looking armour",
         OBJ_ARMOUR, ARM_PLATE_MAIL, +10, 0, LIGHTGREEN,
     {
         0, 0, 0, 0, 0, 0,
@@ -872,11 +869,11 @@
 ,
 /* 40 */
 {
-    "trident of the Octopus king", "mangy trident",
+    "trident of the Octopus King", "mangy trident",
         OBJ_WEAPONS, WPN_TRIDENT, +10, +4, CYAN,
     {
         SPWPN_VENOM, 0, 0, 0, 0, 0,
-        0, 0, 0, 1, 0, 50,              // res poison, res magic
+        0, 0, 1, 1, 0, 50,              // res poison, res magic
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
@@ -932,10 +929,10 @@
         OBJ_WEAPONS, WPN_QUARTERSTAFF, +3, +1, DARKGRAY,
     {
         SPWPN_PROTECTION, 0, 0, 0, 0, 0,
-        1, 1, 0, 0, 0, 60,      // res fire, cold, magic
+        2, 2, 0, 0, 0, 60,      // res fire, cold, magic
         0, 0, 0, 0, 0, 0,
         0, 1, 0, 0, 0,          // noise
-        0, 0, 0, 0, 0,
+        0, 2, 0, 0, 0,          // speed metabolism
         0, 0
     }
     ,
@@ -1003,7 +1000,7 @@
 /* 47 */
 {
     "plutonium sword", "glowing long sword",
-        OBJ_WEAPONS, WPN_LONG_SWORD, +5, +10, LIGHTGREEN,
+        OBJ_WEAPONS, WPN_LONG_SWORD, +12, +16, LIGHTGREEN,
     {
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0,
@@ -1020,8 +1017,8 @@
 ,
 /* 48 */
 {
-    "mace \"Undeadhunter\"", "steel mace",
-        OBJ_WEAPONS, WPN_MACE, +4, +6, LIGHTGRAY,
+    "great mace \"Undeadhunter\"", "great steel mace",
+        OBJ_WEAPONS, WPN_GREAT_MACE, +7, +7, LIGHTGRAY,
     {
         SPWPN_HOLY_WRATH, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 1, 0,       // life prot
@@ -1131,7 +1128,7 @@
 /* 54 */
 {
     "Wyrmbane", "scale-covered lance",
-        OBJ_WEAPONS, WPN_SPEAR, +4, +2, GREEN,
+        OBJ_WEAPONS, WPN_SPEAR, +9, +6, GREEN,
     {
         SPWPN_DRAGON_SLAYING, 5, 0, 0, 0, 0, // AC
         1, 0, 0, 1, 0, 0,     // res fire, poison
@@ -1149,7 +1146,7 @@
 /* 55 */
 {
     "Spriggan's Knife", "dainty little knife",
-        OBJ_WEAPONS, WPN_KNIFE, +1, +10, LIGHTCYAN,
+        OBJ_WEAPONS, WPN_KNIFE, +4, +10, LIGHTCYAN,
     {
         0, 0, 4, 0, 0, 4,  // +EV, +Dex
         0, 0, 0, 0, 0, 20, // +MR
@@ -1186,7 +1183,7 @@
 
 /* 57 */
 {
-    "Brooch of Shielding", "shield-shaped amulet",
+    "brooch of Shielding", "shield-shaped amulet",
         OBJ_JEWELLERY, AMU_WARDING, 0, 0, LIGHTBLUE,
     {
         0, 4, 4, 0, 0, 0, // +AC, EV
@@ -1206,7 +1203,7 @@
 /* 58 */
 {
     "whip \"Serpent-Scourge\"", "forked whip",
-        OBJ_WEAPONS, WPN_WHIP, +5, +7, DARKGREY,
+        OBJ_WEAPONS, WPN_WHIP, +5, +10, DARKGREY,
     {
         SPWPN_VENOM, 0, 0, 0, 0, 0,
         0, 0, 0, 1, 0, 0, // rPois
