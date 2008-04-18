@@ -3660,7 +3660,15 @@ void display_char_status()
         mpr( "You are alive." );
 
     if (you.haloed())
-        mpr( "You are illuminated by a halo." );
+    {
+        int halo_size = halo_radius();
+        if (halo_size > 6)
+            mpr( "You are illuminated by a large halo." );
+        else if (halo_size > 3)
+            mpr( "You are illuminated by a medium halo." );
+        else
+            mpr( "You are illuminated by a small halo." );
+    }
 
     if (you.species == SP_VAMPIRE)
     {
