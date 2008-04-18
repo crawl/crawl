@@ -3706,10 +3706,15 @@ bool monsters::asleep() const
     return (mons_is_sleeping(this));
 }
 
-bool monsters::backlit(bool check_halo) const
+bool monsters::backlit(bool check_haloed) const
 {
     return (has_ench(ENCH_BACKLIGHT)
-        || ((check_halo) ? inside_halo(x, y) : false));
+        || ((check_haloed) ? haloed() : false));
+}
+
+bool monsters::haloed() const
+{
+    return (inside_halo(x, y));
 }
 
 bool monsters::caught() const

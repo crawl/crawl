@@ -3659,6 +3659,9 @@ void display_char_status()
     else
         mpr( "You are alive." );
 
+    if (you.haloed())
+        mpr( "You are illuminated by a halo." );
+
     if (you.species == SP_VAMPIRE)
     {
         std::string msg = "At your current hunger state you ";
@@ -6425,10 +6428,15 @@ bool player::can_see(const actor *target) const
     return (mons_near(mon) && target->visible_to(this));
 }
 
-bool player::backlit(bool check_halo) const
+bool player::backlit(bool check_haloed) const
 {
     return (magic_contamination >= 5 || duration[DUR_BACKLIGHT]
-        || ((check_halo) ? halo_radius() : false));
+        || ((check_haloed) ? haloed() : false));
+}
+
+bool player::haloed() const
+{
+    return (halo_radius());
 }
 
 void player::mutate()

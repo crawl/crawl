@@ -480,7 +480,7 @@ static void _inc_penance(god_type god, int val)
         // nor does TSO's halo or divine shield
         else if (god == GOD_SHINING_ONE)
         {
-            if (halo_radius())
+            if (you.haloed())
                 mpr("Your divine halo fades away.");
 
             if (you.duration[DUR_DIVINE_SHIELD])
@@ -3901,7 +3901,7 @@ void excommunication(god_type new_god)
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
 
-    const bool old_halo = halo_radius();
+    const bool was_haloed = you.haloed();
 
     god_acting gdact(old_god, true);
 
@@ -4000,7 +4000,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_SHINING_ONE:
-        if (old_halo)
+        if (was_haloed)
             mpr("Your divine halo fades away.");
 
         if (you.duration[DUR_DIVINE_SHIELD])

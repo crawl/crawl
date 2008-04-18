@@ -200,7 +200,8 @@ public:
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
     virtual bool asleep() const { return (false); }
-    virtual bool backlit(bool check_halo = true) const = 0;
+    virtual bool backlit(bool check_haloed = true) const = 0;
+    virtual bool haloed() const = 0;
 
     virtual void god_conduct(conduct_type thing_done, int level) { }
 
@@ -882,7 +883,8 @@ public:
     bool paralysed() const;
     bool confused() const;
     bool caught() const;
-    bool backlit(bool check_halo = true) const;
+    bool backlit(bool check_haloed = true) const;
+    bool haloed() const;
 
     bool asleep() const;
     void put_to_sleep(int power = 0);
@@ -1184,7 +1186,8 @@ public:
     bool confused() const;
     bool caught() const;
     bool asleep() const;
-    bool backlit(bool check_halo = true) const;
+    bool backlit(bool check_haloed = true) const;
+    bool haloed() const;
 
     int holy_aura() const;
 

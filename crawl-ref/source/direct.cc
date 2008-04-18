@@ -2107,6 +2107,10 @@ static void describe_monster(const monsters *mon)
         mprf(MSGCH_EXAMINE, "%s is indifferent to you.",
              mon->pronoun(PRONOUN_CAP).c_str());
 
+    if (mon->haloed())
+        mprf(MSGCH_EXAMINE, "%s is illuminated by a halo.",
+             mon->pronoun(PRONOUN_CAP).c_str());
+
     std::string desc = "";
     std::string last_desc = "";
     std::string tmp = "";
