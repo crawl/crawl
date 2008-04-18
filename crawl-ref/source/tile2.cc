@@ -59,10 +59,10 @@ extern TileRegionClass *region_item2;
 //Internal
 static img_type DollCacheImg;
 
-static void _tile_draw_grid(int kind, int xx, int yy);
+static void _tile_draw_grid(int xx, int yy);
 static void _clear_tcache();
 static void _init_tcache();
-static void _register_tile_mask(int tile, int region, int *cp,
+static void _register_tile_mask(int tile, int *cp,
                                 char *ms, bool smalltile = false);
 static void _tcache_compose_normal(int ix, int *fg, int *bg);
 
@@ -134,18 +134,13 @@ int get_floor_special_tile_idx()
 }
 
 /******** Cache buffer for transparency operation *****/
-static int tcache_kind;
-
-#define TCACHE_KIND_NORMAL 1
-#define TCACHE0_NORMAL 0
-
 static int last_cursor = -1;
 
 //Internal cache Image buffer
-static img_type *tcache_image;
+static img_type tcache_image;
 
 //Start of a pointer string
-static int *tcache_head;
+static int tcache_head;
 
 typedef struct tile_cache
 {
@@ -160,23 +155,21 @@ static int tile_xmax;
 static int tile_ymax;
 
 static int max_tcache;
-static int tc_hash;
-// [kind * tc_hash][max_tcache]
-static tile_cache **tcache;
-// [kind][x*y]
-static int **screen_tcach_idx;
+// [max_tcache]
+static tile_cache *tcache;
+// [x*y]
+static int *screen_tcache_idx;
 
-const int tcache_wx_normal[TCACHE_KIND_NORMAL] = {TILE_X};
-const int tcache_wy_normal[TCACHE_KIND_NORMAL] = {TILE_Y};
-const int tcache_ox_normal[TCACHE_KIND_NORMAL] = {0};
-const int tcache_oy_normal[TCACHE_KIND_NORMAL] = {0};
-const int tcache_nlayer_normal[TCACHE_KIND_NORMAL] = {1};
+const int tcache_wx_normal = TILE_X;
+const int tcache_wy_normal = TILE_Y;
+const int tcache_ox_normal = 0;
+const int tcache_oy_normal = 0;
+const int tcache_nlayer_normal = 1;
 
-#define TREGION_0_NORMAL 0
-const int region_sx_normal[1] = {0};
-const int region_sy_normal[1] = {0};
-const int region_wx_normal[1] = {TILE_X};
-const int region_wy_normal[1] = {TILE_Y};
+const int region_sx_normal = 0;
+const int region_sy_normal = 0;
+const int region_wx_normal = TILE_X;
+const int region_wy_normal = TILE_Y;
 
 // ISO mode sink mask
 static char *sink_mask;
@@ -246,7 +239,6 @@ static void _ImgCopyToTileImg(int idx, img_type src, int sx, int sy, int copy,
 
 void TileInit()
 {
-    int x, y, k;
     textcolor(WHITE);
 
     TileImg   = ImgLoadFileSimple("tile");
@@ -293,26 +285,15 @@ void TileInit()
         end(-1);
     }
 
-    tcache_kind = TCACHE_KIND_NORMAL;
-    tc_hash = 1;
     tile_xmax = tile_dngn_x;
     tile_ymax = tile_dngn_y;
 
     max_tcache = 4*tile_xmax*tile_ymax;
 
-    screen_tcach_idx = (int **)malloc(sizeof(int *) * tcache_kind);
-
-    tcache = (tile_cache **)malloc(sizeof(tile_cache *)*tcache_kind);
-
-    tcache_head = (int *)malloc(sizeof(int)*tcache_kind*tc_hash);
-
-    for (k = 0; k < tcache_kind; k++)
-    {
-        screen_tcach_idx[k] = (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
-        tcache[k] = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
-        for (x = 0; x < tile_xmax * tile_ymax; x++)
-             screen_tcach_idx[k][x] = -1;
-    }
+    screen_tcache_idx = (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
+    tcache = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
+    for (int x = 0; x < tile_xmax * tile_ymax; x++)
+         screen_tcache_idx[x] = -1;
 
     sink_mask = (char *)malloc(TILE_X*TILE_Y);
 
@@ -320,9 +301,9 @@ void TileInit()
 
     DollCacheImg = ImgCreateSimple(TILE_X, TILE_Y);
 
-    for (x = 0; x < TILE_DAT_XMAX + 2; x++)
+    for (int x = 0; x < TILE_DAT_XMAX + 2; x++)
     {
-        for (y = 0; y < TILE_DAT_YMAX + 2; y++)
+        for (int y = 0; y < TILE_DAT_YMAX + 2; y++)
         {
             t1buf[x][y] = 0;
             t2buf[x][y] = TILE_DNGN_UNSEEN|TILE_FLAG_UNSEEN;
@@ -333,29 +314,27 @@ void TileInit()
 
     _mcache_init();
 
-    for (x = 0; x < MAX_ITEMLIST; x++)
+    for (int x = 0; x < MAX_ITEMLIST; x++)
          itemlist[x] = itemlist_num[x] = itemlist_key[x] = itemlist_idx[x] = 0;
 }
 
 void TileResizeScreen(int x0, int y0)
 {
-    int k, x;
     tile_xmax = x0;
     tile_ymax = y0;
+#if 0
     max_tcache = 4*tile_xmax*tile_ymax;
 
-    for (k = 0; k < tcache_kind; k++)
-    {
-        free(screen_tcach_idx[k]);
-        screen_tcach_idx[k] = (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
+    free(screen_tcache_idx);
+    screen_tcache_idx = (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
 
-        free(tcache[k]);
-        tcache[k] = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
+    free(tcache[k]);
+    tcache[k] = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
 
-        for (x = 0; x < tile_xmax * tile_ymax; x++)
-            screen_tcach_idx[k][x] = -1;
-    }
+    for (int x = 0; x < tile_xmax * tile_ymax; x++)
+        screen_tcache_idx[x] = -1;
     _clear_tcache();
+#endif
     crawl_view.viewsz.x = tile_xmax;
     crawl_view.viewsz.y = tile_ymax;
     crawl_view.vbuf.size(crawl_view.viewsz);
@@ -363,65 +342,41 @@ void TileResizeScreen(int x0, int y0)
 
 void _clear_tcache()
 {
-    for (int k = 0; k < tcache_kind; k++)
+    tcache_head = 0;
+
+    for (int i = 0; i < max_tcache; i++)
     {
-        tile_cache *tc =  tcache[k];
+        tcache[i].id[1] = tcache[i].id[0] = 0;
+        tcache[i].idx = i;
+        if (i == 0)
+            tcache[i].prev =  NULL;
+        else
+            tcache[i].prev = &tcache[i-1];
 
-        // Decompose pointer string tcache[k] into tc_hash segments
-        for (int h = 0; h < tc_hash; h++)
-        {
-            int i_start = (max_tcache*h)/tc_hash;
-            int i_end   = (max_tcache*(h+1))/tc_hash - 1;
-            tcache_head[k*tc_hash + h] = i_start;
-
-            for (int i = i_start; i <= i_end; i++)
-            {
-                tc[i].id[1] = tc[i].id[0] = 0;
-                tc[i].idx = i;
-                if (i == i_start)
-                    tc[i].prev =  NULL;
-                else
-                    tc[i].prev = &tc[i-1];
-
-                if (i == i_end)
-                    tc[i].next = NULL;
-                else
-                    tc[i].next = &tc[i+1];
-            }
-        }
+        if (i == max_tcache - 1)
+            tcache[i].next = NULL;
+        else
+            tcache[i].next = &tcache[i+1];
     }
 }
 
 void _init_tcache()
 {
-    int k;
-
     _clear_tcache();
-
-    tcache_image = (img_type *)malloc(sizeof(img_type)*tcache_kind);
-
-    for (k = 0; k < tcache_kind; k++)
-    {
-        int wx = tcache_wx_normal[k];
-        int wy = tcache_wy_normal[k];
-        tcache_image[k] = ImgCreateSimple(wx, max_tcache*wy);
-    }
+    tcache_image = ImgCreateSimple(tcache_wx_normal,
+                                   max_tcache*tcache_wy_normal);
 }
 
 // Move a cache to the top of pointer string
 // to shorten the search time
-static void _lift_tcache(int ix, int kind, int hash)
+static void _lift_tcache(int ix)
 {
-    int kind_n_hash = kind * tc_hash + hash;
-    int head_old=tcache_head[kind_n_hash];
-    tile_cache *tc = tcache[kind];
-    tile_cache *p  = tc[ix].prev;
-    tile_cache *n  = tc[ix].next;
+    int head_old = tcache_head;
+    tile_cache *p  = tcache[ix].prev;
+    tile_cache *n  = tcache[ix].next;
 
     ASSERT(ix < max_tcache);
     ASSERT(head_old < max_tcache);
-    ASSERT(kind < tcache_kind);
-    ASSERT(hash < tc_hash);
 
     if (ix == head_old)
         return;
@@ -430,21 +385,16 @@ static void _lift_tcache(int ix, int kind, int hash)
     if (n!=NULL)
         n->prev = p;
 
-    tcache_head[kind_n_hash] = ix;
-    tc[head_old].prev = &tc[ix];
-    tc[ix].next       = &tc[head_old];
+    tcache_head = ix;
+    tcache[head_old].prev = &tcache[ix];
+    tcache[ix].next = &tcache[head_old];
 }
 
 // Find cached image of fg+bg
 // If not found, compose and cache it
-static int _tcache_find_id_normal(int kind, int *fg, int *bg, int *is_new)
+static int _tcache_find_id_normal(int *fg, int *bg, int *is_new)
 {
-    int hash = 0; // Don't use hash
-    int kind_n_hash = kind * tc_hash + hash;
-
-    tile_cache *tc = tcache[kind];
-    tile_cache *tc0 = &tc[tcache_head[kind_n_hash]];
-
+    tile_cache *tc0 = &tcache[tcache_head];
     *is_new = 0;
 
     while (true)
@@ -465,22 +415,22 @@ static int _tcache_find_id_normal(int kind, int *fg, int *bg, int *is_new)
         }
         tc0 = next;
     }
-    _lift_tcache(tc0->idx, kind, hash);
+    _lift_tcache(tc0->idx);
 
     return tc0->idx;
 }
 
 
 /*** overlay a tile onto an exsisting image with transpalency operation */
-static void _tcache_overlay(img_type img, int idx, int tile, int region,
+static void _tcache_overlay(img_type img, int idx, int tile,
                             int *copy, char *mask, unsigned int shift_left = 0)
 {
 
     int x0, y0;
-    int sx = region_sx_normal[region] + shift_left;
-    int sy = region_sy_normal[region];
-    int wx = region_wx_normal[region] - shift_left;
-    int wy = region_wy_normal[region];
+    int sx = region_sx_normal + shift_left;
+    int sy = region_sy_normal;
+    int wx = region_wx_normal - shift_left;
+    int wy = region_wy_normal;
     int ox = 0;
     int oy = 0;
     img_type src = TileImg;
@@ -555,14 +505,14 @@ void _tcache_overlay_player(img_type img, int dx, int dy, int part, int idx,
 }
 
 /* overlay a tile onto an exsisting image with transpalency operation */
-void _register_tile_mask(int tile, int region, int *copy,
+void _register_tile_mask(int tile, int *copy,
                          char *mask, bool smalltile)
 {
     int x0, y0, x, y;
-    int sx = region_sx_normal[region];
-    int sy = region_sy_normal[region];
-    int wx = region_wx_normal[region];
-    int wy = region_wy_normal[region];
+    int sx = region_sx_normal;
+    int sy = region_sy_normal;
+    int wx = region_wx_normal;
+    int wy = region_wy_normal;
     int ox = 0;
     int oy = 0;
     int ux = wx;
@@ -603,7 +553,7 @@ void _register_tile_mask(int tile, int region, int *copy,
     *copy = 0;
 }
 
-void _tile_draw_grid(int kind, int xx, int yy)
+void _tile_draw_grid(int xx, int yy)
 {
     int fg[4],bg[4],ix, ix_old, is_new;
 
@@ -613,34 +563,30 @@ void _tile_draw_grid(int kind, int xx, int yy)
     fg[0] = t1buf[xx+1][yy+1];
     bg[0] = t2buf[xx+1][yy+1];
 
-    ix_old = screen_tcach_idx[kind][xx+yy*tile_xmax];
+    ix_old = screen_tcache_idx[xx+yy*tile_xmax];
 
-    ix = _tcache_find_id_normal(kind, fg, bg, &is_new);
+    ix = _tcache_find_id_normal(fg, bg, &is_new);
 
-    screen_tcach_idx[kind][xx+yy*tile_xmax] = ix;
+    screen_tcache_idx[xx+yy*tile_xmax] = ix;
 
     if (is_new || ix!=ix_old || force_redraw_tile)
     {
-        int x_dest = tcache_ox_normal[kind]+xx* TILE_UX_NORMAL;
-        int y_dest = tcache_oy_normal[kind]+yy* TILE_UY_NORMAL;
-        int wx = tcache_wx_normal[kind];
-        int wy = tcache_wy_normal[kind];
-
-        ImgCopy(tcache_image[kind],
-                0, ix*wy, wx, wy, ScrBufImg, x_dest, y_dest, 1);
+        int x_dest = tcache_ox_normal+xx* TILE_UX_NORMAL;
+        int y_dest = tcache_oy_normal+yy* TILE_UY_NORMAL;
+        int wx = tcache_wx_normal;
+        int wy = tcache_wy_normal;
+        ImgCopy(tcache_image, 0, ix*wy, wx, wy, ScrBufImg, x_dest, y_dest, 1);
     }
 }
 
 static void _update_single_grid(int x, int y)
 {
-    int sx, sy, wx, wy;
+    _tile_draw_grid(x, y);
 
-    _tile_draw_grid(TCACHE0_NORMAL, x, y);
-
-    sx = x*TILE_UX_NORMAL;
-    sy = y*TILE_UY_NORMAL;
-    wx = TILE_UX_NORMAL;
-    wy = TILE_UY_NORMAL;
+    int sx = x*TILE_UX_NORMAL;
+    int sy = y*TILE_UY_NORMAL;
+    int wx = TILE_UX_NORMAL;
+    int wy = TILE_UY_NORMAL;
 
     region_tile->redraw(sx, sy, sx+wx-1, sy+wy-1);
 }
@@ -649,17 +595,14 @@ static void _update_single_grid(int x, int y)
 // Discard cache containing specific tile
 static void _redraw_spx_tcache(int tile)
 {
-    for (int kind = 0; kind < tcache_kind; kind++)
+    for (int idx = 0; idx < max_tcache; idx++)
     {
-        for (int idx = 0; idx < max_tcache; idx++)
+        int fg = tcache[idx].id[0];
+        int bg = tcache[idx].id[1];
+        if ((fg & TILE_FLAG_MASK) == tile
+            || (bg & TILE_FLAG_MASK) == tile)
         {
-            int fg = tcache[kind][idx].id[0];
-            int bg = tcache[kind][idx].id[1];
-            if ((fg & TILE_FLAG_MASK) == tile
-                || (bg & TILE_FLAG_MASK) == tile)
-            {
-                _tcache_compose_normal(idx, &fg, &bg);
-            }
+            _tcache_compose_normal(idx, &fg, &bg);
         }
     }
 }
@@ -707,32 +650,30 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
     int fg0 = fg[0];
     int bg0 = bg[0];
     int sink;
-    img_type tc_img = tcache_image[TCACHE0_NORMAL];
 
     _get_bbg(bg0, &new_bg, &bbg);
 
     if (bbg)
-        _tcache_overlay(tc_img, ix, bbg, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, bbg, &c, NULL);
 
     if (bg0 & TILE_FLAG_BLOOD)
-        _tcache_overlay(tc_img, ix, TILE_BLOOD0, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_BLOOD0, &c, NULL);
 
     if (new_bg)
-        _tcache_overlay(tc_img, ix, new_bg, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, new_bg, &c, NULL);
 
     if ((bg0 & TILE_FLAG_SANCTUARY) && !(bg0 & TILE_FLAG_UNSEEN))
-        _tcache_overlay(tc_img, ix, TILE_SANCTUARY, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_SANCTUARY, &c, NULL);
 
     // Apply the travel exclusion under the foreground if the cell is
     // visible.  It will be applied later if the cell is unseen.
     if ((bg0 & TILE_FLAG_TRAVEL_EX) && !(bg0 & TILE_FLAG_UNSEEN))
     {
-        _tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c,
-                        NULL);
+        _tcache_overlay(tcache_image, ix, TILE_TRAVEL_EXCLUSION, &c, NULL);
     }
 
     if (bg0 & TILE_FLAG_RAY)
-        _tcache_overlay(tc_img, ix, TILE_RAY_MESH, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_RAY_MESH, &c, NULL);
 
     if (fg0)
     {
@@ -740,61 +681,60 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
         if (sink)
         {
             int flag = 2;
-            _register_tile_mask(sink, TREGION_0_NORMAL, &flag, sink_mask);
-            _tcache_overlay(tc_img, ix, fg0, TREGION_0_NORMAL, &c, sink_mask);
+            _register_tile_mask(sink, &flag, sink_mask);
+            _tcache_overlay(tcache_image, ix, fg0, &c, sink_mask);
         }
         else
-            _tcache_overlay(tc_img, ix, fg0, TREGION_0_NORMAL, &c, NULL);
+            _tcache_overlay(tcache_image, ix, fg0, &c, NULL);
     }
 
     if (fg0 & TILE_FLAG_NET)
-        _tcache_overlay(tc_img, ix, TILE_TRAP_NET, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_TRAP_NET, &c, NULL);
 
     if (fg0 & TILE_FLAG_S_UNDER)
     {
-        _tcache_overlay(tc_img, ix, TILE_SOMETHING_UNDER,
-                        TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_SOMETHING_UNDER, &c, NULL);
     }
 
     // Pet mark
     int status_shift = 0;
     if (fg0 & TILE_FLAG_PET)
     {
-        _tcache_overlay(tc_img, ix, TILE_HEART, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_HEART, &c, NULL);
         status_shift += 10;
     }
     else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_NEUTRAL)
     {
-        _tcache_overlay(tc_img, ix, TILE_NEUTRAL, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_NEUTRAL, &c, NULL);
         status_shift += 8;
     }
     else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_STAB)
     {
-        _tcache_overlay(tc_img, ix, TILE_STAB_BRAND, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_STAB_BRAND, &c, NULL);
         status_shift += 8;
     }
     else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_MAY_STAB)
     {
-        _tcache_overlay(tc_img, ix, TILE_MAY_STAB_BRAND, TREGION_0_NORMAL, &c,
+        _tcache_overlay(tcache_image, ix, TILE_MAY_STAB_BRAND, &c,
                         NULL);
         status_shift += 5;
     }
 
     if (fg0 & TILE_FLAG_POISON)
     {
-        _tcache_overlay(tc_img, ix, TILE_POISON, TREGION_0_NORMAL, &c, NULL,
+        _tcache_overlay(tcache_image, ix, TILE_POISON, &c, NULL,
                         status_shift);
         status_shift += 5;
     }
 
     if (bg0 & TILE_FLAG_UNSEEN)
     {
-        _tcache_overlay(tc_img, ix, TILE_MESH, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_MESH, &c, NULL);
     }
 
     if (bg0 & TILE_FLAG_MM_UNSEEN)
     {
-        _tcache_overlay(tc_img, ix, TILE_MAGIC_MAP_MESH, TREGION_0_NORMAL, &c,
+        _tcache_overlay(tcache_image, ix, TILE_MAGIC_MAP_MESH, &c,
                         NULL);
     }
 
@@ -802,12 +742,12 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
     // draw it otherwise.
     if (bg0 & TILE_FLAG_NEW_STAIR && status_shift == 0)
     {
-        _tcache_overlay(tc_img, ix, TILE_NEW_STAIR, TREGION_0_NORMAL, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_NEW_STAIR, &c, NULL);
     }
 
     if ((bg0 & TILE_FLAG_TRAVEL_EX) && (bg0 & TILE_FLAG_UNSEEN))
     {
-        _tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c,
+        _tcache_overlay(tcache_image, ix, TILE_TRAVEL_EXCLUSION, &c,
                         NULL);
     }
 
@@ -820,7 +760,7 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
        if ((bg0 & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
            type = TILE_CURSOR3;
 
-       _tcache_overlay(tc_img, ix, type, TREGION_0_NORMAL, &c, NULL);
+       _tcache_overlay(tcache_image, ix, type, &c, NULL);
 
        if (type != TILE_CURSOR3)
            c = 2;
@@ -871,9 +811,9 @@ void LoadDungeonView(unsigned int *tileb)
     if (tileb == NULL)
         tileb = tb_bk;
 
-    for (y = 0; y < tile_dngn_y; y++)
+    for (y = 0; y < crawl_view.viewsz.y; y++)
     {
-        for (x = 0; x < tile_dngn_x; x++)
+        for (x = 0; x < crawl_view.viewsz.x; x++)
         {
             if (tileb[count] == tileb[count+1])
                 tileb[count] = 0;
@@ -887,23 +827,22 @@ void LoadDungeonView(unsigned int *tileb)
 //Draw the tile screen once and for all
 void TileDrawDungeon(unsigned int *tileb)
 {
-    int x, y, kind;
     if (!TileImg)
         return;
+
+    ASSERT(tile_dngn_x == crawl_view.viewsz.x);
+    ASSERT(tile_dngn_y == crawl_view.viewsz.y);
+    ASSERT(tile_xmax = crawl_view.viewsz.x);
+    ASSERT(tile_ymax = crawl_view.viewsz.y);
 
     LoadDungeonView(tileb);
 
     extern int tile_cursor_x;
     tile_cursor_x = -1;
 
-    for (kind = 0; kind < tcache_kind; kind++)
-    {
-        for (x = 0; x < tile_xmax; x++)
-        {
-            for (y = 0; y < tile_ymax; y++)
-                 _tile_draw_grid(kind, x, y);
-        }
-    }
+    for (int x = 0; x < crawl_view.viewsz.x; x++)
+        for (int y = 0; y < crawl_view.viewsz.y; y++)
+            _tile_draw_grid(x, y);
 
     force_redraw_tile = false;
     TileDrawDungeonAux();
@@ -1635,7 +1574,7 @@ void TilePlayerEdit()
     int copy_doll[TILEP_PARTS_TOTAL];
 
     //int parts[TILEP_PARTS_TOTAL];
-    int i, j, k, x, y, kin, done = 0;
+    int i, j, x, y, kin, done = 0;
     int cur_doll = 0;
     int pre_part = 0;
     int cur_part = 0;
@@ -2058,9 +1997,8 @@ void TilePlayerEdit()
         }
     }
 
-    for (k = 0; k < tcache_kind; k++)
-        for (x = 0; x < tile_xmax * tile_ymax; x++)
-            screen_tcach_idx[k][x] = -1;
+    for (x = 0; x < tile_xmax * tile_ymax; x++)
+        screen_tcache_idx[x] = -1;
 
     clrscr();
     redraw_screen();
