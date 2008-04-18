@@ -771,7 +771,9 @@ bool armour_prompt( const std::string & mesg, int *index, operation_types oper)
                                    true, true, true, 0, NULL,
                                    oper );
 
-        if (slot != PROMPT_ABORT)
+        if (slot == PROMPT_ABORT)
+            canned_msg(MSG_OK);
+        else
         {
             *index = slot;
             succeeded = true;
@@ -1017,17 +1019,8 @@ bool do_wear_armour( int item, bool quiet )
         return (false);
     }
 
-    if ( wearing_slot(item) )
-    {
-//        if (Options.easy_unequip)
-            return (!takeoff_armour(item));
-/*
-        if (!quiet)
-            mpr("You are already wearing that!");
-
-        return (false);
-*/
-    }
+    if (wearing_slot(item) )
+        return (!takeoff_armour(item));
 
     // if you're wielding something,
     if (you.equip[EQ_WEAPON] != -1
@@ -1053,9 +1046,11 @@ bool do_wear_armour( int item, bool quiet )
             item_cursed(you.inv[you.equip[EQ_BODY_ARMOUR]]) )
         {
             if ( !quiet )
+            {
                 mprf("%s is stuck to your body!",
                      you.inv[you.equip[EQ_BODY_ARMOUR]].name(DESC_CAP_YOUR)
                                                        .c_str());
+            }
             return (false);
         }
         if (!item_cursed( you.inv[you.equip[EQ_CLOAK]] ))
@@ -2823,10 +2818,12 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
         prompt += item.base_type == OBJ_WEAPONS ? "Unwield" : "Remove";
         prompt += " anyway?";
 
-        if ((prop_str >= you.strength || prop_int >= you.intel ||
-             prop_dex >= you.dex)
+        if ((prop_str >= you.strength || prop_int >= you.intel
+                || prop_dex >= you.dex)
             && (quiet || !yesno(prompt.c_str(), false, 'n')))
         {
+            if (!quiet)
+                canned_msg(MSG_OK);
             return (false);
         }
     }
@@ -2838,10 +2835,12 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
         prompt += item.base_type == OBJ_WEAPONS ? "Wield" : "Put on";
         prompt += " anyway?";
 
-        if ((-prop_str >= you.strength || -prop_int >= you.intel ||
-             -prop_dex >= you.dex)
+        if ((-prop_str >= you.strength || -prop_int >= you.intel
+                || -prop_dex >= you.dex)
             && (quiet || !yesno(prompt.c_str(), false, 'n')))
         {
+            if (!quiet)
+                canned_msg(MSG_OK);
             return (false);
         }
     }
