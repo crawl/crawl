@@ -112,7 +112,7 @@ class colour_bar
 
             if (cx < disp)
                 textcolor(BLACK + m_default * 16);
-            else if (/*old_val > val &&*/ old_disp > disp && cx < old_disp)
+            else if (old_disp > disp && cx < old_disp)
                 textcolor(BLACK + m_change_neg * 16);
             putch(' ');
 #else

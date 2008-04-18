@@ -2015,15 +2015,31 @@ int mouse_get_mode()
     return mouse_mode;
 }
 
-void gui_init_view_params(coord_def &termsz, coord_def &viewsz,
-                          coord_def &msgp, coord_def &msgsz,
-                          coord_def &hudp, const coord_def &hudsz)
+void gui_init_view_params(crawl_view_geometry &geom)
 {
-    msgsz.x = msg_x;
-    msgsz.y = msg_y;
+    // The tile version handles its own layout on a pixel-by-pixel basis.
+    // Pretend that all of the regions start at character location (1,1).
 
-    viewsz.x = tile_dngn_x;
-    viewsz.y = tile_dngn_y;
+    geom.termp.x = 1;
+    geom.termp.y = 1;
+
+    geom.viewp.x = 1;
+    geom.viewp.y = 1;
+    geom.viewsz.x = tile_dngn_x;
+    geom.viewsz.y = tile_dngn_y;
+
+    geom.hudp.x = 1;
+    geom.hudp.y = 1;
+
+    geom.msgp.x = 1;
+    geom.msgp.y = 1;
+    geom.msgsz.x = msg_x;
+    geom.msgsz.y = msg_y;
+
+    geom.mlistp.x = 1;
+    geom.mlistp.y = 1;
+    geom.mlistsz.x = 0;
+    geom.mlistsz.y = 0;
 }
 
 void lock_region(int r)

@@ -5223,7 +5223,7 @@ void crawl_view_geometry::init_geometry()
 
 #ifdef USE_TILE
     // libgui may redefine these based on its own settings
-    gui_init_view_params(termsz, viewsz, msgp, msgsz, hudp, hudsz);
+    gui_init_view_params(*this);
 #endif
 
     viewhalfsz = viewsz / 2;
