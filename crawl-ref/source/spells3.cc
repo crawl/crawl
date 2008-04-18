@@ -1075,12 +1075,14 @@ void manage_halo()
             {
                 monster = mgrd[posx][posy];
 
-                // light up all monsters inside the halo
+                // light up all non-friendly and non-good neutral
+                // monsters inside the halo
                 if (monster != NON_MONSTER)
                 {
                     monsters *mon = &menv[monster];
 
-                    if (!mon->has_ench(ENCH_BACKLIGHT))
+                    if (!mons_wont_attack(mon)
+                        && !mon->has_ench(ENCH_BACKLIGHT))
                     {
                         mon->add_ench(mon_enchant(ENCH_BACKLIGHT, 0,
                                       KC_YOU, 10));
