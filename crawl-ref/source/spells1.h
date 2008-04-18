@@ -47,14 +47,14 @@ char cast_greatest_healing(void);
  * called from: ability - spell
  * *********************************************************************** */
 char cast_lesser_healing(void);
-#endif 
+#endif
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-int cast_healing(int power, int target_x = -1, int target_y = -1);
-int cast_revitalisation(int power);
+int cast_healing(int pow, int target_x = -1, int target_y = -1);
+int cast_revitalisation(int pow);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
