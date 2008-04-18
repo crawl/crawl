@@ -1144,7 +1144,7 @@ char burn_freeze(int pow, beam_type flavour)
 
         mgr = mgrd[you.x_pos + bmove.dx][you.y_pos + bmove.dy];
 
-        // Yes, this is strange, but it does maintain the original behaviour
+        // Yes, this is strange, but it does maintain the original behaviour.
         if (mgr == NON_MONSTER)
         {
             mpr("There isn't anything close enough!");
@@ -1541,7 +1541,7 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 }                               // end summon_ice_beast_etc()
 
 // Trog sends some fighting buddies for his followers (or enemies if
-// god_gift is false)
+// god_gift is false).
 bool summon_berserker(int pow, bool god_gift)
 {
     beh_type beha = (god_gift) ? BEH_GOD_GIFT : BEH_HOSTILE;
