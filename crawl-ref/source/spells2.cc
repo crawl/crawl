@@ -152,7 +152,7 @@ static void fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 }
 
 static bool mark_detected_creature(int gridx, int gridy, const monsters *mon,
-        int fuzz_chance, int fuzz_radius)
+                                   int fuzz_chance, int fuzz_radius)
 {
 #ifdef USE_TILE
     // Get monster index pre-fuzz
@@ -214,20 +214,20 @@ int detect_creatures( int pow, bool telepathic )
         clear_map(false);
 
     for (int i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
-    {
         for (int j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
         {
-            if (i < 5 || j < 5 || i > (GXM - 5) || j > (GYM - 5))
+            if (!in_bounds(i, j))
                 continue;
 
             if (mgrd[i][j] != NON_MONSTER)
             {
                 monsters *mon = &menv[ mgrd[i][j] ];
-                if (mark_detected_creature(i, j, mon, fuzz_chance,
-                                           fuzz_radius))
-                {
-                    creatures_found++;
-                }
+                creatures_found++;
+
+                // This only returns whether a valid "fuzzy" place has been
+                // found for the monster. In any case, the monster gets
+                // printed on the screen.
+                mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
 
                 // Assuming that highly intelligent spellcasters can
                 // detect scrying. -- bwr
@@ -239,7 +239,6 @@ int detect_creatures( int pow, bool telepathic )
                 }
             }
         }
-    }
 
     return (creatures_found);
 }                               // end detect_creatures()
