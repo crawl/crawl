@@ -433,7 +433,6 @@ void dec_penance(god_type god, int val)
                 && you.piety >= piety_breakpoint(0))
             {
                 mpr("Your divine halo begins to return!");
-                manage_halo();
             }
 
             // bonuses now once more effective
@@ -483,7 +482,6 @@ static void _inc_penance(god_type god, int val)
         {
             if (halo_radius())
                 mpr("Your divine halo begins to fade.");
-            manage_halo();
 
             if (you.duration[DUR_DIVINE_SHIELD])
             {
@@ -2355,10 +2353,7 @@ mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)",
             if (you.religion == GOD_SHINING_ONE)
             {
                 if (i == 0)
-                {
                     mpr("A divine halo begins to surround you!");
-                    manage_halo();
-                }
             }
 
             // When you gain a piety level, you get another chance to
@@ -4007,7 +4002,6 @@ void excommunication(god_type new_god)
     case GOD_SHINING_ONE:
         if (old_halo)
             mpr("Your divine halo begins to fade.");
-        manage_halo();
 
         if (you.duration[DUR_DIVINE_SHIELD])
         {

@@ -69,7 +69,6 @@ bool remove_sanctuary(bool did_attack = false);
 void decrease_sanctuary_radius(void);
 bool cast_sanctuary(const int power);
 int halo_radius(void);
-void manage_halo(void);
 bool inside_halo(int posx, int posy);
 
 // updated 24may2000 {dlb}

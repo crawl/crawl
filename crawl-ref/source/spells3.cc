@@ -1052,46 +1052,6 @@ int halo_radius()
         return 0;
 }
 
-void manage_halo()
-{
-    int radius = halo_radius();
-
-    if (radius == 0)
-        return;
-
-    int monster = -1;
-
-    // Backlight an invisible player inside a halo.
-    if (you.duration[DUR_INVIS] && !you.duration[DUR_BACKLIGHT])
-        you.duration[DUR_BACKLIGHT] = 1;
-
-    for (int x = -radius; x <= radius; x++)
-        for (int y = -radius; y <= radius; y++)
-        {
-            int posx = you.x_pos + x;
-            int posy = you.y_pos + y;
-            int dist = _inside_circle(posx, posy, radius);
-
-            if (dist != -1)
-            {
-                monster = mgrd[posx][posy];
-
-                // Backlight invisible monsters inside a halo.
-                if (monster != NON_MONSTER)
-                {
-                    monsters *mon = &menv[monster];
-
-                    if (mon->has_ench(ENCH_INVIS)
-                        && !mon->has_ench(ENCH_BACKLIGHT))
-                    {
-                        mon->add_ench(mon_enchant(ENCH_BACKLIGHT, 0,
-                                      KC_YOU, 10));
-                    }
-                }
-            }
-        }
-}
-
 bool inside_halo(int posx, int posy)
 {
     return (_inside_circle(posx, posy, halo_radius()) != -1);

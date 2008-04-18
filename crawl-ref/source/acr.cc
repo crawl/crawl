@@ -2858,11 +2858,7 @@ static void _decrement_durations()
     if (you.duration[DUR_BACKLIGHT] > 0 && !--you.duration[DUR_BACKLIGHT]
         && !you.backlit())
     {
-        // An invisible player inside a halo doesn't lose backlight.
-        if (you.duration[DUR_INVIS] && halo_radius())
-            you.duration[DUR_BACKLIGHT] = 1;
-        else
-            mpr("You are no longer glowing.", MSGCH_DURATION);
+        mpr("You are no longer glowing.", MSGCH_DURATION);
     }
 
     // Leak piety from the piety pool into actual piety.
@@ -3052,8 +3048,6 @@ static void _world_reacts()
     _check_shafts();
 
     _check_sanctuary();
-
-    manage_halo();
 
     run_environment_effects();
 

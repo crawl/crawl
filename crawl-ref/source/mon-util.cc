@@ -4238,10 +4238,6 @@ bool monsters::add_ench(const mon_enchant &ench)
     if (new_enchantment)
         add_enchantment_effect(ench);
 
-    // Invisible monsters inside a halo get backlight.
-    if (inside_halo(x, y))
-        manage_halo();
-
     return (true);
 }
 
@@ -4388,10 +4384,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_BACKLIGHT:
-        // invisible monsters inside a halo don't lose backlight
-        if (has_ench(ENCH_INVIS) && inside_halo(x, y))
-            add_ench(mon_enchant(ENCH_BACKLIGHT, 0, KC_YOU, 10));
-        else if (!quiet)
+        if (!quiet)
         {
             if (player_monster_visible(this))
                 simple_monster_message(this, " stops glowing.");

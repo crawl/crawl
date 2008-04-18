@@ -245,10 +245,6 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
             you.duration[DUR_INVIS] = 100;
 
         you.duration[DUR_BACKLIGHT] = 0;
-
-        // Invisible players inside a halo get backlight.
-        if (halo_radius())
-            manage_halo();
         break;
 
     case POT_PORRIDGE:          // oatmeal - always gluggy white/grey?
