@@ -3394,8 +3394,8 @@ void divine_retribution( god_type god )
     ASSERT(god != GOD_NO_GOD);
 
     // Good gods don't use divine retribution on their followers, and
-    // other gods don't use divine retribution on followers of gods they
-    // don't hate.
+    // gods don't use divine retribution on followers of gods they don't
+    // hate.
     if ((god == you.religion && is_good_god(god))
         || (god != you.religion && !god_hates_your_god(god)))
     {
