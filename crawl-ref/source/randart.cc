@@ -91,9 +91,7 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
          break;
 
     case GOD_SHINING_ONE: // holiness, honourable combat
-         if (item.base_type != OBJ_WEAPONS
-             || weapon_skill(item) != SK_LONG_BLADES
-             || brand != SPWPN_HOLY_WRATH)
+         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_HOLY_WRATH)
          {
              return (false);
          }
@@ -134,7 +132,7 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
     case GOD_SIF_MUNA:
     case GOD_KIKUBAAQUDGHA:
     case GOD_VEHUMET:
-         if (randart_wpn_property( item, RAP_PREVENT_SPELLCASTING))
+         if (randart_wpn_property( item, RAP_PREVENT_SPELLCASTING ))
              return (false);
          break;
 
