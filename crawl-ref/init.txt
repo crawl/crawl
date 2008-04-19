@@ -214,6 +214,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # item_stack_summary_minimum = 5
 # list_rotten = false
 # mlist_min_height = 5
+# msg_max_height = 10
 # mlist_allow_alternate_layout = true
 # classic_hud = true
 

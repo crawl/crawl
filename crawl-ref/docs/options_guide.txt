@@ -61,6 +61,7 @@ The contents of this text are:
                 status_caption_colour, delay_message_clear,
                 message_colour, show_inventory_weights, show_gold_turns,
                 show_beam, item_stack_summary_minimum, list_rotten,
+                mlist_min_height, msg_max_height, classic_hud,
                 menu_colour, menu_colour_prefix_id,
                 menu_colour_prefix_class
 4-k     Missiles.
@@ -1068,14 +1069,14 @@ list_rotten = true
         for Trolls, as well.
 
 mlist_min_height = 5
-        This option controls the minimum number of monsters to display
-        in the monster list.  The number displayed may be smaller than
-        this option if the terminal size is not large enough.
+        If there is extra space available for the message area and
+        monster list, the monster list will expand to this height
+        before letting the message area get more.
 
-mlist_allow_alternate_layout = false
-        If the terminal size is large enough, allow the monster list
-        to be placed to the left of the view.  By default, the monster
-        list will only appear beween the HUD and the message pane.
+msg_max_height = 10
+        If there is extra space available after the monster list has
+        expanded, the message area will expand up to this height.
+        The monster list will get the rest.
 
 classic_hud = false
         Remove the Health and Magic bars and the monster list, for a
