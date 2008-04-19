@@ -61,6 +61,7 @@
 #include "newgame.h"
 #include "output.h"
 #include "overmap.h"
+#include "place.h"
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
@@ -2906,6 +2907,39 @@ static int _get_number_of_lines_levelmap()
 }
 
 #ifndef USE_TILE
+static std::string _level_description_string()
+{
+    if (you.level_type == LEVEL_PANDEMONIUM)
+        return "- Pandemonium";
+
+    if (you.level_type == LEVEL_ABYSS)
+        return "- The Abyss";
+
+    if (you.level_type == LEVEL_LABYRINTH)
+        return "- a Labyrinth";
+
+    if (you.level_type == LEVEL_PORTAL_VAULT)
+    {
+         if (you.level_type_name == "bazaar")
+             return "- a Bazaar";
+
+         return "- a Portal Chamber";
+    }
+
+    // level_type == LEVEL_DUNGEON
+    char buf[200];
+    const int youbranch = you.where_are_you;
+    if ( branches[youbranch].depth == 1 )
+        snprintf(buf, sizeof buf, "- %s", branches[youbranch].longname);
+    else
+    {
+        const int curr_subdungeon_level = player_branch_depth();
+        snprintf(buf, sizeof buf, "%d of %s", curr_subdungeon_level,
+                 branches[youbranch].longname);
+    }
+    return buf;
+}
+
 static void _draw_level_map(int start_x, int start_y, bool travel_mode)
 {
     int bufcount2 = 0;
@@ -2932,7 +2966,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
         textcolor(WHITE);
         cprintf("%-*s",
                 get_number_of_cols() - helplen,
-                ("Level " + level_description_string()).c_str());
+                ("Level " + _level_description_string()).c_str());
 
         textcolor(LIGHTGREY);
         cgotoxy(get_number_of_cols() - helplen + 1, 1);
@@ -4921,7 +4955,7 @@ void crawl_view_buffer::size(const coord_def &sz)
 // define VIEW_MAX_WIDTH use Options.view_max_width
 #  define HUD_WIDTH  42
 #  define HUD_HEIGHT 13
-#define MSG_MIN_HEIGHT 6
+#define MSG_MIN_HEIGHT 7
 #define MSG_MAX_HEIGHT Options.msg_max_height
 #define MLIST_MIN_HEIGHT Options.mlist_min_height
 #define MLIST_MIN_WIDTH 25  /* non-inline layout only */
