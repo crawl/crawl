@@ -662,18 +662,6 @@ void libgui_init()
     if (region_dngn)
         region_dngn->init_font(font_name);
 #endif
-
-    _do_layout();
-
-    win_main->create((char*)(CRAWL " " VERSION));
-
-    region_map->init_backbuf();
-
-    region_tile -> init_backbuf();
-    region_item2->init_backbuf();
-
-    if (region_item)
-        region_item->init_backbuf();
 }
 
 void libgui_shutdown()
@@ -2013,6 +2001,16 @@ int mouse_get_mode()
     return mouse_mode;
 }
 
+static void _init_regions()
+{
+    win_main->create((char*)(CRAWL " " VERSION));
+
+    region_map->init_backbuf();
+    region_tile->init_backbuf();
+    region_item2->init_backbuf();
+    region_item->init_backbuf();
+}
+
 void gui_init_view_params(crawl_view_geometry &geom)
 {
     // The tile version handles its own layout on a pixel-by-pixel basis.
@@ -2038,6 +2036,13 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.mlistp.y = 1;
     geom.mlistsz.x = 0;
     geom.mlistsz.y = 0;
+
+    region_tip->resize(geom.hudsz.x, 3);
+    region_msg->resize(geom.msgsz.x, geom.msgsz.y);
+    region_stat->resize(geom.hudsz.x, geom.hudsz.y);
+
+    _do_layout();
+    _init_regions();
 }
 
 void lock_region(int r)
