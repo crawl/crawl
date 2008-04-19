@@ -624,7 +624,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 mons = summon_any_demon(DEMON_COMMON);
             else
             {
-                mons = (one_chance_in(6 - (monster->hit_dice / 7))) ?
+                int chance = std::max(6 - (monster->hit_dice / 6), 2);
+
+                mons = (one_chance_in(chance)) ?
                     MONS_VERY_UGLY_THING : MONS_UGLY_THING;
             }
 
