@@ -235,10 +235,7 @@ std::string item_def::name(description_level_type descrip,
 
    if (descrip != DESC_PLAIN && descrip != DESC_BASENAME)
    {
-        const bool  tried  =  !ident && !equipped
-                               && (item_type_tried(*this)
-                                   || this->base_type == OBJ_JEWELLERY
-                                      && is_artefact && !item_type_known(*this));
+        const bool  tried  =  !ident && !equipped && item_type_tried(*this);
         std::string tried_str = "";
 
         if (tried)
@@ -1697,15 +1694,29 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
         return false;
 }
 
+static bool _randart_has_known_property(const item_def &item)
+{
+    for (int rap = 0; rap < RAP_NUM_PROPERTIES; rap++)
+        if (randart_wpn_known_prop( item, static_cast<randart_prop_type>(rap) ))
+            return true;
+
+    return false;
+}
+
 bool item_type_tried( const item_def& item )
 {
     if ( item_type_known(item) )
         return false;
 
-    // Well, if we ever put in scroll or potion artefacts, this
-    // might be necessary...
     if ( is_artefact(item) )
+    {
+        if (item.base_type == OBJ_JEWELLERY
+            && _randart_has_known_property(item))
+        {
+            return true;
+        }
         return false;
+    }
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
     if (idt != NUM_IDTYPE && item.sub_type < 50)

@@ -829,8 +829,6 @@ monster_name
 
 @short_monster_name@
 
-@player_name@
-
 @player_species@
 
 Killer Bee
@@ -853,19 +851,20 @@ killer_name
 
 's Death
 
-'s Death Toll
-
 's Doom
 
 's Foe
 
+'s Regret
+
+%%%%
+long_killer_name
+
+'s Death Toll
+
 's Funeral
 
-'s Harbinger of Death
-
 's Nightmare
-
-'s Regret
 
 %%%%
 real_weapon_name
@@ -999,7 +998,14 @@ plain_weapon_name
 w:15
 @short_monster_name@@short_killer_name@
 
+w:8
 @monster_name@@killer_name@
+
+w:2
+@short_monster_name@@long_killer_name@
+
+w:1
+@player_death@
 
 w:15
 @real_weapon_name@

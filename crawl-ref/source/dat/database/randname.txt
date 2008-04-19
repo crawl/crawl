@@ -78,7 +78,7 @@ of @power_or_anger@
 of @battle_or_war@
 
 w:1
-of @player_name@'s @death_or_doom@
+of @player_doom@
 
 w:9
 of @death_or_doom@
@@ -253,7 +253,7 @@ jewellery
 
 # jewellery specials (see rand_all.txt)
 w:3
-of @jewellery_animal@
+of the @jewellery_animal@
 
 of @jewellery_special_name@
 
@@ -275,7 +275,7 @@ of @other_weapon_name@
 
 # as defined for armour (see rand_arm.txt)
 w:20
-of @armour_animal@
+of the @armour_animal@
 
 w:3
 of @flower_name@
@@ -460,7 +460,7 @@ w:2
 of Okawaru's @divine_esteem@
 
 w:2
-of @armour_animal@
+of the @armour_animal@
 
 w:1
 of @good_or_divine@
@@ -503,10 +503,10 @@ w:5
 of @chaos_name@
 
 w:5
-of @xom_name@'s @xom_esteem@
+of Xom's @xom_esteem@
 
 w:2
-of @xom_name@'s @divine_esteem@
+of Xom's @divine_esteem@
 
 # uses the long name
 w:1
@@ -534,10 +534,10 @@ w:5
 of @chaos_name@
 
 w:5
-of @xom_name@'s @xom_esteem@
+of Xom's @xom_esteem@
 
 w:2
-of @xom_name@'s @divine_esteem@
+of Xom's @divine_esteem@
 
 # uses the long name
 w:1
@@ -547,7 +547,7 @@ w:1
 of @game_name@
 
 w:1
-of @player_name@'s @killer_name@
+of @player_death@
 
 w:400
 @armour@
@@ -567,10 +567,10 @@ w:5
 of @chaos_name@
 
 w:5
-of @xom_name@'s @xom_esteem@
+of Xom's @xom_esteem@
 
 w:2
-of @xom_name@'s @divine_esteem@
+of Xom's @divine_esteem@
 
 # uses the long name
 w:1
@@ -580,10 +580,10 @@ w:1
 of @game_name@
 
 w:1
-of @player_name@'s @killer_name@
+of @player_death@
 
 w:1
-of @player_name@'s @killer_name@
+of @player_doom@
 
 w:300
 @jewellery@

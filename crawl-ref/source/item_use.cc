@@ -2139,9 +2139,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // it's too weird. Also it messes up the messages.
         if (item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES))
         {
-            if ( !teleport &&
-                 !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
-                 random2(100) < shoot_skill )
+            if ( !teleport
+                 && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
+                 && random2(100) < shoot_skill )
             {
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
                 set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
@@ -2312,9 +2312,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exercise(SK_THROWING, 1);
 
         // ID check
-        if ( !teleport &&
-             !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
-             random2(100) < you.skills[SK_THROWING] )
+        if ( !teleport
+             && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
+             && random2(100) < you.skills[SK_THROWING] )
         {
             set_ident_flags( item, ISFLAG_KNOW_PLUSES );
             set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
@@ -2563,8 +2563,8 @@ void jewellery_wear_effects(item_def &item)
     const bool artefact     = is_random_artefact( item );
     const bool known_pluses = item_ident( item, ISFLAG_KNOW_PLUSES );
     const bool known_cursed = item_known_cursed( item );
-    const bool known_bad    = item_type_known( item )
-                               && (item_value( item ) <= 2);
+    const bool known_bad    = (item_type_known( item )
+                               && item_value( item ) <= 2);
 
     switch (item.sub_type)
     {

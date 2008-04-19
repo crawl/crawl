@@ -40,7 +40,7 @@
    mainly.
 */
 
-static bool god_fits_artefact(const god_type which_god, const item_def &item)
+static bool _god_fits_artefact(const god_type which_god, const item_def &item)
 {
     if (which_god == GOD_NO_GOD)
         return (false);
@@ -92,9 +92,7 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
 
     case GOD_SHINING_ONE: // holiness, honourable combat
         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_HOLY_WRATH)
-        {
             return (false);
-        }
 
         if (randart_wpn_property( item, RAP_INVISIBLE )
             || randart_wpn_property( item, RAP_STEALTH ) > 0)
@@ -158,7 +156,7 @@ static bool god_fits_artefact(const god_type which_god, const item_def &item)
     return (true);
 }
 
-static god_type gift_from_god(const item_def item)
+static god_type _gift_from_god(const item_def item)
 {
     // maybe god gift?
     god_type god_gift = GOD_NO_GOD;
@@ -173,23 +171,34 @@ static god_type gift_from_god(const item_def item)
     return god_gift;
 }
 
-static std::string replace_name_parts(const std::string name_in,
-                                      const item_def item)
+static std::string _replace_name_parts(const std::string name_in,
+                                       const item_def item)
 {
     std::string name = name_in;
 
-    god_type god_gift = gift_from_god(item);
+    god_type god_gift = _gift_from_god(item);
 
     // Don't allow "player's Death" type names for god gifts (except Xom!)
-    if (god_gift != GOD_NO_GOD && god_gift != GOD_XOM
-        && name.find("@player_name@'s", 0) != std::string::npos
-        && name.find("Death", 0) != std::string::npos)
+    if (name.find("@player_death@", 0) != std::string::npos
+        || name.find("@player_doom@", 0) != std::string::npos)
     {
-        // simply overwrite the name with one of type "god's Favour"
-        name = "of ";
-        name += god_name(god_gift, false);
-        name += "'s ";
-        name += getRandNameString("divine_esteem");
+        if (god_gift == GOD_NO_GOD || god_gift == GOD_XOM)
+        {
+            name = replace_all(name, "@player_death@",
+                               "@player_name@'s "
+                               + getRandNameString("killer_name"));
+            name = replace_all(name, "@player_doom@",
+                               "@player_name@'s "
+                               + getRandNameString("death_or_doom"));
+        }
+        else
+        {
+            // simply overwrite the name with one of type "god's Favour"
+            name = "of ";
+            name += god_name(god_gift, false);
+            name += "'s ";
+            name += getRandNameString("divine_esteem");
+        }
     }
     name = replace_all(name, "@player_name@", you.your_name);
 
@@ -250,11 +259,11 @@ static std::string replace_name_parts(const std::string name_in,
             which_god = god_gift;
         else
         {
-           do
-           {
+            do
+            {
                 which_god = static_cast<god_type>(random2(NUM_GODS));
-           }
-           while (!god_fits_artefact(which_god, item));
+            }
+            while (!_god_fits_artefact(which_god, item));
         }
 
         name = replace_all(name, "@god_name@", god_name(which_god, false));
@@ -1300,23 +1309,45 @@ std::string randart_name( const item_def &item )
     {
         result += item_base_name(item) + " ";
 
-        std::string name = getRandNameString(lookup);
-
-        if (name.empty() && god_gift) // if nothing found, try god name alone
+        int tries = 100;
+        std::string name = "";
+        do
         {
-            name = getRandNameString(god_name(static_cast<god_type>(item_orig), false));
+            name = getRandNameString(lookup);
 
-            if (name.empty()) // if still nothing found, try base type alone
-                name = getRandNameString(get_artefact_type(item.base_type).c_str());
+            if (name.empty() && god_gift)
+            {
+                // if nothing found, try god name alone
+                name = getRandNameString(
+                           god_name(static_cast<god_type>(item_orig), false));
+
+                if (name.empty())
+                {
+                    // if still nothing found, try base type alone
+                    name = getRandNameString(
+                               get_artefact_type(item.base_type).c_str());
+                }
+            }
+
+            name = _replace_name_parts(name, item);
+
+            if (name.length() > 30)
+            {
+                mprf(MSGCH_DIAGNOSTICS,
+                    "over-long name: %s  (length: %d)",
+                name.c_str(), name.length());
+            }
         }
+        while (--tries > 0 && name.length() > 30);
 
         if (name.empty()) // still nothing found?
             result += "of Bugginess";
         else
-            result += replace_name_parts(name, item);
+            result += name;
     }
     else
     {
+        // construct a unique name
         const std::string st_p = make_name(random_int(), false);
         result += item_base_name(item);
 
@@ -1540,8 +1571,8 @@ bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
     return (true);
 }
 
-static bool randart_is_redundant( const item_def &item,
-                                  randart_properties_t &proprt )
+static bool _randart_is_redundant( const item_def &item,
+                                   randart_properties_t &proprt )
 {
     if (item.base_type != OBJ_JEWELLERY)
         return false;
@@ -1647,8 +1678,8 @@ static bool randart_is_redundant( const item_def &item,
     return false;
 }
 
-static bool randart_is_conflicting( const item_def &item,
-                                    randart_properties_t &proprt )
+static bool _randart_is_conflicting( const item_def &item,
+                                     randart_properties_t &proprt )
 {
     if (item.base_type != OBJ_JEWELLERY)
         return false;
@@ -1696,8 +1727,8 @@ bool randart_is_bad( const item_def &item, randart_properties_t &proprt )
     if (randart_wpn_num_props( proprt ) == 0)
         return true;
 
-    return ( randart_is_redundant( item, proprt ) ||
-             randart_is_conflicting( item, proprt ) );
+    return ( _randart_is_redundant( item, proprt )
+             || _randart_is_conflicting( item, proprt ) );
 }
 
 bool randart_is_bad( const item_def &item )
@@ -1732,14 +1763,14 @@ bool make_item_randart( item_def &item )
 
     item.flags |= ISFLAG_RANDART;
 
-    god_type god_gift = gift_from_god(item);
+    god_type god_gift = _gift_from_god(item);
 
     do
     {
         item.special = (random_int() & RANDART_SEED_MASK);
     }
     while (randart_is_bad(item)
-        || (god_gift != GOD_NO_GOD && !god_fits_artefact(god_gift, item)));
+           || god_gift != GOD_NO_GOD && !_god_fits_artefact(god_gift, item));
 
     return (true);
 }

@@ -57,16 +57,16 @@ typedef FixedVector< bool, RA_PROPERTIES > randart_known_props_t;
 /* ***********************************************************************
  * called from: describe - fight - it_use2 - item_use - player
  * *********************************************************************** */
-void randart_desc_properties( const item_def &item, 
+void randart_desc_properties( const item_def &item,
                               randart_properties_t &proprt,
                               randart_known_props_t &known,
                               bool force_fake_props = false);
 
-void randart_wpn_properties( const item_def &item, 
+void randart_wpn_properties( const item_def &item,
                              randart_properties_t &proprt,
                              randart_known_props_t &known );
 
-void randart_wpn_properties( const item_def &item, 
+void randart_wpn_properties( const item_def &item,
                              randart_properties_t &proprt );
 
 int randart_wpn_property( const item_def &item, randart_prop_type prop,
@@ -80,7 +80,7 @@ int randart_wpn_num_props( const item_def &item );
 int randart_wpn_num_props( const randart_properties_t &proprt );
 
 void randart_wpn_learn_prop( item_def &item, randart_prop_type prop );
-bool randart_wpn_known_prop( item_def &item, randart_prop_type prop );
+bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop );
 
 /* ***********************************************************************
  * called from: dungeon

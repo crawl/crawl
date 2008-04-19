@@ -145,7 +145,7 @@ enum corpse_type
 enum hands_reqd_type
 {
     HANDS_ONE,
-    HANDS_HALF, 
+    HANDS_HALF,
     HANDS_TWO,
 
     HANDS_DOUBLE        // not a level, marks double ended weapons (== half)
@@ -168,7 +168,7 @@ enum helmet_desc_type
 enum jewellery_type
 {
     RING_FIRST_RING = 0,
-    
+
     RING_REGENERATION = RING_FIRST_RING, //    0
     RING_PROTECTION,
     RING_PROTECTION_FROM_FIRE,
@@ -208,7 +208,7 @@ enum jewellery_type
     AMU_CONTROLLED_FLIGHT,
     AMU_INACCURACY,
     AMU_RESIST_MUTATION,
-    
+
     NUM_JEWELLERY
 };
 
@@ -286,7 +286,7 @@ enum rune_type
     RUNE_DEMONIC                = 50,
     RUNE_ABYSSAL,
 
-    // Runes 60-63 correspond to the Pandemonium demonlords, 
+    // Runes 60-63 correspond to the Pandemonium demonlords,
     // and are equal to the corresponding vault.
     RUNE_MNOLEG                 = 60,
     RUNE_LOM_LOBON,
@@ -505,8 +505,8 @@ enum weapon_property_type
 
 enum vorpal_damage_type
 {
-    // Types of damage a weapon can do... currently assuming that anything 
-    // with BLUDGEON always does "AND" with any other specified types, 
+    // Types of damage a weapon can do... currently assuming that anything
+    // with BLUDGEON always does "AND" with any other specified types,
     // and and sets not including BLUDGEON are "OR".
     DAM_BASH            = 0x0000,       // non-melee weapon blugeoning
     DAM_BLUDGEON        = 0x0001,       // crushing
@@ -522,7 +522,7 @@ enum vorpal_damage_type
     DVORP_CHOPPING      = 0x4000,       // used for axes
     DVORP_SLASHING      = 0x5000,       // used for whips
     DVORP_STABBING      = 0x6000,       // used for knives/daggers
-    
+
     DVORP_CLAWING       = 0x7000,       // claw damage
 
     // These are shortcuts to tie vorpal/damage types for easy setting...
@@ -582,8 +582,8 @@ bool item_is_critical(const item_def &item);
 bool item_cursed( const item_def &item );
 bool item_known_cursed( const item_def &item );
 bool item_known_uncursed( const item_def &item );
-void do_curse_item(  item_def &item );
-void do_uncurse_item(  item_def &item );
+void do_curse_item( item_def &item );
+void do_uncurse_item( item_def &item );
 
 // stationary:
 void set_item_stationary( item_def &item );
@@ -613,7 +613,7 @@ bool  is_helmet( const item_def& item );
 bool  is_hard_helmet( const item_def& item );
 
 // ego items:
-bool set_item_ego_type( item_def &item, int item_type, int ego_type ); 
+bool set_item_ego_type( item_def &item, int item_type, int ego_type );
 int  get_weapon_brand( const item_def &item );
 special_armour_type get_armour_ego_type( const item_def &item );
 int  get_ammo_brand( const item_def &item );
@@ -726,7 +726,7 @@ size_type item_size( const item_def &item );
 bool is_colourful_item( const item_def &item );
 
 bool is_shield(const item_def &item);
-bool is_shield_incompatible(const item_def &weapon, 
+bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = NULL);
 
 // Only works for armour/weapons/missiles
