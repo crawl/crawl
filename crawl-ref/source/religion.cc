@@ -773,7 +773,7 @@ static void _give_nemelex_gift()
     }
 }
 
-bool is_tso_follower(const monsters* mon)
+bool is_good_follower(const monsters* mon)
 {
     return (mon->alive() && !mons_is_evil_or_unholy(mon)
         && mons_friendly(mon));
@@ -788,24 +788,12 @@ bool is_orcish_follower(const monsters* mon)
 
 bool is_follower(const monsters* mon)
 {
-    bool result = false;
-
-    switch (you.religion)
-    {
-        case GOD_SHINING_ONE:
-            result = is_tso_follower(mon);
-            break;
-
-        case GOD_BEOGH:
-            result = is_orcish_follower(mon);
-            break;
-
-        default:
-            result = (mon->alive() && mons_friendly(mon));
-            break;
-    }
-
-    return result;
+    if (is_good_god(you.religion))
+        return is_good_follower(mon);
+    else if (you.religion == GOD_BEOGH)
+        return is_orcish_follower(mon);
+    else
+        return (mon->alive() && mons_friendly(mon));
 }
 
 static bool _blessing_wpn(monsters *mon)

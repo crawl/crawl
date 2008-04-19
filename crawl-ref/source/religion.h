@@ -75,7 +75,7 @@ bool ely_destroy_weapons();
 bool trog_burn_books();
 bool tso_stab_safe_monster(const actor *act);
 
-bool is_tso_follower(const monsters* mon);
+bool is_good_follower(const monsters* mon);
 bool is_orcish_follower(const monsters* mon);
 bool is_follower(const monsters* mon);
 bool bless_follower(monsters* follower = NULL,

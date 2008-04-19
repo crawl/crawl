@@ -1777,13 +1777,14 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         break;
 
     case BEAM_HOLY:             // flame of cleansing
-        if (mons_is_unholy(monster))
-            hurted = (hurted * 3) / 2;
-        else if (mons_is_holy(monster)
-                 || is_good_god(you.religion) && is_follower(monster))
+        if (mons_is_holy(monster)
+            || (is_good_god(you.religion)
+                && (is_follower(monster) || mons_neutral(monster))))
         {
             hurted = 0;
         }
+        else if (mons_is_unholy(monster))
+            hurted = (hurted * 3) / 2;
         else if (!mons_is_evil(monster))
             hurted /= 2;
 
