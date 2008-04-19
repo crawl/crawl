@@ -1248,7 +1248,7 @@ bool summon_elemental(int pow, int restricted_type,
         if (!smove.isValid)
         {
             canned_msg(MSG_OK);
-            return (-1);
+            return (false);
         }
 
         dir_x  = smove.dx;
