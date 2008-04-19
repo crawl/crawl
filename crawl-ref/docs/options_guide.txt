@@ -59,7 +59,7 @@ The contents of this text are:
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour,
                 status_caption_colour, delay_message_clear,
-                message_colour, show_inventory_weights, show_turns,
+                message_colour, show_inventory_weights, show_gold_turns,
                 show_beam, item_stack_summary_minimum, list_rotten,
                 menu_colour, menu_colour_prefix_id,
                 menu_colour_prefix_class
@@ -1039,9 +1039,9 @@ show_inventory_weights = false
         When this is set to true, inventory listings will mention the
         weight of each item.
 
-show_turns = false
-        This option controls whether the turn counter (of turns elapsed) 
-        is displayed in the main view.
+show_gold_turns = false
+        If set to true, this option adds an extra line to the stat area
+        to display the current gold and turn counters.
 
 show_beam = false
         When performing actions such as throwing or zapping, you can 

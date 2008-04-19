@@ -220,7 +220,7 @@ void update_turn_count()
 {
     // Don't update turn counter when running/resting/traveling to
     // prevent pointless screen updates.
-    if (!Options.show_turns
+    if (!Options.show_gold_turns
         || you.running > 0
         || (you.running < 0 && Options.travel_delay == -1))
     {
@@ -859,9 +859,9 @@ void print_stats(void)
         you.redraw_experience = false;
     }
 
-    // If Options.show_turns, line 9 is Gold and Turns
+    // If Options.show_gold_turns, line 9 is Gold and Turns
     int yhack = 0;
-    if (Options.show_turns)
+    if (Options.show_gold_turns)
     {
         yhack = 1;
         cgotoxy(1+6, 9, GOTO_STAT); cprintf("%d", you.gold);
@@ -944,19 +944,21 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
 {
     std::string title = your_name + " the " + class_name;
 
-    int in_len = title.length();
-    const int WIDTH = crawl_view.hudsz.x;
+    unsigned int in_len = title.length();
+    const unsigned int WIDTH = crawl_view.hudsz.x;
     if (in_len > WIDTH)
     {
         in_len -= 3;  // what we're getting back from removing "the"
 
-        const int name_len = your_name.length();
+        const unsigned int name_len = your_name.length();
         std::string trimmed_name = your_name;
 
         // squeeze name if required, the "- 8" is to not squeeze too much
         if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
+        {
             trimmed_name =
                 trimmed_name.substr(0, name_len - (in_len - WIDTH) - 1);
+        }
 
         title = trimmed_name + ", " + class_name;
     }
@@ -1006,7 +1008,7 @@ void draw_border(void)
     cgotoxy(19, 7, GOTO_STAT); cprintf("Ev:");
 
     // Line 8 is exp pool, Level
-    if (Options.show_turns)
+    if (Options.show_gold_turns)
     {
         cgotoxy( 1, 9, GOTO_STAT); cprintf("Gold:");
         cgotoxy(19, 9, GOTO_STAT); cprintf("Turn:");

@@ -1475,9 +1475,17 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
         if (!quiet)
         {
-            mprf("You pick up %d gold piece%s, bringing you to a "
-                 "total of %d gold pieces.",
-                 quant_got, (quant_got > 1) ? "s" : "", you.gold );
+            if (quant_got == you.gold)
+            {
+                mprf("You pick up %d gold piece%s.",
+                     quant_got, (quant_got > 1) ? "s" : "");
+            }
+            else
+            {
+                mprf("You pick up %d gold piece%s, bringing you to a "
+                     "total of %d gold pieces.",
+                     quant_got, (quant_got > 1) ? "s" : "", you.gold );
+            }
         }
 
         you.turn_is_over = true;

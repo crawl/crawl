@@ -629,8 +629,8 @@ void game_options::reset_options()
     autoprayer_on = false;
     show_more_prompt = true;
 
-    show_turns = false;
-    show_beam  = false;
+    show_gold_turns = false;
+    show_beam       = false;
 
     use_old_selection_order = false;
     prev_race   = 0;
@@ -1973,7 +1973,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         save_dir = field;
     }
 #endif
-    else BOOL_OPTION(show_turns);
+    else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_beam);
 #ifndef SAVE_DIR_PATH
     else if (key == "morgue_dir")

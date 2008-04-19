@@ -1580,7 +1580,7 @@ public:
     bool        autoprayer_on;
     bool        show_more_prompt;
 
-    bool        show_turns;      // Show turns used in HUD.
+    bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_beam;       // Show targeting beam by default.
 
     long        autopickups;     // items to autopickup
