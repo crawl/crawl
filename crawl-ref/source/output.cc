@@ -780,13 +780,12 @@ static void _get_status_lights(std::vector<status_light>& out)
 
 static void _print_status_lights(int y)
 {
-    you.redraw_status_flags = 0;
-
     std::vector<status_light> lights;
     static int last_number_of_lights = 0;
     _get_status_lights(lights);
     if (lights.size() == 0 && last_number_of_lights == 0)
         return;
+    last_number_of_lights = lights.size();
 
     size_t line_cur = y;
     const size_t line_end = crawl_view.hudsz.y+1;
