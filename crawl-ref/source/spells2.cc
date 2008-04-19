@@ -1321,20 +1321,20 @@ bool summon_elemental(int pow, int restricted_type,
     // - Air elementals are harder because they're more dynamic/dangerous
     // - Earth elementals are more static and easy to tame (as before)
     // - Fire elementals fall in between the two (10 is still fairly easy)
-    bool friendly = ((type_summoned == MONS_FIRE_ELEMENTAL
-                        && random2(10) < you.skills[SK_FIRE_MAGIC])
+    bool friendly = ((type_summoned != MONS_FIRE_ELEMENTAL
+                        || random2(10) < you.skills[SK_FIRE_MAGIC])
 
-                        || (type_summoned == MONS_WATER_ELEMENTAL
-                            && random2((you.species == SP_MERFOLK) ? 5 : 15)
+                        && (type_summoned != MONS_WATER_ELEMENTAL
+                            || random2((you.species == SP_MERFOLK) ? 5 : 15)
                                 < you.skills[SK_ICE_MAGIC])
 
-                        || (type_summoned == MONS_AIR_ELEMENTAL
-                            && random2(15) < you.skills[SK_AIR_MAGIC])
+                        && (type_summoned != MONS_AIR_ELEMENTAL
+                            || random2(15) < you.skills[SK_AIR_MAGIC])
 
-                        || (type_summoned == MONS_EARTH_ELEMENTAL
-                            && random2(5)  < you.skills[SK_EARTH_MAGIC])
+                        && (type_summoned != MONS_EARTH_ELEMENTAL
+                            || random2(5)  < you.skills[SK_EARTH_MAGIC])
 
-                        || random2(100) >= unfriendly);
+                        && random2(100) >= unfriendly);
 
     if (create_monster( type_summoned, numsc,
                         friendly ? BEH_FRIENDLY : BEH_HOSTILE,
