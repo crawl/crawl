@@ -1322,36 +1322,30 @@ int summon_elemental(int pow, int restricted_type,
     // - Air elementals are harder because they're more dynamic/dangerous
     // - Earth elementals are more static and easy to tame (as before)
     // - Fire elementals fall in between the two (10 is still fairly easy)
-    if ((type_summoned == MONS_FIRE_ELEMENTAL
-            && random2(10) >= you.skills[SK_FIRE_MAGIC])
+    bool friendly = ((type_summoned == MONS_FIRE_ELEMENTAL
+                        && random2(10) < you.skills[SK_FIRE_MAGIC])
 
-        || (type_summoned == MONS_WATER_ELEMENTAL
-            && random2((you.species == SP_MERFOLK) ? 5 : 15)
-                           >= you.skills[SK_ICE_MAGIC])
+                        || (type_summoned == MONS_WATER_ELEMENTAL
+                            && random2((you.species == SP_MERFOLK) ? 5 : 15)
+                                < you.skills[SK_ICE_MAGIC])
 
-        || (type_summoned == MONS_AIR_ELEMENTAL
-            && random2(15) >= you.skills[SK_AIR_MAGIC])
+                        || (type_summoned == MONS_AIR_ELEMENTAL
+                            && random2(15) < you.skills[SK_AIR_MAGIC])
 
-        || (type_summoned == MONS_EARTH_ELEMENTAL
-            && random2(5)  >= you.skills[SK_EARTH_MAGIC])
+                        || (type_summoned == MONS_EARTH_ELEMENTAL
+                            && random2(5)  < you.skills[SK_EARTH_MAGIC])
 
-        || random2(100) < unfriendly)
-    {
-        summ_success = create_monster( type_summoned, numsc, BEH_HOSTILE,
-                                       targ_x, targ_y, MHITYOU,
-                                       MONS_PROGRAM_BUG,
-                                       false, false, false, true);
+                        || random2(100) >= unfriendly);
 
-        if (summ_success >= 0)
-            mpr( "The elemental doesn't seem to appreciate being summoned." );
-    }
-    else
-    {
-        summ_success = create_monster( type_summoned, numsc, BEH_FRIENDLY,
-                                       targ_x, targ_y, you.pet_target,
-                                       MONS_PROGRAM_BUG,
-                                       false, false, false, true);
-    }
+    summ_success = create_monster( type_summoned, numsc,
+                                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                   targ_x, targ_y,
+                                   friendly ? you.pet_target : MHITYOU,
+                                   MONS_PROGRAM_BUG, false, false,
+                                   false, true );
+
+    if (summ_success >= 0 && !friendly)
+        mpr( "The elemental doesn't seem to appreciate being summoned." );
 
     return (summ_success >= 0);
 }                               // end summon_elemental()
@@ -1442,14 +1436,13 @@ void summon_animals(int pow)
         power_left -= power_cost;
         num_so_far++;
 
-        if ( random2(pow) < 5 ) // unfriendly
-            create_monster( mon_chosen, 4, BEH_HOSTILE,
-                            you.x_pos, you.y_pos, MHITYOU,
-                            MONS_PROGRAM_BUG, false, false, false, true);
-        else
-            create_monster( mon_chosen, 4, BEH_FRIENDLY,
-                            you.x_pos, you.y_pos, you.pet_target,
-                            MONS_PROGRAM_BUG, false, false, false, true);
+        bool friendly = (random2(pow) > 4);
+
+        create_monster( mon_chosen, 4,
+                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                        you.x_pos, you.y_pos,
+                        friendly ? you.pet_target : MHITYOU,
+                        MONS_PROGRAM_BUG, false, false, false, true);
     }
 }
 
@@ -1461,25 +1454,19 @@ void summon_scorpions(int pow)
 
     for (int scount = 0; scount < numsc; scount++)
     {
-        if (random2(pow) <= 3)
+        bool friendly = (random2(pow) > 3);
+
+        if (create_monster( MONS_SCORPION, 3,
+                            friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                            you.x_pos, you.y_pos,
+                            friendly ? you.pet_target : MHITYOU,
+                            MONS_PROGRAM_BUG, false, false,
+                            false, true) != -1)
         {
-            if (create_monster( MONS_SCORPION, 3, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG, false, false,
-                                false, true) != -1)
-            {
-                mpr("A scorpion appears. It doesn't look very happy.");
-            }
-        }
-        else
-        {
-            if (create_monster( MONS_SCORPION, 3, BEH_FRIENDLY,
-                                you.x_pos, you.y_pos, you.pet_target,
-                                MONS_PROGRAM_BUG, false, false,
-                                false, true) != -1)
-            {
+            if (friendly)
                 mpr("A scorpion appears.");
-            }
+            else
+                mpr("A scorpion appears. It doesn't look very happy.");
         }
     }
 }                               // end summon_scorpions()
@@ -1488,28 +1475,24 @@ void summon_ugly_thing(int pow)
 {
     monster_type ugly = (one_chance_in(3)) ? MONS_VERY_UGLY_THING :
                                              MONS_UGLY_THING;
-    int numsc = std::min(2 + (random2(pow) / 4), 6);
-    const char *prefix = (ugly == MONS_VERY_UGLY_THING) ? " very " : "n ";
 
-    if (random2(pow) < 4)
+    int numsc = std::min(2 + (random2(pow) / 4), 6);
+
+    bool friendly = (random2(pow) > 3);
+
+    if (create_monster(ugly, numsc,
+                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                       you.x_pos, you.y_pos,
+                       friendly ? you.pet_target : MHITYOU,
+                       MONS_PROGRAM_BUG, false, false,
+                       false, true) != -1)
     {
-        if (create_monster(ugly, numsc, BEH_HOSTILE,
-                           you.x_pos, you.y_pos, MHITYOU,
-                           MONS_PROGRAM_BUG, false, false,
-                           false, true) != -1)
-        {
-            mprf("A%sugly thing appears. It doesn't look very happy.", prefix);
-        }
-    }
-    else
-    {
-        if (create_monster(ugly, numsc, BEH_FRIENDLY,
-                           you.x_pos, you.y_pos, you.pet_target,
-                           MONS_PROGRAM_BUG, false, false,
-                           false, true) != -1)
-        {
+        const char *prefix = (ugly == MONS_VERY_UGLY_THING) ? " very " : "n ";
+
+        if (friendly)
             mprf("A%sugly thing appears.", prefix);
-        }
+        else
+            mprf("A%sugly thing appears. It doesn't look very happy.", prefix);
     }
 }                               // end summon_ugly_thing()
 
@@ -1517,6 +1500,7 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 {
     int numsc = std::min(2 + (random2(pow) / 4), 6);
     beh_type beha = divine_gift ? BEH_GOD_GIFT : BEH_FRIENDLY;
+    int hitting = you.pet_target;
 
     switch (ibc)
     {
@@ -1545,18 +1529,20 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
         break;
 
     default:
-        mpr("A demon appears!");
-        if (random2(pow) < 4)
+        if (random2(pow) > 3)
+            mpr("A demon appears!");
+        else
         {
+            mpr("A demon appears! It doesn't look very happy.");
             beha = BEH_HOSTILE;
-            mpr("It doesn't look very happy.");
+            hitting = MHITYOU;
         }
         break;
 
     }
 
     int monster = create_monster( ibc, numsc, beha,
-                                  you.x_pos, you.y_pos, MHITYOU,
+                                  you.x_pos, you.y_pos, hitting,
                                   MONS_PROGRAM_BUG, false, false,
                                   false, true );
     if (monster != -1)
@@ -1721,7 +1707,8 @@ bool summon_swarm( int pow, bool unfriendly, bool god_gift )
         if (create_monster( thing_called, 3, behaviour,
                             you.x_pos, you.y_pos,
                             !unfriendly ? you.pet_target : MHITYOU,
-                            MONS_PROGRAM_BUG, false, false, false, true) != -1)
+                            MONS_PROGRAM_BUG, false, false,
+                            false, true ) != -1)
         {
             summoned = true;
         }
@@ -1748,25 +1735,19 @@ void summon_undead(int pow)
                         (temp_rand > 3) ? MONS_SPECTRAL_WARRIOR  // 20%
                                         : MONS_FREEZING_WRAITH); // 16%
 
-        if (random2(pow) < 6)
+        bool friendly = (random2(pow) > 5);
+
+        if (create_monster( thing_called, 5,
+                            friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                            you.x_pos, you.y_pos,
+                            friendly ? you.pet_target : MHITYOU,
+                            MONS_PROGRAM_BUG, false, false,
+                            false, true ) != -1)
         {
-            if (create_monster( thing_called, 5, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG,
-                                false, false, false, true ) != -1)
-            {
-                mpr("You sense a hostile presence.");
-            }
-        }
-        else
-        {
-            if (create_monster( thing_called, 5, BEH_FRIENDLY,
-                                you.x_pos, you.y_pos, you.pet_target,
-                                MONS_PROGRAM_BUG,
-                                false, false, false, true ) != -1)
-            {
+            if (friendly)
                 mpr("An insubstantial figure forms in the air.");
-            }
+            else
+                mpr("You sense a hostile presence.");
         }
     }                           // end for loop
 
@@ -1812,8 +1793,7 @@ void summon_things( int pow )
 
         while (big_things > 0)
         {
-            create_monster( MONS_TENTACLED_MONSTROSITY, 6,
-                            BEH_FRIENDLY,
+            create_monster( MONS_TENTACLED_MONSTROSITY, 6, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target,
                             MONS_PROGRAM_BUG, false, false, false, true );
             big_things--;
