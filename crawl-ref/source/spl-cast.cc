@@ -1763,6 +1763,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                         MONS_PROGRAM_BUG );
         break;
     }
+
     //jmf: new spells 19mar2000
     case SPELL_FLAME_TONGUE:
         zapping(ZAP_FLAME_TONGUE, powc, beam);

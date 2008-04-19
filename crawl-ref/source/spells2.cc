@@ -1800,6 +1800,4 @@ void summon_things( int pow )
         mprf("Some Thing%s answered your call!",
              (numsc + big_things > 1) ? "s" : "" );
     }
-
-    return;
 }
