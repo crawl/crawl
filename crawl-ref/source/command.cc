@@ -523,8 +523,8 @@ void list_weapons(void)
     }
     else if (slot == -1)
     {
-        wstring += "-) ";
-        wstring += you.inv[slot].name(DESC_PLAIN);
+        wstring += "  - ";
+        wstring += item->name(DESC_NOCAP_A);
         wstring += " (empty)";
     }
     else
