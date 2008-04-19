@@ -77,7 +77,7 @@ TileRegionClass *region_item  = NULL;
 TileRegionClass *region_item2 = NULL;
 
 // Raw tile images
-img_type TileImg, TileIsoImg;
+img_type TileImg;
 img_type PlayerImg;
 img_type WallImg;
 
@@ -96,15 +96,15 @@ static bool gui_smart_cursor = false;
 // Window prefs
 static int crt_x = 80;
 static int crt_y = 30;
-static int map_px = 3;
-static int msg_x = 80, msg_y = 8;
-static int dngn_x = 17, dngn_y = 17;
+static int map_px = 4;
+static int msg_x = 77, msg_y = 10;
+static int dngn_x = 19, dngn_y = 17;
 static int winox = 0, winoy = 0;
 #define MAX_PREF_CHAR 256
 
 #ifdef USE_X11
 #define UseDosChar false
-static char font_name[MAX_PREF_CHAR+1] = "8x16";
+static char font_name[MAX_PREF_CHAR+1] = "8x13";
 #endif
 
 #ifdef WIN32TILES
@@ -116,12 +116,9 @@ static int dos_font_size = 16;
 
 static int font_size = 12;
 
-#define PREF_MODE_TEXT 0
-#define PREF_MODE_TILE 1
-#define PREF_MODE_ISO  2
-#define PREF_MODE_NUM  3
-static const char *pref_mode_name[PREF_MODE_NUM]
-   = { "Text", "Tile", "Iso"};
+#define PREF_MODE_TILE 0
+#define PREF_MODE_NUM  1
+static const char *pref_mode_name[PREF_MODE_NUM] = { "Tile"};
 
 typedef struct prefs
 {
@@ -151,11 +148,11 @@ struct prefs pref_data[MAX_PREFS] =
     {"MSG Y    ", "MsgY",  'I', &msg_y,  8,  20,  4},
     {"WIN TOP  ", "WindowTop", 'I', &winox, -100, 2000, 5},
     {"WIN LEFT ", "WindowLeft",'I', &winoy, -100, 2000, 6},
-    {"FONT     ", "FontName", 'S', font_name, 0,0,  0},
-    {"FONT SIZE", "FontSize", 'I', &font_size, 8,24, 7}
+    {"FONT     ", "FontName", 'S', font_name, 0, 0,  0},
+    {"FONT SIZE", "FontSize", 'I', &font_size, 8, 24, 7}
 #ifdef WIN32TILES
-    ,{"DOS FONT", "DosFontName", 'S', dos_font_name, 0,0,  1},
-    {"DOS FONT SIZE", "DosFontSize", 'I', &dos_font_size, 8,24, 8}
+    ,{"DOS FONT", "DosFontName", 'S', dos_font_name, 0, 0, 1},
+    {"DOS FONT SIZE", "DosFontSize", 'I', &dos_font_size, 8, 24, 8}
 #endif
 };
 
@@ -688,8 +685,6 @@ void libgui_shutdown()
         ImgDestroy(PlayerImg);
     if (WallImg)
         ImgDestroy(WallImg);
-    if (TileIsoImg)
-        ImgDestroy(TileIsoImg);
 
     // do this before delete win_main
     _libgui_save_prefs();
@@ -729,7 +724,7 @@ static void _libgui_load_prefs()
     }
 
     const char *baseTxt = "wininit.txt";
-    std::string winTxtString = datafile_path(baseTxt, true, true);
+    std::string winTxtString = datafile_path(baseTxt, false, true);
     const char *winTxt = winTxtString.c_str()[0] == 0 ?
         baseTxt : winTxtString.c_str();
 
@@ -782,6 +777,9 @@ static void _libgui_save_prefs()
 {
     int i, mode;
     FILE *fp;
+
+    if (!win_main)
+        return;
 
     winox = win_main->ox;
     winoy = win_main->oy;

@@ -38,7 +38,6 @@ extern void TileDrawDungeonAux();
 
 // Raw tile images
 extern img_type TileImg;
-extern img_type TileIsoImg;
 extern img_type PlayerImg;
 extern img_type WallImg;
 extern img_type ScrBufImg;
