@@ -2345,7 +2345,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
             };
 
             if ( create_monster(RANDOM_ELEMENT(golems), 5, BEH_FRIENDLY,
-                                you.x_pos, you.y_pos, MHITYOU,
+                                you.x_pos, you.y_pos, you.pet_target,
                                 MONS_PROGRAM_BUG) != -1 )
             {
                 mpr("You construct a golem!");
@@ -2504,7 +2504,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
         dct = DEMON_LESSER;
 
     create_monster( summon_any_demon(dct), std::min(power/50,6),
-                    BEH_FRIENDLY, you.x_pos, you.y_pos, MHITYOU,
+                    BEH_FRIENDLY, you.x_pos, you.y_pos, you.pet_target,
                     MONS_PROGRAM_BUG );
 }
 
@@ -2551,18 +2551,20 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
     if ( mon_chosen == NUM_MONSTERS ) // should never happen
         return;
 
-    if ( power_level == 0 && one_chance_in(4) )
-        create_monster( mon_chosen, 3, BEH_HOSTILE,
-                        chosen_x, chosen_y, MHITYOU, MONS_PROGRAM_BUG );
-    else
-        create_monster( mon_chosen, 3, BEH_FRIENDLY,
-                        chosen_x, chosen_y, you.pet_target, MONS_PROGRAM_BUG );
+    const bool friendly = (power_level > 0 || !one_chance_in(4));
+
+    create_monster( mon_chosen, 3,
+                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                    chosen_x, chosen_y,
+                    friendly ? you.pet_target : MHITYOU,
+                    MONS_PROGRAM_BUG );
 }
 
 static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     const bool friendly = (power_level > 0 || !one_chance_in(4));
+
     const int mon = create_monster( MONS_DANCING_WEAPON, power_level + 3,
                                     friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                                     you.x_pos, you.y_pos,
