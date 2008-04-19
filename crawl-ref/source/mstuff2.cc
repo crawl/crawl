@@ -2203,14 +2203,14 @@ bolt mons_spells( int spell_cast, int power )
 
 static int monster_abjure_square(const coord_def &pos,
                                  int power, int test_only,
-                                 int friendly)
+                                 int wont_attack)
 {
     const int mindex = mgrd(pos);
     if (mindex == NON_MONSTER)
         return (0);
 
     monsters *target = &menv[mindex];
-    if (!target->alive() || ((bool)friendly == mons_friendly(target)))
+    if (!target->alive() || ((bool)wont_attack == mons_wont_attack(target)))
         return (0);
 
     mon_enchant abj = target->get_ench(ENCH_ABJ);
@@ -2262,7 +2262,7 @@ static int apply_radius_around_square(
 
 static int monster_abjuration(const monsters *caster, bool test)
 {
-    const bool friendly = mons_friendly(caster);
+    const bool wont_attack = mons_wont_attack(caster);
     int maffected = 0;
 
     if (!test)
@@ -2276,7 +2276,7 @@ static int monster_abjuration(const monsters *caster, bool test)
         int number_hit =
             apply_radius_around_square(
                 caster->pos(), rad, monster_abjure_square,
-                pow, test, friendly);
+                pow, test, wont_attack);
 
         maffected += number_hit;
 

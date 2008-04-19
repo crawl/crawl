@@ -864,7 +864,7 @@ void abjuration(int pow)
         if (monster->type == -1 || !mons_near(monster))
             continue;
 
-        if (mons_friendly(monster))
+        if (mons_wont_attack(monster))
             continue;
 
         mon_enchant abj = monster->get_ench(ENCH_ABJ);
