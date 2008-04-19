@@ -65,9 +65,9 @@ enum card_type
     CARD_BANSHEE,               // "the scream"
     CARD_DAMNATION,             // banishment
     CARD_SOLITUDE,              // dispersal
-    CARD_WARPWRIGHT,            // create teleport trap 
+    CARD_WARPWRIGHT,            // create teleport trap
     CARD_FLIGHT,
-   
+
     CARD_VITRIOL,               // acid damage
     CARD_FLAME,                 // fire damage
     CARD_FROST,                 // cold damage
@@ -76,7 +76,7 @@ enum card_type
     CARD_SPARK,                 // lightning damage
     CARD_PAIN,                  // single target, like spell of agony
     CARD_TORMENT,               // Symbol of Torment
-    
+
     CARD_ELIXIR,                // healing
     CARD_BATTLELUST,            // melee boosts
     CARD_METAMORPHOSIS,         // transformation

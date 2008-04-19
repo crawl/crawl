@@ -2638,7 +2638,9 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     {
         create_monster(result, std::min(power/50, 6),
                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                       you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG);
+                       you.x_pos, you.y_pos,
+                       friendly ? you.pet_target : MHITYOU,
+                       MONS_PROGRAM_BUG);
     }
 }
 
@@ -2652,7 +2654,9 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
 
     create_monster(skeltypes[power_level], std::min(power/50,6),
                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                   you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
+                   you.x_pos, you.y_pos,
+                   friendly ? you.pet_target : MHITYOU,
+                   MONS_PROGRAM_BUG);
 }
 
 static int _card_power(deck_rarity_type rarity)
