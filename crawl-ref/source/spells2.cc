@@ -1473,8 +1473,8 @@ void summon_scorpions(int pow)
 
 void summon_ugly_thing(int pow)
 {
-    monster_type ugly = (one_chance_in(3)) ? MONS_VERY_UGLY_THING :
-                                             MONS_UGLY_THING;
+    monster_type ugly = (one_chance_in(6 - (pow / 15))) ?
+        MONS_VERY_UGLY_THING : MONS_UGLY_THING;
 
     int numsc = std::min(2 + (random2(pow) / 4), 6);
 
