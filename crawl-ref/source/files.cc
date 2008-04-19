@@ -239,7 +239,11 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
 
 #ifdef _MSC_VER
     WIN32_FIND_DATA lData;
-    HANDLE hFind = FindFirstFile(dirname.c_str(), &lData);
+    std::string dir = dirname;
+    if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
+        dir += FILE_SEPARATOR;
+    dir += "*";
+    HANDLE hFind = FindFirstFile(dir.c_str(), &lData);
     if (hFind != INVALID_HANDLE_VALUE)
     {
         if (_is_good_filename(lData.cFileName))
