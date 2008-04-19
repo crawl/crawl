@@ -28,7 +28,7 @@
 #include <algorithm>
 
 #ifdef DOS
-#include <conio.h>
+ #include <conio.h>
 #endif
 
 #include "externs.h"
@@ -739,8 +739,8 @@ void direction(dist& moves, targeting_type restricts,
             {
                 const monsters *montarget = &menv[you.prev_targ];
 
-                if (!mons_near(montarget) ||
-                    !player_monster_visible( montarget ))
+                if (!mons_near(montarget)
+                    || !player_monster_visible( montarget ))
                 {
                     mpr("You can't see that creature any more.",
                         MSGCH_EXAMINE_FILTER);
@@ -806,11 +806,9 @@ void direction(dist& moves, targeting_type restricts,
                 moves.tx = objfind_pos[0];
                 moves.ty = objfind_pos[1];
             }
-            else
-            {
-                if (!skip_iter)
-                    flush_input_buffer(FLUSH_ON_FAILURE);
-            }
+            else if (!skip_iter)
+                flush_input_buffer(FLUSH_ON_FAILURE);
+
             break;
 
         case CMD_TARGET_CYCLE_FORWARD:
@@ -823,11 +821,9 @@ void direction(dist& moves, targeting_type restricts,
                 moves.tx = monsfind_pos[0];
                 moves.ty = monsfind_pos[1];
             }
-            else
-            {
-                if (!skip_iter)
-                    flush_input_buffer(FLUSH_ON_FAILURE);
-            }
+            else if (!skip_iter)
+                flush_input_buffer(FLUSH_ON_FAILURE);
+
             break;
 
         case CMD_TARGET_CANCEL:
@@ -924,10 +920,10 @@ void direction(dist& moves, targeting_type restricts,
 
             // Confirm self-targeting on TARG_ENEMY.
             // Conceivably we might want to confirm on TARG_ANY too.
-            if ( moves.isTarget &&
-                 moves.tx == you.x_pos && moves.ty == you.y_pos &&
-                 mode == TARG_ENEMY &&
-                 !yesno("Really target yourself?", false, 'n'))
+            if ( moves.isTarget
+                 && moves.tx == you.x_pos && moves.ty == you.y_pos
+                 && mode == TARG_ENEMY
+                 && !yesno("Really target yourself?", false, 'n'))
             {
                 mesclr();
                 show_prompt = true;
@@ -1436,16 +1432,14 @@ static char find_square( int xps, int yps,
                         const int xi = temp_xps + i - ctrx;
                         const int yj = temp_yps + j - ctry;
 
-                        if (xi >= 0 && yj <= 0)
+                        if (xi >= 0 && yj <= 0
+                            && abs(xi) > abs(yj + 1))
                         {
-                            if (abs(xi) > abs(yj + 1))
-                            {
-                                x_change = 0;
-                                y_change = -1;
-                                if (xi > 0)
-                                    y_change = 1;
-                                goto finished_spiralling;
-                            }
+                            x_change = 0;
+                            y_change = -1;
+                            if (xi > 0)
+                                y_change = 1;
+                            goto finished_spiralling;
                         }
 
                         x_change = -1;
@@ -1601,7 +1595,7 @@ void describe_floor()
 
     // water is not terribly important if you don't mind it
     if ((grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER
-        || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER)
+            || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER)
         && player_likes_water())
     {
         channel = MSGCH_EXAMINE_FILTER;
@@ -2076,40 +2070,46 @@ static void describe_monster(const monsters *mon)
 
     if (!mons_is_mimic(mon->type) && mons_behaviour_perceptible(mon))
     {
-       if (mon->behaviour == BEH_SLEEP)
-       {
-           mprf(MSGCH_EXAMINE, "%s appears to be resting.",
-                mon->pronoun(PRONOUN_CAP).c_str());
-       }
-       // Applies to both friendlies and hostiles
-       else if (mon->behaviour == BEH_FLEE)
-       {
-           mprf(MSGCH_EXAMINE, "%s is retreating.",
-                mon->pronoun(PRONOUN_CAP).c_str());
-       }
-       // hostile with target != you
-       else if (!mons_friendly(mon) && !mons_neutral(mon) && mon->foe != MHITYOU)
-       {
-           // special case: batty monsters get set to BEH_WANDER as
-           // part of their special behaviour.
-           if (!testbits(mon->flags, MF_BATTY))
-           {
-               mprf(MSGCH_EXAMINE, "%s doesn't appear to have noticed you.",
-                    mon->pronoun(PRONOUN_CAP).c_str());
-           }
-       }
+        if (mon->behaviour == BEH_SLEEP)
+        {
+            mprf(MSGCH_EXAMINE, "%s appears to be resting.",
+                 mon->pronoun(PRONOUN_CAP).c_str());
+        }
+        // Applies to both friendlies and hostiles
+        else if (mon->behaviour == BEH_FLEE)
+        {
+            mprf(MSGCH_EXAMINE, "%s is retreating.",
+                 mon->pronoun(PRONOUN_CAP).c_str());
+        }
+        // hostile with target != you
+        else if (!mons_friendly(mon) && !mons_neutral(mon) && mon->foe != MHITYOU)
+        {
+            // special case: batty monsters get set to BEH_WANDER as
+            // part of their special behaviour.
+            if (!testbits(mon->flags, MF_BATTY))
+            {
+                mprf(MSGCH_EXAMINE, "%s doesn't appear to have noticed you.",
+                     mon->pronoun(PRONOUN_CAP).c_str());
+            }
+        }
     }
 
     if (mon->attitude == ATT_FRIENDLY)
+    {
         mprf(MSGCH_EXAMINE, "%s is friendly.",
              mon->pronoun(PRONOUN_CAP).c_str());
+    }
     else if (mons_neutral(mon)) // don't differentiate between permanent or not
+    {
         mprf(MSGCH_EXAMINE, "%s is indifferent to you.",
              mon->pronoun(PRONOUN_CAP).c_str());
+    }
 
     if (mon->haloed())
+    {
         mprf(MSGCH_EXAMINE, "%s is illuminated by a halo.",
              mon->pronoun(PRONOUN_CAP).c_str());
+    }
 
     std::string desc = "";
     std::string last_desc = "";
@@ -2193,13 +2193,10 @@ static void describe_cell(int mx, int my)
     {
         int i = mgrd[mx][my];
 
-        if (grd[mx][my] == DNGN_SHALLOW_WATER)
+        if (_mon_submerged_in_water(&menv[i]))
         {
-            if (!player_monster_visible(&menv[i]) && !mons_flies(&menv[i]))
-            {
-                mpr("There is a strange disturbance in the water here.",
-                    MSGCH_EXAMINE_FILTER);
-            }
+            mpr("There is a strange disturbance in the water here.",
+                MSGCH_EXAMINE_FILTER);
         }
 
 #if DEBUG_DIAGNOSTICS
@@ -2261,12 +2258,16 @@ static void describe_cell(int mx, int my)
             if (mitm[ targ_item ].base_type == OBJ_GOLD)
                 mprf( MSGCH_FLOOR_ITEMS, "A pile of gold coins." );
             else
+            {
                 mprf( MSGCH_FLOOR_ITEMS, "You see %s here.",
                       mitm[targ_item].name(DESC_NOCAP_A).c_str());
+            }
 
             if (mitm[ targ_item ].link != NON_ITEM)
+            {
                 mprf( MSGCH_FLOOR_ITEMS,
                       "There is something else lying underneath.");
+            }
         }
         item_described = true;
     }
@@ -2313,7 +2314,9 @@ static void describe_cell(int mx, int my)
         // already described.
         if ((feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL) && !bloody
             && (monster_described || item_described || cloud_described))
+        {
             return;
+        }
 
         msg_channel_type channel = MSGCH_EXAMINE;
         if (feat == DNGN_FLOOR
@@ -2349,8 +2352,8 @@ int targeting_behaviour::get_key()
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
-    return unmangle_direction_keys(
-        getchm(KC_TARGETING), KC_TARGETING, false, false);
+    return unmangle_direction_keys( getchm(KC_TARGETING), KC_TARGETING,
+                                    false, false);
 }
 
 command_type targeting_behaviour::get_command(int key)
@@ -2360,65 +2363,70 @@ command_type targeting_behaviour::get_command(int key)
 
     switch ( key )
     {
-    case ESCAPE: case 'x': return CMD_TARGET_CANCEL;
+    case ESCAPE:
+    case 'x':  return CMD_TARGET_CANCEL;
 
 #ifdef USE_TILE
-    case CK_MOUSE_MOVE: return CMD_TARGET_MOUSE_MOVE;
+    case CK_MOUSE_MOVE:  return CMD_TARGET_MOUSE_MOVE;
     case CK_MOUSE_CLICK: return CMD_TARGET_MOUSE_SELECT;
 #endif
 
 #ifdef WIZARD
-    case 'F': return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
-    case 's': return CMD_TARGET_WIZARD_MAKE_SHOUT;
-    case 'g': return CMD_TARGET_WIZARD_GIVE_ITEM;
+    case 'F':  return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
+    case 's':  return CMD_TARGET_WIZARD_MAKE_SHOUT;
+    case 'g':  return CMD_TARGET_WIZARD_GIVE_ITEM;
 #endif
-    case 'v': return CMD_TARGET_DESCRIBE;
-    case '?': return CMD_TARGET_HELP;
-    case ' ': return just_looking? CMD_TARGET_CANCEL : CMD_TARGET_SELECT;
+    case 'v':  return CMD_TARGET_DESCRIBE;
+    case '?':  return CMD_TARGET_HELP;
+    case ' ':  return just_looking? CMD_TARGET_CANCEL : CMD_TARGET_SELECT;
 #ifdef WIZARD
     case CONTROL('C'): return CMD_TARGET_CYCLE_BEAM;
 #endif
-    case ':': return CMD_TARGET_HIDE_BEAM;
+    case ':':  return CMD_TARGET_HIDE_BEAM;
     case '\r': return CMD_TARGET_SELECT;
-    case '.': return CMD_TARGET_SELECT;
-    case '5': return CMD_TARGET_SELECT;
-    case '!': return CMD_TARGET_SELECT_ENDPOINT;
+    case '.':  return CMD_TARGET_SELECT;
+    case '5':  return CMD_TARGET_SELECT;
+    case '!':  return CMD_TARGET_SELECT_ENDPOINT;
 
-    case '\\': case '\t': return CMD_TARGET_FIND_PORTAL;
-    case '^': return CMD_TARGET_FIND_TRAP;
-    case '_': return CMD_TARGET_FIND_ALTAR;
-    case '<': return CMD_TARGET_FIND_UPSTAIR;
-    case '>': return CMD_TARGET_FIND_DOWNSTAIR;
+    case '\\':
+    case '\t': return CMD_TARGET_FIND_PORTAL;
+    case '^':  return CMD_TARGET_FIND_TRAP;
+    case '_':  return CMD_TARGET_FIND_ALTAR;
+    case '<':  return CMD_TARGET_FIND_UPSTAIR;
+    case '>':  return CMD_TARGET_FIND_DOWNSTAIR;
 
     case CONTROL('F'): return CMD_TARGET_CYCLE_TARGET_MODE;
-    case 'p': return CMD_TARGET_PREV_TARGET;
-    case 'f': return CMD_TARGET_MAYBE_PREV_TARGET;
-    case 't': return CMD_TARGET_MAYBE_PREV_TARGET; // f. users of the 0.3.4 keys
+    case 'p':  return CMD_TARGET_PREV_TARGET;
+    case 'f':  return CMD_TARGET_MAYBE_PREV_TARGET;
+    case 't':  return CMD_TARGET_MAYBE_PREV_TARGET; // for the 0.3.4 keys
 
-    case '-': return CMD_TARGET_CYCLE_BACK;
-    case '+': case '=':  return CMD_TARGET_CYCLE_FORWARD;
-    case ';': case '/':  return CMD_TARGET_OBJ_CYCLE_BACK;
-    case '*': case '\'': return CMD_TARGET_OBJ_CYCLE_FORWARD;
+    case '-':  return CMD_TARGET_CYCLE_BACK;
+    case '+':
+    case '=':  return CMD_TARGET_CYCLE_FORWARD;
+    case ';':
+    case '/':  return CMD_TARGET_OBJ_CYCLE_BACK;
+    case '*':
+    case '\'': return CMD_TARGET_OBJ_CYCLE_FORWARD;
 
-    case 'b': return CMD_TARGET_DOWN_LEFT;
-    case 'h': return CMD_TARGET_LEFT;
-    case 'j': return CMD_TARGET_DOWN;
-    case 'k': return CMD_TARGET_UP;
-    case 'l': return CMD_TARGET_RIGHT;
-    case 'n': return CMD_TARGET_DOWN_RIGHT;
-    case 'u': return CMD_TARGET_UP_RIGHT;
-    case 'y': return CMD_TARGET_UP_LEFT;
+    case 'b':  return CMD_TARGET_DOWN_LEFT;
+    case 'h':  return CMD_TARGET_LEFT;
+    case 'j':  return CMD_TARGET_DOWN;
+    case 'k':  return CMD_TARGET_UP;
+    case 'l':  return CMD_TARGET_RIGHT;
+    case 'n':  return CMD_TARGET_DOWN_RIGHT;
+    case 'u':  return CMD_TARGET_UP_RIGHT;
+    case 'y':  return CMD_TARGET_UP_LEFT;
 
-    case 'B': return CMD_TARGET_DIR_DOWN_LEFT;
-    case 'H': return CMD_TARGET_DIR_LEFT;
-    case 'J': return CMD_TARGET_DIR_DOWN;
-    case 'K': return CMD_TARGET_DIR_UP;
-    case 'L': return CMD_TARGET_DIR_RIGHT;
-    case 'N': return CMD_TARGET_DIR_DOWN_RIGHT;
-    case 'U': return CMD_TARGET_DIR_UP_RIGHT;
-    case 'Y': return CMD_TARGET_DIR_UP_LEFT;
+    case 'B':  return CMD_TARGET_DIR_DOWN_LEFT;
+    case 'H':  return CMD_TARGET_DIR_LEFT;
+    case 'J':  return CMD_TARGET_DIR_DOWN;
+    case 'K':  return CMD_TARGET_DIR_UP;
+    case 'L':  return CMD_TARGET_DIR_RIGHT;
+    case 'N':  return CMD_TARGET_DIR_DOWN_RIGHT;
+    case 'U':  return CMD_TARGET_DIR_UP_RIGHT;
+    case 'Y':  return CMD_TARGET_DIR_UP_LEFT;
 
-    default: return CMD_NO_CMD;
+    default:   return CMD_NO_CMD;
     }
 }
 

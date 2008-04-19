@@ -91,9 +91,9 @@ static void _beam_explodes(bolt &beam, int x, int y);
 static int  _affect_wall(bolt &beam, int x, int y);
 static int  _affect_place_clouds(bolt &beam, int x, int y);
 static void _affect_place_explosion_clouds(bolt &beam, int x, int y);
-static int  _affect_player(bolt &beam);
+static int  _affect_player(bolt &beam, item_def *item = NULL);
 static void _affect_items(bolt &beam, int x, int y);
-static int  _affect_monster(bolt &beam, monsters *mon);
+static int  _affect_monster(bolt &beam, monsters *mon, item_def *item = NULL);
 static int  _affect_monster_enchantment(bolt &beam, monsters *mon);
 static void _beam_paralyses_monster( bolt &pbolt, monsters *monster );
 static int  _range_used_on_hit(bolt &beam);
@@ -223,18 +223,18 @@ void zapping(zap_type ztype, int power, bolt &pbolt)
     // stuff monsters throw/zap.
 
     // all of the following might be changed by zappy():
-    pbolt.range = 8 + random2(5);       // default for "0" beams (I think)
-    pbolt.rangeMax = 0;
-    pbolt.hit = 0;                      // default for "0" beams (I think)
-    pbolt.damage = dice_def( 1, 0 );    // default for "0" beams (I think)
-    pbolt.type = 0;                     // default for "0" beams
-    pbolt.flavour = BEAM_MAGIC;         // default for "0" beams
-    pbolt.ench_power = power;
+    pbolt.range          = 8 + random2(5);    // default for "0" beams (I think)
+    pbolt.rangeMax       = 0;
+    pbolt.hit            = 0;                 // default for "0" beams (I think)
+    pbolt.damage         = dice_def( 1, 0 );  // default for "0" beams (I think)
+    pbolt.type           = 0;                 // default for "0" beams
+    pbolt.flavour        = BEAM_MAGIC;        // default for "0" beams
+    pbolt.ench_power     = power;
     pbolt.obvious_effect = false;
-    pbolt.is_beam = false;               // default for all beams.
-    pbolt.is_tracer = false;             // default for all player beams
-    pbolt.thrower = KILL_YOU_MISSILE;   // missile from player
-    pbolt.aux_source.clear();            // additional source info, unused
+    pbolt.is_beam        = false;             // default for all beams.
+    pbolt.is_tracer      = false;             // default for all player beams
+    pbolt.thrower        = KILL_YOU_MISSILE;  // missile from player
+    pbolt.aux_source.clear();                 // additional source info, unused
 
     // fill in the bolt structure
     _zappy( ztype, power, pbolt );
@@ -269,7 +269,7 @@ dice_def calc_dice( int num_dice, int max_damage )
     {
         // Divide the damage among the dice, and add one
         // occasionally to make up for the fractions. -- bwr
-        ret.size = max_damage / num_dice;
+        ret.size  = max_damage / num_dice;
         ret.size += (random2( num_dice ) < max_damage % num_dice);
     }
 
@@ -539,521 +539,498 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     switch (z_type)
     {
     case ZAP_STRIKING:                                  // cap 25
-        pbolt.name = "force bolt";
-        pbolt.colour = BLACK;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = dice_def( 1, 5 );                // dam: 5
-        pbolt.hit = 8 + power / 10;                     // 25: 10
-        pbolt.type = dchar_glyph(DCHAR_SPACE);
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
+        pbolt.name           = "force bolt";
+        pbolt.colour         = BLACK;
+        pbolt.range          = 8 + random2(5);
+        pbolt.damage         = dice_def( 1, 5 );            // dam: 5
+        pbolt.hit            = 8 + power / 10;              // 25: 10
+        pbolt.type           = dchar_glyph(DCHAR_SPACE);
+        pbolt.flavour        = BEAM_MMISSILE;               // unresistable
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_MAGIC_DARTS:                               // cap 25
-        pbolt.name = "magic dart";
-        pbolt.colour = LIGHTMAGENTA;
-        pbolt.range = random2(5) + 8;
-        pbolt.damage = dice_def( 1, 3 + power / 5 );    // 25: 1d8
-        pbolt.hit = AUTOMATIC_HIT;                      // hits always
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
+        pbolt.name           = "magic dart";
+        pbolt.colour         = LIGHTMAGENTA;
+        pbolt.range          = random2(5) + 8;
+        pbolt.damage         = dice_def( 1, 3 + power / 5 ); // 25: 1d8
+        pbolt.hit            = AUTOMATIC_HIT;                // hits always
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_STING:                                     // cap 25
-        pbolt.name = "sting";
-        pbolt.colour = GREEN;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = dice_def( 1, 3 + power / 5 );    // 25: 1d8
-        pbolt.hit = 8 + power / 5;                      // 25: 13
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_POISON;                    // extra damage
-
+        pbolt.name           = "sting";
+        pbolt.colour         = GREEN;
+        pbolt.range          = 8 + random2(5);
+        pbolt.damage         = dice_def( 1, 3 + power / 5 ); // 25: 1d8
+        pbolt.hit            = 8 + power / 5;                // 25: 13
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_POISON;                  // extra damage
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_ELECTRICITY:                               // cap 20
-        pbolt.name = "zap";
-        pbolt.colour = LIGHTCYAN;
-        pbolt.range = 6 + random2(8);                   // extended in beam
-        pbolt.damage = dice_def( 1, 3 + random2(power) / 2 ); // 25: 1d11
-        pbolt.hit = 8 + power / 7;                      // 25: 11
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_ELECTRICITY;               // beams & reflects
-
+        pbolt.name           = "zap";
+        pbolt.colour         = LIGHTCYAN;
+        pbolt.range          = 6 + random2(8);               // extended in beam
+        pbolt.damage         = dice_def( 1, 3 + random2(power) / 2 );// 25: 1d11
+        pbolt.hit            = 8 + power / 7;                        // 25: 11
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_ELECTRICITY;             // beams & reflects
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_DISRUPTION:                                // cap 25
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_DISINTEGRATION;
-        pbolt.range = 7 + random2(8);
-        pbolt.damage = dice_def( 1, 4 + power / 5 );    // 25: 1d9
-        pbolt.ench_power *= 3;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_DISINTEGRATION;
+        pbolt.range          = 7 + random2(8);
+        pbolt.damage         = dice_def( 1, 4 + power / 5 );    // 25: 1d9
+        pbolt.ench_power    *= 3;
         break;
 
     case ZAP_PAIN:                                      // cap 25
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_PAIN;
-        pbolt.range = 7 + random2(8);
-        pbolt.damage = dice_def( 1, 4 + power / 5 );    // 25: 1d9
-        pbolt.ench_power *= 7;
-        pbolt.ench_power /= 2;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_PAIN;
+        pbolt.range          = 7 + random2(8);
+        pbolt.damage         = dice_def( 1, 4 + power / 5 );    // 25: 1d9
+        pbolt.ench_power    *= 7;
+        pbolt.ench_power    /= 2;
         break;
 
     case ZAP_FLAME_TONGUE:                              // cap 25
-        pbolt.name = "flame";
-        pbolt.colour = RED;
+        pbolt.name           = "flame";
+        pbolt.colour         = RED;
 
-        pbolt.range = 1 + random2(2) + random2(power) / 10;
+        pbolt.range          = 1 + random2(2) + random2(power) / 10;
         if (pbolt.range > 4)
             pbolt.range = 4;
 
-        pbolt.damage = dice_def( 1, 8 + power / 4 );    // 25: 1d14
-        pbolt.hit = 7 + power / 6;                      // 25: 11
-        pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
-        pbolt.flavour = BEAM_FIRE;
-
+        pbolt.damage         = dice_def( 1, 8 + power / 4 );    // 25: 1d14
+        pbolt.hit            = 7 + power / 6;                   // 25: 11
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_BOLT);
+        pbolt.flavour        = BEAM_FIRE;
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_SMALL_SANDBLAST:                           // cap 25
-        pbolt.name = "blast of ";
+        pbolt.name           = "blast of ";
 
-        temp_rand = random2(4);
+        temp_rand            = random2(4);
+        pbolt.name          += (temp_rand == 0) ? "dust" :
+                               (temp_rand == 1) ? "dirt" :
+                               (temp_rand == 2) ? "grit" : "sand";
 
-        pbolt.name += (temp_rand == 0) ? "dust" :
-                           (temp_rand == 1) ? "dirt" :
-                           (temp_rand == 2) ? "grit" : "sand";
-
-        pbolt.colour = BROWN;
-        pbolt.range = (random2(power) > random2(30)) ? 2 : 1;
-        pbolt.damage = dice_def( 1, 8 + power / 4 );    // 25: 1d14
-        pbolt.hit = 8 + power / 5;                      // 25: 13
-        pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
-        pbolt.flavour = BEAM_FRAG;                      // extra AC resist
-
+        pbolt.colour         = BROWN;
+        pbolt.range          = (random2(power) > random2(30)) ? 2 : 1;
+        pbolt.damage         = dice_def( 1, 8 + power / 4 );    // 25: 1d14
+        pbolt.hit            = 8 + power / 5;                   // 25: 13
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_BOLT);
+        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_SANDBLAST:                                 // cap 50
-        pbolt.name = coinflip() ? "blast of rock" : "rocky blast";
-        pbolt.colour = BROWN;
+        pbolt.name           = coinflip() ? "blast of rock" : "rocky blast";
 
-        pbolt.range = 2 + random2(power) / 20;
+        pbolt.colour         = BROWN;
+
+        pbolt.range          = 2 + random2(power) / 20;
         if (pbolt.range > 4)
             pbolt.range = 4;
 
-        pbolt.damage = dice_def( 2, 4 + power / 3 );    // 25: 2d12
-        pbolt.hit = 13 + power / 10;                    // 25: 15
-        pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
-        pbolt.flavour = BEAM_FRAG;                      // extra AC resist
-
+        pbolt.damage         = dice_def( 2, 4 + power / 3 );    // 25: 2d12
+        pbolt.hit            = 13 + power / 10;                 // 25: 15
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_BOLT);
+        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_BONE_SHARDS:
-        pbolt.name = "spray of bone shards";
-        pbolt.colour = LIGHTGREY;
-        pbolt.range = 7 + random2(10);
+        pbolt.name           = "spray of bone shards";
+        pbolt.colour         = LIGHTGREY;
+        pbolt.range          = 7 + random2(10);
 
         // Incoming power is highly dependant on mass (see spells3.cc).
         // Basic function is power * 15 + mass...  with the largest
         // available mass (3000) we get a power of 4500 at a power
         // level of 100 (for 3d20).
-        pbolt.damage = dice_def( 3, 2 + (power / 250) );
-        pbolt.hit = 8 + (power / 100);                   // max hit: 53
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_MAGIC;                      // unresisted
-
+        pbolt.damage         = dice_def( 3, 2 + (power / 250) );
+        pbolt.hit            = 8 + (power / 100);               // max hit: 53
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_MAGIC;                      // unresisted
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_FLAME:                                     // cap 50
-        pbolt.name = "puff of flame";
-        pbolt.colour = RED;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = dice_def( 2, 4 + power / 10 );   // 25: 2d6  50: 2d9
-        pbolt.hit = 8 + power / 10;                     // 25: 10   50: 13
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_FIRE;
-
+        pbolt.name           = "puff of flame";
+        pbolt.colour         = RED;
+        pbolt.range          = 8 + random2(5);
+        pbolt.damage         = dice_def( 2, 4 + power / 10 );// 25: 2d6  50: 2d9
+        pbolt.hit            = 8 + power / 10;               // 25: 10   50: 13
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_FIRE;
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_FROST:                                     // cap 50
-        pbolt.name = "puff of frost";
-        pbolt.colour = WHITE;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = dice_def( 2, 4 + power / 10 );   // 25: 2d6  50: 2d9
-        pbolt.hit = 8 + power / 10;                     // 50: 10   50: 13
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_COLD;
-
+        pbolt.name           = "puff of frost";
+        pbolt.colour         = WHITE;
+        pbolt.range          = 8 + random2(5);
+        pbolt.damage         = dice_def( 2, 4 + power / 10 );// 25: 2d6  50: 2d9
+        pbolt.hit            = 8 + power / 10;               // 25: 10   50: 13
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_COLD;
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_STONE_ARROW:                               // cap 100
-        pbolt.name = "stone arrow";
-        pbolt.colour = LIGHTGREY;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = dice_def( 2, 5 + power / 7 );    // 25: 2d8  50: 2d12
-        pbolt.hit = 8 + power / 10;                     // 25: 10    50: 13
-        pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-        pbolt.flavour = BEAM_MMISSILE;                  // irresistible
-
+        pbolt.name           = "stone arrow";
+        pbolt.colour         = LIGHTGREY;
+        pbolt.range          = 8 + random2(5);
+        pbolt.damage         = dice_def( 2, 5 + power / 7 );// 25: 2d8  50: 2d12
+        pbolt.hit            = 8 + power / 10;              // 25: 10    50: 13
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
+        pbolt.flavour        = BEAM_MMISSILE;               // irresistible
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_STICKY_FLAME:                              // cap 100
-        pbolt.name = "sticky flame";        // extra damage
-        pbolt.colour = RED;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = dice_def( 2, 3 + power / 12 );   // 50: 2d7  100: 2d11
-        pbolt.hit = 11 + power / 10;                    // 50: 16   100: 21
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_FIRE;
-
+        pbolt.name           = "sticky flame";          // extra damage
+        pbolt.colour         = RED;
+        pbolt.range          = 8 + random2(5);
+                               // 50: 2d7  100: 2d11
+        pbolt.damage         = dice_def( 2, 3 + power / 12 );
+                               // 50: 16   100: 21
+        pbolt.hit            = 11 + power / 10;
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_FIRE;
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_MYSTIC_BLAST:                              // cap 100
-        pbolt.name = "orb of energy";
-        pbolt.colour = LIGHTMAGENTA;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = calc_dice( 2, 15 + (power * 2) / 5 );
-        pbolt.hit = 10 + power / 7;                     // 50: 17   100: 24
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
-
+        pbolt.name           = "orb of energy";
+        pbolt.colour         = LIGHTMAGENTA;
+        pbolt.range          = 8 + random2(5);
+        pbolt.damage         = calc_dice( 2, 15 + (power * 2) / 5 );
+        pbolt.hit            = 10 + power / 7;               // 50: 17   100: 24
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_ICE_BOLT:                                  // cap 100
-        pbolt.name = "bolt of ice";
-        pbolt.colour = WHITE;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = calc_dice( 3, 10 + power / 2 );
-        pbolt.hit = 9 + power / 12;                     // 50: 13   100: 17
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_ICE;                       // half resistable
+        pbolt.name           = "bolt of ice";
+        pbolt.colour         = WHITE;
+        pbolt.range          = 8 + random2(5);
+        pbolt.damage         = calc_dice( 3, 10 + power / 2 );
+        pbolt.hit            = 9 + power / 12;               // 50: 13   100: 17
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_ICE;                     // half resistable
         break;
 
     case ZAP_DISPEL_UNDEAD:                             // cap 100
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_DISPEL_UNDEAD;
-        pbolt.range = 7 + random2(8);
-        pbolt.damage = calc_dice( 3, 20 + (power * 3) / 4 );
-        pbolt.ench_power *= 3;
-        pbolt.ench_power /= 2;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_DISPEL_UNDEAD;
+        pbolt.range          = 7 + random2(8);
+        pbolt.damage         = calc_dice( 3, 20 + (power * 3) / 4 );
+        pbolt.ench_power    *= 3;
+        pbolt.ench_power    /= 2;
         break;
 
     case ZAP_MAGMA:                                     // cap 150
-        pbolt.name = "bolt of magma";
-        pbolt.colour = RED;
-        pbolt.range = 5 + random2(4);
-        pbolt.damage = calc_dice( 4, 10 + (power * 3) / 5 );
-        pbolt.hit = 8 + power / 25;                     // 50: 10   100: 14
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_LAVA;
-
+        pbolt.name           = "bolt of magma";
+        pbolt.colour         = RED;
+        pbolt.range          = 5 + random2(4);
+        pbolt.damage         = calc_dice( 4, 10 + (power * 3) / 5 );
+        pbolt.hit            = 8 + power / 25;               // 50: 10   100: 14
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_LAVA;
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_FIRE:                                      // cap 150
-        pbolt.name = "bolt of fire";
-        pbolt.colour = RED;
-        pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 6, 18 + power * 2 / 3 );
-        pbolt.hit = 10 + power / 25;                    // 50: 12   100: 14
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_FIRE;
-
+        pbolt.name           = "bolt of fire";
+        pbolt.colour         = RED;
+        pbolt.range          = 7 + random2(10);
+        pbolt.damage         = calc_dice( 6, 18 + power * 2 / 3 );
+        pbolt.hit            = 10 + power / 25;              // 50: 12   100: 14
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_FIRE;
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_COLD:                                      // cap 150
-        pbolt.name = "bolt of cold";
-        pbolt.colour = WHITE;
-        pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 6, 18 + power * 2 / 3 );
-        pbolt.hit = 10 + power / 25;                    // 50: 12   100: 14
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_COLD;
-
+        pbolt.name           = "bolt of cold";
+        pbolt.colour         = WHITE;
+        pbolt.range          = 7 + random2(10);
+        pbolt.damage         = calc_dice( 6, 18 + power * 2 / 3 );
+        pbolt.hit            = 10 + power / 25;              // 50: 12   100: 14
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_COLD;
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_VENOM_BOLT:                                // cap 150
-        pbolt.name = "bolt of poison";
-        pbolt.colour = LIGHTGREEN;
-        pbolt.range = 8 + random2(10);
-        pbolt.damage = calc_dice( 4, 15 + power / 2 );
-        pbolt.hit = 8 + power / 20;                     // 50: 10   100: 13
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_POISON;                    // extra damage
-
+        pbolt.name           = "bolt of poison";
+        pbolt.colour         = LIGHTGREEN;
+        pbolt.range          = 8 + random2(10);
+        pbolt.damage         = calc_dice( 4, 15 + power / 2 );
+        pbolt.hit            = 8 + power / 20;               // 50: 10   100: 13
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_POISON;                  // extra damage
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_NEGATIVE_ENERGY:                           // cap 150
         // these always auto-identify, so no generic name
-        pbolt.name = "bolt of negative energy";
-        pbolt.colour = DARKGREY;
-        pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 4, 15 + (power * 3) / 5 );
-        pbolt.hit = 8 + power / 20;                     // 50: 10   100: 13
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_NEG;                       // drains levels
+        pbolt.name           = "bolt of negative energy";
+        pbolt.colour         = DARKGREY;
+        pbolt.range          = 7 + random2(10);
+        pbolt.damage         = calc_dice( 4, 15 + (power * 3) / 5 );
+        pbolt.hit            = 8 + power / 20;               // 50: 10   100: 13
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_NEG;                     // drains levels
         pbolt.obvious_effect = true;
-
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_IRON_BOLT:                                 // cap 150
-        pbolt.name = "iron bolt";
-        pbolt.colour = LIGHTCYAN;
-        pbolt.range = 5 + random2(5);
-        pbolt.damage = calc_dice( 9, 15 + (power * 3) / 4 );
-        pbolt.hit = 7 + power / 15;                     // 50: 10   100: 13
-        pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
+        pbolt.name           = "iron bolt";
+        pbolt.colour         = LIGHTCYAN;
+        pbolt.range          = 5 + random2(5);
+        pbolt.damage         = calc_dice( 9, 15 + (power * 3) / 4 );
+        pbolt.hit            = 7 + power / 15;               // 50: 10   100: 13
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
+        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_POISON_ARROW:                              // cap 150
-        pbolt.name = "poison arrow";
-        pbolt.colour = LIGHTGREEN;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = calc_dice( 4, 15 + power );
-        pbolt.hit = 5 + power / 10;                     // 50: 10  100: 15
-        pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-        pbolt.flavour = BEAM_POISON_ARROW;              // extra damage
+        pbolt.name           = "poison arrow";
+        pbolt.colour         = LIGHTGREEN;
+        pbolt.range          = 8 + random2(5);
+        pbolt.damage         = calc_dice( 4, 15 + power );
+        pbolt.hit            = 5 + power / 10;                // 50: 10  100: 15
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
+        pbolt.flavour        = BEAM_POISON_ARROW;             // extra damage
         pbolt.obvious_effect = true;
         break;
 
 
     case ZAP_DISINTEGRATION:                            // cap 150
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_DISINTEGRATION;
-        pbolt.range = 7 + random2(8);
-        pbolt.damage = calc_dice( 3, 15 + (power * 3) / 4 );
-        pbolt.ench_power *= 5;
-        pbolt.ench_power /= 2;
-        pbolt.is_beam = true;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_DISINTEGRATION;
+        pbolt.range          = 7 + random2(8);
+        pbolt.damage         = calc_dice( 3, 15 + (power * 3) / 4 );
+        pbolt.ench_power    *= 5;
+        pbolt.ench_power    /= 2;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_LIGHTNING:                                 // cap 150
         // also for breath (at pow = lev * 2; max dam: 33)
-        pbolt.name = "bolt of lightning";
-        pbolt.colour = LIGHTCYAN;
-        pbolt.range = 8 + random2(10);                  // extended in beam
-        pbolt.damage = calc_dice( 1, 10 + (power * 3) / 5 );
-        pbolt.hit = 7 + random2(power) / 20;            // 50: 7-9  100: 7-12
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_ELECTRICITY;               // beams & reflects
-
+        pbolt.name           = "bolt of lightning";
+        pbolt.colour         = LIGHTCYAN;
+        pbolt.range          = 8 + random2(10);            // extended in beam
+        pbolt.damage         = calc_dice( 1, 10 + (power * 3) / 5 );
+        pbolt.hit            = 7 + random2(power) / 20;    // 50: 7-9  100: 7-12
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_ELECTRICITY;           // beams & reflects
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_FIREBALL:                                  // cap 150
-        pbolt.name = "fireball";
-        pbolt.colour = RED;
-        pbolt.range = 8 + random2(5);
-        pbolt.damage = calc_dice( 3, 10 + power / 2 );
-        pbolt.hit = 40;                                 // hit: 40
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_FIRE;                 // fire
-        pbolt.is_explosion = true;
+        pbolt.name           = "fireball";
+        pbolt.colour         = RED;
+        pbolt.range          = 8 + random2(5);
+        pbolt.damage         = calc_dice( 3, 10 + power / 2 );
+        pbolt.hit            = 40;                             // hit: 40
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_FIRE;                      // fire
+        pbolt.is_explosion   = true;
         break;
 
     case ZAP_ORB_OF_ELECTRICITY:                        // cap 150
-        pbolt.name = "orb of electricity";
-        pbolt.colour = LIGHTBLUE;
-        pbolt.range = 9 + random2(12);
-        pbolt.damage = calc_dice( 1, 15 + (power * 4) / 5 );
-        pbolt.damage.num = 0;                    // only does explosion damage
-        pbolt.hit = 40;                                 // hit: 40
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_ELECTRICITY;
-        pbolt.is_explosion = true;
+        pbolt.name           = "orb of electricity";
+        pbolt.colour         = LIGHTBLUE;
+        pbolt.range          = 9 + random2(12);
+        pbolt.damage         = calc_dice( 1, 15 + (power * 4) / 5 );
+        pbolt.damage.num     = 0;                  // only does explosion damage
+        pbolt.hit            = 40;                 // hit: 40
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_ELECTRICITY;
+        pbolt.is_explosion   = true;
         break;
 
     case ZAP_ORB_OF_FRAGMENTATION:                      // cap 150
-        pbolt.name = "metal orb";
-        pbolt.colour = CYAN;
-        pbolt.range = 9 + random2(7);
-        pbolt.damage = calc_dice( 3, 30 + (power * 3) / 4 );
-        pbolt.hit = 20;                                 // hit: 20
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_FRAG;                      // extra AC resist
-        pbolt.is_explosion = true;
+        pbolt.name           = "metal orb";
+        pbolt.colour         = CYAN;
+        pbolt.range          = 9 + random2(7);
+        pbolt.damage         = calc_dice( 3, 30 + (power * 3) / 4 );
+        pbolt.hit            = 20;                            // hit: 20
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
+        pbolt.is_explosion   = true;
         break;
 
     case ZAP_CLEANSING_FLAME:
-        pbolt.name = "golden flame";
-        pbolt.colour = YELLOW;
-        pbolt.range = 7;
-        pbolt.damage = calc_dice( 3, 20 + (power * 2) / 3 );
-        pbolt.hit = 150;
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_HOLY;
-
+        pbolt.name           = "golden flame";
+        pbolt.colour         = YELLOW;
+        pbolt.range          = 7;
+        pbolt.damage         = calc_dice( 3, 20 + (power * 2) / 3 );
+        pbolt.hit            = 150;
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_HOLY;
         pbolt.obvious_effect = true;
-        pbolt.is_explosion = true;
+        pbolt.is_explosion   = true;
         break;
 
     case ZAP_CRYSTAL_SPEAR:                             // cap 200
-        pbolt.name = "crystal spear";
-        pbolt.colour = WHITE;
-        pbolt.range = 6 + random2(4);
-        pbolt.damage = calc_dice( 10, 23 + power );
-        pbolt.hit = 10 + power / 15;                    // 50: 13   100: 16
-        pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
-
+        pbolt.name           = "crystal spear";
+        pbolt.colour         = WHITE;
+        pbolt.range          = 6 + random2(4);
+        pbolt.damage         = calc_dice( 10, 23 + power );
+        pbolt.hit            = 10 + power / 15;              // 50: 13   100: 16
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
+        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_HELLFIRE:                                  // cap 200
-        pbolt.name = "hellfire";
-        pbolt.colour = RED;
-        pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 3, 10 + (power * 3) / 4 );
-        pbolt.hit = 20 + power / 10;                    // 50: 25   100: 30
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_HELLFIRE;
-
+        pbolt.name           = "hellfire";
+        pbolt.colour         = RED;
+        pbolt.range          = 7 + random2(10);
+        pbolt.damage         = calc_dice( 3, 10 + (power * 3) / 4 );
+        pbolt.hit            = 20 + power / 10;              // 50: 25   100: 30
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_HELLFIRE;
         pbolt.obvious_effect = true;
-        pbolt.is_explosion = true;
+        pbolt.is_explosion   = true;
         break;
 
     case ZAP_ICE_STORM:                                 // cap 200
-        pbolt.name = "great blast of cold";
-        pbolt.colour = BLUE;
-        pbolt.range = 9 + random2(5);
-        pbolt.damage = calc_dice( 10, 18 + power );
-        pbolt.damage.num = 0;                    // only does explosion damage
-        pbolt.hit = 20 + power / 10;                    // 50: 25   100: 30
-        pbolt.ench_power = power;                       // used for radius
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_ICE;                       // half resisted
-        pbolt.is_explosion = true;
+        pbolt.name           = "great blast of cold";
+        pbolt.colour         = BLUE;
+        pbolt.range          = 9 + random2(5);
+        pbolt.damage         = calc_dice( 10, 18 + power );
+        pbolt.damage.num     = 0;                  // only does explosion damage
+        pbolt.hit            = 20 + power / 10;    // 50: 25   100: 30
+        pbolt.ench_power     = power;              // used for radius
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_ICE;           // half resisted
+        pbolt.is_explosion   = true;
         break;
 
     case ZAP_BEAM_OF_ENERGY:    // bolt of innacuracy
-        pbolt.name = "narrow beam of energy";
-        pbolt.colour = YELLOW;
-        pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 12, 40 + (power * 3) / 2 );
-        pbolt.hit = 1;
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_ENERGY;                    // unresisted
-
+        pbolt.name           = "narrow beam of energy";
+        pbolt.colour         = YELLOW;
+        pbolt.range          = 7 + random2(10);
+        pbolt.damage         = calc_dice( 12, 40 + (power * 3) / 2 );
+        pbolt.hit            = 1;
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_ENERGY;                    // unresisted
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_SPIT_POISON:       // cap 50
         // max pow = lev + mut * 5 = 42
-        pbolt.name = "splash of poison";
-        pbolt.colour = GREEN;
+        pbolt.name           = "splash of poison";
+        pbolt.colour         = GREEN;
 
-        pbolt.range = 3 + random2( 1 + power / 2 );
+        pbolt.range          = 3 + random2( 1 + power / 2 );
         if (pbolt.range > 9)
             pbolt.range = 9;
 
-        pbolt.damage = dice_def( 1, 4 + power / 2 );    // max dam: 25
-        pbolt.hit = 5 + random2( 1 + power / 3 );       // max hit: 19
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_POISON;
+        pbolt.damage         = dice_def( 1, 4 + power / 2 );    // max dam: 25
+        pbolt.hit            = 5 + random2( 1 + power / 3 );    // max hit: 19
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_POISON;
         pbolt.obvious_effect = true;
         break;
 
     case ZAP_BREATHE_FIRE:      // cap 50
         // max pow = lev + mut * 4 + 12 = 51 (capped to 50)
-        pbolt.name = "fiery breath";
-        pbolt.colour = RED;
+        pbolt.name           = "fiery breath";
+        pbolt.colour         = RED;
 
-        pbolt.range = 3 + random2( 1 + power / 2 );
+        pbolt.range          = 3 + random2( 1 + power / 2 );
         if (pbolt.range > 9)
             pbolt.range = 9;
 
-        pbolt.damage = dice_def( 3, 4 + power / 3 );    // max dam: 60
-        pbolt.hit = 8 + random2( 1 + power / 3 );       // max hit: 25
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_FIRE;
-
+        pbolt.damage         = dice_def( 3, 4 + power / 3 );    // max dam: 60
+        pbolt.hit            = 8 + random2( 1 + power / 3 );    // max hit: 25
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_FIRE;
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_BREATHE_FROST:     // cap 50
         // max power = lev = 27
-        pbolt.name = "freezing breath";
-        pbolt.colour = WHITE;
+        pbolt.name           = "freezing breath";
+        pbolt.colour         = WHITE;
 
-        pbolt.range = 3 + random2( 1 + power / 2 );
+        pbolt.range          = 3 + random2( 1 + power / 2 );
         if (pbolt.range > 9)
             pbolt.range = 9;
 
-        pbolt.damage = dice_def( 3, 4 + power / 3 );    // max dam: 39
-        pbolt.hit = 8 + random2( 1 + power / 3 );
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_COLD;
-
+        pbolt.damage         = dice_def( 3, 4 + power / 3 );    // max dam: 39
+        pbolt.hit            = 8 + random2( 1 + power / 3 );
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_COLD;
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_BREATHE_ACID:      // cap 50
         // max power = lev for ability, 50 for minor destruction (max dam: 57)
-        pbolt.name = "acid";
-        pbolt.colour = YELLOW;
+        pbolt.name           = "acid";
+        pbolt.colour         = YELLOW;
 
-        pbolt.range = 3 + random2( 1 + power / 2 );
+        pbolt.range          = 3 + random2( 1 + power / 2 );
         if (pbolt.range > 9)
             pbolt.range = 9;
 
-        pbolt.damage = dice_def( 3, 3 + power / 3 );    // max dam: 36
-        pbolt.hit = 5 + random2( 1 + power / 3 );
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_ACID;
-
+        pbolt.damage         = dice_def( 3, 3 + power / 3 );    // max dam: 36
+        pbolt.hit            = 5 + random2( 1 + power / 3 );
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_ACID;
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_BREATHE_POISON:    // leaves clouds of gas // cap 50
         // max power = lev = 27
-        pbolt.name = "poison gas";
-        pbolt.colour = GREEN;
+        pbolt.name           = "poison gas";
+        pbolt.colour         = GREEN;
 
-        pbolt.range = 3 + random2( 1 + power / 2 );
+        pbolt.range          = 3 + random2( 1 + power / 2 );
         if (pbolt.range > 9)
             pbolt.range = 9;
 
-        pbolt.damage = dice_def( 3, 2 + power / 6 );    // max dam: 18
-        pbolt.hit = 6 + random2( 1 + power / 3 );
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_POISON;
-
+        pbolt.damage         = dice_def( 3, 2 + power / 6 );    // max dam: 18
+        pbolt.hit            = 6 + random2( 1 + power / 3 );
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_POISON;
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_BREATHE_POWER:     // cap 50
-        pbolt.name = "bolt of energy";
+        pbolt.name           = "bolt of energy";
         // max power = lev = 27
 
-        pbolt.colour = BLUE;
+        pbolt.colour         = BLUE;
         if (random2(power) >= 8)
             pbolt.colour = LIGHTBLUE;
         if (random2(power) >= 12)
@@ -1061,180 +1038,176 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         if (random2(power) >= 17)
             pbolt.colour = LIGHTMAGENTA;
 
-        pbolt.range = 6 + random2( 1 + power / 2 );
+        pbolt.range          = 6 + random2( 1 + power / 2 );
         if (pbolt.range > 9)
             pbolt.range = 9;
 
-        pbolt.damage = dice_def( 3, 3 + power / 3 );    // max dam: 36
-        pbolt.hit = 5 + random2( 1 + power / 3 );
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
-
+        pbolt.damage         = dice_def( 3, 3 + power / 3 );   // max dam: 36
+        pbolt.hit            = 5 + random2( 1 + power / 3 );
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_BREATHE_STEAM:     // cap 50
         // max power = lev = 27
-        pbolt.name = "ball of steam";
-        pbolt.colour = LIGHTGREY;
+        pbolt.name           = "ball of steam";
+        pbolt.colour         = LIGHTGREY;
 
-        pbolt.range = 6 + random2(5);
+        pbolt.range          = 6 + random2(5);
         if (pbolt.range > 9)
             pbolt.range = 9;
 
-        pbolt.damage = dice_def( 3, 4 + power / 5 );    // max dam: 27
-        pbolt.hit = 10 + random2( 1 + power / 5 );
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_STEAM;
-
+        pbolt.damage         = dice_def( 3, 4 + power / 5 );    // max dam: 27
+        pbolt.hit            = 10 + random2( 1 + power / 5 );
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.flavour        = BEAM_STEAM;
         pbolt.obvious_effect = true;
-        pbolt.is_beam = true;
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_SLOWING:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_SLOW;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_SLOW;
         // pbolt.is_beam = true;
         break;
 
     case ZAP_HASTING:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_HASTE;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_HASTE;
         // pbolt.is_beam = true;
         break;
 
     case ZAP_PARALYSIS:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_PARALYSIS;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_PARALYSIS;
         // pbolt.is_beam = true;
         break;
 
     case ZAP_CONFUSION:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_CONFUSION;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_CONFUSION;
         // pbolt.is_beam = true;
         break;
 
     case ZAP_INVISIBILITY:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_INVISIBILITY;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_INVISIBILITY;
         // pbolt.is_beam = true;
         break;
 
     case ZAP_HEALING:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_HEALING;
-        pbolt.damage = dice_def( 1, 7 + power / 3 );
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_HEALING;
+        pbolt.damage         = dice_def( 1, 7 + power / 3 );
         // pbolt.is_beam = true;
         break;
 
     case ZAP_DIGGING:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_DIGGING;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_DIGGING;
         // not ordinary "0" beam range {dlb}
-        pbolt.range = 3 + random2( power / 5 ) + random2(5);
-        pbolt.is_beam = true;
+        pbolt.range          = 3 + random2( power / 5 ) + random2(5);
+        pbolt.is_beam        = true;
         break;
 
     case ZAP_TELEPORTATION:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_TELEPORT;
-        pbolt.range = 9 + random2(5);
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_TELEPORT;
+        pbolt.range          = 9 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_POLYMORPH_OTHER:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_POLYMORPH;
-        pbolt.range = 9 + random2(5);
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_POLYMORPH;
+        pbolt.range          = 9 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_ENSLAVEMENT:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_CHARM;
-        pbolt.range = 7 + random2(5);
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_CHARM;
+        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_BANISHMENT:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_BANISH;
-        pbolt.range = 7 + random2(5);
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_BANISH;
+        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_DEGENERATION:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_DEGENERATE;
-        pbolt.range = 7 + random2(5);
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_DEGENERATE;
+        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_ENSLAVE_UNDEAD:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_ENSLAVE_UNDEAD;
-        pbolt.range = 7 + random2(5);
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_ENSLAVE_UNDEAD;
+        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_AGONY:
-        pbolt.name = "0agony";
-        pbolt.flavour = BEAM_PAIN;
-        pbolt.range = 7 + random2(8);
-        pbolt.ench_power *= 5;
+        pbolt.name           = "0agony";
+        pbolt.flavour        = BEAM_PAIN;
+        pbolt.range          = 7 + random2(8);
+        pbolt.ench_power    *= 5;
         // pbolt.is_beam = true;
         break;
 
     case ZAP_CONTROL_DEMON:
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_ENSLAVE_DEMON;
-        pbolt.range = 7 + random2(5);
-        pbolt.ench_power *= 3;
-        pbolt.ench_power /= 2;
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_ENSLAVE_DEMON;
+        pbolt.range          = 7 + random2(5);
+        pbolt.ench_power    *= 3;
+        pbolt.ench_power    /= 2;
         // pbolt.is_beam = true;
         break;
 
     case ZAP_SLEEP:             //jmf: added
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_SLEEP;
-        pbolt.range = 7 + random2(5);
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_SLEEP;
+        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_BACKLIGHT: //jmf: added
-        pbolt.name = "0";
-        pbolt.flavour = BEAM_BACKLIGHT;
-        pbolt.colour = BLUE;
-        pbolt.range = 7 + random2(5);
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_BACKLIGHT;
+        pbolt.colour         = BLUE;
+        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_DEBUGGING_RAY:
-        pbolt.name = "debugging ray";
-        pbolt.colour = random_colour();
-        pbolt.range = 7 + random2(10);
-        pbolt.damage = dice_def( 1500, 1 );             // dam: 1500
-        pbolt.hit = 1500;                               // hit: 1500
-        pbolt.type = dchar_glyph(DCHAR_FIRED_DEBUG);
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
-
+        pbolt.name           = "debugging ray";
+        pbolt.colour         = random_colour();
+        pbolt.range          = 7 + random2(10);
+        pbolt.damage         = dice_def( 1500, 1 );            // dam: 1500
+        pbolt.hit            = 1500;                           // hit: 1500
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_DEBUG);
+        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
         pbolt.obvious_effect = true;
         break;
 
     default:
-        pbolt.name = "buggy beam";
-        pbolt.colour = random_colour();
-        pbolt.range = 7 + random2(10);
-        pbolt.damage = dice_def( 1, 0 );
-        pbolt.hit = 60;
-        pbolt.type = dchar_glyph(DCHAR_FIRED_DEBUG);
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
-
+        pbolt.name           = "buggy beam";
+        pbolt.colour         = random_colour();
+        pbolt.range          = 7 + random2(10);
+        pbolt.damage         = dice_def( 1, 0 );
+        pbolt.hit            = 60;
+        pbolt.type           = dchar_glyph(DCHAR_FIRED_DEBUG);
+        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
         pbolt.obvious_effect = true;
         break;
-    }                           // end of switch
+    }
 
     if ( wearing_amulet(AMU_INACCURACY) )
     {
@@ -1319,16 +1292,16 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
     if (item)
     {
         tile_beam = tileidx_item_throw(*item,
-            pbolt.target_x-pbolt.source_x,
-            pbolt.target_y-pbolt.source_y);
+                                       pbolt.target_x-pbolt.source_x,
+                                       pbolt.target_y-pbolt.source_y);
     }
 #endif
 
 #if DEBUG_DIAGNOSTICS
     if (pbolt.flavour != BEAM_LINE_OF_SIGHT)
     {
-        mprf( MSGCH_DIAGNOSTICS,
-             "%s%s%s (%d,%d) to (%d,%d): ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
+        mprf( MSGCH_DIAGNOSTICS, "%s%s%s (%d,%d) to (%d,%d): "
+              "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
                  (pbolt.is_beam) ? "beam" : "missile",
                  (pbolt.is_explosion) ? "*" :
                      (pbolt.is_big_cloud) ? "+" : "",
@@ -1342,9 +1315,8 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 #endif
 
     // init
-    pbolt.aimed_at_feet =
-        (pbolt.target_x == pbolt.source_x) &&
-        (pbolt.target_y == pbolt.source_y);
+    pbolt.aimed_at_feet = (pbolt.target_x == pbolt.source_x
+                           && pbolt.target_y == pbolt.source_y);
     pbolt.msg_generated = false;
 
     ray_def ray;
@@ -1400,7 +1372,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
                 // should we ever get a tracer with a wall-affecting
                 // beam (possible I suppose), we'll quit tracing now.
                 if (!pbolt.is_tracer)
-                    rangeRemaining -= affect(pbolt, tx, ty);
+                    rangeRemaining -= affect(pbolt, tx, ty, item);
 
                 // if it's still a wall, quit.
                 if (grid_is_solid(grd[tx][ty]))
@@ -1413,7 +1385,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
                 if (!_isBouncy(pbolt, grd[tx][ty]))
                 {
                     // Affect any monster that might be in the wall.
-                    rangeRemaining -= affect(pbolt, tx, ty);
+                    rangeRemaining -= affect(pbolt, tx, ty, item);
 
                     do
                     {
@@ -1482,7 +1454,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             }
 
             if (!pbolt.affects_nothing)
-                rangeRemaining -= affect(pbolt, tx, ty);
+                rangeRemaining -= affect(pbolt, tx, ty, item);
 
             if (random_beam)
             {
@@ -1518,6 +1490,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 #ifdef USE_TILE
             if (tile_beam == -1)
                 tile_beam = tileidx_bolt(pbolt);
+
             if (tile_beam != -1 && in_los_bounds(drawx, drawy) &&
                 (tx != you.x_pos || ty != you.y_pos))
             {
@@ -1618,13 +1591,12 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     {
     case BEAM_FIRE:
     case BEAM_STEAM:
-        hurted
-            = resist_adjust_damage(
-                monster,
-                pbolt.flavour,
-                (pbolt.flavour == BEAM_FIRE) ? monster->res_fire()
-                                             : monster->res_steam(),
-                hurted, true);
+        hurted = resist_adjust_damage(
+                    monster,
+                    pbolt.flavour,
+                    (pbolt.flavour == BEAM_FIRE) ? monster->res_fire()
+                                                 : monster->res_steam(),
+                    hurted, true);
 
         if (!hurted)
         {
@@ -1704,17 +1676,16 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     case BEAM_POISON:
     {
         int res = mons_res_poison(monster);
-        hurted = resist_adjust_damage(monster, pbolt.flavour, res,
-                                      hurted, true);
+        hurted  = resist_adjust_damage(monster, pbolt.flavour, res,
+                                       hurted, true);
         if (!hurted && res > 0)
         {
             if (doFlavouredEffects)
                 simple_monster_message( monster, " appears unharmed." );
         }
         else if (res <= 0 && doFlavouredEffects && !one_chance_in(3))
-        {
             poison_monster( monster, _whose_kill(pbolt) );
-        }
+
         break;
     }
 
@@ -1757,8 +1728,10 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
             pbolt.obvious_effect = true;
 
             if (YOU_KILL(pbolt.thrower))
+            {
                 did_god_conduct(DID_NECROMANCY, 2 + random2(3),
                                 pbolt.effect_known);
+            }
 
             if (one_chance_in(5))
             {
@@ -1807,7 +1780,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         if (mons_is_unholy(monster))
             hurted = (hurted * 3) / 2;
         else if (mons_is_holy(monster)
-            || (is_good_god(you.religion) && is_follower(monster)))
+                 || is_good_god(you.religion) && is_follower(monster))
         {
             hurted = 0;
         }
@@ -1906,8 +1879,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
 }                               // end mons_adjust_flavoured()
 
 static bool _monster_resists_mass_enchantment(monsters *monster,
-                                             enchant_type wh_enchant,
-                                             int pow)
+                                              enchant_type wh_enchant,
+                                              int pow)
 {
     // assuming that the only mass charm is control undead:
     if (wh_enchant == ENCH_CHARM)
@@ -1928,8 +1901,8 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
     else if (wh_enchant == ENCH_CONFUSION
              || mons_holiness(monster) == MH_NATURAL)
     {
-        if (wh_enchant == ENCH_CONFUSION &&
-            !mons_class_is_confusable(monster->type))
+        if (wh_enchant == ENCH_CONFUSION
+            && !mons_class_is_confusable(monster->type))
         {
             return (true);
         }
@@ -1971,7 +1944,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
     if (pow > 200)
         pow = 200;
 
-    const kill_category kc = origin == MHITYOU? KC_YOU : KC_OTHER;
+    const kill_category kc = (origin == MHITYOU ? KC_YOU : KC_OTHER);
 
     for (i = 0; i < MAX_MONSTERS; i++)
     {
@@ -2047,7 +2020,9 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         {
             if (simple_monster_message(monster,
                                        " is no longer moving quickly."))
+            {
                 pbolt.obvious_effect = true;
+            }
 
             return (MON_AFFECTED);
         }
@@ -2103,13 +2078,12 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
             {
                 if (simple_monster_message(monster,
                                            "'s wounds heal themselves!"))
+                {
                     pbolt.obvious_effect = true;
+                }
             }
-            else
-            {
-                if (simple_monster_message(monster, " is healed somewhat."))
-                    pbolt.obvious_effect = true;
-            }
+            else if (simple_monster_message(monster, " is healed somewhat."))
+                pbolt.obvious_effect = true;
         }
         return (MON_AFFECTED);
 
@@ -2121,8 +2095,8 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         if (!mons_class_is_confusable(monster->type))
             return (MON_UNAFFECTED);
 
-        if (monster->add_ench(
-                mon_enchant(ENCH_CONFUSION, 0, _whose_kill(pbolt))))
+        if (monster->add_ench( mon_enchant(ENCH_CONFUSION, 0,
+                               _whose_kill(pbolt)) ))
         {
             // put in an exception for things you won't notice becoming confused.
             if (simple_monster_message(monster, " appears confused."))
@@ -2283,7 +2257,10 @@ void _sticky_flame_monster( int mn, kill_category who, int levels )
         return;
 
     if (monster->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who)))
+    {
         simple_monster_message(monster, " is covered in liquid flames!");
+        behaviour_event(monster, ME_WHACK, who == KC_YOU ? MHITYOU : MHITNOT);
+    }
 }
 
 /*
@@ -2303,21 +2280,21 @@ void _sticky_flame_monster( int mn, kill_category who, int levels )
 void fire_tracer(const monsters *monster, bolt &pbolt)
 {
     // don't fiddle with any input parameters other than tracer stuff!
-    pbolt.is_tracer = true;
-    pbolt.source_x = monster->x;    // always safe to do.
-    pbolt.source_y = monster->y;
+    pbolt.is_tracer     = true;
+    pbolt.source_x      = monster->x;    // always safe to do.
+    pbolt.source_y      = monster->y;
     pbolt.beam_source   = monster_index(monster);
     pbolt.can_see_invis = (mons_see_invis(monster) != 0);
     pbolt.smart_monster = (mons_intel(monster->type) == I_HIGH
                            || mons_intel(monster->type) == I_NORMAL);
-    pbolt.attitude = mons_attitude(monster);
+    pbolt.attitude      = mons_attitude(monster);
 
     // init tracer variables
-    pbolt.foe_count = pbolt.fr_count = 0;
-    pbolt.foe_power = pbolt.fr_power = 0;
-    pbolt.fr_helped = pbolt.fr_hurt  = 0;
-    pbolt.foe_helped = pbolt.foe_hurt = 0;
-    pbolt.foe_ratio = 80;        // default - see mons_should_fire()
+    pbolt.foe_count     = pbolt.fr_count = 0;
+    pbolt.foe_power     = pbolt.fr_power = 0;
+    pbolt.fr_helped     = pbolt.fr_hurt  = 0;
+    pbolt.foe_helped    = pbolt.foe_hurt = 0;
+    pbolt.foe_ratio     = 80;        // default - see mons_should_fire()
 
     // foe ratio for summon gtr. demons & undead -- they may be
     // summoned, but they're hostile and would love nothing better
@@ -2329,7 +2306,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     fire_beam(pbolt);
 
     // unset tracer flag (convenience)
-    pbolt.is_tracer = false;
+    pbolt.is_tracer     = false;
 }                               // end tracer_f()
 
 bool check_line_of_sight( int sx, int sy, int tx, int ty )
@@ -2382,11 +2359,15 @@ static bool _isBouncy(bolt &beam, unsigned char gridtype)
 {
     if (beam.name[0] == '0')
         return false;
+
     if (beam.flavour == BEAM_ELECTRICITY && gridtype != DNGN_METAL_WALL)
         return true;
-    if ( (beam.flavour == BEAM_FIRE || beam.flavour == BEAM_COLD) &&
-         (gridtype == DNGN_GREEN_CRYSTAL_WALL) )
+
+    if ( (beam.flavour == BEAM_FIRE || beam.flavour == BEAM_COLD)
+         && gridtype == DNGN_GREEN_CRYSTAL_WALL )
+    {
         return true;
+    }
     return (false);
 }
 
@@ -2567,14 +2548,14 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
 // for monsters without see invis firing tracers at the player.
 static bool _found_player(const bolt &beam, int x, int y)
 {
-    const bool needs_fuzz =
-        beam.is_tracer && !beam.can_see_invis && you.invisible();
+    const bool needs_fuzz = (beam.is_tracer && !beam.can_see_invis
+                             && you.invisible());
     const int dist = needs_fuzz? 2 : 0;
 
     return (grid_distance(x, y, you.x_pos, you.y_pos) <= dist);
 }
 
-int affect(bolt &beam, int x, int y)
+int affect(bolt &beam, int x, int y, item_def *item)
 {
     // extra range used by hitting something
     int rangeUsed = 0;
@@ -2589,9 +2570,8 @@ int affect(bolt &beam, int x, int y)
             return (BEAM_STOP);
 
         if (_affects_wall(beam, grd[x][y]))
-        {
             rangeUsed += _affect_wall(beam, x, y);
-        }
+
         // if it's still a wall, quit - we can't do anything else to a
         // wall (but we still might be able to do something to any
         // monster inside the wall).  Otherwise effects (like clouds,
@@ -2603,7 +2583,7 @@ int affect(bolt &beam, int x, int y)
             {
                 monsters *mon = &menv[mid];
                 if (_affect_mon_in_wall(beam, NULL, x, y))
-                    rangeUsed += _affect_monster( beam, mon );
+                    rangeUsed += _affect_monster( beam, mon, item );
                 else if (you.can_see(mon))
                 {
                     mprf("The %s protects %s from harm.",
@@ -2632,7 +2612,7 @@ int affect(bolt &beam, int x, int y)
         if (!beam.is_big_cloud
             && (!beam.is_explosion || beam.in_explosion_phase))
         {
-            rangeUsed += _affect_player( beam );
+            rangeUsed += _affect_player( beam, item );
         }
 
         if (_beam_term_on_target(beam, x, y))
@@ -2656,7 +2636,7 @@ int affect(bolt &beam, int x, int y)
             if (!beam.is_big_cloud
                 && (!beam.is_explosion || beam.in_explosion_phase))
             {
-                rangeUsed += _affect_monster( beam, &menv[mid] );
+                rangeUsed += _affect_monster( beam, &menv[mid], item );
             }
 
             if (_beam_term_on_target(beam, x, y))
@@ -2678,10 +2658,10 @@ static bool _is_superhot(const bolt &beam)
     if (!_is_fiery(beam))
         return (false);
 
-    return beam.name == "bolt of fire"
-        || beam.name == "bolt of magma"
-        || (beam.name.find("hellfire") != std::string::npos
-                && beam.in_explosion_phase);
+    return (beam.name == "bolt of fire"
+            || beam.name == "bolt of magma"
+            || beam.name.find("hellfire") != std::string::npos
+               && beam.in_explosion_phase);
 }
 
 static bool _affects_wall(const bolt &beam, int wall)
@@ -2787,7 +2767,7 @@ static int _affect_wall(bolt &beam, int x, int y)
         int targ_grid = grd[x][y];
 
         if ((targ_grid == DNGN_ROCK_WALL || targ_grid == DNGN_WAX_WALL
-             || targ_grid == DNGN_CLEAR_ROCK_WALL)
+                 || targ_grid == DNGN_CLEAR_ROCK_WALL)
             && in_bounds(x, y))
         {
             grd[ x ][ y ] = DNGN_FLOOR;
@@ -2812,14 +2792,13 @@ static int _affect_wall(bolt &beam, int x, int y)
                 if (!see_grid( x, y ))
                     mpr("You hear a hideous screaming!", MSGCH_SOUND);
                 else
+                {
                     mpr("The statue screams as its substance crumbles away!",
                             MSGCH_SOUND);
+                }
             }
-            else
-            {
-                if (see_grid(x,y))
-                    mpr("The statue twists and shakes as its substance crumbles away!");
-            }
+            else if (see_grid(x,y))
+                mpr("The statue twists and shakes as its substance crumbles away!");
 
             if (targ_grid == DNGN_ORCISH_IDOL
                 && beam.beam_source == NON_MONSTER)
@@ -2848,8 +2827,10 @@ static int _affect_place_clouds(bolt &beam, int x, int y)
     {
         // polymorph randomly changes clouds in its path
         if (beam.flavour == BEAM_POLYMORPH)
+        {
             env.cloud[ env.cgrid[x][y] ].type =
                 static_cast<cloud_type>(1 + random2(8));
+        }
 
         // now exit (all enchantments)
         if (beam.name[0] == '0')
@@ -2880,16 +2861,14 @@ static int _affect_place_clouds(bolt &beam, int x, int y)
         place_cloud( CLOUD_POISON, x, y, random2(4) + 2, _whose_kill(beam) );
 
     // FIRE/COLD over water/lava
-    if ( (grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD)
-        || (grid_is_watery(grd[x][y]) && beam.flavour == BEAM_FIRE) )
+    if (grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD
+        || grid_is_watery(grd[x][y]) && beam.flavour == BEAM_FIRE)
     {
         place_cloud( CLOUD_STEAM, x, y, 2 + random2(5), _whose_kill(beam) );
     }
 
     if (beam.flavour == BEAM_COLD && grid_is_watery(grd[x][y]))
-    {
         place_cloud( CLOUD_COLD, x, y, 2 + random2(5), _whose_kill(beam) );
-    }
 
     // GREAT BLAST OF COLD
     if (beam.name == "great blast of cold")
@@ -2898,14 +2877,10 @@ static int _affect_place_clouds(bolt &beam, int x, int y)
 
     // BALL OF STEAM
     if (beam.name == "ball of steam")
-    {
         place_cloud( CLOUD_STEAM, x, y, random2(5) + 2, _whose_kill(beam) );
-    }
 
     if (beam.flavour == BEAM_MIASMA)
-    {
         place_cloud( CLOUD_MIASMA, x, y, random2(5) + 2, _whose_kill(beam) );
-    }
 
     // POISON GAS
     if (beam.name == "poison gas")
@@ -2921,9 +2896,9 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
     int duration;
 
     // first check: FIRE/COLD over water/lava
-    if ( (grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD)
-        || ((grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == DNGN_SHALLOW_WATER)
-              && beam.flavour == BEAM_FIRE) )
+    if ( grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD
+         || (grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == DNGN_SHALLOW_WATER)
+             && beam.flavour == BEAM_FIRE )
     {
         place_cloud( CLOUD_STEAM, x, y, 2 + random2(5), _whose_kill(beam) );
         return;
@@ -2993,9 +2968,7 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
 
     // then check for more specific explosion cloud types.
     if (beam.name == "ice storm")
-    {
         place_cloud( CLOUD_COLD, x, y, 2 + random2avg(5, 2), _whose_kill(beam) );
-    }
 
     if (beam.name == "stinking cloud")
     {
@@ -3045,17 +3018,15 @@ static void _affect_items(bolt &beam, int x, int y)
 
     if (igrd[x][y] != NON_ITEM)
     {
-        if (objs_vulnerable != OBJ_UNASSIGNED &&
-            mitm[igrd[x][y]].base_type == objs_vulnerable)
+        if (objs_vulnerable != OBJ_UNASSIGNED
+            && mitm[igrd[x][y]].base_type == objs_vulnerable)
         {
             item_was_destroyed(mitm[igrd[x][y]], beam.beam_source);
 
             destroy_item( igrd[ x ][ y ] );
 
             if (objs_vulnerable == OBJ_SCROLLS && see_grid(x,y))
-            {
                 mpr("You see a puff of smoke.");
-            }
 
             if (objs_vulnerable == OBJ_POTIONS && !silenced(x,y)
                 && !silenced(you.x_pos, you.y_pos))
@@ -3121,9 +3092,10 @@ static bool _fuzz_invis_tracer(bolt &beem)
 
     const int newx = beem.target_x + xfuzz,
               newy = beem.target_y + yfuzz;
+
     if (in_bounds(newx, newy)
-            && (newx != beem.source_x
-                || newy != beem.source_y))
+        && (newx != beem.source_x
+            || newy != beem.source_y))
     {
         beem.target_x = newx;
         beem.target_y = newy;
@@ -3157,7 +3129,7 @@ static std::string _beam_zapper(const bolt &beam)
 }
 
 // return amount of extra range used up by affectation of the player
-static int _affect_player( bolt &beam )
+static int _affect_player( bolt &beam, item_def *item )
 {
     // digging -- don't care.
     if (beam.flavour == BEAM_DIGGING)
@@ -3167,8 +3139,7 @@ static int _affect_player( bolt &beam )
     if (beam.is_tracer)
     {
         // check can see player
-        if (beam.can_see_invis || !you.invisible()
-                || _fuzz_invis_tracer(beam))
+        if (beam.can_see_invis || !you.invisible() || _fuzz_invis_tracer(beam))
         {
             if (beam.attitude != ATT_HOSTILE)
             {
@@ -3233,8 +3204,8 @@ static int _affect_player( bolt &beam )
             {
                 // non-beams can be blocked or dodged
                 if (you.equip[EQ_SHIELD] != -1
-                        && !beam.aimed_at_feet
-                        && player_shield_class() > 0)
+                    && !beam.aimed_at_feet
+                    && player_shield_class() > 0)
                 {
                     int exer = one_chance_in(3) ? 1 : 0;
                     const int hit = random2( beam.hit * 130 / 100
@@ -3260,7 +3231,9 @@ static int _affect_player( bolt &beam )
 
                 if (player_light_armour(true) && !beam.aimed_at_feet
                     && coinflip())
+                {
                     exercise(SK_DODGING, 1);
+                }
 
                 if (you.duration[DUR_DEFLECT_MISSILES])
                     beamHit = random2(beamHit / 2);
@@ -3595,32 +3568,31 @@ static int _affect_player( bolt &beam )
         }
     }
 
-    // poisoning
-    if (beam.name.find("poisoned") != std::string::npos
-        && beam.flavour != BEAM_POISON
-        && beam.flavour != BEAM_POISON_ARROW
-        && !player_res_poison())
+    // handling of missiles
+    if (item && item->base_type == OBJ_MISSILES)
     {
-        if (hurted || (beam.ench_power == AUTOMATIC_HIT
-                        && random2(100) < 90 - (3 * player_AC())))
+        if (item->sub_type == MI_THROWING_NET)
         {
-            poison_player( 1 + random2(3) );
+            player_caught_in_net();
             was_affected = true;
         }
-    }
-
-    if (beam.name.find("throwing net") != std::string::npos)
-    {
-        player_caught_in_net();
-        was_affected = true;
-    }
-
-    if (beam.name.find("curare") != std::string::npos)
-    {
-        if (random2(100) < 90 - (3 * player_AC()))
+        else if (item->special == SPMSL_POISONED)
         {
-            curare_hits_player( _beam_ouch_agent(beam), 1 + random2(3) );
-            was_affected = true;
+            if (!player_res_poison()
+                && (hurted || (beam.ench_power == AUTOMATIC_HIT
+                               && random2(100) < 90 - (3 * player_AC()))))
+            {
+                poison_player( 1 + random2(3) );
+                was_affected = true;
+            }
+        }
+        else if (item->special == SPMSL_CURARE)
+        {
+            if (random2(100) < 90 - (3 * player_AC()))
+            {
+                curare_hits_player( _beam_ouch_agent(beam), 1 + random2(3) );
+                was_affected = true;
+            }
         }
     }
 
@@ -3684,9 +3656,9 @@ static int _affect_player( bolt &beam )
 
 static int _beam_source(const bolt &beam)
 {
-    return MON_KILL(beam.thrower)       ? beam.beam_source :
-           beam.thrower == KILL_MISC    ? MHITNOT          :
-                                          MHITYOU;
+    return (MON_KILL(beam.thrower)     ? beam.beam_source :
+            beam.thrower == KILL_MISC  ? MHITNOT
+                                       : MHITYOU);
 }
 
 static int _name_to_skill_level(const std::string& name)
@@ -3736,7 +3708,7 @@ static void _update_hurt_or_helped(bolt &beam, monsters *mon)
 }
 
 // return amount of range used up by affectation of this monster
-static int _affect_monster(bolt &beam, monsters *mon)
+static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 {
     const int tid = mgrd[mon->x][mon->y];
     const int mons_type = menv[tid].type;
@@ -3776,12 +3748,13 @@ static int _affect_monster(bolt &beam, monsters *mon)
             if (!see_grid( mon->x, mon->y ))
                 mpr("You hear a hideous screaming!", MSGCH_SOUND);
             else
+            {
                 mpr("The statue screams as its substance crumbles away!",
                     MSGCH_SOUND);
+            }
         }
-        else
+        else if (see_grid( mon->x, mon->y ))
         {
-            if (see_grid( mon->x, mon->y ))
                 mpr("The statue twists and shakes as its substance "
                     "crumbles away!");
         }
@@ -3841,7 +3814,8 @@ static int _affect_monster(bolt &beam, monsters *mon)
                 if (mons_is_holy(mon))
                     did_god_conduct(DID_ATTACK_HOLY, mon->hit_dice, true, mon);
 
-                if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
+                if (you.religion == GOD_BEOGH
+                    && mons_species(mon->type) == MONS_ORC
                     && mon->behaviour == BEH_SLEEP && !player_under_penance()
                     && you.piety >= piety_breakpoint(2) && mons_near(mon))
                 {
@@ -3887,6 +3861,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
         }
         if (hit_woke_orc)
             beogh_follower_convert(mon, true);
+
         return (rangeUsed);
 
         // END non-tracer enchantment
@@ -3934,9 +3909,7 @@ static int _affect_monster(bolt &beam, monsters *mon)
     }
 
     if (hurt_final < 1)
-    {
         hurt_final = 0;
-    }
 
     const int raw_damage = hurt_final;
 
@@ -4095,8 +4068,12 @@ static int _affect_monster(bolt &beam, monsters *mon)
         }
     }
 
-    if (beam.name.find("throwing net") != std::string::npos)
+    // handling of missiles
+    if (item && item->base_type == OBJ_MISSILES
+        && item->sub_type == MI_THROWING_NET)
+    {
         monster_caught_in_net(mon, beam);
+    }
 
     // note that hurt_final was calculated above, so we don't need it again.
     // just need to apply flavoured specials (since we called with
@@ -4141,46 +4118,48 @@ static int _affect_monster(bolt &beam, monsters *mon)
             _sticky_flame_monster( tid, _whose_kill(beam), levels );
         }
 
-
         /* looks for missiles which aren't poison but are poison*ed* */
-        if (beam.name.find("poisoned") != std::string::npos
-            && beam.flavour != BEAM_POISON
-            && beam.flavour != BEAM_POISON_ARROW)
+        if (item)
         {
-            int num_levels = 0;
-            // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
-            if (beam.ench_power == AUTOMATIC_HIT
-                && random2(100) < 90 - (3 * mon->ac))
+            if (item->base_type == OBJ_MISSILES
+                && item->special == SPMSL_POISONED)
             {
-                num_levels = 2;
-            }
-            else if (random2(hurt_final) - random2(mon->ac) > 0)
-            {
-                num_levels = 1;
-            }
+                int num_levels = 0;
+                // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
+                if (beam.ench_power == AUTOMATIC_HIT
+                    && random2(100) < 90 - (3 * mon->ac))
+                {
+                    num_levels = 2;
+                }
+                else if (random2(hurt_final) - random2(mon->ac) > 0)
+                {
+                    num_levels = 1;
+                }
 
-            int num_success = 0;
-            if ( YOU_KILL(beam.thrower) )
-            {
-                const int skill_level = _name_to_skill_level(beam.name);
-                if ( skill_level + 25 > random2(50) )
-                    num_success++;
-                if ( skill_level > random2(50) )
-                    num_success++;
-            }
-            else
-                num_success = 1;
+                int num_success = 0;
+                if ( YOU_KILL(beam.thrower) )
+                {
+                    const int skill_level = _name_to_skill_level(beam.name);
+                    if ( skill_level + 25 > random2(50) )
+                        num_success++;
+                    if ( skill_level > random2(50) )
+                        num_success++;
+                }
+                else
+                    num_success = 1;
 
-            if ( num_success )
-            {
-                if ( num_success == 2 )
-                    num_levels++;
-                poison_monster( mon, _whose_kill(beam), num_levels );
+                if ( num_success )
+                {
+                    if ( num_success == 2 )
+                        num_levels++;
+                    poison_monster( mon, _whose_kill(beam), num_levels );
+                }
             }
         }
 
         bool wake_mimic = true;
-        if (beam.name.find("curare") != std::string::npos)
+        if (item && item->base_type == OBJ_MISSILES
+            && item->special == SPMSL_CURARE)
         {
             if (beam.ench_power == AUTOMATIC_HIT
                 && curare_hits_monster( beam, mon, _whose_kill(beam), 2 ))
@@ -4259,9 +4238,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
         if (you.level_type == LEVEL_ABYSS)
-        {
             simple_monster_message(mon, " wobbles for a moment.");
-        }
         else
             _monster_die(mon, beam);
 
@@ -4549,90 +4526,90 @@ static void _explosion1(bolt &pbolt)
 
     if (pbolt.name == "hellfire")
     {
-        seeMsg = "The hellfire explodes!";
+        seeMsg  = "The hellfire explodes!";
         hearMsg = "You hear a strangely unpleasant explosion.";
 
-        pbolt.type = dchar_glyph(DCHAR_FIRED_BURST);
+        pbolt.type    = dchar_glyph(DCHAR_FIRED_BURST);
         pbolt.flavour = BEAM_HELLFIRE;
     }
 
     if (pbolt.name == "golden flame")
     {
-        seeMsg = "The flame explodes!";
+        seeMsg  = "The flame explodes!";
         hearMsg = "You feel a deep, resonant explosion.";
 
-        pbolt.type = dchar_glyph(DCHAR_FIRED_BURST);
+        pbolt.type    = dchar_glyph(DCHAR_FIRED_BURST);
         pbolt.flavour = BEAM_HOLY;
         ex_size = 2;
     }
 
     if (pbolt.name == "fireball")
     {
-        seeMsg = "The fireball explodes!";
+        seeMsg  = "The fireball explodes!";
         hearMsg = "You hear an explosion.";
 
-        pbolt.type = dchar_glyph(DCHAR_FIRED_BURST);
+        pbolt.type    = dchar_glyph(DCHAR_FIRED_BURST);
         pbolt.flavour = BEAM_FIRE;
         ex_size = 1;
     }
 
     if (pbolt.name == "orb of electricity")
     {
-        seeMsg = "The orb of electricity explodes!";
+        seeMsg  = "The orb of electricity explodes!";
         hearMsg = "You hear a clap of thunder!";
 
-        pbolt.type = dchar_glyph(DCHAR_FIRED_BURST);
-        pbolt.flavour = BEAM_ELECTRICITY;
-        pbolt.colour = LIGHTCYAN;
+        pbolt.type       = dchar_glyph(DCHAR_FIRED_BURST);
+        pbolt.flavour    = BEAM_ELECTRICITY;
+        pbolt.colour     = LIGHTCYAN;
         pbolt.damage.num = 1;
-        ex_size = 2;
+        ex_size          = 2;
     }
 
     if (pbolt.name == "orb of energy")
     {
-        seeMsg = "The orb of energy explodes.";
+        seeMsg  = "The orb of energy explodes.";
         hearMsg = "You hear an explosion.";
     }
 
     if (pbolt.name == "metal orb")
     {
-        seeMsg = "The orb explodes into a blast of deadly shrapnel!";
+        seeMsg  = "The orb explodes into a blast of deadly shrapnel!";
         hearMsg = "You hear an explosion!";
 
-        pbolt.name = "blast of shrapnel";
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.name    = "blast of shrapnel";
+        pbolt.type    = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_FRAG;     // sets it from pure damage to shrapnel (which is absorbed extra by armour)
     }
 
     if (pbolt.name == "great blast of cold")
     {
-        seeMsg = "The blast explodes into a great storm of ice!";
+        seeMsg  = "The blast explodes into a great storm of ice!";
         hearMsg = "You hear a raging storm!";
 
-        pbolt.name = "ice storm";
+        pbolt.name       = "ice storm";
         pbolt.damage.num = 6;
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.colour = WHITE;
-        ex_size = 2 + (random2( pbolt.ench_power ) > 75);
+        pbolt.type       = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.colour     = WHITE;
+        ex_size          = 2 + (random2( pbolt.ench_power ) > 75);
     }
 
     if (pbolt.name == "ball of vapour")
     {
-        seeMsg = "The ball expands into a vile cloud!";
-        hearMsg = "You hear a gentle \'poof\'.";
+        seeMsg     = "The ball expands into a vile cloud!";
+        hearMsg    = "You hear a gentle \'poof\'.";
         pbolt.name = "stinking cloud";
     }
 
     if (pbolt.name == "potion")
     {
-        seeMsg = "The potion explodes!";
-        hearMsg = "You hear an explosion!";
+        seeMsg     = "The potion explodes!";
+        hearMsg    = "You hear an explosion!";
         pbolt.name = "cloud";
     }
 
     if (seeMsg == NULL)
     {
-        seeMsg = "The beam explodes into a cloud of software bugs!";
+        seeMsg  = "The beam explodes into a cloud of software bugs!";
         hearMsg = "You hear the sound of one hand clapping!";
     }
 
@@ -4675,7 +4652,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
     {
         ray_def ray;
         int     max_dist = grid_distance(beam.source_x, beam.source_y,
-                                     beam.target_x, beam.target_y);
+                                         beam.target_x, beam.target_y);
 
         ray.fullray_idx = -1; // to quiet valgrind
         find_ray( beam.source_x, beam.source_y, beam.target_x, beam.target_y,
@@ -4714,14 +4691,20 @@ void explosion( bolt &beam, bool hole_in_the_middle,
 
 #if DEBUG_DIAGNOSTICS
                 if (!is_wall && stop_at_statues)
+                {
                     mpr("Explosion beam stopped by a statue or other "
                         "non-wall solid feature.", MSGCH_DIAGNOSTICS);
+                }
                 else if (is_wall && stop_at_walls)
+                {
                     mpr("Explosion beam stopped by a by wall.",
                         MSGCH_DIAGNOSTICS);
+                }
                 else
+                {
                     mpr("Explosion beam stopped by someting buggy.",
                         MSGCH_DIAGNOSTICS);
+                }
 #endif
 
                 break;
@@ -4870,9 +4853,8 @@ static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly)
         if (beam.flavour == BEAM_RANDOM)
         {
             random_beam = true;
-            beam.flavour =
-                static_cast<beam_type>(
-                    random_range(BEAM_FIRE, BEAM_ACID) );
+            beam.flavour = static_cast<beam_type>(
+                               random_range(BEAM_FIRE, BEAM_ACID) );
         }
 
         affect(beam, realx, realy);
@@ -4921,7 +4903,7 @@ static void _explosion_map( bolt &beam, int x, int y,
                            int count, int dir, int r )
 {
     // 1. check to see out of range
-    if (x * x + y * y > r * r + r)
+    if (x*x + y*y > r*r + r)
         return;
 
     // 2. check count

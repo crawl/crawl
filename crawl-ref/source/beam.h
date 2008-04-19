@@ -93,7 +93,7 @@ enum zap_type
     ZAP_POISON_ARROW,
     ZAP_BREATHE_STICKY_FLAME,
     ZAP_BREATHE_LIGHTNING,
-    ZAP_PETRIFY, 
+    ZAP_PETRIFY,
     ZAP_HELLFROST,
     NUM_ZAPS                           // must remain last member {dlb}
 };
@@ -124,7 +124,7 @@ struct bolt
     bool        is_energy;             // mostly energy/non-physical attack
     bool        is_launched;           // was fired from launcher?
     bool        is_thrown;             // was thrown from hand?
-    bool        target_first;          // targeting by direction 
+    bool        target_first;          // targeting by direction
     bool        aimed_at_spot;         // aimed at (x,y), should not cross
     std::string aux_source;            // source of KILL_MISC beams
 
@@ -241,7 +241,7 @@ void mimic_alert( monsters *mimic );
 
 void zapping( zap_type ztype, int power, struct bolt &pbolt );
 
-int affect(bolt &beam, int x, int y);
+int affect(bolt &beam, int x, int y, item_def *item = NULL);
 
 void beam_drop_object( bolt &beam, item_def *item, int x, int y );
 

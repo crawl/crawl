@@ -3919,8 +3919,10 @@ void monsters::rot(actor *agent, int rotlevel, int immed_rot)
     }
 
     if (rotlevel > 0)
+    {
         add_ench( mon_enchant(ENCH_ROT, std::min(rotlevel, 4),
                               agent->kill_alignment()) );
+    }
 }
 
 void monsters::confuse(int strength)

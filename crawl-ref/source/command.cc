@@ -490,8 +490,8 @@ void list_weapons(void)
             wstring = "Secondary : ";
 
         colour = MSGCOL_BLACK;
-        if (is_valid_item( you.inv[i]) &&
-               (you.inv[i].base_type == OBJ_WEAPONS
+        if (is_valid_item( you.inv[i])
+            && (you.inv[i].base_type == OBJ_WEAPONS
                 || you.inv[i].base_type == OBJ_STAVES
                 || you.inv[i].base_type == OBJ_MISCELLANY))
         {

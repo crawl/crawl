@@ -1971,11 +1971,11 @@ static bool _wounded_damaged(int monster_type)
 void behaviour_event( monsters *mon, int event, int src,
                       int src_x, int src_y )
 {
-    bool isSmart = (mons_intel(mon->type) > I_ANIMAL);
-    bool isFriendly = mons_friendly(mon);
+    bool isSmart        = (mons_intel(mon->type) > I_ANIMAL);
+    bool isFriendly     = mons_friendly(mon);
     bool sourceFriendly = false;
-    bool setTarget = false;
-    bool breakCharm = false;
+    bool setTarget      = false;
+    bool breakCharm     = false;
 
     if (src == MHITYOU)
         sourceFriendly = true;
@@ -2023,7 +2023,7 @@ void behaviour_event( monsters *mon, int event, int src,
             if (src == MHITYOU)
             {
                 mon->attitude = ATT_HOSTILE;
-                breakCharm = true;
+                breakCharm    = true;
             }
         }
 
