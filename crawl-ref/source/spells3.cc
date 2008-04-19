@@ -984,7 +984,7 @@ bool cast_sanctuary(const int power)
     const int radius = 5;
     const int pattern = random2(4);
     int count = 0;
-    int monster = -1;
+    int monster = NON_MONSTER;
 
     for (int x = -radius; x <= radius; x++)
         for (int y = -radius; y <= radius; y++)

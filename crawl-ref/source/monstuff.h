@@ -89,8 +89,8 @@ void monster_cleanup(monsters *monster);
 /* ***********************************************************************
  * called from: monstuff beam effects fight view
  * *********************************************************************** */
-void behaviour_event( monsters *mon, int event_type, 
-                      int src = MHITNOT, int src_x = 0, int src_y = 0 ); 
+void behaviour_event( monsters *mon, int event_type,
+                      int src = MHITNOT, int src_x = 0, int src_y = 0 );
 
 /* ***********************************************************************
  * called from: fight - it_use3 - spells
