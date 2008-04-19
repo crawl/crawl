@@ -226,7 +226,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         { "rN",     RAP_NEGATIVE_ENERGY,       1 },
         { "MR",     RAP_MAGIC,                 2 },
 
-        // Positive, quantative attributes
+        // Quantitative attributes
         { "AC",     RAP_AC,                    0 },
         { "EV",     RAP_EVASION,               0 },
         { "Str",    RAP_STRENGTH,              0 },
@@ -235,7 +235,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         { "Acc",    RAP_ACCURACY,              0 },
         { "Dam",    RAP_DAMAGE,                0 },
 
-        // Positive, qualitative attributes
+        // Qualitative attributes
         { "MP",     RAP_MAGICAL_POWER,         0 },
         { "SInv",   RAP_EYESIGHT,              2 },
         { "Stlth",  RAP_STEALTH,               2 }  // handled specially
@@ -276,6 +276,23 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         if (known_proprt(propanns[i].prop))
         {
             const int val = proprt[propanns[i].prop];
+
+            if (item.base_type == OBJ_JEWELLERY)
+            {
+                if (item.sub_type == RING_FIRE
+                    && (propanns[i].prop == RAP_FIRE && val == 1
+                        || propanns[i].prop == RAP_COLD && val == -1))
+                {
+                    continue;
+                }
+                if (item.sub_type == RING_ICE
+                    && (propanns[i].prop == RAP_COLD && val == 1
+                        || propanns[i].prop == RAP_FIRE && val == -1))
+                {
+                    continue;
+                }
+            }
+
             std::ostringstream work;
             switch ( propanns[i].spell_out )
             {

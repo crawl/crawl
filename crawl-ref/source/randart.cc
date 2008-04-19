@@ -1048,22 +1048,30 @@ void randart_wpn_properties( const item_def &item,
             if (aclass == OBJ_JEWELLERY
                 && (atype == RING_PROTECTION_FROM_FIRE || atype == RING_FIRE
                     || atype == RING_ICE))
+            {
                 break;              // already does this or something
+            }
             if (aclass == OBJ_ARMOUR
                 && (atype == ARM_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
+            {
                 break;
+            }
             proprt[RAP_FIRE] = -1;
             break;
         case 6:                     // susceptible to cold
             if (aclass == OBJ_JEWELLERY
                 && (atype == RING_PROTECTION_FROM_COLD || atype == RING_FIRE
                     || atype == RING_ICE))
+            {
                 break;              // already does this or something
+            }
             if (aclass == OBJ_ARMOUR
                 && (atype == ARM_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
+            {
                 break;
+            }
             proprt[RAP_COLD] = -1;
             break;
         case 7:                     // speed metabolism
