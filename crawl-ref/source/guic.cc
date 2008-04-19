@@ -701,6 +701,10 @@ void TextRegionClass::textbackground(int col)
 
 void TextRegionClass::cgotoxy(int x, int y)
 {
+    ASSERT(x >= 1);
+    ASSERT(y >= 1);
+    ASSERT(x <= text_mode->mx);
+    ASSERT(y <= text_mode->my);
     print_x = x-1;
     print_y = y-1;
 

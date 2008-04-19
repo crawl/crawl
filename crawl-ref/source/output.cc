@@ -904,7 +904,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
     std::string title = your_name + " the " + class_name;
 
     int in_len = title.length();
-    const int WIDTH = 40; // use crawl_view.hudsz.x instead?
+    const int WIDTH = crawl_view.hudsz.x;
     if (in_len > WIDTH)
     {
         in_len -= 3;  // what we're getting back from removing "the"
@@ -923,7 +923,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
     cgotoxy(1, 1, GOTO_STAT);
 
     textcolor( YELLOW );
-    cprintf( "%-41s", title.c_str() );
+    cprintf( "%-*s", WIDTH, title.c_str() );
 
     cgotoxy(1, 2, GOTO_STAT);
     cprintf("%s", species_name( you.species, you.experience_level ).c_str());
