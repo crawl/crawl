@@ -4310,6 +4310,11 @@ void tile_draw_inv(int flag)
     if (numInvTiles > MAXINV)
         numInvTiles = MAXINV;
 
+    // Show one row of ground tiles, no matter what.  This may cause some
+    // items not to show up, but theoretically you've ordered tile_show_items
+    // to prioritize the important stuff.
+    int max_inventory_items = std::min(numInvTiles - r->mx, ENDOFPACK);
+
     // which items to show in inventory
     const char *item_chars = Options.tile_show_items;
 
@@ -4322,7 +4327,7 @@ void tile_draw_inv(int flag)
 
     // first set eq_flag = 1 for all slots that actually hold valid items
     // XXX: Why? --jpeg
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < max_inventory_items; i++)
     {
         eq_flag[i] =
             (you.inv[i].quantity != 0 && is_valid_item( you.inv[i])) ? 1 : 0;
@@ -4388,7 +4393,7 @@ void tile_draw_inv(int flag)
         if (type == -1)
             continue;
 
-        for (int j = 0; j < ENDOFPACK && n < numInvTiles; j++)
+        for (int j = 0; j < max_inventory_items && n < numInvTiles; j++)
         {
             if (you.inv[j].base_type == type && eq_flag[j] != 0)
             {

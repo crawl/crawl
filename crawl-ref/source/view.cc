@@ -4919,15 +4919,8 @@ void crawl_view_buffer::size(const coord_def &sz)
 // define VIEW_MAX_HEIGHT use Options.view_max_height
 // define VIEW_MIN_WIDTH defined elsewhere
 // define VIEW_MAX_WIDTH use Options.view_max_width
-#ifdef USE_TILE
-// Tile mode doesn't need to compress the HUD, and uses this area for
-// other things.  I don't want to risk breaking tiles, so leaving alone --pld
-#  define HUD_WIDTH  39
-#  define HUD_HEIGHT 17
-#else
 #  define HUD_WIDTH  42
 #  define HUD_HEIGHT 13
-#endif
 #define MSG_MIN_HEIGHT 6
 #define MSG_MAX_HEIGHT Options.msg_max_height
 #define MLIST_MIN_HEIGHT Options.mlist_min_height
