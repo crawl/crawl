@@ -2,6 +2,149 @@
 # entry.des - entry vaults for D:1 only.
 ###############################################################################
 
+
+##############################################################################
+# Fog generator entry vaults
+#
+# This is highly experimental. Please report about the fogs -- do they look
+# foggy enough? Increased chances for easier testing. Feel free to tweak the
+# numbers. Once we have a number of functioning fog machines, we can use them
+# easily everywhere else (with different effect than thin mist, of course).
+#
+# Keep on tokin' onward through the fog!
+##############################################################################
+#
+# MARKER: U = lua:fog_machine { \
+#             pow_max = 6, delay = 10, size = 1, walk_dist= 6, spread_rate=10
+# \
+#      }
+#
+# Matthew Cline:
+#
+# delay: The delay between eruptions.  Can be constant, or randomly
+#    vary between delay_min and delay_max
+#
+# size: The number of grid-squares the cloud is to cover.  Can be constant,
+#    or randomly vary between size_max and size_min
+#
+# lifetime: How long each cloud grid is to last, specified via pow_min,
+#    pow_max and pow_rolls, fed into the three parameter random_range()
+#    function (increasing pow_rolls decreases the chance of extreme
+#    values happening).  All three of these parameters are passed to
+#    the C function so that individual cloud grids in a single eruption
+#    can have different random lifetimes.
+#
+# spread_rate: Percent chance a cloud will spread each time manage_clouds()
+#    is called.  Defaults to whatever is normal for that cloud type
+#    (i.e., 20% chance for steam, grey smoke and black smoke, 0% for
+#    other types).
+#
+# walk_dist: How far to perform a random walk from the Lua marker before
+#    stopping and using that spot as the center of the cloud eruption;
+#    defaults to 0.  If used to places lots of 1x1 clouds around the
+#    marker it produces an overall cloud which is dense around the
+#    center and thins out around the edges.
+#
+# Right now the spread rate of a cloud remains constant as it spreads.  I
+# think
+# that if it were to made to undergo exponential decay that a useful effect
+# could be made just be creating a 1x1 cloud on top of the Lua marker with a
+# 100% spread rate and letting it disperse across the area (without decay a
+# 100% spread rate cloud quickly expands until it reaches the maximum cloud
+# limit and then takes forever to die out).
+#
+
+# Long lasting 30 square cloud every 100 to 200 normal-speed player turns.
+NAME:    fog_1
+TAGS:    entry
+CHANCE:  500
+ORIENT:  float
+MARKER:  U = lua:fog_machine { \
+             pow_max = 100, delay_min = 1000, delay_max = 2000, size = 30  \
+         }
+MAP
+...........
+...........
+...........
+...........
+...........
+.....U.....
+....{......
+...........
+...........
+.........bb
+.........bb
+ENDMAP
+
+# Constantly meandering clouds of various powers.
+NAME:    fog_2
+TAGS:    entry
+CHANCE:  500
+ORIENT:  float
+MARKER:  U = lua:fog_machine { \
+             pow_max = 10, delay = 30, size = 1, spread_rate = 30  \
+         }
+MAP
+...........
+...........
+...........
+...........
+...........
+.....U.....
+....{......
+...........
+...........
+.........vv
+.........vv
+ENDMAP
+
+# Constantly meandering clouds of various powers.
+NAME:    fog_3
+TAGS:    entry
+CHANCE:  500
+ORIENT:  float
+MARKER:  U = lua:fog_machine { \
+             pow_min=4, pow_max = 6, delay = 10, size = 1, walk_dist=0, spread_rate=10 \
+         }
+MAP
+...........
+...........
+...........
+...........
+...........
+.....U.....
+....{......
+...........
+...........
+.........mm
+.........mm
+ENDMAP
+
+# Constantly meandering clouds of various powers.
+NAME:    fog_4
+TAGS:    entry
+CHANCE:  500
+ORIENT:  float
+MARKER:  U = lua:fog_machine { \
+             pow_max = 10, delay = 5, size = 1, spread_rate = 30  \
+         }
+MAP
+...........
+...........
+...........
+...........
+...........
+.....U.....
+....{......
+...........
+...........
+.........cc
+.........cc
+ENDMAP
+
+
+
+
 ##############################################################################
 # Matthew's entry vaults
 ##############################################################################
