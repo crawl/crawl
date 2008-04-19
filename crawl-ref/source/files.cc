@@ -226,7 +226,7 @@ player_save_info read_character_info(const std::string &savefile)
     return fromfile;
 }
 
-static bool _is_good_filename(const std::string &s)
+static inline bool _is_good_filename(const std::string &s)
 {
     return (s != "." && s != "..");
 }
@@ -244,8 +244,11 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
     {
         if (_is_good_filename(lData.cFileName))
             files.push_back(lData.cFileName);
-        while (FindNextFile(hFind, &lData))
-            files.push_back(lData.cFileName);
+        while (FindNextFile(hFind, &lData)) 
+        {
+            if (_is_good_filename(lData.cFileName))
+                files.push_back(lData.cFileName);
+        }
         FindClose(hFind);
     }
 #else // non-MS VC++ compilers
@@ -257,10 +260,8 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
     while (dirent *entry = readdir(dir))
     {
         std::string name = entry->d_name;
-        if (name == "." || name == "..")
-            continue;
-
-        files.push_back(name);
+        if (_is_good_filename(name))
+            files.push_back(name);
     }
     closedir(dir);
 #endif
