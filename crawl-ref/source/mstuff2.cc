@@ -609,7 +609,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_SUMMON_DEMON: // class 2-4 demons
-    case SPELL_SUMMON_UGLY_THINGS:
+    case SPELL_SUMMON_UGLY_THING:
         if (mons_abjured(monster, monsterNearby))
             return;
 
@@ -879,7 +879,7 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_SUMMON_DEMON:
-    case SPELL_SUMMON_UGLY_THINGS:
+    case SPELL_SUMMON_UGLY_THING:
     case SPELL_ANIMATE_DEAD:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_UFETUBUS:

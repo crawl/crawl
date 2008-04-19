@@ -2350,7 +2350,7 @@
 },
 
 {
-    SPELL_SUMMON_UGLY_THINGS, "Summon Ugly Things",
+    SPELL_SUMMON_UGLY_THING, "Summon Ugly Thing",
     SPTYP_SUMMONING,
     SPFLAG_NONE,
     5,

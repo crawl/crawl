@@ -2572,7 +2572,7 @@ enum spell_type
     SPELL_SUMMON_DRAKES,
     SPELL_BLINK_OTHER,                // 220
     SPELL_SUMMON_MUSHROOMS,
-    SPELL_SUMMON_UGLY_THINGS,
+    SPELL_SUMMON_UGLY_THING,
 
     NUM_SPELLS,
     SPELL_NO_SPELL = 250               //  255 - added 22jan2000 {dlb}
