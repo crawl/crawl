@@ -45,7 +45,7 @@ public:
     coord_def viewp;               // Left-top pos of viewport.
     coord_def viewsz;              // Size of the viewport (play area).
     coord_def hudp;                // Left-top pos of status area.
-    const coord_def hudsz;         // Size of the status area.
+    coord_def hudsz;               // Size of the status area.
     coord_def msgp;                // Left-top pos of the message pane.
     coord_def msgsz;               // Size of the message pane.
     coord_def mlistp;              // Left-top pos of the monster list.

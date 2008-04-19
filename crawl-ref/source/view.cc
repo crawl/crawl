@@ -4941,9 +4941,6 @@ void crawl_view_buffer::size(const coord_def &sz)
     buffer = new screen_buffer_t [ sz.x * sz.y * 2 ];
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// crawl_view_geometry
-
 // ----------------------------------------------------------------------
 // Layout helper classes
 // ----------------------------------------------------------------------
@@ -4953,8 +4950,8 @@ void crawl_view_buffer::size(const coord_def &sz)
 // define VIEW_MAX_HEIGHT use Options.view_max_height
 // define VIEW_MIN_WIDTH defined elsewhere
 // define VIEW_MAX_WIDTH use Options.view_max_width
-#  define HUD_WIDTH  42
-#  define HUD_HEIGHT 13
+#define HUD_WIDTH  42
+#define HUD_HEIGHT 12
 #define MSG_MIN_HEIGHT 7
 #define MSG_MAX_HEIGHT Options.msg_max_height
 #define MLIST_MIN_HEIGHT Options.mlist_min_height
@@ -4973,10 +4970,10 @@ static void _increment(int& lvalue, int delta, int max_value)
 class _layout
 {
  public:
-    _layout(coord_def termsz_) :
+    _layout(coord_def termsz_, coord_def hudsz_) :
         termp(1,1),    termsz(termsz_),
         viewp(-1,-1),  viewsz(VIEW_MIN_WIDTH, VIEW_MIN_HEIGHT),
-        hudp(-1,-1),   hudsz(HUD_WIDTH, HUD_HEIGHT),
+        hudp(-1,-1),   hudsz(hudsz_),
         msgp(-1,-1),   msgsz(0, MSG_MIN_HEIGHT),
         mlistp(-1,-1), mlistsz(MLIST_MIN_WIDTH, 0),
         hud_gutter(HUD_MIN_GUTTER),
@@ -5007,7 +5004,7 @@ class _layout
     const coord_def termp, termsz;
     coord_def viewp, viewsz;
     coord_def hudp;
-    coord_def hudsz;
+    const coord_def hudsz;
     coord_def msgp, msgsz;
     coord_def mlistp, mlistsz;
     int hud_gutter;
@@ -5022,7 +5019,9 @@ class _layout
 class _inline_layout : public _layout
 {
  public:
-    _inline_layout(coord_def c) : _layout(c) { valid = _init(); }
+    _inline_layout(coord_def termsz_, coord_def hudsz_) :
+        _layout(termsz_, hudsz_)
+    { valid = _init(); }
     bool _init()
     {
         // x: View gets leftover; then mlist; then hud gutter
@@ -5089,7 +5088,9 @@ class _inline_layout : public _layout
 class _mlist_col_layout : public _layout
 {
  public:
-    _mlist_col_layout(coord_def c) : _layout(c) { valid = _init(); }
+    _mlist_col_layout(coord_def termsz_, coord_def hudsz_)
+        : _layout(termsz_, hudsz_)
+    { valid = _init(); }
     bool _init()
     {
         // Don't let the mlist column steal all the width.  Up front,
@@ -5136,10 +5137,14 @@ class _mlist_col_layout : public _layout
     }
 };
 
+// ----------------------------------------------------------------------
+// crawl_view_geometry
+// ----------------------------------------------------------------------
+
 crawl_view_geometry::crawl_view_geometry()
     : termp(1, 1), termsz(80, 24),
       viewp(1, 1), viewsz(33, 17),
-      hudp(40, 1), hudsz(HUD_WIDTH, HUD_HEIGHT),
+      hudp(40, 1), hudsz(-1, -1),
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
       mlistp(hudp.x, hudp.y + hudsz.y),
       mlistsz(hudsz.x, msgp.y - mlistp.y),
@@ -5213,9 +5218,10 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def( get_number_of_cols(), get_number_of_lines() );
+    hudsz = coord_def(HUD_WIDTH, HUD_HEIGHT + (Options.show_turns ? 1 : 0));
 
-    const _inline_layout lay_inline(termsz);
-    const _mlist_col_layout lay_mlist(termsz);
+    const _inline_layout lay_inline(termsz, hudsz);
+    const _mlist_col_layout lay_mlist(termsz, hudsz);
 
     if (! lay_inline.valid)
     {
@@ -5244,7 +5250,7 @@ void crawl_view_geometry::init_geometry()
     viewp = winner->viewp;
     viewsz = winner->viewsz;
     hudp = winner->hudp;
-    // hudsz = winner->hudsz; size is constant
+    hudsz = winner->hudsz;
     mlistp = winner->mlistp;
     mlistsz = winner->mlistsz;
 

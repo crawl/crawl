@@ -24,6 +24,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "branch.h"
 #include "describe.h"
 #include "direct.h"
 #include "format.h"
@@ -41,6 +42,7 @@
 #include "newgame.h"
 #include "ouch.h"
 #include "player.h"
+#include "place.h"
 #include "quiver.h"
 #include "religion.h"
 #include "skills2.h"
@@ -225,7 +227,7 @@ void update_turn_count()
         return;
     }
 
-    cgotoxy(19+6, 2, GOTO_STAT);
+    cgotoxy(19+6, 9, GOTO_STAT);
     textcolor(LIGHTGREY);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
@@ -293,7 +295,7 @@ static void _print_stats_mp(int x, int y)
             break;
         }
     }
-    cgotoxy(x+7, y, GOTO_STAT);
+    cgotoxy(x+8, y, GOTO_STAT);
 
     cprintf( "%d", you.magic_points);
 
@@ -312,36 +314,39 @@ static void _print_stats_mp(int x, int y)
 static void _print_stats_hp(int x, int y)
 {
     const int max_max_hp = you.hp_max + player_rotted();
-    int hp_percent;
-    if ( max_max_hp )
-        hp_percent = (you.hp * 100) / max_max_hp;
-    else
-        hp_percent = 100;
 
-    for ( unsigned int i = 0; i < Options.hp_colour.size(); ++i )
+    // Calculate colour
+    short hp_colour = LIGHTGREY;
     {
-        if ( i+1 == Options.hp_colour.size() ||
-             hp_percent > Options.hp_colour[i+1].first )
+        const int hp_percent =
+            (you.hp * 100) / (max_max_hp ? max_max_hp : you.hp);
+
+        for ( unsigned int i = 0; i < Options.hp_colour.size(); ++i )
         {
-            textcolor(Options.hp_colour[i].second);
-            break;
+            if ( i+1 == Options.hp_colour.size() ||
+                 hp_percent > Options.hp_colour[i+1].first )
+            {
+                hp_colour = Options.hp_colour[i].second;
+                break;
+            }
         }
     }
 
-    cgotoxy(x+4, y, GOTO_STAT);
-    int col = -wherex();
-    cprintf( "%d", you.hp );
+    // 01234567890123456789
+    // Health: xxx/yyy (zzz)
+    cgotoxy(x, y, GOTO_STAT);
+    textcolor(BROWN);
+    cprintf(max_max_hp != you.hp_max ? "HP: " : "Health: ");
 
+    textcolor(hp_colour);
+    cprintf( "%d", you.hp );
     textcolor(LIGHTGREY);
     cprintf( "/%d", you.hp_max );
-
     if (max_max_hp != you.hp_max)
         cprintf( " (%d)", max_max_hp );
 
-    col += wherex();
-    if (max_max_hp != you.hp_max)
-        col += _count_digits(max_max_hp) + 3;
-    for (int i = 14-col; i > 0; i--)
+    int col = wherex() - crawl_view.hudp.x;
+    for (int i = 18-col; i > 0; i--)
         cprintf(" ");
 
     if (! Options.classic_hud)
@@ -778,13 +783,18 @@ static void _print_status_lights(int y)
     you.redraw_status_flags = 0;
 
     std::vector<status_light> lights;
+    static int last_number_of_lights = 0;
+    _get_status_lights(lights);
+    if (lights.size() == 0 && last_number_of_lights == 0)
+        return;
+
     size_t line_cur = y;
     const size_t line_end = crawl_view.hudsz.y+1;
-    size_t i_light = 0;
 
-    _get_status_lights(lights);
     cgotoxy(1, line_cur, GOTO_STAT);
     ASSERT(wherex()-crawl_view.hudp.x == 0);
+
+    size_t i_light = 0;
     while (true)
     {
         const int end_x = (wherex() - crawl_view.hudp.x) +
@@ -838,22 +848,23 @@ void print_stats(void)
     {
         cgotoxy(1,8, GOTO_STAT);
         textcolor(Options.status_caption_colour);
-        cprintf("Exp level: ");
-        textcolor(LIGHTGREY);
-        cprintf("%d", you.experience_level);
-
-        cgotoxy(19,8, GOTO_STAT);
-        textcolor(Options.status_caption_colour);
-        cprintf("Pool: ");
+        cprintf("Exp Pool: ");
         textcolor(LIGHTGREY);
 #if DEBUG_DIAGNOSTICS
-        cprintf("%d/%d (%d)",
+        cprintf("%d/%d (%d) ",
                 you.skill_cost_level, you.exp_available, you.experience);
 #else
-        cprintf("%d", you.exp_available);
+        cprintf("%-6d", you.exp_available);
 #endif
-        clear_to_end_of_line();
         you.redraw_experience = false;
+    }
+
+    // If Options.show_turns, line 9 is Gold and Turns
+    int yhack = 0;
+    if (Options.show_turns)
+    {
+        yhack = 1;
+        cgotoxy(1+6, 9, GOTO_STAT); cprintf("%d", you.gold);
     }
 
     if (you.wield_change)
@@ -868,12 +879,12 @@ void print_stats(void)
         // Also, it's a little bogus to change simulation state in
         // render code.  We should find a better place for this.
         you.m_quiver->on_weapon_changed();
-        _print_stats_wp(10);
+        _print_stats_wp(9+yhack);
     }
 
     if (you.redraw_quiver || you.wield_change)
     {
-        _print_stats_qv(11);
+        _print_stats_qv(10+yhack);
     }
     you.wield_change = false;
     you.redraw_quiver = false;
@@ -881,21 +892,51 @@ void print_stats(void)
     if (you.redraw_status_flags)
     {
         you.redraw_status_flags = 0;
-        _print_status_lights(12);
+        _print_status_lights(11+yhack);
     }
 
     update_screen();
 }
 
-// For some odd reason, only redrawn on level change.
-void print_stats_level(const std::string& description)
+static std::string _level_description_string_hud()
 {
-    cgotoxy(7, 9, GOTO_STAT);
+    const PlaceInfo& place = you.get_place_info();
+    std::string short_name = place.short_name();
+
+    if (place.level_type == LEVEL_DUNGEON
+        && branches[place.branch].depth > 1)
+    {
+        short_name += make_stringf(":%d", player_branch_depth());
+    }
+    // Indefinite articles
+    else if (  place.level_type == LEVEL_PORTAL_VAULT
+            || place.level_type == LEVEL_LABYRINTH)
+    {
+        if (you.level_type_name == "bazaar")
+            short_name = "A Bazaar";
+        else
+            short_name.insert(0, "A ");
+    }
+    // Definite articles
+    else if (place.level_type == LEVEL_ABYSS)
+    {
+        short_name.insert(0, "The ");
+    }
+    return short_name;
+}
+
+// For some odd reason, only redrawn on level change.
+void print_stats_level()
+{
+    textcolor(BROWN);
+    cgotoxy(19, 8, GOTO_STAT);
+    cprintf("Level: ");
+
     textcolor(LIGHTGREY);
 #if DEBUG_DIAGNOSTICS
     cprintf( "(%d) ", you.your_level + 1 );
 #endif
-    cprintf("%s", description.c_str());
+    cprintf("%s", _level_description_string_hud().c_str());
     clear_to_end_of_line();
 }
 
@@ -920,19 +961,28 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
         title = trimmed_name + ", " + class_name;
     }
 
+    // Line 1: Foo the Bar    *WIZARD*
     cgotoxy(1, 1, GOTO_STAT);
-
     textcolor( YELLOW );
+    if (title.size() > WIDTH)
+        title.resize(WIDTH, ' ');
     cprintf( "%-*s", WIDTH, title.c_str() );
-
-    cgotoxy(1, 2, GOTO_STAT);
-    cprintf("%s", species_name( you.species, you.experience_level ).c_str());
     if (you.wizard)
     {
         textcolor( LIGHTBLUE );
-        cgotoxy(1 + crawl_view.hudsz.x-9, 2, GOTO_STAT);
+        cgotoxy(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
         cprintf(" *WIZARD*");
     }
+
+    // Line 2:
+    // Level N Minotaur [of God]
+    textcolor( YELLOW );
+    cgotoxy(1, 2, GOTO_STAT);
+    cprintf("Level %d %s",
+            you.experience_level,
+            species_name( you.species, you.experience_level ).c_str());
+    if (you.religion != GOD_NO_GOD)
+        cprintf(" of %s", god_name(you.religion).c_str());
 
     textcolor( LIGHTGREY );
 }
@@ -945,23 +995,22 @@ void draw_border(void)
 
     textcolor(Options.status_caption_colour);
 
-    cgotoxy( 1, 3, GOTO_STAT); cprintf("HP:");
+    //cgotoxy( 1, 3, GOTO_STAT); cprintf("Hp:");
     cgotoxy( 1, 4, GOTO_STAT); cprintf("Magic:");
     cgotoxy( 1, 5, GOTO_STAT); cprintf("Str:");
     cgotoxy( 1, 6, GOTO_STAT); cprintf("Int:");
     cgotoxy( 1, 7, GOTO_STAT); cprintf("Dex:");
-    // cgotoxy( 1, 8, GOTO_STAT); cprintf("Exp level:");
 
     cgotoxy(19, 5, GOTO_STAT); cprintf("AC:");
     cgotoxy(19, 6, GOTO_STAT); cprintf("Sh:");
     cgotoxy(19, 7, GOTO_STAT); cprintf("Ev:");
-    //cgotoxy(19, 8, GOTO_STAT); cprintf("Pool:");
+
+    // Line 8 is exp pool, Level
     if (Options.show_turns)
     {
-        cgotoxy(19, 2, GOTO_STAT); cprintf("Turn:");
+        cgotoxy( 1, 9, GOTO_STAT); cprintf("Gold:");
+        cgotoxy(19, 9, GOTO_STAT); cprintf("Turn:");
     }
-    textcolor(LIGHTGREY);
-    cgotoxy( 1,9, GOTO_STAT); cprintf("Level");
 }                               // end draw_border()
 
 // ----------------------------------------------------------------------

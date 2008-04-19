@@ -49,7 +49,7 @@ void update_message_status();
 void update_turn_count();
 
 void print_stats();
-void print_stats_level(const std::string& description);
+void print_stats_level();
 void draw_border();
 void redraw_skill(const std::string &your_name, const std::string &class_name);
 void update_monster_pane();

@@ -2286,44 +2286,10 @@ void trackers_init_new_level(bool transit)
         stash_init_new_level();
 }
 
-std::string level_description_string()
-{
-    if (you.level_type == LEVEL_PANDEMONIUM)
-        return "- Pandemonium";
-
-    if (you.level_type == LEVEL_ABYSS)
-        return "- The Abyss";
-
-    if (you.level_type == LEVEL_LABYRINTH)
-        return "- a Labyrinth";
-
-    if (you.level_type == LEVEL_PORTAL_VAULT)
-    {
-         if (you.level_type_name == "bazaar")
-             return "- a Bazaar";
-
-         return "- a Portal Chamber";
-    }
-
-    // level_type == LEVEL_DUNGEON
-    char buf[200];
-    const int youbranch = you.where_are_you;
-    if ( branches[youbranch].depth == 1 )
-        snprintf(buf, sizeof buf, "- %s", branches[youbranch].longname);
-    else
-    {
-        const int curr_subdungeon_level = player_branch_depth();
-        snprintf(buf, sizeof buf, "%d of %s", curr_subdungeon_level,
-                 branches[youbranch].longname);
-    }
-    return buf;
-}
-
-
 void new_level(void)
 {
     take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
-    print_stats_level(level_description_string());
+    print_stats_level();
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif

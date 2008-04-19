@@ -499,8 +499,8 @@ private:
 class PlaceInfo
 {
 public:
-    int level_type;
-    int branch;
+    int level_type;     // enum level_area_type
+    int branch;         // enum branch_type if LEVEL_DUNGEON; otherwise -1
 
     unsigned long num_visits;
     unsigned long levels_seen;
