@@ -1829,8 +1829,8 @@ void tag_construct_level_tiles(writer &th)
 {
 #ifdef USE_TILE
     unsigned short rle_count = 0; // for run-length encoding
-    unsigned short tile = 0;
-    unsigned short last_tile = 0;
+    unsigned int tile = 0;
+    unsigned int last_tile = 0;
 
     // Ver
     marshallShort(th, 71); // tile routine subversion
@@ -1854,14 +1854,14 @@ void tag_construct_level_tiles(writer &th)
                 rle_count++;
                 if (rle_count == 0x100)
                 {
-                    marshallShort(th, last_tile);
+                    marshallLong(th, last_tile);
                     marshallByte(th, (char)0xFF);
                     rle_count = 1;
                 }
             }
             else
             {
-                marshallShort(th, last_tile);
+                marshallLong(th, last_tile);
                 // Note: the unsigned char tile count gets streamed
                 // as a signed char here.  It gets read back into
                 // an unsigned char in the read function.
@@ -1870,7 +1870,7 @@ void tag_construct_level_tiles(writer &th)
             }
         }
     }
-    marshallShort(th, tile);
+    marshallLong(th, tile);
     marshallByte(th, rle_count);
 
     // fg
@@ -1888,20 +1888,20 @@ void tag_construct_level_tiles(writer &th)
                 rle_count++;
                 if (rle_count == 0x100)
                 {
-                    marshallShort(th, last_tile);
+                    marshallLong(th, last_tile);
                     marshallByte(th, (char)0xFF);
                     rle_count = 1;
                 }
             }
             else
             {
-                marshallShort(th, last_tile);
+                marshallLong(th, last_tile);
                 marshallByte(th, rle_count);
                 rle_count = 1;
             }
         }
     }
-    marshallShort(th, tile);
+    marshallLong(th, tile);
     marshallByte(th, rle_count);
 
     // flavor
@@ -2156,7 +2156,7 @@ void tag_read_level_tiles(struct reader &th)
     }
 
     unsigned char rle_count = 0;
-    unsigned short tile = 0;
+    unsigned int tile = 0;
 
     int ver = unmarshallShort(th);
     if (ver == 0) return;
@@ -2174,7 +2174,7 @@ void tag_read_level_tiles(struct reader &th)
         {
             if (rle_count == 0)
             {
-                tile = unmarshallShort(th);
+                tile = unmarshallLong(th);
                 rle_count = unmarshallByte(th);
             }
             env.tile_bk_bg[i][j] = tile;
@@ -2190,7 +2190,7 @@ void tag_read_level_tiles(struct reader &th)
         {
             if (rle_count == 0)
             {
-                tile = unmarshallShort(th);
+                tile = unmarshallLong(th);
                 rle_count = unmarshallByte(th);
             }
             env.tile_bk_fg[i][j] = tile;
