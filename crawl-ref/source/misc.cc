@@ -2236,8 +2236,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         you.duration[DUR_BEHELD] = 0;
     }
 
-    viewwindow(1, true);
-
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
 
@@ -2246,6 +2244,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 #ifdef USE_TILE
     TileNewLevel(newlevel);
 #endif // USE_TILE
+
+    viewwindow(1, true);
 
     if (collect_travel_data)
     {

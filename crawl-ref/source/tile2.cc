@@ -917,6 +917,8 @@ static void _TileLoadWallAux(int idx_src, int idx_dst, img_type wall)
 
 void WallIdx(int &wall, int &floor, int &special)
 {
+    // Note: This function must be deterministic.
+
     special = -1;
 
     if (you.level_type == LEVEL_PANDEMONIUM)
@@ -967,9 +969,11 @@ void WallIdx(int &wall, int &floor, int &special)
             break;
         }
 
-        if (one_chance_in(3))
+        unsigned int seen = you.get_place_info(LEVEL_PANDEMONIUM).levels_seen;
+
+        if ((seen + env.rock_colour) % 3 == 1)
             wall = IDX_WALL_FLESH;
-        if (one_chance_in(3))
+        if ((seen + env.floor_colour) % 3 == 1)
             floor = IDX_FLOOR_NERVES;
 
         return;
