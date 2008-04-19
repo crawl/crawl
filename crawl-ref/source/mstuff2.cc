@@ -683,11 +683,13 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
         duration  = std::min(2 + monster->hit_dice / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
+        {
             create_monster(MONS_WANDERING_MUSHROOM, duration,
                     SAME_ATTITUDE(monster),
                     monster->x, monster->y,
                     monster->foe,
                     MONS_PROGRAM_BUG);
+        }
         return;
 
     case SPELL_SUMMON_WRAITHS:
