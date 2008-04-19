@@ -1463,10 +1463,8 @@ void summon_scorpions(int pow)
                             MONS_PROGRAM_BUG, false, false,
                             false, true) != -1)
         {
-            if (friendly)
-                mpr("A scorpion appears.");
-            else
-                mpr("A scorpion appears. It doesn't look very happy.");
+            mprf("A scorpion appears.%s",
+                friendly ? "" : " It doesn't look very happy.");
         }
     }
 }                               // end summon_scorpions()
@@ -1489,10 +1487,8 @@ void summon_ugly_thing(int pow)
     {
         const char *prefix = (ugly == MONS_VERY_UGLY_THING) ? " very " : "n ";
 
-        if (friendly)
-            mprf("A%sugly thing appears.", prefix);
-        else
-            mprf("A%sugly thing appears. It doesn't look very happy.", prefix);
+        mprf("A%sugly thing appears.%s", prefix,
+            friendly ? "" : " It doesn't look very happy.");
     }
 }                               // end summon_ugly_thing()
 
@@ -1529,16 +1525,19 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
         break;
 
     default:
-        if (random2(pow) > 3)
-            mpr("A demon appears!");
-        else
+    {
+        bool friendly = (random2(pow) > 3);
+
+        mprf("A demon appears!%s",
+            friendly ? "" : " It doesn't look very happy.");
+
+        if (!friendly)
         {
-            mpr("A demon appears! It doesn't look very happy.");
             beha = BEH_HOSTILE;
             hitting = MHITYOU;
         }
         break;
-
+    }
     }
 
     int monster = create_monster( ibc, numsc, beha,

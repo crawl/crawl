@@ -470,8 +470,9 @@ void cast_summon_butterflies(int pow)
     for (int scount = 1; scount < num; scount++)
     {
         create_monster( MONS_BUTTERFLY, 3, BEH_FRIENDLY,
-                        you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG,
-                        false, false, false, true );
+                        you.x_pos, you.y_pos, you.pet_target,
+                        MONS_PROGRAM_BUG, false, false,
+                        false, true );
     }
 }
 
@@ -508,9 +509,10 @@ void cast_summon_large_mammal(int pow)
         }
     }
 
-    create_monster( mon, 3, BEH_FRIENDLY, you.x_pos, you.y_pos,
-                    you.pet_target, MONS_PROGRAM_BUG,
-                    false, false, false, true );
+    create_monster( mon, 3, BEH_FRIENDLY,
+                    you.x_pos, you.y_pos, you.pet_target,
+                    MONS_PROGRAM_BUG, false, false,
+                    false, true );
 }
 
 void cast_sticks_to_snakes(int pow)
@@ -528,8 +530,10 @@ void cast_sticks_to_snakes(int pow)
         return;
     }
 
-    const beh_type behaviour = item_cursed( you.inv[ weapon ] )
-        ? BEH_HOSTILE : BEH_FRIENDLY;
+    const beh_type beha = item_cursed( you.inv[ weapon ] ) ? BEH_HOSTILE :
+                                                             BEH_FRIENDLY;
+    const int hitting = (beha == BEH_HOSTILE) ? MHITYOU :
+                                                you.pet_target;
 
     if ((you.inv[ weapon ].base_type == OBJ_MISSILES
          && (you.inv[ weapon ].sub_type == MI_ARROW)))
@@ -550,9 +554,10 @@ void cast_sticks_to_snakes(int pow)
                 mon = MONS_SMALL_SNAKE;
             }
 
-            if (create_monster( mon, dur, behaviour, you.x_pos, you.y_pos,
-                                MHITYOU, MONS_PROGRAM_BUG,
-                                false, false, false, true ) != -1)
+            if (create_monster( mon, dur, beha,
+                                you.x_pos, you.y_pos, hitting,
+                                MONS_PROGRAM_BUG, false, false,
+                                false, true ) != -1)
             {
                 how_many++;
             }
@@ -573,8 +578,6 @@ void cast_sticks_to_snakes(int pow)
             || you.inv[ weapon ].sub_type == WPN_GLAIVE
             || you.inv[ weapon ].sub_type == WPN_BLOWGUN))
     {
-        how_many = 1;
-
         // Upsizing Snakes to Brown Snakes as the base class for using
         // the really big sticks (so bonus applies really only to trolls,
         // ogres, and most importantly ogre magi).  Still it's unlikely
@@ -597,8 +600,13 @@ void cast_sticks_to_snakes(int pow)
         if (pow > 20 && one_chance_in(3))
             mon = MONS_BROWN_SNAKE;
 
-        create_monster(mon, dur, behaviour, you.x_pos, you.y_pos, MHITYOU,
-                       MONS_PROGRAM_BUG, false, false, false, true);
+        if (create_monster(mon, dur, beha,
+                       you.x_pos, you.y_pos, hitting,
+                       MONS_PROGRAM_BUG, false, false,
+                       false, true) != -1)
+        {
+            how_many++;
+        }
     }
 
     if (how_many > you.inv[you.equip[EQ_WEAPON]].quantity)
@@ -621,24 +629,25 @@ void cast_sticks_to_snakes(int pow)
 
 void cast_summon_dragon(int pow)
 {
-
     // Removed the chance of multiple dragons... one should be more
     // than enough, and if it isn't, the player can cast again...
     // especially since these aren't on the Abjuration plan... they'll
     // last until they die (maybe that should be changed, but this is
     // a very high level spell so it might be okay).  -- bwr
-    const bool happy = (random2(pow) > 5);
+    const bool friendly = (random2(pow) > 5);
 
     if (create_monster( MONS_DRAGON, 3,
-                        (happy ? BEH_FRIENDLY : BEH_HOSTILE),
-                        you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG,
-                        false, false, false, true) != -1)
+                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                        you.x_pos, you.y_pos,
+                        friendly ? you.pet_target : MHITYOU,
+                        MONS_PROGRAM_BUG, false, false,
+                        false, true ) != -1)
     {
         mprf("A dragon appears.%s",
-             happy ? "" : " It doesn't look very happy.");
+            friendly ? "" : " It doesn't look very happy.");
     }
     else
-        mprf("Nothing happens.");
+        canned_msg( MSG_NOTHING_HAPPENS );
 }                               // end cast_summon_dragon()
 
 void cast_conjure_ball_lightning( int pow )
