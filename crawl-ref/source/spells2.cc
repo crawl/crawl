@@ -1226,11 +1226,10 @@ char burn_freeze(int pow, beam_type flavour)
 //              postal on the caster (after taking into account
 //              chance of that happening to unskilled casters
 //              anyway)
-int summon_elemental(int pow, int restricted_type,
-                     unsigned char unfriendly)
+bool summon_elemental(int pow, int restricted_type,
+                      unsigned char unfriendly)
 {
     int type_summoned = MONS_PROGRAM_BUG;       // error trapping {dlb}
-    int summ_success = 0;
     struct dist smove;
 
     int dir_x;
@@ -1312,7 +1311,7 @@ int summon_elemental(int pow, int restricted_type,
     if (type_summoned == MONS_PROGRAM_BUG)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (0);
+        return (false);
     }
 
     // silly - ice for water? 15jan2000 {dlb}
@@ -1337,17 +1336,20 @@ int summon_elemental(int pow, int restricted_type,
 
                         || random2(100) >= unfriendly);
 
-    summ_success = create_monster( type_summoned, numsc,
-                                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                                   targ_x, targ_y,
-                                   friendly ? you.pet_target : MHITYOU,
-                                   MONS_PROGRAM_BUG, false, false,
-                                   false, true );
+    if (create_monster( type_summoned, numsc,
+                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                        targ_x, targ_y,
+                        friendly ? you.pet_target : MHITYOU,
+                        MONS_PROGRAM_BUG, false, false,
+                        false, true ) == -1)
+    {
+        return (false);
+    }
 
-    if (summ_success >= 0 && !friendly)
+    if (!friendly)
         mpr( "The elemental doesn't seem to appreciate being summoned." );
 
-    return (summ_success >= 0);
+    return (true);
 }                               // end summon_elemental()
 
 //jmf: beefed up higher-level casting of this (formerly lame) spell

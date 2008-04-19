@@ -59,8 +59,8 @@ int corpse_rot(int power);
 /* ***********************************************************************
  * called from: it_use3 - spell
  * *********************************************************************** */
-int summon_elemental(int pow, int restricted_type, unsigned char unfriendly);
-
+bool summon_elemental(int pow, int restricted_type,
+                      unsigned char unfriendly);
 
 struct dist;
 // last updated 24may2000 {dlb}

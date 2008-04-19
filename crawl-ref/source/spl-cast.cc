@@ -1425,7 +1425,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SUMMON_ELEMENTAL:
-        if (summon_elemental(powc, 0, 2) == -1)
+        if (!summon_elemental(powc, 0, 2))
             return (SPRET_ABORT);
         break;
 
@@ -1541,8 +1541,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         mpr("You open a gate to Pandemonium!");
 
         {
-            const beh_type dem_beh = ((random2(powc) <= 5)
-                                      ? BEH_HOSTILE : BEH_CHARMED);
+            const beh_type dem_beh = ((random2(powc) > 5) ? BEH_CHARMED :
+                                                            BEH_HOSTILE);
 
             if (dem_beh == BEH_CHARMED)
                 mpr("You don't feel so good about this...");

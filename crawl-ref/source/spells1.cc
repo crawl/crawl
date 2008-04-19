@@ -157,7 +157,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         {
             // no longer held in net
             clear_trapping_net();
-            
+
             move_player_to_grid(beam.tx, beam.ty, false, true, true);
 
             // controlling teleport contaminates the player -- bwr

@@ -600,10 +600,10 @@ void cast_sticks_to_snakes(int pow)
         if (pow > 20 && one_chance_in(3))
             mon = MONS_BROWN_SNAKE;
 
-        if (create_monster(mon, dur, beha,
+        if (create_monster( mon, dur, beha,
                        you.x_pos, you.y_pos, hitting,
                        MONS_PROGRAM_BUG, false, false,
-                       false, true) != -1)
+                       false, true ) != -1)
         {
             how_many++;
         }
