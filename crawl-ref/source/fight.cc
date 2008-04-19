@@ -2774,9 +2774,15 @@ void melee_attack::player_stab_check()
         stab_bonus = 2;
     }
 
-    // trapped in a net, paralysed, or sleeping
-    if (def->has_ench(ENCH_HELD) || def->has_ench(ENCH_PARALYSIS)
-        || def->behaviour == BEH_SLEEP)
+    // trapped in a net or paralysed
+    if (def->has_ench(ENCH_HELD) || def->has_ench(ENCH_PARALYSIS))
+    {
+        stab_attempt = true;
+        stab_bonus = 1;
+    }
+
+    // sleeping
+    if (def->behaviour == BEH_SLEEP)
     {
         stab_attempt = true;
         roll_needed = false;
