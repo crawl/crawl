@@ -1463,19 +1463,20 @@ void summon_scorpions(int pow)
     {
         if (random2(pow) <= 3)
         {
-            const int mindex =
-                create_monster( MONS_SCORPION, 3, BEH_HOSTILE,
+            if (create_monster( MONS_SCORPION, 3, BEH_HOSTILE,
                                 you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG, false, false, false, true);
-            if (mindex != -1)
+                                MONS_PROGRAM_BUG, false, false,
+                                false, true) != -1)
+            {
                 mpr("A scorpion appears. It doesn't look very happy.");
+            }
         }
         else
         {
             if (create_monster( MONS_SCORPION, 3, BEH_FRIENDLY,
-                                you.x_pos, you.y_pos,
-                                you.pet_target, MONS_PROGRAM_BUG,
-                                false, false, false, true) != -1)
+                                you.x_pos, you.y_pos, you.pet_target,
+                                MONS_PROGRAM_BUG, false, false,
+                                false, true) != -1)
             {
                 mpr("A scorpion appears.");
             }
@@ -1488,16 +1489,28 @@ void summon_ugly_thing(int pow)
     monster_type ugly = (one_chance_in(3)) ? MONS_VERY_UGLY_THING :
                                              MONS_UGLY_THING;
     int numsc = std::min(2 + (random2(pow) / 4), 6);
-    beh_type beha = (random2(pow) < 4) ? BEH_HOSTILE : BEH_FRIENDLY;
+    const char *prefix = (ugly == MONS_VERY_UGLY_THING) ? " very " : "n ";
 
-    create_monster(ugly, numsc, beha, you.x_pos, you.y_pos, you.pet_target,
-                   MONS_PROGRAM_BUG, false, false, false, true);
-
-    mprf("A%sugly thing appears.", (ugly == MONS_VERY_UGLY_THING) ?
-         " very " : "n ");
-
-    if (beha == BEH_HOSTILE)
-        mpr("It doesn't look very happy.");
+    if (random2(pow) < 4)
+    {
+        if (create_monster(ugly, numsc, BEH_HOSTILE,
+                           you.x_pos, you.y_pos, MHITYOU,
+                           MONS_PROGRAM_BUG, false, false,
+                           false, true) != -1)
+        {
+            mprf("A%sugly thing appears. It doesn't look very happy.", prefix);
+        }
+    }
+    else
+    {
+        if (create_monster(ugly, numsc, BEH_FRIENDLY,
+                           you.x_pos, you.y_pos, you.pet_target,
+                           MONS_PROGRAM_BUG, false, false,
+                           false, true) != -1)
+        {
+            mprf("A%sugly thing appears.", prefix);
+        }
+    }
 }                               // end summon_ugly_thing()
 
 void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
