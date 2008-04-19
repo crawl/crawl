@@ -17,7 +17,7 @@
 #include <algorithm>
 
 #include "dgnevent.h"
-#include "direct.h"
+#include "directn.h"
 #include "itemprop.h"
 #include "items.h"
 #include "message.h"
@@ -254,7 +254,7 @@ void get_door_description(int door_size, const char** adjective, const char** no
         "huge "      , "gate",
     };
 
-    const unsigned int idx = MIN((unsigned int)door_size*2, ARRAYSIZE(descriptions)-2);
+    const unsigned int idx = MIN((unsigned int)door_size*2, ARRAYSZ(descriptions)-2);
     *adjective = descriptions[idx];
     *noun = descriptions[idx+1];
 }

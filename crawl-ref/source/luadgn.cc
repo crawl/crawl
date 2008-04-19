@@ -14,7 +14,7 @@
 #include "branch.h"
 #include "clua.h"
 #include "cloud.h"
-#include "direct.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "files.h"
 #include "initfile.h"
@@ -1120,11 +1120,11 @@ const char *dngn_feature_names[] =
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)
 {
-    COMPILE_CHECK(ARRAYSIZE(dngn_feature_names) == NUM_REAL_FEATURES, c1);
+    COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_REAL_FEATURES, c1);
     if (name.empty())
         return (DNGN_UNSEEN);
 
-    for (unsigned i = 0; i < ARRAYSIZE(dngn_feature_names); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
         if (dngn_feature_names[i] == name)
             return static_cast<dungeon_feature_type>(i);
 
@@ -1135,11 +1135,11 @@ std::vector<std::string> dungeon_feature_matches(const std::string &name)
 {
     std::vector<std::string> matches;
 
-    COMPILE_CHECK(ARRAYSIZE(dngn_feature_names) == NUM_REAL_FEATURES, c1);
+    COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_REAL_FEATURES, c1);
     if (name.empty())
         return (matches);
 
-    for (unsigned i = 0; i < ARRAYSIZE(dngn_feature_names); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
         if (strstr(dngn_feature_names[i], name.c_str()))
             matches.push_back(dngn_feature_names[i]);
 
@@ -1150,7 +1150,7 @@ const char *dungeon_feature_name(dungeon_feature_type rfeat)
 {
     const unsigned feat = rfeat;
 
-    if (feat >= ARRAYSIZE(dngn_feature_names))
+    if (feat >= ARRAYSZ(dngn_feature_names))
         return (NULL);
 
     return dngn_feature_names[feat];
@@ -1178,7 +1178,7 @@ static const char *dgn_event_type_names[] =
 
 static dgn_event_type dgn_event_type_by_name(const std::string &name)
 {
-    for (unsigned i = 0; i < ARRAYSIZE(dgn_event_type_names); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(dgn_event_type_names); ++i)
         if (dgn_event_type_names[i] == name)
             return static_cast<dgn_event_type>(i? 1 << (i - 1) : 0);
     return (DET_NONE);
@@ -1189,7 +1189,7 @@ static const char *dgn_event_type_name(unsigned evmask)
     if (evmask == 0)
         return (dgn_event_type_names[0]);
 
-    for (unsigned i = 1; i < ARRAYSIZE(dgn_event_type_names); ++i)
+    for (unsigned i = 1; i < ARRAYSZ(dgn_event_type_names); ++i)
         if (evmask & (1 << (i - 1)))
             return (dgn_event_type_names[i]);
 

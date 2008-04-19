@@ -14,7 +14,7 @@
 #include "mapmark.h"
 
 #include "clua.h"
-#include "direct.h"
+#include "directn.h"
 #include "libutil.h"
 #include "luadgn.h"
 #include "stuff.h"

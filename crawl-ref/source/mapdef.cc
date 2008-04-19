@@ -15,7 +15,7 @@
 #include "AppHdr.h"
 #include "branch.h"
 #include "describe.h"
-#include "direct.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "files.h"
 #include "initfile.h"
@@ -1426,6 +1426,7 @@ std::string map_def::validate_map_def()
     if (!err.empty())
         return (err);
 
+    fixup();
     resolve();
     test_lua_validate(true);
     
@@ -1719,8 +1720,7 @@ void map_def::rotate(bool clock)
 
 void map_def::normalise()
 {
-    // Minivaults are padded out with floor tiles, normal maps are
-    // padded out with rock walls.
+    // Pad out lines that are shorter than max.
     map.normalise(' ');
 }
 

@@ -17,7 +17,7 @@
  */
 
 #include "AppHdr.h"
-#include "direct.h"
+#include "directn.h"
 #include "format.h"
 
 #include <cstdarg>

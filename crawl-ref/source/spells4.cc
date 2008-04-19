@@ -27,7 +27,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
-#include "direct.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "it_use2.h"
@@ -750,7 +750,7 @@ static bool is_domesticated_animal(int type)
         MONS_SPINY_FROG, MONS_BLINK_FROG, MONS_WOLF, MONS_WARG,
         MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR
     };
-    for ( unsigned int i = 0; i < ARRAYSIZE(types); ++i )
+    for ( unsigned int i = 0; i < ARRAYSZ(types); ++i )
         if ( types[i] == type )
             return true;
     return false;

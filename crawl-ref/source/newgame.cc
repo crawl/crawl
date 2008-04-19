@@ -192,7 +192,7 @@ static species_type _random_draconian_species()
 
 static species_type _get_species(const int index)
 {
-    if (index < 0 || (unsigned int) index >= ARRAYSIZE(old_species_order))
+    if (index < 0 || (unsigned int) index >= ARRAYSZ(old_species_order))
     {
         return (SP_UNKNOWN);
     }
@@ -246,7 +246,7 @@ static job_type new_jobs_order[] = {
 
 static job_type _get_class(const int index)
 {
-    if (index < 0 || (unsigned int) index >= ARRAYSIZE(old_jobs_order))
+    if (index < 0 || (unsigned int) index >= ARRAYSZ(old_jobs_order))
        return JOB_UNKNOWN;
 
     return (Options.use_old_selection_order? old_jobs_order[index]
@@ -264,9 +264,9 @@ static const char * Species_Abbrev_List[ NUM_SPECIES ] =
 
 int get_species_index_by_abbrev( const char *abbrev )
 {
-    COMPILE_CHECK(ARRAYSIZE(Species_Abbrev_List) == NUM_SPECIES, c1);
+    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
 
-    for (unsigned i = 0; i < ARRAYSIZE(old_species_order); i++)
+    for (unsigned i = 0; i < ARRAYSZ(old_species_order); i++)
     {
         const int sp = (Options.use_old_selection_order ? old_species_order[i]
                                                         : new_species_order[i]);
@@ -292,7 +292,7 @@ int get_species_index_by_name( const char *name )
     strncpy( lowered_buff, name, sizeof( lowered_buff ) );
     strlwr( lowered_buff );
 
-    for (i = 0; i < ARRAYSIZE(old_species_order); i++)
+    for (i = 0; i < ARRAYSZ(old_species_order); i++)
     {
         const species_type real_sp
                    = (Options.use_old_selection_order ? old_species_order[i]
@@ -323,7 +323,7 @@ const char *get_species_abbrev( int which_species )
 int get_species_by_abbrev( const char *abbrev )
 {
     int i;
-    COMPILE_CHECK(ARRAYSIZE(Species_Abbrev_List) == NUM_SPECIES, c1);
+    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
     for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
          if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[i][0] )
@@ -351,10 +351,10 @@ static const char * Class_Name_List[ NUM_JOBS ] =
 
 int get_class_index_by_abbrev( const char *abbrev )
 {
-    COMPILE_CHECK(ARRAYSIZE(Class_Abbrev_List) == NUM_JOBS, c1);
+    COMPILE_CHECK(ARRAYSZ(Class_Abbrev_List) == NUM_JOBS, c1);
 
     unsigned int job;
-    for (unsigned int i = 0; i < ARRAYSIZE(old_jobs_order); i++)
+    for (unsigned int i = 0; i < ARRAYSZ(old_jobs_order); i++)
     {
         job = (Options.use_old_selection_order ? old_jobs_order[i]
                                                : new_jobs_order[i]);
@@ -394,7 +394,7 @@ int get_class_by_abbrev( const char *abbrev )
 
 int get_class_index_by_name( const char *name )
 {
-    COMPILE_CHECK(ARRAYSIZE(Class_Name_List)   == NUM_JOBS, c1);
+    COMPILE_CHECK(ARRAYSZ(Class_Name_List)   == NUM_JOBS, c1);
 
     char *ptr;
     char lowered_buff[80];
@@ -405,7 +405,7 @@ int get_class_index_by_name( const char *name )
 
     int cl = -1;
     unsigned int job;
-    for (unsigned int i = 0; i < ARRAYSIZE(old_jobs_order); i++)
+    for (unsigned int i = 0; i < ARRAYSZ(old_jobs_order); i++)
     {
         job = (Options.use_old_selection_order ? old_jobs_order[i]
                                                : new_jobs_order[i]);
@@ -3137,12 +3137,12 @@ bool choose_race()
         printed = true;
 
     // the list musn't be longer than the number of actual species
-    COMPILE_CHECK(ARRAYSIZE(old_species_order) <= NUM_SPECIES, c1);
+    COMPILE_CHECK(ARRAYSZ(old_species_order) <= NUM_SPECIES, c1);
 
     // check whether the two lists have the same size
-    COMPILE_CHECK(ARRAYSIZE(old_species_order) == ARRAYSIZE(new_species_order), c2);
+    COMPILE_CHECK(ARRAYSZ(old_species_order) == ARRAYSZ(new_species_order), c2);
 
-    const int num_species = ARRAYSIZE(old_species_order);
+    const int num_species = ARRAYSZ(old_species_order);
 
 spec_query:
     bool prevraceok = (Options.prev_race == '*');
@@ -3386,12 +3386,12 @@ bool choose_class(void)
     ng_cls = 0;
 
     // the list musn't be longer than the number of actual classes
-    COMPILE_CHECK(ARRAYSIZE(old_jobs_order) <= NUM_JOBS, c1);
+    COMPILE_CHECK(ARRAYSZ(old_jobs_order) <= NUM_JOBS, c1);
 
     // check whether the two lists have the same size
-    COMPILE_CHECK(ARRAYSIZE(old_jobs_order) == ARRAYSIZE(new_jobs_order), c2);
+    COMPILE_CHECK(ARRAYSZ(old_jobs_order) == ARRAYSZ(new_jobs_order), c2);
 
-    const int num_classes = ARRAYSIZE(old_jobs_order);
+    const int num_classes = ARRAYSZ(old_jobs_order);
 
 job_query:
     bool prevclassok = (Options.prev_cls == '*');

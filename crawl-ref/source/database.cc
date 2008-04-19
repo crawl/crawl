@@ -182,13 +182,13 @@ void TextDB::_regenerate_db()
 
 void databaseSystemInit()
 {
-    for (unsigned int i = 0; i < ARRAYSIZE(AllDBs); i++)
+    for (unsigned int i = 0; i < ARRAYSZ(AllDBs); i++)
         AllDBs[i].init();
 }
 
 void databaseSystemShutdown()
 {
-    for (unsigned int i = 0; i < ARRAYSIZE(AllDBs); i++)
+    for (unsigned int i = 0; i < ARRAYSZ(AllDBs); i++)
         AllDBs[i].shutdown();
 }
 

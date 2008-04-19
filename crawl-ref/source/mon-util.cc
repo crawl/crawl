@@ -80,7 +80,7 @@ static monsterentry mondata[] = {
 #include "mon-data.h"
 };
 
-#define MONDATASIZE ARRAYSIZE(mondata)
+#define MONDATASIZE ARRAYSZ(mondata)
 
 static mon_spellbook mspell_list[] = {
 #include "mon-spll.h"
@@ -1509,7 +1509,7 @@ static const char *drac_colour_names[] = {
 
 std::string draconian_colour_name(monster_type mtype)
 {
-    COMPILE_CHECK(ARRAYSIZE(drac_colour_names) ==
+    COMPILE_CHECK(ARRAYSZ(drac_colour_names) ==
                   MONS_PALE_DRACONIAN - MONS_DRACONIAN, c1);
 
     if (mtype < MONS_BLACK_DRACONIAN || mtype > MONS_PALE_DRACONIAN)
@@ -1519,10 +1519,10 @@ std::string draconian_colour_name(monster_type mtype)
 
 monster_type draconian_colour_by_name(const std::string &name)
 {
-    COMPILE_CHECK(ARRAYSIZE(drac_colour_names)
+    COMPILE_CHECK(ARRAYSZ(drac_colour_names)
                   == (MONS_PALE_DRACONIAN - MONS_DRACONIAN), c1);
 
-    for (unsigned i = 0; i < ARRAYSIZE(drac_colour_names); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(drac_colour_names); ++i)
         if (name == drac_colour_names[i])
             return static_cast<monster_type>(i + MONS_BLACK_DRACONIAN);
 
@@ -4149,7 +4149,7 @@ void monsters::load_spells(mon_spellbook_type book)
         spells = ghost->spells;
     else
     {
-        for (unsigned int i = 0; i < ARRAYSIZE(mspell_list); ++i)
+        for (unsigned int i = 0; i < ARRAYSZ(mspell_list); ++i)
         {
             if (mspell_list[i].type == book)
             {
@@ -5451,7 +5451,7 @@ static const char *enchant_names[] =
 
 const char *mons_enchantment_name(enchant_type ench)
 {
-    COMPILE_CHECK(ARRAYSIZE(enchant_names) == NUM_ENCHANTMENTS+1, c1);
+    COMPILE_CHECK(ARRAYSZ(enchant_names) == NUM_ENCHANTMENTS+1, c1);
 
     if (ench > NUM_ENCHANTMENTS)
         ench = NUM_ENCHANTMENTS;

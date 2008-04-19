@@ -517,7 +517,7 @@ void init_item_sort_comparators(item_sort_comparators &list,
         if (s[0] == '<' || s[0] == '>')
             s = s.substr(1);
 
-        for (unsigned ci = 0; ci < ARRAYSIZE(cmp_map); ++ci)
+        for (unsigned ci = 0; ci < ARRAYSZ(cmp_map); ++ci)
             if (cmp_map[ci].cname == s)
             {
                 list.push_back( item_comparator( cmp_map[ci].cmp, negated ) );

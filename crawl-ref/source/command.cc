@@ -97,7 +97,7 @@ void version(void)
 {
     mpr( "This is " CRAWL " " VERSION " (" VERSION_DETAIL ")." );
     mprf("Features: %s",
-         comma_separated_line(features, features + ARRAYSIZE(features))
+         comma_separated_line(features, features + ARRAYSZ(features))
              .c_str());
 }                               // end version()
 

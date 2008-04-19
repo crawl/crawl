@@ -19,7 +19,7 @@
 #include "cio.h"
 #include "defines.h"
 #include "describe.h"
-#include "direct.h"
+#include "directn.h"
 #include "files.h"
 #include "food.h"
 #include "itemname.h"

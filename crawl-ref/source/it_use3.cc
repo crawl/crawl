@@ -25,7 +25,7 @@
 #include "cloud.h"
 #include "database.h"
 #include "decks.h"
-#include "direct.h"
+#include "directn.h"
 #include "effects.h"
 #include "fight.h"
 #include "food.h"

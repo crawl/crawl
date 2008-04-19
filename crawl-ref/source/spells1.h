@@ -16,7 +16,7 @@
 
 
 #include "externs.h"
-#include "direct.h"
+#include "directn.h"
 
 struct bolt;
 

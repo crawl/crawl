@@ -16,7 +16,7 @@
 #define SPL_UTIL_H
 
 #include "enum.h"    // just for NUM_SPELL_TYPES and TARG_ENEMY
-#include "direct.h"  // just for DIR_NONE 
+#include "directn.h"  // just for DIR_NONE 
 
 enum spschool_flag_type
 {

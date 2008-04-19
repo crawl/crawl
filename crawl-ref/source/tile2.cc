@@ -14,7 +14,7 @@
 
 #include "branch.h"
 #include "describe.h"
-#include "direct.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "files.h"
 #include "ghost.h"

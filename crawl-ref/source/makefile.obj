@@ -16,7 +16,7 @@ decks.o \
 delay.o \
 describe.o \
 dgnevent.o \
-direct.o \
+directn.o \
 dungeon.o \
 effects.o \
 fight.o \

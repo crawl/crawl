@@ -9,7 +9,7 @@
 #ifdef USE_TILE
 #include <stdio.h>
 #include "decks.h"
-#include "direct.h"
+#include "directn.h"
 #include "externs.h"
 #include "food.h"
 #include "itemname.h"

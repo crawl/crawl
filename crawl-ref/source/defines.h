@@ -299,8 +299,8 @@ const int LABYRINTH_BORDER = 4;
 // it wants to be used in case labels.
 #define CONTROL( xxx )          ((xxx) - 'A' + 1)
 
-#define ARRAYSIZE(x) (sizeof(x) / sizeof(x[0]))
-#define RANDOM_ELEMENT(x) (x[random2(ARRAYSIZE(x))])
+#define ARRAYSZ(x) (sizeof(x) / sizeof(x[0]))
+#define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])
 
 #define MIN(x, y) MINIMUM(x, y)
 #define MAX(x,y) (((x) > (y)) ? (x) : (y))

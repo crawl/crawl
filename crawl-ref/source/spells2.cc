@@ -32,7 +32,7 @@
 #include "beam.h"
 #include "cloud.h"
 #include "delay.h"
-#include "direct.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "itemname.h"

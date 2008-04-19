@@ -14,7 +14,7 @@
 #include "externs.h"
 
 #include "delay.h"
-#include "direct.h"
+#include "directn.h"
 #include "macro.h"
 #include "menu.h" // For print_formatted_paragraph()
 #include "message.h"

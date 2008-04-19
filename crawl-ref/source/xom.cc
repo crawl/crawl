@@ -186,7 +186,7 @@ void xom_makes_you_cast_random_spell(int sever)
 
     god_acting gdact(GOD_XOM);
 
-    const int nxomspells = ARRAYSIZE(xom_spells);
+    const int nxomspells = ARRAYSZ(xom_spells);
     if (spellenum > nxomspells)
         spellenum = nxomspells;
 

@@ -25,7 +25,7 @@
 #include "chardump.h"
 #include "clua.h"
 #include "delay.h"
-#include "direct.h"
+#include "directn.h"
 #include "Kills.h"
 #include "files.h"
 #include "defines.h"
@@ -143,7 +143,7 @@ int str_to_colour( const std::string &str, int default_colour,
         "iron", "bone", "random"
     };
 
-    ASSERT(ARRAYSIZE(element_cols) == (EC_RANDOM - EC_FIRE) + 1);
+    ASSERT(ARRAYSZ(element_cols) == (EC_RANDOM - EC_FIRE) + 1);
 
     for (ret = 0; ret < 16; ret++)
     {
@@ -2411,8 +2411,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(explore_greedy);
     else BOOL_OPTION(explore_improved);
-    else BOOL_OPTION(trap_prompt);
-    else if (key == "stash_tracking")
+    
+	BOOL_OPTION(trap_prompt);
+	else if (key == "stash_tracking")
     {
         stash_tracking =
              field == "dropped" ? STM_DROPPED  :
@@ -3102,7 +3103,7 @@ void menu_sort_condition::set_menu_type(std::string &s)
           { "pickup:", MT_PICKUP    }
       };
 
-    for (unsigned mi = 0; mi < ARRAYSIZE(menu_type_map); ++mi)
+    for (unsigned mi = 0; mi < ARRAYSZ(menu_type_map); ++mi)
     {
         const std::string &name = menu_type_map[mi].mname;
         if (s.find(name) == 0)

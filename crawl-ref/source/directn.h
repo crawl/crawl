@@ -1,5 +1,5 @@
 /*
- *  File:       direct.h
+ *  File:       directn.h
  *  Summary:    Functions used when picking squares.
  *  Written by: Linley Henzell
  *

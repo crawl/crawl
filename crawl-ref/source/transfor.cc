@@ -173,7 +173,7 @@ bool transform(int pow, transformation_type which_trans)
     };
 
     std::set<equipment_type> rem_stuff(default_rem,
-                                       default_rem + ARRAYSIZE(default_rem));
+                                       default_rem + ARRAYSZ(default_rem));
 
     you.redraw_evasion = true;
     you.redraw_armour_class = true;

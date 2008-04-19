@@ -27,7 +27,7 @@
 #include "beam.h"
 #include "branch.h"
 #include "cloud.h"
-#include "direct.h"
+#include "directn.h"
 #include "debug.h"
 #include "delay.h"
 #include "effects.h" // holy word
@@ -755,7 +755,7 @@ bool entomb(int powc)
                 continue;
 
             bool proceed = false;
-            for (unsigned int i = 0; i < ARRAYSIZE(safe_to_overwrite); ++i)
+            for (unsigned int i = 0; i < ARRAYSZ(safe_to_overwrite); ++i)
             {
                 if (grd[srx][sry] == safe_to_overwrite[i])
                 {

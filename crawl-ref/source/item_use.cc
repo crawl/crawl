@@ -42,7 +42,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
-#include "direct.h"
+#include "directn.h"
 #include "effects.h"
 #include "fight.h"
 #include "food.h"
@@ -3586,10 +3586,10 @@ bool _drink_fountain()
                                 20, 20,
                                 4, 4, 4 };
 
-        COMPILE_CHECK( ARRAYSIZE(weights) == ARRAYSIZE(effects), c1 );
+        COMPILE_CHECK( ARRAYSZ(weights) == ARRAYSZ(effects), c1 );
         fountain_effect =
             effects[choose_random_weighted(weights,
-                                           weights + ARRAYSIZE(weights))];
+                                           weights + ARRAYSZ(weights))];
     }
 
     if (fountain_effect != POT_WATER && fountain_effect != POT_BLOOD)

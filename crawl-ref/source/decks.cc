@@ -819,7 +819,7 @@ bool deck_peek()
         already_seen++;
 
     // always increase if seen 2, 50% increase if seen 1
-    if ( coinflip() < already_seen)
+    if ( already_seen && random2(2) < already_seen )
         deck.props["non_brownie_draws"]++;
 
     mprf("You draw two cards from the deck. They are: %s and %s.",
@@ -2004,7 +2004,7 @@ const mutation_type bad_mutations[] = {
 
 bool _has_bad_mutation()
 {
-    for ( unsigned int i = 0; i < ARRAYSIZE(bad_mutations); ++i )
+    for ( unsigned int i = 0; i < ARRAYSZ(bad_mutations); ++i )
         if (you.mutation[bad_mutations[i]] > you.demon_pow[bad_mutations[i]])
             return true;
 
@@ -2015,7 +2015,7 @@ static void _remove_bad_mutation()
 {
     mutation_type which_mut = NUM_MUTATIONS;
     int numfound = 0;
-    for ( unsigned int i = 0; i < ARRAYSIZE(bad_mutations); ++i )
+    for ( unsigned int i = 0; i < ARRAYSZ(bad_mutations); ++i )
         if (you.mutation[bad_mutations[i]] > you.demon_pow[bad_mutations[i]])
         {
             if ( one_chance_in(++numfound) )

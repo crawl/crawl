@@ -16,7 +16,7 @@
 #include "AppHdr.h"
 #include "cio.h"
 #include "database.h"
-#include "direct.h"
+#include "directn.h"
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"

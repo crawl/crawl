@@ -13,7 +13,7 @@
 
 #include "AppHdr.h"
 #include "defines.h"
-#include "direct.h"
+#include "directn.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "externs.h"
@@ -26,7 +26,7 @@
 #include <string.h>
 
 #if defined(WIN32CONSOLE) || defined(WIN32TILES)
-    #undef ARRAYSIZE
+    #undef ARRAYSZ
     #include <windows.h>
     #undef max
 

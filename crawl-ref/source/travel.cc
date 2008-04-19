@@ -19,7 +19,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "dgnevent.h"
-#include "direct.h"
+#include "directn.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"

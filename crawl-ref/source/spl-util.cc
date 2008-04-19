@@ -24,7 +24,7 @@
 #include "externs.h"
 
 #include "beam.h"
-#include "direct.h"
+#include "directn.h"
 #include "debug.h"
 #include "stuff.h"
 #include "itemname.h"

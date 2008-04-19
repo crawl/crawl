@@ -18,6 +18,8 @@
 #include "stuff.h"
 #include "tags.h"
 
+#include <algorithm>
+
 // checks base_type for OBJ_UNASSIGNED, and quantity
 // bool is_valid_item( const item_def &item )
 
@@ -32,7 +34,7 @@ static bool _items_similar(const item_def& a, const item_def& b);
 player_quiver::player_quiver()
     : m_last_used_type(AMMO_THROW)
 {
-    COMPILE_CHECK(ARRAYSIZE(m_last_used_of_type) == NUM_AMMO, a);
+    COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) == NUM_AMMO, a);
 }
 
 // Return:
@@ -292,16 +294,16 @@ void player_quiver::_get_fire_order(
 // Save/load
 // ----------------------------------------------------------------------
 
-static const short QUIVER_COOKIE = static_cast<short>(0xb015);
+static const short QUIVER_COOKIE = short(0xb015);
 void player_quiver::save(writer& outf) const
 {
     marshallShort(outf, QUIVER_COOKIE);
 
     marshallItem(outf, m_last_weapon);
     marshallLong(outf, m_last_used_type);
-    marshallLong(outf, ARRAYSIZE(m_last_used_of_type));
+    marshallLong(outf, ARRAYSZ(m_last_used_of_type));
 
-    for (unsigned int i = 0; i < ARRAYSIZE(m_last_used_of_type); i++)
+    for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
         marshallItem(outf, m_last_used_of_type[i]);
 }
 
@@ -315,7 +317,7 @@ void player_quiver::load(reader& inf)
     ASSERT(m_last_used_type >= AMMO_THROW && m_last_used_type < NUM_AMMO);
 
     const unsigned long count = unmarshallLong(inf);
-    ASSERT(count <= ARRAYSIZE(m_last_used_of_type));
+    ASSERT(count <= ARRAYSZ(m_last_used_of_type));
 
     for (unsigned int i = 0; i < count; i++)
         unmarshallItem(inf, m_last_used_of_type[i]);
@@ -328,9 +330,9 @@ void player_quiver::load(reader& inf)
 preserve_quiver_slots::preserve_quiver_slots()
 {
     if (!you.m_quiver) return;
-    COMPILE_CHECK(ARRAYSIZE(m_last_used_of_type) ==
-                  ARRAYSIZE(you.m_quiver->m_last_used_of_type), a);
-    for (unsigned int i = 0; i < ARRAYSIZE(m_last_used_of_type); i++)
+    COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) ==
+                  ARRAYSZ(you.m_quiver->m_last_used_of_type), a);
+    for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {
         m_last_used_of_type[i] =
             _get_pack_slot(you.m_quiver->m_last_used_of_type[i]);
@@ -340,7 +342,7 @@ preserve_quiver_slots::preserve_quiver_slots()
 preserve_quiver_slots::~preserve_quiver_slots()
 {
     if (! you.m_quiver) return;
-    for (unsigned int i = 0; i < ARRAYSIZE(m_last_used_of_type); i++)
+    for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {
         const int slot = m_last_used_of_type[i];
         if (slot != -1)

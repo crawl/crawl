@@ -26,7 +26,7 @@
 #include "abl-show.h"
 #include "branch.h"
 #include "describe.h"
-#include "direct.h"
+#include "directn.h"
 #include "format.h"
 #include "fight.h"
 #include "initfile.h"

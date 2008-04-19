@@ -260,7 +260,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
             ego = ego.substr(2, ego.length()-3);
 
             // and another one for adding a comma if needed
-            for ( unsigned i = 0; i < ARRAYSIZE(propanns); ++i )
+            for ( unsigned i = 0; i < ARRAYSZ(propanns); ++i )
                  if (known_proprt(propanns[i].prop))
                  {
                      ego += ",";
@@ -271,7 +271,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         }
     }
 
-    for ( unsigned i = 0; i < ARRAYSIZE(propanns); ++i )
+    for ( unsigned i = 0; i < ARRAYSZ(propanns); ++i )
     {
         if (known_proprt(propanns[i].prop))
         {
@@ -401,7 +401,7 @@ static std::string _randart_descrip( const item_def &item )
         { RAP_ANGRY, "It makes you angry.", false}
     };
 
-    for ( unsigned i = 0; i < ARRAYSIZE(propdescs); ++i )
+    for ( unsigned i = 0; i < ARRAYSZ(propdescs); ++i )
     {
         if ( known_proprt(propdescs[i].property))
         {

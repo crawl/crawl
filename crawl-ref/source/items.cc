@@ -42,7 +42,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "dgnevent.h"
-#include "direct.h"
+#include "directn.h"
 #include "effects.h"
 #include "food.h"
 #include "hiscores.h"

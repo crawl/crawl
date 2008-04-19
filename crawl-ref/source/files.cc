@@ -52,20 +52,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#if _MSC_VER
-// # include <direct.h> conflicts with crawl's header.  Yes this sucks
-# include <c:/Program Files/Microsoft Visual Studio 8/VC/include/direct.h>
-#else
-#include <dirent.h>
-#endif
-
 #include "externs.h"
 
 #include "chardump.h"
 #include "cloud.h"
 #include "clua.h"
 #include "debug.h"
-#include "direct.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "ghost.h"
@@ -99,6 +92,14 @@
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"
+
+#if _MSC_VER
+#include <direct.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#include <dirent.h>
+#endif
 
 #ifndef HAVE_STAT
 #if defined(UNIX) || defined(__MINGW32__) || defined(DOS)
@@ -225,11 +226,29 @@ player_save_info read_character_info(const std::string &savefile)
     return fromfile;
 }
 
+static bool _is_good_filename(const std::string &s)
+{
+    return (s != "." && s != "..");
+}
+
 // Returns the names of all files in the given directory. Note that the
 // filenames returned are relative to the directory.
 std::vector<std::string> get_dir_files(const std::string &dirname)
 {
     std::vector<std::string> files;
+
+#ifdef _MSC_VER
+    WIN32_FIND_DATA lData;
+    HANDLE hFind = FindFirstFile(dirname.c_str(), &lData);
+    if (hFind != INVALID_HANDLE_VALUE)
+    {
+        if (_is_good_filename(lData.cFileName))
+            files.push_back(lData.cFileName);
+        while (FindNextFile(hFind, &lData))
+            files.push_back(lData.cFileName);
+        FindClose(hFind);
+    }
+#else // non-MS VC++ compilers
 
     DIR *dir = opendir(dirname.c_str());
     if (!dir)
@@ -244,6 +263,7 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
         files.push_back(name);
     }
     closedir(dir);
+#endif
 
     return (files);
 }
@@ -323,12 +343,18 @@ static bool file_exists(const std::string &name)
 // Low-tech existence check.
 static bool dir_exists(const std::string &dir)
 {
+#ifdef _MSC_VER
+    DWORD lAttr = GetFileAttributes(dir.c_str());
+    return (lAttr != INVALID_FILE_ATTRIBUTES 
+            && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
+#else
     DIR *d = opendir(dir.c_str());
     const bool exists = !!d;
     if (d)
         closedir(d);
 
     return (exists);
+#endif
 }
 
 static int create_directory(const char *dir)

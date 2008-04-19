@@ -20,7 +20,7 @@
 #include "beam.h"
 #include "branch.h"
 #include "delay.h"
-#include "direct.h"
+#include "directn.h"
 #include "it_use2.h"
 #include "items.h"
 #include "itemprop.h"

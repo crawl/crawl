@@ -13,7 +13,7 @@
 #include "clua.h"
 #include "command.h"
 #include "describe.h"
-#include "direct.h"
+#include "directn.h"
 #include "food.h"
 #include "itemname.h"
 #include "itemprop.h"

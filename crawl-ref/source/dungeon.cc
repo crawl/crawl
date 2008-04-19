@@ -39,7 +39,7 @@
 #include "defines.h"
 #include "enum.h"
 #include "externs.h"
-#include "direct.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"

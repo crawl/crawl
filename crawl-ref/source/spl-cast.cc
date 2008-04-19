@@ -3676,7 +3676,7 @@ static int _power_to_barcount( int power )
 
     const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
     int result = 0;
-    for ( unsigned int i = 0; i < ARRAYSIZE(breakpoints); ++i )
+    for ( unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i )
         if ( power > breakpoints[i] )
             ++result;
 

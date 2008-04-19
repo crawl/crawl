@@ -58,7 +58,7 @@
 
 #include <excpt.h>
 #include <stdarg.h>
-#undef ARRAYSIZE
+#undef ARRAYSZ
 #include <windows.h>
 #undef max
 

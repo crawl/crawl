@@ -12,7 +12,7 @@
 #include "AppHdr.h"
 #include "externs.h"
 #include "defines.h"
-#include "direct.h"
+#include "directn.h"
 #include <cctype>
 #include <string>
 #include <vector>

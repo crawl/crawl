@@ -966,7 +966,7 @@ static bool _beogh_blessing_reinforcement()
     for (int i = 0; i < how_many; ++i)
     {
         monster_type follower_type =
-            followers[random2(ARRAYSIZE(followers))];
+            followers[random2(ARRAYSZ(followers))];
 
         int monster = create_monster(follower_type, 0, BEH_GOD_GIFT,
                                  you.x_pos, you.y_pos, you.pet_target,
@@ -2209,7 +2209,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
           "Create Life"
         };
 
-        COMPILE_CHECK(ARRAYSIZE(conducts) == NUM_CONDUCTS, c1);
+        COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
         mprf( MSGCH_DIAGNOSTICS,
              "conduct: %s; piety: %d (%+d); penance: %d (%+d)",
              conducts[thing_done],

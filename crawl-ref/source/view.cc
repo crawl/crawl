@@ -46,7 +46,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "dgnevent.h"
-#include "direct.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "format.h"
 #include "ghost.h"
@@ -4945,7 +4945,7 @@ void crawl_view_buffer::size(const coord_def &sz)
 // Layout helper classes
 // ----------------------------------------------------------------------
 
-// Moved from direct.h, where they didn't need to be.
+// Moved from directn.h, where they didn't need to be.
 // define VIEW_MIN_HEIGHT defined elsewhere
 // define VIEW_MAX_HEIGHT use Options.view_max_height
 // define VIEW_MIN_WIDTH defined elsewhere

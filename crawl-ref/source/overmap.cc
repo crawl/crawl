@@ -29,7 +29,7 @@
 #include "branch.h"
 #include "cio.h"
 #include "dgnevent.h"
-#include "direct.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "files.h"
 #include "menu.h"

@@ -82,7 +82,7 @@ mons_experience_levels::mons_experience_levels()
 static const monster_level_up *monster_level_up_target(
     monster_type type, int hit_dice)
 {
-    for (unsigned i = 0; i < ARRAYSIZE(mon_grow); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(mon_grow); ++i)
     {
         const monster_level_up &mlup(mon_grow[i]);
         if (mlup.before == type)

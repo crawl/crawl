@@ -29,7 +29,7 @@
 #include "abyss.h"
 #include "beam.h"
 #include "cloud.h"
-#include "direct.h"
+#include "directn.h"
 #include "effects.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -905,7 +905,7 @@ void antimagic()
     if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 1)
         you.duration[DUR_CONTROLLED_FLIGHT] = 1;
 
-    for ( unsigned int i = 0; i < ARRAYSIZE(dur_list); ++i )
+    for ( unsigned int i = 0; i < ARRAYSZ(dur_list); ++i )
         if ( you.duration[dur_list[i]] > 1 )
             you.duration[dur_list[i]] = 1;
 
