@@ -623,8 +623,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             if (spell_cast == SPELL_SUMMON_DEMON)
                 mons = summon_any_demon(DEMON_COMMON);
             else
-                mons = one_chance_in(monster->hit_dice / 4) ?
-                                     MONS_VERY_UGLY_THING : MONS_UGLY_THING;
+                mons = (one_chance_in(4)) ? MONS_VERY_UGLY_THING :
+                                            MONS_UGLY_THING;
 
             create_monster( mons, duration, SAME_ATTITUDE(monster),
                             monster->x, monster->y,

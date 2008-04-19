@@ -1755,6 +1755,10 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         zapping(ZAP_ICE_STORM, powc, beam);
         break;
 
+    case SPELL_SUMMON_UGLY_THING:
+        summon_ugly_thing(powc);
+        break;
+
     case SPELL_SHADOW_CREATURES:
     {
         mpr( "Wisps of shadow whirl around you..." );

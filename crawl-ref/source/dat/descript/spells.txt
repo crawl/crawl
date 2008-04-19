@@ -647,6 +647,10 @@ Summon Swarm
 
 This spell summons forth a pestilential swarm. 
 %%%%
+Summon Ugly Thing
+
+This spell summons a hideous creature to the caster's aid.
+%%%%
 Summon Wraiths
 
 This spell calls on the powers of the undead to aid the caster. 

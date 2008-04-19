@@ -1483,6 +1483,23 @@ void summon_scorpions(int pow)
     }
 }                               // end summon_scorpions()
 
+void summon_ugly_thing(int pow)
+{
+    monster_type ugly = (one_chance_in(4)) ? MONS_VERY_UGLY_THING :
+                                             MONS_UGLY_THING;
+    int numsc = std::min(2 + (random2(pow) / 4), 6);
+    beh_type beha = (random2(pow) < 4) ? BEH_HOSTILE : BEH_FRIENDLY;
+
+    create_monster(ugly, numsc, beha, you.x_pos, you.y_pos, you.pet_target,
+                   MONS_PROGRAM_BUG, false, false, false, true);
+
+    mprf("A%sugly thing appears.", (ugly == MONS_VERY_UGLY_THING) ?
+         " very " : "n ");
+
+    if (beha == BEH_HOSTILE)
+        mpr("It doesn't look very happy.");
+}                               // end summon_ugly_thing()
+
 void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 {
     int numsc = std::min(2 + (random2(pow) / 4), 6);
