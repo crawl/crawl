@@ -985,6 +985,7 @@ bool cast_sanctuary(const int power)
     const int pattern = random2(4);
     int count = 0;
     int monster = NON_MONSTER;
+    monsters *mon = NULL;
 
     for (int x = -radius; x <= radius; x++)
         for (int y = -radius; y <= radius; y++)
@@ -1000,7 +1001,7 @@ bool cast_sanctuary(const int power)
 
                 if (monster != NON_MONSTER)
                 {
-                    monsters *mon = &menv[monster];
+                    mon = &menv[monster];
 
                     if (!mons_wont_attack(mon)
                         && mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
@@ -1030,7 +1031,7 @@ bool cast_sanctuary(const int power)
         }
 
     if (count == 1)
-        simple_monster_message(&menv[monster], " turns to flee the light!");
+        simple_monster_message(mon, " turns to flee the light!");
     else if (count > 0)
         mpr("The monsters scatter in all directions!");
 
