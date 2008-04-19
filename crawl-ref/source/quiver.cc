@@ -344,7 +344,10 @@ preserve_quiver_slots::~preserve_quiver_slots()
     {
         const int slot = m_last_used_of_type[i];
         if (slot != -1)
+        {
             you.m_quiver->m_last_used_of_type[i] = you.inv[slot];
+            you.m_quiver->m_last_used_of_type[i].quantity = 1;
+        }
     }
     you.redraw_quiver = true;
 }
