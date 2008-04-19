@@ -1405,7 +1405,7 @@ A servant of the ancient and cruel gods of the orcs, dressed in a long robe. It 
 %%%%
 orc sorcerer
 
-An exceptionally competent orcish wizard. Most of them draw magical power from Hell but some are fueled by other sources.
+An exceptionally competent orcish wizard. Most of them draw magical power from Hell, but some are fueled by other sources.
 %%%%
 orc warlord
 
