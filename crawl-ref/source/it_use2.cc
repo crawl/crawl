@@ -321,7 +321,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         }
 
         // give a message if no message otherwise
-        if (!restore_stat(STAT_ALL, false) && nothing_happens)
+        if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
             mpr( "You feel refreshed." );
         break;
     }

@@ -1008,7 +1008,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_MUMMY_RESTORATION:
     {
         mpr( "You infuse your body with magical energy." );
-        bool did_restore = restore_stat( STAT_ALL, false );
+        bool did_restore = restore_stat( STAT_ALL, 0, false );
 
         const int oldhpmax = you.hp_max;
         unrot_hp( 100 );
@@ -1659,7 +1659,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_RESTORATION:
-        restore_stat( STAT_ALL, false );
+        restore_stat( STAT_ALL, 0, false );
         unrot_hp( 100 );
 
         exercise( SK_INVOCATIONS, 4 + random2(6) );

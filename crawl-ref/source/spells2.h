@@ -124,7 +124,8 @@ void drain_life(int pow);
  * called from: ability - food - it_use2 - spell
  * returns TRUE if a stat was restored.
  * *********************************************************************** */
-bool restore_stat(unsigned char which_stat, bool suppress_msg);
+bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
+                  bool suppress_msg);
 
 
 // last updated 24may2000 {dlb}

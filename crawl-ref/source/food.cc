@@ -1286,7 +1286,7 @@ static void eating(unsigned char item_class, int item_type)
             break;
         case FOOD_ROYAL_JELLY:
             mpr("That royal jelly was delicious!");
-            restore_stat(STAT_ALL, false);
+            restore_stat(STAT_ALL, 0, false);
             break;
         case FOOD_PIZZA:
             if (!SysEnv.crawl_pizza.empty() && !one_chance_in(3))
@@ -1793,12 +1793,7 @@ static void heal_from_food(int hp_amt, int mp_amt, bool unrot,
     }
 
     if (restore_str && you.strength < you.max_strength)
-    {
-        mpr("You feel your strength returning.");
-        you.strength++;
-        you.redraw_strength = true;
-        burden_change();
-    }
+        restore_stat(STAT_STRENGTH, 1, false);
 
     calc_hp();
     calc_mp();

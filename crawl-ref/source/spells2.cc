@@ -689,20 +689,24 @@ bool brand_weapon(brand_type which_brand, int power)
     return true;
 }                               // end brand_weapon()
 
-bool restore_stat(unsigned char which_stat, bool suppress_msg)
+// Restore the stat in which_stat by the amount in stat_gain, displaying
+// a message if suppress_msg is false.  If stat_gain is 0, restore the
+// stat completely.
+bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
+                  bool suppress_msg)
 {
-    bool statRestored = false;
+    bool stat_restored = false;
 
     // a bit hackish, but cut me some slack, man! --
     // besides, a little recursion never hurt anyone {dlb}:
     if (which_stat == STAT_ALL)
     {
-        for (unsigned char loopy = STAT_STRENGTH; loopy < NUM_STATS; loopy++)
+        for (unsigned char loopy = STAT_STRENGTH; loopy < NUM_STATS; ++loopy)
         {
-            if (restore_stat(loopy, suppress_msg) == true)
-                statRestored = true;
+            if (restore_stat(loopy, stat_gain, suppress_msg))
+                stat_restored = true;
         }
-        return statRestored;                 // early return {dlb}
+        return stat_restored;                // early return {dlb}
     }
 
     // the real function begins here {dlb}:
@@ -725,14 +729,6 @@ bool restore_stat(unsigned char which_stat, bool suppress_msg)
         ptr_redraw = &you.redraw_strength;
         break;
 
-    case STAT_DEXTERITY:
-        msg += "dexterity";
-
-        ptr_stat = &you.dex;
-        ptr_stat_max = &you.max_dex;
-        ptr_redraw = &you.redraw_dexterity;
-        break;
-
     case STAT_INTELLIGENCE:
         msg += "intelligence";
 
@@ -740,23 +736,37 @@ bool restore_stat(unsigned char which_stat, bool suppress_msg)
         ptr_stat_max = &you.max_intel;
         ptr_redraw = &you.redraw_intelligence;
         break;
+
+    case STAT_DEXTERITY:
+        msg += "dexterity";
+
+        ptr_stat = &you.dex;
+        ptr_stat_max = &you.max_dex;
+        ptr_redraw = &you.redraw_dexterity;
+        break;
     }
 
     if (*ptr_stat < *ptr_stat_max)
     {
         msg += " returning.";
         if ( !suppress_msg )
-            mpr(msg.c_str());
+            mpr(msg.c_str(), MSGCH_RECOVERY);
 
-        *ptr_stat = *ptr_stat_max;
-        *ptr_redraw = 1;
-        statRestored = true;
+        if (stat_gain == 0 || *ptr_stat + stat_gain > *ptr_stat_max)
+            stat_gain = *ptr_stat_max - *ptr_stat;
 
-        if (ptr_stat == &you.strength)
-            burden_change();
+        if (stat_gain != 0)
+        {
+            *ptr_stat += stat_gain;
+            *ptr_redraw = true;
+            stat_restored = true;
+
+            if (ptr_stat == &you.strength)
+                burden_change();
+        }
     }
 
-    return statRestored;
+    return stat_restored;
 }                               // end restore_stat()
 
 void turn_undead(int pow)

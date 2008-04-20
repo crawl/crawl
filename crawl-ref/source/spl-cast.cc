@@ -1218,15 +1218,15 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_RESTORE_STRENGTH:
-        restore_stat(STAT_STRENGTH, false);
+        restore_stat(STAT_STRENGTH, 0, false);
         break;
 
     case SPELL_RESTORE_INTELLIGENCE:
-        restore_stat(STAT_INTELLIGENCE, false);
+        restore_stat(STAT_INTELLIGENCE, 0, false);
         break;
 
     case SPELL_RESTORE_DEXTERITY:
-        restore_stat(STAT_DEXTERITY, false);
+        restore_stat(STAT_DEXTERITY, 0, false);
         break;
 
     case SPELL_VENOM_BOLT:

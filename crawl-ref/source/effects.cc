@@ -50,6 +50,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spells2.h"
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-book.h"
@@ -2377,25 +2378,13 @@ void handle_time( long time_delta )
     if (!you.disease)
     {
         if (you.strength < you.max_strength && one_chance_in(100))
-        {
-            mpr("You feel your strength returning.", MSGCH_RECOVERY);
-            you.strength++;
-            you.redraw_strength = 1;
-        }
-
-        if (you.dex < you.max_dex && one_chance_in(100))
-        {
-            mpr("You feel your dexterity returning.", MSGCH_RECOVERY);
-            you.dex++;
-            you.redraw_dexterity = 1;
-        }
+            restore_stat(STAT_STRENGTH, 0, false);
 
         if (you.intel < you.max_intel && one_chance_in(100))
-        {
-            mpr("You feel your intelligence returning.", MSGCH_RECOVERY);
-            you.intel++;
-            you.redraw_intelligence = 1;
-        }
+            restore_stat(STAT_INTELLIGENCE, 0, false);
+
+        if (you.dex < you.max_dex && one_chance_in(100))
+            restore_stat(STAT_DEXTERITY, 0, false);
     }
     else
     {
