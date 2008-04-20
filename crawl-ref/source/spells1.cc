@@ -757,21 +757,23 @@ int cast_healing( int pow, int target_x, int target_y )
     return (_healing_spell( pow + roll_dice( 2, pow ) - 2, target_x, target_y ));
 }
 
-void cast_revitalisation(int pow)
+bool cast_revitalisation(int pow)
 {
     if (you.hp == you.hp_max || you.magic_points == you.max_magic_points)
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else
     {
-        // Currently, this uses the same formula as minor healing.
-        int amount = pow + roll_dice(2, pow) - 2;
-
-        // Increase MP by half of amount.
-        inc_mp(amount / 2, false);
-
-        // Increase HP by amount.
-        inc_hp(amount, false);
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return false;
     }
+
+    // Use the formula for minor healing for HP, and the formula divided
+    // by two for MP.
+    int hp_amount = pow + roll_dice(2, pow) - 2;
+    int mp_amount = (pow + roll_dice(2, pow) - 2) / 2;
+
+    inc_hp(hp_amount, false);
+    inc_mp(mp_amount, false);
+
+    return true;
 }
 
 bool cast_revivification(int pow)
