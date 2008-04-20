@@ -238,6 +238,37 @@
 {
   SPELL_TWIST, "Twist",
     SPTYP_TRANSLOCATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+    1,
+    25,
+    NULL,
+    true
+},
+
+{
+  SPELL_FAR_STRIKE, "Far Strike",
+    SPTYP_TRANSLOCATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+    3,
+    100,
+    NULL,
+    true
+},
+
+{
+  SPELL_DELAYED_FIREBALL, "Delayed Fireball",
+    SPTYP_FIRE | SPTYP_CONJURATION,
+    SPFLAG_NONE,
+    7,
+    0,
+     NULL,
+     false,
+    false
+},
+
+{
+  SPELL_STRIKING, "Striking",
+    0,
     SPFLAG_DIR_OR_TARGET,
     1,
     25,
@@ -853,7 +884,7 @@
      false,
     false
 },
-  
+
 {
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
      SPTYP_NECROMANCY,
@@ -1090,6 +1121,27 @@
      NULL,
      false,
     false
+},
+
+{
+  SPELL_FULSOME_DISTILLATION, "Fulsome Distillation",
+    SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
+    SPFLAG_NONE,
+    1,
+    50,
+     NULL,
+     false,
+    false
+},
+
+{
+  SPELL_POISON_ARROW, "Poison Arrow",
+    SPTYP_CONJURATION | SPTYP_POISON,
+    SPFLAG_DIR_OR_TARGET,
+    6,
+    200,
+    NULL,
+    true
 },
 
 {
@@ -1721,10 +1773,7 @@
     false
 },
 
-
-
   //jmf: new spells
-
 
 {
     SPELL_FLAME_TONGUE, "Flame Tongue",
@@ -1873,17 +1922,6 @@
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      1,
-     200,
-     NULL,
-     false,
-    false
-},
-
-{
-    SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
-     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
-     SPFLAG_NONE,
-     5,     // fairly high level - potentially one of the best brands
      200,
      NULL,
      false,
@@ -2119,35 +2157,14 @@
 },
 
 {
-  SPELL_DELAYED_FIREBALL, "Delayed Fireball",
-    SPTYP_FIRE | SPTYP_CONJURATION,
-    SPFLAG_NONE,
-    7,
-    0,
+    SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
+     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+     SPFLAG_NONE,
+     5,     // fairly high level - potentially one of the best brands
+     200,
      NULL,
      false,
     false
-},
-
-{
-  SPELL_FULSOME_DISTILLATION, "Fulsome Distillation",
-    SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
-    SPFLAG_NONE,
-    1,
-    50,
-     NULL,
-     false,
-    false
-},
-
-{
-  SPELL_POISON_ARROW, "Poison Arrow",
-    SPTYP_CONJURATION | SPTYP_POISON,
-    SPFLAG_DIR_OR_TARGET,
-    6,
-    200,
-    NULL,
-    true
 },
 
 {
@@ -2162,13 +2179,14 @@
 },
 
 {
-  SPELL_STRIKING, "Striking",
-    0,
-    SPFLAG_DIR_OR_TARGET,
-    1,
-    25,
+    SPELL_SUMMON_UGLY_THING, "Summon Ugly Thing",
+    SPTYP_SUMMONING,
+    SPFLAG_NONE,
+    5,
+    200,
     NULL,
-    true
+    false,
+    false
 },
 
 {
@@ -2179,7 +2197,7 @@
      200,
      NULL,
      false,
-    false 
+    false
 },
 
 {
@@ -2344,17 +2362,6 @@
     SPFLAG_NONE,
     4,
     0,
-    NULL,
-    false,
-    false
-},
-
-{
-    SPELL_SUMMON_UGLY_THING, "Summon Ugly Thing",
-    SPTYP_SUMMONING,
-    SPFLAG_NONE,
-    5,
-    200,
     NULL,
     false,
     false

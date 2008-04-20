@@ -4575,7 +4575,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 34              , c3);
     COMPILE_CHECK(SPELL_BOLT_OF_MAGMA == 18     , c4);
     COMPILE_CHECK(SPELL_POISON_ARROW == 94      , c5);
-    COMPILE_CHECK(SPELL_SUMMON_MUSHROOMS == 221 , c6);
+    COMPILE_CHECK(SPELL_SUMMON_MUSHROOMS == 222 , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPELLS < SPELL_NO_SPELL   , c7);
