@@ -1406,7 +1406,7 @@ static void _display_vampire_attributes()
 
     std::string result;
 
-    std::string column[9][7] =
+    std::string column[11][7] =
     {
        {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
         "Satiated  ", "<yellow>Thirsty</yellow>  ", "<yellow>Near...</yellow>  ",
@@ -1424,9 +1424,13 @@ static void _display_vampire_attributes()
 
        {"Torment resistance   ", "           ", "        ", "          ",  "         ", "         ", " +   "},
 
+       {"Mutation chance      ", "always     ", "often   ", "sometimes ",  "never    ", "never    ", "never"},
+
        {"Mutation effects     ", "full       ", "capped  ", "capped    ",  "none     ", "none     ", "none "},
 
-       {"Stealth boost        ", "none       ", "none    ", "none      ",  "minor    ", "major    ", "large"}
+       {"Stealth boost        ", "none       ", "none    ", "none      ",  "minor    ", "major    ", "large"},
+
+       {"Bat Form             ", "no         ", "no      ", "yes       ",  "yes      ", "yes      ", "yes  "}
     };
 
     int current = 0;
@@ -1453,7 +1457,7 @@ static void _display_vampire_attributes()
         current = 6;
     }
 
-    for (int y = 0; y < 9; y++)      // lines   (properties)
+    for (int y = 0; y < 11; y++)      // lines   (properties)
     {
         for (int x = 0; x < 7; x++)  // columns (hunger states)
         {

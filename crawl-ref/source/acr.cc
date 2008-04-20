@@ -2564,8 +2564,13 @@ static void _decrement_durations()
         }
     }
 
-    if (_decrement_a_duration(DUR_ICY_ARMOUR, "Your icy armour evaporates."))
+    if (_decrement_a_duration(DUR_ICY_ARMOUR,
+                              "Your icy armour evaporates.",
+                              6, coinflip(),
+                              "Your icy armour start to melt."))
+    {
         you.redraw_armour_class = true;
+    }
 
     if (_decrement_a_duration(DUR_SILENCE, "Your hearing returns."))
         you.attribute[ATTR_WAS_SILENCED] = 0;
@@ -2664,7 +2669,7 @@ static void _decrement_durations()
     // Vampire bat transformations are permanent (until ended.)
     if (you.species != SP_VAMPIRE
         || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
-        || you.duration[DUR_TRANSFORMATION] <= 2)
+        || you.duration[DUR_TRANSFORMATION] <= 5)
     {
         if ( _decrement_a_duration(DUR_TRANSFORMATION,
                                    NULL, 10, random2(3),
@@ -2703,8 +2708,12 @@ static void _decrement_durations()
     }
 
     if ( _decrement_a_duration(DUR_FORESCRY,
-                               "You feel firmly rooted in the present.") )
+                               "You feel firmly rooted in the present.",
+                               6, coinflip(),
+                               "Your vision of the future begins to falter."))
+    {
         you.redraw_evasion = true;
+    }
 
     if ( _decrement_a_duration(DUR_SEE_INVISIBLE) && !player_see_invis() )
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);

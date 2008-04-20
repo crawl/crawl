@@ -665,12 +665,11 @@ static bool food_change(bool suppress_message)
                     you.duration[DUR_TRANSFORMATION] = 2;
                 }
             }
-            else if (newstate == HS_ENGORGED
-                     && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+            else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
                      && you.duration[DUR_TRANSFORMATION] > 5)
             {
-                mpr("Your bloodfilled body can't sustain your transformation much "
-                    "longer.", MSGCH_WARN);
+                mpr("Your bloodfilled body can't sustain your transformation "
+                    "much longer.", MSGCH_WARN);
                 // give more time because suddenly stopping flying can be lethal
                 you.duration[DUR_TRANSFORMATION] = 5;
             }

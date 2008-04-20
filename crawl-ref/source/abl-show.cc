@@ -2016,7 +2016,7 @@ std::vector<talent> your_talents( bool check_confused )
     }
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 3
-        && you.hunger_state < HS_ENGORGED
+        && you.hunger_state <= HS_SATIATED
         && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused );
