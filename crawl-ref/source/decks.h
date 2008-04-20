@@ -90,6 +90,7 @@ enum card_type
     CARD_SUMMON_WEAPON,
     CARD_SUMMON_FLYING,         // wisps and butterflies
     CARD_SUMMON_SKELETON,
+    CARD_SUMMON_UGLY,
     CARD_SUMMON_ANY,
 
     CARD_POTION,

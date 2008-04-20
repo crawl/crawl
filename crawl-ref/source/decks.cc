@@ -132,6 +132,7 @@ const deck_archetype deck_of_summoning[] = {
     { CARD_SUMMON_WEAPON,   {5, 5, 5} },
     { CARD_SUMMON_FLYING,   {5, 5, 5} },
     { CARD_SUMMON_SKELETON, {5, 5, 5} },
+    { CARD_SUMMON_UGLY,     {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -291,6 +292,7 @@ const char* card_name(card_type card)
     case CARD_SUMMON_WEAPON:   return "the Dance";
     case CARD_SUMMON_FLYING:   return "Foxfire";
     case CARD_SUMMON_SKELETON: return "the Bones";
+    case CARD_SUMMON_UGLY:     return "Repulsiveness";
     case CARD_SUMMON_ANY:      return "Summoning";
     case CARD_XOM:             return "Xom";
     case CARD_FAMINE:          return "Famine";
@@ -2661,6 +2663,25 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
                    MONS_PROGRAM_BUG);
 }
 
+static void _summon_ugly(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    const bool friendly = (power_level > 0 || !one_chance_in(4));
+    monster_type ugly;
+    if (power_level >= 2)
+        ugly = MONS_VERY_UGLY_THING;
+    else if (power_level == 1)
+        ugly = coinflip() ? MONS_VERY_UGLY_THING : MONS_UGLY_THING;
+    else
+        ugly = MONS_UGLY_THING;
+
+    create_monster(ugly, std::min(power/50,6),
+                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                   you.x_pos, you.y_pos,
+                   friendly ? you.pet_target : MHITYOU,
+                   MONS_PROGRAM_BUG);
+}
+
 static int _card_power(deck_rarity_type rarity)
 {
     int result = 0;
@@ -2754,6 +2775,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power, rarity); break;
     case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
     case CARD_SUMMON_SKELETON:  _summon_skeleton(power, rarity); break;
+    case CARD_SUMMON_UGLY:      _summon_ugly(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
     case CARD_TROWEL:      rc = _trowel_card(power, rarity); break;
     case CARD_SPADE:   your_spells(SPELL_DIG, random2(power/4), false); break;
