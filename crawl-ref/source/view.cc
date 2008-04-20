@@ -3126,6 +3126,8 @@ void show_map( coord_def &spec_place, bool travel_mode )
     {
         start_y = screen_y - half_screen;
 
+        move_x = move_y = 0;
+
         if (redraw_map)
         {
 #ifdef USE_TILE
@@ -3178,7 +3180,6 @@ void show_map( coord_def &spec_place, bool travel_mode )
             find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
             // Sort features into the order the player is likely to prefer.
             arrange_features(features);
-            move_x = move_y = 0;
             break;
 
         // Cycle the radius of an exclude.
@@ -3189,7 +3190,6 @@ void show_map( coord_def &spec_place, bool travel_mode )
                 cycle_exclude_radius(p);
 
             _reset_travel_colours(features);
-            move_x = move_y = 0;
             break;
         }
 
@@ -3203,7 +3203,6 @@ void show_map( coord_def &spec_place, bool travel_mode )
                 clear_excludes();
 
             _reset_travel_colours(features);
-            move_x = move_y = 0;
             break;
         }
 
