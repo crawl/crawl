@@ -864,7 +864,7 @@ static int _tileidx_unrand_artefact(int idx)
         case 2: return TILE_URAND_SHADOWS;
         case 3: return TILE_URAND_FLAMING_DEATH;
         case 4: return TILE_URAND_IGNORANCE;
-        case 5: return TILE_URAND_ZIN;
+        case 5: return TILE_URAND_AIR;
         case 6: return TILE_URAND_AUGMENTATION;
         case 7: return TILE_URAND_BRILLIANCE;
         case 8: return TILE_URAND_THIEF;
@@ -3005,8 +3005,6 @@ int tilep_equ_armour(const item_def &item)
     {
         switch (find_unrandart_index(item) + 1)
         {
-            // Holy Armour of Zin
-            case 6: return TILEP_BODY_ARMOR_MUMMY;
             // robe of Augmentation
             case 7: return TILEP_BODY_ROBE_WHITE_BLUE;
             // robe of Misfortune

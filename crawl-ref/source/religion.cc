@@ -3126,7 +3126,12 @@ static bool _beogh_retribution()
                 continue;
 
             item_def& item = mitm[slot];
-            set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
+            // Need a species check in case this retribution is a result of
+            // drawing the Wrath card.
+            if (you.species == SP_HILL_ORC)
+                set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
+            else
+                set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ELECTROCUTION );
 
             // manually override plusses
             item.plus = random2(3);

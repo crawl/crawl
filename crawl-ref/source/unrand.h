@@ -37,9 +37,7 @@
    But add 100 to make the item stickycursed. Note that the values for
    wpns and armr are +50.
    plus2: For wpns, plus to-dam. Curses are irrelevant here. Mostly unused
-   for armr and totally for rings. Armour: if boots, plus2 == 1 means
-   naga barding; 2 means centaur barding. If headgear, 1 means helmet,
-   2 means helm, 3 means cap, 4 means wizard's hat.
+   for armr and totally for rings.
    colour: Obvious. Don't use BLACK, use DARKGREY instead.
 
    * Note * any exact combination of class, type, plus & plus2 must be unique,
@@ -240,19 +238,19 @@
 
 /* 6 */
 {
-    "Holy Armour of Zin", "glowing golden plate mail",
-        OBJ_ARMOUR, ARM_PLATE_MAIL, +6, 0, YELLOW,
+    "amulet of the Air", "sky-blue amulet",
+        OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT, 0, 0, LIGHTCYAN,
     {
-        0, 0, 0, 3, 0, 0,       // str
-        0, 0, 0, 0, 2, 50,      // life prot, magic
-        0, 0, 0, 0, 0, 0,
+        0, 0, 3, 0, 0, 0,       // EV
+        0, 0, 1, 0, 0, 0,      // resElec
+        0, 0, 1, 0, 0, 0,       // levitate
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
-        0, 0
+        0, 50                   // stealth
     }
     ,
         "",
-        "A suit of mail and large plates of golden metal.",
+        "A sky-blue amulet.",
         ""
 }
 ,

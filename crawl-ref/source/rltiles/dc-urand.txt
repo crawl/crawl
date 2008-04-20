@@ -30,7 +30,6 @@ weapon/urand_wyrmbane URAND_WYRMBANE
 weapon/urand_spriggans_knife URAND_SPRIGGANS_KNIFE
 %rim 0
 armor/urand_ignorance URAND_IGNORANCE
-armor/urand_zin URAND_ZIN
 armor/urand_augmentation URAND_AUGMENTATION
 armor/urand_thief URAND_THIEF
 armor/urand_bullseye URAND_BULLSEYE
@@ -58,4 +57,5 @@ amulet/urand_cekugob URAND_CEKUGOB
 amulet/urand_four_winds URAND_FOUR_WINDS
 amulet/urand_bloodlust URAND_BLOODLUST
 amulet/urand_brooch_of_shielding URAND_BROOCH_OF_SHIELDING
+amulet/urand_air URAND_AIR
 

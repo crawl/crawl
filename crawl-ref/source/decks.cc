@@ -1880,7 +1880,7 @@ static void _focus_card(int power, deck_rarity_type rarity)
             if (which_god == GOD_XOM)
                 cause = "the capriciousness of Xom";
             else
-                cause = "the 'helpfullness' of " + god_name(which_god);
+                cause = "the 'helpfulness' of " + god_name(which_god);
         }
     }
 

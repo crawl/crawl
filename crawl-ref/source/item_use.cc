@@ -483,11 +483,12 @@ void wield_effects(int item_wield_2, bool showMsgs)
     unsigned char i_dam = 0;
 
     const bool known_cursed = item_known_cursed(you.inv[item_wield_2]);
+    item_def &item = you.inv[item_wield_2];
 
     // and here we finally get to the special effects of wielding {dlb}
-    if (you.inv[item_wield_2].base_type == OBJ_MISCELLANY)
+    if (item.base_type == OBJ_MISCELLANY)
     {
-        if (you.inv[item_wield_2].sub_type == MISC_LANTERN_OF_SHADOWS)
+        if (item.sub_type == MISC_LANTERN_OF_SHADOWS)
         {
             if (showMsgs)
                 mpr("The area is filled with flickering shadows.");
@@ -498,47 +499,47 @@ void wield_effects(int item_wield_2, bool showMsgs)
         }
     }
 
-    if (you.inv[item_wield_2].base_type == OBJ_STAVES)
+    if (item.base_type == OBJ_STAVES)
     {
-        if (you.inv[item_wield_2].sub_type == STAFF_POWER)
+        if (item.sub_type == STAFF_POWER)
         {
             // inc_max_mp(13);
             calc_mp();
-            set_ident_flags( you.inv[item_wield_2], ISFLAG_EQ_WEAPON_MASK );
+            set_ident_flags( item, ISFLAG_EQ_WEAPON_MASK );
             mpr("You feel your mana capacity increase.");
         }
         else
         {
             // Most staves only give curse status when wielded and
             // right now that's always "uncursed". -- bwr
-            set_ident_flags( you.inv[item_wield_2], ISFLAG_KNOW_CURSE );
+            set_ident_flags( item, ISFLAG_KNOW_CURSE );
         }
     }
 
-    if (you.inv[item_wield_2].base_type == OBJ_WEAPONS)
+    if (item.base_type == OBJ_WEAPONS)
     {
-        if (is_evil_item(you.inv[item_wield_2])
-            && (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE
-                || you.religion == GOD_ELYVILON))
+        if (is_evil_item(item) && is_good_god(you.religion))
         {
             if (showMsgs)
                 mpr("You really shouldn't be using a nasty item like this.");
         }
 
-        // only used for Singing Sword introduction
-        const bool was_known = item_type_known(you.inv[item_wield_2]);
-        const char *old_desc = you.inv[item_wield_2].name(DESC_CAP_THE).c_str();
+        const bool was_known = item_type_known(item);
 
-        set_ident_flags( you.inv[item_wield_2], ISFLAG_EQ_WEAPON_MASK );
+        // only used for Singing Sword introducing itself
+        // (could be extended to other talking weapons...)
+        const char *old_desc = item.name(DESC_CAP_THE).c_str();
 
-        if (is_random_artefact( you.inv[item_wield_2] ))
+        set_ident_flags( item, ISFLAG_EQ_WEAPON_MASK );
+
+        if (is_random_artefact( item ))
         {
-            i_dam = randart_wpn_property(you.inv[item_wield_2], RAP_BRAND);
+            i_dam = randart_wpn_property(item, RAP_BRAND);
             use_randart(item_wield_2);
         }
         else
         {
-            i_dam = you.inv[item_wield_2].special;
+            i_dam = item.special;
         }
 
         if (i_dam != SPWPN_NORMAL)
@@ -563,8 +564,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
                 case SPWPN_ELECTROCUTION:
                     if (!silenced(you.x_pos, you.y_pos))
+                    {
                         mpr("You hear the crackle of electricity.",
                             MSGCH_SOUND);
+                    }
                     else
                         mpr("You see sparks fly.");
                     break;
@@ -623,7 +626,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
                 case SPWPN_SINGING_SWORD:
                     if (!was_known)
-                        mprf(MSGCH_TALK, "%s says, \"Hi! I'm the Singing Sword!\"", old_desc);
+                    {
+                        mprf(MSGCH_TALK, "%s says, "
+                             "\"Hi! I'm the Singing Sword!\"", old_desc);
+                    }
                     else
                         mpr("The Singing Sword hums in delight!", MSGCH_TALK);
                     break;
@@ -662,7 +668,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 case SPWPN_VAMPIRES_TOOTH:
                     // mummies cannot smell, and do not hunger {dlb}
                     if (!you.is_undead)
-                        mpr("You feel a strange hunger, and smell blood on the air...");
+                    {
+                        mpr("You feel a strange hunger, and smell blood on the "
+                            "air...");
+                    }
                     else
                         mpr("You feel strangely empty.");
                     break;
@@ -696,8 +705,15 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
             case SPWPN_SCYTHE_OF_CURSES:
                 you.special_wield = SPWLD_CURSE;
-                if (one_chance_in(5))
-                    do_curse_item( you.inv[item_wield_2] );
+                if (!item_cursed(item) && one_chance_in(5))
+                {
+                    if (was_known)
+                    {
+                        mprf("%s glows black for a moment.",
+                             item.name(DESC_CAP_YOUR).c_str());
+                    }
+                    do_curse_item( item );
+                }
                 break;
 
             case SPWPN_MACE_OF_VARIABILITY:
@@ -721,18 +737,18 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 break;
 
             case SPWPN_STAFF_OF_OLGREB:
-                // josh declares mummies cannot smell {dlb}
                 you.special_wield = SPWLD_OLGREB;
                 break;
 
             case SPWPN_STAFF_OF_WUCAD_MU:
-                miscast_effect( SPTYP_DIVINATION, 9, 90, 100, "the Staff of Wucad Mu" );
+                miscast_effect( SPTYP_DIVINATION, 9, 90, 100,
+                                "the Staff of Wucad Mu" );
                 you.special_wield = SPWLD_WUCAD_MU;
                 break;
             }
         }
 
-        if (item_cursed( you.inv[item_wield_2] ))
+        if (item_cursed( item ))
         {
             mpr("It sticks to your hand!");
             if (known_cursed)
@@ -808,7 +824,7 @@ void wear_armour( int slot ) // slot is for tiles
     else if (!armour_prompt("Wear which item?", &armour_wear_2, OPER_WEAR))
         return;
 
-    if (safe_to_remove_or_wear(you.inv[armour_wear_2], false))
+    if (safe_to_remove_or_wear( you.inv[armour_wear_2], wearing_slot(slot) ))
         do_wear_armour( armour_wear_2, false );
 }
 
@@ -1008,7 +1024,7 @@ bool do_wear_armour( int item, bool quiet )
     if (!can_wear_armour(you.inv[item], !quiet, false))
         return (false);
 
-    const item_def &invitem = you.inv[item];
+    const item_def &invitem   = you.inv[item];
     const equipment_type slot = get_armour_slot(invitem);
 
     if (item == you.equip[EQ_WEAPON])
@@ -1019,7 +1035,7 @@ bool do_wear_armour( int item, bool quiet )
         return (false);
     }
 
-    if (wearing_slot(item) )
+    if (wearing_slot(item))
         return (!takeoff_armour(item));
 
     // if you're wielding something,
@@ -2881,11 +2897,7 @@ bool puton_item(int item_slot, bool prompt_finger)
         || item_slot == you.equip[EQ_RIGHT_RING]
         || item_slot == you.equip[EQ_AMULET])
     {
-//        if (Options.easy_unequip)
-            return (!remove_ring(item_slot));
-
-//        mpr("You've already put that on!");
-//        return (true);
+        return (!remove_ring(item_slot));
     }
 
     if (item_slot == you.equip[EQ_WEAPON])
@@ -4469,7 +4481,7 @@ void use_randart(item_def &item)
     ASSERT( is_random_artefact( item ) );
 
     const bool alreadyknown = item_type_known(item);
-    const bool dangerous = player_in_a_dangerous_place();
+    const bool dangerous    = player_in_a_dangerous_place();
 
     randart_properties_t  proprt;
     randart_known_props_t known;
@@ -4550,6 +4562,14 @@ void use_randart(item_def &item)
     {
         mpr("You feel a brief urge to hack something to bits.");
         randart_wpn_learn_prop(item, RAP_BERSERK);
+    }
+
+    if (!item_cursed(item) && proprt[RAP_CURSED] && one_chance_in(3))
+    {
+        mprf("%s glows black for a moment.",
+             item.name(DESC_CAP_YOUR).c_str());
+        do_curse_item( item );
+        randart_wpn_learn_prop(item, RAP_CURSED);
     }
 
     if (proprt[RAP_NOISES])
