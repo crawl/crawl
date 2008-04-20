@@ -1788,7 +1788,7 @@ Vampires
   Vampires are another form of undead, but with a peculiarity: by 
   consuming fresh blood, they may become alive. A bloodless Vampire has
   all the traits of an undead, yet possesses no innate healing power at
-  all -- in particular, magical items or spell which increase the rate
+  all -- in particular, magical items or spells which increase the rate
   of regeneration will not work. On the other hand, a Vampire full with
   blood will regenerate very quickly, but lose all undead powers.
   Vampires can never starve. Upon growing, they learn to transform into
