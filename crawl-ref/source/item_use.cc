@@ -4004,20 +4004,25 @@ static bool scroll_modify_item(const scroll_type scroll)
      case SCR_RECHARGING:
         if (item_is_rechargable(item))
         {
-            // might still fail on highly enchanted weapons of electrocution
+            // Might still fail on highly enchanted weapons of electrocution.
+            // (If so, already prints the "Nothing happens" message.)
             if (recharge_wand(item_slot))
                 return (true);
             return (false);
         }
+        break;
      case SCR_ENCHANT_ARMOUR:
         if (is_enchantable_armour(item, true))
         {
-            // might still fail because of already high enchantment
+            // Might still fail because of already high enchantment.
+            // (If so, already prints the "Nothing happens" message.)
             if (_handle_enchant_armour(item_slot))
                 return (true);
             return (false);
         }
+        break;
      default:
+        mpr("Buggy scroll can't modify item!");
         break;
      }
 

@@ -1333,8 +1333,8 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
     }
 
     // Nor can highly enchanted items (missiles only have one stat)
-    if ( wpn.plus >= 9 ||
-        (wpn.base_type == OBJ_WEAPONS && wpn.plus2 >= 9) )
+    if ( wpn.plus >= 9
+         || wpn.base_type == OBJ_WEAPONS && wpn.plus2 >= 9 )
     {
         return (uncurse && item_cursed( wpn )); // ?EW may uncurse items
     }
