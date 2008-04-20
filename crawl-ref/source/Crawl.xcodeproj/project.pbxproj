@@ -104,7 +104,7 @@
 		7B237E930A8EC9D000580F30 /* effects.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E0C0A8EC9D000580F30 /* effects.h */; };
 		7B237E940A8EC9D000580F30 /* abl-show.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0D0A8EC9D000580F30 /* abl-show.cc */; };
 		7B237E950A8EC9D000580F30 /* files.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0E0A8EC9D000580F30 /* files.cc */; };
-		7B237E960A8EC9D000580F30 /* direct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0F0A8EC9D000580F30 /* direct.cc */; };
+		7B237E960A8EC9D000580F30 /* directn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0F0A8EC9D000580F30 /* directn.cc */; };
 		7B237E970A8EC9D000580F30 /* dungeon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E100A8EC9D000580F30 /* dungeon.h */; };
 		7B237E9A0A8EC9D000580F30 /* view.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E130A8EC9D000580F30 /* view.h */; };
 		7B237E9B0A8EC9D000580F30 /* view.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E140A8EC9D000580F30 /* view.cc */; };
@@ -114,7 +114,7 @@
 		7B237E9F0A8EC9D000580F30 /* spells3.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E180A8EC9D000580F30 /* spells3.h */; };
 		7B237EA00A8EC9D000580F30 /* macro.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E190A8EC9D000580F30 /* macro.h */; };
 		7B237EA10A8EC9D000580F30 /* debug.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1A0A8EC9D000580F30 /* debug.h */; };
-		7B237EA20A8EC9D000580F30 /* direct.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1B0A8EC9D000580F30 /* direct.h */; };
+		7B237EA20A8EC9D000580F30 /* directn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1B0A8EC9D000580F30 /* directn.h */; };
 		7B237EA30A8EC9D000580F30 /* decks.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1C0A8EC9D000580F30 /* decks.h */; };
 		7B237EA40A8EC9D000580F30 /* stuff.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1D0A8EC9D000580F30 /* stuff.h */; };
 		7B237EA50A8EC9D000580F30 /* stuff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E1E0A8EC9D000580F30 /* stuff.cc */; };
@@ -303,7 +303,7 @@
 				7B237E9F0A8EC9D000580F30 /* spells3.h in CopyFiles */,
 				7B237EA00A8EC9D000580F30 /* macro.h in CopyFiles */,
 				7B237EA10A8EC9D000580F30 /* debug.h in CopyFiles */,
-				7B237EA20A8EC9D000580F30 /* direct.h in CopyFiles */,
+				7B237EA20A8EC9D000580F30 /* directn.h in CopyFiles */,
 				7B237EA30A8EC9D000580F30 /* decks.h in CopyFiles */,
 				7B237EA40A8EC9D000580F30 /* stuff.h in CopyFiles */,
 				7B237EA60A8EC9D000580F30 /* stash.h in CopyFiles */,
@@ -476,7 +476,7 @@
 		7B237E0C0A8EC9D000580F30 /* effects.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = effects.h; sourceTree = "<group>"; };
 		7B237E0D0A8EC9D000580F30 /* abl-show.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "abl-show.cc"; sourceTree = "<group>"; };
 		7B237E0E0A8EC9D000580F30 /* files.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = files.cc; sourceTree = "<group>"; };
-		7B237E0F0A8EC9D000580F30 /* direct.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = direct.cc; sourceTree = "<group>"; };
+		7B237E0F0A8EC9D000580F30 /* directn.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = directn.cc; sourceTree = "<group>"; };
 		7B237E100A8EC9D000580F30 /* dungeon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dungeon.h; sourceTree = "<group>"; };
 		7B237E130A8EC9D000580F30 /* view.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		7B237E140A8EC9D000580F30 /* view.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = view.cc; sourceTree = "<group>"; };
@@ -486,7 +486,7 @@
 		7B237E180A8EC9D000580F30 /* spells3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = spells3.h; sourceTree = "<group>"; };
 		7B237E190A8EC9D000580F30 /* macro.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = macro.h; sourceTree = "<group>"; };
 		7B237E1A0A8EC9D000580F30 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
-		7B237E1B0A8EC9D000580F30 /* direct.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = direct.h; sourceTree = "<group>"; };
+		7B237E1B0A8EC9D000580F30 /* directn.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = directn.h; sourceTree = "<group>"; };
 		7B237E1C0A8EC9D000580F30 /* decks.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = decks.h; sourceTree = "<group>"; };
 		7B237E1D0A8EC9D000580F30 /* stuff.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = stuff.h; sourceTree = "<group>"; };
 		7B237E1E0A8EC9D000580F30 /* stuff.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = stuff.cc; sourceTree = "<group>"; };
@@ -613,7 +613,7 @@
 		7BF8556A0C9C916800B7C520 /* dgnevent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dgnevent.h; sourceTree = SOURCE_ROOT; };
 		7BF8556E0C9C919100B7C520 /* luadgn.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = luadgn.cc; sourceTree = SOURCE_ROOT; };
 		7BF8556F0C9C919100B7C520 /* luadgn.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = luadgn.h; sourceTree = SOURCE_ROOT; };
-		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Crawl.icns; path = mac/Crawl.icns; sourceTree = "<group>"; };
 		D2AE25EE0DA2624E00E15489 /* crawl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = crawl; path = mac/crawl; sourceTree = "<group>"; };
 		D2F271F60DA1C58C00445FE9 /* Crawl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Crawl.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -793,8 +793,8 @@
 				7B237E050A8EC9D000580F30 /* describe.h */,
 				7BF855690C9C916800B7C520 /* dgnevent.cc */,
 				7BF8556A0C9C916800B7C520 /* dgnevent.h */,
-				7B237E0F0A8EC9D000580F30 /* direct.cc */,
-				7B237E1B0A8EC9D000580F30 /* direct.h */,
+				7B237E0F0A8EC9D000580F30 /* directn.cc */,
+				7B237E1B0A8EC9D000580F30 /* directn.h */,
 				7B237E670A8EC9D000580F30 /* dungeon.cc */,
 				7B237E100A8EC9D000580F30 /* dungeon.h */,
 				7B237E520A8EC9D000580F30 /* effects.cc */,
@@ -1186,7 +1186,7 @@
 				7B237E920A8EC9D000580F30 /* player.cc in Sources */,
 				7B237E940A8EC9D000580F30 /* abl-show.cc in Sources */,
 				7B237E950A8EC9D000580F30 /* files.cc in Sources */,
-				7B237E960A8EC9D000580F30 /* direct.cc in Sources */,
+				7B237E960A8EC9D000580F30 /* directn.cc in Sources */,
 				7B237E9B0A8EC9D000580F30 /* view.cc in Sources */,
 				7B237E9C0A8EC9D000580F30 /* spl-book.cc in Sources */,
 				7B237E9E0A8EC9D000580F30 /* spells4.cc in Sources */,

@@ -41,14 +41,14 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..;../util/lua/src;../util/sqlite"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;WIN32CONSOLE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;WIN32CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="AppHdr.h"
 				WarningLevel="3"
-				WarnAsError="true"
+				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
@@ -118,13 +118,13 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="util/lua/src"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..;../util/lua/src;../util/sqlite"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="AppHdr.h"
 				WarningLevel="3"
-				WarnAsError="true"
+				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
@@ -340,11 +340,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\direct.cc"
+			RelativePath="..\directn.cc"
 			>
 		</File>
 		<File
-			RelativePath="..\direct.h"
+			RelativePath="..\directn.h"
 			>
 		</File>
 		<File
