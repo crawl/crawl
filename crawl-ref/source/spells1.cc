@@ -1062,7 +1062,7 @@ void stone_scales(int pow)
 
     if (you.duration[DUR_STONEMAIL])
         mpr("Your scaly armour looks firmer.");
-    else 
+    else
     {
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
             mpr( "Your stone body feels more resilient." );
@@ -1071,7 +1071,7 @@ void stone_scales(int pow)
 
         you.redraw_evasion = 1;
         you.redraw_armour_class = 1;
-    }     
+    }
 
     dur_change = 20 + random2(pow) + random2(pow);
 
