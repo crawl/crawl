@@ -9,7 +9,7 @@
  *
  *  <3>     04oct2001     bwr     absorbed spells0.cc
  *  <2>     24jun2000     jmf     changed to use new data structure
- *  <1>     12jun2000     dlb     created after much thought         
+ *  <1>     12jun2000     dlb     created after much thought
  */
 
 #include "AppHdr.h"
