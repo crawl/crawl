@@ -299,7 +299,7 @@ void TileRegionClass::resize(int mx0, int my0, int dx0, int dy0)
     if (dy0 != 0) dy = dy0;
 }
 
-MapRegionClass::MapRegionClass(int x, int y, int o_x, int o_y, bool iso)
+MapRegionClass::MapRegionClass(int x, int y, int o_x, int o_y, int marker_len)
 {
     int i;
 
@@ -315,6 +315,7 @@ MapRegionClass::MapRegionClass(int x, int y, int o_x, int o_y, bool iso)
 
     x_margin = o_x;
     y_margin = o_y;
+    marker_length = marker_len;
     force_redraw = false;
 
     SysInit(x, y, o_x, o_y);
@@ -469,8 +470,8 @@ bool RegionClass::mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy)
 
 bool MapRegionClass::mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy)
 {
-    int x = mouse_x - ox;
-    int y = mouse_y - oy;
+    int x = mouse_x - ox - x_margin;
+    int y = mouse_y - oy - y_margin;
     if ( x < 0 || y < 0 ) return false;
     x /= dx;
     y /= dy;

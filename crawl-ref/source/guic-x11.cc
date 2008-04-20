@@ -326,8 +326,6 @@ void MapRegionClass::draw_data(unsigned char *buf)
     if (!flag)
         return;
 
-    const int marker_length = 2;
-
     for (int yy = 0; yy < dy * marker_length; yy++)
         XPutPixel(backbuf, px*dx+dx/2 + x_margin, yy, map_pix[MAP_BLACK]);
 

@@ -596,7 +596,7 @@ void libgui_init()
         new MapRegionClass(MAP_XMAX+map_margin,
                            MAP_YMAX+map_margin,
                            map_margin, map_margin,
-                           false);
+                           2);
     region_map->id = REGION_MAP;
     region_map->dx = map_px;
     region_map->dy = map_px;
@@ -1153,8 +1153,8 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
 
     if (id == REGION_MAP)
     {
-        x -= gmap_ox + region_map->x_margin + 1;
-        y -= gmap_oy + region_map->y_margin + 1;
+        x -= gmap_ox - region_map->marker_length + 1;
+        y -= gmap_oy - region_map->marker_length + 1;
     }
 
     if (id == REGION_INV1 || id == REGION_INV2)

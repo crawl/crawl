@@ -602,7 +602,6 @@ void MapRegionClass::draw_data(unsigned char *buf)
     inc_y0 = - dx * inc_x0 + BUF_IDX(0, 0, 0, 1);
 
     // erase old markers
-    const int marker_length = 2;
     for (int j = 0; j < dy * marker_length; j++)
         *(pDibBit0 + BUF_IDX(px, 0, dx/2 + x_margin, j)) = MAP_BLACK;
 

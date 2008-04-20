@@ -359,6 +359,7 @@ class MapRegionClass  :public RegionClass
     int my2;
     int x_margin;
     int y_margin;
+    int marker_length;
     unsigned char *mbuf;
     bool force_redraw;
     bool mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy);
@@ -375,7 +376,7 @@ class MapRegionClass  :public RegionClass
     void set_col(int col, int x, int y);
     int get_col(int x, int y);
 
-    MapRegionClass(int x, int y, int o_x, int o_y, bool iso);
+    MapRegionClass(int x, int y, int o_x, int o_y, int marker_length);
 
     void SysInit(int x, int y, int o_x, int o_y);
     void SysDeinit();
