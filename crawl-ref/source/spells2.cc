@@ -1273,7 +1273,7 @@ bool summon_elemental(int pow, int restricted_type,
     }
 
     if ((grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
-         || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL)
+            || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL)
         && (restricted_type == 0 || restricted_type == MONS_EARTH_ELEMENTAL))
     {
         type_summoned = MONS_EARTH_ELEMENTAL;
@@ -1283,26 +1283,26 @@ bool summon_elemental(int pow, int restricted_type,
     }
     else if ((env.cgrid[ targ_x ][ targ_y ] != EMPTY_CLOUD
             && env.cloud[env.cgrid[ targ_x ][ targ_y ]].type == CLOUD_FIRE)
-        && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
+            && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
     {
         type_summoned = MONS_FIRE_ELEMENTAL;
         delete_cloud( env.cgrid[ targ_x ][ targ_y ] );
     }
     else if ((grd[ targ_x ][ targ_y ] == DNGN_LAVA)
-        && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
+            && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
     {
         type_summoned = MONS_FIRE_ELEMENTAL;
     }
     else if ((grd[ targ_x ][ targ_y ] == DNGN_DEEP_WATER
-            || grd[ targ_x ][ targ_y ] == DNGN_SHALLOW_WATER
-            || grd[ targ_x ][ targ_y ] == DNGN_FOUNTAIN_BLUE)
-        && (restricted_type == 0 || restricted_type == MONS_WATER_ELEMENTAL))
+                || grd[ targ_x ][ targ_y ] == DNGN_SHALLOW_WATER
+                || grd[ targ_x ][ targ_y ] == DNGN_FOUNTAIN_BLUE)
+           && (restricted_type == 0 || restricted_type == MONS_WATER_ELEMENTAL))
     {
         type_summoned = MONS_WATER_ELEMENTAL;
     }
     else if ((grd[ targ_x ][ targ_y ] >= DNGN_FLOOR
-            && env.cgrid[ targ_x ][ targ_y ] == EMPTY_CLOUD)
-        && (restricted_type == 0 || restricted_type == MONS_AIR_ELEMENTAL))
+             && env.cgrid[ targ_x ][ targ_y ] == EMPTY_CLOUD)
+             && (restricted_type == 0 || restricted_type == MONS_AIR_ELEMENTAL))
     {
         type_summoned = MONS_AIR_ELEMENTAL;
     }
@@ -1324,17 +1324,17 @@ bool summon_elemental(int pow, int restricted_type,
     bool friendly = ((type_summoned != MONS_FIRE_ELEMENTAL
                         || random2(10) < you.skills[SK_FIRE_MAGIC])
 
-                        && (type_summoned != MONS_WATER_ELEMENTAL
-                            || random2((you.species == SP_MERFOLK) ? 5 : 15)
-                                < you.skills[SK_ICE_MAGIC])
+                     && (type_summoned != MONS_WATER_ELEMENTAL
+                         || random2((you.species == SP_MERFOLK) ? 5 : 15)
+                               < you.skills[SK_ICE_MAGIC])
 
-                        && (type_summoned != MONS_AIR_ELEMENTAL
-                            || random2(15) < you.skills[SK_AIR_MAGIC])
+                     && (type_summoned != MONS_AIR_ELEMENTAL
+                         || random2(15) < you.skills[SK_AIR_MAGIC])
 
-                        && (type_summoned != MONS_EARTH_ELEMENTAL
-                            || random2(5)  < you.skills[SK_EARTH_MAGIC])
+                     && (type_summoned != MONS_EARTH_ELEMENTAL
+                         || random2(5)  < you.skills[SK_EARTH_MAGIC])
 
-                        && random2(100) >= unfriendly);
+                     && random2(100) >= unfriendly);
 
     if (create_monster( type_summoned, numsc,
                         friendly ? BEH_FRIENDLY : BEH_HOSTILE,

@@ -45,10 +45,10 @@
 #define BIG_BAND        20
 
 static int band_member(band_type band, int power);
-static band_type choose_band( int mon_type, int power, int &band_size );
+static band_type choose_band(int mon_type, int power, int &band_size );
 static int place_monster_aux(int mon_type, beh_type behaviour, int target,
-    int px, int py, int power, int extra, bool first_band_member,
-    int dur = 0);
+                             int px, int py, int power, int extra,
+                             bool first_band_member, int dur = 0);
 
 // Returns whether actual_grid is compatible with grid_wanted for monster
 // movement (or for monster generation, if generation is true).
@@ -493,8 +493,9 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     {
         // for some cases disallow monsters on stairs
         if (mons_class_is_stationary( mon_type )
-            || pval == 2 && (mons_speed(mon_type) == 0
-               || grd[px][py] == DNGN_LAVA || grd[px][py] == DNGN_DEEP_WATER))
+            || pval == 2
+               && (mons_speed(mon_type) == 0 || grd[px][py] == DNGN_LAVA
+                   || grd[px][py] == DNGN_DEEP_WATER))
         {
             proximity = PROX_AWAY_FROM_PLAYER;
         }
@@ -517,6 +518,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         // c) in the 'correct' proximity to the player
         dungeon_feature_type grid_wanted =
             habitat2grid( mons_habitat_by_type(mon_type) );
+
         while (true)
         {
             // handled above, won't change anymore
@@ -542,7 +544,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
 
             // occupied?
             if (mgrd[px][py] != NON_MONSTER
-                || (px == you.x_pos && py == you.y_pos))
+                || px == you.x_pos && py == you.y_pos)
             {
                 continue;
             }
@@ -580,8 +582,8 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                 case PROX_AWAY_FROM_PLAYER:
                     close_to_player = (distance(you.x_pos, you.y_pos, px, py) < 64);
 
-                    if ((proximity == PROX_CLOSE_TO_PLAYER && !close_to_player)
-                        || (proximity == PROX_AWAY_FROM_PLAYER && close_to_player))
+                    if (proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
+                        || proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
                     {
                         proxOK = false;
                     }
@@ -681,6 +683,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         const int band_id =
             place_monster_aux( band_monsters[i], behaviour, target, px, py,
                                lev_mons, extra, false, dur);
+
         if (band_id != -1 && band_id != NON_MONSTER)
             menv[band_id].flags |= MF_BAND_MEMBER;
     }
@@ -711,7 +714,9 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     menv[id].ench_countdown = 0;
 
     // setup habitat and placement
-    if (first_band_member)
+    // If the space is occupied, try some neighbouring square instead.
+    if (first_band_member && mgrd[px][py] == NON_MONSTER
+        && (px != you.x_pos || py != you.y_pos))
     {
         fx = px;
         fy = py;
@@ -727,8 +732,11 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
             fy = py + random2(7) - 3;
 
             // occupied?
-            if (mgrd[fx][fy] != NON_MONSTER)
+            if (mgrd[fx][fy] != NON_MONSTER
+                || fx == you.x_pos && fy == you.y_pos)
+            {
                 continue;
+            }
 
             if (!grid_compatible(grid_wanted, grd[fx][fy], true))
                 continue;
@@ -736,9 +744,8 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
             // don't generate monsters on top of teleport traps
             // (how do they get there?)
             int trap = trap_at_xy(fx, fy);
-            if (trap >= 0)
-                if (!can_place_on_trap(mon_type, env.trap[trap].type))
-                    continue;
+            if (trap >= 0 && !can_place_on_trap(mon_type, env.trap[trap].type))
+                continue;
 
             // cool.. passes all tests
             break;
@@ -762,13 +769,9 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
 
     // generate a brand shiny new monster, or zombie
     if (mons_class_is_zombified(mon_type))
-    {
         define_zombie( id, extra, mon_type, power );
-    }
     else
-    {
         define_monster(id);
-    }
 
     // The return of Boris is now handled in monster_die()...
     // not setting this for Boris here allows for multiple Borises
@@ -795,8 +798,10 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     }
 
     if (monster_can_submerge(&menv[id], grd[fx][fy])
-            && !one_chance_in(5))
+        && !one_chance_in(5))
+    {
         menv[id].add_ench(ENCH_SUBMERGED);
+    }
 
     menv[id].flags |= MF_JUST_SUMMONED;
 
@@ -1523,10 +1528,11 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
         permit_bands = true;
     }
 
-    if (permit_bands
-            || mon_type == RANDOM_MONSTER
-            || level_type == LEVEL_PANDEMONIUM)
+    if (mon_type == RANDOM_MONSTER
+        || level_type == LEVEL_PANDEMONIUM)
+    {
         permit_bands = true;
+    }
 
     int mid = -1;
 
@@ -1547,8 +1553,8 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
             break;
     }
 
-    if (place_monster( mid, mon_type, power, behaviour, target, summoned,
-                       px, py, permit_bands, proximity, extra, dur ) == false)
+    if (!place_monster( mid, mon_type, power, behaviour, target, summoned,
+                        px, py, permit_bands, proximity, extra, dur ))
     {
         return (-1);
     }
@@ -1711,13 +1717,16 @@ int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
                     bool player_made )
 {
     int summd = -1;
-    coord_def pos = find_newmons_square(cls, cr_x, cr_y);
+    coord_def pos;
     if (force_place && mons_class_can_pass(cls, grd[cr_x][cr_y])
-        && mgrd[cr_x][cr_y] == NON_MONSTER)
+        && mgrd[cr_x][cr_y] == NON_MONSTER
+        && (cr_x != you.x_pos || cr_y != you.y_pos))
     {
         pos.x = cr_x;
         pos.y = cr_y;
     }
+    else
+        pos = find_newmons_square(cls, cr_x, cr_y);
 
     if (pos.x != -1 && pos.y != -1)
     {

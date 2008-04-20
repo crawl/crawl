@@ -612,7 +612,7 @@ static void sdump_religion(dump_params &par)
         else
         {
             text += god_name(you.religion);
-            text += verb + " demanding penance.\n";
+            text += " " + verb + " demanding penance.\n";
         }
     }
 }
