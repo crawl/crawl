@@ -278,19 +278,17 @@ TAGS:   no_monster_gen no_rotate
 : if you.absdepth() < 7 then
 MONS: gnoll, gnoll, ogre, jackal
 SUBST: *=*. , *=$ , |=* , *=*.
-: else
+: elseif you.absdepth() < 16 then
 MONS: orc, w:5 orc knight / orc warrior
 MONS: orc sorcerer / orc warlord / orc knight, warg
 SUBST: *:*$ , |:*$
-: end
-: if you.absdepth() > 15 then
+: elseif you.absdepth() < 25 then
 MONS: deep elf soldier / deep elf fighter
 MONS: deep elf knight / deep elf mage / deep elf summoner / deep elf priest
 MONS: deep elf annihilator / deep elf sorcerer / deep elf demonologist / deep elf blademaster/deep elf master archer
 MONS: nothing
 SUBST: *:*$, |=|.
-: end
-: if you.absdepth() > 24 then
+: else
 MONS: red draconian/green draconian/yellow draconian/pale draconian/black draconian/purple draconian
 MONS: pale draconian knight/green draconian annihilator/purple draconian knight
 MONS: red draconian scorcher/white draconian zealot/yellow draconian caller/black draconian shifter
