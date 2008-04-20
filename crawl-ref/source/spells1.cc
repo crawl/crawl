@@ -212,7 +212,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     else
     {
         mpr("You blink.");
-        
+
         // no longer held in net
         clear_trapping_net();
 
@@ -291,8 +291,8 @@ void cast_chain_lightning( int powc )
     int tx, ty;
     int i;
 
-    for (sx = you.x_pos, sy = you.y_pos; 
-         powc > 0; 
+    for (sx = you.x_pos, sy = you.y_pos;
+         powc > 0;
          powc -= 8 + random2(13), sx = tx, sy = ty)
     {
         // infinity as far as this spell is concerned
@@ -316,13 +316,13 @@ void cast_chain_lightning( int powc )
             dist = grid_distance( sx, sy, monster->x, monster->y );
 
             // check for the source of this arc
-            if (!dist) 
+            if (!dist)
                 continue;
-                
+
             // randomize distance (arcs don't care about a couple of feet)
             dist += (random2(3) - 1);
 
-            // always ignore targets further than current one 
+            // always ignore targets further than current one
             if (dist > min_dist)
                 continue;
 
@@ -347,7 +347,7 @@ void cast_chain_lightning( int powc )
                 // either first target, or new selected target at min_dist
                 tx = monster->x;
                 ty = monster->y;
-                
+
                 // need to set min_dist for first target case
                 if (dist < min_dist)
                     min_dist = dist;
@@ -363,7 +363,7 @@ void cast_chain_lightning( int powc )
             dist += (random2(3) - 1);
 
             // select player if only, closest, or randomly selected
-            if ((tx == -1 
+            if ((tx == -1
                     || dist < min_dist
                     || (dist == min_dist && one_chance_in( count + 1 )))
                 && check_line_of_sight( sx, sy, you.x_pos, you.y_pos ))
@@ -455,7 +455,7 @@ void identify(int power, int item_slot)
             set_ident_type( item.base_type, item.sub_type, ID_KNOWN_TYPE );
 
         set_ident_flags( item, ISFLAG_IDENT_MASK );
-        
+
         // output identified item
         mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
         if (item_slot == you.equip[EQ_WEAPON])
@@ -483,7 +483,7 @@ bool conjure_flame(int pow)
     {
         if (done_first_message)
             mpr("Where would you like to place the cloud?", MSGCH_PROMPT);
-        else 
+        else
         {
             mpr("You cast a flaming cloud spell! But where?", MSGCH_PROMPT);
             done_first_message = true;
@@ -507,7 +507,7 @@ bool conjure_flame(int pow)
             mpr("You can't see that place!");
             continue;
         }
-        
+
         if (spelld.tx == you.x_pos && spelld.ty == you.y_pos)
         {
             mpr("You can't place the cloud here!");
@@ -908,7 +908,7 @@ void antimagic()
         DUR_INSULATION, DUR_RESIST_POISON, DUR_RESIST_FIRE, DUR_RESIST_COLD,
         DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE
     };
-    
+
     if (!you.permanent_levitation() && you.duration[DUR_LEVITATION] > 2)
         you.duration[DUR_LEVITATION] = 2;
 
@@ -938,7 +938,7 @@ void extension(int pow)
     if (you.duration[DUR_MIGHT])
     {
         potion_effect(POT_MIGHT, pow);
-        contamination++;  
+        contamination++;
     }
 
     if (you.duration[DUR_LEVITATION] && !you.duration[DUR_CONTROLLED_FLIGHT])
@@ -1044,7 +1044,7 @@ void ice_armour(int pow, bool extending)
 
     if (you.duration[DUR_ICY_ARMOUR])
         mpr( "Your icy armour thickens." );
-    else 
+    else
     {
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST)
             mpr( "Your icy body feels more resilient." );
@@ -1052,7 +1052,7 @@ void ice_armour(int pow, bool extending)
             mpr( "A film of ice covers your body!" );
 
         you.redraw_armour_class = 1;
-    }     
+    }
 
     you.duration[DUR_ICY_ARMOUR] += 20 + random2(pow) + random2(pow);
 
