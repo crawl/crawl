@@ -2386,15 +2386,15 @@ bool is_evil_item(const item_def& item)
         int item_eff = item_special_wield_effect(item);
 
         retval = (is_demonic(item)
-             || item.special == SPWPN_SCEPTRE_OF_ASMODEUS
-             || item.special == SPWPN_STAFF_OF_DISPATER
-             || item.special == SPWPN_SWORD_OF_CEREBOV
-             || item_eff == SPWLD_CURSE
-             || item_eff == SPWLD_TORMENT
-             || item_eff == SPWLD_ZONGULDROK
-             || item_brand == SPWPN_DRAINING
-             || item_brand == SPWPN_PAIN
-             || item_brand == SPWPN_VAMPIRICISM);
+            || item.special == SPWPN_SCEPTRE_OF_ASMODEUS
+            || item.special == SPWPN_STAFF_OF_DISPATER
+            || item.special == SPWPN_SWORD_OF_CEREBOV
+            || item_eff == SPWLD_CURSE
+            || item_eff == SPWLD_TORMENT
+            || item_eff == SPWLD_ZONGULDROK
+            || item_brand == SPWPN_DRAINING
+            || item_brand == SPWPN_PAIN
+            || item_brand == SPWPN_VAMPIRICISM);
         }
         break;
     case OBJ_WANDS:
@@ -2402,6 +2402,10 @@ bool is_evil_item(const item_def& item)
         break;
     case OBJ_SCROLLS:
         retval = (item.sub_type == SCR_TORMENT);
+        break;
+    case OBJ_POTIONS:
+        retval = (item.sub_type == POT_BLOOD
+            || item.sub_type == POT_BLOOD_COAGULATED);
         break;
     case OBJ_BOOKS:
         retval = (item.sub_type == BOOK_NECROMANCY
@@ -2412,7 +2416,7 @@ bool is_evil_item(const item_def& item)
         break;
     case OBJ_STAVES:
         retval = (item.sub_type == STAFF_DEATH
-             || item.sub_type == STAFF_DEMONOLOGY);
+            || item.sub_type == STAFF_DEMONOLOGY);
         break;
     case OBJ_MISCELLANY:
         retval = (item.sub_type == MISC_LANTERN_OF_SHADOWS);
