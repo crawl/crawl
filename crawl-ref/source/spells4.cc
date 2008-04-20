@@ -2775,12 +2775,12 @@ void cast_divine_shield()
             mpr("A divine shield forms around you!");
     }
 
-    // duration of complete shield bonus up to 18 turns
+    // duration of complete shield bonus up to 27 turns
     you.duration[DUR_DIVINE_SHIELD]
-       = 5 + (you.skills[SK_SHIELDS] + you.skills[SK_INVOCATIONS]*2)/6;
+       = 5 + (you.skills[SK_SHIELDS] + you.skills[SK_INVOCATIONS]*4)/6;
 
-    // shield bonus up to 8
-    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
+    // shield bonus up to 9
+    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/4;
 
     return;
 }
