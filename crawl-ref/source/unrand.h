@@ -98,9 +98,10 @@
    +/- to-hit/to-dam: Obvious. Affects both melee and missile. Should be left
    at 0 for weapons, which get +s normally.
 
-   cursed: 0 or 1.  Sets the item's initial curse status.  Cursed items
-   will tend to recurse themselves when rewielded.  Maybe this should be
-   made to be a value that determines how often it will recurse? -- bwr
+   cursed: -1, 0, any positive value.
+   Setting this to any value other than 0 will set the item's initial curse
+   status as cursed. If the value is greater than zero, the item will also have
+   one_chance_in(value) of recursing itself when re-equipped.
 
    stealth: -100 to 80.  Adds to stealth value.
 
@@ -226,7 +227,7 @@
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
-        1, 0                    // cursed
+        3, 0                    // cursed
     }
     ,
         "",
@@ -476,7 +477,7 @@
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
-        1, 0                    // cursed
+        -1, 0                    // cursed
     }
     ,
         "",
@@ -623,7 +624,7 @@
         0, 0, 0, 0, 0, 0,
         0, 0, 1, 0, 0,          // prevent spellcasting
         0, 0, 0, 0, 0,
-        1, 0                    // cursed
+        -1, 0                    // cursed
     }
     ,
         "",
@@ -749,7 +750,7 @@
         0, 0, 0, 0, 0, 0,
         0, 0, 1, 0, 0,          // prevent spellcasting
         0, 0, 0, 0, 0,
-        1, 0                    // cursed
+        2, 0                    // cursed
     }
     ,
         "",
@@ -839,7 +840,7 @@
         0, 0, 0, 0, 0, 0,
         0, 0, 1, 0, 1,          // prevent spellcasting, prevent teleport
         0, 0, 0, 0, 0,
-        1, 0                    // cursed
+        -1, 0                    // cursed
     }
     ,
         "",

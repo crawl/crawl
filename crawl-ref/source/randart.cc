@@ -1795,7 +1795,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     item.flags |= ISFLAG_UNRANDART;
     item.special = unranddata[ unrand_index ].prpty[ RAP_BRAND ];
 
-    if (unranddata[ unrand_index ].prpty[ RAP_CURSED ])
+    if (unranddata[ unrand_index ].prpty[ RAP_CURSED ] != 0)
         do_curse_item( item );
 
     set_unrandart_exist( unrand_index, true );

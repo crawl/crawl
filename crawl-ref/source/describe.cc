@@ -238,7 +238,8 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         // Qualitative attributes
         { "MP",     RAP_MAGICAL_POWER,         0 },
         { "SInv",   RAP_EYESIGHT,              2 },
-        { "Stlth",  RAP_STEALTH,               2 }  // handled specially
+        { "Stlth",  RAP_STEALTH,               2 }, // handled specially
+        { "Curse",  RAP_CURSED,                2 },
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -307,6 +308,9 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
                 break;
             }
             case 2: // e.g. rPois or SInv
+                if (propanns[i].prop == RAP_CURSED && val < 1)
+                    continue;
+
                 work << propanns[i].name;
 
                 // these need special handling, so we don't give anything away
@@ -398,13 +402,21 @@ static std::string _randart_descrip( const item_def &item )
         { RAP_CAUSE_TELEPORTATION, "It causes teleportation.", false},
         { RAP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
-        { RAP_ANGRY, "It makes you angry.", false}
+        { RAP_ANGRY,  "It makes you angry.", false},
+        { RAP_CURSED, "It may recurse itself.", false}
     };
 
     for ( unsigned i = 0; i < ARRAYSZ(propdescs); ++i )
     {
         if ( known_proprt(propdescs[i].property))
         {
+            // Only randarts with RAP_CURSED > 0 may recurse themselves.
+            if (propdescs[i].property == RAP_CURSED
+                && proprt[propdescs[i].property] < 1)
+            {
+                continue;
+            }
+
             std::string sdesc = propdescs[i].desc;
 
             // FIXME Not the nicest hack.

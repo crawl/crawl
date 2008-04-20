@@ -707,11 +707,9 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 you.special_wield = SPWLD_CURSE;
                 if (!item_cursed(item) && one_chance_in(5))
                 {
-                    if (was_known)
-                    {
-                        mprf("%s glows black for a moment.",
-                             item.name(DESC_CAP_YOUR).c_str());
-                    }
+                    mprf("%s glows black for a moment.",
+                         item.name(DESC_CAP_YOUR).c_str());
+
                     do_curse_item( item );
                 }
                 break;
@@ -4397,6 +4395,7 @@ void read_scroll( int slot )
             item_def& item = you.inv[you.equip[affected]];
             mprf("%s glows black for a moment.",
                  item.name(DESC_CAP_YOUR).c_str());
+
             do_curse_item( item );
         }
         break;
@@ -4564,10 +4563,12 @@ void use_randart(item_def &item)
         randart_wpn_learn_prop(item, RAP_BERSERK);
     }
 
-    if (!item_cursed(item) && proprt[RAP_CURSED] && one_chance_in(3))
+    if ( !item_cursed(item) && proprt[RAP_CURSED] > 0
+         && one_chance_in(proprt[RAP_CURSED]) )
     {
         mprf("%s glows black for a moment.",
              item.name(DESC_CAP_YOUR).c_str());
+
         do_curse_item( item );
         randart_wpn_learn_prop(item, RAP_CURSED);
     }
