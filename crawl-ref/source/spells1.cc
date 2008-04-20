@@ -766,9 +766,9 @@ bool cast_revitalisation(int pow)
     }
 
     // Use the formula for minor healing for HP, and the formula divided
-    // by two for MP.
+    // roughly in half for MP.
     int hp_amount = pow + roll_dice(2, pow) - 2;
-    int mp_amount = (pow + roll_dice(2, pow) - 2) / 2;
+    int mp_amount = (pow + roll_dice(2, pow) - 2) / 2 + 1;
 
     inc_hp(hp_amount, false);
     inc_mp(mp_amount, false);
