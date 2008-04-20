@@ -1963,7 +1963,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         set_fire_order(field, plus_equal);
     }
-    else BOOL_OPTION(random_pick);
+    
+    BOOL_OPTION(random_pick);
     else BOOL_OPTION(remember_name);
 #ifndef SAVE_DIR_PATH
     else if (key == "save_dir")
@@ -2248,7 +2249,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
-    else BOOL_OPTION(pickup_thrown);
+    
+    BOOL_OPTION(pickup_thrown);
     else BOOL_OPTION(pickup_dropped);
 #ifdef WIZARD
     else if (key == "fsim_kit")
