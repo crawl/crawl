@@ -51,7 +51,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item)
         return (false);
     else if (is_good_god(which_god) && (brand == SPWPN_DRAINING
               || brand == SPWPN_PAIN || brand == SPWPN_VAMPIRICISM)
-              || randart_wpn_property( item, RAP_CURSED ))
+              || randart_wpn_property( item, RAP_CURSED ) != 0)
     {
         return (false);
     }
@@ -1122,7 +1122,12 @@ void randart_wpn_properties( const item_def &item,
         power_level += randart_add_one_property(item, proprt);
 
     if ((power_level < 2 && one_chance_in(5)) || one_chance_in(30))
-        proprt[RAP_CURSED] = 1;
+    {
+        if (one_chance_in(4))
+            proprt[RAP_CURSED] = 1 + random2(5);
+        else
+            proprt[RAP_CURSED] = -1;
+    }
 }
 
 void randart_wpn_properties( const item_def &item,
