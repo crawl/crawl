@@ -316,6 +316,7 @@ MapRegionClass::MapRegionClass(int x, int y, int o_x, int o_y, int marker_len)
     x_margin = o_x;
     y_margin = o_y;
     marker_length = marker_len;
+    old_mark_x = old_mark_y = 0;
     force_redraw = false;
 
     SysInit(x, y, o_x, o_y);

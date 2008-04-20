@@ -341,6 +341,9 @@ int tile_idx_unseen_terrain(int x, int y, int what)
 
 void GmapUpdate(int x, int y, int what, bool upd_tile)
 {
+    if ((you.level_type == LEVEL_LABYRINTH) || (you.level_type == LEVEL_ABYSS))
+        return;
+
     int c;
 
     if (x == you.x_pos && y == you.y_pos)
@@ -467,16 +470,25 @@ void GmapDisplay(int linex, int liney)
         count += GXM - (gmap_max_x - gmap_min_x + 1);
     }
 
-    if ( (you.level_type != LEVEL_LABYRINTH)&&(you.level_type != LEVEL_ABYSS) )
+    bool show_mark = false;
+    int mark_x = 0;
+    int mark_y = 0;
+    if ((you.level_type != LEVEL_LABYRINTH) && (you.level_type != LEVEL_ABYSS))
     {
         ox += linex - gmap_min_x;
         oy += liney - gmap_min_y;
+
+        mark_x = ox;
+        mark_y = oy;
+        show_mark = true;
+
         // highlight centre of the map
+        // [enne] Maybe we need another colour for the highlight?
         buf2[ox + oy * GXM] = Options.tile_player_col;
     }
 
     region_map->flag = true;
-    region_map->draw_data(buf2);
+    region_map->draw_data(buf2, show_mark, mark_x, mark_y);
 }
 
 /* initialize routines */

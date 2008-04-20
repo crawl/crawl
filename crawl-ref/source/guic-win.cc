@@ -574,11 +574,9 @@ void MapRegionClass::redraw(int x1, int y1, int x2, int y2)
     ReleaseDC(win->hWnd, hdc);
 }
 
-void MapRegionClass::draw_data(unsigned char *buf)
+void MapRegionClass::draw_data(unsigned char *buf, bool show_mark,
+                               int mark_x, int mark_y)
 {
-    static int px = 0;
-    static int py = 0;
-
     if (!flag)
         return;
 
@@ -603,10 +601,10 @@ void MapRegionClass::draw_data(unsigned char *buf)
 
     // erase old markers
     for (int j = 0; j < dy * marker_length; j++)
-        *(pDibBit0 + BUF_IDX(px, 0, dx/2 + x_margin, j)) = MAP_BLACK;
+        *(pDibBit0 + BUF_IDX(old_mark_x, 0, dx/2 + x_margin, j)) = MAP_BLACK;
 
     for (int j = 0; j < dx * marker_length; j++)
-        *(pDibBit0 + BUF_IDX(0, py, j, dy/2 + y_margin)) = MAP_BLACK;
+        *(pDibBit0 + BUF_IDX(0, old_mark_y, j, dy/2 + y_margin)) = MAP_BLACK;
 
     force_redraw = true;
 
@@ -618,11 +616,6 @@ void MapRegionClass::draw_data(unsigned char *buf)
         {
             int col = (j >= my2 - y_margin || i >= mx2 - x_margin) ?
                MAP_BLACK : ptr[i];
-            if (col == Options.tile_player_col)
-            {
-                px = i;
-                py = j;
-            }
             if ( col != get_col(i,j) || force_redraw
                  || i < marker_length || j < marker_length)
             {
@@ -643,12 +636,18 @@ void MapRegionClass::draw_data(unsigned char *buf)
         ppix += inc_y;
     }
 
-    // draw new markers
-    for (int j = 0; j < dy * marker_length; j++)
-        *(pDibBit0 + BUF_IDX(px, 0, dx/2 + x_margin, j)) = MAP_WHITE;
+    old_mark_x = mark_x;
+    old_mark_y = mark_y;
 
-    for (int j = 0; j < dx * marker_length; j++)
-        *(pDibBit0 + BUF_IDX(0, py, j, dy/2 + y_margin)) = MAP_WHITE;
+    if (show_mark)
+    {
+        // draw new markers
+        for (int j = 0; j < dy * marker_length; j++)
+            *(pDibBit0 + BUF_IDX(mark_x, 0, dx/2 + x_margin, j)) = MAP_WHITE;
+
+        for (int j = 0; j < dx * marker_length; j++)
+            *(pDibBit0 + BUF_IDX(0, mark_y, j, dy/2 + y_margin)) = MAP_WHITE;
+    }
 
     redraw();
     force_redraw = false;

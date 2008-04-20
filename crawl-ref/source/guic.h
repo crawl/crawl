@@ -352,9 +352,9 @@ class TileRegionClass :public RegionClass
     ~TileRegionClass();
 };
 
-class MapRegionClass  :public RegionClass
+class MapRegionClass : public RegionClass
 {
-    public:
+public:
     int mx2;
     int my2;
     int x_margin;
@@ -363,7 +363,7 @@ class MapRegionClass  :public RegionClass
     unsigned char *mbuf;
     bool force_redraw;
     bool mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy);
-    void draw_data(unsigned char *buf);
+    void draw_data(unsigned char *buf, bool show_mark, int mark_x, int mark_y);
     void redraw(int x1, int y1, int x2, int y2);
     void redraw();
     void clear();
@@ -377,11 +377,14 @@ class MapRegionClass  :public RegionClass
     int get_col(int x, int y);
 
     MapRegionClass(int x, int y, int o_x, int o_y, int marker_length);
+    ~MapRegionClass();
 
     void SysInit(int x, int y, int o_x, int o_y);
     void SysDeinit();
 
-    ~MapRegionClass();
+protected:
+    int old_mark_x;
+    int old_mark_y;
 };
 
 #define PLACE_RIGHT 0

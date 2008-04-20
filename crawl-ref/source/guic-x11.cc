@@ -318,19 +318,23 @@ void MapRegionClass::redraw(int x1, int y1, int x2, int y2)
               (x2-x1+1)*dx, (y2-y1+1)*dy);
 }
 
-void MapRegionClass::draw_data(unsigned char *buf)
+void MapRegionClass::draw_data(unsigned char *buf, bool show_mark,
+                               int mark_x, int mark_y)
 {
-    static int px = 0;
-    static int py = 0;
-
     if (!flag)
         return;
 
     for (int yy = 0; yy < dy * marker_length; yy++)
-        XPutPixel(backbuf, px*dx+dx/2 + x_margin, yy, map_pix[MAP_BLACK]);
+    {
+        XPutPixel(backbuf, old_mark_x*dx+dx/2 + x_margin, yy,
+                  map_pix[MAP_BLACK]);
+    }
 
     for (int xx = 0; xx < dx * marker_length; xx++)
-        XPutPixel(backbuf, xx, py*dy+dy/2 + y_margin, map_pix[MAP_BLACK]);
+    {
+        XPutPixel(backbuf, xx, old_mark_y*dy+dy/2 + y_margin,
+                  map_pix[MAP_BLACK]);
+    }
 
     for (int y = 0; y < my - y_margin; y++)
     {
@@ -338,11 +342,6 @@ void MapRegionClass::draw_data(unsigned char *buf)
         for (int x = 0; x < mx - x_margin; x++)
         {
             int col = ptr[x];
-            if (col == Options.tile_player_col)
-            {
-                px = x;
-                py = y;
-            }
             if (col != get_col(x, y) || force_redraw
                 || x < marker_length || y < marker_length)
             {
@@ -358,11 +357,23 @@ void MapRegionClass::draw_data(unsigned char *buf)
         }
     }
 
-    for (int yy = 0; yy < dy * marker_length; yy++)
-        XPutPixel(backbuf, px*dx+dx/2 + x_margin, yy, map_pix[MAP_WHITE]);
+    old_mark_x = mark_x;
+    old_mark_y = mark_y;
 
-    for (int xx = 0; xx < dx * marker_length; xx++)
-        XPutPixel(backbuf, xx, py*dy+dy/2 + y_margin, map_pix[MAP_WHITE]);
+    if (show_mark)
+    {
+        for (int yy = 0; yy < dy * marker_length; yy++)
+        {
+            XPutPixel(backbuf, old_mark_x*dx+dx/2 + x_margin, yy, 
+                      map_pix[MAP_WHITE]);
+        }
+
+        for (int xx = 0; xx < dx * marker_length; xx++)
+        {
+            XPutPixel(backbuf, xx, old_mark_y*dy+dy/2 + y_margin, 
+                      map_pix[MAP_WHITE]);
+        }
+    }
 
     redraw();
     XFlush(display);
