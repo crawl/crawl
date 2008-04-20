@@ -1326,7 +1326,8 @@ static void tag_read_you(reader &th, char minorVersion)
 
     // old: quiver info.  Discard it.
     count_c = unmarshallByte(th);
-    if (minorVersion >= 3) ASSERT(count_c == 0);
+    if (minorVersion >= TAG_MINOR_QUIVER)
+        ASSERT(count_c == 0);
     for (j = 0; j < count_c; ++j)
     {
         unmarshallByte(th);
@@ -1384,10 +1385,10 @@ static void tag_read_you(reader &th, char minorVersion)
     for (i = 0; i < count_c; i++)
          you.beheld_by.push_back(unmarshallByte(th));
 
-    if (minorVersion >= 2)
+    if (minorVersion >= TAG_MINOR_PIETY)
         you.piety_hysteresis = unmarshallByte(th);
 
-    if (minorVersion >= 3)
+    if (minorVersion >= TAG_MINOR_QUIVER)
         you.m_quiver->load(th);
 }
 
@@ -1986,7 +1987,7 @@ static void tag_read_level( reader &th, char minorVersion )
     unmarshallCoord(th, env.sanctuary_pos);
     env.sanctuary_time = unmarshallByte(th);
 
-    env.markers.read(th);
+    env.markers.read(th, minorVersion);
 }
 
 static void tag_read_level_items(reader &th, char minorVersion)

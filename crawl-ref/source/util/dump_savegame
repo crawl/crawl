@@ -32,7 +32,7 @@ def process_zip(opts, fn):
                 save = crawl.tags.TaggedFile(StringIO(zip.read(n)))
             except Exception, e:
                 print "  Failed (not a tag file?)"
-                continue
+                raise
 
             process_file(opts, save)
 

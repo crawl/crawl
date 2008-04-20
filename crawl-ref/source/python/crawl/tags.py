@@ -12,6 +12,9 @@ import binfile
 # Some constants and things
 # ----------------------------------------------------------------------
 
+TAG_MAJOR_VERSION = 5
+TAG_MINOR_VERSION = 4
+
 NUM_MONSTER_SPELL_SLOTS = 6
 NUM_MONSTER_SLOTS = 10
 MONS_PLAYER_GHOST = 400
@@ -212,7 +215,11 @@ class Quiver(object):
 def Coord(f): return f.stream('HH')
 
 class MapMarker(object):
-    def __init__(self, f):
+    def __init__(self, f, minor):
+        if minor >= 4:
+            expected_size = f.stream1('I')
+
+        num_read = -f.file.tell()
         self.mark_type = mark_type = f.stream1('H')
         if mark_type == 0:      # map_feature_marker
             self.read_base(f)
@@ -233,6 +240,11 @@ class MapMarker(object):
         else:
             assert "Unknown map marker type %d" % mark_type
 
+        num_read += f.file.tell()
+
+        if minor >= 4:
+            assert num_read == expected_size
+
     def read_base(self, f):
         self.coord = Coord(f)
 
@@ -246,6 +258,10 @@ class TaggedFile(object):
         f.byteorder = '>'
         self.f = f
         self.major, self.minor = f.stream('bb')
+        print '  version %d.%d' % (self.major, self.minor)
+        if (self.major != TAG_MAJOR_VERSION or
+            self.minor > TAG_MINOR_VERSION):
+            print "  WARNING: Cannot handle this version!"
         self.tags = dict( self._gen_tags() )
 
     def _gen_tags(self):
@@ -258,9 +274,9 @@ class TaggedFile(object):
             tag_name = TAGS_NAMES[tag_id]
             try:  constructor = TAG_TO_CLASS[tag_name]
             except KeyError:
-                print "  Found %s (currently unsupported)" % tag_name
+                print "  Skipping %s" % tag_name
             else:
-                print "  Found %s (parsing)" % tag_name
+                print "  Parsing %s" % tag_name
                 sub_reader = binfile.reader(StringIO.StringIO(data))
                 sub_reader.byteorder = '>'
                 data = constructor(sub_reader, self.minor)
@@ -414,15 +430,18 @@ class TagLEVEL(TagBase):
         self.grid = [ f.stream('BHHHHH')
                       for i in xrange(self.gx)
                       for j in xrange(self.gy) ]
-
         expected = self.gx * self.gy
         self.grid_colours = list(gen_run_length_decode(f, 'B', expected))
 
+        self.cloud_no = f.stream1('H')
         self.clouds = stream_array(f, 'H', 'BBBHBH', limit=1000)
         self.shops = stream_array(f, 'B', 'BBBBBBBB', limit=15)
         self.sanctuary = Coord(f)
         self.sanctuary_time = f.stream1('B')
-        self.markers = [ MapMarker(f) for x in xrange(f.stream1('H')) ]
+        if minor >= 4:
+            cooky = f.stream1('I')
+            assert cooky == 0x17742C32
+        self.markers = [ MapMarker(f, minor) for x in xrange(f.stream1('H')) ]
         assert_end(f.file)
 
         

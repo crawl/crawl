@@ -107,16 +107,22 @@
 #endif
 #endif
 
-void save_level(int level_saved, level_area_type lt,
-                branch_type where_were_you);
+static void save_level(int level_saved, level_area_type lt,
+                       branch_type where_were_you);
 
-#define GHOST_MINOR_VERSION 1
-#define LEVEL_MINOR_VERSION 1
+static bool _get_and_validate_version(FILE *restoreFile, char& major, char& minor,
+                                      std::string* reason=0);
 
-// 1: starting version
-// 2: append piety_hysteresis to TAG_YOU
-// 3: add quiver info.
-#define YOU_MINOR_VERSION   3
+
+static bool determine_ghost_version( FILE *ghostFile,
+                                     char &majorVersion, char &minorVersion );
+
+static void restore_ghost_version( FILE *ghostFile, char major, char minor );
+
+static void restore_tagged_file( FILE *restoreFile, int fileType,
+                                 char minorVersion );
+
+static void load_ghost();
 
 const short GHOST_SIGNATURE = short( 0xDC55 );
 
@@ -135,29 +141,6 @@ static void redraw_all(void)
     you.redraw_status_flags =
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
 }
-
-static bool determine_version( FILE *restoreFile,
-                               char &majorVersion, char &minorVersion );
-
-static void restore_version( FILE *restoreFile,
-                             char majorVersion, char minorVersion );
-
-static bool determine_level_version( FILE *levelFile,
-                                     char &majorVersion, char &minorVersion );
-
-static void restore_level_version( FILE *levelFile,
-                                   char majorVersion, char minorVersion );
-
-static bool determine_ghost_version( FILE *ghostFile,
-                                     char &majorVersion, char &minorVersion );
-
-static void restore_ghost_version( FILE *ghostFile,
-                                   char majorVersion, char minorVersion );
-
-static void restore_tagged_file( FILE *restoreFile, int fileType,
-                                 char minorVersion );
-
-static void load_ghost();
 
 static std::string uid_as_string()
 {
@@ -207,11 +190,10 @@ player_save_info read_character_info(const std::string &savefile)
     if (!charf)
         return fromfile;
 
-    char majorVersion = 0;
-    char minorVersion = 0;
+    char majorVersion;
+    char minorVersion;
 
-    if (determine_version(charf, majorVersion, minorVersion)
-        && majorVersion == SAVE_MAJOR_VERSION)
+    if (_get_and_validate_version(charf, majorVersion, minorVersion))
     {
         // backup before we clobber "you"
         const player backup(you);
@@ -647,7 +629,7 @@ std::string make_filename( const char *prefix, int level, branch_type where,
                                  isGhost );
 }
 
-static void write_version( FILE *dataFile, int majorVersion, int minorVersion,
+static void _write_version( FILE *dataFile, int majorVersion, int minorVersion,
                            bool extended_version )
 {
     // write version
@@ -675,21 +657,23 @@ static void write_version( FILE *dataFile, int majorVersion, int minorVersion,
     }
 }
 
-static void write_tagged_file( FILE *dataFile, char majorVersion,
-                               char minorVersion, int fileType,
-                               bool extended_version = false )
+static void _write_tagged_file( FILE *outf, int fileType,
+                                bool extended_version = false )
 {
     // find all relevant tags
     char tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
 
-    write_version( dataFile, majorVersion, minorVersion, extended_version );
+    _write_version( outf, TAG_MAJOR_VERSION, TAG_MINOR_VERSION,
+                    extended_version );
 
     // all other tags
     for (int i = 1; i < NUM_TAGS; i++)
     {
         if (tags[i] == 1)
-            tag_write((tag_type)i, dataFile);
+        {
+            tag_write((tag_type)i, outf);
+        }
     }
 }
 
@@ -701,14 +685,10 @@ bool travel_load_map( branch_type branch, int absdepth )
     if (!levelFile)
         return false;
 
-    // BEGIN -- must load the old level : pre-load tasks
-
-    // LOAD various tags
     char majorVersion;
     char minorVersion;
 
-    if (!determine_level_version( levelFile, majorVersion, minorVersion )
-            || majorVersion != SAVE_MAJOR_VERSION)
+    if (!_get_and_validate_version( levelFile, majorVersion, minorVersion ))
     {
         fclose(levelFile);
         return false;
@@ -1051,15 +1031,17 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         // BEGIN -- must load the old level : pre-load tasks
 
         // LOAD various tags
-        char majorVersion = 0;
-        char minorVersion = 0;
+        char majorVersion;
+        char minorVersion;
 
-        if (!determine_level_version( levelFile, majorVersion, minorVersion ))
+        std::string reason;
+        if (!_get_and_validate_version( levelFile, majorVersion, minorVersion, &reason ))
         {
-            end(-1, false, "\nLevel file appears to be invalid.\n");
+            end(-1, false, "\nLevel file is invalid.  %s\n",
+                reason.c_str());
         }
 
-        restore_level_version( levelFile, majorVersion, minorVersion );
+        restore_tagged_file(levelFile, TAGTYPE_LEVEL, minorVersion);
 
         // sanity check - EOF
         if (!feof( levelFile ))
@@ -1232,8 +1214,7 @@ void save_level(int level_saved, level_area_type old_ltype,
     // nail all items to the ground
     fix_item_coordinates();
 
-    write_tagged_file( saveFile, SAVE_MAJOR_VERSION,
-                       LEVEL_MINOR_VERSION, TAGTYPE_LEVEL );
+    _write_tagged_file( saveFile, TAGTYPE_LEVEL );
 
     fclose(saveFile);
 
@@ -1314,8 +1295,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     if (!charf)
         end(-1, true, "Unable to open \"%s\" for writing!\n", charFile.c_str());
 
-    write_tagged_file( charf, SAVE_MAJOR_VERSION,
-                       YOU_MINOR_VERSION, TAGTYPE_PLAYER );
+    _write_tagged_file( charf, TAGTYPE_PLAYER );
 
     fclose(charf);
     DO_CHMOD_PRIVATE(charFile.c_str());
@@ -1386,8 +1366,7 @@ void load_ghost(void)
         return;
     }
 
-    if (majorVersion != SAVE_MAJOR_VERSION
-        || minorVersion != GHOST_MINOR_VERSION)
+    if (majorVersion != TAG_MAJOR_VERSION || minorVersion > TAG_MINOR_VERSION)
     {
 
         fclose(gfile);
@@ -1439,13 +1418,13 @@ void restore_game(void)
     if (!charf )
         end(-1, true, "Unable to open %s for reading!\n", charFile.c_str() );
 
-    char majorVersion = 0;
-    char minorVersion = 0;
+    char majorVersion;
+    char minorVersion;
+    std::string reason;
+    if (!_get_and_validate_version(charf, majorVersion, minorVersion, &reason))
+        end(-1, false, "\nSave file is invalid.  %s\n", reason.c_str());
 
-    if (!determine_version(charf, majorVersion, minorVersion))
-        end(-1, false, "\nSavefile appears to be invalid.\n");
-
-    restore_version(charf, majorVersion, minorVersion);
+    restore_tagged_file(charf, TAGTYPE_PLAYER, minorVersion);
 
     // sanity check - EOF
     if (!feof(charf))
@@ -1602,46 +1581,39 @@ bool apply_to_all_dungeons(bool (*applicator)())
     return success;
 }
 
-static bool determine_version( FILE *restoreFile,
-                               char &majorVersion, char &minorVersion )
+static bool _get_and_validate_version(FILE *restoreFile, char &major, char &minor,
+                                      std::string* reason)
 {
+    std::string dummy;
+    if (reason == 0) reason = &dummy;
+
     // read first two bytes.
     char buf[2];
     if (read2(restoreFile, buf, 2) != 2)
+    {
+        major = minor = -1;
+        *reason = "File is corrupt.";
         return false;               // empty file?
-
-    // otherwise, read version and validate.
-    majorVersion = buf[0];
-    minorVersion = buf[1];
-
-    if (majorVersion == SAVE_MAJOR_VERSION)
-        return true;
-
-    return false;   // if it's not 0, no idea
-}
-
-static void restore_version( FILE *restoreFile,
-                             char majorVersion, char minorVersion )
-{
-    // assuming the following check can be removed once we can read all
-    // savefile versions.
-    if (majorVersion != SAVE_MAJOR_VERSION)
-    {
-        end(-1, false, "\nSorry, this release cannot read a v%d.%d savefile.\n",
-            majorVersion, minorVersion);
     }
 
-    switch(majorVersion)
+    major = buf[0];
+    minor = buf[1];
+
+    if (major != TAG_MAJOR_VERSION)
     {
-        case SAVE_MAJOR_VERSION:
-            restore_tagged_file(restoreFile, TAGTYPE_PLAYER, minorVersion);
-            break;
-        default:
-            break;
+        *reason = make_stringf("Major version mismatch: %d (want %d).", major, TAG_MAJOR_VERSION);
+        return false;
     }
+
+    if (minor >  TAG_MINOR_VERSION)
+    {
+        *reason = make_stringf("Minor version mismatch: %d (want <= %d).", minor, TAG_MINOR_VERSION);
+        return false;
+    }
+
+    return true;
 }
 
-// generic v4 restore function
 static void restore_tagged_file( FILE *restoreFile, int fileType,
                                  char minorVersion )
 {
@@ -1665,46 +1637,6 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
             tag_missing(i, minorVersion);
 }
 
-static bool determine_level_version( FILE *levelFile,
-                                     char &majorVersion, char &minorVersion )
-{
-    // read first two bytes.
-    char buf[2];
-    if (read2(levelFile, buf, 2) != 2)
-        return false;               // empty file?
-
-    // otherwise, read version and validate.
-    majorVersion = buf[0];
-    minorVersion = buf[1];
-
-    if (majorVersion == SAVE_MAJOR_VERSION)
-        return true;
-
-    return false;   // if its not SAVE_MAJOR_VERSION, no idea
-}
-
-static void restore_level_version( FILE *levelFile,
-                                   char majorVersion, char minorVersion )
-{
-    // assuming the following check can be removed once we can read all
-    // savefile versions.
-    if (majorVersion != SAVE_MAJOR_VERSION)
-    {
-        end(-1, false,
-            "\nSorry, this release cannot read a v%d.%d level file.\n",
-            majorVersion, minorVersion);
-    }
-
-    switch(majorVersion)
-    {
-        case SAVE_MAJOR_VERSION:
-            restore_tagged_file(levelFile, TAGTYPE_LEVEL, minorVersion);
-            break;
-        default:
-            break;
-    }
-}
-
 static bool determine_ghost_version( FILE *ghostFile,
                                      char &majorVersion, char &minorVersion )
 {
@@ -1722,15 +1654,15 @@ static bool determine_ghost_version( FILE *ghostFile,
     if (unmarshallShort(inf) != GHOST_SIGNATURE)
         return (false);
 
-    if (majorVersion == SAVE_MAJOR_VERSION
-        && minorVersion <= GHOST_MINOR_VERSION)
+    if (majorVersion == TAG_MAJOR_VERSION
+        && minorVersion <= TAG_MINOR_VERSION)
     {
         // Discard three more 32-bit words of padding.
         inf.read(NULL, 3*4);
         return !feof(ghostFile);
     }
 
-    return false;   // if its not SAVE_MAJOR_VERSION, no idea!
+    return false;   // if its not TAG_MAJOR_VERSION, no idea!
 }
 
 static void restore_ghost_version( FILE *ghostFile,
@@ -1738,7 +1670,7 @@ static void restore_ghost_version( FILE *ghostFile,
 {
     switch(majorVersion)
     {
-    case SAVE_MAJOR_VERSION:
+    case TAG_MAJOR_VERSION:
         restore_tagged_file(ghostFile, TAGTYPE_GHOST, minorVersion);
         break;
     default:
@@ -1776,9 +1708,7 @@ void save_ghost( bool force )
         return;
     }
 
-    write_tagged_file( gfile, SAVE_MAJOR_VERSION,
-                       GHOST_MINOR_VERSION, TAGTYPE_GHOST,
-                       true );
+    _write_tagged_file( gfile, TAGTYPE_GHOST, true );
 
     lk_close(gfile, "wb", cha_fil);
 
@@ -1789,7 +1719,7 @@ void save_ghost( bool force )
     DO_CHMOD_PRIVATE(cha_fil.c_str());
 }                               // end save_ghost()
 
-
+// XXX: remove?
 void generate_random_demon()
 {
     int rdem = 0;

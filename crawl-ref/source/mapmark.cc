@@ -733,22 +733,46 @@ void map_markers::clear()
     markers.clear();
 }
 
+static const long MARKERS_COOKY = 0x17742C32;
 void map_markers::write(writer &outf) const
 {
-    // how many markers
+    marshallLong(outf, MARKERS_COOKY);
+
+    std::vector<unsigned char> buf;
+
     marshallShort(outf, markers.size());
     for (dgn_marker_map::const_iterator i = markers.begin();
          i != markers.end(); ++i)
     {
-        i->second->write(outf);
+        buf.clear();
+        writer tmp_outf(&buf);
+        i->second->write(tmp_outf);
+
+        // Write the marker data, prefixed by a size
+        marshallLong(outf, buf.size());
+        outf.write(&buf[0], buf.size());
     }
 }
 
-void map_markers::read(reader &inf)
+void map_markers::read(reader &inf, int minorVersion)
 {
     clear();
+
+    if (minorVersion >= TAG_MINOR_MAPMARK)
+    {
+        const long cooky = unmarshallLong(inf);
+        ASSERT(cooky == MARKERS_COOKY);
+    }
+
     const int nmarkers = unmarshallShort(inf);
     for (int i = 0; i < nmarkers; ++i)
+    {
+        // used by tools
+        if (minorVersion >= TAG_MINOR_MAPMARK)
+            unmarshallLong(inf);
         if (map_marker *mark = map_marker::read_marker(inf))
+        {
             add(mark);
+        }
+    }
 }

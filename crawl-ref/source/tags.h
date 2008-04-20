@@ -41,6 +41,21 @@ enum tag_file_type   // file types supported by tag system
     TAGTYPE_PLAYER_NAME         // Used only to read the player name
 };
 
+enum tag_major_version
+{
+    TAG_MAJOR_START = 5,
+    TAG_MAJOR_VERSION = 5
+};
+
+enum tag_minor_version
+{
+    TAG_MINOR_PIETY = 2,        // Added piety_hysteresis
+    TAG_MINOR_QUIVER = 3,       // Added quiver
+    TAG_MINOR_MAPMARK = 4,      // Added sizes to map markers
+    TAG_MINOR_VERSION = 4       // Current version
+};
+
+
 /* ***********************************************************************
  * writer API
  * *********************************************************************** */
