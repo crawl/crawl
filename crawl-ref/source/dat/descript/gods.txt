@@ -29,9 +29,8 @@ The Shining One is a powerful deity on an endless crusade against all
 evil. Followers and their allies may be granted various blessings upon 
 slaying unholy creatures. Worshippers must never use evil magic, and 
 are expected to prove their moral superiority by fighting honourably 
-and sacrificing evil items. This God appreciates long-standing 
-persistence. The Shining One does not mind shifting worship to Elyvilon 
-or Zin.
+and sacrificing evil items. Long-standing persistence is appreciated. 
+The Shining One does not mind shifting worship to Elyvilon or Zin.
 %%%%
 Kikubaaqudgha
 
