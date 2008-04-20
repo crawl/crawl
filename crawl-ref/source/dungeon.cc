@@ -938,7 +938,7 @@ static void _fixup_branch_stairs()
     }
 }
 
-static void _fixup_duplicate_stairs()
+static bool _fixup_duplicate_stairs(bool preserve_vault_stairs)
 {
     // This function ensures that there is no more than one of each up and down
     // stone stairs I, II, and III.  More than three stairs will result in
@@ -969,6 +969,8 @@ static void _fixup_duplicate_stairs()
             }
         }
 
+    bool success = true;
+
     for (unsigned int i = 0; i < 2; i++)
     {
         FixedVector<coord_def, max_stairs>& stair_list = (i == 0) ? up_stairs
@@ -990,6 +992,11 @@ static void _fixup_duplicate_stairs()
             base = DNGN_STONE_STAIRS_DOWN_I;
         }
 
+        // In Zot, don't create extra escape hatches, in order to force
+        // the player through vaults that use all three down stone stairs.
+        if (player_in_branch(BRANCH_HALL_OF_ZOT))
+            replace = DNGN_GRANITE_STATUE;
+
         if (num_stairs > 3)
         {
             // Find pairwise stairs that are connected and turn one of them
@@ -1003,6 +1010,12 @@ static void _fixup_duplicate_stairs()
                 {
                     if (num_stairs <= 3)
                         break;
+
+                    if (preserve_vault_stairs &&
+                        (dgn_Map_Mask(stair_list[s2]) & MMT_VAULT))
+                    {
+                        continue;
+                    }
 
                     flood_find<feature_grid, coord_predicate> ff(env.grid,
                         in_bounds);
@@ -1031,10 +1044,33 @@ static void _fixup_duplicate_stairs()
             while (num_stairs > 3)
             {
                 int remove = random2(num_stairs);
+                if (preserve_vault_stairs)
+                {
+                    int start = remove;
+                    do
+                    { 
+                        if (!(dgn_Map_Mask(stair_list[remove]) & MMT_VAULT))
+                            break;
+                        remove = (remove + 1) % num_stairs;
+                    }
+                    while (start != remove);
+
+                    // If we looped through all possibilities, then it
+                    // means that there are more than 3 stairs in vaults and
+                    // we can't preserve vault stairs.
+                    if (start == remove)
+                        break;
+                }
                 grd(stair_list[remove]) = replace;
 
                 stair_list[remove] = stair_list[--num_stairs];
             }
+        }
+
+        if (num_stairs > 3 && preserve_vault_stairs)
+        {
+            success = false;
+            continue;
         }
 
         ASSERT(num_stairs <= 3);
@@ -1058,6 +1094,8 @@ static void _fixup_duplicate_stairs()
             }
         }
     }
+
+    return success;
 }
 
 static void _dgn_verify_connectivity(unsigned nvaults)
@@ -1201,7 +1239,13 @@ static void _build_dungeon_level(int level_number, int level_type)
     if (level_type == LEVEL_PANDEMONIUM)
         _fixup_pandemonium_stairs();
 
-    _fixup_duplicate_stairs();
+    if (!_fixup_duplicate_stairs(true))
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Warning: failed to preserve vault stairs.");
+#endif
+        _fixup_duplicate_stairs(false);
+    }
 }                               // end builder()
 
 
