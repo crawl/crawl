@@ -125,7 +125,7 @@ void drain_life(int pow);
  * returns TRUE if a stat was restored.
  * *********************************************************************** */
 bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
-                  bool suppress_msg);
+                  bool suppress_msg, bool recovery = false);
 
 
 // last updated 24may2000 {dlb}

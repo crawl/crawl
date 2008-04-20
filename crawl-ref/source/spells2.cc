@@ -690,10 +690,11 @@ bool brand_weapon(brand_type which_brand, int power)
 }                               // end brand_weapon()
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying
-// a message if suppress_msg is false.  If stat_gain is 0, restore the
-// stat completely.
+// a message if suppress_msg is false, and doing so in the recovery
+// channel if recovery is true.  If stat_gain is 0, restore the stat
+// completely.
 bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
-                  bool suppress_msg)
+                  bool suppress_msg, bool recovery)
 {
     bool stat_restored = false;
 
@@ -750,7 +751,7 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
     {
         msg += " returning.";
         if ( !suppress_msg )
-            mpr(msg.c_str(), MSGCH_RECOVERY);
+            mpr(msg.c_str(), (recovery) ? MSGCH_RECOVERY : MSGCH_PLAIN);
 
         if (stat_gain == 0 || *ptr_stat + stat_gain > *ptr_stat_max)
             stat_gain = *ptr_stat_max - *ptr_stat;

@@ -38,7 +38,7 @@ enum msg_channel_type
     MSGCH_MONSTER_ENCHANT,// monsters enchantments up and down
     MSGCH_MONSTER_DAMAGE, // monster damage reports (param is level)
     MSGCH_MONSTER_TARGET, // message marking the monster as a target
-    MSGCH_ROTTEN_MEAT,    // messages about chunks/corpses becoming rotten  
+    MSGCH_ROTTEN_MEAT,    // messages about chunks/corpses becoming rotten
     MSGCH_EQUIPMENT,      // equipment listing messages
     MSGCH_FLOOR_ITEMS,    // like equipment, but lists of floor items
     MSGCH_MULTITURN_ACTION,  // delayed action messages
