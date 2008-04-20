@@ -1,4 +1,4 @@
-﻿
+
 The Dungeon Crawl Stone Soup team (Peter Berger, Matthew Cline, Paul Du Bois,
 Nat Lanza, Haran Pilpel, David Ploog, Johanna Ploog, David Lawrence Ramsey,
 Darshan Shaligram, Enne Walker) would like to thank:
@@ -15,14 +15,14 @@ Darshan Shaligram, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Ilyak                     Stefan O'Rear
-Juha Arpiainen               Mitsuhiro Itakura         Yuuma Oohara
-Roy Axenov                   Eino Keskitalo            Erik Piper
-Bill Beher                   Jarmo Kielosto            Lemuel Pitkin
-Alexander Beisig             Kornel Kisielewicz        Remsleep
-Erik Inge Bolsø              Vsevolod Kozlov           David Rose
-Peter Borgmann               Ryan Kusnery              Sebastian Salman
-Terje Bø                     Jukka Kuusisto            Brett Scarborough
+Warwick Allison              Ilyak                     Yuuma Oohara
+Juha Arpiainen               Mitsuhiro Itakura         Erik Piper
+Roy Axenov                   Eino Keskitalo            Lemuel Pitkin
+Bill Beher                   Jarmo Kielosto            Remsleep
+Alexander Beisig             Kornel Kisielewicz        David Rose
+Erik Inge Bolsø              Vsevolod Kozlov           Sebastian Salman
+Peter Borgmann               Ryan Kusnery              Brett Scarborough
+Terje Bø                     Jukka Kuusisto            Robert Shimmin
 Denzi                        Jordan Lewis              Sigurd
 Rachel Elizabeth Dillon      Icy Lich                  Edgar Simo
 Mike Drinen                  Jesse Luehrs              Solf
@@ -34,4 +34,4 @@ Ciaran Hamilton              Onia Ninara               Matt Titus
 Chris Hamons                 Erkki Nurmi               Steven Wheeler
 R. Dan Henry                 nyra                      Jeremey Wilson
 Benoit Hudson                Dylan O'Donnell           Zooko
-Iainuki                
+Iainuki                      Stefan O'Rear             
