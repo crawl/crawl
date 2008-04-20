@@ -81,7 +81,7 @@ void cast_cure_poison(int mabil);
 int  allowed_deaths_door_hp(void);
 void cast_deaths_door(int pow);
 int cast_fire_storm(int powc, bolt &beam);
-bool cast_revivification(int power);
+bool cast_revivification(int pow);
 void cast_berserk(void);
 void cast_ring_of_flames(int power);
 bool conjure_flame(int pow);

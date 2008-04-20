@@ -766,7 +766,7 @@ int cast_revitalisation( int pow )
     return cast_healing(pow, you.x_pos, you.y_pos); // target yourself
 }
 
-bool cast_revivification(int power)
+bool cast_revivification(int pow)
 {
     int loopy = 0;              // general purpose loop variable {dlb}
     bool success = false;
@@ -783,12 +783,12 @@ bool cast_revivification(int power)
         loss = 2;
         for (loopy = 0; loopy < 9; loopy++)
         {
-            if (random2(power) < 8)
+            if (random2(pow) < 8)
                 loss++;
         }
 
-        dec_max_hp( loss );
-        set_hp( you.hp_max, false );
+        dec_max_hp(loss);
+        set_hp(you.hp_max, false);
         success = true;
     }
 
