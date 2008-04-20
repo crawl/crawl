@@ -3326,8 +3326,6 @@ void show_map( coord_def &spec_place, bool travel_mode )
             if (getty == '/' || getty == '*' || getty == ';' || getty == '\'')
                 getty = 'I';
 
-            move_x = 0;
-            move_y = 0;
             if (anchor_x == -1)
             {
                 anchor_x = start_x + curs_x - 1;
@@ -3357,7 +3355,6 @@ void show_map( coord_def &spec_place, bool travel_mode )
         }
 
         case CK_MOUSE_MOVE:
-            move_x = move_y = 0;
             break;
 
         case CK_MOUSE_CLICK:
@@ -3421,8 +3418,6 @@ void show_map( coord_def &spec_place, bool travel_mode )
 #endif
 
         default:
-            move_x = 0;
-            move_y = 0;
             if (travel_mode)
             {
                 map_alive = false;
@@ -3435,6 +3430,15 @@ void show_map( coord_def &spec_place, bool travel_mode )
         if (!map_alive)
             break;
 
+#ifdef USE_TILE
+        {
+            int new_x = start_x + curs_x + move_x - 1;
+            int new_y = start_y + curs_y + move_y - 1;
+
+            curs_x += (new_x < 1 || new_x > GXM) ? 0 : move_x;
+            curs_y += (new_y < 1 || new_y > GYM) ? 0 : move_y;
+        }
+#else
         if (curs_x + move_x < 1 || curs_x + move_x > crawl_view.termsz.x)
             move_x = 0;
 
@@ -3483,6 +3487,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
             move_y = 0;
 
         curs_y += move_y;
+#endif
     }
 
     return;
