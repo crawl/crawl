@@ -132,7 +132,7 @@ Branch branches[] = {
       "Temple", "the Ecumenical Temple", "Temple",
       NULL,
       false, false, LIGHTGREY, LIGHTGREY,
-      mons_standard_rare, mons_standard_level, 
+      mons_standard_rare, mons_standard_level,
       traps_zero_number, NULL, NULL, NULL, // No traps in temple
       0, 'T', false, false },
 
@@ -168,10 +168,10 @@ Branch branches[] = {
       "Swamp", "the Swamp", "Swamp",
       NULL,
       true, true, BROWN, BROWN,
-      mons_swamp_rare, mons_swamp_level, 
+      mons_swamp_rare, mons_swamp_level,
       NULL, NULL, NULL, NULL,
       0, 'S', false, true },
-    
+
     { BRANCH_SHOALS, BRANCH_LAIR, 5, 4, BFLAG_ISLANDED, 0,
       DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
       "Shoals", "the Shoals", "Shoal",
@@ -204,7 +204,7 @@ Branch branches[] = {
       "Hive", "the Hive", "Hive",
       "You hear a buzzing sound coming from all directions.",
       false, false, YELLOW, BROWN,
-      mons_hive_rare, mons_hive_level, 
+      mons_hive_rare, mons_hive_level,
       NULL, NULL, NULL, NULL,
       0, 'H', false, true },
 
@@ -223,7 +223,7 @@ Branch branches[] = {
       "Hall of Blades", "the Hall of Blades", "Blade",
       NULL,
       false, true, LIGHTGREY, LIGHTGREY,
-      mons_hallblade_rare, mons_hallblade_level, 
+      mons_hallblade_rare, mons_hallblade_level,
       NULL, NULL, NULL, NULL,
       0, 'B', false, false },
 
@@ -241,7 +241,7 @@ Branch branches[] = {
       "Tomb", "the Tomb of the Ancients", "Tomb",
       NULL,
       false, true, YELLOW, LIGHTGREY,
-      mons_tomb_rare, mons_tomb_level, 
+      mons_tomb_rare, mons_tomb_level,
       NULL, NULL, NULL, NULL,
       0, 'G', false, true },
 

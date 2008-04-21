@@ -51,7 +51,7 @@ static int _mons_misc_level(int mcls)
     {
     case '&':
         return 35;
-        
+
     case '1':
         return 30;
 
