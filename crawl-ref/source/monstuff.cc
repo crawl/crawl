@@ -1960,16 +1960,24 @@ static bool _wounded_damaged(int monster_type)
 void behaviour_event( monsters *mon, int event, int src,
                       int src_x, int src_y )
 {
-    bool isSmart        = (mons_intel(mon->type) > I_ANIMAL);
-    bool isFriendly     = mons_friendly(mon);
-    bool sourceFriendly = false;
-    bool setTarget      = false;
-    bool breakCharm     = false;
+    bool isSmart          = (mons_intel(mon->type) > I_ANIMAL);
+    bool isFriendly       = mons_friendly(mon);
+    bool wontAttack       = mons_wont_attack(mon);
+    bool sourceFriendly   = false;
+    bool sourceWontAttack = false;
+    bool setTarget        = false;
+    bool breakCharm       = false;
 
     if (src == MHITYOU)
+    {
         sourceFriendly = true;
+        sourceWontAttack = true;
+    }
     else if (src != MHITNOT)
+    {
         sourceFriendly = mons_friendly( &menv[src] );
+        sourceWontAttack = mons_wont_attack( &menv[src] );
+    }
 
     switch(event)
     {
@@ -1993,12 +2001,14 @@ void behaviour_event( monsters *mon, int event, int src,
     case ME_WHACK:
     case ME_ANNOY:
         // will turn monster against <src>, unless they
-        // are BOTH friendly and stupid, or else fleeing anyway.
-        // Hitting someone over the head, of course,
-        // always triggers this code.
+        // are BOTH friendly or good neutral and stupid,
+        // or else fleeing anyway. Hitting someone over
+        // the head, of course, always triggers this code.
         if (event == ME_WHACK
-            || ((isFriendly != sourceFriendly || isSmart)
-                && mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC))
+            || (((isFriendly != sourceFriendly &&
+                wontAttack != sourceWontAttack) || isSmart)
+                   && mon->behaviour != BEH_FLEE
+                   && mon->behaviour != BEH_PANIC))
         {
             // (plain) plants and fungi cannot flee or fight back
             if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT)
@@ -2190,7 +2200,7 @@ static void _handle_behaviour(monsters *mon)
         }
     }
 
-    if (mon->attitude == ATT_NEUTRAL && mon->foe == MHITNOT)
+    if (isNeutral && mon->foe == MHITNOT)
         _set_nearest_monster_foe(mon);
 
     // monsters do not attack themselves {dlb}
@@ -2206,7 +2216,7 @@ static void _handle_behaviour(monsters *mon)
     }
 
     // neutral monsters prefer not to attack players, or other neutrals
-    if (mon->foe != MHITNOT && isNeutral
+    if (isNeutral && mon->foe != MHITNOT
         && (mon->foe == MHITYOU || mons_neutral(&menv[mon->foe])))
     {
         mon->foe = MHITNOT;
