@@ -1961,23 +1961,15 @@ void behaviour_event( monsters *mon, int event, int src,
                       int src_x, int src_y )
 {
     bool isSmart          = (mons_intel(mon->type) > I_ANIMAL);
-    bool isFriendly       = mons_friendly(mon);
     bool wontAttack       = mons_wont_attack(mon);
-    bool sourceFriendly   = false;
     bool sourceWontAttack = false;
     bool setTarget        = false;
     bool breakCharm       = false;
 
     if (src == MHITYOU)
-    {
-        sourceFriendly = true;
         sourceWontAttack = true;
-    }
     else if (src != MHITNOT)
-    {
-        sourceFriendly = mons_friendly( &menv[src] );
         sourceWontAttack = mons_wont_attack( &menv[src] );
-    }
 
     switch(event)
     {
@@ -2005,10 +1997,8 @@ void behaviour_event( monsters *mon, int event, int src,
         // or else fleeing anyway. Hitting someone over
         // the head, of course, always triggers this code.
         if (event == ME_WHACK
-            || (((isFriendly != sourceFriendly &&
-                wontAttack != sourceWontAttack) || isSmart)
-                   && mon->behaviour != BEH_FLEE
-                   && mon->behaviour != BEH_PANIC))
+            || ((wontAttack != sourceWontAttack || isSmart)
+               && mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC))
         {
             // (plain) plants and fungi cannot flee or fight back
             if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT)
