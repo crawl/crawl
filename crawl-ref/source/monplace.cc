@@ -896,8 +896,14 @@ static band_type choose_band( int mon_type, int power, int &band_size )
         if (coinflip())
             break;
         // intentional fall-through {dlb}
-    case MONS_ORC_WARRIOR:
+    case MONS_ORC_WIZARD:
         band = BAND_ORCS;
+        band_size = 2 + random2(3);
+        break;
+
+    case MONS_ORC_PRIEST:
+    case MONS_ORC_WARRIOR:
+        band = BAND_ORC_WARRIOR;
         band_size = 2 + random2(3);
         break;
 
@@ -1311,6 +1317,10 @@ static int band_member(band_type band, int power)
         break;
 
     case BAND_ORCS:
+        mon_type = MONS_ORC;
+        break;
+
+    case BAND_ORC_WARRIOR:
         mon_type = MONS_ORC;
         if (one_chance_in(5))
             mon_type = MONS_ORC_WIZARD;

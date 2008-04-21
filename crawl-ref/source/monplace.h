@@ -23,17 +23,18 @@ enum band_type
     BAND_NO_BAND                = 0,
     BAND_KOBOLDS                = 1,
     BAND_ORCS,
+    BAND_ORC_WARRIOR,
     BAND_ORC_KNIGHT,
-    BAND_KILLER_BEES,
-    BAND_FLYING_SKULLS,         // 5
+    BAND_KILLER_BEES,           // 5
+    BAND_FLYING_SKULLS,
     BAND_SLIME_CREATURES,
     BAND_YAKS,
     BAND_UGLY_THINGS,
-    BAND_HELL_HOUNDS,
-    BAND_JACKALS,               // 10
+    BAND_HELL_HOUNDS,           // 10
+    BAND_JACKALS,
     BAND_HELL_KNIGHTS,
     BAND_ORC_HIGH_PRIEST,
-    BAND_GNOLLS,                // 13
+    BAND_GNOLLS,                // 14
     BAND_BUMBLEBEES             = 16,
     BAND_CENTAURS,
     BAND_YAKTAURS,

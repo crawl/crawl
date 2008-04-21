@@ -2479,6 +2479,7 @@ int mons_standard_level(int mcls)
         return 6;
 
     case MONS_ORC:
+    case MONS_ORC_PRIEST:
         return 7;
 
     case MONS_FUNGUS:
@@ -2554,7 +2555,6 @@ int mons_standard_level(int mcls)
     case MONS_GOLD_MIMIC:
     case MONS_HYDRA:
     case MONS_MOTTLED_DRAGON:
-    case MONS_ORC_PRIEST:
     case MONS_POTION_MIMIC:
     case MONS_SCROLL_MIMIC:
     case MONS_SKELETAL_WARRIOR:
