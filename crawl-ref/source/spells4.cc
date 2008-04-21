@@ -2795,7 +2795,8 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
     if (you.level_type == LEVEL_ABYSS)
     {
         abyss_teleport( false );
-        you.pet_target = MHITNOT;
+        if (you.pet_target != MHITYOU)
+            you.pet_target = MHITNOT;
         return (1);
     }
 

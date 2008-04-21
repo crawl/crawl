@@ -1648,7 +1648,8 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     you.prev_targ  = MHITNOT;
-    you.pet_target = MHITNOT;
+    if (you.pet_target != MHITYOU)
+        you.pet_target = MHITNOT;
 
     you.prev_grd_targ = coord_def(0, 0);
 
@@ -1982,7 +1983,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     }
 
     you.prev_targ  = MHITNOT;
-    you.pet_target = MHITNOT;
+    if (you.pet_target != MHITYOU)
+        you.pet_target = MHITNOT;
 
     you.prev_grd_targ = coord_def(0, 0);
 

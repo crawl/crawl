@@ -4225,7 +4225,8 @@ static void _move_player(int move_x, int move_y)
                     || you.y_pos <= 15 || you.y_pos >= (GYM - 16)))
     {
         area_shift();
-        you.pet_target = MHITNOT;
+        if (you.pet_target != MHITYOU)
+            you.pet_target = MHITNOT;
 
 #if DEBUG_DIAGNOSTICS
         mpr( "Shifting.", MSGCH_DIAGNOSTICS );

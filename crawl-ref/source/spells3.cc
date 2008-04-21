@@ -612,7 +612,8 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     if (you.level_type == LEVEL_ABYSS)
     {
         abyss_teleport( new_abyss_area );
-        you.pet_target = MHITNOT;
+        if (you.pet_target != MHITYOU)
+            you.pet_target = MHITNOT;
         return true;
     }
 

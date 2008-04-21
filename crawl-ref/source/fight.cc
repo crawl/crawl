@@ -3038,11 +3038,21 @@ int melee_attack::player_calc_base_weapon_damage()
 bool melee_attack::mons_attack_mons()
 {
     mons_perform_attack();
+
     if (perceived_attack && (def->foe == MHITNOT || one_chance_in(3))
         && atk->alive() && def->alive())
     {
         behaviour_event(def, ME_WHACK, monster_index(atk));
     }
+
+    // if an enemy attacked a friend, set the pet target if it isn't
+    // set already
+    if (perceived_attack && atk->alive() && mons_friendly(def)
+        && !mons_wont_attack(atk) && you.pet_target == MHITNOT)
+    {
+        you.pet_target = monster_index(atk);
+    }
+
     return (did_hit);
 }
 

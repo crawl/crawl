@@ -151,7 +151,8 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         else if (you.level_type == LEVEL_ABYSS && !wizard_blink)
         {
             abyss_teleport( false );
-            you.pet_target = MHITNOT;
+            if (you.pet_target != MHITYOU)
+                you.pet_target = MHITNOT;
         }
         else
         {
@@ -222,7 +223,8 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         if (you.level_type == LEVEL_ABYSS)
         {
             abyss_teleport( false );
-            you.pet_target = MHITNOT;
+            if (you.pet_target != MHITYOU)
+                you.pet_target = MHITNOT;
         }
     }
 

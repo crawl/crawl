@@ -1913,6 +1913,8 @@ void yell(bool force)
                 targ_prev = true;
             }
         }
+
+        mpr(" h - Order allies to stop attacking");
    }
 
     mprf(" Anything else - Stay silent%s",
@@ -1967,7 +1969,12 @@ void yell(bool force)
             mons_targd = you.prev_targ;
             break;
         }
-        /* fall through... */
+
+    case 'h':
+        mons_targd = MHITYOU;
+        break;
+
+    /* fall through... */
     default:
         mpr("Okely-dokely.");
         return;
@@ -1980,7 +1987,7 @@ void yell(bool force)
     }
 
     noisy( 10, you.x_pos, you.y_pos );
-    mpr("Attack!");
+    mpr(mons_targd == MHITYOU ? "Heel!" : "Attack!");
 }                               // end yell()
 
 bool forget_inventory(bool quiet)
