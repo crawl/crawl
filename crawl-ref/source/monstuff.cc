@@ -915,7 +915,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             {
                 // For TSO, give health from killing evil, or randomly
                 // bless a follower.
-                if (you.religion == GOD_SHINING_ONE && one_chance_in(3)
+                if (you.religion == GOD_SHINING_ONE && !one_chance_in(3)
                     && bless_follower())
                 {
                     break;
@@ -1073,7 +1073,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
                     // Give a follower health from killing evil, or
                     // randomly bless it.
-                    if (one_chance_in(3) && bless_follower(mon))
+                    if (!one_chance_in(3) && bless_follower(mon))
                         break;
 
                     if (mon->alive() && mon->hit_points < mon->max_hit_points)

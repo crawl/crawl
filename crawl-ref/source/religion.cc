@@ -1135,7 +1135,7 @@ bool bless_follower(monsters* follower,
         {
             // Extend a monster's stay if it's abjurable, optionally
             // making it friendly if it's charmed.  If neither is
-            // possible, deliberately fall through.
+            // possible, either deliberately fall through or get out.
             bool more_time = _tso_blessing_extend_stay(mon);
             bool friendliness = false;
 
@@ -1151,6 +1151,9 @@ bool bless_follower(monsters* follower,
 
             if (more_time || friendliness)
                 break;
+
+            if (coinflip())
+                return false;
         }
 
         case GOD_BEOGH:
