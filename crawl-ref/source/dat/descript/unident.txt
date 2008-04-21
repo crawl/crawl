@@ -40,14 +40,14 @@ potion
 
 A small bottle of liquid.
 
-"Then gave I her, -- so tutor'd by my art, --	 
-A sleeping potion; which so took effect
-As I intended, for it wrought on her
-The form of death: meantime I writ to Romeo
-That he should hither come as this dire night,
-To help to take her from her borrow'd grave,
-Being the time the potion's force should cease."
-	-William Shakespeare, _Romeo and Juliet_
+"Then gave I her, -- so tutor'd by my art, --
+ A sleeping potion; which so took effect
+ As I intended, for it wrought on her
+ The form of death: meantime I writ to Romeo
+ That he should hither come as this dire night,
+ To help to take her from her borrow'd grave,
+ Being the time the potion's force should cease."
+    -William Shakespeare, _Romeo and Juliet_
 %%%%
 ring
 

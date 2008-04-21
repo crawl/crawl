@@ -26,17 +26,17 @@ $"On the other hand, Confucius is made to say to his disciples, 'I know how bird
 
 "This Dragon had Two furious Wings
    Each one upon each Shoulder;
-With a Sting in his Tail as long as a Flail,
+ With a Sting in his Tail as long as a Flail,
    Which made him bolder and bolder.
-He had long Claws, and in his Jaws 
+ He had long Claws, and in his Jaws 
    Four and forty Teeth of Iron;
-With a Hide as tough, as any Buff,
+ With a Hide as tough, as any Buff,
    Which did him round environ."
 
-    -"An Excellent Ballad of a moſt dreadful Combat, fought between
+    -"An Excellent Ballad of a most dreadful Combat, fought between
     Moore of Moore-Hall, and the Dragon of Wantley", retold by
     Ambrose Philips, _A Collection of Old Ballads. Corrected from the
-    Best and Most Ancient Copies Extant. With Introductions Historical, 
+    Best and Most Ancient Copies Extant. With Introductions Historical,
     Critical, Or Humorous_.  1723.
 %%%%
 __cap-K_suffix
@@ -65,32 +65,32 @@ at us. May it please Your Majesty to enquire who is.'"
 %%%%
 __cap-O_suffix
 
-"The little princess, asleep in her cradle, floated on the water, and at 
-last she was cast up on the shore of a beautiful country, where, however, 
-very few people dwelt since the ogre Ravagio and his wife Tourmentine had 
-gone to live there-for they ate up everybody. Ogres are terrible people. 
-When once they have tasted raw human flesh they will hardly eat anything 
-else, and Tourmentine always knew how to make some body come their way, 
+"The little princess, asleep in her cradle, floated on the water, and at
+last she was cast up on the shore of a beautiful country, where, however,
+very few people dwelt since the ogre Ravagio and his wife Tourmentine had
+gone to live there-for they ate up everybody. Ogres are terrible people.
+When once they have tasted raw human flesh they will hardly eat anything
+else, and Tourmentine always knew how to make some body come their way,
 for she was half a fairy."
-	-Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, 
-	"'Orangier et l'Abeille".  1697
-	
+    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy,
+    "'Orangier et l'Abeille".  1697
+
 "NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get it? We both have layers."
-	-Shrek.  2001.
+    -Shrek.  2001.
 %%%%
 __cap-S_suffix
 
-$"The latter lived in the country, and before his house there was an oak, 
-in which there was a lair of snakes. His servants killed the snakes, but 
-Melampus gathered wood and burnt the reptiles, and reared the young ones. 
-And when the young were full grown, they stood beside him at each of his 
-shoulders as he slept, and they purged his ears with their tongues. He 
-started up in a great fright, but understood the voices of the birds flying 
-overhead, and from what he learned from them he foretold to men what should 
+$"The latter lived in the country, and before his house there was an oak,
+in which there was a lair of snakes. His servants killed the snakes, but
+Melampus gathered wood and burnt the reptiles, and reared the young ones.
+And when the young were full grown, they stood beside him at each of his
+shoulders as he slept, and they purged his ears with their tongues. He
+started up in a great fright, but understood the voices of the birds flying
+overhead, and from what he learned from them he foretold to men what should
 come to pass."
     -Apollodurus (apocryphal), Library and Epitome, 1.9.11. circa 150 BC.
     Sir James George Frazer, translator
-	 
+
 "A snake, with mottles rare,
 Surveyed my chamber floor,
 In feature as the worm before,
@@ -99,19 +99,19 @@ But ringed with power."
 %%%%
 __cap-T_suffix
 
-$"Buckshank bold and Elfinstone,
-And more than I can mention here,
-They caused to be built so stout a ship,
-And unto Iceland they would steer.
+$
+"Buckshank bold and Elfinstone,
+ And more than I can mention here,
+ They caused to be built so stout a ship,
+ And unto Iceland they would steer.
 
-They launched the ship upon the main,
-Which bellowed like a wrathful bear;
-Down to the bottom the vessel sank,
-A laidly Trold has dragged it there."
+ They launched the ship upon the main,
+ Which bellowed like a wrathful bear;
+ Down to the bottom the vessel sank,
+ A laidly Trold has dragged it there."
     -George Borrow, _Lavengro_
-&
 
-You feel a lump in the pit of your stomach.  
+You feel a lump in the pit of your stomach.
 %%%%
 Agnes
 
@@ -121,10 +121,10 @@ Antaeus
 
 A great titan who lives in the depths of Cocytus.
 
-"That country was then ruled by Antaeus, son of Poseidon, who used to 
-kill strangers by forcing them to wrestle. Being forced to wrestle with 
-him, Hercules hugged him, lifted him aloft, broke and killed him; for 
-when he touched earth so it was that he waxed stronger, wherefore some 
+"That country was then ruled by Antaeus, son of Poseidon, who used to
+kill strangers by forcing them to wrestle. Being forced to wrestle with
+him, Hercules hugged him, lifted him aloft, broke and killed him; for
+when he touched earth so it was that he waxed stronger, wherefore some
 said that he was a son of Earth."
     -Apollodorus (apocryphal), _Library and Epitome_, 2.5.11, circa 150 BC.
     Sir James George Frazer, translator.
@@ -158,8 +158,8 @@ Cacodemon
 
 A hideously ugly demon of rage and legendary power.
 
-"We'll call him Cacodemon, with his black Gib there, his Succuba, his 
-Devil's Seed, his Spawn of Phlegethon, that o' my Conſience was bred 
+"We'll call him Cacodemon, with his black Gib there, his Succuba, his
+Devil's Seed, his Spawn of Phlegethon, that o' my Consience was bred
 o' the Spume of Cocytus."
     -John Fletcher, _The Knight of Malta_.  1647.
 %%%%
@@ -191,8 +191,8 @@ Edmund
 A lightly armoured warrior.
 
 "When the forces stood in array Edmund proposed to decide their claims 
-by single combat; but Canute saying that he, a man of small stature, 
-would have little chance against the tall athletic Edmund, proposed, on 
+by single combat; but Canute saying that he, a man of small stature,
+would have little chance against the tall athletic Edmund, proposed, on
 the contrary, for them to divide the realm as their fathers had done."
     -Thomas Keightley, _The History of England_. 1839.
 %%%%
@@ -232,7 +232,7 @@ A huge, three-headed, winged arch-demon, guardian of the gates of Hell.
 triple-headed Geryon, but Geryon was killed by the great strength of Herakles at
 sea-circled Erytheis beside his own shambling cattle on that day when Herakles drove
 those broad-faced cattle toward holy Tiryns, when he crossed the stream of Okeanos and
-had killed Orthos and the oxherd Eurytion out in the gloomy meadow beyond fabulous 
+had killed Orthos and the oxherd Eurytion out in the gloomy meadow beyond fabulous
 Okeanos."
     -Hesiod, _Theogony_, circa 700 BCE.
 %%%%
@@ -353,15 +353,15 @@ A fair-haired mage, wandering and seemingly half-mad
 with grief and guilt.
 
 "Let Psyche's corpse be clad in mourning weed
-And set on rock of yonder hill aloft;
-Her husband is no wight of human seed,
-But serpent dire and fierce, as may be thought, 
-Who flies with wings above in starry skies,
-And doth subdue each thing with fiery flight.
-The Gods themselves and powers that seem so wise 
-With mighty love be subject to his might.
-The rivers black and deadly floods of pain
-And darkness eke as thrall to him remain."
+ And set on rock of yonder hill aloft;
+ Her husband is no wight of human seed,
+ But serpent dire and fierce, as may be thought, 
+ Who flies with wings above in starry skies,
+ And doth subdue each thing with fiery flight.
+ The Gods themselves and powers that seem so wise 
+ With mighty love be subject to his might.
+ The rivers black and deadly floods of pain
+ And darkness eke as thrall to him remain."
     -Apuleius, _Asinus aureus_, "Cupid and Psyche"
     circa 160 AD.  William Adlington, Translator, 1566.
 %%%%
@@ -382,17 +382,17 @@ Sigmund
 An evil and spry old man, whose eyes twinkle with sadness, and also with madness. Sigmund 
 wields a nasty-looking scythe.
 
-"But Sigmund turned him about, and he said: 'What aileth thee, son?  
-Shall our life-days never be merry, and our labour never be done?'  
+"But Sigmund turned him about, and he said: 'What aileth thee, son?
+ Shall our life-days never be merry, and our labour never be done?'
 
-But Sinfiotli said: 'I have looked, and lo, there is death in the cup.'
+ But Sinfiotli said: 'I have looked, and lo, there is death in the cup.'
 
-And the song, and the tinkling of harp-strings to the roof-tree winded up;
-And Sigmund was dreamy with wine and the wearing of many a year;
-And the noise and the glee of the people as the sound of the wild woods were 
-And the blossoming boughs of the Branstock were the wild trees waving about;
+ And the song, and the tinkling of harp-strings to the roof-tree winded up;
+ And Sigmund was dreamy with wine and the wearing of many a year;
+ And the noise and the glee of the people as the sound of the wild woods were 
+ And the blossoming boughs of the Branstock were the wild trees waving about;
 
-So he said: 'Well seen, my fosterling; let the lip then strain it out.'"
+ So he said: 'Well seen, my fosterling; let the lip then strain it out.'"
     -William Morris, _The Story of Sigurd the Volsung and the Fall of the Niblungs. 1891.
 %%%%
 Snorg
@@ -408,21 +408,21 @@ Tiamat
 A powerful dragon with mighty wings.  Her scales seem to shimmer and change colour as you watch.
 
 "He saith that Tiamat our mother hath conceived a hatred for us,
-With all her force she rageth, full of wrath.
-All the gods have turned to her,
-With those, whom ye created, they go at her side.
-They are banded together, and at the side of Tiamat they advance;
-They are furious, they devise mischief without resting night and day.
-They prepare for battle, fuming and raging;
-They have joined their forces and are making war.
-Tiamat who formed all things,
-Made in addition weapons invincible; she spawned monster-serpents,
-Sharp of tooth, and merciless of fang;
-With poison, instead of blood, she filled their bodies.
-Fierce monster-vipers she clothed with terror,
-With splendor she decked them, she made them of lofty stature.
-Whoever beheld them, terror overcame him,
-Their bodies reared up and none could withstand their attack."
+ With all her force she rageth, full of wrath.
+ All the gods have turned to her,
+ With those, whom ye created, they go at her side.
+ They are banded together, and at the side of Tiamat they advance;
+ They are furious, they devise mischief without resting night and day.
+ They prepare for battle, fuming and raging;
+ They have joined their forces and are making war.
+ Tiamat who formed all things,
+ Made in addition weapons invincible; she spawned monster-serpents,
+ Sharp of tooth, and merciless of fang;
+ With poison, instead of blood, she filled their bodies.
+ Fierce monster-vipers she clothed with terror,
+ With splendor she decked them, she made them of lofty stature.
+ Whoever beheld them, terror overcame him,
+ Their bodies reared up and none could withstand their attack."
     -Enuma Elish, Third Tablet. circa 668 BCE.
 %%%%
 Urug
@@ -512,16 +512,16 @@ boggart
 
 A twisted little sprite-goblin. Beware of its magical tricks!
 
-"He thinks every buſh a boggart."
-    -John Ray, _A Compleat Collection of English Proverbs_.  1768. 
+"He thinks every bush a boggart."
+    -John Ray, _A Compleat Collection of English Proverbs_.  1768.
 
-"A BOGGART intruded himself, upon what pretext or by what authority is unknown, 
-into the house of a quiet, inoffensive, and laborious farmer; and, when once it 
-had taken possession it disputed the right of domicile with the legal mortal 
-tenant, in a very unneighbourly and arbitrary manner. In particular, it seemed 
-to have a great aversion to children. As there is no point on which a parent 
-feels more acutely than that of the maltreatment of his offspring, the feelings 
-of the father and more particularly of his good dame, were daily, ay, and 
+"A BOGGART intruded himself, upon what pretext or by what authority is unknown,
+into the house of a quiet, inoffensive, and laborious farmer; and, when once it
+had taken possession it disputed the right of domicile with the legal mortal
+tenant, in a very unneighbourly and arbitrary manner. In particular, it seemed
+to have a great aversion to children. As there is no point on which a parent
+feels more acutely than that of the maltreatment of his offspring, the feelings
+of the father and more particularly of his good dame, were daily, ay, and
 nightly, harrowed up by the malice of this malignant and invisible boggart."
     -C.J.T., _Folk-lore and Legends: English.  1890.
 %%%%
@@ -549,9 +549,9 @@ bumblebee
 
 A very large and fat hairy bee.
 
-"How doth the little busy Bee 
-     Improve each shining Hour, 
-And gather Honey all the day 
+"How doth the little busy Bee
+     Improve each shining Hour,
+ And gather Honey all the day
      From every opening Flower!"
     -Isaac Watts.  1715.
 %%%%
@@ -560,7 +560,7 @@ butterfly
 A large multicoloured butterfly with beautifully patterned wings, fluttering
 incongruously through the darkness of the cave.
 
-"Happiness is a butterfly, which when pursued, is always just beyond your 
+"Happiness is a butterfly, which when pursued, is always just beyond your
 grasp, but which, if you will sit down quietly, may alight upon you."
     -Nathaniel Hawthorne
 %%%%
@@ -577,22 +577,22 @@ clay golem
 A huge animated clay statue.
 
 "Once upon a time a great Cabbalist lived in Prague called the Rabbi Löw.
-He made a human figure of clay, and left a small aperture in the lesser 
-brain in which he laid a parchment with the unutterable name of God 
-written on it. The clod immediately arose and was a man; he performed 
-all the duties of a servant for his creator, he fetched water, and hewed 
-wood.  All through the Jews quarter he was known as the Golem of the great 
-Rabbi Löw. Every Friday evening the Rabbi took the parchment out of his 
-head, and he was clay until Sunday morning. Once the Rabbi forgot this 
-duty, all were in the Synagogue, the Sabbath hymn was begun, when all the 
+He made a human figure of clay, and left a small aperture in the lesser
+brain in which he laid a parchment with the unutterable name of God
+written on it. The clod immediately arose and was a man; he performed
+all the duties of a servant for his creator, he fetched water, and hewed
+wood.  All through the Jews quarter he was known as the Golem of the great
+Rabbi Löw. Every Friday evening the Rabbi took the parchment out of his
+head, and he was clay until Sunday morning. Once the Rabbi forgot this
+duty, all were in the Synagogue, the Sabbath hymn was begun, when all the
 women and children in the assembly started and screamed out, 'the Golem!
-the Golem is destroying everything!' The Rabbi ordered the precentor to 
-pause at the end of the prayer: it was yet possible to save all, but later 
-nought would avail, the whole world would be destroyed.  He hastened home, 
-and saw the Golem already seizing the joists of his house to tear down the 
+the Golem is destroying everything!' The Rabbi ordered the precentor to
+pause at the end of the prayer: it was yet possible to save all, but later
+nought would avail, the whole world would be destroyed.  He hastened home,
+and saw the Golem already seizing the joists of his house to tear down the
 building: he sprang forward, took the parchment out, and dead clay again
 lay at his feet."
-	-Berthold Auerbach, _Spinoza_. 1882.
+    -Berthold Auerbach, _Spinoza_. 1882.
 %%%%
 crystal golem
 
@@ -776,10 +776,10 @@ ettin
 A large, two-headed humanoid. Most often seen wielding two weapons, so that the heads will have one less thing to bicker about.
 
 "But he had not been long in his hiding-hole, before the awful Ettin came in; and no sooner was he in, than he was heard crying:
-"Snouk but and snouk ben,
+'Snouk but and snouk ben,
 I find the smell of an earthly man,
 Be he living, or be he dead,
-His heart this night shall kitchen my bread."
+His heart this night shall kitchen my bread.'"
     -Joseph Jacobs, _The Red Ettin_
 %%%%
 eye of devastation
@@ -845,15 +845,15 @@ ghoul
 An undead humanoid creature created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
 
 "In the desert
-I saw a creature, naked, bestial,
-Who, squatting upon the ground,
-Held his heart in his hands,
-And ate of it.
-I said, 'Is it good, friend?'
-'It is bitter - bitter', he answered,
-'But I like it
-Because it is bitter,
-And because it is my heart.'"
+ I saw a creature, naked, bestial,
+ Who, squatting upon the ground,
+ Held his heart in his hands,
+ And ate of it.
+ I said, 'Is it good, friend?'
+ 'It is bitter - bitter', he answered,
+ 'But I like it
+ Because it is bitter,
+ And because it is my heart.'"
     -Stephen Crane, _The Black Riders and Other Lines_.  1895.
 %%%%
 giant amoeba
@@ -897,18 +897,18 @@ giant frog
 It probably didn't get this big by eating little insects.
 
 "Hello, my baby
-Hello, my honey
-Hello, my ragtime gal
+ Hello, my honey
+ Hello, my ragtime gal
 
-Send me a kiss by wire
-Baby, my hearts on fire
+ Send me a kiss by wire
+ Baby, my hearts on fire
 
-If you refuse me
-Honey, you'll lose me
-Then you'll be left alone
+ If you refuse me
+ Honey, you'll lose me
+ Then you'll be left alone
 
-Oh baby, telephone
-And tell me I'm your own."
+ Oh baby, telephone
+ And tell me I'm your own."
     -Ida Emerson and Joseph E. Howard, "Hello My Baby!"	
 %%%%
 giant gecko
@@ -969,9 +969,9 @@ A taller and better-equipped relative of goblins and orcs, somewhat doglike in a
 
 "Then he descended softly and beckoned to Nuth.  But the gnoles had
 watched him through knavish holes that they bore in trunks of the
-trees, and the unearthly silence gave way, as it were with a grace, 
+trees, and the unearthly silence gave way, as it were with a grace,
 to the rapid screams of Tonker as they picked him up from behind -- screams
-that came faster and faster until they were incoherent.  And where they took 
+that came faster and faster until they were incoherent.  And where they took
 him it is not good to ask, and what they did with him I shall not say."
     -Lord Dunsanay, "How Nuth Would Have Practiced His Art Upon the Gnoles". 
     1912.
@@ -981,11 +981,11 @@ goblin
 A short, ugly and unfriendly humanoid:  squat, broad, flat-nosed, sallow-skinned, with a wide mouth and pistachio-shaped eyes.
 
 "Swish, smack! Whip crack!
-Batter and beat! Yammer and bleat!
-Work, work! Nor dare to shirk,
-While Goblins quaff, and Goblins laugh,
-Round and round far underground
-Below, my lad!"
+ Batter and beat! Yammer and bleat!
+ Work, work! Nor dare to shirk,
+ While Goblins quaff, and Goblins laugh,
+ Round and round far underground
+ Below, my lad!"
     -J.R.R. Tolkien, _The Hobbit_
 %%%%
 golden dragon
@@ -1021,10 +1021,10 @@ griffon
 A large creature with the hindquarters of a lion and the wings, head, and talons of a great eagle.
 
 "As when a Gryphon through the wilderness,
-With winged course, o'er hill and moory dale,
-Pursues the Arimaspian who by stealth
-Hath from his wakeful custody purloined
-His guarded gold."
+ With winged course, o'er hill and moory dale,
+ Pursues the Arimaspian who by stealth
+ Hath from his wakeful custody purloined
+ His guarded gold."
     -Milton, _Paradise Lost_, Book II. 1667.
 %%%%
 grizzly bear
@@ -1143,8 +1143,8 @@ imp
 A small, ugly minor demon.  Its fanged maw seems locked in a permanent
 malign grin, and its horns protrude obscenely from its scaly pate.
 
-"The Devil, too, sometimes steals human children; it is not infrequent 
-for him to carry away infants within the first six weeks after birth, 
+"The Devil, too, sometimes steals human children; it is not infrequent
+for him to carry away infants within the first six weeks after birth,
 and to substitute in their place imps."
     -Martin Luther
 %%%%
@@ -1180,13 +1180,13 @@ A pulsating mass of acidic protoplasm. It can and will eat almost
 anything, and grows a little each time...
 
 "Beware of the Blob!
-It creeps 
-And leaps
-and glides and slides 
-Across the floor 
-Right through the door 
-And all around the wall, 
-A splotch, a blotch..."
+ It creeps
+ And leaps
+ and glides and slides
+ Across the floor
+ Right through the door
+ And all around the wall,
+ A splotch, a blotch..."
     -Burt Bacharach, "Beware of the Blob"
 %%%%
 jellyfish
@@ -1203,9 +1203,9 @@ A small, powerless larva of a killer bee.
 %%%%
 kobold
 
-No one knows where kobolds originated.  Some say they were the creation 
+No one knows where kobolds originated.  Some say they were the creation
 of an ancient demon-god, while others think they are household spirits
-gone bad.  Kobolds look like small, greyish creatures with canine heads.  
+gone bad.  Kobolds look like small, greyish creatures with canine heads.
 Whatever their origin, this one is not happy to see you.
 %%%%
 kobold demonologist
@@ -1262,7 +1262,7 @@ manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.
 
-"Ctesias writeth, that in Æthiopia likewise there is a beast which he calleth Mantichora, having three rankes of teeth, which when they meet togither are let in one within another like the teeth of combes: with the face and eares of a man, with red eyes; of colour sanguine, bodied like a lyon, and having a taile armed with a sting like a scorpion: his voice resembleth the noise of a flute and trumpet sounded together: very swift he is, and mans flesh of all others hee most desireth."
+"Ctesias writeth, that in Aethiopia likewise there is a beast which he calleth Mantichora, having three rankes of teeth, which when they meet togither are let in one within another like the teeth of combes: with the face and eares of a man, with red eyes; of colour sanguine, bodied like a lyon, and having a taile armed with a sting like a scorpion: his voice resembleth the noise of a flute and trumpet sounded together: very swift he is, and mans flesh of all others hee most desireth."
     -Pliny the Elder, _Natural History_, Book 8, Chapter XXI
 %%%%
 merfolk fighter
@@ -1273,8 +1273,8 @@ mermaid
 
 A young woman with a fish tail in place of legs. Mermaids love to sing and charm their audience.
 
-... To the Sirens first shalt thou come, who beguile all men whosoever comes to them. Whoso in ignorance draws near to them and hears the Sirens' voice, he nevermore returns, that his wife and little children may stand at his side rejoicing, but the Sirens beguile him with their clear-toned song, as they sit in a meadow, and about them is a great heap of bones of mouldering men, and round the bones the skin is shrivelling.
-        -Homer, _The Odyssey_, Book XII
+"To the Sirens first shalt thou come, who beguile all men whosoever comes to them. Whoso in ignorance draws near to them and hears the Sirens' voice, he nevermore returns, that his wife and little children may stand at his side rejoicing, but the Sirens beguile him with their clear-toned song, as they sit in a meadow, and about them is a great heap of bones of mouldering men, and round the bones the skin is shrivelling."
+    -Homer, _The Odyssey_, Book XII
 %%%%
 metal gargoyle
 
@@ -1312,13 +1312,13 @@ mummy
 
 An undead figure covered in bandages and embalming fluids, compelled to walk by an ancient curse. It radiates a malign aura to those who intrude on its domain.
 
-I see Egypt and the Egyptians -- I see the pyramids and obelisks;
-I look on chisel'd histories, songs, philosophies, cut in slabs
-   of sand-stone, or on granite-blocks;
-I see at Memphis mummy-pits, containing mummies, embalm'd, swathed 
-   in linen cloth, lying there many centuries;	 
-I look on the fall'n Theban, the large-ball'd eyes, the side-drooping
-   neck, the hands folded across the breast."
+"I see Egypt and the Egyptians -- I see the pyramids and obelisks;
+ I look on chisel'd histories, songs, philosophies, cut in slabs
+     of sand-stone, or on granite-blocks;
+ I see at Memphis mummy-pits, containing mummies, embalm'd, swathed
+     in linen cloth, lying there many centuries;
+ I look on the fall'n Theban, the large-ball'd eyes, the side-drooping
+     neck, the hands folded across the breast."
     -Walt Whitman, "Salut au Monde"
 %%%%
 mummy priest
@@ -1551,18 +1551,18 @@ shadow
 An wisp of unliving shadow, drifting on the edge of vision.
 
 "Between the idea
-And the reality
-Between the motion
-And the act
-Falls the Shadow
-    For thine is the Kingdom
+ And the reality
+ Between the motion
+ And the act
+ Falls the Shadow
+     For thine is the Kingdom
 
-Between the conception
-And the creation
-Between the emotion
-And the response
-Falls the Shadow
-    Life is very long"
+ Between the conception
+ And the creation
+ Between the emotion
+ And the response
+ Falls the Shadow
+     Life is very long"
     -T.S. Eliot, "The Hollow Men"
 %%%%
 shadow demon
@@ -1628,14 +1628,14 @@ small skeleton
 A skeleton compelled to unlife by the exercise of necromancy.
 
 "When you hear sweet syncopation
-And the music softly moans
-T’ain’t no sin to take off your skin
-And dance around in your bones.
+ And the music softly moans
+ T’ain’t no sin to take off your skin
+ And dance around in your bones.
 
-When it gets too hot for comfort
-And you can’t get ice cream cones
-T’ain’t no sin to take off your skin
-And dance around your bones."
+ When it gets too hot for comfort
+ And you can’t get ice cream cones
+ T’ain’t no sin to take off your skin
+ And dance around your bones."
     -William S. Burroughs and Tom Waits, "T'aint no sin"
 %%%%
 small zombie
@@ -1823,12 +1823,11 @@ worm
 A giant worm, glistening with slime, with unusually large teeth.
 You find yourself surprised that a worm should have teeth at all.
 
-'While the angels, all pallid and wan,	 
-  Uprising, unveiling, affirm	 
-That the play is the tragedy, "Man,"	 
-  And its hero, the Conqueror Worm.'
-
-     -Edgar Allen Poe
+"While the angels, all pallid and wan,
+   Uprising, unveiling, affirm
+ That the play is the tragedy, "Man,"
+   And its hero, the Conqueror Worm."
+    -Edgar Allen Poe
 %%%%
 wraith
 
