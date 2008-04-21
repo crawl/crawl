@@ -183,7 +183,6 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
           simple_monster_message(mons, " freezes in fright!");
           break;
       default:
-          simple_monster_message(mons, " seems impressed!");
           if (holiness == MH_HOLY)
               good_god_holy_attitude_change(mons);
           else
@@ -196,6 +195,8 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
               unsigned int exp_gain = 0, avail_gain = 0;
               gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );
               mons->flags |= MF_GOT_HALF_XP;
+
+              simple_monster_message(mons, " seems impressed!");
           }
           break;
     }
