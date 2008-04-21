@@ -100,28 +100,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item)
             return (false);
         }
 
-        if (is_blessed(item)) // remove negative effects on blessed weapons
-        {
-            if (randart_wpn_property( item, RAP_AC ) < 0
-                || randart_wpn_property( item, RAP_EVASION ) < 0
-                || randart_wpn_property( item, RAP_STRENGTH ) < 0
-                || randart_wpn_property( item, RAP_INTELLIGENCE ) < 0
-                || randart_wpn_property( item, RAP_DEXTERITY ) < 0
-                || randart_wpn_property( item, RAP_FIRE ) < 0
-                || randart_wpn_property( item, RAP_COLD ) < 0
-                || randart_wpn_property( item, RAP_NOISES )
-                || randart_wpn_property( item, RAP_PREVENT_SPELLCASTING )
-                || randart_wpn_property( item, RAP_CAUSE_TELEPORTATION )
-                || randart_wpn_property( item, RAP_PREVENT_TELEPORTATION )
-                || randart_wpn_property( item, RAP_ANGRY )
-                || randart_wpn_property( item, RAP_METABOLISM )
-                || randart_wpn_property( item, RAP_MUTAGENIC )
-                || randart_wpn_property( item, RAP_ACCURACY ) < 0
-                || randart_wpn_property( item, RAP_DAMAGE ) < 0)
-            {
-                return (false);
-            }
-        }
+        // XXX: There should be a better way to do this!
+        // Remove all other effects on blessed weapons, so that they
+        // only have the holy wrath brand.
+        if (is_blessed(item) && randart_wpn_num_props(item) > 1)
+            return (false);
         break;
 
     case GOD_LUGONU: // corruption
