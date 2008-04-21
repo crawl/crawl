@@ -350,7 +350,8 @@ void sublimation(int power)
             mprf("The blood within %s frothes and boils.",
                  you.inv[wielded].quantity == 1 ? "the flask you are holding"
                                                 : "one of your flasks");
-            split_blood_potions_into_decay( wielded, 1 );
+
+            split_potions_into_decay( wielded, 1, false );
 
             mpr("A flood of magical energy pours into your mind!");
             inc_mp( 7 + random2(7), false );

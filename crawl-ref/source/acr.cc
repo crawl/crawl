@@ -2469,12 +2469,12 @@ static void _prep_input()
 {
     you.time_taken = player_speed();
     you.shield_blocks = 0;              // no blocks this round
-    update_screen();
 
     textcolor(LIGHTGREY);
 
     set_redraw_status( REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK );
     print_stats();
+    update_screen();
 }
 
 // Decrement a single duration. Print the message if the duration runs out.
@@ -2905,8 +2905,10 @@ static void _decrement_durations()
     }
 
     if (!you.permanent_flight())
+    {
         if ( _decrement_a_duration(DUR_CONTROLLED_FLIGHT) && you.airborne() )
             mpr("You lose control over your flight.", MSGCH_DURATION);
+    }
 
     if (you.rotting > 0)
     {

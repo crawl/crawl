@@ -2431,7 +2431,7 @@ static void _curse_card(int power, deck_rarity_type rarity)
     if ( power_level >= 2 )
     {
         // curse (almost) everything + decay
-        while ( curse_an_item(true) && !one_chance_in(1000) )
+        while ( curse_an_item(true, true) && !one_chance_in(1000) )
             ;
     }
     else if ( power_level == 1 )

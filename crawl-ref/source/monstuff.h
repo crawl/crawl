@@ -95,7 +95,7 @@ void behaviour_event( monsters *mon, int event_type,
 /* ***********************************************************************
  * called from: fight - it_use3 - spells
  * *********************************************************************** */
-bool curse_an_item(bool decay_potions);
+bool curse_an_item(bool decay_potions, bool quiet = false);
 
 
 /* ***********************************************************************

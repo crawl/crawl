@@ -582,7 +582,7 @@ bool item_is_critical(const item_def &item);
 bool item_cursed( const item_def &item );
 bool item_known_cursed( const item_def &item );
 bool item_known_uncursed( const item_def &item );
-void do_curse_item( item_def &item );
+void do_curse_item( item_def &item, bool quiet = true );
 void do_uncurse_item( item_def &item );
 
 // stationary:

@@ -474,11 +474,15 @@ bool item_known_uncursed( const item_def &item )
     return ((item.flags & ISFLAG_KNOW_CURSE) && !(item.flags & ISFLAG_CURSED));
 }
 
-void do_curse_item( item_def &item )
+void do_curse_item( item_def &item, bool quiet )
 {
+    // already cursed?
+    if (item.flags & ISFLAG_CURSED)
+        return;
+
     // Xom is amused by the player's items being cursed, especially
     // if they're worn/equipped.
-    if (!(item.flags & ISFLAG_CURSED) && item.x == -1 && item.y == -1)
+    if (item.x == -1 && item.y == -1)
     {
         int amusement = 64;
 
@@ -494,6 +498,12 @@ void do_curse_item( item_def &item )
             }
         }
         xom_is_stimulated(amusement);
+    }
+
+    if (!quiet)
+    {
+        mprf("Your %s glows black for a moment.",
+             item.name(DESC_PLAIN).c_str());
     }
 
     item.flags |= ISFLAG_CURSED;
@@ -558,8 +568,8 @@ void set_ident_flags( item_def &item, unsigned long flags )
         request_autoinscribe();
     }
 
-    if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID) &&
-        fully_identified(item) && is_interesting_item(item))
+    if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
+        && fully_identified(item) && is_interesting_item(item))
     {
         // make a note of it
         take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),

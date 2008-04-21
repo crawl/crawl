@@ -1302,9 +1302,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                              || mode == REGION_MSG || mode == REGION_STAT);
 
     if (valid_tip_region && mode != oldmode)
-    {
         update_tip_text("");
-    }
 
     if (toggle_telescope && mode == REGION_MAP)
     {

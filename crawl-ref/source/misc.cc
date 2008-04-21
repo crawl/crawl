@@ -378,25 +378,37 @@ void maybe_coagulate_blood_potions_floor(int obj)
     ASSERT(timer.size() == blood.quantity);
 }
 
-static void _coagulating_blood_message(item_def &blood, int num_coagulated)
+// Prints messages for blood potions coagulating in inventory (coagulate = true)
+// or whenever potions are cursed into potions of decay (coagulate = false).
+static void _potion_stack_changed_message(item_def &potion, int num_changed,
+                                          bool coagulate = true)
 {
-    ASSERT(num_coagulated > 0);
+    ASSERT(num_changed > 0);
+    if (coagulate)
+        ASSERT(potion.sub_type == POT_BLOOD);
 
     std::string msg;
-    if (blood.quantity == num_coagulated)
-        msg = blood.name(DESC_CAP_YOUR, false);
+    if (potion.quantity == num_changed)
+        msg = "Your ";
     else
     {
-        if (num_coagulated == 1)
-            msg = "One of ";
+        if (num_changed == 1)
+            msg = "One of your ";
+        else if (num_changed == 2)
+            msg = "Two of your ";
+        else if (num_changed >= (potion.quantity * 3) / 4)
+            msg = "Most of your ";
         else
-            msg = "Some of ";
-
-        msg += blood.name(DESC_NOCAP_YOUR, false);
+            msg = "Some of your ";
     }
+    msg += potion.name(DESC_PLAIN, false);
 
-    msg += " coagulate";
-    if (num_coagulated == 1)
+    if (coagulate)
+        msg += " coagulate";
+    else
+        msg += " decay";
+
+    if (num_changed == 1)
         msg += "s";
     msg += ".";
 
@@ -465,11 +477,20 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     more();
 #endif
 
+    // just in case
+    you.wield_change  = true;
+    you.redraw_quiver = true;
+
     if (!coag_count) // some potions rotted away
     {
         blood.quantity -= rot_count;
         if (blood.quantity < 1)
+        {
+            if (you.equip[EQ_WEAPON] == blood.link)
+                you.equip[EQ_WEAPON] = -1;
+
             destroy_item(blood);
+        }
         else
             ASSERT(blood.quantity == timer.size());
 
@@ -483,7 +504,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     bool knew_coag  = (get_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED)
                            == ID_KNOWN_TYPE);
 
-    _coagulating_blood_message(blood, coag_count);
+    _potion_stack_changed_message(blood, coag_count);
 
     // identify both blood and coagulated blood, if necessary
     if (!knew_blood)
@@ -510,7 +531,12 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
             blood.quantity -= coag_count + rot_count;
             if (blood.quantity < 1)
+            {
+                if (you.equip[EQ_WEAPON] == blood.link)
+                    you.equip[EQ_WEAPON] = -1;
+
                 destroy_item(blood);
+            }
             else
             {
                 ASSERT(timer.size() == blood.quantity);
@@ -683,7 +709,12 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
     blood.quantity -= rot_count + coag_count;
     if (blood.quantity < 1)
+    {
+        if (you.equip[EQ_WEAPON] == blood.link)
+            you.equip[EQ_WEAPON] = -1;
+
         destroy_item(blood);
+    }
     else
     {
         ASSERT(timer.size() == blood.quantity);
@@ -914,43 +945,61 @@ void turn_corpse_into_blood_potions( item_def &item )
         create_monster_hide(mons_class);
 }
 
-// A variation of the mummy curse: for potions of blood (vital for Vampires!)
-// split the stack and only turn part of it into POT_DECAY.
-void split_blood_potions_into_decay( int obj, int amount )
+// A variation of the mummy curse:
+// instead of trashing the entire stack, split the stack and only turn part
+// of it into POT_DECAY.
+void split_potions_into_decay( int obj, int amount, bool need_msg )
 {
     ASSERT(obj != -1);
-    item_def potion = you.inv[obj];
+    item_def &potion = you.inv[obj];
 
     ASSERT(is_valid_item(potion));
     ASSERT(potion.base_type == OBJ_POTIONS);
-    ASSERT(potion.sub_type == POT_BLOOD
-           || potion.sub_type == POT_BLOOD_COAGULATED);
+    ASSERT(amount > 0);
     ASSERT(amount <= potion.quantity);
 
-    if (amount <= 0)
-        amount = random2(potion.quantity) + 1;
+    // output decay message
+    if (need_msg && get_ident_type(OBJ_POTIONS, POT_DECAY) == ID_KNOWN_TYPE)
+        _potion_stack_changed_message(potion, amount, false);
 
-    // We're being nice here, and only decay the *oldest* potions.
-    for (int i = 0; i < amount; i++)
-        remove_oldest_blood_potion(potion);
+    // just in case
+    you.wield_change  = true;
+    you.redraw_quiver = true;
+
+    if (potion.sub_type == POT_BLOOD || potion.sub_type == POT_BLOOD_COAGULATED)
+    {
+        // We're being nice here, and only decay the *oldest* potions.
+        for (int i = 0; i < amount; i++)
+            remove_oldest_blood_potion(potion);
+    }
 
     // try to merge into existing stacks of decayed potions
     for (int m = 0; m < ENDOFPACK; m++)
     {
         if (you.inv[m].base_type == OBJ_POTIONS
-            && you.inv[m].sub_type == POT_DECAY
-            && you.inv[m].colour == potion.colour)
+            && you.inv[m].sub_type == POT_DECAY)
         {
-            you.inv[obj].quantity -= amount;
+            if (potion.quantity == amount)
+            {
+                if (you.equip[EQ_WEAPON] == obj)
+                    you.equip[EQ_WEAPON] = -1;
+
+                destroy_item(potion);
+            }
+            else
+                you.inv[obj].quantity -= amount;
+
             you.inv[m].quantity   += amount;
+
             return;
         }
     }
 
-    // if entire stack affected just change subtype
+    // else, if entire stack affected just change subtype
     if (amount == potion.quantity)
     {
         you.inv[obj].sub_type = POT_DECAY;
+        unset_ident_flags( you.inv[obj], ISFLAG_IDENT_MASK ); // all different
         return;
     }
 
@@ -971,6 +1020,7 @@ void split_blood_potions_into_decay( int obj, int amount )
         item.plus2     = 0;
         item.special   = 0;
         item.flags     = 0;
+        item.colour    = potion.colour;
 
         you.inv[obj].quantity -= amount;
         return;
@@ -982,8 +1032,7 @@ void split_blood_potions_into_decay( int obj, int amount )
     while (o != NON_ITEM)
     {
         if (mitm[o].base_type == OBJ_POTIONS
-            && mitm[o].sub_type == POT_DECAY
-            && mitm[o].colour == you.inv[obj].colour)
+            && mitm[o].sub_type == POT_DECAY)
         {
             dec_inv_item_quantity(obj, amount);
             inc_mitm_item_quantity(o, amount);
@@ -1004,22 +1053,7 @@ void split_blood_potions_into_decay( int obj, int amount )
         potion2.flags     = potion.flags;
         potion2.quantity  = amount;
         potion2.special   = 0;
-
-        switch (random2(4))
-        {
-        case 0:
-            potion2.colour = RED;
-            break;
-        case 1:
-            potion2.colour = BROWN;
-            break;
-        case 2:
-            potion2.colour = GREEN;
-            break;
-        case 3:
-            potion2.colour = LIGHTRED;
-            break;
-        }
+        potion2.colour    = potion.colour;
 
         copy_item_to_grid( potion2, you.x_pos, you.y_pos );
    }
@@ -2525,12 +2559,12 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
 
 // Return all monsters in range (default: LOS) that the player is able to see
 // and recognize as being a monster.
-// 
+//
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only
 // dangerous_only  Return only "dangerous" monsters
 // range           search radius (defaults: LOS)
-// 
+//
 void get_playervisible_monsters(std::vector<monsters*> &mons,
                                 bool want_move,
                                 bool just_check,

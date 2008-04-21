@@ -205,7 +205,7 @@ int get_mimic_colour( const monsters *mimic )
 }
 
 // monster curses a random player inventory item:
-bool curse_an_item( bool decay_potions )
+bool curse_an_item( bool decay_potions, bool quiet )
 {
     int count = 0;
     int item  = ENDOFPACK;
@@ -241,36 +241,28 @@ bool curse_an_item( bool decay_potions )
         return (false);
 
     // curse item:
+    if (decay_potions && !quiet) // just for mummies
+        mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
 
-    /* problem: changes large piles of potions */
     /* don't change you.inv_special (just for fun) */
     if (you.inv[item].base_type == OBJ_POTIONS)
     {
-        // Potions of blood are vital to vampires, so make an exception for
-        // for them. (Come to think of it, this would work nicely for all
-        // other potion types as well.)
-        if (you.inv[item].sub_type == POT_BLOOD
-            || you.inv[item].sub_type == POT_BLOOD_COAGULATED)
-        {
-            int amount = random2(you.inv[item].quantity) + 1;
-            split_blood_potions_into_decay(item, amount);
-
-            // Xom is amused if this happens to thirsty vampires
-            if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY)
-                xom_is_stimulated(32 * amount);
-        }
+        int amount;
+        // decay at least two of the stack
+        if (you.inv[item].quantity <= 2)
+            amount = you.inv[item].quantity;
         else
-        {
-            // Xom is amused by useful potions being ruined.
-            if (item_value(you.inv[item], true) / you.inv[item].quantity > 2)
-                xom_is_stimulated(32 * you.inv[item].quantity);
+            amount = 2 + random2(you.inv[item].quantity - 1);
 
-            you.inv[item].sub_type = POT_DECAY;
-            unset_ident_flags( you.inv[item], ISFLAG_IDENT_MASK ); // all different
-        }
+        split_potions_into_decay(item, amount);
+
+        if (item_value(you.inv[item], true) / amount > 2)
+            xom_is_stimulated(32 * amount);
     }
     else
-        do_curse_item( you.inv[item] );
+    {
+        do_curse_item( you.inv[item], false );
+    }
 
     return (true);
 }
@@ -1159,10 +1151,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     if (monster->type == MONS_MUMMY)
     {
         if (YOU_KILL(killer) && killer != KILL_YOU_CONF)
-        {
-            if (curse_an_item(true))
-                mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
-        }
+            curse_an_item(true);
     }
     else if (monster->type == MONS_GUARDIAN_MUMMY
              || monster->type == MONS_GREATER_MUMMY

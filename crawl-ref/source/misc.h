@@ -77,7 +77,7 @@ void pick_up_blood_potions_stack( item_def &stack, int quant );
 
 bool can_bottle_blood_from_corpse( int mons_type );
 void turn_corpse_into_blood_potions ( item_def &item );
-void split_blood_potions_into_decay( int obj, int amount = -1 );
+void split_potions_into_decay( int obj, int amount, bool need_msg = true );
 
 bool victim_can_bleed(int montype);
 void bleed_onto_floor(int x, int y, int mon, int damage, bool spatter = false);

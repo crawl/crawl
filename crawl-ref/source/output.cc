@@ -791,7 +791,8 @@ static void _print_status_lights(int y)
             clear_to_end_of_line();
             ++ line_cur;
             // Careful not to trip the )#(*$ cgotoxy ASSERT
-            if (line_cur == line_end) break;
+            if (line_cur == line_end)
+                break;
             cgotoxy(1, line_cur, GOTO_STAT);
         }
     }
@@ -865,15 +866,16 @@ void print_stats(void)
     if (you.redraw_quiver || you.wield_change)
     {
         _print_stats_qv(10+yhack);
+        you.redraw_quiver = false;
     }
-    you.wield_change = false;
-    you.redraw_quiver = false;
+    you.wield_change  = false;
 
     if (you.redraw_status_flags)
     {
         you.redraw_status_flags = 0;
         _print_status_lights(11+yhack);
     }
+    textcolor(LIGHTGREY);
 
     update_screen();
 }

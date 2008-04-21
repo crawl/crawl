@@ -706,12 +706,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             case SPWPN_SCYTHE_OF_CURSES:
                 you.special_wield = SPWLD_CURSE;
                 if (!item_cursed(item) && one_chance_in(5))
-                {
-                    mprf("%s glows black for a moment.",
-                         item.name(DESC_CAP_YOUR).c_str());
-
-                    do_curse_item( item );
-                }
+                    do_curse_item( item, false );
                 break;
 
             case SPWPN_MACE_OF_VARIABILITY:
@@ -1770,6 +1765,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     item.quantity = 1;
     item.slot     = index_to_letter(item.link);
     origin_set_unknown(item);
+
     if (item.base_type == OBJ_POTIONS
         && (item.sub_type == POT_BLOOD
             || item.sub_type == POT_BLOOD_COAGULATED)
@@ -4271,10 +4267,7 @@ void read_scroll( int slot )
         }
         else
         {
-            mprf("%s glows black for a moment.",
-                 you.inv[nthing].name(DESC_CAP_YOUR).c_str());
-
-            do_curse_item( you.inv[nthing] );
+            do_curse_item( you.inv[nthing], false );
             you.wield_change = true;
         }
         break;
@@ -4392,11 +4385,7 @@ void read_scroll( int slot )
         else
         {
             // make the name before we curse it
-            item_def& item = you.inv[you.equip[affected]];
-            mprf("%s glows black for a moment.",
-                 item.name(DESC_CAP_YOUR).c_str());
-
-            do_curse_item( item );
+            do_curse_item( you.inv[you.equip[affected]], false );
         }
         break;
 
@@ -4566,10 +4555,7 @@ void use_randart(item_def &item)
     if ( !item_cursed(item) && proprt[RAP_CURSED] > 0
          && one_chance_in(proprt[RAP_CURSED]) )
     {
-        mprf("%s glows black for a moment.",
-             item.name(DESC_CAP_YOUR).c_str());
-
-        do_curse_item( item );
+        do_curse_item( item, false );
         randart_wpn_learn_prop(item, RAP_CURSED);
     }
 
