@@ -856,11 +856,9 @@ void game_options::reset_options()
                     "kills,notes");
 
     hp_colour.clear();
-    hp_colour.push_back(std::pair<int,int>(100, LIGHTGREY));
     hp_colour.push_back(std::pair<int,int>(50, YELLOW));
     hp_colour.push_back(std::pair<int,int>(25, RED));
     mp_colour.clear();
-    mp_colour.push_back(std::pair<int, int>(100, LIGHTGREY));
     mp_colour.push_back(std::pair<int, int>(50, YELLOW));
     mp_colour.push_back(std::pair<int, int>(25, RED));
 

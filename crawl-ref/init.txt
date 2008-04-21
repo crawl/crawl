@@ -204,8 +204,8 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # hp_warning = 10
 # mp_warning = 0
 
-# hp_colour = lightgrey, 50:yellow, 25:red
-# mp_colour = lightgrey, 50:yellow, 25:red
+# hp_colour = 50:yellow, 25:red
+# mp_colour = 50:yellow, 25:red
 # status_caption_colour = yellow
 # delay_message_clear    = true
 # show_inventory_weights = true

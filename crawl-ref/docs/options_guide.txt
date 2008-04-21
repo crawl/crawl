@@ -1019,17 +1019,18 @@ mp_warning = 0
         channel when the player's magic points drop below this 
         percentage of their maximum (use 0 to turn off these messages).
 
-hp_colour = lightgrey, 50:yellow, 25:red
-        hp_colour colours your HP appropriately in the display. In the 
-        default setting, your HP will appear in red if at less then 25%, 
-        yellow if at less than 50%, and lightgrey otherwise.
+hp_colour = 50:yellow, 25:red
+        hp_colour colours your Health appropriately in the status
+        display. In the default setting, your health will appear in
+        red if at less than 25%, yellow if at less than 50%, and in
+        the default colour otherwise.
 
-mp_colour = lightgrey, 50:yellow, 25:red
-        mp_colour does to MP what hp_colour does to HP.
+mp_colour = 50:yellow, 25:red
+        mp_colour does to Magic what hp_colour does to Health.
 
 status_caption_colour = brown
         Sets the colour that is used to display the captions in the status
-        area (for instance the "HP:" in HP: 10/10).
+        area (for instance the "Health:" in "Health: 10/10").
 
 delay_message_clear = false
         Setting this option to true will delay the clearing of messages 
