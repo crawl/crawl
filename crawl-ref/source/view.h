@@ -64,8 +64,6 @@ enum element_type
     EC_RANDOM           // any colour (except BLACK)
 };
 
-#define BORDER_COLOR BROWN
-
 void init_char_table(char_set_type set);
 void init_feature_table();
 void init_monsters_seens();

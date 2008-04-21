@@ -54,6 +54,12 @@
 #include "travel.h"
 #include "view.h"
 
+// Color for captions like 'Health:', 'Str:'
+#define HUD_CAPTION_COLOR Options.status_caption_colour
+
+// Color for values, which come after captions
+static const short HUD_VALUE_COLOR = LIGHTGREY;
+
 // ----------------------------------------------------------------------
 // colour_bar
 // ----------------------------------------------------------------------
@@ -228,10 +234,11 @@ void update_turn_count()
     }
 
     cgotoxy(19+6, 9, GOTO_STAT);
-    textcolor(LIGHTGREY);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
+    textcolor(HUD_VALUE_COLOR);
     cprintf("%ld", you.num_turns);
+    textcolor(LIGHTGREY);
 }
 
 static int _count_digits(int val)
@@ -281,25 +288,21 @@ static const char* _describe_hunger(int& color)
 
 static void _print_stats_mp(int x, int y)
 {
-    int mp_percent;
-    if ( you.max_magic_points )
-        mp_percent = (you.magic_points * 100) / you.max_magic_points;
-    else
-        mp_percent = 100;
-    for ( unsigned int i = 0; i < Options.mp_colour.size(); ++i )
+    // Calculate colour
+    short mp_colour = HUD_VALUE_COLOR;
     {
-        if ( i+1 == Options.mp_colour.size() ||
-             mp_percent > Options.mp_colour[i+1].first )
-        {
-            textcolor(Options.mp_colour[i].second);
-            break;
-        }
+        int mp_percent = (you.max_magic_points == 0
+                          ? 100
+                          : (you.magic_points * 100) / you.max_magic_points);
+        for ( unsigned int i = 0; i < Options.mp_colour.size(); ++i )
+            if ( mp_percent <= Options.mp_colour[i].first )
+                mp_colour = Options.mp_colour[i].second;
     }
+
     cgotoxy(x+8, y, GOTO_STAT);
-
-    cprintf( "%d", you.magic_points);
-
-    textcolor(LIGHTGREY);
+    textcolor(mp_colour);
+    cprintf("%d", you.magic_points);
+    textcolor(HUD_VALUE_COLOR);
     cprintf("/%d", you.max_magic_points );
 
     int col = _count_digits(you.magic_points)
@@ -316,31 +319,24 @@ static void _print_stats_hp(int x, int y)
     const int max_max_hp = you.hp_max + player_rotted();
 
     // Calculate colour
-    short hp_colour = LIGHTGREY;
+    short hp_colour = HUD_VALUE_COLOR;
     {
         const int hp_percent =
             (you.hp * 100) / (max_max_hp ? max_max_hp : you.hp);
 
         for ( unsigned int i = 0; i < Options.hp_colour.size(); ++i )
-        {
-            if ( i+1 == Options.hp_colour.size() ||
-                 hp_percent > Options.hp_colour[i+1].first )
-            {
+            if ( hp_percent <= Options.hp_colour[i].first )
                 hp_colour = Options.hp_colour[i].second;
-                break;
-            }
-        }
     }
 
     // 01234567890123456789
     // Health: xxx/yyy (zzz)
     cgotoxy(x, y, GOTO_STAT);
-    textcolor(BROWN);
+    textcolor(HUD_CAPTION_COLOR);
     cprintf(max_max_hp != you.hp_max ? "HP: " : "Health: ");
-
     textcolor(hp_colour);
     cprintf( "%d", you.hp );
-    textcolor(LIGHTGREY);
+    textcolor(HUD_VALUE_COLOR);
     cprintf( "/%d", you.hp_max );
     if (max_max_hp != you.hp_max)
         cprintf( " (%d)", max_max_hp );
@@ -370,9 +366,10 @@ static void _print_stats_str(int x, int y)
         textcolor(LIGHTBLUE);  // no end of effect warning
     else if (you.strength < you.max_strength)
         textcolor(YELLOW);
+    else
+        textcolor(HUD_VALUE_COLOR);
 
     cprintf( "%d", you.strength );
-    textcolor(LIGHTGREY);
 
     if (you.strength != you.max_strength)
         cprintf( " (%d)  ", you.max_strength );
@@ -394,11 +391,8 @@ static void _print_stats_int(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    if (you.intel < you.max_intel)
-        textcolor(YELLOW);
-
+    textcolor(you.intel < you.max_intel ? YELLOW : HUD_VALUE_COLOR);
     cprintf( "%d", you.intel );
-    textcolor(LIGHTGREY);
 
     if (you.intel != you.max_intel)
         cprintf( " (%d)  ", you.max_intel );
@@ -418,11 +412,8 @@ static void _print_stats_dex(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    if (you.dex < you.max_dex)
-        textcolor(YELLOW);
-
+    textcolor(you.dex < you.max_dex ? YELLOW : HUD_VALUE_COLOR);
     cprintf( "%d", you.dex );
-    textcolor(LIGHTGREY);
 
     if (you.dex != you.max_dex)
         cprintf( " (%d)  ", you.max_dex );
@@ -432,35 +423,30 @@ static void _print_stats_dex(int x, int y)
 
 static void _print_stats_ac(int x, int y)
 {
+    // AC:
     cgotoxy(x+4, y, GOTO_STAT);
-
     if (you.duration[DUR_STONEMAIL])
         textcolor(_dur_colour( BLUE, (you.duration[DUR_STONEMAIL] <= 6) ));
     else if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
-        textcolor( LIGHTBLUE );  // no end of effect warning
-
+        textcolor( LIGHTBLUE );
+    else
+        textcolor( HUD_VALUE_COLOR );
     cprintf( "%2d ", player_AC() );
-    textcolor( LIGHTGREY );
 
+    // Sh: (one line lower)
     cgotoxy(x+4, y+1, GOTO_STAT);
-
-    if (you.duration[DUR_CONDENSATION_SHIELD]
-       || you.duration[DUR_DIVINE_SHIELD])
-    {
-        textcolor( LIGHTBLUE );  // no end of effect warning
-    }
-
+    if (you.duration[DUR_CONDENSATION_SHIELD] || you.duration[DUR_DIVINE_SHIELD])
+        textcolor( LIGHTBLUE );
+    else
+        textcolor( HUD_VALUE_COLOR );
     cprintf( "%2d ", player_shield_class() );
-    textcolor( LIGHTGREY );
 }
 
 static void _print_stats_ev(int x, int y)
 {
     cgotoxy(x+4, y, GOTO_STAT);
-    if (you.duration[DUR_FORESCRY])
-        textcolor(LIGHTBLUE);  // no end of effect warning
+    textcolor(you.duration[DUR_FORESCRY] ? LIGHTBLUE : HUD_VALUE_COLOR);
     cprintf( "%2d ", player_evasion() );
-    textcolor(LIGHTGREY);
 }
 
 static void _print_stats_wp(int y)
@@ -841,7 +827,7 @@ void print_stats(void)
         cgotoxy(1,8, GOTO_STAT);
         textcolor(Options.status_caption_colour);
         cprintf("Exp Pool: ");
-        textcolor(LIGHTGREY);
+        textcolor(HUD_VALUE_COLOR);
 #if DEBUG_DIAGNOSTICS
         cprintf("%d/%d (%d) ",
                 you.skill_cost_level, you.exp_available, you.experience);
@@ -856,7 +842,9 @@ void print_stats(void)
     if (Options.show_gold_turns)
     {
         yhack = 1;
-        cgotoxy(1+6, 9, GOTO_STAT); cprintf("%d", you.gold);
+        cgotoxy(1+6, 9, GOTO_STAT);
+        textcolor(HUD_VALUE_COLOR);
+        cprintf("%d", you.gold);
     }
 
     if (you.wield_change)
@@ -920,11 +908,11 @@ static std::string _level_description_string_hud()
 // For some odd reason, only redrawn on level change.
 void print_stats_level()
 {
-    textcolor(BROWN);
     cgotoxy(19, 8, GOTO_STAT);
+    textcolor(HUD_CAPTION_COLOR);
     cprintf("Level: ");
 
-    textcolor(LIGHTGREY);
+    textcolor(HUD_VALUE_COLOR);
 #if DEBUG_DIAGNOSTICS
     cprintf( "(%d) ", you.your_level + 1 );
 #endif
@@ -983,7 +971,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
 
 void draw_border(void)
 {
-    textcolor( BORDER_COLOR );
+    textcolor( HUD_CAPTION_COLOR );
     clrscr();
     redraw_skill( you.your_name, player_title() );
 
