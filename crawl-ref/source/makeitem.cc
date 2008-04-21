@@ -865,11 +865,11 @@ static weapon_type determine_weapon_subtype(int item_level)
         WPN_TRIPLE_SWORD
     };
 
-    if (random2(20) < 20 - item_level)
-        rc = RANDOM_ELEMENT(common_subtypes);
-    else if (item_level > 6 && random2(100) < (10 + item_level)
-             && one_chance_in(30))
+    if (item_level > 6 && random2(100) < (10 + item_level)
+          && one_chance_in(30))
         rc = RANDOM_ELEMENT(rare_subtypes);
+    else if (random2(20) < 20 - item_level)
+        rc = RANDOM_ELEMENT(common_subtypes);
     else
     {
         // pick a weapon based on rarity
@@ -1452,6 +1452,22 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_PROTECTION;
             break;
 
+        case WPN_LAJATANG:
+            if (one_chance_in(8))
+                rc = SPWPN_SPEED;
+            else if (one_chance_in(12))
+                rc = SPWPN_PAIN;
+            else if (got_distortion_roll(item_level))
+                rc = SPWPN_DISTORTION;
+            else if (one_chance_in(9))
+                rc = SPWPN_PROTECTION;
+            else if (one_chance_in(6))
+                rc = SPWPN_ELECTROCUTION;
+            else if (one_chance_in(5))
+                rc = SPWPN_VAMPIRICISM;
+            else if (one_chance_in(6))
+                rc = SPWPN_VENOM;
+            break;
 
         case WPN_DEMON_TRIDENT:
         case WPN_DEMON_WHIP:
@@ -3506,9 +3522,15 @@ static item_make_species_type give_weapon(monsters *mon, int level,
     case MONS_PSYCHE:
     case MONS_DONALD:
     case MONS_JOSEPHINE:
-    case MONS_AGNES:
         item.base_type = OBJ_WEAPONS;
         item.sub_type = WPN_DAGGER;
+        break;
+
+    case MONS_AGNES:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = WPN_LAJATANG;
+        if (!one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
         break;
 
     case MONS_CEREBOV:

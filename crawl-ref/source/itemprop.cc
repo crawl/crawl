@@ -1428,6 +1428,7 @@ int weapon_rarity( int w_type )
     case WPN_DIRE_FLAIL:
     case WPN_SCYTHE:
     case WPN_LONGBOW:
+    case WPN_LAJATANG:
         return (2);
 
     case WPN_GIANT_CLUB:
@@ -1439,7 +1440,6 @@ int weapon_rarity( int w_type )
     case WPN_EVENINGSTAR:
     case WPN_EXECUTIONERS_AXE:
     case WPN_KATANA:
-    case WPN_LAJATANG:
     case WPN_KNIFE:
     case WPN_QUICK_BLADE:
     case WPN_TRIPLE_SWORD:
