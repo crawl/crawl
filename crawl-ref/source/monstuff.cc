@@ -1073,7 +1073,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
                     // Give a follower health from killing evil, or
                     // randomly bless it.
-                    if (one_chance_in(3) && bless_follower())
+                    if (one_chance_in(3) && bless_follower(mon))
                         break;
 
                     if (mon->alive() && mon->hit_points < mon->max_hit_points)
