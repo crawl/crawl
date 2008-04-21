@@ -1719,25 +1719,6 @@ void save_ghost( bool force )
     DO_CHMOD_PRIVATE(cha_fil.c_str());
 }                               // end save_ghost()
 
-// XXX: remove?
-void generate_random_demon()
-{
-    int rdem = 0;
-    for (rdem = 0; rdem < MAX_MONSTERS + 1; rdem++)
-    {
-        if (rdem == MAX_MONSTERS)
-            return;
-
-        if (menv[rdem].type == MONS_PANDEMONIUM_DEMON)
-            break;
-    }
-
-    ghost_demon pandemon;
-    pandemon.init_random_demon();
-    menv[rdem].set_ghost(pandemon);
-    menv[rdem].pandemon_init();
-}                               // end generate_random_demon()
-
 ////////////////////////////////////////////////////////////////////////////
 // Locking for multiuser systems
 
