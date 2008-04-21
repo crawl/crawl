@@ -1066,6 +1066,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 {
                     monsters *mon = &menv[i];
 
+                    // Randomly bless the follower who killed.
+                    if (!one_chance_in(3) && bless_follower(mon))
+                        break;
+
                     if (mon->alive() && mon->hit_points < mon->max_hit_points)
                     {
                         simple_monster_message(mon, " looks invigorated.");
@@ -1075,12 +1079,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
 
                 // Randomly bless the follower who killed.
-                if (((you.religion == GOD_SHINING_ONE
-                       && mons_is_evil_or_unholy(monster)
-                       && random2(you.piety) >= piety_breakpoint(0))
-                           || (you.religion == GOD_BEOGH
-                               && mons_holiness(monster) == MH_NATURAL
-                               && random2(you.piety) >= piety_breakpoint(2))
+                if (((you.religion == GOD_BEOGH
+                    && mons_holiness(monster) == MH_NATURAL
+                    && random2(you.piety) >= piety_breakpoint(2))
                     && !player_under_penance())
                     && !one_chance_in(3)
                     && !invalid_monster_index(i))

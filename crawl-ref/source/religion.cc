@@ -1152,7 +1152,7 @@ bool bless_follower(monsters* follower,
             if (more_time || friendliness)
                 break;
 
-            if (!one_chance_in(3))
+            if (coinflip())
                 return false;
         }
 
