@@ -147,13 +147,18 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     }
 }
 
-static bool need_super_ood(int lev_mons)
+static bool _need_moderate_ood(int lev_mons)
+{
+    return (env.turns_on_level > 700 - lev_mons * 117);
+}
+
+static bool _need_super_ood(int lev_mons)
 {
     return (env.turns_on_level > 1400 - lev_mons * 117
             && one_chance_in(5000));
 }
 
-static int fuzz_mons_level(int level)
+static int _fuzz_mons_level(int level)
 {
     if (one_chance_in(7))
     {
@@ -247,10 +252,13 @@ monster_type pick_random_monster(const level_id &place,
     if (place.branch == BRANCH_MAIN_DUNGEON
         && lev_mons < 28)
     {
-        lev_mons = fuzz_mons_level(lev_mons);
+        // If on D:1, allow moderately out-of-depth monsters only after
+        // a certain elapsed turn count on the level (currently 700 turns).
+        if (lev_mons || _need_moderate_ood(lev_mons))
+            lev_mons = _fuzz_mons_level(lev_mons);
 
         // potentially nasty surprise, but very rare
-        if (need_super_ood(lev_mons))
+        if (_need_super_ood(lev_mons))
             lev_mons += random2(12);
 
         // slightly out of depth monsters are more common:
