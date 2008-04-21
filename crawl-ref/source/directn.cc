@@ -2051,7 +2051,6 @@ static std::string stair_destination_description(const coord_def &pos)
 
 static void describe_monster(const monsters *mon)
 {
-
     // first print type and equipment
     std::string text = get_monster_desc(mon);
     text += ".";
@@ -2155,6 +2154,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     std::string desc = mon->name(mondtype);
 
     const int mon_arm = mon->inv[MSLOT_ARMOUR];
+    const int mon_shd = mon->inv[MSLOT_SHIELD];
     std::string weap = "";
 
     if (mon->type != MONS_DANCING_WEAPON)
@@ -2167,13 +2167,25 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
         desc += weap;
     }
 
-    if (full_desc && mon_arm != NON_ITEM)
+    if (full_desc)
     {
-        desc += ", ";
-        if (!weap.empty())
-            desc += "and ";
-        desc += "wearing ";
-        desc += mitm[mon_arm].name(DESC_NOCAP_A);
+        if (mon_arm != NON_ITEM)
+        {
+            desc += ", ";
+            if (!weap.empty() && mon_shd == NON_ITEM)
+                desc += "and ";
+            desc += "wearing ";
+            desc += mitm[mon_arm].name(DESC_NOCAP_A);
+        }
+
+        if (mon_shd != NON_ITEM)
+        {
+            desc += ", ";
+            if (!weap.empty() || mon_arm != NON_ITEM)
+                desc += "and ";
+            desc += "wearing ";
+            desc += mitm[mon_shd].name(DESC_NOCAP_A);
+        }
     }
 
     return desc;
