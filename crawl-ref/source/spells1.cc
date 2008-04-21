@@ -107,9 +107,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
             if (!beam.isValid || coord_def(beam.tx, beam.ty) == you.pos())
             {
-                if (!wizard_blink &&
-                    !yesno("Are you sure you want to cancel this blink?",
-                           false, 'n'))
+                if (!wizard_blink
+                    && !yesno("Are you sure you want to cancel this blink?",
+                              false, 'n'))
                 {
                     mesclr();
                     continue;
