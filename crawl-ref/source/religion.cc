@@ -1133,23 +1133,23 @@ bool bless_follower(monsters* follower,
     {
         case GOD_SHINING_ONE:
         {
-            // Make a monster friendly if it's charmed, optionally
-            // extending its stay if it's abjurable.  If neither is
+            // Extend a monster's stay if it's abjurable, optionally
+            // making it friendly if it's charmed.  If neither is
             // possible, deliberately fall through.
-            bool friendliness = _tso_blessing_friendliness(mon);
-            bool more_time = false;
+            bool more_time = _tso_blessing_extend_stay(mon);
+            bool friendliness = false;
 
-            if (!friendliness || coinflip())
-                more_time = _tso_blessing_extend_stay(mon);
+            if (!more_time || coinflip())
+                friendliness = _tso_blessing_friendliness(mon);
 
-            if (friendliness && more_time)
+            if (more_time && friendliness)
                 result = "friendliness and more time in this world";
-            else if (friendliness)
-                result = "friendliness";
             else if (more_time)
                 result = "more time in this world";
+            else if (friendliness)
+                result = "friendliness";
 
-            if (friendliness || more_time)
+            if (more_time || friendliness)
                 break;
         }
 
