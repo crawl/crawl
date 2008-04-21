@@ -3174,8 +3174,9 @@ static bool _beogh_retribution()
         }
         if (num_created)
         {
-            snprintf(info, INFO_SIZE, " throws %s of orc slaying at you.",
-                     num_created > 1 ? "implements" : "an implement");
+            snprintf(info, INFO_SIZE, " throws %s of %s at you.",
+                num_created > 1 ? "implements" : "an implement",
+                you.species == SP_HILL_ORC ? "orc slaying" : "electrocution");
             simple_god_message(info, god);
             break;
         } // else fall through
