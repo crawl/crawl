@@ -2475,7 +2475,8 @@ static void _crusade_card(int power, deck_rarity_type rarity)
             // Might be too good.
             if ( monster->hit_dice * 35 < random2(power) )
             {
-                simple_monster_message(monster, " is converted.");
+                bool converted = false;
+
                 if ( one_chance_in(5 - power_level) )
                 {
                     if (you.religion == GOD_BEOGH &&
@@ -2484,10 +2485,19 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                         beogh_convert_orc(monster, false);
                     }
                     else
+                    {
                         monster->attitude = ATT_FRIENDLY;
+                        converted = true;
+                    }
                 }
                 else
+                {
                     monster->add_ench(ENCH_CHARM);
+                    converted = true;
+                }
+
+                if (converted)
+                    simple_monster_message(monster, " is converted.");
             }
         }
     }
