@@ -5373,7 +5373,7 @@ static bool _do_move_monster(monsters *monster, int xi, int yi)
     if (!xi && !yi)
         return false;
 
-    /* this appears to be the real one, ie where the movement occurs: */
+    // this appears to be the real one, ie where the movement occurs:
     _swim_or_move_energy(monster);
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
@@ -5381,8 +5381,8 @@ static bool _do_move_monster(monsters *monster, int xi, int yi)
     monster->x = fx;
     monster->y = fy;
 
-    /* need to put in something so that monster picks up multiple
-       items (eg ammunition) identical to those it's carrying. */
+    // need to put in something so that monster picks up multiple
+    // items (eg ammunition) identical to those it's carrying.
     mgrd[monster->x][monster->y] = monster_index(monster);
 
     monster->check_redraw(monster->pos() - coord_def(xi, yi));
