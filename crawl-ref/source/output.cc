@@ -449,15 +449,8 @@ static void _print_stats_ac(int x, int y)
     {
         textcolor( LIGHTBLUE );  // no end of effect warning
     }
-    if (you.equip[EQ_SHIELD] == -1)
-    {
-        textcolor( DARKGREY );
-        cprintf( " - " );
-    }
-    else
-    {
-        cprintf( "%2d ", player_shield_class() );
-    }
+
+    cprintf( "%2d ", player_shield_class() );
     textcolor( LIGHTGREY );
 }
 
