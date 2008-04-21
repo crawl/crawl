@@ -404,11 +404,11 @@ static void _give_monster_experience( monsters *victim,
         if (mon->gain_exp(experience))
         {
             // Randomly bless the follower who gained experience.
-            if (((you.religion == GOD_SHINING_ONE
+            if ((((you.religion == GOD_SHINING_ONE
                 && random2(you.piety) >= piety_breakpoint(0))
                     || (you.religion == GOD_BEOGH
                         && random2(you.piety) >= piety_breakpoint(2)))
-                && !player_under_penance()
+                && !player_under_penance())
                 && !one_chance_in(3))
             {
                 bless_follower(mon);
@@ -913,14 +913,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && (!player_under_penance() &&
                         random2(you.piety) >= piety_breakpoint(0))))
             {
-                // For TSO, give health from killing evil, or randomly
-                // bless a follower.
-                if (you.religion == GOD_SHINING_ONE && one_chance_in(3)
-                    && bless_follower())
-                {
-                    break;
-                }
-
                 if (you.hp < you.hp_max)
                 {
                     mpr("You feel a little better.");
@@ -945,10 +937,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
             // Randomly bless a follower.
             if (!created_friendly && gives_xp
-                && (you.religion == GOD_BEOGH
-                    && mons_holiness(monster) == MH_NATURAL)
-                && (!player_under_penance()
-                    && random2(you.piety) >= piety_breakpoint(2)))
+                && (((you.religion == GOD_SHINING_ONE
+                    && mons_is_evil_or_unholy(monster)
+                    && random2(you.piety) >= piety_breakpoint(0))
+                        || (you.religion == GOD_BEOGH
+                            && mons_holiness(monster) == MH_NATURAL
+                            && random2(you.piety) >= piety_breakpoint(2)))
+                    && !player_under_penance()))
             {
                 bless_follower();
             }
@@ -1071,11 +1066,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 {
                     monsters *mon = &menv[i];
 
-                    // Give a follower health from killing evil, or
-                    // randomly bless it.
-                    if (!one_chance_in(3) && bless_follower(mon))
-                        break;
-
                     if (mon->alive() && mon->hit_points < mon->max_hit_points)
                     {
                         simple_monster_message(mon, " looks invigorated.");
@@ -1085,11 +1075,14 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
 
                 // Randomly bless the follower who killed.
-                if (you.religion == GOD_BEOGH
-                        && mons_holiness(monster) == MH_NATURAL
-                    && (!player_under_penance()
-                        && random2(you.piety) >= piety_breakpoint(2)
-                        && !one_chance_in(3))
+                if (((you.religion == GOD_SHINING_ONE
+                       && mons_is_evil_or_unholy(monster)
+                       && random2(you.piety) >= piety_breakpoint(0))
+                           || (you.religion == GOD_BEOGH
+                               && mons_holiness(monster) == MH_NATURAL
+                               && random2(you.piety) >= piety_breakpoint(2))
+                    && !player_under_penance())
+                    && !one_chance_in(3)
                     && !invalid_monster_index(i))
                 {
                     monsters *mon = &menv[i];
