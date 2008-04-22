@@ -1043,12 +1043,14 @@ static bool _mutation_is_fully_inactive(mutation_type mut)
 }
 
 // Is there any sense in trying to mutate?
-// XXX: Should this also check for mutation resistance or the amulet?
+// XXX: Should this also check for the amulet?
 bool can_safely_mutate()
 {
     return (!you.is_undead
             || (you.is_undead == US_SEMI_UNDEAD
-                && you.hunger_state == HS_ENGORGED));
+                && you.hunger_state == HS_ENGORGED)
+            || player_mutation_level(MUT_MUTATION_RESISTANCE) != 3);
+
 }
 
 formatted_string describe_mutations()
