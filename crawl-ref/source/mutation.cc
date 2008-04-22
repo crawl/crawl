@@ -2345,7 +2345,6 @@ bool delete_mutation(mutation_type which_mutation, bool force, bool good)
             modify_stat(STAT_DEXTERITY, 2, true, "losing a mutation");
         else
             modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
-
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
         break;
 
@@ -2353,7 +2352,6 @@ bool delete_mutation(mutation_type which_mutation, bool force, bool good)
     case MUT_YELLOW_SCALES:
         if (you.mutation[mutat] != 1)
             modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
-
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
         break;
 
