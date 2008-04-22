@@ -251,7 +251,7 @@ void CrawlStoreValue::unset(bool force)
 
     case SV_NONE:
         ASSERT(false);
-        
+
     case NUM_STORE_VAL_TYPES:
         ASSERT(false);
     }
@@ -417,7 +417,7 @@ void CrawlStoreValue::write(writer &th) const
 
     case SV_NONE:
         ASSERT(false);
-        
+
     case NUM_STORE_VAL_TYPES:
         ASSERT(false);
     }
@@ -497,7 +497,7 @@ void CrawlStoreValue::read(reader &th)
 
     case SV_NONE:
         ASSERT(false);
-        
+
     case NUM_STORE_VAL_TYPES:
         ASSERT(false);
     }
@@ -1192,7 +1192,7 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
 
     if (i == hash_map.end())
     {
-        hash_map[key]       = CrawlStoreValue(default_flags);
+        hash_map[key]        = CrawlStoreValue(default_flags);
         CrawlStoreValue &val = hash_map[key];
 
         if (type != SV_NONE)

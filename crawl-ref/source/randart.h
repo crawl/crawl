@@ -37,7 +37,7 @@ void set_unique_item_status( object_class_type base_type, int type,
 /* ***********************************************************************
  * called from: itemname
  * *********************************************************************** */
-std::string randart_name( const item_def &item );
+std::string get_randart_name( const item_def &item );
 
 /* ***********************************************************************
  * called from: describe

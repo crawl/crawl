@@ -1053,7 +1053,7 @@ std::string item_def::name_aux( description_level_type desc,
 
         if (is_random_artefact( *this ) && !dbname)
         {
-            buff << randart_name(*this);
+            buff << get_randart_name(*this);
             break;
         }
 
@@ -1166,7 +1166,7 @@ std::string item_def::name_aux( description_level_type desc,
         // When asking for the base item name, randartism is ignored.
         if (is_random_artefact( *this ) && !basename && !dbname)
         {
-            buff << randart_name(*this);
+            buff << get_randart_name(*this);
             break;
         }
 
@@ -1409,7 +1409,7 @@ std::string item_def::name_aux( description_level_type desc,
 
         if (is_randart && !dbname)
         {
-            buff << randart_name(*this);
+            buff << get_randart_name(*this);
             break;
         }
 
