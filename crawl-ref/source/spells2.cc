@@ -1484,7 +1484,7 @@ void summon_scorpions(int pow)
 
 void summon_ugly_thing(int pow)
 {
-    int chance = std::max(6 - (pow / 14), 2);
+    int chance = std::max(6 - (pow / 11) + random2(2), 1);
 
     monster_type ugly = (one_chance_in(chance)) ?
         MONS_VERY_UGLY_THING : MONS_UGLY_THING;
