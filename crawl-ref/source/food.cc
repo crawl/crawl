@@ -742,16 +742,18 @@ static void describe_food_change(int food_increment)
     mpr(msg.c_str());
 }                               // end describe_food_change()
 
-static bool prompt_eat_chunk(const item_def &item, bool rotten)
+static bool _player_can_eat_rotten_meat(bool need_msg = false)
 {
-    if (rotten && !player_mutation_level(MUT_SAPROVOROUS)
-        && !yesno("Are you sure you want to eat this rotten meat?",
-                  false, 'n'))
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+        || player_mutation_level(MUT_SAPROVOROUS))
     {
-        canned_msg(MSG_OK);
-        return (false);
+        return (true);
     }
-    return (true);
+
+    if (need_msg)
+        mpr("You refuse to eat that rotten meat.");
+
+    return (false);
 }
 
 // should really be merged into function below -- FIXME
@@ -792,7 +794,7 @@ void eat_from_inventory(int which_inventory_slot)
         const int chunk_type = mons_corpse_effect( mons_type );
         const bool rotten    = food_is_rotten(food);
 
-        if (!prompt_eat_chunk(food, rotten))
+        if (rotten && !_player_can_eat_rotten_meat(true))
             return;
 
         eat_chunk(determine_chunk_effect(chunk_type, rotten), cannibal, intel);
@@ -839,7 +841,7 @@ void eat_floor_item(int item_link)
         const bool cannibal  = is_player_same_species( food.plus );
         const bool rotten    = food_is_rotten(food);
 
-        if (!prompt_eat_chunk(food, rotten))
+        if (!_player_can_eat_rotten_meat(true))
             return;
 
         eat_chunk(determine_chunk_effect(chunk_type, rotten), cannibal, intel);
@@ -859,7 +861,7 @@ int eat_from_floor()
         return 0;
 
     bool need_more = false;
-    int vamp_undrainable_corpse = 0;
+    int unusable_corpse = 0;
     bool found_valid = false;
     for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
     {
@@ -875,9 +877,14 @@ int eat_from_floor()
 
             if (!mons_has_blood(item.plus))
             {
-                vamp_undrainable_corpse++;
+                unusable_corpse++;
                 continue;
             }
+        }
+        else if (food_is_rotten(item) && !_player_can_eat_rotten_meat())
+        {
+            unusable_corpse++;
+            continue;
         }
 
         found_valid = true;
@@ -901,11 +908,17 @@ int eat_from_floor()
         // else no: try next one
     }
 
-    if (!found_valid && vamp_undrainable_corpse)
+    if (!found_valid && unusable_corpse)
     {
-        mprf("%s devoid of blood.",
-             (vamp_undrainable_corpse == 1) ? "This corpse is"
-                                            : "These corpses are");
+        if (you.species == SP_VAMPIRE)
+        {
+            mprf("%s devoid of blood.",
+                 (unusable_corpse == 1) ? "This corpse is"
+                                        : "These corpses are");
+        }
+        else
+            _player_can_eat_rotten_meat(true);
+
         need_more = true;
     }
 
@@ -1554,7 +1567,7 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     case CE_HCL:
     case CE_MUTAGEN_RANDOM:
         if (you.species == SP_GHOUL
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
         {
             this_chunk_effect = CE_CLEAN;
         }
@@ -1562,7 +1575,7 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 
     case CE_POISONOUS:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-                || player_res_poison() > 0)
+            || player_res_poison() > 0)
         {
             this_chunk_effect = CE_CLEAN;
         }
@@ -1570,7 +1583,7 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 
     case CE_CONTAMINATED:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-                && player_mutation_level(MUT_SAPROVOROUS) < 3)
+            && player_mutation_level(MUT_SAPROVOROUS) < 3)
         {
             this_chunk_effect = CE_CLEAN;
         }

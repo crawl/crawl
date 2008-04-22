@@ -467,7 +467,7 @@ static bool _is_pet_kill(killer_type killer, int i)
         return (false);
 
     const monsters *m = &menv[i];
-    if (mons_friendly(m))
+    if (mons_friendly(m)) // this includes enslaved monsters
         return (true);
 
     // Check if the monster was confused by you or a friendly, which
@@ -685,11 +685,13 @@ static void _fire_monster_death_event(monsters *monster,
         {
             const level_id target(BRANCH_SLIME_PITS, 6);
             if (is_existing_level(target))
+            {
                 apply_to_level(
                     target,
                     true,
                     target == level_id::current()?
                     _slime_pit_unlock_onlevel : _slime_pit_unlock_offlevel );
+            }
         }
     }
 }
@@ -728,14 +730,16 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         if (me.ench == ENCH_CONFUSION && me.who == KC_YOU)
             killer = KILL_YOU_CONF;
     }
+    else if (MON_KILL(killer) && monster->has_ench(ENCH_CHARM))
+        killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
 
     // Take note!
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-        if ( MONST_INTERESTING(monster) ||
+        if ( MONST_INTERESTING(monster)
              // XXX yucky hack
-             monster->type == MONS_PLAYER_GHOST ||
-             monster->type == MONS_PANDEMONIUM_DEMON )
+             || monster->type == MONS_PLAYER_GHOST
+             || monster->type == MONS_PANDEMONIUM_DEMON )
         {
             take_note(Note(NOTE_KILL_MONSTER,
                            monster->type, mons_friendly(monster),

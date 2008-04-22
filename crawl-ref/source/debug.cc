@@ -2271,7 +2271,6 @@ static const char *mutation_type_names[] = {
     "fangs",
     "hooves",
     "talons",
-    "paws",
     "breathe poison",
     "stinger",
     "big wings",
@@ -2281,7 +2280,8 @@ static const char *mutation_type_names[] = {
     "shaggy fur",
     "high mp",
     "low mp",
-    "sleepiness",
+    "",
+    "",
     "",
     "",
 
