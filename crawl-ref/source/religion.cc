@@ -909,15 +909,21 @@ static bool _tso_blessing_extend_stay(monsters *mon)
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
+    const int increase = 350 + random2(350);
+    const int threshold = (increase + you.piety) * 2;
+
     // Extend the time an abjurable monster has before disappearing.
-    abj.duration += 300 + random2(300);
+    abj.duration += increase;
 
     // If the extended stay is long enough, make it permanent.  Note
     // that we have to delete the enchantment without removing the
     // enchantment effect, in order to keep the monster from
     // disappearing.
-    if (abj.duration > 2999)
+    if (abj.duration >= threshold)
+    {
         mon->del_ench(ENCH_ABJ, true, false);
+        mpr("Permanent.", MSGCH_DIAGNOSTICS);
+    }
     else
         mon->update_ench(abj);
 
@@ -1135,7 +1141,7 @@ bool bless_follower(monsters* follower,
         {
             // Extend a monster's stay if it's abjurable, optionally
             // making it friendly if it's charmed.  If neither is
-            // possible, either deliberately fall through or get out.
+            // possible, deliberately fall through.
             bool more_time = _tso_blessing_extend_stay(mon);
             bool friendliness = false;
 
@@ -1151,9 +1157,6 @@ bool bless_follower(monsters* follower,
 
             if (more_time || friendliness)
                 break;
-
-            if (coinflip())
-                return false;
         }
 
         case GOD_BEOGH:
