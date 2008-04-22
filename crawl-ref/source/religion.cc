@@ -853,7 +853,8 @@ static bool _blessing_AC(monsters* mon)
 static bool _blessing_balms(monsters *mon)
 {
     // Remove poisoning, sickness, confusion, and rotting, like a potion
-    // of healing, but without the healing.
+    // of healing, but without the healing.  Also, remove slowing and
+    // fatigue.
     bool success = false;
 
     if (mon->del_ench(ENCH_POISON, true))
@@ -866,6 +867,12 @@ static bool _blessing_balms(monsters *mon)
         success = true;
 
     if (mon->del_ench(ENCH_ROT, true))
+        success = true;
+
+    if (mon->del_ench(ENCH_SLOW, true))
+        success = true;
+
+    if (mon->del_ench(ENCH_FATIGUE, true))
         success = true;
 
     return success;
