@@ -1017,8 +1017,8 @@ void fixup_mutations()
 
 bool mutation_is_fully_active(mutation_type mut)
 {
-    // for all species except vampires their mutations always apply
-    if (you.species != SP_VAMPIRE)
+    // for all except the semi-undead, mutations always apply
+    if (you.is_undead != US_SEMI_UNDEAD)
         return (true);
 
     // innate mutations are always active
@@ -1029,7 +1029,7 @@ bool mutation_is_fully_active(mutation_type mut)
     if (mutation_defs[mut].physical)
         return (true);
 
-    // ... as well as all mutations for vampires at Alive
+    // ... as well as all mutations for the living semi-undead
     if (you.hunger_state == HS_ENGORGED)
         return (true);
 
@@ -1038,7 +1038,7 @@ bool mutation_is_fully_active(mutation_type mut)
 
 static bool _mutation_is_fully_inactive(mutation_type mut)
 {
-    return (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
+    return (you.is_undead == US_SEMI_UNDEAD && you.hunger_state < HS_SATIATED
             && !you.demon_pow[mut] && !mutation_defs[mut].physical);
 }
 
@@ -1686,7 +1686,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         force_mutation = true;
 
     bool rotting = you.is_undead;
-    if (you.species == SP_VAMPIRE)
+    if (you.is_undead == US_SEMI_UNDEAD)
     {
         // The stat gain mutation always come through at Satiated or
         // higher (mostly for convenience), and, for consistency, also
@@ -1722,7 +1722,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     // except for demonspawn (or other permamutations) in lichform -- haranp
     if (rotting && !demonspawn)
     {
-        if (!wearing_amulet(AMU_RESIST_MUTATION)? !one_chance_in(3)
+        if (!wearing_amulet(AMU_RESIST_MUTATION) ? !one_chance_in(3)
             : one_chance_in(10))
         {
             mpr( "Your body decomposes!", MSGCH_MUTATION );

@@ -5133,7 +5133,7 @@ bool rot_player( int amount )
         return false;
 
     if (you.is_undead
-        && (you.species != SP_VAMPIRE || you.hunger_state <= HS_HUNGRY))
+        && (you.species != SP_VAMPIRE || you.hunger_state < HS_SATIATED))
     {
         mpr( "You feel terrible." );
         return false;
@@ -5974,8 +5974,8 @@ bool player::can_go_berserk(bool verbose) const
         return (false);
     }
 
-    if (you.is_undead && (you.species != SP_VAMPIRE
-                          || you.hunger_state < HS_FULL))
+    if (you.is_undead &&
+        (you.species != SP_VAMPIRE || you.hunger_state <= HS_SATIATED))
     {
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
