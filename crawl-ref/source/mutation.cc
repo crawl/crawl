@@ -1411,7 +1411,7 @@ static void _display_vampire_attributes()
        {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
         "Satiated  ", "<yellow>Thirsty</yellow>  ", "<yellow>Near...</yellow>  ",
         "<lightred>Bloodless</lightred>"},
-                                //Alive          Full        Satiated       Thirsty    Near...      Bloodless
+                                //Alive          Full       Satiated       Thirsty   Near...      Bloodless
        {"Metabolism           ", "very fast  ", "fast    ", "fast      ",  "normal   ", "slow     ", "none"},
 
        {"Regeneration         ", "very fast  ", "fast    ", "normal    ",  "normal   ", "slow     ", "none"},
@@ -1879,7 +1879,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
         return false;
 
-    // Vampires' hunger rate depends on their blood level.
+    // Vampires' thirst rate depends on their blood level.
     if (you.species == SP_VAMPIRE
         && (mutat == MUT_SLOW_METABOLISM || mutat == MUT_FAST_METABOLISM
             || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))

@@ -99,7 +99,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
 
             lessen_hunger(1000, true);
 
-            // healing depends on hunger
+            // healing depends on thirst
             if (you.hunger_state <= HS_HUNGRY) // !heal wounds
             {
                 inc_hp((10 + random2avg(30,2)) / factor, false);

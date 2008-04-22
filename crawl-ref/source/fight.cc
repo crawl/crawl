@@ -180,10 +180,11 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
 
-    // vampires know how to bite and aim better when hungry
+    // vampires know how to bite and aim better when thirsty
     if (you.species == SP_VAMPIRE && uattack == UNAT_BITE)
     {
         your_to_hit += 1;
+
         if (vampiric)
         {
             if (you.hunger_state <= HS_STARVING)
@@ -1018,7 +1019,8 @@ bool melee_attack::player_aux_unarmed()
                 if (_vamp_wants_blood_from_monster(def))
                 {
                     // prob of vampiric bite:
-                    // 1/4 when non-hungry, 1/2 when hungry, 100% when starving
+                    // 1/4 when non-thirsty, 1/2 when thirsty, 100% when
+                    // bloodless
                     if (you.hunger_state > HS_HUNGRY && coinflip())
                         break;
 
