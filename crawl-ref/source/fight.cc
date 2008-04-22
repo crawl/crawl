@@ -601,7 +601,7 @@ static bool _vamp_wants_blood_from_monster(const monsters *mon)
     if (you.species != SP_VAMPIRE)
         return (false);
 
-    if (you.hunger_state >= HS_ENGORGED)
+    if (you.hunger_state == HS_ENGORGED)
         return (false);
 
     if (!mons_has_blood(mon->type))

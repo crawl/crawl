@@ -1353,8 +1353,8 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                         desc += EOL "[Shift-R-Click] Drink blood (e)";
                 }
                 else if (item.base_type == OBJ_FOOD
-                         && you.species != SP_VAMPIRE
-                         && you.species != SP_MUMMY)
+                         && you.is_undead != US_UNDEAD
+                         && you.species != SP_VAMPIRE)
                 {
                     desc += EOL "[Shift-R-Click] Eat (e)";
                 }

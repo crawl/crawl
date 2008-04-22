@@ -4610,7 +4610,7 @@ void tile_use_item(int idx, InvAction act)
         if (mitm[idx].base_type == OBJ_CORPSES
                 && you.species == SP_VAMPIRE
             || mitm[idx].base_type == OBJ_FOOD
-                && you.species != SP_MUMMY && you.species != SP_VAMPIRE)
+                && you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE)
         {
             eat_floor_item(idx);
         }

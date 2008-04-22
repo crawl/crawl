@@ -3068,7 +3068,7 @@ void level_change(bool skip_attribute_increase)
             case SP_VAMPIRE:
                 if (you.experience_level == 3)
                 {
-                    if (you.hunger_state == HS_ENGORGED)
+                    if (you.hunger_state > HS_SATIATED)
                     {
                         mpr( "If you weren't so full you could now transform "
                              "into a vampire bat.", MSGCH_INTRINSIC_GAIN );
