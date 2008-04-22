@@ -1786,8 +1786,9 @@ bool make_item_blessed_blade( item_def &item )
     if (is_artefact(item))
         return (false);
 
-    // mark as an artefact
+    // mark as a random artefact
     item.flags |= ISFLAG_ARTEFACT_MASK;
+    item.flags &= ~ISFLAG_UNRANDART;
 
     ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
     item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
