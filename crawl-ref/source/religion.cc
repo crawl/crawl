@@ -909,7 +909,7 @@ static bool _tso_blessing_extend_stay(monsters *mon)
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
-    const int increase = 350 + random2(350);
+    const int increase = 300 + random2(300);
     const int threshold = (increase + you.piety) * 2;
 
     // Extend the time an abjurable monster has before disappearing.
@@ -920,10 +920,7 @@ static bool _tso_blessing_extend_stay(monsters *mon)
     // enchantment effect, in order to keep the monster from
     // disappearing.
     if (abj.duration >= threshold)
-    {
         mon->del_ench(ENCH_ABJ, true, false);
-        mpr("Permanent.", MSGCH_DIAGNOSTICS);
-    }
     else
         mon->update_ench(abj);
 
