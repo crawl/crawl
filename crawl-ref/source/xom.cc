@@ -626,11 +626,8 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 9)
     {
-        if (you.is_undead
-            && (you.species != SP_VAMPIRE || you.hunger_state != HS_ENGORGED))
-        {
+        if (!can_safely_mutate())
             goto try_again;
-        }
 
         god_speaks(GOD_XOM, _get_xom_speech("good mutations"));
         mpr("Your body is suffused with distortional energy.");
@@ -761,12 +758,8 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 6)
         {
-            if (you.is_undead
-                && (you.species != SP_VAMPIRE
-                    || you.hunger_state != HS_ENGORGED))
-            {
+            if (!can_safely_mutate())
                 goto try_again;
-            }
 
             god_speaks(GOD_XOM, _get_xom_speech("random mutations"));
             mpr("Your body is suffused with distortional energy.");
