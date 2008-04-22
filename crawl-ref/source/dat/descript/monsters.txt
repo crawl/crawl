@@ -65,7 +65,7 @@ at us. May it please Your Majesty to enquire who is.'"
 %%%%
 __cap-O_suffix
 
-"The little princess, asleep in her cradle, floated on the water, and at
+$"The little princess, asleep in her cradle, floated on the water, and at
 last she was cast up on the shore of a beautiful country, where, however,
 very few people dwelt since the ogre Ravagio and his wife Tourmentine had
 gone to live there-for they ate up everybody. Ogres are terrible people.
