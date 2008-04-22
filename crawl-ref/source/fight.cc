@@ -750,7 +750,7 @@ bool melee_attack::player_attack()
         player_sustain_passive_damage();
 
         // thirsty stabbing vampires get to draw blood
-        if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY
+        if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
             && stab_attempt && stab_bonus > 0)
         {
             _player_vampire_draws_blood(monster_index(def), damage_done, true);
