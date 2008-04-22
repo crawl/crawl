@@ -102,12 +102,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item)
         {
             return (false);
         }
-
-        // XXX: There should be a better way to do this!
-        // Remove all other effects on blessed weapons, so that they
-        // only have the holy wrath brand.
-        if (is_blessed(item) && randart_wpn_num_props(item) > 1)
-            return (false);
         break;
 
     case GOD_LUGONU: // corruption
@@ -1259,7 +1253,8 @@ static std::string _get_artefact_type(const int type)
 
 static bool _pick_db_name( const item_def &item )
 {
-    if (is_blessed(item))
+    // Blessed blades always get database names.
+    if (is_blessed_blade(item))
         return true;
 
     switch (item.base_type)

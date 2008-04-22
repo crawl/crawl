@@ -171,8 +171,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
             && (!is_fixed_artefact( *weapon )
                 && (weap_brand == SPWPN_HOLY_WRATH
-                    || (weapon->base_type == OBJ_WEAPONS
-                         && is_blessed(*weapon)))))
+                    || is_blessed_blade(*weapon))))
     {
         SAY(mpr("This weapon will not allow you to wield it."));
         return false;

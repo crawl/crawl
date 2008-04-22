@@ -676,7 +676,7 @@ void set_equip_race( item_def &item, unsigned long flags )
             || item.sub_type == WPN_DEMON_BLADE
             || item.sub_type == WPN_DEMON_WHIP
             || item.sub_type == WPN_DEMON_TRIDENT
-            || is_blessed(item))
+            || is_blessed_blade(item))
         {
             return;
         }
@@ -1634,7 +1634,7 @@ bool is_demonic( const item_def &item )
     return (false);
 }                               // end is_demonic()
 
-bool is_blessed( const item_def &item )
+bool is_blessed_blade( const item_def &item )
 {
     if (item.base_type == OBJ_WEAPONS)
     {
@@ -1656,7 +1656,7 @@ bool is_blessed( const item_def &item )
     }
 
     return (false);
-}                               // end is_blessed()
+}                               // end is_blessed_blade()
 
 bool is_convertible( const item_def &item )
 {
@@ -1734,7 +1734,7 @@ bool convert2good( item_def &item, bool allow_blessed )
         break;
     }
 
-    if (is_blessed(item))
+    if (is_blessed_blade(item))
         item.flags &= ~ISFLAG_RACIAL_MASK;
 
     return (true);
@@ -1940,7 +1940,7 @@ bool check_weapon_shape( const item_def &item, bool quiet, bool check_id )
 
     if ((!check_id || item_type_known( item ))
         && ((item.base_type == OBJ_WEAPONS
-                && is_blessed(item))
+                && is_blessed_blade(item))
             || brand == SPWPN_HOLY_WRATH)
         && (you.is_undead || you.species == SP_DEMONSPAWN))
     {

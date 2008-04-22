@@ -668,7 +668,7 @@ bool is_double_ended( const item_def &item );
 int double_wpn_awkward_speed( const item_def &item );
 
 bool  is_demonic( const item_def &item );
-bool  is_blessed( const item_def &item );
+bool  is_blessed_blade( const item_def &item );
 bool  is_convertible( const item_def &item );
 bool  convert2good( item_def &item, bool allow_blessed = true );
 
