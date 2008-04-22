@@ -2436,7 +2436,7 @@ bool is_evil_item(const item_def& item)
 }
 
 // Is the destroyed weapon valuable enough to gain piety by doing so?
-// Evil weapon are handled specially.
+// Evil weapons are handled specially.
 static bool _destroyed_valuable_weapon(int value, int type)
 {
     // Artefacts (incl. most randarts).
