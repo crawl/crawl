@@ -663,7 +663,7 @@ bool cast_a_spell()
         return (false);
     }
 
-    if (you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE
+    if (you.is_undead != US_UNDEAD && you.is_undead != US_SEMI_UNDEAD
         && (you.hunger_state <= HS_STARVING
             || you.hunger <= spell_hunger( spell )))
     {
