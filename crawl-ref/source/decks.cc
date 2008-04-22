@@ -1195,8 +1195,8 @@ void evoke_deck( item_def& deck )
     if ( you.penance[GOD_NEMELEX_XOBEH] )
     {
         int c = 1;
-        if ( (flags & (CFLAG_MARKED | CFLAG_SEEN)) ||
-             props["num_marked"].get_byte() > 0 )
+        if ( (flags & (CFLAG_MARKED | CFLAG_SEEN))
+             || props["num_marked"].get_byte() > 0 )
         {
             c = 3;
         }
