@@ -1017,11 +1017,11 @@ void fixup_mutations()
 
 bool mutation_is_fully_active(mutation_type mut)
 {
-    // for all except the semi-undead, mutations always apply
+    // For all except the semi-undead, mutations always apply.
     if (you.is_undead != US_SEMI_UNDEAD)
         return (true);
 
-    // innate mutations are always active
+    // Innate mutations are always active
     if (you.demon_pow[mut])
         return (true);
 
@@ -1029,7 +1029,7 @@ bool mutation_is_fully_active(mutation_type mut)
     if (mutation_defs[mut].physical)
         return (true);
 
-    // ... as well as all mutations for the living semi-undead
+    // ... as are all mutations for semi-undead who are fully alive.
     if (you.hunger_state == HS_ENGORGED)
         return (true);
 
