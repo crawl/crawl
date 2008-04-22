@@ -173,18 +173,15 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Nemelex
     {
-         " disappear% <>without a glow</>.",
-         " <>glow% slightly</> and disappear%.",
-         " <>glow% with a rainbow of weird colours</> and disappear%.",
+         " disappear% without a glow.",
+         " glow% slightly and disappear%.",
+         " glow% with a rainbow of weird colours and disappear%.",
     },
     // Elyvilon (no sacrifices, but this is used for weapon destruction)
     {
-        " <>barely shimmer%</> and break% into pieces.",
-        " <>shimmer%</> and break% into pieces.",
-        " <>shimmer% wildly</> and break% into pieces.",
-        // " <>slowly evaporate%</>.",
-        // " <>evaporate%</>.",
-        // " <>glow% and evaporate%</>.",
+        " barely shimmer% and break% into pieces.",
+        " shimmer% and break% into pieces.",
+        " shimmer% wildly and break% into pieces.",
     },
     // Lugonu
     {
@@ -2438,6 +2435,33 @@ bool is_evil_item(const item_def& item)
     return retval;
 }
 
+// Is the destroyed weapon valuable enough to gain piety by doing so?
+// Evil weapon are handled specially.
+static bool _destroyed_valuable_weapon(int value, int type)
+{
+    // Artefacts (incl. most randarts).
+    if (random2(value) >= random2(250))
+        return true;
+
+    // Medium valuable items are more likely to net piety at low piety.
+    // This includes missiles in sufficiently large quantities.
+    if (random2(value) >= random2(100)
+        && one_chance_in(1 + you.piety/50))
+    {
+        return true;
+    }
+
+    // If not for the above, missiles shouldn't yield piety.
+    if (type == OBJ_MISSILES)
+        return false;
+
+    // Weapons, on the other hand, are always acceptable to boost low piety.
+    if (you.piety < 30 || player_under_penance())
+        return true;
+
+    return false;
+}
+
 bool ely_destroy_weapons()
 {
     if (you.religion != GOD_ELYVILON)
@@ -2452,7 +2476,7 @@ bool ely_destroy_weapons()
         const int next = mitm[i].link;  // in case we can't get it later.
 
         if (mitm[i].base_type != OBJ_WEAPONS
-            && mitm[i].base_type != OBJ_MISSILES
+                && mitm[i].base_type != OBJ_MISSILES
             || item_is_stationary(mitm[i])) // held in a net
         {
             i = next;
@@ -2464,28 +2488,22 @@ bool ely_destroy_weapons()
         mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
 #endif
 
-        if (is_evil_item(mitm[i]))
+        piety_gain_t pgain = PIETY_NONE;
+        bool is_evil_weapon = is_evil_item(mitm[i]);
+        if (is_evil_weapon
+            || _destroyed_valuable_weapon(value, mitm[i].base_type))
+        {
+            pgain = PIETY_SOME;
+            gain_piety(1);
+        }
+
+        // Elyvilon doesn't care about item sacrifices at altars, so
+        // I'm stealing _Sacrifice_Messages.
+        _print_sacrifice_message(GOD_ELYVILON, mitm[i], pgain);
+        if (is_evil_weapon)
         {
             simple_god_message(" welcomes the destruction of this evil weapon.",
                                GOD_ELYVILON);
-            gain_piety(1);
-        }
-        else
-        {
-            piety_gain_t pgain = PIETY_NONE;
-            if (random2(value) >= random2(250) // artefacts (incl. most randarts)
-                || (random2(value) >= random2(100)
-                    && one_chance_in(1 + you.piety/50))
-                || (mitm[i].base_type == OBJ_WEAPONS
-                    && (you.piety < 30 || player_under_penance())))
-            {
-                pgain = PIETY_SOME;
-                gain_piety(1);
-            }
-
-            // Elyvilon doesn't care about item sacrifices at altars, so
-            // I'm stealing _Sacrifice_Messages.
-            _print_sacrifice_message(GOD_ELYVILON, mitm[i], pgain);
         }
 
         destroy_item(i);
@@ -4149,10 +4167,10 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
         tag_end = "</white>";
         break;
     }
-    _replace(msg, "<>", tag_start);
-    _replace(msg, "</>", tag_end);
 
     msg.insert(0, item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE));
+    msg = tag_start + msg + tag_end;
+
     formatted_message_history(msg, MSGCH_GOD);
 }
 
@@ -4541,7 +4559,7 @@ void god_pitch(god_type which_god)
     snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?",
               (you.worshipped[which_god]) ? "re" : "" );
 
-    if (!yesno( info, true, 'n' ) || !yesno("Are you sure?", false, 'n'))
+    if (!yesno( info, false, 'n' ) || !yesno("Are you sure?", false, 'n'))
     {
         you.turn_is_over = false; // Okay, opt out.
         redraw_screen();
