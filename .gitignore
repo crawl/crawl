@@ -1,0 +1,16 @@
+*.[oa]
+*.ann
+*.diff
+saves/
+morgue/
+*.orig
+*.rej
+*.swp
+TAGS
+
+# The Crawl executable.
+crawl-ref/source/crawl
+
+# Level-compiler generated files.
+crawl-ref/source/util/*.cc
+crawl-ref/source/util/*.h
