@@ -1204,7 +1204,7 @@ blessing_done:
         view_update_at(c);
 
         update_screen();
-        delay(100);
+        delay(200);
 
         you.flash_colour = old_flash_colour;
         view_update_at(c);
