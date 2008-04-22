@@ -2047,7 +2047,8 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.mlistsz.x = 0;
     geom.mlistsz.y = 0;
 
-    region_tip->resize(geom.hudsz.x, 3);
+    if (region_tip)
+        region_tip->resize(geom.hudsz.x, 3);
     region_msg->resize(geom.msgsz.x, geom.msgsz.y);
     region_stat->resize(geom.hudsz.x, geom.hudsz.y);
 
