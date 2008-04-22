@@ -1318,14 +1318,6 @@ std::string randart_name( const item_def &item )
             }
 
             name = _replace_name_parts(name, item);
-#ifdef DEBUG_DIAGNOSTICS
-            if (name.length() > 30)
-            {
-                mprf(MSGCH_DIAGNOSTICS,
-                    "over-long name: %s  (length: %d)",
-                name.c_str(), name.length());
-            }
-#endif
         }
         while (--tries > 0 && name.length() > 30);
 
