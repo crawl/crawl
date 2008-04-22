@@ -2768,24 +2768,26 @@ static bool _zin_retribution()
     {
     case 0: // remove good mutations (25%)
     case 1:
-    {
-         simple_god_message(" draws some chaos from your body!", god);
-         bool success = false;
-         for (int i = 0; i < 7; i++)
-             if (random2(10) > i
-                 && delete_mutation(RANDOM_MUTATION, true, true))
-             {
-                 success = true;
-             }
+        if (can_safely_mutate())
+        {
+             simple_god_message(" draws some chaos from your body!", god);
+             bool success = false;
+             for (int i = 0; i < 7; i++)
+                 if (random2(10) > i
+                     && delete_mutation(RANDOM_MUTATION, true, true))
+                 {
+                     success = true;
+                 }
 
-         if (success && !count_mutations())
-         {
-             simple_god_message(" rids your body of chaos!");
-             // lower penance a bit more for being particularly successful
-             dec_penance(god, 1);
-         }
-         break;
-    }
+             if (success && !count_mutations())
+             {
+                 simple_god_message(" rids your body of chaos!");
+                 // lower penance a bit more for being particularly successful
+                 dec_penance(god, 1);
+             }
+             break;
+        }
+        // deliberate fall through
     case 2:
     case 3:
     case 4: // summon angels or bugs (pestilence), 3/8
