@@ -189,7 +189,7 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
         {
             if (you.hunger_state <= HS_STARVING)
                 your_to_hit += 2;
-            else if (you.hunger_state <= HS_HUNGRY)
+            else if (you.hunger_state < HS_SATIATED)
                 your_to_hit += 1;
         }
     }
@@ -1708,7 +1708,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     player_check_weapon_effects();
 
     // thirsty vampires will try to use a stabbing situation to draw blood
-    if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY
+    if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
         && mondied && stab_attempt && stab_bonus > 0
         && _player_vampire_draws_blood(monster_index(def), damage_done, true))
     {
