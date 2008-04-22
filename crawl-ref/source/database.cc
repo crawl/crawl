@@ -591,10 +591,16 @@ static std::string _query_database(DBM *db, std::string key,
 /////////////////////////////////////////////////////////////////////////////
 // Description DB specific functions.
 
-std::string getLongDescription(const std::string &key)
+std::string getLongDescription(const std::string &key, bool noquote)
 {
     if (!DescriptionDB.get())
         return ("");
+
+    if (noquote)
+    {
+        return _query_database(DescriptionDB.get(), key + " noquote",
+                               true, true);
+    }
 
     return _query_database(DescriptionDB.get(), key, true, true);
 }

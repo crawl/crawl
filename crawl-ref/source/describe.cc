@@ -1566,7 +1566,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     {
         description << "$$";
         std::string db_name = item.name(DESC_DBNAME, true, false, false);
-        std::string db_desc = getLongDescription(db_name);
+        std::string db_desc = getLongDescription(db_name, is_artefact(item));
 
         if (db_desc == "")
         {

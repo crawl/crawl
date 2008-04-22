@@ -412,6 +412,10 @@ chunk of flesh
 
 A piece of meat found in the dungeon.
 %%%%
+cloak noquote
+
+A cloth cloak.
+%%%%
 cloak
 
 A cloth cloak.
@@ -425,6 +429,10 @@ A cloth cloak.
  Once in my life I'll take a view;
    For I'll have a new cloak about me."
     -Anonymous, "The Old Cloak".  16th Century.
+%%%%
+club noquote
+
+A heavy piece of wood.
 %%%%
 club
 
@@ -466,6 +474,10 @@ crystal plate mail
 
 An incredibly heavy but extremely effective suit of crystalline
 armour.  It is somewhat resistant to corrosion.
+%%%%
+dagger noquote
+
+A long knife or a very short sword, which can be held or thrown.
 %%%%
 dagger
 
@@ -754,6 +766,10 @@ A suit made of hardened leather.
 lemon
 
 A yellow fruit.
+%%%%
+long sword noquote
+
+A sword with a long, slashing blade.
 %%%%
 long sword
 
