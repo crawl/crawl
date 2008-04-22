@@ -48,14 +48,14 @@ static void _purchase( int shop, int item_got, int cost, bool id);
 
 static void _shop_print( const char *shoppy, int line )
 {
-    cgotoxy(1, line+1, GOTO_MSG);
+    cgotoxy(1, line + 19, GOTO_CRT);
     cprintf("%s", shoppy);
     clear_to_end_of_line();
 }
 
 static void _shop_more()
 {
-    cgotoxy(65, 2, GOTO_MSG);
+    cgotoxy(65, 20, GOTO_CRT);
     cprintf("-more-");
     get_ch();
     return;
@@ -100,7 +100,7 @@ static void _list_shop_keys(const std::string &purchasable)
 {
     char buf[200];
     const int numlines = get_number_of_lines();
-    cgotoxy(1, numlines - 1);
+    cgotoxy(1, numlines - 1, GOTO_CRT);
 
     std::string pkeys = _purchase_keys(purchasable);
     if (!pkeys.empty())
@@ -113,7 +113,7 @@ static void _list_shop_keys(const std::string &purchasable)
     formatted_string fs = formatted_string::parse_string(buf);
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
     fs.display();
-    cgotoxy(1, numlines);
+    cgotoxy(1, numlines, GOTO_CRT);
 
     fs = formatted_string::parse_string(
             "[<w>?</w>/<w>*</w>]   Inventory  "
@@ -162,7 +162,7 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
         const int gp_value = _shop_get_item_value(mitm[stock[i]], shop.greed, id);
         const bool can_afford = (you.gold >= gp_value);
 
-        cgotoxy(1, i+1);
+        cgotoxy(1, i+1, GOTO_CRT);
         const char c = i + 'a';
         if (can_afford)
             purchasable += c;
@@ -189,8 +189,7 @@ static void _in_a_shop( int shopidx )
     clrscr();
 
     const std::string hello = "Welcome to " + shop_name(shop.x, shop.y) + "!";
-    _shop_print(hello.c_str(), 1);
-    _shop_more();
+    bool first = true;
 
     const bool id_stock = shoptype_identifies_stock(shop.type);
 
@@ -216,8 +215,19 @@ static void _in_a_shop( int shopidx )
         textcolor(YELLOW);
         _shop_print(info, 0);
 
-        snprintf( info, INFO_SIZE, "What would you like to %s? ",
-                  purchasable.length()? "purchase" : "do");
+        if (first)
+        {
+            first = false;
+            snprintf( info, INFO_SIZE, "%s What would you like to %s? ",
+                      hello.c_str(),
+                      purchasable.length() ? "purchase" : "do");
+        }
+        else
+        {
+            snprintf( info, INFO_SIZE, "What would you like to %s? ",
+                      purchasable.length() ? "purchase" : "do");
+        }
+
         textcolor(CYAN);
         _shop_print(info, 1);
 
@@ -1490,6 +1500,14 @@ void shop()
     if (i == MAX_SHOPS)
     {
         mpr("Help! Non-existent shop.", MSGCH_DANGER);
+        return;
+    }
+
+    // Quick out, if no inventory
+    if ( _shop_get_stock(i).empty() )
+    {
+        const shop_struct& shop = env.shop[i];
+        mprf("%s appears to be closed.", shop_name(shop.x, shop.y).c_str());
         return;
     }
 

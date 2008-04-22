@@ -521,6 +521,8 @@ static void _handle_wizard_command( void )
     case '$':
         you.gold += 1000;
         you.redraw_gold = 1;
+        if (!Options.show_gold_turns)
+            mprf("You now have %d gold.", you.gold);
         break;
 
     case 'a':
