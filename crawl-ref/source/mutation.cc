@@ -1240,14 +1240,15 @@ formatted_string describe_mutations()
                 result += "</green>";
             }
         }
+
         if (you.hunger_state <= HS_STARVING)
             result += "<green>You do not heal.</green>" EOL;
         else if (you.hunger_state <= HS_HUNGRY)
             result += "<green>You heal slowly.</green>" EOL;
-        else if (you.hunger_state >= HS_ENGORGED)
-            result += "<green>Your natural rate of healing is extremely fast.</green>" EOL;
         else if (you.hunger_state >= HS_FULL)
             result += "<green>Your natural rate of healing is unusually fast.</green>" EOL;
+        else if (you.hunger_state == HS_ENGORGED)
+            result += "<green>Your natural rate of healing is extremely fast.</green>" EOL;
         have_any = true;
         break;
 
@@ -1687,14 +1688,14 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     bool rotting = you.is_undead;
     if (you.species == SP_VAMPIRE)
     {
-        // The stat gain mutation always come through at Satiated or higher
-        // (mostly for convenience), and for consistency also their
-        // negative counterparts.
+        // The stat gain mutation always come through at Satiated or
+        // higher (mostly for convenience), and, for consistency, also
+        // their negative counterparts.
         if (which_mutation == MUT_STRONG || which_mutation == MUT_CLEVER
             || which_mutation == MUT_AGILE || which_mutation == MUT_WEAK
             || which_mutation == MUT_DOPEY || which_mutation == MUT_CLUMSY)
         {
-            if (you.hunger_state >= HS_FULL)
+            if (you.hunger_state > HS_SATIATED)
                 rotting = false;
         }
         else

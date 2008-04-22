@@ -824,7 +824,7 @@ static bool _vampire_cannot_cast(spell_type spell)
     if (you.species != SP_VAMPIRE)
         return false;
 
-    if (you.hunger_state >= HS_FULL)
+    if (you.hunger_state > HS_SATIATED)
         return false;
 
     // Satiated or less

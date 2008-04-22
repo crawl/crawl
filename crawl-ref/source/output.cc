@@ -2062,10 +2062,10 @@ std::string _status_mut_abilities()
         {
             if (you.hunger_state <= HS_HUNGRY)
                 text += " slowly";
-            else if (you.hunger_state == HS_ENGORGED)
-                text += " very quickly";
             else if (you.hunger_state >= HS_FULL)
                 text += " quickly";
+            else if (you.hunger_state == HS_ENGORGED)
+                text += " very quickly";
         }
         text += ", ";
     }
@@ -2305,7 +2305,7 @@ std::string _status_mut_abilities()
           break;
 
       case SP_VAMPIRE:
-          if (you.experience_level < 13 || you.hunger_state > HS_HUNGRY)
+          if (you.experience_level < 13 || you.hunger_state >= HS_SATIATED)
               break;
           // else fall-through
       case SP_MUMMY:

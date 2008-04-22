@@ -54,7 +54,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         pow = 150;
 
     const int factor
-        = (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY? 2 : 1);
+        = (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED ? 2 : 1);
 
     switch (pot_eff)
     {
@@ -100,7 +100,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
             lessen_hunger(1000, true);
 
             // healing depends on thirst
-            if (you.hunger_state <= HS_HUNGRY) // !heal wounds
+            if (you.hunger_state < HS_SATIATED) // !heal wounds
             {
                 inc_hp((10 + random2avg(30,2)) / factor, false);
                 mpr("You feel much better.");

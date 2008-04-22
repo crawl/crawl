@@ -1067,7 +1067,7 @@ bool victim_can_bleed(int montype)
     if (montype == -1) // player
     {
         if (you.is_undead && (you.species != SP_VAMPIRE
-                              || you.hunger_state < HS_FULL))
+                              || you.hunger_state <= HS_SATIATED))
         {
             return (false);
         }
