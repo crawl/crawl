@@ -4068,7 +4068,7 @@ static bool _bless_weapon( god_type god, int brand, int colour )
             if (is_convertible(you.inv[wpn]))
             {
                 origin_acquired(you.inv[wpn], GOD_SHINING_ONE);
-                make_item_randart(you.inv[wpn]);
+                make_item_blessed_blade(you.inv[wpn]);
             }
 
             burden_change();

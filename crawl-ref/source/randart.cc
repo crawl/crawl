@@ -27,12 +27,14 @@
 #include "database.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "message.h" // for debugging: more()
 #include "place.h"
 #include "player.h"
 #include "religion.h"
 #include "stuff.h"
 
-#define KNOWN_PROPS_KEY "randart_known_props"
+#define KNOWN_PROPS_KEY    "randart_known_props"
+#define RANDART_PROPS_KEY  "randart_props"
 
 /*
    The initial generation of a randart is very simple - it occurs
@@ -50,8 +52,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item)
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
     else if (is_good_god(which_god) && (brand == SPWPN_DRAINING
-              || brand == SPWPN_PAIN || brand == SPWPN_VAMPIRICISM)
-              || randart_wpn_property( item, RAP_CURSED ) != 0)
+             || brand == SPWPN_PAIN || brand == SPWPN_VAMPIRICISM)
+             || randart_wpn_property( item, RAP_CURSED ) != 0)
     {
         return (false);
     }
@@ -374,6 +376,7 @@ void randart_desc_properties( const item_def &item,
     if ( !force_fake_props && item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
         return;
 
+    // only jewellery need fake randart properties
     if (item.base_type != OBJ_JEWELLERY)
         return;
 
@@ -533,7 +536,9 @@ inline static void randart_propset( randart_properties_t &p,
                                     int value,
                                     bool neg )
 {
-    p[pt] = neg? -value : value;
+    // This shouldn't be called with 0, else no property gets added after all.
+    ASSERT(value != 0);
+    p[pt] = (neg? -value : value);
 }
 
 static int randart_add_one_property( const item_def &item,
@@ -550,7 +555,7 @@ static int randart_add_one_property( const item_def &item,
     int skip = -1;
 
     // Determine if we need to skip any of the above.
-    if (cl == OBJ_ARMOUR || (cl == OBJ_JEWELLERY && ty == RING_PROTECTION))
+    if (cl == OBJ_ARMOUR || cl == OBJ_JEWELLERY && ty == RING_PROTECTION)
         skip = 0;
     else if (cl == OBJ_JEWELLERY && ty == RING_EVASION)
         skip = 1;
@@ -605,50 +610,38 @@ static int randart_add_one_property( const item_def &item,
         break;
     }
 
-    return negench ? 0 : 1;
+    return (negench ? -1 : 1);
 }
 
-void randart_wpn_properties( const item_def &item,
-                             randart_properties_t &proprt,
-                             randart_known_props_t &known)
+void static _init_randart_properties(item_def &item)
 {
-    ASSERT( is_random_artefact( item ) );
-    ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
-    const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
-    ASSERT( _val.get_type() == SV_VEC );
-    const CrawlVector &known_vec = _val.get_vector();
-    ASSERT( known_vec.get_type()     == SV_BOOL );
-    ASSERT( known_vec.size()         == RA_PROPERTIES);
-    ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
+    CrawlHashTable &props = item.props;
+    if (!props.exists( RANDART_PROPS_KEY ))
+        props[RANDART_PROPS_KEY].new_vector(SV_SHORT).resize(RA_PROPERTIES);
 
-    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
-    {
-        for (vec_size i = 0; i < RA_PROPERTIES; i++)
-            known[i] = (bool) true;
-    }
-    else
-    {
-        for (vec_size i = 0; i < RA_PROPERTIES; i++)
-            known[i] = known_vec[i];
-    }
+    CrawlVector &rap = props[RANDART_PROPS_KEY];
+    rap.set_max_size(RA_PROPERTIES);
 
-    const object_class_type aclass = item.base_type;
-    const int atype = item.sub_type;
-
-    int power_level = 0;
+    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        rap[i] = (short) 0;
 
     if (is_unrandom_artefact( item ))
     {
         const unrandart_entry *unrand = seekunrandart( item );
 
         for (int i = 0; i < RA_PROPERTIES; i++)
-            proprt[i] = unrand->prpty[i];
+            rap[i] = (short) unrand->prpty[i];
 
         return;
     }
 
-    const long seed = calc_seed( item );
+    FixedVector< int, RA_PROPERTIES >  proprt;
 
+    const object_class_type aclass = item.base_type;
+    const int atype = item.sub_type;
+    int power_level = 0;
+
+    const long seed = calc_seed( item );
     rng_save_excursion exc;
     seed_rng( seed );
 
@@ -792,7 +785,7 @@ void randart_wpn_properties( const item_def &item,
             if (one_chance_in(4))
             {
                 proprt[RAP_STRENGTH] -= 1 + random2(3) + random2(3)
-                    + random2(3);
+                                          + random2(3);
                 power_level--;
             }
         }
@@ -806,7 +799,7 @@ void randart_wpn_properties( const item_def &item,
             if (one_chance_in(4))
             {
                 proprt[RAP_INTELLIGENCE] -= 1 + random2(3) + random2(3)
-                    + random2(3);
+                                              + random2(3);
                 power_level--;
             }
         }
@@ -820,7 +813,7 @@ void randart_wpn_properties( const item_def &item,
             if (one_chance_in(4))
             {
                 proprt[RAP_DEXTERITY] -= 1 + random2(3) + random2(3)
-                    + random2(3);
+                                           + random2(3);
                 power_level--;
             }
         }
@@ -836,8 +829,8 @@ void randart_wpn_properties( const item_def &item,
             power_level++;
             if (one_chance_in(4))
             {
-                proprt[RAP_ACCURACY] -= 1 + random2(3) + random2(3) +
-                    random2(3);
+                proprt[RAP_ACCURACY] -= 1 + random2(3) + random2(3)
+                                          + random2(3);
                 power_level--;
             }
         }
@@ -1111,7 +1104,46 @@ void randart_wpn_properties( const item_def &item,
         else
             proprt[RAP_CURSED] = -1;
     }
+
+    for (int i = 0; i < RA_PROPERTIES; i++)
+        rap[i] = (short) proprt[i];
 }
+
+void randart_wpn_properties( const item_def &item,
+                             randart_properties_t  &proprt,
+                             randart_known_props_t &known)
+{
+    ASSERT( is_random_artefact( item ) );
+    ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
+    ASSERT( item.props.exists( RANDART_PROPS_KEY ) );
+
+    const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
+    ASSERT( _val.get_type() == SV_VEC );
+    const CrawlVector &known_vec = _val.get_vector();
+    ASSERT( known_vec.get_type()     == SV_BOOL );
+    ASSERT( known_vec.size()         == RA_PROPERTIES);
+    ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
+
+    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
+    {
+        for (vec_size i = 0; i < RA_PROPERTIES; i++)
+            known[i] = (bool) true;
+    }
+    else
+    {
+        for (vec_size i = 0; i < RA_PROPERTIES; i++)
+            known[i] = known_vec[i];
+    }
+
+    const CrawlVector &rap_vec = item.props[RANDART_PROPS_KEY].get_vector();
+    ASSERT( rap_vec.get_type()     == SV_SHORT );
+    ASSERT( rap_vec.size()         == RA_PROPERTIES);
+    ASSERT( rap_vec.get_max_size() == RA_PROPERTIES);
+
+    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        proprt[i] = rap_vec[i].get_short();
+}
+
 
 void randart_wpn_properties( const item_def &item,
                              randart_properties_t &proprt )
@@ -1186,8 +1218,8 @@ void randart_wpn_learn_prop( item_def &item, randart_prop_type prop )
 
     if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
         return;
-    else
-        known_vec[prop] = (bool) true;
+
+    known_vec[prop] = (bool) true;
 }
 
 bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop )
@@ -1319,7 +1351,7 @@ std::string randart_name( const item_def &item )
 
             name = _replace_name_parts(name, item);
         }
-        while (--tries > 0 && name.length() > 30);
+        while (--tries > 0 && name.length() > 25);
 
         if (name.empty()) // still nothing found?
             result += "of Bugginess";
@@ -1720,6 +1752,38 @@ bool randart_is_bad( const item_def &item )
     return randart_is_bad( item, proprt);
 }
 
+bool make_item_blessed_blade( item_def &item )
+{
+    if (item.base_type != OBJ_WEAPONS)
+        return (false);
+
+    // already is an artefact
+    if (is_artefact(item))
+        return (false);
+
+    ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
+    item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
+    CrawlVector &known = item.props[KNOWN_PROPS_KEY];
+    known.set_max_size(RA_PROPERTIES);
+    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        known[i] = (bool) false;
+
+    ASSERT(!item.props.exists( RANDART_PROPS_KEY ));
+    item.props[RANDART_PROPS_KEY].new_vector(SV_SHORT).resize(RA_PROPERTIES);
+    CrawlVector &rap = item.props[RANDART_PROPS_KEY];
+    rap.set_max_size(RA_PROPERTIES);
+    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        rap[i] = (short) 0;
+
+    // blessed blade of The Shining One
+    rap[RAP_BRAND] = (short) SPWPN_HOLY_WRATH;
+    rap[RAP_NEGATIVE_ENERGY] = (short) 1;
+
+    item.flags |= ISFLAG_RANDART;
+
+    return (true);
+}
+
 bool make_item_randart( item_def &item )
 {
     if (item.base_type != OBJ_WEAPONS
@@ -1729,9 +1793,11 @@ bool make_item_randart( item_def &item )
         return (false);
     }
 
+    // already is a randart
     if (item.flags & ISFLAG_RANDART)
         return (true);
 
+    // not a truly random artefact
     if (item.flags & ISFLAG_UNRANDART)
         return (false);
 
@@ -1749,6 +1815,8 @@ bool make_item_randart( item_def &item )
     do
     {
         item.special = (random_int() & RANDART_SEED_MASK);
+        // Now that we found something, initialize the props array.
+        _init_randart_properties(item);
     }
     while (randart_is_bad(item)
            || god_gift != GOD_NO_GOD && !_god_fits_artefact(god_gift, item));

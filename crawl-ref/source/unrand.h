@@ -1163,7 +1163,7 @@
 
 /* 56 */
 {
-    "Dire Lajatang", "double lajatang",
+    "dire lajatang", "double lajatang",
         OBJ_WEAPONS, WPN_LAJATANG, -2, +9, RED,
     {
         SPWPN_VORPAL, 0, 0, 0, 0, -3, // -Dex

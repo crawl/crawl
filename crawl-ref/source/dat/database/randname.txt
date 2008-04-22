@@ -483,14 +483,7 @@ of @politics_name_armour@
 ######################################################
 The Shining One weapon
 
-of The Shining One's @divine_esteem@
-
-of The Shining One's @anger_name@
-
-of The Shining One's @valour_name@
-
-of The Shining One's @virtue_name@
-
+of The Shining One
 %%%%
 ######################################################
 # XOM weapon
