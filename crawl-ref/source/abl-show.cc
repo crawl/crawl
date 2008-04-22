@@ -820,7 +820,7 @@ bool activate_ability()
     std::vector<talent> talents = your_talents(false);
     if ( talents.empty() )
     {
-        // Vampires can't turn into bats when full to the rim with blood.
+        // Vampires can't turn into bats when full of blood.
         if (you.species == SP_VAMPIRE && you.experience_level >= 3)
             mpr("Sorry, you're too full to transform right now.");
         else
