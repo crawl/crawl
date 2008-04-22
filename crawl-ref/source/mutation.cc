@@ -1050,7 +1050,6 @@ bool can_safely_mutate()
             || (you.is_undead == US_SEMI_UNDEAD
                 && you.hunger_state == HS_ENGORGED)
             || player_mutation_level(MUT_MUTATION_RESISTANCE) != 3);
-
 }
 
 formatted_string describe_mutations()
