@@ -4873,7 +4873,7 @@ void replace_area_wrapper(dungeon_feature_type old_feat,
                           dungeon_feature_type new_feat)
 {
     ASSERT(old_feat != new_feat);
-    _replace_area(0, 0, GXM-1, GYM-1, old_feat, new_feat, 0, true);
+    _replace_area(0, 0, GXM-1, GYM-1, old_feat, new_feat, 0, false);
 }
 
 static void _replace_area( int sx, int sy, int ex, int ey,
