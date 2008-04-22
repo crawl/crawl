@@ -2827,9 +2827,14 @@ void melee_attack::player_stab_check()
         stab_bonus = 0;
     }
 
-    if (stab_attempt
-        && you.religion == GOD_SHINING_ONE
-        && !you.duration[DUR_BERSERKER])
+    // no stabs while berserk
+    if (you.duration[DUR_BERSERKER])
+    {
+        stab_attempt = false;
+        stab_bonus = 0;
+    }
+
+    if (stab_attempt && you.religion == GOD_SHINING_ONE)
     {
         // check for the would-be-stabbed monster's being alive, in case
         // it was abjured as a result of the attack
