@@ -1547,6 +1547,8 @@ static bool _class_allowed( species_type speci, job_type char_class )
     case JOB_ENCHANTER:
         if (player_genus(GENPC_DRACONIAN, speci))
             return false;
+        if (speci == SP_VAMPIRE)
+            return true;
         if (_species_is_undead( speci ))
             return false;
 
@@ -1754,6 +1756,8 @@ static bool _class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_TRANSMUTER:
+        if (speci == SP_VAMPIRE)
+            return true;
         if (_species_is_undead( speci ))
             return false;
 
@@ -4204,6 +4208,8 @@ bool _give_items_skills()
 
             if (you.species == SP_SPRIGGAN)
                 _make_rod(you.inv[0], STAFF_STRIKING);
+            else if (you.species == SP_VAMPIRE)
+                you.skills[SK_UNARMED_COMBAT] = 1; // for biting
             break;
 
         case JOB_FIRE_ELEMENTALIST:

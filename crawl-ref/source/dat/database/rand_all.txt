@@ -121,10 +121,6 @@ Best Wishes
 
 Amusement
 
-Dangerous Boredom
-
-Questionable Humour
-
 Ringing Laughter
 
 Bemusement
@@ -132,8 +128,6 @@ Bemusement
 Passing Interest
 
 Full Attention
-
-Everchanging Rules
 
 Whimsicality
 
@@ -143,17 +137,11 @@ Sleight of Hands
 
 Flight of Fancy
 
-Premature Condolences
-
 Absentmindedness
 
 Malicious Joy
 
-Psychedelic Visions
-
 Fair Game
-
-Experimental Loan
 
 %%%%
 time_name

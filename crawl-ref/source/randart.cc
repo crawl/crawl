@@ -27,7 +27,6 @@
 #include "database.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "message.h" // for debugging: more()
 #include "place.h"
 #include "player.h"
 #include "religion.h"
@@ -297,7 +296,7 @@ static unrandart_entry unranddata[] = {
 
 static FixedVector < bool, NO_UNRANDARTS > unrandart_exist;
 
-static unrandart_entry *seekunrandart( const item_def &item );
+static unrandart_entry *_seekunrandart( const item_def &item );
 
 void set_unrandart_exist(int whun, bool is_exist)
 {
@@ -361,7 +360,7 @@ void set_unique_item_status( object_class_type base_type, int art,
     }
 }
 
-static long calc_seed( const item_def &item )
+static long _calc_seed( const item_def &item )
 {
     return (item.special & RANDART_SEED_MASK);
 }
@@ -531,18 +530,18 @@ void randart_desc_properties( const item_def &item,
     }
 }
 
-inline static void randart_propset( randart_properties_t &p,
-                                    randart_prop_type pt,
-                                    int value,
-                                    bool neg )
+inline static void _randart_propset( randart_properties_t &p,
+                                     randart_prop_type pt,
+                                     int value,
+                                     bool neg )
 {
     // This shouldn't be called with 0, else no property gets added after all.
     ASSERT(value != 0);
     p[pt] = (neg? -value : value);
 }
 
-static int randart_add_one_property( const item_def &item,
-                                     randart_properties_t &proprt )
+static int _randart_add_one_property( const item_def &item,
+                                      randart_properties_t &proprt )
 {
     // This function assumes that no properties have been added to this
     // randart yet.
@@ -584,29 +583,29 @@ static int randart_add_one_property( const item_def &item,
     {
     default:
     case 0:
-        randart_propset(proprt, RAP_AC,
-                        1 + random2(3) + random2(3) + random2(3),
-                        negench);
+        _randart_propset(proprt, RAP_AC,
+                         1 + random2(3) + random2(3) + random2(3),
+                         negench);
         break;
     case 1:
-        randart_propset(proprt, RAP_EVASION,
-                        1 + random2(3) + random2(3) + random2(3),
-                        negench);
+        _randart_propset(proprt, RAP_EVASION,
+                         1 + random2(3) + random2(3) + random2(3),
+                         negench);
         break;
     case 2:
-        randart_propset(proprt, RAP_STRENGTH,
-                        1 + random2(3) + random2(3),
-                        negench);
+        _randart_propset(proprt, RAP_STRENGTH,
+                         1 + random2(3) + random2(3),
+                         negench);
         break;
     case 3:
-        randart_propset(proprt, RAP_INTELLIGENCE,
-                        1 + random2(3) + random2(3),
-                        negench);
+        _randart_propset(proprt, RAP_INTELLIGENCE,
+                         1 + random2(3) + random2(3),
+                         negench);
         break;
     case 4:
-        randart_propset(proprt, RAP_DEXTERITY,
-                        1 + random2(3) + random2(3),
-                        negench);
+        _randart_propset(proprt, RAP_DEXTERITY,
+                         1 + random2(3) + random2(3),
+                         negench);
         break;
     }
 
@@ -615,6 +614,7 @@ static int randart_add_one_property( const item_def &item,
 
 void static _init_randart_properties(item_def &item)
 {
+    ASSERT( is_random_artefact( item ) );
     CrawlHashTable &props = item.props;
     if (!props.exists( RANDART_PROPS_KEY ))
         props[RANDART_PROPS_KEY].new_vector(SV_SHORT).resize(RA_PROPERTIES);
@@ -627,7 +627,7 @@ void static _init_randart_properties(item_def &item)
 
     if (is_unrandom_artefact( item ))
     {
-        const unrandart_entry *unrand = seekunrandart( item );
+        const unrandart_entry *unrand = _seekunrandart( item );
 
         for (int i = 0; i < RA_PROPERTIES; i++)
             rap[i] = (short) unrand->prpty[i];
@@ -641,7 +641,7 @@ void static _init_randart_properties(item_def &item)
     const int atype = item.sub_type;
     int power_level = 0;
 
-    const long seed = calc_seed( item );
+    const long seed = _calc_seed( item );
     rng_save_excursion exc;
     seed_rng( seed );
 
@@ -1095,7 +1095,7 @@ void static _init_randart_properties(item_def &item)
     }
 
     if (randart_wpn_num_props(proprt) == 0)
-        power_level += randart_add_one_property(item, proprt);
+        power_level += _randart_add_one_property(item, proprt);
 
     if ((power_level < 2 && one_chance_in(5)) || one_chance_in(30))
     {
@@ -1229,7 +1229,7 @@ bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop )
     return known;
 }
 
-static std::string get_artefact_type(const int type)
+static std::string _get_artefact_type(const int type)
 {
     switch (type)
     {
@@ -1244,7 +1244,7 @@ static std::string get_artefact_type(const int type)
     }
 }
 
-static bool pick_db_name( const item_def &item )
+static bool _pick_db_name( const item_def &item )
 {
     if (is_blessed(item))
         return true;
@@ -1271,11 +1271,11 @@ std::string randart_name( const item_def &item )
 
     if (is_unrandom_artefact( item ))
     {
-        const unrandart_entry *unrand = seekunrandart( item );
+        const unrandart_entry *unrand = _seekunrandart( item );
         return (item_type_known(item) ? unrand->name : unrand->unid_name);
     }
 
-    const long seed = calc_seed( item );
+    const long seed = _calc_seed( item );
 
     std::string lookup;
     std::string result;
@@ -1299,7 +1299,7 @@ std::string randart_name( const item_def &item )
     }
 
     // get base type
-    lookup += get_artefact_type(item.base_type);
+    lookup += _get_artefact_type(item.base_type);
 
     rng_save_excursion rng_state;
     seed_rng( seed );
@@ -1325,7 +1325,7 @@ std::string randart_name( const item_def &item )
         return result;
     }
 
-    if (pick_db_name(item))
+    if (_pick_db_name(item))
     {
         result += item_base_name(item) + " ";
 
@@ -1345,7 +1345,7 @@ std::string randart_name( const item_def &item )
                 {
                     // if still nothing found, try base type alone
                     name = getRandNameString(
-                               get_artefact_type(item.base_type).c_str());
+                               _get_artefact_type(item.base_type).c_str());
                 }
             }
 
@@ -1398,7 +1398,7 @@ int find_unrandart_index(const item_def& artefact)
     return (-1);
 }
 
-static unrandart_entry *seekunrandart( const item_def &item )
+static unrandart_entry *_seekunrandart( const item_def &item )
 {
     const int idx = find_unrandart_index(item);
     if ( idx == -1 )
@@ -1856,7 +1856,7 @@ const char *unrandart_descrip( int which_descrip, const item_def &item )
 {
 /* Eventually it would be great to have randomly generated descriptions for
    randarts. */
-    const unrandart_entry *unrand = seekunrandart( item );
+    const unrandart_entry *unrand = _seekunrandart( item );
 
     return ((which_descrip == 0) ? unrand->spec_descrip1 :
             (which_descrip == 1) ? unrand->spec_descrip2 :
