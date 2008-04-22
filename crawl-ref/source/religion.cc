@@ -2790,44 +2790,45 @@ static bool _zin_retribution()
     case 2:
     case 3:
     case 4: // summon angels or bugs (pestilence), 3/8
-       if (random2(you.experience_level) > 7 && !one_chance_in(5))
-       {
-           const int how_many = 1 + (you.experience_level / 10) + random2(3);
-           bool success = false;
+        if (random2(you.experience_level) > 7 && !one_chance_in(5))
+        {
+            const int how_many = 1 + (you.experience_level / 10) + random2(3);
+            bool success = false;
 
-           for (int i = 0; i < how_many; i++)
-              if (create_monster(MONS_ANGEL, 0, BEH_HOSTILE,
-                                 you.x_pos, you.y_pos, MHITYOU,
-                                 MONS_PROGRAM_BUG) != -1)
-              {
-                  success = true;
-              }
+            for (int i = 0; i < how_many; i++)
+                if (create_monster(MONS_ANGEL, 0, BEH_HOSTILE,
+                                   you.x_pos, you.y_pos, MHITYOU,
+                                   MONS_PROGRAM_BUG) != -1)
+                {
+                    success = true;
+                }
 
-           simple_god_message( success ?
-                              " sends the divine host to punish you "
-                              "for your evil ways!" :
-                              "'s divine host fails to appear.",
-                              god);
-       }
-       else
-       {
-          // god_gift == false gives unfriendly
-          bool success = summon_swarm( you.experience_level * 20, true, false );
-          simple_god_message(success ?
-                             " sends a plague down upon you!" :
-                             "'s plague fails to arrive.",
-                             god);
-       }
-       break;
+            simple_god_message( success ?
+                                " sends the divine host to punish you "
+                                "for your evil ways!" :
+                                "'s divine host fails to appear.",
+                                god);
+        }
+        else
+        {
+            // god_gift == false gives unfriendly
+            bool success = summon_swarm( you.experience_level * 20, true,
+                                         false );
+            simple_god_message(success ?
+                               " sends a plague down upon you!" :
+                               "'s plague fails to arrive.",
+                               god);
+        }
+        break;
     case 5:
     case 6: // famine, 25%
-       simple_god_message(" sends a famine down upon you!", god);
-       make_hungry( you.hunger/2, false );
-       break;
+        simple_god_message(" sends a famine down upon you!", god);
+        make_hungry( you.hunger/2, false );
+        break;
     case 7: // noisiness, 12.5%
-       simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
-       noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
-       break;
+        simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
+        noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
+        break;
     }
     return false;
 }
