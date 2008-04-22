@@ -908,6 +908,13 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
+    if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
+        && !you.can_go_berserk(true))
+    {
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
+
     // some abilities don't need a hunger check
     bool hungerCheck = true;
     switch (tal.which)
@@ -950,13 +957,6 @@ static bool _activate_talent(const talent& tal)
     if (tal.which == ABIL_ZIN_SANCTUARY && env.sanctuary_time)
     {
         mpr("There's already a sanctuary in place on this level.");
-        crawl_state.zero_turns_taken();
-        return (false);
-    }
-
-    if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
-        && !you.can_go_berserk(true))
-    {
         crawl_state.zero_turns_taken();
         return (false);
     }

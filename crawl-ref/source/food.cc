@@ -841,7 +841,7 @@ void eat_floor_item(int item_link)
         const bool cannibal  = is_player_same_species( food.plus );
         const bool rotten    = food_is_rotten(food);
 
-        if (!_player_can_eat_rotten_meat(true))
+        if (rotten && !_player_can_eat_rotten_meat(true))
             return;
 
         eat_chunk(determine_chunk_effect(chunk_type, rotten), cannibal, intel);

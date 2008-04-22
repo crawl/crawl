@@ -1528,6 +1528,40 @@ static int runes_in_pack()
     return num_runes;
 }
 
+static bool _check_annotation_exclusion_warning()
+{
+    coord_def pos(you.x_pos, you.y_pos);
+    level_id  next_level_id = level_id::get_next_level_id(pos);
+
+    crawl_state.level_annotation_shown = false;
+    bool might_be_dangerous = false;
+
+    if (level_annotation_has("!", next_level_id)
+        && next_level_id != level_id::current()
+        && next_level_id.level_type == LEVEL_DUNGEON)
+    {
+        mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
+        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PLAIN, YELLOW);
+        might_be_dangerous = true;
+        crawl_state.level_annotation_shown = true;
+    }
+    else if (is_exclude_root(pos))
+    {
+        mpr("This staircase is marked as excluded!", MSGCH_WARN);
+        might_be_dangerous = true;
+    }
+
+    if (might_be_dangerous
+        && !yesno("Enter next level anyway?", true, 'n', true, false))
+    {
+        canned_msg(MSG_OK);
+        interrupt_activity( AI_FORCE_INTERRUPT );
+        crawl_state.level_annotation_shown = false;
+        return false;
+    }
+    return true;
+}
+
 void up_stairs(dungeon_feature_type force_stair,
                entry_cause_type entry_cause)
 {
@@ -1556,26 +1590,8 @@ void up_stairs(dungeon_feature_type force_stair,
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
 
     // Does the next level have a warning annotation?
-    coord_def pos(you.x_pos, you.y_pos);
-    level_id  next_level_id = level_id::get_next_level_id(pos);
-
-    crawl_state.level_annotation_shown = false;
-
-    if (level_annotation_has("!", next_level_id)
-        && next_level_id != level_id::current()
-        && next_level_id.level_type == LEVEL_DUNGEON && !force_stair)
-    {
-        mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
-        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PLAIN, YELLOW);
-
-        if (!yesno("Enter next level anyway?", true, 0, true, false))
-        {
-            interrupt_activity( AI_FORCE_INTERRUPT );
-            return;
-        }
-
-        crawl_state.level_annotation_shown = true;
-    }
+    if (!force_stair && !_check_annotation_exclusion_warning())
+        return;
 
     // Since the overloaded message set turn_is_over, I'm assuming that
     // the overloaded character makes an attempt... so we're doing this
@@ -1941,26 +1957,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     }
 
     // Does the next level have a warning annotation?
-    coord_def pos = you.pos();
-    level_id  next_level_id = level_id::get_next_level_id(pos);
-
-    crawl_state.level_annotation_shown = false;
-
-    if (level_annotation_has("!", next_level_id)
-        && next_level_id != level_id::current()
-        && next_level_id.level_type == LEVEL_DUNGEON && !force_stair)
-    {
-        mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
-        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PLAIN, YELLOW);
-
-        if (!yesno("Enter next level anyway?", true, 0, true, false))
-        {
-            interrupt_activity( AI_FORCE_INTERRUPT );
-            return;
-        }
-
-        crawl_state.level_annotation_shown = true;
-    }
+    if (!force_stair && !_check_annotation_exclusion_warning())
+        return;
 
     // Interlevel travel data:
     bool collect_travel_data = can_travel_interlevel();
