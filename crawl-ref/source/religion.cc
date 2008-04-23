@@ -815,13 +815,15 @@ static bool _blessing_wpn(monsters *mon)
     item_def& wpn(mitm[slot]);
 
     // And enchant or uncurse it.
-    success = enchant_weapon((coinflip()) ? ENCHANT_TO_HIT
-                                          : ENCHANT_TO_DAM, true, wpn);
+    if (!enchant_weapon((coinflip()) ? ENCHANT_TO_HIT
+                                     : ENCHANT_TO_DAM, true, wpn))
+    {
+        return false;
+    }
 
-    if (success)
-        item_set_appearance(wpn);
+    item_set_appearance(wpn);
 
-    return success;
+    return true;
 }
 
 static bool _blessing_AC(monsters* mon)
@@ -832,8 +834,6 @@ static bool _blessing_AC(monsters* mon)
 
     if (armour == NON_ITEM && shield == NON_ITEM)
         return false;
-
-    bool success;
 
     int slot;
 
@@ -848,10 +848,10 @@ static bool _blessing_AC(monsters* mon)
     int ac_change;
 
     // And enchant or uncurse it.
-    success = enchant_armour(ac_change, true, arm);
+    if (!enchant_armour(ac_change, true, arm))
+        return false;
 
-    if (success)
-        item_set_appearance(arm);
+    item_set_appearance(arm);
 
     return success;
 }
@@ -920,14 +920,14 @@ static bool _tso_blessing_holy_wpn(monsters *mon)
         return false;
     }
 
+    // Convert a demonic weapon into a non-demonic weapon.
+    if (is_demonic(wpn))
+        convert2good(wpn, false);
+
     // And make it holy.
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
     wpn.colour = YELLOW;
-
-    // Convert demonic weapons into non-demonic weapons.
-    if (is_demonic(wpn))
-        convert2good(wpn, false);
 
     return true;
 }
