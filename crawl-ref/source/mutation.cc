@@ -242,25 +242,25 @@ const char *mutation_descrip[][3] = {
      "You are quite resistant to negative energy.",
      "You are immune to negative energy."},
 
-    /* Use player_has_spell() to avoid duplication */
+    // Use player_has_spell() to avoid duplication
     {"You can summon minor demons to your aid.", "", ""},
     {"You can summon demons to your aid.", "", ""},
     {"You can hurl blasts of hellfire.", "", ""},
     {"You can call on the torments of Hell.", "", ""},
 
-    /* Not summoners/necromancers/worshippers of Yredelemnul */
+    // Not summoners/necromancers/worshippers of Yredelemnul
     {"You can raise the dead to walk for you.", "", ""},
 // 50
     {"You can control demons.", "", ""},
     {"You can travel to (but not from) Pandemonium at will.", "", ""},
     {"You can draw strength from death and destruction.", "", ""},
 
-    /* Not worshippers of Vehumet */
+    // Not worshippers of Vehumet
     {"You can channel magical energy from Hell.", "", ""},
 
     {"You can drain life in unarmed combat.", "", ""},
 
-    /* Not conjurers/worshippers of Makhleb */
+    // Not conjurers/worshippers of Makhleb
     {"You can throw forth the flames of Gehenna.", "", ""},
 
     {"You can throw forth the frost of Cocytus.", "", ""},
@@ -385,10 +385,8 @@ const char *mutation_descrip[][3] = {
      "You are completely covered in patterned scales (AC + 3)."}
 };
 
-/*
-   If giving a mutation which must succeed (eg demonspawn), must add exception
-   to the "resist mutation" mutation thing.
- */
+// If giving a mutation which must succeed (eg demonspawn), must add
+// exception to the "resist mutation" mutation thing.
 
 const char *gain_mutation[][3] = {
     {"Your skin toughens.", "Your skin toughens.", "Your skin toughens."},
@@ -756,7 +754,7 @@ const char *lose_mutation[][3] = {
     {"You feel robust.", "You feel robust.", "You feel robust."},
     {"You feel frail.", "You feel frail.", "You feel frail."},
 
-/* Some demonic powers (which can't be lost) start here... */
+// Some demonic powers (which can't be lost) start here...
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
@@ -870,12 +868,12 @@ const char *lose_mutation[][3] = {
      "Your patterned scales recede somewhat."}
 };
 
-/* mutation definitions:
-   first  number  = probability  (0 means it doesn't appear naturally?)
-   second number  = maximum levels
-   first  boolean = is mutation mostly bad?
-   second boolean = is mutation physical, i.e. external only?
-*/
+// mutation definitions:
+// first  number  = probability  (0 means it doesn't appear naturally?)
+// second number  = maximum levels
+// first  boolean = is mutation mostly bad?
+// second boolean = is mutation physical, i.e. external only?
+
 static mutation_def mutation_defs[] = {
     { MUT_TOUGH_SKIN,                10,  3, false, true  },
     { MUT_STRONG,                     8, 14, false, true },
@@ -925,7 +923,7 @@ static mutation_def mutation_defs[] = {
     { MUT_FRAIL,                     10,  3, true,  true  },
     { MUT_ROBUST,                     5,  3, false, true  },
 
-/* Some demonic powers start here: */
+// Some demonic powers start here:
     { MUT_TORMENT_RESISTANCE,         0,  1, false, false },
     { MUT_NEGATIVE_ENERGY_RESISTANCE, 0,  3, false, false },
     { MUT_SUMMON_MINOR_DEMONS,        0,  1, false, false },
@@ -942,7 +940,7 @@ static mutation_def mutation_defs[] = {
     { MUT_THROW_FLAMES,               0,  1, false, false },
     { MUT_THROW_FROST,                0,  1, false, false },
     { MUT_SMITE,                      0,  1, false, false },
-/* end of demonic powers */
+// end of demonic powers
 
     { MUT_CLAWS,                      2,  3, false, true  },
     { MUT_FANGS,                      1,  3, false, true  },
