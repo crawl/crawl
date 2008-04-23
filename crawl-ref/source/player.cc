@@ -1725,11 +1725,8 @@ int player_prot_life(bool calc_unid, bool temp)
 
     // same here: Your piety status is something you can more or less control.
     // TSO's protection
-    if (you.religion == GOD_SHINING_ONE && you.piety > pl * 50
-        && !player_under_penance())
-    {
+    if (you.religion == GOD_SHINING_ONE && you.piety > pl * 50)
         pl = you.piety / 50;
-    }
 
     if (temp)
     {
