@@ -1664,6 +1664,11 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           text << " However, this is easy enough to rectify: simply "
                   "<w>d</w>rop some of the stuff you don't need or that's too "
                   "heavy to lug around permanently.";
+#ifdef USE_TILE
+          text << " In the drop menu you can then comfortably select which "
+                  "items to drop by pressing their inventory letter, or by "
+                  "clicking on their tiles.";
+#endif
           break;
 
       case TUT_ROTTEN_FOOD:

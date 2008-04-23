@@ -35,9 +35,13 @@ wielded items:
   rod:            evoke    ('v')
   misc. item:     evoke    ('v')
   weapon, staff:  unwield  ('w-')
+  armour,
+  jewellery:      unwield  ('w-')
+  others, as non-wielded
+
+worn items:
   armour:         Take off ('T')
   jewellery:      Remove   ('R')
-  others, as non-wielded
 
 Sometimes alternative denominators are used such as "draw a card"
 instead of evoke for decks of cards, or "drink blood" instead of eat.
@@ -48,15 +52,15 @@ Shift + left mouseclick    Drop item ('d').
 
 Shift + right mouseclick   Execute secondary action for some item types.
 
-  weapons:        fire    ('f')
+  weapon:         fire    ('f')
+  non-weapon:     wield   ('w'), if corresponding spells memorised
 
 wielded items:
-  rod:            unwield ('w-')
-  misc. item:     unwield ('w-')
-  others, as non-wielded, or nothing
+  weapon:         fire    ('f')
+  anything else:  unwield ('w-')
 
 
-FLOOR ITEM INTERACTION
+NON-INVENTORY ITEM MANAGEMENT
 
 left mouseclick            Pick up this item ('g').
 
@@ -69,10 +73,12 @@ Shift + right mouseclick   'e'at this food item.
 
 MAP INTERACTION
 
-left mouseclick            Move there, if empty, or swap places with an ally.
+left mouseclick            Move to adjacent square.
+                           Autotravel to reachable square if currently safe.
+                           Swap places with an adjacent ally.
                            Attack, if adjacent non-friendly monster.
 
-right mouseclick           Display grid information (view).
+right mouseclick           Display grid information ('xv').
 
 Ctrl + left mouseclick     Disarm adjacent trap ('Ctrl + Dir.')
                            Open ('O')/Close ('C') adjacent door.
@@ -97,6 +103,10 @@ any mouseclick             Search / Rest for a while ('5')
 
 MENU INTERACTION
 
+any click on tiles         Select item.
 left mouseclick            Scroll to next page.
 right mouseclick           Escape (quit menu).
 
+At inscription prompt:
+left mouseclick            Autoinscribe artefact (where applicable).
+right mouseclick           Escape (quit menu).
