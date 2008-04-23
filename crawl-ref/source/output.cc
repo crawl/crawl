@@ -548,7 +548,7 @@ struct status_light
 // Prints burden, hunger,
 // pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
 //   conf. touch, bargain, sage
-// confused, beheld, fire, poison, disease, rot, held, glow,
+// confused, beheld, fire, poison, disease, rot, held, glow/halo,
 //  swift, fast, slow, breath
 //
 // Note the usage of bad_ench_colour() correspond to levels that
