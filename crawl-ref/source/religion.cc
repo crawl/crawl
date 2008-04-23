@@ -1171,7 +1171,7 @@ bool bless_follower(monsters* follower,
 
                 // Brand a monster's weapon with electrocution, if
                 // possible.
-                if (_beogh_blessing_elec_wpn(mon))
+                if (coinflip() && _beogh_blessing_elec_wpn(mon))
                 {
                     result = "electric attack power";
                     goto blessing_done;
