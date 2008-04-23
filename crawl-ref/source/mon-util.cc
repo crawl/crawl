@@ -396,21 +396,6 @@ mon_holy_type mons_class_holiness(int mc)
     return (smc->holiness);
 }                               // end mons_holiness()
 
-bool mons_class_is_stationary(int mc)
-{
-    return (mc == MONS_OKLOB_PLANT
-                || mc == MONS_PLANT
-                || mc == MONS_FUNGUS
-                || mc == MONS_CURSE_SKULL
-                || mons_is_statue(mc)
-                || mons_is_mimic(mc));
-}
-
-bool mons_is_stationary(const monsters *mon)
-{
-    return (mons_class_is_stationary(mon->type));
-}
-
 bool mons_class_is_confusable(int mc)
 {
     return (smc->resist_magic < MAG_IMMUNE
@@ -427,8 +412,16 @@ bool mons_is_wall_shielded(int mc)
     return (mons_habitat_by_type(mc) == HT_ROCK);
 }
 
-// returns whether a monster is non-solid
-// and thus can't be affected by some traps
+bool mons_class_is_stationary(int mc)
+{
+    return mons_class_flag(mc, M_STATIONARY);
+}
+
+bool mons_is_stationary(const monsters *mon)
+{
+    return mons_class_is_stationary(mon->type);
+}
+
 bool mons_is_insubstantial(int mc)
 {
     return mons_class_flag(mc, M_INSUBSTANTIAL);
@@ -1898,7 +1891,7 @@ mon_attitude_type mons_attitude(const monsters *m)
     return (m->has_ench(ENCH_CHARM)? ATT_FRIENDLY : m->attitude);
 }
 
-bool mons_is_submerged( const monsters *mon )
+bool mons_is_submerged(const monsters *mon)
 {
     // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
     return (mon->has_ench(ENCH_SUBMERGED));

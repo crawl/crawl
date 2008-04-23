@@ -474,8 +474,8 @@ bool mons_class_flag(int mc, int bf);
 mon_holy_type mons_class_holiness(int mclass);
 mon_holy_type mons_holiness(const monsters *);
 
-bool mons_is_mimic( int mc ); 
-bool mons_is_statue(int mc);
+bool mons_is_mimic( int mc );
+bool mons_is_statue( int mc );
 bool mons_is_demon( int mc );
 
 bool mons_wields_two_weapons(const monsters *m);
@@ -649,14 +649,14 @@ bool mons_looks_distracted(const monsters *m);
 
 bool check_mons_resist_magic( const monsters *monster, int pow );
 
-bool mons_class_is_stationary(int mc);
 bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
+bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monsters *mon);
 bool mons_is_wall_shielded(int mc);
 bool mons_is_insubstantial(int mc);
 bool mons_has_blood(int mc);
-bool mons_is_submerged( const monsters *mon );
+bool mons_is_submerged(const monsters *mon);
 
 bool invalid_monster(const monsters *mon);
 bool invalid_monster_class(int mclass);
