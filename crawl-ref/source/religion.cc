@@ -3247,8 +3247,8 @@ static bool _beogh_retribution()
                 continue;
 
             item_def& item = mitm[slot];
-            // Need a species check in case this retribution is a result of
-            // drawing the Wrath card.
+            // Need a species check, in case this retribution is a
+            // result of drawing the Wrath card.
             if (you.species == SP_HILL_ORC)
                 set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
             else
