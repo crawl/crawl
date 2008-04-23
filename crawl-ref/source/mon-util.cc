@@ -796,9 +796,16 @@ int mons_resist_magic( const monsters *mon )
 
     // ego armour resistance
     const int armour = mon->inv[MSLOT_ARMOUR];
+    const int shield = mon->inv[MSLOT_SHIELD];
 
     if (armour != NON_ITEM
         && get_armour_ego_type( mitm[armour] ) == SPARM_MAGIC_RESISTANCE )
+    {
+        u += 30;
+    }
+
+    if (shield != NON_ITEM
+        && get_armour_ego_type( mitm[shield] ) == SPARM_MAGIC_RESISTANCE )
     {
         u += 30;
     }
@@ -903,6 +910,8 @@ int mons_res_poison( const monsters *mon )
         u += _scan_mon_inv_randarts( mon, RAP_POISON );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
+        const int shield = mon->inv[MSLOT_SHIELD];
+
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
             // intrinsic armour abilities
@@ -915,6 +924,13 @@ int mons_res_poison( const monsters *mon )
 
             // ego armour resistance
             if (get_armour_ego_type( mitm[armour] ) == SPARM_POISON_RESISTANCE)
+                u += 1;
+        }
+
+        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        {
+            // ego armour resistance
+            if (get_armour_ego_type( mitm[shield] ) == SPARM_POISON_RESISTANCE)
                 u += 1;
         }
     }
@@ -949,6 +965,8 @@ int mons_res_fire( const monsters *mon )
         u += _scan_mon_inv_randarts( mon, RAP_FIRE );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
+        const int shield = mon->inv[MSLOT_SHIELD];
+
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
             // intrinsic armour abilities
@@ -962,6 +980,14 @@ int mons_res_fire( const monsters *mon )
 
             // check ego resistance
             const int ego = get_armour_ego_type( mitm[armour] );
+            if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
+                u += 1;
+        }
+
+        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        {
+            // check ego resistance
+            const int ego = get_armour_ego_type( mitm[shield] );
             if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
                 u += 1;
         }
@@ -981,6 +1007,8 @@ int mons_res_cold( const monsters *mon )
         u += _scan_mon_inv_randarts( mon, RAP_COLD );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
+        const int shield = mon->inv[MSLOT_SHIELD];
+
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
             // intrinsic armour abilities
@@ -994,6 +1022,14 @@ int mons_res_cold( const monsters *mon )
 
             // check ego resistance
             const int ego = get_armour_ego_type( mitm[armour] );
+            if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
+                u += 1;
+        }
+
+        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        {
+            // check ego resistance
+            const int ego = get_armour_ego_type( mitm[shield] );
             if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
                 u += 1;
         }
@@ -1031,10 +1067,19 @@ int mons_res_negative_energy( const monsters *mon )
         u += _scan_mon_inv_randarts( mon, RAP_NEGATIVE_ENERGY );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
+        const int shield = mon->inv[MSLOT_SHIELD];
+
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
             // check for ego resistance
             if (get_armour_ego_type( mitm[armour] ) == SPARM_POSITIVE_ENERGY)
+                u += 1;
+        }
+
+        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        {
+            // check for ego resistance
+            if (get_armour_ego_type( mitm[shield] ) == SPARM_POSITIVE_ENERGY)
                 u += 1;
         }
     }
