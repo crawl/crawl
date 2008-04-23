@@ -2774,8 +2774,7 @@ void demonspawn(void)
 
     if (whichm == NUM_MUTATIONS || !perma_mutate( whichm, howm ))
     {
-        /* unlikely but remotely possible */
-        /* I know this is a cop-out */
+        // unlikely but remotely possible; I know this is a cop-out
         modify_stat(STAT_STRENGTH, 1, true, "demonspawn mutation");
         modify_stat(STAT_INTELLIGENCE, 1, true, "demonspawn mutation");
         modify_stat(STAT_DEXTERITY, 1, true, "demonspawn mutation");
