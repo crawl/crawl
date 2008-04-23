@@ -1117,22 +1117,27 @@ bool bless_follower(monsters* follower,
         switch (god)
         {
             case GOD_SHINING_ONE:
-                // Brand a monster's weapon with holy wrath, if
-                // possible.
-                if (_tso_blessing_holy_wpn(mon))
+                if (coinflip())
                 {
-                    result = "holy attack power";
-                    goto blessing_done;
+                    // Brand a monster's weapon with holy wrath, if
+                    // possible.
+                    if (_tso_blessing_holy_wpn(mon))
+                    {
+                        result = "holy attack power";
+                        goto blessing_done;
+                    }
+                }
+                else
+                {
+                    // Brand a monster's armour with positive energy, if
+                    // possible.
+                    if (_tso_blessing_holy_arm(mon))
+                    {
+                        result = "life defence";
+                        goto blessing_done;
+                    }
                 }
                 break;
-
-                // Brand a monster's armour with positive energy, if
-                // possible.
-                if (_tso_blessing_holy_arm(mon))
-                {
-                    result = "life defence";
-                    goto blessing_done;
-                }
 
             case GOD_BEOGH:
                 // Turn a monster into a priestly monster, if possible.
