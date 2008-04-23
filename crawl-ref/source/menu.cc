@@ -212,6 +212,7 @@ void Menu::do_menu()
     {
 #ifdef USE_TILE
         TileRedrawInv(REGION_INV2);
+        mouse_control mc(MOUSE_MODE_COMMAND);
 #endif
         int keyin = getchm(c_getch);
 

@@ -1720,11 +1720,20 @@ static int _handle_mouse_button(int mx, int my, int button,
         toggle_telescope = false;
     }
 
-    // item clicked
-    if (mode == REGION_INV1 || mode == REGION_INV2)
+    if (mode == REGION_INV2)
     {
         int ix = TileInvIdx(cx);
+        int key = itemlist_key[cx];
+        if (ix != -1 && key)
+            return key;
+        else
+            return 0;
+    }
 
+    // item clicked
+    if (mode == REGION_INV1)
+    {
+        int ix = TileInvIdx(cx);
         if (ix != -1)
         {
             if (button == 2)
