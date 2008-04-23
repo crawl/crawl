@@ -2108,7 +2108,6 @@ int player_AC(void)
         case TRAN_LICH:  // can wear normal body armour (small bonus)
             break;
 
-
         case TRAN_SPIDER: // low level (small bonus), also gets EV
             AC += (200 + 100 * you.skills[SK_POISON_MAGIC] / 6); // max 6
             break;

@@ -386,7 +386,7 @@ bool transform(int pow, transformation_type which_trans)
         // silently removed since undead automatically resist poison -- bwr
         you.duration[DUR_RESIST_POISON] = 0;
 
-        /* no remove_equip */
+        // no remove_equip
         you.attribute[ATTR_TRANSFORMATION] = TRAN_LICH;
         you.duration[DUR_TRANSFORMATION] = 20 + random2(pow) + random2(pow);
 
