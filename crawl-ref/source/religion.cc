@@ -474,7 +474,7 @@ static void _inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
-        // nor does TSO's halo or divine shield
+        // neither does TSO's halo or divine shield
         else if (god == GOD_SHINING_ONE)
         {
             if (you.haloed())
