@@ -4150,7 +4150,7 @@ static bool _bless_weapon( god_type god, int brand, int colour )
 {
     const int wpn = get_player_wielded_weapon();
 
-    if (!is_artefact( you.inv[wpn] ))
+    if (!is_artefact(you.inv[wpn]) && !is_range_weapon(you.inv[wpn]))
     {
         you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
