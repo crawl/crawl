@@ -909,7 +909,7 @@ static bool _tso_blessing_holy_arm(monsters* mon)
     // And make it resistant to negative energy.
     set_equip_desc(arm, ISFLAG_GLOWING);
     set_item_ego_type(arm, OBJ_ARMOUR, SPARM_POSITIVE_ENERGY);
-    arm.colour = YELLOW;
+    arm.colour = WHITE;
 
     return true;
 }
@@ -1049,7 +1049,7 @@ static bool _beogh_blessing_elec_wpn(monsters *mon)
     // And make it electric.
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
-    wpn.colour = YELLOW;
+    wpn.colour = LIGHTCYAN;
 
     return true;
 }
