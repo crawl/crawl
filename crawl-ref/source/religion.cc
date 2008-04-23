@@ -97,7 +97,7 @@
 // % is replaced by "s" or "" as appropriate.
 // <> and </> are replaced with colors.
 // First message is if there's no piety gain, second is if piety gain
-// is one, third message is for piety gain > 1.
+// is one, third message is if piety gain is more than one.
 enum piety_gain_t
 {
     PIETY_NONE, PIETY_SOME, PIETY_LOTS,
