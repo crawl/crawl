@@ -970,7 +970,6 @@ int mons_res_fire( const monsters *mon )
     return (u);
 }                               // end mons_res_fire()
 
-
 int mons_res_cold( const monsters *mon )
 {
     int mc = mon->type;
@@ -1026,7 +1025,6 @@ int mons_res_negative_energy( const monsters *mon )
     }
 
     int u = 0;
-
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
