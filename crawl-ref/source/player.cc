@@ -3510,7 +3510,7 @@ int check_stealth(void)
                 break;
             case SP_VAMPIRE:
                 // Hungry/bat-form vampires are (much) more stealthy
-                if (you.hunger_state <= HS_STARVING)
+                if (you.hunger_state == HS_STARVING)
                     stealth += (you.skills[SK_STEALTH] * 21);
                 else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
                          || you.hunger_state <= HS_NEAR_STARVING)

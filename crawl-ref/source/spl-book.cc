@@ -1511,7 +1511,7 @@ int staff_spell( int staff )
             food = diff * 5;
     }
 
-    if (food && (you.hunger_state <= HS_STARVING || you.hunger <= food))
+    if (food && (you.hunger_state == HS_STARVING || you.hunger <= food))
     {
         mpr("You don't have the energy to cast that spell.");
         crawl_state.zero_turns_taken();

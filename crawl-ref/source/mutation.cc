@@ -1258,7 +1258,7 @@ formatted_string describe_mutations()
             }
         }
 
-        if (you.hunger_state <= HS_STARVING)
+        if (you.hunger_state == HS_STARVING)
             result += "<green>You do not heal.</green>" EOL;
         else if (you.hunger_state <= HS_HUNGRY)
             result += "<green>You heal slowly.</green>" EOL;

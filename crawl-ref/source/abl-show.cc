@@ -932,7 +932,7 @@ static bool _activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && you.hunger_state <= HS_STARVING)
+    if (hungerCheck && you.hunger_state == HS_STARVING)
     {
         mpr("You're too hungry.");
         crawl_state.zero_turns_taken();

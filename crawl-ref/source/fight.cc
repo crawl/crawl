@@ -187,13 +187,13 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
 
         if (vampiric)
         {
-            if (you.hunger_state <= HS_STARVING)
+            if (you.hunger_state == HS_STARVING)
                 your_to_hit += 2;
             else if (you.hunger_state < HS_SATIATED)
                 your_to_hit += 1;
         }
     }
-    else if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+    else if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
         your_to_hit -= 3;
 
     your_to_hit += slaying_bonus(PWPN_HIT);
@@ -1308,7 +1308,7 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     if (you.duration[DUR_MIGHT] > 1)
         damage += 1 + random2(10);
 
-    if (you.hunger_state <= HS_STARVING && you.species != SP_VAMPIRE)
+    if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
         damage -= random2(5);
 
     return (damage);
@@ -2677,7 +2677,7 @@ int melee_attack::player_to_hit(bool random_factor)
     your_to_hit += slaying_bonus(PWPN_HIT);
 
     // hunger penalty
-    if (you.hunger_state <= HS_STARVING)
+    if (you.hunger_state == HS_STARVING)
         your_to_hit -= 3;
 
     // armour penalty

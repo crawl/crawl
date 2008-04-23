@@ -1235,8 +1235,7 @@ enum holy_word_source_type
 
 enum hunger_state                  // you.hunger_state
 {
-    HS_RAVENOUS,                       //    0: not used within code, really
-    HS_STARVING,
+    HS_STARVING,                       //    0
     HS_NEAR_STARVING,
     HS_VERY_HUNGRY,
     HS_HUNGRY,
