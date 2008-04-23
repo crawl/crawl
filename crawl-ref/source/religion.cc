@@ -1320,14 +1320,14 @@ static void _do_god_gift(bool prayed_for)
     int old_gifts = you.num_gifts[ you.religion ];
 #endif
 
-    // Consider a gift if we don't have a timeout and weren't
-    // already praying when we prayed.
+    // Consider a gift if we don't have a timeout and weren't already
+    // praying when we prayed.
     if (!player_under_penance() && !you.gift_timeout
         || you.religion == GOD_ZIN)
     {
         bool success = false;
 
-        // Remember to check for water/lava
+        // Remember to check for water/lava.
         switch (you.religion)
         {
         default:
