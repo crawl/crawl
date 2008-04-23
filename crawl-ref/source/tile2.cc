@@ -661,15 +661,18 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
     if (new_bg)
         _tcache_overlay(tcache_image, ix, new_bg, &c, NULL);
 
+    if (bg0 & TILE_FLAG_HALO_YOU)
+        _tcache_overlay(tcache_image, ix, TILE_HALO_PLAYER, &c, NULL);
+    else if (bg0 & TILE_FLAG_HALO)
+        _tcache_overlay(tcache_image, ix, TILE_HALO, &c, NULL);
+
     if ((bg0 & TILE_FLAG_SANCTUARY) && !(bg0 & TILE_FLAG_UNSEEN))
         _tcache_overlay(tcache_image, ix, TILE_SANCTUARY, &c, NULL);
 
     // Apply the travel exclusion under the foreground if the cell is
     // visible.  It will be applied later if the cell is unseen.
     if ((bg0 & TILE_FLAG_TRAVEL_EX) && !(bg0 & TILE_FLAG_UNSEEN))
-    {
         _tcache_overlay(tcache_image, ix, TILE_TRAVEL_EXCLUSION, &c, NULL);
-    }
 
     if (bg0 & TILE_FLAG_RAY)
         _tcache_overlay(tcache_image, ix, TILE_RAY_MESH, &c, NULL);
@@ -691,9 +694,7 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
         _tcache_overlay(tcache_image, ix, TILE_TRAP_NET, &c, NULL);
 
     if (fg0 & TILE_FLAG_S_UNDER)
-    {
         _tcache_overlay(tcache_image, ix, TILE_SOMETHING_UNDER, &c, NULL);
-    }
 
     // Pet mark
     int status_shift = 0;
@@ -740,9 +741,7 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.
     if (bg0 & TILE_FLAG_NEW_STAIR && status_shift == 0)
-    {
         _tcache_overlay(tcache_image, ix, TILE_NEW_STAIR, &c, NULL);
-    }
 
     if ((bg0 & TILE_FLAG_TRAVEL_EX) && (bg0 & TILE_FLAG_UNSEEN))
     {

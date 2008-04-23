@@ -29,6 +29,8 @@ sanctuary SANCTUARY
 
 #########MAP
 %sdir dc-misc
+halo_player HALO_PLAYER
+halo HALO
 %corpse 0
 %back none
 %mesh 0

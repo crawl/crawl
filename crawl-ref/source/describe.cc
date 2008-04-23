@@ -278,6 +278,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         {
             const int val = proprt[propanns[i].prop];
 
+            // Don't show rF+/rC- for =Fire, or vice versa for =Ice.
             if (item.base_type == OBJ_JEWELLERY)
             {
                 if (item.sub_type == RING_FIRE

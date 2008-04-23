@@ -20,6 +20,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
+#include "spells3.h" // for the halo
 #include "stuff.h"
 #include "terrain.h"
 #include "tiles.h"
@@ -63,8 +64,8 @@ void TileNewLevel(bool first_time)
             const coord_def gc(x,y);
             int object = grd(gc);
 
-            if (!is_travelable_stair((dungeon_feature_type)object) ||
-                travel_cache.know_stair(gc))
+            if (!is_travelable_stair((dungeon_feature_type)object)
+                || travel_cache.know_stair(gc))
             {
                 env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
             }
@@ -3795,7 +3796,6 @@ void tile_draw_floor()
 {
     int cx, cy;
     for (cy = 0; cy < env.tile_fg.height(); cy++)
-    {
         for (cx = 0; cx < env.tile_fg.width(); cx++)
         {
             const coord_def ep(cx+1, cy+1);
@@ -3821,7 +3821,6 @@ void tile_draw_floor()
             env.tile_bg[ep.x-1][ep.y-1] = bg;
             env.tile_fg[ep.x-1][ep.y-1] = 0;
         }
-    }
 }
 
 // Called from item() in view.cc
@@ -4062,7 +4061,6 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
     const unsigned short baz_col = get_bazaar_special_colour();
 
     for (y = 0; y < crawl_view.viewsz.y; y++)
-    {
         for (x = 0; x < crawl_view.viewsz.x; x++)
         {
             // View coords are not centered on you, but on (cx,cy)
@@ -4096,20 +4094,36 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
 
             if (in_bounds)
             {
-                if (is_bloodcovered(gx, gy))
+                bool print_blood = true;
+                if (inside_halo(gx, gy))
                 {
-                    tileb[count+1] |= TILE_FLAG_BLOOD;
+                    if (gx == you.x_pos && gy == you.y_pos)
+                    {
+                        tileb[count+1] |= TILE_FLAG_HALO_YOU;
+                        print_blood = false;
+                    }
+                    else if (see_grid(gx, gy) && mgrd[gx][gy] != NON_MONSTER)
+                    {
+                        monsters* m = &menv[mgrd[gx][gy]];
+                        if (!mons_class_flag(m->type, M_NO_EXP_GAIN)
+                             && (!mons_is_mimic(m->type)
+                                 || testbits(m->flags, MF_KNOWN_MIMIC)))
+                        {
+                            tileb[count+1] |= TILE_FLAG_HALO;
+                            print_blood = false;
+                        }
+                    }
                 }
 
+                if (print_blood && is_bloodcovered(gx, gy))
+                    tileb[count+1] |= TILE_FLAG_BLOOD;
+
                 if (is_sanctuary(gx, gy))
-                {
                     tileb[count+1] |= TILE_FLAG_SANCTUARY;
-                }
             }
 
             count += 2;
         }
-    }
 }
 
 void tile_draw_dungeon(unsigned int *tileb)
