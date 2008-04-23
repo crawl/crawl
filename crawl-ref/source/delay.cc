@@ -187,15 +187,22 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
               good_god_holy_attitude_change(mons);
           else
           {
-              // permanently neutral, but same message as enchantment
-              mons->attitude = ATT_NEUTRAL;
-              mons->flags |= MF_WAS_NEUTRAL;
+              if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
+              {
+                  if (!mons->add_ench(ENCH_NEUTRAL))
+                      return (0);
+              }
+              else
+              {
+                  // permanently neutral, but same message as enchantment
+                  mons->attitude = ATT_NEUTRAL;
+                  mons->flags |= MF_WAS_NEUTRAL;
 
-              // give half of the monster's xp
-              unsigned int exp_gain = 0, avail_gain = 0;
-              gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );
-              mons->flags |= MF_GOT_HALF_XP;
-
+                  // give half of the monster's xp
+                  unsigned int exp_gain = 0, avail_gain = 0;
+                  gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );
+                  mons->flags |= MF_GOT_HALF_XP;
+              }
               simple_monster_message(mons, " seems impressed!");
           }
           break;
