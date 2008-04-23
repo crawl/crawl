@@ -909,7 +909,7 @@ static bool _tso_blessing_holy_wpn(monsters *mon)
 
     const int wpn_brand = get_weapon_brand(wpn);
 
-    // Don't brand range weapons, and only override certain brands.
+    // Only brand melee weapons, and only override certain brands.
     if (is_artefact(wpn) || is_range_weapon(wpn)
         || (wpn_brand != SPWPN_NORMAL && wpn_brand != SPWPN_DRAINING
             && wpn_brand != SPWPN_PAIN && wpn_brand != SPWPN_VAMPIRICISM
@@ -4150,6 +4150,7 @@ static bool _bless_weapon( god_type god, int brand, int colour )
 {
     const int wpn = get_player_wielded_weapon();
 
+    // Only bless melee weapons.
     if (!is_artefact(you.inv[wpn]) && !is_range_weapon(you.inv[wpn]))
     {
         you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
@@ -4189,7 +4190,7 @@ static bool _bless_weapon( god_type god, int brand, int colour )
         {
             holy_word( 100, HOLY_WORD_GENERIC, true );
 
-            // un-bloodify surrounding squares
+            // Un-bloodify surrounding squares.
             for (int i = -3; i <= 3; i++)
                 for (int j = -3; j <= 3; j++)
                 {
