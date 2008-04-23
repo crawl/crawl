@@ -1043,7 +1043,14 @@ static bool _mutation_is_fully_inactive(mutation_type mut)
 }
 
 // Is there any sense in trying to mutate?
-// XXX: Should this also check for the amulet?
+//
+// Avoid the following cases:
+//     * undead players who can decompose (potentially lethal)
+//     * players with the full mutation resistance mutation (useless)
+//
+// Don't avoid the following cases:
+//     * players with amulets of resist mutation (sometimes fails)
+//     * players who resist mutation due to high Zin piety (same reason)
 bool can_safely_mutate()
 {
     return (!you.is_undead
