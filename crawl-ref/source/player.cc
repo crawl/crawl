@@ -1182,7 +1182,6 @@ int player_res_magic(void)
     /* rings of magic resistance */
     rm += 40 * player_equip( EQ_RINGS, RING_PROTECTION_FROM_MAGIC );
 
-
     /* Enchantment skill */
     rm += 2 * you.skills[SK_ENCHANTMENTS];
 
@@ -1295,8 +1294,6 @@ int player_res_cold(bool calc_unid)
         else if (you.hunger_state <= HS_HUNGRY)
             rc++;
     }
-
-
 
     /* rings of fire resistance/fire */
     rc += player_equip( EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid );
