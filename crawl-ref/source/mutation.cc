@@ -1051,11 +1051,11 @@ static bool _mutation_is_fully_inactive(mutation_type mut)
 //     * players who resist mutation due to high Zin piety (same reason)
 bool can_safely_mutate()
 {
-    return (!you.is_undead
+    return ((!you.is_undead
             || (you.is_undead == US_SEMI_UNDEAD
-                && you.hunger_state == HS_ENGORGED)
-            || you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH
-            || player_mutation_level(MUT_MUTATION_RESISTANCE) != 3);
+                && you.hunger_state == HS_ENGORGED))
+            && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH
+            && player_mutation_level(MUT_MUTATION_RESISTANCE) != 3);
 }
 
 formatted_string describe_mutations()
