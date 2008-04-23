@@ -2046,7 +2046,8 @@ std::string _status_mut_abilities()
         text += "praying, ";
 
     if (you.disease && !you.duration[DUR_REGENERATION]
-        || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
+        || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
+            && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
     {
        text += "non-regenerating, ";
     }
@@ -2060,7 +2061,7 @@ std::string _status_mut_abilities()
 
         if (you.species == SP_VAMPIRE && you.hunger_state != HS_SATIATED)
         {
-            if (you.hunger_state <= HS_HUNGRY)
+            if (you.hunger_state < HS_SATIATED)
                 text += " slowly";
             else if (you.hunger_state >= HS_FULL)
                 text += " quickly";
