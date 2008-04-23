@@ -166,8 +166,6 @@ trap_item_brand    = reverse
 
 # The following options are not default. 
 #
-travel_stop_message = Something appears
-travel_stop_message = god:wrath finds you
 runrest_ignore_message = prayer ends
 runrest_ignore_message = You feel.*sick
 runrest_ignore_message = disappears in a puff of smoke
@@ -178,7 +176,12 @@ runrest_ignore_poison = 2:30
 runrest_ignore_monster = fish:2
 runrest_ignore_monster = butterfly:1
 # runrest_ignore_monster = swamp worm:3
+
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
+
+# You can use the travel_stop_message for making autotravel better behaved.
+# The following file contains a list of such options, with explanations.
+: crawl.read_options('docs/travel_stoppers.txt')
 
 ##### 4-h	Stashes ###############################
 #

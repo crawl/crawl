@@ -1,0 +1,25 @@
+stop := travel_stop_message
+
+# God channel
+#
+# By default, all god messages stop autotravel.
+# You can use a different scheme by commenting in/out.
+stop = god:.*
+# stop = Something appears
+# stop = god:wrath finds you
+
+# Expiring spells
+#
+stop = Your icy armour evaporates
+stop = You feel less protected from missiles
+stop = falls from the air
+
+# Traps
+#
+stop = found a trap
+stop = You have blundered into a Zot trap
+stop = Wait a moment
+
+# Ailments
+#
+stop = flesh start
