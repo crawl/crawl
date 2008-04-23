@@ -1853,11 +1853,11 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     if (mutat == MUT_REGENERATION
         && you.mutation[MUT_SLOW_METABOLISM] > 0 && !force_mutation)
     {
-        return false;           /* if you have a slow metabolism, no regen */
+        return false;           // if you have a slow metabolism, no regen
     }
 
     if (mutat == MUT_SLOW_METABOLISM && you.mutation[MUT_REGENERATION] > 0)
-        return false;           /* if you have regen, no slow metabolism */
+        return false;           // if you have regen, no slow metabolism
 
     // This one can be forced by demonspawn
     if (mutat == MUT_ACUTE_VISION
@@ -1867,7 +1867,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     }
 
     if (mutat == MUT_BLURRY_VISION && you.mutation[MUT_ACUTE_VISION] > 0)
-        return false;           /* blurred vision/see invis */
+        return false;           // blurred vision/see invis
 
     // only Nagas and Draconians can get this one
     if (mutat == MUT_STINGER
@@ -2102,7 +2102,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_hp();
-        /* special-case check */
+        // special-case check
         take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
@@ -2115,7 +2115,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_hp();
-        /* special-case check */
+        // special-case check
         take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
@@ -2128,7 +2128,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_mp();
-        /* special-case check */
+        // special-case check
         take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
@@ -2141,7 +2141,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_mp();
-        /* special-case check */
+        // special-case check
         take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
@@ -2182,12 +2182,12 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
 
     you.mutation[mutat]++;
 
-    /* amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor */
+    // amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor
     int amusementvalue = calc_mutation_amusement_value(mutat);
     xom_is_stimulated(amusementvalue);
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
-    /* remember, some mutations don't get this far (eg frail) */
+    // remember, some mutations don't get this far (e.g. frail)
     return true;
 }
 
@@ -2314,7 +2314,7 @@ bool delete_mutation(mutation_type which_mutation, bool force, bool good)
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
         calc_hp();
-        /* special-case check */
+        // special-case check
         take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
@@ -2324,7 +2324,7 @@ bool delete_mutation(mutation_type which_mutation, bool force, bool good)
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
         calc_mp();
-        /* special-case check */
+        // special-case check
         take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
@@ -2398,7 +2398,7 @@ bool delete_mutation(mutation_type which_mutation, bool force, bool good)
 
 char body_covered(void)
 {
-    /* checks how much of your body is covered by scales etc */
+    // checks how much of your body is covered by scales, etc.
     char covered = 0;
 
     if (you.species == SP_NAGA)
@@ -2458,7 +2458,7 @@ const char *mutation_name(mutation_type which_mutat, int level)
     return (mutation_descrip[ which_mutat ][ level - 1 ]);
 }                               // end mutation_name()
 
-/* Use an attribute counter for how many demonic mutations a dspawn has */
+// Use an attribute counter for how many demonic mutations a dspawn has
 void demonspawn(void)
 {
     mutation_type whichm = NUM_MUTATIONS;
