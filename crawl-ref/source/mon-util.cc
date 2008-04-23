@@ -881,6 +881,9 @@ int mons_res_elec( const monsters *mon )
         }
     }
 
+    if (u > 1)
+        u = 1;
+
     return (u);
 }                               // end mons_res_elec()
 
@@ -934,6 +937,9 @@ int mons_res_poison( const monsters *mon )
                 u += 1;
         }
     }
+
+    if (u > 1)
+        u = 1;
 
     return (u);
 }                               // end mons_res_poison()
@@ -993,6 +999,11 @@ int mons_res_fire( const monsters *mon )
         }
     }
 
+    if (u < -3)
+        u = -3;
+    else if (u > 3)
+        u = 3;
+
     return (u);
 }                               // end mons_res_fire()
 
@@ -1034,6 +1045,11 @@ int mons_res_cold( const monsters *mon )
                 u += 1;
         }
     }
+
+    if (u < -3)
+        u = -3;
+    else if (u > 3)
+        u = 3;
 
     return (u);
 }                               // end mons_res_cold()
@@ -1083,6 +1099,9 @@ int mons_res_negative_energy( const monsters *mon )
                 u += 1;
         }
     }
+
+    if (u > 3)
+        u = 3;
 
     return (u);
 }                               // end mons_res_negative_energy()
