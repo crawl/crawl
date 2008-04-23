@@ -1044,33 +1044,6 @@ static bool _beogh_blessing_priesthood(monsters* mon)
     return false;
 }
 
-static bool _beogh_blessing_elec_wpn(monsters *mon)
-{
-    // Pick a monster's weapon.
-    const int weapon = mon->inv[MSLOT_WEAPON];
-
-    if (weapon == NON_ITEM)
-        return false;
-
-    item_def& wpn(mitm[weapon]);
-
-    const int wpn_brand = get_weapon_brand(wpn);
-
-    // Override certain brands.
-    if (is_artefact(wpn)
-        || (wpn_brand != SPWPN_NORMAL && wpn_brand != SPWPN_ORC_SLAYING))
-    {
-        return false;
-    }
-
-    // And make it electric.
-    set_equip_desc(wpn, ISFLAG_GLOWING);
-    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
-    wpn.colour = LIGHTCYAN;
-
-    return true;
-}
-
 // Bless the follower indicated in follower, if any.  If there isn't
 // one, bless a random follower within sight of the player, if any.
 bool bless_follower(monsters* follower,
@@ -1166,14 +1139,6 @@ bool bless_follower(monsters* follower,
                 if (_beogh_blessing_priesthood(mon))
                 {
                     result = "priesthood";
-                    goto blessing_done;
-                }
-
-                // Brand a monster's weapon with electrocution, if
-                // possible.
-                if (one_chance_in(5) && _beogh_blessing_elec_wpn(mon))
-                {
-                    result = "electric attack power";
                     goto blessing_done;
                 }
                 break;
