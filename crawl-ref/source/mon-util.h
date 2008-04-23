@@ -103,7 +103,7 @@ enum mons_class_flags
     M_BATTY             = (1<<11),        // monster is batty
     M_SPLITS            = (1<<12),        // monster can split
     M_AMPHIBIOUS        = (1<<13),        // monster can swim in water,
-    M_THICK_SKIN        = (1<<14),        // monster has more effective AC,
+    M_STATIONARY        = (1<<14),        // monster is stationary
     M_BLOOD_SCENT       = (1<<15),        // monster can smell blood
     M_COLD_BLOOD        = (1<<16),        // susceptible to cold
     M_WARM_BLOOD        = (1<<17),        // no effect currently
