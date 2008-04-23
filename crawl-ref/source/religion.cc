@@ -3204,7 +3204,7 @@ static bool _beogh_retribution()
         god_smites_you(GOD_BEOGH, KILLED_BY_BEOGH_SMITING);
         break;
 
-    case 2: // send out one or two dancing weapons of orc slaying (12.5%)
+    case 2: // send out one or two dancing weapons (12.5%)
     {
         int num_created = 0;
         int num_to_create = (coinflip() ? 1 : 2);
@@ -3232,8 +3232,7 @@ static bool _beogh_retribution()
             if (coinflip())
                 item.flags |= ISFLAG_CURSED;
 
-            // let the player see that he's being attacked by
-            // orc slayers
+            // let the player see what he's being attacked by
             set_ident_flags( item, ISFLAG_KNOW_TYPE );
 
             // now create monster
