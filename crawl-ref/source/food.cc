@@ -744,11 +744,8 @@ static void describe_food_change(int food_increment)
 
 static bool _player_can_eat_rotten_meat(bool need_msg = false)
 {
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-        || player_mutation_level(MUT_SAPROVOROUS))
-    {
+    if (player_mutation_level(MUT_SAPROVOROUS))
         return (true);
-    }
 
     if (need_msg)
         mpr("You refuse to eat that rotten meat.");
@@ -1555,8 +1552,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
 
 // see if you can follow along here -- except for the Amulet of the Gourmand
 // addition (long missing and requested), what follows is an expansion of how
-// chunks were handled in the codebase up to this date -- I have never really
-// understood why liches are hungry and not true undead beings ... {dlb}:
+// chunks were handled in the codebase up to this date ... {dlb}
 static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 {
     int this_chunk_effect = which_chunk_type;
@@ -1566,11 +1562,8 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     {
     case CE_HCL:
     case CE_MUTAGEN_RANDOM:
-        if (you.species == SP_GHOUL
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
-        {
+        if (you.species == SP_GHOUL)
             this_chunk_effect = CE_CLEAN;
-        }
         break;
 
     case CE_POISONOUS:
@@ -1579,30 +1572,22 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
         break;
 
     case CE_CONTAMINATED:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-            && player_mutation_level(MUT_SAPROVOROUS) < 3)
+        switch (player_mutation_level(MUT_SAPROVOROUS))
         {
-            this_chunk_effect = CE_CLEAN;
-        }
-        else
-        {
-            switch (player_mutation_level(MUT_SAPROVOROUS))
-            {
-            case 1:
-                if (!one_chance_in(15))
-                    this_chunk_effect = CE_CLEAN;
-                break;
+        case 1:
+            if (!one_chance_in(15))
+                this_chunk_effect = CE_CLEAN;
+            break;
 
-            case 2:
-                if (!one_chance_in(45))
-                    this_chunk_effect = CE_CLEAN;
-                break;
+        case 2:
+            if (!one_chance_in(45))
+                this_chunk_effect = CE_CLEAN;
+            break;
 
-            default:
-                if (!one_chance_in(3))
-                    this_chunk_effect = CE_CLEAN;
-                break;
-            }
+        default:
+            if (!one_chance_in(3))
+                this_chunk_effect = CE_CLEAN;
+            break;
         }
         break;
 
@@ -1630,28 +1615,20 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     // one last chance for some species to safely eat rotten food {dlb}:
     if (this_chunk_effect == CE_ROTTEN)
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-                && player_mutation_level(MUT_SAPROVOROUS) < 3)
+        switch (player_mutation_level(MUT_SAPROVOROUS))
         {
-            this_chunk_effect = CE_CLEAN;
-        }
-        else
-        {
-            switch (player_mutation_level(MUT_SAPROVOROUS))
-            {
-            case 1:
-                if (!one_chance_in(5))
-                    this_chunk_effect = CE_CLEAN;
-                break;
+        case 1:
+            if (!one_chance_in(5))
+                this_chunk_effect = CE_CLEAN;
+            break;
 
-            case 2:
-                if (!one_chance_in(15))
-                    this_chunk_effect = CE_CLEAN;
-                break;
+        case 2:
+            if (!one_chance_in(15))
+                this_chunk_effect = CE_CLEAN;
+            break;
 
-            default:
-                break;
-            }
+        default:
+            break;
         }
     }
 
