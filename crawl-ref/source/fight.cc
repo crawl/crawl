@@ -655,7 +655,7 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
     }
 
     // gain nutrition
-    if (you.hunger_state < HS_ENGORGED)
+    if (you.hunger_state != HS_ENGORGED)
     {
         int food_value = 0;
         if (chunk_type == CE_CLEAN)
@@ -1021,10 +1021,10 @@ bool melee_attack::player_aux_unarmed()
                     // prob of vampiric bite:
                     // 1/4 when non-thirsty, 1/2 when thirsty, 100% when
                     // bloodless
-                    if (you.hunger_state > HS_HUNGRY && coinflip())
+                    if (you.hunger_state >= HS_SATIATED && coinflip())
                         break;
 
-                    if (you.hunger_state > HS_STARVING && coinflip())
+                    if (you.hunger_state != HS_STARVING && coinflip())
                         break;
 
                     damage_brand = SPWPN_VAMPIRICISM;

@@ -1291,7 +1291,7 @@ int player_res_cold(bool calc_unid)
     {
         if (you.hunger_state <= HS_NEAR_STARVING)
             rc += 2;
-        else if (you.hunger_state <= HS_HUNGRY)
+        else if (you.hunger_state < HS_SATIATED)
             rc++;
     }
 
@@ -1473,7 +1473,7 @@ int player_res_poison(bool calc_unid, bool temp)
     int rp = 0;
 
     // only thirsty vampires are naturally poison resistant
-    if (you.species == SP_VAMPIRE && you.hunger_state <= HS_HUNGRY)
+    if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
         rp++;
 
     /* rings of poison resistance */
@@ -1550,8 +1550,8 @@ int player_spec_death()
     }
     else if (you.species == SP_VAMPIRE)
     {
-        // Vampires get bonus only when hungry
-        if (you.experience_level >= 13 && you.hunger_state <= HS_HUNGRY)
+        // Vampires get bonus only when thirsty
+        if (you.experience_level >= 13 && you.hunger_state < HS_SATIATED)
             sd++;
     }
 
@@ -3086,7 +3086,7 @@ void level_change(bool skip_attribute_increase)
                 {
                     mprf( MSGCH_INTRINSIC_GAIN,
                           "You feel %sin touch with the powers of death.",
-                          (you.hunger_state <= HS_HUNGRY ? "" : "strangely "));
+                          (you.hunger_state < HS_SATIATED ? "" : "strangely "));
                 }
                 break;
             case SP_NAGA:
@@ -3508,7 +3508,7 @@ int check_stealth(void)
                 stealth += (you.skills[SK_STEALTH] * 12);
                 break;
             case SP_VAMPIRE:
-                // Hungry/bat-form vampires are (much) more stealthy
+                // Thirsty/bat-form vampires are (much) more stealthy
                 if (you.hunger_state == HS_STARVING)
                     stealth += (you.skills[SK_STEALTH] * 21);
                 else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
@@ -3516,7 +3516,7 @@ int check_stealth(void)
                 {
                     stealth += (you.skills[SK_STEALTH] * 20);
                 }
-                else if (you.hunger_state <= HS_HUNGRY)
+                else if (you.hunger_state < HS_SATIATED)
                     stealth += (you.skills[SK_STEALTH] * 19);
                 else
                     stealth += (you.skills[SK_STEALTH] * 18);
@@ -6311,7 +6311,7 @@ void player::drain_stat(int stat, int amount, actor* attacker)
 void player::rot(actor *who, int rotlevel, int immed_rot)
 {
     if (you.is_undead
-        && (you.species != SP_VAMPIRE || you.hunger_state <= HS_HUNGRY))
+        && (you.species != SP_VAMPIRE || you.hunger_state < HS_SATIATED))
     {
         return;
     }

@@ -367,7 +367,7 @@ void sublimation(int power)
             mpr( "A conflicting enchantment prevents the spell from "
                  "coming into effect." );
         }
-        else if (you.species == SP_VAMPIRE && you.hunger_state < HS_FULL)
+        else if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {
             mpr("You don't have enough blood to draw power from your "
                 "own body.");

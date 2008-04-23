@@ -260,7 +260,7 @@ static const char* _describe_hunger(int& color)
     {
         case HS_ENGORGED:
             color = LIGHTGREEN;
-            return (vamp? "Alive" : "Engorged");
+            return (vamp ? "Alive" : "Engorged");
         case HS_VERY_FULL:
             color = GREEN;
             return ("Very Full");
@@ -272,17 +272,17 @@ static const char* _describe_hunger(int& color)
             return NULL;
         case HS_HUNGRY:
             color = YELLOW;
-            return (vamp? "Thirsty" : "Hungry");
+            return (vamp ? "Thirsty" : "Hungry");
         case HS_VERY_HUNGRY:
             color = YELLOW;
-            return (vamp? "Very Thirsty" : "Very Hungry");
+            return (vamp ? "Very Thirsty" : "Very Hungry");
         case HS_NEAR_STARVING:
             color = YELLOW;
-            return (vamp? "Near Bloodless" : "Near Starving");
+            return (vamp ? "Near Bloodless" : "Near Starving");
         case HS_STARVING:
         default:
             color = RED;
-            return (vamp? "Bloodless" : "Starving");
+            return (vamp ? "Bloodless" : "Starving");
     }
 }
 

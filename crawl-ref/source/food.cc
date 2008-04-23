@@ -1407,7 +1407,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     // ur_chunkslover not defined in terms of ur_carnivorous because
     // a player could be one and not the other IMHO - 13mar2000 {dlb}
     bool ur_chunkslover = (
-                (check_hunger? you.hunger_state <= HS_HUNGRY : true)
+                (check_hunger ? you.hunger_state < HS_SATIATED : true)
                            || you.omnivorous()
                            || player_mutation_level(MUT_CARNIVOROUS));
 

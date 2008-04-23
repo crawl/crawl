@@ -1554,8 +1554,9 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 
 static const char* _player_vampire_smells_blood(int dist)
 {
-    // non-hungry vampires get no clear indication of how close the smell is
-    if (you.hunger_state > HS_HUNGRY)
+    // non-thirsty vampires get no clear indication of how close the
+    // smell is
+    if (you.hunger_state >= HS_SATIATED)
         return "";
 
     if (dist < 16) // 4*4

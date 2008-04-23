@@ -795,7 +795,8 @@ void tutorial_dissection_reminder(bool healthy)
     if (Options.tut_just_triggered || !Options.tutorial_left)
         return;
 
-    // when hungry, give appropriate message or at least don't suggest sacrifice
+    // when hungry, give appropriate message or at least don't suggest
+    // sacrifice
     if (you.hunger_state < HS_SATIATED && healthy)
     {
         learned_something_new(TUT_MAKE_CHUNKS);
@@ -1697,7 +1698,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
       case TUT_OFFER_CORPSE:
           if (!god_likes_butchery(you.religion)
-              || you.hunger_state <= HS_HUNGRY)
+              || you.hunger_state < HS_SATIATED)
           {
               return;
           }
