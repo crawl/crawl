@@ -1056,6 +1056,7 @@ bool can_safely_mutate()
     return (!you.is_undead
             || (you.is_undead == US_SEMI_UNDEAD
                 && you.hunger_state == HS_ENGORGED)
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
             || player_mutation_level(MUT_MUTATION_RESISTANCE) != 3);
 }
 
