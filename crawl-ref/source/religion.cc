@@ -894,11 +894,20 @@ static bool _tso_blessing_holy_wpn(monsters *mon)
 {
     // Pick a monster's weapon.
     const int weapon = mon->inv[MSLOT_WEAPON];
+    const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
 
-    if (weapon == NON_ITEM)
+    if (weapon == NON_ITEM && alt_weapon == NON_ITEM)
         return false;
 
-    item_def& wpn(mitm[weapon]);
+    int slot;
+
+    do
+    {
+        slot = (coinflip()) ? weapon : alt_weapon;
+    }
+    while (slot == NON_ITEM);
+
+    item_def& wpn(mitm[slot]);
 
     const int wpn_brand = get_weapon_brand(wpn);
 
