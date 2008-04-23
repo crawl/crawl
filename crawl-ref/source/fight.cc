@@ -2860,9 +2860,8 @@ void melee_attack::player_apply_attack_delay()
 
     final_attack_delay = attack_delay;
 
-    you.time_taken = (you.time_taken * final_attack_delay) / 10;
-    if (you.time_taken < 1)
-        you.time_taken = 1;
+    you.time_taken =
+        std::max(2, div_rand_round(you.time_taken * final_attack_delay, 10));
 
 #if DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS,

@@ -881,8 +881,7 @@ int mons_res_elec( const monsters *mon )
         }
     }
 
-    if (u > 1)
-        u = 1;
+    // Monsters can legitimately get multiple levels of electricity resistance.
 
     return (u);
 }                               // end mons_res_elec()
@@ -938,8 +937,7 @@ int mons_res_poison( const monsters *mon )
         }
     }
 
-    if (u > 1)
-        u = 1;
+    // Monsters can legitimately get multiple levels of poison resistance.
 
     return (u);
 }                               // end mons_res_poison()
