@@ -909,8 +909,8 @@ static bool _tso_blessing_holy_wpn(monsters *mon)
 
     const int wpn_brand = get_weapon_brand(wpn);
 
-    // Override certain brands.
-    if (is_artefact(wpn)
+    // Don't brand range weapons, and only override certain brands.
+    if (is_artefact(wpn) || is_range_weapon(wpn)
         || (wpn_brand != SPWPN_NORMAL && wpn_brand != SPWPN_DRAINING
             && wpn_brand != SPWPN_PAIN && wpn_brand != SPWPN_VAMPIRICISM
             && wpn_brand != SPWPN_VENOM))
