@@ -802,8 +802,6 @@ static bool _blessing_wpn(monsters *mon)
     if (weapon == NON_ITEM && alt_weapon == NON_ITEM)
         return false;
 
-    bool success;
-
     int slot;
 
     do
@@ -853,7 +851,7 @@ static bool _blessing_AC(monsters* mon)
 
     item_set_appearance(arm);
 
-    return success;
+    return true;
 }
 
 static bool _blessing_balms(monsters *mon)
