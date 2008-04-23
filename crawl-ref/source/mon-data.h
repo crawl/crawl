@@ -12,10 +12,8 @@
 
 #include "enum.h"
 
-/*
-   This whole file was very generously condensed from its initial ugly form
-   by Wladimir van der Laan ($pellbinder).
- */
+// This whole file was very generously condensed from its initial ugly form
+// by Wladimir van der Laan ($pellbinder).
 
 /* ******************************************************************
 
