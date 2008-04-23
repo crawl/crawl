@@ -4968,7 +4968,7 @@ void handle_god_time()
             break;
         }
 
-        // These gods like long-standing worshippers
+        // These gods like long-standing worshippers.
         case GOD_ELYVILON:
             if (_need_free_piety() && one_chance_in(20))
                 gain_piety(1);
