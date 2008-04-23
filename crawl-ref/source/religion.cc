@@ -891,8 +891,16 @@ static bool _tso_blessing_holy_wpn(monsters *mon)
 
     item_def& wpn(mitm[weapon]);
 
-    if (is_artefact(wpn) || get_weapon_brand(wpn) == SPWPN_HOLY_WRATH)
+    const int wpn_brand = get_weapon_brand(wpn);
+
+    // Override certain brands.
+    if (is_artefact(wpn)
+        || (wpn_brand != SPWPN_NORMAL && wpn_brand != SPWPN_DRAINING
+            && wpn_brand != SPWPN_PAIN && wpn_brand != SPWPN_VAMPIRICISM
+            && wpn_brand != SPWPN_VENOM))
+    {
         return false;
+    }
 
     // And make it holy.
     set_equip_desc(wpn, ISFLAG_GLOWING);
@@ -928,7 +936,10 @@ static bool _tso_blessing_holy_arm(monsters* mon)
 
     item_def& arm(mitm[slot]);
 
-    if (is_artefact(arm) || get_armour_ego_type(arm) == SPARM_POSITIVE_ENERGY)
+    const int arm_brand = get_armour_ego_type(arm);
+
+    // Override certain brands.
+    if (is_artefact(arm) || arm_brand != SPARM_NORMAL)
         return false;
 
     // And make it resistant to negative energy.
@@ -1043,8 +1054,14 @@ static bool _beogh_blessing_elec_wpn(monsters *mon)
 
     item_def& wpn(mitm[weapon]);
 
-    if (is_artefact(wpn) || get_weapon_brand(wpn) == SPWPN_ELECTROCUTION)
+    const int wpn_brand = get_weapon_brand(wpn);
+
+    // Override certain brands.
+    if (is_artefact(wpn)
+        || (wpn_brand != SPWPN_NORMAL && wpn_brand != SPWPN_ORC_SLAYING))
+    {
         return false;
+    }
 
     // And make it electric.
     set_equip_desc(wpn, ISFLAG_GLOWING);
