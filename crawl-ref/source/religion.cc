@@ -881,6 +881,31 @@ static bool _blessing_healing(monsters *mon, bool extra)
     return heal_monster(mon, mon->max_hit_points, extra);
 }
 
+static bool _tso_blessing_holy_wpn(monsters *mon)
+{
+    // Pick a monster's weapon.
+    const int weapon = mon->inv[MSLOT_WEAPON];
+
+    if (weapon == NON_ITEM)
+        return false;
+
+    item_def& wpn(mitm[weapon]);
+
+    if (is_artefact(wpn) || get_weapon_brand(wpn) == SPWPN_HOLY_WRATH)
+        return false;
+
+    // And make it holy.
+    set_equip_desc(wpn, ISFLAG_GLOWING);
+    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
+    wpn.colour = YELLOW;
+
+    // Convert demonic weapons into non-demonic weapons.
+    if (is_demonic(wpn))
+        convert2good(wpn, false);
+
+    return true;
+}
+
 static bool _tso_blessing_holy_arm(monsters* mon)
 {
     if (mons_res_negative_energy(mon) == 3)
@@ -910,31 +935,6 @@ static bool _tso_blessing_holy_arm(monsters* mon)
     set_equip_desc(arm, ISFLAG_GLOWING);
     set_item_ego_type(arm, OBJ_ARMOUR, SPARM_POSITIVE_ENERGY);
     arm.colour = WHITE;
-
-    return true;
-}
-
-static bool _tso_blessing_holy_wpn(monsters *mon)
-{
-    // Pick a monster's weapon.
-    const int weapon = mon->inv[MSLOT_WEAPON];
-
-    if (weapon == NON_ITEM)
-        return false;
-
-    item_def& wpn(mitm[weapon]);
-
-    if (is_artefact(wpn) || get_weapon_brand(wpn) == SPWPN_HOLY_WRATH)
-        return false;
-
-    // And make it holy.
-    set_equip_desc(wpn, ISFLAG_GLOWING);
-    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
-    wpn.colour = YELLOW;
-
-    // Convert demonic weapons into non-demonic weapons.
-    if (is_demonic(wpn))
-        convert2good(wpn, false);
 
     return true;
 }
@@ -1127,14 +1127,6 @@ bool bless_follower(monsters* follower,
         switch (god)
         {
             case GOD_SHINING_ONE:
-                // Brand a monster's armour with positive energy, if
-                // possible.
-                if (_tso_blessing_holy_arm(mon))
-                {
-                    result = "life defence";
-                    goto blessing_done;
-                }
-
                 // Brand a monster's weapon with holy wrath, if
                 // possible.
                 if (_tso_blessing_holy_wpn(mon))
@@ -1143,6 +1135,14 @@ bool bless_follower(monsters* follower,
                     goto blessing_done;
                 }
                 break;
+
+                // Brand a monster's armour with positive energy, if
+                // possible.
+                if (_tso_blessing_holy_arm(mon))
+                {
+                    result = "life defence";
+                    goto blessing_done;
+                }
 
             case GOD_BEOGH:
                 // Turn a monster into a priestly monster, if possible.
