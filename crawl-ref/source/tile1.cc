@@ -916,7 +916,7 @@ static int _tileidx_unrand_artefact(int idx)
         case 34: return TILE_URAND_EOS;
         case 35: return TILE_URAND_SHAOLIN;
         case 36: return TILE_URAND_ROBUSTNESS;
-        case 37: return TILE_URAND_EDISON;
+        case 37: return TILE_URAND_MAXWELL;
         case 38: return TILE_URAND_VOO_DOO;
         case 39: return TILE_URAND_OCTOPUS_KING;
         case 40: return TILE_URAND_DRAGONMASK;
@@ -934,7 +934,7 @@ static int _tileidx_unrand_artefact(int idx)
         case 52: return TILE_URAND_BLOWGUN;
         case 53: return TILE_URAND_WYRMBANE;
         case 54: return TILE_URAND_SPRIGGANS_KNIFE;
-        case 55: return TILE_URAND_DIRE_LAJATANG;
+        case 55: return TILE_URAND_STARLIGHT;
         case 56: return TILE_URAND_BROOCH_OF_SHIELDING;
         case 57: return TILE_URAND_SERPENT_SCOURGE;
         default: return TILE_TODO;
@@ -1126,7 +1126,7 @@ static int _tileidx_weapon(const item_def &item)
         return TILE_WPN_LONGBOW;
 
     case WPN_LAJATANG:
-        return TILE_WPN_LAJATANG;
+        return TILE_WPN_LAJATANG + etable[1][etype];
 
     case WPN_BARDICHE:
         return TILE_WPN_LOCHABER_AXE;
@@ -2968,7 +2968,6 @@ int tilep_equ_weapon(const item_def &item)
             case 53: return TILEP_HAND1_BLOWGUN_ASSASSIN;
             case 54: return TILEP_HAND1_WYRMBANE;
             case 55: return TILEP_HAND1_SPRIGGANS_KNIFE;
-            case 56: return TILEP_HAND1_DIRE_LAJATANG;
             case 58: return TILEP_HAND1_SERPENT_SCOURGE;
         }
     }
@@ -3032,7 +3031,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_HAMMER:        return TILEP_HAND1_HAMMER;
     case WPN_DEMON_TRIDENT: return TILEP_HAND1_DEMON_TRIDENT;
     case WPN_TRIDENT:       return TILEP_HAND1_TRIDENT2;
-    case WPN_LAJATANG:      return TILEP_HAND1_D_GLAIVE;
+    case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;;
 
     // Ranged
     case WPN_SLING:         return TILEP_HAND1_SLING;
@@ -3067,8 +3066,8 @@ int tilep_equ_armour(const item_def &item)
             case 29: return TILEP_BODY_LEATHER_RED;
             // robe of Folly
             case 33: return TILEP_BODY_ROBE_RED2;
-            // Edison's patent armour
-            case 38: return TILEP_BODY_EDISON;
+            // Maxwell's patent armour
+            case 38: return TILEP_BODY_MAXWELL;
             // robe of Night
             case 46: return TILEP_BODY_ROBE_OF_NIGHT;
             // armour of the Dragon King

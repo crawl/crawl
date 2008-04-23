@@ -362,7 +362,7 @@
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
-        1, 0                                  // cursed
+        4, 0                                  // cursed
     }
     ,
         "",
@@ -768,7 +768,7 @@
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         1, 0, 0, 0, 3,          // force berserk, to dam
-        1, -20                  // cursed, stealth
+        3, -20                  // cursed, stealth
     }
     ,
         "",
@@ -1163,20 +1163,19 @@
 
 /* 56 */
 {
-    "dire lajatang", "double lajatang",
-        OBJ_WEAPONS, WPN_LAJATANG, -2, +9, RED,
+    "cloak of Starlight", "phosphorescent cloak",
+        OBJ_ARMOUR, ARM_CLOAK, 0, 0, WHITE,
     {
-        SPWPN_VORPAL, 0, 0, 0, 0, -3, // -Dex
-        0, 0, 0, 0, 0, 0,
+        0, 0, 4, 0, 0, 0,  // EV
+        0, 1, 1, 0, 0, 0,  // Cold, resElec
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
-        0, 0
+        0, -30             // Stealth
     }
     ,
-        "Those who figure out how to use this exceedingly awkward weapon can "
-        "do great damage with its two pairs of razor-sharp blades.",
-        "A double lajatang.",
+        "A cloak woven of pure light beams.",
+        "A phosphorescent cloak.",
         ""
 },
 

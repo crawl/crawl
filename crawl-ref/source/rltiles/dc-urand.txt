@@ -25,7 +25,6 @@ weapon/urand_undeadhunter URAND_UNDEADHUNTER
 %rim 1
 weapon/urand_blowgun URAND_BLOWGUN
 weapon/urand_serpent_scourge URAND_SERPENT_SCOURGE
-weapon/urand_dire_lajatang URAND_DIRE_LAJATANG
 weapon/urand_wyrmbane URAND_WYRMBANE
 weapon/urand_spriggans_knife URAND_SPRIGGANS_KNIFE
 %rim 0
@@ -43,12 +42,13 @@ armor/urand_salamander URAND_SALAMANDER
 armor/urand_war URAND_WAR
 armor/urand_resistance URAND_RESISTANCE
 armor/urand_folly URAND_FOLLY
-armor/urand_edison URAND_EDISON
+armor/urand_maxwell URAND_MAXWELL
 armor/urand_dragonmask URAND_DRAGONMASK
 armor/urand_night URAND_NIGHT
 armor/urand_dragon_king URAND_DRAGON_KING
 armor/urand_alchemist URAND_ALCHEMIST
 armor/urand_fencer URAND_FENCER
+armor/urand_starlight URAND_STARLIGHT
 ring/urand_shadows URAND_SHADOWS
 ring/urand_shaolin URAND_SHAOLIN
 ring/urand_robustness URAND_ROBUSTNESS

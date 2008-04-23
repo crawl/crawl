@@ -347,7 +347,7 @@ pj PJ
 sam SAM
 vanhel1
 
-edison EDISON
+maxwell MAXWELL
 lears_chain_mail LEARS_CHAIN_MAIL
 robe_of_night ROBE_OF_NIGHT
 %end

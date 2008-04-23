@@ -596,13 +596,16 @@ std::string getLongDescription(const std::string &key, bool noquote)
     if (!DescriptionDB.get())
         return ("");
 
+    std::string result = "";
     if (noquote)
     {
-        return _query_database(DescriptionDB.get(), key + " noquote",
-                               true, true);
+        result = _query_database(DescriptionDB.get(), key + " noquote",
+                                 true, true);
     }
+    if (result.empty())
+        result = _query_database(DescriptionDB.get(), key, true, true);
 
-    return _query_database(DescriptionDB.get(), key, true, true);
+    return result;
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,

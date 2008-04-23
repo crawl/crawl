@@ -132,6 +132,7 @@ blessed_blade WPN_BLESSED_BLADE
 %rim 1
 longbow WPN_LONGBOW
 lajatang WPN_LAJATANG
+lajatang2 WPN_LAJATANG2
 lochaber_axe WPN_LOCHABER_AXE
 
 ######OBJ_MISSILES
@@ -251,7 +252,7 @@ ice_dragon_armour ARM_ICE_DRAGON_ARMOUR /* A9E-2 A magical armour, made from the
 silver_dragon_scales ARM_STEAM_DRAGON_HIDE /* A0E0 The soft and supple scaley skin of a steam dragon. I suppose you could wear it if you really wanted to. 
 silver_dragon_scale_mail ARM_STEAM_DRAGON_ARMOUR /* A3E0 A magical armour, made from the scales of a steam-breathing dragon. Although unlike the armour made from the scales of some larger dragons it does not provide its wearer with much in the way of special magical protection, it is extremely light and as supple as cloth.
 mottled_dragon_hide ARM_MOTTLED_DRAGON_HIDE /* A1E-1 The weirdly-patterned scaley skin of a mottled dragon. I suppose you could wear it if you really wanted to.
-mpttled_dragon_armour ARM_MOTTLED_DRAGON_ARMOUR /* A5E-1 A magical armour made from the scales of a mottled dragon. Although unlike the armour made from the scales of some larger dragons it does not provide its wearer with much in the way of special magical protection, it is as light and relatively uncumbersome as leather armour.
+mottled_dragon_armour ARM_MOTTLED_DRAGON_ARMOUR /* A5E-1 A magical armour made from the scales of a mottled dragon. Although unlike the armour made from the scales of some larger dragons it does not provide its wearer with much in the way of special magical protection, it is as light and relatively uncumbersome as leather armour.
 blue_dragon_scales ARM_STORM_DRAGON_HIDE /* A2E-5 The hide of a storm dragon, covered in extremely hard blue scales. I suppose you could wear it if you really wanted to.
 blue_dragon_scale_mail ARM_STORM_DRAGON_ARMOUR /* A10E-5 A magical armour made from the scales of a lightning-breathing dragon. It is heavier than most dragon scale armours, but gives its wearer great resistance to electrical discharges.
 gold_dragon_hide ARM_GOLD_DRAGON_HIDE /* A2E-10 The extremely tough and heavy skin of a golden dragon, covered in shimmering golden scales. I suppose you could wear it if you really wanted to.
