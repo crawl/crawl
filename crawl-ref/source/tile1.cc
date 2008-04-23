@@ -49,6 +49,26 @@ void TileNewLevel(bool first_time)
     tile_clear_buf();
     if (first_time)
         tile_init_flavor();
+
+    // Fix up stair markers.  The travel information isn't hooked up
+    // until after we change levels.  So, look through all of the stairs
+    // on this level and check if they still need the stair flag.
+    for (unsigned int x = 0; x < GXM; x++)
+        for (unsigned int y = 0; y < GYM; y++)
+        {
+            unsigned int tile = env.tile_bk_bg[x][y];
+            if (!(tile & TILE_FLAG_NEW_STAIR))
+                continue;
+
+            const coord_def gc(x,y);
+            int object = grd(gc);
+
+            if (!is_travelable_stair((dungeon_feature_type)object) ||
+                travel_cache.know_stair(gc))
+            {
+                env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
+            }
+        }
 }
 
 /**** tile index routines ****/
