@@ -1696,13 +1696,15 @@ int player_energy()
     return pe;
 }
 
-// If temp is set to false, temporary sources of resistance won't be counted.
+// If temp is set to false, temporary sources of resistance won't be
+// counted.
 int player_prot_life(bool calc_unid, bool temp)
 {
     int pl = 0;
 
-    // Hunger is temporary, true, but that's something you can control.
-    // (Especially as life protection only increases the hungrier you get.)
+    // Hunger is temporary, true, but that's something you can control,
+    // especially as life protection only increases the hungrier you
+    // get.
     if (you.species == SP_VAMPIRE)
     {
         switch (you.hunger_state)
@@ -1723,8 +1725,8 @@ int player_prot_life(bool calc_unid, bool temp)
         }
     }
 
-    // same here: Your piety status is something you can more or less control.
-    // TSO's protection
+    // Same here.  Your piety status, and, hence, TSO's protection, is
+    // something you can more or less control.
     if (you.religion == GOD_SHINING_ONE && you.piety > pl * 50)
         pl = you.piety / 50;
 
@@ -1753,7 +1755,7 @@ int player_prot_life(bool calc_unid, bool temp)
     // rings
     pl += player_equip( EQ_RINGS, RING_LIFE_PROTECTION, calc_unid );
 
-    // armour: (checks body armour only)
+    // armour (checks body armour only)
     pl += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY );
 
     // randart wpns
