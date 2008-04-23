@@ -797,13 +797,22 @@ static bool _blessing_wpn(monsters *mon)
 {
     // Pick a monster's weapon.
     const int weapon = mon->inv[MSLOT_WEAPON];
+    const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
 
-    if (weapon == NON_ITEM)
+    if (weapon == NON_ITEM && alt_weapon == NON_ITEM)
         return false;
 
     bool success;
 
-    item_def& wpn(mitm[weapon]);
+    int slot;
+
+    do
+    {
+        slot = (coinflip()) ? weapon : alt_weapon;
+    }
+    while (slot == NON_ITEM);
+
+    item_def& wpn(mitm[slot]);
 
     // And enchant or uncurse it.
     success = enchant_weapon((coinflip()) ? ENCHANT_TO_HIT
