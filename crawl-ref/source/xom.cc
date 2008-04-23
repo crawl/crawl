@@ -667,7 +667,7 @@ static bool xom_is_good(int sever)
 
         if (create_monster(xom_random_demon(sever, one_chance_in(8)),
                             0, beh, you.x_pos, you.y_pos,
-                            you.pet_target, MONS_PROGRAM_BUG ) != -1)
+                            you.pet_target, MONS_PROGRAM_BUG) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
