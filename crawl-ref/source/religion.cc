@@ -2026,7 +2026,8 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         break;
 
     // Note that holy deaths are special, they are always noticed...
-    // if you or any friendly kills one you'll get the credit or the blame.
+    // If you or any friendly kills one, you'll get the credit or the
+    // blame.
     case DID_HOLY_KILLED_BY_SERVANT:
     case DID_KILL_HOLY:
         switch (you.religion)
