@@ -580,7 +580,7 @@ static bool xom_is_good(int sever)
 
         // If it's not a demon, Xom got it someplace else, so use
         // different messages below.
-        if (is_demonic)
+        if (!is_demonic)
             different = true;
 
         // Mark non-demons hostile as appropriate.
@@ -658,7 +658,7 @@ static bool xom_is_good(int sever)
 
         // If it's not a demon, Xom got it someplace else, so use
         // different messages below.
-        if (is_demonic)
+        if (!is_demonic)
             different = true;
 
         // Mark non-demons hostile as appropriate.
