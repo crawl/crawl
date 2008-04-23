@@ -1574,11 +1574,8 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
         break;
 
     case CE_POISONOUS:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-            || player_res_poison() > 0)
-        {
+        if (player_res_poison() > 0)
             this_chunk_effect = CE_CLEAN;
-        }
         break;
 
     case CE_CONTAMINATED:
