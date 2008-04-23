@@ -74,8 +74,8 @@ void load_tutorial(reader& inf)
 
     int version = unmarshallLong(inf);
     if (version != TUTORIAL_VERSION)
-        return; 
-        
+        return;
+
     Options.tutorial_type = unmarshallShort(inf);
     for ( long i = 0; i < TUT_EVENTS_NUM; ++i )
     {
@@ -92,7 +92,7 @@ void init_tutorial_options()
 
     Options.delay_message_clear = false;
     Options.auto_list = true;
-    
+
 #ifdef USE_TILE
     // show all items in inventory
     strncpy(Options.tile_show_items, "!?/%=([)X}+\\_.", 18);
@@ -110,9 +110,9 @@ bool pick_tutorial()
         EOL EOL
         "<cyan>You can be:</cyan>"
         EOL EOL).display();
-    
+
     textcolor( LIGHTGREY );
-    
+
     for (int i = 0; i < TUT_TYPES_NUM; i++)
         print_tutorial_menu(i);
 
@@ -129,32 +129,32 @@ bool pick_tutorial()
 
         if (keyn == '*')
             keyn = 'a' + random2(TUT_TYPES_NUM);
-        
+
         // choose character for tutorial game and set starting values
         if (keyn >= 'a' && keyn <= 'a' + TUT_TYPES_NUM - 1)
         {
             Options.tutorial_type = keyn - 'a';
             you.species    = _get_tutorial_species(Options.tutorial_type);
             you.char_class = _get_tutorial_job(Options.tutorial_type);
-            
+
             // activate all triggers
             Options.tutorial_events.init(true);
             Options.tutorial_left = TUT_EVENTS_NUM;
-            
+
             // store whether explore, stash search or travelling was used
             Options.tut_explored = true;
             Options.tut_stashes  = true;
             Options.tut_travel   = true;
-            
+
             // used to compare which fighting means was used most often
             Options.tut_spell_counter   = 0;
             Options.tut_throw_counter   = 0;
             Options.tut_melee_counter   = 0;
             Options.tut_berserk_counter = 0;
-            
+
             // for occasional healing reminders
             Options.tut_last_healed = 0;
-            
+
             Options.random_pick = true; // random choice of starting spellbook
             Options.weapon = WPN_HAND_AXE; // easiest choice for fighters
             return true;
@@ -163,7 +163,7 @@ bool pick_tutorial()
         if (keyn == CK_BKSP || keyn == ' ')
         {
             // in this case, undo previous choices
-            // set_startup_options(); 
+            // set_startup_options();
             you.species    = SP_UNKNOWN;
             you.char_class = JOB_UNKNOWN;
             Options.race   = 0;
@@ -191,7 +191,7 @@ void print_tutorial_menu(unsigned int type)
 {
     char letter = 'a' + type;
     char desc[100];
-    
+
     switch(type)
     {
       case TUT_BERSERK_CHAR:
@@ -248,7 +248,7 @@ static job_type _get_tutorial_job(unsigned int type)
 static formatted_string _tut_starting_info(unsigned int width)
 {
     std::ostringstream istr;
-    
+
     istr << "<white>Welcome to Dungeon Crawl!</white>" EOL EOL
          << "Your object is to lead a <w>"
          << species_name(you.species, 1) << " " << you.class_name
@@ -269,7 +269,7 @@ static formatted_string _tut_starting_info(unsigned int width)
         "available in these files (all of which can also be read in-game):"
         EOL
         "  <lightblue>readme.txt</lightblue>         - "
-        "A very short guide to Crawl." EOL        
+        "A very short guide to Crawl." EOL
         "  <lightblue>crawl_manual.txt</lightblue>   - "
         "This contains all details on races, magic, skills, etc." EOL
         "  <lightblue>options_guide.txt</lightblue>  - "
@@ -279,7 +279,7 @@ static formatted_string _tut_starting_info(unsigned int width)
         "Press <white>Space</white> to proceed to the basics "
         "(the screen division and movement)." EOL
         "Press <white>Esc</white> to fast forward to the game start.";
-        
+
     std::string broken = istr.str();
     linebreak_string2(broken, width);
     return formatted_string::parse_block(broken);
@@ -394,7 +394,7 @@ static formatted_string _tutorial_debug()
     std::string result;
     bool lbreak = false;
     snprintf(info, INFO_SIZE, "Tutorial Debug Screen");
-    
+
     int i = _get_tutorial_cols()/2-1 - strlen(info) / 2;
     result += std::string(i, ' ');
     result += "<white>";
@@ -404,10 +404,10 @@ static formatted_string _tutorial_debug()
     result += "<lightblue>";
     for (i = 0; i < TUT_EVENTS_NUM; i++)
     {
-        snprintf(info, INFO_SIZE, "%d: %d (%s)", 
+        snprintf(info, INFO_SIZE, "%d: %d (%s)",
                  i, Options.tutorial_events[i], _tut_debug_list(i).c_str());
         result += info;
-        
+
         // break text into 2 columns where possible
         if (strlen(info) >= _get_tutorial_cols()/2 || lbreak)
         {
@@ -421,14 +421,14 @@ static formatted_string _tutorial_debug()
         }
     }
     result += "</lightblue>" EOL EOL;
- 
+
     snprintf(info, INFO_SIZE, "tutorial_left: %d\n", Options.tutorial_left);
     result += info;
     result += EOL;
- 
+
     snprintf(info, INFO_SIZE, "You are a %s %s, and the tutorial will reflect "
              "that.", species_name(you.species, 1), you.class_name);
- 
+
     result += info;
 
     return formatted_string::parse_string(result);
@@ -489,7 +489,7 @@ static formatted_string _tutorial_stats_intro()
             " --more--                               Press <w>Escape</w> to skip the basics\n"
             "                                      \n"
             "                                      \n";
-            
+
     return formatted_string::parse_block(istr.str(), false);
 }
 #endif
@@ -601,7 +601,7 @@ void tut_starting_screen()
     }
     if (i >= MAX_INFO)
         more();
-        
+
     mesclr();
 }
 
@@ -615,12 +615,12 @@ void tutorial_death_screen()
          "common occurence in Crawl. Rest assured that with diligence and "
          "playing experience your characters will last longer.",
          MSGCH_TUTORIAL);
-         
+
     mpr( "Perhaps the following advice can improve your playing style:",
          MSGCH_TUTORIAL);
     more();
 
-    if (Options.tutorial_type == TUT_MAGIC_CHAR 
+    if (Options.tutorial_type == TUT_MAGIC_CHAR
         && Options.tut_spell_counter < Options.tut_melee_counter )
     {
         text = "As a Conjurer your main weapon should be offensive magic. Cast "
@@ -631,12 +631,12 @@ void tutorial_death_screen()
         text = "Don't forget to go berserk when fighting particularly "
                "difficult foes. It is risky, but makes you faster and beefier.";
     }
-    else if (Options.tutorial_type == TUT_RANGER_CHAR 
+    else if (Options.tutorial_type == TUT_RANGER_CHAR
              && 2*Options.tut_throw_counter < Options.tut_melee_counter )
     {
         text = "Your bow and arrows are extremely powerful against distant "
                "monsters. Be sure to collect all arrows lying around in the "
-               "dungeon."; 
+               "dungeon.";
     }
     else
     {
@@ -688,13 +688,13 @@ void tutorial_death_screen()
                     "teleportation or a potion of speed can really save your "
                     "bacon.";
             break;
-            
+
         case 5:
             text =  "Never fight more than one monster, if you can help it. "
                     "Always back into a corridor so that they are forced to "
                     "fight you one on one.";
             break;
-            
+
         default:
             text =  "Sorry, no hint this time, though there should have been "
                     "one.";
@@ -720,7 +720,7 @@ void tutorial_finished()
             "to try the other ones as well. Note that the help screen "
             "(<w>?\?</w>) will look very different from now on. Here's a last "
             "playing hint:";
-            
+
     formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
     more();
 
@@ -778,10 +778,10 @@ void tutorial_finished()
                      "<w>.crawlrc</w>. Crawl will complain if it can't find "
                      "either file.";
                break;
-               
+
           default:
               text =  "Oops... No hint for now. Better luck next time!";
-        } 
+        }
     }
     formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
     more();
@@ -804,7 +804,7 @@ void tutorial_dissection_reminder(bool healthy)
 
     if (!god_likes_butchery(you.religion))
         return;
-        
+
     if (Options.tutorial_events[TUT_OFFER_CORPSE])
         learned_something_new(TUT_OFFER_CORPSE);
     else if (one_chance_in(8))
@@ -826,7 +826,7 @@ void tutorial_dissection_reminder(bool healthy)
 
         formatted_message_history(text, MSGCH_TUTORIAL, 0,
                                   _get_tutorial_cols());
-        
+
         if (is_resting())
             stop_running();
     }
@@ -837,7 +837,7 @@ void tutorial_healing_reminder()
 {
     if (!Options.tutorial_left)
         return;
-        
+
     if (you.duration[DUR_POISONING] && 2*you.hp < you.hp_max)
     {
         if (Options.tutorial_events[TUT_NEED_POISON_HEALING])
@@ -845,7 +845,7 @@ void tutorial_healing_reminder()
     }
     else
     {
-        if (Options.tutorial_events[TUT_NEED_HEALING]) 
+        if (Options.tutorial_events[TUT_NEED_HEALING])
             learned_something_new(TUT_NEED_HEALING);
         else if (you.num_turns - Options.tut_last_healed >= 50
                  && !you.duration[DUR_POISONING])
@@ -863,7 +863,7 @@ void tutorial_healing_reminder()
                     ", or click on the stat area with your mouse"
 #endif
                     ".";
-                    
+
             if (you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
                 && !you.duration[DUR_EXHAUSTED]
                 && you.hunger_state >= HS_SATIATED)
@@ -874,7 +874,7 @@ void tutorial_healing_reminder()
             }
             formatted_message_history(text, MSGCH_TUTORIAL, 0,
                                       _get_tutorial_cols());
-            
+
             if (is_resting())
                 stop_running();
         }
@@ -970,17 +970,17 @@ void tutorial_first_monster(const monsters &mon)
     }
 
     stop_running();
-    
+
     Options.tutorial_events[TUT_SEEN_MONSTER] = 0;
     Options.tutorial_left--;
     Options.tut_just_triggered = true;
-    
+
     std::string text = "That ";
 #ifdef USE_TILE
     // need to highlight monster
     const coord_def ep = grid2view(coord_def(mon.x, mon.y));
     tile_place_cursor(ep.x-1,ep.y-1,true);
-    
+
     text += "monster is a ";
     text += mon.name(DESC_PLAIN).c_str();
     text += ". Examples for typical early monsters are rats, giant newts, "
@@ -996,7 +996,7 @@ void tutorial_first_monster(const monsters &mon)
     text += " is a monster, usually depicted by a letter. Some typical "
             "early monsters look like <brown>r</brown>, <green>l</green>, "
             "<brown>K</brown> or <lightgrey>g</lightgrey>. ";
-            
+
     if (crawl_view.mlistsz.y > 0)
     {
         text += "Your console settings allowing, you'll always see a "
@@ -1013,16 +1013,16 @@ void tutorial_first_monster(const monsters &mon)
             "won't be able to automatically move to distant squares, to avoid "
             "death by misclicking.";
 #endif
-            
+
     formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
-    
+
     if (Options.tutorial_type == TUT_RANGER_CHAR)
     {
         text =  "However, as a hunter you will want to deal with it using your "
                 "bow. If you have a look at your bow from your "
                 "<w>i</w>nventory, you'll find an explanation of how to do "
                 "this. First <w>w</w>ield it, then follow the instructions.";
-                
+
 #ifdef USE_TILE
         text += EOL "As a short-cut you can also <w>right-click</w> on your "
                 "bow to read its description, and <w>left-click</w> to wield "
@@ -1038,7 +1038,7 @@ void tutorial_first_monster(const monsters &mon)
                 "magic. If you have a look at your spellbook from your "
                 "<w>i</w>nventory, you'll find an explanation of how to do "
                 "this.";
-                
+
 #ifdef USE_TILE
         text += EOL "As a short-cut you can also <w>right-click</w> on your "
                 "book in your inventory to read its description.";
@@ -1108,12 +1108,12 @@ void tutorial_first_item(const item_def &item)
 
 // Here most of the tutorial messages for various triggers are handled.
 void learned_something_new(tutorial_event_type seen_what, int x, int y)
-{ 
+{
     // already learned about that
     if (!Options.tutorial_events[seen_what])
         return;
 
-    // don't trigger twice in the same turn 
+    // don't trigger twice in the same turn
     if (Options.tut_just_triggered)
         return;
 
@@ -1132,10 +1132,10 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     Options.tut_just_triggered = true;
     Options.tutorial_events[seen_what] = 0;
     Options.tutorial_left--;
-        
+
     switch(seen_what)
     {
-      case TUT_SEEN_POTION:          
+      case TUT_SEEN_POTION:
           text << "You have picked up your first potion"
 #ifndef USE_TILE
                   " ('<w>!</w>'). Use "
@@ -1145,7 +1145,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                   "<w>q</w> to quaff it.";
           break;
-          
+
       case TUT_SEEN_SCROLL:
           text << "You have picked up your first scroll"
 #ifndef USE_TILE
@@ -1156,7 +1156,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                   "<w>r</w> to read it.";
           break;
-          
+
       case TUT_SEEN_WAND:
           text << "You have picked up your first wand"
 #ifndef USE_TILE
@@ -1167,12 +1167,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                   "<w>Z</w> to zap it.";
           break;
-          
+
       case TUT_SEEN_SPBOOK:
           text << "You have picked up a book ";
 #ifndef USE_TILE
           text << "('<w>";
-                  
+
           get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
           text << static_cast<char>(ch)
                << "'</w>) "
@@ -1183,7 +1183,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           text << ". You can read it doing a <w>right click</w> with your "
                   "mouse, and memorise spells with a <w>left click</w>. ";
 #endif
-          
+
           if (you.religion == GOD_TROG)
           {
                text << "\nAs a worshipper of "
@@ -1206,7 +1206,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "clicking on it with your <w>right mouse button</w>.";
 #endif
           break;
-          
+
       case TUT_SEEN_WEAPON:
           text << "This is the first weapon "
 #ifndef USE_TILE
@@ -1226,7 +1226,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                       "with these. Checking other axes can be worthwhile.";
           }
           break;
-          
+
       case TUT_SEEN_MISSILES:
           text << "This is the first stack of missiles "
 #ifndef USE_TILE
@@ -1260,7 +1260,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                       "or stones for ranged attacks.";
           }
           break;
-          
+
       case TUT_SEEN_ARMOUR:
           text << "This is the first piece of armour "
 #ifndef USE_TILE
@@ -1283,14 +1283,14 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                    << (you.species == SP_CENTAUR ? "boots" : "helmets");
           }
           break;
-          
+
       case TUT_SEEN_RANDART:
           text << "Weapons and armour that have unusual descriptions like this "
                   "are much more likely to be of higher enchantment or have "
                   "special properties, good or bad. The rarer the description, "
                   "the greater the potential value of an item.";
           break;
-          
+
       case TUT_SEEN_FOOD:
           text << "You have picked up some food"
 #ifndef USE_TILE
@@ -1302,7 +1302,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                   ".";
           break;
-          
+
       case TUT_SEEN_CARRION:
           text << "You have picked up a corpse"
 #ifndef USE_TILE
@@ -1331,7 +1331,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "any time by selecting the item in question in your "
                   "<w>i</w>nventory.";
           break;
-          
+
       case TUT_SEEN_JEWELLERY:
           text << "You have picked up a a piece of jewellery, either a ring"
 #ifndef USE_TILE
@@ -1349,9 +1349,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                << ", though often magic is necessary to reveal its true "
                   "nature.";
-                  
+
                break;
-          
+
       case TUT_SEEN_MISC:
           text << "This is a curious object indeed. You can play around with "
                   "it to find out what it does by "
@@ -1364,7 +1364,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "it. As usually, selecting it from your <w>i</w>nventory "
                   "might give you more information.";
           break;
-          
+
       case TUT_SEEN_STAFF:
           text << "You have picked up a magic staff or a rod"
 #ifndef USE_TILE
@@ -1387,7 +1387,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "any time by selecting the item in question in your "
                   "<w>i</w>nventory.";
           break;
-          
+
       case TUT_SEEN_STAIRS:
           // don't give this information during the first turn
           if (you.num_turns < 1)
@@ -1398,7 +1398,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           // monsters standing on stairs
           if (mgrd[ex][ey] != NON_MONSTER)
               return;
-              
+
           object = env.show[ex][ey];
           colour = env.show_col[ex][ey];
           { unsigned short dummy; get_item_symbol( object, &ch, &dummy ); }
@@ -1417,7 +1417,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "stairs you're standing on.";
 #endif
           break;
-          
+
       case TUT_SEEN_ESCAPE_HATCH:
           if (you.num_turns < 1)
               return;
@@ -1442,7 +1442,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                   ", but will usually be unable to return right away.";
           break;
-          
+
       case TUT_SEEN_TRAP:
           text << "Oops... you just triggered a trap. An unwary adventurer "
                   "will occasionally stumble into one of these nasty "
@@ -1460,7 +1460,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "example) or have other, more magical effects, like "
                   "teleportation.";
           break;
-          
+
       case TUT_SEEN_ALTAR:
           text << "That ";
 #ifndef USE_TILE
@@ -1475,7 +1475,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "<w>p</w> while standing on the square. Before taking up "
                   "the responding faith you'll be asked for confirmation.";
           break;
-          
+
       case TUT_SEEN_SHOP:
 #ifdef USE_TILES
           tile_place_cursor(ep.x-1,ep.y-1,true);
@@ -1491,7 +1491,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                   "while standing on the square.";
           break;
-          
+
       case TUT_SEEN_DOOR:
           if (you.num_turns < 1)
               return;
@@ -1512,12 +1512,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "adjacent door square.";
 #endif
           break;
-          
+
       case TUT_KILLED_MONSTER:
           text << "Congratulations, your character just gained some experience "
                   "by killing this monster! Every action will use up some of "
                   "it to train certain skills. For example, fighting monsters ";
-                  
+
           if (Options.tutorial_type == TUT_BERSERK_CHAR)
           {
               text << "in melee battle will raise your Axes and Fighting "
@@ -1541,13 +1541,13 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                    << ".";
           }
           break;
-          
+
       case TUT_NEW_LEVEL:
           text << "Well done! Reaching a new experience level is always a nice "
                   "event: you get more health and magic points, and "
                   "occasionally increases to your attributes (strength, "
                   "dexterity, intelligence).";
-                  
+
           if (Options.tutorial_type == TUT_MAGIC_CHAR)
           {
               text << "\nAlso, new experience levels let you learn more spells "
@@ -1561,19 +1561,19 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
           }
           break;
-          
+
       case TUT_SKILL_RAISE:
           text << "One of your skills just got raised. To view or manage your "
                   "skill set, type <w>m</w>.";
           break;
-          
+
       case TUT_YOU_ENCHANTED:
           text << "Enchantments of all types can befall you temporarily. "
                   "Brief descriptions of these appear at the lower end of the "
                   "stats area. Press <w>@</w> for more details. A list of all "
                   "possible enchantments is in the manual (<w>?5</w>).";
           break;
-          
+
       case TUT_YOU_SICK:
           Options.tut_just_triggered = false;
           learned_something_new(TUT_YOU_ENCHANTED);
@@ -1582,21 +1582,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "Also, some monsters' flesh is less palatable than others'. "
                   "While sick, your hitpoints won't regenerate and sometimes "
                   "an attribute may decrease. It wears off with time (";
-                  
-          if (!i_feel_safe())
-              text << "find a quiet corner and ";
-              
-          text << "wait with <w>5</w>"
-#ifdef USE_TILE
-                  "or by clicking onto the stats area"
-#endif
-                  "), or you could quaff a potion of healing. ";
-          break;
-          
-      case TUT_YOU_POISON:
-          learned_something_new(TUT_YOU_ENCHANTED);
-          text << "Poison will slowly reduce your hp. It wears off with time (";
-          
+
           if (!i_feel_safe())
               text << "find a quiet corner and ";
 
@@ -1606,7 +1592,21 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                   "), or you could quaff a potion of healing. ";
           break;
-          
+
+      case TUT_YOU_POISON:
+          learned_something_new(TUT_YOU_ENCHANTED);
+          text << "Poison will slowly reduce your hp. It wears off with time (";
+
+          if (!i_feel_safe())
+              text << "find a quiet corner and ";
+
+          text << "wait with <w>5</w>"
+#ifdef USE_TILE
+                  "or by clicking onto the stats area"
+#endif
+                  "), or you could quaff a potion of healing. ";
+          break;
+
       case TUT_YOU_CURSED:
           text << "Curses are comparatively harmless, but they do mean that "
                   "you cannot remove cursed equipment and will have to suffer "
@@ -1614,7 +1614,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "of remove curse. Weapons and armour can also be uncursed "
                   "using the appropriate enchantment scrolls.";
           break;
-          
+
       case TUT_YOU_HUNGRY:
           text << "There are two ways to overcome hunger: food you started "
                   "with or found, and selfmade chunks from corpses. To get the "
@@ -1622,33 +1622,37 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "with a sharp implement. Your starting weapon will do "
                   "nicely. Try to dine on chunks in order to save permanent "
                   "food.";
-                  
+
           if (Options.tutorial_type == TUT_BERSERK_CHAR)
               text << "\nNote that you cannot Berserk while hungry.";
           break;
-          
+
       case TUT_YOU_STARVING:
           text << "You are now suffering from terrible hunger. You'll need to "
                   "<w>e</w>at something quickly, or you'll die. The safest "
                   "way to deal with this is to simply eat something from your "
                   "inventory rather than wait for a monster to leave a corpse.";
-                  
+
           if (Options.tutorial_type == TUT_MAGIC_CHAR)
               text << "\nNote that you cannot cast spells while starving.";
           break;
-          
+
       case TUT_MULTI_PICKUP:
           text << "There's a more comfortable way to pick up several items at "
                   "the same time. If you press <w>,</w> or <w>g</w> "
 #ifdef USE_TILE
                   ", or click your left mouse button "
 #endif
-                  "twice you can choose items from a menu. This takes fewer "
-                  "keystrokes but has no influence on the number of turns "
-                  "needed. Multi-pickup will be interrupted by monsters or "
-                  "other dangerous events.";
+                  "twice you can choose items from a menu"
+#ifdef USE_TILE
+                  ", either by pressing their letter, or by clicking on their "
+                  "tiles presented at the bottom of the screen"
+#endif
+                  ".\nThis takes fewer keystrokes but has no influence on the "
+                  "number of turns needed. Multi-pickup will be interrupted by "
+                  "monsters or other dangerous events.";
           break;
-          
+
       case TUT_HEAVY_LOAD:
           if (you.burden_state != BS_UNENCUMBERED)
               text << "It is not usually a good idea to run around encumbered; "
@@ -1661,20 +1665,20 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "<w>d</w>rop some of the stuff you don't need or that's too "
                   "heavy to lug around permanently.";
           break;
-          
+
       case TUT_ROTTEN_FOOD:
           text << "One or more of the chunks or corpses you carry has started "
                   "to rot. Few races can digest these safely, so you might "
                   "just as well <w>d</w>rop them now.";
           break;
-          
+
       case TUT_MAKE_CHUNKS:
           text << "How lucky! That monster left a corpse which you can now "
                   "<w>c</w>hop up. One or more chunks will appear that you "
                   "can then <w>e</w>at. Beware that some chunks may be, "
                   "sometimes or always, hazardous. Only experience can help "
                   "you here.";
-                  
+
           if (you.duration[DUR_PRAYER]
               && (god_likes_butchery(you.religion)
                   || god_hates_butchery(you.religion)))
@@ -1915,7 +1919,7 @@ formatted_string tut_abilities_info()
        text << ".";
     }
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    
+
     return formatted_string::parse_string(text.str(), false);
 }
 
@@ -2022,7 +2026,7 @@ void tutorial_describe_item(const item_def &item)
                    curr_wpskill = range_skill(item);
                    best_wpskill = best_skill(SK_SLINGS, SK_DARTS, 99);
                }
-               else 
+               else
                {
                    // compare with other melee weapons
                    curr_wpskill = weapon_skill(item);
@@ -2058,7 +2062,7 @@ void tutorial_describe_item(const item_def &item)
                     ostr << "To attack a monster, you can simply walk into it.";
                 }
             }
-            
+
             if (is_throwable(item, you.body_size()) && !long_text)
             {
                 ostr << "\n\nSome weapons (including this one), can also be "
@@ -2193,14 +2197,14 @@ void tutorial_describe_item(const item_def &item)
 #endif
             Options.tutorial_events[TUT_SEEN_WAND] = 0;
             break;
-            
+
        case OBJ_FOOD:
             ostr << "Food can simply be <w>e</w>aten"
 #ifdef USE_TILE
                     ", something you can also do by <w>left clicking</w> on it"
 #endif
                     ". ";
-                    
+
             if (item.sub_type == FOOD_CHUNK)
             {
                 ostr << "Note that most species refuse to eat raw meat unless "
@@ -2220,7 +2224,7 @@ void tutorial_describe_item(const item_def &item)
                     "or simply click on it with your <w>left mouse button</w>"
 #endif
                     ".";
-                    
+
             Options.tutorial_events[TUT_SEEN_SCROLL] = 0;
             break;
 
@@ -2233,7 +2237,7 @@ void tutorial_describe_item(const item_def &item)
                     "item in your inventory"
 #endif
                     ".";
-                    
+
             if (item_known_cursed( item ))
             {
                 ostr << "\nA cursed piece of jewellery will cling to its "
@@ -2333,7 +2337,7 @@ void tutorial_describe_item(const item_def &item)
                              << "spells right now. This will change as you "
                                 "grow in levels and Spellcasting proficiency. ";
                     }
-                         
+
                     if (you.spell_no)
                     {
                         ostr << "\n\nTo do magic, type <w>z</w> and choose a "
@@ -2435,10 +2439,10 @@ void tutorial_describe_item(const item_def &item)
                             "button</w>"
 #endif
                             ".";
-                            
+
                     gives_resist = true;
                 }
-                
+
                 if (!gives_resist && Options.tutorial_type == TUT_BERSERK_CHAR
                                   && you.religion == GOD_TROG)
                 {
@@ -2451,7 +2455,7 @@ void tutorial_describe_item(const item_def &item)
             }
             Options.tutorial_events[TUT_SEEN_STAFF] = 0;
             break;
-            
+
        case OBJ_MISCELLANY:
             ostr << "Miscellanous items sometimes harbour magical powers. Try "
                     "<w>w</w>ielding and e<w>v</w>oking it"
@@ -2459,10 +2463,10 @@ void tutorial_describe_item(const item_def &item)
                     ", either of which can be done by clicking on it"
 #endif
                     ".";
-                    
+
             Options.tutorial_events[TUT_SEEN_MISC] = 0;
             break;
-            
+
        default:
             return;
     }
@@ -2478,7 +2482,7 @@ void tutorial_inscription_info(bool autoinscribe)
 {
     std::ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    
+
     if (!autoinscribe || wherey() <= get_number_of_lines() - 10)
     {
         text << EOL
@@ -2487,7 +2491,7 @@ void tutorial_inscription_info(bool autoinscribe)
          "but also to set rules for item interaction. If you are new to Crawl, " EOL
          "you can safely ignore this feature, though." EOL;
     }
-       
+
     if (autoinscribe && wherey() <= get_number_of_lines() - 6)
     {
         text << EOL EOL
@@ -2497,7 +2501,7 @@ void tutorial_inscription_info(bool autoinscribe)
     }
     text << "(In the main screen, press <w>?6</w> for more information.)" EOL;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    
+
     formatted_string::parse_string(text.str()).display();
 }
 
@@ -2507,7 +2511,7 @@ bool tutorial_feat_interesting(dungeon_feature_type feat)
         return true;
     if (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
         return true;
-        
+
     switch (feat)
     {
        case DNGN_ORCISH_IDOL:
@@ -2533,7 +2537,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
 {
     std::ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    
+
     switch (feat)
     {
        case DNGN_ORCISH_IDOL:
@@ -2548,7 +2552,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             ostr << "These nasty constructions can do physical damage (with "
                     "darts or needles, for example) or have other, more "
                     "magical effects. ";
-                    
+
             if (feat == DNGN_TRAP_MECHANICAL)
             {
                 ostr << "You can attempt to deactivate the mechanical type by "
@@ -2559,13 +2563,13 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             }
             Options.tutorial_events[TUT_SEEN_TRAP] = 0;
             break;
-            
+
        case DNGN_TRAP_NATURAL: // only shafts for now
             ostr << "The dungeon contains a number of natural obstacles such "
                     "as shafts, which lead one or two levels down.";
             Options.tutorial_events[TUT_SEEN_TRAP] = 0;
             break;
-            
+
        case DNGN_STONE_STAIRS_DOWN_I:
        case DNGN_STONE_STAIRS_DOWN_II:
        case DNGN_STONE_STAIRS_DOWN_III:
@@ -2579,7 +2583,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
 #endif
             Options.tutorial_events[TUT_SEEN_STAIRS] = 0;
             break;
-            
+
        case DNGN_STONE_STAIRS_UP_I:
        case DNGN_STONE_STAIRS_UP_II:
        case DNGN_STONE_STAIRS_UP_III:
@@ -2609,10 +2613,10 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             ostr << "Escape hatches can be used to quickly leave a level with "
                     "<w><<</w> and <w>></w>, respectively. Note that you will "
                     "usually be unable to return right away.";
-                    
+
             Options.tutorial_events[TUT_SEEN_ESCAPE_HATCH] = 0;
             break;
-            
+
        default:
             if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
             {
@@ -2697,7 +2701,7 @@ bool tutorial_monster_interesting(const monsters *mons)
 {
     if (mons_is_unique(mons->type) || mons->type == MONS_PLAYER_GHOST)
         return true;
-        
+
     // highlighted in some way
     if (_mons_is_highlighted(mons))
         return true;

@@ -1057,6 +1057,9 @@ int halo_radius()
 
 bool inside_halo(int posx, int posy)
 {
+    if (!halo_radius())
+        return false;
+
     return (_inside_circle(posx, posy, halo_radius()) != -1);
 }
 
