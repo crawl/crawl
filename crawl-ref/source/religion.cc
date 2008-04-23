@@ -425,14 +425,14 @@ void dec_penance(god_type god, int val)
             take_note(Note(NOTE_MOLLIFY_GOD, god));
             you.penance[god] = 0;
 
-            // the halo is once more available
+            // TSO's halo is once more available
             if (god == GOD_SHINING_ONE && you.religion == GOD_SHINING_ONE
                 && you.piety >= piety_breakpoint(0))
             {
                 mpr("Your divine halo returns!");
             }
 
-            // bonuses now once more effective
+            // orcish bonuses are now once more effective
             if (god == GOD_BEOGH && you.religion == GOD_BEOGH)
                  you.redraw_armour_class = true;
 
