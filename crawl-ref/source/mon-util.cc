@@ -343,7 +343,7 @@ static int _scan_mon_inv_randarts( const monsters *mon,
     if (mons_itemuse( mon->type ) >= MONUSE_STARTING_EQUIPMENT)
     {
         const int weapon = mon->inv[MSLOT_WEAPON];
-        const int second = mon->inv[MSLOT_MISSILE]; // ettins/two-head oges
+        const int second = mon->inv[MSLOT_MISSILE]; // ettins/two-head ogres
         const int armour = mon->inv[MSLOT_ARMOUR];
 
         if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
