@@ -139,73 +139,73 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
 
     switch (pow)
     {
-      case 0:
-          return (0); // handled above
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-          if (!mons_class_is_confusable(mons->type)
-              || !mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
-                                             (16 + random2avg(13, 2)) * 10)))
-          {
+        case 0:
+            return (0); // handled above
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            if (!mons_class_is_confusable(mons->type)
+                || !mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
+                                               (16 + random2avg(13, 2)) * 10)))
+            {
               return (0);
-          }
-          simple_monster_message(mons, " looks confused.");
-          break;
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-          mons->put_to_sleep();
-          simple_monster_message(mons, " falls asleep!");
-          break;
-      case 9:
-      case 10:
-      case 11:
-      case 12:
-          if (!mons->add_ench(ENCH_NEUTRAL))
-              return (0);
-          simple_monster_message(mons, " seems impressed!");
-          break;
-      case 13:
-      case 14:
-      case 15:
-          if (!mons->add_ench(ENCH_FEAR))
-              return (0);
-          simple_monster_message(mons, " turns to flee.");
-          break;
-      case 16:
-      case 17:
-          if (!mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
-                              (16 + random2avg(13, 2)) * 10)))
-              return (0);
-          simple_monster_message(mons, " freezes in fright!");
-          break;
-      default:
-          if (holiness == MH_HOLY)
-              good_god_holy_attitude_change(mons);
-          else
-          {
-              if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
-              {
-                  if (!mons->add_ench(ENCH_NEUTRAL))
-                      return (0);
-              }
-              else
-              {
-                  // permanently neutral, but same message as enchantment
-                  mons->attitude = ATT_NEUTRAL;
-                  mons->flags |= MF_WAS_NEUTRAL;
+            }
+            simple_monster_message(mons, " looks confused.");
+            break;
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            mons->put_to_sleep();
+            simple_monster_message(mons, " falls asleep!");
+            break;
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+            if (!mons->add_ench(ENCH_NEUTRAL))
+                return (0);
+            simple_monster_message(mons, " seems impressed!");
+            break;
+        case 13:
+        case 14:
+        case 15:
+            if (!mons->add_ench(ENCH_FEAR))
+                return (0);
+            simple_monster_message(mons, " turns to flee.");
+            break;
+        case 16:
+        case 17:
+            if (!mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
+                                (16 + random2avg(13, 2)) * 10)))
+                return (0);
+            simple_monster_message(mons, " freezes in fright!");
+            break;
+        default:
+            if (holiness == MH_HOLY)
+                good_god_holy_attitude_change(mons);
+            else
+            {
+                if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
+                {
+                    if (!mons->add_ench(ENCH_NEUTRAL))
+                        return (0);
+                }
+                else
+                {
+                    // permanently neutral, but same message as enchantment
+                    mons->attitude = ATT_NEUTRAL;
+                    mons->flags |= MF_WAS_NEUTRAL;
 
-                  // give half of the monster's xp
-                  unsigned int exp_gain = 0, avail_gain = 0;
-                  gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );
-                  mons->flags |= MF_GOT_HALF_XP;
-              }
-              simple_monster_message(mons, " seems impressed!");
-          }
-          break;
+                    // give half of the monster's xp
+                    unsigned int exp_gain = 0, avail_gain = 0;
+                    gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );
+                    mons->flags |= MF_GOT_HALF_XP;
+                }
+                simple_monster_message(mons, " seems impressed!");
+            }
+            break;
     }
 
     return (1);
