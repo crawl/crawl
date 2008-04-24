@@ -2851,39 +2851,40 @@ static bool _zin_retribution()
     const god_type god = GOD_ZIN;
 
     // angels/creeping doom theme
-    int punishment = random2(8);
+    int punishment = random2(10);
 
-    // if little mutated, do something else instead
-    if (punishment < 2 && count_mutations() <= random2(3))
-        punishment = random2(6)+2;
+    // if little mutated or can't unmutate, do something else instead
+    if (punishment < 2 && count_mutations() <= random2(3)
+        || !can_safely_mutate())
+    {
+        punishment = random2(8)+2;
+    }
 
     switch (punishment)
     {
-    case 0: // remove good mutations (25%)
+    case 0: // remove good mutations (20%)
     case 1:
-        if (can_safely_mutate())
-        {
-            simple_god_message(" draws some chaos from your body!", god);
-            bool success = false;
-            for (int i = 0; i < 7; i++)
-                if (random2(10) > i
-                    && delete_mutation(RANDOM_MUTATION, true, true))
-                {
-                    success = true;
-                }
-
-            if (success && !count_mutations())
+    {
+        simple_god_message(" draws some chaos from your body!", god);
+        bool success = false;
+        for (int i = 0; i < 7; i++)
+            if (random2(10) > i
+                && delete_mutation(RANDOM_MUTATION, true, true))
             {
-                simple_god_message(" rids your body of chaos!");
-                // lower penance a bit more for being particularly successful
-                dec_penance(god, 1);
+                success = true;
             }
-            break;
+
+        if (success && !count_mutations())
+        {
+            simple_god_message(" rids your body of chaos!");
+            // lower penance a bit more for being particularly successful
+            dec_penance(god, 1);
         }
-        // deliberate fall through
+        break;
+    }
     case 2:
     case 3:
-    case 4: // summon angels or bugs (pestilence), 3/8
+    case 4: // summon angels or bugs (pestilence) (30%)
         if (random2(you.experience_level) > 7 && !one_chance_in(5))
         {
             const int how_many = 1 + (you.experience_level / 10) + random2(3);
@@ -2915,11 +2916,27 @@ static bool _zin_retribution()
         }
         break;
     case 5:
-    case 6: // famine, 25%
+    case 6: // recital (20%)
+        simple_god_message(" recites the Axioms of Law!");
+        switch (one_chance_in(3))
+        {
+        case 0:
+            confuse_player( 3 + random2(10), false );
+            break;
+        case 1:
+            you.put_to_sleep();
+            break;
+        case 2:
+            you.paralyse( 3 + random2(10) );
+            break;
+        }
+        break;
+    case 7:
+    case 8: // famine (20%)
         simple_god_message(" sends a famine down upon you!", god);
         make_hungry( you.hunger/2, false );
         break;
-    case 7: // noisiness, 12.5%
+    case 9: // noisiness (10%)
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
         noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
         break;
