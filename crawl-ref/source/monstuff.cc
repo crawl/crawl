@@ -822,19 +822,19 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     {
         if (!silent)
         {
-            if (hard_reset)
-                simple_monster_message( monster,
-                                        " disappears in a puff of smoke!" );
-            else
+            if (!hard_reset)
+            {
                 simple_monster_message(monster, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-            death_message = false;
+                death_message = false;
+            }
         }
 
-        if (hard_reset)
-            place_cloud( random_smoke_type(),
-                         monster->x, monster->y, 1 + random2(3),
-                         monster->kill_alignment() );
+        if (!hard_reset)
+        {
+            if (killer == KILL_RESET)
+                killer = KILL_DISMISSED;
+        }
     }
 
     switch (killer)
