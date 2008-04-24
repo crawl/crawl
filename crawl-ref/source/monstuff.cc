@@ -802,8 +802,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         }
 
         if (monster->type == MONS_FIRE_VORTEX)
+        {
             place_cloud(CLOUD_FIRE, monster->x, monster->y, 2 + random2(4),
                         monster->kill_alignment());
+        }
     }
     else if (monster->type == MONS_SIMULACRUM_SMALL
              || monster->type == MONS_SIMULACRUM_LARGE)
