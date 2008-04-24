@@ -826,8 +826,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         {
             if (!hard_reset)
             {
-                simple_monster_message(monster, " falls from the air.",
-                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                simple_monster_message( monster, " falls from the air.",
+                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
                 death_message = false;
             }
         }
