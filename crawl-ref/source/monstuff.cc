@@ -872,16 +872,22 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             if (!created_friendly && gives_xp)
             {
                 if (mons_holiness(monster) == MH_NATURAL)
+                {
                     did_god_conduct(DID_KILL_LIVING,
                                     monster->hit_dice, true, monster);
+                }
 
                 if (mons_holiness(monster) == MH_UNDEAD)
+                {
                     did_god_conduct(DID_KILL_UNDEAD,
                                     monster->hit_dice, true, monster);
+                }
 
                 if (mons_holiness(monster) == MH_DEMONIC)
+                {
                     did_god_conduct(DID_KILL_DEMON,
                                     monster->hit_dice, true, monster);
+                }
 
                 if (mons_class_flag(monster->type, M_EVIL)
                     && mons_holiness(monster) == MH_NATURAL)
@@ -891,18 +897,24 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
 
                 if (_is_mons_mutator_or_rotter(monster))
+                {
                     did_god_conduct(DID_KILL_MUTATOR_OR_ROTTER,
                                     monster->hit_dice, true, monster);
+                }
 
                 // jmf: Trog hates wizards
                 if (mons_is_magic_user(monster))
+                {
                     did_god_conduct(DID_KILL_WIZARD,
                                     monster->hit_dice, true, monster);
+                }
 
                 // Beogh hates priests of other gods.
                 if (mons_class_flag(monster->type, M_PRIEST))
+                {
                     did_god_conduct(DID_KILL_PRIEST,
                                     monster->hit_dice, true, monster);
+                }
 
                 // Holy beings take their gear with them when they die.
                 if (mons_is_holy(monster))
@@ -2575,11 +2587,15 @@ bool choose_any_monster(const monsters* mon)
 // Find a nearby monster and return its index, including you as a
 // possibility with probability weight.  suitable() should return true
 // for the type of monster wanted.
+// If prefer_named is true, named monsters (including uniques) are twice as
+// likely to get chosen compared with non-named ones.
 int choose_random_nearby_monster(int weight,
-                                 bool (*suitable)(const monsters* mon))
+                                 bool (*suitable)(const monsters* mon),
+                                 bool prefer_named)
 {
     int mons_count = weight;
     int result = NON_MONSTER;
+    int mon;
 
     int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
     int yend = you.y_pos + 9, xend = you.x_pos + 9;
@@ -2593,12 +2609,20 @@ int choose_random_nearby_monster(int weight,
         for ( int x = xstart; x < xend; ++x )
             if ( see_grid(x,y) && mgrd[x][y] != NON_MONSTER )
             {
-                result = mgrd[x][y];
-
-                if ( suitable(&menv[result]) && one_chance_in(++mons_count) )
-                    break;
-
-                result = NON_MONSTER;
+                mon = mgrd[x][y];
+                if (suitable(&menv[mon]))
+                {
+                    if (prefer_named
+                        && !get_unique_monster_name(&menv[mon]).empty())
+                    {
+                        mons_count += 2;
+                        // named monsters have doubled chances
+                        if (random2(mons_count) < 2)
+                            result = mon;
+                    }
+                    else if (one_chance_in(++mons_count))
+                        result = mon;
+                }
             }
 
     return result;
@@ -4706,11 +4730,15 @@ static void _handle_monster_move(int i, monsters *monster)
         {
 #if DEBUG
             if (monster->speed_increment == old_energy)
+            {
                 mprf(MSGCH_DIAGNOSTICS, "'%s' has same energy as last loop",
                      monster->name(DESC_PLAIN, true).c_str());
+            }
             else
+            {
                 mprf(MSGCH_DIAGNOSTICS, "'%s' has MORE energy than last loop",
                      monster->name(DESC_PLAIN, true).c_str());
+            }
 #endif
             monster->speed_increment = old_energy - 10;
             old_energy               = monster->speed_increment;

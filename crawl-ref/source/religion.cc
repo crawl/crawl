@@ -1026,13 +1026,20 @@ static bool _beogh_blessing_reinforcement()
         MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
     };
 
+    const monster_type high_xl_followers[] = {
+        MONS_ORC_PRIEST, MONS_ORC_WARRIOR, MONS_ORC_KNIGHT, MONS_ORC_WARLORD
+    };
+
     // Send up to four followers.
     int how_many = random2(4) + 1;
 
+    monster_type follower_type;
     for (int i = 0; i < how_many; ++i)
     {
-        monster_type follower_type =
-            followers[RANDOM_ELEMENT(followers)];
+        if (random2(you.experience_level) >= 9 && coinflip())
+            follower_type = RANDOM_ELEMENT(high_xl_followers);
+        else
+            follower_type = RANDOM_ELEMENT(followers);
 
         int monster = create_monster(follower_type, 0, BEH_GOD_GIFT,
                                      you.x_pos, you.y_pos, you.pet_target,
@@ -1040,7 +1047,6 @@ static bool _beogh_blessing_reinforcement()
         if (monster != -1)
         {
             monsters *mon = &menv[monster];
-
             mon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
             success = true;
@@ -1079,67 +1085,62 @@ bool bless_follower(int follower,
                     bool (*suitable)(const monsters* mon),
                     bool force)
 {
-    monsters *mon;
-
     std::string pronoun;
     std::string blessed;
     std::string result;
+    monsters *mon;
 
-    int chance = random2(20);
-    if (force)
-        chance = coinflip();
+    int chance = (force ? coinflip() : random2(20));
+
+    if (chance > 2)
+        return false;
 
     bool is_near = false;
 
     // If a follower was specified, and it's suitable, pick it.
-    if (follower != -1 && (force || suitable(&menv[follower])))
-        mon = &menv[follower];
     // Otherwise, pick a random follower within sight of the player.
-    else
+    if (follower == -1 || (!force && !suitable(&menv[follower])))
     {
-        int monster = choose_random_nearby_monster(0, suitable);
+        // Choose a random follower in LOS, preferably a named one.
+        follower = choose_random_nearby_monster(0, suitable, true);
 
-        if (monster == NON_MONSTER)
+        if (follower == NON_MONSTER)
         {
-            if (chance <= 1)
+            switch (god)
             {
-                switch (god)
+                case GOD_BEOGH:
                 {
-                    case GOD_BEOGH:
+                    // If no follower was chosen, either send
+                    // reinforcement or get out.
+                    bool reinforced = _beogh_blessing_reinforcement();
+
+                    if (!reinforced || coinflip())
                     {
-                        // If no follower was chosen, either send
-                        // reinforcement or get out.
-                        bool reinforced = _beogh_blessing_reinforcement();
+                        // Try again, or possibly send more reinforcement.
+                        if (_beogh_blessing_reinforcement())
+                            reinforced = true;
+                    }
 
-                        if (!reinforced || coinflip())
-                        {
-                            // Try again, or possibly send more
-                            // reinforcement.
-                            if (_beogh_blessing_reinforcement())
-                                reinforced = true;
-                        }
-
-                        if (reinforced)
-                        {
-                            pronoun = "";
-                            blessed = "you";
-                            result  = "reinforcement";
-                            goto blessing_done;
-                        }
-                        break;
-                   }
-
-                   default:
-                       break;
+                    if (reinforced)
+                    {
+                        pronoun = "";
+                        blessed = "you";
+                        result  = "reinforcement";
+                        goto blessing_done;
+                    }
+                    break;
                 }
+
+                default:
+                    break;
             }
 
             return false;
         }
 
-        mon = &menv[monster];
     }
 
+    mon = &menv[follower];
     is_near = mons_near(mon);
 
     pronoun = (mons_is_unique(mon->type)) ? "" : "your ";
@@ -1302,7 +1303,10 @@ bool bless_follower(int follower,
     }
 
 blessing_done:
-    std::string whom = get_unique_monster_name(mon);
+    std::string whom = "";
+    if (follower != NON_MONSTER)
+        whom = get_unique_monster_name(mon);
+
     if (whom.empty())
         whom = pronoun + blessed;
 

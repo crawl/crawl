@@ -125,7 +125,8 @@ bool simple_monster_message(const monsters *monster, const char *event,
 bool choose_any_monster(const monsters* mon);
 int choose_random_nearby_monster(int weight,
                                  bool (*suitable)(const monsters* mon) =
-                                     choose_any_monster);
+                                     choose_any_monster,
+                                 bool prefer_named = false);
 
 /* ***********************************************************************
  * called from: acr
