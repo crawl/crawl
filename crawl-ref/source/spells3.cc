@@ -476,7 +476,8 @@ void dancing_weapon(int pow, bool force_hostile)
     int numsc = std::min(2 + (random2(pow) / 5), 6);
 
     int summs = 0;
-    beh_type behavi = BEH_FRIENDLY;
+    beh_type beha = BEH_FRIENDLY;
+    int hitting = you.pet_target;
     bool failed = false;
 
     const int wpn = you.equip[EQ_WEAPON];
@@ -500,10 +501,13 @@ void dancing_weapon(int pow, bool force_hostile)
 
         // cursed weapons become hostile
         if (item_cursed( you.inv[wpn] ) || force_hostile)
-            behavi = BEH_HOSTILE;
+        {
+            beha = BEH_HOSTILE;
+            hitting = MHITYOU;
+        }
 
-        summs = create_monster( MONS_DANCING_WEAPON, numsc, behavi,
-                                you.x_pos, you.y_pos, you.pet_target, 1 );
+        summs = create_monster( MONS_DANCING_WEAPON, numsc, beha,
+                                you.x_pos, you.y_pos, hitting, 1 );
         if ( summs == -1 )
             failed = true;
     }
