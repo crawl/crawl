@@ -2039,7 +2039,7 @@ deceive
 orc
 
 # stay silent most of the time
-w:9
+w:19
 __NONE
 
 w:1
@@ -2096,7 +2096,7 @@ maim
 related beogh orc
 
 # hostile orcs shouldn't be too talkative
-w:60
+w:70
 __NONE
 
 w:30
@@ -2156,6 +2156,10 @@ VISUAL:@The_monster@ stares at you quizzically.
 ###################################################
 %%%%
 friendly related beogh orc
+
+# As they'll be constantly around you, don't let them talk too much.
+w:30
+__NONE
 
 # general friendly speech
 w:30

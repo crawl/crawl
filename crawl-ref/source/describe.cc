@@ -2067,11 +2067,7 @@ void describe_monsters(monsters& mons)
     }
 
     std::ostringstream description;
-    std::string name = get_unique_monster_name(&mons);
-    if (name.empty())
-        name = mons.name(DESC_CAP_A);
-
-    description << name << "$$";
+    description << mons.name(DESC_CAP_A) << "$$";
 
     // Note: Nearly all of the "long" descriptions have moved to
     // mon-data.h, in an effort to give them some locality with the

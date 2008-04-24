@@ -1737,8 +1737,12 @@ std::string mons_type_name(int type, description_level_type desc )
 
 // Fills the number parameter (if not otherwise needed) with a seed for
 // random name choice from randname.txt.
-bool give_unique_monster_name(monsters *mon, bool higher_orcs_only)
+bool give_unique_monster_name(monsters *mon, bool orcs_only)
 {
+    // already has a unique name
+    if (mon->number > 0 && mon->number != MONS_PROGRAM_BUG)
+        return false;
+
     // already have a name
     if (mons_is_unique(mon->type) || mon->type == MONS_PLAYER_GHOST
         || mon->type == MONS_PANDEMONIUM_DEMON)
@@ -1746,28 +1750,29 @@ bool give_unique_monster_name(monsters *mon, bool higher_orcs_only)
         return false;
     }
 
-    // need their number parameter for other information
-    if (mon->type == MONS_HYDRA // #heads
-        || mon->type == MONS_ABOMINATION_SMALL // colour
-        || mon->type == MONS_ABOMINATION_LARGE // colour
-        || mon->type == MONS_MANTICORE // #spikes
-        || mons_genus(mon->type) == MONS_DRACONIAN // subspecies
-        || mons_class_is_zombified(mon->type)) // zombie type
-    {
-        return false;
-    }
-
     // Since this is called from the various divine blessing routines,
-    // don't bless non-orcs, and don't bless plain orcs, either.
-    if (higher_orcs_only
-        && (mons_species(mon->type) != MONS_ORC || mon->type == MONS_ORC))
+    // don't bless non-orcs, and normally don't bless plain orcs, either.
+    if (orcs_only)
     {
-        return false;
+        if (mons_species(mon->type) != MONS_ORC
+            || mon->type == MONS_ORC && !one_chance_in(8))
+        {
+            return false;
+        }
     }
-
-    // already has a unique name
-    if (mon->number > 0 && mon->number != MONS_PROGRAM_BUG)
-        return false;
+    else
+    {
+        // need their number parameter for other information
+        if (mon->type == MONS_HYDRA // #heads
+            || mon->type == MONS_ABOMINATION_SMALL // colour
+            || mon->type == MONS_ABOMINATION_LARGE // colour
+            || mon->type == MONS_MANTICORE // #spikes
+            || mons_genus(mon->type) == MONS_DRACONIAN // subspecies
+            || mons_class_is_zombified(mon->type)) // zombie type
+        {
+            return false;
+        }
+    }
 
     // randomly pick a number
     // XXX: Why does unsigned int (number's type) get munged on save & reload?
@@ -2958,9 +2963,11 @@ void monsters::swap_slots(mon_inv_type a, mon_inv_type b)
 void monsters::equip_weapon(item_def &item, int near)
 {
     if (need_message(near))
+    {
         mprf("%s wields %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A, false, false, true,
                        false, ISFLAG_CURSED).c_str());
+    }
 
     const int brand = get_weapon_brand(item);
     if (brand == SPWPN_PROTECTION)

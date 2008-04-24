@@ -2165,10 +2165,7 @@ static void describe_monster(const monsters *mon)
 std::string get_monster_desc(const monsters *mon, bool full_desc,
                              description_level_type mondtype)
 {
-    std::string desc = get_unique_monster_name(mon);
-
-    if (desc.empty())
-        desc = mon->name(mondtype);
+    std::string desc = mon->name(mondtype);
 
     const int mon_arm = mon->inv[MSLOT_ARMOUR];
     const int mon_shd = mon->inv[MSLOT_SHIELD];

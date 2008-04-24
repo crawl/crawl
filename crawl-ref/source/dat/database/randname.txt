@@ -697,6 +697,7 @@ orc name
 #
 # Other syllables may be borrowed from real life, or made up.
 
+# Obvious references to Beogh
 Albeogh
 
 Bogbart
@@ -704,10 +705,13 @@ Bogbart
 # slavic name, meaning "god's gift" :)
 Bogdan
 
-# Obvious references to Beogh
 Bogdar
 
 Bogmar
+
+Bogric
+
+Bogwald
 
 Bogward
 
@@ -715,7 +719,7 @@ Bogwik
 
 Morbeogh
 
-Sharbog
+Sharbogh
 
 # Obvious references to orcs in general
 Alork
@@ -732,6 +736,8 @@ Oreg
 
 Orik
 
+Orgrim
+
 Orkrul
 
 Orkwin
@@ -747,11 +753,25 @@ Arkwar
 
 Berold
 
+Blodwig
+
+Boderik
+
+Brandogh
+
+Brunolf
+
 Dorog
 
 Gorbash
 
 Gorg
+
+Grimold
+
+Herok
+
+Hilgar
 
 Learuk
 
