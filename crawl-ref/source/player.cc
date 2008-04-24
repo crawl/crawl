@@ -5149,7 +5149,6 @@ bool rot_player( int amount )
     return true;
 }
 
-
 int count_worn_ego( int which_ego )
 {
     int result = 0;
