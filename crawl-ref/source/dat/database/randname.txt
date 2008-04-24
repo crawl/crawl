@@ -686,3 +686,93 @@ w:160
 @general appearance@
 %%%%
 
+##############################################
+# monster names
+##############################################
+orc name
+
+# Some important syllables
+#   beogh, bog = referring to Beogh
+#   ork, orc, org, ok, oc, og (and more) = referring to orcs
+#
+# Other syllables may be borrowed from real life, or made up.
+
+Albeogh
+
+Bogbart
+
+# slavic name, meaning "god's gift" :)
+Bogdan
+
+# Obvious references to Beogh
+Bogdar
+
+Bogmar
+
+Bogward
+
+Bogwik
+
+Morbeogh
+
+Sharbog
+
+# Obvious references to orcs in general
+Alork
+
+Boruk
+
+Marbork
+
+Milork
+
+Okrist
+
+Oreg
+
+Orik
+
+Orkrul
+
+Orkwin
+
+Oruk
+
+# Other
+Agrik
+
+Arbolt
+
+Arkwar
+
+Berold
+
+Dorog
+
+Gorbash
+
+Gorg
+
+Learuk
+
+Margrim
+
+Morun
+
+Murdo
+
+Norbak
+
+Olfik
+
+Olfrun
+
+Wardok
+
+Worak
+
+Wulfoc
+
+Zoruk
+
+%%%%

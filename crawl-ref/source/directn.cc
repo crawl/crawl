@@ -862,10 +862,20 @@ void direction(dist& moves, targeting_type restricts,
                 }
 
                 // To update visual branding of friendlies.  Only
-                // seem capabable of adding bolding, not removing it,
+                // seems capabable of adding bolding, not removing it,
                 // though.
                 viewwindow(true, false);
             }
+            break;
+
+        case CMD_TARGET_WIZARD_BLESS_MONSTER:
+            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+                break;
+            mid = mgrd[moves.tx][moves.ty];
+            if (mid == NON_MONSTER) // can put in terrain description here
+                break;
+
+            debug_apply_monster_blessing(&menv[mid]);
             break;
 
         case CMD_TARGET_WIZARD_MAKE_SHOUT:
@@ -2001,11 +2011,15 @@ static std::string describe_monster_weapon(const monsters *mons)
     const item_def *alt = mons->mslot_item(MSLOT_ALT_WEAPON);
 
     if (weap)
+    {
         name1 = weap->name(DESC_NOCAP_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
+    }
     if (alt && (!weap || mons_wields_two_weapons(mons)))
+    {
         name2 = alt->name(DESC_NOCAP_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
+    }
 
     if (name1.empty() && !name2.empty())
         name1.swap(name2);
@@ -2151,7 +2165,10 @@ static void describe_monster(const monsters *mon)
 std::string get_monster_desc(const monsters *mon, bool full_desc,
                              description_level_type mondtype)
 {
-    std::string desc = mon->name(mondtype);
+    std::string desc = get_unique_monster_name(mon);
+
+    if (desc.empty())
+        desc = mon->name(mondtype);
 
     const int mon_arm = mon->inv[MSLOT_ARMOUR];
     const int mon_shd = mon->inv[MSLOT_SHIELD];
@@ -2385,6 +2402,7 @@ command_type targeting_behaviour::get_command(int key)
 
 #ifdef WIZARD
     case 'F':  return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
+    case 'P':  return CMD_TARGET_WIZARD_BLESS_MONSTER;
     case 's':  return CMD_TARGET_WIZARD_MAKE_SHOUT;
     case 'g':  return CMD_TARGET_WIZARD_GIVE_ITEM;
 #endif

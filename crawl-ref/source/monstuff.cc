@@ -1536,7 +1536,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     update_beholders(monster, true);
 
     // the actual polymorphing:
-    const int old_hp = monster->hit_points;
+    const int old_hp     = monster->hit_points;
     const int old_hp_max = monster->max_hit_points;
     const bool old_mon_shifter = monster->has_ench(ENCH_GLOWING_SHAPESHIFTER,
                                                    ENCH_SHAPESHIFTER);
@@ -1544,13 +1544,13 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     const char old_ench_countdown = monster->ench_countdown;
 
     // deal with mons_sec
-    monster->type = targetc;
+    monster->type   = targetc;
     monster->number = MONS_PROGRAM_BUG;
 
-    mon_enchant abj = monster->get_ench(ENCH_ABJ);
+    mon_enchant abj     = monster->get_ench(ENCH_ABJ);
     mon_enchant shifter = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                             ENCH_SHAPESHIFTER);
-    mon_enchant charm = monster->get_ench(ENCH_CHARM);
+    mon_enchant charm   = monster->get_ench(ENCH_CHARM);
 
     // Note: define_monster() will clear out all enchantments! -- bwr
     define_monster( monster_index(monster) );
@@ -2608,8 +2608,12 @@ bool simple_monster_message(const monsters *monster, const char *event,
         && (channel == MSGCH_MONSTER_SPELL || player_monster_visible(monster)))
     {
         char buff[INFO_SIZE];
-        snprintf( buff, sizeof(buff), "%s%s",
-                  monster->name(descrip).c_str(), event );
+
+        std::string name = get_unique_monster_name(monster);
+        if (name.empty())
+            name = monster->name(descrip);
+
+        snprintf( buff, sizeof(buff), "%s%s", name.c_str(), event );
 
         mpr( buff, channel, param );
         return (true);
@@ -3152,7 +3156,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             fire_beam(beem);
             used = true;
             // decrement # of volleys left
-            monster->number -= 1;
+            monster->number--;
         }
         break;
 

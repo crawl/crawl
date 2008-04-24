@@ -793,8 +793,8 @@ void static _get_randart_properties(const item_def &item,
         }
     }
 
-    if (random2(15) >= power_level && aclass != OBJ_WEAPONS &&
-        (aclass != OBJ_JEWELLERY || atype != RING_SLAYING))
+    if (random2(15) >= power_level && aclass != OBJ_WEAPONS
+        && (aclass != OBJ_JEWELLERY || atype != RING_SLAYING))
     {
         // Weapons and rings of slaying can't get these
         if (one_chance_in(4 + power_level))  // to-hit

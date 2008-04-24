@@ -167,8 +167,7 @@ static void level_place_lost_monsters(m_transit_list &m)
 
 static void level_place_followers(m_transit_list &m)
 {
-    for (m_transit_list::iterator i = m.begin();
-         i != m.end(); )
+    for (m_transit_list::iterator i = m.begin(); i != m.end(); )
     {
         m_transit_list::iterator mon = i++;
         if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))

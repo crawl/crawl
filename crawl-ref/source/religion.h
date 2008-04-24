@@ -80,7 +80,8 @@ bool is_orcish_follower(const monsters* mon);
 bool is_follower(const monsters* mon);
 bool bless_follower(monsters* follower = NULL,
                     god_type god = you.religion,
-                    bool (*suitable)(const monsters* mon) = is_follower);
+                    bool (*suitable)(const monsters* mon) = is_follower,
+                    bool force = false);
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 

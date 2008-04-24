@@ -773,7 +773,7 @@ static void _give_nemelex_gift()
 bool is_good_follower(const monsters* mon)
 {
     return (mon->alive() && !mons_is_evil_or_unholy(mon)
-        && mons_friendly(mon));
+            && mons_friendly(mon));
 }
 
 bool is_orcish_follower(const monsters* mon)
@@ -1054,6 +1054,7 @@ static bool _beogh_blessing_priesthood(monsters* mon)
         // function normally used when going up an experience level.
         // This is a hack, but there seems to be no better way for now.
         mon->upgrade_type(priest_type, true, true);
+        give_unique_monster_name(mon);
 
         return true;
     }
@@ -1065,7 +1066,8 @@ static bool _beogh_blessing_priesthood(monsters* mon)
 // one, bless a random follower within sight of the player, if any.
 bool bless_follower(monsters* follower,
                     god_type god,
-                    bool (*suitable)(const monsters* mon))
+                    bool (*suitable)(const monsters* mon),
+                    bool force)
 {
     monsters *mon = NULL;
 
@@ -1074,11 +1076,13 @@ bool bless_follower(monsters* follower,
     std::string result;
 
     int chance = random2(20);
+    if (force)
+        chance = coinflip();
 
     bool is_near = false;
 
     // If a follower was specified, and it's suitable, pick it.
-    if (follower && suitable(follower))
+    if (follower && (force || suitable(follower)))
         mon = follower;
     // Otherwise, pick a random follower within sight of the player.
     else
@@ -1107,7 +1111,7 @@ bool bless_follower(monsters* follower,
                         {
                             pronoun = "";
                             blessed = "you";
-                            result = "reinforcement";
+                            result  = "reinforcement";
                             goto blessing_done;
                         }
                         break;
@@ -1143,6 +1147,8 @@ bool bless_follower(monsters* follower,
                         result = "holy attack power";
                         goto blessing_done;
                     }
+                    else if (force)
+                        mpr("Couldn't bless monster's weapon.");
                 }
                 else
                 {
@@ -1153,6 +1159,8 @@ bool bless_follower(monsters* follower,
                         result = "life defence";
                         goto blessing_done;
                     }
+                    else if (force)
+                        mpr("Couldn't bless monster's armour.");
                 }
                 break;
 
@@ -1163,6 +1171,8 @@ bool bless_follower(monsters* follower,
                     result = "priesthood";
                     goto blessing_done;
                 }
+                else if (force)
+                    mpr("Couldn't promote monster to priesthood.");
                 break;
 
             default:
@@ -1189,8 +1199,11 @@ bool bless_follower(monsters* follower,
             if (affected)
             {
                 result = "extra attack power";
+                give_unique_monster_name(mon);
                 goto blessing_done;
             }
+            else if (force)
+                mpr("Couldn't enchant monster's weapon.");
         }
         else
         {
@@ -1205,8 +1218,11 @@ bool bless_follower(monsters* follower,
             if (affected)
             {
                 result = "extra defence";
+                give_unique_monster_name(mon);
                 goto blessing_done;
             }
+            else if (force)
+                mpr("Couldn't enchant monster's armour.");
         }
     }
 
@@ -1229,6 +1245,8 @@ bool bless_follower(monsters* follower,
                 result = "more time in this world";
             else if (friendliness)
                 result = "friendliness";
+            else if (force)
+                mpr("Couldn't increase monster's friendliness or time.");
 
             if (more_time || friendliness)
                 break;
@@ -1258,8 +1276,12 @@ bool bless_follower(monsters* follower,
             else if (vigour)
                 result = "extra vigour";
             else
-                return false;
+            {
+                if (force)
+                    mpr("Couldn't heal monster.");
 
+                return false;
+            }
             break;
         }
 
@@ -1268,8 +1290,13 @@ bool bless_follower(monsters* follower,
     }
 
 blessing_done:
-    snprintf(info, INFO_SIZE, " blesses %s%s with %s.",
-             pronoun.c_str(), blessed.c_str(), result.c_str());
+    std::string whom = get_unique_monster_name(mon);
+    if (whom.empty())
+        whom = pronoun + blessed;
+
+    snprintf(info, INFO_SIZE, " blesses %s with %s.",
+             whom.c_str(), result.c_str());
+
     simple_god_message(info);
 
 #ifndef USE_TILE

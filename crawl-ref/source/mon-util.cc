@@ -1651,7 +1651,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     switch (mon.type)
     {
     case MONS_SPECTRAL_THING:
-        result += "spectral ";
+        result  += "spectral ";
         nametype = mon.number;
         break;
 
@@ -1725,14 +1725,105 @@ std::string mons_type_name(int type, description_level_type desc )
     result += get_monster_data(type)->name;
 
     // Vowel fix: Change 'a orc' to 'an orc'
-    if ( result.length() >= 3 &&
-         (result[0] == 'a' || result[0] == 'A') &&
-         result[1] == ' ' &&
-         is_vowel(result[2]) )
+    if ( result.length() >= 3
+         && (result[0] == 'a' || result[0] == 'A')
+         && result[1] == ' '
+         && is_vowel(result[2]) )
     {
         result.insert(1, "n");
     }
     return result;
+}
+
+// Fills the number parameter (if not otherwise needed) with a seed for
+// random name choice from randname.txt.
+bool give_unique_monster_name(monsters *mon, bool higher_orcs_only)
+{
+    // already have a name
+    if (mons_is_unique(mon->type) || mon->type == MONS_PLAYER_GHOST
+        || mon->type == MONS_PANDEMONIUM_DEMON)
+    {
+        return false;
+    }
+
+    // need their number parameter for other information
+    if (mon->type == MONS_HYDRA // #heads
+        || mon->type == MONS_ABOMINATION_SMALL // colour
+        || mon->type == MONS_ABOMINATION_LARGE // colour
+        || mon->type == MONS_MANTICORE // #spikes
+        || mons_genus(mon->type) == MONS_DRACONIAN // subspecies
+        || mons_class_is_zombified(mon->type)) // zombie type
+    {
+        return false;
+    }
+
+    // Since this is called from the various divine blessing routines,
+    // don't bless non-orcs, and don't bless plain orcs, either.
+    if (higher_orcs_only
+        && (mons_species(mon->type) != MONS_ORC || mon->type == MONS_ORC))
+    {
+        return false;
+    }
+
+    // already has a unique name
+    if (mon->number > 0 && mon->number != MONS_PROGRAM_BUG)
+        return false;
+
+    // randomly pick a number
+    // XXX: Why does unsigned int (number's type) get munged on save & reload?
+    mon->number = (unsigned char) random_int();
+//    mprf(MSGCH_DIAGNOSTICS, "new monster number is %d", mon->number);
+
+    return (mon->number != 0 && mon->number != MONS_PROGRAM_BUG);
+}
+
+std::string get_unique_monster_name(const monsters *mon)
+{
+    if (mons_is_unique(mon->type))
+        return get_monster_data(mon->type)->name;
+
+    if (mon->type == MONS_PLAYER_GHOST)
+        return mon->ghost->name + "'s ghost";
+
+    if (mon->type == MONS_PANDEMONIUM_DEMON)
+        return mon->ghost->name;
+
+    // Since the seed for the monster name is stored in mon->number
+    // any monster that uses number for something else cannot be named.
+    if (mon->type == MONS_HYDRA // #heads
+        || mon->type == MONS_ABOMINATION_SMALL // colour
+        || mon->type == MONS_ABOMINATION_LARGE // colour
+        || mon->type == MONS_MANTICORE // #spikes
+        || mons_genus(mon->type) == MONS_DRACONIAN // subspecies
+        || mons_class_is_zombified(mon->type)) // zombie type
+    {
+        return "";
+    }
+
+    // unnamed, sorry
+    if (mon->number <= 0 || mon->number == MONS_PROGRAM_BUG)
+        return "";
+
+//    mprf(MSGCH_DIAGNOSTICS, "get name from number %d", mon->number);
+
+    rng_save_excursion rng_state;
+    seed_rng( mon->number );
+
+    std::string name
+        = getRandNameString(get_monster_data(mon->type)->name, " name");
+
+    if (!name.empty())
+        return name;
+
+    name = getRandNameString(get_monster_data(mons_genus(mon->type))->name,
+                             " name");
+
+    if (!name.empty())
+        return name;
+
+    name = getRandNameString("generic_monster_name");
+
+    return name;
 }
 
 /* ********************* END PUBLIC FUNCTIONS ********************* */
@@ -2921,8 +3012,10 @@ void monsters::equip_weapon(item_def &item, int near)
 void monsters::equip_armour(item_def &item, int near)
 {
     if (need_message(near))
+    {
         mprf("%s wears %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A).c_str());
+    }
 
     const equipment_type eq = get_armour_slot(item);
     if (eq != EQ_SHIELD)
@@ -2959,9 +3052,11 @@ void monsters::equip(item_def &item, int slot, int near)
 void monsters::unequip_weapon(item_def &item, int near)
 {
     if (need_message(near))
+    {
         mprf("%s unwields %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A, false, false, true,
                        false, ISFLAG_CURSED).c_str());
+    }
 
     const int brand = get_weapon_brand(item);
     if (brand == SPWPN_PROTECTION)
@@ -3003,8 +3098,10 @@ void monsters::unequip_weapon(item_def &item, int near)
 void monsters::unequip_armour(item_def &item, int near)
 {
     if (need_message(near))
+    {
         mprf("%s takes off %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A).c_str());
+    }
 
     const equipment_type eq = get_armour_slot(item);
     if (eq != EQ_SHIELD)
@@ -3483,8 +3580,10 @@ bool monsters::eat_corpse(item_def &carrion, int near)
         max_hit_points = hit_points;
 
     if (need_message(near))
+    {
         mprf("%s eats %s.", name(DESC_CAP_THE).c_str(),
              carrion.name(DESC_NOCAP_THE).c_str());
+    }
 
     destroy_item( carrion.index() );
     return (true);
@@ -3622,6 +3721,10 @@ item_def *monsters::shield()
 
 std::string monsters::name(description_level_type desc) const
 {
+    std::string monnam = get_unique_monster_name(this);
+    if (!monnam.empty())
+        return monnam;
+
     return this->name(desc, false);
 }
 
@@ -4009,37 +4112,39 @@ void monsters::set_ghost(const ghost_demon &g)
 
 void monsters::pandemon_init()
 {
-    hit_dice = ghost->xl;
-    hit_points = ghost->max_hp;
-    max_hit_points = ghost->max_hp;
-    ac = ghost->ac;
-    ev = ghost->ev;
-    speed = (one_chance_in(3) ? 10 : 8 + roll_dice(2, 9));
+    hit_dice        = ghost->xl;
+    hit_points      = ghost->max_hp;
+    max_hit_points  = ghost->max_hp;
+    ac              = ghost->ac;
+    ev              = ghost->ev;
+    speed           = (one_chance_in(3) ? 10 : 8 + roll_dice(2, 9));
     speed_increment = 70;
+
     if (you.char_direction == GDT_ASCENDING && you.level_type == LEVEL_DUNGEON)
         colour = LIGHTRED;
     else
         colour = random_colour();        // demon's colour
+
     load_spells(MST_GHOST);
 }
 
 void monsters::ghost_init()
 {
-    type = MONS_PLAYER_GHOST;
-    hit_dice = ghost->xl;
-    hit_points = ghost->max_hp;
-    max_hit_points = ghost->max_hp;
-    ac = ghost->ac;
-    ev = ghost->ev;
-    speed = ghost->speed;
+    type            = MONS_PLAYER_GHOST;
+    hit_dice        = ghost->xl;
+    hit_points      = ghost->max_hp;
+    max_hit_points  = ghost->max_hp;
+    ac              = ghost->ac;
+    ev              = ghost->ev;
+    speed           = ghost->speed;
     speed_increment = 70;
-    attitude = ATT_HOSTILE;
-    behaviour = BEH_WANDER;
-    flags = 0;
-    foe = MHITNOT;
-    foe_memory = 0;
-    colour = mons_class_colour(MONS_PLAYER_GHOST);
-    number = MONS_PROGRAM_BUG;
+    attitude        = ATT_HOSTILE;
+    behaviour       = BEH_WANDER;
+    flags           = 0;
+    foe             = MHITNOT;
+    foe_memory      = 0;
+    colour          = mons_class_colour(MONS_PLAYER_GHOST);
+    number          = MONS_PROGRAM_BUG;
     load_spells(MST_GHOST);
 
     inv.init(NON_ITEM);
@@ -4152,19 +4257,19 @@ void monsters::reset()
     ench_countdown = 0;
     inv.init(NON_ITEM);
 
-    flags = 0;
-    experience = 0L;
-    type = -1;
-    hit_points = 0;
-    max_hit_points = 0;
-    hit_dice = 0;
-    ac = 0;
-    ev = 0;
+    flags           = 0;
+    experience      = 0L;
+    type            = -1;
+    hit_points      = 0;
+    max_hit_points  = 0;
+    hit_dice        = 0;
+    ac              = 0;
+    ev              = 0;
     speed_increment = 0;
-    attitude = ATT_HOSTILE;
-    behaviour = BEH_SLEEP;
-    foe = MHITNOT;
-    number = 0;
+    attitude        = ATT_HOSTILE;
+    behaviour       = BEH_SLEEP;
+    foe             = MHITNOT;
+    number          = 0;
 
     if (in_bounds(x, y))
         mgrd[x][y] = NON_MONSTER;
@@ -4190,7 +4295,7 @@ void monsters::set_transit(const level_id &dest)
 void monsters::load_spells(mon_spellbook_type book)
 {
     spells.init(SPELL_NO_SPELL);
-    if (book == MST_NO_SPELLS || (book == MST_GHOST && !ghost.get()))
+    if (book == MST_NO_SPELLS || book == MST_GHOST && !ghost.get())
         return;
 
 #if DEBUG_DIAGNOSTICS
@@ -5483,9 +5588,11 @@ void monsters::react_to_damage(int damage)
             if (spawned == 1)
                 mprf("%s spits out another jelly.", mname.c_str());
             else
+            {
                 mprf("%s spits out %s more jellies.",
                      mname.c_str(),
                      number_in_words(spawned).c_str());
+            }
         }
     }
 }
@@ -5744,8 +5851,16 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     std::string msg = in_msg;
     description_level_type nocap, cap;
 
-    if (monster->attitude == ATT_FRIENDLY && !mons_is_unique(monster->type)
-        && player_monster_visible(monster))
+    std::string name = get_unique_monster_name(monster);
+    if (!name.empty() && player_monster_visible(monster))
+    {
+        msg = replace_all(msg, "@the_something@", name);
+        msg = replace_all(msg, "@The_something@", name);
+        msg = replace_all(msg, "@the_monster@",   name);
+        msg = replace_all(msg, "@The_monster@",   name);
+    }
+    else if (monster->attitude == ATT_FRIENDLY && !mons_is_unique(monster->type)
+             && player_monster_visible(monster))
     {
         nocap = DESC_PLAIN;
         cap   = DESC_PLAIN;

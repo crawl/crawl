@@ -162,6 +162,7 @@ void debug_dismiss_all_monsters(bool force_all = false);
 
 class monsters;
 void debug_make_monster_shout(monsters* mon);
+void debug_apply_monster_blessing(monsters* mon);
 void wizard_give_monster_item(monsters* mon);
 
 #ifdef DEBUG_DIAGNOSTICS

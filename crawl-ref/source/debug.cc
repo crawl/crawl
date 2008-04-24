@@ -3477,7 +3477,6 @@ extern void force_monster_shout(monsters* monster);
 
 void debug_make_monster_shout(monsters* mon)
 {
-
     mpr("Make the monster (S)hout or (T)alk?", MSGCH_PROMPT);
 
     char type = (char) getchm(KC_DEFAULT);
@@ -3513,19 +3512,53 @@ void debug_make_monster_shout(monsters* mon)
             mpr("The monster is invisible and likely won't speak.");
 
         if (silenced(you.x_pos, you.y_pos) && !silenced(mon->x, mon->y))
+        {
             mpr("You are silenced but the monster isn't; you will "
                 "probably hear/see nothing.");
+        }
         else if (!silenced(you.x_pos, you.y_pos) && silenced(mon->x, mon->y))
             mpr("The monster is silenced and likely won't say anything.");
         else if (silenced(you.x_pos, you.y_pos) && silenced(mon->x, mon->y))
+        {
             mpr("Both you and the monster are silenced, so you likely "
                 "won't hear anything.");
+        }
 
         for (int i = 0; i< num_times; i++)
             mons_speaks(mon);
     }
 
     mpr("== Done ==");
+}
+#endif
+
+#ifdef WIZARD
+static bool _force_suitable(const monsters *mon)
+{
+    return (mon->alive());
+}
+
+void debug_apply_monster_blessing(monsters* mon)
+{
+    mpr("Apply blessing of (B)eogh, The (S)hining One, or (R)andomly?",
+        MSGCH_PROMPT);
+
+    char type = (char) getchm(KC_DEFAULT);
+    type = tolower(type);
+
+    if (type != 'b' && type != 's' && type != 'r')
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+    god_type god = GOD_NO_GOD;
+    if (type == 'b' || type == 'r' && coinflip())
+        god = GOD_BEOGH;
+    else
+        god = GOD_SHINING_ONE;
+
+    if (!bless_follower(mon, god, _force_suitable, true))
+        mprf("%s won't bless this monster for you!", god_name(god).c_str());
 }
 #endif
 

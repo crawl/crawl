@@ -1737,8 +1737,8 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     // except for demonspawn (or other permamutations) in lichform -- haranp
     if (rotting && !demonspawn)
     {
-        if (!wearing_amulet(AMU_RESIST_MUTATION) ? !one_chance_in(3)
-            : one_chance_in(10))
+        if (wearing_amulet(AMU_RESIST_MUTATION) ? one_chance_in(10)
+                                                : !one_chance_in(3))
         {
             mpr( "Your body decomposes!", MSGCH_MUTATION );
 

@@ -50,7 +50,7 @@ enum mon_attack_type
     AT_CLAW,
     AT_TAIL_SLAP,
     AT_BUTT,
-    
+
     AT_SHOOT        // attack representing missile damage for M_ARCHER
 };
 
@@ -174,8 +174,8 @@ enum mon_resist_flags
 {
     MR_NO_FLAGS          = 0,
 
-    // resistances 
-    // Notes: 
+    // resistances
+    // Notes:
     // - negative energy is mostly handled via mons_res_negative_energy()
     // - acid is handled mostly by genus (jellies) plus non-living
     // - asphyx-resistance replaces hellfrost resistance.
@@ -193,7 +193,7 @@ enum mon_resist_flags
     MR_VUL_FIRE          = (1<< 9),
     MR_VUL_COLD          = (1<<10),
 
-    // melee armour resists/vulnerabilities 
+    // melee armour resists/vulnerabilities
     // XXX: how to do combos (bludgeon/slice, bludgeon/pierce)
     MR_RES_PIERCE        = (1<<11),
     MR_RES_SLICE         = (1<<12),
@@ -211,7 +211,7 @@ enum mon_resist_flags
 enum shout_type
 {
     S_SILENT,               // silent
-    S_SHOUT,                // shout                                           
+    S_SHOUT,                // shout
     S_BARK,                 // bark
     S_SHOUT2,               // shout twice (e.g. two-headed ogres)
     S_ROAR,                 // roar
@@ -284,7 +284,7 @@ struct mon_resist_def
     // All values are actually saved as single-bytes, so practical
     // range is -128 - 127, and the game only distinguishes values in
     // the range -1 to 3.
-    
+
     short elec;
     short poison;
     short fire;
@@ -383,7 +383,10 @@ void init_monster_symbols();
 monsters *monster_at(const coord_def &pos);
 
 // this is the old moname()
-std::string mons_type_name(int type, description_level_type desc );
+std::string mons_type_name(int type, description_level_type desc);
+
+bool give_unique_monster_name(monsters *mon, bool orc_only = true);
+std::string get_unique_monster_name(const monsters *mon);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
