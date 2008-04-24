@@ -947,22 +947,22 @@ int player_regen(void)
     if (rr > 20)
         rr = 20 + ((rr - 20) / 2);
 
-    /* rings */
+    // rings
     rr += 40 * player_equip( EQ_RINGS, RING_REGENERATION );
 
-    /* spell */
+    // spell
     if (you.duration[DUR_REGENERATION])
         rr += 100;
 
-    /* troll leather (except for trolls) */
+    // troll leather (except for trolls)
     if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR ) &&
         you.species != SP_TROLL)
         rr += 30;
 
-    /* fast heal mutation */
+    // fast heal mutation
     rr += player_mutation_level(MUT_REGENERATION) * 20;
 
-    /* ghouls heal slowly */
+    // ghouls heal slowly
     // dematerialized people heal slowly
     // dematerialized ghouls shouldn't heal any more slowly -- bwr
     if ((you.species == SP_GHOUL
@@ -3797,13 +3797,14 @@ void display_char_status()
         mpr( "You are praying." );
 
     if (you.disease && !you.duration[DUR_REGENERATION]
-        && (you.species != SP_VAMPIRE || you.hunger_state > HS_STARVING))
+        && (you.species != SP_VAMPIRE || you.hunger_state != HS_STARVING
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT))
     {
         mpr("You do not heal.");
     }
 
     if (you.duration[DUR_REGENERATION]
-        && (you.species != SP_VAMPIRE || you.hunger_state > HS_STARVING))
+        && (you.species != SP_VAMPIRE || you.hunger_state != HS_STARVING))
     {
         if (you.disease)
             mpr("You are recuperating from your illness.");
