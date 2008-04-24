@@ -206,7 +206,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Zin for revitalisation",
       "",
       "",
-      "call upon Zin to create a Sanctuary" },
+      "call upon Zin to create a sanctuary" },
     // TSO
     { "You and your allies can now gain power from killing evil.",
       "call upon The Shining One for a divine shield",
@@ -292,7 +292,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Zin for revitalisation",
       "",
       "",
-      "call upon Zin to create a Sanctuary" },
+      "call upon Zin to create a sanctuary" },
     // TSO
     { "You and your allies can no longer gain power from killing evil.",
       "call upon The Shining One for a divine shield",
