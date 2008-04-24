@@ -2917,7 +2917,7 @@ static bool _zin_retribution()
         break;
     case 5:
     case 6: // recital (20%)
-        simple_god_message(" recites the Axioms of Law!");
+        simple_god_message(" recites the Axioms of Law to you!");
         switch (one_chance_in(3))
         {
         case 0:
