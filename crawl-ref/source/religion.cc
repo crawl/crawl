@@ -1015,6 +1015,7 @@ static bool _tso_blessing_friendliness(monsters *mon)
     return true;
 }
 
+// IF you don't currently have any followers, send a small band to help you out.
 static bool _beogh_blessing_reinforcement()
 {
     bool success = false;
@@ -1024,16 +1025,17 @@ static bool _beogh_blessing_reinforcement()
         MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
     };
 
+    // up to four orcish followers
     int how_many = random2(4) + 1;
 
     for (int i = 0; i < how_many; ++i)
     {
         monster_type follower_type =
-            followers[random2(ARRAYSZ(followers))];
+            followers[RANDOM_ELEMENT(followers)];
 
         int monster = create_monster(follower_type, 0, BEH_GOD_GIFT,
-                                 you.x_pos, you.y_pos, you.pet_target,
-                                 MONS_PROGRAM_BUG);
+                                     you.x_pos, you.y_pos, you.pet_target,
+                                     MONS_PROGRAM_BUG);
         if (monster != -1)
         {
             monsters *mon = &menv[monster];
@@ -1071,12 +1073,12 @@ static bool _beogh_blessing_priesthood(monsters* mon)
 
 // Bless the follower indicated in follower, if any.  If there isn't
 // one, bless a random follower within sight of the player, if any.
-bool bless_follower(monsters* follower,
+bool bless_follower(int follower,
                     god_type god,
                     bool (*suitable)(const monsters* mon),
                     bool force)
 {
-    monsters *mon = NULL;
+    monsters *mon;
 
     std::string pronoun;
     std::string blessed;
@@ -1089,8 +1091,8 @@ bool bless_follower(monsters* follower,
     bool is_near = false;
 
     // If a follower was specified, and it's suitable, pick it.
-    if (follower && (force || suitable(follower)))
-        mon = follower;
+    if (follower != -1 && (force || suitable(&menv[follower])))
+        mon = &menv[follower];
     // Otherwise, pick a random follower within sight of the player.
     else
     {
@@ -1110,6 +1112,7 @@ bool bless_follower(monsters* follower,
 
                         if (!reinforced || coinflip())
                         {
+                            // try again, or possibly get some more
                             if (_beogh_blessing_reinforcement())
                                 reinforced = true;
                         }

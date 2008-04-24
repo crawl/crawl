@@ -34,6 +34,7 @@
 
 #include "beam.h"
 #include "cloud.h"
+#include "database.h"
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
@@ -154,17 +155,17 @@ void get_mimic_item( const monsters *mimic, item_def &item )
             item.special = (((mimic->x << 8) + mimic->y) & RANDART_SEED_MASK);
         }
         else if (prop < 40)
-            set_equip_desc( item, ISFLAG_GLOWING );
+            set_equip_desc(item, ISFLAG_GLOWING);
         else if (prop < 60)
-            set_equip_desc( item, ISFLAG_RUNED );
+            set_equip_desc(item, ISFLAG_RUNED);
         else if (prop < 80)
-            set_equip_desc( item, ISFLAG_EMBROIDERED_SHINY );
+            set_equip_desc(item, ISFLAG_EMBROIDERED_SHINY);
         else if (prop < 85)
-            set_equip_race( item, ISFLAG_ORCISH );
+            set_equip_race(item, ISFLAG_ORCISH);
         else if (prop < 90)
-            set_equip_race( item, ISFLAG_DWARVEN );
+            set_equip_race(item, ISFLAG_DWARVEN);
         else if (prop < 95)
-            set_equip_race( item, ISFLAG_ELVEN );
+            set_equip_race(item, ISFLAG_ELVEN);
         break;
 
     case MONS_SCROLL_MIMIC:
@@ -244,7 +245,6 @@ bool curse_an_item( bool decay_potions, bool quiet )
     if (decay_potions && !quiet) // just for mummies
         mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
 
-    /* don't change you.inv_special (just for fun) */
     if (you.inv[item].base_type == OBJ_POTIONS)
     {
         int amount;
@@ -403,15 +403,20 @@ static void _give_monster_experience( monsters *victim,
     {
         if (mon->gain_exp(experience))
         {
-            // Randomly bless the follower who gained experience.
-            if ((((you.religion == GOD_SHINING_ONE
-                && random2(you.piety) >= piety_breakpoint(0))
-                    || (you.religion == GOD_BEOGH
-                        && random2(you.piety) >= piety_breakpoint(2)))
-                && !player_under_penance())
-                && !one_chance_in(3))
+            if (you.religion != GOD_SHINING_ONE && you.religion != GOD_BEOGH
+                || player_under_penance()
+                || one_chance_in(3))
             {
-                bless_follower(mon);
+                return;
+            }
+
+            // Randomly bless the follower who gained experience.
+            if (you.religion == GOD_SHINING_ONE
+                    && random2(you.piety) >= piety_breakpoint(0)
+                || you.religion == GOD_BEOGH
+                    && random2(you.piety) >= piety_breakpoint(2))
+            {
+                bless_follower(killer_index);
             }
         }
     }
@@ -915,8 +920,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && (you.religion == GOD_MAKHLEB
                         || you.religion == GOD_SHINING_ONE
                            && mons_is_evil_or_unholy(monster))
-                    && (!player_under_penance() &&
-                        random2(you.piety) >= piety_breakpoint(0))))
+                    && !player_under_penance()
+                    && random2(you.piety) >= piety_breakpoint(0)))
             {
                 if (you.hp < you.hp_max)
                 {
@@ -930,8 +935,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 && (you.religion == GOD_MAKHLEB || you.religion == GOD_VEHUMET
                     || you.religion == GOD_SHINING_ONE
                        && mons_is_evil_or_unholy(monster))
-                && (!player_under_penance()
-                    && random2(you.piety) >= piety_breakpoint(0)))
+                && !player_under_penance()
+                && random2(you.piety) >= piety_breakpoint(0))
             {
                 if (you.magic_points < you.max_magic_points)
                 {
@@ -941,14 +946,15 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             }
 
             // Randomly bless a follower.
-            if (!created_friendly && gives_xp
-                && (((you.religion == GOD_SHINING_ONE
-                    && mons_is_evil_or_unholy(monster)
-                    && random2(you.piety) >= piety_breakpoint(0))
-                        || (you.religion == GOD_BEOGH
-                            && mons_holiness(monster) == MH_NATURAL
-                            && random2(you.piety) >= piety_breakpoint(2)))
-                    && !player_under_penance()))
+            if (!created_friendly
+                && gives_xp
+                && (you.religion == GOD_SHINING_ONE
+                        && mons_is_evil_or_unholy(monster)
+                        && random2(you.piety) >= piety_breakpoint(0)
+                    || you.religion == GOD_BEOGH
+                        && mons_holiness(monster) == MH_NATURAL
+                        && random2(you.piety) >= piety_breakpoint(2))
+                && !player_under_penance())
             {
                 bless_follower();
             }
@@ -972,16 +978,20 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         case KILL_MON:          /* Monster kills in combat */
         case KILL_MON_MISSILE:  /* Monster kills by missile or beam */
             if (!silent)
+            {
                 simple_monster_message(monster,
                                        _wounded_damaged(monster->type) ?
                                        " is destroyed!" : " dies!",
                                        MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
+            }
 
             // no piety loss if god gifts killed by other monsters
             if (mons_friendly(monster) && !testbits(monster->flags,MF_GOD_GIFT))
+            {
                 did_god_conduct(DID_FRIEND_DIES, 1 + (monster->hit_dice / 2),
                                 true, monster);
+            }
 
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills. Only
@@ -1065,14 +1075,14 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
                 if (you.religion == GOD_SHINING_ONE
                         && mons_is_evil_or_unholy(monster)
-                    && (!player_under_penance()
-                        && random2(you.piety) >= piety_breakpoint(0))
+                    && !player_under_penance()
+                    && random2(you.piety) >= piety_breakpoint(0)
                     && !invalid_monster_index(i))
                 {
                     monsters *mon = &menv[i];
 
                     // Randomly bless the follower who killed.
-                    if (!one_chance_in(3) && bless_follower(mon))
+                    if (!one_chance_in(3) && bless_follower(i))
                         break;
 
                     if (mon->alive() && mon->hit_points < mon->max_hit_points)
@@ -1084,16 +1094,14 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
 
                 // Randomly bless the follower who killed.
-                if (((you.religion == GOD_BEOGH
+                if (you.religion == GOD_BEOGH
                     && mons_holiness(monster) == MH_NATURAL
-                    && random2(you.piety) >= piety_breakpoint(2))
-                    && !player_under_penance())
+                    && random2(you.piety) >= piety_breakpoint(2)
+                    && !player_under_penance()
                     && !one_chance_in(3)
                     && !invalid_monster_index(i))
                 {
-                    monsters *mon = &menv[i];
-
-                    bless_follower(mon);
+                    bless_follower(i);
                 }
 
             }
@@ -1102,20 +1110,24 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         /* Monster killed by trap/inanimate thing/itself/poison not from you */
         case KILL_MISC:
             if (!silent)
+            {
                 simple_monster_message(monster,
                                        _wounded_damaged(monster->type) ?
                                        " is destroyed!" : " dies!",
                                        MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
+            }
             break;
 
         case KILL_RESET:
-        /* Monster doesn't die, just goes back to wherever it came from
-           This must only be called by monsters running out of time (or
-           abjuration), because it uses the beam variables! Or does it??? */
+        // Monster doesn't die, just goes back to wherever it came from
+        // This must only be called by monsters running out of time (or
+        // abjuration), because it uses the beam variables! Or does it???
             if (!silent)
+            {
                 simple_monster_message( monster,
                                         " disappears in a puff of smoke!" );
+            }
 
             place_cloud( random_smoke_type(),
                          monster->x, monster->y, 1 + random2(3),
@@ -1176,16 +1188,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         else
         {
             // Provide the player with an ingame clue to Boris' return.  -- bwr
-            const int tmp = random2(6);
-            simple_monster_message( monster,
-                    (tmp == 0) ? " says, \"You haven't seen the last of me!\"" :
-                    (tmp == 1) ? " says, \"I'll get you next time!\"" :
-                    (tmp == 2) ? " says, \"This isn't over yet!\"" :
-                    (tmp == 3) ? " says, \"I'll be back!\"" :
-                    (tmp == 4) ? " says, \"This isn't the end, it's only just beginning!\"" :
-                    (tmp == 5) ? " says, \"Kill me?  I think not!\""
-                               : " says, \"You cannot defeat me so easily!\"",
-                                    MSGCH_TALK );
+            std::string msg = getSpeakString("Boris return_speech");
+
+            if (!msg.empty())
+            {
+                msg = do_mon_str_replacements(msg, monster);
+                mpr(msg.c_str(), MSGCH_TALK);
+            }
         }
 
         // Now that Boris is dead, he's a valid target for monster

@@ -78,7 +78,7 @@ bool tso_stab_safe_monster(const actor *act);
 bool is_good_follower(const monsters* mon);
 bool is_orcish_follower(const monsters* mon);
 bool is_follower(const monsters* mon);
-bool bless_follower(monsters* follower = NULL,
+bool bless_follower(int follower = -1,
                     god_type god = you.religion,
                     bool (*suitable)(const monsters* mon) = is_follower,
                     bool force = false);

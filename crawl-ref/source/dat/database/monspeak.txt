@@ -954,6 +954,22 @@ VISUAL SPELL:@The_monster@ gestures.
 @The_monster@ says, "There's only one solution for you.  To die."
 
 @The_monster@ says, "You can never win."
+%%%%
+Boris return_speech
+
+@The_monster@ says, "You haven't seen the last of me!"
+
+@The_monster@ says, "I'll get you next time!"
+
+@The_monster@ says, "This isn't over yet!"
+
+@The_monster@ says, "I'll be back!"
+
+@The_monster@ says, "This isn't the end, it's only just beginning!"
+
+@The_monster@ says, "Kill me?  I think not!"
+
+@The_monster@ says, "You cannot defeat me so easily!"
 ## END Boris ##
 %%%%
 # An adventurer hating competition

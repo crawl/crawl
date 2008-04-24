@@ -3557,7 +3557,7 @@ void debug_apply_monster_blessing(monsters* mon)
     else
         god = GOD_SHINING_ONE;
 
-    if (!bless_follower(mon, god, _force_suitable, true))
+    if (!bless_follower(monster_index(mon), god, _force_suitable, true))
         mprf("%s won't bless this monster for you!", god_name(god).c_str());
 }
 #endif

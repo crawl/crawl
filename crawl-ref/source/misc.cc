@@ -1016,7 +1016,8 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         item.quantity  = amount;
         item.x         = -1;
         item.y         = -1;
-        item.plus      = 0;
+        // keep description as it was
+        item.plus      = potion.plus;
         item.plus2     = 0;
         item.special   = 0;
         item.flags     = 0;
@@ -1048,12 +1049,13 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         item_def potion2;
         potion2.base_type = OBJ_POTIONS;
         potion2.sub_type  = POT_DECAY;
-        potion2.plus      = potion.plus; // are these even needed?
-        potion2.plus2     = potion.plus2;
-        potion2.flags     = potion.flags;
+        // keep description as it was
+        potion2.plus      = potion.plus;
         potion2.quantity  = amount;
-        potion2.special   = 0;
         potion2.colour    = potion.colour;
+        potion2.plus2     = 0;
+        potion2.flags     = 0;
+        potion2.special   = 0;
 
         copy_item_to_grid( potion2, you.x_pos, you.y_pos );
    }
