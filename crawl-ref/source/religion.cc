@@ -887,7 +887,7 @@ static bool _blessing_healing(monsters *mon, bool extra)
     // Heal a monster, giving them an extra hit point if extra is true.
     if (heal_monster(mon, mon->max_hit_points, extra))
     {
-        // high hp monsters might get a unique name
+        // A high-HP monster might get a unique name.
         if (random2(100) <= mon->max_hit_points)
             give_unique_monster_name(mon);
         return true;
