@@ -23,6 +23,7 @@
 #include "it_use2.h"
 #include "place.h"
 #include "player.h"
+#include "spells3.h"
 #include "stuff.h"
 #include "tiles.h"
 #include "tilecount-w2d.h"
@@ -661,8 +662,6 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
     if (new_bg)
         _tcache_overlay(tcache_image, ix, new_bg, &c, NULL);
 
-    if (bg0 & TILE_FLAG_HALO_YOU)
-        _tcache_overlay(tcache_image, ix, TILE_HALO_PLAYER, &c, NULL);
     else if (bg0 & TILE_FLAG_HALO)
         _tcache_overlay(tcache_image, ix, TILE_HALO, &c, NULL);
 
@@ -1240,6 +1239,7 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
     const int p_order[TILEP_PARTS_TOTAL] =
     {
         TILEP_PART_SHADOW,
+        TILEP_PART_HALO,
         TILEP_PART_DRCWING,
         TILEP_PART_CLOAK,
         TILEP_PART_BASE,
@@ -1279,6 +1279,9 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
         // TODO enne - make these configurable.
         parts[TILEP_PART_DRCHEAD] = default_parts[TILEP_PART_DRCHEAD];
         parts[TILEP_PART_DRCWING] = default_parts[TILEP_PART_DRCWING];
+
+        bool halo = inside_halo(you.x_pos, you.y_pos);
+        parts[TILEP_PART_HALO] = halo ? TILEP_HALO_TSO : 0;
     }
 
     // convert TILEP_SHOW_EQUIP into real parts number
@@ -1409,8 +1412,8 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
     // swap boot and leg-armor
     if (parts2[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
-        p_order2[5] = TILEP_PART_LEG;
-        p_order2[4] = TILEP_PART_BOOTS;
+        p_order2[6] = TILEP_PART_LEG;
+        p_order2[5] = TILEP_PART_BOOTS;
     }
 
     for (i = 0; i < TILEP_PARTS_TOTAL; i++)

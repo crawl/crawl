@@ -4097,12 +4097,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 bool print_blood = true;
                 if (inside_halo(gx, gy))
                 {
-                    if (gx == you.x_pos && gy == you.y_pos)
-                    {
-                        tileb[count+1] |= TILE_FLAG_HALO_YOU;
-                        print_blood = false;
-                    }
-                    else if (see_grid(gx, gy) && mgrd[gx][gy] != NON_MONSTER)
+                    if (see_grid(gx, gy) && mgrd[gx][gy] != NON_MONSTER)
                     {
                         monsters* m = &menv[mgrd[gx][gy]];
                         if (!mons_class_flag(m->type, M_NO_EXP_GAIN)

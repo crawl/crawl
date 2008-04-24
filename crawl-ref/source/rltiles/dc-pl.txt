@@ -100,6 +100,17 @@ centaur_barding_magenta CENTAUR_BARDING_MAGENTA
 centaur_barding_red CENTAUR_BARDING_RED
 %end
 
+%parts_ctg HALO
+%parts_wx 32
+%parts_wy 32
+%parts_ox 0
+%parts_oy 0
+%rim 0
+%sdir player/halo
+halo_player TSO
+%rim 1
+%end
+
 ###Cloak
 %parts_ctg CLOAK
 %parts_wx 32
