@@ -1015,7 +1015,8 @@ static bool _tso_blessing_friendliness(monsters *mon)
     return true;
 }
 
-// IF you don't currently have any followers, send a small band to help you out.
+// If you don't currently have any followers, send a small band to help
+// you out.
 static bool _beogh_blessing_reinforcement()
 {
     bool success = false;
@@ -1025,7 +1026,7 @@ static bool _beogh_blessing_reinforcement()
         MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
     };
 
-    // up to four orcish followers
+    // Send up to four followers.
     int how_many = random2(4) + 1;
 
     for (int i = 0; i < how_many; ++i)
@@ -1112,7 +1113,8 @@ bool bless_follower(int follower,
 
                         if (!reinforced || coinflip())
                         {
-                            // try again, or possibly get some more
+                            // Try again, or possibly send more
+                            // reinforcement.
                             if (_beogh_blessing_reinforcement())
                                 reinforced = true;
                         }
