@@ -2876,7 +2876,7 @@ static bool _zin_retribution()
 
         if (success && !count_mutations())
         {
-            simple_god_message(" rids your body of chaos!");
+            simple_god_message(" rids your body of chaos!", god);
             // lower penance a bit more for being particularly successful
             dec_penance(god, 1);
         }
@@ -2917,7 +2917,7 @@ static bool _zin_retribution()
         break;
     case 5:
     case 6: // recital (20%)
-        simple_god_message(" recites the Axioms of Law to you!");
+        simple_god_message(" recites the Axioms of Law to you!", god);
         switch (one_chance_in(3))
         {
         case 0:
