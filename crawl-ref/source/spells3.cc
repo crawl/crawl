@@ -507,7 +507,8 @@ void dancing_weapon(int pow, bool force_hostile)
         }
 
         summs = create_monster( MONS_DANCING_WEAPON, numsc, beha,
-                                you.x_pos, you.y_pos, hitting, 1 );
+                                you.x_pos, you.y_pos, hitting,
+                                MONS_PROGRAM_BUG );
         if ( summs == -1 )
             failed = true;
     }
