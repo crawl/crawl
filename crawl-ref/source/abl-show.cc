@@ -1368,9 +1368,12 @@ static bool _do_ability(const ability_def& abil)
         break;
     }
     case ABIL_ZIN_REVITALISATION:
-        if (cast_revitalisation( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
-            exercise(SK_INVOCATIONS, 1 + random2(3));
+    {
+        int result = cast_revitalisation(1 + (you.skills[SK_INVOCATIONS] / 4));
+        if (result > 0)
+            exercise(SK_INVOCATIONS, 1 + random2(result));
         break;
+    }
 
     case ABIL_ZIN_SANCTUARY:
         if (cast_sanctuary(you.skills[SK_INVOCATIONS] * 4))

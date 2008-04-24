@@ -759,23 +759,57 @@ int cast_healing( int pow, int target_x, int target_y )
     return (_healing_spell( pow + roll_dice( 2, pow ) - 2, target_x, target_y ));
 }
 
-bool cast_revitalisation(int pow)
+int cast_revitalisation(int pow)
 {
-    if (you.hp == you.hp_max || you.magic_points == you.max_magic_points)
+    const int max_steps = std::max(6, pow);
+    int steps = 0;
+
+    switch (random2(3))
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return false;
+    case 0:
+        // Restore HP.
+        if (you.hp < you.hp_max)
+        {
+            for (int hp_amt = 3;
+                 steps < max_steps && you.hp < you.hp_max;
+                 ++steps, hp_amt *= 2)
+            {
+                inc_hp(hp_amt, false);
+            }
+
+            break;
+        }
+        // Deliberate fall through.
+
+    case 1:
+        // Restore MP.
+        if (you.magic_points < you.max_magic_points)
+        {
+            for (int mp_amt = 1;
+                 steps < max_steps && you.magic_points < you.max_magic_points;
+                 ++steps, mp_amt *= 2)
+            {
+                inc_mp(mp_amt, false);
+            }
+
+            break;
+        }
+        // Deliberate fall through.
+
+    default:
+        // Do nothing.
+        break;
     }
 
-    // Use the formula for minor healing for HP, and the formula divided
-    // roughly in half for MP.
-    int hp_amount = pow + roll_dice(2, pow) - 2;
-    int mp_amount = (pow + roll_dice(2, pow) - 2) / 2 + 1;
+    if (steps > 0)
+    {
+        mpr("You feel renewed.");
+        lose_piety(steps * 2 / 3);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-    inc_hp(hp_amount, false);
-    inc_mp(mp_amount, false);
-
-    return true;
+    return steps;
 }
 
 bool cast_revivification(int pow)
