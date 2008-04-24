@@ -6514,7 +6514,10 @@ void player::put_to_sleep(int)
     // Not all species can be put to sleep. Check holiness.
     const mon_holy_type holy = holiness();
     if (holy == MH_UNDEAD || holy == MH_NONLIVING)
+    {
+        mpr("You feel weary for a moment.");
         return;
+    }
 
     mpr("You fall asleep.");
     stop_delay();
