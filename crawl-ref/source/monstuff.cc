@@ -810,9 +810,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     {
         if (!silent)
         {
-            simple_monster_message(
-                monster, " vapourises!", MSGCH_MONSTER_DAMAGE,
-                MDAM_DEAD );
+            simple_monster_message( monster, " vapourises!",
+                                    MSGCH_MONSTER_DAMAGE,  MDAM_DEAD );
             death_message = false;
         }
 
