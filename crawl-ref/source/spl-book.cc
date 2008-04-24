@@ -1112,7 +1112,6 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_BORGNJORS_REVIVIFICATION:
         case SPELL_DEATHS_DOOR:
         case SPELL_NECROMUTATION:
-        case SPELL_ALTER_SELF:
             return true;
         default:
             // also, the above US_HUNGRY_DEAD spells are not castable

@@ -840,6 +840,7 @@ static bool _vampire_cannot_cast(spell_type spell)
     case SPELL_DRAGON_FORM:
     case SPELL_AIR_WALK:
     case SPELL_BERSERKER_RAGE:
+    case SPELL_ALTER_SELF:
         return true;
     default:
         return false;
