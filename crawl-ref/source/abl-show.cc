@@ -956,7 +956,7 @@ static bool _activate_talent(const talent& tal)
 
     if (tal.which == ABIL_ZIN_SANCTUARY && env.sanctuary_time)
     {
-        mpr("There's already a sanctuary in place on this level.");
+        mpr("There's already a Sanctuary in place on this level.");
         crawl_state.zero_turns_taken();
         return (false);
     }
@@ -1352,7 +1352,7 @@ static bool _do_ability(const ability_def& abil)
         int result = check_recital_audience();
         if (result < 0)
         {
-            mpr("That's no appreciative audience!");
+            mpr("There's no appreciative audience!");
             return (false);
         }
         else if (result < 1)
