@@ -1014,7 +1014,7 @@ level_id generic_shaft_dest(level_pos lpos)
     // be created during level generation time.
     // Include level 27 of the main dungeon here, but don't restrict
     // shaft creation (so don't set branch.dangerous_bottom_level).
-    if ((branch.dangerous_bottom_level || lid.branch == BRANCH_MAIN_DUNGEON)
+    if ((branch.dangerous_bottom_level)
         && lid.depth == branch.depth
         && (branch.depth - curr_depth) > 1)
     {
