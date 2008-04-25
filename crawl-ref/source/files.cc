@@ -1079,7 +1079,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
     crawl_view.set_player_at(you.pos(), true);
 
-    // This should fix the "monster occuring under the player" bug?
+    // This should fix the "monster occurring under the player" bug?
     if (make_changes && mgrd[you.x_pos][you.y_pos] != NON_MONSTER)
         monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true, true);
 
