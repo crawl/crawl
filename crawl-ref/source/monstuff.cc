@@ -3166,18 +3166,18 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // easy to set up and doesn't involve inventory.
 
         // set up the beam
-        beem.name = "volley of spikes";
-        beem.range = 9;
-        beem.rangeMax = 9;
-        beem.hit = 14;
-        beem.damage = dice_def( 2, 10 );
+        beem.name        = "volley of spikes";
+        beem.range       = 9;
+        beem.rangeMax    = 9;
+        beem.hit         = 14;
+        beem.damage      = dice_def( 2, 10 );
         beem.beam_source = monster_index(monster);
-        beem.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beem.colour = LIGHTGREY;
-        beem.flavour = BEAM_MISSILE;
-        beem.thrower = KILL_MON;
-        beem.aux_source = "volley of spikes";
-        beem.is_beam = false;
+        beem.type        = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beem.colour      = LIGHTGREY;
+        beem.flavour     = BEAM_MISSILE;
+        beem.thrower     = KILL_MON;
+        beem.aux_source  = "volley of spikes";
+        beem.is_beam     = false;
 
         // fire tracer
         fire_tracer(monster, beem);
@@ -6317,16 +6317,16 @@ forget_it:
 
 static void _setup_plant_spit(monsters *monster, bolt &pbolt)
 {
-    pbolt.name = "acid";
-    pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-    pbolt.range = 9;
-    pbolt.rangeMax = 9;
-    pbolt.colour = YELLOW;
-    pbolt.flavour = BEAM_ACID;
+    pbolt.name        = "acid";
+    pbolt.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+    pbolt.range       = 9;
+    pbolt.rangeMax    = 9;
+    pbolt.colour      = YELLOW;
+    pbolt.flavour     = BEAM_ACID;
     pbolt.beam_source = monster_index(monster);
-    pbolt.damage = dice_def( 3, 7 );
-    pbolt.hit = 20 + (3 * monster->hit_dice);
-    pbolt.thrower = KILL_MON_MISSILE;
+    pbolt.damage      = dice_def( 3, 7 );
+    pbolt.hit         = 20 + (3 * monster->hit_dice);
+    pbolt.thrower     = KILL_MON_MISSILE;
     pbolt.aux_source.clear();
 }
 

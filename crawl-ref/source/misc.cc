@@ -1830,8 +1830,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     branch_type old_where = you.where_are_you;
 
-    bool shaft = ((!force_stair
-                   && trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT)
+    bool shaft = (!force_stair
+                      && trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT
                   || force_stair == DNGN_TRAP_NATURAL);
     level_id shaft_dest;
     int      shaft_level = -1;

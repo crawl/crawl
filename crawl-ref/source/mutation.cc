@@ -1084,7 +1084,7 @@ formatted_string describe_mutations()
 
     case SP_NAGA:
         if ( you.mutation[MUT_DEFORMED] > 1)
-            result += "<cyan>";
+            result += "</lightblue><cyan>";
         result += naga_deformed_descrip[you.mutation[MUT_DEFORMED] - 1];
         if ( you.mutation[MUT_DEFORMED] > 1)
             result += "</cyan><lightblue>";
@@ -1096,13 +1096,13 @@ formatted_string describe_mutations()
             result += "You can spit poison." EOL;
         else
         {
-            result += "<cyan>You can exhale a cloud of poison.</cyan>"
-                      EOL "<lightblue>";
+            result += "</lightblue><cyan>You can exhale a cloud of poison."
+                      "</cyan><lightblue>" EOL ;
         }
 
         // slowness can be overridden
         if ( you.mutation[MUT_FAST] )
-            result += "<cyan>";
+            result += "</lightblue><cyan>";
         result += naga_speed_descrip[you.mutation[MUT_FAST]];
         if ( you.mutation[MUT_FAST] )
             result += "</cyan>";
@@ -1112,7 +1112,7 @@ formatted_string describe_mutations()
 
     case SP_TROLL:
         if ( you.mutation[MUT_CLAWS] )
-            result += "<cyan>";
+            result += "</lightblue><cyan>";
         result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
         if ( you.mutation[MUT_CLAWS] )
             result += "</cyan><lightblue>";
@@ -1122,7 +1122,7 @@ formatted_string describe_mutations()
 
     case SP_CENTAUR:
         if ( you.mutation[MUT_DEFORMED] > 1)
-            result += "<cyan>";
+            result += "</lightblue><cyan>";
         result += centaur_deformed_descrip[you.mutation[MUT_DEFORMED] - 1];
         if ( you.mutation[MUT_DEFORMED] > 1)
             result += "</cyan><lightblue>";

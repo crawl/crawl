@@ -969,9 +969,7 @@ bool is_valid_shaft_level(const level_id &place)
     // on lower levels with the innability to use teleport control to
     // get back up.
     if (testbits(get_branch_flags(place.branch), LFLAG_NO_TELE_CONTROL))
-    {
         return (false);
-    }
 
     const Branch &branch = branches[place.branch];
 
