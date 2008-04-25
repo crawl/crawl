@@ -1367,6 +1367,7 @@ static bool _do_ability(const ability_def& abil)
         exercise( SK_INVOCATIONS, 2 );
         break;
     }
+
     case ABIL_ZIN_REVITALISATION:
     {
         int result = cast_revitalisation(1 + (you.skills[SK_INVOCATIONS] / 4));
