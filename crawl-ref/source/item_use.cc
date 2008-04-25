@@ -484,7 +484,9 @@ void wield_effects(int item_wield_2, bool showMsgs)
     item_def &item = you.inv[item_wield_2];
 
     // and here we finally get to the special effects of wielding {dlb}
-    if (item.base_type == OBJ_MISCELLANY)
+    switch (item.base_type)
+    {
+    case OBJ_MISCELLANY:
     {
         if (item.sub_type == MISC_LANTERN_OF_SHADOWS)
         {
@@ -495,9 +497,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
             setLOSRadius(you.current_vision);
             you.special_wield = SPWLD_SHADOW;
         }
+        break;
     }
 
-    if (item.base_type == OBJ_STAVES)
+    case OBJ_STAVES:
     {
         if (item.sub_type == STAFF_POWER)
         {
@@ -506,15 +509,16 @@ void wield_effects(int item_wield_2, bool showMsgs)
             set_ident_flags( item, ISFLAG_EQ_WEAPON_MASK );
             mpr("You feel your mana capacity increase.");
         }
-        else
+        else if (!maybe_identify_staff(item))
         {
-            // Most staves only give curse status when wielded and
-            // right now that's always "uncursed". -- bwr
-            set_ident_flags( item, ISFLAG_KNOW_CURSE );
+                // Give curse status when wielded.
+                // Right now that's always "uncursed". -- bwr
+                set_ident_flags( item, ISFLAG_KNOW_CURSE );
         }
+        break;
     }
 
-    if (item.base_type == OBJ_WEAPONS)
+    case OBJ_WEAPONS:
     {
         if (is_evil_item(item) && is_good_god(you.religion))
         {
@@ -747,7 +751,11 @@ void wield_effects(int item_wield_2, bool showMsgs)
             else
                 xom_is_stimulated(64);
         }
+        break;
     }
+    default:
+        break;
+    } // switch (base type)
 
     if (showMsgs)
         warn_shield_penalties();

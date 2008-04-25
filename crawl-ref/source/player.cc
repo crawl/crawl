@@ -776,8 +776,8 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
         if (you.equip[EQ_WEAPON] != -1
             && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_STAVES
             && you.inv[you.equip[EQ_WEAPON]].sub_type == sub_type
-            && (calc_unid ||
-                item_type_known(you.inv[you.equip[EQ_WEAPON]])))
+            && (calc_unid
+                || item_type_known( you.inv[you.equip[EQ_WEAPON]] )))
         {
             ret++;
         }
@@ -786,16 +786,16 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
     case EQ_RINGS:
         if (you.equip[EQ_LEFT_RING] != -1
             && you.inv[you.equip[EQ_LEFT_RING]].sub_type == sub_type
-            && (calc_unid ||
-                item_type_known(you.inv[you.equip[EQ_LEFT_RING]])))
+            && (calc_unid
+                || item_type_known( you.inv[you.equip[EQ_LEFT_RING]] )))
         {
             ret++;
         }
 
         if (you.equip[EQ_RIGHT_RING] != -1
             && you.inv[you.equip[EQ_RIGHT_RING]].sub_type == sub_type
-            && (calc_unid ||
-               item_type_known(you.inv[you.equip[EQ_RIGHT_RING]])))
+            && (calc_unid
+                || item_type_known( you.inv[you.equip[EQ_RIGHT_RING]] )))
         {
             ret++;
         }
@@ -2870,7 +2870,7 @@ void level_change(bool skip_attribute_increase)
     you.redraw_experience = true;
 
     while (you.experience_level < 27
-            && you.experience > exp_needed(you.experience_level + 2))
+           && you.experience > exp_needed(you.experience_level + 2))
     {
         bool skip_more = false;
 

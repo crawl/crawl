@@ -5480,6 +5480,28 @@ void monsters::apply_location_effects()
     }
 }
 
+bool monsters::move_to_pos(const coord_def &newpos)
+{
+    if (mgrd[newpos.x][newpos.y] != NON_MONSTER
+        || you.x_pos == newpos.x && you.y_pos == newpos.y)
+    {
+        return (false);
+    }
+
+    // clear old cell pointer
+    mgrd[x][y] = NON_MONSTER;
+
+    // set monster x,y to new value
+    x = newpos.x;
+    y = newpos.y;
+
+    // set new monster grid pointer to this monster.
+    mgrd[x][y] = monster_index(this);
+
+    return (true);
+}
+
+
 // returns true if the trap should be revealed to the player
 bool monsters::do_shaft()
 {

@@ -100,9 +100,9 @@ static bool _surge_identify_boosters(spell_type spell)
                     if ( you.equip[i] != -1 )
                     {
                         item_def& ring = you.inv[you.equip[i]];
-                        if (!item_ident(ring, ISFLAG_KNOW_PROPERTIES) &&
-                            (ring.sub_type == RING_FIRE ||
-                             ring.sub_type == RING_ICE))
+                        if (!item_ident(ring, ISFLAG_KNOW_PROPERTIES)
+                            && (ring.sub_type == RING_FIRE
+                                || ring.sub_type == RING_ICE))
                         {
                             set_ident_type( ring.base_type, ring.sub_type,
                                             ID_KNOWN_TYPE );
@@ -704,101 +704,132 @@ bool cast_a_spell()
 
 // "Utility" spells for the sake of simplicity are currently ones with
 // enchantments, translocations, or divinations.
-bool spell_is_utility_spell( spell_type spell_id )
+static bool _spell_is_utility_spell( spell_type spell_id )
 {
     return (spell_typematch( spell_id,
                 SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION | SPTYP_DIVINATION ));
 }
 
-bool spell_is_unholy( spell_type spell_id )
+static bool _spell_is_unholy( spell_type spell_id )
 {
     return (testbits( get_spell_flags( spell_id ), SPFLAG_UNHOLY ));
 }
 
-void spellcasting_side_effects(spell_type spell, bool idonly = false)
+bool maybe_identify_staff(item_def &item, spell_type spell)
 {
-    int total_skill = 0;
+    if (item_type_known(item))
+        return (true);
 
-    if (you.equip[EQ_WEAPON] != -1
-        && item_is_staff( you.inv[you.equip[EQ_WEAPON]] )
-        && !item_type_known( you.inv[you.equip[EQ_WEAPON]] ))
+    int relevant_skill = 0;
+    const bool chance = (spell != SPELL_NO_SPELL);
+
+    switch (item.sub_type)
     {
-        switch (you.inv[you.equip[EQ_WEAPON]].sub_type)
-        {
         case STAFF_ENERGY:
+            if (!chance) // The staff of energy only autoIDs by chance.
+                return (false);
+            // intentional fall-through
         case STAFF_WIZARDRY:
-            total_skill = you.skills[SK_SPELLCASTING];
+            relevant_skill = you.skills[SK_SPELLCASTING];
             break;
+
         case STAFF_FIRE:
-            if (spell_typematch(spell, SPTYP_FIRE))
-                total_skill = you.skills[SK_FIRE_MAGIC];
+            if (!chance || spell_typematch(spell, SPTYP_FIRE))
+                relevant_skill = you.skills[SK_FIRE_MAGIC];
             else if (spell_typematch(spell, SPTYP_ICE))
-                total_skill = you.skills[SK_ICE_MAGIC];
+                relevant_skill = you.skills[SK_ICE_MAGIC];
             break;
+
         case STAFF_COLD:
-            if (spell_typematch(spell, SPTYP_ICE))
-                total_skill = you.skills[SK_ICE_MAGIC];
+            if (!chance || spell_typematch(spell, SPTYP_ICE))
+                relevant_skill = you.skills[SK_ICE_MAGIC];
             else if (spell_typematch(spell, SPTYP_FIRE))
-                total_skill = you.skills[SK_FIRE_MAGIC];
+                relevant_skill = you.skills[SK_FIRE_MAGIC];
             break;
+
         case STAFF_AIR:
-            if (spell_typematch(spell, SPTYP_AIR))
-                total_skill = you.skills[SK_AIR_MAGIC];
+            if (!chance || spell_typematch(spell, SPTYP_AIR))
+                relevant_skill = you.skills[SK_AIR_MAGIC];
             else if (spell_typematch(spell, SPTYP_EARTH))
-                total_skill = you.skills[SK_EARTH_MAGIC];
+                relevant_skill = you.skills[SK_EARTH_MAGIC];
             break;
+
         case STAFF_EARTH:
-            if (spell_typematch(spell, SPTYP_EARTH))
-                total_skill = you.skills[SK_EARTH_MAGIC];
+            if (!chance || spell_typematch(spell, SPTYP_EARTH))
+                relevant_skill = you.skills[SK_EARTH_MAGIC];
             else if (spell_typematch(spell, SPTYP_AIR))
-                total_skill = you.skills[SK_AIR_MAGIC];
+                relevant_skill = you.skills[SK_AIR_MAGIC];
             break;
+
         case STAFF_POISON:
-            if (spell_typematch(spell, SPTYP_POISON))
-                total_skill = you.skills[SK_POISON_MAGIC];
+            if (!chance || spell_typematch(spell, SPTYP_POISON))
+                relevant_skill = you.skills[SK_POISON_MAGIC];
             break;
+
         case STAFF_DEATH:
-            if (spell_typematch(spell, SPTYP_NECROMANCY))
-                total_skill = you.skills[SK_NECROMANCY];
+            if (!chance || spell_typematch(spell, SPTYP_NECROMANCY))
+                relevant_skill = you.skills[SK_NECROMANCY];
             break;
+
         case STAFF_CONJURATION:
-            if (spell_typematch(spell, SPTYP_CONJURATION))
-                total_skill = you.skills[SK_CONJURATIONS];
+            if (!chance || spell_typematch(spell, SPTYP_CONJURATION))
+                relevant_skill = you.skills[SK_CONJURATIONS];
             break;
+
         case STAFF_ENCHANTMENT:
-            if (spell_typematch(spell, SPTYP_ENCHANTMENT))
-                total_skill = you.skills[SK_ENCHANTMENTS];
+            if (!chance || spell_typematch(spell, SPTYP_ENCHANTMENT))
+                relevant_skill = you.skills[SK_ENCHANTMENTS];
             break;
+
         case STAFF_SUMMONING:
-            if (spell_typematch(spell, SPTYP_SUMMONING))
-                total_skill = you.skills[SK_SUMMONINGS];
+            if (!chance || spell_typematch(spell, SPTYP_SUMMONING))
+                relevant_skill = you.skills[SK_SUMMONINGS];
             break;
-        }
+    }
 
-        if (you.skills[SK_SPELLCASTING] > total_skill)
-            total_skill = you.skills[SK_SPELLCASTING];
+    bool id_staff = false;
 
-        if (random2(100) < total_skill)
-        {
-            item_def& wpn = you.inv[you.equip[EQ_WEAPON]];
-            // changed from ISFLAG_KNOW_TYPE
-            set_ident_flags( wpn, ISFLAG_IDENT_MASK);
-            mprf("You are wielding %s.", wpn.name(DESC_NOCAP_A).c_str());
-            more();
+    if (chance)
+    {
+        if (you.skills[SK_SPELLCASTING] > relevant_skill)
+            relevant_skill = you.skills[SK_SPELLCASTING];
 
-            you.wield_change = true;
-        }
+        if (random2(100) < relevant_skill)
+            id_staff = true;
+    }
+    else if (relevant_skill >= 4)
+        id_staff = true;
+
+    if (id_staff)
+    {
+        item_def& wpn = you.inv[you.equip[EQ_WEAPON]];
+        // changed from ISFLAG_KNOW_TYPE
+        set_ident_flags( wpn, ISFLAG_IDENT_MASK);
+        mprf("You are wielding %s.", wpn.name(DESC_NOCAP_A).c_str());
+        more();
+
+        you.wield_change = true;
+    }
+    return (id_staff);
+}
+
+static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
+{
+    if (you.equip[EQ_WEAPON] != -1
+        && item_is_staff( you.inv[you.equip[EQ_WEAPON]] ))
+    {
+        maybe_identify_staff(you.inv[you.equip[EQ_WEAPON]], spell);
     }
 
     if (idonly)
         return;
 
-    if (!spell_is_utility_spell(spell))
+    if (!_spell_is_utility_spell(spell))
         did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell) );
 
     // Self-banishment gets a special exemption - you're there to spread light
-    if (spell_is_unholy(spell) &&
-        (spell != SPELL_BANISHMENT || !you.banished))
+    if (_spell_is_unholy(spell)
+        && (spell != SPELL_BANISHMENT || !you.banished))
     {
         did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spell) );
     }
@@ -1010,14 +1041,14 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
         if (spfl < spfail_chance)
         {
-            spellcasting_side_effects(spell, true);
+            _spellcasting_side_effects(spell, true);
 
             mpr( "You miscast the spell." );
             flush_input_buffer( FLUSH_ON_FAILURE );
 
             if (you.religion == GOD_SIF_MUNA
-                && (!player_under_penance()
-                    && you.piety >= 100 && random2(150) <= you.piety))
+                && !player_under_penance()
+                && you.piety >= 100 && random2(150) <= you.piety)
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
                 return SPRET_FAIL;
@@ -1951,7 +1982,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
     }                           // end switch
 
-    spellcasting_side_effects(spell);
+    _spellcasting_side_effects(spell);
 
     return (SPRET_SUCCESS);
 }                               // end you_spells()

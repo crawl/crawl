@@ -1053,6 +1053,7 @@ public:
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
     void apply_location_effects();
+    bool move_to_pos(const coord_def &newpos);
 
     kill_category kill_alignment() const;
 

@@ -56,6 +56,8 @@ void exercise_spell( spell_type spell_ex, bool spc, bool divide );
  * *********************************************************************** */
 bool cast_a_spell( void );
 
+bool maybe_identify_staff( item_def &item, spell_type spell = SPELL_NO_SPELL );
+
 void inspect_spells();
 
 
@@ -71,7 +73,7 @@ spret_type your_spells( spell_type spell, int powc = 0,
  * called from: acr - decks - fight - it_use2 - it_use3 - item_use - items -
  *              misc - mstuff2 - religion - spell - spl-book - spells4
  * *********************************************************************** */
-void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail, 
+void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                      int force_effect, const char *cause = NULL );
 
 const char* failure_rate_to_string( int fail );

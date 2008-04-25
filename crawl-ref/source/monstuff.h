@@ -126,6 +126,7 @@ bool choose_any_monster(const monsters* mon);
 int choose_random_nearby_monster(int weight,
                                  bool (*suitable)(const monsters* mon) =
                                      choose_any_monster,
+                                 bool in_sight = true,
                                  bool prefer_named = false);
 
 /* ***********************************************************************

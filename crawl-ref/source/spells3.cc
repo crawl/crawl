@@ -1147,23 +1147,24 @@ bool project_noise(void)
  */
 bool recall(char type_recalled)
 {
-    int loopy = 0;              // general purpose looping variable {dlb}
-    bool success = false;       // more accurately: "apparent success" {dlb}
-    int start_count = 0;
-    int step_value = 1;
-    int end_count = (MAX_MONSTERS - 1);
+    int loopy          = 0;      // general purpose looping variable {dlb}
+    bool success       = false;  // more accurately: "apparent success" {dlb}
+    int start_count    = 0;
+    int step_value     = 1;
+    int end_count      = (MAX_MONSTERS - 1);
+
     FixedVector < char, 2 > empty;
     struct monsters *monster = 0;       // NULL {dlb}
 
     empty[0] = empty[1] = 0;
 
-// someone really had to make life difficult {dlb}:
-// sometimes goes through monster list backwards
+    // someone really had to make life difficult {dlb}:
+    // sometimes goes through monster list backwards
     if (coinflip())
     {
         start_count = (MAX_MONSTERS - 1);
-        end_count = 0;
-        step_value = -1;
+        end_count   = 0;
+        step_value  = -1;
     }
 
     for (loopy = start_count; loopy != end_count; loopy += step_value)
@@ -1193,24 +1194,15 @@ bool recall(char type_recalled)
                 continue;
         }
 
-        if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, 3, false, empty))
+        if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, 3, false, empty)
+            && monster->move_to_pos( coord_def(empty[0], empty[1])) )
         {
-            // clear old cell pointer -- why isn't there a function for moving a monster?
-            mgrd[monster->x][monster->y] = NON_MONSTER;
-            // set monster x,y to new value
-            monster->x = empty[0];
-            monster->y = empty[1];
-            // set new monster grid pointer to this monster.
-            mgrd[monster->x][monster->y] = monster_index(monster);
-
             // only informed if monsters recalled are visible {dlb}:
             if (simple_monster_message(monster, " is recalled."))
                 success = true;
         }
         else
-        {
             break;              // no more room to place monsters {dlb}
-        }
     }
 
     if (!success)

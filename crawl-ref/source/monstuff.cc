@@ -2594,29 +2594,29 @@ bool choose_any_monster(const monsters* mon)
 // likely to get chosen compared with non-named ones.
 int choose_random_nearby_monster(int weight,
                                  bool (*suitable)(const monsters* mon),
-                                 bool prefer_named)
+                                 bool in_sight, bool prefer_named)
 {
     int mons_count = weight;
     int result = NON_MONSTER;
     int mon;
 
     int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
-    int yend = you.y_pos + 9, xend = you.x_pos + 9;
+    int yend   = you.y_pos + 9, xend   = you.x_pos + 9;
     if ( xstart < 0 ) xstart = 0;
     if ( ystart < 0 ) ystart = 0;
-    if ( xend >= GXM ) xend = GXM;
-    if ( yend >= GYM ) yend = GYM;
+    if ( xend >= GXM )  xend = GXM;
+    if ( yend >= GYM )  yend = GYM;
 
     // monster check
     for ( int y = ystart; y < yend; ++y )
         for ( int x = xstart; x < xend; ++x )
-            if ( see_grid(x,y) && mgrd[x][y] != NON_MONSTER )
+            if ( mgrd[x][y] != NON_MONSTER && (!in_sight || see_grid(x,y)) )
             {
                 mon = mgrd[x][y];
                 if (suitable(&menv[mon]))
                 {
                     if (prefer_named
-                        && !get_unique_monster_name(&menv[mon]).empty())
+                        && !(get_unique_monster_name(&menv[mon]).empty()))
                     {
                         mons_count += 2;
                         // named monsters have doubled chances

@@ -1015,6 +1015,60 @@ static bool _tso_blessing_friendliness(monsters *mon)
     return true;
 }
 
+// If there are no nearby followers, try to recall some on the level.
+static int _beogh_blessing_recalling()
+{
+    std::vector<int> recalled;
+
+    FixedVector < char, 2 > empty;
+    empty[0] = empty[1] = 0;
+
+    monsters *mon;
+    for (int loopy = 0; loopy < MAX_MONSTERS; loopy++)
+    {
+        mon = &menv[loopy];
+
+        if (mon->type == -1)
+            continue;
+
+        if (!is_orcish_follower(mon))
+            continue;
+
+        recalled.push_back(loopy);
+    }
+    if (recalled.empty())
+        return 0;
+
+    int count_recalled = 0;
+    int total          = recalled.size();
+    int amount         = 1 + random2(4) + random2(4);
+    bool recall_all    = (total <= amount);
+
+    for (unsigned int loopy = 0; loopy < recalled.size(); loopy++)
+    {
+        mon = &menv[recalled[loopy]];
+
+        if (!recall_all && total == amount)
+            recall_all = true;
+
+        if (recall_all || random2(total) < amount)
+        {
+            if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, 3,
+                                false, empty)
+                && mon->move_to_pos( coord_def(empty[0], empty[1])) )
+            {
+                count_recalled++;
+                amount--;
+            }
+            else
+                break;    // no more room to place monsters
+        }
+        total--;
+    }
+
+    return (count_recalled);
+}
+
 // If you don't currently have any followers, send a small band to help
 // you out.
 static bool _beogh_blessing_reinforcement()
@@ -1101,43 +1155,54 @@ bool bless_follower(int follower,
     // Otherwise, pick a random follower within sight of the player.
     if (follower == -1 || (!force && !suitable(&menv[follower])))
     {
+        if (god != GOD_BEOGH)
+            return false;
+
         // Choose a random follower in LOS, preferably a named one.
-        follower = choose_random_nearby_monster(0, suitable, true);
+        follower = choose_random_nearby_monster(0, suitable, true, true);
 
         if (follower == NON_MONSTER)
         {
-            switch (god)
-            {
-                case GOD_BEOGH:
-                {
-                    // If no follower was chosen, either send
-                    // reinforcement or get out.
-                    bool reinforced = _beogh_blessing_reinforcement();
-
-                    if (!reinforced || coinflip())
-                    {
-                        // Try again, or possibly send more reinforcement.
-                        if (_beogh_blessing_reinforcement())
-                            reinforced = true;
-                    }
-
-                    if (reinforced)
-                    {
-                        pronoun = "";
-                        blessed = "you";
-                        result  = "reinforcement";
-                        goto blessing_done;
-                    }
-                    break;
-                }
-
-                default:
-                    break;
-            }
-
-            return false;
+            // Try again, without the LOS restriction.
+            follower = choose_random_nearby_monster(0, suitable, false, true);
         }
 
+        if (follower == NON_MONSTER)
+        {
+            // If no follower was chosen, either send
+            // reinforcement or get out.
+
+            // First, try to recall orcish followers on level.
+            int  recalled   = _beogh_blessing_recalling();
+            bool reinforced = false;
+
+            if (recalled < 3)
+            {
+                reinforced = _beogh_blessing_reinforcement();
+
+                if (!reinforced || !recalled && coinflip())
+                {
+                    // Try again, or possibly send more reinforcement.
+                    if (_beogh_blessing_reinforcement())
+                        reinforced = true;
+                }
+            }
+
+            if (recalled || reinforced)
+            {
+                pronoun = "";
+                blessed = "you";
+
+                if (recalled)
+                    result = "recalling";
+                else if (reinforced)
+                    result = "reinforcement";
+                else
+                    result = "recalling and reinforcement";
+
+                goto blessing_done;
+            }
+        }
     }
 
     mon = &menv[follower];
@@ -1304,8 +1369,14 @@ bool bless_follower(int follower,
 
 blessing_done:
     std::string whom = "";
+
     if (follower != NON_MONSTER)
-        whom = get_unique_monster_name(mon);
+    {
+        if (!mons_near(mon) || !player_monster_visible(mon))
+            whom = "a follower";
+        else
+            whom = get_unique_monster_name(mon);
+    }
 
     if (whom.empty())
         whom = pronoun + blessed;

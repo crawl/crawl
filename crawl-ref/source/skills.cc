@@ -22,11 +22,13 @@
 
 #include "externs.h"
 
+#include "itemprop.h"
 #include "macro.h"
 #include "notes.h"
 #include "output.h"
 #include "player.h"
 #include "skills2.h"
+#include "spl-cast.h"
 #include "stuff.h"
 #include "tutorial.h"
 
@@ -34,28 +36,28 @@
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).
 //
-// MAX_SPENDING_LIMIT is the maximum XP amount we allow the player to 
+// MAX_SPENDING_LIMIT is the maximum XP amount we allow the player to
 //                    spend on a skill in a single raise.
 //
-// Note that they don't have to be equal, but it is important to make 
+// Note that they don't have to be equal, but it is important to make
 // sure that they're set so that the spending limit will always allow
 // for 1 skill point to be earned.
 #define MAX_COST_LIMIT           250
 #define MAX_SPENDING_LIMIT       250
 
-static int exercise2( int exsk );
+static int _exercise2( int exsk );
 
 // These values were calculated by running a simulation of gaining skills.
 // The goal is to try and match the old cost system which used the player's
-// experience level (which has a number of problems) so things shouldn't 
-// seem too different to the player... but we still try to err on the 
+// experience level (which has a number of problems) so things shouldn't
+// seem too different to the player... but we still try to err on the
 // high side for the lower levels. -- bwr
 int skill_cost_needed( int level )
 {
-    // The average starting skill total is actually lower, but 
-    // some classes get about 2200, and they would probably be 
+    // The average starting skill total is actually lower, but
+    // some classes get about 2200, and they would probably be
     // start around skill cost level 3 if we used the average.  -- bwr
-    int ret = 2200; 
+    int ret = 2200;
 
     switch (level)
     {
@@ -87,15 +89,15 @@ void calc_total_skill_points( void )
     you.total_skill_points = 0;
 
     for (i = 0; i < NUM_SKILLS; i++)
-    {   
+    {
         you.total_skill_points += you.skill_points[i];
     }
 
-    for (i = 1; i <= 27; i++) 
+    for (i = 1; i <= 27; i++)
     {
-        if (you.total_skill_points < skill_cost_needed(i)) 
+        if (you.total_skill_points < skill_cost_needed(i))
             break;
-    } 
+    }
 
     you.skill_cost_level = i - 1;
 
@@ -105,10 +107,10 @@ void calc_total_skill_points( void )
 }
 
 // skill_cost_level makes skills more expensive for more experienced characters
-// skill_level      makes higher skills more expensive 
-static int calc_skill_cost( int skill_cost_level, int skill_level )
+// skill_level      makes higher skills more expensive
+static int _calc_skill_cost( int skill_cost_level, int skill_level )
 {
-    int ret = 1 + skill_level;    
+    int ret = 1 + skill_level;
 
     // does not yet allow for loss of skill levels.
     if (skill_level > 9)
@@ -162,7 +164,7 @@ int exercise(int exsk, int deg)
             break;
 
         if (you.practise_skill[exsk] || one_chance_in(4))
-            ret += exercise2( exsk );
+            ret += _exercise2( exsk );
 
         deg--;
     }
@@ -170,24 +172,21 @@ int exercise(int exsk, int deg)
 #ifdef DEBUG_DIAGNOSTICS
     if (ret)
     {
-        mprf(MSGCH_DIAGNOSTICS,
-                "Exercised %s (deg: %d) by %d",
-                skill_name(exsk),
-                deg,
-                ret);
+        mprf(MSGCH_DIAGNOSTICS, "Exercised %s (deg: %d) by %d",
+                                skill_name(exsk), deg, ret);
     }
 #endif
 
     return (ret);
 }                               // end exercise()
 
-static int exercise2( int exsk )
+static int _exercise2( int exsk )
 {
     int deg = 1;
     int bonus = 0;
     char old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
 
-    int skill_change = calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
+    int skill_change = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
     int i;
 
     // being good at some weapons makes others easier to learn:
@@ -224,7 +223,7 @@ static int exercise2( int exsk )
         {
             bonus += random2(3);
         }
-        
+
         /* Slings and Throwing */
         if ((exsk == SK_SLINGS || exsk == SK_THROWING)
             && (you.skills[SK_SLINGS] > you.skills[exsk]
@@ -285,10 +284,8 @@ static int exercise2( int exsk )
         int skill_rank = 1;
 
         for (i  = SK_CONJURATIONS; i <= SK_DIVINATIONS; i++)
-        {
             if (you.skills[exsk] < you.skills[i])
                 skill_rank++;
-        }
 
         // Things get progressively harder, but not harder than
         // the Fire-Air or Ice-Earth level.
@@ -297,7 +294,7 @@ static int exercise2( int exsk )
     }
 
     int fraction = 0;
-    int spending_limit = (you.exp_available < MAX_SPENDING_LIMIT) 
+    int spending_limit = (you.exp_available < MAX_SPENDING_LIMIT)
                                     ? you.exp_available : MAX_SPENDING_LIMIT;
 
     // handle fractional learning
@@ -308,8 +305,8 @@ static int exercise2( int exsk )
         // Increasing the "deg"ree of exercise would make missile
         // weapons too easy earlier on, so instead we're giving them
         // a special case here.
-        if ((exsk != SK_DARTS && exsk != SK_BOWS && exsk != SK_CROSSBOWS)
-                                        || skill_change > you.exp_available)
+        if (exsk != SK_DARTS && exsk != SK_BOWS && exsk != SK_CROSSBOWS
+            || skill_change > you.exp_available)
         {
             fraction = (spending_limit * 10) / skill_change;
             skill_change = (skill_change * fraction) / 10;
@@ -382,10 +379,11 @@ static int exercise2( int exsk )
 
     you.total_skill_points += skill_inc;
     if (you.skill_cost_level < 27
-       && you.total_skill_points >= skill_cost_needed(you.skill_cost_level + 1))
+        && you.total_skill_points
+               >= skill_cost_needed(you.skill_cost_level + 1))
     {
         you.skill_cost_level++;
-    }     
+    }
 
     if (you.exp_available < 0)
         you.exp_available = 0;
@@ -394,21 +392,21 @@ static int exercise2( int exsk )
 
 /*
     New (LH): debugging bit: when you exercise a skill, displays the skill
-    exercised and how much you spent on it. Too irritating to be a regular 
+    exercised and how much you spent on it. Too irritating to be a regular
     WIZARD feature.
 
 
 #if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "Exercised %s * %d for %d xp.", 
+    mprf( MSGCH_DIAGNOSTICS, "Exercised %s * %d for %d xp.",
           skill_name(exsk), skill_inc, skill_change );
 #endif
 */
 
     if (you.skill_points[exsk] >
-        (skill_exp_needed(you.skills[exsk] + 2) 
-         * species_skills(exsk, you.species) / 100))
+           (skill_exp_needed(you.skills[exsk] + 2)
+            * species_skills(exsk, you.species) / 100))
     {
-        
+
         you.skills[exsk]++;
         take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
 
@@ -430,7 +428,7 @@ static int exercise2( int exsk )
 
         learned_something_new(TUT_SKILL_RAISE);
 
-        // Recalculate this skill's order for tie breaking skills 
+        // Recalculate this skill's order for tie breaking skills
         // at its new level.   See skills2.cc::init_skill_order()
         // for more details.  -- bwr
         you.skill_order[exsk] = 0;
@@ -447,35 +445,37 @@ static int exercise2( int exsk )
             calc_hp();
 
         if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
-        {
             calc_mp();
-        }
 
         if (exsk == SK_DODGING || exsk == SK_ARMOUR)
             you.redraw_evasion = 1;
 
-        if (exsk == SK_ARMOUR || exsk == SK_SHIELDS 
-                || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
-                || you.duration[ DUR_TRANSFORMATION ] > 0)
+        if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
+            || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
+            || you.duration[ DUR_TRANSFORMATION ] > 0)
         {
             you.redraw_armour_class = true;
         }
 
-        const unsigned char best = best_skill( SK_FIGHTING, 
+        const unsigned char best = best_skill( SK_FIGHTING,
                                                (NUM_SKILLS - 1), 99 );
 
-        const unsigned char best_spell = best_skill( SK_SPELLCASTING, 
+        const unsigned char best_spell = best_skill( SK_SPELLCASTING,
                                                      SK_POISON_MAGIC, 99 );
 
-        if ((exsk == SK_SPELLCASTING) 
-                && (you.skills[exsk] == 1 && best_spell == SK_SPELLCASTING))
+        if (exsk == SK_SPELLCASTING
+            && you.skills[exsk] == 1 && best_spell == SK_SPELLCASTING)
         {
             mpr("You're starting to get the hang of this magic thing.");
         }
 
         if (best != old_best_skill || old_best_skill == exsk)
-        {
             redraw_skill( you.your_name, player_title() );
+
+        if (you.equip[EQ_WEAPON] != -1
+            && item_is_staff( you.inv[you.equip[EQ_WEAPON]] ))
+        {
+            maybe_identify_staff(you.inv[you.equip[EQ_WEAPON]]);
         }
     }
     return (skill_inc);
