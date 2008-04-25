@@ -1597,76 +1597,6 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     return (amusement);
 }
 
-static bool is_good_mutation( mutation_type which_mutation )
-{
-    switch (which_mutation)
-    {
-    case MUT_TOUGH_SKIN:
-    case MUT_STRONG:
-    case MUT_CLEVER:
-    case MUT_AGILE:
-    case MUT_GREEN_SCALES:
-    case MUT_GREY_SCALES:
-    case MUT_REPULSION_FIELD:
-    case MUT_POISON_RESISTANCE:
-    case MUT_HEAT_RESISTANCE:
-    case MUT_COLD_RESISTANCE:
-    case MUT_SHOCK_RESISTANCE:
-    case MUT_REGENERATION:
-    case MUT_SLOW_METABOLISM:
-    case MUT_TELEPORT_CONTROL:
-    case MUT_MAGIC_RESISTANCE:
-    case MUT_FAST:
-    case MUT_ACUTE_VISION:
-    case MUT_TELEPORT_AT_WILL:
-    case MUT_SPIT_POISON:
-    case MUT_MAPPING:
-    case MUT_BREATHE_FLAMES:
-    case MUT_BLINK:
-    case MUT_CLARITY:
-    case MUT_MUTATION_RESISTANCE:
-    case MUT_ROBUST:
-    case MUT_TORMENT_RESISTANCE:
-    case MUT_NEGATIVE_ENERGY_RESISTANCE:
-    case MUT_SUMMON_MINOR_DEMONS:
-    case MUT_SUMMON_DEMONS:
-    case MUT_HURL_HELLFIRE:
-    case MUT_CALL_TORMENT:
-    case MUT_RAISE_DEAD:
-    case MUT_CONTROL_DEMONS:
-    case MUT_PANDEMONIUM:
-    case MUT_DEATH_STRENGTH:
-    case MUT_CHANNEL_HELL:
-    case MUT_DRAIN_LIFE:
-    case MUT_THROW_FLAMES:
-    case MUT_THROW_FROST:
-    case MUT_SMITE:
-    case MUT_FANGS:
-    case MUT_BREATHE_POISON:
-    case MUT_STINGER:
-    case MUT_BIG_WINGS:
-    case MUT_SAPROVOROUS:
-    case MUT_SHAGGY_FUR:
-    case MUT_HIGH_MAGIC:
-    case MUT_RED_SCALES:
-    case MUT_NACREOUS_SCALES:
-    case MUT_BLACK2_SCALES:
-    case MUT_WHITE_SCALES:
-    case MUT_BROWN_SCALES:
-    case MUT_BLUE_SCALES:
-    case MUT_PURPLE_SCALES:
-    case MUT_SPECKLED_SCALES:
-    case MUT_ORANGE_SCALES:
-    case MUT_INDIGO_SCALES:
-    case MUT_IRIDESCENT_SCALES:
-    case MUT_PATTERNED_SCALES:
-        return true;
-
-    default:
-        return false;
-    }
-}
-
 static bool accept_mutation( mutation_type mutat, bool ignore_rarity = false )
 {
     if ( you.mutation[mutat] >= mutation_defs[mutat].levels )
@@ -2272,12 +2202,13 @@ int count_mutations()
     return count;
 }
 
-bool delete_mutation(mutation_type which_mutation, bool force, bool good)
+bool delete_mutation(mutation_type which_mutation, bool prefer_good,
+                     bool force_mutation)
 {
     mutation_type mutat = which_mutation;
     int i;
 
-    if (!force
+    if (!force_mutation
         && ( player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
              && (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                  || coinflip()) ) )
@@ -2301,7 +2232,7 @@ bool delete_mutation(mutation_type which_mutation, bool force, bool good)
                     && mutat != MUT_CLUMSY))
                || random2(10) >= mutation_defs[mutat].rarity
                || you.demon_pow[mutat] >= you.mutation[mutat]
-               || good && (!is_good_mutation(mutat) || one_chance_in(10)));
+               || prefer_good && (!mutation_defs[i].bad || one_chance_in(10)));
     }
 
     if (you.mutation[mutat] == 0)
