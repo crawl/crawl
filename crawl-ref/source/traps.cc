@@ -1012,7 +1012,9 @@ level_id generic_shaft_dest(level_pos lpos)
     // Only shafts on the level immediately above a dangerous branch
     // bottom will take you to that dangerous bottom, and shafts can't
     // be created during level generation time.
-    if (branch.dangerous_bottom_level
+    // Include level 27 of the main dungeon here, but don't restrict
+    // shaft creation (so don't set branch.dangerous_bottom_level).
+    if ((branch.dangerous_bottom_level || lid.branch == BRANCH_MAIN_DUNGEON)
         && lid.depth == branch.depth
         && (branch.depth - curr_depth) > 1)
     {
