@@ -2720,7 +2720,7 @@ void demonspawn(void)
                 }
 
                 if (levels)
-                    howm = MINIMUM( 3 - scale_levels, levels + bonus );
+                    howm = std::min(3 - scale_levels, levels + bonus);
             }
 
             if (one_chance_in(25))
