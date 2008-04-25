@@ -1542,7 +1542,6 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
 
     switch (which_mutation)
     {
-    case MUT_TOUGH_SKIN:
     case MUT_STRONG:
     case MUT_CLEVER:
     case MUT_AGILE:
