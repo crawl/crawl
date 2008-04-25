@@ -51,6 +51,7 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
+#include "shopping.h" // for item values
 #include "spells3.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -1955,7 +1956,7 @@ int mons_base_damage_brand(const monsters *m)
     return (SPWPN_NORMAL);
 }
 
-int mons_size(const monsters *m)
+size_type mons_size(const monsters *m)
 {
     return m->body_size();
 }
@@ -1968,7 +1969,7 @@ bool mons_friendly(const monsters *m)
 bool mons_neutral(const monsters *m)
 {
     return (m->attitude == ATT_NEUTRAL || m->has_ench(ENCH_NEUTRAL)
-        || m->attitude == ATT_GOOD_NEUTRAL);
+            || m->attitude == ATT_GOOD_NEUTRAL);
 }
 
 bool mons_good_neutral(const monsters *m)
@@ -2046,7 +2047,7 @@ bool mons_looks_distracted(const monsters *m)
 {
     return (mons_behaviour_perceptible(m)
             && !mons_friendly(m)
-            && ((m->foe != MHITYOU && !mons_is_batty(m) && !mons_neutral(m))
+            && (m->foe != MHITYOU && !mons_is_batty(m) && !mons_neutral(m)
                 || mons_is_confused(m)
                 || mons_is_fleeing(m)
                 || mons_is_caught(m)));
@@ -3240,6 +3241,9 @@ bool monsters::drop_item(int eslot, int near)
         return (false);
     }
 
+    if (mons_friendly(this))
+        mitm[index].flags |= ISFLAG_DROPPED_BY_ALLY;
+
     if (need_message(near))
         mprf("%s drops %s.", name(DESC_CAP_THE).c_str(), iname.c_str());
 
@@ -3386,11 +3390,22 @@ bool monsters::wants_weapon(const item_def &weap) const
     return (true);
 }
 
+static bool _item_race_matches_monster(const item_def &item, monsters *mons)
+{
+    return (get_equip_race(item) == ISFLAG_ELVEN
+                && mons_genus(mons->type) == MONS_ELF
+            || get_equip_race(item) == ISFLAG_ORCISH
+                && mons_genus(mons->type) == MONS_ORC);
+}
+
+// FIXME: Need monster body-size handling.
 bool monsters::wants_armour(const item_def &item) const
 {
-    // FIXME: Need monster body-size handling. For now, never attempt to
-    // change armour.
-    return (!mslot_item(MSLOT_ARMOUR));
+    // Returns whether this armour is the monster's size.
+    return (check_armour_size(item, mons_size(this)));
+
+// For now, never attempt to change armour.
+//    return (!mslot_item(MSLOT_ARMOUR));
 }
 
 static mon_inv_type _equip_slot_to_mslot(equipment_type eq)
@@ -3436,7 +3451,6 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
         return false;
 
     // XXX: Monsters can only equip body armour and shields (as of 0.4).
-    // They can still be forced to wear stuff - this is needed for bardings.
     if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
         return (false);
 
@@ -3444,13 +3458,37 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     if (mslot == NUM_MONSTER_SLOTS)
         return false;
 
-    // XXX: Very simplistic armour evaluation for the moment.
-    // Because of the way wants_armour() is handled above, this armour exchange
-    // currently only takes place if forced by wizard mode.
+    int newAC = item.armour_rating();
+    // no armour yet -> get this one
+    if (!mslot_item(mslot) && newAC > 0)
+        return pickup(item, mslot, near);
+
+    // XXX: Very simplistic armour evaluation (AC comparison) for the moment.
+    // This should take resistances into account.
     if (const item_def *existing_armour = slot_item(eq))
     {
-        if (!force && existing_armour->armour_rating() >= item.armour_rating())
-            return (false);
+        if (!force)
+        {
+            int oldAC = existing_armour->armour_rating();
+            if (oldAC > newAC)
+                return (false);
+
+            if (oldAC == newAC)
+            {
+                // compare item value (uses resistances and such)
+                int oldval = item_value(*existing_armour);
+                int newval = item_value(item);
+
+                // vastly prefer matching racial type
+                if (_item_race_matches_monster(*existing_armour, this))
+                    oldval *= 2;
+                if (_item_race_matches_monster(item, this))
+                    newval *= 2;
+
+                if (oldval >= newval)
+                    return (false);
+            }
+        }
 
         if (!drop_item(mslot, near))
             return (false);
@@ -3623,9 +3661,16 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
             return false;
         }
 
+        // Friendlies may only pick up stuff dropped by (other) allies.
+        if (mons_friendly(this)
+            && !testbits(item.flags, ISFLAG_DROPPED_BY_ALLY))
+        {
+            return false;
+        }
+
         // These are not important enough for pickup when seeking, fleeing etc.
         const int itype = item.base_type;
-        if (!wandering
+        if (!wandering && (!mons_friendly(this) || foe != MHITYOU)
             && (itype == OBJ_ARMOUR || itype == OBJ_CORPSES
                 || itype == OBJ_MISCELLANY || itype == OBJ_GOLD))
         {

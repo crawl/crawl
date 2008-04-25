@@ -2112,7 +2112,7 @@ maim
 related beogh orc
 
 # hostile orcs shouldn't be too talkative
-w:70
+w:80
 __NONE
 
 w:30
@@ -2174,7 +2174,7 @@ VISUAL:@The_monster@ stares at you quizzically.
 friendly related beogh orc
 
 # As they'll be constantly around you, don't let them talk too much.
-w:30
+w:50
 __NONE
 
 # general friendly speech

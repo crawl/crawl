@@ -293,11 +293,13 @@ static void _monster_drop_ething(monsters *monster,
             }
             else
             {
+                if (mons_friendly(monster) && is_valid_item(mitm[item]))
+                    mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
+
                 move_item_to_grid( &item, monster->x, monster->y );
+
                 if (mark_item_origins && is_valid_item(mitm[item]))
-                {
                     origin_set_monster(mitm[item], monster);
-                }
             }
 
             monster->inv[i] = NON_ITEM;
@@ -716,12 +718,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     update_beholders(monster, true);
 
     const int monster_killed = monster_index(monster);
-    bool death_message
-        = !silent && mons_near(monster) && player_monster_visible(monster);
-    bool in_transit = false;
-    const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
-    bool drop_items = !hard_reset;
-    const bool gives_xp = !monster->has_ench(ENCH_ABJ);
+    const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
+    const bool gives_xp      = !monster->has_ench(ENCH_ABJ);
+
+          bool death_message = !silent && mons_near(monster)
+                                  && player_monster_visible(monster);
+          bool in_transit    = false;
+          bool drop_items    = !hard_reset;
 
 #ifdef DGL_MILESTONES
     _check_kill_milestone(monster, killer, i);
@@ -3664,8 +3667,8 @@ static bool _handle_wand(monsters *monster, bolt &beem)
             return (false);
 
         // set up the beam
-        int power    = 30 + monster->hit_dice;
-        bolt theBeam = mons_spells(mzap, power);
+        int power         = 30 + monster->hit_dice;
+        bolt theBeam      = mons_spells(mzap, power);
 
         beem.name         = theBeam.name;
         beem.beam_source  = monster_index(monster);
@@ -4493,8 +4496,10 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     // completely useless, so bail out
     if (mitm[mon_item].base_type == OBJ_MISSILES
         && mitm[mon_item].sub_type == MI_THROWING_NET
-        && (beem.target_x == you.x_pos && beem.target_y == you.y_pos
-        && you.caught()))
+        && ( beem.target_x == you.x_pos && beem.target_y == you.y_pos
+                && you.caught()
+             || mgrd[beem.target_x][beem.target_y] != NON_MONSTER
+                && mons_is_caught(&menv[mgrd[beem.target_x][beem.target_y]]) ))
     {
         return (false);
     }
@@ -4813,8 +4818,8 @@ static void _handle_monster_move(int i, monsters *monster)
                 || monster->type == MONS_NECROPHAGE
                 || monster->type == MONS_GHOUL))
         {
-            // keep permanent friendlies from picking up stuff
-            if (monster->attitude != ATT_FRIENDLY)
+            // keep neutral and charmed monsters from picking up stuff
+            if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM))
             {
                 if (_handle_pickup(monster))
                 {
@@ -5165,6 +5170,10 @@ static bool _handle_pickup(monsters *monster)
 
     if (mons_itemuse(monster->type) == MONUSE_EATS_ITEMS)
     {
+        // Friendly jellies won't eat.
+        if (monster->attitude != ATT_HOSTILE)
+            return (false);
+
         int  midx       = monster_index(monster);
         int  hps_gained = 0;
         int  max_eat    = roll_dice( 1, 10 );

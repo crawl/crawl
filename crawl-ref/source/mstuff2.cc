@@ -48,7 +48,7 @@
 #include "traps.h"
 #include "view.h"
 
-static int monster_abjuration(const monsters *mons, bool test);
+static int _monster_abjuration(const monsters *mons, bool test);
 
 // XXX: must fix species abils to not use duration 15
 // -- ummm ... who wrote this? {dlb}
@@ -433,19 +433,19 @@ void mons_trap(struct monsters *monster)
     return;
 }                               // end mons_trap()
 
-static bool mons_abjured(monsters *monster, bool nearby)
+static bool _mons_abjured(monsters *monster, bool nearby)
 {
-    if (nearby && monster_abjuration(monster, true) > 0
+    if (nearby && _monster_abjuration(monster, true) > 0
         && coinflip())
     {
-        monster_abjuration(monster, false);
+        _monster_abjuration(monster, false);
         return (true);
     }
 
     return (false);
 }
 
-static monster_type pick_random_wraith()
+static monster_type _pick_random_wraith()
 {
     static monster_type wraiths[] =
     {
@@ -455,13 +455,13 @@ static monster_type pick_random_wraith()
     return wraiths[ random2(sizeof(wraiths) / sizeof(*wraiths)) ];
 }
 
-static monster_type pick_horrible_thing()
+static monster_type _pick_horrible_thing()
 {
     return (one_chance_in(4)? MONS_TENTACLED_MONSTROSITY
             : MONS_ABOMINATION_LARGE);
 }
 
-static monster_type pick_undead_summon()
+static monster_type _pick_undead_summon()
 {
     int summonik = MONS_PROGRAM_BUG;
 
@@ -475,11 +475,11 @@ static monster_type pick_undead_summon()
     return static_cast<monster_type>(summonik);
 }
 
-static void do_high_level_summon(monsters *monster, bool monsterNearby,
-                                 monster_type (*mpicker)(),
-                                 int nsummons)
+static void _do_high_level_summon(monsters *monster, bool monsterNearby,
+                                  monster_type (*mpicker)(),
+                                  int nsummons)
 {
-    if (mons_abjured(monster, monsterNearby))
+    if (_mons_abjured(monster, monsterNearby))
         return;
 
     const int duration  = std::min(2 + monster->hit_dice / 5, 6);
@@ -584,7 +584,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
-        if (mons_abjured(monster, monsterNearby))
+        if (_mons_abjured(monster, monsterNearby))
             return;
 
         sumcount2 = 1 + random2(4) + random2( monster->hit_dice / 7 + 1 );
@@ -610,7 +610,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     case SPELL_SUMMON_DEMON: // class 2-4 demons
     case SPELL_SUMMON_UGLY_THING:
-        if (mons_abjured(monster, monsterNearby))
+        if (_mons_abjured(monster, monsterNearby))
             return;
 
         sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 10 + 1 );
@@ -681,7 +681,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.
-        if (mons_abjured(monster, monsterNearby))
+        if (_mons_abjured(monster, monsterNearby))
             return;
 
         sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 4 + 1 );
@@ -698,19 +698,19 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_SUMMON_WRAITHS:
-        do_high_level_summon(monster, monsterNearby, pick_random_wraith,
-                             random_range(3, 6));
+        _do_high_level_summon(monster, monsterNearby, _pick_random_wraith,
+                              random_range(3, 6));
         return;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
-        do_high_level_summon(monster, monsterNearby, pick_horrible_thing,
-                             random_range(3, 5));
+        _do_high_level_summon(monster, monsterNearby, _pick_horrible_thing,
+                              random_range(3, 5));
         return;
 
     case SPELL_SUMMON_UNDEAD:      // summon undead around player
-        do_high_level_summon(monster, monsterNearby, pick_undead_summon,
-                             2 + random2(2)
-                             + random2( monster->hit_dice / 4 + 1 ));
+        _do_high_level_summon(monster, monsterNearby, _pick_undead_summon,
+                              2 + random2(2)
+                              + random2( monster->hit_dice / 4 + 1 ));
         return;
 
     case SPELL_SYMBOL_OF_TORMENT:
@@ -723,7 +723,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_SUMMON_GREATER_DEMON:
-        if (mons_abjured(monster, monsterNearby))
+        if (_mons_abjured(monster, monsterNearby))
             return;
 
         sumcount2 = 1 + random2( monster->hit_dice / 10 + 1 );
@@ -739,7 +739,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     // Journey -- Added in Summon Lizards and Draconian
     case SPELL_SUMMON_DRAKES:
-        if (mons_abjured(monster, monsterNearby))
+        if (_mons_abjured(monster, monsterNearby))
             return;
 
         sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
@@ -1154,17 +1154,17 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     // XXX: ugly hack, but avoids adding dynamic allocation to this code
     char throw_buff[ ITEMNAME_SIZE ];
 
-    bool returning = (get_weapon_brand(mitm[hand_used]) == SPWPN_RETURNING ||
-                      get_ammo_brand(mitm[hand_used]) == SPMSL_RETURNING);
+    bool returning = (get_weapon_brand(mitm[hand_used]) == SPWPN_RETURNING
+                      || get_ammo_brand(mitm[hand_used]) == SPMSL_RETURNING);
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
     int lnchHitBonus = 0, lnchDamBonus = 0;     // special add from launcher
-    int exHitBonus = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
-    int lnchBaseDam = 0;
+    int exHitBonus   = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
+    int lnchBaseDam  = 0;
 
-    int hitMult = 0;
-    int damMult = 0;
+    int hitMult  = 0;
+    int damMult  = 0;
     int diceMult = 100;
 
     // some initial convenience & initializations
@@ -1182,14 +1182,15 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[hand_used];
     item.quantity = 1;
+    if (mons_friendly(monster))
+        item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
-    pbolt.range = 9;
+    pbolt.range       = 9;
     pbolt.beam_source = monster_index(monster);
-
-    pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-    pbolt.colour = item.colour;
-    pbolt.flavour = BEAM_MISSILE;
-    pbolt.thrower = KILL_MON_MISSILE;
+    pbolt.type        = dchar_glyph(DCHAR_FIRED_MISSILE);
+    pbolt.colour      = item.colour;
+    pbolt.flavour     = BEAM_MISSILE;
+    pbolt.thrower     = KILL_MON_MISSILE;
     pbolt.aux_source.clear();
 
     const launch_retval projected =
@@ -1245,7 +1246,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             if (wepType == MI_DART || wepType == MI_STONE
                 || wepType == MI_SLING_BULLET)
             {
-                baseDam      = div_rand_round(baseDam, 2);
+                baseDam = div_rand_round(baseDam, 2);
             }
         }
 
@@ -1341,39 +1342,38 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             diceMult = diceMult * 130 / 100;
 
         // WEAPON or AMMO of FIRE
-        if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
-            && bow_brand != SPWPN_FROST && ammo_brand != SPMSL_ICE)
+        if (bow_brand == SPWPN_FLAME && ammo_brand != SPMSL_ICE
+            || ammo_brand == SPMSL_FLAME && bow_brand != SPWPN_FROST)
         {
             baseHit += 2;
             exDamBonus += 6;
 
-            pbolt.flavour = BEAM_FIRE;
-            pbolt.name = "bolt of ";
+            pbolt.flavour  = BEAM_FIRE;
+            pbolt.name     = "bolt of ";
 
             if (poison)
                 pbolt.name += "poison ";
 
-            pbolt.name += "flame";
-            pbolt.colour = RED;
-            pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
+            pbolt.name     += "flame";
+            pbolt.colour    = RED;
+            pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
         }
-
         // WEAPON or AMMO of FROST
-        if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
-            && bow_brand != SPWPN_FLAME && ammo_brand != SPMSL_FLAME)
+        else if (bow_brand == SPWPN_FROST && ammo_brand != SPMSL_FLAME
+                 || ammo_brand == SPMSL_ICE && bow_brand != SPWPN_FLAME)
         {
             baseHit += 2;
             exDamBonus += 6;
 
-            pbolt.flavour = BEAM_COLD;
-            pbolt.name = "bolt of ";
+            pbolt.flavour   = BEAM_COLD;
+            pbolt.name      = "bolt of ";
 
             if (poison)
                 pbolt.name += "poison ";
 
-            pbolt.name += "frost";
-            pbolt.colour = WHITE;
-            pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
+            pbolt.name     += "frost";
+            pbolt.colour    = WHITE;
+            pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
         }
 
         // Note: we already have throw_energy taken off.  -- bwr
@@ -1381,17 +1381,23 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         if (lnchType == WPN_CROSSBOW)
         {
             if (bow_brand == SPWPN_SPEED)
+            {
                 // Speed crossbows take 50% less time to use than
                 // ordinary crossbows.
                 speed_delta = div_rand_round(throw_energy * 2, 5);
+            }
             else
+            {
                 // Ordinary crossbows take 20% more time to use
                 // than ordinary bows.
                 speed_delta = -div_rand_round(throw_energy, 5);
+            }
         }
         else if (bow_brand == SPWPN_SPEED)
+        {
             // Speed bows take 50% time to use than ordinary bows.
             speed_delta = div_rand_round(throw_energy, 2);
+        }
 
         monster->speed_increment += speed_delta;
     }
@@ -1510,10 +1516,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         if (!is_artefact(item))
             set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
     }
-
-    if ( !really_returns )
-        if (dec_mitm_item_quantity( hand_used, 1 ))
-            monster->inv[returning ? MSLOT_WEAPON : MSLOT_MISSILE] = NON_ITEM;
+    else if (dec_mitm_item_quantity( hand_used, 1 ))
+        monster->inv[returning ? MSLOT_WEAPON : MSLOT_MISSILE] = NON_ITEM;
 
     return (true);
 }                               // end mons_throw()
@@ -1523,8 +1527,8 @@ bool mons_thrown_object_destroyed( item_def *item, int x, int y,
 {
     ASSERT( item != NULL );
 
-    bool destroyed = ((item->base_type == OBJ_MISSILES &&
-                       item->sub_type != MI_THROWING_NET) && coinflip());
+    bool destroyed = (item->base_type == OBJ_MISSILES
+                      && item->sub_type != MI_THROWING_NET && coinflip());
     bool hostile_grid = grid_destroys_items(grd[x][y]);
 
     // Non-returning items thrown into item-destroying grids are always
@@ -1552,13 +1556,13 @@ void spore_goes_pop(struct monsters *monster)
     if (monster == NULL)
         return;
 
-    beam.is_tracer = false;
+    beam.is_tracer    = false;
     beam.is_explosion = true;
-    beam.beam_source = monster_index(monster);
-    beam.type = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.target_x = monster->x;
-    beam.target_y = monster->y;
-    beam.thrower = KILL_MON;    // someone else's explosion
+    beam.beam_source  = monster_index(monster);
+    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.target_x     = monster->x;
+    beam.target_y     = monster->y;
+    beam.thrower      = KILL_MON;    // someone else's explosion
     beam.aux_source.clear();
 
     const char* msg = NULL;
@@ -1566,18 +1570,18 @@ void spore_goes_pop(struct monsters *monster)
     if (type == MONS_GIANT_SPORE)
     {
         beam.flavour = BEAM_SPORE;
-        beam.name = "explosion of spores";
-        beam.colour = LIGHTGREY;
-        beam.damage = dice_def( 3, 15 );
+        beam.name    = "explosion of spores";
+        beam.colour  = LIGHTGREY;
+        beam.damage  = dice_def( 3, 15 );
         beam.ex_size = 2;
         msg = "The giant spore explodes!";
     }
     else if (type == MONS_BALL_LIGHTNING)
     {
         beam.flavour = BEAM_ELECTRICITY;
-        beam.name = "blast of lightning";
-        beam.colour = LIGHTCYAN;
-        beam.damage = dice_def( 3, 20 );
+        beam.name    = "blast of lightning";
+        beam.colour  = LIGHTCYAN;
+        beam.damage  = dice_def( 3, 20 );
         beam.ex_size = coinflip() ? 3 : 2;
         msg = "The ball lightning explodes!";
     }
@@ -1606,599 +1610,591 @@ bolt mons_spells( int spell_cast, int power )
 
     bolt beam;
 
-    beam.name = "****";         // initialize to some bogus values so we can catch problems
-    beam.colour = 1000;
-    beam.range = beam.rangeMax = 8;
-    beam.hit = -1;
-    beam.damage = dice_def( 1, 0 );
-    beam.ench_power = -1;
-    beam.type = 0;
-    beam.flavour = BEAM_NONE;
-    beam.thrower = KILL_MISC;
-    beam.is_beam = false;
+    // Initialize to some bogus values so we can catch problems.
+    beam.name         = "****";
+    beam.colour       = 1000;
+    beam.range        = beam.rangeMax = 8;
+    beam.hit          = -1;
+    beam.damage       = dice_def( 1, 0 );
+    beam.ench_power   = -1;
+    beam.type         = 0;
+    beam.flavour      = BEAM_NONE;
+    beam.thrower      = KILL_MISC;
+    beam.is_beam      = false;
     beam.is_explosion = false;
 
     switch (spell_cast)
     {
     case SPELL_MAGIC_DART:
-        beam.colour = LIGHTMAGENTA;     //inv_colour [throw_2];
-        beam.name = "magic dart";       // inv_name [throw_2]);
-        beam.range = 6;
+        beam.colour   = LIGHTMAGENTA;     // inv_colour [throw_2];
+        beam.name     = "magic dart";     // inv_name [throw_2]);
+        beam.range    = 6;
         beam.rangeMax = 10;
-        beam.damage = dice_def( 3, 4 + (power / 100) );
-        beam.hit = AUTOMATIC_HIT;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_MMISSILE;
-        beam.is_beam = false;
+        beam.damage   = dice_def( 3, 4 + (power / 100) );
+        beam.hit      = AUTOMATIC_HIT;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_MMISSILE;
+        beam.is_beam  = false;
         break;
 
     case SPELL_THROW_FLAME:
-        beam.colour = RED;
-        beam.name = "puff of flame";
-        beam.range = 6;
+        beam.colour   = RED;
+        beam.name     = "puff of flame";
+        beam.range    = 6;
         beam.rangeMax = 10;
 
         // should this be the same as magic missile?
         // No... magic missile is special in that it has a really
         // high to-hit value, so these should do more damage -- bwr
-        beam.damage = dice_def( 3, 5 + (power / 40) );
+        beam.damage   = dice_def( 3, 5 + (power / 40) );
 
-        beam.hit = 25 + power / 40;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_FIRE;
-        beam.is_beam = false;
+        beam.hit      = 25 + power / 40;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_FIRE;
+        beam.is_beam  = false;
         break;
 
     case SPELL_THROW_FROST:
-        beam.colour = WHITE;
-        beam.name = "puff of frost";
-        beam.range = 6;
+        beam.colour   = WHITE;
+        beam.name     = "puff of frost";
+        beam.range    = 6;
         beam.rangeMax = 10;
 
         // should this be the same as magic missile?
         // see SPELL_FLAME -- bwr
-        beam.damage = dice_def( 3, 5 + (power / 40) );
+        beam.damage   = dice_def( 3, 5 + (power / 40) );
 
-        beam.hit = 25 + power / 40;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_COLD;
-        beam.is_beam = false;
+        beam.hit      = 25 + power / 40;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_COLD;
+        beam.is_beam  = false;
         break;
 
     case SPELL_DISPEL_UNDEAD:
-        beam.name = "0";
-        beam.flavour = BEAM_DISPEL_UNDEAD;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.range = 7 + random2(8);
+        beam.name     = "0";
+        beam.flavour  = BEAM_DISPEL_UNDEAD;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.range    = 7 + random2(8);
         beam.rangeMax = 9;
-        beam.damage = dice_def( 3, std::min(6 + power / 7, 40) );
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, std::min(6 + power / 7, 40) );
+        beam.is_beam  = true;
         break;
 
     case SPELL_PARALYSE:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_PARALYSIS;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_PARALYSIS;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
         break;
 
     case SPELL_SLOW:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_SLOW;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_SLOW;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
         break;
 
     case SPELL_HASTE:              // (self)
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_HASTE;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_HASTE;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
         break;
 
     case SPELL_BACKLIGHT:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_BACKLIGHT;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_BACKLIGHT;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
         break;
 
     case SPELL_CONFUSE:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_CONFUSION;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_CONFUSION;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
         break;
 
     case SPELL_SLEEP:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_SLEEP;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_SLEEP;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
         break;
 
     case SPELL_POLYMORPH_OTHER:
-        beam.name = "0";
-        beam.range = 6;
+        beam.name     = "0";
+        beam.range    = 6;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_POLYMORPH;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_POLYMORPH;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
         break;
 
     case SPELL_VENOM_BOLT:
-        beam.name = "bolt of poison";
-        beam.range = 7;
+        beam.name     = "bolt of poison";
+        beam.range    = 7;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 3, 6 + power / 13 );
-        beam.colour = LIGHTGREEN;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_POISON;
-        beam.hit = 19 + power / 20;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 6 + power / 13 );
+        beam.colour   = LIGHTGREEN;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_POISON;
+        beam.hit      = 19 + power / 20;
+        beam.is_beam  = true;
         break;
 
     case SPELL_POISON_ARROW:
-        beam.name = "poison arrow";
-        beam.damage = dice_def( 3, 7 + power / 12 );
-        beam.colour = LIGHTGREEN;
-        beam.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_POISON_ARROW;
-        beam.hit = 20 + power / 25;
-        beam.range = beam.rangeMax = 8;
+        beam.name     = "poison arrow";
+        beam.damage   = dice_def( 3, 7 + power / 12 );
+        beam.colour   = LIGHTGREEN;
+        beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_POISON_ARROW;
+        beam.hit      = 20 + power / 25;
+        beam.range    = beam.rangeMax = 8;
         break;
 
     case SPELL_BOLT_OF_MAGMA:
-        beam.name = "bolt of magma";
-        beam.range = 5;
+        beam.name     = "bolt of magma";
+        beam.range    = 5;
         beam.rangeMax = 13;
-        beam.damage = dice_def( 3, 8 + power / 11 );
-        beam.colour = RED;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_LAVA;
-        beam.hit = 17 + power / 25;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 8 + power / 11 );
+        beam.colour   = RED;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_LAVA;
+        beam.hit      = 17 + power / 25;
+        beam.is_beam  = true;
         break;
 
     case SPELL_BOLT_OF_FIRE:
-        beam.name = "bolt of fire";
-        beam.range = 5;
+        beam.name     = "bolt of fire";
+        beam.range    = 5;
         beam.rangeMax = 13;
-        beam.damage = dice_def( 3, 8 + power / 11 );
-        beam.colour = RED;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_FIRE;
-        beam.hit = 17 + power / 25;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 8 + power / 11 );
+        beam.colour   = RED;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_FIRE;
+        beam.hit      = 17 + power / 25;
+        beam.is_beam  = true;
         break;
 
     case SPELL_ICE_BOLT:
-        beam.name = "bolt of ice";
-        beam.range = 5;
+        beam.name     = "bolt of ice";
+        beam.range    = 5;
         beam.rangeMax = 13;
-        beam.damage = dice_def( 3, 8 + power / 11 );
-        beam.colour = WHITE;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_ICE;
-        beam.hit     = 17 + power / 25;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 8 + power / 11 );
+        beam.colour   = WHITE;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_ICE;
+        beam.hit      = 17 + power / 25;
+        beam.is_beam  = true;
         break;
 
     case SPELL_BOLT_OF_COLD:
-        beam.name = "bolt of cold";
-        beam.range = 5;
+        beam.name     = "bolt of cold";
+        beam.range    = 5;
         beam.rangeMax = 13;
-        beam.damage = dice_def( 3, 8 + power / 11 );
-        beam.colour = WHITE;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_COLD;
-        beam.hit = 17 + power / 25;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 8 + power / 11 );
+        beam.colour   = WHITE;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_COLD;
+        beam.hit      = 17 + power / 25;
+        beam.is_beam  = true;
         break;
 
     case SPELL_FREEZING_CLOUD:
-        beam.name = "freezing blast";
-        beam.range = 5;
+        beam.name     = "freezing blast";
+        beam.range    = 5;
         beam.rangeMax = 12;
-        beam.damage = dice_def( 2, 9 + power / 11 );
-        beam.colour = WHITE;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_COLD;
-        beam.hit = 17 + power / 25;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 2, 9 + power / 11 );
+        beam.colour   = WHITE;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_COLD;
+        beam.hit      = 17 + power / 25;
+        beam.is_beam  = true;
         beam.is_big_cloud = true;
         break;
 
     case SPELL_SHOCK:
-        beam.name = "zap";
-        beam.range = 8;
+        beam.name     = "zap";
+        beam.range    = 8;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 1, 8 + (power / 20) );
-        beam.colour = LIGHTCYAN;
-        beam.type   = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_ELECTRICITY;
-        beam.hit = 17 + power / 20;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 1, 8 + (power / 20) );
+        beam.colour   = LIGHTCYAN;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_ELECTRICITY;
+        beam.hit      = 17 + power / 20;
+        beam.is_beam  = true;
         break;
 
     case SPELL_LIGHTNING_BOLT:
-        beam.name = "bolt of lightning";
-        beam.range = 7;
+        beam.name     = "bolt of lightning";
+        beam.range    = 7;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 3, 10 + power / 17 );
-        beam.colour = LIGHTCYAN;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_ELECTRICITY;
-        beam.hit = 16 + power / 40;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 10 + power / 17 );
+        beam.colour   = LIGHTCYAN;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_ELECTRICITY;
+        beam.hit      = 16 + power / 40;
+        beam.is_beam  = true;
         break;
 
     case SPELL_INVISIBILITY:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_INVISIBILITY;
-        beam.thrower = KILL_MON;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_INVISIBILITY;
+        beam.thrower  = KILL_MON;
+        beam.is_beam  = true;
         break;
 
     case SPELL_FIREBALL:
-        beam.colour = RED;
-        beam.name = "fireball";
-        beam.range = 6;
+        beam.colour   = RED;
+        beam.name     = "fireball";
+        beam.range    = 6;
         beam.rangeMax = 10;
-        beam.damage = dice_def( 3, 7 + power / 10 );
-        beam.hit = 40;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_FIRE;  // why not BEAM_FIRE? {dlb}
-        beam.is_beam = false;
+        beam.damage   = dice_def( 3, 7 + power / 10 );
+        beam.hit      = 40;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_FIRE;  // why not BEAM_FIRE? {dlb}
+        beam.is_beam  = false;
         beam.is_explosion = true;
         break;
 
     case SPELL_LESSER_HEALING:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_HEALING;
-        beam.thrower = KILL_MON;
-        beam.hit = 25 + (power / 5);
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_HEALING;
+        beam.thrower  = KILL_MON;
+        beam.hit      = 25 + (power / 5);
+        beam.is_beam  = true;
         break;
 
     case SPELL_TELEPORT_SELF:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_TELEPORT;        // 6 is used by digging
-        beam.thrower = KILL_MON;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_TELEPORT;        // 6 is used by digging
+        beam.thrower  = KILL_MON;
+        beam.is_beam  = true;
         break;
 
     case SPELL_TELEPORT_OTHER:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_TELEPORT;        // 6 is used by digging
-        beam.thrower = KILL_MON;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_TELEPORT;        // 6 is used by digging
+        beam.thrower  = KILL_MON;
+        beam.is_beam  = true;
         break;
 
     case SPELL_BLINK:
-        beam.is_beam = false;
+        beam.is_beam  = false;
         break;
 
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:      // was splinters
-        beam.name = "crystal spear";
-        beam.range = 7;
+        beam.name     = "crystal spear";
+        beam.range    = 7;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 3, 16 + power / 10 );
-        beam.colour = WHITE;
-        beam.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_MMISSILE;
-        beam.hit = 22 + power / 20;
-        beam.is_beam = false;
+        beam.damage   = dice_def( 3, 16 + power / 10 );
+        beam.colour   = WHITE;
+        beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_MMISSILE;
+        beam.hit      = 22 + power / 20;
+        beam.is_beam  = false;
         break;
 
     case SPELL_DIG:
-        beam.name = "0";
-        beam.range = 3;
+        beam.name     = "0";
+        beam.range    = 3;
         beam.rangeMax = 7 + random2(power) / 10;
-        beam.type = 0;
-        beam.flavour = BEAM_DIGGING;
-        beam.thrower = KILL_MON;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_DIGGING;
+        beam.thrower  = KILL_MON;
+        beam.is_beam  = true;
         break;
 
     case SPELL_BOLT_OF_DRAINING:      // negative energy
-        beam.name = "bolt of negative energy";
-        beam.range = 7;
+        beam.name     = "bolt of negative energy";
+        beam.range    = 7;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 3, 6 + power / 13 );
-        beam.colour = DARKGREY;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_NEG;
-        beam.hit = 16 + power / 35;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 6 + power / 13 );
+        beam.colour   = DARKGREY;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_NEG;
+        beam.hit      = 16 + power / 35;
+        beam.is_beam  = true;
         break;
-
-    // 20, 21 are used
 
     case SPELL_ISKENDERUNS_MYSTIC_BLAST: // mystic blast
-        beam.colour = LIGHTMAGENTA;
-        beam.name = "orb of energy";
-        beam.range = 6;
+        beam.colour   = LIGHTMAGENTA;
+        beam.name     = "orb of energy";
+        beam.range    = 6;
         beam.rangeMax = 10;
-        beam.damage = dice_def( 3, 7 + (power / 14) );
-        beam.hit = 20 + (power / 20);
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_MMISSILE;
-        beam.is_beam = false;
+        beam.damage   = dice_def( 3, 7 + (power / 14) );
+        beam.hit      = 20 + (power / 20);
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_MMISSILE;
+        beam.is_beam  = false;
         break;
-
-    // 23 is brain feed
 
     case SPELL_STEAM_BALL:
-        beam.colour = LIGHTGREY;
-        beam.name = "ball of steam";
-        beam.range = 6;
+        beam.colour   = LIGHTGREY;
+        beam.name     = "ball of steam";
+        beam.range    = 6;
         beam.rangeMax = 10;
-        beam.damage = dice_def( 3, 7 + (power / 15) );
-        beam.hit = 20 + power / 20;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_STEAM;
-        beam.is_beam = false;
+        beam.damage   = dice_def( 3, 7 + (power / 15) );
+        beam.hit      = 20 + power / 20;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_STEAM;
+        beam.is_beam  = false;
         break;
-
-    // 27 is summon devils
-    // 28 is animate dead
 
     case SPELL_PAIN:
-        beam.name = "0";
-        beam.range = 7;
-        beam.rangeMax = 14;
-        beam.type = 0;
-        beam.flavour = BEAM_PAIN;     // pain
-        beam.thrower = KILL_MON;
+        beam.name       = "0";
+        beam.range      = 7;
+        beam.rangeMax   = 14;
+        beam.type       = 0;
+        beam.flavour    = BEAM_PAIN;     // pain
+        beam.thrower    = KILL_MON;
         // beam.damage = dice_def( 1, 50 );
-        beam.damage = dice_def( 1, 7 + (power / 20) );
+        beam.damage     = dice_def( 1, 7 + (power / 20) );
         beam.ench_power = 50;
-        beam.is_beam = true;
+        beam.is_beam    = true;
         break;
 
-    // 30 is smiting
-
     case SPELL_STICKY_FLAME:
-        beam.colour = RED;
-        beam.name = "sticky flame";
-        beam.range = 6;
+        beam.colour   = RED;
+        beam.name     = "sticky flame";
+        beam.range    = 6;
         beam.rangeMax = 10;
-        beam.damage = dice_def( 3, 3 + power / 50 );
-        beam.hit = 18 + power / 15;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_FIRE;
-        beam.is_beam = false;
+        beam.damage   = dice_def( 3, 3 + power / 50 );
+        beam.hit      = 18 + power / 15;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_FIRE;
+        beam.is_beam  = false;
         break;
 
     case SPELL_POISONOUS_CLOUD:       // demon
-        beam.name = "blast of poison";
-        beam.range = 7;
+        beam.name     = "blast of poison";
+        beam.range    = 7;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 3, 3 + power / 25 );
-        beam.colour = LIGHTGREEN;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_POISON;
-        beam.hit = 18 + power / 25;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 3 + power / 25 );
+        beam.colour   = LIGHTGREEN;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_POISON;
+        beam.hit      = 18 + power / 25;
+        beam.is_beam  = true;
         beam.is_big_cloud = true;
         break;
 
     case SPELL_ENERGY_BOLT:        // eye of devastation
-        beam.colour = YELLOW;
-        beam.name = "bolt of energy";
-        beam.range = 9;
+        beam.colour   = YELLOW;
+        beam.name     = "bolt of energy";
+        beam.range    = 9;
         beam.rangeMax = 23;
-        beam.damage = dice_def( 3, 20 );
-        beam.hit = 15 + power / 30;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_NUKE;     // a magical missile which destroys walls
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 20 );
+        beam.hit      = 15 + power / 30;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_NUKE;     // a magical missile which destroys walls
+        beam.is_beam  = true;
         break;
 
     case SPELL_STING:              // sting
-        beam.colour = GREEN;
-        beam.name = "sting";
-        beam.range = 8;
+        beam.colour   = GREEN;
+        beam.name     = "sting";
+        beam.range    = 8;
         beam.rangeMax = 12;
-        beam.damage = dice_def( 1, 6 + power / 25 );
-        beam.hit = 60;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_POISON;
-        beam.is_beam = false;
+        beam.damage   = dice_def( 1, 6 + power / 25 );
+        beam.hit      = 60;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_POISON;
+        beam.is_beam  = false;
         break;
 
     case SPELL_BOLT_OF_IRON:
-        beam.colour = LIGHTCYAN;
-        beam.name = "iron bolt";
-        beam.range = 4;
+        beam.colour   = LIGHTCYAN;
+        beam.name     = "iron bolt";
+        beam.range    = 4;
         beam.rangeMax = 8;
-        beam.damage = dice_def( 3, 8 + (power / 9) );
-        beam.hit = 20 + (power / 25);
-        beam.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_MMISSILE;   // similarly unresisted thing
-        beam.is_beam = false;
+        beam.damage   = dice_def( 3, 8 + (power / 9) );
+        beam.hit      = 20 + (power / 25);
+        beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_MMISSILE;   // similarly unresisted thing
+        beam.is_beam  = false;
         break;
 
     case SPELL_STONE_ARROW:
-        beam.colour = LIGHTGREY;
-        beam.name = "stone arrow";
-        beam.range = 8;
+        beam.colour   = LIGHTGREY;
+        beam.name     = "stone arrow";
+        beam.range    = 8;
         beam.rangeMax = 12;
-        beam.damage = dice_def( 3, 5 + (power / 10) );
-        beam.hit = 14 + power / 35;
-        beam.type = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_MMISSILE;   // similarly unresisted thing
-        beam.is_beam = false;
+        beam.damage   = dice_def( 3, 5 + (power / 10) );
+        beam.hit      = 14 + power / 35;
+        beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_MMISSILE;   // similarly unresisted thing
+        beam.is_beam  = false;
         break;
 
     case SPELL_POISON_SPLASH:
-        beam.colour = GREEN;
-        beam.name = "splash of poison";
-        beam.range = 5;
+        beam.colour   = GREEN;
+        beam.name     = "splash of poison";
+        beam.range    = 5;
         beam.rangeMax = 10;
-        beam.damage = dice_def( 1, 4 + power / 10 );
-        beam.hit = 16 + power / 20;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_POISON;
-        beam.is_beam = false;
+        beam.damage   = dice_def( 1, 4 + power / 10 );
+        beam.hit      = 16 + power / 20;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_POISON;
+        beam.is_beam  = false;
         break;
 
     case SPELL_DISINTEGRATE:
-        beam.name = "0";
-        beam.range = 7;
-        beam.rangeMax = 14;
-        beam.type = 0;
-        beam.flavour = BEAM_DISINTEGRATION;
-        beam.thrower = KILL_MON;
+        beam.name       = "0";
+        beam.range      = 7;
+        beam.rangeMax   = 14;
+        beam.type       = 0;
+        beam.flavour    = BEAM_DISINTEGRATION;
+        beam.thrower    = KILL_MON;
         beam.ench_power = 50;
         // beam.hit = 30 + (power / 10);
-        beam.damage = dice_def( 1, 30 + (power / 10) );
-        beam.is_beam = true;
+        beam.damage     = dice_def( 1, 30 + (power / 10) );
+        beam.is_beam    = true;
         break;
 
     case SPELL_MEPHITIC_CLOUD:          // swamp drake
-        beam.name = "foul vapour";
-        beam.range = 7;
+        beam.name     = "foul vapour";
+        beam.range    = 7;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 3, 2 + power / 25 );
-        beam.colour = GREEN;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_POISON;
-        beam.hit = 14 + power / 30;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 2 + power / 25 );
+        beam.colour   = GREEN;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_POISON;
+        beam.hit      = 14 + power / 30;
+        beam.is_beam  = true;
         beam.is_big_cloud = true;
         break;
 
     case SPELL_MIASMA:            // death drake
-        beam.name = "foul vapour";
-        beam.damage = dice_def( 3, 5 + power / 24 );
-        beam.colour = DARKGREY;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_MIASMA;
-        beam.hit = 17 + power / 20;
-        beam.is_beam = true;
+        beam.name     = "foul vapour";
+        beam.range    = beam.rangeMax = 8;
+        beam.damage   = dice_def( 3, 5 + power / 24 );
+        beam.colour   = DARKGREY;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_MIASMA;
+        beam.hit      = 17 + power / 20;
+        beam.is_beam  = true;
         beam.is_big_cloud = true;
-        beam.range = beam.rangeMax = 8;
         break;
 
     case SPELL_QUICKSILVER_BOLT:   // Quicksilver dragon
-        beam.colour = random_colour();
-        beam.name = "bolt of energy";
-        beam.range = 9;
+        beam.colour   = random_colour();
+        beam.name     = "bolt of energy";
+        beam.range    = 9;
         beam.rangeMax = 23;
-        beam.damage = dice_def( 3, 25 );
-        beam.hit = 16 + power / 25;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_MMISSILE;
-        beam.is_beam = false;
+        beam.damage   = dice_def( 3, 25 );
+        beam.hit      = 16 + power / 25;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_MMISSILE;
+        beam.is_beam  = false;
         break;
 
     case SPELL_HELLFIRE:           // fiend's hellfire
-        beam.name = "hellfire";
-        beam.aux_source = "blast of hellfire";
-        beam.colour = RED;
-        beam.range = 4;
-        beam.rangeMax = 13;
-        beam.damage = dice_def( 3, 25 );
-        beam.hit = 24;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_HELLFIRE;
-        beam.is_beam = true;
+        beam.name         = "hellfire";
+        beam.aux_source   = "blast of hellfire";
+        beam.colour       = RED;
+        beam.range        = 4;
+        beam.rangeMax     = 13;
+        beam.damage       = dice_def( 3, 25 );
+        beam.hit          = 24;
+        beam.type         = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower      = KILL_MON;
+        beam.flavour      = BEAM_HELLFIRE;
+        beam.is_beam      = true;
         beam.is_explosion = true;
         break;
 
     case SPELL_METAL_SPLINTERS:
-        beam.name = "spray of metal splinters";
-        beam.range = 7;
+        beam.name     = "spray of metal splinters";
+        beam.range    = 7;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 3, 20 + power / 20 );
-        beam.colour = CYAN;
-        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.thrower = KILL_MON;
-        beam.flavour = BEAM_FRAG;
-        beam.hit = 19 + power / 30;
-        beam.is_beam = true;
+        beam.damage   = dice_def( 3, 20 + power / 20 );
+        beam.colour   = CYAN;
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON;
+        beam.flavour  = BEAM_FRAG;
+        beam.hit      = 19 + power / 30;
+        beam.is_beam  = true;
         break;
 
     case SPELL_BANISHMENT:
-        beam.name = "0";
-        beam.range = 5;
+        beam.name     = "0";
+        beam.range    = 5;
         beam.rangeMax = 9;
-        beam.type = 0;
-        beam.flavour = BEAM_BANISH;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.is_beam = true;
+        beam.type     = 0;
+        beam.flavour  = BEAM_BANISH;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
         break;
 
     case SPELL_BLINK_OTHER:
-        beam.name = "0";
-        beam.type = 0;
-        beam.flavour = BEAM_BLINK;
-        beam.thrower = KILL_MON;
-        beam.is_beam = true;
+        beam.name       = "0";
+        beam.type       = 0;
+        beam.flavour    = BEAM_BLINK;
+        beam.thrower    = KILL_MON;
+        beam.is_beam    = true;
         beam.is_enchant = true;
-        beam.range = 8;
-        beam.rangeMax = 8;
+        beam.range      = 8;
+        beam.rangeMax   = 8;
         break;
 
     default:
@@ -2208,9 +2204,9 @@ bolt mons_spells( int spell_cast, int power )
     return (beam);
 }                               // end mons_spells()
 
-static int monster_abjure_square(const coord_def &pos,
-                                 int power, int test_only,
-                                 int wont_attack)
+static int _monster_abjure_square(const coord_def &pos,
+                                  int power, int test_only,
+                                  int wont_attack)
 {
     const int mindex = mgrd(pos);
     if (mindex == NON_MONSTER)
@@ -2236,13 +2232,13 @@ static int monster_abjure_square(const coord_def &pos,
 
     if (!target->lose_ench_duration(abj, power))
         simple_monster_message(target, " shudders.");
+
     return (1);
 }
 
-static int apply_radius_around_square(
-    const coord_def &c, int radius,
-    int (*fn)(const coord_def &, int, int, int),
-    int pow, int par1, int par2)
+static int _apply_radius_around_square( const coord_def &c, int radius,
+                                int (*fn)(const coord_def &, int, int, int),
+                                int pow, int par1, int par2)
 {
     int res = 0;
     for (int yi = -radius; yi <= radius; ++yi)
@@ -2267,7 +2263,7 @@ static int apply_radius_around_square(
     return (res);
 }
 
-static int monster_abjuration(const monsters *caster, bool test)
+static int _monster_abjuration(const monsters *caster, bool test)
 {
     const bool wont_attack = mons_wont_attack(caster);
     int maffected = 0;
@@ -2281,9 +2277,9 @@ static int monster_abjuration(const monsters *caster, bool test)
     for (int rad = 1; rad < 5 && pow >= 30; ++rad)
     {
         int number_hit =
-            apply_radius_around_square(
-                caster->pos(), rad, monster_abjure_square,
-                pow, test, wont_attack);
+            _apply_radius_around_square( caster->pos(), rad,
+                                         _monster_abjure_square,
+                                         pow, test, wont_attack);
 
         maffected += number_hit;
 
@@ -2322,7 +2318,7 @@ bool silver_statue_effects(monsters *mons)
 bool orange_statue_effects(monsters *mons)
 {
     if ((mons_player_visible(mons) || one_chance_in(3))
-            && !one_chance_in(3))
+        && !one_chance_in(3))
     {
         mpr("A hostile presence attacks your mind!", MSGCH_WARN);
 
@@ -2373,16 +2369,16 @@ bool orc_battle_cry(monsters *chief)
                     }
                     else
                     {
-                        mons->add_ench(
-                            mon_enchant(ENCH_BATTLE_FRENZY, level,
-                                        KC_OTHER,
-                                        dur));
+                        mons->add_ench( mon_enchant(ENCH_BATTLE_FRENZY, level,
+                                                    KC_OTHER, dur) );
                     }
                     affected.push_back(mons);
 
                     if (mons->asleep())
+                    {
                         behaviour_event( mons, ME_DISTURB, MHITNOT,
                                          chief->x, chief->y );
+                    }
                 }
             }
         }
@@ -2390,8 +2386,10 @@ bool orc_battle_cry(monsters *chief)
         if (!affected.empty())
         {
             if (you.can_see(chief) && player_can_hear(chief->x, chief->y))
+            {
                 mprf(MSGCH_SOUND, "%s roars a battle-cry!",
                      chief->name(DESC_CAP_THE).c_str());
+            }
 
             // The yell happens whether you happen to see it or not.
             noisy(15, chief->x, chief->y);
@@ -2400,16 +2398,14 @@ bool orc_battle_cry(monsters *chief)
 #ifdef ANNOUNCE_BATTLE_FRENZY
             std::map<std::string, int> names;
             for (int i = 0, size = affected.size(); i < size; ++i)
-            {
                 if (you.can_see(affected[i]))
                     names[affected[i]->name(DESC_PLAIN)]++;
-            }
 
             for (std::map<std::string,int>::const_iterator i = names.begin();
                  i != names.end(); ++i)
             {
-                const std::string s =
-                    i->second> 1? pluralise(i->first) : i->first;
+                const std::string s = i->second > 1 ? pluralise(i->first)
+                                                    : i->first;
                 mprf("The %s go%s into a battle-frenzy!",
                      s.c_str(), i->second == 1? "es" : "");
             }
@@ -2420,7 +2416,7 @@ bool orc_battle_cry(monsters *chief)
     return (false);
 }
 
-static bool make_monster_angry(const monsters *mon, monsters *targ)
+static bool _make_monster_angry(const monsters *mon, monsters *targ)
 {
     if (mons_friendly(mon) != mons_friendly(targ))
         return (false);
@@ -2450,10 +2446,11 @@ static bool make_monster_angry(const monsters *mon, monsters *targ)
     if (victim.distance_from(targ->pos()) > victim.distance_from(mon->pos()))
         return (false);
 
-    const bool need_message = mons_near(mon) && player_monster_visible(mon);
-    if (need_message)
+    if (mons_near(mon) && player_monster_visible(mon))
+    {
         mprf("%s goads %s on!", mon->name(DESC_CAP_THE).c_str(),
              targ->name(DESC_NOCAP_THE).c_str());
+    }
 
     targ->go_berserk(false);
 
@@ -2476,7 +2473,7 @@ bool moth_incite_monsters(const monsters *mon)
         if (targ->type == MONS_MOTH_OF_WRATH)
             continue;
 
-        if (make_monster_angry(mon, targ) && !one_chance_in(3 * ++goaded))
+        if (_make_monster_angry(mon, targ) && !one_chance_in(3 * ++goaded))
             return (true);
     }
 

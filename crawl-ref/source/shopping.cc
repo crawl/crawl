@@ -771,7 +771,7 @@ unsigned int item_value( item_def item, bool ident )
                 valued += 50;
         }
         else if (item_type_known(item)
-                && get_equip_desc(item) != 0)
+                 && get_equip_desc(item) != 0)
         {
             valued += 20;
         }
@@ -992,7 +992,7 @@ unsigned int item_value( item_def item, bool ident )
         }
 
         if (get_equip_race(item) == ISFLAG_ELVEN
-                || get_equip_race(item) == ISFLAG_DWARVEN)
+            || get_equip_race(item) == ISFLAG_DWARVEN)
         {
             valued *= 12;
             valued /= 10;

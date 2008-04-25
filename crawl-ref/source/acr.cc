@@ -416,6 +416,13 @@ static void _startup_tutorial()
 }
 
 #ifdef WIZARD
+// returns whether an item of this type can be an artefact, or cursed
+static bool _item_type_can_be_artefact( int type)
+{
+    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY);
+}
+
+
 static void _handle_wizard_command( void )
 {
     int   wiz_command, i, j, tmp;
@@ -552,9 +559,7 @@ static void _handle_wizard_command( void )
             break;
         }
 
-        if (you.inv[i].base_type != OBJ_WEAPONS
-            && you.inv[i].base_type != OBJ_ARMOUR
-            && you.inv[i].base_type != OBJ_JEWELLERY)
+        if (!_item_type_can_be_artefact(you.inv[i].base_type))
         {
             mpr("That item cannot be turned into an artefact.");
             break;
@@ -663,11 +668,8 @@ static void _handle_wizard_command( void )
 
         if (item_cursed(item))
             do_uncurse_item(item);
-        else if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
-                 || item.base_type == OBJ_JEWELLERY)
-        {
+        else if (_item_type_can_be_artefact(item.base_type))
             do_curse_item(item);
-        }
         else
             mpr("That item cannot be cursed.");
         break;

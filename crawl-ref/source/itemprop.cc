@@ -137,10 +137,12 @@ static armour_def Armour_prop[NUM_ARMOURS] =
     // and shapeshift status.
     { ARM_BOOTS,                "boots",                  1,  0,   30,
         true,  EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM },
+    // Changed max. barding size to large to allow for the appropriate
+    // monsters that don't differentiate between torso and general.
     { ARM_CENTAUR_BARDING,      "centaur barding",        4, -2,  100,
-        true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_MEDIUM },
+        true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
     { ARM_NAGA_BARDING,         "naga barding",           4, -2,  100,
-        true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_MEDIUM },
+        true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
 
     // Note: shields use ac-value as sh-value, EV pen is used for heavy_shield
     { ARM_BUCKLER,              "buckler",                3,  0,   90,
@@ -767,7 +769,7 @@ void set_equip_race( item_def &item, unsigned long flags )
             }
             break;
         case OBJ_ARMOUR:
-            if ((get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
+            if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item)
                 || item.sub_type == ARM_ROBE
                 || item.sub_type == ARM_LEATHER_ARMOUR)
             {
