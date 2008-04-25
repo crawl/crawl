@@ -22,7 +22,7 @@
 #include <string.h>
 
 #ifdef DOS
-#include <conio.h>
+ #include <conio.h>
 #endif
 
 #include "externs.h"

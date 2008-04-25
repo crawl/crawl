@@ -399,7 +399,10 @@ mon_holy_type mons_class_holiness(int mc)
 
 bool mons_class_is_confusable(int mc)
 {
-    return (smc->resist_magic < MAG_IMMUNE);
+    return (smc->resist_magic < MAG_IMMUNE
+            && mons_holiness(mon) != MH_PLANT
+            && mons_holiness(mon) != MH_NONLIVING
+            && mons_holiness(mon) != MH_UNDEAD);
 }
 
 bool mons_class_is_slowable(int mc)
@@ -3398,7 +3401,6 @@ static bool _item_race_matches_monster(const item_def &item, monsters *mons)
                 && mons_genus(mons->type) == MONS_ORC);
 }
 
-// FIXME: Need monster body-size handling.
 bool monsters::wants_armour(const item_def &item) const
 {
     // Returns whether this armour is the monster's size.
@@ -3463,8 +3465,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     if (!mslot_item(mslot) && newAC > 0)
         return pickup(item, mslot, near);
 
-    // XXX: Very simplistic armour evaluation (AC comparison) for the moment.
-    // This should take resistances into account.
+    // XXX: Very simplistic armour evaluation (AC comparison).
     if (const item_def *existing_armour = slot_item(eq))
     {
         if (!force)
@@ -3475,7 +3476,9 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
 
             if (oldAC == newAC)
             {
-                // compare item value (uses resistances and such)
+                // Use shopping value as a crude estimate of resistances etc.
+                // XXX: This is not quite logical as many properties don't
+                // apply to monsters (e.g. levitation, blink, berserk).
                 int oldval = item_value(*existing_armour);
                 int newval = item_value(item);
 

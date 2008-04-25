@@ -722,7 +722,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     const bool gives_xp      = !monster->has_ench(ENCH_ABJ);
 
           bool death_message = !silent && mons_near(monster)
-                                  && player_monster_visible(monster);
+                               && player_monster_visible(monster);
           bool in_transit    = false;
           bool drop_items    = !hard_reset;
 
