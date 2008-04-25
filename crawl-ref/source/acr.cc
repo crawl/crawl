@@ -2031,7 +2031,7 @@ void process_command( command_type cmd )
         {
             mpr("Clearing level map.");
             clear_map();
-            crawl_view.set_player_at(you.pos(), true);
+            crawl_view.set_player_at(you.pos());
         }
         break;
 
