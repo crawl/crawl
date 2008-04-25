@@ -655,9 +655,13 @@ static void _handle_wizard_command( void )
 
         if (item_cursed(item))
             do_uncurse_item(item);
-        else
+        else if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
+                 || item.base_type == OBJ_JEWELLERY)
+        {
             do_curse_item(item);
-
+        }
+        else
+            mpr("That item cannot be cursed.");
         break;
     }
 

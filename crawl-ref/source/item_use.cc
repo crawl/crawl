@@ -1376,8 +1376,7 @@ command_type fire_target_behaviour::get_command(int key)
       {
           std::string err;
           const int selected = _fire_prompt_for_item(err);
-          if (selected >= 0 &&
-              _fire_validate_item(selected, err))
+          if (selected >= 0 && _fire_validate_item(selected, err))
           {
               m_slot = selected;
               selected_from_inventory = true;
@@ -1404,10 +1403,10 @@ static bool _fire_choose_item_and_target(int& slot, dist& target)
 
     if (was_chosen)
     {
-        if (you.equip[EQ_WEAPON] == slot
-            && item_cursed(you.inv[slot]))
+        std::string warn;
+        if (!_fire_validate_item(slot, warn))
         {
-            mpr("You can't fire a cursed item!");
+            mpr(warn.c_str());
             return false;
         }
         beh.m_slot = slot; // force item to be the prechosen one
@@ -1474,9 +1473,10 @@ static int _fire_prompt_for_item(std::string& err)
 static bool _fire_validate_item(int slot, std::string& err)
 {
     if (slot == you.equip[EQ_WEAPON]
+        && you.inv[slot].base_type == OBJ_WEAPONS
         && item_cursed(you.inv[slot]))
     {
-        err = "That thing is stuck to your hand!";
+        err = "That weapon is stuck to your hand!";
         return false;
     }
     else if ( wearing_slot(slot) )
@@ -1495,6 +1495,7 @@ static bool _fire_warn_if_impossible()
         canned_msg(MSG_PRESENT_FORM);
         return true;
     }
+
     if (you.attribute[ATTR_HELD])
     {
         const item_def *weapon = you.weapon();
@@ -1535,6 +1536,13 @@ void fire_thing(int item)
     dist target;
     if (!_fire_choose_item_and_target(item, target))
         return;
+
+    std::string warn;
+    if (!_fire_validate_item(item, warn))
+    {
+        mpr(warn.c_str());
+        return;
+    }
 
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
     {
