@@ -400,9 +400,9 @@ mon_holy_type mons_class_holiness(int mc)
 bool mons_class_is_confusable(int mc)
 {
     return (smc->resist_magic < MAG_IMMUNE
-            && mons_holiness(mon) != MH_PLANT
-            && mons_holiness(mon) != MH_NONLIVING
-            && mons_holiness(mon) != MH_UNDEAD);
+            && mons_class_holiness(mc) != MH_PLANT
+            && mons_class_holiness(mc) != MH_NONLIVING
+            && mons_class_holiness(mc) != MH_UNDEAD);
 }
 
 bool mons_class_is_slowable(int mc)
