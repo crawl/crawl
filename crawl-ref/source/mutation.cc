@@ -2660,7 +2660,7 @@ void demonspawn(void)
                 howm = 1;
             }
 
-            // summoners don't get summon imp
+            // summoners and Makhlebites don't get summon imp
             if (!you.skills[SK_SUMMONINGS] && you.religion != GOD_MAKHLEB &&
                 one_chance_in(3))
             {
