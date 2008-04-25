@@ -1547,12 +1547,16 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_CLEVER:
     case MUT_AGILE:
     case MUT_POISON_RESISTANCE:
+    case MUT_SHOCK_RESISTANCE:
+    case MUT_SLOW_METABOLISM:
     case MUT_TELEPORT_CONTROL:
     case MUT_MAGIC_RESISTANCE:
     case MUT_TELEPORT_AT_WILL:
     case MUT_MAPPING:
     case MUT_CLARITY:
     case MUT_MUTATION_RESISTANCE:
+    case MUT_ROBUST:
+    case MUT_HIGH_MAGIC:
         amusement /= 2;  // not funny
         break;
 
@@ -1567,14 +1571,12 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_DEFORMED:
     case MUT_SPIT_POISON:
     case MUT_BREATHE_FLAMES:
-    case MUT_BLINK:
     case MUT_HORNS:
     case MUT_SCREAM:
     case MUT_BERSERK:
     case MUT_DETERIORATION:
     case MUT_BLURRY_VISION:
     case MUT_FRAIL:
-    case MUT_LOW_MAGIC:
     case MUT_CLAWS:
     case MUT_FANGS:
     case MUT_HOOVES:
@@ -1584,6 +1586,7 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BIG_WINGS:
     case MUT_BLUE_MARKS:
     case MUT_GREEN_MARKS:
+    case MUT_LOW_MAGIC:
         amusement *= 2; // funny!
         break;
 
