@@ -875,53 +875,53 @@ const char *lose_mutation[][3] = {
 // second boolean = is mutation physical, i.e. external only?
 
 static mutation_def mutation_defs[] = {
-    { MUT_TOUGH_SKIN,                10,  3, false, true  },
-    { MUT_STRONG,                     8, 14, false, true },
-    { MUT_CLEVER,                     8, 14, false, true },
-    { MUT_AGILE,                      8, 14, false, true },
-    { MUT_GREEN_SCALES,               2,  3, false, true  },
-    { MUT_BLACK_SCALES,               1,  3, false, true  },
-    { MUT_GREY_SCALES,                2,  3, false, true  },
-    { MUT_BONEY_PLATES,               1,  3, false, true  },
+    { MUT_TOUGH_SKIN,                10,  3, false,  true },
+    { MUT_STRONG,                     8, 14, false,  true },
+    { MUT_CLEVER,                     8, 14, false,  true },
+    { MUT_AGILE,                      8, 14, false,  true },
+    { MUT_GREEN_SCALES,               2,  3, false,  true },
+    { MUT_BLACK_SCALES,               1,  3, false,  true },
+    { MUT_GREY_SCALES,                2,  3, false,  true },
+    { MUT_BONEY_PLATES,               1,  3, false,  true },
     { MUT_REPULSION_FIELD,            1,  3, false, false },
     { MUT_POISON_RESISTANCE,          4,  1, false, false },
 // 10
     { MUT_CARNIVOROUS,                5,  3, false, false },
-    { MUT_HERBIVOROUS,                5,  3, true,  false },
+    { MUT_HERBIVOROUS,                5,  3,  true, false },
     { MUT_HEAT_RESISTANCE,            4,  3, false, false },
     { MUT_COLD_RESISTANCE,            4,  3, false, false },
     { MUT_SHOCK_RESISTANCE,           2,  1, false, false },
     { MUT_REGENERATION,               3,  3, false, false },
-    { MUT_FAST_METABOLISM,           10,  3, true,  false },
+    { MUT_FAST_METABOLISM,           10,  3,  true, false },
     { MUT_SLOW_METABOLISM,            7,  3, false, false },
-    { MUT_WEAK,                      10, 14, true,  true  },
-    { MUT_DOPEY,                     10, 14, true,  true  },
+    { MUT_WEAK,                      10, 14,  true,  true },
+    { MUT_DOPEY,                     10, 14,  true,  true },
 // 20
-    { MUT_CLUMSY,                    10, 14, true,  true  },
+    { MUT_CLUMSY,                    10, 14,  true,  true },
     { MUT_TELEPORT_CONTROL,           2,  1, false, false },
-    { MUT_TELEPORT,                   3,  3, true,  false },
+    { MUT_TELEPORT,                   3,  3,  true, false },
     { MUT_MAGIC_RESISTANCE,           5,  3, false, false },
     { MUT_FAST,                       1,  3, false, false },
     { MUT_ACUTE_VISION,               2,  1, false, false },
-    { MUT_DEFORMED,                   8,  3, true,  true  },
+    { MUT_DEFORMED,                   8,  3,  true,  true },
     { MUT_TELEPORT_AT_WILL,           2,  3, false, false },
     { MUT_SPIT_POISON,                8,  3, false, false },
     { MUT_MAPPING,                    3,  3, false, false },
 // 30
     { MUT_BREATHE_FLAMES,             4,  3, false, false },
     { MUT_BLINK,                      3,  3, false, false },
-    { MUT_HORNS,                      7,  3, false, true  },
-    { MUT_STRONG_STIFF,              10,  3, false, true  },
-    { MUT_FLEXIBLE_WEAK,             10,  3, false, true  },
-    { MUT_SCREAM,                     6,  3, true,  false },
+    { MUT_HORNS,                      7,  3, false,  true },
+    { MUT_STRONG_STIFF,              10,  3, false,  true },
+    { MUT_FLEXIBLE_WEAK,             10,  3, false,  true },
+    { MUT_SCREAM,                     6,  3,  true, false },
     { MUT_CLARITY,                    6,  1, false, false },
-    { MUT_BERSERK,                    7,  3, true,  false },
-    { MUT_DETERIORATION,             10,  3, true,  false },
-    { MUT_BLURRY_VISION,             10,  3, true,  false },
+    { MUT_BERSERK,                    7,  3,  true, false },
+    { MUT_DETERIORATION,             10,  3,  true, false },
+    { MUT_BLURRY_VISION,             10,  3,  true, false },
 // 40
     { MUT_MUTATION_RESISTANCE,        4,  3, false, false },
-    { MUT_FRAIL,                     10,  3, true,  true  },
-    { MUT_ROBUST,                     5,  3, false, true  },
+    { MUT_FRAIL,                     10,  3,  true,  true },
+    { MUT_ROBUST,                     5,  3, false,  true },
 
 // Some demonic powers start here:
     { MUT_TORMENT_RESISTANCE,         0,  1, false, false },
@@ -942,54 +942,54 @@ static mutation_def mutation_defs[] = {
     { MUT_SMITE,                      0,  1, false, false },
 // end of demonic powers
 
-    { MUT_CLAWS,                      2,  3, false, true  },
-    { MUT_FANGS,                      1,  3, false, true  },
+    { MUT_CLAWS,                      2,  3, false,  true },
+    { MUT_FANGS,                      1,  3, false,  true },
 // 60
-    { MUT_HOOVES,                     1,  1, false, true  },
-    { MUT_TALONS,                     1,  1, false, true  },
+    { MUT_HOOVES,                     1,  1, false,  true },
+    { MUT_TALONS,                     1,  1, false,  true },
 
     // Naga only
     { MUT_BREATHE_POISON,             0,  1, false, false },
     // Naga and Draconian only
-    { MUT_STINGER,                    0,  3, false, true  },
+    { MUT_STINGER,                    0,  3, false,  true },
     // Draconian only
-    { MUT_BIG_WINGS,                  0,  1, false, true  },
+    { MUT_BIG_WINGS,                  0,  1, false,  true },
 // 65
      // used by evil gods to mark followers (currently UNUSED)
-    { MUT_BLUE_MARKS,                 0,  3, false, true  },
-    { MUT_GREEN_MARKS,                0,  3, false, true  },
+    { MUT_BLUE_MARKS,                 0,  3, false,  true },
+    { MUT_GREEN_MARKS,                0,  3, false,  true },
 
     // species-dependent innate mutation
     { MUT_SAPROVOROUS,                0,  3, false, false },
 
-    { MUT_SHAGGY_FUR,                 2,  3, false, true  },
+    { MUT_SHAGGY_FUR,                 2,  3, false,  true },
 
     { MUT_HIGH_MAGIC,                 1,  3, false, false },
 // 70
-    { MUT_LOW_MAGIC,                  9,  3, true,  false },
+    { MUT_LOW_MAGIC,                  9,  3,  true, false },
     { RANDOM_MUTATION,                0,  3, false, false },
     { RANDOM_MUTATION,                0,  3, false, false },
     { RANDOM_MUTATION,                0,  3, false, false },
     { RANDOM_MUTATION,                0,  3, false, false },
 
 // 75 -- scales of various colours and effects
-    { MUT_RED_SCALES,                 2,  3, false, true  },
-    { MUT_NACREOUS_SCALES,            1,  3, false, true  },
-    { MUT_GREY2_SCALES,               2,  3, false, true  },
-    { MUT_METALLIC_SCALES,            1,  3, false, true  },
-    { MUT_BLACK2_SCALES,              2,  3, false, true  },
-    { MUT_WHITE_SCALES,               2,  3, false, true  },
-    { MUT_YELLOW_SCALES,              2,  3, false, true  },
-    { MUT_BROWN_SCALES,               2,  3, false, true  },
-    { MUT_BLUE_SCALES,                2,  3, false, true  },
-    { MUT_PURPLE_SCALES,              2,  3, false, true  },
+    { MUT_RED_SCALES,                 2,  3, false,  true },
+    { MUT_NACREOUS_SCALES,            1,  3, false,  true },
+    { MUT_GREY2_SCALES,               2,  3, false,  true },
+    { MUT_METALLIC_SCALES,            1,  3, false,  true },
+    { MUT_BLACK2_SCALES,              2,  3, false,  true },
+    { MUT_WHITE_SCALES,               2,  3, false,  true },
+    { MUT_YELLOW_SCALES,              2,  3, false,  true },
+    { MUT_BROWN_SCALES,               2,  3, false,  true },
+    { MUT_BLUE_SCALES,                2,  3, false,  true },
+    { MUT_PURPLE_SCALES,              2,  3, false,  true },
 // 85
-    { MUT_SPECKLED_SCALES,            2,  3, false, true  },
-    { MUT_ORANGE_SCALES,              2,  3, false, true  },
-    { MUT_INDIGO_SCALES,              2,  3, false, true  },
-    { MUT_RED2_SCALES,                1,  3, false, true  },
-    { MUT_IRIDESCENT_SCALES,          1,  3, false, true  },
-    { MUT_PATTERNED_SCALES,           1,  3, false, true  }
+    { MUT_SPECKLED_SCALES,            2,  3, false,  true },
+    { MUT_ORANGE_SCALES,              2,  3, false,  true },
+    { MUT_INDIGO_SCALES,              2,  3, false,  true },
+    { MUT_RED2_SCALES,                1,  3, false,  true },
+    { MUT_IRIDESCENT_SCALES,          1,  3, false,  true },
+    { MUT_PATTERNED_SCALES,           1,  3, false,  true }
 };
 
 COMPILE_CHECK(ARRAYSZ(mutation_defs) == NUM_MUTATIONS, c1);
