@@ -1084,9 +1084,9 @@ bool undead_cannot_memorise(spell_type spell, char being)
     case US_HUNGRY_DEAD: // Ghouls
         switch (spell)
         {
-        //case SPELL_REGENERATION:
         case SPELL_AIR_WALK:
         case SPELL_ALTER_SELF:
+        case SPELL_BERSERKER_RAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
         case SPELL_CURE_POISON_II:
@@ -1099,7 +1099,6 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_STATUE_FORM:
         case SPELL_SYMBOL_OF_TORMENT:
         case SPELL_TAME_BEASTS:
-        case SPELL_BERSERKER_RAGE:
             return true;
         default:
             return false;
@@ -1125,6 +1124,7 @@ bool undead_cannot_memorise(spell_type spell, char being)
         {
         case SPELL_AIR_WALK:
         case SPELL_ALTER_SELF:
+        case SPELL_BERSERKER_RAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
         case SPELL_CURE_POISON_II:
@@ -1141,7 +1141,6 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_SUMMON_HORRIBLE_THINGS:
         case SPELL_SYMBOL_OF_TORMENT:
         case SPELL_TAME_BEASTS:
-        case SPELL_BERSERKER_RAGE:
             return true;
         default:
             return false;
