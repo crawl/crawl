@@ -5132,7 +5132,7 @@ bool rot_player( int amount )
         return false;
 
     if (you.is_undead
-        && (you.species != SP_VAMPIRE || you.hunger_state < HS_SATIATED))
+        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
     {
         mpr( "You feel terrible." );
         return false;
@@ -6131,8 +6131,8 @@ int player_mutation_level(mutation_type mut)
     if (mutation_is_fully_active(mut))
         return (mlevel);
 
-    // For now, dynamic mutation only apply to vampires.
-    ASSERT(you.species == SP_VAMPIRE);
+    // For now, dynamic mutations only apply to semi-undead.
+    ASSERT(you.is_undead == US_SEMI_UNDEAD);
 
     // Assumption: stat mutations are physical, and thus always fully active.
     switch (you.hunger_state)
@@ -6311,7 +6311,7 @@ void player::drain_stat(int stat, int amount, actor* attacker)
 void player::rot(actor *who, int rotlevel, int immed_rot)
 {
     if (you.is_undead
-        && (you.species != SP_VAMPIRE || you.hunger_state < HS_SATIATED))
+        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
     {
         return;
     }

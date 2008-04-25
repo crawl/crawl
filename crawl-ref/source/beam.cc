@@ -3427,7 +3427,7 @@ static int _affect_player( bolt &beam, item_def *item )
             if (beam.aux_source.empty())
                 beam.aux_source = "by dispel undead";
 
-            if (you.species == SP_VAMPIRE)
+            if (you.is_undead == US_SEMI_UNDEAD)
             {
                 if (you.hunger_state == HS_ENGORGED)
                     beam.damage.size /= 2;
