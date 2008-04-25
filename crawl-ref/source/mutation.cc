@@ -1605,6 +1605,7 @@ static bool is_good_mutation( mutation_type which_mutation )
     case MUT_STRONG:
     case MUT_CLEVER:
     case MUT_AGILE:
+    case MUT_REPULSION_FIELD:
     case MUT_POISON_RESISTANCE:
     case MUT_HEAT_RESISTANCE:
     case MUT_COLD_RESISTANCE:
