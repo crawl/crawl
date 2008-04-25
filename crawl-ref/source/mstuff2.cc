@@ -1395,7 +1395,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         }
         else if (bow_brand == SPWPN_SPEED)
         {
-            // Speed bows take 50% time to use than ordinary bows.
+            // Speed bows take 50% less time to use than
+            // ordinary bows.
             speed_delta = div_rand_round(throw_energy, 2);
         }
 
