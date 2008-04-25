@@ -994,7 +994,14 @@ level_id generic_shaft_dest(level_pos lpos)
     int      curr_depth = lid.depth;
     Branch   &branch    = branches[lid.branch];
 
-    lid.depth += ((pos.x + pos.y) % 3) + 1;
+    // 25% drop one level
+    // 50% drop two levels
+    // 25% drop three levels
+    lid.depth += 2;
+    if (pos.x % 2)
+        lid.depth--;
+    if (pos.y % 2)
+        lid.depth++;
 
     if (lid.depth > branch.depth)
         lid.depth = branch.depth;

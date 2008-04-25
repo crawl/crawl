@@ -2008,7 +2008,7 @@ static std::string describe_monster_weapon(const monsters *mons)
     std::string desc = "";
     std::string name1, name2;
     const item_def *weap = mons->mslot_item(MSLOT_WEAPON);
-    const item_def *alt = mons->mslot_item(MSLOT_ALT_WEAPON);
+    const item_def *alt  = mons->mslot_item(MSLOT_ALT_WEAPON);
 
     if (weap)
     {

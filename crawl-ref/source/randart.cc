@@ -877,7 +877,8 @@ void static _get_randart_properties(const item_def &item,
         && (aclass != OBJ_JEWELLERY || atype != RING_POISON_RESISTANCE)
         && (aclass != OBJ_ARMOUR
             || atype != ARM_GOLD_DRAGON_ARMOUR
-            || atype != ARM_SWAMP_DRAGON_ARMOUR))
+               && atype != ARM_SWAMP_DRAGON_ARMOUR
+               && atype != ARM_NAGA_BARDING))
     {
         proprt[RAP_POISON] = 1;
         power_level++;
@@ -907,7 +908,8 @@ void static _get_randart_properties(const item_def &item,
     // see_invis
     if (!done_powers
         && one_chance_in(4 + power_level)
-        && (aclass != OBJ_JEWELLERY || atype != RING_INVISIBILITY))
+        && (aclass != OBJ_JEWELLERY || atype != RING_INVISIBILITY)
+        && (aclass != OBJ_ARMOUR || atype != ARM_NAGA_BARDING))
     {
         proprt[RAP_EYESIGHT] = 1;
         power_level++;
