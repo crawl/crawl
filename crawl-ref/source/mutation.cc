@@ -51,8 +51,7 @@
 #include "xom.h"
 
 
-int how_mutated(void);
-char body_covered(void);
+static char body_covered(void);
 
 const char *troll_claw_descrip[4] = {
     "You have claws for hands.",
@@ -1752,7 +1751,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     if (which_mutation == RANDOM_MUTATION
         || which_mutation == RANDOM_XOM_MUTATION)
     {
-        if ( random2(15) < how_mutated() )
+        if ( random2(15) < how_mutated(false, true) )
         {
             if (!force_mutation && !one_chance_in(3))
                 return (false);
@@ -2165,42 +2164,40 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     return true;
 }
 
-int how_mutated(void)
+int how_mutated(bool all, bool levels)
 {
     int j = 0;
 
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        if (you.mutation[i] && you.demon_pow[i] < you.mutation[i])
+        if (you.mutation[i])
         {
-            // these allow for 14 levels:
-            if (i == MUT_STRONG  || i == MUT_CLEVER || i == MUT_AGILE
-                || i == MUT_WEAK || i == MUT_DOPEY  || i == MUT_CLUMSY)
+            if (!all && you.demon_pow[i] < you.mutation[i])
+                continue;
+
+            if (levels)
             {
-                j += (you.mutation[i] / 5 + 1);
+                // these allow for 14 levels:
+                if (i == MUT_STRONG  || i == MUT_CLEVER || i == MUT_AGILE
+                    || i == MUT_WEAK || i == MUT_DOPEY  || i == MUT_CLUMSY)
+                {
+                    j += (you.mutation[i] / 5 + 1);
+                }
+                else
+                    j += you.mutation[i];
             }
             else
-                j += you.mutation[i];
+                j++;
         }
     }
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "levels: %d", j );
+    mprf(MSGCH_DIAGNOSTICS, "how_mutated(): all = %u, levels = %u, j = %d",
+         all, levels, j);
 #endif
 
     return (j);
 }                               // end how_mutated()
-
-int count_mutations()
-{
-    int count = 0;
-
-    for (int i = 0; i < NUM_MUTATIONS; i++)
-        if (you.mutation[i] && you.demon_pow[i] < you.mutation[i])
-            count++;
-
-    return count;
-}
 
 bool delete_mutation(mutation_type which_mutation, bool force_mutation)
 {
@@ -2373,7 +2370,7 @@ bool delete_mutation(mutation_type which_mutation, bool force_mutation)
     return true;
 }                               // end delete_mutation()
 
-char body_covered(void)
+static char body_covered(void)
 {
     // checks how much of your body is covered by scales, etc.
     char covered = 0;

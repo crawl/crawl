@@ -58,9 +58,6 @@ formatted_string describe_mutations();
  * *********************************************************************** */
 bool delete_mutation(mutation_type which_mutation, bool force_mutation = false);
 
-// used by Zin (religion.cc)
-int count_mutations(void);
-
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: chardump
@@ -81,7 +78,7 @@ bool give_bad_mutation( bool forceMutation = false, bool failMsg = true );
 void demonspawn(void);
 
 bool perma_mutate(mutation_type which_mut, int how_much);
-int how_mutated();
+int how_mutated(bool all = false, bool levels = false);
 
 #ifdef DEBUG_DIAGNOSTICS
 void sanity_check_mutation_defs();

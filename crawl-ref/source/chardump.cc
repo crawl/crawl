@@ -1093,14 +1093,8 @@ static void sdump_hiscore(dump_params &par)
 static void sdump_mutations(dump_params &par)
 {
     std::string &text(par.text);
-    // Can't use how_mutated() here, as it doesn't count demonic powers
-    int xz = 0;
 
-    for (int xy = 0; xy < NUM_MUTATIONS; ++xy)
-        if (you.mutation[xy] > 0)
-            xz++;
-
-    if (xz > 0)
+    if (how_mutated(true, false))
     {
         text += "\n";
         text += describe_mutations();

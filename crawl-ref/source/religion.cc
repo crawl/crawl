@@ -2897,7 +2897,7 @@ static bool _zin_retribution()
     int punishment = random2(10);
 
     // if little mutated or can't unmutate, do something else instead
-    if (punishment < 2 && count_mutations() <= random2(3)
+    if (punishment < 2 && how_mutated() <= random2(3)
         || !can_safely_mutate())
     {
         punishment = random2(8)+2;
@@ -2917,7 +2917,7 @@ static bool _zin_retribution()
                 success = true;
             }
 
-        if (success && !count_mutations())
+        if (success && !how_mutated())
         {
             simple_god_message(" rids your body of chaos!", god);
             // lower penance a bit more for being particularly successful

@@ -2036,7 +2036,7 @@ static void _helix_card(int power, deck_rarity_type rarity)
 
     if ( power_level == 0 )
     {
-        switch ( count_mutations() ? random2(3) : 0 )
+        switch ( how_mutated() ? random2(3) : 0 )
         {
         case 0:
             mutate(RANDOM_MUTATION);
@@ -2052,7 +2052,7 @@ static void _helix_card(int power, deck_rarity_type rarity)
     }
     else if ( power_level == 1 )
     {
-        switch ( count_mutations() ? random2(3) : 0 )
+        switch ( how_mutated() ? random2(3) : 0 )
         {
         case 0:
             mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION);
