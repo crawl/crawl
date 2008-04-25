@@ -1774,12 +1774,12 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     else if (which_mutation == RANDOM_XOM_MUTATION)
     {
         if ((mutat = get_random_xom_mutation()) == NUM_MUTATIONS)
-            return (false);
+            return false;
     }
     else if (which_mutation == RANDOM_GOOD_MUTATION)
     {
         if ((mutat = get_random_mutation(true, 500)) == NUM_MUTATIONS)
-            return (false);
+            return false;
     }
     else if (you.mutation[mutat] >= 3
              && mutat != MUT_STRONG && mutat != MUT_CLEVER
@@ -2217,6 +2217,7 @@ bool delete_mutation(mutation_type which_mutation, bool force_mutation)
     }
 
     if (which_mutation == RANDOM_MUTATION
+        || which_mutation == RANDOM_XOM_MUTATION
         || which_mutation == RANDOM_GOOD_MUTATION)
     {
         do
