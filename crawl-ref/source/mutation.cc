@@ -1606,19 +1606,44 @@ static bool is_good_mutation( mutation_type which_mutation )
     case MUT_CLEVER:
     case MUT_AGILE:
     case MUT_POISON_RESISTANCE:
+    case MUT_HEAT_RESISTANCE:
+    case MUT_COLD_RESISTANCE:
+    case MUT_SHOCK_RESISTANCE:
+    case MUT_REGENERATION:
+    case MUT_SLOW_METABOLISM:
     case MUT_TELEPORT_CONTROL:
     case MUT_MAGIC_RESISTANCE:
+    case MUT_FAST:
+    case MUT_ACUTE_VISION:
     case MUT_TELEPORT_AT_WILL:
+    case MUT_SPIT_POISON:
     case MUT_MAPPING:
+    case MUT_BREATHE_FLAMES:
+    case MUT_BLINK:
     case MUT_CLARITY:
     case MUT_MUTATION_RESISTANCE:
-    case MUT_FAST:
-    case MUT_BLINK:
-    case MUT_BREATHE_FLAMES:
-    case MUT_SPIT_POISON:
+    case MUT_ROBUST:
+    case MUT_TORMENT_RESISTANCE:
+    case MUT_NEGATIVE_ENERGY_RESISTANCE:
+    case MUT_SUMMON_MINOR_DEMONS:
+    case MUT_SUMMON_DEMONS:
+    case MUT_HURL_HELLFIRE:
+    case MUT_CALL_TORMENT:
+    case MUT_RAISE_DEAD:
+    case MUT_CONTROL_DEMONS:
+    case MUT_PANDEMONIUM:
+    case MUT_DEATH_STRENGTH:
+    case MUT_CHANNEL_HELL:
+    case MUT_DRAIN_LIFE:
+    case MUT_THROW_FLAMES:
+    case MUT_THROW_FROST:
+    case MUT_SMITE:
+    case MUT_FANGS:
     case MUT_BREATHE_POISON:
     case MUT_STINGER:
-    case MUT_FANGS:
+    case MUT_BIG_WINGS:
+    case MUT_SAPROVOROUS:
+    case MUT_HIGH_MAGIC:
         return true;
 
     default:
