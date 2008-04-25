@@ -208,7 +208,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 
         return true;
     }
-        
+
     // If command repitition is being used to immitate the rest command,
     // then everything interrupts it.
     if (crawl_state.repeat_cmd == CMD_MOVE_NOWHERE
