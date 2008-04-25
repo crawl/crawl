@@ -273,7 +273,7 @@ const char *mutation_descrip[][3] = {
     {"You have very sharp teeth.", "You have extremely sharp teeth.",
      "You have razor-sharp teeth."},
 
-    // 60 - leave some space for more demonic powers...
+    // 60 - leave some space for more demonic powers
     {"You have hooves in place of feet.", "", ""},
     {"You have talons in place of feet.", "", ""},
 
