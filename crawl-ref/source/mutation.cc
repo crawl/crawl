@@ -2202,7 +2202,6 @@ int how_mutated(bool all, bool levels)
 bool delete_mutation(mutation_type which_mutation, bool force_mutation)
 {
     mutation_type mutat = which_mutation;
-    int i;
 
     if (!force_mutation
         && ( player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
@@ -2231,7 +2230,7 @@ bool delete_mutation(mutation_type which_mutation, bool force_mutation)
                || random2(10) >= mutation_defs[mutat].rarity
                || you.demon_pow[mutat] >= you.mutation[mutat]
                || which_mutation == RANDOM_GOOD_MUTATION
-                   && (!mutation_defs[i].bad || one_chance_in(10)));
+                   && (!mutation_defs[mutat].bad || one_chance_in(10)));
     }
 
     if (you.mutation[mutat] == 0)
@@ -2340,7 +2339,7 @@ bool delete_mutation(mutation_type which_mutation, bool force_mutation)
         if (you.species == SP_NAGA)
         {
             // natural ability to spit poison retakes the slot
-            for (i = 0; i < 52; i++)
+            for (int i = 0; i < 52; i++)
             {
                 if (you.ability_letter_table[i] == ABIL_BREATHE_POISON)
                     you.ability_letter_table[i] = ABIL_SPIT_POISON;
