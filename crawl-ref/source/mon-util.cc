@@ -398,8 +398,7 @@ mon_holy_type mons_class_holiness(int mc)
 
 bool mons_class_is_confusable(int mc)
 {
-    return (smc->resist_magic < MAG_IMMUNE
-            && mons_intel(mc) > I_PLANT);
+    return (smc->resist_magic < MAG_IMMUNE);
 }
 
 bool mons_class_is_slowable(int mc)
