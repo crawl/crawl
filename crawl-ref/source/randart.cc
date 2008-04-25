@@ -1147,6 +1147,13 @@ void randart_wpn_properties( const item_def &item,
         for (vec_size i = 0; i < RA_PROPERTIES; i++)
             proprt[i] = rap_vec[i].get_short();
     }
+    else if (is_unrandom_artefact( item ))
+    {
+        const unrandart_entry *unrand = _seekunrandart( item );
+
+        for (int i = 0; i < RA_PROPERTIES; i++)
+            proprt[i] = (short) unrand->prpty[i];
+    }
     else
     {
         _get_randart_properties(item, proprt);
@@ -1882,17 +1889,27 @@ bool make_item_unrandart( item_def &item, int unrand_index )
             known[i] = (bool) false;
     }
 
-    item.base_type = unranddata[unrand_index].ura_cl;
-    item.sub_type  = unranddata[unrand_index].ura_ty;
-    item.plus      = unranddata[unrand_index].ura_pl;
-    item.plus2     = unranddata[unrand_index].ura_pl2;
-    item.colour    = unranddata[unrand_index].ura_col;
+    const unrandart_entry *unrand = &unranddata[unrand_index];
+    item.base_type = unrand->ura_cl;
+    item.sub_type  = unrand->ura_ty;
+    item.plus      = unrand->ura_pl;
+    item.plus2     = unrand->ura_pl2;
+    item.colour    = unrand->ura_col;
 
     item.flags |= ISFLAG_UNRANDART;
-    item.special = unranddata[ unrand_index ].prpty[ RAP_BRAND ];
+    _init_randart_properties(item);
 
-    if (unranddata[ unrand_index ].prpty[ RAP_CURSED ] != 0)
+    item.special = unrand->prpty[ RAP_BRAND ];
+    if (unrand->prpty[ RAP_CURSED ] != 0)
         do_curse_item( item );
+
+    // get true artefact name
+    ASSERT(!item.props.exists( RANDART_NAME_KEY ));
+    item.props[RANDART_NAME_KEY].get_string() = unrand->name;
+
+    // get artefact appearance
+    ASSERT(!item.props.exists( RANDART_APPEAR_KEY ));
+    item.props[RANDART_APPEAR_KEY].get_string() = unrand->unid_name;
 
     set_unrandart_exist( unrand_index, true );
 
@@ -1901,8 +1918,8 @@ bool make_item_unrandart( item_def &item, int unrand_index )
 
 const char *unrandart_descrip( int which_descrip, const item_def &item )
 {
-/* Eventually it would be great to have randomly generated descriptions for
-   randarts. */
+// Eventually it would be great to have randomly generated descriptions
+// for randarts.
     const unrandart_entry *unrand = _seekunrandart( item );
 
     return ((which_descrip == 0) ? unrand->spec_descrip1 :

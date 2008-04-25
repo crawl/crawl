@@ -22,9 +22,9 @@ function make_hash(ls)
     return h
 end
 
-function you_undead()
+-- don't count Vampires here because of all those exceptions
+function you_real_undead()
     return you.race() == "Mummy" or you.race() == "Ghoul" 
-           or you.race() == "Vampire"
 end
 
 -- not identified
@@ -49,7 +49,7 @@ function ch_autopickup(it)
     local spells = make_hash( you.spells() )
 
     if item.class(it) == "Potions" then
-   
+
         local type = item.potion_type(it)
 
         -- "bad" potions only for Evaporate
@@ -58,7 +58,7 @@ function ch_autopickup(it)
         end
 
         -- no potions for Mummies
-	-- also: no bad potions for anyone else
+        -- also: no bad potions for anyone else
         if you.race() == "Mummy" or bad_potion(type) then
            return false
         end
@@ -71,12 +71,12 @@ function ch_autopickup(it)
         -- special handling
         if spec_potion(type) then
 
-           -- undead cannot use berserk
-	   -- or anything involving mutations
+           -- real undead cannot use berserk
+           -- or anything involving mutations
            if item.subtype(it) == "berserk" 
-	        or item.subtype(it) == "gain ability"
-		or item.subtype(it) == "cure mutation" then
-              if you_undead() then
+                or item.subtype(it) == "gain ability"
+                or item.subtype(it) == "cure mutation" then
+              if you_real_undead() then
                  return false
               else 
                  return true
@@ -85,7 +85,7 @@ function ch_autopickup(it)
 
            -- special cases for blood, water, and porridge
            if item.subtype(it) == "blood" 
-	        or item.subtype(it) == "water" 
+                or item.subtype(it) == "water" 
                 or item.subtype(it) == "porridge" then
               return food.can_eat(it, false)
            end
@@ -109,16 +109,15 @@ function ch_autopickup(it)
             or item.subtype(it) == "inaccuracy" then
           return false
        end 
-       if you_undead() and
+       if you_real_undead() and
             (item.subtype(it) == "regeneration" 
-	       or item.subtype(it) == "rage"
-	       or item.subtype(it) == "sustenance"
-	          and you.race() == "Mummy") then
+               or item.subtype(it) == "rage" 
+               or item.subtype(it) == "sustenance"
+                  and you.race() == "Mummy") then
           return false
        end 
     end
-       
+
     -- we only get here if class autopickup ON
     return true
 end
-

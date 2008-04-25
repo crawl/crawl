@@ -552,6 +552,14 @@ static void _handle_wizard_command( void )
             break;
         }
 
+        if (you.inv[i].base_type != OBJ_WEAPONS
+            && you.inv[i].base_type != OBJ_ARMOUR
+            && you.inv[i].base_type != OBJ_JEWELLERY)
+        {
+            mpr("That item cannot be turned into an artefact.");
+            break;
+        }
+
         // set j == equipment slot of chosen item, remove old randart benefits
         for (j = 0; j < NUM_EQUIP; j++)
         {
