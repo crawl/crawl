@@ -1606,9 +1606,7 @@ static bool is_good_mutation( mutation_type which_mutation )
     case MUT_CLEVER:
     case MUT_AGILE:
     case MUT_GREEN_SCALES:
-    case MUT_BLACK_SCALES:
     case MUT_GREY_SCALES:
-    case MUT_BONEY_PLATES:
     case MUT_REPULSION_FIELD:
     case MUT_POISON_RESISTANCE:
     case MUT_HEAT_RESISTANCE:
@@ -1652,18 +1650,14 @@ static bool is_good_mutation( mutation_type which_mutation )
     case MUT_HIGH_MAGIC:
     case MUT_RED_SCALES:
     case MUT_NACREOUS_SCALES:
-    case MUT_GREY2_SCALES:
-    case MUT_METALLIC_SCALES:
     case MUT_BLACK2_SCALES:
     case MUT_WHITE_SCALES:
-    case MUT_YELLOW_SCALES:
     case MUT_BROWN_SCALES:
     case MUT_BLUE_SCALES:
     case MUT_PURPLE_SCALES:
     case MUT_SPECKLED_SCALES:
     case MUT_ORANGE_SCALES:
     case MUT_INDIGO_SCALES:
-    case MUT_RED2_SCALES:
     case MUT_IRIDESCENT_SCALES:
     case MUT_PATTERNED_SCALES:
         return true;
