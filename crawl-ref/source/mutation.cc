@@ -1091,7 +1091,7 @@ formatted_string describe_mutations()
         result += EOL;
         result += "You cannot wear boots." EOL;
 
-        // breathe poison replaces spit poison:
+        // breathe poison replaces spit poison
         if (!you.mutation[MUT_BREATHE_POISON])
             result += "You can spit poison." EOL;
         else
