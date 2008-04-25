@@ -449,10 +449,6 @@ void randart_desc_properties( const item_def &item,
         fake_rap = RAP_COLD;
         break;
 
-    case RING_STRENGTH:
-        fake_rap = RAP_STRENGTH;
-        break;
-
     case RING_SLAYING:
         fake_rap   = RAP_ACCURACY;
         fake_plus  = item.plus;
@@ -473,13 +469,18 @@ void randart_desc_properties( const item_def &item,
         fake_plus = item.plus;
         break;
 
-    case RING_DEXTERITY:
-        fake_rap  = RAP_DEXTERITY;
+    case RING_STRENGTH:
+        fake_rap = RAP_STRENGTH;
         fake_plus = item.plus;
         break;
 
     case RING_INTELLIGENCE:
         fake_rap  = RAP_INTELLIGENCE;
+        fake_plus = item.plus;
+        break;
+
+    case RING_DEXTERITY:
+        fake_rap  = RAP_DEXTERITY;
         fake_plus = item.plus;
         break;
 
