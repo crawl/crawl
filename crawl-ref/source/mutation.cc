@@ -2202,8 +2202,7 @@ int count_mutations()
     return count;
 }
 
-bool delete_mutation(mutation_type which_mutation, bool prefer_good,
-                     bool force_mutation)
+bool delete_mutation(mutation_type which_mutation, bool force_mutation)
 {
     mutation_type mutat = which_mutation;
     int i;
@@ -2217,7 +2216,8 @@ bool delete_mutation(mutation_type which_mutation, bool prefer_good,
         return false;
     }
 
-    if (which_mutation == RANDOM_MUTATION)
+    if (which_mutation == RANDOM_MUTATION
+        || which_mutation == RANDOM_GOOD_MUTATION)
     {
         do
         {
@@ -2232,7 +2232,8 @@ bool delete_mutation(mutation_type which_mutation, bool prefer_good,
                     && mutat != MUT_CLUMSY))
                || random2(10) >= mutation_defs[mutat].rarity
                || you.demon_pow[mutat] >= you.mutation[mutat]
-               || prefer_good && (!mutation_defs[i].bad || one_chance_in(10)));
+               || which_mutation == RANDOM_GOOD_MUTATION
+                   && (!mutation_defs[i].bad || one_chance_in(10)));
     }
 
     if (you.mutation[mutat] == 0)
