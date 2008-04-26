@@ -205,7 +205,7 @@ int get_mimic_colour( const monsters *mimic )
     return (item.colour);
 }
 
-// monster curses a random player inventory item:
+// Monster curses a random player inventory item.
 bool curse_an_item( bool decay_potions, bool quiet )
 {
     int count = 0;
