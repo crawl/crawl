@@ -763,6 +763,7 @@ int cast_revitalisation(int pow)
 {
     const int max_steps = std::min(6, pow);
     int steps = 0;
+    int loss_amt;
 
     switch (random2(3))
     {
@@ -775,7 +776,10 @@ int cast_revitalisation(int pow)
                  ++steps, hp_amt *= 2)
             {
                 inc_hp(hp_amt, false);
-                lose_piety(steps + 1);
+
+                loss_amt = steps + random2(3);
+                if (loss_amt)
+                    lose_piety(loss_amt);
             }
 
             break;
@@ -791,7 +795,10 @@ int cast_revitalisation(int pow)
                  ++steps, mp_amt *= 2)
             {
                 inc_mp(mp_amt, false);
-                lose_piety(steps + 1);
+
+                loss_amt = steps + random2(3);
+                if (loss_amt)
+                    lose_piety(loss_amt);
             }
 
             break;
