@@ -53,8 +53,8 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
     if (pow > 150)
         pow = 150;
 
-    const int factor
-        = (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED ? 2 : 1);
+    const int factor =
+        (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED ? 2 : 1);
 
     switch (pot_eff)
     {
