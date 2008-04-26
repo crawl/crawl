@@ -827,6 +827,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
         place_cloud(CLOUD_COLD, monster->x, monster->y, 2 + random2(4),
                     monster->kill_alignment());
+
+        if (killer == KILL_RESET)
+            killer = KILL_DISMISSED;
     }
     else if (monster->type == MONS_DANCING_WEAPON)
     {
@@ -1247,23 +1250,12 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         {
             if (mons_weight(mons_species(monster->type)))
             {
-                if (monster->type == MONS_SIMULACRUM_SMALL
-                    || monster->type == MONS_SIMULACRUM_LARGE)
-                {
-                    simple_monster_message( monster, " vapourises!" );
+                simple_monster_message(monster,
+                            "'s corpse disappears in a puff of smoke!");
 
-                    place_cloud( CLOUD_COLD, monster->x, monster->y,
-                                 1 + random2(3), monster->kill_alignment() );
-                }
-                else
-                {
-                    simple_monster_message(monster,
-                                "'s corpse disappears in a puff of smoke!");
-
-                    place_cloud( random_smoke_type(),
-                                 monster->x, monster->y, 1 + random2(3),
-                                 monster->kill_alignment() );
-                }
+                place_cloud( random_smoke_type(),
+                             monster->x, monster->y, 1 + random2(3),
+                             monster->kill_alignment() );
             }
         }
         else
