@@ -5441,12 +5441,12 @@ bool monsters::can_safely_mutate() const
     return (can_mutate());
 }
 
-void monsters::mutate()
+bool monsters::mutate()
 {
     if (!can_mutate())
-        return;
+        return false;
 
-    monster_polymorph(this, RANDOM_MONSTER);
+    return (monster_polymorph(this, RANDOM_MONSTER));
 }
 
 bool monsters::is_icy() const

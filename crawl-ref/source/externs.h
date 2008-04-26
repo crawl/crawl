@@ -149,7 +149,7 @@ public:
     virtual void go_berserk(bool intentional) = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
-    virtual void mutate() = 0;
+    virtual bool mutate() = 0;
     virtual int hurt(const actor *attacker, int amount) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
     virtual void banish(const std::string &who = "") = 0;
@@ -843,7 +843,7 @@ public:
     void go_berserk(bool intentional);
     bool can_mutate() const;
     bool can_safely_mutate() const;
-    void mutate();
+    bool mutate();
     void banish(const std::string &who = "");
     void blink();
     void teleport(bool right_now = false, bool abyss_shift = false);
@@ -1167,7 +1167,7 @@ public:
     void go_berserk(bool intentional);
     bool can_mutate() const;
     bool can_safely_mutate() const;
-    void mutate();
+    bool mutate();
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
     bool visible() const;

@@ -6458,18 +6458,21 @@ bool player::can_safely_mutate() const
                     && you.hunger_state == HS_ENGORGED)));
 }
 
-void player::mutate()
+bool player::mutate()
 {
     if (!can_mutate())
-        return;
+        return false;
 
     if (one_chance_in(5))
     {
         if (::mutate(RANDOM_MUTATION))
+        {
             learned_something_new(TUT_YOU_MUTATED);
+            return true;
+        }
     }
-    else
-        give_bad_mutation();
+
+    return give_bad_mutation();
 }
 
 bool player::is_icy() const

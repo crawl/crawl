@@ -4215,13 +4215,13 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
 
     if (beam.flavour == BEAM_POLYMORPH)
     {
-        if (mons_holiness( mon ) != MH_NATURAL)
+        if (!mon->can_mutate())
             return (MON_UNAFFECTED);
 
         if (check_mons_resist_magic( mon, beam.ench_power ))
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
-        if (monster_polymorph(mon, RANDOM_MONSTER))
+        if (mon->mutate())
             beam.obvious_effect = true;
 
         if (YOU_KILL(beam.thrower))
