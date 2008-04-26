@@ -3012,7 +3012,7 @@ static bool _zin_retribution()
     case 3:
     case 4: // recital (20%)
         simple_god_message(" recites the Axioms of Law to you!", god);
-        switch (one_chance_in(3))
+        switch (random2(3))
         {
         case 0:
             confuse_player( 3 + random2(10), false );
