@@ -1651,10 +1651,10 @@ static mutation_type get_random_mutation(bool prefer_good,
 bool mutate(mutation_type which_mutation, bool failMsg,
             bool force_mutation, bool demonspawn)
 {
-    mutation_type mutat = which_mutation;
-
     if (demonspawn)
         force_mutation = true;
+
+    mutation_type mutat = which_mutation;
 
     bool rotting = you.is_undead;
     if (you.is_undead == US_SEMI_UNDEAD)
