@@ -1676,7 +1676,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     bool rotting = you.is_undead;
     if (you.is_undead == US_SEMI_UNDEAD)
     {
-        // The stat gain mutation always come through at Satiated or
+        // The stat gain mutations always come through at Satiated or
         // higher (mostly for convenience), and, for consistency, also
         // their negative counterparts.
         if (which_mutation == MUT_STRONG || which_mutation == MUT_CLEVER
