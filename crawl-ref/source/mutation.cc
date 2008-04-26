@@ -2014,18 +2014,18 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_HORNS:
-        {
-            mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+    {
+        mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
 
-            // horns force hard helmets off
-            if (you.equip[EQ_HELMET] != -1
-                && !is_hard_helmet( you.inv[you.equip[EQ_HELMET]] ))
-            {
-                break;
-            }
-            remove_one_equip(EQ_HELMET);
+        // horns force hard helmets off
+        if (you.equip[EQ_HELMET] != -1
+            && !is_hard_helmet( you.inv[you.equip[EQ_HELMET]] ))
+        {
+            break;
         }
+        remove_one_equip(EQ_HELMET);
         break;
+    }
 
     case MUT_STRONG_STIFF:
         if (you.mutation[MUT_FLEXIBLE_WEAK] > 0)
