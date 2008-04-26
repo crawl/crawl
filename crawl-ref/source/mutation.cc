@@ -1694,7 +1694,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     // except for demonspawn (or other permamutations) in lichform -- haranp
     if (rotting && !demonspawn)
     {
-        // A god gift overrides an amulet of resist mutation.
+        // God gifts override amulets of resist mutation.
         if ((wearing_amulet(AMU_RESIST_MUTATION) ? !one_chance_in(10)
                                                  : one_chance_in(3))
             && !god_gift)
@@ -1723,7 +1723,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     if (!force_mutation)
     {
-        // A god gift overrides an amulet of resist mutation.
+        // God gifts override amulets of resist mutation.
         if ((wearing_amulet(AMU_RESIST_MUTATION) && !one_chance_in(10)
                 && !god_gift)
             || you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY)
@@ -1812,7 +1812,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
     }
 
-    // This one can be forced by demonspawn or a god gift
+    // This one can be forced by demonspawn or god gifts.
     if (mutat == MUT_REGENERATION
         && you.mutation[MUT_SLOW_METABOLISM] > 0 && !god_gift
         && !force_mutation)
@@ -1823,7 +1823,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (mutat == MUT_SLOW_METABOLISM && you.mutation[MUT_REGENERATION] > 0)
         return false;           // if you have regen, no slow metabolism
 
-    // This one can be forced by demonspawn or a god gift
+    // This one can be forced by demonspawn or god gifts.
     if (mutat == MUT_ACUTE_VISION
         && you.mutation[MUT_BLURRY_VISION] > 0 && !god_gift
         && !force_mutation)
