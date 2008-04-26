@@ -2399,6 +2399,9 @@ static void _dock_piety(int piety_loss, int penance)
 
 void gain_piety(int pgn)
 {
+    if (pgn <= 0)
+        return;
+
     // Xom uses piety differently...
     if (you.religion == GOD_XOM || you.religion == GOD_NO_GOD)
         return;
@@ -2781,6 +2784,9 @@ bool trog_burn_books()
 
 void lose_piety(int pgn)
 {
+    if (pgn <= 0)
+        return;
+
     const int old_piety = you.piety;
 
     // Apply hysteresis
