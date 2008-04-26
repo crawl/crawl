@@ -721,8 +721,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
     const bool gives_xp      = !monster->has_ench(ENCH_ABJ);
 
-          bool death_message = !silent && mons_near(monster)
-                               && player_monster_visible(monster);
           bool in_transit    = false;
           bool drop_items    = !hard_reset;
 
@@ -806,7 +804,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         {
             simple_monster_message( monster, " dissipates!",
                                     MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
-            death_message = false;
+            silent = true;
         }
 
         if (monster->type == MONS_FIRE_VORTEX)
@@ -825,7 +823,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         {
             simple_monster_message( monster, " vapourises!",
                                     MSGCH_MONSTER_DAMAGE,  MDAM_DEAD );
-            death_message = false;
+            silent = true;
         }
 
         place_cloud(CLOUD_COLD, monster->x, monster->y, 2 + random2(4),
@@ -842,7 +840,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             {
                 simple_monster_message( monster, " falls from the air.",
                                         MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
-                death_message = false;
+                silent = true;
             }
         }
 
@@ -852,6 +850,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 killer = KILL_DISMISSED;
         }
     }
+
+    bool death_message =
+        (!silent && mons_near(monster) && player_monster_visible(monster));
 
     switch (killer)
     {
