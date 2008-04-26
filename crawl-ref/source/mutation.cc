@@ -1649,7 +1649,8 @@ static mutation_type get_random_mutation(bool prefer_good,
 }
 
 bool mutate(mutation_type which_mutation, bool failMsg,
-            bool force_mutation, bool demonspawn)
+            bool force_mutation, bool god_gift,
+            bool demonspawn)
 {
     if (demonspawn)
         force_mutation = true;
@@ -1693,8 +1694,17 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     // except for demonspawn (or other permamutations) in lichform -- haranp
     if (rotting && !demonspawn)
     {
-        if (wearing_amulet(AMU_RESIST_MUTATION) ? one_chance_in(10)
-                                                : !one_chance_in(3))
+        // Temporary resistance can be overridden by a god gift.
+        if ((wearing_amulet(AMU_RESIST_MUTATION) ? !one_chance_in(10)
+                                                 : one_chance_in(3))
+            && !god_gift)
+        {
+            if (failMsg)
+                mpr("You feel odd for a moment.", MSGCH_MUTATION);
+
+            return (false);
+        }
+        else
         {
             mpr( "Your body decomposes!", MSGCH_MUTATION );
 
@@ -1709,17 +1719,14 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             xom_is_stimulated(64);
             return (true);
         }
-
-        if (failMsg)
-            mpr("You feel odd for a moment.", MSGCH_MUTATION);
-
-        return (false);
     }
 
     if (!force_mutation)
     {
-        if (wearing_amulet(AMU_RESIST_MUTATION) && !one_chance_in(10)
-            || you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY)
+        // Temporary resistance can be overridden by a god gift.
+        if (((wearing_amulet(AMU_RESIST_MUTATION) && !one_chance_in(10))
+            || (you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY))
+                && !god_gift)
             || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
             || player_mutation_level(MUT_MUTATION_RESISTANCE)
                && !one_chance_in(3))
@@ -1778,7 +1785,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (you.mutation[mutat] > 13 && !force_mutation)
         return false;
 
-    // These can be forced by demonspawn
     if ((mutat == MUT_TOUGH_SKIN || mutat == MUT_SHAGGY_FUR
             || mutat >= MUT_GREEN_SCALES && mutat <= MUT_BONEY_PLATES
             || mutat >= MUT_RED_SCALES && mutat <= MUT_PATTERNED_SCALES)
@@ -1805,9 +1811,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
     }
 
-    // This one can be forced by demonspawn
+    // This one can be forced by demonspawn or a god gift
     if (mutat == MUT_REGENERATION
-        && you.mutation[MUT_SLOW_METABOLISM] > 0 && !force_mutation)
+        && you.mutation[MUT_SLOW_METABOLISM] > 0 && !god_gift
+        && !force_mutation)
     {
         return false;           // if you have a slow metabolism, no regen
     }
@@ -1815,9 +1822,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (mutat == MUT_SLOW_METABOLISM && you.mutation[MUT_REGENERATION] > 0)
         return false;           // if you have regen, no slow metabolism
 
-    // This one can be forced by demonspawn
+    // This one can be forced by demonspawn or a god gift
     if (mutat == MUT_ACUTE_VISION
-        && you.mutation[MUT_BLURRY_VISION] > 0 && !force_mutation)
+        && you.mutation[MUT_BLURRY_VISION] > 0 && !god_gift
+        && !force_mutation)
     {
         return false;
     }
@@ -1937,8 +1945,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_REGENERATION:
         if (you.mutation[MUT_SLOW_METABOLISM] > 0)
         {
-            // Should only get here from demonspawn, where our innate
-            // ability will clear away the counter-mutation.
+            // Should only get here from demonspawn or a god gift, where
+            // our innate ability will clear away the counter-mutation.
             while (delete_mutation(MUT_SLOW_METABOLISM))
                 ;
         }
@@ -1948,8 +1956,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_ACUTE_VISION:
         if (you.mutation[MUT_BLURRY_VISION] > 0)
         {
-            // Should only get here from demonspawn, where our innate
-            // ability will clear away the counter-mutation.
+            // Should only get here from demonspawn or a god gift, where
+            // our innate ability will clear away the counter-mutation.
             while (delete_mutation(MUT_BLURRY_VISION))
                 ;
         }
@@ -2747,13 +2755,13 @@ bool perma_mutate(mutation_type which_mut, int how_much)
     how_much = std::min(static_cast<short>(how_much),
                         mutation_defs[which_mut].levels);
 
-    if (mutate(which_mut, false, true, true))
+    if (mutate(which_mut, false, true, false, true))
         levels++;
 
-    if (how_much >= 2 && mutate(which_mut, false, true, true))
+    if (how_much >= 2 && mutate(which_mut, false, true, false, true))
         levels++;
 
-    if (how_much >= 3 && mutate(which_mut, false, true, true))
+    if (how_much >= 3 && mutate(which_mut, false, true, false, true))
         levels++;
 
     you.demon_pow[which_mut] = levels;

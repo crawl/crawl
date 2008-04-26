@@ -638,7 +638,7 @@ static bool xom_is_good(int sever)
         bool failMsg = true;
         for (int i = random2(4); i >= 0; --i)
         {
-            if (mutate(RANDOM_GOOD_MUTATION, failMsg, true))
+            if (mutate(RANDOM_GOOD_MUTATION, failMsg, false, false, true))
                 done = true;
             else
                 failMsg = false;
@@ -770,7 +770,7 @@ static bool xom_is_bad(int sever)
             bool failMsg = true;
             for (int i = random2(4); i >= 0; --i)
             {
-                if (mutate(RANDOM_XOM_MUTATION, failMsg, true))
+                if (mutate(RANDOM_XOM_MUTATION, failMsg, false, false, true))
                     done = true;
                 else
                     failMsg = false;
