@@ -1989,7 +1989,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             delete_mutation(MUT_FAST_METABOLISM);
             return true;
         }
-        //if (you.mutation[mutat] == 0 || you.mutation[mutat] == 2)
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
