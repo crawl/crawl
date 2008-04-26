@@ -1039,21 +1039,12 @@ static bool _mutation_is_fully_inactive(mutation_type mut)
             && !you.demon_pow[mut] && !mutation_defs[mut].physical);
 }
 
-// Is there any sense in trying to mutate?
-//
-// Avoid the following cases:
-//     * undead players who can decompose (potentially lethal)
-//     * players with the full mutation resistance mutation (useless)
-//
-// Don't avoid the following cases:
-//     * players with amulets of resist mutation (sometimes fails)
-//     * players who resist mutation due to high Zin piety (same reason)
+// Can the player mutate without decomposing?
 bool can_safely_mutate()
 {
-    return ((!you.is_undead
+    return (!you.is_undead
             || (you.is_undead == US_SEMI_UNDEAD
-                && you.hunger_state == HS_ENGORGED))
-            && player_mutation_level(MUT_MUTATION_RESISTANCE) != 3);
+                && you.hunger_state == HS_ENGORGED));
 }
 
 formatted_string describe_mutations()
@@ -1665,8 +1656,8 @@ static mutation_type get_random_mutation(bool prefer_good,
     return (chosen);
 }
 
-bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
-            bool demonspawn)
+bool mutate(mutation_type which_mutation, bool failMsg,
+            bool force_mutation, bool demonspawn)
 {
     mutation_type mutat = which_mutation;
 
@@ -2203,13 +2194,15 @@ bool delete_mutation(mutation_type which_mutation, bool force_mutation)
 {
     mutation_type mutat = which_mutation;
 
-    if (!force_mutation
-        && ( player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
-             && (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                 || coinflip()) ) )
+    if (!force_mutation)
     {
-        mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
-        return false;
+        if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
+            && (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+                || coinflip()))
+        {
+            mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
+            return false;
+        }
     }
 
     if (which_mutation == RANDOM_MUTATION
@@ -2776,26 +2769,27 @@ bool perma_mutate(mutation_type which_mut, int how_much)
     return (levels > 0);
 }                               // end perma_mutate()
 
-bool give_bad_mutation(bool forceMutation, bool failMsg)
+bool give_bad_mutation(bool failMsg, bool force_mutation)
 {
-    mutation_type which_bad_one;
+    mutation_type mutat;
 
-    const int temp_rand = random2(12);
+    switch (random2(12))
+    {
+    case 0: mutat = MUT_CARNIVOROUS; break;
+    case 1: mutat = MUT_HERBIVOROUS; break;
+    case 2: mutat = MUT_FAST; break;
+    case 3: mutat = MUT_WEAK; break;
+    case 4: mutat = MUT_DOPEY; break;
+    case 5: mutat = MUT_CLUMSY; break;
+    case 6: mutat = MUT_TELEPORT; break;
+    case 7: mutat = MUT_DEFORMED; break;
+    case 8: mutat = MUT_SCREAM; break;
+    case 9: mutat = MUT_DETERIORATION; break;
+    case 10: mutat = MUT_BLURRY_VISION; break;
+    case 11: mutat = MUT_FRAIL; break;
+    }
 
-    which_bad_one = ((temp_rand >= 11) ? MUT_CARNIVOROUS :
-                     (temp_rand == 10) ? MUT_HERBIVOROUS :
-                     (temp_rand ==  9) ? MUT_FAST_METABOLISM :
-                     (temp_rand ==  8) ? MUT_WEAK :
-                     (temp_rand ==  7) ? MUT_DOPEY :
-                     (temp_rand ==  6) ? MUT_CLUMSY :
-                     (temp_rand ==  5) ? MUT_TELEPORT :
-                     (temp_rand ==  4) ? MUT_DEFORMED :
-                     (temp_rand ==  3) ? MUT_SCREAM :
-                     (temp_rand ==  2) ? MUT_DETERIORATION :
-                     (temp_rand ==  1) ? MUT_BLURRY_VISION
-                                       : MUT_FRAIL);
-
-    const bool result = mutate(which_bad_one, failMsg, forceMutation);
+    const bool result = mutate(mutat, failMsg, force_mutation);
     if (result)
         learned_something_new(TUT_YOU_MUTATED);
 

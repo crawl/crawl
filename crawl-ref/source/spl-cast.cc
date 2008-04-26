@@ -2982,7 +2982,7 @@ static void _miscast_transmigration(int severity, const char* cause)
             {
                 const bool failMsg = !give_bad_mutation();
                 if (coinflip())
-                    give_bad_mutation(false, failMsg);
+                    give_bad_mutation(failMsg);
                 ouch(5 + random2avg(23, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             }
             break;

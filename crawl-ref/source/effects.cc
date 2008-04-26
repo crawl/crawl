@@ -2500,7 +2500,7 @@ void handle_time( long time_delta )
             if (one_chance_in(5))
                 mutate(RANDOM_MUTATION);
             else
-                give_bad_mutation(coinflip());
+                give_bad_mutation(true, coinflip());
 
             // we're meaner now, what with explosions and whatnot, but
             // we dial down the contamination a little faster if its actually
