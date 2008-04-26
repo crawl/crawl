@@ -2967,9 +2967,8 @@ static bool _zin_retribution()
     // angels/creeping doom theme
     int punishment = random2(10);
 
-    // if little mutated or can't safely unmutate, do something else
-    if (punishment < 2 && how_mutated() <= random2(3)
-        || !you.can_safely_mutate())
+    // if little mutated, do something else instead
+    if (punishment < 2 && how_mutated() <= random2(3))
     {
         punishment = random2(8)+2;
     }
