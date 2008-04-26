@@ -2965,7 +2965,6 @@ void monsters::swap_slots(mon_inv_type a, mon_inv_type b)
 
 void monsters::equip_weapon(item_def &item, int near, bool msg)
 {
-
     if (msg && !need_message(near))
         msg = false;
 
@@ -3054,9 +3053,7 @@ void monsters::equip(item_def &item, int slot, int near)
     {
     case OBJ_WEAPONS:
     {
-        bool give_msg = (slot == MSLOT_WEAPON
-                         || slot == MSLOT_ALT_WEAPON
-                            && mons_wields_two_weapons(this));
+        bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
 
         equip_weapon(item, near, give_msg);
         break;
@@ -3154,9 +3151,7 @@ bool monsters::unequip(item_def &item, int slot, int near, bool force)
     {
     case OBJ_WEAPONS:
     {
-        bool give_msg = (slot == MSLOT_WEAPON
-                         || slot == MSLOT_ALT_WEAPON
-                            && mons_wields_two_weapons(this));
+        bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
 
         unequip_weapon(item, near, give_msg);
         break;
@@ -3242,7 +3237,7 @@ bool monsters::drop_item(int eslot, int near)
     // cursed items from being removed.
     bool was_unequipped = false;
     if (eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR
-        || (eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this) ))
+        || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
         if (!unequip(mitm[index], eslot, near))
             return (false);

@@ -1,0 +1,143 @@
+######################################################
+# monname.txt: lookup monster names
+#
+# This file contains a lists of names for monster
+# names. This is currently only used when one of your
+# orcish follower as Beogh's messiah gets named by 
+# Beogh.
+#
+# Some important syllables
+#   beogh, bog = referring to Beogh
+#   ork, orc, org, ok etc. = referring to orcs
+#
+# Other syllables may be borrowed from real life, 
+# or made up.
+# 
+# Feel free to add to this list. Like for the other
+# database lists, you may add weights (defaults to 
+# w:10) to make certain names more or less likely.
+######################################################
+%%%%
+orc name
+
+# Obvious references to Beogh
+Arbeogh
+
+Bogbarth
+
+# slavic name, meaning "god's gift" :)
+Bogdan
+
+Bogdar
+
+Bogmar
+
+Bogric
+
+Bogrim
+
+Bogwald
+
+Bogward
+
+Bogwik
+
+Morbeogh
+
+Sharbogh
+
+# Obvious references to orcs in general
+Alork
+
+Boruk
+
+Marbork
+
+Milork
+
+Okrist
+
+Oreg
+
+Orgrim
+
+Orik
+
+Orkrul
+
+Orkwin
+
+Oruk
+
+# Other
+Agrik
+
+Arbolt
+
+Argrim
+
+Arkwar
+
+Berold
+
+Bladwarg
+
+Blodwig
+
+Boderik
+
+Bolgrim
+
+Borgoth
+
+Brandogh
+
+Brunolf
+
+Dorog
+
+Garbold
+
+Gorbash
+
+Gorg
+
+Grimold
+
+Herok
+
+Hilgar
+
+Koronagh
+
+Learuk
+
+Margrim
+
+Morguth
+
+Morun
+
+Murdo
+
+Norbak
+
+Olfik
+
+Olfrun
+
+Ugbert
+
+Ugrim
+
+Wardok
+
+Wargrak
+
+Worak
+
+Wulfoc
+
+Zorug
+
+%%%%

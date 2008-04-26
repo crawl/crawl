@@ -1849,9 +1849,32 @@ static void _mpr_monsters()
 
 }
 
-/* note that in some actions, you don't want to clear afterwards.
-   e.g. list_jewellery, etc. */
+static void _print_friendly_pickup_setting(bool was_changed)
+{
+    std::string now = (was_changed? "now " : "");
 
+    if (Options.friendly_pickup == -1)
+    {
+        mprf("Your allies are %sforbidden to pick up anything at all.",
+             now.c_str());
+    }
+    else if (Options.friendly_pickup == 0)
+    {
+        mprf("Your allies may %sonly pick up items dropped by allies.",
+             now.c_str());
+    }
+    else if (Options.friendly_pickup == 1)
+    {
+        mprf("Your allies may %spick up anything they need.", now.c_str());
+    }
+    else
+    {
+        mprf("Your allies are %scollecting bugs!", now.c_str());
+    }
+}
+
+// note that in some actions, you don't want to clear afterwards.
+//  e.g. list_jewellery, etc.
 void process_command( command_type cmd )
 {
     apply_berserk_penalty = true;
@@ -2016,24 +2039,28 @@ void process_command( command_type cmd )
         break;
 
     case CMD_TOGGLE_FRIENDLY_PICKUP:
+    {
         // Toggle pickup mode for friendlies.
-        if (Options.friendly_pickup == -1)
-        {
+        _print_friendly_pickup_setting(false);
+        mpr("Change to (n)othing, (f)riend-dropped, or (a)ll? ", MSGCH_PROMPT);
+
+        char type = (char) getchm(KC_DEFAULT);
+        type = tolower(type);
+
+        if (type == 'n')
+            Options.friendly_pickup = -1;
+        else if (type == 'f')
             Options.friendly_pickup = 0;
-            mpr("Your allies may now only pick up items dropped by allies.");
-        }
-        else if (Options.friendly_pickup == 0)
-        {
+        else if (type == 'a')
             Options.friendly_pickup = 1;
-            mpr("Your allies may now pick up anything they need.");
-        }
         else
         {
-            Options.friendly_pickup = -1;
-            mpr("Your allies are now forbidden to pick up anything at all.");
+            canned_msg( MSG_OK );
+            break;
         }
+        _print_friendly_pickup_setting(true);
         break;
-
+    }
     case CMD_MAKE_NOTE:
         make_user_note();
         break;

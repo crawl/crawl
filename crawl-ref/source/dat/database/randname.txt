@@ -46,6 +46,13 @@
 # with orc slaying, or that Zin doesn't get picked for 
 # randarts with mutagenic properties.
 #
+# Randart names may only have a maximum length of 25
+# symbols (spaces included). This comparison takes
+# place after all replacements have been taken care
+# of, and the name is thus complete. If a name turns
+# out to be longer than this threshold, the game
+# will roll another one.
+#
 # Note that weapons and armour use database names for
 # only half of all randarts created (the others are
 # entirely random names), for jewellery this is only 
@@ -684,137 +691,5 @@ glittering
 
 w:160
 @general appearance@
-%%%%
-
-##############################################
-# monster names
-##############################################
-orc name
-
-# Some important syllables
-#   beogh, bog = referring to Beogh
-#   ork, orc, org, ok, oc, og (and more) = referring to orcs
-#
-# Other syllables may be borrowed from real life, or made up.
-
-# Obvious references to Beogh
-Arbeogh
-
-Bogbarth
-
-# slavic name, meaning "god's gift" :)
-Bogdan
-
-Bogdar
-
-Bogmar
-
-Bogric
-
-Bogrim
-
-Bogwald
-
-Bogward
-
-Bogwik
-
-Morbeogh
-
-Sharbogh
-
-# Obvious references to orcs in general
-Alork
-
-Boruk
-
-Marbork
-
-Milork
-
-Okrist
-
-Oreg
-
-Orgrim
-
-Orik
-
-Orkrul
-
-Orkwin
-
-Oruk
-
-# Other
-Agrik
-
-Arbolt
-
-Argrim
-
-Arkwar
-
-Berold
-
-Bladwarg
-
-Blodwig
-
-Boderik
-
-Bolgrim
-
-Borgoth
-
-Brandogh
-
-Brunolf
-
-Dorog
-
-Garbold
-
-Gorbash
-
-Gorg
-
-Grimold
-
-Herok
-
-Hilgar
-
-Koronagh
-
-Learuk
-
-Margrim
-
-Morguth
-
-Morun
-
-Murdo
-
-Norbak
-
-Olfik
-
-Olfrun
-
-Ugbert
-
-Ugrim
-
-Wardok
-
-Wargrak
-
-Worak
-
-Wulfoc
-
-Zorug
 
 %%%%
