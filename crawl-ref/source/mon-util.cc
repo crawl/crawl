@@ -5431,9 +5431,19 @@ bool monsters::can_see(const actor *target) const
     return (num_feats_between(x, y, tx, ty, DNGN_UNSEEN, DNGN_MAXOPAQUE) == 0);
 }
 
+bool monsters::can_mutate() const
+{
+    return (holiness() == MH_NATURAL);
+}
+
+bool monsters::can_safely_mutate() const
+{
+    return (can_mutate());
+}
+
 void monsters::mutate()
 {
-    if (holiness() != MH_NATURAL)
+    if (!can_mutate())
         return;
 
     monster_polymorph(this, RANDOM_MONSTER);

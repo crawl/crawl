@@ -416,7 +416,7 @@ bool there_are_monsters_nearby()
 
 static bool choose_mutatable_monster(const monsters* mon)
 {
-    return (mon->alive() && mons_holiness(mon) == MH_NATURAL
+    return (mon->alive() && mon->can_safely_mutate()
         && !mons_is_submerged(mon));
 }
 
@@ -626,7 +626,7 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 9)
     {
-        if (!can_safely_mutate())
+        if (!you.can_safely_mutate())
             goto try_again;
 
         god_speaks(GOD_XOM, _get_xom_speech("good mutations"));
@@ -758,7 +758,7 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 6)
         {
-            if (!can_safely_mutate())
+            if (!you.can_safely_mutate())
                 goto try_again;
 
             god_speaks(GOD_XOM, _get_xom_speech("random mutations"));

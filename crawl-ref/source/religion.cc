@@ -2969,7 +2969,7 @@ static bool _zin_retribution()
 
     // if little mutated or can't safely unmutate, do something else
     if (punishment < 2 && how_mutated() <= random2(3)
-        || !can_safely_mutate())
+        || !you.can_safely_mutate())
     {
         punishment = random2(8)+2;
     }

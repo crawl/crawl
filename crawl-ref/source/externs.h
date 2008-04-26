@@ -147,6 +147,8 @@ public:
     virtual bool can_see(const actor *target) const = 0;
     virtual bool is_icy() const = 0;
     virtual void go_berserk(bool intentional) = 0;
+    virtual bool can_mutate() const = 0;
+    virtual bool can_safely_mutate() const = 0;
     virtual void mutate() = 0;
     virtual int hurt(const actor *attacker, int amount) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
@@ -839,6 +841,8 @@ public:
     bool can_go_berserk() const;
     bool can_go_berserk(bool verbose) const;
     void go_berserk(bool intentional);
+    bool can_mutate() const;
+    bool can_safely_mutate() const;
     void mutate();
     void banish(const std::string &who = "");
     void blink();
@@ -1161,6 +1165,8 @@ public:
     void attacking(actor *other);
     bool can_go_berserk() const;
     void go_berserk(bool intentional);
+    bool can_mutate() const;
+    bool can_safely_mutate() const;
     void mutate();
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);

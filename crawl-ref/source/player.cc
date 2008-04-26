@@ -6445,8 +6445,24 @@ bool player::haloed() const
     return (halo_radius());
 }
 
+bool player::can_mutate() const
+{
+    return true;
+}
+
+bool player::can_safely_mutate() const
+{
+    return (can_mutate()
+            && (!you.is_undead
+                || (you.is_undead == US_SEMI_UNDEAD
+                    && you.hunger_state == HS_ENGORGED)));
+}
+
 void player::mutate()
 {
+    if (!can_mutate())
+        return;
+
     if (one_chance_in(5))
     {
         if (::mutate(RANDOM_MUTATION))
