@@ -4617,7 +4617,8 @@ static inline bool _mons_natural_regen_roll(monsters *monster)
 // Do natural regeneration for monster.
 static void _monster_regenerate(monsters *monster)
 {
-    if (monster->has_ench(ENCH_SICK))
+    if (monster->has_ench(ENCH_SICK)
+        || mons_class_flag(monster->type, M_NO_REGEN))
         return;
 
     // Non-land creatures out of their element cannot regenerate.

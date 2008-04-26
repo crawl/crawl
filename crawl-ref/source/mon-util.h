@@ -121,6 +121,7 @@ enum mons_class_flags
     M_TWOWEAPON         = (1<<25),        // wields two weapons at once
 
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
+    M_NO_REGEN          = (1<<27),        // cannot regenerate
 
     M_NO_SKELETON       = (1<<29),        // boneless corpses
     M_NO_EXP_GAIN       = (1<<31)         // worth 0 xp
