@@ -51,7 +51,7 @@
 #include "xom.h"
 
 
-static char body_covered(void);
+static int body_covered(void);
 
 const char *troll_claw_descrip[4] = {
     "You have claws for hands.",
@@ -2369,10 +2369,10 @@ bool delete_mutation(mutation_type which_mutation, bool force_mutation)
     return true;
 }                               // end delete_mutation()
 
-static char body_covered(void)
+static int body_covered(void)
 {
     // checks how much of your body is covered by scales, etc.
-    char covered = 0;
+    int covered = 0;
 
     if (you.species == SP_NAGA)
         covered++;
@@ -2439,7 +2439,7 @@ void demonspawn(void)
     char howm = 1;
     int counter = 0;
 
-    const int scale_levels = body_covered();
+    const int covered = body_covered();
 
     you.attribute[ATTR_NUM_DEMONIC_POWERS]++;
 
@@ -2658,7 +2658,7 @@ void demonspawn(void)
                 howm = 2;
             }
 
-            if (scale_levels < 3 && one_chance_in( 1 + scale_levels * 5 ))
+            if (covered < 3 && one_chance_in( 1 + covered * 5 ))
             {
                 const int bonus = (you.experience_level < 10) ? 0 : 1;
                 int levels = 0;
@@ -2719,7 +2719,7 @@ void demonspawn(void)
                 }
 
                 if (levels)
-                    howm = std::min(3 - scale_levels, levels + bonus);
+                    howm = std::min(3 - covered, levels + bonus);
             }
 
             if (one_chance_in(25))
