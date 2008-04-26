@@ -814,6 +814,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             place_cloud(CLOUD_FIRE, monster->x, monster->y, 2 + random2(4),
                         monster->kill_alignment());
         }
+
+        if (killer == KILL_RESET)
+            killer = KILL_DISMISSED;
     }
     else if (monster->type == MONS_SIMULACRUM_SMALL
              || monster->type == MONS_SIMULACRUM_LARGE)
