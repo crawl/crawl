@@ -777,8 +777,8 @@ int cast_revitalisation(int pow)
             {
                 inc_hp(hp_amt, false);
 
-                loss_amt = steps + random2(3);
-                if (loss_amt)
+                loss_amt = steps + 1 + (random2(3) - 1);
+                if (loss_amt > 0)
                     lose_piety(loss_amt);
             }
 
@@ -796,8 +796,8 @@ int cast_revitalisation(int pow)
             {
                 inc_mp(mp_amt, false);
 
-                loss_amt = steps + random2(3);
-                if (loss_amt)
+                loss_amt = steps + 1 + (random2(3) - 1);
+                if (loss_amt > 0)
                     lose_piety(loss_amt);
             }
 
