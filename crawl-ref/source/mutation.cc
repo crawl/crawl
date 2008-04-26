@@ -1694,7 +1694,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     // except for demonspawn (or other permamutations) in lichform -- haranp
     if (rotting && !demonspawn)
     {
-        // Less-than-perfect resistance can be overridden by a god gift.
+        // A god gift overrides an amulet of resist mutation.
         if ((wearing_amulet(AMU_RESIST_MUTATION) ? !one_chance_in(10)
                                                  : one_chance_in(3))
             && !god_gift)
@@ -1723,10 +1723,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     if (!force_mutation)
     {
-        // Less-than-perfect resistance can be overridden by a god gift.
-        if (((wearing_amulet(AMU_RESIST_MUTATION) && !one_chance_in(10))
-            || (you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY))
+        // A god gift overrides an amulet of resist mutation.
+        if ((wearing_amulet(AMU_RESIST_MUTATION) && !one_chance_in(10)
                 && !god_gift)
+            || you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY)
             || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
             || player_mutation_level(MUT_MUTATION_RESISTANCE)
                && !one_chance_in(3))
