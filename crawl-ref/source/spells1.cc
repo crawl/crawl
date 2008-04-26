@@ -761,7 +761,7 @@ int cast_healing( int pow, int target_x, int target_y )
 
 int cast_revitalisation(int pow)
 {
-    const int max_steps = std::min(6, pow);
+    const int max_steps = std::min(pow, 6);
     int steps = 0;
     int loss_amt;
 
