@@ -1801,7 +1801,7 @@
     SPELL_IGNITE_POISON, "Ignite Poison",
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
-     7,
+     6,
      200,
      NULL,
      false,
