@@ -101,7 +101,7 @@ lua_file = lua/pickup.lua
 # drop_mode = (multi | single)
 # pickup_mode = (single | multi | auto:5)
 # drop_filter = skeleton, rotting, corpse
-# default_friendly_pickup = friend
+# default_friendly_pickup = (none | friend | all)
 
 ##### 4-b	Targetting ############################
 #

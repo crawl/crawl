@@ -2963,9 +2963,13 @@ void monsters::swap_slots(mon_inv_type a, mon_inv_type b)
     inv[b] = swap;
 }
 
-void monsters::equip_weapon(item_def &item, int near)
+void monsters::equip_weapon(item_def &item, int near, bool msg)
 {
-    if (need_message(near))
+
+    if (msg && !need_message(near))
+        msg = false;
+
+    if (msg)
     {
         mprf("%s wields %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A, false, false, true,
@@ -2976,7 +2980,7 @@ void monsters::equip_weapon(item_def &item, int near)
     if (brand == SPWPN_PROTECTION)
         ac += 5;
 
-    if (brand != SPWPN_NORMAL && need_message(near))
+    if (msg && brand != SPWPN_NORMAL)
     {
         bool message_given = true;
         switch (brand)
@@ -3049,8 +3053,14 @@ void monsters::equip(item_def &item, int slot, int near)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        equip_weapon(item, near);
+    {
+        bool give_msg = (slot == MSLOT_WEAPON
+                         || slot == MSLOT_ALT_WEAPON
+                            && mons_wields_two_weapons(this));
+
+        equip_weapon(item, near, give_msg);
         break;
+    }
     case OBJ_ARMOUR:
         equip_armour(item, near);
         break;
@@ -3059,9 +3069,12 @@ void monsters::equip(item_def &item, int slot, int near)
     }
 }
 
-void monsters::unequip_weapon(item_def &item, int near)
+void monsters::unequip_weapon(item_def &item, int near, bool msg)
 {
-    if (need_message(near))
+    if (msg && !need_message(near))
+        msg = false;
+
+    if (msg)
     {
         mprf("%s unwields %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A, false, false, true,
@@ -3072,7 +3085,7 @@ void monsters::unequip_weapon(item_def &item, int near)
     if (brand == SPWPN_PROTECTION)
         ac -= 5;
 
-    if (brand != SPWPN_NORMAL && need_message(near))
+    if (msg && brand != SPWPN_NORMAL)
     {
         bool message_given = true;
         switch (brand)
@@ -3140,12 +3153,14 @@ bool monsters::unequip(item_def &item, int slot, int near, bool force)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        unequip_weapon(item, near);
-        break;
+    {
+        bool give_msg = (slot == MSLOT_WEAPON
+                         || slot == MSLOT_ALT_WEAPON
+                            && mons_wields_two_weapons(this));
 
-    // Armour swapping not implemented yet, but armour can be
-    // removed if wizard forces monster to wear a new piece of
-    // armour with the "give item" wizard command.
+        unequip_weapon(item, near, give_msg);
+        break;
+    }
     case OBJ_ARMOUR:
         unequip_armour(item, near);
         break;
@@ -3315,6 +3330,7 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
             if (is_range_weapon(*weap))
                 continue;
 
+            // Don't drop weapons specific to the monster.
             if (_is_unique_weapon(this, *weap))
                 continue;
 

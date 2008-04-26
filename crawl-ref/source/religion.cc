@@ -1244,7 +1244,7 @@ bool bless_follower(int follower,
     }
 
     // These effects happen if no other blessing was chosen (90%), or if
-    // the above attempts all were unsuccessful.
+    // the above attempts were all unsuccessful.
     switch (god)
     {
         case GOD_SHINING_ONE:
