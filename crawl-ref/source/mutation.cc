@@ -2215,7 +2215,7 @@ bool delete_mutation(mutation_type which_mutation, bool force_mutation)
                || random2(10) >= mutation_defs[mutat].rarity
                || you.demon_pow[mutat] >= you.mutation[mutat]
                || which_mutation == RANDOM_GOOD_MUTATION
-                   && (!mutation_defs[mutat].bad || one_chance_in(10)));
+                   && (mutation_defs[mutat].bad || one_chance_in(10)));
     }
 
     if (you.mutation[mutat] == 0)
