@@ -6472,7 +6472,7 @@ bool player::mutate()
         }
     }
 
-    return give_bad_mutation();
+    return (give_bad_mutation());
 }
 
 bool player::is_icy() const
