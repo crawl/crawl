@@ -775,6 +775,7 @@ int cast_revitalisation(int pow)
                  ++steps, hp_amt *= 2)
             {
                 inc_hp(hp_amt, false);
+                lose_piety(steps + 1);
             }
 
             break;
@@ -790,6 +791,7 @@ int cast_revitalisation(int pow)
                  ++steps, mp_amt *= 2)
             {
                 inc_mp(mp_amt, false);
+                lose_piety(steps + 1);
             }
 
             break;
@@ -802,10 +804,7 @@ int cast_revitalisation(int pow)
     }
 
     if (steps > 0)
-    {
         mpr("You feel renewed.");
-        lose_piety(steps * 2 / 3);
-    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
