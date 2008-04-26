@@ -3954,7 +3954,7 @@ static bool _beogh_followers_abandon_you()
         }
     }
 
-    if (reconvert) // maybe all of them invisible
+    if (reconvert) // maybe all of them are invisible
     {
         simple_god_message("'s voice booms out, \"Who do you think you "
                            "are?\"", GOD_BEOGH);
