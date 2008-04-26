@@ -2182,7 +2182,8 @@ int how_mutated(bool all, bool levels)
     return (j);
 }                               // end how_mutated()
 
-bool delete_mutation(mutation_type which_mutation, bool force_mutation)
+bool delete_mutation(mutation_type which_mutation,
+                     bool force_mutation)
 {
     mutation_type mutat = which_mutation;
 
