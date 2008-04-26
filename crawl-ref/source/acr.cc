@@ -1248,6 +1248,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 
     // Miscellaneous non-repeatable commands.
     case CMD_TOGGLE_AUTOPICKUP:
+    case CMD_TOGGLE_FRIENDLY_PICKUP:
     case CMD_ADJUST_INVENTORY:
     case CMD_REPLAY_MESSAGES:
     case CMD_REDRAW_SCREEN:
@@ -2012,6 +2013,25 @@ void process_command( command_type cmd )
         }
         else
             _toggle_flag( &Options.autoprayer_on, "Autoprayer" );
+        break;
+
+    case CMD_TOGGLE_FRIENDLY_PICKUP:
+        // Toggle pickup mode for friendlies.
+        if (Options.friendly_pickup == -1)
+        {
+            Options.friendly_pickup = 0;
+            mpr("Your allies may now only pick up items dropped by allies.");
+        }
+        else if (Options.friendly_pickup == 0)
+        {
+            Options.friendly_pickup = 1;
+            mpr("Your allies may now pick up anything they need.");
+        }
+        else
+        {
+            Options.friendly_pickup = -1;
+            mpr("Your allies are now forbidden to pick up anything at all.");
+        }
         break;
 
     case CMD_MAKE_NOTE:
@@ -2831,8 +2851,7 @@ static void _decrement_durations()
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
         {
             const int chance =
-                10 +
-                player_mutation_level(MUT_BERSERK) * 25
+                10 + player_mutation_level(MUT_BERSERK) * 25
                 + (wearing_amulet( AMU_RAGE ) ? 10 : 0)
                 + (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
 
@@ -3521,7 +3540,7 @@ static command_type _keycode_to_command( keycode_type key )
 #endif
     case CONTROL('R'): return CMD_REDRAW_SCREEN;
     case CONTROL('S'): return CMD_MARK_STASH;
-    case CONTROL('T'): return CMD_NO_CMD;
+    case CONTROL('T'): return CMD_TOGGLE_FRIENDLY_PICKUP;
     case CONTROL('V'): return CMD_TOGGLE_AUTOPRAYER;
     case CONTROL('W'): return CMD_FIX_WAYPOINT;
     case CONTROL('X'): return CMD_SAVE_GAME_NOW;
@@ -3949,7 +3968,7 @@ static bool _initialise(void)
 
     init_properties();
     burden_change();
-    make_hungry(0,true);
+    make_hungry(0, true);
 
     you.redraw_strength     = true;
     you.redraw_intelligence = true;
@@ -3982,14 +4001,16 @@ static bool _initialise(void)
     update_turn_count();
 
     trackers_init_new_level(false);
-    // Mark items in inventory as of unknown origin.
-    origin_set_inventory(origin_set_unknown);
+    Options.friendly_pickup = Options.default_friendly_pickup;
 
     // set vision radius to player's current vision
     setLOSRadius( you.current_vision );
 
     if (newc)
     {
+        // Mark items in inventory as of unknown origin.
+        origin_set_inventory(origin_set_unknown);
+
         // For a new game, wipe out monsters in LOS.
         zap_los_monsters();
     }

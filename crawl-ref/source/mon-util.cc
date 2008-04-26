@@ -3691,17 +3691,23 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
             return false;
         }
 
-        // Friendlies may only pick up stuff dropped by (other) allies.
-        if (mons_friendly(this)
-            && !testbits(item.flags, ISFLAG_DROPPED_BY_ALLY))
+        // Depending on the friendly pickup toggle, your allies may not pick
+        // up anything, or only stuff dropped by (other) allies.
+        if (mons_friendly(this))
         {
-            return false;
+            if (Options.friendly_pickup < 0
+                || Options.friendly_pickup == 0
+                   && !testbits(item.flags, ISFLAG_DROPPED_BY_ALLY))
+            {
+                return false;
+            }
         }
 
-        // These are not important enough for pickup when seeking, fleeing etc.
         const int itype = item.base_type;
         if (!wandering)
         {
+            // These are not important enough for pickup when
+            // seeking, fleeing etc.
             if (itype == OBJ_ARMOUR || itype == OBJ_CORPSES
                 || itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
             {

@@ -154,7 +154,7 @@ void turn_corpse_into_chunks( item_def &item )
     item.quantity = stepdown_value( item.quantity, 4, 4, 12, 12 );
 
     if (you.species != SP_VAMPIRE)
-        item.flags    &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+        item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     // happens after the corpse has been butchered
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
@@ -2013,21 +2013,13 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         dungeon_terrain_changed(you.pos(), DNGN_FLOOR);
 
     if (stair_find == DNGN_ENTER_LABYRINTH)
-    {
         you.level_type = LEVEL_LABYRINTH;
-    }
     else if (stair_find == DNGN_ENTER_ABYSS)
-    {
         you.level_type = LEVEL_ABYSS;
-    }
     else if (stair_find == DNGN_ENTER_PANDEMONIUM)
-    {
         you.level_type = LEVEL_PANDEMONIUM;
-    }
     else if (stair_find == DNGN_ENTER_PORTAL_VAULT)
-    {
         you.level_type = LEVEL_PORTAL_VAULT;
-    }
 
     // When going downstairs into a special level, delete any previous
     // instances of it
@@ -2045,7 +2037,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (stair_find == DNGN_EXIT_ABYSS || stair_find == DNGN_EXIT_PANDEMONIUM)
     {
         mpr("You pass through the gate.");
-        if (!(you.wizard && crawl_state.is_replaying_keys()))
+        if (!you.wizard || !crawl_state.is_replaying_keys())
             more();
     }
 
@@ -2139,15 +2131,16 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             more();
     }
 
-    const bool newlevel =
-        load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
-             old_level, old_where);
+    const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
+                               old_level, old_where);
 
     set_entry_cause(entry_cause, old_level_type);
     entry_cause = you.entry_cause;
 
     if (newlevel)
     {
+        Options.friendly_pickup = Options.default_friendly_pickup;
+
         switch(you.level_type)
         {
         case LEVEL_DUNGEON:
@@ -2694,12 +2687,12 @@ int str_to_shoptype(const std::string &s)
 /* Decides whether autoprayer Right Now is a good idea. */
 static bool should_autopray()
 {
-    if ( Options.autoprayer_on == false ||
-         you.religion == GOD_NO_GOD ||
-         you.religion == GOD_NEMELEX_XOBEH ||
-         you.duration[DUR_PRAYER] ||
-         grid_altar_god( grd[you.x_pos][you.y_pos] ) != GOD_NO_GOD ||
-         !i_feel_safe() )
+    if ( Options.autoprayer_on == false
+         || you.religion == GOD_NO_GOD
+         || you.religion == GOD_NEMELEX_XOBEH
+         || you.duration[DUR_PRAYER]
+         || grid_altar_god( grd[you.x_pos][you.y_pos] ) != GOD_NO_GOD
+         || !i_feel_safe() )
     {
         return false;
     }

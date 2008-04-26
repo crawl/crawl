@@ -1585,6 +1585,8 @@ public:
 
     bool        autopickup_on;
     bool        autoprayer_on;
+    int         default_friendly_pickup;
+    int         friendly_pickup;
     bool        show_more_prompt;
 
     bool        show_gold_turns; // Show gold and turns in HUD.

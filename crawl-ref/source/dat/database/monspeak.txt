@@ -2112,11 +2112,17 @@ maim
 related beogh orc
 
 # hostile orcs shouldn't be too talkative
-w:80
+w:60
 __NONE
 
-w:30
+w:1
 @_generic_orc_speech_@
+
+w:5
+@_hostile_beogh_speech_@
+
+%%%%
+_hostile_beogh_speech_
 
 # unbelievers
 @The_monster@ @orc_says@, "I don't believe in Beogh!"
@@ -2174,15 +2180,21 @@ VISUAL:@The_monster@ stares at you quizzically.
 friendly related beogh orc
 
 # As they'll be constantly around you, don't let them talk too much.
-w:50
+w:30
 __NONE
 
 # general friendly speech
-w:30
+w:1
 @default friendly humanoid@
 
-w:30
+w:1
 @_generic_orc_speech_@
+
+w:5
+@_friendly_beogh_speech_@
+
+%%%%
+_friendly_beogh_speech_
 
 w:5
 @The_monster@ @loudly_or_repeatedly@ @shouts@ encouragement@orc_modifier@

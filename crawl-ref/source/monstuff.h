@@ -129,6 +129,12 @@ int choose_random_nearby_monster(int weight,
                                  bool in_sight = true,
                                  bool prefer_named = false);
 
+int choose_random_monster_on_level(int weight,
+                                   bool (*suitable)(const monsters* mon) =
+                                       choose_any_monster,
+                                   bool in_sight = true, bool near_by = false,
+                                   bool prefer_named = false);
+
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */

@@ -627,6 +627,8 @@ void game_options::reset_options()
 
     autopickup_on = true;
     autoprayer_on = false;
+    default_friendly_pickup = 0; // allies may only pickup items
+    friendly_pickup         = 0; // dropped by allies
     show_more_prompt = true;
 
     show_gold_turns = false;
@@ -1800,6 +1802,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(use_old_selection_order);
     else BOOL_OPTION_NAMED("default_autopickup", autopickup_on);
     else BOOL_OPTION_NAMED("default_autoprayer", autoprayer_on);
+    else if (key == "default_friendly_pickup")
+    {
+        if (field == "none")
+            friendly_pickup = -1;
+        else if (field == "all")
+            friendly_pickup = 1;
+        else if (field == "friend")
+            friendly_pickup = 0;
+    }
     else BOOL_OPTION(show_inventory_weights);
     else BOOL_OPTION(suppress_startup_errors);
     else BOOL_OPTION(clean_map);
@@ -1961,7 +1972,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         set_fire_order(field, plus_equal);
     }
-    
+
     BOOL_OPTION(random_pick);
     else BOOL_OPTION(remember_name);
 #ifndef SAVE_DIR_PATH
@@ -2247,7 +2258,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
-    
+
     BOOL_OPTION(pickup_thrown);
     else BOOL_OPTION(pickup_dropped);
 #ifdef WIZARD
@@ -2411,7 +2422,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(explore_greedy);
     else BOOL_OPTION(explore_improved);
-    
+
 	BOOL_OPTION(trap_prompt);
 	else if (key == "stash_tracking")
     {

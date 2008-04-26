@@ -1015,60 +1015,6 @@ static bool _tso_blessing_friendliness(monsters *mon)
     return true;
 }
 
-// If there are no nearby followers, try to recall some on the level.
-static int _beogh_blessing_recalling()
-{
-    std::vector<int> recalled;
-
-    FixedVector < char, 2 > empty;
-    empty[0] = empty[1] = 0;
-
-    monsters *mon;
-    for (int loopy = 0; loopy < MAX_MONSTERS; loopy++)
-    {
-        mon = &menv[loopy];
-
-        if (mon->type == -1)
-            continue;
-
-        if (!is_orcish_follower(mon))
-            continue;
-
-        recalled.push_back(loopy);
-    }
-    if (recalled.empty())
-        return 0;
-
-    int count_recalled = 0;
-    int total          = recalled.size();
-    int amount         = 1 + random2(4) + random2(4);
-    bool recall_all    = (total <= amount);
-
-    for (unsigned int loopy = 0; loopy < recalled.size(); loopy++)
-    {
-        mon = &menv[recalled[loopy]];
-
-        if (!recall_all && total == amount)
-            recall_all = true;
-
-        if (recall_all || random2(total) < amount)
-        {
-            if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, 3,
-                                false, empty)
-                && mon->move_to_pos( coord_def(empty[0], empty[1])) )
-            {
-                count_recalled++;
-                amount--;
-            }
-            else
-                break;    // no more room to place monsters
-        }
-        total--;
-    }
-
-    return (count_recalled);
-}
-
 // If you don't currently have any followers, send a small band to help
 // you out.
 static bool _beogh_blessing_reinforcement()
@@ -1133,23 +1079,18 @@ static bool _beogh_blessing_priesthood(monsters* mon)
 }
 
 // Bless the follower indicated in follower, if any.  If there isn't
-// one, bless a random follower within sight of the player, if any.
+// one, bless a random follower within sight of the player, if any, or,
+// with decreasing chances, any follower on the level.
+// Blessing can be enforced with a wizard mode command.
 bool bless_follower(int follower,
                     god_type god,
                     bool (*suitable)(const monsters* mon),
                     bool force)
 {
-    std::string pronoun;
-    std::string blessed;
     std::string result;
     monsters *mon;
 
     int chance = (force ? coinflip() : random2(20));
-
-    if (chance > 2)
-        return false;
-
-    bool is_near = false;
 
     // If a follower was specified, and it's suitable, pick it.
     // Otherwise, pick a random follower within sight of the player.
@@ -1158,60 +1099,57 @@ bool bless_follower(int follower,
         if (god != GOD_BEOGH)
             return false;
 
-        // Choose a random follower in LOS, preferably a named one.
+        if (chance > 2)
+            return false;
+
+        // Choose a random follower in LOS, preferably a named one (10% chance).
         follower = choose_random_nearby_monster(0, suitable, true, true);
 
         if (follower == NON_MONSTER)
         {
-            // Try again, without the LOS restriction.
+            if (coinflip())
+                return false;
+
+            // Try again, without the LOS restriction (5% chance).
             follower = choose_random_nearby_monster(0, suitable, false, true);
-        }
 
-        if (follower == NON_MONSTER)
-        {
-            // If no follower was chosen, either send
-            // reinforcement or get out.
-
-            // First, try to recall orcish followers on level.
-            int  recalled   = _beogh_blessing_recalling();
-            bool reinforced = false;
-
-            if (recalled < 3)
+            if (follower == NON_MONSTER)
             {
-                reinforced = _beogh_blessing_reinforcement();
+                if (coinflip())
+                    return false;
 
-                if (!reinforced || !recalled && coinflip())
+                // Try *again*, on the entire level (2.5% chance).
+                follower = choose_random_monster_on_level(0, suitable,
+                                                          false, false, true);
+
+                if (follower == NON_MONSTER)
                 {
-                    // Try again, or possibly send more reinforcement.
-                    if (_beogh_blessing_reinforcement())
-                        reinforced = true;
-                }
-            }
+                    // If no follower was found, attempt to send
+                    // reinforcement.
+                    bool reinforced = _beogh_blessing_reinforcement();
 
-            if (recalled || reinforced)
-            {
-                pronoun = "";
-                blessed = "you";
+                    if (!reinforced || coinflip())
+                    {
+                        // Try again, or possibly send more reinforcement.
+                        if (_beogh_blessing_reinforcement())
+                            reinforced = true;
+                    }
 
-                if (recalled)
-                    result = "recalling";
-                else if (reinforced)
+                    if (!reinforced)
+                        return false;
+
                     result = "reinforcement";
-                else
-                    result = "recalling and reinforcement";
-
-                goto blessing_done;
+                    goto blessing_done;
+                }
             }
         }
     }
+    ASSERT(follower != -1 && follower != NON_MONSTER);
 
+    // Else, apply blessing to chosen follower.
     mon = &menv[follower];
-    is_near = mons_near(mon);
 
-    pronoun = (mons_is_unique(mon->type)) ? "" : "your ";
-    blessed = (is_near) ? mon->name(DESC_PLAIN).c_str() : "follower";
-
-    if (chance == 0)
+    if (chance == 0) // 5% chance of holy branding, or priesthood
     {
         switch (god)
         {
@@ -1259,7 +1197,8 @@ bool bless_follower(int follower,
     }
 
     // Enchant a monster's weapon or armour/shield by one or two points,
-    // or at least uncurse it, if possible.
+    // or at least uncurse it, if possible (10% chance).
+    // This will happen if the above blessing attempts are unsuccessful.
     if (chance <= 1)
     {
         bool affected;
@@ -1304,6 +1243,8 @@ bool bless_follower(int follower,
         }
     }
 
+    // These effects happen if no other blessing was chosen (90%), or if
+    // the above attempts all were unsuccessful.
     switch (god)
     {
         case GOD_SHINING_ONE:
@@ -1330,20 +1271,27 @@ bool bless_follower(int follower,
                 break;
         }
 
+        // deliberate fallthrough for the healing effects
         case GOD_BEOGH:
         {
             // Remove harmful ailments from a monster, or give it full
             // healing, optionally giving it one extra hit point, if
             // possible.
-            if (coinflip() && _blessing_balms(mon))
+            if (coinflip())
             {
-                result = "divine balms";
-                goto blessing_done;
+                if (_blessing_balms(mon))
+                {
+                    result = "divine balms";
+                    goto blessing_done;
+                }
+                else if (force)
+                    mpr("Couldn't apply balms.");
             }
 
             bool healing = _blessing_healing(mon, false);
             bool vigour = false;
 
+            // Maybe give an extra hit point.
             if (!healing || coinflip())
                 vigour = _blessing_healing(mon, true);
 
@@ -1368,18 +1316,26 @@ bool bless_follower(int follower,
     }
 
 blessing_done:
+
+    bool see_follower = false;
+
     std::string whom = "";
-
-    if (follower != NON_MONSTER)
+    if (follower == NON_MONSTER)
+        whom = "you";
+    else
     {
-        if (!mons_near(mon) || !player_monster_visible(mon))
-            whom = "a follower";
-        else
-            whom = get_unique_monster_name(mon);
-    }
+        if (mons_near(mon) && player_monster_visible(mon))
+            see_follower = true;
 
-    if (whom.empty())
-        whom = pronoun + blessed;
+        if (see_follower)
+        {
+            whom = get_unique_monster_name(mon);
+            if (whom.empty())
+                whom = "your " + mon->name(DESC_PLAIN);
+        }
+        else // cannot see who was blessed
+            whom = "a follower";
+    }
 
     snprintf(info, INFO_SIZE, " blesses %s with %s.",
              whom.c_str(), result.c_str());
@@ -1387,7 +1343,7 @@ blessing_done:
     simple_god_message(info);
 
 #ifndef USE_TILE
-    if (mon && is_near)
+    if (see_follower)
     {
         unsigned char old_flash_colour = you.flash_colour;
         coord_def c(mon->x, mon->y);

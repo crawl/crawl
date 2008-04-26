@@ -78,7 +78,7 @@ void make_hungry( int hunger_amount, bool suppress_msg )
     if (you.is_undead == US_UNDEAD)
         return;
 
-    if (hunger_amount == 0)
+    if (hunger_amount == 0 && !suppress_msg)
         return;
 
 #if DEBUG_DIAGNOSTICS

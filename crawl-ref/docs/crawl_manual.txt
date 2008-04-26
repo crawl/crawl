@@ -2354,6 +2354,9 @@ Other game-playing commands:
     Ctrl-A              Toggle autopickup. Note that encounters with 
                         invisible monsters always turns autopickup off.
                         You need to switch it on with Ctrl-A afterwards.
+    Ctrl-T              Toggle your allies' pickup behaviour between three
+                        settings: don't pick up anything, only pick up
+                        items dropped by allies, pick up anything.
     `                   Re-do previous command
     0                   Repeat next command a given number of times
 
@@ -2502,7 +2505,7 @@ work, with the exception of Space (which fires).
                         key) using the option target_unshifted_dirs.
                         Note that target_unshifted_dirs is mutually
                         exclusive with default_target.
-                        
+
 Shortcuts in lists (like multidrop):
 ------------------------------------
 When dropping (with the drop_mode=multi option), the drop menu accepts 

@@ -931,10 +931,8 @@ void origin_acquired(item_def &item, int agent)
 void origin_set_inventory(void (*oset)(item_def &item))
 {
     for (int i = 0; i < ENDOFPACK; ++i)
-    {
         if (is_valid_item(you.inv[i]))
             oset(you.inv[i]);
-    }
 }
 
 static int first_corpse_monnum(int x, int y)
@@ -1582,6 +1580,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     item.x      = -1;
     item.y      = -1;
     item.link   = freeslot;
+    // remove "dropped by ally" flag
+    item.flags &= ~(ISFLAG_DROPPED_BY_ALLY);
 
     if (!item.slot)
         item.slot = index_to_letter(item.link);

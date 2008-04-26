@@ -1520,6 +1520,7 @@ static void add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             0,
+            "\n"
             "<h>Item types (and common commands)\n"
             "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
             "<brown>(</brown> : missiles (<w>f</w>ire, <w>(</w> to cycle ammo)\n"
@@ -1596,7 +1597,8 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>x</w>   : eXamine surroundings/targets\n"
             "<w>X</w>   : eXamine level map\n"
             "<w>Ctrl-O</w> : show dungeon Overview\n"
-            "<w>Ctrl-A</w> : toggle auto-pickup\n",
+            "<w>Ctrl-A</w> : toggle auto-pickup\n"
+            "<w>Ctrl-T</w> : toggle ally pickup behaviour\n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
