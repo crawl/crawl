@@ -896,6 +896,7 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
         || mon->type == MONS_SMALL_SNAKE
         || mon->type == MONS_SNAKE
         || mon->type == MONS_JELLYFISH
+        || mon->type == MONS_SWAMP_DRAKE
         || mons_is_mimic( mon->type ))
     {
         dam_dice.num = 3;
