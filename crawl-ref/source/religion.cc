@@ -2976,29 +2976,9 @@ static bool _zin_retribution()
 
     switch (punishment)
     {
-    case 0: // remove good mutations (20%)
+    case 0:
     case 1:
-    {
-        simple_god_message(" draws some chaos from your body!", god);
-        bool success = false;
-        for (int i = 0; i < 7; i++)
-            if (random2(10) > i
-                && delete_mutation(RANDOM_GOOD_MUTATION, true))
-            {
-                success = true;
-            }
-
-        if (success && !how_mutated())
-        {
-            simple_god_message(" rids your body of chaos!", god);
-            // lower penance a bit more for being particularly successful
-            dec_penance(god, 1);
-        }
-        break;
-    }
-    case 2:
-    case 3:
-    case 4: // summon angels or bugs (pestilence) (30%)
+    case 2: // summon angels or bugs (pestilence) (30%)
         if (random2(you.experience_level) > 7 && !one_chance_in(5))
         {
             const int how_many = 1 + (you.experience_level / 10) + random2(3);
@@ -3029,8 +3009,8 @@ static bool _zin_retribution()
                                god);
         }
         break;
-    case 5:
-    case 6: // recital (20%)
+    case 3:
+    case 4: // recital (20%)
         simple_god_message(" recites the Axioms of Law to you!", god);
         switch (one_chance_in(3))
         {
@@ -3045,6 +3025,26 @@ static bool _zin_retribution()
             break;
         }
         break;
+    case 5:
+    case 6: // remove good mutations (20%)
+    {
+        simple_god_message(" draws some chaos from your body!", god);
+        bool success = false;
+        for (int i = 0; i < 7; i++)
+            if (random2(10) > i
+                && delete_mutation(RANDOM_GOOD_MUTATION, true))
+            {
+                success = true;
+            }
+
+        if (success && !how_mutated())
+        {
+            simple_god_message(" rids your body of chaos!", god);
+            // lower penance a bit more for being particularly successful
+            dec_penance(god, 1);
+        }
+        break;
+    }
     case 7:
     case 8: // famine (20%)
         simple_god_message(" sends a famine down upon you!", god);
