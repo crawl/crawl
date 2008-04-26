@@ -3340,8 +3340,14 @@ static int _q_adj_damage(int damage, int qty)
 
 bool monsters::pickup_throwable_weapon(item_def &item, int near)
 {
-    if (mslot_item(MSLOT_MISSILE) && pickup(item, MSLOT_MISSILE, near, true))
+    // If occupied, don't pick up a throwable weapons if it would just
+    // stack with an existing one. (Upgrading is possible.)
+    if (mslot_item(MSLOT_MISSILE)
+        && behaviour == BEH_WANDER
+        && pickup(item, MSLOT_MISSILE, near, true))
+    {
         return (true);
+    }
 
     item_def *launch = NULL;
     const int exist_missile = mons_pick_best_missile(this, &launch, true);
@@ -3563,8 +3569,26 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
 
 bool monsters::pickup_wand(item_def &item, int near)
 {
+    // Don't pick up empty wands.
+    if (item.plus == 0)
+        return (false);
+
     // Only low-HD monsters bother with wands.
-    return (hit_dice < 14 && pickup(item, MSLOT_WAND, near));
+    if (hit_dice >= 14)
+        return (false);
+
+    // If you already have a charged wand, don't bother.
+    // Otherwise, replace with a charged one.
+    if (item_def *wand = mslot_item(MSLOT_WAND))
+    {
+        if (wand->plus > 0)
+            return (false);
+
+        if (!drop_item(MSLOT_WAND, near))
+            return (false);
+    }
+
+    return (pickup(item, MSLOT_WAND, near));
 }
 
 bool monsters::pickup_scroll(item_def &item, int near)
@@ -3654,7 +3678,10 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
         if (attitude == ATT_NEUTRAL)
             return (false);
 
-        bool wandering = (behaviour == BEH_WANDER);
+        // If a monster isn't otherwise occupied (has a foe, is fleeing, etc.)
+        // it is considered wandering.
+        bool wandering = (behaviour == BEH_WANDER
+                          || mons_friendly(this) && foe == MHITYOU);
 
         // Weak(ened) monsters won't stop to pick up things as long as they
         // feel unsafe.
@@ -3673,18 +3700,30 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
 
         // These are not important enough for pickup when seeking, fleeing etc.
         const int itype = item.base_type;
-        if (!wandering && (!mons_friendly(this) || foe != MHITYOU)
-            && (itype == OBJ_ARMOUR || itype == OBJ_CORPSES
-                || itype == OBJ_MISCELLANY || itype == OBJ_GOLD))
+        if (!wandering)
         {
-            return false;
-        }
+            if (itype == OBJ_ARMOUR || itype == OBJ_CORPSES
+                || itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
+            {
+                return false;
+            }
 
-        // Fleeing monster only pick up emergency equipment.
-        if (behaviour == BEH_FLEE
-            && (itype == OBJ_WEAPONS || itype == OBJ_MISSILES))
-        {
-            return (false);
+            if (itype == OBJ_WEAPONS || itype == OBJ_MISSILES)
+            {
+                // Fleeing monster only pick up emergency equipment.
+                if (behaviour == BEH_FLEE)
+                    return false;
+
+                // While occupied, hostile monsters won't pick up items
+                // dropped or thrown by you. (You might have done that to
+                // distract them.)
+                if (!mons_friendly(this)
+                    && (testbits(item.flags, ISFLAG_DROPPED)
+                        || testbits(item.flags, ISFLAG_THROWN)))
+                {
+                    return false;
+                }
+            }
         }
     }
 
@@ -3700,6 +3739,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     case OBJ_GOLD:
         return pickup_gold(item, near);
     // Fleeing monsters won't pick up these.
+    // Hostiles won't pick them up if they were ever dropped/thrown by you.
     case OBJ_WEAPONS:
         return pickup_weapon(item, near, force);
     case OBJ_MISSILES:
