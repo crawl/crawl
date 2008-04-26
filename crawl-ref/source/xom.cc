@@ -626,8 +626,11 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 9)
     {
-        if (!you.can_safely_mutate())
+        if (!you.can_safely_mutate()
+            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+        {
             goto try_again;
+        }
 
         god_speaks(GOD_XOM, _get_xom_speech("good mutations"));
         mpr("Your body is suffused with distortional energy.");
@@ -758,8 +761,11 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 6)
         {
-            if (!you.can_safely_mutate())
+            if (!you.can_safely_mutate()
+                || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+            {
                 goto try_again;
+            }
 
             god_speaks(GOD_XOM, _get_xom_speech("random mutations"));
             mpr("Your body is suffused with distortional energy.");
