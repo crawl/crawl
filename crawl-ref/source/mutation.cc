@@ -274,6 +274,7 @@ const char *mutation_descrip[][3] = {
 
     // 60 - leave some space for more demonic powers
     {"You have hooves in place of feet.", "", ""},
+
     {"You have talons in place of feet.", "", ""},
 
     {"You can exhale a cloud of poison.", "", ""},
@@ -417,7 +418,8 @@ const char *gain_mutation[][3] = {
     {"You feel healthy.", "You feel healthy.",  "You feel healthy."},
 
 // 10
-    {"You hunger for flesh.", "You hunger for flesh.", "You hunger for flesh."},
+    {"You hunger for flesh.", "You hunger for flesh.",
+     "You hunger for flesh."},
 
     {"You hunger for vegetation.", "You hunger for vegetation.",
      "You hunger for vegetation."},
@@ -513,7 +515,9 @@ const char *gain_mutation[][3] = {
      "You feel genetically immutable."},
 
     {"You feel frail.", "You feel frail.",  "You feel frail."},
+
     {"You feel robust.", "You feel robust.", "You feel robust."},
+
     {"You feel a strange anaesthesia.", "", ""},
     {"You feel negative.", "You feel negative.", "You feel negative."},
     {"A thousand chattering voices call out to you.", "", ""},
