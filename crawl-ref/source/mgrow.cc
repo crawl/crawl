@@ -74,7 +74,7 @@ mons_experience_levels::mons_experience_levels()
         delta =
             std::min(
                 std::max(delta, monster_xp_base * monster_xp_multiplier / 100),
-                2000);
+                40000);
         experience += delta;
     }
 }
