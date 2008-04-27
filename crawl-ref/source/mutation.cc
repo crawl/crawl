@@ -2268,20 +2268,20 @@ bool delete_mutation(mutation_type which_mutation,
     case MUT_FRAIL:
     case MUT_ROBUST:
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
-        if (you.mutation[mutat] > 0)
-            you.mutation[mutat]--;
-        calc_hp();
         // special-case check
-        goto unmutate_done;
+        you.mutation[mutat]--;
+        calc_hp();
+        you.mutation[mutat]++;
+        break;
 
     case MUT_LOW_MAGIC:
     case MUT_HIGH_MAGIC:
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
-        if (you.mutation[mutat] > 0)
-            you.mutation[mutat]--;
-        calc_mp();
         // special-case check
-        goto unmutate_done;
+        you.mutation[mutat]--;
+        calc_mp();
+        you.mutation[mutat]++;
+        break;
 
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
@@ -2344,10 +2344,8 @@ bool delete_mutation(mutation_type which_mutation,
 //    you.redraw_gold         = 1;
 //    you.redraw_hunger       = 1;
 
-    if (you.mutation[mutat] > 0)
-        you.mutation[mutat]--;
+    you.mutation[mutat]--;
 
-unmutate_done:
     take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
     return true;
 }                               // end delete_mutation()
