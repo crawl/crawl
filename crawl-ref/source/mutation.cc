@@ -2058,7 +2058,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]++;
         calc_hp();
         // special-case check
-        goto mutation_done;
+        goto mutate_done;
 
     case MUT_ROBUST:
         if (you.mutation[MUT_FRAIL] > 0)
@@ -2070,7 +2070,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]++;
         calc_hp();
         // special-case check
-        goto mutation_done;
+        goto mutate_done;
 
     case MUT_LOW_MAGIC:
         if (you.mutation[MUT_HIGH_MAGIC] > 0)
@@ -2082,7 +2082,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]++;
         calc_mp();
         // special-case check
-        goto mutation_done;
+        goto mutate_done;
 
     case MUT_HIGH_MAGIC:
         if (you.mutation[MUT_LOW_MAGIC] > 0)
@@ -2094,7 +2094,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]++;
         calc_mp();
         // special-case check
-        goto mutation_done;
+        goto mutate_done;
 
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
@@ -2133,7 +2133,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     you.mutation[mutat]++;
 
-mutation_done:
+mutate_done:
     // amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor
     int amusementvalue = calc_mutation_amusement_value(mutat);
     xom_is_stimulated(amusementvalue);
@@ -2269,7 +2269,7 @@ bool delete_mutation(mutation_type which_mutation,
             you.mutation[mutat]--;
         calc_hp();
         // special-case check
-        goto unmutation_done;
+        goto unmutate_done;
 
     case MUT_LOW_MAGIC:
     case MUT_HIGH_MAGIC:
@@ -2278,7 +2278,7 @@ bool delete_mutation(mutation_type which_mutation,
             you.mutation[mutat]--;
         calc_mp();
         // special-case check
-        goto unmutation_done;
+        goto unmutate_done;
 
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
@@ -2344,7 +2344,7 @@ bool delete_mutation(mutation_type which_mutation,
     if (you.mutation[mutat] > 0)
         you.mutation[mutat]--;
 
-unmutation_done:
+unmutate_done:
     take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
     return true;
 }                               // end delete_mutation()
