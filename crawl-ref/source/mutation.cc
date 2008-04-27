@@ -2018,11 +2018,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
         // Horns force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
-            && !is_hard_helmet( you.inv[you.equip[EQ_HELMET]] ))
+            && is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
         {
-            break;
+            remove_one_equip(EQ_HELMET);
         }
-        remove_one_equip(EQ_HELMET);
         break;
     }
 
