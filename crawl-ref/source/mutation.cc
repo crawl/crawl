@@ -1733,9 +1733,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (which_mutation == RANDOM_MUTATION
         || which_mutation == RANDOM_XOM_MUTATION)
     {
-        if ( random2(15) < how_mutated(false, true) )
+        if (random2(15) < how_mutated(false, true))
         {
-            if (!force_mutation && !one_chance_in(3))
+            if (!one_chance_in(3) && !force_mutation)
                 return false;
             else
                 return (delete_mutation(RANDOM_MUTATION));
@@ -1750,7 +1750,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             if (one_chance_in(1000))
                 return false;
         }
-        while ( !accept_mutation(mutat) );
+        while (!accept_mutation(mutat));
     }
     else if (which_mutation == RANDOM_XOM_MUTATION)
     {
@@ -1764,8 +1764,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     }
     else if (you.mutation[mutat] >= 3
              && mutat != MUT_STRONG && mutat != MUT_CLEVER
-             && mutat != MUT_AGILE  && mutat != MUT_WEAK
-             && mutat != MUT_DOPEY  && mutat != MUT_CLUMSY)
+             && mutat != MUT_AGILE && mutat != MUT_WEAK
+             && mutat != MUT_DOPEY && mutat != MUT_CLUMSY)
     {
         return false;
     }
