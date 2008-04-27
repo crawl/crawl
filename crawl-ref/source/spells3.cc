@@ -1167,7 +1167,8 @@ bool recall(char type_recalled)
         step_value  = -1;
     }
 
-    for (loopy = start_count; loopy != end_count; loopy += step_value)
+    for (loopy = start_count; loopy != end_count + step_value;
+         loopy += step_value)
     {
         monster = &menv[loopy];
 
