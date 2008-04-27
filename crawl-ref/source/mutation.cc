@@ -2564,7 +2564,8 @@ void demonspawn(void)
                     whichm = MUT_THROW_FLAMES;
                 else if (!you.skills[SK_ICE_MAGIC])
                     whichm = MUT_THROW_FROST;
-                else            // both
+                // both
+                else
                     whichm = (coinflip() ? MUT_THROW_FLAMES : MUT_THROW_FROST);
 
                 howm = 1;
