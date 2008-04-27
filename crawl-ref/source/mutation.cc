@@ -2539,7 +2539,7 @@ void demonspawn(void)
             }
         }
 
-        // check here so we can see if we need to extend our options:
+        // check here so we can see if we need to extend our options
         if (whichm != NUM_MUTATIONS && you.mutation[whichm] != 0)
             whichm = NUM_MUTATIONS;
 
@@ -2556,7 +2556,7 @@ void demonspawn(void)
                 && (!you.skills[SK_ICE_MAGIC]           // already ice & fire?
                     || !you.skills[SK_FIRE_MAGIC]))
             {
-                // try to give the flavour the character doesn't have:
+                // try to give the flavour the character doesn't have
 
                 // neither
                 if (!you.skills[SK_FIRE_MAGIC] && !you.skills[SK_ICE_MAGIC])
