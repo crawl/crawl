@@ -1657,6 +1657,27 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     mutation_type mutat = which_mutation;
 
+    if (!force_mutation)
+    {
+        // God gifts override amulets of resist mutation.
+        if ((wearing_amulet(AMU_RESIST_MUTATION)
+                && !one_chance_in(10) && !god_gift)
+            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+            || player_mutation_level(MUT_MUTATION_RESISTANCE)
+                && !one_chance_in(3))
+        {
+            mpr("You feel odd for a moment.", MSGCH_MUTATION);
+            return false;
+        }
+
+        // Zin's protection.
+        if (you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY))
+        {
+            simple_god_message(" protects your body from chaos!");
+            return false;
+        }
+    }
+
     bool rotting = you.is_undead;
 
     if (you.is_undead == US_SEMI_UNDEAD)
@@ -1693,50 +1714,20 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (rotting && !demonspawn)
+    if (rotting && !demonspawn && !one_chance_in(3))
     {
-        // God gifts override amulets of resist mutation.
-        if ((wearing_amulet(AMU_RESIST_MUTATION) ? !one_chance_in(10)
-                                                 : one_chance_in(3))
-            && !god_gift)
-        {
-            if (failMsg)
-                mpr("You feel odd for a moment.", MSGCH_MUTATION);
+        mpr("Your body decomposes!", MSGCH_MUTATION);
 
-            return false;
-        }
+        if (coinflip())
+            lose_stat(STAT_RANDOM, 1, false, "mutating");
         else
         {
-            mpr( "Your body decomposes!", MSGCH_MUTATION );
-
-            if (coinflip())
-                lose_stat( STAT_RANDOM, 1, false, "mutating");
-            else
-            {
-                ouch( 3, 0, KILLED_BY_ROTTING );
-                rot_hp( roll_dice( 1, 3 ) );
-            }
-
-            xom_is_stimulated(64);
-            return true;
+            ouch(3, 0, KILLED_BY_ROTTING);
+            rot_hp(roll_dice(1, 3));
         }
-    }
 
-    if (!force_mutation)
-    {
-        // God gifts override amulets of resist mutation.
-        if ((wearing_amulet(AMU_RESIST_MUTATION) && !one_chance_in(10)
-                && !god_gift)
-            || you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY)
-            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-            || player_mutation_level(MUT_MUTATION_RESISTANCE)
-               && !one_chance_in(3))
-        {
-            if (failMsg)
-                mpr("You feel odd for a moment.", MSGCH_MUTATION);
-
-            return false;
-        }
+        xom_is_stimulated(64);
+        return true;
     }
 
     if (which_mutation == RANDOM_MUTATION
