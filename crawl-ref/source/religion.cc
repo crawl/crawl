@@ -4302,7 +4302,14 @@ static bool _bless_weapon( god_type god, int brand, int colour )
         do_uncurse_item( you.inv[wpn] );
 
         enchant_weapon( ENCHANT_TO_HIT, true, you.inv[wpn] );
+
+        if (coinflip())
+            enchant_weapon( ENCHANT_TO_HIT, true, you.inv[wpn] );
+
         enchant_weapon( ENCHANT_TO_DAM, true, you.inv[wpn] );
+
+        if (coinflip())
+            enchant_weapon( ENCHANT_TO_DAM, true, you.inv[wpn] );
 
         if ( god == GOD_SHINING_ONE )
         {
