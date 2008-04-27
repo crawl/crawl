@@ -1061,9 +1061,11 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         just_created_level = true;
 
     // closes all the gates if you're on the way out
-    if (you.char_direction == GDT_ASCENDING &&
-        you.level_type != LEVEL_PANDEMONIUM)
+    if (you.char_direction == GDT_ASCENDING
+        && you.level_type != LEVEL_PANDEMONIUM)
+    {
         close_level_gates();
+    }
 
     if (just_created_level)
         clear_env_map();
