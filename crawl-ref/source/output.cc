@@ -1890,8 +1890,8 @@ std::vector<MenuEntry *> _get_overview_screen_results()
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
-                      || you.religion == GOD_ZIN && you.piety >= 150
-                      || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3;
+                      || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+                      || you.religion == GOD_ZIN && you.piety >= 150;
 
     const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
 
