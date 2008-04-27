@@ -4300,6 +4300,7 @@ static bool _bless_weapon( god_type god, int brand, int colour )
         you.inv[wpn].colour = colour;
 
         do_uncurse_item( you.inv[wpn] );
+
         enchant_weapon( ENCHANT_TO_HIT, true, you.inv[wpn] );
         enchant_weapon( ENCHANT_TO_DAM, true, you.inv[wpn] );
 
