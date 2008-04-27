@@ -2122,7 +2122,6 @@ int calc_hp(bool real_hp)
     return (hitp);
 }                               // end calc_hp()
 
-
 int calc_mp(bool real_mp)
 {
     int enp;
@@ -2172,7 +2171,6 @@ int calc_mp(bool real_mp)
     return (you.max_magic_points);
 }                               // end calc_mp()
 
-
 unsigned int skill_exp_needed(int lev)
 {
     lev--;
@@ -2196,7 +2194,6 @@ unsigned int skill_exp_needed(int lev)
     }
     return 0;
 }
-
 
 int species_skills(int skill, species_type species)
 {
