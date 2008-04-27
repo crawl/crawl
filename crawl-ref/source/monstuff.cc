@@ -4615,7 +4615,9 @@ static void _monster_regenerate(monsters *monster)
 {
     if (monster->has_ench(ENCH_SICK)
         || mons_class_flag(monster->type, M_NO_REGEN))
+    {
         return;
+    }
 
     // Non-land creatures out of their element cannot regenerate.
     if (mons_habitat(monster) != HT_LAND

@@ -228,12 +228,12 @@ void update_turn_count()
     // prevent pointless screen updates.
     if (!Options.show_gold_turns
         || you.running > 0
-        || (you.running < 0 && Options.travel_delay == -1))
+        || you.running < 0 && Options.travel_delay == -1)
     {
         return;
     }
 
-    cgotoxy(19+6, 9, GOTO_STAT);
+    cgotoxy(19+6, 8, GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOR);
@@ -823,9 +823,20 @@ void print_stats(void)
     if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (19, 5); }
     // (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_sh (19, 6); }
     if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (19, 7); }
+
+    int yhack = 0;
+    // If Options.show_gold_turns, line 8 is Gold and Turns
+    if (Options.show_gold_turns)
+    {
+        yhack = 1;
+        cgotoxy(1+6, 8, GOTO_STAT);
+        textcolor(HUD_VALUE_COLOR);
+        cprintf("%d", you.gold);
+    }
+
     if (you.redraw_experience)
     {
-        cgotoxy(1,8, GOTO_STAT);
+        cgotoxy(1,8+yhack, GOTO_STAT);
         textcolor(Options.status_caption_colour);
         cprintf("Exp Pool: ");
         textcolor(HUD_VALUE_COLOR);
@@ -836,16 +847,6 @@ void print_stats(void)
         cprintf("%-6d", you.exp_available);
 #endif
         you.redraw_experience = false;
-    }
-
-    // If Options.show_gold_turns, line 9 is Gold and Turns
-    int yhack = 0;
-    if (Options.show_gold_turns)
-    {
-        yhack = 1;
-        cgotoxy(1+6, 9, GOTO_STAT);
-        textcolor(HUD_VALUE_COLOR);
-        cprintf("%d", you.gold);
     }
 
     if (you.wield_change)
@@ -910,7 +911,10 @@ static std::string _level_description_string_hud()
 // For some odd reason, only redrawn on level change.
 void print_stats_level()
 {
-    cgotoxy(19, 8, GOTO_STAT);
+    int ypos = 8;
+    if (Options.show_gold_turns)
+        ypos++;
+    cgotoxy(19, ypos, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOR);
     cprintf("Level: ");
 
@@ -989,12 +993,12 @@ void draw_border(void)
     cgotoxy(19, 6, GOTO_STAT); cprintf("Sh:");
     cgotoxy(19, 7, GOTO_STAT); cprintf("Ev:");
 
-    // Line 8 is exp pool, Level
     if (Options.show_gold_turns)
     {
-        cgotoxy( 1, 9, GOTO_STAT); cprintf("Gold:");
-        cgotoxy(19, 9, GOTO_STAT); cprintf("Turn:");
+        cgotoxy( 1, 8, GOTO_STAT); cprintf("Gold:");
+        cgotoxy(19, 8, GOTO_STAT); cprintf("Turn:");
     }
+    // Line 9 (or 8) is exp pool, Level
 }                               // end draw_border()
 
 // ----------------------------------------------------------------------

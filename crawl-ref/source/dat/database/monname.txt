@@ -3,18 +3,18 @@
 #
 # This file contains a lists of names for monster
 # names. This is currently only used when one of your
-# orcish follower as Beogh's messiah gets named by 
+# orcish followers as Beogh's messiah gets named by
 # Beogh.
 #
 # Some important syllables
 #   beogh, bog = referring to Beogh
 #   ork, orc, org, ok etc. = referring to orcs
 #
-# Other syllables may be borrowed from real life, 
+# Other syllables may be borrowed from real life,
 # or made up.
 # 
 # Feel free to add to this list. Like for the other
-# database lists, you may add weights (defaults to 
+# database lists, you may add weights (defaults to
 # w:10) to make certain names more or less likely.
 ######################################################
 %%%%

@@ -1035,10 +1035,15 @@ static bool _beogh_blessing_reinforcement()
     int how_many = random2(4) + 1;
 
     monster_type follower_type;
+    bool high_level;
     for (int i = 0; i < how_many; ++i)
     {
+        high_level = false;
         if (random2(you.experience_level) >= 9 && coinflip())
+        {
             follower_type = RANDOM_ELEMENT(high_xl_followers);
+            high_level = true;
+        }
         else
             follower_type = RANDOM_ELEMENT(followers);
 
@@ -1049,6 +1054,10 @@ static bool _beogh_blessing_reinforcement()
         {
             monsters *mon = &menv[monster];
             mon->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+            // For high level orcs, there's a chance of being named.
+            if (high_level && one_chance_in(5))
+                give_unique_monster_name(mon);
 
             success = true;
         }
