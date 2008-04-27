@@ -642,7 +642,7 @@ void drain_exp(bool announce_full)
 
     exp_drained /= 100;
 
-    // TSO's protection
+    // TSO's protection.
     if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)
     {
         unsigned long undrained = (you.piety * exp_drained) / 150;

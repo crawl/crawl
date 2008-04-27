@@ -1658,6 +1658,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     mutation_type mutat = which_mutation;
 
     bool rotting = you.is_undead;
+
     if (you.is_undead == US_SEMI_UNDEAD)
     {
         // The stat gain mutations always come through at Satiated or
@@ -1702,14 +1703,14 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             if (failMsg)
                 mpr("You feel odd for a moment.", MSGCH_MUTATION);
 
-            return (false);
+            return false;
         }
         else
         {
             mpr( "Your body decomposes!", MSGCH_MUTATION );
 
             if (coinflip())
-                lose_stat( STAT_RANDOM, 1 , false, "mutating");
+                lose_stat( STAT_RANDOM, 1, false, "mutating");
             else
             {
                 ouch( 3, 0, KILLED_BY_ROTTING );
@@ -1717,7 +1718,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             }
 
             xom_is_stimulated(64);
-            return (true);
+            return true;
         }
     }
 
@@ -1734,7 +1735,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             if (failMsg)
                 mpr("You feel odd for a moment.", MSGCH_MUTATION);
 
-            return (false);
+            return false;
         }
     }
 
@@ -1744,7 +1745,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if ( random2(15) < how_mutated(false, true) )
         {
             if (!force_mutation && !one_chance_in(3))
-                return (false);
+                return false;
             else
                 return (delete_mutation(RANDOM_MUTATION));
         }
@@ -2013,19 +2014,18 @@ bool mutate(mutation_type which_mutation, bool failMsg,
              : gain_mutation[mutat])[you.mutation[mutat]],
              MSGCH_MUTATION);
 
-        // gloves aren't prevented until level 3; we don't have the
+        // Gloves aren't prevented until level 3.  We don't have the
         // mutation yet, so we have to check for level 2 or higher claws
-        // here
+        // here.
         if (you.mutation[mutat] >= 2)
             remove_one_equip(EQ_GLOVES);
-
         break;
 
     case MUT_HORNS:
     {
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
 
-        // horns force hard helmets off
+        // Horns force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
             && !is_hard_helmet( you.inv[you.equip[EQ_HELMET]] ))
         {
