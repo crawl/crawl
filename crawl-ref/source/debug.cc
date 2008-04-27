@@ -2346,6 +2346,8 @@ bool debug_add_mutation(void)
         return (false);
     }
 
+    bool god_gift = yesno("Treat mutation as god gift?", true, 'n');
+
     // Yeah, the gaining message isn't too good for this... but
     // there isn't an array of simple mutation names. -- bwr
     mpr( "Which mutation ('any' for any, 'xom' for xom mutation)? ",
@@ -2439,7 +2441,7 @@ bool debug_add_mutation(void)
         {
             for (int i = 0; i < levels; i++)
             {
-                if (mutate( mutation, true, force ))
+                if (mutate( mutation, true, force, god_gift ))
                     success = true;
             }
         }
