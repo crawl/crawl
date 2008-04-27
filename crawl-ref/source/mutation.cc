@@ -2055,10 +2055,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             return true;
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        // special-case check
         you.mutation[mutat]++;
         calc_hp();
-        // special-case check
-        goto mutate_done;
+        you.mutation[mutat]--;
+        break;
 
     case MUT_ROBUST:
         if (you.mutation[MUT_FRAIL] > 0)
@@ -2067,10 +2068,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             return true;
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        // special-case check
         you.mutation[mutat]++;
         calc_hp();
-        // special-case check
-        goto mutate_done;
+        you.mutation[mutat]--;
+        break;
 
     case MUT_LOW_MAGIC:
         if (you.mutation[MUT_HIGH_MAGIC] > 0)
@@ -2079,10 +2081,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             return true;
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        // special-case check
         you.mutation[mutat]++;
         calc_mp();
-        // special-case check
-        goto mutate_done;
+        you.mutation[mutat]--;
+        break;
 
     case MUT_HIGH_MAGIC:
         if (you.mutation[MUT_LOW_MAGIC] > 0)
@@ -2091,10 +2094,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             return true;
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        // special-case check
         you.mutation[mutat]++;
         calc_mp();
-        // special-case check
-        goto mutate_done;
+        you.mutation[mutat]--;
+        break;
 
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
@@ -2133,7 +2137,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     you.mutation[mutat]++;
 
-mutate_done:
     // amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor
     int amusementvalue = calc_mutation_amusement_value(mutat);
     xom_is_stimulated(amusementvalue);
