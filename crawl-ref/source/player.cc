@@ -2043,13 +2043,13 @@ int player_AC(void)
         // these give: +1, +2, +3
         AC += 100 * player_mutation_level(MUT_TOUGH_SKIN);
         AC += 100 * player_mutation_level(MUT_GREY_SCALES);
+        AC += 100 * player_mutation_level(MUT_SHAGGY_FUR);
+        AC += 100 * player_mutation_level(MUT_BLUE_SCALES);
         AC += 100 * player_mutation_level(MUT_SPECKLED_SCALES);
         AC += 100 * player_mutation_level(MUT_IRIDESCENT_SCALES);
         AC += 100 * player_mutation_level(MUT_PATTERNED_SCALES);
-        AC += 100 * player_mutation_level(MUT_BLUE_SCALES);
-        AC += 100 * player_mutation_level(MUT_SHAGGY_FUR);
 
-        // these gives: +1, +3, +5
+        // these give: +1, +3, +5
         if (player_mutation_level(MUT_GREEN_SCALES) > 0)
             AC += (player_mutation_level(MUT_GREEN_SCALES) * 200) - 100;
         if (player_mutation_level(MUT_NACREOUS_SCALES) > 0)
