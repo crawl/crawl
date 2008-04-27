@@ -2350,18 +2350,27 @@ bool debug_add_mutation(void)
 
     // Yeah, the gaining message isn't too good for this... but
     // there isn't an array of simple mutation names. -- bwr
-    mpr( "Which mutation ('any' for any, 'xom' for xom mutation)? ",
-         MSGCH_PROMPT );
+    mpr("Which mutation ('good' for good, 'any' for any, 'xom' for xom)? ",
+        MSGCH_PROMPT);
     get_input_line( specs, sizeof( specs ) );
 
     if (specs[0] == '\0')
         return (false);
 
-    if (strcasecmp(specs, "any") == 0)
+    mutation_type mutat = NUM_MUTATIONS;
+
+    if (strcasecmp(specs, "good") == 0)
+        mutat = RANDOM_GOOD_MUTATION;
+    else if (strcasecmp(specs, "any") == 0)
+        mutat = RANDOM_MUTATION;
+    else if (strcasecmp(specs, "xom") == 0)
+        mutat = RANDOM_XOM_MUTATION;
+
+    if (mutat != NUM_MUTATIONS)
     {
         int old_resist = player_mutation_level(MUT_MUTATION_RESISTANCE);
 
-        success = mutate(RANDOM_MUTATION, true, force, god_gift);
+        success = mutate(mutat, true, force, god_gift);
 
         if (old_resist < player_mutation_level(MUT_MUTATION_RESISTANCE)
             && !force)
@@ -2372,32 +2381,28 @@ bool debug_add_mutation(void)
         return (success);
     }
 
-    if (strcasecmp(specs, "xom") == 0)
-        return mutate(RANDOM_XOM_MUTATION, true, force, god_gift);
-
     std::vector<int> partial_matches;
-    mutation_type mutation = NUM_MUTATIONS;
 
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         if (strcasecmp(specs, mutation_type_names[i]) == 0)
         {
-            mutation = (mutation_type) i;
+            mutat = (mutation_type) i;
             break;
         }
 
-        if (strstr(mutation_type_names[i] , strlwr(specs) ))
+        if (strstr(mutation_type_names[i], strlwr(specs)))
             partial_matches.push_back(i);
     }
 
     // If only one matching mutation, use that.
-    if (mutation == NUM_MUTATIONS)
+    if (mutat == NUM_MUTATIONS)
     {
         if (partial_matches.size() == 1)
-            mutation = (mutation_type) partial_matches[0];
+            mutat = (mutation_type) partial_matches[0];
     }
 
-    if (mutation == NUM_MUTATIONS)
+    if (mutat == NUM_MUTATIONS)
     {
         crawl_state.cancel_cmd_repeat();
 
@@ -2425,12 +2430,12 @@ bool debug_add_mutation(void)
     }
     else
     {
-        mprf("Found #%d: %s (\"%s\")", (int) mutation,
-             mutation_type_names[mutation], mutation_name( mutation, 1 ) );
+        mprf("Found #%d: %s (\"%s\")", (int) mutat,
+             mutation_type_names[mutat], mutation_name(mutat, 1));
 
         const int levels =
-            debug_prompt_for_int( "How many levels to increase or decrease? ",
-                                  false );
+            debug_prompt_for_int("How many levels to increase or decrease? ",
+                                 false);
 
         if (levels == 0)
         {
@@ -2441,7 +2446,7 @@ bool debug_add_mutation(void)
         {
             for (int i = 0; i < levels; i++)
             {
-                if (mutate(mutation, true, force, god_gift))
+                if (mutate(mutat, true, force, god_gift))
                     success = true;
             }
         }
@@ -2449,7 +2454,7 @@ bool debug_add_mutation(void)
         {
             for (int i = 0; i < -levels; i++)
             {
-                if (delete_mutation(mutation, force))
+                if (delete_mutation(mutat, force))
                     success = true;
             }
         }
