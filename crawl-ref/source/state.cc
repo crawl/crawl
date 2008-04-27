@@ -143,7 +143,7 @@ void game_state::zero_turns_taken()
     cancel_cmd_repeat();
 }
 
-bool interrupt_cmd_repeat( activity_interrupt_type ai, 
+bool interrupt_cmd_repeat( activity_interrupt_type ai,
                            const activity_interrupt_data &at )
 {
     if (crawl_state.cmd_repeat_start)
