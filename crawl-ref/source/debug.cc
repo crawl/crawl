@@ -2361,7 +2361,7 @@ bool debug_add_mutation(void)
     {
         int old_resist = player_mutation_level(MUT_MUTATION_RESISTANCE);
 
-        success = mutate(RANDOM_MUTATION, true, force);
+        success = mutate(RANDOM_MUTATION, true, force, god_gift);
 
         if (old_resist < player_mutation_level(MUT_MUTATION_RESISTANCE)
             && !force)
@@ -2373,7 +2373,7 @@ bool debug_add_mutation(void)
     }
 
     if (strcasecmp(specs, "xom") == 0)
-        return mutate(RANDOM_XOM_MUTATION, true, force);
+        return mutate(RANDOM_XOM_MUTATION, true, force, god_gift);
 
     std::vector<int> partial_matches;
     mutation_type mutation = NUM_MUTATIONS;
