@@ -834,6 +834,17 @@ int cast_revitalisation(int pow)
 
         // Restore rotted HP.
         case 4:
+            if (player_rotted())
+            {
+                success = true;
+                unrot_hp(1 + random2(3));
+                break;
+            }
+
+            step = 5;
+            // Deliberate fall through.
+
+        // Restore more rotted HP.
         case 5:
             if (player_rotted())
             {
@@ -842,7 +853,7 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            step++;
+            step = 6;
             // Deliberate fall through.
 
         default:
@@ -852,6 +863,7 @@ int cast_revitalisation(int pow)
         if (success)
             break;
 
+        step = 0;
         type = 1;
         // Deliberate fall through.
 
@@ -865,6 +877,7 @@ int cast_revitalisation(int pow)
             break;
         }
 
+        step = 0;
         type = 1;
         // Deliberate fall through.
 
@@ -878,6 +891,7 @@ int cast_revitalisation(int pow)
             break;
         }
 
+        step = 0;
         type = 2;
         // Deliberate fall through.
 
@@ -925,7 +939,7 @@ int cast_revitalisation(int pow)
     }
 
     // Otherwise, get out, indicating normal success.
-    return step + 1;
+    return (step + 1);
 }
 
 bool cast_revivification(int pow)
