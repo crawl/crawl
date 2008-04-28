@@ -2856,7 +2856,12 @@ int monsters::damage_brand(int which_attack)
     const item_def *mweap = weapon(which_attack);
 
     if (!mweap)
-        return (SPWPN_NORMAL);
+    {
+        if (type == MONS_PLAYER_GHOST || type == MONS_PANDEMONIUM_DEMON)
+            return (ghost->brand);
+        else
+            return (SPWPN_NORMAL);
+    }
 
     return (!is_range_weapon(*mweap)? get_weapon_brand(*mweap) : SPWPN_NORMAL);
 }
