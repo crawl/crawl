@@ -1000,7 +1000,6 @@ COMPILE_CHECK(ARRAYSZ(mutation_defs) == NUM_MUTATIONS, c1);
 #ifdef DEBUG_DIAGNOSTICS
 void sanity_check_mutation_defs()
 {
-
     for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
     {
         const mutation_def &mdef(mutation_defs[i]);
