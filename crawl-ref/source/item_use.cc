@@ -612,7 +612,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_VAMPIRICISM:
-                    if (!you.is_undead)
+                    if (you.is_undead != US_UNDEAD)
                         mpr("You feel a strange hunger.");
                     else
                         mpr("You feel strangely empty.");
@@ -668,8 +668,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_VAMPIRES_TOOTH:
-                    // mummies cannot smell, and do not hunger {dlb}
-                    if (!you.is_undead)
+                    if (you.is_undead != US_UNDEAD)
                     {
                         mpr("You feel a strange hunger, and smell blood on the "
                             "air...");

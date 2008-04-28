@@ -35,6 +35,8 @@ int get_species_by_name( const char *name );
 int get_class_by_abbrev( const char *abbrev  );
 int get_class_by_name( const char *name );
 
+undead_state_type get_undead_state(const species_type sp);
+
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */

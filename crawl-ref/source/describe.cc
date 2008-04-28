@@ -1626,11 +1626,17 @@ std::string get_item_description( const item_def &item, bool verbose,
             {
                 if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                     description << "It looks nice and ripe.";
-                else if (you.is_undead != US_UNDEAD)
+                else
                 {
                     description << "In fact, it is "
-                        "rotting away before your eyes. "
-                        "Eating it would probably be unwise.";
+                        "rotting away before your eyes.";
+
+                    if (you.is_undead != US_UNDEAD
+                        && you.species != SP_VAMPIRE)
+                    {
+                        description << " Eating it would "
+                            "probably be unwise.";
+                    }
                 }
             }
             else if (player_mutation_level(MUT_SAPROVOROUS) < 3)

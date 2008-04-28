@@ -3648,7 +3648,7 @@ static const char * _get_rotting_how()
 
 void display_char_status()
 {
-    if (you.species == SP_VAMPIRE && you.hunger_state == HS_ENGORGED)
+    if (you.is_undead == US_SEMI_UNDEAD && you.hunger_state == HS_ENGORGED)
         mpr( "You feel almost alive." );
     else if (you.is_undead)
         mpr( "You are undead." );

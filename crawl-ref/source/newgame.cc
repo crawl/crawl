@@ -1090,7 +1090,7 @@ static bool _species_is_undead( const species_type speci )
     return (speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE);
 }
 
-static undead_state_type _get_undead_state(const species_type sp)
+undead_state_type get_undead_state(const species_type sp)
 {
     switch(sp)
     {
@@ -1208,7 +1208,7 @@ game_start:
 
     _species_stat_init( you.species );     // must be down here {dlb}
 
-    you.is_undead = _get_undead_state(you.species);
+    you.is_undead = get_undead_state(you.species);
 
     // before we get into the inventory init, set light radius based
     // on species vision. currently, all species see out to 8 squares.
@@ -2737,8 +2737,9 @@ static void _give_random_potion( int slot )
     you.inv[ slot ].plus = 0;
     you.inv[ slot ].plus2 = 0;
 
+    // no Berserk for undead other than vampires
     int temp_rand = 8;
-    if (you.is_undead) // no Berserk for undeads
+    if (you.is_undead && you.species != SP_VAMPIRE)
         temp_rand--;
 
     switch (random2(temp_rand))
