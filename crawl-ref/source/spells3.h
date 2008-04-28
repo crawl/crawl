@@ -82,7 +82,7 @@ bool project_noise(void);
 /* ***********************************************************************
  * called from: religion - spell
  * *********************************************************************** */
-void dancing_weapon(int pow, bool force_hostile);
+bool dancing_weapon(int pow, bool force_hostile);
 
 
 // updated 24may2000 {dlb}

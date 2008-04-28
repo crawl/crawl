@@ -471,7 +471,7 @@ void simulacrum(int power)
     }
 }
 
-void dancing_weapon(int pow, bool force_hostile)
+bool dancing_weapon(int pow, bool force_hostile)
 {
     int numsc = std::min(2 + (random2(pow) / 5), 6);
 
@@ -521,7 +521,7 @@ void dancing_weapon(int pow, bool force_hostile)
         else
             msg::stream << "Your " << your_hand(true) << " twitch."
                         << std::endl;
-        return;
+        return false;
     }
 
     // We are successful:
@@ -544,6 +544,8 @@ void dancing_weapon(int pow, bool force_hostile)
     menv[summs].inv[MSLOT_WEAPON] = i;
     menv[summs].colour = mitm[i].colour;
     burden_change();
+
+    return true;
 }                               // end dancing_weapon()
 
 //
