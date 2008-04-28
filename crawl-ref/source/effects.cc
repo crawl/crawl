@@ -215,7 +215,7 @@ int torment_monsters(int x, int y, int pow, int caster)
     if (mons_res_negative_energy( monster ) >= 3)
         return 0;
 
-    monster->hit_points = 1 + (monster->hit_points / 2);
+    monster->hit_points = monster->hit_points / 2 + 1;
     simple_monster_message(monster, " convulses!");
 
     return 1;
