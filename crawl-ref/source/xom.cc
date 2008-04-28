@@ -82,8 +82,7 @@ const char *describe_xom_favour()
 
 bool xom_is_nice()
 {
-    // If you.gift_timeout was == 0, then Xom was BORED.
-    // He HATES that.
+    // If you.gift_timeout was == 0, then Xom was BORED.  He HATES that.
     return (you.gift_timeout > 0 && you.piety > 100) || coinflip();
 }
 
@@ -263,11 +262,12 @@ static bool xom_annoyance_gift(int power)
     if (coinflip() && player_in_a_dangerous_place())
     {
         const item_def *weapon = you.weapon();
+
         // Xom has a sense of humour.
         if (coinflip() && weapon && weapon->cursed())
         {
-            // If you are wielding a cursed item then Xom will give
-            // you an item of that same type. Ha ha!
+            // If you are wielding a cursed item then Xom will give you
+            // an item of that same type. Ha ha!
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             if (coinflip())
                 // For added humour, give the same sub-type.
@@ -293,7 +293,7 @@ static bool xom_annoyance_gift(int power)
         if (coinflip() && amulet && amulet->cursed())
         {
             // If you are wearing a cursed amulet, then Xom will give
-            // you an amulet. Ha ha!
+            // you an amulet.  Ha ha!
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             xom_make_item(OBJ_JEWELLERY, get_random_amulet_type(), power * 3);
             return (true);
@@ -305,7 +305,7 @@ static bool xom_annoyance_gift(int power)
                            || (right_ring && right_ring->cursed())))
         {
             // If you are wearing a cursed ring, then Xom will give you
-            // a ring. Ha ha!
+            // a ring.  Ha ha!
             god_speaks(GOD_XOM, _get_xom_speech("ring gift"));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
             return (true);
@@ -313,8 +313,8 @@ static bool xom_annoyance_gift(int power)
 
         if (one_chance_in(5) && weapon)
         {
-            // Xom will give you a wielded item of a type different
-            // from what you are currently wielding.
+            // Xom will give you a wielded item of a type different from
+            // what you are currently wielding.
             god_speaks(GOD_XOM, _get_xom_speech("weapon gift"));
 
             const object_class_type objtype =
@@ -340,7 +340,7 @@ bool xom_gives_item(int power)
     if (coinflip() && cloak && cloak->cursed())
     {
         // If you are wearing a cursed cloak, then Xom will give you a
-        // cloak or body armour. Ha ha!
+        // cloak or body armour.  Ha ha!
         god_speaks(GOD_XOM, _get_xom_speech("xom armour gift"));
         xom_make_item(OBJ_ARMOUR,
                       random2(10)?
@@ -352,14 +352,14 @@ bool xom_gives_item(int power)
 
     god_speaks(GOD_XOM, _get_xom_speech("general gift"));
 
-    // There are two kinds of Xom gifts: acquirement and random
-    // object. The result from acquirement is very good (usually as
-    // good or better than random object), and it is sometimes tuned
-    // to the player's skills and nature. Being tuned to the player's
-    // skills and nature is not very Xomlike...
+    // There are two kinds of Xom gifts: acquirement and random object.
+    // The result from acquirement is very good (usually as good or
+    // better than random object), and it is sometimes tuned to the
+    // player's skills and nature.  Being tuned to the player's skills
+    // and nature is not very Xomlike...
     if (power > random2(256))
     {
-        // random-type acquirement
+        // Random-type acquirement.
         const int r = random2(7);
         const object_class_type objtype = (r == 0) ? OBJ_WEAPONS :
             (r == 1) ? OBJ_ARMOUR :
@@ -375,7 +375,7 @@ bool xom_gives_item(int power)
     }
     else
     {
-        // random-type random object
+        // Random-type random object.
         xom_make_item(OBJ_RANDOM, OBJ_RANDOM, power * 3);
     }
     more();
@@ -392,12 +392,13 @@ bool there_are_monsters_nearby()
     if (xend >= GXM) xend = GXM;
     if (yend >= GYM) yend = GYM;
 
-    // monster check
+    // Monster check.
     for ( int y = ystart; y < yend; ++y )
     {
         for ( int x = xstart; x < xend; ++x )
         {
-            // if you can see an unfriendly monster then you feel unsafe
+            // If you can see an unfriendly monster, then you feel
+            // unsafe.
             if ( see_grid(x,y) )
             {
                 const int targ_monst = mgrd[x][y];
@@ -455,14 +456,14 @@ static monster_type xom_random_punishment_demon(int sever)
     return (demon);
 }
 
-// The nicer stuff (note: these things are not necessarily nice)
+// The nicer stuff (note: these things are not necessarily nice).
 static bool xom_is_good(int sever)
 {
     bool done = false;
     god_acting gdact(GOD_XOM);
 
-    // This series of random calls produces a poisson-looking distribution:
-    // initial hump, plus a long-ish tail.
+    // This series of random calls produces a poisson-looking
+    // distribution: initial hump, plus a long-ish tail.
 
     if (random2(sever) <= 1)
     {
@@ -470,13 +471,13 @@ static bool xom_is_good(int sever)
             POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED, POT_MIGHT,
             POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE, -1);
 
-        // downplay this one a bit
+        // Downplay this one a bit.
         if (type == POT_EXPERIENCE && !one_chance_in(6))
             type = POT_BERSERK_RAGE;
 
         if (type == POT_BERSERK_RAGE)
         {
-            if (!you.can_go_berserk(false)) // no message
+            if (!you.can_go_berserk(false)) // No message.
                 goto try_again;
 
             you.berserk_penalty = NO_BERSERK_PENALTY;
@@ -569,7 +570,9 @@ static bool xom_is_good(int sever)
     else if (random2(sever) <= 4)
     {
         const int radius = random2avg(sever/2, 3) + 1;
-        if (!vitrify_area(radius)) // can fail with radius 1 or in open areas
+
+        // This can fail with radius 1, or in open areas.
+        if (!vitrify_area(radius))
             goto try_again;
 
         god_speaks(GOD_XOM, _get_xom_speech("vitrification"));
@@ -854,7 +857,7 @@ static bool xom_is_bad(int sever)
             bool success = false;
 
             if (one_chance_in(4))
-                success = dancing_weapon(100, true); // nasty, but fun
+                success = dancing_weapon(100, true); // Nasty, but fun.
             else
             {
                 const int numdemons =
