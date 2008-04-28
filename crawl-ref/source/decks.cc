@@ -2061,7 +2061,7 @@ static void _helix_card(int power, deck_rarity_type rarity)
             if ( coinflip() )
                 _remove_bad_mutation();
             else
-                delete_mutation( RANDOM_MUTATION );
+                delete_mutation(RANDOM_MUTATION);
             break;
         case 2:
             if ( coinflip() )
