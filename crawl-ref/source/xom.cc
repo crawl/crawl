@@ -669,8 +669,8 @@ static bool xom_is_good(int sever)
                                                   : BEH_GOD_GIFT;
 
         if (create_monster(xom_random_demon(sever, one_chance_in(8)),
-                            0, beh, you.x_pos, you.y_pos,
-                            you.pet_target, MONS_PROGRAM_BUG) != -1)
+                           0, beh, you.x_pos, you.y_pos,
+                           you.pet_target, MONS_PROGRAM_BUG) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
@@ -800,6 +800,7 @@ static bool xom_is_bad(int sever)
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
                 else
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
+
                 done = true;
             }
         }
@@ -807,6 +808,7 @@ static bool xom_is_bad(int sever)
         {
             if (you.is_undead)
                 goto try_again;
+
             god_speaks(GOD_XOM, _get_xom_speech("draining or torment"));
 
             if (one_chance_in(4))
@@ -827,24 +829,31 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 9)
         {
-            god_speaks(GOD_XOM, _get_xom_speech("hostile monster"));
-
             if (one_chance_in(4))
                 dancing_weapon(100, true);      // nasty, but fun
             else
             {
                 const int numdemons =
                     std::min(random2(random2(random2(sever+1)+1)+1)+1, 14);
+                bool success = false;
+
                 for (int i = 0; i < numdemons; i++)
                 {
-                    create_monster(
-                        xom_random_punishment_demon(sever),
-                        4, BEH_HOSTILE, you.x_pos, you.y_pos,
-                        MHITNOT, MONS_PROGRAM_BUG);
+                    if (create_monster(xom_random_punishment_demon(sever),
+                                       4, BEH_HOSTILE, you.x_pos, you.y_pos,
+                                       MHITNOT, MONS_PROGRAM_BUG) != -1)
+                    {
+                        success = true;
+                    }
+                }
+
+                if (success)
+                {
+                    god_speaks(GOD_XOM, _get_xom_speech("hostile monster"));
+
+                    done = true;
                 }
             }
-
-            done = true;
         }
         else if (random2(sever) <= 10)
         {
