@@ -826,17 +826,12 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 8)
         {
-            bool draining = one_chance_in(4);
-
-            if ((draining && player_prot_life() >= 3)
-                || (!draining && player_res_torment()))
-            {
+            if (player_prot_life() >= 3 || player_res_torment())
                 goto try_again;
-            }
 
             god_speaks(GOD_XOM, _get_xom_speech("draining or torment"));
 
-            if (draining)
+            if (one_chance_in(4))
             {
                 drain_exp();
                 if (random2(sever) > 3)
