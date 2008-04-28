@@ -2768,7 +2768,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         switch (random2(3))
         {
         case 0:
-            if (you.is_undead)
+            if (player_res_torment())
             {
                 mpr("You feel weird for a moment.");
                 break;
@@ -2824,7 +2824,7 @@ static void _miscast_necromancy(int severity, const char* cause)
             }               // otherwise it just flows through...
 
         case 2:
-            if (you.is_undead)
+            if (player_res_torment())
             {
                 mpr("You feel weird for a moment.");
                 break;
@@ -2839,7 +2839,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         switch (random2(6))
         {
         case 0:
-            if (you.is_undead)
+            if (player_res_torment())
             {
                 mpr("Something just walked over your grave. No, really!");
                 break;
