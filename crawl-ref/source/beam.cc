@@ -3263,7 +3263,7 @@ static int _affect_player( bolt &beam, item_def *item )
             && beam.flavour != BEAM_HEALING
             && beam.flavour != BEAM_POLYMORPH
             && beam.flavour != BEAM_DISPEL_UNDEAD
-            && ((beam.flavour != BEAM_TELEPORT && beam.flavour != BEAM_BANISH)
+            && (beam.flavour != BEAM_TELEPORT && beam.flavour != BEAM_BANISH
                 || !beam.aimed_at_feet)
             && you_resist_magic( beam.ench_power ))
         {
@@ -3389,6 +3389,11 @@ static int _affect_player( bolt &beam, item_def *item )
             break;     // enslavement - confusion?
 
         case BEAM_BANISH:
+            if (YOU_KILL(beam.thrower))
+            {
+                mpr("This spell isn't strong enough to banish yourself.");
+                break;
+            }
             if (you.level_type == LEVEL_ABYSS)
             {
                 mpr("You feel trapped.");

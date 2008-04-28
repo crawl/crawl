@@ -270,11 +270,11 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Elyvilon to restore your abilities",
       "call upon Elyvilon for incredible healing" },
     // Lugonu
-    { "depart the Abyss - at a permanent cost",
+    { "depart the Abyss",
       "bend space around yourself",
       "banish your foes",
       "corrupt the fabric of space",
-      "gate yourself to the Abyss" },
+      "gate yourself to the Abyss - for a price" },
     // Beogh
     { "Beogh supports the use of orcish gear.",
       "smite your foes",

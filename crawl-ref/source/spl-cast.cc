@@ -828,11 +828,8 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
         did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell) );
 
     // Self-banishment gets a special exemption - you're there to spread light
-    if (_spell_is_unholy(spell)
-        && (spell != SPELL_BANISHMENT || !you.banished))
-    {
+    if (_spell_is_unholy(spell) && !you.banished)
         did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spell) );
-    }
 
     // Linley says: Condensation Shield needs some disadvantages to keep
     // it from being a no-brainer... this isn't much, but its a start -- bwr
@@ -1529,6 +1526,11 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_BANISHMENT:
+        if (beam.target_x == you.x_pos && beam.target_y == you.y_pos)
+        {
+            mpr("You cannot banish yourself!");
+            break;
+        }
         zapping(ZAP_BANISHMENT, powc, beam);
         break;
 

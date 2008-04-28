@@ -287,14 +287,14 @@ static const ability_def Ability_List[] =
       ABFLAG_CONF_OK },
 
     // Lugonu
-    { ABIL_LUGONU_ABYSS_EXIT,  "Depart the Abyss", 0, 0, 100, 10, ABFLAG_PAIN },
+    { ABIL_LUGONU_ABYSS_EXIT,  "Depart the Abyss", 1, 0, 150, 10, ABFLAG_NONE },
     { ABIL_LUGONU_BEND_SPACE,  "Bend Space", 1, 0, 50, 0, ABFLAG_PAIN },
     { ABIL_LUGONU_BANISH,      "Banish",
       4, 0, 200, generic_cost::range(3, 4), ABFLAG_NONE },
     { ABIL_LUGONU_CORRUPT,     "Corrupt",
       7, 5, 500, generic_cost::range(10, 14), ABFLAG_NONE },
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
-      9, 0, 500, generic_cost::fixed(35), ABFLAG_NONE },
+      9, 0, 500, generic_cost::fixed(35), ABFLAG_PAIN },
 
     // Nemelex
     { ABIL_NEMELEX_DRAW_ONE, "Draw One", 2, 0, 0, 0, ABFLAG_NONE },
@@ -1677,7 +1677,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
-    {
         if ( you.level_type != LEVEL_ABYSS )
         {
             mpr("You aren't in the Abyss!");
@@ -1685,25 +1684,7 @@ static bool _do_ability(const ability_def& abil)
         }
         banished(DNGN_EXIT_ABYSS);
         exercise(SK_INVOCATIONS, 8 + random2(10));
-
-        const int maxloss = std::max(2, div_rand_round(you.hp_max, 30));
-        // Lose permanent HP
-        you.hp_max -= random_range(1, maxloss);
-
-        // Paranoia.
-        if (you.hp_max < 1)
-            you.hp_max = 1;
-
-        // Deflate HP
-        set_hp( 1 + random2(you.hp), false );
-
-        // Lose 1d2 permanent MP
-        rot_mp(coinflip() ? 2 : 1);
-        // Deflate MP
-        if (you.magic_points)
-            set_mp(random2(you.magic_points), false);
         break;
-    }
 
     case ABIL_LUGONU_BEND_SPACE:
         _lugonu_bends_space();
@@ -1711,7 +1692,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_BANISH:
-        if ( !spell_direction(spd, beam, DIR_NONE, TARG_ENEMY) )
+        if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY))
             return (false);
         if (beam.target_x == you.x_pos && beam.target_y == you.y_pos)
         {
@@ -1729,6 +1710,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_ABYSS_ENTER:
+    {
         if (you.level_type == LEVEL_ABYSS)
         {
             mpr("You're already here.");
@@ -1740,11 +1722,29 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
 
+        // Move permanent hp/mp loss from leaving to entering the Abyss. (jpeg)
+        const int maxloss = std::max(2, div_rand_round(you.hp_max, 30));
+        // Lose permanent HP
+        you.hp_max -= random_range(1, maxloss);
+
+        // Paranoia.
+        if (you.hp_max < 1)
+            you.hp_max = 1;
+
+        // Deflate HP
+        set_hp( 1 + random2(you.hp), false );
+
+        // Lose 1d2 permanent MP
+        rot_mp(coinflip() ? 2 : 1);
+        // Deflate MP
+        if (you.magic_points)
+            set_mp(random2(you.magic_points), false);
+
         activate_notes(false);  // this banishment shouldn't be noted
         banished(DNGN_ENTER_ABYSS);
         activate_notes(true);
         break;
-
+    }
     case ABIL_NEMELEX_DRAW_ONE:
         if ( !choose_deck_and_draw() )
             return false;

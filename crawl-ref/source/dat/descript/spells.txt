@@ -41,7 +41,7 @@ This spell zaps at random a nearby creature with a powerful electrical current.
 %%%%
 Banishment
 
-This spell banishes one creature to the Abyss. Those wishing to visit that unpleasant place in person may always banish themselves. 
+This spell banishes one creature to the Abyss. This magic cannot be used to relocate the caster.
 %%%%
 Bend
 
