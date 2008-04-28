@@ -993,7 +993,7 @@ void xom_check_lost_item(const item_def& item)
     else if (is_rune(item))
     {
         // If you'd dropped it, check if that means you'd dropped your
-        // third rune and now don't have enough to get into Zot.
+        // third rune, and now you don't have enough to get into Zot.
         if (item.flags & ISFLAG_BEEN_IN_INV)
             xom_check_less_runes(item.quantity);
 
