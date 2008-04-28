@@ -88,8 +88,10 @@ std::string item_def::name(description_level_type descrip,
                               || (is_random_artefact( *this )));
 
     std::ostringstream buff;
+
     const std::string auxname = this->name_aux(descrip, terse, ident,
                                                ignore_flags);
+
     const bool startvowel     = is_vowel(auxname[0]);
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY)
