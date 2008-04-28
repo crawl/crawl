@@ -469,24 +469,29 @@ static bool xom_is_good(int sever)
         potion_type type = (potion_type)random_choose(
             POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED, POT_MIGHT,
             POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE, -1);
+
         // downplay this one a bit
         if (type == POT_EXPERIENCE && !one_chance_in(6))
             type = POT_BERSERK_RAGE;
+
         if (type == POT_BERSERK_RAGE)
         {
             if (!you.can_go_berserk(false)) // no message
                 goto try_again;
+
             you.berserk_penalty = NO_BERSERK_PENALTY;
         }
 
         god_speaks(GOD_XOM, _get_xom_speech("potion effect"));
 
         potion_effect(type, 150);
+
         done = true;
     }
     else if (random2(sever) <= 2)
     {
         xom_makes_you_cast_random_spell(sever);
+
         done = true;
     }
     else if (random2(sever) <= 3)
@@ -559,11 +564,13 @@ static bool xom_is_good(int sever)
             goto try_again;
 
         god_speaks(GOD_XOM, _get_xom_speech("vitrification"));
+
         done = true;
     }
     else if (random2(sever) <= 5)
     {
         xom_gives_item(sever);
+
         done = true;
     }
     else if (random2(sever) <= 6)
@@ -616,6 +623,7 @@ static bool xom_is_good(int sever)
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
             else
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
+
             done = true;
         }
     }
