@@ -1815,7 +1815,6 @@ bool make_item_blessed_blade( item_def &item )
 
     // blessed blade of The Shining One
     rap[RAP_BRAND] = (short) SPWPN_HOLY_WRATH;
-    rap[RAP_NEGATIVE_ENERGY] = (short) 1;
 
     // set artefact name
     ASSERT(!item.props.exists( RANDART_NAME_KEY ));
