@@ -1566,9 +1566,9 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
     }
 
     const int rinvi = player_see_invis(calc_unid);
-    const int rward = wearing_amulet(AMU_WARDING, calc_unid) ||
-        (you.religion == GOD_VEHUMET && you.duration[DUR_PRAYER] &&
-         !player_under_penance() && you.piety >= piety_breakpoint(2));
+    const int rward = (wearing_amulet(AMU_WARDING, calc_unid)
+                       || you.religion == GOD_VEHUMET && !player_under_penance()
+                          && you.piety >= piety_breakpoint(2));
     const int rcons = wearing_amulet(AMU_CONSERVATION, calc_unid);
     const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
 
@@ -1935,9 +1935,9 @@ std::vector<MenuEntry *> _get_overview_screen_results()
 
 
     const int rinvi = player_see_invis(calc_unid);
-    const int rward = wearing_amulet(AMU_WARDING, calc_unid) ||
-        (you.religion == GOD_VEHUMET && you.duration[DUR_PRAYER] &&
-         !player_under_penance() && you.piety >= piety_breakpoint(2));
+    const int rward = (wearing_amulet(AMU_WARDING, calc_unid)
+                       || you.religion == GOD_VEHUMET && !player_under_penance()
+                          && you.piety >= piety_breakpoint(2));
     const int rcons = wearing_amulet(AMU_CONSERVATION, calc_unid);
     const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
     const int rclar = wearing_amulet(AMU_CLARITY, calc_unid);

@@ -242,8 +242,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     int wiz_factor = 87;
 
     if (you.religion == GOD_VEHUMET
-        && you.duration[DUR_PRAYER]
-        && (!player_under_penance() && you.piety >= 50)
+        && !player_under_penance() && you.piety >= 50
         && (spell_typematch(spell, SPTYP_CONJURATION)
             || spell_typematch(spell, SPTYP_SUMMONING)))
     {
@@ -453,7 +452,7 @@ int spell_fail(spell_type spell)
         }
     }
 
-    // Apply the effects of Vehumet prayer and items of wizardry.
+    // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 
     if (chance2 > 100)

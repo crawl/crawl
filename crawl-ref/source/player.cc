@@ -6013,8 +6013,8 @@ int player::warding() const
     if (wearing_amulet(AMU_WARDING))
         return (30);
 
-    if (religion == GOD_VEHUMET && duration[DUR_PRAYER]
-        && !player_under_penance() && piety >= piety_breakpoint(2))
+    if (religion == GOD_VEHUMET && !player_under_penance()
+        && piety >= piety_breakpoint(2))
     {
         // Clamp piety at 160 and scale that down to a max of 30.
         const int wardpiety = piety > 160? 160 : piety;

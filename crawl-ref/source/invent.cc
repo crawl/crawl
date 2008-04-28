@@ -534,7 +534,7 @@ void init_item_sort_comparators(item_sort_comparators &list,
 
 const menu_sort_condition *InvMenu::find_menu_sort_condition() const
 {
-    for (int i = 0, size = Options.sort_menus.size(); i < size; ++i)
+    for (int i = Options.sort_menus.size() - 1; i >= 0; --i)
         if (Options.sort_menus[i].matches(type))
             return &Options.sort_menus[i];
 

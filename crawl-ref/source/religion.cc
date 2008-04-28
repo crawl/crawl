@@ -1516,8 +1516,7 @@ static void _do_god_gift(bool prayed_for)
                     else if (!you.had_book[BOOK_ANNIHILATIONS])
                         gift = BOOK_ANNIHILATIONS;  // conj books
 
-                    if (you.skills[SK_CONJURATIONS] <
-                                    you.skills[SK_SUMMONINGS]
+                    if (you.skills[SK_CONJURATIONS] < you.skills[SK_SUMMONINGS]
                         || gift == NUM_BOOKS)
                     {
                         if (!you.had_book[BOOK_CALLINGS])
@@ -4933,8 +4932,8 @@ bool god_hates_butchery(god_type god)
 harm_protection_type god_protects_from_harm(god_type god, bool actual)
 {
     const int min_piety = piety_breakpoint(0);
-    bool praying = (you.duration[DUR_PRAYER] &&
-                    random2(you.piety) >= min_piety);
+    bool praying = (you.duration[DUR_PRAYER]
+                    && random2(you.piety) >= min_piety);
     bool anytime = (one_chance_in(10) || you.piety > random2(1000));
     bool penance = you.penance[god];
 
