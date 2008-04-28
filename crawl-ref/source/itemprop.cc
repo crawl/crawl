@@ -291,7 +291,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_HAND_AXE,          "hand axe",            7,  3, 13,  80,  6,
         SK_AXES,         HANDS_ONE,    SIZE_SMALL,  MI_NONE, true,
         DAMV_CHOPPING, 10 },
-    { WPN_WAR_AXE,           "war axe",            11, 0, 16, 180,  7,
+    { WPN_WAR_AXE,           "war axe",            11,  0, 16, 180,  7,
         SK_AXES,         HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_CHOPPING, 10 },
     { WPN_BROAD_AXE,         "broad axe",          14, -2, 17, 230,  8,
