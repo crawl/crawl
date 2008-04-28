@@ -1819,7 +1819,7 @@ bool make_item_blessed_blade( item_def &item )
 
     // set artefact name
     ASSERT(!item.props.exists( RANDART_NAME_KEY ));
-    item.props[RANDART_NAME_KEY].get_string() = _randart_name(item);
+    item.props[RANDART_NAME_KEY].get_string() = "Blessed Blade";
 
     // set artefact appearance
     ASSERT(!item.props.exists( RANDART_APPEAR_KEY ));
