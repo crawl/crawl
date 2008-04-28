@@ -2004,7 +2004,7 @@ const mutation_type bad_mutations[] = {
     MUT_BLURRY_VISION, MUT_FRAIL
 };
 
-bool _has_bad_mutation()
+static bool _has_bad_mutation()
 {
     for ( unsigned int i = 0; i < ARRAYSZ(bad_mutations); ++i )
         if (you.mutation[bad_mutations[i]] > you.demon_pow[bad_mutations[i]])
