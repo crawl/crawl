@@ -190,6 +190,10 @@ bool torment_player(int pow, int caster)
         case TORMENT_SCROLL:
             aux = "scroll of torment";
             break;
+
+        case TORMENT_XOM:
+            aux = "Xom's torment";
+            break;
         }
 
         caster = TORMENT_GENERIC;

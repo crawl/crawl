@@ -840,10 +840,7 @@ static bool xom_is_bad(int sever)
                     drain_exp();
             }
             else
-            {
-                mpr("A wave of agony tears through your body!");
-                set_hp((you.hp / 2) + 1, false);
-            }
+                torment_player(0, TORMENT_XOM);
 
             done = true;
         }
