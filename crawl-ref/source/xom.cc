@@ -908,7 +908,7 @@ void xom_acts(bool niceness, int sever)
     if (sever < 1)
         sever = 1;
 
-    // Nemelex's deck of punishment drawing the Xom card
+    // Nemelex's deck of punishment drawing the Xom card.
     if (crawl_state.is_god_acting()
         && crawl_state.which_god_acting() != GOD_XOM)
     {
@@ -942,7 +942,7 @@ void xom_acts(bool niceness, int sever)
             ;
     }
 
-    // Nemelex's deck of punishment drawing the Xom card
+    // Nemelex's deck of punishment drawing the Xom card.
     if (crawl_state.is_god_acting()
         && crawl_state.which_god_acting() != GOD_XOM)
     {
@@ -971,7 +971,7 @@ static void xom_check_less_runes(int runes_gones)
         - you.attribute[ATTR_RUNES_IN_ZOT];
     int was_avail = runes_avail + runes_gones;
 
-    // No longer enough available runes to get into Zot
+    // No longer enough available runes to get into Zot.
     if (was_avail >= NUMBER_OF_RUNES_NEEDED &&
         runes_avail < NUMBER_OF_RUNES_NEEDED)
     {
@@ -998,15 +998,14 @@ void xom_check_lost_item(const item_def& item)
                  !(item.flags & ISFLAG_BEEN_IN_INV))
         {
             // Player voluntarily entered Pan or the Abyss looking for
-            // runes, yet never found it.
+            // runes, yet never found them.
             if (item.plus == RUNE_ABYSSAL &&
                 you.attribute[ATTR_ABYSSAL_RUNES] == 0)
             {
                 // Ignore Abyss area shifts.
                 if (you.level_type != LEVEL_ABYSS)
-                    // Abyssal runes are a lot more trouble to find
-                    // than demonic runes, so it gets twice the
-                    // stimulation.
+                    // Abyssal runes are a lot more trouble to find than
+                    // demonic runes, so they get twice the stimulation.
                     xom_is_stimulated(128, "Xom snickers.", true);
             }
             else if (item.plus == RUNE_DEMONIC &&
