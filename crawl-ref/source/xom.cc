@@ -823,12 +823,17 @@ static bool xom_is_bad(int sever)
         }
         else if (random2(sever) <= 8)
         {
-            if (you.is_undead)
+            bool draining = one_chance_in(4);
+
+            if ((draining && player_prot_life() >= 3)
+                || (!draining && player_res_torment()))
+            {
                 goto try_again;
+            }
 
             god_speaks(GOD_XOM, _get_xom_speech("draining or torment"));
 
-            if (one_chance_in(4))
+            if (draining)
             {
                 drain_exp();
                 if (random2(sever) > 3)
@@ -839,7 +844,7 @@ static bool xom_is_bad(int sever)
             else
             {
                 mpr("A wave of agony tears through your body!");
-                set_hp(1 + (you.hp / 2), false);
+                set_hp((you.hp / 2) + 1, false);
             }
 
             done = true;
