@@ -3054,7 +3054,6 @@ void monsters::equip(item_def &item, int slot, int near)
     case OBJ_WEAPONS:
     {
         bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
-
         equip_weapon(item, near, give_msg);
         break;
     }
@@ -3287,8 +3286,17 @@ bool monsters::pickup_launcher(item_def &launch, int near)
     return (eslot == -1? false : pickup(launch, eslot, near));
 }
 
-static bool _is_unique_weapon(monsters *monster, const item_def &weapon)
+static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
 {
+    if (weapon.base_type != OBJ_WEAPONS)
+        return false;
+
+    if (monster->type == MONS_DAEVA)
+        return (weapon.sub_type == WPN_BLESSED_BLADE);
+
+    if (monster->type == MONS_SIGMUND)
+        return (weapon.sub_type == WPN_SCYTHE);
+
     if (is_fixed_artefact(weapon))
     {
         switch (weapon.special)
@@ -3326,7 +3334,7 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
                 continue;
 
             // Don't drop weapons specific to the monster.
-            if (_is_unique_weapon(this, *weap))
+            if (_is_signature_weapon(this, *weap))
                 continue;
 
             has_melee = true;
@@ -3467,7 +3475,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
 
     // Bardings are only wearable by the appropriate monster.
     if (eq == EQ_NONE)
-        return false;
+        return (false);
 
     // XXX: Monsters can only equip body armour and shields (as of 0.4).
     if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
@@ -3475,7 +3483,17 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
 
     const mon_inv_type mslot = _equip_slot_to_mslot(eq);
     if (mslot == NUM_MONSTER_SLOTS)
-        return false;
+        return (false);
+
+    // Don't pick up a shield if you're already wielding a two-hander, or
+    // two weapons as a double-wielding monster.
+    if (mslot == MSLOT_SHIELD && mslot_item(MSLOT_WEAPON)
+        && (hands_reqd(*mslot_item(MSLOT_WEAPON), body_size(PSIZE_BODY))
+                == HANDS_TWO
+            || mslot_item(MSLOT_ALT_WEAPON) && mons_wields_two_weapons(this)))
+    {
+        return (false);
+    }
 
     int newAC = item.armour_rating();
     // no armour yet -> get this one
@@ -3531,6 +3549,15 @@ bool monsters::pickup_weapon(item_def &item, int near, bool force)
     //   pick it up if it is better than the one we have.
     // - If it is a throwable weapon, and we're carrying no missiles (or our
     //   missiles are the same type), pick it up.
+
+    // Monsters capable of dual-wielding will always prefer two weapons
+    // to a single two-handed one, however strong.
+    if (mons_wields_two_weapons(this)
+        && hands_reqd(item, body_size(PSIZE_BODY)) == HANDS_TWO
+        && mslot_item(MSLOT_ALT_WEAPON))
+    {
+        return (false);
+    }
 
     if (is_range_weapon(item))
         return (pickup_launcher(item, near));
@@ -3686,13 +3713,11 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     // Equipping stuff can be forced when initially equipping monsters.
     if (!force)
     {
-        if (attitude == ATT_NEUTRAL)
-            return (false);
-
         // If a monster isn't otherwise occupied (has a foe, is fleeing, etc.)
         // it is considered wandering.
         bool wandering = (behaviour == BEH_WANDER
                           || mons_friendly(this) && foe == MHITYOU);
+        const int itype = item.base_type;
 
         // Weak(ened) monsters won't stop to pick up things as long as they
         // feel unsafe.
@@ -3702,10 +3727,18 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
             return false;
         }
 
-        // Depending on the friendly pickup toggle, your allies may not pick
-        // up anything, or only stuff dropped by (other) allies.
         if (mons_friendly(this))
         {
+            // No pickup for abjurable (summoned) allies - not worth the hassle.
+            if (has_ench(ENCH_ABJ))
+                return false;
+
+            // Never pick up gold or misc. items, it'd only annoy the player.
+            if (itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
+                return false;
+
+            // Depending on the friendly pickup toggle, your allies may not
+            // pick up anything, or only stuff dropped by (other) allies.
             if (Options.friendly_pickup < 0
                 || Options.friendly_pickup == 0
                    && !testbits(item.flags, ISFLAG_DROPPED_BY_ALLY))
@@ -3714,7 +3747,6 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
             }
         }
 
-        const int itype = item.base_type;
         if (!wandering)
         {
             // These are not important enough for pickup when
