@@ -2454,7 +2454,7 @@ bool debug_add_mutation(void)
         {
             for (int i = 0; i < -levels; i++)
             {
-                if (delete_mutation(mutat, force, god_gift))
+                if (delete_mutation(mutat, force))
                     success = true;
             }
         }
