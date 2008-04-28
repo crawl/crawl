@@ -3431,7 +3431,7 @@ bool monsters::wants_weapon(const item_def &weap) const
         return (false);
     }
 
-    // Demonid/undead monsters won't pick up holy wrath.
+    // Demonic/undead monsters won't pick up holy wrath.
     if (get_weapon_brand(weap) == SPWPN_HOLY_WRATH && mons_is_unholy(this))
         return (false);
 
