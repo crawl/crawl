@@ -1662,7 +1662,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     if (!force_mutation)
     {
-        // God gifts override amulets of resist mutation.
+        // God gifts override all sources of mutation resistance other
+        // than the mutation resistance mutation and divine protection.
         if ((wearing_amulet(AMU_RESIST_MUTATION)
                 && !one_chance_in(10) && !god_gift)
             || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
