@@ -1585,10 +1585,10 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
 
 static bool accept_mutation( mutation_type mutat, bool ignore_rarity = false )
 {
-    if ( you.mutation[mutat] >= mutation_defs[mutat].levels )
+    if (you.mutation[mutat] >= mutation_defs[mutat].levels)
         return (false);
 
-    if ( ignore_rarity )
+    if (ignore_rarity)
         return (true);
 
     const int rarity = mutation_defs[mutat].rarity + you.demon_pow[mutat];
@@ -1620,7 +1620,7 @@ static mutation_type get_random_xom_mutation()
             }
         }
     }
-    while ( !accept_mutation(mutat) );
+    while (!accept_mutation(mutat));
 
     return (mutat);
 }
