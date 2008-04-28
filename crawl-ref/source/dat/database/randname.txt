@@ -490,7 +490,7 @@ of @politics_name_armour@
 ######################################################
 The Shining One weapon
 
-of The Shining One
+of the Shining One
 %%%%
 ######################################################
 # XOM weapon
