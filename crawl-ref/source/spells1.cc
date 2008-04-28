@@ -771,7 +771,7 @@ int cast_revitalisation(int pow)
     if (step == 0)
     {
         step_max = std::min(pow, 6);
-        type = random2(3);
+        type = random2(4);
         hp_amt = 3;
         mp_amt = 1;
     }
@@ -781,6 +781,81 @@ int cast_revitalisation(int pow)
     switch (type)
     {
     case 0:
+        // Remove negative afflictions.
+        switch (step)
+        {
+        // Remove confusion.
+        case 0:
+            if (you.duration[DUR_CONF])
+            {
+                success = true;
+                you.duration[DUR_CONF] = 0;
+                break;
+            }
+
+            step = 1;
+            // Deliberate fall through.
+
+        // Remove poisoning.
+        case 1:
+            if (you.duration[DUR_POISONING])
+            {
+                success = true;
+                you.duration[DUR_POISONING] = 0;
+                break;
+            }
+
+            step = 2;
+            // Deliberate fall through.
+
+        // Remove sickness.
+        case 2:
+            if (you.disease)
+            {
+                success = true;
+                you.disease = 0;
+                break;
+            }
+
+            step = 3;
+            // Deliberate fall through.
+
+        // Remove rotting.
+        case 3:
+            if (you.rotting)
+            {
+                success = true;
+                you.rotting = 0;
+                break;
+            }
+
+            step = 4;
+            // Deliberate fall through.
+
+        // Restore rotted HP.
+        case 4:
+        case 5:
+            if (player_rotted())
+            {
+                success = true;
+                unrot_hp(1 + random2(3));
+                break;
+            }
+
+            step++;
+            // Deliberate fall through.
+
+        default:
+            break;
+        }
+
+        if (success)
+            break;
+
+        type = 1;
+        // Deliberate fall through.
+
+    case 1:
         // Restore HP.
         if (you.hp < you.hp_max)
         {
@@ -792,7 +867,8 @@ int cast_revitalisation(int pow)
 
         type = 1;
         // Deliberate fall through.
-    case 1:
+
+    case 2:
         // Restore MP.
         if (you.magic_points < you.max_magic_points)
         {
@@ -804,9 +880,9 @@ int cast_revitalisation(int pow)
 
         type = 2;
         // Deliberate fall through.
+
     default:
         // Do nothing.
-        success = false;
         break;
     }
 
@@ -826,7 +902,8 @@ int cast_revitalisation(int pow)
                             (step == 3) ? "somewhat" :
                             (step == 4) ? "appropriately"
                                         : "impressively",
-                            (type == 0) ? "invigorated"
+                            (type == 0) ? "better" :
+                            (type == 1) ? "invigorated"
                                         : "powerful");
 
     // The more the step counter has advanced, the greater the piety
