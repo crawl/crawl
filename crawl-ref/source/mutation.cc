@@ -1738,7 +1738,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     {
         if (random2(15) < how_mutated(false, true))
         {
-            if (!one_chance_in(3) && !force_mutation)
+            // God gifts override mutation loss due to being heavily
+            // mutated.
+            if (!one_chance_in(3) && !god_gift && !force_mutation)
                 return false;
             else
                 return (delete_mutation(RANDOM_MUTATION));
