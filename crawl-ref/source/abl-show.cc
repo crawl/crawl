@@ -1370,8 +1370,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_ZIN_REVITALISATION:
     {
-        int result = cast_revitalisation(1 + (you.skills[SK_INVOCATIONS] / 4),
-                                         random2(3));
+        int result = cast_revitalisation(1 + (you.skills[SK_INVOCATIONS] / 4));
         if (result > 0)
             exercise(SK_INVOCATIONS, 2 + random2(result));
         break;

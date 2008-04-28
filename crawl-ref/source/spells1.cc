@@ -759,11 +759,24 @@ int cast_healing( int pow, int target_x, int target_y )
     return (_healing_spell( pow + roll_dice( 2, pow ) - 2, target_x, target_y ));
 }
 
-int cast_revitalisation(int pow, int type)
+int cast_revitalisation(int pow)
 {
-    const int max_steps = std::min(pow, 6);
-    int steps = 0;
-    int loss_amt;
+    static int step = 0;
+    static int step_max;
+    static int type;
+    static int hp_amt;
+    static int mp_amt;
+
+    // If the step counter has been reset, start from the beginning.
+    if (step == 0)
+    {
+        step_max = std::min(pow, 6);
+        type = random2(3);
+        hp_amt = 3;
+        mp_amt = 1;
+    }
+
+    bool success = false;
 
     switch (type)
     {
@@ -771,51 +784,71 @@ int cast_revitalisation(int pow, int type)
         // Restore HP.
         if (you.hp < you.hp_max)
         {
-            for (int hp_amt = 3;
-                 steps < max_steps && you.hp < you.hp_max;
-                 ++steps, hp_amt *= 2)
-            {
-                inc_hp(hp_amt, false);
-
-                loss_amt = steps + 1 + (random2(3) - 1);
-                if (loss_amt > 0)
-                    lose_piety(loss_amt);
-            }
-
+            success = true;
+            inc_hp(hp_amt, false);
+            hp_amt *= 2;
             break;
         }
-        // Deliberate fall through.
 
+        type = 1;
+        // Deliberate fall through.
     case 1:
         // Restore MP.
         if (you.magic_points < you.max_magic_points)
         {
-            for (int mp_amt = 1;
-                 steps < max_steps && you.magic_points < you.max_magic_points;
-                 ++steps, mp_amt *= 2)
-            {
-                inc_mp(mp_amt, false);
-
-                loss_amt = steps + 1 + (random2(3) - 1);
-                if (loss_amt > 0)
-                    lose_piety(loss_amt);
-            }
-
+            success = true;
+            inc_mp(mp_amt, false);
+            mp_amt *= 2;
             break;
         }
-        // Deliberate fall through.
 
+        type = 2;
+        // Deliberate fall through.
     default:
         // Do nothing.
+        success = false;
         break;
     }
 
-    if (steps > 0)
-        mpr("You feel renewed.");
-    else
+    // If revitalisation failed, reset the step counter and get out,
+    // indicating failure.
+    if (!success)
+    {
         canned_msg(MSG_NOTHING_HAPPENS);
+        step = 0;
+        return 0;
+    }
 
-    return steps;
+    // If it succeeded, display an appropriate message.
+    mprf("You feel %s %s.", (step == 0) ? "only nominally" :
+                            (step == 1) ? "very slightly" :
+                            (step == 2) ? "slightly" :
+                            (step == 3) ? "somewhat" :
+                            (step == 4) ? "appropriately"
+                                        : "impressively",
+                            (type == 0) ? "invigorated"
+                                        : "powerful");
+
+    // The more the step counter has advanced, the greater the piety
+    // cost is.
+    int loss_amt = step + 1 + (random2(3) - 1);
+
+    if (loss_amt > 0)
+        lose_piety(loss_amt);
+
+    // Increment the step counter.
+    step++;
+
+    // If revitalisation went as far as possible, reset the step counter
+    // and get out, indicating maximum success.
+    if (step == step_max)
+    {
+        step = 0;
+        return step_max;
+    }
+
+    // Otherwise, get out, indicating normal success.
+    return step + 1;
 }
 
 bool cast_revivification(int pow)
