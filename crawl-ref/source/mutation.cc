@@ -1583,7 +1583,7 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     return (amusement);
 }
 
-static bool accept_mutation( mutation_type mutat, bool ignore_rarity = false )
+static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false)
 {
     if (you.mutation[mutat] >= mutation_defs[mutat].levels)
         return (false);
@@ -1592,7 +1592,7 @@ static bool accept_mutation( mutation_type mutat, bool ignore_rarity = false )
         return (true);
 
     const int rarity = mutation_defs[mutat].rarity + you.demon_pow[mutat];
-    // low rarity means unlikely to choose it
+    // Low rarity means unlikely to choose it.
     return (rarity > random2(10));
 }
 
