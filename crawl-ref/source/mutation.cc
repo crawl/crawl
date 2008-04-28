@@ -1662,12 +1662,13 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     if (!force_mutation)
     {
-        // God gifts override amulets of resist mutation.
-        if ((wearing_amulet(AMU_RESIST_MUTATION)
-                && !one_chance_in(10) && !god_gift)
-            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+        // God gifts override amulets of resist mutation and less than 3
+        // levels of the mutation resistance mutation.
+        if (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+            || ((wearing_amulet(AMU_RESIST_MUTATION)
+                && !one_chance_in(10)
             || player_mutation_level(MUT_MUTATION_RESISTANCE)
-                && !one_chance_in(3))
+                && !one_chance_in(3)) && !god_gift))
         {
             mpr("You feel odd for a moment.", MSGCH_MUTATION);
             return false;
@@ -2185,15 +2186,17 @@ int how_mutated(bool all, bool levels)
 }                               // end how_mutated()
 
 bool delete_mutation(mutation_type which_mutation,
-                     bool force_mutation)
+                     bool force_mutation, bool god_gift)
 {
     mutation_type mutat = which_mutation;
 
     if (!force_mutation)
     {
-        if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
-            && (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                || coinflip()))
+        // God gifts override less than 3 levels of the mutation
+        // resistance mutation.
+        if (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+            || ((player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
+                && coinflip()) && !god_gift))
         {
             mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
             return false;

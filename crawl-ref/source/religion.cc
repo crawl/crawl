@@ -2955,7 +2955,7 @@ static bool _zin_retribution()
         bool success = false;
         for (int i = 0; i < 7; i++)
             if (random2(10) > i
-                && delete_mutation(RANDOM_GOOD_MUTATION))
+                && delete_mutation(RANDOM_GOOD_MUTATION, false, true))
             {
                 success = true;
             }
