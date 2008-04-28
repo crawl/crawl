@@ -1787,14 +1787,14 @@ bool give_unique_monster_name(monsters *mon, bool orcs_only)
 
 std::string get_unique_monster_name(const monsters *mon)
 {
-    if (mons_is_unique(mon->type))
-        return get_monster_data(mon->type)->name;
-
     if (mon->type == MONS_PLAYER_GHOST)
         return mon->ghost->name + "'s ghost";
 
     if (mon->type == MONS_PANDEMONIUM_DEMON)
         return mon->ghost->name;
+
+    if (mons_is_unique(mon->type))
+        return get_monster_data(mon->type)->name;
 
     // Since the seed for the monster name is stored in mon->number
     // any monster that uses number for something else cannot be named.
