@@ -129,7 +129,35 @@ A strip of preserved dead cow or bull.
 %%%%
 blessed blade
 
-A blade blessed by the Shining One.
+A blade blessed by The Shining One.
+%%%%
+blessed double sword
+
+A double sword blessed by the Shining One.
+%%%%
+blessed falchion
+
+A falchion blessed by The Shining One.
+%%%%
+blessed great sword
+
+A great sword blessed by the Shining One.
+%%%%
+blessed katana
+
+A katana blessed by the Shining One.
+%%%%
+blessed long sword
+
+A long sword blessed by The Shining One.
+%%%%
+blessed scimitar
+
+A scimitar blessed by the Shining One.
+%%%%
+blessed triple sword
+
+A triple sword blessed by the Shining One.
 %%%%
 blowgun
 
