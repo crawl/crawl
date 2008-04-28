@@ -180,11 +180,11 @@ void init_mon_name_cache()
         // except looking up "rakshasa" and getting _FAKE breaks ?/M rakshasa.
         if (Mon_Name_Cache.find(name) != Mon_Name_Cache.end())
         {
-            if (mon == MONS_RAKSHASA_FAKE ||
-                mon == MONS_ARMOUR_MIMIC ||
-                mon == MONS_SCROLL_MIMIC ||
-                mon == MONS_POTION_MIMIC ||
-                mon == MONS_ABOMINATION_LARGE)
+            if (mon == MONS_RAKSHASA_FAKE
+                || mon == MONS_ARMOUR_MIMIC
+                || mon == MONS_SCROLL_MIMIC
+                || mon == MONS_POTION_MIMIC
+                || mon == MONS_ABOMINATION_LARGE)
             {
                 // keep previous entry
                 continue;
@@ -3194,6 +3194,16 @@ void monsters::pickup_message(const item_def &item, int near)
 
 bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 {
+    // If a monster chooses a two-handed weapon as main weapon, it will
+    // first have to drop any shield it might wear.
+    // (Monsters will always favour damage over protection.)
+    if (slot == MSLOT_WEAPON && inv[MSLOT_SHIELD] != NON_ITEM
+        && hands_reqd(item, body_size(PSIZE_BODY)) == HANDS_TWO)
+    {
+        if (!drop_item(MSLOT_SHIELD, near))
+            return false;
+    }
+
     if (inv[slot] != NON_ITEM)
     {
         if (items_stack(item, mitm[inv[slot]], force_merge))
@@ -3319,12 +3329,20 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
 
 bool monsters::pickup_melee_weapon(item_def &item, int near)
 {
+    const bool is_2handed =
+            (hands_reqd(item, body_size(PSIZE_BODY)) == HANDS_TWO);
+    size_type size = body_size(PSIZE_BODY);
+
     if (mons_wields_two_weapons(this))
     {
+        const item_def *wpn = mslot_item(MSLOT_WEAPON);
+        const item_def *alt = mslot_item(MSLOT_ALT_WEAPON);
+
         // If we have either weapon slot free, pick up the weapon.
-        if (inv[MSLOT_WEAPON] == NON_ITEM)
+        if (!wpn && (!alt || hands_reqd(*alt, size) < HANDS_TWO && !is_2handed))
             return pickup(item, MSLOT_WEAPON, near);
-        else if (inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+
+        if (!alt && (!wpn || hands_reqd(*wpn, size) < HANDS_TWO && !is_2handed))
             return pickup(item, MSLOT_ALT_WEAPON, near);
     }
 
@@ -3389,6 +3407,7 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
 
 bool monsters::wants_weapon(const item_def &weap) const
 {
+    // monsters can't use fixed artefacts
     if (is_fixed_artefact( weap ))
         return (false);
 
@@ -3400,24 +3419,24 @@ bool monsters::wants_weapon(const item_def &weap) const
         return (false);
     }
 
-    // XXX: Make this check dependent on creature size.
-    // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
-    // of course, this also block knives {dlb}:
-    if ((::mons_species(type) == MONS_KOBOLD
-         || ::mons_species(type) == MONS_GOBLIN)
-        && property( weap, PWPN_HIT ) <= 0)
-    {
+    // Wimpy monsters (e.g. kobold, goblin) shouldn't pick up halberds etc.
+    if (!check_weapon_wieldable_size( weap, body_size(PSIZE_BODY) ))
         return (false);
-    }
 
-    // Nobody picks up giant clubs:
+    // Nobody picks up giant clubs.
+    // Starting equipment is okay, of course.
     if (weap.sub_type == WPN_GIANT_CLUB
         || weap.sub_type == WPN_GIANT_SPIKED_CLUB)
     {
         return (false);
     }
 
+    // Demonid/undead monsters won't pick up holy wrath.
     if (get_weapon_brand(weap) == SPWPN_HOLY_WRATH && mons_is_unholy(this))
+        return (false);
+
+    // Holy monsters won't pick up demonic weapons.
+    if (mons_holiness(this) == MH_HOLY && is_evil_item(weap))
         return (false);
 
     return (true);
@@ -3490,12 +3509,13 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     if (mslot == NUM_MONSTER_SLOTS)
         return (false);
 
-    // Don't pick up a shield if you're already wielding a two-hander, or
-    // two weapons as a double-wielding monster.
-    if (mslot == MSLOT_SHIELD && mslot_item(MSLOT_WEAPON)
-        && (hands_reqd(*mslot_item(MSLOT_WEAPON), body_size(PSIZE_BODY))
-                == HANDS_TWO
-            || mslot_item(MSLOT_ALT_WEAPON) && mons_wields_two_weapons(this)))
+    // Monsters that are capable of dual wielding won't pick up shields.
+    // Neither will monsters that are already wielding a two-hander.
+    if (mslot == MSLOT_SHIELD
+        && (mons_wields_two_weapons(this)
+            || mslot_item(MSLOT_WEAPON)
+               && hands_reqd(*mslot_item(MSLOT_WEAPON), body_size(PSIZE_BODY))
+                      == HANDS_TWO))
     {
         return (false);
     }
@@ -3618,6 +3638,11 @@ bool monsters::pickup_wand(item_def &item, int near)
 
     // Only low-HD monsters bother with wands.
     if (hit_dice >= 14)
+        return (false);
+
+    // This is the only type based restriction I can think of:
+    // Holy monsters won't pick up draining items.
+    if (mons_holiness(this) == MH_HOLY && item.sub_type == WAND_DRAINING)
         return (false);
 
     // If you already have a charged wand, don't bother.

@@ -2094,7 +2094,7 @@ void describe_monsters(monsters& mons)
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
         description << getLongDescription("mimic");
     else
-        description << getLongDescription(mons.name(DESC_PLAIN));
+        description << getLongDescription(mons.name(DESC_PLAIN, false));
 
     std::string symbol = "";
     symbol += get_monster_data(mons.type)->showchar;

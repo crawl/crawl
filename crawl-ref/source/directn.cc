@@ -2165,10 +2165,10 @@ static void describe_monster(const monsters *mon)
 std::string get_monster_desc(const monsters *mon, bool full_desc,
                              description_level_type mondtype)
 {
-    std::string desc = mon->name(mondtype);
+    std::string desc = "";
+    if (mondtype != DESC_NONE)
+        desc = mon->name(mondtype);
 
-    const int mon_arm = mon->inv[MSLOT_ARMOUR];
-    const int mon_shd = mon->inv[MSLOT_SHIELD];
     std::string weap = "";
 
     if (mon->type != MONS_DANCING_WEAPON)
@@ -2183,22 +2183,65 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
 
     if (full_desc)
     {
+        const int mon_arm = mon->inv[MSLOT_ARMOUR];
+        const int mon_shd = mon->inv[MSLOT_SHIELD];
+        const int mon_qvr = mon->inv[MSLOT_MISSILE];
+        const int mon_alt = mon->inv[MSLOT_ALT_WEAPON];
+
+        const bool need_quiver  = (mon_qvr != NON_ITEM && mons_friendly(mon));
+        const bool need_alt_wpn = (mon_alt != NON_ITEM && mons_friendly(mon)
+                                   && !mons_wields_two_weapons(mon));
+              bool found_sth    = !weap.empty();
+
+
         if (mon_arm != NON_ITEM)
         {
             desc += ", ";
-            if (!weap.empty() && mon_shd == NON_ITEM)
+            if (found_sth && mon_shd == NON_ITEM && !need_quiver
+                          && !need_alt_wpn)
+            {
                 desc += "and ";
+            }
             desc += "wearing ";
             desc += mitm[mon_arm].name(DESC_NOCAP_A);
+            if (!found_sth)
+                found_sth = true;
         }
 
         if (mon_shd != NON_ITEM)
         {
             desc += ", ";
-            if (!weap.empty() || mon_arm != NON_ITEM)
+            if (found_sth && !need_quiver && !need_alt_wpn)
                 desc += "and ";
             desc += "wearing ";
             desc += mitm[mon_shd].name(DESC_NOCAP_A);
+            if (!found_sth)
+                found_sth = true;
+        }
+
+        // For friendly monsters, also list quivered missiles
+        // and alternate weapon.
+        if (mons_friendly(mon))
+        {
+            if (mon_qvr != NON_ITEM)
+            {
+                desc += ", ";
+                if (found_sth && !need_alt_wpn)
+                    desc += "and ";
+                desc += "quivering ";
+                desc += mitm[mon_qvr].name(DESC_NOCAP_A);
+                if (!found_sth)
+                    found_sth = true;
+            }
+
+            if (need_alt_wpn)
+            {
+                desc += ", ";
+                if (found_sth)
+                    desc += "and ";
+                desc += "carrying ";
+                desc += mitm[mon_alt].name(DESC_NOCAP_A);
+            }
         }
     }
 
