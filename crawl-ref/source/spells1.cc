@@ -759,13 +759,13 @@ int cast_healing( int pow, int target_x, int target_y )
     return (_healing_spell( pow + roll_dice( 2, pow ) - 2, target_x, target_y ));
 }
 
-int cast_revitalisation(int pow)
+int cast_revitalisation(int pow, int type)
 {
     const int max_steps = std::min(pow, 6);
     int steps = 0;
     int loss_amt;
 
-    switch (random2(3))
+    switch (type)
     {
     case 0:
         // Restore HP.
