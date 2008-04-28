@@ -91,6 +91,7 @@ bool holy_word(int pow, int caster, bool silent)
             mpr("You are blasted by holy energy!");
 
             const char *aux = "holy word";
+
             if (caster < 0)
             {
                 switch (caster)
@@ -99,12 +100,14 @@ bool holy_word(int pow, int caster, bool silent)
                     aux = "scroll of holy word";
                     break;
                 }
+
                 caster = HOLY_WORD_GENERIC;
             }
+
             ouch(hploss, caster,
-                    caster != HOLY_WORD_GENERIC ? KILLED_BY_MONSTER
-                                                : KILLED_BY_SOMETHING,
-                    aux);
+                 (caster != HOLY_WORD_GENERIC) ? KILLED_BY_MONSTER
+                                               : KILLED_BY_SOMETHING,
+                 aux);
         }
     }
 
@@ -140,6 +143,65 @@ bool holy_word(int pow, int caster, bool silent)
     return holy_influenced;
 }                               // end holy_word()
 
+bool torment_player(int pow, int caster)
+{
+    UNUSED( pow );
+
+    // [dshaligram] Switched to using ouch() instead of dec_hp() so that
+    // notes can also track torment and activities can be interrupted
+    // correctly.
+    int hploss = 0;
+
+    if (!player_res_torment())
+    {
+        // negative energy resistance can alleviate torment
+        hploss = you.hp * (50 - player_prot_life() * 5) / 100 - 1;
+        if (hploss >= you.hp)
+            hploss = you.hp - 1;
+        if (hploss < 0)
+            hploss = 0;
+    }
+
+    if (!hploss)
+    {
+        mpr("You feel a surge of unholy energy.");
+        return false;
+    }
+
+    mpr("Your body is wracked with pain!");
+
+    const char *aux = "torment";
+
+    if (caster < 0)
+    {
+        switch (caster)
+        {
+        case TORMENT_CARDS:
+        case TORMENT_SPELL:
+            aux = "Symbol of Torment";
+            break;
+
+        case TORMENT_SPWLD:
+            // XXX: If we ever make any other weapon / randart eligible
+            // to torment, this will be incorrect.
+            aux = "Sceptre of Torment";
+            break;
+
+        case TORMENT_SCROLL:
+            aux = "scroll of torment";
+            break;
+        }
+
+        caster = TORMENT_GENERIC;
+    }
+
+    ouch(hploss, caster, (caster != TORMENT_GENERIC) ? KILLED_BY_MONSTER
+                                                     : KILLED_BY_SOMETHING,
+         aux);
+
+    return true;
+}
+
 // torment_monsters is called with power 0 because torment is
 // UNRESISTABLE except for being undead or having torment
 // resistance!  Even if we used maximum power of 1000, high
@@ -151,55 +213,7 @@ int torment_monsters(int x, int y, int pow, int caster)
 
     // is player?
     if (x == you.x_pos && y == you.y_pos)
-    {
-        // [dshaligram] Switched to using ouch() instead of dec_hp so that
-        // notes can also track torment and activities can be interrupted
-        // correctly.
-        int hploss = 0;
-        if (!player_res_torment())
-        {
-            // negative energy resistance can alleviate torment
-            hploss = you.hp * (50 - player_prot_life() * 5) / 100 - 1;
-            if (hploss >= you.hp)
-                hploss = you.hp - 1;
-            if (hploss < 0)
-                hploss = 0;
-        }
-
-        if (!hploss)
-            mpr("You feel a surge of unholy energy.");
-        else
-        {
-            mpr("Your body is wracked with pain!");
-
-            const char *aux = "torment";
-            if (caster < 0)
-            {
-                switch (caster)
-                {
-                case TORMENT_CARDS:
-                case TORMENT_SPELL:
-                    aux = "Symbol of Torment";
-                    break;
-                case TORMENT_SPWLD:
-                    // XXX: If we ever make any other weapon / randart
-                    // eligible to torment, this will be incorrect.
-                    aux = "Sceptre of Torment";
-                    break;
-                case TORMENT_SCROLL:
-                    aux = "scroll of torment";
-                    break;
-                }
-                caster = TORMENT_GENERIC;
-            }
-            ouch(hploss, caster,
-                    caster != TORMENT_GENERIC ? KILLED_BY_MONSTER
-                                              : KILLED_BY_SOMETHING,
-                    aux);
-        }
-
-        return 1;
-    }
+        torment_player(pow, caster);
 
     // check for monster in cell
     int mon = mgrd[x][y];
@@ -212,7 +226,7 @@ int torment_monsters(int x, int y, int pow, int caster)
     if (monster->type == -1)
         return 0;
 
-    if (mons_res_negative_energy( monster ) >= 3)
+    if (mons_res_negative_energy( monster ) == 3)
         return 0;
 
     monster->hit_points = monster->hit_points / 2 + 1;

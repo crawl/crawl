@@ -110,6 +110,7 @@ bool holy_word(int pow, int caster, bool silent = false);
  * *********************************************************************** */
 void torment( int caster, int tx, int ty );
 
+bool torment_player(int pow, int caster);
 int torment_monsters(int x, int y, int pow, int caster);
 
 bool forget_inventory(bool quiet = false);
