@@ -878,7 +878,7 @@ int cast_revitalisation(int pow)
         }
 
         step = 0;
-        type = 1;
+        type = 2;
         // Deliberate fall through, resetting the step counter.
 
     case 2:
@@ -892,7 +892,7 @@ int cast_revitalisation(int pow)
         }
 
         step = 0;
-        type = 2;
+        type = 3;
         // Deliberate fall through, resetting the step counter.
 
     default:
