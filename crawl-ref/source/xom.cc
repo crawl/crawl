@@ -510,6 +510,8 @@ static bool xom_is_good(int sever)
 
         int *summons = new int[numdemons];
 
+        bool success = false;
+
         for (int i = 0; i < numdemons; i++)
         {
             monster_type mon = xom_random_demon(sever);
@@ -523,9 +525,13 @@ static bool xom_is_good(int sever)
             summons[i] = create_monster(mon, 3, BEH_GOD_GIFT,
                                         you.x_pos, you.y_pos,
                                         you.pet_target, MONS_PROGRAM_BUG);
+
+            if (summons[i] != -1)
+                success = true;
         }
 
-        if (numdifferent != numdemons && numdifferent > 0 && hostiletype != 0)
+        if (success && numdifferent != numdemons && numdifferent > 0
+            && hostiletype != 0)
         {
             for (int i = 0; i < numdemons; ++i)
             {
@@ -548,14 +554,17 @@ static bool xom_is_good(int sever)
 
         delete[] summons;
 
-        if (numdifferent == numdemons)
-            god_speaks(GOD_XOM, _get_xom_speech("multiple holy summons"));
-        else if (numdifferent > 0)
-            god_speaks(GOD_XOM, _get_xom_speech("multiple mixed summons"));
-        else
-            god_speaks(GOD_XOM, _get_xom_speech("multiple summons"));
+        if (success)
+        {
+            if (numdifferent == numdemons)
+                god_speaks(GOD_XOM, _get_xom_speech("multiple holy summons"));
+            else if (numdifferent > 0)
+                god_speaks(GOD_XOM, _get_xom_speech("multiple mixed summons"));
+            else
+                god_speaks(GOD_XOM, _get_xom_speech("multiple summons"));
 
-        done = true;
+            done = true;
+        }
     }
     else if (random2(sever) <= 4)
     {
