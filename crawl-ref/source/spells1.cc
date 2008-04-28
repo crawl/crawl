@@ -849,7 +849,7 @@ int cast_revitalisation(int pow)
             if (player_rotted())
             {
                 success = true;
-                unrot_hp(1 + random2(3));
+                unrot_hp(2 + random2(6));
                 break;
             }
 
