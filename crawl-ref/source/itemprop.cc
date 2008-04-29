@@ -2633,7 +2633,7 @@ bool is_colourful_item( const item_def &item )
 bool is_shield(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
-        && get_armour_slot(item) == EQ_SHIELD;
+           && get_armour_slot(item) == EQ_SHIELD;
 }
 
 // Returns true if the given item cannot be wielded with the given shield.

@@ -2008,7 +2008,7 @@ void yell(bool force)
     }
 
     noisy( 10, you.x_pos, you.y_pos );
-    mpr(mons_targd == MHITYOU ? "Heel!" : "Attack!");
+    mpr(mons_targd == MHITYOU ? "Come here!" : "Attack!");
 }                               // end yell()
 
 bool forget_inventory(bool quiet)

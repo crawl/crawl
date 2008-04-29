@@ -3329,49 +3329,59 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
 
 bool monsters::pickup_melee_weapon(item_def &item, int near)
 {
-    const bool is_2handed =
-            (hands_reqd(item, body_size(PSIZE_BODY)) == HANDS_TWO);
-    size_type size = body_size(PSIZE_BODY);
-
     if (mons_wields_two_weapons(this))
     {
-        const item_def *wpn = mslot_item(MSLOT_WEAPON);
-        const item_def *alt = mslot_item(MSLOT_ALT_WEAPON);
-
         // If we have either weapon slot free, pick up the weapon.
-        if (!wpn && (!alt || hands_reqd(*alt, size) < HANDS_TWO && !is_2handed))
+        if (inv[MSLOT_WEAPON] == NON_ITEM)
             return pickup(item, MSLOT_WEAPON, near);
 
-        if (!alt && (!wpn || hands_reqd(*wpn, size) < HANDS_TWO && !is_2handed))
+        if (inv[MSLOT_ALT_WEAPON] == NON_ITEM)
             return pickup(item, MSLOT_ALT_WEAPON, near);
     }
 
     const int mdam_rating = mons_weapon_damage_rating(item);
     int eslot = -1;
-    bool has_melee = false;
+    item_def *weap;
+
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
-        if (const item_def *weap = mslot_item(static_cast<mon_inv_type>(i)))
+        weap = mslot_item(static_cast<mon_inv_type>(i));
+
+        if (!weap)
         {
-            if (is_range_weapon(*weap))
-                continue;
-
-            // Don't drop weapons specific to the monster.
-            if (_is_signature_weapon(this, *weap))
-                continue;
-
-            has_melee = true;
-            if (mons_weapon_damage_rating(*weap) < mdam_rating)
-                return (drop_item(i, near) && pickup(item, i, near));
-        }
-        else
+            // If no weapon in this slot, pick up this one.
             eslot = i;
+            break;
+        }
+
+        if (is_range_weapon(*weap))
+            continue;
+
+        // Don't drop weapons specific to the monster.
+        if (_is_signature_weapon(this, *weap))
+            continue;
+
+        // If the new weapon is better than the current one, replace it.
+        // If wielding two weapons, replace the one with the lower dam. rating.
+        if (mons_weapon_damage_rating(*weap) < mdam_rating
+            && ( eslot == -1 // current is main weapon
+                 || !weap->cursed()
+                    && mons_weapon_damage_rating(*weap)
+                       < mons_weapon_damage_rating(*mslot_item(MSLOT_WEAPON)) ))
+        {
+            eslot = i;
+        }
     }
 
-    if (eslot == MSLOT_ALT_WEAPON && inv[MSLOT_WEAPON] == NON_ITEM)
-        eslot = MSLOT_WEAPON;
+    // No slot found to place this item.
+    if (eslot == -1)
+        return false;
 
-    return (eslot == -1 || has_melee? false : pickup(item, eslot, near));
+    // Current item cannot be dropped.
+    if (inv[eslot] != NON_ITEM && !drop_item(eslot, near))
+        return false;
+
+    return (pickup(item, eslot, near));
 }
 
 // Arbitrary damage adjustment for quantity of missiles. So sue me.
@@ -3423,6 +3433,14 @@ bool monsters::wants_weapon(const item_def &weap) const
     if (!check_weapon_wieldable_size( weap, body_size(PSIZE_BODY) ))
         return (false);
 
+    // Monsters capable of dual-wielding will always prefer two weapons
+    // to a single two-handed one, however strong.
+    if (mons_wields_two_weapons(this)
+        && hands_reqd(weap, body_size(PSIZE_BODY)) == HANDS_TWO)
+    {
+        return false;
+    }
+
     // Nobody picks up giant clubs.
     // Starting equipment is okay, of course.
     if (weap.sub_type == WPN_GIANT_CLUB
@@ -3452,11 +3470,19 @@ static bool _item_race_matches_monster(const item_def &item, monsters *mons)
 
 bool monsters::wants_armour(const item_def &item) const
 {
+    // Monsters that are capable of dual wielding won't pick up shields.
+    // Neither will monsters that are already wielding a two-hander.
+    if (is_shield(item)
+        && (mons_wields_two_weapons(this)
+            || mslot_item(MSLOT_WEAPON)
+               && hands_reqd(*mslot_item(MSLOT_WEAPON), body_size(PSIZE_BODY))
+                      == HANDS_TWO))
+    {
+        return (false);
+    }
+
     // Returns whether this armour is the monster's size.
     return (check_armour_size(item, mons_size(this)));
-
-// For now, never attempt to change armour.
-//    return (!mslot_item(MSLOT_ARMOUR));
 }
 
 static mon_inv_type _equip_slot_to_mslot(equipment_type eq)
@@ -3508,17 +3534,6 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     const mon_inv_type mslot = _equip_slot_to_mslot(eq);
     if (mslot == NUM_MONSTER_SLOTS)
         return (false);
-
-    // Monsters that are capable of dual wielding won't pick up shields.
-    // Neither will monsters that are already wielding a two-hander.
-    if (mslot == MSLOT_SHIELD
-        && (mons_wields_two_weapons(this)
-            || mslot_item(MSLOT_WEAPON)
-               && hands_reqd(*mslot_item(MSLOT_WEAPON), body_size(PSIZE_BODY))
-                      == HANDS_TWO))
-    {
-        return (false);
-    }
 
     int newAC = item.armour_rating();
     // no armour yet -> get this one
@@ -3574,15 +3589,6 @@ bool monsters::pickup_weapon(item_def &item, int near, bool force)
     //   pick it up if it is better than the one we have.
     // - If it is a throwable weapon, and we're carrying no missiles (or our
     //   missiles are the same type), pick it up.
-
-    // Monsters capable of dual-wielding will always prefer two weapons
-    // to a single two-handed one, however strong.
-    if (mons_wields_two_weapons(this)
-        && hands_reqd(item, body_size(PSIZE_BODY)) == HANDS_TWO
-        && mslot_item(MSLOT_ALT_WEAPON))
-    {
-        return (false);
-    }
 
     if (is_range_weapon(item))
         return (pickup_launcher(item, near));
@@ -3732,6 +3738,10 @@ bool monsters::pickup_misc(item_def &item, int near)
 {
     // Never pick up runes.
     if (item.sub_type == MISC_RUNE_OF_ZOT)
+        return (false);
+
+    // Holy monsters won't pick up unholy misc. items.
+    if (mons_holiness(this) == MH_HOLY && is_evil_item(item))
         return (false);
 
     return pickup(item, MSLOT_MISCELLANY, near);

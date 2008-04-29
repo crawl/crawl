@@ -1024,11 +1024,11 @@ static bool _beogh_blessing_reinforcement()
 
     // Possible reinforcement.
     const monster_type followers[] = {
-        MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
+        MONS_ORC, MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
     };
 
     const monster_type high_xl_followers[] = {
-        MONS_ORC_PRIEST, MONS_ORC_WARRIOR, MONS_ORC_KNIGHT, MONS_ORC_WARLORD
+        MONS_ORC_PRIEST, MONS_ORC_WARRIOR, MONS_ORC_KNIGHT
     };
 
     // Send up to four followers.
