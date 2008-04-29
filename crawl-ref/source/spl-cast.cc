@@ -1986,7 +1986,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     _spellcasting_side_effects(spell);
 
     return (SPRET_SUCCESS);
-}                               // end you_spells()
+}                               // end your_spells()
 
 void exercise_spell( spell_type spell, bool spc, bool success )
 {
