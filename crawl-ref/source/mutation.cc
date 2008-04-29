@@ -1537,7 +1537,6 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_MAGIC_RESISTANCE:
     case MUT_TELEPORT_AT_WILL:
     case MUT_MAPPING:
-    case MUT_BLINK:
     case MUT_CLARITY:
     case MUT_MUTATION_RESISTANCE:
     case MUT_ROBUST:
@@ -1556,6 +1555,7 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_DEFORMED:
     case MUT_SPIT_POISON:
     case MUT_BREATHE_FLAMES:
+    case MUT_BLINK:
     case MUT_HORNS:
     case MUT_SCREAM:
     case MUT_BERSERK:
