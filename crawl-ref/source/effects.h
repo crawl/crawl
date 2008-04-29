@@ -100,6 +100,7 @@ void yell(bool force = false);
 /* ***********************************************************************
  * called from: item_use - spell
  * *********************************************************************** */
+bool holy_word_player(int pow, int caster);
 bool holy_word(int pow, int caster, bool silent = false);
 
 

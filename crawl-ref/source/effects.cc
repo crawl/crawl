@@ -64,11 +64,47 @@
 #include "view.h"
 #include "xom.h"
 
+bool holy_word_player(int pow, int caster)
+{
+    if (!you.is_undead && you.species != SP_DEMONSPAWN)
+        return false;
+
+    int hploss = you.hp / 2 - 1;
+
+    if (hploss >= you.hp)
+        hploss = you.hp - 1;
+    if (hploss < 0)
+        hploss = 0;
+
+    if (!hploss)
+        return false;
+
+    mpr("You are blasted by holy energy!");
+
+    const char *aux = "holy word";
+
+    if (caster < 0)
+    {
+        switch (caster)
+        {
+        case HOLY_WORD_SCROLL:
+            aux = "scroll of holy word";
+            break;
+        }
+
+        caster = HOLY_WORD_GENERIC;
+    }
+
+    ouch(hploss, caster,
+         (caster != HOLY_WORD_GENERIC) ? KILLED_BY_MONSTER
+                                       : KILLED_BY_SOMETHING,
+         aux);
+
+    return true;
+}
+
 bool holy_word(int pow, int caster, bool silent)
 {
-    bool holy_influenced = false;
-    monsters *monster;
-
     if (!silent)
         mpr("You speak a Word of immense power!");
 
@@ -76,44 +112,11 @@ bool holy_word(int pow, int caster, bool silent)
     if (pow > 300)
         pow = 300;
 
-    if (you.is_undead || you.species == SP_DEMONSPAWN)
-    {
-        int hploss = you.hp / 2 - 1;
-        if (hploss >= you.hp)
-            hploss = you.hp - 1;
-        if (hploss < 0)
-            hploss = 0;
-
-        if (hploss)
-        {
-            holy_influenced = true;
-
-            mpr("You are blasted by holy energy!");
-
-            const char *aux = "holy word";
-
-            if (caster < 0)
-            {
-                switch (caster)
-                {
-                case HOLY_WORD_SCROLL:
-                    aux = "scroll of holy word";
-                    break;
-                }
-
-                caster = HOLY_WORD_GENERIC;
-            }
-
-            ouch(hploss, caster,
-                 (caster != HOLY_WORD_GENERIC) ? KILLED_BY_MONSTER
-                                               : KILLED_BY_SOMETHING,
-                 aux);
-        }
-    }
+    bool holy_influenced = holy_word_player(pow, caster);
 
     for (int tu = 0; tu < MAX_MONSTERS; tu++)
     {
-        monster = &menv[tu];
+        monsters *monster = &menv[tu];
 
         if (monster->type == -1 || !mons_near(monster))
             continue;
