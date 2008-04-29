@@ -4052,6 +4052,8 @@ static void _print_good_god_neutral_holy_being_speech(const std::string key,
     }
 }
 
+// Holy monsters may turn neutral (good) when encountering followers
+// of the good gods.
 void good_god_holy_attitude_change(monsters *holy)
 {
     ASSERT(mons_is_holy(holy));
@@ -4059,7 +4061,7 @@ void good_god_holy_attitude_change(monsters *holy)
     if (player_monster_visible(holy)) // show reaction
     {
         _print_good_god_neutral_holy_being_speech("reaction", holy,
-                                                 MSGCH_MONSTER_ENCHANT);
+                                                  MSGCH_FRIEND_ENCHANT);
 
         if (!one_chance_in(3))
             _print_good_god_neutral_holy_being_speech("speech", holy,
@@ -4101,21 +4103,21 @@ void beogh_convert_orc(monsters *orc, bool emergency,
             if (converted_by_follower)
             {
                 _print_converted_orc_speech("reaction_battle_follower", orc,
-                                            MSGCH_MONSTER_ENCHANT);
+                                            MSGCH_FRIEND_ENCHANT);
                 _print_converted_orc_speech("speech_battle_follower", orc,
                                             MSGCH_TALK);
             }
             else
             {
                 _print_converted_orc_speech("reaction_battle", orc,
-                                            MSGCH_MONSTER_ENCHANT);
+                                            MSGCH_FRIEND_ENCHANT);
                 _print_converted_orc_speech("speech_battle", orc, MSGCH_TALK);
             }
         }
         else
         {
             _print_converted_orc_speech("reaction_sight", orc,
-                                        MSGCH_MONSTER_ENCHANT);
+                                        MSGCH_FRIEND_ENCHANT);
 
             if (!one_chance_in(3))
                 _print_converted_orc_speech("speech_sight", orc, MSGCH_TALK);

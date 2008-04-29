@@ -229,11 +229,15 @@ bool mons_speaks(const monsters *monster)
             return false;
     }
 
-    // berserk monsters just want your hide.
+    // Berserk monsters just want your hide.
     if (monster->has_ench(ENCH_BERSERK))
         return false;
 
-    // charmed monsters aren't too expressive
+    // Monsters in a battle frenzy are likewise occupied.
+    if (monster->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
+        return false;
+
+    // Charmed monsters aren't too expressive.
     if (monster->has_ench(ENCH_CHARM) && !one_chance_in(3))
         return false;
 
@@ -241,7 +245,7 @@ bool mons_speaks(const monsters *monster)
     std::vector<std::string> prefixes;
     if (mons_neutral(monster))
     {
-        if (coinflip()) // neutrals speak half as often
+        if (coinflip()) // Neutrals speak half as often.
             return false;
 
         prefixes.push_back("neutral");
@@ -520,9 +524,15 @@ bool mons_speaks(const monsters *monster)
             else if (param == "VISUAL")
                 msg_type = MSGCH_TALK_VISUAL;
             else if (param == "SPELL" && !silence || param == "VISUAL SPELL")
-                msg_type = MSGCH_MONSTER_SPELL;
+            {
+                msg_type = mons_friendly(monster) ? MSGCH_FRIEND_SPELL
+                                                  : MSGCH_MONSTER_SPELL;
+            }
             else if (param == "ENCHANT" && !silence || param == "VISUAL ENCHANT")
-                msg_type = MSGCH_MONSTER_ENCHANT;
+            {
+                msg_type = mons_friendly(monster) ? MSGCH_FRIEND_ENCHANT
+                                                  : MSGCH_MONSTER_ENCHANT;
+            }
             else if (param == "PLAIN")
                 msg_type = MSGCH_PLAIN;
             else

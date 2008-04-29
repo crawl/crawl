@@ -20,33 +20,36 @@
 // everything properly
 enum msg_channel_type
 {
-    MSGCH_PLAIN,          // regular text
-    MSGCH_PROMPT,         // various prompts
-    MSGCH_GOD,            // god/religion (param is god)
-    MSGCH_PRAY,           // praying messages (param is god)
-    MSGCH_DURATION,       // effect down/warnings
-    MSGCH_DANGER,         // serious life threats (ie very large HP attacks)
-    MSGCH_WARN,           // much less serious threats
-    MSGCH_FOOD,           // hunger notices
-    MSGCH_RECOVERY,       // recovery from disease/stat/poison condition
-    MSGCH_SOUND,          // messages about things the player hears
-    MSGCH_TALK,           // monster talk (param is monster type)
-    MSGCH_TALK_VISUAL,    // silent monster "talk" (not restricted by silence)
-    MSGCH_INTRINSIC_GAIN, // player level/stat/species-power gains
-    MSGCH_MUTATION,       // player gain/lose mutations
-    MSGCH_MONSTER_SPELL,  // monsters casting spells
-    MSGCH_MONSTER_ENCHANT,// monsters enchantments up and down
-    MSGCH_MONSTER_DAMAGE, // monster damage reports (param is level)
-    MSGCH_MONSTER_TARGET, // message marking the monster as a target
-    MSGCH_ROTTEN_MEAT,    // messages about chunks/corpses becoming rotten
-    MSGCH_EQUIPMENT,      // equipment listing messages
-    MSGCH_FLOOR_ITEMS,    // like equipment, but lists of floor items
-    MSGCH_MULTITURN_ACTION,  // delayed action messages
-    MSGCH_EXAMINE,        // messages describing monsters, features, items
-    MSGCH_EXAMINE_FILTER, // "less important" instances of the above
-    MSGCH_DIAGNOSTICS,    // various diagnostic messages
-    MSGCH_TUTORIAL,       // messages for tutorial
-    NUM_MESSAGE_CHANNELS  // always last
+    MSGCH_PLAIN,            // regular text
+    MSGCH_PROMPT,           // various prompts
+    MSGCH_GOD,              // god/religion (param is god)
+    MSGCH_PRAY,             // praying messages (param is god)
+    MSGCH_DURATION,         // effect down/warnings
+    MSGCH_DANGER,           // serious life threats (ie very large HP attacks)
+    MSGCH_WARN,             // much less serious threats
+    MSGCH_FOOD,             // hunger notices
+    MSGCH_RECOVERY,         // recovery from disease/stat/poison condition
+    MSGCH_SOUND,            // messages about things the player hears
+    MSGCH_TALK,             // monster talk (param is monster type)
+    MSGCH_TALK_VISUAL,      // silent monster "talk" (not restricted by silence)
+    MSGCH_INTRINSIC_GAIN,   // player level/stat/species-power gains
+    MSGCH_MUTATION,         // player gain/lose mutations
+    MSGCH_MONSTER_SPELL,    // monsters casting spells
+    MSGCH_MONSTER_ENCHANT,  // monsters'*' enchantments up and down
+    MSGCH_FRIEND_SPELL,     // allied monsters casting spells
+    MSGCH_FRIEND_ENCHANT,   // allied monsters' enchantments up and down
+    MSGCH_MONSTER_DAMAGE,   // monster damage reports (param is level)
+    MSGCH_MONSTER_TARGET,   // message marking the monster as a target
+    MSGCH_ROTTEN_MEAT,      // messages about chunks/corpses becoming rotten
+    MSGCH_EQUIPMENT,        // equipment listing messages
+    MSGCH_FLOOR_ITEMS,      // like equipment, but lists of floor items
+    MSGCH_MULTITURN_ACTION, // delayed action messages
+    MSGCH_EXAMINE,          // messages describing monsters, features, items
+    MSGCH_EXAMINE_FILTER,   // "less important" instances of the above
+    MSGCH_DIAGNOSTICS,      // various diagnostic messages
+    MSGCH_TUTORIAL,         // messages for tutorial
+
+    NUM_MESSAGE_CHANNELS    // always last
 };
 
 enum msg_colour_type

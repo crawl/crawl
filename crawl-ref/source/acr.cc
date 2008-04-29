@@ -4028,13 +4028,14 @@ static bool _initialise(void)
     update_turn_count();
 
     trackers_init_new_level(false);
-    Options.friendly_pickup = Options.default_friendly_pickup;
 
     // set vision radius to player's current vision
     setLOSRadius( you.current_vision );
 
     if (newc)
     {
+        Options.friendly_pickup = Options.default_friendly_pickup;
+
         // Mark items in inventory as of unknown origin.
         origin_set_inventory(origin_set_unknown);
 

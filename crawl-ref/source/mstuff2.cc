@@ -773,8 +773,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     case SPELL_CANTRIP:
     {
-        const bool friendly = mons_friendly(monster);
-        bool need_friendly_stub = false;
+        const bool friendly      = mons_friendly(monster);
+        bool need_friendly_stub  = false;
+        const msg_channel_type channel = (friendly ? MSGCH_FRIEND_ENCHANT
+                                                   : MSGCH_MONSTER_ENCHANT);
+
         // Monster spell of uselessness, just prints a message.
         // This spell exists so that some monsters with really strong
         // spells (ie orc priest) can be toned down a bit. -- bwr
@@ -784,7 +787,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
         case 0:
             simple_monster_message( monster, " glows brightly for a moment.",
-                                    MSGCH_MONSTER_ENCHANT );
+                                    channel );
             break;
         case 1:
             if (friendly)
@@ -800,15 +803,15 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             break;
         case 3:
             simple_monster_message( monster, " looks stronger.",
-                                    MSGCH_MONSTER_ENCHANT );
+                                    channel );
             break;
         case 4:
             simple_monster_message( monster, " becomes somewhat translucent.",
-                                    MSGCH_MONSTER_ENCHANT );
+                                    channel );
             break;
         case 5:
             simple_monster_message( monster, "'s eyes start to glow.",
-                                    MSGCH_MONSTER_ENCHANT );
+                                    channel );
             break;
         case 6:
         default:
@@ -824,7 +827,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (need_friendly_stub)
         {
             simple_monster_message(monster, " shimmers for a moment.",
-                                   MSGCH_MONSTER_ENCHANT);
+                                   channel);
         }
 
         return;
@@ -2334,6 +2337,8 @@ bool orange_statue_effects(monsters *mons)
 bool orc_battle_cry(monsters *chief)
 {
     const actor *foe = chief->get_foe();
+    int affected = 0;
+
     if (foe
         && (foe != &you || !mons_friendly(chief))
         && !silenced(chief->x, chief->y)
@@ -2342,7 +2347,7 @@ bool orc_battle_cry(monsters *chief)
     {
         const int boss_index = monster_index(chief);
         const int level = chief->hit_dice > 12? 2 : 1;
-        std::vector<monsters*> affected;
+        std::vector<monsters*> seen_affected;
         for (int i = 0; i < MAX_MONSTERS; ++i)
         {
             monsters *mons = &menv[i];
@@ -2373,7 +2378,10 @@ bool orc_battle_cry(monsters *chief)
                         mons->add_ench( mon_enchant(ENCH_BATTLE_FRENZY, level,
                                                     KC_OTHER, dur) );
                     }
-                    affected.push_back(mons);
+
+                    affected++;
+                    if (you.can_see(mons))
+                        seen_affected.push_back(mons);
 
                     if (mons->asleep())
                     {
@@ -2384,7 +2392,7 @@ bool orc_battle_cry(monsters *chief)
             }
         }
 
-        if (!affected.empty())
+        if (affected)
         {
             if (you.can_see(chief) && player_can_hear(chief->x, chief->y))
             {
@@ -2396,21 +2404,37 @@ bool orc_battle_cry(monsters *chief)
             noisy(15, chief->x, chief->y);
 
             // Disabling detailed frenzy announcement because it's so spammy.
-#ifdef ANNOUNCE_BATTLE_FRENZY
-            std::map<std::string, int> names;
-            for (int i = 0, size = affected.size(); i < size; ++i)
-                if (you.can_see(affected[i]))
-                    names[affected[i]->name(DESC_PLAIN)]++;
+            const msg_channel_type channel =
+                        mons_friendly(chief) ? MSGCH_MONSTER_ENCHANT
+                                             : MSGCH_FRIEND_ENCHANT;
 
-            for (std::map<std::string,int>::const_iterator i = names.begin();
-                 i != names.end(); ++i)
+            if (!seen_affected.empty())
             {
-                const std::string s = i->second > 1 ? pluralise(i->first)
-                                                    : i->first;
-                mprf("The %s go%s into a battle-frenzy!",
-                     s.c_str(), i->second == 1? "es" : "");
+                std::string who;
+                if (seen_affected.size() == 1)
+                {
+                    who = seen_affected[0]->name(DESC_CAP_THE);
+                    mprf(channel, "%s goes into a battle-frenzy!", who.c_str());
+                }
+                else
+                {
+                    int type = seen_affected[0]->type;
+                    for (unsigned int i = 0; i < seen_affected.size(); i++)
+                    {
+                        if (seen_affected[i]->type != type)
+                        {
+                            // just mention plain orcs
+                            type = MONS_ORC;
+                            break;
+                        }
+                    }
+                    who = get_monster_data(type)->name;
+
+                    mprf(channel, "%s %s go into a battle-frenzy!",
+                         mons_friendly(chief) ? "Your" : "The",
+                         pluralise(who).c_str());
+                }
             }
-#endif
         }
     }
     // Orc battle cry doesn't cost the monster an action.

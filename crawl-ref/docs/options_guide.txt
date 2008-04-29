@@ -1247,6 +1247,8 @@ CHANNEL_NAME can currently be one of these:
    mutation        = gain/lose mutations
    monster_spell   = messages about monsters gesturing or casting spells
    monster_enchant = messages pertaining to monster enchantments
+   friend_spell    = as monster_spell, but only for friendly monsters
+   friend_enchant  = as monster_enchant, but only for friendly monsters
    monster_damage  = messages telling how damaged a monster is
    rotten_meat     = messages about chunks/corpses becoming rotten
    equipment       = messages inidcating worn/wielded equipment

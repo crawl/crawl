@@ -642,10 +642,10 @@ bool is_mons_poisoner(monsters *mons)
 
     const int attk_flavour = mons_attack_spec(mons, 0).flavour;
     return (attk_flavour == AF_POISON
-        || attk_flavour == AF_POISON_NASTY
-        || attk_flavour == AF_POISON_MEDIUM
-        || attk_flavour == AF_POISON_STRONG
-        || attk_flavour == AF_POISON_STR);
+            || attk_flavour == AF_POISON_NASTY
+            || attk_flavour == AF_POISON_MEDIUM
+            || attk_flavour == AF_POISON_STRONG
+            || attk_flavour == AF_POISON_STR);
 }
 
 static bool _slime_pit_unlock(bool silent)
@@ -670,11 +670,15 @@ static bool _slime_pit_unlock(bool silent)
     if (!silent)
     {
         if (in_los)
+        {
             mpr("Suddenly, all colour oozes out of the stone walls.",
                 MSGCH_MONSTER_ENCHANT);
+        }
         else
+        {
             mpr("You feel a strange vibration for a moment.",
                 MSGCH_MONSTER_ENCHANT);
+        }
     }
 
     return (true);
@@ -2668,15 +2672,13 @@ bool simple_monster_message(const monsters *monster, const char *event,
 {
 
     if (mons_near( monster )
-        && (channel == MSGCH_MONSTER_SPELL || player_monster_visible(monster)))
+        && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
+            || player_monster_visible(monster)))
     {
         char buff[INFO_SIZE];
 
-        std::string name = get_unique_monster_name(monster);
-        if (name.empty())
-            name = monster->name(descrip);
-
-        snprintf( buff, sizeof(buff), "%s%s", name.c_str(), event );
+        snprintf( buff, sizeof(buff), "%s%s", monster->name(descrip).c_str(),
+                  event );
 
         mpr( buff, channel, param );
         return (true);
@@ -2924,6 +2926,9 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         return (false);
     }
 
+    const msg_channel_type spl = (mons_friendly(monster) ? MSGCH_FRIEND_SPELL
+                                                         : MSGCH_MONSTER_SPELL);
+
     switch (mclass)
     {
     case MONS_ORC_KNIGHT:
@@ -3145,8 +3150,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 // good idea?
                 if (mons_should_fire(beem))
                 {
-                    simple_monster_message( monster, " makes a gesture!",
-                                            MSGCH_MONSTER_SPELL );
+                    simple_monster_message( monster, " makes a gesture!", spl );
 
                     mons_cast(monster, beem, spell_cast);
                     used = true;
@@ -3268,8 +3272,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             // good idea?
             if (mons_should_fire(beem))
             {
-                simple_monster_message(monster, " breathes.",
-                        MSGCH_MONSTER_SPELL);
+                simple_monster_message(monster, " breathes.", spl);
                 fire_beam(beem);
                 mmov_x = 0;
                 mmov_y = 0;
@@ -3281,21 +3284,21 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     case MONS_MERMAID:
     {
         // Don't behold player already half down or up the stairs
-	if ( !you.delay_queue.empty() )
+        if ( !you.delay_queue.empty() )
         {
-	    delay_queue_item delay = you.delay_queue.front();
+            delay_queue_item delay = you.delay_queue.front();
 
-	    if (delay.type == DELAY_ASCENDING_STAIRS
-	        || delay.type == DELAY_DESCENDING_STAIRS)
-	    {
+            if (delay.type == DELAY_ASCENDING_STAIRS
+                || delay.type == DELAY_DESCENDING_STAIRS)
+            {
 #ifdef DEBUG_DIAGNOSTICS
                 mpr("Taking stairs, don't behold.", MSGCH_DIAGNOSTICS);
 #endif
                 break;
-	    }
+            }
         }
 
-        // won't sing if either of you silenced, or it's friendly or confused
+    // won't sing if either of you silenced, or it's friendly or confused
         if (monster->has_ench(ENCH_CONFUSION) || mons_friendly(monster)
             || silenced(monster->x, monster->y) || silenced(you.x_pos, you.y_pos))
         {
@@ -3324,7 +3327,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 simple_monster_message(monster,
                     make_stringf(" chants %s song.",
                     already_beheld? "her luring" : "a haunting").c_str(),
-                    MSGCH_MONSTER_SPELL);
+                    spl);
             }
             else
             {
@@ -3925,6 +3928,9 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
                                 spell_type spell_cast,
                                 spell_type draco_breath)
 {
+    const msg_channel_type spl = (mons_friendly(monster) ? MSGCH_FRIEND_SPELL
+                                                         : MSGCH_MONSTER_SPELL);
+
     if (nearby)      // handle monsters within range of player
     {
         if (monster->type == MONS_GERYON)
@@ -3933,12 +3939,11 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
                 return (false);
 
             simple_monster_message( monster, " winds a great silver horn.",
-                                    MSGCH_MONSTER_SPELL );
+                                    spl );
         }
         else if (mons_is_demon( monster->type ))
         {
-            simple_monster_message( monster, " gestures.",
-                                    MSGCH_MONSTER_SPELL );
+            simple_monster_message( monster, " gestures.", spl );
         }
         else
         {
@@ -3947,8 +3952,7 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
             default:
                 if (spell_cast == draco_breath)
                 {
-                    if (!simple_monster_message(monster, " breathes.",
-                                                MSGCH_MONSTER_SPELL))
+                    if (!simple_monster_message(monster, " breathes.", spl))
                     {
                         if (!silenced(monster->x, monster->y)
                             && !silenced(you.x_pos, you.y_pos))
@@ -3967,24 +3971,21 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
                     switch (random2(3))
                     {
                     case 0:
-                        simple_monster_message( monster,
-                                                " prays.",
-                                                MSGCH_MONSTER_SPELL );
+                        simple_monster_message(monster, " prays.", spl);
                         break;
                     case 1:
-                        simple_monster_message( monster,
-                                                " mumbles some strange prayers.",
-                                                MSGCH_MONSTER_SPELL );
+                        simple_monster_message(monster,
+                                               " mumbles some strange prayers.",
+                                               spl);
                         break;
                     case 2:
                     default:
-                        simple_monster_message( monster,
-                                                " utters an invocation.",
-                                                MSGCH_MONSTER_SPELL );
+                        simple_monster_message(monster,
+                                               " utters an invocation.", spl);
                         break;
                     }
                 }
-                else
+                else // not a priest
                 {
                     switch (random2(3))
                     {
@@ -3994,21 +3995,18 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
                         // that it doesn't suggest a vocal component. -- bwr
                         if (player_monster_visible(monster))
                         {
-                            simple_monster_message( monster,
-                                                    " gestures wildly.",
-                                                    MSGCH_MONSTER_SPELL );
+                            simple_monster_message(monster,
+                                                   " gestures wildly.", spl );
                         }
                         break;
                     case 1:
-                        simple_monster_message( monster,
-                                                " mumbles some strange words.",
-                                                MSGCH_MONSTER_SPELL );
+                        simple_monster_message(monster,
+                                               " mumbles some strange words.",
+                                               spl);
                         break;
                     case 2:
                     default:
-                        simple_monster_message( monster,
-                                                " casts a spell.",
-                                                MSGCH_MONSTER_SPELL );
+                        simple_monster_message(monster, " casts a spell.", spl);
                         break;
                     }
                 }
@@ -4030,8 +4028,7 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
             case MONS_SERPENT_OF_HELL:
             case MONS_QUICKSILVER_DRAGON:
             case MONS_IRON_DRAGON:
-                if (!simple_monster_message(monster, " breathes.",
-                                            MSGCH_MONSTER_SPELL))
+                if (!simple_monster_message(monster, " breathes.", spl))
                 {
                     if (!silenced(monster->x, monster->y)
                         && !silenced(you.x_pos, you.y_pos))
@@ -4054,23 +4051,20 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
             case MONS_GREAT_ORB_OF_EYES:
             case MONS_SHINING_EYE:
             case MONS_EYE_OF_DEVASTATION:
-                simple_monster_message(monster, " gazes.", MSGCH_MONSTER_SPELL);
+                simple_monster_message(monster, " gazes.", spl);
                 break;
 
             case MONS_GIANT_ORANGE_BRAIN:
-                simple_monster_message(monster, " pulsates.",
-                                       MSGCH_MONSTER_SPELL);
+                simple_monster_message(monster, " pulsates.", spl);
                 break;
 
             case MONS_NAGA:
             case MONS_NAGA_WARRIOR:
-                simple_monster_message(monster, " spits poison.",
-                                       MSGCH_MONSTER_SPELL);
+                simple_monster_message(monster, " spits poison.", spl);
                 break;
 
             case MONS_ORB_OF_FIRE:
-                simple_monster_message(monster, _orb_of_fire_glow(),
-                                       MSGCH_MONSTER_SPELL);
+                simple_monster_message(monster, _orb_of_fire_glow(), spl);
                 break;
             }
         }

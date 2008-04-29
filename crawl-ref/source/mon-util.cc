@@ -1639,11 +1639,23 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     {
         switch (desc)
         {
-        case DESC_CAP_THE:   result = "The "; break;
-        case DESC_NOCAP_THE: result = "the "; break;
-        case DESC_CAP_A:     result = "A ";   break;
-        case DESC_NOCAP_A:   result = "a ";   break;
-        case DESC_PLAIN: default:             break;
+        case DESC_CAP_THE:
+            (mons_friendly(&mon)) ? result = "Your "
+                                  : result = "The ";
+            break;
+        case DESC_NOCAP_THE:
+            (mons_friendly(&mon)) ? result = "your "
+                                  : result = "the ";
+            break;
+        case DESC_CAP_A:
+            result = "A ";
+            break;
+        case DESC_NOCAP_A:
+            result = "a ";
+            break;
+        case DESC_PLAIN:
+        default:
+            break;
         }
     }
 
@@ -2418,7 +2430,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
 {
     gender_type gender = GENDER_NEUTER;
 
-    if ((mons_is_unique( mon_type ) && mon_type != MONS_PLAYER_GHOST)
+    if (mons_is_unique( mon_type ) && mon_type != MONS_PLAYER_GHOST
         || mon_type == MONS_MERMAID)
     {
         switch(mon_type)
@@ -3904,7 +3916,9 @@ item_def *monsters::shield()
 
 std::string monsters::name(description_level_type desc) const
 {
-    std::string monnam = get_unique_monster_name(this);
+    std::string monnam = "";
+    if (player_monster_visible(this))
+        monnam = get_unique_monster_name(this);
     if (!monnam.empty())
         return monnam;
 
