@@ -471,7 +471,7 @@ void simulacrum(int power)
     }
 }
 
-bool dancing_weapon(int pow, bool force_hostile)
+bool dancing_weapon(int pow, bool force_hostile, bool silent)
 {
     int numsc = std::min(2 + (random2(pow) / 5), 6);
 
@@ -485,8 +485,8 @@ bool dancing_weapon(int pow, bool force_hostile)
     // See if wielded item is appropriate:
     if (wpn == -1
         || you.inv[wpn].base_type != OBJ_WEAPONS
-        || is_range_weapon( you.inv[wpn] )
-        || is_fixed_artefact( you.inv[wpn] ))
+        || is_range_weapon(you.inv[wpn])
+        || is_fixed_artefact( you.inv[wpn]))
     {
         failed = true;
     }
@@ -496,7 +496,7 @@ bool dancing_weapon(int pow, bool force_hostile)
     if (i == NON_ITEM)
         failed = true;
 
-    if ( !failed )
+    if (!failed)
     {
 
         // cursed weapons become hostile
@@ -506,21 +506,26 @@ bool dancing_weapon(int pow, bool force_hostile)
             hitting = MHITYOU;
         }
 
-        summs = create_monster( MONS_DANCING_WEAPON, numsc, beha,
-                                you.x_pos, you.y_pos, hitting,
-                                MONS_PROGRAM_BUG );
-        if ( summs == -1 )
+        summs = create_monster(MONS_DANCING_WEAPON, numsc, beha,
+                               you.x_pos, you.y_pos, hitting,
+                               MONS_PROGRAM_BUG);
+        if (summs == -1)
             failed = true;
     }
 
-    if ( failed )
+    if (failed)
     {
         destroy_item(i);
-        if ( wpn != -1 )
-            mpr("Your weapon vibrates crazily for a second.");
-        else
-            msg::stream << "Your " << your_hand(true) << " twitch."
-                        << std::endl;
+
+        if (!silent)
+        {
+            if (wpn != -1)
+                mpr("Your weapon vibrates crazily for a second.");
+            else
+                msg::stream << "Your " << your_hand(true) << " twitch."
+                            << std::endl;
+        }
+
         return false;
     }
 
@@ -539,7 +544,7 @@ bool dancing_weapon(int pow, bool force_hostile)
 
     mprf("%s dances into the air!", you.inv[wpn].name(DESC_CAP_YOUR).c_str());
 
-    you.inv[ wpn ].quantity = 0;
+    you.inv[wpn].quantity = 0;
 
     menv[summs].inv[MSLOT_WEAPON] = i;
     menv[summs].colour = mitm[i].colour;
