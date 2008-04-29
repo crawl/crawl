@@ -828,7 +828,7 @@ static int ignite_poison_objects(int x, int y, int pow, int garbage)
             }
         }
 
-        // FIXME: impliment burning poisoned ammo
+        // FIXME: implement burning poisoned ammo
         // else if ( it's ammo that's poisoned) {
         //   strength += number_of_ammo;
         //   destroy_item(ammo);
@@ -838,8 +838,7 @@ static int ignite_poison_objects(int x, int y, int pow, int garbage)
 
     if (strength > 0)
         place_cloud(CLOUD_FIRE, x, y, strength + roll_dice(3, strength / 4),
-                    KC_YOU
-            );
+                    KC_YOU);
 
     return (strength);
 }                               // end ignite_poison_objects()
