@@ -849,7 +849,7 @@ static bool xom_is_bad(int sever)
             bool success = false;
 
             if (one_chance_in(4))
-                success = dancing_weapon(100, true); // Nasty, but fun.
+                success = dancing_weapon(100, true, true); // Nasty, but fun.
             else
             {
                 const int numdemons =
