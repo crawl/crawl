@@ -635,6 +635,19 @@ static bool _is_mons_mutator_or_rotter(monsters *mons)
     return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT);
 }
 
+bool is_mons_poisoner(monsters *mons)
+{
+    if (mons_corpse_effect(mons->type) == CE_POISONOUS)
+        return true;
+
+    const int attk_flavour = mons_attack_spec(mons, 0).flavour;
+    return (attk_flavour == AF_POISON
+        || attk_flavour == AF_POISON_NASTY
+        || attk_flavour == AF_POISON_MEDIUM
+        || attk_flavour == AF_POISON_STRONG
+        || attk_flavour == AF_POISON_STR);
+}
+
 static bool _slime_pit_unlock(bool silent)
 {
     unset_level_flags(LFLAG_NO_TELE_CONTROL, silent);

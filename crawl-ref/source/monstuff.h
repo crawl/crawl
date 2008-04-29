@@ -66,6 +66,8 @@ enum poly_power_type {
 bool monster_polymorph(monsters *monster, monster_type targetc,
                        poly_power_type p = PPT_SAME);
 
+bool is_mons_poisoner(monsters *mon);
+
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************
    * called from: bang - beam - effects - fight - misc - monstuff - mstuff2 -

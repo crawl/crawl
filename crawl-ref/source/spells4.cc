@@ -890,16 +890,8 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
     struct monsters *const mon = &menv[ mon_index ];
 
     // Monsters which have poison corpses or poisonous attacks:
-    if (mons_corpse_effect( mon->type ) == CE_POISONOUS
-        || mon->type == MONS_GIANT_ANT
-        || mon->type == MONS_SMALL_SNAKE
-        || mon->type == MONS_SNAKE
-        || mon->type == MONS_JELLYFISH
-        || mon->type == MONS_SWAMP_DRAKE
-        || mons_is_mimic( mon->type ))
-    {
+    if (is_mons_poisoner(mon))
         dam_dice.num = 3;
-    }
 
     // Monsters which are poisoned:
     int strength = 0;
