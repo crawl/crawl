@@ -2420,7 +2420,7 @@ static void _genie_card(int power, deck_rarity_type rarity)
 // special case for *your* god maybe?
 static void _godly_wrath()
 {
-    divine_retribution(static_cast<god_type>(random2(NUM_GODS-1) + 1));
+    divine_retribution(static_cast<god_type>(random2(NUM_GODS - 1) + 1));
 }
 
 static void _curse_card(int power, deck_rarity_type rarity)
