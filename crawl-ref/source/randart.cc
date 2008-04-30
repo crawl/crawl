@@ -241,7 +241,7 @@ static std::string _replace_name_parts(const std::string name_in,
         {
             do
             {
-                which_god = static_cast<god_type>(random2(NUM_GODS));
+                which_god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
             }
             while (!_god_fits_artefact(which_god, item));
         }
