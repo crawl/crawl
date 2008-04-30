@@ -1388,7 +1388,7 @@ static bool _jelly_divide(monsters * parent)
     }
 
     return (true);
-}                               // end jelly_divde()
+}                               // end jelly_divide()
 
 // if you're invis and throw/zap whatever, alerts menv to your position
 void alert_nearby_monsters(void)
