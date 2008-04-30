@@ -397,8 +397,7 @@ bool there_are_monsters_nearby()
     {
         for ( int x = xstart; x < xend; ++x )
         {
-            // If you can see an unfriendly monster, then you feel
-            // unsafe.
+            // If you can see a monster, then it's nearby.
             if ( see_grid(x,y) )
             {
                 const int targ_monst = mgrd[x][y];
