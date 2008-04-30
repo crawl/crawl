@@ -1776,7 +1776,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         return false;
     }
 
-    // Saprovorous can't be randomly acquired
+    // Saprovorous can't be randomly acquired.
     if (mutat == MUT_SAPROVOROUS && !force_mutation)
         return false;
 
