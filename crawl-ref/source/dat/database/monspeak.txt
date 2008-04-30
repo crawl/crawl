@@ -1443,7 +1443,7 @@ Norris
 
 SPELL:@The_monster@ mumbles some mantras.
 
-VISUAL:@The_monster@ is surrounded with aura of peace.
+VISUAL:@The_monster@ is surrounded with an aura of peace.
 
 VISUAL:@The_monster@ looks very balanced.
 
