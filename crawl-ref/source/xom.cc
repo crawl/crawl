@@ -82,7 +82,7 @@ const char *describe_xom_favour()
 
 bool xom_is_nice()
 {
-    // If you.gift_timeout was == 0, then Xom was BORED.  He HATES that.
+    // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
     return (you.gift_timeout > 0 && you.piety > 100) || coinflip();
 }
 
