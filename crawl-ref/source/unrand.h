@@ -582,7 +582,7 @@
     "glaive of the Guard", "polished glaive",
         OBJ_WEAPONS, WPN_GLAIVE, +5, +8, LIGHTCYAN,
     {
-        SPWPN_ELECTROCUTION, 5, 0, 0, 0, 0,
+        SPWPN_ELECTROCUTION, 5, 0, 0, 0, 0,       // AC
         0, 0, 0, 0, 0, 0,
         1, 0, 0, 0, 0, 1,       // see invis, go berserk
         0, 0, 0, 0, 0,
@@ -675,7 +675,7 @@
     {
         0, 0, 0, 0, 0, 0,
         2, 0, 0, 0, 0, 0,       // res fire
-        0, 0, 0, 0, 0, 1,
+        0, 0, 0, 0, 0, 1,       // go berserk
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0
@@ -872,7 +872,7 @@
         OBJ_WEAPONS, WPN_TRIDENT, +10, +4, CYAN,
     {
         SPWPN_VENOM, 0, 0, 0, 0, 0,
-        0, 0, 1, 1, 0, 50,              // res poison, res magic
+        0, 0, 1, 1, 0, 50,              // res elec, res poison, res magic
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
