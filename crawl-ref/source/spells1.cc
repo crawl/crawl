@@ -61,7 +61,7 @@ static bool _abyss_blocks_teleport(bool cblink)
         return (false);
 
     // Controlled Blink (the spell) works quite reliably in the Abyss.
-    return (cblink? one_chance_in(3) : !one_chance_in(3));
+    return (cblink ? one_chance_in(3) : !one_chance_in(3));
 }
 
 // If wizard_blink is set, all restriction are ignored (except for
