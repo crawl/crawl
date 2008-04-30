@@ -631,7 +631,7 @@ static bool xom_is_good(int sever)
 
             monsters* mon = &menv[monster];
 
-            if (mons_friendly(mon))
+            if (mons_wont_attack(mon))
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
             else
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
@@ -816,7 +816,7 @@ static bool xom_is_bad(int sever)
 
                 monsters* mon = &menv[monster];
 
-                if (mons_friendly(mon))
+                if (mons_wont_attack(mon))
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
                 else
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
