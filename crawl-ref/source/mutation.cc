@@ -1776,18 +1776,18 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         return false;
     }
 
-    // Saprovorous can't be randomly acquired.
-    if (mutat == MUT_SAPROVOROUS && !force_mutation)
+    if (you.mutation[mutat] > 13 && !force_mutation)
         return false;
 
-    if (you.mutation[mutat] > 13 && !force_mutation)
+    // Saprovorous can't be randomly acquired.
+    if (mutat == MUT_SAPROVOROUS && !force_mutation)
         return false;
 
     // These can be forced by demonspawn or god gifts.
     if ((mutat == MUT_TOUGH_SKIN || mutat == MUT_SHAGGY_FUR
             || mutat >= MUT_GREEN_SCALES && mutat <= MUT_BONEY_PLATES
             || mutat >= MUT_RED_SCALES && mutat <= MUT_PATTERNED_SCALES)
-         && body_covered() >= 3 && !god_gift && !force_mutation)
+        && body_covered() >= 3 && !god_gift && !force_mutation)
     {
         return false;
     }
@@ -2164,8 +2164,8 @@ int how_mutated(bool all, bool levels)
             if (levels)
             {
                 // these allow for 14 levels:
-                if (i == MUT_STRONG  || i == MUT_CLEVER || i == MUT_AGILE
-                    || i == MUT_WEAK || i == MUT_DOPEY  || i == MUT_CLUMSY)
+                if (i == MUT_STRONG || i == MUT_CLEVER || i == MUT_AGILE
+                    || i == MUT_WEAK || i == MUT_DOPEY || i == MUT_CLUMSY)
                 {
                     j += (you.mutation[i] / 5 + 1);
                 }
