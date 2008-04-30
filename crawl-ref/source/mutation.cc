@@ -2418,7 +2418,8 @@ const char *mutation_name(mutation_type which_mutat, int level)
     return (mutation_descrip[ which_mutat ][ level - 1 ]);
 }                               // end mutation_name()
 
-// Use an attribute counter for how many demonic mutations a dspawn has
+// Use an attribute counter for how many demonic mutations a demonspawn
+// has.
 void demonspawn(void)
 {
     mutation_type whichm = NUM_MUTATIONS;
@@ -2431,9 +2432,9 @@ void demonspawn(void)
 
     mpr("Your demonic ancestry asserts itself...", MSGCH_INTRINSIC_GAIN);
 
-    // Merged the demonspawn lists into a single loop.  Now a high level
-    // character can potentially get mutations from the low level list if
-    // its having trouble with the high level list.
+    // Merged the demonspawn lists into a single loop.  Now a high-level
+    // character can potentially get mutations from the low-level list
+    // if it's having trouble with the high level list.
     do
     {
         if (you.experience_level >= 10)
@@ -2491,7 +2492,6 @@ void demonspawn(void)
 
             if (!you.mutation[MUT_CALL_TORMENT] && one_chance_in(15))
             {
-                // Must keep this at 1. OK since it never happens randomly.
                 whichm = MUT_TORMENT_RESISTANCE;
                 howm = 1;
             }
@@ -2515,8 +2515,8 @@ void demonspawn(void)
                 howm = 1;
             }
 
-            if (you.religion != GOD_VEHUMET && you.religion != GOD_MAKHLEB &&
-                one_chance_in(11))
+            if (you.religion != GOD_VEHUMET && you.religion != GOD_MAKHLEB
+                && one_chance_in(11))
             {
                 whichm = MUT_DEATH_STRENGTH;
                 howm = 1;
@@ -2529,9 +2529,9 @@ void demonspawn(void)
             }
 
             // Yredelemnulites have the raise dead invocation
-            if (you.religion != GOD_YREDELEMNUL &&
-                you.skills[SK_SUMMONINGS] < 3 &&
-                you.skills[SK_NECROMANCY] < 3 && one_chance_in(10))
+            if (you.religion != GOD_YREDELEMNUL
+                && you.skills[SK_SUMMONINGS] < 3
+                && you.skills[SK_NECROMANCY] < 3 && one_chance_in(10))
             {
                 whichm = MUT_RAISE_DEAD;
                 howm = 1;
@@ -2548,8 +2548,8 @@ void demonspawn(void)
         if (whichm != NUM_MUTATIONS && you.mutation[whichm] != 0)
             whichm = NUM_MUTATIONS;
 
-        if (you.experience_level < 10 ||
-            (counter > 0 && whichm == NUM_MUTATIONS))
+        if (you.experience_level < 10
+            || (counter > 0 && whichm == NUM_MUTATIONS))
         {
             if ((!you.mutation[MUT_THROW_FROST]         // only one of these
                     && !you.mutation[MUT_THROW_FLAMES]
@@ -2578,8 +2578,8 @@ void demonspawn(void)
             }
 
             // summoners and Makhlebites don't get summon imp
-            if (!you.skills[SK_SUMMONINGS] && you.religion != GOD_MAKHLEB &&
-                one_chance_in(3))
+            if (!you.skills[SK_SUMMONINGS] && you.religion != GOD_MAKHLEB
+                && one_chance_in(3))
             {
                 whichm = (you.experience_level < 10) ? MUT_SUMMON_MINOR_DEMONS
                                                      : MUT_SUMMON_DEMONS;
@@ -2734,7 +2734,7 @@ void demonspawn(void)
 
     if (whichm == NUM_MUTATIONS || !perma_mutate( whichm, howm ))
     {
-        // unlikely but remotely possible; I know this is a cop-out
+        // Unlikely but remotely possible; I know this is a cop-out.
         modify_stat(STAT_STRENGTH, 1, true, "demonspawn mutation");
         modify_stat(STAT_INTELLIGENCE, 1, true, "demonspawn mutation");
         modify_stat(STAT_DEXTERITY, 1, true, "demonspawn mutation");
