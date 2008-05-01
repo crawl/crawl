@@ -121,8 +121,8 @@ const char *mutation_descrip[][3] = {
 
     {"Your system is immune to poisons.", "Your system is immune to poisons.",
      "Your system is immune to poisons."},
-// 10
 
+// 10
     {"Your digestive system is specialised to digest meat.",
      "Your digestive system is highly specialised to digest meat.",
      "You are carnivorous and can eat meat at any time."},
@@ -151,6 +151,7 @@ const char *mutation_descrip[][3] = {
 
     {"You are weak (Str -", "", ""},
     {"You are dopey (Int -", "", ""},
+
 // 20
     {"You are clumsy (Dex -", "", ""},
 
