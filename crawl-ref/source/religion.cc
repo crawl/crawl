@@ -2939,8 +2939,8 @@ static bool _zin_retribution()
     int punishment = random2(10);
 
     // if little mutated or can't unmutate, do something else instead
-    if ((punishment < 2 && how_mutated() <= random2(3))
-        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+    if (punishment < 2 && (how_mutated() <= random2(3)
+        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3))
     {
         punishment = random2(8)+2;
     }
