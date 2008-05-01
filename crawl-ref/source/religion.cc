@@ -92,7 +92,7 @@
 
 #define PIETY_HYSTERESIS_LIMIT 1
 
-// Item offer messages for the gods:
+// Item offering messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
 // <> and </> are replaced with colors.
