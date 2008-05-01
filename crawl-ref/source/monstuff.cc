@@ -3298,7 +3298,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             }
         }
 
-    // won't sing if either of you silenced, or it's friendly or confused
+        // won't sing if either of you silenced, or it's friendly or confused
         if (monster->has_ench(ENCH_CONFUSION) || mons_friendly(monster)
             || silenced(monster->x, monster->y) || silenced(you.x_pos, you.y_pos))
         {
