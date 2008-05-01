@@ -616,7 +616,7 @@ void drain_exp(bool announce_full)
 {
     int protection = player_prot_life();
 
-    if (protection >= 3)
+    if (protection == 3)
     {
         if ( announce_full )
             mpr("You fully resist.");
@@ -626,7 +626,7 @@ void drain_exp(bool announce_full)
     if (you.experience == 0)
     {
         ouch(-9999, 0, KILLED_BY_DRAINING);
-        // Return in case death was escaped via wizard mode;
+        // Return in case death was escaped via wizard mode.
         return;
     }
 
