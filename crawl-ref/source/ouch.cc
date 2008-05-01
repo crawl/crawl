@@ -227,7 +227,7 @@ int check_your_resists(int hurted, beam_type flavour)
     case BEAM_ACID:
         if (player_res_acid())
         {
-            canned_msg( MSG_YOU_RESIST );
+            canned_msg(MSG_YOU_RESIST);
             hurted = hurted * player_acid_resist_factor() / 100;
         }
         break;
@@ -235,7 +235,7 @@ int check_your_resists(int hurted, beam_type flavour)
     case BEAM_MIASMA:
         if (player_prot_life() > random2(3))
         {
-            canned_msg( MSG_YOU_RESIST );
+            canned_msg(MSG_YOU_RESIST);
             hurted = 0;
         }
         break;
