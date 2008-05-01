@@ -1670,14 +1670,16 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             || player_mutation_level(MUT_MUTATION_RESISTANCE)
                 && !one_chance_in(3))
         {
-            mpr("You feel odd for a moment.", MSGCH_MUTATION);
+            if (failMsg)
+                mpr("You feel odd for a moment.", MSGCH_MUTATION);
             return false;
         }
 
         // Zin's protection.
         if (you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY))
         {
-            simple_god_message(" protects your body from chaos!");
+            if (failMsg)
+                simple_god_message(" protects your body from chaos!");
             return false;
         }
     }
