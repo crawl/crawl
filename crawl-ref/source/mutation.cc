@@ -1783,6 +1783,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (mutat == MUT_SAPROVOROUS && !force_mutation)
         return false;
 
+    // Mutation resistance can't be acquired from god gifts.
+    if (mutat == MUT_MUTATION_RESISTANCE && god_gift && !force_mutation)
+        return false;
+
     // These can be forced by demonspawn or god gifts.
     if ((mutat == MUT_TOUGH_SKIN || mutat == MUT_SHAGGY_FUR
             || mutat >= MUT_GREEN_SCALES && mutat <= MUT_BONEY_PLATES
