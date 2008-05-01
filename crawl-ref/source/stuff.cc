@@ -831,6 +831,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_YOU_RESIST:
         mpr("You resist.");
         break;
+    case MSG_YOU_PARTIALLY_RESIST:
+        mpr("You partially resist.");
+        break;
     case MSG_TOO_BERSERK:
         mpr("You are too berserk!");
         crawl_state.cancel_cmd_repeat();

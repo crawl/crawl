@@ -175,7 +175,7 @@ int check_your_resists(int hurted, beam_type flavour)
 
         hurted = resist_adjust_damage(&you, flavour, resist, hurted);
         if (hurted < original)
-            mpr("You partially resist.");
+            canned_msg(MSG_YOU_PARTIALLY_RESIST);
         break;
 
     case BEAM_NEG:
@@ -203,7 +203,7 @@ int check_your_resists(int hurted, beam_type flavour)
                                       hurted, true);
 
         if (hurted < original)
-            mpr("You partially resist.");
+            canned_msg(MSG_YOU_PARTIALLY_RESIST);
         else if (hurted > original)
         {
             mpr("You feel a painful chill!");
@@ -216,7 +216,7 @@ int check_your_resists(int hurted, beam_type flavour)
                                       hurted, true);
 
         if (hurted < original)
-            mpr("You partially resist.");
+            canned_msg(MSG_YOU_PARTIALLY_RESIST);
         else if (hurted > original)
         {
             mpr("It burns terribly!");
@@ -619,7 +619,7 @@ void drain_exp(bool announce_full)
     if (protection == 3)
     {
         if ( announce_full )
-            mpr("You fully resist.");
+            canned_msg(MSG_YOU_RESIST);
         return;
     }
 
@@ -658,7 +658,7 @@ void drain_exp(bool announce_full)
     }
     else if (protection > 0)
     {
-        mpr("You partially resist.");
+        canned_msg(MSG_YOU_PARTIALLY_RESIST);
         exp_drained -= (protection * exp_drained) / 3;
     }
 
