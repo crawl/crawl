@@ -1678,7 +1678,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // Zin's protection.
         if (you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY))
         {
-            simple_god_message(" protects your body from chaos!");
+            if (failMsg)
+                simple_god_message(" protects your body from chaos!");
             return false;
         }
     }
