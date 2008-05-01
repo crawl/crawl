@@ -1754,7 +1754,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     player_apply_staff_damage();
 
     // Returns true if the monster croaked.
-    if (apply_damage_brand())
+    if (!special_damage && apply_damage_brand())
         return (true);
 
     if (!no_damage_message.empty())
@@ -1771,6 +1771,12 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
 
     if (needs_message && !special_damage_message.empty())
         mprf("%s", special_damage_message.c_str());
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Special damage to %s: %d",
+         defender->name(DESC_NOCAP_THE).c_str(),
+         special_damage);
+#endif
 
     special_damage = hurt_monster(def, special_damage);
 
