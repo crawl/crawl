@@ -1768,6 +1768,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if ((mutat = get_random_mutation(true, 500)) == NUM_MUTATIONS)
             return false;
     }
+    else if (which_mutation == RANDOM_BAD_MUTATION)
+    {
+        if ((mutat = get_random_mutation(false, 500)) == NUM_MUTATIONS)
+            return false;
+    }
     else if (you.mutation[mutat] >= 3
              && mutat != MUT_STRONG && mutat != MUT_CLEVER
              && mutat != MUT_AGILE && mutat != MUT_WEAK
@@ -2207,7 +2212,8 @@ bool delete_mutation(mutation_type which_mutation,
 
     if (which_mutation == RANDOM_MUTATION
         || which_mutation == RANDOM_XOM_MUTATION
-        || which_mutation == RANDOM_GOOD_MUTATION)
+        || which_mutation == RANDOM_GOOD_MUTATION
+        || which_mutation == RANDOM_BAD_MUTATION)
     {
         do
         {
@@ -2222,8 +2228,10 @@ bool delete_mutation(mutation_type which_mutation,
                     && mutat != MUT_CLUMSY))
                || random2(10) >= mutation_defs[mutat].rarity
                || you.demon_pow[mutat] >= you.mutation[mutat]
-               || which_mutation == RANDOM_GOOD_MUTATION
-                   && (mutation_defs[mutat].bad || one_chance_in(10)));
+               || (which_mutation == RANDOM_GOOD_MUTATION
+                   && (mutation_defs[mutat].bad || one_chance_in(10)))
+               || (which_mutation == RANDOM_BAD_MUTATION
+                   && (!mutation_defs[mutat].bad || one_chance_in(10))));
     }
 
     if (you.mutation[mutat] == 0)

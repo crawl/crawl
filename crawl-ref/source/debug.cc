@@ -2348,8 +2348,7 @@ bool debug_add_mutation(void)
 
     // Yeah, the gaining message isn't too good for this... but
     // there isn't an array of simple mutation names. -- bwr
-    mpr("Which mutation ('good' for good, 'any' for any, 'xom' for xom)? ",
-        MSGCH_PROMPT);
+    mpr("Which mutation (name, 'good', 'bad', 'any', 'xom')? ", MSGCH_PROMPT);
     get_input_line( specs, sizeof( specs ) );
 
     if (specs[0] == '\0')
@@ -2359,6 +2358,8 @@ bool debug_add_mutation(void)
 
     if (strcasecmp(specs, "good") == 0)
         mutat = RANDOM_GOOD_MUTATION;
+    else if (strcasecmp(specs, "bad") == 0)
+        mutat = RANDOM_BAD_MUTATION;
     else if (strcasecmp(specs, "any") == 0)
         mutat = RANDOM_MUTATION;
     else if (strcasecmp(specs, "xom") == 0)
