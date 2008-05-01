@@ -2133,8 +2133,8 @@ void behaviour_event( monsters *mon, int event, int src,
 //
 // handle_behaviour
 //
-// 1. Evalutates current AI state
-// 2. Sets monster targetx,y based on current foe
+// 1. Evaluates current AI state
+// 2. Sets monster target x,y based on current foe
 //
 // XXX: Monsters of I_NORMAL or above should select a new target
 // if their current target is another monster which is sitting in
@@ -6082,7 +6082,7 @@ static bool _monster_move(monsters *monster)
         }
     } // endif - secret/closed doors
 
-    // jellies eat doors.  Yum!
+    // Jellies eat doors.  Yum!
     if ((grd[monster->x + mmov_x][monster->y + mmov_y] == DNGN_CLOSED_DOOR
             || grd[monster->x + mmov_x][monster->y + mmov_y] == DNGN_OPEN_DOOR)
         && mons_itemuse(monster->type) == MONUSE_EATS_ITEMS)
