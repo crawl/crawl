@@ -2195,7 +2195,7 @@ int how_mutated(bool all, bool levels)
     return (j);
 }                               // end how_mutated()
 
-bool delete_mutation(mutation_type which_mutation,
+bool delete_mutation(mutation_type which_mutation, bool failMsg,
                      bool force_mutation)
 {
     mutation_type mutat = which_mutation;
@@ -2206,7 +2206,8 @@ bool delete_mutation(mutation_type which_mutation,
             && (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || coinflip()))
         {
-            mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
+            if (failMsg)
+                mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
             return false;
         }
     }

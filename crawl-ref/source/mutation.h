@@ -55,7 +55,7 @@ formatted_string describe_mutations();
 /* ***********************************************************************
  * called from: decks - it_use2 - mutation - spells
  * *********************************************************************** */
-bool delete_mutation(mutation_type which_mutation,
+bool delete_mutation(mutation_type which_mutation, bool failMsg = true,
                      bool force_mutation = false);
 
 // last updated 12may2000 {dlb}
