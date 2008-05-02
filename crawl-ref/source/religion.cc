@@ -1098,6 +1098,7 @@ bool bless_follower(int follower,
                     bool force)
 {
     int chance = (force ? coinflip() : random2(20));
+    monsters *mon = NULL;
     std::string result;
 
     // If a follower was specified, and it's suitable, pick it.
@@ -1155,7 +1156,7 @@ bool bless_follower(int follower,
     ASSERT(follower != -1 && follower != NON_MONSTER);
 
     // Else, apply blessing to chosen follower.
-    monsters *mon = &menv[follower];
+    mon = &menv[follower];
 
     if (chance == 0) // 5% chance of holy branding, or priesthood
     {
