@@ -2174,7 +2174,7 @@ int how_mutated(bool all, bool levels)
 
             if (levels)
             {
-                // these allow for 14 levels:
+                // These allow for 14 levels.
                 if (i == MUT_STRONG || i == MUT_CLEVER || i == MUT_AGILE
                     || i == MUT_WEAK || i == MUT_DOPEY || i == MUT_CLUMSY)
                 {
