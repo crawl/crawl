@@ -2372,7 +2372,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
 static int body_covered(void)
 {
-    // checks how much of your body is covered by scales, etc.
+    // Check how much of your body is covered by scales, etc.
     int covered = 0;
 
     if (you.species == SP_NAGA)

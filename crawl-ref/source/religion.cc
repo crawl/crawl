@@ -518,7 +518,7 @@ static void _inc_gift_timeout(int val)
         you.gift_timeout += val;
 }                               // end inc_gift_timeout()
 
-// Only Yredelemnul and Okawaru use this for now
+// Only Yredelemnul and Okawaru use this for now.
 static monster_type _random_servant(god_type god)
 {
     // error trapping {dlb}
