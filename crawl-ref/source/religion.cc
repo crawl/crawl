@@ -177,7 +177,7 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
          " glow% slightly and disappear%.",
          " glow% with a rainbow of weird colours and disappear%.",
     },
-    // Elyvilon (no sacrifices, but this is used for weapon destruction)
+    // Elyvilon (no sacrifices, but used for weapon destruction)
     {
         " barely shimmer% and break% into pieces.",
         " shimmer% and break% into pieces.",
