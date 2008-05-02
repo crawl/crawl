@@ -2780,7 +2780,7 @@ bool perma_mutate(mutation_type which_mut, int how_much)
 
 bool give_bad_mutation(bool failMsg, bool force_mutation)
 {
-    mutation_type mutat;
+    mutation_type mutat = NUM_MUTATIONS;
 
     switch (random2(12))
     {
