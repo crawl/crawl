@@ -1233,7 +1233,9 @@ enum holy_word_source_type
 {
     HOLY_WORD_GENERIC = -1,
     HOLY_WORD_SCROLL = -2,
-    HOLY_WORD_SPELL = -3        // SPELL_HOLY_WORD
+    HOLY_WORD_SPELL = -3,       // SPELL_HOLY_WORD
+    HOLY_WORD_ZIN = -4,         // Zin effect
+    HOLY_WORD_SHINING_ONE = -5  // TSO effect
 };
 
 enum hunger_state                  // you.hunger_state

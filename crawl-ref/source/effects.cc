@@ -88,6 +88,14 @@ bool holy_word_player(int pow, int caster)
         case HOLY_WORD_SCROLL:
             aux = "scroll of holy word";
             break;
+
+        case HOLY_WORD_ZIN:
+            aux = "Zin's holy word";
+            break;
+
+        case HOLY_WORD_SHINING_ONE:
+            aux = "The Shining One's holy word";
+            break;
         }
 
         caster = HOLY_WORD_GENERIC;
