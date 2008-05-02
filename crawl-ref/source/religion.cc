@@ -3326,24 +3326,28 @@ static bool _beogh_retribution()
     {
         int num_created = 0;
         int num_to_create = (coinflip() ? 1 : 2);
+
+        // Need a species check, in case this retribution is a result of
+        // drawing the Wrath card.
         for (int i = 0; i < num_to_create; i++)
         {
-            // first create item
+            // create item
             int slot = items(0, OBJ_WEAPONS, WPN_CLUB + random2(13),
-                             true, you.experience_level, MAKE_ITEM_NO_RACE);
+                             true, you.experience_level,
+                             (you.species == SP_HILL_ORC) ?
+                                 MAKE_ITEM_NO_RACE : MAKE_ITEM_ORCISH);
 
             if ( slot == -1 )
                 continue;
 
             item_def& item = mitm[slot];
-            // Need a species check, in case this retribution is a
-            // result of drawing the Wrath card.
-            if (you.species == SP_HILL_ORC)
-                set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
-            else
-                set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ELECTROCUTION );
 
-            // manually override plusses
+            // set item ego type
+            set_item_ego_type(item, OBJ_WEAPONS,
+                (you.species == SP_HILL_ORC) ?
+                    SPWPN_ORC_SLAYING : SPWPN_ELECTROCUTION);
+
+            // manually override item plusses
             item.plus = random2(3);
             item.plus2 = random2(3);
 
