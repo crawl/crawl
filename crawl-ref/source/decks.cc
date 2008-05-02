@@ -1998,35 +1998,9 @@ static void _experience_card(int power, deck_rarity_type rarity)
     level_change();
 }
 
-const mutation_type bad_mutations[] = {
-    MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY,
-    MUT_TELEPORT, MUT_DEFORMED, MUT_SCREAM, MUT_DETERIORATION,
-    MUT_BLURRY_VISION, MUT_FRAIL
-};
-
-static bool _has_bad_mutation()
-{
-    for ( unsigned int i = 0; i < ARRAYSZ(bad_mutations); ++i )
-        if (you.mutation[bad_mutations[i]] > you.demon_pow[bad_mutations[i]])
-            return true;
-
-    return false;
-}
-
 static void _remove_bad_mutation()
 {
-    mutation_type which_mut = NUM_MUTATIONS;
-    int numfound = 0;
-    for ( unsigned int i = 0; i < ARRAYSZ(bad_mutations); ++i )
-        if (you.mutation[bad_mutations[i]] > you.demon_pow[bad_mutations[i]])
-        {
-            if ( one_chance_in(++numfound) )
-                which_mut = bad_mutations[i];
-        }
-
-    if ( numfound )
-        delete_mutation(which_mut);
-    else
+    if (!delete_mutation(RANDOM_BAD_MUTATION, false))
         mpr("You feel transcendent for a moment.");
 }
 
@@ -2087,7 +2061,7 @@ static void _helix_card(int power, deck_rarity_type rarity)
     }
     else
     {
-        switch ( _has_bad_mutation() ? random2(3) : random2(2) + 1 )
+        switch ( random2(3) )
         {
         case 0:
             _remove_bad_mutation();
