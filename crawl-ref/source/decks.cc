@@ -584,7 +584,7 @@ static bool _check_buggy_deck(item_def& deck)
 
         strm << "Oops, all of the cards seem to be gone." << std::endl
              << "A swarm of software bugs snatches the deck from you "
-            "and whisks it away." << std::endl;
+             "and whisks it away." << std::endl;
 
         if ( deck.link == you.equip[EQ_WEAPON] )
             unwield_item();
