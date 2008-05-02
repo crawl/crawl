@@ -123,11 +123,8 @@ int holy_word_monsters(int x, int y, int pow, int caster)
 
     monsters *monster = &menv[mon];
 
-    if (invalid_monster(monster) || !mons_near(monster)
-        || !mons_is_unholy(monster))
-    {
+    if (invalid_monster(monster) || !mons_is_unholy(monster))
         return retval;
-    }
 
     int hploss = roll_dice(2, 15) + (random2(pow) / 3);
 
@@ -251,11 +248,8 @@ int torment_monsters(int x, int y, int pow, int caster)
 
     monsters *monster = &menv[mon];
 
-    if (invalid_monster(monster) || !mons_near(monster)
-        || mons_res_negative_energy(monster) == 3)
-    {
+    if (invalid_monster(monster) || mons_res_negative_energy(monster) == 3)
         return retval;
-    }
 
     int hploss = monster->hit_points / 2 - 1;
 
