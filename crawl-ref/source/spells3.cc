@@ -984,7 +984,7 @@ bool cast_sanctuary(const int power)
 
     you.flash_colour = WHITE;
     viewwindow( true, false );
-    holy_word( 100, HOLY_WORD_GENERIC, true );
+    holy_word(100, HOLY_WORD_GENERIC, you.x_pos, you.y_pos, true);
 #ifndef USE_TILE
     delay(1000);
 #endif

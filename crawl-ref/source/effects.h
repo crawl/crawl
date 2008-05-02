@@ -100,8 +100,10 @@ void yell(bool force = false);
 /* ***********************************************************************
  * called from: item_use - spell
  * *********************************************************************** */
+int holy_word(int pow, int caster, int x, int y, bool silent);
+
 bool holy_word_player(int pow, int caster);
-bool holy_word(int pow, int caster, bool silent = false);
+int holy_word_monsters(int x, int y, int pow, int caster);
 
 
 // last updated 12may2000 {dlb}
@@ -109,7 +111,7 @@ bool holy_word(int pow, int caster, bool silent = false);
  * called from: ability - decks - fight - it_use3 - item_use - mstuff2 -
  *              spell
  * *********************************************************************** */
-void torment( int caster, int tx, int ty );
+int torment(int caster, int x, int y);
 
 bool torment_player(int pow, int caster);
 int torment_monsters(int x, int y, int pow, int caster);

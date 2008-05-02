@@ -4402,30 +4402,32 @@ void read_scroll( int slot )
         break;
 
     case SCR_HOLY_WORD:
+    {
+        int pow = 100;
+
+        if (is_good_god(you.religion))
         {
-            int pow = 100;
+            pow += (you.religion == GOD_SHINING_ONE) ? you.piety :
+                                                       you.piety / 2;
+        }
 
-            if (is_good_god(you.religion))
-            {
-                pow += (you.religion == GOD_SHINING_ONE) ? you.piety :
-                                                           you.piety / 2;
-            }
+        if (!holy_word(pow, HOLY_WORD_SCROLL, you.x_pos, you.y_pos,
+                       !item_type_known(scroll)))
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            id_the_scroll = false;
+        }
 
-            if (!holy_word(pow, HOLY_WORD_SCROLL, !item_type_known(scroll)))
-            {
-                canned_msg(MSG_NOTHING_HAPPENS);
-                id_the_scroll = false;
-            }
-
-            // good gods like this, regardless of whether it damages anything
-            if (is_good_god(you.religion))
-            {
-                you.duration[DUR_PIETY_POOL] += 10;
-                if (you.duration[DUR_PIETY_POOL] > 500)
-                    you.duration[DUR_PIETY_POOL] = 500;
-            }
+        // Good gods like this, regardless of whether it damages anything.
+        if (is_good_god(you.religion))
+        {
+            you.duration[DUR_PIETY_POOL] += 10;
+            if (you.duration[DUR_PIETY_POOL] > 500)
+                you.duration[DUR_PIETY_POOL] = 500;
         }
         break;
+    }
+
     default:
         mpr("Read a buggy scroll, please report this.");
         break;

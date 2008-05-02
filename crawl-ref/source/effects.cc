@@ -71,8 +71,6 @@ bool holy_word_player(int pow, int caster)
 
     int hploss = you.hp / 2 - 1;
 
-    if (hploss >= you.hp)
-        hploss = you.hp - 1;
     if (hploss < 0)
         hploss = 0;
 
@@ -103,52 +101,74 @@ bool holy_word_player(int pow, int caster)
     return true;
 }
 
-bool holy_word(int pow, int caster, bool silent)
+int holy_word_monsters(int x, int y, int pow, int caster)
 {
-    if (!silent)
-        mpr("You speak a Word of immense power!");
+    int retval = 0;
 
     // doubt this will ever happen, but it's here as a safety -- bwr
     if (pow > 300)
         pow = 300;
 
-    bool holy_influenced = holy_word_player(pow, caster);
-
-    for (int tu = 0; tu < MAX_MONSTERS; tu++)
+    // Is the player in this cell?
+    if (x == you.x_pos && y == you.y_pos)
     {
-        monsters *monster = &menv[tu];
+        retval = (holy_word_player(pow, caster)) ? 1 : 0;
+    }
 
-        if (monster->type == -1 || !mons_near(monster))
-            continue;
+    // Is a monster in this cell?
+    int mon = mgrd[x][y];
 
-        if (mons_is_unholy(monster))
-        {
-            holy_influenced = true;
+    if (mon == NON_MONSTER)
+        return retval;
 
+    monsters *monster = &menv[mon];
+
+    if (invalid_monster(monster) || !mons_near(monster)
+        || !mons_is_unholy(monster))
+    {
+        return retval;
+    }
+
+    int hploss = roll_dice(2, 15) + (random2(pow) / 3);
+
+    if (hploss < 0)
+        hploss = 0;
+
+    behaviour_event(monster, ME_ANNOY, MHITYOU);
+    hurt_monster(monster, hploss);
+
+    if (hploss)
+    {
+        retval = 1;
+        if (monster->hit_points > 0)
             simple_monster_message(monster, " convulses!");
+        else
+            monster_die(monster, KILL_YOU, 0);
+    }
 
-            behaviour_event( monster, ME_ANNOY, MHITYOU );
-            hurt_monster( monster, roll_dice( 2, 15 ) + (random2(pow) / 3) );
+    if (monster->speed_increment >= 25)
+    {
+        retval = 1;
+        monster->speed_increment -= 20;
+    }
 
-            if (monster->hit_points < 1)
-            {
-                monster_die(monster, KILL_YOU, 0);
-                continue;
-            }
+    if (monster->add_ench(ENCH_FEAR))
+        retval = 1;
 
-            if (monster->speed_increment >= 25)
-                monster->speed_increment -= 20;
+    return retval;
+}
 
-            monster->add_ench(ENCH_FEAR);
-        }                       // end "if mons_holiness"
-    }                           // end "for tu"
+int holy_word(int pow, int caster, int x, int y, bool silent)
+{
+    if (!silent)
+        mpr("You speak a Word of immense power!");
 
-    return holy_influenced;
-}                               // end holy_word()
+    return apply_area_within_radius(holy_word_monsters, x, y, pow, 8, caster);
+}
 
 bool torment_player(int pow, int caster)
 {
-    UNUSED( pow );
+    UNUSED(pow);
 
     // [dshaligram] Switched to using ouch() instead of dec_hp() so that
     // notes can also track torment and activities can be interrupted
@@ -159,8 +179,7 @@ bool torment_player(int pow, int caster)
     {
         // negative energy resistance can alleviate torment
         hploss = you.hp * (50 - player_prot_life() * 5) / 100 - 1;
-        if (hploss >= you.hp)
-            hploss = you.hp - 1;
+
         if (hploss < 0)
             hploss = 0;
     }
@@ -216,36 +235,52 @@ bool torment_player(int pow, int caster)
 
 int torment_monsters(int x, int y, int pow, int caster)
 {
-    UNUSED( pow );
+    UNUSED(pow);
 
-    // is player?
+    int retval = 0;
+
+    // Is the player in this cell?
     if (x == you.x_pos && y == you.y_pos)
-        torment_player(pow, caster);
+        retval = (torment_player(0, caster)) ? 1 : 0;
 
-    // check for monster in cell
+    // Is a monster in this cell?
     int mon = mgrd[x][y];
 
     if (mon == NON_MONSTER)
-        return 0;
+        return retval;
 
     monsters *monster = &menv[mon];
 
-    if (monster->type == -1)
-        return 0;
+    if (invalid_monster(monster) || !mons_near(monster)
+        || mons_res_negative_energy(monster) == 3)
+    {
+        return retval;
+    }
 
-    if (mons_res_negative_energy( monster ) == 3)
-        return 0;
+    int hploss = monster->hit_points / 2 - 1;
 
-    monster->hit_points = monster->hit_points / 2 + 1;
-    simple_monster_message(monster, " convulses!");
+    if (hploss < 0)
+        hploss = 0;
 
-    return 1;
+    behaviour_event(monster, ME_ANNOY, MHITYOU);
+    hurt_monster(monster, hploss);
+
+    if (hploss)
+    {
+        retval = 1;
+        if (monster->hit_points > 0)
+            simple_monster_message(monster, " convulses!");
+        else
+            monster_die(monster, KILL_YOU, 0);
+    }
+
+    return retval;
 }
 
-void torment(int caster, int tx, int ty)
+int torment(int caster, int x, int y)
 {
-    apply_area_within_radius(torment_monsters, tx, ty, 0, 8, caster);
-}                               // end torment()
+    return apply_area_within_radius(torment_monsters, x, y, 0, 8, caster);
+}
 
 static std::string who_banished(const std::string &who)
 {
