@@ -2169,7 +2169,7 @@ int how_mutated(bool all, bool levels)
     {
         if (you.mutation[i])
         {
-            if (!all && you.demon_pow[i] < you.mutation[i])
+            if (!all && you.demon_pow[i] >= you.mutation[i])
                 continue;
 
             if (levels)
