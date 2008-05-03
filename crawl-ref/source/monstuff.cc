@@ -1430,7 +1430,7 @@ static bool _valid_morph( monsters *monster, int new_mclass )
         return (false);
     }
 
-    /* various inappropriate polymorph targets */
+    // various inappropriate polymorph targets
     if (mons_class_holiness( new_mclass ) != mons_holiness( monster )
         || mons_class_flag( new_mclass, M_NO_EXP_GAIN )        // not helpless
         || new_mclass == mons_species( monster->type ) // must be different
