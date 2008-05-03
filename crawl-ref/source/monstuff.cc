@@ -1014,8 +1014,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             break;
         }
 
-        case KILL_MON:          /* Monster kills in combat */
-        case KILL_MON_MISSILE:  /* Monster kills by missile or beam */
+        case KILL_MON:          // Monster kills in combat
+        case KILL_MON_MISSILE:  // Monster kills by missile or beam
             if (!silent)
             {
                 simple_monster_message(monster,
@@ -1146,7 +1146,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             }
             break;
 
-        /* Monster killed by trap/inanimate thing/itself/poison not from you */
+        // Monster killed by trap/inanimate thing/itself/poison not from you
         case KILL_MISC:
             if (!silent)
             {
@@ -1346,7 +1346,7 @@ static bool _jelly_divide(monsters * parent)
 
         if (foundSpot)
             break;
-    }                           /* end of for jex */
+    }                           // end of for jex
 
     int k = 0;                  // must remain outside loop that follows {dlb}
 
