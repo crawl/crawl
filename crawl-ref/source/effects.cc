@@ -141,6 +141,8 @@ int holy_word_monsters(int x, int y, int pow, int caster)
     if (hploss < 0)
         hploss = 0;
 
+    // Holy word annoys the monsters it affects because it (currently)
+    // can kill them.
     behaviour_event(monster, ME_ANNOY, MHITYOU);
     hurt_monster(monster, hploss);
 
@@ -269,7 +271,8 @@ int torment_monsters(int x, int y, int pow, int caster)
     if (hploss < 0)
         hploss = 0;
 
-    behaviour_event(monster, ME_ANNOY, MHITYOU);
+    // Torment doesn't annoy the monsters it affects because it
+    // (currently) can't kill them.
     hurt_monster(monster, hploss);
 
     if (hploss)
