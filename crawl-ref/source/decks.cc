@@ -1301,7 +1301,7 @@ int get_power_level(int power, deck_rarity_type rarity)
     return power_level;
 }
 
-/* Actual card implementations follow. */
+// Actual card implementations follow.
 static void _portal_card(int power, deck_rarity_type rarity)
 {
     const int control_level = get_power_level(power, rarity);
