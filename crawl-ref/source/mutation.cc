@@ -2786,7 +2786,7 @@ bool give_bad_mutation(bool failMsg, bool force_mutation)
     {
     case 0: mutat = MUT_CARNIVOROUS; break;
     case 1: mutat = MUT_HERBIVOROUS; break;
-    case 2: mutat = MUT_FAST; break;
+    case 2: mutat = MUT_FAST_METABOLISM; break;
     case 3: mutat = MUT_WEAK; break;
     case 4: mutat = MUT_DOPEY; break;
     case 5: mutat = MUT_CLUMSY; break;
