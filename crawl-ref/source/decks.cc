@@ -704,7 +704,7 @@ static bool _check_buggy_deck(item_def& deck)
     return false;
 }
 
-// Choose a deck from inventory and return its slot (or -1.)
+// Choose a deck from inventory and return its slot (or -1).
 static int _choose_inventory_deck( const char* prompt )
 {
     const int slot = prompt_invent_item( prompt,
