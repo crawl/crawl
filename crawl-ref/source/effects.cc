@@ -129,19 +129,17 @@ int holy_word_monsters(int x, int y, int pow, int caster)
 
     monsters *monster = &menv[mon];
 
-    if (invalid_monster(monster) || !mons_is_unholy(monster))
-        return retval;
-
-    int hploss = 0;
-
-    if (!is_good_god(you.religion)
-        || (!is_follower(monster) && !mons_neutral(monster)))
+    if (invalid_monster(monster) || !mons_is_unholy(monster)
+        || (is_good_god(you.religion)
+            && (is_follower(monster) || mons_neutral(monster))))
     {
-        hploss = roll_dice(2, 15) + (random2(pow) / 3);
-
-        if (hploss < 0)
-            hploss = 0;
+        return retval;
     }
+
+    int hploss = roll_dice(2, 15) + (random2(pow) / 3);
+
+    if (hploss < 0)
+        hploss = 0;
 
     behaviour_event(monster, ME_ANNOY, MHITYOU);
     hurt_monster(monster, hploss);
