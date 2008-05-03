@@ -37,7 +37,8 @@ Whenever Dungeon Crawl is started, the game checks whether any of the
 databases needs to be updated. If one of the underlying files has been
 changed since the last check, the database is automatically rerolled. 
 That means that if you'd like to change one of the descriptions or add 
-some new monster speech all you have to do is modify the file, save, and restart the game to test your changes.
+some new monster speech all you have to do is modify the file, save,
+and restart the game to test your changes.
 
 
 Contents:
@@ -57,7 +58,8 @@ Not all monsters are equally likely to speak. Rather there are
 different chances involved, depending on several attributes, and most
 of the time the database lookup stage isn't even reached.
 
-First, the player will only ever hear monsters speak if they are in line of sight, and monsters will only ever speak if they are not 
+First, the player will only ever hear monsters speak if they are in 
+line of sight, and monsters will only ever speak if they are not 
 asleep, not submerged in water, air or lava, and not wandering around 
 aimlessly (unless neutral).
 
@@ -205,7 +207,9 @@ added to the list, though not for charmed orcs who will simply use the
 generic friendly statements instead of the orcish followers' cheers.
 If you worship one of the good gods instead (Zin, The Shining One, or
 Elyvilon) the prefix "good god" is used. Conversely, worshippers of 
-one of the evil gods (Yredelemnul, Makhleb, Kikubaaqudgha, Lugonu, or Beogh) will use the prefix "evil god". 
+one of the evil gods (Yredelemnul, Makhleb, Kikubaaqudgha, Lugonu, or
+Beogh) will use the prefix "evil god". 
+
 This allows fine-grained handling of monsters depending on your
 character's religion status, e.g. orcs will use special speech for
 Beogh worshippers, and neutral holy beings (Angel and Daeva) may
@@ -229,6 +233,7 @@ the list of prefixes is always prepended with "default". This ensures
 that, for example, fleeing uniques won't output their normal menacing
 speech but rather the default speech defined for fleeing humanoids in
 general.
+
 In practice this means that database keys starting with "default" are
 the fallback solution if the exact look-up has failed. As such, the
 messages should be generic enough to allow for all the possibly 
@@ -277,12 +282,12 @@ a "stupid humanoid" may still be smarter than a "smart arachnid".
 
 Here's a list of allowed monster shapes that should hopefully be 
 self-explanatory:
+
   humanoid, winged humanoid (angels), tailed humanoid (draconians),
   winged tailed humanoid (gargoyles), centaur, naga, quadruped,
   tailless quadruped (frogs), winged quadruped (hippogriff), bat,
   snake (also eels and worms), fish, insect, winged insect, arachnid,
   centipede, snail, plant, fungus, orb (eyes), and blob (jellies).
-
 
 If no matching keys are found after all of these rounds, the monster
 definitely stays silent.
@@ -342,6 +347,7 @@ Example 2:
 
   This is starting to get ridiculous, so it's time for desperate
   measures: 
+
   With the help of some rather complicated functions the game works 
   out that orcs can be described as humanoids of average intelligence.
   Thus, in a final attempt of making this orc wizard speak, we search
@@ -460,16 +466,16 @@ Capitalized forms (@Monster@, @A_something@, @Possessive@, @Pronoun@)
 are expanded with capitalized text.
 
 Also, in insult.txt you'll find the hardcoded variables
-  @species_insult_adj1@, @species_insult_adj2@, and 
-  @species_insult_noun@.
-These are sometimes used in the construction of imps' or demons'
-generic insults, and allow for species-dependent handling. If the
-parser encounters such a variable, it will search the database for the
-corresponding specific entry, i.e. "insult <genus> adj1/adj2/noun"
-where <genus> is replaced with the actual genus name, that is
-"draconian", "elf" or "dwarf" instead of the more specific species
-name, "ogre" for "ogre-mage", or the actual species name in all other
-cases.
+@species_insult_adj1@, @species_insult_adj2@, and
+@species_insult_noun@. These are sometimes used in the construction of
+imps' or demons' generic insults, and allow for species-dependent
+handling. If the parser encounters such a variable, it will search the
+database for the corresponding specific entry, i.e. "insult <genus>
+adj1/adj2/noun" where <genus> is replaced with the actual genus name,
+that is "draconian", "elf" or "dwarf" instead of the more specific
+species name, "ogre" for "ogre-mage", or the actual species name in all
+other cases.
+
 If this specific search doesn't yield any results, i.e., such an
 entry hasn't been defined for the species in question, the general
 replacements are used instead.
@@ -480,6 +486,7 @@ replacements don't hold. Instead you can use @The_weapon@,
 replaced by "The (weapon name)", "the (weapon name)", "Your (weapon
 name)", "your (weapon name)", and the plain weapon name,
 respectively. 
+
 Note that the Singing Sword, being unique, cannot be referred to by 
 the possessive variants, so they will be replaced with the appropriate 
 definite article ones.
