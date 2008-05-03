@@ -64,10 +64,10 @@
 #include "view.h"
 #include "xom.h"
 
-bool holy_word_player(int pow, int caster)
+int holy_word_player(int pow, int caster)
 {
     if (!you.is_undead && you.species != SP_DEMONSPAWN)
-        return false;
+        return 0;
 
     int hploss = you.hp / 2 - 1;
 
@@ -75,7 +75,7 @@ bool holy_word_player(int pow, int caster)
         hploss = 0;
 
     if (!hploss)
-        return false;
+        return 0;
 
     mpr("You are blasted by holy energy!");
 
@@ -106,7 +106,7 @@ bool holy_word_player(int pow, int caster)
                                        : KILLED_BY_SOMETHING,
          aux);
 
-    return true;
+    return 1;
 }
 
 int holy_word_monsters(int x, int y, int pow, int caster)
@@ -119,7 +119,7 @@ int holy_word_monsters(int x, int y, int pow, int caster)
 
     // Is the player in this cell?
     if (x == you.x_pos && y == you.y_pos)
-        retval = (holy_word_player(pow, caster)) ? 1 : 0;
+        retval = holy_word_player(pow, caster);
 
     // Is a monster in this cell?
     int mon = mgrd[x][y];
@@ -169,7 +169,7 @@ int holy_word(int pow, int caster, int x, int y, bool silent)
     return apply_area_within_radius(holy_word_monsters, x, y, pow, 8, caster);
 }
 
-bool torment_player(int pow, int caster)
+int torment_player(int pow, int caster)
 {
     UNUSED(pow);
 
@@ -190,7 +190,7 @@ bool torment_player(int pow, int caster)
     if (!hploss)
     {
         mpr("You feel a surge of unholy energy.");
-        return false;
+        return 0;
     }
 
     mpr("Your body is wracked with pain!");
@@ -228,7 +228,7 @@ bool torment_player(int pow, int caster)
                                                      : KILLED_BY_SOMETHING,
          aux);
 
-    return true;
+    return 1;
 }
 
 // torment_monsters() is called with power 0 because torment
@@ -244,7 +244,7 @@ int torment_monsters(int x, int y, int pow, int caster)
 
     // Is the player in this cell?
     if (x == you.x_pos && y == you.y_pos)
-        retval = (torment_player(0, caster)) ? 1 : 0;
+        retval = torment_player(0, caster);
 
     // Is a monster in this cell?
     int mon = mgrd[x][y];

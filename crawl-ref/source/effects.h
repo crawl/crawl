@@ -102,7 +102,7 @@ void yell(bool force = false);
  * *********************************************************************** */
 int holy_word(int pow, int caster, int x, int y, bool silent);
 
-bool holy_word_player(int pow, int caster);
+int holy_word_player(int pow, int caster);
 int holy_word_monsters(int x, int y, int pow, int caster);
 
 
@@ -113,7 +113,7 @@ int holy_word_monsters(int x, int y, int pow, int caster);
  * *********************************************************************** */
 int torment(int caster, int x, int y);
 
-bool torment_player(int pow, int caster);
+int torment_player(int pow, int caster);
 int torment_monsters(int x, int y, int pow, int caster);
 
 bool forget_inventory(bool quiet = false);
