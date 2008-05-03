@@ -132,10 +132,16 @@ int holy_word_monsters(int x, int y, int pow, int caster)
     if (invalid_monster(monster) || !mons_is_unholy(monster))
         return retval;
 
-    int hploss = roll_dice(2, 15) + (random2(pow) / 3);
+    int hploss = 0;
 
-    if (hploss < 0)
-        hploss = 0;
+    if (!is_good_god(you.religion)
+        || (!is_follower(monster) && !mons_neutral(monster)))
+    {
+        hploss = roll_dice(2, 15) + (random2(pow) / 3);
+
+        if (hploss < 0)
+            hploss = 0;
+    }
 
     behaviour_event(monster, ME_ANNOY, MHITYOU);
     hurt_monster(monster, hploss);
@@ -143,7 +149,7 @@ int holy_word_monsters(int x, int y, int pow, int caster)
     if (hploss)
     {
         retval = 1;
-        if (monster->hit_points > 0)
+        if (monster->alive())
             simple_monster_message(monster, " convulses!");
         else
             monster_die(monster, KILL_YOU, 0);
@@ -268,7 +274,7 @@ int torment_monsters(int x, int y, int pow, int caster)
     if (hploss)
     {
         retval = 1;
-        if (monster->hit_points > 0)
+        if (monster->alive())
             simple_monster_message(monster, " convulses!");
         else
             monster_die(monster, KILL_YOU, 0);
