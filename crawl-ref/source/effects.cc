@@ -119,9 +119,7 @@ int holy_word_monsters(int x, int y, int pow, int caster)
 
     // Is the player in this cell?
     if (x == you.x_pos && y == you.y_pos)
-    {
         retval = (holy_word_player(pow, caster)) ? 1 : 0;
-    }
 
     // Is a monster in this cell?
     int mon = mgrd[x][y];
