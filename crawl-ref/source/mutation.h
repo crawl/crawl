@@ -63,13 +63,13 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg = true,
  * called from: chardump
  * *********************************************************************** */
 // default of level == -1, means to use the player's current level
-const char *mutation_name( mutation_type which_mutat, int level = -1 );
+const char *mutation_name(mutation_type which_mutat, int level = -1);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: items - spells
  * *********************************************************************** */
-bool give_bad_mutation( bool failMsg = true, bool force_mutation = false );
+bool give_bad_mutation(bool failMsg = true, bool force_mutation = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
