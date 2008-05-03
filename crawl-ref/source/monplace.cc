@@ -1717,6 +1717,7 @@ bool player_angers_monster(monsters *creation)
         if ( creation->attitude != ATT_HOSTILE )
         {
             creation->attitude = ATT_HOSTILE;
+            behaviour_event(creation, ME_ALERT, MHITYOU);
             if ( see_grid(creation->x, creation->y)
                  && player_monster_visible(creation) )
             {

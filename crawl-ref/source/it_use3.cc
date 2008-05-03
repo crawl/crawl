@@ -967,11 +967,17 @@ static bool box_of_beasts()
                   (temp_rand == 9) ? MONS_BROWN_SNAKE
                                    : MONS_GIANT_LIZARD);
 
-        beh_type beh = (one_chance_in(you.skills[SK_EVOCATIONS] + 5)
-                        ? BEH_HOSTILE : BEH_FRIENDLY);
+        beh_type beh = BEH_FRIENDLY;
+        int hitting = you.pet_target;
+
+        if (one_chance_in(you.skills[SK_EVOCATIONS] + 5))
+        {
+            beh = BEH_HOSTILE;
+            hitting = MHITYOU;
+        }
 
         if (create_monster( beasty, 2 + random2(4), beh,
-                            you.x_pos, you.y_pos, MHITYOU,
+                            you.x_pos, you.y_pos, hitting,
                             MONS_PROGRAM_BUG ) != -1)
         {
             mpr("...and something leaps out!");
