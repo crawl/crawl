@@ -187,7 +187,7 @@ int torment_player(int pow, int caster)
 
     if (!player_res_torment())
     {
-        // negative energy resistance can alleviate torment
+        // Negative energy resistance can alleviate torment.
         hploss = you.hp * (50 - player_prot_life() * 5) / 100 - 1;
 
         if (hploss < 0)
