@@ -1670,6 +1670,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
             monster->add_ench(ENCH_HELD);
     }
 
+    player_angers_monster(monster);
     return (player_messaged);
 }                                        // end monster_polymorph()
 
