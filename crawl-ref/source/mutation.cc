@@ -2782,7 +2782,7 @@ bool give_bad_mutation(bool failMsg, bool force_mutation)
 {
     mutation_type mutat = NUM_MUTATIONS;
 
-    switch (random2(12))
+    switch (random2(13))
     {
     case 0: mutat = MUT_CARNIVOROUS; break;
     case 1: mutat = MUT_HERBIVOROUS; break;
@@ -2796,6 +2796,7 @@ bool give_bad_mutation(bool failMsg, bool force_mutation)
     case 9: mutat = MUT_DETERIORATION; break;
     case 10: mutat = MUT_BLURRY_VISION; break;
     case 11: mutat = MUT_FRAIL; break;
+    case 12: mutat = MUT_LOW_MAGIC; break;
     }
 
     const bool result = mutate(mutat, failMsg, force_mutation);
