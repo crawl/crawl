@@ -6078,7 +6078,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                                     const monsters* monster)
 {
     std::string msg = in_msg;
-    description_level_type nocap, cap;
+    description_level_type nocap = DESC_NOCAP_THE, cap = DESC_CAP_THE;
 
     std::string name = get_unique_monster_name(monster);
     if (!name.empty() && player_monster_visible(monster))
@@ -6098,11 +6098,6 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@The_something@", "Your @The_something@");
         msg = replace_all(msg, "@the_monster@",   "your @the_monster@");
         msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
-    }
-    else
-    {
-        nocap = DESC_NOCAP_THE;
-        cap   = DESC_CAP_THE;
     }
 
     if (see_grid(monster->x, monster->y))
