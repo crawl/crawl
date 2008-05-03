@@ -75,7 +75,7 @@ bool give_bad_mutation(bool failMsg = true, bool force_mutation = false);
 /* ***********************************************************************
  * called from: player
  * *********************************************************************** */
-void demonspawn(void);
+void demonspawn();
 
 bool perma_mutate(mutation_type which_mut, int how_much);
 int how_mutated(bool all = false, bool levels = false);

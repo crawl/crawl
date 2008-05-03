@@ -51,7 +51,7 @@
 #include "xom.h"
 
 
-static int body_covered(void);
+static int body_covered();
 
 const char *troll_claw_descrip[4] = {
     "You have claws for hands.",
@@ -2370,7 +2370,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
     return true;
 }                               // end delete_mutation()
 
-static int body_covered(void)
+static int body_covered()
 {
     // Check how much of your body is covered by scales, etc.
     int covered = 0;
@@ -2435,7 +2435,7 @@ const char *mutation_name(mutation_type which_mutat, int level)
 
 // Use an attribute counter for how many demonic mutations a demonspawn
 // has.
-void demonspawn(void)
+void demonspawn()
 {
     mutation_type whichm = NUM_MUTATIONS;
     char howm = 1;
