@@ -873,9 +873,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
     switch (killer)
     {
-        case KILL_YOU:          /* You kill in combat. */
-        case KILL_YOU_MISSILE:  /* You kill by missile or beam. */
-        case KILL_YOU_CONF:     /* You kill by confusion */
+        case KILL_YOU:          // You kill in combat.
+        case KILL_YOU_MISSILE:  // You kill by missile or beam.
+        case KILL_YOU_CONF:     // You kill by confusion.
         {
             const bool created_friendly =
                 testbits(monster->flags, MF_CREATED_FRIENDLY);
