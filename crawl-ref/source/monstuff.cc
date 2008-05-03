@@ -275,7 +275,7 @@ static void _monster_drop_ething(monsters *monster,
 
     bool destroyed = false;
 
-    /* drop weapons & missiles last (ie on top) so others pick up */
+    // drop weapons & missiles last (ie on top) so others pick up
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; i--)
     {
         int item = monster->inv[i];
