@@ -233,8 +233,8 @@ bool torment_player(int pow, int caster)
     return true;
 }
 
-// torment_monsters is called with power 0 because torment is
-// UNRESISTABLE except for being undead or having torment
+// torment_monsters() is called with power 0 because torment
+// is UNRESISTABLE except for being undead or having torment
 // resistance!  Even if we used maximum power of 1000, high
 // level monsters and characters would save too often.  (GDL)
 
