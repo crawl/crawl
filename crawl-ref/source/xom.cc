@@ -907,7 +907,7 @@ void xom_acts(bool niceness, int sever)
     if (sever < 1)
         sever = 1;
 
-    // Nemelex's deck of punishment drawing the Xom card.
+    // Drawing the Xom card from Nemelex's decks of oddities or punishment.
     if (crawl_state.is_god_acting()
         && crawl_state.which_god_acting() != GOD_XOM)
     {
