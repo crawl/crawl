@@ -1575,8 +1575,6 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     // the actual polymorphing:
     const int old_hp     = monster->hit_points;
     const int old_hp_max = monster->max_hit_points;
-    const bool old_mon_shifter = monster->has_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                                   ENCH_SHAPESHIFTER);
     const bool old_mon_caught = mons_is_caught(monster);
     const char old_ench_countdown = monster->ench_countdown;
 
@@ -1584,28 +1582,15 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     monster->type   = targetc;
     monster->number = MONS_PROGRAM_BUG;
 
-    mon_attitude_type attitude = monster->attitude;
-    unsigned int foe           = monster->foe;
     mon_enchant abj            = monster->get_ench(ENCH_ABJ);
     mon_enchant shifter        = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                                    ENCH_SHAPESHIFTER);
-    mon_enchant charm          = monster->get_ench(ENCH_CHARM);
-    mon_enchant neutral        = monster->get_ench(ENCH_NEUTRAL);
 
     // Note: define_monster() will clear out all enchantments! -- bwr
     define_monster( monster_index(monster) );
 
     monster->add_ench(abj);
     monster->add_ench(shifter);
-    // Only shapeshifters retain attitude, foe, and the charm and
-    // neutral enchantments.
-    if (old_mon_shifter)
-    {
-        monster->attitude = attitude;
-        monster->foe = foe;
-        monster->add_ench(charm);
-        monster->add_ench(neutral);
-    }
 
     monster->ench_countdown = old_ench_countdown;
 
