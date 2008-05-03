@@ -898,7 +898,7 @@ try_again:
 void xom_acts(bool niceness, int sever)
 {
 #if DEBUG_DIAGNOSTICS || DEBUG_RELIGION || DEBUG_XOM
-    mprf(MSGCH_DIAGNOSTICS, "Xom_acts(%u, %d); piety: %u, interest: %u\n",
+    mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d); piety: %u, interest: %u\n",
          niceness, sever, you.piety, you.gift_timeout);
 #endif
 
