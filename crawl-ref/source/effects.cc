@@ -149,11 +149,14 @@ int holy_word_monsters(int x, int y, int pow, int caster)
     if (hploss)
     {
         retval = 1;
-        if (monster->alive())
-            simple_monster_message(monster, " convulses!");
-        else
+        if (!monster->alive())
+        {
             monster_die(monster, KILL_YOU, 0);
+            return retval;
+        }
     }
+
+    simple_monster_message(monster, " convulses!");
 
     if (monster->speed_increment >= 25)
     {
@@ -274,11 +277,14 @@ int torment_monsters(int x, int y, int pow, int caster)
     if (hploss)
     {
         retval = 1;
-        if (monster->alive())
-            simple_monster_message(monster, " convulses!");
-        else
+        if (!monster->alive())
+        {
             monster_die(monster, KILL_YOU, 0);
+            return retval;
+        }
     }
+
+    simple_monster_message(monster, " convulses!");
 
     return retval;
 }
