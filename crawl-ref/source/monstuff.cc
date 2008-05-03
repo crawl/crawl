@@ -1582,14 +1582,20 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     monster->type   = targetc;
     monster->number = MONS_PROGRAM_BUG;
 
+    unsigned int foe           = monster->foe;
     mon_enchant abj            = monster->get_ench(ENCH_ABJ);
+    mon_enchant charm          = monster->get_ench(ENCH_CHARM);
+    mon_enchant neutral        = monster->get_ench(ENCH_NEUTRAL);
     mon_enchant shifter        = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                                    ENCH_SHAPESHIFTER);
 
     // Note: define_monster() will clear out all enchantments! -- bwr
     define_monster( monster_index(monster) );
 
+    monster->foe = foe;
     monster->add_ench(abj);
+    monster->add_ench(charm);
+    monster->add_ench(neutral);
     monster->add_ench(shifter);
 
     monster->ench_countdown = old_ench_countdown;
