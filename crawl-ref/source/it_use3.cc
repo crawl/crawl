@@ -370,8 +370,10 @@ static bool evoke_horn_of_geryon()
     else
     {
         mpr("You produce a hideous howling noise!");
-        create_monster( MONS_BEAST, 4, BEH_HOSTILE, you.x_pos, you.y_pos,
-                        MHITYOU, MONS_PROGRAM_BUG, false, false, false, true );
+        create_monster( MONS_BEAST, 4, BEH_HOSTILE,
+                        you.x_pos, you.y_pos, MHITYOU,
+                        MONS_PROGRAM_BUG,
+                        false, false, false, true );
     }
     return rc;
 }
@@ -388,8 +390,8 @@ static bool evoke_sceptre_of_asmodeus()
                                     summon_any_demon(DEMON_COMMON));
         const bool good_summon =
             (create_monster( mtype, 6, BEH_HOSTILE,
-                             you.x_pos, you.y_pos,
-                             MHITYOU, MONS_PROGRAM_BUG) != -1);
+                             you.x_pos, you.y_pos, MHITYOU,
+                             MONS_PROGRAM_BUG) != -1);
 
         if (good_summon)
         {
@@ -686,23 +688,27 @@ bool evoke_wielded()
 
 static bool efreet_flask(void)
 {
-    const beh_type behaviour =
-        ((you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20))
-         ? BEH_FRIENDLY : BEH_HOSTILE);
+    beh_type beha = BEH_HOSTILE;
+    int hitting = MHITYOU;
+
+    if (you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20))
+    {
+        beha = BEH_FRIENDLY;
+        hitting = you.pet_target;
+    }
 
     mpr("You open the flask...");
 
-    const int efreet = create_monster( MONS_EFREET, 0, behaviour,
-                                       you.x_pos, you.y_pos, MHITYOU,
-                                       MONS_PROGRAM_BUG,
-                                       false, false, true );
+    const int efreet = create_monster( MONS_EFREET, 0, beha,
+                                       you.x_pos, you.y_pos, hitting,
+                                       MONS_PROGRAM_BUG );
     if (efreet != -1)
     {
         monsters *mon = &menv[efreet];
 
         mpr( "...and a huge efreet comes out." );
-        player_angers_monster(mon);
-        mpr( (mon->attitude == ATT_FRIENDLY)?
+
+        mpr( (mon->attitude == ATT_FRIENDLY) ?
              "\"Thank you for releasing me!\""
              : "It howls insanely!" );
     }
@@ -967,16 +973,16 @@ static bool box_of_beasts()
                   (temp_rand == 9) ? MONS_BROWN_SNAKE
                                    : MONS_GIANT_LIZARD);
 
-        beh_type beh = BEH_FRIENDLY;
+        beh_type beha = BEH_FRIENDLY;
         int hitting = you.pet_target;
 
         if (one_chance_in(you.skills[SK_EVOCATIONS] + 5))
         {
-            beh = BEH_HOSTILE;
+            beha = BEH_HOSTILE;
             hitting = MHITYOU;
         }
 
-        if (create_monster( beasty, 2 + random2(4), beh,
+        if (create_monster( beasty, 2 + random2(4), beha,
                             you.x_pos, you.y_pos, hitting,
                             MONS_PROGRAM_BUG ) != -1)
         {
