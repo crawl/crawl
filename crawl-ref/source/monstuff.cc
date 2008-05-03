@@ -1588,15 +1588,19 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     mon_enchant shifter = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                             ENCH_SHAPESHIFTER);
     mon_enchant charm   = monster->get_ench(ENCH_CHARM);
+    mon_enchant neutral = monster->get_ench(ENCH_NEUTRAL);
 
     // Note: define_monster() will clear out all enchantments! -- bwr
     define_monster( monster_index(monster) );
 
     monster->add_ench(abj);
     monster->add_ench(shifter);
-    // Only shapeshifters retain the charm enchantment.
+    // Only shapeshifters retain the charm and neutral enchantments.
     if (old_mon_shifter)
+    {
         monster->add_ench(charm);
+        monster->add_ench(neutral);
+    }
 
     monster->ench_countdown = old_ench_countdown;
 
