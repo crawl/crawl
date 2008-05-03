@@ -64,7 +64,7 @@ enum poly_power_type {
 };
 
 bool monster_polymorph(monsters *monster, monster_type targetc,
-                       poly_power_type p = PPT_SAME);
+                       poly_power_type power = PPT_SAME);
 
 bool is_mons_poisoner(monsters *mon);
 

@@ -6790,7 +6790,7 @@ bool shift_monster( monsters *mon, int x, int y )
             if (!in_bounds(tx, ty))
                 continue;
 
-            // won't drop on anything but vanilla floor right now
+            // don't drop on anything but vanilla floor right now
             if (grd[tx][ty] != DNGN_FLOOR)
                 continue;
 
