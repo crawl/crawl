@@ -267,7 +267,7 @@ static bool xom_annoyance_gift(int power)
         if (coinflip() && weapon && weapon->cursed())
         {
             // If you are wielding a cursed item then Xom will give you
-            // an item of that same type. Ha ha!
+            // an item of that same type.  Ha ha!
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             if (coinflip())
                 // For added humour, give the same sub-type.
@@ -281,7 +281,7 @@ static bool xom_annoyance_gift(int power)
         if (coinflip() && gloves && gloves->cursed())
         {
             // If you are wearing cursed gloves, then Xom will give you
-            // a ring. Ha ha!
+            // a ring.  Ha ha!
             //
             // A random ring.  (Not necessarily a good one.)
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
