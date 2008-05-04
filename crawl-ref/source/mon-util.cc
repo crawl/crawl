@@ -4313,7 +4313,13 @@ void monsters::pandemon_init()
     max_hit_points  = ghost->max_hp;
     ac              = ghost->ac;
     ev              = ghost->ev;
-    speed           = (one_chance_in(3) ? 10 : 8 + roll_dice(2, 9));
+    // Don't make greased-lightning Pandemonium demons in the dungeon (max
+    // speed = 17). Demons in Pandemonium can be up to speed 24.
+    if (you.level_type == LEVEL_DUNGEON)
+        speed = (one_chance_in(3)? 10 : 7 + roll_dice(2, 5));
+    else
+        speed = (one_chance_in(3) ? 10 : 10 + roll_dice(2, 7));
+
     speed_increment = 70;
 
     if (you.char_direction == GDT_ASCENDING && you.level_type == LEVEL_DUNGEON)
