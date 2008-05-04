@@ -1359,35 +1359,13 @@ inline static void monster_warning(activity_interrupt_type ai,
         const monsters* mon = static_cast<const monsters*>(at.data);
         if (!mon->visible())
             return;
-#ifndef DEBUG_DIAGNOSTICS
         if (at.context == "already seen")
         {
             // Only say "comes into view" if the monster wasn't in view
             // during the previous turn.
             if (testbits(mon->flags, MF_WAS_IN_VIEW))
-            {
-                switch(random2(4))
-                {
-                   case 0:
-                     mprf(MSGCH_WARN, "%s's nearness makes you nervous.",
-                          mon->name(DESC_CAP_THE).c_str());
-                     break;
-                   case 1:
-                     mprf(MSGCH_WARN, "%s is too close now for your liking.",
-                          mon->name(DESC_CAP_THE).c_str());
-                     break;
-                   case 2:
-                     mprf(MSGCH_WARN,
-                          "You feel that %s is too close now for comfort.",
-                          mon->name(DESC_NOCAP_THE).c_str());
-                     break;
-                   default:
-                     mprf(MSGCH_WARN,
-                          "%s's presence makes you stop your activity.",
-                          mon->name(DESC_CAP_THE).c_str());
-                     break;
-                }
-            }
+                mprf(MSGCH_WARN, "%s is too close now for your liking.",
+                     mon->name(DESC_CAP_THE).c_str());
         }
         else
         {
@@ -1435,15 +1413,6 @@ inline static void monster_warning(activity_interrupt_type ai,
             if (get_mons_colour(mon) != mon->colour)
                 learned_something_new(TUT_MONSTER_BRAND);
         }
-#else
-        formatted_string fs( channel_to_colour(MSGCH_WARN) );
-        fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());
-        fs.add_glyph( mon );
-        fs.cprintf(") in view: (%d,%d), see_grid: %s",
-             mon->x, mon->y,
-             see_grid(mon->x, mon->y)? "yes" : "no");
-        formatted_mpr(fs, MSGCH_WARN);
-#endif
     }
 }
 
