@@ -130,7 +130,7 @@ static void _xom_is_stimulated(int maxinterestingness,
     if (you.religion != GOD_XOM || maxinterestingness <= 0)
         return;
 
-    // Xom is not stimulated by his own acts, at least not directly.
+    // Xom is not directly stimulated by his own acts.
     if (crawl_state.which_god_acting() == GOD_XOM)
         return;
 
