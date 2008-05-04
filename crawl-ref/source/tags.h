@@ -47,12 +47,14 @@ enum tag_major_version
     TAG_MAJOR_VERSION = 5
 };
 
+// Minor version will be reset to zero when major version changes.
 enum tag_minor_version
 {
     TAG_MINOR_PIETY = 2,        // Added piety_hysteresis
     TAG_MINOR_QUIVER = 3,       // Added quiver
     TAG_MINOR_MAPMARK = 4,      // Added sizes to map markers
-    TAG_MINOR_VERSION = 4       // Current version
+    TAG_MINOR_MONNAM = 5,       // Monsters get individual names
+    TAG_MINOR_VERSION = 5       // Current version
 };
 
 

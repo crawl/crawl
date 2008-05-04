@@ -1092,18 +1092,17 @@ static bool _beogh_blessing_priesthood(monsters* mon)
 // one, bless a random follower within sight of the player, if any, or,
 // with decreasing chances, any follower on the level.
 // Blessing can be enforced with a wizard mode command.
-bool bless_follower(int follower,
+bool bless_follower(monsters *follower,
                     god_type god,
                     bool (*suitable)(const monsters* mon),
                     bool force)
 {
     int chance = (force ? coinflip() : random2(20));
-    monsters *mon = NULL;
     std::string result;
 
     // If a follower was specified, and it's suitable, pick it.
     // Otherwise, pick a random follower within sight of the player.
-    if (follower == -1 || (!force && !suitable(&menv[follower])))
+    if (!follower || (!force && !suitable(follower)))
     {
         if (god != GOD_BEOGH)
             return false;
@@ -1114,7 +1113,7 @@ bool bless_follower(int follower,
         // Choose a random follower in LOS, preferably a named one (10% chance).
         follower = choose_random_nearby_monster(0, suitable, true, true);
 
-        if (follower == NON_MONSTER)
+        if (!follower)
         {
             if (coinflip())
                 return false;
@@ -1122,7 +1121,7 @@ bool bless_follower(int follower,
             // Try again, without the LOS restriction (5% chance).
             follower = choose_random_nearby_monster(0, suitable, false, true);
 
-            if (follower == NON_MONSTER)
+            if (!follower)
             {
                 if (coinflip())
                     return false;
@@ -1131,7 +1130,7 @@ bool bless_follower(int follower,
                 follower = choose_random_monster_on_level(0, suitable,
                                                           false, false, true);
 
-                if (follower == NON_MONSTER)
+                if (!follower)
                 {
                     // If no follower was found, attempt to send
                     // reinforcement.
@@ -1153,10 +1152,7 @@ bool bless_follower(int follower,
             }
         }
     }
-    ASSERT(follower != -1 && follower != NON_MONSTER);
-
-    // Else, apply blessing to chosen follower.
-    mon = &menv[follower];
+    ASSERT(follower);
 
     if (chance == 0) // 5% chance of holy branding, or priesthood
     {
@@ -1167,7 +1163,7 @@ bool bless_follower(int follower,
                 {
                     // Brand a monster's weapon with holy wrath, if
                     // possible.
-                    if (_tso_blessing_holy_wpn(mon))
+                    if (_tso_blessing_holy_wpn(follower))
                     {
                         result = "holy attack power";
                         goto blessing_done;
@@ -1179,7 +1175,7 @@ bool bless_follower(int follower,
                 {
                     // Brand a monster's armour with positive energy, if
                     // possible.
-                    if (_tso_blessing_holy_arm(mon))
+                    if (_tso_blessing_holy_arm(follower))
                     {
                         result = "life defence";
                         goto blessing_done;
@@ -1191,7 +1187,7 @@ bool bless_follower(int follower,
 
             case GOD_BEOGH:
                 // Turn a monster into a priestly monster, if possible.
-                if (_beogh_blessing_priesthood(mon))
+                if (_beogh_blessing_priesthood(follower))
                 {
                     result = "priesthood";
                     goto blessing_done;
@@ -1214,18 +1210,18 @@ bool bless_follower(int follower,
 
         if (coinflip())
         {
-            affected = _blessing_wpn(mon);
+            affected = _blessing_wpn(follower);
 
             if (!affected || coinflip())
             {
-                if (_blessing_wpn(mon))
+                if (_blessing_wpn(follower))
                     affected = true;
             }
 
             if (affected)
             {
                 result = "extra attack power";
-                give_unique_monster_name(mon);
+                give_unique_monster_name(follower);
                 goto blessing_done;
             }
             else if (force)
@@ -1233,18 +1229,18 @@ bool bless_follower(int follower,
         }
         else
         {
-            affected = _blessing_AC(mon);
+            affected = _blessing_AC(follower);
 
             if (!affected || coinflip())
             {
-                if (_blessing_AC(mon))
+                if (_blessing_AC(follower))
                     affected = true;
             }
 
             if (affected)
             {
                 result = "extra defence";
-                give_unique_monster_name(mon);
+                give_unique_monster_name(follower);
                 goto blessing_done;
             }
             else if (force)
@@ -1261,11 +1257,11 @@ bool bless_follower(int follower,
             // Extend a monster's stay if it's abjurable, optionally
             // making it friendly if it's charmed.  If neither is
             // possible, deliberately fall through.
-            bool more_time = _tso_blessing_extend_stay(mon);
+            bool more_time = _tso_blessing_extend_stay(follower);
             bool friendliness = false;
 
             if (!more_time || coinflip())
-                friendliness = _tso_blessing_friendliness(mon);
+                friendliness = _tso_blessing_friendliness(follower);
 
             if (more_time && friendliness)
                 result = "friendliness and more time in this world";
@@ -1288,7 +1284,7 @@ bool bless_follower(int follower,
             // possible.
             if (coinflip())
             {
-                if (_blessing_balms(mon))
+                if (_blessing_balms(follower))
                 {
                     result = "divine balms";
                     goto blessing_done;
@@ -1297,12 +1293,12 @@ bool bless_follower(int follower,
                     mpr("Couldn't apply balms.");
             }
 
-            bool healing = _blessing_healing(mon, false);
+            bool healing = _blessing_healing(follower, false);
             bool vigour = false;
 
             // Maybe give an extra hit point.
             if (!healing || coinflip())
-                vigour = _blessing_healing(mon, true);
+                vigour = _blessing_healing(follower, true);
 
             if (healing && vigour)
                 result = "healing and extra vigour";
@@ -1329,18 +1325,19 @@ blessing_done:
     bool see_follower = false;
 
     std::string whom = "";
-    if (follower == NON_MONSTER)
+    if (!follower)
         whom = "you";
     else
     {
-        if (mons_near(mon) && player_monster_visible(mon))
+        if (mons_near(follower) && player_monster_visible(follower))
             see_follower = true;
 
         if (see_follower)
         {
-            whom = get_unique_monster_name(mon);
-            if (whom.empty())
-                whom = "your " + mon->name(DESC_PLAIN);
+            if (follower->is_named())
+                whom = follower->name(DESC_PLAIN);
+            else
+                whom = "your " + follower->name(DESC_PLAIN);
         }
         else // cannot see who was blessed
             whom = "a follower";
@@ -1355,7 +1352,7 @@ blessing_done:
     if (see_follower)
     {
         unsigned char old_flash_colour = you.flash_colour;
-        coord_def c(mon->x, mon->y);
+        coord_def c(follower->pos());
 
         you.flash_colour = god_colour(god);
         view_update_at(c);
@@ -1365,6 +1362,7 @@ blessing_done:
 
         you.flash_colour = old_flash_colour;
         view_update_at(c);
+        update_screen();
     }
 #endif
 

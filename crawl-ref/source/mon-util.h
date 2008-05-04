@@ -387,7 +387,6 @@ monsters *monster_at(const coord_def &pos);
 std::string mons_type_name(int type, description_level_type desc);
 
 bool give_unique_monster_name(monsters *mon, bool orcs_only = true);
-std::string get_unique_monster_name(const monsters *mon);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

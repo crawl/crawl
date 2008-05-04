@@ -472,8 +472,7 @@ bool invalid_monster_class(int mclass)
 
 bool invalid_monster_index(int i)
 {
-    return (i < 0
-            || i >= MAX_MONSTERS);
+    return (i < 0 || i >= MAX_MONSTERS);
 }
 
 bool mons_is_statue(int mc)
@@ -1373,6 +1372,7 @@ void define_monster(monsters &mons)
     int col = mons_class_colour(mons.type);
     mon_spellbook_type spells = MST_NO_SPELLS;
 
+    mons.mname.clear();
     hd = m->hpdice[0];
 
     // misc
@@ -1629,6 +1629,11 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     if (mon.type == MONS_PANDEMONIUM_DEMON)
         return mon.ghost->name;
 
+    // If the monster has an explicit name, return that, handling it like
+    // a unique's name.
+    if (!mon.mname.empty())
+        return mon.mname;
+
     std::string result;
 
     // Start building the name string.
@@ -1750,20 +1755,34 @@ std::string mons_type_name(int type, description_level_type desc )
     return result;
 }
 
+// XXX: unique as in "proper name", not unique as in "name not used elsewhere"?
+static std::string _get_unique_monster_name(const monsters *mon)
+{
+    const monsterentry *me = mon->find_monsterentry();
+    if (!me)
+        return ("");
+    
+    std::string name = getRandNameString(me->name, " name");
+    if (!name.empty())
+        return name;
+
+    name = getRandNameString(get_monster_data(mons_genus(mon->type))->name,
+                             " name");
+
+    if (!name.empty())
+        return name;
+
+    name = getRandNameString("generic_monster_name");
+    return name;
+}
+
 // Fills the number parameter (if not otherwise needed) with a seed for
 // random name choice from randname.txt.
 bool give_unique_monster_name(monsters *mon, bool orcs_only)
 {
     // already has a unique name
-    if (mon->number > 0 && mon->number != MONS_PROGRAM_BUG)
-        return false;
-
-    // already have a name
-    if (mons_is_unique(mon->type) || mon->type == MONS_PLAYER_GHOST
-        || mon->type == MONS_PANDEMONIUM_DEMON)
-    {
-        return false;
-    }
+    if (mon->is_named())
+        return (false);
 
     // Since this is called from the various divine blessing routines,
     // don't bless non-orcs, and normally don't bless plain orcs, either.
@@ -1775,78 +1794,10 @@ bool give_unique_monster_name(monsters *mon, bool orcs_only)
             return false;
         }
     }
-    else
-    {
-        // need their number parameter for other information
-        if (mon->type == MONS_HYDRA // #heads
-            || mon->type == MONS_ABOMINATION_SMALL // colour
-            || mon->type == MONS_ABOMINATION_LARGE // colour
-            || mon->type == MONS_MANTICORE // #spikes
-            || mons_genus(mon->type) == MONS_DRACONIAN // subspecies
-            || mons_class_is_zombified(mon->type)) // zombie type
-        {
-            return false;
-        }
-    }
 
-    // randomly pick a number
-    // XXX: Why does unsigned int (number's type) get munged on save & reload?
-    mon->number = (unsigned char) random_int();
-//    mprf(MSGCH_DIAGNOSTICS, "new monster number is %d", mon->number);
-
-    return (mon->number != 0 && mon->number != MONS_PROGRAM_BUG);
+    mon->mname = _get_unique_monster_name(mon);
+    return (mon->is_named());
 }
-
-std::string get_unique_monster_name(const monsters *mon)
-{
-    if (mon->type == MONS_PLAYER_GHOST)
-        return mon->ghost->name + "'s ghost";
-
-    if (mon->type == MONS_PANDEMONIUM_DEMON)
-        return mon->ghost->name;
-
-    if (mons_is_unique(mon->type))
-        return get_monster_data(mon->type)->name;
-
-    // Since the seed for the monster name is stored in mon->number
-    // any monster that uses number for something else cannot be named.
-    if (mon->type == MONS_HYDRA // #heads
-        || mon->type == MONS_ABOMINATION_SMALL // colour
-        || mon->type == MONS_ABOMINATION_LARGE // colour
-        || mon->type == MONS_MANTICORE // #spikes
-        || mons_genus(mon->type) == MONS_DRACONIAN // subspecies
-        || mons_class_is_zombified(mon->type)) // zombie type
-    {
-        return "";
-    }
-
-    // unnamed, sorry
-    if (mon->number <= 0 || mon->number == MONS_PROGRAM_BUG)
-        return "";
-
-//    mprf(MSGCH_DIAGNOSTICS, "get name from number %d", mon->number);
-
-    rng_save_excursion rng_state;
-    seed_rng( mon->number );
-
-    std::string name
-        = getRandNameString(get_monster_data(mon->type)->name, " name");
-
-    if (!name.empty())
-        return name;
-
-    name = getRandNameString(get_monster_data(mons_genus(mon->type))->name,
-                             " name");
-
-    if (!name.empty())
-        return name;
-
-    name = getRandNameString("generic_monster_name");
-
-    return name;
-}
-
-/* ********************* END PUBLIC FUNCTIONS ********************* */
 
 // see mons_init for initialization of mon_entry array.
 monsterentry *get_monster_data(int p_monsterid)
@@ -2612,8 +2563,39 @@ monsters &monsters::operator = (const monsters &mon)
     return (*this);
 }
 
+void monsters::reset()
+{
+    destroy_inventory();
+
+    mname.clear();
+    enchantments.clear();
+    ench_countdown = 0;
+    inv.init(NON_ITEM);
+
+    flags           = 0;
+    experience      = 0L;
+    type            = -1;
+    hit_points      = 0;
+    max_hit_points  = 0;
+    hit_dice        = 0;
+    ac              = 0;
+    ev              = 0;
+    speed_increment = 0;
+    attitude        = ATT_HOSTILE;
+    behaviour       = BEH_SLEEP;
+    foe             = MHITNOT;
+    number          = 0;
+
+    if (in_bounds(x, y))
+        mgrd[x][y] = NON_MONSTER;
+
+    x = y = 0;
+    ghost.reset(NULL);
+}
+
 void monsters::init_with(const monsters &mon)
 {
+    mname             = mon.mname;
     type              = mon.type;
     hit_points        = mon.hit_points;
     max_hit_points    = mon.max_hit_points;
@@ -3914,14 +3896,13 @@ item_def *monsters::shield()
     return (mslot_item(MSLOT_SHIELD));
 }
 
+bool monsters::is_named() const
+{
+    return (!mname.empty() || mons_is_unique(type));
+}
+
 std::string monsters::name(description_level_type desc) const
 {
-    std::string monnam = "";
-    if (player_monster_visible(this))
-        monnam = get_unique_monster_name(this);
-    if (!monnam.empty())
-        return monnam;
-
     return this->name(desc, false);
 }
 
@@ -3933,8 +3914,8 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
     if (possessive)
         desc = DESC_NOCAP_THE;
 
-    std::string mname = _str_monam(*this, desc, force_vis);
-    return (possessive? apostrophise(mname) : mname);
+    std::string monnam = _str_monam(*this, desc, force_vis);
+    return (possessive? apostrophise(monnam) : monnam);
 }
 
 std::string monsters::pronoun(pronoun_type pro) const
@@ -4305,6 +4286,7 @@ void monsters::set_ghost(const ghost_demon &g)
     TileGhostInit(g);
 #endif
     ghost.reset( new ghost_demon(g) );
+    mname = ghost->name;
 }
 
 void monsters::pandemon_init()
@@ -4444,35 +4426,6 @@ void monsters::destroy_inventory()
             inv[j] = NON_ITEM;
         }
     }
-}
-
-void monsters::reset()
-{
-    destroy_inventory();
-
-    enchantments.clear();
-    ench_countdown = 0;
-    inv.init(NON_ITEM);
-
-    flags           = 0;
-    experience      = 0L;
-    type            = -1;
-    hit_points      = 0;
-    max_hit_points  = 0;
-    hit_dice        = 0;
-    ac              = 0;
-    ev              = 0;
-    speed_increment = 0;
-    attitude        = ATT_HOSTILE;
-    behaviour       = BEH_SLEEP;
-    foe             = MHITNOT;
-    number          = 0;
-
-    if (in_bounds(x, y))
-        mgrd[x][y] = NON_MONSTER;
-
-    x = y = 0;
-    ghost.reset(NULL);
 }
 
 bool monsters::needs_transit() const
@@ -5809,17 +5762,17 @@ void monsters::react_to_damage(int damage)
 
         if (needs_message)
         {
-            const std::string mname = name(DESC_CAP_THE);
-            mprf("%s shudders%s.", mname.c_str(),
+            const std::string monnam = name(DESC_CAP_THE);
+            mprf("%s shudders%s.", monnam.c_str(),
                  spawned >= 5 ? " alarmingly" :
                  spawned >= 3 ? " violently" :
                  spawned > 1 ? " vigorously" : "");
             if (spawned == 1)
-                mprf("%s spits out another jelly.", mname.c_str());
+                mprf("%s spits out another jelly.", monnam.c_str());
             else
             {
                 mprf("%s spits out %s more jellies.",
-                     mname.c_str(),
+                     monnam.c_str(),
                      number_in_words(spawned).c_str());
             }
         }
@@ -6080,7 +6033,8 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     std::string msg = in_msg;
     description_level_type nocap = DESC_NOCAP_THE, cap = DESC_CAP_THE;
 
-    std::string name = get_unique_monster_name(monster);
+    std::string name =
+        monster->is_named()? monster->name(DESC_CAP_THE) : "";
     if (!name.empty() && player_monster_visible(monster))
     {
         msg = replace_all(msg, "@the_something@", name);

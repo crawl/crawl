@@ -162,8 +162,9 @@ void zap_los_monsters();
 class rng_save_excursion
 {
 public:
-    rng_save_excursion()  { push_rng_state(); }
-    ~rng_save_excursion() { pop_rng_state(); }
+    rng_save_excursion(long seed) { push_rng_state(); seed_rng(seed); }
+    rng_save_excursion()          { push_rng_state(); }
+    ~rng_save_excursion()         { pop_rng_state(); }
 };
 
 template<typename Iterator>

@@ -1010,8 +1010,11 @@ public:
     ~monsters();
 
     monsters &operator = (const monsters &other);
+    void reset();
 
 public:
+    std::string mname;
+    
     int type;
     int hit_points;
     int max_hit_points;
@@ -1050,10 +1053,14 @@ public:
                                        // AI_SEE_MONSTER
 
 public:
+    // Returns true if the monster is named with a proper name, or is
+    // a player ghost.
+    bool is_named() const;
+    const monsterentry *find_monsterentry() const;    
+    
     void init_experience();
 
     void mark_summoned(int longevity, bool mark_items_summoned );
-
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
     void apply_location_effects();
@@ -1098,7 +1105,6 @@ public:
     void ghost_init();
     void pandemon_init();
     void destroy_inventory();
-    void reset();
     void load_spells(mon_spellbook_type spellbook);
 
     actor *get_foe() const;
@@ -1262,7 +1268,6 @@ private:
                               coord_def &chosen,
                               int &nvalid) const;
     bool has_spell_of_type(unsigned) const;
-    const monsterentry *find_monsterentry() const;
 };
 
 struct cloud_struct

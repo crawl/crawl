@@ -716,11 +716,8 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     if (id == MAX_MONSTERS)
         return -1;
 
-    menv[id].inv.init(NON_ITEM);
-    // scrap monster enchantments
-    menv[id].enchantments.clear();
-    menv[id].ench_countdown = 0;
-
+    menv[id].reset();
+    
     // setup habitat and placement
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && mgrd[px][py] == NON_MONSTER

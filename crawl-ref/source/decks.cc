@@ -1346,24 +1346,24 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
     // Swap between you and another monster.
     // Don't choose yourself unless there are no other monsters
     // nearby.
-    const int mon_to_swap = choose_random_nearby_monster(0);
-    if ( mon_to_swap == NON_MONSTER )
+    monsters *mon_to_swap = choose_random_nearby_monster(0);
+    if ( !mon_to_swap )
     {
         mpr("You spin around.");
     }
     else
     {
-        monsters& mon = menv[mon_to_swap];
-        const coord_def newpos = menv[mon_to_swap].pos();
+        monsters& mon(*mon_to_swap);
+        const coord_def newpos = mon.pos();
 
         // pick the monster up
-        mgrd[mon.x][mon.y] = NON_MONSTER;
+        mgrd(newpos) = NON_MONSTER;
 
         mon.x = you.x_pos;
         mon.y = you.y_pos;
 
         // plunk it down
-        mgrd[mon.x][mon.y] = mon_to_swap;
+        mgrd(mon.pos()) = monster_index(mon_to_swap);
 
         // move you to its previous location
         you.moveto(newpos);
@@ -1403,19 +1403,19 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     for ( int i = 0; i < 1 + extra_targets; ++i )
     {
         // pick a random monster nearby to banish (or yourself)
-        const int mon_to_banish = choose_random_nearby_monster(1);
+        monsters *mon_to_banish = choose_random_nearby_monster(1);
 
         // bonus banishments only banish monsters
-        if ( i != 0 && mon_to_banish == NON_MONSTER )
+        if ( i != 0 && !mon_to_banish )
             continue;
 
-        if ( mon_to_banish == NON_MONSTER ) // banish yourself!
+        if ( !mon_to_banish ) // banish yourself!
         {
             banished(DNGN_ENTER_ABYSS, "drawing a card");
             break;              // don't banish anything else
         }
         else
-            menv[mon_to_banish].banish();
+            mon_to_banish->banish();
     }
 
 }

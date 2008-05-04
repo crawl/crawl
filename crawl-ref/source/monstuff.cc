@@ -418,7 +418,7 @@ static void _give_monster_experience( monsters *victim,
                 || you.religion == GOD_BEOGH
                     && random2(you.piety) >= piety_breakpoint(2))
             {
-                bless_follower(killer_index);
+                bless_follower(mon);
             }
         }
     }
@@ -1121,8 +1121,11 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     monsters *mon = &menv[i];
 
                     // Randomly bless the follower who killed.
-                    if (!one_chance_in(3) && bless_follower(i))
+                    if (!one_chance_in(3) && mon->alive()
+                        && bless_follower(mon))
+                    {
                         break;
+                    }
 
                     if (mon->alive() && mon->hit_points < mon->max_hit_points)
                     {
@@ -1140,7 +1143,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && !one_chance_in(3)
                     && !invalid_monster_index(i))
                 {
-                    bless_follower(i);
+                    bless_follower(&menv[i]);
                 }
 
             }
@@ -2604,22 +2607,21 @@ bool choose_any_monster(const monsters* mon)
 // for the type of monster wanted.
 // If prefer_named is true, named monsters (including uniques) are twice as
 // likely to get chosen compared with non-named ones.
-int choose_random_nearby_monster(int weight,
-                                 bool (*suitable)(const monsters* mon),
-                                 bool in_sight, bool prefer_named)
+monsters *choose_random_nearby_monster(int weight,
+                                       bool (*suitable)(const monsters* mon),
+                                       bool in_sight, bool prefer_named)
 {
     return choose_random_monster_on_level(weight, suitable, in_sight, true,
                                           prefer_named);
 }
 
-int choose_random_monster_on_level(int weight,
-                                   bool (*suitable)(const monsters* mon),
-                                   bool in_sight, bool near_by,
-                                   bool prefer_named)
+monsters *choose_random_monster_on_level(int weight,
+                                         bool (*suitable)(const monsters* mon),
+                                         bool in_sight, bool near_by,
+                                         bool prefer_named)
 {
+    monsters *chosen = NULL;
     int mons_count = weight;
-    int result = NON_MONSTER;
-    int mon;
 
     int xstart = 0, ystart = 0;
     int xend = GXM, yend = GYM;
@@ -2642,23 +2644,27 @@ int choose_random_monster_on_level(int weight,
         for ( int x = xstart; x < xend; ++x )
             if ( mgrd[x][y] != NON_MONSTER && (!in_sight || see_grid(x,y)) )
             {
-                mon = mgrd[x][y];
-                if (suitable(&menv[mon]))
+                monsters *mon = &menv[mgrd[x][y]];
+                if (suitable(mon))
                 {
-                    if (prefer_named
-                        && !(get_unique_monster_name(&menv[mon]).empty()))
+                    // FIXME: if the intent is to favour monsters
+                    // named by $DEITY, we should set a flag on the
+                    // monster (something like MF_DEITY_PREFERRED) and
+                    // use that instead of checking the name, given
+                    // that other monsters can also have names.
+                    if (prefer_named && mon->is_named())
                     {
                         mons_count += 2;
                         // named monsters have doubled chances
                         if (random2(mons_count) < 2)
-                            result = mon;
+                            chosen = mon;
                     }
                     else if (one_chance_in(++mons_count))
-                        result = mon;
+                        chosen = mon;
                 }
             }
-
-    return result;
+    
+    return chosen;
 }
 
 // note that this function *completely* blocks messaging for monsters

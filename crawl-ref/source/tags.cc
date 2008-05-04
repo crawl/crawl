@@ -99,6 +99,9 @@ extern std::map<level_id, std::string> level_annotations;
 // temp file pairs used for file level cleanup
 FixedArray < bool, MAX_LEVELS, NUM_BRANCHES > tmp_file_pairs;
 
+// The minor version for the tag currently being read.
+static int _tag_minor_version = -1;
+
 // Reads input in network byte order, from a file or buffer.
 unsigned char reader::readByte()
 {
@@ -706,6 +709,7 @@ tag_type tag_read(FILE *fp, char minorVersion)
             return TAG_NO_TAG;
     }
 
+    unwind_var<int> tag_minor_version(_tag_minor_version, minorVersion);
     // ok, we have data now.
     reader th(buf);
     switch (tag_id)
@@ -790,7 +794,7 @@ void tag_set_expected(char tags[], int fileType)
         switch(fileType)
         {
             case TAGTYPE_PLAYER:
-                if (i >= TAG_YOU && i <= TAG_YOU_DUNGEON
+                if ((i >= TAG_YOU && i <= TAG_YOU_DUNGEON)
                     || i == TAG_LOST_MONSTERS)
                 {
                     tags[i] = 1;
@@ -1580,7 +1584,6 @@ static void tag_read_you_dungeon(reader &th)
 static void tag_read_lost_monsters(reader &th, int minorVersion)
 {
     the_lost_ones.clear();
-
     unmarshallMap(th, the_lost_ones,
                   unmarshall_level_id, unmarshall_follower_list);
 }
@@ -1755,6 +1758,7 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
 
 static void marshall_monster(writer &th, const monsters &m)
 {
+    marshallString(th, m.mname);
     marshallByte(th, m.ac);
     marshallByte(th, m.ev);
     marshallByte(th, m.hit_dice);
@@ -2011,6 +2015,11 @@ static void tag_read_level_items(reader &th, char minorVersion)
 
 static void unmarshall_monster(reader &th, monsters &m)
 {
+    m.reset();
+    
+    if (_tag_minor_version >= TAG_MINOR_MONNAM)
+        m.mname = unmarshallString(th, 100);
+    
     m.ac = unmarshallByte(th);
     m.ev = unmarshallByte(th);
     m.hit_dice = unmarshallByte(th);
