@@ -1141,7 +1141,6 @@ static int find_acquirement_subtype(object_class_type class_wanted,
     }
     else if (class_wanted != OBJ_GOLD)
     {
-
         do
         {
             unsigned char i;
