@@ -10,9 +10,3 @@ fi
 if [ -f WIZARD/crawl ]; then
 	ln -sf WIZARD/crawl wcrawl
 fi
-
-if [ -d dat/lua ]; then
-	true
-else
-	mkdir -p dat/lua && cp source/lua/*.lua dat/lua
-fi

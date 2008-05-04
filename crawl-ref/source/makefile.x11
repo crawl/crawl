@@ -267,7 +267,7 @@ endif
 	mkdir -p $(DATADIR)/dat/descript
 	mkdir -p $(DATADIR)/dat/database
 	cp dat/*.des $(DATADIR)/dat
-	cp lua/*.lua $(DATADIR)/dat/lua
+	cp dat/lua/*.lua $(DATADIR)/dat/lua
 	cp dat/clua/*.lua $(DATADIR)/dat/clua
 	cp dat/descript/*.txt $(DATADIR)/dat/descript
 	cp dat/database/*.txt $(DATADIR)/dat/database
