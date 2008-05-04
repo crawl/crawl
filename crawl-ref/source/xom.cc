@@ -569,7 +569,7 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 4)
     {
-        const int radius = random2avg(sever/2, 3) + 1;
+        const int radius = random2avg(sever / 2, 3) + 1;
 
         // This can fail with radius 1, or in open areas.
         if (!vitrify_area(radius))
