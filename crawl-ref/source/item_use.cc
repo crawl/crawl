@@ -3560,7 +3560,7 @@ bool _drink_fountain()
     if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
-        return false;
+        return true;
     }
 
     potion_type fountain_effect = POT_WATER;
