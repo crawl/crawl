@@ -160,8 +160,8 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 mprf( MSGCH_WARN,
                       "Wait a moment, %s!  Do you really want to step there?",
                       you.your_name );
-
-                more();
+                if (!you.running.is_any_travel())
+                    more();
 
                 exercise( SK_TRAPS_DOORS, 3 );
 

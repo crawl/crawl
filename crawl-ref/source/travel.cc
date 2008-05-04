@@ -3882,6 +3882,20 @@ bool runrest::is_explore() const
     return (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY);
 }
 
+bool runrest::is_any_travel() const
+{
+    switch (runmode)
+    {
+    case RMODE_INTERLEVEL:
+    case RMODE_EXPLORE_GREEDY:
+    case RMODE_EXPLORE:
+    case RMODE_TRAVEL:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 void runrest::rest()
 {
     // stop_running() Lua hooks will never see rest stops.

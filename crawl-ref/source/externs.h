@@ -473,8 +473,8 @@ public:
 
     // Returns true if we're currently resting.
     bool is_rest() const;
-
     bool is_explore() const;
+    bool is_any_travel() const;
 
     // Clears run state.
     void clear();
