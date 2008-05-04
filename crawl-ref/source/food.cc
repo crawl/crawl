@@ -652,7 +652,7 @@ static bool food_change(bool suppress_message)
             {
                 if (you.duration[DUR_BERSERKER] > 1)
                 {
-                    mpr("Your bloodless body can't sustain your rage any "
+                    mpr("Your blood-deprived body can't sustain your rage any "
                         "longer.", MSGCH_DURATION);
                     you.duration[DUR_BERSERKER] = 1;
                 }
@@ -660,7 +660,7 @@ static bool food_change(bool suppress_message)
                 if (transform != TRAN_NONE && transform != TRAN_BAT
                     && you.duration[DUR_TRANSFORMATION] > 2)
                 {
-                    mpr("Your bloodless body can't sustain your "
+                    mpr("Your blood-deprived body can't sustain your "
                         "transformation much longer.", MSGCH_DURATION);
                     you.duration[DUR_TRANSFORMATION] = 2;
                 }
@@ -668,7 +668,7 @@ static bool food_change(bool suppress_message)
             else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
                      && you.duration[DUR_TRANSFORMATION] > 5)
             {
-                mpr("Your bloodfilled body can't sustain your transformation "
+                mpr("Your blood-filled body can't sustain your transformation "
                     "much longer.", MSGCH_WARN);
                 // give more time because suddenly stopping flying can be lethal
                 you.duration[DUR_TRANSFORMATION] = 5;
