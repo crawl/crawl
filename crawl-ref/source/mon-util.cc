@@ -1624,10 +1624,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     }
 
     if (mon.type == MONS_PLAYER_GHOST)
-        return mon.ghost->name + "'s ghost";
-
-    if (mon.type == MONS_PANDEMONIUM_DEMON)
-        return mon.ghost->name;
+        return apostrophise(mon.mname) + " ghost";
 
     // If the monster has an explicit name, return that, handling it like
     // a unique's name.
@@ -3901,6 +3898,13 @@ bool monsters::is_named() const
     return (!mname.empty() || mons_is_unique(type));
 }
 
+bool monsters::has_base_name() const
+{
+    // Any non-ghost, non-Pandemonium demon that has an explicitly set name
+    // has a base name.
+    return (!mname.empty() && !ghost.get());
+}
+
 std::string monsters::name(description_level_type desc) const
 {
     return this->name(desc, false);
@@ -3916,6 +3920,19 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
 
     std::string monnam = _str_monam(*this, desc, force_vis);
     return (possessive? apostrophise(monnam) : monnam);
+}
+
+std::string monsters::base_name(description_level_type desc, bool force_vis)
+    const
+{
+    if (ghost.get() || mons_is_unique(type))
+        return (name(desc, force_vis));
+    else
+    {
+        unwind_var<std::string> tmname(
+            const_cast<monsters*>(this)->mname, "");
+        return (name(desc, force_vis));
+    }
 }
 
 std::string monsters::pronoun(pronoun_type pro) const

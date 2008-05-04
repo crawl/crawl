@@ -1056,6 +1056,11 @@ public:
     // Returns true if the monster is named with a proper name, or is
     // a player ghost.
     bool is_named() const;
+
+    // Does this monster have a base name, i.e. is base_name() != name().
+    // See base_name() for details.
+    bool has_base_name() const;
+    
     const monsterentry *find_monsterentry() const;    
     
     void init_experience();
@@ -1160,6 +1165,12 @@ public:
 
     std::string name(description_level_type type) const;
     std::string name(description_level_type type, bool force_visible) const;
+
+    // Base name of the monster, bypassing any mname setting. For an orc priest
+    // named Arbolt, name() will return "Arbolt", but base_name() will return
+    // "orc priest".
+    std::string base_name(description_level_type type,
+                          bool force_visible) const;
     std::string pronoun(pronoun_type pro) const;
     std::string conj_verb(const std::string &verb) const;
 

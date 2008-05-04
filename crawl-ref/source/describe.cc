@@ -2073,28 +2073,16 @@ void describe_monsters(monsters& mons)
     }
 
     std::ostringstream description;
-    description << mons.name(DESC_CAP_A) << "$$";
-
-    // Note: Nearly all of the "long" descriptions have moved to
-    // mon-data.h, in an effort to give them some locality with the
-    // rest of the monster definition data, and to get them out of
-    // the control logic.  The only sorts of descriptions that should
-    // go here are those that require active decisions about what
-    // sort of message to print (eg "It's beautiful" or "It's ugly"
-    // depending on player class).  And just between you and me: that's
-    // sort of a dumb idea anyway.  So don't add any more of those.
-    //
-    // In my fantasy world, the long descriptions (and monster data)
-    // wouldn't live in a header file, but in a simple text file
-    // that's easier to edit and easy to read.  Even XML would be better
-    // than what we have today.
-    //
-    // -peterb 4/14/07
+    std::string capname = mons.name(DESC_CAP_A);
+    description << capname;
+    if (mons.has_base_name())
+        description << ", " << mons.base_name(DESC_NOCAP_THE, false);
+    description << "$$";
 
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
         description << getLongDescription("mimic");
     else
-        description << getLongDescription(mons.name(DESC_PLAIN, false));
+        description << getLongDescription(mons.base_name(DESC_PLAIN, false));
 
     std::string symbol = "";
     symbol += get_monster_data(mons.type)->showchar;
