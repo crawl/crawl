@@ -140,4 +140,6 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 
 void reveal_secret_door(int x, int y);
 
+std::string your_hand(bool plural);
+
 #endif

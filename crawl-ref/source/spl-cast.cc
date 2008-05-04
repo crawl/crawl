@@ -38,6 +38,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mutation.h"

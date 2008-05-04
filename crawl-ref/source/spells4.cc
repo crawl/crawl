@@ -74,49 +74,6 @@ static int quadrant_blink(int x, int y, int pow, int garbage);
 
 void do_monster_rot(int mon);
 
-//jmf: FIXME: put somewhere else (misc.cc?)
-// A feeble attempt at Nethack-like completeness for cute messages.
-std::string your_hand( bool plural )
-{
-    std::string result;
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    default:
-        mpr("ERROR: unknown transformation in your_hand() (spells4.cc)");
-    case TRAN_NONE:
-    case TRAN_STATUE:
-    case TRAN_LICH:
-        if (you.has_usable_claws())
-        {
-            result = "claw";
-            break;
-        }
-        // or fall-through
-    case TRAN_ICE_BEAST:
-        result = "hand";
-        break;
-    case TRAN_SPIDER:
-        result = "front leg";
-        break;
-    case TRAN_SERPENT_OF_HELL:
-    case TRAN_DRAGON:
-    case TRAN_BAT:
-        result = "foreclaw";
-        break;
-    case TRAN_BLADE_HANDS:
-        result = "scythe-like blade";
-        break;
-    case TRAN_AIR:
-        result = "misty tendril";
-        break;
-    }
-
-    if (plural)
-        result += 's';
-
-    return result;
-}
-
 // just to avoid typing this over and over
 // now returns true if monster died -- bwr
 inline bool player_hurt_monster(int monster, int damage)

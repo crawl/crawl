@@ -49,7 +49,6 @@
 #include "randart.h"
 #include "religion.h"
 #include "spells1.h"
-#include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"

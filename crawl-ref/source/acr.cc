@@ -125,7 +125,6 @@
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
