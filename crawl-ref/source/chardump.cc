@@ -707,8 +707,7 @@ static void sdump_inventory(dump_params &par)
     }
     else
     {
-        text += "  Inventory:";
-        text += "\n";
+        text += "Inventory:\n\n";
 
         for (i = 0; i < OBJ_GOLD; i++)
         {

@@ -991,31 +991,34 @@ static std::string _describe_weapon( const item_def &item, bool verbose)
 
     }
 
-    if ( is_demonic(item) && !launcher )
-         description += "$Demonspawn are more deadly with it.";
-    else if (get_equip_race(item) != ISFLAG_NO_RACE)
+    if (verbose)
     {
-        switch (get_equip_race( item ))
+        if ( is_demonic(item) && !launcher )
+            description += "$Demonspawn are more deadly with it.";
+        else if (get_equip_race(item) != ISFLAG_NO_RACE)
         {
-        case ISFLAG_DWARVEN:
-            description += "$It is well-crafted and very durable.";
-            description += "$Dwarves are more deadly with it";
-            break;
-        case ISFLAG_ELVEN:
-            description += "$Elves are more accurate with it";
-            break;
-        case ISFLAG_ORCISH:
-            description += "$Orcs are more deadly with it";
-            break;
-        }
+            switch (get_equip_race( item ))
+            {
+            case ISFLAG_DWARVEN:
+                description += "$It is well-crafted and very durable.";
+                description += "$Dwarves are more deadly with it";
+                break;
+            case ISFLAG_ELVEN:
+                description += "$Elves are more accurate with it";
+                break;
+            case ISFLAG_ORCISH:
+                description += "$Orcs are more deadly with it";
+                break;
+            }
 
-        if (launcher)
-        {
-            description += ", and it is most deadly when used with ";
-            description += racial_description_string(item);
-            description += "ammunition";
+            if (launcher)
+            {
+                description += ", and it is most deadly when used with ";
+                description += racial_description_string(item);
+                description += "ammunition";
+            }
+            description += ".";
         }
-        description += ".";
     }
 
     return (description);
@@ -1551,7 +1554,8 @@ std::string get_item_description( const item_def &item, bool verbose,
         description << unrandart_descrip(1, item);
         description << "$";
     }
-    else if (is_fixed_artefact(item) && item_type_known(item))
+
+    if (is_fixed_artefact(item) && item_type_known(item))
     {
         // Known fixed artifacts are handled elsewhere.
     }
@@ -1566,36 +1570,47 @@ std::string get_item_description( const item_def &item, bool verbose,
                          && item.base_type != OBJ_ARMOUR))
     {
         description << "$$";
-        std::string db_name = item.name(DESC_DBNAME, true, false, false);
-        std::string db_desc = getLongDescription(db_name, is_artefact(item));
 
-        if (db_desc == "")
+        if (dump)
         {
-            if (item_type_known(item))
-            {
-                description << "[ERROR: no desc for item name '" << db_name
-                            << "']$";
-            }
-            else
-            {
-                description << article_a(item.name(DESC_CAP_A, true,
-                                                   false, false), false);
-                description << ".$";
-            }
+            description << "["
+                        << item.name(DESC_DBNAME, true, false, false)
+                        << "]";
         }
         else
-            description << db_desc;
-
-        if (item.base_type == OBJ_WANDS
-            || item.base_type == OBJ_MISSILES
-            || item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
         {
-            // Get rid of newline at end of description, so that
-            // either the wand "no charges left" or the meat chunk
-            // "unpleasant" description can follow on the same line.
-            // Same for missiles' descriptions.
-            description.seekp(description.tellp() - (std::streamoff)1);
-            description << " ";
+            std::string db_name = item.name(DESC_DBNAME, true, false, false);
+            std::string db_desc =
+                getLongDescription(db_name, is_artefact(item));
+
+            if (db_desc == "")
+            {
+                if (item_type_known(item))
+                {
+                    description << "[ERROR: no desc for item name '" << db_name
+                                << "']$";
+                }
+                else
+                {
+                    description << article_a(item.name(DESC_CAP_A, true,
+                                                       false, false), false);
+                    description << ".$";
+                }
+            }
+            else
+                description << db_desc;
+
+            if (item.base_type == OBJ_WANDS
+                || item.base_type == OBJ_MISSILES
+                || item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
+            {
+                // Get rid of newline at end of description, so that
+                // either the wand "no charges left" or the meat chunk
+                // "unpleasant" description can follow on the same line.
+                // Same for missiles' descriptions.
+                description.seekp(description.tellp() - (std::streamoff)1);
+                description << " ";
+            }
         }
     }
 
@@ -1715,25 +1730,33 @@ std::string get_item_description( const item_def &item, bool verbose,
     }
 
     if (!verbose && item_known_cursed( item ))
-        description << "It has a curse placed upon it.";
+        description << "$It has a curse placed upon it.";
     else
     {
-        description << "$$It";
-        if (item_known_cursed( item ))
-            description << " has a curse placed upon it, and it";
-
-        const int mass = item_mass( item );
-        description << " weighs around " << (mass / 10)
-                    << "." << (mass % 10)
-                    << " aum. "; // arbitrary unit of mass
-
-        if ( is_dumpable_artefact(item, false) )
+        if (verbose)
         {
-            if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_WEAPONS)
-                description << "$$This ancient artefact cannot be changed "
-                    "by magic or mundane means.";
-            else
-                description << "$$It is an ancient artefact.";
+            description << "$$It";
+            if (item_known_cursed( item ))
+                description << " has a curse placed upon it, and it";
+
+            const int mass = item_mass( item );
+            description << " weighs around " << (mass / 10)
+                        << "." << (mass % 10)
+                        << " aum. "; // arbitrary unit of mass
+
+            if ( is_dumpable_artefact(item, false) )
+            {
+                if (item.base_type == OBJ_ARMOUR
+                    || item.base_type == OBJ_WEAPONS)
+                {
+                    description << "$$This ancient artefact cannot be changed "
+                        "by magic or mundane means.";
+                }
+                else
+                {
+                    description << "$$It is an ancient artefact.";
+                }
+            }
         }
     }
 
