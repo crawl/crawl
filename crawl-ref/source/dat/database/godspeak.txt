@@ -116,7 +116,7 @@ Xom single demon summon
 
 Xom grants you a demonic assistant.
 
-Xom grants you a demonic servitor.",
+Xom grants you a demonic servitor.
 
 Xom opens a gate.
 
