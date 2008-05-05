@@ -2713,10 +2713,6 @@ int monsters::body_weight() const
 
     int weight = mons_weight(mclass);
 
-    // Water elementals are "insubstantial", but still have weight.
-    if (weight == 0 && type == MONS_WATER_ELEMENTAL)
-        weight = 1500;
-
     // weight == 0 in the monster entry indicates "no corpse".  Can't
     // use CE_NOCORPSE, because the corpse-effect field is used for
     // corpseless monsters to indicate what happens if their blood
