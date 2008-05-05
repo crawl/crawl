@@ -1988,7 +1988,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             }
 
             mspec.mid = nspec.mid;
-            mspec.monnum = nspec.monnum;
+            mspec.monbase = nspec.monbase;
+            mspec.number = nspec.number;
         }
 
         if (mspec.items.size() > 0)
@@ -2072,8 +2073,8 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
         {
             s = s.substr(spectre.length());
             spec.mid = MONS_SPECTRAL_THING;
-            spec.monnum = get_monster_by_name(s, true);
-            if (!mons_zombie_size(spec.monnum))
+            spec.monbase = get_monster_by_name(s, true);
+            if (!mons_zombie_size(spec.monbase))
                 spec.mid = MONS_PROGRAM_BUG;
             return;
         }
@@ -2084,9 +2085,9 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
     s = s.substr(0, s.length() - strlen(zombie_types[mod - 1]));
     trim_string(s);
 
-    spec.monnum = get_monster_by_name(s, true);
+    spec.monbase = get_monster_by_name(s, true);
 
-    const int zombie_size = mons_zombie_size(spec.monnum);
+    const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
     {
         spec.mid = MONS_PROGRAM_BUG;
@@ -2104,7 +2105,7 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
     else if (nheads > 19)
         nheads = 19;
 
-    return mons_spec(MONS_HYDRA, nheads);
+    return mons_spec(MONS_HYDRA, MONS_PROGRAM_BUG, nheads);
 }
 
 // Handle draconians specified as:
@@ -2156,7 +2157,7 @@ mons_spec mons_list::drac_monspec(std::string name) const
     const monster_type colour = get_monster_by_name(name, true);
     if (colour != MONS_PROGRAM_BUG)
     {
-        spec.monnum = colour;
+        spec.monbase = colour;
         return (spec);
     }
 
@@ -2166,7 +2167,7 @@ mons_spec mons_list::drac_monspec(std::string name) const
         return (MONS_PROGRAM_BUG);
 
     std::string scolour = name.substr(0, wordend);
-    if ((spec.monnum = draconian_colour_by_name(scolour)) == MONS_PROGRAM_BUG)
+    if ((spec.monbase = draconian_colour_by_name(scolour)) == MONS_PROGRAM_BUG)
         return (MONS_PROGRAM_BUG);
 
     name = trimmed_string(name.substr(wordend + 1));

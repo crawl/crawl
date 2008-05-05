@@ -225,9 +225,9 @@ void special_wielded()
         if (random2(8) <= player_spec_death())
         {
             did_god_conduct( DID_NECROMANCY, 1 );
-            create_monster( MONS_SHADOW, 2, BEH_FRIENDLY,
-                            you.x_pos, you.y_pos, you.pet_target,
-                            MONS_PROGRAM_BUG );
+            create_monster(
+                mgen_data(MONS_SHADOW, BEH_FRIENDLY,
+                          2, you.pos(), you.pet_target));
         }
 
         show_green = DARKGREY;
@@ -370,10 +370,9 @@ static bool evoke_horn_of_geryon()
     else
     {
         mpr("You produce a hideous howling noise!");
-        create_monster( MONS_BEAST, 4, BEH_HOSTILE,
-                        you.x_pos, you.y_pos, MHITYOU,
-                        MONS_PROGRAM_BUG,
-                        false, false, false, true );
+        create_monster(
+            mgen_data( MONS_BEAST, BEH_HOSTILE,
+                       4, you.pos(), MHITYOU ));
     }
     return rc;
 }
@@ -389,9 +388,9 @@ static bool evoke_sceptre_of_asmodeus()
         const monster_type mtype = (one_chance_in(4) ? MONS_FIEND :
                                     summon_any_demon(DEMON_COMMON));
         const bool good_summon =
-            (create_monster( mtype, 6, BEH_HOSTILE,
-                             you.x_pos, you.y_pos, MHITYOU,
-                             MONS_PROGRAM_BUG) != -1);
+            create_monster(
+                mgen_data( mtype, BEH_HOSTILE,
+                           6, you.pos(), MHITYOU )) != -1;
 
         if (good_summon)
         {
@@ -699,9 +698,10 @@ static bool efreet_flask(void)
 
     mpr("You open the flask...");
 
-    const int efreet = create_monster( MONS_EFREET, 0, beha,
-                                       you.x_pos, you.y_pos, hitting,
-                                       MONS_PROGRAM_BUG );
+    const int efreet =
+        create_monster(
+            mgen_data( MONS_EFREET, beha, 0, you.pos(), hitting ) );
+    
     if (efreet != -1)
     {
         monsters *mon = &menv[efreet];
@@ -883,9 +883,9 @@ void tome_of_power(int slot)
     }
     else if (one_chance_in(36))
     {
-        if (create_monster( MONS_ABOMINATION_SMALL, 6, BEH_HOSTILE,
-                            you.x_pos, you.y_pos, MHITYOU,
-                            MONS_PROGRAM_BUG ) != -1)
+        if (create_monster(
+                mgen_data( MONS_ABOMINATION_SMALL, BEH_HOSTILE, 6,
+                           you.pos(), MHITYOU )) != -1)
         {
             mpr("A horrible Thing appears!");
             mpr("It doesn't look too friendly.");
@@ -950,7 +950,7 @@ void skill_manual(int slot)
 
 static bool box_of_beasts()
 {
-    int beasty = MONS_PROGRAM_BUG;      // error trapping {dlb}
+    monster_type beasty = MONS_PROGRAM_BUG;
     int temp_rand = 0;          // probability determination {dlb}
 
     int ret = false;
@@ -982,9 +982,9 @@ static bool box_of_beasts()
             hitting = MHITYOU;
         }
 
-        if (create_monster( beasty, 2 + random2(4), beha,
-                            you.x_pos, you.y_pos, hitting,
-                            MONS_PROGRAM_BUG ) != -1)
+        if (create_monster(
+                mgen_data( beasty, beha, 2 + random2(4),
+                           you.pos(), hitting ) ) != -1)
         {
             mpr("...and something leaps out!");
             xom_is_stimulated(14);

@@ -554,7 +554,7 @@ monster_type draco_subspecies( const monsters *mon )
     monster_type ret = mons_species( mon->type );
 
     if (ret == MONS_DRACONIAN && mon->type != MONS_DRACONIAN)
-        ret = static_cast<monster_type>( mon->number );
+        ret = static_cast<monster_type>( mon->base_monster );
 
     return (ret);
 }
@@ -665,9 +665,9 @@ int mons_colour(const monsters *monster)
     return (monster->colour);
 }
 
-int mons_zombie_base(const monsters *monster)
+monster_type mons_zombie_base(const monsters *monster)
 {
-    return (monster->number);
+    return (monster->base_monster);
 }
 
 bool mons_class_is_zombified(int mc)
@@ -1368,6 +1368,7 @@ void define_monster(monsters &mons)
     int mcls = mons.type;
     int hd, hp, hp_max, ac, ev, speed;
     int monnumber = mons.number;
+    monster_type monbase = mons.base_monster;
     const monsterentry *m = get_monster_data(mcls);
     int col = mons_class_colour(mons.type);
     mon_spellbook_type spells = MST_NO_SPELLS;
@@ -1389,9 +1390,7 @@ void define_monster(monsters &mons)
         hd = 4 + random2(4);
         ac = 3 + random2(7);
         ev = 7 + random2(6);
-
-        if (monnumber == MONS_PROGRAM_BUG) // ??
-            col = random_colour();
+        col = random_colour();
         break;
 
     case MONS_ZOMBIE_SMALL:
@@ -1406,9 +1405,7 @@ void define_monster(monsters &mons)
         hd = 8 + random2(4);
         ac = 5 + random2avg(9, 2);
         ev = 3 + random2(5);
-
-        if (monnumber == MONS_PROGRAM_BUG)
-            col = random_colour();
+        col = random_colour();
         break;
 
     case MONS_BEAST:
@@ -1492,10 +1489,9 @@ void define_monster(monsters &mons)
         // White draconians will never be draconian scorchers, but
         // apart from that, anything goes.
         do
-        {
-            monnumber = MONS_BLACK_DRACONIAN + random2(8);
-        }
-        while (drac_colour_incompatible(mcls, monnumber));
+            monbase =
+                static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(8));
+        while (drac_colour_incompatible(mcls, monbase));
         break;
     }
     case MONS_DRACONIAN_KNIGHT:
@@ -1510,7 +1506,7 @@ void define_monster(monsters &mons)
             spells = (coinflip() ? MST_DEEP_ELF_CONJURER_I
                                  : MST_DEEP_ELF_CONJURER_II);
 
-        monnumber = MONS_BLACK_DRACONIAN + random2(8);
+        monbase = static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(8));
         break;
     }
     case MONS_HUMAN:
@@ -1544,7 +1540,10 @@ void define_monster(monsters &mons)
     mons.speed = speed;
     mons.speed_increment = 70;
 
-    if (mons.number == MONS_PROGRAM_BUG)
+    if (mons.base_monster == MONS_PROGRAM_BUG)
+        mons.base_monster = monbase;
+
+    if (mons.number == 0)
         mons.number = monnumber;
 
     mons.flags = 0L;
@@ -1669,13 +1668,13 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     {
     case MONS_SPECTRAL_THING:
         result  += "spectral ";
-        nametype = mon.number;
+        nametype = mon.base_monster;
         break;
 
     case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
     case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-        nametype = mon.number;
+        nametype = mon.base_monster;
         break;
 
     case MONS_DRACONIAN_CALLER:
@@ -1685,11 +1684,8 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_DRACONIAN_SCORCHER:
-        if (mon.number != 0) // database search
-        {
-            result += draconian_colour_name(
-                          static_cast<monster_type>( mon.number ) ) + " ";
-        }
+        if (mon.base_monster != MONS_PROGRAM_BUG) // database search
+            result += draconian_colour_name(mon.base_monster) + " ";
         break;
 
     default:
@@ -2572,6 +2568,7 @@ void monsters::reset()
     flags           = 0;
     experience      = 0L;
     type            = -1;
+    base_monster    = MONS_PROGRAM_BUG;
     hit_points      = 0;
     max_hit_points  = 0;
     hit_dice        = 0;
@@ -2594,6 +2591,7 @@ void monsters::init_with(const monsters &mon)
 {
     mname             = mon.mname;
     type              = mon.type;
+    base_monster      = mon.base_monster;
     hit_points        = mon.hit_points;
     max_hit_points    = mon.max_hit_points;
     hit_dice          = mon.hit_dice;
@@ -4503,6 +4501,12 @@ void monsters::load_spells(mon_spellbook_type book)
 #endif
 }
 
+bool monsters::has_hydra_multi_attack() const
+{
+    return (type == MONS_HYDRA ||
+            (mons_is_zombified(this) && base_monster == MONS_HYDRA));
+}
+
 bool monsters::has_ench(enchant_type ench) const
 {
     return (enchantments.find(ench) != enchantments.end());
@@ -5768,9 +5772,9 @@ void monsters::react_to_damage(int damage)
                 continue;
 
             const int nmons =
-                mons_place( jelly, sbehaviour, foe, true, jpos.x, jpos.y,
-                            you.level_type, PROX_ANYWHERE, MONS_PROGRAM_BUG,
-                            0, false );
+                mons_place(
+                    mgen_data( jelly, sbehaviour, 0, jpos,
+                               foe, true ) );
 
             if (nmons != -1 && nmons != NON_MONSTER)
             {
@@ -6245,7 +6249,7 @@ mon_body_shape get_mon_shape(const monsters *mon)
     if (mon->type == MONS_PLAYER_GHOST)
         return _get_ghost_shape(mon);
     else if (mons_is_zombified(mon))
-        return get_mon_shape(mon->number);
+        return get_mon_shape(mon->base_monster);
     else
         return get_mon_shape(mon->type);
 }

@@ -439,7 +439,7 @@ static int raise_corpse( int corps, int corx, int cory,
         returnVal = 0;
     else if (actual != 0)
     {
-        int type;
+        monster_type type = MONS_PROGRAM_BUG;
         if (mitm[corps].sub_type == CORPSE_BODY)
         {
             if (mons_zombie_size(mitm[corps].plus) == Z_SMALL)
@@ -455,8 +455,11 @@ static int raise_corpse( int corps, int corx, int cory,
                 type = MONS_SKELETON_LARGE;
         }
 
-        create_monster( type, 0, corps_beh, corx, cory, corps_hit,
-                        mitm[corps].plus );
+        create_monster(
+            mgen_data(
+                type, corps_beh, 0,
+                coord_def(corx, cory), corps_hit,
+                0, static_cast<monster_type>(mitm[corps].plus)));
 
         destroy_item(corps);
     }
@@ -468,7 +471,7 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
 {
     int total_mass = 0;
     int num_corpses = 0;
-    int type_resurr = MONS_ABOMINATION_SMALL;
+    monster_type type_resurr = MONS_ABOMINATION_SMALL;
     char colour;
 
     unsigned char rotted = 0;
@@ -535,8 +538,11 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
     else
         colour = LIGHTRED;
 
-    int mon = create_monster( type_resurr, 0, corps_beh, you.x_pos, you.y_pos,
-                              corps_hit, colour );
+    mgen_data mg( type_resurr, corps_beh, 0,
+                  you.pos(), corps_hit, 0, MONS_PROGRAM_BUG, 0,
+                  colour );
+    
+    int mon = create_monster(mg);
 
     if (mon == -1)
         mpr("The corpses collapse into a pulpy mess.");
@@ -1240,7 +1246,7 @@ char burn_freeze(int pow, beam_type flavour)
 bool summon_elemental(int pow, int restricted_type,
                       unsigned char unfriendly)
 {
-    int type_summoned = MONS_PROGRAM_BUG;       // error trapping {dlb}
+    monster_type type_summoned = MONS_PROGRAM_BUG;
     struct dist smove;
 
     int dir_x;
@@ -1347,12 +1353,12 @@ bool summon_elemental(int pow, int restricted_type,
 
                      && random2(100) >= unfriendly);
 
-    if (create_monster( type_summoned, numsc,
-                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                        targ_x, targ_y,
-                        friendly ? you.pet_target : MHITYOU,
-                        MONS_PROGRAM_BUG, false, false,
-                        false, true ) == -1)
+    if (create_monster(
+            mgen_data( type_summoned, 
+                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                       numsc,
+                       coord_def(targ_x, targ_y),
+                       friendly ? you.pet_target : MHITYOU )) != -1)
     {
         return (false);
     }
@@ -1409,11 +1415,11 @@ void summon_small_mammals(int pow)
             break;
         }
 
-        create_monster( thing_called, 3, BEH_FRIENDLY,
-                        you.x_pos, you.y_pos, you.pet_target,
-                        MONS_PROGRAM_BUG, false, false, false, true);
+        create_monster(
+            mgen_data( thing_called, BEH_FRIENDLY, 3,
+                       you.pos(), you.pet_target ));
     }
-}                               // end summon_small_mammals()
+}
 
 void summon_animals(int pow)
 {
@@ -1451,11 +1457,11 @@ void summon_animals(int pow)
 
         bool friendly = (random2(pow) > 4);
 
-        create_monster( mon_chosen, 4,
-                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                        you.x_pos, you.y_pos,
-                        friendly ? you.pet_target : MHITYOU,
-                        MONS_PROGRAM_BUG, false, false, false, true);
+        create_monster(
+            mgen_data( mon_chosen, 
+                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, 4,
+                       you.pos(),
+                       friendly ? you.pet_target : MHITYOU ));
     }
 }
 
@@ -1469,12 +1475,12 @@ void summon_scorpions(int pow)
     {
         bool friendly = (random2(pow) > 3);
 
-        if (create_monster( MONS_SCORPION, 3,
-                            friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                            you.x_pos, you.y_pos,
-                            friendly ? you.pet_target : MHITYOU,
-                            MONS_PROGRAM_BUG, false, false,
-                            false, true) != -1)
+        if (create_monster(
+                mgen_data(MONS_SCORPION, 
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                          3,
+                          you.pos(),
+                          friendly ? you.pet_target : MHITYOU)) != -1)
         {
             mprf("A scorpion appears.%s",
                 friendly ? "" : " It doesn't look very happy.");
@@ -1493,12 +1499,12 @@ void summon_ugly_thing(int pow)
 
     bool friendly = (random2(pow) > 3);
 
-    if (create_monster(ugly, numsc,
-                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                       you.x_pos, you.y_pos,
-                       friendly ? you.pet_target : MHITYOU,
-                       MONS_PROGRAM_BUG, false, false,
-                       false, true) != -1)
+    if (create_monster(
+            mgen_data(ugly, 
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      numsc,
+                      you.pos(),
+                      friendly ? you.pet_target : MHITYOU)) != -1)
     {
         const char *prefix = (ugly == MONS_VERY_UGLY_THING) ? " very " : "n ";
 
@@ -1507,7 +1513,7 @@ void summon_ugly_thing(int pow)
     }
 }                               // end summon_ugly_thing()
 
-void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
+void summon_ice_beast_etc(int pow, monster_type ibc, bool divine_gift)
 {
     int numsc = std::min(2 + (random2(pow) / 4), 6);
     beh_type beha = divine_gift ? BEH_GOD_GIFT : BEH_FRIENDLY;
@@ -1555,10 +1561,10 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
     }
     }
 
-    int monster = create_monster( ibc, numsc, beha,
-                                  you.x_pos, you.y_pos, hitting,
-                                  MONS_PROGRAM_BUG, false, false,
-                                  false, true );
+    int monster =
+        create_monster(
+            mgen_data(ibc, beha, numsc, 
+                      you.pos(), hitting));
     if (monster != -1)
     {
         if (ibc == MONS_DAEVA)
@@ -1626,9 +1632,11 @@ bool summon_berserker(int pow, bool god_gift)
             mon = MONS_STONE_GIANT;
     }
 
-    int mons = create_monster( mon, numsc, beha, you.x_pos, you.y_pos,
-                               god_gift ? you.pet_target : MHITYOU,
-                               MONS_PROGRAM_BUG );
+    int mons =
+        create_monster(
+            mgen_data( mon, beha, numsc,
+                       you.pos(),
+                       god_gift ? you.pet_target : MHITYOU ));
 
     if (mons != -1)
     {
@@ -1653,7 +1661,7 @@ bool summon_berserker(int pow, bool god_gift)
 
 bool summon_swarm( int pow, bool unfriendly, bool god_gift )
 {
-    int thing_called = MONS_PROGRAM_BUG;        // error trapping {dlb}
+    monster_type thing_called = MONS_PROGRAM_BUG;
     int numsc = 2 + random2(pow) / 10 + random2(pow) / 25;
     bool summoned = false;
 
@@ -1718,11 +1726,10 @@ bool summon_swarm( int pow, bool unfriendly, bool god_gift )
         else if (!unfriendly && random2(pow) > 7)
             behaviour = BEH_FRIENDLY;
 
-        if (create_monster( thing_called, 3, behaviour,
-                            you.x_pos, you.y_pos,
-                            !unfriendly ? you.pet_target : MHITYOU,
-                            MONS_PROGRAM_BUG, false, false,
-                            false, true ) != -1)
+        if (create_monster(
+                mgen_data( thing_called, behaviour, 3,
+                           you.pos(),
+                           !unfriendly ? you.pet_target : MHITYOU )) != -1)
         {
             summoned = true;
         }
@@ -1734,7 +1741,7 @@ bool summon_swarm( int pow, bool unfriendly, bool god_gift )
 void summon_undead(int pow)
 {
     int temp_rand = 0;
-    int thing_called = MONS_PROGRAM_BUG;        // error trapping {dlb}
+    monster_type thing_called = MONS_PROGRAM_BUG;
 
     int numsc = 1 + random2(pow) / 30 + random2(pow) / 30;
     numsc = stepdown_value(numsc, 2, 2, 6, 8);  //see stuff.cc {dlb}
@@ -1751,12 +1758,11 @@ void summon_undead(int pow)
 
         bool friendly = (random2(pow) > 5);
 
-        if (create_monster( thing_called, 5,
-                            friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                            you.x_pos, you.y_pos,
-                            friendly ? you.pet_target : MHITYOU,
-                            MONS_PROGRAM_BUG, false, false,
-                            false, true ) != -1)
+        if (create_monster(
+                mgen_data(thing_called, 
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, 5,
+                          you.pos(),
+                          friendly ? you.pet_target : MHITYOU)) != -1)
         {
             if (friendly)
                 mpr("An insubstantial figure forms in the air.");
@@ -1807,17 +1813,17 @@ void summon_things( int pow )
 
         while (big_things > 0)
         {
-            create_monster( MONS_TENTACLED_MONSTROSITY, 6, BEH_FRIENDLY,
-                            you.x_pos, you.y_pos, you.pet_target,
-                            MONS_PROGRAM_BUG, false, false, false, true );
+            create_monster(
+                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, 6,
+                          you.pos(), you.pet_target));
             big_things--;
         }
 
         while (numsc > 0)
         {
-            create_monster( MONS_ABOMINATION_LARGE, 6, BEH_FRIENDLY,
-                            you.x_pos, you.y_pos, you.pet_target,
-                            MONS_PROGRAM_BUG, false, false, false, true );
+            create_monster(
+                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, 6,
+                          you.pos(), you.pet_target ));
             numsc--;
         }
 

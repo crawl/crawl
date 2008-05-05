@@ -132,7 +132,7 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-void summon_ice_beast_etc(int pow, int ibc, bool divine_gift = false);
+void summon_ice_beast_etc(int pow, monster_type ibc, bool divine_gift = false);
 
 
 // last updated 24may2000 {dlb}

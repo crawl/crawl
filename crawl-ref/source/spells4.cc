@@ -426,10 +426,9 @@ void cast_summon_butterflies(int pow)
 
     for (int scount = 1; scount < num; scount++)
     {
-        create_monster( MONS_BUTTERFLY, 3, BEH_FRIENDLY,
-                        you.x_pos, you.y_pos, you.pet_target,
-                        MONS_PROGRAM_BUG, false, false,
-                        false, true );
+        create_monster(
+            mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, 3,
+                      you.pos(), you.pet_target));
     }
 }
 
@@ -466,15 +465,14 @@ void cast_summon_large_mammal(int pow)
         }
     }
 
-    create_monster( mon, 3, BEH_FRIENDLY,
-                    you.x_pos, you.y_pos, you.pet_target,
-                    MONS_PROGRAM_BUG, false, false,
-                    false, true );
+    create_monster(
+        mgen_data( mon, BEH_FRIENDLY, 3,
+                   you.pos(), you.pet_target ));
 }
 
 void cast_sticks_to_snakes(int pow)
 {
-    int mon;
+    monster_type mon = MONS_PROGRAM_BUG;
     int how_many = 0;
     int max = 1 + random2( 1 + you.skills[SK_TRANSMIGRATION] ) / 4;
     int dur = std::min(3 + random2(pow) / 20, 5);
@@ -511,10 +509,9 @@ void cast_sticks_to_snakes(int pow)
                 mon = MONS_SMALL_SNAKE;
             }
 
-            if (create_monster( mon, dur, beha,
-                                you.x_pos, you.y_pos, hitting,
-                                MONS_PROGRAM_BUG, false, false,
-                                false, true ) != -1)
+            if (create_monster(
+                    mgen_data( mon, beha, dur,
+                               you.pos(), hitting )) != -1)
             {
                 how_many++;
             }
@@ -557,10 +554,9 @@ void cast_sticks_to_snakes(int pow)
         if (pow > 20 && one_chance_in(3))
             mon = MONS_BROWN_SNAKE;
 
-        if (create_monster( mon, dur, beha,
-                       you.x_pos, you.y_pos, hitting,
-                       MONS_PROGRAM_BUG, false, false,
-                       false, true ) != -1)
+        if (create_monster(
+                mgen_data( mon, beha, dur,
+                           you.pos(), hitting )) != -1)
         {
             how_many++;
         }
@@ -593,12 +589,11 @@ void cast_summon_dragon(int pow)
     // a very high level spell so it might be okay).  -- bwr
     const bool friendly = (random2(pow) > 5);
 
-    if (create_monster( MONS_DRAGON, 3,
-                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                        you.x_pos, you.y_pos,
-                        friendly ? you.pet_target : MHITYOU,
-                        MONS_PROGRAM_BUG, false, false,
-                        false, true ) != -1)
+    if (create_monster(
+            mgen_data( MONS_DRAGON, 
+                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, 3,
+                       you.pos(),
+                       friendly ? you.pet_target : MHITYOU )) != -1)
     {
         mprf("A dragon appears.%s",
             friendly ? "" : " It doesn't look very happy.");
@@ -638,11 +633,10 @@ void cast_conjure_ball_lightning( int pow )
             ty = you.y_pos;
         }
 
-        int mon = mons_place( MONS_BALL_LIGHTNING, BEH_FRIENDLY, MHITNOT,
-                              true, tx, ty );
-
-        // int mon = create_monster( MONS_BALL_LIGHTNING, 0, BEH_FRIENDLY,
-        //                           tx, ty, MHITNOT, MONS_PROGRAM_BUG );
+        int mon =
+            mons_place(
+                mgen_data( MONS_BALL_LIGHTNING, BEH_FRIENDLY, 0,
+                           coord_def(tx, ty) ));
 
         if (mon != -1)
         {
@@ -1825,21 +1819,6 @@ void cast_fulsome_distillation( int powc )
         mpr( "Unfortunately, you can't carry it right now!" );
     }
 }
-
-void make_shuggoth(int x, int y, int hp)
-{
-    int mon = create_monster( MONS_SHUGGOTH, 100 + random2avg(58, 3),
-                              BEH_HOSTILE, x, y, MHITNOT, MONS_PROGRAM_BUG,
-                              false, false, false, true );
-
-    if (mon != -1)
-    {
-        menv[mon].hit_points = hp;
-        menv[mon].max_hit_points = hp;
-    }
-
-    return;
-}                               // end make_shuggoth()
 
 static int rot_living(int x, int y, int pow, int message)
 {

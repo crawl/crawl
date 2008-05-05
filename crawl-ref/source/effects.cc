@@ -2232,8 +2232,8 @@ static void hell_effects()
 
         if (summon_instead)
         {
-            create_monster( which_beastie, 0, BEH_HOSTILE, you.x_pos,
-                            you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
+            create_monster(
+                mgen_data( which_beastie, BEH_HOSTILE, 0, you.pos(), MHITYOU ));
         }
         else
         {
@@ -2250,18 +2250,14 @@ static void hell_effects()
     // try to summon at least one and up to five random monsters {dlb}
     if (one_chance_in(3))
     {
-        create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE,
-                        you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
+        mgen_data mg;
+        mg.pos = you.pos();
+        mg.foe = MHITYOU;
+        create_monster(mg);
 
         for (int i = 0; i < 4; i++)
-        {
             if (one_chance_in(3))
-            {
-                create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG );
-            }
-        }
+                create_monster(mg);
     }
 }
 

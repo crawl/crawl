@@ -433,11 +433,12 @@ void area_shift(void)
 
     xom_check_nearness();
 
+    mgen_data mons;
+    mons.level_type = LEVEL_ABYSS;
+    mons.proximity  = PROX_AWAY_FROM_PLAYER;
+    
     for (unsigned int mcount = 0; mcount < 15; mcount++)
-    {
-        mons_place( RANDOM_MONSTER, BEH_HOSTILE, MHITNOT, false, 1, 1,
-                    LEVEL_ABYSS, PROX_AWAY_FROM_PLAYER ); // PROX_ANYWHERE?
-    }
+        mons_place(mons);
 
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
@@ -599,8 +600,7 @@ static bool spawn_corrupted_servant_near(const coord_def &pos)
             one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4)?
             BEH_HOSTILE : BEH_NEUTRAL;
         const int mid =
-            create_monster( mons, 5, beh, p.x, p.y, MHITNOT, MONS_PROGRAM_BUG );
-
+            create_monster( mgen_data( mons, beh, 5, p ) );
         return (mid != -1);
     }
     return (false);

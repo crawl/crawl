@@ -612,7 +612,8 @@ kill_monster_desc::kill_monster_desc(const monsters *mon)
             break;
         default: break;
     }
-    if (modifier != M_NORMAL) monnum = mon->number;
+    if (modifier != M_NORMAL)
+        monnum = mon->base_monster;
 
     if (mon->has_ench(ENCH_SHAPESHIFTER) ||
             mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))

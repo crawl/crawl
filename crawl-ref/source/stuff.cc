@@ -1101,6 +1101,12 @@ bool map_bounds( int x, int y )
             && y >= Y_BOUND_1 && y <= Y_BOUND_2);
 }
 
+coord_def random_in_bounds()
+{
+    return coord_def( random_range(MAPGEN_BORDER, GXM - MAPGEN_BORDER - 1),
+                      random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1) );
+}
+
 // Returns a random location in (x_pos, y_pos)... the grid will be
 // DNGN_FLOOR if clear, and NON_MONSTER if empty.  Exclusive tells
 // if we're using in_bounds() or map_bounds() restriction.

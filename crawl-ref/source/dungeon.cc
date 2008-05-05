@@ -79,7 +79,7 @@
 
 struct pit_mons_def
 {
-    int type;
+    monster_type type;
     int rare;
 };
 
@@ -759,7 +759,7 @@ static void _reset_level()
         menv[i].type = -1;
 
     for (int i = 0; i < 20; i++)
-        env.mons_alloc[i] = -1;
+        env.mons_alloc[i] = MONS_PROGRAM_BUG;
 
     mgrd.init(NON_MONSTER);
     igrd.init(NON_ITEM);
@@ -2773,7 +2773,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     return true;
 }                               //end make_room()
 
-static int _pick_unique(int lev)
+static monster_type _pick_unique(int lev)
 {
     int which_unique =
         ((lev > 19) ? random_range(MONS_LOUISE, MONS_BORIS) :
@@ -2796,7 +2796,7 @@ static int _pick_unique(int lev)
         which_unique = MONS_POLYPHEMUS;
     }
 
-    return (which_unique);
+    return static_cast<monster_type>(which_unique);
 }
 
 // Place uniques on the level.
@@ -2817,14 +2817,15 @@ static int _place_uniques(int level_number, char level_type)
 
     while (one_chance_in(3))
     {
-        int which_unique = -1;   //     30 in total
+        monster_type which_unique = MONS_PROGRAM_BUG;   //     30 in total
 
-        while (which_unique < 0 || you.unique_creatures[which_unique])
+        while (which_unique == MONS_PROGRAM_BUG
+               || you.unique_creatures[which_unique])
         {
             // sometimes, we just quit if a unique is already placed.
-            if (which_unique >= 0 && !one_chance_in(3))
+            if (which_unique != MONS_PROGRAM_BUG && !one_chance_in(3))
             {
-                which_unique = -1;
+                which_unique = MONS_PROGRAM_BUG;
                 break;
             }
 
@@ -2833,13 +2834,16 @@ static int _place_uniques(int level_number, char level_type)
 
         // usually, we'll have quit after a few tries. Make sure we don't
         // create unique[-1] by accident.
-        if (which_unique == -1)
+        if (which_unique == MONS_PROGRAM_BUG)
             break;
 
-        // note: unique_creatures 40 + used by unique demons
-        if (place_monster( not_used, which_unique, level_number,
-                           BEH_SLEEP, MHITNOT, false, 1, 1, true,
-                           PROX_ANYWHERE, MONS_PROGRAM_BUG, 0, MMT_NO_MONS ))
+        mgen_data mg( which_unique, BEH_SLEEP, 0,
+                      coord_def(), MHITNOT, MG_PERMIT_BANDS,
+                      MONS_PROGRAM_BUG, 0, BLACK,
+                      level_number, PROX_ANYWHERE );
+        mg.map_mask = MMT_NO_MONS;
+
+        if (place_monster(mg) != -1)
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Placed %s",
@@ -2851,19 +2855,23 @@ static int _place_uniques(int level_number, char level_type)
     return num_placed;
 }
 
-static int _place_monster_vector(std::vector<int> montypes,
+static int _place_monster_vector(std::vector<monster_type> montypes,
                                  int level_number, int num_to_place)
 {
     int result = 0;
-    int not_used = 0;
+
+    mgen_data mg;
+    mg.power = level_number;
+    mg.behaviour = BEH_SLEEP;
+    mg.flags |= MG_PERMIT_BANDS;
+    mg.map_mask |= MMT_NO_MONS;
+    
     for (int i = 0; i < num_to_place; i++)
-        if (place_monster( not_used, montypes[random2(montypes.size())],
-                           level_number, BEH_SLEEP, MHITNOT,
-                           false, 1, 1, true, PROX_ANYWHERE,
-                           MONS_PROGRAM_BUG, 0, MMT_NO_MONS ))
-        {
+    {
+        mg.cls = montypes[random2(montypes.size())];
+        if (place_monster(mg) != -1)
             ++result;
-        }
+    }
 
     return result;
 }
@@ -2872,7 +2880,7 @@ static int _place_monster_vector(std::vector<int> montypes,
 static void _place_aquatic_monsters(int level_number, char level_type)
 {
     int lava_spaces = 0, water_spaces = 0;
-    std::vector<int> swimming_things(4u, NON_MONSTER);
+    std::vector<monster_type> swimming_things(4u, MONS_PROGRAM_BUG);
 
     // count the number of lava and water tiles {dlb}:
     for (int x = 0; x < GXM; x++)
@@ -2888,21 +2896,24 @@ static void _place_aquatic_monsters(int level_number, char level_type)
     {
         for (int i = 0; i < 4; i++)
         {
-            swimming_things[i] = MONS_LAVA_WORM + random2(3);
+            swimming_things[i] =
+                static_cast<monster_type>(
+                    MONS_LAVA_WORM + random2(3) );
             if (one_chance_in(30))
                 swimming_things[i] = MONS_SALAMANDER;
         }
 
         _place_monster_vector(swimming_things, level_number,
                               std::min(random2avg(9, 2)
-                                + (random2(lava_spaces) / 10), 15));
+                                       + (random2(lava_spaces) / 10), 15));
     }
 
     if (water_spaces > 49)
     {
         for (int i = 0; i < 4; i++)
         {
-            swimming_things[i] = MONS_BIG_FISH + random2(4);
+            swimming_things[i] =
+                static_cast<monster_type>(MONS_BIG_FISH + random2(4));
             if (player_in_branch( BRANCH_SWAMP ) && !one_chance_in(3))
                 swimming_things[i] = MONS_SWAMP_WORM;
             else if (player_in_branch( BRANCH_SHOALS ))
@@ -2929,7 +2940,6 @@ static void _place_aquatic_monsters(int level_number, char level_type)
 
 static void _builder_monsters(int level_number, char level_type, int mon_wanted)
 {
-    int not_used = 0;
     if (level_type == LEVEL_PANDEMONIUM
         || player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
@@ -2938,9 +2948,12 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
 
     for (int i = 0; i < mon_wanted; i++)
     {
-        place_monster( not_used, RANDOM_MONSTER, level_number, BEH_SLEEP,
-                       MHITNOT, false, 1, 1, true, PROX_ANYWHERE,
-                       MONS_PROGRAM_BUG, 0, MMT_NO_MONS );
+        mgen_data mg;
+        mg.power = level_number;
+        mg.flags |= MG_PERMIT_BANDS;
+        mg.map_mask |= MMT_NO_MONS;
+        
+        place_monster(mg);
     }
 
     _place_uniques(level_number, level_type);
@@ -2950,10 +2963,10 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
     else
     {
         if (one_chance_in(3))
-            mons_place( MONS_CURSE_SKULL, BEH_SLEEP, MHITNOT, false, 0, 0 );
+            mons_place( mgen_data( MONS_CURSE_SKULL, BEH_SLEEP ) );
 
         if (one_chance_in(7))
-            mons_place( MONS_CURSE_SKULL, BEH_SLEEP, MHITNOT, false, 0, 0 );
+            mons_place( mgen_data( MONS_CURSE_SKULL, BEH_SLEEP ) );
     }
 }
 
@@ -3127,7 +3140,7 @@ static void _specr_2(spec_room &sr)
 // then place a "lord of the pit" of lord_type at (lordx, lordy).
 static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
                                MAX_PIT_MONSTERS> &pit_list, int density,
-                               int lord_type, int lordx, int lordy )
+                               monster_type lord_type, int lordx, int lordy )
 {
     int i, x, y;
 
@@ -3163,7 +3176,15 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
 
     // put the boss monster down
     if (lord_type != MONS_PROGRAM_BUG)
-        mons_place( lord_type, BEH_SLEEP, MHITNOT, true, lordx, lordy );
+    {
+        mgen_data mg;
+        mg.cls = lord_type;
+        mg.behaviour = BEH_SLEEP;
+        mg.pos = coord_def(lordx, lordy);
+        
+        mons_place(
+            mgen_data::sleeper_at(lord_type, coord_def(lordx, lordy)));
+    }
 
     // place monsters and give them items {dlb}:
     for (x = sr.x1; x <= sr.x2; x++)
@@ -3183,8 +3204,10 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
             for (i = 0; i < num_types; i++)
                 if (roll < pit_list[i].rare)
                 {
-                    mons_place( pit_list[i].type, BEH_SLEEP, MHITNOT,
-                                true, x, y );
+                    mons_place(
+                        mgen_data::sleeper_at(
+                            pit_list[i].type,
+                            coord_def(x, y)));
                     break;
                 }
         }
@@ -3201,7 +3224,7 @@ static void _special_room(int level_number, spec_room &sr)
     unsigned char i;        // general purpose loop variable {dlb}
     int temp_rand = 0;          // probability determination {dlb}
 
-    FixedVector < int, 10 > mons_alloc; // was [20] {dlb}
+    FixedVector < monster_type, 10 > mons_alloc; // was [20] {dlb}
 
     char lordx = 0, lordy = 0;
 
@@ -3299,8 +3322,10 @@ static void _special_room(int level_number, spec_room &sr)
                 if (one_chance_in(4))
                     continue;
 
-                mons_place( mons_alloc[random2(10)], BEH_SLEEP, MHITNOT,
-                            true, x, y );
+                mons_place(
+                    mgen_data::sleeper_at(
+                        mons_alloc[random2(10)],
+                        coord_def(x, y)));
             }
 
         break;
@@ -3333,13 +3358,16 @@ static void _special_room(int level_number, spec_room &sr)
                 if (x == lordx && y == lordy)
                     continue;
 
-                mons_place( mons_alloc[random2(10)], BEH_SLEEP, MHITNOT,
-                            true, x, y );
+                mons_place(
+                    mgen_data::sleeper_at(
+                        mons_alloc[random2(10)], 
+                        coord_def(x, y) ));
             }
 
         // put the boss monster down
-        mons_place( MONS_BIG_KOBOLD, BEH_SLEEP, MHITNOT, true, lordx, lordy );
-
+        mons_place(
+            mgen_data::sleeper_at( MONS_BIG_KOBOLD,
+                                   coord_def(lordx, lordy) ));
         break;
 
     case SROOM_TREASURY:
@@ -3372,9 +3400,11 @@ static void _special_room(int level_number, spec_room &sr)
             }
 
         // place guardian {dlb}:
-        mons_place( MONS_GUARDIAN_NAGA, BEH_SLEEP, MHITNOT, true,
-                    sr.x1 + random2( sr.x2 - sr.x1 ),
-                    sr.y1 + random2( sr.y2 - sr.y1 ) );
+        mons_place(
+            mgen_data::sleeper_at(
+                MONS_GUARDIAN_NAGA,
+                coord_def(sr.x1 + random2( sr.x2 - sr.x1 ),
+                          sr.y1 + random2( sr.y2 - sr.y1 )) ));
         break;
 
     case SROOM_BEEHIVE:
@@ -3427,13 +3457,18 @@ static void _beehive(spec_room &sr)
 
             // the hive is chock full of bees!
 
-            mons_place( one_chance_in(7) ? MONS_KILLER_BEE_LARVA
-                                         : MONS_KILLER_BEE,
-                        BEH_SLEEP, MHITNOT, true, x, y );
+            mons_place(
+                mgen_data::sleeper_at(
+                    one_chance_in(7) ?
+                    MONS_KILLER_BEE_LARVA : MONS_KILLER_BEE,
+                    coord_def(x, y)));
         }
 
-    mons_place( MONS_QUEEN_BEE, BEH_SLEEP, MHITNOT, true, queenx, queeny );
-}                               // end beehive()
+    mons_place(
+        mgen_data::sleeper_at(
+            MONS_QUEEN_BEE,
+            coord_def(queenx, queeny )));
+}
 
 // used for placement of vaults
 static bool _may_overwrite_feature(const dungeon_feature_type grid,
@@ -4490,22 +4525,21 @@ bool dgn_place_monster(mons_spec &mspec,
                 grd[vx][vy] = habitat2grid(habitat);
         }
 
-        int mindex = NON_MONSTER;
-        const bool placed
-            = place_monster( mindex, mid, monster_level,
-                             m_generate_awake ? BEH_WANDER : BEH_SLEEP,
-                             MHITNOT, true, vx, vy, false,
-                             PROX_ANYWHERE, mspec.monnum);
+        mgen_data mg(static_cast<monster_type>(mid));
+        mg.power = monster_level;
+        mg.behaviour = m_generate_awake ? BEH_WANDER : BEH_SLEEP;
+        mg.base_type = mspec.monbase;
+        mg.number = mspec.number;
+        mg.colour = mspec.colour;
+        mg.pos = coord_def(vx, vy);
 
-        if (placed && mindex != -1 && mindex != NON_MONSTER)
+        const int mindex = place_monster(mg);
+        if (mindex != -1)
         {
-            if (mspec.colour != BLACK)
-                menv[mindex].colour = mspec.colour;
-
             if (mspec.items.size() > 0)
                 _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
         }
-        return (placed);
+        return (mindex != -1);
     }
     return (false);
 }
@@ -4618,8 +4652,6 @@ static int _vault_grid( vault_placement &place,
                         int rune_subst,
                         bool following )
 {
-    int not_used;
-
     keyed_mapspec *mapsp = following? NULL : place.map.mapspec_for_key(vgrid);
     if (mapsp)
     {
@@ -4661,8 +4693,8 @@ static int _vault_grid( vault_placement &place,
     if (vgrid == 'F' && one_chance_in(100))
     {
         vgrid = '.';
-        place_monster( not_used, _random_evil_statue(), 30, BEH_HOSTILE,
-                       MHITNOT, true, vx, vy, false);
+        create_monster(
+            mgen_data::hostile_at( _random_evil_statue(), coord_def(vx, vy) ));
     }
 
     // first, set base tile for grids {dlb}:
@@ -4831,13 +4863,13 @@ static int _vault_grid( vault_placement &place,
 
     if (vgrid == 'S' || vgrid == 'H')
     {
-        const int mtype = (vgrid == 'H') ? MONS_ORANGE_STATUE
-                                         : MONS_SILVER_STATUE;
+        const monster_type mtype =
+            (vgrid == 'H') ? MONS_ORANGE_STATUE : MONS_SILVER_STATUE;
 
         grd[vx][vy] = DNGN_FLOOR;
 
-        place_monster( not_used, mtype, 30, BEH_HOSTILE,
-                       MHITNOT, true, vx, vy, false);
+        create_monster(
+            mgen_data::hostile_at( mtype, coord_def(vx, vy) ));
     }
 
     // finally, handle grids that place monsters {dlb}:
@@ -6241,7 +6273,10 @@ static void _labyrinth_place_items(const coord_def &end)
 static void _labyrinth_place_exit(const coord_def &end)
 {
     _labyrinth_place_items(end);
-    mons_place( MONS_MINOTAUR, BEH_SLEEP, MHITNOT, true, end.x, end.y );
+    mons_place(
+        mgen_data::sleeper_at(
+            MONS_MINOTAUR,
+            end));
     grd(end) = DNGN_ESCAPE_HATCH_UP;
 }
 
@@ -7115,16 +7150,18 @@ static void _morgue(spec_room &sr)
         for (y = sr.y1; y <= sr.y2; y++)
             if (grd[x][y] == DNGN_FLOOR || grd[x][y] == DNGN_BUILDER_SPECIAL_FLOOR)
             {
-                int mon_type;
                 temp_rand = random2(24);
 
-                mon_type =  ((temp_rand > 11) ? MONS_ZOMBIE_SMALL :  // 50.0%
-                             (temp_rand >  7) ? MONS_WIGHT :         // 16.7%
-                             (temp_rand >  3) ? MONS_NECROPHAGE :    // 16.7%
-                             (temp_rand >  0) ? MONS_WRAITH          // 12.5%
-                                              : MONS_VAMPIRE);       //  4.2%
+                const monster_type mon_type =
+                    ((temp_rand > 11) ? MONS_ZOMBIE_SMALL :  // 50.0%
+                     (temp_rand >  7) ? MONS_WIGHT :         // 16.7%
+                     (temp_rand >  3) ? MONS_NECROPHAGE :    // 16.7%
+                     (temp_rand >  0) ? MONS_WRAITH          // 12.5%
+                                      : MONS_VAMPIRE);       //  4.2%
 
-                mons_place( mon_type, BEH_SLEEP, MHITNOT, true, x, y );
+                mons_place(
+                    mgen_data::sleeper_at(
+                        mon_type, coord_def(x, y) ));
             }
 }                               // end morgue()
 
@@ -7204,203 +7241,6 @@ bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type)
 
     return false;
 }                               // end place_specific_trap()
-
-void define_zombie( int mid, int ztype, int cs, int power )
-{
-    int mons_sec2 = 0;
-    int zombie_size = 0;
-    bool ignore_rarity = false;
-    int test, cls;
-
-    if (power > 27)
-        power = 27;
-
-    // set size based on zombie class (cs)
-    switch(cs)
-    {
-        case MONS_ZOMBIE_SMALL:
-        case MONS_SIMULACRUM_SMALL:
-        case MONS_SKELETON_SMALL:
-            zombie_size = Z_SMALL;
-            break;
-
-        case MONS_ZOMBIE_LARGE:
-        case MONS_SIMULACRUM_LARGE:
-        case MONS_SKELETON_LARGE:
-            zombie_size = Z_BIG;
-            break;
-
-        case MONS_SPECTRAL_THING:
-            zombie_size = -1;
-            break;
-
-        default:
-            // this should NEVER happen.
-            perror("\ncreate_zombie() got passed incorrect zombie type!\n");
-            end(0);
-            break;
-    }
-
-    // that is, random creature from which to fashion undead
-    if (ztype == MONS_PROGRAM_BUG)
-    {
-        // how OOD this zombie can be.
-        int relax = 5;
-
-        // pick an appropriate creature to make a zombie out of,
-        // levelwise.  The old code was generating absolutely
-        // incredible OOD zombies.
-        while (true)
-        {
-            // this limit can be updated if mons->number goes >8 bits..
-            test = random2(182);            // not guaranteed to be valid, so..
-            cls = mons_species(test);
-            if (cls == MONS_PROGRAM_BUG)
-                continue;
-
-            // on certain branches, zombie creation will fail if we use
-            // the mons_rarity() functions, because (for example) there
-            // are NO zombifiable "native" abyss creatures. Other branches
-            // where this is a problem are hell levels and the crypt.
-            // we have to watch for summoned zombies on other levels, too,
-            // such as the Temple, HoB, and Slime Pits.
-            if (you.level_type != LEVEL_DUNGEON
-                || player_in_hell()
-                || player_in_branch( BRANCH_HALL_OF_ZOT )
-                || player_in_branch( BRANCH_VESTIBULE_OF_HELL )
-                || player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
-                || player_in_branch( BRANCH_CRYPT )
-                || player_in_branch( BRANCH_TOMB )
-                || player_in_branch( BRANCH_HALL_OF_BLADES )
-                || player_in_branch( BRANCH_SNAKE_PIT )
-                || player_in_branch( BRANCH_SLIME_PITS )
-                || one_chance_in(1000))
-            {
-                ignore_rarity = true;
-            }
-
-            // don't make out-of-rarity zombies when we don't have to
-            if (!ignore_rarity && mons_rarity(cls) == 0)
-                continue;
-
-            // monster class must be zombifiable
-            if (!mons_zombie_size(cls))
-                continue;
-
-            // if skeleton, monster must have a skeleton
-            if ((cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
-                && !mons_skeleton(cls))
-            {
-                continue;
-            }
-
-            // size must match, but you can make a spectral thing out of anything.
-            if (mons_zombie_size(cls) != zombie_size && zombie_size != -1)
-                continue;
-
-            // hack -- non-dungeon zombies are always made out of nastier
-            // monsters
-            if (you.level_type != LEVEL_DUNGEON && mons_power(cls) > 8)
-                break;
-
-            // check for rarity.. and OOD - identical to mons_place()
-            int level, diff, chance;
-
-            level  = mons_level( cls ) - 4;
-            diff   = level - power;
-
-            chance = (ignore_rarity) ? 100
-                                     : mons_rarity(cls) - (diff * diff) / 2;
-
-            if (power > level - relax && power < level + relax
-                && random2avg(100, 2) <= chance)
-            {
-                break;
-            }
-
-            // every so often, we'll relax the OOD restrictions.  Avoids
-            // infinite loops (if we don't do this, things like creating
-            // a large skeleton on level 1 may hang the game!)
-            if (one_chance_in(5))
-                relax++;
-        }
-
-        // set type and secondary appropriately
-        menv[mid].number = cls;
-        mons_sec2 = cls;
-    }
-    else
-    {
-        menv[mid].number = mons_species(ztype);
-        mons_sec2 = menv[mid].number;
-    }
-
-    menv[mid].type = menv[mid].number;
-
-    define_monster(mid);
-
-    menv[mid].hit_points = hit_points( menv[mid].hit_dice, 6, 5 );
-    menv[mid].max_hit_points = menv[mid].hit_points;
-
-    menv[mid].ac -= 2;
-
-    if (menv[mid].ac < 0)
-        menv[mid].ac = 0;
-
-    menv[mid].ev -= 5;
-
-    if (menv[mid].ev < 0)
-        menv[mid].ev = 0;
-
-    menv[mid].speed -= 2;
-
-    if (menv[mid].speed < 3)
-        menv[mid].speed = 3;
-
-    menv[mid].speed_increment = 70;
-
-    if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
-    {
-        menv[mid].type = ((mons_zombie_size(menv[mid].number) == Z_BIG)
-                                    ? MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL);
-    }
-    else if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
-    {
-        menv[mid].hit_points = hit_points( menv[mid].hit_dice, 5, 4 );
-        menv[mid].max_hit_points = menv[mid].hit_points;
-
-        menv[mid].ac -= 4;
-
-        if (menv[mid].ac < 0)
-            menv[mid].ac = 0;
-
-        menv[mid].ev -= 2;
-
-        if (menv[mid].ev < 0)
-            menv[mid].ev = 0;
-
-        menv[mid].type = ((mons_zombie_size( menv[mid].number ) == Z_BIG)
-                            ? MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
-    }
-    else if (cs == MONS_SIMULACRUM_SMALL || cs == MONS_SIMULACRUM_LARGE)
-    {
-        // Simulacrum aren't tough, but you can create piles of them. -- bwr
-        menv[mid].hit_points = hit_points( menv[mid].hit_dice, 1, 4 );
-        menv[mid].max_hit_points = menv[mid].hit_points;
-        menv[mid].type = ((mons_zombie_size( menv[mid].number ) == Z_BIG)
-                            ? MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL);
-    }
-    else if (cs == MONS_SPECTRAL_THING)
-    {
-        menv[mid].hit_points = hit_points( menv[mid].hit_dice, 4, 4 );
-        menv[mid].max_hit_points = menv[mid].hit_points;
-        menv[mid].ac += 4;
-        menv[mid].type = MONS_SPECTRAL_THING;
-    }
-
-    menv[mid].number = mons_sec2;
-    menv[mid].colour = mons_class_colour(cs);
-}                               // end define_zombie()
 
 static void _build_river( dungeon_feature_type river_type ) //mv
 {

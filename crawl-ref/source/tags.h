@@ -54,7 +54,8 @@ enum tag_minor_version
     TAG_MINOR_QUIVER = 3,       // Added quiver
     TAG_MINOR_MAPMARK = 4,      // Added sizes to map markers
     TAG_MINOR_MONNAM = 5,       // Monsters get individual names
-    TAG_MINOR_VERSION = 5       // Current version
+    TAG_MINOR_MONBASE = 6,      // Zombie base monster gets its own field.
+    TAG_MINOR_VERSION = 6       // Current version
 };
 
 

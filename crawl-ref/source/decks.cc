@@ -2307,9 +2307,9 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
                 MONS_ORANGE_STATUE, MONS_SILVER_STATUE, MONS_ICE_STATUE
             };
 
-            if ( create_monster(RANDOM_ELEMENT(statues), 0, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG) != -1 )
+            if (create_monster(
+                    mgen_data(RANDOM_ELEMENT(statues), 
+                              BEH_HOSTILE, 0, you.pos(), MHITYOU)) != -1)
             {
                 mpr("A menacing statue appears!");
                 num_made++;
@@ -2320,9 +2320,10 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
                 MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM
             };
 
-            if ( create_monster(RANDOM_ELEMENT(golems), 5, BEH_FRIENDLY,
-                                you.x_pos, you.y_pos, you.pet_target,
-                                MONS_PROGRAM_BUG) != -1 )
+            if (create_monster(
+                    mgen_data( RANDOM_ELEMENT(golems),
+                               BEH_FRIENDLY, 5, you.pos(),
+                               you.pet_target )) != -1)
             {
                 mpr("You construct a golem!");
                 num_made++;
@@ -2489,9 +2490,10 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     else
         dct = DEMON_LESSER;
 
-    create_monster( summon_any_demon(dct), std::min(power/50,6),
-                    BEH_FRIENDLY, you.x_pos, you.y_pos, you.pet_target,
-                    MONS_PROGRAM_BUG );
+    create_monster(
+        mgen_data( summon_any_demon(dct), BEH_FRIENDLY,
+                   std::min(power / 50, 6),
+                   you.pos(), you.pet_target ));
 }
 
 static void _summon_any_monster(int power, deck_rarity_type rarity)
@@ -2539,11 +2541,11 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 
     const bool friendly = (power_level > 0 || !one_chance_in(4));
 
-    create_monster( mon_chosen, 3,
-                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                    chosen_x, chosen_y,
-                    friendly ? you.pet_target : MHITYOU,
-                    MONS_PROGRAM_BUG );
+    create_monster(
+        mgen_data( mon_chosen, 
+                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                   3, coord_def(chosen_x, chosen_y),
+                   MHITYOU ) );
 }
 
 static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
@@ -2551,12 +2553,12 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
     const bool friendly = (power_level > 0 || !one_chance_in(4));
 
-    const int mon = create_monster( MONS_DANCING_WEAPON, power_level + 3,
-                                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                                    you.x_pos, you.y_pos,
-                                    friendly ? you.pet_target : MHITYOU,
-                                    MONS_PROGRAM_BUG, false, false, false,
-                                    true );
+    const int mon =
+        create_monster(
+            mgen_data( MONS_DANCING_WEAPON,
+                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                       power_level + 3, you.pos(),
+                       friendly ? you.pet_target : MHITYOU ));
 
     // Given the abundance of Nemelex decks, not setting hard reset
     // leaves a trail of weapons behind, most of which just get
@@ -2624,11 +2626,12 @@ static void _summon_flying(int power, deck_rarity_type rarity)
 
     for ( int i = 0; i < power_level * 5 + 2; ++i )
     {
-        create_monster(result, std::min(power/50, 6),
+        create_monster(
+            mgen_data( result,
                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                       you.x_pos, you.y_pos,
-                       friendly ? you.pet_target : MHITYOU,
-                       MONS_PROGRAM_BUG);
+                       std::min(power/50, 6),
+                       you.pos(),
+                       friendly ? you.pet_target : MHITYOU ));
     }
 }
 
@@ -2640,11 +2643,13 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
         MONS_SKELETON_LARGE, MONS_SKELETAL_WARRIOR, MONS_SKELETAL_DRAGON
     };
 
-    create_monster(skeltypes[power_level], std::min(power/50,6),
-                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                   you.x_pos, you.y_pos,
-                   friendly ? you.pet_target : MHITYOU,
-                   MONS_PROGRAM_BUG);
+    create_monster(
+        mgen_data(
+            skeltypes[power_level], 
+            friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+            std::min(power/50,6),
+            you.pos(),
+            friendly ? you.pet_target : MHITYOU ));
 }
 
 static void _summon_ugly(int power, deck_rarity_type rarity)
@@ -2659,11 +2664,12 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     else
         ugly = MONS_UGLY_THING;
 
-    create_monster(ugly, std::min(power/50,6),
+    create_monster(
+        mgen_data( ugly, 
                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                   you.x_pos, you.y_pos,
-                   friendly ? you.pet_target : MHITYOU,
-                   MONS_PROGRAM_BUG);
+                   std::min(power/50,6),
+                   you.pos(),
+                   friendly ? you.pet_target : MHITYOU));
 }
 
 static int _card_power(deck_rarity_type rarity)

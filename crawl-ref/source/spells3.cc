@@ -432,7 +432,8 @@ void simulacrum(int power)
             || (you.inv[ chunk ].base_type == OBJ_FOOD
                 && you.inv[ chunk ].sub_type == FOOD_CHUNK)))
     {
-        const int mons_type = you.inv[ chunk ].plus;
+        const monster_type mons_type =
+            static_cast<monster_type>(you.inv[ chunk ].plus);
 
         // Can't create more than the available chunks
         if (you.inv[ chunk ].quantity < max_num)
@@ -444,9 +445,11 @@ void simulacrum(int power)
 
         for (int i = 0; i < max_num; i++)
         {
-            if (create_monster( MONS_SIMULACRUM_SMALL, 6,
-                                BEH_FRIENDLY, you.x_pos, you.y_pos,
-                                you.pet_target, mons_type ) != -1)
+            if (create_monster(
+                    mgen_data(MONS_SIMULACRUM_SMALL, 
+                              BEH_FRIENDLY, 6,
+                              you.pos(), you.pet_target,
+                              0, mons_type)) != -1)
             {
                 summoned++;
             }
@@ -503,9 +506,10 @@ bool dancing_weapon(int pow, bool force_hostile, bool silent)
             hitting = MHITYOU;
         }
 
-        summs = create_monster(MONS_DANCING_WEAPON, numsc, beha,
-                               you.x_pos, you.y_pos, hitting,
-                               MONS_PROGRAM_BUG);
+        summs =
+            create_monster(
+                mgen_data(MONS_DANCING_WEAPON, beha, numsc,
+                          you.pos(), hitting));
         if (summs == -1)
             failed = true;
     }

@@ -2343,16 +2343,20 @@ bool melee_attack::chop_hydra_head( int dam,
                       def_name(DESC_NOCAP_THE).c_str() );
             }
 
-            if (wpn_brand == SPWPN_FLAMING)
+            // Only living hydras get to regenerate heads.
+            if (defender->holiness() == MH_NATURAL)
             {
-                if (defender_visible)
-                    mpr( "The flame cauterises the wound!" );
-            }
-            else if (def->number < 19)
-            {
-                simple_monster_message( def, " grows two more!" );
-                def->number += 2;
-                heal_monster( def, 8 + random2(8), true );
+                if (wpn_brand == SPWPN_FLAMING)
+                {
+                    if (defender_visible)
+                        mpr( "The flame cauterises the wound!" );
+                }
+                else if (def->number < 19)
+                {
+                    simple_monster_message( def, " grows two more!" );
+                    def->number += 2;
+                    heal_monster( def, 8 + random2(8), true );
+                }
             }
         }
 
@@ -2364,7 +2368,7 @@ bool melee_attack::chop_hydra_head( int dam,
 
 bool melee_attack::decapitate_hydra(int dam, int damage_type)
 {
-    if (defender->id() == MONS_HYDRA)
+    if (defender->atype() == ACT_MONSTER && def->has_hydra_multi_attack())
     {
         const int dam_type = (damage_type != -1) ? damage_type
                                                  : attacker->damage_type();
@@ -3723,7 +3727,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
 void melee_attack::mons_perform_attack_rounds()
 {
-    const int nrounds = atk->type == MONS_HYDRA? atk->number : 4;
+    const int nrounds = atk->has_hydra_multi_attack()? atk->number : 4;
     const coord_def pos = defender->pos();
 
     // Melee combat, tell attacker to wield its melee weapon.

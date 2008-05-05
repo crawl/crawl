@@ -44,11 +44,16 @@
 
 #define BIG_BAND        20
 
-static int band_member(band_type band, int power);
+static void _define_zombie( int mid, monster_type ztype,
+                            monster_type cs, int power );
+static monster_type _band_member(band_type band, int power);
 static band_type choose_band(int mon_type, int power, int &band_size );
-static int place_monster_aux(int mon_type, beh_type behaviour, int target,
-                             int px, int py, int power, int extra,
-                             bool first_band_member, int dur = 0);
+// static int _place_monster_aux(int mon_type, beh_type behaviour, int target,
+//                               int px, int py, int power, int extra,
+//                               bool first_band_member, int dur = 0);
+
+static int _place_monster_aux(const mgen_data &mg,
+                              bool first_band_member);
 
 // Returns whether actual_grid is compatible with grid_wanted for monster
 // movement (or for monster generation, if generation is true).
@@ -181,10 +186,10 @@ static void hell_spawn_random_monsters()
 
     if (one_chance_in(genodds))
     {
-        proximity_type prox =
+        mgen_data mg(WANDERING_MONSTER);
+        mg.proximity =
             (one_chance_in(10) ? PROX_NEAR_STAIRS : PROX_AWAY_FROM_PLAYER);
-        mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
-                    50, 50, LEVEL_DUNGEON, prox );
+        mons_place(mg);
         viewwindow(true, false);
     }
 }
@@ -209,16 +214,16 @@ void spawn_random_monsters()
         if (you.char_direction == GDT_ASCENDING)
             prox = (one_chance_in(6) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
 
-        mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
-                    50, 50, LEVEL_DUNGEON, prox );
+        mgen_data mg(WANDERING_MONSTER);
+        mg.proximity = prox;
+        mons_place( mg );
         viewwindow(true, false);
     }
 
     // place Abyss monsters.
     if (you.level_type == LEVEL_ABYSS && one_chance_in(5))
     {
-        mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
-                    50, 50, LEVEL_ABYSS, PROX_ANYWHERE );
+        mons_place(mgen_data(WANDERING_MONSTER));
         viewwindow(true, false);
     }
 
@@ -356,28 +361,37 @@ bool drac_colour_incompatible(int drac, int colour)
     return (drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN);
 }
 
-static int resolve_monster_type(int mon_type, proximity_type proximity,
-                                int num, int px, int py, unsigned mmask,
-                                dungeon_char_type *stair_type,
-                                int *lev_mons)
+static monster_type resolve_monster_type(monster_type mon_type,
+                                         proximity_type proximity,
+                                         monster_type base_type,
+                                         coord_def &pos,
+                                         unsigned mmask,
+                                         dungeon_char_type *stair_type,
+                                         int *lev_mons)
 {
     if (mon_type == RANDOM_DRACONIAN)
     {
         // Pick any random drac, constrained by colour if requested.
         do
             mon_type =
-                random_range(MONS_BLACK_DRACONIAN, MONS_DRACONIAN_SCORCHER);
-        while (num != MONS_PROGRAM_BUG
-               && mon_type != num
+                static_cast<monster_type>(
+                    random_range(MONS_BLACK_DRACONIAN,
+                                 MONS_DRACONIAN_SCORCHER));
+        while (base_type != MONS_PROGRAM_BUG
+               && mon_type != base_type
                && (mons_species(mon_type) == mon_type
-                   || drac_colour_incompatible(mon_type, num)));
+                   || drac_colour_incompatible(mon_type, base_type)));
     }
     else if (mon_type == RANDOM_BASE_DRACONIAN)
-        mon_type = random_range(MONS_BLACK_DRACONIAN, MONS_PALE_DRACONIAN);
+        mon_type =
+            static_cast<monster_type>(
+                random_range(MONS_BLACK_DRACONIAN, MONS_PALE_DRACONIAN));
     else if (mon_type == RANDOM_NONBASE_DRACONIAN)
-        mon_type = random_range(MONS_DRACONIAN_CALLER, MONS_DRACONIAN_SCORCHER);
+        mon_type =
+            static_cast<monster_type>(
+                random_range(MONS_DRACONIAN_CALLER, MONS_DRACONIAN_SCORCHER));
 
-    // (2) take care of random monsters
+    // (2) take care of non-drac random monsters
     if (mon_type == RANDOM_MONSTER)
     {
         level_id place = level_id::current();
@@ -388,21 +402,17 @@ static int resolve_monster_type(int mon_type, proximity_type proximity,
             int pval = 0;
             while (++tries <= 320)
             {
-                px = 5 + random2(GXM - 10);
-                py = 5 + random2(GYM - 10);
+                pos = random_in_bounds();
 
-                if (mgrd[px][py] != NON_MONSTER
-                    || (px == you.x_pos && py == you.y_pos))
-                {
+                if (mgrd(pos) != NON_MONSTER || pos == you.pos())
                     continue;
-                }
 
                 // Is the grid verboten?
-                if (!unforbidden( coord_def(px, py), mmask ))
+                if (!unforbidden( pos, mmask ))
                     continue;
 
                 // don't generate monsters on top of teleport traps
-                int trap = trap_at_xy(px, py);
+                int trap = trap_at_xy(pos.x, pos.y);
                 if (trap >= 0)
                 {
                     if (!can_place_on_trap(mon_type, env.trap[trap].type))
@@ -411,7 +421,7 @@ static int resolve_monster_type(int mon_type, proximity_type proximity,
 
                 // check whether there's a stair
                 // and whether it leads to another branch
-                pval = near_stairs(coord_def(px, py), 1,
+                pval = near_stairs(pos, 1,
                                    *stair_type, place.branch);
 
                 // no monsters spawned in the Temple
@@ -455,57 +465,49 @@ static int resolve_monster_type(int mon_type, proximity_type proximity,
     return (mon_type);
 }
 
-bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
-                   int target, bool summoned, int px, int py, bool allow_bands,
-                   proximity_type proximity, int extra, int dur,
-                   unsigned mmask)
+int place_monster(mgen_data mg)
 {
     int band_size = 0;
-    int band_monsters[BIG_BAND];        // band monster types
-    int lev_mons = power;               // final 'power'
-    int i;
+    monster_type band_monsters[BIG_BAND];        // band monster types
 
     int tries = 0;
     int pval = 0;
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
-
-    // set initial id to -1  (unsuccessful create)
-    id = -1;
+    int id = -1;
 
     // (1) early out (summoned to occupied grid)
-    if (summoned && mgrd[px][py] != NON_MONSTER)
+    if (mg.use_position() && mgrd(mg.pos) != NON_MONSTER)
         return (false);
 
-    mon_type =
-        resolve_monster_type(mon_type, proximity, extra,
-                             px, py, mmask, &stair_type,
-                             &lev_mons);
+    mg.cls =
+        resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
+                             mg.pos, mg.map_mask,
+                             &stair_type, &mg.power);
 
-    if (mon_type == MONS_PROGRAM_BUG || mon_type == -1)
+    if (mg.cls == MONS_PROGRAM_BUG)
         return (false);
 
     // (3) decide on banding (good lord!)
     band_size = 1;
-    band_monsters[0] = mon_type;
+    band_monsters[0] = mg.cls;
 
-    if (allow_bands)
+    if (mg.permit_bands())
     {
-        const band_type band = choose_band(mon_type, power, band_size);
+        const band_type band = choose_band(mg.cls, mg.power, band_size);
         band_size ++;
-
-        for (i = 1; i < band_size; i++)
-            band_monsters[i] = band_member( band, power );
+        for (int i = 1; i < band_size; i++)
+            band_monsters[i] = _band_member( band, mg.power );
     }
 
-    if (proximity == PROX_NEAR_STAIRS)
+    if (mg.proximity == PROX_NEAR_STAIRS)
     {
         // for some cases disallow monsters on stairs
-        if (mons_class_is_stationary( mon_type )
-            || pval == 2
-               && (mons_speed(mon_type) == 0 || grd[px][py] == DNGN_LAVA
-                   || grd[px][py] == DNGN_DEEP_WATER))
+        if (mons_class_is_stationary( mg.cls )
+            || (pval == 2
+                && (mons_speed(mg.cls) == 0 || grd(mg.pos) == DNGN_LAVA
+                    || grd(mg.pos) == DNGN_DEEP_WATER)))
         {
-            proximity = PROX_AWAY_FROM_PLAYER;
+            mg.proximity = PROX_AWAY_FROM_PLAYER;
         }
     }
 
@@ -516,7 +518,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     // player shoved out of the way?
     bool shoved = false;
 
-    if (!summoned)
+    if (!mg.use_position())
     {
         tries = 0;
 
@@ -525,104 +527,90 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         // b) compatible
         // c) in the 'correct' proximity to the player
         dungeon_feature_type grid_wanted =
-            habitat2grid( mons_habitat_by_type(mon_type) );
+            habitat2grid( mons_habitat_by_type(mg.cls) );
 
         while (true)
         {
-            // handled above, won't change anymore
-            if (proximity == PROX_NEAR_STAIRS && tries)
-            {
-                proximity = PROX_AWAY_FROM_PLAYER;
-                tries = 0;
-            }
             // Dropped number of tries from 60.
-            else if (tries >= 45)
+            if (tries++ >= 45)
                 return (false);
 
-            tries ++;
-
             // placement already decided for PROX_NEAR_STAIRS
-            if (proximity != PROX_NEAR_STAIRS)
-            {
-                px = 5 + random2(GXM - 10);
-                py = 5 + random2(GYM - 10);
-            }
+            if (mg.proximity != PROX_NEAR_STAIRS)
+                mg.pos = random_in_bounds();
 
             // Let's recheck these even for PROX_NEAR_STAIRS, just in case
-
             // occupied?
-            if (mgrd[px][py] != NON_MONSTER
-                || px == you.x_pos && py == you.y_pos)
-            {
+            if (mgrd(mg.pos) != NON_MONSTER || mg.pos == you.pos())
                 continue;
-            }
 
             // Is the monster happy where we want to put it?
-            if (!grid_compatible(grid_wanted, grd[px][py], true))
+            if (!grid_compatible(grid_wanted, grd(mg.pos), true))
                 continue;
 
             // Is the grid verboten?
-            if (!unforbidden( coord_def(px, py), mmask ))
+            if (!unforbidden( mg.pos, mg.map_mask ))
                 continue;
 
             // don't generate monsters on top of teleport traps
             // (how did they get there?)
-            int trap = trap_at_xy(px, py);
+            int trap = trap_at_xy(mg.pos.x, mg.pos.y);
             if (trap >= 0)
             {
-                if (!can_place_on_trap(mon_type, env.trap[trap].type))
+                if (!can_place_on_trap(mg.cls, env.trap[trap].type))
                     continue;
             }
 
             // check proximity to player
             proxOK = true;
 
-            switch (proximity)
+            switch (mg.proximity)
             {
-                case PROX_ANYWHERE:
-                    if (grid_distance( you.x_pos, you.y_pos, px, py ) < 2 + random2(3))
+            case PROX_ANYWHERE:
+                if (grid_distance( you.x_pos, you.y_pos,
+                                   mg.pos.x, mg.pos.y ) < 2 + random2(3))
+                {
+                    proxOK = false;
+                }
+                break;
+
+            case PROX_CLOSE_TO_PLAYER:
+            case PROX_AWAY_FROM_PLAYER:
+                close_to_player =
+                    (distance(you.x_pos, you.y_pos,
+                              mg.pos.x, mg.pos.y) < 64);
+                
+                if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
+                    || mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
+                {
+                    proxOK = false;
+                }
+                break;
+
+            case PROX_NEAR_STAIRS:
+                if (pval == 2) // player on stairs
+                {
+                    // 0 speed monsters can't shove player out of their way.
+                    if (mons_speed(mg.cls) == 0)
                     {
                         proxOK = false;
+                        break;
                     }
-                    break;
-
-                case PROX_CLOSE_TO_PLAYER:
-                case PROX_AWAY_FROM_PLAYER:
-                    close_to_player = (distance(you.x_pos, you.y_pos, px, py) < 64);
-
-                    if (proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
-                        || proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
+                    // swap the monster and the player spots, unless the
+                    // monster was generated in lava or deep water.
+                    if (grd(mg.pos) == DNGN_LAVA ||
+                        grd(mg.pos) == DNGN_DEEP_WATER)
                     {
                         proxOK = false;
+                        break;
                     }
-                    break;
-
-                case PROX_NEAR_STAIRS:
-                    if (pval == 2) // player on stairs
-                    {
-                        // 0 speed monsters can't shove player out of their way.
-                        if (mons_speed(mon_type) == 0)
-                        {
-                            proxOK = false;
-                            break;
-                        }
-                        // swap the monster and the player spots, unless the
-                        // monster was generated in lava or deep water.
-                        if (grd[px][py] == DNGN_LAVA || grd[px][py] == DNGN_DEEP_WATER)
-                        {
-                            proxOK = false;
-                            break;
-                        }
-                        shoved = true;
-                        int tpx = px;
-                        int tpy = py;
-                        px = you.x_pos;
-                        py = you.y_pos;
-                        you.moveto(tpx, tpy);
-                    }
-
-                    proxOK = (pval > 0);
-                    break;
+                    shoved = true;
+                    coord_def mpos = mg.pos;
+                    mg.pos = you.pos();
+                    you.moveto(mpos);
+                }
+                proxOK = (pval > 0);
+                break;
             }
 
             if (!proxOK)
@@ -633,16 +621,14 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         } // end while.. place first monster
     }
 
-    id = place_monster_aux( mon_type, behaviour, target, px, py, lev_mons,
-                            extra, true);
+    id = _place_monster_aux(mg, true);
 
-    // now, forget about banding if the first placement failed, or there's too
-    // many monsters already, or we successfully placed by stairs
-    if (id < 0 || id+30 > MAX_MONSTERS)
-        return false;
+    // Bail out now if we failed.
+    if (id == -1)
+        return (id);
 
     // message to player from stairwell/gate appearance?
-    if (see_grid(px, py) && proximity == PROX_NEAR_STAIRS)
+    if (see_grid(mg.pos) && mg.proximity == PROX_NEAR_STAIRS)
     {
         std::string msg;
 
@@ -672,41 +658,43 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         }
 
         // special case: must update the view for monsters created in player LOS
-        viewwindow(1, false);
+        viewwindow(true, false);
     }
 
-    // monsters placed by stairs don't bring the whole band up/down/through
-    // with them
-    if (proximity == PROX_NEAR_STAIRS)
-        return (true);
+    // now, forget about banding if the first placement failed, or there's too
+    // many monsters already, or we successfully placed by stairs
+    if (id >= MAX_MONSTERS - 30 || mg.proximity == PROX_NEAR_STAIRS)
+        return (id);
 
     // Not PROX_NEAR_STAIRS, so will it will be part of a band, if there
     // is any.
     if (band_size > 1)
         menv[id].flags |= MF_BAND_MEMBER;
 
+    mgen_data band_template = mg;
     // (5) for each band monster, loop call to place_monster_aux().
-    for (i = 1; i < band_size; i++)
+    for (int i = 1; i < band_size; i++)
     {
+        if (band_monsters[i] == MONS_PROGRAM_BUG)
+            break;
+        
+        band_template.cls = band_monsters[i];
         const int band_id =
-            place_monster_aux( band_monsters[i], behaviour, target, px, py,
-                               lev_mons, extra, false, dur);
-
+            _place_monster_aux( band_template, false );
         if (band_id != -1 && band_id != NON_MONSTER)
             menv[band_id].flags |= MF_BAND_MEMBER;
     }
 
     // placement of first monster, at least, was a success.
-    return (true);
+    return (id);
 }
 
-static int place_monster_aux( int mon_type, beh_type behaviour, int target,
-                              int px, int py, int power, int extra,
-                              bool first_band_member, int dur )
+static int _place_monster_aux( const mgen_data &mg,
+                               bool first_band_member )
 {
-    int id, i;
+    int id = -1;
     dungeon_feature_type grid_wanted = DNGN_UNSEEN;
-    int fx = 0, fy = 0;     // final x,y
+    coord_def fpos;
 
     // gotta be able to pick an ID
     for (id = 0; id < MAX_MONSTERS; id++)
@@ -714,42 +702,39 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
             break;
 
     if (id == MAX_MONSTERS)
-        return -1;
+        return (-1);
 
     menv[id].reset();
     
     // setup habitat and placement
     // If the space is occupied, try some neighbouring square instead.
-    if (first_band_member && mgrd[px][py] == NON_MONSTER
-        && (px != you.x_pos || py != you.y_pos))
+    if (first_band_member && mgrd(mg.pos) == NON_MONSTER
+        && mg.pos != you.pos())
     {
-        fx = px;
-        fy = py;
+        fpos = mg.pos;
     }
     else
     {
-        grid_wanted = habitat2grid( mons_habitat_by_type(mon_type) );
+        grid_wanted = habitat2grid( mons_habitat_by_type(mg.cls) );
 
+        int i = 0;
         // we'll try 1000 times for a good spot
-        for (i = 0; i < 1000; i++)
+        for ( ; i < 1000; i++)
         {
-            fx = px + random2(7) - 3;
-            fy = py + random2(7) - 3;
+            fpos = mg.pos + coord_def( random_range(-3, 3),
+                                       random_range(-3, 3) );
 
             // occupied?
-            if (mgrd[fx][fy] != NON_MONSTER
-                || fx == you.x_pos && fy == you.y_pos)
-            {
+            if (mgrd(fpos) != NON_MONSTER || fpos == you.pos())
                 continue;
-            }
 
-            if (!grid_compatible(grid_wanted, grd[fx][fy], true))
+            if (!grid_compatible(grid_wanted, grd(fpos), true))
                 continue;
 
             // don't generate monsters on top of teleport traps
             // (how do they get there?)
-            int trap = trap_at_xy(fx, fy);
-            if (trap >= 0 && !can_place_on_trap(mon_type, env.trap[trap].type))
+            int trap = trap_at_xy(fpos.x, fpos.y);
+            if (trap >= 0 && !can_place_on_trap(mg.cls, env.trap[trap].type))
                 continue;
 
             // cool.. passes all tests
@@ -762,47 +747,48 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     }
 
     // now, actually create the monster (wheeee!)
-    menv[id].type = mon_type;
+    menv[id].type = mg.cls;
+    menv[id].base_monster = mg.base_type;
 
-    menv[id].number = extra;
+    menv[id].number = mg.number;
 
-    menv[id].x = fx;
-    menv[id].y = fy;
+    menv[id].x = fpos.x;
+    menv[id].y = fpos.y;
 
     // link monster into monster grid
-    mgrd[fx][fy] = id;
+    mgrd(fpos) = id;
 
     // generate a brand shiny new monster, or zombie
-    if (mons_class_is_zombified(mon_type))
-        define_zombie( id, extra, mon_type, power );
+    if (mons_class_is_zombified(mg.cls))
+        _define_zombie( id, mg.base_type, mg.cls, mg.power );
     else
         define_monster(id);
 
     // The return of Boris is now handled in monster_die()...
     // not setting this for Boris here allows for multiple Borises
     // in the dungeon at the same time.  -- bwr
-    if (mons_is_unique(mon_type))
-        you.unique_creatures[mon_type] = true;
+    if (mons_is_unique(mg.cls))
+        you.unique_creatures[mg.cls] = true;
 
-    if (mons_class_flag(mon_type, M_INVIS))
+    if (mons_class_flag(mg.cls, M_INVIS))
         menv[id].add_ench(ENCH_INVIS);
 
-    if (mons_class_flag(mon_type, M_CONFUSED))
+    if (mons_class_flag(mg.cls, M_CONFUSED))
         menv[id].add_ench(ENCH_CONFUSION);
 
-    if (mon_type == MONS_SHAPESHIFTER)
+    if (mg.cls == MONS_SHAPESHIFTER)
         menv[id].add_ench(ENCH_SHAPESHIFTER);
 
-    if (mon_type == MONS_GLOWING_SHAPESHIFTER)
+    if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
         menv[id].add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
-    if (mon_type == MONS_GIANT_BAT || mon_type == MONS_UNSEEN_HORROR
-        || mon_type == MONS_GIANT_BLOWFLY)
+    if (mg.cls == MONS_GIANT_BAT || mg.cls == MONS_UNSEEN_HORROR
+        || mg.cls == MONS_GIANT_BLOWFLY)
     {
         menv[id].flags |= MF_BATTY;
     }
 
-    if (monster_can_submerge(&menv[id], grd[fx][fy])
+    if (monster_can_submerge(&menv[id], grd(fpos))
         && !one_chance_in(5))
     {
         menv[id].add_ench(ENCH_SUBMERGED);
@@ -810,34 +796,33 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
 
     menv[id].flags |= MF_JUST_SUMMONED;
 
-    if (mon_type == MONS_DANCING_WEAPON && extra != 1) // ie not from spell
+    if (mg.cls == MONS_DANCING_WEAPON && mg.number != 1) // ie not from spell
     {
-        give_item( id, power );
+        give_item( id, mg.power );
 
         if (menv[id].inv[MSLOT_WEAPON] != NON_ITEM)
             menv[id].colour = mitm[ menv[id].inv[MSLOT_WEAPON] ].colour;
     }
-    else if (mons_itemuse(mon_type) >= MONUSE_STARTING_EQUIPMENT)
+    else if (mons_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
-        give_item( id, power );
+        give_item( id, mg.power );
         // Give these monsters a second weapon -- bwr
-        if (mons_wields_two_weapons(static_cast<monster_type>(mon_type)))
-            give_item( id, power );
+        if (mons_wields_two_weapons(mg.cls))
+            give_item( id, mg.power );
 
         unwind_var<int> save_speedinc(menv[id].speed_increment);
         menv[id].wield_melee_weapon(false);
     }
 
     // give manticores 8 to 16 spike volleys.
-    // they're not spellcasters so this doesn't screw anything up.
-    if (mon_type == MONS_MANTICORE)
+    if (mg.cls == MONS_MANTICORE)
         menv[id].number = 8 + random2(9);
 
     // set attitude, behaviour and target
     menv[id].attitude = ATT_HOSTILE;
-    menv[id].behaviour = behaviour;
+    menv[id].behaviour = mg.behaviour;
 
-    if (mons_is_statue(mon_type))
+    if (mons_is_statue(mg.cls))
         menv[id].behaviour = BEH_WANDER;
 
     menv[id].foe_memory = 0;
@@ -846,22 +831,22 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     // monster wander.. if you want sleeping
     // hostiles, use BEH_SLEEP since the default
     // attitude is hostile.
-    if (behaviour > NUM_BEHAVIOURS)
+    if (mg.behaviour > NUM_BEHAVIOURS)
     {
-        if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
+        if (mg.behaviour == BEH_FRIENDLY || mg.behaviour == BEH_GOD_GIFT)
             menv[id].attitude = ATT_FRIENDLY;
 
-        if (behaviour == BEH_NEUTRAL)
+        if (mg.behaviour == BEH_NEUTRAL)
             menv[id].attitude = ATT_NEUTRAL;
 
         menv[id].behaviour = BEH_WANDER;
     }
 
     // dur should always be 1-6 for monsters that can be abjured.
-    if (dur >= 1 && dur <= 6)
-        menv[id].mark_summoned( dur, true );
+    if (mg.abjuration_duration >= 1 && mg.abjuration_duration <= 6)
+        menv[id].mark_summoned( mg.abjuration_duration, true );
 
-    menv[id].foe = target;
+    menv[id].foe = mg.foe;
 
     // Initialise pandemonium demons
     if (menv[id].type == MONS_PANDEMONIUM_DEMON)
@@ -872,14 +857,224 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
         menv[id].pandemon_init();
     }
 
-    mark_interesting_monst(&menv[id], behaviour);
+    mark_interesting_monst(&menv[id], mg.behaviour);
 
     if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
         seen_monster(&menv[id]);
 
     return (id);
-}                               // end place_monster_aux()
+}
 
+static monster_type _pick_random_zombie()
+{
+    static std::vector<monster_type> zombifiable;
+    if (zombifiable.empty())
+    {
+        for (int i = 0; i < NUM_MONSTERS; ++i)
+        {
+            if (mons_species(i) != i || i == MONS_PROGRAM_BUG)
+                continue;
+
+            const monster_type mcls = static_cast<monster_type>(i);
+            if (!mons_zombie_size(mcls))
+                continue;
+
+            zombifiable.push_back(mcls);
+        }
+    }
+    return (zombifiable[ random2(zombifiable.size()) ]);
+}
+
+static void _define_zombie( int mid, monster_type ztype,
+                            monster_type cs, int power )
+{
+    monster_type mons_sec2 = MONS_PROGRAM_BUG;
+    int zombie_size = 0;
+    bool ignore_rarity = false;
+    monster_type cls  = MONS_PROGRAM_BUG;
+
+    if (power > 27)
+        power = 27;
+
+    // set size based on zombie class (cs)
+    switch (cs)
+    {
+        case MONS_ZOMBIE_SMALL:
+        case MONS_SIMULACRUM_SMALL:
+        case MONS_SKELETON_SMALL:
+            zombie_size = Z_SMALL;
+            break;
+
+        case MONS_ZOMBIE_LARGE:
+        case MONS_SIMULACRUM_LARGE:
+        case MONS_SKELETON_LARGE:
+            zombie_size = Z_BIG;
+            break;
+
+        case MONS_SPECTRAL_THING:
+            zombie_size = -1;
+            break;
+
+        default:
+            // this should NEVER happen.
+            perror("\ncreate_zombie() got passed incorrect zombie type!\n");
+            end(0);
+            break;
+    }
+
+    // that is, random creature from which to fashion undead
+    if (ztype == MONS_PROGRAM_BUG)
+    {
+        // how OOD this zombie can be.
+        int relax = 5;
+
+        // pick an appropriate creature to make a zombie out of,
+        // levelwise.  The old code was generating absolutely
+        // incredible OOD zombies.
+        while (true)
+        {
+            cls = _pick_random_zombie();
+
+            // on certain branches, zombie creation will fail if we use
+            // the mons_rarity() functions, because (for example) there
+            // are NO zombifiable "native" abyss creatures. Other branches
+            // where this is a problem are hell levels and the crypt.
+            // we have to watch for summoned zombies on other levels, too,
+            // such as the Temple, HoB, and Slime Pits.
+            if (you.level_type != LEVEL_DUNGEON
+                || player_in_hell()
+                || player_in_branch( BRANCH_HALL_OF_ZOT )
+                || player_in_branch( BRANCH_VESTIBULE_OF_HELL )
+                || player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
+                || player_in_branch( BRANCH_CRYPT )
+                || player_in_branch( BRANCH_TOMB )
+                || player_in_branch( BRANCH_HALL_OF_BLADES )
+                || player_in_branch( BRANCH_SNAKE_PIT )
+                || player_in_branch( BRANCH_SLIME_PITS )
+                || one_chance_in(1000))
+            {
+                ignore_rarity = true;
+            }
+
+            // don't make out-of-rarity zombies when we don't have to
+            if (!ignore_rarity && mons_rarity(cls) == 0)
+                continue;
+
+            // if skeleton, monster must have a skeleton
+            if ((cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
+                && !mons_skeleton(cls))
+            {
+                continue;
+            }
+
+            // size must match, but you can make a spectral thing out
+            // of anything.
+            if (mons_zombie_size(cls) != zombie_size && zombie_size != -1)
+                continue;
+
+            // hack -- non-dungeon zombies are always made out of nastier
+            // monsters
+            if (you.level_type != LEVEL_DUNGEON && mons_power(cls) > 8)
+                break;
+
+            // check for rarity.. and OOD - identical to mons_place()
+            int level, diff, chance;
+
+            level  = mons_level( cls ) - 4;
+            diff   = level - power;
+
+            chance = (ignore_rarity) ? 100
+                                     : mons_rarity(cls) - (diff * diff) / 2;
+
+            if (power > level - relax && power < level + relax
+                && random2avg(100, 2) <= chance)
+            {
+                break;
+            }
+
+            // every so often, we'll relax the OOD restrictions.  Avoids
+            // infinite loops (if we don't do this, things like creating
+            // a large skeleton on level 1 may hang the game!)
+            if (one_chance_in(5))
+                relax++;
+        }
+
+        // set type and secondary appropriately
+        menv[mid].base_monster = cls;
+        mons_sec2 = cls;
+    }
+    else
+    {
+        menv[mid].base_monster = mons_species(ztype);
+        mons_sec2 = menv[mid].base_monster;
+    }
+
+    menv[mid].type = menv[mid].base_monster;
+
+    define_monster(mid);
+
+    menv[mid].hit_points = hit_points( menv[mid].hit_dice, 6, 5 );
+    menv[mid].max_hit_points = menv[mid].hit_points;
+
+    menv[mid].ac -= 2;
+
+    if (menv[mid].ac < 0)
+        menv[mid].ac = 0;
+
+    menv[mid].ev -= 5;
+
+    if (menv[mid].ev < 0)
+        menv[mid].ev = 0;
+
+    menv[mid].speed -= 2;
+
+    if (menv[mid].speed < 3)
+        menv[mid].speed = 3;
+
+    menv[mid].speed_increment = 70;
+
+    if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
+    {
+        menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG)
+                          ? MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL);
+    }
+    else if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
+    {
+        menv[mid].hit_points = hit_points( menv[mid].hit_dice, 5, 4 );
+        menv[mid].max_hit_points = menv[mid].hit_points;
+
+        menv[mid].ac -= 4;
+
+        if (menv[mid].ac < 0)
+            menv[mid].ac = 0;
+
+        menv[mid].ev -= 2;
+
+        if (menv[mid].ev < 0)
+            menv[mid].ev = 0;
+
+        menv[mid].type = ((mons_zombie_size( menv[mid].base_monster ) == Z_BIG)
+                          ? MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
+    }
+    else if (cs == MONS_SIMULACRUM_SMALL || cs == MONS_SIMULACRUM_LARGE)
+    {
+        // Simulacrum aren't tough, but you can create piles of them. -- bwr
+        menv[mid].hit_points = hit_points( menv[mid].hit_dice, 1, 4 );
+        menv[mid].max_hit_points = menv[mid].hit_points;
+        menv[mid].type = ((mons_zombie_size( menv[mid].base_monster ) == Z_BIG)
+                            ? MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL);
+    }
+    else if (cs == MONS_SPECTRAL_THING)
+    {
+        menv[mid].hit_points = hit_points( menv[mid].hit_dice, 4, 4 );
+        menv[mid].max_hit_points = menv[mid].hit_points;
+        menv[mid].ac += 4;
+        menv[mid].type = MONS_SPECTRAL_THING;
+    }
+
+    menv[mid].base_monster = mons_sec2;
+    menv[mid].colour = mons_class_colour(cs);
+}
 
 static band_type choose_band( int mon_type, int power, int &band_size )
 {
@@ -1177,13 +1372,13 @@ static band_type choose_band( int mon_type, int power, int &band_size )
     return (band);
 }
 
-static int band_member(band_type band, int power)
+static monster_type _band_member(band_type band, int power)
 {
-    int mon_type = -1;
+    monster_type mon_type = MONS_PROGRAM_BUG;
     int temp_rand;
 
     if (band == BAND_NO_BAND)
-        return -1;
+        return (MONS_PROGRAM_BUG);
 
     switch (band)
     {
@@ -1281,14 +1476,16 @@ static int band_member(band_type band, int power)
 
     case BAND_PANDEMONIUM_DEMON:
         if (one_chance_in(7))
-            mon_type = random_choose_weighted(50, MONS_LICH,
-                                              10, MONS_ANCIENT_LICH,
-                                              0);
+            mon_type = static_cast<monster_type>(
+                random_choose_weighted(50, MONS_LICH,
+                                       10, MONS_ANCIENT_LICH,
+                                       0));
         else if (one_chance_in(6))
-            mon_type = random_choose_weighted(50, MONS_ABOMINATION_SMALL,
-                                              40, MONS_ABOMINATION_LARGE,
-                                              10, MONS_TENTACLED_MONSTROSITY,
-                                              0);
+            mon_type = static_cast<monster_type>(
+                random_choose_weighted(50, MONS_ABOMINATION_SMALL,
+                                       40, MONS_ABOMINATION_LARGE,
+                                       10, MONS_TENTACLED_MONSTROSITY,
+                                       0));
         else
             mon_type =
                 summon_any_demon(
@@ -1493,7 +1690,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
 
 // PUBLIC FUNCTION -- mons_place().
 
-static int pick_zot_exit_defender()
+static monster_type pick_zot_exit_defender()
 {
     if (one_chance_in(11))
         return (MONS_PANDEMONIUM_DEMON);
@@ -1508,12 +1705,13 @@ static int pick_zot_exit_defender()
          (temp_rand > 13)  ? MONS_RED_DEVIL                  //  7.25%
                            : MONS_PIT_FIEND);                //  5.07%
 
-    return (mon_type);
+    return static_cast<monster_type>(mon_type);
 }
 
-int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
-                int px, int py, int level_type, proximity_type proximity,
-                int extra, int dur, bool permit_bands )
+int mons_place( mgen_data mg )
+    // int mon_type, beh_type behaviour, int target, bool summoned,
+    //             int px, int py, int level_type, proximity_type proximity,
+    //             int extra, int dur, bool permit_bands )
 {
     int mon_count = 0;
     for (int il = 0; il < MAX_MONSTERS; il++)
@@ -1522,85 +1720,80 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
             mon_count++;
     }
 
-    if (mon_type == WANDERING_MONSTER)
+    if (mg.cls == WANDERING_MONSTER)
     {
-        if (mon_count > 150)
+        if (mon_count > MAX_MONSTERS - 50)
             return (-1);
 
-        mon_type = RANDOM_MONSTER;
+        mg.cls = RANDOM_MONSTER;
     }
 
     // all monsters have been assigned? {dlb}
-    if (mon_count > MAX_MONSTERS - 2)
+    if (mon_count >= MAX_MONSTERS - 1)
         return (-1);
 
     // this gives a slight challenge to the player as they ascend the
     // dungeon with the Orb
-    if (you.char_direction == GDT_ASCENDING && mon_type == RANDOM_MONSTER
-        && you.level_type == LEVEL_DUNGEON && !summoned)
+    if (you.char_direction == GDT_ASCENDING && mg.cls == RANDOM_MONSTER
+        && you.level_type == LEVEL_DUNGEON && !mg.summoned())
     {
-        mon_type = pick_zot_exit_defender();
-        permit_bands = true;
+        mg.cls = pick_zot_exit_defender();
+        mg.flags |= MG_PERMIT_BANDS;
     }
 
-    if (mon_type == RANDOM_MONSTER
-        || level_type == LEVEL_PANDEMONIUM)
-    {
-        permit_bands = true;
-    }
+    if (mg.cls == RANDOM_MONSTER || mg.level_type == LEVEL_PANDEMONIUM)
+        mg.flags |= MG_PERMIT_BANDS;
 
     int mid = -1;
 
     // translate level_type
-    int power;
-
-    switch (level_type)
+    switch (mg.level_type)
     {
         case LEVEL_PANDEMONIUM:
-            power = 52;     // sigh..
+            mg.power = 52;     // sigh..
             break;
         case LEVEL_ABYSS:
-            power = 51;
+            mg.power = 51;
             break;
-        case LEVEL_DUNGEON: // intentional fallthrough
+        case LEVEL_DUNGEON:
         default:
-            power = you.your_level;
+            mg.power = you.your_level;
             break;
     }
 
-    if (!place_monster( mid, mon_type, power, behaviour, target, summoned,
-                        px, py, permit_bands, proximity, extra, dur ))
-    {
+    mid = place_monster(mg);
+    if (mid == -1)
         return (-1);
-    }
+    
+    monsters *creation = &menv[mid];
 
-    if (mid != -1)
+    // look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT
+    // alert summoned being to player's presence
+    if (mg.behaviour > NUM_BEHAVIOURS)
     {
-        struct monsters *const creation = &menv[mid];
+        if (mg.behaviour == BEH_FRIENDLY || mg.behaviour == BEH_GOD_GIFT)
+            creation->flags |= MF_CREATED_FRIENDLY;
 
-        // look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT
-        // alert summoned being to player's presence
-        if (behaviour > NUM_BEHAVIOURS)
+        if (mg.behaviour == BEH_GOD_GIFT)
+            creation->flags |= MF_GOD_GIFT;
+
+        if (!(mg.flags & MG_FORCE_BEH) && player_angers_monster(creation))
+            creation->attitude = ATT_HOSTILE;
+
+        if (mg.behaviour == BEH_CHARMED)
         {
-            if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
-                creation->flags |= MF_CREATED_FRIENDLY;
-
-            if (behaviour == BEH_GOD_GIFT)
-                creation->flags |= MF_GOD_GIFT;
-
-            if (behaviour == BEH_CHARMED)
-            {
-                creation->attitude = ATT_HOSTILE;
-                creation->add_ench(ENCH_CHARM);
-            }
-
-            // make summoned being aware of player's presence
-            behaviour_event(creation, ME_ALERT, MHITYOU);
+            creation->attitude = ATT_HOSTILE;
+            creation->add_ench(ENCH_CHARM);
         }
-    }
 
+        // make summoned being aware of player's presence
+        behaviour_event(creation, ME_ALERT, MHITYOU);
+
+        if (creation->type == MONS_RAKSHASA_FAKE && !one_chance_in(3))
+            creation->add_ench(ENCH_INVIS);        
+    }
     return (mid);
-}                               // end mons_place()
+}
 
 static dungeon_feature_type _monster_habitat_feature(int mtype)
 {
@@ -1680,7 +1873,7 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
     return (in_bounds(p)? p : coord_def(-1, -1));
 }
 
-coord_def find_newmons_square(int mons_class, int x, int y)
+coord_def find_newmons_square(int mons_class, const coord_def &p)
 {
     FixedVector < char, 2 > empty;
     coord_def pos(-1, -1);
@@ -1696,7 +1889,7 @@ coord_def find_newmons_square(int mons_class, int x, int y)
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water of lava this function would work.  -- bwr
-    if (empty_surrounds( x, y, spcw, 2, true, empty ))
+    if (empty_surrounds( p.x, p.y, spcw, 2, true, empty ))
     {
         pos.x = empty[0];
         pos.y = empty[1];
@@ -1727,81 +1920,28 @@ bool player_angers_monster(monsters *creation)
     return (false);
 }
 
-int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
-                    int hitting, int zsec, bool permit_bands,
-                    bool force_place, bool force_behaviour,
-                    bool player_made )
+int create_monster( mgen_data mg )
 {
     int summd = -1;
-    coord_def pos;
-    if (force_place && mons_class_can_pass(cls, grd[cr_x][cr_y])
-        && mgrd[cr_x][cr_y] == NON_MONSTER
-        && (cr_x != you.x_pos || cr_y != you.y_pos))
-    {
-        pos.x = cr_x;
-        pos.y = cr_y;
-    }
-    else
-        pos = find_newmons_square(cls, cr_x, cr_y);
+    if (!(mg.force_place()
+          && in_bounds(mg.pos)
+          && mons_class_can_pass(mg.cls, grd(mg.pos))
+          && mgrd(mg.pos) == NON_MONSTER
+          && mg.pos != you.pos()))
+        mg.pos = find_newmons_square(mg.cls, mg.pos);
 
-    if (pos.x != -1 && pos.y != -1)
-    {
-        summd = mons_place( cls, beha, hitting, true, pos.x, pos.y,
-                            you.level_type, PROX_ANYWHERE, zsec,
-                            dur, permit_bands );
-    }
+    if (in_bounds(mg.pos))
+        summd = mons_place( mg );
 
     // determine whether creating a monster is successful (summd != -1) {dlb}:
     // then handle the outcome {dlb}:
-    if (summd == -1)
-    {
-        if (see_grid( cr_x, cr_y ))
-            mpr("You see a puff of smoke.");
-    }
-    else
-    {
-        monsters *const creation = &menv[summd];
-
-        // dur should always be ENCH_ABJ_xx
-        if (dur >= 1 && dur <= 6)
-            creation->mark_summoned( dur, true );
-
-        // player summons do not give XP or other bonuses
-        // (you can still train skills on them though)
-        if ( player_made )
-            creation->flags |= MF_CREATED_FRIENDLY;
-
-        // look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT
-        // alert summoned being to player's presence
-        if (beha > NUM_BEHAVIOURS)
-        {
-            if (beha == BEH_FRIENDLY || beha == BEH_GOD_GIFT)
-                creation->flags |= MF_CREATED_FRIENDLY;
-
-            if (beha == BEH_GOD_GIFT)
-                creation->flags |= MF_GOD_GIFT;
-
-            if (!force_behaviour && player_angers_monster(creation))
-                beha = BEH_HOSTILE;
-
-            if (beha == BEH_CHARMED)
-            {
-                creation->attitude = ATT_HOSTILE;
-                creation->add_ench(ENCH_CHARM);
-            }
-
-            // make summoned being aware of player's presence
-            behaviour_event(creation, ME_ALERT, MHITYOU);
-        }
-
-        if (creation->type == MONS_RAKSHASA_FAKE && !one_chance_in(3))
-            creation->add_ench(ENCH_INVIS);
-    }
+    if (summd == -1 && see_grid( mg.pos ))
+        mpr("You see a puff of smoke.");
 
     // the return value is either -1 (failure of some sort)
     // or the index of the monster placed (if I read things right) {dlb}
     return (summd);
-}                               // end create_monster()
+}
 
 
 bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,

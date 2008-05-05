@@ -92,6 +92,127 @@ enum proximity_type   // proximity to player to create monster
     PROX_NEAR_STAIRS
 };
 
+enum mgen_flag_type
+{
+    MG_PERMIT_BANDS = 0x1,
+    MG_FORCE_PLACE  = 0x2,
+    MG_FORCE_BEH    = 0x4,
+    MG_PLAYER_MADE  = 0x8
+};
+
+// A structure with all the data needed to whip up a new monster.
+struct mgen_data
+{
+    // Monster type.
+    monster_type cls;
+
+    // If the monster is zombie-like, or a specialised draconian, this
+    // is the base monster that the monster is based on - should be
+    // set to MONS_PROGRAM_BUG when not used.
+    monster_type base_type;
+
+    // Determines the behaviour of the monster after it is generated. This
+    // behaviour is an unholy combination of monster attitude
+    // (friendly, hostile) and monster initial state (asleep, wandering).
+    // XXX: Could use splitting up these aspects.
+    beh_type     behaviour;
+
+    // For summoned monsters, this is a measure of how long the summon will
+    // hang around, on a scale of 1-6, 6 being longest. Use 0 for monsters
+    // that aren't summoned.
+    int          abjuration_duration;
+
+    // Where the monster will be created.
+    coord_def    pos;
+
+    // The monster's foe, i.e. which monster it will want to attack. foe
+    // may be an index into the monster array (0 - (MAX_MONSTERS-1)), or
+    // it may be MHITYOU to indicate that the monster wants to attack the
+    // player, or MHITNOT, to indicate that the monster has no foe and is
+    // just wandering around.
+    int          foe;
+
+    // Generation flags from mgen_flag_type.
+    unsigned     flags;
+
+    // The number of hydra heads or manticore attack volleys. Note:
+    // in older version this field was used for both this and for base_type.
+    int          number;
+
+    // The colour of the monster
+    int          colour;
+
+    // A measure of how powerful the generated monster should be (for
+    // randomly chosen monsters), usually equal to the absolute depth
+    // that the player is in the dungeon.
+    int          power;
+
+    // How close to or far from the player the monster should be created.
+    // Is usually used only when the initial position (pos) is unspecified.
+    proximity_type proximity;
+
+    // What place we're in, or pretending to be in, usually the place
+    // the player is actually in.
+    level_area_type level_type;
+
+    // Some predefined vaults (aka maps) include flags to suppress random
+    // generation of monsters. When generating monsters, this is a mask of
+    // map flags to honour (such as MMT_NO_MONS to specify that we shouldn't
+    // randomly generate a monster inside a map that doesn't want it). These
+    // map flags are usually respected only when a dungeon level is being
+    // constructed, since at future points vault information may no longer
+    // be available (vault metadata is not preserved across game saves).
+    unsigned        map_mask;
+
+    mgen_data(monster_type mt = RANDOM_MONSTER,
+              beh_type beh = BEH_HOSTILE,
+              int abj = 0,
+              const coord_def &p = coord_def(-1, -1),
+              int mfoe = MHITNOT,
+              unsigned monflags = 0,
+              monster_type base = MONS_PROGRAM_BUG,
+              int monnumber = 0,
+              int moncolour = BLACK,
+              int monpower = you.your_level,
+              proximity_type prox = PROX_ANYWHERE,
+              level_area_type ltype = you.level_type)
+        
+        : cls(mt), base_type(base), behaviour(beh),
+          abjuration_duration(abj), pos(p), foe(mfoe), flags(monflags),
+          number(monnumber), colour(moncolour), power(monpower),
+          proximity(prox), level_type(ltype), map_mask(0)
+    {
+    }
+
+    bool permit_bands() const { return (flags & MG_PERMIT_BANDS); }
+    bool force_place() const { return (flags & MG_FORCE_PLACE); }
+
+    // Is there a valid position set on this struct that we want to use
+    // when placing the monster?
+    bool use_position() const { return in_bounds(pos); }
+
+    bool summoned() const { return (abjuration_duration > 0); }
+
+    static mgen_data sleeper_at(monster_type what,
+                                const coord_def &where)
+    {
+        return mgen_data(what, BEH_SLEEP, 0, where);
+    }
+
+    static mgen_data hostile_at(monster_type what,
+                                const coord_def &where)
+    {
+        return mgen_data(what, BEH_HOSTILE, 0, where);
+    }
+ 
+    static mgen_data alert_hostile_at(monster_type what,
+                                      const coord_def &where,
+                                      int abj_deg = 0)
+    {
+        return mgen_data(what, BEH_HOSTILE, abj_deg, where, MHITYOU);
+    }   
+};
+
 // last updated 13mar2001 {gdl}
 /* ***********************************************************************
  * called from: acr - lev-pand - monplace - dungeon
@@ -111,11 +232,16 @@ enum proximity_type   // proximity to player to create monster
  *              2 = don't place the monster near the player
  *              3 = place the monster near stairs (regardless of player pos)
  * *********************************************************************** */
-int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
-                int px, int py, int level_type = LEVEL_DUNGEON,
-                proximity_type proximity = PROX_ANYWHERE,
-                int extra = MONS_PROGRAM_BUG,
-                int dur = 0, bool permit_bands = false );
+
+int mons_place( mgen_data mg );
+
+/* int mons_place( int mon_type, beh_type behaviour, int target, bool summoned, */
+/*                 int px, int py, int level_type = LEVEL_DUNGEON, */
+/*                 proximity_type proximity = PROX_ANYWHERE, */
+/*                 int extra = MONS_PROGRAM_BUG, */
+/*                 int dur = 0, bool permit_bands = false ); */
+
+int create_monster( mgen_data mg );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -123,10 +249,10 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
  *              items - monstuff - mstuff2 - religion - spell - spells -
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
-int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
-                    int hitting, int zsec, bool permit_bands = false,
-                    bool force_place = false, bool force_behaviour = false,
-                    bool player_made = false );
+/* int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y, */
+/*                     int hitting, int zsec, bool permit_bands = false, */
+/*                     bool force_place = false, bool force_behaviour = false, */
+/*                     bool player_made = false ); */
 
 class level_id;
 monster_type pick_random_monster(const level_id &place,
@@ -160,11 +286,13 @@ monster_type summon_any_demon( demon_class_type demon_class );
  * mons_place().  If you need to put a monster somewhere,  use mons_place().
  * Summoned creatures can be created with create_monster().
  * *********************************************************************** */
-bool place_monster( int &id, int mon_type, int power, beh_type behaviour,
-                    int target, bool summoned, int px, int py, bool allow_bands,
-                    proximity_type proximity = PROX_ANYWHERE,
-                    int extra = MONS_PROGRAM_BUG, int dur = 0,
-                    unsigned mmask = 0 );
+int place_monster( mgen_data mg );
+
+    // int &id, int mon_type, int power, beh_type behaviour,
+    //                 int target, bool summoned, int px, int py, bool allow_bands,
+    //                 proximity_type proximity = PROX_ANYWHERE,
+    //                 int extra = MONS_PROGRAM_BUG, int dur = 0,
+    //                 unsigned mmask = 0 );
 
 monster_type rand_dragon( dragon_class_type type );
 bool drac_colour_incompatible(int drac, int colour);
@@ -185,7 +313,7 @@ bool monster_habitable_grid(int monster_class,
                             int flies = -1,
                             bool paralysed = false);
 bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid);
-coord_def find_newmons_square(int mons_class, int x, int y);
+coord_def find_newmons_square(int mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int maxdistance = 3);

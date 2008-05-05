@@ -311,7 +311,6 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
                    const coord_def &pos = coord_def(-1, -1));
 void level_clear_vault_memory();
 void level_welcome_messages();
-void define_zombie(int mid, int ztype, int cs, int power);
 bool is_wall(int feature);
 bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);
 void place_spec_shop(int level_number, int shop_x, int shop_y,

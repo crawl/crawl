@@ -397,20 +397,22 @@ class mons_spec
 {
  public:
     int  mid;
-    int  monnum;              // The zombified monster for zombies, or head
-                              // count for hydras, or colour for draconians.
+    monster_type monbase;     // Base monster for zombies and dracs.
+    int  number;              // Head count for hydras
     int  genweight, mlevel;
     bool fix_mons;
     bool generate_awake;
-    int colour;
+    int  colour;
 
     item_list items;
 
-    mons_spec(int id = RANDOM_MONSTER, int num = MONS_PROGRAM_BUG,
+    mons_spec(int id = RANDOM_MONSTER,
+              monster_type base = MONS_PROGRAM_BUG,
+              int num = 0,
               int gw = 10, int ml = 0,
               bool _fixmons = false, bool awaken = false)
-        : mid(id), monnum(num), genweight(gw), mlevel(ml), fix_mons(_fixmons),
-        generate_awake(awaken), colour(BLACK), items()
+        : mid(id), monbase(base), number(num), genweight(gw), mlevel(ml),
+          fix_mons(_fixmons), generate_awake(awaken), colour(BLACK), items()
     {
     }
 };

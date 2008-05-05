@@ -116,7 +116,8 @@ void init_pandemonium(void)
         }
 
         if (one_chance_in(10))
-            env.mons_alloc[pc] = MONS_HELLION + random2(10);
+            env.mons_alloc[pc] =
+                static_cast<monster_type>(MONS_HELLION + random2(10));
 
         if (one_chance_in(30))
             env.mons_alloc[pc] = MONS_RED_DEVIL;
@@ -125,17 +126,21 @@ void init_pandemonium(void)
             env.mons_alloc[pc] = MONS_IMP;
 
         if (one_chance_in(20))
-            env.mons_alloc[pc] = MONS_DEMONIC_CRAWLER + random2(5);
+            env.mons_alloc[pc] =
+                static_cast<monster_type>(MONS_DEMONIC_CRAWLER + random2(5));
     }
 
     if (one_chance_in(8))
-        env.mons_alloc[7] = MONS_EXECUTIONER + random2(5);
+        env.mons_alloc[7] =
+            static_cast<monster_type>(MONS_EXECUTIONER + random2(5));
 
     if (one_chance_in(5))
-        env.mons_alloc[8] = MONS_EXECUTIONER + random2(5);
+        env.mons_alloc[8] =
+            static_cast<monster_type>(MONS_EXECUTIONER + random2(5));
 
     if (one_chance_in(3))
-        env.mons_alloc[9] = MONS_EXECUTIONER + random2(5);
+        env.mons_alloc[9] =
+            static_cast<monster_type>(MONS_EXECUTIONER + random2(5));
 
     if (one_chance_in(10))
         env.mons_alloc[7 + random2(3)] = MONS_FIEND;
@@ -170,6 +175,8 @@ void pandemonium_mons(void)
         }
         while (!mons_pan(pan_mons));
     }
-    mons_place(pan_mons, BEH_HOSTILE, MHITNOT, false, 50,50,
-               LEVEL_PANDEMONIUM);
+    mgen_data mg(static_cast<monster_type>(pan_mons));
+    mg.level_type = LEVEL_PANDEMONIUM;
+    
+    mons_place(mg);
 }                               // end pandemonium_mons()

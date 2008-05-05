@@ -788,7 +788,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         if (monster->type >= 0 && monster->type < NUM_MONSTERS) 
         {
             death_source = monster->type;
-            mon_num = monster->number;
+            mon_num = monster->base_monster;
 
             // Previously the weapon was only used for dancing weapons,
             // but now we pass it in as a string through the scorefile

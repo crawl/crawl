@@ -2989,7 +2989,9 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
         if (grd[x][y] == DNGN_FLOOR && mgrd[x][y] == NON_MONSTER
             && one_chance_in(4))
         {
-            mons_place( MONS_FIRE_VORTEX, BEH_HOSTILE, MHITNOT, true, x, y );
+            mons_place(
+                mgen_data::hostile_at(
+                    MONS_FIRE_VORTEX, coord_def(x, y)));
         }
     }
 }

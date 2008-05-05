@@ -57,9 +57,6 @@ void cast_dispersal(int pow);
 void cast_snake_charm(int pow);
 void cast_stoneskin(int pow);
 
-void cast_shuggoth_seed(int powc);
-void make_shuggoth(int x, int y, int hp);
-
 int cast_semi_controlled_blink(int pow);
 bool cast_portal_projectile(int pow, bolt& beam);
 

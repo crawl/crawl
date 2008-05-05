@@ -1037,6 +1037,7 @@ public:
     unsigned long flags;               // bitfield of boolean flags
 
     unsigned long experience;
+    monster_type  base_monster;        // zombie base monster, draconian colour
     unsigned int  number;              // #heads (hydra), etc.
     int           colour;
 
@@ -1076,6 +1077,9 @@ public:
     int  foe_distance() const;
     bool needs_berserk(bool check_spells = true) const;
 
+    // Has a hydra-like variable number of attacks based on mons->number.
+    bool has_hydra_multi_attack() const;
+    
     bool has_ench(enchant_type ench) const;
     bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
@@ -1414,7 +1418,7 @@ public:
     FixedVector< shop_struct, MAX_SHOPS >    shop;  // shop list
     FixedVector< trap_struct, MAX_TRAPS >    trap;  // trap list
 
-    FixedVector< int, 20 >                   mons_alloc;
+    FixedVector< monster_type, 20 >          mons_alloc;
     map_markers                              markers;
 
     double                   elapsed_time; // used during level load

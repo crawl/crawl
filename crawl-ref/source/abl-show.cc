@@ -1544,7 +1544,9 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
         summon_ice_beast_etc( 20 + you.skills[SK_INVOCATIONS] * 3,
-                              MONS_NEQOXEC + random2(5), true );
+                              static_cast<monster_type>(
+                                  MONS_NEQOXEC + random2(5)),
+                              true );
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
@@ -1601,7 +1603,8 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         summon_ice_beast_etc( 20 + you.skills[SK_INVOCATIONS] * 3,
-                              MONS_EXECUTIONER + random2(5),
+                              static_cast<monster_type>(
+                                  MONS_EXECUTIONER + random2(5)),
                               true );
 
         exercise(SK_INVOCATIONS, 6 + random2(6));

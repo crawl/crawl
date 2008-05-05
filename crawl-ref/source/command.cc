@@ -927,10 +927,10 @@ static bool do_description(std::string key, std::string footer = "")
             case MONS_RED_DRACONIAN:
             case MONS_WHITE_DRACONIAN:
             case MONS_PALE_DRACONIAN:
-                mon.number = mon_num;
+                mon.base_monster = mon_num;
                 break;
             default:
-                mon.number = 0;
+                mon.base_monster = MONS_PROGRAM_BUG;
                 break;
             }
 

@@ -537,7 +537,7 @@ int mons_speed(int mclass);
  * called from: dungeon - mon-util - spells2
  * *********************************************************************** */
 int mons_zombie_size(int mc);
-int mons_zombie_base(const monsters *monster);
+monster_type mons_zombie_base(const monsters *monster);
 bool mons_class_is_zombified(int mc);
 bool mons_is_zombified(const monsters *monster);
 

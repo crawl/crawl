@@ -394,9 +394,12 @@ void create_spec_monster(void)
     if (mon == -1)
         canned_msg( MSG_OK );
     else
-        create_monster( mon, 0, BEH_SLEEP,
-                        you.x_pos, you.y_pos, MHITNOT, MONS_PROGRAM_BUG,
-                        true );
+    {
+        create_monster(
+            mgen_data::sleeper_at(
+                static_cast<monster_type>(mon),
+                you.pos()));
+    }
 }                               // end create_spec_monster()
 #endif
 
@@ -435,7 +438,7 @@ void create_spec_monster_name(int x, int y)
     mons_spec mspec = mlist.get_monster(0);
     if (!force_place && mspec.mid != -1)
     {
-        coord_def place = find_newmons_square(mspec.mid, x, y);
+        coord_def place = find_newmons_square(mspec.mid, coord_def(x, y));
         if (in_bounds(place))
         {
             x = place.x;
@@ -1431,13 +1434,16 @@ void stethoscope(int mwh)
     // print stats and other info
     mprf(MSGCH_DIAGNOSTICS,
          "HD=%d (%lu) HP=%d/%d AC=%d EV=%d MR=%d SP=%d "
-         "energy=%d num=%d flags=%04lx",
+         "energy=%d%s%s num=%d flags=%04lx",
          menv[i].hit_dice,
          menv[i].experience,
          menv[i].hit_points, menv[i].max_hit_points,
          menv[i].ac, menv[i].ev,
          mons_resist_magic( &menv[i] ),
          menv[i].speed, menv[i].speed_increment,
+         menv[i].base_monster != MONS_PROGRAM_BUG ? " base=" : "",
+         menv[i].base_monster != MONS_PROGRAM_BUG ?
+         get_monster_data(menv[i].base_monster)->name : "",
          menv[i].number, menv[i].flags );
 
     // print behaviour information
@@ -2516,8 +2522,10 @@ void error_message_to_player(void)
 static int create_fsim_monster(int mtype, int hp)
 {
     const int mi =
-        create_monster( mtype, 0, BEH_HOSTILE, you.x_pos, you.y_pos,
-                        MHITNOT, MONS_PROGRAM_BUG );
+        create_monster(
+            mgen_data::hostile_at(
+                static_cast<monster_type>(mtype),
+                you.pos() ) );
 
     if (mi == -1)
         return (mi);

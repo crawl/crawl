@@ -1784,6 +1784,7 @@ static void marshall_monster(writer &th, const monsters &m)
     marshallShort(th, m.hit_points);
     marshallShort(th, m.max_hit_points);
     marshallShort(th, m.number);
+    marshallShort(th, m.base_monster);
     marshallShort(th, m.colour);
 
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
@@ -2047,6 +2048,10 @@ static void unmarshall_monster(reader &th, monsters &m)
     m.hit_points = unmarshallShort(th);
     m.max_hit_points = unmarshallShort(th);
     m.number = unmarshallShort(th);
+    if (_tag_minor_version >= TAG_MINOR_MONBASE)
+        m.base_monster = static_cast<monster_type>(unmarshallShort(th));
+    else
+        m.base_monster = static_cast<monster_type>(m.number);
 
     m.colour = unmarshallShort(th);
 
@@ -2071,7 +2076,7 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
     // how many mons_alloc?
     count = unmarshallByte(th);
     for (i = 0; i < count; ++i)
-        env.mons_alloc[i] = unmarshallShort(th);
+        env.mons_alloc[i] = static_cast<monster_type>( unmarshallShort(th) );
 
     // how many monsters?
     count = unmarshallShort(th);

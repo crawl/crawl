@@ -1581,8 +1581,9 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             if (dem_beh == BEH_CHARMED)
                 mpr("You don't feel so good about this...");
 
-            create_monster( summon_any_demon(DEMON_GREATER), 5, dem_beh,
-                            you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
+            create_monster(
+                mgen_data( summon_any_demon(DEMON_GREATER), dem_beh, 5,
+                           you.pos(), MHITYOU ));
         }
         break;
 
@@ -1796,9 +1797,9 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     case SPELL_SHADOW_CREATURES:
     {
         mpr( "Wisps of shadow whirl around you..." );
-        create_monster( RANDOM_MONSTER, 2, BEH_FRIENDLY,
-                        you.x_pos, you.y_pos, you.pet_target,
-                        MONS_PROGRAM_BUG );
+        create_monster(
+            mgen_data( RANDOM_MONSTER, BEH_FRIENDLY, 2,
+                       you.pos(), you.pet_target ));
         break;
     }
 
@@ -2358,8 +2359,9 @@ static void _miscast_translocation(int severity, const char* cause)
             break;
         case 5:
             mpr("Space twists in upon itself!");
-            create_monster( MONS_SPATIAL_VORTEX, 3, BEH_HOSTILE,
-                            you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
+            create_monster(
+                mgen_data( MONS_SPATIAL_VORTEX, BEH_HOSTILE, 3,
+                           you.pos(), MHITYOU ));
             break;
         }
         break;
@@ -2391,9 +2393,9 @@ static void _miscast_translocation(int severity, const char* cause)
                 const int count = 2 + random2(3);
                 for (int i = 0; i < count; ++i)
                 {
-                    create_monster( MONS_SPATIAL_VORTEX, 3,
-                                    BEH_HOSTILE, you.x_pos, you.y_pos,
-                                    MHITYOU, MONS_PROGRAM_BUG );
+                    create_monster(
+                        mgen_data(MONS_SPATIAL_VORTEX, BEH_HOSTILE, 3,
+                                  you.pos(), MHITYOU));
                 }
             }
             break;
@@ -2485,15 +2487,16 @@ static void _miscast_summoning(int severity, const char* cause)
 
         case 3:
             mpr("Space twists in upon itself!");
-            create_monster( MONS_SPATIAL_VORTEX, 3, BEH_HOSTILE,
-                            you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
+            create_monster(
+                mgen_data(MONS_SPATIAL_VORTEX, BEH_HOSTILE, 3,
+                          you.pos(), MHITYOU));
             break;
 
         case 4:
         case 5:
-            if (create_monster( summon_any_demon(DEMON_LESSER), 5,
-                                BEH_HOSTILE, you.x_pos, you.y_pos,
-                                MHITYOU, MONS_PROGRAM_BUG ) != -1)
+            if (create_monster(
+                    mgen_data(summon_any_demon(DEMON_LESSER), 
+                              BEH_HOSTILE, 5, you.pos(), MHITYOU)) != -1)
             {
                 mpr("Something appears in a flash of light!");
             }
@@ -2510,18 +2513,20 @@ static void _miscast_summoning(int severity, const char* cause)
                 const int count = 2 + random2(3);
                 for (int i = 0; i < count; ++i)
                 {
-                    create_monster( MONS_SPATIAL_VORTEX, 3,
-                                    BEH_HOSTILE, you.x_pos, you.y_pos,
-                                    MHITYOU, MONS_PROGRAM_BUG );
+                    create_monster(
+                        mgen_data(MONS_SPATIAL_VORTEX, 
+                                  BEH_HOSTILE, 3,
+                                  you.pos(), MHITYOU));
                 }
             }
             break;
 
         case 1:
         case 2:
-            if (create_monster( summon_any_demon(DEMON_COMMON), 5,
-                                BEH_HOSTILE, you.x_pos, you.y_pos,
-                                MHITYOU, MONS_PROGRAM_BUG) != -1)
+            if (create_monster(
+                    mgen_data(summon_any_demon(DEMON_COMMON), 
+                              BEH_HOSTILE, 5,
+                              you.pos(), MHITYOU)) != -1)
             {
                 mpr("Something forms out of thin air!");
             }
@@ -2531,27 +2536,23 @@ static void _miscast_summoning(int severity, const char* cause)
         case 4:
         case 5:
             mpr("A chorus of chattering voices calls out to you!");
-            create_monster( summon_any_demon(DEMON_LESSER), 5,
-                            BEH_HOSTILE, you.x_pos, you.y_pos,
-                            MHITYOU, MONS_PROGRAM_BUG );
+            create_monster(
+                mgen_data(summon_any_demon(DEMON_LESSER), 
+                          BEH_HOSTILE, 5, you.pos(), MHITYOU));
 
-            create_monster( summon_any_demon(DEMON_LESSER), 5,
-                            BEH_HOSTILE, you.x_pos, you.y_pos,
-                            MHITYOU, MONS_PROGRAM_BUG );
-
-            if (coinflip())
-            {
-                create_monster( summon_any_demon(DEMON_LESSER), 5,
-                                BEH_HOSTILE, you.x_pos, you.y_pos,
-                                MHITYOU, MONS_PROGRAM_BUG );
-            }
+            create_monster(
+                mgen_data(summon_any_demon(DEMON_LESSER), 
+                          BEH_HOSTILE, 5, you.pos(), MHITYOU));
 
             if (coinflip())
-            {
-                create_monster( summon_any_demon(DEMON_LESSER), 5,
-                                BEH_HOSTILE, you.x_pos, you.y_pos,
-                                MHITYOU, MONS_PROGRAM_BUG );
-            }
+                create_monster(
+                    mgen_data(summon_any_demon(DEMON_LESSER), 
+                              BEH_HOSTILE, 5, you.pos(), MHITYOU));
+            
+            if (coinflip())
+                create_monster(
+                    mgen_data(summon_any_demon(DEMON_LESSER), 
+                              BEH_HOSTILE, 5, you.pos(), MHITYOU));
             break;
         }
         break;
@@ -2560,18 +2561,20 @@ static void _miscast_summoning(int severity, const char* cause)
         switch (random2(4))
         {
         case 0:
-            if (create_monster( MONS_ABOMINATION_SMALL, 0, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG ) != -1)
+            if (create_monster(
+                    mgen_data::alert_hostile_at(
+                        MONS_ABOMINATION_SMALL,
+                        you.pos())) != -1)
             {
                 mpr("Something forms out of thin air.");
             }
             break;
 
         case 1:
-            if (create_monster( summon_any_demon(DEMON_GREATER), 0,
-                                BEH_HOSTILE, you.x_pos, you.y_pos,
-                                MHITYOU, MONS_PROGRAM_BUG ) != -1)
+            if (create_monster(
+                    mgen_data::alert_hostile_at(
+                        summon_any_demon(DEMON_GREATER),
+                        you.pos())) != -1)
             {
                 mpr("You sense a hostile presence.");
             }
@@ -2580,20 +2583,18 @@ static void _miscast_summoning(int severity, const char* cause)
         case 2:
             mpr("Something turns its malign attention towards you...");
 
-            create_monster( summon_any_demon(DEMON_COMMON), 3,
-                            BEH_HOSTILE, you.x_pos, you.y_pos,
-                            MHITYOU, MONS_PROGRAM_BUG );
+            create_monster(
+                mgen_data::alert_hostile_at(
+                    summon_any_demon(DEMON_COMMON), you.pos(), 3));
 
-            create_monster( summon_any_demon(DEMON_COMMON), 3,
-                            BEH_HOSTILE, you.x_pos, you.y_pos,
-                            MHITYOU, MONS_PROGRAM_BUG );
+            create_monster(
+                mgen_data::alert_hostile_at(
+                    summon_any_demon(DEMON_COMMON), you.pos(), 3));
 
             if (coinflip())
-            {
-                create_monster(summon_any_demon(DEMON_COMMON), 3,
-                               BEH_HOSTILE, you.x_pos, you.y_pos,
-                               MHITYOU, MONS_PROGRAM_BUG);
-            }
+                create_monster(
+                    mgen_data::alert_hostile_at(
+                        summon_any_demon(DEMON_COMMON), you.pos(), 3));
             break;
 
         case 3:
@@ -2797,23 +2798,19 @@ static void _miscast_necromancy(int severity, const char* cause)
         case 0:
             mpr("Flickering shadows surround you.");
 
-            create_monster( MONS_SHADOW, 2, BEH_HOSTILE,
-                            you.x_pos, you.y_pos, MHITYOU,
-                            MONS_PROGRAM_BUG );
+            create_monster(
+                mgen_data::alert_hostile_at(
+                    MONS_SHADOW, you.pos(), 2));
 
             if (coinflip())
-            {
-                create_monster( MONS_SHADOW, 2, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG );
-            }
+                create_monster(
+                    mgen_data::alert_hostile_at(
+                        MONS_SHADOW, you.pos(), 2));
 
             if (coinflip())
-            {
-                create_monster( MONS_SHADOW, 2, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG );
-            }
+                create_monster(
+                    mgen_data::alert_hostile_at(
+                        MONS_SHADOW, you.pos(), 2));
             break;
 
         case 1:
@@ -2866,18 +2863,18 @@ static void _miscast_necromancy(int severity, const char* cause)
             break;
 
         case 4:
-            if (create_monster( MONS_SOUL_EATER, 4, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG) != -1)
+            if (create_monster(
+                    mgen_data::alert_hostile_at(
+                        MONS_SOUL_EATER, you.pos(), 4)) != -1)
             {
                 mpr("Something reaches out for you...");
             }
             break;
 
         case 5:
-            if (create_monster( MONS_REAPER, 4, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU,
-                                MONS_PROGRAM_BUG) != -1)
+            if (create_monster(
+                    mgen_data::alert_hostile_at(
+                        MONS_REAPER, you.pos(), 4)) != -1)
             {
                 mpr("Death has come for you...");
             }

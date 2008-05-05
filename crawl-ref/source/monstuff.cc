@@ -1003,9 +1003,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 && mons_holiness(monster) == MH_NATURAL
                 && mons_weight(mons_species(monster->type)))
             {
-                if (create_monster( MONS_SPECTRAL_THING, 0, BEH_FRIENDLY,
-                                    monster->x, monster->y, you.pet_target,
-                                    mons_species(monster->type)) != -1)
+                if (create_monster(
+                        mgen_data( MONS_SPECTRAL_THING, BEH_FRIENDLY,
+                                   0, monster->pos(), you.pet_target,
+                                   0, mons_species(monster->type) )) != -1)
                 {
                     if (death_message)
                         mpr("A glowing mist starts to gather...");
@@ -1441,7 +1442,7 @@ static bool _valid_morph( monsters *monster, int new_mclass )
         || new_mclass == MONS_SHAPESHIFTER
         || new_mclass == MONS_GLOWING_SHAPESHIFTER
 
-        // These require manual setting of mons.number to indicate
+        // These require manual setting of mons.base_monster to indicate
         // what they are a skeleton/zombie/simulacrum/spectral thing of,
         // which we currently aren't smart enough to handle.
         || mons_class_is_zombified(new_mclass)
@@ -1582,8 +1583,9 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     const char old_ench_countdown = monster->ench_countdown;
 
     // deal with mons_sec
-    monster->type   = targetc;
-    monster->number = MONS_PROGRAM_BUG;
+    monster->type         = targetc;
+    monster->base_monster = MONS_PROGRAM_BUG;
+    monster->number       = 0;
 
     mon_enchant abj            = monster->get_ench(ENCH_ABJ);
     mon_enchant charm          = monster->get_ench(ENCH_CHARM);
@@ -3637,9 +3639,9 @@ static bool _handle_scroll(monsters *monster)
             if (mons_near(monster))
             {
                 simple_monster_message(monster, " reads a scroll.");
-                create_monster( MONS_ABOMINATION_SMALL, 2,
-                                SAME_ATTITUDE(monster), monster->x, monster->y,
-                                monster->foe, MONS_PROGRAM_BUG );
+                create_monster(
+                    mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(monster),
+                              2, monster->pos(), monster->foe) );
                 read  = true;
                 ident = ID_KNOWN_TYPE;
             }
@@ -6069,14 +6071,14 @@ static bool _monster_move(monsters *monster)
     {
         if (mons_is_zombified(monster))
         {
-            // for zombies, monster type is kept in mon->number
-            if (mons_itemuse(monster->number) >= MONUSE_OPEN_DOORS)
+            // for zombies, monster type is kept in mon->base_monster
+            if (mons_itemuse(monster->base_monster) >= MONUSE_OPEN_DOORS)
             {
                 _mons_open_door(monster, newpos);
                 return true;
             }
         }
-        else if (mons_itemuse(monster->type) >= MONUSE_OPEN_DOORS)
+        else if (mons_itemuse(monster->base_monster) >= MONUSE_OPEN_DOORS)
         {
             _mons_open_door(monster, newpos);
             return true;

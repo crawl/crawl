@@ -523,9 +523,10 @@ static bool xom_is_good(int sever)
             if (!is_demonic)
                 numdifferent++;
 
-            summons[i] = create_monster(mon, 3, BEH_GOD_GIFT,
-                                        you.x_pos, you.y_pos,
-                                        you.pet_target, MONS_PROGRAM_BUG);
+            summons[i] =
+                create_monster(
+                    mgen_data(mon, BEH_GOD_GIFT, 3,
+                              you.pos(), you.pet_target));
 
             if (summons[i] != -1)
                 success = true;
@@ -606,8 +607,8 @@ static bool xom_is_good(int sever)
         beh_type beh = (different && hostiletype) ? BEH_HOSTILE
                                                   : BEH_GOD_GIFT;
 
-        if (create_monster(mon, 6, beh, you.x_pos, you.y_pos,
-                           you.pet_target, MONS_PROGRAM_BUG) != -1)
+        if (create_monster(
+                mgen_data(mon, beh, 6, you.pos(), you.pet_target)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single holy summon"));
@@ -686,9 +687,9 @@ static bool xom_is_good(int sever)
         beh_type beh = (different && hostiletype) ? BEH_HOSTILE
                                                   : BEH_GOD_GIFT;
 
-        if (create_monster(xom_random_demon(sever, one_chance_in(8)),
-                           0, beh, you.x_pos, you.y_pos,
-                           you.pet_target, MONS_PROGRAM_BUG) != -1)
+        if (create_monster(
+                mgen_data(xom_random_demon(sever, one_chance_in(8)),
+                          beh, 0, you.pos(), you.pet_target)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
@@ -853,9 +854,9 @@ static bool xom_is_bad(int sever)
 
                 for (int i = 0; i < numdemons; i++)
                 {
-                    if (create_monster(xom_random_punishment_demon(sever),
-                                       4, BEH_HOSTILE, you.x_pos, you.y_pos,
-                                       MHITNOT, MONS_PROGRAM_BUG) != -1)
+                    if (create_monster(
+                            mgen_data(xom_random_punishment_demon(sever),
+                                      BEH_HOSTILE, 4, you.pos())) != -1)
                     {
                         success = true;
                     }
