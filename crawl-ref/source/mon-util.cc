@@ -731,7 +731,7 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
     int mc = mons->type;
     const bool zombified = mons_is_zombified(mons);
 
-    if ((attk_number < 0 || attk_number > 3) || mc == MONS_HYDRA)
+    if ((attk_number < 0 || attk_number > 3) || mons->has_hydra_multi_attack())
         attk_number = 0;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
