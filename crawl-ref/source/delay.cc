@@ -410,7 +410,7 @@ void stop_delay( bool stop_stair_travel )
 
     case DELAY_FEED_VAMPIRE:
     {
-        mpr( "You stop draining the corpse." );
+        mpr("You stop draining the corpse.");
 
         item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
                                         : mitm[delay.parm2]);
@@ -684,7 +684,7 @@ void handle_delay( void )
                     // Vampires won't continue bottling rotting corpses.
                     if (can_bottle_blood_from_corpse(mitm[delay.parm1].plus))
                     {
-                        mpr("You stop bottling this corpse's foul smelling "
+                        mpr("You stop bottling this corpse's foul-smelling "
                             "blood!");
                         delay.duration = 0;
                     }
@@ -704,7 +704,6 @@ void handle_delay( void )
     }
     if ( delay.type == DELAY_MULTIDROP )
     {
-
         // Throw away invalid items; items usually go invalid because
         // of chunks rotting away.
         while (!items_for_multidrop.empty()
