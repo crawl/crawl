@@ -180,7 +180,7 @@ int check_your_resists(int hurted, beam_type flavour)
     case BEAM_NEG:
         resist = player_prot_life();
 
-        // TSO's protection
+        // TSO's protection.
         if (you.religion == GOD_SHINING_ONE && you.piety > resist * 50)
         {
             int unhurted = (you.piety * hurted) / 150;
