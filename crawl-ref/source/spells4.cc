@@ -1662,11 +1662,9 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     fire_beam(beem);
 
     // both old and new code use up a potion:
-    if (you.inv[potion].sub_type == POT_BLOOD
-        || you.inv[potion].sub_type == POT_BLOOD_COAGULATED)
-    {
+    if (is_blood_potion(you.inv[potion]))
         remove_oldest_blood_potion(you.inv[potion]);
-    }
+
     dec_inv_item_quantity( potion, 1 );
 
     return (true);

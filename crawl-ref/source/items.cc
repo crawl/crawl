@@ -1533,12 +1533,9 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                     you.inv[m].inscription = mitm[obj].inscription;
                 }
 
-                if (mitm[obj].base_type == OBJ_POTIONS
-                    && (mitm[obj].sub_type == POT_BLOOD
-                        || mitm[obj].sub_type == POT_BLOOD_COAGULATED))
-                {
+                if (is_blood_potion(mitm[obj]))
                     pick_up_blood_potions_stack(mitm[obj], quant_got);
-                }
+
                 inc_inv_item_quantity( m, quant_got );
                 dec_mitm_item_quantity( obj, quant_got );
                 burden_change();
@@ -1592,9 +1589,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     check_note_item(item);
 
     item.quantity = quant_got;
-    if (mitm[obj].base_type == OBJ_POTIONS
-        && (mitm[obj].sub_type == POT_BLOOD
-            || mitm[obj].sub_type == POT_BLOOD_COAGULATED))
+    if (is_blood_potion(mitm[obj]))
     {
         if (quant_got != mitm[obj].quantity)
         {
@@ -1759,9 +1754,7 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
             {
                 inc_mitm_item_quantity( i, quant_drop );
 
-                if (item.base_type == OBJ_POTIONS
-                    && (item.sub_type == POT_BLOOD
-                        || item.sub_type == POT_BLOOD_COAGULATED))
+                if (is_blood_potion(item))
                 {
                     item_def help = item;
                     drop_blood_potions_stack(help, quant_drop, x_plos, y_plos);
@@ -1799,9 +1792,7 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
     }
 
     move_item_to_grid( &new_item, x_plos, y_plos );
-    if (item.base_type == OBJ_POTIONS
-        && (item.sub_type == POT_BLOOD
-            || item.sub_type == POT_BLOOD_COAGULATED)
+    if (is_blood_potion(item)
         && item.quantity != quant_drop) // partial drop only
     {
         // since only the oldest potions have been dropped,
@@ -1923,9 +1914,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
         StashTrack.add_stash();
 
-    if (you.inv[item_dropped].base_type == OBJ_POTIONS
-        && (you.inv[item_dropped].sub_type == POT_BLOOD
-            || you.inv[item_dropped].sub_type == POT_BLOOD_COAGULATED)
+    if (is_blood_potion(you.inv[item_dropped])
         && you.inv[item_dropped].quantity != quant_drop)
     {
         // oldest potions have been dropped

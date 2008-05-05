@@ -2565,8 +2565,7 @@ bool is_evil_item(const item_def& item)
         retval = (item.sub_type == SCR_TORMENT);
         break;
     case OBJ_POTIONS:
-        retval = (item.sub_type == POT_BLOOD
-                  || item.sub_type == POT_BLOOD_COAGULATED);
+        retval = is_blood_potion(item);
         break;
     case OBJ_BOOKS:
         retval = (item.sub_type == BOOK_NECROMANCY

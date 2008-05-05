@@ -2361,7 +2361,7 @@ static void _generate_potion_item(item_def& item, int force_type,
         item.sub_type = stype;
     }
 
-    if (item.sub_type == POT_BLOOD || item.sub_type == POT_BLOOD_COAGULATED)
+    if (is_blood_potion(item))
         init_stack_blood_potions(item);
 }
 

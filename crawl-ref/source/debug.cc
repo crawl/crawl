@@ -1245,11 +1245,8 @@ void create_spec_object()
 
         case OBJ_POTIONS:
             mitm[thing_created].quantity = 12;
-            if (mitm[thing_created].sub_type == POT_BLOOD
-                || mitm[thing_created].sub_type == POT_BLOOD_COAGULATED)
-            {
+            if (is_blood_potion(mitm[thing_created]))
                 init_stack_blood_potions(mitm[thing_created]);
-            }
             break;
 
         case OBJ_FOOD:

@@ -164,9 +164,7 @@ void turn_corpse_into_chunks( item_def &item )
 // initialize blood potions with a vector of timers
 void init_stack_blood_potions(item_def &stack, int age)
 {
-    ASSERT(stack.base_type == OBJ_POTIONS);
-    ASSERT(stack.sub_type == POT_BLOOD
-           || stack.sub_type == POT_BLOOD_COAGULATED);
+    ASSERT(is_blood_potion(stack));
 
     CrawlHashTable &props = stack.props;
     props.clear(); // sanity measure
@@ -218,10 +216,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
 {
     item_def &blood = mitm[obj];
     ASSERT(is_valid_item(blood));
-    ASSERT(blood.base_type == OBJ_POTIONS);
-
-    ASSERT(blood.sub_type == POT_BLOOD
-           || blood.sub_type == POT_BLOOD_COAGULATED);
+    ASSERT(is_blood_potion(blood));
 
     CrawlHashTable &props = blood.props;
     if (!props.exists("timer"))
@@ -420,10 +415,7 @@ static void _potion_stack_changed_message(item_def &potion, int num_changed,
 bool maybe_coagulate_blood_potions_inv(item_def &blood)
 {
     ASSERT(is_valid_item(blood));
-    ASSERT(blood.base_type == OBJ_POTIONS);
-
-    ASSERT(blood.sub_type == POT_BLOOD
-           || blood.sub_type == POT_BLOOD_COAGULATED);
+    ASSERT(is_blood_potion(blood));
 
     CrawlHashTable &props = blood.props;
     if (!props.exists("timer"))
@@ -728,10 +720,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 long remove_oldest_blood_potion(item_def &stack)
 {
     ASSERT(is_valid_item(stack));
-    ASSERT(stack.base_type == OBJ_POTIONS);
-
-    ASSERT (stack.sub_type == POT_BLOOD
-            || stack.sub_type == POT_BLOOD_COAGULATED);
+    ASSERT(is_blood_potion(stack));
 
     CrawlHashTable &props = stack.props;
     if (!props.exists("timer"))
@@ -751,10 +740,7 @@ long remove_oldest_blood_potion(item_def &stack)
 void remove_newest_blood_potion(item_def &stack, int quant)
 {
     ASSERT(is_valid_item(stack));
-    ASSERT(stack.base_type == OBJ_POTIONS);
-
-    ASSERT (stack.sub_type == POT_BLOOD
-            || stack.sub_type == POT_BLOOD_COAGULATED);
+    ASSERT(is_blood_potion(stack));
 
     CrawlHashTable &props = stack.props;
     if (!props.exists("timer"))
@@ -794,9 +780,7 @@ void drop_blood_potions_stack(item_def &stack, int quant, int x, int y)
         return;
 
     ASSERT(quant > 0 && quant <= stack.quantity);
-    ASSERT(stack.base_type == OBJ_POTIONS);
-    ASSERT(stack.sub_type == POT_BLOOD
-           || stack.sub_type == POT_BLOOD_COAGULATED);
+    ASSERT(is_blood_potion(stack));
 
     CrawlHashTable &props = stack.props;
     if (!props.exists("timer"))
@@ -847,9 +831,7 @@ void pick_up_blood_potions_stack(item_def &stack, int quant)
     if (!is_valid_item(stack))
         return;
 
-    ASSERT(stack.base_type == OBJ_POTIONS);
-    ASSERT(stack.sub_type == POT_BLOOD
-           || stack.sub_type == POT_BLOOD_COAGULATED);
+    ASSERT(is_blood_potion(stack));
 
     CrawlHashTable &props = stack.props;
     if (!props.exists("timer"))
@@ -966,7 +948,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     you.wield_change  = true;
     you.redraw_quiver = true;
 
-    if (potion.sub_type == POT_BLOOD || potion.sub_type == POT_BLOOD_COAGULATED)
+    if (is_blood_potion(potion))
     {
         // We're being nice here, and only decay the *oldest* potions.
         for (int i = 0; i < amount; i++)

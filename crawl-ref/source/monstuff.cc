@@ -2663,7 +2663,7 @@ monsters *choose_random_monster_on_level(int weight,
                         chosen = mon;
                 }
             }
-    
+
     return chosen;
 }
 
@@ -3505,12 +3505,8 @@ static bool _handle_potion(monsters *monster, bolt & beem)
         {
             if (dec_mitm_item_quantity( monster->inv[MSLOT_POTION], 1 ))
                 monster->inv[MSLOT_POTION] = NON_ITEM;
-            else if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_BLOOD
-                     || mitm[monster->inv[MSLOT_POTION]].sub_type
-                            == POT_BLOOD_COAGULATED)
-            {
+            else if (is_blood_potion(mitm[monster->inv[MSLOT_POTION]]))
                 remove_oldest_blood_potion(mitm[monster->inv[MSLOT_POTION]]);
-            }
 
             if (ident != ID_UNKNOWN_TYPE && was_visible)
                 set_ident_type(OBJ_POTIONS, potion_type, ident);

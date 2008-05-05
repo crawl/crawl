@@ -3505,11 +3505,19 @@ void drink( int slot )
 
     const bool alreadyknown = item_type_known(you.inv[item_slot]);
 
+    if (you.hunger_state == HS_ENGORGED && alreadyknown
+        && (is_blood_potion(you.inv[item_slot])
+            || you.inv[item_slot].sub_type == POT_PORRIDGE))
+    {
+        mpr("You are much too full right now.");
+        return;
+    }
+
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.
     const bool dangerous =
-        player_in_a_dangerous_place() && (you.experience_level > 1);
+        (player_in_a_dangerous_place() && you.experience_level > 1);
 
     if (potion_effect(static_cast<potion_type>(you.inv[item_slot].sub_type),
                       40, alreadyknown))
@@ -3531,8 +3539,7 @@ void drink( int slot )
         xom_is_stimulated(255);
     }
 
-    if (you.inv[item_slot].sub_type == POT_BLOOD
-        || you.inv[item_slot].sub_type == POT_BLOOD_COAGULATED)
+    if (is_blood_potion(you.inv[item_slot]))
     {
         // always drink oldest potion
         remove_oldest_blood_potion(you.inv[item_slot]);

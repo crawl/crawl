@@ -1632,12 +1632,8 @@ bool acquirement(object_class_type class_wanted, int agent,
         else if (quant > 1)
             thing.quantity = quant;
 
-        if (thing.base_type == OBJ_POTIONS
-            && (thing.sub_type == POT_BLOOD
-                || thing.sub_type == POT_BLOOD_COAGULATED))
-        {
+        if (is_blood_potion(thing))
             init_stack_blood_potions(thing);
-        }
 
         // remove curse flag from item
         do_uncurse_item( thing );
@@ -2288,15 +2284,10 @@ static bool food_item_needs_time_check(item_def &item)
     }
 
     if (item.base_type == OBJ_FOOD && item.sub_type != FOOD_CHUNK)
-    {
         return false;
-    }
 
-    if (item.base_type == OBJ_POTIONS && item.sub_type != POT_BLOOD
-        && item.sub_type != POT_BLOOD_COAGULATED)
-    {
+    if (item.base_type == OBJ_POTIONS && !is_blood_potion(item))
         return false;
-    }
 
     return true;
 }

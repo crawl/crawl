@@ -28,6 +28,7 @@
 #include "food.h"
 #include "items.h"
 #include "itemprop.h"
+#include "it_use2.h"
 #include "macro.h"
 #include "mon-util.h"
 #include "notes.h"
@@ -2154,6 +2155,15 @@ bool food_is_veg( const item_def &item )
     ASSERT( is_valid_item( item ) && item.base_type == OBJ_FOOD );
 
     return (Food_prop[ Food_index[item.sub_type] ].herb_mod > 0);
+}
+
+bool is_blood_potion( const item_def &item)
+{
+    if (item.base_type != OBJ_POTIONS)
+        return false;
+
+    return (item.sub_type == POT_BLOOD
+            || item.sub_type == POT_BLOOD_COAGULATED);
 }
 
 // returns food value for one turn of eating

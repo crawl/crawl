@@ -342,9 +342,7 @@ void sublimation(int power)
 
             dec_inv_item_quantity( wielded, 1 );
         }
-        else if (you.inv[wielded].base_type == OBJ_POTIONS
-                 && (you.inv[wielded].sub_type == POT_BLOOD
-                     || you.inv[wielded].sub_type == POT_BLOOD_COAGULATED))
+        else if (is_blood_potion(you.inv[wielded]))
         {
             mprf("The blood within %s frothes and boils.",
                  you.inv[wielded].quantity == 1 ? "the flask you are holding"

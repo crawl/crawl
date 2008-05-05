@@ -1699,8 +1699,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     case OBJ_POTIONS:
 #ifdef DEBUG_BLOOD_POTIONS
         // list content of timer vector for blood potions
-        if (item.sub_type == POT_BLOOD
-            || item.sub_type == POT_BLOOD_COAGULATED)
+        if (is_blood_potion(item))
         {
             item_def stack = static_cast<item_def>(item);
             CrawlHashTable &props = stack.props;

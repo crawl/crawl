@@ -1,7 +1,7 @@
 /*
  *  File:       delay.h
  *  Summary:    Functions for handling multi-turn actions.
- *  
+ *
  *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Change History (most recent first):
@@ -44,7 +44,7 @@ struct activity_interrupt_data
         : apt(AIP_STRING), data(s), context()
     {
     }
-    activity_interrupt_data(const std::string &s) 
+    activity_interrupt_data(const std::string &s)
         : apt(AIP_STRING), data(s.c_str()), context()
     {
     }
@@ -72,13 +72,14 @@ struct ait_hp_loss
 
 void start_delay( delay_type type, int turns, int parm1 = 0, int parm2 = 0 );
 void stop_delay( bool stop_stair_travel = false );
-bool you_are_delayed( void ); 
-delay_type current_delay_action( void ); 
+bool you_are_delayed( void );
+delay_type current_delay_action( void );
 int check_recital_audience( void );
 void handle_delay( void );
 
 bool is_run_delay(int delay);
 bool is_being_butchered(const item_def &item);
+bool is_vampire_feeding( void );
 void stop_butcher_delay();
 
 const char *activity_interrupt_name(activity_interrupt_type ai);
@@ -88,8 +89,8 @@ const char *delay_name(int delay);
 delay_type get_delay(const std::string &);
 
 void perform_activity();
-bool interrupt_activity( activity_interrupt_type ai, 
-                         const activity_interrupt_data &a 
+bool interrupt_activity( activity_interrupt_type ai,
+                         const activity_interrupt_data &a
                             = activity_interrupt_data() );
 
 #endif

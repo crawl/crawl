@@ -83,7 +83,7 @@ void set_hunger(int new_hunger_level, bool suppress_msg);
  * *********************************************************************** */
 void weapon_switch( int targ );
 
-bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, 
+bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 bool reqid = false, bool check_hunger = true);
 
 void eat_floor_item(int item_link);
@@ -95,6 +95,9 @@ void eat_from_inventory(int which_inventory_slot);
 bool prompt_eat_from_inventory(int slot = -1);
 
 void chunk_nutrition_message(int nutrition);
+
+void vampire_nutrition_per_turn(const item_def &corpse,
+                                int feeding = 0);
 
 int you_max_hunger();
 int you_min_hunger();

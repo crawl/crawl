@@ -1474,9 +1474,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                             if (wielded)
                                 desc += EOL "[Ctrl-L-Click] Unwield";
                             else if ( item_type_known(item)
-                                      && (item.sub_type == POT_BLOOD
-                                          || item.sub_type
-                                                 == POT_BLOOD_COAGULATED)
+                                      && is_blood_potion(item)
                                       && player_knows_spell(
                                             SPELL_SUBLIMATION_OF_BLOOD) )
                             {

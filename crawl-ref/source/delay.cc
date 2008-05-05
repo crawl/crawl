@@ -312,9 +312,9 @@ void stop_delay( bool stop_stair_travel )
     ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
 
     const bool butcher_swap_warn =
-        delay.type == DELAY_BUTCHER
-        && (you.delay_queue.size() >= 2
-            && you.delay_queue[1].type == DELAY_WEAPON_SWAP);
+        (delay.type == DELAY_BUTCHER
+         && you.delay_queue.size() >= 2
+         && you.delay_queue[1].type == DELAY_WEAPON_SWAP);
 
     const int butcher_swap_weapon =
         butcher_swap_warn? you.delay_queue[1].parm1 : -10;
@@ -408,6 +408,33 @@ void stop_delay( bool stop_stair_travel )
         // this to be stoppable, with partial food items implemented. -- bwr
         break;
 
+    case DELAY_FEED_VAMPIRE:
+    {
+        mpr( "You stop draining the corpse." );
+
+        item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
+                                        : mitm[delay.parm2]);
+
+        if (!mons_skeleton( corpse.plus ))
+        {
+            if (delay.parm1)
+                dec_inv_item_quantity( delay.parm2, 1 );
+            else
+                dec_mitm_item_quantity( delay.parm2, 1 );
+        }
+        else
+        {
+            mpr("All blood oozes out of the corpse!");
+            bleed_onto_floor(you.x_pos, you.y_pos, corpse.plus, delay.duration,
+                             false);
+            corpse.sub_type = CORPSE_SKELETON;
+            corpse.special = 90;
+            corpse.colour = LIGHTGREY;
+        }
+        did_god_conduct(DID_DRINK_BLOOD, 8);
+        pop_delay();
+        break;
+    }
     case DELAY_ARMOUR_ON:
     case DELAY_ARMOUR_OFF:
         // These two have the default action of not being interruptible,
@@ -482,6 +509,15 @@ bool is_being_butchered(const item_def &item)
     }
 
     return (false);
+}
+
+bool is_vampire_feeding()
+{
+    if (!you_are_delayed())
+        return (false);
+
+    const delay_queue_item &delay = you.delay_queue.front();
+    return (delay.type == DELAY_FEED_VAMPIRE);
 }
 
 // check whether there are monsters who might be influenced by Recite
@@ -576,6 +612,13 @@ void handle_delay( void )
             if (apply_area_visible(recite_to_monsters, delay.parm1))
                 viewwindow(true, false);
             break;
+        case DELAY_FEED_VAMPIRE:
+        {
+            item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
+                                            : mitm[delay.parm2]);
+            vampire_nutrition_per_turn(corpse, -1);
+            break;
+        }
         default:
             break;
         }
@@ -740,9 +783,22 @@ void handle_delay( void )
             items_for_multidrop.erase( items_for_multidrop.begin() );
             break;
         case DELAY_EAT:
-            mprf(MSGCH_MULTITURN_ACTION, "You continue %sing.",
-                 you.species == SP_VAMPIRE ? "drink" : "eat");
+            mpr("You continue eating.", MSGCH_MULTITURN_ACTION);
             break;
+        case DELAY_FEED_VAMPIRE:
+        {
+            item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
+                                            : mitm[delay.parm2]);
+            if (food_is_rotten(corpse))
+            {
+                mpr("This corpse has started to rot.", MSGCH_ROTTEN_MEAT);
+                stop_delay();
+                break;
+            }
+            mprf(MSGCH_MULTITURN_ACTION, "You continue drinking.");
+            vampire_nutrition_per_turn(corpse, 0);
+            break;
+        }
         default:
             break;
         }
@@ -822,14 +878,37 @@ static void finish_delay(const delay_queue_item &delay)
         break;
     }
     case DELAY_EAT:
-        mprf("You finish %sing.",
-             you.species == SP_VAMPIRE ? "drink" : "eat");
+        mprf("You finish eating.");
         // For chunks, warn the player if they're not getting much
         // nutrition.
         if (delay.parm1)
             chunk_nutrition_message(delay.parm1);
         break;
 
+    case DELAY_FEED_VAMPIRE:
+    {
+        mprf("You finish drinking.");
+        did_god_conduct(DID_DRINK_BLOOD, 8);
+
+        item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
+                                        : mitm[delay.parm2]);
+        vampire_nutrition_per_turn(corpse, 1);
+
+        if (!mons_skeleton( corpse.plus ))
+        {
+            if (delay.parm1)
+                dec_inv_item_quantity( delay.parm2, 1 );
+            else
+                dec_mitm_item_quantity( delay.parm2, 1 );
+        }
+        else if (!one_chance_in(4))
+        {
+            corpse.sub_type = CORPSE_SKELETON;
+            corpse.special = 90;
+            corpse.colour = LIGHTGREY;
+        }
+        break;
+    }
     case DELAY_MEMORISE:
         mpr( "You finish memorising." );
         add_spell_to_memory( static_cast<spell_type>( delay.parm1 ) );
@@ -1325,10 +1404,11 @@ static int userdef_interrupt_activity( const delay_queue_item &idelay,
             return (true);
     }
 
-    if (delay == DELAY_MACRO &&
-                clua.callbooleanfn(true, "c_interrupt_macro",
-                    "sA", interrupt_name, &at))
+    if (delay == DELAY_MACRO && clua.callbooleanfn(true, "c_interrupt_macro",
+                                                   "sA", interrupt_name, &at))
+    {
         return (true);
+    }
 
 #endif
     return (false);
@@ -1346,8 +1426,8 @@ static bool should_stop_activity(const delay_queue_item &item,
     if (userd)
         return (userd == 1);
 
-    return (ai == AI_FORCE_INTERRUPT ||
-            (Options.activity_interrupts[item.type][ai]));
+    return (ai == AI_FORCE_INTERRUPT
+            || Options.activity_interrupts[item.type][ai]);
 }
 
 inline static void monster_warning(activity_interrupt_type ai,
@@ -1547,8 +1627,8 @@ activity_interrupt_type get_activity_interrupt(const std::string &name)
 
 static const char *delay_names[] =
 {
-    "not_delayed", "eat", "armour_on", "armour_off", "jewellery_on",
-    "memorise", "butcher", "weapon_swap", "passwall",
+    "not_delayed", "eat", "vampire_feed", "armour_on", "armour_off",
+    "jewellery_on", "memorise", "butcher", "weapon_swap", "passwall",
     "drop_item", "multidrop", "ascending_stairs", "descending_stairs", "recite",
     "run", "rest", "travel", "macro", "interruptible", "uninterruptible",
 };
