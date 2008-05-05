@@ -300,7 +300,7 @@ static int _tileidx_monster_base(int mon_idx, bool detected)
 
     case MONS_HYDRA:
         // Number of heads
-        return TILE_MONS_HYDRA + std::min(mon->number, 7) - 1;
+        return TILE_MONS_HYDRA + std::min((int)mon->number, 7) - 1;
 
     case MONS_SKELETON_SMALL:
         return TILE_MONS_SKELETON_SMALL;
