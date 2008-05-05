@@ -516,7 +516,6 @@ corpse_effect_type mons_corpse_effect(int mc)
     return (smc->corpse_thingy);
 }                               // end mons_corpse_effect()
 
-
 monster_type mons_species( int mc )
 {
     const monsterentry *me = get_monster_data(mc);
