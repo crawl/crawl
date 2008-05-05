@@ -455,11 +455,17 @@ static int raise_corpse( int corps, int corx, int cory,
                 type = MONS_SKELETON_LARGE;
         }
 
+        const int number =
+            mitm[corps].props.exists(MONSTER_NUMBER)
+            ? mitm[corps].props[MONSTER_NUMBER].get_short()
+            : 0;
+
         create_monster(
             mgen_data(
                 type, corps_beh, 0,
                 coord_def(corx, cory), corps_hit,
-                0, static_cast<monster_type>(mitm[corps].plus)));
+                0, static_cast<monster_type>(mitm[corps].plus),
+                number));
 
         destroy_item(corps);
     }

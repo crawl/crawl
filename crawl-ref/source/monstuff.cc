@@ -336,6 +336,7 @@ static void _place_monster_corpse(const monsters *monster)
     mitm[o].special   = 210;  // rot time
     mitm[o].colour    = mons_class_colour(corpse_class);
     mitm[o].quantity  = 1;
+    mitm[o].props[MONSTER_NUMBER] = short(monster->number);
 
     if (mitm[o].colour == BLACK)
         mitm[o].colour = monster->colour;

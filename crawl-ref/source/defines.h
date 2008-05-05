@@ -305,6 +305,8 @@ const int LABYRINTH_BORDER = 4;
 #define MIN(x, y) MINIMUM(x, y)
 #define MAX(x,y) (((x) > (y)) ? (x) : (y))
 
+const char * const MONSTER_NUMBER = "monster-number";
+
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10
 #define KEY_MACRO_DISABLE_MORE -1
