@@ -2368,7 +2368,9 @@ bool melee_attack::chop_hydra_head( int dam,
 
 bool melee_attack::decapitate_hydra(int dam, int damage_type)
 {
-    if (defender->atype() == ACT_MONSTER && def->has_hydra_multi_attack())
+    if (defender->atype() == ACT_MONSTER
+        && def->has_hydra_multi_attack()
+        && defender->id() != MONS_SPECTRAL_THING)
     {
         const int dam_type = (damage_type != -1) ? damage_type
                                                  : attacker->damage_type();
