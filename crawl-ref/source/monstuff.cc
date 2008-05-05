@@ -1007,7 +1007,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 if (create_monster(
                         mgen_data( MONS_SPECTRAL_THING, BEH_FRIENDLY,
                                    0, monster->pos(), you.pet_target,
-                                   0, mons_species(monster->type) )) != -1)
+                                   0, mons_species(monster->type),
+                                   monster->number )) != -1)
                 {
                     if (death_message)
                         mpr("A glowing mist starts to gather...");
