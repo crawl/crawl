@@ -48,6 +48,7 @@
 
 extern std::vector<SelItem> items_for_multidrop;
 
+static void xom_check_corpse_waste();
 static void armour_wear_effects(const int item_inv_slot);
 static void handle_run_delays(const delay_queue_item &delay);
 static void handle_macro_delay();
@@ -411,7 +412,7 @@ void stop_delay( bool stop_stair_travel )
     case DELAY_FEED_VAMPIRE:
     {
         mpr("You stop draining the corpse.");
-
+        xom_check_corpse_waste();
         item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
                                         : mitm[delay.parm2]);
 
@@ -791,6 +792,7 @@ void handle_delay( void )
             if (food_is_rotten(corpse))
             {
                 mpr("This corpse has started to rot.", MSGCH_ROTTEN_MEAT);
+                xom_check_corpse_waste();
                 stop_delay();
                 break;
             }
