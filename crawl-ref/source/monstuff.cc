@@ -1004,10 +1004,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 && mons_holiness(monster) == MH_NATURAL
                 && mons_weight(mons_species(monster->type)))
             {
-                if (create_monster(
+                const monster_type spectre = mons_species(monster->type);
+                // Don't allow 0-headed hydras to become spectral hydras.
+                if ((spectre != MONS_HYDRA || monster->number)
+                    && create_monster(
                         mgen_data( MONS_SPECTRAL_THING, BEH_FRIENDLY,
                                    0, monster->pos(), you.pet_target,
-                                   0, mons_species(monster->type),
+                                   0, spectre,
                                    monster->number )) != -1)
                 {
                     if (death_message)

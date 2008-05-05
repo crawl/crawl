@@ -460,12 +460,18 @@ static int raise_corpse( int corps, int corx, int cory,
             ? mitm[corps].props[MONSTER_NUMBER].get_short()
             : 0;
 
+        const monster_type zombie_type =
+            static_cast<monster_type>(mitm[corps].plus);
+
+        // Headless hydras cannot be raised, sorry.
+        if (!number && zombie_type == MONS_HYDRA)
+            return (0);
+
         create_monster(
             mgen_data(
                 type, corps_beh, 0,
                 coord_def(corx, cory), corps_hit,
-                0, static_cast<monster_type>(mitm[corps].plus),
-                number));
+                0, zombie_type, number));
 
         destroy_item(corps);
     }
