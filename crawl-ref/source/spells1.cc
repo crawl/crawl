@@ -44,6 +44,7 @@
 #include "randart.h"
 #include "religion.h"
 #include "skills2.h"
+#include "spells2.h"
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-util.h"
@@ -771,7 +772,7 @@ int cast_revitalisation(int pow)
     if (step == 0)
     {
         step_max = std::min(pow, 6);
-        type = random2(4);
+        type = random2(6);
         hp_amt = 3;
         mp_amt = 1;
     }
@@ -895,6 +896,50 @@ int cast_revitalisation(int pow)
         type = 3;
         // Deliberate fall through, resetting the step counter.
 
+    case 3:
+        // Restore and/or temporarily boost stats.
+        switch (step)
+        {
+        case 0:
+            if (you.strength < you.max_strength || you.intel < you.max_intel
+                || you.dex < you.max_dex)
+            {
+                success = true;
+                restore_stat(STAT_STRENGTH, 1, true);
+                restore_stat(STAT_INTELLIGENCE, 1, true);
+                restore_stat(STAT_DEXTERITY, 1, true);
+                break;
+            }
+
+            step = 1;
+            // Deliberate fall through.
+
+        case 1:
+            if (you.strength < you.max_strength || you.intel < you.max_intel
+                || you.dex < you.max_dex)
+            {
+                success = true;
+                restore_stat(STAT_STRENGTH, 0, true);
+                restore_stat(STAT_INTELLIGENCE, 0, true);
+                restore_stat(STAT_DEXTERITY, 0, true);
+                break;
+            }
+
+            step = 2;
+            // Deliberate fall through.
+
+        // XXX: Temporary stat boosting is not implemented yet.
+        default:
+            break;
+        }
+
+        if (success)
+            break;
+
+        step = 0;
+        type = 4;
+        // Deliberate fall through, resetting the step counter.
+
     default:
         // Do nothing.
         break;
@@ -917,8 +962,9 @@ int cast_revitalisation(int pow)
                             (step == 4) ? "appropriately"
                                         : "impressively",
                             (type == 0) ? "better" :
-                            (type == 1) ? "invigorated"
-                                        : "powerful");
+                            (type == 1) ? "invigorated" :
+                            (type == 2) ? "powerful"
+                                        : "renewed");
 
     // The more the step counter has advanced, the greater the piety
     // cost is.
