@@ -945,7 +945,7 @@ int cast_revitalisation(int pow)
         break;
     }
 
-    // If revitalisation failed, reset the step counter and get out,
+    // If revitalisation has failed, reset the step counter and get out,
     // indicating failure.
     if (!success)
     {
@@ -976,8 +976,8 @@ int cast_revitalisation(int pow)
     // Increment the step counter.
     step++;
 
-    // If revitalisation went as far as possible, reset the step counter
-    // and get out, indicating maximum success.
+    // If revitalisation has gone as far as possible, reset the step
+    // counter and get out, indicating maximum success.
     if (step == step_max)
     {
         step = 0;
