@@ -2805,7 +2805,6 @@ static monster_type _pick_unique(int lev)
 // Return the number of uniques placed.
 static int _place_uniques(int level_number, char level_type)
 {
-    int not_used = 0;
     // Unique beasties:
     if (level_number <= 0 || level_type != LEVEL_DUNGEON
         || !your_branch().has_uniques)
@@ -2843,11 +2842,12 @@ static int _place_uniques(int level_number, char level_type)
                       level_number, PROX_ANYWHERE );
         mg.map_mask = MMT_NO_MONS;
 
-        if (place_monster(mg) != -1)
+        const int mindex = place_monster(mg);
+        if (mindex != -1)
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Placed %s",
-                 menv[not_used].name(DESC_NOCAP_A).c_str());
+                 menv[mindex].name(DESC_NOCAP_A).c_str());
 #endif
             ++num_placed;
         }
