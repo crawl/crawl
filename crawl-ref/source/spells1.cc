@@ -928,20 +928,6 @@ int cast_revitalisation(int pow)
             step = 2;
             // Deliberate fall through.
 
-        case 2:
-            if (you.strength < you.max_strength || you.intel < you.max_intel
-                || you.dex < you.max_dex)
-            {
-                success = true;
-                restore_stat(STAT_STRENGTH, 0, true);
-                restore_stat(STAT_INTELLIGENCE, 0, true);
-                restore_stat(STAT_DEXTERITY, 0, true);
-                break;
-            }
-
-            step = 3;
-            // Deliberate fall through.
-
         // XXX: Temporary stat boosting is not implemented yet.
         default:
             break;
