@@ -3321,7 +3321,7 @@ static bool _beogh_retribution()
     const god_type god = GOD_BEOGH;
 
     // orcish theme
-    switch (6/*random2(8)*/)
+    switch (random2(8))
     {
     case 0: // smiting (25%)
     case 1:
