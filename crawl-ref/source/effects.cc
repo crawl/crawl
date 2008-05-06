@@ -1554,10 +1554,10 @@ bool acquirement(object_class_type class_wanted, int agent,
                 continue;
 
             const item_def &doodad(mitm[thing_created]);
-            if ((doodad.base_type == OBJ_WEAPONS
-                 && !can_wield(&doodad, false, true))
-                || (doodad.base_type == OBJ_ARMOUR
-                    && !can_wear_armour(doodad, false, true)))
+            if (doodad.base_type == OBJ_WEAPONS
+                   && !can_wield(&doodad, false, true)
+                || doodad.base_type == OBJ_ARMOUR
+                   && !can_wear_armour(doodad, false, true))
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
@@ -1566,14 +1566,11 @@ bool acquirement(object_class_type class_wanted, int agent,
 
             // Only TSO gifts blessed blades, and currently not through
             // acquirement, but make sure of this anyway
-            if (agent != GOD_SHINING_ONE)
+            if (agent != GOD_SHINING_ONE && is_blessed_blade(doodad))
             {
-                if (is_blessed_blade(doodad))
-                {
-                    destroy_item(thing_created, true);
-                    thing_created = NON_ITEM;
-                    continue;
-                }
+                destroy_item(thing_created, true);
+                thing_created = NON_ITEM;
+                continue;
             }
 
             // Trog does not gift the Wrath of Trog, nor weapons of pain
@@ -1602,9 +1599,9 @@ bool acquirement(object_class_type class_wanted, int agent,
 
                 // check vs stats. positive stats will automatically fall
                 // through.  As will negative stats that won't kill you.
-                if (-proprt[RAP_STRENGTH] >= you.strength ||
-                    -proprt[RAP_INTELLIGENCE] >= you.intel ||
-                    -proprt[RAP_DEXTERITY] >= you.dex)
+                if (-proprt[RAP_STRENGTH] >= you.strength
+                    || -proprt[RAP_INTELLIGENCE] >= you.intel
+                    || -proprt[RAP_DEXTERITY] >= you.dex)
                 {
                     // try again
                     destroy_item(thing_created);
@@ -1771,7 +1768,16 @@ bool acquirement(object_class_type class_wanted, int agent,
         }
 
         if (agent == you.religion)
+        {
             thing.inscription = "god gift";
+            if (is_random_artefact(thing))
+            {
+                origin_acquired(mitm[thing_created], agent);
+                // give another name that takes god gift into account
+                thing.props["randart_name"].get_string() =
+                    randart_name(thing, false);
+            }
+        }
         move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
 
         // This should never actually be NON_ITEM because of the way

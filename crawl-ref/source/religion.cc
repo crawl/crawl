@@ -890,7 +890,7 @@ static bool _blessing_healing(monsters *mon, bool extra)
     {
         // A high-HP monster might get a unique name.
         if (random2(100) <= mon->max_hit_points)
-            give_unique_monster_name(mon);
+            give_monster_proper_name(mon);
         return true;
     }
     return false;
@@ -1058,7 +1058,7 @@ static bool _beogh_blessing_reinforcement()
 
             // For high level orcs, there's a chance of being named.
             if (high_level && one_chance_in(5))
-                give_unique_monster_name(mon);
+                give_monster_proper_name(mon);
 
             success = true;
         }
@@ -1081,7 +1081,7 @@ static bool _beogh_blessing_priesthood(monsters* mon)
         // function normally used when going up an experience level.
         // This is a hack, but there seems to be no better way for now.
         mon->upgrade_type(priest_type, true, true);
-        give_unique_monster_name(mon);
+        give_monster_proper_name(mon);
 
         return true;
     }
@@ -1222,7 +1222,7 @@ bool bless_follower(monsters *follower,
             if (affected)
             {
                 result = "extra attack power";
-                give_unique_monster_name(follower);
+                give_monster_proper_name(follower);
                 goto blessing_done;
             }
             else if (force)
@@ -1241,7 +1241,7 @@ bool bless_follower(monsters *follower,
             if (affected)
             {
                 result = "extra defence";
-                give_unique_monster_name(follower);
+                give_monster_proper_name(follower);
                 goto blessing_done;
             }
             else if (force)
@@ -3321,7 +3321,7 @@ static bool _beogh_retribution()
     const god_type god = GOD_BEOGH;
 
     // orcish theme
-    switch (random2(8))
+    switch (6/*random2(8)*/)
     {
     case 0: // smiting (25%)
     case 1:
@@ -3406,7 +3406,7 @@ static bool _beogh_retribution()
     default: // send orcs after you (3/8 to 5/8)
     {
         const int points = you.experience_level + 3
-            + random2(you.experience_level * 3);
+                           + random2(you.experience_level * 3);
 
         monster_type punisher;
         // "natural" bands
@@ -3421,13 +3421,15 @@ static bool _beogh_retribution()
         else
             punisher = MONS_ORC;
 
-        bool success =
-            (create_monster(
-                mgen_data::alert_hostile_at(
-                    punisher,
-                    you.pos())) != -1);
+        int mons = create_monster(
+                       mgen_data::alert_hostile_at( punisher, you.pos(), 0,
+                                                    MG_PERMIT_BANDS) );
 
-        simple_god_message(success ?
+        // sometimes name band leader
+        if (mons != -1 && one_chance_in(3))
+            give_monster_proper_name(&menv[mons]);
+
+        simple_god_message(mons != -1 ?
                            " sends forth an army of orcs." :
                            " is still gathering forces against you.",
                            god);

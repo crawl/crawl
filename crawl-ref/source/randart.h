@@ -40,6 +40,11 @@ void set_unique_item_status( object_class_type base_type, int type,
 std::string get_randart_name( const item_def &item );
 
 /* ***********************************************************************
+ * called from: effects
+ * *********************************************************************** */
+std::string randart_name( const item_def &item, bool appearance = false );
+
+/* ***********************************************************************
  * called from: describe
  * *********************************************************************** */
 const char *unrandart_descrip( int which_descrip, const item_def &item );

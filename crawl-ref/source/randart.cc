@@ -27,6 +27,7 @@
 #include "database.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "place.h"
 #include "player.h"
 #include "religion.h"
@@ -184,9 +185,6 @@ static std::string _replace_name_parts(const std::string name_in,
 
     name = replace_all(name, "@player_species@",
                  species_name(static_cast<species_type>(you.species), 1));
-
-    name = replace_all(name, "@race_name@",
-                 species_name(static_cast<species_type>(random2(SP_ELF)),1));
 
     if (name.find("@branch_name@", 0) != std::string::npos)
     {
@@ -1279,7 +1277,7 @@ static bool _pick_db_name( const item_def &item )
     }
 }
 
-static std::string _randart_name(const item_def &item, bool appearance = false)
+std::string randart_name(const item_def &item, bool appearance)
 {
     ASSERT(is_artefact(item));
 
@@ -1407,12 +1405,12 @@ std::string get_randart_name( const item_def &item )
         // print artefact's real name
         if (item.props.exists(RANDART_NAME_KEY))
             return item.props[RANDART_NAME_KEY].get_string();
-        return _randart_name(item, false);
+        return randart_name(item, false);
     }
     // print artefact appearance
     if (item.props.exists(RANDART_APPEAR_KEY))
         return item.props[RANDART_APPEAR_KEY].get_string();
-    return _randart_name(item, false);
+    return randart_name(item, false);
 }
 
 int find_unrandart_index(const item_def& artefact)
@@ -1869,11 +1867,11 @@ bool make_item_randart( item_def &item )
 
     // get true artefact name
     ASSERT(!item.props.exists( RANDART_NAME_KEY ));
-    item.props[RANDART_NAME_KEY].get_string() = _randart_name(item, false);
+    item.props[RANDART_NAME_KEY].get_string() = randart_name(item, false);
 
     // get artefact appearance
     ASSERT(!item.props.exists( RANDART_APPEAR_KEY ));
-    item.props[RANDART_APPEAR_KEY].get_string() = _randart_name(item, true);
+    item.props[RANDART_APPEAR_KEY].get_string() = randart_name(item, true);
 
     return (true);
 }

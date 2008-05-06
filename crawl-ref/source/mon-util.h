@@ -386,7 +386,7 @@ monsters *monster_at(const coord_def &pos);
 // this is the old moname()
 std::string mons_type_name(int type, description_level_type desc);
 
-bool give_unique_monster_name(monsters *mon, bool orcs_only = true);
+bool give_monster_proper_name(monsters *mon, bool orcs_only = true);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

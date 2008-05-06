@@ -1026,6 +1026,9 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         with the exception that all worn/wielded items come first. This 
         can be convenient if you use the '.' command to select 
         subsequent items.
+        If you define sort_menus differently for two or more selectors,
+        the last one matching will always take precedence, i.e. "any"
+        as last setting would override any of the others.
 
 4-j     Messages and Display Enhancements.
 ------------------------------------------

@@ -1,26 +1,66 @@
-######################################################
+##########################################################
 # monname.txt: lookup monster names
 #
-# This file contains a lists of names for monster
-# names. This is currently only used when one of your
-# orcish followers as Beogh's messiah gets named by
-# Beogh.
+# This file contains a lists of names for monster names.
+# This is currently only used when one of your orcish followers as
+# Beogh's messiah gets named by Beogh.
 #
 # Some important syllables
 #   beogh, bog = referring to Beogh
-#   ork, orc, org, ok etc. = referring to orcs
+#   ork, orc, org, og, ok etc. = referring to orcs
 #
-# Other syllables may be borrowed from real life,
-# or made up.
-# 
-# Feel free to add to this list. Like for the other
-# database lists, you may add weights (defaults to
-# w:10) to make certain names more or less likely.
-######################################################
+# Other syllables may be borrowed from real life, or made up.
+#
+# To determine a name for an orcish follower, the game first looks
+# looks for this follower's specific type, followed by the key word
+# "name", e.g. "orc warrior name" or "orc sorcerer name". If no name
+# has been found, the genus "orc" is tried instead. Should that also
+# fail, plain orcs as well as followers of professions that have not
+# been defined, won't ever be named.
+#
+# A name, once chosen, is final. In particular, Blork and Urug cannot
+# be renamed. Also, note that plain orcs can grow up to be warriors
+# and follow the fighter route, or else be blessed by Beogh to become
+# priests. Either way, if already named, they will keep their name.
+#
+# Feel free to add to this list. Like for the other database lists,
+# you may add weights (defaults to w:10) to make certain names more
+# or less likely.
+#
+##########################################################
 %%%%
 orc name
 
+w:14
+@beogh_name@
+
+w:12
+@orcish_name@
+
+w:45
+@other_orcish_name@
+
+%%%%
+# some specials for orcish priests
+orc high priest name
+
+@orc priest name@
+
+%%%
+orc priest name
+
+# Watch out! :p
+w:1
+Judas
+
+w:49
+@orc name@
+
+%%%%
 # Obvious references to Beogh
+# (14 at last count)
+beogh_name
+
 Arbeogh
 
 Bogbarth
@@ -29,6 +69,8 @@ Bogbarth
 Bogdan
 
 Bogdar
+
+Boghold
 
 Bogmar
 
@@ -44,10 +86,18 @@ Bogwik
 
 Morbeogh
 
-Sharbogh
+Orbeogh
 
+Warbeogh
+
+%%%%
 # Obvious references to orcs in general
+# (extremely subjective, and 12 at last count)
+orcish_name
+
 Alork
+
+Borgk
 
 Boruk
 
@@ -69,7 +119,11 @@ Orkwin
 
 Oruk
 
+%%%%
 # Other
+# (45 at last count)
+other_orcish_name
+
 Agrik
 
 Arbolt
@@ -90,6 +144,8 @@ Bolgrim
 
 Borgoth
 
+Borgun
+
 Brandogh
 
 Brunolf
@@ -102,7 +158,13 @@ Gorbash
 
 Gorg
 
+Gorm
+
 Grimold
+
+Harm
+
+Hawl
 
 Herok
 
@@ -122,9 +184,17 @@ Murdo
 
 Norbak
 
+Nordag
+
 Olfik
 
 Olfrun
+
+Ortolf
+
+Rocco
+
+Thorok
 
 Ugbert
 
@@ -132,7 +202,11 @@ Ugrim
 
 Wardok
 
+Wargath
+
 Wargrak
+
+Warrok
 
 Worak
 

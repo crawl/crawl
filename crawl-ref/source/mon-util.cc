@@ -1747,13 +1747,12 @@ std::string mons_type_name(int type, description_level_type desc )
     return result;
 }
 
-// XXX: unique as in "proper name", not unique as in "name not used elsewhere"?
-static std::string _get_unique_monster_name(const monsters *mon)
+static std::string _get_proper_monster_name(const monsters *mon)
 {
     const monsterentry *me = mon->find_monsterentry();
     if (!me)
         return ("");
-    
+
     std::string name = getRandNameString(me->name, " name");
     if (!name.empty())
         return name;
@@ -1770,7 +1769,7 @@ static std::string _get_unique_monster_name(const monsters *mon)
 
 // Fills the number parameter (if not otherwise needed) with a seed for
 // random name choice from randname.txt.
-bool give_unique_monster_name(monsters *mon, bool orcs_only)
+bool give_monster_proper_name(monsters *mon, bool orcs_only)
 {
     // already has a unique name
     if (mon->is_named())
@@ -1787,7 +1786,7 @@ bool give_unique_monster_name(monsters *mon, bool orcs_only)
         }
     }
 
-    mon->mname = _get_unique_monster_name(mon);
+    mon->mname = _get_proper_monster_name(mon);
     return (mon->is_named());
 }
 

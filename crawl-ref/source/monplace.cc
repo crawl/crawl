@@ -579,7 +579,7 @@ int place_monster(mgen_data mg)
                 close_to_player =
                     (distance(you.x_pos, you.y_pos,
                               mg.pos.x, mg.pos.y) < 64);
-                
+
                 if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
                     || mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
                 {
@@ -666,8 +666,7 @@ int place_monster(mgen_data mg)
     if (id >= MAX_MONSTERS - 30 || mg.proximity == PROX_NEAR_STAIRS)
         return (id);
 
-    // Not PROX_NEAR_STAIRS, so will it will be part of a band, if there
-    // is any.
+    // Not PROX_NEAR_STAIRS, so it will be part of a band, if there is any.
     if (band_size > 1)
         menv[id].flags |= MF_BAND_MEMBER;
 
@@ -677,7 +676,7 @@ int place_monster(mgen_data mg)
     {
         if (band_monsters[i] == MONS_PROGRAM_BUG)
             break;
-        
+
         band_template.cls = band_monsters[i];
         const int band_id =
             _place_monster_aux( band_template, false );
@@ -705,7 +704,7 @@ static int _place_monster_aux( const mgen_data &mg,
         return (-1);
 
     menv[id].reset();
-    
+
     // setup habitat and placement
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && mgrd(mg.pos) == NON_MONSTER
@@ -1099,20 +1098,25 @@ static band_type choose_band( int mon_type, int power, int &band_size )
         band_size = 2 + random2(3);
         break;
 
-    case MONS_BIG_KOBOLD:
-        if (power > 3)
-        {
-            band = BAND_KOBOLDS;
-            band_size = 2 + random2(6);
-        }
-        break;
-
     case MONS_ORC_WARLORD:
         band_size = 5 + random2(5);   // warlords have large bands
         // intentional fall through
     case MONS_ORC_KNIGHT:
         band = BAND_ORC_KNIGHT;       // orcs + knight
         band_size += 3 + random2(4);
+        break;
+
+    case MONS_ORC_HIGH_PRIEST:
+        band = BAND_ORC_HIGH_PRIEST;
+        band_size = 4 + random2(4);
+        break;
+
+    case MONS_BIG_KOBOLD:
+        if (power > 3)
+        {
+            band = BAND_KOBOLDS;
+            band_size = 2 + random2(6);
+        }
         break;
 
     case MONS_KILLER_BEE:
@@ -1155,13 +1159,9 @@ static band_type choose_band( int mon_type, int power, int &band_size )
         band = BAND_NECROMANCER;
         band_size = 4 + random2(4);
         break;
-    case MONS_ORC_HIGH_PRIEST:
-        band = BAND_ORC_HIGH_PRIEST;
-        band_size = 4 + random2(4);
-        break;
     case MONS_GNOLL:
         band = BAND_GNOLLS;
-        band_size = ((coinflip())? 3 : 2);
+        band_size = (coinflip() ? 3 : 2);
         break;
     case MONS_BUMBLEBEE:
         band = BAND_BUMBLEBEES;
@@ -1386,8 +1386,22 @@ static monster_type _band_member(band_type band, int power)
         mon_type = MONS_KOBOLD;
         break;
 
+    case BAND_ORCS:
+        mon_type = MONS_ORC;
+        break;
+
+    case BAND_ORC_WARRIOR:
+        mon_type = MONS_ORC;
+        if (one_chance_in(5))
+            mon_type = MONS_ORC_WIZARD;
+        if (one_chance_in(7))
+            mon_type = MONS_ORC_PRIEST;
+        break;
+
     case BAND_ORC_KNIGHT:
     case BAND_ORC_HIGH_PRIEST:
+        // XXX: For Beogh punishment, ogres and trolls look out of place...
+        // (For normal generation, they're okay, of course.)
         temp_rand = random2(30);
         mon_type = ((temp_rand > 17) ? MONS_ORC :          // 12 in 30
                     (temp_rand >  8) ? MONS_ORC_WARRIOR :  //  9 in 30
@@ -1476,17 +1490,22 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_PANDEMONIUM_DEMON:
         if (one_chance_in(7))
+        {
             mon_type = static_cast<monster_type>(
                 random_choose_weighted(50, MONS_LICH,
                                        10, MONS_ANCIENT_LICH,
                                        0));
+        }
         else if (one_chance_in(6))
+        {
             mon_type = static_cast<monster_type>(
                 random_choose_weighted(50, MONS_ABOMINATION_SMALL,
                                        40, MONS_ABOMINATION_LARGE,
                                        10, MONS_TENTACLED_MONSTROSITY,
                                        0));
+        }
         else
+        {
             mon_type =
                 summon_any_demon(
                     static_cast<demon_class_type>(
@@ -1494,6 +1513,7 @@ static monster_type _band_member(band_type band, int power)
                                                20, DEMON_GREATER,
                                                10, DEMON_RANDOM,
                                                0)));
+        }
         break;
 
     case BAND_HELLWING:
@@ -1509,35 +1529,6 @@ static monster_type _band_member(band_type band, int power)
                     (temp_rand == 1) ? MONS_DEEP_ELF_MAGE      // 1 in 11
                                      : MONS_DEEP_ELF_PRIEST);  // 1 in 11
         break;
-
-    case BAND_ORCS:
-        mon_type = MONS_ORC;
-        break;
-
-    case BAND_ORC_WARRIOR:
-        mon_type = MONS_ORC;
-        if (one_chance_in(5))
-            mon_type = MONS_ORC_WIZARD;
-        if (one_chance_in(7))
-            mon_type = MONS_ORC_PRIEST;
-        break;
-
-    case BAND_HELL_KNIGHTS:
-        mon_type = MONS_HELL_KNIGHT;
-        if (one_chance_in(4))
-            mon_type = MONS_NECROMANCER;
-        break;
-
-    //case 12 is orc high priest
-
-    case BAND_OGRE_MAGE:
-        mon_type = MONS_OGRE;
-        if (one_chance_in(3))
-            mon_type = MONS_TWO_HEADED_OGRE;
-        break;                  // ogre mage
-
-        // comment does not match value (30, TWO_HEADED_OGRE) prior to
-        // enum replacement [!!!] 14jan2000 {dlb}
 
     case BAND_DEEP_ELF_KNIGHT:                    // deep elf knight
         temp_rand = random2(208);
@@ -1569,6 +1560,18 @@ static monster_type _band_member(band_type band, int power)
                  (temp_rand == 1) ? MONS_DEEP_ELF_SORCERER      // 1 in 16
                                   : MONS_DEEP_ELF_DEATH_MAGE);  // 1 in 16
         break;
+
+    case BAND_HELL_KNIGHTS:
+        mon_type = MONS_HELL_KNIGHT;
+        if (one_chance_in(4))
+            mon_type = MONS_NECROMANCER;
+        break;
+
+    case BAND_OGRE_MAGE:
+        mon_type = MONS_OGRE;
+        if (one_chance_in(3))
+            mon_type = MONS_TWO_HEADED_OGRE;
+        break;                  // ogre mage
 
     case BAND_KOBOLD_DEMONOLOGIST:
         temp_rand = random2(13);
@@ -1715,10 +1718,8 @@ int mons_place( mgen_data mg )
 {
     int mon_count = 0;
     for (int il = 0; il < MAX_MONSTERS; il++)
-    {
         if (menv[il].type != -1)
             mon_count++;
-    }
 
     if (mg.cls == WANDERING_MONSTER)
     {
@@ -1764,7 +1765,7 @@ int mons_place( mgen_data mg )
     mid = place_monster(mg);
     if (mid == -1)
         return (-1);
-    
+
     monsters *creation = &menv[mid];
 
     // look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT
@@ -1790,7 +1791,7 @@ int mons_place( mgen_data mg )
         behaviour_event(creation, ME_ALERT, MHITYOU);
 
         if (creation->type == MONS_RAKSHASA_FAKE && !one_chance_in(3))
-            creation->add_ench(ENCH_INVIS);        
+            creation->add_ench(ENCH_INVIS);
     }
     return (mid);
 }
@@ -1928,7 +1929,9 @@ int create_monster( mgen_data mg )
           && mons_class_can_pass(mg.cls, grd(mg.pos))
           && mgrd(mg.pos) == NON_MONSTER
           && mg.pos != you.pos()))
+    {
         mg.pos = find_newmons_square(mg.cls, mg.pos);
+    }
 
     if (in_bounds(mg.pos))
         summd = mons_place( mg );

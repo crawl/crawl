@@ -34,7 +34,6 @@
 #  * player_name     - player-chosen character name
 #  * player_species  - species of the character
 #  * branch_name     - name of a random Crawl branch
-#  * race_name       - name of a random Crawl species
 #  * god_name        - name of a random Crawl god
 #  * xom_name        - one of Xom's long names
 #
@@ -164,8 +163,6 @@ of @god_name@'s @divine_esteem@
 # hardcoded keywords
 w:1
 of @god_name@
-
-of the @race_name@
 
 %%%%
 ######################################################
@@ -370,9 +367,6 @@ of @balance_or_order@
 
 w:20
 of @economics_or_politics@
-
-w:20
-of the @race_name@
 
 w:15
 of @branch_name@

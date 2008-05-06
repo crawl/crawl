@@ -176,7 +176,7 @@ struct mgen_data
               int monpower = you.your_level,
               proximity_type prox = PROX_ANYWHERE,
               level_area_type ltype = you.level_type)
-        
+
         : cls(mt), base_type(base), behaviour(beh),
           abjuration_duration(abj), pos(p), foe(mfoe), flags(monflags),
           number(monnumber), colour(moncolour), power(monpower),
@@ -204,13 +204,14 @@ struct mgen_data
     {
         return mgen_data(what, BEH_HOSTILE, 0, where);
     }
- 
+
     static mgen_data alert_hostile_at(monster_type what,
                                       const coord_def &where,
-                                      int abj_deg = 0)
+                                      int abj_deg = 0,
+                                      unsigned flags = 0)
     {
-        return mgen_data(what, BEH_HOSTILE, abj_deg, where, MHITYOU);
-    }   
+        return mgen_data(what, BEH_HOSTILE, abj_deg, where, MHITYOU, flags);
+    }
 };
 
 // last updated 13mar2001 {gdl}
