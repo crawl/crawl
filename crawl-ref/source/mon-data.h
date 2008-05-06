@@ -436,7 +436,7 @@
 },
 
 // elves ('e')
-//mv: have to exist because it's (and should be) valid polymorph target.
+//mv: have to exist because it's (and should be) a valid polymorph target.
 {
     MONS_ELF, 'e', RED, "elf",
     M_WARM_BLOOD | M_SPEAKS,
