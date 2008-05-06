@@ -2801,7 +2801,7 @@ static monster_type _pick_unique(int lev)
 
 // Place uniques on the level.
 // There is a hidden dependency on the player's actual
-// location (through your_branch().)
+// location (through your_branch()).
 // Return the number of uniques placed.
 static int _place_uniques(int level_number, char level_type)
 {
