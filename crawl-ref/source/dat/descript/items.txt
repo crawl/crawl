@@ -129,35 +129,43 @@ A strip of preserved dead cow or bull.
 %%%%
 blessed double sword
 
-A double sword blessed by the Shining One.
+A magical weapon with two razor-sharp blades.  It has been enhanced by
+the Shining One's power.
 %%%%
 blessed eudemon blade
 
-A glorious blade from the forges of heaven, blessed by the Shining One.
+A glorious blade from the forges of heaven.  It is the favored weapon
+of the Shining One's servants.
 %%%%
 blessed falchion
 
-A falchion blessed by the Shining One.
+A sword with a broad slashing blade.  It has been enhanced by the
+Shining One's power.
 %%%%
 blessed great sword
 
-A great sword blessed by the Shining One.
+A sword with a very long, heavy blade and a long handle.  It has been
+enhanced by the Shining One's power.
 %%%%
 blessed katana
 
-A katana blessed by the Shining One.
+A very rare and extremely effective imported weapon, featuring a long
+single-edged blade.  It has been enhanced by the Shining One's power.
 %%%%
 blessed long sword
 
-A long sword blessed by the Shining One.
+A sword with a long, slashing blade.  It has been enhanced by the
+Shining One's power.
 %%%%
 blessed scimitar
 
-A scimitar blessed by the Shining One.
+A long sword with a curved blade.  It has been enhanced by the Shining
+One's power.
 %%%%
 blessed triple sword
 
-A triple sword blessed by the Shining One.
+A magical weapon with three great razor-sharp blades.  It has been
+enhanced by the Shining One's power.
 %%%%
 blowgun
 
