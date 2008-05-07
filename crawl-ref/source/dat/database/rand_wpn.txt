@@ -458,6 +458,8 @@ Change
 
 Extremism
 
+Impermanence
+
 %%%%
 balance_or_order
 
@@ -645,6 +647,8 @@ Monotheism
 
 Atheism
 
+Pantheism
+
 Agnosticism
 
 Existentialism
@@ -654,6 +658,8 @@ Relativism
 Absolutism
 
 Abstinence
+
+Epicureanism
 
 Orthodoxy
 
@@ -672,6 +678,8 @@ Serendipity
 Limitation
 
 Levity
+
+Nihilism
 
 %%%%
 science_name
