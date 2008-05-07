@@ -780,7 +780,8 @@ bool is_good_follower(const monsters* mon)
 bool is_nonmagical_follower(const monsters* mon)
 {
     return (mon->alive() && !mons_is_magic_user(mon)
-            && mons_friendly(mon));
+            && mon->attitude == ATT_FRIENDLY
+            && (mon->flags & MF_GOD_GIFT));
 }
 
 bool is_orcish_follower(const monsters* mon)
