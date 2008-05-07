@@ -2131,7 +2131,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         return (MON_AFFECTED);
     }
     case BEAM_CHARM:             /* 9 = charm */
-        if (is_good_god(you.religion) && mons_is_evil_or_unholy(monster))
+        if (player_angers_monster(monster, false))
         {
             simple_monster_message(monster, " is repulsed!");
             return (MON_OTHER);
@@ -4299,7 +4299,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
         beam.obvious_effect = true;
-        if (is_good_god(you.religion))
+        if (player_angers_monster(mon, false))
         {
             simple_monster_message(mon, " is repulsed!");
             return (MON_OTHER);
@@ -4331,7 +4331,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
             return (MON_UNAFFECTED);
 
         beam.obvious_effect = true;
-        if (is_good_god(you.religion))
+        if (player_angers_monster(mon, false))
         {
             simple_monster_message(mon, " is repulsed!");
             return (MON_OTHER);

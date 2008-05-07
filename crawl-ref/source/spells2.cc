@@ -1407,6 +1407,8 @@ void summon_small_mammals(int pow)
         case 75: case 74: case 38:
             // If you worship a good god, don't summon an evil small
             // mammal.
+            // XXX: There should be a better way to do this, using
+            // player_angers_monster().
             if (!is_good_god(you.religion))
             {
                 thing_called = MONS_ORANGE_RAT;

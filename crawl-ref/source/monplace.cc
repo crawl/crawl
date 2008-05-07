@@ -1899,21 +1899,32 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
     return (pos);
 }
 
-bool player_angers_monster(monsters *creation)
+bool player_angers_monster(monsters *mon, bool actual)
 {
+    const bool holy = (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
+    const bool antimagical = (you.religion == GOD_TROG && mons_is_magic_user(mon));
+
     // get the drawbacks, not the benefits...
-    // (to prevent demon-scumming)
-    if (is_good_god(you.religion) && mons_is_evil_or_unholy(creation))
+    // (to prevent e.g. demon-scumming)
+    if (holy || antimagical)
     {
-        if ( creation->attitude != ATT_HOSTILE )
+        if (actual && mon->attitude != ATT_HOSTILE)
         {
-            creation->attitude = ATT_HOSTILE;
-            behaviour_event(creation, ME_ALERT, MHITYOU);
-            if ( see_grid(creation->x, creation->y)
-                 && player_monster_visible(creation) )
+            mon->attitude = ATT_HOSTILE;
+            behaviour_event(mon, ME_ALERT, MHITYOU);
+            if (see_grid(mon->x, mon->y) && player_monster_visible(mon))
             {
-                mprf("%s is enraged by your holy aura!",
-                     creation->name(DESC_CAP_THE).c_str());
+                std::string aura;
+
+                if (holy && antimagical)
+                    aura = "holy, anti-magical";
+                else if (holy)
+                    aura = "holy";
+                else if (antimagical)
+                    aura = "anti-magical";
+
+                mprf("%s is enraged by your %s aura!",
+                     mon->name(DESC_CAP_THE).c_str(), aura.c_str());
             }
         }
         return (true);

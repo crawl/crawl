@@ -260,7 +260,7 @@ monster_type pick_random_monster(const level_id &place,
                                  int power,
                                  int &lev_mons);
 
-bool player_angers_monster(monsters *mon);
+bool player_angers_monster(monsters *mon, bool actual = true);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
