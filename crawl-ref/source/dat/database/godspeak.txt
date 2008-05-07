@@ -357,6 +357,8 @@ Beogh's voice booms out: "Heretic, die!"
 
 You hear Beogh's thundering voice: "Suffer, infidel!"
 
+Beogh roars, "Feel my power, apostate!"
+
 %%%%
 # a character of another species has destroyed an idol
 Beogh idol other
