@@ -329,19 +329,19 @@ static void _god_greeting_message( bool game_start )
     switch (you.religion)
     {
     case GOD_ZIN:
-        simple_god_message( " says: Spread the light, my child." );
+        simple_god_message(" says: Spread the light, my child.");
         break;
     case GOD_SHINING_ONE:
-        simple_god_message( " says: Lead the forces of light to victory!" );
+        simple_god_message(" says: Lead the forces of light to victory!");
         break;
     case GOD_KIKUBAAQUDGHA:
     case GOD_YREDELEMNUL:
     case GOD_NEMELEX_XOBEH:
-        simple_god_message( " says: Welcome..." );
+        simple_god_message(" says: Welcome...");
         break;
     case GOD_XOM:
         if (game_start)
-            simple_god_message( " says: A new plaything!" );
+            simple_god_message(" says: A new plaything!");
         break;
     case GOD_VEHUMET:
         simple_god_message(" says: Let it end in hellfire!");
@@ -350,23 +350,22 @@ static void _god_greeting_message( bool game_start )
         simple_god_message(" says: Welcome, disciple.");
         break;
     case GOD_MAKHLEB:
-        god_speaks( you.religion, "Blood and souls for Makhleb!" );
+        god_speaks(you.religion, "Blood and souls for Makhleb!");
         break;
     case GOD_SIF_MUNA:
-        simple_god_message( " whispers: I know many secrets...");
+        simple_god_message(" whispers: I know many secrets...");
         break;
     case GOD_TROG:
-        simple_god_message( " says: Kill them all!" );
+        simple_god_message(" says: Kill them all!");
         break;
     case GOD_ELYVILON:
-        simple_god_message( " says: Go forth and aid the weak!" );
+        simple_god_message(" says: Go forth and aid the weak!");
         break;
     case GOD_LUGONU:
-        simple_god_message( " says: Spread carnage and corruption!");
+        simple_god_message(" says: Spread carnage and corruption!");
         break;
     case GOD_BEOGH:
-        simple_god_message(
-            " says: Drown the unbelievers in a sea of blood!");
+        simple_god_message(" says: Drown the unbelievers in a sea of blood!");
         break;
     case GOD_NO_GOD:
     case NUM_GODS:
