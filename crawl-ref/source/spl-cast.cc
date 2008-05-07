@@ -2836,7 +2836,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         switch (random2(6))
         {
         case 0:
-            if (player_res_torment())
+            if (you.is_undead)
             {
                 mpr("Something just walked over your grave. No, really!");
                 break;
