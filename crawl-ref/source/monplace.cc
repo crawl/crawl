@@ -1901,8 +1901,10 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
 
 bool player_angers_monster(monsters *mon, bool actual)
 {
-    const bool holy = (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
-    const bool antimagical = (you.religion == GOD_TROG && mons_is_magic_user(mon));
+    const bool holy =
+        (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
+    const bool antimagical =
+        (you.religion == GOD_TROG && mons_is_magic_user(mon));
 
     // get the drawbacks, not the benefits...
     // (to prevent e.g. demon-scumming)
