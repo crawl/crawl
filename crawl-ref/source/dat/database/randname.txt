@@ -480,13 +480,6 @@ of @politics_name_armour@
 
 %%%%
 ######################################################
-# THE SHINING ONE (blessed weapons only)
-######################################################
-The Shining One weapon
-
-of the Shining One
-%%%%
-######################################################
 # XOM weapon
 ######################################################
 # Xom will basically allow everything
