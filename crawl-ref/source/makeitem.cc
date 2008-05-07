@@ -1501,7 +1501,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
         case WPN_BLESSED_KATANA:
-        case WPN_BLESSED_BLADE:
+        case WPN_BLESSED_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
@@ -3465,7 +3465,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.colour = WHITE;        // forced by force_item above {dlb}
 
-        item.sub_type = (one_chance_in(4) ? WPN_BLESSED_BLADE
+        item.sub_type = (one_chance_in(4) ? WPN_BLESSED_EUDEMON_BLADE
                                           : WPN_LONG_SWORD);
 
         set_equip_desc( item, ISFLAG_GLOWING );

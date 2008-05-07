@@ -3303,7 +3303,7 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         return false;
 
     if (monster->type == MONS_DAEVA)
-        return (weapon.sub_type == WPN_BLESSED_BLADE);
+        return (weapon.sub_type == WPN_BLESSED_EUDEMON_BLADE);
 
     if (monster->type == MONS_SIGMUND)
         return (weapon.sub_type == WPN_SCYTHE);

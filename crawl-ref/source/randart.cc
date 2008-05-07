@@ -1261,10 +1261,6 @@ static std::string _get_artefact_type(const int type)
 
 static bool _pick_db_name( const item_def &item )
 {
-    // Blessed blades always get database names.
-    if (is_blessed_blade(item))
-        return true;
-
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -1811,7 +1807,7 @@ bool make_item_blessed_blade( item_def &item )
     for (vec_size i = 0; i < RA_PROPERTIES; i++)
         rap[i] = (short) 0;
 
-    // blessed blade of The Shining One
+    // blessed blade of the Shining One
     rap[RAP_BRAND] = (short) SPWPN_HOLY_WRATH;
 
     // set artefact name

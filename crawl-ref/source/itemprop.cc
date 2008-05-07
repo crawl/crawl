@@ -239,52 +239,52 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLICING | DAM_PIERCE, 10 },
 
     // Long blades
-    { WPN_FALCHION,             "falchion",              8,  2, 13, 170,  4,
+    { WPN_FALCHION,              "falchion",               8,  2, 13, 170,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 10 },     // or perhaps DAMV_CHOPPING is more apt?
-    { WPN_BLESSED_FALCHION,     "blessed falchion",     10,  2, 11, 170,  4,
+        DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
+    { WPN_BLESSED_FALCHION,      "blessed falchion",      10,  2, 11, 170,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 10 },     // or perhaps DAMV_CHOPPING is more apt?
-    { WPN_LONG_SWORD,           "long sword",           10,  1, 14, 160,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 10 },
-    { WPN_BLESSED_LONG_SWORD,   "blessed long sword",   12,  0, 13, 160,  3,
+        DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
+    { WPN_LONG_SWORD,            "long sword",            10,  1, 14, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_SCIMITAR,             "scimitar",             11, -1, 14, 170,  3,
+    { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    12,  0, 13, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_BLESSED_SCIMITAR,     "blessed scimitar",     12, -1, 12, 170,  3,
+    { WPN_SCIMITAR,              "scimitar",              11, -1, 14, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_KATANA,               "katana",               13,  2, 13, 160,  3,
+    { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      12, -1, 12, 170,  3,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        DAMV_SLICING, 10 },
+    { WPN_KATANA,                "katana",                13,  2, 13, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_BLESSED_KATANA,       "blessed katana",       14,  1, 13, 160,  3,
+    { WPN_BLESSED_KATANA,        "blessed katana",        14,  1, 13, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_DEMON_BLADE,          "demon blade",          13, -1, 15, 200,  4,
+    { WPN_DEMON_BLADE,           "demon blade",           13, -1, 15, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_BLESSED_BLADE,        "blessed blade",        14, -2, 14, 200,  4,
+    { WPN_BLESSED_EUDEMON_BLADE, "blessed eudemon blade", 14, -2, 14, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
-    { WPN_DOUBLE_SWORD,         "double sword",         15, -2, 16, 220,  5,
+    { WPN_DOUBLE_SWORD,          "double sword",          15, -2, 16, 220,  5,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_BLESSED_DOUBLE_SWORD, "blessed double sword", 15, -2, 15, 220,  5,
+    { WPN_BLESSED_DOUBLE_SWORD,  "blessed double sword",  15, -2, 15, 220,  5,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_GREAT_SWORD,          "great sword",          16, -3, 17, 250,  6,
+    { WPN_GREAT_SWORD,           "great sword",           16, -3, 17, 250,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_BLESSED_GREAT_SWORD,  "blessed great sword",  17, -5, 17, 250,  6,
+    { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -5, 17, 250,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_TRIPLE_SWORD,         "triple sword",         19, -4, 19, 260,  6,
+    { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 19, 260,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_BLESSED_TRIPLE_SWORD, "blessed triple sword", 19, -5, 18, 260,  6,
+    { WPN_BLESSED_TRIPLE_SWORD,  "blessed triple sword",  19, -5, 18, 260,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
 
@@ -1463,7 +1463,7 @@ int weapon_rarity( int w_type )
     case WPN_BLESSED_LONG_SWORD:
     case WPN_BLESSED_SCIMITAR:
     case WPN_BLESSED_KATANA:
-    case WPN_BLESSED_BLADE:
+    case WPN_BLESSED_EUDEMON_BLADE:
     case WPN_BLESSED_DOUBLE_SWORD:
     case WPN_BLESSED_GREAT_SWORD:
     case WPN_BLESSED_TRIPLE_SWORD:
@@ -1647,7 +1647,7 @@ bool is_blessed_blade( const item_def &item )
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
         case WPN_BLESSED_KATANA:
-        case WPN_BLESSED_BLADE:
+        case WPN_BLESSED_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
@@ -1701,7 +1701,7 @@ bool convert2good( item_def &item, bool allow_blessed )
         if (!allow_blessed)
             item.sub_type = WPN_SCIMITAR;
         else
-            item.sub_type = WPN_BLESSED_BLADE;
+            item.sub_type = WPN_BLESSED_EUDEMON_BLADE;
         break;
 
     case WPN_KATANA:

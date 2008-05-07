@@ -592,10 +592,13 @@ unsigned int item_value( item_def item, bool ident )
         case WPN_LONG_SWORD:
         case WPN_LONGBOW:
         case WPN_SCIMITAR:
+        case WPN_BLESSED_FALCHION:
             valued += 45;
             break;
 
         case WPN_SPIKED_FLAIL:
+        case WPN_BLESSED_LONG_SWORD:
+        case WPN_BLESSED_SCIMITAR:
             valued += 50;
 
         case WPN_HAND_CROSSBOW:
@@ -617,16 +620,13 @@ unsigned int item_value( item_def item, bool ident )
 
         case WPN_BATTLEAXE:
         case WPN_GREAT_MACE:
+        case WPN_EVENINGSTAR:
             valued += 65;
             break;
 
         case WPN_DIRE_FLAIL:
         case WPN_BARDICHE:
             valued += 90;
-            break;
-
-        case WPN_EVENINGSTAR:
-            valued += 65;
             break;
 
         case WPN_EXECUTIONERS_AXE:
@@ -647,9 +647,13 @@ unsigned int item_value( item_def item, bool ident )
             break;
 
         case WPN_KATANA:
-        case WPN_TRIPLE_SWORD:
         case WPN_DEMON_BLADE:
-        case WPN_BLESSED_BLADE:
+        case WPN_TRIPLE_SWORD:
+        case WPN_BLESSED_KATANA:
+        case WPN_BLESSED_EUDEMON_BLADE:
+        case WPN_BLESSED_DOUBLE_SWORD:
+        case WPN_BLESSED_GREAT_SWORD:
+        case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_LAJATANG:
             valued += 200;
             break;

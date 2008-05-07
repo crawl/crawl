@@ -127,13 +127,13 @@ beef jerky
 
 A strip of preserved dead cow or bull.
 %%%%
-blessed blade
-
-A blade blessed by the Shining One.
-%%%%
 blessed double sword
 
 A double sword blessed by the Shining One.
+%%%%
+blessed eudemon blade
+
+A glorious blade from the forges of heaven, blessed by the Shining One.
 %%%%
 blessed falchion
 

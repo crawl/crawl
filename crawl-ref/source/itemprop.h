@@ -465,7 +465,7 @@ enum weapon_type
     WPN_KNIFE,
     WPN_BLOWGUN,
     WPN_FALCHION,
-    WPN_BLESSED_BLADE,
+    WPN_BLESSED_EUDEMON_BLADE,
     WPN_LONGBOW,                       //   45
     WPN_LAJATANG,
     WPN_BARDICHE,
