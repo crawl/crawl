@@ -1372,6 +1372,7 @@ enum level_area_type                   // you.level_type
     NUM_LEVEL_AREA_TYPES
 };
 
+// reasons for entering the Abyss
 enum entry_cause_type
 {
     EC_UNKNOWN,
@@ -1379,7 +1380,7 @@ enum entry_cause_type
     EC_SELF_RISKY,    // i.e., wielding an id'd distorion weapon
     EC_SELF_ACCIDENT, // i.e., wielding an un-id'd distortion weapon
     EC_MISCAST,
-    EC_GOD_RETRIUBTION,
+    EC_GOD_RETRIBUTION,
     EC_GOD_ACT, // Xom sending the player somewhere for amusement
     EC_MONSTER,
     NUM_ENTRY_CAUSE_TYPES
@@ -2721,6 +2722,13 @@ enum unique_item_status_type
     UNIQ_NOT_EXISTS = 0,
     UNIQ_EXISTS = 1,
     UNIQ_LOST_IN_ABYSS = 2
+};
+
+enum friendly_pickup_type
+{
+    FRIENDLY_PICKUP_NONE = 0,
+    FRIENDLY_PICKUP_FRIEND,
+    FRIENDLY_PICKUP_ALL
 };
 
 #ifdef WIZARD

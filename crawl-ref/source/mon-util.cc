@@ -2941,7 +2941,7 @@ bool monsters::can_use_missile(const item_def &item) const
     if (item.sub_type == MI_LARGE_ROCK && !can_throw_rocks())
         return (false);
 
-    // These don't need any launcher, and always okay.
+    // These don't need any launcher, and are always okay.
     if (item.sub_type == MI_STONE || item.sub_type == MI_DART)
         return (true);
 
@@ -3808,8 +3808,8 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
 
             // Depending on the friendly pickup toggle, your allies may not
             // pick up anything, or only stuff dropped by (other) allies.
-            if (Options.friendly_pickup < 0
-                || Options.friendly_pickup == 0
+            if (you.friendly_pickup == FRIENDLY_PICKUP_NONE
+                || you.friendly_pickup == FRIENDLY_PICKUP_FRIEND
                    && !testbits(item.flags, ISFLAG_DROPPED_BY_ALLY))
             {
                 return false;

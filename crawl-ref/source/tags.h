@@ -34,7 +34,7 @@ enum tag_type   // used during save/load process to identify data blocks
 
 enum tag_file_type   // file types supported by tag system
 {
-    TAGTYPE_PLAYER=0,           // Foo.sav
+    TAGTYPE_PLAYER = 0,         // Foo.sav
     TAGTYPE_LEVEL,              // Foo.00a, .01a, etc.
     TAGTYPE_GHOST,              // bones.xxx
 
@@ -50,12 +50,13 @@ enum tag_major_version
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
 {
-    TAG_MINOR_PIETY = 2,        // Added piety_hysteresis
-    TAG_MINOR_QUIVER = 3,       // Added quiver
+    TAG_MINOR_PIETY   = 2,      // Added piety_hysteresis
+    TAG_MINOR_QUIVER  = 3,      // Added quiver
     TAG_MINOR_MAPMARK = 4,      // Added sizes to map markers
-    TAG_MINOR_MONNAM = 5,       // Monsters get individual names
+    TAG_MINOR_MONNAM  = 5,      // Monsters get individual names
     TAG_MINOR_MONBASE = 6,      // Zombie base monster gets its own field.
-    TAG_MINOR_VERSION = 6       // Current version
+    TAG_MINOR_FPICKUP = 7,      // Added pickup option for allied monsters.
+    TAG_MINOR_VERSION = 7       // Current version
 };
 
 

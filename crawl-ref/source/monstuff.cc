@@ -4851,9 +4851,10 @@ static void _handle_monster_move(int i, monsters *monster)
                 || monster->type == MONS_GHOUL))
         {
             // Keep neutral and charmed monsters from picking up stuff.
-            // Same for friendlies if friendly_pickup is set to -1.
+            // Same for friendlies if friendly_pickup is set to "none".
             if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM)
-                && (!mons_friendly(monster) || Options.friendly_pickup >= 0))
+                && (!mons_friendly(monster)
+                    || you.friendly_pickup > FRIENDLY_PICKUP_NONE))
             {
                 if (_handle_pickup(monster))
                 {

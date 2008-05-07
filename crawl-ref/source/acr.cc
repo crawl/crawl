@@ -1851,17 +1851,17 @@ static void _print_friendly_pickup_setting(bool was_changed)
 {
     std::string now = (was_changed? "now " : "");
 
-    if (Options.friendly_pickup == -1)
+    if (you.friendly_pickup == FRIENDLY_PICKUP_NONE)
     {
         mprf("Your allies are %sforbidden to pick up anything at all.",
              now.c_str());
     }
-    else if (Options.friendly_pickup == 0)
+    else if (you.friendly_pickup == FRIENDLY_PICKUP_FRIEND)
     {
         mprf("Your allies may %sonly pick up items dropped by allies.",
              now.c_str());
     }
-    else if (Options.friendly_pickup == 1)
+    else if (you.friendly_pickup == FRIENDLY_PICKUP_ALL)
     {
         mprf("Your allies may %spick up anything they need.", now.c_str());
     }
@@ -2040,17 +2040,20 @@ void process_command( command_type cmd )
     {
         // Toggle pickup mode for friendlies.
         _print_friendly_pickup_setting(false);
-        mpr("Change to (n)othing, (f)riend-dropped, or (a)ll? ", MSGCH_PROMPT);
+        mpr("Change to (d)efault, (n)othing, (f)riend-dropped, or (a)ll? ",
+            MSGCH_PROMPT);
 
         char type = (char) getchm(KC_DEFAULT);
         type = tolower(type);
 
-        if (type == 'n')
-            Options.friendly_pickup = -1;
+        if (type == 'd')
+            you.friendly_pickup = Options.default_friendly_pickup;
+        else if (type == 'n')
+            you.friendly_pickup = FRIENDLY_PICKUP_NONE;
         else if (type == 'f')
-            Options.friendly_pickup = 0;
+            you.friendly_pickup = FRIENDLY_PICKUP_FRIEND;
         else if (type == 'a')
-            Options.friendly_pickup = 1;
+            you.friendly_pickup = FRIENDLY_PICKUP_ALL;
         else
         {
             canned_msg( MSG_OK );
@@ -4032,7 +4035,7 @@ static bool _initialise(void)
 
     if (newc) // start a new game
     {
-        Options.friendly_pickup = Options.default_friendly_pickup;
+        you.friendly_pickup = Options.default_friendly_pickup;
 
         // Mark items in inventory as of unknown origin.
         origin_set_inventory(origin_set_unknown);

@@ -1008,6 +1008,9 @@ static void tag_construct_you(writer &th)
 
     // minorVersion 3 starts here
     you.m_quiver->save(th);
+
+    // minorVersion 7 starts here
+    marshallByte(th, you.friendly_pickup);
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1394,6 +1397,9 @@ static void tag_read_you(reader &th, char minorVersion)
 
     if (minorVersion >= TAG_MINOR_QUIVER)
         you.m_quiver->load(th);
+
+    if (minorVersion >= TAG_MINOR_FPICKUP)
+        you.friendly_pickup = unmarshallByte(th);
 }
 
 static void tag_read_you_items(reader &th, char minorVersion)
@@ -2017,10 +2023,10 @@ static void tag_read_level_items(reader &th, char minorVersion)
 static void unmarshall_monster(reader &th, monsters &m)
 {
     m.reset();
-    
+
     if (_tag_minor_version >= TAG_MINOR_MONNAM)
         m.mname = unmarshallString(th, 100);
-    
+
     m.ac = unmarshallByte(th);
     m.ev = unmarshallByte(th);
     m.hit_dice = unmarshallByte(th);

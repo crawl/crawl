@@ -559,7 +559,8 @@ public:
 
   std::vector<int> beheld_by; // monsters beholding player
 
-  bool just_autoprayed;         // autopray just kicked in
+  bool just_autoprayed;       // autopray just kicked in
+  int  friendly_pickup;       // pickup setting for allies
 
   unsigned short prev_targ;
   coord_def     prev_grd_targ;
@@ -1014,7 +1015,7 @@ public:
 
 public:
     std::string mname;
-    
+
     int type;
     int hit_points;
     int max_hit_points;
@@ -1061,9 +1062,9 @@ public:
     // Does this monster have a base name, i.e. is base_name() != name().
     // See base_name() for details.
     bool has_base_name() const;
-    
-    const monsterentry *find_monsterentry() const;    
-    
+
+    const monsterentry *find_monsterentry() const;
+
     void init_experience();
 
     void mark_summoned(int longevity, bool mark_items_summoned );
@@ -1079,7 +1080,7 @@ public:
 
     // Has a hydra-like variable number of attacks based on mons->number.
     bool has_hydra_multi_attack() const;
-    
+
     bool has_ench(enchant_type ench) const;
     bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
@@ -1606,7 +1607,6 @@ public:
     bool        autopickup_on;
     bool        autoprayer_on;
     int         default_friendly_pickup;
-    int         friendly_pickup;
     bool        show_more_prompt;
 
     bool        show_gold_turns; // Show gold and turns in HUD.

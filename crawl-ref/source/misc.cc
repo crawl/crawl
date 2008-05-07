@@ -1477,7 +1477,7 @@ static void set_entry_cause(entry_cause_type default_cause,
     if (crawl_state.is_god_acting())
     {
         if (crawl_state.is_god_retribution())
-            you.entry_cause = EC_GOD_RETRIUBTION;
+            you.entry_cause = EC_GOD_RETRIBUTION;
         else
             you.entry_cause = EC_GOD_ACT;
 
@@ -2122,7 +2122,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (newlevel)
     {
         // When entering a new level, reset friendly_pickup to default.
-        Options.friendly_pickup = Options.default_friendly_pickup;
+        you.friendly_pickup = Options.default_friendly_pickup;
 
         switch(you.level_type)
         {

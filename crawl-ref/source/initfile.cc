@@ -628,7 +628,7 @@ void game_options::reset_options()
 
     autopickup_on = true;
     autoprayer_on = false;
-    default_friendly_pickup = 0; // allies may only pickup items
+    default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
     show_more_prompt = true;
 
     show_gold_turns = false;
@@ -1805,11 +1805,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "default_friendly_pickup")
     {
         if (field == "none")
-            default_friendly_pickup = -1;
-        else if (field == "all")
-            default_friendly_pickup = 1;
+            default_friendly_pickup = FRIENDLY_PICKUP_NONE;
         else if (field == "friend")
-            default_friendly_pickup = 0;
+            default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
+        else if (field == "all")
+            default_friendly_pickup = FRIENDLY_PICKUP_ALL;
     }
     else BOOL_OPTION(show_inventory_weights);
     else BOOL_OPTION(suppress_startup_errors);

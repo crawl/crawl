@@ -1780,7 +1780,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     }
     else if (item.sub_type == MI_STONE)
     {
-        item.quantity = 1^+ random2(9) + random2(12) + random2(15) + random2(12);
+        item.quantity = 1 + random2(9) + random2(12) + random2(15) + random2(12);
         return;
     }
     else if (item.sub_type == MI_THROWING_NET) // no fancy nets, either
