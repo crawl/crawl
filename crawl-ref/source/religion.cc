@@ -702,7 +702,7 @@ static void _give_nemelex_gift()
     {
         misc_item_type gift_type;
 
-        // make a pure deck
+        // Make a pure deck.
         const misc_item_type pure_decks[] = {
             MISC_DECK_OF_ESCAPE,
             MISC_DECK_OF_DESTRUCTION,
