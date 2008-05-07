@@ -438,14 +438,14 @@ default_friendly_pickup = (none | friend | all)
                       (This is how it works for hostile monsters.)
 
         This option controls which is the default setting for this toggle
-        when you start or reload a game, or when you enter a level for
-        the first time.
+        when you start a new game, or when you enter a level for the first
+        time.
 
         Note that monsters have their own reasonings for which items they
         may need, and when they feel safe enough to pick them up. Except
-        for "none", these options won't let you override these. 
-        Also, friendly jellies won't ever eat any items, regardless of this 
-        option.
+        for "none", these options won't let you override this behaviour.
+        Also, friendly jellies won't ever eat any items, regardless of
+        this option.
 
 4-b     Targeting.
 -------------------

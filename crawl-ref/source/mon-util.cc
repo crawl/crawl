@@ -2916,9 +2916,9 @@ bool monsters::has_spell_of_type(unsigned disciplines) const
 
 bool monsters::can_use_missile(const item_def &item) const
 {
-    // Pretty simplistic at the moment. We allow monsters to pick up
-    // missiles without the corresponding launcher, assuming that sufficient
-    // wandering may get them to stumble upon the launcher.
+    // Don't allow monsters to pick up missiles without the corresponding
+    // launcher. The opposite is okay, and sufficient wandering will
+    // hopefully take the monster to a stack of appropriate missiles.
 
     // Prevent monsters that have conjurations / summonings from
     // grabbing missiles.
@@ -2941,7 +2941,20 @@ bool monsters::can_use_missile(const item_def &item) const
     if (item.sub_type == MI_LARGE_ROCK && !can_throw_rocks())
         return (false);
 
-    return (true);
+    // These don't need any launcher, and always okay.
+    if (item.sub_type == MI_STONE || item.sub_type == MI_DART)
+        return (true);
+
+    item_def *launch;
+    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
+    {
+        launch = mslot_item(static_cast<mon_inv_type>(i));
+        if (launch && fires_ammo_type(*launch) == item.sub_type)
+            return (true);
+    }
+
+    // no fitting launcher in inventory
+    return (false);
 }
 
 void monsters::swap_slots(mon_inv_type a, mon_inv_type b)
@@ -3378,7 +3391,7 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
     // If occupied, don't pick up a throwable weapons if it would just
     // stack with an existing one. (Upgrading is possible.)
     if (mslot_item(MSLOT_MISSILE)
-        && behaviour == BEH_WANDER
+        && (behaviour == BEH_WANDER || mons_friendly(this) && foe == MHITYOU)
         && pickup(item, MSLOT_MISSILE, near, true))
     {
         return (true);
@@ -3584,10 +3597,6 @@ bool monsters::pickup_weapon(item_def &item, int near, bool force)
 
 bool monsters::pickup_missile(item_def &item, int near, bool force)
 {
-    // XXX: Missile pickup could get a lot smarter if we allow monsters to
-    // drop their existing missiles and pick up new stuff, but that's too
-    // much work for now.
-
     const item_def *miss = missiles();
 
     if (item.sub_type == MI_THROWING_NET)
@@ -3604,7 +3613,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
 
         // Monsters in a fight will only pick up missiles if doing so
         // is worthwhile.
-        if (behaviour != BEH_WANDER
+        if (behaviour != BEH_WANDER && (!mons_friendly(this) || foe != MHITYOU)
             && (item.quantity < 5 || miss && miss->quantity >= 7))
         {
             return (false);
@@ -3615,6 +3624,43 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
 
     if (!force && !can_use_missile(item))
         return (false);
+
+    if (miss)
+    {
+        item_def *launch;
+        for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
+        {
+            launch = mslot_item(static_cast<mon_inv_type>(i));
+            if (launch)
+            {
+                // If this ammunition is better, drop the old ones.
+                if (fires_ammo_type(*launch) == item.sub_type
+                    && (fires_ammo_type(*launch) != miss->sub_type
+                        || item.plus > miss->plus
+                        || item.plus == miss->plus
+                           && get_ammo_brand(*miss) == SPMSL_NORMAL
+                           && get_ammo_brand(item) != SPMSL_NORMAL))
+                {
+                    if (!drop_item(MSLOT_MISSILE, near))
+                        return (false);
+                    break;
+                }
+            }
+        }
+
+        // Darts don't absolutely need a launcher - still allow upgrading.
+        if (item.sub_type == miss->sub_type
+            && item.sub_type == MI_DART
+            && (item.plus > miss->plus
+                || item.plus == miss->plus
+                   && get_ammo_brand(*miss) == SPMSL_NORMAL
+                   && get_ammo_brand(item) != SPMSL_NORMAL))
+        {
+            if (!drop_item(MSLOT_MISSILE, near))
+                return (false);
+        }
+
+    }
 
     return pickup(item, MSLOT_MISSILE, near);
 }

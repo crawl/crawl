@@ -4031,7 +4031,7 @@ static bool _initialise(void)
     // set vision radius to player's current vision
     setLOSRadius( you.current_vision );
 
-    if (newc)
+    if (newc) // start a new game
     {
         Options.friendly_pickup = Options.default_friendly_pickup;
 

@@ -4850,8 +4850,10 @@ static void _handle_monster_move(int i, monsters *monster)
                 || monster->type == MONS_NECROPHAGE
                 || monster->type == MONS_GHOUL))
         {
-            // keep neutral and charmed monsters from picking up stuff
-            if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM))
+            // Keep neutral and charmed monsters from picking up stuff.
+            // Same for friendlies if friendly_pickup is set to -1.
+            if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM)
+                && (!mons_friendly(monster) || Options.friendly_pickup >= 0))
             {
                 if (_handle_pickup(monster))
                 {
@@ -5292,16 +5294,17 @@ static bool _handle_pickup(monsters *monster)
 
     // Note: Monsters only look at stuff near the top of stacks.
 
+    bool success = false;
     for (item = igrd[monster->x][monster->y]; item != NON_ITEM; )
     {
         item_def &topickup = mitm[item];
         item = topickup.link;
         if (monster->pickup_item(topickup, monsterNearby))
-            return (true);
+            success = true;
         if (coinflip())
             break;
     }
-    return (false);
+    return (success);
 }                               // end handle_pickup()
 
 static void _jelly_grows(monsters *monster)

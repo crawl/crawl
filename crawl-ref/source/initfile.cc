@@ -611,10 +611,10 @@ void game_options::reset_options()
 
     mouse_input = false;
 
-    view_max_width = 33;
-    view_max_height = 21;
+    view_max_width   = 33;
+    view_max_height  = 21;
     mlist_min_height = 5;
-    msg_max_height = 10;
+    msg_max_height   = 10;
     mlist_allow_alternate_layout = false;
     classic_hud = false;
 
@@ -629,7 +629,6 @@ void game_options::reset_options()
     autopickup_on = true;
     autoprayer_on = false;
     default_friendly_pickup = 0; // allies may only pickup items
-    friendly_pickup         = 0; // dropped by allies
     show_more_prompt = true;
 
     show_gold_turns = false;
@@ -1806,11 +1805,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "default_friendly_pickup")
     {
         if (field == "none")
-            friendly_pickup = -1;
+            default_friendly_pickup = -1;
         else if (field == "all")
-            friendly_pickup = 1;
+            default_friendly_pickup = 1;
         else if (field == "friend")
-            friendly_pickup = 0;
+            default_friendly_pickup = 0;
     }
     else BOOL_OPTION(show_inventory_weights);
     else BOOL_OPTION(suppress_startup_errors);

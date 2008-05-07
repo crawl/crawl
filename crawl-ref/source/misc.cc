@@ -2121,6 +2121,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (newlevel)
     {
+        // When entering a new level, reset friendly_pickup to default.
         Options.friendly_pickup = Options.default_friendly_pickup;
 
         switch(you.level_type)

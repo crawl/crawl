@@ -1325,17 +1325,14 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
 
-            if (item.sub_type == WPN_HAND_AXE &&
-                one_chance_in(10))
+            if (item.sub_type == WPN_HAND_AXE && one_chance_in(10))
                 rc = SPWPN_RETURNING;
 
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(3) && (rc == SPWPN_NORMAL || one_chance_in(5)))
-            {
                 rc = SPWPN_VORPAL;
-            }
 
             if (one_chance_in(4))
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
@@ -1554,7 +1551,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         item.sub_type = WPN_LONG_SWORD;
     }
 
-    item.plus = 0;
+    item.plus  = 0;
     item.plus2 = 0;
 
     set_equip_race(item, _determine_weapon_race(item, item_race));
@@ -1588,7 +1585,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
             item.plus2 += 2 + random2(3);
         }
 
-        const int chance = force_good ? 200 : item_level;
+        const int chance = (force_good ? 200 : item_level);
 
         // odd-looking, but this is how the algorithm compacts {dlb}:
         for (int i = 0; i < 4; ++i)
@@ -1675,8 +1672,7 @@ static item_status_flag_type _determine_missile_race(const item_def& item,
 
         // Dwarves don't make arrows, sling bullets, javelins, or
         // throwing nets
-        if ((item.sub_type == MI_DART
-                || item.sub_type == MI_BOLT)
+        if ((item.sub_type == MI_DART || item.sub_type == MI_BOLT)
             && one_chance_in(6))
         {
             rc = ISFLAG_DWARVEN;
@@ -1741,8 +1737,8 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     // Un-poison sling bullets; un-flame and un-ice javelins; unbrand
     // throwing nets.
     if ((item.sub_type == MI_SLING_BULLET && rc == SPMSL_POISONED)
-         || (item.sub_type == MI_JAVELIN
-             && (rc == SPMSL_FLAME || rc == SPMSL_ICE))
+         || item.sub_type == MI_JAVELIN
+            && (rc == SPMSL_FLAME || rc == SPMSL_ICE)
          || item.sub_type == MI_THROWING_NET)
     {
         rc = SPMSL_NORMAL;
@@ -1754,7 +1750,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 static void _generate_missile_item(item_def& item, int force_type,
                                    int item_level, int item_race)
 {
-    const bool no_brand = item.special == SPMSL_FORBID_BRAND;
+    const bool no_brand = (item.special == SPMSL_FORBID_BRAND);
     if (no_brand)
         item.special = SPMSL_NORMAL;
 
@@ -1784,7 +1780,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     }
     else if (item.sub_type == MI_STONE)
     {
-        item.quantity = 1+ random2(9) + random2(12) + random2(15) + random2(12);
+        item.quantity = 1^+ random2(9) + random2(12) + random2(15) + random2(12);
         return;
     }
     else if (item.sub_type == MI_THROWING_NET) // no fancy nets, either
@@ -1811,7 +1807,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     else if (get_ammo_brand( item ) != SPMSL_NORMAL)
         item.quantity = 1 + random2(9) + random2(12) + random2(12);
     else
-        item.quantity = 1+ random2(9) + random2(12) + random2(12) + random2(15);
+        item.quantity = 1 + random2(9) + random2(12) + random2(12) + random2(15);
 
     if (10 + item_level >= random2(100))
         item.plus += random2(5);
@@ -1827,7 +1823,7 @@ static void _generate_missile_item(item_def& item, int force_type,
 static bool _try_make_armour_artefact(item_def& item, int force_type,
                                       int item_level)
 {
-    if ( item_level > 2 && random2(4000) <= (100 + item_level * 3))
+    if (item_level > 2 && random2(4000) <= (100 + item_level * 3))
     {
         // Make a randart or unrandart.
 
@@ -2114,8 +2110,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         item.plus++;
 
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
-    const bool forced_ego = item.special > 0;
-    const bool no_ego     = item.special == SPARM_FORBID_EGO;
+    const bool forced_ego = (item.special > 0);
+    const bool no_ego     = (item.special == SPARM_FORBID_EGO);
 
     if (no_ego)
         item.special = SPARM_NORMAL;
@@ -2141,7 +2137,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
                               _determine_armour_ego(item, force_type,
                                                     item_level));
 
-            if ( get_armour_ego_type(item) == SPARM_PONDEROUSNESS )
+            if (get_armour_ego_type(item) == SPARM_PONDEROUSNESS)
                 item.plus += 3 + random2(4);
         }
     }
@@ -2817,7 +2813,10 @@ int items( int allow_uniques,       // not just true-false,
     default:
         item.base_type = OBJ_GOLD;
         if (force_good)
-            item.quantity = 150+ random2(150) + random2(random2(random2(2000)));
+        {
+            item.quantity = 150 + random2(150)
+                            + random2(random2(random2(2000)));
+        }
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);
         break;
@@ -3031,8 +3030,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     }
 
     // moved setting of quantity here to keep it in mind {dlb}
-    int iquan = 1;
-    // I wonder if this is even used, given calls to item() {dlb}
+    item.quantity = 1;
 
     switch (mon->type)
     {
@@ -3104,7 +3102,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         {
             force_item = true;
             item_race = MAKE_ITEM_NO_RACE;
-            item.plus += 1 + random2(3);
+            item.plus  += 1 + random2(3);
             item.plus2 += 1 + random2(3);
 
             if (one_chance_in(5))
@@ -3347,8 +3345,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
         if (one_chance_in(10) || mon->type == MONS_ETTIN)
         {
-            item.sub_type = ((one_chance_in(10)) ? WPN_DIRE_FLAIL
-                                                 : WPN_GREAT_MACE);
+            item.sub_type = (one_chance_in(10) ? WPN_DIRE_FLAIL
+                                               : WPN_GREAT_MACE);
         }
         break;
 
@@ -3394,6 +3392,15 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         }
         break;
 
+    case MONS_MERFOLK:
+        if (one_chance_in(3))
+        {
+            item_race = MAKE_ITEM_NO_RACE;
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type = WPN_TRIDENT;
+            break;
+        }
+        // intentionally fall through
     case MONS_MERMAID:
         if (one_chance_in(3))
         {
@@ -3403,22 +3410,12 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         }
         break;
 
-    case MONS_MERFOLK:
-        if (one_chance_in(3))
-        {
-            item_race = MAKE_ITEM_NO_RACE;
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_TRIDENT;
-        }
-        break;
-
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type = WPN_BOW;
-        if (mon->type == MONS_CENTAUR_WARRIOR
-                && one_chance_in(3))
+        if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3))
             item.sub_type = WPN_LONGBOW;
         break;
 
@@ -3435,7 +3432,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type = WPN_SCIMITAR;
-        item.plus = random2(5);
+        item.plus  = random2(5);
         item.plus2 = random2(5);
         item.colour = RED;  // forced by force_item above {dlb}
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
@@ -3458,7 +3455,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             item.sub_type = WPN_LONG_SWORD;
         }
 
-        item.plus = 1 + random2(3);
+        item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
         break;
 
@@ -3473,7 +3470,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
         set_equip_desc( item, ISFLAG_GLOWING );
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_HOLY_WRATH );
-        item.plus = 1 + random2(3);
+        item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
         break;
 
@@ -3518,7 +3515,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
                                                   : SPWPN_SPEED) );
         }
 
-        item.plus += random2(6);
+        item.plus  += random2(6);
         item.plus2 += random2(6);
 
         item.colour = RED;  // forced by force_item above {dlb}
@@ -3533,7 +3530,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         force_item = true;
         item.base_type = OBJ_WEAPONS;
         item.sub_type = WPN_GREAT_SWORD;
-        item.plus = 0;
+        item.plus  = 0;
         item.plus2 = 0;
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
 
@@ -3548,7 +3545,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         force_item = true;
         item.base_type = OBJ_WEAPONS;
         item.sub_type = WPN_BATTLEAXE;
-        item.plus = 0;
+        item.plus  = 0;
         item.plus2 = 0;
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FREEZING );
 
@@ -3621,7 +3618,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         else
             set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
 
-        item.plus = random2(5);
+        item.plus  = random2(5);
         item.plus2 = random2(5);
         item.colour = RED;  // forced by force_item above {dlb}
         break;
@@ -3642,9 +3639,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     item.y = 0;
     item.link = NON_ITEM;
 
-    if (force_item)
-        item.quantity = iquan;
-    else if (mons_is_unique( mon->type ))
+    if (!force_item && mons_is_unique( mon->type ))
     {
         if (random2(100) <= 9 + mon->hit_dice)
             level = MAKE_GOOD_ITEM;
@@ -3674,9 +3669,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     if (force_item)
         item_set_appearance(i);
-
-    if (iquan > 1 && !force_item)
-        i.quantity = iquan;
 
     _give_monster_item(mon, thing_created, force_item);
 
@@ -3814,6 +3806,7 @@ static void _give_ammo(monsters *mon, int level,
 
         const int thing_created =
             items( 0, weap_class, weap_type, true, level, item_race );
+
         if (thing_created != NON_ITEM)
         {
             mitm[thing_created].quantity = qty;

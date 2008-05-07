@@ -1094,7 +1094,7 @@ static std::string _describe_ammo( const item_def &item )
     if (get_equip_race(item) != ISFLAG_NO_RACE)
     {
         bool can_launch = has_launcher(item);
-        bool can_throw = is_throwable(item);
+        bool can_throw  = is_throwable(item);
 
         description += "$";
         if (need_new_line)

@@ -2024,7 +2024,7 @@ missile_type fires_ammo_type( weapon_type wtype )
 {
     item_def wpn;
     wpn.base_type = OBJ_WEAPONS;
-    wpn.sub_type = wtype;
+    wpn.sub_type  = wtype;
 
     return (fires_ammo_type(wpn));
 }
@@ -2065,18 +2065,19 @@ const char *ammo_name(missile_type ammo)
             : Missile_prop[ Missile_index[ammo] ].name);
 }
 
-const char * ammo_name( const item_def &bow )
+const char *ammo_name( const item_def &bow )
 {
     ASSERT( is_range_weapon( bow ) );
     return ammo_name(fires_ammo_type( bow ));
 }
 
 // returns true if item has an associated launcher
-bool has_launcher( const item_def &wpn )
+bool has_launcher( const item_def &ammo )
 {
-    return (wpn.sub_type != MI_LARGE_ROCK &&
-            wpn.sub_type != MI_JAVELIN &&
-            wpn.sub_type != MI_THROWING_NET);
+    ASSERT(ammo.base_type == OBJ_MISSILES);
+    return (ammo.sub_type != MI_LARGE_ROCK
+            && ammo.sub_type != MI_JAVELIN
+            && ammo.sub_type != MI_THROWING_NET);
 }
 
 // returns true if item can be reasonably thrown without a launcher
