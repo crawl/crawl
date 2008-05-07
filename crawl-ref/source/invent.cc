@@ -30,6 +30,7 @@
 #include "externs.h"
 
 #include "clua.h"
+#include "decks.h"
 #include "describe.h"
 #include "food.h"
 #include "initfile.h"
@@ -781,6 +782,8 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OSEL_VAMP_EAT:
         return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
                 && !food_is_rotten(i) && mons_has_blood(i.plus));
+    case OSEL_DRAW_DECK:
+        return (is_deck(i));
     case OSEL_EQUIP:
         for (int eq = 0; eq < NUM_EQUIP; eq++)
         {

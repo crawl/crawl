@@ -708,7 +708,7 @@ static bool _check_buggy_deck(item_def& deck)
 static int _choose_inventory_deck( const char* prompt )
 {
     const int slot = prompt_invent_item( prompt,
-                                         MT_INVLIST, OBJ_MISCELLANY,
+                                         MT_INVLIST, OSEL_DRAW_DECK,
                                          true, true, true, 0, NULL,
                                          OPER_EVOKE );
 
