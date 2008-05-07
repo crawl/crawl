@@ -5270,7 +5270,7 @@ int piety_breakpoint(int i)
         return breakpoints[i];
 }
 
-// Returns true if The Shining One doesn't mind your stabbing this
+// Returns true if the Shining One doesn't mind your stabbing this
 // creature.
 bool tso_stab_safe_monster(const actor *act)
 {
