@@ -2629,7 +2629,7 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_ICY_ARMOUR,
                               "Your icy armour evaporates.",
                               6, coinflip(),
-                              "Your icy armour start to melt."))
+                              "Your icy armour starts to melt."))
     {
         you.redraw_armour_class = true;
     }
