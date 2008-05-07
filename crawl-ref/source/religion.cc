@@ -777,6 +777,12 @@ bool is_good_follower(const monsters* mon)
             && mons_friendly(mon));
 }
 
+bool is_nonmagical_follower(const monsters* mon)
+{
+    return (mon->alive() && !mons_is_magic_user(mon)
+            && mons_friendly(mon));
+}
+
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
@@ -788,6 +794,8 @@ bool is_follower(const monsters* mon)
 {
     if (is_good_god(you.religion))
         return is_good_follower(mon);
+    else if (you.religion == GOD_TROG)
+        return is_nonmagical_follower(mon);
     else if (you.religion == GOD_BEOGH)
         return is_orcish_follower(mon);
     else
