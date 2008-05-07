@@ -777,11 +777,16 @@ bool is_good_follower(const monsters* mon)
             && mons_friendly(mon));
 }
 
+bool is_undead_follower(const monsters* mon)
+{
+    return (mon->alive() && mons_holiness(mon) == MH_UNDEAD
+            && mons_friendly(mon));
+}
+
 bool is_nonmagical_follower(const monsters* mon)
 {
     return (mon->alive() && !mons_is_magic_user(mon)
-            && mon->attitude == ATT_FRIENDLY
-            && (mon->flags & MF_GOD_GIFT));
+            && mons_friendly(mon));
 }
 
 bool is_orcish_follower(const monsters* mon)
@@ -795,6 +800,12 @@ bool is_follower(const monsters* mon)
 {
     if (is_good_god(you.religion))
         return is_good_follower(mon);
+    else if (you.religion == GOD_KIKUBAAQUDGHA
+        || you.religion == GOD_YREDELEMNUL)
+    {
+        return is_undead_follower(mon)
+            || (you.religion == GOD_KIKUBAAQUDGHA && mon->type == MONS_REAPER);
+    }
     else if (you.religion == GOD_TROG)
         return is_nonmagical_follower(mon);
     else if (you.religion == GOD_BEOGH)
