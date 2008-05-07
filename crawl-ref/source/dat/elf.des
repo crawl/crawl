@@ -365,8 +365,8 @@ MONS:    deep elf death mage, deep elf master archer
 MONS:    deep elf blademaster
 SHUFFLE: 345
 SUBST:   4=4., 2=2., 5=5., 3=3.
-SUBST:   l=lw 
-SHUFFLE: lw
+SUBST:   l : lww 
+SHUFFLE: lww
 SHUFFLE: nN / yY / zZ
 SUBST:   N=@, n=., Y=c, y=c
 SHUFFLE: zZ / nN
