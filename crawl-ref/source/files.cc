@@ -230,7 +230,7 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
     {
         if (_is_good_filename(lData.cFileName))
             files.push_back(lData.cFileName);
-        while (FindNextFile(hFind, &lData)) 
+        while (FindNextFile(hFind, &lData))
         {
             if (_is_good_filename(lData.cFileName))
                 files.push_back(lData.cFileName);
