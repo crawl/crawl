@@ -2312,7 +2312,7 @@ static std::string weird_colour()
     int temp_rand;             // for probability determinations {dlb}
     std::string result;
 
-    temp_rand = random2(25);
+    temp_rand = random2(26);
     result =
         (temp_rand ==  0) ? "red" :
         (temp_rand ==  1) ? "purple" :
@@ -2338,7 +2338,8 @@ static std::string weird_colour()
         (temp_rand == 21) ? "azure" :
         (temp_rand == 22) ? "lime green" :
         (temp_rand == 23) ? "scarlet" :
-        (temp_rand == 24) ? "chartreuse"
+        (temp_rand == 24) ? "chartreuse" :
+        (temp_rand == 25) ? "rubric"
                           : "colourless";
 
     return result;
