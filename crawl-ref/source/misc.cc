@@ -2199,7 +2199,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     case LEVEL_ABYSS:
         grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
 
-        init_pandemonium();     /* colours only */
+        init_pandemonium();     // colours only
 
         if (player_in_hell())
         {
