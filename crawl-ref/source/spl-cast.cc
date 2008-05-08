@@ -2548,7 +2548,7 @@ static void _miscast_summoning(int severity, const char* cause)
                 create_monster(
                     mgen_data(summon_any_demon(DEMON_LESSER), 
                               BEH_HOSTILE, 5, you.pos(), MHITYOU));
-            
+
             if (coinflip())
                 create_monster(
                     mgen_data(summon_any_demon(DEMON_LESSER), 
