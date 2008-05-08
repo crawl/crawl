@@ -3060,6 +3060,8 @@ static void _decrement_durations()
             more();
         }
     }
+
+    reduce_revitalisation_chain(1);
 }
 
 static void _check_banished()

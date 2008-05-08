@@ -54,6 +54,9 @@ char cast_lesser_healing(void);
  * called from: ability - spell
  * *********************************************************************** */
 int cast_healing(int pow, int target_x = -1, int target_y = -1);
+
+void revitalisation_chain(int amount);
+void reduce_revitalisation_chain(int amount);
 int cast_revitalisation(int pow);
 
 // last updated 24may2000 {dlb}

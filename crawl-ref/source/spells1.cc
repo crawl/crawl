@@ -760,19 +760,56 @@ int cast_healing( int pow, int target_x, int target_y )
     return (_healing_spell( pow + roll_dice( 2, pow ) - 2, target_x, target_y ));
 }
 
+void revitalisation_chain(int amount)
+{
+    if (amount <= 0)
+        return;
+
+    const int old_value = you.duration[DUR_REVITALISATION_CHAIN];
+    you.duration[DUR_REVITALISATION_CHAIN] += amount;
+
+    if (you.duration[DUR_REVITALISATION_CHAIN] > 15)
+        you.duration[DUR_REVITALISATION_CHAIN] = 15;
+
+    if (old_value == 0)
+    {
+        mpr("Zin magnifies your power of revitalisation!", MSGCH_DURATION);
+        you.duration[DUR_REVITALISATION_CHAIN] += 3;
+    }
+}
+
+void reduce_revitalisation_chain(int amount)
+{
+    if (you.duration[DUR_REVITALISATION_CHAIN] == 0 || amount <= 0)
+        return;
+
+    you.duration[DUR_REVITALISATION_CHAIN] -= amount;
+
+    if (you.duration[DUR_REVITALISATION_CHAIN] <= 0)
+    {
+        you.duration[DUR_REVITALISATION_CHAIN] = 0;
+        mpr("Your vitality returns to normal.", MSGCH_DURATION);
+    }
+}
+
 int cast_revitalisation(int pow)
 {
-    static int step = 0;
+    const int step_max_chain = 6;
+    const int type_max_chain = 4;
+
+    static int step;
     static int step_max;
     static int type;
     static int hp_amt;
     static int mp_amt;
 
-    // If the step counter has been reset, start from the beginning.
-    if (step == 0)
+    // If revitalisation chaining is turned off, start from the
+    // beginning.
+    if (you.duration[DUR_REVITALISATION_CHAIN] == 0)
     {
-        step_max = std::min(pow, 6);
-        type = random2(6);
+        step = 0;
+        step_max = std::min(pow, step_max_chain);
+        type = random2(type_max_chain * 3 / 2);
         hp_amt = 3;
         mp_amt = 1;
     }
@@ -794,6 +831,9 @@ int cast_revitalisation(int pow)
                 break;
             }
 
+            if (step == step_max)
+                break;
+
             step = 1;
             // Deliberate fall through.
 
@@ -805,6 +845,9 @@ int cast_revitalisation(int pow)
                 you.duration[DUR_POISONING] = 0;
                 break;
             }
+
+            if (step == step_max)
+                break;
 
             step = 2;
             // Deliberate fall through.
@@ -818,6 +861,9 @@ int cast_revitalisation(int pow)
                 break;
             }
 
+            if (step == step_max)
+                break;
+
             step = 3;
             // Deliberate fall through.
 
@@ -829,6 +875,9 @@ int cast_revitalisation(int pow)
                 you.rotting = 0;
                 break;
             }
+
+            if (step == step_max)
+                break;
 
             step = 4;
             // Deliberate fall through.
@@ -842,6 +891,9 @@ int cast_revitalisation(int pow)
                 break;
             }
 
+            if (step == step_max)
+                break;
+
             step = 5;
             // Deliberate fall through.
 
@@ -853,6 +905,9 @@ int cast_revitalisation(int pow)
                 unrot_hp(2 + random2(6));
                 break;
             }
+
+            if (step == step_max)
+                break;
 
             step = 6;
             // Deliberate fall through.
@@ -911,6 +966,9 @@ int cast_revitalisation(int pow)
                 break;
             }
 
+            if (step == step_max)
+                break;
+
             step = 1;
             // Deliberate fall through.
 
@@ -925,6 +983,9 @@ int cast_revitalisation(int pow)
                 break;
             }
 
+            if (step == step_max)
+                break;
+
             step = 2;
             // Deliberate fall through.
 
@@ -938,6 +999,9 @@ int cast_revitalisation(int pow)
                 restore_stat(STAT_DEXTERITY, 0, true);
                 break;
             }
+
+            if (step == step_max)
+                break;
 
             step = 3;
             // Deliberate fall through.
@@ -955,51 +1019,48 @@ int cast_revitalisation(int pow)
         // Deliberate fall through, resetting the step counter.
 
     default:
-        // Do nothing.
+        // Set the step counter to its maximum value to turn off
+        // revitalisation chaining.
+        step = step_max;
         break;
     }
 
-    // If revitalisation has failed, reset the step counter and get out,
-    // indicating failure.
-    if (!success)
+    // If revitalisation has succeeded, display an appropriate message.
+    if (success)
     {
+        mprf("You feel %s %s.", (step == 0) ? "only nominally" :
+                                (step == 1) ? "very slightly" :
+                                (step == 2) ? "slightly" :
+                                (step == 3) ? "somewhat" :
+                                (step == 4) ? "appropriately"
+                                            : "impressively",
+                                (type == 0) ? "better" :
+                                (type == 1) ? "invigorated" :
+                                (type == 2) ? "powerful"
+                                            : "renewed");
+
+        // The more the step counter has advanced, the greater the piety
+        // cost is.
+        int loss_amt = step + 1 + (random2(3) - 1);
+
+        if (loss_amt > 0)
+            lose_piety(loss_amt);
+
+        // Increment the step counter.
+        step++;
+    }
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
-        step = 0;
-        return 0;
-    }
 
-    // If it succeeded, display an appropriate message.
-    mprf("You feel %s %s.", (step == 0) ? "only nominally" :
-                            (step == 1) ? "very slightly" :
-                            (step == 2) ? "slightly" :
-                            (step == 3) ? "somewhat" :
-                            (step == 4) ? "appropriately"
-                                        : "impressively",
-                            (type == 0) ? "better" :
-                            (type == 1) ? "invigorated" :
-                            (type == 2) ? "powerful"
-                                        : "renewed");
+    // If revitalisation has succeeded, and it hasn't succeeded as far
+    // as possible, turn on revitalisation chaining for several turns.
+    if (success && step != step_max)
+        revitalisation_chain(3);
+    // Otherwise, turn off revitalisation chaining.
+    else
+        reduce_revitalisation_chain(15);
 
-    // The more the step counter has advanced, the greater the piety
-    // cost is.
-    int loss_amt = step + 1 + (random2(3) - 1);
-
-    if (loss_amt > 0)
-        lose_piety(loss_amt);
-
-    // Increment the step counter.
-    step++;
-
-    // If revitalisation has gone as far as possible, reset the step
-    // counter and get out, indicating maximum success.
-    if (step == step_max)
-    {
-        step = 0;
-        return step_max;
-    }
-
-    // Otherwise, get out, indicating normal success.
-    return (step + 1);
+    return (success) ? (step + 1) : 0;
 }
 
 bool cast_revivification(int pow)

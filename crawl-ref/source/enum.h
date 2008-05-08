@@ -1100,6 +1100,7 @@ enum duration_type
     DUR_SLEEP,
     DUR_SAGE,
     DUR_TELEPATHY,
+    DUR_REVITALISATION_CHAIN,
     NUM_DURATIONS
 };
 
