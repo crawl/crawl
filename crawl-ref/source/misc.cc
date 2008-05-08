@@ -2351,7 +2351,7 @@ std::string weird_writing()
     int temp_rand;             // for probability determinations {dlb}
     std::string result;
 
-    temp_rand = random2(15);
+    temp_rand = random2(14);
     result =
         (temp_rand == 0) ? "writhing" :
         (temp_rand == 1) ? "bold" :
@@ -2360,7 +2360,9 @@ std::string weird_writing()
         (temp_rand == 4) ? "blocky" :
         (temp_rand == 5) ? "angular" :
         (temp_rand == 6) ? "shimmering" :
-        (temp_rand == 7) ? "glowing"
+        (temp_rand == 7) ? "glowing" :
+        (temp_rand == 8) ? "pulsating" :
+        (temp_rand == 9) ? "sinuous"
                          : "";
 
     if (!result.empty())
@@ -2378,7 +2380,7 @@ std::string weird_writing()
         (temp_rand == 2) ? "sigils" :
         (temp_rand == 3) ? "runes" :
         (temp_rand == 4) ? "hieroglyphics" :
-        (temp_rand == 5) ? "scrawl" :
+        (temp_rand == 5) ? "figures" :
         (temp_rand == 6) ? "print-out" :
         (temp_rand == 7) ? "binary code" :
         (temp_rand == 8) ? "glyphs" :
@@ -2408,14 +2410,14 @@ std::string weird_glow_colour()
     // Must start with a consonant!
     temp_rand = random2(8);
     result =
-        (temp_rand ==  0) ? "brilliant" :
-        (temp_rand ==  1) ? "pale" :
-        (temp_rand ==  2) ? "mottled" :
-        (temp_rand ==  3) ? "shimmering" :
-        (temp_rand ==  4) ? "bright" :
-        (temp_rand ==  5) ? "dark" :
-        (temp_rand ==  6) ? "shining"
-                          : "faint";
+        (temp_rand == 0) ? "brilliant" :
+        (temp_rand == 1) ? "pale" :
+        (temp_rand == 2) ? "mottled" :
+        (temp_rand == 3) ? "shimmering" :
+        (temp_rand == 4) ? "bright" :
+        (temp_rand == 5) ? "dark" :
+        (temp_rand == 6) ? "shining"
+                         : "faint";
 
     result += ' ';
 
