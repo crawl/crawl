@@ -1278,7 +1278,7 @@ bool bless_follower(monsters *follower,
 
             if (more_time)
             {
-                result += (more_time == 2) ? "permanence in this world"
+                result += (more_time == 2) ? "permanent time in this world"
                                            : "more time in this world";
             }
 
