@@ -475,6 +475,15 @@ static void _inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
+        // neither does Zin's revitalisation chaining
+        else if (god == GOD_ZIN)
+        {
+            if (you.duration[DUR_REVITALISATION_CHAIN])
+            {
+                mpr("Your power of revitalisation disappears!");
+                you.duration[DUR_REVITALISATION_CHAIN] = 0;
+            }
+        }
         // neither does TSO's halo or divine shield
         else if (god == GOD_SHINING_ONE)
         {
@@ -4296,6 +4305,12 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_ZIN:
+        if (you.duration[DUR_REVITALISATION_CHAIN])
+        {
+            mpr("Your power of revitalisation disappears!");
+            you.duration[DUR_REVITALISATION_CHAIN] = 0;
+        }
+
         if (env.sanctuary_time)
             remove_sanctuary();
 
