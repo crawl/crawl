@@ -831,11 +831,11 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            if (step == step_max)
-                break;
-
             step = 1;
             // Deliberate fall through.
+
+            if (step == step_max)
+                break;
 
         // Remove poisoning.
         case 1:
@@ -846,11 +846,11 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            if (step == step_max)
-                break;
-
             step = 2;
             // Deliberate fall through.
+
+            if (step == step_max)
+                break;
 
         // Remove sickness.
         case 2:
@@ -861,11 +861,11 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            if (step == step_max)
-                break;
-
             step = 3;
             // Deliberate fall through.
+
+            if (step == step_max)
+                break;
 
         // Remove rotting.
         case 3:
@@ -876,11 +876,11 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            if (step == step_max)
-                break;
-
             step = 4;
             // Deliberate fall through.
+
+            if (step == step_max)
+                break;
 
         // Restore rotted HP.
         case 4:
@@ -891,11 +891,11 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            if (step == step_max)
-                break;
-
             step = 5;
             // Deliberate fall through.
+
+            if (step == step_max)
+                break;
 
         // Restore more rotted HP.
         case 5:
@@ -905,9 +905,6 @@ int cast_revitalisation(int pow)
                 unrot_hp(2 + random2(6));
                 break;
             }
-
-            if (step == step_max)
-                break;
 
             step = 6;
             // Deliberate fall through.
@@ -966,11 +963,11 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            if (step == step_max)
-                break;
-
             step = 1;
             // Deliberate fall through.
+
+            if (step == step_max)
+                break;
 
         case 1:
             if (you.strength < you.max_strength || you.intel < you.max_intel
@@ -983,11 +980,11 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            if (step == step_max)
-                break;
-
             step = 2;
             // Deliberate fall through.
+
+            if (step == step_max)
+                break;
 
         case 2:
             if (you.strength < you.max_strength || you.intel < you.max_intel
@@ -1000,11 +997,11 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            if (step == step_max)
-                break;
-
             step = 3;
             // Deliberate fall through.
+
+            if (step == step_max)
+                break;
 
         // XXX: Temporary stat boosting is not implemented yet.
         default:
