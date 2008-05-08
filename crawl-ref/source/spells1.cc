@@ -822,12 +822,13 @@ int cast_revitalisation(int pow)
         // Remove negative afflictions.
         switch (step)
         {
-        // Remove confusion.
+        // Remove confusion and poisoning.
         case 0:
-            if (you.duration[DUR_CONF])
+            if (you.duration[DUR_CONF] || you.duration[DUR_POISONING])
             {
                 success = true;
                 you.duration[DUR_CONF] = 0;
+                you.duration[DUR_POISONING] = 0;
                 break;
             }
 
@@ -837,12 +838,13 @@ int cast_revitalisation(int pow)
             if (step == step_max)
                 break;
 
-        // Remove poisoning.
+        // Remove sickness and rotting.
         case 1:
-            if (you.duration[DUR_POISONING])
+            if (you.disease || you.rotting)
             {
                 success = true;
-                you.duration[DUR_POISONING] = 0;
+                you.disease = 0;
+                you.rotting = 0;
                 break;
             }
 
@@ -852,12 +854,12 @@ int cast_revitalisation(int pow)
             if (step == step_max)
                 break;
 
-        // Remove sickness.
+        // Restore rotted HP.
         case 2:
-            if (you.disease)
+            if (player_rotted())
             {
                 success = true;
-                you.disease = 0;
+                unrot_hp(3 + random2(9));
                 break;
             }
 
@@ -867,12 +869,15 @@ int cast_revitalisation(int pow)
             if (step == step_max)
                 break;
 
-        // Remove rotting.
+        // Divine robustness, level 1.
         case 3:
-            if (you.rotting)
+            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] < 1)
             {
                 success = true;
-                you.rotting = 0;
+                mpr("Zin grants you divine robustness.", MSGCH_DURATION);
+                you.attribute[ATTR_DIVINE_ROBUSTNESS] = 1;
+                you.duration[DUR_DIVINE_ROBUSTNESS] += 19 + random2(19);
+                calc_hp();
                 break;
             }
 
@@ -882,12 +887,15 @@ int cast_revitalisation(int pow)
             if (step == step_max)
                 break;
 
-        // Restore rotted HP.
+        // Divine robustness, level 2.
         case 4:
-            if (player_rotted())
+            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] < 2)
             {
                 success = true;
-                unrot_hp(1 + random2(3));
+                mpr("Zin strengthens your divine robustness.", MSGCH_DURATION);
+                you.attribute[ATTR_DIVINE_ROBUSTNESS] = 2;
+                you.duration[DUR_DIVINE_ROBUSTNESS] += 13 + random2(13);
+                calc_hp();
                 break;
             }
 
@@ -897,12 +905,15 @@ int cast_revitalisation(int pow)
             if (step == step_max)
                 break;
 
-        // Restore more rotted HP.
+        // Divine robustness, level 3.
         case 5:
-            if (player_rotted())
+            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] < 3)
             {
                 success = true;
-                unrot_hp(2 + random2(6));
+                mpr("Zin maximises your divine robustness.", MSGCH_DURATION);
+                you.attribute[ATTR_DIVINE_ROBUSTNESS] = 3;
+                you.duration[DUR_DIVINE_ROBUSTNESS] += 7 + random2(7);
+                calc_hp();
                 break;
             }
 

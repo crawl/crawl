@@ -475,13 +475,21 @@ static void _inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
-        // neither does Zin's revitalisation chaining
+        // neither does Zin's revitalisation chaining or divine robustness
         else if (god == GOD_ZIN)
         {
             if (you.duration[DUR_REVITALISATION_CHAIN])
             {
                 mpr("Your power of revitalisation disappears!");
                 you.duration[DUR_REVITALISATION_CHAIN] = 0;
+            }
+
+            if (you.duration[DUR_DIVINE_ROBUSTNESS])
+            {
+                mpr("Your divine robustness is withdrawn.");
+                you.duration[DUR_DIVINE_ROBUSTNESS] = 0;
+                you.duration[DUR_REVITALISATION_CHAIN] = 0;
+                calc_hp();
             }
         }
         // neither does TSO's halo or divine shield
@@ -4309,6 +4317,14 @@ void excommunication(god_type new_god)
         {
             mpr("Your power of revitalisation disappears!");
             you.duration[DUR_REVITALISATION_CHAIN] = 0;
+        }
+
+        if (you.duration[DUR_DIVINE_ROBUSTNESS])
+        {
+            mpr("Your divine robustness is withdrawn.");
+            you.attribute[ATTR_DIVINE_ROBUSTNESS] = 0;
+            you.duration[DUR_DIVINE_ROBUSTNESS] = 0;
+            calc_hp();
         }
 
         if (env.sanctuary_time)

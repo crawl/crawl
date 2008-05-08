@@ -171,6 +171,7 @@ enum attribute_type
     ATTR_HELD,                  // caught in a net
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
                                 // sight of the player while in the Abyss.
+    ATTR_DIVINE_ROBUSTNESS,     // strength of Zin's Divine Robustness
     ATTR_DIVINE_SHIELD,         // strength of TSO's Divine Shield
     ATTR_UNIQUE_RUNES,
     ATTR_DEMONIC_RUNES,
@@ -1070,6 +1071,7 @@ enum duration_type
     DUR_REPEL_MISSILES,
     DUR_PRAYER,
     DUR_PIETY_POOL,             // distribute piety over time
+    DUR_DIVINE_ROBUSTNESS,      // duration of Zin's Divine Robustness
     DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
     DUR_REGENERATION,
     DUR_SWIFTNESS,

@@ -2112,6 +2112,7 @@ int calc_hp(bool real_hp)
 
     // frail and robust mutations
     hitp *= (10 + player_mutation_level(MUT_ROBUST)
+                + you.attribute[ATTR_DIVINE_ROBUSTNESS]
                 - player_mutation_level(MUT_FRAIL));
     hitp /= 10;
 
