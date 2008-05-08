@@ -681,6 +681,10 @@ Levity
 
 Nihilism
 
+Pragmatism
+
+Idealism
+
 %%%%
 science_name
 
