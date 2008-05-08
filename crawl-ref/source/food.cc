@@ -72,10 +72,13 @@ static void  _heal_from_food(int hp_amt, int mp_amt, bool unrot,
  **************************************************
 */
 
-void make_hungry( int hunger_amount, bool suppress_msg )
+void make_hungry( int hunger_amount, bool suppress_msg, bool allow_reducing )
 {
     if (you.is_undead == US_UNDEAD)
         return;
+
+    if (allow_reducing)
+        hunger_amount = calc_hunger(hunger_amount);
 
     if (hunger_amount == 0 && !suppress_msg)
         return;
@@ -1842,7 +1845,7 @@ int you_min_hunger()
     if (you.is_undead == US_UNDEAD)
         return 6000;
 
-    // vampires can never starve to death
+    // Vampires can never starve to death.
     if (you.species == SP_VAMPIRE)
         return 701;
 

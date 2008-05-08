@@ -327,8 +327,6 @@ int cast_bone_shards(int power, bolt &beam)
 
 void sublimation(int power)
 {
-    unsigned char loopy = 0;    // general purpose loop variable {dlb}
-
     int wielded = you.equip[EQ_WEAPON];
     if (wielded != -1)
     {
@@ -377,6 +375,7 @@ void sublimation(int power)
         {
             mpr("You draw magical energy from your own body!");
 
+            unsigned char loopy = 0;    // general purpose loop variable {dlb}
             int food = 0; // for Vampires
             while (you.magic_points < you.max_magic_points && you.hp > 1
                    && (you.species != SP_VAMPIRE || you.hunger - food >= 7000))
@@ -388,10 +387,8 @@ void sublimation(int power)
                     food += 15;
 
                 for (loopy = 0; loopy < (you.hp > 1 ? 3 : 0); loopy++)
-                {
                     if (random2(power) < 6)
                         dec_hp(1, false);
-                }
 
                 if (random2(power) < 6)
                     break;
@@ -446,7 +443,7 @@ void simulacrum(int power)
         for (int i = 0; i < max_num; i++)
         {
             if (create_monster(
-                    mgen_data(MONS_SIMULACRUM_SMALL, 
+                    mgen_data(MONS_SIMULACRUM_SMALL,
                               BEH_FRIENDLY, 6,
                               you.pos(), you.pet_target,
                               0, mons_type)) != -1)

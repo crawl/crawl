@@ -932,7 +932,8 @@ static bool _activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && you.hunger_state == HS_STARVING)
+    if (hungerCheck && you.species != SP_VAMPIRE
+        && you.hunger_state == HS_STARVING)
     {
         mpr("You're too hungry.");
         crawl_state.zero_turns_taken();
@@ -963,7 +964,7 @@ static bool _activate_talent(const talent& tal)
 
     // don't insta-starve the player
     // (happens at 100, losing consciousness possible from 500 downward)
-    if (hungerCheck)
+    if (hungerCheck && you.species != SP_VAMPIRE)
     {
         const int expected_hunger = you.hunger - abil.food_cost * 2;
 #ifdef DEBUG_DIAGNOSTICS
@@ -1867,7 +1868,7 @@ static void _pay_ability_costs(const ability_def& abil)
     // currently only delayed fireball is instantaneous -- bwr
     you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
-    const int food_cost = abil.food_cost + random2avg(abil.food_cost, 2);
+    const int food_cost  = abil.food_cost + random2avg(abil.food_cost, 2);
     const int piety_cost = abil.piety_cost.cost();
 
 #if DEBUG_DIAGNOSTICS
@@ -1890,7 +1891,7 @@ static void _pay_ability_costs(const ability_def& abil)
     }
 
     if (food_cost)
-        make_hungry( food_cost, false );
+        make_hungry( food_cost, false, true );
 
     if (piety_cost)
         lose_piety( piety_cost );

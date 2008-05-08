@@ -138,6 +138,7 @@ int player_movement_speed(void);
  * *********************************************************************** */
 int player_hunger_rate(void);
 
+int calc_hunger(int food_cost);
 
 /* ***********************************************************************
  * called from: debug - it_use3 - spells0

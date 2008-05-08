@@ -1507,6 +1507,8 @@ int staff_spell( int staff )
         food -= 10 * you.skills[SK_EVOCATIONS];
         if (food < diff * 5)
             food = diff * 5;
+
+        food = calc_hunger(food);
     }
 
     if (food && (you.hunger_state == HS_STARVING || you.hunger <= food))
@@ -1539,7 +1541,7 @@ int staff_spell( int staff )
         return (-1);
     }
 
-    make_hungry( food, true );
+    make_hungry(food, true, true);
     istaff.plus -= mana;
     you.wield_change = true;
     you.turn_is_over = true;

@@ -691,7 +691,7 @@ bool cast_a_spell()
 
     if (!staff_energy && you.is_undead != US_UNDEAD)
     {
-        const int spellh = spell_hunger( spell );
+        const int spellh = calc_hunger( spell_hunger(spell) );
         if (spellh > 0)
             make_hungry(spellh, true);
     }
@@ -2495,7 +2495,7 @@ static void _miscast_summoning(int severity, const char* cause)
         case 4:
         case 5:
             if (create_monster(
-                    mgen_data(summon_any_demon(DEMON_LESSER), 
+                    mgen_data(summon_any_demon(DEMON_LESSER),
                               BEH_HOSTILE, 5, you.pos(), MHITYOU)) != -1)
             {
                 mpr("Something appears in a flash of light!");
@@ -2514,7 +2514,7 @@ static void _miscast_summoning(int severity, const char* cause)
                 for (int i = 0; i < count; ++i)
                 {
                     create_monster(
-                        mgen_data(MONS_SPATIAL_VORTEX, 
+                        mgen_data(MONS_SPATIAL_VORTEX,
                                   BEH_HOSTILE, 3,
                                   you.pos(), MHITYOU));
                 }
@@ -2524,7 +2524,7 @@ static void _miscast_summoning(int severity, const char* cause)
         case 1:
         case 2:
             if (create_monster(
-                    mgen_data(summon_any_demon(DEMON_COMMON), 
+                    mgen_data(summon_any_demon(DEMON_COMMON),
                               BEH_HOSTILE, 5,
                               you.pos(), MHITYOU)) != -1)
             {
@@ -2537,21 +2537,21 @@ static void _miscast_summoning(int severity, const char* cause)
         case 5:
             mpr("A chorus of chattering voices calls out to you!");
             create_monster(
-                mgen_data(summon_any_demon(DEMON_LESSER), 
+                mgen_data(summon_any_demon(DEMON_LESSER),
                           BEH_HOSTILE, 5, you.pos(), MHITYOU));
 
             create_monster(
-                mgen_data(summon_any_demon(DEMON_LESSER), 
+                mgen_data(summon_any_demon(DEMON_LESSER),
                           BEH_HOSTILE, 5, you.pos(), MHITYOU));
 
             if (coinflip())
                 create_monster(
-                    mgen_data(summon_any_demon(DEMON_LESSER), 
+                    mgen_data(summon_any_demon(DEMON_LESSER),
                               BEH_HOSTILE, 5, you.pos(), MHITYOU));
 
             if (coinflip())
                 create_monster(
-                    mgen_data(summon_any_demon(DEMON_LESSER), 
+                    mgen_data(summon_any_demon(DEMON_LESSER),
                               BEH_HOSTILE, 5, you.pos(), MHITYOU));
             break;
         }

@@ -60,8 +60,8 @@ bool eat_food(bool run_hook = true, int slot = -1);
 /* ***********************************************************************
  * called from: abl-show - acr - fight - food - spell
  * *********************************************************************** */
-void make_hungry(int hunger_amount, bool suppress_msg);
-
+void make_hungry(int hunger_amount, bool suppress_msg,
+                 bool allow_reducing = false);
 
 // last updated 19jun2000 {dlb}
 /* ***********************************************************************

@@ -473,7 +473,7 @@ bool evoke_wielded()
 
                 dec_hp( 5 + random2avg(19, 2), false, "Staff of Dispater" );
                 dec_mp( 2 + random2avg(5, 2) );
-                make_hungry( 100, false );
+                make_hungry(100, false, true);
 
                 power = you.skills[SK_EVOCATIONS] * 8;
                 your_spells( SPELL_HELLFIRE, power, false );
@@ -484,7 +484,7 @@ bool evoke_wielded()
             case SPWPN_SCEPTRE_OF_ASMODEUS:
                 if ( evoke_sceptre_of_asmodeus() )
                 {
-                    make_hungry(200, false);
+                    make_hungry(200, false, true);
                     did_work = true;
                     pract = 1;
                 }
@@ -498,7 +498,7 @@ bool evoke_wielded()
                 }
 
                 dec_mp(4);
-                make_hungry( 50, false );
+                make_hungry(50, false, true);
                 pract = 1;
                 did_work = true;
 
@@ -520,7 +520,7 @@ bool evoke_wielded()
                 mpr("Magical energy flows into your mind!");
 
                 inc_mp( 3 + random2(5) + you.skills[SK_EVOCATIONS] / 3, false );
-                make_hungry( 50, false );
+                make_hungry(50, false, true);
                 pract = 1;
                 did_work = true;
 
@@ -559,7 +559,7 @@ bool evoke_wielded()
             {
                 mpr("You channel some magical energy.");
                 inc_mp( 1 + random2(3), false );
-                make_hungry( 50, false );
+                make_hungry(50, false, true);
                 pract = (one_chance_in(5) ? 1 : 0);
                 did_work = true;
 
@@ -701,7 +701,7 @@ static bool efreet_flask(void)
     const int efreet =
         create_monster(
             mgen_data( MONS_EFREET, beha, 0, you.pos(), hitting ) );
-    
+
     if (efreet != -1)
     {
         monsters *mon = &menv[efreet];

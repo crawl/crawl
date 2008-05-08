@@ -6003,6 +6003,18 @@ void player::make_hungry(int hunger_increase, bool silent)
         ::lessen_hunger(-hunger_increase, silent);
 }
 
+// For semi-undead species (Vampire!) reduce food cost for spells and abilities
+// to 75% (hungry), 50% (very hungry), 25% (near starving), or zero (starving).
+int calc_hunger(int food_cost)
+{
+    if (you.is_undead == US_SEMI_UNDEAD && you.hunger_state < HS_SATIATED)
+    {
+        food_cost *= you.hunger_state;
+        food_cost /= 4;
+    }
+    return (food_cost);
+}
+
 int player::holy_aura() const
 {
     return (duration[DUR_REPEL_UNDEAD]? piety : 0);
@@ -6452,10 +6464,12 @@ bool player::can_mutate() const
 
 bool player::can_safely_mutate() const
 {
-    return (can_mutate()
-            && (!you.is_undead
-                || (you.is_undead == US_SEMI_UNDEAD
-                    && you.hunger_state == HS_ENGORGED)));
+    if (!can_mutate())
+        return false;
+
+    return (!you.is_undead
+            || you.is_undead == US_SEMI_UNDEAD
+               && you.hunger_state == HS_ENGORGED);
 }
 
 bool player::mutate()

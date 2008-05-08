@@ -1408,7 +1408,7 @@ static void _display_vampire_attributes()
 
     std::string result;
 
-    std::string column[11][7] =
+    std::string column[12][7] =
     {
        {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
         "Satiated  ", "<yellow>Thirsty</yellow>  ", "<yellow>Near...</yellow>  ",
@@ -1432,7 +1432,9 @@ static void _display_vampire_attributes()
 
        {"Stealth boost        ", "none       ", "none    ", "none      ",  "minor    ", "major    ", "large"},
 
-       {"Bat Form             ", "no         ", "no      ", "yes       ",  "yes      ", "yes      ", "yes  "}
+       {"Bat Form             ", "no         ", "no      ", "yes       ",  "yes      ", "yes      ", "yes  "},
+
+       {"Spell hunger         ", "full       ", "full    ", "full      ",  "reduced  ", "lowered  ", "none "}
     };
 
     int current = 0;
@@ -1459,7 +1461,7 @@ static void _display_vampire_attributes()
         current = 6;
     }
 
-    for (int y = 0; y < 11; y++)      // lines   (properties)
+    for (int y = 0; y < 12; y++)     // lines   (properties)
     {
         for (int x = 0; x < 7; x++)  // columns (hunger states)
         {
@@ -1471,18 +1473,6 @@ static void _display_vampire_attributes()
         }
         result += EOL;
     }
-/*
-    result = "                     <lightgreen>Alive</lightgreen>      <green>Full</green>    Satiated  "
-                                  "<yellow>Thirsty  Near...</yellow>  <lightred>Bloodless</lightred>" EOL
-             "Metabolism           very fast  fast    fast      normal   slow     none " EOL
-             "Regeneration         very fast  fast    normal    normal   slow     none " EOL
-             "Poison resistance                        +         +        +        +   " EOL
-             "Cold resistance                                    +        +        ++  " EOL
-             "Negative resistance                                +        ++       +++ " EOL
-             "Torment resistance                                                   +   " EOL
-             "Mutation effects     full       capped  capped    none     none     none " EOL
-             "Stealth boost        none       none    none      minor    major    large" EOL;
-*/
 
     result += EOL EOL;
     result += EOL EOL;
