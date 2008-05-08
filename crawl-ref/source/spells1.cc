@@ -819,7 +819,7 @@ int cast_revitalisation(int pow)
     switch (type)
     {
     case 0:
-        // Remove negative afflictions.
+        // Remove negative afflictions, and/or add divine robustness.
         switch (step)
         {
         // Remove confusion and poisoning.
