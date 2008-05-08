@@ -975,10 +975,10 @@ static bool _tso_blessing_holy_arm(monsters* mon)
     return true;
 }
 
-static bool _tso_blessing_extend_stay(monsters *mon)
+static int _tso_blessing_extend_stay(monsters *mon)
 {
     if (!mon->has_ench(ENCH_ABJ))
-        return false;
+        return 0;
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
@@ -993,11 +993,14 @@ static bool _tso_blessing_extend_stay(monsters *mon)
     // enchantment effect, in order to keep the monster from
     // disappearing.
     if (abj.duration >= threshold)
+    {
         mon->del_ench(ENCH_ABJ, true, false);
+        return 2;
+    }
     else
         mon->update_ench(abj);
 
-    return true;
+    return 1;
 }
 
 static bool _tso_blessing_friendliness(monsters *mon)
@@ -1258,23 +1261,32 @@ bool bless_follower(monsters *follower,
             // Extend a monster's stay if it's abjurable, optionally
             // making it friendly if it's charmed.  If neither is
             // possible, deliberately fall through.
-            bool more_time = _tso_blessing_extend_stay(follower);
+            int more_time = _tso_blessing_extend_stay(follower);
             bool friendliness = false;
 
             if (!more_time || coinflip())
                 friendliness = _tso_blessing_friendliness(follower);
 
-            if (more_time && friendliness)
-                result = "friendliness and more time in this world";
-            else if (more_time)
-                result = "more time in this world";
-            else if (friendliness)
-                result = "friendliness";
-            else if (force)
-                mpr("Couldn't increase monster's friendliness or time.");
+            result = "";
+
+            if (friendliness)
+            {
+                result += "friendliness";
+                if (more_time)
+                    result += " and ";
+            }
+
+            if (more_time)
+            {
+                result += (more_time == 2) ? "permanence in this world"
+                                           : "more time in this world";
+            }
 
             if (more_time || friendliness)
                 break;
+
+            if (force)
+                mpr("Couldn't increase monster's friendliness or time.");
         }
 
         // deliberate fallthrough for the healing effects
@@ -1301,20 +1313,25 @@ bool bless_follower(monsters *follower,
             if (!healing || coinflip())
                 vigour = _blessing_healing(follower, true);
 
-            if (healing && vigour)
-                result = "healing and extra vigour";
-            else if (healing)
-                result = "healing";
-            else if (vigour)
-                result = "extra vigour";
-            else
-            {
-                if (force)
-                    mpr("Couldn't heal monster.");
+            result = "";
 
-                return false;
+            if (healing)
+            {
+                result += "healing";
+                if (vigour)
+                    result += " and ";
             }
-            break;
+
+            if (vigour)
+                result += "extra vigour";
+
+            if (healing || vigour)
+                break;
+
+            if (force)
+                mpr("Couldn't heal monster.");
+
+            return false;
         }
 
         default:
