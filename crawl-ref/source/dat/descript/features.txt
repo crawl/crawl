@@ -331,7 +331,7 @@ A wooden door. You can close it by standing next to it and pressing 'C'.
 %%%%
 An orcish idol
 
-An idol of Beogh
+An idol of the orc god Beogh
 %%%%
 An unnaturally hard rock wall
 
