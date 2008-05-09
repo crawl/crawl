@@ -95,8 +95,10 @@ CFWARN := -Wall -Wwrite-strings -Wshadow -pedantic
 CFOTHERS := -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS
 
 ifneq ($(HURRY),y)
+ifneq ($(DEBUG_CRAWL),y)
 CFWARN += -Wuninitialized
 CFOTHERS += -O2
+endif
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
