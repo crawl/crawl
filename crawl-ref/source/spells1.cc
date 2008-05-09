@@ -768,14 +768,11 @@ void revitalisation_chain(int amount)
     const int old_value = you.duration[DUR_REVITALISATION_CHAIN];
     you.duration[DUR_REVITALISATION_CHAIN] += amount;
 
-    if (you.duration[DUR_REVITALISATION_CHAIN] > 15)
-        you.duration[DUR_REVITALISATION_CHAIN] = 15;
+    if (you.duration[DUR_REVITALISATION_CHAIN] > 20)
+        you.duration[DUR_REVITALISATION_CHAIN] = 20;
 
     if (old_value == 0)
-    {
         mpr("Zin magnifies your power of revitalisation!", MSGCH_DURATION);
-        you.duration[DUR_REVITALISATION_CHAIN] += 3;
-    }
 }
 
 void reduce_revitalisation_chain(int amount)
@@ -1084,10 +1081,10 @@ int cast_revitalisation(int pow)
     // as possible, and revitalisation chaining is needed, turn on
     // revitalisation chaining for several turns.
     if (success && step != step_max && need_chain)
-        revitalisation_chain(3);
+        revitalisation_chain(4);
     // Otherwise, turn off revitalisation chaining.
     else
-        reduce_revitalisation_chain(15);
+        reduce_revitalisation_chain(20);
 
     return (success) ? (step + 1) : 0;
 }
