@@ -2110,10 +2110,12 @@ int calc_hp(bool real_hp)
         }
     }
 
+    // limit combined robust mutations and divine robustness to 3
+    const int robust = std::min(player_mutation_level(MUT_ROBUST)
+                           + you.attribute[ATTR_DIVINE_ROBUSTNESS], 3);
+
     // frail and robust mutations, and divine robustness
-    hitp *= (10 + player_mutation_level(MUT_ROBUST)
-                + you.attribute[ATTR_DIVINE_ROBUSTNESS]
-                - player_mutation_level(MUT_FRAIL));
+    hitp *= (10 + robust - player_mutation_level(MUT_FRAIL));
     hitp /= 10;
 
     you.hp_max = hitp;
