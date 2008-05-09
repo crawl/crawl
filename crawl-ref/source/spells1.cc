@@ -871,11 +871,11 @@ int cast_revitalisation(int pow)
 
         // Divine robustness, level 1.
         case 3:
-            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] < 1)
+            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 0)
             {
                 success = true;
                 mpr("Zin grants you divine robustness.", MSGCH_DURATION);
-                you.attribute[ATTR_DIVINE_ROBUSTNESS] = 1;
+                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
                     you.skills[SK_INVOCATIONS] * 2;
                 calc_hp();
@@ -890,11 +890,11 @@ int cast_revitalisation(int pow)
 
         // Divine robustness, level 2.
         case 4:
-            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] < 2)
+            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 1)
             {
                 success = true;
                 mpr("Zin strengthens your divine robustness.", MSGCH_DURATION);
-                you.attribute[ATTR_DIVINE_ROBUSTNESS] = 2;
+                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
                     you.skills[SK_INVOCATIONS];
                 calc_hp();
@@ -909,11 +909,11 @@ int cast_revitalisation(int pow)
 
         // Divine robustness, level 3.
         case 5:
-            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] < 3)
+            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 2)
             {
                 success = true;
                 mpr("Zin maximises your divine robustness.", MSGCH_DURATION);
-                you.attribute[ATTR_DIVINE_ROBUSTNESS] = 3;
+                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
                     you.skills[SK_INVOCATIONS] / 2;
                 calc_hp();
