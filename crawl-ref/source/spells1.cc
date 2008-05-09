@@ -1020,15 +1020,15 @@ int cast_revitalisation(int pow)
                 break;
 
         case 2:
-            // Restore all stats completely.
+            // Restore all stats by 3 points.
             if (you.strength < you.max_strength || you.intel < you.max_intel
                 || you.dex < you.max_dex)
             {
                 need_chain = true;
                 success = true;
-                restore_stat(STAT_STRENGTH, 0, true);
-                restore_stat(STAT_INTELLIGENCE, 0, true);
-                restore_stat(STAT_DEXTERITY, 0, true);
+                restore_stat(STAT_STRENGTH, 3, true);
+                restore_stat(STAT_INTELLIGENCE, 3, true);
+                restore_stat(STAT_DEXTERITY, 3, true);
                 break;
             }
 
