@@ -989,54 +989,16 @@ int cast_revitalisation(int pow)
         switch (step)
         {
         case 0:
-            // Restore all stats by 1 point.
-            if (you.strength < you.max_strength || you.intel < you.max_intel
-                || you.dex < you.max_dex)
-            {
-                success = true;
-                restore_stat(STAT_STRENGTH, 1, true);
-                restore_stat(STAT_INTELLIGENCE, 1, true);
-                restore_stat(STAT_DEXTERITY, 1, true);
-                need_chain = (you.strength < you.max_strength
-                    || you.intel < you.max_intel || you.dex < you.max_dex);
-                break;
-            }
-
-            step = 1;
-            // Deliberate fall through.
-
-            if (step == step_max)
-                break;
-
         case 1:
-            // Restore all stats by 2 points.
-            if (you.strength < you.max_strength || you.intel < you.max_intel
-                || you.dex < you.max_dex)
-            {
-                success = true;
-                restore_stat(STAT_STRENGTH, 2, true);
-                restore_stat(STAT_INTELLIGENCE, 2, true);
-                restore_stat(STAT_DEXTERITY, 2, true);
-                need_chain = (you.strength < you.max_strength
-                    || you.intel < you.max_intel || you.dex < you.max_dex);
-                break;
-            }
-
-            step = 2;
-            // Deliberate fall through.
-
-            if (step == step_max)
-                break;
-
         case 2:
-            // Restore all stats by 3 points.
+            // Restore stats.
             if (you.strength < you.max_strength || you.intel < you.max_intel
                 || you.dex < you.max_dex)
             {
                 success = true;
-                restore_stat(STAT_STRENGTH, 3, true);
-                restore_stat(STAT_INTELLIGENCE, 3, true);
-                restore_stat(STAT_DEXTERITY, 3, true);
+                restore_stat(STAT_STRENGTH, step + 1, true);
+                restore_stat(STAT_INTELLIGENCE, step + 1, true);
+                restore_stat(STAT_DEXTERITY, step + 1, true);
                 need_chain = (you.strength < you.max_strength
                     || you.intel < you.max_intel || you.dex < you.max_dex);
                 break;
@@ -1044,9 +1006,6 @@ int cast_revitalisation(int pow)
 
             step = 3;
             // Deliberate fall through.
-
-            if (step == step_max)
-                break;
 
         // XXX: Temporary stat boosting is not implemented yet.
         default:
