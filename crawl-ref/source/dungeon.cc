@@ -756,7 +756,7 @@ static void _reset_level()
 
     // reset all monsters
     for (int i = 0; i < MAX_MONSTERS; i++)
-        menv[i].type = -1;
+        menv[i].reset();
 
     for (int i = 0; i < 20; i++)
         env.mons_alloc[i] = MONS_PROGRAM_BUG;
