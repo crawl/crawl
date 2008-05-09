@@ -229,8 +229,8 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "", "", "", "", "" },
     // Vehumet
     { "gain magical power from killing",
-      "You can call upon Vehumet to aid your destructive magics with prayer.",
-      "During prayer you have some protection from summoned creatures.",
+      "Vehumet is aiding your destructive magics.",
+      "Vehumet is shielding you from summoned creatures.",
       "",
       "" },
     // Okawaru
