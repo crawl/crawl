@@ -797,6 +797,7 @@ int cast_revitalisation(int pow)
     const int step_max_chain = 6;
     const int type_max_chain = 4;
 
+    static bool need_chain;
     static int step;
     static int step_max;
     static int type;
@@ -807,6 +808,7 @@ int cast_revitalisation(int pow)
     // beginning.
     if (you.duration[DUR_REVITALISATION_CHAIN] == 0)
     {
+        need_chain = false;
         step = 0;
         step_max = std::min(pow, step_max_chain);
         type = random2(type_max_chain * 3 / 2);
@@ -826,6 +828,7 @@ int cast_revitalisation(int pow)
         case 0:
             if (you.duration[DUR_CONF] || you.duration[DUR_POISONING])
             {
+                need_chain = false;
                 success = true;
                 you.duration[DUR_CONF] = 0;
                 you.duration[DUR_POISONING] = 0;
@@ -842,6 +845,7 @@ int cast_revitalisation(int pow)
         case 1:
             if (you.disease || you.rotting)
             {
+                need_chain = false;
                 success = true;
                 you.disease = 0;
                 you.rotting = 0;
@@ -858,6 +862,7 @@ int cast_revitalisation(int pow)
         case 2:
             if (player_rotted())
             {
+                need_chain = false;
                 success = true;
                 unrot_hp(3 + random2(9));
                 break;
@@ -873,6 +878,7 @@ int cast_revitalisation(int pow)
         case 3:
             if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 0)
             {
+                need_chain = true;
                 success = true;
                 mpr("Zin grants you divine robustness.", MSGCH_DURATION);
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
@@ -890,8 +896,10 @@ int cast_revitalisation(int pow)
 
         // Divine robustness, level 2.
         case 4:
-            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 1)
+            if (you.duration[DUR_REVITALISATION_CHAIN] > 0
+                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == 1)
             {
+                need_chain = true;
                 success = true;
                 mpr("Zin strengthens your divine robustness.", MSGCH_DURATION);
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
@@ -909,8 +917,10 @@ int cast_revitalisation(int pow)
 
         // Divine robustness, level 3.
         case 5:
-            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 2)
+            if (you.duration[DUR_REVITALISATION_CHAIN] > 0
+                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == 2)
             {
+                need_chain = true;
                 success = true;
                 mpr("Zin maximises your divine robustness.", MSGCH_DURATION);
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
@@ -938,6 +948,7 @@ int cast_revitalisation(int pow)
         // Restore HP.
         if (you.hp < you.hp_max)
         {
+            need_chain = true;
             success = true;
             inc_hp(hp_amt, false);
             hp_amt *= 2;
@@ -952,6 +963,7 @@ int cast_revitalisation(int pow)
         // Restore MP.
         if (you.magic_points < you.max_magic_points)
         {
+            need_chain = true;
             success = true;
             inc_mp(mp_amt, false);
             mp_amt *= 2;
@@ -967,9 +979,11 @@ int cast_revitalisation(int pow)
         switch (step)
         {
         case 0:
+            // Restore all stats by 1 point.
             if (you.strength < you.max_strength || you.intel < you.max_intel
                 || you.dex < you.max_dex)
             {
+                need_chain = true;
                 success = true;
                 restore_stat(STAT_STRENGTH, 1, true);
                 restore_stat(STAT_INTELLIGENCE, 1, true);
@@ -984,9 +998,11 @@ int cast_revitalisation(int pow)
                 break;
 
         case 1:
+            // Restore all stats by 2 points.
             if (you.strength < you.max_strength || you.intel < you.max_intel
                 || you.dex < you.max_dex)
             {
+                need_chain = true;
                 success = true;
                 restore_stat(STAT_STRENGTH, 2, true);
                 restore_stat(STAT_INTELLIGENCE, 2, true);
@@ -1001,9 +1017,11 @@ int cast_revitalisation(int pow)
                 break;
 
         case 2:
+            // Restore all stats completely.
             if (you.strength < you.max_strength || you.intel < you.max_intel
                 || you.dex < you.max_dex)
             {
+                need_chain = true;
                 success = true;
                 restore_stat(STAT_STRENGTH, 0, true);
                 restore_stat(STAT_INTELLIGENCE, 0, true);
@@ -1030,9 +1048,8 @@ int cast_revitalisation(int pow)
         // Deliberate fall through, resetting the step counter.
 
     default:
-        // Set the step counter to its maximum value to turn off
-        // revitalisation chaining.
-        step = step_max;
+        // Turn off revitalisation chaining.
+        need_chain = false;
         break;
     }
 
@@ -1063,9 +1080,10 @@ int cast_revitalisation(int pow)
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    // If revitalisation has succeeded, and it hasn't succeeded as far
-    // as possible, turn on revitalisation chaining for several turns.
-    if (success && step != step_max)
+    // If revitalisation has succeeded, it hasn't succeeded as far
+    // as possible, and revitalisation chaining is needed, turn on
+    // revitalisation chaining for several turns.
+    if (success && step != step_max && need_chain)
         revitalisation_chain(3);
     // Otherwise, turn off revitalisation chaining.
     else
