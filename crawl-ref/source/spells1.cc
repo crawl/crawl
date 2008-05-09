@@ -876,7 +876,8 @@ int cast_revitalisation(int pow)
                 success = true;
                 mpr("Zin grants you divine robustness.", MSGCH_DURATION);
                 you.attribute[ATTR_DIVINE_ROBUSTNESS] = 1;
-                you.duration[DUR_DIVINE_ROBUSTNESS] += 19 + random2(19);
+                you.duration[DUR_DIVINE_ROBUSTNESS] +=
+                    you.skills[SK_INVOCATIONS] * 2;
                 calc_hp();
                 break;
             }
@@ -894,7 +895,8 @@ int cast_revitalisation(int pow)
                 success = true;
                 mpr("Zin strengthens your divine robustness.", MSGCH_DURATION);
                 you.attribute[ATTR_DIVINE_ROBUSTNESS] = 2;
-                you.duration[DUR_DIVINE_ROBUSTNESS] += 13 + random2(13);
+                you.duration[DUR_DIVINE_ROBUSTNESS] +=
+                    you.skills[SK_INVOCATIONS];
                 calc_hp();
                 break;
             }
@@ -912,7 +914,8 @@ int cast_revitalisation(int pow)
                 success = true;
                 mpr("Zin maximises your divine robustness.", MSGCH_DURATION);
                 you.attribute[ATTR_DIVINE_ROBUSTNESS] = 3;
-                you.duration[DUR_DIVINE_ROBUSTNESS] += 7 + random2(7);
+                you.duration[DUR_DIVINE_ROBUSTNESS] +=
+                    you.skills[SK_INVOCATIONS] / 2;
                 calc_hp();
                 break;
             }
