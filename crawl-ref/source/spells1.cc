@@ -785,7 +785,7 @@ void reduce_revitalisation_chain(int amount)
     if (you.duration[DUR_REVITALISATION_CHAIN] <= 0)
     {
         you.duration[DUR_REVITALISATION_CHAIN] = 0;
-        mpr("Your vitality returns to normal.", MSGCH_DURATION);
+        mpr("Your power of revitalisation returns to normal.", MSGCH_DURATION);
     }
 }
 
