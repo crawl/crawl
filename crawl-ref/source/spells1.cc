@@ -873,7 +873,8 @@ int cast_revitalisation(int pow)
 
         // Divine robustness, level 1.
         case 3:
-            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 0)
+            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 0
+                && player_mutation_level(MUT_ROBUST) < 3)
             {
                 success = true;
                 mpr("Zin grants you divine robustness.", MSGCH_DURATION);
@@ -883,7 +884,7 @@ int cast_revitalisation(int pow)
                 const int old_hp_max = you.hp_max;
                 calc_hp();
                 set_hp(you.hp * you.hp_max / old_hp_max, false);
-                need_chain = true;
+                need_chain = (player_mutation_level(MUT_ROBUST) < 2);
                 break;
             }
 
@@ -895,8 +896,8 @@ int cast_revitalisation(int pow)
 
         // Divine robustness, level 2.
         case 4:
-            if (you.duration[DUR_REVITALISATION_CHAIN] > 0
-                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == 1)
+            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 1
+                && player_mutation_level(MUT_ROBUST) < 2)
             {
                 success = true;
                 mpr("Zin strengthens your divine robustness.", MSGCH_DURATION);
@@ -906,7 +907,7 @@ int cast_revitalisation(int pow)
                 const int old_hp_max = you.hp_max;
                 calc_hp();
                 set_hp(you.hp * you.hp_max / old_hp_max, false);
-                need_chain = true;
+                need_chain = (player_mutation_level(MUT_ROBUST) < 1);
                 break;
             }
 
@@ -918,8 +919,8 @@ int cast_revitalisation(int pow)
 
         // Divine robustness, level 3.
         case 5:
-            if (you.duration[DUR_REVITALISATION_CHAIN] > 0
-                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == 2)
+            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 2
+                && player_mutation_level(MUT_ROBUST) < 1)
             {
                 success = true;
                 mpr("Zin maximises your divine robustness.", MSGCH_DURATION);
