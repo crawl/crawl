@@ -22,6 +22,7 @@ cyclops CORPSE_CYCLOPS /* C */
 fire_giant CORPSE_FIRE_GIANT /* C */
 frost_giant CORPSE_FROST_GIANT /* C */
 hill_giant CORPSE_HILL_GIANT /* C */
+ettin CORPSE_ETTIN
 stone_giant CORPSE_STONE_GIANT /* C */
 titan CORPSE_TITAN /* C */
 
@@ -51,6 +52,7 @@ giant_amoeba CORPSE_GIANT_AMOEBA /* J */
 
 %back dc-misc/blood_green
 kobold CORPSE_KOBOLD /* K */
+big_kobold CORPSE_BIG_KOBOLD
 
 %back dc-misc/blood_red
 greater_naga0 CORPSE_GREATER_NAGA /* N */
