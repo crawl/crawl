@@ -1773,7 +1773,7 @@ static std::string _overview_screen_title()
 
 // new scrollable status overview screen,
 // including stats, mutations etc.
-std::vector<MenuEntry *> _get_overview_screen_results()
+char _get_overview_screen_results()
 {
     bool calc_unid = false;
     formatted_scroller overview;
@@ -1994,21 +1994,22 @@ std::vector<MenuEntry *> _get_overview_screen_results()
 
     overview.add_text(" ");
     overview.add_text(_status_mut_abilities());
-    return overview.show();
+
+    std::vector<MenuEntry *> results = overview.show();
+    return (results.size() > 0) ? results[0]->hotkeys[0] : 0;
 }
 
 void print_overview_screen()
 {
     while (true)
     {
-        std::vector<MenuEntry *> results = _get_overview_screen_results();
-        if (results.size() == 0)
+        char c = _get_overview_screen_results();
+        if (!c)
         {
             redraw_screen();
             break;
         }
 
-        const char c = results[0]->hotkeys[0];
         item_def& item = you.inv[letter_to_index(c)];
         describe_item(item, true);
         // loop around for another go.
