@@ -794,23 +794,23 @@ int cast_revitalisation(int pow)
     const int step_max_chain = 6;
     const int type_max_chain = 4;
 
-    static bool need_chain;
     static int step;
     static int step_max;
     static int type;
     static int hp_amt;
     static int mp_amt;
+    static bool need_chain;
 
     // If revitalisation chaining is turned off, start from the
     // beginning.
     if (you.duration[DUR_REVITALISATION_CHAIN] == 0)
     {
-        need_chain = false;
         step = 0;
         step_max = std::min(pow, step_max_chain);
         type = random2(type_max_chain * 3 / 2);
         hp_amt = 3;
         mp_amt = 1;
+        need_chain = false;
     }
 
     bool success = false;
@@ -825,10 +825,10 @@ int cast_revitalisation(int pow)
         case 0:
             if (you.duration[DUR_CONF] || you.duration[DUR_POISONING])
             {
-                need_chain = false;
                 success = true;
                 you.duration[DUR_CONF] = 0;
                 you.duration[DUR_POISONING] = 0;
+                need_chain = false;
                 break;
             }
 
@@ -842,10 +842,10 @@ int cast_revitalisation(int pow)
         case 1:
             if (you.disease || you.rotting)
             {
-                need_chain = false;
                 success = true;
                 you.disease = 0;
                 you.rotting = 0;
+                need_chain = false;
                 break;
             }
 
@@ -859,9 +859,9 @@ int cast_revitalisation(int pow)
         case 2:
             if (player_rotted())
             {
-                need_chain = false;
                 success = true;
                 unrot_hp(3 + random2(9));
+                need_chain = false;
                 break;
             }
 
@@ -875,7 +875,6 @@ int cast_revitalisation(int pow)
         case 3:
             if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 0)
             {
-                need_chain = true;
                 success = true;
                 mpr("Zin grants you divine robustness.", MSGCH_DURATION);
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
@@ -884,6 +883,7 @@ int cast_revitalisation(int pow)
                 const int old_hp_max = you.hp_max;
                 calc_hp();
                 set_hp(you.hp * you.hp_max / old_hp_max, false);
+                need_chain = true;
                 break;
             }
 
@@ -898,7 +898,6 @@ int cast_revitalisation(int pow)
             if (you.duration[DUR_REVITALISATION_CHAIN] > 0
                 && you.attribute[ATTR_DIVINE_ROBUSTNESS] == 1)
             {
-                need_chain = true;
                 success = true;
                 mpr("Zin strengthens your divine robustness.", MSGCH_DURATION);
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
@@ -907,6 +906,7 @@ int cast_revitalisation(int pow)
                 const int old_hp_max = you.hp_max;
                 calc_hp();
                 set_hp(you.hp * you.hp_max / old_hp_max, false);
+                need_chain = true;
                 break;
             }
 
@@ -921,7 +921,6 @@ int cast_revitalisation(int pow)
             if (you.duration[DUR_REVITALISATION_CHAIN] > 0
                 && you.attribute[ATTR_DIVINE_ROBUSTNESS] == 2)
             {
-                need_chain = true;
                 success = true;
                 mpr("Zin maximises your divine robustness.", MSGCH_DURATION);
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
@@ -930,6 +929,7 @@ int cast_revitalisation(int pow)
                 const int old_hp_max = you.hp_max;
                 calc_hp();
                 set_hp(you.hp * you.hp_max / old_hp_max, false);
+                need_chain = true;
                 break;
             }
 
@@ -953,10 +953,10 @@ int cast_revitalisation(int pow)
         // Restore HP.
         if (you.hp < you.hp_max)
         {
-            need_chain = true;
             success = true;
             inc_hp(hp_amt, false);
             hp_amt *= 2;
+            need_chain = (you.hp < you.hp_max);
             break;
         }
 
@@ -970,10 +970,10 @@ int cast_revitalisation(int pow)
         // Restore MP.
         if (you.magic_points < you.max_magic_points)
         {
-            need_chain = true;
             success = true;
             inc_mp(mp_amt, false);
             mp_amt *= 2;
+            need_chain = (you.magic_points < you.max_magic_points);
             break;
         }
 
@@ -992,11 +992,12 @@ int cast_revitalisation(int pow)
             if (you.strength < you.max_strength || you.intel < you.max_intel
                 || you.dex < you.max_dex)
             {
-                need_chain = true;
                 success = true;
                 restore_stat(STAT_STRENGTH, 1, true);
                 restore_stat(STAT_INTELLIGENCE, 1, true);
                 restore_stat(STAT_DEXTERITY, 1, true);
+                need_chain = (you.strength < you.max_strength
+                    || you.intel < you.max_intel || you.dex < you.max_dex);
                 break;
             }
 
@@ -1011,11 +1012,12 @@ int cast_revitalisation(int pow)
             if (you.strength < you.max_strength || you.intel < you.max_intel
                 || you.dex < you.max_dex)
             {
-                need_chain = true;
                 success = true;
                 restore_stat(STAT_STRENGTH, 2, true);
                 restore_stat(STAT_INTELLIGENCE, 2, true);
                 restore_stat(STAT_DEXTERITY, 2, true);
+                need_chain = (you.strength < you.max_strength
+                    || you.intel < you.max_intel || you.dex < you.max_dex);
                 break;
             }
 
@@ -1030,11 +1032,12 @@ int cast_revitalisation(int pow)
             if (you.strength < you.max_strength || you.intel < you.max_intel
                 || you.dex < you.max_dex)
             {
-                need_chain = true;
                 success = true;
                 restore_stat(STAT_STRENGTH, 3, true);
                 restore_stat(STAT_INTELLIGENCE, 3, true);
                 restore_stat(STAT_DEXTERITY, 3, true);
+                need_chain = (you.strength < you.max_strength
+                    || you.intel < you.max_intel || you.dex < you.max_dex);
                 break;
             }
 
