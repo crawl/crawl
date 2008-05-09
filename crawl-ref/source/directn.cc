@@ -2120,7 +2120,7 @@ static void describe_monster(const monsters *mon)
 
     if (mon->haloed())
     {
-        mprf(MSGCH_EXAMINE, "%s is illuminated by a halo.",
+        mprf(MSGCH_EXAMINE, "%s is illuminated by a divine halo.",
              mon->pronoun(PRONOUN_CAP).c_str());
     }
 
