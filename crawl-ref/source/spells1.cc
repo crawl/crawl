@@ -875,14 +875,14 @@ int cast_revitalisation(int pow)
         case 3:
         case 4:
         case 5:
-            if ((step == 3 || you.duration[DUR_REVITALISATION_CHAIN] > 0))
+            if ((step == 3 || you.duration[DUR_REVITALISATION_CHAIN] > 0)
                 && you.attribute[ATTR_DIVINE_ROBUSTNESS] == (step - 3)
                 && player_mutation_level(MUT_ROBUST) < (6 - step))
             {
                 success = true;
                 mprf(MSGCH_DURATION, "Zin %s divine robustness.",
                     (step == 3) ? "grants you" :
-                    (step == 4) ? "strengthens your" :
+                    (step == 4) ? "strengthens your"
                                 : "maximises your");
                 you.attribute[ATTR_DIVINE_ROBUSTNESS] = (step - 2);
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
