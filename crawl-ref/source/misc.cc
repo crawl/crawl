@@ -1202,7 +1202,7 @@ void search_around( bool only_adjacent )
                         // purposes - oh well.
                         grd[srx][sry] = DNGN_FLOOR;
 #if DEBUG_DIAGNOSTICS
-                        mpr(MSGCH_DIAGNOSTICS, 
+                        mprf(MSGCH_DIAGNOSTICS, 
                             "You found a buggy trap! It vanishes!");
 #endif
                     }
