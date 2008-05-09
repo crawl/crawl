@@ -2454,7 +2454,7 @@ static std::string religion_help( god_type god )
     case GOD_VEHUMET:
         if (you.piety >= 50)
             result += "Vehumet assists you in casting Conjurations"
-                      " and Summonings during prayer.";
+                      " and Summonings.";
         break;
 
     default:
