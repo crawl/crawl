@@ -262,7 +262,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "peek at two random cards from a deck",
       "choose one out of three cards",
       "mark four cards in a deck",
-      "order the the top five cards of a deck, forfeiting the rest" },
+      "order the top five cards of a deck, forfeiting the rest" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
       "call upon Elyvilon for purification",
