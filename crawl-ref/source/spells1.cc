@@ -884,7 +884,7 @@ int cast_revitalisation(int pow)
                     (step == 3) ? "grants you" :
                     (step == 4) ? "strengthens your"
                                 : "maximises your");
-                you.attribute[ATTR_DIVINE_ROBUSTNESS] = (step - 2);
+                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
                     (step == 3) ? (you.skills[SK_INVOCATIONS] * 2) :
                     (step == 4) ? (you.skills[SK_INVOCATIONS])
@@ -967,10 +967,9 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            step = 3;
+            step = 6;
             // Deliberate fall through.
-
-        // XXX: Temporary stat boosting is not implemented yet.
+            // XXX: Temporary stat boosting is not implemented yet.
         default:
             break;
         }
