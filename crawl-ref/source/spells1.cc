@@ -772,7 +772,7 @@ void revitalisation_chain(int amount)
         you.duration[DUR_REVITALISATION_CHAIN] = 20;
 
     if (old_value == 0)
-        mpr("Zin magnifies your power of revitalisation!", MSGCH_DURATION);
+        mpr("Zin amplifies your power of revitalisation!", MSGCH_DURATION);
 }
 
 void reduce_revitalisation_chain(int amount)
