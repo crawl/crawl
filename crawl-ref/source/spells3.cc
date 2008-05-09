@@ -1144,12 +1144,10 @@ bool project_noise(void)
     return (success);
 }                               // end project_noise()
 
-/*
-   Type recalled:
-   0 = anything
-   1 = undead only (Kiku/Yred religion ability)
-   2 = orcs only (Beogh religion ability)
- */
+// Type recalled:
+// 0 = anything
+// 1 = undead only (Kiku/Yred religion ability)
+// 2 = orcs only (Beogh religion ability)
 bool recall(char type_recalled)
 {
     int loopy          = 0;      // general purpose looping variable {dlb}
