@@ -144,8 +144,8 @@ static void fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 
     *fuzz_radius = pow >= 50? 1 : 2;
 
-    // Fuzz chance starts off at 100% and declines to a low of 10% for obscenely
-    // powerful castings (pow caps around the 60 mark).
+    // Fuzz chance starts off at 100% and declines to a low of 10% for
+    // obscenely powerful castings (pow caps around the 60 mark).
     *fuzz_chance = 100 - 90 * (pow - 1) / 59;
     if (*fuzz_chance < 10)
         *fuzz_chance = 10;
