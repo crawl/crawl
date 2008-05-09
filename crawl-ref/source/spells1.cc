@@ -881,7 +881,9 @@ int cast_revitalisation(int pow)
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
                     you.skills[SK_INVOCATIONS] * 2;
+                const int old_hp_max = you.hp_max;
                 calc_hp();
+                set_hp(you.hp * you.hp_max / old_hp_max, false);
                 break;
             }
 
@@ -902,7 +904,9 @@ int cast_revitalisation(int pow)
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
                     you.skills[SK_INVOCATIONS];
+                const int old_hp_max = you.hp_max;
                 calc_hp();
+                set_hp(you.hp * you.hp_max / old_hp_max, false);
                 break;
             }
 
@@ -923,7 +927,9 @@ int cast_revitalisation(int pow)
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
                     you.skills[SK_INVOCATIONS] / 2;
+                const int old_hp_max = you.hp_max;
                 calc_hp();
+                set_hp(you.hp * you.hp_max / old_hp_max, false);
                 break;
             }
 
