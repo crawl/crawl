@@ -871,66 +871,29 @@ int cast_revitalisation(int pow)
             if (step == step_max)
                 break;
 
-        // Divine robustness, level 1.
+        // Divine robustness.
         case 3:
-            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 0
-                && player_mutation_level(MUT_ROBUST) < 3)
-            {
-                success = true;
-                mpr("Zin grants you divine robustness.", MSGCH_DURATION);
-                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
-                you.duration[DUR_DIVINE_ROBUSTNESS] +=
-                    you.skills[SK_INVOCATIONS] * 2;
-                const int old_hp_max = you.hp_max;
-                calc_hp();
-                set_hp(you.hp * you.hp_max / old_hp_max, false);
-                need_chain = (player_mutation_level(MUT_ROBUST) < 2);
-                break;
-            }
-
-            step = 4;
-            // Deliberate fall through.
-
-            if (step == step_max)
-                break;
-
-        // Divine robustness, level 2.
         case 4:
-            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 1
-                && player_mutation_level(MUT_ROBUST) < 2)
-            {
-                success = true;
-                mpr("Zin strengthens your divine robustness.", MSGCH_DURATION);
-                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
-                you.duration[DUR_DIVINE_ROBUSTNESS] +=
-                    you.skills[SK_INVOCATIONS];
-                const int old_hp_max = you.hp_max;
-                calc_hp();
-                set_hp(you.hp * you.hp_max / old_hp_max, false);
-                need_chain = (player_mutation_level(MUT_ROBUST) < 1);
-                break;
-            }
-
-            step = 5;
-            // Deliberate fall through.
-
-            if (step == step_max)
-                break;
-
-        // Divine robustness, level 3.
         case 5:
-            if (you.attribute[ATTR_DIVINE_ROBUSTNESS] == 2
-                && player_mutation_level(MUT_ROBUST) < 1)
+            if ((step == 3 || you.duration[DUR_REVITALISATION_CHAIN] > 0))
+                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == (step - 3)
+                && player_mutation_level(MUT_ROBUST) < (6 - step))
             {
                 success = true;
-                mpr("Zin maximises your divine robustness.", MSGCH_DURATION);
-                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
+                mprf(MSGCH_DURATION, "Zin %s divine robustness.",
+                    (step == 3) ? "grants you" :
+                    (step == 4) ? "strengthens your" :
+                                : "maximises your");
+                you.attribute[ATTR_DIVINE_ROBUSTNESS] = (step - 2);
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
-                    you.skills[SK_INVOCATIONS] / 2;
+                    (step == 3) ? (you.skills[SK_INVOCATIONS] * 2) :
+                    (step == 4) ? (you.skills[SK_INVOCATIONS])
+                                : (you.skills[SK_INVOCATIONS] / 2);
+
                 const int old_hp_max = you.hp_max;
                 calc_hp();
                 set_hp(you.hp * you.hp_max / old_hp_max, false);
-                need_chain = true;
+                need_chain = (player_mutation_level(MUT_ROBUST) < (5 - step));
                 break;
             }
 
