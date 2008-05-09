@@ -937,9 +937,11 @@ int cast_revitalisation(int pow)
         if (success)
             break;
 
+        need_chain = false;
         step = 0;
         type = 1;
-        // Deliberate fall through, resetting the step counter.
+        // Deliberate fall through, resetting the revitalisation
+        // chaining indicator and the step counter.
 
     case 1:
         // Restore HP.
@@ -952,9 +954,11 @@ int cast_revitalisation(int pow)
             break;
         }
 
+        need_chain = false;
         step = 0;
         type = 2;
-        // Deliberate fall through, resetting the step counter.
+        // Deliberate fall through, resetting the revitalisation
+        // chaining indicator and the step counter.
 
     case 2:
         // Restore MP.
@@ -967,9 +971,11 @@ int cast_revitalisation(int pow)
             break;
         }
 
+        need_chain = false;
         step = 0;
         type = 3;
-        // Deliberate fall through, resetting the step counter.
+        // Deliberate fall through, resetting the revitalisation
+        // chaining indicator and the step counter.
 
     case 3:
         // Restore and/or temporarily boost stats.
@@ -1040,13 +1046,14 @@ int cast_revitalisation(int pow)
         if (success)
             break;
 
+        need_chain = false;
         step = 0;
         type = 4;
-        // Deliberate fall through, resetting the step counter.
+        // Deliberate fall through, resetting the revitalisation
+        // chaining indicator and the step counter.
 
     default:
-        // Turn off revitalisation chaining.
-        need_chain = false;
+        // Do nothing.
         break;
     }
 
