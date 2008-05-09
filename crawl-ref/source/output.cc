@@ -721,17 +721,12 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(RED, "Held"));
     }
 
-    if (you.backlit())
+    if (you.backlit(false))
     {
-        if (!you.backlit(false) && you.haloed())
-            out.push_back(status_light(LIGHTBLUE, "Halo"));
-        else
-        {
-            int color = you.magic_contamination > 5
-                ? _bad_ench_colour( you.magic_contamination, 15, 25 )
-                : LIGHTBLUE;
-            out.push_back(status_light(color, "Glow"));
-        }
+        int color = you.magic_contamination > 5
+            ? _bad_ench_colour( you.magic_contamination, 15, 25 )
+            : LIGHTBLUE;
+        out.push_back(status_light(color, "Glow"));
     }
 
     if (you.duration[DUR_SWIFTNESS])
