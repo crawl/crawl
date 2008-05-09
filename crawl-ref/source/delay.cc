@@ -192,10 +192,11 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
                 {
                     if (!mons->add_ench(ENCH_NEUTRAL))
                         return (0);
+                    simple_monster_message(mons, " seems impressed!");
                 }
                 else
                 {
-                    // permanently neutral, but same message as enchantment
+                    // permanently neutral
                     mons->attitude = ATT_NEUTRAL;
                     mons->flags |= MF_WAS_NEUTRAL;
 
@@ -203,8 +204,9 @@ static int recite_to_monsters(int x, int y, int pow, int unused)
                     unsigned int exp_gain = 0, avail_gain = 0;
                     gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );
                     mons->flags |= MF_GOT_HALF_XP;
+
+                    simple_monster_message(mons, " seems fully impressed!");
                 }
-                simple_monster_message(mons, " seems impressed!");
             }
             break;
     }
