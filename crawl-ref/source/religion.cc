@@ -209,7 +209,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Zin to create a sanctuary" },
     // TSO
     { "You and your allies can now gain power from killing evil.",
-      "call upon The Shining One for a divine shield",
+      "call upon the Shining One for a divine shield",
       "",
       "hurl blasts of cleansing flame",
       "summon a divine warrior" },
@@ -295,7 +295,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Zin to create a sanctuary" },
     // TSO
     { "You and your allies can no longer gain power from killing evil.",
-      "call upon The Shining One for a divine shield",
+      "call upon the Shining One for a divine shield",
       "",
       "hurl blasts of cleansing flame",
       "summon a divine warrior" },
@@ -2938,7 +2938,7 @@ static bool _tso_retribution()
         beam.name = "golden flame";
         beam.colour = YELLOW;
         beam.thrower = KILL_MISC;
-        beam.aux_source = "The Shining One's cleansing flame";
+        beam.aux_source = "the Shining One's cleansing flame";
         beam.ex_size = 2;
         beam.is_tracer = false;
         beam.is_explosion = true;
@@ -2954,7 +2954,7 @@ static bool _tso_retribution()
        }
        else
        {
-           god_speaks(god, "You feel The Shining One's silent rage upon you!");
+           god_speaks(god, "You feel the Shining One's silent rage upon you!");
            cast_silence( 25 );
        }
        break;
