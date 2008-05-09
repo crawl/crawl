@@ -129,12 +129,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
         }
     }
 
-    if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
-    {
-        SAY(mpr("You can't wield that with a shield."));
-        return (false);
-    }
-
     // We don't have to check explicitly for staves - all staves are wieldable
     // by everyone.
     if (weapon->base_type != OBJ_WEAPONS)
@@ -174,6 +168,12 @@ bool can_wield(const item_def *weapon, bool say_reason,
     {
         SAY(mpr("This weapon will not allow you to wield it."));
         return false;
+    }
+
+    if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
+    {
+        SAY(mpr("You can't wield that with a shield."));
+        return (false);
     }
 
     // We can wield this weapon. Phew!
