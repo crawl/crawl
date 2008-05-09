@@ -102,20 +102,21 @@ bbbb?bbbb
 ENDMAP
 
 ##############################################################################
-# where's the temple?
+# Where's the entry to the temple?
 #
 NAME:   temple_secret_doors_a
 CHANCE: 1
 TAGS:   temple_entry
 ORIENT: float
+SUBST:  c:cxxx
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 MAP
 cccccccccc
-ccccnnnnnc
-ccccn?.?nc
-@...=.O.nc
-ccccn?.?nc
-ccccnnnnnc
+ccccmmmmmc
+ccccm?.?mc
+@...=.O.mc
+ccccm?.?mc
+ccccmmmmmc
 cccccccccc
 ENDMAP
 
@@ -124,14 +125,15 @@ CHANCE: 1
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
-NSUBST: X = 1:= / *=nnn=
+SUBST:  c:cxxx
+NSUBST: X = 1:= / *=mmm=
 MAP
 ccccccccccc
-cccnnnnnccc
-cccn?.?nccc
+cccmmmmmccc
+cccm?.?mccc
 @..X.O.X..@
-cccn?.?nccc
-cccnnnnnccc
+cccm?.?mccc
+cccmmmmmccc
 ccccccccccc
 ENDMAP
 
@@ -140,14 +142,15 @@ CHANCE: 1
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
-NSUBST: X = 1:= / *=nnn=
+SUBST:  c:cxxx
+NSUBST: X = 1:= / *=mmm=
 MAP
 ccccccccc
-cccnnnnnc
-cccn?.?nc
-@..X.O.nc
-cccn?.?nc
-cccnnXnnc
+cccmmmmmc
+cccm?.?mc
+@..X.O.mc
+cccm?.?mc
+cccmmXmmc
 ccccc.ccc
 ccccc.ccc
 ccccc@ccc
@@ -158,14 +161,15 @@ CHANCE: 1
 TAGS:   temple_entry 
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
-NSUBST: X = 1:= / *=nnn=
+SUBST:  c:cxxx
+NSUBST: X = 1:= / *=mmm=
 MAP
 ccccccccccc
-cccnnnnnccc
-cccn?.?nccc
+cccmmmmmccc
+cccm?.?mccc
 @..X.O.X..@
-cccn?.?nccc
-cccnnXnnccc
+cccm?.?mccc
+cccmmXmmccc
 ccccc.ccccc
 ccccc.ccccc
 ccccc@ccccc
@@ -176,16 +180,17 @@ CHANCE: 6
 TAGS:   temple_entry no_rotate
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
-NSUBST: X = 1:= / *=nnn=
+SUBST:  c:cxxx
+NSUBST: X = 1:= / *=mm=
 MAP
 cccccc@cccccc
 cccccc.cccccc
 cccccc.cccccc
-ccccnnXnncccc
-ccccn?.?ncccc
+ccccmmXmmcccc
+ccccm?.?mcccc
 @...X.O.X...@
-ccccn?.?ncccc
-ccccnnXnncccc
+ccccm?.?mcccc
+ccccmmXmmcccc
 cccccc.cccccc
 cccccc.cccccc
 cccccc@cccccc
