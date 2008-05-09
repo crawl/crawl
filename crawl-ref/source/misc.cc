@@ -312,7 +312,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
             return;
         }
     }
-    // If we got here nothing was found!
+    // If we got here, nothing was found!
 
     // entire stack is gone, rotted or coagulated.
     // -> change potions to coagulated type
