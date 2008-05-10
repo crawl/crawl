@@ -2433,7 +2433,7 @@ static std::string religion_help( god_type god )
     {
     case GOD_ZIN:
         result += "Pray at one of " + god_name(god)
-               +  "'s altars to part with your money. ";
+               +  "'s altars to part with your money.";
         break;
 
     case GOD_SHINING_ONE:
@@ -2450,28 +2450,37 @@ static std::string religion_help( god_type god )
                 result += "small ";
 
             result += "righteous aura, and all beings within it are "
-                      "easier to hit. ";
+                      "easier to hit.";
         }
-        // deliberate fall through
+        if (!player_under_penance() && you.piety > 160
+            && !you.num_gifts[god])
+        {
+            if (result != "")
+                result += " ";
+            result += "You can pray at an altar to have your weapon "
+                      "blessed, especially a long sword.";
+        }
+        break;
+
     case GOD_LUGONU:
         if (!player_under_penance() && you.piety > 160
             && !you.num_gifts[god])
         {
-            result += "You can pray at an altar to ask " + god_name(god)
-                   +  " to bless your weapon. ";
+            result += "You can pray at an altar to have your weapon "
+                      "blessed.";
         }
         break;
 
     case GOD_NEMELEX_XOBEH:
         result += "You can pray to sacrifice all items on your square. "
                   "Inscribe items with !p, !* or =p to avoid sacrificing "
-                  "them accidentally. ";
+                  "them accidentally.";
         break;
 
     case GOD_VEHUMET:
         if (you.piety >= 50)
             result += "Vehumet assists you in casting Conjurations"
-                      " and Summonings. ";
+                      " and Summonings.";
         break;
 
     default:
@@ -2479,8 +2488,12 @@ static std::string religion_help( god_type god )
     }
 
     if (god_likes_butchery(god))
+    {
+        if (result != "")
+            result += " ";
         result += "You can sacrifice corpses by dissecting"
                   " them during prayer.";
+    }
 
     return result;
 }
