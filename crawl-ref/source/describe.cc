@@ -2433,7 +2433,7 @@ static std::string religion_help( god_type god )
     {
     case GOD_ZIN:
         result += "Pray at one of " + god_name(god)
-               +  "'s altars to part with your money.";
+               +  "'s altars to part with your money. ";
         break;
 
     case GOD_SHINING_ONE:
@@ -2458,7 +2458,7 @@ static std::string religion_help( god_type god )
             && !you.num_gifts[god])
         {
             result += "You can pray at an altar to ask " + god_name(god)
-                   +  " to bless your weapon.";
+                   +  " to bless your weapon. ";
         }
         break;
 
@@ -2471,7 +2471,7 @@ static std::string religion_help( god_type god )
     case GOD_VEHUMET:
         if (you.piety >= 50)
             result += "Vehumet assists you in casting Conjurations"
-                      " and Summonings.";
+                      " and Summonings. ";
         break;
 
     default:
