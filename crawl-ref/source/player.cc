@@ -3663,7 +3663,7 @@ void display_char_status()
         if (halo_size > 6)
             mpr( "You are illuminated by a large divine halo." );
         else if (halo_size > 3)
-            mpr( "You are illuminated by a medium divine halo." );
+            mpr( "You are illuminated by a divine halo." );
         else
             mpr( "You are illuminated by a small divine halo." );
     }

@@ -2428,7 +2428,7 @@ static std::string religion_help( god_type god )
 {
     std::string result = "";
 
-    switch(god)
+    switch (god)
     {
     case GOD_ZIN:
         result += "Pray at one of " + god_name(god)
