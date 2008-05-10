@@ -938,12 +938,13 @@ static void _fixup_branch_stairs()
     }
 }
 
-static bool _fixup_duplicate_stairs(bool preserve_vault_stairs)
+static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 {
-    // This function ensures that there is no more than one of each up and down
+    // This function ensures that there is exactly one each up and down
     // stone stairs I, II, and III.  More than three stairs will result in
     // turning additional stairs into escape hatches (with an attempt to keep
-    // level connectivity).
+    // level connectivity).  Fewer than three stone stairs will result in
+    // random placement of new stairs.
 
     const unsigned int max_stairs = 20;
     FixedVector<coord_def, max_stairs> up_stairs;
@@ -1073,14 +1074,36 @@ static bool _fixup_duplicate_stairs(bool preserve_vault_stairs)
             continue;
         }
 
-        ASSERT(num_stairs <= 3);
-
-        if (num_stairs <= 1)
+        // If there are no stairs, it's either a branch entrance or exit.
+        // If we somehow have ended up in a catastrophic "no stairs" state,
+        // the level will not be validated, so we do not need to catch it here.
+        if (num_stairs == 0)
             continue;
 
-        // At this point, up_stairs and down_stairs contain no more than
-        // three stairs.  Ensure that they are unique.
-        for (int s = 0; s < (num_stairs == 3 ? 4 : 1); s++)
+        // The top level doesn't connect to anything, so don't fix it.
+        if (level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1) && i == 0)
+            continue;
+
+        // Add extra stairs to get to exactly three.
+        for (int s = num_stairs; s < 3; s++)
+        {
+            coord_def gc;
+            do
+            {
+                gc.x = random2(GXM);
+                gc.y = random2(GYM);
+            }
+            while (grd(gc) != DNGN_FLOOR);
+
+            // base gets fixed up to be the right stone stair below...
+            grd(gc) = base;
+            stair_list[num_stairs++] = gc;
+        }
+
+        ASSERT(num_stairs == 3);
+
+        // Ensure uniqueness of three stairs.
+        for (int s = 0; s < 4; s++)
         {
             int s1 = s % num_stairs;
             int s2 = (s1 + 1) % num_stairs;
@@ -1094,6 +1117,7 @@ static bool _fixup_duplicate_stairs(bool preserve_vault_stairs)
             }
         }
     }
+
 
     return success;
 }
@@ -1239,12 +1263,12 @@ static void _build_dungeon_level(int level_number, int level_type)
     if (level_type == LEVEL_PANDEMONIUM)
         _fixup_pandemonium_stairs();
 
-    if (!_fixup_duplicate_stairs(true))
+    if (!_fixup_stone_stairs(true))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Warning: failed to preserve vault stairs.");
 #endif
-        _fixup_duplicate_stairs(false);
+        _fixup_stone_stairs(false);
     }
 }                               // end builder()
 
