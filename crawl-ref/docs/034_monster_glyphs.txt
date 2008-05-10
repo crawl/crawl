@@ -9,7 +9,7 @@
 # are both coloured green now) and the higher level (and 
 # thus more dangerous) version of an early monster would 
 # get the brighter colour. 
-# As an example of the latter, the orc sorceror has been
+# As an example of the latter, the orc sorcerer has been
 # recoloured to light magenta because the orc wizard (the 
 # easier orc mage version) glyph is coloured magenta. 
 # Also, the colours of some pairings including small 
