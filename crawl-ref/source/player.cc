@@ -233,12 +233,8 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
             if (stepped && !force && !you.duration[DUR_CONF])
             {
-                if (! yes_or_no("Do you really want to step into the %s",
-                                (new_grid == DNGN_LAVA ? "lava" : "deep water")))
-                {
-                    canned_msg(MSG_OK);
-                    return (false);
-                }
+                canned_msg(MSG_UNTHINKING_ACT);
+                return (false);
             }
 
             // have to move now so fall_into_a_pool will work
