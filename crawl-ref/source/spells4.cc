@@ -541,17 +541,17 @@ void cast_sticks_to_snakes(int pow)
         else
             mon = MONS_BROWN_SNAKE;
 
-        if (pow > 90 && one_chance_in(3))
-            mon = MONS_GREY_SNAKE;
-
-        if (pow > 70 && one_chance_in(3))
-            mon = MONS_BLACK_SNAKE;
+        if (pow > 20 && one_chance_in(3))
+            mon = MONS_BROWN_SNAKE;
 
         if (pow > 40 && one_chance_in(3))
             mon = MONS_YELLOW_SNAKE;
 
-        if (pow > 20 && one_chance_in(3))
-            mon = MONS_BROWN_SNAKE;
+        if (pow > 70 && one_chance_in(3))
+            mon = MONS_BLACK_SNAKE;
+
+        if (pow > 90 && one_chance_in(3))
+            mon = MONS_GREY_SNAKE;
 
         if (create_monster(
                 mgen_data( mon, beha, dur,

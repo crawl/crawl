@@ -214,29 +214,27 @@ struct mgen_data
     }
 };
 
-// last updated 13mar2001 {gdl}
 /* ***********************************************************************
- * called from: acr - lev-pand - monplace - dungeon
- *
- * Usage:
- * mon_type     WANDERING_MONSTER, RANDOM_MONSTER, or monster type
- * behaviour     standard behaviours (BEH_ENSLAVED, etc)
- * target       MHITYOU, MHITNOT, or monster id
- * extra        various things like skeleton/zombie types, colours, etc
- * summoned     monster is summoned?
- * px           placement x
- * py           placement y
- * level_type   LEVEL_DUNGEON, LEVEL_ABYSS, LEVEL_PANDEMONIUM.
- *              LEVEL_DUNGEON will generate appropriate power monsters
- * proximity    0 = no extra restrictions on monster placement
- *              1 = try to place the monster near the player
- *              2 = don't place the monster near the player
- *              3 = place the monster near stairs (regardless of player pos)
+ * Creates a monster near the place specified in the mgen_data, producing
+ * a "puff of smoke" message if the monster cannot be placed. This is usually
+ * used for summons and other monsters that want to appear near a given
+ * position like a summon.
  * *********************************************************************** */
+int create_monster( mgen_data mg );
 
+/* ***********************************************************************
+ * Primary function to create monsters. See mgen_data for details on monster
+ * placement.
+ * *********************************************************************** */
 int mons_place( mgen_data mg );
 
-int create_monster( mgen_data mg );
+/* ***********************************************************************
+ * This isn't really meant to be a public function.  It is a low level
+ * monster placement function used by dungeon building routines and
+ * mons_place().  If you need to put a monster somewhere,  use mons_place().
+ * Summoned creatures can be created with create_monster().
+ * *********************************************************************** */
+int place_monster( mgen_data mg );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -266,18 +264,6 @@ bool empty_surrounds( int emx, int emy, dungeon_feature_type spc_wanted,
  * called from: ability - acr - items - maps - mstuff2 - spell - spells
  * *********************************************************************** */
 monster_type summon_any_demon( demon_class_type demon_class );
-
-
-// last update 13mar2001 {gdl}
-/* ***********************************************************************
- * called from: dungeon monplace
- *
- * This isn't really meant to be a public function.  It is a low level
- * monster placement function used by dungeon building routines and
- * mons_place().  If you need to put a monster somewhere,  use mons_place().
- * Summoned creatures can be created with create_monster().
- * *********************************************************************** */
-int place_monster( mgen_data mg );
 
 monster_type rand_dragon( dragon_class_type type );
 bool drac_colour_incompatible(int drac, int colour);
