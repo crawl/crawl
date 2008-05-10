@@ -431,8 +431,8 @@ void stop_delay( bool stop_stair_travel )
             bleed_onto_floor(you.x_pos, you.y_pos, corpse.plus, delay.duration,
                              false);
             corpse.sub_type = CORPSE_SKELETON;
-            corpse.special = 90;
-            corpse.colour = LIGHTGREY;
+            corpse.special  = 90;
+            corpse.colour   = LIGHTGREY;
         }
         did_god_conduct(DID_DRINK_BLOOD, 8);
         pop_delay();

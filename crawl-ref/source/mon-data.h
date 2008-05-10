@@ -869,8 +869,8 @@
 },
 
 {
-    // gila monsters colours: lightmagenta, magenta, lightred, yellow
-    MONS_GILA_MONSTER, 'l', BLACK, "gila monster",
+    // old colour: black (randomly lightmagenta, magenta, lightred, or yellow)
+    MONS_GILA_MONSTER, 'l', MAGENTA, "gila monster",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
     500, 10, MONS_GIANT_LIZARD, MONS_GILA_MONSTER, MH_NATURAL, -3,
@@ -1002,7 +1002,7 @@
 
 // orcs ('o')
 {
-    MONS_ORC, 'o', RED, "orc",
+    MONS_ORC, 'o', LIGHTRED, "orc",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     600, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -3,
@@ -1035,7 +1035,7 @@
 },
 
 {
-    MONS_ORC_WARRIOR, 'o', LIGHTRED, "orc warrior",
+    MONS_ORC_WARRIOR, 'o', YELLOW, "orc warrior",
     M_FIGHTER | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     600, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -3,
@@ -3794,7 +3794,7 @@
 },
 
 {
-    MONS_URUG, 'o', YELLOW, "Urug",
+    MONS_URUG, 'o', RED, "Urug",
     M_FIGHTER | M_WARM_BLOOD | M_SPEAKS | M_UNIQUE,
     MR_NO_FLAGS,
     0, 20, MONS_ORC, MONS_ORC, MH_NATURAL, -5,

@@ -1522,6 +1522,9 @@ void define_monster(monsters &mons)
         break;
     }
 
+    if (col == BLACK)
+        col = random_colour();
+
     if (spells == MST_NO_SPELLS && mons_class_flag(mons.type, M_SPELLCASTER))
         spells = m->sec;
 

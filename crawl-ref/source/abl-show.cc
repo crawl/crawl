@@ -378,7 +378,8 @@ const std::string make_cost_description( ability_type ability )
         ret << " HP";
     }
 
-    if (abil.food_cost && you.is_undead != US_UNDEAD)
+    if (abil.food_cost && you.is_undead != US_UNDEAD
+        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
         if (!ret.str().empty())
             ret << ", ";

@@ -95,7 +95,6 @@ void fix_item_coordinates(void)
 {
     // nails all items to the ground (i.e. sets x,y)
     for (int x = 0; x < GXM; x++)
-    {
         for (int y = 0; y < GYM; y++)
         {
             int i = igrd[x][y];
@@ -107,7 +106,6 @@ void fix_item_coordinates(void)
                 i = mitm[i].link;
             }
         }
-    }
 }
 
 // This function uses the items coordinates to relink all the igrd lists.
@@ -430,7 +428,8 @@ void unlink_item( int dest )
         }
 
         // Okay, item is buried, find item that's on top of it:
-        for (c = igrd[ mitm[dest].x ][ mitm[dest].y ]; c != NON_ITEM; c = mitm[c].link)
+        for (c = igrd[ mitm[dest].x ][ mitm[dest].y ]; c != NON_ITEM;
+             c = mitm[c].link)
         {
             // find item linking to dest item
             if (is_valid_item( mitm[c] ) && mitm[c].link == dest)
@@ -448,14 +447,15 @@ void unlink_item( int dest )
 
 #if DEBUG
     // Okay, the sane ways are gone... let's warn the player:
-    mpr( "BUG WARNING: Problems unlinking item!!!", MSGCH_DANGER );
+    mprf( MSGCH_DANGER, "BUG WARNING: Problems unlinking item '%s', (%d, %d)!!!",
+          mitm[dest].name(DESC_PLAIN).c_str(), mitm[dest].x, mitm[dest].y );
 
     // Okay, first we scan all items to see if we have something
     // linked to this item.  We're not going to return if we find
     // such a case... instead, since things are already out of
     // alignment, let's assume there might be multiple links as well.
-    bool  linked = false;
-    int   old_link = mitm[dest].link; // used to try linking the first
+    bool linked = false;
+    int  old_link = mitm[dest].link; // used to try linking the first
 
     // clean the relevant parts of the object:
     mitm[dest].base_type = OBJ_UNASSIGNED;
@@ -483,7 +483,6 @@ void unlink_item( int dest )
 
     // Now check the grids to see if it's linked as a list top.
     for (c = 2; c < (GXM - 1); c++)
-    {
         for (cy = 2; cy < (GYM - 1); cy++)
         {
             if (igrd[c][cy] == dest)
@@ -497,7 +496,6 @@ void unlink_item( int dest )
                 }
             }
         }
-    }
 
 
     // Okay, finally warn player if we didn't do anything.

@@ -2,35 +2,35 @@
 # overhaul of monster colours and monster glyphs. 
 #
 # The goal of this change was to put monsters into more 
-# consistent groups (e.g. group jackals with hounds,
-# move slugs into a group of their own) and to follow 
-# a more consistent colour scheme where similar
-# monster would have similar colours (e.g. orc priest
-# and elf priest are both coloured green now) and the 
-# higher level (and thus more dangerous) version of 
-# an early monster would get the brighter colour. 
-# As an example of the latter, the orc sorceror has
-# been recoloured to light magenta because the orc
-# wizard (the easier orc mage version) glyph is 
-# coloured magenta. Also, the colours of some pairings 
-# including small snake/snake and yaktaur/yaktaur 
-# have been switched, following the same rule.
-# Another important point of the change was to avoid
-# the use of dark grey, which can be unreadable on some 
-# systems, and use light grey, white, or blue or another 
+# consistent groups (e.g. group jackals with hounds, move
+# slugs into a group of their own) and to follow a more 
+# consistent colour scheme where similar monsters would 
+# have similar colours (e.g. orc priest and elf priest 
+# are both coloured green now) and the higher level (and 
+# thus more dangerous) version of an early monster would 
+# get the brighter colour. 
+# As an example of the latter, the orc sorceror has been
+# recoloured to light magenta because the orc wizard (the 
+# easier orc mage version) glyph is coloured magenta. 
+# Also, the colours of some pairings including small 
+# snake/snake and yaktaur/yaktaur captain have been 
+# switched, following the same rule.
+# Another important point of the change was to avoid the
+# use of dark grey, which can be unreadable on some
+# systems, and use light grey, white, or blue, or another 
 # colour in its stead, as appropriate.
 #
-# We think that as a result of these changes monsters
-# are coloured more consistently, and that their 
-# difficulty level should be easier to grasp for newbies.
+# We think that as a result of these changes monsters are
+# coloured more consistently, and that their difficulty
+# level should be easier to grasp for newbies.
 # At the same time we realize that this change might be
-# hard on experienced players. Of course we hope that 
-# you will be able to adapt, but in case there are 
-# changes you really cannot accept, here are the options
-# necessary to make the glyphs of all affected monsters
-# show up as they did in version 0.3.4. 
+# hard on experienced players. Of course we hope that you
+# will be able to adapt, but in case there are changes you
+# really cannot accept, here are the options necessary to 
+# make the glyphs of all affected monsters show up as they 
+# did in version 0.3.4. 
 #
-# You'll find a table comparing old and new settings at 
+# You'll find a table comparing old and new settings at
 # the end of this file.
 
 ###########################
@@ -45,9 +45,9 @@ feature = orcish idol { , , darkgrey}
 ###########################
 
 # orcs
-mon_glyph = orc : lightred
-mon_glyph = Urug : red
-mon_glyph = orc warrior : yellow
+#mon_glyph = orc : lightred
+#mon_glyph = Urug : red
+#mon_glyph = orc warrior : yellow
 mon_glyph = orc priest : lightgreen
 mon_glyph = orc knight : lightcyan
 mon_glyph = orc high priest : green
@@ -72,6 +72,8 @@ mon_glyph = deep elf master archer : lightmagenta
 # lizards
 mon_glyph = giant newt : lightgreen
 mon_glyph = giant lizard : green
+# black means randomly coloured
+mon_glyph = gila monster : black
 
 # snakes and naga
 mon_glyph = small snake : lightgreen
@@ -200,6 +202,7 @@ mon_glyph = Frederick : darkgrey
 # lizards
 # giant newt              lightgreen     green
 # giant lizard            green          lightgreen
+# gila monster            random (black) magenta
 #
 # monster                 old colour     new colour
 # -------                 ----------     ----------
