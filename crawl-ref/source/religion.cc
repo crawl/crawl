@@ -3735,9 +3735,11 @@ static bool _holy_beings_on_level_attitude_change()
             // holy beings hostile.
             else if (!is_good_god(you.religion))
             {
-                if (monster->attitude != ATT_HOSTILE)
+                if (monster->attitude != ATT_HOSTILE
+                    || monster->has_ench(ENCH_CHARM))
                 {
                     monster->attitude = ATT_HOSTILE;
+                    monster->del_ench(ENCH_CHARM, true);
                     behaviour_event(monster, ME_ALERT, MHITYOU);
                     // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
 
@@ -3776,9 +3778,11 @@ static bool _evil_beings_on_level_attitude_change()
             {
                 // If you worship a good god, you make all non-hostile
                 // evil and unholy beings hostile.
-                if (monster->attitude != ATT_HOSTILE)
+                if (monster->attitude != ATT_HOSTILE
+                    || monster->has_ench(ENCH_CHARM))
                 {
                     monster->attitude = ATT_HOSTILE;
+                    monster->del_ench(ENCH_CHARM, true);
                     behaviour_event(monster, ME_ALERT, MHITYOU);
                     // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
 

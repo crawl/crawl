@@ -1778,14 +1778,14 @@ int mons_place( mgen_data mg )
         if (mg.behaviour == BEH_GOD_GIFT)
             creation->flags |= MF_GOD_GIFT;
 
-        if (!(mg.flags & MG_FORCE_BEH) && player_angers_monster(creation))
-            creation->attitude = ATT_HOSTILE;
-
         if (mg.behaviour == BEH_CHARMED)
         {
             creation->attitude = ATT_HOSTILE;
             creation->add_ench(ENCH_CHARM);
         }
+
+        if (!(mg.flags & MG_FORCE_BEH))
+            player_angers_monster(creation);
 
         // make summoned being aware of player's presence
         behaviour_event(creation, ME_ALERT, MHITYOU);
@@ -1910,9 +1910,11 @@ bool player_angers_monster(monsters *mon, bool actual)
     // (to prevent e.g. demon-scumming)
     if (holy || antimagical)
     {
-        if (actual && mon->attitude != ATT_HOSTILE)
+        if (actual
+            && (mon->attitude != ATT_HOSTILE || mon->has_ench(ENCH_CHARM)))
         {
             mon->attitude = ATT_HOSTILE;
+            mon->del_ench(ENCH_CHARM);
             behaviour_event(mon, ME_ALERT, MHITYOU);
             if (see_grid(mon->x, mon->y) && player_monster_visible(mon))
             {
