@@ -498,11 +498,10 @@ void cast_sticks_to_snakes(int pow)
 
         for (int i = 0; i <= max; i++)
         {
-            if (pow > 50 || (pow > 25 && one_chance_in(3))
-                || (get_ammo_brand(you.inv[weapon]) == SPMSL_POISONED
-                    && random2(100) < 43))
+            if (one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25)))
+                || get_ammo_brand(you.inv[weapon]) == SPMSL_POISONED)
             {
-                mon = MONS_SNAKE;
+                mon = random2(100) < pow / 3? MONS_BROWN_SNAKE : MONS_SNAKE;
             }
             else
             {

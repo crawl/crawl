@@ -236,12 +236,6 @@ struct mgen_data
 
 int mons_place( mgen_data mg );
 
-/* int mons_place( int mon_type, beh_type behaviour, int target, bool summoned, */
-/*                 int px, int py, int level_type = LEVEL_DUNGEON, */
-/*                 proximity_type proximity = PROX_ANYWHERE, */
-/*                 int extra = MONS_PROGRAM_BUG, */
-/*                 int dur = 0, bool permit_bands = false ); */
-
 int create_monster( mgen_data mg );
 
 // last updated 12may2000 {dlb}
@@ -250,10 +244,6 @@ int create_monster( mgen_data mg );
  *              items - monstuff - mstuff2 - religion - spell - spells -
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
-/* int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y, */
-/*                     int hitting, int zsec, bool permit_bands = false, */
-/*                     bool force_place = false, bool force_behaviour = false, */
-/*                     bool player_made = false ); */
 
 class level_id;
 monster_type pick_random_monster(const level_id &place,
@@ -288,12 +278,6 @@ monster_type summon_any_demon( demon_class_type demon_class );
  * Summoned creatures can be created with create_monster().
  * *********************************************************************** */
 int place_monster( mgen_data mg );
-
-    // int &id, int mon_type, int power, beh_type behaviour,
-    //                 int target, bool summoned, int px, int py, bool allow_bands,
-    //                 proximity_type proximity = PROX_ANYWHERE,
-    //                 int extra = MONS_PROGRAM_BUG, int dur = 0,
-    //                 unsigned mmask = 0 );
 
 monster_type rand_dragon( dragon_class_type type );
 bool drac_colour_incompatible(int drac, int colour);
