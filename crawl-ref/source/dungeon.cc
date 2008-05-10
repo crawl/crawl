@@ -6266,25 +6266,26 @@ static void _labyrinth_build_maze(coord_def &e, const dgn_region &lab)
 
 static void _labyrinth_place_items(const coord_def &end)
 {
-    int num_items = 8 + random2avg(9, 2);
+    int num_items = 8 + random2avg(12, 2);
     for (int i = 0; i < num_items; i++)
     {
-        int temp_rand = random2(11);
-
-        const object_class_type
-            glopop = ((temp_rand == 0 || temp_rand == 9)  ? OBJ_WEAPONS :
-                      (temp_rand == 1 || temp_rand == 10) ? OBJ_ARMOUR :
-                      (temp_rand == 2)                    ? OBJ_MISSILES :
-                      (temp_rand == 3)                    ? OBJ_WANDS :
-                      (temp_rand == 4)                    ? OBJ_MISCELLANY :
-                      (temp_rand == 5)                    ? OBJ_SCROLLS :
-                      (temp_rand == 6)                    ? OBJ_JEWELLERY :
-                      (temp_rand == 7)                    ? OBJ_BOOKS
-                   /* (temp_rand == 8) */                 : OBJ_STAVES);
+        const object_class_type glopop =
+            static_cast<object_class_type>(
+                random_choose_weighted(14, OBJ_WEAPONS,
+                                       14, OBJ_ARMOUR,
+                                       3, OBJ_MISSILES,
+                                       3, OBJ_MISCELLANY,
+                                       10, OBJ_WANDS,
+                                       10, OBJ_SCROLLS,
+                                       10, OBJ_JEWELLERY,
+                                       8, OBJ_BOOKS,
+                                       8, OBJ_STAVES,
+                                       0));
 
         const int treasure_item =
             items( 1, glopop, OBJ_RANDOM, true,
-                   you.your_level * 3, MAKE_ITEM_RANDOM_RACE );
+                   one_chance_in(3)? you.your_level * 3 : MAKE_GOOD_ITEM,
+                   MAKE_ITEM_RANDOM_RACE );
 
         if (treasure_item != NON_ITEM)
         {
@@ -6501,12 +6502,6 @@ static void _labyrinth_level(int level_number)
                               0);
 
     _labyrinth_place_entry_point(lab, end);
-
-    // turn rock walls into undiggable stone or metal:
-    // dungeon_feature_type wall_xform =
-    //    ((random2(50) > 10) ? DNGN_STONE_WALL   // 78.0%
-    //     : DNGN_METAL_WALL); // 22.0%
-    //replace_area(0, 0, GXM - 1, GYM - 1, DNGN_ROCK_WALL, wall_xform, vaults);
 
     link_items();
 }                               // end labyrinth_level()

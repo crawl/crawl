@@ -1197,10 +1197,6 @@ trap_type random_trap_for_place(int level_number, const level_id &place)
         return traps_abyss_type(level_number);
     case LEVEL_PANDEMONIUM:
         return traps_pan_type(level_number);
-    case LEVEL_LABYRINTH:
-    case LEVEL_PORTAL_VAULT:
-        ASSERT(false);
-        break;
     default:
         return random_trap_default(level_number, place);
     }
