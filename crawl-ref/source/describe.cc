@@ -2465,7 +2465,7 @@ static std::string religion_help( god_type god )
     case GOD_NEMELEX_XOBEH:
         result += "You can pray to sacrifice all items on your square. "
                   "Inscribe items with !p, !* or =p to avoid sacrificing "
-                  "them accidentally.";
+                  "them accidentally. ";
         break;
 
     case GOD_VEHUMET:
