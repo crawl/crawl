@@ -2044,7 +2044,7 @@ void yell(bool force)
         mons_targd = MHITYOU;
         break;
 
-    /* fall through... */
+    // fall through...
     default:
         mpr("Okely-dokely.");
         return;
