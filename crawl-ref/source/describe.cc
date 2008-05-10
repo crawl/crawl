@@ -54,6 +54,7 @@
 #include "randart.h"
 #include "religion.h"
 #include "skills2.h"
+#include "spells3.h"
 #include "spl-book.h"
 #include "stuff.h"
 #include "spl-util.h"
@@ -2436,12 +2437,28 @@ static std::string religion_help( god_type god )
         break;
 
     case GOD_SHINING_ONE:
+        if (you.haloed())
+        {
+            int halo_size = halo_radius();
+            result += "You radiate a ";
+
+            if (halo_size > 6)
+                result += "large ";
+            else if (halo_size > 3)
+                result += "";
+            else
+                result += "small ";
+
+            result += "righteous aura, and all beings within it are "
+                      "easier to hit. ";
+        }
+        // deliberate fall through
     case GOD_LUGONU:
         if (!player_under_penance() && you.piety > 160
             && !you.num_gifts[god])
         {
             result += "You can pray at an altar to ask " + god_name(god)
-                   +  " to bless your weapon." EOL;
+                   +  " to bless your weapon.";
         }
         break;
 
@@ -2507,7 +2524,7 @@ void describe_god( god_type which_god, bool give_title )
     if (you.religion == which_god)
     {
         //mv: print title based on piety
-        cprintf( EOL EOL "Title - " );
+        cprintf( EOL "Title - " );
         textcolor(colour);
 
         // mv: if your piety is high enough you get title
@@ -2714,10 +2731,12 @@ void describe_god( god_type which_god, bool give_title )
     // only give this additional information for worshippers
     if ( which_god == you.religion )
     {
-        if (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE)
-            cgotoxy(1, get_number_of_lines(), GOTO_CRT);
-        else if (you.religion == GOD_BEOGH)
+        if (you.religion == GOD_ZIN
+            || you.religion == GOD_SHINING_ONE
+            || you.religion == GOD_ELYVILON)
+        {
             cgotoxy(1, get_number_of_lines() - 1, GOTO_CRT);
+        }
         else
             cgotoxy(1, get_number_of_lines() - 2, GOTO_CRT);
 
