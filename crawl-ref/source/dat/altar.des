@@ -272,7 +272,11 @@ ENDMAP
 
 NAME:  lemuel_angel_altar
 DEPTH: D:3-18, Vault
-MONS:  angel/daeva
+: if you.absdepth() > 12 then
+MONS: Daeva / Angel
+: else
+MONS:  Angel
+: end
 KFEAT: C = altar_elyvilon / altar_zin / altar_shining_one
 MAP
    .....
