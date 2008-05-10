@@ -795,13 +795,15 @@ static void _good_god_follower_attitude_change(monsters *monster)
     else if (!is_good_god(you.religion)
              && monster->alive()
              && mons_is_holy(monster)
-             && monster->attitude != ATT_HOSTILE
+             && (monster->attitude != ATT_HOSTILE
+                 || monster->has_ench(ENCH_CHARM))
              && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
              && mons_player_visible(monster) && !mons_is_sleeping(monster)
              && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {      // attitude change if non-good god
 
         monster->attitude = ATT_HOSTILE;
+        monster->del_ench(ENCH_CHARM, true);
         behaviour_event(monster, ME_ALERT, MHITYOU);
         // WAS_NEUTRAL stays -> no piety bonus on killing these
 
