@@ -763,6 +763,11 @@ static int _place_monster_aux( const mgen_data &mg,
     else
         define_monster(id);
 
+    // If the caller requested a specific colour for this monster,
+    // apply it now.
+    if (mg.colour != BLACK)
+        menv[id].colour = mg.colour;
+
     // The return of Boris is now handled in monster_die()...
     // not setting this for Boris here allows for multiple Borises
     // in the dungeon at the same time.  -- bwr
