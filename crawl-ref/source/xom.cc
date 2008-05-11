@@ -342,7 +342,7 @@ bool xom_gives_item(int power)
     {
         // If you are wearing a cursed cloak, then Xom will give you a
         // cloak or body armour.  Ha ha!
-        god_speaks(GOD_XOM, _get_xom_speech("xom armour gift"));
+        god_speaks(GOD_XOM, _get_xom_speech("armour gift"));
         xom_make_item(OBJ_ARMOUR,
                       random2(10)?
                           get_random_body_armour_type(you.your_level * 2)
