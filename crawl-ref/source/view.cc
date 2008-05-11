@@ -769,7 +769,7 @@ static void _good_god_follower_attitude_change(monsters *monster)
         && mons_is_holy(monster)
         && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
         && !mons_friendly(monster)
-        && !mons_neutral(monster)
+        && !mons_good_neutral(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
