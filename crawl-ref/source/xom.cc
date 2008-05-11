@@ -526,7 +526,7 @@ static bool xom_is_good(int sever)
             summons[i] =
                 create_monster(
                     mgen_data(mon, BEH_GOD_GIFT, 3,
-                              you.pos(), you.pet_target));
+                              you.pos(), you.pet_target, MG_FORCE_BEH));
 
             if (summons[i] != -1)
                 success = true;
@@ -604,11 +604,18 @@ static bool xom_is_good(int sever)
             different = true;
 
         // Mark non-demons hostile as appropriate.
-        beh_type beh = (different && hostiletype) ? BEH_HOSTILE
-                                                  : BEH_GOD_GIFT;
+        beh_type beha = BEH_GOD_GIFT;
+        int hitting = you.pet_target;
+
+        if (different && hostiletype)
+        {
+            beha = BEH_HOSTILE;
+            hitting = MHITYOU;
+        }
 
         if (create_monster(
-                mgen_data(mon, beh, 6, you.pos(), you.pet_target)) != -1)
+                mgen_data(mon, beha, 6,
+                          you.pos(), hitting, MG_FORCE_BEH)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single holy summon"));
@@ -684,12 +691,18 @@ static bool xom_is_good(int sever)
             different = true;
 
         // Mark non-demons hostile as appropriate.
-        beh_type beh = (different && hostiletype) ? BEH_HOSTILE
-                                                  : BEH_GOD_GIFT;
+        beh_type beha = BEH_GOD_GIFT;
+        int hitting = you.pet_target;
+
+        if (different && hostiletype)
+        {
+            beha = BEH_HOSTILE;
+            hitting = MHITYOU;
+        }
 
         if (create_monster(
-                mgen_data(xom_random_demon(sever, one_chance_in(8)),
-                          beh, 0, you.pos(), you.pet_target)) != -1)
+                mgen_data(xom_random_demon(sever, one_chance_in(8)), beha, 0,
+                          you.pos(), hitting, MG_FORCE_BEH)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
