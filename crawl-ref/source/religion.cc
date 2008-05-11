@@ -375,7 +375,6 @@ static bool _beogh_followers_abandon_you();
 static void _altar_prayer();
 static void _dock_piety(int piety_loss, int penance);
 static bool _make_god_gifts_disappear(bool level_only = true);
-static bool _make_god_gifts_neutral(bool level_only = true);
 static bool _make_god_gifts_good_neutral(bool level_only = true);
 static bool _make_god_gifts_hostile(bool level_only = true);
 static void _print_sacrifice_message(god_type, const item_def &,
@@ -3883,46 +3882,6 @@ static bool _make_god_gifts_disappear(bool level_only)
        return (success);
 
    return (apply_to_all_dungeons(_god_gifts_disappear_wrapper) || success);
-}
-
-// When abandoning the god in question, turn friendly god gifts neutral.
-// If seen, only count monsters where the player can see the change, and
-// output a message.
-static bool _make_god_gifts_on_level_neutral(bool seen = false)
-{
-    int count = 0;
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
-    {
-        monsters *monster = &menv[i];
-        if (monster->type != -1
-            && monster->attitude == ATT_FRIENDLY
-            && (monster->flags & MF_GOD_GIFT))
-        {
-            // monster changes attitude
-            monster->attitude = ATT_NEUTRAL;
-
-            if (!seen || simple_monster_message(monster, " becomes indifferent."))
-                count++;
-        }
-    }
-    return (count);
-}
-
-static bool _god_gifts_neutral_wrapper()
-{
-    return (_make_god_gifts_on_level_neutral());
-}
-
-// Make friendly god gifts turn neutral on all levels, or on only the
-// current one.
-static bool _make_god_gifts_neutral(bool level_only)
-{
-    bool success = _make_god_gifts_on_level_neutral(true);
-
-    if (level_only)
-        return (success);
-
-    return (apply_to_all_dungeons(_god_gifts_neutral_wrapper) || success);
 }
 
 // When abandoning the god in question, turn friendly god gifts good
