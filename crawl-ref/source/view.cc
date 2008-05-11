@@ -792,30 +792,6 @@ static void _good_god_follower_attitude_change(monsters *monster)
             stop_running();
         }
     }
-    else if (!is_good_god(you.religion)
-             && monster->alive()
-             && mons_is_holy(monster)
-             && (monster->attitude != ATT_HOSTILE
-                 || monster->has_ench(ENCH_CHARM))
-             && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
-             && mons_player_visible(monster) && !mons_is_sleeping(monster)
-             && !mons_is_confused(monster) && !mons_is_paralysed(monster))
-    {      // attitude change if non-good god
-
-        monster->attitude = ATT_HOSTILE;
-        monster->del_ench(ENCH_CHARM, true);
-        behaviour_event(monster, ME_ALERT, MHITYOU);
-        // WAS_NEUTRAL stays -> no piety bonus on killing these
-
-        // give message only sometimes
-        if (player_monster_visible(monster) && random2(4))
-        {
-            msg::streams(MSGCH_MONSTER_ENCHANT)
-                << monster->name(DESC_CAP_THE)
-                << " turns against you!"
-                << std::endl;
-        }
-    }
 }
 
 void beogh_follower_convert(monsters *monster, bool orc_hit)
@@ -853,26 +829,6 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
             }
             beogh_convert_orc(monster, orc_hit);
             stop_running();
-        }
-    }
-    else if (you.religion != GOD_BEOGH
-             && is_follower(monster)
-             && (monster->flags & MF_ATT_CHANGE_ATTEMPT)
-             && mons_player_visible(monster) && !mons_is_sleeping(monster)
-             && !mons_is_confused(monster) && !mons_is_paralysed(monster))
-    {      // reconversion if no longer Beogh
-
-        monster->attitude = ATT_HOSTILE;
-        behaviour_event(monster, ME_ALERT, MHITYOU);
-        // CREATED_FRIENDLY stays -> no piety bonus on killing these
-
-        // give message only sometimes
-        if (player_monster_visible(monster) && random2(4))
-        {
-            msg::streams(MSGCH_MONSTER_ENCHANT)
-                << monster->name(DESC_CAP_THE)
-                << " deserts you."
-                << std::endl;
         }
     }
 }
