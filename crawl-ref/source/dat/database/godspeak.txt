@@ -2,8 +2,8 @@
 # godspeak.txt contains the messages for divine speech,
 # though currently only for Xom.
 #
-# For an explanation of how to read godspeak.txt and how to 
-# add new messages, see monster_speech.txt in the docs 
+# For an explanation of how to read godspeak.txt and how to
+# add new messages, see monster_speech.txt in the docs
 # directory.
 ############################################################
 %%%%
@@ -14,7 +14,7 @@ Xom snickers.
 
 "How about this?"
 
-"Let's try an experiment, hmm?"
+"Let's try an experiment, hmmm?"
 
 "I wonder... What does this button do?"
 
@@ -472,9 +472,9 @@ the one true way.
 # purity
 purity of body and mind.
 
-preserving your bodily integrity. 
+preserving your bodily integrity.
 
-keeping your body clean and pure. 
+keeping your body clean and pure.
 
 proper care of body and soul.
 
@@ -484,7 +484,7 @@ avoiding mutations.
 just saying no to mutations.
 
 # respecting intelligent beings
-proper burial practice. 
+proper burial practice.
 
 # demons
 not dealing with demons.
@@ -508,7 +508,7 @@ the Law and the prophets.
 the importance of the Law.
 
 # anti-mutation
-mutations, and how to avoid them. 
+mutations, and how to avoid them.
 
 potions of Mutation - the devil's brew!
 
