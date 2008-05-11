@@ -1908,12 +1908,14 @@ bool player_angers_monster(monsters *mon, bool actual)
 {
     const bool holy =
         (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
+    const bool unholy =
+        (is_evil_god(you.religion) && mons_is_holy(mon));
     const bool antimagical =
         (you.religion == GOD_TROG && mons_is_magic_user(mon));
 
     // get the drawbacks, not the benefits...
     // (to prevent e.g. demon-scumming)
-    if (holy || antimagical)
+    if (holy || unholy || antimagical)
     {
         if (actual
             && (mon->attitude != ATT_HOSTILE || mon->has_ench(ENCH_CHARM)))
@@ -1921,23 +1923,29 @@ bool player_angers_monster(monsters *mon, bool actual)
             mon->attitude = ATT_HOSTILE;
             mon->del_ench(ENCH_CHARM);
             behaviour_event(mon, ME_ALERT, MHITYOU);
+
             if (see_grid(mon->x, mon->y) && player_monster_visible(mon))
             {
                 std::string aura;
 
-                if (holy && antimagical)
-                    aura = "holy, anti-magical";
-                else if (holy)
-                    aura = "holy";
-                else if (antimagical)
-                    aura = "anti-magical";
+                if (holy || unholy || antimagical)
+                {
+                    if (holy)
+                        aura = "holy";
+                    else if (unholy)
+                        aura = "unholy";
+                    else if (antimagical)
+                        aura = "anti-magical";
+                }
 
                 mprf("%s is enraged by your %s aura!",
                      mon->name(DESC_CAP_THE).c_str(), aura.c_str());
             }
         }
+
         return (true);
     }
+
     return (false);
 }
 
