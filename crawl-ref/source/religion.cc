@@ -4212,6 +4212,8 @@ void good_god_holy_attitude_change(monsters *holy)
     // on, it won't count as a good kill
     holy->flags |= MF_WAS_NEUTRAL;
 
+    holy->flags |= MF_GOD_GIFT;
+
     // to avoid immobile "followers"
     behaviour_event(holy, ME_ALERT, MHITNOT);
 }
@@ -4392,8 +4394,10 @@ void excommunication(god_type new_god)
             you.redraw_armour_class = true;
         }
 
-        if (!is_good_god(new_god))
+        if (is_evil_god(new_god))
             _make_god_gifts_hostile(false);
+        else if (!is_good_god(new_god))
+            _make_god_gifts_neutral(false);
         else
             _make_god_gifts_good_neutral(false);
 
