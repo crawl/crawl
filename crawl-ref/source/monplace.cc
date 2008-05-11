@@ -1926,17 +1926,14 @@ bool player_angers_monster(monsters *mon, bool actual)
 
             if (see_grid(mon->x, mon->y) && player_monster_visible(mon))
             {
-                std::string aura;
+                std::string aura = "";
 
-                if (holy || unholy || antimagical)
-                {
-                    if (holy)
-                        aura = "holy";
-                    else if (unholy)
-                        aura = "unholy";
-                    else if (antimagical)
-                        aura = "anti-magical";
-                }
+                if (holy)
+                    aura = "holy";
+                else if (unholy)
+                    aura = "unholy";
+                else if (antimagical)
+                    aura = "anti-magical";
 
                 mprf("%s is enraged by your %s aura!",
                      mon->name(DESC_CAP_THE).c_str(), aura.c_str());
