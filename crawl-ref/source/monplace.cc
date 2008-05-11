@@ -1910,14 +1910,12 @@ bool player_angers_monster(monsters *mon, bool actual)
         (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
     const bool unholy =
         (is_evil_god(you.religion) && mons_is_holy(mon));
-    const bool lackingholy =
-        (!is_good_god(you.religion) && mons_is_holy(mon));
     const bool antimagical =
         (you.religion == GOD_TROG && mons_is_magic_user(mon));
 
     // get the drawbacks, not the benefits...
     // (to prevent e.g. demon-scumming)
-    if (holy || unholy || lackingholy || antimagical)
+    if (holy || unholy || antimagical)
     {
         if (actual
             && (mon->attitude != ATT_HOSTILE || mon->has_ench(ENCH_CHARM)))
@@ -1934,8 +1932,6 @@ bool player_angers_monster(monsters *mon, bool actual)
                     aura = "holy";
                 else if (unholy)
                     aura = "unholy";
-                else if (lackingholy)
-                    aura = "lacking holy";
                 else if (antimagical)
                     aura = "anti-magical";
 
