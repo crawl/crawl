@@ -376,6 +376,7 @@ static void _altar_prayer();
 static void _dock_piety(int piety_loss, int penance);
 static bool _make_god_gifts_disappear(bool level_only = true);
 static bool _make_god_gifts_neutral(bool level_only = true);
+static bool _make_god_gifts_good_neutral(bool level_only = true);
 static bool _make_god_gifts_hostile(bool level_only = true);
 static void _print_sacrifice_message(god_type, const item_def &,
                                      piety_gain_t, bool = false);
@@ -3924,6 +3925,46 @@ static bool _make_god_gifts_neutral(bool level_only)
     return (apply_to_all_dungeons(_god_gifts_neutral_wrapper) || success);
 }
 
+// When abandoning the god in question, turn friendly god gifts good
+// neutral.  If seen, only count monsters where the player can see the
+// change, and output a message.
+static bool _make_god_gifts_on_level_good_neutral(bool seen = false)
+{
+    int count = 0;
+    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    {
+        monsters *monster = &menv[i];
+        if (monster->type != -1
+            && monster->attitude == ATT_FRIENDLY
+            && (monster->flags & MF_GOD_GIFT))
+        {
+            // monster changes attitude
+            monster->attitude = ATT_GOOD_NEUTRAL;
+
+            if (!seen || simple_monster_message(monster, " becomes indifferent."))
+                count++;
+        }
+    }
+    return (count);
+}
+
+static bool _god_gifts_good_neutral_wrapper()
+{
+    return (_make_god_gifts_on_level_good_neutral());
+}
+
+// Make friendly god gifts turn good neutral on all levels, or on only
+// the current one.
+static bool _make_god_gifts_good_neutral(bool level_only)
+{
+    bool success = _make_god_gifts_on_level_good_neutral(true);
+
+    if (level_only)
+        return (success);
+
+    return (apply_to_all_dungeons(_god_gifts_good_neutral_wrapper) || success);
+}
+
 // When abandoning the god in question, turn friendly god gifts hostile.
 // If seen, only count monsters where the player can see the change, and
 // output a message.
@@ -4149,8 +4190,8 @@ static void _print_good_god_neutral_holy_being_speech(const std::string key,
     }
 }
 
-// Holy monsters may turn neutral (good) when encountering followers
-// of the good gods.
+// Holy monsters may turn good neutral when encountering followers of
+// the good gods.
 void good_god_holy_attitude_change(monsters *holy)
 {
     ASSERT(mons_is_holy(holy));
@@ -4354,7 +4395,7 @@ void excommunication(god_type new_god)
         if (!is_good_god(new_god))
             _make_god_gifts_hostile(false);
         else
-            _make_god_gifts_neutral(false);
+            _make_god_gifts_good_neutral(false);
 
         _inc_penance( old_god, 50 );
         break;
