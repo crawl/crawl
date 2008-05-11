@@ -3800,6 +3800,49 @@ static bool _evil_beings_attitude_change()
     return apply_to_all_dungeons(_evil_beings_on_level_attitude_change);
 }
 
+static bool _magic_users_on_level_attitude_change()
+{
+    bool success = false;
+
+    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    {
+        monsters *monster = &menv[i];
+        if (monster->type != -1
+            && mons_is_magic_user(monster))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Magic user attitude changing: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+
+            // If you worship Trog, you make all non-hostile magic users
+            // hostile.
+            if (you.religion == GOD_TROG)
+            {
+                if (monster->attitude != ATT_HOSTILE
+                    || monster->has_ench(ENCH_CHARM))
+                {
+                    monster->attitude = ATT_HOSTILE;
+                    monster->del_ench(ENCH_CHARM, true);
+                    behaviour_event(monster, ME_ALERT, MHITYOU);
+                    // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+
+                    success = true;
+                }
+            }
+        }
+    }
+
+    return success;
+}
+
+static bool _magic_users_attitude_change()
+{
+    return apply_to_all_dungeons(_magic_users_on_level_attitude_change);
+}
+
 // Make summoned (temporary) friendly god gifts disappear on penance
 // or when abandoning the god in question.  If seen, only count monsters
 // where the player can see the change, and output a message.
@@ -4905,6 +4948,11 @@ void god_pitch(god_type which_god)
     }
     else if (you.religion == GOD_TROG)
     {
+        // When you start worshipping Trog, you make all non-hostile
+        // magic users hostile.
+        if (_magic_users_attitude_change())
+            mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
+
         mpr("You can now call upon Trog to burn books in your surroundings.",
             MSGCH_GOD);
     }
@@ -4921,12 +4969,12 @@ void god_pitch(god_type which_god)
     // evil and unholy beings hostile.
     if (is_good_god(you.religion))
     {
+        if (_evil_beings_attitude_change())
+            mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
+
         // piety bonus when switching between good gods
         if (good_god_switch && old_piety > 15)
             gain_piety(std::min(30, old_piety - 15));
-
-        if (_evil_beings_attitude_change())
-            mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
     }
     else if (is_evil_god(you.religion))
     {
