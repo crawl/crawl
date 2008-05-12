@@ -1416,10 +1416,8 @@ static char find_square( int xps, int yps,
         }                       // end if (direction == 1)
         else
         {
-            /*
-               This part checks all eight surrounding squares to find the
-               one that leads on to the present square.
-             */
+            // This part checks all eight surrounding squares to find the
+            // one that leads on to the present square.
             for (i = -1; i < 2; i++)
             {
                 for (j = -1; j < 2; j++)
