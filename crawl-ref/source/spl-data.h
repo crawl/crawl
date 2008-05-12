@@ -1180,7 +1180,7 @@
     SPELL_BANISHMENT, "Banishment",
      SPTYP_TRANSLOCATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
-     5,
+     4,
      200,
      NULL,
      true
