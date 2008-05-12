@@ -38,11 +38,9 @@
 #define RANDART_NAME_KEY   "randart_name"
 #define RANDART_APPEAR_KEY "randart_appearance"
 
-/*
-   The initial generation of a randart is very simple - it occurs
-   in dungeon.cc and consists of giving it a few random things - plus & plus2
-   mainly.
-*/
+// The initial generation of a randart is very simple - it occurs in
+// dungeon.cc and consists of giving it a few random things - plus &
+// plus2 mainly.
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item)
 {
