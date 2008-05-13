@@ -150,8 +150,8 @@ static kill_category _whose_kill(const bolt &beam)
             return (KC_FRIENDLY);
         if (beam.beam_source >= 0 && beam.beam_source < MAX_MONSTERS)
         {
-            const monsters *mons = &menv[beam.beam_source];
-            if (mons_friendly(mons))
+            const monsters *mon = &menv[beam.beam_source];
+            if (mons_friendly(mon))
                 return (KC_FRIENDLY);
         }
     }
@@ -2633,14 +2633,14 @@ int affect(bolt &beam, int x, int y, item_def *item)
     int mid = mgrd[x][y];
     if (mid != NON_MONSTER)
     {
-        monsters *mons = &menv[mid];
+        monsters *mon = &menv[mid];
 
         // Monsters submerged in shallow water can be targeted by beams
         // aimed at that spot.
-        if (mons->alive()
-            && (!mons->submerged()
-                || (beam.aimed_at_spot && beam.target() == mons->pos()
-                    && grd(mons->pos()) == DNGN_SHALLOW_WATER)))
+        if (mon->alive()
+            && (!mon->submerged()
+                || (beam.aimed_at_spot && beam.target() == mon->pos()
+                    && grd(mon->pos()) == DNGN_SHALLOW_WATER)))
         {
             if (!beam.is_big_cloud
                 && (!beam.is_explosion || beam.in_explosion_phase))
@@ -3481,7 +3481,7 @@ static int _affect_player( bolt &beam, item_def *item )
                     // Beam from player rebounded and hit player
                     xom_is_stimulated(255);
                 else
-                    // Beam from an ally
+                    // Beam from an ally or neutral
                     xom_is_stimulated(128);
             }
             else
@@ -3656,7 +3656,7 @@ static int _affect_player( bolt &beam, item_def *item )
             // Beam from player rebounded and hit player
             if (beam.beam_source == NON_MONSTER)
                 xom_is_stimulated(255);
-            // Xom's amusement at the player being damaged is handled
+            // Xom's amusement at the player's being damaged is handled
             // elsewhere.
             else if (was_affected)
                 xom_is_stimulated(128);
@@ -3714,7 +3714,7 @@ static void _update_hurt_or_helped(bolt &beam, monsters *mon)
             beam.fr_hurt++;
 
             // Harmful beam from this monster rebounded and hit the monster
-            int midx = (int) monster_index(mon);
+            int midx = monster_index(mon);
             if (midx == beam.beam_source)
                 xom_is_stimulated(128);
         }
