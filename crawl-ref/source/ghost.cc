@@ -30,6 +30,7 @@ std::vector<ghost_demon> ghosts;
    when finding spells to be remembered by a player's ghost:
  */
 static spell_type search_order_conj[] = {
+/* 0 */
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_BOLT_OF_DRAINING,
     SPELL_AGONY,
@@ -40,6 +41,7 @@ static spell_type search_order_conj[] = {
     SPELL_BOLT_OF_MAGMA,
     SPELL_ICE_BOLT,
     SPELL_BOLT_OF_FIRE,
+/* 10 */
     SPELL_BOLT_OF_COLD,
     SPELL_FIREBALL,
     SPELL_DELAYED_FIREBALL,
@@ -50,6 +52,7 @@ static spell_type search_order_conj[] = {
     SPELL_THROW_FROST,
     SPELL_PAIN,
     SPELL_STING,
+/* 20 */
     SPELL_SHOCK,
     SPELL_MAGIC_DART,
     SPELL_SLEEP,
@@ -72,10 +75,10 @@ static spell_type search_order_third[] = {
     SPELL_SUMMON_UGLY_THING,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_ANIMATE_DEAD,
+/* 10 */
     SPELL_INVISIBILITY,
     SPELL_CALL_IMP,
     SPELL_SUMMON_SMALL_MAMMAL,
-/* 10 */
     SPELL_CONTROLLED_BLINK,
     SPELL_BLINK,
     SPELL_NO_SPELL,                        // end search
@@ -98,6 +101,7 @@ static spell_type search_order_misc[] = {
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
     SPELL_DIG,
+/* 10 */
     SPELL_BACKLIGHT,
     SPELL_NO_SPELL,                        // end search
 };
