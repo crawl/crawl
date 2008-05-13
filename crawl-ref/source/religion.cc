@@ -5190,7 +5190,7 @@ void handle_god_time()
             divine_retribution(which_god);
     }
 
-    // Update the god's opinion of the player
+    // Update the god's opinion of the player.
     if (you.religion != GOD_NO_GOD)
     {
         switch (you.religion)
@@ -5208,15 +5208,15 @@ void handle_god_time()
             const char *newfavour = describe_xom_favour();
             if (strcmp(origfavour, newfavour))
             {
-                // Dampen oscillation across announcement boundaries:
+                // Dampen oscillation across announcement boundaries.
                 size += delta * 2;
                 you.piety = 100 + (good ? size : -size);
             }
 
-            // ... but he gets bored... (I re-use gift_timeout for
-            // this instead of making a separate field because I don't
-            // want to learn how to save and restore a new field). In
-            // this usage, the "gift" is the gift you give to Xom of
+            // ...but he gets bored... (I re-use gift_timeout for this
+            // instead of making a separate field because I don't want
+            // to learn how to save and restore a new field).  In this
+            // usage, the "gift" is the gift you give to Xom of
             // something interesting happening.
             if (you.gift_timeout == 1)
             {
