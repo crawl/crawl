@@ -1717,7 +1717,7 @@ void pray()
     }
     else if (you.religion == GOD_XOM)
     {
-        mpr("Xom ignores you.");
+        god_speaks(you.religion, "Xom ignores you.");
         return;
     }
 
