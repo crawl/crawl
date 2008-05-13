@@ -1100,12 +1100,11 @@ static void _handle_wizard_command( void )
 
         mpr("igrid:");
 
-        int item;
 
         for (i = 0; i < GXM; i++)
             for (j = 0; j < GYM; j++)
             {
-                item = igrd[i][j];
+                int item = igrd[i][j];
                 if (item != NON_ITEM)
                 {
                     mprf("%3d at (%2d,%2d), cl:%3d ty:%3d pl:%3d pl2:%3d "
