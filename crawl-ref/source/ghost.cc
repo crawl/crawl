@@ -25,10 +25,8 @@
 
 std::vector<ghost_demon> ghosts;
 
-/*
-   Order for looking for conjurations for the 1st & 2nd spell slots,
-   when finding spells to be remembered by a player's ghost:
- */
+// Order for looking for conjurations for the 1st & 2nd spell slots,
+// when finding spells to be remembered by a player's ghost.
 static spell_type search_order_conj[] = {
 /* 0 */
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
@@ -60,9 +58,8 @@ static spell_type search_order_conj[] = {
     SPELL_NO_SPELL,                        // end search
 };
 
-/*
-   Order for looking for summonings and self-enchants for the 3rd spell slot:
- */
+// Order for looking for summonings and self-enchants for the 3rd spell
+// slot.
 static spell_type search_order_third[] = {
 /* 0 */
     SPELL_SYMBOL_OF_TORMENT,
@@ -84,11 +81,9 @@ static spell_type search_order_third[] = {
     SPELL_NO_SPELL,                        // end search
 };
 
-/*
-   Order for looking for enchants for the 4th + 5th spell slot. If fails, will
-   go through conjs.
-   Note: Dig must be in misc2 (5th) position to work.
- */
+// Order for looking for enchants for the 4th & 5th spell slots.  If
+// this fails, go through conjurations.  Note: Dig must be in misc2
+// (5th) position to work.
 static spell_type search_order_misc[] = {
 /* 0 */
     SPELL_AGONY,
@@ -106,7 +101,7 @@ static spell_type search_order_misc[] = {
     SPELL_NO_SPELL,                        // end search
 };
 
-/* Last slot (emergency) can only be teleport self or blink. */
+// Last slot (emergency) can only be Teleport Self or Blink.
 
 ghost_demon::ghost_demon()
 {
@@ -150,7 +145,7 @@ void ghost_demon::init_random_demon()
         resists.fire = random_range(1, 2);
     else
     {
-        resists.fire = 0;    /* res_fire */
+        resists.fire = 0;    // res_fire
 
         if (one_chance_in(10))
             resists.fire = -1;
@@ -181,7 +176,7 @@ void ghost_demon::init_random_demon()
         do
         {
             brand = static_cast<brand_type>( random2(MAX_PAN_LORD_BRANDS) );
-            /* some brands inappropriate (e.g. holy wrath) */
+            // some brands inappropriate (e.g. holy wrath)
         }
         while (brand == SPWPN_HOLY_WRATH
                || (brand == SPWPN_ORC_SLAYING
@@ -210,9 +205,9 @@ void ghost_demon::init_random_demon()
 
     spells.init(SPELL_NO_SPELL);
 
-    /* This bit uses the list of player spells to find appropriate spells
-       for the demon, then converts those spells to the monster spell indices.
-       Some special monster-only spells are at the end. */
+    // This bit uses the list of player spells to find appropriate
+    // spells for the demon, then converts those spells to the monster
+    // spell indices.  Some special monster-only spells are at the end.
     if (spellcaster)
     {
         if (coinflip())
@@ -240,18 +235,18 @@ void ghost_demon::init_random_demon()
         if (coinflip())
             spells[5] = SPELL_TELEPORT_SELF;
 
-        /* Converts the player spell indices to monster spell ones */
+        // Convert the player spell indices to monster spell ones.
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
             spells[i] = translate_spell( spells[i] );
 
-        /* give demon a chance for some monster-only spells: */
-        /* and demon-summoning should be fairly common: */
+        // Give demon a chance for some monster-only spells.
+        // Demon-summoning should be fairly common.
         if (one_chance_in(25))
             spells[0] = SPELL_HELLFIRE_BURST;
         if (one_chance_in(25))
             spells[0] = SPELL_METAL_SPLINTERS;
         if (one_chance_in(25))
-            spells[0] = SPELL_ENERGY_BOLT;  /* eye of devas */
+            spells[0] = SPELL_ENERGY_BOLT;  // eye of devas
 
         if (one_chance_in(25))
             spells[1] = SPELL_STEAM_BALL;
@@ -274,7 +269,7 @@ void ghost_demon::init_random_demon()
         if (one_chance_in(20))
             spells[3] = SPELL_SUMMON_DEMON;
 
-        /* at least they can summon demons */
+        // At least they can summon demons.
         if (spells[3] == SPELL_NO_SPELL)
             spells[3] = SPELL_SUMMON_DEMON;
 
@@ -325,7 +320,7 @@ void ghost_demon::init_player_ghost()
     }
     else
     {
-        /* Unarmed combat */
+        // Unarmed combat.
         if (you.species == SP_TROLL)
             d += you.experience_level;
 
@@ -405,11 +400,10 @@ static spell_type search_third_list(int ignore_spell)
     return SPELL_NO_SPELL;
 }                               // end search_third_list()
 
-/*
-   Used when creating ghosts: goes through and finds spells for the ghost to
-   cast. Death is a traumatic experience, so ghosts only remember a few spells.
- */
-void ghost_demon::add_spells( )
+// Used when creating ghosts: goes through and finds spells for the
+// ghost to cast.  Death is a traumatic experience, so ghosts only
+// remember a few spells.
+void ghost_demon::add_spells()
 {
     int i = 0;
 
@@ -431,7 +425,7 @@ void ghost_demon::add_spells( )
     if (player_has_spell( SPELL_DIG ))
         spells[ 4 ] = SPELL_DIG;
 
-    /* Looks for blink/tport for emergency slot */
+    // Look for Blink or Teleport Self for the emergency slot.
     if (player_has_spell( SPELL_CONTROLLED_BLINK )
         || player_has_spell( SPELL_BLINK ))
     {
@@ -445,21 +439,19 @@ void ghost_demon::add_spells( )
         spells[i] = translate_spell( spells[i] );
 }                               // end add_spells()
 
-/*
-   When passed the number for a player spell, returns the equivalent monster
-   spell. Returns SPELL_NO_SPELL on failure (no equiv).
- */
+// When passed the number for a player spell, returns the equivalent
+// monster spell.  Returns SPELL_NO_SPELL on failure (no equivalent).
 spell_type ghost_demon::translate_spell(spell_type spel) const
 {
     switch (spel)
     {
     case SPELL_CONTROLLED_BLINK:
-        return (SPELL_BLINK);        /* approximate */
+        return (SPELL_BLINK);        // approximate
     case SPELL_DEMONIC_HORDE:
         return (SPELL_CALL_IMP);
     case SPELL_AGONY:
     case SPELL_SYMBOL_OF_TORMENT:
-        /* Too powerful to give ghosts Torment for Agony? Nah. */
+        // Too powerful to give ghosts Torment for Agony?  Nah.
         return (SPELL_SYMBOL_OF_TORMENT);
     case SPELL_DELAYED_FIREBALL:
         return (SPELL_FIREBALL);
@@ -557,7 +549,7 @@ int ghost_demon::n_extra_ghosts()
     if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE)
         return (0);
 
-    // No multiple ghosts until level 9 of the Main Dungeon.
+    // No multiple ghosts until level 9 of the main dungeon.
     if ((lev < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON)
         || (subdepth < 2 && you.where_are_you == BRANCH_LAIR)
         || (subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES))
