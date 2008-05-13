@@ -3965,7 +3965,7 @@ static bool _make_god_gifts_hostile(bool level_only)
     return (apply_to_all_dungeons(_god_gifts_hostile_wrapper) || success);
 }
 
-static bool orcish_followers_on_level_abandon_you()
+static bool _orcish_followers_on_level_abandon_you()
 {
     bool success = false;
 
@@ -4005,7 +4005,7 @@ static bool _beogh_followers_abandon_you()
     if (you.religion != GOD_BEOGH)
     {
         reconvert =
-            apply_to_all_dungeons(orcish_followers_on_level_abandon_you);
+            apply_to_all_dungeons(_orcish_followers_on_level_abandon_you);
     }
     else
     {
