@@ -1566,6 +1566,14 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             xom_is_stimulated(128);
         else if (pbolt.foe_helped > 0 && pbolt.fr_helped == 0)
             xom_is_stimulated(128);
+
+        // allow friendlies to react to projectiles.
+        const monsters *mon = &menv[pbolt.beam_source];
+        if (pbolt.foe_hurt > 0 && !mons_wont_attack(mon)
+            && you.pet_target == MHITNOT)
+        {
+            you.pet_target = pbolt.beam_source;
+        }
     }
 
     // that's it!
