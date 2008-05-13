@@ -284,6 +284,10 @@ Xom spell effect
 
 Xom's power flows through you!
 
+Xom plays with reality for a moment.
+
+Xon guffaws.
+
 %%%%
 # turns walls into glass
 Xom vitrification
@@ -342,7 +346,7 @@ You hear Xom's avuncular chuckle.
 # Beogh's messiah has destroyed an idol
 Beogh idol follower
 
-Beogh fumes, "This is no small sin, orc. Repent!"
+Beogh fumes, "This is no small sin, orc.  Repent!"
 
 Beogh whispers, "You will pay for this transgression.",
 
@@ -365,6 +369,9 @@ Beogh idol other
 Beogh is not amused about the destruction of his idols.
 
 Beogh seems highly displeased.
+
+Your arrogance infuriates Beogh.
+
 %%%%
 ##########################################################
 # Messages for the *player* using Zin's Recite invocation
@@ -528,7 +535,17 @@ the alliance of Zin and the Shining One.
 
 the alliance of Zin and Elyvilon.
 
+the lawlessness of @chaotic_god@.
+
 the evilness of @evil_god@.
+
+%%%%
+chaotic_god
+
+Xom
+
+Makhleb
+
 %%%%
 evil_god
 
@@ -541,4 +558,5 @@ Yredelemnul
 Beogh
 
 Lugonu
+
 %%%%
