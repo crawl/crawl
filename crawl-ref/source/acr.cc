@@ -1100,17 +1100,20 @@ static void _handle_wizard_command( void )
 
         mpr("igrid:");
 
+        int item;
+
         for (i = 0; i < GXM; i++)
             for (j = 0; j < GYM; j++)
             {
-                if (igrd[i][j] != NON_ITEM)
+                item = igrd[i][j];
+                if (item != NON_ITEM)
                 {
                     mprf("%3d at (%2d,%2d), cl:%3d ty:%3d pl:%3d pl2:%3d "
                          "sp:%3ld q:%3d",
-                         igrd[i][j], i, j,
-                         mitm[i].base_type, mitm[i].sub_type,
-                         mitm[i].plus, mitm[i].plus2, mitm[i].special,
-                         mitm[i].quantity );
+                         item, i, j,
+                         mitm[item].base_type, mitm[item].sub_type,
+                         mitm[item].plus, mitm[item].plus2, mitm[item].special,
+                         mitm[item].quantity );
                 }
             }
 
