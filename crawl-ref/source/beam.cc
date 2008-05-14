@@ -2607,9 +2607,12 @@ int affect(bolt &beam, int x, int y, item_def *item)
 
     // grd[x][y] will NOT be a wall for the remainder of this function.
 
-    // if not a tracer, place clouds
+    // if not a tracer, place clouds and affect items
     if (!beam.is_tracer)
+    {
         rangeUsed += _affect_place_clouds(beam, x, y);
+        _affect_items(beam, x, y);
+    }
 
     // if player is at this location, try to affect unless term_on_target
     if (_found_player(beam, x, y))
@@ -4778,10 +4781,9 @@ void explosion( bolt &beam, bool hole_in_the_middle,
     _explosion_map(beam, 0, 0, 0, 0, r);
 
     // Go through affected cells, drawing effect and
-    // calling affect() and _affect_items() for each.
-    // now, we get a bit fancy, drawing all radius 0
-    // effects, then radius 1, radius 2, etc.  It looks
-    // a bit better that way.
+    // calling affect() for each.  Now, we get a bit
+    // fancy, drawing all radius 0 effects, then radius 1,
+    // radius 2, etc.  It looks a bit better that way.
 
     // turn buffering off
 #ifdef WIN32CONSOLE
@@ -4882,14 +4884,6 @@ static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly)
     // early out for tracer
     if (beam.is_tracer)
         return;
-
-    // now affect items
-    if (!drawOnly)
-    {
-        _affect_items(beam, realx, realy);
-        if (_affects_wall(beam, grd[realx][realy]))
-            _affect_wall(beam, realx, realy);
-    }
 
     if (drawOnly)
     {
