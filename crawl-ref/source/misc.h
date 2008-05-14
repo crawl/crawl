@@ -40,6 +40,9 @@ void down_stairs(int old_level,
                  dungeon_feature_type force_stair = DNGN_UNSEEN,
                  entry_cause_type entry_cause = EC_UNKNOWN);
 
+cloud_type beam2cloud(beam_type flavour);
+beam_type cloud2beam(cloud_type flavour);
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr

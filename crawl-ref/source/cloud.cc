@@ -22,6 +22,7 @@
 #include "cloud.h"
 #include "mapmark.h"
 #include "misc.h"
+#include "ouch.h"
 #include "place.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -152,7 +153,10 @@ void manage_clouds(void)
             dissipate *= 4;
         }
 
-        dissipate_cloud( cc, env.cloud[cc], dissipate );
+        expose_items_to_element(cloud2beam(env.cloud[cc].type),
+                                env.cloud[cc].x, env.cloud[cc].y);
+
+        dissipate_cloud(cc, env.cloud[cc], dissipate);
     }
 
     return;
@@ -516,5 +520,5 @@ fog_machine_data fogs_lab_type(int level_number)
 
 killer_type cloud_struct::beam_thrower() const
 {
-    return (whose == KC_YOU? KILL_YOU_MISSILE : KILL_MON_MISSILE);
+    return (whose == KC_YOU ? KILL_YOU_MISSILE : KILL_MON_MISSILE);
 }

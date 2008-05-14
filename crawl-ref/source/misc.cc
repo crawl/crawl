@@ -1211,6 +1211,75 @@ void search_around( bool only_adjacent )
     return;
 }                               // end search_around()
 
+cloud_type beam2cloud(beam_type flavour)
+{
+    switch (flavour)
+    {
+    default:
+    case BEAM_NONE:
+        return CLOUD_NONE;
+    case BEAM_FIRE:
+    case BEAM_POTION_FIRE:
+        return CLOUD_FIRE;
+    case BEAM_POTION_STINKING_CLOUD:
+        return CLOUD_STINK;
+    case BEAM_COLD:
+    case BEAM_POTION_COLD:
+        return CLOUD_COLD;
+    case BEAM_POISON:
+    case BEAM_POTION_POISON:
+        return CLOUD_POISON;
+    case BEAM_POTION_BLACK_SMOKE:
+        return CLOUD_BLACK_SMOKE;
+    case BEAM_POTION_GREY_SMOKE:
+        return CLOUD_GREY_SMOKE;
+    case BEAM_POTION_BLUE_SMOKE:
+        return CLOUD_BLUE_SMOKE;
+    case BEAM_POTION_PURP_SMOKE:
+        return CLOUD_PURP_SMOKE;
+    case BEAM_STEAM:
+    case BEAM_POTION_STEAM:
+        return CLOUD_STEAM;
+    case BEAM_MIASMA:
+    case BEAM_POTION_MIASMA:
+        return CLOUD_MIASMA;
+    case BEAM_RANDOM:
+        return CLOUD_RANDOM;
+    }
+}
+
+beam_type cloud2beam(cloud_type flavour)
+{
+    switch (flavour)
+    {
+    default:
+    case CLOUD_NONE:
+        return BEAM_NONE;
+    case CLOUD_FIRE:
+        return BEAM_FIRE;
+    case CLOUD_STINK:
+        return BEAM_POTION_STINKING_CLOUD;
+    case CLOUD_COLD:
+        return BEAM_COLD;
+    case CLOUD_POISON:
+        return BEAM_POISON;
+    case CLOUD_BLACK_SMOKE:
+        return BEAM_POTION_BLACK_SMOKE;
+    case CLOUD_GREY_SMOKE:
+        return BEAM_POTION_GREY_SMOKE;
+    case CLOUD_BLUE_SMOKE:
+        return BEAM_POTION_BLUE_SMOKE;
+    case CLOUD_PURP_SMOKE:
+        return BEAM_POTION_PURP_SMOKE;
+    case CLOUD_STEAM:
+        return BEAM_STEAM;
+    case CLOUD_MIASMA:
+        return BEAM_MIASMA;
+    case CLOUD_RANDOM:
+        return BEAM_RANDOM;
+    }
+}
+
 void in_a_cloud()
 {
     int cl = env.cgrid[you.x_pos][you.y_pos];

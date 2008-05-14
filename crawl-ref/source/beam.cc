@@ -2413,6 +2413,7 @@ static void _beam_explodes(bolt &beam, int x, int y)
             break;
 
         case BEAM_POTION_STEAM:
+        case BEAM_POTION_GREY_SMOKE:
             beam.colour = LIGHTGREY;
             break;
 
@@ -2920,52 +2921,33 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
         switch (beam.flavour)
         {
         case BEAM_POTION_STINKING_CLOUD:
-            cl_type = CLOUD_STINK;
-            break;
-
         case BEAM_POTION_POISON:
-            cl_type = CLOUD_POISON;
-            break;
-
         case BEAM_POTION_MIASMA:
-            cl_type = CLOUD_MIASMA;
-            break;
-
-        case BEAM_POTION_BLACK_SMOKE:
-            cl_type = CLOUD_BLACK_SMOKE;
-            break;
-
+        case BEAM_POTION_STEAM:
         case BEAM_POTION_FIRE:
-            cl_type = CLOUD_FIRE;
-            break;
-
         case BEAM_POTION_COLD:
-            cl_type = CLOUD_COLD;
-            break;
-
+        case BEAM_POTION_BLACK_SMOKE:
+        case BEAM_POTION_GREY_SMOKE:
         case BEAM_POTION_BLUE_SMOKE:
-            cl_type = CLOUD_BLUE_SMOKE;
-            break;
-
         case BEAM_POTION_PURP_SMOKE:
-            cl_type = CLOUD_PURP_SMOKE;
+            cl_type = beam2cloud(beam.flavour);
             break;
 
         case BEAM_POTION_RANDOM:
-            switch (random2(10))
+            switch (random2(11))
             {
             case 0:  cl_type = CLOUD_FIRE;           break;
             case 1:  cl_type = CLOUD_STINK;          break;
             case 2:  cl_type = CLOUD_COLD;           break;
             case 3:  cl_type = CLOUD_POISON;         break;
             case 4:  cl_type = CLOUD_BLACK_SMOKE;    break;
-            case 5:  cl_type = CLOUD_BLUE_SMOKE;     break;
-            case 6:  cl_type = CLOUD_PURP_SMOKE;     break;
+            case 5:  cl_type = CLOUD_GREY_SMOKE;     break;
+            case 6:  cl_type = CLOUD_BLUE_SMOKE;     break;
+            case 7:  cl_type = CLOUD_PURP_SMOKE;     break;
             default: cl_type = CLOUD_STEAM;          break;
             }
             break;
 
-        case BEAM_POTION_STEAM:
         default:
             cl_type = CLOUD_STEAM;
             break;
