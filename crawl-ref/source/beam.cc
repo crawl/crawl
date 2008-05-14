@@ -147,7 +147,7 @@ static kill_category _whose_kill(const bolt &beam)
     {
         if (beam.beam_source == ANON_FRIENDLY_MONSTER)
             return (KC_FRIENDLY);
-        if (beam.beam_source >= 0 && beam.beam_source < MAX_MONSTERS)
+        if (!invalid_monster_index(beam.beam_source))
         {
             const monsters *mon = &menv[beam.beam_source];
             if (mons_friendly(mon))
@@ -1559,7 +1559,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         }
     }
 
-    if (!pbolt.is_tracer && pbolt.beam_source != NON_MONSTER)
+    if (!pbolt.is_tracer && !invalid_monster_index(pbolt.beam_source))
     {
         if (pbolt.foe_hurt == 0 && pbolt.fr_hurt > 0)
             xom_is_stimulated(128);
