@@ -1504,7 +1504,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             {
                 cgotoxy(drawx, drawy);
                 put_colour_ch(
-                    pbolt.colour == BLACK? random_colour() : pbolt.colour,
+                    pbolt.colour == BLACK ? random_colour() : pbolt.colour,
                     pbolt.type );
 
                 // get curses to update the screen so we can see the beam
@@ -4770,14 +4770,14 @@ void explosion( bolt &beam, bool hole_in_the_middle,
     // set map to false
     explode_map.init(false);
 
-    // discover affected cells - recursion is your friend!
+    // Discover affected cells - recursion is your friend!
     // this is done to model an explosion's behaviour around
     // corners where a simple 'line of sight' isn't quite
-    // enough.   This might be slow for really big explosions,
+    // enough.  This might be slow for really big explosions,
     // as the recursion runs approximately as R^2
     _explosion_map(beam, 0, 0, 0, 0, r);
 
-    // go through affected cells, drawing effect and
+    // Go through affected cells, drawing effect and
     // calling affect() and _affect_items() for each.
     // now, we get a bit fancy, drawing all radius 0
     // effects, then radius 1, radius 2, etc.  It looks
