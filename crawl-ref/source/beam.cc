@@ -92,7 +92,6 @@ static int  _affect_wall(bolt &beam, int x, int y);
 static int  _affect_place_clouds(bolt &beam, int x, int y);
 static void _affect_place_explosion_clouds(bolt &beam, int x, int y);
 static int  _affect_player(bolt &beam, item_def *item = NULL);
-static void _affect_items(bolt &beam, int x, int y);
 static int  _affect_monster(bolt &beam, monsters *mon, item_def *item = NULL);
 static int  _affect_monster_enchantment(bolt &beam, monsters *mon);
 static void _beam_paralyses_monster( bolt &pbolt, monsters *monster );
@@ -2605,11 +2604,11 @@ int affect(bolt &beam, int x, int y, item_def *item)
 
     // grd[x][y] will NOT be a wall for the remainder of this function.
 
-    // if not a tracer, place clouds and affect items
+    // if not a tracer, affect items and place clouds
     if (!beam.is_tracer)
     {
+        expose_items_to_element(beam.flavour, x, y);
         rangeUsed += _affect_place_clouds(beam, x, y);
-        _affect_items(beam, x, y);
     }
 
     // if player is at this location, try to affect unless term_on_target
@@ -3000,50 +2999,6 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
             mons_place(
                 mgen_data::hostile_at(
                     MONS_FIRE_VORTEX, coord_def(x, y)));
-        }
-    }
-}
-
-static void _affect_items(bolt &beam, int x, int y)
-{
-    object_class_type objs_vulnerable = OBJ_UNASSIGNED;
-
-    switch (beam.flavour)
-    {
-    case BEAM_FIRE:
-    case BEAM_LAVA:
-        objs_vulnerable = OBJ_SCROLLS;
-        break;
-    case BEAM_COLD:
-        objs_vulnerable = OBJ_POTIONS;
-        break;
-    case BEAM_SPORE:
-        objs_vulnerable = OBJ_FOOD;
-        break;
-    default:
-        break;
-    }
-
-    if (beam.name == "hellfire")
-        objs_vulnerable = OBJ_SCROLLS;
-
-    if (igrd[x][y] != NON_ITEM)
-    {
-        if (objs_vulnerable != OBJ_UNASSIGNED
-            && mitm[igrd[x][y]].base_type == objs_vulnerable)
-        {
-            item_was_destroyed(mitm[igrd[x][y]], beam.beam_source);
-
-            destroy_item( igrd[ x ][ y ] );
-
-            if (objs_vulnerable == OBJ_SCROLLS && see_grid(x,y))
-                mpr("You see a puff of smoke.");
-
-            if (objs_vulnerable == OBJ_POTIONS && !silenced(x,y)
-                && !silenced(you.x_pos, you.y_pos))
-            {
-                mpr("You hear glass shatter.");
-            }
         }
     }
 }

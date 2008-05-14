@@ -437,7 +437,7 @@ void item_corrode( int itco )
 
 // Helper function for the expose functions below.
 // This currently works because elements only target a single type each.
-static int get_target_class( beam_type flavour )
+static int _get_target_class(beam_type flavour)
 {
     int target_class = OBJ_UNASSIGNED;
 
@@ -469,25 +469,24 @@ static int get_target_class( beam_type flavour )
 // XXX: These expose functions could use being reworked into a real system...
 // the usage and implementation is currently very hacky.
 // Handles the destruction of inventory items from the elements.
-static void expose_invent_to_element( beam_type flavour, int strength )
+static void _expose_invent_to_element(beam_type flavour, int strength)
 {
-    int i, j;
     int num_dest = 0;
 
-    const int target_class = get_target_class( flavour );
+    const int target_class = _get_target_class( flavour );
     if (target_class == OBJ_UNASSIGNED)
         return;
 
     // Currently we test against each stack (and item in the stack)
-    // independantly at strength%... perhaps we don't want that either
+    // independently at strength%... perhaps we don't want that either
     // because it makes the system very fair and removes the protection
     // factor of junk (which might be more desirable for game play).
-    for (i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!is_valid_item( you.inv[i] ))
+        if (!is_valid_item(you.inv[i]))
             continue;
 
-        if (is_valid_item( you.inv[i] )
+        if (is_valid_item(you.inv[i])
             && (you.inv[i].base_type == target_class
                 || (target_class == OBJ_FOOD
                     && you.inv[i].base_type == OBJ_CORPSES)))
@@ -495,7 +494,7 @@ static void expose_invent_to_element( beam_type flavour, int strength )
             if (player_item_conserve() && !one_chance_in(10))
                 continue;
 
-            for (j = 0; j < you.inv[i].quantity; j++)
+            for (int j = 0; j < you.inv[i].quantity; ++j)
             {
                 if (random2(100) < strength)
                 {
@@ -504,7 +503,7 @@ static void expose_invent_to_element( beam_type flavour, int strength )
                     if (i == you.equip[EQ_WEAPON])
                         you.wield_change = true;
 
-                    if (dec_inv_item_quantity( i, 1 ))
+                    if (dec_inv_item_quantity(i, 1))
                         break;
                 }
             }
@@ -529,7 +528,7 @@ static void expose_invent_to_element( beam_type flavour, int strength )
             break;
 
         case OBJ_FOOD:
-            mprf("Some of your food is covered with spores!");
+            mpr("Some of your food is covered with spores!");
             break;
 
         default:
@@ -543,6 +542,64 @@ static void expose_invent_to_element( beam_type flavour, int strength )
     }
 }
 
+void expose_items_to_element(beam_type flavour, int x, int y)
+{
+    int num_dest = 0;
+
+    const int target_class = _get_target_class(flavour);
+    if (target_class == OBJ_UNASSIGNED)
+        return;
+
+    for (int i = igrd[x][y]; i != NON_ITEM; i = mitm[i].link)
+    {
+        if (!is_valid_item(mitm[i]))
+            continue;
+
+        if (is_valid_item(mitm[i])
+            && (mitm[i].base_type == target_class
+                || (target_class == OBJ_FOOD
+                    && mitm[i].base_type == OBJ_CORPSES)))
+        {
+            num_dest++;
+
+            item_was_destroyed(mitm[i]);
+
+            destroy_item(i);
+        }
+    }
+
+    if (num_dest > 0)
+    {
+        if (see_grid(x, y))
+        {
+            switch (target_class)
+            {
+            case OBJ_SCROLLS:
+                mprf("You see %s of smoke.",
+                     (num_dest > 1) ? "some puffs" : "a puff");
+                break;
+
+            case OBJ_POTIONS:
+                mprf("You see %s shatter.",
+                     (num_dest > 1) ? "some glass" : "glass");
+                break;
+
+            case OBJ_FOOD:
+                mprf("You see %s of spores.",
+                     (num_dest > 1) ? "some clouds" : "a cloud");
+                break;
+
+            default:
+                mprf("%s on the floor %s destroyed!",
+                     (num_dest > 1) ? "Some items" : "An item",
+                     (num_dest > 1) ? "were" : "was" );
+                break;
+            }
+        }
+
+        xom_is_stimulated((num_dest > 1) ? 32 : 16);
+    }
+}
 
 // Handle side-effects for exposure to element other than damage.
 // This function exists because some code calculates its own damage
@@ -550,10 +607,10 @@ static void expose_invent_to_element( beam_type flavour, int strength )
 // code they keep having to do... namely condensation shield checks,
 // you really can't expect this function to even be called for much else.
 //
-// This function now calls expose_invent_to_element if strength > 0.
+// This function now calls _expose_invent_to_element if strength > 0.
 //
 // XXX: this function is far from perfect and a work in progress.
-void expose_player_to_element( beam_type flavour, int strength )
+void expose_player_to_element(beam_type flavour, int strength)
 {
     // Note that BEAM_TELEPORT is sent here when the player
     // blinks or teleports.
@@ -571,7 +628,7 @@ void expose_player_to_element( beam_type flavour, int strength )
     }
 
     if (strength)
-        expose_invent_to_element( flavour, strength );
+        _expose_invent_to_element( flavour, strength );
 }
 
 void lose_level()
