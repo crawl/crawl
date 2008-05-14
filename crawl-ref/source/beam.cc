@@ -2584,7 +2584,7 @@ int affect(bolt &beam, int x, int y, item_def *item)
         // if it's still a wall, quit - we can't do anything else to a
         // wall (but we still might be able to do something to any
         // monster inside the wall).  Otherwise effects (like clouds,
-        // etc) are still possible.
+        // etc.) are still possible.
         if (grid_is_solid(grd[x][y]))
         {
             int mid = mgrd[x][y];
@@ -4778,7 +4778,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
     _explosion_map(beam, 0, 0, 0, 0, r);
 
     // go through affected cells, drawing effect and
-    // calling affect() and affect_items() for each.
+    // calling affect() and _affect_items() for each.
     // now, we get a bit fancy, drawing all radius 0
     // effects, then radius 1, radius 2, etc.  It looks
     // a bit better that way.
