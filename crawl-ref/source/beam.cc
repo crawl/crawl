@@ -2336,11 +2336,9 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty )
     return find_ray( sx, sy, tx, ty, false, ray );
 }
 
-/*
-   When a mimic is hit by a ranged attack, it teleports away (the slow way)
-   and changes its appearance - the appearance change is in monster_teleport
-   in mstuff2.
- */
+// When a mimic is hit by a ranged attack, it teleports away (the slow
+// way) and changes its appearance - the appearance change is in
+// monster_teleport() in mstuff2.cc.
 void mimic_alert(monsters *mimic)
 {
     bool should_id = !testbits(mimic->flags, MF_KNOWN_MIMIC)
@@ -2384,7 +2382,7 @@ static void _beam_explodes(bolt &beam, int x, int y)
 {
     cloud_type cl_type;
 
-    // this will be the last thing this beam does.. set target_x
+    // This will be the last thing this beam does.  Set target_x
     // and target_y to hold explosion co'ords.
 
     beam.target_x = x;
@@ -2459,7 +2457,7 @@ static void _beam_explodes(bolt &beam, int x, int y)
     // cloud producer -- FOUL VAPOR (SWAMP DRAKE?)
     if (beam.name == "foul vapour")
     {
-        cl_type = beam.flavour == BEAM_MIASMA? CLOUD_MIASMA : CLOUD_STINK;
+        cl_type = beam.flavour == BEAM_MIASMA ? CLOUD_MIASMA : CLOUD_STINK;
         big_cloud( cl_type, _whose_kill(beam), x, y, 0, 9 );
         return;
     }
