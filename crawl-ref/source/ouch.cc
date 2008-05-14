@@ -378,8 +378,8 @@ void item_corrode( int itco )
         }
         break;
     default:
-        /* items which aren't missiles, etc...Could happen
-           if we're wielding a deck, say */
+        // items which aren't missiles, etc... could happen if we're
+        // e.g. wielding a deck
         return;
     }
 
