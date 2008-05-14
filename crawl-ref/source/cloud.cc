@@ -67,7 +67,7 @@ static void place_new_cloud(cloud_type cltype, int x, int y, int decay,
     // find slot for cloud
     for (int ci = 0; ci < MAX_CLOUDS; ci++)
     {
-        if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
+        if (env.cloud[ci].type == CLOUD_NONE)   // i.e., is empty
         {
             new_cloud( ci, cltype, x, y, decay, whose, spread_rate );
             break;
