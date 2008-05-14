@@ -3067,13 +3067,13 @@ bool test_beam_hit(int attack, int defence)
 
 static std::string _beam_zapper(const bolt &beam)
 {
-    const int bsrc = _beam_source(beam);
-    if (bsrc == MHITYOU)
+    const int beam_src = _beam_source(beam);
+    if (beam_src == MHITYOU)
         return ("self");
-    else if (bsrc == MHITNOT)
+    else if (beam_src == MHITNOT)
         return ("");
     else
-        return menv[bsrc].name(DESC_PLAIN);
+        return menv[beam_src].name(DESC_PLAIN);
 }
 
 // return amount of extra range used up by affectation of the player
