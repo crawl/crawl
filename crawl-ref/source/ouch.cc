@@ -602,7 +602,7 @@ void expose_items_to_element(beam_type flavour, int x, int y)
 }
 
 // Handle side-effects for exposure to element other than damage.  This
-// function exists because some code calculates its own damage isntead
+// function exists because some code calculates its own damage instead
 // of using check_your_resists() and we want to isolate all the special
 // code they keep having to do... namely condensation shield checks,
 // you really can't expect this function to even be called for much
