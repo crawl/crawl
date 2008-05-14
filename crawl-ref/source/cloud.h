@@ -1,7 +1,7 @@
 /*
  *  File:       cloud.h
  *  Summary:    Functions related to clouds.
- *  Written by: Brent Ross 
+ *  Written by: Brent Ross
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
  *
