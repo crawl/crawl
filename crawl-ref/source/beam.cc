@@ -4774,7 +4774,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
     // this is done to model an explosion's behaviour around
     // corners where a simple 'line of sight' isn't quite
     // enough.  This might be slow for really big explosions,
-    // as the recursion runs approximately as R^2
+    // as the recursion runs approximately as R^2.
     _explosion_map(beam, 0, 0, 0, 0, r);
 
     // Go through affected cells, drawing effect and
