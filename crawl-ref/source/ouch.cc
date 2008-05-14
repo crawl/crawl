@@ -84,7 +84,7 @@ static void end_game( scorefile_entry &se );
 static void item_corrode( int itco );
 
 
-/* NOTE: DOES NOT check for hellfire!!! */
+// NOTE: DOES NOT check for hellfire!!!
 int check_your_resists(int hurted, beam_type flavour)
 {
     int resist;
@@ -254,7 +254,7 @@ int check_your_resists(int hurted, beam_type flavour)
 
     default:
         break;
-    }                           /* end switch */
+    }                           // end switch
 
     return (hurted);
 }                               // end check_your_resists()
@@ -601,13 +601,14 @@ void expose_items_to_element(beam_type flavour, int x, int y)
     }
 }
 
-// Handle side-effects for exposure to element other than damage.
-// This function exists because some code calculates its own damage
-// instead of using check_resists and we want to isolate all the special
+// Handle side-effects for exposure to element other than damage.  This
+// function exists because some code calculates its own damage isntead
+// of using check_your_resists() and we want to isolate all the special
 // code they keep having to do... namely condensation shield checks,
-// you really can't expect this function to even be called for much else.
+// you really can't expect this function to even be called for much
+// else.
 //
-// This function now calls _expose_invent_to_element if strength > 0.
+// This function now calls _expose_invent_to_element() if strength > 0.
 //
 // XXX: this function is far from perfect and a work in progress.
 void expose_player_to_element(beam_type flavour, int strength)
