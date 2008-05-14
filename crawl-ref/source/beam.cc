@@ -2817,7 +2817,7 @@ static int _affect_wall(bolt &beam, int x, int y)
             {
                 beogh_idol_revenge();
             }
-            beam.obvious_effect = 1;
+            beam.obvious_effect = true;
         }
 
         return (BEAM_STOP);
@@ -2901,7 +2901,6 @@ static int _affect_place_clouds(bolt &beam, int x, int y)
     return (0);
 }
 
-// following two functions used with explosions:
 static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
 {
     cloud_type cl_type;
