@@ -560,7 +560,7 @@ void expose_items_to_element(beam_type flavour, int x, int y)
                 || (target_class == OBJ_FOOD
                     && mitm[i].base_type == OBJ_CORPSES)))
         {
-            num_dest++;
+            num_dest += mitm[i].quantity;
 
             item_was_destroyed(mitm[i]);
 
