@@ -1690,10 +1690,14 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
             result += draconian_colour_name(mon.base_monster) + " ";
         break;
 
-    case MONS_HYDRA:
-        if (mon.number < 1 || desc == DESC_PLAIN || desc == DESC_DBNAME)
-            break;
+    default:
+        break;
+    }
 
+    // Done here to cover cases of undead versions of hydras.
+    if (nametype == MONS_HYDRA
+        && mon.number > 0 && desc != DESC_PLAIN && desc != DESC_DBNAME)
+    {
         if (mon.number < 11)
         {
             result += (mon.number ==  1) ? "one"   :
@@ -1714,10 +1718,6 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         }
 
         result += "-headed ";
-        break;
-
-    default:
-        break;
     }
 
     // Add the base name.
@@ -1736,10 +1736,10 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     }
 
     // Vowel fix: Change 'a orc' to 'an orc'
-    if ( result.length() >= 3 &&
-         (result[0] == 'a' || result[0] == 'A') &&
-         result[1] == ' ' &&
-         is_vowel(result[2]) )
+    if (result.length() >= 3
+        && (result[0] == 'a' || result[0] == 'A')
+        && result[1] == ' '
+        && is_vowel(result[2]))
     {
         result.insert(1, "n");
     }

@@ -2299,8 +2299,6 @@ bool melee_attack::chop_hydra_head( int dam,
         && dam > 0
         && (dam >= 4 || wpn_brand == SPWPN_VORPAL || coinflip()))
     {
-        def->number--;
-
         const char *verb = NULL;
 
         if (dam_type == DVORP_CLAWING)
@@ -2317,7 +2315,7 @@ bool melee_attack::chop_hydra_head( int dam,
             verb = RANDOM_ELEMENT(slice_verbs);
         }
 
-        if (def->number < 1)
+        if (def->number == 1) // will be zero afterwards
         {
             if (defender_visible)
             {
@@ -2326,6 +2324,7 @@ bool melee_attack::chop_hydra_head( int dam,
                       attacker->conj_verb(verb).c_str(),
                       def_name(DESC_NOCAP_THE).c_str() );
             }
+            def->number--;
 
             coord_def pos = defender->pos();
             bleed_onto_floor(pos.x, pos.y, defender->id(),
@@ -2342,6 +2341,7 @@ bool melee_attack::chop_hydra_head( int dam,
                       attacker->conj_verb(verb).c_str(),
                       def_name(DESC_NOCAP_THE).c_str() );
             }
+            def->number--;
 
             // Only living hydras get to regenerate heads.
             if (defender->holiness() == MH_NATURAL)

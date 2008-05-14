@@ -325,7 +325,7 @@ tile_show_items = !?/%=([)X}+\_.
 ##### 5-b	Notes #################################
 #
 # user_note_prefix=@@@
-# note_items = rod,book,rune
+# note_items = rod,book
 # note_monsters = orb of fire
 # ood_interesting = 8
 # note_hp_percent = 5
