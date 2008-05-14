@@ -102,9 +102,9 @@ static void _attribute_increase();
 // Use this function whenever the player enters (or lands and thus re-enters)
 // a grid.
 //
-// stepped - normal walking moves
+// stepped     - normal walking moves
 // allow_shift - allowed to scramble in any direction out of lava/water
-// force - ignore safety checks, move must happen (traps, lava/water).
+// force       - ignore safety checks, move must happen (traps, lava/water).
 bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                           bool force )
 {
@@ -114,7 +114,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     // assuming that entering the same square means coming from above (levitate)
     const bool from_above = (you.x_pos == x && you.y_pos == y);
     const dungeon_feature_type old_grid = (from_above) ? DNGN_FLOOR
-                                      : grd[you.x_pos][you.y_pos];
+                                            : grd[you.x_pos][you.y_pos];
     const dungeon_feature_type new_grid = grd[x][y];
 
     // really must be clear
@@ -128,7 +128,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     if (cloud != EMPTY_CLOUD)
     {
         const cloud_type ctype = env.cloud[ cloud ].type;
-        // don't prompt if already in a cloud of the same type
+        // Don't prompt if already in a cloud of the same type.
         if (is_damaging_cloud(ctype, false)
             && (env.cgrid[you.x_pos][you.y_pos] == EMPTY_CLOUD
                 || ctype != env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type))
@@ -146,7 +146,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
         }
     }
 
-    // if we're walking along, give a chance to avoid trap
+    // If we're walking along, give a chance to avoid traps.
     if (stepped && !force && !you.confused())
     {
         if (new_grid == DNGN_UNDISCOVERED_TRAP)
@@ -160,6 +160,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 mprf( MSGCH_WARN,
                       "Wait a moment, %s!  Do you really want to step there?",
                       you.your_name );
+
                 if (!you.running.is_any_travel())
                     more();
 
@@ -173,7 +174,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
                 return (false);
             }
-        } // unknown trap
+        }
         else if (new_grid == DNGN_TRAP_MAGICAL
 #ifdef CLUA_BINDINGS
                  || new_grid == DNGN_TRAP_MECHANICAL
@@ -297,8 +298,8 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 #ifdef USE_TILE
     // We could check for this above, but we need to do this post-move
     // to force the merfolk tile to be out of water.
-    if ((!grid_is_water(new_grid) && grid_is_water(old_grid) ||
-        grid_is_water(new_grid) && !grid_is_water(old_grid))
+    if ((!grid_is_water(new_grid) && grid_is_water(old_grid)
+         || grid_is_water(new_grid) && !grid_is_water(old_grid))
         && you.species == SP_MERFOLK)
     {
         TilePlayerRefresh();
@@ -335,12 +336,12 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 set_envmap_obj(you.x_pos, you.y_pos, type);
             }
 
-            // not easy to blink onto a trap without setting it off:
+            // It's not easy to blink onto a trap without setting it off.
             if (!stepped)
                 trap_known = false;
 
             // mechanical traps and shafts cannot be set off if the
-	    // player is flying or levitating
+            // player is flying or levitating
             if (!player_is_airborne()
                 || trap_category( env.trap[id].type ) == DNGN_TRAP_MAGICAL)
             {
@@ -2692,7 +2693,7 @@ int player_sust_abil(bool calc_unid)
 
 int carrying_capacity( burden_state_type bs )
 {
-    int cap = 3500+(you.strength * 100)+(player_is_airborne() ? 1000 : 0);
+    int cap = 3500 + (you.strength * 100) + (player_is_airborne() ? 1000 : 0);
     if ( bs == BS_UNENCUMBERED )
         return (cap * 5) / 6;
     else if ( bs == BS_ENCUMBERED )
@@ -6218,20 +6219,20 @@ flight_type player::flight_mode() const
 
 bool player::permanent_levitation() const
 {
-    return airborne() &&
-        (permanent_flight() ||
-         // Boots of levitation keep you with DUR_LEVITATION >= 2 at
-         // all times. This is so that you can evoke stop-levitation
-         // in order to actually cancel levitation (by setting
-         // DUR_LEVITATION to 1.) Note that antimagic() won't do this.
-         (player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION ) &&
-          you.duration[DUR_LEVITATION] > 1));
+    // Boots of levitation keep you with DUR_LEVITATION >= 2 at
+    // all times. This is so that you can evoke stop-levitation
+    // in order to actually cancel levitation (by setting
+    // DUR_LEVITATION to 1.) Note that antimagic() won't do this.
+    return (airborne()
+            && (permanent_flight()
+                || player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION )
+                   && you.duration[DUR_LEVITATION] > 1));
 }
 
 bool player::permanent_flight() const
 {
-    return airborne() &&
-        (you.species == SP_KENKU && you.experience_level >= 15);
+    return (airborne()
+            && you.species == SP_KENKU && you.experience_level >= 15);
 }
 
 bool player::light_flight() const

@@ -144,7 +144,8 @@ inline bool is_trap(int x, int y)
     return grid_is_trap( grd[x][y] );
 }
 
-// Returns true if this feature takes extra time to cross.
+// Returns an estimate for the time needed to cross this feature.
+// This is done, so traps etc. will usually be circumvented where possible.
 inline int feature_traverse_cost(dungeon_feature_type feature)
 {
     if (feature == DNGN_SHALLOW_WATER || feature == DNGN_CLOSED_DOOR)
@@ -412,9 +413,10 @@ static bool is_reseedable(int x, int y)
 {
     if (is_excluded(coord_def(x, y)))
         return (true);
+
     int grid = grd[x][y];
-    return (grid == DNGN_DEEP_WATER || grid == DNGN_SHALLOW_WATER ||
-            grid == DNGN_LAVA || is_trap(x, y) || is_monster_blocked(x, y));
+    return (grid == DNGN_DEEP_WATER || grid == DNGN_SHALLOW_WATER
+            || grid == DNGN_LAVA || is_trap(x, y) || is_monster_blocked(x, y));
 }
 
 /*
@@ -452,13 +454,12 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
 
     return (is_traversable(grid)
 #ifdef CLUA_BINDINGS
-             ||
-                (is_trap(x, y) &&
-                 clua.callbooleanfn(false, "ch_cross_trap",
-                                    "s", trap_name(x, y)))
+                || (is_trap(x, y)
+                    && clua.callbooleanfn(false, "ch_cross_trap",
+                                          "s", trap_name(x, y)))
 #endif
             )
-        && !is_excluded(coord_def(x, y));
+            && !is_excluded(coord_def(x, y));
 }
 
 // Returns true if the location at (x,y) is monster-free and contains no clouds.
@@ -488,7 +489,9 @@ static bool is_safe_move(int x, int y)
                                "s", trap_name(x, y))
 #endif
         )
+    {
         return (false);
+    }
 
     const int cloud = env.cgrid[x][y];
     if (cloud == EMPTY_CLOUD)
@@ -1691,8 +1694,8 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             // this number, since this square is unsafe for travel.
             point_distance[dc.x][dc.y] =
                 is_exclude_root(dc)   ? PD_EXCLUDED :
-                is_excluded(dc)       ? PD_EXCLUDED_RADIUS :
-                PD_TRAP;
+                is_excluded(dc)       ? PD_EXCLUDED_RADIUS
+                                      : PD_TRAP;
         }
         return (false);
     }

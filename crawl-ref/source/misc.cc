@@ -1160,12 +1160,11 @@ void search_around( bool only_adjacent )
     if ( max_dist < 1 )
         max_dist = 1;
 
-    for ( int srx = you.x_pos - max_dist; srx <= you.x_pos + max_dist; ++srx )
-    {
-        for ( int sry=you.y_pos - max_dist; sry<=you.y_pos + max_dist; ++sry )
+    for (int srx = you.x_pos - max_dist; srx <= you.x_pos + max_dist; ++srx)
+        for (int sry = you.y_pos - max_dist; sry <= you.y_pos + max_dist; ++sry)
         {
             // must have LOS, with no translucent walls in the way.
-            if ( see_grid_no_trans(srx,sry) )
+            if (see_grid_no_trans(srx, sry))
             {
                 // maybe we want distance() instead of grid_distance()?
                 int dist = grid_distance(srx, sry, you.x_pos, you.y_pos);
@@ -1177,16 +1176,15 @@ void search_around( bool only_adjacent )
                 // making this harsher by removing the old +1
                 int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
 
-                if (grd[srx][sry] == DNGN_SECRET_DOOR &&
-                    random2(17) <= effective)
+                if (grd[srx][sry] == DNGN_SECRET_DOOR
+                    && random2(17) <= effective)
                 {
                     reveal_secret_door(srx, sry);
                     mpr("You found a secret door!");
-                    exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
+                    exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
                 }
-
-                if (grd[srx][sry] == DNGN_UNDISCOVERED_TRAP &&
-                    random2(17) <= effective)
+                else if (grd[srx][sry] == DNGN_UNDISCOVERED_TRAP
+                         && random2(17) <= effective)
                 {
                     i = trap_at_xy(srx, sry);
 
@@ -1194,7 +1192,7 @@ void search_around( bool only_adjacent )
                     {
                         grd[srx][sry] = trap_category(env.trap[i].type);
                         mpr("You found a trap!");
-                        exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
+                        exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
                     }
                     else
                     {
@@ -1209,7 +1207,6 @@ void search_around( bool only_adjacent )
                 }
             }
         }
-    }
 
     return;
 }                               // end search_around()
@@ -1441,8 +1438,7 @@ static void climb_message(dungeon_feature_type stair, bool going_up,
         else
         {
             mprf("You %s downwards.", you.flight_mode() == FL_FLY? "fly" :
-                                     (player_is_airborne()? "float" :
-                                      "slide"));
+                                     (player_is_airborne()? "float" : "slide"));
         }
     }
     else
@@ -1471,11 +1467,8 @@ static void set_entry_cause(entry_cause_type default_cause,
 {
     ASSERT(default_cause != NUM_ENTRY_CAUSE_TYPES);
 
-    if (!(old_level_type != you.level_type
-          || you.entry_cause == EC_UNKNOWN))
-    {
+    if (old_level_type == you.level_type && you.entry_cause != EC_UNKNOWN)
         return;
-    }
 
     if (crawl_state.is_god_acting())
     {
@@ -1585,8 +1578,8 @@ void up_stairs(dungeon_feature_type force_stair,
     // check before that one. -- bwr
     if (!player_is_airborne()
         && you.duration[DUR_CONF]
-        && (stair_find >= DNGN_STONE_STAIRS_UP_I
-            && stair_find <= DNGN_STONE_STAIRS_UP_III)
+        && stair_find >= DNGN_STONE_STAIRS_UP_I
+        && stair_find <= DNGN_STONE_STAIRS_UP_III
         && random2(100) > you.dex)
     {
         mpr("In your confused state, you trip and fall back down the stairs.");
@@ -2012,7 +2005,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     {
         std::string lname = make_filename(you.your_name, you.your_level,
                                           you.where_are_you,
-                                          you.level_type, false );
+                                          you.level_type, false);
 #if DEBUG_DIAGNOSTICS
         mprf( MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str() );
 #endif

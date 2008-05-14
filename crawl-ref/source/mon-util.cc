@@ -730,7 +730,7 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
     int mc = mons->type;
     const bool zombified = mons_is_zombified(mons);
 
-    if ((attk_number < 0 || attk_number > 3) || mons->has_hydra_multi_attack())
+    if (attk_number < 0 || attk_number > 3 || mons->has_hydra_multi_attack())
         attk_number = 0;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
@@ -1688,6 +1688,32 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     case MONS_DRACONIAN_SCORCHER:
         if (mon.base_monster != MONS_PROGRAM_BUG) // database search
             result += draconian_colour_name(mon.base_monster) + " ";
+        break;
+
+    case MONS_HYDRA:
+        if (mon.number < 1 || desc == DESC_PLAIN || desc == DESC_DBNAME)
+            break;
+
+        if (mon.number < 11)
+        {
+            result += (mon.number ==  1) ? "one"   :
+                      (mon.number ==  2) ? "two"   :
+                      (mon.number ==  3) ? "three" :
+                      (mon.number ==  4) ? "four"  :
+                      (mon.number ==  5) ? "five"  :
+                      (mon.number ==  6) ? "six"   :
+                      (mon.number ==  7) ? "seven" :
+                      (mon.number ==  8) ? "eight" :
+                      (mon.number ==  9) ? "nine"
+                                         : "ten";
+        }
+        else
+        {
+            snprintf(info, INFO_SIZE, "%d", mon.number);
+            result += info;
+        }
+
+        result += "-headed ";
         break;
 
     default:
@@ -4546,8 +4572,8 @@ void monsters::load_spells(mon_spellbook_type book)
 
 bool monsters::has_hydra_multi_attack() const
 {
-    return (type == MONS_HYDRA ||
-            (mons_is_zombified(this) && base_monster == MONS_HYDRA));
+    return (type == MONS_HYDRA
+            || (mons_is_zombified(this) && base_monster == MONS_HYDRA));
 }
 
 bool monsters::has_ench(enchant_type ench) const

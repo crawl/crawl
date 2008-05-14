@@ -382,7 +382,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
         if (trap_known && one_chance_in(3))
             mpr("You avoid triggering a blade trap.");
         else if (random2limit(player_evasion(), 40)
-                        + (random2(you.dex) / 3) + (trap_known ? 3 : 0) > 8)
+                 + (random2(you.dex) / 3) + (trap_known ? 3 : 0) > 8)
         {
             mpr("A huge blade swings just past you!");
         }
@@ -402,7 +402,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
         else
         {
             if (random2limit(player_evasion(), 40)
-                        + (random2(you.dex) / 3) + (trap_known ? 3 : 0) > 12)
+                + (random2(you.dex) / 3) + (trap_known ? 3 : 0) > 12)
             {
                 mpr("A net drops to the ground!");
             }
@@ -447,13 +447,10 @@ void handle_traps(trap_type trt, int i, bool trap_known)
             return;
         }
 
-        if (!you.do_shaft())
+        if (!you.do_shaft() && !trap_known)
         {
-            if (!trap_known)
-            {
-                grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
-                return;
-            }
+            grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+            return;
         }
 
         break;
@@ -471,7 +468,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
 
     if (!trap_known) // Now you know...
         exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
-}                               // end handle_traps()
+}
 
 void destroy_trap( const coord_def& pos )
 {
@@ -528,8 +525,8 @@ void disarm_trap( struct dist &disa )
             exercise(SK_TRAPS_DOORS, 1 + random2(you.your_level / 5));
         else
         {
-            if (env.trap[i].type == TRAP_NET &&
-                (env.trap[i].x != you.x_pos || env.trap[i].y != you.y_pos))
+            if (env.trap[i].type == TRAP_NET
+                && (env.trap[i].x != you.x_pos || env.trap[i].y != you.y_pos))
             {
                 if (coinflip())
                     return;

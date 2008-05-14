@@ -2071,12 +2071,6 @@ static void describe_monster(const monsters *mon)
     if (player_beheld_by(mon))
         mpr("You are beheld by her song.", MSGCH_EXAMINE);
 
-    // XXX: Not strictly correct if we add any other monster with a
-    // variable number of attacks.
-    if (mon->has_hydra_multi_attack())
-        mprf(MSGCH_EXAMINE, "It has %d head%s.", mon->number,
-             (mon->number > 1? "s" : ""));
-
     print_wounds(mon);
 
     if (!mons_is_mimic(mon->type) && mons_behaviour_perceptible(mon))

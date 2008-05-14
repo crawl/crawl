@@ -54,12 +54,9 @@
 #include "view.h"
 
 static void _adjust_item(void);
-static void adjust_spells(void);
-static void adjust_ability(void);
-static void list_wizard_commands();
-#ifdef OBSOLETE_COMMAND_HELP
-static const char *command_string( int i );
-#endif
+static void _adjust_spells(void);
+static void _adjust_ability(void);
+static void _list_wizard_commands();
 
 static const char *features[] = {
     "Stash-tracking",
@@ -110,9 +107,9 @@ void adjust(void)
     if (keyin == 'i')
         _adjust_item();
     else if (keyin == 's')
-        adjust_spells();
+        _adjust_spells();
     else if (keyin == 'a')
-        adjust_ability();
+        _adjust_ability();
     else if (keyin == ESCAPE)
         canned_msg( MSG_OK );
     else
@@ -189,9 +186,9 @@ static void _adjust_item(void)
     }
 
     swap_inv_slots(from_slot, to_slot, true);
-}                               // end _adjust_item()
+}
 
-static void adjust_spells(void)
+static void _adjust_spells(void)
 {
     if (!you.spell_no)
     {
@@ -262,9 +259,9 @@ static void adjust_spells(void)
 
     if (spell != SPELL_NO_SPELL)
         mprf("%c - %s", input_1, spell_title(spell) );
-}                               // end adjust_spells()
+}                               // end _adjust_spells()
 
-static void adjust_ability(void)
+static void _adjust_ability(void)
 {
     const std::vector<talent> talents = your_talents(false);
 
@@ -362,7 +359,7 @@ static void adjust_ability(void)
     ability_type tmp = you.ability_letter_table[index2];
     you.ability_letter_table[index2] = you.ability_letter_table[index1];
     you.ability_letter_table[index1] = tmp;
-}
+}                               // end _adjust_ability()
 
 void list_armour()
 {
@@ -541,7 +538,7 @@ void list_weapons(void)
     mpr( wstring.c_str(), MSGCH_EQUIPMENT, colour );
 }                               // end list_weapons()
 
-static bool cmdhelp_textfilter(const std::string &tag)
+static bool _cmdhelp_textfilter(const std::string &tag)
 {
 #ifdef WIZARD
     if (tag == "wiz")
@@ -597,8 +594,8 @@ static const char *targeting_help_2 =
 // start of the contents of the file.
 // If auto_hotkeys is true, the function will try to identify
 // sections and add appropriate hotkeys.
-static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
-                                 int first_hotkey, bool auto_hotkeys )
+static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
+                                  int first_hotkey, bool auto_hotkeys )
 {
     bool next_is_hotkey = false;
     bool is_first = true;
@@ -660,7 +657,7 @@ help_file help_files[] = {
     { NULL, 0, false }
 };
 
-static bool compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
+static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
     monster_type *a = static_cast<monster_type*>( entry_a->data );
     monster_type *b = static_cast<monster_type*>( entry_b->data );
@@ -675,7 +672,7 @@ static bool compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 
 // Compare monsters by location-independant level, or by hitdice if
 // levels are equal, or by name if both level and hitdice are equal.
-static bool compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
+static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {
     monster_type *a = static_cast<monster_type*>( entry_a->data );
     monster_type *b = static_cast<monster_type*>( entry_b->data );
@@ -739,9 +736,9 @@ public:
                 return;
 
             if (sort_alpha)
-                std::sort(items.begin(), items.end(), compare_mon_names);
+                std::sort(items.begin(), items.end(), _compare_mon_names);
             else
-                std::sort(items.begin(), items.end(), compare_mon_toughness);
+                std::sort(items.begin(), items.end(), _compare_mon_toughness);
 
             for (unsigned int i = 0, size = items.size(); i < size; i++)
             {
@@ -764,8 +761,8 @@ public:
         }
 };
 
-static std::vector<std::string> get_desc_keys(std::string regex,
-                                              db_find_filter filter)
+static std::vector<std::string> _get_desc_keys(std::string regex,
+                                               db_find_filter filter)
 {
     std::vector<std::string> key_matches = getLongDescKeysByRegex(regex,
                                                                   filter);
@@ -790,14 +787,12 @@ static std::vector<std::string> get_desc_keys(std::string regex,
     std::vector<std::string> all_matches;
     for (unsigned int i = 0, size = tmp.size(); i < size; i++)
         if (i == 0 || all_matches[all_matches.size() - 1] != tmp[i])
-        {
             all_matches.push_back(tmp[i]);
-        }
 
     return (all_matches);
 }
 
-static std::vector<std::string> get_monster_keys(unsigned char showchar)
+static std::vector<std::string> _get_monster_keys(unsigned char showchar)
 {
     std::vector<std::string> mon_keys;
 
@@ -824,7 +819,7 @@ static std::vector<std::string> get_monster_keys(unsigned char showchar)
     return (mon_keys);
 }
 
-static std::vector<std::string> get_god_keys()
+static std::vector<std::string> _get_god_keys()
 {
     std::vector<std::string> names;
 
@@ -838,7 +833,7 @@ static std::vector<std::string> get_god_keys()
     return names;
 }
 
-static std::vector<std::string> get_branch_keys()
+static std::vector<std::string> _get_branch_keys()
 {
     std::vector<std::string> names;
 
@@ -857,30 +852,30 @@ static std::vector<std::string> get_branch_keys()
     return names;
 }
 
-static bool monster_filter(std::string key, std::string body)
+static bool _monster_filter(std::string key, std::string body)
 {
     int mon_num = get_monster_by_name(key.c_str(), true);
     return (mon_num == MONS_PROGRAM_BUG || mons_global_level(mon_num) == 0);
 }
 
-static bool spell_filter(std::string key, std::string body)
+static bool _spell_filter(std::string key, std::string body)
 {
     return (spell_by_name(key) == SPELL_NO_SPELL);
 }
 
-static bool item_filter(std::string key, std::string body)
+static bool _item_filter(std::string key, std::string body)
 {
     return (item_types_by_name(key).base_type == OBJ_UNASSIGNED);
 }
 
-static bool feature_filter(std::string key, std::string body)
+static bool _feature_filter(std::string key, std::string body)
 {
     return (feat_by_desc(key) == DNGN_UNSEEN);
 }
 
 typedef void (*db_keys_recap)(std::vector<std::string>&);
 
-static void recap_mon_keys(std::vector<std::string> &keys)
+static void _recap_mon_keys(std::vector<std::string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
     {
@@ -889,7 +884,7 @@ static void recap_mon_keys(std::vector<std::string> &keys)
     }
 }
 
-static void recap_feat_keys(std::vector<std::string> &keys)
+static void _recap_feat_keys(std::vector<std::string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
     {
@@ -904,7 +899,7 @@ static void recap_feat_keys(std::vector<std::string> &keys)
     }
 }
 
-static bool do_description(std::string key, std::string footer = "")
+static bool _do_description(std::string key, std::string footer = "")
 {
     std::string desc = getLongDescription(key);
 
@@ -974,7 +969,7 @@ static bool do_description(std::string key, std::string footer = "")
     return (true);
 }
 
-static bool find_description(bool &again, std::string& error_inout)
+static bool _find_description(bool &again, std::string& error_inout)
 {
     again = true;
 
@@ -1004,26 +999,26 @@ static bool find_description(bool &again, std::string& error_inout)
     case 'M':
         type       = "monster";
         extra      = "  Enter a single letter to list monsters displayed by "
-            "that symbol.";
-        filter     = monster_filter;
-        recap      = recap_mon_keys;
+                     "that symbol.";
+        filter     = _monster_filter;
+        recap      = _recap_mon_keys;
         doing_mons = true;
         break;
     case 'S':
         type   = "spell";
-        filter = spell_filter;
+        filter = _spell_filter;
         break;
     case 'I':
         type        = "item";
-        extra      = "  Enter a single letter to list items displayed by "
-            "that symbol.";
-        filter      = item_filter;
+        extra       = "  Enter a single letter to list items displayed by "
+                      "that symbol.";
+        filter      = _item_filter;
         doing_items = true;
         break;
     case 'F':
         type   = "feature";
-        filter = feature_filter;
-        recap  = recap_feat_keys;
+        filter = _feature_filter;
+        recap  = _recap_feat_keys;
         break;
     case 'G':
         type       = "god";
@@ -1093,15 +1088,15 @@ static bool find_description(bool &again, std::string& error_inout)
     std::vector<std::string> key_list;
 
     if (by_mon_symbol)
-        key_list = get_monster_keys(regex[0]);
+        key_list = _get_monster_keys(regex[0]);
     else if (by_item_symbol)
         key_list = item_name_list_for_glyph(regex[0]);
     else if (doing_gods)
-        key_list = get_god_keys();
+        key_list = _get_god_keys();
     else if (doing_branches)
-        key_list = get_branch_keys();
+        key_list = _get_branch_keys();
     else
-        key_list = get_desc_keys(regex, filter);
+        key_list = _get_desc_keys(regex, filter);
 
     if (recap != NULL)
         (*recap)(key_list);
@@ -1146,9 +1141,7 @@ static bool find_description(bool &again, std::string& error_inout)
         return (false);
     }
     else if (key_list.size() == 1)
-    {
-        return do_description(key_list[0]);
-    }
+        return _do_description(key_list[0]);
 
     if (exact_match)
     {
@@ -1156,7 +1149,7 @@ static bool find_description(bool &again, std::string& error_inout)
         footer += regex;
         footer += "'.  To see non-exact matches, press space.";
 
-        if (!do_description(regex, footer))
+        if (!_do_description(regex, footer))
         {
             DEBUGSTR("do_description() returned false for exact_match");
             return (false);
@@ -1234,16 +1227,18 @@ static bool find_description(bool &again, std::string& error_inout)
             else
                 key = *((std::string*) sel[0]->data);
 
-            if (do_description(key))
+            if (_do_description(key))
+            {
                 if ( getch() == 0 )
                     getch();
+            }
         }
     }
 
     return (false);
 }
 
-static int keyhelp_keyfilter(int ch)
+static int _keyhelp_keyfilter(int ch)
 {
     switch (ch)
     {
@@ -1263,7 +1258,7 @@ static int keyhelp_keyfilter(int ch)
         do
         {
             // resets 'again'
-            if (find_description(again, error) && getch() == 0 )
+            if (_find_description(again, error) && getch() == 0 )
                 getch();
 
             if (again)
@@ -1320,9 +1315,9 @@ std::string help_highlighter::get_species_key() const
 }
 ////////////////////////////////////////////////////////////////////////////
 
-static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
-                              bool with_manual, bool easy_exit = false,
-                              int hotkey = 0)
+static void _show_keyhelp_menu(const std::vector<formatted_string> &lines,
+                               bool with_manual, bool easy_exit = false,
+                               int hotkey = 0)
 {
     formatted_scroller cmd_help;
 
@@ -1342,7 +1337,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
     if ( with_manual )
     {
         cmd_help.set_highlighter(new help_highlighter);
-        cmd_help.f_keyfilter = keyhelp_keyfilter;
+        cmd_help.f_keyfilter = _keyhelp_keyfilter;
         column_composer cols(2, 40);
 
         cols.add_formatted(
@@ -1366,7 +1361,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
 #endif
             "<w>V</w>: Version information\n"
             "<w>Home</w>: This screen\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
         cols.add_formatted(
             1,
@@ -1392,7 +1387,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>4</w>.      Keys and Commands\n"
             "<w>5</w>.      List of Enchantments\n"
             "<w>6</w>.      Inscriptions\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
         std::vector<formatted_string> blines = cols.formatted_lines();
         unsigned i;
@@ -1424,8 +1419,8 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             cmd_help.add_item_string("");
 
             // and the file itself
-            add_file_to_scroller(fp, cmd_help, help_files[i].hotkey,
-                                 help_files[i].auto_hotkey);
+            _add_file_to_scroller(fp, cmd_help, help_files[i].hotkey,
+                                  help_files[i].auto_hotkey);
 
             // done with this file
             fclose(fp);
@@ -1443,10 +1438,12 @@ void show_specific_help( const std::string &help )
     std::vector<std::string> lines = split_string("\n", help, false, true);
     std::vector<formatted_string> formatted_lines;
     for (int i = 0, size = lines.size(); i < size; ++i)
+    {
         formatted_lines.push_back(
             formatted_string::parse_string(
-                lines[i], true, cmdhelp_textfilter));
-    show_keyhelp_menu(formatted_lines, false, true);
+                lines[i], true, _cmdhelp_textfilter));
+    }
+    _show_keyhelp_menu(formatted_lines, false, true);
 }
 
 void show_levelmap_help()
@@ -1462,7 +1459,7 @@ void show_targeting_help()
 
     cols.add_formatted(0, targeting_help_1, true, true);
     cols.add_formatted(1, targeting_help_2, true, true);
-    show_keyhelp_menu(cols.formatted_lines(), false, true);
+    _show_keyhelp_menu(cols.formatted_lines(), false, true);
 }
 
 void show_interlevel_travel_branch_help()
@@ -1480,7 +1477,7 @@ void show_stash_search_help()
     show_specific_help( getHelpString("stash-search.prompt") );
 }
 
-static void add_formatted_keyhelp(column_composer &cols)
+static void _add_formatted_keyhelp(column_composer &cols)
 {
     cols.add_formatted(
             0,
@@ -1494,7 +1491,7 @@ static void add_formatted_keyhelp(column_composer &cols)
                      "      <w>h</w>-<w>.</w>-<w>l</w>\n"
             "                  /|\\        /|\\\n"
             "                 <w>7 8 9      b j n\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
@@ -1504,7 +1501,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>5</w> : rest and long search; stops when\n"
             "    HP or Magic full, something found \n"
             "    or 100 turns over (<w>Shift-numpad-5</w>)\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
@@ -1516,7 +1513,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
             "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : open/close door, \n"
             "         untrap, attack without move\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
@@ -1537,7 +1534,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<lightmagenta>0</lightmagenta> : the Orb of Zot (Carry the Orb \n"
             "    to the surface and win!)\n"
             "<yellow>$</yellow> : gold\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
@@ -1548,7 +1545,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>t</w> : tell allies (<w>tt</w> to shout)\n"
             "<w>`</w> : re-do previous command\n"
             "<w>0</w> : repeat next command # of times\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
@@ -1563,7 +1560,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>=</w> : reassign inventory/spell letters\n"
             "<w>_</w> : read messages (online play only)"
             " \n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -1571,7 +1568,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>S</w> : Save game and exit \n"
             "<w>Q</w> : Quit without saving\n"
             "<w>Ctrl-X</w> : save game without query\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -1586,7 +1583,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>)</w> : display current weapons\n"
             "<w>\"</w> : display worn jewellery\n"
             "<w>E</w> : display experience info\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -1599,7 +1596,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>Ctrl-O</w> : show dungeon Overview\n"
             "<w>Ctrl-A</w> : toggle auto-pickup\n"
             "<w>Ctrl-T</w> : toggle ally pickup behaviour\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -1619,7 +1616,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>v</w> : evoke power of wielded item\n"
             "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
             "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -1630,7 +1627,7 @@ static void add_formatted_keyhelp(column_composer &cols)
             "<w>d#</w>: Drop exact number of items \n"
             "<w>c</w> : Chop up a corpse \n"
             "<w>e</w> : Eat food from floor \n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -1639,10 +1636,10 @@ static void add_formatted_keyhelp(column_composer &cols)
             "help, among them <w>X</w>, <w>x</w>, <w>f</w> (or any \n"
             "form of targeting), <w>Ctrl-F</w> and <w>Ctrl-G</w>."
             "\n",
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 }
 
-static void add_formatted_tutorial_help(column_composer &cols)
+static void _add_formatted_tutorial_help(column_composer &cols)
 {
     unsigned ch;
     unsigned short colour;
@@ -1682,7 +1679,7 @@ static void add_formatted_tutorial_help(column_composer &cols)
 
     cols.add_formatted(
             0, text.str(),
-            true, true, cmdhelp_textfilter);
+            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -1705,14 +1702,14 @@ static void add_formatted_tutorial_help(column_composer &cols)
             "If the previous target is still alive\n"
             "and in sight, one of <w>f</w> or <w>p</w> fires at it\n"
             "again (without selecting anything).\n",
-            true, true, cmdhelp_textfilter, 40);
+            true, true, _cmdhelp_textfilter, 40);
 }
 
 void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
 {
     if (wizard)
     {
-        list_wizard_commands();
+        _list_wizard_commands();
 
         if (do_redraw_screen)
             redraw_screen();
@@ -1727,11 +1724,11 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
     cols.set_pagesize(get_number_of_lines() - 1);
 
     if (Options.tutorial_left)
-        add_formatted_tutorial_help(cols);
+        _add_formatted_tutorial_help(cols);
     else
-        add_formatted_keyhelp(cols);
+        _add_formatted_keyhelp(cols);
 
-    show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
+    _show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
 
     if (do_redraw_screen)
     {
@@ -1740,7 +1737,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
     }
 }
 
-static void list_wizard_commands()
+static void _list_wizard_commands()
 {
 #ifdef WIZARD
     // 2 columns
@@ -1803,6 +1800,7 @@ static void list_wizard_commands()
                        "@      : set Str Int Dex\n"
                        "\\      : make a shop\n",
                        true, true);
-    show_keyhelp_menu(cols.formatted_lines(), false, true);
+
+    _show_keyhelp_menu(cols.formatted_lines(), false, true);
 #endif
 }

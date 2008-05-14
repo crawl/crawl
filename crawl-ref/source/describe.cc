@@ -512,19 +512,20 @@ int str_to_trap(const std::string &s)
 {
     ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
 
+    // allow a couple of synonyms
     if (s == "random" || s == "any")
         return (TRAP_RANDOM);
     else if (s == "suitable")
         return (TRAP_INDEPTH);
-    else if (s == "nonteleport" || s == "noteleport" || s == "nontele"
-             || s == "notele")
+    else if (s == "nonteleport" || s == "noteleport"
+             || s == "nontele" || s == "notele")
+    {
         return (TRAP_NONTELEPORT);
+    }
 
     for (int i = 0; i < NUM_TRAPS; ++i)
-    {
         if (trap_names[i] == s)
             return (i);
-    }
 
     return (-1);
 }

@@ -650,7 +650,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
-                mgen_data( summon_any_demon(DEMON_LESSER), 
+                mgen_data( summon_any_demon(DEMON_LESSER),
                            SAME_ATTITUDE(monster),
                            duration, monster->pos(),
                            monster->foe ));
@@ -692,7 +692,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (int i = 0; i < sumcount2; ++i)
         {
             create_monster(
-                mgen_data(MONS_WANDERING_MUSHROOM, 
+                mgen_data(MONS_WANDERING_MUSHROOM,
                           SAME_ATTITUDE(monster),
                           duration,
                           monster->pos(),
@@ -735,10 +735,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
-                mgen_data(summon_any_demon(DEMON_GREATER), 
+                mgen_data(summon_any_demon(DEMON_GREATER),
                           SAME_ATTITUDE(monster),
                           duration,
-                          monster->pos(), 
+                          monster->pos(),
                           monster->foe));
         }
         return;
@@ -1114,21 +1114,24 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         break;
     }
 
-    pbolt.range = 4;
-    pbolt.rangeMax = 13;
-    pbolt.damage = dice_def( 3, (monster->hit_dice * 2) );
+    pbolt.range       = 4;
+    pbolt.rangeMax    = 13;
+    pbolt.damage      = dice_def( 3, (monster->hit_dice * 2) );
     pbolt.damage.size = scaling * pbolt.damage.size / 100;
-    pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-    pbolt.hit = 30;
+    pbolt.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+    pbolt.hit         = 30;
     pbolt.beam_source = monster_index(monster);
-    pbolt.thrower = KILL_MON;
-    pbolt.is_beam = true;
+    pbolt.thrower     = KILL_MON;
+    pbolt.is_beam     = true;
 
-    // accuracy is halved if the dragon is attacking a target that's
-    // wielding a weapon of dragon slaying (which makes the
-    // dragon/draconian avoid looking at the foe).
-    if ((mons_genus(monster->type) == MONS_DRAGON
-         || mons_genus(monster->type) == MONS_DRACONIAN))
+    // Accuracy is lowered by one quarter if the dragon is attacking a
+    // a target thatis wielding a weapon of dragon slaying (which
+    // makes the dragon/draconian avoid looking at the foe).
+    // FIXME: This effect is not yet implemented for player draconians
+    // or characters in dragon form breathing at monsters wielding a
+    // weapon with this brand.
+    if (mons_genus(monster->type) == MONS_DRAGON
+        || mons_genus(monster->type) == MONS_DRACONIAN)
     {
         if (actor *foe = monster->get_foe())
         {
@@ -1138,7 +1141,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
                 {
                     pbolt.hit *= 3;
                     pbolt.hit /= 4;
-		}
+                }
             }
         }
     }
@@ -1150,7 +1153,7 @@ void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
     pbolt.rangeMax = 9;
     pbolt.beam_source = monster_index(monster);
 
-    pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
+    pbolt.type    = dchar_glyph(DCHAR_FIRED_MISSILE);
     pbolt.flavour = BEAM_MISSILE;
     pbolt.thrower = KILL_MON_MISSILE;
     pbolt.aux_source.clear();

@@ -1448,6 +1448,8 @@ static void _got_item(item_def& item, int quant)
     }
 
     item.flags |= ISFLAG_BEEN_IN_INV;
+    take_note(Note(NOTE_FOUND_ORB_OR_RUNE, 0, 0,
+                   item.name(DESC_NOCAP_A).c_str()));
 }
 
 // Returns quantity of items moved into player's inventory and -1 if
@@ -1607,6 +1609,10 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     if (item.base_type == OBJ_ORBS
         && you.char_direction == GDT_DESCENDING)
     {
+        // Take a note!
+        take_note(Note(NOTE_FOUND_ORB_OR_RUNE, 0, 0,
+                       item.name(DESC_NOCAP_A).c_str()));
+
         if (!quiet)
             mpr("Now all you have to do is get back out of the dungeon!");
         you.char_direction = GDT_ASCENDING;
