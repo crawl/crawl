@@ -807,7 +807,7 @@ int cast_revitalisation(int pow)
     {
         step = 0;
         step_max = std::min(pow, step_max_chain);
-        type = random2(type_max_chain * 3 / 2);
+        type = random2(type_max_chain + 1);
         hp_amt = 3;
         mp_amt = 1;
         need_chain = false;
@@ -835,7 +835,7 @@ int cast_revitalisation(int pow)
             step = 1;
             // Deliberate fall through.
 
-            if (step == step_max)
+            if (step >= step_max)
                 break;
 
         // Remove sickness and rotting.
@@ -852,7 +852,7 @@ int cast_revitalisation(int pow)
             step = 2;
             // Deliberate fall through.
 
-            if (step == step_max)
+            if (step >= step_max)
                 break;
 
         // Restore rotted HP.
@@ -868,7 +868,7 @@ int cast_revitalisation(int pow)
             step = 3;
             // Deliberate fall through.
 
-            if (step == step_max)
+            if (step >= step_max)
                 break;
 
         // Divine robustness.
@@ -970,6 +970,9 @@ int cast_revitalisation(int pow)
             step = 3;
             // Deliberate fall through.
 
+            if (step >= step_max)
+                break;
+
         // Divine stamina.
         case 3:
         case 4:
@@ -1000,6 +1003,9 @@ int cast_revitalisation(int pow)
                 break;
             }
 
+            step = 6;
+            // Deliberate fall through.
+
         default:
             break;
         }
@@ -1017,6 +1023,12 @@ int cast_revitalisation(int pow)
         // Do nothing.
         break;
     }
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "revitalising: step = %d, type = %d, step_max = %d",
+         step, type, step_max);
+#endif
 
     // If revitalisation has succeeded, display an appropriate message.
     if (success)
@@ -1048,7 +1060,7 @@ int cast_revitalisation(int pow)
     // If revitalisation has succeeded, it hasn't succeeded as far
     // as possible, and revitalisation chaining is needed, turn on
     // revitalisation chaining for several turns.
-    if (success && step != step_max && need_chain)
+    if (success && step < step_max && need_chain)
         revitalisation_chain(6);
     // Otherwise, turn off revitalisation chaining.
     else
