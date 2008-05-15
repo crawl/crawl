@@ -2828,10 +2828,6 @@ void melee_attack::player_stab_check()
     if (defender->cannot_fight())
         stab_attempt = false;
 
-    // see if we need to roll against dexterity / stabbing
-    if (stab_attempt && roll_needed)
-        stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
-
     // check for invisibility - no stabs on invisible monsters.
     if (!player_monster_visible( def ))
     {
@@ -2860,6 +2856,10 @@ void melee_attack::player_stab_check()
             cancel_attack = true;
         }
     }
+
+    // see if we need to roll against dexterity / stabbing
+    if (stab_attempt && roll_needed)
+        stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
 }
 
 void melee_attack::player_apply_attack_delay()
