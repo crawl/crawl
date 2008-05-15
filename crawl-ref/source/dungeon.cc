@@ -203,7 +203,7 @@ static void _big_room(int level_number);
 static void _chequerboard(spec_room &sr, dungeon_feature_type target,
                           dungeon_feature_type floor1,
                           dungeon_feature_type floor2);
-static void _roguey_level(int level_number, spec_room &sr);
+static void _roguey_level(int level_number, spec_room &sr, bool make_stairs);
 static void _morgue(spec_room &sr);
 static void _beehive(spec_room &sr);
 static void _jelly_pit(int level_number, spec_room &sr);
@@ -2083,8 +2083,6 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
     UNUSED( level_type );
 
     bool skipped = false;
-    bool done_city = false;
-
     int vault = _dgn_random_map_for_place(false);
 
     // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
@@ -2155,9 +2153,16 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
     //V was 3
     if (!skipped && one_chance_in(7))
     {
+        // Sometimes do just a rogue level, sometimes override with
+        // the basic builder for something more interesting.
+        bool just_roguey = coinflip();
+
         // sometimes roguey_levels generate a special room
-        _roguey_level(level_number, sr);
+        _roguey_level(level_number, sr, just_roguey);
         minivault_chance = 4;
+
+        if (just_roguey)
+            return BUILD_SKIP;
     }
     else
     {
@@ -2167,13 +2172,14 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
                 _city_level(level_number);
             else
                 _plan_main(level_number, 4);
-            done_city = true;
+
+            return BUILD_SKIP;
         }
     }
 
     // maybe create a special room, if roguey_level hasn't done it
     // already.
-    if (!sr.created && level_number > 5 && !done_city && one_chance_in(5))
+    if (!sr.created && level_number > 5 && one_chance_in(5))
         _special_room(level_number, sr);
 
     return BUILD_CONTINUE;
@@ -6748,7 +6754,7 @@ static void _city_level(int level_number)
             }
         }
 
-    int stair_count = coinflip() ? 2 : 1;
+    int stair_count = coinflip() ? 4 : 3;
 
     for (j = 0; j < stair_count; j++)
         for (i = 0; i < 2; i++)
@@ -6977,7 +6983,7 @@ static void _chequerboard( spec_room &sr, dungeon_feature_type target,
         }
 }                               // end chequerboard()
 
-static void _roguey_level(int level_number, spec_room &sr)
+static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
 {
     int bcount_x, bcount_y;
     int cn = 0;
@@ -7149,7 +7155,10 @@ static void _roguey_level(int level_number, spec_room &sr)
                       DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
     }
 
-    int stair_count = coinflip() ? 2 : 1;
+    if (!make_stairs)
+        return;
+
+    int stair_count = coinflip() ? 4 : 3;
 
     for (int j = 0; j < stair_count; j++)
         for (i = 0; i < 2; i++)
