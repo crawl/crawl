@@ -789,6 +789,26 @@ void reduce_revitalisation_chain(int amount)
     }
 }
 
+void remove_divine_robustness()
+{
+    mpr("Your divine robustness is withdrawn.");
+    you.duration[DUR_DIVINE_ROBUSTNESS] = 0;
+    you.attribute[ATTR_DIVINE_ROBUSTNESS] = 0;
+    calc_hp();
+}
+
+void remove_divine_stamina()
+{
+    mpr("Your divine stamina fades.", MSGCH_DURATION);
+    modify_stat(STAT_STRENGTH, -you.attribute[ATTR_DIVINE_STAMINA],
+                true, "Zin's divine stamina running out");
+    modify_stat(STAT_INTELLIGENCE, -you.attribute[ATTR_DIVINE_STAMINA],
+                true, "Zin's divine stamina running out");
+    modify_stat(STAT_DEXTERITY, -you.attribute[ATTR_DIVINE_STAMINA],
+                true, "Zin's divine stamina running out");
+    you.attribute[ATTR_DIVINE_STAMINA] = 0;
+}
+
 int cast_revitalisation(int pow)
 {
     const int step_max_chain = 6;

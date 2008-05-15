@@ -57,6 +57,8 @@ int cast_healing(int pow, int target_x = -1, int target_y = -1);
 
 void revitalisation_chain(int amount);
 void reduce_revitalisation_chain(int amount);
+void remove_divine_robustness();
+void remove_divine_stamina();
 int cast_revitalisation(int pow);
 
 // last updated 24may2000 {dlb}

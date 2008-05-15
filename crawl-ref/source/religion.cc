@@ -475,7 +475,8 @@ static void _inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
-        // neither does Zin's revitalisation chaining or divine robustness
+        // neither does Zin's revitalisation chaining, divine
+        // robustness, or divine stamina
         else if (god == GOD_ZIN)
         {
             if (you.duration[DUR_REVITALISATION_CHAIN])
@@ -485,12 +486,10 @@ static void _inc_penance(god_type god, int val)
             }
 
             if (you.duration[DUR_DIVINE_ROBUSTNESS])
-            {
-                mpr("Your divine robustness is withdrawn.");
-                you.duration[DUR_DIVINE_ROBUSTNESS] = 0;
-                you.duration[DUR_REVITALISATION_CHAIN] = 0;
-                calc_hp();
-            }
+                remove_divine_robustness();
+
+            if (you.duration[DUR_DIVINE_STAMINA])
+                remove_divine_stamina();
         }
         // neither does TSO's halo or divine shield
         else if (god == GOD_SHINING_ONE)
@@ -499,12 +498,7 @@ static void _inc_penance(god_type god, int val)
                 mpr("Your divine halo fades away.");
 
             if (you.duration[DUR_DIVINE_SHIELD])
-            {
-                mpr("Your divine shield disappears!");
-                you.duration[DUR_DIVINE_SHIELD] = 0;
-                you.attribute[ATTR_DIVINE_SHIELD] = 0;
-                you.redraw_armour_class = true;
-            }
+                remove_divine_shield();
 
             _make_god_gifts_disappear(true); // only on level
         }
@@ -4344,12 +4338,7 @@ void excommunication(god_type new_god)
             mpr("Your divine halo fades away.");
 
         if (you.duration[DUR_DIVINE_SHIELD])
-        {
-            mpr("Your divine shield disappears!");
-            you.duration[DUR_DIVINE_SHIELD] = 0;
-            you.attribute[ATTR_DIVINE_SHIELD] = 0;
-            you.redraw_armour_class = true;
-        }
+            remove_divine_shield();
 
         if (!is_good_god(new_god))
             _make_god_gifts_hostile(false);
@@ -4367,12 +4356,10 @@ void excommunication(god_type new_god)
         }
 
         if (you.duration[DUR_DIVINE_ROBUSTNESS])
-        {
-            mpr("Your divine robustness is withdrawn.");
-            you.attribute[ATTR_DIVINE_ROBUSTNESS] = 0;
-            you.duration[DUR_DIVINE_ROBUSTNESS] = 0;
-            calc_hp();
-        }
+            remove_divine_robustness();
+
+        if (you.duration[DUR_DIVINE_STAMINA])
+            remove_divine_stamina();
 
         if (env.sanctuary_time)
             remove_sanctuary();

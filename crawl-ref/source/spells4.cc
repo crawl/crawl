@@ -2680,6 +2680,14 @@ void cast_condensation_shield(int pow)
     return;
 }                               // end cast_condensation_shield()
 
+void remove_divine_shield()
+{
+    mpr("Your divine shield disappears!");
+    you.duration[DUR_DIVINE_SHIELD] = 0;
+    you.attribute[ATTR_DIVINE_SHIELD] = 0;
+    you.redraw_armour_class = true;
+}
+
 // shield bonus = attribute for duration turns, then decreasing by 1
 //                every two out of three turns
 // overall shield duration = duration + attribute

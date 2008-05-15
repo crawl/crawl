@@ -3066,23 +3066,10 @@ static void _decrement_durations()
     reduce_revitalisation_chain(1);
 
     if (_decrement_a_duration(DUR_DIVINE_ROBUSTNESS))
-    {
-        mpr("Your divine robustness fades.", MSGCH_DURATION);
-        you.attribute[ATTR_DIVINE_ROBUSTNESS] = 0;
-        calc_hp();
-    }
+        remove_divine_robustness();
 
     if (_decrement_a_duration(DUR_DIVINE_STAMINA))
-    {
-        mpr("Your divine stamina fades.", MSGCH_DURATION);
-        modify_stat(STAT_STRENGTH, -you.attribute[ATTR_DIVINE_STAMINA],
-                    true, "Zin's divine stamina running out");
-        modify_stat(STAT_INTELLIGENCE, -you.attribute[ATTR_DIVINE_STAMINA],
-                    true, "Zin's divine stamina running out");
-        modify_stat(STAT_DEXTERITY, -you.attribute[ATTR_DIVINE_STAMINA],
-                    true, "Zin's divine stamina running out");
-        you.attribute[ATTR_DIVINE_STAMINA] = 0;
-    }
+        remove_divine_stamina();
 }
 
 static void _check_banished()
