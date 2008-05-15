@@ -286,11 +286,11 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
 
     delay_queue_item delay;
 
-    delay.type = type;
+    delay.type     = type;
     delay.duration = turns;
-    delay.parm1 = parm1;
-    delay.parm2 = parm2;
-    delay.started = false;
+    delay.parm1    = parm1;
+    delay.parm2    = parm2;
+    delay.started  = false;
 
     // Handle zero-turn delays (possible with butchering).
     if (turns == 0)
@@ -307,7 +307,7 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
 void stop_delay( bool stop_stair_travel )
 /*********************/
 {
-    if ( you.delay_queue.empty() )
+    if (you.delay_queue.empty())
         return;
 
     delay_queue_item delay = you.delay_queue.front();
@@ -315,9 +315,10 @@ void stop_delay( bool stop_stair_travel )
     ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
 
     const bool butcher_swap_warn =
-        (delay.type == DELAY_BUTCHER
-         && you.delay_queue.size() >= 2
-         && you.delay_queue[1].type == DELAY_WEAPON_SWAP);
+                          ((delay.type == DELAY_BUTCHER
+                              || delay.type == DELAY_OFFER_CORPSE)
+                           && you.delay_queue.size() >= 2
+                           && you.delay_queue[1].type == DELAY_WEAPON_SWAP);
 
     const int butcher_swap_weapon =
         butcher_swap_warn? you.delay_queue[1].parm1 : -10;
@@ -334,20 +335,25 @@ void stop_delay( bool stop_stair_travel )
     {
     case DELAY_BUTCHER:
         // Corpse keeps track of work in plus2 field, see handle_delay() -- bwr
+        // FIXME: Also print this message for interruptions in chained
+        //        butchery/sacrifice session.
         if (butcher_swap_warn)
         {
             std::string weapon;
             if (butcher_swap_weapon == -1)
                 weapon = "unarmed combat";
             else
+            {
                 weapon = "your " +
                     you.inv[butcher_swap_weapon].name(DESC_BASENAME);
+            }
             mprf(MSGCH_WARN, "You stop butchering the corpse; not switching "
                  "back to %s.",
                  weapon.c_str());
         }
         else
             mpr( "You stop butchering the corpse." );
+
         pop_delay();
         break;
 
@@ -462,10 +468,17 @@ void stop_delay( bool stop_stair_travel )
          }
          break;
 
+    case DELAY_OFFER_CORPSE:      // one turn
+#ifdef DEBUG_DIAGNOSTICS
+        mpr("Stop sacrificing.");
+#endif
+        pop_delay();
+        break;
+
     case DELAY_WEAPON_SWAP:       // one turn... too much trouble
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
-    case DELAY_UNINTERRUPTIBLE:   // never stoppable
     case DELAY_JEWELLERY_ON:      // one turn
+    case DELAY_UNINTERRUPTIBLE:   // never stoppable
     default:
         break;
     }
@@ -476,8 +489,11 @@ void stop_delay( bool stop_stair_travel )
 
 void stop_butcher_delay()
 {
-    if (current_delay_action() == DELAY_BUTCHER)
+    if (current_delay_action() == DELAY_BUTCHER
+        || current_delay_action() == DELAY_OFFER_CORPSE)
+    {
         stop_delay();
+    }
 }
 
 bool you_are_delayed( void )
@@ -588,9 +604,9 @@ void handle_delay( void )
 
     delay_queue_item &delay = you.delay_queue.front();
 
-    if ( !delay.started )
+    if (!delay.started)
     {
-        switch ( delay.type )
+        switch (delay.type)
         {
         case DELAY_ARMOUR_ON:
             mpr("You start putting on your armour.", MSGCH_MULTITURN_ACTION);
@@ -599,9 +615,16 @@ void handle_delay( void )
             mpr("You start removing your armour.", MSGCH_MULTITURN_ACTION);
             break;
         case DELAY_BUTCHER:
-            mprf(MSGCH_MULTITURN_ACTION, "You start %s the corpse.",
-                 can_bottle_blood_from_corpse(mitm[delay.parm1].plus)?
-                  "bottling blood from" : "butchering");
+            mprf(MSGCH_MULTITURN_ACTION, "You start %s the %s.",
+                 can_bottle_blood_from_corpse(mitm[delay.parm1].plus) ?
+                 "bottling blood from" : "butchering",
+                 mitm[delay.parm1].name(DESC_PLAIN).c_str());
+
+            if (you.duration[DUR_PRAYER]
+                && god_hates_butchery(you.religion))
+            {
+                did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
+            }
             break;
         case DELAY_MEMORISE:
             mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
@@ -649,14 +672,14 @@ void handle_delay( void )
 
     // First check cases where delay may no longer be valid:
     // XXX: need to handle passwall when monster digs -- bwr
-    if (delay.type == DELAY_BUTCHER)
+    if (delay.type == DELAY_BUTCHER || delay.type == DELAY_OFFER_CORPSE)
     {
         // A monster may have raised the corpse you're chopping up! -- bwr
         // Note that a monster could have raised the corpse and another
         // monster could die and create a corpse with the same ID number...
         // However, it would not be at the player's square like the
         // original and that's why we do it this way.
-        if (is_valid_item( mitm[ delay.parm1 ] )
+        if (is_valid_item(mitm[ delay.parm1 ])
             && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
             && mitm[ delay.parm1 ].x == you.x_pos
             && mitm[ delay.parm1 ].y == you.y_pos )
@@ -664,19 +687,41 @@ void handle_delay( void )
             if (mitm[ delay.parm1 ].sub_type == CORPSE_SKELETON)
             {
                 mpr("The corpse rots away into a skeleton!");
-                if (player_mutation_level(MUT_SAPROVOROUS) == 3)
-                    xom_check_corpse_waste();
+                if (delay.type == DELAY_BUTCHER)
+                {
+                    if (player_mutation_level(MUT_SAPROVOROUS) == 3)
+                        xom_check_corpse_waste();
+                    else
+                        xom_is_stimulated(32);
+                    delay.duration = 0;
+                }
                 else
-                    xom_is_stimulated(32);
-                delay.duration = 0;
+                {
+                    // don't attempt to offer a skeleton
+                    pop_delay();
+
+                    // Chain onto the next delay.
+                    handle_delay();
+                    return;
+                }
             }
             else
             {
-                // special < 100 is the rottenness check
-                if ( (mitm[delay.parm1].special < 100) &&
-                     (delay.parm2 >= 100) )
+                // Only give the rotting message if the corpse wasn't
+                // previously rotten. (special < 100 is the rottenness check)
+                if (food_is_rotten(mitm[delay.parm1]) && delay.parm2 >= 100)
                 {
                     mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
+                    if (delay.type == DELAY_OFFER_CORPSE)
+                    {
+                        // don't attempt to offer a rotten corpse
+                        pop_delay();
+
+                        // Chain onto the next delay.
+                        handle_delay();
+                        return;
+                    }
+
                     delay.parm2 = 99; // don't give the message twice
 
                     if (you.is_undead != US_UNDEAD
@@ -697,6 +742,16 @@ void handle_delay( void )
                 mitm[ delay.parm1 ].plus2++;
             }
         }
+        else if (delay.type == DELAY_OFFER_CORPSE)
+        {
+            mprf("Corpse %d no longer valid!", delay.parm1);
+            // don't attempt to offer an invalid item
+            pop_delay();
+
+            // Chain onto the next delay.
+            handle_delay();
+            return;
+        }
         else
         {
             // corpse is no longer valid! End the butchering normally
@@ -704,8 +759,14 @@ void handle_delay( void )
             // back to their main weapon if necessary.
             delay.duration = 0;
         }
+
+        if (delay.type == DELAY_OFFER_CORPSE && !you.duration[DUR_PRAYER]
+            && do_autopray())
+        {
+            return;
+        }
     }
-    if ( delay.type == DELAY_MULTIDROP )
+    else if (delay.type == DELAY_MULTIDROP)
     {
         // Throw away invalid items; items usually go invalid because
         // of chunks rotting away.
@@ -713,7 +774,9 @@ void handle_delay( void )
                // Don't look for gold in inventory
                && items_for_multidrop[0].slot != PROMPT_GOT_SPECIAL
                && !is_valid_item(you.inv[ items_for_multidrop[0].slot ]))
+        {
             items_for_multidrop.erase( items_for_multidrop.begin() );
+        }
 
         if ( items_for_multidrop.empty() )
         {
@@ -722,10 +785,8 @@ void handle_delay( void )
             return;
         }
     }
-
-    if ( delay.type == DELAY_RECITE)
+    else if (delay.type == DELAY_RECITE)
     {
-
         if (check_recital_audience() < 1 // maybe you've lost your audience
             || Options.hp_warning && you.hp*Options.hp_warning <= you.hp_max
                && delay.parm2*Options.hp_warning > you.hp_max
@@ -796,7 +857,7 @@ void handle_delay( void )
                 mpr("This corpse has started to rot.", MSGCH_ROTTEN_MEAT);
                 xom_check_corpse_waste();
                 stop_delay();
-                break;
+                return;
             }
             mprf(MSGCH_MULTITURN_ACTION, "You continue drinking.");
             vampire_nutrition_per_turn(corpse, 0);
@@ -990,17 +1051,22 @@ static void finish_delay(const delay_queue_item &delay)
             }
             else
             {
-                mprf("You finish %s the corpse into pieces.",
+                mprf("You finish %s the %s into pieces.",
                      (you.has_usable_claws()
-                      || player_mutation_level(MUT_FANGS) == 3) ?
-                     "ripping" : "chopping");
+                      || player_mutation_level(MUT_FANGS) == 3) ? "ripping"
+                                                                : "chopping",
+                     mitm[delay.parm1].name(DESC_PLAIN).c_str());
 
                 if (is_good_god(you.religion) && is_player_same_species(item.plus))
+                {
                     simple_god_message(" expects more respect for your departed "
                                        "relatives.");
+                }
                 else if (you.religion == GOD_ZIN && mons_intel(item.plus) >= I_NORMAL)
+                {
                     simple_god_message(" expects more respect for this departed "
                                        "soul.");
+                }
 
                 if (you.species == SP_VAMPIRE && you.experience_level < 6
                     && mons_has_blood(item.plus)
@@ -1029,6 +1095,17 @@ static void finish_delay(const delay_queue_item &delay)
         break;
     }
 
+    case DELAY_OFFER_CORPSE:
+    {
+        if (!you.duration[DUR_PRAYER] && !do_autopray())
+        {
+            stop_delay();
+            return;
+        }
+
+        offer_corpse(delay.parm1);
+        break;
+    }
     case DELAY_DROP_ITEM:
         // Note:  checking if item is droppable is assumed to
         // be done before setting up this delay... this includes
@@ -1639,9 +1716,10 @@ activity_interrupt_type get_activity_interrupt(const std::string &name)
 static const char *delay_names[] =
 {
     "not_delayed", "eat", "vampire_feed", "armour_on", "armour_off",
-    "jewellery_on", "memorise", "butcher", "weapon_swap", "passwall",
-    "drop_item", "multidrop", "ascending_stairs", "descending_stairs", "recite",
-    "run", "rest", "travel", "macro", "interruptible", "uninterruptible",
+    "jewellery_on", "memorise", "butcher", "offer_corpse", "weapon_swap",
+    "passwall", "drop_item", "multidrop", "ascending_stairs",
+    "descending_stairs", "recite", "run", "rest", "travel", "macro",
+    "interruptible", "uninterruptible"
 };
 
 // Gets a delay given its name.

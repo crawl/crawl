@@ -979,11 +979,14 @@ static std::string _list_alternative_yes(char yes1, char yes2,
 }
 
 static const char* _list_allowed_keys(char yes1, char yes2,
-                                      bool lowered = false)
+                                      bool lowered = false,
+                                      bool allow_all = false)
 {
     std::string result = " [";
                 result += (lowered ? "y" : "Y");
                 result += _list_alternative_yes(yes1, yes2, lowered);
+                if (allow_all)
+                    result += (lowered? "/a" : "/A");
                 result += (lowered ? "/n/q" : "/N/Q");
                 result += "]";
 
@@ -1000,7 +1003,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
 
     std::string prompt = make_stringf("%s%s ", str ? str : "Buggy prompt?",
                                       _list_allowed_keys(alt_yes, alt_yes2,
-                                                         safe));
+                                                         safe, allow_all));
 
     while (true)
     {

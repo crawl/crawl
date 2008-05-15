@@ -857,7 +857,7 @@ void tutorial_healing_reminder()
             learned_something_new(TUT_NEED_POISON_HEALING);
     }
     else if (Options.tut_seen_invisible > 0
-             && you.num_turns < Options.tut_seen_invisible - 20)
+             && you.num_turns < Options.tut_seen_invisible + 20)
     {
         // If we recently encountered an invisible monster, we need a
         // special message.

@@ -493,6 +493,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_recite = teleport",
         "interrupt_uninterruptible =",
         "interrupt_weapon_swap =",
+        "interrupt_offer_corpse = interrupt_butcher, hungry",
 
         NULL
     };
