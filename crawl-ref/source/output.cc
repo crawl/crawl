@@ -2135,6 +2135,9 @@ std::string _status_mut_abilities()
     if (you.duration[DUR_DIVINE_ROBUSTNESS])
         text += "divinely robust, ";
 
+    if (you.duration[DUR_DIVINE_STAMINA])
+        text += "divinely fortified, ";
+
     if (you.duration[DUR_BERSERKER])
         text += "berserking, ";
 

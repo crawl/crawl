@@ -3873,6 +3873,9 @@ void display_char_status()
     if (you.duration[DUR_DIVINE_ROBUSTNESS])
         mpr( "You are divinely robust." );
 
+    if (you.duration[DUR_DIVINE_STAMINA])
+        mpr( "You are divinely fortified." );
+
     if (you.duration[DUR_BERSERKER])
         mpr( "You are possessed by a berserker rage." );
 
