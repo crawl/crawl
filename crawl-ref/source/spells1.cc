@@ -975,7 +975,10 @@ int cast_revitalisation(int pow)
         case 4:
         case 5:
             if ((step == 3 || you.duration[DUR_REVITALISATION_CHAIN] > 0)
-                && you.attribute[ATTR_DIVINE_STAMINA] == (step - 3))
+                && you.attribute[ATTR_DIVINE_STAMINA] == (step - 3)
+                && player_mutation_level(MUT_STRONG) < (17 - step)
+                && player_mutation_level(MUT_CLEVER) < (17 - step)
+                && player_mutation_level(MUT_AGILE) < (17 - step))
             {
                 success = true;
                 mprf(MSGCH_DURATION, "Zin %s divine stamina.",
@@ -991,7 +994,9 @@ int cast_revitalisation(int pow)
                 modify_stat(STAT_STRENGTH, 1, true, "");
                 modify_stat(STAT_INTELLIGENCE, 1, true, "");
                 modify_stat(STAT_DEXTERITY, 1, true, "");
-                need_chain = true;
+                need_chain = (player_mutation_level(MUT_STRONG) < (16 - step)
+                    && player_mutation_level(MUT_CLEVER) < (16 - step)
+                    && player_mutation_level(MUT_AGILE) < (16 - step));
                 break;
             }
 
