@@ -974,15 +974,18 @@ int cast_vitalisation(int pow)
         case 1:
         case 2:
             // Restore stats.
-            if (you.strength < you.max_strength || you.intel < you.max_intel
+            if (you.strength < you.max_strength
+                || you.intel < you.max_intel
                 || you.dex < you.max_dex)
             {
                 success = true;
                 restore_stat(STAT_STRENGTH, step + 1, true);
                 restore_stat(STAT_INTELLIGENCE, step + 1, true);
                 restore_stat(STAT_DEXTERITY, step + 1, true);
-                need_chain = (you.strength < you.max_strength
-                    || you.intel < you.max_intel || you.dex < you.max_dex);
+                need_chain =
+                    (you.strength < you.max_strength
+                    || you.intel < you.max_intel
+                    || you.dex < you.max_dex);
                 break;
             }
 
@@ -998,9 +1001,9 @@ int cast_vitalisation(int pow)
         case 5:
             if ((step == 3 || you.duration[DUR_VITALISATION_CHAIN] > 0)
                 && you.attribute[ATTR_DIVINE_STAMINA] == (step - 3)
-                && player_mutation_level(MUT_STRONG) < (17 - step)
-                && player_mutation_level(MUT_CLEVER) < (17 - step)
-                && player_mutation_level(MUT_AGILE) < (17 - step))
+                && (player_mutation_level(MUT_STRONG) / 5 + 1) < (6 - step)
+                && (player_mutation_level(MUT_CLEVER) / 5 + 1) < (6 - step)
+                && (player_mutation_level(MUT_AGILE) / 5 + 1) < (6 - step))
             {
                 success = true;
                 mprf(MSGCH_DURATION, "Zin %s divine stamina.",
@@ -1016,9 +1019,10 @@ int cast_vitalisation(int pow)
                 modify_stat(STAT_STRENGTH, 1, true, "");
                 modify_stat(STAT_INTELLIGENCE, 1, true, "");
                 modify_stat(STAT_DEXTERITY, 1, true, "");
-                need_chain = (player_mutation_level(MUT_STRONG) < (16 - step)
-                    && player_mutation_level(MUT_CLEVER) < (16 - step)
-                    && player_mutation_level(MUT_AGILE) < (16 - step));
+                need_chain =
+                    ((player_mutation_level(MUT_STRONG) / 5 + 1) < (5 - step)
+                    && (player_mutation_level(MUT_CLEVER) / 5 + 1) < (5 - step)
+                    && (player_mutation_level(MUT_AGILE) / 5 + 1) < (5 - step));
                 break;
             }
 
