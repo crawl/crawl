@@ -2110,7 +2110,7 @@ int calc_hp(bool real_hp)
         }
     }
 
-    // limit combined robust mutations and divine robustness to 3
+    // robust mutations and divine robustness don't stack
     const int robust = std::min(player_mutation_level(MUT_ROBUST)
                            + you.attribute[ATTR_DIVINE_ROBUSTNESS], 3);
 

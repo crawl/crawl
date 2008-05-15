@@ -3065,7 +3065,7 @@ static void _decrement_durations()
 
     reduce_revitalisation_chain(1);
 
-    if ( _decrement_a_duration(DUR_DIVINE_ROBUSTNESS))
+    if (_decrement_a_duration(DUR_DIVINE_ROBUSTNESS))
     {
         mpr("Your divine robustness fades.", MSGCH_DURATION);
         you.attribute[ATTR_DIVINE_ROBUSTNESS] = 0;

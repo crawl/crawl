@@ -2986,7 +2986,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false,
+                                             : STAT_DEXTERITY), 1, false,
                                  "level gain");
                 }
                 break;
@@ -3021,7 +3021,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 5))
                 {
                     modify_stat( (coinflip() ? STAT_STRENGTH
-                                            : STAT_DEXTERITY), 1, false,
+                                             : STAT_DEXTERITY), 1, false,
                                  "level gain");
                 }
 
@@ -3113,7 +3113,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false,
+                                             : STAT_DEXTERITY), 1, false,
                                  "level gain");
                 }
                 break;
@@ -3272,7 +3272,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_DEXTERITY
-                                              : STAT_STRENGTH), 1, false,
+                                             : STAT_STRENGTH), 1, false,
                                  "level gain");
                 }
 
@@ -3314,7 +3314,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 5))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                  : STAT_DEXTERITY), 1, false,
+                                             : STAT_DEXTERITY), 1, false,
                                  "level gain");
                 }
                 break;
@@ -4453,20 +4453,20 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
         msg += ((amount > 0) ? "stronger." : "weaker.");
         break;
 
-    case STAT_DEXTERITY:
-        ptr_stat     = &you.dex;
-        ptr_stat_max = &you.max_dex;
-        ptr_redraw   = &you.redraw_dexterity;
-        kill_type    = KILLED_BY_CLUMSINESS;
-        msg += ((amount > 0) ? "agile." : "clumsy.");
-        break;
-
     case STAT_INTELLIGENCE:
         ptr_stat     = &you.intel;
         ptr_stat_max = &you.max_intel;
         ptr_redraw   = &you.redraw_intelligence;
         kill_type    = KILLED_BY_STUPIDITY;
         msg += ((amount > 0) ? "clever." : "stupid.");
+        break;
+
+    case STAT_DEXTERITY:
+        ptr_stat     = &you.dex;
+        ptr_stat_max = &you.max_dex;
+        ptr_redraw   = &you.redraw_dexterity;
+        kill_type    = KILLED_BY_CLUMSINESS;
+        msg += ((amount > 0) ? "agile." : "clumsy.");
         break;
 
     default:
@@ -5163,7 +5163,8 @@ int count_worn_ego( int which_ego )
 static int _strength_modifier()
 {
     int result = 0;
-    if ( you.duration[DUR_MIGHT] )
+
+    if (you.duration[DUR_MIGHT])
         result += 5;
 
     // ego items of strength
@@ -5191,6 +5192,26 @@ static int _strength_modifier()
     case TRAN_BAT:             result -=  5; break;
     default:                                 break;
     }
+    return result;
+}
+
+static int _int_modifier()
+{
+    int result = 0;
+
+    // ego items of intelligence
+    result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
+
+    // rings of intelligence
+    result += player_equip( EQ_RINGS_PLUS, RING_INTELLIGENCE );
+
+    // randarts of intelligence
+    result += scan_randarts(RAP_INTELLIGENCE);
+
+    // mutations
+    result += player_mutation_level(MUT_CLEVER)
+              - player_mutation_level(MUT_DOPEY);
+
     return result;
 }
 
@@ -5237,33 +5258,13 @@ static int _dex_modifier()
     return result;
 }
 
-static int _int_modifier()
-{
-    int result = 0;
-
-    // ego items of intelligence
-    result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
-
-    // rings of intelligence
-    result += player_equip( EQ_RINGS_PLUS, RING_INTELLIGENCE );
-
-    // randarts of intelligence
-    result += scan_randarts(RAP_INTELLIGENCE);
-
-    // mutations
-    result += player_mutation_level(MUT_CLEVER)
-              - player_mutation_level(MUT_DOPEY);
-
-    return result;
-}
-
 int stat_modifier( stat_type stat )
 {
     switch ( stat )
     {
     case STAT_STRENGTH:     return _strength_modifier();
-    case STAT_DEXTERITY:    return _dex_modifier();
     case STAT_INTELLIGENCE: return _int_modifier();
+    case STAT_DEXTERITY:    return _dex_modifier();
     default:
         mprf(MSGCH_DANGER, "Bad stat: %d", stat);
         return 0;
