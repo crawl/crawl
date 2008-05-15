@@ -86,10 +86,10 @@ public:
     bool      needs_message;
     bool      attacker_visible, defender_visible;
     bool      attacker_invisible, defender_invisible;
-    
+
     bool      unarmed_ok;
     int       attack_number;
-    
+
     int       to_hit;
     int       base_damage;
     int       potential_damage;
@@ -104,7 +104,7 @@ public:
     int       final_attack_delay;
 
     // Attacker's damage output potential:
-    
+
     item_def  *weapon;
     int       damage_brand;  // Can be special even if unarmed (transforms)
     int       wpn_skill, hands;
@@ -126,7 +126,7 @@ public:
     // Armour penalties?
     int       heavy_armour_penalty;
     bool      can_do_unarmed;
-    
+
     // Attacker uses watery terrain to advantage vs defender. Implies that
     // both attacker and defender are in water.
     bool      water_attack;
@@ -227,7 +227,7 @@ private:
     int  player_stab_weapon_bonus(int damage);
     int  player_stab(int damage);
     int  player_weapon_type_modify(int damage);
-    
+
     bool player_hits_monster();
     int  player_calc_base_weapon_damage();
     int  player_calc_base_unarmed_damage();
