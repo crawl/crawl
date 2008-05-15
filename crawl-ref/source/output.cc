@@ -54,10 +54,10 @@
 #include "travel.h"
 #include "view.h"
 
-// Color for captions like 'Health:', 'Str:'
+// Color for captions like 'Health:', 'Str:', etc.
 #define HUD_CAPTION_COLOR Options.status_caption_colour
 
-// Color for values, which come after captions
+// Color for values, which come after captions.
 static const short HUD_VALUE_COLOR = LIGHTGREY;
 
 // ----------------------------------------------------------------------
