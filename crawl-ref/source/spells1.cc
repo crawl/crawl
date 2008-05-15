@@ -791,7 +791,7 @@ void reduce_vitalisation_chain(int amount)
 
 void remove_divine_robustness()
 {
-    mpr("Your divine robustness is withdrawn.");
+    mpr("Your divine robustness fades.", MSGCH_DURATION);
     you.duration[DUR_DIVINE_ROBUSTNESS] = 0;
     you.attribute[ATTR_DIVINE_ROBUSTNESS] = 0;
     calc_hp();
@@ -903,6 +903,7 @@ int cast_vitalisation(int pow)
                     (step == 3) ? "grants you" :
                     (step == 4) ? "strengthens your"
                                 : "maximises your");
+
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
                     (step == 3) ? (you.skills[SK_INVOCATIONS] * 2) :
@@ -1010,6 +1011,7 @@ int cast_vitalisation(int pow)
                     (step == 3) ? "grants you" :
                     (step == 4) ? "strengthens your"
                                 : "maximises your");
+
                 you.attribute[ATTR_DIVINE_STAMINA]++;
                 you.duration[DUR_DIVINE_STAMINA] +=
                     (step == 3) ? (you.skills[SK_INVOCATIONS] * 2) :

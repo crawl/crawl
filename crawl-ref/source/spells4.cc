@@ -2682,7 +2682,7 @@ void cast_condensation_shield(int pow)
 
 void remove_divine_shield()
 {
-    mpr("Your divine shield disappears!");
+    mpr("Your divine shield disappears!", MSGCH_DURATION);
     you.duration[DUR_DIVINE_SHIELD] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
     you.redraw_armour_class = true;
