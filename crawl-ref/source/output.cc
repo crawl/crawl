@@ -561,7 +561,7 @@ struct status_light
 // pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
 //   conf. touch, bargain, sage
 // confused, beheld, fire, poison, disease, rot, held, glow, swift,
-//  fast, slow, breath
+//   fast, slow, breath
 //
 // Note the usage of bad_ench_colour() correspond to levels that
 // can be found in player.cc, ie those that the player can tell by
