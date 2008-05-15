@@ -111,7 +111,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Zin
-    { ABIL_ZIN_RECITE, ABIL_ZIN_REVITALISATION, ABIL_NON_ABILITY,
+    { ABIL_ZIN_RECITE, ABIL_ZIN_VITALISATION, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
     // TSO
     { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_NON_ABILITY,
@@ -233,7 +233,7 @@ static const ability_def Ability_List[] =
     // INVOCATIONS:
     // Zin
     { ABIL_ZIN_RECITE, "Recite", 3, 0, 120, 0, ABFLAG_DELAY },
-    { ABIL_ZIN_REVITALISATION, "Revitalisation", 0, 0, 100, 2, ABFLAG_CONF_OK },
+    { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 100, 2, ABFLAG_CONF_OK },
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
 
     // The Shining One
@@ -673,7 +673,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
         break;
 
-    case ABIL_ZIN_REVITALISATION:
+    case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_BEOGH_SMITING:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
@@ -1370,9 +1370,9 @@ static bool _do_ability(const ability_def& abil)
         break;
     }
 
-    case ABIL_ZIN_REVITALISATION:
+    case ABIL_ZIN_VITALISATION:
     {
-        int result = cast_revitalisation(1 + (you.skills[SK_INVOCATIONS] / 4));
+        int result = cast_vitalisation(1 + (you.skills[SK_INVOCATIONS] / 4));
         if (result > 0)
             exercise(SK_INVOCATIONS, 2 + random2(result));
         break;

@@ -203,7 +203,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "", "", "", "", "" },
     // Zin
     { "recite Zin's Axioms of Law",
-      "call upon Zin for revitalisation",
+      "call upon Zin for vitalisation",
       "",
       "",
       "call upon Zin to create a sanctuary" },
@@ -289,7 +289,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "", "", "", "", "" },
     // Zin
     { "recite Zin's Axioms of Law",
-      "call upon Zin for revitalisation",
+      "call upon Zin for vitalisation",
       "",
       "",
       "call upon Zin to create a sanctuary" },
@@ -475,14 +475,14 @@ static void _inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
-        // neither does Zin's revitalisation chaining, divine
-        // robustness, or divine stamina
+        // neither does Zin's vitalisation chaining, divine robustness,
+        // or divine stamina
         else if (god == GOD_ZIN)
         {
-            if (you.duration[DUR_REVITALISATION_CHAIN])
+            if (you.duration[DUR_VITALISATION_CHAIN])
             {
-                mpr("Your power of revitalisation disappears!");
-                you.duration[DUR_REVITALISATION_CHAIN] = 0;
+                mpr("Your power of vitalisation disappears!");
+                you.duration[DUR_VITALISATION_CHAIN] = 0;
             }
 
             if (you.duration[DUR_DIVINE_ROBUSTNESS])
@@ -4349,10 +4349,10 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_ZIN:
-        if (you.duration[DUR_REVITALISATION_CHAIN])
+        if (you.duration[DUR_VITALISATION_CHAIN])
         {
-            mpr("Your power of revitalisation disappears!");
-            you.duration[DUR_REVITALISATION_CHAIN] = 0;
+            mpr("Your power of vitalisation disappears!");
+            you.duration[DUR_VITALISATION_CHAIN] = 0;
         }
 
         if (you.duration[DUR_DIVINE_ROBUSTNESS])

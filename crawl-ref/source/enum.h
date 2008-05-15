@@ -75,7 +75,7 @@ enum ability_type
 
     // Divine abilities
     ABIL_ZIN_RECITE = 110,                  //  110
-    ABIL_ZIN_REVITALISATION,
+    ABIL_ZIN_VITALISATION,
     ABIL_ZIN_SANCTUARY,
     ABIL_TSO_DIVINE_SHIELD = 120,           //  120
     ABIL_TSO_CLEANSING_FLAME,
@@ -1105,7 +1105,7 @@ enum duration_type
     DUR_SLEEP,
     DUR_SAGE,
     DUR_TELEPATHY,
-    DUR_REVITALISATION_CHAIN,
+    DUR_VITALISATION_CHAIN,
     NUM_DURATIONS
 };
 

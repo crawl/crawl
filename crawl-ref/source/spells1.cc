@@ -760,32 +760,32 @@ int cast_healing( int pow, int target_x, int target_y )
     return (_healing_spell( pow + roll_dice( 2, pow ) - 2, target_x, target_y ));
 }
 
-void revitalisation_chain(int amount)
+void vitalisation_chain(int amount)
 {
     if (amount <= 0)
         return;
 
-    const int old_value = you.duration[DUR_REVITALISATION_CHAIN];
-    you.duration[DUR_REVITALISATION_CHAIN] += amount;
+    const int old_value = you.duration[DUR_VITALISATION_CHAIN];
+    you.duration[DUR_VITALISATION_CHAIN] += amount;
 
-    if (you.duration[DUR_REVITALISATION_CHAIN] > 30)
-        you.duration[DUR_REVITALISATION_CHAIN] = 30;
+    if (you.duration[DUR_VITALISATION_CHAIN] > 30)
+        you.duration[DUR_VITALISATION_CHAIN] = 30;
 
     if (old_value == 0)
-        mpr("Zin amplifies your power of revitalisation!", MSGCH_DURATION);
+        mpr("Zin amplifies your power of vitalisation!", MSGCH_DURATION);
 }
 
-void reduce_revitalisation_chain(int amount)
+void reduce_vitalisation_chain(int amount)
 {
-    if (you.duration[DUR_REVITALISATION_CHAIN] == 0 || amount <= 0)
+    if (you.duration[DUR_VITALISATION_CHAIN] == 0 || amount <= 0)
         return;
 
-    you.duration[DUR_REVITALISATION_CHAIN] -= amount;
+    you.duration[DUR_VITALISATION_CHAIN] -= amount;
 
-    if (you.duration[DUR_REVITALISATION_CHAIN] <= 0)
+    if (you.duration[DUR_VITALISATION_CHAIN] <= 0)
     {
-        you.duration[DUR_REVITALISATION_CHAIN] = 0;
-        mpr("Your power of revitalisation returns to normal.", MSGCH_DURATION);
+        you.duration[DUR_VITALISATION_CHAIN] = 0;
+        mpr("Your power of vitalisation returns to normal.", MSGCH_DURATION);
     }
 }
 
@@ -809,7 +809,7 @@ void remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
-int cast_revitalisation(int pow)
+int cast_vitalisation(int pow)
 {
     const int step_max_chain = 6;
     const int type_max_chain = 4;
@@ -821,9 +821,8 @@ int cast_revitalisation(int pow)
     static int mp_amt;
     static bool need_chain;
 
-    // If revitalisation chaining is turned off, start from the
-    // beginning.
-    if (you.duration[DUR_REVITALISATION_CHAIN] == 0)
+    // If vitalisation chaining is turned off, start from the beginning.
+    if (you.duration[DUR_VITALISATION_CHAIN] == 0)
     {
         step = 0;
         step_max = std::min(pow, step_max_chain);
@@ -895,7 +894,7 @@ int cast_revitalisation(int pow)
         case 3:
         case 4:
         case 5:
-            if ((step == 3 || you.duration[DUR_REVITALISATION_CHAIN] > 0)
+            if ((step == 3 || you.duration[DUR_VITALISATION_CHAIN] > 0)
                 && you.attribute[ATTR_DIVINE_ROBUSTNESS] == (step - 3)
                 && player_mutation_level(MUT_ROBUST) < (6 - step))
             {
@@ -930,8 +929,8 @@ int cast_revitalisation(int pow)
         need_chain = false;
         step = 0;
         type = 1;
-        // Deliberate fall through, resetting the revitalisation
-        // chaining indicator and the step counter.
+        // Deliberate fall through, resetting the vitalisation chaining
+        // indicator and the step counter.
 
     case 1:
         // Restore HP.
@@ -947,8 +946,8 @@ int cast_revitalisation(int pow)
         need_chain = false;
         step = 0;
         type = 2;
-        // Deliberate fall through, resetting the revitalisation
-        // chaining indicator and the step counter.
+        // Deliberate fall through, resetting the vitalisation chaining
+        // indicator and the step counter.
 
     case 2:
         // Restore MP.
@@ -964,8 +963,8 @@ int cast_revitalisation(int pow)
         need_chain = false;
         step = 0;
         type = 3;
-        // Deliberate fall through, resetting the revitalisation
-        // chaining indicator and the step counter.
+        // Deliberate fall through, resetting the vitalisation chaining
+        // indicator and the step counter.
 
     case 3:
         // Restore stats and/or add divine stamina.
@@ -997,7 +996,7 @@ int cast_revitalisation(int pow)
         case 3:
         case 4:
         case 5:
-            if ((step == 3 || you.duration[DUR_REVITALISATION_CHAIN] > 0)
+            if ((step == 3 || you.duration[DUR_VITALISATION_CHAIN] > 0)
                 && you.attribute[ATTR_DIVINE_STAMINA] == (step - 3)
                 && player_mutation_level(MUT_STRONG) < (17 - step)
                 && player_mutation_level(MUT_CLEVER) < (17 - step)
@@ -1036,8 +1035,8 @@ int cast_revitalisation(int pow)
         need_chain = false;
         step = 0;
         type = 4;
-        // Deliberate fall through, resetting the revitalisation
-        // chaining indicator and the step counter.
+        // Deliberate fall through, resetting the vitalisation chaining
+        // indicator and the step counter.
 
     default:
         // Do nothing.
@@ -1046,11 +1045,11 @@ int cast_revitalisation(int pow)
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "revitalising: step = %d, type = %d, step_max = %d",
+         "vitalising: step = %d, type = %d, step_max = %d",
          step, type, step_max);
 #endif
 
-    // If revitalisation has succeeded, display an appropriate message.
+    // If vitalisation has succeeded, display an appropriate message.
     if (success)
     {
         mprf("You feel %s %s.", (step == 0) ? "only nominally" :
@@ -1077,14 +1076,14 @@ int cast_revitalisation(int pow)
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    // If revitalisation has succeeded, it hasn't succeeded as far
-    // as possible, and revitalisation chaining is needed, turn on
-    // revitalisation chaining for several turns.
+    // If vitalisation has succeeded, it hasn't succeeded as far as
+    // possible, and vitalisation chaining is needed, turn on
+    // vitalisation chaining for several turns.
     if (success && step < step_max && need_chain)
-        revitalisation_chain(6);
-    // Otherwise, turn off revitalisation chaining.
+        vitalisation_chain(6);
+    // Otherwise, turn off vitalisation chaining.
     else
-        reduce_revitalisation_chain(30);
+        reduce_vitalisation_chain(30);
 
     return (success) ? (step + 1) : 0;
 }

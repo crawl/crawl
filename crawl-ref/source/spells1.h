@@ -55,11 +55,11 @@ char cast_lesser_healing(void);
  * *********************************************************************** */
 int cast_healing(int pow, int target_x = -1, int target_y = -1);
 
-void revitalisation_chain(int amount);
-void reduce_revitalisation_chain(int amount);
+void vitalisation_chain(int amount);
+void reduce_vitalisation_chain(int amount);
 void remove_divine_robustness();
 void remove_divine_stamina();
-int cast_revitalisation(int pow);
+int cast_vitalisation(int pow);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

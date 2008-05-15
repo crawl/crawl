@@ -3063,7 +3063,7 @@ static void _decrement_durations()
         }
     }
 
-    reduce_revitalisation_chain(1);
+    reduce_vitalisation_chain(1);
 
     if (_decrement_a_duration(DUR_DIVINE_ROBUSTNESS))
         remove_divine_robustness();
