@@ -1124,8 +1124,8 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     pbolt.thrower     = KILL_MON;
     pbolt.is_beam     = true;
 
-    // Accuracy is lowered by one quarter if the dragon is attacking a
-    // a target thatis wielding a weapon of dragon slaying (which
+    // Accuracy is lowered by one quarter if the dragon is attacking
+    // a target that is wielding a weapon of dragon slaying (which
     // makes the dragon/draconian avoid looking at the foe).
     // FIXME: This effect is not yet implemented for player draconians
     // or characters in dragon form breathing at monsters wielding a

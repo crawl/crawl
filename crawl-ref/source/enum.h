@@ -2693,17 +2693,19 @@ enum tutorial_event_type
     // warning
     TUT_RUN_AWAY,           // 38
     TUT_RETREAT_CASTER,
-    TUT_WIELD_WEAPON,
+    TUT_WIELD_WEAPON,       // 40
     TUT_NEED_HEALING,
     TUT_NEED_POISON_HEALING,
+    TUT_INVISIBLE_DANGER,
+    TUT_NEED_HEALING_INVIS,
     // interface
-    TUT_MULTI_PICKUP,       // 43
+    TUT_MULTI_PICKUP,       // 45
     TUT_HEAVY_LOAD,
     TUT_SHIFT_RUN,
     TUT_MAP_VIEW,
     TUT_DONE_EXPLORE,
-    TUT_EVENTS_NUM          // 48
-}; // for numbers higher than 48 change size of tutorial_events in externs.h
+    TUT_EVENTS_NUM          // 50
+}; // for numbers higher than 50 change size of tutorial_events in externs.h
 
 enum tutorial_types
 {

@@ -2230,7 +2230,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
     case SPELL_INVISIBILITY:
         if (mon->has_ench(ENCH_INVIS)
-            || (mons_friendly(mon) && !player_see_invis(false)))
+            || mons_friendly(mon) && !player_see_invis(false))
         {
             ret = true;
         }
@@ -4307,8 +4307,10 @@ int monsters::hurt(const actor *agent, int amount)
         if (agent->atype() == ACT_PLAYER)
             monster_die(this, KILL_YOU, 0);
         else
+        {
             monster_die(this, KILL_MON,
                         monster_index( dynamic_cast<const monsters*>(agent) ));
+        }
     }
     return (amount);
 }

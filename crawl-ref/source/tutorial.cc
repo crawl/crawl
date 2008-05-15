@@ -155,6 +155,9 @@ bool pick_tutorial()
             // for occasional healing reminders
             Options.tut_last_healed = 0;
 
+            // Did the player recently see a monster turn invisible?
+            Options.tut_seen_invisible = 0;
+
             Options.random_pick = true; // random choice of starting spellbook
             Options.weapon = WPN_HAND_AXE; // easiest choice for fighters
             return true;
@@ -362,6 +365,10 @@ static std::string _tut_debug_list(int event)
           return "needed healing";
       case TUT_NEED_POISON_HEALING:
           return "needed healing for poison";
+      case TUT_INVISIBLE_DANGER:
+          return "encountered an invisible foe";
+      case TUT_NEED_HEALING_INVIS:
+          return "had to heal near an unseen monster";
       case TUT_POSTBERSERK:
           return "learned about Berserk aftereffects";
       case TUT_RUN_AWAY:
@@ -640,17 +647,22 @@ void tutorial_death_screen()
     }
     else
     {
-      int hint = random2(6);
-      // If a character has been unusually busy with projectiles and spells
-      // give some other hint rather than the first one.
-      if (hint == 0 && Options.tut_throw_counter + Options.tut_spell_counter
+        int hint = random2(6);
+        // If a character has been unusually busy with projectiles and spells
+        // give some other hint rather than the first one.
+        if (hint == 0 && Options.tut_throw_counter + Options.tut_spell_counter
                           >= Options.tut_melee_counter)
-      {
-         hint = random2(5)+1;
-      }
+        {
+            hint = random2(5)+1;
+        }
+        // FIXME: The hints below could be somewhat less random, so that e.g.
+        // the message for fighting several monsters in a corridor only happens
+        // if there's more than one monster around and you're not in a corridor,
+        // or the one about using consumable objects only if you actually have
+        // any (useful or unidentified) scrolls/wands/potions.
 
-      switch(hint)
-      {
+        switch (hint)
+        {
         case 0:
             text = "Always consider using projectiles, wands or spells before "
                    "engaging monsters in close combat.";
@@ -698,7 +710,7 @@ void tutorial_death_screen()
         default:
             text =  "Sorry, no hint this time, though there should have been "
                     "one.";
-      }
+        }
     }
     formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
     more();
@@ -843,6 +855,14 @@ void tutorial_healing_reminder()
     {
         if (Options.tutorial_events[TUT_NEED_POISON_HEALING])
             learned_something_new(TUT_NEED_POISON_HEALING);
+    }
+    else if (Options.tut_seen_invisible > 0
+             && you.num_turns < Options.tut_seen_invisible - 20)
+    {
+        // If we recently encountered an invisible monster, we need a
+        // special message.
+        learned_something_new(TUT_NEED_HEALING_INVIS);
+        // If that one was already displayed, don't print a reminder.
     }
     else
     {
@@ -1161,7 +1181,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
       case TUT_SEEN_WAND:
           text << "You have picked up your first wand"
 #ifndef USE_TILE
-                  " ('<w>/</w>'). Type"
+                  " ('<w>/</w>'). Type "
 #else
                   ". Simply click on it with your <w>left mouse button</w>, or "
                   "type "
@@ -1787,6 +1807,27 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "better yet, a potion of healing. If you have seen neither "
                   "of these so far, try unknown ones in your inventory. Good "
                   "luck!";
+          break;
+
+      case TUT_INVISIBLE_DANGER:
+          text << "Fighting against a monster you cannot see is difficult. "
+                  "Your best bet is probably a strategic retreat, be it via "
+                  "teleportation or by getting off the level. "
+                  "Or else, luring the monster into a corridor should at least "
+                  "make it easier for you to hit it.";
+
+          // to prevent this text being immediately followed by the next one
+          Options.tut_last_healed = you.num_turns - 30;
+          break;
+
+      case TUT_NEED_HEALING_INVIS:
+          text << "You recently noticed an invisible monster, so resting might "
+                  "not be safe. If you still need to replenish your hitpoints "
+                  "or magic, you'll have to quaff an appropriate potion. For "
+                  "normal resting you will first have to get away from the "
+                  "danger.";
+
+          Options.tut_last_healed = you.num_turns;
           break;
 
       case TUT_POSTBERSERK:

@@ -1852,8 +1852,7 @@ public:
 
     ///////////////////////////////////////////////////////////////////////
     // tutorial
-    FixedVector<bool, 48> tutorial_events;
-//    bool tut_made_note;
+    FixedVector<bool, 50> tutorial_events;
     bool tut_explored;
     bool tut_stashes;
     bool tut_travel;
@@ -1862,6 +1861,7 @@ public:
     unsigned int tut_berserk_counter;
     unsigned int tut_melee_counter;
     unsigned int tut_last_healed;
+    unsigned int tut_seen_invisible;
 
     bool tut_just_triggered;
     unsigned int tutorial_type;

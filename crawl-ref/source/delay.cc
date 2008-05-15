@@ -1524,11 +1524,19 @@ static void paranoid_option_disable( activity_interrupt_type ai,
             }
 
             if (!deactivatees.empty())
+            {
                 mprf(MSGCH_WARN, "Deactivating %s; reactivate with %s.",
                       comma_separated_line(deactivatees.begin(),
                                            deactivatees.end()).c_str(),
                       comma_separated_line(restart.begin(),
                                            restart.end()).c_str());
+            }
+
+            if (Options.tutorial_left)
+            {
+                learned_something_new(TUT_INVISIBLE_DANGER);
+                Options.tut_seen_invisible = you.num_turns;
+            }
         }
     }
 }

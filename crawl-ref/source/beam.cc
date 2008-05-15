@@ -63,6 +63,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
+#include "tutorial.h"
 #include "view.h"
 #include "xom.h"
 
@@ -2131,6 +2132,13 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
                      monster_name.c_str(),
                      player_monster_visible(monster) ? "for a moment."
                                                      : "and vanishes!" );
+
+                if (Options.tutorial_left)
+                {
+                    learned_something_new(TUT_INVISIBLE_DANGER);
+                    if (!player_monster_visible(monster))
+                        Options.tut_seen_invisible = you.num_turns;
+                }
             }
 
             pbolt.obvious_effect = true;

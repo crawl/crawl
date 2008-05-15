@@ -992,7 +992,7 @@ static const char* _list_allowed_keys(char yes1, char yes2,
 
 // like yesno(), but returns 0 for no, 1 for yes, and -1 for quit
 // alt_yes and alt_yes2 allow up to two synonyms for 'Y'
-int yesnoquit( const char* str, bool safe, int safeanswer,
+int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
                bool clear_after, char alt_yes, char alt_yes2 )
 {
     if (!crawl_state.is_repeating_cmd())
@@ -1008,7 +1008,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer,
 
         int tmp = getchm(KC_CONFIRM);
 
-        if ( tmp == CK_ESCAPE || tmp == 'q' || tmp == 'Q' )
+        if (tmp == CK_ESCAPE || tmp == 'q' || tmp == 'Q')
             return -1;
 
         if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
@@ -1016,7 +1016,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer,
 
         if (Options.easy_confirm == CONFIRM_ALL_EASY
             || tmp == safeanswer
-            || (Options.easy_confirm == CONFIRM_SAFE_EASY && safe))
+            || safe && Options.easy_confirm == CONFIRM_SAFE_EASY)
         {
             tmp = toupper( tmp );
         }
@@ -1026,8 +1026,16 @@ int yesnoquit( const char* str, bool safe, int safeanswer,
 
         if (tmp == 'N')
             return 0;
-        else if (tmp == 'Y' || tmp == alt_yes)
+        else if (tmp == 'Y' || tmp == alt_yes || tmp == alt_yes2)
             return 1;
+        else if (allow_all)
+        {
+            if (tmp == 'A')
+                return 2;
+            else
+                mprf("Choose [Y]es%s, [N]o, [Q]uit, or [A]ll!",
+                     _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
+        }
         else
         {
             mprf("[Y]es%s, [N]o or [Q]uit only, please.",
