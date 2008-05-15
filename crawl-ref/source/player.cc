@@ -5167,6 +5167,9 @@ static int _strength_modifier()
     if (you.duration[DUR_MIGHT])
         result += 5;
 
+    if (you.duration[DUR_DIVINE_STAMINA])
+        result += you.attribute[ATTR_DIVINE_STAMINA];
+
     // ego items of strength
     result += 3 * count_worn_ego(SPARM_STRENGTH);
 
@@ -5199,6 +5202,9 @@ static int _int_modifier()
 {
     int result = 0;
 
+    if (you.duration[DUR_DIVINE_STAMINA])
+        result += you.attribute[ATTR_DIVINE_STAMINA];
+
     // ego items of intelligence
     result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
@@ -5218,6 +5224,9 @@ static int _int_modifier()
 static int _dex_modifier()
 {
     int result = 0;
+
+    if (you.duration[DUR_DIVINE_STAMINA])
+        result += you.attribute[ATTR_DIVINE_STAMINA];
 
     // ego items of dexterity
     result += 3 * count_worn_ego(SPARM_DEXTERITY);

@@ -362,7 +362,7 @@ static void _print_stats_str(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    if (you.duration[DUR_MIGHT])
+    if (you.duration[DUR_MIGHT] || you.duration[DUR_DIVINE_STAMINA])
         textcolor(LIGHTBLUE);  // no end of effect warning
     else if (you.strength < you.max_strength)
         textcolor(YELLOW);
@@ -391,7 +391,13 @@ static void _print_stats_int(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    textcolor(you.intel < you.max_intel ? YELLOW : HUD_VALUE_COLOR);
+    if (you.duration[DUR_DIVINE_STAMINA])
+        textcolor(LIGHTBLUE);  // no end of effect warning
+    else if (you.intel < you.max_intel)
+        textcolor(YELLOW);
+    else
+        textcolor(HUD_VALUE_COLOR);
+
     cprintf( "%d", you.intel );
 
     if (you.intel != you.max_intel)
@@ -412,7 +418,13 @@ static void _print_stats_dex(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    textcolor(you.dex < you.max_dex ? YELLOW : HUD_VALUE_COLOR);
+    if (you.duration[DUR_DIVINE_STAMINA])
+        textcolor(LIGHTBLUE);  // no end of effect warning
+    else if (you.dex < you.max_dex)
+        textcolor(YELLOW);
+    else
+        textcolor(HUD_VALUE_COLOR);
+
     cprintf( "%d", you.dex );
 
     if (you.dex != you.max_dex)

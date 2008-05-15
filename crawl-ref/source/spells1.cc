@@ -948,7 +948,7 @@ int cast_revitalisation(int pow)
         // chaining indicator and the step counter.
 
     case 3:
-        // Restore and/or temporarily boost stats.
+        // Restore stats and/or add divine stamina.
         switch (step)
         {
         case 0:
@@ -967,9 +967,34 @@ int cast_revitalisation(int pow)
                 break;
             }
 
-            step = 6;
+            step = 3;
             // Deliberate fall through.
-            // XXX: Temporary stat boosting is not implemented yet.
+
+        // Divine stamina.
+        case 3:
+        case 4:
+        case 5:
+            if ((step == 3 || you.duration[DUR_REVITALISATION_CHAIN] > 0)
+                && you.attribute[ATTR_DIVINE_STAMINA] == (step - 3))
+            {
+                success = true;
+                mprf(MSGCH_DURATION, "Zin %s divine stamina.",
+                    (step == 3) ? "grants you" :
+                    (step == 4) ? "strengthens your"
+                                : "maximises your");
+                you.attribute[ATTR_DIVINE_STAMINA]++;
+                you.duration[DUR_DIVINE_STAMINA] +=
+                    (step == 3) ? (you.skills[SK_INVOCATIONS] * 2) :
+                    (step == 4) ? (you.skills[SK_INVOCATIONS])
+                                : (you.skills[SK_INVOCATIONS] / 2);
+
+                modify_stat(STAT_STRENGTH, 1, true, "");
+                modify_stat(STAT_INTELLIGENCE, 1, true, "");
+                modify_stat(STAT_DEXTERITY, 1, true, "");
+                need_chain = true;
+                break;
+            }
+
         default:
             break;
         }

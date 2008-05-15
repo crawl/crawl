@@ -3071,6 +3071,18 @@ static void _decrement_durations()
         you.attribute[ATTR_DIVINE_ROBUSTNESS] = 0;
         calc_hp();
     }
+
+    if (_decrement_a_duration(DUR_DIVINE_STAMINA))
+    {
+        mpr("Your divine stamina fades.", MSGCH_DURATION);
+        modify_stat(STAT_STRENGTH, -you.attribute[ATTR_DIVINE_STAMINA],
+                    true, "Zin's divine stamina running out");
+        modify_stat(STAT_INTELLIGENCE, -you.attribute[ATTR_DIVINE_STAMINA],
+                    true, "Zin's divine stamina running out");
+        modify_stat(STAT_DEXTERITY, -you.attribute[ATTR_DIVINE_STAMINA],
+                    true, "Zin's divine stamina running out");
+        you.attribute[ATTR_DIVINE_STAMINA] = 0;
+    }
 }
 
 static void _check_banished()
