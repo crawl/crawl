@@ -1074,6 +1074,11 @@ int cast_vitalisation(int pow)
         if (loss_amt > 0)
             lose_piety(loss_amt);
 
+        // If there's not enough piety left to vitalise again, turn off
+        // vitalisation chaining.
+        if (you.piety < piety_breakpoint(1))
+            need_chain = false;
+
         // Increment the step counter.
         step++;
     }
