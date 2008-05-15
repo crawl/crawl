@@ -2122,6 +2122,7 @@ std::string _status_mut_abilities()
     // how exactly did you get to show the status?
     if (you.duration[DUR_PARALYSIS])
         text += "paralysed, ";
+
     if (you.duration[DUR_SLEEP])
         text += "sleeping, ";
 
@@ -2130,6 +2131,9 @@ std::string _status_mut_abilities()
 
     if (you.duration[DUR_MIGHT])
         text += "mighty, ";
+
+    if (you.duration[DUR_DIVINE_ROBUSTNESS])
+        text += "divinely robust, ";
 
     if (you.duration[DUR_BERSERKER])
         text += "berserking, ";
