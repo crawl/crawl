@@ -315,7 +315,7 @@ bool butchery(int which_corpse)
                      can_bottle_blood_from_corpse(mitm[o].plus)? "Bottle" : "Butcher",
                      mitm[o].name(DESC_NOCAP_A).c_str());
 
-            const int result = yesnoquit(info, true, 'N', false, 'C', 'D');
+            const int result = yesnoquit(info, true, 'N', false, false, 'C', 'D');
             if ( result == -1 )
             {
                 canceled_butcher = true;
