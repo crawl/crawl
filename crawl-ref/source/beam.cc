@@ -3774,7 +3774,6 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 {
                     hit_woke_orc = true;
                 }
-
             }
 
             behaviour_event( mon, ME_ANNOY, _beam_source(beam) );
