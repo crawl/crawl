@@ -89,14 +89,15 @@ static spell_type search_order_misc[] = {
     SPELL_AGONY,
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
+    SPELL_DISPEL_UNDEAD,
     SPELL_PARALYSE,
     SPELL_CONFUSE,
     SPELL_MEPHITIC_CLOUD,
     SPELL_SLOW,
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
-    SPELL_DIG,
 /* 10 */
+    SPELL_DIG,
     SPELL_BACKLIGHT,
     SPELL_NO_SPELL,                        // end search
 };
