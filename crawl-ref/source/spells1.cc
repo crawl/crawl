@@ -1465,8 +1465,8 @@ void cast_swiftness(int power)
     // dur_incr = random2(power) + random2(power) + 20;
     dur_incr = 20 + random2( power );
 
-    // [dshaligram] Removed the on-your-feet bit. Sounds odd when you're
-    // levitating, for instance.
+    // [dshaligram] Removed the on-your-feet bit.  Sounds odd when
+    // you're levitating, for instance.
     mpr("You feel quick.");
 
     if (dur_incr + you.duration[DUR_SWIFTNESS] > 100)
