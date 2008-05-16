@@ -133,6 +133,8 @@ Negligence
 
 Inaction
 
+Oblivion
+
 %%%%
 mental_illness_armour
 
@@ -504,4 +506,3 @@ Forget-Me-Not
 Hero's Friend
 
 %%%%
-
