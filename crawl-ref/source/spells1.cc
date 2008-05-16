@@ -357,7 +357,7 @@ void cast_chain_lightning( int powc )
             }
         }
 
-        // now check if the player is a target:
+        // now check if the player is a target
         dist = grid_distance( sx, sy, you.x_pos, you.y_pos );
 
         if (dist)       // ie player was not the source
@@ -410,7 +410,7 @@ void cast_chain_lightning( int powc )
         beam.colour = LIGHTBLUE;
         beam.damage = calc_dice( 5, 12 + powc * 2 / 3 );
 
-        // Be kinder to the player
+        // Be kinder to the player.
         if (tx == you.x_pos && ty == you.y_pos)
         {
             if (!(beam.damage.num /= 2))
