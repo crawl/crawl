@@ -42,7 +42,7 @@ public:
 
     typedef unsigned long   size_type;
     typedef long            difference_type;
-    
+
     typedef TYPE*           iterator;
     typedef const TYPE*     const_iterator;
 

@@ -635,7 +635,7 @@ bool mons_player_visible( const monsters *mon )
         if (player_in_water())
             return (true);
 
-        if (mons_see_invis( mon ) || mons_sense_invis(mon))
+        if (mons_see_invis(mon) || mons_sense_invis(mon))
             return (true);
 
         return (false);
