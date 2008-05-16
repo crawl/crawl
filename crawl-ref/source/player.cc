@@ -6017,13 +6017,15 @@ void player::make_hungry(int hunger_increase, bool silent)
 }
 
 // For semi-undead species (Vampire!) reduce food cost for spells and abilities
-// to 75% (hungry), 50% (very hungry), 25% (near starving), or zero (starving).
+// to 50% (hungry, very hungry) or zero (near starving, starving).
 int calc_hunger(int food_cost)
 {
     if (you.is_undead == US_SEMI_UNDEAD && you.hunger_state < HS_SATIATED)
     {
-        food_cost *= you.hunger_state;
-        food_cost /= 4;
+        if (you.hunger_state <= HS_NEAR_STARVING)
+            return 0;
+
+        return (food_cost/2);
     }
     return (food_cost);
 }

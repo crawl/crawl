@@ -4586,7 +4586,7 @@ static bool _god_likes_item(god_type god, const item_def& item)
     switch (god)
     {
     case GOD_KIKUBAAQUDGHA: case GOD_TROG:
-        return item.base_type == OBJ_CORPSES;
+        return (item.base_type == OBJ_CORPSES || is_blood_potion(item));
 
     case GOD_NEMELEX_XOBEH:
         return !is_deck(item);
@@ -5020,18 +5020,16 @@ std::string god_hates_your_god_reaction(god_type god,
 
 bool god_likes_butchery(god_type god)
 {
-    return
-        god == GOD_OKAWARU ||
-        god == GOD_MAKHLEB ||
-        god == GOD_TROG ||
-        god == GOD_BEOGH ||
-        god == GOD_LUGONU;
+    return (god == GOD_OKAWARU
+            || god == GOD_MAKHLEB
+            || god == GOD_TROG
+            || god == GOD_BEOGH
+            || god == GOD_LUGONU);
 }
 
 bool god_hates_butchery(god_type god)
 {
-    return
-        god == GOD_ELYVILON;
+    return (god == GOD_ELYVILON);
 }
 
 harm_protection_type god_protects_from_harm(god_type god, bool actual)

@@ -1434,7 +1434,7 @@ static void _display_vampire_attributes()
 
        {"Bat Form             ", "no         ", "no      ", "yes       ",  "yes      ", "yes      ", "yes  "},
 
-       {"Spell hunger         ", "full       ", "full    ", "full      ",  "reduced  ", "lowered  ", "none "}
+       {"Spell hunger         ", "full       ", "full    ", "full      ",  "halved   ", "none     ", "none "}
     };
 
     int current = 0;

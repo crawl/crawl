@@ -271,7 +271,7 @@ static bool _prepare_butchery(bool can_butcher, bool barehand_butcher,
     return (true);
 }
 
-static bool _butcher_corpse(int corpse_id)
+static bool _butcher_corpse(int corpse_id, bool force_butcher = false)
 {
     ASSERT(corpse_id != -1);
 
@@ -293,17 +293,19 @@ static bool _butcher_corpse(int corpse_id)
                                you.religion);
         }
 
-        // If we didn't switch weapons, we get in one turn of butchery;
-        // otherwise the work has to happen in the delay.
-//      if (!wpn_switch && !removed_gloves)
-//          ++mitm[corpse_id].plus2;
-
         int work_req = 4 - mitm[corpse_id].plus2;
         if (work_req < 0)
             work_req = 0;
 
-        start_delay(DELAY_BUTCHER, work_req, corpse_id,
-                    mitm[corpse_id].special);
+
+        delay_type dtype = DELAY_BUTCHER;
+        if (!force_butcher
+            && can_bottle_blood_from_corpse(mitm[corpse_id].plus))
+        {
+            dtype = DELAY_BOTTLE_BLOOD;
+        }
+
+        start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special);
     }
 
     you.turn_is_over = true;
@@ -438,6 +440,7 @@ bool butchery(int which_corpse)
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
     bool butcher_all = false;
+    bool bottle_all  = false; // for Vampires
     for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
     {
         if (mitm[o].base_type != OBJ_CORPSES
@@ -446,7 +449,10 @@ bool butchery(int which_corpse)
             continue;
         }
 
-        if (butcher_all)
+        if (bottle_all && !can_bottle_blood_from_corpse(mitm[o].plus))
+            continue;
+
+        if (butcher_all || bottle_all)
             corpse_id = o;
         else
         {
@@ -482,21 +488,26 @@ bool butchery(int which_corpse)
                 corpse_id = o;
 
                 if (result == 2) // (a)ll
-                    butcher_all = true;
+                {
+                    if (can_bottle_blood_from_corpse(mitm[o].plus))
+                        bottle_all = true;
+                    else
+                        butcher_all = true;
+                }
             }
         }
 
         if (corpse_id != -1)
         {
-            if (_butcher_corpse(corpse_id))
+            if (_butcher_corpse(corpse_id, butcher_all))
                 success = true;
 
-            if (!butcher_all)
+            if (!butcher_all && !bottle_all)
                 break;
         }
     }
 
-    if (!butcher_all && corpse_id == -1)
+    if (!butcher_all && !bottle_all && corpse_id == -1)
     {
         mprf("There isn't anything else to %s here.",
              you.species == SP_VAMPIRE && you.experience_level >= 6 ?

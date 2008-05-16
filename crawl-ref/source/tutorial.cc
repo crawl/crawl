@@ -857,7 +857,7 @@ void tutorial_healing_reminder()
             learned_something_new(TUT_NEED_POISON_HEALING);
     }
     else if (Options.tut_seen_invisible > 0
-             && you.num_turns < Options.tut_seen_invisible + 20)
+             && you.num_turns - Options.tut_seen_invisible <= 20)
     {
         // If we recently encountered an invisible monster, we need a
         // special message.
@@ -2434,7 +2434,8 @@ void tutorial_describe_item(const item_def &item)
                         "<w>d</w>rop menu. On a related note, offering several "
                         "corpses on a floor square is facilitated by using the "
                         "<w>c</w>hop prompt where <w>c</w> is a valid synonym "
-                        "for <w>y</w>es.";
+                        "for <w>y</w>es, or directly chopping <w>a</w>ll "
+                        "corpses.";
             }
 #endif
             Options.tutorial_events[TUT_SEEN_CARRION] = 0;

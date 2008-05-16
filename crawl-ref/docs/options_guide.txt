@@ -1460,6 +1460,7 @@ The following events are logged:
         - Being put under penance and being forgiven
         - Receiving a gift from a god (except Xom)
         - Being able to invoke a godly power for the first time
+        - Picking up a rune or the orb of zot for the first time
         - Identifying items (see below)
         - Killing OOD or unique monsters (see below)
         - Reaching critical HP levels (see below)
@@ -1477,14 +1478,14 @@ note_items = <regexes>
         artefact
         (fixed, unrand, or random) or if its short description matches a 
         regex. E.g.
-             note_items = rod,book,rune,acquirement
+             note_items = rod,book,acquirement
 
 note_monsters = <regex list>
         Monsters whose name matches an item in this comma-separated list 
         are considered interesting. You can have multiple note_monsters 
         lines. E.g.
              note_monsters = Klown,orb of fire
-        
+
 ood_interesting = 8
         Monsters which are out of depth (OOD for short) for their 
         current level, e.g. a dragon on level 2, will be noted if they 

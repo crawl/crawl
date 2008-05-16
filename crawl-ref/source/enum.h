@@ -708,6 +708,7 @@ enum delay_type
     DELAY_JEWELLERY_ON,
     DELAY_MEMORISE,
     DELAY_BUTCHER,
+    DELAY_BOTTLE_BLOOD,
     DELAY_OFFER_CORPSE,
     DELAY_WEAPON_SWAP,                 // for easy_butcher
     DELAY_PASSWALL,
