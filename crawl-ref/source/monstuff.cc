@@ -1047,8 +1047,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 bool notice = false;
                 const bool anon = (i == ANON_FRIENDLY_MONSTER);
 
-                const mon_holy_type targ_holy  = mons_holiness(monster),
-                    attacker_holy = anon? MH_NATURAL : mons_holiness(&menv[i]);
+                const mon_holy_type targ_holy = mons_holiness(monster),
+                    attacker_holy = anon ? MH_NATURAL : mons_holiness(&menv[i]);
 
                 if (attacker_holy == MH_UNDEAD)
                 {
