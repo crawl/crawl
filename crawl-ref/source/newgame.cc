@@ -3630,7 +3630,7 @@ bool _give_items_skills()
             _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
 
             if (you.species == SP_OGRE)
-                _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANCUS);
+                _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANKUS);
             else if (you.species == SP_TROLL)
                 _newgame_clear_item(0);
         }
@@ -4031,7 +4031,7 @@ bool _give_items_skills()
 
         // WEAPONS
         if (you.species == SP_OGRE)
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANCUS);
+            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANKUS);
         else if (you.species == SP_TROLL)
             you.equip[EQ_WEAPON] = -1;
         else

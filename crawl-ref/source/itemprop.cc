@@ -193,7 +193,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_FLAIL,             "flail",               9,  2, 15, 130,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
-    { WPN_ANCUS,             "ancus",               9,  2, 14, 120,  8,
+    { WPN_ANKUS,             "ankus",               9,  2, 14, 120,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING, 10 },
     { WPN_MORNINGSTAR,       "morningstar",        10, -1, 15, 140,  8,
@@ -759,7 +759,7 @@ void set_equip_race( item_def &item, unsigned long flags )
                     && item.sub_type != WPN_FALCHION)
                 || item.sub_type == WPN_QUICK_BLADE
                 || item.sub_type == WPN_CLUB
-                || item.sub_type == WPN_ANCUS
+                || item.sub_type == WPN_ANKUS
                 || item.sub_type == WPN_WHIP
                 || item.sub_type == WPN_BLOWGUN
                 || item.sub_type == WPN_BOW
@@ -1437,7 +1437,7 @@ int weapon_rarity( int w_type )
     case WPN_GREAT_MACE:
         return (3);
 
-    case WPN_ANCUS:
+    case WPN_ANKUS:
     case WPN_DIRE_FLAIL:
     case WPN_SCYTHE:
     case WPN_LONGBOW:

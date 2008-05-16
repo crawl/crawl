@@ -449,7 +449,7 @@ enum weapon_type
     WPN_DOUBLE_SWORD,
     WPN_TRIPLE_SWORD,
     WPN_HAMMER,
-    WPN_ANCUS,
+    WPN_ANKUS,
     WPN_WHIP,                          //   30
     WPN_SABRE,
     WPN_DEMON_BLADE,

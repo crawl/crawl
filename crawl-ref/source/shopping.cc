@@ -574,7 +574,7 @@ unsigned int item_value( item_def item, bool ident )
             valued += 35;
             break;
 
-        case WPN_ANCUS:
+        case WPN_ANKUS:
         case WPN_WAR_AXE:
         case WPN_MORNINGSTAR:
         case WPN_SABRE:

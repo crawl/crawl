@@ -64,9 +64,12 @@ This amulet repels some of the attacks of creatures which have been
 magically summoned, and also makes the wearer more resistant to
 draining attacks.
 %%%%
-ancus
+ankus
 
-A large and vicious toothed club.
+What mahouts steer their elephants with. It basically resembles a 
+fireplace poker with a short, stout handle, and a bluntish spike and 
+hook for communicating one's desires through the pachyderm's  thick 
+skin. Curiously enough, Ogres are famous for driving larger elephants.
 %%%%
 animal skin
 

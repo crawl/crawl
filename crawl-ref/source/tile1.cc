@@ -1101,8 +1101,8 @@ static int _tileidx_weapon(const item_def &item)
     case WPN_GIANT_SPIKED_CLUB:
         return TILE_WPN_GIANT_SPIKED_CLUB;
 
-    case WPN_ANCUS:
-        return TILE_WPN_ANCUS;
+    case WPN_ANKUS:
+        return TILE_WPN_ANKUS;
 
     case WPN_WHIP:
         return TILE_WPN_WHIP;
@@ -3302,7 +3302,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_EVENINGSTAR:       return TILEP_HAND1_EVENINGSTAR;
     case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
     case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
-    case WPN_ANCUS:             return TILEP_HAND1_MACE;
+    case WPN_ANKUS:             return TILEP_HAND1_MACE;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
 
@@ -4503,7 +4503,7 @@ static int _pack_floor_item(int *idx, int *flag, int *isort, int max)
     {
         WPN_WHIP, WPN_CLUB, WPN_HAMMER, WPN_MACE,
         WPN_FLAIL, WPN_DEMON_WHIP,
-        WPN_ANCUS, WPN_MORNINGSTAR, WPN_EVENINGSTAR,
+        WPN_ANKUS, WPN_MORNINGSTAR, WPN_EVENINGSTAR,
         WPN_SPIKED_FLAIL, WPN_GREAT_MACE, WPN_DIRE_FLAIL,
         WPN_GIANT_CLUB,  WPN_GIANT_SPIKED_CLUB,
 

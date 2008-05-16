@@ -43,7 +43,7 @@ eveningstar WPN_EVENINGSTAR
 eveningstar2 WPN_EVENINGSTAR2
 hammer WPN_HAMMER
 hammer2 WPN_HAMMER2
-ancus WPN_ANCUS/* D9H1S14 A large and vicious toothed club.
+ankus WPN_ANKUS/* D9H1S14 A large and vicious toothed club.
 bullwhip WPN_WHIP/* D3H1S14 A whip.
 demon_whip WPN_DEMON_WHIP/* D10H1S14 A terrible weapon, woven in the depths of the inferno.
 giant_club WPN_GIANT_CLUB/* D15H-5S16 A giant lump of wood, shaped for an ogre's hands.

@@ -526,7 +526,7 @@ void cast_sticks_to_snakes(int pow)
             || you.inv[ weapon ].sub_type == WPN_GIANT_SPIKED_CLUB
             || you.inv[ weapon ].sub_type == WPN_BOW
             || you.inv[ weapon ].sub_type == WPN_LONGBOW
-            || you.inv[ weapon ].sub_type == WPN_ANCUS
+            || you.inv[ weapon ].sub_type == WPN_ANKUS
             || you.inv[ weapon ].sub_type == WPN_HALBERD
             || you.inv[ weapon ].sub_type == WPN_GLAIVE
             || you.inv[ weapon ].sub_type == WPN_BLOWGUN))

@@ -136,7 +136,7 @@ static int _classic_weapon_colour(const item_def &item)
         case WPN_CLUB:
         case WPN_GIANT_CLUB:
         case WPN_GIANT_SPIKED_CLUB:
-        case WPN_ANCUS:
+        case WPN_ANKUS:
         case WPN_WHIP:
         case WPN_QUARTERSTAFF:
             item_colour = BROWN;
@@ -1019,7 +1019,7 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
                 rc = ISFLAG_DWARVEN;
             break;
 
-        case WPN_ANCUS:
+        case WPN_ANKUS:
             if (one_chance_in(4))
                 rc = ISFLAG_ORCISH;
             break;
