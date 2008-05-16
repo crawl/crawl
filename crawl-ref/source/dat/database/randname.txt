@@ -157,6 +157,9 @@ of @virtue_or_vice@
 
 of @number_or_qualifier@ @thing_names@
 
+w:5
+of @destiny_name@
+
 w:9
 of @god_name@'s @divine_esteem@
 

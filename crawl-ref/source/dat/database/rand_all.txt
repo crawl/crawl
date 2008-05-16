@@ -287,6 +287,19 @@ Amorality
 Untruth
 
 %%%%
+destiny_name
+
+Destiny
+
+Fate
+
+Karma
+
+Kismet
+
+Wyrd
+
+%%%%
 number_or_qualifier
 
 # exact numbers
