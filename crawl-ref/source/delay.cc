@@ -372,7 +372,8 @@ void stop_delay( bool stop_stair_travel )
                              (multiple_corpses ? "s" : ""), weapon.c_str());
         }
         else
-            mprf("You stop %s the corpse.", butcher_verb.c_str());
+            mprf("You stop %s the corpse%s.", butcher_verb.c_str(),
+                 multiple_corpses ? "s" : "");
 
         pop_delay();
         break;

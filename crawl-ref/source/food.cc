@@ -460,8 +460,10 @@ bool butchery(int which_corpse)
 
             // Shall we butcher this corpse?
             snprintf(info, INFO_SIZE, "%s %s?",
-                     can_bottle_blood_from_corpse(mitm[o].plus) ? "Bottle"
-                                                                : "Butcher",
+                     (!can_bottle_blood_from_corpse(mitm[o].plus)
+                      || you.duration[DUR_PRAYER]
+                         && god_likes_butchery(you.religion)) ? "Butcher"
+                                                              : "Bottle",
                      mitm[o].name(DESC_NOCAP_A).c_str());
 
             const int result = yesnoquit(info, true, 'N', true, false,
@@ -489,8 +491,12 @@ bool butchery(int which_corpse)
 
                 if (result == 2) // (a)ll
                 {
-                    if (can_bottle_blood_from_corpse(mitm[o].plus))
+                    if (can_bottle_blood_from_corpse(mitm[o].plus)
+                        && (!you.duration[DUR_PRAYER]
+                            || !god_likes_butchery(you.religion)))
+                    {
                         bottle_all = true;
+                    }
                     else
                         butcher_all = true;
                 }
