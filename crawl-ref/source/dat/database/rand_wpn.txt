@@ -169,6 +169,8 @@ Execution
 
 Destruction
 
+Disembowelment
+
 Evisceration
 
 Extermination
@@ -265,6 +267,8 @@ Tortfeasance
 Extenuating Circumstances
 
 Absolution
+
+Exoneration
 
 False Accusations
 

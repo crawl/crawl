@@ -20,6 +20,8 @@ Amoeba
 # insects
 Butterfly
 
+Cicada
+
 Cricket
 
 Echidna
