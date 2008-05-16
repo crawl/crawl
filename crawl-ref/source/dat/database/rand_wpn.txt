@@ -326,12 +326,12 @@ Gnat
 
 Blowfly
 
-# arachnides
+# arachnids
 Spider
 
 Scorpion
 
-# amphibes and reptiles
+# amphibians and reptiles
 Rattle-Snake
 
 # birds

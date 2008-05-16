@@ -98,8 +98,6 @@ Benevolence
 
 Whim
 
-Favour
-
 # bad
 Displeasure
 
@@ -394,4 +392,3 @@ Wishes
 Wonders
 
 %%%%
-

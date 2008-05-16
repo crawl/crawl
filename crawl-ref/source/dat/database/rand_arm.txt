@@ -33,7 +33,7 @@ Snail
 
 Gastropod
 
-# arachnides and clams
+# arachnids and clams
 Tarantula
 
 Clam
@@ -42,7 +42,7 @@ Barnacle
 
 Lobster
 
-# amphibia and reptiles
+# amphibians and reptiles
 Tortoise
 
 Turtle
@@ -229,7 +229,7 @@ armour_property_name
 
 Supple Strength
 
-Resist Death
+Death Resistance
 
 Grace
 
