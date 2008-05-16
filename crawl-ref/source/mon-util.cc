@@ -4092,7 +4092,7 @@ void monsters::banish(const std::string &)
 
 int monsters::holy_aura() const
 {
-    return ((type == MONS_DAEVA || type == MONS_ANGEL)? hit_dice : 0);
+    return ((type == MONS_DAEVA || type == MONS_ANGEL) ? hit_dice : 0);
 }
 
 bool monsters::has_spell(spell_type spell) const
