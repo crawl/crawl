@@ -1493,12 +1493,10 @@ static bool _is_poly_power_unsuitable(
     }
 }
 
-/*
- * if targetc == RANDOM_MONSTER then relpower indicates the desired
- * power of the new monster relative to the current monster.
- * Relaxation still takes effect when needed no matter what relpower
- * says.
- */
+// if targetc == RANDOM_MONSTER, then relpower indicates the desired
+// power of the new monster, relative to the current monster.
+// Relaxation still takes effect when needed, no matter what relpower
+// says.
 bool monster_polymorph( monsters *monster, monster_type targetc,
                         poly_power_type power )
 {
