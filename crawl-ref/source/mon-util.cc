@@ -2585,8 +2585,6 @@ monsters &monsters::operator = (const monsters &mon)
 
 void monsters::reset()
 {
-    destroy_inventory();
-
     mname.clear();
     enchantments.clear();
     ench_countdown = 0;
