@@ -1001,7 +1001,7 @@ int cast_vitalisation(int pow)
         case 4:
         case 5:
             if ((step == 3 || you.duration[DUR_VITALISATION_CHAIN] > 0)
-                && you.attribute[ATTR_DIVINE_STAMINA] == (step - 3)
+                && ((you.attribute[ATTR_DIVINE_STAMINA] + 1) / 2) == (step - 3)
                 && (player_mutation_level(MUT_STRONG) / 5) < (6 - step)
                 && (player_mutation_level(MUT_CLEVER) / 5) < (6 - step)
                 && (player_mutation_level(MUT_AGILE) / 5) < (6 - step))
@@ -1012,15 +1012,16 @@ int cast_vitalisation(int pow)
                     (step == 4) ? "strengthens your"
                                 : "maximises your");
 
-                you.attribute[ATTR_DIVINE_STAMINA]++;
+                const int stamina_amt = (step - 3) * 2 + 1;
+                you.attribute[ATTR_DIVINE_STAMINA] += stamina_amt;
                 you.duration[DUR_DIVINE_STAMINA] +=
                     (step == 3) ? (you.skills[SK_INVOCATIONS] * 2) :
                     (step == 4) ? (you.skills[SK_INVOCATIONS])
                                 : (you.skills[SK_INVOCATIONS] / 2);
 
-                modify_stat(STAT_STRENGTH, 1, true, "");
-                modify_stat(STAT_INTELLIGENCE, 1, true, "");
-                modify_stat(STAT_DEXTERITY, 1, true, "");
+                modify_stat(STAT_STRENGTH, stamina_amt, true, "");
+                modify_stat(STAT_INTELLIGENCE, stamina_amt, true, "");
+                modify_stat(STAT_DEXTERITY, stamina_amt, true, "");
                 need_chain =
                     ((player_mutation_level(MUT_STRONG) / 5) < (5 - step)
                     && (player_mutation_level(MUT_CLEVER) / 5) < (5 - step)
