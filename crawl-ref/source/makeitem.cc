@@ -1019,11 +1019,6 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
                 rc = ISFLAG_DWARVEN;
             break;
 
-        case WPN_ANKUS:
-            if (one_chance_in(4))
-                rc = ISFLAG_ORCISH;
-            break;
-
         case WPN_DAGGER:
             if (one_chance_in(3))
                 rc = ISFLAG_ORCISH;
