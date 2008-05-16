@@ -1374,6 +1374,7 @@ orange crystal statue
 
 An intricately carved statue of glittering orange crystal. Its eyes
 fix on yours with a piercing gaze.
+
 It looks brittle.
 %%%%
 orange demon
@@ -1597,6 +1598,7 @@ silver statue
 
 A beautiful statue of silvery hue. Its eyes glow with an otherworldly
 radiance.
+
 It looks brittle.
 %%%%
 skeletal dragon
