@@ -3770,6 +3770,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                         did_god_conduct(DID_ATTACK_FRIEND, 5, true, mon);
                     else if (mons_neutral(mon))
                         did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, mon);
+
+                    if (is_unchivalric_attack(&you, mon, mon))
+                        did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, mon);
                 }
 
                 if (mons_is_holy(mon))
@@ -3944,8 +3947,11 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             else if (mons_neutral(mon))
                 conduct.set(DID_ATTACK_NEUTRAL, 5, !okay, mon);
 
+            if (is_unchivalric_attack(&you, mon, mon))
+                conduct.set(DID_UNCHIVALRIC_ATTACK, 5, !okay, mon);
+
             if (mons_is_holy(mon))
-                conduct.set( DID_ATTACK_HOLY, mon->hit_dice, !okay, mon );
+                conduct.set(DID_ATTACK_HOLY, mon->hit_dice, !okay, mon);
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC

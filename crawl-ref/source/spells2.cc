@@ -35,6 +35,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "fight.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1212,6 +1213,9 @@ char burn_freeze(int pow, beam_type flavour)
             did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
         else if (mons_neutral(monster))
             did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
+
+        if (is_unchivalric_attack(&you, monster, monster))
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
 
         if (mons_holiness(monster) == MH_HOLY)
             did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice);

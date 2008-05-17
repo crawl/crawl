@@ -28,6 +28,18 @@ enum unarmed_attack_type
     UNAT_BITE
 };
 
+enum unchivalric_attack_type
+{
+    UCAT_NO_ATTACK,                    //    0
+    UCAT_DISTRACTED,
+    UCAT_CONFUSED,
+    UCAT_FLEEING,
+    UCAT_INVISIBLE,
+    UCAT_NET_HELD,
+    UCAT_PARALYSED,
+    UCAT_SLEEPING
+};
+
 struct mon_attack_def;
 
 // added Sept 18, 2000 -- bwr
@@ -69,6 +81,10 @@ bool monsters_fight(int monster_attacking, int monster_attacked);
 int calc_your_to_hit( bool random_factor );
 
 int calc_heavy_armour_penalty( bool random_factor );
+
+unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
+                                              const actor *defender,
+                                              const monsters *def);
 
 class melee_attack
 {

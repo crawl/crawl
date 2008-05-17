@@ -31,6 +31,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "effects.h" // holy word
+#include "fight.h"
 #include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -220,6 +221,9 @@ int cast_smiting(int power, dist &beam)
         else if (mons_neutral(monster))
             did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
 
+        if (is_unchivalric_attack(&you, monster, monster))
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
+
         if (mons_is_holy(monster))
             did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice, true, monster);
 
@@ -278,6 +282,9 @@ int airstrike(int power, dist &beam)
                 did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
             else if (mons_neutral(monster))
                 did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
+
+            if (is_unchivalric_attack(&you, monster, monster))
+                did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
 
             if (mons_is_holy(monster))
                 did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice, true, monster);

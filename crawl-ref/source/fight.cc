@@ -283,6 +283,55 @@ static bool player_fights_well_unarmed(int heavy_armour_penalty)
             && random2(1 + heavy_armour_penalty) < 2);
 }
 
+unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
+                                              const actor *defender,
+                                              const monsters *def)
+{
+    unchivalric_attack_type unchivalric = UCAT_NO_ATTACK;
+
+    // distracted (but not batty)
+    if (def->foe != MHITYOU && !testbits(def->flags, MF_BATTY))
+        unchivalric = UCAT_DISTRACTED;
+
+    // confused (but not perma-confused)
+    if (def->has_ench(ENCH_CONFUSION)
+        && !mons_class_flag(def->type, M_CONFUSED))
+    {
+        unchivalric = UCAT_CONFUSED;
+    }
+
+    // fleeing
+    if (def->behaviour == BEH_FLEE)
+        unchivalric = UCAT_FLEEING;
+
+    // invisible
+    if (attacker->invisible() && !defender->can_see_invisible())
+        unchivalric = UCAT_INVISIBLE;
+
+    // held in a net
+    if (def->has_ench(ENCH_HELD))
+        unchivalric = UCAT_NET_HELD;
+
+    // paralysed
+    if (def->has_ench(ENCH_PARALYSIS))
+        unchivalric = UCAT_PARALYSED;
+
+    // sleeping
+    if (def->behaviour == BEH_SLEEP)
+        unchivalric = UCAT_SLEEPING;
+
+    // no unchivalric attacks on monsters that cannot fight
+    // (plants, etc.)
+    if (defender->cannot_fight())
+        unchivalric = UCAT_NO_ATTACK;
+
+    // no unchivalric attacks on invisible monsters
+    if (!player_monster_visible(def))
+        unchivalric = UCAT_NO_ATTACK;
+
+    return unchivalric;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Melee attack
 
@@ -2774,67 +2823,57 @@ int melee_attack::player_to_hit(bool random_factor)
 
 void melee_attack::player_stab_check()
 {
+    unchivalric_attack_type unchivalric =
+        is_unchivalric_attack(attacker, defender, def);
+
     bool roll_needed = true;
     int roll = 155;
     // This ordering is important!
 
-    // not paying attention (but not batty)
-    if (def->foe != MHITYOU && !testbits(def->flags, MF_BATTY))
+    switch (unchivalric)
     {
+    default:
+    case UCAT_NO_ATTACK:
+        stab_attempt = false;
+        stab_bonus = 0;
+        break;
+
+    case UCAT_DISTRACTED:
         stab_attempt = true;
         stab_bonus = 3;
-    }
+        break;
 
-    // confused (but not perma-confused)
-    if (def->has_ench(ENCH_CONFUSION)
-        && !mons_class_flag(def->type, M_CONFUSED))
-    {
+    case UCAT_CONFUSED:
+    case UCAT_FLEEING:
         stab_attempt = true;
         stab_bonus = 2;
-    }
+        break;
 
-    // fleeing
-    if (def->behaviour == BEH_FLEE)
-    {
-        stab_attempt = true;
-        stab_bonus = 2;
-    }
-
-    if (attacker->invisible() && !defender->can_see_invisible())
-    {
+    case UCAT_INVISIBLE:
         stab_attempt = true;
         if (!mons_sense_invis(def))
             roll -= 15;
         stab_bonus = 2;
-    }
+        break;
 
-    // trapped in a net or paralysed
-    if (def->has_ench(ENCH_HELD) || def->has_ench(ENCH_PARALYSIS))
-    {
+    case UCAT_NET_HELD:
+    case UCAT_PARALYSED:
         stab_attempt = true;
         stab_bonus = 1;
-    }
+        break;
 
-    // sleeping
-    if (def->behaviour == BEH_SLEEP)
-    {
+    case UCAT_SLEEPING:
         stab_attempt = true;
         roll_needed = false;
         stab_bonus = 1;
+        break;
     }
 
-    // helpless (plants, etc.)
-    if (defender->cannot_fight())
-        stab_attempt = false;
+    // see if we need to roll against dexterity / stabbing
+    if (stab_attempt && roll_needed)
+        stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
 
-    // check for invisibility - no stabs on invisible monsters.
-    if (!player_monster_visible( def ))
-    {
-        stab_attempt = false;
-        stab_bonus = 0;
-    }
-
-    if (stab_attempt && you.religion == GOD_SHINING_ONE)
+    if (unchivalric && you.religion == GOD_SHINING_ONE)
     {
         // check for the would-be-stabbed monster's being alive, in case
         // it was abjured as a result of the attack
@@ -2848,12 +2887,8 @@ void melee_attack::player_stab_check()
             cancel_attack = true;
         }
         else
-            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 4);
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5);
     }
-
-    // see if we need to roll against dexterity / stabbing
-    if (stab_attempt && roll_needed)
-        stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
 }
 
 void melee_attack::player_apply_attack_delay()
