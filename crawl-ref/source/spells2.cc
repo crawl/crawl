@@ -1217,7 +1217,7 @@ char burn_freeze(int pow, beam_type flavour)
         if (is_unchivalric_attack(&you, monster, monster))
             did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
 
-        if (mons_holiness(monster) == MH_HOLY)
+        if (mons_is_holy(monster))
             did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice);
     }
 
