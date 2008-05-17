@@ -2823,7 +2823,7 @@ int melee_attack::player_to_hit(bool random_factor)
 void melee_attack::player_stab_check()
 {
     unchivalric_attack_type unchivalric =
-        is_unchivalric_attack(attacker, defender, def);
+        is_unchivalric_attack(&you, defender, def);
 
     bool roll_needed = true;
     int roll = 155;
@@ -2874,18 +2874,17 @@ void melee_attack::player_stab_check()
 
     if (unchivalric)
     {
-        bool cancel_stab =
-            (you.religion == GOD_SHINING_ONE
-                && !tso_unchivalric_attack_safe_monster(defender)
-                && !yesno("Really attack this helpless creature?", false, 'n'));
-
-        if (cancel_stab)
+        if (you.religion == GOD_SHINING_ONE
+            && !tso_unchivalric_attack_safe_monster(defender))
         {
-            stab_attempt = false;
-            cancel_attack = true;
+            if (!you.confused()
+                && !yesno("Really attack this helpless creature?", false, 'n'))
+            {
+                cancel_attack = true;
+            }
+            else
+                did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, def);
         }
-        else
-            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, def);
     }
 }
 
