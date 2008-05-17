@@ -591,9 +591,6 @@ bool melee_attack::attack()
         return (true);
     }
 
-    // Allow god to get offended, etc.
-    attacker->attacking(defender);
-
     // A lot of attack parameters get set in here. 'Ware.
     to_hit = calc_to_hit();
 
@@ -605,9 +602,14 @@ bool melee_attack::attack()
 
     // Trying to stay general beyond this point is a recipe for insanity.
     // Maybe when Stone Soup hits 1.0... :-)
-    return (attacker->atype() == ACT_PLAYER? player_attack() :
-            defender->atype() == ACT_PLAYER? mons_attack_you() :
-                                             mons_attack_mons() );
+    bool retval = ((attacker->atype() == ACT_PLAYER) ? player_attack() :
+                   (defender->atype() == ACT_PLAYER) ? mons_attack_you()
+                                                     : mons_attack_mons());
+
+    // Allow god to get offended, etc.
+    attacker->attacking(defender);
+
+    return retval;
 }
 
 static int _modify_blood_amount(const int damage, const int dam_type)
