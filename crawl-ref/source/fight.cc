@@ -142,7 +142,7 @@ bool test_melee_hit(int to_hit, int ev)
 
 // This function returns the "extra" stats the player gets because of
 // choice of weapon... it's used only for giving warnings when a player
-// weilds a less than ideal weapon.
+// wields a less than ideal weapon.
 int effective_stat_bonus( int wepType )
 {
 #ifdef USE_NEW_COMBAT_STATS
@@ -704,8 +704,8 @@ bool melee_attack::player_attack()
             damage_done = 0;
         else
         {
-            // This actually does more than calculate damage - it also sets up
-            // messages, etc.
+            // This actually does more than calculate damage - it also
+            // sets up messages, etc.
             player_calc_hit_damage();
         }
 
