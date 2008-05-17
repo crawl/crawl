@@ -763,35 +763,32 @@ bool melee_attack::player_attack()
             hit_woke_orc = true;
         }
 
-        if (def->alive())
+        // always upset monster regardless of damage
+        behaviour_event(def, ME_WHACK, MHITYOU);
+
+        if (damage_done > 0)
         {
-            // always upset monster regardless of damage
-            behaviour_event(def, ME_WHACK, MHITYOU);
+            int blood =
+                _modify_blood_amount(damage_done, attacker->damage_type());
+            if (blood > defender->stat_hp())
+                blood = defender->stat_hp();
 
-            if (damage_done > 0)
-            {
-                int blood =
-                    _modify_blood_amount(damage_done, attacker->damage_type());
-                if (blood > defender->stat_hp())
-                    blood = defender->stat_hp();
-
-                bleed_onto_floor(where.x, where.y, defender->id(), blood, true);
-            }
-
-            if (damage_done > 0 || !defender_visible)
-                player_announce_hit();
-            else if (!shield_blocked && damage_done <= 0)
-            {
-                no_damage_message =
-                    make_stringf("You %s %s.", attack_verb.c_str(),
-                                 defender->name(DESC_NOCAP_THE).c_str());
-            }
-
-            player_hurt_monster();
-
-            if (damage_done)
-                player_exercise_combat_skills();
+            bleed_onto_floor(where.x, where.y, defender->id(), blood, true);
         }
+
+        if (damage_done > 0 || !defender_visible)
+            player_announce_hit();
+        else if (!shield_blocked && damage_done <= 0)
+        {
+            no_damage_message =
+                make_stringf("You %s %s.", attack_verb.c_str(),
+                             defender->name(DESC_NOCAP_THE).c_str());
+        }
+
+        player_hurt_monster();
+
+        if (damage_done)
+            player_exercise_combat_skills();
 
         if (player_check_monster_died())
             return (true);
