@@ -1473,7 +1473,7 @@ int melee_attack::player_stab(int damage)
 
         exercise(SK_STABBING, 1 + random2avg(5, 4));
 
-        did_god_conduct(DID_STABBING, 4);
+        did_god_conduct(DID_STABBING, 4, true, def);
     }
     else
     {
@@ -2885,7 +2885,7 @@ void melee_attack::player_stab_check()
             cancel_attack = true;
         }
         else
-            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5);
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, def);
     }
 }
 

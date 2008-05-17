@@ -1895,10 +1895,14 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
 
     case DID_UNCHIVALRIC_ATTACK:
     case DID_POISON:
-        if (you.religion == GOD_SHINING_ONE
-            && (thing_done != DID_UNCHIVALRIC_ATTACK
-                || tso_unchivalric_attack_safe_monster(victim)))
+        if (you.religion == GOD_SHINING_ONE)
         {
+            if (thing_done == DID_UNCHIVALRIC_ATTACK
+                && tso_unchivalric_attack_safe_monster(victim))
+            {
+                break;
+            }
+
             ret = true;
             piety_change = -level;
             penance = level * 2;
