@@ -289,45 +289,42 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
 {
     unchivalric_attack_type unchivalric = UCAT_NO_ATTACK;
 
-    // distracted (but not batty)
-    if (def->foe != MHITYOU && !testbits(def->flags, MF_BATTY))
-        unchivalric = UCAT_DISTRACTED;
-
-    // confused (but not perma-confused)
-    if (def->has_ench(ENCH_CONFUSION)
-        && !mons_class_flag(def->type, M_CONFUSED))
+    // no unchivalric attacks on dead or abjured monsters, monsters that
+    // cannot fight (e.g. plants), or invisible monsters
+    if (defender->alive() && !defender->cannot_fight()
+        && player_monster_visible(def))
     {
-        unchivalric = UCAT_CONFUSED;
+        // distracted (but not batty)
+        if (def->foe != MHITYOU && !testbits(def->flags, MF_BATTY))
+            unchivalric = UCAT_DISTRACTED;
+
+        // confused (but not perma-confused)
+        if (def->has_ench(ENCH_CONFUSION)
+            && !mons_class_flag(def->type, M_CONFUSED))
+        {
+            unchivalric = UCAT_CONFUSED;
+        }
+
+        // fleeing
+        if (def->behaviour == BEH_FLEE)
+            unchivalric = UCAT_FLEEING;
+
+        // invisible
+        if (attacker->invisible() && !defender->can_see_invisible())
+            unchivalric = UCAT_INVISIBLE;
+
+        // held in a net
+        if (def->has_ench(ENCH_HELD))
+            unchivalric = UCAT_HELD_IN_NET;
+
+        // paralysed
+        if (def->has_ench(ENCH_PARALYSIS))
+            unchivalric = UCAT_PARALYSED;
+
+        // sleeping
+        if (def->behaviour == BEH_SLEEP)
+            unchivalric = UCAT_SLEEPING;
     }
-
-    // fleeing
-    if (def->behaviour == BEH_FLEE)
-        unchivalric = UCAT_FLEEING;
-
-    // invisible
-    if (attacker->invisible() && !defender->can_see_invisible())
-        unchivalric = UCAT_INVISIBLE;
-
-    // held in a net
-    if (def->has_ench(ENCH_HELD))
-        unchivalric = UCAT_NET_HELD;
-
-    // paralysed
-    if (def->has_ench(ENCH_PARALYSIS))
-        unchivalric = UCAT_PARALYSED;
-
-    // sleeping
-    if (def->behaviour == BEH_SLEEP)
-        unchivalric = UCAT_SLEEPING;
-
-    // no unchivalric attacks on monsters that cannot fight
-    // (plants, etc.)
-    if (defender->cannot_fight())
-        unchivalric = UCAT_NO_ATTACK;
-
-    // no unchivalric attacks on invisible monsters
-    if (!player_monster_visible(def))
-        unchivalric = UCAT_NO_ATTACK;
 
     return unchivalric;
 }
@@ -2856,7 +2853,7 @@ void melee_attack::player_stab_check()
         stab_bonus = 2;
         break;
 
-    case UCAT_NET_HELD:
+    case UCAT_HELD_IN_NET:
     case UCAT_PARALYSED:
         stab_attempt = true;
         stab_bonus = 1;

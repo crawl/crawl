@@ -35,7 +35,7 @@ enum unchivalric_attack_type
     UCAT_CONFUSED,
     UCAT_FLEEING,
     UCAT_INVISIBLE,
-    UCAT_NET_HELD,
+    UCAT_HELD_IN_NET,
     UCAT_PARALYSED,
     UCAT_SLEEPING
 };
