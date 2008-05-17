@@ -856,7 +856,7 @@ int mons_res_elec( const monsters *mon )
 {
     int mc = mon->type;
 
-    /* this is a variable, not a player_xx() function, so can be above 1 */
+    // this is a variable, not a player_xx() function, so can be above 1
     int u = 0;
 
     u += get_mons_resists(mon).elec;
@@ -2453,10 +2453,8 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
     return ("");
 }
 
-/*
- * Checks if the monster can use smiting/torment to attack without unimpeded
- * LOS to the player.
- */
+// Checks if the monster can use smiting/torment to attack without
+// unimpeded LOS to the player.
 static bool _mons_can_smite(const monsters *monster)
 {
     if (monster->type == MONS_FIEND)
@@ -2474,15 +2472,14 @@ static bool _mons_can_smite(const monsters *monster)
     return (false);
 }
 
-/*
- * Determines if a monster is smart and pushy enough to displace other monsters.
- * A shover should not cause damage to the shovee by displacing it, so monsters
- * that trail clouds of badness are ineligible. The shover should also benefit
- * from shoving, so monsters that can smite/torment are ineligible.
- *
- * (Smiters would be eligible for shoving when fleeing if the AI allowed for
- * smart monsters to flee.)
- */
+// Determines if a monster is smart and pushy enough to displace other
+// monsters.  A shover should not cause damage to the shovee by
+// displacing it, so monsters that trail clouds of badness are
+// ineligible.  The shover should also benefit from shoving, so monsters
+// that can smite/torment are ineligible.
+//
+// (Smiters would be eligible for shoving when fleeing if the AI allowed
+// for smart monsters to flee.)
 bool monster_shover(const monsters *m)
 {
     const monsterentry *me = get_monster_data(m->type);
