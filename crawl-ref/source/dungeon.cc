@@ -169,7 +169,7 @@ static void _spotty_level(bool seeded, int iterations, bool boxy);
 static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
 static char _plan_1();
-static char _plan_2();
+static char _plan_2(int level_number);
 static char _plan_3();
 static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                     char forbid_y2, dungeon_feature_type force_wall);
@@ -639,7 +639,9 @@ static void _register_place(const vault_placement &place)
 {
     _dgn_register_vault(place.map);
 
-    _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
+    if (!place.map.has_tag("layout"))
+        _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
+    
     if (place.map.has_tag("no_monster_gen"))
         _mask_vault(place, MMT_NO_MONS);
 
@@ -4273,9 +4275,11 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
         mapgen_report_map_use(place.map);
 #endif
 
+    bool is_layout = place.map.has_tag("layout");
+
     // If the map takes the whole screen or we were only requested to
     // build the vault, our work is done.
-    if (gluggy == MAP_ENCOMPASS || build_only)
+    if (gluggy == MAP_ENCOMPASS && !is_layout || build_only)
         return (true);
 
     // Does this level require Dis treatment (metal wallification)?
@@ -4299,7 +4303,7 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
     {
         _plan_4(v1x, v1y, v2x, v2y, DNGN_METAL_WALL);
     }
-    else
+    else if (!is_layout)
     {
         dgn_region_list excluded_regions;
         excluded_regions.push_back( dgn_region::absolute(v1x, v1y, v2x, v2y) );
@@ -5767,7 +5771,7 @@ static void _plan_main(int level_number, int force_plan)
         force_plan = 1 + random2(12);
 
     do_stairs = ((force_plan == 1) ? _plan_1() :
-                 (force_plan == 2) ? _plan_2() :
+                 (force_plan == 2) ? _plan_2(level_number) :
                  (force_plan == 3) ? _plan_3() :
                  (force_plan == 4) ? _plan_4(0, 0, 0, 0, NUM_FEATURES) :
                  (force_plan == 5) ? (one_chance_in(9) ? _plan_5()
@@ -5864,19 +5868,17 @@ static char _plan_1()
     return (one_chance_in(5) ? 3 : 2);
 }                               // end plan_1()
 
-// just a cross:
-static char _plan_2()
+static char _plan_2(int level_number)
 {
     dgn_Build_Method = "plan_2";
 
-    char width2 = (5 - random2(5));     // value range of [1,5] {dlb}
+    const int vault = random_map_for_tag("layout", false, true);
+    ASSERT(vault != -1);
 
-    _replace_area(10, (35 - width2), (GXM - 10), (35 + width2),
-                  DNGN_ROCK_WALL, DNGN_FLOOR);
-    _replace_area((40 - width2), 10, (40 + width2), (GYM - 10),
-                  DNGN_ROCK_WALL, DNGN_FLOOR);
+    bool success = _build_vaults(level_number, vault);
+    _ensure_vault_placed(success);
 
-    return (one_chance_in(4) ? 2 : 3);
+    return (one_chance_in(4) ? 0 : 1);
 }                               // end plan_2()
 
 static char _plan_3()
@@ -6100,39 +6102,11 @@ static char _plan_6(int level_number)
 {
     dgn_Build_Method = "plan_6";
 
-    spec_room sr;
+    const int vault = random_map_for_tag("layout", false, true);
+    ASSERT(vault != -1);
 
-    // circle of standing stones (well, kind of)
-    sr.x1 = 10;
-    sr.x2 = (GXM - 10);
-    sr.y1 = 10;
-    sr.y2 = (GYM - 10);
-
-    _octa_room(sr, 14, DNGN_FLOOR);
-
-    _replace_area(23, 23, 26, 26, DNGN_FLOOR, DNGN_STONE_WALL);
-    _replace_area(23, 47, 26, 50, DNGN_FLOOR, DNGN_STONE_WALL);
-    _replace_area(55, 23, 58, 26, DNGN_FLOOR, DNGN_STONE_WALL);
-    _replace_area(55, 47, 58, 50, DNGN_FLOOR, DNGN_STONE_WALL);
-    _replace_area(39, 20, 43, 23, DNGN_FLOOR, DNGN_STONE_WALL);
-    _replace_area(39, 50, 43, 53, DNGN_FLOOR, DNGN_STONE_WALL);
-    _replace_area(20, 30, 23, 33, DNGN_FLOOR, DNGN_STONE_WALL);
-    _replace_area(20, 40, 23, 43, DNGN_FLOOR, DNGN_STONE_WALL);
-    _replace_area(58, 30, 61, 33, DNGN_FLOOR, DNGN_STONE_WALL);
-    _replace_area(58, 40, 61, 43, DNGN_FLOOR, DNGN_STONE_WALL);
-
-    grd[35][32] = DNGN_STONE_WALL;
-    grd[46][32] = DNGN_STONE_WALL;
-    grd[35][40] = DNGN_STONE_WALL;
-    grd[46][40] = DNGN_STONE_WALL;
-
-    grd[69][34] = DNGN_STONE_STAIRS_DOWN_I;
-    grd[69][35] = DNGN_STONE_STAIRS_DOWN_II;
-    grd[69][36] = DNGN_STONE_STAIRS_DOWN_III;
-
-    grd[10][34] = DNGN_STONE_STAIRS_UP_I;
-    grd[10][35] = DNGN_STONE_STAIRS_UP_II;
-    grd[10][36] = DNGN_STONE_STAIRS_UP_III;
+    bool success = _build_vaults(level_number, vault);
+    _ensure_vault_placed(success);
 
     // This "back door" is often one of the easier ways to get out of
     // pandemonium... the easiest is to use the banish spell.

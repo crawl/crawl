@@ -361,6 +361,7 @@ int random_map_for_place(const level_id &place, bool want_minivault)
         // We also accept tagged levels here.
         if (vdefs[i].place == place
             && vdefs[i].is_minivault() == want_minivault
+            && !vdefs[i].has_tag("layout")
             && vault_unforbidden(vdefs[i]))
         {
             rollsize += vdefs[i].chance;
@@ -398,6 +399,7 @@ int random_map_in_depth(const level_id &place, bool want_minivault)
             && !vdefs[i].has_tag("pan")
             && !vdefs[i].has_tag("unrand")
             && !vdefs[i].has_tag("bazaar")
+            && !vdefs[i].has_tag("layout")
             && vault_unforbidden(vdefs[i]))
         {
             rollsize += vdefs[i].chance;
