@@ -20,9 +20,6 @@
 
 #define MAX_PIETY 200
 
-class actor;
-class monsters;
-
 enum harm_protection_type
 {
     HPT_NONE = 0,
