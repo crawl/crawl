@@ -963,7 +963,7 @@ bool melee_attack::player_aux_unarmed()
             }
             break;
 
-        case 2:             /* draconians */
+        case 2:             // draconians
             if (uattack != UNAT_TAILSLAP)
             {
                 // not draconian, and not wet merfolk
@@ -993,7 +993,7 @@ bool melee_attack::player_aux_unarmed()
                 damage_brand  = SPWPN_VENOM;
             }
 
-            /* grey dracs have spiny tails, or something */
+            // grey dracs have spiny tails, or something
             // maybe add this to player messaging {dlb}
             //
             // STINGER mutation doesn't give extra damage here... that
@@ -1016,7 +1016,7 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
 
-            /* no punching with a shield or 2-handed wpn, except staves */
+            // no punching with a shield or 2-handed wpn, except staves
             if (shield || coinflip()
                 || (weapon
                     && hands == HANDS_TWO
@@ -1027,7 +1027,7 @@ bool melee_attack::player_aux_unarmed()
             }
 
             unarmed_attack = "punch";
-            /* applied twice */
+            // applied twice
             aux_damage = 5 + you.skills[SK_UNARMED_COMBAT] / 3;
 
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
@@ -1084,7 +1084,7 @@ bool melee_attack::player_aux_unarmed()
 
             break;
 
-            /* To add more, add to while part of loop below as well */
+            // To add more, add to while part of loop below as well
         default:
             continue;
         }
@@ -2201,7 +2201,7 @@ bool melee_attack::apply_damage_brand()
         drain_defender();
         break;
 
-        /* 9 = speed - done before */
+        // 9 = speed - done before
     case SPWPN_VORPAL:
         special_damage = 1 + random2(damage_done) / 2;
         // note: leaving special_damage_message empty because there
@@ -2598,7 +2598,7 @@ bool melee_attack::player_check_monster_died()
     if (def->hit_points < 1)
     {
 #if DEBUG_DIAGNOSTICS
-        /* note: doesn't take account of special weapons etc */
+        // note: doesn't take account of special weapons, etc.
         mprf( MSGCH_DIAGNOSTICS, "Hit for %d.", damage_done );
 #endif
 
@@ -2971,7 +2971,7 @@ int melee_attack::player_unarmed_speed()
         else
             unarmed_delay = 10 - you.skills[SK_UNARMED_COMBAT] / 5;
 
-        /* this shouldn't happen anyway...sanity */
+        // this shouldn't happen anyway... sanity
         if (unarmed_delay < min_delay)
             unarmed_delay = min_delay;
     }
