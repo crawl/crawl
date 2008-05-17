@@ -1062,8 +1062,9 @@ void drain_life(int pow)
 
             hurted = 3 + random2(7) + random2(pow);
 
-            hurt_monster(monster, hurted);
             behaviour_event(monster, ME_WHACK, MHITYOU, you.x_pos, you.y_pos);
+
+            hurt_monster(monster, hurted);
 
             hp_gain += hurted;
 
@@ -1209,7 +1210,7 @@ char burn_freeze(int pow, beam_type flavour)
 
     if (hurted)
     {
-        behaviour_event(monster, ME_ANNOY, MHITYOU);
+        behaviour_event(monster, ME_WHACK, MHITYOU);
 
         if (mons_friendly(monster))
             did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);

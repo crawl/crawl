@@ -212,7 +212,7 @@ int cast_smiting(int power, dist &beam)
 
         mprf("You smite %s!", monster->name(DESC_NOCAP_THE).c_str());
 
-        behaviour_event(monster, ME_ANNOY, MHITYOU);
+        behaviour_event(monster, ME_WHACK, MHITYOU);
 
         // Maxes out at around 40 damage at 27 Invocations, which is plenty
         // in my book (the old max damage was around 70, which seems excessive)
@@ -276,7 +276,7 @@ int airstrike(int power, dist &beam)
             hurted = 0;
         else
         {
-            behaviour_event(monster, ME_ANNOY, MHITYOU);
+            behaviour_event(monster, ME_WHACK, MHITYOU);
 
             hurt_monster(monster, hurted);
 
@@ -290,8 +290,6 @@ int airstrike(int power, dist &beam)
 
             if (mons_is_holy(monster))
                 did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice, true, monster);
-
-            behaviour_event(monster, ME_ANNOY, MHITYOU, you.x_pos, you.y_pos);
 
             if (monster->hit_points < 1)
                 monster_die(monster, KILL_YOU, 0);
