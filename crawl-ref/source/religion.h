@@ -73,7 +73,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 bool is_evil_item(const item_def& item);
 bool ely_destroy_weapons();
 bool trog_burn_books();
-bool tso_stab_safe_monster(const actor *act);
+bool tso_unchivalric_attack_safe_monster(const actor *act);
 
 bool is_good_follower(const monsters* mon);
 bool is_orcish_follower(const monsters* mon);

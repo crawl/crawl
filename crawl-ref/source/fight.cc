@@ -1424,9 +1424,6 @@ int melee_attack::player_stab(int damage)
         stab_message( def, stab_bonus );
 
         exercise(SK_STABBING, 1 + random2avg(5, 4));
-
-        if (!tso_stab_safe_monster(defender))
-            did_god_conduct(DID_STABBING, 4);
     }
     else
     {
@@ -2776,7 +2773,7 @@ int melee_attack::player_to_hit(bool random_factor)
 void melee_attack::player_stab_check()
 {
     bool roll_needed = true;
-    int  roll = 155;
+    int roll = 155;
     // This ordering is important!
 
     // not paying attention (but not batty)
@@ -2835,26 +2832,21 @@ void melee_attack::player_stab_check()
         stab_bonus = 0;
     }
 
-    // no stabs while berserk
-    if (you.duration[DUR_BERSERKER])
-    {
-        stab_attempt = false;
-        stab_bonus = 0;
-    }
-
     if (stab_attempt && you.religion == GOD_SHINING_ONE)
     {
         // check for the would-be-stabbed monster's being alive, in case
         // it was abjured as a result of the attack
         bool cancel_stab = !defender->alive() ||
-            (!tso_stab_safe_monster(defender)
+            (!tso_unchivalric_attack_safe_monster(defender)
                 && !yesno("Really attack this helpless creature?", false, 'n'));
 
         if (cancel_stab)
         {
-            stab_attempt  = false;
+            stab_attempt = false;
             cancel_attack = true;
         }
+        else
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 4);
     }
 
     // see if we need to roll against dexterity / stabbing

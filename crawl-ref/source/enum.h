@@ -637,7 +637,7 @@ enum conduct_type
     DID_ATTACK_NEUTRAL,
     DID_ATTACK_FRIEND,
     DID_FRIEND_DIES,
-    DID_STABBING,
+    DID_UNCHIVALRIC_ATTACK,
     DID_POISON,
     DID_DEDICATED_BUTCHERY,
     // killings need no longer be dedicated (JPEG)

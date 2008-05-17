@@ -1893,7 +1893,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    case DID_STABBING:
+    case DID_UNCHIVALRIC_ATTACK:
     case DID_POISON:
         if (you.religion == GOD_SHINING_ONE)
         {
@@ -2373,11 +2373,11 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         {
           "",
           "Necromancy", "Unholy", "Attack Holy", "Attack Neutral",
-          "Attack Friend", "Friend Died", "Stab", "Poison", "Field Sacrifice",
-          "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
-          "Kill Mutator Or Rotter", "Kill Wizard", "Kill Priest",
-          "Kill Holy", "Undead Slave Kill Living", "Servant Kill Living",
-          "Servant Kill Undead", "Servant Kill Demon",
+          "Attack Friend", "Friend Died", "Unchivalric Attack", "Poison",
+          "Field Sacrifice", "Kill Living", "Kill Undead", "Kill Demon",
+          "Kill Natural Evil", "Kill Mutator Or Rotter", "Kill Wizard",
+          "Kill Priest", "Kill Holy", "Undead Slave Kill Living",
+          "Servant Kill Living", "Servant Kill Undead", "Servant Kill Demon",
           "Servant Kill Natural Evil", "Servant Kill Holy", "Spell Memorise",
           "Spell Cast", "Spell Practise", "Spell Nonutility", "Cards",
           "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
@@ -5356,9 +5356,9 @@ int piety_breakpoint(int i)
         return breakpoints[i];
 }
 
-// Returns true if the Shining One doesn't mind your stabbing this
-// creature.
-bool tso_stab_safe_monster(const actor *act)
+// Returns true if the Shining One doesn't mind your using unchivalric
+// attacks on this creature.
+bool tso_unchivalric_attack_safe_monster(const actor *act)
 {
     const mon_holy_type holy = act->holiness();
     return (holy != MH_NATURAL && holy != MH_HOLY);
