@@ -1209,6 +1209,8 @@ char burn_freeze(int pow, beam_type flavour)
 
     if (hurted)
     {
+        behaviour_event(monster, ME_ANNOY, MHITYOU);
+
         if (mons_friendly(monster))
             did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
         else if (mons_neutral(monster))
@@ -1220,9 +1222,6 @@ char burn_freeze(int pow, beam_type flavour)
         if (mons_is_holy(monster))
             did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice);
     }
-
-    if (!mons_friendly(monster) || hurted)
-        behaviour_event(monster, ME_ANNOY, MHITYOU);
 
     if (hurted)
     {
