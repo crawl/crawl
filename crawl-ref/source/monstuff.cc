@@ -1316,10 +1316,8 @@ void monster_cleanup(monsters *monster)
     monster->reset();
 
     for (int dmi = 0; dmi < MAX_MONSTERS; dmi++)
-    {
         if (menv[dmi].foe == monster_killed)
             menv[dmi].foe = MHITNOT;
-    }
 
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
@@ -2172,10 +2170,10 @@ static void _handle_behaviour(monsters *mon)
     }
 
     // validate current target exists
-    if (mon->foe != MHITNOT && mon->foe != MHITYOU)
+    if (mon->foe != MHITNOT && mon->foe != MHITYOU
+        && menv[mon->foe].type == -1)
     {
-        if (menv[mon->foe].type == -1)
-            mon->foe = MHITNOT;
+        mon->foe = MHITNOT;
     }
 
     // change proxPlayer depending on invisibility and standing
@@ -2207,8 +2205,8 @@ static void _handle_behaviour(monsters *mon)
         }
     }
 
-    // set friendly target, if they don't already have one
-    // berserking allies ignore your commands
+    // Set friendly target, if they don't already have one.
+    // Berserking allies ignore your commands!
     if (isFriendly
         && you.pet_target != MHITNOT
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
@@ -2217,20 +2215,16 @@ static void _handle_behaviour(monsters *mon)
         mon->foe = you.pet_target;
     }
 
-    // instead berserkers attack nearest monsters.
+    // Instead, berserkers attack nearest monsters.
     if (mon->has_ench(ENCH_BERSERK)
         && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
     {
         // intelligent monsters prefer to attack the player,
         // even when berserking
         if (!isFriendly && proxPlayer && mons_intel(mon->type) >= I_NORMAL)
-        {
             mon->foe = MHITYOU;
-        }
         else
-        {
             _set_nearest_monster_foe(mon);
-        }
     }
 
     if (isNeutral && mon->foe == MHITNOT)
@@ -2242,10 +2236,10 @@ static void _handle_behaviour(monsters *mon)
 
     // friendly and good neutral monsters do not attack other friendly
     // and good neutral monsters
-    if (mon->foe != MHITNOT && mon->foe != MHITYOU)
+    if (mon->foe != MHITNOT && mon->foe != MHITYOU
+        && wontAttack && mons_wont_attack(&menv[mon->foe]))
     {
-        if (wontAttack && mons_wont_attack(&menv[mon->foe]))
-            mon->foe = MHITNOT;
+        mon->foe = MHITNOT;
     }
 
     // neutral monsters prefer not to attack players, or other neutrals
@@ -2255,8 +2249,8 @@ static void _handle_behaviour(monsters *mon)
         mon->foe = MHITNOT;
     }
 
-    // unfriendly monsters fighting other monsters will usually
-    // target the player, if they're healthy
+    // Unfriendly monsters fighting other monsters will usually
+    // target the player, if they're healthy.
     if (!isFriendly && !isNeutral
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !(mon->has_ench(ENCH_BERSERK)) && isHealthy
@@ -2266,10 +2260,10 @@ static void _handle_behaviour(monsters *mon)
     }
 
     // validate target again
-    if (mon->foe != MHITNOT && mon->foe != MHITYOU)
+    if (mon->foe != MHITNOT && mon->foe != MHITYOU
+        && menv[mon->foe].type == -1)
     {
-        if (menv[mon->foe].type == -1)
-            mon->foe = MHITNOT;
+        mon->foe = MHITNOT;
     }
 
     while (changed)
@@ -2473,10 +2467,10 @@ static void _handle_behaviour(monsters *mon)
             // eventually relax their guard (stupid
             // ones will do so faster, smart monsters
             // have longer memories
-            if (!proxFoe && mon->foe != MHITNOT)
+            if (!proxFoe && mon->foe != MHITNOT
+                && one_chance_in( isSmart ? 60 : 20 ))
             {
-                if (one_chance_in( isSmart ? 60 : 20 ))
-                    new_foe = MHITNOT;
+                new_foe = MHITNOT;
             }
             break;
 
@@ -2740,9 +2734,10 @@ static void _handle_movement(monsters *monster)
     mmov_x = (dx > 0) ? 1 : ((dx < 0) ? -1 : 0);
     mmov_y = (dy > 0) ? 1 : ((dy < 0) ? -1 : 0);
 
-    if (monster->behaviour == BEH_FLEE &&
-        (!mons_friendly(monster) ||
-         monster->target_x != you.x_pos || monster->target_y != you.y_pos))
+    if (monster->behaviour == BEH_FLEE
+        && (!mons_friendly(monster)
+            || monster->target_x != you.x_pos
+            || monster->target_y != you.y_pos))
     {
         mmov_x *= -1;
         mmov_y *= -1;
@@ -5892,8 +5887,8 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         }
     }
 
-    // friendlies shouldn't try to move onto the player's
-    // location, if they are aiming for some other target
+    // Friendlies shouldn't try to move onto the player's
+    // location, if they are aiming for some other target.
     if (mons_wont_attack(monster)
         && monster->foe != MHITNOT
         && monster->foe != MHITYOU

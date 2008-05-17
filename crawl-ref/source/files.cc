@@ -332,7 +332,7 @@ static bool dir_exists(const std::string &dir)
 {
 #ifdef _MSC_VER
     DWORD lAttr = GetFileAttributes(dir.c_str());
-    return (lAttr != INVALID_FILE_ATTRIBUTES 
+    return (lAttr != INVALID_FILE_ATTRIBUTES
             && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
 #else
     DIR *d = opendir(dir.c_str());
@@ -517,9 +517,8 @@ std::vector<player_save_info> find_saved_characters()
             continue;
 
         std::string basename =
-            filename.substr(
-                    0,
-                    filename.length() - strlen(PACKAGE_SUFFIX));
+            filename.substr(0,
+                            filename.length() - strlen(PACKAGE_SUFFIX));
 
         const std::string zipname = get_savedir_path(basename);
 
@@ -558,7 +557,7 @@ std::vector<player_save_info> find_saved_characters()
 std::string get_savedir()
 {
     const std::string &dir = Options.save_dir;
-    return (dir.empty()? "." : dir);
+    return (dir.empty() ? "." : dir);
 }
 
 std::string get_savedir_filename(const std::string &prefix,
@@ -630,7 +629,7 @@ std::string make_filename( const char *prefix, int level, branch_type where,
 }
 
 static void _write_version( FILE *dataFile, int majorVersion, int minorVersion,
-                           bool extended_version )
+                            bool extended_version )
 {
     // write version
     writer outf(dataFile);
@@ -669,12 +668,8 @@ static void _write_tagged_file( FILE *outf, int fileType,
 
     // all other tags
     for (int i = 1; i < NUM_TAGS; i++)
-    {
         if (tags[i] == 1)
-        {
             tag_write((tag_type)i, outf);
-        }
-    }
 }
 
 bool travel_load_map( branch_type branch, int absdepth )
@@ -811,7 +806,6 @@ static void place_player_on_stair(branch_type old_branch,
 static void close_level_gates()
 {
     for ( int i = 0; i < GXM; ++i )
-    {
         for ( int j = 0; j < GYM; ++j )
         {
             if (you.char_direction == GDT_ASCENDING
@@ -824,7 +818,6 @@ static void close_level_gates()
                 }
             }
         }
-    }
 }
 
 static void clear_env_map()
@@ -867,7 +860,6 @@ static void grab_followers()
 {
     const bool can_follow = level_type_allows_followers(you.level_type);
     for (int i = you.x_pos - 1; i < you.x_pos + 2; i++)
-    {
         for (int j = you.y_pos - 1; j < you.y_pos + 2; j++)
         {
             if (i == you.x_pos && j == you.y_pos)
@@ -886,7 +878,6 @@ static void grab_followers()
                 continue;
             }
         }
-    }
 
     if (can_follow)
     {
@@ -969,7 +960,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
                                          you.level_type,
                                          false );
 
-    if ((you.level_type == LEVEL_DUNGEON && old_level_type == LEVEL_DUNGEON)
+    if (you.level_type == LEVEL_DUNGEON && old_level_type == LEVEL_DUNGEON
         || load_mode == LOAD_START_GAME)
     {
         if (tmp_file_pairs[you.your_level][you.where_are_you] == false)
@@ -1170,11 +1161,13 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         PlaceInfo& curr_PlaceInfo = you.get_place_info();
         PlaceInfo  delta;
 
-        if (load_mode == LOAD_START_GAME ||
-            (load_mode == LOAD_ENTER_LEVEL &&
-             (old_branch != you.where_are_you ||
-              old_level_type != you.level_type)))
+        if (load_mode == LOAD_START_GAME
+            || (load_mode == LOAD_ENTER_LEVEL
+                && (old_branch != you.where_are_you
+                    || old_level_type != you.level_type)))
+        {
             delta.num_visits++;
+        }
 
         if (just_created_level)
             delta.levels_seen++;
@@ -1189,7 +1182,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (just_created_level)
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
 
-    if ( load_mode != LOAD_VISITOR )
+    if (load_mode != LOAD_VISITOR)
         dungeon_events.fire_event(DET_ENTERED_LEVEL);
 
     return just_created_level;
@@ -1560,7 +1553,6 @@ bool apply_to_all_dungeons(bool (*applicator)())
     save_level(original.absdepth(), original.level_type, original.branch);
 
     for ( int i = 0; i < MAX_LEVELS; ++i )
-    {
         for ( int j = 0; j < NUM_BRANCHES; ++j )
         {
             const branch_type br = static_cast<branch_type>(j);
@@ -1576,7 +1568,6 @@ bool apply_to_all_dungeons(bool (*applicator)())
             if (apply_to_level(thislevel, false, applicator))
                 success = true;
         }
-    }
 
     _restore_level(original);
 
@@ -1603,13 +1594,15 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major, char &mino
 
     if (major != TAG_MAJOR_VERSION)
     {
-        *reason = make_stringf("Major version mismatch: %d (want %d).", major, TAG_MAJOR_VERSION);
+        *reason = make_stringf("Major version mismatch: %d (want %d).",
+                               major, TAG_MAJOR_VERSION);
         return false;
     }
 
     if (minor >  TAG_MINOR_VERSION)
     {
-        *reason = make_stringf("Minor version mismatch: %d (want <= %d).", minor, TAG_MINOR_VERSION);
+        *reason = make_stringf("Minor version mismatch: %d (want <= %d).",
+                               minor, TAG_MINOR_VERSION);
         return false;
     }
 

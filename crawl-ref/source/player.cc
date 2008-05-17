@@ -5370,9 +5370,9 @@ void player::copy_from(const player &other)
 // player struct initialization
 void player::init()
 {
-    birth_time = time( NULL );
-    real_time = 0;
-    num_turns = 0L;
+    birth_time       = time( NULL );
+    real_time        = 0;
+    num_turns        = 0L;
     last_view_update = 0L;
 
 #ifdef WIZARD
@@ -5391,57 +5391,57 @@ void player::init()
 
     just_autoprayed = false;
     berserk_penalty = 0;
-    disease = 0;
-    elapsed_time = 0;
-    rotting = 0;
-    special_wield = SPWLD_NONE;
-    synch_time = 0;
+    disease         = 0;
+    elapsed_time    = 0;
+    rotting         = 0;
+    special_wield   = SPWLD_NONE;
+    synch_time      = 0;
 
     magic_contamination = 0;
 
-    base_hp = 5000;
+    base_hp  = 5000;
     base_hp2 = 5000;
-    hp_max = 0;
-    base_magic_points = 5000;
+    hp_max   = 0;
+    base_magic_points  = 5000;
     base_magic_points2 = 5000;
-    max_magic_points = 0;
+    max_magic_points   = 0;
 
     magic_points_regeneration = 0;
-    strength = 0;
-    max_strength = 0;
-    intel = 0;
-    max_intel = 0;
-    dex = 0;
-    max_dex = 0;
-    experience = 0;
+    strength         = 0;
+    max_strength     = 0;
+    intel            = 0;
+    max_intel        = 0;
+    dex              = 0;
+    max_dex          = 0;
+    experience       = 0;
     experience_level = 1;
-    max_level = 1;
-    char_class = JOB_UNKNOWN;
-    species = SP_UNKNOWN;
+    max_level        = 1;
+    char_class       = JOB_UNKNOWN;
+    species          = SP_UNKNOWN;
 
-    hunger = 6000;
+    hunger       = 6000;
     hunger_state = HS_SATIATED;
 
-    wield_change = false;
-    redraw_quiver = false;
+    wield_change            = false;
+    redraw_quiver           = false;
     received_weapon_warning = false;
 
     gold = 0;
     // speed = 10;             // 0.75;  // unused
 
-    burden = 0;
+    burden       = 0;
     burden_state = BS_UNENCUMBERED;
 
     spell_no = 0;
 
-    your_level = 0;
-    level_type = LEVEL_DUNGEON;
+    your_level      = 0;
+    level_type      = LEVEL_DUNGEON;
     entry_cause     = EC_SELF_EXPLICIT;
     entry_cause_god = GOD_NO_GOD;
-    where_are_you  = BRANCH_MAIN_DUNGEON;
-    char_direction = GDT_DESCENDING;
+    where_are_you   = BRANCH_MAIN_DUNGEON;
+    char_direction  = GDT_DESCENDING;
 
-    prev_targ = MHITNOT;
+    prev_targ  = MHITNOT;
     pet_target = MHITNOT;
 
     prev_grd_targ = coord_def(0, 0);
@@ -5456,11 +5456,11 @@ void player::init()
     travel_x = 0;
     travel_y = 0;
 
-    religion = GOD_NO_GOD;
-    piety = 0;
+    religion         = GOD_NO_GOD;
+    piety            = 0;
     piety_hysteresis = 0;
 
-    gift_timeout = 0;
+    gift_timeout     = 0;
 
     penance.init(0);
     worshipped.init(0);
@@ -5488,7 +5488,7 @@ void player::init()
     skill_order.init(MAX_SKILL_ORDER);
     practise_skill.init(true);
 
-    skill_cost_level = 1;
+    skill_cost_level   = 1;
     total_skill_points = 0;
 
     attribute.init(0);
@@ -5497,13 +5497,13 @@ void player::init()
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        inv[i].quantity = 0;
+        inv[i].quantity  = 0;
         inv[i].base_type = OBJ_WEAPONS;
-        inv[i].sub_type = WPN_CLUB;
-        inv[i].plus = 0;
-        inv[i].plus2 = 0;
-        inv[i].special = 0;
-        inv[i].colour = 0;
+        inv[i].sub_type  = WPN_CLUB;
+        inv[i].plus      = 0;
+        inv[i].plus2     = 0;
+        inv[i].special   = 0;
+        inv[i].colour    = 0;
         set_ident_flags( inv[i], ISFLAG_IDENT_MASK );
 
         inv[i].x = -1;
@@ -5532,7 +5532,8 @@ void player::init()
         non_branch_info[i].assert_validity();
     }
 
-    if (m_quiver) delete m_quiver;
+    if (m_quiver)
+        delete m_quiver;
     m_quiver = new player_quiver;
 }
 

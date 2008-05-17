@@ -4853,8 +4853,8 @@ void viewwindow(bool draw_it, bool do_updates)
                 if (flash_colour && buffy[bufcount])
                 {
                     buffy[bufcount + 1] =
-                        see_grid(gc.x, gc.y)?
-                        real_colour(flash_colour) : DARKGREY;
+                        see_grid(gc.x, gc.y) ? real_colour(flash_colour)
+                                             : DARKGREY;
                 }
 
                 bufcount += 2;

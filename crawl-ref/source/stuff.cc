@@ -238,8 +238,8 @@ static bool tag_follower_at(const coord_def &pos)
 
     // only friendly monsters, or those actively seeking the
     // player, will follow up/down stairs.
-    if (!(mons_friendly(fmenv) ||
-          (fmenv->behaviour == BEH_SEEK && fmenv->foe == MHITYOU)))
+    if (!mons_friendly(fmenv)
+        && (fmenv->behaviour != BEH_SEEK || fmenv->foe != MHITYOU))
     {
         return (false);
     }
@@ -252,9 +252,11 @@ static bool tag_follower_at(const coord_def &pos)
             return (false);
 
         // Orcs will follow Beogh worshippers.
-        if (!(mons_species(fmenv->type) == MONS_ORC
-              && you.religion == GOD_BEOGH))
+        if (mons_species(fmenv->type) != MONS_ORC
+            || you.religion != GOD_BEOGH)
+        {
             return (false);
+        }
     }
 
     // monster is chasing player through stairs:

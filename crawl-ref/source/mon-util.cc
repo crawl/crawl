@@ -1593,7 +1593,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         return ("");
 
     // Handle non-visible case first
-    if ( !force_seen && !player_monster_visible(&mon) )
+    if (!force_seen && !player_monster_visible(&mon))
     {
         switch (desc)
         {
@@ -2995,9 +2995,10 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
 
     if (msg)
     {
-        mprf("%s wields %s.", name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_A, false, false, true,
-                       false, ISFLAG_CURSED).c_str());
+        snprintf(info, INFO_SIZE, " wields %s.",
+                 item.name(DESC_NOCAP_A, false, false, true, false,
+                           ISFLAG_CURSED).c_str());
+        msg = simple_monster_message(this, info);
     }
 
     const int brand = get_weapon_brand(item);
@@ -3051,8 +3052,9 @@ void monsters::equip_armour(item_def &item, int near)
 {
     if (need_message(near))
     {
-        mprf("%s wears %s.", name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_A).c_str());
+        snprintf(info, INFO_SIZE, " wears %s.",
+                 item.name(DESC_NOCAP_A).c_str());
+        simple_monster_message(this, info);
     }
 
     const equipment_type eq = get_armour_slot(item);
@@ -3097,9 +3099,10 @@ void monsters::unequip_weapon(item_def &item, int near, bool msg)
 
     if (msg)
     {
-        mprf("%s unwields %s.", name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_A, false, false, true,
-                       false, ISFLAG_CURSED).c_str());
+        snprintf(info, INFO_SIZE, " unwields %s.",
+                             item.name(DESC_NOCAP_A, false, false, true, false,
+                             ISFLAG_CURSED).c_str());
+        msg = simple_monster_message(this, info);
     }
 
     const int brand = get_weapon_brand(item);
@@ -3143,8 +3146,9 @@ void monsters::unequip_armour(item_def &item, int near)
 {
     if (need_message(near))
     {
-        mprf("%s takes off %s.", name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_A).c_str());
+        snprintf(info, INFO_SIZE, " takes off %s.",
+                 item.name(DESC_NOCAP_A).c_str());
+        simple_monster_message(this, info);
     }
 
     const equipment_type eq = get_armour_slot(item);
@@ -3207,8 +3211,8 @@ void monsters::pickup_message(const item_def &item, int near)
     {
         mprf("%s picks up %s.",
              name(DESC_CAP_THE).c_str(),
-             item.base_type == OBJ_GOLD? "some gold"
-             : item.name(DESC_NOCAP_A).c_str());
+             item.base_type == OBJ_GOLD ? "some gold"
+                                        : item.name(DESC_NOCAP_A).c_str());
     }
 }
 
@@ -3901,7 +3905,8 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
 
 bool monsters::need_message(int &near) const
 {
-    return near != -1? near : (near = visible());
+    return (near != -1 ? near
+                       : (near = visible()) );
 }
 
 void monsters::swap_weapons(int near)
@@ -4030,8 +4035,10 @@ bool monsters::fumbles_attack(bool verbose)
         if (verbose)
         {
             if (you.can_see(this))
+            {
                 mprf("%s splashes around in the water.",
                      this->name(DESC_CAP_THE).c_str());
+            }
             else if (!silenced(you.x_pos, you.y_pos) && !silenced(x, y))
                 mprf(MSGCH_SOUND, "You hear a splashing noise.");
         }

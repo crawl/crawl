@@ -1214,7 +1214,7 @@ command_type travel()
                 // we've reached that destination square.
                 else if (runmode == RMODE_INTERLEVEL
                          && (level_target.p.pos != you.pos()
-                            || level_target.p.id != level_id::current()))
+                             || level_target.p.id != level_id::current()))
                 {
                     if (last_stair.depth != -1
                         && last_stair == level_id::current())
@@ -1729,13 +1729,13 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
         {
             const int feature = grd(dc);
 
-            if (((feature != DNGN_FLOOR
-                  && feature != DNGN_SHALLOW_WATER
-                  && feature != DNGN_DEEP_WATER
-                  && feature != DNGN_LAVA)
-                 || is_waypoint(dc.x, dc.y)
-                 || is_stash(ls, dc.x, dc.y))
-                && dc != start)
+            if (dc != start
+                && (feature != DNGN_FLOOR
+                       && feature != DNGN_SHALLOW_WATER
+                       && feature != DNGN_DEEP_WATER
+                       && feature != DNGN_LAVA
+                    || is_waypoint(dc.x, dc.y)
+                    || is_stash(ls, dc.x, dc.y)))
             {
                 features->push_back(dc);
             }
@@ -1781,10 +1781,8 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
     // first so that the travel path doesn't zigzag all over the map. Note the
     // (dir = 1) is intentional assignment.
     for (int dir = 0; dir < 8; (dir += 2) == 8 && (dir = 1))
-    {
         if (path_flood(c, c + Compass[dir]))
             return (true);
-    }
 
     return (false);
 }
@@ -1798,14 +1796,17 @@ void find_travel_pos(int youx, int youy,
     travel_pathfind tp;
 
     if (move_x && move_y)
+    {
         tp.set_src_dst(coord_def(youx, youy),
                        coord_def(you.running.x, you.running.y));
+    }
     else
         tp.set_floodseed(coord_def(youx, youy));
 
     tp.set_feature_vector(features);
 
-    run_mode_type rmode = move_x && move_y? RMODE_TRAVEL : RMODE_NOT_RUNNING;
+    run_mode_type rmode = (move_x && move_y) ? RMODE_TRAVEL
+                                             : RMODE_NOT_RUNNING;
 
     const coord_def dest = tp.pathfind( rmode );
 
@@ -2564,9 +2565,11 @@ static int find_transtravel_stair(  const level_id &cur,
             // for a location on the same level. If that's the case, we can get
             // the distance off the travel_point_distance matrix.
             deltadist = travel_point_distance[target.pos.x][target.pos.y];
-            if (!deltadist &&
-                    (stair.x != target.pos.x || stair.y != target.pos.y))
+            if (!deltadist
+                && (stair.x != target.pos.x || stair.y != target.pos.y))
+            {
                 deltadist = -1;
+            }
         }
 
         if (deltadist != -1)
