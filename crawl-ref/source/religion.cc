@@ -2353,6 +2353,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
+    case DID_STABBING:                          // unused
     case DID_STIMULANTS:                        // unused
     case DID_EAT_MEAT:                          // unused
     case DID_CREATED_LIFE:                      // unused
@@ -2373,11 +2374,12 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         {
           "",
           "Necromancy", "Unholy", "Attack Holy", "Attack Neutral",
-          "Attack Friend", "Friend Died", "Unchivalric Attack", "Poison",
-          "Field Sacrifice", "Kill Living", "Kill Undead", "Kill Demon",
-          "Kill Natural Evil", "Kill Mutator Or Rotter", "Kill Wizard",
-          "Kill Priest", "Kill Holy", "Undead Slave Kill Living",
-          "Servant Kill Living", "Servant Kill Undead", "Servant Kill Demon",
+          "Attack Friend", "Friend Died", "Stab", "Unchivalric Attack",
+          "Poison", "Field Sacrifice", "Kill Living", "Kill Undead",
+          "Kill Demon", "Kill Natural Evil", "Kill Mutator Or Rotter",
+          "Kill Wizard", "Kill Priest", "Kill Holy",
+          "Undead Slave Kill Living", "Servant Kill Living",
+          "Servant Kill Undead", "Servant Kill Demon",
           "Servant Kill Natural Evil", "Servant Kill Holy", "Spell Memorise",
           "Spell Cast", "Spell Practise", "Spell Nonutility", "Cards",
           "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
