@@ -917,7 +917,7 @@ bool remove_sanctuary(bool did_attack)
     {
         if (seen_change)
             simple_god_message(" revokes the gift of sanctuary.", GOD_ZIN);
-        did_god_conduct(DID_FRIEND_DIES, 3);
+        did_god_conduct(DID_FRIEND_DIED, 3);
     }
 
     if (is_resting())

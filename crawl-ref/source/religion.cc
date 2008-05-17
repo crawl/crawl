@@ -1940,7 +1940,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    case DID_FRIEND_DIES:
+    case DID_FRIEND_DIED:
         switch (you.religion)
         {
         case GOD_ELYVILON: // healer god cares more about this
