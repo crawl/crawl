@@ -763,32 +763,35 @@ bool melee_attack::player_attack()
             hit_woke_orc = true;
         }
 
-        // always upset monster regardless of damage
-        behaviour_event(def, ME_WHACK, MHITYOU);
-
-        if (damage_done > 0)
+        if (def->alive())
         {
-            int blood
-                   = _modify_blood_amount(damage_done, attacker->damage_type());
-            if (blood > defender->stat_hp())
-                blood = defender->stat_hp();
+            // always upset monster regardless of damage
+            behaviour_event(def, ME_WHACK, MHITYOU);
 
-            bleed_onto_floor(where.x, where.y, defender->id(), blood, true);
+            if (damage_done > 0)
+            {
+                int blood =
+                    _modify_blood_amount(damage_done, attacker->damage_type());
+                if (blood > defender->stat_hp())
+                    blood = defender->stat_hp();
+
+                bleed_onto_floor(where.x, where.y, defender->id(), blood, true);
+            }
+
+            if (damage_done > 0 || !defender_visible)
+                player_announce_hit();
+            else if (!shield_blocked && damage_done <= 0)
+            {
+                no_damage_message =
+                    make_stringf("You %s %s.", attack_verb.c_str(),
+                                 defender->name(DESC_NOCAP_THE).c_str());
+            }
+
+            player_hurt_monster();
+
+            if (damage_done)
+                player_exercise_combat_skills();
         }
-
-        if (damage_done > 0 || !defender_visible)
-            player_announce_hit();
-        else if (!shield_blocked && damage_done <= 0)
-        {
-            no_damage_message =
-                make_stringf("You %s %s.", attack_verb.c_str(),
-                             defender->name(DESC_NOCAP_THE).c_str());
-        }
-
-        player_hurt_monster();
-
-        if (damage_done)
-            player_exercise_combat_skills();
 
         if (player_check_monster_died())
             return (true);
@@ -2626,7 +2629,7 @@ void melee_attack::player_calc_hit_damage()
     //  are stupidly powerful) -- GDL
     potential_damage += slaying_bonus(PWPN_DAMAGE);
     damage_done =
-        potential_damage > 0? one_chance_in(3) + random2(potential_damage) : 0;
+        potential_damage > 0 ? one_chance_in(3) + random2(potential_damage) : 0;
     damage_done = player_apply_weapon_skill(damage_done);
     damage_done = player_apply_fighting_skill(damage_done, false);
     damage_done = player_apply_misc_modifiers(damage_done);
