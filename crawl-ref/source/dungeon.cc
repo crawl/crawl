@@ -168,7 +168,7 @@ static void _build_lake(dungeon_feature_type lake_type); //mv
 static void _spotty_level(bool seeded, int iterations, bool boxy);
 static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
-static char _plan_1();
+static char _plan_1(int level_number);
 static char _plan_2(int level_number);
 static char _plan_3();
 static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
@@ -5770,7 +5770,7 @@ static void _plan_main(int level_number, int force_plan)
     if (!force_plan)
         force_plan = 1 + random2(12);
 
-    do_stairs = ((force_plan == 1) ? _plan_1() :
+    do_stairs = ((force_plan == 1) ? _plan_1(level_number) :
                  (force_plan == 2) ? _plan_2(level_number) :
                  (force_plan == 3) ? _plan_3() :
                  (force_plan == 4) ? _plan_4(0, 0, 0, 0, NUM_FEATURES) :
@@ -5799,74 +5799,18 @@ static void _plan_main(int level_number, int force_plan)
         _replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, special_grid);
 }                               // end plan_main()
 
-static char _plan_1()
+static char _plan_1(int level_number)
 {
     dgn_Build_Method = "plan_1";
 
-    int temp_rand = 0;          // probability determination {dlb}
+    const int vault = random_map_for_tag("layout", false, true);
+    ASSERT(vault != -1);
 
-    unsigned char width = (10 - random2(7));    // value range of [4,10] {dlb}
+    bool success = _build_vaults(level_number, vault);
+    _ensure_vault_placed(success);
 
-    _replace_area(10, 10, (GXM - 10), (10 + width), DNGN_ROCK_WALL, DNGN_FLOOR);
-    _replace_area(10, (60 - width), (GXM - 10), (GYM - 10),
-                  DNGN_ROCK_WALL, DNGN_FLOOR);
-    _replace_area(10, 10, (10 + width), (GYM - 10), DNGN_ROCK_WALL, DNGN_FLOOR);
-    _replace_area((60 - width), 10, (GXM - 10), (GYM - 10),
-                  DNGN_ROCK_WALL, DNGN_FLOOR);
-
-    // possible early returns {dlb}:
-    temp_rand = random2(4);
-
-    if (temp_rand > 2)          // 25% chance {dlb}
-        return 3;
-    else if (temp_rand > 1)     // 25% chance {dlb}
-        return 2;
-    else                        // 50% chance {dlb}
-    {
-        unsigned char width2 = (coinflip()? (1 + random2(5)) : 5);
-
-        _replace_area(10, (35 - width2), (GXM - 10), (35 + width2),
-                      DNGN_ROCK_WALL, DNGN_FLOOR);
-        _replace_area((40 - width2), 10, (40 + width2), (GYM - 10),
-                      DNGN_ROCK_WALL, DNGN_FLOOR);
-    }
-
-    // possible early returns {dlb}:
-    temp_rand = random2(4);
-
-    if (temp_rand > 2)          // 25% chance {dlb}
-        return 3;
-    else if (temp_rand > 1)     // 25% chance {dlb}
-        return 2;
-    else                        // 50% chance {dlb}
-    {
-        temp_rand = random2(15);
-
-        if (temp_rand > 7)      // 7 in 15 odds {dlb}
-        {
-            spec_room sr;
-            sr.x1 = 25;
-            sr.y1 = 25;
-            sr.x2 = (GXM - 25);
-            sr.y2 = (GYM - 25);
-
-            int oblique_max = 0;
-            if (coinflip())
-                oblique_max = 5 + random2(20);
-
-            temp_rand = random2(7);
-
-            dungeon_feature_type floor_type =
-                ((temp_rand > 1) ? DNGN_FLOOR :   // 5/7
-                 (temp_rand > 0) ? DNGN_DEEP_WATER// 1/7
-                                 : DNGN_LAVA);    // 1/7
-            _octa_room(sr, oblique_max, floor_type);
-        }
-    }
-
-    // final return {dlb}:
-    return (one_chance_in(5) ? 3 : 2);
-}                               // end plan_1()
+    return 0;
+}                               // end plan_2()
 
 static char _plan_2(int level_number)
 {
@@ -5878,7 +5822,7 @@ static char _plan_2(int level_number)
     bool success = _build_vaults(level_number, vault);
     _ensure_vault_placed(success);
 
-    return (one_chance_in(4) ? 0 : 1);
+    return 0;
 }                               // end plan_2()
 
 static char _plan_3()

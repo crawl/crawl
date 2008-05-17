@@ -1455,9 +1455,6 @@ std::string map_def::validate_map_def()
         }
     }
 
-    if (map.height() == 0)
-        return ("Must define map.");
-
     switch (orient)
     {
     case MAP_NORTH: case MAP_SOUTH:

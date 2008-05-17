@@ -7,6 +7,8 @@
 ###############################################################################
 
 lua {{
+    -- TODO enne - most of these should probably get moved back into C++
+
     function fill_area(x1, y1, x2, y2, feature)
         for x = x1, x2 do
             for y = y1, y2 do
@@ -15,18 +17,20 @@ lua {{
         end
     end
 
-    function octa_room(x1, y1, x2, y2, oblique, floor)
+    function octa_room(x1, y1, x2, y2, oblique, fill)
         local ob_temp = oblique
 
         local rock_wall = dgn.feature_number("rock_wall")
         local shallow_water = dgn.feature_number("shallow_water")
+        local deep_water = dgn.feature_number("deep_water")
+        local floor = dgn.feature_number("floor")
 
         for x = x1, x2 do
             for y = y1 + ob_temp, y2 - ob_temp do
                 if dgn.grid(x, y) == rock_wall then
-                    dgn.grid(x, y, floor)
+                    dgn.grid(x, y, fill)
                 end
-                if dgn.grid(x, y) == floor and floor == shallow_water then
+                if dgn.grid(x, y) == floor and (fill == shallow_water or fill == deep_water) then
                     dgn.grid(x, y, shallow_water)
                 end
             end
@@ -135,7 +139,161 @@ lua {{
             return false
         end
     end
+
+    function spotty_level(boxy, x1, y1, x2, y2)
+        local iterations
+        -- boxy levels have more clearing, so they get fewer iterations
+        if boxy then
+            iterations = 200 + crawl.random2(750)
+        else
+            iterations = 200 + crawl.random2(1500)
+        end
+
+        make_spotty(iterations, boxy, x1, y1, x2, y2)
+    end
+
+    -- randomly turns walls into floors
+    function make_spotty(iterations, boxy, x1, y1, x2, y2)
+        if x2 - x1 - 8 <= 0 or y2 - y1 - 8 <= 0 then
+            return
+        end
+
+        local wall = dgn.feature_number("rock_wall")
+        local floor = dgn.feature_number("floor")
+
+        for i = 1, iterations do
+            local x, y
+            repeat
+                x = crawl.random2(x2 - x1 - 7) + x1 + 4
+                y = crawl.random2(y2 - y1 - 7) + y1 + 4
+            until dgn.grid(x, y) ~= wall or
+                  dgn.grid(x-1, y) ~= wall or
+                  dgn.grid(x+1, y) ~= wall or
+                  dgn.grid(x, y-1) ~= wall or
+                  dgn.grid(x, y+1) ~= wall or
+                  dgn.grid(x-2, y) ~= wall or
+                  dgn.grid(x+2, y) ~= wall or
+                  dgn.grid(x, y-2) ~= wall or
+                  dgn.grid(x, y+2) ~= wall
+
+            -- convenience function
+            function replace_grid(x, y, search, replace)
+                if dgn.grid(x, y) == search then
+                    dgn.grid(x, y, replace)
+                end
+            end
+
+            replace_grid(x, y, wall, floor)
+            replace_grid(x, y-1, wall, floor)
+            replace_grid(x, y+1, wall, floor)
+            replace_grid(x-1, y, wall, floor)
+            replace_grid(x+1, y, wall, floor)
+
+            if boxy then
+                replace_grid(x-1, y-1, wall, floor)
+                replace_grid(x+1, y+1, wall, floor)
+                replace_grid(x-1, y+1, wall, floor)
+                replace_grid(x+1, y-1, wall, floor)
+            end
+        end
+    end
+
+    -- randomly extends walls onto floors
+    function smear_feature(iterations, boxy, feature, x1, y1, x2, y2)
+        for i = 1, iterations do
+            local x, y
+            function check_box(x, y, feature)
+                return dgn.grid(x+1, y) == feature or
+                    dgn.grid(x-1, y) == feature or
+                    dgn.grid(x, y+1) == feature or
+                    dgn.grid(x, y-1) == feature
+            end
+            function check_diagonal(x, y, feature)
+                return dgn.grid(x+1, y+1) == feature or
+                    dgn.grid(x-1, y+1) == feature or
+                    dgn.grid(x-1, y-1) == feature or
+                    dgn.grid(x+1, y-1) == feature
+            end
+
+            repeat
+                x = crawl.random2(x2 - x1 - 2) + x1 + 1
+                y = crawl.random2(y2 - y1 - 2) + y1 + 1
+            until dgn.grid(x, y) ~= feature and
+                  (check_box(x, y, feature) or 
+                  not boxy and check_diagonal(x, y, feature))
+
+            dgn.grid(x, y, feature)
+        end
+    end
 }}
+
+##############################################################
+# layout_forbidden_doughnut
+#
+# This replaces dungeon.cc:_plan_1().  It usually creates a
+# room with a large hole in the middle.
+#
+NAME:   layout_forbidden_donut
+ORIENT: encompass
+TAGS:   layout allow_dup
+
+{{
+    local gxm, gym = dgn.max_bounds()
+    local wall = dgn.feature_number("rock_wall")
+    local floor = dgn.feature_number("floor")
+    fill_area(0, 0, gxm - 1, gym - 1, wall)
+
+    local width = (10 - crawl.random2(7))
+
+    -- construct donut
+    fill_area(10, 10, gxm - 10, 10 + width, floor)
+    fill_area(10, 60 - width, gxm - 10, gym - 10, floor)
+    fill_area(10, 10, 10 + width, gym - 10, floor)
+    fill_area(60 - width, 10, gxm - 10, gym - 10, floor)
+
+    local spotty = crawl.coinflip()
+    local smears = crawl.random2(300)
+
+    -- sometimes add a hallway cross through center
+    if crawl.coinflip() then
+        local width2 = 1 + crawl.random2(5)
+
+        fill_area(10, gym/2 - width2, gxm - 10, gym/2 + width2, floor)
+        fill_area(gxm/2 - width2, 10, gxm/2 + width2, gym - 10, floor)
+
+        -- sometimes add a small octagon room
+        if crawl.coinflip() and crawl.random2(15) > 7 then
+            local oblique = 0
+            if crawl.coinflip() then
+                oblique = 5 + crawl.random2(20)
+            end
+
+            local feature_name = select_from_weighted_table({
+                ["floor"]      = 5,
+                ["deep_water"] = 1,
+                ["lava"]       = 1,
+            })
+            local feature_idx = dgn.feature_number(feature_name)
+
+            octa_room(25, 25, gxm - 25, gym - 25, oblique, feature_idx)
+
+            -- decrease spotty chance
+            spotty = crawl.one_chance_in(5)
+        end
+    end
+
+    local spotty_boxy = crawl.coinflip()
+    local smear_boxy = crawl.coinflip()
+
+    if spotty then
+        spotty_level(spotty_boxy, 0, 0, gxm - 1, gym - 1)
+    end
+    if not spotty and crawl.one_chance_in(4) or spotty then
+        smear_feature(smears, smear_boxy, wall, 0, 0, gxm - 1, gym - 1)
+    end
+}}
+MAP
+ENDMAP
 
 ##############################################################
 # layout_cross
@@ -185,13 +343,14 @@ TAGS:    layout allow_dup
     fill_area(10, gym/2 - height, gxm - 10, gym/2 + height, floor)
     fill_area(gxm/2 - width, 10, gxm/2 + width, gym - 10, floor)
 
-    -- TODO enne - add lua function for spotty()
+    if not crawl.one_chance_in(4) then
+        spotty_level(crawl.coinflip(), 0, 0, gxm - 1, gym - 1)
+    end
 }}
 MAP
-.
 ENDMAP
 
-##############################################################
+#############################################################
 # layout_big_octagon
 #
 # This replaces dungeon.cc:_plan_6().  It has an octagonal
@@ -213,6 +372,11 @@ TAGS:    layout allow_dup
     -- Step 1: Create octagon
     fill_area(0, 0, gxm - 1, gym - 1, wall)
     octa_room(10, 10, gxm - 10, gym - 10, oblique, floor)
+
+    if crawl.coinflip() then
+        local iterations = 100 + crawl.random2(200)
+        smear_feature(iterations, false, wall, 0, 0, gxm - 1, gym - 1)
+    end
 
     -- Step 2: Add pillars
 
@@ -299,5 +463,4 @@ TAGS:    layout allow_dup
     end
 }}
 MAP
-.
 ENDMAP
