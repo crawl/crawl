@@ -2156,8 +2156,9 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    // Undead slave is any friendly undead... Kiku and Yred pay attention
-    // to the undead and both like the death of living things.
+    // Undead slave is any friendly undead monster.  Kiku and Yred pay
+    // attention to the undead, and both like the death of living
+    // things.
     case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
         switch (you.religion)
         {
@@ -2175,9 +2176,8 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    // Servants are currently any friendly monster under Vehumet, or
-    // any god given pet for everyone else (excluding undead which are
-    // handled above).
+    // Servants are currently any friendly or charmed monster, excluding
+    // undead, which are handled above.
     case DID_LIVING_KILLED_BY_SERVANT:
         switch (you.religion)
         {
