@@ -2870,12 +2870,11 @@ void melee_attack::player_stab_check()
     if (stab_attempt && roll_needed)
         stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
 
-    if (unchivalric && you.religion == GOD_SHINING_ONE)
+    if (unchivalric)
     {
-        // check for the would-be-stabbed monster's being alive, in case
-        // it was abjured as a result of the attack
-        bool cancel_stab = !defender->alive() ||
-            (!tso_unchivalric_attack_safe_monster(defender)
+        bool cancel_stab =
+            (you.religion == GOD_SHINING_ONE
+                && !tso_unchivalric_attack_safe_monster(defender)
                 && !yesno("Really attack this helpless creature?", false, 'n'));
 
         if (cancel_stab)
