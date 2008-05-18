@@ -944,7 +944,7 @@
 
 // merfolk ('m')
 {
-    MONS_MERFOLK, 'm', LIGHTBLUE, "merfolk fighter",
+    MONS_MERFOLK, 'm', LIGHTBLUE, "merfolk",
     M_WARM_BLOOD | M_AMPHIBIOUS | M_SPEAKS,
     MR_RES_POISON | MR_RES_COLD,
     500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
