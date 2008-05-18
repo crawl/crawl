@@ -99,7 +99,6 @@ inline bool player_hurt_monster(int monster, int damage)
     return (false);
 }                               // end player_hurt_monster()
 
-
 // Here begin the actual spells:
 static int shatter_monsters(int x, int y, int pow, int garbage)
 {
