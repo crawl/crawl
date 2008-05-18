@@ -1179,9 +1179,13 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
         if (count == 1)
         {
             // Print an "icon" representing damage level
+            const monsters *mon = mons[start].m_mon;
             std::string damage_desc;
             mon_dam_level_type damage_level;
-            mons_get_damage_level(mons[start].m_mon, damage_desc, damage_level);
+            if (!monster_descriptor(mon->type, MDSC_NOMSG_WOUNDS))
+                mons_get_damage_level(mon, damage_desc, damage_level);
+            else
+                damage_level = MDAM_OKAY;
             int dam_color;
             switch (damage_level)
             {
