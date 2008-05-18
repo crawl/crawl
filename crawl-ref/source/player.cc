@@ -4931,8 +4931,8 @@ bool poison_player( int amount, bool force )
 
     if (you.duration[DUR_POISONING] > old_value)
     {
-        // XXX: which message channel for this message?
-        mprf("You are %spoisoned.", (old_value > 0) ? "more " : "" );
+        mprf(MSGCH_WARN, "You are %spoisoned.",
+             (old_value > 0) ? "more " : "" );
         learned_something_new(TUT_YOU_POISON);
     }
     return true;
@@ -4975,9 +4975,9 @@ bool confuse_player( int amount, bool resistable )
 
     if (you.duration[DUR_CONF] > old_value)
     {
-        // XXX: which message channel for this message?
         you.check_awaken(500);
-        mprf("You are %sconfused.", (old_value > 0) ? "more " : "" );
+        mprf(MSGCH_WARN, "You are %sconfused.",
+             (old_value > 0) ? "more " : "" );
         learned_something_new(TUT_YOU_ENCHANTED);
 
         xom_is_stimulated(you.duration[DUR_CONF] - old_value);
@@ -5950,9 +5950,9 @@ void player::attacking(actor *other)
             pet_target = monster_index(mons);
     }
 
-    if (mutation[MUT_BERSERK] &&
-         (random2(100) < (mutation[MUT_BERSERK] * 10) - 5)
-        || _equipment_make_berserk())
+    if (mutation[MUT_BERSERK]
+        && (random2(100) < (mutation[MUT_BERSERK] * 10) - 5)
+            || _equipment_make_berserk())
     {
         go_berserk(false);
     }
@@ -5982,15 +5982,17 @@ bool player::can_go_berserk(bool verbose) const
     {
         if (verbose)
             mpr("You're too exhausted to go berserk.");
+
         // or else they won't notice -- no message here
         return (false);
     }
 
-    if (you.is_undead &&
-        (you.species != SP_VAMPIRE || you.hunger_state <= HS_SATIATED))
+    if (you.is_undead
+        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state <= HS_SATIATED))
     {
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
+
         // or else you won't notice -- no message here
         return (false);
     }

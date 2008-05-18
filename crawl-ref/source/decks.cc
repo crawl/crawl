@@ -2308,7 +2308,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
             };
 
             if (create_monster(
-                    mgen_data(RANDOM_ELEMENT(statues), 
+                    mgen_data(RANDOM_ELEMENT(statues),
                               BEH_HOSTILE, 0, you.pos(), MHITYOU)) != -1)
             {
                 mpr("A menacing statue appears!");
@@ -2542,7 +2542,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
     const bool friendly = (power_level > 0 || !one_chance_in(4));
 
     create_monster(
-        mgen_data( mon_chosen, 
+        mgen_data( mon_chosen,
                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                    3, coord_def(chosen_x, chosen_y),
                    MHITYOU ) );
@@ -2587,9 +2587,11 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
             wpn.plus  = random2(4) - 1;
             wpn.plus2 = random2(4) - 1;
             wpn.sub_type = (coinflip() ? WPN_LONG_SWORD : WPN_HAND_AXE);
-            if ( coinflip() )
+            if (coinflip())
+            {
                 set_item_ego_type(wpn, OBJ_WEAPONS,
                                   coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING);
+            }
         }
         else if ( power_level == 2 )
         {
@@ -2645,7 +2647,7 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
 
     create_monster(
         mgen_data(
-            skeltypes[power_level], 
+            skeltypes[power_level],
             friendly ? BEH_FRIENDLY : BEH_HOSTILE,
             std::min(power/50,6),
             you.pos(),
@@ -2665,7 +2667,7 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
         ugly = MONS_UGLY_THING;
 
     create_monster(
-        mgen_data( ugly, 
+        mgen_data( ugly,
                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                    std::min(power/50,6),
                    you.pos(),

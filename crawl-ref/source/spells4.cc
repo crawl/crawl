@@ -589,7 +589,7 @@ void cast_summon_dragon(int pow)
     const bool friendly = (random2(pow) > 5);
 
     if (create_monster(
-            mgen_data( MONS_DRAGON, 
+            mgen_data( MONS_DRAGON,
                        friendly ? BEH_FRIENDLY : BEH_HOSTILE, 3,
                        you.pos(),
                        friendly ? you.pet_target : MHITYOU )) != -1)
@@ -1974,17 +1974,17 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
     //FIXME: if (player typed '>' to attack floor) goto do_terrain;
     blast.beam_source = MHITYOU;
-    blast.thrower = KILL_YOU;
+    blast.thrower     = KILL_YOU;
     blast.aux_source.clear();
-    blast.ex_size = 1;              // default
-    blast.type = '#';
-    blast.colour = 0;
+    blast.ex_size     = 1;              // default
+    blast.type        = '#';
+    blast.colour      = 0;
     blast.set_target(beam);
-    blast.source_x = you.x_pos;
-    blast.source_y = you.y_pos;
-    blast.is_tracer = false;
-    blast.flavour = BEAM_FRAG;
-    blast.hit = AUTOMATIC_HIT;
+    blast.source_x    = you.x_pos;
+    blast.source_y    = you.y_pos;
+    blast.is_tracer   = false;
+    blast.flavour     = BEAM_FRAG;
+    blast.hit         = AUTOMATIC_HIT;
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
     blast.damage = dice_def( 0, 5 + pow / 10 );
@@ -2009,11 +2009,11 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_ICE_BEAST:
         case MONS_SIMULACRUM_SMALL:
         case MONS_SIMULACRUM_LARGE:
-            explode = true;
-            blast.name = "icy blast";
-            blast.colour = WHITE;
+            explode          = true;
+            blast.name       = "icy blast";
+            blast.colour     = WHITE;
             blast.damage.num = 2;
-            blast.flavour = BEAM_ICE;
+            blast.flavour    = BEAM_ICE;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
                 blast.damage.num += 1;
             break;
@@ -2058,9 +2058,9 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         case MONS_IRON_GOLEM:
         case MONS_METAL_GARGOYLE:
-            explode = true;
-            blast.name = "blast of metal fragments";
-            blast.colour = CYAN;
+            explode          = true;
+            blast.name       = "blast of metal fragments";
+            blast.colour     = CYAN;
             blast.damage.num = 4;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
                 blast.damage.num += 2;
@@ -2070,10 +2070,10 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_STONE_GOLEM:
         case MONS_EARTH_ELEMENTAL:
         case MONS_GARGOYLE:
-            explode = true;
-            blast.ex_size = 2;
-            blast.name = "blast of rock fragments";
-            blast.colour = BROWN;
+            explode          = true;
+            blast.ex_size    = 2;
+            blast.name       = "blast of rock fragments";
+            blast.colour     = BROWN;
             blast.damage.num = 3;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
                 blast.damage.num += 1;
@@ -2081,7 +2081,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         case MONS_SILVER_STATUE:
         case MONS_ORANGE_STATUE:
-            explode = true;
+            explode       = true;
             blast.ex_size = 2;
             if (menv[mon].type == MONS_SILVER_STATUE)
             {
@@ -2107,10 +2107,10 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             break;
 
         case MONS_CRYSTAL_GOLEM:
-            explode = true;
-            blast.ex_size = 2;
-            blast.name = "blast of crystal shards";
-            blast.colour = WHITE;
+            explode          = true;
+            blast.ex_size    = 2;
+            blast.name       = "blast of crystal shards";
+            blast.colour     = WHITE;
             blast.damage.num = 4;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
                 blast.damage.num += 2;
@@ -2160,7 +2160,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         explode = true;
 
-        blast.name = "blast of rock fragments";
+        blast.name       = "blast of rock fragments";
         blast.damage.num = 3;
         if (blast.colour == 0)
             blast.colour = LIGHTGREY;
@@ -2168,17 +2168,17 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         if (okay_to_dest
             && (grid == DNGN_ORCISH_IDOL
                 || grid == DNGN_GRANITE_STATUE
-                || (pow >= 40 && grid == DNGN_ROCK_WALL && one_chance_in(3))
-                || (pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
-                    && one_chance_in(3))
-                || (pow >= 60 && grid == DNGN_STONE_WALL && one_chance_in(10))
-                || (pow >= 60 && grid == DNGN_CLEAR_STONE_WALL &&
-                    one_chance_in(10)) ))
+                || pow >= 40 && grid == DNGN_ROCK_WALL && one_chance_in(3)
+                || pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
+                   && one_chance_in(3)
+                || pow >= 60 && grid == DNGN_STONE_WALL && one_chance_in(10)
+                || pow >= 60 && grid == DNGN_CLEAR_STONE_WALL
+                   && one_chance_in(10)))
         {
             // terrain blew up real good:
-            blast.ex_size = 2;
+            blast.ex_size         = 2;
             grd[beam.tx][beam.ty] = DNGN_FLOOR;
-            debris = DEBRIS_ROCK;
+            debris                = DEBRIS_ROCK;
         }
         break;
 
@@ -2187,10 +2187,10 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     //
 
     case DNGN_METAL_WALL:
-        what = "metal wall";
-        blast.colour = CYAN;
-        explode = true;
-        blast.name = "blast of metal fragments";
+        what             = "metal wall";
+        blast.colour     = CYAN;
+        explode          = true;
+        blast.name       = "blast of metal fragments";
         blast.damage.num = 4;
 
         if (okay_to_dest && pow >= 80 && random2(500) < pow / 5)
@@ -2206,15 +2206,14 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     //
 
     case DNGN_GREEN_CRYSTAL_WALL:       // crystal -- large & nasty explosion
-        what = "crystal wall";
-        blast.colour = GREEN;
-        explode = true;
-        blast.ex_size = 2;
-        blast.name = "blast of crystal shards";
+        what             = "crystal wall";
+        blast.colour     = GREEN;
+        explode          = true;
+        blast.ex_size    = 2;
+        blast.name       = "blast of crystal shards";
         blast.damage.num = 5;
 
-        if (okay_to_dest
-            && grid == DNGN_GREEN_CRYSTAL_WALL && coinflip())
+        if (okay_to_dest && grid == DNGN_GREEN_CRYSTAL_WALL && coinflip())
         {
             blast.ex_size = coinflip() ? 3 : 2;
             grd[beam.tx][beam.ty] = DNGN_FLOOR;
@@ -2239,10 +2238,10 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         // undiscovered traps appear as exploding from the floor -- bwr
         what = ((grid == DNGN_UNDISCOVERED_TRAP) ? "floor" : "trap");
 
-        explode = true;
-        hole = false;           // to hit monsters standing on traps
-        blast.name = "blast of fragments";
-        blast.colour = env.floor_colour;  // in order to blend in
+        explode          = true;
+        hole             = false;    // to hit monsters standing on traps
+        blast.name       = "blast of fragments";
+        blast.colour     = env.floor_colour;  // in order to blend in
         blast.damage.num = 2;
 
         // Exploded traps are nonfunctional, ammo is also ruined -- bwr
@@ -2265,10 +2264,10 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         // fall-through
     case DNGN_STONE_ARCH:       // floor -- small explosion
-        explode = true;
-        hole = false;           // to hit monsters standing on doors
-        blast.name = "blast of rock fragments";
-        blast.colour = LIGHTGREY;
+        explode          = true;
+        hole             = false;  // to hit monsters standing on doors
+        blast.name       = "blast of rock fragments";
+        blast.colour     = LIGHTGREY;
         blast.damage.num = 2;
         break;
 
@@ -2317,7 +2316,7 @@ void cast_twist(int pow)
 
     // Get target, using DIR_TARGET for targetting only,
     // since we don't use fire_beam() for this spell.
-    if ( !spell_direction(targ, tmp, DIR_TARGET) )
+    if (!spell_direction(targ, tmp, DIR_TARGET))
         return;
 
     const int mons = mgrd[ targ.tx ][ targ.ty ];
@@ -2350,10 +2349,10 @@ void cast_twist(int pow)
 
 bool cast_portal_projectile(int pow, bolt& beam)
 {
-    if ( pow > 50 )
+    if (pow > 50)
         pow = 50;
 
-    if ( grid_is_solid(beam.target_x, beam.target_y) )
+    if (grid_is_solid(beam.target_x, beam.target_y))
     {
         mpr("You can't shoot at gazebos.");
         return false;
@@ -2368,18 +2367,19 @@ bool cast_portal_projectile(int pow, bolt& beam)
     int idx;
     const item_def* item;
     you.m_quiver->get_desired_item(&item, &idx);
-    if ( item == NULL )
+    if (item == NULL)
     {
         mpr("No suitable missiles.");
         return false;
     }
-    else if ( idx == -1 )
+    else if (idx == -1)
     {
         mpr("No missiles left.");
         return false;
     }
 
-    throw_it( beam, idx, true, random2(pow/4) );
+    throw_it(beam, idx, true, random2(pow/4));
+
     return true;
 }
 
@@ -2405,7 +2405,7 @@ void cast_far_strike(int pow)
 
     // Get target, using DIR_TARGET for targetting only,
     // since we don't use fire_beam() for this spell.
-    if ( !spell_direction(targ, tmp, DIR_TARGET) )
+    if (!spell_direction(targ, tmp, DIR_TARGET))
         return;
 
     // Get the target monster...

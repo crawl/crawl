@@ -410,6 +410,7 @@ mon_itemuse_type mons_itemuse(int mc);
  * *********************************************************************** */
 bool mons_see_invis(const monsters *mon);
 bool mons_sense_invis(const monsters *mon);
+bool mon_can_see_monster( const monsters *mon, const monsters *targ );
 bool mons_monster_visible( const monsters *mon, const monsters *targ );
 bool mons_player_visible( const monsters *mon );
 

@@ -63,9 +63,10 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
     // XXX What in Xom's name is DNGN_WATER_STUCK? It looks like an artificial
     // device to slow down fiery monsters flying over water.
     if (grid_wanted == DNGN_FLOOR)
-        return actual_grid >= DNGN_FLOOR
-            || (!generation
-                    && actual_grid == DNGN_SHALLOW_WATER);
+    {
+        return (actual_grid >= DNGN_FLOOR
+                || !generation && actual_grid == DNGN_SHALLOW_WATER);
+    }
 
     if (grid_wanted >= DNGN_ROCK_WALL
         && grid_wanted <= DNGN_CLEAR_PERMAROCK_WALL)
@@ -1671,7 +1672,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
     else if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
         interesting = false;
     // Don't waste time on moname() if user isn't using this option
-    else if ( Options.note_monsters.size() > 0 )
+    else if (Options.note_monsters.size() > 0)
     {
         const std::string iname = mons_type_name(monster->type, DESC_NOCAP_A);
         for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
@@ -1683,16 +1684,18 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
             }
         }
     }
-    else if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
-              you.level_type == LEVEL_DUNGEON &&
-              mons_level(monster->type) >= you.your_level + ood_limit() &&
-              mons_level(monster->type) < 99 &&
-              !(monster->type >= MONS_EARTH_ELEMENTAL &&
-                monster->type <= MONS_AIR_ELEMENTAL)
-              && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
+    else if (you.where_are_you == BRANCH_MAIN_DUNGEON
+             && you.level_type == LEVEL_DUNGEON
+             && mons_level(monster->type) >= you.your_level + ood_limit()
+             && mons_level(monster->type) < 99
+             && !(monster->type >= MONS_EARTH_ELEMENTAL
+                  && monster->type <= MONS_AIR_ELEMENTAL)
+             && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
+    {
         interesting = true;
+    }
 
-    if ( interesting )
+    if (interesting)
         monster->flags |= MF_INTERESTING;
 }
 

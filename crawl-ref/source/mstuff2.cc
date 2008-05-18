@@ -50,9 +50,6 @@
 
 static int _monster_abjuration(const monsters *mons, bool test);
 
-// XXX: must fix species abils to not use duration 15
-// -- ummm ... who wrote this? {dlb}
-
 // NB: only works because grid location already verified
 //     to be some sort of trap prior to function call: {dlb}
 void mons_trap(struct monsters *monster)

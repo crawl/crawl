@@ -486,15 +486,15 @@ void direction(dist& moves, targeting_type restricts,
     bool target_unshifted = Options.target_unshifted_dirs;
 
     // Find a default target
-    if ( Options.default_target && mode == TARG_ENEMY )
+    if (Options.default_target && mode == TARG_ENEMY)
     {
         skip_iter = true;   // skip first iteration...XXX mega-hack
-        if ( you.prev_targ != MHITNOT && you.prev_targ != MHITYOU )
+        if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
         {
             const monsters *montarget = &menv[you.prev_targ];
-            if ( mons_near(montarget) && player_monster_visible(montarget)
-                 && !mons_friendly(montarget) // not made friendly since then
-                 && _is_target_in_range(montarget->x, montarget->y, range) )
+            if (mons_near(montarget) && player_monster_visible(montarget)
+                && !mons_friendly(montarget) // not made friendly since then
+                && _is_target_in_range(montarget->x, montarget->y, range))
             {
                 found_autotarget = true;
                 moves.tx = montarget->x;

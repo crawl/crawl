@@ -1304,7 +1304,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
               "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
                  (pbolt.is_beam) ? "beam" : "missile",
                  (pbolt.is_explosion) ? "*" :
-                     (pbolt.is_big_cloud) ? "+" : "",
+                 (pbolt.is_big_cloud) ? "+" : "",
                  (pbolt.is_tracer) ? " tracer" : "",
                  pbolt.source_x, pbolt.source_y,
                  pbolt.target_x, pbolt.target_y,
@@ -1321,7 +1321,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 
     ray_def ray;
 
-    if ( pbolt.chose_ray )
+    if (pbolt.chose_ray)
         ray = pbolt.ray;
     else
     {
@@ -1331,7 +1331,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
                   0, true );
     }
 
-    if ( !pbolt.aimed_at_feet )
+    if (!pbolt.aimed_at_feet)
         ray.advance_through(pbolt.target());
 
     // give chance for beam to affect one cell even if aimed_at_feet.

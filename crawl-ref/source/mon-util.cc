@@ -613,12 +613,21 @@ bool mons_see_invis(const monsters *mon)
     return (false);
 }                               // end mons_see_invis()
 
+bool mon_can_see_monster( const monsters *mon, const monsters *targ )
+{
+    if (!mon->mon_see_grid(targ->x, targ->y))
+        return false;
+
+    return (mons_monster_visible(mon, targ));
+}
+
+
 // This does NOT do line of sight!  It checks the targ's visibility
 // with respect to mon's perception, but doesn't do walls or range.
 bool mons_monster_visible( const monsters *mon, const monsters *targ )
 {
     if (targ->has_ench(ENCH_SUBMERGED)
-        || (targ->invisible() && !mons_see_invis(mon)))
+        || targ->invisible() && !mons_see_invis(mon))
     {
         return (false);
     }
@@ -3564,7 +3573,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     if (!mslot_item(mslot) && newAC > 0)
         return pickup(item, mslot, near);
 
-    // XXX: Very simplistic armour evaluation (AC comparison).
+    // Very simplistic armour evaluation (AC comparison).
     if (const item_def *existing_armour = slot_item(eq))
     {
         if (!force)
@@ -3576,8 +3585,8 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
             if (oldAC == newAC)
             {
                 // Use shopping value as a crude estimate of resistances etc.
-                // XXX: This is not quite logical as many properties don't
-                // apply to monsters (e.g. levitation, blink, berserk).
+                // XXX: This is not really logical as many properties don't
+                //      apply to monsters (e.g. levitation, blink, berserk).
                 int oldval = item_value(*existing_armour);
                 int newval = item_value(item);
 
@@ -5605,6 +5614,15 @@ bool monsters::visible_to(const actor *looker) const
     }
 }
 
+bool monsters::mon_see_grid(int tx, int ty) const
+{
+    if (distance(x, y, tx, ty) > LOS_RADIUS * LOS_RADIUS)
+        return false;
+
+    // Ignoring clouds for now.
+    return (num_feats_between(x, y, tx, ty, DNGN_UNSEEN, DNGN_MAXOPAQUE) == 0);
+}
+
 bool monsters::can_see(const actor *target) const
 {
     if (this == target)
@@ -5617,14 +5635,8 @@ bool monsters::can_see(const actor *target) const
         return mons_near(this);
 
     const monsters* mon = dynamic_cast<const monsters*>(target);
-    int       tx  = mon->x;
-    int       ty  = mon->y;
 
-    if (distance(x, y, tx, ty) > LOS_RADIUS * LOS_RADIUS)
-        return false;
-
-    // Ignoring clouds for now.
-    return (num_feats_between(x, y, tx, ty, DNGN_UNSEEN, DNGN_MAXOPAQUE) == 0);
+    return mon_see_grid(mon->x, mon->y);
 }
 
 bool monsters::can_mutate() const

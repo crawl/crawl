@@ -2972,9 +2972,11 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
                     // XXX: This is a horrible hack.
                     screen_buffer_t &bc = buffer2[bufcount2];
                     unsigned char ch = is_waypoint(c.x, c.y);
-                    if (ch && (bc == get_sightmap_char(DNGN_FLOOR) ||
-                               bc == get_magicmap_char(DNGN_FLOOR)))
+                    if (ch && (bc == get_sightmap_char(DNGN_FLOOR)
+                               || bc == get_magicmap_char(DNGN_FLOOR)))
+                    {
                         bc = ch;
+                    }
                 }
             }
 

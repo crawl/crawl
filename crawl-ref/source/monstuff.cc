@@ -760,10 +760,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     // Take note!
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-        if ( MONST_INTERESTING(monster)
-             // XXX yucky hack
-             || monster->type == MONS_PLAYER_GHOST
-             || monster->type == MONS_PANDEMONIUM_DEMON )
+        if (MONST_INTERESTING(monster)
+            // XXX yucky hack
+            || monster->type == MONS_PLAYER_GHOST
+            || monster->type == MONS_PANDEMONIUM_DEMON)
         {
             take_note(Note(NOTE_KILL_MONSTER,
                            monster->type, mons_friendly(monster),
@@ -775,7 +775,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     if (killer == KILL_YOU && you.duration[DUR_BERSERKER])
     {
         if (you.religion == GOD_TROG
-            && (!player_under_penance() && you.piety > random2(1000)))
+            && !player_under_penance() && you.piety > random2(1000))
         {
             int bonus = 3 + random2avg( 10, 2 );
 
@@ -869,8 +869,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         }
     }
 
-    bool death_message =
-        (!silent && mons_near(monster) && player_monster_visible(monster));
+    bool death_message = (!silent && mons_near(monster)
+                          && player_monster_visible(monster));
 
     switch (killer)
     {
@@ -1105,8 +1105,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
                 if (you.religion == GOD_VEHUMET
                     && notice
-                    && (!player_under_penance()
-                        && random2(you.piety) >= piety_breakpoint(0)))
+                    && !player_under_penance()
+                    && random2(you.piety) >= piety_breakpoint(0))
                 {
                     // Vehumet - only for non-undead servants (coding
                     // convenience, no real reason except that Vehumet
@@ -1119,7 +1119,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
 
                 if (you.religion == GOD_SHINING_ONE
-                        && mons_is_evil_or_unholy(monster)
+                    && mons_is_evil_or_unholy(monster)
                     && !player_under_penance()
                     && random2(you.piety) >= piety_breakpoint(0)
                     && !invalid_monster_index(i))
@@ -1546,8 +1546,8 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     }
 
     // messaging: {dlb}
-    bool invis = (mons_class_flag( targetc, M_INVIS )
-                  || monster->invisible()) && !player_see_invis();
+    bool invis = (!player_see_invis() && (mons_class_flag( targetc, M_INVIS )
+                                          || monster->invisible()));
 
     if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
         str_polymon = " changes into ";
@@ -1648,9 +1648,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
                          monster->name(DESC_NOCAP_THE).c_str());
                 }
                 else
-                {
                     mpr("All of a sudden the net rips apart!");
-                }
             }
         }
         else if (mons_is_insubstantial(monster->type)
@@ -1690,7 +1688,9 @@ bool monster_blink(monsters *monster)
 
         if (!random_near_space(monster->x, monster->y, nx, ny,
                                false, true))
+        {
             return (false);
+        }
     }
 
     if (mons_is_caught(monster))
@@ -1731,9 +1731,11 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
 
     // Skip ray tracing if possible.
     if (trans_wall_block)
+    {
         min_walls_between = num_feats_between(ox, oy, you.x_pos, you.y_pos,
                                               DNGN_CLEAR_ROCK_WALL,
                                               DNGN_CLEAR_PERMAROCK_WALL);
+    }
     int  tries = 0;
     while (tries++ < 150)
     {
@@ -1753,12 +1755,14 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
         tried[dx][dy] = true;
 
         if (!in_bounds(tx, ty)
-            || (!see_grid(tx, ty) && restrict_LOS)
+            || restrict_LOS && !see_grid(tx, ty)
             || grd[tx][ty] < DNGN_SHALLOW_WATER
             || mgrd[tx][ty] != NON_MONSTER
-            || (tx == you.x_pos && ty == you.y_pos)
-            || (!allow_adjacent && distance(ox, oy, tx, ty) <= 2))
+            || tx == you.x_pos && ty == you.y_pos
+            || !allow_adjacent && distance(ox, oy, tx, ty) <= 2)
+        {
             continue;
+        }
 
         if (!trans_wall_block && !origin_is_player)
             return (true);
@@ -1773,7 +1777,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
         // away from the player, since in the absence of tranlucent
         // walls monsters can blink to places which are not in either
         // the monster's nor the player's LOS.
-        if (!see_grid(tx, ty) && !origin_is_player)
+        if (!origin_is_player && !see_grid(tx, ty))
             return (true);
 
         // Player can't randomly pass through translucent walls.
@@ -2088,7 +2092,7 @@ void behaviour_event( monsters *mon, int event, int src,
 
         mon->foe = src;
         mon->behaviour = BEH_FLEE;
-        // assume monsters know where to run from, even
+        // Assume monsters know where to run from, even
         // if player is invisible.
         setTarget = true;
         if (see_grid(mon->x, mon->y))
@@ -2176,8 +2180,8 @@ static void _handle_behaviour(monsters *mon)
         mon->foe = MHITNOT;
     }
 
-    // change proxPlayer depending on invisibility and standing
-    // in shallow water
+    // Change proxPlayer depending on invisibility and standing
+    // in shallow water.
     if (proxPlayer && you.invisible())
     {
         if (!mons_player_visible( mon ))
@@ -2219,8 +2223,8 @@ static void _handle_behaviour(monsters *mon)
     if (mon->has_ench(ENCH_BERSERK)
         && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
     {
-        // intelligent monsters prefer to attack the player,
-        // even when berserking
+        // Intelligent monsters prefer to attack the player,
+        // even when berserking.
         if (!isFriendly && proxPlayer && mons_intel(mon->type) >= I_NORMAL)
             mon->foe = MHITYOU;
         else
@@ -2234,15 +2238,15 @@ static void _handle_behaviour(monsters *mon)
     if (mon->foe == monster_index(mon))
         mon->foe = MHITNOT;
 
-    // friendly and good neutral monsters do not attack other friendly
-    // and good neutral monsters
+    // Friendly and good neutral monsters do not attack other friendly
+    // and good neutral monsters.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
         && wontAttack && mons_wont_attack(&menv[mon->foe]))
     {
         mon->foe = MHITNOT;
     }
 
-    // neutral monsters prefer not to attack players, or other neutrals
+    // Neutral monsters prefer not to attack players, or other neutrals.
     if (isNeutral && mon->foe != MHITNOT
         && (mon->foe == MHITYOU || mons_neutral(&menv[mon->foe])))
     {
@@ -2286,11 +2290,7 @@ static void _handle_behaviour(monsters *mon)
             {
                 proxFoe = mons_near(mon, mon->foe);
 
-                if (!mons_monster_visible( mon, &menv[mon->foe] ))
-                    proxFoe = false;
-
-                // XXX monsters will rely on player LOS -- GDL
-                if (!see_grid(menv[mon->foe].x, menv[mon->foe].y))
+                if (!mon_can_see_monster(mon, &menv[mon->foe]))
                     proxFoe = false;
 
                 foe_x = menv[mon->foe].x;
@@ -2455,7 +2455,7 @@ static void _handle_behaviour(monsters *mon)
             // direction to the left or right.  We're changing this so
             // wandering monsters at least appear to have some sort of
             // attention span.  -- bwr
-            if ((mon->x == mon->target_x && mon->y == mon->target_y)
+            if (mon->x == mon->target_x && mon->y == mon->target_y
                 || one_chance_in(20)
                 || testbits( mon->flags, MF_BATTY ))
             {
@@ -2556,7 +2556,7 @@ static bool _mons_check_set_foe(monsters *mon, int x, int y,
         monsters *foe = &menv[mgrd[x][y]];
 
         if (foe != mon
-            && mons_monster_visible(mon, foe)
+            && mon_can_see_monster(mon, foe)
             && (mons_friendly(foe) != friendly
                 || (neutral && !mons_neutral(foe))))
         {
@@ -2651,6 +2651,11 @@ monsters *choose_random_monster_on_level(int weight,
                     // monster (something like MF_DEITY_PREFERRED) and
                     // use that instead of checking the name, given
                     // that other monsters can also have names.
+
+                    // True, but it's currently only used for orcs, and
+                    // Blork and Urug also being preferred to non-named orcs
+                    // is fine, I think. Once more gods name followers (and
+                    // prefer them) that should be changed, of course. (jpeg)
                     if (prefer_named && mon->is_named())
                     {
                         mons_count += 2;
@@ -2840,19 +2845,19 @@ static void _handle_nearby_ability(monsters *monster)
     if (monster_can_submerge(monster, grd[monster->x][monster->y])
         && !player_beheld_by(monster) // no submerging if player entranced
         && (one_chance_in(5)
-            || ((grid_distance( monster->x, monster->y,
-                                you.x_pos, you.y_pos ) > 1
-                 // FIXME This is better expressed as a
-                 // function such as
-                 // monster_has_ranged_attack:
-                 && monster->type != MONS_ELECTRICAL_EEL
-                 && monster->type != MONS_LAVA_SNAKE
-                 && (monster->type != MONS_MERMAID
-                     || you.species == SP_MERFOLK)
-                 // Don't submerge if we just unsubmerged for
-                 // the sake of shouting.
-                 && monster->seen_context != "bursts forth shouting"
-                 && !one_chance_in(20)) )
+            || grid_distance( monster->x, monster->y,
+                              you.x_pos, you.y_pos ) > 1
+               // FIXME This is better expressed as a
+               // function such as
+               // monster_has_ranged_attack:
+               && monster->type != MONS_ELECTRICAL_EEL
+               && monster->type != MONS_LAVA_SNAKE
+               && (monster->type != MONS_MERMAID
+                   || you.species == SP_MERFOLK)
+               // Don't submerge if we just unsubmerged for
+               // the sake of shouting.
+               && monster->seen_context != "bursts forth shouting"
+               && !one_chance_in(20)
             || monster->hit_points <= monster->max_hit_points / 2
             || env.cgrid[monster->x][monster->y] != EMPTY_CLOUD))
     {
@@ -3305,7 +3310,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
         // won't sing if either of you silenced, or it's friendly or confused
         if (monster->has_ench(ENCH_CONFUSION) || mons_friendly(monster)
-            || silenced(monster->x, monster->y) || silenced(you.x_pos, you.y_pos))
+            || silenced(monster->x, monster->y)
+            || silenced(you.x_pos, you.y_pos))
         {
             break;
         }
@@ -3489,11 +3495,11 @@ static bool _handle_potion(monsters *monster, bolt & beem)
                 beem.colour = MAGENTA;
                 // Friendly monsters won't go invisible if the player
                 // can't see invisible. We're being nice.
-                if ( mons_friendly(monster) && !player_see_invis(false) )
+                if (mons_friendly(monster) && !player_see_invis(false))
                     break;
             }
 
-            // allow monsters to drink these when player in sight (jpeg)
+            // Allow monsters to drink these when player in sight. (jpeg)
             simple_monster_message(monster, " drinks a potion.");
             mons_ench_f2(monster, beem);
             imbibed = true;
@@ -3533,7 +3539,7 @@ static bool _handle_reaching(monsters *monster)
     {
         if (monster->foe == MHITYOU)
         {
-            // this check isn't redundant -- player may be invisible.
+            // This check isn't redundant -- player may be invisible.
             if (monster->target_pos() == you.pos()
                 && see_grid_no_trans(monster->pos()))
             {
@@ -3564,7 +3570,7 @@ static bool _handle_reaching(monsters *monster)
         }
     }
 
-    // Player saw the item reach
+    // Player saw the item reach.
     if (ret && !is_artefact(mitm[wpn]) && mons_near(monster)
         && player_monster_visible(monster))
     {
@@ -4221,7 +4227,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
 
         if (!finalAnswer)
         {
-            // if nothing found by now, safe friendlies will rarely cast
+            // If nothing found by now, safe friendlies will rarely cast.
             if (mons_friendly(monster) && !mon_enemies_around(monster)
                 && !one_chance_in(8))
             {
@@ -4317,7 +4323,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                             spellOK = false;
                         }
                     }
-                    else if (!mons_monster_visible( monster, &menv[monster->foe] ))
+                    else if (!mon_can_see_monster(monster, &menv[monster->foe]))
                     {
                         spellOK = false;
                     }
@@ -5822,11 +5828,8 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         return false;
     }
 
-    if (monster->type == MONS_WANDERING_MUSHROOM
-        && see_grid(targ_x, targ_y))
-    {
+    if (monster->type == MONS_WANDERING_MUSHROOM && see_grid(targ_x, targ_y))
         return false;
-    }
 
     // Water elementals avoid fire and heat
     if (monster->type == MONS_WATER_ELEMENTAL
@@ -6739,16 +6742,16 @@ static spell_type _map_wand_to_mspell(int wand_type)
 
 void seen_monster(monsters *monster)
 {
-    if ( monster->flags & MF_SEEN )
+    if (monster->flags & MF_SEEN)
         return;
 
     // First time we've seen this particular monster
     monster->flags |= MF_SEEN;
 
-    if ( !mons_is_mimic(monster->type)
-         && MONST_INTERESTING(monster)
-         && monster->type != MONS_PANDEMONIUM_DEMON
-         && monster->type != MONS_PLAYER_GHOST )
+    if (!mons_is_mimic(monster->type)
+        && MONST_INTERESTING(monster)
+        && monster->type != MONS_PANDEMONIUM_DEMON
+        && monster->type != MONS_PLAYER_GHOST)
     {
         take_note(
             Note(NOTE_SEEN_MONSTER, monster->type, 0,

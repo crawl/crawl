@@ -722,7 +722,7 @@ static int item_name_specialness(const item_def& item)
         return ( branded ? 1 : 0 );
     }
 
-    if ( item.base_type == OBJ_MISSILES )
+    if (item.base_type == OBJ_MISSILES)
         return 0;               // missiles don't get name descriptors
 
     std::string itname = item.name(DESC_PLAIN, false, false, false);
@@ -733,14 +733,14 @@ static int item_name_specialness(const item_def& item)
     const bool heav_runed = itname.find("heavily ") != std::string::npos;
     const bool item_glows = itname.find("glowing") != std::string::npos;
 
-    if ( item_glows || (item_runed && !heav_runed) ||
-         get_equip_desc(item) == ISFLAG_EMBROIDERED_SHINY )
+    if (item_glows || item_runed && !heav_runed
+        || get_equip_desc(item) == ISFLAG_EMBROIDERED_SHINY)
     {
         return 1;
     }
 
-    // You can tell artefacts, because they'll have a description which
-    // rules out anything else.
+    // You can tell something is an artefacts, because they'll have a
+    // description which rules out anything else.
     // XXX Fixedarts and unrandarts might upset the apple-cart, though.
     if ( is_artefact(item) )
         return 2;

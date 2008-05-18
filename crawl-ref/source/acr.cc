@@ -3727,7 +3727,7 @@ static void _open_door(int move_x, int move_y, bool check_confused)
 
         if (you.duration[DUR_BERSERKER])
         {
-            // XXX: better flavor for larger doors?
+            // XXX: better flavour for larger doors?
             if (silenced(you.x_pos, you.y_pos))
             {
                 mprf("The %s%s flies open!", adj, noun);
@@ -4238,8 +4238,8 @@ static void _move_player(int move_x, int move_y)
             you_attack( targ_monst, true );
             you.turn_is_over = true;
 
-            // we don't want to create a penalty if there isn't
-            // supposed to be one
+            // We don't want to create a penalty if there isn't
+            // supposed to be one.
             if (you.berserk_penalty != NO_BERSERK_PENALTY)
                 you.berserk_penalty = 0;
 
