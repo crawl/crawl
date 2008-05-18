@@ -1930,7 +1930,7 @@ void mons_get_damage_level(
         return;
     }
 
-    if (monster->hit_points <= monster->max_hit_points / 6)
+    if (monster->hit_points <= monster->max_hit_points / 4)
     {
         desc += "horribly ";
         dam_level = MDAM_HORRIBLY_DAMAGED;
