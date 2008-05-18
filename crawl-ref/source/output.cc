@@ -1194,7 +1194,7 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
             case MDAM_MODERATELY_DAMAGED: dam_color = BROWN;     break;
             case MDAM_LIGHTLY_DAMAGED:    dam_color = GREEN;     break;
             case MDAM_OKAY:               dam_color = GREEN;     break;
-            default:                      dam_color = CYAN; break;
+            default:                      dam_color = CYAN;      break;
             }
             cprintf(" ");
             textbackground(dam_color);
