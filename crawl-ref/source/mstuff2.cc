@@ -1691,7 +1691,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.thrower  = KILL_MON_MISSILE;
         beam.range    = 7 + random2(8);
         beam.rangeMax = 9;
-        beam.damage   = dice_def( 3, std::min(6 + power / 7, 40) );
+        beam.damage   = dice_def( 3, std::min(6 + power / 8, 40) );
         beam.is_beam  = true;
         break;
 
