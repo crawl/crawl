@@ -721,5 +721,5 @@ This spell throws a bolt of poison.
 %%%%
 Warp Weapon
 
-This spell temporarily binds a localized warp field to the invoker's weapon. This spell is very dangerous to cast, as the field is likely to affect the caster as well. 
+This spell temporarily binds a localized warp field to the invoker's weapon.
 %%%%
