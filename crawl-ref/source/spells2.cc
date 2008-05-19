@@ -1150,7 +1150,6 @@ int vampiric_drain(int pow, const dist &vmove)
 char burn_freeze(int pow, beam_type flavour)
 {
     int mgr = NON_MONSTER;
-    struct monsters *monster = 0;       // NULL {dlb}
     struct dist bmove;
 
     if (pow > 25)
@@ -1189,7 +1188,7 @@ char burn_freeze(int pow, beam_type flavour)
         }
     }
 
-    monster = &menv[mgr];
+    monsters *monster = &menv[mgr];
 
     mprf("You %s %s.",
          (flavour == BEAM_FIRE)        ? "burn" :
@@ -1210,18 +1209,23 @@ char burn_freeze(int pow, beam_type flavour)
 
     if (hurted)
     {
+        god_conduct_trigger conduct;
+        conduct.enabled = false;
+
         if (mons_friendly(monster))
-            did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
+            conduct.set(DID_ATTACK_FRIEND, 5, true, monster);
         else if (mons_neutral(monster))
-            did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
+            conduct.set(DID_ATTACK_NEUTRAL, 5, true, monster);
 
         if (is_unchivalric_attack(&you, monster, monster))
-            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
+            conduct.set(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
 
         if (mons_is_holy(monster))
-            did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice);
+            conduct.set(DID_ATTACK_HOLY, monster->hit_dice);
 
         behaviour_event(monster, ME_ANNOY, MHITYOU);
+
+        conduct.enabled = true;
 
         hurt_monster(monster, hurted);
 

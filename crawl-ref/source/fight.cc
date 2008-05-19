@@ -2882,9 +2882,10 @@ void melee_attack::player_stab_check()
             {
                 cancel_attack = true;
             }
-            else
-                did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, def);
         }
+
+        if (!cancel_attack)
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, def);
     }
 }
 
