@@ -2834,6 +2834,22 @@ void melee_attack::player_stab_check()
     unchivalric_attack_type unchivalric =
         is_unchivalric_attack(&you, defender, def);
 
+    if (unchivalric)
+    {
+        if (you.religion == GOD_SHINING_ONE
+            && !tso_unchivalric_attack_safe_monster(defender))
+        {
+            if (!you.confused()
+                && !yesno("Really attack this helpless creature?", false, 'n'))
+            {
+                cancel_attack = true;
+                return;
+            }
+        }
+
+        did_god_conduct(DID_UNCHIVALRIC_ATTACK, 4, true, def);
+    }
+
     bool roll_needed = true;
     int roll = 155;
     // This ordering is important!
@@ -2880,27 +2896,11 @@ void melee_attack::player_stab_check()
     // see if we need to roll against dexterity / stabbing
     if (stab_attempt && roll_needed)
         stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
-
-    if (unchivalric)
-    {
-        if (you.religion == GOD_SHINING_ONE
-            && !tso_unchivalric_attack_safe_monster(defender))
-        {
-            if (!you.confused()
-                && !yesno("Really attack this helpless creature?", false, 'n'))
-            {
-                cancel_attack = true;
-                return;
-            }
-        }
-
-        did_god_conduct(DID_UNCHIVALRIC_ATTACK, 4, true, def);
-    }
 }
 
 void melee_attack::player_apply_attack_delay()
 {
-    int attack_delay = weapon? player_weapon_speed() : player_unarmed_speed();
+    int attack_delay = weapon ? player_weapon_speed() : player_unarmed_speed();
     attack_delay = player_apply_shield_delay(attack_delay);
 
     if (attack_delay < 3)
