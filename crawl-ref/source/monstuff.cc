@@ -3271,7 +3271,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
         }
 
-        if ((monster->type != MONS_HELL_HOUND && random2(13) < 3)
+        if (monster->type != MONS_HELL_HOUND && random2(13) < 3
             || one_chance_in(10))
         {
             setup_dragon(monster, beem);
@@ -3546,7 +3546,7 @@ static bool _handle_reaching(monsters *monster)
                 int dx = abs(monster->x - you.x_pos);
                 int dy = abs(monster->y - you.y_pos);
 
-                if ((dx == 2 && dy <= 2) || (dy == 2 && dx <= 2))
+                if (dx == 2 && dy <= 2 || dy == 2 && dx <= 2)
                 {
                     ret = true;
                     monster_attack( monster_index(monster) );
@@ -3555,13 +3555,16 @@ static bool _handle_reaching(monsters *monster)
         }
         else if (monster->foe != MHITNOT)
         {
+            int foe_x = menv[monster->foe].x;
+            int foe_y = menv[monster->foe].y;
             // same comments as to invisibility as above.
-            if (monster->target_x == menv[monster->foe].x
-                && monster->target_y == menv[monster->foe].y)
+            if (monster->target_x == foe_x && monster->target_y == foe_y
+                && monster->mon_see_grid(foe_x, foe_y, true))
             {
-                int dx = abs(monster->x - menv[monster->foe].x);
-                int dy = abs(monster->y - menv[monster->foe].y);
-                if ((dx == 2 && dy <= 2) || (dy == 2 && dx <= 2))
+                int dx = abs(monster->x - foe_x);
+                int dy = abs(monster->y - foe_y);
+
+                if (dx == 2 && dy <= 2 || dy == 2 && dx <= 2)
                 {
                     ret = true;
                     monsters_fight( monster_index(monster), monster->foe );
@@ -4864,8 +4867,10 @@ static void _handle_monster_move(int i, monsters *monster)
         }
 
         if (mons_is_caught(monster))
+        {
             // Struggling against the net takes time.
             _swim_or_move_energy(monster);
+        }
         else
         {
             // calculates mmov_x, mmov_y based on monster target.
@@ -4898,13 +4903,13 @@ static void _handle_monster_move(int i, monsters *monster)
                  // bounds check: don't let confused monsters try to run
                  // off the map
                  if (monster->x + mmov_x < 0
-                    || monster->x + mmov_x >= GXM)
+                     || monster->x + mmov_x >= GXM)
                  {
                      mmov_x = 0;
                  }
 
                  if (monster->y + mmov_y < 0
-                         || monster->y + mmov_y >= GYM)
+                     || monster->y + mmov_y >= GYM)
                  {
                      mmov_y = 0;
                  }

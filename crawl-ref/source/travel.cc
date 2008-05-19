@@ -945,8 +945,10 @@ static void explore_find_target_square()
                     anti_zigzag_dir = 0;
             }
             else
+            {
                 anti_zigzag_dir = std::min(prev_travel_moves[0],
                                            prev_travel_moves[1]) + 1;
+            }
         }
 
         // anti_zigzag_dir might have just been set, or might have
@@ -1133,7 +1135,7 @@ command_type travel()
         // Speed up explore by not doing a double-floodfill if we have
         // a valid target.
         if (!you.running.x
-            || (you.running.x == you.x_pos && you.running.y == you.y_pos)
+            || you.running.x == you.x_pos && you.running.y == you.y_pos
             || !is_valid_explore_target(you.running.x, you.running.y))
         {
             explore_find_target_square();
@@ -1488,13 +1490,14 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     unexplored_place = greedy_place = coord_def(0, 0);
     unexplored_dist  = greedy_dist  = UNFOUND_DIST;
 
-    refdist = Options.explore_item_greed > 0? &unexplored_dist: &greedy_dist;
+    refdist = (Options.explore_item_greed > 0) ? &unexplored_dist
+                                               : &greedy_dist;
 
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
     if (!floodout
         && !is_travelsafe_square(start.x, start.y, false)
-        && !is_trap(start.x, start.y))              // The player likes pain
+        && !is_trap(start.x, start.y))          // player likes pain
     {
         return coord_def(0, 0);
     }
@@ -1532,8 +1535,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
         {
             if (path_examine_point(circumference[circ_index][i]))
             {
-                return (runmode == RMODE_TRAVEL? travel_move()
-                        : explore_target());
+                return (runmode == RMODE_TRAVEL ? travel_move()
+                                                : explore_target());
             }
         }
 
@@ -1573,14 +1576,16 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
             // An exclude - wherever it is - is always a feature.
             if (std::find(features->begin(), features->end(), exc.pos)
                     == features->end())
+            {
                 features->push_back(exc.pos);
+            }
 
             fill_exclude_radius(exc);
         }
     }
 
-    return (rmode == RMODE_TRAVEL? travel_move()
-            : explore_target());
+    return (rmode == RMODE_TRAVEL ? travel_move()
+                                  : explore_target());
 }
 
 bool travel_pathfind::square_slows_movement(const coord_def &c)

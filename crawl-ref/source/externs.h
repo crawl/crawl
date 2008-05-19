@@ -1209,7 +1209,7 @@ public:
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const;
-    bool mon_see_grid(int tx, int ty) const;
+    bool mon_see_grid(int tx, int ty, bool reach = false) const;
     bool can_see(const actor *target) const;
     bool is_icy() const;
     bool paralysed() const;

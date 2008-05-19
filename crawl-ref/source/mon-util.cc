@@ -5614,13 +5614,17 @@ bool monsters::visible_to(const actor *looker) const
     }
 }
 
-bool monsters::mon_see_grid(int tx, int ty) const
+bool monsters::mon_see_grid(int tx, int ty, bool reach) const
 {
     if (distance(x, y, tx, ty) > LOS_RADIUS * LOS_RADIUS)
-        return false;
+        return (false);
 
-    // Ignoring clouds for now.
-    return (num_feats_between(x, y, tx, ty, DNGN_UNSEEN, DNGN_MAXOPAQUE) == 0);
+    dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
+    if (reach)
+        max_disallowed = DNGN_MAX_NONREACH;
+
+    // XXX: Ignoring clouds for now.
+    return (num_feats_between(x, y, tx, ty, DNGN_UNSEEN, max_disallowed) == 0);
 }
 
 bool monsters::can_see(const actor *target) const
