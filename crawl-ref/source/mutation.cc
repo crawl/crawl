@@ -1258,9 +1258,8 @@ formatted_string describe_mutations()
     }                           //end switch - innate abilities
 
     // a bit more stuff
-    if ( (you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE) ||
-         player_genus(GENPC_DRACONIAN) ||
-         you.species == SP_SPRIGGAN )
+    if ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
+        || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         result += "Your body does not fit into most forms of armour." EOL;
         have_any = true;
@@ -1268,7 +1267,7 @@ formatted_string describe_mutations()
 
     result += "</lightblue>";
 
-    if ( beogh_water_walk() )
+    if (beogh_water_walk())
     {
         result += "<green>You can walk on water.</green>" EOL;
         have_any = true;
@@ -1285,8 +1284,9 @@ formatted_string describe_mutations()
             have_any = true;
 
             // these are already handled above:
-            if (you.species == SP_NAGA &&
-                (i == MUT_BREATHE_POISON || i == MUT_FAST || i == MUT_DEFORMED))
+            if (you.species == SP_NAGA
+                && (i == MUT_BREATHE_POISON || i == MUT_FAST
+                    || i == MUT_DEFORMED))
             {
                 continue;
             }
