@@ -3290,9 +3290,10 @@ static void _miscast_earth(int severity, const char* cause)
             break;
         case 9:
             mprf("Your %s warm.",
-                 (you.species == SP_NAGA)    ? "underbelly feels" :
-                 (player_mutation_level(MUT_HOOVES))  ? "hooves feel"
-                 : "feet feel");
+                 (you.species == SP_NAGA)            ? "underbelly feels" :
+                 (player_mutation_level(MUT_HOOVES)) ? "hooves feel" :
+                 (player_mutation_level(MUT_TALONS)) ? "talons feel"
+                                                     : "feet feel");
             break;
         }
         break;
