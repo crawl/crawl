@@ -5941,13 +5941,9 @@ void player::attacking(actor *other)
 {
     if (other && other->atype() == ACT_MONSTER)
     {
-        const monsters *mons = dynamic_cast<monsters*>(other);
-        if (mons_friendly(mons))
-            did_god_conduct(DID_ATTACK_FRIEND, 5, true, mons);
-        else if (mons_neutral(mons))
-            did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, mons);
-        else
-            pet_target = monster_index(mons);
+        const monsters *mon = dynamic_cast<monsters*>(other);
+        if (!mons_friendly(mon) && !mons_neutral(mon))
+            pet_target = monster_index(mon);
     }
 
     if (mutation[MUT_BERSERK]

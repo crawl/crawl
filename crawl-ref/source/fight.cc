@@ -289,10 +289,9 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
 {
     unchivalric_attack_type unchivalric = UCAT_NO_ATTACK;
 
-    // no unchivalric attacks on dead or abjured monsters, monsters that
-    // cannot fight (e.g. plants), or invisible monsters
-    if (defender->alive() && !defender->cannot_fight()
-        && player_monster_visible(def))
+    // no unchivalric attacks on monsters that cannot fight (e.g.
+    // plants) or invisible monsters
+    if (!defender->cannot_fight() && player_monster_visible(def))
     {
         // distracted (but not batty)
         if (def->foe != MHITYOU && !testbits(def->flags, MF_BATTY))
@@ -594,7 +593,7 @@ bool melee_attack::attack()
     // A lot of attack parameters get set in here. 'Ware.
     to_hit = calc_to_hit();
 
-    // Allow god to get offended, etc.
+    // Allow setting of your allies' target, etc.
     attacker->attacking(defender);
 
     // The attacker loses nutrition.
@@ -603,11 +602,24 @@ bool melee_attack::attack()
     check_autoberserk();
     check_special_wield_effects();
 
+    god_conduct_trigger conduct;
+    conduct.enabled = false;
+
+    if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
+    {
+        if (mons_friendly(def))
+            conduct.set(DID_ATTACK_FRIEND, 5, true, def);
+        else if (mons_neutral(def))
+            conduct.set(DID_ATTACK_NEUTRAL, 5, true, def);
+    }
+
     // Trying to stay general beyond this point is a recipe for insanity.
     // Maybe when Stone Soup hits 1.0... :-)
     bool retval = ((attacker->atype() == ACT_PLAYER) ? player_attack() :
                    (defender->atype() == ACT_PLAYER) ? mons_attack_you()
                                                      : mons_attack_mons());
+
+    conduct.enabled = true;
 
     return retval;
 }
