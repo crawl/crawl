@@ -1208,21 +1208,21 @@ char burn_freeze(int pow, beam_type flavour)
     if (flavour != BEAM_MISSILE)
         hurted = mons_adjust_flavoured(monster, beam, hurted);
 
-    if (mons_friendly(monster))
-        did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
-    else if (mons_neutral(monster))
-        did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
-
-    if (is_unchivalric_attack(&you, monster, monster))
-        did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
-
-    if (mons_is_holy(monster))
-        did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice);
-
-    behaviour_event(monster, ME_ANNOY, MHITYOU);
-
     if (hurted)
     {
+        if (mons_friendly(monster))
+            did_god_conduct(DID_ATTACK_FRIEND, 5, true, monster);
+        else if (mons_neutral(monster))
+            did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, monster);
+
+        if (is_unchivalric_attack(&you, monster, monster))
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
+
+        if (mons_is_holy(monster))
+            did_god_conduct(DID_ATTACK_HOLY, monster->hit_dice);
+
+        behaviour_event(monster, ME_ANNOY, MHITYOU);
+
         hurt_monster(monster, hurted);
 
         if (monster->hit_points < 1)
