@@ -2636,7 +2636,7 @@ void get_playervisible_monsters(std::vector<monsters*> &mons,
             if ( see_grid(x,y) )
             {
                 monsters *mon = &env.mons[targ_monst];
-                if ( player_monster_visible(mon)
+                if (player_monster_visible(mon)
                     && !mons_is_submerged(mon)
                     && (!mons_is_mimic(mon->type)
                         || mons_is_known_mimic(mon))
@@ -2682,7 +2682,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 
     // monster check
     std::vector<monsters*> visible;
-    get_playervisible_monsters(visible, !announce, want_move, true, range);
+    get_playervisible_monsters(visible, want_move, !announce, true, range);
 
     // No monsters found.
     if (visible.empty())
@@ -2694,8 +2694,10 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
         const monsters &m = *visible[0];
         if (announce)
         {
-            mprf(MSGCH_WARN, "Not with %s in view!",
-                m.name(DESC_NOCAP_A).c_str());
+            std::string monname =
+                (mons_is_mimic(m.type)) ? "the mimic" : m.name(DESC_NOCAP_A);
+
+            mprf(MSGCH_WARN, "Not with %s in view!", monname.c_str());
         }
         else
             tutorial_first_monster(m);
