@@ -302,7 +302,7 @@ int channel_to_colour( msg_channel_type channel, int param )
 
         case MSGCH_MONSTER_DAMAGE:
             ret =  ((param == MDAM_DEAD)               ? RED :
-                    (param >= MDAM_HORRIBLY_DAMAGED)   ? LIGHTRED :
+                    (param >= MDAM_SEVERELY_DAMAGED)   ? LIGHTRED :
                     (param >= MDAM_MODERATELY_DAMAGED) ? YELLOW
                                                        : LIGHTGREY);
             break;

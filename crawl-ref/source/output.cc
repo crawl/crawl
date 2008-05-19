@@ -1193,7 +1193,7 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
                 // but not background colors.  So stick wth standards.
             case MDAM_DEAD:
             case MDAM_ALMOST_DEAD:
-            case MDAM_HORRIBLY_DAMAGED:   dam_color = RED;       break;
+            case MDAM_SEVERELY_DAMAGED:   dam_color = RED;       break;
             case MDAM_HEAVILY_DAMAGED:    dam_color = MAGENTA;   break;
             case MDAM_MODERATELY_DAMAGED: dam_color = BROWN;     break;
             case MDAM_LIGHTLY_DAMAGED:    dam_color = GREEN;     break;
