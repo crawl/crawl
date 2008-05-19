@@ -3752,6 +3752,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         if (submerged)
             return (0);
 
+        god_conduct_trigger conduct;
+        conduct.enabled = false;
+
         // nasty enchantments will annoy the monster, and are considered
         // naughty (even if a monster might resist)
         if (nasty_beam(mon, beam))
@@ -3767,16 +3770,16 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 if (beam.flavour != BEAM_CHARM)
                 {
                     if (mons_friendly(mon))
-                        did_god_conduct(DID_ATTACK_FRIEND, 5, true, mon);
+                        conduct.set(DID_ATTACK_FRIEND, 5, true, mon);
                     else if (mons_neutral(mon))
-                        did_god_conduct(DID_ATTACK_NEUTRAL, 5, true, mon);
+                        conduct.set(DID_ATTACK_NEUTRAL, 5, true, mon);
 
                     if (is_unchivalric_attack(&you, mon, mon))
-                        did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, mon);
+                        conduct.set(DID_UNCHIVALRIC_ATTACK, 5, true, mon);
                 }
 
                 if (mons_is_holy(mon))
-                    did_god_conduct(DID_ATTACK_HOLY, mon->hit_dice, true, mon);
+                    conduct.set(DID_ATTACK_HOLY, mon->hit_dice, true, mon);
 
                 if (you.religion == GOD_BEOGH
                     && mons_species(mon->type) == MONS_ORC
@@ -3793,6 +3796,8 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         {
             behaviour_event( mon, ME_ALERT, _beam_source(beam) );
         }
+
+        conduct.enabled = true;
 
         // !@#*( affect_monster_enchantment() has side-effects on
         // the beam structure which screw up range_used_on_hit(),
@@ -3889,11 +3894,11 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     }
 #endif
 
-    // now, we know how much this monster would (probably) be
+    // Now, we know how much this monster would (probably) be
     // hurt by this beam.
     if (beam.is_tracer)
     {
-        if (hurt_final != 0)
+        if (hurt_final > 0)
         {
             // monster could be hurt somewhat, but only apply the
             // monster's power based on how badly it is affected.
@@ -3912,6 +3917,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 beam.fr_power += 2 * hurt_final * mons_power(mons_type) / hurt;
             }
         }
+
         // either way, we could hit this monster, so return range used
         return (_range_used_on_hit(beam));
     }
@@ -3919,10 +3925,10 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
     // BEGIN real non-enchantment beam
 
-    // player beams which hit friendly will annoy them and be
-    // considered naughty if they do damage (this is so as not to
-    // penalize players that fling fireballs into a melee with fire
-    // elementals on their side - the elementals won't give a sh*t,
+    // player beams which hit friendlies or good neutrals will annoy
+    // them and be considered naughty if they do damage (this is so as
+    // not to penalize players that fling fireballs into a melee with
+    // fire elementals on their side - the elementals won't give a sh*t,
     // after all)
 
     god_conduct_trigger conduct;
@@ -3934,7 +3940,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         {
             const bool okay =
                 (beam.aux_source == "reading a scroll of immolation"
-                 && !beam.effect_known);
+                && !beam.effect_known);
 
             if (is_sanctuary(mon->x, mon->y)
                 || is_sanctuary(you.x_pos, you.y_pos))
