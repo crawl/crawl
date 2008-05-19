@@ -605,15 +605,43 @@ bool melee_attack::attack()
     god_conduct_trigger conduct;
     conduct.enabled = false;
 
-    if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
+    if (attacker->atype() == ACT_PLAYER)
     {
-        if (mons_friendly(def))
-            conduct.set(DID_ATTACK_FRIEND, 5, true, def);
-        else if (mons_neutral(def))
-            conduct.set(DID_ATTACK_NEUTRAL, 5, true, def);
+        const bool wontAttack = mons_wont_attack(def);
+        const bool isFriendly = mons_friendly(def);
+        const bool isNeutral = mons_neutral(def);
+        const bool isUnchivalric = is_unchivalric_attack(&you, def, def);
+        const bool isHoly = mons_is_holy(def);
 
-        if (mons_is_holy(def))
-            did_god_conduct(DID_ATTACK_HOLY, def->hit_dice, true, def);
+        if (wontAttack
+            || (is_good_god(you.religion) && (isNeutral || isHoly))
+            || (you.religion == GOD_SHINING_ONE && isUnchivalric))
+        {
+            snprintf(info, INFO_SIZE, "Really attack this %s%s creature?",
+                                      (isFriendly)    ? "friendly " :
+                                      (wontAttack)    ? "non-hostile " :
+                                      (isNeutral)     ? "neutral " :
+                                      (isUnchivalric) ? "helpless "
+                                                      : "",
+                                      (isHoly)        ? "holy"
+                                                      : "");
+
+            if (you.confused() || yesno(info, false, 'n'))
+            {
+                if (isFriendly)
+                    conduct.set(DID_ATTACK_FRIEND, 5, true, def);
+                else if (isNeutral)
+                    conduct.set(DID_ATTACK_NEUTRAL, 5, true, def);
+
+                if (isUnchivalric)
+                    conduct.set(DID_UNCHIVALRIC_ATTACK, 4, true, def);
+
+                if (isHoly)
+                    conduct.set(DID_ATTACK_HOLY, def->hit_dice, true, def);
+            }
+            else
+                cancel_attack = true;
+        }
     }
 
     // Trying to stay general beyond this point is a recipe for insanity.
@@ -743,15 +771,15 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
 
 bool melee_attack::player_attack()
 {
+    if (cancel_attack)
+        return (false);
+
     potential_damage =
-        !weapon? player_calc_base_unarmed_damage()
-               : player_calc_base_weapon_damage();
+        !weapon ? player_calc_base_unarmed_damage()
+                : player_calc_base_weapon_damage();
 
     player_apply_attack_delay();
     player_stab_check();
-
-    if (cancel_attack)
-        return (false);
 
     coord_def where = defender->pos();
 
@@ -2833,22 +2861,6 @@ void melee_attack::player_stab_check()
 {
     unchivalric_attack_type unchivalric =
         is_unchivalric_attack(&you, defender, def);
-
-    if (unchivalric)
-    {
-        if (you.religion == GOD_SHINING_ONE
-            && !tso_unchivalric_attack_safe_monster(defender))
-        {
-            if (!you.confused()
-                && !yesno("Really attack this helpless creature?", false, 'n'))
-            {
-                cancel_attack = true;
-                return;
-            }
-        }
-
-        did_god_conduct(DID_UNCHIVALRIC_ATTACK, 4, true, def);
-    }
 
     bool roll_needed = true;
     int roll = 155;
