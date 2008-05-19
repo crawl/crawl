@@ -220,7 +220,7 @@ int cast_smiting(int power, dist &beam)
             conduct.set(DID_ATTACK_NEUTRAL, 5, true, monster);
 
         if (is_unchivalric_attack(&you, monster, monster))
-            conduct.set(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
+            conduct.set(DID_UNCHIVALRIC_ATTACK, 4, true, monster);
 
         if (mons_is_holy(monster))
             conduct.set(DID_ATTACK_HOLY, monster->hit_dice, true, monster);

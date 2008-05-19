@@ -611,6 +611,9 @@ bool melee_attack::attack()
             conduct.set(DID_ATTACK_FRIEND, 5, true, def);
         else if (mons_neutral(def))
             conduct.set(DID_ATTACK_NEUTRAL, 5, true, def);
+
+        if (mons_is_holy(def))
+            did_god_conduct(DID_ATTACK_HOLY, def->hit_dice, true, def);
     }
 
     // Trying to stay general beyond this point is a recipe for insanity.
@@ -1184,9 +1187,6 @@ bool melee_attack::player_apply_aux_unarmed()
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster( def, KC_YOU );
 
-        if (mons_holiness(def) == MH_HOLY)
-            did_god_conduct(DID_ATTACK_HOLY, 1, true, def);
-
         // normal vampiric biting attack, not if already got stabbing special
         if (damage_brand == SPWPN_VAMPIRICISM && you.species == SP_VAMPIRE
             && (!stab_attempt || stab_bonus <= 0))
@@ -1485,7 +1485,7 @@ int melee_attack::player_stab(int damage)
 
         exercise(SK_STABBING, 1 + random2avg(5, 4));
 
-        did_god_conduct(DID_STABBING, 5);
+        did_god_conduct(DID_STABBING, 4);
     }
     else
     {
@@ -1761,9 +1761,6 @@ void melee_attack::player_check_weapon_effects()
 // Returns true if the combat round should end here.
 bool melee_attack::player_monattk_hit_effects(bool mondied)
 {
-    if (!mondied && mons_holiness(def) == MH_HOLY)
-        did_god_conduct(DID_ATTACK_HOLY, 1, true, def);
-
     player_check_weapon_effects();
 
     // thirsty vampires will try to use a stabbing situation to draw blood
@@ -2897,7 +2894,7 @@ void melee_attack::player_stab_check()
             }
         }
 
-        did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, def);
+        did_god_conduct(DID_UNCHIVALRIC_ATTACK, 4, true, def);
     }
 }
 
