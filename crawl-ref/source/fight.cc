@@ -594,6 +594,9 @@ bool melee_attack::attack()
     // A lot of attack parameters get set in here. 'Ware.
     to_hit = calc_to_hit();
 
+    // Allow god to get offended, etc.
+    attacker->attacking(defender);
+
     // The attacker loses nutrition.
     attacker->make_hungry(3, true);
 
@@ -605,9 +608,6 @@ bool melee_attack::attack()
     bool retval = ((attacker->atype() == ACT_PLAYER) ? player_attack() :
                    (defender->atype() == ACT_PLAYER) ? mons_attack_you()
                                                      : mons_attack_mons());
-
-    // Allow god to get offended, etc.
-    attacker->attacking(defender);
 
     return retval;
 }
