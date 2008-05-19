@@ -617,14 +617,14 @@ bool melee_attack::attack()
             || (is_good_god(you.religion) && (isNeutral || isHoly))
             || (you.religion == GOD_SHINING_ONE && isUnchivalric))
         {
-            snprintf(info, INFO_SIZE, "Really attack this %s%s%s creature?",
+            snprintf(info, INFO_SIZE, "Really attack this %s%s%screature?",
                                       (isUnchivalric) ? "helpless "
                                                       : "",
                                       (isFriendly)    ? "friendly " :
                                       (wontAttack)    ? "non-hostile " :
                                       (isNeutral)     ? "neutral "
                                                       : "",
-                                      (isHoly)        ? "holy"
+                                      (isHoly)        ? "holy "
                                                       : "");
 
             if (you.confused() || yesno(info, false, 'n'))
