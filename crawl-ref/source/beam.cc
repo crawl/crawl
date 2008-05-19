@@ -1805,8 +1805,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         break;
 
     case BEAM_ICE:
-        /* ice - about 50% of damage is cold, other 50% is impact and
-           can't be resisted (except by AC, of course) */
+        // ice - about 50% of damage is cold, other 50% is impact and
+        // can't be resisted (except by AC, of course)
         hurted = resist_adjust_damage(monster, pbolt.flavour,
                                       monster->res_cold(), hurted,
                                       true);
@@ -1847,7 +1847,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         break;
     default:
         break;
-    }                           /* end of switch */
+    }                           // end of switch
 
     if (pbolt.name == "hellfire")
     {
@@ -1879,7 +1879,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                     simple_monster_message(monster, " is burned terribly!");
             }
 
-            hurted *= 12;       /* hellfire */
+            hurted *= 12;       // hellfire
             hurted /= 10;
         }
     }
