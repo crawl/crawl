@@ -3871,7 +3871,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         hurt_final -= random2(1 + mon->ac);
     }
 
-    if (hurt_final < 1)
+    if (hurt_final < 0)
         hurt_final = 0;
 
     const int raw_damage = hurt_final;
@@ -3963,7 +3963,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         }
 
         // Don't annoy friendlies or good neutrals if the player's beam
-        // did no damage. Hostiles will still take umbrage.
+        // did no damage.  Hostiles will still take umbrage.
         if (hurt_final > 0 || !mons_wont_attack(mon) || !YOU_KILL(beam.thrower))
             behaviour_event(mon, ME_ANNOY, _beam_source(beam) );
     }
@@ -4014,7 +4014,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
     conduct.enabled = true;
 
-    // the beam hit.
+    // The beam hit.
     if (mons_near(mon))
     {
         mprf("The %s %s %s.",
@@ -4025,8 +4025,8 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     }
     else
     {
-        // the player might hear something,
-        // if _they_ fired a missile (not beam)
+        // The player might hear something, if _they_ fired a missile
+        // (not beam).
         if (!silenced(you.x_pos, you.y_pos) && beam.flavour == BEAM_MISSILE
             && YOU_KILL(beam.thrower))
         {
