@@ -2881,11 +2881,11 @@ void melee_attack::player_stab_check()
                 && !yesno("Really attack this helpless creature?", false, 'n'))
             {
                 cancel_attack = true;
+                return;
             }
         }
 
-        if (!cancel_attack)
-            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, def);
+        did_god_conduct(DID_UNCHIVALRIC_ATTACK, 5, true, def);
     }
 }
 
