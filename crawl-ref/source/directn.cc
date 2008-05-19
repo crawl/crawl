@@ -845,9 +845,12 @@ void direction(dist& moves, targeting_type restricts,
                 switch (m.attitude)
                 {
                  case ATT_FRIENDLY:
-                     m.attitude = ATT_NEUTRAL;
+                     m.attitude = ATT_GOOD_NEUTRAL;
                      m.flags &= ~MF_CREATED_FRIENDLY;
                      m.flags |= MF_WAS_NEUTRAL;
+                     break;
+                 case ATT_GOOD_NEUTRAL:
+                     m.attitude = ATT_NEUTRAL;
                      break;
                  case ATT_NEUTRAL:
                      m.attitude = ATT_HOSTILE;

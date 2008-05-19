@@ -1426,10 +1426,11 @@ void stethoscope(int mwh)
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
          menv[i].name(DESC_CAP_THE, true).c_str(),
          i, menv[i].type, menv[i].x, menv[i].y,
-         ((menv[i].attitude == ATT_FRIENDLY) ? "friendly" :
-          (menv[i].attitude == ATT_HOSTILE)  ? "hostile" :
-          (menv[i].attitude == ATT_NEUTRAL)  ? "neutral"
-                                             : "unknown alignment") );
+         ((menv[i].attitude == ATT_HOSTILE)       ? "hostile" :
+          (menv[i].attitude == ATT_FRIENDLY)      ? "friendly" :
+          (menv[i].attitude == ATT_NEUTRAL)       ? "neutral" :
+          (menv[i].attitude == ATT_GOOD_NEUTRAL)  ? "good neutral"
+                                                  : "unknown alignment") );
 
     // print stats and other info
     mprf(MSGCH_DIAGNOSTICS,
