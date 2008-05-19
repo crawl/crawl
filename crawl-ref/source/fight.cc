@@ -4173,8 +4173,8 @@ static inline int player_weapon_str_weight( void )
     return (ret);
 }
 
-// weapon_dex_weight() + weapon_str_weight == 10 so we only need define
-// one of these.
+// weapon_dex_weight() + weapon_str_weight == 10, so we only need to
+// define one of these.
 static inline int player_weapon_dex_weight( void )
 {
     return (10 - player_weapon_str_weight());
