@@ -360,7 +360,7 @@ void cast_chain_lightning( int powc )
         // now check if the player is a target
         dist = grid_distance( sx, sy, you.x_pos, you.y_pos );
 
-        if (dist)       // ie player was not the source
+        if (dist)       // i.e., player was not the source
         {
             // distance randomized (as above)
             dist += (random2(3) - 1);
