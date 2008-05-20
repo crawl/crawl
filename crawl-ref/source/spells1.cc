@@ -966,32 +966,35 @@ int cast_vitalisation(int pow)
         // indicator and the step counter.
 
     case 3:
-        // Add divine stamina and divine robustness.
+    {
 stamina_robustness:
+        int estep = step / 2;
+
+        // Add divine stamina and divine robustness.
         switch (step)
         {
         // Divine stamina.
         case 0:
         case 2:
         case 4:
-            if ((step == 0 || you.duration[DUR_VITALISATION_CHAIN] > 0)
-                && ((you.attribute[ATTR_DIVINE_STAMINA] + 1) / 2) == (step / 2)
-                && (player_mutation_level(MUT_STRONG) / 5) < (3 - step / 2)
-                && (player_mutation_level(MUT_CLEVER) / 5) < (3 - step / 2)
-                && (player_mutation_level(MUT_AGILE) / 5) < (3 - step / 2))
+            if ((estep == 0 || you.duration[DUR_VITALISATION_CHAIN] > 0)
+                && ((you.attribute[ATTR_DIVINE_STAMINA] + 1) / 2) == estep
+                && (player_mutation_level(MUT_STRONG) / 5) < (3 - estep)
+                && (player_mutation_level(MUT_CLEVER) / 5) < (3 - estep)
+                && (player_mutation_level(MUT_AGILE) / 5) < (3 - estep))
             {
                 success = true;
                 mprf(MSGCH_DURATION, "Zin %s divine stamina.",
-                    (step == 0) ? "grants you" :
-                    (step == 2) ? "strengthens your"
-                                : "maximises your");
+                    (estep == 0) ? "grants you" :
+                    (estep == 1) ? "strengthens your"
+                                 : "maximises your");
 
                 const int stamina_amt = step + 1;
                 you.attribute[ATTR_DIVINE_STAMINA] += stamina_amt;
                 you.duration[DUR_DIVINE_STAMINA] +=
-                    (step == 0) ? (you.skills[SK_INVOCATIONS] * 2) :
-                    (step == 2) ? (you.skills[SK_INVOCATIONS])
-                                : (you.skills[SK_INVOCATIONS] / 2);
+                    (estep == 0) ? (you.skills[SK_INVOCATIONS] * 2) :
+                    (estep == 1) ? (you.skills[SK_INVOCATIONS])
+                                 : (you.skills[SK_INVOCATIONS] / 2);
 
                 modify_stat(STAT_STRENGTH, stamina_amt, true, "");
                 modify_stat(STAT_INTELLIGENCE, stamina_amt, true, "");
@@ -1001,21 +1004,22 @@ stamina_robustness:
             }
 
             step++;
+            goto stamina_robustness;
             // Deliberate fall through.
 
         // Divine robustness.
         case 1:
         case 3:
         case 5:
-            if ((step == 1 || you.duration[DUR_VITALISATION_CHAIN] > 0)
-                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == (step / 2)
-                && player_mutation_level(MUT_ROBUST) < (3 - step / 2))
+            if ((estep == 0 || you.duration[DUR_VITALISATION_CHAIN] > 0)
+                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == estep
+                && player_mutation_level(MUT_ROBUST) < (3 - estep))
             {
                 success = true;
                 mprf(MSGCH_DURATION, "Zin %s divine robustness.",
-                    (step == 1) ? "grants you" :
-                    (step == 3) ? "strengthens your"
-                                : "maximises your");
+                    (estep == 0) ? "grants you" :
+                    (estep == 1) ? "strengthens your"
+                                 : "maximises your");
 
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
@@ -1046,6 +1050,7 @@ stamina_robustness:
         type = 4;
         // Deliberate fall through, resetting the vitalisation chaining
         // indicator and the step counter.
+    }
 
     default:
         // Do nothing.
