@@ -771,7 +771,7 @@ static void xom_checks_damage(kill_method_type death_type,
     if (!monster->alive())
         return;
 
-    if (mons_attitude(monster) == ATT_FRIENDLY)
+    if (mons_wont_attack(monster))
     {
         // Xom thinks collateral damage is funny.
         xom_is_stimulated(255 * dam / (dam + you.hp));
