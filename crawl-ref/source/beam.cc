@@ -2312,7 +2312,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     pbolt.foe_helped    = pbolt.foe_hurt = 0;
     pbolt.foe_ratio     = 80;        // default - see mons_should_fire()
 
-    // foe ratio for summon gtr. demons & undead -- they may be
+    // foe ratio for summoning gtr. demons & undead -- they may be
     // summoned, but they're hostile and would love nothing better
     // than to nuke the player and his minions
     if (pbolt.attitude == ATT_FRIENDLY && monster->attitude != ATT_FRIENDLY)
@@ -3598,7 +3598,7 @@ static int _affect_player( bolt &beam, item_def *item )
         {
             beam.fr_hurt++;
 
-            // Beam from player rebounded and hit player
+            // Beam from player rebounded and hit player.
             if (beam.beam_source == NON_MONSTER)
                 xom_is_stimulated(255);
             // Xom's amusement at the player's being damaged is handled

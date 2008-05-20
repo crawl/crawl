@@ -754,7 +754,7 @@ static void xom_checks_damage(kill_method_type death_type,
     }
     else if (death_type == KILLED_BY_FALLING_DOWN_STAIRS)
     {
-        // Xom thinks falling down the stairs is hilarious
+        // Xom thinks falling down the stairs is hilarious.
         xom_is_stimulated(255);
         return;
     }
@@ -773,7 +773,7 @@ static void xom_checks_damage(kill_method_type death_type,
 
     if (mons_attitude(monster) == ATT_FRIENDLY)
     {
-        // Xom thinks collateral damage is funny
+        // Xom thinks collateral damage is funny.
         xom_is_stimulated(255 * dam / (dam + you.hp));
         return;
     }
@@ -783,9 +783,9 @@ static void xom_checks_damage(kill_method_type death_type,
     if (leveldif == 0)
         leveldif = 1;
 
-    /* Note that Xom is amused when you are significantly hurt
-     * by a creature of higher level than yourself as well as
-     * by a creatured of lower level than yourself. */
+    // Note that Xom is amused when you are significantly hurt by a
+    // creature of higher level than yourself, as well as by a creature
+    // of lower level than yourself.
     amusementvalue += leveldif * leveldif * dam;
 
     if (!player_monster_visible(monster))
