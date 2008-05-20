@@ -138,8 +138,8 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             }
         }
 
-        // Allow wizard blink to send player into walls, in case
-        // the user wants to alter that grid to something else.
+        // Allow wizard blink to send player into walls, in case the
+        // user wants to alter that grid to something else.
         if (grid_is_solid(grd[beam.tx][beam.ty]) && wizard_blink)
             grd[beam.tx][beam.ty] = DNGN_FLOOR;
 
