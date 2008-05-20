@@ -1138,7 +1138,7 @@ void fire_monster_alerts()
             {
                 _handle_seen_interrupt(monster);
 
-                if (mons_attitude(monster) == ATT_HOSTILE)
+                if (monster->attitude == ATT_HOSTILE)
                     num_hostile++;
             }
             else

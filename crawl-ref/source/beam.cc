@@ -2300,9 +2300,8 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     pbolt.source_x      = monster->x;    // always safe to do.
     pbolt.source_y      = monster->y;
     pbolt.beam_source   = monster_index(monster);
-    pbolt.can_see_invis = (mons_see_invis(monster) != 0);
-    pbolt.smart_monster = (mons_intel(monster->type) == I_HIGH
-                           || mons_intel(monster->type) == I_NORMAL);
+    pbolt.can_see_invis = mons_see_invis(monster);
+    pbolt.smart_monster = (mons_intel(monster->type) >= I_NORMAL);
     pbolt.attitude      = mons_attitude(monster);
 
     // init tracer variables

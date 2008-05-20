@@ -1874,7 +1874,6 @@ bool intelligent_ally(const monsters *monster)
             && mons_intel(monster->type) >= I_NORMAL);
 }
 
-
 int mons_power(int mc)
 {
     // for now, just return monster hit dice.

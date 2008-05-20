@@ -1031,7 +1031,8 @@ class monster_pane_info
         // will break saves a little bit though.
         m_attitude = mons_attitude(m);
 
-        // Currently, difficulty is defined as "average hp".  Leaks too much info?
+        // Currently, difficulty is defined as "average hp".  Leaks too
+        // much info?
         const monsterentry* me = get_monster_data(m->type);
         m_difficulty = me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]>>1))
             + me->hpdice[3];
