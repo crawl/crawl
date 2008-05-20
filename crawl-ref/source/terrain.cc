@@ -34,7 +34,7 @@
 #include "transfor.h"
 #include "view.h"
 
-bool grid_is_wall( dungeon_feature_type grid )
+bool grid_is_wall(dungeon_feature_type grid)
 {
     return (grid >= DNGN_MINWALL && grid <= DNGN_MAXWALL);
 }
@@ -175,8 +175,8 @@ bool grid_is_rock(dungeon_feature_type grid)
     return (grid == DNGN_ORCISH_IDOL
             || grid == DNGN_GRANITE_STATUE
             || grid == DNGN_SECRET_DOOR
-            || (grid >= DNGN_ROCK_WALL
-                && grid <= DNGN_CLEAR_PERMAROCK_WALL));
+            || grid >= DNGN_ROCK_WALL
+               && grid <= DNGN_CLEAR_PERMAROCK_WALL);
 }
 
 bool grid_is_permarock(dungeon_feature_type grid)
@@ -190,7 +190,7 @@ bool grid_is_trap(dungeon_feature_type grid)
             || grid == DNGN_TRAP_NATURAL);
 }
 
-bool grid_is_water( dungeon_feature_type grid )
+bool grid_is_water(dungeon_feature_type grid)
 {
     return (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
 }
@@ -205,7 +205,7 @@ bool grid_destroys_items( dungeon_feature_type grid )
     return (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER);
 }
 
-// returns 0 if grid is not an altar, else it returns the GOD_* type
+// Returns 0 if grid is not an altar, else it returns the GOD_* type.
 god_type grid_altar_god( dungeon_feature_type grid )
 {
     if (grid >= DNGN_ALTAR_FIRST_GOD && grid <= DNGN_ALTAR_LAST_GOD)
@@ -214,8 +214,7 @@ god_type grid_altar_god( dungeon_feature_type grid )
     return (GOD_NO_GOD);
 }
 
-// returns DNGN_FLOOR for non-gods, otherwise returns the altar for
-// the god.
+// Returns DNGN_FLOOR for non-gods, otherwise returns the altar for the god.
 dungeon_feature_type altar_for_god( god_type god )
 {
     if (god == GOD_NO_GOD || god >= NUM_GODS)
@@ -224,7 +223,7 @@ dungeon_feature_type altar_for_god( god_type god )
     return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
 }
 
-bool grid_is_branch_stairs( dungeon_feature_type grid )
+bool grid_is_branch_stairs(dungeon_feature_type grid)
 {
     return ((grid >= DNGN_ENTER_FIRST_BRANCH && grid <= DNGN_ENTER_LAST_BRANCH)
             || (grid >= DNGN_ENTER_DIS && grid <= DNGN_ENTER_TARTARUS));
@@ -232,7 +231,7 @@ bool grid_is_branch_stairs( dungeon_feature_type grid )
 
 // Find all connected cells containing ft, starting at d.
 void find_connected_identical(coord_def d, dungeon_feature_type ft,
-                               std::set<coord_def>& out)
+                              std::set<coord_def>& out)
 {
     if (grd[d.x][d.y] != ft) return;
     if (out.insert(d).second)
@@ -254,7 +253,8 @@ void get_door_description(int door_size, const char** adjective, const char** no
         "huge "      , "gate",
     };
 
-    const unsigned int idx = MIN((unsigned int)door_size*2, ARRAYSZ(descriptions)-2);
+    const unsigned int idx = MIN( (unsigned int) door_size*2,
+                                  ARRAYSZ(descriptions) - 2 );
     *adjective = descriptions[idx];
     *noun = descriptions[idx+1];
 }
@@ -264,7 +264,6 @@ dungeon_feature_type grid_secret_door_appearance( int gx, int gy )
     dungeon_feature_type ret = DNGN_FLOOR;
 
     for (int dx = -1; dx <= 1; dx++)
-    {
         for (int dy = -1; dy <= 1; dy++)
         {
             // only considering orthogonal grids
@@ -281,20 +280,19 @@ dungeon_feature_type grid_secret_door_appearance( int gx, int gy )
             else if (ret != targ)
                 ret = ((ret < targ) ? ret : targ);
         }
-    }
 
     return ((ret == DNGN_FLOOR) ? DNGN_ROCK_WALL
                                 : ret);
 }
 
-const char *grid_item_destruction_message( dungeon_feature_type grid )
+const char *grid_item_destruction_message(dungeon_feature_type grid)
 {
-    return grid == DNGN_DEEP_WATER? "You hear a splash."
-         : grid == DNGN_LAVA      ? "You hear a sizzling splash."
-         :                          "You hear a crunching noise.";
+    return (grid == DNGN_DEEP_WATER ? "You hear a splash." :
+            grid == DNGN_LAVA       ? "You hear a sizzling splash."
+                                    : "You hear a crunching noise.");
 }
 
-static coord_def dgn_find_nearest_square(
+static coord_def _dgn_find_nearest_square(
     const coord_def &pos,
     bool (*acceptable)(const coord_def &),
     bool (*traversable)(const coord_def &) = NULL)
@@ -317,7 +315,6 @@ static coord_def dgn_find_nearest_square(
 
             travel_point_distance[p.x][p.y] = 1;
             for (int yi = -1; yi <= 1; ++yi)
-            {
                 for (int xi = -1; xi <= 1; ++xi)
                 {
                     if (!xi && !yi)
@@ -332,7 +329,6 @@ static coord_def dgn_find_nearest_square(
 
                     points[!iter].push_back(np);
                 }
-            }
         }
 
         points[iter].clear();
@@ -343,16 +339,16 @@ static coord_def dgn_find_nearest_square(
     return (unfound);
 }
 
-static bool item_safe_square(const coord_def &pos)
+static bool _item_safe_square(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
     return (is_traversable(feat) && !grid_destroys_items(feat));
 }
 
 // Moves an item on the floor to the nearest adjacent floor-space.
-static bool dgn_shift_item(const coord_def &pos, item_def &item)
+static bool _dgn_shift_item(const coord_def &pos, item_def &item)
 {
-    const coord_def np = dgn_find_nearest_square(pos, item_safe_square);
+    const coord_def np = _dgn_find_nearest_square(pos, _item_safe_square);
     if (in_bounds(np) && np != pos)
     {
         int index = item.index();
@@ -368,19 +364,20 @@ bool is_critical_feature(dungeon_feature_type feat)
             || grid_altar_god(feat) != GOD_NO_GOD);
 }
 
-static bool is_feature_shift_target(const coord_def &pos)
+static bool _is_feature_shift_target(const coord_def &pos)
 {
     return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));
 }
 
-static bool dgn_shift_feature(const coord_def &pos)
+static bool _dgn_shift_feature(const coord_def &pos)
 {
     const dungeon_feature_type dfeat = grd(pos);
     if (!is_critical_feature(dfeat) && !env.markers.find(pos, MAT_ANY))
         return (false);
 
     const coord_def dest =
-        dgn_find_nearest_square(pos, is_feature_shift_target);
+        _dgn_find_nearest_square(pos, _is_feature_shift_target);
+
     if (in_bounds(dest) && dest != pos)
     {
         grd(dest) = dfeat;
@@ -399,7 +396,7 @@ static bool dgn_shift_feature(const coord_def &pos)
     return (true);
 }
 
-static void dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
+static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 {
     const dungeon_feature_type grid = grd(pos);
     if (grid_is_solid(grid) || grid_destroys_items(grid))
@@ -413,7 +410,7 @@ static void dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 
             // Game-critical item.
             if (preserve_items || item_is_critical(mitm[curr]))
-                dgn_shift_item(pos, mitm[curr]);
+                _dgn_shift_item(pos, mitm[curr]);
             else
             {
                 item_was_destroyed(mitm[curr]);
@@ -426,7 +423,7 @@ static void dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
     }
 }
 
-static void dgn_check_terrain_monsters(const coord_def &pos)
+static void _dgn_check_terrain_monsters(const coord_def &pos)
 {
     const int mindex = mgrd(pos);
     if (mindex != NON_MONSTER)
@@ -450,7 +447,7 @@ void dungeon_terrain_changed(const coord_def &pos,
     if (nfeat != DNGN_UNSEEN)
     {
         if (preserve_features)
-            dgn_shift_feature(pos);
+            _dgn_shift_feature(pos);
 
         unnotice_feature(level_pos(level_id::current(), pos));
         grd(pos) = nfeat;
@@ -459,7 +456,7 @@ void dungeon_terrain_changed(const coord_def &pos,
             seen_notable_thing(nfeat, pos.x, pos.y);
     }
 
-    dgn_check_terrain_items(pos, preserve_items);
+    _dgn_check_terrain_items(pos, preserve_items);
     if (affect_player && pos == you.pos())
     {
         if (!grid_is_solid(grd(pos)))
@@ -470,7 +467,7 @@ void dungeon_terrain_changed(const coord_def &pos,
         else
             you_teleport_now(true, false);
     }
-    dgn_check_terrain_monsters(pos);
+    _dgn_check_terrain_monsters(pos);
 }
 
 // returns true if we manage to scramble free.

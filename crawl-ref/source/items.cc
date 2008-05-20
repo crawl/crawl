@@ -739,7 +739,7 @@ static int item_name_specialness(const item_def& item)
         return 1;
     }
 
-    // You can tell something is an artefacts, because they'll have a
+    // You can tell something is an artefact, because it'll have a
     // description which rules out anything else.
     // XXX Fixedarts and unrandarts might upset the apple-cart, though.
     if ( is_artefact(item) )

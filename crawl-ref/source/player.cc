@@ -121,8 +121,8 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     ASSERT( you.can_pass_through_feat( new_grid ) );
 
     // better not be an unsubmerged monster either:
-    ASSERT( mgrd[x][y] == NON_MONSTER
-            || mons_is_submerged( &menv[ mgrd[x][y] ] ));
+    ASSERT(mgrd[x][y] == NON_MONSTER
+           || mons_is_submerged( &menv[ mgrd[x][y] ] ));
 
     const int cloud = env.cgrid[x][y];
     if (cloud != EMPTY_CLOUD)
@@ -382,8 +382,8 @@ bool is_grid_dangerous(int grid)
 
 bool player_in_mappable_area( void )
 {
-    return (!(testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
-              || testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE)));
+    return (!testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
+            && !testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE));
 }
 
 bool player_in_branch( int branch )
@@ -399,8 +399,8 @@ bool player_in_hell( void )
     COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_THE_PIT, b);
 
     return (you.level_type == LEVEL_DUNGEON
-            && (   you.where_are_you >= BRANCH_FIRST_HELL
-                && you.where_are_you <= BRANCH_LAST_HELL)
+            && you.where_are_you >= BRANCH_FIRST_HELL
+            && you.where_are_you <= BRANCH_LAST_HELL
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
 

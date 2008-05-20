@@ -2531,7 +2531,7 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     case CLOUD_FIRE:
     case CLOUD_COLD:
         return (true);
-    // only harmful if the player doesn't have the necessary resistances
+    // Only harmful if the player doesn't have the necessary resistances.
     // Takes into account what the player can *know* and what s/he can
     // also expect to be the case a few turns later (ignores spells).
     case CLOUD_STINK:
@@ -2584,10 +2584,11 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
                    || mons_class_flag(mon->type, M_NO_EXP_GAIN);
 
 #ifdef CLUA_BINDINGS
-    bool moving = ((!you.delay_queue.empty()
+    bool moving = (!you.delay_queue.empty()
                        && is_run_delay(you.delay_queue.front().type)
-                       && you.delay_queue.front().type != DELAY_REST)
-                   || you.running < RMODE_NOT_RUNNING || want_move);
+                       && you.delay_queue.front().type != DELAY_REST
+                   || you.running < RMODE_NOT_RUNNING
+                   || want_move);
 
     int  dist   = grid_distance(you.x_pos, you.y_pos,
                                 mon->x, mon->y);
@@ -2695,7 +2696,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
         if (announce)
         {
             std::string monname =
-                (mons_is_mimic(m.type)) ? "the mimic" : m.name(DESC_NOCAP_A);
+                (mons_is_mimic(m.type)) ? "a mimic" : m.name(DESC_NOCAP_A);
 
             mprf(MSGCH_WARN, "Not with %s in view!", monname.c_str());
         }
