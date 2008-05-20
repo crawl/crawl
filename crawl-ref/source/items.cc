@@ -970,7 +970,7 @@ static void check_note_item(item_def &item)
 
         // If it's already fully identified when picked up, don't take
         // further notes.
-        if ( fully_identified(item) )
+        if (fully_identified(item))
             item.flags |= ISFLAG_NOTED_ID;
     }
 }
@@ -1448,8 +1448,13 @@ static void _got_item(item_def& item, int quant)
     }
 
     item.flags |= ISFLAG_BEEN_IN_INV;
-    take_note(Note(NOTE_FOUND_ORB_OR_RUNE, 0, 0,
-                   item.name(DESC_NOCAP_A).c_str()));
+    if (!(item.flags & ISFLAG_NOTED_GET))
+    {
+        take_note(Note(NOTE_GET_ITEM, 0, 0,
+                       item.name(DESC_NOCAP_A).c_str()));
+        // Don't take another note.
+        item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+    }
 }
 
 // Returns quantity of items moved into player's inventory and -1 if
@@ -1610,8 +1615,12 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         && you.char_direction == GDT_DESCENDING)
     {
         // Take a note!
-        take_note(Note(NOTE_FOUND_ORB_OR_RUNE, 0, 0,
-                       item.name(DESC_NOCAP_A).c_str()));
+        if (!(item.flags & ISFLAG_NOTED_GET))
+        {
+            take_note(Note(NOTE_GET_ITEM, 0, 0,
+                           item.name(DESC_NOCAP_A).c_str()));
+            item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+        }
 
         if (!quiet)
             mpr("Now all you have to do is get back out of the dungeon!");
@@ -2409,9 +2418,12 @@ item_def find_item_type(object_class_type base_type, std::string name)
         {
             if (!max_subtype[i])
                 continue;
+
             if (find_subtype_by_name(item, static_cast<object_class_type>(i),
                                      max_subtype[i], name))
+            {
                 break;
+            }
         }
     }
     else

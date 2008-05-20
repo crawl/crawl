@@ -119,7 +119,6 @@ static bool _is_noteworthy( const Note& note )
         || note.type == NOTE_POLY_MONSTER
         || note.type == NOTE_USER_NOTE
         || note.type == NOTE_MESSAGE
-        || note.type == NOTE_FOUND_ORB_OR_RUNE
         || note.type == NOTE_LOSE_GOD
         || note.type == NOTE_PENANCE
         || note.type == NOTE_MOLLIFY_GOD
@@ -341,9 +340,6 @@ std::string Note::describe( bool when, bool where, bool what ) const
         case NOTE_DEATH:
             result << name;
             break;
-        case NOTE_FOUND_ORB_OR_RUNE:
-            result << "Found " << name;
-            break;
         case NOTE_USER_NOTE:
             result << Options.user_note_prefix << name;
             break;
@@ -432,12 +428,12 @@ bool notes_active = false;
 
 bool notes_are_active()
 {
-    return notes_active;
+    return (notes_active);
 }
 
 void take_note( const Note& note, bool force )
 {
-    if ( notes_active && (force || _is_noteworthy(note)) )
+    if (notes_active && (force || _is_noteworthy(note)))
     {
         note_list.push_back( note );
         note.check_milestone();

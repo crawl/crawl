@@ -574,11 +574,12 @@ void set_ident_flags( item_def &item, unsigned long flags )
     if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
         && fully_identified(item) && is_interesting_item(item))
     {
-        // make a note of it
+        // Make a note of it.
         take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
                        origin_desc(item).c_str()));
-        // sometimes (e.g. shops) you can ID an item before you get it;
-        // don't note twice in those cases
+
+        // Sometimes (e.g. shops) you can ID an item before you get it;
+        // don't note twice in those cases.
         item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
     }
 }

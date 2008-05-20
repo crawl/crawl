@@ -80,19 +80,17 @@ std::string stash_annotate_item(const char *s,
                                 bool exclusive = false)
 {
     std::string text = userdef_annotate_item(s, item, exclusive);
-    if ((item->base_type == OBJ_BOOKS
-         && item_type_known(*item)
-         && item->sub_type != BOOK_MANUAL
-         && item->sub_type != BOOK_DESTRUCTION)
+    if (item->base_type == OBJ_BOOKS
+            && item_type_known(*item)
+            && item->sub_type != BOOK_MANUAL
+            && item->sub_type != BOOK_DESTRUCTION
         || count_staff_spells(*item, true) > 1)
     {
         formatted_string fs;
         item_def dup = *item;
-        spellbook_contents( dup,
-                item->base_type == OBJ_BOOKS?
-                    RBOOK_READ_SPELL
-                  : RBOOK_USE_STAFF,
-                &fs );
+        spellbook_contents(dup, item->base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
+                                                             : RBOOK_USE_STAFF,
+                           &fs);
         text += EOL;
         text += fs.tostring(2, -2);
     }
@@ -132,9 +130,7 @@ static void fully_identify_item(item_def *item)
 
     set_ident_flags( *item, ISFLAG_IDENT_MASK );
     if (item->base_type != OBJ_WEAPONS)
-        set_ident_type( item->base_type,
-                        item->sub_type,
-                        ID_KNOWN_TYPE );
+        set_ident_type( item->base_type, item->sub_type, ID_KNOWN_TYPE );
 }
 
 // ----------------------------------------------------------------------
@@ -241,12 +237,19 @@ bool Stash::is_boring_feature(dungeon_feature_type feat)
     switch (feat)
     {
     // Discard spammy dungeon features.
-    case DNGN_SHALLOW_WATER: case DNGN_DEEP_WATER:
-    case DNGN_LAVA: case DNGN_OPEN_DOOR: case DNGN_STONE_STAIRS_DOWN_I:
-    case DNGN_STONE_STAIRS_DOWN_II: case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_STONE_STAIRS_UP_I: case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III: case DNGN_ESCAPE_HATCH_DOWN:
-    case DNGN_ESCAPE_HATCH_UP: case DNGN_ENTER_SHOP:
+    case DNGN_SHALLOW_WATER:
+    case DNGN_DEEP_WATER:
+    case DNGN_LAVA:
+    case DNGN_OPEN_DOOR:
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+    case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_ENTER_SHOP:
     case DNGN_UNDISCOVERED_TRAP:
         return (true);
     default:
@@ -490,15 +493,14 @@ bool Stash::matches_search(const std::string &prefix,
                            const base_pattern &search,
                            stash_search_result &res) const
 {
-    if (!enabled || (items.empty() && feat == DNGN_FLOOR))
+    if (!enabled || items.empty() && feat == DNGN_FLOOR)
         return false;
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
         const item_def &item = items[i];
-        std::string s = stash_item_name(item);
-        std::string ann = stash_annotate_item(
-                    STASH_LUA_SEARCH_ANNOTATE, &item);
+        std::string s   = stash_item_name(item);
+        std::string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
         if (search.matches(prefix + " " + ann + s))
         {
             if (!res.count++)
@@ -542,14 +544,16 @@ bool Stash::matches_search(const std::string &prefix,
     return !!res.matches;
 }
 
-void Stash::write(std::ostream &os,
-                  int refx, int refy,
-                  std::string place,
-                  bool identify)
+void Stash::write(std::ostream &os, int refx, int refy,
+                  std::string place, bool identify)
     const
 {
+    bool note_status = notes_are_active();
     activate_notes(false);
-    if (!enabled || (items.size() == 0 && verified)) return;
+
+    if (!enabled || (items.size() == 0 && verified))
+        return;
+
     os << "(" << ((int) x - refx) << ", " << ((int) y - refy)
        << (place.length()? ", " + place : "")
        << ")"
@@ -566,8 +570,7 @@ void Stash::write(std::ostream &os,
         std::string s = stash_item_name(item);
         strncpy(buf, s.c_str(), sizeof buf);
 
-        std::string ann = userdef_annotate_item(
-                STASH_LUA_DUMP_ANNOTATE, &item);
+        std::string ann = userdef_annotate_item(STASH_LUA_DUMP_ANNOTATE, &item);
 
         if (!ann.empty())
         {
@@ -577,7 +580,7 @@ void Stash::write(std::ostream &os,
 
         os << "  " << buf
            << (!ann.empty()? ann : std::string())
-           << (!verified && (items.size() > 1 || i)? " (still there?)" : "")
+           << (!verified && (items.size() > 1 || i) ? " (still there?)" : "")
            << std::endl;
 
         if (is_dumpable_artefact(item, false))
@@ -591,10 +594,11 @@ void Stash::write(std::ostream &os,
             // If string is not-empty, pad out to a neat indent
             if (desc.length())
             {
-                // Walk backwards and prepend indenting spaces to \n characters
+                // Walk backwards and prepend indenting spaces to \n characters.
                 for (int j = desc.length() - 1; j >= 0; --j)
                     if (desc[j] == '\n')
                         desc.insert(j + 1, " ");
+
                 os << "    " << desc << std::endl;
             }
         }
@@ -602,7 +606,8 @@ void Stash::write(std::ostream &os,
 
     if (items.size() <= 1 && !verified)
         os << "  (unseen)" << std::endl;
-    activate_notes(true);
+
+    activate_notes(note_status);
 }
 
 void Stash::save(writer& outf) const
@@ -634,13 +639,10 @@ void Stash::load(reader& inf)
     x = unmarshallByte(inf);
     y = unmarshallByte(inf);
 
-    feat =
-        static_cast<dungeon_feature_type>(
-            static_cast<unsigned char>( unmarshallByte(inf) ));
-    trap =
-        static_cast<trap_type>(
-            static_cast<unsigned char>( unmarshallByte(inf) ));
-
+    feat =  static_cast<dungeon_feature_type>(
+                static_cast<unsigned char>( unmarshallByte(inf) ));
+    trap =  static_cast<trap_type>(
+                static_cast<unsigned char>( unmarshallByte(inf) ));
 
     unsigned char flags = unmarshallByte(inf);
     verified = (flags & 1) != 0;
@@ -699,7 +701,7 @@ std::string ShopInfo::shop_item_name(const shop_item &si) const
     snprintf(shopitem, sizeof shopitem, "%s (%u gold)",
              itemname.c_str(), si.price);
 
-    if ( oldflags != si.item.flags )
+    if (oldflags != si.item.flags)
         const_cast<shop_item&>(si).item.flags = oldflags;
 
     return shopitem;
@@ -725,7 +727,7 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
                 desc.insert(i + 1, " ");
     }
 
-    if ( oldflags != si.item.flags )
+    if (oldflags != si.item.flags)
         const_cast<shop_item&>(si).item.flags = oldflags;
 
     return desc;
@@ -808,13 +810,16 @@ bool ShopInfo::matches_search(const std::string &prefix,
     if (items.empty() && visited)
         return false;
 
+    bool note_status = notes_are_active();
+    activate_notes(false);
+
     bool match = false;
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
         std::string sname = shop_item_name(items[i]);
-        std::string ann = stash_annotate_item(
-                    STASH_LUA_SEARCH_ANNOTATE, &items[i].item, true);
+        std::string ann   = stash_annotate_item( STASH_LUA_SEARCH_ANNOTATE,
+                                                  &items[i].item, true );
 
         bool thismatch = false;
         if (search.matches(prefix + " " + ann + sname))
@@ -853,11 +858,13 @@ bool ShopInfo::matches_search(const std::string &prefix,
         res.pos.pos.y = y;
     }
 
-    return match || res.matches;
+    activate_notes(note_status);
+    return (match || res.matches);
 }
 
 void ShopInfo::write(std::ostream &os, bool identify) const
 {
+    bool note_status = notes_are_active();
     activate_notes(false);
     os << "[Shop] " << name << std::endl;
     if (items.size() > 0)
@@ -879,7 +886,8 @@ void ShopInfo::write(std::ostream &os, bool identify) const
         os << "  (Shop is empty)" << std::endl;
     else
         os << "  (Shop contents are unknown)" << std::endl;
-    activate_notes(true);
+
+    activate_notes(note_status);
 }
 
 void ShopInfo::save(writer& outf) const
@@ -964,10 +972,9 @@ const Stash *LevelStashes::find_stash(int x, int y) const
 const ShopInfo *LevelStashes::find_shop(int x, int y) const
 {
     for (unsigned i = 0; i < m_shops.size(); ++i)
-    {
         if (m_shops[i].isAt(x, y))
             return (&m_shops[i]);
-    }
+
     return (NULL);
 }
 
@@ -1123,13 +1130,13 @@ void LevelStashes::get_matching_stashes(
 
 void LevelStashes::write(std::ostream &os, bool identify) const
 {
-    if (visible_stash_count() == 0) return ;
+    if (visible_stash_count() == 0)
+        return;
+
     os << level_name() << std::endl;
 
     for (unsigned i = 0; i < m_shops.size(); ++i)
-    {
         m_shops[i].write(os, identify);
-    }
 
     if (m_stashes.size())
     {
@@ -1137,7 +1144,7 @@ void LevelStashes::write(std::ostream &os, bool identify) const
         int refx = s.getX(), refy = s.getY();
         std::string levname = short_level_name();
         for (stashes_t::const_iterator iter = m_stashes.begin();
-                iter != m_stashes.end(); iter++)
+             iter != m_stashes.end(); iter++)
         {
             iter->second.write(os, refx, refy, levname, identify);
         }

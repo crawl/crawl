@@ -154,12 +154,13 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
 static std::string _shop_print_stock( const std::vector<int>& stock,
                                      const shop_struct& shop )
 {
-    ShopInfo &si = StashTrack.get_shop(shop.x, shop.y);
+    ShopInfo &si  = StashTrack.get_shop(shop.x, shop.y);
     const bool id = shoptype_identifies_stock(shop.type);
     std::string purchasable;
     for (unsigned int i = 0; i < stock.size(); ++i)
     {
-        const int gp_value = _shop_get_item_value(mitm[stock[i]], shop.greed, id);
+        const int gp_value = _shop_get_item_value(mitm[stock[i]], shop.greed,
+                                                  id);
         const bool can_afford = (you.gold >= gp_value);
 
         cgotoxy(1, i+1, GOTO_CRT);
@@ -200,7 +201,7 @@ static void _in_a_shop( int shopidx )
         std::vector<int> stock = _shop_get_stock(shopidx);
 
         clrscr();
-        if ( stock.empty() )
+        if (stock.empty())
         {
             _shop_print("I'm sorry, my shop is empty now.", 1);
             _shop_more();
@@ -248,7 +249,7 @@ static void _in_a_shop( int shopidx )
             bool is_ok = true;
 
             ft = get_ch();
-            if ( !isalpha(ft) )
+            if (!isalpha(ft))
             {
                 is_ok = false;
             }
@@ -259,7 +260,7 @@ static void _in_a_shop( int shopidx )
                     is_ok = false;
             }
 
-            if ( !is_ok )
+            if (!is_ok)
             {
                 _shop_print("Huh?", 1);
                 _shop_more();
@@ -275,16 +276,18 @@ static void _in_a_shop( int shopidx )
             // noted when you buy it.
             item_def& item = mitm[stock[ft]];
             const unsigned long old_flags = item.flags;
-            if ( id_stock )
+            if (id_stock)
+            {
                 item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID |
                                ISFLAG_NOTED_GET);
+            }
             describe_item(item);
-            if ( id_stock )
+            if (id_stock)
                 item.flags = old_flags;
         }
         else if (ft == '?' || ft == '*')
             invent(-1, false);
-        else if ( !isalpha(ft) )
+        else if (!isalpha(ft))
         {
             _shop_print("Huh?", 1);
             _shop_more();
@@ -323,10 +326,9 @@ static void _in_a_shop( int shopidx )
 
 bool shoptype_identifies_stock(shop_type type)
 {
-    return
-        type != SHOP_WEAPON_ANTIQUE &&
-        type != SHOP_ARMOUR_ANTIQUE &&
-        type != SHOP_GENERAL_ANTIQUE;
+    return (type != SHOP_WEAPON_ANTIQUE
+            && type != SHOP_ARMOUR_ANTIQUE
+            && type != SHOP_GENERAL_ANTIQUE);
 }
 
 static void _purchase( int shop, int item_got, int cost, bool id )
@@ -353,15 +355,16 @@ static void _purchase( int shop, int item_got, int cost, bool id )
     if (num < quant)
     {
         snprintf( info, INFO_SIZE, "I'll put %s outside for you.",
-                 (quant == 1) ? "it" :
-                 (num > 0) ? "the rest" : "these" );
+                                   (quant == 1) ? "it" :
+                                   (num > 0)    ? "the rest"
+                                                : "these" );
 
         _shop_print(info, 1);
         _shop_more();
 
         move_item_to_grid( &item_got, env.shop[shop].x, env.shop[shop].y );
     }
-}                               // end purchase()
+}
 
 // This probably still needs some work.  Rings used to be the only
 // artefacts which had a change in price, and that value corresponds

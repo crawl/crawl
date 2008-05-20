@@ -1812,10 +1812,10 @@ bool recharge_wand(int item_slot)
     item_def &wand = you.inv[ item_slot ];
 
     if (wand.base_type == OBJ_WEAPONS
-        && get_weapon_brand( wand ) == SPWPN_ELECTROCUTION)
+        && get_weapon_brand(wand) == SPWPN_ELECTROCUTION)
     {
         // might fail because of already high enchantment
-        if ( enchant_weapon( ENCHANT_TO_DAM, false, wand ))
+        if (enchant_weapon( ENCHANT_TO_DAM, false, wand ))
         {
             you.wield_change = true;
 

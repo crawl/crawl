@@ -504,7 +504,6 @@ void wield_effects(int item_wield_2, bool showMsgs)
     {
         if (item.sub_type == STAFF_POWER)
         {
-            // inc_max_mp(13);
             calc_mp();
             set_ident_flags( item, ISFLAG_EQ_WEAPON_MASK );
             mpr("You feel your mana capacity increase.");
@@ -4444,7 +4443,7 @@ void read_scroll( int slot )
     // scrolls of immolation were already destroyed earlier
     if (which_scroll != SCR_PAPER && which_scroll != SCR_IMMOLATION)
     {
-        if ( id_the_scroll )
+        if (id_the_scroll)
             set_ident_flags( scroll, ISFLAG_KNOW_TYPE ); // for notes
 
         dec_inv_item_quantity( item_slot, 1 );

@@ -2128,15 +2128,18 @@ static char retlet( int sed )
 bool is_interesting_item( const item_def& item )
 {
     if (fully_identified(item)
-        && (is_random_artefact(item) ||
-            is_unrandom_artefact(item) ||
-            is_fixed_artefact(item)))
+        && (is_random_artefact(item)
+            || is_unrandom_artefact(item)
+            || is_fixed_artefact(item)))
+    {
         return (true);
+    }
 
     const std::string iname = item.name(DESC_PLAIN);
     for (unsigned i = 0; i < Options.note_items.size(); ++i)
         if (Options.note_items[i].matches(iname))
             return (true);
+
     return (false);
 }
 

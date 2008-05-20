@@ -1747,9 +1747,10 @@ static bool _do_ability(const ability_def& abil)
         if (you.magic_points)
             set_mp(random2(you.magic_points), false);
 
+        bool note_status = notes_are_active();
         activate_notes(false);  // this banishment shouldn't be noted
         banished(DNGN_ENTER_ABYSS);
-        activate_notes(true);
+        activate_notes(note_status);
         break;
     }
     case ABIL_NEMELEX_DRAW_ONE:
