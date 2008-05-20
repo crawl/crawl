@@ -1731,7 +1731,7 @@ static bool _do_ability(const ability_def& abil)
         // Move permanent hp/mp loss from leaving to entering the Abyss. (jpeg)
         const int maxloss = std::max(2, div_rand_round(you.hp_max, 30));
         // Lose permanent HP
-        you.hp_max -= random_range(1, maxloss);
+        dec_max_hp(random_range(1, maxloss));
 
         // Paranoia.
         if (you.hp_max < 1)
@@ -1742,6 +1742,7 @@ static bool _do_ability(const ability_def& abil)
 
         // Lose 1d2 permanent MP
         rot_mp(coinflip() ? 2 : 1);
+
         // Deflate MP
         if (you.magic_points)
             set_mp(random2(you.magic_points), false);
