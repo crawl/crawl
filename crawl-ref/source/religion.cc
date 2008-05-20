@@ -805,7 +805,7 @@ bool is_follower(const monsters* mon)
         return (mon->alive() && mons_friendly(mon));
 }
 
-static bool _blessing_wpn(monsters *mon)
+static bool _blessing_wpn(monsters* mon)
 {
     // Pick a monster's weapon.
     const int weapon = mon->inv[MSLOT_WEAPON];
@@ -894,7 +894,7 @@ static bool _blessing_balms(monsters *mon)
     return success;
 }
 
-static bool _blessing_healing(monsters *mon, bool extra)
+static bool _blessing_healing(monsters* mon, bool extra)
 {
     // Heal a monster, giving them an extra hit point if extra is true.
     if (heal_monster(mon, mon->max_hit_points, extra))
@@ -907,7 +907,7 @@ static bool _blessing_healing(monsters *mon, bool extra)
     return false;
 }
 
-static bool _tso_blessing_holy_wpn(monsters *mon)
+static bool _tso_blessing_holy_wpn(monsters* mon)
 {
     // Pick a monster's weapon.
     const int weapon = mon->inv[MSLOT_WEAPON];
@@ -986,7 +986,7 @@ static bool _tso_blessing_holy_arm(monsters* mon)
     return true;
 }
 
-static int _tso_blessing_extend_stay(monsters *mon)
+static int _tso_blessing_extend_stay(monsters* mon)
 {
     if (!mon->has_ench(ENCH_ABJ))
         return 0;
@@ -1014,7 +1014,7 @@ static int _tso_blessing_extend_stay(monsters *mon)
     return 1;
 }
 
-static bool _tso_blessing_friendliness(monsters *mon)
+static bool _tso_blessing_friendliness(monsters* mon)
 {
     if (!mon->has_ench(ENCH_CHARM))
         return false;
@@ -5368,8 +5368,8 @@ int piety_breakpoint(int i)
 // attacks on this creature.
 bool tso_unchivalric_attack_safe_monster(const actor *act)
 {
-    const mon_holy_type holy = act->holiness();
-    return (holy != MH_NATURAL && holy != MH_HOLY);
+    const mon_holy_type holiness = act->holiness();
+    return (holiness != MH_NATURAL && holiness != MH_HOLY);
 }
 
 /////////////////////////////////////////////////////////////////////
