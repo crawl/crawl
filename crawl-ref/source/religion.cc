@@ -5027,6 +5027,26 @@ std::string god_hates_your_god_reaction(god_type god,
     return "";
 }
 
+bool god_hates_killing(god_type god, const monsters* mon)
+{
+    bool retval = false;
+    const mon_holy_type holiness = mon->holiness();
+
+    switch (holiness)
+    {
+        case MH_HOLY:
+            retval = (is_good_god(god));
+            break;
+        case MH_NATURAL:
+            retval = (god == GOD_ELYVILON);
+            break;
+        default:
+            break;
+    }
+
+    return retval;
+}
+
 bool god_likes_butchery(god_type god)
 {
     return (god == GOD_OKAWARU

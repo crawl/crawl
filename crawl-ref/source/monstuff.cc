@@ -740,7 +740,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     const bool gives_xp      = !monster->has_ench(ENCH_ABJ);
 
           bool in_transit    = false;
-          bool drop_items    = !hard_reset;
+          bool drop_items    = !hard_reset && !mons_is_holy(monster);
 
 #ifdef DGL_MILESTONES
     _check_kill_milestone(monster, killer, i);
@@ -878,6 +878,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         case KILL_YOU_MISSILE:  // You kill by missile or beam.
         case KILL_YOU_CONF:     // You kill by confusion.
         {
+            const bool bad_kill =
+                god_hates_killing(you.religion, monster);
             const bool created_friendly =
                 testbits(monster->flags, MF_CREATED_FRIENDLY);
             const bool was_neutral =
@@ -896,8 +898,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // killing triggers tutorial lesson
             _tutorial_inspect_kill();
 
-            // prevent summoned creatures from being done_good kills,
-            if (!created_friendly && gives_xp)
+            // prevent summoned creatures from being good kills
+            if (bad_kill || (!created_friendly && gives_xp))
             {
                 if (mons_holiness(monster) == MH_NATURAL)
                 {
@@ -944,12 +946,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                     monster->hit_dice, true, monster);
                 }
 
-                // Holy beings take their gear with them when they die.
                 if (mons_is_holy(monster))
                 {
                     did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
                                     true, monster);
-                    drop_items = false;
                 }
             }
 
