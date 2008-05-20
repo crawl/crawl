@@ -826,7 +826,7 @@ int cast_vitalisation(int pow)
     {
         step = 0;
         step_max = std::min(pow, step_max_chain);
-        type = random2(type_max_chain + 1);
+        type = random2(type_max_chain * 3 / 2);
         hp_amt = 3;
         mp_amt = 1;
         need_chain = false;
@@ -837,7 +837,69 @@ int cast_vitalisation(int pow)
     switch (type)
     {
     case 0:
-        // Remove negative afflictions, and/or add divine robustness.
+        // Restore HP and MP.
+        if (you.hp < you.hp_max || you.magic_points < you.max_magic_points)
+        {
+            success = true;
+            inc_hp(hp_amt, false);
+            inc_mp(mp_amt, false);
+            hp_amt *= 2;
+            mp_amt *= 2;
+            need_chain =
+                (you.hp < you.hp_max
+                    || you.magic_points < you.max_magic_points);
+            break;
+        }
+
+        need_chain = false;
+        step = 0;
+        type = 1;
+        // Deliberate fall through, resetting the vitalisation chaining
+        // indicator and the step counter.
+
+    case 1:
+        switch (step)
+        {
+        case 0:
+        case 1:
+        case 2:
+            // Restore stats.
+            if (you.strength < you.max_strength
+                || you.intel < you.max_intel
+                || you.dex < you.max_dex)
+            {
+                success = true;
+                restore_stat(STAT_STRENGTH, step + 1, true);
+                restore_stat(STAT_INTELLIGENCE, step + 1, true);
+                restore_stat(STAT_DEXTERITY, step + 1, true);
+                need_chain =
+                    (you.strength < you.max_strength
+                        || you.intel < you.max_intel
+                        || you.dex < you.max_dex);
+                break;
+            }
+
+            step = 3;
+            // Deliberate fall through.
+
+            if (step >= step_max)
+                break;
+
+        default:
+            break;
+        }
+
+        if (success)
+            break;
+
+        need_chain = false;
+        step = 0;
+        type = 2;
+        // Deliberate fall through, resetting the vitalisation chaining
+        // indicator and the step counter.
+
+    case 2:
+        // Remove negative afflictions.
         switch (step)
         {
         // Remove confusion and poisoning.
@@ -890,36 +952,6 @@ int cast_vitalisation(int pow)
             if (step >= step_max)
                 break;
 
-        // Divine robustness.
-        case 3:
-        case 4:
-        case 5:
-            if ((step == 3 || you.duration[DUR_VITALISATION_CHAIN] > 0)
-                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == (step - 3)
-                && player_mutation_level(MUT_ROBUST) < (6 - step))
-            {
-                success = true;
-                mprf(MSGCH_DURATION, "Zin %s divine robustness.",
-                    (step == 3) ? "grants you" :
-                    (step == 4) ? "strengthens your"
-                                : "maximises your");
-
-                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
-                you.duration[DUR_DIVINE_ROBUSTNESS] +=
-                    (step == 3) ? (you.skills[SK_INVOCATIONS] * 2) :
-                    (step == 4) ? (you.skills[SK_INVOCATIONS])
-                                : (you.skills[SK_INVOCATIONS] / 2);
-
-                const int old_hp_max = you.hp_max;
-                calc_hp();
-                set_hp(you.hp * you.hp_max / old_hp_max, false);
-                need_chain = (player_mutation_level(MUT_ROBUST) < (5 - step));
-                break;
-            }
-
-            step = 6;
-            // Deliberate fall through.
-
         default:
             break;
         }
@@ -929,107 +961,77 @@ int cast_vitalisation(int pow)
 
         need_chain = false;
         step = 0;
-        type = 1;
-        // Deliberate fall through, resetting the vitalisation chaining
-        // indicator and the step counter.
-
-    case 1:
-        // Restore HP.
-        if (you.hp < you.hp_max)
-        {
-            success = true;
-            inc_hp(hp_amt, false);
-            hp_amt *= 2;
-            need_chain = (you.hp < you.hp_max);
-            break;
-        }
-
-        need_chain = false;
-        step = 0;
-        type = 2;
-        // Deliberate fall through, resetting the vitalisation chaining
-        // indicator and the step counter.
-
-    case 2:
-        // Restore MP.
-        if (you.magic_points < you.max_magic_points)
-        {
-            success = true;
-            inc_mp(mp_amt, false);
-            mp_amt *= 2;
-            need_chain = (you.magic_points < you.max_magic_points);
-            break;
-        }
-
-        need_chain = false;
-        step = 0;
         type = 3;
         // Deliberate fall through, resetting the vitalisation chaining
         // indicator and the step counter.
 
     case 3:
-        // Restore stats and/or add divine stamina.
+        // Add divine stamina and divine robustness.
+stamina_robustness:
         switch (step)
         {
-        case 0:
-        case 1:
-        case 2:
-            // Restore stats.
-            if (you.strength < you.max_strength
-                || you.intel < you.max_intel
-                || you.dex < you.max_dex)
-            {
-                success = true;
-                restore_stat(STAT_STRENGTH, step + 1, true);
-                restore_stat(STAT_INTELLIGENCE, step + 1, true);
-                restore_stat(STAT_DEXTERITY, step + 1, true);
-                need_chain =
-                    (you.strength < you.max_strength
-                    || you.intel < you.max_intel
-                    || you.dex < you.max_dex);
-                break;
-            }
-
-            step = 3;
-            // Deliberate fall through.
-
-            if (step >= step_max)
-                break;
-
         // Divine stamina.
-        case 3:
+        case 0:
+        case 2:
         case 4:
-        case 5:
-            if ((step == 3 || you.duration[DUR_VITALISATION_CHAIN] > 0)
-                && ((you.attribute[ATTR_DIVINE_STAMINA] + 1) / 2) == (step - 3)
-                && (player_mutation_level(MUT_STRONG) / 5) < (6 - step)
-                && (player_mutation_level(MUT_CLEVER) / 5) < (6 - step)
-                && (player_mutation_level(MUT_AGILE) / 5) < (6 - step))
+            if ((step == 0 || you.duration[DUR_VITALISATION_CHAIN] > 0)
+                && ((you.attribute[ATTR_DIVINE_STAMINA] + 1) / 2) == (step / 2)
+                && (player_mutation_level(MUT_STRONG) / 5) < (3 - step / 2)
+                && (player_mutation_level(MUT_CLEVER) / 5) < (3 - step / 2)
+                && (player_mutation_level(MUT_AGILE) / 5) < (3 - step / 2))
             {
                 success = true;
                 mprf(MSGCH_DURATION, "Zin %s divine stamina.",
-                    (step == 3) ? "grants you" :
-                    (step == 4) ? "strengthens your"
+                    (step == 0) ? "grants you" :
+                    (step == 2) ? "strengthens your"
                                 : "maximises your");
 
-                const int stamina_amt = (step - 3) * 2 + 1;
+                const int stamina_amt = step + 1;
                 you.attribute[ATTR_DIVINE_STAMINA] += stamina_amt;
                 you.duration[DUR_DIVINE_STAMINA] +=
-                    (step == 3) ? (you.skills[SK_INVOCATIONS] * 2) :
-                    (step == 4) ? (you.skills[SK_INVOCATIONS])
+                    (step == 0) ? (you.skills[SK_INVOCATIONS] * 2) :
+                    (step == 2) ? (you.skills[SK_INVOCATIONS])
                                 : (you.skills[SK_INVOCATIONS] / 2);
 
                 modify_stat(STAT_STRENGTH, stamina_amt, true, "");
                 modify_stat(STAT_INTELLIGENCE, stamina_amt, true, "");
                 modify_stat(STAT_DEXTERITY, stamina_amt, true, "");
-                need_chain =
-                    ((player_mutation_level(MUT_STRONG) / 5) < (5 - step)
-                    && (player_mutation_level(MUT_CLEVER) / 5) < (5 - step)
-                    && (player_mutation_level(MUT_AGILE) / 5) < (5 - step));
+                need_chain = true;
                 break;
             }
 
-            step = 6;
+            step++;
+            // Deliberate fall through.
+
+        // Divine robustness.
+        case 1:
+        case 3:
+        case 5:
+            if ((step == 1 || you.duration[DUR_VITALISATION_CHAIN] > 0)
+                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == (step / 2)
+                && player_mutation_level(MUT_ROBUST) < (3 - step / 2))
+            {
+                success = true;
+                mprf(MSGCH_DURATION, "Zin %s divine robustness.",
+                    (step == 1) ? "grants you" :
+                    (step == 3) ? "strengthens your"
+                                : "maximises your");
+
+                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
+                you.duration[DUR_DIVINE_ROBUSTNESS] +=
+                    (step == 1) ? (you.skills[SK_INVOCATIONS] * 2) :
+                    (step == 3) ? (you.skills[SK_INVOCATIONS])
+                                : (you.skills[SK_INVOCATIONS] / 2);
+
+                const int old_hp_max = you.hp_max;
+                calc_hp();
+                set_hp(you.hp * you.hp_max / old_hp_max, false);
+                need_chain = true;
+                break;
+            }
+
+            step++;
+            goto stamina_robustness;
             // Deliberate fall through.
 
         default:
@@ -1065,10 +1067,10 @@ int cast_vitalisation(int pow)
                                 (step == 3) ? "somewhat" :
                                 (step == 4) ? "appropriately"
                                             : "impressively",
-                                (type == 0) ? "better" :
-                                (type == 1) ? "invigorated" :
-                                (type == 2) ? "powerful"
-                                            : "renewed");
+                                (type == 0) ? "invigorated" :
+                                (type == 1) ? "renewed" :
+                                (type == 2) ? "better"
+                                            : "powerful");
 
         // The more the step counter has advanced, the greater the piety
         // cost is.
