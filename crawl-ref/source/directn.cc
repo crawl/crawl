@@ -86,23 +86,22 @@ enum LOSSelect
 static void describe_feature(int mx, int my, bool oos);
 static void describe_cell(int mx, int my);
 
-static bool find_object(  int x, int y, int mode, int range );
-static bool find_monster( int x, int y, int mode, int range );
-static bool find_feature( int x, int y, int mode, int range );
+static bool find_object(  int x, int y, int mode, bool need_path, int range );
+static bool find_monster( int x, int y, int mode, bool need_path, int range );
+static bool find_feature( int x, int y, int mode, bool need_path, int range );
 
 static char find_square_wrapper( int tx, int ty,
                                  FixedVector<char, 2> &mfp, char direction,
-                                 bool (*targ)(int, int, int, int),
-                                 int mode = TARG_ANY, int range = -1,
-                                 bool wrap = false,
+                                 bool (*targ)(int, int, int, bool, int),
+                                 bool need_path = false, int mode = TARG_ANY,
+                                 int range = -1, bool wrap = false,
                                  int los = LOS_ANY);
 
 static char find_square( int xps, int yps,
                          FixedVector<char, 2> &mfp, int direction,
-                         bool (*targ)(int, int, int, int),
-                         int mode = TARG_ANY, int range = -1,
-                         bool wrap = false,
-                         int los = LOS_ANY);
+                         bool (*targ)(int, int, int, bool, int),
+                         bool need_path, int mode = TARG_ANY, int range = -1,
+                         bool wrap = false, int los = LOS_ANY);
 
 static int targeting_cmd_to_compass( command_type command );
 static void describe_oos_square(int x, int y);
@@ -457,7 +456,7 @@ void direction(dist& moves, targeting_type restricts,
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!
 
-    if ( restricts == DIR_DIR )
+    if (restricts == DIR_DIR)
     {
         direction_choose_compass( moves, beh );
         return;
@@ -478,7 +477,7 @@ void direction(dist& moves, targeting_type restricts,
     moves.ty = you.y_pos;
 
     // If we show the beam on startup, we have to initialise it.
-    if ( show_beam )
+    if (show_beam)
         find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
 
     bool skip_iter = false;
@@ -629,7 +628,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_DIR_UP_RIGHT:
             i = targeting_cmd_to_compass(key_command);
 
-            if ( restricts != DIR_TARGET )
+            if (restricts != DIR_TARGET)
             {
                 // A direction is allowed, and we've selected it.
                 moves.dx = Compass[i].x;
@@ -704,9 +703,9 @@ void direction(dist& moves, targeting_type restricts,
         {
             const int thing_to_find = targeting_cmd_to_feature(key_command);
             if (find_square_wrapper(moves.tx, moves.ty, objfind_pos, 1,
-                                    find_feature, thing_to_find, range, true,
-                                    Options.target_los_first ?
-                                    LOS_FLIPVH : LOS_ANY))
+                                    find_feature, needs_path, thing_to_find,
+                                    range, true, Options.target_los_first ?
+                                        LOS_FLIPVH : LOS_ANY))
             {
                 moves.tx = objfind_pos[0];
                 moves.ty = objfind_pos[1];
@@ -798,10 +797,10 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_OBJ_CYCLE_FORWARD:
             dir = (key_command == CMD_TARGET_OBJ_CYCLE_BACK) ? -1 : 1;
             if (find_square_wrapper( moves.tx, moves.ty, objfind_pos, dir,
-                                     find_object, 0, range, true,
-                                     Options.target_los_first
-                                     ? (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
-                                     : LOS_ANY))
+                                     find_object, needs_path, TARG_ANY, range,
+                                     true, Options.target_los_first ?
+                                         (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
+                                          : LOS_ANY))
             {
                 moves.tx = objfind_pos[0];
                 moves.ty = objfind_pos[1];
@@ -815,7 +814,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_CYCLE_BACK:
             dir = (key_command == CMD_TARGET_CYCLE_BACK) ? -1 : 1;
             if (find_square_wrapper( moves.tx, moves.ty, monsfind_pos, dir,
-                                     find_monster, mode, range,
+                                     find_monster, needs_path, mode, range,
                                      Options.target_wrap))
             {
                 moves.tx = monsfind_pos[0];
@@ -1141,7 +1140,8 @@ bool in_los(int x, int y)
     return (in_vlos(grid2view(coord_def(x, y))));
 }
 
-static bool find_monster( int x, int y, int mode, int range = -1)
+static bool find_monster( int x, int y, int mode, bool need_path,
+                          int range = -1)
 {
     // target the player for friendly and general spells
     if ((mode == TARG_FRIEND || mode == TARG_ANY)
@@ -1158,6 +1158,10 @@ static bool find_monster( int x, int y, int mode, int range = -1)
 
     // No monster or outside LOS.
     if (targ_mon == NON_MONSTER || !in_los(x,y))
+        return (false);
+
+    // Monster in LOS but only via glass walls, so no direct path.
+    if (need_path && !see_grid_no_trans(x,y))
         return (false);
 
     monsters *mon = &menv[targ_mon];
@@ -1197,7 +1201,8 @@ static bool find_monster( int x, int y, int mode, int range = -1)
             || !mons_class_flag( menv[targ_mon].type, M_NO_EXP_GAIN ));
 }
 
-static bool find_feature( int x, int y, int mode, int /* range */)
+static bool find_feature( int x, int y, int mode,
+                          bool /* need_path */, int /* range */)
 {
     // The stair need not be in LOS if the square is mapped.
     if (!in_los(x, y) && (!Options.target_oos || !is_terrain_seen(x, y)))
@@ -1206,7 +1211,8 @@ static bool find_feature( int x, int y, int mode, int /* range */)
     return is_feature(mode, x, y);
 }
 
-static bool find_object(int x, int y, int mode, int /* range */)
+static bool find_object(int x, int y, int mode,
+                        bool /* need_path */, int /* range */)
 {
     // First, check for mimics.
     bool is_mimic = false;
@@ -1299,8 +1305,10 @@ bool in_los_bounds(int x, int y)
 //---------------------------------------------------------------
 static char find_square( int xps, int yps,
                          FixedVector<char, 2> &mfp, int direction,
-                         bool (*find_targ)( int x, int y, int mode, int range ),
-                         int mode, int range, bool wrap, int los )
+                         bool (*find_targ)( int x, int y, int mode,
+                                            bool need_path, int range ),
+                         bool need_path, int mode, int range, bool wrap,
+                         int los )
 {
     // the day will come when [unsigned] chars will be consigned to
     // the fires of Gehenna. Not quite yet, though.
@@ -1364,19 +1372,21 @@ static char find_square( int xps, int yps,
     {
         if (direction == 1 && temp_xps == minx && temp_yps == maxy)
         {
-            if (find_targ(you.x_pos, you.y_pos, mode, range))
+            if (find_targ(you.x_pos, you.y_pos, mode, need_path, range))
             {
                 mfp[0] = ctrx;
                 mfp[1] = ctry;
                 return (1);
             }
-            return find_square(ctrx, ctry, mfp, direction, find_targ, mode,
-                               range, false, next_los(direction, los, wrap));
+            return find_square(ctrx, ctry, mfp, direction, find_targ,
+                               need_path, mode, range, false,
+                               next_los(direction, los, wrap));
         }
         if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
         {
-            return find_square(minx, maxy, mfp, direction, find_targ, mode,
-                               range, false, next_los(direction, los, wrap));
+            return find_square(minx, maxy, mfp, direction, find_targ,
+                               need_path, mode, range, false,
+                               next_los(direction, los, wrap));
         }
 
         if (direction == 1)
@@ -1500,7 +1510,7 @@ static char find_square( int xps, int yps,
         if ((onlyVis || onlyHidden) && onlyVis != in_los(targ_x, targ_y))
             continue;
 
-        if (find_targ(targ_x, targ_y, mode, range))
+        if (find_targ(targ_x, targ_y, mode, need_path, range))
         {
             mfp[0] = temp_xps;
             mfp[1] = temp_yps;
@@ -1509,10 +1519,10 @@ static char find_square( int xps, int yps,
     }
 
     return (direction == 1?
-        find_square(ctrx, ctry, mfp, direction, find_targ, mode, range, false,
-                    next_los(direction, los, wrap))
-      : find_square(minx, maxy, mfp, direction, find_targ, mode, range, false,
-                    next_los(direction, los, wrap)));
+        find_square(ctrx, ctry, mfp, direction, find_targ, need_path, mode,
+                    range, false, next_los(direction, los, wrap))
+      : find_square(minx, maxy, mfp, direction, find_targ, need_path, mode,
+                    range, false, next_los(direction, los, wrap)));
 }
 
 // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
@@ -1521,11 +1531,13 @@ static char find_square( int xps, int yps,
 static char find_square_wrapper( int tx, int ty,
                                  FixedVector<char, 2> &mfp, char direction,
                                  bool (*find_targ)( int x, int y, int mode,
-                                                    int range ),
-                                 int mode, int range, bool wrap, int los )
+                                                    bool need_path, int range ),
+                                 bool need_path, int mode, int range, bool wrap,
+                                 int los )
 {
     const char r =  find_square(grid2viewX(tx), grid2viewY(ty), mfp,
-                                direction, find_targ, mode, range, wrap, los);
+                                direction, find_targ, need_path, mode, range,
+                                wrap, los);
     mfp[0] = view2gridX(mfp[0]);
     mfp[1] = view2gridY(mfp[1]);
     return r;

@@ -69,7 +69,7 @@ void init_spell_descs(void)
         spell_list[i] = -1;
 
     // can only use up to SPELLDATASIZE _MINUS ONE_, or the
-    // last entry tries to set spell_list[SPELL_NO_SPELL] 
+    // last entry tries to set spell_list[SPELL_NO_SPELL]
     // which corrupts the heap.
     for (unsigned int i = 0; i < SPELLDATASIZE - 1; i++)
         spell_list[spelldata[i].id] = i;
@@ -86,7 +86,7 @@ void init_spell_name_cache()
 
         if (!is_valid_spell(type))
             continue;
-        
+
         const char *sptitle = spell_title(type);
         ASSERT(sptitle);
         const std::string spell_name = lowercase_string(sptitle);
@@ -116,7 +116,7 @@ spell_type spell_by_name(std::string name, bool partial_match)
         spell_type type = static_cast<spell_type>(i);
         if (!is_valid_spell(type))
             continue;
-        
+
         const char *sptitle = spell_title(type);
         const std::string spell_name = lowercase_string(sptitle);
 
@@ -220,6 +220,10 @@ int spell_hunger(spell_type which_spell)
     return hunger;
 }
 
+// Used to determine whether or not a monster should always fire this spell
+// if selected.  If not, we should use a tracer.
+
+// Note - this function assumes that the monster is "nearby" its target!
 bool spell_needs_tracer(spell_type spell)
 {
     return (_seekspell(spell)->ms_needs_tracer);
@@ -333,7 +337,7 @@ int apply_area_visible( int (*func) (int, int, int, int), int power,
 
 // Applies the effect to all nine squares around/including the target.
 // Returns summation of return values from passed in function.
-int apply_area_square( int (*func) (int, int, int, int), int cx, int cy, 
+int apply_area_square( int (*func) (int, int, int, int), int cx, int cy,
                         int power )
 {
     int x, y;
@@ -353,7 +357,7 @@ int apply_area_square( int (*func) (int, int, int, int), int cx, int cy,
 
 // Applies the effect to the eight squares beside the target.
 // Returns summation of return values from passed in function.
-int apply_area_around_square( int (*func) (int, int, int, int), 
+int apply_area_around_square( int (*func) (int, int, int, int),
                               int targ_x, int targ_y, int power)
 {
     int x, y;
@@ -375,7 +379,7 @@ int apply_area_around_square( int (*func) (int, int, int, int),
 // Effect up to max_targs monsters around a point, chosen randomly
 // Return varies with the function called;  return values will be added up.
 int apply_random_around_square( int (*func) (int, int, int, int),
-                                int targ_x, int targ_y, 
+                                int targ_x, int targ_y,
                                 bool hole_in_middle, int power, int max_targs )
 {
     int rv = 0;
@@ -400,15 +404,15 @@ int apply_random_around_square( int (*func) (int, int, int, int),
     {
         for (int y = targ_y - 1; y <= targ_y + 1; y++)
         {
-            if (hole_in_middle && (x == targ_x && y == targ_y)) 
+            if (hole_in_middle && (x == targ_x && y == targ_y))
                 continue;
 
-            if (mgrd[x][y] == NON_MONSTER 
+            if (mgrd[x][y] == NON_MONSTER
                 && !(x == you.x_pos && y == you.y_pos))
             {
                 continue;
             }
-                
+
             // Found target
             count++;
 
@@ -486,7 +490,7 @@ int apply_random_around_square( int (*func) (int, int, int, int),
             }
             else if (random2( count ) < max_targs)
             {
-                const int pick = random2( max_targs );  
+                const int pick = random2( max_targs );
                 targs[ pick ].x = x;
                 targs[ pick ].y = y;
             }
@@ -749,7 +753,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
 
 // Select a spell direction and fill dist and pbolt appropriately.
 // Return false if the user canceled, true otherwise.
-bool spell_direction( dist &spelld, bolt &pbolt, 
+bool spell_direction( dist &spelld, bolt &pbolt,
                       targeting_type restrict, targ_mode_type mode,
                       bool needs_path, const char *prompt )
 {
@@ -762,14 +766,14 @@ bool spell_direction( dist &spelld, bolt &pbolt,
     {
         // check for user cancel
         canned_msg(MSG_OK);
-        return false;
+        return (false);
     }
 
     pbolt.set_target(spelld);
     pbolt.source_x = you.x_pos;
     pbolt.source_y = you.y_pos;
 
-    return true;
+    return (true);
 }                               // end spell_direction()
 
 const char* spelltype_short_name( int which_spelltype )

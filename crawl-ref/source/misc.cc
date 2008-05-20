@@ -2584,7 +2584,8 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
                     || mons_class_flag(mon->type, M_NO_EXP_GAIN)
                        // only seen through glass walls
                     || !see_grid_no_trans(mon->x, mon->y)
-                       && !mons_has_ranged_spell(mon));
+                       && !mons_has_ranged_spell(mon)
+                       && !mons_has_los_ability(mon->type));
 
 #ifdef CLUA_BINDINGS
     bool moving = (!you.delay_queue.empty()

@@ -19,16 +19,16 @@
 
 enum corpse_effect_type
 {
-    CE_NOCORPSE,                       //    0
-    CE_CLEAN,                          //    1
-    CE_CONTAMINATED,                   //    2
-    CE_POISONOUS,                      //    3
-    CE_HCL,                            //    4
-    CE_MUTAGEN_RANDOM,                 //    5
-    CE_MUTAGEN_GOOD, //    6 - may be worth implementing {dlb}
-    CE_MUTAGEN_BAD, //    7 - may be worth implementing {dlb}
-    CE_RANDOM, //    8 - not used, but may be worth implementing {dlb}
-    CE_ROTTEN = 50 //   50 - must remain at 50 for now {dlb}
+    CE_NOCORPSE,        //    0
+    CE_CLEAN,           //    1
+    CE_CONTAMINATED,    //    2
+    CE_POISONOUS,       //    3
+    CE_HCL,             //    4
+    CE_MUTAGEN_RANDOM,  //    5
+    CE_MUTAGEN_GOOD,    //    6 - may be worth implementing {dlb}
+    CE_MUTAGEN_BAD,     //    7 - may be worth implementing {dlb}
+    CE_RANDOM,          //    8 - not used, but may be worth implementing {dlb}
+    CE_ROTTEN = 50      //   50 - must remain at 50 for now {dlb}
 };
 
 enum gender_type
@@ -596,16 +596,16 @@ bool ms_direct_nasty(spell_type monspell);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-bool ms_requires_tracer(spell_type mons_spell);
 
 bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell );
 bool ms_quick_get_away( const monsters *mon, spell_type monspell );
 bool ms_waste_of_time( const monsters *mon, spell_type monspell );
 bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell );
 
+bool mons_is_magic_user( const monsters *mon );
+bool mons_has_los_ability( int mclass );
 bool mons_has_ranged_spell( const monsters *mon );
 bool mons_has_ranged_attack( const monsters *mon );
-bool mons_is_magic_user( const monsters *mon );
 
 // last updated 06mar2001 (gdl)
 /* ***********************************************************************

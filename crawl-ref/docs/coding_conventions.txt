@@ -2,7 +2,7 @@ Crawl coding conventions
 ========================
 
 Introduction
-------------
+============
 
 This file documents the style conventions currently in use in the crawl
 codebase, as well as the conventions that new and/or modified code should
@@ -11,23 +11,26 @@ effectively" treatise.  That is something best left to books and websites
 and experience.
 
 Conventions
------------
+===========
 
 A) Indenting
+------------
 
 Generally, use 4 spaces to indent, and indent with spaces only (no tabs).
+Empty lines don't need any spacing at all.
 
-Also, empty lines don't need any spacing at all.
+Methods
+-------
 
 If the parameter list of a function runs longer than a line length (80 columns), 
-the remaining parameters are indented in the lines below.
+the remaining parameters are usually indented in the lines below.
 
-static void replace_area( int sx, int sy, int ex, int ey,
-                          dungeon_feature_type replace,
-                          dungeon_feature_type feature, unsigned mapmask)
-{
-[...]
-}
+  static void replace_area( int sx, int sy, int ex, int ey,
+                            dungeon_feature_type replace,
+                            dungeon_feature_type feature, unsigned mapmask)
+  {
+       [...]
+  }
 
 The same is true when a function is called:
 
@@ -40,6 +43,9 @@ The same is true when a function is called:
 There are cases where this is not possible because the parameters themselves
 are too long for that, or because the function is already heavily indented,
 but otherwise, this convention should be followed.
+
+Conditionals
+------------
 
 In a switch conditional, the case listings don't have to be indented, though
 the conditional statements should be.
@@ -61,62 +67,75 @@ the conditional statements should be.
                     break;
                 }
 
+Comparisons using the ? shortcut may be indented ...
+
+            mpr( forget_spell() ? "You have forgotten a spell!"
+                                : "You get a splitting headache." );
+
+... but really short ones don't have to be.
+
+            beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
+
+
 B) Variable naming
+------------------
 
 When naming variables, use underscores_as_spaces instead of mixedCase.  Other 
-conventions are pointed out by example, below:
+conventions are pointed out by example, below.
+
+Global variables are capitalized and underscored.
+Warning: there are currently many globals which don't do this.
+
+  int Some_Global_Variable;
+
+Internal functions are prefixed with underscores.
+Warning: This is a new convention, so much code doesn't follow it. 
+
+  static void _remove_from_inventory(item_def* item);
+
+Functions use underscores_as_spaces, but there are currently a lot of
+mixedCase functions.
+
+  void destroy_item(item_def* item)
+  {
+      // - Variables use underscores too.
+      int item_weight = /* ... */;
+  }
+
+There's no convention for class/struct names (yet?)
+
+  class TextDB
+  {
+   public:
+      // - No rules for static member functions; they're not used often anyway.
+      static void whatever();
+
+      // - Public member functions: named like functions.
+      void* get_value();
+
+   private:
+      // - Internal member functions: also named like functions.
+      void _parse_text_file(const char*);
+
+      // - Member variables get a prefix.
+      DB* m_db;
+
+      // - Static member variables get a prefix, too.
+      std::vector<DB*> sm_all_dbs;
+  };
 
 
-// - Global variables are capitalized and underscored.
-//   Warning: there are currently many globals which don't do this.
-int Some_Global_Variable;
+But structures tend to use underscores
 
+  struct coord_def
+  {
+      // - Simple structures don't need the "m_" prefixes
+      int x, y;	
+  };
 
-// - Internal functions are prefixed with underscores.
-//   Warning: This is a new convention, so much code doesn't follow it.
-static void _remove_from_inventory(item_def* item);
-
-
-// - Functions use underscores_as_spaces, but there are currently
-//   a lot of mixedCase functions.
-void destroy_item(item_def* item)
-{
-    // - Variables use underscores too.
-    int item_weight = /* ... */;
-
-}
-
-
-// - There's no convention for class/struct names (yet?)
-class TextDB
-{
- public:
-    // - No rules for static member functions; they're not used often anyway.
-    static void whatever();
-
-    // - Public member functions: named like functions.
-    void* get_value();
-
- private:
-    // - Internal member functions: also named like functions.
-    void _parse_text_file(const char*);
-
-    // - Member variables get a prefix.
-    DB* m_db;
-
-    // - Static member variables get a prefix, too.
-    std::vector<DB*> sm_all_dbs;
-};
-
-
-// - But structures tend to use underscores
-struct coord_def
-{
-    // - Simple structures don't need the "m_" prefixes
-    int x, y;	
-};
 
 C) Braces
+---------
 
 Braces are always put on their own lines.
 
@@ -161,7 +180,7 @@ Otherwise, place braces.
 Also place braces if this is only the case because of one or more comment lines.
 
         for (j = 0; j < num_to_make; j++)
-        {           
+        {
             // places items (eg darts), which will automatically stack
             itrap(beam, i);
         }
@@ -196,7 +215,7 @@ may be omitted.
     {
         if (coinflip()) // neutrals speak half as often
             return false;
-            
+
         prefixes.push_back("neutral");
     }
     else if (mons_friendly(monster))
@@ -247,4 +266,47 @@ leave a free line between them.
         }
 
     return coord_def(0, 0);
+
+
+D) Commenting
+-------------
+
+If you feel that a method is complicated enough to be difficult to understand, 
+or has restrictions or effects that might not be obvious, add explanatory 
+comments before it. You may sign your comments if you wish to.
+
+  // note that this function *completely* blocks messaging for monsters
+  // distant or invisible to the player ... look elsewhere for a function
+  // permitting output of "It" messages for the invisible {dlb}
+  // Intentionally avoids info and str_pass now. -- bwr
+  bool simple_monster_message(const monsters *monster, const char *event,
+                              msg_channel_type channel, int param,
+                              description_level_type descrip)
+  [...]
+
+Adding explanatory comments to somewhat complicated, already existing methods
+is very much welcome, as long as said comments are correct. :)
+
+Suboptimal code should be marked for later revision using the keywords "XXX",
+"FIXME" or "TODO", so that other coders can easily find it by searching the
+source. Also, some editors will highlight such keywords. Don't forget to add
+a comment about what should be changed, or to remove said comment if you fix
+the issue.
+
+  // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
+  // Identical to find_square, except that input (tx, ty) and output
+  // (mfp) are in grid coordinates rather than view coordinates.
+  static char find_square_wrapper( int tx, int ty,
+  [...]
+
+
+  if (death_type == KILLED_BY_LEAVING
+      || death_type == KILLED_BY_WINNING)
+  {
+      // TODO: strcat "after reaching level %d"; for LEAVING
+      [...]
+
+
+  // FIXME: implement this for tiles
+  void update_monster_pane() {}
 

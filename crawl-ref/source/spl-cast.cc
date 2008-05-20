@@ -976,16 +976,16 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         else if (dir == DIR_DIR)
             mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
 
-        const bool needs_path =
-             !(testbits(flags, SPFLAG_GRID) || testbits(flags, SPFLAG_TARGET));
+        const bool needs_path = (!testbits(flags, SPFLAG_GRID)
+                                 && !testbits(flags, SPFLAG_TARGET));
 
-        if ( !spell_direction( spd, beam, dir, targ, needs_path, prompt ) )
+        if (!spell_direction( spd, beam, dir, targ, needs_path, prompt ))
             return (SPRET_ABORT);
 
         if (testbits( flags, SPFLAG_NOT_SELF ) && spd.isMe)
         {
             if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_HEAL_OTHER
-                    || spell == SPELL_POLYMORPH_OTHER)
+                || spell == SPELL_POLYMORPH_OTHER)
             {
                 mpr( "Sorry, this spell works on others only." );
             }
@@ -2188,7 +2188,7 @@ static void _miscast_conjuration(int severity, const char* cause)
             beam.aux_source.clear();
             if (cause)
                 beam.aux_source = cause;
-            beam.ex_size = coinflip()?1:2;
+            beam.ex_size = coinflip() ? 1 : 2;
             beam.is_explosion = true;
 
             explosion(beam);
@@ -2689,7 +2689,7 @@ static void _miscast_divination(int severity, const char* cause)
         {
         case 0:
             mpr( forget_spell() ? "You have forgotten a spell!"
-                 : "You get a splitting headache." );
+                                : "You get a splitting headache." );
             break;
         case 1:
             mpr("You feel completely lost.");

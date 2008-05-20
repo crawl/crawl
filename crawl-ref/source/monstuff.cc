@@ -3028,17 +3028,17 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
 
         // setup tracer
-        beem.name = "glob of lava";
-        beem.range = 4;
-        beem.rangeMax = 13;
-        beem.damage = dice_def( 3, 10 );
-        beem.colour = RED;
-        beem.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beem.flavour = BEAM_LAVA;
-        beem.hit = 20;
+        beem.name        = "glob of lava";
+        beem.aux_source  = "glob of lava";
+        beem.range       = 4;
+        beem.rangeMax    = 13;
+        beem.damage      = dice_def( 3, 10 );
+        beem.hit         = 20;
+        beem.colour      = RED;
+        beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+        beem.flavour     = BEAM_LAVA;
         beem.beam_source = monster_index(monster);
-        beem.thrower = KILL_MON;
-        beem.aux_source = "glob of lava";
+        beem.thrower     = KILL_MON;
 
         // fire tracer
         fire_tracer(monster, beem);
@@ -3069,18 +3069,18 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
 
         // setup tracer
-        beem.name = "bolt of electricity";
-        beem.damage = dice_def( 3, 6 );
-        beem.colour = LIGHTCYAN;
-        beem.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        beem.flavour = BEAM_ELECTRICITY;
-        beem.hit = 50;
+        beem.name        = "bolt of electricity";
+        beem.aux_source  = "bolt of electricity";
+        beem.range       = 4;
+        beem.rangeMax    = 13;
+        beem.damage      = dice_def( 3, 6 );
+        beem.hit         = 50;
+        beem.colour      = LIGHTCYAN;
+        beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+        beem.flavour     = BEAM_ELECTRICITY;
         beem.beam_source = monster_index(monster);
-        beem.thrower = KILL_MON;
-        beem.aux_source = "bolt of electricity";
-        beem.range = 4;
-        beem.rangeMax = 13;
-        beem.is_beam = true;
+        beem.thrower     = KILL_MON;
+        beem.is_beam     = true;
 
         // fire tracer
         fire_tracer(monster, beem);
@@ -3211,6 +3211,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
         // set up the beam
         beem.name        = "volley of spikes";
+        beem.aux_source  = "volley of spikes";
         beem.range       = 9;
         beem.rangeMax    = 9;
         beem.hit         = 14;
@@ -3220,7 +3221,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         beem.colour      = LIGHTGREY;
         beem.flavour     = BEAM_MISSILE;
         beem.thrower     = KILL_MON;
-        beem.aux_source  = "volley of spikes";
         beem.is_beam     = false;
 
         // fire tracer
@@ -4290,7 +4290,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                 setup_mons_cast(monster, beem, spell_cast);
 
                 // beam-type spells requiring tracers
-                if (ms_requires_tracer(spell_cast))
+                if (spell_needs_tracer(spell_cast))
                 {
                     fire_tracer(monster, beem);
                     // good idea?

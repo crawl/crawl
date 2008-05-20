@@ -2075,18 +2075,6 @@ bool mons_should_fire(struct bolt &beam)
                          100));
 }
 
-// used to determine whether or not a monster should always
-// fire this spell if selected.  If not, we should use a
-// tracer.
-
-// note - this function assumes that the monster is "nearby"
-// its target!
-
-bool ms_requires_tracer(spell_type monspell)
-{
-    return (spell_needs_tracer(monspell));
-}
-
 // returns true if the spell is something you wouldn't want done if
 // you had a friendly target..  only returns a meaningful value for
 // non-beam spells
@@ -2362,12 +2350,35 @@ bool mons_is_magic_user( const monsters *mon )
     return (false);
 }
 
+// Returns true if the monster has an ability that only needs LOS to
+// affect the target.
+bool mons_has_los_ability( int mclass )
+{
+    // These two have Torment, but are handled specially.
+    if (mclass == MONS_FIEND || mclass == MONS_PIT_FIEND)
+        return (true);
+
+    // These eyes only need LOS, as well. (The other eyes use spells.)
+    if (mclass == MONS_GIANT_EYEBALL || mclass == MONS_EYE_OF_DRAINING)
+        return (true);
+
+    // Although not using spells, these are exceedingly dangerous.
+    if (mclass == MONS_SILVER_STATUE || mclass == MONS_ORANGE_STATUE)
+        return (true);
+
+    // Beholding just needs LOS.
+    if (mclass == MONS_MERMAID)
+        return (true);
+
+    return (false);
+}
+
 bool mons_has_ranged_spell( const monsters *mon )
 {
     const int mclass = mon->type;
 
-    // These two have Torment, but are handled specially.
-    if (mclass == MONS_FIEND || mclass == MONS_PIT_FIEND)
+    // Monsters may have spell like abilities.
+    if (mons_has_los_ability(mclass))
         return (true);
 
     if (mons_class_flag( mclass, M_SPELLCASTER ))
