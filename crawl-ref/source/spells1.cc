@@ -979,9 +979,9 @@ stamina_robustness:
         case 4:
             if ((estep == 0 || you.duration[DUR_VITALISATION_CHAIN] > 0)
                 && ((you.attribute[ATTR_DIVINE_STAMINA] + 1) / 2) == estep
-                && (player_mutation_level(MUT_STRONG) / 5) < (3 - estep)
-                && (player_mutation_level(MUT_CLEVER) / 5) < (3 - estep)
-                && (player_mutation_level(MUT_AGILE) / 5) < (3 - estep))
+                && (player_mutation_level(MUT_STRONG) / 5 + 1) < (3 - estep)
+                && (player_mutation_level(MUT_CLEVER) / 5 + 1) < (3 - estep)
+                && (player_mutation_level(MUT_AGILE) / 5 + 1) < (3 - estep))
             {
                 success = true;
                 mprf(MSGCH_DURATION, "Zin %s divine stamina.",
@@ -1005,9 +1005,9 @@ stamina_robustness:
                 // if divine robustness can be increased one
                 // vitalisation attempt from now.
                 need_chain =
-                    ((player_mutation_level(MUT_STRONG) / 5) < (2 - estep)
-                        && (player_mutation_level(MUT_CLEVER) / 5) < (2 - estep)
-                        && (player_mutation_level(MUT_AGILE) / 5) < (2 - estep))
+                    ((player_mutation_level(MUT_STRONG) / 5 + 1) < (2 - estep)
+                        && (player_mutation_level(MUT_CLEVER) / 5 + 1) < (2 - estep)
+                        && (player_mutation_level(MUT_AGILE) / 5 + 1) < (2 - estep))
                             || (player_mutation_level(MUT_ROBUST) < (3 - estep));
                 break;
             }
@@ -1046,9 +1046,9 @@ stamina_robustness:
                 // vitalisation attempt from now.
                 need_chain =
                     (player_mutation_level(MUT_ROBUST) < (2 - estep))
-                        || ((player_mutation_level(MUT_STRONG) / 5) < (3 - estep)
-                            && (player_mutation_level(MUT_CLEVER) / 5) < (3 - estep)
-                            && (player_mutation_level(MUT_AGILE) / 5) < (3 - estep));
+                        || ((player_mutation_level(MUT_STRONG) / 5 + 1) < (3 - estep)
+                            && (player_mutation_level(MUT_CLEVER) / 5 + 1) < (3 - estep)
+                            && (player_mutation_level(MUT_AGILE) / 5 + 1) < (3 - estep));
                 break;
             }
 
