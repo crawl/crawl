@@ -2113,8 +2113,8 @@ void tag_missing_level_attitude()
     // there's one around.
 
     // as for attitude, a couple simple checks
-    // can be used to determine friendly/neutral/
-    // hostile.
+    // can be used to determine friendly/good
+    // neutral/neutral/hostile.
     int i;
     bool is_friendly;
     unsigned int new_beh = BEH_WANDER;
