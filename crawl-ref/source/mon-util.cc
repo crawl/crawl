@@ -1883,7 +1883,7 @@ int mons_power(int mc)
 bool mons_aligned(int m1, int m2)
 {
     mon_attitude_type fr1, fr2;
-    struct monsters *mon1, *mon2;
+    monsters *mon1, *mon2;
 
     if (m1 == MHITNOT || m2 == MHITNOT)
         return (true);
@@ -1904,6 +1904,11 @@ bool mons_aligned(int m1, int m2)
         fr2 = mons_attitude(mon2);
     }
 
+    return (mons_atts_aligned(fr1, fr2));
+}
+
+bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
+{
     if (fr1 == ATT_GOOD_NEUTRAL)
         fr1 = ATT_FRIENDLY;
 
@@ -1974,9 +1979,21 @@ bool mons_wont_attack(const monsters *m)
     return (mons_friendly(m) || mons_good_neutral(m));
 }
 
+bool mons_att_wont_attack(mon_attitude_type fr)
+{
+    return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL);
+}
+
 mon_attitude_type mons_attitude(const monsters *m)
 {
-    return (m->has_ench(ENCH_CHARM)? ATT_FRIENDLY : m->attitude);
+    if (mons_friendly(m))
+        return ATT_FRIENDLY;
+    else if (mons_good_neutral(m))
+        return ATT_GOOD_NEUTRAL;
+    else if (mons_neutral(m))
+        return ATT_NEUTRAL;
+    else
+        return ATT_HOSTILE;
 }
 
 bool mons_is_submerged(const monsters *mon)

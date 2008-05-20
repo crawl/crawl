@@ -1025,10 +1025,6 @@ class monster_pane_info
     monster_pane_info(const monsters* m)
         : m_mon(m)
     {
-        // XXX: this doesn't take into account ENCH_NEUTRAL, but that's probably
-        // a bug for mons_attitude, not this.
-        // XXX: also, mons_attitude_type should be sorted hostile/neutral/friendly;
-        // will break saves a little bit though.
         m_attitude = mons_attitude(m);
 
         // Currently, difficulty is defined as "average hp".  Leaks too

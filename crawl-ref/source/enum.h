@@ -1876,9 +1876,9 @@ enum beh_type
 enum mon_attitude_type
 {
     ATT_HOSTILE,                       // 0, default in most cases
-    ATT_FRIENDLY,                      // created friendly (or tamed?)
     ATT_NEUTRAL,                       // neutral
-    ATT_GOOD_NEUTRAL                   // neutral, but won't attack friendlies
+    ATT_GOOD_NEUTRAL,                  // neutral, but won't attack friendlies
+    ATT_FRIENDLY                       // created friendly (or tamed?)
 };
 
 enum mon_flight_type

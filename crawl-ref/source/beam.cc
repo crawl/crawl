@@ -2314,8 +2314,11 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     // foe ratio for summoning gtr. demons & undead -- they may be
     // summoned, but they're hostile and would love nothing better
     // than to nuke the player and his minions
-    if (pbolt.attitude == ATT_FRIENDLY && monster->attitude != ATT_FRIENDLY)
+    if (mons_att_wont_attack(pbolt.attitude)
+        && !mons_att_wont_attack(monster->attitude))
+    {
         pbolt.foe_ratio = 25;
+    }
 
     // fire!
     fire_beam(pbolt);
@@ -3096,7 +3099,7 @@ static int _affect_player( bolt &beam, item_def *item )
         // check can see player
         if (beam.can_see_invis || !you.invisible() || _fuzz_invis_tracer(beam))
         {
-            if (beam.attitude != ATT_HOSTILE)
+            if (mons_att_wont_attack(beam.attitude))
             {
                 beam.fr_count += 1;
                 beam.fr_power += you.experience_level;
@@ -3326,8 +3329,11 @@ static int _affect_player( bolt &beam, item_def *item )
 
             // An enemy helping you escape while in the Abyss, or an
             // enemy stabilizing a teleport that was about to happen.
-            if (beam.attitude == ATT_HOSTILE && you.level_type == LEVEL_ABYSS)
+            if (!mons_att_wont_attack(beam.attitude)
+                && you.level_type == LEVEL_ABYSS)
+            {
                 xom_is_stimulated(255);
+            }
 
             beam.obvious_effect = true;
             break;
@@ -3418,7 +3424,7 @@ static int _affect_player( bolt &beam, item_def *item )
 
         if (nasty)
         {
-            if (beam.attitude != ATT_HOSTILE)
+            if (mons_att_wont_attack(beam.attitude))
             {
                 beam.fr_hurt++;
                 if (beam.beam_source == NON_MONSTER)
@@ -3434,7 +3440,7 @@ static int _affect_player( bolt &beam, item_def *item )
 
         if (nice)
         {
-            if (beam.attitude != ATT_HOSTILE)
+            if (mons_att_wont_attack(beam.attitude))
                 beam.fr_helped++;
             else
             {
@@ -3593,7 +3599,7 @@ static int _affect_player( bolt &beam, item_def *item )
 
     if (hurted > 0 || old_hp < you.hp || was_affected)
     {
-        if (beam.attitude != ATT_HOSTILE)
+        if (mons_att_wont_attack(beam.attitude))
         {
             beam.fr_hurt++;
 
@@ -3644,7 +3650,7 @@ static int _name_to_skill_level(const std::string& name)
 
 static void _update_hurt_or_helped(bolt &beam, monsters *mon)
 {
-    if (beam.attitude != mons_attitude(mon))
+    if (mons_atts_aligned(beam.attitude, mons_attitude(mon)))
     {
         if (nasty_beam(mon, beam))
             beam.foe_hurt++;
@@ -3731,7 +3737,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         if (beam.is_tracer)
         {
             // enchant case -- enchantments always hit, so update target immed.
-            if (beam.attitude != mons_attitude(mon))
+            if (mons_atts_aligned(beam.attitude, mons_attitude(mon)))
             {
                 beam.foe_count += 1;
                 beam.foe_power += mons_power(mons_type);
@@ -3905,7 +3911,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             // fireball at another fire giant, and it only took
             // 1/3 damage, then power of 5 would be applied to
             // foe_power or fr_power.
-            if (beam.attitude != mons_attitude(mon))
+            if (mons_atts_aligned(beam.attitude, mons_attitude(mon)))
             {
                 beam.foe_count += 1;
                 beam.foe_power += 2 * hurt_final * mons_power(mons_type) / hurt;
