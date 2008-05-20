@@ -1023,9 +1023,9 @@ stamina_robustness:
 
                 you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
                 you.duration[DUR_DIVINE_ROBUSTNESS] +=
-                    (step == 1) ? (you.skills[SK_INVOCATIONS] * 2) :
-                    (step == 3) ? (you.skills[SK_INVOCATIONS])
-                                : (you.skills[SK_INVOCATIONS] / 2);
+                    (estep == 0) ? (you.skills[SK_INVOCATIONS] * 2) :
+                    (estep == 1) ? (you.skills[SK_INVOCATIONS])
+                                 : (you.skills[SK_INVOCATIONS] / 2);
 
                 const int old_hp_max = you.hp_max;
                 calc_hp();
