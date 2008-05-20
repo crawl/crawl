@@ -999,7 +999,16 @@ stamina_robustness:
                 modify_stat(STAT_STRENGTH, stamina_amt, true, "");
                 modify_stat(STAT_INTELLIGENCE, stamina_amt, true, "");
                 modify_stat(STAT_DEXTERITY, stamina_amt, true, "");
-                need_chain = true;
+
+                // Keep vitalisation chaining on if divine stamina can
+                // be increased two vitalisation attempts from now, or
+                // if divine robustness can be increased one
+                // vitalisation attempt from now.
+                need_chain =
+                    ((player_mutation_level(MUT_STRONG) / 5) < (2 - estep)
+                        && (player_mutation_level(MUT_CLEVER) / 5) < (2 - estep)
+                        && (player_mutation_level(MUT_AGILE) / 5) < (2 - estep))
+                            || (player_mutation_level(MUT_ROBUST) < (3 - estep));
                 break;
             }
 
@@ -1030,7 +1039,16 @@ stamina_robustness:
                 const int old_hp_max = you.hp_max;
                 calc_hp();
                 set_hp(you.hp * you.hp_max / old_hp_max, false);
-                need_chain = true;
+
+                // Keep vitalisation chaining on if divine robustness
+                // can be increased two vitalisation attempts from now,
+                // or if divine stamina can be increased one
+                // vitalisation attempt from now.
+                need_chain =
+                    (player_mutation_level(MUT_ROBUST) < (2 - estep))
+                        || ((player_mutation_level(MUT_STRONG) / 5) < (3 - estep)
+                            && (player_mutation_level(MUT_CLEVER) / 5) < (3 - estep)
+                            && (player_mutation_level(MUT_AGILE) / 5) < (3 - estep));
                 break;
             }
 
