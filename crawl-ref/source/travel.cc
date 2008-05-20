@@ -1135,7 +1135,7 @@ command_type travel()
         // Interlevel travel. Since you.running.x is zero, we've either just
         // initiated travel, or we've just climbed or descended a staircase,
         // and we need to figure out where to travel to next.
-        if (!you.running.x || !_find_transtravel_square(level_target.p))
+        if (!_find_transtravel_square(level_target.p) || !you.running.x)
             stop_running();
     }
 
@@ -2581,8 +2581,10 @@ static int _find_transtravel_stair(  const level_id &cur,
             // still be able to find a shorter route, since it can consider
             // routes that leave and reenter the current level.
             if (player_level == target.id && stair.x == you.x_pos
-                    && stair.y == you.y_pos)
+                && stair.y == you.y_pos)
+            {
                 best_stair = target.pos;
+            }
 
             // The local_distance is already set, but there may actually be
             // stairs we can take that'll get us to the target faster than the
