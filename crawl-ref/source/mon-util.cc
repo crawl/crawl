@@ -1333,9 +1333,7 @@ int exper_value( const struct monsters *monster )
     // cause the experience value to be overly large... this tries
     // to reduce the inappropriate amount of XP that results. -- bwr
     if (speed < 10 && !spellcaster && item_usage < MONUSE_STARTING_EQUIPMENT)
-    {
         x_val /= 2;
-    }
 
     // Apply the modifier in the monster's definition
     if (modifier > 0)
@@ -2366,7 +2364,11 @@ bool mons_is_magic_user( const monsters *mon )
 
 bool mons_has_ranged_spell( const monsters *mon )
 {
-    const int  mclass = mon->type;
+    const int mclass = mon->type;
+
+    // These two have Torment, but are handled specially.
+    if (mclass == MONS_FIEND || mclass == MONS_PIT_FIEND)
+        return (true);
 
     if (mons_class_flag( mclass, M_SPELLCASTER ))
     {
