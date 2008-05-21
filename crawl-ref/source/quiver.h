@@ -63,7 +63,7 @@ class player_quiver
 // Quiver tracks items, which in most cases is the Right Thing.  But
 // when a quivered item is identified, the quiver doesn't change to
 // match.  We would like the quiver to store the identified item.
-// 
+//
 // This class saves off the quiver item slots, and restores them when
 // destroyed.  The expected use is to create one of these around code
 // that identifies items in inv.
