@@ -366,7 +366,7 @@ Beogh roars, "Feel my power, apostate!"
 # a character of another species has destroyed an idol
 Beogh idol other
 
-Beogh is not amused about the destruction of his idols.
+Beogh is not amused by that idol's destruction.
 
 Beogh seems highly displeased.
 
