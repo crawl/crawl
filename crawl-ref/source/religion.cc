@@ -3063,63 +3063,77 @@ static bool _zin_retribution()
     return false;
 }
 
-static void _ely_destroy_inventory_weapon()
+static void _ely_dull_inventory_weapons()
 {
-    int count = 0;
-    int item  = ENDOFPACK;
+    int chance = 50;
+    int num_dulled = 0;
+    int quiver_link;
 
-    for (int i = 0; i < ENDOFPACK; i++)
+    you.m_quiver->get_desired_item(NULL, &quiver_link);
+
+    for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!is_valid_item( you.inv[i] ))
-             continue;
+        if (!is_valid_item(you.inv[i]))
+            continue;
 
         if (you.inv[i].base_type == OBJ_WEAPONS
             || you.inv[i].base_type == OBJ_MISSILES)
         {
+            // don't dull artefacts
             if (is_artefact(you.inv[i]))
                 continue;
 
-            // item is valid for destroying, so give it a chance
-            count++;
-            if (one_chance_in( count ))
-                item = i;
+            // don't dull weapons below -1/-1
+            if (you.inv[i].base_type == OBJ_WEAPONS
+                && you.inv[i].plus <= -1 && you.inv[i].plus2 <= -1)
+            {
+                continue;
+            }
+            // don't dull ammo below -1
+            else if (you.inv[i].plus <= -1)
+                continue;
+
+            // 2/3 of the time, don't do anything
+            if (!one_chance_in(3))
+                continue;
+
+            bool wielded = false;
+            bool quivered = false;
+
+            if (you.inv[i].link == you.equip[EQ_WEAPON])
+                wielded = true;
+            if (you.inv[i].link == quiver_link)
+                quivered = true;
+
+            // dull the weapon/ammo
+            if (you.inv[i].plus > -1)
+                you.inv[i].plus--;
+            if ((you.inv[i].base_type == OBJ_WEAPONS)
+                && you.inv[i].plus2 > -1)
+            {
+                you.inv[i].plus2--;
+            }
+
+            // update the weapon/ammo display, if necessary
+            if (wielded)
+                you.wield_change = true;
+            if (quivered)
+                you.m_quiver->on_item_fired(you.inv[i]);
+
+            chance += item_value(you.inv[i], true) / 50;
+            num_dulled++;
         }
     }
 
-    // any item to destroy?
-    if (item == ENDOFPACK)
-        return;
-
-    int value = 1;
-    bool wielded = false;
-
-    // increase value of wielded weapons or large stacks of ammo
-    if (you.inv[item].base_type == OBJ_WEAPONS
-        && you.inv[item].link == you.equip[EQ_WEAPON])
+    if (num_dulled > 0)
     {
-        wielded = true;
-        value += 2;
+        if (chance >= random2(100))
+            dec_penance(GOD_ELYVILON, 1);
+
+        snprintf(info, INFO_SIZE, " dulls %syour weapons.",
+                 (num_dulled > 1) ? "" : "one of ");
+        simple_god_message(info, GOD_ELYVILON);
     }
-    else if (you.inv[item].quantity > random2(you.penance[GOD_ELYVILON]))
-        value += 1 + random2(2);
-
-    piety_gain_t pgain = (value == 1) ? PIETY_NONE : PIETY_SOME;
-
-    // Elyvilon doesn't care about item sacrifices at altars, so I'm
-    // stealing _Sacrifice_Messages.
-    _print_sacrifice_message(GOD_ELYVILON, you.inv[item], pgain, true);
-
-    if (wielded)
-    {
-        unwield_item(true);
-        you.wield_change = true;
-        you.m_quiver->on_weapon_changed();
-    }
-
-    destroy_item(you.inv[item]);
-    burden_change();
-
-    dec_penance(GOD_ELYVILON, value);
 }
 
 static bool _elyvilon_retribution()
@@ -3142,8 +3156,8 @@ static bool _elyvilon_retribution()
         break;
 
     case 3:
-    case 4: // destroy weapons in your inventory
-        _ely_destroy_inventory_weapon();
+    case 4: // dull weapons in your inventory
+        _ely_dull_inventory_weapons();
         break;
     }
 
