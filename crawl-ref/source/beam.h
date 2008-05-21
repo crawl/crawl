@@ -238,7 +238,7 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty );
 void mimic_alert( monsters *mimic );
 
 
-void zapping( zap_type ztype, int power, struct bolt &pbolt );
+bool zapping( zap_type ztype, int power, struct bolt &pbolt );
 
 int affect(bolt &beam, int x, int y, item_def *item = NULL);
 

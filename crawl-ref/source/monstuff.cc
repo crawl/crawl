@@ -2341,15 +2341,14 @@ static void _handle_behaviour(monsters *mon)
 
                 if (mon->foe_memory > 0 && mon->foe != MHITNOT)
                 {
-                    // if we've arrived at our target x,y
+                    // If we've arrived at our target x,y
                     // do a stealth check.  If the foe
                     // fails, monster will then start
                     // tracking foe's CURRENT position,
                     // but only for a few moves (smell and
-                    // intuition only go so far)
+                    // intuition only go so far).
 
-                    if (mon->x == mon->target_x &&
-                        mon->y == mon->target_y)
+                    if (mon->x == mon->target_x && mon->y == mon->target_y)
                     {
                         if (mon->foe == MHITYOU)
                         {
@@ -2373,8 +2372,7 @@ static void _handle_behaviour(monsters *mon)
                         }
                     }
 
-                    // either keep chasing, or start
-                    // wandering.
+                    // Either keep chasing, or start wandering.
                     if (mon->foe_memory < 2)
                     {
                         mon->foe_memory = 0;
@@ -2404,7 +2402,7 @@ static void _handle_behaviour(monsters *mon)
                 }
 
                 mon->foe_memory = memory;
-                break;      // from case
+                break;  // switch/case BEH_SEEK
             }
 
             // monster can see foe: continue 'tracking'
@@ -2417,7 +2415,7 @@ static void _handle_behaviour(monsters *mon)
                     mon->target_x = 10 + random2(GXM - 10);
                     mon->target_y = 10 + random2(GYM - 10);
                     mon->foe = MHITNOT;
-                    new_beh = BEH_WANDER;
+                    new_beh  = BEH_WANDER;
                 }
                 else
                 {
@@ -2478,7 +2476,8 @@ static void _handle_behaviour(monsters *mon)
             // check for healed
             if (isHealthy && !isScared)
                 new_beh = BEH_SEEK;
-            // smart monsters flee until they can
+
+            // Smart monsters flee until they can
             // flee no more...  possible to get a
             // 'CORNERED' event, at which point
             // we can jump back to WANDER if the foe
@@ -2726,6 +2725,7 @@ static void _handle_movement(monsters *monster)
     // some calculations
     if (monster->type == MONS_BORING_BEETLE && monster->foe == MHITYOU)
     {
+        // Boring beetles always move in a straight line in your direction.
         dx = you.x_pos - monster->x;
         dy = you.y_pos - monster->y;
     }
@@ -2748,8 +2748,8 @@ static void _handle_movement(monsters *monster)
         mmov_y *= -1;
     }
 
-    // don't allow monsters to enter a sanctuary
-    // or attack you inside a sanctuary even if it's right next to them
+    // Don't allow monsters to enter a sanctuary
+    // or attack you inside a sanctuary even if you're right next to them.
     if (is_sanctuary(monster->x + mmov_x, monster->y + mmov_y)
         && (!is_sanctuary(monster->x, monster->y)
             || monster->x + mmov_x == you.x_pos
@@ -2759,8 +2759,7 @@ static void _handle_movement(monsters *monster)
         mmov_y = 0;
     }
 
-    // bounds check: don't let fleeing monsters try to run
-    // off the map
+    // Bounds check: don't let fleeing monsters try to run off the map.
     if (monster->target_x + mmov_x < 0 || monster->target_x + mmov_x >= GXM)
         mmov_x = 0;
 
@@ -2771,7 +2770,7 @@ static void _handle_movement(monsters *monster)
     if (mmov_x == 0 && mmov_y == 0)
         return;
 
-    // reproduced here is some semi-legacy code that makes monsters
+    // Reproduced here is some semi-legacy code that makes monsters
     // move somewhat randomly along oblique paths.  It is an exceedingly
     // good idea, given crawl's unique line of sight properties.
     //
@@ -4237,7 +4236,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                 return (false);
             }
 
-            // remove healing/invis/haste if we don't need them
+            // Remove healing/invis/haste if we don't need them.
             int num_no_spell = 0;
 
             for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
@@ -4664,10 +4663,11 @@ static void _monster_regenerate(monsters *monster)
 static void _swim_or_move_energy(monsters *mon)
 {
     const dungeon_feature_type feat = grd[mon->x][mon->y];
+
     // FIXME: Replace check with mons_is_swimming()?
-    mon->lose_energy(
-        feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-        && !mon->airborne() ? EUT_SWIM : EUT_MOVE );
+    mon->lose_energy( (feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
+                       && !mon->airborne()) ? EUT_SWIM
+                                            : EUT_MOVE );
 }
 
 #if DEBUG
@@ -4699,13 +4699,11 @@ static void _handle_monster_move(int i, monsters *monster)
     _monster_add_energy(monster);
 
     // Handle clouds on nonmoving monsters:
-    if (monster->speed == 0)
+    if (monster->speed == 0
+        && env.cgrid[monster->x][monster->y] != EMPTY_CLOUD
+        && !monster->has_ench(ENCH_SUBMERGED))
     {
-        if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD
-            && !monster->has_ench(ENCH_SUBMERGED))
-        {
-            _mons_in_cloud( monster );
-        }
+        _mons_in_cloud( monster );
     }
 
     // Apply monster enchantments once for every normal-speed
@@ -4723,19 +4721,19 @@ static void _handle_monster_move(int i, monsters *monster)
         // reset, since then the monster type is invalid.
         if (monster->type == -1)
             return;
-        else if (monster->hit_points < 1)
+        if (monster->hit_points < 1)
             break;
     }
 
-    // memory is decremented here for a reason -- we only want it
-    // decrementing once per monster "move"
+    // Memory is decremented here for a reason -- we only want it
+    // decrementing once per monster "move".
     if (monster->foe_memory > 0)
         monster->foe_memory--;
 
+    // Otherwise there are potential problems with summonings.
     if (monster->type == MONS_GLOWING_SHAPESHIFTER)
         monster->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
-    // otherwise there are potential problems with summonings
     if (monster->type == MONS_SHAPESHIFTER)
         monster->add_ench(ENCH_SHAPESHIFTER);
 
@@ -4761,7 +4759,7 @@ static void _handle_monster_move(int i, monsters *monster)
                                    entry->energy_usage.swim);
 
     while (monster->has_action_energy())
-    {                   // The continues & breaks are WRT this.
+    {   // The continues & breaks are WRT this.
         if (!monster->alive())
             break;
 
@@ -4900,19 +4898,13 @@ static void _handle_monster_move(int i, monsters *monster)
                  if (random2(2 + pfound) < 2)
                      mmov_x = mmov_y = 0;
 
-                 // bounds check: don't let confused monsters try to run
-                 // off the map
-                 if (monster->x + mmov_x < 0
-                     || monster->x + mmov_x >= GXM)
-                 {
+                 // Bounds check: don't let confused monsters try to run
+                 // off the map.
+                 if (monster->x + mmov_x < 0 || monster->x + mmov_x >= GXM)
                      mmov_x = 0;
-                 }
 
-                 if (monster->y + mmov_y < 0
-                     || monster->y + mmov_y >= GYM)
-                 {
+                 if (monster->y + mmov_y < 0 || monster->y + mmov_y >= GYM)
                      mmov_y = 0;
-                 }
 
                  if (!monster->can_pass_through(monster->x + mmov_x,
                                                 monster->y + mmov_y))
@@ -4945,11 +4937,11 @@ static void _handle_monster_move(int i, monsters *monster)
         if (monster->behaviour != BEH_SLEEP
             && monster->behaviour != BEH_WANDER
 
-            // berserking monsters are limited to running up and
+            // Berserking monsters are limited to running up and
             // hitting their foes.
             && !monster->has_ench(ENCH_BERSERK))
         {
-            // prevents unfriendlies from nuking you from offscreen.
+            // Prevents unfriendlies from nuking you from offscreen.
             // How nice!
             if (mons_friendly(monster) || mons_near(monster))
             {
@@ -4957,11 +4949,10 @@ static void _handle_monster_move(int i, monsters *monster)
                 // in monsters that have both. This aims to give them both
                 // roughly the same weight.
 
-                if (coinflip()?
-                        _handle_special_ability(monster, beem)
-                            || _handle_monster_spell(monster, beem)
-                    :   _handle_monster_spell(monster, beem)
-                            || _handle_special_ability(monster, beem))
+                if (coinflip() ? _handle_special_ability(monster, beem)
+                                 || _handle_monster_spell(monster, beem)
+                               : _handle_monster_spell(monster, beem)
+                                 || _handle_special_ability(monster, beem))
                 {
                     DEBUG_ENERGY_USE("spell or special");
                     continue;
@@ -5001,7 +4992,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
         if (!mons_is_caught(monster))
         {
-            // see if we move into (and fight) an unfriendly monster
+            // See if we move into (and fight) an unfriendly monster.
             int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
             if (targmon != NON_MONSTER
                 && targmon != i
@@ -5032,7 +5023,7 @@ static void _handle_monster_move(int i, monsters *monster)
                 && monster->y + mmov_y == you.y_pos)
             {
                 bool isFriendly = mons_friendly(monster);
-                bool attacked = false;
+                bool attacked   = false;
 
                 if (!isFriendly)
                 {
@@ -5053,8 +5044,8 @@ static void _handle_monster_move(int i, monsters *monster)
                     && monster->hit_points < 1)
                 {
 
-                    // detach monster from the grid first, so it
-                    // doesn't get hit by its own explosion (GDL)
+                    // Detach monster from the grid first, so it
+                    // doesn't get hit by its own explosion. (GDL)
                     mgrd[monster->x][monster->y] = NON_MONSTER;
 
                     spore_goes_pop(monster);
@@ -5096,8 +5087,8 @@ static void _handle_monster_move(int i, monsters *monster)
         if (monster->type == MONS_GIANT_SPORE
             || monster->type == MONS_BALL_LIGHTNING)
         {
-            // detach monster from the grid first, so it
-            // doesn't get hit by its own explosion (GDL)
+            // Detach monster from the grid first, so it
+            // doesn't get hit by its own explosion. (GDL)
             mgrd[monster->x][monster->y] = NON_MONSTER;
 
             spore_goes_pop( monster );
@@ -5105,9 +5096,7 @@ static void _handle_monster_move(int i, monsters *monster)
             return;
         }
         else
-        {
             monster_die( monster, KILL_MISC, 0 );
-        }
     }
 }
 
@@ -5131,8 +5120,8 @@ void handle_monsters(void)
         if (monster->type == -1 || immobile_monster[i])
             continue;
 
-        const int mx = monster->x,
-                  my = monster->y;
+        const int mx = monster->x, my = monster->y;
+
         _handle_monster_move(i, monster);
 
         if (!invalid_monster(monster)
@@ -5157,26 +5146,24 @@ void handle_monsters(void)
     // Clear any summoning flags so that lower indiced
     // monsters get their actions in the next round.
     for (int i = 0; i < MAX_MONSTERS; i++)
-    {
         menv[i].flags &= ~MF_JUST_SUMMONED;
-    }
-}                               // end handle_monster()
+}
 
 static bool _is_item_jelly_edible(const item_def &item)
 {
-    // don't eat artefacts (note that unrandarts are randarts)
+    // Don't eat artefacts (note that unrandarts are randarts).
     if (is_fixed_artefact(item) || is_random_artefact(item))
         return (false);
 
-    // shouldn't eat stone things
-    //    - but what about wands and rings?
+    // Shouldn't eat stone things
+    //   - but what about wands and rings?
     if (item.base_type == OBJ_MISSILES
         && (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK))
     {
         return (false);
     }
 
-    // don't eat special game items
+    // Don't eat special game items.
     if (item.base_type == OBJ_ORBS
         || (item.base_type == OBJ_MISCELLANY
             && (item.sub_type == MISC_RUNE_OF_ZOT
@@ -5298,7 +5285,8 @@ static bool _handle_pickup(monsters *monster)
     }                           // end "if jellies"
 
     // Note: Monsters only look at stuff near the top of stacks.
-
+    // XXX: Need to put in something so that monster picks up multiple items
+    // (eg ammunition) identical to those it's carrying.
     bool success = false;
     for (item = igrd[monster->x][monster->y]; item != NON_ITEM; )
     {
@@ -5405,6 +5393,7 @@ static bool _monster_swaps_places( monsters *mon, int mx, int my )
     // Check that both monsters will be happy at their proposed new locations.
     const int cx = mon->x, cy = mon->y,
               nx = mon->x + mx, ny = mon->y + my;
+
     if (!_habitat_okay(mon, grd[nx][ny])
         || !_habitat_okay(m2, grd[cx][cy]))
     {
@@ -5435,7 +5424,7 @@ static bool _monster_swaps_places( monsters *mon, int mx, int my )
 static bool _do_move_monster(monsters *monster, int xi, int yi)
 {
     const int fx = monster->x + xi,
-        fy = monster->y + yi;
+              fy = monster->y + yi;
 
     if (!in_bounds(fx, fy))
         return false;
@@ -5470,8 +5459,6 @@ static bool _do_move_monster(monsters *monster, int xi, int yi)
     monster->x = fx;
     monster->y = fy;
 
-    // need to put in something so that monster picks up multiple
-    // items (eg ammunition) identical to those it's carrying.
     mgrd[monster->x][monster->y] = monster_index(monster);
 
     monster->check_redraw(monster->pos() - coord_def(xi, yi));
@@ -5492,12 +5479,14 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
     {
         const bool message = mons_near(mons);
 
-        // don't worry about invisibility - you should be able to
-        // see if something has fallen into the lava
+        // Don't worry about invisibility - you should be able to
+        // see if something has fallen into the lava.
         if (message)
+        {
             mprf("%s falls into the %s!",
                  mons->name(DESC_CAP_THE).c_str(),
                  (grid == DNGN_LAVA ? "lava" : "water"));
+        }
 
         if (grid == DNGN_LAVA && mons_res_fire(mons) >= 2)
             grid = DNGN_DEEP_WATER;

@@ -1800,8 +1800,10 @@ bool acquirement(object_class_type class_wanted, int agent,
 bool recharge_wand(int item_slot)
 {
     if (item_slot == -1)
+    {
         item_slot = prompt_invent_item( "Charge which item?", MT_INVLIST,
                                         OSEL_RECHARGE, true, true, false );
+    }
 
     if (item_slot == PROMPT_ABORT)
     {
@@ -1811,10 +1813,11 @@ bool recharge_wand(int item_slot)
 
     item_def &wand = you.inv[ item_slot ];
 
+    // Weapons of electrocution can be "charged", i.e. gain +1 damage.
     if (wand.base_type == OBJ_WEAPONS
         && get_weapon_brand(wand) == SPWPN_ELECTROCUTION)
     {
-        // might fail because of already high enchantment
+        // Might fail because of already high enchantment.
         if (enchant_weapon( ENCHANT_TO_DAM, false, wand ))
         {
             you.wield_change = true;
@@ -1858,7 +1861,7 @@ bool recharge_wand(int item_slot)
             break;
         }
 
-        // don't display zap counts any more
+        // Don't display zap counts any more.
         wand.plus2 = ZAPCOUNT_UNKNOWN;
 
         mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
@@ -1868,9 +1871,8 @@ bool recharge_wand(int item_slot)
         if (wand.plus > charge_gain * 3)
             wand.plus = charge_gain * 3;
     }
-    else
+    else // It's a rod.
     {
-        // This is a rod.
         bool work = false;
 
         if (wand.plus2 <= MAX_ROD_CHARGE * ROD_CHARGE_MULT)

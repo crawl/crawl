@@ -211,7 +211,7 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
     zap_animation( element_colour( elem ), mon, force );
 }
 
-void zapping(zap_type ztype, int power, bolt &pbolt)
+bool zapping(zap_type ztype, int power, bolt &pbolt)
 {
 
 #if DEBUG_DIAGNOSTICS
@@ -239,16 +239,35 @@ void zapping(zap_type ztype, int power, bolt &pbolt)
     // fill in the bolt structure
     _zappy( ztype, power, pbolt );
 
-    if (ztype == ZAP_LIGHTNING && !silenced(you.x_pos, you.y_pos))
-        // needs to check silenced at other location, too {dlb}
+    if (pbolt.thrower == KILL_YOU_MISSILE)
     {
+        pbolt.is_tracer = true;
+        // XXX: rangeMax needs to be set appropriately for the tracer!
+        pbolt.attitude  = ATT_FRIENDLY;
+        pbolt.source_x  = you.x_pos;
+        pbolt.source_y  = you.y_pos;
+        fire_beam(pbolt);
+
+        if (pbolt.fr_count > 0 && !yesno("Really fire through this friendly "
+                                         "creature?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            you.turn_is_over = false;
+            return (false);
+        }
+        pbolt.is_tracer = false;
+    }
+
+    if (ztype == ZAP_LIGHTNING && !silenced(you.x_pos, you.y_pos))
+    {
+        // XXX: needs to check silenced at other location, too {dlb}
         mpr("You hear a mighty clap of thunder!");
         noisy( 25, you.x_pos, you.y_pos );
     }
 
     fire_beam(pbolt);
 
-    return;
+    return (true);
 }                               // end zapping()
 
 dice_def calc_dice( int num_dice, int max_damage )
@@ -1347,7 +1366,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             rangeRemaining += random2((pbolt.rangeMax - pbolt.range) + 1);
     }
 
-    // before we start drawing the beam, turn buffering off
+    // Before we start drawing the beam, turn buffering off.
 #ifdef WIN32CONSOLE
     bool oldValue = true;
     if (!pbolt.is_tracer)
@@ -1359,11 +1378,11 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         tx = ray.x();
         ty = ray.y();
 
-        // shooting through clouds affects accuracy
-        if ( env.cgrid[tx][ty] != EMPTY_CLOUD )
+        // Shooting through clouds affects accuracy.
+        if (env.cgrid[tx][ty] != EMPTY_CLOUD)
             pbolt.hit = std::max(pbolt.hit - 2, 0);
 
-        // see if tx, ty is blocked by something
+        // See if tx, ty is blocked by something.
         if (grid_is_solid(grd[tx][ty]))
         {
             // first, check to see if this beam affects walls.
@@ -1479,11 +1498,11 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         if (!pbolt.is_tracer && pbolt.name[0] != '0' && see_grid(tx,ty))
         {
             // we don't clean up the old position.
-            // first, most people like seeing the full path,
+            // First, most people like to see the full path,
             // and second, it is hard to do it right with
             // respect to killed monsters, cloud trails, etc.
 
-            // draw new position
+            // Draw new position.
             int drawx = grid2viewX(tx);
             int drawy = grid2viewY(ty);
 
@@ -1768,7 +1787,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         }
         else
         {
-            // early out for tracer/no side effects
+            // Early out for tracer/no side effects.
             if (!doFlavouredEffects)
                 return (hurted);
 
@@ -2311,9 +2330,9 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     pbolt.foe_helped    = pbolt.foe_hurt = 0;
     pbolt.foe_ratio     = 80;        // default - see mons_should_fire()
 
-    // foe ratio for summoning gtr. demons & undead -- they may be
+    // Foe ratio for summoning gtr. demons & undead -- they may be
     // summoned, but they're hostile and would love nothing better
-    // than to nuke the player and his minions
+    // than to nuke the player and his minions.
     if (mons_att_wont_attack(pbolt.attitude)
         && !mons_att_wont_attack(monster->attitude))
     {
@@ -2323,7 +2342,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     // fire!
     fire_beam(pbolt);
 
-    // unset tracer flag (convenience)
+    // Unset tracer flag (convenience).
     pbolt.is_tracer     = false;
 }                               // end tracer_f()
 
@@ -2615,14 +2634,14 @@ int affect(bolt &beam, int x, int y, item_def *item)
 
     // grd[x][y] will NOT be a wall for the remainder of this function.
 
-    // if not a tracer, affect items and place clouds
+    // If not a tracer, affect items and place clouds.
     if (!beam.is_tracer)
     {
         expose_items_to_element(beam.flavour, x, y);
         rangeUsed += _affect_place_clouds(beam, x, y);
     }
 
-    // if player is at this location, try to affect unless term_on_target
+    // If player is at this location, try to affect unless term_on_target.
     if (_found_player(beam, x, y))
     {
         // Done this way so that poison blasts affect the target once (via
@@ -3934,7 +3953,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     // them and be considered naughty if they do damage (this is so as
     // not to penalize players that fling fireballs into a melee with
     // fire elementals on their side - the elementals won't give a sh*t,
-    // after all)
+    // after all).
 
     god_conduct_trigger conduct;
     conduct.enabled = false;

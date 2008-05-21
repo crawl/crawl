@@ -2071,17 +2071,16 @@ bool mons_should_fire(struct bolt &beam)
          beam.smart_monster? "yes" : "no");
 #endif
     // use of foeRatio:
-    // the higher this number, the more monsters
-    // will _avoid_ collateral damage to their friends.
-    // setting this to zero will in fact have all
-    // monsters ignore their friends when considering
-    // collateral damage.
+    // The higher this number, the more monsters will _avoid_
+    // collateral damage to their friends.
+    // Setting this to zero will in fact have all monsters ignore
+    // their friends when considering collateral damage.
 
-    // quick check - did we in fact get any foes?
+    // Quick check - did we in fact get any foes?
     if (beam.foe_count == 0)
         return (false);
 
-    // if we either hit no friends, or monster too dumb to care
+    // If we either hit no friends, or monster too dumb to care.
     if (beam.fr_count == 0 || !beam.smart_monster)
         return (true);
 
@@ -2091,10 +2090,9 @@ bool mons_should_fire(struct bolt &beam)
                          100));
 }
 
-// returns true if the spell is something you wouldn't want done if
+// Returns true if the spell is something you wouldn't want done if
 // you had a friendly target..  only returns a meaningful value for
-// non-beam spells
-
+// non-beam spells.
 bool ms_direct_nasty(spell_type monspell)
 {
     return (spell_needs_foe(monspell)

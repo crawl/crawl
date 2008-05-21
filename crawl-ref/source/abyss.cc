@@ -77,7 +77,6 @@ void generate_abyss(void)
 #endif
 
     for (i = 5; i < (GXM - 5); i++)
-    {
         for (j = 5; j < (GYM - 5); j++)
         {
             temp_rand = random2(4000);
@@ -88,12 +87,13 @@ void generate_abyss(void)
                          (temp_rand >   0) ? DNGN_METAL_WALL    //  2.5%
                                            : DNGN_CLOSED_DOOR); // 1 in 4000
         }
-    }
 
     grd[45][35] = DNGN_FLOOR;
-    if ( one_chance_in(5) )
+    if (one_chance_in(5))
+    {
         place_feature_near( coord_def(45, 35), LOS_RADIUS,
                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
+    }
 }
 
 static void generate_area(int gx1, int gy1, int gx2, int gy2)
@@ -143,18 +143,21 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
 
             for (int i = x1; room_ok && i < x2; i++)
                 for (int j = y1; room_ok && j < y2; j++)
+                {
                     if (grd[i][j] != DNGN_UNSEEN)
                         room_ok = false;
+                }
 
-            if ( room_ok )
+            if (room_ok)
+            {
                 for (int i = x1; i < x2; i++)
                     for (int j = y1; j < y2; j++)
                         grd[i][j] = DNGN_FLOOR;
+            }
         }
     }
 
     for (int i = gx1; i <= gx2; i++)
-    {
         for (int j = gy1; j <= gy2; j++)
         {
             if (grd[i][j] == DNGN_UNSEEN && random2(100) <= thickness)
@@ -184,13 +187,11 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
                 }
             }
         }
-    }
 
     int exits_wanted  = 0;
     int altars_wanted = 0;
 
     for (int i = gx1; i <= gx2; i++)
-    {
         for (int j = gy1; j <= gy2; j++)
         {
             if (grd[i][j] == DNGN_UNSEEN)
@@ -217,16 +218,15 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
             {
                 do
                 {
-                    grd[i][j] =
-                        static_cast<dungeon_feature_type>(
-                            DNGN_ALTAR_ZIN + random2(NUM_GODS-1) );
+                    grd[i][j] = static_cast<dungeon_feature_type>(
+                                    DNGN_ALTAR_ZIN + random2(NUM_GODS-1) );
                 }
                 while (grd[i][j] == DNGN_ALTAR_ZIN
                        || grd[i][j] == DNGN_ALTAR_SHINING_ONE
                        || grd[i][j] == DNGN_ALTAR_ELYVILON);
 
                 // Lugonu has a flat 50% chance of corrupting the altar
-                if ( coinflip() )
+                if (coinflip())
                     grd[i][j] = DNGN_ALTAR_LUGONU;
 
                 altars_wanted--;
@@ -235,7 +235,6 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
 #endif
             }
         }
-    }
 }
 
 static int abyss_exit_nearness()
@@ -253,8 +252,7 @@ static int abyss_exit_nearness()
                 && get_screen_glyph(x, y) != ' ')
             {
                 nearness = MIN(nearness,
-                               grid_distance(you.x_pos, you.y_pos,
-                                             x, y));
+                               grid_distance(you.x_pos, you.y_pos, x, y));
             }
         }
 
@@ -280,9 +278,11 @@ static int abyss_rune_nearness()
                 {
                     item_def& item(mitm[i]);
                     if (is_rune(item) && item.plus == RUNE_ABYSSAL)
+                    {
                         nearness = MIN(nearness,
                                        grid_distance(you.x_pos, you.y_pos,
                                                      x, y));
+                    }
                     i = item.link;
                 }
             }
@@ -312,20 +312,20 @@ static void xom_check_nearness()
     int exit_is_near = abyss_exit_nearness();
     int rune_is_near = abyss_rune_nearness();
 
-    if ((exit_was_near   <  INFINITE_DISTANCE
-         && exit_is_near == INFINITE_DISTANCE)
-        || (rune_was_near < INFINITE_DISTANCE
+    if (exit_was_near < INFINITE_DISTANCE
+            && exit_is_near == INFINITE_DISTANCE
+        || rune_was_near < INFINITE_DISTANCE
             && rune_is_near == INFINITE_DISTANCE
-            && you.attribute[ATTR_ABYSSAL_RUNES] == 0))
+            && you.attribute[ATTR_ABYSSAL_RUNES] == 0)
     {
         xom_is_stimulated(255, "Xom snickers loudly.", true);
     }
 
-    if ((rune_was_near   == INFINITE_DISTANCE
-         && rune_is_near <  INFINITE_DISTANCE
-         && you.attribute[ATTR_ABYSSAL_RUNES] == 0)
-        || (exit_was_near == INFINITE_DISTANCE &&
-            exit_is_near  <  INFINITE_DISTANCE))
+    if (rune_was_near == INFINITE_DISTANCE
+            && rune_is_near < INFINITE_DISTANCE
+            && you.attribute[ATTR_ABYSSAL_RUNES] == 0
+        || exit_was_near == INFINITE_DISTANCE
+            && exit_is_near < INFINITE_DISTANCE)
     {
         xom_is_stimulated(255);
     }
@@ -361,7 +361,6 @@ void area_shift(void)
     }
 
     for (int i = 5; i < (GXM - 5); i++)
-    {
         for (int j = 5; j < (GYM - 5); j++)
         {
             // don't modify terrain by player
@@ -377,7 +376,6 @@ void area_shift(void)
             if (mgrd[i][j] != NON_MONSTER)
                 abyss_lose_monster( menv[ mgrd[i][j] ] );
         }
-    }
 
     // shift all monsters & items to new area
     for (int i = you.x_pos - 10; i < you.x_pos + 11; i++)
@@ -436,7 +434,7 @@ void area_shift(void)
     mgen_data mons;
     mons.level_type = LEVEL_ABYSS;
     mons.proximity  = PROX_AWAY_FROM_PLAYER;
-    
+
     for (unsigned int mcount = 0; mcount < 15; mcount++)
         mons_place(mons);
 
@@ -519,15 +517,13 @@ void abyss_teleport( bool new_area )
         delete_cloud( i );
 
     for (i = 10; i < (GXM - 9); i++)
-    {
         for (j = 10; j < (GYM - 9); j++)
         {
-            grd[i][j] = DNGN_UNSEEN;    // so generate_area will pick it up
-            igrd[i][j] = NON_ITEM;
-            mgrd[i][j] = NON_MONSTER;
+            grd[i][j]       = DNGN_UNSEEN;  // so generate_area will pick it up
+            igrd[i][j]      = NON_ITEM;
+            mgrd[i][j]      = NON_MONSTER;
             env.cgrid[i][j] = EMPTY_CLOUD;
         }
-    }
 
     ASSERT( env.cloud_no == 0 );
 
@@ -538,9 +534,11 @@ void abyss_teleport( bool new_area )
     xom_check_nearness();
 
     grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
-    if ( one_chance_in(5) )
+    if (one_chance_in(5))
+    {
         place_feature_near( you.pos(), LOS_RADIUS,
                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
+    }
 
     place_transiting_monsters();
     place_transiting_items();
@@ -570,7 +568,9 @@ static void initialise_level_corrupt_seeds(int power)
     {
         coord_def where;
         do
+        {
             where = coord_def(random2(GXM), random2(GYM));
+        }
         while (!in_bounds(where) || grd(where) != DNGN_FLOOR
                || env.markers.find(where, MAT_ANY));
 
@@ -587,20 +587,22 @@ static bool spawn_corrupted_servant_near(const coord_def &pos)
                            pos.y + random2avg(4, 3) + random2(3) );
         if (!in_bounds(p) || p == you.pos() || mgrd(p) != NON_MONSTER
             || !grid_compatible(DNGN_FLOOR, grd(p), true))
+        {
             continue;
+        }
 
         // Got a place, summon the beast.
         int level = 51;
-        monster_type mons =
-            pick_random_monster(level_id(LEVEL_ABYSS), level, level);
+        monster_type mons = pick_random_monster(level_id(LEVEL_ABYSS), level,
+                                                level);
         if (mons == MONS_PROGRAM_BUG)
             return (false);
 
         const beh_type beh =
-            one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4)?
-            BEH_HOSTILE : BEH_NEUTRAL;
-        const int mid =
-            create_monster( mgen_data( mons, beh, 5, p ) );
+            one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4) ? BEH_HOSTILE
+                                                              : BEH_NEUTRAL;
+        const int mid = create_monster( mgen_data( mons, beh, 5, p ) );
+
         return (mid != -1);
     }
     return (false);
@@ -618,10 +620,10 @@ static void apply_corruption_effect(
 
     for (int i = 0; i < neffects; ++i)
     {
-        if (random2(4000) < cmark->duration)
+        if (random2(4000) < cmark->duration
+            && !spawn_corrupted_servant_near(cmark->pos))
         {
-            if (!spawn_corrupted_servant_near(cmark->pos))
-                break;
+            break;
         }
     }
     cmark->duration -= duration;
@@ -680,7 +682,6 @@ static bool is_crowded_square(const coord_def &c)
 {
     int neighbours = 0;
     for (int xi = -1; xi <= 1; ++xi)
-    {
         for (int yi = -1; yi <= 1; ++yi)
         {
             if (!xi && !yi)
@@ -693,7 +694,7 @@ static bool is_crowded_square(const coord_def &c)
             if (++neighbours > 4)
                 return (false);
         }
-    }
+
     return (true);
 }
 
@@ -701,7 +702,6 @@ static bool is_crowded_square(const coord_def &c)
 static bool is_sealed_square(const coord_def &c)
 {
     for (int xi = -1; xi <= 1; ++xi)
-    {
         for (int yi = -1; yi <= 1; ++yi)
         {
             if (!xi && !yi)
@@ -714,7 +714,7 @@ static bool is_sealed_square(const coord_def &c)
             if (!grid_is_opaque(grd(n)))
                 return (false);
         }
-    }
+
     return (true);
 }
 
@@ -825,11 +825,16 @@ static void corrupt_choose_colours()
 {
     int colour = BLACK;
     do
+    {
         colour = random_uncommon_colour();
+    }
     while (colour == env.rock_colour || colour == LIGHTGREY || colour == WHITE);
     env.rock_colour = colour;
+
     do
+    {
         colour = random_uncommon_colour();
+    }
     while (colour == env.floor_colour || colour == LIGHTGREY
            || colour == WHITE);
     env.floor_colour = colour;

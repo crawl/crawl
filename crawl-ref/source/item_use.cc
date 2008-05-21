@@ -3266,11 +3266,14 @@ void zap_wand( int slot )
     if (slot != -1)
         item_slot = slot;
     else
+    {
         item_slot = prompt_invent_item( "Zap which item?",
                                     MT_INVLIST,
                                     OBJ_WANDS,
                                     true, true, true, 0, NULL,
                                     OPER_ZAP );
+    }
+
     if (item_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -3288,24 +3291,26 @@ void zap_wand( int slot )
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
 
-    if ( wand.plus < 1 )
+    bool has_charges = true;
+    if (wand.plus < 1)
     {
-        // it's an empty wand, inscribe it that way
-        canned_msg(MSG_NOTHING_HAPPENS);
-        wand.plus2 = ZAPCOUNT_EMPTY;
-        you.turn_is_over = true;
-        return;
+        if (wand.plus2 == ZAPCOUNT_EMPTY)
+        {
+            mpr("This wand has no charges.");
+            return;
+        }
+        has_charges = false;
     }
 
     const bool alreadyknown = item_type_known(wand);
     const bool alreadytried = item_type_tried(wand);
+    const bool dangerous    = player_in_a_dangerous_place();
+
     if (!alreadyknown)
         beam.effect_known = false;
-
-    const bool dangerous = player_in_a_dangerous_place();
-    if (alreadyknown)
+    else
     {
-        switch ( wand.sub_type )
+        switch (wand.sub_type)
         {
         case WAND_DIGGING:
         case WAND_TELEPORTATION:
@@ -3334,6 +3339,16 @@ void zap_wand( int slot )
         return;
     }
 
+    if (!has_charges)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        // It's an empty wand; inscribe it that way.
+        wand.plus2 = ZAPCOUNT_EMPTY;
+        you.turn_is_over = true;
+        return;
+    }
+
+
     if (you.duration[DUR_CONF])
     {
         zap_wand.tx = you.x_pos + random2(13) - 6;
@@ -3357,27 +3372,27 @@ void zap_wand( int slot )
     beam.set_target(zap_wand);
 
     // zapping() updates beam
-    zapping( static_cast<zap_type>(type_zapped),
-             30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
+    if (!zapping( static_cast<zap_type>(type_zapped),
+                  30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam ))
+    {
+        return;
+    }
 
     // take off a charge
     wand.plus--;
 
     // increment zap count
-    if ( wand.plus2 >= 0 )
+    if (wand.plus2 >= 0)
         wand.plus2++;
 
     // identify if necessary
-    if ((beam.obvious_effect || type_zapped == ZAP_FIREBALL) &&
-        !alreadyknown)
+    if (!alreadyknown && (beam.obvious_effect || type_zapped == ZAP_FIREBALL))
     {
         set_ident_type( wand.base_type, wand.sub_type, ID_KNOWN_TYPE );
         mpr(wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
     else
-    {
         set_ident_type( wand.base_type, wand.sub_type, ID_TRIED_TYPE );
-    }
 
     if (item_type_known(wand)
         && (item_ident( wand, ISFLAG_KNOW_PLUSES )

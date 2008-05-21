@@ -1655,11 +1655,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     {
         // God gifts override all sources of mutation resistance other
         // than the mutation resistance mutation and divine protection.
-        if ((wearing_amulet(AMU_RESIST_MUTATION)
-                && !one_chance_in(10) && !god_gift)
+        if (wearing_amulet(AMU_RESIST_MUTATION)
+                && !one_chance_in(10) && !god_gift
             || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
             || player_mutation_level(MUT_MUTATION_RESISTANCE)
-                && !one_chance_in(3))
+               && !one_chance_in(3))
         {
             if (failMsg)
                 mpr("You feel odd for a moment.", MSGCH_MUTATION);

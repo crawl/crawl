@@ -435,8 +435,10 @@ void identify(int power, int item_slot)
     do
     {
         if (item_slot == -1)
+        {
             item_slot = prompt_invent_item( "Identify which item?", MT_INVLIST,
                                             OSEL_UNIDENT, true, true, false );
+        }
         if (item_slot == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );
@@ -445,7 +447,7 @@ void identify(int power, int item_slot)
 
         item_def& item(you.inv[item_slot]);
 
-        if ( fully_identified(item) )
+        if (fully_identified(item))
         {
             mpr("Choose an unidentified item, or Esc to abort.");
             if ( Options.auto_list )
@@ -454,7 +456,7 @@ void identify(int power, int item_slot)
             continue;
         }
 
-        if ( !is_artefact(item) )
+        if (!is_artefact(item))
             set_ident_type( item.base_type, item.sub_type, ID_KNOWN_TYPE );
 
         set_ident_flags( item, ISFLAG_IDENT_MASK );

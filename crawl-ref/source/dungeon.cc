@@ -641,7 +641,7 @@ static void _register_place(const vault_placement &place)
 
     if (!place.map.has_tag("layout"))
         _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
-    
+
     if (place.map.has_tag("no_monster_gen"))
         _mask_vault(place, MMT_NO_MONS);
 
@@ -776,16 +776,14 @@ static void _reset_level()
     // Set default level flags
     if (you.level_type == LEVEL_DUNGEON)
         env.level_flags = branches[you.where_are_you].default_level_flags;
-    else if (you.level_type == LEVEL_LABYRINTH ||
-             you.level_type == LEVEL_ABYSS)
+    else if (you.level_type == LEVEL_LABYRINTH
+             || you.level_type == LEVEL_ABYSS)
     {
         env.level_flags = LFLAG_NO_TELE_CONTROL | LFLAG_NOT_MAPPABLE;
 
-        if (!(you.level_type == LEVEL_LABYRINTH
-              && you.species != SP_MINOTAUR))
-        {
+        // Labyrinths are *only* magic mappable for minotaurs.
+        if (you.level_type != LEVEL_LABYRINTH || you.species != SP_MINOTAUR)
             env.level_flags |= LFLAG_NO_MAGIC_MAP;
-        }
     }
     else
         env.level_flags = 0;
@@ -837,15 +835,17 @@ static int _num_items_wanted(int level_number)
 
 static int _num_mons_wanted(int level_type)
 {
-    if (level_type == LEVEL_ABYSS ||
-        player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
+    if (level_type == LEVEL_ABYSS
+        || player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+    {
         return 0;
+    }
 
     int mon_wanted = roll_dice( 3, 10 );
 
     if (player_in_hell())
         mon_wanted += roll_dice( 3, 8 );
-    else if (player_in_branch( BRANCH_HALL_OF_BLADES ))
+    else if (player_in_branch(BRANCH_HALL_OF_BLADES))
         mon_wanted += roll_dice( 6, 8 );
 
     if (mon_wanted > 60)
@@ -1051,7 +1051,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                 {
                     int start = remove;
                     do
-                    { 
+                    {
                         if (!(dgn_Map_Mask(stair_list[remove]) & MMT_VAULT))
                             break;
                         remove = (remove + 1) % num_stairs;
@@ -2897,7 +2897,7 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
     mg.behaviour = BEH_SLEEP;
     mg.flags |= MG_PERMIT_BANDS;
     mg.map_mask |= MMT_NO_MONS;
-    
+
     for (int i = 0; i < num_to_place; i++)
     {
         mg.cls = montypes[random2(montypes.size())];
@@ -2984,7 +2984,7 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
         mg.power = level_number;
         mg.flags |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
-        
+
         place_monster(mg);
     }
 
@@ -3213,7 +3213,7 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
         mg.cls = lord_type;
         mg.behaviour = BEH_SLEEP;
         mg.pos = coord_def(lordx, lordy);
-        
+
         mons_place(
             mgen_data::sleeper_at(lord_type, coord_def(lordx, lordy)));
     }
@@ -3392,7 +3392,7 @@ static void _special_room(int level_number, spec_room &sr)
 
                 mons_place(
                     mgen_data::sleeper_at(
-                        mons_alloc[random2(10)], 
+                        mons_alloc[random2(10)],
                         coord_def(x, y) ));
             }
 
@@ -6058,9 +6058,9 @@ static char _plan_6(int level_number)
     // Note, that although "level_number > 20" will work for most
     // trips to pandemonium (through regular portals), it won't work
     // for demonspawn who gate themselves there. -- bwr
-    if (((player_in_branch( BRANCH_MAIN_DUNGEON ) && level_number > 20)
+    if ((player_in_branch(BRANCH_MAIN_DUNGEON) && level_number > 20
             || you.level_type == LEVEL_PANDEMONIUM)
-        && (coinflip() || you.mutation[ MUT_PANDEMONIUM ]))
+        && (coinflip() || player_mutation_level(MUT_PANDEMONIUM)))
     {
         grd[40][36] = DNGN_ENTER_ABYSS;
         grd[41][36] = DNGN_ENTER_ABYSS;
