@@ -3070,20 +3070,20 @@ static void _ely_destroy_inventory_weapon()
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-         if (!is_valid_item( you.inv[i] ))
+        if (!is_valid_item( you.inv[i] ))
              continue;
 
-         if (you.inv[i].base_type == OBJ_WEAPONS
-             || you.inv[i].base_type == OBJ_MISSILES)
-         {
-             if (is_artefact(you.inv[i]))
-                 continue;
+        if (you.inv[i].base_type == OBJ_WEAPONS
+            || you.inv[i].base_type == OBJ_MISSILES)
+        {
+            if (is_artefact(you.inv[i]))
+                continue;
 
-             // item is valid for destroying, so give it a chance
-             count++;
-             if (one_chance_in( count ))
-                 item = i;
-         }
+            // item is valid for destroying, so give it a chance
+            count++;
+            if (one_chance_in( count ))
+                item = i;
+        }
     }
 
     // any item to destroy?
