@@ -4819,6 +4819,7 @@ void offer_items()
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_TROG:
+        case GOD_SHINING_ONE:
             gain_piety(1);
             relative_piety_gain = PIETY_SOME;
             break;
