@@ -4845,7 +4845,7 @@ void offer_items()
         _show_pure_deck_chances();
 #endif
     }
-    else if (!num_sacced) // explanatory messages if nothing sacrificed
+    else if (num_sacced == 0) // explanatory messages if nothing sacrificed
     {
         if (you.religion == GOD_KIKUBAAQUDGHA || you.religion == GOD_TROG)
             simple_god_message(" only cares about primal sacrifices!", you.religion);
