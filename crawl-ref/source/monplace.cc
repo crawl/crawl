@@ -276,8 +276,8 @@ monster_type pick_random_monster(const level_id &place,
             lev_mons = 27;
     }
 
-    /* Abyss or Pandemonium. Almost never called from Pan;
-       probably only if a rand demon gets summon anything spell */
+    // Abyss or Pandemonium. Almost never called from Pan; probably only
+    // if a random demon gets summon anything spell
     if (lev_mons == 51
         || place.level_type == LEVEL_PANDEMONIUM
         || place.level_type == LEVEL_ABYSS)
