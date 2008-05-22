@@ -1107,8 +1107,10 @@ stamina_robustness:
             lose_piety(loss_amt);
 
         // If there's not enough piety left to vitalise again, turn off
-        // vitalisation chaining.
-        if (you.piety < piety_breakpoint(1))
+        // vitalisation chaining.  Note that, if the piety cost for this
+        // in abl-show.cc::_do_ability() is changed from 2, this needs
+        // to be changed as well.
+        if (you.piety < piety_breakpoint(1) + 2)
             need_chain = false;
 
         // Increment the step counter.
