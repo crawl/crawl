@@ -80,12 +80,13 @@ enum ability_flag_type
     ABFLAG_NONE         = 0x00000000,
     ABFLAG_BREATH       = 0x00000001, // ability uses DUR_BREATH_WEAPON
     ABFLAG_DELAY        = 0x00000002, // ability has its own delay (ie recite)
-    ABFLAG_PAIN         = 0x00000004, // ability must hurt player (ie torment)
-    ABFLAG_EXHAUSTION   = 0x00000008, // fails if you.exhausted
-    ABFLAG_INSTANT      = 0x00000010, // doesn't take time to use
-    ABFLAG_PERMANENT_HP = 0x00000020, // costs permanent HPs
-    ABFLAG_PERMANENT_MP = 0x00000040, // costs permanent MPs
-    ABFLAG_CONF_OK      = 0x00000080  // can use even if confused.
+    ABFLAG_PIETY        = 0x00000004, // ability has its own piety (ie vitalise)
+    ABFLAG_PAIN         = 0x00000008, // ability must hurt player (ie torment)
+    ABFLAG_EXHAUSTION   = 0x00000010, // fails if you.exhausted
+    ABFLAG_INSTANT      = 0x00000020, // doesn't take time to use
+    ABFLAG_PERMANENT_HP = 0x00000040, // costs permanent HPs
+    ABFLAG_PERMANENT_MP = 0x00000080, // costs permanent MPs
+    ABFLAG_CONF_OK      = 0x00000100  // can use even if confused
 };
 
 static void _lugonu_bends_space();
@@ -233,7 +234,7 @@ static const ability_def Ability_List[] =
     // INVOCATIONS:
     // Zin
     { ABIL_ZIN_RECITE, "Recite", 3, 0, 120, 0, ABFLAG_DELAY },
-    { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 100, 2, ABFLAG_CONF_OK },
+    { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 100, 0, ABFLAG_PIETY | ABFLAG_CONF_OK },
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
 
     // The Shining One
@@ -387,7 +388,7 @@ const std::string make_cost_description( ability_type ability )
         ret << "Food";   // randomized and amount hidden from player
     }
 
-    if (abil.piety_cost)
+    if (abil.piety_cost || abil.flags & ABFLAG_PIETY)
     {
         if (!ret.str().empty())
             ret << ", ";

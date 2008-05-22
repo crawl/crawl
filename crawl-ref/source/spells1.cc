@@ -1099,25 +1099,27 @@ stamina_robustness:
                                 (type == 2) ? "better"
                                             : "powerful");
 
-        // The more the step counter has advanced, the greater the piety
-        // cost is.
+        // If vitalisation has succeeded, pay the extended piety cost,
+        // based on how far the step counter has advanced.
         int loss_amt = step + 1 + (random2(3) - 1);
 
         if (loss_amt > 0)
             lose_piety(loss_amt);
-
-        // If there's not enough piety left to vitalise again, turn off
-        // vitalisation chaining.  Note that, if the piety cost for this
-        // in abl-show.cc::Ability_List[] is changed from 2, this needs
-        // to be changed as well.
-        if (you.piety < piety_breakpoint(1) + 2)
-            need_chain = false;
 
         // Increment the step counter.
         step++;
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
+
+    // Whether vitalisation has succeeded or failed, pay the minimum
+    // piety cost.
+    lose_piety(2);
+
+    // If there's not enough piety left to vitalise again, turn off
+    // vitalisation chaining.
+    if (you.piety < piety_breakpoint(1))
+        need_chain = false;
 
     // If vitalisation has succeeded, it hasn't succeeded as far as
     // possible, and vitalisation chaining is needed, turn on
