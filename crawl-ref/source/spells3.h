@@ -36,7 +36,7 @@ int airstrike(int power, dist &beam);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-int cast_bone_shards(int power, bolt &);
+bool cast_bone_shards(int power, bolt &);
 
 
 // updated 24may2000 {dlb}

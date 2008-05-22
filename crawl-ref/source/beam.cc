@@ -211,7 +211,27 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
     zap_animation( element_colour( elem ), mon, force );
 }
 
-bool zapping(zap_type ztype, int power, bolt &pbolt)
+static void _beam_set_default_values(bolt &beam, int power)
+{
+    beam.range          = 8 + random2(5);    // default for "0" beams (I think)
+    beam.rangeMax       = 0;
+    beam.hit            = 0;                 // default for "0" beams (I think)
+    beam.damage         = dice_def( 1, 0 );  // default for "0" beams (I think)
+    beam.type           = 0;                 // default for "0" beams
+    beam.flavour        = BEAM_MAGIC;        // default for "0" beams
+    beam.ench_power     = power;
+    beam.obvious_effect = false;
+    beam.is_beam        = false;             // default for all beams.
+    beam.is_tracer      = false;             // default for all player beams
+    beam.thrower        = KILL_YOU_MISSILE;  // missile from player
+    beam.aux_source.clear();                 // additional source info, unused
+}
+
+// If needs_tracer is true, we need to check the beam path for friendly
+// monsters for *player beams* only! If allies are found, the player is
+// prompted to stop or continue.
+bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
+             std::string msg)
 {
 
 #if DEBUG_DIAGNOSTICS
@@ -222,46 +242,30 @@ bool zapping(zap_type ztype, int power, bolt &pbolt)
     // equal to range.  This is OK, since rangeMax really only matters for
     // stuff monsters throw/zap.
 
-    // all of the following might be changed by zappy():
-    pbolt.range          = 8 + random2(5);    // default for "0" beams (I think)
-    pbolt.rangeMax       = 0;
-    pbolt.hit            = 0;                 // default for "0" beams (I think)
-    pbolt.damage         = dice_def( 1, 0 );  // default for "0" beams (I think)
-    pbolt.type           = 0;                 // default for "0" beams
-    pbolt.flavour        = BEAM_MAGIC;        // default for "0" beams
-    pbolt.ench_power     = power;
-    pbolt.obvious_effect = false;
-    pbolt.is_beam        = false;             // default for all beams.
-    pbolt.is_tracer      = false;             // default for all player beams
-    pbolt.thrower        = KILL_YOU_MISSILE;  // missile from player
-    pbolt.aux_source.clear();                 // additional source info, unused
+    // All of the following settings might be changed by _zappy().
+    _beam_set_default_values(pbolt, power);
+
+    // For player bolts, check whether tracer goes through friendlies.
+    // NOTE: Whenever zapping() is called with a randomized value for power,
+    // player_tracer should be called directly with the highest power possible
+    // respecting current skill, experience level etc.
+
+    if (needs_tracer && pbolt.thrower == KILL_YOU_MISSILE
+        && !player_tracer(ztype, power, pbolt))
+    {
+        return (false);
+    }
 
     // fill in the bolt structure
     _zappy( ztype, power, pbolt );
 
-    if (pbolt.thrower == KILL_YOU_MISSILE)
-    {
-        pbolt.is_tracer = true;
-        // XXX: rangeMax needs to be set appropriately for the tracer!
-        pbolt.attitude  = ATT_FRIENDLY;
-        pbolt.source_x  = you.x_pos;
-        pbolt.source_y  = you.y_pos;
-        fire_beam(pbolt);
-
-        if (pbolt.fr_count > 0 && !yesno("Really fire through this friendly "
-                                         "creature?", true, 'n'))
-        {
-            canned_msg(MSG_OK);
-            you.turn_is_over = false;
-            return (false);
-        }
-        pbolt.is_tracer = false;
-    }
+    if (!msg.empty())
+        mpr(msg.c_str());
 
     if (ztype == ZAP_LIGHTNING && !silenced(you.x_pos, you.y_pos))
     {
         // XXX: needs to check silenced at other location, too {dlb}
-        mpr("You hear a mighty clap of thunder!");
+        mpr("You hear a mighty clap of thunder!", MSGCH_SOUND);
         noisy( 25, you.x_pos, you.y_pos );
     }
 
@@ -269,6 +273,432 @@ bool zapping(zap_type ztype, int power, bolt &pbolt)
 
     return (true);
 }                               // end zapping()
+
+// pbolt needs to be initialized for tracing: with the the maximum range,
+// and the flavour to allow for completely resistant monsters.
+static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
+{
+    // sorted by range
+    switch (z_type)
+    {
+    case ZAP_SMALL_SANDBLAST:
+        pbolt.rangeMax       = 2;
+        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
+        break;
+
+    case ZAP_SANDBLAST:
+        if (power > 50)
+            power = 50;
+
+//      pbolt.range          = 2 + random2(power) / 20;
+        pbolt.rangeMax       = 2 + (power-1) / 20; // max 4
+        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
+        break;
+
+    case ZAP_FLAME_TONGUE:
+        if (power > 25)
+            power = 25;
+
+//      pbolt.range          = 1 + random2(2) + random2(power) / 10;
+        pbolt.rangeMax       = 2 + (power-1) / 10; // max 4
+        pbolt.flavour        = BEAM_FIRE;
+        break;
+
+    case ZAP_CLEANSING_FLAME:
+        pbolt.name           = "golden flame";
+        pbolt.rangeMax       = 7;
+        pbolt.flavour        = BEAM_HOLY;
+        pbolt.is_explosion   = true;
+        break;
+
+    case ZAP_MAGMA:
+        pbolt.rangeMax       = 8;
+        pbolt.flavour        = BEAM_LAVA;
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_IRON_BOLT:
+        pbolt.rangeMax       = 9;
+        pbolt.flavour        = BEAM_MMISSILE;               // unresistable
+        break;
+
+    case ZAP_CRYSTAL_SPEAR:
+        pbolt.rangeMax       = 9;
+        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
+        break;
+
+    case ZAP_SPIT_POISON:
+        if (power > 50)
+            power = 50;
+
+//      pbolt.range          = 3 + random2( 1 + power / 2 );
+        pbolt.rangeMax       = 3 + power / 2;
+        if (pbolt.rangeMax > 9)
+            pbolt.rangeMax = 9;
+
+        pbolt.flavour        = BEAM_POISON;
+        break;
+
+    case ZAP_BREATHE_FIRE:
+        if (power > 50)
+            power = 50;
+
+//      pbolt.range          = 3 + random2( 1 + power / 2 );
+        pbolt.rangeMax       = 3 + power / 2;
+        if (pbolt.rangeMax > 9)
+            pbolt.rangeMax = 9;
+
+        pbolt.flavour        = BEAM_FIRE;
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_BREATHE_FROST:
+        if (power > 50)
+            power = 50;
+
+//      pbolt.range          = 3 + random2( 1 + power / 2 );
+        pbolt.rangeMax       = 3 + power / 2;
+        if (pbolt.rangeMax > 9)
+            pbolt.rangeMax = 9;
+
+        pbolt.flavour        = BEAM_COLD;
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_BREATHE_ACID:
+        if (power > 50)
+            power = 50;
+
+//      pbolt.range          = 3 + random2( 1 + power / 2 );
+        pbolt.rangeMax       = 3 + power / 2;
+        if (pbolt.rangeMax > 9)
+            pbolt.rangeMax = 9;
+
+        pbolt.flavour        = BEAM_ACID;
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_BREATHE_POISON:    // leaves clouds of gas
+        if (power > 50)
+            power = 50;
+
+//      pbolt.range          = 3 + random2( 1 + power / 2 );
+        pbolt.rangeMax       = 3 + power / 2;
+        if (pbolt.rangeMax > 9)
+            pbolt.rangeMax = 9;
+
+        pbolt.flavour        = BEAM_POISON;
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_BREATHE_POWER:
+        if (power > 50)
+            power = 50;
+
+//      pbolt.range          = 6 + random2( 1 + power / 2 );
+        pbolt.rangeMax       = 6 + power / 2;
+        if (pbolt.rangeMax > 9)
+            pbolt.rangeMax = 9;
+
+        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_BREATHE_STEAM:
+        pbolt.rangeMax       = 9;
+        pbolt.flavour        = BEAM_STEAM;
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_STRIKING:
+    case ZAP_MAGIC_DARTS:
+    case ZAP_STONE_ARROW:
+    case ZAP_MYSTIC_BLAST:
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_MMISSILE;               // unresistable
+        break;
+
+    case ZAP_STING:
+    case ZAP_POISON_ARROW:
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_POISON;
+        break;
+
+    case ZAP_FLAME:
+    case ZAP_STICKY_FLAME:
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_FIRE;
+        break;
+
+    case ZAP_FROST:
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_COLD;
+        break;
+
+    case ZAP_ICE_BOLT:
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_ICE;                     // half resistable
+        break;
+
+    case ZAP_ELECTRICITY:
+        pbolt.rangeMax       = 13;
+        pbolt.flavour        = BEAM_ELECTRICITY;           // beams & reflects
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_DISRUPTION:
+    case ZAP_DISINTEGRATION:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 14;
+        pbolt.flavour        = BEAM_DISINTEGRATION;
+        break;
+
+    case ZAP_PAIN:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 14;
+        pbolt.flavour        = BEAM_PAIN;
+        break;
+
+    case ZAP_DISPEL_UNDEAD:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 14;
+        pbolt.flavour        = BEAM_DISPEL_UNDEAD;
+        break;
+
+    case ZAP_FIRE:
+        pbolt.rangeMax       = 16;
+        pbolt.flavour        = BEAM_FIRE;
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_BONE_SHARDS:
+        pbolt.rangeMax       = 16;
+        pbolt.flavour        = BEAM_MAGIC;                      // unresisted
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_COLD:
+        pbolt.rangeMax       = 16;
+        pbolt.flavour        = BEAM_COLD;
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_NEGATIVE_ENERGY:
+        pbolt.rangeMax       = 16;
+        pbolt.flavour        = BEAM_NEG;                     // drains levels
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_BEAM_OF_ENERGY:    // bolt of innacuracy
+        pbolt.range          = 16;
+        pbolt.flavour        = BEAM_ENERGY;                    // unresisted
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_VENOM_BOLT:
+        pbolt.rangeMax       = 17;
+        pbolt.flavour        = BEAM_POISON;
+        pbolt.is_beam        = true;
+        break;
+
+    case ZAP_LIGHTNING:
+        pbolt.rangeMax       = 17;
+        pbolt.flavour        = BEAM_ELECTRICITY;           // beams & reflects
+        pbolt.is_beam        = true;
+        break;
+
+    // enchantments
+    case ZAP_ENSLAVEMENT:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 11;
+        pbolt.flavour        = BEAM_CHARM;
+        break;
+
+    case ZAP_BANISHMENT:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 11;
+        pbolt.flavour        = BEAM_BANISH;
+        break;
+
+    case ZAP_DEGENERATION:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 11;
+        pbolt.flavour        = BEAM_DEGENERATE;
+        break;
+
+    case ZAP_ENSLAVE_UNDEAD:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 11;
+        pbolt.flavour        = BEAM_ENSLAVE_UNDEAD;
+        break;
+
+    case ZAP_CONTROL_DEMON:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 11;
+        pbolt.flavour        = BEAM_ENSLAVE_DEMON;
+        break;
+
+    case ZAP_SLEEP:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 11;
+        pbolt.flavour        = BEAM_SLEEP;
+        break;
+
+    case ZAP_BACKLIGHT:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 11;
+        pbolt.flavour        = BEAM_BACKLIGHT;
+        break;
+
+    case ZAP_SLOWING:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_SLOW;
+        break;
+
+    case ZAP_HASTING:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_HASTE;
+        break;
+
+    case ZAP_PARALYSIS:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_PARALYSIS;
+        break;
+
+    case ZAP_CONFUSION:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_CONFUSION;
+        break;
+
+    case ZAP_INVISIBILITY:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_INVISIBILITY;
+        break;
+
+    case ZAP_HEALING:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_HEALING;
+        break;
+
+    case ZAP_TELEPORTATION:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 13;
+        pbolt.flavour        = BEAM_TELEPORT;
+        break;
+
+    case ZAP_POLYMORPH_OTHER:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 13;
+        pbolt.flavour        = BEAM_POLYMORPH;
+        break;
+
+    case ZAP_AGONY:
+        pbolt.name           = "0agony";
+        pbolt.rangeMax       = 14;
+        pbolt.flavour        = BEAM_PAIN;
+        break;
+
+    case ZAP_DIGGING:
+        pbolt.name           = "0";
+//        pbolt.range          = 3 + random2( power / 5 ) + random2(5);
+        pbolt.rangeMax       = 6 + power / 5;
+        pbolt.flavour        = BEAM_DIGGING;
+        pbolt.is_beam        = true;
+        break;
+
+    // explosions
+    case ZAP_FIREBALL:
+        pbolt.name           = "fireball";
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_FIRE;                      // fire
+        pbolt.is_explosion   = true;
+        break;
+
+    case ZAP_ICE_STORM:
+        pbolt.name           = "great blast of cold";
+        pbolt.rangeMax       = 13;
+        pbolt.ench_power     = power;              // used for radius
+        pbolt.flavour        = BEAM_ICE;           // half resisted
+        pbolt.is_explosion   = true;
+        break;
+
+    case ZAP_ORB_OF_FRAGMENTATION:                      // cap 150
+        pbolt.name           = "metal orb";
+        pbolt.rangeMax       = 16;
+        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
+        pbolt.is_explosion   = true;
+        break;
+
+    case ZAP_HELLFIRE:
+        pbolt.rangeMax       = 16;
+        pbolt.flavour        = BEAM_HELLFIRE;
+        pbolt.is_explosion   = true;
+        break;
+
+    case ZAP_ORB_OF_ELECTRICITY:                        // cap 150
+        pbolt.name           = "orb of electricity";
+        pbolt.rangeMax       = 20;
+        pbolt.flavour        = BEAM_ELECTRICITY;
+        pbolt.is_explosion   = true;
+        break;
+
+    case ZAP_DEBUGGING_RAY:
+    default: // buggy beam
+        pbolt.rangeMax       = 16;
+        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
+        break;
+    }
+}
+
+// FIXME: Also needs to check for fleeing monster with TSO and neutrals for
+//        all good gods.
+bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
+{
+    _beam_set_default_values(pbolt, power);
+    pbolt.name = "unimportant";
+    _get_max_range(ztype, power, pbolt);
+
+    // override range if necessary
+    if (range > 0)
+        pbolt.rangeMax = range;
+
+    pbolt.is_tracer     = true;
+    pbolt.source_x      = you.x_pos;
+    pbolt.source_y      = you.y_pos;
+    pbolt.beam_source   = 0;
+    pbolt.can_see_invis = player_see_invis();
+    pbolt.smart_monster = true;
+    pbolt.attitude      = ATT_FRIENDLY;
+
+    // init tracer variables
+    pbolt.foe_count     = pbolt.fr_count = 0;
+    pbolt.foe_power     = pbolt.fr_power = 0;
+    pbolt.fr_helped     = pbolt.fr_hurt  = 0;
+    pbolt.foe_helped    = pbolt.foe_hurt = 0;
+    pbolt.foe_ratio     = 100;
+
+    fire_beam(pbolt);
+
+    // Should only happen if the player answered 'n' to one of those
+    // "Fire through friendly?" prompts.
+    if (pbolt.fr_count > 0)
+    {
+        canned_msg(MSG_OK);
+        you.turn_is_over = false;
+        return (false);
+    }
+
+    // Set to non-tracing for actual firing.
+    pbolt.is_tracer = false;
+    return (true);
+
+}
 
 dice_def calc_dice( int num_dice, int max_damage )
 {
@@ -295,8 +725,7 @@ dice_def calc_dice( int num_dice, int max_damage )
     return (ret);
 }
 
-// *do not* call this function directly (duh - it's static), need to
-// see zapping() for default values not set within this function {dlb}
+// Need to see zapping() for default values not set within this function {dlb}
 static void _zappy( zap_type z_type, int power, bolt &pbolt )
 {
     int temp_rand = 0;          // probability determination {dlb}
@@ -1353,7 +1782,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
     if (!pbolt.aimed_at_feet)
         ray.advance_through(pbolt.target());
 
-    // give chance for beam to affect one cell even if aimed_at_feet.
+    // Give chance for beam to affect one cell even if aimed_at_feet.
     beamTerminate = false;
 
     // setup range
@@ -1385,15 +1814,15 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         // See if tx, ty is blocked by something.
         if (grid_is_solid(grd[tx][ty]))
         {
-            // first, check to see if this beam affects walls.
+            // First, check to see if this beam affects walls.
             if (_affects_wall(pbolt, grd[tx][ty]))
             {
-                // should we ever get a tracer with a wall-affecting
+                // Should we ever get a tracer with a wall-affecting
                 // beam (possible I suppose), we'll quit tracing now.
                 if (!pbolt.is_tracer)
                     rangeRemaining -= affect(pbolt, tx, ty, item);
 
-                // if it's still a wall, quit.
+                // If it's still a wall, quit.
                 if (grid_is_solid(grd[tx][ty]))
                     break;      // breaks from line tracing
             }
@@ -1441,23 +1870,23 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             } // end else - beam doesn't affect walls
         } // endif - is tx, ty wall?
 
-        // at this point, if grd[tx][ty] is still a wall, we
+        // At this point, if grd[tx][ty] is still a wall, we
         // couldn't find any path: bouncy, fuzzy, or not - so break.
         if (grid_is_solid(grd[tx][ty]))
             break;
 
-        // check for "target termination"
+        // Check for "target termination"
         // occurs when beam can be targetted at empty
         // cell (e.g. a mage wants an explosion to happen
-        // between two monsters)
+        // between two monsters).
 
-        // in this case, don't affect the cell - players and
+        // In this case, don't affect the cell - players and
         // monsters have no chance to dodge or block such
         // a beam, and we want to avoid silly messages.
         if (tx == pbolt.target_x && ty == pbolt.target_y)
             beamTerminate = _beam_term_on_target(pbolt, tx, ty);
 
-        // affect the cell, except in the special case noted
+        // Affect the cell, except in the special case noted
         // above -- affect() will early out if something gets
         // hit and the beam is type 'term on target'.
         if (!beamTerminate || !pbolt.is_explosion)
@@ -1467,9 +1896,8 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             if (pbolt.flavour == BEAM_RANDOM)
             {
                 random_beam = true;
-                pbolt.flavour =
-                    static_cast<beam_type>(
-                        random_range(BEAM_FIRE, BEAM_ACID) );
+                pbolt.flavour = static_cast<beam_type>(
+                                    random_range(BEAM_FIRE, BEAM_ACID));
             }
 
             if (!pbolt.affects_nothing)
@@ -1482,22 +1910,22 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             }
         }
 
-        // always decrease range by 1
+        // Always decrease range by 1.
         rangeRemaining -= 1;
 
-        // check for range termination
+        // Check for range termination.
         if (rangeRemaining <= 0)
             beamTerminate = true;
 
-        // special case - beam was aimed at feet
+        // Special case - beam was aimed at feet.
         if (pbolt.aimed_at_feet)
             beamTerminate = true;
 
-        // actually draw the beam/missile/whatever,
+        // Actually draw the beam/missile/whatever,
         // if the player can see the cell.
         if (!pbolt.is_tracer && pbolt.name[0] != '0' && see_grid(tx,ty))
         {
-            // we don't clean up the old position.
+            // We don't clean up the old position.
             // First, most people like to see the full path,
             // and second, it is hard to do it right with
             // respect to killed monsters, cloud trails, etc.
@@ -1510,8 +1938,8 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             if (tile_beam == -1)
                 tile_beam = tileidx_bolt(pbolt);
 
-            if (tile_beam != -1 && in_los_bounds(drawx, drawy) &&
-                (tx != you.x_pos || ty != you.y_pos))
+            if (tile_beam != -1 && in_los_bounds(drawx, drawy)
+                && (tx != you.x_pos || ty != you.y_pos))
             {
                 TileDrawBolt(drawx-1, drawy-1, tile_beam);
                 delay(15);
@@ -1554,7 +1982,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 
     ASSERT(!drop_item || item);
 
-    // check for explosion.  NOTE that for tracers, we have to make a copy
+    // Check for explosion.  NOTE that for tracers, we have to make a copy
     // of target co-ords and then reset after calling this -- tracers should
     // never change any non-tracers fields in the beam structure. -- GDL
     int ox = pbolt.target_x;
@@ -1568,7 +1996,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         pbolt.target_y = oy;
     }
 
-    // canned msg for enchantments that affected no-one, but only if the
+    // Canned msg for enchantments that affected no-one, but only if the
     // enchantment is yours.
     if (pbolt.name[0] == '0')
     {
@@ -1603,7 +2031,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 }
 
 
-// returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
+// Returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
 // attack -- damage from clouds and branded weapons handled elsewhere.
 int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                            int hurted, bool doFlavouredEffects )
@@ -2126,7 +2554,8 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         if (monster->add_ench( mon_enchant(ENCH_CONFUSION, 0,
                                _whose_kill(pbolt)) ))
         {
-            // put in an exception for things you won't notice becoming confused.
+            // Put in an exception for things you won't notice becoming
+            // confused.
             if (simple_monster_message(monster, " appears confused."))
                 pbolt.obvious_effect = true;
         }
@@ -2173,8 +2602,8 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
 
         if (monster->add_ench(ENCH_CHARM))
         {
-            // put in an exception for fungi, plants and other things you won't
-            // notice becoming charmed.
+            // Put in an exception for fungi, plants and other things
+            // you won't notice becoming charmed.
             if (simple_monster_message(monster, " is charmed."))
                 pbolt.obvious_effect = true;
         }
@@ -2519,11 +2948,12 @@ static bool _beam_term_on_target(bolt &beam, int x, int y)
 {
     if (beam.flavour == BEAM_LINE_OF_SIGHT)
     {
-        beam.foe_count++;
+        if (beam.thrower != KILL_YOU_MISSILE)
+            beam.foe_count++;
         return (true);
     }
 
-    // generic - all explosion-type beams can be targeted at empty space,
+    // Generic - all explosion-type beams can be targeted at empty space,
     // and will explode there.  This semantic also means that a creature
     // in the target cell will have no chance to dodge or block, so we
     // DON'T affect() the cell if this function returns true!
@@ -2553,7 +2983,7 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
 {
     ASSERT( item != NULL );
 
-    // conditions: beam is missile and not tracer.
+    // Conditions: beam is missile and not tracer.
     if (beam.is_tracer || beam.flavour != BEAM_MISSILE)
         return;
 
@@ -2565,12 +2995,12 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
     {
         if (item->sub_type == MI_THROWING_NET)
         {
-            // player or monster on position is caught in net
+            // Player or monster on position is caught in net.
             if (you.x_pos == x && you.y_pos == y && you.attribute[ATTR_HELD]
                 || mgrd[x][y] != NON_MONSTER &&
                     mons_is_caught(&menv[mgrd[x][y]]))
             {
-                // if no trapping net found mark this one
+                // If no trapping net found mark this one.
                 if (get_trapping_net(x,y, true) == NON_ITEM)
                     set_item_stationary(*item);
             }
@@ -2593,10 +3023,10 @@ static bool _found_player(const bolt &beam, int x, int y)
 
 int affect(bolt &beam, int x, int y, item_def *item)
 {
-    // extra range used by hitting something
+    // Extra range used by hitting something.
     int rangeUsed = 0;
 
-    // line of sight never affects anything
+    // Line of sight never affects anything.
     if (beam.flavour == BEAM_LINE_OF_SIGHT)
         return (0);
 
@@ -2724,7 +3154,7 @@ static bool _affects_wall(const bolt &beam, int wall)
     return (false);
 }
 
-// return amount of extra range used up by affectation of this wall.
+// Returns amount of extra range used up by affectation of this wall.
 static int _affect_wall(bolt &beam, int x, int y)
 {
     int rangeUsed = 0;
@@ -2746,7 +3176,7 @@ static int _affect_wall(bolt &beam, int x, int y)
         {
             grd[x][y] = DNGN_FLOOR;
 
-            // blood does not transfer onto floor
+            // Blood does not transfer onto floor.
             if (is_bloodcovered(x,y))
                 env.map[x][y].property = FPROP_NONE;
 
@@ -2822,7 +3252,7 @@ static int _affect_wall(bolt &beam, int x, int y)
         {
             grd[x][y] = DNGN_FLOOR;
 
-            // blood does not transfer onto floor
+            // Blood does not transfer onto floor.
             if (is_bloodcovered(x,y))
                 env.map[x][y].property = FPROP_NONE;
 
@@ -3105,7 +3535,7 @@ static std::string _beam_zapper(const bolt &beam)
         return menv[beam_src].name(DESC_PLAIN);
 }
 
-// return amount of extra range used up by affectation of the player
+// Returns amount of extra range used up by affectation of the player.
 static int _affect_player( bolt &beam, item_def *item )
 {
     // digging -- don't care.
@@ -3115,8 +3545,10 @@ static int _affect_player( bolt &beam, item_def *item )
     // check for tracer
     if (beam.is_tracer)
     {
-        // check can see player
-        if (beam.can_see_invis || !you.invisible() || _fuzz_invis_tracer(beam))
+        // Check whether thrower can see player, unless thrower == player.
+        if (beam.thrower != KILL_YOU_MISSILE
+            && (beam.can_see_invis || !you.invisible()
+                || _fuzz_invis_tracer(beam)))
         {
             if (mons_att_wont_attack(beam.attitude))
             {
@@ -3125,8 +3557,11 @@ static int _affect_player( bolt &beam, item_def *item )
             }
             else
             {
-                beam.foe_count++;
-                beam.foe_power += you.experience_level;
+                if (beam.thrower != KILL_YOU_MISSILE)
+                {
+                    beam.foe_count++;
+                    beam.foe_power += you.experience_level;
+                }
             }
         }
         return (_range_used_on_hit(beam));
@@ -3140,7 +3575,7 @@ static int _affect_player( bolt &beam, item_def *item )
     // BEGIN real beam code
     beam.msg_generated = true;
 
-    // use beamHit, NOT beam.hit, for modification of tohit.. geez!
+    // Use beamHit, NOT beam.hit, for modification of tohit.. geez!
     int beamHit = beam.hit;
 
     // Monsters shooting at an invisible player are very inaccurate.
@@ -3156,7 +3591,7 @@ static int _affect_player( bolt &beam, item_def *item )
 
             if (beam.is_beam)
             {
-                // beams can be dodged
+                // Beams can be dodged.
                 if (player_light_armour(true)
                     && !beam.aimed_at_feet && coinflip())
                 {
@@ -3201,7 +3636,7 @@ static int _affect_player( bolt &beam, item_def *item )
                         return (BEAM_STOP);
                     }
 
-                    // some training just for the "attempt"
+                    // Some training just for the "attempt".
                     if (coinflip())
                         exercise( SK_SHIELDS, exer );
                 }
@@ -3447,10 +3882,10 @@ static int _affect_player( bolt &beam, item_def *item )
             {
                 beam.fr_hurt++;
                 if (beam.beam_source == NON_MONSTER)
-                    // Beam from player rebounded and hit player
+                    // Beam from player rebounded and hit player.
                     xom_is_stimulated(255);
                 else
-                    // Beam from an ally or neutral
+                    // Beam from an ally or neutral.
                     xom_is_stimulated(128);
             }
             else
@@ -3468,7 +3903,7 @@ static int _affect_player( bolt &beam, item_def *item )
             }
         }
 
-        // regardless of affect, we need to know if this is a stopper
+        // Regardless of affect, we need to know if this is a stopper
         // or not - it seems all of the above are.
         return (_range_used_on_hit(beam));
 
@@ -3485,7 +3920,7 @@ static int _affect_player( bolt &beam, item_def *item )
     int burn_power = (beam.is_explosion) ? 5 :
                           (beam.is_beam) ? 3 : 2;
 
-    // Roll the damage
+    // Roll the damage.
     hurted += roll_dice( beam.damage );
 
 #if DEBUG_DIAGNOSTICS
@@ -3524,8 +3959,8 @@ static int _affect_player( bolt &beam, item_def *item )
     if (hurted < 0)
         hurted = 0;
 
-    // if the beam is an actual missile or of the MMISSILE type (Earth magic)
-    // might bleed on the floor
+    // If the beam is an actual missile or of the MMISSILE type (Earth magic)
+    // might bleed on the floor.
     if (!engulfs
         && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE))
     {
@@ -3669,7 +4104,7 @@ static int _name_to_skill_level(const std::string& name)
 
 static void _update_hurt_or_helped(bolt &beam, monsters *mon)
 {
-    if (mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+    if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
     {
         if (nasty_beam(mon, beam))
             beam.foe_hurt++;
@@ -3682,7 +4117,7 @@ static void _update_hurt_or_helped(bolt &beam, monsters *mon)
         {
             beam.fr_hurt++;
 
-            // Harmful beam from this monster rebounded and hit the monster
+            // Harmful beam from this monster rebounded and hit the monster.
             int midx = monster_index(mon);
             if (midx == beam.beam_source)
                 xom_is_stimulated(128);
@@ -3721,7 +4156,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         // check can see other monster
         if (!beam.can_see_invis && menv[tid].invisible())
         {
-            // can't see this monster, ignore it
+            // Can't see this monster, ignore it.
             return 0;
         }
     }
@@ -3755,16 +4190,36 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (beam.is_tracer)
         {
-            // enchant case -- enchantments always hit, so update target immed.
-            if (mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+            // Enchant case -- enchantments always hit, so update target immed.
+            if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
             {
-                beam.foe_count += 1;
-                beam.foe_power += mons_power(mons_type);
+                if (beam.thrower != KILL_YOU_MISSILE)
+                {
+                    beam.foe_count += 1;
+                    beam.foe_power += mons_power(mons_type);
+                }
             }
             else
             {
-                beam.fr_count += 1;
-                beam.fr_power += mons_power(mons_type);
+                bool count_friend = true;
+                if (beam.thrower == KILL_YOU_MISSILE)
+                {
+                    snprintf(info, INFO_SIZE, "Really fire through %s?",
+                             mon->name(DESC_NOCAP_THE).c_str());
+
+                    if (!yesno(info))
+                    {
+                        beam.fr_count = 1;
+                        return (BEAM_STOP);
+                    }
+                    else
+                        count_friend = false;
+                }
+                if (count_friend)
+                {
+                    beam.fr_count += 1;
+                    beam.fr_power += mons_power(mons_type);
+                }
             }
 
             return (_range_used_on_hit(beam));
@@ -3779,8 +4234,8 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         god_conduct_trigger conduct;
         conduct.enabled = false;
 
-        // nasty enchantments will annoy the monster, and are considered
-        // naughty (even if a monster might resist)
+        // Nasty enchantments will annoy the monster, and are considered
+        // naughty (even if a monster might resist).
         if (nasty_beam(mon, beam))
         {
             if (YOU_KILL( beam.thrower ))
@@ -3864,7 +4319,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     if (submerged && !beam.aimed_at_spot)
         return (0);                   // missed me!
 
-    // we need to know how much the monster _would_ be hurt by this, before
+    // We need to know how much the monster _would_ be hurt by this, before
     // we decide if it actually hits.
 
     // Roll the damage:
@@ -3905,7 +4360,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
     const int raw_damage = hurt_final;
 
-    // check monster resists, _without_ side effects (since the
+    // Check monster resists, _without_ side effects (since the
     // beam/missile might yet miss!)
     hurt_final = mons_adjust_flavoured( mon, beam, raw_damage, false );
 
@@ -3922,34 +4377,61 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     // hurt by this beam.
     if (beam.is_tracer)
     {
-        if (hurt_final > 0)
+        // Check only if actual damage, but always count friends for player.
+        if (hurt_final > 0 || beam.thrower == KILL_YOU_MISSILE)
         {
-            // monster could be hurt somewhat, but only apply the
+            // Monster could be hurt somewhat, but only apply the
             // monster's power based on how badly it is affected.
             // For example, if a fire giant (power 16) threw a
             // fireball at another fire giant, and it only took
             // 1/3 damage, then power of 5 would be applied to
             // foe_power or fr_power.
-            if (mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+            if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
             {
-                beam.foe_count += 1;
-                beam.foe_power += 2 * hurt_final * mons_power(mons_type) / hurt;
+                if (beam.thrower != KILL_YOU_MISSILE)
+                {
+                    // Counting foes is only important for monster tracers.
+                    beam.foe_count += 1;
+                    beam.foe_power += 2 * hurt_final * mons_power(mons_type)
+                                                        / hurt;
+                }
             }
             else
             {
-                beam.fr_count += 1;
-                beam.fr_power += 2 * hurt_final * mons_power(mons_type) / hurt;
+                bool count_friend = true;
+                if (beam.thrower == KILL_YOU_MISSILE)
+                {
+                    snprintf(info, INFO_SIZE, "Really fire through %s?",
+                             mon->name(DESC_NOCAP_THE).c_str());
+
+                    if (!yesno(info))
+                    {
+                        beam.fr_count = 1;
+                        return (BEAM_STOP);
+                    }
+                    else
+                    {
+                        // Don't count friends we don't want counted.
+                        count_friend = false;
+                    }
+                }
+                if (count_friend)
+                {
+                    beam.fr_count += 1;
+                    beam.fr_power += 2 * hurt_final * mons_power(mons_type)
+                                                       / hurt;
+                }
             }
         }
 
-        // either way, we could hit this monster, so return range used
+        // Either way, we could hit this monster, so return range used.
         return (_range_used_on_hit(beam));
     }
     // END non-enchantment (could still be tracer)
 
     // BEGIN real non-enchantment beam
 
-    // player beams which hit friendlies or good neutrals will annoy
+    // Player beams which hit friendlies or good neutrals will annoy
     // them and be considered naughty if they do damage (this is so as
     // not to penalize players that fling fireballs into a melee with
     // fire elementals on their side - the elementals won't give a sh*t,
@@ -4010,7 +4492,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     // to-hit system (which had very little love for monsters).
     if (!engulfs && !test_beam_hit(beam_hit, random2(mon->ev)))
     {
-        // if the PLAYER cannot see the monster, don't tell them anything!
+        // If the PLAYER cannot see the monster, don't tell them anything!
         if (player_monster_visible( &menv[tid] ) && mons_near(mon))
         {
             msg::stream << "The " << beam.name << " misses "
@@ -4071,13 +4553,13 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         monster_caught_in_net(mon, beam);
     }
 
-    // note that hurt_final was calculated above, so we don't need it again.
+    // Note that hurt_final was calculated above, so we don't need it again.
     // just need to apply flavoured specials (since we called with
-    // doFlavouredEffects = false above)
+    // doFlavouredEffects = false above).
     hurt_final = mons_adjust_flavoured(mon, beam, raw_damage);
 
-    // if the beam is an actual missile or of the MMISSILE type (Earth magic)
-    // might bleed on the floor
+    // If the beam is an actual missile or of the MMISSILE type (Earth magic)
+    // might bleed on the floor.
     if (!engulfs
         && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE))
     {
@@ -4444,7 +4926,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
 // extra range used on hit
 static int _range_used_on_hit(bolt &beam)
 {
-    // non-beams can only affect one thing (player/monster)
+    // Non-beams can only affect one thing (player/monster).
     if (!beam.is_beam)
         return (BEAM_STOP);
 
@@ -4479,7 +4961,7 @@ static int _range_used_on_hit(bolt &beam)
         return (0);
     }
 
-    // hellfire stops for nobody!
+    // Hellfire stops for nobody!
     if (beam.name == "hellfire")
         return (0);
 
@@ -4491,11 +4973,11 @@ static int _range_used_on_hit(bolt &beam)
     if (beam.flavour == BEAM_ACID)
         return (BEAM_STOP);
 
-    // lava doesn't go far, but it goes through most stuff
+    // Lava doesn't go far, but it goes through most stuff.
     if (beam.flavour == BEAM_LAVA)
         return (1);
 
-    // If it isn't lightning, reduce range by a lot
+    // If it isn't lightning, reduce range by a lot.
     if (beam.flavour != BEAM_ELECTRICITY)
         return (random2(4) + 2);
 
@@ -4574,7 +5056,8 @@ static void _explosion1(bolt &pbolt)
 
         pbolt.name    = "blast of shrapnel";
         pbolt.type    = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_FRAG;     // sets it from pure damage to shrapnel (which is absorbed extra by armour)
+        pbolt.flavour = BEAM_FRAG;     // Sets it from pure damage to shrapnel
+                                       // (which is absorbed extra by armour).
     }
 
     if (pbolt.name == "great blast of cold")
@@ -4613,14 +5096,14 @@ static void _explosion1(bolt &pbolt)
     if (!pbolt.is_tracer && *seeMsg && *hearMsg)
     {
         // check for see/hear/no msg
-        if (see_grid(x,y) || (x == you.x_pos && y == you.y_pos))
+        if (see_grid(x,y) || x == you.x_pos && y == you.y_pos)
             mpr(seeMsg);
         else
         {
-            if (!(silenced(x,y) || silenced(you.x_pos, you.y_pos)))
-                mpr(hearMsg, MSGCH_SOUND);
-            else
+            if (silenced(x,y) || silenced(you.x_pos, you.y_pos))
                 pbolt.msg_generated = false;
+            else
+                mpr(hearMsg, MSGCH_SOUND);
         }
     }
 

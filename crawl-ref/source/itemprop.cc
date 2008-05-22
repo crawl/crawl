@@ -42,7 +42,7 @@
 #include "xom.h"
 
 
-// XXX: name strings in most of the following are currently unused!
+// XXX: Name strings in most of the following are currently unused!
 struct armour_def
 {
     armour_type         id;
@@ -139,7 +139,7 @@ static armour_def Armour_prop[NUM_ARMOURS] =
     { ARM_BOOTS,                "boots",                  1,  0,   30,
         true,  EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM },
     // Changed max. barding size to large to allow for the appropriate
-    // monsters that don't differentiate between torso and general.
+    // monster types (monsters don't differentiate between torso and general).
     { ARM_CENTAUR_BARDING,      "centaur barding",        4, -2,  100,
         true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
     { ARM_NAGA_BARDING,         "naga barding",           4, -2,  100,
@@ -397,7 +397,7 @@ struct food_def
 
 // NOTE: Any food with special random messages or side effects
 // currently only takes one turn to eat (except ghouls and chunks)...
-// if this changes then those items will have to have special code
+// If this changes then those items will have to have special code
 // (like ghoul chunks) to guarantee that the special thing is only
 // done once.  See the ghoul eating code over in food.cc.
 static int Food_index[NUM_FOODS];
@@ -433,7 +433,7 @@ static food_def Food_prop[NUM_FOODS] =
 // be accessed correctly.
 void init_properties()
 {
-    // compare with enum comments, to catch changes
+    // Compare with enum comments, to catch changes.
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
     COMPILE_CHECK(NUM_WEAPONS  == 55, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
@@ -591,11 +591,11 @@ void unset_ident_flags( item_def &item, unsigned long flags )
 }
 
 // Returns the mask of interesting identify bits for this item
-// (e.g., scrolls don't have know-cursedness.)
+// (e.g., scrolls don't have know-cursedness).
 unsigned long full_ident_mask( const item_def& item )
 {
     unsigned long flagset = ISFLAG_IDENT_MASK;
-    switch ( item.base_type )
+    switch (item.base_type)
     {
     case OBJ_FOOD:
     case OBJ_CORPSES:
@@ -636,10 +636,9 @@ unsigned long full_ident_mask( const item_def& item )
     if (item_type_known(item))
         flagset &= (~ISFLAG_KNOW_TYPE);
 
-    if ( is_artefact(item) )
-    {
+    if (is_artefact(item))
         flagset |= ISFLAG_KNOW_PROPERTIES;
-    }
+
     return flagset;
 }
 
@@ -989,7 +988,7 @@ bool hide2armour( item_def &item )
     return (true);
 }                               // end hide2armour()
 
-// Return the enchantment limit of a piece of armour
+// Return the enchantment limit of a piece of armour.
 int armour_max_enchant( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_ARMOUR );
@@ -1003,7 +1002,7 @@ int armour_max_enchant( const item_def &item )
     return (max_plus);
 }
 
-// doesn't include animal skin (only skins we can make and enchant)
+// Doesn't include animal skin (only skins we can make and enchant).
 bool armour_is_hide( const item_def &item, bool inc_made )
 {
     ASSERT( item.base_type == OBJ_ARMOUR );
@@ -1037,7 +1036,7 @@ bool armour_is_hide( const item_def &item, bool inc_made )
     return (false);
 }
 
-// used to distinguish shiny and embroidered
+// Used to distinguish shiny and embroidered.
 bool armour_not_shiny( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_ARMOUR );
@@ -1127,7 +1126,7 @@ bool base_armour_is_light( const item_def &item )
     return (Armour_prop[ Armour_index[item.sub_type] ].light);
 }
 
-// returns number of sizes off
+// Returns number of sizes off (0 if fitting).
 int fit_armour_size( const item_def &item, size_type size )
 {
     ASSERT( item.base_type == OBJ_ARMOUR );
@@ -1143,7 +1142,7 @@ int fit_armour_size( const item_def &item, size_type size )
     return (0);
 }
 
-// returns true if armour fits size (shape needs additional verification)
+// Returns true if armour fits size (shape needs additional verification).
 bool check_armour_size( const item_def &item, size_type size )
 {
     ASSERT( item.base_type == OBJ_ARMOUR );
@@ -1258,7 +1257,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
             break;
 
         case EQ_BODY_ARMOUR:
-            // Cannot swim in heavy armour
+            // Cannot swim in heavy armour.
             if (player_is_swimming() && !is_light_armour( item ))
             {
                 if (!quiet)
@@ -1314,7 +1313,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
     return (true);
 }
 
-// if known is true, only returns true for *known* weapons of electrocution
+// If known is true, only returns true for *known* weapons of electrocution.
 bool item_is_rechargable(const item_def &it, bool known)
 {
     // These are obvious
@@ -1323,9 +1322,9 @@ bool item_is_rechargable(const item_def &it, bool known)
 
     // ... but electro-weapons can also be charged
     return ( it.base_type == OBJ_WEAPONS
-             && !is_random_artefact( it )
-             && !is_fixed_artefact( it )
-             && get_weapon_brand( it ) == SPWPN_ELECTROCUTION
+             && !is_random_artefact(it)
+             && !is_fixed_artefact(it)
+             && get_weapon_brand(it) == SPWPN_ELECTROCUTION
              && (!known || item_type_known(it)) );
 }
 
@@ -1338,19 +1337,19 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
 //    if (!item_is_equipped(wpn))
 //        return (false);
 
-    // artefacts cannot be enchanted (missiles can't be artefacts)
+    // Artefacts cannot be enchanted (missiles can't be artefacts).
     if (wpn.base_type == OBJ_WEAPONS
-        && (is_fixed_artefact( wpn )
-            || is_random_artefact( wpn )))
+        && (is_fixed_artefact(wpn)
+            || is_random_artefact(wpn)))
     {
         return (uncurse && item_cursed( wpn )); // ?EW may uncurse artefacts
     }
 
     // Nor can highly enchanted items (missiles only have one stat)
-    if ( wpn.plus >= 9
-         || wpn.base_type == OBJ_WEAPONS && wpn.plus2 >= 9 )
+    if (wpn.plus >= 9
+        || wpn.base_type == OBJ_WEAPONS && wpn.plus2 >= 9)
     {
-        return (uncurse && item_cursed( wpn )); // ?EW may uncurse items
+        return (uncurse && item_cursed( wpn )); // ?EW may uncurse items.
     }
 
     return (true);
@@ -1361,23 +1360,19 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse)
     if (arm.base_type != OBJ_ARMOUR)
         return (false);
 
-    // only equipped items should be affected
-//    if (!item_is_equipped(arm))
-//        return (false);
-
-    // artefacts cannot be enchanted
-    if (is_fixed_artefact( arm )
-        || is_random_artefact( arm ))
+    // Artefacts cannot be enchanted.
+    if (is_fixed_artefact(arm)
+        || is_random_artefact(arm))
     {
-        return (uncurse && item_cursed( arm )); // ?EA may uncurse artefacts
+        return (uncurse && item_cursed(arm)); // ?EA may uncurse artefacts.
     }
 
-    // Nor can highly enchanted items
-    if ( arm.plus >= 2
-         && (arm.sub_type >= ARM_CLOAK && arm.sub_type <= ARM_BOOTS
-             || is_shield(arm)) )
+    // Nor can highly enchanted items.
+    if (arm.plus >= 2
+        && (arm.sub_type >= ARM_CLOAK && arm.sub_type <= ARM_BOOTS
+            || is_shield(arm)))
     {
-        return (uncurse && item_cursed( arm )); // ?EA may uncurse items
+        return (uncurse && item_cursed(arm)); // ?EA may uncurse items.
     }
 
     return (true);
@@ -1468,7 +1463,7 @@ int weapon_rarity( int w_type )
     case WPN_BLESSED_DOUBLE_SWORD:
     case WPN_BLESSED_GREAT_SWORD:
     case WPN_BLESSED_TRIPLE_SWORD:
-        // zero value weapons must be placed specially -- see make_item() {dlb}
+        // Zero value weapons must be placed specially -- see make_item() {dlb}
         return (0);
 
     default:
@@ -1476,7 +1471,7 @@ int weapon_rarity( int w_type )
     }
 
     return (0);
-}                               // end rare_weapon()
+}
 
 int get_vorpal_type( const item_def &item )
 {
@@ -1486,7 +1481,7 @@ int get_vorpal_type( const item_def &item )
         ret = (Weapon_prop[ Weapon_index[item.sub_type] ].dam_type & DAMV_MASK);
 
     return (ret);
-}                               // end vorpal_type()
+}
 
 int get_damage_type( const item_def &item )
 {
@@ -1496,12 +1491,12 @@ int get_damage_type( const item_def &item )
         ret = (Weapon_prop[ Weapon_index[item.sub_type] ].dam_type & DAM_MASK);
 
     return (ret);
-}                               // end damage_type()
+}
 
 bool does_damage_type( const item_def &item, int dam_type )
 {
     return (get_damage_type( item ) & dam_type);
-}                               // end does_damage_type()
+}
 
 
 hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
@@ -1513,7 +1508,7 @@ hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
     return hands_reqd(item, size);
 }
 
-// give hands required to wield weapon for a torso of "size"
+// Give hands required to wield weapon for a torso of "size".
 hands_reqd_type hands_reqd( const item_def &item, size_type size )
 {
     int         ret = HANDS_ONE;
@@ -1541,14 +1536,14 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
 
         ret = Weapon_prop[ Weapon_index[item.sub_type] ].hands;
 
-        // size is the level where we can use one hand for one end
+        // Size is the level where we can use one hand for one end.
         if (ret == HANDS_DOUBLE)
         {
             doub = true;
-            ret = HANDS_TWO; // HANDS_HALF once double-ended is implemented
+            ret = HANDS_TWO; // HANDS_HALF once double-ended is implemented.
         }
 
-        // adjust handedness for size only for non-whip melee weapons
+        // Adjust handedness for size only for non-whip melee weapons.
         if (!is_range_weapon( item )
             && item.sub_type != WPN_WHIP
             && item.sub_type != WPN_DEMON_WHIP)
@@ -1775,7 +1770,7 @@ int weapon_str_required( const item_def &wpn, bool hand_half )
     return ((req < STR_REQ_THRESHOLD) ? 0 : req);
 }
 
-// returns melee skill of item
+// Returns melee skill of item.
 skill_type weapon_skill( const item_def &item )
 {
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon( item ))
@@ -1783,11 +1778,11 @@ skill_type weapon_skill( const item_def &item )
     else if (item.base_type == OBJ_STAVES)
         return (SK_STAVES);
 
-    // this is used to mark that only fighting applies.
+    // This is used to mark that only fighting applies.
     return (SK_FIGHTING);
 }
 
-// front function for the above when we don't have a physical item to check
+// Front function for the above when we don't have a physical item to check.
 skill_type weapon_skill( object_class_type wclass, int wtype )
 {
     item_def    wpn;
@@ -1796,9 +1791,9 @@ skill_type weapon_skill( object_class_type wclass, int wtype )
     wpn.sub_type = wtype;
 
     return (weapon_skill( wpn ));
-}                               // end weapon_skill()
+}
 
-// returns range skill of the item
+// Returns range skill of the item.
 skill_type range_skill( const item_def &item )
 {
     if (item.base_type == OBJ_WEAPONS && is_range_weapon( item ))
@@ -1816,7 +1811,7 @@ skill_type range_skill( const item_def &item )
     return (SK_THROWING);
 }
 
-// front function for the above when we don't have a physical item to check
+// Front function for the above when we don't have a physical item to check.
 skill_type range_skill( object_class_type wclass, int wtype )
 {
     item_def    wpn;
@@ -1825,7 +1820,7 @@ skill_type range_skill( object_class_type wclass, int wtype )
     wpn.sub_type = wtype;
 
     return (range_skill( wpn ));
-}                               // end weapon_skill()
+}
 
 
 // Calculate the bonus to melee EV for using "wpn", with "skill" and "dex"
@@ -1837,20 +1832,20 @@ int weapon_ev_bonus( const item_def &wpn, int skill, size_type body, int dex,
 
     int ret = 0;
 
-    // Note: ret currently measured in halves (see skill factor)
+    // Note: ret currently measured in halves (see skill factor).
     if (wpn.sub_type == WPN_WHIP || wpn.sub_type == WPN_DEMON_WHIP)
         ret = 3 + (dex / 5);
     else if (weapon_skill( wpn ) == SK_POLEARMS)
         ret = 2 + (dex / 5);
 
-    // weapons of reaching are naturally a bit longer/flexier
+    // Weapons of reaching are naturally a bit longer/flexier.
     if (!hide_hidden || item_type_known( wpn ))
     {
         if (get_weapon_brand( wpn ) == SPWPN_REACHING)
             ret += 1;
     }
 
-    // only consider additional modifications if we have a positive base:
+    // Only consider additional modifications if we have a positive base:
     if (ret > 0)
     {
         // Size factors:
@@ -1864,12 +1859,12 @@ int weapon_ev_bonus( const item_def &wpn, int skill, size_type body, int dex,
         // apply skill (and dividing by 2)
         ret = (ret * (skill + 10)) / 20;
 
-        // make sure things can't get too insane
+        // Make sure things can't get too insane.
         if (ret > 8)
             ret = 8 + (ret - 8) / 2;
     }
 
-    // Note: this is always a bonus
+    // Note: this is always a bonus.
     return ((ret > 0) ? ret : 0);
 }
 
@@ -1883,7 +1878,7 @@ static size_type weapon_size( const item_def &item )
     return (Weapon_prop[ Weapon_index[item.sub_type] ].fit_size);
 }
 
-// returns number of sizes off
+// Returns number of sizes off.
 int cmp_weapon_size( const item_def &item, size_type size )
 {
     ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
@@ -1891,14 +1886,15 @@ int cmp_weapon_size( const item_def &item, size_type size )
     return (weapon_size( item ) - size);
 }
 
-// Returns number of sizes away from being a usable weapon
+// Returns number of sizes away from being a usable weapon.
 int fit_weapon_wieldable_size( const item_def &item, size_type size )
 {
     ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
 
     const int fit = cmp_weapon_size( item, size );
 
-    return ((fit < -2) ? fit + 2 : (fit > 1) ? fit - 1 : 0);
+    return ((fit < -2) ? fit + 2 :
+            (fit >  1) ? fit - 1 : 0);
 }
 
 // Returns number of sizes away from being throwable... the window
@@ -1907,11 +1903,13 @@ int fit_item_throwable_size( const item_def &item, size_type size )
 {
     int ret = item_size( item ) - size;
 
-    return ((ret >= 0) ? ret + 1 : (ret > -6) ? 0 : ret + 5);
+    return ((ret >= 0) ? ret + 1 :
+            (ret > -6) ? 0
+                       : ret + 5);
 }
 
-// Returns true if weapon is usable as a tool
-// Note that we assume that tool usable >= wieldable
+// Returns true if weapon is usable as a tool.
+// Note that we assume that tool usable >= wieldable.
 bool check_weapon_tool_size( const item_def &item, size_type size )
 {
     ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
@@ -1925,7 +1923,7 @@ bool check_weapon_tool_size( const item_def &item, size_type size )
     return (fit >= -3 && fit <= 1);
 }
 
-// Returns true if weapon is usable as a weapon
+// Returns true if weapon is usable as a weapon.
 bool check_weapon_wieldable_size( const item_def &item, size_type size )
 {
     ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
@@ -1969,7 +1967,7 @@ bool check_weapon_shape( const item_def &item, bool quiet, bool check_id )
     return (true);
 }
 
-// Returns the you.inv[] index of our wielded weapon or -1 (no item, not wield)
+// Returns the you.inv[] index of our wielded weapon or -1 (no item, not wield).
 int get_inv_wielded( void )
 {
     return (player_weapon_wielded() ? you.equip[EQ_WEAPON] : -1);
@@ -2035,9 +2033,9 @@ bool is_range_weapon( const item_def &item )
     return (fires_ammo_type( item ) != MI_NONE);
 }
 
-// decide if something is launched or thrown
+// Decide if something is launched or thrown.
 launch_retval is_launched(actor *actor, const item_def *launcher,
-                         const item_def &missile)
+                          const item_def &missile)
 {
     if (missile.base_type == OBJ_MISSILES
         && launcher
@@ -2072,7 +2070,7 @@ const char *ammo_name( const item_def &bow )
     return ammo_name(fires_ammo_type( bow ));
 }
 
-// returns true if item has an associated launcher
+// Returns true if item has an associated launcher.
 bool has_launcher( const item_def &ammo )
 {
     ASSERT(ammo.base_type == OBJ_MISSILES);
@@ -2081,7 +2079,7 @@ bool has_launcher( const item_def &ammo )
             && ammo.sub_type != MI_THROWING_NET);
 }
 
-// returns true if item can be reasonably thrown without a launcher
+// Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable( const item_def &wpn, size_type bodysize )
 {
     if (wpn.base_type == OBJ_WEAPONS)
@@ -2168,14 +2166,14 @@ bool is_blood_potion( const item_def &item)
             || item.sub_type == POT_BLOOD_COAGULATED);
 }
 
-// returns food value for one turn of eating
+// Returns food value for one turn of eating.
 int food_value( const item_def &item )
 {
     ASSERT( is_valid_item( item ) && item.base_type == OBJ_FOOD );
 
     const int herb = player_mutation_level(MUT_HERBIVOROUS);
 
-    // XXX: this needs to be better merged with the mutation system
+    // XXX: This needs to be better merged with the mutation system.
     const int carn = player_mutation_level(MUT_CARNIVOROUS);
 
     const food_def &food = Food_prop[ Food_index[item.sub_type] ];
@@ -2202,13 +2200,13 @@ bool can_cut_meat( const item_def &item )
 
 bool food_is_rotten( const item_def &item )
 {
-    return (item.special < 100) && ((item.base_type == OBJ_CORPSES &&
-                                     item.sub_type == CORPSE_BODY) ||
-                                    (item.base_type == OBJ_FOOD &&
-                                     item.sub_type == FOOD_CHUNK));
+    return (item.special < 100) && (item.base_type == OBJ_CORPSES
+                                       && item.sub_type == CORPSE_BODY
+                                    || item.base_type == OBJ_FOOD
+                                       && item.sub_type == FOOD_CHUNK);
 }
 
-// returns true if item counts as a tool for tool size comparisons and msgs
+// Returns true if item counts as a tool for tool size comparisons and msgs.
 bool is_tool( const item_def &item )
 {
     // Currently using OBJ_WEAPONS instead of can_cut_meat() as almost
@@ -2462,7 +2460,7 @@ int item_mass( const item_def &item )
         {
             const int reduc = (unit_mass >= 25) ? unit_mass / 5 : 5;
 
-            // truncate to the nearest 5 and reduce the item mass:
+            // Truncate to the nearest 5 and reduce the item mass:
             unit_mass -= ((reduc / 5) * 5);
             unit_mass = MAXIMUM( unit_mass, 5 );
         }
@@ -2549,7 +2547,7 @@ int item_mass( const item_def &item )
     return ((unit_mass > 0) ? unit_mass : 0);
 }
 
-// Note that this function, an item sizes in general aren't quite on the
+// Note that this function, and item sizes in general aren't quite on the
 // same scale as PCs and monsters.
 size_type item_size( const item_def &item )
 {
@@ -2617,7 +2615,7 @@ size_type item_size( const item_def &item )
     return (static_cast<size_type>( size ));
 }
 
-// returns true if we might be interested in dumping the colour
+// Returns true if we might be interested in dumping the colour.
 bool is_colourful_item( const item_def &item )
 {
     bool ret = false;

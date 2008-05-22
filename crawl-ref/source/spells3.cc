@@ -308,12 +308,12 @@ int airstrike(int power, dist &beam)
     return (success);
 }                               // end airstrike()
 
-int cast_bone_shards(int power, bolt &beam)
+bool cast_bone_shards(int power, bolt &beam)
 {
     bool success = false;
 
     if (you.equip[EQ_WEAPON] == -1
-                    || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_CORPSES)
+        || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_CORPSES)
     {
         canned_msg(MSG_SPELL_FIZZLES);
     }
@@ -325,6 +325,9 @@ int cast_bone_shards(int power, bolt &beam)
         // actual max of    200 * 15 + 3000 = 6000
         power *= 15;
         power += mons_weight( you.inv[you.equip[EQ_WEAPON]].plus );
+
+        if (!player_tracer(ZAP_BONE_SHARDS, power, beam))
+            return (false);
 
         mpr("The skeleton explodes into sharp fragments of bone!");
 

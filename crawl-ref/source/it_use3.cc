@@ -797,6 +797,7 @@ static bool disc_of_storms(void)
             beam.target_x = you.x_pos + random2(13) - 6;
             beam.target_y = you.y_pos + random2(13) - 6;
 
+            // non-controlleable
             zapping( which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam );
 
             disc_count--;

@@ -91,7 +91,7 @@ void cast_berserk(void);
 void cast_ring_of_flames(int power);
 bool conjure_flame(int pow);
 void extension(int pow);
-int fireball(int power, bolt &beam);
+bool fireball(int power, bolt &beam);
 int stinking_cloud(int pow, bolt &beam);
 void abjuration(int pow);
 

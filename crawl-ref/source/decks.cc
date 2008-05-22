@@ -1610,7 +1610,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
         break;
 
     case CARD_PAIN:
-        if ( power_level == 2 )
+        if (power_level == 2)
         {
             _mass_drain(power);
             return true;
@@ -1623,7 +1623,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
         break;
     }
 
-    if ( spell_direction( target, beam ) )
+    if (spell_direction(target, beam) && player_tracer(ztype, power/4, beam))
         zapping(ztype, random2(power/4), beam);
     else
         rc = false;

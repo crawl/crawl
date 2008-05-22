@@ -470,9 +470,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
 
     // When checking failure rates, wizardry is handled after the various
     // stepping calulations.
-    int power =
-            (you.skills[SK_SPELLCASTING] / 2)
-            + (fail_rate_check? 0 : player_mag_abil(false));
+    int power = (you.skills[SK_SPELLCASTING] / 2)
+                 + (fail_rate_check? 0 : player_mag_abil(false));
     int enhanced = 0;
 
     unsigned int disciplines = get_spell_disciplines( spell );
@@ -979,7 +978,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));
 
-        if (!spell_direction( spd, beam, dir, targ, needs_path, prompt ))
+        if (!spell_direction(spd, beam, dir, targ, needs_path, prompt))
             return (SPRET_ABORT);
 
         if (testbits( flags, SPFLAG_NOT_SELF ) && spd.isMe)
@@ -1108,12 +1107,13 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_MAGIC_DART:
-        if (!zapping(ZAP_MAGIC_DARTS, powc, beam))
+        if (!zapping(ZAP_MAGIC_DARTS, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_FIREBALL:
-        fireball(powc, beam);
+        if (!fireball(powc, beam))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_DELAYED_FIREBALL:
@@ -1155,7 +1155,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_STRIKING:
-        if (!zapping( ZAP_STRIKING, powc, beam ))
+        if (!zapping(ZAP_STRIKING, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1165,27 +1165,27 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_DIG:
-        if (!zapping(ZAP_DIGGING, powc, beam))
+        if (!zapping(ZAP_DIGGING, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_BOLT_OF_FIRE:
-        if (!zapping(ZAP_FIRE, powc, beam))
+        if (!zapping(ZAP_FIRE, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_BOLT_OF_COLD:
-        if (!zapping(ZAP_COLD, powc, beam))
+        if (!zapping(ZAP_COLD, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_LIGHTNING_BOLT:
-        if (!zapping(ZAP_LIGHTNING, powc, beam))
+        if (!zapping(ZAP_LIGHTNING, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_BOLT_OF_MAGMA:
-        if (!zapping(ZAP_MAGMA, powc, beam))
+        if (!zapping(ZAP_MAGMA, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1193,26 +1193,27 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         // Trying is already enough, even if it fails.
         did_god_conduct(DID_DELIBERATE_MUTATING, 10);
 
-        if (!zapping(ZAP_POLYMORPH_OTHER, powc, beam))
+        if (!zapping(ZAP_POLYMORPH_OTHER, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_SLOW:
-        if (!zapping(ZAP_SLOWING, powc, beam))
+        if (!zapping(ZAP_SLOWING, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_HASTE:
-        zapping(ZAP_HASTING, powc, beam);
+        if (!zapping(ZAP_HASTING, powc, beam, true))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_PARALYSE:
-        if (!zapping(ZAP_PARALYSIS, powc, beam))
+        if (!zapping(ZAP_PARALYSIS, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_CONFUSE:
-        if (!zapping(ZAP_CONFUSION, powc, beam))
+        if (!zapping(ZAP_CONFUSION, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1225,16 +1226,17 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_INVISIBILITY:
-        zapping(ZAP_INVISIBILITY, powc, beam);
+        if (!zapping(ZAP_INVISIBILITY, powc, beam, true))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_THROW_FLAME:
-        if (!zapping(ZAP_FLAME, powc, beam))
+        if (!zapping(ZAP_FLAME, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_THROW_FROST:
-        if (!zapping(ZAP_FROST, powc, beam))
+        if (!zapping(ZAP_FROST, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1268,7 +1270,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_VENOM_BOLT:
-        if (!zapping(ZAP_VENOM_BOLT, powc, beam))
+        if (!zapping(ZAP_VENOM_BOLT, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1278,7 +1280,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     case SPELL_TELEPORT_OTHER:
         // teleport creature (I think)
-        if (!zapping(ZAP_TELEPORTATION, powc, beam))
+        if (!zapping(ZAP_TELEPORTATION, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1349,17 +1351,17 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_BOLT_OF_DRAINING:
-        if (!zapping(ZAP_NEGATIVE_ENERGY, powc, beam))
+        if (!zapping(ZAP_NEGATIVE_ENERGY, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-        if (!zapping(ZAP_CRYSTAL_SPEAR, powc, beam))
+        if (!zapping(ZAP_CRYSTAL_SPEAR, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_BOLT_OF_INACCURACY:
-        if (!zapping(ZAP_BEAM_OF_ENERGY, powc, beam))
+        if (!zapping(ZAP_BEAM_OF_ENERGY, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1368,7 +1370,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_POISON_ARROW:
-        if (!zapping( ZAP_POISON_ARROW, powc, beam ))
+        if (!zapping(ZAP_POISON_ARROW, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1386,7 +1388,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        if (!zapping( ZAP_MYSTIC_BLAST, powc, beam ))
+        if (!zapping(ZAP_MYSTIC_BLAST, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1399,7 +1401,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_ENSLAVEMENT:
-        if (!zapping(ZAP_ENSLAVEMENT, powc, beam))
+        if (!zapping(ZAP_ENSLAVEMENT, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1425,7 +1427,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_PAIN:
-        if (!zapping(ZAP_PAIN, powc, beam))
+        if (!zapping(ZAP_PAIN, powc, beam, true))
             return (SPRET_ABORT);
         dec_hp(1, false);
         break;
@@ -1481,7 +1483,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_STICKY_FLAME:
-        if (!zapping(ZAP_STICKY_FLAME, powc, beam))
+        if (!zapping(ZAP_STICKY_FLAME, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1511,7 +1513,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_DISPEL_UNDEAD:
-        if (!zapping(ZAP_DISPEL_UNDEAD, powc, beam))
+        if (!zapping(ZAP_DISPEL_UNDEAD, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1520,12 +1522,12 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_THUNDERBOLT:
-        if (!zapping(ZAP_LIGHTNING, powc, beam))
+        if (!zapping(ZAP_LIGHTNING, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_FLAME_OF_CLEANSING:
-        if (!zapping(ZAP_CLEANSING_FLAME, powc, beam))
+        if (!zapping(ZAP_CLEANSING_FLAME, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1544,7 +1546,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_BONE_SHARDS:
-        cast_bone_shards(powc, beam);
+        if (!cast_bone_shards(powc, beam))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_BANISHMENT:
@@ -1553,17 +1556,17 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             mpr("You cannot banish yourself!");
             break;
         }
-        if (!zapping(ZAP_BANISHMENT, powc, beam))
+        if (!zapping(ZAP_BANISHMENT, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_CIGOTUVIS_DEGENERATION:
-        if (!zapping(ZAP_DEGENERATION, powc, beam))
+        if (!zapping(ZAP_DEGENERATION, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_STING:
-        if (!zapping(ZAP_STING, powc, beam))
+        if (!zapping(ZAP_STING, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1577,9 +1580,9 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_HELLFIRE:
-        // should only be available from:
+        // Should only be available from:
         // staff of Dispater & Sceptre of Asmodeus
-        if (!zapping(ZAP_HELLFIRE, powc, beam))
+        if (!zapping(ZAP_HELLFIRE, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1652,12 +1655,12 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_BOLT_OF_IRON:
-        if (!zapping(ZAP_IRON_BOLT, powc, beam))
+        if (!zapping(ZAP_IRON_BOLT, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_STONE_ARROW:
-        if (!zapping(ZAP_STONE_ARROW, powc, beam))
+        if (!zapping(ZAP_STONE_ARROW, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1670,7 +1673,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SHOCK:
-        if (!zapping(ZAP_ELECTRICITY, powc, beam))
+        if (!zapping(ZAP_ELECTRICITY, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1687,7 +1690,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_ORB_OF_ELECTROCUTION:
-        if (!zapping(ZAP_ORB_OF_ELECTRICITY, powc, beam))
+        if (!zapping(ZAP_ORB_OF_ELECTRICITY, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1738,7 +1741,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_DEBUGGING_RAY:
-        if (!zapping(ZAP_DEBUGGING_RAY, powc, beam))
+        if (!zapping(ZAP_DEBUGGING_RAY, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1753,7 +1756,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_AGONY:
-        if (!zapping(ZAP_AGONY, powc, beam))
+        if (!zapping(ZAP_AGONY, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1762,12 +1765,12 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_DISRUPT:
-        if (!zapping(ZAP_DISRUPTION, powc, beam))
+        if (!zapping(ZAP_DISRUPTION, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_DISINTEGRATE:
-        if (!zapping(ZAP_DISINTEGRATION, powc, beam))
+        if (!zapping(ZAP_DISINTEGRATION, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1804,12 +1807,12 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_ORB_OF_FRAGMENTATION:
-        if (!zapping(ZAP_ORB_OF_FRAGMENTATION, powc, beam))
+        if (!zapping(ZAP_ORB_OF_FRAGMENTATION, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
     case SPELL_ICE_BOLT:
-        if (!zapping(ZAP_ICE_BOLT, powc, beam))
+        if (!zapping(ZAP_ICE_BOLT, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1823,7 +1826,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_ICE_STORM:
-        if (!zapping(ZAP_ICE_STORM, powc, beam))
+        if (!zapping(ZAP_ICE_STORM, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1842,7 +1845,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     //jmf: new spells 19mar2000
     case SPELL_FLAME_TONGUE:
-        if (!zapping(ZAP_FLAME_TONGUE, powc, beam))
+        if (!zapping(ZAP_FLAME_TONGUE, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1878,7 +1881,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         mprf(MSGCH_DIAGNOSTICS, "Sleep power stepdown: %d -> %d",
              powc, sleep_power);
 #endif
-        if (!zapping(ZAP_SLEEP, sleep_power, beam))
+        if (!zapping(ZAP_SLEEP, sleep_power, beam, true))
             return (SPRET_ABORT);
         break;
     }
@@ -1938,7 +1941,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_BACKLIGHT:
-        if (!zapping(ZAP_BACKLIGHT, powc + 10, beam))
+        if (!zapping(ZAP_BACKLIGHT, powc + 10, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1964,7 +1967,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SANDBLAST:
-        cast_sandblast(powc, beam);
+        if (!cast_sandblast(powc, beam))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_ROTTING:

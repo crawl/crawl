@@ -1039,29 +1039,30 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_SPIT_POISON:      // Naga + spit poison mutation
+    {
         if (you.duration[DUR_BREATH_WEAPON])
         {
             canned_msg(MSG_CANNOT_DO_YET);
             return (false);
         }
-        else if ( !spell_direction(abild, beam) )
+
+        const int pow = you.experience_level
+                        + player_mutation_level(MUT_SPIT_POISON) * 5
+                        + (you.species == SP_NAGA) * 10;
+
+        if (!spell_direction(abild, beam)
+            || !player_tracer(ZAP_SPIT_POISON, pow, beam))
         {
             return (false);
         }
         else
         {
-            mpr("You spit poison.");
-
-            zapping( ZAP_SPIT_POISON,
-                     you.experience_level
-                        + player_mutation_level(MUT_SPIT_POISON) * 5
-                        + (you.species == SP_NAGA) * 10,
-                     beam );
+            zapping(ZAP_SPIT_POISON, pow, beam);
 
             you.duration[DUR_BREATH_WEAPON] = 3 + random2(5);
         }
         break;
-
+    }
     case ABIL_EVOKE_MAPPING:    // randarts
     case ABIL_MAPPING:          // Gnome + sense surrounds mut
         if (abil.ability == ABIL_MAPPING
@@ -1110,65 +1111,86 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
         if (you.duration[DUR_BREATH_WEAPON]
-                && abil.ability != ABIL_SPIT_ACID)
+            && abil.ability != ABIL_SPIT_ACID)
         {
             canned_msg(MSG_CANNOT_DO_YET);
             return (false);
         }
-        else if ( !spell_direction( abild, beam ) )
-        {
+        else if (!spell_direction(abild, beam))
             return (false);
-        }
 
         switch (abil.ability)
         {
         case ABIL_BREATHE_FIRE:
+            // Don't check for hell serpents - they get hell fire,
+            // never regular fire. (GDL)
             power = you.experience_level;
             power += player_mutation_level(MUT_BREATHE_FLAMES) * 4;
 
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
                 power += 12;
 
-            // don't check for hell serpents - they get hell fire,
-            // never regular fire (GDL)
-            mprf("You breathe fire%c", (power < 15)?'.':'!');
+            snprintf(info, INFO_SIZE, "You breathe fire%c",
+                     (power < 15) ? '.':'!');
 
-            zapping( ZAP_BREATHE_FIRE, power, beam);
+            if (!zapping(ZAP_BREATHE_FIRE, power, beam, true, info))
+                return (false);
             break;
 
         case ABIL_BREATHE_FROST:
-            mpr("You exhale a wave of freezing cold.");
-            zapping(ZAP_BREATHE_FROST, you.experience_level, beam);
+            if (!zapping(ZAP_BREATHE_FROST, you.experience_level, beam, true,
+                         "You exhale a wave of freezing cold."))
+            {
+                return (false);
+            }
             break;
 
         case ABIL_BREATHE_POISON:
-            mpr("You exhale a blast of poison gas.");
-            zapping(ZAP_BREATHE_POISON, you.experience_level, beam);
+            if (!zapping(ZAP_BREATHE_POISON, you.experience_level, beam, true,
+                         "You exhale a blast of poison gas."))
+            {
+                return (false);
+            }
             break;
 
         case ABIL_BREATHE_LIGHTNING:
-            mpr("You spit a bolt of lightning.");
-            zapping(ZAP_LIGHTNING, (you.experience_level * 2), beam);
+            if (!zapping(ZAP_LIGHTNING, (you.experience_level * 2), beam, true,
+                         "You spit a bolt of lightning."))
+            {
+                return (false);
+            }
             break;
 
         case ABIL_SPIT_ACID:
-            mpr("You spit acid.");
-            zapping(ZAP_BREATHE_ACID, you.experience_level, beam);
+            if (!zapping(ZAP_BREATHE_ACID, you.experience_level, beam, true,
+                         "You spit acid."))
+            {
+                return (false);
+            }
             break;
 
         case ABIL_BREATHE_POWER:
-            mpr("You spit a bolt of incandescent energy.");
-            zapping(ZAP_BREATHE_POWER, you.experience_level, beam);
+            if (!zapping(ZAP_BREATHE_POWER, you.experience_level, beam, true,
+                         "You spit a bolt of incandescent energy."))
+            {
+                return (false);
+            }
             break;
 
         case ABIL_BREATHE_STICKY_FLAME:
-            mpr("You spit a glob of burning liquid.");
-            zapping(ZAP_STICKY_FLAME, you.experience_level, beam);
+            if (!zapping(ZAP_STICKY_FLAME, you.experience_level, beam, true,
+                         "You spit a glob of burning liquid."))
+            {
+                return (false);
+            }
             break;
 
         case ABIL_BREATHE_STEAM:
-            mpr("You exhale a blast of scalding steam.");
-            zapping(ZAP_BREATHE_STEAM, you.experience_level, beam);
+            if (!zapping(ZAP_BREATHE_STEAM, you.experience_level, beam, true,
+                         "You exhale a blast of scalding steam."))
+            {
+                return (false);
+            }
             break;
 
         default:
@@ -1271,12 +1293,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_CONTROL_DEMON:
-        if ( !spell_direction(abild, beam) )
+        if (!spell_direction(abild, beam)
+            || !zapping(ZAP_CONTROL_DEMON, you.experience_level * 5, beam,
+                        true))
         {
             return (false);
         }
-
-        zapping(ZAP_CONTROL_DEMON, you.experience_level * 5, beam);
         break;
 
     case ABIL_TO_PANDEMONIUM:
@@ -1296,23 +1318,22 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_THROW_FLAME:
     case ABIL_THROW_FROST:
-        if ( !spell_direction(abild, beam) )
+        if (!spell_direction(abild, beam))
+            return (false);
+
+        if (!zapping((abil.ability == ABIL_THROW_FLAME ? ZAP_FLAME : ZAP_FROST),
+                     you.experience_level * 3, beam, true))
         {
             return (false);
         }
-
-        zapping( (abil.ability == ABIL_THROW_FLAME ? ZAP_FLAME : ZAP_FROST),
-                    you.experience_level * 3,
-                    beam );
         break;
 
     case ABIL_BOLT_OF_DRAINING:
-        if ( !spell_direction(abild, beam) )
-        {
+        if (!spell_direction(abild, beam))
             return (false);
-        }
 
-        zapping(ZAP_NEGATIVE_ENERGY, you.experience_level * 6, beam);
+        if (!zapping(ZAP_NEGATIVE_ENERGY, you.experience_level * 6, beam, true))
+            return (false);
         break;
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
@@ -1383,66 +1404,20 @@ static bool _do_ability(const ability_def& abil)
             exercise(SK_INVOCATIONS, 5 + random2(8));
         break;
 
-// no longer in use, maybe keep for other cases (or remove!)
-/*
-    case ABIL_ZIN_PESTILENCE:
-        mpr( "You call forth a swarm of pestilential beasts!" );
-
-        if (!summon_swarm( you.skills[SK_INVOCATIONS] * 8, false, true ))
-            mpr( "Nothing seems to have answered your call." );
-
-        exercise( SK_INVOCATIONS, 2 + random2(4) );
-        break;
-
-    case ABIL_ZIN_HOLY_WORD:
-        holy_word(you.skills[SK_INVOCATIONS] * 8, HOLY_WORD_GENERIC, you.x_pos,
-                  you.y_pos, true);
-        exercise(SK_INVOCATIONS, 3 + random2(5));
-        break;
-
-    case ABIL_ZIN_SUMMON_GUARDIAN:
-        summon_ice_beast_etc(you.skills[SK_INVOCATIONS] * 4, MONS_ANGEL, true);
-        exercise(SK_INVOCATIONS, 8 + random2(10));
-        break;
-
-    case ABIL_TSO_REPEL_UNDEAD:
-        turn_undead(you.piety);
-
-        if (!you.duration[DUR_REPEL_UNDEAD])
-            mpr( "You feel a holy aura protecting you." );
-
-        you.duration[DUR_REPEL_UNDEAD] += 8
-                                + roll_dice(2, 2 * you.skills[SK_INVOCATIONS]);
-
-        if (you.duration[ DUR_REPEL_UNDEAD ] > 50)
-            you.duration[ DUR_REPEL_UNDEAD ] = 50;
-
-        exercise(SK_INVOCATIONS, 1);
-        break;
-
-    case ABIL_TSO_ANNIHILATE_UNDEAD:
-        if ( !spell_direction(spd, beam) )
-        {
-            return (false);
-        }
-
-        zapping(ZAP_DISPEL_UNDEAD, you.skills[SK_INVOCATIONS] * 6, beam);
-        exercise(SK_INVOCATIONS, 2 + random2(4));
-        break;
-*/
-
     case ABIL_TSO_DIVINE_SHIELD:
         cast_divine_shield();
         exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
-        if ( !spell_direction(spd, beam) )
+        if (!spell_direction(spd, beam))
+            return (false);
+
+        if (!zapping(ZAP_CLEANSING_FLAME, 20 + you.skills[SK_INVOCATIONS] * 6,
+            beam, true))
         {
             return (false);
         }
-
-        zapping(ZAP_CLEANSING_FLAME, 20 + you.skills[SK_INVOCATIONS] * 6, beam);
         exercise(SK_INVOCATIONS, 3 + random2(6));
         break;
 
@@ -1457,12 +1432,14 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_ENSLAVE_UNDEAD:
-        if ( !spell_direction(spd, beam) )
+        if (!spell_direction(spd, beam))
+            return (false);
+
+        if (!zapping(ZAP_ENSLAVE_UNDEAD, you.skills[SK_INVOCATIONS] * 8, beam,
+                     true))
         {
             return (false);
         }
-
-        zapping( ZAP_ENSLAVE_UNDEAD, you.skills[SK_INVOCATIONS] * 8, beam );
         exercise(SK_INVOCATIONS, 5 + random2(5));
         break;
 
@@ -1523,14 +1500,17 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-        if ( !spell_direction(spd, beam) )
-        {
+        if (!spell_direction(spd, beam))
             return (false);
-        }
 
         power = you.skills[SK_INVOCATIONS]
                     + random2( 1 + you.skills[SK_INVOCATIONS] )
                     + random2( 1 + you.skills[SK_INVOCATIONS] );
+
+        // Since the actual beam is random, check with BEAM_MMISSILE and the
+        // highest range possible (electricity).
+        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, 13))
+            return (false);
 
         switch (random2(5))
         {
@@ -1554,14 +1534,17 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-        if ( !spell_direction(spd, beam) )
-        {
+        if (!spell_direction(spd, beam))
             return (false);
-        }
 
         power = you.skills[SK_INVOCATIONS] * 3
-                    + random2( 1 + you.skills[SK_INVOCATIONS] )
-                    + random2( 1 + you.skills[SK_INVOCATIONS] );
+                + random2( 1 + you.skills[SK_INVOCATIONS] )
+                + random2( 1 + you.skills[SK_INVOCATIONS] );
+
+        // Since the actual beam is random, check with BEAM_MMISSILE and the
+        // highest range possible (orb of electricity).
+        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, 20))
+            return (false);
 
         switch (random2(8))
         {
@@ -1579,17 +1562,17 @@ static bool _do_ability(const ability_def& abil)
 
             // make a divine lightning bolt...
             beam.beam_source = NON_MONSTER;
-            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage = dice_def( 3, 30 );
-            beam.flavour = BEAM_ELECTRICITY;
-            beam.target_x = you.x_pos;
-            beam.target_y = you.y_pos;
-            beam.name = "blast of lightning";
-            beam.colour = LIGHTCYAN;
-            beam.thrower = KILL_YOU;
-            beam.aux_source = "Makhleb's lightning strike";
-            beam.ex_size = 1 + you.skills[SK_INVOCATIONS] / 8;
-            beam.is_tracer = false;
+            beam.type        = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage      = dice_def( 3, 30 );
+            beam.flavour     = BEAM_ELECTRICITY;
+            beam.target_x    = you.x_pos;
+            beam.target_y    = you.y_pos;
+            beam.name        = "blast of lightning";
+            beam.colour      = LIGHTCYAN;
+            beam.thrower     = KILL_YOU;
+            beam.aux_source  = "Makhleb's lightning strike";
+            beam.ex_size     = 1 + you.skills[SK_INVOCATIONS] / 8;
+            beam.is_tracer   = false;
 
             // ... and fire!
             explosion(beam);
@@ -1700,12 +1683,17 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_LUGONU_BANISH:
         if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY))
             return (false);
+
         if (beam.target_x == you.x_pos && beam.target_y == you.y_pos)
         {
             mpr("You cannot banish yourself!");
             return (false);
         }
-        zapping( ZAP_BANISHMENT, 16 + you.skills[SK_INVOCATIONS] * 8, beam );
+        if (!zapping(ZAP_BANISHMENT, 16 + you.skills[SK_INVOCATIONS] * 8, beam,
+                     true))
+        {
+            return (false);
+        }
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
 

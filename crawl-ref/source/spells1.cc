@@ -238,29 +238,31 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     return;
 }                               // end random_blink()
 
-int fireball(int power, bolt &beam)
+bool fireball(int power, bolt &beam)
 {
-    zapping(ZAP_FIREBALL, power, beam);
-    return (1);
+    if (!zapping(ZAP_FIREBALL, power, beam, true))
+        return (false);
+
+    return (true);
 }                               // end fireball()
 
 int cast_fire_storm(int powc, bolt &beam)
 {
-    beam.ex_size = 2 + (random2(powc) > 75);
-    beam.flavour = BEAM_LAVA;
-    beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-    beam.colour = RED;
-    beam.beam_source = MHITYOU;
-    beam.thrower = KILL_YOU_MISSILE;
+    beam.name         = "great blast of fire";
+    beam.ex_size      = 2 + (random2(powc) > 75);
+    beam.flavour      = BEAM_LAVA;
+    beam.type         = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.colour       = RED;
+    beam.beam_source  = MHITYOU;
+    beam.thrower      = KILL_YOU_MISSILE;
     beam.aux_source.clear();
     beam.obvious_effect = false;
-    beam.is_beam = false;
-    beam.is_tracer = false;
+    beam.is_beam      = false;
+    beam.is_tracer    = false;
     beam.is_explosion = true;
-    beam.ench_power = powc;     // used for radius
-    beam.name = "great blast of fire";
-    beam.hit = 20 + powc / 10;
-    beam.damage = calc_dice( 9, 20 + powc );
+    beam.ench_power   = powc;     // used for radius
+    beam.hit          = 20 + powc / 10;
+    beam.damage       = calc_dice( 9, 20 + powc );
 
     explosion( beam, false, false, true, true, false );
     mpr("A raging storm of fire appears!");
@@ -276,19 +278,19 @@ void cast_chain_lightning( int powc )
     struct bolt beam;
 
     // initialize beam structure
-    beam.name = "lightning arc";
-    beam.aux_source = "chain lightning";
-    beam.beam_source = MHITYOU;
-    beam.thrower = KILL_YOU_MISSILE;
-    beam.range = 8;
-    beam.rangeMax = 8;
-    beam.hit = AUTOMATIC_HIT;
-    beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
-    beam.flavour = BEAM_ELECTRICITY;
+    beam.name           = "lightning arc";
+    beam.aux_source     = "chain lightning";
+    beam.beam_source    = MHITYOU;
+    beam.thrower        = KILL_YOU_MISSILE;
+    beam.range          = 8;
+    beam.rangeMax       = 8;
+    beam.hit            = AUTOMATIC_HIT;
+    beam.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.flavour        = BEAM_ELECTRICITY;
     beam.obvious_effect = true;
-    beam.is_beam = false;            // since we want to stop at our target
-    beam.is_explosion = false;
-    beam.is_tracer = false;
+    beam.is_beam        = false;       // since we want to stop at our target
+    beam.is_explosion   = false;
+    beam.is_tracer      = false;
 
     int sx, sy;
     int tx, ty;

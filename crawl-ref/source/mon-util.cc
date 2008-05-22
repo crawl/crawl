@@ -1613,11 +1613,11 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         }
     }
 
-    // Assumed visible from now on
+    // Assumed visible from now on.
 
     // Various special cases:
     // non-gold mimics, dancing weapons, ghosts, Pan demons
-    if ( mons_is_mimic(mon.type) && mon.type != MONS_GOLD_MIMIC )
+    if (mons_is_mimic(mon.type) && mon.type != MONS_GOLD_MIMIC)
     {
         item_def item;
         get_mimic_item( &mon, item );
@@ -1645,17 +1645,17 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     // Start with the prefix.
     // (Uniques don't get this, because their names are proper nouns.)
-    if ( !mons_is_unique(mon.type) )
+    if (!mons_is_unique(mon.type))
     {
         switch (desc)
         {
         case DESC_CAP_THE:
-            (mons_friendly(&mon)) ? result = "Your "
-                                  : result = "The ";
+            result = (mons_friendly(&mon) ? "Your "
+                                          : "The ");
             break;
         case DESC_NOCAP_THE:
-            (mons_friendly(&mon)) ? result = "your "
-                                  : result = "the ";
+            result = (mons_friendly(&mon) ? "your "
+                                          : "the ");
             break;
         case DESC_CAP_A:
             result = "A ";
@@ -4022,6 +4022,7 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
         desc = DESC_NOCAP_THE;
 
     std::string monnam = _str_monam(*this, desc, force_vis);
+
     return (possessive? apostrophise(monnam) : monnam);
 }
 

@@ -2636,21 +2636,24 @@ int cast_apportation(int pow)
     return (done);
 }
 
-void cast_sandblast(int pow, bolt &beam)
+bool cast_sandblast(int pow, bolt &beam)
 {
     bool big = false;
 
     if (you.weapon())
     {
         const item_def& wpn(*you.weapon());
-        big = (wpn.base_type == OBJ_MISSILES)
-            && (wpn.sub_type == MI_STONE || wpn.sub_type == MI_LARGE_ROCK);
+        big = (wpn.base_type == OBJ_MISSILES
+               && (wpn.sub_type == MI_STONE || wpn.sub_type == MI_LARGE_ROCK));
     }
 
-    if (big)
+    bool success = zapping(big ? ZAP_SANDBLAST
+                               : ZAP_SMALL_SANDBLAST, pow, beam, true);
+
+    if (big && success)
         dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
 
-    zapping(big ? ZAP_SANDBLAST : ZAP_SMALL_SANDBLAST, pow, beam);
+    return (success);
 }
 
 void cast_condensation_shield(int pow)

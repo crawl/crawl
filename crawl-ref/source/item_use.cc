@@ -1799,7 +1799,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     // even though direction is allowed, we're throwing so we
     // want to use tx, ty to make the missile fly to map edge.
-    if ( !teleport )
+    if (!teleport)
         pbolt.set_target(thr);
 
     pbolt.flavour = BEAM_MISSILE;
@@ -1841,9 +1841,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // get the launcher class,type.  Convenience.
     if (you.equip[EQ_WEAPON] < 0)
         lnchType = NUM_WEAPONS;
-    else
+    else {
         lnchType =
             static_cast<weapon_type>( you.inv[you.equip[EQ_WEAPON]].sub_type );
+    }
 
     // baseHit and damage for generic objects
     baseHit = you.strength - item_mass(item) / 10;
@@ -1936,11 +1937,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
         }
 
-        // lower accuracy if held in a net (needs testing)
+        // Lower accuracy if held in a net (needs testing).
         if (you.attribute[ATTR_HELD])
             baseHit--;
 
-        // for all launched weapons, maximum effective specific skill
+        // For all launched weapons, maximum effective specific skill
         // is twice throwing skill.  This models the fact that no matter
         // how 'good' you are with a bow, if you know nothing about
         // trajectories you're going to be a damn poor bowman.  Ditto
@@ -1968,10 +1969,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // [dshaligram] This can get large...
         exDamBonus = lnchDamBonus + random2(1 + ammoDamBonus);
-        exDamBonus = exDamBonus > 0? random2(exDamBonus + 1)
-                                   : -random2(-exDamBonus + 1);
-        exHitBonus = lnchHitBonus > 0? random2(lnchHitBonus + 1)
-                                     : -random2(-lnchHitBonus + 1);
+        exDamBonus = (exDamBonus > 0   ? random2(exDamBonus + 1)
+                                       : -random2(-exDamBonus + 1));
+        exHitBonus = (lnchHitBonus > 0 ? random2(lnchHitBonus + 1)
+                                       : -random2(-lnchHitBonus + 1));
 
         // Identify ammo type if the information is there. Note
         // that the bow is always type-identified because it's
@@ -1983,7 +1984,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
         }
 
-        // removed 2 random2(2)s from each of the learning curves, but
+        // Removed 2 random2(2)s from each of the learning curves, but
         // left slings because they're hard enough to develop without
         // a good source of shot in the dungeon.
         switch (launcher_skill)
@@ -2000,7 +2001,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             exHitBonus += (effSkill * 3) / 2;
 
-            // strength is good if you're using a nice sling.
+            // Strength is good if you're using a nice sling.
             int strbonus = (10 * (you.strength - 10)) / 9;
             strbonus = (strbonus * (2 * baseDam + ammoDamBonus)) / 20;
 
@@ -2009,25 +2010,25 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 strbonus = lnchDamBonus + 1;
 
             exDamBonus += strbonus;
-            // add skill for slings.. helps to find those vulnerable spots
+            // Add skill for slings... helps to find those vulnerable spots.
             dice_mult = dice_mult * (14 + random2(1 + effSkill)) / 14;
 
-            // now kill the launcher damage bonus
+            // Now kill the launcher damage bonus.
             if (lnchDamBonus > 0)
                 lnchDamBonus = 0;
             break;
         }
-            // blowguns take a _very_ steady hand;  a lot of the bonus
-            // comes from dexterity.  (Dex bonus here as well as below)
+            // Blowguns take a _very_ steady hand;  a lot of the bonus
+            // comes from dexterity.  (Dex bonus here as well as below).
         case SK_DARTS:
             baseHit -= 2;
             exercise(SK_DARTS, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 3) / 2 + you.dex / 2;
 
-            // no extra damage for blowguns
+            // No extra damage for blowguns.
             // exDamBonus = 0;
 
-            // now kill the launcher damage and ammo bonuses
+            // Now kill the launcher damage and ammo bonuses.
             if (lnchDamBonus > 0)
                 lnchDamBonus = 0;
             if (ammoDamBonus > 0)
@@ -2040,23 +2041,23 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exercise(SK_BOWS, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 2);
 
-            // strength is good if you're using a nice bow
+            // Strength is good if you're using a nice bow.
             int strbonus = (10 * (you.strength - 10)) / 4;
             strbonus = (strbonus * (2 * baseDam + ammoDamBonus)) / 20;
 
-            // cap; reduced this cap, because we don't want to allow
+            // Cap; reduced this cap, because we don't want to allow
             // the extremely-strong to quadruple the enchantment bonus.
             if (strbonus > lnchDamBonus + 1)
                 strbonus = lnchDamBonus + 1;
 
             exDamBonus += strbonus;
 
-            // add in skill for bows.. help you to find those vulnerable spots.
+            // Add in skill for bows - helps you to find those vulnerable spots.
             // exDamBonus += effSkill;
 
             dice_mult = dice_mult * (17 + random2(1 + effSkill)) / 17;
 
-            // now kill the launcher damage bonus
+            // Now kill the launcher damage bonus.
             if (lnchDamBonus > 0)
                 lnchDamBonus = 0;
             break;
@@ -2082,7 +2083,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             break;
         }
 
-        // Slings and Darts train Throwing a bit
+        // Slings and Darts train Throwing a bit.
         if (launcher_skill == SK_SLINGS || launcher_skill == SK_DARTS)
         {
             if (coinflip())
@@ -2101,11 +2102,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             dice_mult = dice_mult * 130 / 100;
         }
 
-        // special cases for flame, frost, poison, etc.
-        // check for venom brand (usually only available for blowguns)
+        // Special cases for flame, frost, poison, etc.
+        // check for venom brand.
         if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_NORMAL)
         {
-            // poison brand the ammo
+            // Poison brand the ammo.
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_POISONED );
             pbolt.name = item.name(DESC_PLAIN);
         }
@@ -2128,7 +2129,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
             pbolt.thrower = KILL_YOU_MISSILE;
             pbolt.aux_source.clear();
-
         }
 
         if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
@@ -2150,20 +2150,20 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             pbolt.aux_source.clear();
         }
 
-        /* the chief advantage here is the extra damage this does
-         * against susceptible creatures */
+        // The chief advantage here is the extra damage this does
+        // against susceptible creatures.
 
-        /* Note: weapons & ammo of eg fire are not cumulative
-         * ammo of fire and weapons of frost don't work together,
-         * and vice versa */
+        // Note: weapons & ammo of eg fire are not cumulative
+        // ammo of fire and weapons of frost don't work together,
+        // and vice versa.
 
         // ID check. Can't ID off teleported projectiles, uh, because
         // it's too weird. Also it messes up the messages.
         if (item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES))
         {
-            if ( !teleport
-                 && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
-                 && random2(100) < shoot_skill )
+            if (!teleport
+                && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
+                && random2(100) < shoot_skill)
             {
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
                 set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
@@ -2195,28 +2195,28 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         baseHit = 0;
 
-        // missiles only use inv_plus
+        // Missiles only use inv_plus.
         if (wepClass == OBJ_MISSILES)
             ammoDamBonus = ammoHitBonus;
 
-        // all weapons that use 'throwing' go here..
+        // All weapons that use 'throwing' go here.
         if (wepClass == OBJ_WEAPONS
             || (wepClass == OBJ_MISSILES
                 && (wepType == MI_STONE || wepType == MI_LARGE_ROCK
                     || wepType == MI_DART || wepType == MI_JAVELIN)))
         {
-            // elves with elven weapons
+            // Elves with elven weapons.
             if (get_equip_race(item) == ISFLAG_ELVEN
                 && player_genus(GENPC_ELVEN))
             {
                 baseHit += 1;
             }
 
-            // give an appropriate 'tohit' -
-            // hand axes and clubs are -5
-            // daggers are +1
-            // spears are -1
-            // rocks are 0
+            // Give an appropriate 'tohit':
+            // * hand axes and clubs are -5
+            // * daggers are +1
+            // * spears are -1
+            // * rocks are 0
             if (wepClass == OBJ_WEAPONS)
             {
                 switch (wepType)
@@ -2251,11 +2251,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             baseDam = property( item, PWPN_DAMAGE );
 
-            // dwarves/orcs with dwarven/orcish weapons
-            if ( (get_equip_race(item) == ISFLAG_DWARVEN
-                  && player_genus(GENPC_DWARVEN)) ||
-                 (get_equip_race(item) == ISFLAG_ORCISH
-                  && you.species == SP_HILL_ORC))
+            // Dwarves/orcs with dwarven/orcish weapons.
+            if (get_equip_race(item) == ISFLAG_DWARVEN
+                   && player_genus(GENPC_DWARVEN)
+                || get_equip_race(item) == ISFLAG_ORCISH
+                   && you.species == SP_HILL_ORC)
             {
                 baseDam += 1;
             }
@@ -2263,7 +2263,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exDamBonus =
                 (10 * (you.skills[SK_THROWING] / 2 + you.strength - 10)) / 12;
 
-            // now, exDamBonus is a multiplier.  The full multiplier
+            // Now, exDamBonus is a multiplier.  The full multiplier
             // is applied to base damage, but only a third is applied
             // to the magical modifier.
             exDamBonus = (exDamBonus * (3 * baseDam + ammoDamBonus)) / 30;
@@ -2302,19 +2302,18 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 exercise(SK_THROWING, 1 + coinflip());
                 break;
             case MI_THROWING_NET:
-                // Nets use throwing skill
-                // They don't do any damage!
+                // Nets use throwing skill.  They don't do any damage!
                 baseDam = 0;
                 exDamBonus = 0;
                 ammoDamBonus = 0;
 
-                // but accuracy is important for this one
+                // ... but accuracy is important for this one.
                 baseHit = 1;
                 exHitBonus += (skill_bump(SK_THROWING) * 7 / 2);
                 // Adjust for strength and dex.
                 exHitBonus = dex_adjust_thrown_tohit(exHitBonus);
 
-                // Nets train throwing
+                // Nets train throwing.
                 exercise(SK_THROWING, 1);
                 break;
             }
@@ -2334,9 +2333,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exercise(SK_THROWING, 1);
 
         // ID check
-        if ( !teleport
-             && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
-             && random2(100) < you.skills[SK_THROWING] )
+        if (!teleport
+            && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
+            && random2(100) < you.skills[SK_THROWING])
         {
             set_ident_flags( item, ISFLAG_KNOW_PLUSES );
             set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
@@ -2346,7 +2345,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
     }
 
-    // range, dexterity bonus, possible skill increase for silly throwing
+    // Range, dexterity bonus, possible skill increase for silly throwing.
     if (projected)
     {
         if (wepType == MI_LARGE_ROCK)
@@ -2427,14 +2426,14 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.damage.size  = dice_mult * pbolt.damage.size / 100;
     pbolt.damage.size += slayDam;
 
-    // only add bonuses if we're throwing something sensible
+    // Only add bonuses if we're throwing something sensible.
     if (projected || wepClass == OBJ_WEAPONS)
     {
         pbolt.hit += ammoHitBonus + lnchHitBonus;
         pbolt.damage.size += ammoDamBonus + lnchDamBonus;
     }
 
-    // Add in bonus (only from Portal Projectile for now)
+    // Add in bonus (only from Portal Projectile for now).
     if (acc_bonus != DEBUG_COOKIE)
         pbolt.hit += acc_bonus;
 
@@ -2448,17 +2447,17 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
               pbolt.hit, pbolt.damage.num, pbolt.damage.size );
 #endif
 
-    // create message
+    // Create message.
     mprf( "You %s%s %s.",
           projected? "" : "awkwardly ",
           projected == LRET_LAUNCHED ? "shoot" : "throw",
           item.name(DESC_NOCAP_A).c_str() );
 
-    // ensure we're firing a 'missile'-type beam
+    // Ensure we're firing a 'missile'-type beam.
     pbolt.is_beam = false;
     pbolt.is_tracer = false;
 
-    // mark this item as thrown if it's a missile, so that we'll pick it up
+    // Mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.
     if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
         item.flags |= ISFLAG_THROWN;
@@ -2484,9 +2483,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
     }
 
-    if ( did_return )
+    if (did_return)
     {
-        // Fire beam in reverse
+        // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow(true, false);
         fire_beam(pbolt, &item, false);
@@ -2494,25 +2493,26 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"
                     << std::endl;
 
-        // Player saw the item return
+        // Player saw the item return.
         if (!is_artefact(you.inv[throw_2]))
             set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
     }
     else
     {
-        // should have returned but didn't
+        // Should have returned but didn't.
         if (returning && item_type_known(you.inv[throw_2]))
+        {
             msg::stream << item.name(DESC_CAP_THE)
                         << " fails to return to your pack!" << std::endl;
-
+        }
         dec_inv_item_quantity( throw_2, 1 );
     }
 
-    // throwing and blowguns are silent
+    // Throwing and blowguns are silent
     if (projected == LRET_LAUNCHED && lnchType != WPN_BLOWGUN)
         noisy( 6, you.x_pos, you.y_pos );
 
-    // but any monster nearby can see that something has been thrown:
+    // ... but any monster nearby can see that something has been thrown:
     alert_nearby_monsters();
 
     you.turn_is_over = true;
@@ -3355,10 +3355,12 @@ void zap_wand( int slot )
         zap_wand.ty = you.y_pos + random2(13) - 6;
     }
 
-    const zap_type type_zapped = static_cast<zap_type>(wand.zap());
+    zap_type type_zapped = static_cast<zap_type>(wand.zap());
+    bool random = false;
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
     {
         beam.effect_known = false;
+        random = true;
         if (dangerous)
         {
             // Xom loves it when you use a Wand of Random Effects and
@@ -3371,12 +3373,17 @@ void zap_wand( int slot )
     beam.source_y = you.y_pos;
     beam.set_target(zap_wand);
 
-    // zapping() updates beam
-    if (!zapping( static_cast<zap_type>(type_zapped),
-                  30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam ))
+    // Check whether we may hit friends, use "safe" values for random effects
+    // (highest possible range, and unresistable beam flavour).
+    if (!player_tracer(random ? ZAP_DEBUGGING_RAY : type_zapped,
+                       2 * (you.skills[SK_EVOCATIONS] - 1), beam,
+                       random ? 17 : 0))
     {
         return;
     }
+
+    // zapping() updates beam
+    zapping( type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
     // take off a charge
     wand.plus--;

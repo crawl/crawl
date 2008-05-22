@@ -2542,10 +2542,10 @@ int player_see_invis(bool calc_unid)
     if (artefacts > 0)
         si += artefacts;
 
-    if ( si > 1 )
+    if (si > 1)
         si = 1;
 
-    return si;
+    return (si);
 }
 
 // This does NOT do line of sight!  It checks the monster's visibility

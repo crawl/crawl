@@ -238,7 +238,11 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty );
 void mimic_alert( monsters *mimic );
 
 
-bool zapping( zap_type ztype, int power, struct bolt &pbolt );
+bool zapping( zap_type ztype, int power, struct bolt &pbolt,
+              bool needs_tracer = false, std::string msg = "" );
+
+bool player_tracer( zap_type ztype, int power, struct bolt &pbolt,
+                    int range = 0 );
 
 int affect(bolt &beam, int x, int y, item_def *item = NULL);
 
