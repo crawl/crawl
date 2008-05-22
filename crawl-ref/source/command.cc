@@ -1506,7 +1506,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<h>Extended Movement:\n"
-            "<w>o</w>      : auto-explore\n"
+            "<w>o</w> : auto-explore\n"
             "<w>G</w> : interlevel travel\n"
             "<w>Ctrl-F</w> : Find items\n"
             "<w>Ctrl-W</w> : set Waypoint\n"
@@ -1634,7 +1634,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Additional help:\n"
             "Many commands have context sensitive \n"
             "help, among them <w>X</w>, <w>x</w>, <w>f</w> (or any \n"
-            "form of targeting), <w>Ctrl-F</w> and <w>Ctrl-G</w>."
+            "form of targeting), <w>G</w> and <w>Ctrl-F</w>."
             "\n",
             true, true, _cmdhelp_textfilter);
 }
