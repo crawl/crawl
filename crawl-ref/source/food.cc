@@ -297,9 +297,8 @@ static bool _butcher_corpse(int corpse_id, bool force_butcher = false)
         if (work_req < 0)
             work_req = 0;
 
-
         delay_type dtype = DELAY_BUTCHER;
-        if (!force_butcher
+        if (!force_butcher && !rotten
             && can_bottle_blood_from_corpse(mitm[corpse_id].plus))
         {
             dtype = DELAY_BOTTLE_BLOOD;

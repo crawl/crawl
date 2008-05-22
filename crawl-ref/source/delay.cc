@@ -1099,7 +1099,7 @@ static void finish_delay(const delay_queue_item &delay)
                 }
 
                 if (you.species == SP_VAMPIRE && delay.type == DELAY_BUTCHER
-                    && mons_has_blood(item.plus))
+                    && mons_has_blood(item.plus) && !food_is_rotten(item))
                 {
                     mpr("What a waste.");
                 }
