@@ -4238,7 +4238,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         // naughty (even if a monster might resist).
         if (nasty_beam(mon, beam))
         {
-            if (YOU_KILL( beam.thrower ))
+            if (YOU_KILL(beam.thrower))
             {
                 if (is_sanctuary(mon->x, mon->y)
                     || is_sanctuary(you.x_pos, you.y_pos))
@@ -4269,12 +4269,10 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 }
             }
 
-            behaviour_event( mon, ME_ANNOY, _beam_source(beam) );
+            behaviour_event(mon, ME_ANNOY, _beam_source(beam));
         }
         else
-        {
-            behaviour_event( mon, ME_ALERT, _beam_source(beam) );
-        }
+            behaviour_event(mon, ME_ALERT, _beam_source(beam));
 
         conduct.enabled = true;
 
@@ -4477,7 +4475,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         // Don't annoy friendlies or good neutrals if the player's beam
         // did no damage.  Hostiles will still take umbrage.
         if (hurt_final > 0 || !mons_wont_attack(mon) || !YOU_KILL(beam.thrower))
-            behaviour_event(mon, ME_ANNOY, _beam_source(beam) );
+            behaviour_event(mon, ME_ANNOY, _beam_source(beam));
     }
 
     // explosions always 'hit'
@@ -5433,8 +5431,11 @@ bool nasty_beam(monsters *mon, bolt &beam)
         return (mons_holiness(mon) == MH_NATURAL);
 
     // dispel undead / control undead
-    if (beam.flavour == BEAM_DISPEL_UNDEAD || beam.flavour == BEAM_ENSLAVE_UNDEAD)
+    if (beam.flavour == BEAM_DISPEL_UNDEAD
+        || beam.flavour == BEAM_ENSLAVE_UNDEAD)
+    {
         return (mons_holiness(mon) == MH_UNDEAD);
+    }
 
     // pain/agony
     if (beam.flavour == BEAM_PAIN)
