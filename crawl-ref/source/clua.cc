@@ -1983,6 +1983,58 @@ LUARET1(crawl_random_range, number,
                       lua_isnumber(ls, 3)? luaL_checkint(ls, 3) : 1 ))
 LUARET1(crawl_coinflip, boolean, coinflip())
 
+static int crawl_random_element(lua_State *ls)
+{
+    const int table_idx = 1;
+    const int value_idx = 2;
+
+    if (lua_gettop(ls) == 0)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    // Only the first arg does anything now.  Maybe this should
+    // select from a variable number of table args?
+    lua_pop(ls, lua_gettop(ls) - 1);
+
+    // Keep max value on the stack, as it could be any type of value.
+    lua_pushnil(ls);
+    int rollsize = 0;
+
+    lua_pushnil(ls);
+    while (lua_next(ls, table_idx) != 0)
+    {
+        const int weight_idx = -1;
+        const int key_idx = -2;
+
+        int this_weight = lua_isnil(ls, weight_idx) ?
+            1 : (int)lua_tonumber(ls, weight_idx);
+
+        if (rollsize > 0)
+        {
+            rollsize += this_weight;
+            if (random2(rollsize) < this_weight)
+            {
+                lua_pushvalue(ls, key_idx);
+                lua_replace(ls, value_idx);
+            }
+        }
+        else
+        {
+            lua_pushvalue(ls, key_idx);
+            lua_replace(ls, value_idx);
+            rollsize = this_weight;
+        }
+
+        lua_pop(ls, 1);
+    }
+
+    lua_pushvalue(ls, value_idx);
+
+    return 1;
+}
+
 static int crawl_err_trace(lua_State *ls)
 {
     const int nargs = lua_gettop(ls);
@@ -2025,6 +2077,7 @@ static const struct luaL_reg crawl_lib[] =
     { "random2avg"   ,  crawl_random2avg },
     { "coinflip",       crawl_coinflip },
     { "random_range",   crawl_random_range },
+    { "random_element", crawl_random_element },
     { "redraw_screen",  crawl_redraw_screen },
     { "input_line",     crawl_input_line },
     { "c_input_line",   crawl_c_input_line},

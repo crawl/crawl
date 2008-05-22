@@ -10,6 +10,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <cmath>
 
 #include "branch.h"
 #include "clua.h"
@@ -1668,6 +1669,387 @@ static int dgn_apply_area_cloud(lua_State *ls)
     return (0);
 }
 
+static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx)
+{
+    dungeon_feature_type feat = (dungeon_feature_type)0;
+    if (lua_isnumber(ls, idx))
+        feat = (dungeon_feature_type)luaL_checkint(ls, idx);
+    else if (lua_isstring(ls, idx))
+        feat = dungeon_feature_by_name(luaL_checkstring(ls, idx));
+    else
+        luaL_argerror(ls, idx, "Feature must be a string or a feature index.");
+
+    return feat;
+}
+
+static void _clamp_to_bounds(int &x, int &y)
+{
+    x = std::min(std::max(x, X_BOUND_1+1), X_BOUND_2-1);
+    y = std::min(std::max(y, Y_BOUND_1+1), Y_BOUND_2-1);
+}
+
+static int dgn_fill_area(lua_State *ls)
+{
+    int x1 = luaL_checkint(ls, 1);
+    int y1 = luaL_checkint(ls, 2);
+    int x2 = luaL_checkint(ls, 3);
+    int y2 = luaL_checkint(ls, 4);
+    dungeon_feature_type feat = _get_lua_feature(ls, 5);
+    if (!feat)
+    {
+        luaL_argerror(ls, 5, "Invalid feature.");
+        return 0;
+    }
+
+    _clamp_to_bounds(x1, y1);
+    _clamp_to_bounds(x2, y2);
+    if (x2 < x1)
+        std::swap(x1, x2);
+    if (y2 < y1)
+        std::swap(y1, y2);
+
+    for (int y = y1; y <= y2; y++)
+        for (int x = x1; x <= x2; x++)
+            grd[x][y] = feat;
+
+    return 0;
+}
+
+static int dgn_replace_area(lua_State *ls)
+{
+    int x1 = luaL_checkint(ls, 1);
+    int y1 = luaL_checkint(ls, 2);
+    int x2 = luaL_checkint(ls, 3);
+    int y2 = luaL_checkint(ls, 4);
+    dungeon_feature_type search = _get_lua_feature(ls, 5);
+    if (!search)
+    {
+        luaL_argerror(ls, 5, "Invalid feature.");
+        return 0;
+    }
+    dungeon_feature_type replace = _get_lua_feature(ls, 6);
+    if (!replace)
+    {
+        luaL_argerror(ls, 6, "Invalid feature.");
+        return 0;
+    }
+
+    // gracefully handle out of bound areas by truncating them.
+    _clamp_to_bounds(x1, y1);
+    _clamp_to_bounds(x2, y2);
+    if (x2 < x1)
+        std::swap(x1, x2);
+    if (y2 < y1)
+        std::swap(y1, y2);
+
+    for (int y = y1; y <= y2; y++)
+        for (int x = x1; x <= x2; x++)
+            if (grd[x][y] == search)
+                grd[x][y] = replace;
+
+    return 0;
+}
+
+static int dgn_octa_room(lua_State *ls)
+{
+    int x1 = luaL_checkint(ls, 1);
+    int y1 = luaL_checkint(ls, 2);
+    int x2 = luaL_checkint(ls, 3);
+    int y2 = luaL_checkint(ls, 4);
+    int oblique = luaL_checkint(ls, 5);
+    dungeon_feature_type fill = _get_lua_feature(ls, 6);
+    if (!fill)
+    {
+        luaL_argerror(ls, 6, "Invalid feature.");
+        return 0;
+    }
+
+    spec_room sr;
+    sr.x1 = x1;
+    sr.x2 = x2;
+    sr.y1 = y1;
+    sr.y2 = y2;
+
+    octa_room(sr, oblique, fill);
+
+    return 0;
+}
+
+static int dgn_make_pillars(lua_State *ls)
+{
+    int center_x = luaL_checkint(ls, 1);
+    int center_y = luaL_checkint(ls, 2);
+    int num = luaL_checkint(ls, 3);
+    int scale_x = luaL_checkint(ls, 4);
+    int big_radius = luaL_checkint(ls, 5);
+    int pillar_radius = luaL_checkint(ls, 6);
+    dungeon_feature_type fill = _get_lua_feature(ls, 8);
+    if (!fill)
+    {
+        luaL_argerror(ls, 8, "Invalid feature.");
+        return 0;
+    }
+
+    const float PI = 3.14159265f;
+    for (int n = 0; n < num; n++)
+    {
+        float angle = n * 2 * PI / (float)num;
+        int x = (int)std::floor(std::cos(angle) * big_radius * scale_x + 0.5f);
+        int y = (int)std::floor(std::sin(angle) * big_radius + 0.5f);
+
+        lua_pushvalue(ls, 7);
+        lua_pushnumber(ls, center_x + x);
+        lua_pushnumber(ls, center_y + y);
+        lua_pushnumber(ls, pillar_radius);
+        lua_pushnumber(ls, fill);
+
+        lua_call(ls, 4, 0);
+    }
+
+    return 0;
+}
+
+static int dgn_make_square(lua_State *ls)
+{
+    int center_x = luaL_checkint(ls, 1);
+    int center_y = luaL_checkint(ls, 2);
+    int radius = std::abs(luaL_checkint(ls, 3));
+    dungeon_feature_type fill = _get_lua_feature(ls, 4);
+    if (!fill)
+    {
+        luaL_argerror(ls, 4, "Invalid feature.");
+        return 0;
+    }
+
+    for (int x = -radius; x <= radius; x++)
+        for (int y = -radius; y <= radius; y++)
+            grd[center_x + x][center_y + y] = fill;
+
+    return 0;
+}
+
+static int dgn_make_rounded_square(lua_State *ls)
+{
+    int center_x = luaL_checkint(ls, 1);
+    int center_y = luaL_checkint(ls, 2);
+    int radius = std::abs(luaL_checkint(ls, 3));
+    dungeon_feature_type fill = _get_lua_feature(ls, 4);
+    if (!fill)
+    {
+        luaL_argerror(ls, 4, "Invalid feature.");
+        return 0;
+    }
+
+    for (int x = -radius; x <= radius; x++)
+        for (int y = -radius; y <= radius; y++)
+            if (std::abs(x) != radius || std::abs(y) != radius)
+                grd[center_x + x][center_y + y] = fill;
+
+    return 0;
+}
+
+static int dgn_make_circle(lua_State *ls)
+{
+    int center_x = luaL_checkint(ls, 1);
+    int center_y = luaL_checkint(ls, 2);
+    int radius = std::abs(luaL_checkint(ls, 3));
+    dungeon_feature_type fill = _get_lua_feature(ls, 4);
+    if (!fill)
+    {
+        luaL_argerror(ls, 4, "Invalid feature.");
+        return 0;
+    }
+
+    for (int x = -radius; x <= radius; x++)
+        for (int y = -radius; y <= radius; y++)
+            if (x * x + y * y < radius * radius)
+                grd[center_x + x][center_y + y] = fill;
+
+    return 0;
+}
+
+static int dgn_in_bounds(lua_State *ls)
+{
+    int x = luaL_checkint(ls, 1);
+    int y = luaL_checkint(ls, 2);
+
+    lua_pushboolean(ls, in_bounds(x, y));
+    return 1;
+}
+
+static int dgn_replace_first(lua_State *ls)
+{
+    int x = luaL_checkint(ls, 1);
+    int y = luaL_checkint(ls, 2);
+    int dx = luaL_checkint(ls, 3);
+    int dy = luaL_checkint(ls, 4);
+    dungeon_feature_type search = _get_lua_feature(ls, 5);
+    if (!search)
+    {
+        luaL_argerror(ls, 5, "Invalid feature.");
+        lua_pushboolean(ls, false);
+        return 1;
+    }
+    dungeon_feature_type replace = _get_lua_feature(ls, 6);
+    if (!replace)
+    {
+        luaL_argerror(ls, 6, "Invalid feature.");
+        lua_pushboolean(ls, false);
+        return 1;
+    }
+
+    _clamp_to_bounds(x, y);
+    bool found = false;
+    while (in_bounds(x, y))
+    {
+        if (grd[x][y] == search)
+        {
+            grd[x][y] = replace;
+            found = true;
+            break;
+        }
+
+        x += dx;
+        y += dy;
+    }
+
+    lua_pushboolean(ls, found);
+    return 1;
+}
+
+static int dgn_replace_random(lua_State *ls)
+{
+    dungeon_feature_type search = _get_lua_feature(ls, 1);
+    if (!search)
+    {
+        luaL_argerror(ls, 1, "Invalid feature.");
+        return 0;
+    }
+    dungeon_feature_type replace = _get_lua_feature(ls, 2);
+    if (!replace)
+    {
+        luaL_argerror(ls, 2, "Invalid feature.");
+        return 0;
+    }
+
+    int x, y;
+    do
+    {
+        x = random2(GXM);
+        y = random2(GYM);
+    }
+    while (grd[x][y] != search);
+
+    grd[x][y] = replace;
+
+    return 0;
+}
+
+static int dgn_spotty_level(lua_State *ls)
+{
+    bool seeded = lua_toboolean(ls, 1);
+    int iterations = luaL_checkint(ls, 2);
+    bool boxy = lua_toboolean(ls, 3);
+
+    spotty_level(seeded, iterations, boxy);
+    return 0;
+}
+
+static int dgn_smear_feature(lua_State *ls)
+{
+    int iterations = luaL_checkint(ls, 1);
+    bool boxy = lua_toboolean(ls, 2);
+    dungeon_feature_type feat = _get_lua_feature(ls, 3);
+    if (!feat)
+    {
+        luaL_argerror(ls, 3, "Invalid feature.");
+        return 0;
+    }
+
+    int x1 = luaL_checkint(ls, 4);
+    int y1 = luaL_checkint(ls, 5);
+    int x2 = luaL_checkint(ls, 6);
+    int y2 = luaL_checkint(ls, 7);
+
+    _clamp_to_bounds(x1, y1);
+    _clamp_to_bounds(x2, y2);
+
+    smear_feature(iterations, boxy, feat, x1, y1, x2, y2);
+
+    return 0;
+}
+
+static int dgn_count_feature_in_box(lua_State *ls)
+{
+    int x1 = luaL_checkint(ls, 1);
+    int y1 = luaL_checkint(ls, 2);
+    int x2 = luaL_checkint(ls, 3);
+    int y2 = luaL_checkint(ls, 4);
+    dungeon_feature_type feat = _get_lua_feature(ls, 5);
+    if (!feat)
+    {
+        luaL_argerror(ls, 5, "Invalid feature.");
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    lua_pushnumber(ls, count_feature_in_box(x1, y1, x2, y2, feat)); 
+    return 1;
+}
+
+static int dgn_count_antifeature_in_box(lua_State *ls)
+{
+    int x1 = luaL_checkint(ls, 1);
+    int y1 = luaL_checkint(ls, 2);
+    int x2 = luaL_checkint(ls, 3);
+    int y2 = luaL_checkint(ls, 4);
+    dungeon_feature_type feat = _get_lua_feature(ls, 5);
+    if (!feat)
+    {
+        luaL_argerror(ls, 5, "Invalid feature.");
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    lua_pushnumber(ls, count_antifeature_in_box(x1, y1, x2, y2, feat)); 
+    return 1;
+}
+
+static int dgn_count_neighbours(lua_State *ls)
+{
+    int x = luaL_checkint(ls, 1);
+    int y = luaL_checkint(ls, 2);
+    dungeon_feature_type feat = _get_lua_feature(ls, 3);
+    if (!feat)
+    {
+        luaL_argerror(ls, 3, "Invalid feature.");
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    lua_pushnumber(ls, count_neighbours(x, y, feat)); 
+    return 1;
+}
+
+static int dgn_join_the_dots(lua_State *ls)
+{
+    int from_x = luaL_checkint(ls, 1);
+    int from_y = luaL_checkint(ls, 2);
+    int to_x = luaL_checkint(ls, 3);
+    int to_y = luaL_checkint(ls, 4);
+    // TODO enne - push map masks to lua?
+    unsigned map_mask = MMT_VAULT;
+    bool early_exit = lua_toboolean(ls, 5);
+
+    coord_def from(from_x, from_y);
+    coord_def to(to_x, to_y);
+
+    bool ret = join_the_dots(from, to, map_mask, early_exit);
+    lua_pushboolean(ls, ret);
+
+    return 1;
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -1716,22 +2098,40 @@ static const struct luaL_reg dgn_lib[] =
     { "register_listener", dgn_register_listener },
     { "remove_listener", dgn_remove_listener },
     { "remove_marker", dgn_remove_marker },
-    { "num_matching_markers", dgn_num_matching_markers},
+    { "num_matching_markers", dgn_num_matching_markers },
     { "feature_desc", dgn_feature_desc },
     { "feature_desc_at", dgn_feature_desc_at },
     { "item_from_index", dgn_item_from_index },
     { "mons_from_index", dgn_mons_from_index },
-    { "change_level_flags", dgn_change_level_flags},
-    { "change_branch_flags", dgn_change_branch_flags},
-    { "get_floor_colour", dgn_get_floor_colour},
-    { "get_rock_colour",  dgn_get_rock_colour},
-    { "change_floor_colour", dgn_change_floor_colour},
-    { "change_rock_colour",  dgn_change_rock_colour},
-    { "set_lt_callback", lua_dgn_set_lt_callback},
-    { "fixup_stairs", dgn_fixup_stairs},
-    { "floor_halo", dgn_floor_halo},
-    { "random_walk", dgn_random_walk},
-    { "apply_area_cloud", dgn_apply_area_cloud},
+    { "change_level_flags", dgn_change_level_flags },
+    { "change_branch_flags", dgn_change_branch_flags },
+    { "get_floor_colour", dgn_get_floor_colour },
+    { "get_rock_colour",  dgn_get_rock_colour },
+    { "change_floor_colour", dgn_change_floor_colour },
+    { "change_rock_colour",  dgn_change_rock_colour },
+    { "set_lt_callback", lua_dgn_set_lt_callback },
+    { "fixup_stairs", dgn_fixup_stairs },
+    { "floor_halo", dgn_floor_halo },
+    { "random_walk", dgn_random_walk },
+    { "apply_area_cloud", dgn_apply_area_cloud },
+
+    // building routines
+    { "fill_area", dgn_fill_area },
+    { "replace_area", dgn_replace_area },
+    { "octa_room", dgn_octa_room },
+    { "make_pillars", dgn_make_pillars },
+    { "make_square", dgn_make_square },
+    { "make_rounded_square", dgn_make_rounded_square },
+    { "make_circle", dgn_make_circle },
+    { "in_bounds", dgn_in_bounds },
+    { "replace_first", dgn_replace_first },
+    { "replace_random", dgn_replace_random },
+    { "spotty_level", dgn_spotty_level },
+    { "smear_feature", dgn_smear_feature },
+    { "count_feature_in_box", dgn_count_feature_in_box },
+    { "count_antifeature_in_box", dgn_count_antifeature_in_box },
+    { "count_neighbours", dgn_count_neighbours },
+    { "join_the_dots", dgn_join_the_dots },
 
     { NULL, NULL }
 };

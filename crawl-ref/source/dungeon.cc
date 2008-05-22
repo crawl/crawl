@@ -83,20 +83,6 @@ struct pit_mons_def
     int rare;
 };
 
-struct spec_room
-{
-    bool created;
-    bool hooked_up;
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-
-    spec_room() : created(false), hooked_up(false), x1(0), y1(0), x2(0), y2(0)
-    {
-    }
-};
-
 struct dist_feat
 {
     int dist;
@@ -155,8 +141,6 @@ static void _place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
                         unsigned char pool_y1, unsigned char pool_x2,
                         unsigned char pool_y2);
 static void _many_pools(dungeon_feature_type pool_type);
-static bool _join_the_dots(const coord_def &from, const coord_def &to,
-                           unsigned mmask, bool early_exit = false);
 static bool _join_the_dots_rigorous(const coord_def &from,
                                     const coord_def &to,
                                     unsigned mapmask,
@@ -165,7 +149,6 @@ static bool _join_the_dots_rigorous(const coord_def &from,
 static void _build_river(dungeon_feature_type river_type); //mv
 static void _build_lake(dungeon_feature_type lake_type); //mv
 
-static void _spotty_level(bool seeded, int iterations, bool boxy);
 static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
 static char _plan_1(int level_number);
@@ -175,8 +158,6 @@ static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                     char forbid_y2, dungeon_feature_type force_wall);
 static char _plan_5();
 static char _plan_6(int level_number);
-static bool _octa_room(spec_room &sr, int oblique_max,
-                       dungeon_feature_type type_floor);
 static void _portal_vault_level(int level_number);
 static void _labyrinth_level(int level_number);
 static void _box_room(int bx1, int bx2, int by1, int by2,
@@ -1406,8 +1387,8 @@ static void _place_ellipse(int x, int y, int a, int b,
             }
 }
 
-static int _count_feature_in_box(int x0, int y0, int x1, int y1,
-                                 dungeon_feature_type feat)
+int count_feature_in_box(int x0, int y0, int x1, int y1,
+                         dungeon_feature_type feat)
 {
     int result = 0;
     for ( int i = x0; i < x1; ++i )
@@ -1420,16 +1401,16 @@ static int _count_feature_in_box(int x0, int y0, int x1, int y1,
     return result;
 }
 
-static int _count_antifeature_in_box(int x0, int y0, int x1, int y1,
-                                     dungeon_feature_type feat)
+int count_antifeature_in_box(int x0, int y0, int x1, int y1,
+                             dungeon_feature_type feat)
 {
-    return (x1-x0)*(y1-y0) - _count_feature_in_box(x0,y0,x1,y1,feat);
+    return (x1-x0)*(y1-y0) - count_feature_in_box(x0,y0,x1,y1,feat);
 }
 
 // count how many neighbours of grd[x][y] are the feature feat.
 int count_neighbours(int x, int y, dungeon_feature_type feat)
 {
-    return _count_feature_in_box(x-1, y-1, x+2, y+2, feat);
+    return count_feature_in_box(x-1, y-1, x+2, y+2, feat);
 }
 
 static void _replace_in_grid(int x1, int y1, int x2, int y2,
@@ -2011,7 +1992,7 @@ static builder_rc_type _builder_by_branch(int level_number)
     case BRANCH_HIVE:
     case BRANCH_SLIME_PITS:
     case BRANCH_ORCISH_MINES:
-        _spotty_level(false, 100 + random2(500), false);
+        spotty_level(false, 100 + random2(500), false);
         return BUILD_SKIP;
 
     default:
@@ -2131,7 +2112,7 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
     {
         if (one_chance_in(16))
         {
-            _spotty_level(false, 0, coinflip());
+            spotty_level(false, 0, coinflip());
             return BUILD_SKIP;
         }
 
@@ -3739,7 +3720,7 @@ static void _build_rooms(const dgn_region_list &excluded,
         if (connections.size())
         {
             const coord_def c = connections[0];
-            if (_join_the_dots(c, myroom.random_edge_point(), MMT_VAULT))
+            if (join_the_dots(c, myroom.random_edge_point(), MMT_VAULT))
                 connections.erase( connections.begin() );
         }
 
@@ -4029,7 +4010,7 @@ static void _connect_vault(const vault_placement &vp)
         if (!floor.x && !floor.y)
             continue;
 
-        _join_the_dots(p, floor, MMT_VAULT, true);
+        join_the_dots(p, floor, MMT_VAULT, true);
     }
 }
 
@@ -5066,8 +5047,8 @@ static bool _join_the_dots_rigorous(const coord_def &from,
     return (found);
 }
 
-static bool _join_the_dots( const coord_def &from, const coord_def &to,
-                            unsigned mapmask, bool early_exit)
+bool join_the_dots(const coord_def &from, const coord_def &to,
+                   unsigned mapmask, bool early_exit)
 {
     if (from == to)
         return (true);
@@ -5200,7 +5181,7 @@ static void _many_pools(dungeon_feature_type pool_type)
         const int k = i + 2 + roll_dice( 2, 9 );
         const int l = j + 2 + roll_dice( 2, 9 );
 
-        if ( _count_antifeature_in_box(i, j, k, l, DNGN_FLOOR) == 0 )
+        if ( count_antifeature_in_box(i, j, k, l, DNGN_FLOOR) == 0 )
         {
             _place_pool(pool_type, i, j, k, l);
             pools++;
@@ -5332,13 +5313,13 @@ static void _place_altar()
         int px = 15 + random2(55);
         int py = 15 + random2(45);
 
-        const int numfloors = _count_feature_in_box(px-2, py-2, px+3, py+3,
+        const int numfloors = count_feature_in_box(px-2, py-2, px+3, py+3,
                                                     DNGN_FLOOR);
         const int numgood =
-            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_ROCK_WALL) +
-            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_CLOSED_DOOR) +
-            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_SECRET_DOOR) +
-            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_FLOOR);
+            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_ROCK_WALL) +
+            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_CLOSED_DOOR) +
+            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_SECRET_DOOR) +
+            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_FLOOR);
 
         if ( numgood < 5*5 || numfloors == 0 )
             continue;
@@ -5624,7 +5605,7 @@ static object_class_type _item_in_shop(unsigned char shop_type)
     return (OBJ_RANDOM);
 }                               // end item_in_shop()
 
-static void _spotty_level(bool seeded, int iterations, bool boxy)
+void spotty_level(bool seeded, int iterations, bool boxy)
 {
     dgn_Build_Method = "spotty_level";
 
@@ -5718,6 +5699,34 @@ static void _spotty_level(bool seeded, int iterations, bool boxy)
     }
 }                               // end spotty_level()
 
+void smear_feature(int iterations, bool boxy, dungeon_feature_type feature,
+                   int x1, int y1, int x2, int y2)
+{
+    for (int i = 0; i < iterations; i++)
+    {
+        int x, y;
+        bool diagonals, straights;
+        do
+        {
+            x = random_range(x1+1, x2-1);
+            y = random_range(y1+1, y2-1);
+
+            diagonals = grd[x+1][y+1] == feature ||
+                        grd[x-1][y+1] == feature ||
+                        grd[x-1][y-1] == feature ||
+                        grd[x+1][y-1] == feature;
+
+            straights = grd[x+1][y] == feature ||
+                        grd[x-1][y] == feature ||
+                        grd[x][y+1] == feature ||
+                        grd[x][y-1] == feature;
+        }
+        while (grd[x][y] == feature || !straights && (boxy || !diagonals));
+
+        grd[x][y] = feature;
+    }
+}
+
 static void _bigger_room()
 {
     dgn_Build_Method = "bigger_room";
@@ -5780,7 +5789,7 @@ static void _plan_main(int level_number, int force_plan)
                                    : _plan_3());
 
     if (do_stairs == 3 || do_stairs == 1)
-        _spotty_level(true, 0, coinflip());
+        spotty_level(true, 0, coinflip());
 
     if (do_stairs == 2 || do_stairs == 3)
     {
@@ -5849,7 +5858,7 @@ static char _plan_3()
         romx2[which_room] = romx1[which_room] + 2 + random2(8);
         romy2[which_room] = romy1[which_room] + 2 + random2(8);
 
-        if (exclusive && _count_antifeature_in_box(romx1[which_room] - 1,
+        if (exclusive && count_antifeature_in_box(romx1[which_room] - 1,
                                                    romy1[which_room] - 1,
                                                    romx2[which_room] + 1,
                                                    romy2[which_room] + 1,
@@ -5873,7 +5882,7 @@ static char _plan_3()
             const int prev_ry1 = romy1[which_room - 1];
             const int prev_ry2 = romy2[which_room - 1];
 
-            _join_the_dots( coord_def(rx1 + random2( rx2 - rx1 ),
+            join_the_dots( coord_def(rx1 + random2( rx2 - rx1 ),
                                       ry1 + random2( ry2 - ry1 )),
                             coord_def(prev_rx1 + random2(prev_rx2 - prev_rx1),
                                       prev_ry1 + random2(prev_ry2 - prev_ry1)),
@@ -5903,7 +5912,7 @@ static char _plan_3()
                 const int prev_ry1 = romy1[i - 1];
                 const int prev_ry2 = romy2[i - 1];
 
-                _join_the_dots( coord_def( rx1 + random2( rx2 - rx1 ),
+                join_the_dots( coord_def( rx1 + random2( rx2 - rx1 ),
                                            ry1 + random2( ry2 - ry1 ) ),
                                 coord_def(
                                     prev_rx1 + random2( prev_rx2 - prev_rx1 ),
@@ -5975,7 +5984,7 @@ static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
             }
         }
 
-        if (_count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
+        if (count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
             continue;
 
         if (force_wall == NUM_FEATURES)
@@ -6016,7 +6025,7 @@ static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
         if (one_chance_in(10))
             feature = coinflip()? DNGN_DEEP_WATER : DNGN_LAVA;
 
-        _octa_room(sr, oblique_max, feature);
+        octa_room(sr, oblique_max, feature);
     }
 
     return 2;
@@ -6030,14 +6039,14 @@ static char _plan_5()
 
     for (unsigned char i = 0; i < imax; i++)
     {
-        _join_the_dots(
+        join_the_dots(
             coord_def( random2(GXM - 20) + 10, random2(GYM - 20) + 10 ),
             coord_def( random2(GXM - 20) + 10, random2(GYM - 20) + 10 ),
             MMT_VAULT );
     }
 
     if (!one_chance_in(4))
-        _spotty_level(true, 100, coinflip());
+        spotty_level(true, 100, coinflip());
 
     return 2;
 }                               // end plan_5()
@@ -6069,8 +6078,8 @@ static char _plan_6(int level_number)
     return 0;
 }                               // end plan_6()
 
-static bool _octa_room(spec_room &sr, int oblique_max,
-                       dungeon_feature_type type_floor)
+bool octa_room(spec_room &sr, int oblique_max,
+               dungeon_feature_type type_floor)
 {
     dgn_Build_Method = "octa_room";
 
@@ -6762,7 +6771,7 @@ static void _diamond_rooms(int level_number)
 
         oblique_max = (sr.x2 - sr.x1) / 2;      //random2(20) + 5;
 
-        if (!_octa_room(sr, oblique_max, type_floor))
+        if (!octa_room(sr, oblique_max, type_floor))
         {
             runthru++;
             if (runthru > 9)
@@ -6797,7 +6806,7 @@ static void _big_room(int level_number)
         // usually floor, except at higher levels
         if (!one_chance_in(5) || level_number < 8 + random2(8))
         {
-            _octa_room(sr, oblique, DNGN_FLOOR);
+            octa_room(sr, oblique, DNGN_FLOOR);
             return;
         }
 
@@ -6810,7 +6819,7 @@ static void _big_room(int level_number)
                                                        : DNGN_LAVA);
         }
 
-        _octa_room(sr, oblique, type_floor);
+        octa_room(sr, oblique, type_floor);
     }
 
     // what now?

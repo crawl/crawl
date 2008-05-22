@@ -340,4 +340,33 @@ void dgn_set_lt_callback(std::string level_type_name,
 // vaults used in the current level).
 bool dgn_square_is_passable(const coord_def &c);
 
+struct spec_room
+{
+    bool created;
+    bool hooked_up;
+    int x1;
+    int y1;
+    int x2;
+    int y2;
+
+    spec_room() : created(false), hooked_up(false), x1(0), y1(0), x2(0), y2(0)
+    {
+    }
+};
+
+bool join_the_dots(const coord_def &from, const coord_def &to,
+                   unsigned mmask, bool early_exit = false);
+void spotty_level(bool seeded, int iterations, bool boxy);
+void smear_feature(int iterations, bool boxy, dungeon_feature_type feature,
+                   int x1, int y1, int x2, int y2);
+bool octa_room(spec_room &sr, int oblique_max,
+               dungeon_feature_type type_floor);
+
+int count_feature_in_box(int x0, int y0, int x1, int y1,
+                         dungeon_feature_type feat);
+int count_antifeature_in_box(int x0, int y0, int x1, int y1,
+                             dungeon_feature_type feat);
+int count_neighbours(int x, int y, dungeon_feature_type feat);
+
+
 #endif

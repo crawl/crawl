@@ -6,227 +6,6 @@
 #
 ###############################################################################
 
-lua {{
-    -- TODO enne - most of these should probably get moved back into C++
-
-    function fill_area(x1, y1, x2, y2, feature)
-        for x = x1, x2 do
-            for y = y1, y2 do
-                dgn.grid(x, y, feature)
-            end
-        end
-    end
-
-    function octa_room(x1, y1, x2, y2, oblique, fill)
-        local ob_temp = oblique
-
-        local rock_wall = dgn.feature_number("rock_wall")
-        local shallow_water = dgn.feature_number("shallow_water")
-        local deep_water = dgn.feature_number("deep_water")
-        local floor = dgn.feature_number("floor")
-
-        for x = x1, x2 do
-            for y = y1 + ob_temp, y2 - ob_temp do
-                if dgn.grid(x, y) == rock_wall then
-                    dgn.grid(x, y, fill)
-                end
-                if dgn.grid(x, y) == floor and (fill == shallow_water or fill == deep_water) then
-                    dgn.grid(x, y, shallow_water)
-                end
-            end
-
-            if x > x2 - oblique then
-                ob_temp = ob_temp + 1
-            elseif ob_temp > 0 then
-                ob_temp = ob_temp - 1
-            end
-        end
-    end
-
-    function pillars(center_x, center_y, num, flip_x, big_radius, 
-                     pillar_radius, pillar_routine, fill)
-        for i = 0, num - 1 do
-            local angle = i * 2 * math.pi / num
-            local x = math.floor(math.cos(angle) * big_radius * flip_x + 0.5)
-            local y = math.floor(math.sin(angle) * big_radius + 0.5)
-
-            pillar_routine(center_x + x, center_y + y, pillar_radius, fill)
-        end
-    end
-
-    -- begin pillar functions
-    function pillar_square(center_x, center_y, radius, fill)
-        for x = -radius, radius do
-            for y = -radius, radius do
-                dgn.grid(center_x + x, center_y + y, fill)
-            end
-        end
-    end
-
-    function pillar_rounded_square(center_x, center_y, radius, fill)
-        for x = -radius, radius do
-            for y = -radius, radius do
-                if math.abs(x) ~= radius or math.abs(y) ~= radius then
-                    dgn.grid(center_x + x, center_y + y, fill)
-                end
-            end
-        end
-    end
-
-    function pillar_circle(center_x, center_y, radius, fill)
-        for x = -radius, radius do
-            for y = -radius, radius do
-                if x * x + y * y < radius * radius then
-                    dgn.grid(center_x + x, center_y + y, fill)
-                end
-            end
-        end
-    end
-    -- end pillar functions
-
-    function select_from_weighted_table(tb)
-        local value = nil
-        local rollsize = 0
-        for temp_val, temp_weight in pairs (tb) do
-            if rollsize == 0 then
-                value = temp_val
-                rollsize = temp_weight
-            else
-                rollsize = rollsize + temp_weight
-                if crawl.random2(rollsize) < temp_weight then
-                    value = temp_val
-                end
-            end
-        end
-
-        return value
-    end
-
-    -- Randomly selects a grid with feature 'search' and sets it to 'replace'
-    function replace_random(search, replace)
-        local gxm, gym = dgn.max_bounds()
-
-        local feature = nil, x, y
-        while feature ~= search do
-            x = crawl.random2(gxm)
-            y = crawl.random2(gym)
-            feature = dgn.grid(x, y)
-        end
-
-        dgn.grid(x, y, replace)
-    end
-
-    function valid(x, y)
-        local gxm, gym = dgn.max_bounds()
-        return (x >= 0 and y >= 0 and x < gxm and y < gym)
-    end
-
-    -- Walks from x, y along dx,dy until it finds 'search'
-    function replace_first(x, y, dx, dy, search, replace)
-
-        local feature = dgn.grid(x, y)
-
-        while feature ~= search and valid(x,y) do
-            x = x + dx
-            y = y + dy
-            feature = dgn.grid(x, y)
-        end
-
-        if valid(x, y) then
-            dgn.grid(x, y, replace)
-            return true
-        else
-            return false
-        end
-    end
-
-    function spotty_level(boxy, x1, y1, x2, y2)
-        local iterations
-        -- boxy levels have more clearing, so they get fewer iterations
-        if boxy then
-            iterations = 200 + crawl.random2(750)
-        else
-            iterations = 200 + crawl.random2(1500)
-        end
-
-        make_spotty(iterations, boxy, x1, y1, x2, y2)
-    end
-
-    -- randomly turns walls into floors
-    function make_spotty(iterations, boxy, x1, y1, x2, y2)
-        if x2 - x1 - 8 <= 0 or y2 - y1 - 8 <= 0 then
-            return
-        end
-
-        local wall = dgn.feature_number("rock_wall")
-        local floor = dgn.feature_number("floor")
-
-        for i = 1, iterations do
-            local x, y
-            repeat
-                x = crawl.random2(x2 - x1 - 7) + x1 + 4
-                y = crawl.random2(y2 - y1 - 7) + y1 + 4
-            until dgn.grid(x, y) ~= wall or
-                  dgn.grid(x-1, y) ~= wall or
-                  dgn.grid(x+1, y) ~= wall or
-                  dgn.grid(x, y-1) ~= wall or
-                  dgn.grid(x, y+1) ~= wall or
-                  dgn.grid(x-2, y) ~= wall or
-                  dgn.grid(x+2, y) ~= wall or
-                  dgn.grid(x, y-2) ~= wall or
-                  dgn.grid(x, y+2) ~= wall
-
-            -- convenience function
-            function replace_grid(x, y, search, replace)
-                if dgn.grid(x, y) == search then
-                    dgn.grid(x, y, replace)
-                end
-            end
-
-            replace_grid(x, y, wall, floor)
-            replace_grid(x, y-1, wall, floor)
-            replace_grid(x, y+1, wall, floor)
-            replace_grid(x-1, y, wall, floor)
-            replace_grid(x+1, y, wall, floor)
-
-            if boxy then
-                replace_grid(x-1, y-1, wall, floor)
-                replace_grid(x+1, y+1, wall, floor)
-                replace_grid(x-1, y+1, wall, floor)
-                replace_grid(x+1, y-1, wall, floor)
-            end
-        end
-    end
-
-    -- randomly extends walls onto floors
-    function smear_feature(iterations, boxy, feature, x1, y1, x2, y2)
-        for i = 1, iterations do
-            local x, y
-            function check_box(x, y, feature)
-                return dgn.grid(x+1, y) == feature or
-                    dgn.grid(x-1, y) == feature or
-                    dgn.grid(x, y+1) == feature or
-                    dgn.grid(x, y-1) == feature
-            end
-            function check_diagonal(x, y, feature)
-                return dgn.grid(x+1, y+1) == feature or
-                    dgn.grid(x-1, y+1) == feature or
-                    dgn.grid(x-1, y-1) == feature or
-                    dgn.grid(x+1, y-1) == feature
-            end
-
-            repeat
-                x = crawl.random2(x2 - x1 - 2) + x1 + 1
-                y = crawl.random2(y2 - y1 - 2) + y1 + 1
-            until dgn.grid(x, y) ~= feature and
-                  (check_box(x, y, feature) or 
-                  not boxy and check_diagonal(x, y, feature))
-
-            dgn.grid(x, y, feature)
-        end
-    end
-}}
-
 ##############################################################
 # layout_forbidden_doughnut
 #
@@ -241,15 +20,15 @@ TAGS:   layout allow_dup
     local gxm, gym = dgn.max_bounds()
     local wall = dgn.feature_number("rock_wall")
     local floor = dgn.feature_number("floor")
-    fill_area(0, 0, gxm - 1, gym - 1, wall)
+    dgn.fill_area(0, 0, gxm - 1, gym - 1, wall)
 
     local width = (10 - crawl.random2(7))
 
     -- construct donut
-    fill_area(10, 10, gxm - 10, 10 + width, floor)
-    fill_area(10, 60 - width, gxm - 10, gym - 10, floor)
-    fill_area(10, 10, 10 + width, gym - 10, floor)
-    fill_area(60 - width, 10, gxm - 10, gym - 10, floor)
+    dgn.fill_area(10, 10, gxm - 10, 10 + width, floor)
+    dgn.fill_area(10, 60 - width, gxm - 10, gym - 10, floor)
+    dgn.fill_area(10, 10, 10 + width, gym - 10, floor)
+    dgn.fill_area(60 - width, 10, gxm - 10, gym - 10, floor)
 
     local spotty = crawl.coinflip()
     local smears = crawl.random2(300)
@@ -258,8 +37,8 @@ TAGS:   layout allow_dup
     if crawl.coinflip() then
         local width2 = 1 + crawl.random2(5)
 
-        fill_area(10, gym/2 - width2, gxm - 10, gym/2 + width2, floor)
-        fill_area(gxm/2 - width2, 10, gxm/2 + width2, gym - 10, floor)
+        dgn.fill_area(10, gym/2 - width2, gxm - 10, gym/2 + width2, floor)
+        dgn.fill_area(gxm/2 - width2, 10, gxm/2 + width2, gym - 10, floor)
 
         -- sometimes add a small octagon room
         if crawl.coinflip() and crawl.random2(15) > 7 then
@@ -268,14 +47,12 @@ TAGS:   layout allow_dup
                 oblique = 5 + crawl.random2(20)
             end
 
-            local feature_name = select_from_weighted_table({
+            local feature_name = crawl.random_element({
                 ["floor"]      = 5,
                 ["deep_water"] = 1,
                 ["lava"]       = 1,
             })
-            local feature_idx = dgn.feature_number(feature_name)
-
-            octa_room(25, 25, gxm - 25, gym - 25, oblique, feature_idx)
+            dgn.octa_room(25, 25, gxm - 25, gym - 25, oblique, feature_name)
 
             -- decrease spotty chance
             spotty = crawl.one_chance_in(5)
@@ -286,10 +63,10 @@ TAGS:   layout allow_dup
     local smear_boxy = crawl.coinflip()
 
     if spotty then
-        spotty_level(spotty_boxy, 0, 0, gxm - 1, gym - 1)
+        dgn.spotty_level(true, 0, spotty_boxy)
     end
     if not spotty and crawl.one_chance_in(4) or spotty then
-        smear_feature(smears, smear_boxy, wall, 0, 0, gxm - 1, gym - 1)
+        dgn.smear_feature(smears, smear_boxy, wall, 0, 0, gxm - 1, gym - 1)
     end
 }}
 MAP
@@ -328,23 +105,23 @@ TAGS:    layout allow_dup
     end
 
     -- fill with rock
-    fill_area(0, 0, gxm-1, gym-1, wall)
+    dgn.fill_area(0, 0, gxm-1, gym-1, wall)
 
     -- create window
     if window then
         local clear = dgn.feature_number("clear_rock_wall")
-        fill_area(10, gym/2 - height - 1, gxm - 10, gym/2 - height - 1, clear)
-        fill_area(10, gym/2 + height + 1, gxm - 10, gym/2 + height + 1, clear)
-        fill_area(gxm/2 - width - 1, 10, gxm/2 - width - 1, gym - 10, clear)
-        fill_area(gxm/2 + width + 1, 10, gxm/2 + width + 1, gym - 10, clear)
+        dgn.fill_area(10, gym/2 - height - 1, gxm - 10, gym/2 - height - 1, clear)
+        dgn.fill_area(10, gym/2 + height + 1, gxm - 10, gym/2 + height + 1, clear)
+        dgn.fill_area(gxm/2 - width - 1, 10, gxm/2 - width - 1, gym - 10, clear)
+        dgn.fill_area(gxm/2 + width + 1, 10, gxm/2 + width + 1, gym - 10, clear)
     end
 
     -- create a cross
-    fill_area(10, gym/2 - height, gxm - 10, gym/2 + height, floor)
-    fill_area(gxm/2 - width, 10, gxm/2 + width, gym - 10, floor)
+    dgn.fill_area(10, gym/2 - height, gxm - 10, gym/2 + height, floor)
+    dgn.fill_area(gxm/2 - width, 10, gxm/2 + width, gym - 10, floor)
 
     if not crawl.one_chance_in(4) then
-        spotty_level(crawl.coinflip(), 0, 0, gxm - 1, gym - 1)
+        dgn.spotty_level(true, 0, crawl.coinflip())
     end
 }}
 MAP
@@ -369,13 +146,12 @@ TAGS:    layout allow_dup
 
     local oblique = 10 + crawl.random2(20)
 
-    -- Step 1: Create octagon
-    fill_area(0, 0, gxm - 1, gym - 1, wall)
-    octa_room(10, 10, gxm - 10, gym - 10, oblique, floor)
+    dgn.fill_area(0, 0, gxm - 1, gym - 1, "rock_wall")
+    dgn.octa_room(10, 10, gxm - 10, gym - 10, oblique, "floor")
 
-    if crawl.coinflip() then
+    if crawl.coinflip() or true then
         local iterations = 100 + crawl.random2(200)
-        smear_feature(iterations, false, wall, 0, 0, gxm - 1, gym - 1)
+        dgn.smear_feature(iterations, false, wall, 0, 0, gxm - 1, gym - 1)
     end
 
     -- Step 2: Add pillars
@@ -389,10 +165,14 @@ TAGS:    layout allow_dup
         ["deep_water"]         = 2,
         ["lava"]               = 1,
     }
-    local fill = dgn.feature_number(select_from_weighted_table(pillar_fill))
+    local fill = dgn.feature_number(crawl.random_element(pillar_fill))
 
     -- Potential pillar drawing routines
-    local pillar_func = {pillar_circle, pillar_square, pillar_rounded_square}
+    local pillar_func = {
+        dgn.make_circle,
+        dgn.make_square,
+        dgn.make_rounded_square
+    }
 
     -- Pillar size params
     -- NOTE: Be careful about tweaking the ranges here.  Pillars that are
@@ -402,14 +182,15 @@ TAGS:    layout allow_dup
     local pillar_radius = 1 + crawl.random2(3)
     local circle_radius = 2 + crawl.random2(6) + pillar_radius * 2 + num / 2
 
+
     -- beautification hack: no "circle" pillars of radius 1
     if type == 1 and pillar_radius == 1 then
         fill = dgn.feature_number("stone_arch")
     end
 
     -- Finally, make the pillars
-    pillars(gxm/2, gym/2, num, 1, circle_radius, pillar_radius,
-            pillar_func[type], fill)
+    dgn.make_pillars(gxm/2, gym/2, num, 1, circle_radius, pillar_radius,
+                     pillar_func[type], fill)
 
     -- Step 3: Create stairs
 
@@ -445,17 +226,17 @@ TAGS:    layout allow_dup
             local ret = true
 
             if loc == 0 then
-                replace_random(floor, stair_list[i])
+                dgn.replace_random(floor, stair_list[i])
             elseif loc == 1 then
                 dgn.grid(gxm/2 + i - 2, gym/2 + 1 - math.abs(i - 2), st)
             elseif loc == 2 then
-                ret = replace_first(gxm/2 + i - 2, 0, 0, 1, floor, st)
+                ret = dgn.replace_first(gxm/2 + i-2, 0, 0, 1, floor, st)
             elseif loc == 3 then
-                ret = replace_first(gxm - 1, gym/2 + i - 2, -1, 0, floor, st)
+                ret = dgn.replace_first(gxm - 1, gym/2 + i-2, -1, 0, floor, st)
             elseif loc == 4 then
-                ret = replace_first(gxm/2 + i - 2, gym - 1, 0, -1, floor, st)
+                ret = dgn.replace_first(gxm/2 + i-2, gym - 1, 0, -1, floor, st)
             elseif loc == 5 then
-                ret = replace_first(0, gym/2 + i - 2, 1, 0, floor, st)
+                ret = dgn.replace_first(0, gym/2 + i-2, 1, 0, floor, st)
             end
 
             assert(ret)
