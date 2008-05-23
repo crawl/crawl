@@ -2085,13 +2085,9 @@ std::vector<talent> your_talents( bool check_confused )
 
     // Religious abilities
     if (you.religion == GOD_ELYVILON)
-    {
         _add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused );
-    }
     else if (you.religion == GOD_TROG)
-    {
         _add_talent(talents, ABIL_TROG_BURN_BOOKS, check_confused );
-    }
 
     // gods take abilities away until penance completed -- bwr
     if (!player_under_penance() && !silenced( you.x_pos, you.y_pos ))
@@ -2114,9 +2110,7 @@ std::vector<talent> your_talents( bool check_confused )
     //jmf: check for breath weapons -- they're exclusive of each other I hope!
     //     better make better ones first.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
-    {
         _add_talent(talents, ABIL_BREATHE_HELLFIRE, check_confused );
-    }
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
              || player_mutation_level(MUT_BREATHE_FLAMES))
     {
