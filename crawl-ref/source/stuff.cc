@@ -135,13 +135,13 @@ void radius_iterator::step_back()
 
 bool radius_iterator::on_valid_square() const
 {
-    if ( !in_bounds(location) )
+    if (!in_bounds(location))
         return false;
-    if ( !roguelike_metric && (location - center).abs() > radius*radius )
+    if (!roguelike_metric && (location - center).abs() > radius*radius)
         return false;
-    if ( require_los && !see_grid(location) )
+    if (require_los && !see_grid(location))
         return false;
-    if ( exclude_center && location == center )
+    if (exclude_center && location == center)
         return false;
     return true;
 }
@@ -1098,7 +1098,7 @@ bool player_can_hear(int x, int y)
     return (!silenced(x, y) && !silenced(you.x_pos, you.y_pos));
 }                               // end player_can_hear()
 
-// Returns true if inside the area the player can move and dig (ie exclusive)
+// Returns true if inside the area the player can move and dig (ie exclusive).
 bool in_bounds( int x, int y )
 {
     return (x > X_BOUND_1 && x < X_BOUND_2

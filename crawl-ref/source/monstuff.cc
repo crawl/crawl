@@ -2540,7 +2540,7 @@ static void _handle_behaviour(monsters *mon)
 static bool _mons_check_set_foe(monsters *mon, int x, int y,
                                 bool friendly, bool neutral)
 {
-    if (!in_bounds(x, y))
+    if (!inside_level_bounds(x, y))
         return (false);
 
     if (!friendly && !neutral && x == you.x_pos && y == you.y_pos
@@ -2706,7 +2706,7 @@ static void _handle_movement(monsters *monster)
 {
     int dx, dy;
 
-    // monsters will try to flee out of a sanctuary
+    // Monsters will try to flee out of a sanctuary.
     if (is_sanctuary(monster->x, monster->y) && !mons_friendly(monster)
         && !mons_is_fleeing(monster)
         && monster->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
@@ -2717,7 +2717,8 @@ static void _handle_movement(monsters *monster)
              && !is_sanctuary(monster->x, monster->y)
              && monster->target_x == env.sanctuary_pos.x
              && monster->target_y == env.sanctuary_pos.y)
-    {   // once outside there's a chance they'll regain their courage
+    {
+        // Once outside there's a chance they'll regain their courage.
         if (random2(5) > 2)
             monster->del_ench(ENCH_FEAR);
     }
@@ -2780,14 +2781,14 @@ static void _handle_movement(monsters *monster)
     {
         if (abs(dx) > abs(dy))
         {
-            // sometimes we'll just move parallel the x axis
+            // Sometimes we'll just move parallel the x axis.
             if (coinflip())
                 mmov_y = 0;
         }
 
         if (abs(dy) > abs(dx))
         {
-            // sometimes we'll just move parallel the y axis
+            // Sometimes we'll just move parallel the y axis.
             if (coinflip())
                 mmov_x = 0;
         }
@@ -2915,8 +2916,6 @@ static void _handle_nearby_ability(monsters *monster)
 //
 // handle_special_ability
 //
-// $$$ not sure what to say here...
-//
 //---------------------------------------------------------------
 static bool _handle_special_ability(monsters *monster, bolt & beem)
 {
@@ -2998,7 +2997,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             const int tx = monster->x + dx;
             const int ty = monster->y + dy;
 
-            if (tx < 0 || tx > GXM || ty < 0 || ty > GYM)
+            if (!inside_level_bounds(tx, ty))
                 continue;
 
             if (!grid_is_solid(grd[tx][ty]))
@@ -3087,7 +3086,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // good idea?
         if (mons_should_fire(beem))
         {
-            simple_monster_message(monster, " shoots out a bolt of electricity!");
+            simple_monster_message(monster,
+                                   " shoots out a bolt of electricity!");
             fire_beam(beem);
             used = true;
         }
@@ -3132,6 +3132,12 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // friendly fiends won't use torment, preferring hellfire
         // (right now there is no way a monster can predict how
         // badly they'll damage the player with torment) -- GDL
+
+        // Well, I guess you could allow it if the player is torment
+        // resistant, but there's a very good reason torment resistant
+        // players can't cast Torment themselves, and allowing your
+        // allies to cast it would just introduce harmless Torment
+        // through the backdoor. Thus, shouldn't happen. (jpeg)
         if (one_chance_in(4))
         {
             spell_type spell_cast = SPELL_NO_SPELL;
@@ -3200,12 +3206,12 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (!mons_near(monster))
             break;
 
-        // the fewer spikes the manticore has left, the less
+        // The fewer spikes the manticore has left, the less
         // likely it will use them.
         if (random2(16) >= static_cast<int>(monster->number))
             break;
 
-        // do the throwing right here, since the beam is so
+        // Do the throwing right here, since the beam is so
         // easy to set up and doesn't involve inventory.
 
         // set up the beam
@@ -3307,7 +3313,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             }
         }
 
-        // won't sing if either of you silenced, or it's friendly or confused
+        // Won't sing if either of you silenced, or it's friendly or confused.
         if (monster->has_ench(ENCH_CONFUSION) || mons_friendly(monster)
             || silenced(monster->x, monster->y)
             || silenced(you.x_pos, you.y_pos))
@@ -3315,11 +3321,11 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
         }
 
-        // reduce probability because of spamminess
+        // Reduce probability because of spamminess.
         if (you.species == SP_MERFOLK && !one_chance_in(4))
             break;
 
-        // a wounded invisible mermaid is less likely to give away her position
+        // A wounded invisible mermaid is less likely to give away her position.
         if (monster->invisible()
             && monster->hit_points <= monster->max_hit_points / 2
             && !one_chance_in(3))
@@ -3341,8 +3347,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             }
             else
             {
-                // if you're already beheld by an invisible mermaid she can
-                // still prolong the enchantment; otherwise you "resist"
+                // If you're already beheld by an invisible mermaid she can
+                // still prolong the enchantment; otherwise you "resist".
                 if (already_beheld)
                     mpr("You hear a luring song.", MSGCH_SOUND);
                 else
@@ -3360,7 +3366,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 }
             }
 
-            // once beheld by a particular monster, cannot resist anymore
+            // Once beheld by a particular monster, you cannot resist anymore.
             if (!already_beheld
                 && (you.species == SP_MERFOLK || you_resist_magic(100)))
             {
@@ -4876,9 +4882,9 @@ static void _handle_monster_move(int i, monsters *monster)
 
             brkk = false;
 
-             if (mons_is_confused( monster )
-                 || (monster->type == MONS_AIR_ELEMENTAL
-                     && monster->has_ench(ENCH_SUBMERGED)))
+             if (mons_is_confused(monster)
+                 || monster->type == MONS_AIR_ELEMENTAL
+                    && monster->has_ench(ENCH_SUBMERGED))
              {
                  std::vector<coord_def> moves;
 
@@ -5754,19 +5760,18 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
     const int targ_x = monster->x + count_x;
     const int targ_y = monster->y + count_y;
 
-    // bounds check - don't consider moving out of grid!
+    // Bounds check - don't consider moving out of grid!
     if (!inside_level_bounds(targ_x, targ_y))
         return false;
 
-    // non-friendly and non-good neutral monsters won't enter
-    // sanctuaries
+    // Non-friendly and non-good neutral monsters won't enter sanctuaries.
     if (!mons_wont_attack(monster)
         && is_sanctuary(targ_x, targ_y)
         && !is_sanctuary(monster->x, monster->y))
     {
         return (false);
     }
-    // inside a sanctuary don't attack anything!
+    // Inside a sanctuary don't attack anything!
     if (is_sanctuary(monster->x, monster->y)
         && (targ_x == you.x_pos && targ_y == you.y_pos
             || mgrd[targ_x][targ_y] != NON_MONSTER))
@@ -5777,11 +5782,10 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
     const dungeon_feature_type target_grid = grd[targ_x][targ_y];
     const habitat_type habitat = mons_habitat(monster);
 
-    // effectively slows down monster movement across water.
+    // Effectively slows down monster movement across water.
     // Fire elementals can't cross at all.
     bool no_water = false;
     if (monster->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
-        //okmove = DNGN_WATER_STUCK;
         no_water = true;
 
     const int targ_cloud_num  = env.cgrid[ targ_x ][ targ_y ];
@@ -5798,18 +5802,18 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         && (target_grid == DNGN_ROCK_WALL
             || target_grid == DNGN_CLEAR_ROCK_WALL))
     {
-        // don't burrow out of bounds
+        // Don't burrow out of bounds.
+        // XXX: Are these bounds still valid? (jpeg)
+        //      We should probably use in_bounds() instead.
         if (targ_x <= 7 || targ_x >= (GXM - 8)
             || targ_y <= 7 || targ_y >= (GYM - 8))
         {
             return false;
         }
 
-        // don't burrow at an angle (legacy behaviour)
+        // Don't burrow at an angle (legacy behaviour).
         if (count_x != 0 && count_y != 0)
-        {
             return false;
-        }
     }
     else if (!monster->can_pass_through_feat(target_grid)
              || (no_water && target_grid >= DNGN_DEEP_WATER
@@ -5825,7 +5829,7 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
     if (monster->type == MONS_WANDERING_MUSHROOM && see_grid(targ_x, targ_y))
         return false;
 
-    // Water elementals avoid fire and heat
+    // Water elementals avoid fire and heat.
     if (monster->type == MONS_WATER_ELEMENTAL
         && (target_grid == DNGN_LAVA
             || targ_cloud_type == CLOUD_FIRE
@@ -6789,13 +6793,12 @@ bool shift_monster( monsters *mon, int x, int y )
     }
 
     for (i = -1; i <= 1; i++)
-    {
         for (j = -1; j <= 1; j++)
         {
             tx = x + i;
             ty = y + j;
 
-            if (!in_bounds(tx, ty))
+            if (!inside_level_bounds(tx, ty))
                 continue;
 
             // don't drop on anything but vanilla floor right now
@@ -6815,7 +6818,6 @@ bool shift_monster( monsters *mon, int x, int y )
                 found_move = true;
             }
         }
-    }
 
     if (found_move)
     {

@@ -4181,12 +4181,23 @@ static bool _stop_unchivalric_attack(monsters *mon)
     const bool isUnchivalric = is_unchivalric_attack(&you, mon, mon);
     const bool isHoly        = mons_is_holy(mon);
 
-    if (wontAttack
-        || is_good_god(you.religion) && (isNeutral || isHoly)
-        || you.religion == GOD_SHINING_ONE && isUnchivalric)
+    if (isFriendly)
     {
-        snprintf(info, INFO_SIZE, "Really fire through this "
-                                  "%s%s%screature?",
+        // listed in the form: "your rat", "Blork"
+        snprintf(info, INFO_SIZE, "Really fire through %s?",
+                 mon->name(DESC_NOCAP_THE).c_str());
+
+        if (!yesno(info, true, 'n'))
+            return (true);
+    }
+    else if (wontAttack
+             || is_good_god(you.religion) && (isNeutral || isHoly)
+             || you.religion == GOD_SHINING_ONE && isUnchivalric)
+    {
+        // "Really fire through the helpless neutral holy Daeva?"
+        // was: "Really fire through this helpless neutral holy creature?"
+        snprintf(info, INFO_SIZE, "Really fire through the "
+                                  "%s%s%s%s?",
                  (isUnchivalric) ? "helpless "
                                  : "",
                  (isFriendly)    ? "friendly " :
@@ -4194,7 +4205,8 @@ static bool _stop_unchivalric_attack(monsters *mon)
                  (isNeutral)     ? "neutral "
                                  : "",
                  (isHoly)        ? "holy "
-                                 : "");
+                                 : "",
+                 mon->name(DESC_PLAIN).c_str());
 
         if (!yesno(info, true, 'n'))
             return (true);
@@ -4266,45 +4278,25 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (beam.is_tracer)
         {
-            // Enchant case -- enchantments always hit, so update target immed.
-            if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+            if (beam.thrower == KILL_YOU_MISSILE)
             {
-                if (beam.thrower == KILL_YOU_MISSILE)
+                if (!_beam_is_harmless(beam, mon)
+                    && _stop_unchivalric_attack(mon))
                 {
-                    if (_stop_unchivalric_attack(mon))
-                    {
-                        beam.fr_count = 1;
-                        return (BEAM_STOP);
-                    }
+                    beam.fr_count = 1;
+                    return (BEAM_STOP);
                 }
-                else
-                {
-                    beam.foe_count += 1;
-                    beam.foe_power += mons_power(mons_type);
-                }
+            }
+            // Enchant case -- enchantments always hit, so update target immed.
+            else if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+            {
+                beam.foe_count += 1;
+                beam.foe_power += mons_power(mons_type);
             }
             else
             {
-                if (beam.thrower == KILL_YOU_MISSILE)
-                {
-                    if (!_beam_is_harmless(beam, mon))
-                    {
-                        snprintf(info, INFO_SIZE, "Really fire through %s?",
-                                 mon->name(DESC_NOCAP_THE).c_str());
-
-                        if (!yesno(info, true, 'n'))
-                        {
-                            beam.fr_count = 1;
-                            return (BEAM_STOP);
-                        }
-                    }
-                    // Don't count friends we don't want counted.
-                }
-                else
-                {
-                    beam.fr_count += 1;
-                    beam.fr_power += mons_power(mons_type);
-                }
+                beam.fr_count += 1;
+                beam.fr_power += mons_power(mons_type);
             }
 
             return (_range_used_on_hit(beam));
@@ -4460,8 +4452,17 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     // hurt by this beam.
     if (beam.is_tracer)
     {
-        // Check only if actual damage, but always count friends for player.
-        if (hurt_final > 0 || beam.thrower == KILL_YOU_MISSILE)
+        if (beam.thrower == KILL_YOU_MISSILE)
+        {
+            if (!_beam_is_harmless(beam, mon)
+                && _stop_unchivalric_attack(mon))
+            {
+                beam.fr_count = 1;
+                return (BEAM_STOP);
+            }
+        }
+        // Check only if actual damage.
+        else if (hurt_final > 0)
         {
             // Monster could be hurt somewhat, but only apply the
             // monster's power based on how badly it is affected.
@@ -4471,45 +4472,16 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             // foe_power or fr_power.
             if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
             {
-                if (beam.thrower == KILL_YOU_MISSILE)
-                {
-                    if (_stop_unchivalric_attack(mon))
-                    {
-                        beam.fr_count = 1;
-                        return (BEAM_STOP);
-                    }
-                }
-                else
-                {
-                    // Counting foes is only important for monster tracers.
-                    beam.foe_count += 1;
-                    beam.foe_power += 2 * hurt_final * mons_power(mons_type)
-                                                        / hurt;
-                }
+                // Counting foes is only important for monster tracers.
+                beam.foe_count += 1;
+                beam.foe_power += 2 * hurt_final * mons_power(mons_type)
+                                                    / hurt;
             }
             else
             {
-                if (beam.thrower == KILL_YOU_MISSILE)
-                {
-                    if (!_beam_is_harmless(beam, mon))
-                    {
-                        snprintf(info, INFO_SIZE, "Really fire through %s?",
-                                 mon->name(DESC_NOCAP_THE).c_str());
-
-                        if (!yesno(info, true, 'n'))
-                        {
-                            beam.fr_count = 1;
-                            return (BEAM_STOP);
-                        }
-                    }
-                    // Don't count friends we don't want counted.
-                }
-                else
-                {
-                    beam.fr_count += 1;
-                    beam.fr_power += 2 * hurt_final * mons_power(mons_type)
-                                                       / hurt;
-                }
+                beam.fr_count += 1;
+                beam.fr_power += 2 * hurt_final * mons_power(mons_type)
+                                                   / hurt;
             }
         }
 
