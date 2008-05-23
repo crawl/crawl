@@ -440,6 +440,7 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
     const monster_type demontype =
         summon_any_demon(
             use_greater_demons || dct != DEMON_GREATER ? dct : DEMON_COMMON);
+
     return (demontype);
 }
 
@@ -448,11 +449,13 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
 static monster_type xom_random_punishment_demon(int sever)
 {
     monster_type demon = MONS_PROGRAM_BUG;
+
     do
         demon = xom_random_demon(sever);
     while ((demon == MONS_HELLION
             && you.experience_level < 12
             && !one_chance_in(3 + (12 - you.experience_level) / 2)));
+
     return (demon);
 }
 
