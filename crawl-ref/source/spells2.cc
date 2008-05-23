@@ -554,7 +554,7 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
     mgen_data mg( type_resurr, corps_beh, 0,
                   you.pos(), corps_hit, 0, MONS_PROGRAM_BUG, 0,
                   colour );
-    
+
     int mon = create_monster(mg);
 
     if (mon == -1)
@@ -1371,7 +1371,7 @@ bool summon_elemental(int pow, int restricted_type,
                      && random2(100) >= unfriendly);
 
     if (create_monster(
-            mgen_data( type_summoned, 
+            mgen_data( type_summoned,
                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                        numsc,
                        coord_def(targ_x, targ_y),
@@ -1477,7 +1477,7 @@ void summon_animals(int pow)
         bool friendly = (random2(pow) > 4);
 
         create_monster(
-            mgen_data( mon_chosen, 
+            mgen_data( mon_chosen,
                        friendly ? BEH_FRIENDLY : BEH_HOSTILE, 4,
                        you.pos(),
                        friendly ? you.pet_target : MHITYOU ));
@@ -1495,7 +1495,7 @@ void summon_scorpions(int pow)
         bool friendly = (random2(pow) > 3);
 
         if (create_monster(
-                mgen_data(MONS_SCORPION, 
+                mgen_data(MONS_SCORPION,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                           3,
                           you.pos(),
@@ -1519,7 +1519,7 @@ void summon_ugly_thing(int pow)
     bool friendly = (random2(pow) > 3);
 
     if (create_monster(
-            mgen_data(ugly, 
+            mgen_data(ugly,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       numsc,
                       you.pos(),
@@ -1582,7 +1582,7 @@ void summon_ice_beast_etc(int pow, monster_type ibc, bool divine_gift)
 
     int monster =
         create_monster(
-            mgen_data(ibc, beha, numsc, 
+            mgen_data(ibc, beha, numsc,
                       you.pos(), hitting));
     if (monster != -1)
     {
@@ -1778,7 +1778,7 @@ void summon_undead(int pow)
         bool friendly = (random2(pow) > 5);
 
         if (create_monster(
-                mgen_data(thing_called, 
+                mgen_data(thing_called,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE, 5,
                           you.pos(),
                           friendly ? you.pet_target : MHITYOU)) != -1)
