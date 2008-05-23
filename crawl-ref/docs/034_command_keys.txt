@@ -7,6 +7,10 @@
 # Note that the 'v'iew item command is not available anymore. You can
 # get the same functionality by pressing the item slot in the inventor.
 
+# autotravel (Ctrl-G)
+M:\{7}
+A:G
+
 # annotate level (Ctrl-I)
 M:\{9}
 A:!
