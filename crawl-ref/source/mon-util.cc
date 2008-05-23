@@ -379,7 +379,7 @@ static bool _mons_your_abomination(const monsters *mon)
         return (false);
     }
 
-    // Reusing the colour scheme - hacky! (jpeg)
+    // XXX: Reusing the colour scheme - hacky! (jpeg)
     return (mon->number == BROWN || mon->number == RED
             || mon->number == LIGHTRED);
 }
@@ -395,14 +395,13 @@ mon_holy_type mons_holiness(const monsters *mon)
 mon_holy_type mons_class_holiness(int mc)
 {
     return (smc->holiness);
-}                               // end mons_holiness()
+}
 
 bool mons_class_is_confusable(int mc)
 {
     return (smc->resist_magic < MAG_IMMUNE
             && mons_class_holiness(mc) != MH_PLANT
-            && mons_class_holiness(mc) != MH_NONLIVING
-            && mons_class_holiness(mc) != MH_UNDEAD);
+            && mons_class_holiness(mc) != MH_NONLIVING);
 }
 
 bool mons_class_is_slowable(int mc)
@@ -482,17 +481,17 @@ bool mons_is_statue(int mc)
             || mc == MONS_ICE_STATUE);
 }
 
-bool mons_is_mimic( int mc )
+bool mons_is_mimic(int mc)
 {
-    return (mons_species( mc ) == MONS_GOLD_MIMIC);
+    return (mons_species(mc) == MONS_GOLD_MIMIC);
 }
 
-bool mons_is_demon( int mc )
+bool mons_is_demon(int mc)
 {
-    const int show_char = mons_char( mc );
+    const int show_char = mons_char(mc);
 
     // Not every demonic monster is a demon (hell hog, hell hound, etc.).
-    if (mons_class_holiness( mc ) == MH_DEMONIC
+    if (mons_class_holiness(mc) == MH_DEMONIC
         && (isdigit( show_char ) || show_char == '&'))
     {
         return (true);
@@ -504,36 +503,36 @@ bool mons_is_demon( int mc )
 int mons_zombie_size(int mc)
 {
     return (smc->zombie_size);
-}                               // end mons_zombie_size()
+}
 
 int mons_weight(int mc)
 {
     return (smc->weight);
-}                               // end mons_weight()
+}
 
 corpse_effect_type mons_corpse_effect(int mc)
 {
     return (smc->corpse_thingy);
-}                               // end mons_corpse_effect()
+}
 
-monster_type mons_species( int mc )
+monster_type mons_species(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return (me? me->species : MONS_PROGRAM_BUG);
-}                               // end mons_species()
+}
 
-monster_type mons_genus( int mc )
+monster_type mons_genus(int mc)
 {
     return (smc->genus);
 }
 
-monster_type draco_subspecies( const monsters *mon )
+monster_type draco_subspecies(const monsters *mon)
 {
     ASSERT( mons_genus( mon->type ) == MONS_DRACONIAN );
 
-    if ( mon->type == MONS_TIAMAT )
+    if (mon->type == MONS_TIAMAT)
     {
-        switch ( mon->colour )
+        switch (mon->colour)
         {
         case RED:
             return MONS_RED_DRACONIAN;
@@ -550,7 +549,7 @@ monster_type draco_subspecies( const monsters *mon )
         }
     }
 
-    monster_type ret = mons_species( mon->type );
+    monster_type ret = mons_species(mon->type);
 
     if (ret == MONS_DRACONIAN && mon->type != MONS_DRACONIAN)
         ret = static_cast<monster_type>( mon->base_monster );
@@ -591,7 +590,7 @@ shout_type mons_shouts(int mc)
     return (u);
 }
 
-bool mons_is_unique( int mc )
+bool mons_is_unique(int mc)
 {
     return (mons_class_flag(mc, M_UNIQUE));
 }
@@ -611,7 +610,7 @@ bool mons_see_invis(const monsters *mon)
         return (true);
 
     return (false);
-}                               // end mons_see_invis()
+}
 
 bool mon_can_see_monster( const monsters *mon, const monsters *targ )
 {
@@ -666,7 +665,7 @@ int mons_class_colour(int mc)
 mon_itemuse_type mons_itemuse(int mc)
 {
     return (smc->gmon_use);
-}                               // end mons_itemuse()
+}
 
 int mons_colour(const monsters *monster)
 {
@@ -789,11 +788,11 @@ int mons_resist_magic( const monsters *mon )
 
     int u = (get_monster_data(mon->type))->resist_magic;
 
-    // negative values get multiplied with mhd
+    // Negative values get multiplied with monster hit dice.
     if (u < 0)
         u = mon->hit_dice * -u * 4 / 3;
 
-    // randarts have a multiplicative effect
+    // Randarts have a multiplicative effect.
     u *= (_scan_mon_inv_randarts( mon, RAP_MAGIC ) + 100);
     u /= 100;
 
@@ -865,12 +864,12 @@ int mons_res_elec( const monsters *mon )
 {
     int mc = mon->type;
 
-    // this is a variable, not a player_xx() function, so can be above 1
+    // This is a variable, not a player_xx() function, so can be above 1.
     int u = 0;
 
     u += get_mons_resists(mon).elec;
 
-    // don't bother checking equipment if the monster can't use it
+    // Don't bother checking equipment if the monster can't use it.
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
         u += _scan_mon_inv_randarts( mon, RAP_ELECTRICITY );
@@ -894,9 +893,9 @@ bool mons_res_asphyx( const monsters *mon )
     const mon_holy_type holiness = mons_holiness( mon );
 
     return (mons_is_unholy(mon)
-                || holiness == MH_NONLIVING
-                || holiness == MH_PLANT
-                || get_mons_resists(mon).asphyx > 0);
+            || holiness == MH_NONLIVING
+            || holiness == MH_PLANT
+            || get_mons_resists(mon).asphyx > 0);
 }
 
 int mons_res_acid( const monsters *mon )
@@ -5024,9 +5023,7 @@ void monsters::timeout_enchantments(int levels)
 
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
-            {
                 del_ench(i->first);
-            }
             blink();
             break;
 
@@ -5162,12 +5159,12 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (mons_itemuse(type) == MONUSE_EATS_ITEMS)
             break;
 
-        // the enchantment doubles as the durability of a net
-        // the more corroded it gets, the more easily it will break
-        const int hold = mitm[net].plus; // this will usually be negative
+        // The enchantment doubles as the durability of a net
+        // the more corroded it gets, the more easily it will break.
+        const int hold = mitm[net].plus; // This will usually be negative.
         const int mon_size = body_size(PSIZE_BODY);
 
-        // smaller monsters can escape more quickly
+        // Smaller monsters can escape more quickly.
         if (mon_size < random2(SIZE_BIG)  // BIG = 5
             && !has_ench(ENCH_BERSERK) && type != MONS_DANCING_WEAPON)
         {
@@ -5176,18 +5173,18 @@ void monsters::apply_enchantment(const mon_enchant &me)
             else
                 simple_monster_message(this, " struggles to escape the net.");
 
-            // confused monsters have trouble finding the exit
+            // Confused monsters have trouble finding the exit.
             if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
                 break;
 
             decay_enchantment(me, 2*(NUM_SIZE_LEVELS - mon_size) - hold);
 
-            // frayed nets are easier to escape
+            // Frayed nets are easier to escape.
             if (mon_size <= -(hold-1)/2)
                 decay_enchantment(me, (NUM_SIZE_LEVELS - mon_size));
         }
-        else // large (and above) monsters always thrash the net and destroy it
-        {    // e.g. ogre, large zombie (large); centaur, nage, hydra (big)
+        else // Large (and above) monsters always thrash the net and destroy it
+        {    // e.g. ogre, large zombie (large); centaur, nage, hydra (big).
 
             if (mons_near(this) && !player_monster_visible(this))
                 mpr("Something wriggles in the net.");
@@ -5277,7 +5274,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SUBMERGED:
     {
-        // not even air elementals unsubmerge into clouds
+        // Not even air elementals unsubmerge into clouds.
         if (env.cgrid[x][y] != EMPTY_CLOUD)
             break;
 
