@@ -1763,27 +1763,110 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
         }
     }
+    pbolt.set_target(thr);
+
+    // Making a copy of the item: changed only for venom launchers
+    item_def item = you.inv[throw_2];
+    item.quantity = 1;
+    item.slot     = index_to_letter(item.link);
+
+    // Get the ammo/weapon type.  Convenience.
+    const object_class_type wepClass = item.base_type;
+    const int               wepType  = item.sub_type;
+
+    // figure out if we're thrown or launched
+    const launch_retval projected = is_launched(&you, you.weapon(), item);
+
+    pbolt.name     = item.name(DESC_PLAIN, false, false, false);
+    pbolt.thrower  = KILL_YOU_MISSILE;
+    pbolt.source_x = you.x_pos;
+    pbolt.source_y = you.y_pos;
+    pbolt.colour   = item.colour;
+    pbolt.flavour  = BEAM_MISSILE;
+    pbolt.aux_source.clear();
+    // pbolt.range is set below
+
+    if (projected)
+    {
+        if (wepType == MI_LARGE_ROCK)
+        {
+            pbolt.range    = 1 + random2( you.strength / 5 );
+            pbolt.rangeMax = you.strength / 5;
+            if (you.can_throw_rocks())
+            {
+                pbolt.range    += random_range(4, 7);
+                pbolt.rangeMax += 7;
+            }
+            if (pbolt.rangeMax > 12)
+            {
+                pbolt.rangeMax = 12;
+                if (pbolt.range > 12)
+                    pbolt.range = 12;
+            }
+        }
+        else if (wepType == MI_THROWING_NET)
+        {
+            pbolt.rangeMax = pbolt.range = 2 + player_size(PSIZE_BODY);
+        }
+        else
+        {
+            pbolt.rangeMax = pbolt.range = 12;
+        }
+    }
+    else
+    {
+        // Range based on mass & strength, between 1 and 9.
+        pbolt.range = you.strength - item_mass(item) / 10 + 3;
+        if (pbolt.range < 1)
+            pbolt.range = 1;
+
+        if (pbolt.range > 9)
+            pbolt.range = 9;
+
+        pbolt.rangeMax = pbolt.range;
+    }
+
+    pbolt.is_beam       = false;
+    pbolt.beam_source   = 0;
+    pbolt.can_see_invis = player_see_invis();
+    pbolt.smart_monster = true;
+    pbolt.attitude      = ATT_FRIENDLY;
+    pbolt.is_tracer     = true;
+
+    // init tracer variables
+    pbolt.foe_count     = pbolt.fr_count = 0;
+    pbolt.foe_power     = pbolt.fr_power = 0;
+    pbolt.fr_helped     = pbolt.fr_hurt  = 0;
+    pbolt.foe_helped    = pbolt.foe_hurt = 0;
+    pbolt.foe_ratio     = 100;
+
+    // Don't do the tracing when confused.
+    if (!you.duration[DUR_CONF])
+        fire_beam(pbolt);
+
+    // Should only happen if the player answered 'n' to one of those
+    // "Fire through friendly?" prompts.
+    if (pbolt.fr_count > 0)
+    {
+        canned_msg(MSG_OK);
+        you.turn_is_over = false;
+        return (false);
+    }
+
+    // Now start real firing!
+    origin_set_unknown(item);
 
     // Must unwield before fire_beam() makes a copy in order to remove things
     // like temporary branding. -- bwr
     if (throw_2 == you.equip[EQ_WEAPON] && you.inv[throw_2].quantity == 1)
     {
         unwield_item();
-        canned_msg( MSG_EMPTY_HANDED );
+        canned_msg(MSG_EMPTY_HANDED);
     }
 
-    // Making a copy of the item: changed only for venom launchers
-    item_def item = you.inv[throw_2];
-    item.quantity = 1;
-    item.slot     = index_to_letter(item.link);
-    origin_set_unknown(item);
-
-    if (item.base_type == OBJ_POTIONS
-        && (item.sub_type == POT_BLOOD
-            || item.sub_type == POT_BLOOD_COAGULATED)
-        && you.inv[throw_2].quantity > 1)
+    if (is_blood_potion(item) && you.inv[throw_2].quantity > 1)
     {
-        // initialize thrown potion with oldest potion in stack
+        // Initialize thrown potion with oldest potion in stack.
         long val = remove_oldest_blood_potion(you.inv[throw_2]);
         val -= you.num_turns;
         item.props.clear();
@@ -1801,9 +1884,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // want to use tx, ty to make the missile fly to map edge.
     if (!teleport)
         pbolt.set_target(thr);
-
-    pbolt.flavour = BEAM_MISSILE;
-    // pbolt.range is set below
 
     dungeon_char_type zapsym = DCHAR_SPACE;
     switch (item.base_type)
@@ -1825,23 +1905,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     pbolt.type = dchar_glyph(zapsym);
 
-    pbolt.source_x = you.x_pos;
-    pbolt.source_y = you.y_pos;
-    pbolt.colour = item.colour;
-
-    pbolt.name = item.name(DESC_PLAIN, false, false, false);
-
-    pbolt.thrower = KILL_YOU_MISSILE;
-    pbolt.aux_source.clear();
-
-    // get the ammo/weapon type.  Convenience.
-    const object_class_type wepClass = item.base_type;
-    const int wepType = item.sub_type;
-
-    // get the launcher class,type.  Convenience.
+    // Get the launcher class,type.  Convenience.
     if (you.equip[EQ_WEAPON] < 0)
         lnchType = NUM_WEAPONS;
-    else {
+    else
+    {
         lnchType =
             static_cast<weapon_type>( you.inv[you.equip[EQ_WEAPON]].sub_type );
     }
@@ -1862,17 +1930,14 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             baseDam = 0;
     }
 
-    // figure out if we're thrown or launched
-    const launch_retval projected = is_launched(&you, you.weapon(), item);
-
-    // extract launcher bonuses due to magic
+    // Extract launcher bonuses due to magic.
     if (projected == LRET_LAUNCHED)
     {
         lnchHitBonus = you.inv[you.equip[EQ_WEAPON]].plus;
         lnchDamBonus = you.inv[you.equip[EQ_WEAPON]].plus2;
     }
 
-    // extract weapon/ammo bonuses due to magic
+    // Extract weapon/ammo bonuses due to magic.
     ammoHitBonus = item.plus;
     ammoDamBonus = item.plus2;
 
@@ -1892,7 +1957,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         baseHit = property( launcher, PWPN_HIT );
         baseDam = lnch_base_dam + random2(1 + item_base_dam);
 
-        // Slings are terribly weakened otherwise
+        // Slings are terribly weakened otherwise.
         if (lnch_base_dam == 0)
             baseDam = item_base_dam;
 
@@ -1903,7 +1968,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             baseDam = 4;
 
         // [dshaligram] This is a horrible hack - we force beam.cc to consider
-        // this beam "needle-like".
+        // this beam "needle-like". (XXX)
         if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
             pbolt.ench_power = AUTOMATIC_HIT;
 
@@ -1915,10 +1980,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         item_base_dam, lnch_base_dam);
 #endif
 
-        // fix ammo damage bonus, since missiles only use inv_plus
+        // Fix ammo damage bonus, since missiles only use inv_plus.
         ammoDamBonus = ammoHitBonus;
 
-        // check for matches; dwarven, elven, orcish
+        // Check for matches; dwarven, elven, orcish.
         if (!get_equip_race(you.inv[you.equip[EQ_WEAPON]]) == 0)
         {
             if (get_equip_race( you.inv[you.equip[EQ_WEAPON]] )
@@ -2018,8 +2083,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 lnchDamBonus = 0;
             break;
         }
-            // Blowguns take a _very_ steady hand;  a lot of the bonus
-            // comes from dexterity.  (Dex bonus here as well as below).
+        // Blowguns take a _very_ steady hand;  a lot of the bonus
+        // comes from dexterity.  (Dex bonus here as well as below).
         case SK_DARTS:
             baseHit -= 2;
             exercise(SK_DARTS, (coinflip()? 2 : 1));
@@ -2125,8 +2190,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 pbolt.name += "poison ";
 
             pbolt.name += "flame";
-            pbolt.colour = RED;
-            pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
+            pbolt.colour  = RED;
+            pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
             pbolt.thrower = KILL_YOU_MISSILE;
             pbolt.aux_source.clear();
         }
@@ -2144,8 +2209,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 pbolt.name += "poison ";
 
             pbolt.name += "frost";
-            pbolt.colour = WHITE;
-            pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
+            pbolt.colour  = WHITE;
+            pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
             pbolt.thrower = KILL_YOU_MISSILE;
             pbolt.aux_source.clear();
         }
@@ -2187,8 +2252,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // CALCULATIONS FOR THROWN WEAPONS
     if (projected == LRET_THROWN)
     {
-        returning = ((get_weapon_brand(item) == SPWPN_RETURNING ||
-                      get_ammo_brand(item) == SPMSL_RETURNING) && !teleport);
+        returning = (!teleport && (get_weapon_brand(item) == SPWPN_RETURNING
+                                   || get_ammo_brand(item) == SPMSL_RETURNING));
 
         if (returning && !one_chance_in(1 + skill_bump(SK_THROWING)))
             did_return = true;
@@ -2345,36 +2410,19 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
     }
 
-    // Range, dexterity bonus, possible skill increase for silly throwing.
+    // Dexterity bonus, and possible skill increase for silly throwing.
     if (projected)
     {
-        if (wepType == MI_LARGE_ROCK)
+        if (wepType != MI_LARGE_ROCK && wepType != MI_THROWING_NET)
         {
-            pbolt.range = 1 + random2( you.strength / 5 );
-            if (you.can_throw_rocks())
-                pbolt.range += random_range(4, 7);
-            if (pbolt.range > 12)
-                pbolt.range = 12;
-
-            pbolt.rangeMax = pbolt.range;
-        }
-        else if (wepType == MI_THROWING_NET)
-        {
-            pbolt.rangeMax = pbolt.range = 2 + player_size(PSIZE_BODY);
-        }
-        else
-        {
-            pbolt.range = 12;
-            pbolt.rangeMax = 12;
-
             exHitBonus += you.dex / 2;
 
             // slaying bonuses
             if (projected != LRET_LAUNCHED || wepType != MI_NEEDLE)
             {
                 slayDam = slaying_bonus(PWPN_DAMAGE);
-                slayDam = slayDam < 0? -random2(1 - slayDam)
-                                     : random2(1 + slayDam);
+                slayDam = (slayDam < 0 ? -random2(1 - slayDam)
+                                       :  random2(1 + slayDam));
             }
 
             exHitBonus += slaying_bonus(PWPN_HIT);
@@ -2382,17 +2430,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else
     {
-        // range based on mass & strength, between 1 and 9
-        pbolt.range = you.strength - item_mass(item) / 10 + 3;
-        if (pbolt.range < 1)
-            pbolt.range = 1;
-
-        if (pbolt.range > 9)
-            pbolt.range = 9;
-
-        // set max range equal to range for this
-        pbolt.rangeMax = pbolt.range;
-
         if (one_chance_in(20))
             exercise(SK_THROWING, 1);
 
@@ -2454,7 +2491,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
           item.name(DESC_NOCAP_A).c_str() );
 
     // Ensure we're firing a 'missile'-type beam.
-    pbolt.is_beam = false;
+    pbolt.is_beam   = false;
     pbolt.is_tracer = false;
 
     // Mark this item as thrown if it's a missile, so that we'll pick it up

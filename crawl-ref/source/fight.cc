@@ -1909,7 +1909,7 @@ static inline int get_resistible_fraction(beam_type flavour)
 // (does handle monster acid damage), miasma, and other exotic
 // attacks.
 //
-// beam_type is just use to determine the damage flavour, it does not
+// beam_type is just used to determine the damage flavour, it does not
 // necessarily imply that the attack is a beam attack.
 int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged)
@@ -1917,12 +1917,12 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
     if (!res)
         return (rawdamage);
 
-    const bool monster = defender->atype() == ACT_MONSTER;
+    const bool monster = (defender->atype() == ACT_MONSTER);
 
     // Check if this is a resist that pretends to be boolean for
     // damage purposes - only electricity at the moment, raw poison
     // damage uses the normal formula.
-    int res_base = is_boolean_resist(flavour)? 2 : 1;
+    int res_base = (is_boolean_resist(flavour) ? 2 : 1);
     const int resistible_fraction = get_resistible_fraction(flavour);
 
     int resistible = rawdamage * resistible_fraction / 100;

@@ -82,7 +82,7 @@ static int opdir[]   = { 2, 1, 4, 3 };
 static FixedArray < bool, 19, 19 > explode_map;
 
 // helper functions (some of these should probably be public):
-static void _sticky_flame_monster( int mn, kill_category who, int hurt_final );
+static void _sticky_flame_monster(int mn, kill_category who, int hurt_final);
 static bool _affects_wall(const bolt &beam, int wall_feature);
 static bool _isBouncy(bolt &beam, unsigned char gridtype);
 static int _beam_source(const bolt &beam);
@@ -102,13 +102,16 @@ static void _explosion_map(bolt &beam, int x, int y,
                            int count, int dir, int r);
 static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly);
 
-static void _ench_animation( int flavour, const monsters *mon = NULL, bool force = false);
+static void _ench_animation(int flavour, const monsters *mon = NULL,
+                            bool force = false);
 static void _zappy(zap_type z_type, int power, bolt &pbolt);
 static void _monster_die(monsters *mons, const bolt &beam);
+static bool _nasty_beam(monsters *mon, bolt &beam);
+static bool _nice_beam(monsters *mon, bolt &beam);
 
 static std::set<std::string> beam_message_cache;
 
-static bool _beam_is_blockable( bolt &pbolt )
+static bool _beam_is_blockable(bolt &pbolt)
 {
     // BEAM_ELECTRICITY is added here because chain lighting is not
     // a true beam (stops at the first target it gets to and redirects
@@ -656,10 +659,17 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
     }
 }
 
+// Returns true if the path is considered "safe", and false if there are
+// monsters in the way the player doesn't want to hit.
 // FIXME: Also needs to check for fleeing monster with TSO and neutrals for
 //        all good gods.
 bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 {
+    // Non-controlleable during confusion.
+    // (We'll shoot in a different direction anyway.)
+    if (you.duration[DUR_CONF])
+        return (true);
+
     _beam_set_default_values(pbolt, power);
     pbolt.name = "unimportant";
     _get_max_range(ztype, power, pbolt);
@@ -697,7 +707,6 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     // Set to non-tracing for actual firing.
     pbolt.is_tracer = false;
     return (true);
-
 }
 
 dice_def calc_dice( int num_dice, int max_damage )
@@ -1737,7 +1746,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 #ifdef USE_TILE
     int tile_beam = -1;
 
-    if (item)
+    if (item && !pbolt.is_tracer)
     {
         tile_beam = tileidx_item_throw(*item,
                                        pbolt.target_x-pbolt.source_x,
@@ -4106,14 +4115,14 @@ static void _update_hurt_or_helped(bolt &beam, monsters *mon)
 {
     if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
     {
-        if (nasty_beam(mon, beam))
+        if (_nasty_beam(mon, beam))
             beam.foe_hurt++;
-        else if (nice_beam(mon, beam))
+        else if (_nice_beam(mon, beam))
             beam.foe_helped++;
     }
     else
     {
-        if (nasty_beam(mon, beam))
+        if (_nasty_beam(mon, beam))
         {
             beam.fr_hurt++;
 
@@ -4122,18 +4131,84 @@ static void _update_hurt_or_helped(bolt &beam, monsters *mon)
             if (midx == beam.beam_source)
                 xom_is_stimulated(128);
         }
-        else if (nice_beam(mon, beam))
+        else if (_nice_beam(mon, beam))
             beam.fr_helped++;
     }
+}
+
+static bool _beam_is_harmless(bolt &beam, monsters *mon)
+{
+    // For enchantments, this is already handled in _nasty_beam().
+    if (beam.name[0] == '0')
+        return (!_nasty_beam(mon, beam));
+
+    // The others are handled here.
+    switch (beam.flavour)
+    {
+    case BEAM_DIGGING:
+        return (true);
+
+    // Cleansing flame doesn't affect player's followers.
+    case BEAM_HOLY:
+        return (mons_is_holy(mon)
+                || is_good_god(you.religion)
+                   && ( is_follower(mon) || mons_neutral(mon) ));
+    case BEAM_STEAM:
+        return (mons_res_steam(mon) >= 3);
+    case BEAM_FIRE:
+        return (mons_res_fire(mon) >= 3);
+    case BEAM_COLD:
+        return (mons_res_cold(mon) >= 3);
+    case BEAM_MIASMA:
+    case BEAM_NEG:
+        return (mons_res_negative_energy(mon) >= 3);
+    case BEAM_ELECTRICITY:
+        return (mons_res_elec(mon) >= 3);
+    case BEAM_POISON:
+        return (mons_res_poison(mon) >= 3);
+    case BEAM_ACID:
+        return (mons_res_acid(mon) >= 3);
+    default:
+        return (false);
+    }
+}
+
+static bool _stop_unchivalric_attack(monsters *mon)
+{
+    const bool wontAttack    = mons_wont_attack(mon);
+    const bool isFriendly    = mons_friendly(mon);
+    const bool isNeutral     = mons_neutral(mon);
+    const bool isUnchivalric = is_unchivalric_attack(&you, mon, mon);
+    const bool isHoly        = mons_is_holy(mon);
+
+    if (wontAttack
+        || is_good_god(you.religion) && (isNeutral || isHoly)
+        || you.religion == GOD_SHINING_ONE && isUnchivalric)
+    {
+        snprintf(info, INFO_SIZE, "Really fire through this "
+                                  "%s%s%screature?",
+                 (isUnchivalric) ? "helpless "
+                                 : "",
+                 (isFriendly)    ? "friendly " :
+                 (wontAttack)    ? "non-hostile " :
+                 (isNeutral)     ? "neutral "
+                                 : "",
+                 (isHoly)        ? "holy "
+                                 : "");
+
+        if (!yesno(info, true, 'n'))
+            return (true);
+    }
+    return (false);
 }
 
 // return amount of range used up by affectation of this monster
 static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 {
     const int tid = mgrd[mon->x][mon->y];
-    const int mons_type = menv[tid].type;
-    const int thrower = YOU_KILL(beam.thrower)? KILL_YOU_MISSILE
-                                              : KILL_MON_MISSILE;
+    const int mons_type  = menv[tid].type;
+    const int thrower    = YOU_KILL(beam.thrower) ? KILL_YOU_MISSILE
+                                                  : KILL_MON_MISSILE;
     const bool submerged = mon->submerged();
 
     int hurt;
@@ -4153,8 +4228,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     // check for tracer
     if (beam.is_tracer)
     {
-        // check can see other monster
-        if (!beam.can_see_invis && menv[tid].invisible())
+        // Can we see this monster?
+        if (!beam.can_see_invis && menv[tid].invisible()
+            || thrower == KILL_YOU_MISSILE && !see_grid(mon->x, mon->y))
         {
             // Can't see this monster, ignore it.
             return 0;
@@ -4186,14 +4262,22 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     }
 
     bool hit_woke_orc = false;
-    if (beam.name[0] == '0')
+    if (beam.name[0] == '0') // enchantments
     {
         if (beam.is_tracer)
         {
             // Enchant case -- enchantments always hit, so update target immed.
             if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
             {
-                if (beam.thrower != KILL_YOU_MISSILE)
+                if (beam.thrower == KILL_YOU_MISSILE)
+                {
+                    if (_stop_unchivalric_attack(mon))
+                    {
+                        beam.fr_count = 1;
+                        return (BEAM_STOP);
+                    }
+                }
+                else
                 {
                     beam.foe_count += 1;
                     beam.foe_power += mons_power(mons_type);
@@ -4201,21 +4285,22 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             }
             else
             {
-                bool count_friend = true;
                 if (beam.thrower == KILL_YOU_MISSILE)
                 {
-                    snprintf(info, INFO_SIZE, "Really fire through %s?",
-                             mon->name(DESC_NOCAP_THE).c_str());
-
-                    if (!yesno(info))
+                    if (!_beam_is_harmless(beam, mon))
                     {
-                        beam.fr_count = 1;
-                        return (BEAM_STOP);
+                        snprintf(info, INFO_SIZE, "Really fire through %s?",
+                                 mon->name(DESC_NOCAP_THE).c_str());
+
+                        if (!yesno(info, true, 'n'))
+                        {
+                            beam.fr_count = 1;
+                            return (BEAM_STOP);
+                        }
                     }
-                    else
-                        count_friend = false;
+                    // Don't count friends we don't want counted.
                 }
-                if (count_friend)
+                else
                 {
                     beam.fr_count += 1;
                     beam.fr_power += mons_power(mons_type);
@@ -4236,7 +4321,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
         // Nasty enchantments will annoy the monster, and are considered
         // naughty (even if a monster might resist).
-        if (nasty_beam(mon, beam))
+        if (_nasty_beam(mon, beam))
         {
             if (YOU_KILL(beam.thrower))
             {
@@ -4329,7 +4414,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         // Can't hurt submerged water creatures with electricity.
         if (beam.flavour == BEAM_ELECTRICITY)
         {
-            if (see_grid(mon->x, mon->y))
+            if (see_grid(mon->x, mon->y) && !beam.is_tracer)
             {
                 mprf("The %s arcs harmlessly into the water.",
                      beam.name.c_str());
@@ -4386,7 +4471,15 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             // foe_power or fr_power.
             if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
             {
-                if (beam.thrower != KILL_YOU_MISSILE)
+                if (beam.thrower == KILL_YOU_MISSILE)
+                {
+                    if (_stop_unchivalric_attack(mon))
+                    {
+                        beam.fr_count = 1;
+                        return (BEAM_STOP);
+                    }
+                }
+                else
                 {
                     // Counting foes is only important for monster tracers.
                     beam.foe_count += 1;
@@ -4396,24 +4489,22 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             }
             else
             {
-                bool count_friend = true;
                 if (beam.thrower == KILL_YOU_MISSILE)
                 {
-                    snprintf(info, INFO_SIZE, "Really fire through %s?",
-                             mon->name(DESC_NOCAP_THE).c_str());
+                    if (!_beam_is_harmless(beam, mon))
+                    {
+                        snprintf(info, INFO_SIZE, "Really fire through %s?",
+                                 mon->name(DESC_NOCAP_THE).c_str());
 
-                    if (!yesno(info))
-                    {
-                        beam.fr_count = 1;
-                        return (BEAM_STOP);
+                        if (!yesno(info, true, 'n'))
+                        {
+                            beam.fr_count = 1;
+                            return (BEAM_STOP);
+                        }
                     }
-                    else
-                    {
-                        // Don't count friends we don't want counted.
-                        count_friend = false;
-                    }
+                    // Don't count friends we don't want counted.
                 }
-                if (count_friend)
+                else
                 {
                     beam.fr_count += 1;
                     beam.fr_power += 2 * hurt_final * mons_power(mons_type)
@@ -4438,7 +4529,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     god_conduct_trigger conduct;
     conduct.enabled = false;
 
-    if (nasty_beam(mon, beam))
+    if (_nasty_beam(mon, beam))
     {
         if (YOU_KILL(beam.thrower) && hurt_final > 0)
         {
@@ -4692,7 +4783,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
             return (MON_UNAFFECTED);
 
         if (check_mons_resist_magic( mon, beam.ench_power ))
-            return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
+            return (mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST);
 
         if (mon->mutate())
             beam.obvious_effect = true;
@@ -4902,7 +4993,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
     }
 
     // everything else?
-    if ( !death_check )
+    if (!death_check)
         return (mons_ench_f2(mon, beam));
 
     if (mon->hit_points < 1)
@@ -5416,7 +5507,7 @@ static void _explosion_map( bolt &beam, int x, int y,
 // Only enchantments should need the actual monster type
 // to determine this; non-enchantments are pretty
 // straightforward.
-bool nasty_beam(monsters *mon, bolt &beam)
+static bool _nasty_beam(monsters *mon, bolt &beam)
 {
     // take care of non-enchantments
     if (beam.name[0] != '0')
@@ -5454,7 +5545,7 @@ bool nasty_beam(monsters *mon, bolt &beam)
     return (true);
 }
 
-bool nice_beam( monsters *mon, bolt &beam )
+static bool _nice_beam(monsters *mon, bolt &beam)
 {
     // haste/healing/invisibility
     if (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_HEALING

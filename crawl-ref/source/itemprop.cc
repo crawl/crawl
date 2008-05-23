@@ -602,7 +602,7 @@ unsigned long full_ident_mask( const item_def& item )
         flagset = 0;
         break;
     case OBJ_MISCELLANY:
-        if ( item.sub_type == MISC_RUNE_OF_ZOT )
+        if (item.sub_type == MISC_RUNE_OF_ZOT)
             flagset = 0;
         else
             flagset = ISFLAG_KNOW_TYPE;
@@ -629,6 +629,7 @@ unsigned long full_ident_mask( const item_def& item )
         break;
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
+        // all flags necessary for full identification
     default:
         break;
     }

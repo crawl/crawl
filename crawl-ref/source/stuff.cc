@@ -909,7 +909,7 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
 
     while (true)
     {
-        if ( !noprompt )
+        if (!noprompt)
             mpr(prompt.c_str(), MSGCH_PROMPT);
 
         int tmp = getchm(KC_CONFIRM);
@@ -925,7 +925,7 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
 
         if (Options.easy_confirm == CONFIRM_ALL_EASY
             || tmp == safeanswer
-            || (Options.easy_confirm == CONFIRM_SAFE_EASY && safe))
+            || Options.easy_confirm == CONFIRM_SAFE_EASY && safe)
         {
             tmp = toupper( tmp );
         }

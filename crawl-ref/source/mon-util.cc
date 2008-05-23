@@ -784,7 +784,7 @@ bool mons_immune_magic(const monsters *mon)
 
 int mons_resist_magic( const monsters *mon )
 {
-    if ( mons_immune_magic(mon) )
+    if (mons_immune_magic(mon))
         return MAG_IMMUNE;
 
     int u = (get_monster_data(mon->type))->resist_magic;

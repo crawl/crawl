@@ -178,13 +178,6 @@ bool test_beam_hit(int attack, int defence);
  * *********************************************************************** */
 void fire_beam( bolt &pbolt, item_def *item = NULL, bool drop_item = false );
 
-// last updated 19apr2001 {gdl}
-/* ***********************************************************************
- * called from: beam
- * *********************************************************************** */
-bool nasty_beam( monsters *mon, struct bolt &beam );
-bool nice_beam( monsters *mon, struct bolt &beam );
-
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - it_use3 - item_use - mstuff2 - religion -
