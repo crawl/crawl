@@ -5184,7 +5184,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 decay_enchantment(me, (NUM_SIZE_LEVELS - mon_size));
         }
         else // Large (and above) monsters always thrash the net and destroy it
-        {    // e.g. ogre, large zombie (large); centaur, nage, hydra (big).
+        {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
 
             if (mons_near(this) && !player_monster_visible(this))
                 mpr("Something wriggles in the net.");
