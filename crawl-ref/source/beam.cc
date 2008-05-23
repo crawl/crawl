@@ -4442,9 +4442,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (YOU_KILL(beam.thrower) && hurt_final > 0)
         {
-            const bool okay =
-                (beam.aux_source == "reading a scroll of immolation"
-                && !beam.effect_known);
+            const bool okay = !beam.effect_known;
 
             if (is_sanctuary(mon->x, mon->y)
                 || is_sanctuary(you.x_pos, you.y_pos))

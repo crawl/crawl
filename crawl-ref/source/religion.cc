@@ -1897,12 +1897,17 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
     case DID_POISON:
         if (you.religion == GOD_SHINING_ONE)
         {
-            if (thing_done == DID_UNCHIVALRIC_ATTACK
-                && tso_unchivalric_attack_safe_monster(victim))
+            if (thing_done == DID_UNCHIVALRIC_ATTACK)
             {
-                break;
-            }
+                if (tso_unchivalric_attack_safe_monster(victim))
+                    break;
 
+                if (!known)
+                {
+                    simple_god_message(" did not appreciate that!");
+                    break;
+                }
+            }
             ret = true;
             piety_change = -level;
             penance = level * 2;
