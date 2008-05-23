@@ -642,7 +642,7 @@
 },
 
 {
-    SPELL_SUMMON_SMALL_MAMMAL, "Summon Small Mammals",
+    SPELL_SUMMON_SMALL_MAMMALS, "Summon Small Mammals",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      1,
@@ -770,7 +770,7 @@
 },
 
 {
-    SPELL_SWARM, "Summon Swarm",
+    SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      6,

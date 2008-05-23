@@ -50,7 +50,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
 {
     // 0 - Minor Magic I
     {SPELL_MAGIC_DART,
-     SPELL_SUMMON_SMALL_MAMMAL,
+     SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_THROW_FLAME,
      SPELL_BLINK,
      SPELL_SLOW,
@@ -70,7 +70,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
     // 2 - Minor Magic III
     {SPELL_MAGIC_DART,
-     SPELL_SUMMON_SMALL_MAMMAL,
+     SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_BLINK,
      SPELL_REPEL_MISSILES,
      SPELL_SLOW,
@@ -301,7 +301,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 25 - Book of Callings
-    {SPELL_SUMMON_SMALL_MAMMAL,
+    {SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_STICKS_TO_SNAKES,
      SPELL_CALL_IMP,
      SPELL_SUMMON_ELEMENTAL,
@@ -514,7 +514,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
     // 44 - Book of Cantrips      //jmf: added 04jan2000
     {SPELL_CONFUSING_TOUCH,
      SPELL_ANIMATE_SKELETON,
-     SPELL_SUMMON_SMALL_MAMMAL,
+     SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_DETECT_SECRET_DOORS,
      SPELL_APPORTATION,
      SPELL_NO_SPELL,
@@ -534,7 +534,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 46 - Book of Beasts //jmf: added 19mar2000
-    {SPELL_SUMMON_SMALL_MAMMAL,
+    {SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_STICKS_TO_SNAKES,
      SPELL_DETECT_CREATURES,
      SPELL_SUMMON_LARGE_MAMMAL,
@@ -594,7 +594,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
     {SPELL_ABJURATION_I,
      SPELL_RECALL,
      SPELL_SUMMON_ELEMENTAL,
-     SPELL_SWARM,
+     SPELL_SUMMON_SWARM,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,

@@ -75,7 +75,7 @@ static spell_type search_order_third[] = {
 /* 10 */
     SPELL_INVISIBILITY,
     SPELL_CALL_IMP,
-    SPELL_SUMMON_SMALL_MAMMAL,
+    SPELL_SUMMON_SMALL_MAMMALS,
     SPELL_CONTROLLED_BLINK,
     SPELL_BLINK,
     SPELL_NO_SPELL,                        // end search

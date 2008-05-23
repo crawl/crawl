@@ -1333,7 +1333,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         detect_curse(false);
         break;
 
-    case SPELL_SUMMON_SMALL_MAMMAL:
+    case SPELL_SUMMON_SMALL_MAMMALS:
         summon_small_mammals(powc); //jmf: hmm, that's definitely *plural* ;-)
         break;
 
@@ -1392,7 +1392,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             return (SPRET_ABORT);
         break;
 
-    case SPELL_SWARM:
+    case SPELL_SUMMON_SWARM:
         summon_swarm( powc, false, false );
         break;
 

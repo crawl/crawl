@@ -540,9 +540,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         monster->go_berserk(true);
         return;
 
-    case SPELL_SUMMON_SMALL_MAMMAL:
+    case SPELL_SUMMON_SMALL_MAMMALS:
     case SPELL_VAMPIRE_SUMMON:
-        if ( spell_cast == SPELL_SUMMON_SMALL_MAMMAL )
+        if (spell_cast == SPELL_SUMMON_SMALL_MAMMALS)
             sumcount2 = 1 + random2(4);
         else
             sumcount2 = 3 + random2(3) + monster->hit_dice / 5;
@@ -885,7 +885,7 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
     // fire_tracer, or beam.
     switch (spell_cast)
     {
-    case SPELL_SUMMON_SMALL_MAMMAL:
+    case SPELL_SUMMON_SMALL_MAMMALS:
     case SPELL_GREATER_HEALING:
     case SPELL_VAMPIRE_SUMMON:
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
