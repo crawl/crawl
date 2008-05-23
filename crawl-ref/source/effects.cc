@@ -263,7 +263,7 @@ int torment_monsters(int x, int y, int pow, int caster)
 
     monsters *monster = &menv[mon];
 
-    if (invalid_monster(monster) || mons_res_negative_energy(monster) == 3)
+    if (invalid_monster(monster) || mons_res_negative_energy(monster) >= 3)
         return retval;
 
     int hploss = monster->hit_points / 2 - 1;

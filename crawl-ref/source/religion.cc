@@ -952,7 +952,7 @@ static bool _tso_blessing_holy_wpn(monsters* mon)
 static bool _tso_blessing_holy_arm(monsters* mon)
 {
     // If a monster has full negative energy resistance, get out.
-    if (mons_res_negative_energy(mon) == 3)
+    if (mons_res_negative_energy(mon) >= 3)
         return false;
 
     // Pick either a monster's armour or its shield.
