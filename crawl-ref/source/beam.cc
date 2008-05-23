@@ -5410,13 +5410,13 @@ static void _explosion_map( bolt &beam, int x, int y,
     }
 }
 
-// returns true if the beam is harmful (ignoring monster
+// Returns true if the beam is harmful (ignoring monster
 // resists) -- mon is given for 'special' cases where,
 // for example, "Heal" might actually hurt undead, or
 // "Holy Word" being ignored by holy monsters, etc.
 //
-// only enchantments should need the actual monster type
-// to determine this;  non-enchantments are pretty
+// Only enchantments should need the actual monster type
+// to determine this; non-enchantments are pretty
 // straightforward.
 bool nasty_beam(monsters *mon, bolt &beam)
 {
