@@ -3993,17 +3993,18 @@ void display_char_status()
     // character evaluates their ability to sneak around:
     const int ustealth = check_stealth();
 
-    // XXX: made these values up, probably could be better.
     mprf("You feel %sstealthy.",
          (ustealth <  10) ? "extremely un" :
-         (ustealth <  20) ? "very un" :
-         (ustealth <  30) ? "un" :
-         (ustealth <  50) ? "fairly " :
-         (ustealth <  80) ? "" :
-         (ustealth < 120) ? "quite " :
-         (ustealth < 160) ? "very " :
-         (ustealth < 200) ? "extremely "
-                          : "incredibly " );
+         (ustealth <  30) ? "very un" :
+         (ustealth <  60) ? "un" :
+         (ustealth <  90) ? "fairly " :
+         (ustealth < 120) ? "" :
+         (ustealth < 160) ? "quite " :
+         (ustealth < 220) ? "very " :
+         (ustealth < 300) ? "extremely " :
+         (ustealth < 400) ? "extraordinarily " :
+         (ustealth < 520) ? "incredibly " 
+                          : "uncannily ");
 
 #if DEBUG_DIAGNOSTICS
     mprf("stealth: %d", ustealth);
