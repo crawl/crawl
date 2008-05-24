@@ -53,7 +53,7 @@ orc priest name
 w:1
 Judas
 
-w:49
+w:50
 @orc name@
 
 %%%%
@@ -105,6 +105,8 @@ Marbork
 
 Milork
 
+Ogrik
+
 Okrist
 
 Oreg
@@ -140,6 +142,8 @@ Blodwig
 
 Boderik
 
+Boldo
+
 Bolgrim
 
 Borgoth
@@ -170,6 +174,8 @@ Herok
 
 Hilgar
 
+Jorge
+
 Koronagh
 
 Learuk
@@ -185,6 +191,8 @@ Murdo
 Norbak
 
 Nordag
+
+Ognian
 
 Olfik
 

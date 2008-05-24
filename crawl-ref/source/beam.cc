@@ -4173,7 +4173,7 @@ static bool _beam_is_harmless(bolt &beam, monsters *mon)
     }
 }
 
-static bool _stop_unchivalric_attack(monsters *mon)
+static bool _stop_unchivalric_attack(monsters *mon, bool target)
 {
     const bool wontAttack    = mons_wont_attack(mon);
     const bool isFriendly    = mons_friendly(mon);
@@ -4184,7 +4184,8 @@ static bool _stop_unchivalric_attack(monsters *mon)
     if (isFriendly)
     {
         // listed in the form: "your rat", "Blork"
-        snprintf(info, INFO_SIZE, "Really fire through %s?",
+        snprintf(info, INFO_SIZE, "Really fire %s %s?",
+                 (target ? "at" : "through"),
                  mon->name(DESC_NOCAP_THE).c_str());
 
         if (!yesno(info, true, 'n'))
@@ -4196,8 +4197,8 @@ static bool _stop_unchivalric_attack(monsters *mon)
     {
         // "Really fire through the helpless neutral holy Daeva?"
         // was: "Really fire through this helpless neutral holy creature?"
-        snprintf(info, INFO_SIZE, "Really fire through the "
-                                  "%s%s%s%s?",
+        snprintf(info, INFO_SIZE, "Really fire %s the %s%s%s%s?",
+                 (target ? "at" : "through"),
                  (isUnchivalric) ? "helpless "
                                  : "",
                  (isFriendly)    ? "friendly " :
@@ -4280,11 +4281,16 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         {
             if (beam.thrower == KILL_YOU_MISSILE)
             {
-                if (!_beam_is_harmless(beam, mon)
-                    && _stop_unchivalric_attack(mon))
+                if (!_beam_is_harmless(beam, mon))
                 {
-                    beam.fr_count = 1;
-                    return (BEAM_STOP);
+                    const bool target = (beam.target_x == mon->x
+                                         && beam.target_y == mon->y);
+
+                    if (_stop_unchivalric_attack(mon, target))
+                    {
+                        beam.fr_count = 1;
+                        return (BEAM_STOP);
+                    }
                 }
             }
             // Enchant case -- enchantments always hit, so update target immed.
@@ -4454,12 +4460,17 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (beam.thrower == KILL_YOU_MISSILE)
         {
-            if (!_beam_is_harmless(beam, mon)
-                && _stop_unchivalric_attack(mon))
-            {
-                beam.fr_count = 1;
-                return (BEAM_STOP);
-            }
+                if (!_beam_is_harmless(beam, mon))
+                {
+                    const bool target = (beam.target_x == mon->x
+                                         && beam.target_y == mon->y);
+
+                    if (_stop_unchivalric_attack(mon, target))
+                    {
+                        beam.fr_count = 1;
+                        return (BEAM_STOP);
+                    }
+                }
         }
         // Check only if actual damage.
         else if (hurt_final > 0)

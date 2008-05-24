@@ -17,23 +17,26 @@ Interface
 * Added Ctrl-D as a synonym for '~' (defining macros).
 * Added commands for repeating commands ('`' and '0').
 * Added command to annotate level ('!' command).
-* Stepping into lava/deep water/zot traps requires typing "yes".
+* Stepping into lava/deep water is not possible anymore, unless confused.
 * Ask for confirmation before stepping into dangerous clouds, or traps.
 * Allow autotravel through clouds your character is immune to.
+* Prompt when firing through allies, or doing a ranged attack TSO would punish.
 * (W)ear and (P)ut on menus allow removal of equipped items.
 * easy_butcher won't switch away from distortion weapons.
+* Distortion effect now cancels butchering.
 * Fixed weapon swap ignoring {!w}.
 * Added inscriptions =p, !p for preventing autosaccing.
 * Arriving via stairs calls autopickup and lists items on square.
 * Output item slots for rotting meat message.
+* Refuse to eat rotten meat for non-saprovorous characters.
 * Evaporate can now be cancelled during potion/direction choice.
 * greedy_explore now defaults to true.
 
 Gods
 ----
 * Overhauled the good gods: Zin/TSO completely new, Elyvilon more interesting.
-* Improved Beogh and Nemelex.
-* Vehumet isn't considered evil anymore.
+* Greatly improved Beogh and Nemelex.
+* Vehumet isn't evil anymore, and all boosts apply without prayer.
 * Removed option to stop prayer.
 * Upon failed sacrifice hint on accepted item types.
 * Divine summons will leave on penance, or turn hostile on abandonment.
@@ -44,7 +47,7 @@ Characters
 * Removed Glamour.
 * New order of species and classes on the character selection screen.
 * Red/White Draconians gain heat/cold resistance at xl 14 (rather than 18).
-* Removed forgetfulnes; introduce fur, shouting, +mp/-mp mutations.
+* Mutations: Removed forgetfulnes; introduced fur, shouting, +mp/-mp.
 * Added +1 damage bonus for orcs and dwarves throwing racial gear.
 * Fixed undead being unable to smite.
 * Necromutation now gives torment resistance again.
@@ -66,6 +69,7 @@ Items
 * Scrolls of recharging and enchant armour now prompt for an item.
 * Potions of restore ability also cancel breath delay.
 * Staves and rods of the same type can now be recognized.
+* Staves will autoID if your skill in the appropriate school is 4 or higher.
 * Manuals are now visibly different from spell books.
 * Improved artefact autoinscriptions.
 * Several new pre-defined (un)randarts.
@@ -75,6 +79,7 @@ Items
 * Thrown potions of poison won't poison monsters anymore.
 * Limit racial properties applying to only some fitting item types.
 * Prompt when attempting to sacrifice important items.
+* Fix books in shops being noted as identifed over and over again.
 
 Monsters
 --------
@@ -85,6 +90,7 @@ Monsters
 * Holy monsters may turn neutral if the player follows a good god.
 * Unknown mimics are now consistently treated like items.
 * Beefed up demon lords.
+* Mummy curses now only decay a random amount of a stack of potions.
 * Began changing monster resists to have several levels, like the player's.
 * Removed electricity resistance from several monsters.
 * Daevas now resist negative energy.
@@ -94,12 +100,15 @@ Monsters
 * Improved trap handling for intelligent monsters.
 * Smarter pickup handling.
 * Fixed friendlies accidentally shooting the player.
+* Fixed monsters firing/reaching through walls.
+* Fixed summoned monsters sharing a square with the player.
 * Monsters won't enter miasma if it harms them.
 * Implemented Dispel Undead for monsters.
 * Fix nagas/centaurs never being generating with bardings.
 * Monsters may use wands of disintegration and polymorph other (mutates).
 * Give a message for kills out of LOS.
 * No experience for killing summoned monsters.
+* Give half xp for enslaved monsters dying.
 * Monster blink is now restricted to their LOS.
 * Introduced fish zombies (vault defined only).
 * Fixed several spell/invocation attacks not waking monsters.
@@ -113,6 +122,7 @@ Levels
 * Slime Pits: Modify stone walls at royal jelly's death.
 * Slime Pits are now on Lair:8-10.
 * Several new vaults.
+* Fixed some levels having the wrong amount of stairs.
 * Treat adjacent doors as one (large) gate, opening/closing together.
 * Removed amnesia traps.
 * Introduced shafts.
@@ -124,6 +134,7 @@ Tiles
 * Merged Tiles into Crawl code. 
 * Save files between tile and non-tile games are compatible.
 * Added lots of new tiles, and corrected misdisplayed ones.
+* wininit.txt is now autocreated, if missing.
 * Tutorial improvement for tiles.
 * Improved mouse-click inventory/dungeon interaction.
 * Show travel exclusion in tile map and mini-map.
@@ -141,7 +152,7 @@ Miscellaneous
 * New scoring system.
 * Train Stealth by sneaking around sleeping monsters.
 * Train Traps & Doors by setting off traps.
-* Distortion effect now cancels butchering.
+* Increase cost for self-banishment, and nerf Banishment spell.
 * Better feedback on Detect Traps.
 * Identify post-mortem inventory in morgue.txt.
 * Dump command also dumps level map.
