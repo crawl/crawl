@@ -517,23 +517,6 @@ void melee_attack::identify_mimic(monsters *mon)
 
 bool melee_attack::attack()
 {
-    if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
-    {
-        if (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(def->x, def->y))
-        {
-            snprintf(info, INFO_SIZE,
-                     "Really attack %s, despite your sanctuary?",
-                     def->name(DESC_NOCAP_THE).c_str());
-
-            if (!yesno(info, true, 'n'))
-            {
-                cancel_attack = true;
-                return (false);
-            }
-        }
-    }
-
     // If a mimic is attacking or defending, it is thereafter known.
     identify_mimic(atk);
     identify_mimic(def);
@@ -624,17 +607,19 @@ bool melee_attack::attack()
 
     if (attacker->atype() == ACT_PLAYER)
     {
+        const bool inSanctuary   = (is_sanctuary(you.x_pos, you.y_pos)
+                                       || is_sanctuary(def->x, def->y));
         const bool wontAttack = mons_wont_attack(def);
         const bool isFriendly = mons_friendly(def);
         const bool isNeutral = mons_neutral(def);
         const bool isUnchivalric = is_unchivalric_attack(&you, def, def);
         const bool isHoly = mons_is_holy(def);
 
-        if (wontAttack
+        if (inSanctuary || wontAttack
             || (is_good_god(you.religion) && (isNeutral || isHoly))
             || (you.religion == GOD_SHINING_ONE && isUnchivalric))
         {
-            snprintf(info, INFO_SIZE, "Really attack this %s%s%screature?",
+            snprintf(info, INFO_SIZE, "Really attack the %s%s%s%s%s?",
                                       (isUnchivalric) ? "helpless "
                                                       : "",
                                       (isFriendly)    ? "friendly " :
@@ -642,6 +627,9 @@ bool melee_attack::attack()
                                       (isNeutral)     ? "neutral "
                                                       : "",
                                       (isHoly)        ? "holy "
+                                                      : "",
+                                      def->name(DESC_PLAIN).c_str(),
+                                      (inSanctuary)   ? ", despite your sanctuary"
                                                       : "");
 
             if (you.confused() || yesno(info, false, 'n'))
