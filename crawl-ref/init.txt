@@ -320,7 +320,7 @@ tile_show_items = !?/%=([)X}+\_.
 # dump_message_count = 7
 # dump_order  = header,hiscore,stats,misc,notes,inventory,
 # dump_order += turns_by_place,skills,spells,overview,mutations,
-# dump_order += messages,screenshot,kills_by_place,kills
+# dump_order += messages,screenshot,monlist,kills_by_place,kills
 
 ##### 5-b	Notes #################################
 #

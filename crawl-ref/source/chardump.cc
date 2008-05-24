@@ -88,6 +88,7 @@ static void sdump_kills(dump_params &);
 static void sdump_newline(dump_params &);
 static void sdump_overview(dump_params &);
 static void sdump_hiscore(dump_params &);
+static void sdump_monster_list(dump_params &);
 static void sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void sdump_lua(dump_params &);
@@ -139,6 +140,7 @@ static dump_section_handler dump_handlers[] = {
     { "kills",          sdump_kills         },
     { "overview",       sdump_overview      },
     { "hiscore",        sdump_hiscore       },
+    { "monlist",        sdump_monster_list  },
 
     // Conveniences for the .crawlrc artist.
     { "",               sdump_newline       },
@@ -1064,9 +1066,7 @@ static void sdump_kills_by_place(dump_params &par)
     }
 
     if (result.length() > 0)
-    {
         text += header + result + footer + "\n";
-    }
 }
 
 static void sdump_overview(dump_params &par)
@@ -1086,6 +1086,14 @@ static void sdump_hiscore(dump_params &par)
     std::string hiscore = hiscores_format_single_long( *(par.se), true );
     trim_string(hiscore);
     par.text += hiscore;
+    par.text += "\n\n";
+}
+
+static void sdump_monster_list(dump_params &par)
+{
+    std::string monlist = mpr_monster_list(par.se);
+    trim_string(monlist);
+    par.text += monlist;
     par.text += "\n\n";
 }
 

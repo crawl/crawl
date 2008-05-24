@@ -1375,7 +1375,7 @@ blessing_done:
     snprintf(info, INFO_SIZE, " blesses %s with %s.",
              whom.c_str(), result.c_str());
 
-    simple_god_message(info);
+    simple_god_message(info, god);
 
 #ifndef USE_TILE
     if (see_follower)

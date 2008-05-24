@@ -1012,6 +1012,166 @@ void draw_border(void)
 // Monster pane
 // ----------------------------------------------------------------------
 
+static bool _mons_hostile(const monsters *mon)
+{
+    return (!mons_friendly(mon) && !mons_neutral(mon));
+}
+
+static const char* _get_monster_name(const monsters *mon, bool list_a = false)
+{
+    std::string desc = "";
+
+    bool adj = false;
+    if (mons_friendly(mon))
+    {
+        desc += "friendly ";
+        adj = true;
+    }
+    else if (mons_neutral(mon))
+    {
+        desc += "neutral ";
+        adj = true;
+    }
+
+    if (adj && list_a)
+    {
+        desc = (mon->is_named() ? "the " : "a ") + desc;
+        list_a = false;
+    }
+
+    desc += mon->name(list_a ? DESC_NOCAP_A : DESC_PLAIN);
+    if (!(mon->mname).empty())
+    {
+        desc += " (";
+        desc += mons_type_name(mon->type, DESC_PLAIN);
+        desc += ")";
+    }
+
+    return desc.c_str();
+}
+
+// Returns true if the first monster is more aggressive (in terms of
+// hostile/neutral/friendly) than the second, or, if both monsters share the
+// same attitude, if the first monster has a lower type.
+// If monster type and attitude are the same, return false.
+static bool _compare_monsters_attitude( const monsters *m1, const monsters *m2 )
+{
+    if (_mons_hostile(m1) && !_mons_hostile(m2))
+        return (true);
+
+    if (mons_neutral(m1))
+    {
+        if (mons_friendly(m2))
+            return (true);
+        if (_mons_hostile(m2))
+            return (false);
+    }
+
+    if (mons_friendly(m1) && !mons_friendly(m2))
+        return (false);
+
+    // If we get here then monsters have the same attitude.
+    // FIXME: replace with difficulty comparison
+    return (m1->type < m2->type);
+}
+
+static void _get_visible_monsters(std::vector<std::string>& describe)
+{
+    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
+    int yend = you.y_pos + 9, xend = you.x_pos + 9;
+    if ( xstart < 0 ) xstart = 0;
+    if ( ystart < 0 ) ystart = 0;
+    if ( xend >= GXM ) xend = GXM;
+    if ( yend >= GYM ) yend = GYM;
+
+    std::vector<const monsters*> mons;
+
+    // monster check
+    for (int y = ystart; y < yend; ++y)
+        for (int x = xstart; x < xend; ++x)
+            if (see_grid(x,y))
+            {
+                const unsigned short targ_monst = mgrd[x][y];
+                if (targ_monst != NON_MONSTER)
+                {
+                    const monsters *mon = &menv[targ_monst];
+                    if (player_monster_visible(mon)
+                        && !mons_is_submerged(mon)
+                        && !mons_is_mimic(mon->type))
+                    {
+                        mons.push_back(mon);
+                    }
+                }
+            }
+
+    if (mons.empty())
+        return;
+
+    std::sort( mons.begin(), mons.end(), _compare_monsters_attitude );
+
+    int count = 0;
+    int size = mons.size();
+    for (int i = 0; i < size; ++i)
+    {
+        if (i > 0 && _compare_monsters_attitude(mons[i-1], mons[i]))
+        {
+            if (count == 1)
+                describe.push_back(_get_monster_name(mons[i-1], true));
+            else
+            {
+                describe.push_back(number_in_words(count) + " "
+                                   + pluralise(_get_monster_name(mons[i-1])));
+            }
+            count = 0;
+        }
+        count++;
+    }
+    // handle last monster
+    if (mons.size() == 1
+        || _compare_monsters_attitude(mons[size-2], mons[size-1]))
+    {
+        describe.push_back(_get_monster_name(mons[size-1], true));
+    }
+    else
+    {
+        describe.push_back(number_in_words(count) + " "
+                           + pluralise(_get_monster_name(mons[size-1])));
+    }
+}
+
+// If past is true, the messages should be printed in the past tense
+// because they're needed for the morgue dump.
+std::string mpr_monster_list(bool past)
+{
+    std::vector<std::string> describe;
+    _get_visible_monsters(describe);
+
+    std::string msg = "";
+    if (describe.empty())
+    {
+        msg  = "There ";
+        msg += (past ? "were" : "are");
+        msg += " no monsters in sight!";
+
+        return (msg);
+    }
+
+    msg = "You ";
+    msg += (past ? "could" : "can");
+    msg += " see ";
+
+    if (describe.size() == 1)
+        msg += describe[0];
+    else
+    {
+        msg += comma_separated_line(describe.begin(), describe.end(),
+                                    ", and ", ", ");
+    }
+    msg += ".";
+
+    return (msg);
+}
+
 #ifndef USE_TILE
 
 // Monster info used by the pane; precomputes some data
@@ -1031,11 +1191,11 @@ class monster_pane_info
         // much info?
         const monsterentry* me = get_monster_data(m->type);
         m_difficulty = me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]>>1))
-            + me->hpdice[3];
+                       + me->hpdice[3];
 
         m_brands = 0;
-        if (mons_looks_stabbable(m)) m_brands |= 1;
-        if (mons_looks_distracted(m)) m_brands |= 2;
+        if (mons_looks_stabbable(m))   m_brands |= 1;
+        if (mons_looks_distracted(m))  m_brands |= 2;
         if (m->has_ench(ENCH_BERSERK)) m_brands |= 4;
     }
 
@@ -1083,11 +1243,8 @@ monster_pane_info::less_than(const monster_pane_info& m1,
     return false;
 }
 
-void
-monster_pane_info::to_string(
-    int count,
-    std::string& desc,
-    int& desc_color) const
+void monster_pane_info::to_string( int count, std::string& desc,
+                                   int& desc_color) const
 {
     std::ostringstream out;
 
@@ -1327,8 +1484,8 @@ const char *equip_slot_to_name(int equip)
     if (equip == EQ_RINGS || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING)
         return "Ring";
 
-    if (equip == EQ_BOOTS &&
-           (you.species == SP_CENTAUR || you.species == SP_NAGA))
+    if (equip == EQ_BOOTS
+        && (you.species == SP_CENTAUR || you.species == SP_NAGA))
     {
         return "Barding";
     }
@@ -1821,15 +1978,19 @@ char _get_overview_screen_results()
     if (you.intel == you.max_intel)
         snprintf(buf, sizeof buf, "Int %2d", you.intel);
     else
+    {
         snprintf(buf, sizeof buf, "Int <yellow>%2d</yellow> (%d)",
                  you.intel, you.max_intel);
+    }
     cols1.add_formatted(1, buf, false);
 
     if (you.dex == you.max_dex)
         snprintf(buf, sizeof buf, "Dex %2d", you.dex);
     else
+    {
         snprintf(buf, sizeof buf, "Dex <yellow>%2d</yellow> (%d)",
                  you.dex, you.max_dex);
+    }
     cols1.add_formatted(1, buf, false);
 
     snprintf(buf, sizeof buf, "AC %2d" , player_AC());
@@ -1850,9 +2011,9 @@ char _get_overview_screen_results()
     char god_colour_tag[20];
     god_colour_tag[0] = 0;
     std::string godpowers(god_name(you.religion));
-    if ( you.religion != GOD_NO_GOD )
+    if (you.religion != GOD_NO_GOD)
     {
-        if ( player_under_penance() )
+        if (player_under_penance())
             strcpy(god_colour_tag, "<red>*");
         else
         {
@@ -1860,12 +2021,13 @@ char _get_overview_screen_results()
                      colour_to_str(god_colour(you.religion)));
             // piety rankings
             int prank = piety_rank() - 1;
-            if ( prank < 0 || you.religion == GOD_XOM)
+            if (prank < 0 || you.religion == GOD_XOM)
                 prank = 0;
+
             // Careful about overflow. We erase some of the god's name
             // if necessary.
-            godpowers = godpowers.substr(0, 29 - prank) + " " +
-                std::string(prank, '*');
+            godpowers = godpowers.substr(0, 29 - prank)
+                         + " " + std::string(prank, '*');
         }
     }
 
@@ -1878,7 +2040,8 @@ char _get_overview_screen_results()
              (you.experience_level < 27?
               make_stringf(", need: %d", xp_needed).c_str() : ""),
              god_colour_tag, godpowers.c_str(),
-             you.spell_no, player_spell_levels(), (player_spell_levels() == 1) ? "" : "s");
+             you.spell_no, player_spell_levels(),
+             (player_spell_levels() == 1) ? "" : "s");
     cols1.add_formatted(3, buf, false);
 
     {
@@ -1897,9 +2060,9 @@ char _get_overview_screen_results()
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
-    const int rmuta = wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
-                      || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                      || you.religion == GOD_ZIN && you.piety >= 150;
+    const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
+                       || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+                       || you.religion == GOD_ZIN && you.piety >= 150);
 
     const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
 
@@ -1964,8 +2127,10 @@ char _get_overview_screen_results()
     cols.add_formatted(1, buf, false);
 
     if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
+    {
         snprintf(buf, sizeof buf, "\n%sPrev.Telep.: %s",
                  _determine_color_string(-1), itosym1(1));
+    }
     else
     {
         const int rrtel = !!player_teleport(calc_unid);
@@ -1993,7 +2158,7 @@ char _get_overview_screen_results()
         std::vector<formatted_string> blines = cols.formatted_lines();
         for (unsigned int i = 0; i < blines.size(); ++i )
         {
-            // Kind of a hack -- we don't care really what items these
+            // Kind of a hack -- we don't really care what items these
             // hotkeys go to.  So just pick the first few.
             const char hotkey = (i < equip_chars.size()) ? equip_chars[i] : 0;
             overview.add_item_formatted_string(blines[i], hotkey);

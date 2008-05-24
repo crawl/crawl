@@ -54,7 +54,7 @@ description_level_type description_type_by_name(const char *desc)
 {
     if (!desc)
         return DESC_PLAIN;
-    
+
     if (!strcmp("The", desc))
         return DESC_CAP_THE;
     else if (!strcmp("the", desc))
@@ -124,7 +124,7 @@ void play_sound( const char *file )
     // Check whether file exists, is readable, etc.?
     if (file && *file)
         sndPlaySound(file, SND_ASYNC | SND_NODEFAULT);
-        
+
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];
     command[0] = 0;
@@ -159,7 +159,7 @@ std::string &uppercase(std::string &s)
 {
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)
         s[i] = toupper(s[i]);
-        
+
     return (s);
 }
 
@@ -167,7 +167,7 @@ std::string &lowercase(std::string &s)
 {
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)
         s[i] = tolower(s[i]);
-        
+
     return (s);
 }
 
@@ -181,7 +181,7 @@ int ends_with(const std::string &s, const char *suffixes[])
 {
     if (!suffixes)
         return (0);
-        
+
     for (int i = 0; suffixes[i]; ++i)
         if (ends_with(s, suffixes[i]))
             return (1 + i);
@@ -210,7 +210,7 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
         }
         return (false);
     }
-    
+
     if ((pos = s.find(" " + tag + " ")) != std::string::npos)
     {
         // Leave one space intact.
@@ -233,19 +233,19 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
 {
     std::string::size_type pos = s.find(tagprefix);
-    
+
     while (pos && pos != std::string::npos && !isspace(s[pos - 1]))
     {
         pos = s.find(tagprefix, pos + 1);
     }
-    
+
     if (pos == std::string::npos)
         return ("");
 
     std::string::size_type ns = s.find(" ", pos);
     if (ns == std::string::npos)
         ns = s.length();
-    
+
     const std::string argument =
         s.substr(pos + tagprefix.length(), ns - pos - tagprefix.length());
 
@@ -266,7 +266,7 @@ std::string article_a(const std::string &name, bool lowercase)
 {
     if (!name.length())
         return name;
-    
+
     const char *a  = lowercase? "a "  : "A ";
     const char *an = lowercase? "an " : "An ";
     switch (name[0])
@@ -295,7 +295,7 @@ std::string pluralise(const std::string &name,
     if (qualifiers)
     {
         for (int i = 0; qualifiers[i]; ++i)
-            if ((pos = name.find(qualifiers[i])) != std::string::npos 
+            if ((pos = name.find(qualifiers[i])) != std::string::npos
                 && !ends_with(name, no_qualifier))
             {
                 return pluralise(name.substr(0, pos)) + name.substr(pos);
@@ -307,7 +307,7 @@ std::string pluralise(const std::string &name,
     {
         return (pluralise(name.substr(0, pos)) + name.substr(pos));
     }
-    
+
     if (ends_with(name, "us"))
     {
         // Fungus, ufetubus, for instance.
@@ -352,7 +352,7 @@ std::string pluralise(const std::string &name,
         // Maybe we should generalise 'manes' to ends_with("es")?
         return name;
     }
-    else if (ends_with(name, "ch") || ends_with(name, "sh") 
+    else if (ends_with(name, "ch") || ends_with(name, "sh")
              || ends_with(name, "x"))
     {
         // To handle cockroaches and sphinxes, and in case there's some monster
@@ -411,7 +411,7 @@ static std::string tens_in_words(unsigned num)
         return numbers[num];
 
     int ten = num / 10, digit = num % 10;
-    return std::string(tens[ten]) 
+    return std::string(tens[ten])
              + (digit ? std::string("-") + numbers[digit] : "");
 }
 
@@ -419,7 +419,7 @@ static std::string join_strings(const std::string &a, const std::string &b)
 {
     if (!a.empty() && !b.empty())
         return (a + " " + b);
-        
+
     return (a.empty() ? b : a);
 }
 
@@ -441,8 +441,9 @@ std::string number_in_words(unsigned num, int pow)
         return ("zero");
 
     return join_strings((rest? number_in_words(rest, pow + 3) : ""),
-                (thousands? hundreds_in_words(thousands) + pow_in_words(pow)
-                : ""));
+                        (thousands? hundreds_in_words(thousands)
+                                    + pow_in_words(pow)
+                                  : ""));
 }
 
 std::string replace_all(std::string s,
@@ -451,7 +452,7 @@ std::string replace_all(std::string s,
 {
     std::string::size_type start = 0;
     std::string::size_type found;
-   
+
     while ((found = s.find(find, start)) != std::string::npos)
     {
         s.replace( found, find.length(), repl );
@@ -469,7 +470,7 @@ std::string replace_all_of(std::string s,
 {
     std::string::size_type start = 0;
     std::string::size_type found;
-   
+
     while ((found = s.find_first_of(tofind, start)) != std::string::npos)
     {
         s.replace( found, 1, replacement );
@@ -540,9 +541,9 @@ std::vector<std::string> split_string( const std::string &sep,
     {
         add_segment(segments, s.substr(0, pos),
                     trim_segments, accept_empty_segments);
-        
+
         s.erase(0, pos + separator_length);
-        
+
         if (nsplits > 0)
             --nsplits;
     }
@@ -553,7 +554,7 @@ std::vector<std::string> split_string( const std::string &sep,
     return segments;
 }
 
-// The old school way of doing short delays via low level I/O sync.  
+// The old school way of doing short delays via low level I/O sync.
 // Good for systems like old versions of Solaris that don't have usleep.
 #ifdef NEED_USLEEP
 
@@ -572,10 +573,10 @@ void usleep(unsigned long time)
 }
 #endif
 
-// Not the greatest version of snprintf, but a functional one that's 
+// Not the greatest version of snprintf, but a functional one that's
 // a bit safer than raw sprintf().  Note that this doesn't do the
-// special behaviour for size == 0, largely because the return value 
-// in that case varies depending on which standard is being used (SUSv2 
+// special behaviour for size == 0, largely because the return value
+// in that case varies depending on which standard is being used (SUSv2
 // returns an unspecified value < 1, whereas C99 allows str == NULL
 // and returns the number of characters that would have been written). -- bwr
 #ifdef NEED_SNPRINTF
@@ -587,7 +588,7 @@ int snprintf( char *str, size_t size, const char *format, ... )
     va_list argp;
     va_start( argp, format );
 
-    char *buff = new char [ 10 * size ];  // hopefully enough 
+    char *buff = new char [ 10 * size ];  // hopefully enough
     if (!buff)
         end(1, false, "Out of memory\n");
 
@@ -595,7 +596,7 @@ int snprintf( char *str, size_t size, const char *format, ... )
     strncpy( str, buff, size );
     str[ size - 1 ] = 0;
 
-    int ret = strlen( str );  
+    int ret = strlen( str );
     if ((unsigned int) ret == size - 1 && strlen( buff ) >= size)
         ret = -1;
 
@@ -670,7 +671,7 @@ static bool glob_match( const char *pattern, const char *text, bool icase )
             // Try to match exactly at the current text position...
             if (!*pattern || glob_match(pattern, text - 1, icase))
                 return true;
-                
+
             // Or skip one character in the text and try the wildcard match
             // again. If this is the end of the text, the match has failed.
             return (t ? glob_match(pattern - 1, text, icase) : false);
@@ -689,7 +690,7 @@ struct glob_info
     bool ignore_case;
 };
 
-void *compile_glob_pattern(const char *pattern, bool icase) 
+void *compile_glob_pattern(const char *pattern, bool icase)
 {
     // If we're using simple globs, we need to box the pattern with '*'
     std::string s = std::string("*") + pattern + "*";
@@ -723,7 +724,7 @@ void *compile_pattern(const char *pattern, bool icase)
     const char *error;
     int erroffset;
     int flags = icase? PCRE_CASELESS : 0;
-    return pcre_compile(pattern, 
+    return pcre_compile(pattern,
                         flags,
                         &error,
                         &erroffset,

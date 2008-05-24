@@ -43,16 +43,17 @@ enum status_redraw_flag_type
 };
 
 #ifdef DGL_SIMPLE_MESSAGING
-void update_message_status();
+void update_message_status(void);
 #endif
 
-void update_turn_count();
+void update_turn_count(void);
 
-void print_stats();
-void print_stats_level();
-void draw_border();
+void print_stats(void);
+void print_stats_level(void);
+void draw_border(void);
+std::string mpr_monster_list(bool past = false);
 void redraw_skill(const std::string &your_name, const std::string &class_name);
-void update_monster_pane();
+void update_monster_pane(void);
 
 std::vector<formatted_string> get_full_detail(bool calc_unid, long score = -1);
 

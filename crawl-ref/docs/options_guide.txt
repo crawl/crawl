@@ -1436,8 +1436,8 @@ dump_message_count = 7
         files. 
 
 dump_order  = header,hiscore,stats,misc,notes,inventory,
-dump_order += skills,spells,overview,mutations,messages,screenshot
-dump_order += kills
+dump_order += skills,spells,overview,mutations,messages,screenshot,
+dump_order += monlist,kills
         Controls the order of sections in the dump. You can use multiple
         dump_order lines - all lines but the first must use 
              dump_order +=

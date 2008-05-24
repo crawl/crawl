@@ -439,7 +439,6 @@ void game_options::new_dump_fields(const std::string &text, bool add)
     else
     {
         for (int f = 0, size = fields.size(); f < size; ++f)
-        {
             for (int i = 0, dsize = dump_order.size(); i < dsize; ++i)
             {
                 if (dump_order[i] == fields[f])
@@ -448,7 +447,6 @@ void game_options::new_dump_fields(const std::string &text, bool add)
                     break;
                 }
             }
-        }
     }
 }
 
@@ -856,8 +854,8 @@ void game_options::reset_options()
     // Clear vector options.
     dump_order.clear();
     new_dump_fields("header,hiscore,stats,misc,inventory,"
-                    "skills,spells,overview,mutations,messages,screenshot,"
-                    "kills,notes");
+                    "skills,spells,overview,mutations,messages,"
+                    "screenshot,monlist,kills,notes");
 
     hp_colour.clear();
     hp_colour.push_back(std::pair<int,int>(50, YELLOW));
@@ -2505,10 +2503,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "dump_kill_places")
     {
-        dump_kill_places =
-            field == "none"? KDO_NO_PLACES :
-            field == "all" ? KDO_ALL_PLACES :
-                             KDO_ONE_PLACE;
+        dump_kill_places = (field == "none" ? KDO_NO_PLACES :
+                            field == "all"  ? KDO_ALL_PLACES
+                                            : KDO_ONE_PLACE);
     }
     else if (key == "kill_map")
     {
