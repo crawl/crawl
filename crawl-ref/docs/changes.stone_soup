@@ -47,7 +47,7 @@ Characters
 * Removed Glamour.
 * New order of species and classes on the character selection screen.
 * Red/White Draconians gain heat/cold resistance at xl 14 (rather than 18).
-* Mutations: Removed forgetfulnes; introduced fur, shouting, +mp/-mp.
+* Mutations: Removed forgetfulness; introduced fur, shouting, +mp/-mp.
 * Added +1 damage bonus for orcs and dwarves throwing racial gear.
 * Fixed undead being unable to smite.
 * Necromutation now gives torment resistance again.
@@ -79,7 +79,7 @@ Items
 * Thrown potions of poison won't poison monsters anymore.
 * Limit racial properties applying to only some fitting item types.
 * Prompt when attempting to sacrifice important items.
-* Fix books in shops being noted as identifed over and over again.
+* Fix books in shops being noted as identified over and over again.
 
 Monsters
 --------
