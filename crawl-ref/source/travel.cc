@@ -2421,7 +2421,7 @@ void start_translevel_travel(const travel_target &pos)
 
     if (!can_travel_to(pos.p.id))
     {
-        if (you.level_type != LEVEL_DUNGEON)
+        if (!can_travel_interlevel())
             mpr("Sorry, you can't auto-travel out of here.");
         else
             mpr("Sorry, I don't know how to get there.");
