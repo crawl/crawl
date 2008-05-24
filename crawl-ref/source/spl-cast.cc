@@ -3334,10 +3334,16 @@ static void _miscast_earth(int severity, const char* cause)
             break;
         case 9:
             mprf("Your %s warm.",
-                 (you.species == SP_NAGA)            ? "underbelly feels" :
-                 (player_mutation_level(MUT_HOOVES)) ? "hooves feel" :
-                 (player_mutation_level(MUT_TALONS)) ? "talons feel"
-                                                     : "feet feel");
+                (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
+                                                    ? "lowest portion feels" :
+                (!transform_changed_physiology() ?
+                    (player_mutation_level(MUT_HOOVES)) ? "hooves feel" :
+                    (player_mutation_level(MUT_TALONS)) ? "talons feel" :
+                    (you.species == SP_NAGA)            ? "underbelly feels" :
+                    (you.species == SP_MERFOLK
+                        && player_is_swimming())        ? "tail feels"
+                                                        : "feet feel"
+                                                    : "feet feel"));
             break;
         }
         break;
