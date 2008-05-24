@@ -988,10 +988,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // Randomly bless a follower.
             if (!created_friendly
                 && gives_xp
-                && (you.religion == GOD_SHINING_ONE
-                        && mons_is_evil_or_unholy(monster)
-                        && random2(you.piety) >= piety_breakpoint(0)
-                    || you.religion == GOD_BEOGH
+                && (you.religion == GOD_BEOGH
                         && mons_holiness(monster) == MH_NATURAL
                         && random2(you.piety) >= piety_breakpoint(2))
                 && !player_under_penance())
