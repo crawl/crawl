@@ -1192,7 +1192,7 @@ formatted_string describe_mutations()
         }
         break;
 
-    case SP_GOLDEN_DRACONIAN:
+    case SP_YELLOW_DRACONIAN:
         if (you.experience_level > 6)
         {
             result += "You can spit acid." EOL;

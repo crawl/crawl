@@ -437,7 +437,7 @@ bool player_genus(genus_type which_genus, species_type species)
     case SP_RED_DRACONIAN:
     case SP_WHITE_DRACONIAN:
     case SP_GREEN_DRACONIAN:
-    case SP_GOLDEN_DRACONIAN:
+    case SP_YELLOW_DRACONIAN:
     case SP_GREY_DRACONIAN:
     case SP_BLACK_DRACONIAN:
     case SP_PURPLE_DRACONIAN:
@@ -559,7 +559,7 @@ bool is_player_same_species(const int mon, bool transform)
         case SP_RED_DRACONIAN:
         case SP_WHITE_DRACONIAN:
         case SP_GREEN_DRACONIAN:
-        case SP_GOLDEN_DRACONIAN:
+        case SP_YELLOW_DRACONIAN:
         case SP_GREY_DRACONIAN:
         case SP_BLACK_DRACONIAN:
         case SP_PURPLE_DRACONIAN:
@@ -1357,7 +1357,7 @@ int player_res_acid(bool consider_unidentified_gear)
     int res = 0;
     if (!transform_changed_physiology())
     {
-        if (you.species == SP_GOLDEN_DRACONIAN
+        if (you.species == SP_YELLOW_DRACONIAN
                     && you.experience_level >= 7)
             res += 2;
 
@@ -3154,7 +3154,7 @@ void level_change(bool skip_attribute_increase)
             case SP_RED_DRACONIAN:
             case SP_WHITE_DRACONIAN:
             case SP_GREEN_DRACONIAN:
-            case SP_GOLDEN_DRACONIAN:
+            case SP_YELLOW_DRACONIAN:
 /* Grey is later */
             case SP_BLACK_DRACONIAN:
             case SP_PURPLE_DRACONIAN:
@@ -3183,7 +3183,7 @@ void level_change(bool skip_attribute_increase)
                         perma_mutate(MUT_POISON_RESISTANCE, 1);
                         break;
 
-                    case SP_GOLDEN_DRACONIAN:
+                    case SP_YELLOW_DRACONIAN:
                         mpr("Your scales start taking on a golden yellow colour.", MSGCH_INTRINSIC_GAIN);
                         break;
                     case SP_BLACK_DRACONIAN:
@@ -4054,7 +4054,7 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
                 case SP_RED_DRACONIAN:     res = "Red Draconian";     break;
                 case SP_WHITE_DRACONIAN:   res = "White Draconian";   break;
                 case SP_GREEN_DRACONIAN:   res = "Green Draconian";   break;
-                case SP_GOLDEN_DRACONIAN:  res = "Yellow Draconian";  break;
+                case SP_YELLOW_DRACONIAN:  res = "Yellow Draconian";  break;
                 case SP_GREY_DRACONIAN:    res = "Grey Draconian";    break;
                 case SP_BLACK_DRACONIAN:   res = "Black Draconian";   break;
                 case SP_PURPLE_DRACONIAN:  res = "Purple Draconian";  break;

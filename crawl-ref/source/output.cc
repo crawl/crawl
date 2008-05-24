@@ -2358,7 +2358,7 @@ std::string _status_mut_abilities()
               mutations.push_back("breathe lightning");
           break;
 
-      case SP_GOLDEN_DRACONIAN:
+      case SP_YELLOW_DRACONIAN:
           if (you.experience_level > 6)
           {
               mutations.push_back("spit acid");

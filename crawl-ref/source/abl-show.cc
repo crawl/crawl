@@ -2005,7 +2005,7 @@ std::vector<talent> your_talents( bool check_confused )
                 (you.species == SP_GREEN_DRACONIAN)  ? ABIL_BREATHE_POISON :
                 (you.species == SP_RED_DRACONIAN)    ? ABIL_BREATHE_FIRE :
                 (you.species == SP_WHITE_DRACONIAN)  ? ABIL_BREATHE_FROST :
-                (you.species == SP_GOLDEN_DRACONIAN) ? ABIL_SPIT_ACID :
+                (you.species == SP_YELLOW_DRACONIAN) ? ABIL_SPIT_ACID :
                 (you.species == SP_BLACK_DRACONIAN)  ? ABIL_BREATHE_LIGHTNING :
                 (you.species == SP_PURPLE_DRACONIAN) ? ABIL_BREATHE_POWER :
                 (you.species == SP_PALE_DRACONIAN)   ? ABIL_BREATHE_STEAM :

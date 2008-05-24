@@ -2208,7 +2208,7 @@ static void _species_stat_init(species_type which_species)
     case SP_RED_DRACONIAN:
     case SP_WHITE_DRACONIAN:
     case SP_GREEN_DRACONIAN:
-    case SP_GOLDEN_DRACONIAN:
+    case SP_YELLOW_DRACONIAN:
     case SP_GREY_DRACONIAN:
     case SP_BLACK_DRACONIAN:
     case SP_PURPLE_DRACONIAN:

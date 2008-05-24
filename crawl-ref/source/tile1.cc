@@ -2636,7 +2636,7 @@ int draconian_color(int race, int level)
     switch(race)
     {
     case SP_BLACK_DRACONIAN:   return 1;
-    case SP_GOLDEN_DRACONIAN:  return 2;
+    case SP_YELLOW_DRACONIAN:  return 2;
     case SP_GREY_DRACONIAN:    return 3;
     case SP_GREEN_DRACONIAN:   return 4;
     case SP_MOTTLED_DRACONIAN: return 5;
@@ -2725,7 +2725,7 @@ void tilep_race_default(int race, int gender, int level, int *parts)
         case SP_RED_DRACONIAN:
         case SP_WHITE_DRACONIAN:
         case SP_GREEN_DRACONIAN:
-        case SP_GOLDEN_DRACONIAN:
+        case SP_YELLOW_DRACONIAN:
         case SP_GREY_DRACONIAN:
         case SP_BLACK_DRACONIAN:
         case SP_PURPLE_DRACONIAN:
