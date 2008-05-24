@@ -41,7 +41,7 @@
 #include "view.h"
 
 /* Basic goals for titles:
-   The higher titles must be come last.
+   The higher titles must come last.
    Referring to the skill itself is fine ("Transmuter") but not impressive.
    No overlaps, high diversity.
 */
@@ -59,7 +59,7 @@ const char *skills[50][6] =
     {"Axes", "Chopper", "Cleaver", "Hacker", "Severer", "Executioner"},
     {"Maces & Flails", "Cudgeler", "Basher", "Bludgeoner", "Shatterer", "Skullcrusher"},   // 5
     {"Polearms", "Poker", "Spear-Bearer", "Impaler", "Phalangite", "%s Porcupine"},
-    {"Staves", "Twirler", "Cruncher", "Stickfighter", "Pulverizerr", "Chief of Staff"},
+    {"Staves", "Twirler", "Cruncher", "Stickfighter", "Pulverizer", "Chief of Staff"},
     {"Slings", "Vandal", "Slinger", "Whirler", "Slingshot", "%s Catapult"},
     {"Bows", "Shooter", "Archer", "Marks%s", "Crack Shot", "Merry %s"},
     {"Crossbows", "Bolt Thrower", "Quickloader", "Sharpshooter", "Sniper", "%s Arbalest"}, // 10
@@ -99,7 +99,6 @@ const char *skills[50][6] =
     {"Evocations", "Charlatan", "Prestidigitator", "Fetichist", "Evocator", "Talismancer"}, // 39
 
 /*NOTE: If more skills are added, must change ranges in level_change() in player.cc */
-/*{"",             "", "", "", ""}, */
 
     {NULL},                     // 40- empty
     {NULL},                     // 41- empty
