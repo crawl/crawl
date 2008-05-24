@@ -1525,9 +1525,9 @@ void summon_ugly_thing(int pow)
                       you.pos(),
                       friendly ? you.pet_target : MHITYOU)) != -1)
     {
-        const char *prefix = (ugly == MONS_VERY_UGLY_THING) ? " very " : "n ";
+        const char *prefix = (ugly == MONS_VERY_UGLY_THING) ? " very" : "n";
 
-        mprf("A%sugly thing appears.%s", prefix,
+        mprf("A%s ugly thing appears.%s", prefix,
             friendly ? "" : " It doesn't look very happy.");
     }
 }                               // end summon_ugly_thing()
