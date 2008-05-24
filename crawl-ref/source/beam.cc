@@ -4175,6 +4175,8 @@ static bool _beam_is_harmless(bolt &beam, monsters *mon)
 
 static bool _stop_unchivalric_attack(monsters *mon, bool target)
 {
+    const bool inSanctuary   = (is_sanctuary(you.x_pos, you.y_pos)
+                                   || is_sanctuary(mon->x, mon->y));
     const bool wontAttack    = mons_wont_attack(mon);
     const bool isFriendly    = mons_friendly(mon);
     const bool isNeutral     = mons_neutral(mon);
@@ -4184,21 +4186,25 @@ static bool _stop_unchivalric_attack(monsters *mon, bool target)
     if (isFriendly)
     {
         // listed in the form: "your rat", "Blork"
-        snprintf(info, INFO_SIZE, "Really fire %s %s?",
-                 (target ? "at" : "through"),
-                 mon->name(DESC_NOCAP_THE).c_str());
+        snprintf(info, INFO_SIZE, "Really fire %s %s%s?",
+                 (target)      ? "at"
+                               : "through",
+                 mon->name(DESC_NOCAP_THE).c_str(),
+                 (inSanctuary) ? ", despite your sanctuary"
+                               : "");
 
         if (!yesno(info, true, 'n'))
             return (true);
     }
-    else if (wontAttack
+    else if (inSanctuary || wontAttack
              || is_good_god(you.religion) && (isNeutral || isHoly)
              || you.religion == GOD_SHINING_ONE && isUnchivalric)
     {
         // "Really fire through the helpless neutral holy Daeva?"
         // was: "Really fire through this helpless neutral holy creature?"
-        snprintf(info, INFO_SIZE, "Really fire %s the %s%s%s%s?",
-                 (target ? "at" : "through"),
+        snprintf(info, INFO_SIZE, "Really fire %s the %s%s%s%s%s?",
+                 (target)        ? "at"
+                                 : "through",
                  (isUnchivalric) ? "helpless "
                                  : "",
                  (isFriendly)    ? "friendly " :
@@ -4207,7 +4213,9 @@ static bool _stop_unchivalric_attack(monsters *mon, bool target)
                                  : "",
                  (isHoly)        ? "holy "
                                  : "",
-                 mon->name(DESC_PLAIN).c_str());
+                 mon->name(DESC_PLAIN).c_str(),
+                 (inSanctuary)   ? ", despite your sanctuary"
+                                 : "");
 
         if (!yesno(info, true, 'n'))
             return (true);
