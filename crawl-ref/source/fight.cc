@@ -517,6 +517,23 @@ void melee_attack::identify_mimic(monsters *mon)
 
 bool melee_attack::attack()
 {
+    if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
+    {
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(def->x, def->y))
+        {
+            snprintf(info, INFO_SIZE,
+                     "Really attack %s, despite your sanctuary?",
+                     def->name(DESC_NOCAP_THE).c_str());
+
+            if (!yesno(info, true, 'n'))
+            {
+                cancel_attack = true;
+                return (false);
+            }
+        }
+    }
+
     // If a mimic is attacking or defending, it is thereafter known.
     identify_mimic(atk);
     identify_mimic(def);

@@ -4218,17 +4218,6 @@ static void _move_player(int move_x, int move_y)
         }
         else if (!can_swap_places) // attack!
         {
-            if (is_sanctuary(you.x_pos, you.y_pos)
-                || is_sanctuary(mon->x, mon->y))
-            {
-                snprintf(info, INFO_SIZE,
-                         "Really attack %s, despite your sanctuary?",
-                         mon->name(DESC_NOCAP_THE).c_str());
-
-                if (!yesno(info, true, 'n'))
-                    return;
-            }
-
             // XXX: Moving into a normal wall does nothing and uses no
             // turns or energy, but moving into a wall which contains
             // an invisible monster attacks the monster, thus allowing
