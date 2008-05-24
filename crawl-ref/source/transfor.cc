@@ -712,7 +712,7 @@ void drop_everything(void)
 // Used to mark transformations which override species/mutation intrinsics.
 // If phys_scales is true then we're checking to see if the form keeps
 // the physical (AC/EV) properties from scales... the special intrinsic
-// features (resistances, etc) are lost in those forms however.
+// features (resistances, etc.) are lost in those forms however.
 bool transform_changed_physiology( bool phys_scales )
 {
     return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
