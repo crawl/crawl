@@ -2131,7 +2131,7 @@ int player_AC(void)
             AC += (1000 + 100 * you.skills[SK_FIRE_MAGIC] / 3);     // max 19
             break;
 
-        case TRAN_AIR:    // air - scales & species ought to be irrelevent
+        case TRAN_AIR:    // air - scales & species ought to be irrelevant
             AC = (you.skills[SK_AIR_MAGIC] * 300) / 2;            // max 40
             break;
 
