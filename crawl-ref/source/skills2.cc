@@ -40,10 +40,10 @@
 #include "transfor.h"
 #include "view.h"
 
-/* jmf: some references for words I used below:
- Peltast http://www.geocities.com/Athens/Aegean/9659/shields_main.htm
- Phalangite http://www.users.cts.com/funtv/j/jjartist/EpiroteScenario1.htm
- Yeoman: http://snt.student.utwente.nl/campus/sagi/artikel/longbow/longbow.html
+/* Basic goals for titles:
+   The higher titles must be come last.
+   Referring to the skill itself is fine ("Transmuter") but not impressive.
+   No overlaps, high diversity.
 */
 
 // Note:  Even though %s could be used with most of these, remember that
@@ -52,30 +52,27 @@
 
 const char *skills[50][6] =
 {
-    {"Fighting", "Skirmisher", "Grunt", "Veteran", "Warrior", "Slayer"},      // 0
-    {"Short Blades", "Stabber", "Cutter", "Knifefighter", "Eviscerator", "Blademaster"},
-    {"Long Blades", "Slasher", "Slicer", "Fencer", "Swordfighter", "Swordmaster"},
+    {"Fighting", "Skirmisher", "Fighter", "Warrior", "Slayer", "Conqueror"},               // 0
+    {"Short Blades", "Cutter", "Slicer", "Swashbuckler", "Blademaster", "Eviscerator"},
+    {"Long Blades", "Slasher", "Carver", "Fencer", "%s Blade", "Swordmaster"},
     {NULL},                     //  3- was: great swords {dlb}
-    {"Axes", "Chopper", "Cleaver", "Hacker", "Severer", "Axe Maniac"},
-    {"Maces & Flails", "Basher", "Cudgeler", "Shatterer", "Bludgeoner", "Skullcrusher"},   // 5
-    {"Polearms", "Spear-Bearer", "Pike-%s", "Phalangite", "Lancer", "Halberdier"},
-    {"Staves", "Twirler", "Cruncher", "Smasher", "Stickfighter", "Skullbreaker"},
-
-    {"Slings", "Vandal", "Slinger", "Whirler", "Crazy %s", "Very Crazy %s"},
-    {"Bows", "Shooter", "Yeoman", "Archer", "Merry %s", "Merry %s"},
-    {"Crossbows", "Shooter", "Sharpshooter", "Archer", "%s Ballista", "%s Ballista"},     // 10
-    {"Darts", "Dart Thrower", "Hurler", "Hurler, First Class", "%s Darts Champion", "Universal Darts Champion"},
-    {"Throwing", "Chucker", "Thrower", "Deadly Accurate", "Hawkeye", "Sniper"},
-
+    {"Axes", "Chopper", "Cleaver", "Hacker", "Severer", "Executioner"},
+    {"Maces & Flails", "Cudgeler", "Basher", "Bludgeoner", "Shatterer", "Skullcrusher"},   // 5
+    {"Polearms", "Poker", "Spear-Bearer", "Impaler", "Phalangite", "%s Porcupine"},
+    {"Staves", "Twirler", "Cruncher", "Stickfighter", "Pulverizerr", "Chief of Staff"},
+    {"Slings", "Vandal", "Slinger", "Whirler", "Slingshot", "%s Catapult"},
+    {"Bows", "Shooter", "Archer", "Marks%s", "Crack Shot", "Merry %s"},
+    {"Crossbows", "Bolt Thrower", "Quickloader", "Sharpshooter", "Sniper", "%s Arbalest"}, // 10
+    {"Darts", "Dart Thrower", "Hurler", "Hedgehog", "Darts Champion", "Perforator"},
+    {"Throwing", "Chucker", "Thrower", "Deadly Accurate", "Hawkeye", "%s Ballista"},
     {"Armour", "Covered", "Protected", "Tortoise", "Impregnable", "Invulnerable"},
-    {"Dodging", "Ducker", "Dodger", "Nimble", "Spry", "Acrobat"},
-    {"Stealth", "Footpad", "Sneak", "Covert", "Unseen", "Imperceptible"},
+    {"Dodging", "Ducker", "Nimble", "Spry", "Acrobat", "Intangible"},
+    {"Stealth", "Sneak", "Covert", "Unseen", "Imperceptible", "Ninja"},                    // 15
     {"Stabbing", "Miscreant", "Blackguard", "Backstabber", "Cutthroat", "Politician"},
-    {"Shields", "Shield-Bearer", "Blocker", "%s Barricade", "Peltast", "Hoplite"},
-    {"Traps & Doors", "Disarmer", "Trapper", "Architect", "Engineer", "Dungeon Master"},
-
+    {"Shields", "Shield-Bearer", "Hoplite", "Blocker", "Peltast", "%s Barricade"},
+    {"Traps & Doors", "Scout", "Disarmer", "Vigilant", "Perceptive", "Dungeon Master"},
     // STR based fighters, for DEX/martial arts titles see below
-    {"Unarmed Combat", "Ruffian", "Grappler", "Brawler", "Wrestler", "Boxer" },
+    {"Unarmed Combat", "Ruffian", "Grappler", "Brawler", "Wrestler", "%sweight Champion"},
 
     {NULL},                     // 20- empty
     {NULL},                     // 21- empty
@@ -83,22 +80,22 @@ const char *skills[50][6] =
     {NULL},                     // 23- empty
     {NULL},                     // 24- empty
 
-    {"Spellcasting", "Magician", "Thaumaturge", "Eclecticist", "Sorcerer", "Archmage"},     // 25
+    {"Spellcasting", "Magician", "Thaumaturge", "Eclecticist", "Sorcerer", "Archmage"},    // 25
     {"Conjurations", "Ruinous", "Conjurer", "Destroyer", "Devastator", "Annihilator"},
     {"Enchantments", "Charm-Maker", "Infuser", "Bewitcher", "Enchanter", "Spellbinder"},
     {"Summonings", "Caller", "Summoner", "Convoker", "Demonologist", "Hellbinder"},
     {"Necromancy", "Grave Robber", "Reanimator", "Necromancer", "Thanatomancer", "%s of Death"},
-    {"Translocations", "Jumper", "Blinker", "Shifter", "Portalist", "Plane Walker"},       // 30
-    {"Transmigration", "Changer", "Transmogrifier", "Transformer", "Alchemist", "Transmuter"},
+    {"Translocations", "Grasshopper", "Placeless %s", "Blinker", "Portalist", "Plane %s"}, // 30
+    {"Transmigration", "Changer", "Transmogrifier", "Alchemist", "Malleable", "Shapeless %s"},
     {"Divinations", "Seer", "Soothsayer", "Diviner", "Augur", "Oracle"},
 
     {"Fire Magic", "Firebug", "Arsonist", "Scorcher", "Pyromancer", "Infernalist"},
-    {"Ice Magic", "Chiller", "Frost Mage", "Ice Mage", "Cryomancer", "Englaciator"},
-    {"Air Magic", "Wind Mage", "Cloud Mage", "Air Mage", "Sky Mage", "Storm Mage"}, // 35
+    {"Ice Magic", "Chiller", "Frost Mage", "Gelid", "Cryomancer", "Englaciator"},
+    {"Air Magic", "Gusty", "Cloud Mage", "Aerator", "Anemomancer", "Meteorologist"},       // 35
     {"Earth Magic", "Digger", "Geomancer", "Earth Mage", "Metallomancer", "Petrodigitator"},
-    {"Poison Magic", "Stinger", "Tainter", "Polluter", "Poisoner", "Envenomancer"},
+    {"Poison Magic", "Stinger", "Tainter", "Polluter", "Contaminator", "Envenomancer"},
 
-    {"Invocations", "Believer", "Servant", "Worldly Agent", "Theurge", "Avatar"},  // 38
+    {"Invocations", "Believer", "Agitator", "Worldly Agent", "Theurge", "Avatar"},  // 38
     {"Evocations", "Charlatan", "Prestidigitator", "Fetichist", "Evocator", "Talismancer"}, // 39
 
 /*NOTE: If more skills are added, must change ranges in level_change() in player.cc */
@@ -117,8 +114,10 @@ const char *skills[50][6] =
 };
 
 const char *martial_arts_titles[6] =
-    {"Unarmed Combat", "Martial Artist", "Black Belt", "Sensei", "Master", "Grand Master"};
+    {"Unarmed Combat", "Insei", "Martial Artist", "Black Belt", "Sensei", "Grand Master"};
 
+const char *atheist_inv_titles[6] =
+    {"Invocations", "Unbeliever", "Agnostic", "Dissident", "Heretic", "Apostate"};
 
 /* Note that this (humans have 100 for all skills) is assumed in the
    level_change function in player.cc, if CLASSES is def'd
@@ -1917,7 +1916,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
 {
     // paranoia
     if (best_skill == SK_UNUSED_1
-        || (best_skill > SK_UNARMED_COMBAT && best_skill < SK_SPELLCASTING)
+        || best_skill > SK_UNARMED_COMBAT && best_skill < SK_SPELLCASTING
         || best_skill >= NUM_SKILLS)
     {
         return ("Adventurer");
@@ -1960,7 +1959,13 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
 
         case SK_INVOCATIONS:
             if (god == GOD_NO_GOD)
-                result = "Godless";
+                result = atheist_inv_titles[skill_rank];
+            else if (god == GOD_TROG || god == GOD_XOM
+                     || god == GOD_NEMELEX_XOBEH)
+            {
+                // don't care about Invocations
+                result = "Prodigal";
+            }
             else
                 result = skills[best_skill][skill_rank];
             break;
@@ -1972,14 +1977,63 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
     }
 
     const std::string::size_type where = result.find("%s");
-    if ( where != std::string::npos )
+    if (where != std::string::npos)
     {
-        const bool need_cap = (where == 0 && best_skill != SK_NECROMANCY);
-        const std::string sp = species_name(static_cast<species_type>(species),
-                                            0, true, need_cap);
-        result.replace(where, 2, sp);
+        if (best_skill == SK_UNARMED_COMBAT)
+        {
+            std::string weightclass = "";
+            switch (species)
+            {
+            case SP_OGRE:
+            case SP_OGRE_MAGE:
+            case SP_TROLL:
+                weightclass = "Heavy";
+                break;
+
+            case SP_NAGA:
+            case SP_CENTAUR:
+                weightclass = "Cruiser";
+                break;
+
+            default:
+                weightclass = "Middle";
+                break;
+
+            case SP_HIGH_ELF:
+            case SP_GREY_ELF:
+            case SP_DEEP_ELF:
+            case SP_SLUDGE_ELF:
+            case SP_KENKU:
+                weightclass = "Little";
+                break;
+
+            case SP_HALFLING:
+            case SP_GNOME:
+            case SP_KOBOLD:
+                weightclass = "Feather";
+                break;
+
+            case SP_SPRIGGAN:
+                weightclass = "Fly";
+                break;
+            }
+            result.replace(where, 2, weightclass);
+        }
+        else if (best_skill == SK_TRANSLOCATIONS && skill_rank == 5)
+        {
+            result.replace(where, 2, (species == SP_NAGA ? "Slider"
+                                                         : "Walker"));
+        }
+        else
+        {
+            const bool need_cap = (best_skill != SK_BOWS);
+            const std::string sp = species_name(static_cast<species_type>(species),
+                                                0, true, need_cap);
+            result.replace(where, 2, sp);
+        }
     }
-    return result.empty() ? std::string("Invalid Title") : result;
+    return (result.empty() ? std::string("Invalid Title")
+                           : result);
 }
 
 std::string player_title()
