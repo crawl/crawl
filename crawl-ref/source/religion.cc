@@ -1116,7 +1116,7 @@ bool bless_follower(monsters *follower,
     std::string result;
 
     // If a follower was specified, and it's suitable, pick it.
-    // Otherwise, pick a random follower within sight of the player.
+    // Otherwise, pick a random follower.
     if (!follower || (!force && !suitable(follower)))
     {
         if (god != GOD_BEOGH)
