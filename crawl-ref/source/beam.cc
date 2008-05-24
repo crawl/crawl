@@ -4197,7 +4197,7 @@ static bool _stop_unchivalric_attack(monsters *mon, bool target)
     {
         // "Really fire through the helpless neutral holy Daeva?"
         // was: "Really fire through this helpless neutral holy creature?"
-        snprintf(info, INFO_SIZE, "Really fire %s the %s%s%s%s%s?",
+        snprintf(info, INFO_SIZE, "Really fire %s the %s%s%s%s?",
                  (target ? "at" : "through"),
                  (isUnchivalric) ? "helpless "
                                  : "",
@@ -4207,10 +4207,7 @@ static bool _stop_unchivalric_attack(monsters *mon, bool target)
                                  : "",
                  (isHoly)        ? "holy "
                                  : "",
-                 mon->name(DESC_PLAIN).c_str(),
-                 (is_sanctuary(you.x_pos, you.y_pos)
-                     || is_sanctuary(mon->x, mon->y)) ?
-                         ", despite your sanctuary" : "");
+                 mon->name(DESC_PLAIN).c_str());
 
         if (!yesno(info, true, 'n'))
             return (true);
