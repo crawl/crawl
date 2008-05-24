@@ -65,4 +65,6 @@ const char *equip_slot_to_name(int equip);
 
 void print_overview_screen(void);
 
+std::string dump_overview_screen(bool full_id);
+
 #endif

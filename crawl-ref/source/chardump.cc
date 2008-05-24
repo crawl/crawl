@@ -191,6 +191,7 @@ static void sdump_header(dump_params &par)
 
 static void sdump_stats(dump_params &par)
 {
+/*
     std::vector<formatted_string> vfs =
         get_full_detail(par.full_id, par.se? par.se->points : -1);
 
@@ -199,6 +200,8 @@ static void sdump_stats(dump_params &par)
         par.text += vfs[i];
         par.text += '\n';
     }
+*/
+    par.text += dump_overview_screen(par.full_id);
     par.text += "\n\n";
 }
 

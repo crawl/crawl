@@ -1006,7 +1006,7 @@ void draw_border(void)
         cgotoxy(19, 8, GOTO_STAT); cprintf("Turn:");
     }
     // Line 9 (or 8) is exp pool, Level
-}                               // end draw_border()
+}
 
 // ----------------------------------------------------------------------
 // Monster pane
@@ -1039,14 +1039,22 @@ static const char* _get_monster_name(const monsters *mon, bool list_a = false)
         list_a = false;
     }
 
-    desc += mon->name(list_a ? DESC_NOCAP_A : DESC_PLAIN);
-    if (!(mon->mname).empty())
+    if (mons_is_mimic(mon->type))
     {
-        desc += " (";
-        desc += mons_type_name(mon->type, DESC_PLAIN);
-        desc += ")";
+        if (list_a)
+            desc += "a ";
+        desc += "mimic";
     }
-
+    else
+    {
+        desc += mon->name(list_a ? DESC_NOCAP_A : DESC_PLAIN);
+        if (!(mon->mname).empty())
+        {
+            desc += " (";
+            desc += mons_type_name(mon->type, DESC_PLAIN);
+            desc += ")";
+        }
+    }
     return desc.c_str();
 }
 
@@ -1097,7 +1105,8 @@ static void _get_visible_monsters(std::vector<std::string>& describe)
                     const monsters *mon = &menv[targ_monst];
                     if (player_monster_visible(mon)
                         && !mons_is_submerged(mon)
-                        && !mons_is_mimic(mon->type))
+                        && (!mons_is_mimic(mon->type)
+                            || testbits(mon->flags, MF_KNOWN_MIMIC)))
                     {
                         mons.push_back(mon);
                     }
@@ -1299,17 +1308,17 @@ void monster_pane_info::to_string( int count, std::string& desc,
 static void
 _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
 {
-    // skip forward to past the end of the range of identical monsters
+    // Skip forward to past the end of the range of identical monsters.
     unsigned int end;
     for (end=start+1; end < mons.size(); ++end)
     {
-        // Array is sorted, so if !(m1 < m2), m1 and m2 are "equal"
+        // Array is sorted, so if !(m1 < m2), m1 and m2 are "equal".
         if (monster_pane_info::less_than(mons[start], mons[end]))
             break;
     }
     // Postcondition: all monsters in [start, end) are "equal"
 
-    // Print info on the monsters we've found
+    // Print info on the monsters we've found.
     {
         int printed = 0;
 
@@ -1332,7 +1341,7 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
 
         if (count == 1)
         {
-            // Print an "icon" representing damage level
+            // Print an "icon" representing damage level.
             const monsters *mon = mons[start].m_mon;
             std::string damage_desc;
             mon_dam_level_type damage_level;
@@ -1382,7 +1391,7 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
         }
     }
 
-    // Set start to the next un-described monster
+    // Set start to the next un-described monster.
     start = end;
     textcolor(LIGHTGREY);
 }
@@ -1525,7 +1534,7 @@ static const char* _determine_color_string( int level )
     }
 }
 
-// old overview screen, now only used for dumping
+// Old overview screen, now only used for dumping.
 std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
 {
     char buf[1000];
@@ -1904,7 +1913,8 @@ static std::string _overview_screen_title()
 
     int linelength = strlen(you.your_name) + strlen(title)
                      + strlen(race_class) + strlen(time_turns);
-    for (int count = 0; linelength >= get_number_of_cols() && count < 2; count++ )
+    for (int count = 0; linelength >= get_number_of_cols() && count < 2;
+         count++)
     {
         switch (count)
         {
@@ -1921,7 +1931,7 @@ static std::string _overview_screen_title()
               break;
         }
         linelength = strlen(you.your_name) + strlen(title)
-            + strlen(race_class) + strlen(time_turns);
+                     + strlen(race_class) + strlen(time_turns);
     }
 
     std::string text;
@@ -1936,29 +1946,20 @@ static std::string _overview_screen_title()
     return text;
 }
 
-// new scrollable status overview screen,
-// including stats, mutations etc.
-char _get_overview_screen_results()
+static std::vector<formatted_string> _get_overview_cols1()
 {
-    bool calc_unid = false;
-    formatted_scroller overview;
-    // Set flags, and don't use easy exit.
-    overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
-    overview.set_more( formatted_string::parse_string(
-                       "<cyan>[ + : Page down.   - : Page up.   Esc exits.]"));
-    overview.set_tag("resists");
-
-    overview.add_text(_overview_screen_title());
-
     char buf[1000];
+
     // 4 columns
     column_composer cols1(4, 18, 30, 40);
 
     if (!player_rotted())
         snprintf(buf, sizeof buf, "HP %3d/%d",you.hp,you.hp_max);
     else
+    {
         snprintf(buf, sizeof buf, "HP %3d/%d (%d)",
                  you.hp, you.hp_max, you.hp_max + player_rotted() );
+    }
     cols1.add_formatted(0, buf, false);
 
     snprintf(buf, sizeof buf, "MP %3d/%d",
@@ -1971,8 +1972,10 @@ char _get_overview_screen_results()
     if (you.strength == you.max_strength)
         snprintf(buf, sizeof buf, "Str %2d", you.strength);
     else
+    {
         snprintf(buf, sizeof buf, "Str <yellow>%2d</yellow> (%d)",
                  you.strength, you.max_strength);
+    }
     cols1.add_formatted(1, buf, false);
 
     if (you.intel == you.max_intel)
@@ -2001,9 +2004,8 @@ char _get_overview_screen_results()
         snprintf(buf, sizeof buf, "Sh  <darkgrey>-</darkgrey>");
     }
     else
-    {
         snprintf(buf, sizeof buf, "Sh %2d", player_shield_class());
-    }
+
     cols1.add_formatted(2, buf, false);
     snprintf(buf, sizeof buf, "Ev %2d" , player_evasion());
     cols1.add_formatted(2, buf, false);
@@ -2044,12 +2046,13 @@ char _get_overview_screen_results()
              (player_spell_levels() == 1) ? "" : "s");
     cols1.add_formatted(3, buf, false);
 
-    {
-        std::vector<formatted_string> blines = cols1.formatted_lines();
-        for (unsigned int i = 0; i < blines.size(); ++i )
-            overview.add_item_formatted_string(blines[i]);
-        overview.add_text(" ");
-    }
+    return cols1.formatted_lines();
+}
+
+static std::vector<formatted_string> _get_overview_cols2(
+    std::vector<char> &equip_chars, bool calc_unid = false)
+{
+    char buf[1000];
 
     // 3 columns, splits at columns 21, 38
     column_composer cols(3, 21, 38);
@@ -2151,11 +2154,36 @@ char _get_overview_screen_results()
              _determine_color_string(rcfli), itosym1(rcfli));
     cols.add_formatted(1, buf, false);
 
-    std::vector<char> equip_chars;
     _print_overview_screen_equip(cols, equip_chars);
 
+    return cols.formatted_lines();
+}
+
+// New scrollable status overview screen, including stats, mutations etc.
+char _get_overview_screen_results()
+{
+    bool calc_unid = false;
+    formatted_scroller overview;
+    // Set flags, and don't use easy exit.
+    overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
+    overview.set_more( formatted_string::parse_string(
+                       "<cyan>[ + : Page down.   - : Page up.   Esc exits.]"));
+    overview.set_tag("resists");
+
+    overview.add_text(_overview_screen_title());
+
     {
-        std::vector<formatted_string> blines = cols.formatted_lines();
+        std::vector<formatted_string> blines = _get_overview_cols1();
+        for (unsigned int i = 0; i < blines.size(); ++i )
+            overview.add_item_formatted_string(blines[i]);
+        overview.add_text(" ");
+    }
+
+
+    {
+        std::vector<char> equip_chars;
+        std::vector<formatted_string> blines = _get_overview_cols2(equip_chars,
+                                                                   calc_unid);
         for (unsigned int i = 0; i < blines.size(); ++i )
         {
             // Kind of a hack -- we don't really care what items these
@@ -2170,6 +2198,34 @@ char _get_overview_screen_results()
 
     std::vector<MenuEntry *> results = overview.show();
     return (results.size() > 0) ? results[0]->hotkeys[0] : 0;
+}
+
+std::string dump_overview_screen(bool full_id)
+{
+    std::string text = formatted_string::parse_string(_overview_screen_title());
+    text += EOL;
+
+    std::vector<formatted_string> blines = _get_overview_cols1();
+    for (unsigned int i = 0; i < blines.size(); ++i)
+    {
+        text += blines[i];
+        text += EOL;
+    }
+    text += EOL;
+
+    std::vector<char> equip_chars;
+    blines = _get_overview_cols2(equip_chars, full_id);
+    for (unsigned int i = 0; i < blines.size(); ++i)
+    {
+        text += blines[i];
+        text += EOL;
+    }
+    text += EOL;
+
+    text += formatted_string::parse_string(_status_mut_abilities());
+    text += EOL;
+
+    return text;
 }
 
 void print_overview_screen()
@@ -2189,8 +2245,8 @@ void print_overview_screen()
     }
 }
 
-// creates rows of short descriptions for current
-// status, mutations and abilities
+// Creates rows of short descriptions for current
+// status, mutations and abilities.
 std::string _status_mut_abilities()
 {
     //----------------------------
@@ -2433,6 +2489,7 @@ std::string _status_mut_abilities()
           break;
     }
 /*
+//  Commenting out until this information is actually meaningful. (jpeg)
     const int to_hit = calc_your_to_hit( false ) * 2;
 
     snprintf( info, INFO_SIZE,
