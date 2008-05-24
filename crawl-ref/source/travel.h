@@ -81,7 +81,7 @@ bool is_traversable(dungeon_feature_type grid);
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool is_excluded(const coord_def &p);
 
-void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y, 
+void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y,
                      std::vector<coord_def>* coords = NULL);
 
 bool is_travelsafe_square(int x, int y, bool ignore_hostile = false,
@@ -127,7 +127,7 @@ bool prompt_stop_explore(int es_why);
 enum translevel_prompt_flags
 {
     TPF_NO_FLAGS          = 0,
-    
+
     TPF_ALLOW_WAYPOINTS   = 0x1,
     TPF_ALLOW_UPDOWN      = 0x2,
     TPF_REMEMBER_TARGET   = 0x4,
@@ -224,7 +224,7 @@ public:
         depth  = -1;
         level_type = LEVEL_DUNGEON;
     }
-    
+
     bool is_valid() const
     {
         return (branch != NUM_BRANCHES && depth != -1)
@@ -250,7 +250,7 @@ public:
 
         if (level_type != LEVEL_DUNGEON)
             return (false);
-        
+
         return (branch < id.branch) || (branch==id.branch && depth < id.depth);
     }
 
@@ -271,7 +271,7 @@ struct level_pos
         pos.x = pos.y = -1;
     }
 
-    level_pos(const level_id &lid, const coord_def &coord) 
+    level_pos(const level_id &lid, const coord_def &coord)
         : id(lid), pos(coord)
     {
     }
@@ -296,7 +296,7 @@ struct level_pos
     {
         return (id < lp.id) || (id == lp.id && pos < lp.pos);
     }
-    
+
     bool is_valid() const
     {
         return id.depth > -1 && pos.x != -1 && pos.y != -1;
@@ -338,7 +338,7 @@ class explore_discoveries
 {
 public:
     explore_discoveries();
-    
+
     void found_feature(const coord_def &pos, dungeon_feature_type grid);
     void found_item(const coord_def &pos, const item_def &item);
 
@@ -370,7 +370,7 @@ private:
 private:
     template <class C> void say_any(const C &coll, const char *stub) const;
     template <class citer> bool has_duplicates(citer, citer) const;
-    
+
     std::string cleaned_feature_description(dungeon_feature_type feature) const;
     void add_item(const item_def &item);
     void add_stair(const named_thing<int> &stair);
@@ -378,7 +378,7 @@ private:
         const std::vector< named_thing<int> > &v) const;
     bool merge_feature(
         std::vector< named_thing<int> > &v,
-        const named_thing<int> &feat) const;    
+        const named_thing<int> &feat) const;
 };
 
 struct stair_info
@@ -389,7 +389,7 @@ public:
         PHYSICAL,
         PLACEHOLDER
     };
-    
+
 public:
     coord_def position;     // Position of stair
     dungeon_feature_type grid; // Grid feature of the stair.
@@ -471,7 +471,7 @@ struct LevelInfo
     // Updates/creates a StairInfo for the stair at (x, y) in grid coordinates
     void update_stair(int x, int y, const level_pos &p, bool guess = false);
 
-    // Returns true if the given branch is known to be accessible from the 
+    // Returns true if the given branch is known to be accessible from the
     // current level.
     bool is_known_branch(unsigned char branch) const;
 
@@ -530,7 +530,7 @@ public:
 
     const level_pos &get_waypoint(int number) const
     {
-        return waypoints[number]; 
+        return waypoints[number];
     }
 
     int get_waypoint_count() const;
@@ -594,7 +594,7 @@ public:
     // The next square to go to to move towards the travel destination. Return
     // value is undefined if pathfind was not called with RMODE_TRAVEL.
     const coord_def travel_move() const;
-    
+
     // Square to go to for (greedy) explore. Return value is undefined if
     // pathfind was not called with RMODE_EXPLORE or RMODE_EXPLORE_GREEDY.
     const coord_def explore_target() const;
@@ -620,10 +620,10 @@ protected:
 protected:
     static const int UNFOUND_DIST  = -30000;
     static const int INFINITE_DIST =  INFINITE_DISTANCE;
-    
+
 protected:
     run_mode_type runmode;
-    
+
     // Where pathfinding starts, and the destination. Note that dest is not
     // relevant for explore!
     coord_def start, dest;
@@ -650,7 +650,7 @@ protected:
 
     // Are we greedy exploring?
     bool need_for_greed;
-    
+
     // Targets for explore and greedy explore.
     coord_def unexplored_place, greedy_place;
 
