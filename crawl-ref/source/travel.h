@@ -74,7 +74,6 @@ bool is_stair(dungeon_feature_type gridc);
 bool is_travelable_stair(dungeon_feature_type gridc);
 command_type direction_to_command( char x, char y );
 bool is_resting( void );
-bool can_travel_interlevel();
 #ifdef CLUA_BINDINGS
 const char *trap_name(int x, int y);
 #endif
