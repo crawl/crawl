@@ -3002,6 +3002,7 @@ std::string your_hand(bool plural)
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                         bool beam_target)
 {
+    bool retval = false;
     bool prompt = false;
 
     const bool inSanctuary   = (is_sanctuary(you.x_pos, you.y_pos)
@@ -3048,5 +3049,8 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
         prompt = true;
     }
 
-    return !(you.confused() || (prompt && yesno(info, false, 'n')));
+    if (!you.confused() && prompt)
+        retval = !yesno(info, false, 'n');
+
+    return retval;
 }
