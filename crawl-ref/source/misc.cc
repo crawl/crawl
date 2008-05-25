@@ -3048,7 +3048,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
         prompt = true;
     }
 
-    return (!you.confused() && (!prompt || yesno(info, false, 'n')));
+    return !(you.confused() || (prompt && yesno(info, false, 'n')));
 }
 
 void set_attack_conducts(const monsters *mon, god_conduct_trigger& conduct,
