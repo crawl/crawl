@@ -353,7 +353,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
     //   what this spell is trying to be), one is more than enough...
     //   let people use necromancy.
     // - there is no need for another air spell... air spells are
-    //   already very common (ie. this level nine spell occurred in
+    //   already very common (i.e,. this level nine spell occurred in
     //   two books!)
 
     // 29 - Book of the Sky
