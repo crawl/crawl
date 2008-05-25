@@ -2102,7 +2102,7 @@ void behaviour_event( monsters *mon, int event, int src,
 
     case ME_CORNERED:
         // Plants or nonliving monsters cannot flee.
-        if (mons_class_holiness(mon->type) == MH_PLANT)
+        if (mons_class_holiness(mon->type) == MH_PLANT
             || mons_class_holiness(mon->type) == MH_NONLIVING)
         {
             break;
