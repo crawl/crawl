@@ -4003,7 +4003,7 @@ void display_char_status()
          (ustealth < 220) ? "very " :
          (ustealth < 300) ? "extremely " :
          (ustealth < 400) ? "extraordinarily " :
-         (ustealth < 520) ? "incredibly " 
+         (ustealth < 520) ? "incredibly "
                           : "uncannily ");
 
 #if DEBUG_DIAGNOSTICS
@@ -5776,8 +5776,8 @@ int player::damage_type(int)
     {
         return (get_vorpal_type(inv[wpn]));
     }
-    else if (equip[EQ_GLOVES] == -1 &&
-             attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    else if (equip[EQ_GLOVES] == -1
+             && attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
     {
         return (DVORP_SLICING);
     }
@@ -6619,16 +6619,16 @@ void PlaceInfo::make_global()
 void PlaceInfo::assert_validity() const
 {
     // Check that level_type and branch match up
-    ASSERT(is_global() ||
-           (level_type == LEVEL_DUNGEON && branch >= BRANCH_MAIN_DUNGEON &&
-            branch < NUM_BRANCHES) ||
-           (level_type > LEVEL_DUNGEON && level_type < NUM_LEVEL_AREA_TYPES &&
-            branch == -1));
+    ASSERT(is_global()
+           || level_type == LEVEL_DUNGEON && branch >= BRANCH_MAIN_DUNGEON
+              && branch < NUM_BRANCHES
+           || level_type > LEVEL_DUNGEON && level_type < NUM_LEVEL_AREA_TYPES
+              && branch == -1);
 
     // Can't have visited a place without seeing any of its levels, and
     // visa versa
-    ASSERT((num_visits == 0 && levels_seen == 0) ||
-           (num_visits > 0 && levels_seen > 0));
+    ASSERT(num_visits == 0 && levels_seen == 0
+           || num_visits > 0 && levels_seen > 0);
 
     if (level_type == LEVEL_LABYRINTH || level_type == LEVEL_ABYSS)
         ASSERT(num_visits == levels_seen);
@@ -6637,12 +6637,12 @@ void PlaceInfo::assert_validity() const
     else if (level_type == LEVEL_DUNGEON && branches[branch].depth > 0)
         ASSERT(levels_seen <= (unsigned long) branches[branch].depth);
 
-    ASSERT(turns_total == (turns_explore + turns_travel + turns_interlevel +
-                           turns_resting + turns_other));
+    ASSERT(turns_total == (turns_explore + turns_travel + turns_interlevel
+                           + turns_resting + turns_other));
 
-    ASSERT(elapsed_total == (elapsed_explore + elapsed_travel +
-                             elapsed_interlevel + elapsed_resting +
-                             elapsed_other));
+    ASSERT(elapsed_total == (elapsed_explore + elapsed_travel
+                             + elapsed_interlevel + elapsed_resting
+                             + elapsed_other));
 }
 
 const std::string PlaceInfo::short_name() const
@@ -6759,9 +6759,9 @@ PlaceInfo& player::get_place_info(level_area_type level_type2) const
 PlaceInfo& player::get_place_info(branch_type branch,
                                   level_area_type level_type2) const
 {
-    ASSERT((level_type2 == LEVEL_DUNGEON && branch >= BRANCH_MAIN_DUNGEON &&
-            branch < NUM_BRANCHES) ||
-           (level_type2 > LEVEL_DUNGEON && level_type < NUM_LEVEL_AREA_TYPES));
+    ASSERT(level_type2 == LEVEL_DUNGEON && branch >= BRANCH_MAIN_DUNGEON
+                && branch < NUM_BRANCHES
+           || level_type2 > LEVEL_DUNGEON && level_type < NUM_LEVEL_AREA_TYPES);
 
     if (level_type2 == LEVEL_DUNGEON)
         return (PlaceInfo&) branch_info[branch];

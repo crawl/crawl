@@ -2084,9 +2084,12 @@ void behaviour_event( monsters *mon, int event, int src,
         if (mon->has_ench(ENCH_BERSERK))
             break;
 
-        // Neither do wandering mushrooms.
-        if (mon->type == MONS_WANDERING_MUSHROOM)
+        // Neither do plants or nonliving beings.
+        if (mons_class_holiness(mon->type) == MH_PLANT
+            || mons_class_holiness(mon->type) == MH_NONLIVING)
+        {
             break;
+        }
 
         mon->foe = src;
         mon->behaviour = BEH_FLEE;
@@ -2098,11 +2101,15 @@ void behaviour_event( monsters *mon, int event, int src,
         break;
 
     case ME_CORNERED:
-        if (mon->type == MONS_WANDERING_MUSHROOM)
+        // Plants or nonliving monsters cannot flee.
+        if (mons_class_holiness(mon->type) == MH_PLANT)
+            || mons_class_holiness(mon->type) == MH_NONLIVING)
+        {
             break;
+        }
 
-        // just set behaviour.. foe doesn't change.
-        if (mon->behaviour != BEH_CORNERED && !mon->has_ench(ENCH_FEAR))
+        // Just set behaviour.. foe doesn't change.
+        if (mon->behaviour != BEH_CORNERED)
             simple_monster_message(mon, " turns to fight!");
 
         mon->behaviour = BEH_CORNERED;
@@ -2793,6 +2800,12 @@ static void _handle_movement(monsters *monster)
     }
 }                               // end handle_movement()
 
+static void _make_mons_stop_fleeing(monsters *mon)
+{
+    if (mon->behaviour == BEH_FLEE)
+        behaviour_event(mon, ME_CORNERED);
+}
+
 //---------------------------------------------------------------
 //
 // handle_nearby_ability
@@ -3042,6 +3055,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // good idea?
         if (mons_should_fire(beem))
         {
+            _make_mons_stop_fleeing(monster);
             simple_monster_message(monster, " spits lava!");
             fire_beam(beem);
             used = true;
@@ -3084,6 +3098,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // good idea?
         if (mons_should_fire(beem))
         {
+            _make_mons_stop_fleeing(monster);
             simple_monster_message(monster,
                                    " shoots out a bolt of electricity!");
             fire_beam(beem);
@@ -3126,7 +3141,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
         }
 
-        // friendly fiends won't use torment, preferring hellfire
+        // Friendly fiends won't use torment, preferring hellfire
         // (right now there is no way a monster can predict how
         // badly they'll damage the player with torment) -- GDL
 
@@ -3162,6 +3177,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 // good idea?
                 if (mons_should_fire(beem))
                 {
+                    _make_mons_stop_fleeing(monster);
                     simple_monster_message( monster, " makes a gesture!", spl );
 
                     mons_cast(monster, beem, spell_cast);
@@ -3231,6 +3247,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // good idea?
         if (mons_should_fire(beem))
         {
+            _make_mons_stop_fleeing(monster);
             simple_monster_message(monster, " flicks its tail!");
             fire_beam(beem);
             used = true;
@@ -3284,6 +3301,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             // good idea?
             if (mons_should_fire(beem))
             {
+                _make_mons_stop_fleeing(monster);
                 simple_monster_message(monster, " breathes.", spl);
                 fire_beam(beem);
                 mmov_x = 0;
@@ -3296,7 +3314,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     case MONS_MERMAID:
     {
         // Don't behold player already half down or up the stairs
-        if ( !you.delay_queue.empty() )
+        if (!you.delay_queue.empty())
         {
             delay_queue_item delay = you.delay_queue.front();
 
@@ -3310,8 +3328,10 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             }
         }
 
-        // Won't sing if either of you silenced, or it's friendly or confused.
-        if (monster->has_ench(ENCH_CONFUSION) || mons_friendly(monster)
+        // Won't sing if either of you silenced, or it's friendly,
+        // confused or fleeing.
+        if (monster->has_ench(ENCH_CONFUSION) || monster->behaviour == BEH_FLEE
+            || mons_friendly(monster)
             || silenced(monster->x, monster->y)
             || silenced(you.x_pos, you.y_pos))
         {
@@ -4109,8 +4129,8 @@ static bool _handle_spell( monsters *monster, bolt & beem )
 
     // yes, there is a logic to this ordering {dlb}:
     if (monster->behaviour == BEH_SLEEP
-        || (!mons_class_flag(monster->type, M_SPELLCASTER)
-                && draco_breath == SPELL_NO_SPELL)
+        || !mons_class_flag(monster->type, M_SPELLCASTER)
+           && draco_breath == SPELL_NO_SPELL
         || monster->has_ench(ENCH_SUBMERGED))
     {
         return (false);
@@ -4118,7 +4138,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
 
     if ((mons_class_flag(monster->type, M_ACTUAL_SPELLS)
             || mons_class_flag(monster->type, M_PRIEST))
-        && (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER)))
+        && monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
     {
         return (false);           //jmf: shapeshifters don't get spells, just
                                   //     physical powers.
@@ -4145,7 +4165,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
 
         if (!mon_enemies_around(monster))
         {
-            // forces the casting of dig when player not visible - this is EVIL!
+            // Forces the casting of dig when player not visible - this is EVIL!
             if (monster->has_spell(SPELL_DIG)
                 && monster->behaviour == BEH_SEEK)
             {
@@ -4153,7 +4173,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                 finalAnswer = true;
             }
             else if ((monster->has_spell(SPELL_LESSER_HEALING)
-                      || monster->has_spell(SPELL_GREATER_HEALING))
+                         || monster->has_spell(SPELL_GREATER_HEALING))
                      && monster->hit_points < monster->max_hit_points)
             {
                 // The player's out of sight!
@@ -4183,8 +4203,8 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                 return (false);
         }
 
-        // monsters caught in a net try to get away
-        // this is only urgent if enemies are around
+        // Monsters caught in a net try to get away.
+        // This is only urgent if enemies are around.
         if (!finalAnswer && mon_enemies_around(monster)
             && mons_is_caught(monster) && one_chance_in(4))
         {
@@ -4234,7 +4254,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
         {
             // If nothing found by now, safe friendlies will rarely cast.
             if (mons_friendly(monster) && !mon_enemies_around(monster)
-                && !one_chance_in(8))
+                && !one_chance_in(10))
             {
                 return (false);
             }
@@ -4247,9 +4267,10 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                 if (hspell_pass[i] == SPELL_NO_SPELL)
                     num_no_spell++;
                 else if (ms_waste_of_time( monster, hspell_pass[i] )
-                // should monster not have selected dig by now, it never will:
                          || hspell_pass[i] == SPELL_DIG)
                 {
+                    // Should monster not have selected dig by now,
+                    // it never will.
                     hspell_pass[i] = SPELL_NO_SPELL;
                     num_no_spell++;
                 }
@@ -4262,12 +4283,12 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                 return (false);
             }
 
-            // up to four tries to pick a spell.
+            // Up to four tries to pick a spell.
             for (int loopy = 0; loopy < 4; loopy ++)
             {
                 bool spellOK = false;
 
-                // setup spell - fleeing monsters will always try to
+                // Setup spell - fleeing monsters will always try to
                 // choose their emergency spell.
                 if (monster->behaviour == BEH_FLEE)
                 {
@@ -4334,7 +4355,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                     }
                 }
 
-                // if not okay, then maybe we'll cast a defensive spell
+                // If not okay, then maybe we'll cast a defensive spell.
                 if (!spellOK)
                 {
                     if (is_sanctuary(you.x_pos, you.y_pos)
@@ -4343,7 +4364,10 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                         spell_cast = SPELL_NO_SPELL;
                     }
                     else
-                        spell_cast = (coinflip() ? hspell_pass[2] : SPELL_NO_SPELL);
+                    {
+                        spell_cast = (coinflip() ? hspell_pass[2]
+                                                 : SPELL_NO_SPELL);
+                    }
                 }
 
                 if (spell_cast != SPELL_NO_SPELL)
@@ -4354,9 +4378,9 @@ static bool _handle_spell( monsters *monster, bolt & beem )
         // If there's otherwise no ranged attack use the breath weapon.
         // The breath weapon is also occasionally used.
         if (draco_breath != SPELL_NO_SPELL
-                && (spell_cast == SPELL_NO_SPELL
-                    || (!_is_emergency_spell(hspell_pass, spell_cast)
-                        && one_chance_in(4)))
+            && (spell_cast == SPELL_NO_SPELL
+                 || !_is_emergency_spell(hspell_pass, spell_cast)
+                    && one_chance_in(4))
             && !is_sanctuary(you.x_pos, you.y_pos)
             && !is_sanctuary(monster->x, monster->y))
         {
@@ -4364,11 +4388,11 @@ static bool _handle_spell( monsters *monster, bolt & beem )
             finalAnswer = true;
         }
 
-        // should the monster *still* not have a spell, well, too bad {dlb}:
+        // Should the monster *still* not have a spell, well, too bad {dlb}:
         if (spell_cast == SPELL_NO_SPELL)
             return (false);
 
-        // Try to animate dead: if nothing rises, pretend we didn't cast it
+        // Try to animate dead: if nothing rises, pretend we didn't cast it.
         if (spell_cast == SPELL_ANIMATE_DEAD
             && !animate_dead( monster, 100, SAME_ATTITUDE(monster),
                               monster->foe, 0 ))
@@ -4398,6 +4422,8 @@ static bool _handle_spell( monsters *monster, bolt & beem )
         }
         else
         {
+            if (spell_needs_foe(spell_cast))
+                _make_mons_stop_fleeing(monster);
             mons_cast(monster, beem, spell_cast);
             mmov_x = 0;
             mmov_y = 0;
@@ -6379,6 +6405,7 @@ static bool _plant_spit(monsters *monster, bolt &pbolt)
 
     if (mons_should_fire(pbolt))
     {
+        _make_mons_stop_fleeing(monster);
         strcpy( spit_string, " spits" );
         if (pbolt.target_x == you.x_pos && pbolt.target_y == you.y_pos)
             strcat( spit_string, " at you" );

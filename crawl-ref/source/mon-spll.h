@@ -40,7 +40,8 @@
        SPELL_INVISIBILITY,
        SPELL_MAGIC_DART,
        SPELL_NO_SPELL,
-       SPELL_CONFUSE  }
+       SPELL_CONFUSE
+      }
     },
 
     {  MST_ORC_WIZARD_III,
@@ -50,7 +51,8 @@
        SPELL_HASTE,
        SPELL_THROW_FLAME,
        SPELL_MAGIC_DART,
-       SPELL_INVISIBILITY  }
+       SPELL_INVISIBILITY
+      }
     },
 
     {  MST_GUARDIAN_NAGA,
@@ -60,7 +62,8 @@
        SPELL_LESSER_HEALING,
        SPELL_VENOM_BOLT,
        SPELL_SLOW,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_LICH_I,
@@ -70,7 +73,8 @@
        SPELL_SUMMON_GREATER_DEMON,
        SPELL_ANIMATE_DEAD,
        SPELL_BOLT_OF_IRON,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_LICH_II,
@@ -80,7 +84,8 @@
        SPELL_HASTE,
        SPELL_BOLT_OF_DRAINING,
        SPELL_SUMMON_GREATER_DEMON,
-       SPELL_BANISHMENT  }
+       SPELL_BANISHMENT
+      }
     },
 
     {  MST_LICH_III,
@@ -90,7 +95,8 @@
        SPELL_SUMMON_UNDEAD,
        SPELL_THROW_FROST,
        SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-       SPELL_SUMMON_UNDEAD  }
+       SPELL_SUMMON_UNDEAD
+      }
     },
 
     {  MST_LICH_IV,
@@ -100,7 +106,8 @@
        SPELL_INVISIBILITY,
        SPELL_ANIMATE_DEAD,
        SPELL_BOLT_OF_IRON,
-       SPELL_INVISIBILITY  }
+       SPELL_INVISIBILITY
+      }
     },
 
     {  MST_BURNING_DEVIL,
@@ -110,7 +117,8 @@
        SPELL_NO_SPELL,
        SPELL_HELLFIRE_BURST,
        SPELL_HELLFIRE_BURST,
-       SPELL_HELLFIRE_BURST  }
+       SPELL_HELLFIRE_BURST
+      }
     },
 
     {  MST_VAMPIRE,
@@ -120,7 +128,8 @@
        SPELL_INVISIBILITY,
        SPELL_NO_SPELL,
        SPELL_VAMPIRE_SUMMON,
-       SPELL_VAMPIRE_SUMMON }
+       SPELL_VAMPIRE_SUMMON
+      }
     },
 
     {  MST_VAMPIRE_KNIGHT,
@@ -130,7 +139,8 @@
        SPELL_HASTE,
        SPELL_INVISIBILITY,
        SPELL_VAMPIRE_SUMMON,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_VAMPIRE_MAGE,
@@ -140,7 +150,8 @@
        SPELL_INVISIBILITY,
        SPELL_ANIMATE_DEAD,
        SPELL_ANIMATE_DEAD,
-       SPELL_TELEPORT_SELF }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_EFREET,
@@ -150,7 +161,8 @@
        SPELL_NO_SPELL,
        SPELL_FIREBALL,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_BRAIN_WORM,
@@ -160,7 +172,8 @@
        SPELL_NO_SPELL,
        SPELL_BRAIN_FEED,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_GIANT_ORANGE_BRAIN,
@@ -170,7 +183,8 @@
        SPELL_SHADOW_CREATURES,
        SPELL_CONFUSE,
        SPELL_BLINK,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_RAKSHASA,
@@ -180,7 +194,8 @@
        SPELL_INVISIBILITY,
        SPELL_FAKE_RAKSHASA_SUMMON,
        SPELL_BLINK,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_GREAT_ORB_OF_EYES,
@@ -190,7 +205,8 @@
        SPELL_NO_SPELL,
        SPELL_SLOW,
        SPELL_CONFUSE,
-       SPELL_TELEPORT_OTHER  }
+       SPELL_TELEPORT_OTHER
+      }
     },
 
     {  MST_ORC_SORCERER,
@@ -200,7 +216,8 @@
        SPELL_SUMMON_DEMON,
        SPELL_PARALYSE,
        SPELL_ANIMATE_DEAD,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_STEAM_DRAGON,
@@ -210,7 +227,8 @@
        SPELL_NO_SPELL,
        SPELL_STEAM_BALL,
        SPELL_STEAM_BALL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_HELL_KNIGHT_I,
@@ -220,7 +238,8 @@
        SPELL_HASTE,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_HASTE  }
+       SPELL_HASTE
+      }
     },
 
     {  MST_HELL_KNIGHT_II,
@@ -230,7 +249,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_BLINK  }
+       SPELL_BLINK
+      }
     },
 
     {  MST_NECROMANCER_I,
@@ -240,7 +260,8 @@
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
        SPELL_ANIMATE_DEAD,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_NECROMANCER_II,
@@ -250,7 +271,8 @@
        SPELL_INVISIBILITY,
        SPELL_ANIMATE_DEAD,
        SPELL_ANIMATE_DEAD,
-       SPELL_BLINK  }
+       SPELL_BLINK
+      }
     },
 
     {  MST_WIZARD_I,
@@ -260,7 +282,8 @@
        SPELL_HASTE,
        SPELL_LIGHTNING_BOLT,
        SPELL_CONFUSE,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_WIZARD_II,
@@ -270,7 +293,8 @@
        SPELL_INVISIBILITY,
        SPELL_CONFUSE,
        SPELL_SLOW,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_WIZARD_III,
@@ -280,7 +304,8 @@
        SPELL_BLINK,
        SPELL_BOLT_OF_FIRE,
        SPELL_BOLT_OF_COLD,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_WIZARD_IV,
@@ -290,7 +315,8 @@
        SPELL_BLINK,
        SPELL_LIGHTNING_BOLT,
        SPELL_BANISHMENT,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_WIZARD_V,
@@ -300,7 +326,8 @@
        SPELL_INVISIBILITY,
        SPELL_TELEPORT_OTHER,
        SPELL_FIREBALL,
-       SPELL_TELEPORT_OTHER  }
+       SPELL_TELEPORT_OTHER
+      }
     },
 
     {  MST_ORC_PRIEST,
@@ -310,7 +337,8 @@
        SPELL_CANTRIP,
        SPELL_SMITING,
        SPELL_NO_SPELL,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_ORC_HIGH_PRIEST,
@@ -320,7 +348,8 @@
        SPELL_SUMMON_DEMON,
        SPELL_SMITING,
        SPELL_ANIMATE_DEAD,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_MOTTLED_DRAGON,
@@ -330,7 +359,8 @@
        SPELL_NO_SPELL,
        SPELL_STICKY_FLAME,
        SPELL_STICKY_FLAME,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_ICE_FIEND,
@@ -340,7 +370,8 @@
        SPELL_NO_SPELL,
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_DEMON  }
+       SPELL_SUMMON_DEMON
+      }
     },
 
     {  MST_SHADOW_FIEND,
@@ -350,7 +381,8 @@
        SPELL_NO_SPELL,
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_DISPEL_UNDEAD,
-       SPELL_SUMMON_DEMON  }
+       SPELL_SUMMON_DEMON
+      }
     },
 
     {  MST_TORMENTOR,
@@ -360,7 +392,8 @@
        SPELL_NO_SPELL,
        SPELL_PAIN,
        SPELL_NO_SPELL,
-       SPELL_SYMBOL_OF_TORMENT  }
+       SPELL_SYMBOL_OF_TORMENT
+      }
     },
 
     {  MST_STORM_DRAGON,
@@ -370,7 +403,8 @@
        SPELL_NO_SPELL,
        SPELL_LIGHTNING_BOLT,
        SPELL_LIGHTNING_BOLT,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_WHITE_IMP,
@@ -380,7 +414,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_YNOXINUL,
@@ -390,7 +425,8 @@
        SPELL_SUMMON_UFETUBUS,
        SPELL_NO_SPELL,
        SPELL_SUMMON_UFETUBUS,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_NEQOXEC,
@@ -400,7 +436,8 @@
        SPELL_NO_SPELL,
        SPELL_BRAIN_FEED,
        SPELL_CALL_IMP,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_HELLWING,
@@ -410,7 +447,8 @@
        SPELL_NO_SPELL,
        SPELL_TELEPORT_OTHER,
        SPELL_ANIMATE_DEAD,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_SMOKE_DEMON,
@@ -420,7 +458,8 @@
        SPELL_NO_SPELL,
        SPELL_SMITING,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_CACODEMON,
@@ -430,7 +469,8 @@
        SPELL_CALL_IMP,
        SPELL_POLYMORPH_OTHER,
        SPELL_DIG,
-       SPELL_SUMMON_DEMON  }
+       SPELL_SUMMON_DEMON
+      }
     },
 
     {  MST_GREEN_DEATH,
@@ -440,7 +480,8 @@
        SPELL_NO_SPELL,
        SPELL_VENOM_BOLT,
        SPELL_CALL_IMP,
-       SPELL_BLINK  }
+       SPELL_BLINK
+      }
     },
 
     {  MST_BALRUG,
@@ -450,7 +491,8 @@
        SPELL_NO_SPELL,
        SPELL_STICKY_FLAME,
        SPELL_SMITING,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_BLUE_DEATH,
@@ -460,7 +502,8 @@
        SPELL_NO_SPELL,
        SPELL_CALL_IMP,
        SPELL_SHADOW_CREATURES,
-       SPELL_TELEPORT_OTHER  }
+       SPELL_TELEPORT_OTHER
+      }
     },
 
     {  MST_GERYON,
@@ -470,7 +513,8 @@
        SPELL_NO_SPELL,
        SPELL_SUMMON_BEAST,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_BEAST  }
+       SPELL_SUMMON_BEAST
+      }
     },
 
     {  MST_DISPATER,
@@ -480,7 +524,8 @@
        SPELL_SUMMON_DEMON,
        SPELL_LIGHTNING_BOLT,
        SPELL_HELLFIRE,
-       SPELL_SUMMON_GREATER_DEMON  }
+       SPELL_SUMMON_GREATER_DEMON
+      }
     },
 
     {  MST_ASMODEUS,
@@ -490,7 +535,8 @@
        SPELL_SUMMON_DEMON,
        SPELL_SUMMON_GREATER_DEMON,
        SPELL_BOLT_OF_DRAINING,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_ERESHKIGAL,
@@ -500,7 +546,8 @@
        SPELL_SUMMON_GREATER_DEMON,
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_PARALYSE,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_ANTAEUS,
@@ -510,7 +557,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_MNOLEG,
@@ -520,7 +568,8 @@
        SPELL_INVISIBILITY,
        SPELL_POLYMORPH_OTHER,
        SPELL_SHADOW_CREATURES,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_LOM_LOBON,
@@ -530,7 +579,8 @@
        SPELL_GREATER_HEALING,
        SPELL_SUMMON_DEMON,
        SPELL_TELEPORT_SELF,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_CEREBOV,
@@ -540,7 +590,8 @@
        SPELL_HASTE,
        SPELL_FIREBALL,
        SPELL_SUMMON_GREATER_DEMON,
-       SPELL_HASTE  }
+       SPELL_HASTE
+      }
     },
 
     {  MST_GLOORX_VLOQ,
@@ -550,7 +601,8 @@
        SPELL_SUMMON_DEMON,
        SPELL_BOLT_OF_DRAINING,
        SPELL_DISPEL_UNDEAD,
-       SPELL_INVISIBILITY  }
+       SPELL_INVISIBILITY
+      }
     },
 
     {  MST_TITAN,
@@ -560,7 +612,8 @@
        SPELL_LESSER_HEALING,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_GOLDEN_DRAGON,
@@ -570,7 +623,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_POISONOUS_CLOUD,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_DEEP_ELF_SUMMONER,
@@ -580,7 +634,8 @@
        SPELL_SUMMON_UFETUBUS,
        SPELL_VAMPIRE_SUMMON,
        SPELL_SUMMON_DEMON,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_DEEP_ELF_CONJURER_I,
@@ -590,7 +645,8 @@
        SPELL_CANTRIP,
        SPELL_LIGHTNING_BOLT,
        SPELL_STICKY_FLAME,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_DEEP_ELF_CONJURER_II,
@@ -600,7 +656,8 @@
        SPELL_INVISIBILITY,
        SPELL_STONE_ARROW,
        SPELL_BOLT_OF_DRAINING,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_DEEP_ELF_PRIEST,
@@ -610,7 +667,8 @@
        SPELL_LESSER_HEALING,
        SPELL_SMITING,
        SPELL_ANIMATE_DEAD,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_DEEP_ELF_HIGH_PRIEST,
@@ -620,7 +678,8 @@
        SPELL_LESSER_HEALING,
        SPELL_SMITING,
        SPELL_ANIMATE_DEAD,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_DEEP_ELF_DEMONOLOGIST,
@@ -630,7 +689,8 @@
        SPELL_SUMMON_DEMON,
        SPELL_SUMMON_GREATER_DEMON,
        SPELL_CALL_IMP,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_DEEP_ELF_ANNIHILATOR,
@@ -640,7 +700,8 @@
        SPELL_BLINK,
        SPELL_BOLT_OF_IRON,
        SPELL_POISON_ARROW,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_DEEP_ELF_SORCERER,
@@ -650,7 +711,8 @@
        SPELL_HASTE,
        SPELL_SUMMON_DEMON,
        SPELL_HELLFIRE,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_DEEP_ELF_DEATH_MAGE,
@@ -660,7 +722,8 @@
        SPELL_LESSER_HEALING,
        SPELL_ANIMATE_DEAD,
        SPELL_ANIMATE_DEAD,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_KOBOLD_DEMONOLOGIST,
@@ -670,7 +733,8 @@
        SPELL_CANTRIP,
        SPELL_CALL_IMP,
        SPELL_SUMMON_DEMON,
-       SPELL_CANTRIP  },           // this should be cute -- bw
+       SPELL_CANTRIP           // this should be cute -- bw
+      },
     },
 
     {  MST_NAGA,
@@ -680,7 +744,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_NAGA_MAGE,
@@ -690,7 +755,8 @@
        SPELL_HASTE,
        SPELL_POISON_ARROW,
        SPELL_TELEPORT_OTHER,
-       SPELL_TELEPORT_SELF  }
+       SPELL_TELEPORT_SELF
+      }
     },
 
     {  MST_CURSE_SKULL,
@@ -700,7 +766,8 @@
        SPELL_NO_SPELL,
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_SUMMON_UNDEAD,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_SHINING_EYE,
@@ -710,7 +777,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_FROST_GIANT,
@@ -720,7 +788,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_ANGEL,
@@ -730,7 +799,8 @@
        SPELL_LESSER_HEALING,
        SPELL_NO_SPELL,
        SPELL_LESSER_HEALING,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_DAEVA,
@@ -740,7 +810,8 @@
        SPELL_NO_SPELL,
        SPELL_SMITING,
        SPELL_SMITING,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_SHADOW_DRAGON,
@@ -750,7 +821,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_BOLT_OF_DRAINING,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_SPHINX,
@@ -760,7 +832,8 @@
        SPELL_LESSER_HEALING,
        SPELL_SMITING,
        SPELL_SLOW,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_MUMMY,
@@ -770,7 +843,8 @@
        SPELL_NO_SPELL,
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_SUMMON_UNDEAD,
-       SPELL_SUMMON_UNDEAD  }
+       SPELL_SUMMON_UNDEAD
+      }
     },
 
     {  MST_ELECTRIC_GOLEM,
@@ -780,7 +854,8 @@
        SPELL_BLINK,
        SPELL_LIGHTNING_BOLT,
        SPELL_LIGHTNING_BOLT,
-       SPELL_BLINK  }
+       SPELL_BLINK
+      }
     },
 
     {  MST_ORB_OF_FIRE,
@@ -790,7 +865,8 @@
        SPELL_NO_SPELL,
        SPELL_POLYMORPH_OTHER,
        SPELL_FIREBALL,
-       SPELL_FIREBALL  }
+       SPELL_FIREBALL
+      }
     },
 
     {  MST_SHADOW_IMP,
@@ -800,7 +876,8 @@
        SPELL_ANIMATE_DEAD,
        SPELL_ANIMATE_DEAD,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_HELL_HOG,
@@ -810,7 +887,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_SWAMP_DRAGON,
@@ -820,7 +898,8 @@
        SPELL_NO_SPELL,
        SPELL_POISONOUS_CLOUD,
        SPELL_POISONOUS_CLOUD,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_SWAMP_DRAKE,
@@ -830,7 +909,8 @@
        SPELL_NO_SPELL,
        SPELL_MEPHITIC_CLOUD,
        SPELL_MEPHITIC_CLOUD,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_SERPENT_OF_HELL,
@@ -840,7 +920,8 @@
        SPELL_NO_SPELL,
        SPELL_HELLFIRE,
        SPELL_HELLFIRE,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_BOGGART,
@@ -850,7 +931,8 @@
        SPELL_INVISIBILITY,
        SPELL_BLINK,
        SPELL_SHADOW_CREATURES,
-       SPELL_SHADOW_CREATURES  }
+       SPELL_SHADOW_CREATURES
+      }
     },
 
     {  MST_EYE_OF_DEVASTATION,
@@ -860,7 +942,8 @@
        SPELL_NO_SPELL,
        SPELL_ENERGY_BOLT,
        SPELL_ENERGY_BOLT,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_QUICKSILVER_DRAGON,
@@ -870,7 +953,8 @@
        SPELL_NO_SPELL,
        SPELL_QUICKSILVER_BOLT,
        SPELL_QUICKSILVER_BOLT,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_IRON_DRAGON,
@@ -880,7 +964,8 @@
        SPELL_NO_SPELL,
        SPELL_METAL_SPLINTERS,
        SPELL_METAL_SPLINTERS,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_SKELETAL_WARRIOR,
@@ -890,7 +975,8 @@
        SPELL_ANIMATE_DEAD,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_MYSTIC,
@@ -900,7 +986,8 @@
        SPELL_INVISIBILITY,
        SPELL_CONFUSE,
        SPELL_PARALYSE,
-       SPELL_LESSER_HEALING  }
+       SPELL_LESSER_HEALING
+      }
     },
 
     {  MST_DEATH_DRAKE,
@@ -910,7 +997,8 @@
        SPELL_NO_SPELL,
        SPELL_MIASMA,
        SPELL_MIASMA,
-       SPELL_NO_SPELL  }
+       SPELL_NO_SPELL
+      }
     },
 
     {  MST_DRAC_SCORCHER,
@@ -920,7 +1008,8 @@
        SPELL_NO_SPELL,
        SPELL_FIREBALL,
        SPELL_HELLFIRE,
-       SPELL_HELLFIRE_BURST }
+       SPELL_HELLFIRE_BURST
+      }
     },
 
     {  MST_DRAC_CALLER,
@@ -930,7 +1019,8 @@
        SPELL_SUMMON_DRAKES,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_DRAKES }
+       SPELL_SUMMON_DRAKES
+      }
     },
 
     {  MST_DRAC_SHIFTER,
@@ -940,7 +1030,8 @@
        SPELL_BLINK,
        SPELL_NO_SPELL,
        SPELL_BLINK_OTHER,
-       SPELL_CONTROLLED_BLINK }
+       SPELL_CONTROLLED_BLINK
+      }
     },
 
     // Curse toe menu should be kept full, because otherwise the toe spends
@@ -952,7 +1043,8 @@
        SPELL_SUMMON_MUSHROOMS,
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_SUMMON_UNDEAD,
-       SPELL_SYMBOL_OF_TORMENT  }
+       SPELL_SYMBOL_OF_TORMENT
+      }
     },
 
     // Crusader theme.
@@ -963,7 +1055,8 @@
        SPELL_BERSERKER_RAGE,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_BERSERKER_RAGE }
+       SPELL_BERSERKER_RAGE
+      }
     },
 
     {  MST_ICE_STATUE,
@@ -973,7 +1066,8 @@
        SPELL_NO_SPELL,
        SPELL_FREEZING_CLOUD,
        SPELL_SUMMON_ICE_BEAST,
-       SPELL_SUMMON_ICE_BEAST }
+       SPELL_SUMMON_ICE_BEAST
+      }
     }
 
 #endif

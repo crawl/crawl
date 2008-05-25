@@ -1204,14 +1204,14 @@ game_start:
     }
 
 
-// ************ round-out character statistics and such ************
+// ************ Round-out character statistics and such. ************
 
     _species_stat_init( you.species );     // must be down here {dlb}
 
     you.is_undead = get_undead_state(you.species);
 
-    // before we get into the inventory init, set light radius based
-    // on species vision. currently, all species see out to 8 squares.
+    // Before we get into the inventory init, set light radius based
+    // on species vision. Currently, all species see out to 8 squares.
     you.normal_vision  = 8;
     you.current_vision = 8;
 
@@ -1221,40 +1221,39 @@ game_start:
     _assign_remaining_stats((you.species == SP_DEMIGOD ||
                              you.species == SP_DEMONSPAWN) ? 15 : 8);
 
-    // this function depends on stats being finalized
-    // returns false if Backspace on god/weapon/... selection
+    // This function depends on stats being finalized.
+    // Returns false if Backspace on god/weapon/... selection.
     if (!_give_items_skills())
     {
-        // now choose again, name stays same
+        // Now choose again, name stays same.
         const std::string old_name = you.your_name;
 
         Options.prev_randpick = false;
-        Options.prev_race   = ng_race;
-        Options.prev_cls    = ng_cls;
-        Options.prev_weapon = ng_weapon;
-        // ck, dk, pr and book are asked last
-        // --> don't need to be changed
+        Options.prev_race     = ng_race;
+        Options.prev_cls      = ng_cls;
+        Options.prev_weapon   = ng_weapon;
+        // ck, dk, pr and book are asked last --> don't need to be changed
 
-        // reset stats
+        // Reset stats.
         _init_player();
 
         Options.reset_startup_options();
 
-        // Restore old name
+        // Restore old name.
         strncpy(you.your_name, old_name.c_str(), kNameLen);
         you.your_name[kNameLen - 1] = 0;
 
-        // choose new character
+        // Choose new character.
         goto game_start;
     }
 
     _give_species_bonus_hp();
     _give_species_bonus_mp();
 
-    // these need to be set above using functions!!! {dlb}
-    you.max_dex = you.dex;
+    // XXX: these need to be set above using functions!!! {dlb}
+    you.max_dex      = you.dex;
     you.max_strength = you.strength;
-    you.max_intel = you.intel;
+    you.max_intel    = you.intel;
 
     _give_starting_food();
     _mark_starting_books();
@@ -1266,13 +1265,12 @@ game_start:
     calc_total_skill_points();
 
     for (int i = 0; i < ENDOFPACK; i++)
-    {
         if (is_valid_item(you.inv[i]))
         {
-            // Why is this here? Elsewhere it's only ever used for runes
+            // XXX: Why is this here? Elsewhere it's only ever used for runes.
             you.inv[i].flags |= ISFLAG_BEEN_IN_INV;
 
-            // identify all items in pack
+            // Identify all items in pack.
             set_ident_type( you.inv[i].base_type,
                             you.inv[i].sub_type, ID_KNOWN_TYPE );
             // link properly
@@ -1282,7 +1280,6 @@ game_start:
             you.inv[i].slot = index_to_letter(you.inv[i].link);
             item_colour( you.inv[i] );  // set correct special and colour
         }
-    }
 
     // Apply autoinscribe rules to inventory.
     request_autoinscribe();
@@ -1291,12 +1288,12 @@ game_start:
     // Brand items as original equipment.
     origin_set_inventory(origin_set_startequip);
 
-    // we calculate hp and mp here; all relevant factors should be
-    // finalized by now (GDL)
+    // We calculate hp and mp here; all relevant factors should be
+    // finalized by now. (GDL)
     calc_hp();
     calc_mp();
 
-    // make sure the starting player is fully charged up
+    // Make sure the starting player is fully charged up.
     set_hp( you.hp_max, false );
     set_mp( you.max_magic_points, false );
 
@@ -2352,8 +2349,8 @@ static void _give_basic_mutations(species_type speci)
         break;
     }
 
-    // starting mutations are unremoveable
-    for ( int i = 0; i < NUM_MUTATIONS; ++i )
+    // Starting mutations are unremoveable.
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
         you.demon_pow[i] = you.mutation[i];
 }
 
@@ -2488,8 +2485,8 @@ static void _opening_screen(void)
 }
 
 static void _show_name_prompt(int where, bool blankOK,
-        const std::vector<player_save_info> &existing_chars,
-        slider_menu &menu)
+                        const std::vector<player_save_info> &existing_chars,
+                        slider_menu &menu)
 {
     cgotoxy(1, where);
     textcolor( CYAN );
@@ -2525,8 +2522,8 @@ static void _show_name_prompt(int where, bool blankOK,
 
 static void _preprocess_character_name(char *name, bool blankOK)
 {
-    if (!*name && blankOK && Options.prev_name.length() &&
-            Options.remember_name)
+    if (!*name && blankOK && Options.prev_name.length()
+        && Options.remember_name)
     {
         strncpy(name, Options.prev_name.c_str(), kNameLen);
         name[kNameLen - 1] = 0;
@@ -2574,12 +2571,13 @@ static int newname_keyfilter(int &ch)
 {
     if (ch == CK_DOWN || ch == CK_PGDN || ch == '\t')
         return -1;
+
     return 1;
 }
 
 static bool _read_player_name( char *name, int len,
-        const std::vector<player_save_info> &existing,
-        slider_menu &menu)
+                               const std::vector<player_save_info> &existing,
+                               slider_menu &menu)
 {
     const int name_x = wherex(), name_y = wherey();
     int (*keyfilter)(int &) = newname_keyfilter;
@@ -3108,7 +3106,7 @@ static void _create_wanderer( void )
             _give_random_secondary_armour(5);
         }
 
-        // remove potion if good weapon is given:
+        // Remove potion if good weapon is given:
         if (_give_wanderer_weapon( 0, wpn_skill ))
             you.inv[3].quantity = 0;
     }

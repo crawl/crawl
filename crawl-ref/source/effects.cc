@@ -625,41 +625,39 @@ void direct_effect(struct bolt &pbolt)
     switch (pbolt.type)
     {
     case DMNBM_HELLFIRE:
-        pbolt.name = "hellfire";
-        pbolt.ex_size = 1;
-        pbolt.flavour = BEAM_HELLFIRE;
+        pbolt.aux_source   = "burst of hellfire";
+        pbolt.name         = "hellfire";
+        pbolt.ex_size      = 1;
+        pbolt.flavour      = BEAM_HELLFIRE;
         pbolt.is_explosion = true;
-        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.colour = RED;
-        pbolt.thrower = KILL_MON_MISSILE;
+        pbolt.type         = dchar_glyph(DCHAR_FIRED_ZAP);
+        pbolt.colour       = RED;
+        pbolt.thrower      = KILL_MON_MISSILE;
         pbolt.aux_source.clear();
-        pbolt.is_beam = false;
-        pbolt.is_tracer = false;
-        pbolt.hit = 20;
-        pbolt.damage = dice_def( 3, 20 );
-        pbolt.aux_source = "burst of hellfire";
+        pbolt.is_beam      = false;
+        pbolt.is_tracer    = false;
+        pbolt.hit          = 20;
+        pbolt.damage       = dice_def( 3, 20 );
         explosion( pbolt );
         break;
 
     case DMNBM_SMITING:
         mpr( "Something smites you!" );
-        pbolt.name = "smiting";
+        pbolt.name       = "smiting";
         pbolt.aux_source = "by divine providence";
-        damage_taken = 7 + random2avg(11, 2);
+        damage_taken     = 7 + random2avg(11, 2);
         break;
 
     case DMNBM_BRAIN_FEED:
         // lose_stat() must come last {dlb}
-        if (one_chance_in(3) &&
-            lose_stat(STAT_INTELLIGENCE, 1, source))
+        if (one_chance_in(3)
+            && lose_stat(STAT_INTELLIGENCE, 1, source))
         {
             mpr("Something feeds on your intellect!");
             xom_is_stimulated(50);
         }
         else
-        {
             mpr("Something tries to feed on your intellect!");
-        }
         break;
     }
 
@@ -688,16 +686,16 @@ void mons_direct_effect(struct bolt &pbolt, int i)
     {
     case DMNBM_HELLFIRE:
         simple_monster_message(monster, " is engulfed in hellfire.");
-        pbolt.name = "hellfire";
+        pbolt.name    = "hellfire";
         pbolt.flavour = BEAM_LAVA;
 
-        damage_taken = 5 + random2(10) + random2(5);
-        damage_taken = mons_adjust_flavoured(monster, pbolt, damage_taken);
+        damage_taken  = 5 + random2(10) + random2(5);
+        damage_taken  = mons_adjust_flavoured(monster, pbolt, damage_taken);
         break;
 
     case DMNBM_SMITING:
         simple_monster_message(monster, " is smitten.");
-        pbolt.name = "smiting";
+        pbolt.name    = "smiting";
         pbolt.flavour = BEAM_MISSILE;
 
         damage_taken += 7 + random2avg(11, 2);
@@ -707,9 +705,11 @@ void mons_direct_effect(struct bolt &pbolt, int i)
         break;
 
     case DMNBM_MUTATION:
-        if (mons_holiness(monster) != MH_NATURAL ||
-            mons_immune_magic(monster))
+        if (mons_holiness(monster) != MH_NATURAL
+            || mons_immune_magic(monster))
+        {
             simple_monster_message(monster, " is unaffected.");
+        }
         else if (check_mons_resist_magic( monster, pbolt.ench_power ))
             simple_monster_message(monster, " resists.");
         else

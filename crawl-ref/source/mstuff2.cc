@@ -493,7 +493,7 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
 
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 {
-    // always do setup.  It might be done already, but it doesn't
+    // Always do setup.  It might be done already, but it doesn't
     // hurt to do it again (cheap).
     setup_mons_cast(monster, pbolt, spell_cast);
 
@@ -511,7 +511,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     if (spell_cast == SPELL_HELLFIRE_BURST || spell_cast == SPELL_BRAIN_FEED
         || spell_cast == SPELL_SMITING)
-    {                           // etc.
+    {
         if (monster->foe == MHITYOU || monster->foe == MHITNOT)
         {
             if (monsterNearby)
@@ -574,9 +574,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 }
             }
 
-            create_monster(
-                mgen_data( mons, SAME_ATTITUDE(monster), 5,
-                           monster->pos(), monster->foe ) );
+            create_monster( mgen_data( mons, SAME_ATTITUDE(monster), 5,
+                                       monster->pos(), monster->foe ) );
         }
         return;
 
@@ -588,9 +587,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            create_monster(
-                mgen_data( RANDOM_MONSTER, SAME_ATTITUDE(monster), 5,
-                           monster->pos(), monster->foe ) );
+            create_monster( mgen_data( RANDOM_MONSTER, SAME_ATTITUDE(monster),
+                                       5, monster->pos(), monster->foe ) );
         }
         return;
 
@@ -621,11 +619,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 mons = summon_any_demon(DEMON_COMMON);
             else
             {
-                int chance =
-                    std::max(6 - (monster->hit_dice / 5) + random2(2), 1);
+                int chance = std::max(6 - (monster->hit_dice / 5)
+                                        + random2(2), 1);
 
-                mons = (one_chance_in(chance)) ?
-                    MONS_VERY_UGLY_THING : MONS_UGLY_THING;
+                mons = (one_chance_in(chance) ? MONS_VERY_UGLY_THING
+                                              : MONS_UGLY_THING);
             }
 
             create_monster(
@@ -668,9 +666,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_SUMMON_BEAST:       // Geryon
-        create_monster(
-            mgen_data(MONS_BEAST, SAME_ATTITUDE(monster), 4,
-                      monster->pos(), monster->foe));
+        create_monster( mgen_data(MONS_BEAST, SAME_ATTITUDE(monster), 4,
+                                  monster->pos(), monster->foe) );
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
