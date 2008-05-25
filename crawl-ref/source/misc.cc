@@ -3050,18 +3050,3 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
 
     return !(you.confused() || (prompt && yesno(info, false, 'n')));
 }
-
-void set_attack_conducts(const monsters *mon, god_conduct_trigger& conduct,
-                         bool known)
-{
-    if (mons_friendly(mon))
-        conduct.set(DID_ATTACK_FRIEND, 5, known, mon);
-    else if (mons_neutral(mon))
-        conduct.set(DID_ATTACK_NEUTRAL, 5, known, mon);
-
-    if (is_unchivalric_attack(&you, mon, mon))
-        conduct.set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
-
-    if (mons_is_holy(mon))
-        conduct.set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
-}

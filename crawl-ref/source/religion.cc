@@ -44,6 +44,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "effects.h"
+#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "invent.h"
@@ -2443,6 +2444,21 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
 #endif
 
     return (ret);
+}
+
+void set_attack_conducts(const monsters *mon, god_conduct_trigger& conduct,
+                         bool known)
+{
+    if (mons_friendly(mon))
+        conduct.set(DID_ATTACK_FRIEND, 5, known, mon);
+    else if (mons_neutral(mon))
+        conduct.set(DID_ATTACK_NEUTRAL, 5, known, mon);
+
+    if (is_unchivalric_attack(&you, mon, mon))
+        conduct.set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
+
+    if (mons_is_holy(mon))
+        conduct.set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
 }
 
 static void _dock_piety(int piety_loss, int penance)
