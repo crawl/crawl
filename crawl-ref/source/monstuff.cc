@@ -2035,7 +2035,7 @@ void behaviour_event( monsters *mon, int event, int src,
     case ME_WHACK:
     case ME_ANNOY:
         // will turn monster against <src>, unless they
-        // are BOTH friendly or good neutral and stupid,
+        // are BOTH friendly or good neutral AND stupid,
         // or else fleeing anyway. Hitting someone over
         // the head, of course, always triggers this code.
         if (event == ME_WHACK

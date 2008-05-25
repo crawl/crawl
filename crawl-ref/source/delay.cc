@@ -1542,7 +1542,7 @@ inline static void monster_warning(activity_interrupt_type ai,
                                    const activity_interrupt_data &at,
                                    int atype)
 {
-    if ( ai == AI_SEE_MONSTER && is_run_delay(atype) )
+    if (ai == AI_SEE_MONSTER && is_run_delay(atype))
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
         if (!mon->visible())
@@ -1552,14 +1552,17 @@ inline static void monster_warning(activity_interrupt_type ai,
             // Only say "comes into view" if the monster wasn't in view
             // during the previous turn.
             if (testbits(mon->flags, MF_WAS_IN_VIEW))
+            {
                 mprf(MSGCH_WARN, "%s is too close now for your liking.",
                      mon->name(DESC_CAP_THE).c_str());
+            }
         }
         else
         {
-            const std::string mweap =
-                get_monster_desc(mon, false, DESC_NONE);
             std::string text = mon->name(DESC_CAP_A);
+            // For named monsters also mention the base type.
+            if (!(mon->mname).empty())
+                text += ", " + mons_type_name(mon->type, DESC_NOCAP_A) + ",";
 
             if (at.context == "thin air")
             {
@@ -1584,10 +1587,13 @@ inline static void monster_warning(activity_interrupt_type ai,
             else
                 text += " comes into view.";
 
+            const std::string mweap =
+                get_monster_desc(mon, false, DESC_NONE);
+
             if (!mweap.empty())
             {
                 text += " " + mon->pronoun(PRONOUN_CAP)
-                    + " is" + mweap + ".";
+                        + " is" + mweap + ".";
             }
             print_formatted_paragraph(text,
                                       get_number_of_cols(),

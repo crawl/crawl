@@ -774,7 +774,7 @@ bool spell_direction( dist &spelld, bolt &pbolt,
     pbolt.source_y = you.y_pos;
 
     return (true);
-}                               // end spell_direction()
+}
 
 const char* spelltype_short_name( int which_spelltype )
 {

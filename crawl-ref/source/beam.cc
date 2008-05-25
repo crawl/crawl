@@ -681,7 +681,6 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.is_tracer     = true;
     pbolt.source_x      = you.x_pos;
     pbolt.source_y      = you.y_pos;
-    pbolt.beam_source   = 0;
     pbolt.can_see_invis = player_see_invis();
     pbolt.smart_monster = true;
     pbolt.attitude      = ATT_FRIENDLY;
@@ -1749,8 +1748,8 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
     if (item && !pbolt.is_tracer)
     {
         tile_beam = tileidx_item_throw(*item,
-                                       pbolt.target_x-pbolt.source_x,
-                                       pbolt.target_y-pbolt.source_y);
+                                       pbolt.target_x - pbolt.source_x,
+                                       pbolt.target_y - pbolt.source_y);
     }
 #endif
 
@@ -1874,6 +1873,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 
                 if (rangeRemaining < 1)
                     break;
+
                 tx = ray.x();
                 ty = ray.y();
             } // end else - beam doesn't affect walls
@@ -1900,7 +1900,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         // hit and the beam is type 'term on target'.
         if (!beamTerminate || !pbolt.is_explosion)
         {
-            // random beams: randomize before affect
+            // Random beams: randomize before affect().
             bool random_beam = false;
             if (pbolt.flavour == BEAM_RANDOM)
             {
@@ -2746,13 +2746,13 @@ void _sticky_flame_monster( int mn, kill_category who, int levels )
  * fr_power, foe_power: a measure of how many 'friendly' hit dice it will
  * affect, and how many 'unfriendly' hit dice.
  *
- * note that beam properties must be set, as the tracer will take them
+ * Note that beam properties must be set, as the tracer will take them
  * into account, as well as the monster's intelligence.
  *
  */
 void fire_tracer(const monsters *monster, bolt &pbolt)
 {
-    // don't fiddle with any input parameters other than tracer stuff!
+    // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
     pbolt.source_x      = monster->x;    // always safe to do.
     pbolt.source_y      = monster->y;
@@ -2761,7 +2761,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     pbolt.smart_monster = (mons_intel(monster->type) >= I_NORMAL);
     pbolt.attitude      = mons_attitude(monster);
 
-    // init tracer variables
+    // Init tracer variables.
     pbolt.foe_count     = pbolt.fr_count = 0;
     pbolt.foe_power     = pbolt.fr_power = 0;
     pbolt.fr_helped     = pbolt.fr_hurt  = 0;
@@ -3108,8 +3108,8 @@ int affect(bolt &beam, int x, int y, item_def *item)
         // aimed at that spot.
         if (mon->alive()
             && (!mon->submerged()
-                || (beam.aimed_at_spot && beam.target() == mon->pos()
-                    && grd(mon->pos()) == DNGN_SHALLOW_WATER)))
+                || beam.aimed_at_spot && beam.target() == mon->pos()
+                   && grd(mon->pos()) == DNGN_SHALLOW_WATER))
         {
             if (!beam.is_big_cloud
                 && (!beam.is_explosion || beam.in_explosion_phase))
@@ -3471,8 +3471,10 @@ static void _beam_ouch( int dam, bolt &beam )
         if (beam.flavour == BEAM_SPORE)
             ouch( dam, beam.beam_source, KILLED_BY_SPORE );
         else
+        {
             ouch( dam, beam.beam_source, KILLED_BY_BEAM,
                   beam.aux_source.c_str() );
+        }
     }
     else // KILL_MISC || (YOU_KILL && aux_source)
     {
@@ -3623,7 +3625,7 @@ static int _affect_player( bolt &beam, item_def *item )
             }
             else if (_beam_is_blockable(beam))
             {
-                // non-beams can be blocked or dodged
+                // Non-beams can be blocked or dodged.
                 if (you.equip[EQ_SHIELD] != -1
                     && !beam.aimed_at_feet
                     && player_shield_class() > 0)
@@ -4614,6 +4616,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
              engulfs? "engulfs" : "hits",
              player_monster_visible(&menv[tid]) ?
                  mon->name(DESC_NOCAP_THE).c_str() : "something");
+
     }
     else
     {
@@ -4676,7 +4679,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             _sticky_flame_monster( tid, _whose_kill(beam), levels );
         }
 
-        /* looks for missiles which aren't poison but are poison*ed* */
+        /* Look for missiles which aren't poison but are poison*ed*. */
         if (item)
         {
             if (item->base_type == OBJ_MISSILES

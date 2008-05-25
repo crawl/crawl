@@ -2169,13 +2169,20 @@ static void describe_monster(const monsters *mon)
     }
 }
 
+// This method is called in two cases:
+// a) Monsters coming into view: "An ogre comes into view. It is wielding ..."
+// b) Monster description via 'x': "An ogre, wielding a club and wearing ..."
 std::string get_monster_desc(const monsters *mon, bool full_desc,
                              description_level_type mondtype)
 {
     std::string desc = "";
     if (mondtype != DESC_NONE)
+    {
         desc = mon->name(mondtype);
-
+        // For named monsters also mention the base type.
+        if (!(mon->mname).empty())
+            desc += ", " + mons_type_name(mon->type, DESC_NOCAP_A);
+    }
     std::string weap = "";
 
     if (mon->type != MONS_DANCING_WEAPON)
@@ -2188,6 +2195,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
         desc += weap;
     }
 
+    // Print the rest of the equipment only for full descriptions.
     if (full_desc)
     {
         const int mon_arm = mon->inv[MSLOT_ARMOUR];
