@@ -2769,7 +2769,7 @@ static bool should_autopray()
     return true;
 }
 
-/* Actually performs autoprayer. */
+// Actually performs autoprayer.
 bool do_autopray()
 {
     if ( you.turn_is_over )     // can happen with autopickup, I think
