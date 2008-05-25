@@ -1772,8 +1772,9 @@ void summon_undead(int pow)
         temp_rand = random2(25);
 
         thing_called = ((temp_rand > 8) ? MONS_WRAITH :          // 64%
-                        (temp_rand > 3) ? MONS_SPECTRAL_WARRIOR  // 20%
-                                        : MONS_FREEZING_WRAITH); // 16%
+                        (temp_rand > 4) ? MONS_FREEZING_WRAITH : // 16%
+                        (temp_rand > 1) ? MONS_SPECTRAL_WARRIOR  // 12%
+                                        : MONS_SHADOW_WRAITH);   // 8%
 
         bool friendly = (random2(pow) > 5);
 
