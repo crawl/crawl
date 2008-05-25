@@ -92,7 +92,7 @@ Warbeogh
 
 %%%%
 # Obvious references to orcs in general
-# (extremely subjective, and 12 at last count)
+# (extremely subjective, and 13 at last count)
 orcish_name
 
 Alork
@@ -123,7 +123,7 @@ Oruk
 
 %%%%
 # Other
-# (45 at last count)
+# (49 at last count)
 other_orcish_name
 
 Agrik
@@ -201,6 +201,8 @@ Olfrun
 Ortolf
 
 Rocco
+
+Syrus
 
 Thorok
 
