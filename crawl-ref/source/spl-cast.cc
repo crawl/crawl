@@ -857,17 +857,17 @@ static bool _vampire_cannot_cast(spell_type spell)
     // Satiated or less
     switch (spell)
     {
-    case SPELL_RESIST_POISON:
-    case SPELL_CURE_POISON_II:
-    case SPELL_TAME_BEASTS:
-    case SPELL_BLADE_HANDS:
-    case SPELL_SPIDER_FORM:
-    case SPELL_ICE_FORM:
-    case SPELL_STATUE_FORM:
-    case SPELL_DRAGON_FORM:
     case SPELL_AIR_WALK:
-    case SPELL_BERSERKER_RAGE:
     case SPELL_ALTER_SELF:
+    case SPELL_BERSERKER_RAGE:
+    case SPELL_BLADE_HANDS:
+    case SPELL_CURE_POISON_II:
+    case SPELL_DRAGON_FORM:
+    case SPELL_ICE_FORM:
+    case SPELL_RESIST_POISON:
+    case SPELL_SPIDER_FORM:
+    case SPELL_STATUE_FORM:
+    case SPELL_TAME_BEASTS:
         return true;
     default:
         return false;
