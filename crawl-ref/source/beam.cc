@@ -4290,17 +4290,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 }
 
                 if (beam.flavour != BEAM_CHARM)
-                {
-                    if (mons_friendly(mon))
-                        conduct.set(DID_ATTACK_FRIEND, 5, true, mon);
-                    else if (mons_neutral(mon))
-                        conduct.set(DID_ATTACK_NEUTRAL, 5, true, mon);
-
-                    if (is_unchivalric_attack(&you, mon, mon))
-                        conduct.set(DID_UNCHIVALRIC_ATTACK, 4, true, mon);
-                }
-
-                if (mons_is_holy(mon))
+                    set_attack_conducts(mon, conduct);
+                // No charming holy beings!
+                else if (mons_is_holy(mon))
                     conduct.set(DID_ATTACK_HOLY, mon->hit_dice, true, mon);
 
                 if (you.religion == GOD_BEOGH
