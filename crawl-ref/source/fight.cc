@@ -357,13 +357,12 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
 void melee_attack::check_hand_half_bonus_eligible()
 {
-    hand_half_bonus =
-        unarmed_ok
-        && !can_do_unarmed
-        && !shield
-        && weapon
-        && !item_cursed( *weapon )
-        && hands == HANDS_HALF;
+    hand_half_bonus = (unarmed_ok
+                       && !can_do_unarmed
+                       && !shield
+                       && weapon
+                       && !item_cursed( *weapon )
+                       && hands == HANDS_HALF);
 }
 
 void melee_attack::init_attack()
@@ -396,11 +395,11 @@ void melee_attack::init_attack()
 
     water_attack       = is_water_attack(attacker, defender);
     attacker_visible   = attacker->visible();
-    attacker_invisible = !attacker_visible && see_grid(attacker->pos());
-    defender_visible   = defender && defender->visible();
-    defender_invisible = !defender_visible && defender
-                         && see_grid(defender->pos());
-    needs_message      = attacker_visible || defender_visible;
+    attacker_invisible = (!attacker_visible && see_grid(attacker->pos()));
+    defender_visible   = (defender && defender->visible());
+    defender_invisible = (!defender_visible && defender
+                          && see_grid(defender->pos()));
+    needs_message      = (attacker_visible || defender_visible);
 
     if (defender && defender->submerged())
         unarmed_ok = false;
@@ -607,10 +606,13 @@ bool melee_attack::attack()
 
     if (attacker->atype() == ACT_PLAYER)
     {
-        if (!stop_attack_prompt(def, false, false))
-            set_attack_conducts(def, conduct);
-        else
+        if (stop_attack_prompt(def, false, false))
+        {
             cancel_attack = true;
+            return (false);
+        }
+        else
+            set_attack_conducts(def, conduct);
     }
 
     // Trying to stay general beyond this point is a recipe for insanity.
@@ -782,8 +784,8 @@ bool melee_attack::player_attack()
 
         if (damage_done > 0)
         {
-            int blood =
-                _modify_blood_amount(damage_done, attacker->damage_type());
+            int blood = _modify_blood_amount(damage_done,
+                                             attacker->damage_type());
             if (blood > defender->stat_hp())
                 blood = defender->stat_hp();
 
@@ -3080,8 +3082,8 @@ bool melee_attack::mons_attack_mons()
         behaviour_event(def, ME_WHACK, monster_index(atk));
     }
 
-    // if an enemy attacked a friend, set the pet target if it isn't
-    // set already
+    // If an enemy attacked a friend, set the pet target if it isn't
+    // set already.
     if (perceived_attack && atk->alive() && mons_friendly(def)
         && !mons_wont_attack(atk) && you.pet_target == MHITNOT)
     {
@@ -3837,8 +3839,8 @@ void melee_attack::mons_perform_attack_rounds()
             if (defender->atype() == ACT_MONSTER)
                 type = defender->id();
 
-            int blood
-                   = _modify_blood_amount(damage_done, attacker->damage_type());
+            int blood = _modify_blood_amount(damage_done,
+                                             attacker->damage_type());
             if (blood > defender->stat_hp())
                 blood = defender->stat_hp();
 
@@ -3983,12 +3985,20 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     wielded_weapon_check(attk.weapon);
 
     bool attack = attk.attack();
-    if (attack && (is_sanctuary(you.x_pos, you.y_pos)
-                   || is_sanctuary(defender->x, defender->y)))
+    if (!attack)
+    {
+        // Attack was cancelled or unsuccessful...
+        if (attk.cancel_attack)
+            you.turn_is_over = false;
+        return (false);
+    }
+
+    if (is_sanctuary(you.x_pos, you.y_pos)
+        || is_sanctuary(defender->x, defender->y))
     {
         remove_sanctuary(true);
     }
-    return attack;
+    return (true);
 }
 
 // Lose attack energy for attacking with a weapon. The monster has already lost
@@ -4026,7 +4036,7 @@ bool monster_attack(int monster_attacking)
 
     // Friendly and good neutral monsters won't attack unless confused.
     if (mons_wont_attack(attacker) && !mons_is_confused(attacker))
-        return false;
+        return (false);
 
     // In case the monster hasn't noticed you, bumping into it will
     // change that.
@@ -4034,7 +4044,7 @@ bool monster_attack(int monster_attacking)
     melee_attack attk(attacker, &you);
     attk.attack();
 
-    return true;
+    return (true);
 }                               // end monster_attack()
 
 bool monsters_fight(int monster_attacking, int monster_attacked)

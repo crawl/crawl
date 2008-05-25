@@ -56,7 +56,8 @@ enum tag_minor_version
     TAG_MINOR_MONNAM  = 5,      // Monsters get individual names
     TAG_MINOR_MONBASE = 6,      // Zombie base monster gets its own field.
     TAG_MINOR_FPICKUP = 7,      // Added pickup option for allied monsters.
-    TAG_MINOR_VERSION = 7       // Current version
+    TAG_MINOR_MPATROL = 8,      // Added monster patrol points.
+    TAG_MINOR_VERSION = 8       // Current version
 };
 
 

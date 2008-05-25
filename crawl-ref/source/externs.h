@@ -1028,6 +1028,7 @@ public:
     unsigned char y;
     unsigned char target_x;
     unsigned char target_y;
+    coord_def patrol_point;
     FixedVector<short, NUM_MONSTER_SLOTS> inv;
     monster_spells spells;
     mon_attitude_type attitude;
@@ -1104,6 +1105,7 @@ public:
 
     void timeout_enchantments(int levels);
 
+    bool is_patrolling() const;
     bool needs_transit() const;
     void set_transit(const level_id &destination);
     bool find_place_to_live(bool near_player = false);

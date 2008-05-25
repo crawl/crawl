@@ -1902,14 +1902,33 @@ bool recharge_wand(int item_slot)
 }                               // end recharge_wand()
 
 // Sets foe target of friendly monsters.
-static void set_friendly_foes()
+// If allow_patrol is true, patrolling monsters get MHITNOT instead.
+static void _set_friendly_foes(bool allow_patrol = false)
 {
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *mon(&menv[i]);
         if (!mon->alive() || !mons_near(mon) || !mons_friendly(mon))
             continue;
-        mon->foe = you.pet_target;
+
+        mon->foe = (allow_patrol && mon->is_patrolling() ? MHITNOT
+                                                         : you.pet_target);
+    }
+}
+
+static void _set_allies_patrol_point(bool clear = false)
+{
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *mon(&menv[i]);
+        if (!mon->alive() || !mons_near(mon) || !mons_friendly(mon))
+            continue;
+
+        mon->patrol_point = (clear ? coord_def(0, 0)
+                                   : coord_def(mon->x, mon->y));
+
+        if (!clear)
+            mon->behaviour = BEH_WANDER;
     }
 }
 
@@ -1986,7 +2005,9 @@ void yell(bool force)
             }
         }
 
-        mpr(" h - Order allies to stop attacking");
+        mpr(" s - Order allies to stop attacking");
+        mpr(" w - Order allies to wait here");
+        mpr(" f - Order allies to follow you");
    }
 
     mprf(" Anything else - Stay silent%s",
@@ -1996,13 +2017,47 @@ void yell(bool force)
 
     switch (keyn)
     {
-    case '!':                  // for players using the old keyset
+    case '!':    // for players using the old keyset
     case 't':
         mprf(MSGCH_SOUND, "You %s for attention!", shout_verb.c_str());
         you.turn_is_over = true;
         noisy( noise_level, you.x_pos, you.y_pos );
         return;
 
+    case 'f':
+    case 's':
+        mons_targd = MHITYOU;
+        if (keyn == 'f')
+        {
+            // Don't reset patrol points for 'Stop fighting!'
+            _set_allies_patrol_point(true);
+            mpr("Follow me!");
+        }
+        else
+            mpr("Stop fighting!");
+        break;
+
+    case 'w':
+        mpr("Wait here!");
+        mons_targd = MHITNOT;
+        _set_allies_patrol_point();
+        break;
+
+    case 'p':
+        if (you.duration[DUR_BERSERKER])
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
+        if (targ_prev)
+        {
+            mons_targd = you.prev_targ;
+            mpr("Attack!");
+            break;
+        }
+
+    // fall through
     case 'a':
         if (you.duration[DUR_BERSERKER])
         {
@@ -2027,39 +2082,22 @@ void yell(bool force)
         }
 
         mons_targd = mgrd[targ.tx][targ.ty];
+        mpr("Attack!");
         break;
 
-    case 'p':
-        if (you.duration[DUR_BERSERKER])
-        {
-            canned_msg(MSG_TOO_BERSERK);
-            return;
-        }
-
-        if (targ_prev)
-        {
-            mons_targd = you.prev_targ;
-            break;
-        }
-
-    case 'h':
-        mons_targd = MHITYOU;
-        break;
-
-    // fall through...
     default:
         mpr("Okely-dokely.");
         return;
     }
 
-    if (mons_targd != MHITNOT)
-    {
-        you.pet_target = mons_targd;
-        set_friendly_foes();
-    }
+    you.pet_target = mons_targd;
+    // Allow patrolling for "Stop fighting!" and "Wait here!"
+    _set_friendly_foes(keyn == 's' || keyn == 'w');
+
+    if (mons_targd != MHITNOT && mons_targd != MHITYOU)
+        mpr("Attack!");
 
     noisy( 10, you.x_pos, you.y_pos );
-    mpr(mons_targd == MHITYOU ? "Come here!" : "Attack!");
 }                               // end yell()
 
 bool forget_inventory(bool quiet)

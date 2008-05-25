@@ -1789,8 +1789,8 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
     return true;
 }
 
-// take care of labyrinth, abyss, pandemonium
-// returns 1 if we should skip further generation,
+// Take care of labyrinth, abyss, pandemonium.
+// Returns 1 if we should skip further generation,
 // -1 if we should immediately quit, and 0 otherwise.
 static builder_rc_type _builder_by_type(int level_number, char level_type)
 {
@@ -2874,9 +2874,9 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
     int result = 0;
 
     mgen_data mg;
-    mg.power = level_number;
+    mg.power     = level_number;
     mg.behaviour = BEH_SLEEP;
-    mg.flags |= MG_PERMIT_BANDS;
+    mg.flags    |= MG_PERMIT_BANDS;
     mg.map_mask |= MMT_NO_MONS;
 
     for (int i = 0; i < num_to_place; i++)
@@ -2962,8 +2962,8 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
     for (int i = 0; i < mon_wanted; i++)
     {
         mgen_data mg;
-        mg.power = level_number;
-        mg.flags |= MG_PERMIT_BANDS;
+        mg.power     = level_number;
+        mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
 
         place_monster(mg);
@@ -3191,9 +3191,9 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
     if (lord_type != MONS_PROGRAM_BUG)
     {
         mgen_data mg;
-        mg.cls = lord_type;
+        mg.cls       = lord_type;
         mg.behaviour = BEH_SLEEP;
-        mg.pos = coord_def(lordx, lordy);
+        mg.pos       = coord_def(lordx, lordy);
 
         mons_place(
             mgen_data::sleeper_at(lord_type, coord_def(lordx, lordy)));
@@ -3218,9 +3218,8 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
                 if (roll < pit_list[i].rare)
                 {
                     mons_place(
-                        mgen_data::sleeper_at(
-                            pit_list[i].type,
-                            coord_def(x, y)));
+                        mgen_data::sleeper_at( pit_list[i].type,
+                                               coord_def(x, y)));
                     break;
                 }
         }
@@ -3336,9 +3335,8 @@ static void _special_room(int level_number, spec_room &sr)
                     continue;
 
                 mons_place(
-                    mgen_data::sleeper_at(
-                        mons_alloc[random2(10)],
-                        coord_def(x, y)));
+                    mgen_data::sleeper_at( mons_alloc[random2(10)],
+                                           coord_def(x, y) ));
             }
 
         break;
@@ -3372,9 +3370,8 @@ static void _special_room(int level_number, spec_room &sr)
                     continue;
 
                 mons_place(
-                    mgen_data::sleeper_at(
-                        mons_alloc[random2(10)],
-                        coord_def(x, y) ));
+                    mgen_data::sleeper_at( mons_alloc[random2(10)],
+                                           coord_def(x, y) ));
             }
 
         // put the boss monster down
@@ -3384,7 +3381,7 @@ static void _special_room(int level_number, spec_room &sr)
         break;
 
     case SROOM_TREASURY:
-        // should only appear in deep levels, with a guardian
+        // Should only appear in deep levels, with a guardian
         // Maybe have several types of treasure room?
         // place treasure {dlb}:
         for (x = sr.x1; x <= sr.x2; x++)
@@ -3417,7 +3414,8 @@ static void _special_room(int level_number, spec_room &sr)
             mgen_data::sleeper_at(
                 MONS_GUARDIAN_NAGA,
                 coord_def(sr.x1 + random2( sr.x2 - sr.x1 ),
-                          sr.y1 + random2( sr.y2 - sr.y1 )) ));
+                          sr.y1 + random2( sr.y2 - sr.y1 )),
+                MG_PATROLLING ));
         break;
 
     case SROOM_BEEHIVE:
@@ -3472,15 +3470,16 @@ static void _beehive(spec_room &sr)
 
             mons_place(
                 mgen_data::sleeper_at(
-                    one_chance_in(7) ?
-                    MONS_KILLER_BEE_LARVA : MONS_KILLER_BEE,
+                    one_chance_in(7) ? MONS_KILLER_BEE_LARVA
+                                     : MONS_KILLER_BEE,
                     coord_def(x, y)));
         }
 
     mons_place(
         mgen_data::sleeper_at(
             MONS_QUEEN_BEE,
-            coord_def(queenx, queeny )));
+            coord_def(queenx, queeny ),
+            MG_PATROLLING));
 }
 
 // used for placement of vaults
@@ -4517,7 +4516,7 @@ bool dgn_place_monster(mons_spec &mspec,
     if (mspec.mid != -1)
     {
         const int mid = mspec.mid;
-        const bool m_generate_awake = generate_awake || mspec.generate_awake;
+        const bool m_generate_awake = (generate_awake || mspec.generate_awake);
 
         const int mlev = mspec.mlevel;
         if (mlev)
@@ -4541,12 +4540,12 @@ bool dgn_place_monster(mons_spec &mspec,
         }
 
         mgen_data mg(static_cast<monster_type>(mid));
-        mg.power = monster_level;
-        mg.behaviour = m_generate_awake ? BEH_WANDER : BEH_SLEEP;
+        mg.power     = monster_level;
+        mg.behaviour = (m_generate_awake ? BEH_WANDER : BEH_SLEEP);
         mg.base_type = mspec.monbase;
-        mg.number = mspec.number;
-        mg.colour = mspec.colour;
-        mg.pos = coord_def(vx, vy);
+        mg.number    = mspec.number;
+        mg.colour    = mspec.colour;
+        mg.pos       = coord_def(vx, vy);
 
         const int mindex = place_monster(mg);
         if (mindex != -1)
@@ -4878,8 +4877,8 @@ static int _vault_grid( vault_placement &place,
 
     if (vgrid == 'S' || vgrid == 'H')
     {
-        const monster_type mtype =
-            (vgrid == 'H') ? MONS_ORANGE_STATUE : MONS_SILVER_STATUE;
+        const monster_type mtype = ((vgrid == 'H') ? MONS_ORANGE_STATUE
+                                                   : MONS_SILVER_STATUE);
 
         grd[vx][vy] = DNGN_FLOOR;
 
@@ -6231,10 +6230,7 @@ static void _labyrinth_place_items(const coord_def &end)
 static void _labyrinth_place_exit(const coord_def &end)
 {
     _labyrinth_place_items(end);
-    mons_place(
-        mgen_data::sleeper_at(
-            MONS_MINOTAUR,
-            end));
+    mons_place( mgen_data::sleeper_at(MONS_MINOTAUR, end, MG_PATROLLING) );
     grd(end) = DNGN_ESCAPE_HATCH_UP;
 }
 

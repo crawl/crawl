@@ -3516,8 +3516,8 @@ static void _open_door(int move_x, int move_y, bool check_confused)
 
             }
 
-            you_attack(mgrd[dx][dy], true);
             you.turn_is_over = true;
+            you_attack(mgrd[dx][dy], true);
 
             if (you.berserk_penalty != NO_BERSERK_PENALTY)
                 you.berserk_penalty = 0;
@@ -4075,8 +4075,8 @@ static void _move_player(int move_x, int move_y)
             // an invisible monster attacks the monster, thus allowing
             // the player to figure out which adjacent wall an invis
             // monster is in "for free".
-            you_attack( targ_monst, true );
             you.turn_is_over = true;
+            you_attack( targ_monst, true );
 
             // We don't want to create a penalty if there isn't
             // supposed to be one.

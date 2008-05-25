@@ -523,8 +523,8 @@ void init_travel_terrain_check(bool check_race_equip)
         _set_pass_feature(DNGN_DEEP_WATER, water);
 
         // Permanently levitating players can cross most hostile terrain.
-        const signed char trav = you.permanent_levitation() ?
-            TRAVERSABLE : IMPASSABLE;
+        const signed char trav = (you.permanent_levitation() ? TRAVERSABLE
+                                                             : IMPASSABLE);
 
         if (water != TRAVERSABLE)
             _set_pass_feature(DNGN_DEEP_WATER, trav);

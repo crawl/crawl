@@ -1770,6 +1770,7 @@ static void marshall_monster(writer &th, const monsters &m)
     marshallByte(th, m.y);
     marshallByte(th, m.target_x);
     marshallByte(th, m.target_y);
+    marshallCoord(th, m.patrol_point);
     marshallLong(th, m.flags);
     marshallLong(th, m.experience);
 
@@ -2030,6 +2031,10 @@ static void unmarshall_monster(reader &th, monsters &m)
     m.y               = unmarshallByte(th);
     m.target_x        = unmarshallByte(th);
     m.target_y        = unmarshallByte(th);
+
+    if (_tag_minor_version >= TAG_MINOR_MPATROL)
+        unmarshallCoord(th, m.patrol_point);
+
     m.flags           = unmarshallLong(th);
     m.experience      = static_cast<unsigned long>(unmarshallLong(th));
 

@@ -732,7 +732,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     if (mons_is_caught(monster))
         mons_clear_trapping_net(monster);
 
-    // update list of monsters beholding player
+    // Update list of monsters beholding player.
     update_beholders(monster, true);
 
     const int monster_killed = monster_index(monster);
@@ -1029,7 +1029,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                        MDAM_DEAD);
             }
 
-            // no piety loss if god gifts killed by other monsters
+            // No piety loss if god gifts killed by other monsters.
             if (mons_friendly(monster) && !testbits(monster->flags,MF_GOD_GIFT))
             {
                 did_god_conduct(DID_FRIEND_DIED, 1 + (monster->hit_dice / 2),
@@ -1319,7 +1319,7 @@ void monster_cleanup(monsters *monster)
 
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
-}                               // end monster_cleanup()
+}
 
 static bool _jelly_divide(monsters * parent)
 {
@@ -1330,10 +1330,10 @@ static bool _jelly_divide(monsters * parent)
     if (!mons_class_flag( parent->type, M_SPLITS ) || parent->hit_points == 1)
         return (false);
 
-    // first, find a suitable spot for the child {dlb}:
+    // First, find a suitable spot for the child {dlb}:
     for (jex = -1; jex < 3; jex++)
     {
-        // loop moves beyond those tiles contiguous to parent {dlb}:
+        // Loop moves beyond those tiles contiguous to parent {dlb}:
         if (jex > 1)
             return (false);
 
@@ -1351,7 +1351,7 @@ static bool _jelly_divide(monsters * parent)
 
         if (foundSpot)
             break;
-    }                           // end of for jex
+    }   // end of for jex
 
     int k = 0;                  // must remain outside loop that follows {dlb}
 
@@ -1366,7 +1366,7 @@ static bool _jelly_divide(monsters * parent)
             return (false);
     }
 
-    // handle impact of split on parent {dlb}:
+    // Handle impact of split on parent {dlb}:
     parent->max_hit_points /= 2;
 
     if (parent->hit_points > parent->max_hit_points)
@@ -1375,11 +1375,11 @@ static bool _jelly_divide(monsters * parent)
     parent->init_experience();
     parent->experience = parent->experience * 3 / 5 + 1;
 
-    // create child {dlb}:
-    // this is terribly partial and really requires
+    // Create child {dlb}:
+    // This is terribly partial and really requires
     // more thought as to generation ... {dlb}
     *child = *parent;
-    child->max_hit_points = child->hit_points;
+    child->max_hit_points  = child->hit_points;
     child->speed_increment = 70 + random2(5);
     child->x = parent->x + jex;
     child->y = parent->y + jey;
@@ -1395,7 +1395,7 @@ static bool _jelly_divide(monsters * parent)
     return (true);
 }                               // end jelly_divide()
 
-// if you're invis and throw/zap whatever, alerts menv to your position
+// If you're invis and throw/zap whatever, alerts menv to your position.
 void alert_nearby_monsters(void)
 {
     monsters *monster = 0;       // NULL {dlb}
@@ -2028,6 +2028,9 @@ void behaviour_event( monsters *mon, int event, int src,
         // interesting for a moment. -- bwr
         if (!isSmart || mon->foe == MHITNOT || mon->behaviour == BEH_WANDER)
         {
+            if (mon->is_patrolling())
+                break;
+
             mon->target_x = src_x;
             mon->target_y = src_y;
         }
@@ -2035,13 +2038,13 @@ void behaviour_event( monsters *mon, int event, int src,
 
     case ME_WHACK:
     case ME_ANNOY:
-        // will turn monster against <src>, unless they
+        // Will turn monster against <src>, unless they
         // are BOTH friendly or good neutral AND stupid,
         // or else fleeing anyway. Hitting someone over
         // the head, of course, always triggers this code.
         if (event == ME_WHACK
             || ((wontAttack != sourceWontAttack || isSmart)
-               && mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC))
+                && mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC))
         {
             // (plain) plants and fungi cannot flee or fight back
             if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT)
@@ -2059,16 +2062,19 @@ void behaviour_event( monsters *mon, int event, int src,
             }
         }
 
-        // now set target x,y so that monster can whack
-        // back (once) at an invisible foe
+        // Now set target x,y so that monster can whack
+        // back (once) at an invisible foe.
         if (event == ME_WHACK)
             setTarget = true;
         break;
 
     case ME_ALERT:
-        // will alert monster to <src> and turn them
+        if (mon->is_patrolling())
+            break;
+
+        // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
-        // it won't turn friends hostile either.
+        // It won't turn friends hostile either.
         if (mon->behaviour != BEH_CORNERED && mon->behaviour != BEH_PANIC
             && mon->behaviour != BEH_FLEE)
         {
@@ -2108,7 +2114,7 @@ void behaviour_event( monsters *mon, int event, int src,
             break;
         }
 
-        // Just set behaviour.. foe doesn't change.
+        // Just set behaviour... foe doesn't change.
         if (mon->behaviour != BEH_CORNERED)
             simple_monster_message(mon, " turns to fight!");
 
@@ -2135,13 +2141,44 @@ void behaviour_event( monsters *mon, int event, int src,
         }
     }
 
-    // now, break charms if appropriate
+    // Now, break charms if appropriate.
     if (breakCharm)
         mon->del_ench(ENCH_CHARM);
 
-    // do any resultant foe or state changes
+    // Do any resultant foe or state changes.
     _handle_behaviour( mon );
 }
+
+static bool _choose_random_target_grid_in_los(monsters *mon)
+{
+    int pos_x, pos_y;
+    int count_grids = 0;
+    for (int j = -LOS_RADIUS; j < LOS_RADIUS; j++)
+        for (int k = -LOS_RADIUS; k < LOS_RADIUS; k++)
+        {
+            if (j == 0 && k == 0)
+                continue;
+
+            pos_x = mon->x + j;
+            pos_y = mon->y + k;
+
+            if (!in_bounds(pos_x, pos_y))
+                continue;
+            if (!mon->mon_see_grid(pos_x, pos_y))
+                continue;
+            if (!mon->can_pass_through_feat(grd[pos_x][pos_y]))
+                continue;
+
+            if (one_chance_in(++count_grids))
+            {
+                mon->target_x = pos_x;
+                mon->target_y = pos_y;
+            }
+        }
+
+    return (count_grids);
+}
+
 
 //---------------------------------------------------------------
 //
@@ -2164,11 +2201,12 @@ static void _handle_behaviour(monsters *mon)
     bool wontAttack = mons_wont_attack(mon);
     bool proxPlayer = mons_near(mon);
     bool proxFoe;
-    bool isHurt    = (mon->hit_points <= mon->max_hit_points / 4 - 1);
-    bool isHealthy = (mon->hit_points > mon->max_hit_points / 2);
-    bool isSmart   = (mons_intel(mon->type) > I_ANIMAL);
-    bool isScared  = mon->has_ench(ENCH_FEAR);
-    bool isMobile  = !mons_is_stationary(mon);
+    bool isHurt     = (mon->hit_points <= mon->max_hit_points / 4 - 1);
+    bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
+    bool isSmart    = (mons_intel(mon->type) > I_ANIMAL);
+    bool isScared   = mon->has_ench(ENCH_FEAR);
+    bool isMobile   = !mons_is_stationary(mon);
+    bool patrolling = mon->is_patrolling();
 
     // check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
@@ -2178,7 +2216,7 @@ static void _handle_behaviour(monsters *mon)
         return;
     }
 
-    // validate current target exists
+    // Validate current target exists.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
         && menv[mon->foe].type == -1)
     {
@@ -2197,15 +2235,15 @@ static void _handle_behaviour(monsters *mon)
             proxPlayer = false;
 
         const int intel = mons_intel(mon->type);
-        // now, the corollary to that is that sometimes, if a
-        // player is right next to a monster, they will 'see'
+        // Now, the corollary to that is that sometimes, if a
+        // player is right next to a monster, they will 'see'.
         if (grid_distance( you.x_pos, you.y_pos, mon->x, mon->y ) == 1
             && one_chance_in(3))
         {
             proxPlayer = true;
         }
 
-        // [dshaligram] Very smart monsters have a chance of cluing in to
+        // [dshaligram] Very smart monsters have a chance of clueing in to
         // invisible players in various ways.
         else if (intel == I_NORMAL && one_chance_in(13)
                  || intel == I_HIGH && one_chance_in(6))
@@ -2239,7 +2277,7 @@ static void _handle_behaviour(monsters *mon)
     if (isNeutral && mon->foe == MHITNOT)
         _set_nearest_monster_foe(mon);
 
-    // monsters do not attack themselves {dlb}
+    // Monsters do not attack themselves. {dlb}
     if (mon->foe == monster_index(mon))
         mon->foe = MHITNOT;
 
@@ -2280,7 +2318,7 @@ static void _handle_behaviour(monsters *mon)
         int foe_x = you.x_pos;
         int foe_y = you.y_pos;
 
-        // evaluate these each time; they may change
+        // Evaluate these each time; they may change.
         if (mon->foe == MHITNOT)
             proxFoe = false;
         else
@@ -2303,12 +2341,12 @@ static void _handle_behaviour(monsters *mon)
             }
         }
 
-        // track changes to state; attitude never changes here.
-        beh_type new_beh = mon->behaviour;
+        // Track changes to state; attitude never changes here.
+        beh_type new_beh     = mon->behaviour;
         unsigned int new_foe = mon->foe;
 
         // take care of monster state changes
-        switch(mon->behaviour)
+        switch (mon->behaviour)
         {
         case BEH_SLEEP:
             // default sleep state
@@ -2321,7 +2359,7 @@ static void _handle_behaviour(monsters *mon)
             // no foe? then wander or seek the player
             if (mon->foe == MHITNOT)
             {
-                if (!proxPlayer || isNeutral)
+                if (!proxPlayer || isNeutral || patrolling)
                     new_beh = BEH_WANDER;
                 else
                 {
@@ -2329,13 +2367,19 @@ static void _handle_behaviour(monsters *mon)
                     mon->target_x = you.x_pos;
                     mon->target_y = you.y_pos;
                 }
-
                 break;
             }
 
             // foe gone out of LOS?
             if (!proxFoe)
             {
+                if (patrolling)
+                {
+                    new_foe = MHITNOT;
+                    new_beh = BEH_WANDER;
+                    break;
+                }
+
                 if (isFriendly)
                 {
                     new_foe = MHITYOU;
@@ -2410,11 +2454,11 @@ static void _handle_behaviour(monsters *mon)
                 break;  // switch/case BEH_SEEK
             }
 
-            // monster can see foe: continue 'tracking'
-            // by updating target x,y
+            // Monster can see foe: continue 'tracking'
+            // by updating target x,y.
             if (mon->foe == MHITYOU)
             {
-                // sometimes, your friends will wander a bit.
+                // Sometimes, your friends will wander a bit.
                 if (isFriendly && one_chance_in(8))
                 {
                     mon->target_x = 10 + random2(GXM - 10);
@@ -2439,7 +2483,7 @@ static void _handle_behaviour(monsters *mon)
             break;
 
         case BEH_WANDER:
-            // is our foe in LOS?
+            // Is our foe in LOS?
             // Batty monsters don't automatically reseek so that
             // they'll flitter away, we'll reset them just before
             // they get movement in handle_monsters() instead. -- bwr
@@ -2462,14 +2506,25 @@ static void _handle_behaviour(monsters *mon)
                 || one_chance_in(20)
                 || testbits( mon->flags, MF_BATTY ))
             {
-                mon->target_x = 10 + random2(GXM - 10);
-                mon->target_y = 10 + random2(GYM - 10);
+                if (patrolling)
+                {
+                    if (mon->patrol_point != coord_def(mon->x, mon->y)
+                        || !_choose_random_target_grid_in_los(mon))
+                    {
+                        mon->target_x = mon->patrol_point.x;
+                        mon->target_y = mon->patrol_point.y;
+                    }
+                }
+                else
+                {
+                    mon->target_x = 10 + random2(GXM - 10);
+                    mon->target_y = 10 + random2(GYM - 10);
+                }
             }
 
-            // during their wanderings, monsters will
-            // eventually relax their guard (stupid
-            // ones will do so faster, smart monsters
-            // have longer memories
+            // During their wanderings, monsters will eventually relax their
+            // guard (stupid ones will do so faster, smart monsters have
+            // longer memories.
             if (!proxFoe && mon->foe != MHITNOT
                 && one_chance_in( isSmart ? 60 : 20 ))
             {
@@ -2482,11 +2537,9 @@ static void _handle_behaviour(monsters *mon)
             if (isHealthy && !isScared)
                 new_beh = BEH_SEEK;
 
-            // Smart monsters flee until they can
-            // flee no more...  possible to get a
-            // 'CORNERED' event, at which point
-            // we can jump back to WANDER if the foe
-            // isn't present.
+            // Smart monsters flee until they can flee no more...
+            // possible to get a 'CORNERED' event, at which point
+            // we can jump back to WANDER if the foe isn't present.
 
             // XXX: If a monster can move through solid grids, then it
             // should preferentially flee towards the nearest solid grid
@@ -2497,13 +2550,13 @@ static void _handle_behaviour(monsters *mon)
 
             if (isFriendly)
             {
-                // Special-cased below so that it will flee *towards* you
+                // Special-cased below so that it will flee *towards* you.
                 mon->target_x = you.x_pos;
                 mon->target_y = you.y_pos;
             }
             else if (proxFoe)
             {
-                // try to flee _from_ the correct position
+                // Try to flee _from_ the correct position.
                 mon->target_x = foe_x;
                 mon->target_y = foe_y;
             }
@@ -2516,7 +2569,7 @@ static void _handle_behaviour(monsters *mon)
             // foe gone out of LOS?
             if (!proxFoe)
             {
-                if ((isFriendly || proxPlayer) && !isNeutral)
+                if ((isFriendly || proxPlayer) && !isNeutral && !patrolling)
                     new_foe = MHITYOU;
                 else
                     new_beh = BEH_WANDER;
@@ -2571,8 +2624,7 @@ static bool _mons_check_set_foe(monsters *mon, int x, int y,
     return (false);
 }
 
-// choose nearest monster as a foe
-// (used for berserking monsters)
+// Choose nearest monster as a foe. (Used for berserking monsters.)
 void _set_nearest_monster_foe(monsters *mon)
 {
     const bool friendly = mons_friendly(mon);
@@ -3579,7 +3631,7 @@ static bool _handle_reaching(monsters *monster)
         {
             int foe_x = menv[monster->foe].x;
             int foe_y = menv[monster->foe].y;
-            // same comments as to invisibility as above.
+            // Same comments as to invisibility as above.
             if (monster->target_x == foe_x && monster->target_y == foe_y
                 && monster->mon_see_grid(foe_x, foe_y, true))
             {
@@ -4526,7 +4578,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     if (one_chance_in(archer? 9 : 5))
         return (false);
 
-    // don't allow offscreen throwing for now.
+    // Don't allow offscreen throwing for now.
     if (monster->foe == MHITYOU && !mons_near(monster))
         return (false);
 
@@ -4900,63 +4952,87 @@ static void _handle_monster_move(int i, monsters *monster)
         }
         else
         {
-            // calculates mmov_x, mmov_y based on monster target.
+            // Calculates mmov_x, mmov_y based on monster target.
             _handle_movement(monster);
 
             brkk = false;
 
-             if (mons_is_confused(monster)
-                 || monster->type == MONS_AIR_ELEMENTAL
-                    && monster->has_ench(ENCH_SUBMERGED))
-             {
-                 std::vector<coord_def> moves;
+            if (mons_is_confused(monster)
+                || monster->type == MONS_AIR_ELEMENTAL
+                   && monster->has_ench(ENCH_SUBMERGED))
+            {
+                std::vector<coord_def> moves;
 
-                 int pfound = 0;
-                 for (int yi = -1; yi <= 1; ++yi)
-                     for (int xi = -1; xi <= 1; ++xi)
-                     {
-                         coord_def c = monster->pos() + coord_def(xi, yi);
-                         if (in_bounds(c) && monster->can_pass_through(c)
-                             && one_chance_in(++pfound))
-                         {
-                             mmov_x = xi;
-                             mmov_y = yi;
-                         }
-                     }
+                int pfound = 0;
+                for (int yi = -1; yi <= 1; ++yi)
+                    for (int xi = -1; xi <= 1; ++xi)
+                    {
+                        coord_def c = monster->pos() + coord_def(xi, yi);
+                        if (in_bounds(c) && monster->can_pass_through(c)
+                            && one_chance_in(++pfound))
+                        {
+                            mmov_x = xi;
+                            mmov_y = yi;
+                        }
+                    }
 
-                 if (random2(2 + pfound) < 2)
-                     mmov_x = mmov_y = 0;
+                if (random2(2 + pfound) < 2)
+                    mmov_x = mmov_y = 0;
 
-                 // Bounds check: don't let confused monsters try to run
-                 // off the map.
-                 if (monster->x + mmov_x < 0 || monster->x + mmov_x >= GXM)
-                     mmov_x = 0;
+                // Bounds check: don't let confused monsters try to run
+                // off the map.
+                if (monster->x + mmov_x < 0 || monster->x + mmov_x >= GXM)
+                    mmov_x = 0;
 
-                 if (monster->y + mmov_y < 0 || monster->y + mmov_y >= GYM)
-                     mmov_y = 0;
+                if (monster->y + mmov_y < 0 || monster->y + mmov_y >= GYM)
+                    mmov_y = 0;
 
-                 if (!monster->can_pass_through(monster->x + mmov_x,
-                                                monster->y + mmov_y))
-                 {
-                     mmov_x = mmov_y = 0;
-                 }
+                if (!monster->can_pass_through(monster->x + mmov_x,
+                                               monster->y + mmov_y))
+                {
+                    mmov_x = mmov_y = 0;
+                }
 
-                 if (mgrd[monster->x + mmov_x][monster->y + mmov_y] != NON_MONSTER
-                     && !is_sanctuary(monster->x, monster->y)
-                     && (mmov_x != 0 || mmov_y != 0))
-                 {
-                     monsters_fight(i,
-                         mgrd[monster->x + mmov_x][monster->y + mmov_y]);
+                int enemy = mgrd[monster->x + mmov_x][monster->y + mmov_y];
+                if (enemy != NON_MONSTER
+                    && !is_sanctuary(monster->x, monster->y)
+                    && (mmov_x != 0 || mmov_y != 0))
+                {
+                    if (monsters_fight(i, enemy))
+                    {
+                        brkk = true;
+                        mmov_x = 0;
+                        mmov_y = 0;
+                        DEBUG_ENERGY_USE("monsters_fight()");
+                    }
+                    else
+                    {
+                        // FIXME: None of these work!
+                        // Instead run away!
+                        if (monster->add_ench(mon_enchant(ENCH_FEAR)))
+                        {
+                            behaviour_event(monster, ME_SCARE, MHITNOT,
+                                            monster->x + mmov_x,
+                                            monster->y + mmov_y);
+                        }
+                        break;
+/*
+                        if (monster->foe == enemy || mons_friendly(monster)
+                                                     && monster->foe == MHITYOU)
+                        {
+                            monster->foe = MHITNOT;
+                            monster->behaviour = BEH_WANDER;
+                        }
 
-                     brkk = true;
-                     mmov_x = 0;
-                     mmov_y = 0;
-                     DEBUG_ENERGY_USE("monsters_fight()");
-                 }
-             }
+                        monster->target_x = 10 + random2(GXM - 10);
+                        monster->target_y = 10 + random2(GYM - 10);
+*/
+                    }
+                }
+            }
 
-             if (brkk)
-                 continue;
+            if (brkk)
+                continue;
         }
         _handle_nearby_ability( monster );
 
@@ -5027,7 +5103,7 @@ static void _handle_monster_move(int i, monsters *monster)
                 && targmon != i
                 && !mons_aligned(i, targmon))
             {
-                // figure out if they fight
+                // Figure out if they fight.
                 if (monsters_fight(i, targmon))
                 {
                     if (testbits(monster->flags, MF_BATTY))
@@ -5102,7 +5178,7 @@ static void _handle_monster_move(int i, monsters *monster)
         }
         update_beholders(monster);
 
-        // reevaluate behaviour, since the monster's
+        // Reevaluate behaviour, since the monster's
         // surroundings have changed (it may have moved,
         // or died for that matter.  Don't bother for
         // dead monsters.  :)
@@ -5883,13 +5959,13 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         return false;
     }
 
-    // smacking the player is always a good move if we're
-    // hostile (even if we're heading somewhere else)
-    // also friendlies want to keep close to the player
-    // so it's okay as well
+    // Smacking the player is always a good move if we're
+    // hostile (even if we're heading somewhere else).
+    // Also friendlies want to keep close to the player
+    // so it's okay as well.
 
-    // smacking another monster is good, if the monsters
-    // are aligned differently
+    // Smacking another monster is good, if the monsters
+    // are aligned differently.
     if (mgrd[targ_x][targ_y] != NON_MONSTER)
     {
         if (just_check)
@@ -5902,6 +5978,7 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
 
         const int thismonster = monster_index(monster),
                   targmonster = mgrd[targ_x][targ_y];
+
         if (mons_aligned(thismonster, targmonster)
             && targmonster != MHITNOT
             && targmonster != MHITYOU

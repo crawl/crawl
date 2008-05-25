@@ -94,10 +94,11 @@ enum proximity_type   // proximity to player to create monster
 
 enum mgen_flag_type
 {
-    MG_PERMIT_BANDS = 0x1,
-    MG_FORCE_PLACE  = 0x2,
-    MG_FORCE_BEH    = 0x4,
-    MG_PLAYER_MADE  = 0x8
+    MG_PERMIT_BANDS = 0x01,
+    MG_FORCE_PLACE  = 0x02,
+    MG_FORCE_BEH    = 0x04,
+    MG_PLAYER_MADE  = 0x08,
+    MG_PATROLLING   = 0x10
 };
 
 // A structure with all the data needed to whip up a new monster.
@@ -186,6 +187,7 @@ struct mgen_data
 
     bool permit_bands() const { return (flags & MG_PERMIT_BANDS); }
     bool force_place() const { return (flags & MG_FORCE_PLACE); }
+    bool needs_patrol_point() const { return (flags & MG_PATROLLING); }
 
     // Is there a valid position set on this struct that we want to use
     // when placing the monster?
@@ -194,7 +196,8 @@ struct mgen_data
     bool summoned() const { return (abjuration_duration > 0); }
 
     static mgen_data sleeper_at(monster_type what,
-                                const coord_def &where)
+                                const coord_def &where,
+                                unsigned flags = 0)
     {
         return mgen_data(what, BEH_SLEEP, 0, where);
     }

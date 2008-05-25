@@ -2214,7 +2214,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         // life-protected if he has triple life protection.
         const mon_holy_type holiness = foe->holiness();
         return (holiness == MH_UNDEAD || holiness == MH_DEMONIC
-            || holiness == MH_NONLIVING || holiness == MH_PLANT);
+                || holiness == MH_NONLIVING || holiness == MH_PLANT);
     }
 
     case SPELL_DISPEL_UNDEAD:
@@ -2222,7 +2222,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
     case SPELL_BACKLIGHT:
     {
-        ret = !foe || foe->backlit();
+        ret = (!foe || foe->backlit());
         break;
     }
 
@@ -2591,10 +2591,11 @@ bool monster_senior(const monsters *m1, const monsters *m2)
 monsters::monsters()
     : type(-1), hit_points(0), max_hit_points(0), hit_dice(0),
       ac(0), ev(0), speed(0), speed_increment(0), x(0), y(0),
-      target_x(0), target_y(0), inv(NON_ITEM), spells(), attitude(ATT_HOSTILE),
-      behaviour(BEH_WANDER), foe(MHITYOU), enchantments(), flags(0L),
-      experience(0), number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
-      god(GOD_NO_GOD), ghost(), seen_context("")
+      target_x(0), target_y(0), patrol_point(0, 0), inv(NON_ITEM), spells(),
+      attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
+      enchantments(), flags(0L), experience(0), number(0), colour(BLACK),
+      foe_memory(0), shield_blocks(0), god(GOD_NO_GOD), ghost(),
+      seen_context("")
 {
 }
 
@@ -2641,6 +2642,7 @@ void monsters::reset()
         mgrd[x][y] = NON_MONSTER;
 
     x = y = 0;
+    patrol_point = coord_def(0, 0);
     ghost.reset(NULL);
 }
 
@@ -2660,6 +2662,7 @@ void monsters::init_with(const monsters &mon)
     y                 = mon.y;
     target_x          = mon.target_x;
     target_y          = mon.target_y;
+    patrol_point      = mon.patrol_point;
     inv               = mon.inv;
     spells            = mon.spells;
     attitude          = mon.attitude;
@@ -4558,12 +4561,17 @@ void monsters::destroy_inventory()
     }
 }
 
+bool monsters::is_patrolling() const
+{
+    return (patrol_point != coord_def(0, 0));
+}
+
 bool monsters::needs_transit() const
 {
     return ((mons_is_unique(type)
-             || (flags & MF_BANISHED)
-             || type == MONS_ROYAL_JELLY
-             || (you.level_type == LEVEL_DUNGEON && hit_dice > 8 + random2(25)))
+                || (flags & MF_BANISHED)
+                || type == MONS_ROYAL_JELLY
+                || you.level_type == LEVEL_DUNGEON && hit_dice > 8 + random2(25))
             && !mons_is_summoned(this));
 }
 
@@ -4613,7 +4621,7 @@ void monsters::load_spells(mon_spellbook_type book)
 bool monsters::has_hydra_multi_attack() const
 {
     return (type == MONS_HYDRA
-            || (mons_is_zombified(this) && base_monster == MONS_HYDRA));
+            || mons_is_zombified(this) && base_monster == MONS_HYDRA);
 }
 
 bool monsters::has_ench(enchant_type ench) const
@@ -4728,9 +4736,9 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_CHARM:
         behaviour = BEH_SEEK;
-        target_x = you.x_pos;
-        target_y = you.y_pos;
-        foe = MHITYOU;
+        target_x  = you.x_pos;
+        target_y  = you.y_pos;
+        foe       = MHITYOU;
         break;
 
     default:
@@ -5572,7 +5580,8 @@ actor *monsters::get_foe() const
 int monsters::foe_distance() const
 {
     const actor *afoe = get_foe();
-    return (afoe? pos().distance_from(afoe->pos()) : INFINITE_DISTANCE);
+    return (afoe ? pos().distance_from(afoe->pos())
+                 : INFINITE_DISTANCE);
 }
 
 bool monsters::can_go_berserk() const

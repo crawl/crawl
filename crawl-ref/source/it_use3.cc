@@ -296,16 +296,16 @@ static bool reaching_weapon_attack(const item_def& wpn)
      *       slips between the squares.
      */
 
-    // if we're attacking more than a space away
-    if ((x_distance > 1) || (y_distance > 1))
+    // If we're attacking more than a space away...
+    if (x_distance > 1 || y_distance > 1)
     {
         const int x_middle = MAX(beam.tx, you.x_pos) - (x_distance / 2);
         const int y_middle = MAX(beam.ty, you.y_pos) - (y_distance / 2);
 
-        // if either the x or the y is the same, we should check for
+        // If either the x or the y is the same, we should check for
         // a monster:
-        if (((beam.tx == you.x_pos) || (beam.ty == you.y_pos))
-            && (mgrd[x_middle][y_middle] != NON_MONSTER))
+        if ((beam.tx == you.x_pos || beam.ty == you.y_pos)
+            && mgrd[x_middle][y_middle] != NON_MONSTER)
         {
             const int skill = weapon_skill( wpn.base_type, wpn.sub_type );
 
