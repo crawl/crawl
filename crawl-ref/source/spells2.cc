@@ -1196,7 +1196,7 @@ char burn_freeze(int pow, beam_type flavour)
 
     if (success)
     {
-        set_attack_conduct(monster, conduct);
+        set_attack_conducts(monster, conduct);
 
         mprf("You %s %s.",
              (flavour == BEAM_FIRE)        ? "burn" :

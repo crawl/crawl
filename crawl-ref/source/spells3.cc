@@ -212,7 +212,7 @@ int cast_smiting(int power, dist &beam)
 
         if (success)
         {
-            set_attack_conduct(monster, conduct);
+            set_attack_conducts(monster, conduct);
 
             mprf("You smite %s!", monster->name(DESC_NOCAP_THE).c_str());
 
@@ -255,7 +255,7 @@ int airstrike(int power, dist &beam)
 
         if (success)
         {
-            set_attack_conduct(monster, conduct);
+            set_attack_conducts(monster, conduct);
 
             mprf("The air twists around and strikes %s!",
                  monster->name(DESC_NOCAP_THE).c_str());

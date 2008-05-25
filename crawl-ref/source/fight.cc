@@ -608,7 +608,7 @@ bool melee_attack::attack()
     if (attacker->atype() == ACT_PLAYER)
     {
         if (!stop_attack_prompt(def, false, false))
-            set_attack_conduct(def, conduct);
+            set_attack_conducts(def, conduct);
         else
             cancel_attack = true;
     }

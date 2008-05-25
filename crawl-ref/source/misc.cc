@@ -3051,8 +3051,8 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     return (!you.confused() && (!prompt || yesno(info, false, 'n')));
 }
 
-void set_attack_conduct(const monsters *mon, god_conduct_trigger& conduct,
-                        bool known)
+void set_attack_conducts(const monsters *mon, god_conduct_trigger& conduct,
+                         bool known)
 {
     if (mons_friendly(mon))
         conduct.set(DID_ATTACK_FRIEND, 5, known, mon);

@@ -149,7 +149,7 @@ std::string your_hand(bool plural);
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                         bool beam_target);
 
-void set_attack_conduct(const monsters *mon, god_conduct_trigger& conduct,
-                        bool known = true);
+void set_attack_conducts(const monsters *mon, god_conduct_trigger& conduct,
+                         bool known = true);
 
 #endif

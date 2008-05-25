@@ -4486,7 +4486,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 remove_sanctuary(true);
             }
 
-            set_attack_conduct(mon, conduct, !okay);
+            set_attack_conducts(mon, conduct, !okay);
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
