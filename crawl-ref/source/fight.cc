@@ -606,7 +606,12 @@ bool melee_attack::attack()
     conduct.enabled = false;
 
     if (attacker->atype() == ACT_PLAYER)
-        cancel_attack = stop_attack_prompt(def, false, false, &conduct);
+    {
+        if (!stop_attack_prompt(def, false, false))
+            set_attack_conduct(def, conduct);
+        else
+            cancel_attack = true;
+    }
 
     // Trying to stay general beyond this point is a recipe for insanity.
     // Maybe when Stone Soup hits 1.0... :-)

@@ -4486,16 +4486,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 remove_sanctuary(true);
             }
 
-            if (mons_friendly(mon))
-                conduct.set(DID_ATTACK_FRIEND, 5, !okay, mon);
-            else if (mons_neutral(mon))
-                conduct.set(DID_ATTACK_NEUTRAL, 5, !okay, mon);
-
-            if (is_unchivalric_attack(&you, mon, mon))
-                conduct.set(DID_UNCHIVALRIC_ATTACK, 4, !okay, mon);
-
-            if (mons_is_holy(mon))
-                conduct.set(DID_ATTACK_HOLY, mon->hit_dice, !okay, mon);
+            set_attack_conduct(mon, conduct, !okay);
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
@@ -5474,7 +5465,7 @@ static bool _nasty_beam(monsters *mon, bolt &beam)
 
     // pain/agony
     if (beam.flavour == BEAM_PAIN)
-        return (!mons_res_negative_energy( mon ));
+        return (!mons_res_negative_energy(mon));
 
     // control demon
     if (beam.flavour == BEAM_ENSLAVE_DEMON)

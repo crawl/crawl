@@ -208,10 +208,12 @@ int cast_smiting(int power, dist &beam)
         god_conduct_trigger conduct;
         conduct.enabled = false;
 
-        success = !stop_attack_prompt(monster, false, false, &conduct);
+        success = !stop_attack_prompt(monster, false, false);
 
         if (success)
         {
+            set_attack_conduct(monster, conduct);
+
             mprf("You smite %s!", monster->name(DESC_NOCAP_THE).c_str());
 
             behaviour_event(monster, ME_ANNOY, MHITYOU);
@@ -249,10 +251,12 @@ int airstrike(int power, dist &beam)
         god_conduct_trigger conduct;
         conduct.enabled = false;
 
-        success = !stop_attack_prompt(monster, false, false, &conduct);
+        success = !stop_attack_prompt(monster, false, false);
 
         if (success)
         {
+            set_attack_conduct(monster, conduct);
+
             mprf("The air twists around and strikes %s!",
                  monster->name(DESC_NOCAP_THE).c_str());
 

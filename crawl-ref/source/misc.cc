@@ -3000,9 +3000,8 @@ std::string your_hand(bool plural)
 }
 
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
-                        bool beam_target, god_conduct_trigger *conduct)
+                        bool beam_target)
 {
-    bool retval = false;
     bool prompt = false;
 
     const bool inSanctuary   = (is_sanctuary(you.x_pos, you.y_pos)
@@ -3049,24 +3048,20 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
         prompt = true;
     }
 
-    if (you.confused() || (prompt && yesno(info, false, 'n')))
-    {
-        if (conduct)
-        {
-            if (isFriendly)
-                conduct->set(DID_ATTACK_FRIEND, 5, true, mon);
-            else if (isNeutral)
-                conduct->set(DID_ATTACK_NEUTRAL, 5, true, mon);
+    return (!you.confused() && (!prompt || yesno(info, false, 'n')));
+}
 
-            if (isUnchivalric)
-                conduct->set(DID_UNCHIVALRIC_ATTACK, 4, true, mon);
+void set_attack_conduct(const monsters *mon, god_conduct_trigger& conduct,
+                        bool known)
+{
+    if (mons_friendly(mon))
+        conduct.set(DID_ATTACK_FRIEND, 5, known, mon);
+    else if (mons_neutral(mon))
+        conduct.set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
-            if (isHoly)
-                conduct->set(DID_ATTACK_HOLY, mon->hit_dice, true, mon);
-        }
-    }
-    else
-        retval = true;
+    if (is_unchivalric_attack(&you, mon, mon))
+        conduct.set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
 
-    return retval;
+    if (mons_is_holy(mon))
+        conduct.set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
 }

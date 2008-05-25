@@ -1192,10 +1192,12 @@ char burn_freeze(int pow, beam_type flavour)
     god_conduct_trigger conduct;
     conduct.enabled = false;
 
-    bool success = !stop_attack_prompt(monster, false, false, &conduct);
+    bool success = !stop_attack_prompt(monster, false, false);
 
     if (success)
     {
+        set_attack_conduct(monster, conduct);
+
         mprf("You %s %s.",
              (flavour == BEAM_FIRE)        ? "burn" :
              (flavour == BEAM_COLD)        ? "freeze" :

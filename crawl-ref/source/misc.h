@@ -147,6 +147,9 @@ void reveal_secret_door(int x, int y);
 std::string your_hand(bool plural);
 
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
-                        bool beam_target, god_conduct_trigger *conduct = NULL);
+                        bool beam_target);
+
+void set_attack_conduct(const monsters *mon, god_conduct_trigger& conduct,
+                        bool known = true);
 
 #endif
