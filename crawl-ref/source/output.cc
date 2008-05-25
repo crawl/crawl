@@ -1946,7 +1946,7 @@ static std::string _overview_screen_title()
     return text;
 }
 
-static std::vector<formatted_string> _get_overview_cols1()
+static std::vector<formatted_string> _get_overview_stats()
 {
     char buf[1000];
 
@@ -2049,8 +2049,9 @@ static std::vector<formatted_string> _get_overview_cols1()
     return cols1.formatted_lines();
 }
 
-static std::vector<formatted_string> _get_overview_cols2(
-    std::vector<char> &equip_chars, bool calc_unid = false)
+static std::vector<formatted_string> _get_overview_resistances(
+    std::vector<char> &equip_chars,
+    bool calc_unid = false)
 {
     char buf[1000];
 
@@ -2173,7 +2174,7 @@ char _get_overview_screen_results()
     overview.add_text(_overview_screen_title());
 
     {
-        std::vector<formatted_string> blines = _get_overview_cols1();
+        std::vector<formatted_string> blines = _get_overview_stats();
         for (unsigned int i = 0; i < blines.size(); ++i )
             overview.add_item_formatted_string(blines[i]);
         overview.add_text(" ");
@@ -2182,8 +2183,9 @@ char _get_overview_screen_results()
 
     {
         std::vector<char> equip_chars;
-        std::vector<formatted_string> blines = _get_overview_cols2(equip_chars,
-                                                                   calc_unid);
+        std::vector<formatted_string> blines =
+            _get_overview_resistances(equip_chars, calc_unid);
+
         for (unsigned int i = 0; i < blines.size(); ++i )
         {
             // Kind of a hack -- we don't really care what items these
@@ -2205,7 +2207,7 @@ std::string dump_overview_screen(bool full_id)
     std::string text = formatted_string::parse_string(_overview_screen_title());
     text += EOL;
 
-    std::vector<formatted_string> blines = _get_overview_cols1();
+    std::vector<formatted_string> blines = _get_overview_stats();
     for (unsigned int i = 0; i < blines.size(); ++i)
     {
         text += blines[i];
@@ -2214,7 +2216,7 @@ std::string dump_overview_screen(bool full_id)
     text += EOL;
 
     std::vector<char> equip_chars;
-    blines = _get_overview_cols2(equip_chars, full_id);
+    blines = _get_overview_resistances(equip_chars, full_id);
     for (unsigned int i = 0; i < blines.size(); ++i)
     {
         text += blines[i];

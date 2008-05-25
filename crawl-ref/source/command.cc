@@ -65,8 +65,16 @@ static const char *features[] = {
     "Lua user scripts",
 #endif
 
+#ifdef USE_TILE
+    "Tile support",
+#endif
+
 #ifdef WIZARD
     "Wizard mode",
+#endif
+
+#ifdef DEBUG
+    "Debug mode",
 #endif
 
 #if defined(REGEX_POSIX)
@@ -81,22 +89,95 @@ static const char *features[] = {
     "Sound support",
 #endif
 
+#ifdef DGL_MILESTONES
+    "Milestones",
+#endif
+
 #ifdef UNICODE_GLYPHS
     "Unicode glyphs",
 #endif
-
-#ifdef USE_TILE
-    "Tile support",
-#endif
 };
 
-void version(void)
+static std::string _get_version_information(void)
 {
-    mpr( "This is " CRAWL " " VERSION " (" VERSION_DETAIL ")." );
-    mprf("Features: %s",
-         comma_separated_line(features, features + ARRAYSZ(features))
-             .c_str());
-}                               // end version()
+    std::string result  = "This is <w>";
+                result += CRAWL " " VERSION "</w> (" VERSION_DETAIL ").";
+    result += "\n\n";
+
+    return (result);
+}
+
+static std::string _get_version_features(void)
+{
+    std::string result  = "FEATURES" EOL;
+                result += "--------" EOL;
+
+    for (unsigned int i = 0; i < ARRAYSZ(features); i++)
+    {
+        result += " * ";
+        result += features[i];
+        result += EOL;
+    }
+    result += "\n\n";
+
+    return (result);
+}
+
+static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
+                                  int first_hotkey  = 0,
+                                  bool auto_hotkeys = false);
+
+void print_version(void)
+{
+    formatted_scroller cmd_version;
+
+    // Set flags.
+    int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP | MF_EASY_EXIT;
+    cmd_version.set_flags(flags, false);
+    cmd_version.set_tag("version");
+
+    // FIXME: Allow for hiding Page down when at the end of the listing, ditto
+    // for page up at start of listing.
+    cmd_version.set_more( formatted_string::parse_string(
+                              "<cyan>[ + : Page down.   - : Page up."
+                              "                           Esc exits.]") );
+
+    cmd_version.add_text(_get_version_information());
+    cmd_version.add_text(_get_version_features());
+
+    // Read in information about changed in comparison to the latest version.
+    FILE* fp = fopen(datafile_path("034_changes.txt", true).c_str(), "r");
+    if (fp)
+    {
+        char buf[200];
+        bool first = true;
+        while (fgets(buf, sizeof buf, fp))
+        {
+            // Remove trailing spaces.
+            for (int i = strlen(buf) - 1; i >= 0; i++)
+            {
+                if (isspace( buf[i] ))
+                    buf[i] = 0;
+                else
+                    break;
+            }
+            if (first)
+            {
+                // Highlight the first line (title).
+                std::string text  = "<w>";
+                            text += buf;
+                            text += "</w>";
+                cmd_version.add_text(text);
+                first = false;
+            }
+            else
+                cmd_version.add_text(buf);
+        }
+    }
+    fclose(fp);
+
+    cmd_version.show();
+}
 
 void adjust(void)
 {
@@ -173,12 +254,11 @@ static void _adjust_item(void)
 
     mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
-    to_slot = prompt_invent_item(
-                    "Adjust to which letter?",
-                    MT_INVLIST,
-                    -1,
-                    false,
-                    false );
+    to_slot = prompt_invent_item( "Adjust to which letter?",
+                                  MT_INVLIST,
+                                  -1,
+                                  false,
+                                  false );
     if (to_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -595,40 +675,39 @@ static const char *targeting_help_2 =
 // If auto_hotkeys is true, the function will try to identify
 // sections and add appropriate hotkeys.
 static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
-                                  int first_hotkey, bool auto_hotkeys )
+                                  int first_hotkey, bool auto_hotkeys)
 {
     bool next_is_hotkey = false;
     bool is_first = true;
     char buf[200];
 
-    // bracket with MEL_TITLES, so that you won't scroll
-    // into it or above it
+    // Bracket with MEL_TITLES, so that you won't scroll into it or above it.
     m.add_entry(new MenuEntry(std::string(), MEL_TITLE));
-    for ( int i = 0; i < get_number_of_lines(); ++i )
+    for (int i = 0; i < get_number_of_lines(); ++i)
         m.add_entry(new MenuEntry(std::string()));
     m.add_entry(new MenuEntry(std::string(), MEL_TITLE));
 
     while (fgets(buf, sizeof buf, fp))
     {
         MenuEntry* me = new MenuEntry(buf);
-        if ((next_is_hotkey && (isupper(buf[0]) || isdigit(buf[0]))) ||
-            (is_first && first_hotkey))
+        if (next_is_hotkey && (isupper(buf[0]) || isdigit(buf[0]))
+            || is_first && first_hotkey)
         {
-            int hotkey = is_first ? first_hotkey : buf[0];
-            if ( !is_first && buf[0] == 'X' &&
-                 strlen(buf) >= 3 && isdigit(buf[2]) )
+            int hotkey = (is_first ? first_hotkey : buf[0]);
+            if (!is_first && buf[0] == 'X'
+                && strlen(buf) >= 3 && isdigit(buf[2]))
             {
                 // X.# is hotkeyed to the #
                 hotkey = buf[2];
             }
             me->add_hotkey(hotkey);
-            if ( isupper(hotkey) )
+            if (isupper(hotkey))
                 me->add_hotkey(tolower(hotkey));
-            me->level = MEL_SUBTITLE;
+            me->level  = MEL_SUBTITLE;
             me->colour = WHITE;
         }
         m.add_entry(me);
-        // XXX FIXME: there must be a better way to identify sections
+        // FIXME: There must be a better way to identify sections!
         next_is_hotkey = auto_hotkeys &&
             (strstr(buf, "------------------------------------------"
                          "------------------------------") == buf);
@@ -1258,7 +1337,7 @@ static int _keyhelp_keyfilter(int ch)
         do
         {
             // resets 'again'
-            if (_find_description(again, error) && getch() == 0 )
+            if (_find_description(again, error) && getch() == 0)
                 getch();
 
             if (again)
@@ -1268,6 +1347,12 @@ static int _keyhelp_keyfilter(int ch)
 
         viewwindow(true, false);
 
+        return -1;
+      }
+      case 'v':
+      case 'V':
+      {
+        print_version();
         return -1;
       }
     }
@@ -1334,7 +1419,7 @@ static void _show_keyhelp_menu(const std::vector<formatted_string> &lines,
                            "<cyan>[ + : Page down.   - : Page up."
                            "                           Esc exits.]"));
 
-    if ( with_manual )
+    if (with_manual)
     {
         cmd_help.set_highlighter(new help_highlighter);
         cmd_help.f_keyfilter = _keyhelp_keyfilter;
@@ -1391,26 +1476,27 @@ static void _show_keyhelp_menu(const std::vector<formatted_string> &lines,
 
         std::vector<formatted_string> blines = cols.formatted_lines();
         unsigned i;
-        for (i = 0; i < blines.size(); ++i )
+        for (i = 0; i < blines.size(); ++i)
             cmd_help.add_item_formatted_string(blines[i]);
 
-        while ( static_cast<int>(++i) < get_number_of_lines() )
+        while (static_cast<int>(++i) < get_number_of_lines())
             cmd_help.add_item_string("");
+
         // unscrollable
         cmd_help.add_entry(new MenuEntry(std::string(), MEL_TITLE));
     }
 
-    for (unsigned i = 0; i < lines.size(); ++i )
+    for (unsigned i = 0; i < lines.size(); ++i)
         cmd_help.add_item_formatted_string(lines[i], (i == 0 ? '?' : 0) );
 
-    if ( with_manual )
+    if (with_manual)
     {
-        for ( int i = 0; help_files[i].name != NULL; ++i )
+        for (int i = 0; help_files[i].name != NULL; ++i)
         {
-            // attempt to open this file, skip it if unsuccessful
+            // Attempt to open this file, skip it if unsuccessful.
             FILE* fp =
                 fopen(datafile_path(help_files[i].name, false).c_str(), "r");
-            if ( !fp )
+            if (!fp)
                 continue;
 
             // put in a separator
@@ -1427,7 +1513,7 @@ static void _show_keyhelp_menu(const std::vector<formatted_string> &lines,
         }
     }
 
-    if ( hotkey )
+    if (hotkey)
         cmd_help.jump_to_hotkey(hotkey);
 
     cmd_help.show();

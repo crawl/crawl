@@ -1707,17 +1707,18 @@ static bool _randart_has_known_property(const item_def &item)
 
 bool item_type_tried( const item_def& item )
 {
-    if ( item_type_known(item) )
-        return false;
+    if (item_type_known(item))
+        return (false);
 
-    if ( is_artefact(item) )
+    if (is_artefact(item) && item.base_type == OBJ_JEWELLERY)
     {
         if (item.base_type == OBJ_JEWELLERY
-            && _randart_has_known_property(item))
+            && item.props.exists("jewellery_tried")
+            && item.props["jewellery_tried"].get_bool())
         {
-            return true;
+            return (true);
         }
-        return false;
+        return (false);
     }
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
@@ -1727,7 +1728,7 @@ bool item_type_tried( const item_def& item )
                  || type_ids[idt][item.sub_type] == ID_MON_TRIED_TYPE);
     }
     else
-        return false;
+        return (false);
 }
 
 id_arr& get_typeid_array()

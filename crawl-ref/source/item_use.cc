@@ -2616,9 +2616,9 @@ void jewellery_wear_effects(item_def &item)
     randart_prop_type       fake_rap     = RAP_NUM_PROPERTIES;
     bool                    learn_pluses = false;
 
-    // Randart jewellery shouldn't auto-ID just because the
-    // base type is known. Somehow the player should still
-    // be told, preferably by message. (jpeg)
+    // Randart jewellery shouldn't auto-ID just because the base type
+    // is known. Somehow the player should still be told, preferably
+    // by message. (jpeg)
     const bool artefact     = is_random_artefact( item );
     const bool known_pluses = item_ident( item, ISFLAG_KNOW_PLUSES );
     const bool known_cursed = item_known_cursed( item );
@@ -2761,6 +2761,12 @@ void jewellery_wear_effects(item_def &item)
 
         if (fake_rap != RAP_NUM_PROPERTIES)
             randart_wpn_learn_prop( item, fake_rap );
+
+        if (!item.props.exists("jewellery_tried")
+            || !item.props["jewellery_tried"].get_bool())
+        {
+            item.props["jewellery_tried"].get_bool() = true;
+        }
     }
     else
     {

@@ -4457,31 +4457,40 @@ static int _item_unid_type(const item_def &item)
 
     switch (item.base_type)
     {
-        case OBJ_STAVES:
-          id0 = id[ IDTYPE_STAVES ][s];
-          if (id0 != ID_KNOWN_TYPE)
-             return 1;
-          else
-             return 0;
+    case OBJ_STAVES:
+        id0 = id[ IDTYPE_STAVES ][s];
+        if (id0 != ID_KNOWN_TYPE)
+            return 1;
+        else
+            return 0;
 
-        case OBJ_SCROLLS:
-          id0 = id[ IDTYPE_SCROLLS ][s];
-          break;
+    case OBJ_SCROLLS:
+        id0 = id[ IDTYPE_SCROLLS ][s];
+        break;
 
-        case OBJ_WANDS:
-          id0 = id[ IDTYPE_WANDS ][s];
-          break;
+    case OBJ_WANDS:
+        id0 = id[ IDTYPE_WANDS ][s];
+        break;
 
-        case OBJ_POTIONS:
-          id0 = id[ IDTYPE_POTIONS ][s];
-          break;
+    case OBJ_POTIONS:
+        id0 = id[ IDTYPE_POTIONS ][s];
+        break;
 
-        case OBJ_JEWELLERY:
-          id0 = id[ IDTYPE_JEWELLERY ][s];
-          break;
+    case OBJ_JEWELLERY:
+        if (is_artefact(item))
+        {
+            if (item.props.exists("jewellery_tried")
+                && item.props["jewellery_tried"].get_bool())
+            {
+                return 2;
+            }
+            return 1;
+        }
+        id0 = id[ IDTYPE_JEWELLERY ][s];
+        break;
 
-        default:
-          return 0;
+    default:
+        return 0;
     }
 
     if (id0 == ID_TRIED_TYPE)
@@ -4492,7 +4501,7 @@ static int _item_unid_type(const item_def &item)
     return 0;
 }
 
-// Helper routine: sort floor item index and pack into idx
+// Helper routine: sort floor item index and pack into idx.
 static int _pack_floor_item(int *idx, int *flag, int *isort, int max)
 {
     int n = 0;

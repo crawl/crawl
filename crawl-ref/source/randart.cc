@@ -368,7 +368,7 @@ void randart_desc_properties( const item_def &item,
 {
     randart_wpn_properties( item, proprt, known);
 
-    if ( !force_fake_props && item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
+    if (!force_fake_props && item_ident( item, ISFLAG_KNOW_PROPERTIES ))
         return;
 
     // only jewellery need fake randart properties

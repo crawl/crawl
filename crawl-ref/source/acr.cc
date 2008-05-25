@@ -1223,7 +1223,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_DISPLAY_CHARACTER_STATUS:
     case CMD_DISPLAY_SPELLS:
     case CMD_EXPERIENCE_CHECK:
-    case CMD_GET_VERSION:
     case CMD_RESISTS_SCREEN:
     case CMD_READ_MESSAGES:
     case CMD_SEARCH_STASHES:
@@ -2361,10 +2360,6 @@ void process_command( command_type cmd )
             canned_msg(MSG_OK);
         break;
 
-    case CMD_GET_VERSION:
-        version();
-        break;
-
     case CMD_REPEAT_CMD:
         _setup_cmd_repeat();
         break;
@@ -3375,7 +3370,7 @@ static command_type _keycode_to_command( keycode_type key )
     case 'R': return CMD_REMOVE_JEWELLERY;
     case 'S': return CMD_SAVE_GAME;
     case 'T': return CMD_REMOVE_ARMOUR;
-    case 'V': return CMD_GET_VERSION;
+    case 'V': return CMD_NO_CMD;
     case 'W': return CMD_WEAR_ARMOUR;
     case 'X': return CMD_DISPLAY_MAP;
     case 'Z': return CMD_ZAP_WAND;

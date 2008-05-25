@@ -691,9 +691,7 @@ static void sdump_inventory(dump_params &par)
     char tmp_quant[20];
 
     for (i = 0; i < OBJ_GOLD; i++)
-    {
         inv_class2[i] = 0;
-    }
 
     for (i = 0; i < ENDOFPACK; i++)
     {
@@ -761,7 +759,7 @@ static void sdump_inventory(dump_params &par)
                         }
 
                         if (origin_describable(you.inv[j])
-                                && dump_item_origin(you.inv[j], ival))
+                            && dump_item_origin(you.inv[j], ival))
                         {
                             text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
                         }
@@ -1037,20 +1035,20 @@ static void sdump_kills_by_place(dump_params &par)
     std::string result = "";
 
     std::string header =
-"Table legend:\n"
-" A = Kills in this place as a percentage of kills in entire the game.\n"
-" B = Kills by you in this place as a percentage of kills by you in\n"
-"     the entire game.\n"
-" C = Kills by friends in this place as a percentage of kills by\n"
-"     friends in the entire game.\n"
-" D = Other kills in this place as a percentage of other kills in the\n"
-"     entire game.\n"
-" E = Character level experience gained in this place as a percentage of\n"
-"     character level experience gained in the entire game.\n"
-" F = Skills experience gained in this place as a percentage of skills\n"
-"     experience gained in the entire game.\n"
-" G = Experience gained in this place divided by the number of levels of\n"
-"     this place that you have seen.\n\n";
+    "Table legend:\n"
+    " A = Kills in this place as a percentage of kills in entire the game.\n"
+    " B = Kills by you in this place as a percentage of kills by you in\n"
+    "     the entire game.\n"
+    " C = Kills by friends in this place as a percentage of kills by\n"
+    "     friends in the entire game.\n"
+    " D = Other kills in this place as a percentage of other kills in the\n"
+    "     entire game.\n"
+    " E = Character level experience gained in this place as a percentage of\n"
+    "     character level experience gained in the entire game.\n"
+    " F = Skills experience gained in this place as a percentage of skills\n"
+    "     experience gained in the entire game.\n"
+    " G = Experience gained in this place divided by the number of levels of\n"
+    "     this place that you have seen.\n\n";
 
     header += "               ";
     header += "    A       B       C       D       E       F          G\n";
@@ -1119,16 +1117,17 @@ static void sdump_mutations(dump_params &par)
 const char *hunger_level(void)
 {
     return ((you.hunger <= 1000) ? "starving" :
-             (you.hunger <= 2600) ? "hungry" :
-             (you.hunger < 7000) ? "not hungry" :
-             (you.hunger < 11000) ? "full" : "completely stuffed");
+            (you.hunger <= 2600) ? "hungry" :
+            (you.hunger <  7000) ? "not hungry" :
+            (you.hunger < 11000) ? "full"
+                                 : "completely stuffed");
 }
 
 static std::string morgue_directory()
 {
-    std::string dir =
-        !Options.morgue_dir.empty()? Options.morgue_dir :
-        !SysEnv.crawl_dir.empty()  ? SysEnv.crawl_dir : "";
+    std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
+                       !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
+                                                   : "");
 
     if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;
@@ -1151,20 +1150,17 @@ void dump_map(FILE *fp)
         for (int j = Y_BOUND_1; j <= Y_BOUND_2; j++)
             if (env.map[i][j].known())
             {
-                if ( i > max_x )
-                    max_x = i;
-                if ( i < min_x )
-                    min_x = i;
-                if ( j > max_y )
-                    max_y = j;
-                if ( j < min_y )
-                    min_y = j;
+                if (i > max_x) max_x = i;
+                if (i < min_x) min_x = i;
+                if (j > max_y) max_y = j;
+                if (j < min_y) min_y = j;
             }
 
-    for ( int y = min_y; y <= max_y; ++y )
+    for (int y = min_y; y <= max_y; ++y)
     {
-        for ( int x = min_x; x <= max_x; ++x )
+        for (int x = min_x; x <= max_x; ++x)
             fputc( env.map[x][y].glyph(), fp );
+
         fputc('\n', fp);
     }
 
@@ -1176,7 +1172,7 @@ void dump_map(FILE *fp)
 void dump_map(const char* fname)
 {
     FILE* fp = fopen(fname, "w");
-    if ( !fp )
+    if (!fp)
         return;
 
     dump_map(fp);
@@ -1184,9 +1180,7 @@ void dump_map(const char* fname)
     fclose(fp);
 }
 
-static bool write_dump(
-        const std::string &fname,
-        dump_params &par)
+static bool write_dump( const std::string &fname, dump_params &par)
 {
     bool succeeded = false;
 
@@ -1225,25 +1219,29 @@ void display_notes()
 {
     Menu scr;
     scr.set_tag("notes");
-    scr.set_title( new MenuEntry("Turn   | Place   | Note"));
-    for ( unsigned int i = 0; i < note_list.size(); ++i )
+    scr.set_title(new MenuEntry("Turn   | Place   | Note"));
+    for (unsigned int i = 0; i < note_list.size(); ++i)
     {
         std::string prefix = note_list[i].describe(true, true, false);
         std::string suffix = note_list[i].describe(false, false, true);
-        if ( suffix.empty() )
+        if (suffix.empty())
             continue;
+
         int spaceleft = get_number_of_cols() - prefix.length() - 1;
-        if ( spaceleft <= 0 )
+        if (spaceleft <= 0)
             return;
+
         linebreak_string(suffix, spaceleft - 4, spaceleft);
         std::vector<std::string> parts = split_string("\n", suffix);
-        if ( parts.empty() ) // disregard pure-whitespace notes
+        if (parts.empty()) // disregard pure-whitespace notes
             continue;
+
         scr.add_entry(new MenuEntry(prefix + parts[0]));
         for ( unsigned int j = 1; j < parts.size(); ++j )
+        {
             scr.add_entry(new MenuEntry(std::string(prefix.length()-2, ' ') +
                                         std::string("| ") + parts[j]));
-
+        }
     }
     scr.show();
     redraw_screen();
