@@ -14,6 +14,7 @@
 #define MISC_H
 
 #include "externs.h"
+#include "religion.h"
 
 struct bolt;
 struct dist;
@@ -144,5 +145,8 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 void reveal_secret_door(int x, int y);
 
 std::string your_hand(bool plural);
+
+bool stop_attack_prompt(const monsters *mon, bool beam_attack,
+                        bool beam_target, god_conduct_trigger *conduct = NULL);
 
 #endif

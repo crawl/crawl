@@ -31,7 +31,6 @@
 #include "debug.h"
 #include "delay.h"
 #include "effects.h" // holy word
-#include "fight.h"
 #include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -200,45 +199,38 @@ int cast_smiting(int power, dist &beam)
 {
     bool success = false;
 
-    if (mgrd[beam.tx][beam.ty] == NON_MONSTER
-        || beam.isMe)
-    {
+    if (mgrd[beam.tx][beam.ty] == NON_MONSTER || beam.isMe)
         canned_msg(MSG_SPELL_FIZZLES);
-    }
     else
     {
         monsters *monster = &menv[mgrd[beam.tx][beam.ty]];
 
-        mprf("You smite %s!", monster->name(DESC_NOCAP_THE).c_str());
-
         god_conduct_trigger conduct;
         conduct.enabled = false;
 
-        if (mons_friendly(monster))
-            conduct.set(DID_ATTACK_FRIEND, 5, true, monster);
-        else if (mons_neutral(monster))
-            conduct.set(DID_ATTACK_NEUTRAL, 5, true, monster);
+        success = !stop_attack_prompt(monster, false, false, &conduct);
 
-        if (is_unchivalric_attack(&you, monster, monster))
-            conduct.set(DID_UNCHIVALRIC_ATTACK, 4, true, monster);
+        if (success)
+        {
+            mprf("You smite %s!", monster->name(DESC_NOCAP_THE).c_str());
 
-        if (mons_is_holy(monster))
-            conduct.set(DID_ATTACK_HOLY, monster->hit_dice, true, monster);
-
-        behaviour_event(monster, ME_ANNOY, MHITYOU);
+            behaviour_event(monster, ME_ANNOY, MHITYOU);
+        }
 
         conduct.enabled = true;
 
-        // Maxes out at around 40 damage at 27 Invocations, which is plenty
-        // in my book (the old max damage was around 70, which seems excessive)
-        hurt_monster(monster, 7 + (random2(power) * 33 / 191));
+        if (success)
+        {
+            // Maxes out at around 40 damage at 27 Invocations, which is
+            // plenty in my book (the old max damage was around 70,
+            // which seems excessive).
+            hurt_monster(monster, 7 + (random2(power) * 33 / 191));
 
-        if (monster->hit_points < 1)
-            monster_die(monster, KILL_YOU, 0);
-        else
-            print_wounds(monster);
-
-        success = true;
+            if (monster->hit_points < 1)
+                monster_die(monster, KILL_YOU, 0);
+            else
+                print_wounds(monster);
+        }
     }
 
     return (success);
@@ -248,51 +240,42 @@ int airstrike(int power, dist &beam)
 {
     bool success = false;
 
-    if (mgrd[beam.tx][beam.ty] == NON_MONSTER
-        || beam.isMe)
-    {
+    if (mgrd[beam.tx][beam.ty] == NON_MONSTER || beam.isMe)
         canned_msg(MSG_SPELL_FIZZLES);
-    }
     else
     {
         monsters *monster = &menv[mgrd[beam.tx][beam.ty]];
 
-        mprf("The air twists around and strikes %s!",
-             monster->name(DESC_NOCAP_THE).c_str());
+        god_conduct_trigger conduct;
+        conduct.enabled = false;
 
-        int hurted = 8 + random2( random2(4) + (random2(power) / 6)
-                                  + (random2(power) / 7) );
+        success = !stop_attack_prompt(monster, false, false, &conduct);
 
-        if ( mons_flies(monster) )
+        if (success)
         {
-            hurted *= 3;
-            hurted /= 2;
-        }
-
-        hurted -= random2(1 + monster->ac);
-
-        if (hurted < 0)
-            hurted = 0;
-
-        if (hurted)
-        {
-            god_conduct_trigger conduct;
-            conduct.enabled = false;
-
-            if (mons_friendly(monster))
-                conduct.set(DID_ATTACK_FRIEND, 5, true, monster);
-            else if (mons_neutral(monster))
-                conduct.set(DID_ATTACK_NEUTRAL, 5, true, monster);
-
-            if (is_unchivalric_attack(&you, monster, monster))
-                conduct.set(DID_UNCHIVALRIC_ATTACK, 5, true, monster);
-
-            if (mons_is_holy(monster))
-                conduct.set(DID_ATTACK_HOLY, monster->hit_dice, true, monster);
+            mprf("The air twists around and strikes %s!",
+                 monster->name(DESC_NOCAP_THE).c_str());
 
             behaviour_event(monster, ME_ANNOY, MHITYOU);
+        }
 
-            conduct.enabled = true;
+        conduct.enabled = true;
+
+        if (success)
+        {
+            int hurted = 8 + random2(random2(4) + (random2(power) / 6)
+                           + (random2(power) / 7));
+
+            if (mons_flies(monster))
+            {
+                hurted *= 3;
+                hurted /= 2;
+            }
+
+            hurted -= random2(1 + monster->ac);
+
+            if (hurted < 0)
+                hurted = 0;
 
             hurt_monster(monster, hurted);
 
@@ -301,8 +284,6 @@ int airstrike(int power, dist &beam)
             else
                 print_wounds(monster);
         }
-
-        success = true;
     }
 
     return (success);

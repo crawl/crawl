@@ -606,49 +606,7 @@ bool melee_attack::attack()
     conduct.enabled = false;
 
     if (attacker->atype() == ACT_PLAYER)
-    {
-        const bool inSanctuary   = (is_sanctuary(you.x_pos, you.y_pos)
-                                     || is_sanctuary(def->x, def->y));
-        const bool wontAttack    = mons_wont_attack(def);
-        const bool isFriendly    = mons_friendly(def);
-        const bool isNeutral     = mons_neutral(def);
-        const bool isUnchivalric = is_unchivalric_attack(&you, def, def);
-        const bool isHoly        = mons_is_holy(def);
-
-        if (inSanctuary || wontAttack
-            || (is_good_god(you.religion) && (isNeutral || isHoly))
-            || (you.religion == GOD_SHINING_ONE && isUnchivalric))
-        {
-            snprintf(info, INFO_SIZE, "Really attack the %s%s%s%s%s?",
-                                      (isUnchivalric) ? "helpless "
-                                                      : "",
-                                      (isFriendly)    ? "friendly " :
-                                      (wontAttack)    ? "non-hostile " :
-                                      (isNeutral)     ? "neutral "
-                                                      : "",
-                                      (isHoly)        ? "holy "
-                                                      : "",
-                                      def->name(DESC_PLAIN).c_str(),
-                                      (inSanctuary)   ? ", despite your sanctuary"
-                                                      : "");
-
-            if (you.confused() || yesno(info, false, 'n'))
-            {
-                if (isFriendly)
-                    conduct.set(DID_ATTACK_FRIEND, 5, true, def);
-                else if (isNeutral)
-                    conduct.set(DID_ATTACK_NEUTRAL, 5, true, def);
-
-                if (isUnchivalric)
-                    conduct.set(DID_UNCHIVALRIC_ATTACK, 4, true, def);
-
-                if (isHoly)
-                    conduct.set(DID_ATTACK_HOLY, def->hit_dice, true, def);
-            }
-            else
-                cancel_attack = true;
-        }
-    }
+        cancel_attack = stop_attack_prompt(def, false, false, &conduct);
 
     // Trying to stay general beyond this point is a recipe for insanity.
     // Maybe when Stone Soup hits 1.0... :-)

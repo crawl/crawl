@@ -49,6 +49,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "format.h"
@@ -2996,4 +2997,76 @@ std::string your_hand(bool plural)
         result += 's';
 
     return result;
+}
+
+bool stop_attack_prompt(const monsters *mon, bool beam_attack,
+                        bool beam_target, god_conduct_trigger *conduct)
+{
+    bool retval = false;
+    bool prompt = false;
+
+    const bool inSanctuary   = (is_sanctuary(you.x_pos, you.y_pos)
+                                 || is_sanctuary(mon->x, mon->y));
+    const bool wontAttack    = mons_wont_attack(mon);
+    const bool isFriendly    = mons_friendly(mon);
+    const bool isNeutral     = mons_neutral(mon);
+    const bool isUnchivalric = is_unchivalric_attack(&you, mon, mon);
+    const bool isHoly        = mons_is_holy(mon);
+
+    if (isFriendly)
+    {
+        // listed in the form: "your rat", "Blork"
+        snprintf(info, INFO_SIZE, "Really %s %s%s?",
+                 (beam_attack) ? (beam_target) ? "fire at"
+                                               : "fire through"
+                               : "attack",
+                 mon->name(DESC_NOCAP_THE).c_str(),
+                 (inSanctuary) ? ", despite your sanctuary"
+                               : "");
+        prompt = true;
+    }
+    else if (inSanctuary || wontAttack
+        || (is_good_god(you.religion) && (isNeutral || isHoly))
+        || (you.religion == GOD_SHINING_ONE && isUnchivalric))
+    {
+        // "Really fire through the helpless neutral holy Daeva?"
+        // was: "Really fire through this helpless neutral holy creature?"
+        snprintf(info, INFO_SIZE, "Really %s the %s%s%s%s%s?",
+                 (beam_attack) ? (beam_target) ? "fire at"
+                                               : "fire through"
+                               : "attack",
+                 (isUnchivalric) ? "helpless "
+                                 : "",
+                 (isFriendly)    ? "friendly " :
+                 (wontAttack)    ? "non-hostile " :
+                 (isNeutral)     ? "neutral "
+                                 : "",
+                 (isHoly)        ? "holy "
+                                 : "",
+                 mon->name(DESC_PLAIN).c_str(),
+                 (inSanctuary)   ? ", despite your sanctuary"
+                                 : "");
+        prompt = true;
+    }
+
+    if (you.confused() || (prompt && yesno(info, false, 'n')))
+    {
+        if (conduct)
+        {
+            if (isFriendly)
+                conduct->set(DID_ATTACK_FRIEND, 5, true, mon);
+            else if (isNeutral)
+                conduct->set(DID_ATTACK_NEUTRAL, 5, true, mon);
+
+            if (isUnchivalric)
+                conduct->set(DID_UNCHIVALRIC_ATTACK, 4, true, mon);
+
+            if (isHoly)
+                conduct->set(DID_ATTACK_HOLY, mon->hit_dice, true, mon);
+        }
+    }
+    else
+        retval = true;
+
+    return retval;
 }

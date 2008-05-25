@@ -35,7 +35,6 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
-#include "fight.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1190,42 +1189,35 @@ char burn_freeze(int pow, beam_type flavour)
 
     monsters *monster = &menv[mgr];
 
-    mprf("You %s %s.",
-         (flavour == BEAM_FIRE)        ? "burn" :
-         (flavour == BEAM_COLD)        ? "freeze" :
-         (flavour == BEAM_MISSILE)     ? "crush" :
-         (flavour == BEAM_ELECTRICITY) ? "zap"
-                                       : "______",
-         monster->name(DESC_NOCAP_THE).c_str());
+    god_conduct_trigger conduct;
+    conduct.enabled = false;
 
-    int hurted = roll_dice( 1, 3 + pow / 3 );
+    bool success = !stop_attack_prompt(monster, false, false, &conduct);
 
-    bolt beam;
-
-    beam.flavour = flavour;
-
-    if (flavour != BEAM_MISSILE)
-        hurted = mons_adjust_flavoured(monster, beam, hurted);
-
-    if (hurted)
+    if (success)
     {
-        god_conduct_trigger conduct;
-        conduct.enabled = false;
-
-        if (mons_friendly(monster))
-            conduct.set(DID_ATTACK_FRIEND, 5, true, monster);
-        else if (mons_neutral(monster))
-            conduct.set(DID_ATTACK_NEUTRAL, 5, true, monster);
-
-        if (is_unchivalric_attack(&you, monster, monster))
-            conduct.set(DID_UNCHIVALRIC_ATTACK, 4, true, monster);
-
-        if (mons_is_holy(monster))
-            conduct.set(DID_ATTACK_HOLY, monster->hit_dice);
+        mprf("You %s %s.",
+             (flavour == BEAM_FIRE)        ? "burn" :
+             (flavour == BEAM_COLD)        ? "freeze" :
+             (flavour == BEAM_MISSILE)     ? "crush" :
+             (flavour == BEAM_ELECTRICITY) ? "zap"
+                                           : "______",
+             monster->name(DESC_NOCAP_THE).c_str());
 
         behaviour_event(monster, ME_ANNOY, MHITYOU);
+    }
 
-        conduct.enabled = true;
+    conduct.enabled = true;
+
+    if (success)
+    {
+        bolt beam;
+        beam.flavour = flavour;
+
+        int hurted = roll_dice(1, 3 + pow / 3);
+
+        if (flavour != BEAM_MISSILE)
+            hurted = mons_adjust_flavoured(monster, beam, hurted);
 
         hurt_monster(monster, hurted);
 
@@ -1237,7 +1229,7 @@ char burn_freeze(int pow, beam_type flavour)
 
             if (flavour == BEAM_COLD)
             {
-                if (mons_class_flag( monster->type, M_COLD_BLOOD )
+                if (mons_class_flag(monster->type, M_COLD_BLOOD)
                     && coinflip())
                 {
                     monster->add_ench(ENCH_SLOW);
