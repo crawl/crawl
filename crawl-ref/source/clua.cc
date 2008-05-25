@@ -1227,6 +1227,13 @@ static int l_item_subtype(lua_State *ls)
                 else if (item->sub_type == POT_CURE_MUTATION)
                    s = "cure mutation";
             }
+            else if (item->base_type == OBJ_BOOKS)
+            {
+                if (item->sub_type == BOOK_MANUAL)
+                    s = "manual";
+                else
+                    s = "spellbook";
+            }
 
             if (s)
                 lua_pushstring(ls, s);

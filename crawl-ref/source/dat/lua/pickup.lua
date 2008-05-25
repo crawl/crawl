@@ -100,8 +100,9 @@ function ch_autopickup(it)
        return food.can_eat(it, false)
     end
 
-    if item.class(it) == "Books" and you.god() == "Trog"
-       then return false
+    if item.class(it) == "Books" and item.subtype(it) == "spellbook" 
+         and you.god() == "Trog" then
+       return false
     end
 
     if item.class(it) == "Jewellery" then

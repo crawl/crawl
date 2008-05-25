@@ -898,8 +898,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // killing triggers tutorial lesson
             _tutorial_inspect_kill();
 
-            // prevent summoned creatures from being good kills
-            if (bad_kill || (!created_friendly && gives_xp))
+            // Prevent summoned creatures from being good kills.
+            if (bad_kill || !created_friendly && gives_xp)
             {
                 if (mons_holiness(monster) == MH_NATURAL)
                 {
@@ -932,7 +932,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                     monster->hit_dice, true, monster);
                 }
 
-                // jmf: Trog hates wizards
+                // jmf: Trog hates wizards.
                 if (mons_is_magic_user(monster))
                 {
                     did_god_conduct(DID_KILL_WIZARD,
@@ -972,7 +972,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             }
 
             if (!created_friendly && gives_xp
-                && (you.religion == GOD_MAKHLEB || you.religion == GOD_VEHUMET
+                && (you.religion == GOD_MAKHLEB
+                    || you.religion == GOD_VEHUMET
                     || you.religion == GOD_SHINING_ONE
                        && mons_is_evil_or_unholy(monster))
                 && !player_under_penance()
@@ -1057,7 +1058,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 else if (you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
                          || you.religion == GOD_SHINING_ONE
-                         || (!anon && testbits(menv[i].flags, MF_GOD_GIFT)))
+                         || !anon && testbits(menv[i].flags, MF_GOD_GIFT))
                 {
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necromancy vs Summoning (ignoring

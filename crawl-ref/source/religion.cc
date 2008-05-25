@@ -4969,7 +4969,7 @@ void god_pitch(god_type which_god)
         if (_magic_users_attitude_change())
             mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
 
-        mpr("You can now call upon Trog to burn books in your surroundings.",
+        mpr("You can now call upon Trog to burn spellbooks in your surroundings.",
             MSGCH_GOD);
     }
 
