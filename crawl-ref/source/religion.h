@@ -29,6 +29,31 @@ enum harm_protection_type
     NUM_HPTS
 };
 
+// Calls did_god_conduct() when the object goes out of scope.
+struct god_conduct_trigger
+{
+    conduct_type conduct;
+    int pgain;
+    bool known;
+    bool enabled;
+    std::auto_ptr<monsters> victim;
+
+    god_conduct_trigger(conduct_type c = NUM_CONDUCTS,
+                        int pg = 0,
+                        bool kn = true,
+                        const monsters *vict = NULL);
+
+    void set(conduct_type c = NUM_CONDUCTS,
+             int pg = 0,
+             bool kn = true,
+             const monsters *vict = NULL);
+
+    ~god_conduct_trigger();
+};
+
+bool is_evil_god(god_type god);
+bool is_good_god(god_type god);
+bool is_chaotic_god(god_type god);
 bool is_priest_god(god_type god);
 void simple_god_message( const char *event, god_type which_deity = GOD_NO_GOD );
 int piety_breakpoint(int i);
@@ -82,31 +107,5 @@ bool bless_follower(monsters *follower = NULL,
                     bool force = false);
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
-
-bool is_evil_god(god_type god);
-bool is_good_god(god_type god);
-bool is_chaotic_god(god_type god);
-
-// Calls did_god_conduct when the object goes out of scope.
-struct god_conduct_trigger
-{
-    conduct_type conduct;
-    int pgain;
-    bool known;
-    bool enabled;
-    std::auto_ptr<monsters> victim;
-
-    god_conduct_trigger(conduct_type c = NUM_CONDUCTS,
-                        int pg = 0,
-                        bool kn = true,
-                        const monsters *vict = NULL);
-
-    void set(conduct_type c = NUM_CONDUCTS,
-             int pg = 0,
-             bool kn = true,
-             const monsters *vict = NULL);
-
-    ~god_conduct_trigger();
-};
 
 #endif

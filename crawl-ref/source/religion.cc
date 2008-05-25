@@ -103,6 +103,7 @@ enum piety_gain_t
     PIETY_NONE, PIETY_SOME, PIETY_LOTS,
     NUM_PIETY_GAIN
 };
+
 static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
 {
     // No god
@@ -380,6 +381,40 @@ static bool _make_god_gifts_hostile(bool level_only = true);
 static void _print_sacrifice_message(god_type, const item_def &,
                                      piety_gain_t, bool = false);
 
+/////////////////////////////////////////////////////////////////////
+// god_conduct_trigger
+
+god_conduct_trigger::god_conduct_trigger(
+    conduct_type c, int pg, bool kn, const monsters *vict)
+  : conduct(c), pgain(pg), known(kn), enabled(true), victim(NULL)
+{
+    if (vict)
+    {
+        victim.reset(new monsters);
+        *(victim.get()) = *vict;
+    }
+}
+
+void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
+                              const monsters *vict)
+{
+    conduct = c;
+    pgain = pg;
+    known = kn;
+    victim.reset(NULL);
+    if (vict)
+    {
+        victim.reset(new monsters);
+        *victim.get() = *vict;
+    }
+}
+
+god_conduct_trigger::~god_conduct_trigger()
+{
+    if (enabled && conduct != NUM_CONDUCTS)
+        did_god_conduct(conduct, pgain, known, victim.get());
+}
+
 bool is_evil_god(god_type god)
 {
     return
@@ -398,19 +433,19 @@ bool is_good_god(god_type god)
         god == GOD_ELYVILON;
 }
 
+bool is_chaotic_god(god_type god)
+{
+    return
+        god == GOD_MAKHLEB ||
+        god == GOD_XOM;
+}
+
 bool is_priest_god(god_type god)
 {
     return
         god == GOD_ZIN ||
         god == GOD_YREDELEMNUL ||
         god == GOD_BEOGH;
-}
-
-bool is_chaotic_god(god_type god)
-{
-    return
-        god == GOD_MAKHLEB ||
-        god == GOD_XOM;
 }
 
 void dec_penance(god_type god, int val)
@@ -5410,38 +5445,4 @@ bool tso_unchivalric_attack_safe_monster(const actor *act)
 {
     const mon_holy_type holiness = act->holiness();
     return (holiness != MH_NATURAL && holiness != MH_HOLY);
-}
-
-/////////////////////////////////////////////////////////////////////
-// god_conduct_trigger
-
-god_conduct_trigger::god_conduct_trigger(
-    conduct_type c, int pg, bool kn, const monsters *vict)
-  : conduct(c), pgain(pg), known(kn), enabled(true), victim(NULL)
-{
-    if (vict)
-    {
-        victim.reset(new monsters);
-        *(victim.get()) = *vict;
-    }
-}
-
-void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
-                              const monsters *vict)
-{
-    conduct = c;
-    pgain = pg;
-    known = kn;
-    victim.reset(NULL);
-    if (vict)
-    {
-        victim.reset(new monsters);
-        *victim.get() = *vict;
-    }
-}
-
-god_conduct_trigger::~god_conduct_trigger()
-{
-    if (enabled && conduct != NUM_CONDUCTS)
-        did_god_conduct(conduct, pgain, known, victim.get());
 }
