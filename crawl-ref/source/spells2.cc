@@ -336,6 +336,7 @@ int animate_dead( actor *caster, int power, beh_type corps_beh,
     int yinc = 1;
 
     int number_raised = 0;
+    int number_seen   = 0;
 
     if (coinflip())
     {
@@ -374,8 +375,11 @@ int animate_dead( actor *caster, int power, beh_type corps_beh,
                         if (is_animatable_corpse(mitm[objl])
                             && !is_being_butchered(mitm[objl]))
                         {
-                            number_raised += raise_corpse(objl, a.x, a.y,
+                            int num = raise_corpse(objl, a.x, a.y,
                                                 corps_beh, corps_hit, actual);
+                            number_raised += num;
+                            if (see_grid(env.show, you.pos(), a))
+                                number_seen += num;
                             break;
                         }
 
@@ -392,7 +396,7 @@ int animate_dead( actor *caster, int power, beh_type corps_beh,
     if (actual == 0)
         return number_raised;
 
-    if (number_raised > 0)
+    if (number_seen > 0)
     {
         mpr("The dead are walking!");
     }
@@ -417,7 +421,8 @@ int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
             rc = raise_corpse(objl, axps, ayps, corps_beh, corps_hit, 1);
             if ( rc )
             {
-                mpr("The dead are walking!");
+                if (is_terrain_seen(axps, ayps))
+                    mpr("The dead are walking!");
 
                 if (was_butchering)
                     xom_is_stimulated(255);
