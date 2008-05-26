@@ -2438,7 +2438,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 
 // Count the number of matching features between two points along
 // a beam-like path; the path will pass through solid features.
-// By default, it excludes enpoints from the count.
+// By default, it excludes end points from the count.
 int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
                       dungeon_feature_type min_feat,
                       dungeon_feature_type max_feat,
@@ -3632,7 +3632,7 @@ bool see_grid( const coord_def &p )
     return see_grid(env.show, you.pos(), p);
 }
 
-// answers the question: "Would a grid be within character's line of sight,
+// Answers the question: "Would a grid be within character's line of sight,
 // even if all translucent/clear walls were made opaque?"
 bool see_grid_no_trans( const coord_def &p )
 {
@@ -3643,6 +3643,25 @@ bool see_grid_no_trans( const coord_def &p )
 bool trans_wall_blocking( const coord_def &p )
 {
     return see_grid(p) && !see_grid_no_trans(p);
+}
+
+// Usually calculates whether from one grid someone could see the other.
+// Depending on the viewer's habitat, 'allowed' can be set to DNGN_FLOOR,
+// DNGN_SHALLOW_WATER or DNGN_DEEP_WATER.
+// Yes, this ignores lava-loving monsters.
+bool grid_see_grid(int posx_1, int posy_1, int posx_2, int posy_2,
+                   dungeon_feature_type allowed)
+{
+    if (distance(posx_1, posy_1, posx_2, posy_2) > LOS_RADIUS * LOS_RADIUS)
+        return (false);
+
+    dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
+    if (allowed != DNGN_UNSEEN)
+        max_disallowed = static_cast<dungeon_feature_type>(allowed - 1);
+
+    // XXX: Ignoring clouds for now.
+    return (num_feats_between(posx_1, posy_1, posx_2, posy_2, DNGN_UNSEEN,
+                              max_disallowed) == 0);
 }
 
 static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =

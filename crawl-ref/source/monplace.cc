@@ -188,8 +188,8 @@ static void hell_spawn_random_monsters()
     if (one_chance_in(genodds))
     {
         mgen_data mg(WANDERING_MONSTER);
-        mg.proximity =
-            (one_chance_in(10) ? PROX_NEAR_STAIRS : PROX_AWAY_FROM_PLAYER);
+        mg.proximity = (one_chance_in(10) ? PROX_NEAR_STAIRS
+                                          : PROX_AWAY_FROM_PLAYER);
         mons_place(mg);
         viewwindow(true, false);
     }
@@ -1737,12 +1737,12 @@ int mons_place( mgen_data mg )
         mg.cls = RANDOM_MONSTER;
     }
 
-    // all monsters have been assigned? {dlb}
+    // All monsters have been assigned? {dlb}
     if (mon_count >= MAX_MONSTERS - 1)
         return (-1);
 
-    // this gives a slight challenge to the player as they ascend the
-    // dungeon with the Orb
+    // This gives a slight challenge to the player as they ascend the
+    // dungeon with the Orb.
     if (you.char_direction == GDT_ASCENDING && mg.cls == RANDOM_MONSTER
         && you.level_type == LEVEL_DUNGEON && !mg.summoned())
     {
@@ -1776,8 +1776,8 @@ int mons_place( mgen_data mg )
 
     monsters *creation = &menv[mid];
 
-    // look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT
-    // alert summoned being to player's presence
+    // Look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT.
+    // Alert summoned being to player's presence.
     if (mg.behaviour > NUM_BEHAVIOURS)
     {
         if (mg.behaviour == BEH_FRIENDLY || mg.behaviour == BEH_GOD_GIFT)
@@ -1801,6 +1801,10 @@ int mons_place( mgen_data mg )
         if (creation->type == MONS_RAKSHASA_FAKE && !one_chance_in(3))
             creation->add_ench(ENCH_INVIS);
     }
+
+    if (mg.needs_patrol_point())
+        creation->patrol_point = coord_def(creation->x, creation->y);
+
     return (mid);
 }
 

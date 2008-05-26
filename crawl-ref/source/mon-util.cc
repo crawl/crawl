@@ -4739,6 +4739,13 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         target_x  = you.x_pos;
         target_y  = you.y_pos;
         foe       = MHITYOU;
+
+        if (is_patrolling())
+        {
+            // Enslaved monsters stop patrolling and forget their patrol point,
+            // they're supposed to follow you now.
+            patrol_point = coord_def(0, 0);
+        }
         break;
 
     default:
@@ -4836,6 +4843,13 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // and fire activity interrupts
             interrupt_activity(AI_SEE_MONSTER,
                                activity_interrupt_data(this, "uncharm"));
+        }
+
+        if (is_patrolling())
+        {
+            // Enslaved monsters stop patrolling and forget their patrol point,
+            // in case they were on order to wait.
+            patrol_point = coord_def(0, 0);
         }
 
         // reevaluate behaviour

@@ -194,6 +194,8 @@ bool see_grid( const env_show_grid &show,
 bool see_grid(const coord_def &p);
 bool see_grid_no_trans( const coord_def &p );
 bool trans_wall_blocking( const coord_def &p );
+bool grid_see_grid(int posx_1, int posy_1, int posx_2, int posy_2,
+                   dungeon_feature_type allowed = DNGN_UNSEEN);
 
 inline bool see_grid( int grx, int gry )
 {
