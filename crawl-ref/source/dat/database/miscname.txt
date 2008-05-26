@@ -115,6 +115,10 @@ Angular
 
 Sinuous
 
+Faded
+
+Shifting
+
 %%%%
 writing_noun
 
