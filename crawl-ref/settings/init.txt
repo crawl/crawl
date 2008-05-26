@@ -9,8 +9,8 @@
 # The options for monster glyphs and item colours don't matter for Tiles.
 # (New players should just ignore these lines.)
 #
-# include                   docs/034_monster_glyphs.txt
-# additional_macro_file   = docs/034_command_keys.txt
+# include                   034_monster_glyphs.txt
+# additional_macro_file   = 034_command_keys.txt
 # classic_item_colours    = true
 # classic_hud             = true
 # use_old_selection_order = true
