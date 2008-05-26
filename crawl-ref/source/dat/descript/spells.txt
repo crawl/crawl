@@ -361,7 +361,7 @@ This spell throws a crackling sphere of destructive energy.
 %%%%
 Lee's Rapid Deconstruction
 
-This spell throws a heavy sphere of metal which explodes on impact into a rain of deadly, jagged fragments. It can rip a creature to shreds, but proves ineffective against heavily-armoured targets. It can also be used on walls.
+This spells fragments a wall into an explosion of deadly shrapnel.  It can also be used directly on monsters made of wall-like substances.
 %%%%
 Lehudib's Crystal Spear
 
