@@ -805,17 +805,20 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 8:
-        temp_rand = random2(9);
-        mprf("You hear %s.",
-             (temp_rand == 0) ? "snatches of song"                 :
-             (temp_rand == 1) ? "a voice call someone else's name" :
-             (temp_rand == 2) ? "a very strange noise"             :
-             (temp_rand == 3) ? "roaring flame"                    :
-             (temp_rand == 4) ? "a very strange noise indeed"      :
-             (temp_rand == 5) ? "the chiming of a distant gong"    :
-             (temp_rand == 6) ? "the bellowing of a yak"           :
-             (temp_rand == 7) ? "a crunching sound"
-                              : "the tinkle of an enormous bell");
+        if (!silenced(you.x_pos, you.y_pos))
+        {
+            temp_rand = random2(9);
+            mprf("You hear %s.",
+                 (temp_rand == 0) ? "snatches of song"                 :
+                 (temp_rand == 1) ? "a voice call someone else's name" :
+                 (temp_rand == 2) ? "a very strange noise"             :
+                 (temp_rand == 3) ? "roaring flame"                    :
+                 (temp_rand == 4) ? "a very strange noise indeed"      :
+                 (temp_rand == 5) ? "the chiming of a distant gong"    :
+                 (temp_rand == 6) ? "the bellowing of a yak"           :
+                 (temp_rand == 7) ? "a crunching sound"
+                                  : "the tinkle of an enormous bell");
+        }
         break;
     }
 
