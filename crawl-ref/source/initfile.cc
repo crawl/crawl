@@ -1133,7 +1133,9 @@ static std::string _find_crawlrc()
         }
     }
 
-    return ("");
+    // Last attempt: pick up init.txt from datafile_path, which will
+    // also search the settings/ directory.
+    return (datafile_path("init.txt", false, false));
 }
 
 // Returns an error message if the init.txt was not found.

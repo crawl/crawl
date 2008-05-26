@@ -36,7 +36,7 @@ MCHMOD := 2755
 # Permissions to set on the save directory.
 MCHMOD_SAVEDIR := 775
 
-# The user:group to install the game as. 
+# The user:group to install the game as.
 INSTALL_UGRP := games:games
 
 INSTALLDIR   := /usr/games/crawl
@@ -225,13 +225,13 @@ endif
 #
 
 install: $(GAME)
+ifeq ($(DATADIR),)
+	$(error DATADIR not set! Set DATADIR and run make clean install again)
+endif
 	[ -d $(INSTALLDIR) ] || mkdir -p $(INSTALLDIR)
 	$(COPY) $(GAME) $(INSTALLDIR)
 	chown $(INSTALL_UGRP) $(INSTALLDIR)/$(GAME)
 	chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
-ifeq ($(DATADIR),)
-	$(error DATADIR not set! Set DATADIR and run make clean install again)
-endif
 	mkdir -p $(DATADIR)/dat
 	mkdir -p $(DATADIR)/dat/lua
 	mkdir -p $(DATADIR)/dat/clua
@@ -242,6 +242,8 @@ endif
 	cp dat/clua/*.lua $(DATADIR)/dat/clua
 	cp dat/descript/*.txt $(DATADIR)/dat/descript
 	cp dat/database/*.txt $(DATADIR)/dat/database
+	mkdir -p $(DATADIR)/settings
+	cp ../settings/* $(DATADIR)/settings/
 	mkdir -p $(DATADIR)/docs
 	cp ../docs/*.txt $(DATADIR)/docs
 	chown -R $(INSTALL_UGRP) $(DATADIR)
