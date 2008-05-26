@@ -21,9 +21,9 @@
 enum acquirement_agent_type
 {
     AQ_SCROLL   = 0,
-    
+
     // Empty space for the gods
-    
+
     AQ_CARD_GENIE = 100,
 
     AQ_WIZMODE          = 200
@@ -46,6 +46,7 @@ bool items_stack( const item_def &item1, const item_def &item2,
                   bool force = false );
 
 item_def find_item_type(object_class_type base_type, std::string name);
+item_def *find_floor_item(object_class_type cls, int sub_type);
 
 void init_item( int item );
 
@@ -93,7 +94,7 @@ void pickup(void);
 /* ***********************************************************************
  * called from: beam - items - transfor
  * *********************************************************************** */
-bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos, 
+bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
                         int quant_drop = -1,    // item.quantity by default
                         bool mark_dropped = false);
 

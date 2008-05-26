@@ -748,7 +748,6 @@ static int item_name_specialness(const item_def& item)
 
 void item_check(bool verbose)
 {
-
     describe_floor();
     origin_set(you.x_pos, you.y_pos);
 
@@ -2342,6 +2341,27 @@ int inv_count(void)
             count++;
 
     return count;
+}
+
+item_def *find_floor_item(object_class_type cls, int sub_type)
+{
+    int item = NON_ITEM;
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+        {
+            item = igrd[x][y];
+            while (item != NON_ITEM)
+            {
+                item_def &i(mitm[item]);
+
+                if (is_valid_item(i) && i.base_type == cls
+                    && i.sub_type == sub_type)
+                    return (&i);
+
+                item = i.link;
+            }
+        }
+    return (NULL);
 }
 
 static bool find_subtype_by_name(item_def &item,

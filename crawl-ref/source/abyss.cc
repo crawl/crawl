@@ -73,7 +73,8 @@ void generate_abyss(void)
     int temp_rand;              // probability determination {dlb}
 
 #if DEBUG_ABYSS
-    mpr("generate_abyss().", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS,
+         "generate_abyss(); turn_on_level: %d", env.turns_on_level);
 #endif
 
     for (i = 5; i < (GXM - 5); i++)
@@ -96,12 +97,51 @@ void generate_abyss(void)
     }
 }
 
+// Returns the roll to use to check if we want to create an abyssal rune.
+static int _abyssal_rune_roll()
+{
+    if (you.attribute[ATTR_ABYSSAL_RUNES])
+        return (-1);
+
+    // The longer the player's hung around in the Abyss, the more
+    // likely the rune. Never generate a new rune if the player
+    // already found one, but make the Abyssal rune eligible for
+    // generation again if the player loses it.
+
+    // If the player leaves the Abyss turns_on_level resets to 0. So
+    // hang in there if you want your Abyssal rune fix quick. :P
+
+    // Worshippers of Lugonu with decent piety will attract the rune
+    // to themselves.
+
+    const bool lugonu_favoured =
+        (you.religion == GOD_LUGONU && !player_under_penance()
+         && you.piety > 120);
+
+    const int cutoff = lugonu_favoured ? 50 : 500;
+    const int scale = lugonu_favoured ? 10 : 40;
+
+    const int odds =
+        std::max(200 - std::max((env.turns_on_level - cutoff) / scale, 0), 6);
+#ifdef DEBUG_ABYSS
+    mprf(MSGCH_DIAGNOSTICS, "Abyssal rune odds: 1 in %d", odds);
+#endif
+    return (odds);
+}
+
 static void generate_area(int gx1, int gy1, int gx2, int gy2)
 {
+    // Any rune on the floor prevents the abyssal rune from being generated.
+    bool placed_abyssal_rune =
+        find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
+
 #if DEBUG_ABYSS
-    mpr("generate_area().", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS,
+         "generate_area(). turns_on_level: %d, rune_on_floor: %s",
+         env.turns_on_level, placed_abyssal_rune? "yes" : "no");
 #endif
 
+    const int abyssal_rune_roll = _abyssal_rune_roll();
     int items_placed = 0;
     const int thickness = random2(70) + 30;
     int thing_created;
@@ -166,10 +206,12 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
 
                 if (items_placed < 150 && one_chance_in(200))
                 {
-                    if (one_chance_in(200))
+                    if (!placed_abyssal_rune && abyssal_rune_roll != -1
+                        && one_chance_in(abyssal_rune_roll))
                     {
                         thing_created = items(1, OBJ_MISCELLANY,
                                               MISC_RUNE_OF_ZOT, true, 51, 51);
+                        placed_abyssal_rune = true;
 #if DEBUG_ABYSS
                         mpr("Placing an Abyssal rune.", MSGCH_DIAGNOSTICS);
 #endif
@@ -269,7 +311,8 @@ static int abyss_rune_nearness()
             if (!in_bounds(x, y))
                 continue;
 
-            // HACK: Why doesn't is_terrain_known() work here?
+            // is_terrain_known() doesn't work on unmappable levels because
+            // mapping flags are not set on such levels.
             if (get_screen_glyph(x, y) != ' ')
             {
                 int i = igrd[x][y];
@@ -427,7 +470,8 @@ void area_shift(void)
 
     you.moveto(45, 35);
 
-    generate_area(5, 5, (GXM - 5), (GYM - 5));
+    generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
+                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER);
 
     xom_check_nearness();
 
@@ -529,7 +573,8 @@ void abyss_teleport( bool new_area )
 
     you.moveto(45, 35);
 
-    generate_area( 10, 10, (GXM - 10), (GYM - 10) );
+    generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
+                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER);
 
     xom_check_nearness();
 
