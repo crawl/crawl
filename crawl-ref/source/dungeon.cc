@@ -233,6 +233,7 @@ static void _dgn_set_floor_colours();
 map_mask dgn_Map_Mask;
 std::vector<vault_placement> Level_Vaults;
 std::string dgn_Build_Method;
+std::string dgn_Layout_Type;
 
 static int vault_chance = 9;
 static int minivault_chance = 3;
@@ -307,6 +308,8 @@ bool builder(int level_number, int level_type)
 
         if (!dgn_level_vetoed && _valid_dungeon_level(level_number, level_type))
         {
+            dgn_Layout_Type.clear();
+
             _dgn_map_colour_fixup();
             return (true);
         }
@@ -322,6 +325,8 @@ bool builder(int level_number, int level_type)
                   make_stringf("Unable to generate level for '%s'!",
                                level_id::current().describe().c_str()).c_str());
     }
+
+    dgn_Layout_Type.clear();
     return (false);
 }
 
@@ -716,6 +721,7 @@ static bool _valid_dungeon_level(int level_number, int level_type)
 static void _reset_level()
 {
     dgn_Build_Method.clear();
+    dgn_Layout_Type.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
 
@@ -1160,12 +1166,15 @@ static void _build_dungeon_level(int level_number, int level_type)
 {
     spec_room sr;
 
+    dgn_Layout_Type = "rooms";
+
     _build_layout_skeleton(level_number, level_type, sr);
 
     if (you.level_type == LEVEL_LABYRINTH
         || you.level_type == LEVEL_PORTAL_VAULT
         || dgn_level_vetoed)
     {
+        dgn_Layout_Type.clear();
         return;
     }
 
@@ -1510,6 +1519,8 @@ static void _place_base_islands(int margin, int num_islands, int estradius,
 
 static void _prepare_shoals(int level_number)
 {
+    dgn_Layout_Type = "shaols";
+
     // dpeg's algorithm.
     // We could have just used spotty_level() and changed rock to
     // water, but this is much cooler. Right?
@@ -1667,6 +1678,8 @@ static void _prepare_shoals(int level_number)
 
 static void _prepare_swamp()
 {
+    dgn_Layout_Type = "swamp";
+
     const int margin = 10;
 
     for (int i = margin; i < (GXM - margin); i++)
@@ -5607,6 +5620,12 @@ static object_class_type _item_in_shop(unsigned char shop_type)
 void spotty_level(bool seeded, int iterations, bool boxy)
 {
     dgn_Build_Method = "spotty_level";
+    if (dgn_Layout_Type == "open" || dgn_Layout_Type == "cross")
+        dgn_Layout_Type = "open";
+    else if (iterations >= 100)
+        dgn_Layout_Type  = "caves";
+    else
+        dgn_Layout_Type += "_spotty";
 
     // assumes starting with a level full of rock walls (1)
     int i, j, k, l;
@@ -5729,6 +5748,7 @@ void smear_feature(int iterations, bool boxy, dungeon_feature_type feature,
 static void _bigger_room()
 {
     dgn_Build_Method = "bigger_room";
+    dgn_Layout_Type  = "open";
 
     unsigned char i, j;
 
@@ -5764,6 +5784,7 @@ static void _bigger_room()
 static void _plan_main(int level_number, int force_plan)
 {
     dgn_Build_Method = "plan_main";
+    dgn_Layout_Type  = "rooms";
 
     // possible values for do_stairs:
     //  0 - stairs already done
@@ -5810,8 +5831,9 @@ static void _plan_main(int level_number, int force_plan)
 static char _plan_1(int level_number)
 {
     dgn_Build_Method = "plan_1";
+    dgn_Layout_Type  = "open";
 
-    const int vault = random_map_for_tag("layout", false, true);
+    const int vault = find_map_by_name("layout_forbidden_donut");
     ASSERT(vault != -1);
 
     bool success = _build_vaults(level_number, vault);
@@ -5823,8 +5845,9 @@ static char _plan_1(int level_number)
 static char _plan_2(int level_number)
 {
     dgn_Build_Method = "plan_2";
+    dgn_Layout_Type  = "cross";
 
-    const int vault = random_map_for_tag("layout", false, true);
+    const int vault = find_map_by_name("layout_cross");
     ASSERT(vault != -1);
 
     bool success = _build_vaults(level_number, vault);
@@ -5836,6 +5859,7 @@ static char _plan_2(int level_number)
 static char _plan_3()
 {
     dgn_Build_Method = "plan_3";
+    dgn_Layout_Type  = "rooms";
 
     /* Draws a room, then another and links them together, then another and etc
        Of course, this can easily end up looking just like a make_trail level.
@@ -5928,6 +5952,7 @@ static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                     char forbid_y2, dungeon_feature_type force_wall)
 {
     dgn_Build_Method = "plan_4";
+    dgn_Layout_Type  = "city";
 
     // a more chaotic version of city level
     int temp_rand;              // req'd for probability checking
@@ -6033,6 +6058,7 @@ static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
 static char _plan_5()
 {
     dgn_Build_Method = "plan_5";
+    dgn_Layout_Type  = "misc"; // XXX: What type of layout is this?
 
     unsigned char imax = 5 + random2(20);       // value range of [5,24] {dlb}
 
@@ -6053,8 +6079,9 @@ static char _plan_5()
 static char _plan_6(int level_number)
 {
     dgn_Build_Method = "plan_6";
+    dgn_Layout_Type  = "open"; // Octagon with pillars in middle
 
-    const int vault = random_map_for_tag("layout", false, true);
+    const int vault = find_map_by_name("layout_big_octagon");
     ASSERT(vault != -1);
 
     bool success = _build_vaults(level_number, vault);
@@ -6376,6 +6403,8 @@ static void _labyrinth_place_entry_point(const dgn_region &region,
 
 static void _labyrinth_level(int level_number)
 {
+    dgn_Layout_Type = "labyrinth";
+
     dgn_region lab = dgn_region::absolute( LABYRINTH_BORDER,
                                            LABYRINTH_BORDER,
                                            GXM - LABYRINTH_BORDER - 1,
@@ -6616,6 +6645,9 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
 
 static void _city_level(int level_number)
 {
+    dgn_Build_Method = "city_level";
+    dgn_Layout_Type  = "city";
+
     int temp_rand;          // probability determination {dlb}
     // remember, can have many wall types in one level
     dungeon_feature_type wall_type;

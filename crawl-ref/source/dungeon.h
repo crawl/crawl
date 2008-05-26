@@ -56,6 +56,7 @@ typedef char map_type[MAP_SIDE + 1][MAP_SIDE + 1];
 typedef FixedArray<unsigned short, GXM, GYM> map_mask;
 
 extern map_mask dgn_Map_Mask;
+extern std::string dgn_Layout_Type;
 
 // Map mask constants.
 

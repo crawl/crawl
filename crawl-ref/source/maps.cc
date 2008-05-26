@@ -329,6 +329,14 @@ static bool vault_unforbidden(const map_def &map)
                                you.uniq_map_tags.end()));
 }
 
+static bool map_matches_layout_type(const map_def &map)
+{
+    if (dgn_Layout_Type.empty() || !map.has_tag_prefix("layout_"))
+        return true;
+
+    return map.has_tag("layout_" + dgn_Layout_Type);
+}
+
 int find_map_by_name(const std::string &name)
 {
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
@@ -362,6 +370,7 @@ int random_map_for_place(const level_id &place, bool want_minivault)
         if (vdefs[i].place == place
             && vdefs[i].is_minivault() == want_minivault
             && !vdefs[i].has_tag("layout")
+            && map_matches_layout_type(vdefs[i])
             && vault_unforbidden(vdefs[i]))
         {
             rollsize += vdefs[i].chance;
@@ -388,6 +397,8 @@ int random_map_in_depth(const level_id &place, bool want_minivault)
     int mapindex = -1;
     int rollsize = 0;
 
+    const bool check_layout = (place == level_id::current());
+
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].is_minivault() == want_minivault
             && !vdefs[i].place.is_valid()
@@ -400,6 +411,7 @@ int random_map_in_depth(const level_id &place, bool want_minivault)
             && !vdefs[i].has_tag("unrand")
             && !vdefs[i].has_tag("bazaar")
             && !vdefs[i].has_tag("layout")
+            && (!check_layout || map_matches_layout_type(vdefs[i]))
             && vault_unforbidden(vdefs[i]))
         {
             rollsize += vdefs[i].chance;
@@ -426,6 +438,7 @@ int random_map_for_tag(const std::string &tag,
         if (vdefs[i].has_tag(tag) && vdefs[i].is_minivault() == want_minivault
             && (!check_depth || !vdefs[i].has_depth()
                 || vdefs[i].is_usable_in(level_id::current()))
+            && map_matches_layout_type(vdefs[i])
             && vault_unforbidden(vdefs[i]))
         {
             rollsize += vdefs[i].chance;
