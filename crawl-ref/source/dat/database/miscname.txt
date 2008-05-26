@@ -10,6 +10,7 @@
 ######################################################
 %%%%
 glowing_adj
+# any word similar to glowing, other than "glowing" itself, will work
 
 Brilliant
 
@@ -26,6 +27,8 @@ Dark
 Shining
 
 Faint
+
+Pulsating
 
 %%%%
 colour_name
@@ -98,23 +101,17 @@ glowing_colour_name
 %%%%
 writing_adj
 
+Glowing
+
 Writhing
 
 Bold
-
-Faint
 
 Spidery
 
 Blocky
 
 Angular
-
-Shimmering
-
-Glowing
-
-Pulsating
 
 Sinuous
 
