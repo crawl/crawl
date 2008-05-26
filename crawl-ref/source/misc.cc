@@ -44,6 +44,7 @@
 #include "chardump.h"
 #include "clua.h"
 #include "cloud.h"
+#include "database.h"
 #include "delay.h"
 #include "directn.h"
 #include "dgnevent.h"
@@ -2375,39 +2376,9 @@ void new_level(void)
 
 static std::string weird_colour()
 {
-    int temp_rand;             // for probability determinations {dlb}
-    std::string result;
+    std::string result = getRandNameString("colour_name");
 
-    temp_rand = random2(27);
-    result =
-        (temp_rand ==  0) ? "red" :
-        (temp_rand ==  1) ? "purple" :
-        (temp_rand ==  2) ? "orange" :
-        (temp_rand ==  3) ? "green" :
-        (temp_rand ==  4) ? "magenta" :
-        (temp_rand ==  5) ? "black" :
-        (temp_rand ==  6) ? "blue" :
-        (temp_rand ==  7) ? "grey" :
-        (temp_rand ==  8) ? "umber" :
-        (temp_rand ==  9) ? "charcoal" :
-        (temp_rand == 10) ? "bronze" :
-        (temp_rand == 11) ? "silver" :
-        (temp_rand == 12) ? "gold" :
-        (temp_rand == 13) ? "pink" :
-        (temp_rand == 14) ? "yellow" :
-        (temp_rand == 15) ? "white" :
-        (temp_rand == 16) ? "brown" :
-        (temp_rand == 17) ? "cyan" :
-        (temp_rand == 18) ? "aubergine" :
-        (temp_rand == 19) ? "ochre" :
-        (temp_rand == 20) ? "leaf green" :
-        (temp_rand == 21) ? "mauve" :
-        (temp_rand == 22) ? "azure" :
-        (temp_rand == 23) ? "lime green" :
-        (temp_rand == 24) ? "scarlet" :
-        (temp_rand == 25) ? "chartreuse" :
-        (temp_rand == 26) ? "rubric"
-                          : "colourless";
+    lowercase(result);
 
     return result;
 }

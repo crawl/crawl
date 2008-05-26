@@ -189,13 +189,65 @@ Eternity
 %%%%
 colour_name
 
+Aubergine
+
+Azure
+
+Beige
+
+Black
+
 Blue
 
-Red
+Bronze
+
+Brown
+
+Charcoal
+
+Chartreuse
+
+Cyan
+
+Gold
+
+Green
+
+Grey
+
+Indigo
+
+Leaf Green
+
+Lime Green
+
+Magenta
+
+Marigold
+
+Mauve
+
+Ochre
 
 Orange
 
+Pink
+
 Purple
+
+Red
+
+Rubric
+
+Scarlet
+
+Silver
+
+Umber
+
+White
+
+Yellow
 
 %%%%
 sky_or_light
