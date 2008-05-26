@@ -6,6 +6,7 @@
 # monster colours, command keys, order on the character selection screen,
 # item colours, appearance of the stat section, butchering interface, 
 # targeting interface. 
+# The options for monster glyphs and item colours don't matter for Tiles.
 # (New players should just ignore these lines.)
 #
 # include                   docs/034_monster_glyphs.txt

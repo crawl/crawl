@@ -654,10 +654,10 @@ static const char *targeting_help_1 =
 #ifdef WIZARD
     " \n"
     "<h>Wizard targeting comands:</h>\n"
-    "<w>F</w>: toggle target friendly/good neutral/neutral/hostile\n"
-    "<w>P</w>: apply divine blessing to target\n"
-    "<w>s</w>: force target to shout or speak\n"
     "<w>g</w>: give item to monster\n"
+    "<w>s</w>: force monster to shout or speak\n"
+    "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
+    "<w>P</w>: apply divine blessing to monster\n"
 #endif
 ;
 
@@ -1681,7 +1681,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>X</w>   : eXamine level map\n"
             "<w>Ctrl-O</w> : show dungeon Overview\n"
             "<w>Ctrl-A</w> : toggle auto-pickup\n"
-            "<w>Ctrl-T</w> : toggle ally pickup behaviour\n",
+            "<w>Ctrl-T</w> : change ally pickup behaviour\n",
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(

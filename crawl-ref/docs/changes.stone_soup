@@ -9,11 +9,12 @@ Interface
 ---------
 * Overhauled key settings of a number of commands. (See /docs/034_commands.txt.)
 * Added monster list for monsters in LOS (for big consoles, ASCII only).
-* Overhauled (f)iring interface, abolish (t)hrowing, output quiver in status.
+* Overhauled (f)iring interface: abolish (t)hrowing, output quiver in status.
 * Allow selection of equipment slots from '%' overview screen.
 * Improved butchering interface.
 * Allow searching item/monster/spell descriptions ('?\' command).
 * Allow swapping (' command) to non-weapons that need to be wielded for spells.
+* Fixed weapon swap ignoring {!w}.
 * Added Ctrl-D as a synonym for '~' (defining macros).
 * Added commands for repeating commands ('`' and '0').
 * Added command to annotate level ('!' command).
@@ -21,13 +22,9 @@ Interface
 * Ask for confirmation before stepping into dangerous clouds, or traps.
 * Allow autotravel through clouds your character is immune to.
 * Prompt when firing through allies, or doing a ranged attack TSO would punish.
+* Make butchering respect distortion weapons.
 * (W)ear and (P)ut on menus allow removal of equipped items.
-* easy_butcher won't switch away from distortion weapons.
-* Distortion effect now cancels butchering.
-* Fixed weapon swap ignoring {!w}.
-* Added inscriptions =p, !p for preventing autosaccing.
 * Arriving via stairs calls autopickup and lists items on square.
-* Output item slots for rotting meat message.
 * Refuse to eat rotten meat for non-saprovorous characters.
 * Evaporate can now be cancelled during potion/direction choice.
 * greedy_explore now defaults to true.
@@ -51,17 +48,17 @@ Characters
 * Added +1 damage bonus for orcs and dwarves throwing racial gear.
 * Fixed undead being unable to smite.
 * Necromutation now gives torment resistance again.
-* When transforming only remove armour you can't wear when transformed.
+* When transforming only remove armour you can't wear while transformed.
 * Improve Priests' starting weapons.
 
 Items
 -----
 * Removed weapons of disruption, improved holy wrath.
 * New weapon brand: dragon slaying, limited to Polearms.
-* Disable random generation of weapons of orc slaying (allowed in randarts).
-* Allow random generation of throwing nets.
+* Forbid (un)equipping of items with known potentially fatal stat drain.
 * Make distortion only take effect on unwielding.
 * Improved autotargeting for weapons of reaching.
+* Disable random generation of weapons of orc slaying (allowed in randarts).
 * Fixed cap acquirement misbehaviour.
 * New scrolls: Holy Word, Fog.
 * Removed scrolls of forgetfulness.
@@ -73,7 +70,6 @@ Items
 * Manuals are now visibly different from spell books.
 * Improved artefact autoinscriptions.
 * Several new pre-defined (un)randarts.
-* Warn before putting on items of potentially fatal stat drain.
 * Added message for returning weapons NOT returning.
 * Equipped randarts can now actually cause berserk.
 * Thrown potions of poison won't poison monsters anymore.
@@ -84,20 +80,21 @@ Items
 Monsters
 --------
 * New glyphs and colours for many monsters. (See /docs/034_monster_glyphs.txt.)
-* Ghosts get freezing cloud.
 * Draconian ghosts of xl >= 7 get the shadow dragon breath attack.
+* Ghosts get freezing cloud.
+* Mummy curses now only decay a random amount of a stack of potions.
 * Angels and Daevas may appear randomly in the Abyss.
 * Holy monsters may turn neutral if the player follows a good god.
-* Unknown mimics are now consistently treated like items.
 * Beefed up demon lords.
-* Mummy curses now only decay a random amount of a stack of potions.
-* Began changing monster resists to have several levels, like the player's.
+* Unknown mimics are now consistently treated like items.
+* Changed monster resists to have several levels, like the player's.
 * Removed electricity resistance from several monsters.
 * Daevas now resist negative energy.
 * Fixed Oklob plants being confuseable.
 * Lee's Rapid Deconstruction now works against skeletal dragons.
 * Changed evil/holiness/intelligence flags for a number of monsters.
 * Improved trap handling for intelligent monsters.
+* Improved control over friendly monsters.
 * Smarter pickup handling.
 * Fixed friendlies accidentally shooting the player.
 * Fixed monsters firing/reaching through walls.
@@ -127,24 +124,21 @@ Levels
 * Removed amnesia traps.
 * Introduced shafts.
 * Added blood spattering.
-* Allow for fountains of blood in vault generation.
 
 Tiles
 -----
-* Merged Tiles into Crawl code. 
+* Merged Tiles into Crawl code.
 * Save files between tile and non-tile games are compatible.
 * Added lots of new tiles, and corrected misdisplayed ones.
 * wininit.txt is now autocreated, if missing.
 * Tutorial improvement for tiles.
 * Improved mouse-click inventory/dungeon interaction.
 * Show travel exclusion in tile map and mini-map.
-* Added MP colour bar.
 * Fixed ghosts changing icons between saves.
-* Fixed Detect creatures revealing exact monster type. 
+* Fixed Detect creatures revealing exact monster type.
 * Mimics posing as autopickable items now get marked as such.
 * Clicking on items now respects warning inscriptions.
 * Added item brand for plants.
-* Added '0' significator for empty wands.
 * General improvement.
 
 Miscellaneous
@@ -154,6 +148,7 @@ Miscellaneous
 * Train Traps & Doors by setting off traps.
 * Increase cost for self-banishment, and nerf Banishment spell.
 * Better feedback on Detect Traps.
+* Added MP colour bar.
 * Identify post-mortem inventory in morgue.txt.
 * Dump command also dumps level map.
 * init.txt/crawlrc allow loading of external options/macro files.
