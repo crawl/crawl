@@ -7,8 +7,9 @@ Breaks saves and bones compatibility.
 
 Interface
 ---------
-* Overhauled key settings of a number of commands. (See /docs/034_commands.txt.)
-* Added monster list for monsters in LOS (for big consoles, ASCII only).
+* Overhauled key settings of a number of commands. 
+  (See /settings/034_commands.txt.)
+* Added monster list for monsters in LOS (ASCII only).
 * Overhauled (f)iring interface: abolish (t)hrowing, output quiver in status.
 * Allow selection of equipment slots from '%' overview screen.
 * Improved butchering interface.
@@ -79,7 +80,8 @@ Items
 
 Monsters
 --------
-* New glyphs and colours for many monsters. (See /docs/034_monster_glyphs.txt.)
+* New glyphs and colours for many monsters.
+  (See /settings/034_monster_glyphs.txt.)
 * Draconian ghosts of xl >= 7 get the shadow dragon breath attack.
 * Ghosts get freezing cloud.
 * Mummy curses now only decay a random amount of a stack of potions.
@@ -148,7 +150,7 @@ Miscellaneous
 * Train Traps & Doors by setting off traps.
 * Increase cost for self-banishment, and nerf Banishment spell.
 * Better feedback on Detect Traps.
-* Added MP colour bar.
+* Added coloured HP/Magic bars.
 * Identify post-mortem inventory in morgue.txt.
 * Dump command also dumps level map.
 * init.txt/crawlrc allow loading of external options/macro files.
