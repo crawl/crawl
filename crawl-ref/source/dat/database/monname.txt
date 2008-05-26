@@ -1,7 +1,7 @@
 ##########################################################
 # monname.txt: lookup monster names
 #
-# This file contains a lists of names for monster names.
+# This file contains a list of names for monster names.
 # This is currently only used when one of your orcish followers as
 # Beogh's messiah gets named by Beogh.
 #
