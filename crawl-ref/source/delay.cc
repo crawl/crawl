@@ -1534,6 +1534,14 @@ static bool should_stop_activity(const delay_queue_item &item,
     if (userd)
         return (userd == 1);
 
+    delay_type curr = current_delay_action();
+
+    if (curr != DELAY_REST && (ai == AI_FULL_HP || ai == AI_FULL_MP))
+        return false;
+    else if (ai == AI_SEE_MONSTER && (curr == DELAY_ASCENDING_STAIRS ||
+                                      curr == DELAY_DESCENDING_STAIRS))
+        return false;
+
     return (ai == AI_FORCE_INTERRUPT
             || Options.activity_interrupts[item.type][ai]);
 }
