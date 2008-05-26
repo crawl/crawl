@@ -393,15 +393,15 @@ TAGS:     Tags go an a TAGS: line and are space-separated. Valid tags are:
           * "no_hmirror": Like no_rotate, but for horizontal mirroring.
           * "no_vmirror": Like no_rotate, but for vertical mirroring.
           * "layout": Lua code that dungeon.cc uses for generating level
-             layouts.  Do *NOT* use or mess with unlss you know what
+             layouts.  Do *NOT* use or mess with unless you know what
              you're doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
              compatible with, for vaults that don't fit in with all layouts;
              the absence of this type of tags means it can go with any layout.
              Multiple layout_foo tags can be used if it can be used with
-             multiple layouts.   Current values for "foo" are: rooms, city,
-             open, caves, cross, shoals, swamp, labyrithn (though currently
-             random vaults aren't palced in the last three).
+             multiple layouts.  Current values for "foo" are: rooms, city,
+             open, caves, cross, shoals, swamp, labyrinth (though currently
+             random vaults aren't placed in the last three).
 
           Pre-0.3 Crawl distinguished between TAGS and FLAGS. 0.3 and
           newer Crawls treat TAGS and FLAGS as synonyms.
@@ -543,7 +543,7 @@ MONS:     (list of monsters)
           never generated, and ego items are only generated if the ego
           is explicitly stated.  Note that any items that the monster was
           originally generated with will be removed and destroyed.  This
-          can be used force a monster to have no items whatsoever:
+          can be used to force a monster to have no items whatsoever:
               MONS: orc; nothing
 
           Items given to an orc or an elf will be made orcish or elven
