@@ -126,7 +126,7 @@ public:
 
     // Need not be implemented for the player - player action costs
     // are explicitly calculated.
-    virtual void lose_energy(energy_use_type)
+    virtual void lose_energy(energy_use_type, int div = 1, int mult = 1)
     {
     }
 
@@ -1091,7 +1091,7 @@ public:
     bool del_ench(enchant_type ench, bool quiet = false, bool effect = true);
     bool lose_ench_duration(const mon_enchant &e, int levels);
     bool lose_ench_levels(const mon_enchant &e, int lev);
-    void lose_energy(energy_use_type et);
+    void lose_energy(energy_use_type et, int div = 1, int mult = 1);
 
     void scale_hp(int num, int den);
     bool gain_exp(int exp);

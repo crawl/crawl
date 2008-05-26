@@ -3888,6 +3888,9 @@ bool melee_attack::mons_perform_attack()
 
     if (attacker != defender && mons_attack_warded_off())
     {
+        // A warded-off attack takes half the normal energy.
+        attacker->lose_energy(EUT_ATTACK, 2);
+
         perceived_attack = true;
         return (false);
     }

@@ -5860,9 +5860,9 @@ int monsters::action_energy(energy_use_type et) const
     return 10;
 }
 
-void monsters::lose_energy(energy_use_type et)
+void monsters::lose_energy(energy_use_type et, int div, int mult)
 {
-    speed_increment -= action_energy(et);
+    speed_increment -= div_round_up(mult * action_energy(et), div);
 }
 
 static inline monster_type _royal_jelly_ejectable_monster()
