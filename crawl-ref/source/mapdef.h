@@ -65,7 +65,7 @@ public:
 
     void set(int s, int d = -1);
     void set(const std::string &branch, int s, int d) throw (std::string);
-    
+
     void reset();
     bool matches(const level_id &) const;
     bool matches(int depth) const;
@@ -77,7 +77,7 @@ public:
     int span() const;
 
     static level_range parse(std::string lr) throw (std::string);
-    
+
     std::string describe() const;
     std::string str_depth_range() const;
 
@@ -111,7 +111,7 @@ public:
         TT_MARKER,
         TT_COLOUR
     };
-    
+
 public:
     virtual ~map_transformer() = 0;
     virtual std::string apply_transform(map_lines &map) = 0;
@@ -129,9 +129,9 @@ public:
     {
         return (foo);
     }
-    
+
     int value();
-    
+
     std::string apply_transform(map_lines &map);
     transform_type type() const;
     std::string describe() const;
@@ -142,7 +142,7 @@ private:
     int foo;        // The thing to replace.
     bool fix;       // If true, the first replacement fixes the value.
     int frozen_value;
-    
+
     glyph_replacements_t repl;
 };
 
@@ -153,7 +153,7 @@ public:
     std::string apply_transform(map_lines &map);
     transform_type type() const { return TT_NSUBST; }
     std::string describe() const;
-    
+
 public:
     int key;
     std::vector<subst_spec> specs;
@@ -190,7 +190,7 @@ class shuffle_spec : public map_transformer
         : shuffle(spec)
     {
     }
-    
+
     std::string apply_transform(map_lines &map);
     transform_type type() const;
     std::string describe() const;
@@ -224,7 +224,7 @@ public:
     map_lines &operator = (const map_lines &);
 
     bool in_map(const coord_def &pos) const;
-    
+
     void add_line(const std::string &s);
     std::string add_nsubst(const std::string &st);
     std::string add_subst(const std::string &st);
@@ -241,7 +241,7 @@ public:
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
     coord_def find_first_glyph(const std::string &glyphs) const;
-    
+
     void set_orientation(const std::string &s);
 
     int width() const;
@@ -249,7 +249,7 @@ public:
 
     int glyph(int x, int y) const;
     bool is_solid(int gly) const;
-    
+
     bool solid_borders(map_section_type border);
 
     std::string apply_transforms();
@@ -266,18 +266,18 @@ public:
 
     void add_marker(map_marker *marker);
     std::string add_feature_marker(const std::string &desc);
-    
+
     void apply_markers(const coord_def &pos);
     void apply_colours(const coord_def &pos);
     void apply_overlays(const coord_def &pos);
-    
+
     const std::vector<std::string> &get_lines() const;
     std::vector<std::string> &get_lines();
     std::vector<std::string> get_shuffle_strings() const;
     std::vector<std::string> get_subst_strings() const;
 
     int operator () (const coord_def &c) const;
-    
+
 private:
     void init_from(const map_lines &map);
     void clear_transforms();
@@ -290,7 +290,7 @@ private:
     void rotate_marker(map_marker *, int par);
     void translate_marker(void (map_lines::*xform)(map_marker *, int par),
                           int par = 0);
-    
+
     void resolve_shuffle(const std::string &shuffle);
     void subst(std::string &s, subst_spec &spec);
     void subst(subst_spec &);
@@ -318,13 +318,13 @@ private:
     friend class shuffle_spec;
     friend class map_marker_spec;
     friend class colour_spec;
-    
+
 private:
     std::vector<map_transformer *> transforms;
     std::vector<map_marker *> markers;
     std::vector<std::string> lines;
     std::auto_ptr< Matrix<int> > colour_overlay;
-    
+
     int map_width;
     bool solid_north, solid_east, solid_south, solid_west;
     bool solid_checked;
@@ -339,7 +339,7 @@ enum item_spec_type
 struct item_spec
 {
     int genweight;
-    
+
     object_class_type base_type;
     int sub_type;
     int ego;
@@ -379,7 +379,7 @@ private:
         {
         }
     };
-    
+
 private:
     item_spec item_by_specifier(const std::string &spec);
     item_spec_slot parse_item_spec(std::string spec);
@@ -402,6 +402,7 @@ class mons_spec
     int  genweight, mlevel;
     bool fix_mons;
     bool generate_awake;
+    bool patrolling;
     int  colour;
 
     item_list items;
@@ -410,9 +411,10 @@ class mons_spec
               monster_type base = MONS_PROGRAM_BUG,
               int num = 0,
               int gw = 10, int ml = 0,
-              bool _fixmons = false, bool awaken = false)
+              bool _fixmons = false, bool awaken = false, bool patrol = false)
         : mid(id), monbase(base), number(num), genweight(gw), mlevel(ml),
-          fix_mons(_fixmons), generate_awake(awaken), colour(BLACK), items()
+          fix_mons(_fixmons), generate_awake(awaken), patrolling(false),
+          colour(BLACK), items()
     {
     }
 };
@@ -495,7 +497,7 @@ struct feature_slot
 
 struct map_flags
 {
-    unsigned long flags_set, flags_unset; 
+    unsigned long flags_set, flags_unset;
 
     map_flags();
     void clear();
@@ -509,7 +511,7 @@ struct keyed_mapspec
 {
 public:
     int          key_glyph;
-    
+
     feature_slot feat;
     item_list    item;
     mons_list    mons;
@@ -571,19 +573,19 @@ struct map_file_place
 
 /////////////////////////////////////////////////////////////////////////////
 // map_def: map definitions for maps loaded from .des files.
-// 
+//
 // Please read this before changing map_def.
-// 
+//
 // When adding Lua-visible fields to map_def, note that there are two
 // kinds of fields:
-// 
+//
 // * Fields that determine placement of the map, or are unchanging,
 //   such as "place", "depths" (determine placement), or "name" (does
 //   not change between different evaluations of the map). Such fields
 //   must be reset to their default values in map_def::init() if they
 //   determine placement, or just initialised in the constructor if
 //   they will not change.
-//   
+//
 // * Fields that do not determine placement and may change between
 //   different uses of the map (such as "mons", "items",
 //   "level_flags", etc.). Such fields must be reset to their default
@@ -593,7 +595,7 @@ struct map_file_place
 // If you do not do this, maps will not work correctly, and will break
 // in obscure, hard-to-find ways. The level-compiler will not (cannot)
 // warn you.
-// 
+//
 class map_def
 {
 public:
@@ -639,11 +641,11 @@ public:
     bool in_map(const coord_def &p) const;
 
     coord_def size() const { return coord_def(map.width(), map.height()); }
-    
+
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
     coord_def find_first_glyph(const std::string &glyphs) const;
-    
+
     void write_index(writer&) const;
     void write_full(writer&);
 
@@ -672,7 +674,7 @@ public:
     void fixup();
 
     bool is_usable_in(const level_id &lid) const;
-    
+
     keyed_mapspec *mapspec_for_key(int key);
     const keyed_mapspec *mapspec_for_key(int key) const;
 
@@ -680,12 +682,12 @@ public:
     void add_depth(const level_range &depth);
     void add_depths(depth_ranges::const_iterator s,
                     depth_ranges::const_iterator e);
-    
+
     std::string add_key_item(const std::string &s);
     std::string add_key_mons(const std::string &s);
     std::string add_key_feat(const std::string &s);
     std::string add_key_mask(const std::string &s);
-    
+
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;
     coord_def float_dock();
@@ -725,13 +727,13 @@ public:
                     && c.y >= 0 && c.y < map.map.height());
         }
     };
-    
+
 private:
     void write_depth_ranges(writer&) const;
     void read_depth_ranges(reader&);
     bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
     std::string rewrite_chunk_errors(const std::string &s) const;
-    
+
     std::string add_key_field(
         const std::string &s,
         std::string (keyed_mapspec::*set_field)(

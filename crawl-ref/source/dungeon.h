@@ -127,13 +127,13 @@ class dgn_region
         return (xp >= pos.x && xp < pos.x + size.x
                 && yp >= pos.y && yp < pos.y + size.y);
     }
-    
+
     bool fully_contains(const coord_def &p) const
     {
         return (p.x > pos.x && p.x < pos.x + size.x - 1
                 && p.y > pos.y && p.y < pos.y + size.y - 1);
     }
-    
+
     bool overlaps(const dgn_region &other) const;
     bool overlaps_any(const dgn_region_list &others) const;
     bool overlaps(const dgn_region_list &others,
@@ -156,7 +156,7 @@ public:
     bool has_exit_from(const coord_def &start);
 
     bool did_leave_vault() const { return left_vault; }
-    
+
 protected:
     bool path_flood(const coord_def &c, const coord_def &dc);
 protected:
@@ -275,7 +275,7 @@ bool flood_find<fgrd, bound_check>::path_flood(
         }
         return (false);
     }
-    
+
     if (needed_features[ grid ])
     {
         unexplored_place = dc;
@@ -294,7 +294,7 @@ bool flood_find<fgrd, bound_check>::path_flood(
         left_vault = true;
 
     good_square(dc);
-    
+
     return (false);
 }
 //////////////////////////////////////////////////////////////////////////
@@ -326,7 +326,7 @@ int count_neighbours(int x, int y, dungeon_feature_type feat);
 class mons_spec;
 bool dgn_place_monster(mons_spec &mspec,
                        int monster_level, int vx, int vy,
-                       bool generate_awake);
+                       bool generate_awake, bool patrolling = false);
 
 bool set_level_flags(unsigned long flags, bool silent = false);
 bool unset_level_flags(unsigned long flags, bool silent = false);

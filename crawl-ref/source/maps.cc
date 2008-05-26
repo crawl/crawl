@@ -54,29 +54,29 @@ static std::vector<map_def> vdefs;
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************* */
 
-// remember (!!!) - if a member of the monster array isn't specified
+// Remember (!!!) - if a member of the monster array isn't specified
 // within a vault subroutine, assume that it holds a random monster
 // -- only in cases of explicit monsters assignment have I listed
 // out random monster insertion {dlb}
 
-// make sure that vault_n, where n is a number, is a vault which can be put
+// Make sure that vault_n, where n is a number, is a vault which can be put
 // anywhere, while other vault names are for specific level ranges, etc.
-int vault_main(
-        map_type vgrid,
-        vault_placement &place,
-        int which_vault,
-        bool check_place,
-        bool clobber)
+int vault_main( map_type vgrid,
+                vault_placement &place,
+                int which_vault,
+                bool check_place,
+                bool clobber)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Generating level: %s (%d,%d)",
          vdefs[which_vault].name.c_str(),
          place.pos.x, place.pos.y);
+
     if (crawl_state.map_stat_gen)
         mapgen_report_map_try(vdefs[which_vault]);
 #endif
 
-    // first, fill in entirely with walls and null-terminate {dlb}:
+    // First, fill in entirely with walls and null-terminate {dlb}:
     for (int vx = 0; vx < MAP_SIDE; vx++)
     {
         for (int vy = 0; vy < MAP_SIDE; vy++)

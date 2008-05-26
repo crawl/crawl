@@ -361,6 +361,10 @@ TAGS:     Tags go an a TAGS: line and are space-separated. Valid tags are:
              entry vault.
           * "generate_awake": Monsters placed (using MONS, KMONS) in this vault
              will be generated awake.
+          * "patrolling": Monsters placed (using MONS, KMONS) in this vault
+             will be generated with their starting position as patrol point.
+             If not otherwise occupied (fighting, seeking) they will patrol
+             the area.
           * "no_item_gen": Prevents random item generation in the vault.
              Items explicitly placed by the vault are not affected.
           * "mini_float": applicable only to minivaults, requests that
@@ -518,6 +522,10 @@ MONS:     (list of monsters)
           (without the quotes). Use this sparingly:
               MONS: generate_awake giant beetle
 
+          Individual monsters may be prefixed with the "patrolling"
+          (without the quotes). Use this sparingly:
+              MONS: patrolling naga guardian
+
           Monsters can also be given colours that override their default
           colour. Use this *very* sparingly:
               MONS: col:darkgrey fungus
@@ -537,9 +545,9 @@ MONS:     (list of monsters)
           originally generated with will be removed and destroyed.  This
           can be used force a monster to have no items whatsoever:
               MONS: orc; nothing
-          
+
           Items given to an orc or an elf will be made orcish or elven
-          unless the item's race type is explicitly set otherwise.        
+          unless the item's race type is explicitly set otherwise.
 
           Limitations: If an item in the item list has alternatives,
           there's no way to force all monsters dervied from that monster

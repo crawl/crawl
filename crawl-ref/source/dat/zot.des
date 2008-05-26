@@ -298,7 +298,7 @@ ROCKCOL:  lightmagenta
 #traps
 SUBST:   C = c:1000 =
 KFEAT:   1 = any trap / w:20 floor
-KMONS:   1 = Orb Guardian
+KMONS:   1 = patrolling Orb Guardian
 KFEAT:   8 = any trap / w:20 floor
 SHUFFLE: ABab / ^^FF / ^^FF / ^^FF
 SHUFFLE: Aa / Bb 
@@ -310,8 +310,8 @@ SUBST:   ! = ^ .:40
 SUBST:   . = .:500 ^
 
 #monsters
-MONS:    Orb Guardian, Killer Klown, electric golem, orb of fire, ancient lich
-MONS:    orange crystal statue / silver statue / ice statue
+MONS:    patrolling Orb Guardian, Killer Klown, electric golem, orb of fire
+MONS:    ancient lich, orange crystal statue / silver statue / ice statue
 SUBST:   8=8., 8=8., 5=5.
 SHUFFLE: 234
 SUBST:   ? = .:8 ?
