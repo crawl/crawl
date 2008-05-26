@@ -155,7 +155,7 @@ game_state crawl_state;
 
 
 
-std::string init_file_location; // externed in newgame.cc
+std::string init_file_error;    // externed in newgame.cc
 
 char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 
@@ -225,7 +225,7 @@ int main( int argc, char *argv[] )
     init_monsters(mcolour);
 
     // Read the init file.
-    init_file_location = read_init_file();
+    init_file_error = read_init_file();
 
     // now parse the args again, looking for everything else.
     parse_args( argc, argv, false );
@@ -294,6 +294,7 @@ static void _show_commandline_options_help()
     puts("  -plain           don't use IBM extended characters");
     puts("  -dir <path>      crawl directory");
     puts("  -rc <file>       init file name");
+    puts("  -rcdir <dir>     directory that contains (included) rc files");
     puts("  -morgue <dir>    directory to save character dumps");
     puts("  -macro <dir>     directory to save/find macro.txt");
     puts("");

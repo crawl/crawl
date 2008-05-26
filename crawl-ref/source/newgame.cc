@@ -102,7 +102,7 @@
 #include "version.h"
 #include "view.h"
 
-extern std::string init_file_location;
+extern std::string init_file_error;
 
 #define MIN_START_STAT       1
 
@@ -2468,15 +2468,31 @@ static void _opening_screen(void)
         "Please consult crawl_manual.txt for instructions and legal details."
         "</brown>" EOL;
 
-    const bool init_found =
-        (init_file_location.find("not found") == std::string::npos);
+    const bool init_found = init_file_error.empty();
 
     if (!init_found)
-        msg += "<lightred>Init file ";
+        msg += "<lightred>No init file ";
     else
-        msg += "<lightgrey>Init file read: ";
+        msg += "<lightgrey>(Read options from ";
 
-    msg += init_file_location;
+    if (init_found)
+    {
+#ifdef DGAMELAUNCH
+        // For dgl installs, show only the last segment of the .crawlrc
+        // file name so that we don't leak details of the directory
+        // structure to (untrusted) users.
+        msg += get_base_filename(Options.filename);
+#else
+        msg += Options.filename;
+#endif
+        msg += ".)";
+    }
+    else
+    {
+        msg += init_file_error;
+        msg += ", using defaults.";
+    }
+
     msg += EOL;
 
     formatted_string::parse_string(msg).display();

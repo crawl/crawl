@@ -8,7 +8,7 @@
 # targeting interface. 
 # (New players should just ignore these lines.)
 #
-# : crawl.read_options('docs/034_monster_glyphs.txt')
+# include                   docs/034_monster_glyphs.txt
 # additional_macro_file   = docs/034_command_keys.txt
 # classic_item_colours    = true
 # classic_hud             = true
@@ -180,9 +180,11 @@ runrest_ignore_monster = butterfly:1
 
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
-# You can use the travel_stop_message for making autotravel better behaved.
-# The following file contains a list of such options, with explanations.
-: crawl.read_options('docs/travel_stoppers.txt')
+# You can use travel_stop_message to make autotravel stop for situations that
+# warrant your attention. This file (travel_stoppers.txt) contains a list of
+# travel_stop_message settings, with brief descriptions of what they do.
+
+include docs/travel_stoppers.txt
 
 ##### 4-h	Stashes ###############################
 #
@@ -351,9 +353,6 @@ tile_show_items = !?/%=([)X}+\_.
 # colour.lightgray = black
 # colour.lightcyan = cyan
 # colour.yellow    = brown
-#
-# Set the monster glyphs back to the way they were in 0.3.4
-# : crawl.read_options('docs/monster_glyphs.txt')
 
 # See options_guide.txt for the options
 # cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any, 

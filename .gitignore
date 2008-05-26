@@ -1,8 +1,8 @@
 *.[oa]
 *.ann
 *.diff
-saves/
-morgue/
+saves
+morgue
 *.orig
 *.rej
 *.swp

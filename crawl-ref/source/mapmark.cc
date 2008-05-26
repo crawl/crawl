@@ -762,6 +762,7 @@ void map_markers::read(reader &inf, int minorVersion)
     {
         const long cooky = unmarshallLong(inf);
         ASSERT(cooky == MARKERS_COOKY);
+        UNUSED(cooky);
     }
 
     const int nmarkers = unmarshallShort(inf);

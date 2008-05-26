@@ -53,10 +53,14 @@ void get_system_environment(void);
 
 struct system_environment
 {
+public:
     std::string crawl_name;
     std::string crawl_pizza;
     std::string crawl_rc;
     std::string crawl_dir;
+
+    std::vector<std::string> rcdirs;   // Directories to search for includes.
+
     std::string morgue_dir;
     std::string crawl_base;        // Directory from argv[0], may be used to
                                    // locate datafiles.
@@ -73,6 +77,9 @@ struct system_environment
     std::vector<std::string> cmd_args;
 
     int map_gen_iters;
+
+public:
+    void add_rcdir(const std::string &dir);
 };
 
 extern system_environment SysEnv;

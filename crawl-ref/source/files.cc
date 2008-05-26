@@ -281,6 +281,44 @@ std::string get_base_filename(const std::string &filename)
     return (filename);
 }
 
+bool is_absolute_path(const std::string &path)
+{
+    return (!path.empty()
+            && (path[0] == FILE_SEPARATOR
+#if defined(WIN32CONSOLE) || defined(WIN32TILES)
+                || path.find(':') != std::string::npos
+#endif
+                ));
+}
+
+// Concatenates two paths, separating them with FILE_SEPARATOR if necessary.
+// Assumes that the second path is not absolute.
+//
+// If the first path is empty, returns the second unchanged. The second path
+// may be absolute in this case.
+std::string catpath(const std::string &first, const std::string &second)
+{
+    if (first.empty())
+        return (second);
+
+    std::string directory = first;
+    if (directory[directory.length() - 1] != FILE_SEPARATOR)
+        directory += FILE_SEPARATOR;
+    directory += second;
+
+    return (directory);
+}
+
+// Given a relative path and a reference file name, returns the relative path
+// suffixed to the directory containing the reference file name. Assumes that
+// the second path is not absolute.
+std::string get_path_relative_to(const std::string &referencefile,
+                                 const std::string &relativepath)
+{
+    return catpath(get_parent_directory(referencefile),
+                   relativepath);
+}
+
 std::string change_file_extension(const std::string &filename,
                                   const std::string &ext)
 {
@@ -312,7 +350,7 @@ void check_newer(const std::string &target,
         action();
 }
 
-static bool file_exists(const std::string &name)
+bool file_exists(const std::string &name)
 {
 #ifdef HAVE_STAT
     struct stat st;
@@ -328,12 +366,16 @@ static bool file_exists(const std::string &name)
 }
 
 // Low-tech existence check.
-static bool dir_exists(const std::string &dir)
+bool dir_exists(const std::string &dir)
 {
 #ifdef _MSC_VER
     DWORD lAttr = GetFileAttributes(dir.c_str());
     return (lAttr != INVALID_FILE_ATTRIBUTES
             && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
+#elif defined(HAVE_STAT)
+    struct stat st;
+    const int err = ::stat(dir.c_str(), &st);
+    return (!err && S_ISDIR(st.st_mode));
 #else
     DIR *d = opendir(dir.c_str());
     const bool exists = !!d;
@@ -385,36 +427,84 @@ static bool create_dirs(const std::string &dir)
     return (true);
 }
 
+// Checks whether the given path is safe to read from. A path is safe if:
+// 1. If Unix: It contains no shell metacharacters.
+// 2. If DATA_DIR_PATH is set: the path is not an absolute path.
+// 3. If DATA_DIR_PATH is set: the path contains no ".." sequence.
+void assert_read_safe_path(const std::string &path) throw (std::string)
+{
+    // Check for rank tomfoolery first:
+    if (path.empty())
+        throw "Empty file name.";
+
+#ifdef UNIX
+    if (!shell_safe(path.c_str()))
+        throw make_stringf("\"%s\" contains bad characters.",
+                           path.c_str());
+#endif
+
+#ifdef DATA_DIR_PATH
+    if (is_absolute_path(path))
+        throw make_stringf("\"%s\" is an absolute path.", path.c_str());
+
+    if (path.find("..") != std::string::npos)
+        throw make_stringf("\"%s\" contains \"..\" sequences.",
+                           path.c_str());
+#endif
+
+    // Path is okay.
+}
+
+bool is_read_safe_path(const std::string &path)
+{
+    try
+    {
+        assert_read_safe_path(path);
+    }
+    catch (const std::string &err)
+    {
+        return (false);
+    }
+    return (true);
+}
+
+std::string canonicalise_file_separator(const std::string &path)
+{
+#if FILE_SEPARATOR != '/'
+    return (replace_all_of(path, "/", std::string(1, FILE_SEPARATOR)));
+#else
+    // No action needed here.
+    return (path);
+#endif
+}
+
 std::string datafile_path(std::string basename,
                           bool croak_on_fail,
                           bool test_base_path)
 {
-#if FILE_SEPARATOR != '/'
-    basename = replace_all_of(basename, "/", std::string(1, FILE_SEPARATOR));
-#endif
+    basename = canonicalise_file_separator(basename);
 
     if (test_base_path && file_exists(basename))
         return (basename);
-
-    std::string cdir = !SysEnv.crawl_dir.empty()? SysEnv.crawl_dir : "";
 
     const std::string rawbases[] = {
 #ifdef DATA_DIR_PATH
         DATA_DIR_PATH,
 #else
-        cdir,
+        !SysEnv.crawl_dir.empty()? SysEnv.crawl_dir : "",
 #endif
     };
 
     const std::string prefixes[] = {
         std::string("dat") + FILE_SEPARATOR,
         std::string("docs") + FILE_SEPARATOR,
+        std::string("settings") + FILE_SEPARATOR,
 #ifndef DATA_DIR_PATH
         std::string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR + "dat" + FILE_SEPARATOR,
+        std::string("..") + FILE_SEPARATOR + "settings" + FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR,
 #endif
-        std::string(".") + FILE_SEPARATOR,
         "",
     };
 

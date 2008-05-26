@@ -892,6 +892,9 @@ void game_options::reset_options()
 
     // Setup travel information. What's a better place to do this?
     initialise_travel();
+
+    // Forget any files we remembered as included.
+    included.clear();
 }
 
 void game_options::clear_cset_overrides()
@@ -1080,53 +1083,85 @@ void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
     cset_override[set][dc] = symbol;
 }
 
-// returns where the init file was read from
-std::string read_init_file(bool runscript)
+static std::string _find_crawlrc()
 {
     const char* locations_data[][2] = {
-        { SysEnv.crawl_rc.c_str(), "" },
         { SysEnv.crawl_dir.c_str(), "init.txt" },
 #ifdef MULTIUSER
-        { SysEnv.home.c_str(), "/.crawlrc" },
+        { SysEnv.home.c_str(), ".crawlrc" },
         { SysEnv.home.c_str(), "init.txt" },
 #endif
+#ifndef DATA_DIR_PATH
         { "", "init.txt" },
-#ifdef WIN32CONSOLE
-        { "", ".crawlrc" },
-        { "", "_crawlrc" },
+        { "..", "init.txt" },
 #endif
         { NULL, NULL }                // placeholder to mark end
     };
 
-    Options.reset_options();
+    // We'll look for these files in any supplied -rcdirs.
+    static const char *rc_dir_filenames[] = {
+        ".crawlrc", "init.txt"
+    };
 
-    FILE* f = NULL;
-    char name_buff[kPathLen];
+    // -rc option always wins.
+    if (!SysEnv.crawl_rc.empty())
+        return (SysEnv.crawl_rc);
+
+    // If we have any rcdirs, look in them for files from the
+    // rc_dir_names list.
+    for (int i = 0, size = SysEnv.rcdirs.size(); i < size; ++i)
+    {
+        for (unsigned n = 0; n < ARRAYSZ(rc_dir_filenames); ++n)
+        {
+            const std::string rc(
+                catpath(SysEnv.rcdirs[i], rc_dir_filenames[n]));
+            if (file_exists(rc))
+                return (rc);
+        }
+    }
+
     // Check all possibilities for init.txt
-    for ( int i = 0; f == NULL && locations_data[i][1] != NULL; ++i )
+    for ( int i = 0; locations_data[i][1] != NULL; ++i )
     {
         // Don't look at unset options
         if ( locations_data[i][0] != NULL )
         {
-            snprintf( name_buff, sizeof name_buff, "%s%s",
-                      locations_data[i][0], locations_data[i][1] );
-            f = fopen( name_buff, "r" );
+            const std::string rc =
+                catpath(locations_data[i][0], locations_data[i][1]);
+            if (file_exists(rc))
+                return (rc);
         }
     }
 
+    return ("");
+}
+
+// Returns an error message if the init.txt was not found.
+std::string read_init_file(bool runscript)
+{
+    Options.reset_options();
+
+    const std::string init_file_name( _find_crawlrc() );
+
+    FILE* f = fopen(init_file_name.c_str(), "r");
     if ( f == NULL )
     {
+        if (!init_file_name.empty())
+            return make_stringf("(\"%s\" is not readable)",
+                                init_file_name.c_str());
+
 #ifdef MULTIUSER
-        return "not found (~/.crawlrc missing)";
+        return "(~/.crawlrc missing)";
 #else
-        return "not found (init.txt missing from current directory)";
+        return "(no init.txt in current directory)";
 #endif
     }
 
+    Options.filename = init_file_name;
     read_options(f, runscript);
     fclose(f);
-    return std::string(name_buff);
-}                               // end read_init_file()
+    return ("");
+}
 
 void read_startup_prefs()
 {
@@ -1580,6 +1615,23 @@ void game_options::set_option_fragment(const std::string &s)
     }
 }
 
+bool game_options::include_file_directive(const std::string &line,
+                                          bool runscript)
+{
+    const std::string prefix = "include ";
+    if (line.find(prefix) == std::string::npos)
+        return (false);
+
+    std::string include_line = trimmed_string(line);
+    if (include_line.find(prefix) == 0)
+    {
+        include(trimmed_string(include_line.substr(prefix.length())),
+                true, runscript);
+        return (true);
+    }
+    return (false);
+}
+
 void game_options::read_option_line(const std::string &str, bool runscript)
 {
 #define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
@@ -1633,6 +1685,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
     bool plus_equal  = false;
     bool minus_equal = false;
+
+    // If the user asked us to include a file, don't try to process the line
+    // as an option.
+    if (include_file_directive(str, runscript))
+        return;
 
     const int first_equals = str.find('=');
 
@@ -2033,12 +2090,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                      field.c_str() );
         }
     }
+    // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
+#ifndef DATA_DIR_PATH
     else if (key == "crawl_dir")
     {
         // We shouldn't bother to allocate this a second time
         // if the user puts two crawl_dir lines in the init file.
         SysEnv.crawl_dir = field;
     }
+#endif
     else if (key == "race")
     {
         race = _str_to_race( field );
@@ -2592,7 +2652,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "additional_macro_file")
     {
-        additional_macro_files.push_back(orig_field);
+        const std::string resolved = resolve_include(orig_field, "macro ");
+        if (!resolved.empty())
+            additional_macro_files.push_back(resolved);
     }
 #ifdef USE_TILE
     else if (key == "tile_show_items")
@@ -2718,6 +2780,128 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 }
 
+// Checks an include file name for safety and resolves it to a readable path.
+// If safety check fails, throws a string with the reason for failure.
+// If file cannot be resolved, returns the empty string (this does not throw!)
+// If file can be resolved, returns the resolved path.
+std::string game_options::resolve_include(
+    std::string parent_file,
+    std::string included_file,
+    const std::vector<std::string> *rcdirs)
+
+    throw (std::string)
+{
+    // Before we start, make sure we convert forward slashes to the platform's
+    // favoured file separator.
+    parent_file   = canonicalise_file_separator(parent_file);
+    included_file = canonicalise_file_separator(included_file);
+
+    // How we resolve include paths:
+    // 1. If it's an absolute path, use it directly.
+    // 2. Try the name relative to the parent filename, if supplied.
+    // 3. Try the name relative to any of the provided rcdirs.
+    // 4. Try locating the name as a regular data file (also checks for the
+    //    file name relative to the current directory).
+    // 5. Fail, and return empty string.
+
+    assert_read_safe_path(included_file);
+
+    // There's only so much you can do with an absolute path.
+    // Note: absolute paths can only get here if we're not on a
+    // multiuser system. On multiuser systems assert_read_safe_path()
+    // will throw an exception if it sees absolute paths.
+    if (is_absolute_path(included_file))
+        return (file_exists(included_file)? included_file : "");
+
+    if (!parent_file.empty())
+    {
+        const std::string candidate =
+            get_path_relative_to(parent_file, included_file);
+        if (file_exists(candidate))
+            return (candidate);
+    }
+
+    if (rcdirs)
+    {
+        const std::vector<std::string> &dirs(*rcdirs);
+        for (int i = 0, size = dirs.size(); i < size; ++i)
+        {
+            const std::string candidate( catpath(dirs[i], included_file) );
+            if (file_exists(candidate))
+                return (candidate);
+        }
+    }
+
+    return datafile_path(included_file, false, true);
+}
+
+std::string game_options::resolve_include(
+    const std::string &file,
+    const char *type)
+{
+    try
+    {
+        const std::string resolved =
+            resolve_include(this->filename, file, &SysEnv.rcdirs);
+
+        if (resolved.empty())
+            report_error(
+                make_stringf("Cannot find %sfile \"%s\".",
+                             type, file.c_str()));
+        return (resolved);
+    }
+    catch (const std::string &err)
+    {
+        report_error(
+            make_stringf("Cannot include %sfile: %s", type, err.c_str()));
+        return "";
+    }
+}
+
+bool game_options::was_included(const std::string &file) const
+{
+    return (included.find(file) != included.end());
+}
+
+void game_options::include(const std::string &rawfilename,
+                           bool resolve,
+                           bool runscript)
+{
+    const std::string include_file =
+        resolve ? resolve_include(rawfilename) : rawfilename;
+
+    if (was_included(include_file))
+    {
+        // Report error with rawfilename, not the resolved file name - we
+        // don't want to leak file paths in dgamelaunch installs.
+        report_error(make_stringf("Skipping previously included file: \"%s\".",
+                                  rawfilename.c_str()));
+        return;
+    }
+
+    included.insert(include_file);
+
+    // Change this->filename to the included filename while we're reading it.
+    unwind_var<std::string> optfile(this->filename, include_file);
+    FILE* f = fopen( include_file.c_str(), "r" );
+    if (f)
+    {
+        FileLineInput fl(f);
+        read_options(fl, runscript);
+        fclose(f);
+    }
+}
+
+void game_options::report_error(const std::string &error)
+{
+    // If called before game starts, log a startup error,
+    // otherwise spam the warning channel.
+    if (crawl_state.need_save)
+        mprf(MSGCH_WARN, "Warning: %s", error.c_str());
+    else
+        crawl_state.add_startup_error(error);
+}
+
 static std::string check_string(const char *s)
 {
     return (s? s : "");
@@ -2778,6 +2962,7 @@ enum commandline_option_type {
     CLO_PLAIN,
     CLO_DIR,
     CLO_RC,
+    CLO_RCDIR,
     CLO_TSCORES,
     CLO_VSCORES,
     CLO_SCOREFILE,
@@ -2788,10 +2973,11 @@ enum commandline_option_type {
     CLO_NOPS
 };
 
-static const char *cmd_ops[] = { "scores", "name", "race", "class",
-                                 "pizza", "plain", "dir", "rc", "tscores",
-                                 "vscores", "scorefile", "morgue",
-                                 "macro", "mapstat" };
+static const char *cmd_ops[] = {
+    "scores", "name", "race", "class", "pizza", "plain", "dir", "rc",
+    "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
+    "mapstat"
+};
 
 const int num_cmd_ops = CLO_NOPS;
 bool arg_seen[num_cmd_ops];
@@ -2799,6 +2985,8 @@ bool arg_seen[num_cmd_ops];
 bool parse_args( int argc, char **argv, bool rc_only )
 {
     set_crawl_base_dir(argv[0]);
+
+    SysEnv.rcdirs.clear();
 
     if (argc < 2)           // no args!
         return (true);
@@ -2991,6 +3179,15 @@ bool parse_args( int argc, char **argv, bool rc_only )
             }
             break;
 
+        case CLO_RCDIR:
+            // Always parse
+            if (!next_is_param)
+                return (false);
+
+            SysEnv.add_rcdir(next_arg);
+            nextUsed = true;
+            break;
+
         case CLO_DIR:
             // ALWAYS PARSE
             if (!next_is_param)
@@ -3075,6 +3272,18 @@ int game_options::o_colour(const char *name, int def) const
     lowercase(val);
     int col = str_to_colour(val);
     return (col == -1? def : col);
+}
+
+///////////////////////////////////////////////////////////////////////
+// system_environment
+
+void system_environment::add_rcdir(const std::string &dir)
+{
+    std::string cdir = canonicalise_file_separator(dir);
+    if (dir_exists(cdir))
+        rcdirs.push_back(cdir);
+    else
+        end(1, false, "Cannot find -rcdir \"%s\"", cdir.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////

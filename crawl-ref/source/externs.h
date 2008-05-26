@@ -1561,7 +1561,23 @@ public:
     void read_options(InitLineInput &, bool runscripts,
                       bool clear_aliases = true);
 
+    void include(const std::string &file, bool resolve, bool runscript);
+    void report_error(const std::string &error);
+
+    std::string resolve_include(const std::string &file,
+                                const char *type = "");
+
+    bool was_included(const std::string &file) const;
+
+    static std::string resolve_include(
+        std::string including_file,
+        std::string included_file,
+        const std::vector<std::string> *rcdirs = NULL)
+               throw (std::string);
+
 public:
+    std::string filename;  // The name of the file containing options.
+
     // View options
     std::vector<feature_override> feature_overrides;
     std::vector<mon_display>      mon_glyph_overrides;
@@ -1872,6 +1888,7 @@ public:
 
 private:
     std::map<std::string, std::string> aliases;
+    std::set<std::string>    included; // Files we've included already.
 
 public:
     // Convenience accessors for the second-class options in named_options.
@@ -1922,6 +1939,7 @@ private:
     void add_mon_glyph_override(const std::string &);
     mon_display parse_mon_glyph(const std::string &s) const;
     void set_option_fragment(const std::string &s);
+    bool include_file_directive(const std::string &line, bool runscript);
 
     static const std::string interrupt_prefix;
 };

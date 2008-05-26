@@ -1794,18 +1794,7 @@ static int crawl_read_options(lua_State *ls)
         return (0);
 
     const char* filename = lua_tostring(ls, 1);
-    FILE* f = fopen( filename, "r" );
-    if (f)
-    {
-        FileLineInput fl(f);
-        Options.read_options(fl, true);
-        fclose(f);
-    }
-    else
-    {
-        mprf(MSGCH_WARN, "Warning: could not read options file '%s'", filename);
-    }
-
+    Options.include(filename, true, true);
     return (0);
 }
 

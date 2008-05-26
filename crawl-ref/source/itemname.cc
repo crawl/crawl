@@ -1696,6 +1696,9 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
         return false;
 }
 
+// [ds] Will the owner of this unused function step up and end its
+// suffering? :P
+#if 0
 static bool _randart_has_known_property(const item_def &item)
 {
     for (int rap = 0; rap < RAP_NUM_PROPERTIES; rap++)
@@ -1704,6 +1707,7 @@ static bool _randart_has_known_property(const item_def &item)
 
     return false;
 }
+#endif
 
 bool item_type_tried( const item_def& item )
 {
