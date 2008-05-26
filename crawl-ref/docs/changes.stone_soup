@@ -8,7 +8,7 @@ Breaks saves and bones compatibility.
 Interface
 ---------
 * Overhauled key settings of a number of commands. 
-  (See /settings/034_commands.txt.)
+  (See /settings/034_commands.txt or press ?v while playing.)
 * Added monster list for monsters in LOS (ASCII only).
 * Overhauled (f)iring interface: abolish (t)hrowing, output quiver in status.
 * Allow selection of equipment slots from '%' overview screen.
@@ -68,7 +68,7 @@ Items
 * Potions of restore ability also cancel breath delay.
 * Staves and rods of the same type can now be recognized.
 * Staves will autoID if your skill in the appropriate school is 4 or higher.
-* Manuals are now visibly different from spell books.
+* Manuals are visibly different from spell books and don't prompt anymore.
 * Improved artefact autoinscriptions.
 * Several new pre-defined (un)randarts.
 * Added message for returning weapons NOT returning.
@@ -117,9 +117,7 @@ Monsters
 Levels
 ------
 * Added transparent wall types.
-* Guarantee Slime Pits rune.
-* Slime Pits: Modify stone walls at royal jelly's death.
-* Slime Pits are now on Lair:8-10.
+* Modified Slime Pits end.
 * Several new vaults.
 * Fixed some levels having the wrong amount of stairs.
 * Treat adjacent doors as one (large) gate, opening/closing together.
