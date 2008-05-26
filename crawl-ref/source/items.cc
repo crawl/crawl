@@ -344,10 +344,8 @@ int get_item_slot( int reserve )
     int item = NON_ITEM;
 
     for (item = 0; item < (MAX_ITEMS - reserve); item++)
-    {
         if (!is_valid_item( mitm[item] ))
             break;
-    }
 
     if (item >= MAX_ITEMS - reserve)
     {
@@ -427,11 +425,11 @@ void unlink_item( int dest )
             return;
         }
 
-        // Okay, item is buried, find item that's on top of it:
+        // Okay, item is buried, find item that's on top of it.
         for (c = igrd[ mitm[dest].x ][ mitm[dest].y ]; c != NON_ITEM;
              c = mitm[c].link)
         {
-            // find item linking to dest item
+            // Find item linking to dest item.
             if (is_valid_item( mitm[c] ) && mitm[c].link == dest)
             {
                 // unlink dest
@@ -459,10 +457,10 @@ void unlink_item( int dest )
 
     // clean the relevant parts of the object:
     mitm[dest].base_type = OBJ_UNASSIGNED;
-    mitm[dest].quantity = 0;
+    mitm[dest].quantity  = 0;
     mitm[dest].x = 0;
     mitm[dest].y = 0;
-    mitm[dest].link = NON_ITEM;
+    mitm[dest].link      = NON_ITEM;
     mitm[dest].props.clear();
 
     // Look through all items for links to this item.
@@ -524,7 +522,7 @@ void destroy_item( item_def &item, bool never_created )
         }
     }
 
-    // paranoia, shouldn't be needed
+    // Paranoia, shouldn't be needed.
     item.clear();
 }
 
@@ -1099,19 +1097,25 @@ std::string origin_desc(const item_def &item)
                 break;
             default:
                 if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
+                {
                     desc += god_name(static_cast<god_type>(iorig))
                         + " gifted " + _article_it(item) + " to you ";
+                }
                 else
+                {
                     // Bug really.
                     desc += "You stumbled upon " + _article_it(item) + " ";
+                }
                 break;
             }
         }
         else if (item.orig_monnum - 1 == MONS_DANCING_WEAPON)
             desc += "You subdued it ";
         else
+        {
             desc += "You took " + _article_it(item) + " off "
                     + _origin_monster_desc(item) + " ";
+        }
     }
     else
         desc += "You found " + _article_it(item) + " ";
@@ -1738,7 +1742,7 @@ void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y )
 }
 
 
-// returns quantity dropped
+// Returns quantity dropped.
 bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
                         int quant_drop, bool mark_dropped )
 {
@@ -1749,7 +1753,7 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
     if (quant_drop < 0)
         quant_drop = item.quantity;
 
-    // loop through items at current location
+    // Loop through items at current location.
     if (is_stackable_item( item ))
     {
         for (int i = igrd[x_plos][y_plos]; i != NON_ITEM; i = mitm[i].link)
@@ -1773,15 +1777,15 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
         }
     }
 
-    // item not found in current stack, add new item to top.
+    // Item not found in current stack, add new item to top.
     int new_item = get_item_slot(10);
     if (new_item == NON_ITEM)
         return (false);
 
-    // copy item
+    // Copy item.
     mitm[new_item] = item;
 
-    // set quantity, and set the item as unlinked
+    // Set quantity, and set the item as unlinked.
     mitm[new_item].quantity = quant_drop;
     mitm[new_item].x = 0;
     mitm[new_item].y = 0;
@@ -1789,7 +1793,7 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
 
     if (mark_dropped)
     {
-        mitm[new_item].slot = index_to_letter(item.link);
+        mitm[new_item].slot   = index_to_letter(item.link);
         mitm[new_item].flags |= ISFLAG_DROPPED;
         mitm[new_item].flags &= ~ISFLAG_THROWN;
         origin_set_unknown(mitm[new_item]);
@@ -1799,8 +1803,8 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
     if (is_blood_potion(item)
         && item.quantity != quant_drop) // partial drop only
     {
-        // since only the oldest potions have been dropped,
-        // remove the newest ones
+        // Since only the oldest potions have been dropped,
+        // remove the newest ones.
         remove_newest_blood_potion(mitm[new_item]);
     }
 

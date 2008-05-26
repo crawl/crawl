@@ -321,6 +321,7 @@ static void _place_monster_corpse(const monsters *monster)
     else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
         corpse_class = MONS_GLOWING_SHAPESHIFTER;
 
+    // Doesn't leave a corpse.
     if (mons_weight(corpse_class) == 0 || coinflip())
         return;
 
@@ -348,13 +349,13 @@ static void _place_monster_corpse(const monsters *monster)
         return;
     }
 
-    // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
+    // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack).
     move_item_to_grid( &o, monster->x, monster->y );
     if (see_grid(monster->x, monster->y))
     {
-        tutorial_dissection_reminder(
-            mons_corpse_effect(monster->type) != CE_POISONOUS
-             || player_res_poison() > 0 );
+        const bool poison = (mons_corpse_effect(monster->type) == CE_POISONOUS
+                             && player_res_poison() <= 0);
+        tutorial_dissection_reminder(!poison);
     }
 }                               // end place_monster_corpse()
 

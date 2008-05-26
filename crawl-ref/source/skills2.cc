@@ -46,70 +46,74 @@
    No overlaps, high diversity.
 */
 
-// Note:  Even though %s could be used with most of these, remember that
+// Replace @genus@ with lowercase genus, @Genus@ with uppercase, and %s
+// with special cases defined below, including but not limited to species.
+
+// NOTE:  Even though %s could be used with most of these, remember that
 // the character's race will be listed on the next line.  It's only really
 // intended for cases where things might be really awkward without it. -- bwr
-
 const char *skills[50][6] =
 {
-    {"Fighting", "Skirmisher", "Fighter", "Warrior", "Slayer", "Conqueror"},               // 0
-    {"Short Blades", "Cutter", "Slicer", "Swashbuckler", "Blademaster", "Eviscerator"},
-    {"Long Blades", "Slasher", "Carver", "Fencer", "%s Blade", "Swordmaster"},
-    {NULL},                     //  3- was: great swords {dlb}
-    {"Axes", "Chopper", "Cleaver", "Hacker", "Severer", "Executioner"},
-    {"Maces & Flails", "Cudgeler", "Basher", "Bludgeoner", "Shatterer", "Skullcrusher"},   // 5
-    {"Polearms", "Poker", "Spear-Bearer", "Impaler", "Phalangite", "%s Porcupine"},
-    {"Staves", "Twirler", "Cruncher", "Stickfighter", "Pulverizer", "Chief of Staff"},
-    {"Slings", "Vandal", "Slinger", "Whirler", "Slingshot", "%s Catapult"},
-    {"Bows", "Shooter", "Archer", "Marks%s", "Crack Shot", "Merry %s"},
-    {"Crossbows", "Bolt Thrower", "Quickloader", "Sharpshooter", "Sniper", "%s Arbalest"}, // 10
-    {"Darts", "Dart Thrower", "Hurler", "Hedgehog", "Darts Champion", "Perforator"},
-    {"Throwing", "Chucker", "Thrower", "Deadly Accurate", "Hawkeye", "%s Ballista"},
-    {"Armour", "Covered", "Protected", "Tortoise", "Impregnable", "Invulnerable"},
-    {"Dodging", "Ducker", "Nimble", "Spry", "Acrobat", "Intangible"},
-    {"Stealth", "Sneak", "Covert", "Unseen", "Imperceptible", "Ninja"},                    // 15
-    {"Stabbing", "Miscreant", "Blackguard", "Backstabber", "Cutthroat", "Politician"},
-    {"Shields", "Shield-Bearer", "Hoplite", "Blocker", "Peltast", "%s Barricade"},
-    {"Traps & Doors", "Scout", "Disarmer", "Vigilant", "Perceptive", "Dungeon Master"},
+  //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
+    {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},          //  0
+    {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Blademaster",    "Eviscerator"},
+    {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Genus@ Blade",  "Swordmaster"},
+    {NULL},  //  3- was: great swords {dlb}
+    {"Axes",           "Chopper",       "Cleaver",         "Hacker",          "Severer",        "Executioner"},
+    {"Maces & Flails", "Cudgeler",      "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},       //  5
+    {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Genus@ Porcupine"},
+    {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulverizer",     "Chief of Staff"},
+    {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Genus@ Catapult"},
+    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry %s"},
+    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Genus@ Arbalest"},   // 10
+    {"Darts",          "Dart Thrower",  "Hurler",          "Hedgehog",        "Darts Champion", "Perforator"},
+    {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Genus@ Ballista"},
+    {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable"},
+    {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible"},
+    {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja"},              // 15
+    {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
+    {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Genus@ Barricade"},
+    {"Traps & Doors",  "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
     // STR based fighters, for DEX/martial arts titles see below
-    {"Unarmed Combat", "Ruffian", "Grappler", "Brawler", "Wrestler", "%sweight Champion"},
+    {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "%sweight Champion"},
 
-    {NULL},                     // 20- empty
-    {NULL},                     // 21- empty
-    {NULL},                     // 22- empty
-    {NULL},                     // 23- empty
-    {NULL},                     // 24- empty
+    {NULL},   // 20- empty
+    {NULL},   // 21- empty
+    {NULL},   // 22- empty
+    {NULL},   // 23- empty
+    {NULL},   // 24- empty
 
-    {"Spellcasting", "Magician", "Thaumaturge", "Eclecticist", "Sorcerer", "Archmage"},    // 25
-    {"Conjurations", "Ruinous", "Conjurer", "Destroyer", "Devastator", "Annihilator"},
-    {"Enchantments", "Charm-Maker", "Infuser", "Bewitcher", "Enchanter", "Spellbinder"},
-    {"Summonings", "Caller", "Summoner", "Convoker", "Demonologist", "Hellbinder"},
-    {"Necromancy", "Grave Robber", "Reanimator", "Necromancer", "Thanatomancer", "%s of Death"},
-    {"Translocations", "Grasshopper", "Placeless %s", "Blinker", "Portalist", "Plane %s"}, // 30
-    {"Transmigration", "Changer", "Transmogrifier", "Alchemist", "Malleable", "Shapeless %s"},
-    {"Divinations", "Seer", "Soothsayer", "Diviner", "Augur", "Oracle"},
+    {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},           // 25
+    {"Conjurations",   "Ruinous",       "Conjurer",        "Destroyer",       "Devastator",     "Annihilator"},
+    {"Enchantments",   "Charm-Maker",   "Infuser",         "Bewitcher",       "Enchanter",      "Spellbinder"},
+    {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
+    {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "%s of Death"},
+    {"Translocations", "Grasshopper",   "Placeless %s",    "Blinker",         "Portalist",      "Plane %s"},           // 30
+    {"Transmigration", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless %s"},
+    {"Divinations",    "Seer",          "Soothsayer",      "Diviner",         "Augur",          "Oracle"},
 
-    {"Fire Magic", "Firebug", "Arsonist", "Scorcher", "Pyromancer", "Infernalist"},
-    {"Ice Magic", "Chiller", "Frost Mage", "Gelid", "Cryomancer", "Englaciator"},
-    {"Air Magic", "Gusty", "Cloud Mage", "Aerator", "Anemomancer", "Meteorologist"},       // 35
-    {"Earth Magic", "Digger", "Geomancer", "Earth Mage", "Metallomancer", "Petrodigitator"},
-    {"Poison Magic", "Stinger", "Tainter", "Polluter", "Contaminator", "Envenomancer"},
+    {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist"},
+    {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator"},
+    {"Air Magic",      "Gusty",         "Cloud Mage",      "Aerator",         "Anemomancer",    "Meteorologist"},      // 35
+    {"Earth Magic",    "Digger",        "Geomancer",       "Earth Mage",      "Metallomancer",  "Petrodigitator"},
+    {"Poison Magic",   "Stinger",       "Tainter",         "Polluter",        "Contaminator",   "Envenomancer"},
 
-    {"Invocations", "Believer", "Agitator", "Worldly Agent", "Theurge", "Avatar"},  // 38
-    {"Evocations", "Charlatan", "Prestidigitator", "Fetichist", "Evocator", "Talismancer"}, // 39
+    // for titles for godless characters, see below
+    {"Invocations",    "Believer",      "Agitator",        "Worldly Agent",   "Theurge",        "Avatar"},
+    {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},        // 39
 
 /*NOTE: If more skills are added, must change ranges in level_change() in player.cc */
 
-    {NULL},                     // 40- empty
-    {NULL},                     // 41- empty
-    {NULL},                     // 42- empty
-    {NULL},                     // 43- empty
-    {NULL},                     // 44- empty
-    {NULL},                     // 45- empty
-    {NULL},                     // 46- empty
-    {NULL},                     // 47- empty
-    {NULL},                     // 48- empty
-    {NULL}                      // 49- empty  {end of array}
+    {NULL},   // 40- empty
+    {NULL},   // 41- empty
+    {NULL},   // 42- empty
+    {NULL},   // 43- empty
+    {NULL},   // 44- empty
+    {NULL},   // 45- empty
+    {NULL},   // 46- empty
+    {NULL},   // 47- empty
+    {NULL},   // 48- empty
+    {NULL}    // 49- empty  {end of array}
 };
 
 const char *martial_arts_titles[6] =
@@ -118,12 +122,11 @@ const char *martial_arts_titles[6] =
 const char *atheist_inv_titles[6] =
     {"Invocations", "Unbeliever", "Agnostic", "Dissident", "Heretic", "Apostate"};
 
-/* Note that this (humans have 100 for all skills) is assumed in the
-   level_change function in player.cc, if CLASSES is def'd
+// The Human aptitude set of 100 for all skills allows to define all other
+// species relative to Humans.
 
-   3.10: but it never is, and CLASSES is probably broken now. Anyway,
-   the Spellcasting skill (25) is actually about 130% of what is shown here.
- */
+// Spellcasting and In/Evocations form the exceptions here:
+// Spellcasting skill is actually about 130%, the other two about 75%.
 const int spec_skills[ NUM_SPECIES ][40] =
 {
     {                           // SP_HUMAN (1)
@@ -1933,8 +1936,8 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
     if (god == -1)
         god = you.religion;
 
-    // translate skill level into skill ranking {dlb}:
-    // increment rank by one to "skip" skill name in array {dlb}:
+    // Translate skill level into skill ranking {dlb}:
+    // Increment rank by one to "skip" skill name in array {dlb}:
     const int skill_rank = ((skill_lev <= 7)  ? 1 :
                             (skill_lev <= 14) ? 2 :
                             (skill_lev <= 20) ? 3 :
@@ -1975,7 +1978,22 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         }
     }
 
-    const std::string::size_type where = result.find("%s");
+    // Replace all occurrences of @genus@ with the player genus.
+    std::string genus = species_name(you.species, 1, true, false, true);
+    std::string::size_type where = result.find("@genus@");
+    if (where != std::string::npos)
+    {
+        lowercase(genus);
+        result = replace_all(result, "@genus@", genus);
+    }
+    else
+    {
+        if (you.species == SP_OGRE_MAGE)
+            genus = species_name(you.species, 1, true, false, false);
+        result = replace_all(result, "@Genus@", genus);
+    }
+
+    where = result.find("%s");
     if (where != std::string::npos)
     {
         if (best_skill == SK_UNARMED_COMBAT)
@@ -2020,14 +2038,16 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         }
         else if (best_skill == SK_TRANSLOCATIONS && skill_rank == 5)
         {
-            result.replace(where, 2, (species == SP_NAGA ? "Slider"
-                                                         : "Walker"));
+            result.replace(where, 2, (species == SP_NAGA  ? "Slider" :
+                                      species == SP_KENKU ? "Glider"
+                                                          : "Walker"));
         }
         else
         {
             const bool need_cap = (best_skill != SK_BOWS);
-            const std::string sp = species_name(static_cast<species_type>(species),
-                                                0, true, need_cap);
+            const std::string sp =
+                species_name(static_cast<species_type>(species), 0, true,
+                             need_cap);
             result.replace(where, 2, sp);
         }
     }

@@ -4034,10 +4034,15 @@ int str_to_species(const std::string &species)
     return (SP_HUMAN);
 }
 
-std::string species_name(species_type speci, int level, bool genus, bool adj)
-// defaults:                                            false       false
+std::string species_name(species_type speci, int level, bool genus, bool adj,
+                         bool ogre)
+// defaults:             false                          false       false
 {
     std::string res;
+
+    // If 'ogre' is true, the Ogre-Mage is described as like the Ogre.
+    if (ogre && speci == SP_OGRE_MAGE)
+        speci = SP_OGRE;
 
     if (player_genus( GENPC_DRACONIAN, speci ))
     {
@@ -4114,8 +4119,7 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
         // We've previously declared that these are radically
         // different from Ogres... so we're not going to
         // refer to them as Ogres.  -- bwr
-        // Not the species, but genus... why not? -- jpeg
-        case SP_OGRE_MAGE:  res = (genus? "Ogre" : "Ogre-Mage");     break;
+        case SP_OGRE_MAGE:  res = "Ogre-Mage";                       break;
         case SP_CENTAUR:    res = "Centaur";                         break;
         case SP_SPRIGGAN:   res = "Spriggan";                        break;
         case SP_MINOTAUR:   res = "Minotaur";                        break;

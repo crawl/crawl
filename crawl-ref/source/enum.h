@@ -2263,7 +2263,7 @@ enum shop_type // (unsigned char) env.sh_type[], item_in_shop(), in_a_shop()
     SHOP_RANDOM = 255                  // keep set at 255 for now {dlb}
 };
 
-// These are often addressed relative to each other (esp. delta SIZE_MEDIUM)
+// These are often addressed relative to each other (esp. delta SIZE_MEDIUM).
 enum size_type
 {
     SIZE_TINY,              // rat/bat
@@ -2305,6 +2305,11 @@ enum skill_type
     SK_SHIELDS,
     SK_TRAPS_DOORS,
     SK_UNARMED_COMBAT,                 //   19
+    SK_UNUSED_2,
+    SK_UNUSED_3,
+    SK_UNUSED_4,
+    SK_UNUSED_5,
+    SK_UNUSED_6,
     SK_SPELLCASTING = 25,              //   25
     SK_CONJURATIONS,
     SK_ENCHANTMENTS,
