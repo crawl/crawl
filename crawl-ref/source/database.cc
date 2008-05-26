@@ -74,6 +74,8 @@ static TextDB AllDBs[] =
             "database/rand_all.txt", // jewellery and general
             // This doesn't really belong here, but they *are* god gifts...
             "database/monname.txt",  // orcish names for Beogh to choose from
+            // This doesn't really belong here, but *can* be used by randarts...
+            "database/miscname.txt", // names for miscellaneous things
             NULL),
 
     TextDB( "db/speak",

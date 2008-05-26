@@ -2308,7 +2308,7 @@ bool silver_statue_effects(monsters *mons)
     if ((mons_player_visible(mons) || one_chance_in(3)) && !one_chance_in(3))
     {
         const std::string msg =
-            "'s eyes glow " + weird_glow_colour() + '.';
+            "'s eyes glow " + weird_glowing_colour() + '.';
         simple_monster_message(mons, msg.c_str(), MSGCH_WARN);
 
         create_monster(

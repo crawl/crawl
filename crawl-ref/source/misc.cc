@@ -2374,9 +2374,9 @@ void new_level(void)
 #endif
 }
 
-static std::string weird_colour()
+std::string weird_glowing_colour()
 {
-    std::string result = getRandNameString("colour_name");
+    std::string result = getRandNameString("glowing_colour_name");
 
     lowercase(result);
 
@@ -2385,44 +2385,9 @@ static std::string weird_colour()
 
 std::string weird_writing()
 {
-    int temp_rand;             // for probability determinations {dlb}
-    std::string result;
+    std::string result = getRandNameString("writing_name");
 
-    temp_rand = random2(14);
-    result =
-        (temp_rand == 0) ? "writhing" :
-        (temp_rand == 1) ? "bold" :
-        (temp_rand == 2) ? "faint" :
-        (temp_rand == 3) ? "spidery" :
-        (temp_rand == 4) ? "blocky" :
-        (temp_rand == 5) ? "angular" :
-        (temp_rand == 6) ? "shimmering" :
-        (temp_rand == 7) ? "glowing" :
-        (temp_rand == 8) ? "pulsating" :
-        (temp_rand == 9) ? "sinuous"
-                         : "";
-
-    if (!result.empty())
-        result += ' ';
-
-    result += weird_colour();
-
-    result += ' ';
-
-    temp_rand = random2(14);
-
-    result +=
-        (temp_rand == 0) ? "writing" :
-        (temp_rand == 1) ? "scrawl" :
-        (temp_rand == 2) ? "sigils" :
-        (temp_rand == 3) ? "runes" :
-        (temp_rand == 4) ? "hieroglyphics" :
-        (temp_rand == 5) ? "figures" :
-        (temp_rand == 6) ? "print-out" :
-        (temp_rand == 7) ? "binary code" :
-        (temp_rand == 8) ? "glyphs" :
-        (temp_rand == 9) ? "symbols"
-                         : "text";
+    lowercase(result);
 
     return result;
 }
@@ -2438,30 +2403,6 @@ bool scramble(void)
     else
         return true;
 }                               // end scramble()
-
-std::string weird_glow_colour()
-{
-    int temp_rand;             // for probability determinations {dlb}
-    std::string result;
-
-    // Must start with a consonant!
-    temp_rand = random2(8);
-    result =
-        (temp_rand == 0) ? "brilliant" :
-        (temp_rand == 1) ? "pale" :
-        (temp_rand == 2) ? "mottled" :
-        (temp_rand == 3) ? "shimmering" :
-        (temp_rand == 4) ? "bright" :
-        (temp_rand == 5) ? "dark" :
-        (temp_rand == 6) ? "shining"
-                         : "faint";
-
-    result += ' ';
-
-    result += weird_colour();
-
-    return result;
-}
 
 bool go_berserk(bool intentional)
 {

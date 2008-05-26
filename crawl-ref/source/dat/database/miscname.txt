@@ -1,0 +1,157 @@
+######################################################
+# Miscellaneous
+# -------------
+# miscname.txt: lookup miscellaneous names
+#
+# This file contains a list of names for miscellaneous things.
+# This is currently only used for colours and writing types.
+#
+# Note that randarts may use these as well.
+######################################################
+%%%%
+glowing_adj
+
+Brilliant
+
+Pale
+
+Mottled
+
+Shimmering
+
+Bright
+
+Dark
+
+Shining
+
+Faint
+
+%%%%
+colour_name
+
+Aubergine
+
+Azure
+
+Beige
+
+Black
+
+Blue
+
+Bronze
+
+Brown
+
+Charcoal
+
+Chartreuse
+
+Cyan
+
+Gold
+
+Green
+
+Grey
+
+Indigo
+
+Leaf Green
+
+Lime Green
+
+Magenta
+
+Marigold
+
+Mauve
+
+Ochre
+
+Orange
+
+Pink
+
+Purple
+
+Red
+
+Rubric
+
+Scarlet
+
+Silver
+
+Umber
+
+White
+
+Yellow
+
+%%%%
+glowing_colour_name
+
+@glowing_adj@ @colour_name@
+
+%%%%
+writing_adj
+
+Writhing
+
+Bold
+
+Faint
+
+Spidery
+
+Blocky
+
+Angular
+
+Shimmering
+
+Glowing
+
+Pulsating
+
+Sinuous
+
+%%%%
+writing_noun
+
+Writing
+
+Scrawl
+
+Sigils
+
+Runes
+
+Hieroglyphics
+
+Figures
+
+Print-Out
+
+Binary Code
+
+Glyphs
+
+Symbols
+
+Text
+
+%%%%
+writing_name
+
+@writing_adj@ @writing_noun@
+
+@colour_name@ @writing_noun@
+
+@glowing_colour_name@ @writing_noun@
+
+@writing_adj@ @colour_name@ @writing_noun@
+
+%%%%

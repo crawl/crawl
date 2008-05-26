@@ -736,8 +736,8 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     switch (ru)
     {
     case 0:
-        msg::stream << "The dust glows a " << weird_glow_colour()
-                    << " colour!" << std::endl;
+        msg::stream << "The dust glows " << weird_glowing_colour()
+                    << "!" << std::endl;
         break;
 
     case 1:
@@ -749,7 +749,7 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         if (you.equip[EQ_WEAPON] != -1)
         {
             msg::stream << you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR)
-                        << " glows " << weird_glow_colour()
+                        << " glows " << weird_glowing_colour()
                         << " for a moment." << std::endl;
         }
         else
