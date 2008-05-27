@@ -1128,6 +1128,13 @@ void tutorial_first_item(const item_def &item)
     if (!Options.tutorial_events[TUT_SEEN_FIRST_OBJECT]
         || Options.tut_just_triggered)
     {
+        // NOTE: Since a new player might not think to pick up a
+        // corpse, TUT_SEEN_CARRION is done when a corpse is first seen.
+        if (item.base_type == OBJ_CORPSES
+            && mgrd[item.x][item.y] == NON_MONSTER)
+        {
+            learned_something_new(TUT_SEEN_CARRION, item.x, item.y);
+        }
         return;
     }
 
@@ -1179,6 +1186,11 @@ void tutorial_first_item(const item_def &item)
 #ifdef USE_TILE
     more();
 #endif
+
+    // NOTE: Since a new player might not think to pick up a corpse,
+    // TUT_SEEN_CARRION is done when a corpse is first seen.
+    if (item.base_type == OBJ_CORPSES)
+        learned_something_new(TUT_SEEN_CARRION, item.x, item.y);
 }
 
 // Here most of the tutorial messages for various triggers are handled.
@@ -1379,14 +1391,50 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
 
       case TUT_SEEN_CARRION:
-          text << "You have picked up a corpse"
+          // NOTE: This is called when a corpse is first seen, rather than
+          // first picked up, since a new player might not think to pick
+          // up a corpse.
+
+          if (x <= 0 || y <= 0)
+              text << "Ah, a corpse!";
+          else
+          {
+              int i = igrd[x][y];
+              while (i != NON_ITEM)
+              {
+                  if (mitm[i].base_type == OBJ_CORPSES)
+                      break;
+
+                  i = mitm[i].link;
+              }
+              if (i == NON_ITEM)
+                  text << "Ah, a corpse!";
+              else
+              {
+                  const item_def& item(mitm[i]);
+
+                  text << "That ";
+
 #ifndef USE_TILE
-                  " ('<w>%</w>')"
+                  unsigned short col;
+                  get_item_glyph(&item, &ch, &col);
+
+                  text << _colourize_glyph(col, ch);
+                  text << " ";
+#else
+                  // highlight item
+                  const coord_def ep = grid2view(coord_def(item.x, item.y));
+                  tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
-                  ". When a corpse is lying on the ground, you can "
-                  "<w>c</w>hop it up with a sharp implement. Once hungry you "
-                  "can then <w>e</w>at the resulting chunks (though they may "
-                  "not be healthy).";
+
+                  text << "is a corpse.";
+              }
+          }
+              
+          text << " When a corpse is lying on the ground, you "
+                  "can <w>c</w>hop it up with a sharp implement. Once "
+                  "hungry you can then <w>e</w>at the resulting chunks "
+                  "(though they may not be healthy).";
 #ifdef USE_TILE
           text << " With tiles, you can also chop up any corpse that shows in "
                   "the floor part of your inventory region, simply by doing a "
