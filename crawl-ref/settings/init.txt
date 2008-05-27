@@ -168,7 +168,7 @@ trap_item_brand    = reverse
 
 # The following options are not default. 
 #
-runrest_ignore_message = prayer ends
+runrest_ignore_message = pray:
 runrest_ignore_message = You feel.*sick
 runrest_ignore_message = disappears in a puff of smoke
 runrest_ignore_message = engulfed in a cloud of smoke
