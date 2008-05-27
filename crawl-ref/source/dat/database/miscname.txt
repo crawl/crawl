@@ -11,24 +11,25 @@
 %%%%
 glowing_adj
 # any word other than "glowing" itself will work here
+Bright
 
 Brilliant
 
-Pale
-
-Mottled
-
-Shimmering
-
-Bright
-
 Dark
 
-Shining
+Dull
 
 Faint
 
+Mottled
+
+Pale
+
 Pulsating
+
+Shimmering
+
+Shining
 
 %%%%
 colour_name
@@ -100,49 +101,50 @@ glowing_colour_name
 
 %%%%
 writing_adj
-
-Glowing
-
-Writhing
-
-Bold
-
-Spidery
+Angular
 
 Blocky
 
-Angular
-
-Sinuous
+Bold
 
 Faded
 
+Flowing
+
+Glowing
+
 Shifting
+
+Sinuous
+
+Spidery
+
+Writhing
 
 %%%%
 writing_noun
 
-Writing
+Binary Code
+
+Figures
+
+Glyphs
+
+Hieroglyphics
+
+Print-Out
+
+Runes
 
 Scrawl
 
 Sigils
 
-Runes
-
-Hieroglyphics
-
-Figures
-
-Print-Out
-
-Binary Code
-
-Glyphs
-
 Symbols
 
 Text
+
+Writing
 
 %%%%
 writing_name
