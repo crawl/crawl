@@ -326,11 +326,11 @@ int get_species_by_abbrev( const char *abbrev )
     COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
     for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
-         if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[i][0] )
-             && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[i][1] ))
-         {
-             break;
-         }
+        if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[i][0] )
+            && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[i][1] ))
+        {
+            break;
+        }
     }
 
     return ((i < NUM_SPECIES) ? i : -1);
@@ -557,8 +557,8 @@ int give_first_conjuration_book()
     // Conjuration books are largely Fire or Ice, so we'll use
     // that as the primary condition, and air/earth to break ties. -- bwr
     if (you.skills[SK_ICE_MAGIC] > you.skills[SK_FIRE_MAGIC]
-        || (you.skills[SK_FIRE_MAGIC] == you.skills[SK_ICE_MAGIC]
-            && you.skills[SK_AIR_MAGIC] > you.skills[SK_EARTH_MAGIC]))
+        || you.skills[SK_FIRE_MAGIC] == you.skills[SK_ICE_MAGIC]
+           && you.skills[SK_AIR_MAGIC] > you.skills[SK_EARTH_MAGIC])
     {
         book = BOOK_CONJURATIONS_II;
     }

@@ -797,10 +797,12 @@ static void _build_layout_skeleton(int level_number, int level_type,
 
     if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
     {
-        // do 'normal' building.  Well, except for the swamp and shoals.
-        if (!player_in_branch(BRANCH_SWAMP) &&
-            !player_in_branch(BRANCH_SHOALS))
+        // Do 'normal' building.  Well, except for the swamp and shoals.
+        if (!player_in_branch(BRANCH_SWAMP)
+            && !player_in_branch(BRANCH_SHOALS))
+        {
             skip_build = _builder_normal(level_number, level_type, sr);
+        }
 
         if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
         {
@@ -851,7 +853,7 @@ static void _fixup_walls()
         || player_in_branch( BRANCH_VAULTS )
         || player_in_branch( BRANCH_CRYPT ))
     {
-        // always the case with Dis {dlb}
+        // Always the case with Dis {dlb}
         dungeon_feature_type vault_wall = DNGN_METAL_WALL;
 
         if (player_in_branch( BRANCH_VAULTS ))
@@ -859,13 +861,13 @@ static void _fixup_walls()
             vault_wall = DNGN_ROCK_WALL;
             const int bdepth = player_branch_depth();
 
-            if ( bdepth > 2 )
+            if (bdepth > 2)
                 vault_wall = DNGN_STONE_WALL;
 
-            if ( bdepth > 4 )
+            if (bdepth > 4)
                 vault_wall = DNGN_METAL_WALL;
 
-            if ( bdepth > 6 && one_chance_in(10))
+            if (bdepth > 6 && one_chance_in(10))
                 vault_wall = DNGN_GREEN_CRYSTAL_WALL;
         }
         else if (player_in_branch( BRANCH_CRYPT ))
@@ -881,9 +883,9 @@ static void _fixup_branch_stairs()
 {
     // Top level of branch levels - replaces up stairs
     // with stairs back to dungeon or wherever:
-    if ( your_branch().exit_stairs != NUM_FEATURES &&
-         player_branch_depth() == 1 &&
-         you.level_type == LEVEL_DUNGEON )
+    if (your_branch().exit_stairs != NUM_FEATURES
+        && player_branch_depth() == 1
+        && you.level_type == LEVEL_DUNGEON)
     {
         const dungeon_feature_type exit = your_branch().exit_stairs;
         for (int x = 1; x < GXM; x++)
@@ -892,9 +894,11 @@ static void _fixup_branch_stairs()
                     && grd[x][y] <= DNGN_ESCAPE_HATCH_UP)
                 {
                     if (grd[x][y] == DNGN_STONE_STAIRS_UP_I)
+                    {
                         env.markers.add(
                             new map_feature_marker(coord_def(x,y),
                                                    grd[x][y]));
+                    }
                     grd[x][y] = exit;
                 }
     }
@@ -1001,14 +1005,14 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                     if (num_stairs <= 3)
                         break;
 
-                    if (preserve_vault_stairs &&
-                        (dgn_Map_Mask(stair_list[s2]) & MMT_VAULT))
+                    if (preserve_vault_stairs
+                        && (dgn_Map_Mask(stair_list[s2]) & MMT_VAULT))
                     {
                         continue;
                     }
 
                     flood_find<feature_grid, coord_predicate> ff(env.grid,
-                        in_bounds);
+                                                                 in_bounds);
 
                     ff.add_feat(grd(stair_list[s2]));
 
@@ -1096,8 +1100,8 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         {
             int s1 = s % num_stairs;
             int s2 = (s1 + 1) % num_stairs;
-            ASSERT(grd(stair_list[s2]) >= base &&
-                grd(stair_list[s2]) <= base + 3);
+            ASSERT(grd(stair_list[s2]) >= base
+                   && grd(stair_list[s2]) <= base + 3);
 
             if (grd(stair_list[s1]) == grd(stair_list[s2]))
             {
@@ -1358,7 +1362,7 @@ static void _hide_doors()
     for (dx = 1; dx < GXM-1; dx++)
         for (dy = 1; dy < GYM-1; dy++)
         {
-            // only one out of four doors are candidates for hiding {gdl}:
+            // Only one out of four doors are candidates for hiding {gdl}:
             if (grd[dx][dy] == DNGN_CLOSED_DOOR && one_chance_in(4)
                 && unforbidden(coord_def(dx, dy), MMT_NO_DOOR))
             {
@@ -1507,10 +1511,10 @@ static void _place_base_islands(int margin, int num_islands, int estradius,
                     break;
                 }
             }
-            if ( random2(num_islands) && island_distance )
+            if (random2(num_islands) && island_distance)
                 --island_distance;
         }
-        while ( !centre_ok );
+        while (!centre_ok);
 
         // place an ellipse around the new coordinate
         _place_ellipse( centres[i].x, centres[i].y, a, b, DNGN_FLOOR, margin);
@@ -1973,7 +1977,7 @@ static int _dgn_random_map_for_place(bool wantmini)
     const level_id lid = level_id::current();
     int vault = random_map_for_place(lid, wantmini);
 
-    // disallow entry vaults for tutorial (complicates things)
+    // Disallow entry vaults for tutorial (only complicates things).
     if (vault == -1
         && lid.branch == BRANCH_MAIN_DUNGEON
         && lid.depth == 1 && !Options.tutorial_left)
@@ -1984,7 +1988,7 @@ static int _dgn_random_map_for_place(bool wantmini)
     return (vault);
 }
 
-// returns BUILD_SKIP if we should skip further generation,
+// Returns BUILD_SKIP if we should skip further generation,
 // BUILD_QUIT if we should immediately quit, and BUILD_CONTINUE
 // otherwise.
 static builder_rc_type _builder_by_branch(int level_number)
@@ -2050,7 +2054,7 @@ static void _place_minivaults(const std::string &tag, int lo, int hi, bool force
     }
 
     int chance = you.your_level == 0? 50 : 100;
-    while ((chance && random2(100) < chance) || nvaults-- > 0)
+    while (chance && random2(100) < chance || nvaults-- > 0)
     {
         const int vault = _dgn_random_map_for_place(true);
         if (vault == -1)
@@ -2185,9 +2189,9 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
 static builder_rc_type _builder_basic(int level_number)
 {
     int temp_rand;
-    int doorlevel = random2(11);
+    int doorlevel  = random2(11);
     int corrlength = 2 + random2(14);
-    int roomsize = 4 + random2(5) + random2(6);
+    int roomsize   = 4 + random2(5) + random2(6);
     int no_corr = (one_chance_in(100) ? 500 + random2(500) : 30 + random2(200));
     int intersect_chance = (one_chance_in(20) ? 400 : random2(20));
 
@@ -2332,7 +2336,7 @@ static void _builder_extras( int level_number, int level_type )
     else if (level_number > 8 && one_chance_in(12))
     {
         _build_lake( (river_type != DNGN_SHALLOW_WATER) ? river_type
-                                                       : DNGN_DEEP_WATER );
+                                                        : DNGN_DEEP_WATER );
     }
 }
 

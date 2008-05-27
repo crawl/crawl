@@ -851,7 +851,7 @@ bool activate_ability()
 
         const int keyin = get_ch();
 
-        if ( keyin == '?' || keyin == '*' )
+        if (keyin == '?' || keyin == '*')
         {
             selected = choose_ability_menu(talents);
             if (selected == -1)
@@ -860,8 +860,8 @@ bool activate_ability()
                 return (false);
             }
         }
-        else if (keyin == ESCAPE || keyin == ' ' ||
-                 keyin == '\r' || keyin == '\n')
+        else if (keyin == ESCAPE || keyin == ' '
+                 || keyin == '\r' || keyin == '\n')
         {
             canned_msg( MSG_OK );
             return (false);
