@@ -2748,7 +2748,10 @@ int burden_change(void)
         you.burden_state = BS_OVERLOADED;
 
         if (old_burdenstate != you.burden_state)
+        {
             mpr("You are being crushed by all of your possessions.");
+            learned_something_new(TUT_HEAVY_LOAD);
+        }
     }
 
     // Stop travel if we get burdened (as from potions of might/levitation
