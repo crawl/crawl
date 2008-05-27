@@ -161,39 +161,39 @@ writing_name
 %%%%
 roaring_animal_name
 
-Frog
-
-Pill Bug
-
-Millipede
-
-Eggplant
-
 Albino Dragon
 
 Dragon
 
+Eggplant
+
+Frog
+
 Human
+
+Millipede
+
+Pill Bug
 
 Slug
 
 %%%%
 smell_name
 
-Coffee
-
-Salt
+Baking Bread
 
 Burning Hair
 
-Baking Bread
+Coffee
+
+Fire and Brimstone
+
+Salt
 
 Something Weird
 
-Wet Wool
-
 Sulphur
 
-Fire and Brimstone
+Wet Wool
 
 %%%%
