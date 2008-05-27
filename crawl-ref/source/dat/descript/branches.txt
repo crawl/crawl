@@ -1,52 +1,51 @@
 %%%%
 Dungeon
 
-It is still a mystery how this bizarre place was created. Some claim that it is
-the playground of bored gods, whereas others maintain that it was shaped by all
-kinds of species who fled the overworld and shunned the light.
-No matter what the origin of this cave is, it is filled with riches unheard of 
-as well as with ample dangers to any intruder.
-Few have escaped alive, and even fewer have kept some rest of sanity to tell
-the tale.
+It is still a mystery how this bizarre place was created. Some claim that it
+is the playground of bored gods, whereas others maintain that it was shaped
+by all kinds of species who fled the overworld and shunned the light. No
+matter what the origin of this cave is, it is filled with riches unheard of
+as well as with ample dangers to any intruder. Few have escaped alive, and
+even fewer have kept some rest of sanity to tell the tale.
 %%%%
 Temple
 
-The Temple of some of the Gods, a place of peace and refuge
-from the insanity of the dungeon.
+The Temple of some of the Gods, a place of peace and refuge from the
+insanity of the dungeon.
 %%%%
 Orcish Mines
 
-The mines of the orcs, filled with their gold, but 
-treacherous and easy to get trapped in.
+The mines of the orcs, filled with their gold, but treacherous and easy to
+get trapped in.
 %%%%
 Elven Halls
 
-Whereas most elven folk would never move into a dark subterranean complex like
-this, the deep elves did. Their halls are filled with riches but any passersby
-should be aware of the legendary magical prowess of this species.
+Whereas most elven folk would never move into a dark subterranean complex
+like this, the deep elves did. Their halls are filled with riches but any
+passersby should be aware of the legendary magical prowess of this species.
 %%%%
 Lair
 
 Most adventurers find the lair to be an exciting change of climate. And
-indeed, there is something to be said about getting stabbed, mauled and 
+indeed, there is something to be said about getting gored, mauled and
 eaten rather than sliced, burnt or stabbed.
 %%%%
 Swamp
 
-A swampy waste land, complete with ooze, muck, flies, and
-large slavering carnivorous monsters.
+A swampy waste land, complete with ooze, muck, flies, and large slavering
+carnivorous monsters.
 %%%%
 Shoals
 
-Here be the Shoals: exotic underground beaches, salty spray and
-creatures that bite, stab, and maul.
+Here be the Shoals: exotic underground beaches, salty spray and creatures
+that bite, stab, and maul.
 %%%%
 Slime Pits
 
-The amorphous realm of acids, jellies and slimes. 
-Any trace of intelligent beings has long been dissolved. Still, 
-there are rumours of great treasures deep down, hidden safely away
-in secret chambers without door or window for acid to leak in.
+The amorphous realm of acids, jellies and slimes. Any trace of intelligent
+beings has long been dissolved. Still, there are rumours of great treasures
+deep down, hidden safely away in secret chambers without door or window for
+acid to leak in.
 %%%%
 Snake Pit
 
@@ -99,7 +98,8 @@ Who will stand the test of iron?
 %%%%
 Gehenna
 
-The fires of Gehenna burnt many a confident hero, and they will burn evermore.
+The fires of Gehenna burnt many a confident hero, and they will burn
+evermore.
 %%%%
 Cocytus
 
@@ -107,7 +107,7 @@ A grim and frost-bitten hell.
 %%%%
 Tartarus
 
-Over time, the undead, demons and devils of this place drain all life out of 
+Over time, the undead, demons and devils of this place drain all life out of
 treasure-craving visitors.
 %%%%
 Zot
