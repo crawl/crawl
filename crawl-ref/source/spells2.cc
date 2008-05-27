@@ -272,7 +272,6 @@ int corpse_rot(int power)
     }
 
     for (adx = minx; adx != maxx; adx += xinc)
-    {
         for (ady = miny; ady != maxy; ady += yinc)
         {
             if (see_grid_no_trans(adx, ady))
@@ -296,14 +295,14 @@ int corpse_rot(int power)
                         else
                         {
                             mitm[objl].sub_type = CORPSE_SKELETON;
-                            mitm[objl].special = 200;
-                            mitm[objl].colour = LIGHTGREY;
+                            mitm[objl].special  = 200;
+                            mitm[objl].colour   = LIGHTGREY;
                         }
 
                         place_cloud(CLOUD_MIASMA, adx, ady,
                                     4 + random2avg(16, 3), KC_YOU);
 
-                        // Don't look for more corpses here
+                        // Don't look for more corpses here.
                         break;
                     }
                     hrg = mitm[objl].link;
@@ -311,7 +310,6 @@ int corpse_rot(int power)
                 }
             }
         }
-    }
 
     if (player_can_smell())
         mpr("You smell decay.");
@@ -359,49 +357,45 @@ int animate_dead( actor *caster, int power, beh_type corps_beh,
 
     coord_def a;
     for (a.x = minx; a.x != maxx; a.x += xinc)
-    {
         for (a.y = miny; a.y != maxy; a.y += yinc)
         {
-            if (in_bounds(a) && see_grid(los, c, a))
+            if (!in_bounds(a) || !see_grid(los, c, a))
+                continue;
+
+            if (igrd(a) != NON_ITEM)
             {
-                if (igrd(a) != NON_ITEM)
+                int objl = igrd(a);
+                int hrg = 0;
+
+                // This searches all the items on the ground for a corpse.
+                while (objl != NON_ITEM)
                 {
-                    int objl = igrd(a);
-                    int hrg = 0;
-
-                    // This searches all the items on the ground for a corpse
-                    while (objl != NON_ITEM)
+                    if (is_animatable_corpse(mitm[objl])
+                        && !is_being_butchered(mitm[objl]))
                     {
-                        if (is_animatable_corpse(mitm[objl])
-                            && !is_being_butchered(mitm[objl]))
-                        {
-                            int num = raise_corpse(objl, a.x, a.y,
-                                                corps_beh, corps_hit, actual);
-                            number_raised += num;
-                            if (see_grid(env.show, you.pos(), a))
-                                number_seen += num;
-                            break;
-                        }
-
-                        hrg = mitm[objl].link;
-                        objl = hrg;
+                        int num = raise_corpse(objl, a.x, a.y, corps_beh,
+                                               corps_hit, actual);
+                        number_raised += num;
+                        if (see_grid(env.show, you.pos(), a))
+                            number_seen += num;
+                        break;
                     }
 
-                    objl = 1;
+                    hrg = mitm[objl].link;
+                    objl = hrg;
                 }
+
+                objl = 1;
             }
         }
-    }
 
     if (actual == 0)
-        return number_raised;
+        return (number_raised);
 
     if (number_seen > 0)
-    {
         mpr("The dead are walking!");
-    }
 
-    return number_raised;
+    return (number_raised);
 }                               // end animate_dead()
 
 int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
@@ -419,7 +413,7 @@ int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
             bool was_butchering = is_being_butchered(item);
 
             rc = raise_corpse(objl, axps, ayps, corps_beh, corps_hit, 1);
-            if ( rc )
+            if (rc)
             {
                 if (is_terrain_seen(axps, ayps))
                     mpr("The dead are walking!");
@@ -462,8 +456,8 @@ static int raise_corpse( int corps, int corx, int cory,
 
         const int number =
             mitm[corps].props.exists(MONSTER_NUMBER)
-            ? mitm[corps].props[MONSTER_NUMBER].get_short()
-            : 0;
+                ? mitm[corps].props[MONSTER_NUMBER].get_short()
+                : 0;
 
         const monster_type zombie_type =
             static_cast<monster_type>(mitm[corps].plus);

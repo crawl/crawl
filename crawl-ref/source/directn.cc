@@ -2179,9 +2179,10 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     if (mondtype != DESC_NONE)
     {
         desc = mon->name(mondtype);
-        // For named monsters also mention the base type.
+        // For named monsters also mention the base type in the form of
+        // "Morbeogh the orc priest".
         if (!(mon->mname).empty())
-            desc += ", " + mons_type_name(mon->type, DESC_NOCAP_A);
+            desc += " " + mons_type_name(mon->type, DESC_NOCAP_THE);
     }
     std::string weap = "";
 

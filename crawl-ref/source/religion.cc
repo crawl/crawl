@@ -3135,21 +3135,21 @@ static void _ely_dull_inventory_weapons()
         if (you.inv[i].base_type == OBJ_WEAPONS
             || you.inv[i].base_type == OBJ_MISSILES)
         {
-            // don't dull artefacts
+            // Don't dull artefacts.
             if (is_artefact(you.inv[i]))
                 continue;
 
-            // don't dull weapons below -1/-1
+            // Don't dull weapons below -1/-1.
             if (you.inv[i].base_type == OBJ_WEAPONS
                 && you.inv[i].plus <= -1 && you.inv[i].plus2 <= -1)
             {
                 continue;
             }
-            // don't dull ammo below -1
+            // Don't dull ammo below -1.
             else if (you.inv[i].plus <= -1)
                 continue;
 
-            // 2/3 of the time, don't do anything
+            // 2/3 of the time, don't do anything.
             if (!one_chance_in(3))
                 continue;
 
@@ -3161,16 +3161,17 @@ static void _ely_dull_inventory_weapons()
             if (you.inv[i].link == quiver_link)
                 quivered = true;
 
-            // dull the weapon/ammo
+            // Dull the weapon/ammo.
             if (you.inv[i].plus > -1)
                 you.inv[i].plus--;
-            if ((you.inv[i].base_type == OBJ_WEAPONS)
+
+            if (you.inv[i].base_type == OBJ_WEAPONS
                 && you.inv[i].plus2 > -1)
             {
                 you.inv[i].plus2--;
             }
 
-            // update the weapon/ammo display, if necessary
+            // Update the weapon/ammo display, if necessary.
             if (wielded)
                 you.wield_change = true;
             if (quivered)
@@ -3444,54 +3445,54 @@ static bool _beogh_retribution()
         // drawing the Wrath card.
         for (int i = 0; i < num_to_create; i++)
         {
-            // create item
+            // Create item.
             int slot = items(0, OBJ_WEAPONS, WPN_CLUB + random2(13),
                              true, you.experience_level,
                              (you.species == SP_HILL_ORC) ?
                                  MAKE_ITEM_NO_RACE : MAKE_ITEM_ORCISH);
 
-            if ( slot == -1 )
+            if (slot == -1)
                 continue;
 
             item_def& item = mitm[slot];
 
-            // set item ego type
+            // Set item ego type.
             set_item_ego_type(item, OBJ_WEAPONS,
                 (you.species == SP_HILL_ORC) ?
                     SPWPN_ORC_SLAYING : SPWPN_ELECTROCUTION);
 
-            // manually override item plusses
-            item.plus = random2(3);
+            // Manually override item plusses.
+            item.plus  = random2(3);
             item.plus2 = random2(3);
 
             if (coinflip())
                 item.flags |= ISFLAG_CURSED;
 
-            // let the player see what he's being attacked by
+            // Let the player see what he's being attacked by.
             set_ident_flags( item, ISFLAG_KNOW_TYPE );
 
-            // now create monster
+            // Now create monster.
             int mons =
                 create_monster(
                     mgen_data::alert_hostile_at(
                         MONS_DANCING_WEAPON,
                         you.pos() ));
 
-            // hand item information over to monster
+            // Hand item information over to monster.
             if (mons != -1)
             {
-                // destroy the old weapon
-                // arguably we should use destroy_item() here
+                // Destroy the old weapon.
+                // Arguably we should use destroy_item() here.
                 mitm[menv[mons].inv[MSLOT_WEAPON]].clear();
 
                 menv[mons].inv[MSLOT_WEAPON] = slot;
                 num_created++;
 
-                // 50% chance of weapon disappearing on "death"
+                // 50% chance of weapon disappearing on "death".
                 if (coinflip())
                     menv[mons].flags |= MF_HARD_RESET;
             }
-            else // didn't work out! delete item
+            else // Didn't work out! Delete item.
             {
                 mitm[slot].clear();
             }

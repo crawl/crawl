@@ -3547,7 +3547,7 @@ bool monsters::wants_armour(const item_def &item) const
     return (check_armour_size(item, mons_size(this)));
 }
 
-static mon_inv_type _equip_slot_to_mslot(equipment_type eq)
+mon_inv_type equip_slot_to_mslot(equipment_type eq)
 {
     switch (eq)
     {
@@ -3568,7 +3568,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     equipment_type eq = EQ_NONE;
 
     // Hack to allow nagas/centaurs to wear bardings. (jpeg)
-    switch(item.sub_type)
+    switch (item.sub_type)
     {
     case ARM_NAGA_BARDING:
         if (::mons_species(this->type) == MONS_NAGA)
@@ -3593,12 +3593,13 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
         return (false);
 
-    const mon_inv_type mslot = _equip_slot_to_mslot(eq);
+    const mon_inv_type mslot = equip_slot_to_mslot(eq);
     if (mslot == NUM_MONSTER_SLOTS)
         return (false);
 
     int newAC = item.armour_rating();
-    // no armour yet -> get this one
+
+    // No armour yet -> get this one.
     if (!mslot_item(mslot) && newAC > 0)
         return pickup(item, mslot, near);
 
@@ -3619,7 +3620,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
                 int oldval = item_value(*existing_armour);
                 int newval = item_value(item);
 
-                // vastly prefer matching racial type
+                // Vastly prefer matching racial type.
                 if (_item_race_matches_monster(*existing_armour, this))
                     oldval *= 2;
                 if (_item_race_matches_monster(item, this))
@@ -3984,7 +3985,7 @@ void monsters::wield_melee_weapon(int near)
 
 item_def *monsters::slot_item(equipment_type eq)
 {
-    return mslot_item(_equip_slot_to_mslot(eq));
+    return mslot_item(equip_slot_to_mslot(eq));
 }
 
 item_def *monsters::mslot_item(mon_inv_type mslot) const
@@ -5380,7 +5381,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
     }
 
-    // assumption: mons_res_fire has already been checked
+    // Assumption: mons_res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
         int dam =
@@ -5586,7 +5587,7 @@ actor *monsters::get_foe() const
     else if (foe == MHITYOU)
         return (&you);
 
-    // must be a monster
+    // Must be a monster!
     monsters *my_foe = &menv[foe];
     return (my_foe->alive()? my_foe : NULL);
 }
@@ -5772,7 +5773,7 @@ bool monsters::move_to_pos(const coord_def &newpos)
 }
 
 
-// returns true if the trap should be revealed to the player
+// Returns true if the trap should be revealed to the player.
 bool monsters::do_shaft()
 {
     if (!is_valid_shaft_level())
@@ -5827,7 +5828,7 @@ bool monsters::do_shaft()
 
     handle_items_on_shaft(this->x, this->y, false);
 
-    // Monster is no longer on this level
+    // Monster is no longer on this level.
     destroy_inventory();
     monster_cleanup(this);
 
@@ -5955,7 +5956,7 @@ static const char *enchant_names[] =
     "blood-lust", "neutral", "bug"
 };
 
-const char *mons_enchantment_name(enchant_type ench)
+static const char *_mons_enchantment_name(enchant_type ench)
 {
     COMPILE_CHECK(ARRAYSZ(enchant_names) == NUM_ENCHANTMENTS+1, c1);
 
@@ -5974,7 +5975,7 @@ mon_enchant::mon_enchant(enchant_type e, int deg, kill_category whose,
 mon_enchant::operator std::string () const
 {
     return make_stringf("%s (%d:%d%s)",
-                        mons_enchantment_name(ench),
+                        _mons_enchantment_name(ench),
                         degree,
                         duration,
                         kill_category_desc(who));

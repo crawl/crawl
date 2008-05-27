@@ -66,7 +66,7 @@ int get_trapping_net(int x, int y, bool trapped)
 }
 
 // if there are more than one net on this square
-// split off one of them for checking/setting values
+// split off one of them for checking/setting values.
 static void maybe_split_nets(item_def &item, int x, int y)
 {
     if (item.quantity == 1)
@@ -78,12 +78,12 @@ static void maybe_split_nets(item_def &item, int x, int y)
     item_def it;
 
     it.base_type = item.base_type;
-    it.sub_type = item.sub_type;
-    it.plus = item.plus;
-    it.plus2 = item.plus2;
-    it.flags = item.flags;
-    it.special = item.special;
-    it.quantity = --item.quantity;
+    it.sub_type  = item.sub_type;
+    it.plus      = item.plus;
+    it.plus2     = item.plus2;
+    it.flags     = item.flags;
+    it.special   = item.special;
+    it.quantity  = --item.quantity;
     item_colour(it);
 
     item.quantity = 1;
@@ -846,14 +846,14 @@ void clear_trapping_net()
 bool trap_item(object_class_type base_type, char sub_type,
                char beam_x, char beam_y)
 {
-    item_def  item;
+    item_def item;
     item.base_type = base_type;
-    item.sub_type = sub_type;
-    item.plus = 0;
-    item.plus2 = 0;
-    item.flags = 0;
-    item.special = 0;
-    item.quantity = 1;
+    item.sub_type  = sub_type;
+    item.plus      = 0;
+    item.plus2     = 0;
+    item.flags     = 0;
+    item.special   = 0;
+    item.quantity  = 1;
 
     if (base_type == OBJ_MISSILES)
     {

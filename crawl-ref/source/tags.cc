@@ -233,7 +233,7 @@ void marshallShort(std::vector<unsigned char>& buf, short data)
     buf.push_back((unsigned char) ((data & 0x00FF)     ));
 }
 
-// marshall 2 byte short in network order
+// Marshall 2 byte short in network order.
 void marshallShort(writer &th, short data)
 {
     const char b2 = (char)(data & 0x00FF);
@@ -242,7 +242,7 @@ void marshallShort(writer &th, short data)
     th.writeByte(b2);
 }
 
-// unmarshall 2 byte short in network order
+// Unmarshall 2 byte short in network order.
 short unmarshallShort(reader &th)
 {
     short b1 = th.readByte();
@@ -259,7 +259,7 @@ void marshallLong(std::vector<unsigned char>& buf, long data)
     buf.push_back((unsigned char) ((data & 0x000000FF)      ));
 }
 
-// marshall 4 byte int in network order
+// Marshall 4 byte int in network order.
 void marshallLong(writer &th, long data)
 {
     char b4 = (char) (data & 0x000000FF);
@@ -273,7 +273,7 @@ void marshallLong(writer &th, long data)
     th.writeByte(b4);
 }
 
-// unmarshall 4 byte int in network order
+// Unmarshall 4 byte int in network order.
 long unmarshallLong(reader &th)
 {
     long b1 = th.readByte();
@@ -299,7 +299,7 @@ void marshallMap(writer &th, const std::map<key,value>& data,
 {
     marshallLong( th, data.size() );
     typename std::map<key,value>::const_iterator ci;
-    for ( ci = data.begin(); ci != data.end(); ++ci )
+    for (ci = data.begin(); ci != data.end(); ++ci)
     {
         key_marshall(th, ci->first);
         value_marshall(th, ci->second);
@@ -324,7 +324,7 @@ static void unmarshall_vector(reader& th, std::vector<T>& vec,
 {
     vec.clear();
     const long num_to_read = unmarshallLong(th);
-    for ( long i = 0; i < num_to_read; ++i )
+    for (long i = 0; i < num_to_read; ++i)
         vec.push_back( T_unmarshall(th) );
 }
 
@@ -338,7 +338,7 @@ static void unmarshall_container(reader &th, T_container &container,
         (container.*inserter)(unmarshal(th));
 }
 
-// XXX: redundant with level_id.save()/load()
+// XXX: Redundant with level_id.save()/load().
 void marshall_level_id( writer& th, const level_id& id )
 {
     marshallByte(th, id.branch );
@@ -346,7 +346,7 @@ void marshall_level_id( writer& th, const level_id& id )
     marshallByte(th, id.level_type);
 }
 
-// XXX: redundant with level_pos.save()/load()
+// XXX: Redundant with level_pos.save()/load().
 void marshall_level_pos( writer& th, const level_pos& lpos )
 {
     marshallLong(th, lpos.pos.x);
@@ -361,7 +361,7 @@ void unmarshallMap(reader& th, map& data,
 {
     long i, len = unmarshallLong(th);
     key k;
-    for ( i = 0; i < len; ++i )
+    for (i = 0; i < len; ++i)
     {
         k = key_unmarshall(th);
         std::pair<key, value> p(k, value_unmarshall(th));
@@ -500,14 +500,14 @@ static void marshallStringNoMax(writer &th, const std::string &data)
 // string -- unmarshall length & string data
 int unmarshallCString(reader &th, char *data, int maxSize)
 {
-    // get length
+    // Get length.
     short len = unmarshallShort(th);
     int copylen = len;
 
     if (len >= maxSize && maxSize > 0)
         copylen = maxSize - 1;
 
-    // read the actual string and null terminate
+    // Read the actual string and null terminate.
     th.read(data, copylen);
     data[copylen] = 0;
 
@@ -535,7 +535,7 @@ static std::string unmarshallStringNoMax(reader &th)
     return unmarshallString(th);
 }
 
-// string -- 4 byte length, non-terminated string data
+// string -- 4 byte length, non-terminated string data.
 void marshallString4(writer &th, const std::string &data)
 {
     marshallLong(th, data.length());
@@ -679,7 +679,7 @@ void tag_write(tag_type tagID, FILE* outf)
         marshallLong(tmp, buf.size());
     }
 
-    // write tag data
+    // Write tag data.
     write2(outf, &buf[0], buf.size());
 }
 
@@ -688,7 +688,7 @@ void tag_write(tag_type tagID, FILE* outf)
 // (or on an error).
 //
 // minorVersion is available for any sub-readers that need it
-// (like TAG_LEVEL_MONSTERS)
+// (like TAG_LEVEL_MONSTERS).
 tag_type tag_read(FILE *fp, char minorVersion)
 {
     // Read header info and data
@@ -708,7 +708,8 @@ tag_type tag_read(FILE *fp, char minorVersion)
     }
 
     unwind_var<int> tag_minor_version(_tag_minor_version, minorVersion);
-    // ok, we have data now.
+
+    // Ok, we have data now.
     reader th(buf);
     switch (tag_id)
     {
@@ -753,16 +754,15 @@ tag_type tag_read(FILE *fp, char minorVersion)
 }
 
 
-// older savefiles might want to call this to get a tag
-// properly initialized if it wasn't part of the savefile.
+// Older savefiles might want to call this to get a tag properly
+// initialized if it wasn't part of the savefile.
 // For now, none are supported.
 
-// This function will be called AFTER all other tags for
-// the savefile are read, so everything that can be
-// initialized should have been by now.
+// This function will be called AFTER all other tags for the savefile
+// are read, so everything that can be initialized should have been by now.
 
-// minorVersion is available for any child functions that need
-// it (currently none)
+// minorVersion is available for any child functions that need it
+// (currently none).
 void tag_missing(int tag, char minorVersion)
 {
     UNUSED( minorVersion );
@@ -883,7 +883,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.experience_level);
     marshallLong(th, you.exp_available);
 
-    /* max values */
+    // max values
     marshallByte(th, you.max_strength);
     marshallByte(th, you.max_intel);
     marshallByte(th, you.max_dex);
@@ -917,10 +917,10 @@ static void tag_construct_you(writer &th)
     marshallByte(th, 50);
     for (j = 0; j < 50; ++j)
     {
-        marshallByte(th, you.skills[j]);   /* skills! */
-        marshallByte(th, you.practise_skill[j]);   /* skills! */
+        marshallByte(th, you.skills[j]);
+        marshallByte(th, you.practise_skill[j]);
         marshallLong(th, you.skill_points[j]);
-        marshallByte(th, you.skill_order[j]);   /* skills ordering */
+        marshallByte(th, you.skill_order[j]);   // skills ordering
     }
 
     // how many durations?
@@ -933,10 +933,10 @@ static void tag_construct_you(writer &th)
     for (j = 0; j < NUM_ATTRIBUTES; ++j)
         marshallByte(th, you.attribute[j]);
 
-    // was: remembered quiver items
+    // Was: remembered quiver items.
     marshallByte(th, 0);
 
-    // sacrifice values
+    // Sacrifice values.
     marshallByte(th, NUM_OBJECT_CLASSES);
     for (j = 0; j < NUM_OBJECT_CLASSES; ++j)
         marshallLong(th, you.sacrifice_value[j]);
@@ -977,7 +977,7 @@ static void tag_construct_you(writer &th)
     // time of game start
     marshallString(th, make_date_string( you.birth_time ).c_str(), 20);
 
-    // real_time == -1 means game was started before this feature
+    // real_time == -1 means game was started before this feature.
     if (you.real_time != -1)
     {
         const time_t now = time(NULL);
@@ -996,7 +996,7 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
 
-    // list of currently beholding monsters (usually empty)
+    // List of currently beholding monsters (usually empty).
     marshallByte(th, you.beheld_by.size());
     for (unsigned int k = 0; k < you.beheld_by.size(); k++)
          marshallByte(th, you.beheld_by[k]);
@@ -1020,7 +1020,7 @@ static void tag_construct_you_items(writer &th)
     for (i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
 
-    // item descrip for each type & subtype
+    // Item descrip for each type & subtype.
     // how many types?
     marshallByte(th, NUM_IDESC);
     // how many subtypes?
@@ -1029,7 +1029,7 @@ static void tag_construct_you_items(writer &th)
         for (j = 0; j < 50; ++j)
             marshallByte(th, you.item_description[i][j]);
 
-    // identification status
+    // Identification status.
     const id_arr& identy(get_typeid_array());
     // how many types?
     marshallByte(th, static_cast<char>(identy.width()));
@@ -1092,7 +1092,7 @@ static void tag_construct_you_dungeon(writer &th)
     // how many unique creatures?
     marshallShort(th, NUM_MONSTERS);
     for (j = 0; j < NUM_MONSTERS; ++j)
-        marshallByte(th,you.unique_creatures[j]); /* unique beasties */
+        marshallByte(th,you.unique_creatures[j]); // unique beasties
 
     // how many branches?
     marshallByte(th, NUM_BRANCHES);
@@ -1266,7 +1266,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.experience_level          = unmarshallByte(th);
     you.exp_available             = unmarshallLong(th);
 
-    /* max values */
+    // max values
     you.max_strength              = unmarshallByte(th);
     you.max_intel                 = unmarshallByte(th);
     you.max_dex                   = unmarshallByte(th);
@@ -1316,7 +1316,7 @@ static void tag_read_you(reader &th, char minorVersion)
         you.skill_order[j]    = unmarshallByte(th);
     }
 
-    // set up you.total_skill_points and you.skill_cost_level
+    // Set up you.total_skill_points and you.skill_cost_level.
     calc_total_skill_points();
 
     // how many durations?
@@ -1384,7 +1384,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
 
-    // list of currently beholding monsters (usually empty)
+    // List of currently beholding monsters (usually empty).
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
          you.beheld_by.push_back(unmarshallByte(th));
@@ -1410,7 +1410,7 @@ static void tag_read_you_items(reader &th, char minorVersion)
     for (i = 0; i < count_c; ++i)
         unmarshallItem(th, you.inv[i]);
 
-    // item descrip for each type & subtype
+    // Item descrip for each type & subtype.
     // how many types?
     count_c = unmarshallByte(th);
     // how many subtypes?
@@ -1419,15 +1419,14 @@ static void tag_read_you_items(reader &th, char minorVersion)
         for (j = 0; j < count_c2; ++j)
             you.item_description[i][j] = unmarshallByte(th);
 
-    // identification status
+    // Identification status.
     // how many types?
     count_c = unmarshallByte(th);
     // how many subtypes?
     count_c2 = unmarshallByte(th);
 
-    // argh.. this is awful.
+    // Argh... this is awful!
     for (i = 0; i < count_c; ++i)
-    {
         for (j = 0; j < count_c2; ++j)
         {
             const item_type_id_state_type ch =
@@ -1452,13 +1451,14 @@ static void tag_read_you_items(reader &th, char minorVersion)
                     break;
             }
         }
-    }
 
     // how many unique items?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
+    {
         you.unique_items[j] =
             static_cast<unique_item_status_type>(unmarshallByte(th));
+    }
 
     // how many books?
     count_c = unmarshallByte(th);
@@ -1470,8 +1470,8 @@ static void tag_read_you_items(reader &th, char minorVersion)
     for (j = 0; j < count_s; ++j)
         set_unrandart_exist(j, unmarshallBoolean(th));
 
-    // # of unrandarts could certainly change.  If it does,
-    // the new ones won't exist yet - zero them out.
+    // # of unrandarts could certainly change.
+    // If it does, the new ones won't exist yet - zero them out.
     for (; j < NO_UNRANDARTS; j++)
         set_unrandart_exist(j, false);
 }
@@ -1608,7 +1608,7 @@ static void tag_construct_level(writer &th)
 
     marshallFloat(th, (float)you.elapsed_time);
 
-    // map grids
+    // Map grids.
     // how many X?
     marshallShort(th, GXM);
     // how many Y?
@@ -1617,7 +1617,6 @@ static void tag_construct_level(writer &th)
     marshallLong(th, env.turns_on_level);
 
     for (int count_x = 0; count_x < GXM; count_x++)
-    {
         for (int count_y = 0; count_y < GYM; count_y++)
         {
             marshallByte(th, grd[count_x][count_y]);
@@ -1627,7 +1626,6 @@ static void tag_construct_level(writer &th)
             marshallShort(th, env.map[count_x][count_y].property);
             marshallShort(th, env.cgrid[count_x][count_y]);
         }
-    }
 
     run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
 
@@ -1840,9 +1838,10 @@ void tag_construct_level_tiles(writer &th)
     unsigned int tile = 0;
     unsigned int last_tile = 0;
 
-    // Ver
-    marshallShort(th, 71); // tile routine subversion
-    // map grids
+    // tile routine subversion
+    marshallShort(th, 71);
+
+    // Map grids.
     // how many X?
     marshallShort(th, GXM);
     // how many Y?
@@ -1851,7 +1850,6 @@ void tag_construct_level_tiles(writer &th)
     tile = env.tile_bk_bg[0][0];
     //  bg first
     for (int count_x = 0; count_x < GXM; count_x++)
-    {
         for (int count_y = 0; count_y < GYM; count_y++)
         {
             last_tile = tile;
@@ -1877,7 +1875,7 @@ void tag_construct_level_tiles(writer &th)
                 rle_count = 1;
             }
         }
-    }
+
     marshallLong(th, tile);
     marshallByte(th, rle_count);
 
@@ -1931,7 +1929,8 @@ static void tag_read_level( reader &th, char minorVersion )
     env.level_flags  = (unsigned long) unmarshallLong(th);
 
     env.elapsed_time = unmarshallFloat(th);
-    // map grids
+
+    // Map grids.
     // how many X?
     const int gx = unmarshallShort(th);
     // how many Y?
@@ -2112,14 +2111,12 @@ void tag_read_level_attitude(reader &th)
 
 void tag_missing_level_attitude()
 {
-    // we don't really have to do a lot here.
-    // just set foe to MHITNOT;  they'll pick up
-    // a foe first time through handle_monster() if
+    // We don't really have to do a lot here, just set foe to MHITNOT;
+    // they'll pick up a foe first time through handle_monster() if
     // there's one around.
 
-    // as for attitude, a couple simple checks
-    // can be used to determine friendly/good
-    // neutral/neutral/hostile.
+    // As for attitude, a couple simple checks can be used to determine
+    // friendly/good neutral/neutral/hostile.
     int i;
     bool is_friendly;
     unsigned int new_beh = BEH_WANDER;
@@ -2165,13 +2162,11 @@ void tag_read_level_tiles(struct reader &th)
 {
 #ifdef USE_TILE
     for (int i = 0; i < GXM; i++)
-    {
         for (int j = 0; j < GYM; j++)
         {
             env.tile_bk_bg[i][j] = 0;
             env.tile_bk_fg[i][j] = 0;
         }
-    }
 
     unsigned char rle_count = 0;
     unsigned int tile = 0;
@@ -2179,7 +2174,7 @@ void tag_read_level_tiles(struct reader &th)
     int ver = unmarshallShort(th);
     if (ver == 0) return;
 
-    // map grids
+    // Map grids.
     // how many X?
     const int gx = unmarshallShort(th);
     // how many Y?

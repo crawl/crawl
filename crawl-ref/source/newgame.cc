@@ -2746,9 +2746,9 @@ static void _give_random_potion( int slot )
     if (you.is_undead == US_UNDEAD)
         return;
 
-    you.inv[ slot ].quantity = 1;
+    you.inv[ slot ].quantity  = 1;
     you.inv[ slot ].base_type = OBJ_POTIONS;
-    you.inv[ slot ].plus = 0;
+    you.inv[ slot ].plus  = 0;
     you.inv[ slot ].plus2 = 0;
 
     // no Berserk for undead other than vampires
@@ -2781,11 +2781,11 @@ static void _give_random_potion( int slot )
 
 static void _give_random_secondary_armour( int slot )
 {
-    you.inv[ slot ].quantity = 1;
+    you.inv[ slot ].quantity  = 1;
     you.inv[ slot ].base_type = OBJ_ARMOUR;
-    you.inv[ slot ].special = 0;
-    you.inv[ slot ].plus = 0;
-    you.inv[ slot ].plus2 = 0;
+    you.inv[ slot ].special   = 0;
+    you.inv[ slot ].plus      = 0;
+    you.inv[ slot ].plus2     = 0;
 
     switch (random2(4))
     {
@@ -2820,7 +2820,7 @@ static void _give_random_secondary_armour( int slot )
     }
 }
 
-// Returns true if a "good" weapon is given
+// Returns true if a "good" weapon is given.
 static bool _give_wanderer_weapon( int slot, int wpn_skill )
 {
     bool ret = false;
@@ -2829,13 +2829,13 @@ static bool _give_wanderer_weapon( int slot, int wpn_skill )
 
     // We'll also re-fill the template, all this for later possible
     // safe reuse of code in the future.
-    you.inv[ slot ].quantity = 1;
+    you.inv[ slot ].quantity  = 1;
     you.inv[ slot ].base_type = OBJ_WEAPONS;
-    you.inv[ slot ].plus = 0;
-    you.inv[ slot ].plus2 = 0;
-    you.inv[ slot ].special = 0;
+    you.inv[ slot ].plus      = 0;
+    you.inv[ slot ].plus2     = 0;
+    you.inv[ slot ].special   = 0;
 
-    // Now fill in the type according to the random wpn_skill
+    // Now fill in the type according to the random wpn_skill.
     switch (wpn_skill)
     {
     case SK_MACES_FLAILS:
@@ -4187,12 +4187,13 @@ bool _give_items_skills()
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         if (you.char_class == JOB_ENCHANTER)
         {
-            you.inv[0].plus = 1;
+            // Enchant starting equipment.
+            you.inv[0].plus  = 1;
             you.inv[0].plus2 = 1;
-            you.inv[1].plus = 1;
+            you.inv[1].plus  = 1;
         }
 
-        if ( you.char_class == JOB_CONJURER )
+        if (you.char_class == JOB_CONJURER)
         {
             if (!_choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
                 return false;
@@ -4203,7 +4204,7 @@ bool _give_items_skills()
         case JOB_SUMMONER:
             _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
             you.skills[SK_SUMMONINGS] = 4;
-            // gets some darts - this class is difficult to start off with
+            // Gets some darts - this class is difficult to start off with.
             _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART,
                                8 + roll_dice( 2, 8 ));
             break;
@@ -4512,7 +4513,7 @@ bool _give_items_skills()
         case DK_YREDELEMNUL:
             you.religion = GOD_YREDELEMNUL;
             you.piety = 28;
-            you.inv[0].plus = 1;
+            you.inv[0].plus  = 1;
             you.inv[0].plus2 = 1;
             you.inv[2].quantity = 0;
             you.skills[SK_INVOCATIONS] = 3;
@@ -4520,9 +4521,9 @@ bool _give_items_skills()
         }
 
         you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_ARMOUR] = 1;
-        you.skills[SK_DODGING] = 1;
-        you.skills[SK_STEALTH] = 1;
+        you.skills[SK_ARMOUR]   = 1;
+        you.skills[SK_DODGING]  = 1;
+        you.skills[SK_STEALTH]  = 1;
         //you.skills [SK_SHORT_BLADES] = 2;
         you.skills[SK_STABBING] = 1;
         break;

@@ -1570,7 +1570,7 @@ inline static void monster_warning(activity_interrupt_type ai,
             std::string text = mon->name(DESC_CAP_A);
             // For named monsters also mention the base type.
             if (!(mon->mname).empty())
-                text += ", " + mons_type_name(mon->type, DESC_NOCAP_A) + ",";
+                text += " " + mons_type_name(mon->type, DESC_NOCAP_THE);
 
             if (at.context == "thin air")
             {

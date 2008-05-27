@@ -1769,7 +1769,7 @@ void cast_fulsome_distillation( int powc )
         break;
     }
 
-    // If not powerful enough, we downgrade the potion
+    // If not powerful enough, we downgrade the potion.
     if (random2(50) > powc + 10 * rotten)
     {
         switch (pot_type)
@@ -1797,24 +1797,22 @@ void cast_fulsome_distillation( int powc )
         }
     }
 
-    // We borrow the corpse's object to make our potion:
+    // We borrow the corpse's object to make our potion.
     mitm[corpse].base_type = OBJ_POTIONS;
-    mitm[corpse].sub_type = pot_type;
-    mitm[corpse].quantity = 1;
-    mitm[corpse].plus = 0;
-    mitm[corpse].plus2 = 0;
-    mitm[corpse].flags = 0;
+    mitm[corpse].sub_type  = pot_type;
+    mitm[corpse].quantity  = 1;
+    mitm[corpse].plus      = 0;
+    mitm[corpse].plus2     = 0;
+    mitm[corpse].flags     = 0;
     mitm[corpse].inscription.clear();
     item_colour( mitm[corpse] );  // sets special as well
 
     mprf("You extract %s from the corpse.",
          mitm[corpse].name(DESC_NOCAP_A).c_str());
 
-    // try to move the potion to the player (for convenience)
+    // Try to move the potion to the player (for convenience).
     if (move_item_to_player( corpse, 1 ) != 1)
-    {
         mpr( "Unfortunately, you can't carry it right now!" );
-    }
 }
 
 static int rot_living(int x, int y, int pow, int message)

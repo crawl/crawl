@@ -1050,7 +1050,7 @@ void create_spec_object()
         }
     }
 
-    // allocate an item to play with:
+    // Allocate an item to play with.
     thing_created = get_item_slot();
     if (thing_created == NON_ITEM)
     {
@@ -1127,12 +1127,12 @@ void create_spec_object()
 
         if (class_wanted == OBJ_MISCELLANY)
         {
-            // Leaves object unmodified if it wasn't a rune or deck
+            // Leaves object unmodified if it wasn't a rune or deck.
             rune_or_deck_from_specs(specs, mitm[thing_created]);
 
             if (mitm[thing_created].base_type == OBJ_UNASSIGNED)
             {
-                // Rune or deck creation canceled, clean up item
+                // Rune or deck creation canceled, clean up item.
                 destroy_item(thing_created);
                 return;
             }
@@ -1236,7 +1236,7 @@ void create_spec_object()
         case OBJ_STAVES:
             if (item_is_rod( mitm[thing_created] ))
             {
-                mitm[thing_created].plus = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+                mitm[thing_created].plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
                 mitm[thing_created].plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
             }
             break;
@@ -3677,8 +3677,17 @@ void wizard_give_monster_item(monsters *mon)
         break;
 
     case OBJ_ARMOUR:
-        mon_slot = MSLOT_ARMOUR;
+    {
+        // May only return shield or armour slot.
+        equipment_type eq = get_armour_slot(item);
+
+        // Force non-shield, non-body armour to be worn anyway.
+        if (eq == EQ_NONE)
+            eq = EQ_BODY_ARMOUR;
+
+        mon_slot = equip_slot_to_mslot(eq);
         break;
+    }
     case OBJ_MISSILES:
         mon_slot = MSLOT_MISSILE;
         break;
@@ -3725,7 +3734,7 @@ void wizard_give_monster_item(monsters *mon)
         return;
     }
 
-    // Move monster's old item to player's inventory as last step
+    // Move monster's old item to player's inventory as last step.
     int old_eq = NON_ITEM;
     if (mon->inv[mon_slot] != NON_ITEM)
     {
@@ -3738,7 +3747,7 @@ void wizard_give_monster_item(monsters *mon)
     }
 
     item_def &new_item = mitm[index];
-    new_item = item;
+    new_item      = item;
     new_item.link = NON_ITEM;
     new_item.x    = 0;
     new_item.y    = 0;

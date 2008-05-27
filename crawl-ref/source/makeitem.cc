@@ -913,7 +913,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
 
         // The other 98% are normal randarts.
         make_item_randart( item );
-        item.plus = random2(7);
+        item.plus  = random2(7);
         item.plus2 = random2(7);
 
         if (one_chance_in(3))
@@ -1561,7 +1561,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
     if ((force_good || is_demonic(item) || forced_ego
             || random2(200) <= 50 + item_level)
-        // nobody would bother enchanting a mundane club
+        // Nobody would bother enchanting a mundane club.
         && item.sub_type != WPN_CLUB
         && item.sub_type != WPN_GIANT_CLUB
         && item.sub_type != WPN_GIANT_SPIKED_CLUB)
@@ -1604,7 +1604,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     {
         if (one_chance_in(12))
         {
-            // make a cursed item
+            // Make a cursed item.
             do_curse_item( item );
             item.plus  -= random2(4);
             item.plus2 -= random2(4);
@@ -1615,7 +1615,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     if (get_equip_race(item) == ISFLAG_ORCISH
         && !(item_race == MAKE_ITEM_ORCISH && forced_ego))
     {
-        // no holy wrath or slay orc and 1/2 the time no-ego
+        // No holy wrath or slay orc and 1/2 the time no-ego.
         const int brand = get_weapon_brand( item );
         if (brand == SPWPN_HOLY_WRATH
             || brand == SPWPN_ORC_SLAYING
@@ -2211,7 +2211,7 @@ static int _wand_max_charges(int subtype)
 
 static void _generate_wand_item(item_def& item, int force_type)
 {
-    // determine sub_type
+    // Determine sub_type.
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
@@ -2221,7 +2221,7 @@ static void _generate_wand_item(item_def& item, int force_type)
     item.plus = random2avg(_wand_max_charges(item.sub_type), 3);
 
     // ...but 0 charges is silly
-    if ( item.plus == 0 )
+    if (item.plus == 0)
         item.plus++;
 
     // plus2 tracks how many times the player has zapped it.
@@ -2595,7 +2595,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 
     // everything begins as uncursed, unenchanted jewellery {dlb}:
-    item.plus = 0;
+    item.plus  = 0;
     item.plus2 = 0;
 
     item.plus = _determine_ring_plus(item.sub_type);
@@ -2614,7 +2614,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
             {
                 // make "ring of damage"
                 do_uncurse_item( item );
-                item.plus = 0;
+                item.plus   = 0;
                 item.plus2 += 2;
             }
         }
@@ -3095,8 +3095,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
                                           : WPN_MACE + random2(12));
         if (coinflip())
         {
-            force_item = true;
-            item_race = MAKE_ITEM_NO_RACE;
+            force_item  = true;
+            item_race   = MAKE_ITEM_NO_RACE;
             item.plus  += 1 + random2(3);
             item.plus2 += 1 + random2(3);
 
@@ -3407,29 +3407,29 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_BOW;
+        item.sub_type  = WPN_BOW;
         if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3))
             item.sub_type = WPN_LONGBOW;
         break;
 
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_CROSSBOW;
+        item.sub_type  = WPN_CROSSBOW;
         break;
 
     case MONS_EFREET:
     case MONS_ERICA:
-        force_item = true;
-        item_race = MAKE_ITEM_NO_RACE;
+        force_item     = true;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_SCIMITAR;
-        item.plus  = random2(5);
-        item.plus2 = random2(5);
-        item.colour = RED;  // forced by force_item above {dlb}
+        item.sub_type  = WPN_SCIMITAR;
+        item.plus      = random2(5);
+        item.plus2     = random2(5);
+        item.colour    = RED;  // forced by force_item above {dlb}
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
         break;
 
@@ -3455,13 +3455,13 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         break;
 
     case MONS_DAEVA:
-        force_item = true;
-        item_race = MAKE_ITEM_NO_RACE;
+        force_item     = true;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.colour = WHITE;        // forced by force_item above {dlb}
+        item.colour    = WHITE;        // forced by force_item above {dlb}
 
-        item.sub_type = (one_chance_in(4) ? WPN_BLESSED_EUDEMON_BLADE
-                                          : WPN_LONG_SWORD);
+        item.sub_type  = (one_chance_in(4) ? WPN_BLESSED_EUDEMON_BLADE
+                                           : WPN_LONG_SWORD);
 
         set_equip_desc( item, ISFLAG_GLOWING );
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_HOLY_WRATH );
@@ -3476,7 +3476,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     {
         force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_LONG_SWORD + random2(3);
+        item.sub_type  = WPN_LONG_SWORD + random2(3);
 
         if (one_chance_in(7))
             item.sub_type = WPN_HALBERD;
@@ -3524,9 +3524,9 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_FIRE_GIANT:
         force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_GREAT_SWORD;
-        item.plus  = 0;
-        item.plus2 = 0;
+        item.sub_type  = WPN_GREAT_SWORD;
+        item.plus      = 0;
+        item.plus2     = 0;
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
 
         item.colour = RED;  // forced by force_item above {dlb}
@@ -3539,9 +3539,9 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_FROST_GIANT:
         force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_BATTLEAXE;
-        item.plus  = 0;
-        item.plus2 = 0;
+        item.sub_type  = WPN_BATTLEAXE;
+        item.plus      = 0;
+        item.plus2     = 0;
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FREEZING );
 
         // forced by force_item above {dlb}
@@ -3585,11 +3585,10 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         break;
 
     case MONS_GERYON:
-        //mv: probably should be moved out of this switch,
-        //but it's not worth of it, unless we have more
-        //monsters with misc. items
+        //mv: Probably should be moved out of this switch, but it's not
+        //worth of it, unless we have more monsters with misc. items.
         item.base_type = OBJ_MISCELLANY;
-        item.sub_type = MISC_HORN_OF_GERYON;
+        item.sub_type  = MISC_HORN_OF_GERYON;
         break;
 
     case MONS_SALAMANDER: //mv: new 8 Aug 2001
@@ -3597,7 +3596,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
                           //it's almost impossible to get them
     {
         force_item = true;
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race  = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         const int temp_rand = random2(6);
 
@@ -3613,8 +3612,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         else
             set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
 
-        item.plus  = random2(5);
-        item.plus2 = random2(5);
+        item.plus   = random2(5);
+        item.plus2  = random2(5);
         item.colour = RED;  // forced by force_item above {dlb}
         break;
     }

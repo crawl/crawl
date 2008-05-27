@@ -624,6 +624,7 @@ bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2);
 /* ***********************************************************************
  * called from: monstuff acr
  * *********************************************************************** */
+size_type mons_size(const monsters *m);
 bool mons_friendly(const monsters *m);
 bool mons_neutral(const monsters *m);
 bool mons_good_neutral(const monsters *m);
@@ -718,5 +719,7 @@ std::string get_mon_shape_str(const int type);
 std::string get_mon_shape_str(const mon_body_shape shape);
 
 bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid);
+
+mon_inv_type equip_slot_to_mslot(equipment_type eq);
 
 #endif

@@ -379,7 +379,7 @@ void item_corrode( int itco )
         break;
     default:
         // items which aren't missiles, etc... could happen if we're
-        // e.g. wielding a deck
+        // e.g. wielding a deck.
         return;
     }
 
@@ -393,7 +393,7 @@ void item_corrode( int itco )
 
         // the embedded equation may look funny, but it actually works well
         // to generate a pretty probability ramp {6%, 18%, 34%, 58%, 98%}
-        // for values [0,4] which closely matches the original, ugly switch
+        // for values [0,4] which closely matches the original, ugly switch.
         // {dlb}
         if (chance_corr >= 0 && chance_corr <= 4)
         {
@@ -403,7 +403,7 @@ void item_corrode( int itco )
         else
             it_resists = true;  // no idea how often this occurs {dlb}
 
-        // if the checks get this far, you should hear about it {dlb}
+        // If the checks get this far, you should hear about it. {dlb}
         suppress_msg = false;
     }
 
@@ -424,7 +424,7 @@ void item_corrode( int itco )
         if (item.base_type == OBJ_WEAPONS)
             item.plus2 = how_rusty;
         else
-            item.plus = how_rusty;
+            item.plus  = how_rusty;
 
         you.redraw_armour_class = 1;     // for armour, rings, etc. {dlb}
 

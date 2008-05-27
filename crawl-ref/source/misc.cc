@@ -339,7 +339,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
         return;
     }
 
-    // else, create a new stack of potions
+    // Else, create a new stack of potions.
     int o = get_item_slot( 20 );
     if (o == NON_ITEM)
         return;
@@ -585,7 +585,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         return (rot_count > 0);
     }
 
-    // else, create new stack in inventory
+    // Else, create new stack in inventory.
     int freeslot = find_free_slot(blood);
     if (freeslot >= 0 && freeslot < ENDOFPACK
         && !is_valid_item(you.inv[freeslot]))
@@ -1000,7 +1000,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         item.quantity  = amount;
         item.x         = -1;
         item.y         = -1;
-        // keep description as it was
+        // Keep description as it was.
         item.plus      = potion.plus;
         item.plus2     = 0;
         item.special   = 0;
@@ -1012,7 +1012,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     }
     // Okay, inventory is full.
 
-    // check whether we can merge with an existing stack on the floor
+    // Check whether we can merge with an existing stack on the floor.
     int o = igrd[you.x_pos][you.y_pos];
     while (o != NON_ITEM)
     {
@@ -1027,13 +1027,13 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     }
 
     // only bother creating a distinct stack of potions
-    // if it won't get destroyed right away
+    // if it won't get destroyed right away.
     if (!grid_destroys_items(grd[you.x_pos][you.y_pos]))
     {
         item_def potion2;
         potion2.base_type = OBJ_POTIONS;
         potion2.sub_type  = POT_DECAY;
-        // keep description as it was
+        // Keep description as it was.
         potion2.plus      = potion.plus;
         potion2.quantity  = amount;
         potion2.colour    = potion.colour;
@@ -1043,11 +1043,11 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
 
         copy_item_to_grid( potion2, you.x_pos, you.y_pos );
    }
-   // is decreased even if the decay stack goes splat
+   // Is decreased even if the decay stack goes splat.
    dec_inv_item_quantity(obj, amount);
 }
 
-// checks whether the player or a monster is capable of bleeding
+// Checks whether the player or a monster is capable of bleeding.
 bool victim_can_bleed(int montype)
 {
     if (montype == -1) // player

@@ -101,16 +101,16 @@ void get_mimic_item( const monsters *mimic, item_def &item )
     ASSERT( mimic != NULL && mons_is_mimic( mimic->type ) );
 
     item.base_type = OBJ_UNASSIGNED;
-    item.sub_type = 0;
-    item.special = 0;
-    item.colour = 0;
-    item.flags = 0;
-    item.quantity = 1;
-    item.plus = 0;
-    item.plus2 = 0;
-    item.x = mimic->x;
-    item.y = mimic->y;
-    item.link = NON_ITEM;
+    item.sub_type  = 0;
+    item.special   = 0;
+    item.colour    = 0;
+    item.flags     = 0;
+    item.quantity  = 1;
+    item.plus      = 0;
+    item.plus2     = 0;
+    item.x         = mimic->x;
+    item.y         = mimic->y;
+    item.link      = NON_ITEM;
 
     int prop = 127 * mimic->x + 269 * mimic->y;
 
@@ -268,14 +268,15 @@ bool curse_an_item( bool decay_potions, bool quiet )
 }
 
 static void _monster_drop_ething(monsters *monster,
-                                 bool mark_item_origins = false)
+                                 bool mark_item_origins = false,
+                                 int owner_id = NON_ITEM)
 {
     const bool hostile_grid = grid_destroys_items(grd(monster->pos()));
     const int midx = (int) monster_index(monster);
 
     bool destroyed = false;
 
-    // drop weapons & missiles last (ie on top) so others pick up
+    // Drop weapons & missiles last (ie on top) so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; i--)
     {
         int item = monster->inv[i];
@@ -3946,8 +3947,8 @@ static bool _handle_wand(monsters *monster, bolt &beem)
                 else
                     set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
 
-                // increment zap count
-                if ( wand.plus2 >= 0 )
+                // Increment zap count.
+                if (wand.plus2 >= 0)
                     wand.plus2++;
             }
 
@@ -4522,6 +4523,7 @@ int mons_thrown_weapon_damage(const item_def *weap)
 {
     if (!weap || get_weapon_brand(*weap) != SPWPN_RETURNING)
         return (0);
+
     return std::max(0, (property(*weap, PWPN_DAMAGE) + weap->plus2 / 2));
 }
 
