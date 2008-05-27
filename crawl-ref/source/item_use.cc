@@ -322,10 +322,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     if (!can_wield(&you.inv[item_slot], true))
         return (false);
 
-    // for non-auto_wield cases checked above
+    // For non-auto_wield cases checked above.
     if (auto_wield && !check_warning_inscriptions(you.inv[item_slot], OPER_WIELD))
         return (false);
 
+    // Wield the weapon.
     if (!safe_to_remove_or_wear(you.inv[item_slot], false))
         return (false);
 
@@ -821,8 +822,12 @@ void wear_armour( int slot ) // slot is for tiles
     else if (!armour_prompt("Wear which item?", &armour_wear_2, OPER_WEAR))
         return;
 
-    if (safe_to_remove_or_wear( you.inv[armour_wear_2], wearing_slot(slot) ))
+    // Wear the armour.
+    if (safe_to_remove_or_wear( you.inv[armour_wear_2],
+                                wearing_slot(armour_wear_2) ))
+    {
         do_wear_armour( armour_wear_2, false );
+    }
 }
 
 static int armour_equip_delay(const item_def &item)
@@ -2928,6 +2933,7 @@ static bool swap_rings(int ring_slot)
     if (!remove_ring(unwanted, false))
         return (false);
 
+    // Put on the new ring.
     if (!safe_to_remove_or_wear(you.inv[ring_slot], false))
         return (false);
 
@@ -2983,6 +2989,7 @@ bool puton_item(int item_slot, bool prompt_finger)
             return false;
         }
 
+        // Put on the new amulet.
         if (!safe_to_remove_or_wear(you.inv[item_slot], false))
             return (false);
 
@@ -2992,6 +2999,7 @@ bool puton_item(int item_slot, bool prompt_finger)
         return (true);
     }
 
+    // Put on the amulet.
     if (!safe_to_remove_or_wear(you.inv[item_slot], false))
         return (false);
 
@@ -3254,8 +3262,10 @@ bool remove_ring(int slot, bool announce)
     if (item_cursed( you.inv[you.equip[hand_used]] ))
     {
         if (announce)
+        {
             mprf("%s is stuck to you!",
                  you.inv[you.equip[hand_used]].name(DESC_CAP_YOUR).c_str());
+        }
         else
             mpr("It's stuck to you!");
 
@@ -3265,6 +3275,7 @@ bool remove_ring(int slot, bool announce)
 
     ring_wear_2 = you.equip[hand_used];
 
+    // Remove the ring.
     if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
         return (false);
 

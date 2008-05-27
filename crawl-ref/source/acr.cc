@@ -3467,14 +3467,12 @@ static keycode_type _get_next_keycode()
     return (keyin);
 }
 
-/*
- * Check squares adjacent to player for given feature and return how
- * many there are.  If there's only one, return the dx and dy.
- */
+// Check squares adjacent to player for given feature and return how
+// many there are.  If there's only one, return the dx and dy.
 static int _check_adjacent(dungeon_feature_type feat, int &dx, int &dy)
 {
     int num = 0;
-    int _dx, _dy;
+    int _dx = 0, _dy = 0;
 
     for (int x = -1; x <= 1; x++)
         for (int y = -1; y <= 1; y++)
@@ -3494,11 +3492,9 @@ static int _check_adjacent(dungeon_feature_type feat, int &dx, int &dy)
     return num;
 }
 
-/*
-   Opens doors and handles some aspects of untrapping. If either move_x or
-   move_y are non-zero, the pair carries a specific direction for the door
-   to be opened (eg if you type ctrl - dir).
- */
+// Opens doors and handles some aspects of untrapping. If either move_x or
+// move_y are non-zero, the pair carries a specific direction for the door
+// to be opened (eg if you type ctrl - dir).
 static void _open_door(int move_x, int move_y, bool check_confused)
 {
     struct dist door_move;

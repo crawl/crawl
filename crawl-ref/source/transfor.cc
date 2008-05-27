@@ -27,6 +27,7 @@
 #include "misc.h"
 #include "output.h"
 #include "player.h"
+#include "randart.h"
 #include "skills2.h"
 #include "stuff.h"
 #include "traps.h"
@@ -34,10 +35,67 @@
 void drop_everything(void);
 void extra_hp(int amount_extra);
 
+static void _init_equipment_removal(std::set<equipment_type> &rem_stuff,
+                                    int which_trans)
+{
+    switch (which_trans)
+    {
+    case TRAN_SPIDER:
+        // Spiders CAN wear soft helmets
+        if (you.equip[EQ_HELMET] == -1
+            || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
+        {
+            rem_stuff.erase(EQ_HELMET);
+        }
+        break;
+
+    case TRAN_BAT:
+        // Bats CAN wear soft helmets.
+        if (you.equip[EQ_HELMET] == -1
+            || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
+        {
+            rem_stuff.erase(EQ_HELMET);
+        }
+        break;
+
+    case TRAN_ICE_BEAST:
+        rem_stuff.erase(EQ_CLOAK);
+        // Ice beasts CAN wear soft helmets.
+        if (you.equip[EQ_HELMET] == -1
+            || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
+        {
+            rem_stuff.erase(EQ_HELMET);
+        }
+        break;
+
+    case TRAN_BLADE_HANDS:
+        rem_stuff.erase(EQ_CLOAK);
+        rem_stuff.erase(EQ_HELMET);
+        rem_stuff.erase(EQ_BOOTS);
+        rem_stuff.erase(EQ_BODY_ARMOUR);
+        break;
+
+    case TRAN_STATUE:
+        rem_stuff.erase(EQ_WEAPON); // can still hold a weapon
+        rem_stuff.erase(EQ_CLOAK);
+        rem_stuff.erase(EQ_HELMET);
+        break;
+
+    case TRAN_AIR:
+        // Can't wear anything at all!
+        rem_stuff.insert(EQ_LEFT_RING);
+        rem_stuff.insert(EQ_RIGHT_RING);
+        rem_stuff.insert(EQ_AMULET);
+        break;
+    default:
+        break;
+    }
+}
+
 bool remove_equipment(std::set<equipment_type> removed)
 {
-    if ( removed.find(EQ_WEAPON) != removed.end() &&
-         you.equip[EQ_WEAPON] != -1)
+    if (removed.find(EQ_WEAPON) != removed.end()
+        && you.equip[EQ_WEAPON] != -1)
     {
         unwield_item();
         canned_msg(MSG_EMPTY_HANDED);
@@ -45,10 +103,10 @@ bool remove_equipment(std::set<equipment_type> removed)
 
     // Remove items in order (std::set is a sorted container)
     std::set<equipment_type>::const_iterator iter;
-    for ( iter = removed.begin(); iter != removed.end(); ++iter )
+    for (iter = removed.begin(); iter != removed.end(); ++iter)
     {
         const equipment_type e = *iter;
-        if ( e == EQ_WEAPON || you.equip[e] == -1 )
+        if (e == EQ_WEAPON || you.equip[e] == -1)
             continue;
 
         mprf("%s falls away.",
@@ -58,7 +116,7 @@ bool remove_equipment(std::set<equipment_type> removed)
         you.equip[e] = -1;
     }
 
-    return true;
+    return (true);
 }                               // end remove_equipment()
 
 bool remove_one_equip(equipment_type eq)
@@ -76,7 +134,7 @@ static bool check_for_cursed_equipment(const std::set<equipment_type> &remove)
     for (iter = remove.begin(); iter != remove.end(); ++iter )
     {
         equipment_type e = *iter;
-        if ( you.equip[e] == -1 )
+        if (you.equip[e] == -1)
             continue;
 
         if (item_cursed( you.inv[ you.equip[e] ] ))
@@ -90,6 +148,78 @@ static bool check_for_cursed_equipment(const std::set<equipment_type> &remove)
 
     return (false);
 }                               // end check_for_cursed_equipment()
+
+// Count the stat boosts yielded by all items to be removed, and count
+// future losses (caused by the transformation) like a current stat boost,
+// as well. If the sum of all bosts of a stat is equal to or greater than
+// the current stat, give a message and return true.
+bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
+                                    int str_loss, int dex_loss, int int_loss,
+                                    bool quiet)
+{
+    // Initialize with additional losses, if any.
+    int prop_str = str_loss;
+    int prop_dex = dex_loss;
+    int prop_int = int_loss;
+
+    // Check over all items to be removed.
+    std::set<equipment_type>::const_iterator iter;
+    for (iter = remove.begin(); iter != remove.end(); ++iter)
+    {
+        equipment_type e = *iter;
+        if (you.equip[e] == -1)
+            continue;
+
+        item_def item = you.inv[you.equip[e]];
+        if (item.base_type == OBJ_JEWELLERY)
+        {
+            if (!item_ident( item, ISFLAG_KNOW_PLUSES ))
+                continue;
+
+            switch (item.sub_type)
+            {
+            case RING_STRENGTH:
+                if (item.plus != 0)
+                    prop_str += item.plus;
+                break;
+            case RING_DEXTERITY:
+                if (item.plus != 0)
+                    prop_dex += item.plus;
+                break;
+            case RING_INTELLIGENCE:
+                if (item.plus != 0)
+                    prop_int += item.plus;
+                break;
+            default:
+                break;
+            }
+        }
+
+        if (is_random_artefact( item ))
+        {
+            prop_str += randart_known_wpn_property(item, RAP_STRENGTH);
+            prop_int += randart_known_wpn_property(item, RAP_INTELLIGENCE);
+            prop_dex += randart_known_wpn_property(item, RAP_DEXTERITY);
+        }
+
+        // Since there might be multiple items whose effects cancel each other
+        // out while worn, if at any point in the order of checking this list
+        // (which is the same order as when removing items) one of your stats
+        // would reach 0, return true.
+        if (prop_str >= you.strength || prop_int >= you.intel
+            || prop_dex >= you.dex)
+        {
+            if (!quiet)
+            {
+                mpr("This transformation would result in fatal stat loss!",
+                    MSGCH_WARN);
+            }
+            return (true);
+        }
+    }
+
+    return (false);
+}
 
 // FIXME: Switch to 4.1 transforms handling.
 size_type transform_size(int psize)
@@ -163,10 +293,10 @@ bool transform(int pow, transformation_type which_trans)
         return (false);
     }
 
-    //jmf: silently discard this enchantment
+    //jmf: Silently discard this enchantment
     you.duration[DUR_STONESKIN] = 0;
 
-    // We drop everything except jewellery by default
+    // We drop everything except jewellery by default.
     equipment_type default_rem[] = {
         EQ_WEAPON, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS,
         EQ_SHIELD, EQ_BODY_ARMOUR
@@ -174,6 +304,7 @@ bool transform(int pow, transformation_type which_trans)
 
     std::set<equipment_type> rem_stuff(default_rem,
                                        default_rem + ARRAYSZ(default_rem));
+    _init_equipment_removal(rem_stuff, which_trans);
 
     you.redraw_evasion = true;
     you.redraw_armour_class = true;
@@ -183,13 +314,6 @@ bool transform(int pow, transformation_type which_trans)
     switch (which_trans)
     {
     case TRAN_SPIDER:           // also AC +3, ev +3, fast_run
-        // spiders CAN wear soft helmets
-        if ( you.equip[EQ_HELMET] == -1
-             || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
-        {
-             rem_stuff.erase(EQ_HELMET);
-        }
-
         if (check_for_cursed_equipment( rem_stuff ))
             return (false);
 
@@ -210,16 +334,11 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_BAT:
-        // bats CAN wear soft helmets
-        if ( you.equip[EQ_HELMET] == -1
-             || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
-        {
-             rem_stuff.erase(EQ_HELMET);
-        }
+        if (check_for_cursed_equipment(rem_stuff))
+            return (false);
 
-        // high ev, low ac, high speed
-        if (check_for_cursed_equipment( rem_stuff ))
-            return false;
+        if (check_transformation_stat_loss(rem_stuff, 5)) // Str loss = 5
+            return (false);
 
         mprf("You turn into a %sbat.",
              you.species == SP_VAMPIRE ? "vampire " : "");
@@ -232,6 +351,7 @@ bool transform(int pow, transformation_type which_trans)
         if (you.duration[DUR_TRANSFORMATION] > 100)
             you.duration[DUR_TRANSFORMATION] = 100;
 
+        // high ev, low ac, high speed
        modify_stat( STAT_DEXTERITY, 5, true,
                     "gaining the bat transformation");
        modify_stat( STAT_STRENGTH, -5, true,
@@ -242,16 +362,8 @@ bool transform(int pow, transformation_type which_trans)
        return (true);
 
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1
-        rem_stuff.erase(EQ_CLOAK);
-        // ice beasts CAN wear soft helmets
-        if ( you.equip[EQ_HELMET] == -1
-             || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
-        {
-             rem_stuff.erase(EQ_HELMET);
-        }
-
         if (check_for_cursed_equipment( rem_stuff ))
-            return false;
+            return (false);
 
         mpr( "You turn into a creature of crystalline ice." );
 
@@ -292,12 +404,11 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_STATUE: // also AC +20, ev -5, elec +1, pois +1, neg +1, slow
-        rem_stuff.erase(EQ_WEAPON); // can still hold a weapon
-        rem_stuff.erase(EQ_CLOAK);
-        rem_stuff.erase(EQ_HELMET);
-
         if (check_for_cursed_equipment( rem_stuff ))
-            return false;
+            return (false);
+
+        if (check_transformation_stat_loss(rem_stuff, 0, 2)) // Dex loss = 2
+            return (false);
 
         if (you.species == SP_GNOME && coinflip())
             mpr( "Look, a garden gnome.  How cute!" );
@@ -306,7 +417,7 @@ bool transform(int pow, transformation_type which_trans)
         else
             mpr( "You turn into a living statue of rough stone." );
 
-        // too stiff to make use of shields, gloves, or armour -- bwr
+        // Too stiff to make use of shields, gloves, or armour -- bwr
         remove_equipment( rem_stuff );
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_STATUE;
@@ -333,8 +444,10 @@ bool transform(int pow, transformation_type which_trans)
             return false;
 
         if (you.species == SP_MERFOLK && player_is_swimming())
+        {
             mpr("You fly out of the water as you turn into "
                 "a fearsome dragon!");
+        }
         else
             mpr("You turn into a fearsome dragon!");
 
@@ -364,6 +477,8 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_LICH:
+        // Don't need to remove anything.
+
         // also AC +3, cold +1, neg +3, pois +1, is_undead, res magic +50,
         // spec_death +1, and drain attack (if empty-handed)
         if (you.duration[DUR_DEATHS_DOOR])
@@ -403,10 +518,6 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_AIR:
-        rem_stuff.insert(EQ_LEFT_RING);
-        rem_stuff.insert(EQ_RIGHT_RING);
-        rem_stuff.insert(EQ_AMULET);
-
         if (check_for_cursed_equipment( rem_stuff ))
             return false;
 

@@ -832,7 +832,7 @@ bool activate_ability()
         return false;
     }
 
-    if ( you.duration[DUR_CONF] )
+    if (you.duration[DUR_CONF])
     {
         talents = your_talents(true);
         if ( talents.empty() )
@@ -844,7 +844,7 @@ bool activate_ability()
     }
 
     int selected = -1;
-    while ( selected < 0 )
+    while (selected < 0)
     {
         msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list)"
                                    << std::endl;
@@ -871,7 +871,7 @@ bool activate_ability()
             // try to find the hotkey
             for (unsigned int i = 0; i < talents.size(); ++i)
             {
-                if ( talents[i].hotkey == keyin )
+                if (talents[i].hotkey == keyin)
                 {
                     selected = static_cast<int>(i);
                     break;
@@ -879,7 +879,7 @@ bool activate_ability()
             }
 
             // if we can't, cancel out
-            if ( selected < 0 )
+            if (selected < 0)
             {
                 mpr("You can't do that.");
                 crawl_state.zero_turns_taken();
@@ -894,17 +894,20 @@ bool activate_ability()
 static bool _activate_talent(const talent& tal)
 {
     // Doing these would outright kill the player due to stat drain.
-    if (tal.which == ABIL_TRAN_BAT && you.strength <= 5)
+    if (tal.which == ABIL_TRAN_BAT)
     {
-        mpr("You lack the strength for this transformation.");
-        crawl_state.zero_turns_taken();
-        return (false);
+        if (you.strength <= 5)
+        {
+            mpr("You lack the strength for this transformation.", MSGCH_WARN);
+            crawl_state.zero_turns_taken();
+            return (false);
+        }
     }
     else if (tal.which == ABIL_END_TRANSFORMATION
              && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
              && you.dex <= 5)
     {
-        mpr("Turning back with such low dexterity would be fatal!");
+        mpr("Turning back with such low dexterity would be fatal!", MSGCH_WARN);
         more();
         crawl_state.zero_turns_taken();
         return (false);
@@ -1831,7 +1834,11 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TRAN_BAT:
-        transform(100, TRAN_BAT);
+        if (!transform(100, TRAN_BAT))
+        {
+            crawl_state.zero_turns_taken();
+            return (false);
+        }
         break;
 
     case ABIL_RENOUNCE_RELIGION:
