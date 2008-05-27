@@ -214,7 +214,8 @@ static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
     "recovery", "sound", "talk", "talk_visual", "intrinsic_gain", "mutation",
     "monster_spell", "monster_enchant", "friend_spell", "friend_enchant",
     "monster_damage", "monster_target", "rotten_meat", "equipment", "floor",
-    "multiturn", "examine", "examine_filter", "diagnostic","tutorial"
+    "multiturn", "examine", "examine_filter", "diagnostic", "error",
+    "tutorial"
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -1392,7 +1393,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
 #ifdef CLUA_BINDINGS
                 clua.execstring(luacode.c_str());
                 if (!clua.error.empty())
-                    mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
+                    mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
                 luacode.clear();
 #endif
             }
@@ -1407,7 +1408,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             {
                 clua.execstring(luacode.c_str());
                 if (!clua.error.empty())
-                    mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
+                    mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
             }
 #endif
             luacode.clear();
@@ -1441,7 +1442,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             luacond += "]] )\n";
         clua.execstring(luacond.c_str());
         if (!clua.error.empty())
-            mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
+            mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
     }
 #endif
 
@@ -1897,7 +1898,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #ifdef CLUA_BINDINGS
         clua.execfile(field.c_str(), false, false);
         if (!clua.error.empty())
-            mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
+            mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
 #endif
     }
     else if (key == "colour" || key == "color")
@@ -2775,7 +2776,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         {
 #ifdef CLUA_BINDINGS
             if (!clua.error.empty())
-                mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
+                mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
 #endif
             named_options[key] = orig_field;
         }
@@ -2899,7 +2900,7 @@ void game_options::report_error(const std::string &error)
     // If called before game starts, log a startup error,
     // otherwise spam the warning channel.
     if (crawl_state.need_save)
-        mprf(MSGCH_WARN, "Warning: %s", error.c_str());
+        mprf(MSGCH_ERROR, "Warning: %s", error.c_str());
     else
         crawl_state.add_startup_error(error);
 }

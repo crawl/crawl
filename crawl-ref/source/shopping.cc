@@ -1506,7 +1506,7 @@ void shop()
 
     if (i == MAX_SHOPS)
     {
-        mpr("Help! Non-existent shop.", MSGCH_DANGER);
+        mpr("Help! Non-existent shop.", MSGCH_ERROR);
         return;
     }
 

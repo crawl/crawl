@@ -66,7 +66,7 @@ std::string userdef_annotate_item(const char *s, const item_def *item,
         lua_set_exclusive_item(item);
     std::string ann;
     if (!clua.callfn(s, "u>s", item, &ann) && !clua.error.empty())
-        mprf(MSGCH_WARN, "Lua error: %s", clua.error.c_str());
+        mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     if (exclusive)
         lua_set_exclusive_item(NULL);
     return (ann);

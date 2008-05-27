@@ -2876,7 +2876,8 @@ std::string your_hand(bool plural)
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
     default:
-        mpr("ERROR: unknown transformation in your_hand() (spells4.cc)");
+        mpr("ERROR: unknown transformation in your_hand() (spells4.cc)",
+            MSGCH_ERROR);
     case TRAN_NONE:
     case TRAN_STATUE:
     case TRAN_LICH:

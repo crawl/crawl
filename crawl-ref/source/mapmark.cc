@@ -173,14 +173,14 @@ map_lua_marker::map_lua_marker(const std::string &s, const std::string &,
     if (mapdef_marker)
     {
         if (dlua.loadstring(("return " + s).c_str(), "lua_marker"))
-            mprf(MSGCH_WARN, "lua_marker load error: %s", dlua.error.c_str());
+            mprf(MSGCH_ERROR, "lua_marker load error: %s", dlua.error.c_str());
         if (!dlua.callfn("dgn_run_map", 1, 1))
-            mprf(MSGCH_WARN, "lua_marker exec error: %s", dlua.error.c_str());
+            mprf(MSGCH_ERROR, "lua_marker exec error: %s", dlua.error.c_str());
     }
     else
     {
         if (dlua.execstring(("return " + s).c_str(), "lua_marker_mapless", 1))
-            mprf(MSGCH_WARN, "lua_marker_mapless exec error: %s",
+            mprf(MSGCH_ERROR, "lua_marker_mapless exec error: %s",
                  dlua.error.c_str());
     }
     check_register_table();
@@ -210,7 +210,7 @@ void map_lua_marker::check_register_table()
 {
     if (!lua_istable(dlua, -1))
     {
-        mprf(MSGCH_WARN, "lua_marker: Expected table, didn't get it.");
+        mprf(MSGCH_ERROR, "lua_marker: Expected table, didn't get it.");
         initialised = false;
         return;
     }
@@ -242,7 +242,7 @@ void map_lua_marker::write(writer &outf) const
     bool init = initialised;
     if (!get_table())
     {
-        mprf(MSGCH_WARN, "Couldn't find table.");
+        mprf(MSGCH_ERROR, "Couldn't find table.");
         init = false;
     }
 
@@ -322,7 +322,7 @@ bool map_lua_marker::callfn(const char *fn, bool warn_err, int args) const
     }
     const bool res = dlua.callfn("dlua_marker_method", args, 1);
     if (!res && warn_err)
-        mprf(MSGCH_WARN, "mlua error: %s", dlua.error.c_str());
+        mprf(MSGCH_ERROR, "mlua error: %s", dlua.error.c_str());
     return (res);
 }
 
@@ -340,7 +340,7 @@ void map_lua_marker::notify_dgn_event(const dgn_event &e)
     push_fn_args("event");
     clua_push_dgn_event(dlua, &e);
     if (!dlua.callfn("dlua_marker_method", 4, 0))
-        mprf(MSGCH_WARN, "notify_dgn_event: Lua error: %s",
+        mprf(MSGCH_ERROR, "notify_dgn_event: Lua error: %s",
              dlua.error.c_str());
 }
 

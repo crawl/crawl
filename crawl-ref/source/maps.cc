@@ -133,7 +133,7 @@ static bool resolve_map(map_def &map, const map_def &original)
         if (crawl_state.map_stat_gen)
             mapgen_report_error(map, err);
 #endif
-        mprf(MSGCH_WARN, "Lua error: %s", err.c_str());
+        mprf(MSGCH_ERROR, "Lua error: %s", err.c_str());
         return (false);
     }
 
@@ -141,7 +141,7 @@ static bool resolve_map(map_def &map, const map_def &original)
     err = map.resolve();
     if (!err.empty())
     {
-        mprf(MSGCH_WARN, "Error: %s", err.c_str());
+        mprf(MSGCH_ERROR, "Error: %s", err.c_str());
         return (false);
     }
 
@@ -721,7 +721,7 @@ void run_map_preludes()
         if (!chunk.empty())
         {
             if (chunk.load_call(dlua, NULL))
-                mprf(MSGCH_WARN, "Lua error: %s", chunk.orig_error().c_str());
+                mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
         }
     }
     for (int i = 0, size = vdefs.size(); i < size; ++i)
@@ -730,7 +730,7 @@ void run_map_preludes()
         {
             std::string err = vdefs[i].run_lua(true);
             if (!err.empty())
-                mprf(MSGCH_WARN, "Lua error (map %s): %s",
+                mprf(MSGCH_ERROR, "Lua error (map %s): %s",
                      vdefs[i].name.c_str(), err.c_str());
         }
     }

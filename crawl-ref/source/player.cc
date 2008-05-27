@@ -5286,7 +5286,7 @@ int stat_modifier( stat_type stat )
     case STAT_INTELLIGENCE: return _int_modifier();
     case STAT_DEXTERITY:    return _dex_modifier();
     default:
-        mprf(MSGCH_DANGER, "Bad stat: %d", stat);
+        mprf(MSGCH_ERROR, "Bad stat: %d", stat);
         return 0;
     }
 }

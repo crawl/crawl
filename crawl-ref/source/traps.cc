@@ -504,7 +504,7 @@ void disarm_trap( struct dist &disa )
 
         if (i == MAX_TRAPS - 1)
         {
-            mpr("Error - couldn't find that trap.");
+            mpr("Error - couldn't find that trap.", MSGCH_ERROR);
             return;
         }
     }

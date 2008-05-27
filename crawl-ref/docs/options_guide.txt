@@ -72,7 +72,7 @@ The contents of this text are:
                 recovery, talk, talk_visual, intrinsic_gain, mutation,
                 monster_spell, monster_enchant, monster_damage, 
                 rotten_meat, equipment, floor, multiturn, examine, 
-                examine_filter, diagnostics, tutorial
+                examine_filter, diagnostics, error, tutorial
 4-m     Inscriptions.
                 autoinscribe
 4-n     Macro related Options.
@@ -1264,6 +1264,7 @@ CHANNEL_NAME can currently be one of these:
    examine         = messages from examine your surroundings
    examine_filter  = boring messages from examining your surroundings
    diagnostics     = debugging messages
+   error           = error messages
    tutorial        = messages from the tutorial
 
 The channel options are

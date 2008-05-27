@@ -1449,7 +1449,7 @@ void run_macro(const char *macroname)
     if (!clua.callbooleanfn(false, "c_macro", "s", macroname))
     {
         if (clua.error.length())
-            mprf(MSGCH_WARN, "Lua error: %s", clua.error.c_str());
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 
         stop_delay();
     }

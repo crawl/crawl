@@ -1936,7 +1936,7 @@ static void _portal_vault_level(int level_number)
 
         if (Level_Vaults.empty())
         {
-            mprf(MSGCH_WARN, "No maps or tags named '%s'.",
+            mprf(MSGCH_ERROR, "No maps or tags named '%s'.",
                  level_name);
             ASSERT(false);
             end(-1);
@@ -3963,7 +3963,8 @@ static void _pick_float_exits(vault_placement &place,
     if (possible_exits.empty())
     {
 #ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_WARN, "Unable to find exit from %s", place.map.name.c_str());
+        mprf(MSGCH_ERROR, "Unable to find exit from %s",
+             place.map.name.c_str());
 #endif
         return;
     }

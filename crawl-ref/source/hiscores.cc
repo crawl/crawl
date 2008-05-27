@@ -996,7 +996,7 @@ void scorefile_entry::init()
                 // elsewhere.
                 if (you.inv[d].plus < 0 || you.inv[d].plus >= NUM_RUNE_TYPES)
                 {
-                    mpr("WARNING: Buggy rune in pack!");
+                    mpr("WARNING: Buggy rune in pack!", MSGCH_ERROR);
                     // Be nice and assume the buggy rune was originally
                     // different from any of the other rune types.
                     num_diff_runes++;

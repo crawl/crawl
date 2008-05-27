@@ -4651,7 +4651,7 @@ static bool _god_likes_items(god_type god)
         return false;
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM:
-        mprf(MSGCH_DANGER, "Bad god, no biscuit! %d", static_cast<int>(god) );
+        mprf(MSGCH_ERROR, "Bad god, no biscuit! %d", static_cast<int>(god) );
         return false;
     }
     return false;

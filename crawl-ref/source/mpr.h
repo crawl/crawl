@@ -47,6 +47,7 @@ enum msg_channel_type
     MSGCH_EXAMINE,          // messages describing monsters, features, items
     MSGCH_EXAMINE_FILTER,   // "less important" instances of the above
     MSGCH_DIAGNOSTICS,      // various diagnostic messages
+    MSGCH_ERROR,            // error messages
     MSGCH_TUTORIAL,         // messages for tutorial
 
     NUM_MESSAGE_CHANNELS    // always last

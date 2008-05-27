@@ -1788,7 +1788,7 @@ void save_ghost( bool force )
 
     if (gfile == NULL)
     {
-        mprf("Error creating ghost file: %s", cha_fil.c_str());
+        mprf(MSGCH_ERROR, "Error creating ghost file: %s", cha_fil.c_str());
         more();
         return;
     }

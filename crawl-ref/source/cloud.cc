@@ -358,7 +358,7 @@ void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
     }
     catch (const std::string &err)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Error while making fog machine: %s",
+        mprf(MSGCH_ERROR, "Error while making fog machine: %s",
              err.c_str());
     }
 }

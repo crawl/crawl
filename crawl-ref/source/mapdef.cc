@@ -1380,7 +1380,7 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval, bool croak)
         if (croak)
             end(1, false, "Lua error: %s", validate.orig_error().c_str());
         else
-            mprf(MSGCH_WARN, "Lua error: %s", validate.orig_error().c_str());
+            mprf(MSGCH_ERROR, "Lua error: %s", validate.orig_error().c_str());
         return (result);
     }
     if (dlua.callfn("dgn_run_map", 1, 1))
@@ -1391,7 +1391,7 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval, bool croak)
             end(1, false, "Lua error: %s",
                 rewrite_chunk_errors(dlua.error).c_str());
         else
-            mprf(MSGCH_WARN, "Lua error: %s",
+            mprf(MSGCH_ERROR, "Lua error: %s",
                  rewrite_chunk_errors(dlua.error).c_str());
     }
     return (result);

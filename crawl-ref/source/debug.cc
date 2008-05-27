@@ -1504,7 +1504,7 @@ void stethoscope(int mwh)
 //---------------------------------------------------------------
 static void dump_item( const char *name, int num, const item_def &item )
 {
-    mpr( name, MSGCH_WARN );
+    mpr( name, MSGCH_ERROR );
 
     mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %ld",
          num, item.base_type, item.sub_type,
@@ -1548,7 +1548,7 @@ void debug_item_scan( void )
                 // Check for invalid (zero quantity) items that are linked in
                 if (!is_valid_item( mitm[obj] ))
                 {
-                    mprf(MSGCH_WARN, "Linked invalid item at (%d,%d)!", x, y);
+                    mprf(MSGCH_ERROR, "Linked invalid item at (%d,%d)!", x, y);
                     dump_item( mitm[obj].name(DESC_PLAIN).c_str(),
                                obj, mitm[obj] );
                 }
@@ -1556,7 +1556,7 @@ void debug_item_scan( void )
                 // Check that item knows what stack it's in
                 if (mitm[obj].x != x || mitm[obj].y != y)
                 {
-                    mprf(MSGCH_WARN,"Item position incorrect at (%d,%d)!",x,y);
+                    mprf(MSGCH_ERROR,"Item position incorrect at (%d,%d)!",x,y);
                     dump_item( mitm[obj].name(DESC_PLAIN).c_str(),
                                obj, mitm[obj] );
                 }
@@ -1565,7 +1565,7 @@ void debug_item_scan( void )
                 // this will also keep this from being an infinite loop.
                 if (visited[obj])
                 {
-                    mprf(MSGCH_WARN,
+                    mprf(MSGCH_ERROR,
                          "Potential INFINITE STACK at (%d, %d)", x, y);
                     break;
                 }
@@ -1585,7 +1585,7 @@ void debug_item_scan( void )
         // Don't check (-1,-1) player items or (0,0) monster items
         if ((mitm[i].x > 0 || mitm[i].y > 0) && !visited[i])
         {
-            mpr( "Unlinked item:", MSGCH_WARN );
+            mpr( "Unlinked item:", MSGCH_ERROR );
             dump_item( name, i, mitm[i] );
 
             mprf("igrd(%d,%d) = %d",
@@ -1623,7 +1623,7 @@ void debug_item_scan( void )
             || strstr( name, "bola" ) != NULL
             || strstr( name, "bugg" ) != NULL)
         {
-            mpr( "Bad item:", MSGCH_WARN );
+            mpr( "Bad item:", MSGCH_ERROR );
             dump_item( name, i, mitm[i] );
         }
         else if ((mitm[i].base_type == OBJ_WEAPONS
@@ -1643,7 +1643,7 @@ void debug_item_scan( void )
                     || (!is_random_artefact( mitm[i] )
                         && mitm[i].special >= 30))))
         {
-            mpr( "Bad plus or special value:", MSGCH_WARN );
+            mpr( "Bad plus or special value:", MSGCH_ERROR );
             dump_item( name, i, mitm[i] );
         }
     }
@@ -1659,8 +1659,8 @@ void debug_item_scan( void )
         if (monster.name(DESC_PLAIN, true).find("questionable") !=
             std::string::npos)
         {
-            mprf( MSGCH_WARN, "Program bug detected!" );
-            mprf( MSGCH_WARN,
+            mprf( MSGCH_ERROR, "Program bug detected!" );
+            mprf( MSGCH_ERROR,
                   "Buggy monster detected: monster #%d; position (%d,%d)",
                   i, monster.x, monster.y );
         }
@@ -2054,7 +2054,7 @@ void debug_item_statistics( void )
     if (!ostat)
     {
 #ifndef DOS
-        mprf("Can't write items.stat: %s", strerror(errno));
+        mprf(MSGCH_ERROR, "Can't write items.stat: %s", strerror(errno));
 #endif
         return;
     }
@@ -2936,7 +2936,7 @@ static bool debug_fight_sim(int mindex, int missile_slot,
         // and it's insufficiently important for a wizmode-only
         // feature.
 #ifndef DOS
-        mprf("Can't write fight.stat: %s", strerror(errno));
+        mprf(MSGCH_ERROR, "Can't write fight.stat: %s", strerror(errno));
 #endif
         return (false);
     }
@@ -3918,7 +3918,7 @@ static bool mg_do_build_level(int niters)
                 vaults = " (" + vaults + ")";
 
             extern std::string dgn_Build_Method;
-            mprf(MSGCH_WARN,
+            mprf(MSGCH_ERROR,
                  "Bad (disconnected) level on %s%s",
                  level_id::current().describe().c_str(),
                  vaults.c_str());

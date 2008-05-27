@@ -3159,7 +3159,7 @@ static void _read_each_message()
     FILE *mf = fopen(SysEnv.messagefile.c_str(), "r+");
     if (!mf)
     {
-        mprf(MSGCH_WARN, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),
+        mprf(MSGCH_ERROR, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
         goto kill_messaging;
     }
@@ -3169,7 +3169,7 @@ static void _read_each_message()
 
     if (!lock_file_handle(mf, F_RDLCK))
     {
-        mprf(MSGCH_WARN, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
+        mprf(MSGCH_ERROR, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
         goto kill_messaging;
     }
@@ -3195,7 +3195,7 @@ static void _read_each_message()
 
         if (!lock_file_handle(mf, F_RDLCK))
         {
-            mprf(MSGCH_WARN, "Failed to lock %s: %s",
+            mprf(MSGCH_ERROR, "Failed to lock %s: %s",
                  SysEnv.messagefile.c_str(),
                  strerror(errno));
             goto kill_messaging;
@@ -3203,7 +3203,7 @@ static void _read_each_message()
     }
     if (!lock_file_handle(mf, F_WRLCK))
     {
-        mprf(MSGCH_WARN, "Unable to write lock %s: %s",
+        mprf(MSGCH_ERROR, "Unable to write lock %s: %s",
              SysEnv.messagefile.c_str(),
              strerror(errno));
     }

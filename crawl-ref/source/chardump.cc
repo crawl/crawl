@@ -1210,7 +1210,7 @@ static bool write_dump( const std::string &fname, dump_params &par)
         succeeded = true;
     }
     else
-        mprf("Error opening file '%s'", file_name.c_str());
+        mprf(MSGCH_ERROR, "Error opening file '%s'", file_name.c_str());
 
     return (succeeded);
 }

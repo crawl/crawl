@@ -132,7 +132,7 @@ namespace msg
 
         if ( internal_count + 3 > INTERNAL_LENGTH )
         {
-            mpr("oops, hit overflow", MSGCH_DANGER);
+            mpr("oops, hit overflow", MSGCH_ERROR);
             internal_count = 0;
             return std::streambuf::traits_type::eof();
         }
@@ -262,6 +262,7 @@ int channel_to_colour( msg_channel_type channel, int param )
             break;
 
         case MSGCH_WARN:
+        case MSGCH_ERROR:
             ret = LIGHTRED;
             break;
 
@@ -371,6 +372,9 @@ static void do_message_print( msg_channel_type channel, int param,
     buff[199] = 0;
 
     mpr(buff, channel, param);
+
+    if (channel == MSGCH_ERROR)
+        interrupt_activity( AI_FORCE_INTERRUPT );
 }
 
 void mprf( msg_channel_type channel, int param, const char *format, ... )
@@ -402,7 +406,7 @@ void mpr(const char *inf, msg_channel_type channel, int param)
 {
     if (!crawl_state.io_inited)
     {
-        if (channel == MSGCH_WARN)
+        if (channel == MSGCH_ERROR)
             fprintf(stderr, "%s\n", inf);
         return;
     }
