@@ -736,8 +736,8 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     switch (ru)
     {
     case 0:
-        msg::stream << "The dust glows " << weird_glowing_colour()
-                    << "!" << std::endl;
+        msg::stream << "The dust glows " << weird_glowing_colour() << "!"
+                    << std::endl;
         break;
 
     case 1:
@@ -759,32 +759,13 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 3:
-        temp_rand = random2(8);
-        mprf("You hear the distant roaring of an enraged %s!",
-             (temp_rand == 0) ? "frog"          :
-             (temp_rand == 1) ? "pill bug"      :
-             (temp_rand == 2) ? "millipede"     :
-             (temp_rand == 3) ? "eggplant"      :
-             (temp_rand == 4) ? "albino dragon" :
-             (temp_rand == 5) ? "dragon"        :
-             (temp_rand == 6) ? "human"
-                              : "slug");
+        msg::stream << "You hear the distant roaring of an enraged "
+                    << weird_roaring_animal() << "!" << std::endl;
         break;
 
     case 4:
         if (player_can_smell())
-        {
-            temp_rand = random2(8);
-            mprf("You smell %s",
-                 (temp_rand == 0) ? "coffee."          :
-                 (temp_rand == 1) ? "salt."            :
-                 (temp_rand == 2) ? "burning hair!"    :
-                 (temp_rand == 3) ? "baking bread."    :
-                 (temp_rand == 4) ? "something weird." :
-                 (temp_rand == 5) ? "wet wool."        :
-                 (temp_rand == 6) ? "sulphur."
-                                  : "fire and brimstone!");
-        }
+            msg::stream << "You smell " << weird_smell() << "." << std::endl;
         break;
 
     case 5:

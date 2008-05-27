@@ -98,13 +98,15 @@ void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
  * *********************************************************************** */
 std::string weird_glowing_colour();
 
-
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: it_use3
  * *********************************************************************** */
 std::string weird_writing();
 
+std::string weird_roaring_animal();
+
+std::string weird_smell();
 
 std::string cloud_name(cloud_type type);
 

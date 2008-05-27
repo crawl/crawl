@@ -2392,6 +2392,24 @@ std::string weird_writing()
     return result;
 }
 
+std::string weird_roaring_animal()
+{
+    std::string result = getRandNameString("roaring_animal_name");
+
+    lowercase(result);
+
+    return result;
+}
+
+std::string weird_smell()
+{
+    std::string result = getRandNameString("smell_name");
+
+    lowercase(result);
+
+    return result;
+}
+
 bool scramble(void)
 {
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)

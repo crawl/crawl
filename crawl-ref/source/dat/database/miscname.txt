@@ -4,7 +4,8 @@
 # miscname.txt: lookup miscellaneous names
 #
 # This file contains a list of names for miscellaneous things.
-# This is currently only used for colours and writing types.
+# This is currently only used for colours, writing types,
+# roaring animals, and smells.
 #
 # Note that randarts may use these as well.
 ######################################################
@@ -156,5 +157,43 @@ writing_name
 @glowing_colour_name@ @writing_noun@
 
 @writing_adj@ @colour_name@ @writing_noun@
+
+%%%%
+roaring_animal_name
+
+Frog
+
+Pill Bug
+
+Millipede
+
+Eggplant
+
+Albino Dragon
+
+Dragon
+
+Human
+
+Slug
+
+%%%%
+smell_name
+
+Coffee
+
+Salt
+
+Burning Hair
+
+Baking Bread
+
+Something Weird
+
+Wet Wool
+
+Sulphur
+
+Fire and Brimstone
 
 %%%%
