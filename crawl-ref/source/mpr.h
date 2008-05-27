@@ -21,6 +21,7 @@
 enum msg_channel_type
 {
     MSGCH_PLAIN,            // regular text
+    MSGCH_FRIEND_ACTION,    // friendly monsters taking actions
     MSGCH_PROMPT,           // various prompts
     MSGCH_GOD,              // god/religion (param is god)
     MSGCH_PRAY,             // praying messages (param is god)

@@ -2777,6 +2777,9 @@ bool simple_monster_message(const monsters *monster, const char *event,
         snprintf( buff, sizeof(buff), "%s%s", monster->name(descrip).c_str(),
                   event );
 
+        if (channel == MSGCH_PLAIN && mons_wont_attack(monster))
+            channel = MSGCH_FRIEND_ACTION;
+
         mpr( buff, channel, param );
         return (true);
     }

@@ -170,8 +170,8 @@ bool is_altar(const coord_def &c)
 inline bool is_player_altar(dungeon_feature_type grid)
 {
     // An ugly hack, but that's what religion.cc does.
-    return you.religion != GOD_NO_GOD
-        && grid_altar_god(grid) == you.religion;
+    return (you.religion != GOD_NO_GOD
+            && grid_altar_god(grid) == you.religion);
 }
 
 inline bool is_player_altar(const coord_def &c)
@@ -210,12 +210,10 @@ const char *trap_name(int x, int y)
 }
 #endif
 
-/*
- * Returns true if the character can cross this dungeon feature.
- */
+// Returns true if the character can cross this dungeon feature.
 bool is_traversable(dungeon_feature_type grid)
 {
-    return traversable_terrain[grid] == TRAVERSABLE;
+    return (traversable_terrain[grid] == TRAVERSABLE);
 }
 
 static bool _is_excluded(const coord_def &p,
@@ -419,11 +417,9 @@ static bool _is_reseedable(int x, int y)
             || grid == DNGN_LAVA || is_trap(x, y) || _is_monster_blocked(x, y));
 }
 
-/*
- * Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
- * is true, returns true even for dungeon features the character can normally
- * not cross safely (deep water, lava, traps).
- */
+// Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
+// is true, returns true even for dungeon features the character can normally
+// not cross safely (deep water, lava, traps).
 bool is_travelsafe_square(int x, int y, bool ignore_hostile,
                           bool ignore_terrain_knowledge)
 {
@@ -450,7 +446,7 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
     // navigated over if the player is willing to take damage, or levitate.
     if (ignore_hostile && _is_reseedable(x, y))
-        return true;
+        return (true);
 
     return (is_traversable(grid)
 #ifdef CLUA_BINDINGS
@@ -508,16 +504,15 @@ static void _set_pass_feature(unsigned char grid, signed char pass)
         traversable_terrain[(unsigned) grid] = pass;
 }
 
-/*
- * Sets traversable terrain based on the character's role and whether or not he
- * has permanent levitation
- */
+// Sets traversable terrain based on the character's role and whether or not he
+// has permanent levitation
 void init_travel_terrain_check(bool check_race_equip)
 {
     if (check_race_equip)
     {
         // Swimmers get deep water.
-        signed char water = player_likes_water(true)? TRAVERSABLE : IMPASSABLE;
+        signed char water = (player_likes_water(true) ? TRAVERSABLE
+                                                      : IMPASSABLE);
 
         // If the player has overridden deep water already, we'll respect that.
         _set_pass_feature(DNGN_DEEP_WATER, water);
@@ -530,6 +525,8 @@ void init_travel_terrain_check(bool check_race_equip)
             _set_pass_feature(DNGN_DEEP_WATER, trav);
         _set_pass_feature(DNGN_LAVA, trav);
         _set_pass_feature(DNGN_TRAP_MECHANICAL, trav);
+        // Shafts can also be levitated over.
+        _set_pass_feature(DNGN_TRAP_NATURAL, trav);
     }
     else
     {
@@ -558,100 +555,26 @@ void travel_init_new_level()
     explore_stopped_pos.reset();
 }
 
-/*
- * Sets up travel-related stuff.
- */
+// Sets up travel-related stuff.
 void initialise_travel()
 {
-    // FIXME: Need a better way to do this. :-(
-    traversable_terrain[DNGN_FLOOR] =
-    traversable_terrain[DNGN_FLOOR_SPECIAL] =
-    traversable_terrain[DNGN_ENTER_HELL] =
-    traversable_terrain[DNGN_OPEN_DOOR] =
-    traversable_terrain[DNGN_UNDISCOVERED_TRAP] =
-    traversable_terrain[DNGN_ENTER_SHOP] =
-    traversable_terrain[DNGN_ENTER_LABYRINTH] =
-    traversable_terrain[DNGN_STONE_STAIRS_DOWN_I] =
-    traversable_terrain[DNGN_STONE_STAIRS_DOWN_II] =
-    traversable_terrain[DNGN_STONE_STAIRS_DOWN_III] =
-    traversable_terrain[DNGN_ESCAPE_HATCH_DOWN] =
-    traversable_terrain[DNGN_STONE_STAIRS_UP_I] =
-    traversable_terrain[DNGN_STONE_STAIRS_UP_II] =
-    traversable_terrain[DNGN_STONE_STAIRS_UP_III] =
-    traversable_terrain[DNGN_ESCAPE_HATCH_UP] =
-    traversable_terrain[DNGN_ENTER_DIS] =
-    traversable_terrain[DNGN_ENTER_GEHENNA] =
-    traversable_terrain[DNGN_ENTER_COCYTUS] =
-    traversable_terrain[DNGN_ENTER_TARTARUS] =
-    traversable_terrain[DNGN_ENTER_ABYSS] =
-    traversable_terrain[DNGN_EXIT_ABYSS] =
-    traversable_terrain[DNGN_STONE_ARCH] =
-    traversable_terrain[DNGN_ENTER_PANDEMONIUM] =
-    traversable_terrain[DNGN_EXIT_PANDEMONIUM] =
-    traversable_terrain[DNGN_TRANSIT_PANDEMONIUM] =
-    traversable_terrain[DNGN_ENTER_ORCISH_MINES] =
-    traversable_terrain[DNGN_ENTER_HIVE] =
-    traversable_terrain[DNGN_ENTER_LAIR] =
-    traversable_terrain[DNGN_ENTER_SLIME_PITS] =
-    traversable_terrain[DNGN_ENTER_VAULTS] =
-    traversable_terrain[DNGN_ENTER_CRYPT] =
-    traversable_terrain[DNGN_ENTER_HALL_OF_BLADES] =
-    traversable_terrain[DNGN_ENTER_ZOT] =
-    traversable_terrain[DNGN_ENTER_TEMPLE] =
-    traversable_terrain[DNGN_ENTER_SNAKE_PIT] =
-    traversable_terrain[DNGN_ENTER_ELVEN_HALLS] =
-    traversable_terrain[DNGN_ENTER_TOMB] =
-    traversable_terrain[DNGN_ENTER_SWAMP] =
-    traversable_terrain[DNGN_ENTER_SHOALS] =
-    traversable_terrain[DNGN_RETURN_FROM_ORCISH_MINES] =
-    traversable_terrain[DNGN_RETURN_FROM_HIVE] =
-    traversable_terrain[DNGN_RETURN_FROM_LAIR] =
-    traversable_terrain[DNGN_RETURN_FROM_SLIME_PITS] =
-    traversable_terrain[DNGN_RETURN_FROM_VAULTS] =
-    traversable_terrain[DNGN_RETURN_FROM_CRYPT] =
-    traversable_terrain[DNGN_RETURN_FROM_HALL_OF_BLADES] =
-    traversable_terrain[DNGN_RETURN_FROM_ZOT] =
-    traversable_terrain[DNGN_RETURN_FROM_TEMPLE] =
-    traversable_terrain[DNGN_RETURN_FROM_SNAKE_PIT] =
-    traversable_terrain[DNGN_RETURN_FROM_ELVEN_HALLS] =
-    traversable_terrain[DNGN_RETURN_FROM_TOMB] =
-    traversable_terrain[DNGN_RETURN_FROM_SWAMP] =
-    traversable_terrain[DNGN_RETURN_FROM_SHOALS] =
-    traversable_terrain[DNGN_ENTER_PORTAL_VAULT] =
-    traversable_terrain[DNGN_EXIT_PORTAL_VAULT] =
-    traversable_terrain[DNGN_ALTAR_ZIN] =
-    traversable_terrain[DNGN_ALTAR_SHINING_ONE] =
-    traversable_terrain[DNGN_ALTAR_KIKUBAAQUDGHA] =
-    traversable_terrain[DNGN_ALTAR_YREDELEMNUL] =
-    traversable_terrain[DNGN_ALTAR_XOM] =
-    traversable_terrain[DNGN_ALTAR_VEHUMET] =
-    traversable_terrain[DNGN_ALTAR_OKAWARU] =
-    traversable_terrain[DNGN_ALTAR_MAKHLEB] =
-    traversable_terrain[DNGN_ALTAR_SIF_MUNA] =
-    traversable_terrain[DNGN_ALTAR_TROG] =
-    traversable_terrain[DNGN_ALTAR_NEMELEX_XOBEH] =
-    traversable_terrain[DNGN_ALTAR_ELYVILON] =
-    traversable_terrain[DNGN_ALTAR_LUGONU] =
-    traversable_terrain[DNGN_ALTAR_BEOGH] =
-    traversable_terrain[DNGN_FOUNTAIN_BLUE] =
-    traversable_terrain[DNGN_FOUNTAIN_SPARKLING] =
-    traversable_terrain[DNGN_FOUNTAIN_BLOOD] =
-    traversable_terrain[DNGN_DRY_FOUNTAIN_BLUE] =
-    traversable_terrain[DNGN_DRY_FOUNTAIN_SPARKLING] =
-    traversable_terrain[DNGN_DRY_FOUNTAIN_BLOOD] =
-    traversable_terrain[DNGN_PERMADRY_FOUNTAIN] =
+    for (int feat = DNGN_FLOOR_MIN; feat < NUM_REAL_FEATURES; feat++)
+    {
+        if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_NATURAL)
+            continue;
+
+        traversable_terrain[feat] = TRAVERSABLE;
+    }
+    // A few special cases...
     traversable_terrain[DNGN_CLOSED_DOOR] =
-    traversable_terrain[DNGN_SHALLOW_WATER] =
-                            TRAVERSABLE;
+    traversable_terrain[DNGN_SHALLOW_WATER] = TRAVERSABLE;
 }
 
-/*
- * Given a dungeon feature description, returns the feature number. This is a
- * crude hack and currently recognises only (deep/shallow) water. (XXX)
- *
- * Returns -1 if the feature named is not recognised, else returns the feature
- * number (guaranteed to be 0-255).
- */
+// Given a dungeon feature description, returns the feature number. This is a
+// crude hack and currently recognises only (deep/shallow) water. (XXX)
+//
+// Returns -1 if the feature named is not recognised, else returns the feature
+// number (guaranteed to be 0-255).
 int get_feature_type(const std::string &feature)
 {
     if (feature.find("deep water") != std::string::npos)
@@ -661,10 +584,8 @@ int get_feature_type(const std::string &feature)
     return -1;
 }
 
-/*
- * Given a feature description, prevents travel to locations of that feature
- * type.
- */
+// Given a feature description, prevents travel to locations of that feature
+// type.
 void prevent_travel_to(const std::string &feature)
 {
     int feature_type = get_feature_type(feature);
@@ -752,17 +673,15 @@ bool prompt_stop_explore(int es_why)
             || yesno("Stop exploring?", true, 'y', true, false));
 }
 
-#define ES_item  (Options.explore_stop & ES_ITEM)
-#define ES_shop  (Options.explore_stop & ES_SHOP)
-#define ES_stair (Options.explore_stop & ES_STAIR)
-#define ES_altar (Options.explore_stop & ES_ALTAR)
+#define ES_item   (Options.explore_stop & ES_ITEM)
+#define ES_shop   (Options.explore_stop & ES_SHOP)
+#define ES_stair  (Options.explore_stop & ES_STAIR)
+#define ES_altar  (Options.explore_stop & ES_ALTAR)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
 
-/*
- * Adds interesting stuf on (x, y) to explore_discoveries.
- *
- * NOTE: These are env.map coords, add +1 to get grid coords.
- */
+// Adds interesting stuff on (x, y) to explore_discoveries.
+//
+// NOTE: These are env.map coords, add +1 to get grid coords.
 inline static void _check_interesting_square(int x, int y,
                                              explore_discoveries &ed)
 {
@@ -1060,15 +979,13 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     }
 }
 
-/*
- * Top-level travel control (called from input() in acr.cc).
- *
- * travel() is responsible for making the individual moves that constitute
- * (interlevel) travel and explore and deciding when travel and explore
- * end.
- *
- * Don't call travel() if you.running >= 0.
- */
+// Top-level travel control (called from input() in acr.cc).
+//
+// travel() is responsible for making the individual moves that constitute
+// (interlevel) travel and explore and deciding when travel and explore
+// end.
+//
+// Don't call travel() if you.running >= 0.
 command_type travel()
 {
     char holdx, holdy;
@@ -1420,7 +1337,10 @@ const coord_def travel_pathfind::travel_move() const
 const coord_def travel_pathfind::explore_target() const
 {
     if (unexplored_dist != UNFOUND_DIST && greedy_dist != UNFOUND_DIST)
-        return (unexplored_dist < greedy_dist? unexplored_place : greedy_place);
+    {
+        return (unexplored_dist < greedy_dist ? unexplored_place
+                                              : greedy_place);
+    }
     else if (unexplored_dist != UNFOUND_DIST)
         return (unexplored_place);
     else if (greedy_dist != UNFOUND_DIST)
@@ -1439,10 +1359,8 @@ const coord_def travel_pathfind::unexplored_square() const
     return (unexplored_place);
 }
 
-/*
- * The travel algorithm is based on the NetHack travel code written by Warwick
- * Allison - used with his permission.
- */
+// The travel algorithm is based on the NetHack travel code written by Warwick
+// Allison - used with his permission.
 coord_def travel_pathfind::pathfind(run_mode_type rmode)
 {
     if (rmode == RMODE_INTERLEVEL)
@@ -1813,10 +1731,8 @@ void find_travel_pos(int youx, int youy,
     }
 }
 
-/*
- * Given a branch id, returns the parent branch. If the branch id is not found,
- * returns BRANCH_MAIN_DUNGEON.
- */
+// Given a branch id, returns the parent branch. If the branch id is not found,
+// returns BRANCH_MAIN_DUNGEON.
 branch_type find_parent_branch(branch_type br)
 {
     return branches[br].parent_branch;
@@ -1850,7 +1766,8 @@ void find_parent_branch(branch_type br, int depth,
 void trackback(std::vector<level_id> &vec,
                branch_type branch, int subdepth)
 {
-    if (subdepth < 1 || subdepth > MAX_LEVELS) return;
+    if (subdepth < 1 || subdepth > MAX_LEVELS)
+        return;
 
     level_id lid( branch, subdepth );
     vec.push_back(lid);
@@ -1887,11 +1804,9 @@ void track_intersect(std::vector<level_id> &cur,
     }
 }
 
-/*
- * Returns the number of stairs the player would need to take to go from
- * the 'first' level to the 'second' level. If there's no obvious route between
- * 'first' and 'second', returns -1. If first == second, returns 0.
- */
+// Returns the number of stairs the player would need to take to go from
+// the 'first' level to the 'second' level. If there's no obvious route between
+// 'first' and 'second', returns -1. If first == second, returns 0.
 int level_distance(level_id first, level_id second)
 {
     if (first == second
@@ -2037,10 +1952,8 @@ static bool _is_known_branch(const Branch &br)
     return (_is_known_branch_id(br.id));
 }
 
-/*
- * Returns a list of the branches that the player knows the location of the
- * stairs to, in the same order as overmap.cc lists them.
- */
+// Returns a list of the branches that the player knows the location of the
+// stairs to, in the same order as overmap.cc lists them.
 static std::vector<branch_type> _get_branches(bool (*selector)(const Branch &))
 {
     std::vector<branch_type> result;
@@ -2517,16 +2430,16 @@ static int _target_distance_from(const coord_def &pos)
  * populated with a floodout call to find_travel_pos starting from the player's
  * location.
  */
-static int _find_transtravel_stair(  const level_id &cur,
-                                     const level_pos &target,
-                                     int distance,
-                                   // This is actually the current position
-                                   // on cur, not necessarily a stair.
-                                     const coord_def &stair,
-                                     level_id &closest_level,
-                                     int &best_level_distance,
-                                     coord_def &best_stair,
-                                     const bool target_has_excludes )
+static int _find_transtravel_stair( const level_id &cur,
+                                    const level_pos &target,
+                                    int distance,
+                                    // This is actually the current position
+                                    // on cur, not necessarily a stair.
+                                    const coord_def &stair,
+                                    level_id &closest_level,
+                                    int &best_level_distance,
+                                    coord_def &best_stair,
+                                    const bool target_has_excludes )
 {
     int local_distance = -1;
     level_id player_level = level_id::current();
@@ -2836,7 +2749,7 @@ void start_travel(int x, int y)
 {
     // Redundant target?
     if (x == you.x_pos && y == you.y_pos)
-        return ;
+        return;
 
     // Remember where we're going so we can easily go back if interrupted.
     you.travel_x = x;
@@ -2890,11 +2803,9 @@ void start_explore(bool grab_items)
     _start_running();
 }
 
-/*
- * Given a feature vector, arranges the features in the order that the player
- * is most likely to be interested in. Currently, the only thing it does is to
- * put altars of the player's religion at the front of the list.
- */
+// Given a feature vector, arranges the features in the order that the player
+// is most likely to be interested in. Currently, the only thing it does is to
+// put altars of the player's religion at the front of the list.
 void arrange_features(std::vector<coord_def> &features)
 {
     for (int i = 0, count = features.size(); i < count; ++i)
@@ -4042,8 +3953,8 @@ void explore_discoveries::add_item(const item_def &i)
 
     items.push_back( named_thing<item_def>(i.name(DESC_NOCAP_A), i) );
 
-    // first item of this type?
-    // only works when travelling
+    // First item of this type?
+    // XXX: Only works when travelling.
     tutorial_first_item(i);
 }
 
