@@ -1005,8 +1005,6 @@ Bingo
 
 @roaring_animal_name@'s Rage
 
-@smell_name@
-
 # from the crawl.akrasiac.org patch
 Cookie Cutter
 
