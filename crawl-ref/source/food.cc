@@ -325,11 +325,61 @@ static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
     you.turn_is_over = true;
 }
 
+static bool _have_corpses_in_pack(bool remind)
+{
+    int num = 0;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &obj(you.inv[i]);
+
+        if (!is_valid_item( obj ))
+            continue;
+
+        if (obj.base_type == OBJ_CORPSES)
+            num++;
+    }
+
+    if (num == 0)
+        return false;
+
+    std::string verb = (you.species == SP_VAMPIRE
+                        && you.experience_level > 5) ? "bottle" : "butcher";
+    std::string noun, pronoun;
+
+    if (num == 1)
+    {
+        noun    = "corpse";
+        pronoun = "it";
+    }
+    else
+    {
+        noun    = "corpses";
+        pronoun = "them";
+    }
+
+    std::ostringstream text;
+
+    if (remind)
+        text << "You might want to also " << verb << " the " << noun
+             << " in your pack.";
+    else
+        text << "If you dropped the " << noun << " in your pack on solid "
+             << "ground or into shallow water then you could " << verb
+             << " " << pronoun  << ".";
+
+    mpr(text.str().c_str());
+
+    return true;
+}
+
+
 bool butchery(int which_corpse)
 {
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
     {
-        mpr("There isn't anything here!");
+        if (!_have_corpses_in_pack(false))
+            mpr("There isn't anything here!");
         return (false);
     }
 
@@ -392,9 +442,10 @@ bool butchery(int which_corpse)
 
     if (num_corpses == 0)
     {
-        mprf("There isn't anything to %s here.",
-             you.species == SP_VAMPIRE && you.experience_level > 5 ? "bottle"
-                                                                   : "butcher");
+        if (!_have_corpses_in_pack(false))
+            mprf("There isn't anything to %s here.",
+                 (you.species == SP_VAMPIRE
+                  && you.experience_level > 5) ? "bottle" : "butcher");
         return (false);
     }
 
@@ -433,6 +484,9 @@ bool butchery(int which_corpse)
         _terminate_butchery(wpn_switch, removed_gloves, new_cursed,
                             old_weapon, old_gloves);
 
+        // Remind player of corpses in pack that could be butchered or
+        // bottled.
+        _have_corpses_in_pack(true);
         return success;
     }
 
@@ -523,6 +577,12 @@ bool butchery(int which_corpse)
         _terminate_butchery(wpn_switch, removed_gloves, new_cursed,
                             old_weapon, old_gloves);
     }
+
+
+    if (success)
+        // Remind player of corpses in pack that could be butchered or
+        // bottled.
+        _have_corpses_in_pack(true);
 
     return success;
 }                               // end butchery()
