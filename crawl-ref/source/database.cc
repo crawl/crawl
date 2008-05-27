@@ -277,8 +277,8 @@ std::vector<std::string> database_find_bodies(DBM *database,
 static void _execute_embedded_lua(std::string &str)
 {
     // Execute any lua code found between "{{" and "}}".  The lua code
-    // is expected to return a string, with which the lua code and braces
-    // will be replaced.
+    // is expected to return a string, with which the lua code and
+    // braces will be replaced.
     std::string::size_type pos = str.find("{{");
     while (pos != std::string::npos)
     {
