@@ -38,6 +38,7 @@
 #include "randart.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "tutorial.h"
 #include "view.h"
 
 /* Basic goals for titles:
@@ -1793,12 +1794,12 @@ static void _display_skill_table(bool show_aptitudes)
                                      (prev_needed * spec_abil) / 100) * 100) /
                     (((needed - prev_needed) * spec_abil) / 100);
 
-                if ( percent_done == 100 )
+                if (percent_done == 100)
                     --percent_done;
-                if ( percent_done == 0 )
+                if (percent_done == 0)
                     ++percent_done;
 
-                if ( !show_aptitudes )
+                if (!show_aptitudes)
                 {
                     textcolor(CYAN);
                     cprintf( " (%2d%%)", (percent_done / 5) * 5 );
@@ -1809,12 +1810,12 @@ static void _display_skill_table(bool show_aptitudes)
 
                     // Modify Spellcasting, Evocations, Invocations for
                     // aptitude display.
-                    if ( x == SK_SPELLCASTING )
+                    if (x == SK_SPELLCASTING)
                     {
                         spec_abil *= 10;
                         spec_abil /= 13;
                     }
-                    else if ( x == SK_INVOCATIONS || x == SK_EVOCATIONS )
+                    else if (x == SK_INVOCATIONS || x == SK_EVOCATIONS)
                     {
                         spec_abil *= 4;
                         spec_abil /= 3;
@@ -1830,20 +1831,13 @@ static void _display_skill_table(bool show_aptitudes)
 
     if (Options.tutorial_left)
     {
-        textcolor(MAGENTA);
         cgotoxy(1, bottom_line-5);
-        formatted_string::parse_block(
-            "This screen shows the skill set of your character. You can pick up new" EOL
-            "skills by performing the corresponding actions. The number next to the" EOL
-            "skill is your current level, the higher the better. The blue percent  " EOL
-            "value shows your progress towards the next skill level. You can toggle" EOL
-            "which skills to train by pressing their slot letters. A <darkgrey>greyish</darkgrey> skill " EOL
-            "will increase at a decidedly slower rate and ease training of others. ",
-            false).display();
+        // Doesn't mention the toggle between progress/aptitudes.
+        print_tut_skills_info();
     }
     else
     {
-        // if any more skills added, must adapt letters to go into caps
+        // NOTE: If any more skills added, must adapt letters to go into caps.
         cgotoxy(1, bottom_line-1);
         textcolor(LIGHTGREY);
         cprintf("Press the letter of a skill to choose "

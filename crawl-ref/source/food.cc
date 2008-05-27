@@ -341,7 +341,7 @@ static bool _have_corpses_in_pack(bool remind)
     }
 
     if (num == 0)
-        return false;
+        return (false);
 
     std::string verb = (you.species == SP_VAMPIRE
                         && you.experience_level > 5) ? "bottle" : "butcher";
@@ -361,16 +361,20 @@ static bool _have_corpses_in_pack(bool remind)
     std::ostringstream text;
 
     if (remind)
+    {
         text << "You might want to also " << verb << " the " << noun
              << " in your pack.";
+    }
     else
+    {
         text << "If you dropped the " << noun << " in your pack on solid "
              << "ground or into shallow water then you could " << verb
              << " " << pronoun  << ".";
+    }
 
     mpr(text.str().c_str());
 
-    return true;
+    return (true);
 }
 
 
@@ -443,9 +447,11 @@ bool butchery(int which_corpse)
     if (num_corpses == 0)
     {
         if (!_have_corpses_in_pack(false))
+        {
             mprf("There isn't anything to %s here.",
                  (you.species == SP_VAMPIRE
                   && you.experience_level > 5) ? "bottle" : "butcher");
+        }
         return (false);
     }
 
@@ -580,11 +586,13 @@ bool butchery(int which_corpse)
 
 
     if (success)
+    {
         // Remind player of corpses in pack that could be butchered or
         // bottled.
         _have_corpses_in_pack(true);
+    }
 
-    return success;
+    return (success);
 }                               // end butchery()
 
 void lua_push_items(lua_State *ls, int link)

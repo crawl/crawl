@@ -2845,7 +2845,7 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
     int prop_dex = 0;
     int prop_int = 0;
 
-    // don't warn when putting on an unknown item
+    // Don't warn when putting on an unknown item.
     if (item.base_type == OBJ_JEWELLERY
         && item_ident( item, ISFLAG_KNOW_PLUSES ))
     {

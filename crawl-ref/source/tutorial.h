@@ -31,7 +31,7 @@ bool pick_tutorial(void);
 void print_tutorial_menu(unsigned int type);
 
 formatted_string tut_starting_info2();
-void tut_starting_screen();
+void tut_starting_screen(void);
 void tutorial_death_screen(void);
 void tutorial_finished(void);
 
@@ -42,7 +42,8 @@ void taken_new_item(unsigned char item_type);
 void tutorial_first_monster(const monsters& mon);
 void tutorial_first_item(const item_def& item);
 void learned_something_new(tutorial_event_type seen_what, int x=0, int y=0);
-formatted_string tut_abilities_info();
+formatted_string tut_abilities_info(void);
+void print_tut_skills_info(void);
 
 // additional information for tutorial players
 void tutorial_describe_item(const item_def &item);

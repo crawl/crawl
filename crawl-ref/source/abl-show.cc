@@ -1932,7 +1932,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
         }
     }
 
-    if ( Options.tutorial_left )
+    if (Options.tutorial_left)
     {
         // XXX This could be buggy if you manage to pick up lots and lots
         // of abilities during the tutorial.
@@ -1942,7 +1942,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
     }
     std::vector<MenuEntry*> sel = abil_menu.show(false);
     redraw_screen();
-    if ( sel.empty() )
+    if (sel.empty())
     {
         return -1;
     }

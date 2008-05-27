@@ -117,7 +117,7 @@ Monsters
 Levels
 ------
 * Added transparent wall types.
-* Modified Slime Pits end.
+* Modified Slime Pits end, guarantee rune.
 * Several new vaults.
 * Fixed some levels having the wrong amount of stairs.
 * Treat adjacent doors as one (large) gate, opening/closing together.
@@ -155,7 +155,7 @@ Miscellaneous
 * Changed stat display to be more compact and visually appealing.
 * Overhaul of ghost structure.
 * Overhauled and improved the documentation.
-* Outsourced names for random artefacts.
+* Outsourced a lot of text into database files.
 * General code clean-up.
 * Lots of additional bugs squashed.
 
