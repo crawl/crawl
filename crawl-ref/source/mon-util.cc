@@ -3990,8 +3990,8 @@ item_def *monsters::slot_item(equipment_type eq)
 
 item_def *monsters::mslot_item(mon_inv_type mslot) const
 {
-    const int mindex = mslot == NUM_MONSTER_SLOTS? NON_ITEM : inv[mslot];
-    return (mindex == NON_ITEM? NULL: &mitm[mindex]);
+    const int mindex = (mslot == NUM_MONSTER_SLOTS) ? NON_ITEM : inv[mslot];
+    return (mindex == NON_ITEM ? NULL : &mitm[mindex]);
 }
 
 item_def *monsters::shield()
@@ -5673,7 +5673,8 @@ bool monsters::mon_see_grid(int tx, int ty, bool reach) const
         max_disallowed = DNGN_MAX_NONREACH;
 
     // XXX: Ignoring clouds for now.
-    return (num_feats_between(x, y, tx, ty, DNGN_UNSEEN, max_disallowed) == 0);
+    return (!num_feats_between(x, y, tx, ty, DNGN_UNSEEN, max_disallowed,
+                               true, true));
 }
 
 bool monsters::can_see(const actor *target) const

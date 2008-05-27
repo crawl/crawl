@@ -163,7 +163,7 @@ static void _libgui_save_prefs();
 //Internal variables
 
 static int mouse_mode = MOUSE_MODE_NORMAL;
-// hack: prevent clrscr for some region
+// Hack: prevent clrscr for some region.
 static bool region_lock[NUM_REGIONS];
 static bool toggle_telescope;
 
@@ -177,7 +177,7 @@ static int gmap_min_x, gmap_max_x;
 static int gmap_min_y, gmap_max_y;
 static int gmap_ox, gmap_oy;
 
-// redefine color constants with shorter name to save space
+// Redefine color constants with shorter names to save space.
 #define PX_0     0
 #define PX_F     1
 #define PX_W     2
@@ -473,7 +473,8 @@ void GmapDisplay(int linex, int liney)
     bool show_mark = false;
     int mark_x = 0;
     int mark_y = 0;
-    if ((you.level_type != LEVEL_LABYRINTH) && (you.level_type != LEVEL_ABYSS))
+    // Unmappables...
+    if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS)
     {
         ox += linex - gmap_min_x;
         oy += liney - gmap_min_y;
@@ -482,7 +483,7 @@ void GmapDisplay(int linex, int liney)
         mark_y = oy;
         show_mark = true;
 
-        // highlight centre of the map
+        // Highlight centre of the map.
         // [enne] Maybe we need another colour for the highlight?
         buf2[ox + oy * GXM] = Options.tile_player_col;
     }
@@ -491,7 +492,7 @@ void GmapDisplay(int linex, int liney)
     region_map->draw_data(buf2, show_mark, mark_x, mark_y);
 }
 
-/* initialize routines */
+// Initialize routines.
 static void _do_layout()
 {
     // buffer between map region and stat region
@@ -585,7 +586,7 @@ void libgui_init()
 
     _libgui_load_prefs();
 
-    // Adjust sizes
+    // Adjust sizes.
     if (dngn_x & 1 == 0) dngn_x++;
     if (dngn_y & 1 == 0) dngn_y++;
     if (font_size & 1 == 1) font_size--;
@@ -635,10 +636,12 @@ void libgui_init()
     region_tile->id = REGION_DNGN;
 
 #if DEBUG_DIAGNOSTICS
-    // one more line for debug GPS
-    region_stat = new TextRegionClass(crawl_view.hudsz.x, crawl_view.hudsz.y + 1, 0, 0);
+    // One more line for debug GPS.
+    region_stat = new TextRegionClass(crawl_view.hudsz.x,
+                                      crawl_view.hudsz.y + 1, 0, 0);
 #else
-    region_stat = new TextRegionClass(crawl_view.hudsz.x, crawl_view.hudsz.y, 0, 0);
+    region_stat = new TextRegionClass(crawl_view.hudsz.x,
+                                      crawl_view.hudsz.y, 0, 0);
 #endif
     region_stat->id = REGION_STAT;
     region_msg = new TextRegionClass(msg_x, msg_y, 0, 0);
@@ -686,7 +689,7 @@ void libgui_shutdown()
     if (WallImg)
         ImgDestroy(WallImg);
 
-    // do this before delete win_main
+    // Do this before delete win_main.
     _libgui_save_prefs();
 
     std::vector<RegionClass *>::iterator r;
@@ -701,7 +704,7 @@ void libgui_shutdown()
     libgui_shutdown_sys();
 }
 
-/***  Save, Load, and Edit window prefs ***/
+// Save, Load, and Edit window prefs.
 static void _libgui_load_prefs()
 {
     int i, mode;
@@ -725,8 +728,8 @@ static void _libgui_load_prefs()
 
     const char *baseTxt = "wininit.txt";
     std::string winTxtString = datafile_path(baseTxt, false, true);
-    const char *winTxt = winTxtString.c_str()[0] == 0 ?
-        baseTxt : winTxtString.c_str();
+    const char *winTxt = (winTxtString.c_str()[0] == 0 ? baseTxt
+                                                       : winTxtString.c_str());
 
     if ( (fp = fopen(winTxt, "r")) != NULL )
     {
@@ -735,7 +738,9 @@ static void _libgui_load_prefs()
             fgets(buf, 250, fp);
             i = 0;
             while (buf[i] >= 32 && i < 120)
+            {
                    i++;
+            }
             buf[i] = 0;
 
             for (i = 0; i < MAX_PREFS; i++)
@@ -754,22 +759,24 @@ static void _libgui_load_prefs()
                                 val = p->max;
                             if (val < p->min)
                                 val = p->min;
+
                             dummy_int[mode][p->dummy_idx] = val;
                             if (mode == pref_mode)
                                 *(int *)p->ptr = val;
                         }
-                        if (p->type == 'S')
+                        else if (p->type == 'S')
                         {
                             strncpy(dummy_str[mode][p->dummy_idx], dat,
                                     MAX_PREF_CHAR);
+
                             if (mode == pref_mode)
                                 strncpy((char *)p->ptr, dat, MAX_PREF_CHAR);
                         }
                         break;
-                    }// tag match
+                    }
                 }
             }
-        }// while
+        } // while (!end of file)
     }
 }
 
@@ -789,12 +796,12 @@ static void _libgui_save_prefs()
 
     for (i = 0; i < MAX_PREFS; i++)
     {
-    struct prefs *p = &pref_data[i];
-    int idx = p->dummy_idx;
-    if (p->type == 'I')
-        dummy_int[pref_mode][idx] = *(int *)p->ptr;
-    else if (p->type == 'S')
-        strncpy(dummy_str[pref_mode][idx], (char *)p->ptr, MAX_PREF_CHAR);
+        struct prefs *p = &pref_data[i];
+        int idx = p->dummy_idx;
+        if (p->type == 'I')
+            dummy_int[pref_mode][idx] = *(int *)p->ptr;
+        else if (p->type == 'S')
+            strncpy(dummy_str[pref_mode][idx], (char *)p->ptr, MAX_PREF_CHAR);
     }
 
     const char *baseTxt = "wininit.txt";
@@ -806,21 +813,21 @@ static void _libgui_save_prefs()
     {
         for (mode = 0; mode < PREF_MODE_NUM; mode++)
         {
-            for ( i = 0; i < MAX_PREFS; i++)
+            for (i = 0; i < MAX_PREFS; i++)
             {
-                 struct prefs *p = &pref_data[i];
-                 int idx = p->dummy_idx;
+                struct prefs *p = &pref_data[i];
+                int idx = p->dummy_idx;
 
-                 if (p->type == 'I')
-                 {
-                     fprintf(fp, "%s:%s=%d\n", pref_mode_name[mode],
-                             p->tagname, dummy_int[mode][idx]);
-                 }
-                 else if (p->type == 'S')
-                 {
-                     fprintf(fp, "%s:%s=%s\n", pref_mode_name[mode],
-                             p->tagname, dummy_str[mode][idx]);
-                 }
+                if (p->type == 'I')
+                {
+                    fprintf(fp, "%s:%s=%d\n", pref_mode_name[mode],
+                            p->tagname, dummy_int[mode][idx]);
+                }
+                else if (p->type == 'S')
+                {
+                    fprintf(fp, "%s:%s=%s\n", pref_mode_name[mode],
+                            p->tagname, dummy_str[mode][idx]);
+                }
             }
             fprintf(fp, "\n");
         }
@@ -899,23 +906,23 @@ void edit_prefs()
             region_stat->clear();
             for (i = 0; i < MAX_EDIT_PREFS; i++)
             {
-                 struct prefs *p = &pref_data[i];
-                 cgotoxy(2, i+2, GOTO_STAT);
-                 if (i == cur_pos)
-                 {
-                     textcolor(0xf0);
-                     cprintf(">");
-                 }
-                 else
-                 {
-                     textcolor(LIGHTGREY);
-                     cprintf(" ");
-                 }
+                struct prefs *p = &pref_data[i];
+                cgotoxy(2, i+2, GOTO_STAT);
+                if (i == cur_pos)
+                {
+                    textcolor(0xf0);
+                    cprintf(">");
+                }
+                else
+                {
+                    textcolor(LIGHTGREY);
+                    cprintf(" ");
+                }
 
-                 if (pref_data[i].type == 'I')
-                     cprintf(" %s: %3d  ", p->name, *(int *)p->ptr);
-                 else
-                     cprintf(" %s: %s", p->name, (char *)p->ptr);
+                if (pref_data[i].type == 'I')
+                    cprintf(" %s: %3d  ", p->name, *(int *)p->ptr);
+                else
+                    cprintf(" %s: %s", p->name, (char *)p->ptr);
             }
             textcolor(LIGHTGREY);
 
@@ -974,11 +981,11 @@ void edit_prefs()
         case 'H': inc = -10; break;
         }
 
-        int crt_x_old = crt_x;
-        int crt_y_old = crt_y;
+        int crt_x_old  = crt_x;
+        int crt_y_old  = crt_y;
         int map_px_old = map_px;
-        int msg_x_old = msg_x;
-        int msg_y_old = msg_y;
+        int msg_x_old  = msg_x;
+        int msg_y_old  = msg_y;
         int dngn_x_old = dngn_x;
         int dngn_y_old = dngn_y;
 
@@ -1011,26 +1018,26 @@ void edit_prefs()
 
             // crt screen layouts
 
-            // resize msg?
+            // Resize msg?
             if (msg_x != msg_x_old || msg_y != msg_y_old)
             {
                 upd_msg = true;
                 region_msg->resize(msg_x, msg_y);
             }
-            // resize crt?
+            // Resize crt?
             if (crt_x != crt_x_old || crt_y != crt_y_old)
             {
                 upd_crt = true;
                 region_crt->resize(crt_x, crt_y);
             }
-            // resize map?
+            // Resize map?
             if (map_px != map_px_old)
             {
                 upd_map = true;
                 region_map->resize( 0, 0, map_px, map_px);
             }
 
-            // resize dngn tile screen?
+            // Resize dngn tile screen?
             if (dngn_x != dngn_x_old || dngn_y != dngn_y_old)
             {
                 clrscr();
@@ -1044,16 +1051,18 @@ void edit_prefs()
             win_main->resize();
             win_main->clear();
 
-            // Now screens are all black
+            // Now screens are all black.
 
             if (upd_map)
                 region_map->resize_backbuf();
+
             if (upd_dngn)
             {
                 region_tile -> resize_backbuf();
                 tile_set_force_redraw_tiles(true);
                 TileResizeScreen(dngn_x, dngn_y);
             }
+
             if (region_item)
                 region_item->resize_backbuf();
             if (region_item2)
@@ -1443,7 +1452,8 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                                          && player_knows_spell(
                                                 SPELL_STICKS_TO_SNAKES) )
                             {
-                                // For Sandblast and Sticks to Snakes, respectively.
+                                // For Sandblast and Sticks to Snakes,
+                                // respectively.
                                 desc += EOL "[Ctrl-L-Click] Wield (w)";
                             }
                             break;
@@ -1510,7 +1520,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                     }
 
                     // For Boneshards.
-                    // special handling since skeletons have no primary action
+                    // Special handling since skeletons have no primary action.
                     if (item.base_type == OBJ_CORPSES
                         && item.sub_type == CORPSE_SKELETON)
                     {
@@ -1521,7 +1531,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                     }
 
                     desc += EOL "[R-Click] Info";
-                    // has to be non-equipped or non-cursed to drop
+                    // Has to be non-equipped or non-cursed to drop.
                     if (!equipped || !_is_true_equipped_item(you.inv[ix])
                         || !item_cursed(you.inv[ix]))
                     {
@@ -1591,10 +1601,10 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
             if (grid_stair_direction( grd[gx][gy] ) != CMD_NO_CMD)
                 desc += EOL "[Shift-L-Click] use stairs (</>)";
 
-            // character overview
+            // Character overview.
             desc += EOL "[R-Click] Overview (%)";
 
-            // Religion
+            // Religion.
             if (you.religion != GOD_NO_GOD)
                 desc += EOL "[Shift-R-Click] Religion (^)";
 
@@ -1633,6 +1643,7 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
     {
         if (oldmode != REGION_STAT)
             update_tip_text("[L-Click] Rest / Search for a while");
+
         oldmode = mode;
         oldcx = cx;
         oldcy = cy;
@@ -1646,8 +1657,13 @@ static int _handle_mouse_button(int mx, int my, int button,
                                 bool shift, bool ctrl)
 {
     int dir;
-    const int dx[9] = {-1,0,1, -1,0,1, -1,0,1};
-    const int dy[9] = {1,1,1,0,0,0,-1,-1,-1};
+    const int dx[9] = {-1, 0, 1,
+                       -1, 0, 1,
+                       -1, 0, 1};
+
+    const int dy[9] = { 1, 1, 1,
+                        0, 0, 0,
+                       -1,-1,-1};
 
     const int cmd_n[9] = {'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u'};
     const int cmd_s[9] = {'B', 'J', 'N', 'H', '5', 'L', 'Y', 'K', 'U'};
@@ -1659,14 +1675,14 @@ static int _handle_mouse_button(int mx, int my, int button,
     const int cmd_dir[9] = {'1','2','3','4','5','6','7','8','9'};
 
     int trig = CK_MOUSE_B1;
-    if (button == 2)
-        trig = CK_MOUSE_B2;
-    else if (button == 3)
-        trig = CK_MOUSE_B3;
-    else if (button == 4)
-        trig = CK_MOUSE_B4;
-    else if (button == 5)
-        trig = CK_MOUSE_B5;
+    switch (button)
+    {
+        case 2: trig = CK_MOUSE_B2; break;
+        case 3: trig = CK_MOUSE_B3; break;
+        case 4: trig = CK_MOUSE_B4; break;
+        case 5: trig = CK_MOUSE_B5; break;
+        default: break;
+    }
 
     if (shift)
         trig |= 512;
@@ -1687,12 +1703,12 @@ static int _handle_mouse_button(int mx, int my, int button,
     static int oldcy = -1;
 
     static bool enable_wheel = true;
-    static int  old_button = 0;
-    static int  old_hp = 0;
+    static int  old_button   = 0;
+    static int  old_hp       = 0;
 
     mode = convert_cursor_pos(mx, my, &cx, &cy);
 
-    // prevent accidental wheel slip and subsequent char death
+    // Prevent accidental wheel slip and subsequent char death.
     if (mouse_mode == MOUSE_MODE_COMMAND && (button == 4 || button == 5)
         && button == old_button && oldcx == cx && oldcy == cy)
     {
@@ -1713,7 +1729,7 @@ static int _handle_mouse_button(int mx, int my, int button,
 
     if (toggle_telescope)
     {
-        // quit telescope mode
+        // Quit telescope mode.
         TileDrawDungeon(NULL);
         toggle_telescope = false;
     }
@@ -1728,7 +1744,7 @@ static int _handle_mouse_button(int mx, int my, int button,
             return 0;
     }
 
-    // item clicked
+    // Clicked on item.
     if (mode == REGION_INV1)
     {
         int ix = TileInvIdx(cx);
@@ -1736,7 +1752,7 @@ static int _handle_mouse_button(int mx, int my, int button,
         {
             if (button == 2)
             {
-                // describe item
+                // Describe item.
                 if (itemlist_iflag[cx] & TILEI_FLAG_FLOOR)
                 {
                     if (shift)
@@ -1758,7 +1774,7 @@ static int _handle_mouse_button(int mx, int my, int button,
                 // Floor item
                 if (itemlist_iflag[cx] & TILEI_FLAG_FLOOR)
                 {
-                    // try pick up one item
+                    // Try to pick up one item.
                     if (!shift)
                         _gui_set_mouse_inv(ix, INV_PICKUP);
                     else
@@ -1767,7 +1783,7 @@ static int _handle_mouse_button(int mx, int my, int button,
                     return CK_MOUSE_B1ITEM;
                 }
 
-                // use item
+                // Use item.
                 if (shift)
                     _gui_set_mouse_inv(ix, INV_DROP);
                 else if (ctrl)
@@ -1796,11 +1812,11 @@ static int _handle_mouse_button(int mx, int my, int button,
     {
         if (button == 1 && cx == DCX && cy == DCY)
         {
-            // pick up items
+            // Pick up items.
             if (!shift)
                 return 'g';
 
-            // else attempt to use stairs on square
+            // Else attempt to use stairs on square.
             const int gx = view2gridX(cx) + 1;
             const int gy = view2gridY(cy) + 1;
             switch (grid_stair_direction( grd[gx][gy] ))
@@ -1816,22 +1832,21 @@ static int _handle_mouse_button(int mx, int my, int button,
 
         if (button == 2)
         {
-            // describe yourself
+            // Describe yourself.
             if (cx == DCX && cy == DCY)
             {
                 if (!shift)
-                    return '%'; // character overview
+                    return '%'; // Character overview.
 
                 if (you.religion != GOD_NO_GOD)
-                    return '^'; // religion screen
+                    return '^'; // Religion screen.
             }
 
             // trigger
             if (mouse_mode == MOUSE_MODE_MACRO)
                 return trig;
 
-            // Right Click: try to describe grid
-            // otherwise return trigger key
+            // R-Click: try to describe grid; otherwise return trigger key.
             if (!in_los_bounds(cx+1,cy+1))
                 return CK_MOUSE_B2;
 
@@ -1842,8 +1857,8 @@ static int _handle_mouse_button(int mx, int my, int button,
         }
 
         // button = 1 or 4, 5
-        // first, check if 3x3 grid around @ is clicked.
-        // if so, return equivalent numpad key
+        // First check if 3x3 grid around @ is clicked.
+        // If so, return equivalent numpad key.
         int adir = -1;
         for (dir = 0; dir < 9; dir++)
         {
@@ -1866,19 +1881,19 @@ static int _handle_mouse_button(int mx, int my, int button,
         if (button != 1)
             return trig;
 
-        // otherwise travel to that grid
+        // Otherwise travel to that grid.
         const coord_def gc = view2grid(coord_def(cx+1, cy+1));
         if (!map_bounds(gc))
             return 0;
 
-        // Activate travel
+        // Activate travel.
         start_travel(gc.x, gc.y);
         return CK_MOUSE_DONE;
     }
 
     if (mouse_mode == MOUSE_MODE_COMMAND && mode == REGION_MAP)
     {
-        // begin telescope mode
+        // Begin telescope mode.
         if (button == 2)
         {
             toggle_telescope = true;
@@ -1890,12 +1905,12 @@ static int _handle_mouse_button(int mx, int my, int button,
         if (button != 1)
             return trig;
 
-        // L-click: try to travel to the grid
+        // L-click: try to travel to the grid.
         const coord_def gc(cx-1, cy-1);
         if (!map_bounds(gc))
             return 0;
 
-        // Activate travel
+        // Activate travel.
         start_travel(gc.x, gc.y);
         return CK_MOUSE_DONE;
     }
@@ -1917,10 +1932,9 @@ static int _handle_mouse_button(int mx, int my, int button,
             return 0;
 
         for (dir = 0; dir < 9; dir++)
-        {
             if (DCX + dx[dir] == cx && DCY + dy[dir] == cy)
                 return cmd_dir[dir];
-        }
+
         return 0;
     }
 
@@ -1983,7 +1997,7 @@ int getch()
     {
         'k', 'j', 'h', 'l', '.', 'y', 'b', '.', 'u', 'n',
         'K', 'J', 'H', 'L', '5', 'Y', 'B', '5', 'U', 'N',
-        11, 10, 8, 12, '0', 25, 2, 'C', 21, 14
+         11,  10,   8,  12, '0',  25,   2, 'C',  21,  14
     };
 
     int keyin = getch_ck();
@@ -2009,7 +2023,7 @@ void set_mouse_enabled(bool enabled)
 void mouse_set_mode(int mode)
 {
     mouse_mode = mode;
-    // init cursor etc
+    // Init cursor etc.
     _handle_mouse_motion(0, 0, true);
 }
 
@@ -2084,7 +2098,7 @@ void clrscr()
     win_main->clear();
     TextRegionClass::cursor_region = NULL;
 
-    // clear Text regions
+    // Clear Text regions.
     if (!region_lock[REGION_CRT])
         region_crt->clear();
 
@@ -2100,7 +2114,7 @@ void clrscr()
     if (region_tip && !region_lock[REGION_TIP])
         region_tip->clear();
 
-    // Hack: Do not erase the backbuffer. Instead just hide it.
+    // Hack: Do not erase the backbuffer; instead just hide it.
     if (region_map)
     {
         if (region_lock[REGION_MAP])
@@ -2175,31 +2189,34 @@ void get_input_line_gui(char *const buff, int len)
     if (!r->flag)
         return;
 
-    /* Locate the cursor */
+    // Locate the cursor.
     x = wherex();
     y = wherey();
 
-    /* Paranoia -- check len */
-    if (len < 1) len = 1;
+    // Paranoia -- check len.
+    if (len < 1)
+        len = 1;
 
-    /* Restrict the length */
-    if (x + len > r->mx) len = r->mx - x;
-    if (len > 40) len = 40;
+    // Restrict the length.
+    if (x + len > r->mx)
+        len = r->mx - x;
+    if (len > 40)
+        len = 40;
 
-    /* Paranoia -- Clip the default entry */
+    // Paranoia -- Clip the default entry.
     buff[len] = '\0';
-    buff[0] = '\0';
+    buff[0]   = '\0';
 
     r->cgotoxy(x, y);
     putch('_');
 
-    /* Process input */
+    // Process input.
     while (!done)
     {
-        /* Get a key */
+        // Get a key.
         kin = getch_ck();
 
-        /* Analyze the key */
+        // Analyze the key.
         switch (kin)
         {
         case 0x1B:
@@ -2243,10 +2260,10 @@ void get_input_line_gui(char *const buff, int len)
             }
             break;
         }
-        /* Terminate */
+        // Terminate.
         buff[k] = '\0';
 
-        /* Update the entry */
+        // Update the entry.
         r->cgotoxy(x, y);
         int i;
 
@@ -2272,7 +2289,7 @@ void get_input_line_gui(char *const buff, int len)
         }
         r->addstr((char *)"_             ");
         r->cgotoxy(x+k, y);
-    }/* while */
+    } // while (!done)
 }
 
 void cprintf(const char *format,...)
@@ -2440,7 +2457,7 @@ void ViewTextFile(const char *name)
     // Hack
 #define MAXTEXTLINES 100
 
-#define DELIMITER_END "-------------------------------------------------------------------------------"
+#define DELIMITER_END  "-------------------------------------------------------------------------------"
 #define DELIMITER_MORE "...(more)...                                                                   "
     unsigned char buf[80*MAXTEXTLINES], buf2[84];
     int nlines = 0;

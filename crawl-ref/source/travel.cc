@@ -1025,7 +1025,7 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        // Exploring
+        // Exploring.
         if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP
             && you.running == RMODE_EXPLORE_GREEDY)
         {
@@ -1058,8 +1058,8 @@ command_type travel()
 
     if (you.running < 0)
     {
-        // Remember what run-mode we were in so that we can resume explore/
-        // interlevel travel correctly.
+        // Remember what run-mode we were in so that we can resume
+        // explore/interlevel travel correctly.
         int runmode = you.running;
 
         // Get the next step to make. If the travel command can't find a route,

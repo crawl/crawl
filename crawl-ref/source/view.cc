@@ -2439,10 +2439,12 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 // Count the number of matching features between two points along
 // a beam-like path; the path will pass through solid features.
 // By default, it excludes end points from the count.
+// If just_check is true, the function will return early once one
+// such feature is encountered.
 int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
                       dungeon_feature_type min_feat,
                       dungeon_feature_type max_feat,
-                      bool exclude_endpoints)
+                      bool exclude_endpoints, bool just_check)
 {
     ray_def ray;
     int     count    = 0;
@@ -2458,24 +2460,30 @@ int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
     }
 
     int dist = 0;
+    bool reached_target = false;
     while (dist++ <= max_dist)
     {
         dungeon_feature_type feat = grd[ray.x()][ray.y()];
 
-        if (feat >= min_feat && feat <= max_feat)
+        if (ray.x() == targetx && ray.y() == targety)
+            reached_target = true;
+
+        if (feat >= min_feat && feat <= max_feat
+            && (!exclude_endpoints || !reached_target))
+        {
             count++;
 
-        if (ray.x() == targetx && ray.y() == targety)
-        {
-            if (exclude_endpoints && feat >= min_feat && feat <= max_feat)
-                count--;
-
-            break;
+            if (just_check) // Only needs to be > 0.
+                return (count);
         }
+
+        if (reached_target)
+            break;
+
         ray.advance(true);
     }
 
-    return count;
+    return (count);
 }
 
 // The rule behind LOS is:
@@ -2989,7 +2997,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
 
 static void _reset_travel_colours(std::vector<coord_def> &features)
 {
-    // We now need to redo travel colours
+    // We now need to redo travel colours.
     features.clear();
     find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
     // Sort features into the order the player is likely to prefer.
@@ -3660,8 +3668,8 @@ bool grid_see_grid(int posx_1, int posy_1, int posx_2, int posy_2,
         max_disallowed = static_cast<dungeon_feature_type>(allowed - 1);
 
     // XXX: Ignoring clouds for now.
-    return (num_feats_between(posx_1, posy_1, posx_2, posy_2, DNGN_UNSEEN,
-                              max_disallowed) == 0);
+    return (!num_feats_between(posx_1, posy_1, posx_2, posy_2, DNGN_UNSEEN,
+                               max_disallowed, true, true));
 }
 
 static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =

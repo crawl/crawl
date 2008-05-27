@@ -753,12 +753,11 @@ bool entomb(int powc)
     };
 
     for (int srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
-    {
         for (int sry = you.y_pos - 1; sry < you.y_pos + 2; sry++)
         {
-            // tile already occupied by monster or yourself {dlb}:
+            // Tile already occupied by monster or yourself {dlb}:
             if (mgrd[srx][sry] != NON_MONSTER
-                    || (srx == you.x_pos && sry == you.y_pos))
+                || srx == you.x_pos && sry == you.y_pos)
             {
                 continue;
             }
@@ -827,11 +826,10 @@ bool entomb(int powc)
                 }
             }
 
-            // finally, place the wall {dlb}:
+            // Finally, place the wall {dlb}:
             grd[srx][sry] = DNGN_ROCK_WALL;
             number_built++;
-        }                       // end "for srx,sry"
-    }
+        }
 
     if (number_built > 0)
     {
@@ -843,7 +841,7 @@ bool entomb(int powc)
             const coord_def pos = mon->pos();
             int walls = num_feats_between(you.x_pos, you.y_pos,
                                           pos.x, pos.y, DNGN_UNSEEN,
-                                          DNGN_MAXWALL);
+                                          DNGN_MAXWALL, true, true);
 
             if (walls > 0)
             {

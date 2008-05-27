@@ -526,8 +526,7 @@ delay_type current_delay_action( void )
 
 bool is_run_delay(int delay)
 {
-    return (delay == DELAY_RUN || delay == DELAY_REST
-            || delay == DELAY_TRAVEL);
+    return (delay == DELAY_RUN || delay == DELAY_REST || delay == DELAY_TRAVEL);
 }
 
 bool is_being_butchered(const item_def &item)

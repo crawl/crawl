@@ -232,7 +232,8 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
                       dungeon_feature_type min_feat,
                       dungeon_feature_type max_feat,
-                      bool exclude_endpoints = true);
+                      bool exclude_endpoints = true,
+                      bool just_check = false);
 
 dungeon_char_type dchar_by_name(const std::string &name);
 

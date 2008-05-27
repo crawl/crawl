@@ -7384,6 +7384,7 @@ static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
             if (!travel_point_distance[x][y] && grid_is_stone_stair(grd[x][y]))
                 _dgn_fill_zone(coord_def(x, y), 1, np, _dgn_square_travel_ok);
         }
+
     return (np.nearest);
 }
 
