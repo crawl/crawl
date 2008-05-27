@@ -21,6 +21,7 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
@@ -676,10 +677,12 @@ void tutorial_death_screen()
             break;
 
         case 2:
-            text = "Rest between encounters. In Crawl, searching and resting "
-                   "are one and the same. To search for one turn, press "
-                   "<w>s</w>, <w>.</w>, <w>delete</w> or <w>keypad-5</w>. "
-                   "Pressing <w>5</w> or <w>shift-and-keypad-5</w> "
+            text = "Rest between encounters, if possible in an area already "
+                   "already explored and cleared of monsters. In Crawl, "
+                   "searching and resting are one and the same. To search "
+                   "for one turn, press <w>s</w>, <w>.</w>, <w>delete</w> or "
+                   "<w>keypad-5</w>. Pressing <w>5</w> or "
+                   "<w>shift-and-keypad-5</w> "
 #ifdef USE_TILE
                    ", or clicking into the stat area "
 #endif
@@ -878,7 +881,11 @@ void tutorial_healing_reminder()
 
             std::string text;
             text =  "Remember to rest between fights and to enter unexplored "
-                    "terrain with full hitpoints and magic. For resting, press "
+                    "terrain with full hitpoints and magic. Ideally you "
+                    "should retreat back areas you've already explored and "
+                    "cleared of monsters; resting on the edge of the explored "
+                    "terrain increases the chances of your rest being "
+                    "interrupted by wandering monsters. For resting, press "
                     "<w>5</w> or <w>Shift-numpad 5</w>"
 #ifdef USE_TILE
                     ", or click on the stat area with your mouse"
@@ -976,6 +983,53 @@ static bool _mons_is_highlighted(const monsters *mons)
                 && Options.may_stab_brand != CHATTR_NORMAL);
 }
 
+static bool _advise_use_wand()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &obj(you.inv[i]);
+
+        if (!is_valid_item( obj ))
+            continue;
+
+        if (obj.base_type != OBJ_WANDS)
+            continue;
+
+        // Wand type unknown, might be useful.
+        if (!item_type_known(obj))
+            return true;
+
+        // Empty wands are no good.
+        if (obj.name(DESC_PLAIN).find("empty") != std::string::npos
+            || (item_ident(obj, ISFLAG_KNOW_PLUSES)
+                && obj.plus <= 0))
+            continue;
+
+        // Can it be used to fight?
+        switch(obj.sub_type)
+        {
+        case WAND_FLAME:
+        case WAND_FROST:
+        case WAND_SLOWING:
+        case WAND_MAGIC_DARTS:
+        case WAND_PARALYSIS:
+        case WAND_FIRE:
+        case WAND_COLD:
+        case WAND_CONFUSION:
+        case WAND_FIREBALL:
+        case WAND_TELEPORTATION:
+        case WAND_LIGHTNING:
+        case WAND_ENSLAVEMENT:
+        case WAND_DRAINING:
+        case WAND_RANDOM_EFFECTS:
+        case WAND_DISINTEGRATION:
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void tutorial_first_monster(const monsters &mon)
 {
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
@@ -1027,8 +1081,8 @@ void tutorial_first_monster(const monsters &mon)
             "moving the cursor on the monster, and read the monster "
             "description by then pressing <w>v</w>. "
 #endif
-            "\nTo attack this monster with your wielded weapon, just move into "
-            "it. ";
+            "\nTo attack this monster with your wielded weapon, just move "
+            "into it. ";
 #ifdef USE_TILE
     text += "Note that as long as there's a non-friendly monster in view you "
             "won't be able to automatically move to distant squares, to avoid "
@@ -1495,6 +1549,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           text << "is an altar. You can get information about it by pressing "
                   "<w>p</w> while standing on the square. Before taking up "
                   "the responding faith you'll be asked for confirmation.";
+          if (you.religion == GOD_NO_GOD &&
+              Options.tutorial_type == TUT_MAGIC_CHAR)
+              text << "\n\nThe best god for an unexperienced conjurer is "
+                  "Vehumet, though Sif Muna is a good second choice. You "
+                  "shouldn't take the other gods while playing a conjurer "
+                  "until you get some more experinece.";
           break;
 
       case TUT_SEEN_SHOP:
@@ -1526,7 +1586,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                   "is a closed door. You can open it by walking into it. "
                   "Sometimes it is useful to close a door. Do so by pressing "
-                  "<w>c</w>, followed by the direction, or simply "
+                  "<w>C</w>, followed by the direction, or simply "
                   "<w>Ctrl-Direction</w>.";
 #ifdef USE_TILE
           text << "\nIn tiles, the same can be achieved by clicking on an "
@@ -1793,7 +1853,11 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
       case TUT_NEED_HEALING:
           text << "If you're low on hitpoints or magic and there's no urgent "
-                  "need to move, you can rest for a bit. Press <w>5</w> or "
+                  "need to move, you can rest for a bit. Ideally you should "
+                  "retreat to an area you've already explored and cleared "
+                  "of monsters before resting, since resting on the edge of "
+                  "the explored terrain increases the risk of rest being "
+                  "interrupted by a wandering monster. Press <w>5</w> or "
                   "<w>shift-numpad-5</w>"
 #ifdef USE_TILE
                   ", or click on the stat area"
@@ -1863,6 +1927,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           text << "Without magical power you're unable to cast spells. While "
                   "melee is a possibility, that's not where your strengths "
                   "lie, so retreat (if possible) might be the better option.";
+
+          if (_advise_use_wand())
+              text << "\n\nOr you could <w>Z</w>ap a wand to deal damage.";
           break;
 
       case TUT_YOU_MUTATED:
@@ -1875,8 +1942,27 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
 
       case TUT_NEW_ABILITY:
-          text <<  "You just gained a new ability. Press <w>a</w> to take a "
-                   "look at your abilities or to use one of them.";
+          switch(you.religion)
+          {
+          // Gods where first granted ability is active.
+          case GOD_ZIN:
+          case GOD_KIKUBAAQUDGHA:
+          case GOD_YREDELEMNUL:
+          case GOD_OKAWARU: 
+          case GOD_SIF_MUNA:
+          case GOD_TROG:
+          case GOD_NEMELEX_XOBEH:
+          case GOD_ELYVILON:
+          case GOD_LUGONU:
+              text <<  "You just gained a new ability. Press <w>a</w> to "
+                  "take a look at your abilities or to use one of them.";
+              break;
+
+          // Gods where first granted ability is passive.
+          default:
+              text <<  "You just gained a new ability. Press <w>^</w> to "
+                  "take a look at your ability.";
+          }
           break;
 
       case TUT_WIELD_WEAPON:
