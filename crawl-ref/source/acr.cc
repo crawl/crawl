@@ -175,6 +175,7 @@ static void _do_berserk_no_combat_penalty(void);
 static bool _initialise(void);
 static void _input(void);
 static void _move_player(int move_x, int move_y);
+static int  _check_adjacent(dungeon_feature_type feat, int &dx, int &dy);
 static void _open_door(int move_x, int move_y, bool check_confused = true);
 static void _close_door(int move_x, int move_y);
 static void _start_running( int dir, int mode );
@@ -3467,6 +3468,33 @@ static keycode_type _get_next_keycode()
 }
 
 /*
+ * Check squares adjacent to player for given feature and return how
+ * many there are.  If there's only one, return the dx and dy.
+ */
+static int _check_adjacent(dungeon_feature_type feat, int &dx, int &dy)
+{
+    int num = 0;
+    int _dx, _dy;
+
+    for (int x = -1; x <= 1; x++)
+        for (int y = -1; y <= 1; y++)
+            if (grd[you.x_pos + x][you.y_pos + y] == feat)
+            {
+                num++;
+                _dx = x;
+                _dy = y;
+            }
+
+    if (num == 1)
+    {
+        dx = _dx;
+        dy = _dy;
+    }
+
+    return num;
+}
+
+/*
    Opens doors and handles some aspects of untrapping. If either move_x or
    move_y are non-zero, the pair carries a specific direction for the door
    to be opened (eg if you type ctrl - dir).
@@ -3481,6 +3509,17 @@ static void _open_door(int move_x, int move_y, bool check_confused)
         free_self_from_net();
         you.turn_is_over = true;
         return;
+    }
+
+    // If there's only one door to open, don't ask.
+    if ((!check_confused || !you.duration[DUR_CONF])
+        && !(move_x || move_y))
+    {
+        if (_check_adjacent(DNGN_CLOSED_DOOR, move_x, move_y) == 0)
+        {
+            mpr("There's nothing to open.");
+            return;
+        }
     }
 
     if (check_confused && you.duration[DUR_CONF] && !one_chance_in(3))
@@ -3633,6 +3672,28 @@ static void _close_door(int door_x, int door_y)
 {
     struct dist door_move;
     int dx, dy;             // door x, door y
+
+    // If there's only one door to close, don't ask.
+    if (!you.duration[DUR_CONF] && !(door_x || door_y))
+    {
+        int num = _check_adjacent(DNGN_OPEN_DOOR, door_x, door_y);
+        if (num == 0)
+        {
+            mpr("There's nothing to close.");
+            return;
+        }
+        else if (num == 1 && !(door_x || door_y))
+        {
+            mpr("You can't close doors on yourself!");
+            return;
+        }
+    }
+
+    if (you.duration[DUR_CONF] && !one_chance_in(3))
+    {
+        door_x = random2(3) - 1;
+        door_y = random2(3) - 1;
+    }
 
     door_move.dx = door_x;
     door_move.dy = door_y;
