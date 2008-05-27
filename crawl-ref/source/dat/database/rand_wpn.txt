@@ -316,7 +316,7 @@ Coward
 weapon_animal
 
 # insects
-Pill-Bug
+Pill Bug
 
 Butterfly
 
