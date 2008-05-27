@@ -2345,7 +2345,7 @@ Item interaction (floor):
 
 Other game-playing commands:
     a                   Use special ability.
-    p                   Pray. Also turns prayer off.
+    p                   Pray (or renew an exist prayer)
     z                   Cast a spell. 
     I                   List spells. 
     t                   Tell commands to allies, or shout (the latter
