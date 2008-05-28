@@ -1183,7 +1183,7 @@ bool check_awaken(monsters* monster)
     if (monster->has_ench(ENCH_SLEEPY))
         return (false);
 
-    // berserkers aren't really concerned about stealth
+    // Berserkers aren't really concerned about stealth.
     if (you.duration[DUR_BERSERKER])
         return (true);
 
@@ -1194,16 +1194,16 @@ bool check_awaken(monsters* monster)
     if (you.duration[DUR_REPEL_UNDEAD] && mons_is_unholy(monster))
         return (true);
 
-    // I assume that creatures who can sense invisible are very perceptive
+    // I assume that creatures who can sense invisible are very perceptive.
     mons_perc = 10 + (mons_intel(monster->type) * 4) + monster->hit_dice
                    + mons_sense_invis(monster) * 5;
 
     bool unnatural_stealthy = false; // "stealthy" only because of invisibility?
 
-    // critters that are wandering still have MHITYOU as their foe are
-    // still actively on guard for the player, even if they can't see
-    // him.  Give them a large bonus (handle_behaviour() will nuke 'foe'
-    // after a while, removing this bonus.
+    // Critters that are wandering but still have MHITYOU as their foe are
+    // still actively on guard for the player, even if they can't see you.
+    // Give them a large bonus -- handle_behaviour() will nuke 'foe' after
+    // a while, removing this bonus.
     if (monster->behaviour == BEH_WANDER && monster->foe == MHITYOU)
         mons_perc += 15;
 
@@ -1217,7 +1217,7 @@ bool check_awaken(monsters* monster)
     {
         if (mon_holy == MH_NATURAL)
         {
-            // monster is "hibernating"... reduce chance of waking
+            // Monster is "hibernating"... reduce chance of waking.
             if (monster->has_ench(ENCH_SLEEP_WARY))
                 mons_perc -= 10;
         }

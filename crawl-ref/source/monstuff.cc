@@ -2248,6 +2248,12 @@ static void _handle_behaviour(monsters *mon)
     bool isNeutral  = mons_neutral(mon);
     bool wontAttack = mons_wont_attack(mon);
     bool proxPlayer = mons_near(mon);
+#ifdef WIZARD
+    // If stealth is greater than actually possible (wizmode level)
+    // pretend the player isn't there, but only for hostile monsters.
+    if (proxPlayer && you.skills[SK_STEALTH] > 27 && !mons_wont_attack(mon))
+        proxPlayer = false;
+#endif
     bool proxFoe;
     bool isHurt     = (mon->hit_points <= mon->max_hit_points / 4 - 1);
     bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
@@ -2277,9 +2283,8 @@ static void _handle_behaviour(monsters *mon)
     {
         if (!mons_player_visible( mon ))
             proxPlayer = false;
-
-        // must be able to see each other
-        if (!see_grid(mon->x, mon->y))
+        // Must be able to see each other.
+        else if (!see_grid(mon->x, mon->y))
             proxPlayer = false;
 
         const int intel = mons_intel(mon->type);
@@ -2710,8 +2715,8 @@ bool choose_any_monster(const monsters* mon)
 // Find a nearby monster and return its index, including you as a
 // possibility with probability weight.  suitable() should return true
 // for the type of monster wanted.
-// If prefer_named is true, named monsters (including uniques) are twice as
-// likely to get chosen compared with non-named ones.
+// If prefer_named is true, named monsters (including uniques) are twice
+// as likely to get chosen compared to non-named ones.
 monsters *choose_random_nearby_monster(int weight,
                                        bool (*suitable)(const monsters* mon),
                                        bool in_sight, bool prefer_named)
@@ -2765,7 +2770,7 @@ monsters *choose_random_monster_on_level(int weight,
                     if (prefer_named && mon->is_named())
                     {
                         mons_count += 2;
-                        // named monsters have doubled chances
+                        // Named monsters have doubled chances.
                         if (random2(mons_count) < 2)
                             chosen = mon;
                     }
@@ -2805,6 +2810,63 @@ bool simple_monster_message(const monsters *monster, const char *event,
     return (false);
 }                               // end simple_monster_message()
 
+// Altars as well as branch entrances are considered interesting
+// for some monster types.
+static bool _mon_on_interesting_grid(monsters *mon)
+{
+    // Patrolling shouldn't happen all the time.
+    if (one_chance_in(4))
+        return (false);
+
+    const dungeon_feature_type feat = grd[mon->x][mon->y];
+
+    switch (feat)
+    {
+    // Holy beings will tend to patrol around altars to the good gods.
+    case DNGN_ALTAR_ELYVILON:
+        if (!one_chance_in(3))
+            return (false);
+        // else fall through
+    case DNGN_ALTAR_ZIN:
+    case DNGN_ALTAR_SHINING_ONE:
+        return (mons_holiness(mon) == MH_HOLY);
+
+    // Orcs will tend to patrol around altars to Beogh, and guard the
+    // stairway from and to the Orcish Mines.
+    case DNGN_ALTAR_BEOGH:
+    case DNGN_ENTER_ORCISH_MINES:
+    case DNGN_RETURN_FROM_ORCISH_MINES:
+        return (mons_species(mon->type) == MONS_ORC);
+
+    // Same for elves and the Elven Halls.
+    case DNGN_ENTER_ELVEN_HALLS:
+    case DNGN_RETURN_FROM_ELVEN_HALLS:
+        return (mons_species(mon->type) == MONS_ELF);
+
+    // Killer bees always return to their hive.
+    case DNGN_ENTER_HIVE:
+        return (mons_species(mon->type == MONS_KILLER_BEE)
+                || mons_species(mon->type == MONS_KILLER_BEE_LARVA));
+
+    default:
+        return (false);
+    }
+}
+
+// If a hostile monster finds itself on a grid of an "interesting" feature,
+// while unoccupied, it will remain in that area, and try to return to it
+// if it left it for fighting, seeking etc.
+static void _maybe_set_patrol_route(monsters *monster)
+{
+    if (monster->behaviour == BEH_WANDER
+        && !mons_friendly(monster)
+        && !monster->is_patrolling()
+        && _mon_on_interesting_grid(monster))
+    {
+        monster->patrol_point = coord_def(monster->x, monster->y);
+    }
+}
+
 //---------------------------------------------------------------
 //
 // handle_movement
@@ -2815,6 +2877,8 @@ bool simple_monster_message(const monsters *monster, const char *event,
 static void _handle_movement(monsters *monster)
 {
     int dx, dy;
+
+    _maybe_set_patrol_route(monster);
 
     // Monsters will try to flee out of a sanctuary.
     if (is_sanctuary(monster->x, monster->y) && !mons_friendly(monster)
@@ -2846,7 +2910,7 @@ static void _handle_movement(monsters *monster)
         dy = monster->target_y - monster->y;
     }
 
-    // move the monster:
+    // Move the monster.
     mmov_x = (dx > 0) ? 1 : ((dx < 0) ? -1 : 0);
     mmov_y = (dy > 0) ? 1 : ((dy < 0) ? -1 : 0);
 
@@ -6772,7 +6836,7 @@ bool message_current_target()
     if (crawl_state.is_replaying_keys())
     {
         if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
-            return false;
+            return (false);
 
         const monsters *montarget = &menv[you.prev_targ];
         return (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU

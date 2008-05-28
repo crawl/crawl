@@ -2511,9 +2511,15 @@ std::string cloud_name(cloud_type type)
 
 bool mons_is_safe(const struct monsters *mon, bool want_move)
 {
+    int  dist   = grid_distance(you.x_pos, you.y_pos, mon->x, mon->y);
+
     bool is_safe = (mons_wont_attack(mon)
                     || mons_class_flag(mon->type, M_NO_EXP_GAIN)
-                       // only seen through glass walls
+#ifdef WIZARD
+                    // Wizmode skill setting enforces hiddenness.
+                    || you.skills[SK_STEALTH] > 27 && dist > 2
+#endif
+                       // Only seen through glass walls?
                     || !see_grid_no_trans(mon->x, mon->y)
                        && !mons_has_ranged_spell(mon)
                        && !mons_has_los_ability(mon->type));
@@ -2525,8 +2531,6 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
                    || you.running < RMODE_NOT_RUNNING
                    || want_move);
 
-    int  dist   = grid_distance(you.x_pos, you.y_pos,
-                                mon->x, mon->y);
     bool result = is_safe;
 
     if (clua.callfn("ch_mon_is_safe", "Mbbd>b",

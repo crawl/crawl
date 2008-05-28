@@ -3480,11 +3480,17 @@ void level_change(bool skip_attribute_increase)
 
 }                               // end level_change()
 
-// here's a question for you: does the ordering of mods make a difference?
+// Here's a question for you: does the ordering of mods make a difference?
 // (yes) -- are these things in the right order of application to stealth?
 // - 12mar2000 {dlb}
 int check_stealth(void)
 {
+#ifdef WIZARD
+    // Extreme stealthiness can be enforced by wizmode stealth setting.
+    if (you.skills[SK_STEALTH] > 27)
+        return (1000);
+#endif
+
     if (you.special_wield == SPWLD_SHADOW || you.duration[DUR_BERSERKER])
         return (0);
 

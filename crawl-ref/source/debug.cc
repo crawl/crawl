@@ -220,7 +220,7 @@ static int debug_prompt_for_skill( const char *prompt )
         {
             if (ptr == sk_name && strlen(specs) > 0)
             {
-                // we prefer prefixes over partial matches
+                // We prefer prefixes over partial matches.
                 skill = i;
                 break;
             }
