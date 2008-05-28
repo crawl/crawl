@@ -9,7 +9,7 @@
 # The options for monster glyphs and item colours don't matter for Tiles.
 # (New players should just ignore these lines.)
 #
-# include                   034_monster_glyphs.txt
+# include                 = 034_monster_glyphs.txt
 # additional_macro_file   = 034_command_keys.txt
 # classic_item_colours    = true
 # classic_hud             = true
@@ -185,7 +185,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # warrant your attention. This file (travel_stoppers.txt) contains a list of
 # travel_stop_message settings, with brief descriptions of what they do.
 
-include travel_stoppers.txt
+include = travel_stoppers.txt
 
 ##### 4-h	Stashes ###############################
 #

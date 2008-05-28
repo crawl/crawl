@@ -1618,23 +1618,6 @@ void game_options::set_option_fragment(const std::string &s)
     }
 }
 
-bool game_options::include_file_directive(const std::string &line,
-                                          bool runscript)
-{
-    const std::string prefix = "include ";
-    if (line.find(prefix) == std::string::npos)
-        return (false);
-
-    std::string include_line = trimmed_string(line);
-    if (include_line.find(prefix) == 0)
-    {
-        include(trimmed_string(include_line.substr(prefix.length())),
-                true, runscript);
-        return (true);
-    }
-    return (false);
-}
-
 void game_options::read_option_line(const std::string &str, bool runscript)
 {
 #define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
@@ -1688,11 +1671,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
     bool plus_equal  = false;
     bool minus_equal = false;
-
-    // If the user asked us to include a file, don't try to process the line
-    // as an option.
-    if (include_file_directive(str, runscript))
-        return;
 
     const int first_equals = str.find('=');
 
@@ -1764,12 +1742,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "mon_glyph" && key != "opt" && key != "option"
         && key != "menu_colour" && key != "menu_color"
         && key != "message_colour" && key != "message_color"
-        && key != "levels" && key != "level" && key != "entries")
+        && key != "levels" && key != "level" && key != "entries"
+        && key != "include")
     {
         lowercase( field );
     }
 
-    if (key == "opt" || key == "option")
+    if (key == "include")
+    {
+        include(field, true, runscript);
+    }
+    else if (key == "opt" || key == "option")
     {
         split_parse(field, ",", &game_options::set_option_fragment);
     }

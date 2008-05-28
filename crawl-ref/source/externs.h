@@ -1940,7 +1940,6 @@ private:
     void add_mon_glyph_override(const std::string &);
     mon_display parse_mon_glyph(const std::string &s) const;
     void set_option_fragment(const std::string &s);
-    bool include_file_directive(const std::string &line, bool runscript);
 
     static const std::string interrupt_prefix;
 };
