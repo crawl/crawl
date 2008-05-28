@@ -59,6 +59,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transfor.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
@@ -762,11 +763,19 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
             msg::stream << "You hear the distant roaring of an enraged "
                         << weird_roaring_animal() << "!" << std::endl;
         }
+        else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_AIR)
+            mpr("Your skull vibrates slightly.");
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
         break;
 
     case 4:
         if (player_can_smell())
             msg::stream << "You smell " << weird_smell() << "." << std::endl;
+        else if (you.species == SP_MUMMY)
+            mpr("Your bandages flutter.");
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
         break;
 
     case 5:
@@ -784,6 +793,8 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     case 7:
         if (!silenced(you.x_pos, you.y_pos))
             mpr("You hear the tinkle of a tiny bell.");
+        else
+            mpr("The world appears momentarily distorted.");
         cast_summon_butterflies( 100 );
         break;
 
@@ -802,6 +813,10 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
                  (temp_rand == 7) ? "a crunching sound"
                                   : "the tinkle of an enormous bell");
         }
+        else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_AIR)
+            mpr("Your head hurts.");
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
         break;
     }
 

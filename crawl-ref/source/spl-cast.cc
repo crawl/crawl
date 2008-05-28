@@ -2159,6 +2159,8 @@ static void _miscast_conjuration(int severity, const char* cause)
                 mpr("You smell something strange.");
             else if (you.species == SP_MUMMY)
                 mpr("Your bandages flutter.");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
         }
         break;
 
@@ -3554,6 +3556,8 @@ static void _miscast_poison(int severity, const char* cause)
                 mpr("You hear a slurping sound.", MSGCH_SOUND);
             else if (you.species != SP_MUMMY)
                 mpr("You taste almonds.");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
         break;
