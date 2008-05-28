@@ -1887,7 +1887,8 @@ public:
     unsigned int tutorial_left;
 
 private:
-    std::map<std::string, std::string> aliases;
+    typedef std::map<std::string, std::string> string_map;
+    string_map               aliases;
     std::set<std::string>    included; // Files we've included already.
 
 public:

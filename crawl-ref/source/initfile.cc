@@ -2886,11 +2886,15 @@ void game_options::include(const std::string &rawfilename,
 
     // Change this->filename to the included filename while we're reading it.
     unwind_var<std::string> optfile(this->filename, include_file);
+
+    // Also unwind any aliases defined in included files.
+    unwind_var<string_map> unwalias(aliases);
+
     FILE* f = fopen( include_file.c_str(), "r" );
     if (f)
     {
         FileLineInput fl(f);
-        read_options(fl, runscript);
+        this->read_options(fl, runscript, false);
         fclose(f);
     }
 }
