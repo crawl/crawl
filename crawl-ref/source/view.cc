@@ -3611,10 +3611,21 @@ bool mons_near(const monsters *monster, unsigned int foe)
 
 bool mon_enemies_around(const monsters *monster)
 {
+    // If the monster has a foe, return true.
+    if (monster->foe != MHITNOT && monster->foe != MHITYOU)
+        return (true);
+
     if (mons_friendly(monster))
-        return (!mons_near(monster) || !i_feel_safe());
+    {
+        // Additionally, if an ally is nearby and *you* have a foe, consider
+        // it as the ally's enemy too.
+        return (mons_near(monster) && !i_feel_safe());
+    }
     else
+    {
+        // For hostile monsters *you* are the main enemy.
         return (mons_near(monster));
+    }
 }
 
 bool see_grid( const env_show_grid &show,

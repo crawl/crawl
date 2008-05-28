@@ -2168,10 +2168,20 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
             if (!in_bounds(pos_x, pos_y))
                 continue;
 
+            // Don't bother for the current position. If everything fails,
+            // we'll stay here anyways.
             if (pos_x == mon->x && pos_y == mon->y)
                 continue;
 
             if (!mon->can_pass_through_feat(grd[pos_x][pos_y]))
+                continue;
+
+            // Don't bother moving to squares (currently) occupied by a
+            // monster. We'll usually be able to find other target squares
+            // (and if we're not, we couldn't move anyway), and this avoids
+            // monsters trying to move onto a grid occupied by a plant or
+            // sleeping monster.
+            if (mgrd[pos_x][pos_y] != NON_MONSTER)
                 continue;
 
             if (grid_see_grid(mon->x, mon->y, patrol_x, patrol_y, habitat))
@@ -2180,6 +2190,11 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
                 // from the current position, it suffices if the target is
                 // within reach of the patrol point OR the current position:
                 // we can easily get there.
+                // Note: This can take us into a position where the target
+                // cannot be easily reached (e.g. blocked by a wall) and the
+                // patrol point is out of sight, too. Such a case will be
+                // handled below, though it might take a while until a monster
+                // gets out of a deadlock.
                 if (!grid_see_grid(patrol_x, patrol_y, pos_x, pos_y, habitat)
                     && !grid_see_grid(mon->x, mon->y, pos_x, pos_y, habitat))
                 {
@@ -2197,6 +2212,9 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
                 {
                     continue;
                 }
+                // If this fails for all surrounding squares (probably because
+                // we're too far away), we fall back to heading directly for
+                // the patrol point.
             }
 
             if (one_chance_in(++count_grids))
