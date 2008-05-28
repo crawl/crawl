@@ -5030,17 +5030,13 @@ void god_pitch(god_type which_god)
 
     take_note(Note(NOTE_GET_GOD, you.religion));
 
-    // Currently penance is just zeroed, this could be much more interesting.
+    // Currently, penance is just zeroed.  This could be much more
+    // interesting.
     you.penance[you.religion] = 0;
 
-    // When you start worshipping a good god, you make all non-hostile
-    // evil and unholy beings hostile.
     if (is_good_god(you.religion))
     {
-        if (_evil_beings_attitude_change())
-            mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
-
-        // piety bonus when switching between good gods
+        // Give a piety bonus when switching between good gods.
         if (good_god_switch && old_piety > 15)
             gain_piety(std::min(30, old_piety - 15));
     }
@@ -5057,10 +5053,10 @@ void god_pitch(god_type which_god)
     }
 
     // note that you.worshipped[] has already been incremented
-    if ( you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1 )
+    if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
         gain_piety(20);         // allow instant access to first power
 
-    redraw_skill( you.your_name, player_title() );
+    redraw_skill(you.your_name, player_title());
 }                               // end god_pitch()
 
 bool god_hates_your_god(god_type god,
