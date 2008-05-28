@@ -753,14 +753,15 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
                         << " for a moment." << std::endl;
         }
         else
-        {
             canned_msg(MSG_NOTHING_HAPPENS);
-        }
         break;
 
     case 3:
-        msg::stream << "You hear the distant roaring of an enraged "
-                    << weird_roaring_animal() << "!" << std::endl;
+        if (!silenced(you.x_pos, you.y_pos))
+        {
+            msg::stream << "You hear the distant roaring of an enraged "
+                        << weird_roaring_animal() << "!" << std::endl;
+        }
         break;
 
     case 4:
@@ -781,7 +782,8 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 7:
-        mpr("You hear the tinkle of a tiny bell.");
+        if (!silenced(you.x_pos, you.y_pos))
+            mpr("You hear the tinkle of a tiny bell.");
         cast_summon_butterflies( 100 );
         break;
 
