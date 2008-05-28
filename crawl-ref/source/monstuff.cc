@@ -82,6 +82,8 @@ static void _mons_in_cloud(monsters *monster);
 static bool _monster_move(monsters *monster);
 static bool _plant_spit(monsters *monster, bolt &pbolt);
 static spell_type _map_wand_to_mspell(int wand_type);
+static bool _is_native_in_branch(const monsters *monster,
+                                 const branch_type branch);
 
 // [dshaligram] Doesn't need to be extern.
 static int mmov_x, mmov_y;
@@ -2829,24 +2831,23 @@ static bool _mon_on_interesting_grid(monsters *mon)
         // else fall through
     case DNGN_ALTAR_ZIN:
     case DNGN_ALTAR_SHINING_ONE:
-        return (mons_holiness(mon) == MH_HOLY);
+        return (mons_is_holy(mon));
 
     // Orcs will tend to patrol around altars to Beogh, and guard the
     // stairway from and to the Orcish Mines.
     case DNGN_ALTAR_BEOGH:
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-        return (mons_species(mon->type) == MONS_ORC);
+        return (_is_native_in_branch(mon, BRANCH_ORCISH_MINES));
 
     // Same for elves and the Elven Halls.
     case DNGN_ENTER_ELVEN_HALLS:
     case DNGN_RETURN_FROM_ELVEN_HALLS:
-        return (mons_species(mon->type) == MONS_ELF);
+        return (_is_native_in_branch(mon, BRANCH_ELVEN_HALLS));
 
     // Killer bees always return to their hive.
     case DNGN_ENTER_HIVE:
-        return (mons_species(mon->type == MONS_KILLER_BEE)
-                || mons_species(mon->type == MONS_KILLER_BEE_LARVA));
+        return (_is_native_in_branch(mon, BRANCH_HIVE));
 
     default:
         return (false);
@@ -5742,9 +5743,9 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
     }
 }
 
-// Returns true for monsters that obviously (to the player)
-// feel "thematically at home" in a branch.
-// Currently used for native monsters recognizing traps.
+// Returns true for monsters that obviously (to the player) feel
+// "thematically at home" in a branch.  Currently used for native
+// monsters recognizing traps and patrolling branch entrances.
 static bool _is_native_in_branch(const monsters *monster,
                                  const branch_type branch)
 {
