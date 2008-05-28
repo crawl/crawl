@@ -258,13 +258,12 @@ static std::string _replace_name_parts(const std::string name_in,
     return name;
 }
 
-// Remember: disallow unrandart creation in abyss/pan
+// Remember: disallow unrandart creation in Abyss/Pan.
 
-/*
-   The following unrandart bits were taken from $pellbinder's mon-util code
-   (see mon-util.h & mon-util.cc) and modified (LRH). They're in randart.cc and
-   not randart.h because they're only used in this code module.
-*/
+// The following unrandart bits were taken from $pellbinder's mon-util
+// code (see mon-util.h & mon-util.cc) and modified (LRH).  They're in
+// randart.cc and not randart.h because they're only used in this code
+// module.
 
 struct unrandart_entry
 {
