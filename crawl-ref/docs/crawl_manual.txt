@@ -329,6 +329,7 @@ option for disabling this); else this can also be done using the 'O'
 command. They can be closed with the 'C' command. Pressing Ctrl plus
 a direction, or '*', followed by a direction, will open/close doors,
 too.
+
 If there is no door in the indicated space, both Ctrl-direction and * 
 direction will attempt to attack any monster which may be standing there
 (this is the only way to attack a friendly creature hand-to-hand). If 
