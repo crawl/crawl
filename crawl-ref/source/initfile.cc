@@ -1393,7 +1393,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
 #ifdef CLUA_BINDINGS
                 clua.execstring(luacode.c_str());
                 if (!clua.error.empty())
-                    mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
+                    mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
                 luacode.clear();
 #endif
             }
@@ -1408,7 +1408,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             {
                 clua.execstring(luacode.c_str());
                 if (!clua.error.empty())
-                    mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
+                    mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
             }
 #endif
             luacode.clear();
@@ -1442,7 +1442,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             luacond += "]] )\n";
         clua.execstring(luacond.c_str());
         if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
 #endif
 
@@ -1881,7 +1881,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #ifdef CLUA_BINDINGS
         clua.execfile(field.c_str(), false, false);
         if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 #endif
     }
     else if (key == "colour" || key == "color")
@@ -2759,7 +2759,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         {
 #ifdef CLUA_BINDINGS
             if (!clua.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s\n", clua.error.c_str());
+                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 #endif
             named_options[key] = orig_field;
         }
