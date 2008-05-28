@@ -1,0 +1,130 @@
+### Colouring of corpses, depending on whether you can eat them, and
+### whether it's safe to eat them. Contains spoilers!
+### Colours both on the ground and in inventory!
+
+msg := message_colour
+inv := menu_colour
+
+# Spriggans don't care for corpses and chunks.
+#
+: if you.race() == "Spriggan" then
+msg = darkgrey:.*corpse
+msg = darkgrey:.*chunk
+inv = darkgrey:.*chunks? of
+inv = darkgrey:.*corpse
+inv = yellow:.*food.*(bread ration|snozzcumber|slice of pizza)
+inv = yellow:.*food.*(orange|banana|lemon|pear|apple|apricot|choko)
+inv = yellow:.*food.*(rambutan|lychee|strawberry|grape|sultana)
+: end
+
+# Mummies don't care for food at all.
+#
+: if you.race() == "Mummy" then
+msg = darkgrey:.*corpse
+msg = darkgrey:.*chunk
+inv = darkgrey:.*food.*
+: end
+
+# Rotten chunks eaters: Ghouls, Ogres, Kobolds, Trolls, Hill Orcs
+#
+: if you.race() == "Ghoul" then
+msg = yellow:rot.*chunks? of
+msg = yellow:rot.*corpse
+inv = yellow:.*rot.*chunks? of
+< elseif you.race() == "Ogre" or
+         you.race() == "Kobold" or
+         you.race() == "Troll" or
+         you.race() == "Hill Orc" then >
+# color rotten chunks as normal chunks
+: else
+msg = lightred:rot.*chunks? of
+msg = lightred:rot.*corpse
+inv = lightred:.*rot.*chunks? of
+inv = lightred:.*rot.*corpse
+autopickup_exceptions = >rot.*chunks? of
+: end
+
+# Kobolds don't want fruits but meat.
+#
+: if you.race() == "Kobold" then
+inv = darkgrey:.*food.*(bread ration|snozzcumber|slice of pizza)
+inv = darkgrey:.*food.*(orange|banana|lemon|pear|apple|apricot)
+inv = darkgrey:.*food.*(rambutan|lychee|strawberry|grape|sultana)
+inv = yellow:.*chunks? of
+: end
+
+# Undead corpses/chunks
+#
+msg = lightred:chunks? of.*(ghoul|necrophage|death drake)
+msg = lightred:(ghoul | necrophage|death drake).*corpse
+inv = lightred:.*chunks? of.*(ghoul|necrophage|death drake)
+
+# Mutagenic corpses/chunks
+#
+msg = magenta:chunks? of.*(draining|orange brain|great orb)
+msg = magenta:chunks? of.*(guardian naga|shapeshifter|very ugly)
+msg = magenta:(draining|orange brain|great orb).*corpse
+msg = magenta:(guardian naga|shapeshifter|very ugly).*corpse
+inv = magenta:.*chunks? of.*(draining|orange brain|great orb)
+inv = magenta:.*chunks? of.*(guardian naga|shapeshifter|very ugly)
+
+# Poisonous corpses/chunks
+#
+msg = lightgreen:chunks? of.*(ant larva|kobold|beetle)
+msg = lightgreen:chunks? of.*(brain worm|green draconian)
+msg = lightgreen:chunks? of.*((black|brown|yellow) snake)
+msg = lightgreen:chunks? of.*(bee|death yak|slug|amoeba)
+msg = lightgreen:chunks? of.*(centipede|mite|snail|gila|hydra)
+msg = lightgreen:chunks? of.*(iron troll|naga|queen|wasp)
+msg = lightgreen:chunks? of.*(redback|(golden|mottled) dragon)
+msg = lightgreen:chunks? of.*((orange|green) rat)
+msg = lightgreen:chunks? of.*(scorpion|soldier ant|spiny|spider)
+msg = lightgreen:(ant larva|kobold|beetle).*corpse
+msg = lightgreen:(brain worm|green draconian).*corpse
+msg = lightgreen:((black|brown|yellow) snake).*corpse
+msg = lightgreen:(bee|death yak|slug|amoeba).*corpse
+msg = lightgreen:(centipede|mite|snail|gila|hydra).*corpse
+msg = lightgreen:(iron troll|naga|queen|wasp).*corpse
+msg = lightgreen:(redback|(golden|mottled) dragon).*corpse
+msg = lightgreen:((orange|green) rat).*corpse
+msg = lightgreen:(scorpion|soldier ant|spiny|spider).*corpse
+inv = lightgreen:.*chunks? of.*(ant larva|kobold|beetle)
+inv = lightgreen:.*chunks? of.*(brain worm|green draconian)
+inv = lightgreen:.*chunks? of.*((black|brown|yellow) snake)
+inv = lightgreen:.*chunks? of.*(bee|death yak|slug|amoeba)
+inv = lightgreen:.*chunks? of.*(centipede|mite|snail|gila|hydra)
+inv = lightgreen:.*chunks? of.*(iron troll|naga|queen|wasp)
+inv = lightgreen:.*chunks? of.*(redback|(golden|mottled) dragon)
+inv = lightgreen:.*chunks? of.*((orange|green) rat)
+inv = lightgreen:.*chunks? of.*(scorpion|soldier ant|spiny|spider)
+
+# Contaminated corpses/chunks
+#
+msg = brown:chunks? of.*(elf|human|drake|blowfly|cockroach)
+msg = brown:chunks? of.*((fire|hill|frost|stone) giant)
+msg = brown:chunks? of.*(mosquito|gnoll|goblin|jackal)
+msg = brown:chunks? of.*(manticore|minotaur|ogre|orc)
+msg = brown:chunks? of.*(war dog|warg|((rock|deep) )?troll)
+msg = brown:chunks? of.*(grey rat|ugly thing|draconian)
+msg = brown:chunks? of.*((quicksilver|iron|swamp|komodo) dragon)
+msg = brown:chunks? of.*(mer(folk|maid))
+msg = brown:(elf|human|drake|blowfly|cockroach).*corpse
+msg = brown:((fire|hill|frost|stone) giant).*corpse
+msg = brown:(mosquito|gnoll|goblin|jackal).*corpse
+msg = brown:(manticore|minotaur|ogre|orc).*corpse
+msg = brown:(war dog|warg|((rock|deep) )?troll).*corpse
+msg = brown:(grey rat|ugly thing|draconian).*corpse
+msg = brown:((quicksilver|iron|swamp|komodo) dragon).*corpse
+msg = brown:(mer(folk|maid)).*corpse
+inv = brown:.*chunks? of.*(elf|human|drake|blowfly|cockroach)
+inv = brown:.*chunks? of.*((fire|hill|frost|stone) giant)
+inv = brown:.*chunks? of.*(mosquito|gnoll|goblin|jackal)
+inv = brown:.*chunks? of.*(manticore|minotaur|ogre|orc)
+inv = brown:.*chunks? of.*(war dog|warg|((rock|deep) )?troll)
+inv = brown:.*chunks? of.*(grey rat|ugly thing|draconian)
+inv = brown:.*chunks? of.*((quicksilver|iron|swamp|komodo) dragon)
+inv = brown:.*chunks? of.*(mer(folk|maid))
+
+# Other food
+#
+inv = lightgrey:^food

@@ -24,3 +24,10 @@ stop = You fall through a shaft
 # Ailments
 #
 stop = flesh start
+
+# Ghouls
+#
+: if you.race() == "Ghoul" then
+stop = smell.*(rott(ing|en)|decay)
+stop = something tasty in your inventory
+: end

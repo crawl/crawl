@@ -1,0 +1,46 @@
+ae := autopickup_exceptions
+
+#### inclusions ###
+
+# curare is always dangerous on the floor
+ae = <curare-tipped
+
+
+### exclusions ###
+
+# Don't autopickup in the Abyss
+< do
+local old_ch_autopickup = ch_autopickup or function() return true end
+function ch_autopickup(it)
+    return you.where() ~= "Abyss" and old_ch_autopickup(it)
+end
+end >
+
+# universally bad options and scrolls
+ae = potions? of (confusion | degeneration | poison | strong poison)
+ae = potions? of (slowing | paralysis | decay | water)
+ae = scrolls? of (paper | torment | immolation | curse weapon)
+ae = scrolls? of (curse armour | random uselessness | noise)
+
+# Excluding amulets as you only need one of each. Also for some rings.
+# There is some (intended) overlap with pickup.lua, which also exludes
+# the ring of hunger, for example.
+ae = amulet of (inaccuracy | gourmand | controlled flight | warding)
+ae = amulet of (resist mutation | resist slow | clarity | rage)
+ae = ring of (see invisible | levitation | poison resistance | hunger)
+ae = ring of (fire | ice | sustenance | invisibility)
+ae = ring of (magical power | regeneration)
+
+: if you.race() == "Mummy" or you.race() == "Ghoul" then
+ae = ring of life protection
+: end
+
+: if you.race() == "Kenku" then
+ae = potions? of levitation
+: end
+
+: if you.god() == "Trog" then
+ae = wizardry
+ae = staff
+: end
+

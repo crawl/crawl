@@ -1,0 +1,38 @@
+### Highlighting of various messages
+
+msc := message_colour
+
+# Really important messages
+#
+msc = lightred:drains you
+msc = lightred:feel drained
+msc = lightred:strangely unstable
+msc = lightred:curare-tipped.*hits you
+msc = lightred:Space warps.* around you
+msc = lightred:Space bends around you
+msc = lightred:is eaten away
+msc = lightred:you are carrying w.* destroyed
+msc = lightred:you are carrying catche?s? fire
+msc = lightred:you are carrying freezes? and shatters?
+msc = lightred:Some of your food is covered with spores
+msc = lightred:lose your buoyancy
+msc = lightred:sense of stasis
+msc = lightred:clumsily bash
+
+# Less urgent, but still significant messages
+#
+msc = yellow:ticking.*clock
+msc = yellow:snort
+msc = yellow:coins.*counted
+msc = yellow:tolling.*bell
+msc = lightcyan:LOW MAGIC WARNING
+msc = yellow:fails to return
+
+# Unimportant messages and combat clutter
+#
+message_colour = darkgrey:You start (resting|searching)
+message_colour = darkgrey:Unknown command
+message_colour = darkgrey:disappears in a puff of smoke
+#
+message_colour = darkgrey:miss(es)? (the|you|it)
+message_colour = darkgrey:but (do no|doesn't do any) damage

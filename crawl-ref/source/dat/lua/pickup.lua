@@ -75,7 +75,8 @@ function ch_autopickup(it)
            -- or anything involving mutations
            if item.subtype(it) == "berserk" 
                 or item.subtype(it) == "gain ability"
-                or item.subtype(it) == "cure mutation" then
+                or item.subtype(it) == "cure mutation" 
+                or item.subtype(it) == "mutation" then
               if you_real_undead() then
                  return false
               else 

@@ -89,10 +89,15 @@ lua_file = lua/pickup.lua
 #
 ##### 4-a	Picking up and Dropping ###############
 #	
-# autopickup = $?!+"/%
-# autopickup_exceptions = scrolls? of random uselessness
-# autopickup_exceptions = <deck of cards
-#
+autopickup = $?!+"/%)
+
+# lua routines for automatically picking up one butchering tool
+# This require ) in autopickup and no further weapons are picked up.
+include pickup_butcher_tool.txt
+
+# There is a long list of autopickup exceptions in
+include autopickup_exceptions.txt
+
 # default_autopickup = false
 # autopickup_no_burden = true
 # pickup_thrown = false
@@ -164,8 +169,6 @@ trap_item_brand    = reverse
 # tc_excluded       = lightmagenta
 # tc_exclude_circle = red
 
-# trap_prompt = false
-
 # The following options are not default. 
 #
 runrest_ignore_message = pray:
@@ -174,17 +177,16 @@ runrest_ignore_message = disappears in a puff of smoke
 runrest_ignore_message = engulfed in a cloud of smoke
 runrest_ignore_message = safely over a trap
 runrest_ignore_message = You feel.*sick
-runrest_ignore_poison = 2:30
+runrest_ignore_poison  = 2:30
 runrest_ignore_monster = fish:2
-runrest_ignore_monster = butterfly:1
+runrest_ignore_monster = butterfly:0
 # runrest_ignore_monster = swamp worm:3
 
+# trap_prompt = false
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
-# You can use travel_stop_message to make autotravel stop for situations that
-# warrant your attention. This file (travel_stoppers.txt) contains a list of
-# travel_stop_message settings, with brief descriptions of what they do.
-
+# The file (travel_stoppers.txt) contains a list of travel_stop_message 
+# settings, with brief descriptions of what they do.
 include = travel_stoppers.txt
 
 ##### 4-h	Stashes ###############################
@@ -225,38 +227,39 @@ include = travel_stoppers.txt
 # mlist_allow_alternate_layout = true
 # classic_hud = true
 
-# Colouring for the inventory
-menu_colour = inventory:lightred: cursed.*(worn|neck|hand|weapon)\)
-menu_colour = inventory:green:(worn|neck|hand|weapon)\)
-menu_colour = inventory:red: cursed
-menu_colour = inventory:red: rotting
+#####          Colours (messages and menus) #####
+#
+# menu_colour_prefix_id    = true
+menu_colour_prefix_class = true
+
+# Food is colour coded as follows:
+#
+#   yellow     = preferred food
+#   lightgrey  = normal food
+#   darkgey    = cannot be eaten at all
+#   lightred   = extremely dangerous
+#   magenta    = mutagenic
+#   lightgreen = poisonous
+#   brown      = contaminated (may cause sickening)
+#
+include food_colouring.txt
+
+# There is elaborate colouring of items in the inventory (and other menus)
+# depending on their usefulness, taking race and other criteria into account.
+include menu_colours.txt
 
 # Colouring of autoinscribed god gifts
 menu_colour = pickup:green:god gift
 
-# Identified artefacts
-menu_colour = inventory:white:( [-+] the)
-
-# This block colours ego items; it requires annotate_item_class = true
-# menu_colour_prefix_id = true
-# menu_colour_prefix_class = true
-# menu_colour_prefix_id    = true
-# menu_colour_prefix_class = true
-# menu_colour = inventory:green:(^identified armour .* pair of .* of )
-# menu_colour = inventory:lightgrey:(^identified armour .* pair of )
-# menu_colour = inventory:green:(^identified (weapon|armour) .* of )
+# Colouring of messages
+include messages.txt
 
 # Colouring for the notes
 menu_colour = notes:white:Reached XP level
 
-# Message colours
-message_colour = lightcyan:LOW MAGIC WARNING
-# for weapons of returning not returning to your pack
-message_colour = yellow:fails to return
-
 # These lines will suppress extra feedback messages from 
 # travel/shift-running.
-
+#
 # message_colour = mute:warning:comes into view
 # message_colour = mute:You start (searching|resting)
 # message_colour = mute:Done searching
@@ -320,26 +323,27 @@ tile_show_items = !?/%=([)X}+\_.
 # dump_kill_places = (single | all | none)
 # dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
 # dump_item_origin_price = -1
-# dump_message_count = 7
-# dump_order  = header,hiscore,stats,misc,notes,inventory,
-# dump_order += turns_by_place,skills,spells,overview,mutations,
-# dump_order += messages,screenshot,monlist,kills_by_place,kills
+# dump_message_count = 20
+# dump_order  = header, hiscore, stats, misc, notes, inventory,
+# dump_order += turns_by_place, skills,s pells, overview, mutations,
+# dump_order += messages, screenshot, monlist, kills_by_place, kills
 
 ##### 5-b	Notes #################################
 #
 # user_note_prefix=@@@
-# note_items = rod,book
-# note_monsters = orb of fire
-# ood_interesting = 8
-# note_hp_percent = 5
-# note_skill_levels = 1,5,10,15,27
-# note_all_skill_levels = true
-# note_skill_max  = true
-# note_all_spells = true
-# note_all_spells = true
-
-# The following takes a note whenever the Abyss is left: 
-# note_messages = You pass through the gate 
+ood_interesting = 8
+note_hp_percent = 5
+note_skill_levels = 1,5,10,15,27
+note_all_skill_levels = true
+note_skill_max  = true
+note_all_spells = true
+note_all_spells = true
+note_items    = rod of, acquirement, preservation, running, of Zot
+note_messages = You pass through the gate
+note_messages = [bB]anish.*Abyss
+note_messages = Your scales start
+note_messages = protects you from harm
+note_monsters = orb of fire, ancient lich, Sigmund
 
 ##### 6-  Miscellaneous #############################################
 #

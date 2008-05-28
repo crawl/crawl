@@ -1,0 +1,145 @@
+# Changing colours of items in the inventory and other menus
+
+menu := menu_colour 
+ae   := autopickup_exceptions
+
+# Important game items
+#
+menu = lightmagenta:.*misc.*rune( of Zot)?
+menu = lightmagenta:.*orb.*Zot
+
+# Identified artefacts
+#
+menu = magenta:.*(weapon|armour|jewellery|staff).*[+-] the
+
+# Unidentified weapon artefacts
+# 
+menu = magenta:.*weapon.* ((brightly|faintly) glowing|smoking|twisted)
+menu = magenta:.*weapon.* (bloodstained|shimmering|warped|crystal)
+menu = magenta:.*weapon.* (jewelled|transparent|encrusted|pitted|slimy)
+menu = magenta:.*weapon.* (polished|fine|crude|ancient|ichor-stained)
+menu = magenta:.*weapon.* (steaming|shiny|polka-dotted)
+menu = magenta:.*weapon.* (golden|purple|bone|serpentine|ruby|chunky)
+menu = magenta:.*weapon.* (thin|green|ivory|ephemeral|blackened)
+menu = magenta:.*weapon.* (sapphire|rusty|blue|brutal|adamantine|ebony)
+menu = magenta:.*weapon.* (mangy|mithril|black|very long|steel|tiny)
+menu = magenta:.*weapon.* flaming crossbow
+
+# Unidentified armour artefacts
+#
+menu = lightgrey:.*armour.* jewelled helm(et)?
+menu = magenta:.*armour.* ((brightly|faintly) glowing|smoking|twisted)
+menu = magenta:.*armour.* (bloodstained|shimmering|warped|heavily runed)
+menu = magenta:.*armour.* (jewelled|transparent|encrusted|pitted|slimy)
+menu = magenta:.*armour.* (polished|fine|crude|ancient|ichor-stained)
+menu = magenta:.*armour.* (steaming|distressingly furry|plaid|tie-dyed)
+menu = magenta:.*armour.* (dull|golden|silk|tattered|round|bronze)
+menu = magenta:.*armour.* (fabulously|vibrating|soft|smelly|red|thick)
+menu = magenta:.*armour.* (weird-looking|blue|black|dirty|paisley)
+menu = magenta:.*armour.* (chartreuse)
+
+# Unidentified jewellery artefacts
+#
+menu = magenta:.*jewellery.* ((brightly|faintly) glowing|smoking)
+menu = magenta:.*jewellery.* (shimmering|warped|crystal|diamond)
+menu = magenta:.*jewellery.* (transparent|pitted|slimy|polished|fine)
+menu = magenta:.*jewellery.* (crude|ancient|steaming|scintillating)
+menu = magenta:.*jewellery.* (sparkling|flickering|glittering)
+menu = magenta:.*jewellery.* (black |blood-stained|cast-iron)
+menu = magenta:.*jewellery.* (phosphorescent)
+menu = magenta:.*jewellery.* an (encrusted|emerald) (ring|amulet)
+menu = magenta:.*jewellery.* a (runed|twisted|shiny|ruby) (ring|amulet)
+menu = magenta:.*jewellery.* a (sapphire) ring
+menu = magenta:.*jewellery.* a (jade) amulet
+
+# Possible ego items 
+#
+menu = lightblue:.*weapon.*(runed|glowing)
+menu = lightblue:.*armour.*(runed|glowing|embroidered|shiny|dyed)
+
+# Mummies' potions
+#
+: if you.race() == "Mummy" then
+menu_colour = darkgrey:.*potion.*
+: end
+
+# Emergency items 
+#
+menu = cyan:.*scroll.*(blinking|teleport|fear)
+menu = cyan:.*wand.*(teleport|healing|hasting)
+menu = cyan:.*potion.*(heal|berserk|speed|resistance)
+menu = cyan:.*misc.*[lL]antern
+
+# Good items
+#
+menu = magenta:.*scroll.*(acquirement)
+menu = magenta:.*potion.*(gain (strength|dexterity|intelligence))
+menu = magenta:.*potion.*(experience|magic)
+: if not you_real_undead() then
+menu = magenta:.*potion.*(of mutation)
+: else
+menu = lightred:.*potion.*(of mutation)
+: end
+
+# Dangerous items
+#
+menu = lightred:.*scroll.*(forgetfulness|torment|curse armour)
+menu = lightred:.*scroll.*(immolation|curse weapon)
+menu = lightred:.*potion.*(slowing|degeneration|poison|confusion)
+menu = lightred:.*potion.*(paralysis|decay)
+menu = lightred:.*jewellery.*(inaccuracy|hunger)
+
+# Useless items
+#
+menu = darkgrey:.*scroll.*(random uselessness|paper|noise)
+menu = darkgrey:.*potion.*water
+
+: if you.race() == "Mummy" then
+menu = darkgrey:.*jewellery.*(sustenance)
+: end
+
+: if you_real_undead() then
+menu = darkgrey:.*jewellery.*(regeneration|rage)
+: end
+
+: if string.find(you.race(), "Draconian", 0, true) then
+menu = darkgrey:.*jewellery.*(controlled flight)
+ae   = >amulet.*(controlled flight)
+: end
+
+: if you.race() == "Green Draconian" or you.race() == "Naga" then
+menu = darkgrey:.*jewellery.*(poison resistance)
+ae   = >ring.*(poison resistance)
+: end
+
+< if you.race() == "Naga" or
+     you.race() == "Spriggan" or
+     you.race() == "Vampire" then >
+menu = darkgrey:.*jewellery.*(see invis)
+ae   = >ring.*(see invis)
+:end
+
+: if you.race() == "Spriggan" then
+menu = darkgrey:.*jewellery.*(sustenance)
+ae   = >ring.*(sustenance)
+:end
+
+# need to save and restore after temple if you get trog later
+: if you.god() == "Trog" then
+menu = darkgrey:.*jewellery.*(rage|wizardry)
+ae   = >amulet.*(rage)
+ae   = >ring.*(wizardry)
+: end
+
+# Exceptions
+#
+menu = yellow:.*potion.*(porridge|gluggy white)
+
+# Defaults for normal items
+#
+menu = lightgreen:uncursed.*\(.*(worn|neck|hand|weapon).*\)
+menu = lightred:cursed.*\(.*(worn|neck|hand|weapon).*\)
+menu = white:\(.*(worn|neck|hand|weapon).*\)
+menu = green:uncursed
+menu = red:cursed
+menu = lightgrey:^(scroll|potion|ring|amulet)

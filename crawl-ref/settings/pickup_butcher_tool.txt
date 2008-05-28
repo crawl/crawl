@@ -1,0 +1,48 @@
+# Pick up a butchering weapon if we don't already have one 
+# This requires ) to be in the autopickup option line
+
+< do
+local old_ch_autopickup = ch_autopickup or function() return true end
+local function can_butcher(it)
+    if item.name(it):find("distort", 0, true) then
+        return false
+    end
+    local skill = item.weap_skill(it)
+    -- have to handle polearms separately, since only some of them can butcher
+    if skill == "Polearms" or skill == "Staves" then
+        local butcherable_polearms = {
+            "scythe", "lajatang", "halberd", "bardiche", "glaive"
+        }
+        for _, weap in ipairs(butcherable_polearms) do
+            if item.name(it):find(weap, 0, true) then return true end
+        end
+        return false
+    else
+        return skill:find("Blades", 0, true) or skill == "Axes"
+    end
+end
+function ch_autopickup(it)
+    if item.class(it, true) == "weapon" then
+        local need_blade = true
+        -- Trolls and Ghouls don't need weapons to butcher things, and Mummies
+        -- and Spriggans can't eat chunks. Ideally, we could detect a player
+        -- with the claws mutation here too, but that's not currently possible
+        if you.race() == "Troll" or
+           you.race() == "Ghoul" or
+           you.race() == "Mummy" or
+           you.race() == "Spriggan" then
+            need_blade = false
+        else
+            for _, inv_it in pairs(item.inventory()) do
+                if item.class(inv_it, true) == "weapon" and
+                   can_butcher(inv_it) then
+                    need_blade = false
+                end
+            end
+        end
+        return need_blade and not item.cursed(it) and can_butcher(it)
+    else
+        return old_ch_autopickup(it)
+    end
+end
+end >
