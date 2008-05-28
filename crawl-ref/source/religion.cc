@@ -4458,11 +4458,8 @@ void excommunication(god_type new_god)
 
     // When you leave one of the good gods for a non-good god, or no
     // god, you make all non-hostile holy beings hostile.
-    if (!is_good_god(new_god))
-    {
-        if (_holy_beings_attitude_change())
-            mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
-    }
+    if (!is_good_god(new_god) && _holy_beings_attitude_change())
+        mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
 }                               // end excommunication()
 
 static bool _bless_weapon( god_type god, int brand, int colour )
@@ -5009,20 +5006,23 @@ void god_pitch(god_type which_god)
     simple_god_message( info );
     more();
 
+    // When you start worshipping a good god, you make all non-hostile
+    // evil and unholy beings hostile, and when you start worshipping
+    // Trog, you make all non-hostile magic users hostile.
+    if (is_good_god(you.religion) && _evil_beings_attitude_change())
+        mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
+    else if (you.religion == GOD_TROG && _magic_users_attitude_change())
+        mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
+
     if (you.religion == GOD_ELYVILON)
     {
-        mpr("You can now call upon Elyvilon to destroy weapons "
-            "lying on the ground.", MSGCH_GOD);
+        mpr("You can now call upon Elyvilon to destroy weapons lying "
+            "on the ground.", MSGCH_GOD);
     }
     else if (you.religion == GOD_TROG)
     {
-        // When you start worshipping Trog, you make all non-hostile
-        // magic users hostile.
-        if (_magic_users_attitude_change())
-            mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
-
-        mpr("You can now call upon Trog to burn spellbooks in your surroundings.",
-            MSGCH_GOD);
+        mpr("You can now call upon Trog to burn spellbooks in your "
+            "surroundings.", MSGCH_GOD);
     }
 
     if (you.worshipped[you.religion] < 100)
