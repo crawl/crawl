@@ -59,7 +59,6 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "transfor.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
@@ -758,15 +757,8 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 3:
-        if (!silenced(you.x_pos, you.y_pos))
-        {
-            msg::stream << "You hear the distant roaring of an enraged "
-                        << weird_roaring_animal() << "!" << std::endl;
-        }
-        else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_AIR)
-            mpr("Your skull vibrates slightly.");
-        else
-            canned_msg(MSG_NOTHING_HAPPENS);
+        msg::stream << "You hear the distant roaring of an enraged "
+                    << weird_roaring_animal() << "!" << std::endl;
         break;
 
     case 4:
@@ -791,32 +783,22 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 7:
-        if (!silenced(you.x_pos, you.y_pos))
-            mpr("You hear the tinkle of a tiny bell.");
-        else
-            mpr("The world appears momentarily distorted.");
+        mpr("You hear the tinkle of a tiny bell.");
         cast_summon_butterflies( 100 );
         break;
 
     case 8:
-        if (!silenced(you.x_pos, you.y_pos))
-        {
-            temp_rand = random2(9);
-            mprf("You hear %s.",
-                 (temp_rand == 0) ? "snatches of song"                 :
-                 (temp_rand == 1) ? "a voice call someone else's name" :
-                 (temp_rand == 2) ? "a very strange noise"             :
-                 (temp_rand == 3) ? "roaring flame"                    :
-                 (temp_rand == 4) ? "a very strange noise indeed"      :
-                 (temp_rand == 5) ? "the chiming of a distant gong"    :
-                 (temp_rand == 6) ? "the bellowing of a yak"           :
-                 (temp_rand == 7) ? "a crunching sound"
-                                  : "the tinkle of an enormous bell");
-        }
-        else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_AIR)
-            mpr("Your head hurts.");
-        else
-            canned_msg(MSG_NOTHING_HAPPENS);
+        temp_rand = random2(9);
+        mprf("You hear %s.",
+             (temp_rand == 0) ? "snatches of song"                 :
+             (temp_rand == 1) ? "a voice call someone else's name" :
+             (temp_rand == 2) ? "a very strange noise"             :
+             (temp_rand == 3) ? "roaring flame"                    :
+             (temp_rand == 4) ? "a very strange noise indeed"      :
+             (temp_rand == 5) ? "the chiming of a distant gong"    :
+             (temp_rand == 6) ? "the bellowing of a yak"           :
+             (temp_rand == 7) ? "a crunching sound"
+                              : "the tinkle of an enormous bell");
         break;
     }
 
