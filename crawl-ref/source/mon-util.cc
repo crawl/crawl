@@ -3058,7 +3058,7 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
             mpr("It softly glows with a divine radiance!");
             break;
         case SPWPN_ELECTROCUTION:
-            mpr("You hear the crackle of electricity.");
+            mpr("You hear the crackle of electricity.", MSGCH_SOUND);
             break;
         case SPWPN_VENOM:
             mpr("It begins to drip with poison!");
@@ -4080,7 +4080,7 @@ bool monsters::fumbles_attack(bool verbose)
                      this->name(DESC_CAP_THE).c_str());
             }
             else if (!silenced(you.x_pos, you.y_pos) && !silenced(x, y))
-                mprf(MSGCH_SOUND, "You hear a splashing noise.");
+                mpr("You hear a splashing noise.", MSGCH_SOUND);
         }
         return (true);
     }

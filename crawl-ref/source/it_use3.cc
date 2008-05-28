@@ -369,7 +369,7 @@ static bool evoke_horn_of_geryon()
     }
     else
     {
-        mpr("You produce a hideous howling noise!");
+        mpr("You produce a hideous howling noise!", MSGCH_SOUND);
         create_monster(
             mgen_data( MONS_BEAST, BEH_HOSTILE,
                        4, you.pos(), MHITYOU ));

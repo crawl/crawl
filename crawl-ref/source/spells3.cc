@@ -974,7 +974,7 @@ void decrease_sanctuary_radius()
 bool cast_sanctuary(const int power)
 {
     if (!silenced(you.x_pos, you.y_pos)) // how did you manage that?
-        mpr("You hear a choir sing!");
+        mpr("You hear a choir sing!", MSGCH_SOUND);
     else
         mpr("You are suddenly bathed in radiance!");
 

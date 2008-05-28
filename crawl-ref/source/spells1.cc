@@ -1203,7 +1203,8 @@ void cast_deaths_door(int pow)
     else
     {
         mpr("You feel invincible!");
-        mpr("You seem to hear sand running through an hourglass...");
+        mpr("You seem to hear sand running through an hourglass...",
+            MSGCH_SOUND);
 
         set_hp( allowed_deaths_door_hp(), false );
         deflate_hp( you.hp_max, false );

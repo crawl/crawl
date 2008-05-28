@@ -4279,8 +4279,7 @@ void read_scroll( int slot )
     }
 
     case SCR_NOISE:
-        mpr("You hear a loud clanging noise!");
-        noisy( 25, you.x_pos, you.y_pos );
+        noisy(25, you.x_pos, you.y_pos, "You hear a loud clanging noise!");
         break;
 
     case SCR_SUMMONING:
