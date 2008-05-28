@@ -293,8 +293,7 @@ static int shatter_walls(int x, int y, int pow, int garbage)
 
     if (random2(100) < chance)
     {
-        if (!silenced( x, y ))
-            noisy( 30, x, y );
+        noisy(30, x, y);
 
         grd[x][y] = DNGN_FLOOR;
         return (1);
@@ -306,10 +305,9 @@ static int shatter_walls(int x, int y, int pow, int garbage)
 void cast_shatter(int pow)
 {
     int damage = 0;
-    const bool sil = silenced( you.x_pos, you.y_pos );
+    const bool sil = silenced(you.x_pos, you.y_pos);
 
-    if (!sil)
-        noisy( 30, you.x_pos, you.y_pos );
+    noisy(30, you.x_pos, you.y_pos);
 
     mprf((sil ? MSGCH_PLAIN : MSGCH_SOUND),
          "The dungeon %s!", (sil ? "shakes" : "rumbles"));

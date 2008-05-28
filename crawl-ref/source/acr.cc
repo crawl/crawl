@@ -3539,7 +3539,6 @@ static void _open_door(int move_x, int move_y, bool check_confused)
         {
             if (mons_is_caught(&menv[mon]))
             {
-
                 std::string prompt  = "Do you want to try to take the net off ";
                             prompt += (&menv[mon])->name(DESC_NOCAP_THE);
                             prompt += '?';
@@ -3616,19 +3615,19 @@ static void _open_door(int move_x, int move_y, bool check_confused)
         {
             // XXX: better flavour for larger doors?
             if (silenced(you.x_pos, you.y_pos))
-            {
                 mprf("The %s%s flies open!", adj, noun);
-            }
             else
             {
-                mprf("The %s%s flies open with a bang!", adj, noun);
-                noisy( 15, you.x_pos, you.y_pos );
+                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!",
+                     adj, noun);
+                noisy(15, you.x_pos, you.y_pos);
             }
         }
         else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
         {
-            mprf( "As you open the %s%s, it creaks loudly!", adj, noun );
-            noisy( 10, you.x_pos, you.y_pos );
+            mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
+                 adj, noun);
+            noisy(10, you.x_pos, you.y_pos);
         }
         else
         {
@@ -3769,14 +3768,16 @@ static void _close_door(int door_x, int door_y)
             }
             else
             {
-                mprf("You slam the %s%s shut with an echoing bang!", adj, noun);
-                noisy( 25, you.x_pos, you.y_pos );
+                mprf(MSGCH_SOUND, "You slam the %s%s shut with an echoing bang!",
+                     adj, noun);
+                noisy(25, you.x_pos, you.y_pos);
             }
         }
         else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
         {
-            mprf("As you close the %s%s, it creaks loudly!", adj, noun);
-            noisy( 10, you.x_pos, you.y_pos );
+            mprf(MSGCH_SOUND, "As you close the %s%s, it creaks loudly!",
+                 adj, noun);
+            noisy(10, you.x_pos, you.y_pos);
         }
         else
         {

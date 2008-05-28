@@ -239,7 +239,7 @@ void special_wielded()
     }
 
     if (makes_noise)
-        noisy( 25, you.x_pos, you.y_pos );
+        noisy(25, you.x_pos, you.y_pos);
 
     if (old_plus != you.inv[wpn].plus
         || old_plus2 != you.inv[wpn].plus2

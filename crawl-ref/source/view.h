@@ -105,7 +105,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
  * called from: acr - effects - it_use2 - it_use3 - item_use - spell -
  *              spells - spells3 - spells4
  * *********************************************************************** */
-bool noisy( int loudness, int nois_x, int nois_y, const char *msg = NULL );
+bool noisy(int loudness, int nois_x, int nois_y, const char *msg = NULL);
 void blood_smell( int strength, int blood_x, int blood_y);
 void handle_monster_shouts(monsters* monster, bool force = false);
 

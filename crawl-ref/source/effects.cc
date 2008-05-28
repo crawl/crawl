@@ -1966,7 +1966,7 @@ void yell(bool force)
     if (force)
     {
         mprf("A %s rips itself from your throat!", shout_verb.c_str());
-        noisy( noise_level, you.x_pos, you.y_pos );
+        noisy(noise_level, you.x_pos, you.y_pos);
         return;
     }
 
@@ -2003,8 +2003,8 @@ void yell(bool force)
     case '!':    // for players using the old keyset
     case 't':
         mprf(MSGCH_SOUND, "You %s for attention!", shout_verb.c_str());
+        noisy(noise_level, you.x_pos, you.y_pos);
         you.turn_is_over = true;
-        noisy( noise_level, you.x_pos, you.y_pos );
         return;
 
     case 'f':
@@ -2080,7 +2080,7 @@ void yell(bool force)
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
         mpr("Attack!");
 
-    noisy( 10, you.x_pos, you.y_pos );
+    noisy(10, you.x_pos, you.y_pos);
 }                               // end yell()
 
 bool forget_inventory(bool quiet)

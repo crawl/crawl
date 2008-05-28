@@ -675,7 +675,7 @@ bool brand_weapon(brand_type which_brand, int power)
         // well, in theory, we could be silenced, but then how are
         // we casting the brand spell?
         msg += " shrieks in agony.";
-        noisy( 15, you.x_pos, you.y_pos );
+        noisy(15, you.x_pos, you.y_pos);
         duration_affected = 8;
         break;
 

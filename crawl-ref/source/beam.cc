@@ -265,11 +265,10 @@ bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
     if (!msg.empty())
         mpr(msg.c_str());
 
-    if (ztype == ZAP_LIGHTNING && !silenced(you.x_pos, you.y_pos))
+    if (ztype == ZAP_LIGHTNING)
     {
         // XXX: needs to check silenced at other location, too {dlb}
-        mpr("You hear a mighty clap of thunder!", MSGCH_SOUND);
-        noisy( 25, you.x_pos, you.y_pos );
+        noisy(25, you.x_pos, you.y_pos, "You hear a mighty clap of thunder!");
     }
 
     fire_beam(pbolt);
@@ -5244,7 +5243,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
         r = MAX_EXPLOSION_RADIUS;
 
     // make a noise
-    noisy( 10 + 5*r, beam.target_x, beam.target_y );
+    noisy(10 + 5 * r, beam.target_x, beam.target_y);
 
     // set map to false
     explode_map.init(false);

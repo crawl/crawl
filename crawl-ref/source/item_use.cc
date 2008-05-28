@@ -2377,7 +2377,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 exDamBonus = 0;
                 ammoDamBonus = 0;
 
-                // ... but accuracy is important for this one.
+                // ...but accuracy is important for this one.
                 baseHit = 1;
                 exHitBonus += (skill_bump(SK_THROWING) * 7 / 2);
                 // Adjust for strength and dex.
@@ -2550,11 +2550,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         dec_inv_item_quantity( throw_2, 1 );
     }
 
-    // Throwing and blowguns are silent
+    // Throwing and blowguns are silent...
     if (projected == LRET_LAUNCHED && lnchType != WPN_BLOWGUN)
-        noisy( 6, you.x_pos, you.y_pos );
+        noisy(6, you.x_pos, you.y_pos);
 
-    // ... but any monster nearby can see that something has been thrown:
+    // ...but any monster nearby can see that something has been thrown.
     alert_nearby_monsters();
 
     you.turn_is_over = true;

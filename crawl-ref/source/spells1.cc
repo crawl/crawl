@@ -391,8 +391,8 @@ void cast_chain_lightning( int powc )
 
         // Trying to limit message spamming here so we'll only mention
         // the thunder when it's out of LoS.
-        if (noisy( 25, sx, sy ) && !see_source)
-            mpr( "You hear a mighty clap of thunder!", MSGCH_SOUND );
+        if (!see_source)
+            noisy(25, sx, sy, "You hear a mighty clap of thunder!");
 
         if (see_source && !see_targ)
             mpr( "The lightning arcs out of your line of sight!" );

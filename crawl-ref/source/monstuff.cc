@@ -6215,16 +6215,14 @@ static bool _monster_move(monsters *monster)
                     mprf(MSGCH_TALK_VISUAL, "%s rages.",
                          monster->name(DESC_CAP_THE).c_str());
                 }
-                noisy( noise_level, monster->x, monster->y );
+                noisy(noise_level, monster->x, monster->y);
             }
             else if (one_chance_in(5))
-            {
                 handle_monster_shouts(monster, true);
-            }
             else
             {
-                // Just be noisy without messaging the player
-                noisy( noise_level, monster->x, monster->y );
+                // Just be noisy without messaging the player.
+                noisy(noise_level, monster->x, monster->y);
             }
         }
     }

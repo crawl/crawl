@@ -3009,7 +3009,7 @@ static bool _tso_retribution()
        if (coinflip())
        {
            simple_god_message(" booms out: \"Take the path of righteousness! REPENT!\"", god);
-           noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
+           noisy(25, you.x_pos, you.y_pos); // same as scroll of noise
        }
        else
        {
@@ -3109,11 +3109,11 @@ static bool _zin_retribution()
     case 7:
     case 8: // famine (20%)
         simple_god_message(" sends a famine down upon you!", god);
-        make_hungry( you.hunger/2, false );
+        make_hungry(you.hunger / 2, false);
         break;
     case 9: // noisiness (10%)
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
-        noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
+        noisy(25, you.x_pos, you.y_pos); // same as scroll of noise
         break;
     }
     return false;

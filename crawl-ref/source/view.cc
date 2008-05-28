@@ -1043,7 +1043,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     }
 
     if (noise_level > 0)
-        noisy( noise_level, monster->x, monster->y );
+        noisy(noise_level, monster->x, monster->y);
 }
 
 #ifdef WIZARD
@@ -1455,13 +1455,13 @@ void cloud_grid(void)
 // player is appropriate.
 //
 // Returns true if the PC heard the noise.
-bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
+bool noisy(int loudness, int nois_x, int nois_y, const char *msg)
 {
     struct monsters *monster = 0;       // NULL {dlb}
     bool ret = false;
 
     // If the origin is silenced there is no noise.
-    if (silenced( nois_x, nois_y ))
+    if (silenced(nois_x, nois_y))
         return (false);
 
     const int dist = loudness * loudness;

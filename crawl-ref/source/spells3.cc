@@ -1125,7 +1125,7 @@ bool project_noise(void)
     {
         if (in_bounds(pos) && !grid_is_solid(grd(pos)))
         {
-            noisy( 30, pos.x, pos.y );
+            noisy(30, pos.x, pos.y);
             success = true;
         }
 
