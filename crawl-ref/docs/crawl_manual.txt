@@ -1113,7 +1113,7 @@ radiations express harmfully.
 Furthermore, certain corpses are mutagenic, and there are traps with 
 mutation effects. There are also some spells that cause mutations.
 
-It is much more difficult to get rid of bad mutations that to get one. A
+It is much more difficult to get rid of bad mutations than to get one. A
 lucky mutation attempt can actually remove mutations. However, the only
 sure-fire way is to quaff a potion of cure mutation, which will attempt
 to remove three random mutations.
