@@ -169,7 +169,7 @@ static void dump_section(dump_params &par)
 bool dump_char(const std::string &fname, bool show_prices, bool full_id,
                const scorefile_entry *se)
 {
-    // start with enough room for 100 80 character lines
+    // Start with enough room for 100 80 character lines.
     std::string text;
     text.reserve(100 * 80);
 

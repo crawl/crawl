@@ -563,7 +563,7 @@ public:
   int  friendly_pickup;       // pickup setting for allies
 
   unsigned short prev_targ;
-  coord_def     prev_grd_targ;
+  coord_def      prev_grd_targ;
   char your_name[kNameLen];
 
   species_type species;

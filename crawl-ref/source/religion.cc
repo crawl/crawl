@@ -4642,29 +4642,29 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
     }
 }
 
-static bool _god_likes_items(god_type god)
+bool god_likes_items(god_type god)
 {
     switch (god)
     {
     case GOD_ZIN:      case GOD_SHINING_ONE:   case GOD_KIKUBAAQUDGHA:
     case GOD_OKAWARU:  case GOD_MAKHLEB:       case GOD_SIF_MUNA:
     case GOD_TROG:     case GOD_NEMELEX_XOBEH:
-        return true;
+        return (true);
 
     case GOD_YREDELEMNUL: case GOD_XOM:        case GOD_VEHUMET:
     case GOD_LUGONU:      case GOD_BEOGH:      case GOD_ELYVILON:
-        return false;
+        return (false);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM:
         mprf(MSGCH_ERROR, "Bad god, no biscuit! %d", static_cast<int>(god) );
-        return false;
+        return (false);
     }
-    return false;
+    return (false);
 }
 
 static bool _god_likes_item(god_type god, const item_def& item)
 {
-    if ( !_god_likes_items(god) )
+    if (!god_likes_items(god))
         return false;
 
     switch (god)
@@ -4719,7 +4719,7 @@ void offer_items()
 
     int i = igrd[you.x_pos][you.y_pos];
 
-    if (!_god_likes_items(you.religion) && i != NON_ITEM)
+    if (!god_likes_items(you.religion) && i != NON_ITEM)
     {
         simple_god_message(" doesn't care about such mundane gifts.", you.religion);
         return;

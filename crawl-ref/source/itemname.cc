@@ -729,29 +729,29 @@ static const char* misc_type_name(int type, bool known)
     {
         switch ( static_cast<misc_item_type>(type) )
         {
-        case MISC_DECK_OF_ESCAPE: return "deck of escape";
+        case MISC_DECK_OF_ESCAPE:      return "deck of escape";
         case MISC_DECK_OF_DESTRUCTION: return "deck of destruction";
-        case MISC_DECK_OF_DUNGEONS: return "deck of dungeons";
-        case MISC_DECK_OF_SUMMONING: return "deck of summonings";
-        case MISC_DECK_OF_WONDERS: return "deck of wonders";
-        case MISC_DECK_OF_PUNISHMENT: return "deck of punishment";
-        case MISC_DECK_OF_WAR: return "deck of war";
-        case MISC_DECK_OF_CHANGES: return "deck of changes";
-        case MISC_DECK_OF_DEFENCE: return "deck of defence";
+        case MISC_DECK_OF_DUNGEONS:    return "deck of dungeons";
+        case MISC_DECK_OF_SUMMONING:   return "deck of summonings";
+        case MISC_DECK_OF_WONDERS:     return "deck of wonders";
+        case MISC_DECK_OF_PUNISHMENT:  return "deck of punishment";
+        case MISC_DECK_OF_WAR:         return "deck of war";
+        case MISC_DECK_OF_CHANGES:     return "deck of changes";
+        case MISC_DECK_OF_DEFENCE:     return "deck of defence";
 
-        case MISC_CRYSTAL_BALL_OF_ENERGY: return "crystal ball of energy";
+        case MISC_CRYSTAL_BALL_OF_ENERGY:   return "crystal ball of energy";
         case MISC_CRYSTAL_BALL_OF_FIXATION: return "crystal ball of fixation";
-        case MISC_CRYSTAL_BALL_OF_SEEING: return "crystal ball of seeing";
-        case MISC_BOX_OF_BEASTS: return "box of beasts";
-        case MISC_EMPTY_EBONY_CASKET: return "empty ebony casket";
-        case MISC_AIR_ELEMENTAL_FAN: return "air elemental fan";
-        case MISC_LAMP_OF_FIRE: return "lamp of fire";
-        case MISC_LANTERN_OF_SHADOWS: return "lantern of shadows";
-        case MISC_HORN_OF_GERYON: return "horn of Geryon";
-        case MISC_DISC_OF_STORMS: return "disc of storms";
+        case MISC_CRYSTAL_BALL_OF_SEEING:   return "crystal ball of seeing";
+        case MISC_BOX_OF_BEASTS:            return "box of beasts";
+        case MISC_EMPTY_EBONY_CASKET:       return "empty ebony casket";
+        case MISC_AIR_ELEMENTAL_FAN:        return "air elemental fan";
+        case MISC_LAMP_OF_FIRE:             return "lamp of fire";
+        case MISC_LANTERN_OF_SHADOWS:       return "lantern of shadows";
+        case MISC_HORN_OF_GERYON:           return "horn of Geryon";
+        case MISC_DISC_OF_STORMS:           return "disc of storms";
+        case MISC_BOTTLED_EFREET:           return "bottled efreet";
         case MISC_STONE_OF_EARTH_ELEMENTALS:
             return "stone of earth elementals";
-        case MISC_BOTTLED_EFREET: return "bottled efreet";
 
         case MISC_RUNE_OF_ZOT:
         case NUM_MISCELLANY:
@@ -779,13 +779,13 @@ static const char* misc_type_name(int type, bool known)
         case MISC_BOX_OF_BEASTS:
         case MISC_EMPTY_EBONY_CASKET:
             return "small ebony casket";
-        case MISC_AIR_ELEMENTAL_FAN: return "gauzy fan";
-        case MISC_LAMP_OF_FIRE: return "blazing lamp";
-        case MISC_LANTERN_OF_SHADOWS: return "bone lantern";
-        case MISC_HORN_OF_GERYON: return "silver horn";
-        case MISC_DISC_OF_STORMS: return "grey disc";
+        case MISC_AIR_ELEMENTAL_FAN:         return "gauzy fan";
+        case MISC_LAMP_OF_FIRE:              return "blazing lamp";
+        case MISC_LANTERN_OF_SHADOWS:        return "bone lantern";
+        case MISC_HORN_OF_GERYON:            return "silver horn";
+        case MISC_DISC_OF_STORMS:            return "grey disc";
         case MISC_STONE_OF_EARTH_ELEMENTALS: return "nondescript stone";
-        case MISC_BOTTLED_EFREET: return "sealed bronze flask";
+        case MISC_BOTTLED_EFREET:            return "sealed bronze flask";
 
         case MISC_RUNE_OF_ZOT:
         case NUM_MISCELLANY:
@@ -1007,12 +1007,12 @@ std::string item_def::name_aux( description_level_type desc,
         && !testbits(ignore_flags, ISFLAG_KNOW_TYPE)
         && (ident || item_type_known(*this));
 
-    const bool know_ego   = know_brand;
+    const bool know_ego = know_brand;
 
     const bool know_cosmetic = !__know_pluses && !terse & !basename
         && !qualname && !dbname;
 
-    // So that know_cosmetic won't be affected by ignore_flags
+    // So that know_cosmetic won't be affected by ignore_flags.
     const bool know_pluses = __know_pluses
         && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
 

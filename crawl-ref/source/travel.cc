@@ -1585,7 +1585,15 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             return (true);
     }
 
-    if (dc != dest && !is_travelsafe_square(dc.x, dc.y, ignore_hostile))
+    if (dc == dest)
+    {
+        // Hallelujah, we're home!
+        if (_is_safe_move(c.x, c.y))
+            next_travel_move = c;
+
+        return (true);
+    }
+    else if (!is_travelsafe_square(dc.x, dc.y, ignore_hostile))
     {
         // This point is not okay to travel on, but if this is a
         // trap, we'll want to put it on the feature vector anyway.
@@ -1609,14 +1617,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
         return (false);
     }
 
-    if (dc == dest)
-    {
-        // Hallelujah, we're home!
-        if (_is_safe_move(c.x, c.y))
-            next_travel_move = c;
-        return (true);
-    }
-    else if (!point_distance[dc.x][dc.y])
+    if (!point_distance[dc.x][dc.y])
     {
         // This point is going to be on the agenda for the next
         // iteration

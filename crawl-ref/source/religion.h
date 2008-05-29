@@ -109,5 +109,6 @@ bool bless_follower(monsters *follower = NULL,
                     bool force = false);
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
+bool god_likes_items(god_type god);
 
 #endif
