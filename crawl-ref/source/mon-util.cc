@@ -58,6 +58,7 @@
 #include "terrain.h"
 #include "tiles.h"
 #include "traps.h"
+#include "tutorial.h"
 #include "view.h"
 
 //jmf: moved from inside function
@@ -4747,6 +4748,8 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             // they're supposed to follow you now.
             patrol_point = coord_def(0, 0);
         }
+        if (you.can_see(this))
+            learned_something_new(TUT_MONSTER_FRIENDLY);
         break;
 
     default:

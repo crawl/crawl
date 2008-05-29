@@ -4867,7 +4867,7 @@ void contaminate_player(int change, bool controlled, bool status_only)
     // get current contamination level
     int old_level = _get_contamination_level();
     int new_level = 0;
-
+#define DEBUG_DIAGNOSTICS 1
 #if DEBUG_DIAGNOSTICS
     if (change > 0 || (change < 0 && you.magic_contamination))
     {
@@ -4875,6 +4875,7 @@ void contaminate_player(int change, bool controlled, bool status_only)
              change, change + you.magic_contamination );
     }
 #endif
+#undef DEBUG_DIAGNOSTICS
 
     // make the change
     if (change + you.magic_contamination < 0)
@@ -4889,6 +4890,9 @@ void contaminate_player(int change, bool controlled, bool status_only)
 
     // figure out new level
     new_level = _get_contamination_level();
+
+    if (new_level >= 1)
+        learned_something_new(TUT_GLOWING);
 
     if (status_only)
     {
@@ -5163,6 +5167,8 @@ bool rot_player( int amount )
              (you.rotting) ? "rotting" : "start to rot" );
 
         you.rotting += amount;
+
+        learned_something_new(TUT_YOU_ROTTING);
     }
     return true;
 }
@@ -6476,7 +6482,7 @@ bool player::can_see(const actor *target) const
 
 bool player::backlit(bool check_haloed) const
 {
-    return (magic_contamination >= 5 || duration[DUR_BACKLIGHT]
+    return (_get_contamination_level() >= 1 || duration[DUR_BACKLIGHT]
         || ((check_haloed) ? haloed() : false));
 }
 

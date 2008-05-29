@@ -1486,6 +1486,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                  you.gold, (you.gold > 1) ? "s" : "");
         }
 
+        learned_something_new(TUT_SEEN_GOLD);
+
         you.turn_is_over = true;
         return (retval);
     }

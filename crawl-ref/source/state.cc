@@ -190,12 +190,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         }
 
         if (Options.tutorial_left)
-        {
-            // enforce that this message comes first
             tutorial_first_monster(*mon);
-            if (get_mons_colour(mon) != mon->colour)
-                learned_something_new(TUT_MONSTER_BRAND);
-        }
 #else
         formatted_string fs( channel_to_colour(MSGCH_WARN) );
         fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());

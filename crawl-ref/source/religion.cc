@@ -4316,6 +4316,7 @@ void excommunication(god_type new_god)
     ASSERT(old_god != new_god);
 
     const bool was_haloed = you.haloed();
+    const int  old_piety  = you.piety;
 
     god_acting gdact(old_god, true);
 
@@ -4421,11 +4422,13 @@ void excommunication(god_type new_god)
             remove_divine_shield();
 
         if (!is_good_god(new_god))
+        {
+            _inc_penance( old_god, 50 );
             _make_god_gifts_hostile(false);
+        }
         else
             _make_god_gifts_good_neutral(false);
 
-        _inc_penance( old_god, 50 );
         break;
 
     case GOD_ZIN:
@@ -4444,11 +4447,13 @@ void excommunication(god_type new_god)
         if (env.sanctuary_time)
             remove_sanctuary();
 
-        _inc_penance( old_god, 25 );
+        if (!is_good_god(new_god))
+            _inc_penance( old_god, 25 );
         break;
 
     case GOD_ELYVILON:
-        _inc_penance( old_god, 30 );
+        if (!is_good_god(new_god))
+            _inc_penance( old_god, 30 );
         break;
 
     default:
@@ -4460,6 +4465,8 @@ void excommunication(god_type new_god)
     // god, you make all non-hostile holy beings hostile.
     if (!is_good_god(new_god) && _holy_beings_attitude_change())
         mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
+
+    learned_something_new(TUT_EXCOMMUNICATE, (int) new_god, old_piety);
 }                               // end excommunication()
 
 static bool _bless_weapon( god_type god, int brand, int colour )
@@ -5057,6 +5064,8 @@ void god_pitch(god_type which_god)
         gain_piety(20);         // allow instant access to first power
 
     redraw_skill(you.your_name, player_title());
+
+    learned_something_new(TUT_CONVERT);
 }                               // end god_pitch()
 
 bool god_hates_your_god(god_type god,

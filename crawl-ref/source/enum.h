@@ -2675,48 +2675,60 @@ enum tutorial_event_type
     TUT_SEEN_RANDART,
     TUT_SEEN_FOOD,
     TUT_SEEN_CARRION,
+    TUT_SEEN_GOLD,
     // encountered dungeon features
-    TUT_SEEN_STAIRS,        // 14
+    TUT_SEEN_STAIRS,        // 15
     TUT_SEEN_ESCAPE_HATCH,
+    TUT_SEEN_BRANCH,
     TUT_SEEN_TRAP,
     TUT_SEEN_ALTAR,
-    TUT_SEEN_SHOP,
+    TUT_SEEN_SHOP,          // 20
     TUT_SEEN_DOOR,
+    TUT_SEEN_SECRET_DOOR,
     // other 'first events'
-    TUT_SEEN_MONSTER,       // 20
+    TUT_SEEN_MONSTER,
     TUT_MONSTER_BRAND,
+    TUT_MONSTER_FRIENDLY,   // 25
     TUT_KILLED_MONSTER,
     TUT_NEW_LEVEL,
     TUT_SKILL_RAISE,
-    TUT_MAKE_CHUNKS,        // 25
-    TUT_OFFER_CORPSE,
+    TUT_MAKE_CHUNKS,
+    TUT_OFFER_CORPSE,       // 30
     TUT_NEW_ABILITY,
     TUT_FLEEING_MONSTER,
     TUT_ROTTEN_FOOD,
+    TUT_CONVERT,
+    TUT_EXCOMMUNICATE,      // 35
+    TUT_SPELL_MISCAST,
+    TUT_SPELL_HUNGER,
+    TUT_GLOWING,
     // status changes
-    TUT_YOU_ENCHANTED,      // 30
-    TUT_YOU_SICK,
+    TUT_YOU_ENCHANTED,
+    TUT_YOU_SICK,           // 40
     TUT_YOU_POISON,
+    TUT_YOU_ROTTING,
     TUT_YOU_CURSED,
     TUT_YOU_HUNGRY,
-    TUT_YOU_STARVING,       // 35
+    TUT_YOU_STARVING,       // 45
     TUT_YOU_MUTATED,
     TUT_POSTBERSERK,
     // warning
-    TUT_RUN_AWAY,           // 38
+    TUT_RUN_AWAY,
     TUT_RETREAT_CASTER,
-    TUT_WIELD_WEAPON,       // 40
+    TUT_WIELD_WEAPON,       // 50
     TUT_NEED_HEALING,
     TUT_NEED_POISON_HEALING,
     TUT_INVISIBLE_DANGER,
     TUT_NEED_HEALING_INVIS,
+    TUT_ABYSS,              // 55
     // interface
-    TUT_MULTI_PICKUP,       // 45
+    TUT_MULTI_PICKUP,
     TUT_HEAVY_LOAD,
     TUT_SHIFT_RUN,
     TUT_MAP_VIEW,
-    TUT_DONE_EXPLORE,
-    TUT_EVENTS_NUM          // 50
+    TUT_DONE_EXPLORE,       // 60
+    TUT_STAIR_BRAND,
+    TUT_EVENTS_NUM          // 62
 }; // for numbers higher than 50 change size of tutorial_events in externs.h
 
 enum tutorial_types

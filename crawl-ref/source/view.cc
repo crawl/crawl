@@ -4687,14 +4687,26 @@ void viewwindow(bool draw_it, bool do_updates)
                             learned_something_new(TUT_SEEN_ESCAPE_HATCH,
                                                   gc.x, gc.y);
                         }
+                        else if (grid_is_branch_stairs(grd(gc)))
+                            learned_something_new(TUT_SEEN_BRANCH, gc.x, gc.y);
                         else if (is_feature('>', gc.x, gc.y))
+                        {
                             learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
+                        }
                         else if (is_feature('_', gc.x, gc.y))
                             learned_something_new(TUT_SEEN_ALTAR, gc.x, gc.y);
                         else if (grd(gc) == DNGN_CLOSED_DOOR)
                             learned_something_new(TUT_SEEN_DOOR, gc.x, gc.y);
                         else if (grd(gc) == DNGN_ENTER_SHOP)
                             learned_something_new(TUT_SEEN_SHOP, gc.x, gc.y);
+
+                        if (igrd[gc.x][gc.y] != NON_ITEM
+                            && Options.feature_item_brand != CHATTR_NORMAL
+                            && (is_feature('>', gc.x, gc.y)
+                                || is_feature('<', gc.x, gc.y)))
+                        {
+                            learned_something_new(TUT_STAIR_BRAND, gc.x, gc.y);
+                        }
                     }
                 }
 

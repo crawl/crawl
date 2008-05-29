@@ -1608,12 +1608,7 @@ inline static void monster_warning(activity_interrupt_type ai,
         }
 
         if (Options.tutorial_left)
-        {
-            // enforce that this message comes first
             tutorial_first_monster(*mon);
-            if (get_mons_colour(mon) != mon->colour)
-                learned_something_new(TUT_MONSTER_BRAND);
-        }
     }
 }
 

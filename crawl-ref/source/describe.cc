@@ -1790,7 +1790,7 @@ void describe_feature_wide(int x, int y)
 #endif
 
     if (Options.tutorial_left)
-        tutorial_describe_feature(grd[x][y]);
+        tutorial_describe_pos(x, y);
 
     if ( getch() == 0 )
         getch();

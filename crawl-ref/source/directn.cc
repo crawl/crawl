@@ -2382,7 +2382,7 @@ static void describe_cell(int mx, int my)
          marker.c_str(),
          traveldest.c_str());
 #else
-    if (Options.tutorial_left && tutorial_feat_interesting(grd[mx][my]))
+    if (Options.tutorial_left && tutorial_pos_interesting(mx, my))
     {
         feature_desc += " (Press <w>v<lightgray> for more information.)";
 

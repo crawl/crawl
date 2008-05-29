@@ -15,6 +15,7 @@
 
 #include "tutorial.h"
 #include "cio.h"
+#include "cloud.h"
 #include "command.h"
 #include "food.h"
 #include "format.h"
@@ -46,10 +47,12 @@
 
 static species_type _get_tutorial_species(unsigned int type);
 static job_type     _get_tutorial_job(unsigned int type);
-
+static void         _tutorial_describe_disturbance(int x, int y);
+static void         _tutorial_describe_cloud(int x, int y);
+static bool         _water_is_disturbed(int x, int y);
 
 //#define TUTORIAL_DEBUG
-#define TUTORIAL_VERSION 111
+#define TUTORIAL_VERSION 112
 
 static int _get_tutorial_cols()
 {
@@ -316,6 +319,8 @@ static std::string _tut_debug_list(int event)
           return "seen first food";
       case TUT_SEEN_CARRION:
           return "seen first corpse";
+      case TUT_SEE_GOLD:
+          return "seen first pile of gold";
       case TUT_SEEN_JEWELLERY:
           return "seen first jewellery";
       case TUT_SEEN_MISC:
@@ -326,6 +331,8 @@ static std::string _tut_debug_list(int event)
           return "seen first stairs";
       case TUT_SEEN_ESCAPE_HATCH:
           return "seen first escape hatch";
+      case TUT_SEEN_BRANCH:
+          return "seen first branch entrance";
       case TUT_SEEN_TRAP:
           return "encountered a trap";
       case TUT_SEEN_ALTAR:
@@ -334,6 +341,8 @@ static std::string _tut_debug_list(int event)
           return "seen a shop";
       case TUT_SEEN_DOOR:
           return "seen a closed door";
+      case TUT_SEEN_SECRET_DOOR:
+          return "found a secret door";
       case TUT_KILLED_MONSTER:
           return "killed first monster";
       case TUT_NEW_LEVEL:
@@ -346,6 +355,8 @@ static std::string _tut_debug_list(int event)
           return "became sick";
       case TUT_YOU_POISON:
           return "were poisoned";
+      case TUT_YOU_ROTTING:
+          return "were rotting";
       case TUT_YOU_CURSED:
           return "had something cursed";
       case TUT_YOU_HUNGRY:
@@ -370,6 +381,8 @@ static std::string _tut_debug_list(int event)
           return "encountered an invisible foe";
       case TUT_NEED_HEALING_INVIS:
           return "had to heal near an unseen monster";
+      case TUT_ABYSS:
+          return "was cast into the Abyss";
       case TUT_POSTBERSERK:
           return "learned about Berserk aftereffects";
       case TUT_RUN_AWAY:
@@ -392,6 +405,20 @@ static std::string _tut_debug_list(int event)
           return "made a monster flee";
       case TUT_MONSTER_BRAND:
           return "learned about colour brandings";
+      case TUT_MONSTER_FRIENDLY:
+          return "seen first friendly monster";
+      case TUT_CONVERT:
+          return "converted to a god";
+      case TUT_EXCOMMUNICATE:
+          return "excommunicated by a god";
+      case TUT_SPELL_MISCAST:
+          return "spell miscast";
+      case TUT_SPELL_HUNGER:
+          return "spell casting caused hunger";
+      case TUT_GLOWING:
+          return "player glowing from contamination";
+      case TUT_STAIR_BRAND:
+          return "saw stairs with objects on it";
       default:
           return "faced a bug";
     }
@@ -950,6 +977,9 @@ void taken_new_item(unsigned char item_type)
       case OBJ_STAVES:
           learned_something_new(TUT_SEEN_STAFF);
           break;
+      case OBJ_GOLD:
+          learned_something_new(TUT_SEEN_GOLD);
+          break;
       default: /* nothing to be done */
           return;
     }
@@ -1034,7 +1064,14 @@ static bool _advise_use_wand()
 void tutorial_first_monster(const monsters &mon)
 {
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
+    {
+        if (get_mons_colour(&mon) != mon.colour)
+            learned_something_new(TUT_MONSTER_BRAND);
+        if (mons_friendly(&mon))
+            learned_something_new(TUT_MONSTER_FRIENDLY);
+
         return;
+    }
 
     // crude hack:
     // if the first monster is sleeping wake it
@@ -1122,6 +1159,11 @@ void tutorial_first_monster(const monsters &mon)
         formatted_message_history(text, MSGCH_TUTORIAL, 0,
                                   _get_tutorial_cols());
     }
+
+    if (get_mons_colour(&mon) != mon.colour)
+        learned_something_new(TUT_MONSTER_BRAND, mon.x, mon.y);
+    if (mons_friendly(&mon))
+        learned_something_new(TUT_MONSTER_FRIENDLY, mon.x, mon.y);
 }
 
 void tutorial_first_item(const item_def &item)
@@ -1192,6 +1234,245 @@ void tutorial_first_item(const item_def &item)
     // TUT_SEEN_CARRION is done when a corpse is first seen.
     if (item.base_type == OBJ_CORPSES)
         learned_something_new(TUT_SEEN_CARRION, item.x, item.y);
+}
+
+static void _new_god_conduct()
+{
+    std::ostringstream text;
+
+    const std::string new_god_name  = god_name(you.religion);
+
+    text << "You've just converted to worshiping " << new_god_name
+         << ". ";
+
+    if (you.religion == GOD_XOM)
+    {
+        text << "You can keep Xom happy by keeping him amused; you do "
+            "<w>not</w> want Xom to grow bored with you.  If you've "
+            "kept him amused he'll treat you like a plaything, "
+            "randomly helping and harming you for his own amusement.";
+        return;
+    }
+
+    text << "Your piety (divine favor) gradually decreases over time, and "
+        "if it runs out " << new_god_name << " will excommunicate you "
+        "and punish you.  You can prevent this, and even gain "
+        "enough piety to get powers and divine gifts, by doing things "
+        "to please " << new_god_name << ".  And don't panic: you "
+        "start out with a decent amount of piety, so any danger of "
+        "excommunication is far off.\n";
+
+    formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
+                              _get_tutorial_cols());
+    text.str("");
+
+    std::vector<std::string> likes;
+
+    // Unique/unusual piety gain methods first
+    switch(you.religion)
+    {
+    case GOD_SIF_MUNA:
+        likes.push_back("train your various spell casting skills");
+        break;
+
+    case GOD_TROG:
+        likes.push_back("destroy spell books (especially ones you've"
+                        "never touched) via the <w>a</w> key");
+        break;
+
+    case GOD_NEMELEX_XOBEH:
+        likes.push_back("draw unmarked cards and use up decks");
+        break;
+
+    case GOD_ELYVILON:
+        likes.push_back("destroy weapons (especially evil ones) via "
+                        "the <w>a</w> key");
+        break;
+
+    default:
+        break;
+    }
+
+    switch(you.religion)
+    {
+    case GOD_SHINING_ONE:   case GOD_KIKUBAAQUDGHA: case GOD_OKAWARU:
+    case GOD_MAKHLEB:       case GOD_SIF_MUNA:      case GOD_TROG:
+        likes.push_back("sacrifice items (by dropping them on an altar "
+                        "and praying)");
+        break;
+
+    case GOD_NEMELEX_XOBEH:
+        likes.push_back("sacrifice items (by standing over them and "
+                        "praying)");
+        break;
+
+    case GOD_ZIN:
+        likes.push_back("sacrifice gold (by praying at an altar)");
+        break;
+
+    default:
+        break;
+    }
+
+    if (god_likes_butchery(you.religion))
+        likes.push_back("butcher corpses while praying");
+
+    switch(you.religion)
+    {
+    case GOD_KIKUBAAQUDGHA: case GOD_YREDELEMNUL: case GOD_OKAWARU:
+    case GOD_VEHUMET:       case GOD_MAKHLEB:     case GOD_TROG:
+    case GOD_BEOGH:         case GOD_LUGONU:
+        likes.push_back("kill living beings");
+        break;
+
+    default:
+        break;
+    }
+
+    switch(you.religion)
+    {
+    case GOD_SHINING_ONE: case GOD_OKAWARU: case GOD_VEHUMET:
+    case GOD_MAKHLEB:     case GOD_LUGONU:
+        likes.push_back("kill the undead");
+        break;
+
+    default:
+        break;
+    }
+
+    switch(you.religion)
+    {
+    case GOD_SHINING_ONE: case GOD_OKAWARU: case GOD_MAKHLEB:
+        likes.push_back("kill demons");
+        break;
+
+    default:
+        break;
+    }
+
+    // Unusual kills
+    switch(you.religion)
+    {
+    case GOD_ZIN:
+        likes.push_back("kill monsters which cause mutation or rotting");
+        break;
+
+    case GOD_SHINING_ONE:
+        likes.push_back("kill living evil beings");
+        break;
+
+    case GOD_BEOGH:
+        likes.push_back("kill the priests of other religions");
+        break;
+
+    case GOD_TROG:
+        likes.push_back("kill wizards and other users of magic");
+        break;
+
+    default:
+        break;
+    }
+
+    if (likes.size() == 0)
+    {
+        mprf(MSGCH_ERROR,
+             " %s doesn't like anything?  This a bug; please report it.",
+             new_god_name.c_str());
+    }
+    else
+    {
+        text << new_god_name << " likes it when you ";
+        text << comma_separated_line(likes.begin(), likes.end(),
+                                     " and ", ", ");
+        text << ".";
+        formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
+                                  _get_tutorial_cols());
+        text.str("");
+    }
+
+    std::vector<std::string> dislikes;
+
+    if (god_hates_butchery(you.religion))
+        dislikes.push_back("butcher corpses while praying");
+
+    if (is_good_god(you.religion))
+    {
+        dislikes.push_back("drink blood");
+        dislikes.push_back("perform cannibalism");
+        dislikes.push_back("use necromancy");
+        dislikes.push_back("use unholy magic or items");
+        dislikes.push_back("attack holy beings");
+        dislikes.push_back("attack neutral beings");
+    }
+
+    switch(you.religion)
+    {
+    case GOD_ZIN:     case GOD_SHINING_ONE:  case GOD_ELYVILON:
+    case GOD_OKAWARU:
+        dislikes.push_back("attack allies");
+        break;
+
+    case GOD_BEOGH:
+        dislikes.push_back("attack allied orcs");
+        break;
+
+    default:
+        break;
+    }
+
+    switch(you.religion)
+    {
+    case GOD_ELYVILON: case GOD_ZIN: case GOD_OKAWARU:
+        dislikes.push_back("allow an ally to die");
+        break;
+
+    default:
+        break;
+    }
+
+    switch(you.religion)
+    {
+    case GOD_ZIN:
+        dislikes.push_back("cause yourself to mutate in a way that could "
+                           "have been avoided");
+        dislikes.push_back("eat the flesh of sentient beings");
+        break;
+
+    case GOD_SHINING_ONE:
+        dislikes.push_back("poison a monster");
+        dislikes.push_back("attack in an unchivalric manner");
+        break;
+
+    case GOD_ELYVILON:
+        dislikes.push_back("kill a living thing while praying");
+        break;
+
+    case GOD_TROG:
+        dislikes.push_back("memorize spells");
+        dislikes.push_back("cast spells");
+        break;
+
+    default:
+        break;
+    }
+
+    if (dislikes.size() > 0)
+    {
+        text << "\n";
+        text << new_god_name << " dislikes it when you ";
+        text << comma_separated_line(dislikes.begin(), dislikes.end(),
+                                     " or ", ", ");
+        text << ".";
+        formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
+                                  _get_tutorial_cols());
+    }
+}
+
+#define DELAY_EVENT \
+{ \
+    Options.tutorial_events[seen_what] = 1; \
+    Options.tutorial_left++; \
+    return; \
 }
 
 // Here most of the tutorial messages for various triggers are handled.
@@ -1511,17 +1792,28 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 "<w>i</w>nventory.";
         break;
 
+    case TUT_SEEN_GOLD:
+        text << "You have picked up your first pile of gold"
+#ifndef USE_TILE
+                " ('<yellow>$</yellow>')"
+#endif
+                ". Unlike all other objects in Crawl it doesn't show up in "
+                "your inventory, takes up no space in your inventory, weighs "
+                "nothing and can't be dropped. Gold can be used to buy "
+                "items from shops, and can also be sacrificed to some gods.";
+        break;
+
     case TUT_SEEN_STAIRS:
         // Don't give this information during the first turn, to give
         // the player time to have a look around.
         if (you.num_turns < 1)
-            return;
+            DELAY_EVENT;
 
         text << "These ";
 #ifndef USE_TILE
         // monsters standing on stairs
-        if (mgrd[ex][ey] != NON_MONSTER)
-            return;
+        if (mgrd[x][y] != NON_MONSTER)
+            DELAY_EVENT;
 
         object = env.show[ex][ey];
         colour = env.show_col[ex][ey];
@@ -1544,7 +1836,11 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     case TUT_SEEN_ESCAPE_HATCH:
         if (you.num_turns < 1)
-            return;
+            DELAY_EVENT;
+
+        // monsters standing on stairs
+        if (mgrd[x][y] != NON_MONSTER)
+            DELAY_EVENT;
 
         text << "These ";
 #ifndef USE_TILE
@@ -1565,6 +1861,53 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 "with the <w>Shift key</w>)"
 #endif
                 ", but will usually be unable to return right away.";
+        break;
+
+    case TUT_SEEN_BRANCH:
+        text << "These ";
+#ifndef USE_TILE
+        // monsters standing on stairs
+        if (mgrd[x][y] != NON_MONSTER)
+            DELAY_EVENT;
+
+        // XXX: Branch entrace character not being colored yellow.
+        object = env.show[ex][ey];
+        colour = env.show_col[ex][ey];
+        { unsigned short dummy; get_item_symbol( object, &ch, &dummy ); }
+
+        text << _colourize_glyph(colour, ch) << " ";
+#else
+        tile_place_cursor(ep.x-1,ep.y-1,true);
+#endif
+        text << "are the entrance to a different branch of the dungeon, "
+                "which might have different terrain, level layout and "
+                "monsters than the current main branch you're in.  Branches "
+                "can range from being up to ten levels deep to having only "
+                "a single level.  They can also contain entrances to other "
+                "branches."
+
+                "\n\nThe first three branches you'll encounter are the "
+                "Temple, the Orcish Mines and the Lair.  While the Mines "
+                "and the Lair can be dangerous for the new adventurer, "
+                "the Temple is completely safe and contains a number of "
+                "altars at which you might convert to a new god.";
+        break;
+
+    case TUT_STAIR_BRAND:
+#ifdef USE_TILE
+        // XXX: How does stair branding work with tiles?
+        return;
+#else
+        // monster or player standing on stairs
+        if (mgrd[x][y] != NON_MONSTER || (you.x_pos == x
+                                          && you.y_pos == y))
+            DELAY_EVENT;
+
+        text << "If any items are covering stairs or an escape hatch then "
+                "that will be indicated by highlighting the <w><<</w> or "
+                "<w>></w> symbol, instead of hiding the stair/hatch symbol "
+                "with an item sybmol.";
+#endif
         break;
 
     case TUT_SEEN_TRAP:
@@ -1627,7 +1970,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     case TUT_SEEN_DOOR:
         if (you.num_turns < 1)
-            return;
+            DELAY_EVENT;
 
 #ifdef USE_TILES
         tile_place_cursor(ep.x-1,ep.y-1,true);
@@ -1644,6 +1987,33 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         text << "\nIn tiles, the same can be achieved by clicking on an "
                 "adjacent door square.";
 #endif
+        break;
+
+    case TUT_SEEN_SECRET_DOOR:
+#ifdef USE_TILES
+        tile_place_cursor(ep.x-1,ep.y-1,true);
+#endif
+        text << "That "
+#ifndef USE_TILE
+             << _colourize_glyph(WHITE, get_screen_glyph(x,y)) << " "
+#endif
+                "was a secret door.  You can actively try to find secret "
+                "doors by searching. To search for one turn, press <w>s</w>, "
+                "<w>.</w>, <w>delete</w> or <w>keypad-5</w>. Pressing "
+                "<w>5</w> or <w>shift-and-keypad-5</w> "
+#ifdef USE_TILE
+                ", or clicking into the stat area "
+#endif
+                "will search 100 times, stopping early if you find any "
+                "secret doors or traps, or when your HP or MP fully "
+                "recovers.\n\n"
+
+                "If you can't find all three (or any) of the down stairs "
+                "on a level you should try searching for secret doors, since "
+                "the missing stairs might be in sections of the level blocked "
+                "off by them.  If you can't find any secret doors then the "
+                "missing stairs are in sections of the level totally "
+                "disconnected from the section you're searching.";
         break;
 
     case TUT_KILLED_MONSTER:
@@ -1729,8 +2099,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_YOU_POISON:
+        // Hack: reset tut_just_triggered, to force recursive calling of
+        // learned_something_new().
+        Options.tut_just_triggered = false;
         learned_something_new(TUT_YOU_ENCHANTED);
-        text << "Poison will slowly reduce your hp. It wears off with time (";
+        Options.tut_just_triggered = true;
+        text << "Poison will slowly reduce your HP. It wears off with time (";
 
         if (!i_feel_safe())
             text << "find a quiet corner and ";
@@ -1740,6 +2114,25 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 "or by clicking onto the stats area"
 #endif
                 "), or you could quaff a potion of healing. ";
+        break;
+
+    case TUT_YOU_ROTTING:
+        // Hack: reset tut_just_triggered, to force recursive calling of
+        // learned_something_new().
+        Options.tut_just_triggered = false;
+        learned_something_new(TUT_YOU_ENCHANTED);
+        Options.tut_just_triggered = true;
+        text << "Ugh, your flesh is rotting!  Not only does this slowly "
+                "reduce your HP, it also slowly reduces your <w>maximum</w> "
+                "HP (your usual maximum HP will be indicated by a number in "
+                "parentheses at the end of the \"Health\" line in the "
+                "stat area of the window).  While you can wait it out, "
+                "you'll probably want to stop it as soon as possible by "
+                "drinking a potion of healing, since the longer you wait "
+                "the more your maximum HP will be reduced.  Once you've "
+                "stopped rotting you can restore your maximum HP to normal "
+                "by drinking potions of healing and heal wounds while "
+                "fully healed.";
         break;
 
     case TUT_YOU_CURSED:
@@ -2005,15 +2398,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         switch(you.religion)
         {
         // Gods where first granted ability is active.
-        case GOD_ZIN:
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_YREDELEMNUL:
-        case GOD_OKAWARU:
-        case GOD_SIF_MUNA:
-        case GOD_TROG:
-        case GOD_NEMELEX_XOBEH:
-        case GOD_ELYVILON:
-        case GOD_LUGONU:
+        case GOD_KIKUBAAQUDGHA: case GOD_YREDELEMNUL: case GOD_NEMELEX_XOBEH:
+        case GOD_ZIN:           case GOD_OKAWARU:     case GOD_SIF_MUNA:
+        case GOD_TROG:          case GOD_ELYVILON:    case GOD_LUGONU:
             text <<  "You just gained a new ability. Press <w>a</w> to "
                      "take a look at your abilities or to use one of them.";
             break;
@@ -2022,8 +2409,70 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         default:
             text <<  "You just gained a new ability. Press <w>^</w> to "
                      "take a look at your ability.";
+            break;
         }
         break;
+
+    case TUT_CONVERT:
+        _new_god_conduct();
+        break;
+
+    case TUT_EXCOMMUNICATE:
+    {
+        const god_type new_god   = (god_type) x;
+        const int      old_piety = y;
+
+        god_type old_god = GOD_NO_GOD;
+        for (int i = 0; i < MAX_NUM_GODS; i++)
+            if (you.worshipped[i] > 0)
+            {
+                old_god = (god_type) i;
+                break;
+            }
+
+        const std::string old_god_name  = god_name(old_god);
+        const std::string new_god_name  = god_name(new_god);
+
+        if (new_god == GOD_NO_GOD)
+        {
+            if (old_piety < 1)
+                text << "Uh-oh, " << old_god << " just excommunicated you "
+                        "for running out of piety (your divine favour went "
+                        "to nothing). Either you repeatedly annoyed him, "
+                        "you weren't doing things that pleased him often "
+                        "enough, or some combination of the two.  If you "
+                        "can find an altar dedicated to " << old_god
+                     << " you can re-convert and all will be well, otherwise "
+                        "you'll have to weather his displeasure until his "
+                        "wrath is spent.";
+            else
+                text << "You just renounced your religion?  Are you "
+                        "<w>sure</w> about that?  If you can find an "
+                        "altar dedicated to " << old_god << " you can "
+                        "re-convert and all will be well, otherwise you'll "
+                        "have to weather his displeasure until his wrath is "
+                        "spent.";
+        }
+        else
+        {
+            if (is_good_god(old_god) && is_good_god(new_god))
+                text << "Fortunately, it seems that " << old_god << " didn't "
+                        "mind you converting to " << new_god << ".  This "
+                        "is only the case when converting from one of the "
+                        "three good gods to a different good god, so don't "
+                        "expect this to be the norm.";
+            else
+                text << "Looks like " << old_god << " didn't appreciate you "
+                        "converting to " << new_god << " (it's only safe to "
+                        "convert between gods if both of them is among the "
+                        "three good gods). Unfortunately, converting back to "
+                     << old_god << " will annoy " << new_god <<
+                        ", so you're stuck with having to suffer the wrath "
+                        "of one god or another.";
+        }
+
+        break;
+    }
 
     case TUT_WIELD_WEAPON:
         if (Options.tutorial_type == TUT_RANGER_CHAR
@@ -2071,8 +2520,77 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
         break;
 
+    case TUT_MONSTER_FRIENDLY:
+#ifdef USE_TILE
+        tile_place_cursor(ep.x-1,ep.y-1,true);
+#endif
+        text << "That monster is friendly to you and will attack your "
+                "enemies, though you get only half the experience for "
+                "monsters killed by allies that you'd get for killing them "
+                "yourself. You can command your allies by pressing <w>t</w> "
+                "to talk to them, and can tell them which items to pick up "
+                "(or not pick up) by pressing <w>Ctrl-T</w>.";
+        break;
+
     case TUT_SEEN_MONSTER:
     case TUT_SEEN_FIRST_OBJECT:
+        break;
+
+    case TUT_ABYSS:
+        text << "Uh-oh, you've wound up in the Abyss!.  The Abyss is filled "
+                "with nasty monsters, you can't remember or map where you've "
+                "been, and you're probably going to die. If you want to "
+                "survive until you can find the exit (a flickering "
+                "<w>\\</w>), keep moving, don't fight any of the "
+                "monsters, and don't bother picking up any items on the "
+                "ground.  If you're encumbered or overburdened then "
+                "lighten up your load, and if the monsters are closing in "
+                "use potions of speed to get away.  And if you can, move "
+                "in a direction slightly off from a compass direction (for "
+                "example, north-by-northwest instead of north or northwest), "
+                "as you'll likely miss the exist if you keep heading solely "
+                "in a compass direction.";
+        break;
+
+    case TUT_SPELL_MISCAST:
+        text << "You just miscast a spell.  If the spell casting success "
+                "chance is high (which can be checked by entering <w>z\?</w>) "
+                "then a miscast merely means the spell not working, along "
+                "with a harmless side effect.  However, for spells with a "
+                "low success rate there's a chance of contaminating "
+                "yourself with magical energy, plus a chance of an "
+                "additional harmful side effect.  Normally this isn't a "
+                "problem, since magical contamination bleeds off over time, "
+                "but if you're repeatedly contaminated too often in a short"
+                "amount of time you'll mutate and suffer from other ill "
+                "side effects.\n\n"
+
+                "Note that a miscast spell will still consume the full amount "
+                "of MP and nutrition that a successfully cast spell would.";
+        break;
+
+    case TUT_SPELL_HUNGER:
+        text << "The spell you just cast made you hungrier; you can see "
+                "how hungry spells make you by entering <w>z\?!</w>.  The "
+                "amount of nutrition consumed increases with the level of "
+                "the spell and decreases according to your intelligence "
+                "stat multiplied by your Spellcasting skill; if your "
+                "intelligence and Spellcasting are high enough a spell " 
+                "might not cost you any nutrition at all.";
+        break;
+
+    case TUT_GLOWING:
+        text << "Uh-oh, you've accumulated so much magical contamination that "
+                "you're glowing!  You acquire magical contamination from "
+                "using some powerful magics, like invisibility, haste/speed "
+                "and potions of resistance.  This normally isn't a problem, "
+                "since contamination slowly bleeds off on its own, but it"
+                "seems that you've contaminated yourself so many time is "
+                "such a short amount of time that you're in trouble. "
+                "Now that you're glowing the contamination is going to "
+                "mutate you, and possibly even damage you via magical "
+                "storms. Additionally, glowing is going to make you much "
+                "less stealthy.";
         break;
 
     default:
@@ -2718,6 +3236,13 @@ void tutorial_inscription_info(bool autoinscribe)
     formatted_string::parse_string(text.str()).display();
 }
 
+bool tutorial_pos_interesting(int x, int y)
+{
+    return (cloud_type_at(coord_def(x, y)) != CLOUD_NONE
+            || _water_is_disturbed(x, y)
+            || tutorial_feat_interesting(grd[x][y]));
+}
+
 bool tutorial_feat_interesting(dungeon_feature_type feat)
 {
     if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
@@ -2744,6 +3269,13 @@ bool tutorial_feat_interesting(dungeon_feature_type feat)
        default:
             return false;
     }
+}
+
+void tutorial_describe_pos(int x, int y)
+{
+    _tutorial_describe_disturbance(x, y);
+    _tutorial_describe_cloud(x, y);
+    tutorial_describe_feature(grd[x][y]);
 }
 
 void tutorial_describe_feature(dungeon_feature_type feat)
@@ -2808,7 +3340,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             }
             else
             {
-                ostr << "You can enter the previous (lower) level by following "
+                ostr << "You can enter the previous (shallower) level by following "
                         "these up (<w><<</w>). To get back to this level "
                         "again, press <w>></w> while standing on the "
                         "downstairs.";
@@ -2909,6 +3441,88 @@ void tutorial_describe_feature(dungeon_feature_type feat)
     linebreak_string2(broken, _get_tutorial_cols());
     formatted_string::parse_block(broken, false).display();
 } // tutorial_describe_feature
+
+static void _tutorial_describe_cloud(int x, int y)
+{
+    cloud_type ctype = cloud_type_at(coord_def(x, y));
+    if (ctype == CLOUD_NONE)
+        return;
+
+    std::string cname = cloud_name(ctype);
+
+    std::ostringstream ostr;
+
+    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    ostr << "The " << cname << " ";
+
+    if (ends_with(cname, "s"))
+        ostr << "are ";
+    else
+        ostr << "is ";
+
+    switch(ctype)
+    {
+    case CLOUD_BLACK_SMOKE:
+    case CLOUD_GREY_SMOKE:
+    case CLOUD_BLUE_SMOKE:
+    case CLOUD_PURP_SMOKE:
+    case CLOUD_MIST:
+        ostr << "harmless. ";
+        break;
+
+    default:
+        ostr << "dangerous, and you should stay out of it if you can. ";
+    }
+
+    if (is_opaque_cloud(env.cgrid[x][y]))
+        ostr << "It is opaque.  If two or more opaque clouds are between "
+                "you and a square you won't be able to see anything in that "
+                "square.";
+
+    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    std::string broken = ostr.str();
+    linebreak_string2(broken, _get_tutorial_cols());
+    formatted_string::parse_block(broken, false).display();
+}
+
+static void _tutorial_describe_disturbance(int x, int y)
+{
+    if (!_water_is_disturbed(x, y))
+        return;
+
+    std::ostringstream ostr;
+
+    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    ostr << "The strange disturbance means that there's a monster hiding "
+            "under the surface of the shallow water.  Distance attacks "
+            "which only hit a single target may not hit submereged monsters "
+            "unless you use the <w>!</w> key to fire your ammo/spell/wand "
+            "after selecting the sumberged target.";
+
+    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    std::string broken = ostr.str();
+    linebreak_string2(broken, _get_tutorial_cols());
+    formatted_string::parse_block(broken, false).display();
+}
+
+static bool _water_is_disturbed(int x, int y)
+{
+    int mon_num = mgrd[x][y];
+
+    if (mon_num == NON_MONSTER || grd[x][y] != DNGN_SHALLOW_WATER
+        || !see_grid(x, y))
+    {
+        return false;
+    }
+
+    const monsters *mon = &menv[mon_num];
+
+    return (!player_monster_visible(mon) && !mons_flies(mon));
+}
 
 bool tutorial_monster_interesting(const monsters *mons)
 {

@@ -57,6 +57,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "tutorial.h"
 #include "view.h"
 #include "xom.h"
 
@@ -692,7 +693,10 @@ bool cast_a_spell()
     {
         const int spellh = calc_hunger( spell_hunger(spell) );
         if (spellh > 0)
+        {
             make_hungry(spellh, true);
+            learned_something_new(TUT_SPELL_HUNGER);
+        }
     }
 
     you.turn_is_over = true;
@@ -1039,6 +1043,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
             mpr( "You miscast the spell." );
             flush_input_buffer( FLUSH_ON_FAILURE );
+            learned_something_new( TUT_SPELL_MISCAST );
 
             if (you.religion == GOD_SIF_MUNA
                 && !player_under_penance()

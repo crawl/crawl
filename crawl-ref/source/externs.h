@@ -1871,7 +1871,7 @@ public:
 
     ///////////////////////////////////////////////////////////////////////
     // tutorial
-    FixedVector<bool, 50> tutorial_events;
+    FixedVector<bool, 70> tutorial_events;
     bool tut_explored;
     bool tut_stashes;
     bool tut_travel;

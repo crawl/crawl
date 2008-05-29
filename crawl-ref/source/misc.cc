@@ -1181,8 +1181,8 @@ void search_around( bool only_adjacent )
                 if (grd[srx][sry] == DNGN_SECRET_DOOR
                     && random2(17) <= effective)
                 {
-                    reveal_secret_door(srx, sry);
                     mpr("You found a secret door!");
+                    reveal_secret_door(srx, sry);
                     exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
                 }
                 else if (grd[srx][sry] == DNGN_UNDISCOVERED_TRAP
@@ -2135,6 +2135,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         if (!force_stair)
             mpr("You enter the Abyss!");
         mpr("To return, you must find a gate leading back.");
+        learned_something_new(TUT_ABYSS);
         break;
 
     case LEVEL_PANDEMONIUM:
@@ -2888,6 +2889,8 @@ void reveal_secret_door(int x, int y)
     dungeon_feature_type door = grid_secret_door_appearance(x, y);
     grd[x][y] = grid_is_opaque(door) ?
         DNGN_CLOSED_DOOR : DNGN_OPEN_DOOR;
+    viewwindow(true, false);
+    learned_something_new(TUT_SEEN_SECRET_DOOR, x, y);
 }
 
 // A feeble attempt at Nethack-like completeness for cute messages.
