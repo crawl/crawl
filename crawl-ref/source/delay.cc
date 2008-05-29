@@ -706,7 +706,7 @@ void handle_delay( void )
         if (is_valid_item(mitm[ delay.parm1 ])
             && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
             && mitm[ delay.parm1 ].x == you.x_pos
-            && mitm[ delay.parm1 ].y == you.y_pos )
+            && mitm[ delay.parm1 ].y == you.y_pos)
         {
             if (mitm[ delay.parm1 ].sub_type == CORPSE_SKELETON)
             {
@@ -779,9 +779,9 @@ void handle_delay( void )
         }
         else
         {
-            // corpse is no longer valid! End the butchering normally
-            // instead of using stop_delay() so that the player switches
-            // back to their main weapon if necessary.
+            // corpse is no longer valid!  End the butchering normally
+            // instead of using stop_delay(), so that the player
+            // switches back to their main weapon if necessary.
             delay.duration = 0;
         }
 
