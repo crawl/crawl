@@ -16,11 +16,12 @@
 ###########################################################################
 # mnoleg.
 #
-NAME: mnoleg
-TAGS: mnoleg
-ORIENT: northeast
-MONS: Mnoleg, neqoxec
-MONS: random, random, random, random, random
+NAME:     mnoleg
+TAGS:     mnoleg
+ORIENT:   northeast
+FLOORCOL: yellow
+ROCKCOL:  red
+MONS:     Mnoleg, neqoxec
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -63,11 +64,12 @@ ENDMAP
 #######################################################################
 # lom_lobon
 #
-NAME: lom_lobon
-TAGS: lom_lobon
-ORIENT: north
-MONS: Lom Lobon, giant orange brain, rakshasa, wizard
-MONS: random, random, random
+NAME:     lom_lobon
+TAGS:     lom_lobon
+ORIENT:   north
+FLOORCOL: lightgrey
+ROCKCOL:  white
+MONS:     Lom Lobon, giant orange brain, rakshasa, wizard
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -110,11 +112,12 @@ ENDMAP
 #############################################################################
 # cerebov
 #
-NAME: cerebov
-TAGS: cerebov
-ORIENT: northeast
+NAME:     cerebov
+TAGS:     cerebov
+ORIENT:   northeast
+FLOORCOL: red
+ROCKCOL:  red
 MONS: Cerebov, Balrug, Pit Fiend
-MONS: random, random, random, random
 #
 # you might not want to teleport too much on this level - unless you can 
 # reliably teleport away again.
@@ -161,11 +164,12 @@ ENDMAP
 ##############################################################################
 # Gloorx Vloq
 #
-NAME: gloorx_vloq
-TAGS: gloorx_vloq
-ORIENT: southwest
-MONS: Gloorx Vloq, Executioner, demonic crawler, shadow demon
-MONS: random, random, random
+NAME:     gloorx_vloq
+TAGS:     gloorx_vloq
+ORIENT:   southwest
+FLOORCOL: darkgrey
+ROCKCOL:  darkgrey
+MONS:     Gloorx Vloq, Executioner, demonic crawler, shadow demon
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@.xxxxxxxxxxxxxxx
 xxxxxxxxx..............................x
