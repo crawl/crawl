@@ -138,7 +138,6 @@ endif
 		copy /y dat\descript\*.txt $(INSTALLDIR)\dat\descript
 		copy /y dat\database\*.txt $(INSTALLDIR)\dat\database
 		copy /y ..\settings\* $(INSTALLDIR)\settings
-		copy /y ..\init.txt   $(INSTALLDIR)
 
 clean:
 		$(DELETE) $(OPATH)\*.o
