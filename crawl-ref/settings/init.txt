@@ -93,10 +93,10 @@ autopickup = $?!+"/%)
 
 # lua routines for automatically picking up one butchering tool
 # This require ) in autopickup and no further weapons are picked up.
-include pickup_butcher_tool.txt
+include = pickup_butcher_tool.txt
 
 # There is a long list of autopickup exceptions in
-include autopickup_exceptions.txt
+include = autopickup_exceptions.txt
 
 # default_autopickup = false
 # autopickup_no_burden = true
@@ -242,17 +242,17 @@ menu_colour_prefix_class = true
 #   lightgreen = poisonous
 #   brown      = contaminated (may cause sickening)
 #
-include food_colouring.txt
+include = food_colouring.txt
 
 # There is elaborate colouring of items in the inventory (and other menus)
 # depending on their usefulness, taking race and other criteria into account.
-include menu_colours.txt
+include = menu_colours.txt
 
 # Colouring of autoinscribed god gifts
 menu_colour = pickup:green:god gift
 
 # Colouring of messages
-include messages.txt
+include = messages.txt
 
 # Colouring for the notes
 menu_colour = notes:white:Reached XP level
