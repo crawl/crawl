@@ -2183,7 +2183,7 @@ VISUAL:@The_monster@ stares at you quizzically.
 friendly related beogh orc
 
 # As they'll be constantly around you, don't let them talk too much.
-w:45
+w:80
 __NONE
 
 # general friendly speech
@@ -2193,7 +2193,7 @@ w:1
 w:2
 @_generic_orc_speech_@
 
-w:7
+w:12
 @_friendly_beogh_speech_@
 
 %%%%

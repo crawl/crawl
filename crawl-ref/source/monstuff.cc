@@ -2155,24 +2155,59 @@ void behaviour_event( monsters *mon, int event, int src,
 
 static bool _choose_random_patrol_target_grid(monsters *mon)
 {
-    int patrol_x = mon->patrol_point.x;
-    int patrol_y = mon->patrol_point.y;
+    const int intel = mons_intel(mon->type);
 
-    monster_los lm;
-    lm.set_monster(mon);
-    lm.fill_los_field();
-    bool patrol_seen = lm.in_sight(patrol_x, patrol_y);
+    // Zombies will occasionally just stand around.
+    // This does not mean that they don't move every second turn. Rather,
+    // once they reach their chosen target, there's a 50% chance they'll
+    // just remain there until next turn when this function is called
+    // again.
+    if (intel == I_PLANT && coinflip())
+        return (true);
+
+    const int patrol_x = mon->patrol_point.x;
+    const int patrol_y = mon->patrol_point.y;
+
+    // If there's no chance we'll find the patrol point, quit right away.
+    if (grid_distance(mon->x, mon->y, patrol_x, patrol_y) > 2*LOS_RADIUS)
+        return (false);
+
+    const bool patrol_seen = mon->mon_see_grid(patrol_x, patrol_y,
+                                               habitat2grid(mons_habitat(mon)));
+
+    if (intel == I_PLANT && !patrol_seen)
+    {
+        // Really stupid monsters won't even try to get back into the
+        // patrol zone.
+        return (false);
+    }
+
+    // While the patrol point is in easy reach, monsters of insect/plant
+    // intelligence will only use a range of 5 (distance from the patrol point).
+    // Otherwise, try to get back using the full LOS.
+    const int  rad      = (intel >= I_ANIMAL || !patrol_seen)? LOS_RADIUS : 5;
+    const bool is_smart = (intel >= I_NORMAL);
 
     monster_los patrol;
     // Set monster to make monster_los respect habitat restrictions.
     patrol.set_monster(mon);
     patrol.set_los_centre(patrol_x, patrol_y);
+    patrol.set_los_range(rad);
     patrol.fill_los_field();
+
+    monster_los lm;
+    if (is_smart || !patrol_seen)
+    {
+        // For stupid monsters, don't bother if the patrol point is in sight.
+        lm.set_monster(mon);
+        lm.fill_los_field();
+    }
 
     int pos_x, pos_y;
     int count_grids = 0;
+    bool set_target = false;
     for (int j = -LOS_RADIUS; j < LOS_RADIUS; j++)
-        for (int k = -LOS_RADIUS; k < LOS_RADIUS; k++)
+        for (int k = -LOS_RADIUS; k < LOS_RADIUS; k++, set_target = false)
         {
             pos_x = patrol_x + j;
             pos_y = patrol_y + k;
@@ -2202,13 +2237,15 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
                 // from the current position, it suffices if the target is
                 // within reach of the patrol point OR the current position:
                 // we can easily get there.
-                // Note: This can take us into a position where the target
-                // cannot be easily reached (e.g. blocked by a wall) and the
-                // patrol point is out of sight, too. Such a case will be
-                // handled below, though it might take a while until a monster
-                // gets out of a deadlock.
+                // Only smart monsters will even attempt to move out of the
+                // patrol area.
+                // NOTE: Either of these can take us into a position where the
+                // target cannot be easily reached (e.g. blocked by a wall)
+                // and the patrol point is out of sight, too. Such a case
+                // will be handled below, though it might take a while until
+                // a monster gets out of a deadlock. (5% chance per turn.)
                 if (!patrol.in_sight(pos_x, pos_y)
-                    && !lm.in_sight(pos_x, pos_y))
+                    && (!is_smart || !lm.in_sight(pos_x, pos_y)))
                 {
                     continue;
                 }
@@ -2229,7 +2266,17 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
                 // the patrol point.
             }
 
-            if (one_chance_in(++count_grids))
+            if (intel == I_PLANT && pos_x == patrol_x && pos_y == patrol_y)
+            {
+                // Slightly greater chance to simply head for the centre.
+                count_grids += 3;
+                if (random2(count_grids) < 3)
+                    set_target = true;
+            }
+            else if (one_chance_in(++count_grids))
+                set_target = true;
+
+            if (set_target)
             {
                 mon->target_x = pos_x;
                 mon->target_y = pos_y;
@@ -2577,9 +2624,38 @@ static void _handle_behaviour(monsters *mon)
                     {
                         // If we couldn't find a target that is within easy
                         // reach of the monster and close to the patrol point,
-                        // it's time to head back.
-                        mon->target_x = mon->patrol_point.x;
-                        mon->target_y = mon->patrol_point.y;
+                        // do one of the following:
+                        //  * set current position as new patrol point
+                        //  * forget about patrolling
+                        //  * head back to patrol point
+
+                        if (mons_intel(mon->type) == I_PLANT)
+                        {
+                            // Really stupid monsters forget where they're
+                            // supposed to be.
+                            if (mons_friendly(mon))
+                            {
+                                // Your ally was told to wait, and wait it will!
+                                // (Though possibly not where you told it to.)
+                                mon->patrol_point = coord_def(mon->x, mon->y);
+                            }
+                            else
+                            {
+                                // Stop patrolling.
+                                mon->patrol_point = coord_def(0, 0);
+                            }
+                        }
+                        else
+                        {
+                            // It's time to head back!
+                            // Ideally, smart monsters should be able to use
+                            // pathfinding to find the way back, and animals
+                            // could decide to stop patrolling if the path
+                            // was too long.
+
+                            mon->target_x = mon->patrol_point.x;
+                            mon->target_y = mon->patrol_point.y;
+                        }
                     }
                 }
                 else

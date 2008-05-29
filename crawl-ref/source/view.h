@@ -256,6 +256,7 @@ public:
     // public methods
     void set_monster(monsters *mon);
     void set_los_centre(int x, int y);
+    void set_los_range(int r);
     void fill_los_field(void);
     bool in_sight(int x, int y);
 
@@ -286,6 +287,9 @@ protected:
     // (if mon->x == gridx, mon->y == gridy).
     // Else, any monster trying to move around within this los field.
     monsters *mons;
+
+    // Range may never be greater than LOS_RADIUS!
+    int range;
 
     // The array to store the LOS values.
     int los_field[LSIZE][LSIZE];

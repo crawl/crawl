@@ -5300,12 +5300,36 @@ void handle_terminal_resize(bool redraw)
 // monster_los
 
 monster_los::monster_los()
-    : gridx(0), gridy(0), mons(), los_field()
+    : gridx(0), gridy(0), mons(), range(LOS_RADIUS), los_field()
 {
 }
 
 monster_los::~monster_los()
 {
+}
+
+void monster_los::set_monster(monsters *mon)
+{
+    mons = mon;
+    if (gridx != mons->x)
+        gridx = mons->x;
+    if (gridy != mons->y)
+        gridy = mons->y;
+}
+
+void monster_los::set_los_centre(int x, int y)
+{
+    if (!in_bounds(x, y))
+        return;
+
+    gridx = x;
+    gridy = y;
+}
+
+void monster_los::set_los_range(int r)
+{
+    ASSERT (r >= 1 && r <= LOS_RADIUS);
+    range = r;
 }
 
 coord_def monster_los::pos_to_index(coord_def &p)
@@ -5384,28 +5408,10 @@ static bool _blocks_movement_sight(monsters *mon, dungeon_feature_type feat)
     return (false);
 }
 
-void monster_los::set_monster(monsters *mon)
-{
-    mons = mon;
-    if (gridx != mons->x)
-        gridx = mons->x;
-    if (gridy != mons->y)
-        gridy = mons->y;
-}
-
-void monster_los::set_los_centre(int x, int y)
-{
-    if (!in_bounds(x, y))
-        return;
-
-    gridx = x;
-    gridy = y;
-}
-
 void monster_los::fill_los_field()
 {
     int pos_x, pos_y;
-    for (int k = 1; k <= LOS_RADIUS; k++)
+    for (int k = 1; k <= range; k++)
         for (int i = -1; i <= 1; i++)
             for (int j = -1; j <= 1; j++)
             {
@@ -5434,7 +5440,8 @@ void monster_los::fill_los_field()
 // target1 and target2 are targets we'll be aiming *at* to fire through (dx,dy)
 static bool _set_beam_target(int cx, int cy, int dx, int dy,
                              int &target1_x, int &target1_y,
-                             int &target2_x, int &target2_y)
+                             int &target2_x, int &target2_y,
+                             int range)
 {
     const int xdist = dx - cx;
     const int ydist = dy - cy;
@@ -5442,8 +5449,8 @@ static bool _set_beam_target(int cx, int cy, int dx, int dy,
     if (xdist == 0 && ydist == 0)
         return (false); // Nothing to be done.
 
-    if (xdist <= -LOS_RADIUS || xdist >= LOS_RADIUS
-        || ydist <= -LOS_RADIUS || ydist >= LOS_RADIUS)
+    if (xdist <= -range || xdist >= range
+        || ydist <= -range || ydist >= range)
     {
         // Grids on the edge of a monster's LOS don't block sight any further.
         return (false);
@@ -5475,16 +5482,16 @@ static bool _set_beam_target(int cx, int cy, int dx, int dy,
     if (xdist == 0)
     {
         target1_x = cx;
-        target1_y = (ydist > 0 ? cy + LOS_RADIUS
-                               : cy - LOS_RADIUS);
+        target1_y = (ydist > 0 ? cy + range
+                               : cy - range);
 
         target2_x = target1_x;
         target2_y = target1_y;
     }
     else if (ydist == 0)
     {
-        target1_x = (xdist > 0 ? cx + LOS_RADIUS
-                               : cx - LOS_RADIUS);
+        target1_x = (xdist > 0 ? cx + range
+                               : cx - range);
         target1_y = cy;
 
         target2_x = target1_x;
@@ -5494,13 +5501,13 @@ static bool _set_beam_target(int cx, int cy, int dx, int dy,
     {
         if (xdist < 0)
         {
-            target1_x = cx - LOS_RADIUS;
-            target1_y = cy - LOS_RADIUS;
+            target1_x = cx - range;
+            target1_y = cy - range;
         }
         else
         {
-            target1_x = cx + LOS_RADIUS;
-            target1_y = cy + LOS_RADIUS;
+            target1_x = cx + range;
+            target1_y = cy + range;
         }
 
         if (xdist == ydist)
@@ -5515,11 +5522,11 @@ static bool _set_beam_target(int cx, int cy, int dx, int dy,
                 if (dx > dy)
                 {
                     target2_x = dx;
-                    target2_y = cy - LOS_RADIUS;
+                    target2_y = cy - range;
                 }
                 else
                 {
-                    target2_x = cx - LOS_RADIUS;
+                    target2_x = cx - range;
                     target2_y = dy;
                 }
             }
@@ -5527,13 +5534,13 @@ static bool _set_beam_target(int cx, int cy, int dx, int dy,
             {
                 if (dx > dy)
                 {
-                    target2_x = cx + LOS_RADIUS;
+                    target2_x = cx + range;
                     target2_y = dy;
                 }
                 else
                 {
                     target2_x = dx;
-                    target2_y = cy + LOS_RADIUS;
+                    target2_y = cy + range;
                 }
             }
         }
@@ -5542,13 +5549,13 @@ static bool _set_beam_target(int cx, int cy, int dx, int dy,
     {
         if (xdist < 0) // lower left corner
         {
-            target1_x = cx - LOS_RADIUS;
-            target1_y = cy + LOS_RADIUS;
+            target1_x = cx - range;
+            target1_y = cy + range;
         }
         else // upper right corner
         {
-            target1_x = cx + LOS_RADIUS;
-            target1_y = cy - LOS_RADIUS;
+            target1_x = cx + range;
+            target1_y = cy - range;
         }
 
         if (xdist == -ydist)
@@ -5562,13 +5569,13 @@ static bool _set_beam_target(int cx, int cy, int dx, int dy,
             {
                 if (-xdist > ydist)
                 {
-                    target2_x = cx - LOS_RADIUS;
+                    target2_x = cx - range;
                     target2_y = dy;
                 }
                 else
                 {
                     target2_x = dx;
-                    target2_y = cy + LOS_RADIUS;
+                    target2_y = cy + range;
                 }
             }
             else // xdist > 0, ydist < 0
@@ -5576,11 +5583,11 @@ static bool _set_beam_target(int cx, int cy, int dx, int dy,
                 if (-xdist > ydist)
                 {
                     target2_x = dx;
-                    target2_y = cy - LOS_RADIUS;
+                    target2_y = cy - range;
                 }
                 else
                 {
-                    target2_x = cx + LOS_RADIUS;
+                    target2_x = cx + range;
                     target2_y = dy;
                 }
             }
@@ -5601,7 +5608,7 @@ void monster_los::check_los_beam(int dx, int dy)
 
     int target1_x = 0, target1_y = 0, target2_x = 0, target2_y = 0;
     if (!_set_beam_target(gridx, gridy, dx, dy, target1_x, target1_y,
-                          target2_x, target2_y))
+                          target2_x, target2_y, range))
     {
         // Nothing to be done.
         return;
@@ -5619,7 +5626,7 @@ void monster_los::check_los_beam(int dx, int dy)
         target2_y = help;
     }
 
-    const int max_dist = LOS_RADIUS;
+    const int max_dist = range;
     int dist;
     bool blocked = false;
     for (int tx = target1_x; tx <= target2_x; tx++)
