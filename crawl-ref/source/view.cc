@@ -5461,12 +5461,12 @@ static bool _set_beam_target(int cx, int cy, int dx, int dy,
  *    /  SW | SE  \
  *
  *   target1_x and target1_y mark the base line target, so the base beam ends
- *   on the diagonal line closest to the target (or one of the straight line
- *   if cx == dx or dx == dy).
+ *   on the diagonal line closest to the target (or on one of the straight
+ *   lines if cx == dx or dx == dy).
  *
  *   target2_x and target2_y then mark the second target our beam finder should
  *   cycle through. It'll always be target2_x = dx or target2_y = dy, the other
- *   being 0 or 2*LOS_RADIUS depending on the quadrant.
+ *   being on the edge of LOS, which one depending on the quadrant.
  *
  *   The beam finder can then cycle from the nearest corner (target1) to the
  *   second edge target closest to (dx,dy).
@@ -5605,6 +5605,18 @@ void monster_los::check_los_beam(int dx, int dy)
     {
         // Nothing to be done.
         return;
+    }
+
+    if (target1_x > target2_x || target1_y > target2_y)
+    {
+        // Swap the two targets so our loop will work correctly.
+        int help = target1_x;
+        target1_x = target2_x;
+        target2_x = help;
+
+        help = target1_y;
+        target1_y = target2_y;
+        target2_y = help;
     }
 
     const int max_dist = LOS_RADIUS;

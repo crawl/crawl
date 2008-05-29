@@ -551,6 +551,9 @@ w:2
 %%%%
 default friendly humanoid
 
+w:20
+__NONE
+
 @The_monster@ yells, "Run!  I'll cover you!"
 
 @The_monster@ shouts, "Die, monster!"
@@ -2180,17 +2183,17 @@ VISUAL:@The_monster@ stares at you quizzically.
 friendly related beogh orc
 
 # As they'll be constantly around you, don't let them talk too much.
-w:30
+w:45
 __NONE
 
 # general friendly speech
 w:1
 @default friendly humanoid@
 
-w:1
+w:2
 @_generic_orc_speech_@
 
-w:5
+w:7
 @_friendly_beogh_speech_@
 
 %%%%

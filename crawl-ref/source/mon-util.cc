@@ -6181,7 +6181,7 @@ static std::string _get_species_insult(const std::string type)
 
 static std::string _pluralise_player_genus()
 {
-    std::string sp = species_name(you.species, 1, true);
+    std::string sp = species_name(you.species, 1, true, false, true);
     if (player_genus(GENPC_ELVEN, you.species)
         || player_genus(GENPC_DWARVEN, you.species))
     {
@@ -6249,7 +6249,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@player_species@",
                       species_name(you.species, 1).c_str());
     msg = replace_all(msg, "@player_genus@",
-                      species_name(you.species, 1, true).c_str());
+                      species_name(you.species, 1, true, false, true).c_str());
     msg = replace_all(msg, "@player_genus_plural@",
                       _pluralise_player_genus().c_str());
 
