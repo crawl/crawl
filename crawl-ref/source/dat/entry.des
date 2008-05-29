@@ -2038,6 +2038,7 @@ ENDMAP
 NAME: david_entry_033_a
 TAGS: entry
 ORIENT: float
+SHUFFLE: TV
 CHANCE: 5
 MAP
   xx..@..xx
@@ -2047,7 +2048,7 @@ MAP
 xx..xxxxx..xx
 x...........x
 x.....(.....x
-x.U...[...U.x
+x.T...[...T.x
 x.....{.....x
 x...........x
 xxxx..x..xxxx
@@ -4206,7 +4207,7 @@ ENDMAP
 NAME: onia_ninara_003_mini_spirals
 TAGS: entry
 ORIENT: float
-SHUFFLE: ({[<, ~T, vcxxxx
+SHUFFLE: ({[<,GT, vcxxxx
 MAP
 vvvvvvvvvvv
 vv...v...vv
