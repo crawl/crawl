@@ -4867,7 +4867,6 @@ void contaminate_player(int change, bool controlled, bool status_only)
     // get current contamination level
     int old_level = _get_contamination_level();
     int new_level = 0;
-#define DEBUG_DIAGNOSTICS 1
 #if DEBUG_DIAGNOSTICS
     if (change > 0 || (change < 0 && you.magic_contamination))
     {
@@ -4875,7 +4874,6 @@ void contaminate_player(int change, bool controlled, bool status_only)
              change, change + you.magic_contamination );
     }
 #endif
-#undef DEBUG_DIAGNOSTICS
 
     // make the change
     if (change + you.magic_contamination < 0)
