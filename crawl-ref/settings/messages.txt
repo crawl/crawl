@@ -36,3 +36,6 @@ message_colour = darkgrey:disappears in a puff of smoke
 #
 message_colour = darkgrey:miss(es)? (the|you|it)
 message_colour = darkgrey:but (do no|doesn't do any) damage
+
+# Uncomment to Reduce auto-prayer spam
+#msc = mute:pray:(You offer a prayer|with you\.|your worship\.|noncommittal\.)
