@@ -1911,9 +1911,13 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_SEEN_TRAP:
-        text << "Oops... you just triggered a trap. An unwary adventurer "
-                "will occasionally stumble into one of these nasty "
-                "constructions";
+        if (x == you.x_pos && y == you.y_pos)
+            text << "Oops... you just triggered a trap. ";
+        else
+            text << "You just discovered a trap. ";
+
+        text << "An unwary adventurer will occasionally stumble into one "
+                "of these nasty constructions";
 #ifndef USE_TILE
         object = env.show[ex][ey];
         colour = env.show_col[ex][ey];
@@ -2294,11 +2298,22 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                     "another level or through secret doors. To find the "
                     "latter, search the adjacent squares of walls for one "
                     "turn with <w>s</w> or <w>.</w>, or for 100 turns with "
-                    "<w>5</w> or <w>Shift-numpad 5"
+                    "<w>5</w> or <w>Shift-numpad 5</w>"
 #ifdef USE_TILE
                     ", or by clicking on the stat area"
 #endif
-                    ".";
+                    ".\n\n"
+
+                    "When resting up on the next (deeper) level it's wise "
+                    "to retreat to an up staircase or hatch so you can "
+                    "retreat to the previous level if a monster wanders "
+                    "across you.  Monsters can only follow you up if they're "
+                    "standing right next to you, so if they're still at least "
+                    "two squares away you can flee and safely rest on the "
+                    "the previous level.  They'll still be there when you "
+                    "go back down, though, so you'd want to go back down a "
+                    "different set of stairs so they can't get the jump on "
+                    "you when you return.";
         }
         break;
 
@@ -3304,14 +3319,25 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                         "standing next to it and then pressing <w>Ctrl</w> "
                         "and the direction of the trap. Note that this usually "
                         "causes the trap to go off, so it can be quite a "
-                        "dangerous task.";
+                        "dangerous task.\n\n"
+
+                        "You can safely pass over a mechanical trap if "
+                        "you're flying or leviating.";
+            }
+            else
+            {
+                ostr << "Magical traps can't be disarmed, and unlike "
+                        "mechanical traps you can't avoid tripping them "
+                        "by levitating or flying over them.";
             }
             Options.tutorial_events[TUT_SEEN_TRAP] = 0;
             break;
 
        case DNGN_TRAP_NATURAL: // only shafts for now
             ostr << "The dungeon contains a number of natural obstacles such "
-                    "as shafts, which lead one or two levels down.";
+                    "as shafts, which lead one to three levels down.  They "
+                    "can't be disarmed, but you can safely pass over them "
+                    "if you're levitating or flying.";
             Options.tutorial_events[TUT_SEEN_TRAP] = 0;
             break;
 
@@ -3340,9 +3366,13 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             }
             else
             {
-                ostr << "You can enter the previous (shallower) level by following "
-                        "these up (<w><<</w>). To get back to this level "
-                        "again, press <w>></w> while standing on the "
+                ostr << "You can enter the previous (shallower) level by "
+                        "following these up (<w><<</w>). This is ideal for "
+                        "retreating or fidning a safe resting spot, since the "
+                        "previous level will have less monsters and monsters "
+                        "on this level can't follow you up unless they're "
+                        "standing right next to you. To get back to this "
+                        "level again, press <w>></w> while standing on the "
                         "downstairs.";
 #ifdef USE_TILE
                 ostr << " In tiles, you can perform either action simply by "
