@@ -1270,7 +1270,7 @@ static void _new_god_conduct()
 
     if (is_good_god(you.religion))
     {
-        // For the good gods, piety grows over them.
+        // For the good gods, piety grows over time.
         text << "From now on, " << new_god_name << " will watch over you and "
                 "judge your behaviour. Thus, your actions will greatly "
                 "influence your piety (divine favour). If your piety runs out ";

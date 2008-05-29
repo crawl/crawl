@@ -1886,7 +1886,7 @@ void describe_item( item_def &item, bool allow_inscribe )
             && !ainscrip.empty()
             && item.inscription.find(ainscrip) == std::string::npos;
 
-        if ( allow_autoinscribe )
+        if (allow_autoinscribe)
         {
             formatted_string::parse_string(
                 "<cyan>Do you wish to inscribe this item? "
@@ -1898,20 +1898,23 @@ void describe_item( item_def &item, bool allow_inscribe )
                 "<cyan>Do you wish to inscribe this item? ").display();
         }
 
-        if (Options.tutorial_left && wherey() <= get_number_of_lines() - 2)
+        if (Options.tutorial_left && wherey() <= get_number_of_lines() - 5)
         {
             tutorial_inscription_info(allow_autoinscribe);
 
-            if ( allow_autoinscribe )
+            if (wherey() <= get_number_of_lines() - 2)
             {
-                formatted_string::parse_string(
-                    "<cyan>So, do you wish to inscribe this item? "
-                    "('a' to autoinscribe) ").display();
-            }
-            else
-            {
-                formatted_string::parse_string(
-                    "<cyan>So, do you wish to inscribe this item? ").display();
+                if (allow_autoinscribe)
+                {
+                    formatted_string::parse_string(
+                        "<cyan>So, do you wish to inscribe this item? "
+                        "('a' to autoinscribe) ").display();
+                }
+                else
+                {
+                    formatted_string::parse_string(
+                        "<cyan>So, do you wish to inscribe this item? ").display();
+                }
             }
         }
 #ifdef USE_TILE

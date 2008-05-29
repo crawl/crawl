@@ -2157,8 +2157,18 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
 {
     int patrol_x = mon->patrol_point.x;
     int patrol_y = mon->patrol_point.y;
-    dungeon_feature_type habitat = habitat2grid(
-                                       mons_habitat_by_type(mon->type) );
+
+    monster_los lm;
+    lm.set_monster(mon);
+    lm.fill_los_field();
+    bool patrol_seen = lm.in_sight(patrol_x, patrol_y);
+
+    monster_los patrol;
+    // Set monster to make monster_los respect habitat restrictions.
+    patrol.set_monster(mon);
+    patrol.set_los_centre(patrol_x, patrol_y);
+    patrol.fill_los_field();
+
     int pos_x, pos_y;
     int count_grids = 0;
     for (int j = -LOS_RADIUS; j < LOS_RADIUS; j++)
@@ -2171,7 +2181,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
                 continue;
 
             // Don't bother for the current position. If everything fails,
-            // we'll stay here anyways.
+            // we'll stay here anyway.
             if (pos_x == mon->x && pos_y == mon->y)
                 continue;
 
@@ -2186,7 +2196,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
             if (mgrd[pos_x][pos_y] != NON_MONSTER)
                 continue;
 
-            if (grid_see_grid(mon->x, mon->y, patrol_x, patrol_y, habitat))
+            if (patrol_seen)
             {
                 // If the patrol point can be easily (within LOS) reached
                 // from the current position, it suffices if the target is
@@ -2197,8 +2207,8 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
                 // patrol point is out of sight, too. Such a case will be
                 // handled below, though it might take a while until a monster
                 // gets out of a deadlock.
-                if (!grid_see_grid(patrol_x, patrol_y, pos_x, pos_y, habitat)
-                    && !grid_see_grid(mon->x, mon->y, pos_x, pos_y, habitat))
+                if (!patrol.in_sight(pos_x, pos_y)
+                    && !lm.in_sight(pos_x, pos_y))
                 {
                     continue;
                 }
@@ -2209,8 +2219,8 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
                 // make sure the new target brings us into reach of it.
                 // This means that the target must be reachable BOTH from
                 // the patrol point AND the current position.
-                if (!grid_see_grid(patrol_x, patrol_y, pos_x, pos_y, habitat)
-                    || !grid_see_grid(mon->x, mon->y, pos_x, pos_y, habitat))
+                if (!patrol.in_sight(pos_x, pos_y)
+                    || !lm.in_sight(pos_x, pos_y))
                 {
                     continue;
                 }
