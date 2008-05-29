@@ -2174,7 +2174,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         break;
 
     case BEAM_NEG:
-        if (mons_res_negative_energy(monster) > 0)
+        if (mons_res_negative_energy(monster))
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " appears unharmed.");
@@ -2214,7 +2214,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         break;
 
     case BEAM_MIASMA:
-        if (mons_res_negative_energy( monster ) >= 3)
+        if (mons_res_negative_energy( monster ) == 3)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " appears unharmed.");
@@ -4162,7 +4162,7 @@ static bool _beam_is_harmless(bolt &beam, monsters *mon)
         return (mons_res_cold(mon) >= 3);
     case BEAM_MIASMA:
     case BEAM_NEG:
-        return (mons_res_negative_energy(mon) >= 3);
+        return (mons_res_negative_energy(mon) == 3);
     case BEAM_ELECTRICITY:
         return (mons_res_elec(mon) >= 3);
     case BEAM_POISON:

@@ -1530,7 +1530,7 @@ static int _drain_monsters(int x, int y, int pow, int garbage)
 
         monsters& mon = menv[mnstr];
 
-        if (mons_res_negative_energy(&mon) > 0)
+        if (mons_res_negative_energy(&mon))
             simple_monster_message(&mon, " is unaffected.");
         else
         {

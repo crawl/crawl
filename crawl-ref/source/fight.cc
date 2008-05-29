@@ -1961,7 +1961,7 @@ void melee_attack::drain_player()
 
 void melee_attack::drain_monster()
 {
-    if (defender->res_negative_energy() > 0 || one_chance_in(3))
+    if (defender->res_negative_energy() || one_chance_in(3))
         return;
 
     if (defender_visible)
@@ -2226,7 +2226,7 @@ bool melee_attack::apply_damage_brand()
         }
 
         if (defender->holiness() != MH_NATURAL || !weapon
-            || defender->res_negative_energy() > 0
+            || defender->res_negative_energy()
             || damage_done < 1 || attacker->stat_hp() == attacker->stat_maxhp()
             || one_chance_in(5))
         {
@@ -2275,7 +2275,7 @@ bool melee_attack::apply_damage_brand()
         break;
     }
     case SPWPN_PAIN:
-        if (defender->res_negative_energy() <= 0
+        if (defender->res_negative_energy()
             && random2(8) <= attacker->skill(SK_NECROMANCY))
         {
             if (defender_visible)
@@ -2554,7 +2554,7 @@ void melee_attack::player_apply_staff_damage()
     }
 
     case STAFF_DEATH:
-        if (mons_res_negative_energy(def) > 0)
+        if (mons_res_negative_energy(def))
             break;
 
         if (random2(8) <= you.skills[SK_NECROMANCY])

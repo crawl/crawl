@@ -1050,7 +1050,7 @@ void drain_life(int pow)
         if (mons_holiness(monster) != MH_NATURAL)
             continue;
 
-        if (mons_res_negative_energy( monster ))
+        if (mons_res_negative_energy(monster))
             continue;
 
         if (mons_near(monster))
@@ -1108,7 +1108,7 @@ int vampiric_drain(int pow, const dist &vmove)
         return -1;
     }
 
-    if (mons_res_negative_energy( monster ))
+    if (mons_res_negative_energy(monster))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return -1;
