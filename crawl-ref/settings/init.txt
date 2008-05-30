@@ -253,6 +253,9 @@ include = menu_colours.txt
 # Colouring of autoinscribed god gifts
 menu_colour = pickup:green:god gift
 
+# Highlight selected items
+menu_colour = white:\w \+ .
+
 # Colouring of messages
 include = messages.txt
 
