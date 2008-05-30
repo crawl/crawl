@@ -1659,7 +1659,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         }
         else if (Options.tutorial_type == TUT_MAGIC_CHAR)
         {
-            text << "\nHowever, as a spellslinger you don't really need "
+            text << "\nHowever, as a spellslinger, you don't really need "
                     "another type of ranged attack, unless there's another "
                     "effect in addition to damage.";
         }
@@ -2468,9 +2468,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_GOD_DISPLEASED:
-        text << "Uh-oh, " << god_name(you.religion) << " is growing displead "
-                "because your piety is running low.  This can be caused by "
-                "you doing things to annoy him";
+        text << "Uh-oh, " << god_name(you.religion) << " is growing "
+                "displeased because your piety is running low. This can be "
+                "caused by your doing things to annoy him";
 
         if (!is_good_god(you.religion))
         {
@@ -2480,9 +2480,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         }
         text << ". ";
 
-        text << "If your piety goes to zero then you'll be excomunnicated. "
-                "Better get cracking on raising your piety and/or stop "
-                "annoying annoying your god.";
+        text << "If your piety goes to zero, then you'll be excomunicated. "
+                "Better get cracking on raising your piety, and/or stop "
+                "annoying your god.";
         break;
 
     case TUT_EXCOMMUNICATE:
