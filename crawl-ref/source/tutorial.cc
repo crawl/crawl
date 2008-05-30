@@ -1736,7 +1736,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 text << "That ";
 #ifndef USE_TILE
                 unsigned short col;
-                get_item_glyph(&item, &ch, &col);
+                get_item_glyph(&mitm[i], &ch, &col);
 
                 text << _colourize_glyph(col, ch);
                 text << " ";
