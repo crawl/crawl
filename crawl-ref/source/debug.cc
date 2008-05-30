@@ -2112,10 +2112,11 @@ void debug_set_skills(void)
         mpr( skill_name(skill) );
         int amount = debug_prompt_for_int( "To what level? ", true );
 
-        if (amount == -1)
+        if (amount < 0)
             canned_msg( MSG_OK );
         else
         {
+            const int old_amount = you.skills[skill];
             const int points = (skill_exp_needed( amount + 1 )
                                 * species_skills( skill, you.species )) / 100;
 
@@ -2149,6 +2150,18 @@ void debug_set_skills(void)
 
             default:
                 break;
+            }
+
+            mprf("%s %s to skill level %d.",
+                 (old_amount < amount ? "Increased" :
+                  old_amount > amount ? "Lowered"
+                                      : "Reset"),
+                 skill_name(skill), amount);
+
+            if (skill == SK_STEALTH && amount == 27)
+            {
+                mpr("If you set the stealth skill to a value higher than 27, "
+                    "hide mode is activated, and monsters won't notice you.");
             }
         }
     }

@@ -902,6 +902,10 @@ static void finish_delay(const delay_queue_item &delay)
     {
     case DELAY_WEAPON_SWAP:
         weapon_switch( delay.parm1 );
+        // In case we just butchered some corpses or bottled some blood,
+        // call autopickup.
+        if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
+            autopickup();
         break;
 
     case DELAY_JEWELLERY_ON:
@@ -1030,11 +1034,11 @@ static void finish_delay(const delay_queue_item &delay)
                 break;
             }
 
-            // move any monsters out of the way:
+            // Move any monsters out of the way:
             int mon = mgrd[ pass_x ][ pass_y ];
             if (mon != NON_MONSTER)
             {
-                // one square, a few squares, anywhere...
+                // One square, a few squares, anywhere...
                 if (!shift_monster(&menv[mon])
                     && !monster_blink(&menv[mon]))
                 {
@@ -1071,6 +1075,7 @@ static void finish_delay(const delay_queue_item &delay)
 
             if (delay.type == DELAY_BOTTLE_BLOOD)
             {
+                mpr("You finish bottling this corpse's blood.");
                 turn_corpse_into_blood_potions( mitm[ delay.parm1 ] );
             }
             else
@@ -1082,47 +1087,54 @@ static void finish_delay(const delay_queue_item &delay)
                                                        : "chopping",
                      mitm[delay.parm1].name(DESC_PLAIN).c_str());
 
-                if (is_good_god(you.religion) && is_player_same_species(item.plus))
+                if (is_good_god(you.religion)
+                    && is_player_same_species(item.plus))
                 {
                     simple_god_message(" expects more respect for your departed "
                                        "relatives.");
                 }
-                else if (you.religion == GOD_ZIN && mons_intel(item.plus) >= I_NORMAL)
+                else if (you.religion == GOD_ZIN
+                         && mons_intel(item.plus) >= I_NORMAL)
                 {
                     simple_god_message(" expects more respect for this departed "
                                        "soul.");
                 }
 
                 if (you.species == SP_VAMPIRE && delay.type == DELAY_BUTCHER
-                    && mons_has_blood(item.plus) && !food_is_rotten(item))
+                    && mons_has_blood(item.plus) && !food_is_rotten(item)
+                    // Don't give this message if more butchering to follow.
+                    && (you.delay_queue.size() == 1
+                        || you.delay_queue[1].type != DELAY_BUTCHER))
                 {
                     mpr("What a waste.");
                 }
                 turn_corpse_into_chunks( mitm[ delay.parm1 ] );
 
-                if (you.duration[DUR_BERSERKER] &&
-                    you.berserk_penalty != NO_BERSERK_PENALTY)
+                if (you.duration[DUR_BERSERKER]
+                    && you.berserk_penalty != NO_BERSERK_PENALTY)
                 {
                     mpr("You enjoyed that.");
                     you.berserk_penalty = 0;
                 }
+            }
 
-                // Don't atuopickup chunks if there's a weapon-swap delay
-                // waiting to happen.
-                if (Options.chunks_autopickup
-                    && you.delay_queue.size() == 1)
-                {
-                    autopickup();
-                }
+            // Don't autopickup chunks/potions if there's still another
+            // delay (usually more corpses to butcher or a weapon-swap)
+            // waiting to happen.
+            if ((Options.chunks_autopickup
+                    || delay.type == DELAY_BOTTLE_BLOOD)
+                && you.delay_queue.size() == 1)
+            {
+                autopickup();
             }
         }
         else
         {
-            mprf("You stop %s.", can_bottle_blood_from_corpse(item.plus) ?
-                                 "bottling this corpse's blood"
-                                 : "butchering the corpse");
+            mprf("You stop %s.",
+                 delay.type == DELAY_BUTCHER ? "butchering the corpse"
+                                             : "bottling this corpse's blood");
         }
-        StashTrack.update_stash(); // Stash-track the generated item(s)
+        StashTrack.update_stash(); // Stash-track the generated item(s).
         break;
     }
 
@@ -1408,7 +1420,7 @@ static void handle_run_delays(const delay_queue_item &delay)
 
     if (cmd != CMD_NO_CMD)
     {
-        if ( delay.type != DELAY_REST )
+        if (delay.type != DELAY_REST)
             mesclr();
         process_command(cmd);
     }

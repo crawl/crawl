@@ -94,7 +94,7 @@ static void create_monster_hide(int mons_class)
 
     mitm[o].quantity = 1;
 
-    // these values are common to all: {dlb}
+    // These values are common to all: {dlb}
     mitm[o].base_type = OBJ_ARMOUR;
     mitm[o].plus      = 0;
     mitm[o].plus2     = 0;
@@ -102,7 +102,7 @@ static void create_monster_hide(int mons_class)
     mitm[o].flags     = 0;
     mitm[o].colour    = mons_class_colour( mons_class );
 
-    // these values cannot be set by a reasonable formula: {dlb}
+    // These values cannot be set by a reasonable formula: {dlb}
     switch (mons_class)
     {
     case MONS_DRAGON:
@@ -146,7 +146,7 @@ void turn_corpse_into_chunks( item_def &item )
     const int mons_class = item.plus;
     const int max_chunks = mons_weight( mons_class ) / 150;
 
-    // only fresh corpses bleed enough to colour the ground
+    // Only fresh corpses bleed enough to colour the ground.
     if (!food_is_rotten(item))
         bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
 
@@ -158,12 +158,12 @@ void turn_corpse_into_chunks( item_def &item )
     if (you.species != SP_VAMPIRE)
         item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
-    // happens after the corpse has been butchered
+    // Happens after the corpse has been butchered.
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
         create_monster_hide(mons_class);
 }
 
-// initialize blood potions with a vector of timers
+// Initialize blood potions with a vector of timers.
 void init_stack_blood_potions(item_def &stack, int age)
 {
     ASSERT(is_blood_potion(stack));
@@ -181,7 +181,7 @@ void init_stack_blood_potions(item_def &stack, int age)
         else // coagulated blood
             age = 500;
     }
-    // for a newly created stack, all potions use the same timer
+    // For a newly created stack, all potions use the same timer.
     const long max_age = you.num_turns + age;
 #ifdef DEBUG_BLOOD_POTIONS
     mprf(MSGCH_DIAGNOSTICS, "newly created stack will time out at turn %d",
@@ -195,7 +195,7 @@ void init_stack_blood_potions(item_def &stack, int age)
     props.assert_validity();
 }
 
-// sort a CrawlVector<long>, should probably be done properly with templates
+// Sort a CrawlVector<long>, should probably be done properly with templates.
 static void _long_sort(CrawlVector &vec)
 {
     std::vector<long> help;
@@ -234,7 +234,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     int rot_limit  = you.num_turns;
     int coag_limit = you.num_turns + 500; // check 500 turns later
 
-    // first count whether coagulating is even necessary
+    // First count whether coagulating is even necessary.
     int rot_count  = 0;
     int coag_count = 0;
     std::vector<long> age_timer;
@@ -245,7 +245,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
         if (current > coag_limit
             || blood.sub_type == POT_BLOOD_COAGULATED && current > rot_limit)
         {
-            // still some time until rotting/coagulating
+            // Still some time until rotting/coagulating.
             break;
         }
 
@@ -273,24 +273,24 @@ void maybe_coagulate_blood_potions_floor(int obj)
     more();
 #endif
 
-    if (!coag_count) // some potions rotted away
+    if (!coag_count) // Some potions rotted away.
     {
         dec_mitm_item_quantity(obj, rot_count);
-        // timer is already up to date
+        // Timer is already up to date.
         return;
     }
 
-    // coagulated blood cannot coagulate any further...
+    // Coagulated blood cannot coagulate any further...
     ASSERT(blood.sub_type == POT_BLOOD);
 
-    // now that coagulating is necessary, check square for !coagulated blood
+    // Now that coagulating is necessary, check square for !coagulated blood.
     ASSERT(blood.x >= 0 && blood.y >= 0);
     for (int o = igrd[blood.x][blood.y]; o != NON_ITEM; o = mitm[o].link)
     {
         if (mitm[o].base_type == OBJ_POTIONS
             && mitm[o].sub_type == POT_BLOOD_COAGULATED)
         {
-            // merge with existing stack
+            // Merge with existing stack.
             CrawlHashTable &props2 = mitm[o].props;
             if (!props2.exists("timer"))
                 init_stack_blood_potions(mitm[o], mitm[o].special);
@@ -299,7 +299,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
             CrawlVector &timer2 = props2["timer"].get_vector();
             ASSERT(timer2.size() == mitm[o].quantity);
 
-            // update timer -> push(pop)
+            // Update timer -> push(pop).
             long val;
             while (!age_timer.empty())
             {
@@ -316,17 +316,17 @@ void maybe_coagulate_blood_potions_floor(int obj)
     }
     // If we got here, nothing was found!
 
-    // entire stack is gone, rotted or coagulated.
-    // -> change potions to coagulated type
+    // Entire stack is gone, rotted or coagulated.
+    // -> Change potions to coagulated type.
     if (rot_count + coag_count == blood.quantity)
     {
         ASSERT(timer.empty());
 
-        // update subtype
+        // Update subtype.
         blood.sub_type = POT_BLOOD_COAGULATED;
         item_colour(blood);
 
-        // re-fill vector
+        // Re-fill vector.
         long val;
         while (!age_timer.empty())
         {
@@ -412,8 +412,8 @@ static void _potion_stack_changed_message(item_def &potion, int num_changed,
     mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
 }
 
-// returns true if "equipment weighs less" message needed
-// also handles coagulation messages
+// Returns true if "equipment weighs less" message needed.
+// Also handles coagulation messages.
 bool maybe_coagulate_blood_potions_inv(item_def &blood)
 {
     ASSERT(is_valid_item(blood));
@@ -433,7 +433,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     int rot_limit  = you.num_turns;
     int coag_limit = you.num_turns + 500; // check 500 turns later
 
-    // first count whether coagulating is even necessary
+    // First count whether coagulating is even necessary.
     int rot_count  = 0;
     int coag_count = 0;
     std::vector<long> age_timer;
@@ -445,7 +445,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         if (current > coag_limit
             || blood.sub_type == POT_BLOOD_COAGULATED && current > rot_limit)
         {
-            // still some time until rotting/coagulating
+            // Still some time until rotting/coagulating.
             break;
         }
 
@@ -475,7 +475,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     you.wield_change  = true;
     you.redraw_quiver = true;
 
-    if (!coag_count) // some potions rotted away
+    if (!coag_count) // Some potions rotted away.
     {
         blood.quantity -= rot_count;
         if (blood.quantity < 1)
@@ -491,7 +491,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         return true;
     }
 
-    // coagulated blood cannot coagulate any further...
+    // Coagulated blood cannot coagulate any further...
     ASSERT(blood.sub_type == POT_BLOOD);
 
     bool knew_blood = get_ident_type(OBJ_POTIONS, POT_BLOOD) == ID_KNOWN_TYPE;
@@ -500,14 +500,14 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
     _potion_stack_changed_message(blood, coag_count);
 
-    // identify both blood and coagulated blood, if necessary
+    // Identify both blood and coagulated blood, if necessary.
     if (!knew_blood)
         set_ident_type( OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE );
 
     if (!knew_coag)
         set_ident_type( OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE );
 
-    // now that coagulating is necessary, check inventory for !coagulated blood
+    // Now that coagulating is necessary, check inventory for !coagulated blood.
     for (int m = 0; m < ENDOFPACK; m++)
     {
         if (!is_valid_item(you.inv[m]))
@@ -538,7 +538,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
                     mpr(blood.name(DESC_INVENTORY).c_str());
             }
 
-            // update timer -> push(pop)
+            // Update timer -> push(pop).
             long val;
             while (!age_timer.empty())
             {
@@ -559,15 +559,15 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         }
     }
 
-    // if entire stack has coagulated, simply change subtype
+    // If entire stack has coagulated, simply change subtype.
     if (rot_count + coag_count == blood.quantity)
     {
         ASSERT(timer.empty());
-        // update subtype
+        // Update subtype.
         blood.sub_type = POT_BLOOD_COAGULATED;
         item_colour(blood);
 
-        // re-fill vector
+        // Re-fill vector.
         long val;
         while (!age_timer.empty())
         {
@@ -576,7 +576,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             timer.push_back(val);
         }
         blood.quantity -= rot_count;
-        // stack still exists because of coag_count
+        // Stack still exists because of coag_count.
         ASSERT(timer.size() == blood.quantity);
 
         if (!knew_coag)
@@ -631,14 +631,14 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         return (rot_count > 0);
     }
 
-    // no space in inventory, check floor
+    // No space in inventory, check floor.
     int o = igrd[you.x_pos][you.y_pos];
     while (o != NON_ITEM)
     {
         if (mitm[o].base_type == OBJ_POTIONS
             && mitm[o].sub_type == POT_BLOOD_COAGULATED)
         {
-            // merge with existing stack
+            // Merge with existing stack.
             CrawlHashTable &props2 = mitm[o].props;
             if (!props2.exists("timer"))
                 init_stack_blood_potions(mitm[o], mitm[o].special);
@@ -647,7 +647,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             CrawlVector &timer2 = props2["timer"].get_vector();
             ASSERT(timer2.size() == mitm[o].quantity);
 
-            // update timer -> push(pop)
+            // Update timer -> push(pop).
             long val;
             while (!age_timer.empty())
             {
@@ -669,12 +669,12 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     }
     // If we got here nothing was found!
 
-    // create a new stack of potions
+    // Create a new stack of potions.
     o = get_item_slot( 100 + random2(200) );
     if (o == NON_ITEM)
         return false;
 
-    // these values are common to all: {dlb}
+    // These values are common to all: {dlb}
     mitm[o].base_type = OBJ_POTIONS;
     mitm[o].sub_type  = POT_BLOOD_COAGULATED;
     mitm[o].quantity  = coag_count;
@@ -718,7 +718,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     return true;
 }
 
-// mostly used for (q)uaff, (f)ire, and Evaporate
+// Mostly used for (q)uaff, (f)ire, and Evaporate.
 long remove_oldest_blood_potion(item_def &stack)
 {
     ASSERT(is_valid_item(stack));
@@ -731,14 +731,15 @@ long remove_oldest_blood_potion(item_def &stack)
     CrawlVector &timer = props["timer"].get_vector();
     ASSERT(!timer.empty());
 
-    // assuming already sorted, and first (oldest) potion valid
+    // Assuming already sorted, and first (oldest) potion valid.
     const long val = timer[timer.size() - 1].get_long();
     timer.pop_back();
-    // the quantity will be decreased elsewhere
+
+    // The quantity will be decreased elsewhere.
     return val;
 }
 
-// used whenever copies of blood potions have to be cleaned up
+// Used whenever copies of blood potions have to be cleaned up.
 void remove_newest_blood_potion(item_def &stack, int quant)
 {
     ASSERT(is_valid_item(stack));
@@ -754,7 +755,7 @@ void remove_newest_blood_potion(item_def &stack, int quant)
     if (quant == -1)
         quant = timer.size() - stack.quantity;
 
-    // overwrite newest potions with oldest ones
+    // Overwrite newest potions with oldest ones.
     int repeats = stack.quantity;
     if (repeats > quant)
         repeats = quant;
@@ -765,17 +766,17 @@ void remove_newest_blood_potion(item_def &stack, int quant)
         timer.pop_back();
     }
 
-    // now remove remaining oldest potions
+    // Now remove remaining oldest potions...
     repeats = quant - repeats;
     for (int i = 0; i < repeats; i++)
         timer.pop_back();
 
-    // and re-sort
+    // ... and re-sort.
     _long_sort(timer);
 }
 
 // Called from copy_item_to_grid.
-// Quantities are set afterwards, so don't ASSERT for those.
+// NOTE: Quantities are set afterwards, so don't ASSERT for those.
 void drop_blood_potions_stack(item_def &stack, int quant, int x, int y)
 {
     if (!is_valid_item(stack))
@@ -791,7 +792,7 @@ void drop_blood_potions_stack(item_def &stack, int quant, int x, int y)
     CrawlVector &timer = props["timer"].get_vector();
     ASSERT(!timer.empty());
 
-    // first check whether we can merge with an existing stack on the floor
+    // First check whether we can merge with an existing stack on the floor.
     int o = igrd[x][y];
     while (o != NON_ITEM)
     {
@@ -804,14 +805,14 @@ void drop_blood_potions_stack(item_def &stack, int quant, int x, int y)
             ASSERT(props2.exists("timer"));
             CrawlVector &timer2 = props2["timer"].get_vector();
 
-            // update timer -> push(pop)
+            // Update timer -> push(pop).
             for (int i = 0; i < quant; i++)
             {
                 timer2.push_back(timer[timer.size() - 1].get_long());
                 timer.pop_back();
             }
 
-            // re-sort timer
+            // Re-sort timer.
             _long_sort(timer2);
             return;
         }
@@ -842,7 +843,7 @@ void pick_up_blood_potions_stack(item_def &stack, int quant)
     CrawlVector &timer = props["timer"].get_vector();
     ASSERT(!timer.empty());
 
-    // first check whether we can merge with an existing stack in inventory
+    // First check whether we can merge with an existing stack in inventory.
     for (int m = 0; m < ENDOFPACK; m++)
     {
         if (!is_valid_item(you.inv[m]))
@@ -857,14 +858,14 @@ void pick_up_blood_potions_stack(item_def &stack, int quant)
             ASSERT(props2.exists("timer"));
             CrawlVector &timer2 = props2["timer"].get_vector();
 
-            // update timer -> push(pop)
+            // Update timer -> push(pop).
             for (int i = 0; i < quant; i++)
             {
                 timer2.push_back(timer[timer.size() - 1].get_long());
                 timer.pop_back();
             }
 
-            // re-sort timer
+            // Re-sort timer.
             _long_sort(timer2);
             return;
         }
@@ -905,12 +906,12 @@ void turn_corpse_into_blood_potions( item_def &item )
     item_colour(item);
     item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
-    // max. amount is about one third of the max. amount for chunks
+    // Max. amount is about one third of the max. amount for chunks.
     const int max_chunks = mons_weight( mons_class ) / 150;
     item.quantity  = 1 + random2( max_chunks/3 );
     item.quantity  = stepdown_value( item.quantity, 2, 2, 6, 6 );
 
-    // lower number of potions obtained from contaminated chunk type corpses
+    // Lower number of potions obtained from contaminated chunk type corpses.
     if (mons_corpse_effect( mons_class ) == CE_CONTAMINATED)
     {
         item.quantity /= (random2(3) + 1);
@@ -919,18 +920,18 @@ void turn_corpse_into_blood_potions( item_def &item )
             item.quantity = 1;
     }
 
-    // initialize timer depending on corpse age
+    // Initialize timer depending on corpse age:
     // almost rotting: age = 100 --> potion timer =  500 --> will coagulate soon
     // freshly killed: age = 200 --> potion timer = 2000 --> fresh !blood
     init_stack_blood_potions(item, (item.special - 100) * 15 + 500);
 
-    // happens after the blood has been bottled
+    // Happens after the blood has been bottled.
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
         create_monster_hide(mons_class);
 }
 
 // A variation of the mummy curse:
-// instead of trashing the entire stack, split the stack and only turn part
+// Instead of trashing the entire stack, split the stack and only turn part
 // of it into POT_DECAY.
 void split_potions_into_decay( int obj, int amount, bool need_msg )
 {
@@ -942,7 +943,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     ASSERT(amount > 0);
     ASSERT(amount <= potion.quantity);
 
-    // output decay message
+    // Output decay message.
     if (need_msg && get_ident_type(OBJ_POTIONS, POT_DECAY) == ID_KNOWN_TYPE)
         _potion_stack_changed_message(potion, amount, false);
 
@@ -957,7 +958,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
             remove_oldest_blood_potion(potion);
     }
 
-    // try to merge into existing stacks of decayed potions
+    // Try to merge into existing stacks of decayed potions.
     for (int m = 0; m < ENDOFPACK; m++)
     {
         if (you.inv[m].base_type == OBJ_POTIONS
@@ -979,7 +980,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         }
     }
 
-    // else, if entire stack affected just change subtype
+    // Else, if entire stack affected just change subtype.
     if (amount == potion.quantity)
     {
         you.inv[obj].sub_type = POT_DECAY;
@@ -987,7 +988,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         return;
     }
 
-    // else, create new stack in inventory
+    // Else, create new stack in inventory.
     int freeslot = find_free_slot(you.inv[obj]);
     if (freeslot >= 0 && freeslot < ENDOFPACK
         && !is_valid_item(you.inv[freeslot]))
@@ -1026,7 +1027,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         o = mitm[o].link;
     }
 
-    // only bother creating a distinct stack of potions
+    // Only bother creating a distinct stack of potions
     // if it won't get destroyed right away.
     if (!grid_destroys_items(grd[you.x_pos][you.y_pos]))
     {
@@ -1061,33 +1062,33 @@ bool victim_can_bleed(int montype)
         int tran = you.attribute[ATTR_TRANSFORMATION];
         if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
             || tran == TRAN_AIR || tran == TRAN_LICH
-            || tran == TRAN_SPIDER) // monster spiders don't bleed either
+            || tran == TRAN_SPIDER) // Monster spiders don't bleed either.
         {
             return (false);
         }
         return (true);
     }
 
-    // now check monsters
+    // Now check monsters.
     return (mons_has_blood(montype));
 }
 
 static bool allow_bleeding_on_square(int x, int y)
 {
-    // no bleeding onto sanctuary ground, please
-    // also not necessary if already covered in blood
+    // No bleeding onto sanctuary ground, please.
+    // Also not necessary if already covered in blood.
     if (env.map[x][y].property != FPROP_NONE)
         return (false);
 
-    // no spattering into lava or water
+    // No spattering into lava or water.
     if (grd[x][y] >= DNGN_LAVA && grd[x][y] < DNGN_FLOOR)
         return (false);
 
-    // no spattering into fountains (other than blood)
+    // No spattering into fountains (other than blood).
     if (grd[x][y] == DNGN_FOUNTAIN_BLUE || grd[x][y] == DNGN_FOUNTAIN_SPARKLING)
         return (false);
 
-    // the good gods like to keep their altars pristine
+    // The good gods like to keep their altars pristine.
     if (is_good_god(grid_altar_god(grd[x][y])))
         return (false);
 
@@ -1112,22 +1113,22 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
         if (allow_bleeding_on_square(x,y))
             env.map[x][y].property = FPROP_BLOODY;
 
-        // if old or new blood on square, the smell reaches further
+        // If old or new blood on square, the smell reaches further.
         if (env.map[x][y].property == FPROP_BLOODY)
             blood_smell(12, x, y);
-        else // still allow a lingering smell
+        else // Still allow a lingering smell.
             blood_smell(7, x, y);
 
         if (spatter)
         {
-            // smaller chance of spattering surrounding squares
+            // Smaller chance of spattering surrounding squares.
             for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++)
                 {
                      if (i == 0 && j == 0) // current square
                          continue;
 
-                     // spattering onto walls etc. less likely
+                     // Spattering onto walls etc. less likely.
                      if (grd[x+i][y+j] < DNGN_MINMOVE && one_chance_in(3))
                          continue;
 
@@ -1137,9 +1138,9 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
     }
 }
 
-// currently flavour only: colour ground (and possibly adjacent squares) red
+// Currently flavour only: colour ground (and possibly adjacent squares) red.
 // "damage" depends on damage taken (or hitpoints, if damage higher),
-// or, for sacrifices, on the number of chunks possible to get out of a corpse
+// or, for sacrifices, on the number of chunks possible to get out of a corpse.
 void bleed_onto_floor(int x, int y, int montype, int damage, bool spatter)
 {
     if (!victim_can_bleed(montype))
@@ -1165,17 +1166,18 @@ void search_around( bool only_adjacent )
     for (int srx = you.x_pos - max_dist; srx <= you.x_pos + max_dist; ++srx)
         for (int sry = you.y_pos - max_dist; sry <= you.y_pos + max_dist; ++sry)
         {
-            // must have LOS, with no translucent walls in the way.
+            // Must have LOS, with no translucent walls in the way.
             if (see_grid_no_trans(srx, sry))
             {
-                // maybe we want distance() instead of grid_distance()?
+                // Maybe we want distance() instead of grid_distance()?
                 int dist = grid_distance(srx, sry, you.x_pos, you.y_pos);
 
-                // don't exclude own square; may be levitating
+                // Don't exclude own square; may be levitating.
+                // XXX: Currently, levitating over a trap will always detect it.
                 if (dist == 0)
                     ++dist;
 
-                // making this harsher by removing the old +1
+                // Making this harsher by removing the old +1...
                 int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
 
                 if (grd[srx][sry] == DNGN_SECRET_DOOR
@@ -1213,7 +1215,7 @@ void search_around( bool only_adjacent )
         }
 
     return;
-}                               // end search_around()
+}
 
 cloud_type beam2cloud(beam_type flavour)
 {
@@ -1629,7 +1631,7 @@ void up_stairs(dungeon_feature_type force_stair,
         return;
     }
 
-    // probably still need this check here (teleportation) -- bwr
+    // Probably still need this check here (teleportation) -- bwr
     if (grid_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
     {
         if (stair_find == DNGN_STONE_ARCH)
@@ -1684,7 +1686,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     int old_level  = you.your_level;
 
-    // Interlevel travel data:
+    // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
 
     if (collect_travel_data)
@@ -1692,7 +1694,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     // Make sure we return to our main dungeon level... labyrinth entrances
     // in the abyss or pandemonium are a bit trouble (well the labyrinth does
-    // provide a way out of those places, its really not that bad I suppose)
+    // provide a way out of those places, its really not that bad I suppose).
     if (level_type_exits_up(you.level_type))
         you.level_type = LEVEL_DUNGEON;
 
@@ -1736,7 +1738,7 @@ void up_stairs(dungeon_feature_type force_stair,
         you.your_level = 27;
     }
 
-    // did we take a branch stair?
+    // Did we take a branch stair?
     for ( i = 0; i < NUM_BRANCHES; ++i )
     {
         if ( branches[i].exit_stairs == stair_find )
@@ -1896,7 +1898,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     }
 #endif
 
-    // probably still need this check here (teleportation) -- bwr
+    // Probably still need this check here (teleportation) -- bwr
     if (grid_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
     {
         if (stair_find == DNGN_STONE_ARCH)
@@ -1912,7 +1914,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     {
         mpr("A mysterious force prevents you from descending the staircase.");
         return;
-    }                           /* down stairs in vestibule are one-way */
+    }  // Down stairs in vestibule are one-way!
 
     if (stair_find == DNGN_STONE_ARCH)
     {
@@ -2013,7 +2015,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (!force_stair && !_check_annotation_exclusion_warning())
         return;
 
-    // Interlevel travel data:
+    // Interlevel travel data.
     bool collect_travel_data = can_travel_interlevel();
 
     level_id  old_level_id    = level_id::current();
@@ -2047,8 +2049,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         you.your_level = 26;
     }
 
-    // welcome message
-    // try to find a branch stair
+    // Welcome message.
+    // Try to find a branch stair.
     bool entered_branch = false;
     for ( i = 0; i < NUM_BRANCHES; ++i )
     {
@@ -2073,7 +2075,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         you.level_type = LEVEL_PORTAL_VAULT;
 
     // When going downstairs into a special level, delete any previous
-    // instances of it
+    // instances of it.
     if (you.level_type != LEVEL_DUNGEON)
     {
         std::string lname = make_filename(you.your_name, you.your_level,
@@ -2103,7 +2105,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         mpr("In your confused state, you trip and fall down the stairs.");
 
         // Nastier than when climbing stairs, but you'll aways get to
-        // your destination, -- bwr
+        // your destination. -- bwr
         ouch( roll_dice( 6 + you.burden_state, 10 ), 0,
               KILLED_BY_FALLING_DOWN_STAIRS );
     }
@@ -2136,6 +2138,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     case LEVEL_ABYSS:
         if (!force_stair)
             mpr("You enter the Abyss!");
+
         mpr("To return, you must find a gate leading back.");
         learned_something_new(TUT_ABYSS);
         break;
@@ -2311,7 +2314,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     new_level();
 
-    // clear list of beholding monsters
+    // Clear list of beholding monsters.
     if (you.duration[DUR_BEHELD])
     {
         you.beheld_by.clear();
@@ -2415,15 +2418,18 @@ std::string weird_smell()
 
 bool scramble(void)
 {
+    // Statues are too stiff and heavy to scramble out of the water.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
         return (false);
+
     int max_carry = carrying_capacity();
 
+    // When highly encumbered, scrambling out is hard to do.
     if ((max_carry / 2) + random2(max_carry / 2) <= you.burden)
-        return false;
+        return (false);
     else
-        return true;
-}                               // end scramble()
+        return (true);
+}
 
 bool go_berserk(bool intentional)
 {
@@ -2465,6 +2471,7 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     case CLOUD_FIRE:
     case CLOUD_COLD:
         return (true);
+
     // Only harmful if the player doesn't have the necessary resistances.
     // Takes into account what the player can *know* and what s/he can
     // also expect to be the case a few turns later (ignores spells).
@@ -2475,8 +2482,9 @@ bool is_damaging_cloud(cloud_type type, bool temp)
         return (player_res_steam(false, temp) <= 0);
     case CLOUD_MIASMA:
         return (player_prot_life(false, temp) <= 2);
-    // smoke, never harmful
+
     default:
+        // Smoke, never harmful.
         return (false);
     }
 }
@@ -2569,32 +2577,32 @@ void get_playervisible_monsters(std::vector<monsters*> &mons,
     const int xstart = MAX(0,   you.x_pos - range);
     const int xend   = MIN(GXM, you.x_pos + range);
 
-    // monster check
-    for ( int y = ystart; y < yend; ++y )
-    for ( int x = xstart; x < xend; ++x )
-    {
-        const unsigned short targ_monst = env.mgrid[x][y];
-        if ( targ_monst != NON_MONSTER )
+    // Monster check.
+    for (int y = ystart; y < yend; ++y)
+        for (int x = xstart; x < xend; ++x)
         {
-            if ( see_grid(x,y) )
+            const unsigned short targ_monst = env.mgrid[x][y];
+            if (targ_monst != NON_MONSTER)
             {
-                monsters *mon = &env.mons[targ_monst];
-                if (player_monster_visible(mon)
-                    && !mons_is_submerged(mon)
-                    && (!mons_is_mimic(mon->type)
-                        || mons_is_known_mimic(mon))
-                    && (!dangerous_only || !mons_is_safe(mon, want_move)))
+                if (see_grid(x,y))
                 {
-                    mons.push_back(mon);
-                    if (just_check)
+                    monsters *mon = &env.mons[targ_monst];
+                    if (player_monster_visible(mon)
+                        && !mons_is_submerged(mon)
+                        && (!mons_is_mimic(mon->type)
+                            || mons_is_known_mimic(mon))
+                        && (!dangerous_only || !mons_is_safe(mon, want_move)))
                     {
-                        // one monster found, that's enough
-                        return;
+                        mons.push_back(mon);
+                        if (just_check)
+                        {
+                            // One monster found, that's enough.
+                            return;
+                        }
                     }
                 }
             }
         }
-    }
 }
 
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
@@ -2606,6 +2614,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
         {
             const cloud_type type =
                     env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type;
+
             if (is_damaging_cloud(type, false))
             {
                 if (announce)
@@ -2617,13 +2626,13 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
             }
         }
 
-        // no monster will attack you inside a sanctuary,
-        // so presence of monsters won't matter - until it starts shrinking
+        // No monster will attack you inside a sanctuary,
+        // so presence of monsters won't matter -- until it starts shrinking...
         if (is_sanctuary(you.x_pos, you.y_pos) && env.sanctuary_time >= 5)
             return (true);
     }
 
-    // monster check
+    // Monster check.
     std::vector<monsters*> visible;
     get_playervisible_monsters(visible, want_move, !announce, true, range);
 
@@ -2681,8 +2690,8 @@ int str_to_shoptype(const std::string &s)
     return (-1);
 }
 
-// general threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters
-// highest threat = highest_logexpervalue_of_nearby_unfriendly_monsters
+// General threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters.
+// Highest threat = highest_logexpervalue_of_nearby_unfriendly_monsters.
 void monster_threat_values(double *general, double *highest)
 {
     double sum = 0;
@@ -2911,7 +2920,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
 
     if (isFriendly)
     {
-        // listed in the form: "your rat", "Blork"
+        // listed in the form: "your rat", "Blork the orc"
         snprintf(info, INFO_SIZE, "Really %s %s%s?",
                  (beam_attack) ? (beam_target) ? "fire at"
                                                : "fire through"
@@ -2922,8 +2931,8 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
         prompt = true;
     }
     else if (inSanctuary || wontAttack
-        || (is_good_god(you.religion) && (isNeutral || isHoly))
-        || (you.religion == GOD_SHINING_ONE && isUnchivalric))
+             || is_good_god(you.religion) && (isNeutral || isHoly)
+             || you.religion == GOD_SHINING_ONE && isUnchivalric)
     {
         // "Really fire through the helpless neutral holy Daeva?"
         // was: "Really fire through this helpless neutral holy creature?"
@@ -2942,11 +2951,12 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                  mon->name(DESC_PLAIN).c_str(),
                  (inSanctuary)   ? ", despite your sanctuary"
                                  : "");
+
         prompt = true;
     }
 
     if (!you.confused() && prompt)
         retval = !yesno(info, false, 'n');
 
-    return retval;
+    return (retval);
 }

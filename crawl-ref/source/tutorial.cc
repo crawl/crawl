@@ -1733,8 +1733,6 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 text << "Ah, a corpse!";
             else
             {
-                const item_def& item(mitm[i]);
-
                 text << "That ";
 #ifndef USE_TILE
                 unsigned short col;
@@ -1744,7 +1742,6 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 text << " ";
 #else
                 // Highlight item (if it works).
-                const coord_def ep = grid2view(coord_def(item.x, item.y));
                 tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
 
@@ -2480,7 +2477,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         }
         text << ". ";
 
-        text << "If your piety goes to zero, then you'll be excomunicated. "
+        text << "If your piety goes to zero, then you'll be excommunicated. "
                 "Better get cracking on raising your piety, and/or stop "
                 "annoying your god.";
         break;

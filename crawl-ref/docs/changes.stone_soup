@@ -29,14 +29,13 @@ Interface
 * Refuse to eat rotten meat for non-saprovorous characters.
 * Evaporate can now be cancelled during potion/direction choice.
 * greedy_explore now defaults to true.
-* Autoprayer is gone.
 
 Gods
 ----
 * Overhauled the good gods: Zin/TSO completely new, Elyvilon more interesting.
 * Greatly improved Beogh and Nemelex.
 * Vehumet isn't evil anymore, and all boosts apply without prayer.
-* Removed option to stop prayer.
+* Removed autoprayer and option to stop prayer.
 * Upon failed sacrifice hint on accepted item types.
 * Divine summons will leave on penance, or turn hostile on abandonment.
 
