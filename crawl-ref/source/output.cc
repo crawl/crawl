@@ -213,7 +213,7 @@ void update_message_status()
 {
     textcolor(LIGHTBLUE);
 
-    cgotoxy(36, 2, GOTO_STAT);
+    cgotoxy(36, 1, GOTO_STAT);
     if (SysEnv.have_messages)
         cprintf("(msg)");
     else
@@ -445,8 +445,8 @@ static void _print_stats_ac(int x, int y)
         textcolor( HUD_VALUE_COLOR );
     cprintf( "%2d ", player_AC() );
 
-    // Sh: (one line lower)
-    cgotoxy(x+4, y+1, GOTO_STAT);
+    // Sh: (two lines lower)
+    cgotoxy(x+4, y+2, GOTO_STAT);
     if (you.duration[DUR_CONDENSATION_SHIELD] || you.duration[DUR_DIVINE_SHIELD])
         textcolor( LIGHTBLUE );
     else
@@ -823,13 +823,13 @@ void print_stats(void)
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp ( 1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp ( 1, 4); }
-    if (you.redraw_strength)     { you.redraw_strength = false;     _print_stats_str( 1, 5); }
-    if (you.redraw_intelligence) { you.redraw_intelligence = false; _print_stats_int( 1, 6); }
-    if (you.redraw_dexterity)    { you.redraw_dexterity = false;    _print_stats_dex( 1, 7); }
+    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac ( 1, 5); }
+    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev ( 1, 6); }
+    // (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_sh ( 1, 7); }
 
-    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (19, 5); }
-    // (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_sh (19, 6); }
-    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (19, 7); }
+    if (you.redraw_strength)     { you.redraw_strength = false;     _print_stats_str(19, 5); }
+    if (you.redraw_intelligence) { you.redraw_intelligence = false; _print_stats_int(19, 6); }
+    if (you.redraw_dexterity)    { you.redraw_dexterity = false;    _print_stats_dex(19, 7); }
 
     int yhack = 0;
     // If Options.show_gold_turns, line 8 is Gold and Turns
@@ -992,13 +992,13 @@ void draw_border(void)
 
     //cgotoxy( 1, 3, GOTO_STAT); cprintf("Hp:");
     cgotoxy( 1, 4, GOTO_STAT); cprintf("Magic:");
-    cgotoxy( 1, 5, GOTO_STAT); cprintf("Str:");
-    cgotoxy( 1, 6, GOTO_STAT); cprintf("Int:");
-    cgotoxy( 1, 7, GOTO_STAT); cprintf("Dex:");
+    cgotoxy( 1, 5, GOTO_STAT); cprintf("AC:");
+    cgotoxy( 1, 6, GOTO_STAT); cprintf("EV:");
+    cgotoxy( 1, 7, GOTO_STAT); cprintf("SH:");
 
-    cgotoxy(19, 5, GOTO_STAT); cprintf("AC:");
-    cgotoxy(19, 6, GOTO_STAT); cprintf("Sh:");
-    cgotoxy(19, 7, GOTO_STAT); cprintf("Ev:");
+    cgotoxy(19, 5, GOTO_STAT); cprintf("Str:");
+    cgotoxy(19, 6, GOTO_STAT); cprintf("Int:");
+    cgotoxy(19, 7, GOTO_STAT); cprintf("Dex:");
 
     if (Options.show_gold_turns)
     {
@@ -1951,7 +1951,7 @@ static std::vector<formatted_string> _get_overview_stats()
     char buf[1000];
 
     // 4 columns
-    column_composer cols1(4, 18, 30, 40);
+    column_composer cols1(4, 18, 28, 40);
 
     if (!player_rotted())
         snprintf(buf, sizeof buf, "HP %3d/%d",you.hp,you.hp_max);
@@ -1969,6 +1969,21 @@ static std::vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "Gold %d", you.gold);
     cols1.add_formatted(0, buf, false);
 
+    snprintf(buf, sizeof buf, "AC %2d" , player_AC());
+    cols1.add_formatted(1, buf, false);
+
+    snprintf(buf, sizeof buf, "EV %2d" , player_evasion());
+    cols1.add_formatted(1, buf, false);
+
+    if (you.equip[EQ_SHIELD] == -1)
+    {
+        textcolor( DARKGREY );
+        snprintf(buf, sizeof buf, "SH  <darkgrey>-</darkgrey>");
+    }
+    else
+        snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
+    cols1.add_formatted(1, buf, false);
+
     if (you.strength == you.max_strength)
         snprintf(buf, sizeof buf, "Str %2d", you.strength);
     else
@@ -1976,7 +1991,7 @@ static std::vector<formatted_string> _get_overview_stats()
         snprintf(buf, sizeof buf, "Str <yellow>%2d</yellow> (%d)",
                  you.strength, you.max_strength);
     }
-    cols1.add_formatted(1, buf, false);
+    cols1.add_formatted(2, buf, false);
 
     if (you.intel == you.max_intel)
         snprintf(buf, sizeof buf, "Int %2d", you.intel);
@@ -1985,7 +2000,7 @@ static std::vector<formatted_string> _get_overview_stats()
         snprintf(buf, sizeof buf, "Int <yellow>%2d</yellow> (%d)",
                  you.intel, you.max_intel);
     }
-    cols1.add_formatted(1, buf, false);
+    cols1.add_formatted(2, buf, false);
 
     if (you.dex == you.max_dex)
         snprintf(buf, sizeof buf, "Dex %2d", you.dex);
@@ -1994,20 +2009,6 @@ static std::vector<formatted_string> _get_overview_stats()
         snprintf(buf, sizeof buf, "Dex <yellow>%2d</yellow> (%d)",
                  you.dex, you.max_dex);
     }
-    cols1.add_formatted(1, buf, false);
-
-    snprintf(buf, sizeof buf, "AC %2d" , player_AC());
-    cols1.add_formatted(2, buf, false);
-    if (you.equip[EQ_SHIELD] == -1)
-    {
-        textcolor( DARKGREY );
-        snprintf(buf, sizeof buf, "Sh  <darkgrey>-</darkgrey>");
-    }
-    else
-        snprintf(buf, sizeof buf, "Sh %2d", player_shield_class());
-
-    cols1.add_formatted(2, buf, false);
-    snprintf(buf, sizeof buf, "Ev %2d" , player_evasion());
     cols1.add_formatted(2, buf, false);
 
     char god_colour_tag[20];
