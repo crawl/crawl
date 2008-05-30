@@ -1012,7 +1012,7 @@ static void _origin_freeze(item_def &item, int x, int y)
     }
 }
 
-static std::string _origin_monster_name(const item_def &item)
+std::string origin_monster_name(const item_def &item)
 {
     const int monnum = item.orig_monnum - 1;
     if (monnum == MONS_PLAYER_GHOST)
@@ -1020,11 +1020,6 @@ static std::string _origin_monster_name(const item_def &item)
     else if (monnum == MONS_PANDEMONIUM_DEMON)
         return ("a demon");
     return mons_type_name(monnum, DESC_NOCAP_A);
-}
-
-static std::string _origin_monster_desc(const item_def &item)
-{
-    return (_origin_monster_name(item));
 }
 
 static std::string _origin_place_desc(const item_def &item)
@@ -1114,7 +1109,7 @@ std::string origin_desc(const item_def &item)
         else
         {
             desc += "You took " + _article_it(item) + " off "
-                    + _origin_monster_desc(item) + " ";
+                    + origin_monster_name(item) + " ";
         }
     }
     else

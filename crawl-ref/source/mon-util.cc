@@ -1636,7 +1636,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     // If the monster has an explicit name, return that, handling it like
     // a unique's name.
-    if (!mon.mname.empty())
+    if (desc != DESC_BASENAME && !mon.mname.empty())
         return mon.mname;
 
     std::string result;
@@ -1773,10 +1773,10 @@ std::string mons_type_name(int type, description_level_type desc )
     result += get_monster_data(type)->name;
 
     // Vowel fix: Change 'a orc' to 'an orc'
-    if ( result.length() >= 3
-         && (result[0] == 'a' || result[0] == 'A')
-         && result[1] == ' '
-         && is_vowel(result[2]) )
+    if (result.length() >= 3
+        && (result[0] == 'a' || result[0] == 'A')
+        && result[1] == ' '
+        && is_vowel(result[2]) )
     {
         result.insert(1, "n");
     }

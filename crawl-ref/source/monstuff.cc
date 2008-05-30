@@ -351,6 +351,7 @@ static void _place_monster_corpse(const monsters *monster)
         mitm[o].base_type = OBJ_UNASSIGNED;
         return;
     }
+    origin_set_monster(mitm[o], monster);
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack).
     move_item_to_grid( &o, monster->x, monster->y );

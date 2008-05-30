@@ -466,11 +466,24 @@ static int raise_corpse( int corps, int corx, int cory,
         if (!number && zombie_type == MONS_HYDRA)
             return (0);
 
-        create_monster(
-            mgen_data(
-                type, corps_beh, 0,
-                coord_def(corx, cory), corps_hit,
-                0, zombie_type, number));
+        int monster = create_monster(
+                        mgen_data(
+                            type, corps_beh, 0,
+                            coord_def(corx, cory), corps_hit,
+                            0, zombie_type, number));
+
+        if (monster != -1)
+        {
+            const int monnum = mitm[corps].orig_monnum - 1;
+            if (mons_is_unique(monnum))
+            {
+                menv[monster].mname = origin_monster_name(mitm[corps]);
+                // Special case for Blork the orc: shorten his name to "Blork"
+                // to avoid mentions of "Blork the orc the orc skeleton".
+                if (monnum == MONS_BLORK_THE_ORC)
+                    menv[monster].mname = "Blork";
+            }
+        }
 
         destroy_item(corps);
     }

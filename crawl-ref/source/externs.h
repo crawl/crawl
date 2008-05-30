@@ -393,13 +393,13 @@ struct delay_queue_item
 struct item_def
 {
     object_class_type  base_type;  // basic class (ie OBJ_WEAPON)
-    unsigned char  sub_type;   // type within that class (ie WPN_DAGGER)
-    short          plus;       // +to hit, charges, corpse mon id
-    short          plus2;      // +to dam, sub-sub type for boots and helms
-    long           special;    // special stuff
-    unsigned char  colour;     // item colour
-    unsigned long  flags;      // item status flags
-    short          quantity;   // number of items
+    unsigned char  sub_type;       // type within that class (ie WPN_DAGGER)
+    short          plus;           // +to hit, charges, corpse mon id
+    short          plus2;          // +to dam, sub-sub type for boots/helms
+    long           special;        // special stuff
+    unsigned char  colour;         // item colour
+    unsigned long  flags;          // item status flags
+    short          quantity;       // number of items
 
     short  x;          // x-location;         for inventory items = -1
     short  y;          // y-location;         for inventory items = -1

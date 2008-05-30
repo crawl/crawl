@@ -2729,7 +2729,8 @@ enum tutorial_event_type
     TUT_DONE_EXPLORE,
     TUT_STAIR_BRAND,
     TUT_EVENTS_NUM          // 63
-}; // for numbers higher than 70 change size of tutorial_events in externs.h
+};
+// NOTE: For numbers higher than 70 change size of tutorial_events in externs.h.
 
 enum tutorial_types
 {

@@ -2180,9 +2180,12 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     {
         desc = mon->name(mondtype);
         // For named monsters also mention the base type in the form of
-        // "Morbeogh the orc priest".
+        // "Morbeogh the orc priest", "Sigmund the human zombie".
+        // Note that the only difference between DESC_BASENAME and DESC_PLAIN
+        // is that basename will ignore mname, so the monster _must_ be named
+        // for this to make any sense.
         if (!(mon->mname).empty())
-            desc += " " + mons_type_name(mon->type, DESC_NOCAP_THE);
+            desc += " the " + mon->name(DESC_BASENAME);
     }
     std::string weap = "";
 
