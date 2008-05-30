@@ -56,7 +56,7 @@ The contents of this text are:
                 auto_list, easy_open, easy_unequip, easy_confirm, 
                 easy_butcher, always_confirm_butcher,
                 easy_quit_item_prompts, easy_exit_menu, 
-                default_autoprayer, sort_menus
+                sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour,
                 status_caption_colour, delay_message_clear,
@@ -766,7 +766,6 @@ runrest_ignore_message = <string>
         run. E.g.
              runrest_ignore_message = offer a prayer,prayer is over
              runrest_ignore_message = pleased with you,exalted
-        (useful in conjunction with autoprayer.)
 
         Note that monster talk and dungeon noises already do not 
         interrupt running or resting, by default. 
@@ -913,22 +912,6 @@ easy_quit_item_prompts = true
 easy_exit_menu = true
         In multidrop (and pickup) menus, paging past the end will drop 
         out of the menu if easy_exit_menu is true.
-
-default_autoprayer = false
-        When set to true, the game will start with automatic prayers. 
-        This option can be toggled in-game with Ctrl-V.
-
-        Automatic prayers take a turn like manual prayers and happen 
-        only if
-        - there is no hostile monster in sight
-        - some further conditions (like not standing at an altar)
-        Note that even when you're praying, you can renew prayer 
-        anytime. Also note the option safe_zero_exp (see 4-a) decides 
-        whether zero experience monsters (like plants) are considered 
-        hostile.
-        If you use autoprayer, you might want to set 
-        runrest_ignore_message to ignore the prayer messages (see the
-        documentation for runrest_ignore_message).
 
 sort_menus = [menu:](true | false | auto:X)[:sort_order]
         Controls if and how items are sorted in inventory and pickup

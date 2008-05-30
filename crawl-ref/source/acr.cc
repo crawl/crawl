@@ -1264,7 +1264,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_FIX_WAYPOINT:
     case CMD_CLEAR_MAP:
     case CMD_INSCRIBE_ITEM:
-    case CMD_TOGGLE_AUTOPRAYER:
     case CMD_MAKE_NOTE:
     case CMD_CYCLE_QUIVER_FORWARD:
         mpr("You can't repeat that command.");
@@ -1425,8 +1424,6 @@ static void _input()
         _world_reacts();
         return;
     }
-
-    do_autopray();              // this might set you.turn_is_over
 
     if ( you.turn_is_over )
     {
@@ -1884,16 +1881,6 @@ void process_command( command_type cmd )
 
     case CMD_TOGGLE_AUTOPICKUP:
         _toggle_flag( &Options.autopickup_on, "Autopickup");
-        break;
-
-    case CMD_TOGGLE_AUTOPRAYER:
-        if (you.religion == GOD_NEMELEX_XOBEH)
-        {
-            mpr("Those worshipping Nemelex Xobeh don't need to autopray.");
-            Options.autoprayer_on = false;
-        }
-        else
-            _toggle_flag( &Options.autoprayer_on, "Autoprayer" );
         break;
 
     case CMD_TOGGLE_FRIENDLY_PICKUP:
@@ -3428,7 +3415,6 @@ static command_type _keycode_to_command( keycode_type key )
     case CONTROL('R'): return CMD_REDRAW_SCREEN;
     case CONTROL('S'): return CMD_MARK_STASH;
     case CONTROL('T'): return CMD_TOGGLE_FRIENDLY_PICKUP;
-    case CONTROL('V'): return CMD_TOGGLE_AUTOPRAYER;
     case CONTROL('W'): return CMD_FIX_WAYPOINT;
     case CONTROL('X'): return CMD_SAVE_GAME_NOW;
     case CONTROL('Z'): return CMD_SUSPEND_GAME;

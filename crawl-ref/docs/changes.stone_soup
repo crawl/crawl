@@ -29,6 +29,7 @@ Interface
 * Refuse to eat rotten meat for non-saprovorous characters.
 * Evaporate can now be cancelled during potion/direction choice.
 * greedy_explore now defaults to true.
+* Autoprayer is gone.
 
 Gods
 ----

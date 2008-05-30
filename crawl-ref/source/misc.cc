@@ -2681,50 +2681,6 @@ int str_to_shoptype(const std::string &s)
     return (-1);
 }
 
-/* Decides whether autoprayer Right Now is a good idea. */
-static bool should_autopray()
-{
-    if ( Options.autoprayer_on == false
-         || you.religion == GOD_NO_GOD
-         || you.religion == GOD_NEMELEX_XOBEH
-         || you.duration[DUR_PRAYER]
-         || grid_altar_god( grd[you.x_pos][you.y_pos] ) != GOD_NO_GOD
-         || !i_feel_safe() )
-    {
-        return false;
-    }
-
-    // We already know that we're not praying now. So if you
-    // just autoprayed, there's a problem.
-    if ( you.just_autoprayed )
-    {
-        mpr("Autoprayer failed, deactivating.", MSGCH_WARN);
-        Options.autoprayer_on = false;
-        return false;
-    }
-
-    return true;
-}
-
-// Actually performs autoprayer.
-bool do_autopray()
-{
-    if ( you.turn_is_over )     // can happen with autopickup, I think
-        return false;
-
-    if ( should_autopray() )
-    {
-        pray();
-        you.just_autoprayed = true;
-        return true;
-    }
-    else
-    {
-        you.just_autoprayed = false;
-        return false;
-    }
-}
-
 // general threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters
 // highest threat = highest_logexpervalue_of_nearby_unfriendly_monsters
 void monster_threat_values(double *general, double *highest)

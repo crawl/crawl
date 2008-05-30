@@ -208,7 +208,6 @@ include = travel_stoppers.txt
 # chunks_autopickup      = true
 # easy_quit_item_prompts = false
 # easy_exit_menu         = false
-# default_autoprayer = true
 # sort_menus = pickup: true : basename, qualname, curse, qty
 
 ##### 4-j	Messages and Display Enhancements #####

@@ -555,7 +555,6 @@ public:
 
   std::vector<int> beheld_by; // monsters beholding player
 
-  bool just_autoprayed;       // autopray just kicked in
   int  friendly_pickup;       // pickup setting for allies
 
   unsigned short prev_targ;
@@ -1620,7 +1619,6 @@ public:
     int         scroll_margin_y;
 
     bool        autopickup_on;
-    bool        autoprayer_on;
     int         default_friendly_pickup;
     bool        show_more_prompt;
 

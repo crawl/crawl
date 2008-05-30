@@ -5407,7 +5407,6 @@ void player::init()
     entering_level = false;
     transit_stair  = DNGN_UNSEEN;
 
-    just_autoprayed = false;
     berserk_penalty = 0;
     disease         = 0;
     elapsed_time    = 0;

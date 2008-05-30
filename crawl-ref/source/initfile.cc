@@ -628,7 +628,6 @@ void game_options::reset_options()
     scroll_margin_y  = 2;
 
     autopickup_on = true;
-    autoprayer_on = false;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
     show_more_prompt = true;
 
@@ -1847,7 +1846,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     else BOOL_OPTION(use_old_selection_order);
     else BOOL_OPTION_NAMED("default_autopickup", autopickup_on);
-    else BOOL_OPTION_NAMED("default_autoprayer", autoprayer_on);
     else if (key == "default_friendly_pickup")
     {
         if (field == "none")

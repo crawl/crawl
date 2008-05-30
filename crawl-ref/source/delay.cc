@@ -678,10 +678,6 @@ void handle_delay( void )
     // Run delays and Lua delays don't have a specific end time.
     if (is_run_delay(delay.type))
     {
-        // Hack - allow autoprayer to trigger during run delays
-        if ( do_autopray() )
-            return;
-
         handle_run_delays(delay);
         return;
     }
@@ -789,12 +785,6 @@ void handle_delay( void )
             // instead of using stop_delay(), so that the player
             // switches back to their main weapon if necessary.
             delay.duration = 0;
-        }
-
-        if (delay.type == DELAY_OFFER_CORPSE && !you.duration[DUR_PRAYER]
-            && do_autopray())
-        {
-            return;
         }
     }
     else if (delay.type == DELAY_MULTIDROP)
@@ -1138,7 +1128,7 @@ static void finish_delay(const delay_queue_item &delay)
 
     case DELAY_OFFER_CORPSE:
     {
-        if (!you.duration[DUR_PRAYER] && !do_autopray())
+        if (!you.duration[DUR_PRAYER])
         {
             stop_delay();
             return;
@@ -1652,12 +1642,6 @@ static void paranoid_option_disable( activity_interrupt_type ai,
         {
             std::vector<std::string> deactivatees;
             std::vector<std::string> restart;
-            if (Options.autoprayer_on)
-            {
-                deactivatees.push_back("autoprayer");
-                Options.autoprayer_on = false;
-                restart.push_back("Ctrl+V");
-            }
 
             if (Options.autopickup_on)
             {
