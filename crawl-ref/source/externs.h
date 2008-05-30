@@ -489,10 +489,6 @@ public:
     // Returns true if you were running and are now no longer running.
     bool check_stop_running();
 
-    // Check if we've reached the HP/MP stop-rest condition
-    void check_hp();
-    void check_mp();
-
 private:
     void set_run_check(int index, int compass_dir);
     bool run_grids_changed() const;
@@ -1640,6 +1636,7 @@ public:
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        easy_butcher;    // autoswap to butchering tool
     bool        always_confirm_butcher; // even if only one corpse
+    bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        list_rotten;     // list slots for rotting corpses/chunks
     bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
@@ -1814,6 +1811,9 @@ public:
 
     // If the player prefers to merge kill records, this option can do that.
     int         kill_map[KC_NCATEGORIES];
+
+    bool        rest_wait_both; // Stop resting only when both HP and MP are
+                                // fully restored.
 
 #ifdef WIZARD
     // Parameters for fight simulations.

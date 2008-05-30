@@ -485,7 +485,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_travel = interrupt_butcher, statue, hungry, "
                             "burden, monster, hit_monster",
         "interrupt_run = interrupt_travel, message",
-        "interrupt_rest = interrupt_run",
+        "interrupt_rest = interrupt_run, full_hp, full_mp",
 
         // Stair ascents/descents cannot be interrupted, attempts to interrupt
         // the delay will just trash all queued delays, including travel.
@@ -671,6 +671,7 @@ void game_options::reset_options()
     easy_unequip           = true;
     easy_butcher           = true;
     always_confirm_butcher = false;
+    chunks_autopickup      = false;
     list_rotten            = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
@@ -885,6 +886,8 @@ void game_options::reset_options()
     clear_cset_overrides();
     clear_feature_overrides();
     mon_glyph_overrides.clear();
+
+    rest_wait_both = false;
 
     // Map each category to itself. The user can override in init.txt
     kill_map[KC_YOU] = KC_YOU;
@@ -1875,6 +1878,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
     else BOOL_OPTION(easy_butcher);
     else BOOL_OPTION(always_confirm_butcher);
+    else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(list_rotten);
     else if (key == "lua_file" && runscript)
     {
@@ -2568,6 +2572,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
+    else BOOL_OPTION(rest_wait_both);
     else if (key == "dump_message_count")
     {
         // Capping is implicit

@@ -93,4 +93,5 @@ bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &a
                             = activity_interrupt_data() );
 
+void block_interruptions(bool block);
 #endif

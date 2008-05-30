@@ -3038,8 +3038,6 @@ static void _world_reacts()
     {
         inc_hp(1, false);
         tmp -= 100;
-
-        you.running.check_hp();
     }
 
     ASSERT( tmp >= 0 && tmp < 100 );
@@ -3056,8 +3054,6 @@ static void _world_reacts()
     {
         inc_mp(1, false);
         tmp -= 100;
-
-        you.running.check_mp();
     }
 
     ASSERT( tmp >= 0 && tmp < 100 );

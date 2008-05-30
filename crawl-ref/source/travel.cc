@@ -3831,25 +3831,6 @@ void runrest::clear()
     _reset_zigzag_info();
 }
 
-void runrest::check_hp()
-{
-    if (is_rest() && you.hp == you.hp_max && you.hp > hp)
-    {
-        mpr("HP restored.");
-        stop();
-    }
-}
-
-void runrest::check_mp()
-{
-    if (is_rest() && you.magic_points == you.max_magic_points
-        && you.magic_points > mp)
-    {
-        mpr("Magic restored.");
-        stop();
-    }
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // explore_discoveries
 

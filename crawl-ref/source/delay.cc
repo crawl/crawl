@@ -48,6 +48,8 @@
 
 extern std::vector<SelItem> items_for_multidrop;
 
+static int  _interrupts_blocked = 0;
+
 static void xom_check_corpse_waste();
 static void armour_wear_effects(const int item_inv_slot);
 static void handle_run_delays(const delay_queue_item &delay);
@@ -284,6 +286,8 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
 {
     ASSERT(!crawl_state.is_repeating_cmd() || type == DELAY_MACRO);
 
+    _interrupts_blocked = 0; // Just to be safe
+
     delay_queue_item delay;
 
     delay.type     = type;
@@ -307,6 +311,8 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
 void stop_delay( bool stop_stair_travel )
 /*********************/
 {
+    _interrupts_blocked = 0; // Just to be safe
+
     if (you.delay_queue.empty())
         return;
 
@@ -1110,6 +1116,14 @@ static void finish_delay(const delay_queue_item &delay)
                     mpr("You enjoyed that.");
                     you.berserk_penalty = 0;
                 }
+
+                // Don't atuopickup chunks if there's a weapon-swap delay
+                // waiting to happen.
+                if (Options.chunks_autopickup
+                    && you.delay_queue.size() == 1)
+                {
+                    autopickup();
+                }
             }
         }
         else
@@ -1535,11 +1549,27 @@ static bool should_stop_activity(const delay_queue_item &item,
 
     delay_type curr = current_delay_action();
 
-    if (curr != DELAY_REST && (ai == AI_FULL_HP || ai == AI_FULL_MP))
+    if (ai == AI_SEE_MONSTER && (curr == DELAY_ASCENDING_STAIRS ||
+                                 curr == DELAY_DESCENDING_STAIRS))
         return false;
-    else if (ai == AI_SEE_MONSTER && (curr == DELAY_ASCENDING_STAIRS ||
-                                      curr == DELAY_DESCENDING_STAIRS))
-        return false;
+
+    if (ai == AI_FULL_HP || ai == AI_FULL_MP)
+    {
+        // No recursive interruptions from messages (AI_MESSAGE)
+        block_interruptions(true);
+        if (ai == AI_FULL_HP)
+            mpr("HP restored.");
+        else
+            mpr("Magic restored.");
+        block_interruptions(false);
+
+        if (Options.rest_wait_both && curr == DELAY_REST
+            && (you.magic_points < you.max_magic_points
+                || you.hp < you.hp_max))
+        {
+            return false;
+        }
+    }
 
     return (ai == AI_FORCE_INTERRUPT
             || Options.activity_interrupts[item.type][ai]);
@@ -1658,6 +1688,9 @@ static void paranoid_option_disable( activity_interrupt_type ai,
 bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &at )
 {
+    if (_interrupts_blocked > 0)
+        return false;
+
     paranoid_option_disable(ai, at);
 
     if (crawl_state.is_repeating_cmd())
@@ -1794,4 +1827,12 @@ const char *delay_name(int delay)
         return ("");
 
     return delay_names[delay];
+}
+
+void block_interruptions(bool block)
+{
+    if (block)
+        _interrupts_blocked++;
+    else
+        _interrupts_blocked--;
 }

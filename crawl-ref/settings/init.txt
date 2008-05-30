@@ -185,6 +185,8 @@ runrest_ignore_monster = butterfly:0
 # trap_prompt = false
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
+#rest_wait_both = true
+
 # The file (travel_stoppers.txt) contains a list of travel_stop_message 
 # settings, with brief descriptions of what they do.
 include = travel_stoppers.txt
@@ -203,6 +205,7 @@ include = travel_stoppers.txt
 # easy_confirm = (none | safe)
 # easy_butcher = false
 # always_confirm_butcher = true
+# chunks_autopickup      = true
 # easy_quit_item_prompts = false
 # easy_exit_menu         = false
 # default_autoprayer = true

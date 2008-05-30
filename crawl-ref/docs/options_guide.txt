@@ -812,6 +812,12 @@ trap_prompt = true
         stepping on a mechanical trap. Note that you'll always be prompted
         for non-mechanical traps.
 
+rest_wait_both = false
+        If rest_wait_both is set to true then resting will only stop
+        when both HP and MP are fully restored, not when either one of
+        them is restored.
+   
+
 4-h     Stashes.
 ----------------
 
@@ -889,6 +895,13 @@ always_confirm_butcher = false
         false, butchering will proceed automatically if there is exactly 
         one corpse on the square. If there are multiple corpses on a 
         square, you will always be prompted, regardless of this option.
+
+chunks_autopickup = false
+        If true then butchered flesh will be autopickup'd right after
+        they're generated (and after switching back from the
+        butchering weapon to usual weapon, if necessary).  Respects
+        all of the autopickup options.  Requires '%' to be in the
+        autopickup line.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing 

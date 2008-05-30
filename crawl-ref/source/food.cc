@@ -160,6 +160,9 @@ void weapon_switch( int targ )
     // special checks: staves of power, etc
     if (targ != -1)
         wield_effects( targ, false );
+
+    if (Options.chunks_autopickup)
+        autopickup();
 }
 
 // look for a butchering implement. If fallback is true,
