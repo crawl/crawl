@@ -372,7 +372,7 @@ static void _tutorial_inspect_kill()
 #ifdef DGL_MILESTONES
 static std::string _milestone_kill_verb(killer_type killer)
 {
-    return (killer == KILL_RESET? "banished " : "killed ");
+    return (killer == KILL_RESET ? "banished " : "killed ");
 }
 
 static void _check_kill_milestone(const monsters *mons,
@@ -6092,12 +6092,12 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
 
     const int targ_cloud_num  = env.cgrid[ targ_x ][ targ_y ];
     const int targ_cloud_type =
-        targ_cloud_num == EMPTY_CLOUD? CLOUD_NONE
+        targ_cloud_num == EMPTY_CLOUD ? CLOUD_NONE
                                      : env.cloud[targ_cloud_num].type;
 
     const int curr_cloud_num = env.cgrid[ monster->x ][ monster->y ];
     const int curr_cloud_type =
-        curr_cloud_num == EMPTY_CLOUD? CLOUD_NONE
+        curr_cloud_num == EMPTY_CLOUD ? CLOUD_NONE
                                      : env.cloud[curr_cloud_num].type;
 
     if (monster->type == MONS_BORING_BEETLE
