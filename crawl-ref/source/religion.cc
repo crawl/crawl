@@ -2943,6 +2943,9 @@ void lose_piety(int pgn)
         }
     }
 
+    if (you.piety > 0 && you.piety <= 5)
+        learned_something_new(TUT_GOD_DISPLEASED);
+
     if ( you.religion == GOD_BEOGH )
     {
         // every piety level change also affects AC from orcish gear

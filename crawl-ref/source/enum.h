@@ -2698,38 +2698,39 @@ enum tutorial_event_type
     TUT_FLEEING_MONSTER,
     TUT_ROTTEN_FOOD,
     TUT_CONVERT,
-    TUT_EXCOMMUNICATE,      // 35
+    TUT_GOD_DISPLEASED,     // 35
+    TUT_EXCOMMUNICATE,
     TUT_SPELL_MISCAST,
     TUT_SPELL_HUNGER,
     TUT_GLOWING,
     // status changes
-    TUT_YOU_ENCHANTED,
-    TUT_YOU_SICK,           // 40
+    TUT_YOU_ENCHANTED,      // 40
+    TUT_YOU_SICK,
     TUT_YOU_POISON,
     TUT_YOU_ROTTING,
     TUT_YOU_CURSED,
-    TUT_YOU_HUNGRY,
-    TUT_YOU_STARVING,       // 45
+    TUT_YOU_HUNGRY,         // 45
+    TUT_YOU_STARVING,
     TUT_YOU_MUTATED,
     TUT_POSTBERSERK,
     // warning
     TUT_RUN_AWAY,
-    TUT_RETREAT_CASTER,
-    TUT_WIELD_WEAPON,       // 50
+    TUT_RETREAT_CASTER,     // 50
+    TUT_WIELD_WEAPON,
     TUT_NEED_HEALING,
     TUT_NEED_POISON_HEALING,
     TUT_INVISIBLE_DANGER,
-    TUT_NEED_HEALING_INVIS,
-    TUT_ABYSS,              // 55
+    TUT_NEED_HEALING_INVIS, // 55
+    TUT_ABYSS,
     // interface
     TUT_MULTI_PICKUP,
     TUT_HEAVY_LOAD,
     TUT_SHIFT_RUN,
-    TUT_MAP_VIEW,
-    TUT_DONE_EXPLORE,       // 60
+    TUT_MAP_VIEW,           // 60
+    TUT_DONE_EXPLORE,
     TUT_STAIR_BRAND,
-    TUT_EVENTS_NUM          // 62
-}; // for numbers higher than 50 change size of tutorial_events in externs.h
+    TUT_EVENTS_NUM          // 63
+}; // for numbers higher than 70 change size of tutorial_events in externs.h
 
 enum tutorial_types
 {

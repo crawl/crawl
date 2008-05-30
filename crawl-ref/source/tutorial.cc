@@ -52,7 +52,7 @@ static void         _tutorial_describe_cloud(int x, int y);
 static bool         _water_is_disturbed(int x, int y);
 
 //#define TUTORIAL_DEBUG
-#define TUTORIAL_VERSION 112
+#define TUTORIAL_VERSION 113
 
 static int _get_tutorial_cols()
 {
@@ -411,6 +411,8 @@ static std::string _tut_debug_list(int event)
           return "seen first friendly monster";
       case TUT_CONVERT:
           return "converted to a god";
+      case TUT_GOD_DISPLEASED:
+          return "piety ran low";
       case TUT_EXCOMMUNICATE:
           return "excommunicated by a god";
       case TUT_SPELL_MISCAST:
@@ -2463,6 +2465,24 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     case TUT_CONVERT:
         _new_god_conduct();
+        break;
+
+    case TUT_GOD_DISPLEASED:
+        text << "Uh-oh, " << god_name(you.religion) << " is growing displead "
+                "because your piety is running low.  This can be caused by "
+                "you doing things to annoy him";
+
+        if (!is_good_god(you.religion))
+        {
+            // Piety decreases over time for non-good gods
+            text << ", not doing things to please him frequently enough, or "
+                    "a combination of the two";
+        }
+        text << ". ";
+
+        text << "If your piety goes to zero then you'll be excomunnicated. "
+                "Better get cracking on raising your piety and/or stop "
+                "annoying annoying your god.";
         break;
 
     case TUT_EXCOMMUNICATE:
