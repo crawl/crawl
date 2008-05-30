@@ -479,7 +479,7 @@ bool item_known_uncursed( const item_def &item )
 
 void do_curse_item( item_def &item, bool quiet )
 {
-    // already cursed?
+    // Already cursed?
     if (item.flags & ISFLAG_CURSED)
         return;
 
@@ -493,7 +493,7 @@ void do_curse_item( item_def &item, bool quiet )
         {
             amusement *= 2;
 
-            // Cursed cloaks prevent you from removing body armour
+            // Cursed cloaks prevent you from removing body armour.
             if (item.base_type == OBJ_ARMOUR
                 && get_armour_slot(item) == EQ_CLOAK)
             {
