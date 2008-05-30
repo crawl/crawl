@@ -231,7 +231,7 @@ void InvEntry::add_class_hotkeys(const item_def &i)
         add_hotkey('?');
         break;
     case OBJ_JEWELLERY:
-        add_hotkey(i.sub_type >= AMU_RAGE? '"' : '=');
+        add_hotkey(i.sub_type >= AMU_RAGE ? '"' : '=');
         break;
     case OBJ_POTIONS:
         add_hotkey('!');
@@ -799,7 +799,7 @@ static bool _item_class_selected(const item_def &i, int selector)
 static bool _userdef_item_selected(const item_def &i, int selector)
 {
 #if defined(CLUA_BINDINGS)
-    const char *luafn = selector == OSEL_WIELD? "ch_item_wieldable" :
+    const char *luafn = selector == OSEL_WIELD ? "ch_item_wieldable" :
                                                 NULL;
     return (luafn && clua.callbooleanfn(false, luafn, "u", &i));
 #else
@@ -1032,7 +1032,7 @@ std::vector<SelItem> prompt_invent_items(
     if (ret != PROMPT_ABORT)
         items.push_back(
             SelItem( ret, count,
-                     ret != PROMPT_GOT_SPECIAL? &you.inv[ret] : NULL ) );
+                     ret != PROMPT_GOT_SPECIAL ? &you.inv[ret] : NULL ) );
     return items;
 }
 
