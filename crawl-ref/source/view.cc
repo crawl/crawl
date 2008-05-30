@@ -91,6 +91,13 @@
 #define MC_ITEM    0x01
 #define MC_MONS    0x02
 
+// Static class members must be initialized outside of the class declaration,
+// or gcc won't define them in view.o and we'll get a linking error.
+const int monster_los::LSIZE     =  _monster_los_LSIZE;
+const int monster_los::L_VISIBLE =  1;
+const int monster_los::L_UNKNOWN =  0;
+const int monster_los::L_BLOCKED = -1;
+
 static FixedVector<feature_def, NUM_FEATURES> Feature;
 
 crawl_view_geometry crawl_view;

@@ -244,6 +244,8 @@ unsigned short dos_brand( unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);
 #endif
 
+#define _monster_los_LSIZE (2 * LOS_RADIUS + 1)
+
 // This class can be used to fill the entire surroundings (los_range)
 // of a monster or other position with seen/unseen values, so as to be able
 // to compare several positions within this range.
@@ -273,11 +275,11 @@ protected:
     void check_los_beam(int dx, int dy);
 
     // The (fixed) size of the array.
-    static const int LSIZE = 2 * LOS_RADIUS + 1;
+    static const int LSIZE;
 
-    static const int L_VISIBLE =  1;
-    static const int L_UNKNOWN =  0;
-    static const int L_BLOCKED = -1;
+    static const int L_VISIBLE;
+    static const int L_UNKNOWN;
+    static const int L_BLOCKED;
 
     // The centre of our los field.
     int gridx, gridy;
@@ -292,7 +294,7 @@ protected:
     int range;
 
     // The array to store the LOS values.
-    int los_field[LSIZE][LSIZE];
+    int los_field[_monster_los_LSIZE][_monster_los_LSIZE];
 };
 
 #endif
