@@ -91,7 +91,7 @@ menu = lightred:.*jewellery.*(inaccuracy|hunger)
 
 # Useless items
 #
-menu = darkgrey:.*scroll.*(random uselessness|paper|noise|fog)
+menu = darkgrey:.*scroll.*(random uselessness|paper|noise)
 menu = darkgrey:.*potion.*water
 
 : if you.race() == "Mummy" then

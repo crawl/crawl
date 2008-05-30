@@ -20,7 +20,7 @@ end >
 ae = potions? of (confusion|degeneration|poison|strong poison)
 ae = potions? of (slowing|paralysis|decay|water)
 ae = scrolls? of (paper|torment|immolation|curse weapon)
-ae = scrolls? of (curse armour|random uselessness|noise|fog)
+ae = scrolls? of (curse armour|random uselessness|noise)
 
 # Excluding amulets as you only need one of each. Also for some rings.
 # There is some (intended) overlap with pickup.lua, which also exludes
