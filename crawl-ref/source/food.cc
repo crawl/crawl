@@ -1634,6 +1634,97 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
         lessen_hunger(food_value / duration, !start_feeding);
 }
 
+bool is_poisonous(const item_def &food)
+{
+    if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
+        return (false);
+
+    return (mons_corpse_effect(food.plus) == CE_POISONOUS);
+}
+
+bool is_mutagenic(const item_def &food)
+{
+    if (food.base_type != OBJ_FOOD || food.base_type != OBJ_CORPSES)
+        return (false);
+
+    return (mons_corpse_effect(food.plus) == CE_MUTAGEN_RANDOM);
+}
+
+bool is_contaminated(const item_def &food)
+{
+    if (food.base_type != OBJ_FOOD || food.base_type != OBJ_CORPSES)
+        return (false);
+
+    return (mons_corpse_effect(food.plus) == CE_CONTAMINATED);
+}
+
+bool causes_rot(const item_def &food)
+{
+    if (food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK)
+        return (false);
+
+    return (mons_corpse_effect(food.plus) == CE_HCL);
+}
+
+// Returns 1 for herbivores, -1 for carnivores and 0 for either.
+static int _player_likes_food_type(int food_type)
+{
+    switch (food_type)
+    {
+    case FOOD_BREAD_RATION:
+    case FOOD_PEAR:
+    case FOOD_APPLE:
+    case FOOD_CHOKO:
+    case FOOD_SNOZZCUMBER:
+    case FOOD_PIZZA:
+    case FOOD_APRICOT:
+    case FOOD_ORANGE:
+    case FOOD_BANANA:
+    case FOOD_STRAWBERRY:
+    case FOOD_RAMBUTAN:
+    case FOOD_LEMON:
+    case FOOD_GRAPE:
+    case FOOD_SULTANA:
+    case FOOD_LYCHEE:
+    case FOOD_CHEESE:
+        return 1;
+
+    case FOOD_CHUNK:
+    case FOOD_MEAT_RATION:
+    case FOOD_SAUSAGE:
+        return -1;
+    }
+
+    // Anything missing?
+    return 0;
+}
+
+// As we want to avoid autocolouring the entire food selection, this should
+// be restricted to the absolute highlights, even though other stuff may
+// still be edible or even delicious.
+bool is_preferred_food(const item_def &food)
+{
+    if (food.base_type != OBJ_FOOD)
+        return (false);
+
+    // Honeycombs are tasty for everyone.
+    if (food.sub_type == FOOD_HONEYCOMB || food.sub_type == FOOD_ROYAL_JELLY)
+        return (true);
+
+    // Ghouls specifically like rotten food.
+    if (you.species == SP_GHOUL)
+        return (food_is_rotten(food));
+
+    if (player_mutation_level(MUT_CARNIVOROUS) == 3)
+        return (_player_likes_food_type(food.sub_type) < 0);
+
+    if (player_mutation_level(MUT_HERBIVOROUS) == 3)
+        return (_player_likes_food_type(food.sub_type) > 0);
+
+    // No food preference.
+    return (false);
+}
+
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
                 bool check_hunger)
 {
@@ -1685,6 +1776,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     switch (what_isit)
     {
     case OBJ_FOOD:
+    {
         if (you.species == SP_VAMPIRE)
         {
             if (!suppress_msg)
@@ -1692,43 +1784,32 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
              return false;
         }
 
-        switch (kindof_thing)
+        int vorous = _player_likes_food_type(kindof_thing);
+        if (vorous > 0) // Herbivorous food.
         {
-        case FOOD_BREAD_RATION:
-        case FOOD_PEAR:
-        case FOOD_APPLE:
-        case FOOD_CHOKO:
-        case FOOD_SNOZZCUMBER:
-        case FOOD_PIZZA:
-        case FOOD_APRICOT:
-        case FOOD_ORANGE:
-        case FOOD_BANANA:
-        case FOOD_STRAWBERRY:
-        case FOOD_RAMBUTAN:
-        case FOOD_LEMON:
-        case FOOD_GRAPE:
-        case FOOD_SULTANA:
-        case FOOD_LYCHEE:
-        case FOOD_CHEESE:
             if (ur_carnivorous)
             {
-                survey_says = false;
                 if (!suppress_msg)
                     mpr("Sorry, you're a carnivore.");
+                return (false);
             }
             else
-                survey_says = true;
-            break;
-
-        case FOOD_CHUNK:
+                return (true);
+        }
+        else if (vorous < 0) // Carnivorous food.
+        {
             if (ur_herbivorous)
             {
-                survey_says = false;
                 if (!suppress_msg)
                     mpr("You can't eat raw meat!");
+                return (false);
             }
-            else if (!ur_chunkslover)
+            else if (kindof_thing == FOOD_CHUNK)
             {
+                if (ur_chunkslover)
+                    return (true);
+
+                // Else, we're not hungry enough.
                 if (wearing_amulet(AMU_THE_GOURMAND, !reqid))
                 {
                     const int amulet = you.equip[EQ_AMULET];
@@ -1742,21 +1823,17 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
                                         ID_KNOWN_TYPE );
                         mpr(you.inv[amulet].name(DESC_INVENTORY, false).c_str());
                     }
-                    return true;
+                    return (true);
                 }
-                survey_says = false;
                 if (!suppress_msg)
                     mpr("You aren't quite hungry enough to eat that!");
+                return (false);
             }
-            else
-                survey_says = true;
-            break;
-
-        default:
-            return (true);
         }
-        break;
-
+        // Any food types not specifically handled until here (e.g. meat
+        // rations for non-herbivores) are okay.
+        return (true);
+    }
     case OBJ_CORPSES:
         if (you.species == SP_VAMPIRE)
         {
@@ -1821,7 +1898,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     return (survey_says);
 }                               // end can_ingest()
 
-// see if you can follow along here -- except for the Amulet of the Gourmand
+// See if you can follow along here -- except for the Amulet of the Gourmand
 // addition (long missing and requested), what follows is an expansion of how
 // chunks were handled in the codebase up to this date ... {dlb}
 static int _determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
@@ -1866,7 +1943,7 @@ static int _determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
         break;
     }
 
-    // determine effects of rotting on base chunk effect {dlb}:
+    // Determine effects of rotting on base chunk effect {dlb}:
     if (rotten_chunk)
     {
         switch (this_chunk_effect)

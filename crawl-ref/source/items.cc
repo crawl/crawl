@@ -837,7 +837,6 @@ static void _pickup_menu(int item_link)
     redraw_screen();
 
     for (int i = 0, count = selected.size(); i < count; ++i)
-    {
         for (int j = item_link; j != NON_ITEM; j = mitm[j].link)
         {
             if (&mitm[j] == selected[i].item)
@@ -870,7 +869,6 @@ static void _pickup_menu(int item_link)
                 break;
             }
         }
-    }
 }
 
 bool origin_known(const item_def &item)

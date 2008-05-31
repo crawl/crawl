@@ -239,7 +239,7 @@ menu_colour_prefix_class = true
 #
 #   yellow     = preferred food
 #   lightgrey  = normal food
-#   darkgey    = cannot be eaten at all
+#   darkgrey   = cannot be eaten at all
 #   lightred   = extremely dangerous
 #   magenta    = mutagenic
 #   lightgreen = poisonous

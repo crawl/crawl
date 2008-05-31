@@ -8,49 +8,13 @@ ae   := autopickup_exceptions
 menu = lightmagenta:.*misc.*rune( of Zot)?
 menu = lightmagenta:.*orb.*Zot
 
-# Identified artefacts
-#
-menu = magenta:.*(weapon|armour|jewellery|staff).*[+-] the
+# Artefacts
+menu = white:.*artefact.*
 
-# Unidentified weapon artefacts
-# 
-menu = magenta:.*weapon.* ((brightly|faintly) glowing|smoking|twisted)
-menu = magenta:.*weapon.* (bloodstained|shimmering|warped|crystal)
-menu = magenta:.*weapon.* (jewelled|transparent|encrusted|pitted|slimy)
-menu = magenta:.*weapon.* (polished|fine|crude|ancient|ichor-stained)
-menu = magenta:.*weapon.* (steaming|shiny|polka-dotted)
-menu = magenta:.*weapon.* (golden|purple|bone|serpentine|ruby|chunky)
-menu = magenta:.*weapon.* (thin|green|ivory|ephemeral|blackened)
-menu = magenta:.*weapon.* (sapphire|rusty|blue|brutal|adamantine|ebony)
-menu = magenta:.*weapon.* (mangy|mithril|black|very long|steel|tiny)
-menu = magenta:.*weapon.* flaming crossbow
-
-# Unidentified armour artefacts
-#
-menu = lightgrey:.*armour.* jewelled helm(et)?
-menu = magenta:.*armour.* ((brightly|faintly) glowing|smoking|twisted)
-menu = magenta:.*armour.* (bloodstained|shimmering|warped|heavily runed)
-menu = magenta:.*armour.* (jewelled|transparent|encrusted|pitted|slimy)
-menu = magenta:.*armour.* (polished|fine|crude|ancient|ichor-stained)
-menu = magenta:.*armour.* (steaming|distressingly furry|plaid|tie-dyed)
-menu = magenta:.*armour.* (dull|golden|silk|tattered|round|bronze)
-menu = magenta:.*armour.* (fabulously|vibrating|soft|smelly|red|thick)
-menu = magenta:.*armour.* (weird-looking|blue|black|dirty|paisley)
-menu = magenta:.*armour.* (chartreuse)
-
-# Unidentified jewellery artefacts
-#
-menu = magenta:.*jewellery.* ((brightly|faintly) glowing|smoking)
-menu = magenta:.*jewellery.* (shimmering|warped|crystal|diamond)
-menu = magenta:.*jewellery.* (transparent|pitted|slimy|polished|fine)
-menu = magenta:.*jewellery.* (crude|ancient|steaming|scintillating)
-menu = magenta:.*jewellery.* (sparkling|flickering|glittering)
-menu = magenta:.*jewellery.* (black |blood-stained|cast-iron)
-menu = magenta:.*jewellery.* (phosphorescent)
-menu = magenta:.*jewellery.* an (encrusted|emerald) (ring|amulet)
-menu = magenta:.*jewellery.* a (runed|twisted|shiny|ruby) (ring|amulet)
-menu = magenta:.*jewellery.* a (sapphire) ring
-menu = magenta:.*jewellery.* a (jade) amulet
+# If Options.menu_colour_prefix_id is set to true, you can 
+# differentiate further.
+#menu = white:.*identified.*artefact.*
+#menu = magenta:.*unidentified.*artefact.*
 
 # Possible ego items 
 #
@@ -137,9 +101,8 @@ menu = yellow:.*potion.*(porridge|gluggy white)
 
 # Defaults for normal items
 #
-menu = lightgreen:uncursed.*\(.*(worn|neck|hand|weapon).*\)
-menu = lightred:cursed.*\(.*(worn|neck|hand|weapon).*\)
-menu = white:\(.*(worn|neck|hand|weapon).*\)
+menu = lightred:.*equipped.*cursed
+menu = lightgreen:.*equipped.*
 menu = green:uncursed
 menu = red:cursed
 menu = lightgrey:^(scroll|potion|ring|amulet)

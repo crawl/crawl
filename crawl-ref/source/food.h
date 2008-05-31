@@ -83,6 +83,12 @@ void set_hunger(int new_hunger_level, bool suppress_msg);
  * *********************************************************************** */
 void weapon_switch( int targ );
 
+bool is_poisonous(const item_def &food);
+bool is_mutagenic(const item_def &food);
+bool is_contaminated(const item_def &food);
+bool causes_rot(const item_def &food);
+bool is_preferred_food(const item_def &food);
+
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 bool reqid = false, bool check_hunger = true);
 

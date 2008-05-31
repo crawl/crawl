@@ -604,7 +604,7 @@ static int prepare_message(const std::string& imsg, msg_channel_type channel,
                = Options.message_colour_mappings;
     typedef std::vector<message_colour_mapping>::const_iterator mcmci;
 
-    for ( mcmci ci = mcm.begin(); ci != mcm.end(); ++ci )
+    for (mcmci ci = mcm.begin(); ci != mcm.end(); ++ci)
     {
         if (ci->message.is_filtered(channel, imsg))
         {
@@ -613,7 +613,7 @@ static int prepare_message(const std::string& imsg, msg_channel_type channel,
         }
     }
 
-    if ( colour != MSGCOL_MUTED )
+    if (colour != MSGCOL_MUTED)
     {
         mpr_check_patterns(imsg, channel, param);
         flush_input_buffer( FLUSH_ON_MESSAGE );

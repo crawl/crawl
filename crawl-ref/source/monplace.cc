@@ -65,8 +65,8 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
     if (grid_wanted == DNGN_FLOOR)
     {
         return (actual_grid >= DNGN_FLOOR
-                && actual_grid != DNGN_BUILDER_SPECIAL_WALL
-                    || !generation && actual_grid == DNGN_SHALLOW_WATER);
+                    && actual_grid != DNGN_BUILDER_SPECIAL_WALL
+                || !generation && actual_grid == DNGN_SHALLOW_WATER);
     }
 
     if (grid_wanted >= DNGN_ROCK_WALL

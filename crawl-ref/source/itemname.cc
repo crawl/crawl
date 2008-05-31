@@ -36,6 +36,7 @@
 #include "makeitem.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "player.h"
 #include "quiver.h"
 #include "randart.h"
 #include "skills2.h"
@@ -2150,7 +2151,7 @@ bool is_interesting_item( const item_def& item )
 
 const std::string menu_colour_item_prefix(const item_def &item)
 {
-    std::string str = "";
+    std::vector<std::string> prefixes;
 
     if (Options.menu_colour_prefix_id)
     {
@@ -2158,7 +2159,7 @@ const std::string menu_colour_item_prefix(const item_def &item)
             || item.base_type == OBJ_FOOD
             || item.base_type == OBJ_CORPSES)
         {
-            str += "identified ";
+            prefixes.push_back("identified");
         }
         else
         {
@@ -2168,7 +2169,8 @@ const std::string menu_colour_item_prefix(const item_def &item)
                 // Wands are only fully identified if we know the
                 // number of charges.
                 if (item.base_type == OBJ_WANDS)
-                    str += "known ";
+                    prefixes.push_back("known");
+
                 // Rings are fully identified simply by knowing their
                 // type, unless the ring has plusses, like a ring of
                 // dexterity.
@@ -2176,26 +2178,62 @@ const std::string menu_colour_item_prefix(const item_def &item)
                          && !jewellery_is_amulet(item))
                 {
                     if (item.plus == 0 && item.plus2 == 0)
-                        str += "identified ";
+                        prefixes.push_back("identified");
                     else
-                        str += "known ";
+                        prefixes.push_back("known");
                 }
                 // All other types of magical items are fully identified
                 // simply by knowing the type
                 else
-                    str += "identified ";
+                    prefixes.push_back("identified");
             }
             else
-                str += "unidentified ";
+                prefixes.push_back("unidentified");
         }
     }
 
-    if (Options.menu_colour_prefix_class)
+    switch (item.base_type)
     {
-        str += item_class_name(item.base_type, true) + " ";
+    case OBJ_FOOD:
+        if (!can_ingest(item.base_type, item.sub_type, true, true, false)
+            || food_is_rotten(item)
+               && !player_mutation_level(MUT_SAPROVOROUS))
+        {
+            prefixes.push_back("inedible");
+        }
+        else if (is_preferred_food(item))
+            prefixes.push_back("preferred");
+
+        // intentional fall-through
+    case OBJ_CORPSES:
+        if (is_poisonous(item) && !player_res_poison())
+            prefixes.push_back("poisonous");
+        else if (is_mutagenic(item))
+            prefixes.push_back("mutagenic");
+        else if (is_contaminated(item))
+            prefixes.push_back("contaminated");
+        else if (causes_rot(item))
+            prefixes.push_back("rot-inducing");
+        break;
+
+    case OBJ_WEAPONS:
+    case OBJ_ARMOUR:
+    case OBJ_JEWELLERY:
+        if (item_is_equipped(item))
+            prefixes.push_back("equipped");
+        if (is_artefact(item))
+            prefixes.push_back("artefact");
+    default:
+        break;
     }
 
-    return str;
+    if (Options.menu_colour_prefix_class)
+        prefixes.push_back(item_class_name(item.base_type, true));
+
+    std::string result = comma_separated_line(prefixes.begin(), prefixes.end(),
+                                              " ", " ");
+
+    return result;
 }
 
 typedef std::map<std::string, item_types_pair> item_names_map;

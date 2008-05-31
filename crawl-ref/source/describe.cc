@@ -1645,21 +1645,48 @@ std::string get_item_description( const item_def &item, bool verbose,
                     description << "It looks nice and ripe.";
                 else
                 {
-                    description << "In fact, it is "
-                        "rotting away before your eyes.";
+                    description << "In fact, it is rotting away before your "
+                                   "eyes.";
 
-                    if (you.is_undead != US_UNDEAD
-                        && you.species != SP_VAMPIRE)
+                    if (!you.is_undead
+                        && !player_mutation_level(MUT_SAPROVOROUS))
                     {
-                        description << " Eating it would "
-                            "probably be unwise.";
+                        description << " Eating it is completely out of the "
+                                       "question!";
                     }
                 }
             }
             else if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 description << "It looks rather unpleasant.";
 
+            switch (mons_corpse_effect(item.plus))
+            {
+            case CE_POISONOUS:
+                description << "$$This meat is poisonous.";
+                break;
+            case CE_MUTAGEN_RANDOM:
+                if (you.species != SP_GHOUL)
+                {
+                    description << "$$Eating this meat will cause random "
+                                   "mutations.";
+                }
+                break;
+            case CE_HCL:
+                if (you.species != SP_GHOUL)
+                    description << "$$Eating this meat will cause rotting.";
+                break;
+            case CE_CONTAMINATED:
+                if (player_mutation_level(MUT_SAPROVOROUS) < 3)
+                {
+                    description << "$$Chunks like this may occasionally cause "
+                                   "sickness.";
+                }
+                break;
+            default:
+                break;
+            }
             description << "$";
+
         }
         break;
 

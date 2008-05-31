@@ -74,7 +74,7 @@ struct MenuEntry
 
     MenuEntry( const std::string &txt = std::string(),
                MenuEntryLevel lev = MEL_ITEM,
-               int qty = 0,
+               int qty  = 0,
                int hotk = 0 ) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
         hotkeys(), level(lev), data(NULL)
@@ -105,7 +105,7 @@ struct MenuEntry
 
     bool is_primary_hotkey( int key ) const
     {
-        return hotkeys.size()? hotkeys[0] == key : false;
+        return (hotkeys.size()? hotkeys[0] == key : false);
     }
 
     virtual std::string get_text() const
@@ -127,7 +127,7 @@ struct MenuEntry
 
     virtual bool selected() const
     {
-        return selected_qty > 0 && quantity;
+        return (selected_qty > 0 && quantity);
     }
 
     virtual void select( int qty = -1 )
@@ -135,7 +135,7 @@ struct MenuEntry
         if (selected())
             selected_qty = 0;
         else if (quantity)
-            selected_qty = qty == -1? quantity : qty;
+            selected_qty = (qty == -1? quantity : qty);
     }
 };
 

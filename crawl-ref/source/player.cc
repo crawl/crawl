@@ -1473,13 +1473,13 @@ int player_res_poison(bool calc_unid, bool temp)
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
         rp++;
 
-    /* rings of poison resistance */
+    // rings of poison resistance
     rp += player_equip( EQ_RINGS, RING_POISON_RESISTANCE, calc_unid );
 
-    /* Staves */
+    // Staves
     rp += player_equip( EQ_STAFF, STAFF_POISON, calc_unid );
 
-    /* the staff of Olgreb: */
+    // the staff of Olgreb:
     if (you.equip[EQ_WEAPON] != -1
         && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
         && you.inv[you.equip[EQ_WEAPON]].special == SPWPN_STAFF_OF_OLGREB)

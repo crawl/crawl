@@ -2512,18 +2512,18 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         }
     }
     // MSVC has a limit on how many if/else if can be chained together.
-    /* else */ if (key == "menu_colour" || key == "menu_color")
+    if (key == "menu_colour" || key == "menu_color")
     {
         std::vector<std::string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
-            // format: tag:string:colour
+            // Format is "tag:colour:pattern" or "colour:pattern" (default tag).
             // FIXME: arrange so that you can use ':' inside a pattern
             std::vector<std::string> subseg = split_string(":", seg[i], false);
             std::string tagname, patname, colname;
-            if ( subseg.size() < 2 )
+            if (subseg.size() < 2)
                 continue;
-            if ( subseg.size() >= 3 )
+            if (subseg.size() >= 3)
             {
                 tagname = subseg[0];
                 colname = subseg[1];
