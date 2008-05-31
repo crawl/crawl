@@ -1926,24 +1926,8 @@ void describe_item( item_def &item, bool allow_inscribe )
         }
 
         if (Options.tutorial_left && wherey() <= get_number_of_lines() - 5)
-        {
             tutorial_inscription_info(allow_autoinscribe);
 
-            if (wherey() <= get_number_of_lines() - 2)
-            {
-                if (allow_autoinscribe)
-                {
-                    formatted_string::parse_string(
-                        "<cyan>So, do you wish to inscribe this item? "
-                        "('a' to autoinscribe) ").display();
-                }
-                else
-                {
-                    formatted_string::parse_string(
-                        "<cyan>So, do you wish to inscribe this item? ").display();
-                }
-            }
-        }
 #ifdef USE_TILE
         const int keyin = getch_ck();
         if (toupper(keyin) == 'Y')

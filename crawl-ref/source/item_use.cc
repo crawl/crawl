@@ -3889,13 +3889,16 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn )
 }
 
 static bool _handle_enchant_weapon( enchant_stat_type which_stat,
-                                   bool quiet, int item_slot )
+                                    bool quiet, int item_slot )
 {
     if (item_slot == -1)
         item_slot = you.equip[ EQ_WEAPON ];
 
     if (item_slot == -1)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
+    }
 
     item_def& wpn(you.inv[item_slot]);
 
@@ -4158,7 +4161,7 @@ void read_scroll( int slot )
         return;
     }
 
-    // here we try to read a book {dlb}:
+    // Here we try to read a book {dlb}:
     if (scroll.base_type == OBJ_BOOKS)
     {
         handle_read_book( item_slot );
@@ -4172,10 +4175,10 @@ void read_scroll( int slot )
         return;
     }
 
-    // ok - now we FINALLY get to read a scroll !!! {dlb}
+    // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
-    // imperfect vision prevents players from reading actual content {dlb}:
+    // Imperfect vision prevents players from reading actual content {dlb}:
     if (player_mutation_level(MUT_BLURRY_VISION)
         && random2(5) < player_mutation_level(MUT_BLURRY_VISION))
     {
@@ -4185,10 +4188,10 @@ void read_scroll( int slot )
         return;
     }
 
-    // decrement and handle inventory if any scroll other than paper {dlb}:
+    // Decrement and handle inventory if any scroll other than paper {dlb}:
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
-    if (which_scroll != SCR_PAPER &&
-        (which_scroll != SCR_IMMOLATION || you.duration[DUR_CONF]))
+    if (which_scroll != SCR_PAPER
+        && (which_scroll != SCR_IMMOLATION || you.duration[DUR_CONF]))
     {
         mpr("As you read the scroll, it crumbles to dust.");
         // Actual removal of scroll done afterwards. -- bwr
@@ -4197,7 +4200,7 @@ void read_scroll( int slot )
     const bool alreadyknown = item_type_known(scroll);
     const bool dangerous    = player_in_a_dangerous_place();
 
-    // scrolls of paper are also exempted from this handling {dlb}:
+    // Scrolls of paper are also exempted from this handling {dlb}:
     if (which_scroll != SCR_PAPER)
     {
         if (you.duration[DUR_CONF])
@@ -4298,27 +4301,28 @@ void read_scroll( int slot )
     case SCR_TORMENT:
         torment( TORMENT_SCROLL, you.x_pos, you.y_pos );
 
-        // is only naughty if you know you're doing it
+        // Is only naughty if you know you're doing it.
         did_god_conduct(DID_UNHOLY, 10, item_type_known(scroll));
         break;
 
     case SCR_IMMOLATION:
         mpr("The scroll explodes in your hands!");
-        // we do this here to prevent it from blowing itself up
+        // We do this here to prevent it from blowing itself up.
         dec_inv_item_quantity( item_slot, 1 );
 
-        beam.type = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage = dice_def( 3, 10 );
         // unsure about this    // BEAM_EXPLOSION instead? {dlb}
-        beam.flavour = BEAM_FIRE;
-        beam.target_x = you.x_pos;
-        beam.target_y = you.y_pos;
-        beam.name = "fiery explosion";
-        beam.colour = RED;
+        beam.flavour      = BEAM_FIRE;
+
+        beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+        beam.damage       = dice_def( 3, 10 );
+        beam.target_x     = you.x_pos;
+        beam.target_y     = you.y_pos;
+        beam.name         = "fiery explosion";
+        beam.colour       = RED;
         // your explosion, (not someone else's explosion)
-        beam.thrower = KILL_YOU;
-        beam.aux_source = "reading a scroll of immolation";
-        beam.ex_size = 2;
+        beam.thrower      = KILL_YOU;
+        beam.aux_source   = "reading a scroll of immolation";
+        beam.ex_size      = 2;
         beam.is_explosion = true;
 
         if (!alreadyknown)
@@ -4344,7 +4348,7 @@ void read_scroll( int slot )
         }
         break;
 
-    // everything [in the switch] below this line is a nightmare {dlb}:
+    // Everything [in the switch] below this line is a nightmare {dlb}:
     case SCR_ENCHANT_WEAPON_I:
         id_the_scroll = _handle_enchant_weapon( ENCHANT_TO_HIT );
         break;
@@ -4366,7 +4370,6 @@ void read_scroll( int slot )
                 mprf("%s glows bright yellow for a while.", iname.c_str() );
 
                 do_uncurse_item( you.inv[you.equip[EQ_WEAPON]] );
-
                 _handle_enchant_weapon( ENCHANT_TO_HIT, true );
 
                 if (coinflip())

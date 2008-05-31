@@ -988,9 +988,11 @@ static void finish_delay(const delay_queue_item &delay)
     case DELAY_EAT:
         mprf("You finish eating.");
         // For chunks, warn the player if they're not getting much
-        // nutrition.
+        // nutrition. Also, print the other eating messages only now.
         if (delay.parm1)
             chunk_nutrition_message(delay.parm1);
+        else if (delay.parm2 != -1)
+            finished_eating_message(delay.parm2);
         break;
 
     case DELAY_FEED_VAMPIRE:

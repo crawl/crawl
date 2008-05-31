@@ -1066,9 +1066,11 @@ static const char *_chunk_flavour_phrase(bool likes_chunks)
     {
         const int gourmand = you.duration[DUR_GOURMAND];
         if (gourmand >= GOURMAND_MAX)
+        {
             phrase =
                 one_chance_in(1000)? "tastes like chicken!"
                                    : "tastes great.";
+        }
         else if (gourmand > GOURMAND_MAX * 75 / 100)
             phrase = "tastes very good.";
         else if (gourmand > GOURMAND_MAX * 50 / 100)
@@ -1228,7 +1230,7 @@ static void _eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
 
     if (do_eat)
     {
-        start_delay( DELAY_EAT, 2, (suppress_msg) ? 0 : nutrition );
+        start_delay( DELAY_EAT, 2, (suppress_msg) ? 0 : nutrition, -1 );
         lessen_hunger( nutrition, true );
     }
 
@@ -1237,7 +1239,6 @@ static void _eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
 
 static void _eating(unsigned char item_class, int item_type)
 {
-    int temp_rand;              // probability determination {dlb}
     int food_value = 0;
     int how_herbivorous = player_mutation_level(MUT_HERBIVOROUS);
     int how_carnivorous = player_mutation_level(MUT_CARNIVOROUS);
@@ -1260,7 +1261,8 @@ static void _eating(unsigned char item_class, int item_type)
         case FOOD_HONEYCOMB:
             food_value = 2000;
             break;
-        case FOOD_SNOZZCUMBER:  // maybe a nasty side-effect from RD's book?
+        case FOOD_SNOZZCUMBER:  // Maybe a nasty side-effect from RD's book?
+                                // I'd like that, but I don't dare. (jpeg)
         case FOOD_PIZZA:
         case FOOD_BEEF_JERKY:
             food_value = 1500;
@@ -1297,7 +1299,7 @@ static void _eating(unsigned char item_class, int item_type)
             break;
         }                       // end base sustenance listing {dlb}
 
-        // next, sustenance modifier for carnivores/herbivores {dlb}:
+        // Next, sustenance modifier for carnivores/herbivores {dlb}:
         switch (item_type)
         {
         case FOOD_MEAT_RATION:
@@ -1344,135 +1346,13 @@ static void _eating(unsigned char item_class, int item_type)
             break;
         }                    // end carnivore/herbivore modifier listing {dlb}
 
-        // next, let's take care of messaging {dlb}:
+        // Next, let's take care of messaging {dlb}:
         if (how_carnivorous > 0 && carnivore_modifier < 0)
             mpr("Blech - you need meat!");
         else if (how_herbivorous > 0 && herbivore_modifier < 0)
             mpr("Blech - you need greens!");
 
-        if (how_herbivorous < 1)
-        {
-            switch (item_type)
-            {
-            case FOOD_MEAT_RATION:
-                mpr("That meat ration really hit the spot!");
-                break;
-            case FOOD_BEEF_JERKY:
-                mprf("That beef jerky was %s!",
-                     one_chance_in(4) ? "jerk-a-riffic"
-                                      : "delicious");
-                break;
-            case FOOD_SAUSAGE:
-                mpr("That sausage was delicious!");
-                break;
-            default:
-                break;
-            }
-        }
-
-        if (how_carnivorous < 1)
-        {
-            switch (item_type)
-            {
-            case FOOD_BREAD_RATION:
-                mpr("That bread ration really hit the spot!");
-                break;
-            case FOOD_PEAR:
-            case FOOD_APPLE:
-            case FOOD_APRICOT:
-                mprf("Mmmm... Yummy %s.",
-                     (item_type == FOOD_APPLE)   ? "apple." :
-                     (item_type == FOOD_PEAR)    ? "pear." :
-                     (item_type == FOOD_APRICOT) ? "apricot."
-                                                 : "fruit.");
-                break;
-            case FOOD_CHOKO:
-                mpr("That choko was very bland.");
-                break;
-            case FOOD_SNOZZCUMBER:
-                mpr("That snozzcumber tasted truly putrid!");
-                break;
-            case FOOD_ORANGE:
-                mprf("That orange was delicious!%s",
-                     one_chance_in(8) ? " Even the peel tasted good!" : "");
-                break;
-            case FOOD_BANANA:
-                mprf("That banana was delicious!%s",
-                     one_chance_in(8) ? " Even the peel tasted good!" : "");
-                break;
-            case FOOD_STRAWBERRY:
-                mpr("That strawberry was delicious!");
-                break;
-            case FOOD_RAMBUTAN:
-                mpr("That rambutan was delicious!");
-                break;
-            case FOOD_LEMON:
-                mpr("That lemon was rather sour... But delicious nonetheless!");
-                break;
-            case FOOD_GRAPE:
-                mpr("That grape was delicious!");
-                break;
-            case FOOD_SULTANA:
-                mpr("That sultana was delicious! (but very small)");
-                break;
-            case FOOD_LYCHEE:
-                mpr("That lychee was delicious!");
-                break;
-            default:
-                break;
-            }
-        }
-
-        switch (item_type)
-        {
-        case FOOD_HONEYCOMB:
-            mpr("That honeycomb was delicious.");
-            break;
-        case FOOD_ROYAL_JELLY:
-            mpr("That royal jelly was delicious!");
-            restore_stat(STAT_ALL, 0, false);
-            break;
-        case FOOD_PIZZA:
-            if (!SysEnv.crawl_pizza.empty() && !one_chance_in(3))
-                mprf("Mmm... %s.", SysEnv.crawl_pizza.c_str());
-            else
-            {
-                if (how_carnivorous >= 1) // non-vegetable
-                    temp_rand = 5 + random2(4);
-                else if (how_herbivorous >= 1) // non-meaty
-                    temp_rand = random2(6) + 2;
-                else
-                    temp_rand = random2(9);
-
-                mprf("Mmm... %s",
-                     (temp_rand == 0) ? "Ham and pineapple." :
-                     (temp_rand == 2) ? "Vegetable." :
-                     (temp_rand == 3) ? "Pepperoni." :
-                     (temp_rand == 4) ? "Yeuchh - Anchovies!" :
-                     (temp_rand == 5) ? "Cheesy." :
-                     (temp_rand == 6) ? "Supreme." :
-                     (temp_rand == 7) ? "Super Supreme!"
-                                      : "Chicken.");
-            }
-            break;
-        case FOOD_CHEESE:
-            temp_rand = random2(9);
-            mprf("Mmm...%s.",
-                 (temp_rand == 0) ? "Cheddar" :
-                 (temp_rand == 1) ? "Edam" :
-                 (temp_rand == 2) ? "Wensleydale" :
-                 (temp_rand == 3) ? "Camembert" :
-                 (temp_rand == 4) ? "Goat cheese" :
-                 (temp_rand == 5) ? "Fruit cheese" :
-                 (temp_rand == 6) ? "Mozzarella" :
-                 (temp_rand == 7) ? "Sheep cheese"
-                                  : "Yak cheese");
-            break;
-        default:
-            break;
-        }
-
-        // finally, modify player's hunger level {dlb}:
+        // Finally, modify player's hunger level {dlb}:
         if (carnivore_modifier && how_carnivorous > 0)
             food_value += (carnivore_modifier * how_carnivorous);
 
@@ -1481,11 +1361,11 @@ static void _eating(unsigned char item_class, int item_type)
 
         if (food_value > 0)
         {
+            int duration = 1;
             if (item_type == FOOD_MEAT_RATION || item_type == FOOD_BREAD_RATION)
-                start_delay( DELAY_EAT, 3 );
-            else
-                start_delay( DELAY_EAT, 1 );
+                duration = 3;
 
+            start_delay( DELAY_EAT, 1, 0, item_type );
             lessen_hunger( food_value, true );
         }
         break;
@@ -1496,6 +1376,176 @@ static void _eating(unsigned char item_class, int item_type)
 
     return;
 }                               // end eating()
+
+// Handle messaging at the end of eating.
+// Some food types may not get a message.
+void finished_eating_message(int food_type)
+{
+    bool herbivorous = player_mutation_level(MUT_HERBIVOROUS) > 0;
+    bool carnivorous = player_mutation_level(MUT_CARNIVOROUS) > 0;
+
+    if (herbivorous)
+    {
+        switch (food_type)
+        {
+        case FOOD_MEAT_RATION:
+        case FOOD_BEEF_JERKY:
+        case FOOD_SAUSAGE:
+            mpr("Blech - you need greens!");
+            return;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        switch (food_type)
+        {
+        case FOOD_MEAT_RATION:
+            mpr("That meat ration really hit the spot!");
+            return;
+        case FOOD_BEEF_JERKY:
+            mprf("That beef jerky was %s!",
+                 one_chance_in(4) ? "jerk-a-riffic"
+                                  : "delicious");
+            return;
+        case FOOD_SAUSAGE:
+            mpr("That sausage was delicious!");
+            return;
+        default:
+            break;
+        }
+    }
+
+    if (carnivorous)
+    {
+        switch (food_type)
+        {
+        case FOOD_BREAD_RATION:
+        case FOOD_BANANA:
+        case FOOD_ORANGE:
+        case FOOD_LEMON:
+        case FOOD_PEAR:
+        case FOOD_APPLE:
+        case FOOD_APRICOT:
+        case FOOD_CHOKO:
+        case FOOD_SNOZZCUMBER:
+        case FOOD_RAMBUTAN:
+        case FOOD_LYCHEE:
+        case FOOD_STRAWBERRY:
+        case FOOD_GRAPE:
+        case FOOD_SULTANA:
+            mpr("Blech - you need meat!");
+            return;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        switch (food_type)
+        {
+        case FOOD_BREAD_RATION:
+            mpr("That bread ration really hit the spot!");
+            return;
+        case FOOD_PEAR:
+        case FOOD_APPLE:
+        case FOOD_APRICOT:
+            mprf("Mmmm... Yummy %s.",
+                (food_type == FOOD_APPLE)   ? "apple." :
+                (food_type == FOOD_PEAR)    ? "pear." :
+                (food_type == FOOD_APRICOT) ? "apricot."
+                                            : "fruit.");
+            return;
+        case FOOD_CHOKO:
+            mpr("That choko was very bland.");
+            return;
+        case FOOD_SNOZZCUMBER:
+            mpr("That snozzcumber tasted truly putrid!");
+            return;
+        case FOOD_ORANGE:
+            mprf("That orange was delicious!%s",
+                 one_chance_in(8) ? " Even the peel tasted good!" : "");
+            return;
+        case FOOD_BANANA:
+            mprf("That banana was delicious!%s",
+                 one_chance_in(8) ? " Even the peel tasted good!" : "");
+            return;
+        case FOOD_STRAWBERRY:
+            mpr("That strawberry was delicious!");
+            return;
+        case FOOD_RAMBUTAN:
+            mpr("That rambutan was delicious!");
+            return;
+        case FOOD_LEMON:
+            mpr("That lemon was rather sour... but delicious nonetheless!");
+            return;
+        case FOOD_GRAPE:
+            mpr("That grape was delicious!");
+            return;
+        case FOOD_SULTANA:
+            mpr("That sultana was delicious! (but very small)");
+            return;
+        case FOOD_LYCHEE:
+            mpr("That lychee was delicious!");
+            return;
+        default:
+            break;
+        }
+    }
+
+    switch (food_type)
+    {
+    case FOOD_HONEYCOMB:
+        mpr("That honeycomb was delicious.");
+        break;
+    case FOOD_ROYAL_JELLY:
+        mpr("That royal jelly was delicious!");
+        restore_stat(STAT_ALL, 0, false);
+        break;
+    case FOOD_PIZZA:
+        if (!SysEnv.crawl_pizza.empty() && !one_chance_in(3))
+            mprf("Mmm... %s.", SysEnv.crawl_pizza.c_str());
+        else
+        {
+            int temp_rand;
+            if (carnivorous) // non-vegetable
+                temp_rand = 5 + random2(4);
+            else if (herbivorous) // non-meaty
+                temp_rand = random2(6) + 2;
+            else
+                temp_rand = random2(9);
+
+            mprf("Mmm... %s",
+                (temp_rand == 0) ? "Ham and pineapple." :
+                (temp_rand == 2) ? "Vegetable." :
+                (temp_rand == 3) ? "Pepperoni." :
+                (temp_rand == 4) ? "Yeuchh - Anchovies!" :
+                (temp_rand == 5) ? "Cheesy." :
+                (temp_rand == 6) ? "Supreme." :
+                (temp_rand == 7) ? "Super Supreme!"
+                                 : "Chicken.");
+        }
+        break;
+    case FOOD_CHEESE:
+    {
+        int temp_rand = random2(9);
+        mprf("Mmm...%s.",
+             (temp_rand == 0) ? "Cheddar" :
+             (temp_rand == 1) ? "Edam" :
+             (temp_rand == 2) ? "Wensleydale" :
+             (temp_rand == 3) ? "Camembert" :
+             (temp_rand == 4) ? "Goat cheese" :
+             (temp_rand == 5) ? "Fruit cheese" :
+             (temp_rand == 6) ? "Mozzarella" :
+             (temp_rand == 7) ? "Sheep cheese"
+                              : "Yak cheese");
+        break;
+    }
+    default:
+        break;
+    }
+}
 
 // Divide full nutrition by duration, so that each turn you get the same
 // amount of nutrition. Also, experimentally regenerate 1 hp per feeding turn

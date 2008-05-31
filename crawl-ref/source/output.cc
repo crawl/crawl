@@ -899,8 +899,8 @@ static std::string _level_description_string_hud()
         short_name += make_stringf(":%d", player_branch_depth());
     }
     // Indefinite articles
-    else if (  place.level_type == LEVEL_PORTAL_VAULT
-            || place.level_type == LEVEL_LABYRINTH)
+    else if (place.level_type == LEVEL_PORTAL_VAULT
+             || place.level_type == LEVEL_LABYRINTH)
     {
         if (you.level_type_name == "bazaar")
             short_name = "A Bazaar";
@@ -1481,16 +1481,8 @@ const char* itosym3(int stat)
 
 static const char *s_equip_slot_names[] =
 {
-    "Weapon",
-    "Cloak",
-    "Helmet",
-    "Gloves",
-    "Boots",
-    "Shield",
-    "Armour",
-    "Left Ring",
-    "Right Ring",
-    "Amulet",
+    "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
+    "Shield", "Armour", "Left Ring", "Right Ring", "Amulet",
 };
 
 const char *equip_slot_to_name(int equip)

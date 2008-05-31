@@ -3306,26 +3306,47 @@ void tutorial_inscription_info(bool autoinscribe)
     std::ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
+    bool longtext = false;
     if (!autoinscribe || wherey() <= get_number_of_lines() - 10)
     {
         text << EOL
          "Inscriptions are a powerful concept of Dungeon Crawl." EOL
          "You can inscribe items to differentiate them, or to comment on them, " EOL
          "but also to set rules for item interaction. If you are new to Crawl, " EOL
-         "you can safely ignore this feature, though." EOL;
+         "you can safely ignore this feature, though.";
+
+        longtext = true;
     }
 
     if (autoinscribe && wherey() <= get_number_of_lines() - 6)
     {
-        text << EOL EOL
+        text << EOL
          "Artefacts can be autoinscribed to give a brief overview of their " EOL
          "known properties. Here, doing a <w>left mouse click</w> will autoinscribe " EOL
-         "this item." EOL;
+         "this item.";
+
+        longtext = true;
     }
-    text << "(In the main screen, press <w>?6</w> for more information.)" EOL;
+    text << EOL
+       "(In the main screen, press <w>?6</w> for more information.)" EOL;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     formatted_string::parse_string(text.str()).display();
+
+    if (longtext && wherey() <= get_number_of_lines() - 2)
+    {
+        if (autoinscribe)
+        {
+            formatted_string::parse_string(
+                "<cyan>So, do you wish to inscribe this item? "
+                "('a' to autoinscribe) ").display();
+        }
+        else
+        {
+            formatted_string::parse_string(
+                "<cyan>So, do you wish to inscribe this item? ").display();
+        }
+    }
 }
 
 bool tutorial_pos_interesting(int x, int y)

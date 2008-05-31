@@ -269,7 +269,7 @@ bool is_terrain_changed( int x, int y )
     return (env.map[x][y].flags & MAP_CHANGED_FLAG);
 }
 
-// used to mark dug out areas, unset when terrain is seen or mapped again.
+// Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed( int x, int y )
 {
     env.map[x][y].flags |= MAP_CHANGED_FLAG;
@@ -3474,13 +3474,14 @@ void show_map( coord_def &spec_place, bool travel_mode )
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force)
 {
-    if (!force &&
-        (testbits(env.level_flags, LFLAG_NO_MAGIC_MAP)
-         || testbits(get_branch_flags(), BFLAG_NO_MAGIC_MAP)))
+    if (!force
+        && (testbits(env.level_flags, LFLAG_NO_MAGIC_MAP)
+            || testbits(get_branch_flags(), BFLAG_NO_MAGIC_MAP)))
     {
         if (!suppress_msg)
             mpr("You feel momentarily disoriented.");
-        return false;
+
+        return (false);
     }
 
     if (!suppress_msg)
@@ -3521,10 +3522,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 #ifdef USE_TILE
             if (!wizard_map && is_terrain_known(i,j))
             {
-                // can't use set_envmap_obj because that
-                // will overwrite the gmap.
-                env.tile_bk_bg[i][j] =
-                    tile_idx_unseen_terrain(i, j, grd[i][j]);
+                // Can't use set_envmap_obj because that would
+                // overwrite the gmap.
+                env.tile_bk_bg[i][j] = tile_idx_unseen_terrain(i, j, grd[i][j]);
             }
 #endif
 
@@ -3798,15 +3798,15 @@ void init_feature_table( void )
 {
     for (int i = 0; i < NUM_FEATURES; i++)
     {
-        Feature[i].dchar  = NUM_DCHAR_TYPES;
-        Feature[i].symbol = 0;
-        Feature[i].colour = BLACK;      // means must be set some other way
-        Feature[i].flags  = FFT_NONE;
-        Feature[i].magic_symbol = 0;    // made equal to symbol if untouched
-        Feature[i].map_colour = DARKGREY;
-        Feature[i].seen_colour = BLACK;    // marks no special seen map handling
+        Feature[i].dchar          = NUM_DCHAR_TYPES;
+        Feature[i].symbol         = 0;
+        Feature[i].colour         = BLACK;   // means must be set some other way
+        Feature[i].flags          = FFT_NONE;
+        Feature[i].magic_symbol   = 0;       // set to symbol if unchanged
+        Feature[i].map_colour     = DARKGREY;
+        Feature[i].seen_colour    = BLACK;   // -> no special seen map handling
         Feature[i].seen_em_colour = BLACK;
-        Feature[i].em_colour = BLACK;
+        Feature[i].em_colour      = BLACK;
 
         switch (i)
         {
@@ -3816,150 +3816,150 @@ void init_feature_table( void )
 
         case DNGN_ROCK_WALL:
         case DNGN_PERMAROCK_WALL:
-            Feature[i].dchar = DCHAR_WALL;
-            Feature[i].colour = EC_ROCK;
+            Feature[i].dchar        = DCHAR_WALL;
+            Feature[i].colour       = EC_ROCK;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             break;
 
         case DNGN_STONE_WALL:
-            Feature[i].dchar = DCHAR_WALL;
-            Feature[i].colour = EC_STONE;
+            Feature[i].dchar        = DCHAR_WALL;
+            Feature[i].colour       = EC_STONE;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             break;
 
         case DNGN_CLEAR_ROCK_WALL:
         case DNGN_CLEAR_STONE_WALL:
         case DNGN_CLEAR_PERMAROCK_WALL:
-            Feature[i].dchar = DCHAR_WALL;
+            Feature[i].dchar        = DCHAR_WALL;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            Feature[i].colour = LIGHTCYAN;
+            Feature[i].colour       = LIGHTCYAN;
             break;
 
 
         case DNGN_OPEN_DOOR:
-            Feature[i].dchar = DCHAR_DOOR_OPEN;
+            Feature[i].dchar  = DCHAR_DOOR_OPEN;
             Feature[i].colour = LIGHTGREY;
             break;
 
         case DNGN_CLOSED_DOOR:
-            Feature[i].dchar = DCHAR_DOOR_CLOSED;
+            Feature[i].dchar  = DCHAR_DOOR_CLOSED;
             Feature[i].colour = LIGHTGREY;
             break;
 
         case DNGN_METAL_WALL:
-            Feature[i].dchar = DCHAR_WALL;
-            Feature[i].colour = CYAN;
+            Feature[i].dchar        = DCHAR_WALL;
+            Feature[i].colour       = CYAN;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             break;
 
         case DNGN_SECRET_DOOR:
-            // Note: get_secret_door_appearance means this probably isn't used
-            Feature[i].dchar = DCHAR_WALL;
-            Feature[i].colour = EC_ROCK;
+            // Note: get_secret_door_appearance means this probably isn't used.
+            Feature[i].dchar        = DCHAR_WALL;
+            Feature[i].colour       = EC_ROCK;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             break;
 
         case DNGN_GREEN_CRYSTAL_WALL:
-            Feature[i].dchar = DCHAR_WALL;
-            Feature[i].colour = GREEN;
+            Feature[i].dchar        = DCHAR_WALL;
+            Feature[i].colour       = GREEN;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             break;
 
         case DNGN_ORCISH_IDOL:
-            Feature[i].dchar = DCHAR_STATUE;
-            Feature[i].colour = RED; // plain Orc colour
+            Feature[i].dchar  = DCHAR_STATUE;
+            Feature[i].colour = LIGHTRED; // plain orc colour
             break;
 
         case DNGN_WAX_WALL:
-            Feature[i].dchar = DCHAR_WALL;
-            Feature[i].colour = YELLOW;
+            Feature[i].dchar        = DCHAR_WALL;
+            Feature[i].colour       = YELLOW;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             break;                  // wax wall
 
         case DNGN_GRANITE_STATUE:
-            Feature[i].dchar = DCHAR_STATUE;
+            Feature[i].dchar  = DCHAR_STATUE;
             Feature[i].colour = DARKGREY;
             break;
 
         case DNGN_LAVA:
-            Feature[i].dchar = DCHAR_WAVY;
+            Feature[i].dchar  = DCHAR_WAVY;
             Feature[i].colour = RED;
             break;
 
         case DNGN_DEEP_WATER:
-            Feature[i].dchar = DCHAR_WAVY;
+            Feature[i].dchar  = DCHAR_WAVY;
             Feature[i].colour = BLUE;
             break;
 
         case DNGN_SHALLOW_WATER:
-            Feature[i].dchar = DCHAR_WAVY;
+            Feature[i].dchar  = DCHAR_WAVY;
             Feature[i].colour = CYAN;
             break;
 
         case DNGN_FLOOR:
-            Feature[i].dchar = DCHAR_FLOOR;
-            Feature[i].colour = EC_FLOOR;
+            Feature[i].dchar        = DCHAR_FLOOR;
+            Feature[i].colour       = EC_FLOOR;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
             break;
 
         case DNGN_FLOOR_SPECIAL:
-            Feature[i].dchar = DCHAR_FLOOR;
-            Feature[i].colour = YELLOW;
+            Feature[i].dchar        = DCHAR_FLOOR;
+            Feature[i].colour       = YELLOW;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
             break;
 
         case DNGN_EXIT_HELL:
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].colour = LIGHTRED;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].colour      = LIGHTRED;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTRED;
             break;
 
         case DNGN_ENTER_HELL:
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].colour = RED;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].colour      = RED;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = RED;
             break;
 
         case DNGN_TRAP_MECHANICAL:
-            Feature[i].colour = LIGHTCYAN;
-            Feature[i].dchar = DCHAR_TRAP;
+            Feature[i].colour     = LIGHTCYAN;
+            Feature[i].dchar      = DCHAR_TRAP;
             Feature[i].map_colour = LIGHTCYAN;
             break;
 
         case DNGN_TRAP_MAGICAL:
-            Feature[i].colour = MAGENTA;
-            Feature[i].dchar = DCHAR_TRAP;
+            Feature[i].colour     = MAGENTA;
+            Feature[i].dchar      = DCHAR_TRAP;
             Feature[i].map_colour = MAGENTA;
             break;
 
         case DNGN_TRAP_NATURAL:
-            Feature[i].colour = BROWN;
-            Feature[i].dchar = DCHAR_TRAP;
+            Feature[i].colour     = BROWN;
+            Feature[i].dchar      = DCHAR_TRAP;
             Feature[i].map_colour = BROWN;
             break;
 
         case DNGN_UNDISCOVERED_TRAP:
-            Feature[i].dchar = DCHAR_FLOOR;
-            Feature[i].colour = EC_FLOOR;
+            Feature[i].dchar        = DCHAR_FLOOR;
+            Feature[i].colour       = EC_FLOOR;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
             break;
 
         case DNGN_ENTER_SHOP:
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].colour = YELLOW;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].colour      = YELLOW;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = YELLOW;
             break;
 
         case DNGN_ENTER_LABYRINTH:
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].colour = CYAN;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].colour      = CYAN;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = CYAN;
             break;
 
@@ -3975,8 +3975,8 @@ void init_feature_table( void )
             break;
 
         case DNGN_ESCAPE_HATCH_DOWN:
-            Feature[i].dchar = DCHAR_STAIRS_DOWN;
-            Feature[i].colour = BROWN;
+            Feature[i].dchar      = DCHAR_STAIRS_DOWN;
+            Feature[i].colour     = BROWN;
             Feature[i].map_colour = BROWN;
             break;
 
@@ -3991,93 +3991,93 @@ void init_feature_table( void )
             break;
 
         case DNGN_ESCAPE_HATCH_UP:
-            Feature[i].dchar = DCHAR_STAIRS_UP;
-            Feature[i].colour = BROWN;
+            Feature[i].dchar      = DCHAR_STAIRS_UP;
+            Feature[i].colour     = BROWN;
             Feature[i].map_colour = BROWN;
             break;
 
         case DNGN_STONE_STAIRS_UP_I:
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
-            Feature[i].dchar = DCHAR_STAIRS_UP;
-            Feature[i].colour = LIGHTGREY;
-            Feature[i].map_colour = GREEN;
+            Feature[i].dchar          = DCHAR_STAIRS_UP;
+            Feature[i].colour         = LIGHTGREY;
+            Feature[i].map_colour     = GREEN;
             Feature[i].em_colour      = WHITE;
             Feature[i].seen_em_colour = WHITE;
             break;
 
         case DNGN_ENTER_DIS:
-            Feature[i].colour = CYAN;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].colour      = CYAN;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = CYAN;
             break;
 
         case DNGN_ENTER_GEHENNA:
-            Feature[i].colour = RED;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].colour      = RED;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = RED;
             break;
 
         case DNGN_ENTER_COCYTUS:
-            Feature[i].colour = LIGHTCYAN;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].colour      = LIGHTCYAN;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTCYAN;
             break;
 
         case DNGN_ENTER_TARTARUS:
-            Feature[i].colour = DARKGREY;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].colour      = DARKGREY;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = DARKGREY;
             break;
 
         case DNGN_ENTER_ABYSS:
-            Feature[i].colour = EC_RANDOM;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].colour      = EC_RANDOM;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = EC_RANDOM;
             break;
 
         case DNGN_EXIT_ABYSS:
-            Feature[i].colour = EC_RANDOM;
-            Feature[i].dchar = DCHAR_ARCH;
+            Feature[i].colour     = EC_RANDOM;
+            Feature[i].dchar      = DCHAR_ARCH;
             Feature[i].map_colour = EC_RANDOM;
             break;
 
         case DNGN_STONE_ARCH:
-            Feature[i].colour = LIGHTGREY;
-            Feature[i].dchar = DCHAR_ARCH;
+            Feature[i].colour     = LIGHTGREY;
+            Feature[i].dchar      = DCHAR_ARCH;
             Feature[i].map_colour = LIGHTGREY;
             break;
 
         case DNGN_ENTER_PANDEMONIUM:
-            Feature[i].colour = LIGHTBLUE;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].colour      = LIGHTBLUE;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTBLUE;
             break;
 
         case DNGN_EXIT_PANDEMONIUM:
-            // Note: has special handling for colouring with mutation
-            Feature[i].colour = LIGHTBLUE;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].map_colour = LIGHTGREY;
+            // Note: Has special handling for colouring with mutation.
+            Feature[i].colour      = LIGHTBLUE;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTBLUE;
             break;
 
         case DNGN_TRANSIT_PANDEMONIUM:
-            Feature[i].colour = LIGHTGREEN;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].colour      = LIGHTGREEN;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTGREEN;
             break;
 
@@ -4097,18 +4097,18 @@ void init_feature_table( void )
         case DNGN_ENTER_RESERVED_2:
         case DNGN_ENTER_RESERVED_3:
         case DNGN_ENTER_RESERVED_4:
-            Feature[i].colour = YELLOW;
-            Feature[i].dchar = DCHAR_STAIRS_DOWN;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = RED;
+            Feature[i].colour      = YELLOW;
+            Feature[i].dchar       = DCHAR_STAIRS_DOWN;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = RED;
             Feature[i].seen_colour = YELLOW;
             break;
 
         case DNGN_ENTER_ZOT:
-            Feature[i].colour = MAGENTA;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].colour      = MAGENTA;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = MAGENTA;
             break;
 
@@ -4128,128 +4128,128 @@ void init_feature_table( void )
         case DNGN_RETURN_RESERVED_2:
         case DNGN_RETURN_RESERVED_3:
         case DNGN_RETURN_RESERVED_4:
-            Feature[i].colour = YELLOW;
-            Feature[i].dchar = DCHAR_STAIRS_UP;
+            Feature[i].colour      = YELLOW;
+            Feature[i].dchar       = DCHAR_STAIRS_UP;
             Feature[i].map_colour  = GREEN;
             Feature[i].seen_colour = YELLOW;
             break;
 
         case DNGN_RETURN_FROM_ZOT:
-            Feature[i].colour = MAGENTA;
-            Feature[i].dchar = DCHAR_ARCH;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].colour      = MAGENTA;
+            Feature[i].dchar       = DCHAR_ARCH;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = MAGENTA;
             break;
 
         case DNGN_ALTAR_ZIN:
-            Feature[i].colour = WHITE;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = WHITE;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = WHITE;
             break;
 
         case DNGN_ALTAR_SHINING_ONE:
-            Feature[i].colour = YELLOW;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = YELLOW;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = YELLOW;
             break;
 
         case DNGN_ALTAR_KIKUBAAQUDGHA:
-            Feature[i].colour = DARKGREY;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = DARKGREY;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = DARKGREY;
             break;
 
         case DNGN_ALTAR_YREDELEMNUL:
-            Feature[i].colour = EC_UNHOLY;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = EC_UNHOLY;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_UNHOLY;
             break;
 
         case DNGN_ALTAR_XOM:
-            Feature[i].colour = EC_RANDOM;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = EC_RANDOM;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_RANDOM;
             break;
 
         case DNGN_ALTAR_VEHUMET:
-            Feature[i].colour = EC_VEHUMET;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = EC_VEHUMET;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_VEHUMET;
             break;
 
         case DNGN_ALTAR_OKAWARU:
-            Feature[i].colour = CYAN;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = CYAN;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = CYAN;
             break;
 
         case DNGN_ALTAR_MAKHLEB:
-            Feature[i].colour = EC_FIRE;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = EC_FIRE;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_FIRE;
             break;
 
         case DNGN_ALTAR_SIF_MUNA:
-            Feature[i].colour = BLUE;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = BLUE;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = BLUE;
             break;
 
         case DNGN_ALTAR_TROG:
-            Feature[i].colour = RED;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = RED;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = RED;
             break;
 
         case DNGN_ALTAR_NEMELEX_XOBEH:
-            Feature[i].colour = LIGHTMAGENTA;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = LIGHTMAGENTA;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = LIGHTMAGENTA;
             break;
 
         case DNGN_ALTAR_ELYVILON:
-            Feature[i].colour = LIGHTGREY;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = LIGHTGREY;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = LIGHTGREY;
             break;
 
         case DNGN_ALTAR_LUGONU:
-            Feature[i].colour = GREEN;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = GREEN;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = GREEN;
             break;
 
         case DNGN_ALTAR_BEOGH:
-            Feature[i].colour = EC_BEOGH;
-            Feature[i].dchar = DCHAR_ALTAR;
-            Feature[i].flags |= FFT_NOTABLE;
-            Feature[i].map_colour = DARKGREY;
+            Feature[i].colour      = EC_BEOGH;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_BEOGH;
             break;
 
@@ -4273,7 +4273,7 @@ void init_feature_table( void )
         case DNGN_DRY_FOUNTAIN_BLOOD:
         case DNGN_PERMADRY_FOUNTAIN:
             Feature[i].colour = LIGHTGREY;
-            Feature[i].dchar = DCHAR_FOUNTAIN;
+            Feature[i].dchar  = DCHAR_FOUNTAIN;
             break;
 
         case DNGN_INVIS_EXPOSED:
@@ -4351,7 +4351,9 @@ void init_feature_table( void )
 
         if (i == DNGN_ENTER_ORCISH_MINES || i == DNGN_ENTER_SLIME_PITS
             || i == DNGN_ENTER_LABYRINTH)
+        {
             Feature[i].flags |= FFT_EXAMINE_HINT;
+        }
 
         if (Feature[i].dchar != NUM_DCHAR_TYPES)
             Feature[i].symbol = Options.char_table[ Feature[i].dchar ];
@@ -4667,6 +4669,7 @@ void viewwindow(bool draw_it, bool do_updates)
         const bool map = player_in_mappable_area();
         const bool draw =
             (!you.running || Options.travel_delay > -1) && !you.asleep();
+
         int bufcount = 0;
 
         int flash_colour = you.flash_colour;

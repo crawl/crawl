@@ -480,7 +480,7 @@ static bool _is_pet_kill(killer_type killer, int i)
         return (false);
 
     const monsters *m = &menv[i];
-    if (mons_friendly(m)) // this includes enslaved monsters
+    if (mons_friendly(m)) // This includes enslaved monsters.
         return (true);
 
     // Check if the monster was confused by you or a friendly, which
@@ -1055,9 +1055,25 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 if (attacker_holy == MH_UNDEAD)
                 {
                     if (targ_holy == MH_NATURAL)
-                        notice |=
-                            did_god_conduct(DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
-                                        monster->hit_dice);
+                    {
+                        // Yes, this is a hack, but it makes sure that confused
+                        // monsters doing the kill are not referred to as
+                        // "slave", and I think it's okay that Yredelemnul
+                        // ignores kills done by confused monsters as opposed
+                        // to enslaved or friendly ones. (jpeg)
+                        if (mons_friendly(&menv[i]))
+                        {
+                            notice |=
+                                did_god_conduct(DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
+                                            monster->hit_dice);
+                        }
+                        else
+                        {
+                            notice |=
+                                did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
+                                            monster->hit_dice);
+                        }
+                    }
                 }
                 else if (you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
@@ -1231,20 +1247,14 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     }
     else if (monster->type == MONS_BORIS && !in_transit)
     {
-        // XXX: actual blood curse effect for Boris? -- bwr
+        // XXX: Actual blood curse effect for Boris? -- bwr
 
-        if (one_chance_in(5))
-            mons_speaks( monster );
-        else
+        // Provide the player with an ingame clue to Boris' return.  -- bwr
+        std::string msg = getSpeakString("Boris return_speech");
+        if (!msg.empty())
         {
-            // Provide the player with an ingame clue to Boris' return.  -- bwr
-            std::string msg = getSpeakString("Boris return_speech");
-
-            if (!msg.empty())
-            {
-                msg = do_mon_str_replacements(msg, monster);
-                mpr(msg.c_str(), MSGCH_TALK);
-            }
+            msg = do_mon_str_replacements(msg, monster);
+            mpr(msg.c_str(), MSGCH_TALK);
         }
 
         // Now that Boris is dead, he's a valid target for monster
@@ -3109,6 +3119,7 @@ static void _handle_nearby_ability(monsters *monster)
         if (one_chance_in(chance))
             mons_speaks(monster);
     }
+    // Okay then, don't speak.
 
     if (monster_can_submerge(monster, grd[monster->x][monster->y])
         && !player_beheld_by(monster) // no submerging if player entranced

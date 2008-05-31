@@ -985,7 +985,7 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
 
     const coord_def oldplace = monster->pos();
 
-    // pick the monster up
+    // Pick the monster up.
     mgrd(oldplace) = NON_MONSTER;
 
     if (mons_is_caught(monster))
@@ -997,7 +997,7 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
         newx = 10 + random2(GXM - 20);
         newy = 10 + random2(GYM - 20);
 
-        // don't land on top of another monster
+        // Don't land on top of another monster.
         if (mgrd[newx][newy] != NON_MONSTER
             || newx == you.x_pos && newy == you.y_pos)
         {
@@ -1061,46 +1061,40 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     case MONS_DRAGON:
     case MONS_LINDWURM:
     case MONS_XTAHUA:
-        pbolt.name += "blast of flame";
-        pbolt.flavour = BEAM_FIRE;
-        pbolt.colour = RED;
+        pbolt.name      += "blast of flame";
         pbolt.aux_source = "blast of fiery breath";
+        pbolt.flavour    = BEAM_FIRE;
+        pbolt.colour     = RED;
         break;
 
     case MONS_ICE_DRAGON:
-        pbolt.name += "blast of cold";
-        pbolt.flavour = BEAM_COLD;
-        pbolt.colour = WHITE;
+        pbolt.name      += "blast of cold";
         pbolt.aux_source = "blast of icy breath";
+        pbolt.flavour    = BEAM_COLD;
+        pbolt.colour     = WHITE;
         break;
 
     case MONS_RED_DRACONIAN:
-        pbolt.name += "searing blast";
-#ifdef DEBUG_DIAGNOSTICS
-        mprf( MSGCH_DIAGNOSTICS, "bolt name: '%s'", pbolt.name.c_str() );
-#endif
-        pbolt.flavour = BEAM_FIRE;
-        pbolt.colour = RED;
+        pbolt.name      += "searing blast";
         pbolt.aux_source = "blast of searing breath";
-        scaling = 65;
+        pbolt.flavour    = BEAM_FIRE;
+        pbolt.colour     = RED;
+        scaling          = 65;
         break;
 
     case MONS_WHITE_DRACONIAN:
-        pbolt.name += "chilling blast";
-#ifdef DEBUG_DIAGNOSTICS
-        mprf( MSGCH_DIAGNOSTICS, "bolt name: '%s'", pbolt.name.c_str() );
-#endif
-        pbolt.flavour = BEAM_COLD;
-        pbolt.colour = WHITE;
+        pbolt.name      += "chilling blast";
         pbolt.aux_source = "blast of chilling breath";
+        pbolt.flavour    = BEAM_COLD;
+        pbolt.colour     = WHITE;
         scaling = 65;
         break;
 
     case MONS_PLAYER_GHOST: // draconians only
-        pbolt.name += "blast of negative energy";
-        pbolt.flavour = BEAM_NEG;
-        pbolt.colour = DARKGREY;
+        pbolt.name      += "blast of negative energy";
         pbolt.aux_source = "blast of draining breath";
+        pbolt.flavour    = BEAM_NEG;
+        pbolt.colour     = DARKGREY;
         scaling = 65;
         break;
 
@@ -1108,6 +1102,10 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         DEBUGSTR("Bad monster class in setup_dragon()");
         break;
     }
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf( MSGCH_DIAGNOSTICS, "bolt name: '%s'", pbolt.name.c_str() );
+#endif
 
     pbolt.range       = 4;
     pbolt.rangeMax    = 13;

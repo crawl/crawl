@@ -2404,6 +2404,8 @@ void new_level(void)
 #endif
 }
 
+// XXX: Why the lowercasing? I mean why not list the messages as lowercased
+//      in the first place? (jpeg)
 std::string weird_glowing_colour()
 {
     std::string result = getRandNameString("glowing_colour_name");

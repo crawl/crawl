@@ -139,6 +139,7 @@ static void _initialize_randmons()
         {
             if (invalid_monster_class(m))
                 continue;
+
             if (monster_habitable_grid(m, grid))
                 monsters_by_habitat[i].push_back(static_cast<monster_type>(m));
         }
@@ -158,9 +159,10 @@ monster_type random_monster_at_grid(dungeon_feature_type grid)
 
     const habitat_type ht = grid2habitat(grid);
     const std::vector<monster_type> &valid_mons = monsters_by_habitat[ht];
+
     ASSERT(!valid_mons.empty());
-    return valid_mons.empty()? MONS_PROGRAM_BUG
-                 : valid_mons[ random2(valid_mons.size()) ];
+    return (valid_mons.empty() ? MONS_PROGRAM_BUG
+                               : valid_mons[ random2(valid_mons.size()) ]);
 }
 
 typedef std::map<std::string, unsigned> mon_name_map;

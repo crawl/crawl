@@ -91,6 +91,7 @@ bool monster_habitable_grid(const monsters *m,
 {
     // Zombified monsters enjoy the same habitat as their original.
     const int type = mons_is_zombified(m) ? mons_zombie_base(m) : m->type;
+
     return (monster_habitable_grid(type, actual_grid, mons_flies(m),
                                    m->paralysed()));
 }
@@ -116,6 +117,7 @@ bool monster_habitable_grid(int monster_class,
 {
     const dungeon_feature_type preferred_habitat =
         habitat2grid( mons_habitat_by_type(monster_class) );
+
     return (grid_compatible(preferred_habitat, actual_grid)
             // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
             // only have to check for the additional valid grids of deep

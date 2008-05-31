@@ -2266,6 +2266,9 @@ w:5
 #################################################
 related beogh orc sorcerer
 
+__NONE
+
+w:5
 @_wizard_@
 
 w:3

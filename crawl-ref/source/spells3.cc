@@ -128,10 +128,10 @@ bool remove_curse(bool suppress_msg)
     int loopy = 0;              // general purpose loop variable {dlb}
     bool success = false;       // whether or not curse(s) removed {dlb}
 
-    // special "wield slot" case - see if you can figure out why {dlb}:
-    // because only cursed weapons in hand only count as cursed -- bwr
+    // Special "wield slot" case - see if you can figure out why {dlb}:
+    // ... because only cursed weapons in hand count as cursed -- bwr
     if (you.equip[EQ_WEAPON] != -1
-                && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS)
+        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS)
     {
         if (item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
         {
@@ -141,8 +141,8 @@ bool remove_curse(bool suppress_msg)
         }
     }
 
-    // everything else uses the same paradigm - are we certain?
-    // what of artefact rings and amulets? {dlb}:
+    // Everything else uses the same paradigm - are we certain?
+    // What of artefact rings and amulets? {dlb}:
     for (loopy = EQ_CLOAK; loopy < NUM_EQUIP; loopy++)
     {
         if (you.equip[loopy] != -1 && item_cursed(you.inv[you.equip[loopy]]))
@@ -152,7 +152,7 @@ bool remove_curse(bool suppress_msg)
         }
     }
 
-    // messaging output {dlb}:
+    // Messaging output. {dlb}:
     if (!suppress_msg)
     {
         if (success)

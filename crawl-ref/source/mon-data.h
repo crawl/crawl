@@ -257,8 +257,8 @@
 
 // draconians ('d')
 {   // Base draconian -- for use like MONS_HUMAN, MONS_ELF although we
-    // now store the draconian subspecies in the high byte of mon->number
-    // for those listed as species MONS_DRACONIAN.
+    // now store the draconian subspecies in base_monster for those
+    // listed as species MONS_DRACONIAN.
     MONS_DRACONIAN, 'd', BROWN, "draconian",
     M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,

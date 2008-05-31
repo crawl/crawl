@@ -701,7 +701,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
         damage_taken += 7 + random2avg(11, 2);
         break;
 
-    case DMNBM_BRAIN_FEED:      // not implemented here (nor, probably, can be)
+    case DMNBM_BRAIN_FEED:  // Not implemented here (nor, probably, can be).
         break;
 
     case DMNBM_MUTATION:
@@ -717,7 +717,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
         break;
     }
 
-    // apply damage and handle death, where appropriate {dlb}
+    // Apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
     {
         hurt_monster(monster, damage_taken);
@@ -727,7 +727,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
     }
 
     return;
-}                               // end mons_direct_effect()
+}
 
 void random_uselessness(unsigned char ru, unsigned char sc_read_2)
 {
@@ -736,8 +736,7 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     switch (ru)
     {
     case 0:
-        msg::stream << "The dust glows " << weird_glowing_colour() << "!"
-                    << std::endl;
+        mprf("The dust glows %s!", weird_glowing_colour().c_str());
         break;
 
     case 1:
@@ -748,22 +747,22 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     case 2:
         if (you.equip[EQ_WEAPON] != -1)
         {
-            msg::stream << you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR)
-                        << " glows " << weird_glowing_colour()
-                        << " for a moment." << std::endl;
+            mprf("%s glows %s for a moment.",
+                 you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR).c_str(),
+                 weird_glowing_colour().c_str());
         }
         else
             canned_msg(MSG_NOTHING_HAPPENS);
         break;
 
     case 3:
-        msg::stream << "You hear the distant roaring of an enraged "
-                    << weird_roaring_animal() << "!" << std::endl;
+        mprf("You hear the distant roaring of an enraged %s!",
+             weird_roaring_animal().c_str());
         break;
 
     case 4:
         if (player_can_smell())
-            msg::stream << "You smell " << weird_smell() << "." << std::endl;
+            mprf("You smell %s.", weird_smell().c_str());
         else if (you.species == SP_MUMMY)
             mpr("Your bandages flutter.");
         else
@@ -801,9 +800,7 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
                               : "the tinkle of an enormous bell");
         break;
     }
-
-    return;
-}                               // end random_uselessness()
+}
 
 static armour_type random_nonbody_armour_type()
 {

@@ -105,6 +105,8 @@ void chunk_nutrition_message(int nutrition);
 void vampire_nutrition_per_turn(const item_def &corpse,
                                 int feeding = 0);
 
+void finished_eating_message(int food_type);
+
 int you_max_hunger();
 int you_min_hunger();
 

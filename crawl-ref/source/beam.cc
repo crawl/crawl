@@ -2455,7 +2455,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
                 }
             }
 
-            // extra check for fear (monster needs to reevaluate behaviour)
+            // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
                 behaviour_event( monster, ME_SCARE, origin );
         }
@@ -2467,13 +2467,10 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
     return (msg_generated);
 }                               // end mass_enchantment()
 
-/*
-   Monster has probably failed save, now it gets enchanted somehow.
-
-   returns MON_RESIST if monster is unaffected due to magic resist.
-   returns MON_UNAFFECTED if monster is immune to enchantment
-   returns MON_AFFECTED in all other cases (already enchanted, etc)
- */
+// Monster has probably failed save, now it gets enchanted somehow.
+// * Returns MON_RESIST if monster is unaffected due to magic resist.
+// * Returns MON_UNAFFECTED if monster is immune to enchantment.
+// * Returns MON_AFFECTED in all other cases (already enchanted, etc).
 int mons_ench_f2(monsters *monster, bolt &pbolt)
 {
     switch (pbolt.flavour)      /* put in magic resistance */
@@ -3688,7 +3685,18 @@ static int _affect_player( bolt &beam, item_def *item )
                 || !beam.aimed_at_feet)
             && you_resist_magic( beam.ench_power ))
         {
-            canned_msg(MSG_YOU_RESIST);
+            bool need_msg = true;
+            if (beam.beam_source != -1)
+            {
+                monsters *mon = &menv[beam.beam_source];
+                if (!player_monster_visible(mon))
+                {
+                    mpr("Something tries to affect you, but you resist.");
+                    need_msg = false;
+                }
+            }
+            if (need_msg)
+                canned_msg(MSG_YOU_RESIST);
 
             // You *could* have gotten a free teleportation in the Abyss,
             // but no, you resisted.

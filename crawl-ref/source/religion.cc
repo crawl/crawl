@@ -1820,8 +1820,8 @@ std::string god_name( god_type which_god, bool long_name )
     {
     case GOD_NO_GOD: return "No God";
     case GOD_RANDOM: return "random";
-    case GOD_ZIN: return (long_name ? "Zin the Law-Giver" : "Zin");
-    case GOD_SHINING_ONE: return "The Shining One";
+    case GOD_ZIN:           return (long_name ? "Zin the Law-Giver" : "Zin");
+    case GOD_SHINING_ONE:   return "The Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
     case GOD_YREDELEMNUL:
         return (long_name ? "Yredelemnul the Dark" : "Yredelemnul");
@@ -1833,8 +1833,8 @@ std::string god_name( god_type which_god, bool long_name )
     case GOD_TROG: return (long_name ? "Trog the Wrathful" : "Trog");
     case GOD_NEMELEX_XOBEH: return "Nemelex Xobeh";
     case GOD_ELYVILON: return (long_name ? "Elyvilon the Healer" : "Elyvilon");
-    case GOD_LUGONU: return (long_name ? "Lugonu the Unformed" : "Lugonu");
-    case GOD_BEOGH: return (long_name ? "Beogh the Brigand" : "Beogh");
+    case GOD_LUGONU:   return (long_name ? "Lugonu the Unformed" : "Lugonu");
+    case GOD_BEOGH:    return (long_name ? "Beogh the Brigand" : "Beogh");
 
     case GOD_XOM:
         if (!long_name)
