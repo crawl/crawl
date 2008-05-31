@@ -283,8 +283,6 @@ static bool xom_annoyance_gift(int power)
         {
             // If you are wearing cursed gloves, then Xom will give you
             // a ring.  Ha ha!
-            //
-            // A random ring.  (Not necessarily a good one.)
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
             return (true);
