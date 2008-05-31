@@ -645,6 +645,12 @@ static bool xom_is_good(int sever)
             else
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
 
+            if (one_chance_in(12))
+            {
+                mon->add_ench(coinflip() ? ENCH_SHAPESHIFTER
+                                         : ENCH_GLOWING_SHAPESHIFTER);
+            }
+
             done = true;
         }
     }
@@ -833,6 +839,12 @@ static bool xom_is_bad(int sever)
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
                 else
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
+
+                if (one_chance_in(12))
+                {
+                    mon->add_ench(coinflip() ? ENCH_SHAPESHIFTER
+                                             : ENCH_GLOWING_SHAPESHIFTER);
+                }
 
                 done = true;
             }
