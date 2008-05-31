@@ -1704,6 +1704,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
                 break;
             case HS_ENGORGED:
                 rotting = false;
+                break;
             }
         }
     }
