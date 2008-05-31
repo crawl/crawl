@@ -268,12 +268,22 @@ static void pop_delay()
         you.delay_queue.erase( you.delay_queue.begin() );
 }
 
+static int delays_cleared[NUM_DELAYS];
+static int cleared_delays_parm1[NUM_DELAYS];
+
 static void clear_pending_delays()
 {
+    memset(delays_cleared, 0, sizeof(delays_cleared));
+    memset(cleared_delays_parm1, 0, sizeof(cleared_delays_parm1));
+
     while (you.delay_queue.size() > 1)
     {
         const delay_queue_item delay =
             you.delay_queue[you.delay_queue.size() - 1];
+
+        delays_cleared[delay.type]++;
+        cleared_delays_parm1[delay.type] = delay.parm1;
+
         you.delay_queue.pop_back();
 
         if (is_run_delay(delay.type) && you.running)
@@ -334,9 +344,10 @@ void stop_delay( bool stop_stair_travel )
     case DELAY_BOTTLE_BLOOD:
     case DELAY_OFFER_CORPSE:
     {
-        bool multiple_corpses  = false;
-        bool butcher_swap_warn = false;
-        int wpn_delay = -1;
+        bool multiple_corpses    = false;
+        bool butcher_swap_warn   = false;
+        int  butcher_swap_weapon = 0;
+
         for (unsigned int i = 1; i < you.delay_queue.size(); i++)
         {
             if (you.delay_queue[i].type == DELAY_BUTCHER
@@ -347,12 +358,18 @@ void stop_delay( bool stop_stair_travel )
             }
             else if (you.delay_queue[i].type == DELAY_WEAPON_SWAP)
             {
-                wpn_delay = i;
-                butcher_swap_warn = true;
+                butcher_swap_weapon = you.delay_queue[i].parm1;
+                butcher_swap_warn   = true;
                 break;
             }
             else
                 break;
+        }
+
+        if (!butcher_swap_warn && delays_cleared[DELAY_WEAPON_SWAP] > 0)
+        {
+            butcher_swap_warn   = true;
+            butcher_swap_weapon = cleared_delays_parm1[DELAY_WEAPON_SWAP];
         }
 
         const std::string butcher_verb =
@@ -363,8 +380,6 @@ void stop_delay( bool stop_stair_travel )
         // Corpse keeps track of work in plus2 field, see handle_delay() -- bwr
         if (butcher_swap_warn)
         {
-            const int butcher_swap_weapon = you.delay_queue[wpn_delay].parm1;
-
             std::string weapon;
             if (butcher_swap_weapon == -1)
                 weapon = "unarmed combat";
@@ -376,6 +391,10 @@ void stop_delay( bool stop_stair_travel )
             mprf(MSGCH_WARN, "You stop %s the corpse%s; not switching "
                              "back to %s.", butcher_verb.c_str(),
                              (multiple_corpses ? "s" : ""), weapon.c_str());
+
+            if (Options.swap_when_safe)
+                you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
+                    = butcher_swap_weapon;
         }
         else
             mprf("You stop %s the corpse%s.", butcher_verb.c_str(),

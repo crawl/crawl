@@ -758,6 +758,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
     if (showMsgs)
         warn_shield_penalties();
+
+    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }                               // end wield_weapon()
 
 //---------------------------------------------------------------

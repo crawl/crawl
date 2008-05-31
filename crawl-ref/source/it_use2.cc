@@ -523,6 +523,8 @@ bool unwield_item(bool showMsgs)
         mpr("You feel your mana capacity decrease.");
     }
 
+    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+
     return (true);
 }                               // end unwield_item()
 

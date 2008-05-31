@@ -1414,6 +1414,15 @@ static void _input()
     if (need_to_autoinscribe())
         autoinscribe();
 
+    if (i_feel_safe() && you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
+    {
+        weapon_switch(you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]);
+        print_stats();
+
+        // To prevent spam in case the weapon can't be switched back to.
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+    }
+
     handle_delay();
 
     const coord_def cwhere = grid2view(you.pos());

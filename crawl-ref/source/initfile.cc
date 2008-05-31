@@ -671,6 +671,7 @@ void game_options::reset_options()
     easy_butcher           = true;
     always_confirm_butcher = false;
     chunks_autopickup      = false;
+    swap_when_safe         = false;
     list_rotten            = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
@@ -1885,6 +1886,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(easy_butcher);
     else BOOL_OPTION(always_confirm_butcher);
     else BOOL_OPTION(chunks_autopickup);
+    else BOOL_OPTION(swap_when_safe);
     else BOOL_OPTION(list_rotten);
     else if (key == "lua_file" && runscript)
     {

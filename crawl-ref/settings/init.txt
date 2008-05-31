@@ -206,6 +206,7 @@ include = travel_stoppers.txt
 # easy_butcher = false
 # always_confirm_butcher = true
 # chunks_autopickup      = true
+# swap_when_safe         = true
 # easy_quit_item_prompts = false
 # easy_exit_menu         = false
 # sort_menus = pickup: true : basename, qualname, curse, qty

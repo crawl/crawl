@@ -916,6 +916,11 @@ chunks_autopickup = false
         all of the autopickup options.  Requires '%' to be in the
         autopickup line.
 
+swap_when_safe = false
+        If both this and easy_butcher are true, then if an auto-switch
+        butchery is interupted, then the auto-switch will be reversed
+        as soon as your safe again.
+
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing 
         with Space (as well as Escape, which always works). These lists 
