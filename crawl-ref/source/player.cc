@@ -2910,8 +2910,11 @@ void level_change(bool skip_attribute_increase)
         }
         else  // character has gained a new level
         {
-            mprf(MSGCH_INTRINSIC_GAIN, "You are now a level %d %s!",
-                 you.experience_level, you.class_name );
+            if (you.experience_level == 27)
+               mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
+            else
+               mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
+                   you.experience_level );
             if (!skip_more)
                 more();
 

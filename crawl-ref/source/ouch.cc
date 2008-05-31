@@ -647,7 +647,7 @@ void lose_level()
     you.experience_level--;
 
     mprf(MSGCH_WARN,
-         "You are now a level %d %s!", you.experience_level, you.class_name);
+         "You are now level %d!", you.experience_level);
 
     // Constant value to avoid grape jelly trick... see level_change() for
     // where these HPs and MPs are given back.  -- bwr
