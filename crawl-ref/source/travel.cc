@@ -674,6 +674,10 @@ bool prompt_stop_explore(int es_why)
 }
 
 #define ES_item   (Options.explore_stop & ES_ITEM)
+#define ES_greedy (Options.explore_stop & ES_GREEDY_ITEM)
+#define ES_glow   (Options.explore_stop & ES_GLOWING_ITEM)
+#define ES_art    (Options.explore_stop & ES_ARTEFACT)
+#define ES_rune   (Options.explore_stop & ES_RUNE)
 #define ES_shop   (Options.explore_stop & ES_SHOP)
 #define ES_stair  (Options.explore_stop & ES_STAIR)
 #define ES_altar  (Options.explore_stop & ES_ALTAR)
@@ -687,7 +691,7 @@ inline static void _check_interesting_square(int x, int y,
 {
     const coord_def pos(x, y);
 
-    if (ES_item)
+    if (ES_item || ES_greedy || ES_glow || ES_art || ES_rune)
     {
         if (mgrd(pos) != NON_MONSTER)
         {
@@ -1093,8 +1097,12 @@ command_type travel()
                 if (lev && lev->needs_visit(new_x, new_y)
                     && !lev->shop_needs_visit(new_x, new_y))
                 {
-                    if ((Options.explore_stop & ES_ITEM)
-                        && prompt_stop_explore(ES_ITEM))
+                    const int estop =
+                        (you.running == RMODE_EXPLORE_GREEDY) ?
+                            ES_GREEDY_PICKUP : ES_PICKUP;
+
+                    if ((Options.explore_stop & estop)
+                        && prompt_stop_explore(estop))
                     {
                         explore_stopped_pos = coord_def(new_x, new_y);
                         stop_running();
@@ -3948,16 +3956,32 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
         if (!current_level)
             current_level = StashTrack.find_current_level();
 
-        if (current_level
-            && !(Options.explore_stop & ES_GREEDY_ITEM)
-            && _is_greed_inducing_square(current_level, pos))
+        if (current_level)
         {
-            return;
+            const bool greed_inducing =
+                _is_greed_inducing_square(current_level, pos);
+
+            if (greed_inducing && (Options.explore_stop & ES_GREEDY_ITEM))
+                ; // Stop for this conditions
+            else if (!greed_inducing
+                     && ((Options.explore_stop & ES_ITEM)
+                         || ((Options.explore_stop & ES_GLOWING_ITEM)
+                             && (i.flags & ISFLAG_COSMETIC_MASK))
+                         || ((Options.explore_stop & ES_ARTEFACT)
+                             && (i.flags & ISFLAG_ARTEFACT_MASK))
+                         || ((Options.explore_stop & ES_RUNE)
+                             && is_rune(i)) ))
+            {
+                ; // More conditions to stop for
+            }
+            else
+                return; // No conditions met, don't stop for this item
         }
-    }
+    } // if (you.running == RMODE_EXPLORE_GREEDY)
 
     add_item(i);
-    es_flags |= ES_ITEM;
+    es_flags |= (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP :
+                                                        ES_PICKUP;
 }
 
 // Expensive O(n^2) duplicate search, but we can live with that.

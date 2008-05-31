@@ -1509,6 +1509,14 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_ALTAR;
         else if (c == "greedy_item" || c == "greedy_items")
             conditions |= ES_GREEDY_ITEM;
+        else if (c == "glowing" || c == "glowing_item"
+                 || c == "glowing_items")
+            conditions |= ES_GLOWING_ITEM;
+        else if (c == "artefact" || c == "artefacts"
+                 || c == "artifact" || c == "artifacts")
+            conditions |= ES_ARTEFACT;
+        else if (c == "rune" || c == "runes")
+            conditions |= ES_RUNE;
     }
     return (conditions);
 }
