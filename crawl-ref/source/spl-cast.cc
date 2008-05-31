@@ -2778,6 +2778,10 @@ static void _miscast_necromancy(int severity, const char* cause)
         case 0:
             if (player_can_smell())
                 mpr("You smell decay.");
+            else if (you.species == SP_MUMMY)
+                mpr("Your bandages flutter.");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 1:
             if (!silenced(you.x_pos, you.y_pos))
@@ -2835,6 +2839,10 @@ static void _miscast_necromancy(int severity, const char* cause)
                 mpr("You smell decay."); // identical to a harmless message
                 you.rotting++;
             }
+            else if (you.species == SP_MUMMY)
+                mpr("Your bandages flutter.");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
         break;
@@ -2969,6 +2977,10 @@ static void _miscast_transmigration(int severity, const char* cause)
         case 9:
             if (player_can_smell())
                 mpr("You smell something strange.");
+            else if (you.species == SP_MUMMY)
+                mpr("Your bandages flutter.");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
         break;
@@ -3062,6 +3074,10 @@ static void _miscast_fire(int severity, const char* cause)
         case 4:
             if (player_can_smell())
                 mpr("You smell smoke.");
+            else if (you.species == SP_MUMMY)
+                mpr("Your bandages flutter.");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 5:
             mpr("Heat runs through your body.");
@@ -3442,6 +3458,10 @@ static void _miscast_air(int severity, const char* cause)
                 mpr("You hear a whooshing sound.", MSGCH_SOUND);
             else if (player_can_smell())
                 mpr("You smell ozone.");
+            else if (you.species == SP_MUMMY)
+                mpr("Your bandages flutter.");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 8:
             canned_msg(MSG_NOTHING_HAPPENS);
@@ -3451,6 +3471,10 @@ static void _miscast_air(int severity, const char* cause)
                 mpr("You hear a crackling sound.", MSGCH_SOUND);
             else if (player_can_smell())
                 mpr("You smell something musty.");
+            else if (you.species == SP_MUMMY)
+                mpr("Your bandages flutter.");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
         break;
