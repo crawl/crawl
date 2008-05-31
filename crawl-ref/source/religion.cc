@@ -1766,8 +1766,7 @@ void pray()
     }
     else if (!_god_accepts_prayer(you.religion))
     {
-        std::string msg = god_name(you.religion) + " ignores you.";
-        god_speaks(you.religion, msg.c_str());
+        simple_god_message(" ignores you.");
         return;
     }
 
@@ -5334,7 +5333,7 @@ void handle_god_time()
             // something interesting happening.
             if (you.gift_timeout == 1)
             {
-                god_speaks(you.religion, "Xom is getting BORED.");
+                simple_god_message(" is getting BORED.");
                 you.gift_timeout = 0;
             }
             else if (you.gift_timeout > 1)
@@ -5419,9 +5418,6 @@ void handle_god_time()
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    if (which_deity == GOD_NO_GOD)
-        which_deity = you.religion;
-
     std::string msg = god_name(which_deity);
     msg += event;
     god_speaks( which_deity, msg.c_str() );
