@@ -75,8 +75,8 @@ const char *troll_claw_lose[3] = {
 const char *naga_speed_descrip[4] = {
     "You cover ground very slowly.",    // 10*14/10 = 14
     "You cover ground rather slowly.",  //  8*14/10 = 11
-    "You cover ground rather quickly.", //  7*14/10 = 9
-    "You cover ground quickly."         //  6*14/10 = 8
+    "You cover ground rather quickly.", //  7*14/10 =  9
+    "You cover ground quickly."         //  6*14/10 =  8
 };
 
 const char *centaur_deformed_descrip[3] = {
