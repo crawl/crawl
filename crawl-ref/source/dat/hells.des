@@ -323,7 +323,9 @@ MARKER: O = lua:item_pickup_change_flags { \
             level_flags="!no_tele_control", item="iron rune" \
         }
 MONS:   Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle
-MONS:   random, random
+MONS:   iron dragon
+SHUFFLE: 23
+SUBST:  4 = 4:30 6  
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
