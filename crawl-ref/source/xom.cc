@@ -769,7 +769,7 @@ static bool xom_is_bad(int sever)
         {
             god_speaks(GOD_XOM, _get_xom_speech("zero miscast effect"));
 
-            miscast_effect( SPTYP_RANDOM, 0, 0, 0, "the mischief of Xom" );
+            miscast_effect(SPTYP_RANDOM, 0, 0, 0, "the mischief of Xom");
 
             done = true;
         }
@@ -777,8 +777,8 @@ static bool xom_is_bad(int sever)
         {
             god_speaks(GOD_XOM, _get_xom_speech("minor miscast effect"));
 
-            miscast_effect( SPTYP_RANDOM, 0, 0, random2(2),
-                            "the capriciousness of Xom" );
+            miscast_effect(SPTYP_RANDOM, 0, 0, random2(2),
+                           "the capriciousness of Xom");
 
             done = true;
         }
@@ -795,8 +795,8 @@ static bool xom_is_bad(int sever)
         {
             god_speaks(GOD_XOM, _get_xom_speech("medium miscast effect"));
 
-            miscast_effect( SPTYP_RANDOM, 0, 0, random2(3),
-                            "the capriciousness of Xom" );
+            miscast_effect(SPTYP_RANDOM, 0, 0, random2(3),
+                           "the capriciousness of Xom");
 
             done = true;
         }
@@ -902,8 +902,8 @@ static bool xom_is_bad(int sever)
         {
             god_speaks(GOD_XOM, _get_xom_speech("major miscast effect"));
 
-            miscast_effect( SPTYP_RANDOM, 0, 0, random2(4),
-                            "the severe capriciousness of Xom" );
+            miscast_effect(SPTYP_RANDOM, 0, 0, random2(4),
+                           "the severe capriciousness of Xom");
 
             done = true;
         }
