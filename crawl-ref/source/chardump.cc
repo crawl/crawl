@@ -608,16 +608,20 @@ static void sdump_religion(dump_params &par)
         text += god_name(you.religion);
         text += ".\n";
 
-        std::string verb = par.se? "was" : "is";
-        if (!player_under_penance())
+        if (you.religion != GOD_XOM)
         {
-            text += god_prayer_reaction();
-            text += "\n";
-        }
-        else
-        {
-            text += god_name(you.religion);
-            text += " " + verb + " demanding penance.\n";
+            if (!player_under_penance())
+            {
+                text += god_prayer_reaction();
+                text += "\n";
+            }
+            else
+            {
+                std::string verb = par.se ? "was" : "is";
+
+                text += god_name(you.religion);
+                text += " " + verb + " demanding penance.\n";
+            }
         }
     }
 }
