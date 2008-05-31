@@ -643,7 +643,7 @@ static bool xom_is_good(int sever)
             else
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
 
-            if (one_chance_in(10)
+            if (one_chance_in(8)
                 && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
                                   ENCH_SHAPESHIFTER))
             {
@@ -840,7 +840,7 @@ static bool xom_is_bad(int sever)
                 else
                     monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
 
-                if (one_chance_in(10)
+                if (one_chance_in(8)
                     && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
                                       ENCH_SHAPESHIFTER))
                 {
