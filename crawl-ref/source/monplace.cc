@@ -64,16 +64,16 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
     // device to slow down fiery monsters flying over water.
     if (grid_wanted == DNGN_FLOOR)
     {
-        return (actual_grid >= DNGN_FLOOR && 
-                    actual_grid != DNGN_BUILDER_SPECIAL_WALL
-                || !generation && actual_grid == DNGN_SHALLOW_WATER);
+        return (actual_grid >= DNGN_FLOOR
+                && actual_grid != DNGN_BUILDER_SPECIAL_WALL
+                    || !generation && actual_grid == DNGN_SHALLOW_WATER);
     }
 
     if (grid_wanted >= DNGN_ROCK_WALL
         && grid_wanted <= DNGN_CLEAR_PERMAROCK_WALL)
     {
-        return (actual_grid >= DNGN_ROCK_WALL &&
-                actual_grid <= DNGN_CLEAR_PERMAROCK_WALL);
+        return (actual_grid >= DNGN_ROCK_WALL
+                && actual_grid <= DNGN_CLEAR_PERMAROCK_WALL);
     }
 
     return (grid_wanted == actual_grid
@@ -90,7 +90,7 @@ bool monster_habitable_grid(const monsters *m,
                             dungeon_feature_type actual_grid)
 {
     // Zombified monsters enjoy the same habitat as their original.
-    const int type = mons_is_zombified(m)? mons_zombie_base(m) : m->type;
+    const int type = mons_is_zombified(m) ? mons_zombie_base(m) : m->type;
     return (monster_habitable_grid(type, actual_grid, mons_flies(m),
                                    m->paralysed()));
 }
