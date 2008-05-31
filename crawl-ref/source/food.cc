@@ -1365,7 +1365,7 @@ static void _eating(unsigned char item_class, int item_type)
             if (item_type == FOOD_MEAT_RATION || item_type == FOOD_BREAD_RATION)
                 duration = 3;
 
-            start_delay( DELAY_EAT, 1, 0, item_type );
+            start_delay( DELAY_EAT, duration, 0, item_type );
             lessen_hunger( food_value, true );
         }
         break;
