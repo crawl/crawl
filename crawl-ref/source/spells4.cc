@@ -1323,11 +1323,7 @@ static int make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
             if (!mons_skeleton(mitm[obj].plus))
                 destroy_item(obj);
             else
-            {
-                mitm[obj].sub_type = CORPSE_SKELETON;
-                mitm[obj].special = 200;
-                mitm[obj].colour = LIGHTGREY;
-            }
+                turn_corpse_into_skeleton(mitm[obj]);
 
             place_cloud(ctype, x, y,
                         (3 + random2(pow / 4) + random2(pow / 4) +

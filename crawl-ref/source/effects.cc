@@ -2352,8 +2352,9 @@ static void rot_inventory_food(long time_delta)
                 continue;
             }
 
+            // Carried skeletons are not destroyed.
             if (you.inv[i].sub_type == CORPSE_SKELETON)
-                continue;       // carried skeletons are not destroyed
+                continue;
 
             if (!mons_skeleton( you.inv[i].plus ))
             {
@@ -2365,9 +2366,7 @@ static void rot_inventory_food(long time_delta)
                 continue;
             }
 
-            you.inv[i].sub_type   = CORPSE_SKELETON;
-            you.inv[i].special    = 0;
-            you.inv[i].colour     = LIGHTGREY;
+            turn_corpse_into_skeleton(you.inv[i]);
             you.wield_change      = true;
             burden_changed_by_rot = true;
             continue;
@@ -3009,11 +3008,7 @@ void update_corpses(double elapsedTime)
                     destroy_item(c);
                 }
                 else
-                {
-                    it.sub_type = CORPSE_SKELETON;
-                    it.special  = 200;
-                    it.colour   = LIGHTGREY;
-                }
+                    turn_corpse_into_skeleton(it);
             }
         }
         else

@@ -1197,22 +1197,22 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
     return id;
 }
 
-// assumes the item is equipped in the first place!
+// NOTE: Assumes the item is equipped in the first place!
 static bool _is_true_equipped_item(item_def item)
 {
-    // weapons and staves are only truly equipped if wielded
+    // Weapons and staves are only truly equipped if wielded.
     if (item.link == you.equip[EQ_WEAPON])
         return (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
 
-    // cursed armour and rings are only truly equipped if *not* wielded
+    // Cursed armour and rings are only truly equipped if *not* wielded.
     return (item.link != you.equip[EQ_WEAPON]);
 }
 
-// returns whether there's any action you can take with an item in inventory
-// apart from dropping it
+// Returns whether there's any action you can take with an item in inventory
+// apart from dropping it.
 static bool _can_use_item(item_def item, bool equipped)
 {
-    // vampires can drain corpses
+    // Vampires can drain corpses.
     if (item.base_type == OBJ_CORPSES)
     {
         return (you.species == SP_VAMPIRE
@@ -1223,20 +1223,20 @@ static bool _can_use_item(item_def item, bool equipped)
 
     if (equipped && item_cursed(item))
     {
-        // misc. items/rods can always be evoked, cursed or not
+        // Misc. items/rods can always be evoked, cursed or not.
         if (item.base_type == OBJ_MISCELLANY || item_is_rod(item))
             return true;
 
-        // you can't unwield/fire a wielded cursed weapon/staff
-        // but cursed armour and rings can be unwielded without problems
+        // You can't unwield/fire a wielded cursed weapon/staff
+        // but cursed armour and rings can be unwielded without problems.
         return (!_is_true_equipped_item(item));
     }
 
-    // mummies can't do anything with food or potions
+    // Mummies can't do anything with food or potions.
     if (you.species == SP_MUMMY)
         return (item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD);
 
-    // in all other cases you can use the item in some way
+    // In all other cases you can use the item in some way.
     return true;
 }
 

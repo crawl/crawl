@@ -293,11 +293,7 @@ int corpse_rot(int power)
                         if (!mons_skeleton(mitm[objl].plus))
                             destroy_item(objl);
                         else
-                        {
-                            mitm[objl].sub_type = CORPSE_SKELETON;
-                            mitm[objl].special  = 200;
-                            mitm[objl].colour   = LIGHTGREY;
-                        }
+                            turn_corpse_into_skeleton(mitm[objl]);
 
                         place_cloud(CLOUD_MIASMA, adx, ady,
                                     4 + random2avg(16, 3), KC_YOU);
@@ -314,7 +310,7 @@ int corpse_rot(int power)
     if (player_can_smell())
         mpr("You smell decay.");
 
-    // should make zombies decay into skeletons
+    // Should make zombies decay into skeletons?
 
     return 0;
 }                               // end corpse_rot()
@@ -407,8 +403,9 @@ int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
     while (objl != NON_ITEM)
     {
         const item_def& item = mitm[objl];
-        if (is_animatable_corpse(item) &&
-            (class_allowed == CORPSE_BODY || item.sub_type == CORPSE_SKELETON))
+        if (is_animatable_corpse(item)
+            && (class_allowed == CORPSE_BODY
+                || item.sub_type == CORPSE_SKELETON))
         {
             bool was_butchering = is_being_butchered(item);
 

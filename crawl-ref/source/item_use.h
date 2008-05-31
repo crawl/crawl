@@ -166,7 +166,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport=false, int acc_bonus=0,
 
 bool thrown_object_destroyed( item_def *item, int x, int y, bool returning );
 
-void inscribe_item();
+void prompt_inscribe_item();
 int launcher_shield_slowdown(const item_def &launcher,
                              const item_def *shield);
 int launcher_final_speed(const item_def &launcher,

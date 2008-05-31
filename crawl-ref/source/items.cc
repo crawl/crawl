@@ -455,7 +455,7 @@ void unlink_item( int dest )
     bool linked = false;
     int  old_link = mitm[dest].link; // used to try linking the first
 
-    // clean the relevant parts of the object:
+    // Clean the relevant parts of the object.
     mitm[dest].base_type = OBJ_UNASSIGNED;
     mitm[dest].quantity  = 0;
     mitm[dest].x = 0;
@@ -627,7 +627,7 @@ void destroy_item_stack( int x, int y, int cause )
             item_was_destroyed(mitm[o], cause);
 
             mitm[o].base_type = OBJ_UNASSIGNED;
-            mitm[o].quantity = 0;
+            mitm[o].quantity  = 0;
             mitm[o].props.clear();
         }
 
@@ -640,38 +640,36 @@ static bool _invisible_to_player( const item_def& item )
     return strstr(item.inscription.c_str(), "=k") != 0;
 }
 
-static int count_nonsquelched_items( int obj )
+static int _count_nonsquelched_items( int obj )
 {
     int result = 0;
-    while ( obj != NON_ITEM )
+    while (obj != NON_ITEM)
     {
-        if ( !_invisible_to_player(mitm[obj]) )
+        if (!_invisible_to_player(mitm[obj]))
             ++result;
         obj = mitm[obj].link;
     }
     return result;
 }
 
-/* Fill items with the items on a square.
-   Squelched items (marked with =k) are ignored, unless
-   the square contains *only* squelched items, in which case they
-   are included. If force_squelch is true, squelched items are
-   never displayed.
- */
+// Fill items with the items on a square.
+// Squelched items (marked with =k) are ignored, unless
+// the square contains *only* squelched items, in which case they
+// are included. If force_squelch is true, squelched items are
+// never displayed.
 static void _item_list_on_square( std::vector<const item_def*>& items,
                                   int obj, bool force_squelch )
 {
-    const bool have_nonsquelched = (force_squelch ||
-                                    count_nonsquelched_items(obj));
+    const bool have_nonsquelched = (force_squelch
+                                    || _count_nonsquelched_items(obj));
 
-    /* loop through the items */
+    // Loop through the items.
     while ( obj != NON_ITEM )
     {
-        /* add them to the items list if they qualify */
+        // Add them to the items list if they qualify.
         if ( !have_nonsquelched || !_invisible_to_player(mitm[obj]) )
-        {
             items.push_back( &mitm[obj] );
-        }
+
         obj = mitm[obj].link;
     }
 }
@@ -687,16 +685,18 @@ void request_autopickup(bool do_pickup)
 }
 
 // 2 - artefact, 1 - glowing/runed, 0 - mundane
-static int item_name_specialness(const item_def& item)
+static int _item_name_specialness(const item_def& item)
 {
     // All jewellery is worth looking at.
     // And we can always tell from the name if it's an artefact.
     if (item.base_type == OBJ_JEWELLERY )
         return ( is_artefact(item) ? 2 : 1 );
 
-    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR &&
-        item.base_type != OBJ_MISSILES)
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
+        && item.base_type != OBJ_MISSILES)
+    {
         return 0;
+    }
     if (item_type_known(item))
     {
         if ( is_artefact(item) )
@@ -721,8 +721,9 @@ static int item_name_specialness(const item_def& item)
         return ( branded ? 1 : 0 );
     }
 
+    // Missiles don't get name descriptors.
     if (item.base_type == OBJ_MISSILES)
-        return 0;               // missiles don't get name descriptors
+        return 0;
 
     std::string itname = item.name(DESC_PLAIN, false, false, false);
     lowercase(itname);
@@ -740,7 +741,7 @@ static int item_name_specialness(const item_def& item)
 
     // You can tell something is an artefact, because it'll have a
     // description which rules out anything else.
-    // XXX Fixedarts and unrandarts might upset the apple-cart, though.
+    // XXX: Fixedarts and unrandarts might upset the apple-cart, though.
     if ( is_artefact(item) )
         return 2;
 
@@ -760,7 +761,7 @@ void item_check(bool verbose)
 
     if (items.size() == 0)
     {
-        if ( verbose )
+        if (verbose)
             strm << "There are no items here." << std::endl;
         return;
     }
@@ -783,7 +784,7 @@ void item_check(bool verbose)
             unsigned short glyph_col;
             get_item_glyph( items[i], &glyph_char, &glyph_col );
             item_chars.push_back( glyph_char * 0x100 +
-                                  (10 - item_name_specialness(*(items[i]))) );
+                                  (10 - _item_name_specialness(*(items[i]))) );
         }
         std::sort(item_chars.begin(), item_chars.end());
 
@@ -794,10 +795,10 @@ void item_check(bool verbose)
             const int specialness = 10 - (item_chars[i] % 0x100);
             if ( specialness != cur_state )
             {
-                switch ( specialness )
+                switch (specialness)
                 {
-                case 2: out_string += "<yellow>"; break; // artefact
-                case 1: out_string += "<white>"; break;  // glowing/runed
+                case 2: out_string += "<yellow>";   break; // artefact
+                case 1: out_string += "<white>";    break; // glowing/runed
                 case 0: out_string += "<darkgrey>"; break; // mundane
                 }
                 cur_state = specialness;
@@ -929,25 +930,31 @@ void origin_set_inventory(void (*oset)(item_def &item))
             oset(you.inv[i]);
 }
 
-static int first_corpse_monnum(int x, int y)
+static int _first_corpse_monnum(int x, int y)
 {
     // We could look for a corpse on this square and assume that the
     // items belonged to it, but that is unsatisfactory.
+
+    // Actually, it would be easy to add the monster type to a corpse
+    // (or to another item) by setting orig_monnum when the monster dies
+    // (already done for unique monsters to get named zombies), but
+    // personally, I rather like the way the player can't tell where an
+    // item came from if he just finds it lying on the floor. (jpeg)
     return (0);
 }
 
 #ifdef DGL_MILESTONES
-static std::string milestone_rune(const item_def &item)
+static std::string _milestone_rune(const item_def &item)
 {
     return std::string("found ") + item.name(DESC_NOCAP_A) + ".";
 }
 
-static void milestone_check(const item_def &item)
+static void _milestone_check(const item_def &item)
 {
     if (item.base_type == OBJ_MISCELLANY
         && item.sub_type == MISC_RUNE_OF_ZOT)
     {
-        mark_milestone("rune", milestone_rune(item));
+        mark_milestone("rune", _milestone_rune(item));
     }
     else if (item.base_type == OBJ_ORBS && item.sub_type == ORB_ZOT)
     {
@@ -956,7 +963,7 @@ static void milestone_check(const item_def &item)
 }
 #endif // DGL_MILESTONES
 
-static void check_note_item(item_def &item)
+static void _check_note_item(item_def &item)
 {
     if (!(item.flags & ISFLAG_NOTED_GET) && is_interesting_item(item))
     {
@@ -973,7 +980,7 @@ static void check_note_item(item_def &item)
 
 void origin_set(int x, int y)
 {
-    int monnum = first_corpse_monnum(x, y);
+    int monnum = _first_corpse_monnum(x, y);
     unsigned short pplace = get_packed_place();
     for (int link = igrd[x][y]; link != NON_ITEM; link = mitm[link].link)
     {
@@ -984,15 +991,16 @@ void origin_set(int x, int y)
         if (!item.orig_monnum)
             item.orig_monnum = static_cast<short>( monnum );
         item.orig_place  = pplace;
+
 #ifdef DGL_MILESTONES
-        milestone_check(item);
+        _milestone_check(item);
 #endif
     }
 }
 
 void origin_set_monstercorpse(item_def &item, int x, int y)
 {
-    item.orig_monnum = first_corpse_monnum(x, y);
+    item.orig_monnum = _first_corpse_monnum(x, y);
 }
 
 static void _origin_freeze(item_def &item, int x, int y)
@@ -1003,9 +1011,10 @@ static void _origin_freeze(item_def &item, int x, int y)
             origin_set_monstercorpse(item, x, y);
 
         item.orig_place = get_packed_place();
-        check_note_item(item);
+        _check_note_item(item);
+
 #ifdef DGL_MILESTONES
-        milestone_check(item);
+        _milestone_check(item);
 #endif
     }
 }
@@ -1175,7 +1184,7 @@ void pickup()
     }
 
     int o = igrd[you.x_pos][you.y_pos];
-    const int num_nonsquelched = count_nonsquelched_items(o);
+    const int num_nonsquelched = _count_nonsquelched_items(o);
 
     if (o == NON_ITEM)
     {
@@ -1355,7 +1364,7 @@ bool items_stack( const item_def &item1, const item_def &item2,
     return (true);
 }
 
-static int userdef_find_free_slot(const item_def &i)
+static int _userdef_find_free_slot(const item_def &i)
 {
 #ifdef CLUA_BINDINGS
     int slot = -1;
@@ -1375,7 +1384,7 @@ int find_free_slot(const item_def &i)
     bool searchforward = false;
     // If we're doing Lua, see if there's a Lua function that can give
     // us a free slot.
-    int slot = userdef_find_free_slot(i);
+    int slot = _userdef_find_free_slot(i);
     if (slot == -2 || Options.assign_item_slot == SS_FORWARD)
         searchforward = true;
 
@@ -1517,7 +1526,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
 
-                check_note_item(mitm[obj]);
+                _check_note_item(mitm[obj]);
 
                 // If the object on the ground is inscribed, but not
                 // the one in inventory, then the inventory object
@@ -1581,7 +1590,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     _autoinscribe_item( item );
 
     _origin_freeze(item, you.x_pos, you.y_pos);
-    check_note_item(item);
+    _check_note_item(item);
 
     item.quantity = quant_got;
     if (is_blood_potion(mitm[obj]))
@@ -1655,7 +1664,7 @@ void mark_items_non_pickup_at(const coord_def &pos)
 // calling code that "obj" is possibly modified.
 bool move_item_to_grid( int *const obj, int x, int y )
 {
-    // must be a valid reference to a valid object
+    // Must be a valid reference to a valid object.
     if (*obj == NON_ITEM || !is_valid_item( mitm[*obj] ))
         return (false);
 
@@ -1938,7 +1947,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     return (true);
 }
 
-static std::string drop_menu_invstatus(const Menu *menu)
+static std::string _drop_menu_invstatus(const Menu *menu)
 {
     char buf[100];
     const int cap = carrying_capacity(BS_UNENCUMBERED);
@@ -1965,9 +1974,9 @@ static std::string drop_menu_invstatus(const Menu *menu)
     return (buf);
 }
 
-static std::string drop_menu_title(const Menu *menu, const std::string &oldt)
+static std::string _drop_menu_title(const Menu *menu, const std::string &oldt)
 {
-    std::string res = drop_menu_invstatus(menu) + " " + oldt;
+    std::string res = _drop_menu_invstatus(menu) + " " + oldt;
     if (menu->is_set( MF_MULTISELECT ))
         res = "[Multidrop] " + res;
 
@@ -1991,7 +2000,7 @@ int get_equip_slot(const item_def *item)
     return worn;
 }
 
-static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
+static std::string _drop_selitem_text( const std::vector<MenuEntry*> *s )
 {
     char buf[130];
     bool extraturns = false;
@@ -2022,7 +2031,7 @@ std::vector<SelItem> items_for_multidrop;
 // Arrange items that have been selected for multidrop so that
 // equipped items are dropped after other items, and equipped items
 // are dropped in the same order as their EQ_ slots are numbered.
-static bool drop_item_order(const SelItem &first, const SelItem &second)
+static bool _drop_item_order(const SelItem &first, const SelItem &second)
 {
     const item_def &i1 = you.inv[first.slot];
     const item_def &i2 = you.inv[second.slot];
@@ -2057,8 +2066,8 @@ void drop(void)
 
     std::vector<SelItem> tmp_items;
     tmp_items = prompt_invent_items( "Drop what?", MT_DROP, -1,
-                                     drop_menu_title, true, true, 0,
-                                     &Options.drop_filter, drop_selitem_text,
+                                     _drop_menu_title, true, true, 0,
+                                     &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop );
 
     if (tmp_items.empty())
@@ -2071,7 +2080,7 @@ void drop(void)
     // dropping a worn robe before a cloak (old behaviour: remove
     // cloak, remove robe, wear cloak, drop robe, remove cloak, drop
     // cloak).
-    std::sort( tmp_items.begin(), tmp_items.end(), drop_item_order );
+    std::sort( tmp_items.begin(), tmp_items.end(), _drop_item_order );
 
     // If the user answers "no" to an item an with a warning inscription,
     // then remove it from the list of items to drop by not copying it
@@ -2170,33 +2179,32 @@ void autoinscribe()
     will_autoinscribe = false;
 }
 
-static inline std::string autopickup_item_name(const item_def &item)
+static inline std::string _autopickup_item_name(const item_def &item)
 {
     return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
         + item.name(DESC_PLAIN);
 }
 
-static bool is_denied_autopickup(const item_def &item, std::string &iname)
+static bool _is_denied_autopickup(const item_def &item, std::string &iname)
 {
     if (iname.empty())
-        iname = autopickup_item_name(item);
+        iname = _autopickup_item_name(item);
+
     for (unsigned i = 0, size = Options.never_pickup.size(); i < size; ++i)
-    {
         if (Options.never_pickup[i].matches(iname))
             return (true);
-    }
+
     return false;
 }
 
-static bool is_forced_autopickup(const item_def &item, std::string &iname)
+static bool _is_forced_autopickup(const item_def &item, std::string &iname)
 {
     if (iname.empty())
-        iname = autopickup_item_name(item);
+        iname = _autopickup_item_name(item);
+
     for (unsigned i = 0, size = Options.always_pickup.size(); i < size; ++i)
-    {
         if (Options.always_pickup[i].matches(iname))
             return (true);
-    }
     return false;
 }
 
@@ -2216,9 +2224,9 @@ bool item_needs_autopickup(const item_def &item)
 #ifdef CLUA_BINDINGS
              && clua.callbooleanfn(true, "ch_autopickup", "u", &item)
 #endif
-             || is_forced_autopickup(item, itemname))
+             || _is_forced_autopickup(item, itemname))
             && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
-            && !is_denied_autopickup(item, itemname));
+            && !_is_denied_autopickup(item, itemname));
 }
 
 bool can_autopickup()
@@ -2244,7 +2252,7 @@ bool can_autopickup()
     return (true);
 }
 
-static void do_autopickup()
+static void _do_autopickup()
 {
     //David Loewenstern 6/99
     int n_did_pickup = 0;
@@ -2325,7 +2333,7 @@ static void do_autopickup()
 void autopickup()
 {
     _autoinscribe_floor_items();
-    do_autopickup();
+    _do_autopickup();
 }
 
 int inv_count(void)
@@ -2360,9 +2368,9 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
     return (NULL);
 }
 
-static bool find_subtype_by_name(item_def &item,
-                                 object_class_type base_type, int ntypes,
-                                 const std::string &name)
+static bool _find_subtype_by_name(item_def &item,
+                                  object_class_type base_type, int ntypes,
+                                  const std::string &name)
 {
     // In order to get the sub-type, we'll fill out the base type...
     // then we're going to iterate over all possible subtype values
@@ -2439,17 +2447,15 @@ item_def find_item_type(object_class_type base_type, std::string name)
             if (!max_subtype[i])
                 continue;
 
-            if (find_subtype_by_name(item, static_cast<object_class_type>(i),
-                                     max_subtype[i], name))
+            if (_find_subtype_by_name(item, static_cast<object_class_type>(i),
+                                      max_subtype[i], name))
             {
                 break;
             }
         }
     }
     else
-    {
-        find_subtype_by_name(item, base_type, max_subtype[base_type], name);
-    }
+        _find_subtype_by_name(item, base_type, max_subtype[base_type], name);
 
     return (item);
 }

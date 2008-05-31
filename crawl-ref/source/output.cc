@@ -1322,14 +1322,18 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
     {
         int printed = 0;
 
-        // one glyph for each monster
+        // One glyph for each monster.
         for (unsigned int i_mon=start; i_mon<end; i_mon++)
         {
             unsigned int glyph;
             unsigned short glyph_color;
             get_mons_glyph(mons[i_mon].m_mon, &glyph, &glyph_color);
             textcolor(glyph_color);
-            cprintf( stringize_glyph(glyph).c_str() );
+            // XXX: Hack to make the death cob (%) show up correctly.
+            if (glyph == '%')
+                cprintf("%%");
+            else
+                cprintf( stringize_glyph(glyph).c_str() );
             ++ printed;
             // Printing too many looks pretty bad, though.
             if (i_mon > 6)
@@ -1349,11 +1353,12 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
                 mons_get_damage_level(mon, damage_desc, damage_level);
             else
                 damage_level = MDAM_OKAY;
+
             int dam_color;
             switch (damage_level)
             {
-                // NOTE: in os x, light versions of foreground colors are OK,
-                // but not background colors.  So stick wth standards.
+            // NOTE: In os x, light versions of foreground colors are OK,
+            //       but not background colors.  So stick wth standards.
             case MDAM_DEAD:
             case MDAM_ALMOST_DEAD:
             case MDAM_SEVERELY_DAMAGED:   dam_color = RED;       break;

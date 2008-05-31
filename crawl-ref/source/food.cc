@@ -183,14 +183,14 @@ static bool _find_butchering_implement( bool fallback )
                  "for butchering.");
             return (false);
         }
-        // no switching necessary
+        // No switching necessary.
         if (can_cut_meat( *wpn ))
             return (false);
     }
 
     int old_weapon = you.equip[EQ_WEAPON];
 
-    // look for a butchering implement in your pack
+    // Look for a butchering implement in your pack.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         if (is_valid_item( you.inv[i] )
@@ -339,7 +339,7 @@ static bool _have_corpses_in_pack(bool remind)
         if (!is_valid_item( obj ))
             continue;
 
-        if (obj.base_type == OBJ_CORPSES)
+        if (obj.base_type == OBJ_CORPSES && obj.sub_type == CORPSE_BODY)
             num++;
     }
 
@@ -371,8 +371,7 @@ static bool _have_corpses_in_pack(bool remind)
     else
     {
         text << "If you dropped the " << noun << " in your pack on solid "
-             << "ground or into shallow water then you could " << verb
-             << " " << pronoun  << ".";
+             << "ground then you could " << verb << " " << pronoun  << ".";
     }
 
     mpr(text.str().c_str());

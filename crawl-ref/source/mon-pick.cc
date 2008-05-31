@@ -2098,7 +2098,7 @@ int mons_shoals_rare(int mcls)
     case MONS_STONE_GIANT:
     case MONS_YAKTAUR_CAPTAIN:
         return 10;
-        
+
     case MONS_OKLOB_PLANT:
         return 5;
     default:
@@ -2706,8 +2706,6 @@ int mons_standard_rare(int mcls)
 {
     switch (mcls)
     {
-// "another lava thing" has no stats!  (GDL)
-//    case MONS_ANOTHER_LAVA_THING:
     case MONS_MERFOLK:
     case MONS_MERMAID:
     case MONS_BIG_FISH:

@@ -3481,10 +3481,9 @@ void zap_wand( int slot )
     you.turn_is_over = true;
 }                               // end zap_wand()
 
-void inscribe_item()
+void prompt_inscribe_item()
 {
     int item_slot;
-    char buf[79];
     if (inv_count() < 1)
     {
         mpr("You don't have anything to inscribe.");
@@ -3497,26 +3496,8 @@ void inscribe_item()
         canned_msg( MSG_OK );
         return;
     }
-    mpr( you.inv[item_slot].name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT );
-    mpr( "Inscribe with what? ", MSGCH_PROMPT );
-    if (!cancelable_get_line(buf, sizeof buf))
-    {
-        // strip spaces from the end
-        for (int i = strlen(buf) - 1; i >= 0; i--)
-        {
-            if (isspace( buf[i] ))
-                buf[i] = 0;
-            else
-                break;
-        }
 
-        you.inv[item_slot].inscription = std::string(buf);
-        you.wield_change  = true;
-    }
-    else
-    {
-        canned_msg(MSG_OK);
-    }
+    inscribe_item(you.inv[item_slot]);
 }
 
 void drink( int slot )

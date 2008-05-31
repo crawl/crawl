@@ -264,11 +264,11 @@ monster_type pick_random_monster(const level_id &place,
         if (lev_mons || _need_moderate_ood(lev_mons))
             lev_mons = _fuzz_mons_level(lev_mons);
 
-        // potentially nasty surprise, but very rare
+        // Potentially nasty surprise, but very rare.
         if (_need_super_ood(lev_mons))
             lev_mons += random2(12);
 
-        // slightly out of depth monsters are more common:
+        // Slightly out of depth monsters are more common:
         // [ds] Replaced with a fuzz above for a more varied mix.
         //if (need_moderate_ood(lev_mons))
         //    lev_mons += random2(5);
@@ -375,10 +375,12 @@ static monster_type resolve_monster_type(monster_type mon_type,
     {
         // Pick any random drac, constrained by colour if requested.
         do
+        {
             mon_type =
                 static_cast<monster_type>(
                     random_range(MONS_BLACK_DRACONIAN,
                                  MONS_DRACONIAN_SCORCHER));
+        }
         while (base_type != MONS_PROGRAM_BUG
                && mon_type != base_type
                && (mons_species(mon_type) == mon_type
@@ -719,21 +721,21 @@ static int _place_monster_aux( const mgen_data &mg,
         grid_wanted = habitat2grid( mons_habitat_by_type(mg.cls) );
 
         int i = 0;
-        // we'll try 1000 times for a good spot
+        // We'll try 1000 times for a good spot.
         for ( ; i < 1000; i++)
         {
             fpos = mg.pos + coord_def( random_range(-3, 3),
                                        random_range(-3, 3) );
 
-            // occupied?
+            // Occupied?
             if (mgrd(fpos) != NON_MONSTER || fpos == you.pos())
                 continue;
 
             if (!grid_compatible(grid_wanted, grd(fpos), true))
                 continue;
 
-            // don't generate monsters on top of teleport traps
-            // (how do they get there?)
+            // Don't generate monsters on top of teleport traps.
+            // (How do they get there?)
             int trap = trap_at_xy(fpos.x, fpos.y);
             if (trap >= 0 && !can_place_on_trap(mg.cls, env.trap[trap].type))
                 continue;
@@ -747,7 +749,7 @@ static int _place_monster_aux( const mgen_data &mg,
             return (-1);
     }
 
-    // now, actually create the monster (wheeee!)
+    // Now, actually create the monster. (Wheeee!)
     menv[id].type = mg.cls;
     menv[id].base_monster = mg.base_type;
 
@@ -756,10 +758,10 @@ static int _place_monster_aux( const mgen_data &mg,
     menv[id].x = fpos.x;
     menv[id].y = fpos.y;
 
-    // link monster into monster grid
+    // Link monster into monster grid.
     mgrd(fpos) = id;
 
-    // generate a brand shiny new monster, or zombie
+    // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
         _define_zombie( id, mg.base_type, mg.cls, mg.power );
     else
@@ -895,14 +897,14 @@ static void _define_zombie( int mid, monster_type ztype,
                             monster_type cs, int power )
 {
     monster_type mons_sec2 = MONS_PROGRAM_BUG;
-    int zombie_size = 0;
-    bool ignore_rarity = false;
-    monster_type cls  = MONS_PROGRAM_BUG;
+    int zombie_size        = 0;
+    bool ignore_rarity     = false;
+    monster_type cls       = MONS_PROGRAM_BUG;
 
     if (power > 27)
         power = 27;
 
-    // set size based on zombie class (cs)
+    // Set size based on zombie class (cs).
     switch (cs)
     {
         case MONS_ZOMBIE_SMALL:
@@ -922,26 +924,26 @@ static void _define_zombie( int mid, monster_type ztype,
             break;
 
         default:
-            // this should NEVER happen.
+            // This should NEVER happen.
             perror("\ncreate_zombie() got passed incorrect zombie type!\n");
             end(0);
             break;
     }
 
-    // that is, random creature from which to fashion undead
+    // That is, random creature from which to fashion undead.
     if (ztype == MONS_PROGRAM_BUG)
     {
-        // how OOD this zombie can be.
+        // How OOD this zombie can be.
         int relax = 5;
 
-        // pick an appropriate creature to make a zombie out of,
+        // Pick an appropriate creature to make a zombie out of,
         // levelwise.  The old code was generating absolutely
         // incredible OOD zombies.
         while (true)
         {
             cls = _pick_random_zombie();
 
-            // on certain branches, zombie creation will fail if we use
+            // On certain branches, zombie creation will fail if we use
             // the mons_rarity() functions, because (for example) there
             // are NO zombifiable "native" abyss creatures. Other branches
             // where this is a problem are hell levels and the crypt.
@@ -962,28 +964,37 @@ static void _define_zombie( int mid, monster_type ztype,
                 ignore_rarity = true;
             }
 
-            // don't make out-of-rarity zombies when we don't have to
+            // Don't make out-of-rarity zombies when we don't have to.
             if (!ignore_rarity && mons_rarity(cls) == 0)
                 continue;
 
-            // if skeleton, monster must have a skeleton
+            // If skeleton, monster must have a skeleton.
             if ((cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
                 && !mons_skeleton(cls))
             {
                 continue;
             }
 
-            // size must match, but you can make a spectral thing out
+            // Size must match, but you can make a spectral thing out
             // of anything.
             if (mons_zombie_size(cls) != zombie_size && zombie_size != -1)
                 continue;
 
-            // hack -- non-dungeon zombies are always made out of nastier
-            // monsters
+            // Skeletal or icy draconians shouldn't be coloured.
+            // How could you tell?
+            if ((cs == MONS_SKELETON_SMALL || cs == MONS_SIMULACRUM_SMALL)
+                && mons_genus(cls) == MONS_DRACONIAN
+                && cls != MONS_DRACONIAN)
+            {
+                cls = MONS_DRACONIAN;
+            }
+
+            // Hack -- non-dungeon zombies are always made out of nastier
+            // monsters.
             if (you.level_type != LEVEL_DUNGEON && mons_power(cls) > 8)
                 break;
 
-            // check for rarity.. and OOD - identical to mons_place()
+            // Check for rarity.. and OOD - identical to mons_place()
             int level, diff, chance;
 
             level  = mons_level( cls ) - 4;
@@ -998,7 +1009,7 @@ static void _define_zombie( int mid, monster_type ztype,
                 break;
             }
 
-            // every so often, we'll relax the OOD restrictions.  Avoids
+            // Every so often, we'll relax the OOD restrictions.  Avoids
             // infinite loops (if we don't do this, things like creating
             // a large skeleton on level 1 may hang the game!)
             if (one_chance_in(5))
@@ -1873,10 +1884,8 @@ public:
     }
 };
 
-/*
- * Finds a square for a monster of the given class, pathfinding
- * through only contiguous squares of habitable terrain.
- */
+// Finds a square for a monster of the given class, pathfinding
+// through only contiguous squares of habitable terrain.
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int distance)
@@ -1921,8 +1930,7 @@ bool player_angers_monster(monsters *mon, bool actual)
     const bool antimagical =
         (you.religion == GOD_TROG && mons_is_magic_user(mon));
 
-    // get the drawbacks, not the benefits...
-    // (to prevent e.g. demon-scumming)
+    // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
     if (holy || unholy || antimagical)
     {
         if (actual
@@ -1985,14 +1993,13 @@ bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,
                      FixedVector < char, 2 > &empty)
 {
     bool success;
-    // assume all player summoning originates from player x,y
+    // Assume all player summoning originates from player x,y.
     bool playerSummon = (emx == you.x_pos && emy == you.y_pos);
 
     int good_count = 0;
     int count_x, count_y;
 
     for (count_x = -radius; count_x <= radius; count_x++)
-    {
         for (count_y = -radius; count_y <= radius; count_y++)
         {
             success = false;
@@ -2025,15 +2032,14 @@ bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,
 
             if (success && one_chance_in(++good_count))
             {
-                // add point to list of good points
+                // Add point to list of good points.
                 empty[0] = tx;
                 empty[1] = ty;
             }
-        }                       // end "for count_y"
-    }                           // end "for count_x"
+        }
 
     return (good_count > 0);
-}                               // end empty_surrounds()
+}
 
 monster_type summon_any_demon(demon_class_type demon_class)
 {

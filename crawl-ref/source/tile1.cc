@@ -1364,13 +1364,12 @@ static int _tileidx_food(const item_def &item)
     return TILE_ERROR;
 }
 
-// returns index of corpse tiles
-// parameter mon already holds the corpse type (monster species)
+// Returns index of corpse tiles.
+// Parameter mon already holds the corpse type (monster species).
 static int _tileidx_corpse(int mon)
 {
   switch (mon)
   {
-    // case MONS_PROGRAM_BUG:
     case MONS_GIANT_COCKROACH:
         return TILE_CORPSE_GIANT_COCKROACH;
     case MONS_GIANT_ANT:
@@ -1429,15 +1428,12 @@ static int _tileidx_corpse(int mon)
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_DEATH_MAGE:
         return TILE_CORPSE_ELF;
-    // case MONS_FUNGUS:
-    // case MONS_WANDERING_MUSHROOM:
     case MONS_GOBLIN:
         return TILE_CORPSE_GOBLIN;
     case MONS_HOBGOBLIN:
         return TILE_CORPSE_HOBGOBLIN;
     case MONS_GNOLL:
         return TILE_CORPSE_GNOLL;
-    // case MONS_BOGGART:
     case MONS_JACKAL:
         return TILE_CORPSE_JACKAL;
     case MONS_HOUND:
@@ -1450,8 +1446,6 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_WAR_DOG;
     case MONS_HOG:
         return TILE_CORPSE_HOG;
-    // case MONS_HELL_HOUND:
-    // case MONS_HELL_HOG:
     case MONS_ELEPHANT_SLUG:
         return TILE_CORPSE_ELEPHANT_SLUG;
     case MONS_GIANT_SLUG:
@@ -1490,7 +1484,6 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_NECROPHAGE;
     case MONS_GHOUL:
         return TILE_CORPSE_GHOUL;
-    // case MONS_ROTTING_HULK:
     case MONS_ORC:
     case MONS_ORC_WIZARD:
     case MONS_ORC_PRIEST:
@@ -1500,11 +1493,6 @@ static int _tileidx_corpse(int mon)
     case MONS_ORC_SORCERER:
     case MONS_ORC_HIGH_PRIEST:
         return TILE_CORPSE_ORC;
-    // case MONS_PHANTOM:
-    // case MONS_HUNGRY_GHOST:
-    // case MONS_FLAYED_GHOST:
-    // case MONS_PLAYER_GHOST:
-    // case MONS_INSUBSTANTIAL_WISP:
     case MONS_RAT:
         return TILE_CORPSE_RAT;
     case MONS_QUOKKA:
@@ -1531,12 +1519,6 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_UGLY_THING;
     case MONS_VERY_UGLY_THING:
         return TILE_CORPSE_VERY_UGLY_THING;
-    // case MONS_FIRE_VORTEX:
-    // case MONS_SPATIAL_VORTEX:
-    // case MONS_AIR_ELEMENTAL:
-    // case MONS_EARTH_ELEMENTAL:
-    // case MONS_FIRE_ELEMENTAL:
-    // case MONS_WATER_ELEMENTAL:
     case MONS_KILLER_BEE_LARVA:
         return TILE_CORPSE_KILLER_BEE_LARVA;
     case MONS_WORM:
@@ -1547,8 +1529,6 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_BRAIN_WORM;
     case MONS_SPINY_WORM:
         return TILE_CORPSE_SPINY_WORM;
-    // case MONS_UNSEEN_HORROR:
-    // case MONS_ABOMINATION_SMALL:
     case MONS_YELLOW_WASP:
         return TILE_CORPSE_YELLOW_WASP;
     case MONS_GIANT_MOSQUITO:
@@ -1557,16 +1537,6 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_GIANT_BLOWFLY;
     case MONS_RED_WASP:
         return TILE_CORPSE_RED_WASP;
-    // case MONS_MOTH_OF_WRATH:
-    // case MONS_ZOMBIE_SMALL:
-    // case MONS_SKELETON_SMALL:
-    // case MONS_SIMULACRUM_SMALL:
-    // case MONS_SKELETAL_WARRIOR:
-    // case MONS_FLYING_SKULL:
-    // case MONS_CURSE_SKULL:
-    // case MONS_CURSE_TOE:
-    // case MONS_ANGEL:
-    // case MONS_DAEVA:
     case MONS_GIANT_BEETLE:
         return TILE_CORPSE_GIANT_BEETLE;
     case MONS_BOULDER_BEETLE:
@@ -1601,17 +1571,12 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_SWAMP_DRAGON;
     case MONS_MOTTLED_DRAGON:
         return TILE_CORPSE_MOTTLED_DRAGON;
-    // case MONS_QUICKSILVER_DRAGON:
-    // case MONS_IRON_DRAGON:
     case MONS_STORM_DRAGON:
         return TILE_CORPSE_STORM_DRAGON;
     case MONS_GOLDEN_DRAGON:
         return TILE_CORPSE_GOLDEN_DRAGON;
     case MONS_SHADOW_DRAGON:
         return TILE_CORPSE_SHADOW_DRAGON;
-    // case MONS_SKELETAL_DRAGON:
-    // case MONS_SERPENT_OF_HELL:
-    // case MONS_EFREET:
     case MONS_GIANT_FROG:
         return TILE_CORPSE_GIANT_FROG;
     case MONS_GIANT_BROWN_FROG:
@@ -1620,7 +1585,6 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_SPINY_FROG;
     case MONS_BLINK_FROG:
         return TILE_CORPSE_BLINK_FROG;
-    // case MONS_GIANT_SPORE:
     case MONS_GIANT_EYEBALL:
         return TILE_CORPSE_GIANT_EYEBALL;
     case MONS_EYE_OF_DRAINING:
@@ -1629,39 +1593,20 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_GIANT_ORANGE_BRAIN;
     case MONS_GREAT_ORB_OF_EYES:
         return TILE_CORPSE_GREAT_ORB_OF_EYES;
-    // case MONS_SHINING_EYE:
-    // case MONS_EYE_OF_DEVASTATION:
     case MONS_HIPPOGRIFF:
         return TILE_CORPSE_HIPPOGRIFF;
     case MONS_MANTICORE:
         return TILE_CORPSE_MANTICORE;
     case MONS_GRIFFON:
         return TILE_CORPSE_GRIFFON;
-    // case MONS_SPHINX:
-    // case MONS_ICE_BEAST:
-    // case MONS_OOZE:
-    // case MONS_JELLY:
-    // case MONS_SLIME_CREATURE:
-    // case MONS_PULSATING_LUMP:
     case MONS_GIANT_AMOEBA:
         return TILE_CORPSE_GIANT_AMOEBA;
-    // case MONS_BROWN_OOZE:
-    // case MONS_AZURE_JELLY:
-    // case MONS_DEATH_OOZE:
-    // case MONS_ACID_BLOB:
-    // case MONS_ROYAL_JELLY:
     case MONS_KOBOLD:
         return TILE_CORPSE_KOBOLD;
     case MONS_BIG_KOBOLD:
         return TILE_CORPSE_BIG_KOBOLD;
     case MONS_KOBOLD_DEMONOLOGIST:
         return TILE_CORPSE_KOBOLD;
-    // case MONS_LICH:
-    // case MONS_ANCIENT_LICH:
-    // case MONS_MUMMY:
-    // case MONS_GUARDIAN_MUMMY:
-    // case MONS_GREATER_MUMMY:
-    // case MONS_MUMMY_PRIEST:
     case MONS_NAGA:
     case MONS_GUARDIAN_NAGA:
     case MONS_NAGA_MAGE:
@@ -1672,15 +1617,10 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_OGRE;
     case MONS_TWO_HEADED_OGRE:
         return TILE_CORPSE_TWO_HEADED_OGRE;
-    // case MONS_OGRE_MAGE:
-    // case MONS_PLANT:
-    // case MONS_OKLOB_PLANT:
     case MONS_QUEEN_BEE:
         return TILE_CORPSE_QUEEN_BEE;
     case MONS_QUEEN_ANT:
         return TILE_CORPSE_QUEEN_ANT;
-    // case MONS_RAKSHASA:
-    // case MONS_RAKSHASA_FAKE:
     case MONS_SMALL_SNAKE:
         return TILE_CORPSE_SMALL_SNAKE;
     case MONS_SNAKE:
@@ -1709,154 +1649,23 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_POLAR_BEAR;
     case MONS_BLACK_BEAR:
         return TILE_CORPSE_BLACK_BEAR;
-    // case MONS_VAMPIRE:
-    // case MONS_VAMPIRE_KNIGHT:
-    // case MONS_VAMPIRE_MAGE:
-    // case MONS_WIGHT:
-    // case MONS_WRAITH:
-    // case MONS_SHADOW_WRAITH:
-    // case MONS_FREEZING_WRAITH:
-    // case MONS_SPECTRAL_WARRIOR:
-    // case MONS_SPECTRAL_THING:
-    // case MONS_ABOMINATION_LARGE:
-    // case MONS_TENTACLED_MONSTROSITY:
-    // case MONS_ORB_GUARDIAN:
     case MONS_SHEEP:
         return TILE_CORPSE_SHEEP;
     case MONS_YAK:
         return TILE_CORPSE_YAK;
     case MONS_DEATH_YAK:
         return TILE_CORPSE_DEATH_YAK;
-    // case MONS_ZOMBIE_LARGE:
-    // case MONS_SKELETON_LARGE:
-    // case MONS_SIMULACRUM_LARGE:
-    // case MONS_BIG_FISH:
-    // case MONS_GIANT_GOLDFISH:
-    // case MONS_ELECTRICAL_EEL:
-    // case MONS_JELLYFISH:
-    // case MONS_SWAMP_WORM:
-    // case MONS_LAVA_WORM:
-    // case MONS_LAVA_FISH:
-    // case MONS_LAVA_SNAKE:
-    // case MONS_SALAMANDER:
-    // case MONS_ROCK_WORM:
     case MONS_HUMAN:
     case MONS_HELL_KNIGHT:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
         return TILE_CORPSE_HUMAN;
-    // case MONS_VAULT_GUARD:
     case MONS_SHAPESHIFTER:
         return TILE_CORPSE_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
-    // case MONS_KILLER_KLOWN:
-    // case MONS_GOLD_MIMIC:
-    // case MONS_WEAPON_MIMIC:
-    // case MONS_ARMOUR_MIMIC:
-    // case MONS_SCROLL_MIMIC:
-    // case MONS_POTION_MIMIC:
-    // case MONS_DANCING_WEAPON:
-    // case MONS_IMP:
-    // case MONS_QUASIT:
-    // case MONS_WHITE_IMP:
-    // case MONS_LEMURE:
-    // case MONS_UFETUBUS:
-    // case MONS_MANES:
-    // case MONS_MIDGE:
-    // case MONS_SHADOW_IMP:
-    // case MONS_RED_DEVIL:
-    // case MONS_ROTTING_DEVIL:
-    // case MONS_HAIRY_DEVIL:
-    // case MONS_BEAST:
-    // case MONS_SMOKE_DEMON:
-    // case MONS_HELLION:
-    // case MONS_TORMENTOR:
-    // case MONS_BLUE_DEVIL:
-    // case MONS_IRON_DEVIL:
-    // case MONS_NEQOXEC:
-    // case MONS_ORANGE_DEMON:
-    // case MONS_HELLWING:
-    // case MONS_YNOXINUL:
-    // case MONS_DEMONIC_CRAWLER:
-    // case MONS_SHADOW_DEMON:
-    // case MONS_SUN_DEMON:
-    // case MONS_REAPER:
-    // case MONS_SOUL_EATER:
-    // case MONS_ICE_DEVIL:
-    // case MONS_LOROCYPROCA:
-    // case MONS_FIEND:
-    // case MONS_ICE_FIEND:
-    // case MONS_SHADOW_FIEND:
-    // case MONS_PIT_FIEND:
-    // case MONS_EXECUTIONER:
-    // case MONS_GREEN_DEATH:
-    // case MONS_BLUE_DEATH:
-    // case MONS_BALRUG:
-    // case MONS_CACODEMON:
-    // case MONS_CLAY_GOLEM:
-    // case MONS_WOOD_GOLEM:
-    // case MONS_STONE_GOLEM:
-    // case MONS_IRON_GOLEM:
-    // case MONS_CRYSTAL_GOLEM:
-    // case MONS_TOENAIL_GOLEM:
-    // case MONS_ELECTRIC_GOLEM:
-    // case MONS_ICE_STATUE:
-    // case MONS_SILVER_STATUE:
-    // case MONS_ORANGE_STATUE:
-    // case MONS_GARGOYLE:
-    // case MONS_METAL_GARGOYLE:
-    // case MONS_MOLTEN_GARGOYLE:
-    // case MONS_PANDEMONIUM_DEMON:
-    // case MONS_BALL_LIGHTNING:
-    // case MONS_ORB_OF_FIRE:
-    // case MONS_VAPOUR:
-    // case MONS_SHADOW:
-    // case MONS_DEATH_COB:
-    // case MONS_IJYB:
-    // case MONS_BLORK_THE_ORC:
-    // case MONS_URUG:
-    // case MONS_EROLCHA:
-    // case MONS_SNORG:
     case MONS_POLYPHEMUS:
         return TILE_CORPSE_CYCLOPS;
-    // case MONS_ANTAEUS:
-    // case MONS_XTAHUA:
-    // case MONS_TIAMAT:
-    // case MONS_BORIS:
-    // case MONS_MURRAY:
-    // case MONS_TERENCE:
-    // case MONS_JESSICA:
-    // case MONS_SIGMUND:
-    // case MONS_EDMUND:
-    // case MONS_PSYCHE:
-    // case MONS_DONALD:
-    // case MONS_MICHAEL:
-    // case MONS_JOSEPH:
-    // case MONS_ERICA:
-    // case MONS_JOSEPHINE:
-    // case MONS_HAROLD:
-    // case MONS_NORBERT:
-    // case MONS_JOZEF:
-    // case MONS_AGNES:
-    // case MONS_MAUD:
-    // case MONS_LOUISE:
-    // case MONS_FRANCIS:
-    // case MONS_FRANCES:
-    // case MONS_RUPERT:
-    // case MONS_WAYNE:
-    // case MONS_DUANE:
-    // case MONS_NORRIS:
-    // case MONS_FREDERICK:
-    // case MONS_MARGERY:
-    // case MONS_MNOLEG:
-    // case MONS_LOM_LOBON:
-    // case MONS_CEREBOV:
-    // case MONS_GLOORX_VLOQ:
-    // case MONS_GERYON:
-    // case MONS_DISPATER:
-    // case MONS_ASMODEUS:
-    // case MONS_ERESHKIGAL:
     default:
         return TILE_ERROR;
   }

@@ -2337,7 +2337,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_INSCRIBE_ITEM:
-        inscribe_item();
+        prompt_inscribe_item();
         break;
 
 #ifdef WIZARD

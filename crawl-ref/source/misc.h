@@ -67,6 +67,7 @@ void trackers_init_new_level(bool transit);
 /* ***********************************************************************
  * called from: delay
  * *********************************************************************** */
+void turn_corpse_into_skeleton(item_def &corpse, int time = 200);
 void turn_corpse_into_chunks( item_def &item );
 
 void init_stack_blood_potions( item_def &stack, int age = -1 );

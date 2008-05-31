@@ -56,9 +56,9 @@ static void handle_run_delays(const delay_queue_item &delay);
 static void handle_macro_delay();
 static void finish_delay(const delay_queue_item &delay);
 
-// monster cannot be affected in these states
-// (all results of Recite, plus friendly + stupid;
-// note that berserk monsters are also hasted)
+// Monsters cannot be affected in these states.
+// (All results of Recite, plus friendly + stupid;
+//  note that berserk monsters are also hasted.)
 static bool recite_mons_useless(const monsters *mon)
 {
     return (mons_intel(mon->type) < I_NORMAL
@@ -482,9 +482,7 @@ void stop_delay( bool stop_stair_travel )
             mpr("All blood oozes out of the corpse!");
             bleed_onto_floor(you.x_pos, you.y_pos, corpse.plus, delay.duration,
                              false);
-            corpse.sub_type = CORPSE_SKELETON;
-            corpse.special  = 90;
-            corpse.colour   = LIGHTGREY;
+            turn_corpse_into_skeleton(corpse, 90);
         }
         did_god_conduct(DID_DRINK_BLOOD, 8);
         pop_delay();
@@ -1012,11 +1010,7 @@ static void finish_delay(const delay_queue_item &delay)
                 dec_mitm_item_quantity( delay.parm2, 1 );
         }
         else if (!one_chance_in(4))
-        {
-            corpse.sub_type = CORPSE_SKELETON;
-            corpse.special = 90;
-            corpse.colour = LIGHTGREY;
-        }
+            turn_corpse_into_skeleton(corpse, 90);
         break;
     }
     case DELAY_MEMORISE:
@@ -1166,6 +1160,7 @@ static void finish_delay(const delay_queue_item &delay)
         }
 
         offer_corpse(delay.parm1);
+        StashTrack.update_stash(); // Don't stash-track this corpse anymore.
         break;
     }
     case DELAY_DROP_ITEM:

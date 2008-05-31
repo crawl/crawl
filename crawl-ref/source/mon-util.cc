@@ -1142,10 +1142,10 @@ bool mons_skeleton(int mc)
     if (mons_zombie_size(mc) == Z_NOZOMBIE
         || mons_weight(mc) == 0 || (mons_class_flag(mc, M_NO_SKELETON)))
     {
-        return false;
+        return (false);
     }
 
-    return true;
+    return (true);
 }                               // end mons_skeleton()
 
 flight_type mons_class_flies(int mc)
@@ -1170,8 +1170,8 @@ flight_type mons_flies(const monsters *mon)
     const int type = mons_is_zombified(mon)? mons_zombie_base(mon) : mon->type;
     const flight_type ret = mons_class_flies( type );
     return (ret ? ret
-            : (_scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? FL_LEVITATE
-                                                              : FL_NONE);
+                : (_scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? FL_LEVITATE
+                                                                  : FL_NONE);
 }
 
 bool mons_amphibious(int mc)
@@ -1733,13 +1733,20 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     // Add suffixes.
     switch (mon.type)
     {
-    case MONS_ZOMBIE_SMALL: case MONS_ZOMBIE_LARGE:
-        result += " zombie"; break;
-    case MONS_SKELETON_SMALL: case MONS_SKELETON_LARGE:
-        result += " skeleton"; break;
-    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-        result += " simulacrum"; break;
-    default: break;
+    case MONS_ZOMBIE_SMALL:
+    case MONS_ZOMBIE_LARGE:
+        result += " zombie";
+        break;
+    case MONS_SKELETON_SMALL:
+    case MONS_SKELETON_LARGE:
+        result += " skeleton";
+        break;
+    case MONS_SIMULACRUM_SMALL:
+    case MONS_SIMULACRUM_LARGE:
+        result += " simulacrum";
+        break;
+    default:
+        break;
     }
 
     // Vowel fix: Change 'a orc' to 'an orc'
@@ -1864,8 +1871,8 @@ habitat_type mons_habitat_by_type(int mc)
 
 habitat_type mons_habitat(const monsters *m)
 {
-    return mons_habitat_by_type(
-        mons_is_zombified(m)? mons_zombie_base(m) : m->type );
+    return mons_habitat_by_type( mons_is_zombified(m) ? mons_zombie_base(m)
+                                                      : m->type );
 }
 
 bool intelligent_ally(const monsters *monster)
@@ -2534,6 +2541,7 @@ bool monster_shover(const monsters *m)
         return (false);
 
     int mchar = me->showchar;
+
     // Somewhat arbitrary: giants and dragons are too big to get past anything,
     // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
     // aren't pushers and shovers, zombies are zombies. Worms and elementals
@@ -6476,8 +6484,10 @@ mon_body_shape get_mon_shape(const int type)
         if (type == MONS_SKELETAL_WARRIOR)
             return(MON_SHAPE_HUMANOID);
         else
+        {
             // constructed type, not enough info to determine shape
             return(MON_SHAPE_MISC);
+        }
     case 'A': // angelic beings
         return(MON_SHAPE_HUMANOID_WINGED);
     case 'B': // beetles

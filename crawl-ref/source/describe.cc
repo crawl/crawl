@@ -1975,7 +1975,58 @@ void describe_item( item_def &item, bool allow_inscribe )
         getch();
 }
 
+void inscribe_item(item_def &item)
+{
+    mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
 
+    std::string ainscrip;
+
+    if (is_random_artefact(item))
+        ainscrip = _randart_auto_inscription(item);
+
+    // Only allow autoinscription if we don't have all the text
+    // already.
+    const bool autoinscribe =
+            is_random_artefact(item)
+            && !ainscrip.empty()
+            && item.inscription.find(ainscrip) == std::string::npos;
+
+    mprf( MSGCH_PROMPT, "Inscribe with what%s? ",
+          autoinscribe ? " ('a' to autoinscribe)" : "" );
+
+    char buf[79];
+    if (!cancelable_get_line(buf, sizeof buf))
+    {
+        // Strip spaces from the end.
+        for (int i = strlen(buf) - 1; i >= 0; i--)
+        {
+            if (isspace( buf[i] ))
+                buf[i] = 0;
+            else
+                break;
+        }
+
+        if (autoinscribe && buf[1] == 0 && (buf[0] == 'a' || buf[0] == 'A'))
+        {
+            // Remove previous randart inscription
+            _trim_randart_inscrip(item);
+
+            if (!item.inscription.empty())
+                item.inscription += ", ";
+
+            item.inscription += ainscrip;
+        }
+        else
+            item.inscription = std::string(buf);
+
+        mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
+        you.wield_change  = true;
+    }
+    else
+    {
+        canned_msg(MSG_OK);
+    }
+}
 //---------------------------------------------------------------
 //
 // describe_spell
