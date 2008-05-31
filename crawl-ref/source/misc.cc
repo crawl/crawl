@@ -2435,11 +2435,7 @@ std::string weird_roaring_animal()
 
 std::string weird_smell()
 {
-    std::string result = getRandNameString("smell_name");
-
-    lowercase(result);
-
-    return result;
+    return getRandNameString("smell_name");
 }
 
 bool scramble(void)

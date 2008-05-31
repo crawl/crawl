@@ -102,6 +102,7 @@ glowing_colour_name
 
 %%%%
 writing_adj
+
 Angular
 
 Blocky
@@ -180,20 +181,20 @@ Slug
 %%%%
 smell_name
 
-Baking Bread
+baking bread
 
-Burning Hair
+burning hair
 
-Coffee
+coffee
 
-Fire and Brimstone
+fire and brimstone
 
-Salt
+salt
 
-Something Weird
+womething weird
 
-Sulphur
+sulphur
 
-Wet Wool
+wet wool
 
 %%%%
