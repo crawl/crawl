@@ -67,43 +67,7 @@ std::string InvTitle::get_text() const
     return titlefn? titlefn( m, MenuEntry::get_text() ) :
                     MenuEntry::get_text();
 }
-/*
-static std::string _get_item_prefix(const item_def &item)
-{
-    std::vector<std::string> prefixes;
-    switch (item.base_type)
-    {
-    case OBJ_FOOD:
-        if (!can_ingest(item.base_type, item.sub_type, true, true, false))
-            prefixes.push_back("inedible");
 
-        // intentional fall-through
-    case OBJ_CORPSES:
-        if (is_poisonous(item) && !player_res_poison())
-            prefixes.push_back("poisonous");
-
-        if (is_mutagenic(item))
-            prefixes.push_back("mutagenic");
-
-        if (is_snack(item))
-            prefixes.push_back("snack");
-        break;
-
-    case OBJ_WEAPONS:
-    case OBJ_ARMOUR:
-    case OBJ_JEWELLERY:
-        if (item_is_equipped(item))
-            prefixes.push_back("equipped");
-        if (is_artefact(item))
-            prefixes.push_back("artefact");
-    default:
-        break;
-    }
-
-    return comma_separated_line(prefixes.begin(), prefixes.end(),
-                                ",", ",");
-}
-*/
 InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
 {
     data = const_cast<item_def *>( item );
@@ -117,9 +81,6 @@ InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
     }
     else
         text = i.name(DESC_NOCAP_A, false);
-
-//    prefix = _get_item_prefix(i);
-//    mpr(prefix.c_str());
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
         add_hotkey(index_to_letter( i.link ));

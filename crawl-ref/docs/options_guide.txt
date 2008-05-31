@@ -713,7 +713,7 @@ explore_stop = items,greedy_pickup,stairs,shops,altars,gates
 
         greedy_items: stop when items that are eligible for autopickup
             come into view.
-   
+
         greedy_pickup: stop when you arrive at a square which contains
             an item eligble for autopickup.
 
@@ -1150,13 +1150,26 @@ menu_colour = <match>:<colour>:<regex>
            spell         (the Z and I screens)
            stash         (the results from Ctrl-F)
 
+        Crawl has a couple of prefixes defined to make inventory colouring
+        easier. These are:
+           inedible      (you cannot eat this or get no nutrition from it)
+           poisonous     (chunks/corpses that are poisonous)
+           mutagenic     (chunks/corpses that are mutagenic)
+           contaminated  (chunks/corpses that may cause sickness, but
+                          ignored for Kobolds, Ogres, Trolls, and Ghouls)
+           rot-inducing  (chunks/corpses that cause rotting)
+           equipped      (equipped items)
+           artefact      (item is an artefact, whether identified or not)
+
         To colour worn stuff and highlight cursed items, take
-          menu_colour = inventory:lightred: cursed.*(worn|neck|hand|weapon)
-          menu_colour = inventory:green:(worn|neck|hand|weapon)
+          menu_colour = inventory:lightred:equipped.* cursed
+          menu_colour = inventory:green:equipped
           menu_colour = inventory:red: cursed
 
         To colour identified artefacts, try
           menu_colour = inventory:white:( [-+] the)
+        or, if menu_colour_prefix_id is true,
+          menu_colour = inventory:white:identified.*artefact
 
         If you frequently die because you forget to use emergency items, 
         try
