@@ -1711,7 +1711,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (rotting && !demonspawn && !one_chance_in(3))
+    if (rotting && !demonspawn)
     {
         mpr("Your body decomposes!", MSGCH_MUTATION);
 
