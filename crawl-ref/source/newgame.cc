@@ -136,11 +136,11 @@ static int  ng_weapon;
 static int  ng_book;
 static god_type ng_pr;
 
-/* March 2008: change order of species and jobs on character selection screen
-   as suggested by Markus Maier. Summarizing comments below are copied directly
-   from Markus' SourceForge comments. */
+// March 2008: change order of species and jobs on character selection
+// screen as suggested by Markus Maier. Summarizing comments below are
+// copied directly from Markus' SourceForge comments.
 
-// listed in two columns to match the selection screen output
+// These are listed in two columns to match the selection screen output.
 // Take care to list all valid species here, or they cannot be directly chosen.
 // The red draconian is later replaced by a random variant.
 // The old and new lists are expected to have the same length.
