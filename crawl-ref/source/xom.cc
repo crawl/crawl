@@ -46,8 +46,8 @@
 #    define DEBUG_GIFTS       1
 #endif
 
-// Which spells?  First I copied all spells from your_spells(), then I
-// filtered some out, especially conjurations.  Then I sorted them in
+// Which spells?  First I copied all spells from your_spells(), and then
+// I filtered some out, especially conjurations.  Then I sorted them in
 // roughly ascending order of power.
 static const spell_type xom_spells[] =
 {
