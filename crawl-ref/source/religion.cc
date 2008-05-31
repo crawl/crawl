@@ -1695,6 +1695,25 @@ std::string god_prayer_reaction()
     return result;
 }
 
+static bool _god_accepts_prayer(god_type type)
+{
+    switch(type)
+    {
+    case GOD_VEHUMET:
+    case GOD_XOM:
+    case GOD_SHINING_ONE:
+    case GOD_SIF_MUNA:
+    case GOD_KIKUBAAQUDGHA:
+    case GOD_NO_GOD:
+        return false;
+
+    default:
+        break;
+    }
+
+    return true;
+}
+
 void pray()
 {
     if (silenced(you.x_pos, you.y_pos))
@@ -1745,9 +1764,10 @@ void pray()
         you.turn_is_over = false;
         return;
     }
-    else if (you.religion == GOD_XOM)
+    else if (!_god_accepts_prayer(you.religion))
     {
-        god_speaks(you.religion, "Xom ignores you.");
+        std::string msg = god_name(you.religion) + " ignores you.";
+        god_speaks(you.religion, msg.c_str());
         return;
     }
 
