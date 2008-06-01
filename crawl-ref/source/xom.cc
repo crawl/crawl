@@ -647,8 +647,8 @@ static bool xom_is_good(int sever)
                 && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
                                   ENCH_SHAPESHIFTER))
             {
-                mon->add_ench(!one_chance_in(3) ? ENCH_SHAPESHIFTER
-                                                : ENCH_GLOWING_SHAPESHIFTER);
+                mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
+                                               : ENCH_SHAPESHIFTER);
             }
 
             done = true;
@@ -844,8 +844,8 @@ static bool xom_is_bad(int sever)
                     && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
                                       ENCH_SHAPESHIFTER))
                 {
-                    mon->add_ench(!one_chance_in(3)? ENCH_SHAPESHIFTER
-                                                   : ENCH_GLOWING_SHAPESHIFTER);
+                    mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
+                                                   : ENCH_SHAPESHIFTER);
                 }
 
                 done = true;
