@@ -65,10 +65,9 @@
 #include <conio.h>
 #endif
 
-/* This determines how likely it is that more powerful wild magic effects
- * will occur. Set to 100 for the old probabilities (although the individual
- * effects have been made much nastier since then).
- */
+// This determines how likely it is that more powerful wild magic
+// effects will occur.  Set to 100 for the old probabilities (although
+// the individual effects have been made much nastier since then).
 #define WILD_MAGIC_NASTINESS 150
 
 static bool _surge_identify_boosters(spell_type spell)
