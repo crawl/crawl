@@ -5,11 +5,11 @@
 #
 # This file contains a list of names for miscellaneous things.
 # This is currently only used for colours, writing types,
-# roaring animals, and smells.
+# roaring animals, smells, and sounds.
 ######################################################
 %%%%
 glowing_adj
-# any word other than "glowing" itself will work here
+# Any word other than "glowing" itself will work here.
 bright
 
 brilliant
@@ -159,7 +159,8 @@ writing_name
 
 %%%%
 roaring_animal_name
-
+# This doesn't necessarily have to make sense.  For example, a name of a
+# fruit or an insect will work here.
 albino dragon
 
 dragon
@@ -194,5 +195,26 @@ womething weird
 sulphur
 
 wet wool
+
+%%%%
+sound_name
+
+a crunching sound
+
+a very strange noise
+
+a very strange noise indeed
+
+a voice calling someone else's name
+
+roaring flame
+
+snatches of song
+
+the bellowing of a yak
+
+the chiming of a distant gong
+
+the tinkle of an enormous bell
 
 %%%%

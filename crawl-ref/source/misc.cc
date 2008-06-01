@@ -2424,6 +2424,11 @@ std::string weird_smell()
     return getMiscString("smell_name");
 }
 
+std::string weird_sound()
+{
+    return getMiscString("sound_name");
+}
+
 bool scramble(void)
 {
     // Statues are too stiff and heavy to scramble out of the water.

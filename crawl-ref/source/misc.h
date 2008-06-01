@@ -109,6 +109,8 @@ std::string weird_roaring_animal();
 
 std::string weird_smell();
 
+std::string weird_sound();
+
 std::string cloud_name(cloud_type type);
 
 bool is_damaging_cloud(cloud_type type, bool temp = false);
