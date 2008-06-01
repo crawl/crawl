@@ -105,8 +105,6 @@ std::string weird_glowing_colour();
  * *********************************************************************** */
 std::string weird_writing();
 
-std::string weird_roaring_animal();
-
 std::string weird_smell();
 
 std::string weird_sound();

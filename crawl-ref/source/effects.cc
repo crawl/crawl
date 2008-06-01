@@ -729,11 +729,15 @@ void mons_direct_effect(struct bolt &pbolt, int i)
     return;
 }
 
-void random_uselessness(unsigned char ru, unsigned char sc_read_2)
+void random_uselessness(int scroll_slot)
 {
-    int temp_rand = 0;          // probability determination {dlb}
+    int temp_rand = random2(8);
 
-    switch (ru)
+    // If this isn't from a scroll, skip the first two possibilities.
+    if (scroll_slot == -1)
+        temp_rand = 2 + random2(6);
+
+    switch (temp_rand)
     {
     case 0:
         mprf("The dust glows %s!", weird_glowing_colour().c_str());
@@ -741,7 +745,7 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
 
     case 1:
         mpr("The scroll reassembles itself in your hand!");
-        inc_inv_item_quantity( sc_read_2, 1 );
+        inc_inv_item_quantity(scroll_slot, 1);
         break;
 
     case 2:
@@ -759,11 +763,6 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 3:
-        mprf("You hear the distant roaring of an enraged %s!",
-             weird_roaring_animal().c_str());
-        break;
-
-    case 4:
         if (player_can_smell())
             mprf("You smell %s.", weird_smell().c_str());
         else if (you.species == SP_MUMMY)
@@ -772,11 +771,11 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
             canned_msg(MSG_NOTHING_HAPPENS);
         break;
 
-    case 5:
+    case 4:
         mpr("You experience a momentary feeling of inescapable doom!");
         break;
 
-    case 6:
+    case 5:
         temp_rand = random2(3);
         mprf("Your %s",
              (temp_rand == 0) ? "ears itch."   :
@@ -784,12 +783,12 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
                               : "nose twitches suddenly!");
         break;
 
-    case 7:
+    case 6:
         mpr("You hear the tinkle of a tiny bell.", MSGCH_SOUND);
         cast_summon_butterflies( 100 );
         break;
 
-    case 8:
+    case 7:
         mprf(MSGCH_SOUND, "You hear %s.", weird_sound().c_str());
         break;
     }

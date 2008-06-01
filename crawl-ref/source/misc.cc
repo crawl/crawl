@@ -2414,11 +2414,6 @@ std::string weird_writing()
     return getMiscString("writing_name");
 }
 
-std::string weird_roaring_animal()
-{
-    return getMiscString("roaring_animal_name");
-}
-
 std::string weird_smell()
 {
     return getMiscString("smell_name");

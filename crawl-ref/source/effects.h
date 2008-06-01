@@ -57,7 +57,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
 /* ***********************************************************************
  * called from: item_use - spell - spells
  * *********************************************************************** */
-void random_uselessness(unsigned char ru, unsigned char sc_read_2);
+void random_uselessness(int scroll_slot = -1);
 
 
 // last updated 12may2000 {dlb}

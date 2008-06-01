@@ -673,7 +673,7 @@ bool cast_a_spell()
 
     const bool staff_energy = player_energy();
     if (you.duration[DUR_CONF])
-        random_uselessness( 2 + random2(7), 0 );
+        random_uselessness();
     else
     {
         const spret_type cast_result = your_spells( spell );
@@ -2297,7 +2297,7 @@ static void _miscast_enchantment(int severity, const char* cause)
             potion_effect(POT_LEVITATION, 20);
             break;
         case 1:
-            random_uselessness(2 + random2(7), 0);
+            random_uselessness();
             break;
         }
         break;
@@ -2993,7 +2993,7 @@ static void _miscast_transmigration(int severity, const char* cause)
             ouch(1 + random2avg(11, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 1:
-            random_uselessness(2 + random2(7), 0);
+            random_uselessness();
             break;
         }
         break;

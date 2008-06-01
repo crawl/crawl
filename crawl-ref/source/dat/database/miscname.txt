@@ -5,7 +5,7 @@
 #
 # This file contains a list of names for miscellaneous things.
 # This is currently only used for colours, writing types,
-# roaring animals, smells, and sounds.
+# smells, and sounds.
 ######################################################
 %%%%
 glowing_adj
@@ -158,6 +158,27 @@ writing_name
 @writing_adj@ @colour_name@ @writing_noun@
 
 %%%%
+smell_name
+
+baking bread
+
+burning hair
+
+coffee
+
+fire and brimstone
+
+salt
+
+womething weird
+
+sulphur
+
+tea
+
+wet wool
+
+%%%%
 roaring_animal_name
 # This doesn't necessarily have to make sense.  For example, a name of a
 # fruit or an insect will work here.
@@ -177,24 +198,7 @@ pill bug
 
 slug
 
-%%%%
-smell_name
-
-baking bread
-
-burning hair
-
-coffee
-
-fire and brimstone
-
-salt
-
-womething weird
-
-sulphur
-
-wet wool
+yak
 
 %%%%
 sound_name
@@ -207,11 +211,11 @@ a very strange noise indeed
 
 a voice calling someone else's name
 
-roaring flame
+roaring flames
 
 snatches of song
 
-the bellowing of a yak
+the distant roaring of an enraged @roaring_animal_name@
 
 the chiming of a distant gong
 

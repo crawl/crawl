@@ -4205,7 +4205,7 @@ void read_scroll( int slot )
     {
         if (you.duration[DUR_CONF])
         {
-            random_uselessness(random2(9), item_slot);
+            random_uselessness(item_slot);
             dec_inv_item_quantity( item_slot, 1 );
             return;
         }
@@ -4228,7 +4228,7 @@ void read_scroll( int slot )
         break;
 
     case SCR_RANDOM_USELESSNESS:
-        random_uselessness(random2(9), item_slot);
+        random_uselessness(item_slot);
         id_the_scroll = false;
         break;
 
