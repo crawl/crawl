@@ -149,13 +149,13 @@ writing
 %%%%
 writing_name
 
-@writing_adj@ @writing_noun@
-
 @colour_name@ @writing_noun@
 
 @glowing_colour_name@ @writing_noun@
 
 @writing_adj@ @colour_name@ @writing_noun@
+
+@writing_adj@ @writing_noun@
 
 %%%%
 smell_name
