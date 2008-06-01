@@ -2072,7 +2072,7 @@ friendly orc
 w:5
 @_generic_orc_speech_@
 %%%%
-# charmed orcs, for hill orcs (not counting beogh)
+# charmed orcs, for hill orcs (not counting Beogh)
 friendly related orc
 
 @default friendly related humanoid@
@@ -2359,4 +2359,3 @@ beogh_converted_orc_reaction_speech_follower
 
 @beogh_converted_orc_reaction_speech@
 %%%%
-

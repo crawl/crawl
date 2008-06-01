@@ -205,8 +205,8 @@ belief of the character. If the monster in question is a member of the
 orc species and the character worships Beogh, the prefix "beogh" gets
 added to the list, though not for charmed orcs who will simply use the
 generic friendly statements instead of the orcish followers' cheers.
-If you worship one of the good gods instead (Zin, The Shining One, or
-Elyvilon) the prefix "good god" is used. Conversely, worshippers of
+If you worship one of the good gods instead (Zin, the Shining One, or
+Elyvilon), the prefix "good god" is used. Conversely, worshippers of
 one of the evil gods (Yredelemnul, Makhleb, Kikubaaqudgha, Lugonu, or
 Beogh) will use the prefix "evil god".
 
