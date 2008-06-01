@@ -237,7 +237,7 @@ int mons_place( mgen_data mg );
  * mons_place().  If you need to put a monster somewhere,  use mons_place().
  * Summoned creatures can be created with create_monster().
  * *********************************************************************** */
-int place_monster( mgen_data mg );
+int place_monster( mgen_data mg, bool force_pos = false );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

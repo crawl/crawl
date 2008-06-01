@@ -52,8 +52,8 @@ static band_type choose_band(int mon_type, int power, int &band_size );
 //                               int px, int py, int power, int extra,
 //                               bool first_band_member, int dur = 0);
 
-static int _place_monster_aux(const mgen_data &mg,
-                              bool first_band_member);
+static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
+                              bool force_pos = false);
 
 // Returns whether actual_grid is compatible with grid_wanted for monster
 // movement (or for monster generation, if generation is true).
@@ -100,11 +100,12 @@ inline static bool mons_airborne(int mcls, int flies, bool paralysed)
 {
     if (flies == -1)
         flies = mons_class_flies(mcls);
+
     return (paralysed ? flies == FL_LEVITATE : flies != FL_NONE);
 }
 
-// Can monsters of class monster_class live happily on actual_grid? Use flies
-// == true to pretend the monster can fly.
+// Can monsters of class monster_class live happily on actual_grid?
+// Use flies == true to pretend the monster can fly.
 //
 // [dshaligram] We're trying to harmonise the checks from various places into
 // one check, so we no longer care if a water elemental springs into existence
@@ -112,31 +113,42 @@ inline static bool mons_airborne(int mcls, int flies, bool paralysed)
 // anyway.
 bool monster_habitable_grid(int monster_class,
                             dungeon_feature_type actual_grid,
-                            int flies,
-                            bool paralysed)
+                            int flies, bool paralysed)
 {
     const dungeon_feature_type preferred_habitat =
         habitat2grid( mons_habitat_by_type(monster_class) );
 
-    return (grid_compatible(preferred_habitat, actual_grid)
-            // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
-            // only have to check for the additional valid grids of deep
-            // water and lava.
-            || (mons_airborne(monster_class, flies, paralysed)
-                && (actual_grid == DNGN_LAVA
-                    || actual_grid == DNGN_DEEP_WATER))
+    if (grid_compatible(preferred_habitat, actual_grid))
+        return (true);
 
-            // Amphibious critters are happy in water or on land.
-            || (mons_amphibious(monster_class)
-                && ((preferred_habitat == DNGN_FLOOR
-                    && grid_compatible(DNGN_DEEP_WATER, actual_grid))
-                    || (preferred_habitat == DNGN_DEEP_WATER
-                        && grid_compatible(DNGN_FLOOR, actual_grid))))
+    // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
+    // only have to check for the additional valid grids of deep
+    // water and lava.
+    if (mons_airborne(monster_class, flies, paralysed)
+        && (actual_grid == DNGN_LAVA || actual_grid == DNGN_DEEP_WATER))
+    {
+        return (true);
+    }
 
-            // Rock wall critters are native to walls but are happy on
-            // the floor as well.
-            || (preferred_habitat == DNGN_ROCK_WALL
-                && grid_compatible(DNGN_FLOOR, actual_grid)));
+    // Amphibious critters are happy in water or on land.
+    if (mons_amphibious(monster_class)
+        && (preferred_habitat == DNGN_FLOOR
+                && grid_compatible(DNGN_DEEP_WATER, actual_grid)
+            || preferred_habitat == DNGN_DEEP_WATER
+               && grid_compatible(DNGN_FLOOR, actual_grid)))
+    {
+        return (true);
+    }
+
+    // Rock wall critters are native to walls but are happy on
+    // the floor as well.
+    if (preferred_habitat == DNGN_ROCK_WALL
+        && grid_compatible(DNGN_FLOOR, actual_grid))
+    {
+        return (true);
+    }
+
+    return (false);
 }
 
 // Returns true if the monster can submerge in the given grid
@@ -506,7 +518,7 @@ static int _is_near_stairs(coord_def &p)
     return result;
 }
 
-int place_monster(mgen_data mg)
+int place_monster(mgen_data mg, bool force_pos)
 {
     int band_size = 0;
     monster_type band_monsters[BIG_BAND];        // band monster types
@@ -662,7 +674,7 @@ int place_monster(mgen_data mg)
         } // end while.. place first monster
     }
 
-    id = _place_monster_aux(mg, true);
+    id = _place_monster_aux(mg, true, force_pos);
 
     // Bail out now if we failed.
     if (id == -1)
@@ -730,7 +742,7 @@ int place_monster(mgen_data mg)
 }
 
 static int _place_monster_aux( const mgen_data &mg,
-                               bool first_band_member )
+                               bool first_band_member, bool force_pos )
 {
     int id = -1;
     dungeon_feature_type grid_wanted = DNGN_UNSEEN;
@@ -746,16 +758,20 @@ static int _place_monster_aux( const mgen_data &mg,
 
     menv[id].reset();
 
-    // setup habitat and placement
+    const int htype = (mons_class_is_zombified(mg.cls) ? mg.base_type
+                                                       : mg.cls);
+
+    // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
-    if (first_band_member && mgrd(mg.pos) == NON_MONSTER
-        && mg.pos != you.pos())
+    if (first_band_member && in_bounds(mg.pos)
+        && (force_pos || mgrd(mg.pos) == NON_MONSTER && mg.pos != you.pos()
+                         && monster_habitable_grid(htype, grd(mg.pos))))
     {
         fpos = mg.pos;
     }
     else
     {
-        grid_wanted = habitat2grid( mons_habitat_by_type(mg.cls) );
+        grid_wanted = habitat2grid( mons_habitat_by_type(htype) );
 
         int i = 0;
         // We'll try 1000 times for a good spot.
@@ -787,9 +803,8 @@ static int _place_monster_aux( const mgen_data &mg,
     }
 
     // Now, actually create the monster. (Wheeee!)
-    menv[id].type = mg.cls;
+    menv[id].type         = mg.cls;
     menv[id].base_monster = mg.base_type;
-
     menv[id].number = mg.number;
 
     menv[id].x = fpos.x;

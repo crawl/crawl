@@ -2156,7 +2156,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     switch (you.level_type)
     {
     case LEVEL_LABYRINTH:
-        mpr("You enter a dark and forbidding labyrinth.");
+        if (you.species == SP_MINOTAUR)
+            mpr("You feel right at home here.");
+        else
+            mpr("You enter a dark and forbidding labyrinth.");
         break;
 
     case LEVEL_ABYSS:

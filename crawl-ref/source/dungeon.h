@@ -326,7 +326,8 @@ int count_neighbours(int x, int y, dungeon_feature_type feat);
 class mons_spec;
 bool dgn_place_monster(mons_spec &mspec,
                        int monster_level, int vx, int vy,
-                       bool generate_awake, bool patrolling = false);
+                       bool force_pos = false, bool generate_awake = false,
+                       bool patrolling = false);
 
 bool set_level_flags(unsigned long flags, bool silent = false);
 bool unset_level_flags(unsigned long flags, bool silent = false);

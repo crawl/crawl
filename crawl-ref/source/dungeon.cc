@@ -763,14 +763,13 @@ static void _reset_level()
     // Set default level flags.
     if (you.level_type == LEVEL_DUNGEON)
         env.level_flags = branches[you.where_are_you].default_level_flags;
-    else if (you.level_type == LEVEL_LABYRINTH
-             || you.level_type == LEVEL_ABYSS)
+    else if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
     {
-        env.level_flags = LFLAG_NO_TELE_CONTROL | LFLAG_NOT_MAPPABLE;
+        env.level_flags = LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAGIC_MAP;
 
-        // Labyrinths are *only* magic mappable for minotaurs.
+        // Labyrinths are *only* mappable for minotaurs.
         if (you.level_type != LEVEL_LABYRINTH || you.species != SP_MINOTAUR)
-            env.level_flags |= LFLAG_NO_MAGIC_MAP;
+            env.level_flags |= LFLAG_NOT_MAPPABLE;
     }
     else
         env.level_flags = 0;
@@ -4534,7 +4533,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 
 
 bool dgn_place_monster(mons_spec &mspec,
-                       int monster_level, int vx, int vy,
+                       int monster_level, int vx, int vy, bool force_pos,
                        bool generate_awake, bool patrolling)
 {
     if (mspec.mid != -1)
@@ -4576,10 +4575,11 @@ bool dgn_place_monster(mons_spec &mspec,
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
         mg.pos       = coord_def(vx, vy);
+
         if (m_patrolling)
             mg.flags |= MG_PATROLLING;
 
-        const int mindex = place_monster(mg);
+        const int mindex = place_monster(mg, true);
         if (mindex != -1)
         {
             if (mspec.items.size() > 0)
@@ -4599,8 +4599,8 @@ static bool _dgn_place_monster( const vault_placement &place, mons_spec &mspec,
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
 
-    return dgn_place_monster(mspec, monster_level, vx, vy, generate_awake,
-                             patrolling);
+    return dgn_place_monster(mspec, monster_level, vx, vy, false,
+                             generate_awake, patrolling);
 }
 
 static bool _dgn_place_one_monster( const vault_placement &place,

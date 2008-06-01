@@ -967,6 +967,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
                     "Could not pick up %s here; shall I ignore %s?",
                     tried_pickup == 1? "an item" : "some items",
                     tried_pickup == 1? "it" : "them");
+
             // Make Escape => 'n' and stop run.
             explicit_keymap map;
             map[ESCAPE] = 'n';
@@ -2786,7 +2787,7 @@ void start_explore(bool grab_items)
     if (Options.tut_explored)
         Options.tut_explored = 0;
 
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+    if (!player_in_mappable_area())
     {
         mpr("It would help if you knew where you were, first.");
         return;

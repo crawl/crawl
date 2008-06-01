@@ -1930,8 +1930,8 @@ void process_command( command_type cmd )
         break;
 
     case CMD_CLEAR_MAP:
-        if (you.level_type != LEVEL_LABYRINTH &&
-            you.level_type != LEVEL_ABYSS)
+        if (you.level_type != LEVEL_LABYRINTH
+            && you.level_type != LEVEL_ABYSS)
         {
             mpr("Clearing level map.");
             clear_map();

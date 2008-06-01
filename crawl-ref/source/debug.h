@@ -92,7 +92,7 @@ void create_spec_monster(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void create_spec_monster_name(int x = -1, int y = -1);
+void create_spec_monster_name(void);
 
 
 // last updated 12may2000 {dlb}
