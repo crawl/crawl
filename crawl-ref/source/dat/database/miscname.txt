@@ -12,25 +12,25 @@
 %%%%
 glowing_adj
 # any word other than "glowing" itself will work here
-Bright
+bright
 
-Brilliant
+brilliant
 
-Dark
+dark
 
-Dull
+dull
 
-Faint
+faint
 
-Mottled
+mottled
 
-Pale
+pale
 
-Pulsating
+pulsating
 
-Shimmering
+shimmering
 
-Shining
+shining
 
 %%%%
 colour_name
