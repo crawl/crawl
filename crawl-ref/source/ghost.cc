@@ -28,7 +28,7 @@ std::vector<ghost_demon> ghosts;
 // Order for looking for conjurations for the 1st & 2nd spell slots,
 // when finding spells to be remembered by a player's ghost.
 static spell_type search_order_conj[] = {
-/* 0 */
+// 0
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_BOLT_OF_DRAINING,
     SPELL_AGONY,
@@ -39,7 +39,7 @@ static spell_type search_order_conj[] = {
     SPELL_BOLT_OF_MAGMA,
     SPELL_ICE_BOLT,
     SPELL_BOLT_OF_FIRE,
-/* 10 */
+// 10
     SPELL_BOLT_OF_COLD,
     SPELL_FIREBALL,
     SPELL_DELAYED_FIREBALL,
@@ -50,7 +50,7 @@ static spell_type search_order_conj[] = {
     SPELL_THROW_FROST,
     SPELL_PAIN,
     SPELL_STING,
-/* 20 */
+// 20
     SPELL_SHOCK,
     SPELL_MAGIC_DART,
     SPELL_SLEEP,
@@ -61,7 +61,7 @@ static spell_type search_order_conj[] = {
 // Order for looking for summonings and self-enchants for the 3rd spell
 // slot.
 static spell_type search_order_third[] = {
-/* 0 */
+// 0
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
@@ -72,7 +72,7 @@ static spell_type search_order_third[] = {
     SPELL_SUMMON_UGLY_THING,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_ANIMATE_DEAD,
-/* 10 */
+// 10
     SPELL_INVISIBILITY,
     SPELL_CALL_IMP,
     SPELL_SUMMON_SMALL_MAMMALS,
@@ -85,7 +85,7 @@ static spell_type search_order_third[] = {
 // this fails, go through conjurations.  Note: Dig must be in misc2
 // (5th) position to work.
 static spell_type search_order_misc[] = {
-/* 0 */
+// 0
     SPELL_AGONY,
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
@@ -96,7 +96,7 @@ static spell_type search_order_misc[] = {
     SPELL_SLOW,
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
-/* 10 */
+// 10
     SPELL_DIG,
     SPELL_BACKLIGHT,
     SPELL_NO_SPELL,                        // end search
