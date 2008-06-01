@@ -1005,8 +1005,6 @@ Bung
 
 Bingo
 
-@roaring_animal_name@'s Rage
-
 # from the crawl.akrasiac.org patch
 Cookie Cutter
 

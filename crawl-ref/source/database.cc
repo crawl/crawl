@@ -74,8 +74,6 @@ static TextDB AllDBs[] =
             "database/rand_all.txt", // jewellery and general
             // This doesn't really belong here, but they *are* god gifts...
             "database/monname.txt",  // orcish names for Beogh to choose from
-            // This doesn't really belong here, but *can* be used by randarts...
-            "database/miscname.txt", // names for miscellaneous things
             NULL),
 
     TextDB( "db/speak",
@@ -93,6 +91,10 @@ static TextDB AllDBs[] =
     TextDB( "db/help",
             "database/help.txt",
             NULL),
+
+    TextDB( "db/misc",
+            "database/miscname.txt", // names for miscellaneous things
+            NULL),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
@@ -100,6 +102,7 @@ static TextDB& RandartDB     = AllDBs[1];
 static TextDB& SpeakDB       = AllDBs[2];
 static TextDB& ShoutDB       = AllDBs[3];
 static TextDB& HelpDB        = AllDBs[4];
+static TextDB& MiscDB        = AllDBs[5];
 
 // ----------------------------------------------------------------------
 // TextDB
@@ -682,4 +685,19 @@ std::string getRandNameString(const std::string &itemtype,
 std::string getHelpString(const std::string &topic)
 {
     return _query_database(HelpDB.get(), topic, false, true);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Miscellaneous DB specific functions.
+
+std::string getMiscString(const std::string &misc,
+                          const std::string &suffix)
+
+{
+    if (!MiscDB)
+        return ("");
+
+    int num_replacements = 0;
+
+    return _getRandomizedStr(MiscDB, misc, suffix, num_replacements);
 }

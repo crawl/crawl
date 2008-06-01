@@ -6,8 +6,6 @@
 # This file contains a list of names for miscellaneous things.
 # This is currently only used for colours, writing types,
 # roaring animals, and smells.
-#
-# Note that randarts may use these as well.
 ######################################################
 %%%%
 glowing_adj
@@ -35,65 +33,65 @@ shining
 %%%%
 colour_name
 
-Aubergine
+aubergine
 
-Azure
+azure
 
-Beige
+beige
 
-Black
+black
 
-Blue
+blue
 
-Bronze
+bronze
 
-Brown
+brown
 
-Charcoal
+charcoal
 
-Chartreuse
+chartreuse
 
-Cyan
+cyan
 
-Gold
+gold
 
-Green
+green
 
-Grey
+grey
 
-Indigo
+indigo
 
-Leaf Green
+leaf green
 
-Lime Green
+lime green
 
-Magenta
+magenta
 
-Marigold
+marigold
 
-Mauve
+mauve
 
-Ochre
+ochre
 
-Orange
+orange
 
-Pink
+pink
 
-Purple
+purple
 
-Red
+red
 
-Rubric
+rubric
 
-Scarlet
+scarlet
 
-Silver
+silver
 
-Umber
+umber
 
-White
+white
 
-Yellow
+yellow
 
 %%%%
 glowing_colour_name
@@ -162,21 +160,21 @@ writing_name
 %%%%
 roaring_animal_name
 
-Albino Dragon
+albino dragon
 
-Dragon
+dragon
 
-Eggplant
+eggplant
 
-Frog
+frog
 
-Human
+human
 
-Millipede
+millipede
 
-Pill Bug
+pill bug
 
-Slug
+slug
 
 %%%%
 smell_name

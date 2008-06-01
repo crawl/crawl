@@ -209,8 +209,6 @@ the Clouds
 
 the Sky
 
-the @colour_name@ Skies
-
 %%%%
 virtue_or_vice
 

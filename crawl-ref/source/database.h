@@ -64,5 +64,7 @@ std::string getSpeakString(const std::string &monst);
 std::string getRandNameString(const std::string &itemtype,
                               const std::string &suffix = "");
 std::string getHelpString(const std::string &topic);
+std::string getMiscString(const std::string &misc,
+                          const std::string &suffix = "");
 
 #endif

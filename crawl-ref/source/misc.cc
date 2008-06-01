@@ -2404,38 +2404,24 @@ void new_level(void)
 #endif
 }
 
-// XXX: Why the lowercasing? I mean why not list the messages as lowercased
-//      in the first place? (jpeg)
 std::string weird_glowing_colour()
 {
-    std::string result = getRandNameString("glowing_colour_name");
-
-    lowercase(result);
-
-    return result;
+    return getMiscString("glowing_colour_name");
 }
 
 std::string weird_writing()
 {
-    std::string result = getRandNameString("writing_name");
-
-    lowercase(result);
-
-    return result;
+    return getMiscString("writing_name");
 }
 
 std::string weird_roaring_animal()
 {
-    std::string result = getRandNameString("roaring_animal_name");
-
-    lowercase(result);
-
-    return result;
+    return getMiscString("roaring_animal_name");
 }
 
 std::string weird_smell()
 {
-    return getRandNameString("smell_name");
+    return getMiscString("smell_name");
 }
 
 bool scramble(void)
