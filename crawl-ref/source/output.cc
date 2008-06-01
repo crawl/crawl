@@ -254,7 +254,7 @@ static int _count_digits(int val)
 
 static const char* _describe_hunger(int& color)
 {
-    bool vamp = (you.species == SP_VAMPIRE);
+    const bool vamp = (you.species == SP_VAMPIRE);
 
     switch (you.hunger_state)
     {
