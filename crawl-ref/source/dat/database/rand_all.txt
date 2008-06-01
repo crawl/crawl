@@ -181,6 +181,20 @@ Eternal Night
 
 Eternity
 %%%%
+sky_colour_name
+
+Black
+
+Blue
+
+Grey
+
+Orange
+
+Purple
+
+Red
+%%%%
 sky_or_light
 
 the Sun
@@ -202,6 +216,8 @@ Starshine
 the Clouds
 
 the Sky
+
+the @sky_colour_name@ Skies
 %%%%
 virtue_or_vice
 
