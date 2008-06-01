@@ -16,10 +16,22 @@ menu = white:.*artefact.*
 #menu = white:.*identified.*artefact.*
 #menu = magenta:.*unidentified.*artefact.*
 
-# Possible ego items 
+# Ego items 
 #
+: if options.menu_colour_prefix_class and options.menu_colour_prefix_id then
+menu = lightblue:(^identified armour .* pair of .* of )
+menu = lightgrey:(^identified armour .* pair of )
+menu = lightblue:(^identified (weapon|armour) .* of )
+
+# Possible egos
+menu = lightblue:^unidentified .*weapon.*(runed|glowing)
+menu = lightblue:^unidentified .*armour.*(runed|glowing|embroidered|shiny|dyed)
+
+: elseif options.menu_colour_prefix_class then
+#Possible egos
 menu = lightblue:.*weapon.*(runed|glowing)
 menu = lightblue:.*armour.*(runed|glowing|embroidered|shiny|dyed)
+:end
 
 # Mummies' potions
 #
