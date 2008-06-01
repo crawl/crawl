@@ -1693,7 +1693,7 @@ bool is_poisonous(const item_def &food)
 
 bool is_mutagenic(const item_def &food)
 {
-    if (food.base_type != OBJ_FOOD || food.base_type != OBJ_CORPSES)
+    if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return (false);
 
     return (mons_corpse_effect(food.plus) == CE_MUTAGEN_RANDOM);
@@ -1701,7 +1701,7 @@ bool is_mutagenic(const item_def &food)
 
 bool is_contaminated(const item_def &food)
 {
-    if (food.base_type != OBJ_FOOD || food.base_type != OBJ_CORPSES)
+    if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return (false);
 
     return (mons_corpse_effect(food.plus) == CE_CONTAMINATED);
@@ -1709,7 +1709,7 @@ bool is_contaminated(const item_def &food)
 
 bool causes_rot(const item_def &food)
 {
-    if (food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK)
+    if (food.base_type != OBJ_FOOD && food.sub_type != FOOD_CHUNK)
         return (false);
 
     return (mons_corpse_effect(food.plus) == CE_HCL);
