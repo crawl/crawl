@@ -1100,7 +1100,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_CREATE_NOISE:  // unused, the player can shout to do this - bwr
-        noisy(25, you.x_pos, you.y_pos, "You hear a voice call your name!");
+        noisy(25, you.x_pos, you.y_pos, "You hear a voice calling your name!");
         break;
 
     case SPELL_REMOVE_CURSE:
