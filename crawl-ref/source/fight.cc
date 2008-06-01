@@ -180,7 +180,7 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
 
-    // vampires know how to bite and aim better when thirsty
+    // Vampires know how to bite and aim better when thirsty.
     if (you.species == SP_VAMPIRE && uattack == UNAT_BITE)
     {
         your_to_hit += 1;
@@ -382,7 +382,7 @@ void melee_attack::init_attack()
         randart_wpn_properties( *weapon, art_props );
     }
 
-    wpn_skill = weapon? weapon_skill( *weapon ) : SK_UNARMED_COMBAT;
+    wpn_skill = weapon ? weapon_skill( *weapon ) : SK_UNARMED_COMBAT;
     if (weapon)
     {
         hands = hands_reqd( *weapon, attacker->body_size() );
@@ -1073,8 +1073,8 @@ bool melee_attack::player_aux_unarmed()
 
             unarmed_attack = "bite";
             simple_miss_message = true;
-            // TODO: Maybe unarmed combat factor in
-            aux_damage += player_mutation_level(MUT_FANGS) * 2;
+            aux_damage += player_mutation_level(MUT_FANGS) * 2
+                          + you.skills[SK_UNARMED_COMBAT] / 5;
 
             if (you.species == SP_VAMPIRE)
             {

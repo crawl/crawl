@@ -2153,12 +2153,27 @@ void process_command( command_type cmd )
     case CMD_INTERLEVEL_TRAVEL:
         if (Options.tut_travel)
             Options.tut_travel = 0;
+
         if (!can_travel_interlevel())
         {
-            mpr("Sorry, you can't auto-travel out of here.");
-            break;
+            if (you.running.x == you.x_pos && you.running.y == you.running.y)
+            {
+                mpr("You're already here.");
+                break;
+            }
+            else if (!you.running.x || !you.running.y)
+            {
+                mpr("Sorry, you can't auto-travel out of here.");
+                break;
+            }
+
+            // Don't ask for a destination if you can only travel
+            // within level anyway.
+            start_travel(you.running.x, you.running.y);
         }
-        start_translevel_travel();
+        else
+            start_translevel_travel();
+
         if (you.running)
             mesclr();
         break;
