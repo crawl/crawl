@@ -806,6 +806,9 @@ VISUAL:@The_monster@ grins evilly.
 # Hamlet
 @The_monster@ wails, "To die, to sleep, no more."
 
+# The Mysterious Stranger
+@The_monster@ whispers, "It is all a dream - a grotesque and foolish dream."
+
 @The_monster@ @wails@, "Death is your only future!"
 
 @The_monster@ whispers, "They're coming for you..."
