@@ -3847,10 +3847,10 @@ bool _give_items_skills()
                 {
                     textcolor(BROWN);
                     cprintf(EOL "Enter - %s" EOL,
-                            Options.prev_pr == GOD_ZIN?         "Zin" :
-                            Options.prev_pr == GOD_YREDELEMNUL? "Yredelemnul" :
-                            Options.prev_pr == GOD_BEOGH?       "Beogh"
-                                                        :       "Random");
+                            Options.prev_pr == GOD_ZIN ?         "Zin" :
+                            Options.prev_pr == GOD_YREDELEMNUL ? "Yredelemnul" :
+                            Options.prev_pr == GOD_BEOGH ?       "Beogh"
+                                                         :       "Random");
                 }
 
                 do
@@ -3885,7 +3885,7 @@ bool _give_items_skills()
                         keyn = '*'; // for ng_pr setting
                         // fall-through for random
                     case '*':
-                        you.religion = coinflip()? GOD_ZIN : GOD_YREDELEMNUL;
+                        you.religion = coinflip() ? GOD_ZIN : GOD_YREDELEMNUL;
                         if (you.species == SP_HILL_ORC && coinflip())
                             you.religion = GOD_BEOGH;
                         break;
