@@ -429,16 +429,22 @@ bool is_evil_god(god_type god)
 bool is_good_god(god_type god)
 {
     return
-        god == GOD_SHINING_ONE ||
         god == GOD_ZIN ||
+        god == GOD_SHINING_ONE ||
         god == GOD_ELYVILON;
 }
 
 bool is_chaotic_god(god_type god)
 {
     return
-        god == GOD_MAKHLEB ||
-        god == GOD_XOM;
+        god == GOD_XOM ||
+        god == GOD_MAKHLEB;
+}
+
+bool is_lawful_god(god_type god)
+{
+    return
+        god == GOD_ZIN;
 }
 
 bool is_priest_god(god_type god)
@@ -4365,7 +4371,7 @@ void excommunication(god_type new_god)
     switch (old_god)
     {
     case GOD_XOM:
-        xom_acts( false, abs(you.piety - 100) * 2);
+        xom_acts(false, abs(you.piety - 100) * 2);
         _inc_penance( old_god, 50 );
         break;
 
@@ -5100,7 +5106,7 @@ bool god_hates_your_god(god_type god,
         return (true);
 
     // Zin hates Xom and Makhleb.
-    if (god == GOD_ZIN && is_chaotic_god(your_god))
+    if (is_lawful_god(god) && is_chaotic_god(your_god))
         return (true);
 
     return (is_evil_god(your_god));
@@ -5116,7 +5122,7 @@ std::string god_hates_your_god_reaction(god_type god,
             return "";
 
         // Zin hates Xom and Makhleb.
-        if (god == GOD_ZIN && is_chaotic_god(your_god))
+        if (is_lawfukl_god(god) && is_chaotic_god(your_god))
             return " for chaos";
 
         if (is_evil_god(your_god))
