@@ -5122,7 +5122,7 @@ std::string god_hates_your_god_reaction(god_type god,
             return "";
 
         // Zin hates Xom and Makhleb.
-        if (is_lawfukl_god(god) && is_chaotic_god(your_god))
+        if (is_lawful_god(god) && is_chaotic_god(your_god))
             return " for chaos";
 
         if (is_evil_god(your_god))
