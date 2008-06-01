@@ -1550,8 +1550,8 @@ static void climb_message(dungeon_feature_type stair, bool going_up,
 
 static void leaving_level_now()
 {
-    // Note the name ahead of time because the events may cause
-    // markers to be discarded.
+    // Note the name ahead of time because the events may cause markers
+    // to be discarded.
     const std::string newtype =
         env.markers.property_at(you.pos(), MAT_ANY, "dst");
 
