@@ -103,50 +103,50 @@ glowing_colour_name
 %%%%
 writing_adj
 
-Angular
+angular
 
-Blocky
+blocky
 
-Bold
+bold
 
-Faded
+faded
 
-Flowing
+flowing
 
-Glowing
+glowing
 
-Shifting
+shifting
 
-Sinuous
+sinuous
 
-Spidery
+spidery
 
-Writhing
+writhing
 
 %%%%
 writing_noun
 
-Binary Code
+binary code
 
-Figures
+figures
 
-Glyphs
+glyphs
 
-Hieroglyphics
+hieroglyphics
 
-Print-Out
+print-out
 
-Runes
+runes
 
-Scrawl
+scrawl
 
-Sigils
+sigils
 
-Symbols
+symbols
 
-Text
+text
 
-Writing
+writing
 
 %%%%
 writing_name
