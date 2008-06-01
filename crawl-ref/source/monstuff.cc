@@ -3699,7 +3699,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 //---------------------------------------------------------------
 static bool _handle_potion(monsters *monster, bolt & beem)
 {
-
     // Yes, there is a logic to this ordering {dlb}:
     if (monster->behaviour == BEH_SLEEP)
         return (false);
