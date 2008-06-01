@@ -1031,12 +1031,14 @@ void xom_check_lost_item(const item_def& item)
             {
                 // Ignore Abyss area shifts.
                 if (you.level_type != LEVEL_ABYSS)
+                {
                     // Abyssal runes are a lot more trouble to find than
                     // demonic runes, so they get twice the stimulation.
                     xom_is_stimulated(128, "Xom snickers.", true);
+                }
             }
             else if (item.plus == RUNE_DEMONIC
-                && you.attribute[ATTR_DEMONIC_RUNES] == 0)
+                     && you.attribute[ATTR_DEMONIC_RUNES] == 0)
             {
                 xom_is_stimulated(64, "Xom snickers softly.", true);
             }

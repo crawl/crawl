@@ -1710,6 +1710,7 @@ public:
 
     // Messages that stop travel
     std::vector<message_filter> travel_stop_message;
+    std::vector<message_filter> force_more_message;
 
     int         stash_tracking; // How stashes are tracked
 

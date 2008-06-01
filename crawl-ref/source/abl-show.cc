@@ -822,9 +822,18 @@ bool activate_ability()
     std::vector<talent> talents = your_talents(false);
     if ( talents.empty() )
     {
-        // Vampires can't turn into bats when full of blood.
+        // Give messages if the character cannot use innate talents right now.
+        // * Vampires can't turn into bats when full of blood.
+        // * Permanent flying (Kenku) cannot be turned off.
         if (you.species == SP_VAMPIRE && you.experience_level >= 3)
             mpr("Sorry, you're too full to transform right now.");
+        else if (you.species == SP_KENKU && you.experience_level >= 5)
+        {
+            if (you.flight_mode() == FL_FLY)
+                mpr("You're already flying!");
+            else if (you.flight_mode() == FL_LEVITATE)
+                mpr("You can only start flying from the ground.");
+        }
         else
             mpr("Sorry, you're not good enough to have a special ability.");
 
@@ -2151,19 +2160,23 @@ std::vector<talent> your_talents( bool check_confused )
             _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused );
     }
 
-    //jmf: "upgrade" for draconians -- expensive flight
-    // note: this ability only applies to this counter
+    // jmf: "upgrade" for draconians -- expensive flight
+    // Note: This ability only applies to this counter.
     if (player_equip( EQ_RINGS, RING_LEVITATION )
         || player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION )
         || scan_randarts( RAP_LEVITATE ))
     {
-        // Now you can only turn levitation off if you have an
-        // activatable item.  Potions and miscast effects will
-        // have to time out (this makes the miscast effect actually
-        // a bit annoying). -- bwr
-        _add_talent(talents, you.duration[DUR_LEVITATION] ?
-                    ABIL_EVOKE_STOP_LEVITATING : ABIL_EVOKE_LEVITATE,
-                    check_confused);
+        // Has no effect on permanently flying Kenku.
+        if (!you.permanent_levitation() && you.flight_mode() != FL_FLY)
+        {
+            // Now you can only turn levitation off if you have an
+            // activatable item.  Potions and miscast effects will
+            // have to time out (this makes the miscast effect actually
+            // a bit annoying). -- bwr
+            _add_talent(talents, you.duration[DUR_LEVITATION] ?
+                        ABIL_EVOKE_STOP_LEVITATING : ABIL_EVOKE_LEVITATE,
+                        check_confused);
+        }
     }
 
     if (player_equip( EQ_RINGS, RING_TELEPORTATION )

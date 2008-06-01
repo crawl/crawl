@@ -146,12 +146,10 @@ int str_to_colour( const std::string &str, int default_colour,
     ASSERT(ARRAYSZ(element_cols) == (EC_RANDOM - EC_FIRE) + 1);
 
     for (ret = 0; ret < 16; ret++)
-    {
         if (str == cols[ret])
             break;
-    }
 
-    // check for alternate spellings
+    // Check for alternate spellings.
     if (ret == 16)
     {
         if (str == "lightgray")
@@ -177,7 +175,7 @@ int str_to_colour( const std::string &str, int default_colour,
 
     if (ret == 16 && accept_number)
     {
-        // Check if we have a direct colour index
+        // Check if we have a direct colour index.
         const char *s = str.c_str();
         char *es = NULL;
         const int ci = static_cast<int>(strtol(s, &es, 10));
@@ -188,7 +186,7 @@ int str_to_colour( const std::string &str, int default_colour,
     return ((ret == 16) ? default_colour : ret);
 }
 
-// returns -1 if unmatched else returns 0-15
+// Returns -1 if unmatched else returns 0-15.
 static int _str_to_channel_colour( const std::string &str )
 {
     int ret = str_to_colour( str );
@@ -874,6 +872,7 @@ void game_options::reset_options()
     note_items.clear();
     note_skill_levels.clear();
     travel_stop_message.clear();
+    force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
     menu_colour_prefix_class = false;
@@ -1744,7 +1743,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "autopickup_exceptions"
         && key != "stop_travel" && key != "sound"
-        && key != "travel_stop_message"
+        && key != "travel_stop_message" && key != "force_more_message"
         && key != "drop_filter" && key != "lua_file"
         && key != "note_items" && key != "autoinscribe"
         && key != "note_monsters" && key != "note_messages"
@@ -2400,12 +2399,39 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                     std::string s = fragments[i].substr( pos + 1 );
                     trim_string( s );
                     travel_stop_message.push_back(
-                       message_filter( channel, s ) );
+                        message_filter( channel, s ) );
                     continue;
                 }
             }
 
             travel_stop_message.push_back(
+                    message_filter( fragments[i] ) );
+        }
+    }
+    else if (key == "force_more_message")
+    {
+        std::vector<std::string> fragments = split_string(",", field);
+        for (int i = 0, count = fragments.size(); i < count; ++i)
+        {
+            if (fragments[i].length() == 0)
+                continue;
+
+            std::string::size_type pos = fragments[i].find(":");
+            if (pos && pos != std::string::npos)
+            {
+                std::string prefix = fragments[i].substr(0, pos);
+                int channel = str_to_channel( prefix );
+                if (channel != -1 || prefix == "any")
+                {
+                    std::string s = fragments[i].substr( pos + 1 );
+                    trim_string( s );
+                    force_more_message.push_back(
+                        message_filter( channel, s ) );
+                    continue;
+                }
+            }
+
+            force_more_message.push_back(
                     message_filter( fragments[i] ) );
         }
     }

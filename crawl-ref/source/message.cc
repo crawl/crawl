@@ -43,7 +43,7 @@
 #include "view.h"
 #include "menu.h"
 
-// circular buffer for keeping past messages
+// Circular buffer for keeping past messages.
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
 int Next_Message = 0;                                 // end of messages
 
@@ -170,7 +170,7 @@ static char god_message_altar_colour( god_type god )
         return (WHITE);
 
     case GOD_ELYVILON:
-        return (LIGHTBLUE);     // really, LIGHTGREY but that's plain text
+        return (LIGHTBLUE);     // Really, LIGHTGREY but that's plain text.
 
     case GOD_OKAWARU:
         return (CYAN);
@@ -221,7 +221,7 @@ static char god_message_altar_colour( god_type god )
 
 #ifdef USE_COLOUR_MESSAGES
 
-// returns a colour or MSGCOL_MUTED
+// Returns a colour or MSGCOL_MUTED.
 int channel_to_colour( msg_channel_type channel, int param )
 {
     if (you.asleep())
@@ -232,7 +232,7 @@ int channel_to_colour( msg_channel_type channel, int param )
     switch (Options.channels[ channel ])
     {
     case MSGCOL_PLAIN:
-        // note that if the plain channel is muted, then we're protecting
+        // Note that if the plain channel is muted, then we're protecting
         // the player from having that spread to other channels here.
         // The intent of plain is to give non-coloured messages, not to
         // suppress them.
@@ -338,9 +338,9 @@ int channel_to_colour( msg_channel_type channel, int param )
         // cases should be handled above.
         if (channel == MSGCH_MONSTER_DAMAGE)
         {
-            // a special case right now for monster damage (at least until
+            // A special case right now for monster damage (at least until
             // the init system is improved)... selecting a specific
-            // colour here will result in only the death messages coloured
+            // colour here will result in only the death messages coloured.
             if (param == MDAM_DEAD)
                 ret = Options.channels[ channel ];
             else if (Options.channels[ MSGCH_PLAIN ] >= MSGCOL_DEFAULT)
@@ -390,7 +390,7 @@ void mprf( msg_channel_type channel, const char *format, ... )
 {
     va_list  argp;
     va_start( argp, format );
-    do_message_print( channel, channel == MSGCH_GOD? you.religion : 0,
+    do_message_print( channel, channel == MSGCH_GOD ? you.religion : 0,
                       format, argp );
     va_end( argp );
 }
@@ -411,22 +411,37 @@ void mpr(const char *inf, msg_channel_type channel, int param)
             fprintf(stderr, "%s\n", inf);
         return;
     }
+
+    std::string help = inf;
+    if (help.find("</") != std::string::npos)
+    {
+        std::string col = colour_to_str(channel_to_colour(channel));
+        if (!col.empty())
+            help = "<" + col + ">" + help + "</" + col + ">";
+
+        // Handing over to the experts...
+        formatted_mpr(formatted_string::parse_string(help), channel);
+        return;
+    }
+
+
     char mbuf[400];
     size_t i = 0;
     const int stepsize = get_number_of_cols() - 1;
     const size_t msglen = strlen(inf);
     const int lookback_size = (stepsize < 12 ? 0 : 12);
-    // if a message is exactly STEPSIZE characters long,
+
+    // If a message is exactly STEPSIZE characters long,
     // it should precisely fit in one line. The printing is thus
     // from I to I + STEPSIZE - 1. Stop when I reaches MSGLEN.
     while ( i < msglen || i == 0 )
     {
         strncpy( mbuf, inf + i, stepsize );
         mbuf[stepsize] = 0;
-        // did the message break?
+        // Did the message break?
         if ( i + stepsize < msglen )
         {
-            // yes, find a nicer place to break it.
+            // Aes, find a nicer place to break it.
             int lookback, where = 0;
             for ( lookback = 0; lookback < lookback_size; ++lookback )
             {
@@ -438,15 +453,16 @@ void mpr(const char *inf, msg_channel_type channel, int param)
 
             if ( lookback != lookback_size )
             {
-                // found a good spot to break
+                // Found a good spot to break.
                 mbuf[where] = 0;
-                i += where + 1; // skip past the space!
+                i += where + 1; // Skip past the space!
             }
             else
                 i += stepsize;
         }
         else
             i += stepsize;
+
         base_mpr( mbuf, channel, param );
     }
 }
@@ -486,8 +502,8 @@ void mpr_comma_separated_list(const std::string prefix,
 }
 
 
-// checks whether a given message contains patterns relevant for
-// notes, stop_running or sounds and handles these cases
+// Checks whether a given message contains patterns relevant for
+// notes, stop_running or sounds and handles these cases.
 static void mpr_check_patterns(const std::string& message,
                                msg_channel_type channel,
                                int param)
@@ -555,7 +571,7 @@ static bool channel_message_history(msg_channel_type channel)
     }
 }
 
-// adds a given message to the message history
+// Adds a given message to the message history.
 static void mpr_store_messages(const std::string& message,
                                msg_channel_type channel, int param)
 {
@@ -570,16 +586,16 @@ static void mpr_store_messages(const std::string& message,
     if (Message_Line < num_lines - 1)
         Message_Line++;
 
-    // reset colour
+    // Reset colour.
     textcolor(LIGHTGREY);
 
-    // equipment lists just waste space in the message recall
+    // Equipment lists just waste space in the message recall.
     if (channel_message_history(channel))
     {
         // Put the message into Store_Message, and move the '---' line forward
-        Store_Message[ Next_Message ].text = message;
+        Store_Message[ Next_Message ].text    = message;
         Store_Message[ Next_Message ].channel = channel;
-        Store_Message[ Next_Message ].param = param;
+        Store_Message[ Next_Message ].param   = param;
         Next_Message++;
 
         if (Next_Message >= NUM_STORED_MESSAGES)
@@ -630,11 +646,11 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
     const std::string imsg = inf;
     const int colour = prepare_message( imsg, channel, param );
 
-    if ( colour == MSGCOL_MUTED )
+    if (colour == MSGCOL_MUTED)
         return;
 
-    if (silenced(you.x_pos, you.y_pos) &&
-        (channel == MSGCH_SOUND || channel == MSGCH_TALK))
+    if (silenced(you.x_pos, you.y_pos)
+        && (channel == MSGCH_SOUND || channel == MSGCH_TALK))
     {
         return;
     }
@@ -647,6 +663,17 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
 
     message_out( Message_Line, colour, inf,
                  Options.delay_message_clear? 2 : 1 );
+
+    for (unsigned i = 0; i < Options.force_more_message.size(); ++i)
+    {
+        if (Options.force_more_message[i].is_filtered( channel, imsg ))
+        {
+            more();
+            New_Message_Count = 0;
+            // One more() is quite enough, thank you!
+            break;
+        }
+    }
 
     mpr_store_messages(imsg, channel, param);
 }                               // end mpr()
@@ -697,7 +724,7 @@ void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
     mpr_store_messages(imsg, channel, param);
 }
 
-// output given string as formatted message(s), but check patterns
+// Output given string as formatted message(s), but check patterns
 // for string stripped of tags and store the original tagged string
 // for message history.  Newlines break the string into multiple
 // messages.
@@ -728,9 +755,7 @@ void formatted_message_history(const std::string &st_nocolor,
     }
 
     if (wrap_col)
-    {
         linebreak_string2(st, wrap_col);
-    }
 
     std::vector<formatted_string> fss;
     formatted_string::parse_string_to_multiple(st, fss);
@@ -750,13 +775,17 @@ void formatted_message_history(const std::string &st_nocolor,
 
         mpr_formatted_output(fs, colour);
 
-        // message playback explicitly only handles colors for
-        // the tutorial channel... guess we'll store bare strings
-        // for the rest, then.
-        if (channel == MSGCH_TUTORIAL)
-            mpr_store_messages(fs.to_colour_string(), channel, param);
-        else
-            mpr_store_messages(unformatted, channel, param);
+        for (unsigned f = 0; f < Options.force_more_message.size(); ++f)
+        {
+            if (Options.force_more_message[f].is_filtered(channel, st_nocolor))
+            {
+                more();
+                New_Message_Count = 0;
+                // One more() is quite enough, thank you!
+                break;
+            }
+        }
+        mpr_store_messages(fs.to_colour_string(), channel, param);
     }
 }
 
@@ -779,13 +808,13 @@ void mesclr( bool force )
         return;
     }
 
-    // turn cursor off -- avoid 'cursor dance'
+    // Turn cursor off -- avoid 'cursor dance'.
 
     cursor_control cs(false);
     clear_message_window();
     need_prefix = false;
     Message_Line = 0;
-}                               // end mseclr()
+}
 
 void more(void)
 {
@@ -808,14 +837,18 @@ void more(void)
         int keypress = 0;
 
         if (Options.tutorial_left)
+        {
             message_out(crawl_view.msgsz.y - 1,
                         LIGHTGREY,
                         "--more--                        "
                         "Press Ctrl-P to reread old messages",
                         2, false);
+        }
         else
+        {
             message_out(crawl_view.msgsz.y - 1,
                         LIGHTGREY, "--more--", 2, false);
+        }
 
 #ifdef USE_TILE
         mouse_control mc(MOUSE_MODE_MORE);
@@ -917,12 +950,12 @@ void replay_messages(void)
 
         for (int i = 0; i < num_lines - 2; i++)
         {
-            // calculate line in circular buffer
+            // Calculate line in circular buffer.
             int line = win_start_line + i;
             if (line >= NUM_STORED_MESSAGES)
                 line -= NUM_STORED_MESSAGES;
 
-            // avoid wrap-around
+            // Avoid wrap-around.
             if (line == first_message && i != 0)
                 break;
 
@@ -935,37 +968,27 @@ void replay_messages(void)
             textcolor( colour );
 
             std::string text = Store_Message[ line ].text;
-            // for tutorial texts (for now, used for debugging)
-            // allow formatted output of tagged messages
-            if (Store_Message[ line ].channel == MSGCH_TUTORIAL)
+
+            // Allow formatted output of tagged messages.
+            formatted_string fs = formatted_string::parse_string(text, true);
+            int curcol = 1;
+            for ( unsigned int j = 0; j < fs.ops.size(); ++j )
             {
-                formatted_string fs = formatted_string::parse_string(text, true);
-                int curcol = 1;
-                for ( unsigned int j = 0; j < fs.ops.size(); ++j )
+                switch ( fs.ops[j].type )
                 {
-                    switch ( fs.ops[j].type )
-                    {
-                    case FSOP_COLOUR:
-                        colour = fs.ops[j].x;
-                        break;
-                    case FSOP_TEXT:
-                        textcolor( colour );
-                        cgotoxy(curcol, wherey(), GOTO_CRT);
-                        cprintf(fs.ops[j].text.c_str());
-                        curcol += multibyte_strlen(fs.ops[j].text);
-                        break;
-                    case FSOP_CURSOR:
-                        break;
-                    }
+                case FSOP_COLOUR:
+                    colour = fs.ops[j].x;
+                    break;
+                case FSOP_TEXT:
+                    textcolor( colour );
+                    cgotoxy(curcol, wherey(), GOTO_CRT);
+                    cprintf(fs.ops[j].text.c_str());
+                    curcol += multibyte_strlen(fs.ops[j].text);
+                    break;
+                case FSOP_CURSOR:
+                    break;
                 }
             }
-            else
-#if DEBUG_DIAGNOSTICS
-            cprintf( "%d: %s", line, text.c_str() );
-#else
-            cprintf( "%s", text.c_str() );
-#endif
-
             cprintf(EOL);
             textcolor(LIGHTGREY);
         }

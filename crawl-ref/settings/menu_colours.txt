@@ -114,7 +114,7 @@ menu = yellow:.*potion.*(porridge|gluggy white)
 # Defaults for normal items
 #
 menu = lightred:.*equipped.*cursed
-menu = lightgreen:.*equipped.*
+menu = green:.*equipped.*
 menu = green:uncursed
 menu = red:cursed
 menu = lightgrey:^(scroll|potion|ring|amulet)

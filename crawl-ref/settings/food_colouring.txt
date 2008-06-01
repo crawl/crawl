@@ -5,9 +5,6 @@
 msg := message_colour
 inv := menu_colour
 
-# Spriggans don't care for corpses and chunks.
-#
-
 msg = darkgrey:.*inedible.*
 inv = darkgrey:.*inedible.*
 

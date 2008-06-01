@@ -1274,7 +1274,7 @@ void evoke_deck( item_def& deck )
                                       << std::endl;
     }
 
-    if ( !fake_draw )
+    if (!fake_draw)
         did_god_conduct(DID_CARDS, brownie_points);
 
     // Always wield change, since the number of cards used/left has

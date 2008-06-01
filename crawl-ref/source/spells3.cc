@@ -606,7 +606,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
     {
         mpr("You feel a strange sense of stasis.");
-        return false;
+        return (false);
     }
 
     // after this point, we're guaranteed to teleport. Kill the appropriate
@@ -624,7 +624,8 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
         abyss_teleport( new_abyss_area );
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
-        return true;
+
+        return (true);
     }
 
     coord_def pos(1, 0);
@@ -671,8 +672,8 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
 
             you.moveto(pos.x, pos.y);
 
-            if ((grd[you.x_pos][you.y_pos] != DNGN_FLOOR
-                    && grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER)
+            if (grd[you.x_pos][you.y_pos] != DNGN_FLOOR
+                    && grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER
                 || mgrd[you.x_pos][you.y_pos] != NON_MONSTER
                 || env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
             {
@@ -680,11 +681,11 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             }
             else
             {
-                // controlling teleport contaminates the player -- bwr
+                // Controlling teleport contaminates the player. -- bwr
                 contaminate_player(1, true);
             }
         }
-    }                           // end "if is_controlled"
+    }   // end "if is_controlled"
 
     if (!is_controlled)
     {
@@ -695,8 +696,8 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             newx = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
             newy = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
         }
-        while ((grd[newx][newy] != DNGN_FLOOR
-                && grd[newx][newy] != DNGN_SHALLOW_WATER)
+        while (grd[newx][newy] != DNGN_FLOOR
+                   && grd[newx][newy] != DNGN_SHALLOW_WATER
                || mgrd[newx][newy] != NON_MONSTER
                || env.cgrid[newx][newy] != EMPTY_CLOUD);
 
@@ -730,8 +731,10 @@ void you_teleport_now( bool allow_control, bool new_abyss_area )
     // teleported to escape from all the monsters chasing him/her,
     // since in that case the new dangerous area is almost certainly
     // *less* dangerous than the old dangerous area.
-    if (randtele && player_in_a_dangerous_place()
-        && you.level_type != LEVEL_ABYSS)
+    // Teleporting in a labyrinth is also funny, but only for non-minotaurs.
+    if (randtele
+        && (you.level_type == LEVEL_LABYRINTH && you.species != SP_MINOTAUR
+            || you.level_type != LEVEL_ABYSS && player_in_a_dangerous_place()))
     {
         xom_is_stimulated(255);
     }

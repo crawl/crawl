@@ -2194,8 +2194,18 @@ const std::string menu_colour_item_prefix(const item_def &item)
 
     switch (item.base_type)
     {
+    case OBJ_CORPSES:
+        // Skeletons cannot be eaten.
+        if (item.sub_type == CORPSE_SKELETON)
+        {
+            prefixes.push_back("inedible");
+            break;
+        }
+        // intentional fall-through
     case OBJ_FOOD:
-        if (!can_ingest(item.base_type, item.sub_type, true, true, false)
+        if (item.base_type != OBJ_CORPSES
+               && !can_ingest(item.base_type, item.sub_type, true, true, false)
+            || you.species == SP_VAMPIRE && !mons_has_blood(item.plus)
             || food_is_rotten(item)
                && !player_mutation_level(MUT_SAPROVOROUS))
         {
@@ -2204,9 +2214,7 @@ const std::string menu_colour_item_prefix(const item_def &item)
         else if (is_preferred_food(item))
             prefixes.push_back("preferred");
 
-        // intentional fall-through
-    case OBJ_CORPSES:
-        if (is_poisonous(item) && !player_res_poison())
+        if (is_poisonous(item))
             prefixes.push_back("poisonous");
         else if (is_mutagenic(item))
             prefixes.push_back("mutagenic");

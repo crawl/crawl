@@ -3541,10 +3541,13 @@ void drink( int slot )
     if (slot != -1)
         item_slot = slot;
     else
+    {
         item_slot = prompt_invent_item( "Drink which item?",
                                         MT_INVLIST, OBJ_POTIONS,
                                         true, true, true, 0, NULL,
                                         OPER_QUAFF );
+    }
+
     if (item_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -3570,8 +3573,8 @@ void drink( int slot )
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.
-    const bool dangerous =
-        (player_in_a_dangerous_place() && you.experience_level > 1);
+    const bool dangerous = (player_in_a_dangerous_place()
+                            && you.experience_level > 1);
 
     if (potion_effect(static_cast<potion_type>(you.inv[item_slot].sub_type),
                       40, alreadyknown))

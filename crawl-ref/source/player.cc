@@ -1463,13 +1463,13 @@ int player_res_torment(bool)
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING);
 }
 
-// funny that no races are susceptible to poisons {dlb}
+// Funny that no races are susceptible to poisons. {dlb}
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_poison(bool calc_unid, bool temp)
 {
     int rp = 0;
 
-    // only thirsty vampires are naturally poison resistant
+    // Only thirsty vampires are naturally poison resistant.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
         rp++;
 
@@ -6247,9 +6247,11 @@ flight_type player::flight_mode() const
         return FL_FLY;
     }
     else if (is_levitating())
+    {
         return (you.duration[DUR_CONTROLLED_FLIGHT]
-                || wearing_amulet(AMU_CONTROLLED_FLIGHT)
-                ? FL_FLY : FL_LEVITATE);
+                || wearing_amulet(AMU_CONTROLLED_FLIGHT) ? FL_FLY
+                                                         : FL_LEVITATE);
+    }
     else
         return (FL_NONE);
 }

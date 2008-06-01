@@ -45,9 +45,10 @@ The contents of this text are:
                 explore_greedy, explore_stop, explore_improved,
                 tc_reachable, tc_dangerous, tc_disconnected,
                 tc_excluded, tc_exclude_circle,
-                travel_stop_message, runrest_ignore_message,
-                runrest_ignore_poison, runrest_ignore_monster,
-                trapwalk_safe_hp, trap_prompt, rest_wait_both
+                travel_stop_message, force_more_message,
+                runrest_ignore_message, runrest_ignore_poison, 
+                runrest_ignore_monster, trapwalk_safe_hp, 
+                trap_prompt, rest_wait_both
 4-h     Stashes.
                 stash_tracking, stash_filter, annotate_item_class
 4-i     Command Enhancements.
@@ -771,6 +772,12 @@ travel_stop_message = <list of regexes>
         Check the file travel_stoppers.txt in the settings folder for a
         list of such options. It can be included by
         include = travel_stoppers.txt
+
+force_more_message = <list of regexes>
+        Any message that contains a regex specified here, will enforce a
+        -More- prompt, so it can be used to highlight really important
+        events.
+        The syntax is identical to that of travel_stop_message.
 
 runrest_ignore_message = <string>
         This only works if runrest.lua has already been sourced in 

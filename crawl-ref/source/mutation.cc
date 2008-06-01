@@ -1418,7 +1418,7 @@ static void _display_vampire_attributes()
 
        {"Regeneration         ", "very fast  ", "fast    ", "normal    ",  "normal   ", "slow     ", "none"},
 
-       {"Poison resistance    ", "           ", "        ", " +        ",  " +       ", " +       ", " +   "},
+       {"Poison resistance    ", "           ", "        ", "          ",  " +       ", " +       ", " +   "},
 
        {"Cold resistance      ", "           ", "        ", "          ",  " +       ", " +       ", " ++  "},
 
