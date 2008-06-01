@@ -1120,11 +1120,16 @@ static void sdump_mutations(dump_params &par)
 
 const char *hunger_level(void)
 {
-    return ((you.hunger <= 1000) ? "starving" :
-            (you.hunger <= 2600) ? "hungry" :
-            (you.hunger <  7000) ? "not hungry" :
-            (you.hunger < 11000) ? "full"
-                                 : "completely stuffed");
+    const bool vamp = (you.species == SP_VAMPIRE);
+
+    return ((you.hunger <= 1000) ? (vamp ? "bloodless" : "starving") :
+            (you.hunger <= 1533) ? (vamp ? "near bloodless" : "near starving") :
+            (you.hunger <= 2066) ? (vamp ? "very thirsty" : "very hungry") :
+            (you.hunger <= 2600) ? (vamp ? "thirsty" : "hungry") :
+            (you.hunger <  7000) ? (vamp ? "not thirsty" : "not hungry") :
+            (you.hunger <  9000) ? "full" :
+            (you.hunger < 11000) ? "very full"
+                                 : (vamp ? "almost alive" : "completely stuffed"));
 }
 
 static std::string morgue_directory()
