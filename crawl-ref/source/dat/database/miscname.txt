@@ -29,7 +29,6 @@ pulsating
 shimmering
 
 shining
-
 %%%%
 colour_name
 
@@ -92,12 +91,10 @@ umber
 white
 
 yellow
-
 %%%%
 glowing_colour_name
 
 @glowing_adj@ @colour_name@
-
 %%%%
 writing_adj
 
@@ -120,7 +117,6 @@ sinuous
 spidery
 
 writhing
-
 %%%%
 writing_noun
 
@@ -145,7 +141,6 @@ symbols
 text
 
 writing
-
 %%%%
 writing_name
 
@@ -156,7 +151,6 @@ writing_name
 @writing_adj@ @colour_name@ @writing_noun@
 
 @writing_adj@ @writing_noun@
-
 %%%%
 smell_name
 
@@ -177,7 +171,6 @@ sulphur
 tea
 
 wet wool
-
 %%%%
 roaring_animal_name
 # This doesn't necessarily have to make sense.  For example, a name of a
@@ -199,7 +192,6 @@ pill bug
 slug
 
 yak
-
 %%%%
 sound_name
 
@@ -220,5 +212,4 @@ the distant roaring of an enraged @roaring_animal_name@
 the chiming of a distant gong
 
 the tinkle of an enormous bell
-
 %%%%

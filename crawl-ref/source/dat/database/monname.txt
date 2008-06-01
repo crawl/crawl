@@ -39,7 +39,6 @@ w:12
 
 w:45
 @other_orcish_name@
-
 %%%%
 # some specials for orcish priests
 orc high priest name
@@ -55,7 +54,6 @@ Judas
 
 w:50
 @orc name@
-
 %%%%
 # Obvious references to Beogh
 # (14 at last count)
@@ -89,7 +87,6 @@ Morbeogh
 Orbeogh
 
 Warbeogh
-
 %%%%
 # Obvious references to orcs in general
 # (extremely subjective, and 13 at last count)
@@ -120,7 +117,6 @@ Orkrul
 Orkwin
 
 Oruk
-
 %%%%
 # Other
 # (49 at last count)
@@ -223,5 +219,4 @@ Worak
 Wulfoc
 
 Zorug
-
 %%%%

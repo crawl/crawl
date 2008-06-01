@@ -12,7 +12,6 @@
 imp_taunt
 
 @run_or_give_up@, thou @generic_insult@!
-
 %%%%
 run_or_give_up
 
@@ -21,7 +20,6 @@ w:6
 
 w:1
 @give_up@
-
 %%%%
 demon_taunt
 
@@ -33,7 +31,6 @@ w:2
 
 w:3
 @demon_taunt_special@
-
 %%%%
 demon_taunt_special
 
@@ -44,7 +41,6 @@ Thy @body_or_spiritual_part@ shall be my @meal@!
 @run_away@ @whilst_thou_can@!
 
 I @will_or_shall@ @feast_or_devour@ thy @body_or_spiritual_part@!
-
 %%%%
 # capitalized "flee" verbs
 run_away
@@ -100,7 +96,6 @@ Slither home
 Take thy face hence
 
 Turn tail
-
 %%%%
 # capitalized synonyms for "give up"
 give_up
@@ -162,9 +157,7 @@ Tremble
 Relinquish hope
 
 Taste defeat
-
 %%%%
-
 whilst_thou_can
 
 whilst thou can
@@ -185,7 +178,6 @@ whilst thou art whole
 
 # screen vs. this for undead?
 whilst life thou hast
-
 %%%%
 body_or_spiritual_part
 
@@ -194,21 +186,18 @@ w:3
 
 w:1
 @important_spiritual_part@
-
 %%%%
 will_or_shall
 
 will
 
 shall
-
 %%%%
 feast_or_devour
 
 feast on
 
 devour
-
 %%%%
 important_body_part
 
@@ -233,7 +222,6 @@ neck
 skull
 
 spine
-
 %%%%
 important_spiritual_part
 
@@ -259,7 +247,6 @@ fortitude
 
 life force
 %%%%
-
 meal
 
 meal
@@ -308,7 +295,6 @@ w:5
 @species_insult_adj1@
 
 @insult general adj1@
-
 %%%%
 insult general adj1
 
@@ -451,7 +437,6 @@ weedy
 worthless
 
 yeasty
-
 %%%%
 ##########################################################
 # adjective1, Elf special
@@ -493,7 +478,6 @@ puny
 shaky
 
 prissy
-
 %%%%
 ##########################################################
 # adjective1, Ghoul special
@@ -547,7 +531,6 @@ foetid
 gangrenous
 
 foul-breathed
-
 %%%%
 ###############################################################
 # adjective2, usually longer and consisting of two words
@@ -558,7 +541,6 @@ w:5
 @species_insult_adj2@
 
 @insult general adj2@
-
 %%%%
 insult general adj2
 
@@ -685,7 +667,6 @@ unchin-snouted
 weather-bitten
 
 weevil-witted
-
 %%%%
 ##########################################################
 # adjective2, Dwarf special
@@ -715,7 +696,6 @@ rhino-raveling
 thigh-biting
 
 dirt-delving
-
 %%%%
 ##########################################################
 # adjective2, Kenku special
@@ -745,7 +725,6 @@ crow-beaked
 magpie-eyed
 
 mallardish
-
 %%%%
 ##########################################################
 # adjective2, Mummy special
@@ -788,7 +767,6 @@ straight-laced
 
 w:30
 @insult undead adj2@
-
 %%%%
 ##########################################################
 # adjective2, Vampire special
@@ -817,7 +795,6 @@ exsanguinous
 
 w:20
 @insult undead adj2@
-
 %%%%
 ##########################################################
 # adjective2, undead special
@@ -831,7 +808,6 @@ lifeless
 undead
 
 corpse-like
-
 %%%%
 ###############################################
 # noun of the insult
@@ -842,7 +818,6 @@ w:5
 @species_insult_noun@
 
 @insult general noun@
-
 %%%%
 insult general noun
 
@@ -993,7 +968,6 @@ wormtrail
 yak-dropping
 
 zombie-fodder
-
 %%%%
 ##########################################################
 # noun, small species special
@@ -1069,7 +1043,6 @@ burrow-botch
 hole-pimple
 
 hovel-pustule
-
 %%%%
 ##########################################################
 # noun, Spriggan special
@@ -1110,7 +1083,6 @@ sissy-prig
 pussyfoot
 
 creepsneak
-
 %%%%
 ##########################################################
 # noun, Centaur special
@@ -1142,7 +1114,6 @@ nag
 nightmare
 
 pony
-
 %%%%
 ##########################################################
 # noun, Minotaur special
@@ -1239,5 +1210,4 @@ walking corpse
 corpse eater
 
 scavenger
-
 %%%%

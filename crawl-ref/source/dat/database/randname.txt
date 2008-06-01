@@ -166,7 +166,6 @@ of @god_name@'s @divine_esteem@
 # hardcoded keywords
 w:1
 of @god_name@
-
 %%%%
 ######################################################
 # 2. ARMOUR
@@ -251,7 +250,6 @@ of @god_name@
 
 w:15
 of @branch_name@
-
 %%%%
 ######################################################
 # 3. JEWELLERY
@@ -318,7 +316,6 @@ of @vice_name@
 
 w:20
 of @number_or_qualifier@ @thing_names@
-
 %%%%
 ######################################################
 # GOD GIFT specials
@@ -402,7 +399,6 @@ of @monster_name@@killer_name@
 
 w:30
 "@plain_weapon_name@"
-
 %%%%
 ######################################################
 # OKAWARU weapon
@@ -446,7 +442,6 @@ of @place_name@
 
 w:2
 of @item_name@
-
 %%%%
 ######################################################
 # OKAWARU armour
@@ -480,7 +475,6 @@ of @wacky_armour_name@
 
 w:2
 of @politics_name_armour@
-
 %%%%
 ######################################################
 # XOM weapon
@@ -512,7 +506,6 @@ w:400
 @jewellery@
 
 @armour@
-
 %%%%
 ######################################################
 # XOM armour
@@ -545,7 +538,6 @@ w:400
 # why not some other names? 
 # (sadly, some weapon names don't make sense even for Xom)
 @jewellery@
-
 %%%%
 ######################################################
 # XOM jewellery
@@ -581,7 +573,6 @@ w:300
 # why not some other names? 
 # (sadly, some weapon names don't make sense even for Xom)
 @armour@
-
 %%%%
 ######################################################
 # Library of randart APPEARANCE (un-identified).
@@ -620,7 +611,6 @@ faintly glowing
 steaming
 
 shiny
-
 %%%%
 weapon appearance
 
@@ -637,7 +627,6 @@ ichor-stained
 # currently 16 entries, so their overall weight amounts 160
 w:160
 @general appearance@
-
 %%%%
 armour appearance
 
@@ -655,7 +644,6 @@ distressingly furry
 
 w:160
 @general appearance@
-
 %%%%
 jewellery appearance
 
@@ -681,5 +669,4 @@ glittering
 
 w:160
 @general appearance@
-
 %%%%

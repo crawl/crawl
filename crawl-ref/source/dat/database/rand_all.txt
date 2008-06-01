@@ -23,7 +23,6 @@ Magpie
 Firefly
 
 Scarab
-
 %%%%
 jewellery_special_name
 
@@ -48,7 +47,6 @@ Lady Luck
 Temptation
 
 False Pretenses
-
 %%%%
 suspicion_name
 
@@ -68,7 +66,6 @@ Suspected Treachery
 
 w:20
 @conflict_name@
-
 %%%%
 ######################################################
 # Library of keywords used for all randart types.
@@ -105,7 +102,6 @@ Envy
 
 w:70
 @anger_name@
-
 %%%%
 xom_esteem
 
@@ -144,7 +140,6 @@ Fair Game
 Wantonness
 
 Recklessness
-
 %%%%
 time_name
 
@@ -185,7 +180,6 @@ the Harvest
 Eternal Night
 
 Eternity
-
 %%%%
 sky_or_light
 
@@ -208,7 +202,6 @@ Starshine
 the Clouds
 
 the Sky
-
 %%%%
 virtue_or_vice
 
@@ -218,7 +211,6 @@ w:5
 @valour_name@
 
 @vice_name@
-
 %%%%
 virtue_name
 
@@ -237,7 +229,6 @@ Charity
 Patience
 
 Modesty
-
 %%%%
 vice_name
 
@@ -272,7 +263,6 @@ Immorality
 Amorality
 
 Untruth
-
 %%%%
 destiny_name
 
@@ -285,7 +275,6 @@ Karma
 Kismet
 
 Wyrd
-
 %%%%
 number_or_qualifier
 
@@ -343,7 +332,6 @@ the Jolly
 the Ancient
 
 the Exiled
-
 %%%%
 thing_names
 
@@ -392,5 +380,4 @@ Places
 Wishes
 
 Wonders
-
 %%%%

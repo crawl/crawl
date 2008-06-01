@@ -111,7 +111,6 @@ ploy
 ploy
 
 trick
-
 ############################################################
 # Library of speeches for types of monsters, like priests, 
 # wizards, guards and so on.
@@ -586,7 +585,6 @@ VISUAL:@The_monster@ smiles happily.
 
 VISUAL:@The_monster@ looks friendly.
 ## END friendly humanoid ##
-
 %%%%
 pauses_or_stops
 
@@ -633,7 +631,6 @@ default confused centipede
 VISUAL:@The_monster@ seems to be having trouble coordinating @possessive@ many legs.
 
 VISUAL:@The_monster@ wildly waves @possessive@ antennae.
-
 #########################################
 # Speech strings by monster symbol
 #########################################
@@ -680,7 +677,6 @@ SOUND:@The_monster@ buzzes around in tight circles.
 default '8'
 
 __NONE
-
 ######################
 # Demon taunts
 ######################
@@ -704,7 +700,6 @@ __NONE
 '4'
 
 @_demon_taunt_@
-
 #####################################
 # Demons are silent when not taunting
 #####################################
@@ -732,7 +727,6 @@ __NONE
 default '5'
 
 __NONE
-
 ###############
 # Friendly imps
 ###############
@@ -745,7 +739,6 @@ __NONE
 
 w:1
 @_friendly_imp_@
-
 ####################################################################
 # Player ghost phrases.  Ghosts with different classes can be given 
 # different messages.
@@ -829,7 +822,6 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ whispers, "The ORB doesn't exist."
 ## END player ghost ##
-
 #######################################
 # Unique monsters
 #######################################
@@ -1699,7 +1691,6 @@ VISUAL:@The_monster@ glares at you.
 @The_monster@ roars horribly.
 You are afraid.
 ## END Xtahua ##
-
 ##########################################
 # Specific non-unique monsters
 ##########################################
@@ -1928,7 +1919,6 @@ __NONE
 
 w:1
 @holy_being@
-
 %%%%
 # Otherwise, they'll stay silent.
 default 'cap-A'
@@ -1942,7 +1932,6 @@ good_god_neutral_holy_being_reaction
 @The_monster@ relaxes its fighting stance.
 
 @The_monster@ salutes you.
-
 %%%%
 good_god_neutral_holy_being_speech
 
@@ -2106,7 +2095,6 @@ smash
 burn
 
 maim
-
 %%%%
 #######################################################
 # Heretic orcs, not believing in Beogh or doubting the
@@ -2123,7 +2111,6 @@ w:1
 
 w:5
 @_hostile_beogh_speech_@
-
 %%%%
 _hostile_beogh_speech_
 
@@ -2195,7 +2182,6 @@ w:2
 
 w:12
 @_friendly_beogh_speech_@
-
 %%%%
 _friendly_beogh_speech_
 
@@ -2317,7 +2303,6 @@ beogh_converted_orc_reaction_sight
 @The_monster@ relaxes @possessive@ fighting stance and smiles at you.
 
 @The_monster@ falls on @possessive@ knees before you.
-
 %%%%
 beogh_converted_orc_speech_sight
 
@@ -2328,7 +2313,6 @@ beogh_converted_orc_speech_sight
 @Pronoun@ asks, "Are you our saviour?"
 
 @Pronoun@ says, "I'm so glad you are here now."
-
 %%%%
 # through battle
 beogh_converted_orc_reaction_battle
@@ -2338,7 +2322,6 @@ beogh_converted_orc_reaction_battle
 @The_monster@ falls to @possessive@ knees.
 
 @The_monster@ raises @possessive@ hands in surrender.
-
 %%%%
 beogh_converted_orc_speech_battle
 

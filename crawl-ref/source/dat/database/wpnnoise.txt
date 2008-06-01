@@ -22,7 +22,6 @@ w:4
 
 w:1
 @weapon_talks@
-
 %%%%
 ############################################################
 # NOISY WEAPONS like to chatter and imitate dungeon noises.

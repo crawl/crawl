@@ -19,7 +19,6 @@ w:7
 
 w:7
 @anger_name@
-
 %%%%
 power_name
 
@@ -44,7 +43,6 @@ Dominance
 Victory
 
 Intimidation
-
 %%%%
 conflict_name
 
@@ -59,7 +57,6 @@ Division
 Doubt
 
 Internal Strife
-
 %%%%
 anger_name
 
@@ -76,7 +73,6 @@ Wrath
 Brutal Revenge
 
 Vengeance
-
 %%%%
 battle_or_war
 
@@ -131,7 +127,6 @@ Mourning
 Death's Door
 
 the Grave
-
 %%%%
 death_or_doom
 
@@ -185,7 +180,6 @@ Dismemberment
 Terror
 
 Misery
-
 %%%%
 strategy_or_justice
 
@@ -197,7 +191,6 @@ w:4
 
 w:3
 @justice_name@
-
 %%%%
 strategy_name
 
@@ -215,7 +208,6 @@ Reinforcement
 Expedience
 
 Optimality
-
 %%%%
 valour_name
 
@@ -248,7 +240,6 @@ Valiance
 Courage
 
 Eternal Vigilance
-
 %%%%
 justice_name
 
@@ -277,7 +268,6 @@ Wrongful Imprisonment
 Corporal Punishment
 
 Capital Punishment
-
 %%%%
 diviner_name
 
@@ -290,7 +280,6 @@ Soothsayer
 Seeker
 
 Visionary
-
 %%%%
 people_name
 
@@ -313,7 +302,6 @@ Genius
 Coward
 
 @diviner_name@
-
 %%%%
 weapon_animal
 
@@ -353,7 +341,6 @@ Weasel
 Goat
 
 Whale
-
 %%%%
 # plants and fungi
 plant_name
@@ -372,7 +359,6 @@ Toadstool
 
 # ???
 Puffball
-
 %%%%
 # undead and evil beings
 evil_stuff
@@ -406,7 +392,6 @@ Deformation
 Infection
 
 Demonkind
-
 %%%%
 # catastrophes etc.
 catastrophe_name
@@ -430,7 +415,6 @@ Pestilence
 Plague
 
 Famine
-
 %%%%
 chaos_name
 
@@ -465,7 +449,6 @@ Change
 Extremism
 
 Impermanence
-
 %%%%
 balance_or_order
 
@@ -506,8 +489,7 @@ Linearity
 Law
 
 Order
-
-%%%%%
+%%%%
 economics_or_politics
 
 # economics
@@ -557,7 +539,6 @@ Fundamental Breach
 Termination
 
 Sequestration
-
 %%%%
 place_name
 
@@ -594,7 +575,6 @@ the Maze
 the Pit
 
 the Eternal Void
-
 %%%%
 discomfort_weapon
 
@@ -621,7 +601,6 @@ Annoyance
 Anxiety
 
 Urgency
-
 %%%%
 mental_illness_weapon
 
@@ -638,14 +617,12 @@ Egomania
 Compulsion
 
 Fatigue
-
 %%%%
 philosophy_or_science
 
 @philosophy_name@
 
 @science_name@
-
 %%%%
 philosophy_name
 
@@ -690,7 +667,6 @@ Nihilism
 Pragmatism
 
 Idealism
-
 %%%%
 science_name
 
@@ -727,7 +703,6 @@ Quantum Leap
 Gravity
 
 Rotation
-
 %%%%
 item_name
 
@@ -752,7 +727,6 @@ Heart
 Brain
 
 Tooth
-
 %%%%
 magic_name
 
@@ -761,7 +735,6 @@ the Magi
 the Archmagi
 
 the Warrior-Mage
-
 %%%%
 # substances
 substance_name
@@ -790,7 +763,6 @@ Yeast
 Spores
 
 Dust
-
 %%%%
 # non-groupables
 other_weapon_name
@@ -819,7 +791,6 @@ Grontol
 
 # akrasiac patch
 Irrepressible Laughter
-
 %%%%
 # single word monster names, to allow for combinations like <Monster>slayer
 short_monster_name
@@ -839,7 +810,6 @@ Giant
 Beetle
 
 Jelly
-
 %%%%
 monster_name
 
@@ -852,14 +822,12 @@ Killer Bee
 Killer Klown
 
 Orb Guardian
-
 %%%%
 short_killer_name
 
 bane
 
 slayer
-
 %%%%
 killer_name
 
@@ -872,7 +840,6 @@ killer_name
 's Foe
 
 's Regret
-
 %%%%
 long_killer_name
 
@@ -881,7 +848,6 @@ long_killer_name
 's Funeral
 
 's Nightmare
-
 %%%%
 real_weapon_name
 
@@ -943,7 +909,6 @@ Trog's @anger_name@
 Hellblazer
 
 Hell-Harrower
-
 %%%%
 joke_weapon_name
 
@@ -1007,7 +972,6 @@ Bingo
 
 # from the crawl.akrasiac.org patch
 Cookie Cutter
-
 %%%%
 plain_weapon_name
 
@@ -1028,5 +992,4 @@ w:15
 
 w:5
 @joke_weapon_name@
-
 %%%%

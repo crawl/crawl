@@ -77,7 +77,6 @@ Monkey
 
 # not strictly an animal... :)
 Monkey's Uncle
-
 %%%%
 flower_name
 
@@ -88,7 +87,6 @@ Daffodils
 the Rose
 
 the Garden
-
 %%%%
 # non-Crawl critters
 critter_name
@@ -101,7 +99,6 @@ the Alphagorgon
 the Hot Ocelot
 
 Eight Boll Weevils
-
 %%%%
 discomfort_and_inaction
 
@@ -134,7 +131,6 @@ Negligence
 Inaction
 
 Oblivion
-
 %%%%
 mental_illness_armour
 
@@ -147,7 +143,6 @@ Agoraphobia
 Dyspraxia
 
 Mental Paralysis
-
 %%%%
 good_or_divine
 
@@ -196,7 +191,6 @@ Divine Compulsion
 the Invisible Hand
 
 Divine Intervention
-
 %%%%
 # in contrast to "wacky_armour_name" these do have some connection to armour and protection
 armour_name_shielding
@@ -226,7 +220,6 @@ Preservation
 Conservation
 
 Inviolability
-
 %%%%
 # other armour properties (beside protection)
 armour_property_name
@@ -246,7 +239,6 @@ Disguise
 Least Resistance
 
 Protective Custody
-
 %%%%
 wacky_armour_name
 
@@ -301,7 +293,6 @@ Decompression
 the Loofah
 
 Love and Death
-
 %%%%
 # Lemuel's suggestions
 celestial_bodies
@@ -319,7 +310,6 @@ Pleiades
 Morning Star
 
 Evening Star
-
 %%%%
 instrument_name
 
@@ -332,7 +322,6 @@ the Accordion
 the Bagpipe
 
 the Lute
-
 %%%%    
 evil_being
 
@@ -347,7 +336,6 @@ Greater Demons
 the Iron Devil
 
 the Devil's Advocate
-    
 %%%%
 # um, reeeeally bad weather...
 weather_name
@@ -359,7 +347,6 @@ Boiling Hail
 Perpetual Drought
 
 the Thunderstorm
-
 %%%%
 profession_name
 
@@ -388,7 +375,6 @@ Guardian
 Beekeeper
 
 Gardener
-
 %%%%
 # something for Xom
 game_name
@@ -419,7 +405,6 @@ Jigsaw
 Whack-A-Mole
 
 Ladders and Snakes
-
 %%%%
 politics_name_armour
 
@@ -450,7 +435,6 @@ the Country
 the Suburbs
 
 the Mutiny
-
 %%%%
 other_armour_name
 
@@ -497,12 +481,10 @@ Unambiguity
 the Lost Path
 
 Misanthrophy
-
 %%%%
 plain_armour_name
 
 Forget-Me-Not
 
 Hero's Friend
-
 %%%%

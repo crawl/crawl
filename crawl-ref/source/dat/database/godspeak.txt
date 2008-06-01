@@ -16,7 +16,6 @@ Xom snickers.
 "Let's try an experiment, hmmm?"
 
 "I wonder... What does this button do?"
-
 %%%%
 ##############################
 # Xom throwing stuff at you.
@@ -36,7 +35,6 @@ Xom grants you an implement of some kind.
 "Take this token of my esteem."
 
 Xom smiles on you.
-
 %%%%
 # Xom will give you a ring or amulet you can't currently use, due to
 # cursed equipment.
@@ -47,7 +45,6 @@ Xom cursed gift
 "Maybe this would work better."
 
 "Catch!"
-
 %%%%
 # If you're wearing a cursed ring, Xom will give you another ring.
 Xom ring gift
@@ -57,7 +54,6 @@ Xom ring gift
 "Take this!"
 
 "Catch!"
-
 %%%%
 # Xom will choose a weapon of a different subtype from the one you're
 # currently wielding.
@@ -68,7 +64,6 @@ Xom weapon gift
 "Have you considered using one of these?"
 
 "How about this?"
-
 %%%%
 # If you're wearing a cursed cloak, Xom will give you either a cloak
 # or body armour.
@@ -79,7 +74,6 @@ Xom armour gift
 "Have you considered wearing one of these?"
 
 "Here you go."
-
 %%%%
 ####################
 # friendly summons
@@ -91,7 +85,6 @@ Xom single summon
 "Serve the toy, my child!"
 
 Xom opens a gate.
-
 %%%%
 Xom single holy summon
 
@@ -108,7 +101,6 @@ Xom lures something onto this plane.
 "I wonder which toy lasts longer."
 
 Xom opens a gate.
-
 %%%%
 # higher demonic being
 Xom single demon summon
@@ -118,7 +110,6 @@ Xom grants you a demonic assistant.
 Xom grants you a demonic servitor.
 
 Xom opens a gate.
-
 %%%%
 Xom single major holy summon
 
@@ -133,7 +124,6 @@ You wonder where Xom got that toy from.
 Xom seems to have successfully tricked another god.
 
 Xom opens a gate.
-
 %%%%
 # several demons
 Xom multiple summons
@@ -143,7 +133,6 @@ Xom multiple summons
 Xom grants you some temporary aid.
 
 Xom momentarily opens a gate.
-
 %%%%
 # holy beings and demons at the same time
 Xom multiple mixed summons
@@ -161,7 +150,6 @@ Xom manages to trick several beings into existence.
 Xom snickers at the variety.
 
 Xom momentarily opens several gates.
-
 %%%%
 Xom multiple holy summons
 
@@ -174,7 +162,6 @@ Xom tricks other gods for their servants.
 "Different god, different toy."
 
 Xom momentarily opens a gate.
-
 %%%%
 ##################
 # Xom nastiness
@@ -189,7 +176,6 @@ Xom's attention almost turns to you for a moment.
 Xom's power almost touches on you for a moment.
 
 You almost hear Xom's maniacal laughter.
-
 %%%%
 # miscast strength random2(2), harmless/annoying
 Xom minor miscast effect
@@ -201,13 +187,11 @@ Xom's attention turns to you for a moment.
 Xom's power touches on you for a moment.
 
 You hear Xom's maniacal laughter.
-
 %%%%
 # miscast strength random2(3), mostly annoying
 Xom medium miscast effect
 
 @Xom minor miscast effect@
-
 %%%%
 # miscast strength random2(4), up to really nasty
 Xom major miscast effect
@@ -219,7 +203,6 @@ Xom's attention turns to you.
 Xom's power touches on you.
 
 Xom giggles.
-
 %%%%
 Xom lose stats
 
@@ -230,7 +213,6 @@ Xom's malign attention turns to you for a moment.
 Xom's power touches on you for a moment.
 
 You hear Xom's maniacal laughter.
-
 %%%%
 # 25% chance of draining, else torment
 Xom draining or torment
@@ -242,7 +224,6 @@ Xom draining or torment
 Xom's power touches on you for a moment.
 
 You hear Xom's maniacal laughter.
-
 %%%%
 # 25% chance dancing weapon, else summon hostile monster
 Xom hostile monster
@@ -254,7 +235,6 @@ Xom hostile monster
 "Let's see if it's strong enough to survive yet."
 
 You hear Xom's maniacal laughter.
-
 %%%%
 Xom banishment
 
@@ -263,7 +243,6 @@ Xom banishment
 Xom casts you into the Abyss!
 
 The world seems to spin as Xom's maniacal laughter rings in your ears.
-
 %%%%
 #####################
 # other effects
@@ -277,7 +256,6 @@ Xom potion effect
 Xom grants you a minor favour.
 
 Xom smiles on you.
-
 %%%%
 # cast a random spell
 Xom spell effect
@@ -287,7 +265,6 @@ Xom's power flows through you!
 Xom plays with reality for a moment.
 
 Xom guffaws.
-
 %%%%
 # turns walls into glass
 Xom vitrification
@@ -299,7 +276,6 @@ Everything around seems to assume a strange transparency.
 All the walls suddenly lose part of their structure.
 
 Xom alters the dungeon around you.
-
 %%%%
 # strengthens friendlies, weakens hostiles
 Xom good monster polymorph
@@ -311,7 +287,6 @@ Xom good monster polymorph
 Xom's power touches on a nearby monster.
 
 You hear Xom's avuncular chuckle.
-
 %%%%
 # weakens friendlies, strengthens hostiles
 Xom bad monster polymorph
@@ -327,7 +302,6 @@ Xom good mutations
 Xom's power touches on you for a moment.
 
 You hear Xom's maniacal cackling.
-
 %%%%
 Xom random mutations
 
@@ -338,7 +312,6 @@ Xom random mutations
 Xom's power brushes against you for a moment.
 
 You hear Xom's avuncular chuckle.
-
 %%%%
 ############################################
 # Beogh rants on destroying an orcish idol #
@@ -351,7 +324,6 @@ Beogh fumes, "This is no small sin, orc.  Repent!"
 Beogh whispers, "You will pay for this transgression.",
 
 Beogh rages, "An eye for an eye..."
-
 %%%%
 # an unbelieving hill orc has destroyed an idol
 Beogh idol hill orc
@@ -361,7 +333,6 @@ Beogh's voice booms out: "Heretic, die!"
 You hear Beogh's thundering voice: "Suffer, infidel!"
 
 Beogh roars, "Feel my power, apostate!"
-
 %%%%
 # a character of another species has destroyed an idol
 Beogh idol other
@@ -371,7 +342,6 @@ Beogh is not amused by that idol's destruction.
 Beogh seems highly displeased.
 
 Your arrogance infuriates Beogh.
-
 %%%%
 ##########################################################
 # Messages for the *player* using Zin's Recite invocation
@@ -383,7 +353,6 @@ begin
 launch into
 
 embark on
-
 %%%%
 recite_what
 
@@ -396,7 +365,6 @@ the word of Zin on
 sonorously on
 
 loudly on
-
 %%%%
 zin_recite_speech_start
 
@@ -419,7 +387,6 @@ begin explaining the importance of @important_subject@
 
 w:5
 begin speaking about @recite_subject@
-
 %%%%
 # the short form of the above, for continuing/stopping/finishing
 # reciting -- order and weights must be the same as above!
@@ -440,7 +407,6 @@ your sermon
 
 w:15
 your speech
-
 %%%%
 lecture_modifier
 
@@ -449,7 +415,6 @@ lengthy
 passionate
 
 stern
-
 %%%%
 axioms_of_law
 
@@ -460,7 +425,6 @@ the Axioms of Law.
 the books of the Law.
 
 the sacred Law of Zin.
-
 %%%%
 # used for "explaining the importance of ..."
 important_subject
@@ -496,7 +460,6 @@ proper burial practice.
 not dealing with demons.
 
 rejecting the service of demons.
-
 %%%%
 # the subject of your recital/lecture/whatever
 # needs the full dot or exclamation mark
@@ -538,14 +501,12 @@ the alliance of Zin and Elyvilon.
 the lawlessness of @chaotic_god@.
 
 the evilness of @evil_god@.
-
 %%%%
 chaotic_god
 
 Xom
 
 Makhleb
-
 %%%%
 evil_god
 
@@ -558,5 +519,4 @@ Yredelemnul
 Beogh
 
 Lugonu
-
 %%%%
