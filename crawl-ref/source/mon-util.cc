@@ -6156,15 +6156,16 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
 
 // replaces @player_god@ and @god_is@ with player's god name
 // special handling for atheists: use "you"/"You" instead
-static std::string _replace_god_name(bool need_verb = false, bool capital = false)
+static std::string _replace_god_name(bool need_verb = false,
+                                     bool capital = false)
 {
     std::string result =
-          (you.religion == GOD_NO_GOD ? (capital? "You" : "you")
+          (you.religion == GOD_NO_GOD ? (capital ? "You" : "you")
                                       : god_name(you.religion, false));
     if (need_verb)
     {
         result +=
-          (you.religion == GOD_NO_GOD? " are" : " is");
+          (you.religion == GOD_NO_GOD ? " are" : " is");
     }
 
     return (result);
