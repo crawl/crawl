@@ -1618,7 +1618,7 @@ void blood_smell( int strength, int blood_x, int blood_y )
     }
 }      // end blood_smell()
 
-/* The LOS code now uses raycasting -- haranp */
+// The LOS code now uses raycasting -- haranp
 
 #define LONGSIZE (sizeof(unsigned long)*8)
 #define LOS_MAX_RANGE_X 9
