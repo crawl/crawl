@@ -3775,7 +3775,7 @@ static bool _handle_potion(monsters *monster, bolt & beem)
             if (monster->has_ench(ENCH_HASTE))
                 break;
 
-            beem.colour = BLUE;
+            beem.flavour = BEAM_HASTE;
             // intentional fall through
         case POT_INVISIBILITY:
             if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_INVISIBILITY)
@@ -3783,7 +3783,7 @@ static bool _handle_potion(monsters *monster, bolt & beem)
                 if (monster->has_ench(ENCH_INVIS))
                     break;
 
-                beem.colour = MAGENTA;
+                beem.flavour = BEAM_INVISIBILITY;
                 // Friendly monsters won't go invisible if the player
                 // can't see invisible. We're being nice.
                 if (mons_friendly(monster) && !player_see_invis(false))
@@ -3794,7 +3794,8 @@ static bool _handle_potion(monsters *monster, bolt & beem)
             simple_monster_message(monster, " drinks a potion.");
             mons_ench_f2(monster, beem);
             imbibed = true;
-            ident = ID_KNOWN_TYPE;
+            if (beem.obvious_effect)
+                ident = ID_KNOWN_TYPE;
             break;
         }
 
