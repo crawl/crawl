@@ -939,8 +939,8 @@ static void _reassess_starting_skills()
         if (!you.skills[i])
             continue;
 
-        // Grant the amount of skill points required for a human
-        const int points = skill_exp_needed( you.skills[i] + 1 );
+        // Grant the amount of skill points required for a human.
+        const int points = skill_exp_needed( you.skills[i] );
         you.skill_points[i] = (points * species_skills(i, SP_HUMAN))/100 + 1;
 
         // Find out what level that earns this character.
@@ -949,7 +949,7 @@ static void _reassess_starting_skills()
 
         for (int lvl = 1; lvl <= 8; lvl++)
         {
-            if (you.skill_points[i] > (skill_exp_needed(lvl+1) * sp_diff)/100)
+            if (you.skill_points[i] > (skill_exp_needed(lvl) * sp_diff)/100)
                 you.skills[i] = lvl;
             else
                 break;
@@ -958,7 +958,7 @@ static void _reassess_starting_skills()
         // Spellcasters should always have Spellcasting skill.
         if ( i == SK_SPELLCASTING && you.skills[i] == 0 )
         {
-            you.skill_points[i] = (skill_exp_needed(2) * sp_diff) / 100;
+            you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
             you.skills[i] = 1;
         }
     }

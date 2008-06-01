@@ -1786,22 +1786,26 @@ static void _display_skill_table(bool show_aptitudes)
 
             if (you.skills[x] < 27)
             {
-                const int needed = skill_exp_needed(you.skills[x] + 2);
-                const int prev_needed = skill_exp_needed(you.skills[x] + 1);
-                int spec_abil = species_skills(x, you.species);
-
-                int percent_done = ((you.skill_points[x] -
-                                     (prev_needed * spec_abil) / 100) * 100) /
-                    (((needed - prev_needed) * spec_abil) / 100);
-
-                if (percent_done == 100)
-                    --percent_done;
-                if (percent_done == 0)
-                    ++percent_done;
+                const int needed      = skill_exp_needed(you.skills[x] + 1);
+                const int prev_needed = skill_exp_needed(you.skills[x]);
+                int spec_abil         = species_skills(x, you.species);
 
                 if (!show_aptitudes)
                 {
+                    int percent_done = ((you.skill_points[x] -
+                                       (prev_needed * spec_abil) / 100) * 100) /
+                        (((needed - prev_needed) * spec_abil) / 100);
+
+                    // But wouldn't that put us way into the next level?
+                    // Shouldn't it be 0 then, or maybe the difference?
+                    if (percent_done >= 100)
+                        percent_done = 99;
+
+                    if (percent_done <= 0)
+                        percent_done = 1; // This'll just be turned to 0 anyway.
+
                     textcolor(CYAN);
+                    // Round down by 5 digits.
                     cprintf( " (%2d%%)", (percent_done / 5) * 5 );
                 }
                 else
@@ -2241,7 +2245,6 @@ int calc_mp(bool real_mp)
 
 unsigned int skill_exp_needed(int lev)
 {
-    lev--;
     switch (lev)
     {
     case 0:  return 0;
@@ -2270,18 +2273,18 @@ int species_skills(int skill, species_type species)
 
 void wield_warning(bool newWeapon)
 {
-    // early out - no weapon
+    // Early out - no weapon.
     if (!you.weapon())
          return;
 
     const item_def& wep = *you.weapon();
 
-    // early out - don't warn for non-weapons or launchers
+    // Early out - don't warn for non-weapons or launchers.
     if (wep.base_type != OBJ_WEAPONS || is_range_weapon(wep))
         return;
 
-    // don't warn if the weapon is OK, of course
-    if ( effective_stat_bonus() > -4 )
+    // Don't warn if the weapon is OK, of course.
+    if (effective_stat_bonus() > -4)
         return;
 
     std::string msg = (newWeapon ? "this " : "your ") + wep.name(DESC_BASENAME);
@@ -2290,19 +2293,27 @@ void wield_warning(bool newWeapon)
     if (you.strength < you.dex)
     {
         if (you.strength < 11)
+        {
             mprf(MSGCH_WARN, "You have %strouble swinging %s.",
                  (you.strength < 7) ? "" : "a little ", mstr);
+        }
         else
+        {
             mprf(MSGCH_WARN, "You'd be more effective with "
                  "%s if you were stronger.", mstr);
+        }
     }
     else
     {
         if (you.dex < 11)
+        {
             mprf(MSGCH_WARN, "Wielding %s is %s awkward.",
                  mstr, (you.dex < 7) ? "fairly" : "a little" );
+        }
         else
+        {
             mprf(MSGCH_WARN, "You'd be more effective with "
                  "%s if you were nimbler.", mstr);
+        }
     }
 }

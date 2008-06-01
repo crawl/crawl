@@ -827,7 +827,8 @@ bool activate_ability()
         // * Permanent flying (Kenku) cannot be turned off.
         if (you.species == SP_VAMPIRE && you.experience_level >= 3)
             mpr("Sorry, you're too full to transform right now.");
-        else if (you.species == SP_KENKU && you.experience_level >= 5)
+        else if (you.species == SP_KENKU && you.experience_level >= 5
+                 || player_mutation_level(MUT_BIG_WINGS))
         {
             if (you.flight_mode() == FL_FLY)
                 mpr("You're already flying!");
@@ -1248,7 +1249,7 @@ static bool _do_ability(const ability_def& abil)
             exercise( SK_EVOCATIONS, 1 );
         break;
 
-    // fly (kenku) -- eventually becomes permanent (see acr.cc)
+    // Fly (kenku) -- eventually becomes permanent (see acr.cc).
     case ABIL_FLY:
         cast_fly( you.experience_level * 4 );
 
@@ -2041,9 +2042,9 @@ std::vector<talent> your_talents( bool check_confused )
 
     if (!player_is_airborne())
     {
-        // kenku can fly, but only from the ground
-        // (until level 15, when it becomes permanent until revoked)
-        //jmf: "upgrade" for draconians -- expensive flight
+        // Kenku can fly, but only from the ground
+        // (until level 15, when it becomes permanent until revoked).
+        // jmf: "upgrade" for draconians -- expensive flight
         if (you.species == SP_KENKU && you.experience_level >= 5)
             _add_talent(talents, ABIL_FLY, check_confused );
         else if (player_genus(GENPC_DRACONIAN)

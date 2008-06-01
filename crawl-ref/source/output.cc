@@ -941,12 +941,12 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
     const unsigned int WIDTH = crawl_view.hudsz.x;
     if (in_len > WIDTH)
     {
-        in_len -= 3;  // what we're getting back from removing "the"
+        in_len -= 3;  // What we're getting back from removing "the".
 
         const unsigned int name_len = your_name.length();
         std::string trimmed_name = your_name;
 
-        // squeeze name if required, the "- 8" is to not squeeze too much
+        // Squeeze name if required, the "- 8" is to not squeeze too much.
         if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
         {
             trimmed_name =

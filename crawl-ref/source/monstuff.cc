@@ -2032,7 +2032,7 @@ void behaviour_event( monsters *mon, int event, int src,
     switch(event)
     {
     case ME_DISTURB:
-        // assumes disturbed by noise...
+        // Assumes disturbed by noise...
         if (mon->behaviour == BEH_SLEEP)
             mon->behaviour = BEH_WANDER;
 
@@ -2479,7 +2479,7 @@ static void _handle_behaviour(monsters *mon)
             break;
 
         case BEH_SEEK:
-            // no foe? then wander or seek the player
+            // No foe? Then wander or seek the player.
             if (mon->foe == MHITNOT)
             {
                 if (!proxPlayer || isNeutral || patrolling)
@@ -3122,7 +3122,7 @@ static void _handle_nearby_ability(monsters *monster)
     // Okay then, don't speak.
 
     if (monster_can_submerge(monster, grd[monster->x][monster->y])
-        && !player_beheld_by(monster) // no submerging if player entranced
+        && !player_beheld_by(monster) // No submerging if player entranced.
         && (one_chance_in(5)
             || grid_distance( monster->x, monster->y,
                               you.x_pos, you.y_pos ) > 1
@@ -3149,13 +3149,14 @@ static void _handle_nearby_ability(monsters *monster)
     {
     case MONS_SPATIAL_VORTEX:
     case MONS_KILLER_KLOWN:
-        // used for colour (butterflies too, but they don't change)
+        // Choose random colour.
         monster->colour = random_colour();
         break;
 
     case MONS_GIANT_EYEBALL:
         if (coinflip() && !mons_friendly(monster)
-            && monster->behaviour != BEH_WANDER)
+            && monster->behaviour != BEH_WANDER
+            && monster->behaviour != BEH_FLEE)
         {
             simple_monster_message(monster, " stares at you.");
 
@@ -3167,7 +3168,8 @@ static void _handle_nearby_ability(monsters *monster)
 
     case MONS_EYE_OF_DRAINING:
         if (coinflip() && !mons_friendly(monster)
-            && monster->behaviour != BEH_WANDER)
+            && monster->behaviour != BEH_WANDER
+            && monster->behaviour != BEH_FLEE)
         {
             simple_monster_message(monster, " stares at you.");
 
@@ -3427,6 +3429,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             case 0:
                 if (!mons_friendly(monster))
                 {
+                    _make_mons_stop_fleeing(monster);
                     spell_cast = SPELL_SYMBOL_OF_TORMENT;
                     mons_cast(monster, beem, spell_cast);
                     used = true;
@@ -3599,7 +3602,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
         // Won't sing if either of you silenced, or it's friendly,
         // confused or fleeing.
-        if (monster->has_ench(ENCH_CONFUSION) || monster->behaviour == BEH_FLEE
+        if (monster->has_ench(ENCH_CONFUSION)
+            || monster->behaviour == BEH_FLEE
             || mons_friendly(monster)
             || silenced(monster->x, monster->y)
             || silenced(you.x_pos, you.y_pos))
@@ -4782,7 +4786,7 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
 //---------------------------------------------------------------
 static bool _handle_throw(monsters *monster, bolt & beem)
 {
-    // yes, there is a logic to this ordering {dlb}:
+    // Yes, there is a logic to this ordering {dlb}:
     if (monster->incapacitated()
         || monster->asleep()
         || monster->submerged())
@@ -5658,9 +5662,9 @@ static bool _mons_can_displace(const monsters *mpusher, const monsters *mpushee)
     // can't push. Note that sleeping monsters can't be pushed
     // past, either, but they may be woken up by a crowd trying to
     // elbow past them, and the wake-up check happens downstream.
-    if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
+    if (mons_is_confused(mpusher)     || mons_is_confused(mpushee)
         || mons_is_paralysed(mpusher) || mons_is_paralysed(mpushee)
-        || mons_is_sleeping(mpusher) || mons_is_stationary(mpusher)
+        || mons_is_sleeping(mpusher)  || mons_is_stationary(mpusher)
         || mons_is_stationary(mpushee))
     {
         return (false);

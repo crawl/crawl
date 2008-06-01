@@ -2699,18 +2699,20 @@ void handle_time( long time_delta )
 // off-level.
 static void catchup_monster_moves(monsters *mon, int turns)
 {
-    // Summoned monsters might have disappeared
+    // Summoned monsters might have disappeared.
     if (!mon->alive())
         return;
 
-    // Don't move non-land or stationary monsters around
+    // Don't move non-land or stationary monsters around.
     if (mons_habitat( mon ) != HT_LAND
+        || mons_is_zombified( mon )
+           && mons_habitat_by_type(mon->base_monster) != HT_LAND
         || mons_is_stationary( mon ))
     {
         return;
     }
 
-    // Let sleeping monsters lie
+    // Let sleeping monsters lie.
     if (mon->behaviour == BEH_SLEEP || mons_is_paralysed(mon))
         return;
 

@@ -418,41 +418,36 @@ god_conduct_trigger::~god_conduct_trigger()
 
 bool is_evil_god(god_type god)
 {
-    return
-        god == GOD_KIKUBAAQUDGHA ||
-        god == GOD_MAKHLEB ||
-        god == GOD_YREDELEMNUL ||
-        god == GOD_BEOGH ||
-        god == GOD_LUGONU;
+    return (god == GOD_KIKUBAAQUDGHA
+            || god == GOD_MAKHLEB
+            || god == GOD_YREDELEMNUL
+            || god == GOD_BEOGH
+            || god == GOD_LUGONU);
 }
 
 bool is_good_god(god_type god)
 {
-    return
-        god == GOD_ZIN ||
-        god == GOD_SHINING_ONE ||
-        god == GOD_ELYVILON;
+    return (god == GOD_ZIN
+            || god == GOD_SHINING_ONE
+            || god == GOD_ELYVILON);
 }
 
 bool is_chaotic_god(god_type god)
 {
-    return
-        god == GOD_XOM ||
-        god == GOD_MAKHLEB;
+    return (god == GOD_XOM
+            || god == GOD_MAKHLEB);
 }
 
 bool is_lawful_god(god_type god)
 {
-    return
-        god == GOD_ZIN;
+    return (god == GOD_ZIN);
 }
 
 bool is_priest_god(god_type god)
 {
-    return
-        god == GOD_ZIN ||
-        god == GOD_YREDELEMNUL ||
-        god == GOD_BEOGH;
+    return (god == GOD_ZIN
+            || god == GOD_YREDELEMNUL
+            || god == GOD_BEOGH);
 }
 
 void dec_penance(god_type god, int val)
@@ -468,14 +463,14 @@ void dec_penance(god_type god, int val)
             take_note(Note(NOTE_MOLLIFY_GOD, god));
             you.penance[god] = 0;
 
-            // TSO's halo is once more available
+            // TSO's halo is once more available.
             if (god == GOD_SHINING_ONE && you.religion == GOD_SHINING_ONE
                 && you.piety >= piety_breakpoint(0))
             {
                 mpr("Your divine halo returns!");
             }
 
-            // orcish bonuses are now once more effective
+            // Orcish bonuses are now once more effective.
             if (god == GOD_BEOGH && you.religion == GOD_BEOGH)
                  you.redraw_armour_class = true;
 
@@ -487,12 +482,12 @@ void dec_penance(god_type god, int val)
         else
             you.penance[god] -= val;
     }
-}                               // end dec_penance()
+}
 
 void dec_penance(int val)
 {
     dec_penance(you.religion, val);
-}                               // end dec_penance()
+}
 
 bool beogh_water_walk()
 {

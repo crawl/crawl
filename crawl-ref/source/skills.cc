@@ -89,15 +89,11 @@ void calc_total_skill_points( void )
     you.total_skill_points = 0;
 
     for (i = 0; i < NUM_SKILLS; i++)
-    {
         you.total_skill_points += you.skill_points[i];
-    }
 
     for (i = 1; i <= 27; i++)
-    {
         if (you.total_skill_points < skill_cost_needed(i))
             break;
-    }
 
     you.skill_cost_level = i - 1;
 
@@ -403,7 +399,7 @@ static int _exercise2( int exsk )
 */
 
     if (you.skill_points[exsk] >
-           (skill_exp_needed(you.skills[exsk] + 2)
+           (skill_exp_needed(you.skills[exsk] + 1)
             * species_skills(exsk, you.species) / 100))
     {
 

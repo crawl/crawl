@@ -2329,7 +2329,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         if (monspell == SPELL_SLEEP && (!foe || foe->asleep()))
             return (true);
 
-        // occasionally we don't estimate... just fire and see:
+        // Occasionally we don't estimate... just fire and see.
         if (one_chance_in(5))
             return (false);
 
@@ -4861,7 +4861,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(this, info);
 
-        // reevaluate behaviour
+        // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
         break;
 
@@ -4869,12 +4869,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(this, " seems less confused.");
 
-        // reevaluate behaviour
+        // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
         break;
 
     case ENCH_INVIS:
-        // invisible monsters stay invisible
+        // Invisible monsters stay invisible.
         if (mons_class_flag(type, M_INVIS))
             add_ench( mon_enchant(ENCH_INVIS) );
         else if (mons_near(this) && !player_see_invis()
@@ -5074,9 +5074,9 @@ void monsters::timeout_enchantments(int levels)
         {
         case ENCH_POISON: case ENCH_ROT: case ENCH_BACKLIGHT:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
-        case ENCH_SLOW: case ENCH_HASTE: case ENCH_FEAR:
-        case ENCH_INVIS: case ENCH_CHARM: case ENCH_SLEEP_WARY:
-        case ENCH_SICK: case ENCH_SLEEPY: case ENCH_PARALYSIS:
+        case ENCH_SLOW:  case ENCH_HASTE:  case ENCH_FEAR:
+        case ENCH_INVIS: case ENCH_CHARM:  case ENCH_SLEEP_WARY:
+        case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_BATTLE_FRENZY: case ENCH_NEUTRAL:
             lose_ench_levels(i->second, levels);
             break;
@@ -5224,7 +5224,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         int net = get_trapping_net(x,y,true);
 
-        if (net == NON_ITEM) // really shouldn't happen!
+        if (net == NON_ITEM) // Really shouldn't happen!
         {
             del_ench(ENCH_HELD);
             break;
@@ -5892,6 +5892,7 @@ void monsters::put_to_sleep(int)
 {
     if (has_ench(ENCH_BERSERK))
         return;
+
     behaviour = BEH_SLEEP;
     add_ench(ENCH_SLEEPY);
     add_ench(ENCH_SLEEP_WARY);
