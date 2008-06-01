@@ -4102,7 +4102,7 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
 
     const map_def *mdef = map_by_index(map);
     bool did_map = false;
-    bool fixup = false;
+    bool fixup   = false;
 
     if (mdef->orient == MAP_ENCOMPASS && !generating_level)
     {
@@ -4119,6 +4119,7 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
             mprf(MSGCH_DIAGNOSTICS,
                  "Cannot generate encompass map '%s' without clobber=true",
                  mdef->name.c_str());
+
             return (false);
         }
     }
@@ -4538,7 +4539,7 @@ bool dgn_place_monster(mons_spec &mspec,
 {
     if (mspec.mid != -1)
     {
-        const int mid = mspec.mid;
+        const int  mid = mspec.mid;
         const bool m_generate_awake = (generate_awake || mspec.generate_awake);
         const bool m_patrolling     = (patrolling || mspec.patrolling);
 
@@ -4555,10 +4556,15 @@ bool dgn_place_monster(mons_spec &mspec,
 
         if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
         {
+            // Don't place a unique monster a second time.
+            // (Boris is handled specially.)
             if (mons_is_unique(mid) && you.unique_creatures[mid])
                 return (false);
 
-            const habitat_type habitat = mons_habitat_by_type(mid);
+            const int type = mons_class_is_zombified(mid) ? mspec.monbase
+                                                          : mid;
+
+            const habitat_type habitat = mons_habitat_by_type(type);
             if (habitat != HT_LAND)
                 grd[vx][vy] = habitat2grid(habitat);
         }
@@ -7286,6 +7292,9 @@ static void _build_river( dungeon_feature_type river_type ) //mv
                     }
                     else
                         grd[i][j] = river_type;
+
+                    // Override existing markers.
+                    env.markers.remove_markers_at(coord_def(i, j), MAT_ANY);
                 }
             }
     }
@@ -7306,7 +7315,6 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
     y1 = 5 + random2(GYM - 30);
     x2 = x1 + 4 + random2(16);
     y2 = y1 + 8 + random2(12);
-    // mpr("lake");
 
     for (j = y1; j < y2; j++)
     {
@@ -7337,7 +7345,12 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
                 // So we'll avoid the silliness of monsters and items
                 // on lava and deep water grids. -- bwr
                 if (!one_chance_in(200) && _may_overwrite_pos(i,j))
+                {
                     grd[i][j] = lake_type;
+
+                    // Override markers. (No underwater portals, please.)
+                    env.markers.remove_markers_at(coord_def(i, j), MAT_ANY);
+                }
             }
     }
 }

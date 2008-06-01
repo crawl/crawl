@@ -204,7 +204,7 @@ static std::string _player_ghost_speak_str(const monsters *monster,
     return msg;
 }
 
-// returns true if something is said
+// Returns true if something is said.
 bool mons_speaks(const monsters *monster)
 {
     // Invisible monster tries to remain unnoticed.  Unless they're

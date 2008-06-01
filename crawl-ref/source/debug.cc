@@ -438,7 +438,11 @@ void create_spec_monster_name(int x, int y)
     mons_spec mspec = mlist.get_monster(0);
     if (!force_place && mspec.mid != -1)
     {
-        coord_def place = find_newmons_square(mspec.mid, coord_def(x, y));
+        int type = mspec.mid;
+        if (mons_class_is_zombified(mspec.mid))
+            type = mspec.monbase;
+
+        coord_def place = find_newmons_square(type, coord_def(x, y));
         if (in_bounds(place))
         {
             x = place.x;
@@ -453,11 +457,11 @@ void create_spec_monster_name(int x, int y)
 
     if (!dgn_place_monster(mspec, you.your_level, x, y, false))
     {
-        mpr("Unable to place monster");
+        mpr("Unable to place monster.");
         return;
     }
 
-    // Need to set a name for the player ghost
+    // Need to set a name for the player ghost.
     if (mspec.mid == MONS_PLAYER_GHOST)
     {
         unsigned short mid  = mgrd[x][y];
@@ -485,7 +489,7 @@ void create_spec_monster_name(int x, int y)
         ghost.name = "John Doe";
 
         char input_str[80];
-        mpr( "Make player ghost which species? (case-sensitive) ", MSGCH_PROMPT );
+        mpr("Make player ghost which species? (case-sensitive) ", MSGCH_PROMPT);
         get_input_line( input_str, sizeof( input_str ) );
 
         int sp_id = get_species_by_abbrev(input_str);

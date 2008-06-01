@@ -1950,9 +1950,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (mspec.genweight == TAG_UNFOUND || mspec.genweight <= 0)
             mspec.genweight = 10;
 
-        mspec.fix_mons = strip_tag(mon_str, "fix_mons");
+        mspec.fix_mons       = strip_tag(mon_str, "fix_mons");
         mspec.generate_awake = strip_tag(mon_str, "generate_awake");
-        mspec.patrolling = strip_tag(mon_str, "patrolling");
+        mspec.patrolling     = strip_tag(mon_str, "patrolling");
 
         std::string colour = strip_tag_prefix(mon_str, "col:");
         if (!colour.empty())
@@ -1985,9 +1985,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 return (slot);
             }
 
-            mspec.mid = nspec.mid;
+            mspec.mid     = nspec.mid;
             mspec.monbase = nspec.monbase;
-            mspec.number = nspec.number;
+            mspec.number  = nspec.number;
         }
 
         if (mspec.items.size() > 0)
@@ -2056,10 +2056,10 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
 
     // This order must match zombie_types, indexed from one.
     static const monster_type zombie_montypes[][2] =
-    {
-        { MONS_PROGRAM_BUG, MONS_PROGRAM_BUG },
-        { MONS_ZOMBIE_SMALL, MONS_ZOMBIE_LARGE },
-        { MONS_SKELETON_SMALL, MONS_SKELETON_LARGE },
+    {     // small               // large
+        { MONS_PROGRAM_BUG,      MONS_PROGRAM_BUG },
+        { MONS_ZOMBIE_SMALL,     MONS_ZOMBIE_LARGE },
+        { MONS_SKELETON_SMALL,   MONS_SKELETON_LARGE },
         { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE }
     };
 

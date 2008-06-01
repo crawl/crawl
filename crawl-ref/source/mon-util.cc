@@ -583,12 +583,51 @@ int get_shout_noise_level(const shout_type shout)
     }
 }
 
-shout_type mons_shouts(int mc)
+// Only the beast uses S_RANDOM for noise type.
+// Pandemonium lords can also get here but they can use almost anything.
+static bool _shout_fits_monster(int type, int shout)
+{
+    if (shout == NUM_SHOUTS || shout >= NUM_LOUDNESS)
+        return (false);
+
+    // For demon lords almost everything is fair game.
+    // It's only used for the shouting verb ("say", "whine", "roar", ...)
+    // anyway.
+    if (type != MONS_BEAST)
+        return (shout != S_BUZZ && shout != S_WHINE);
+
+    switch (shout)
+    {
+    // 2-headed ogres, bees or mosquitos never fit.
+    case S_SHOUT2:
+    case S_BUZZ:
+    case S_WHINE:
+    // The beast cannot speak.
+    case S_DEMON_TAUNT:
+    // Silent is boring.
+    case S_SILENT:
+        return (false);
+    default:
+        return (true);
+    }
+}
+
+// If demon_shout is true, we're trying to find a random loudness for
+// a pandemonium lord trying to shout.
+shout_type mons_shouts(int mc, bool demon_shout)
 {
     shout_type u = smc->shouts;
 
-    if (u == S_RANDOM)
-        u = static_cast<shout_type>(random2(NUM_SHOUTS));
+    // Pandemonium lords use this to get the noises.
+    if (u == S_RANDOM || demon_shout && u == S_DEMON_TAUNT)
+    {
+        const int max_shout = (u == S_RANDOM ? NUM_SHOUTS : NUM_LOUDNESS);
+        do
+        {
+            u = static_cast<shout_type>(random2(max_shout));
+        }
+        while (!_shout_fits_monster(mc, u));
+    }
 
     return (u);
 }
@@ -6208,13 +6247,14 @@ static std::string _pluralise_player_genus()
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
 std::string do_mon_str_replacements(const std::string &in_msg,
-                                    const monsters* monster)
+                                    const monsters* monster, int s_type)
 {
     std::string msg = in_msg;
     description_level_type nocap = DESC_NOCAP_THE, cap = DESC_CAP_THE;
 
     std::string name =
         monster->is_named()? monster->name(DESC_CAP_THE) : "";
+
     if (!name.empty() && player_monster_visible(monster))
     {
         msg = replace_all(msg, "@the_something@", name);
@@ -6306,7 +6346,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@possessive@",
                       monster->pronoun(PRONOUN_NOCAP_POSSESSIVE));
 
-    // replace with "you are" for atheists
+    // Replace with "you are" for atheists.
     msg = replace_all(msg, "@god_is@", _replace_god_name(true, false));
     msg = replace_all(msg, "@God_is@", _replace_god_name(true, true));
 
@@ -6314,7 +6354,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@player_god@", _replace_god_name(false, false));
     msg = replace_all(msg, "@Player_god@", _replace_god_name(false, true));
 
-    // replace with species specific insults
+    // Replace with species specific insults.
     if (msg.find("@species_insult_") != std::string::npos)
     {
         msg = replace_all(msg, "@species_insult_adj1@",
@@ -6341,21 +6381,27 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "croaks",
         "growls",
         "hisses",
-        "breathes", // S_VERY_SOFT
-        "whispers", // S_SOFT
-        "says",     // S_NORMAL
-        "shouts",   // S_LOUD
-        "screams"   // S_VERY_LOUD
+        "sneers",       // S_DEMON_TAUNT
+        "buggily says", // NUM_SHOUTS
+        "breathes",     // S_VERY_SOFT
+        "whispers",     // S_SOFT
+        "says",         // S_NORMAL
+        "shouts",       // S_LOUD
+        "screams"       // S_VERY_LOUD
     };
 
-    if (mons_shouts(monster->type) >= NUM_SHOUTS)
+    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
+        s_type = mons_shouts(monster->type);
+
+    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
     {
         mpr("Invalid @says@ type.", MSGCH_DIAGNOSTICS);
         msg = replace_all(msg, "@says@", "buggily says");
     }
     else
-        msg = replace_all(msg, "@says@",
-                          sound_list[mons_shouts(monster->type)]);
+    {
+        msg = replace_all(msg, "@says@", sound_list[s_type]);
+    }
 
     // The proper possessive for a word ending in an "s" is to
     // put an apostrophe after the "s": "Chris" -> "Chris'",

@@ -217,14 +217,16 @@ enum shout_type
     S_SHOUT2,               // shout twice (e.g. two-headed ogres)
     S_ROAR,                 // roar
     S_SCREAM,               // scream
-    S_BELLOW,               // bellow (?)
+    S_BELLOW,               // bellow (yaks)
     S_SCREECH,              // screech
     S_BUZZ,                 // buzz
     S_MOAN,                 // moan
-    S_WHINE,                // irritating whine (mosquito)
+    S_WHINE,                // irritating whine (mosquitos)
     S_CROAK,                // frog croak
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards
+    S_DEMON_TAUNT,          // for pandemonium lords
+    NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt
     S_VERY_SOFT,
@@ -233,7 +235,7 @@ enum shout_type
     S_LOUD,
     S_VERY_LOUD,
 
-    NUM_SHOUTS,
+    NUM_LOUDNESS,
     S_RANDOM
 };
 
@@ -420,7 +422,7 @@ bool mons_player_visible( const monsters *mon );
  * called from: view
  * *********************************************************************** */
 int get_shout_noise_level(const shout_type shout);
-shout_type mons_shouts(int mclass);
+shout_type mons_shouts(int mclass, bool demon_shout = false);
 
 bool mons_is_unique(int mclass);
 
@@ -684,9 +686,10 @@ void         init_mon_name_cache();
 monster_type get_monster_by_name(std::string name, bool exact = false);
 
 std::string do_mon_str_replacements(const std::string &msg,
-                                    const monsters* monster);
+                                    const monsters* monster, int s_type = -1);
 
-enum mon_body_shape {
+enum mon_body_shape
+{
     MON_SHAPE_HUMANOID,
     MON_SHAPE_HUMANOID_WINGED,
     MON_SHAPE_HUMANOID_TAILED,

@@ -340,8 +340,10 @@ void map_lua_marker::notify_dgn_event(const dgn_event &e)
     push_fn_args("event");
     clua_push_dgn_event(dlua, &e);
     if (!dlua.callfn("dlua_marker_method", 4, 0))
+    {
         mprf(MSGCH_ERROR, "notify_dgn_event: Lua error: %s",
              dlua.error.c_str());
+    }
 }
 
 std::string map_lua_marker::call_str_fn(const char *fn) const

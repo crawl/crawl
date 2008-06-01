@@ -1417,10 +1417,9 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
     return val + random2avg(lfuzz + hfuzz + 1, naverage) - lfuzz;
 }
 
-// returns 0 if the point is not near stairs
-// returns 1 if the point is near unoccupied stairs
-// returns 2 if the point is near player-occupied stairs
-
+// Returns 0 if the point is not near stairs.
+// Returns 1 if the point is near unoccupied stairs.
+// Returns 2 if the point is near player-occupied stairs.
 int near_stairs(const coord_def &p, int max_dist,
                 dungeon_char_type &stair_type,
                 branch_type &branch)
@@ -1437,13 +1436,13 @@ int near_stairs(const coord_def &p, int max_dist,
             const dungeon_feature_type feat = grd(np);
             if (is_stair(feat))
             {
-                // shouldn't happen for escape hatches
+                // Shouldn't happen for escape hatches.
                 if (grid_is_escape_hatch(feat))
                     continue;
 
                 stair_type = get_feature_dchar(feat);
 
-                // is it a branch stair?
+                // Is it a branch stair?
                 for (int i = 0; i < NUM_BRANCHES; ++i)
                 {
                      if (branches[i].entry_stairs == feat)

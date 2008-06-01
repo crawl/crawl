@@ -864,34 +864,32 @@ static void _handle_seen_interrupt(monsters* monster)
 
 void handle_monster_shouts(monsters* monster, bool force)
 {
-    if (!force
-        && (!you.turn_is_over || random2(30) < you.skills[SK_STEALTH]))
-    {
+    if (!force && (!you.turn_is_over || random2(30) < you.skills[SK_STEALTH]))
         return;
-    }
+
+    // Friendly or neutral monsters don't shout.
+    if (!force && (mons_friendly(monster) || mons_neutral(monster)))
+        return;
 
     // Get it once, since monster might be S_RANDOM, in which case
     // mons_shouts() will return a different value every time.
-    const shout_type type = mons_shouts(monster->type);
+    shout_type  s_type = mons_shouts(monster->type, false);
 
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
-    if (!force && (mons_friendly(monster) || mons_neutral(monster))
-        || (type == S_SILENT && !player_monster_visible(monster))
-        || (type != S_SILENT && (silenced(you.x_pos, you.y_pos)
-                                 || silenced(monster->x, monster->y))))
+    if (s_type == S_SILENT && !player_monster_visible(monster)
+        || s_type != S_SILENT && (silenced(you.x_pos, you.y_pos)
+                                  || silenced(monster->x, monster->y)))
     {
         return;
     }
 
-    int         noise_level = get_shout_noise_level(type);
-    std::string default_msg_key;
+    std::string default_msg_key = "";
 
-    switch (type)
+    switch (s_type)
     {
-    case NUM_SHOUTS:
-    case S_RANDOM:
-        default_msg_key = "__BUGGY";
+    case S_SILENT:
+        // No default message.
         break;
     case S_SHOUT:
         default_msg_key = "__SHOUT";
@@ -932,19 +930,17 @@ void handle_monster_shouts(monsters* monster, bool force)
     case S_HISS:
         default_msg_key = "__HISS";
         break;
+    case S_DEMON_TAUNT:
+        default_msg_key = "__DEMON_TAUNT";
+        break;
     default:
-        default_msg_key = "";
+        default_msg_key = "__BUGGY";
     }
 
-    // Use get_monster_data(monster->type) to bypass mon_shouts()
-    // replacing S_RANDOM with a random value.
-    if (mons_is_demon( monster->type ) && coinflip()
-        && (type != S_SILENT ||
-            get_monster_data(monster->type)->shouts == S_RANDOM))
-    {
-        noise_level     = 8;
-        default_msg_key = "__DEMON_TAUNT";
-    }
+    // Now that we have the message key, get a random verb and noise level
+    // for pandemonium lords.
+    if (s_type == S_DEMON_TAUNT)
+        s_type = mons_shouts(monster->type, true);
 
     std::string msg, suffix;
     std::string key = mons_type_name(monster->type, DESC_PLAIN);
@@ -993,16 +989,20 @@ void handle_monster_shouts(monsters* monster, bool force)
     }
 
     if (default_msg_key == "__BUGGY")
+    {
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
                                   << std::endl;
-    else if ((msg == "" || msg == "__NONE")
-             && mons_shouts(monster->type) == S_SILENT)
+    }
+    else if (s_type == S_SILENT && (msg == "" || msg == "__NONE"))
+    {
         ; // No "visual shout" defined for silent monster, do nothing
+    }
     else if (msg == "")
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "No shout entry for default shout type '"
             << default_msg_key << "'" << std::endl;
+
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
                                   << std::endl;
     }
@@ -1016,7 +1016,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     }
     else
     {
-        msg = do_mon_str_replacements(msg, monster);
+        msg = do_mon_str_replacements(msg, monster, s_type);
         msg_channel_type channel = MSGCH_TALK;
 
         std::string param = "";
@@ -1028,7 +1028,7 @@ void handle_monster_shouts(monsters* monster, bool force)
             msg   = msg.substr(pos + 1);
         }
 
-        if (mons_shouts(monster->type) == S_SILENT || param == "VISUAL")
+        if (s_type == S_SILENT || param == "VISUAL")
             channel = MSGCH_TALK_VISUAL;
         else if (param == "SOUND")
             channel = MSGCH_SOUND;
@@ -1049,6 +1049,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         msg::streams(channel) << msg << std::endl;
     }
 
+    const int noise_level = get_shout_noise_level(s_type);
     if (noise_level > 0)
         noisy(noise_level, monster->x, monster->y);
 }
