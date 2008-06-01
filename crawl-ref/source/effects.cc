@@ -752,7 +752,10 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
                  weird_glowing_colour().c_str());
         }
         else
-            canned_msg(MSG_NOTHING_HAPPENS);
+        {
+            mprf("Your %s glow %s for a moment.",
+                 your_hand(true).c_str(), weird_glowing_colour().c_str());
+        }
         break;
 
     case 3:
@@ -782,12 +785,12 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 7:
-        mpr("You hear the tinkle of a tiny bell.");
+        mpr("You hear the tinkle of a tiny bell.", MSGCH_SOUND);
         cast_summon_butterflies( 100 );
         break;
 
     case 8:
-        mprf("You hear %s.", weird_sound().c_str());
+        mprf(MSGCH_SOUND, "You hear %s.", weird_sound().c_str());
         break;
     }
 }
