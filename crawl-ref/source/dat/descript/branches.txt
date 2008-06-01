@@ -114,7 +114,6 @@ Zot
 
 A region of the dungeon complex, safely locked away and referred to usually by
 madness, frenzy, lunacy. Only the most demented adventurers would dare to
-break the seal and press deeper -- in the vain hope for a fabled artefact no 
+break the seal and press deeper - in the vain hope for a fabled artefact no 
 man has ever laid eyes on before.
 %%%%
-

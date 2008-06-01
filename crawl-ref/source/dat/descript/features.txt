@@ -1,25 +1,19 @@
 %%%%
 A basalt altar of Yredelemnul
-
 %%%%
 A bloodstained altar of Trog
-
 %%%%
 A burning altar of Makhleb
-
 %%%%
 A closed door
 
 A wooden door. To open it, try simply walking into it, or press 'O'.
 %%%%
 A corrupted altar of Lugonu
-
 %%%%
 A deep blue altar of Sif Muna
-
 %%%%
 A dry fountain
-
 %%%%
 A flickering gateway to a bazaar
 
@@ -47,19 +41,14 @@ A fountain of sparkling water
 'q'uaff to drink from this magic fountain. Expect magical effects, as long as it's still magic.
 %%%%
 A gate leading back out of this place
-
 %%%%
 A gate leading out of Pandemonium
-
 %%%%
 A gate leading to another region of Pandemonium
-
 %%%%
 A gate leading to the halls of Pandemonium
-
 %%%%
 A gate to the Realm of Zot
-
 %%%%
 A gateway to a bazaar
 
@@ -80,7 +69,6 @@ A gateway out of this accursed place, shimmering and shifting in the
 impermanent landscape.
 %%%%
 A gateway to Gehenna
-
 %%%%
 A gateway to Hell
 
@@ -88,19 +76,14 @@ A gateway to Hell
    -Dante Alighieri, _Divina Commedia_, "L'Inferno", Canto III.  Circa 1315.
 %%%%
 A gateway to the Iron City of Dis
-
 %%%%
 A gateway to the decaying netherworld of Tartarus
-
 %%%%
 A gateway to the freezing wastes of Cocytus
-
 %%%%
 A glowing golden altar of the Shining One
-
 %%%%
 A glowing white marble altar of Zin
-
 %%%%
 A granite statue
 
@@ -130,13 +113,10 @@ adventurer has lost his way and starved to death.
         -Mark Z. Danielewski, "House of Leaves".  2000.
 %%%%
 A magical trap
-
 %%%%
 A mechanical trap
-
 %%%%
 A natural trap
-
 %%%%
 A metal wall
 
@@ -164,13 +144,10 @@ A rock wall
     -Oscar Wilde, "Ballad of Reading Gaol"
 %%%%
 A roughly hewn altar of Beogh
-
 %%%%
 A shimmering altar of Xom
-
 %%%%
 A shining altar of Vehumet
-
 %%%%
 A shop
 
@@ -181,28 +158,20 @@ Some shops hawk antiques of unknown provenance, and offer little hint
 as to the quality or nature of their goods.
 %%%%
 A silver altar of Elyvilon
-
 %%%%
 A sparkling altar of Nemelex Xobeh
-
 %%%%
 A staircase back to the Crypt
-
 %%%%
 A staircase back to the Dungeon
-
 %%%%
 A staircase back to the Lair
-
 %%%%
 A staircase back to the Mines
-
 %%%%
 A staircase back to the Vaults
-
 %%%%
 A staircase to the Crypt
-
 %%%%
 A staircase to the Ecumenical Temple
 
@@ -216,14 +185,12 @@ skilled warriors with blade and bow, and fearsome sorcerers and
 magicians.
 %%%%
 A staircase to the Hall of Blades
-
 %%%%
 A staircase to the Hive
 
 You hear an angry and manifold drone.
 %%%%
 A staircase to the Lair
-
 %%%%
 A staircase to the Orcish Mines
 
@@ -268,13 +235,10 @@ brotherhood of remorse not break their chain."
     -Nathaniel Hawthorne
 %%%%
 A staircase to the Vaults
-
 %%%%
 A stone staircase leading down
-
 %%%%
 A stone staircase leading up
-
 %%%%
 A stone wall
 
@@ -287,10 +251,8 @@ An unnaturally hard translucent rock wall
 A translucent stone wall
 
 A harder obstacle than rock walls.  Only the mightiest magic can shatter stone walls.  It has been imbued with arcane magics which render it translucent.
-
 %%%%
 A trap
-
 %%%%
 A wall of green crystal
 
@@ -304,13 +266,10 @@ not the bees'.) They are susceptible to fire and will melt and burn, given
 sufficient heat.
 %%%%
 A wall of the weird stuff which makes up Pandemonium
-
 %%%%
 An ancient bone altar of Kikubaaqudgha
-
 %%%%
 An empty arch of ancient stone
-
 %%%%
 An escape hatch in the ceiling
 
@@ -323,7 +282,6 @@ allowing the adventurer beset by adversaries to exchange the perils of
 this level for the perils of the next.
 %%%%
 An iron altar of Okawaru
-
 %%%%
 An open door
 
@@ -334,13 +292,10 @@ An orcish idol
 An idol of the orc god Beogh
 %%%%
 An unnaturally hard rock wall
-
 %%%%
 Floor
-
 %%%%
 Some deep water
-
 %%%%
 Some lava
 
@@ -348,6 +303,5 @@ An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
 %%%%
 Some shallow water
 
-This waist-deep, misty water makes movement and combat cumbersome for landlubbers -- sometimes dangerous, but never directly fatal.
+This waist-deep, misty water makes movement and combat cumbersome for landlubbers - sometimes dangerous, but never directly fatal.
 %%%%
-

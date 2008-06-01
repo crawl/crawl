@@ -389,7 +389,7 @@ w:5
 begin speaking about @recite_subject@
 %%%%
 # the short form of the above, for continuing/stopping/finishing
-# reciting -- order and weights must be the same as above!
+# reciting - order and weights must be the same as above!
 # doesn't need finishing interpunction
 zin_recite_speech_other
 
@@ -481,7 +481,7 @@ mutations, and how to avoid them.
 
 potions of Mutation - the devil's brew!
 
-Neqoxecs and Cacodemons -- may they all be destroyed!
+Neqoxecs and Cacodemons - may they all be destroyed!
 
 # respecting intelligent beings
 a proper diet respecting intelligent beings.
