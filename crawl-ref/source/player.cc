@@ -960,8 +960,8 @@ int player_regen(void)
     rr += player_mutation_level(MUT_REGENERATION) * 20;
 
     // ghouls heal slowly
-    // dematerialized people heal slowly
-    // dematerialized ghouls shouldn't heal any more slowly -- bwr
+    // dematerialised people heal slowly
+    // dematerialised ghouls shouldn't heal any more slowly -- bwr
     if ((you.species == SP_GHOUL
             && (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS))

@@ -1481,7 +1481,7 @@ static void _flight_card(int power, deck_rarity_type rarity)
             {
                 const int i = trap_at_xy(you.x_pos, you.y_pos);
                 grd[you.x_pos][you.y_pos] = trap_category(env.trap[i].type);
-                mpr("A shaft materializes beneath you!");
+                mpr("A shaft materialises beneath you!");
             }
         }
     }

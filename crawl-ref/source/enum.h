@@ -2566,7 +2566,7 @@ enum spell_type
     SPELL_EVAPORATE,    // turn a potion into a cloud 190
     SPELL_ERINGYAS_SURPRISING_BOUQUET, // turn sticks into herbivore food
     SPELL_FRAGMENTATION,               // replacement for "orb of frag"
-    SPELL_AIR_WALK,                    // "dematerialize" (air/transmigration)
+    SPELL_AIR_WALK,                    // "dematerialise" (air/transmigration)
     SPELL_SANDBLAST,     // mini-frag; can use stones for material comp
     SPELL_ROTTING,       // evil god power or necromantic transmigration
     SPELL_MAXWELLS_SILVER_HAMMER,      // vorpal-brand maces etc.
