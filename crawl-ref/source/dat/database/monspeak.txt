@@ -813,7 +813,7 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ whispers, "They're coming for you..."
 
-@The_monster@ whispers, "Trust me. Just give in."
+@The_monster@ whispers, "Trust me.  Just give in."
 
 @The_monster@ whispers, "Meet the emptiness of death!"
 
