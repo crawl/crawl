@@ -449,7 +449,7 @@ void save_notes(writer& outf)
 {
     marshallLong( outf, NOTES_VERSION_NUMBER );
     marshallLong( outf, note_list.size() );
-    for ( unsigned i = 0; i < note_list.size(); ++i )
+    for (unsigned i = 0; i < note_list.size(); ++i)
         note_list[i].save(outf);
 }
 
@@ -472,7 +472,7 @@ void make_user_note()
     mpr("Enter note: ", MSGCH_PROMPT);
     char buf[400];
     bool validline = !cancelable_get_line(buf, sizeof(buf));
-    if ( !validline || (!*buf) )
+    if (!validline || (!*buf))
         return;
     Note unote(NOTE_USER_NOTE);
     unote.name = buf;

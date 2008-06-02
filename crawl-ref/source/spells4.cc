@@ -2222,11 +2222,11 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         if (trap != -1
             && trap_category( env.trap[trap].type ) != DNGN_TRAP_MECHANICAL)
         {
-            // non-mechanical traps don't explode with this spell -- bwr
+            // Non-mechanical traps don't explode with this spell. -- bwr
             break;
         }
 
-        // undiscovered traps appear as exploding from the floor -- bwr
+        // Undiscovered traps appear as exploding from the floor. -- bwr
         what = ((grid == DNGN_UNDISCOVERED_TRAP) ? "floor" : "trap");
 
         explode          = true;

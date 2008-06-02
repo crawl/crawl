@@ -1364,7 +1364,7 @@ static void _input()
     Options.tut_just_triggered = false;
 
     // He, we don't want those "Whew, it's safe to rest now" messages when
-    // you were just cast into the abyss. Right?
+    // you were just cast into the Abyss. Right?
     if (i_feel_safe() && you.level_type != LEVEL_ABYSS)
     {
         if (Options.tutorial_left)

@@ -2320,7 +2320,12 @@ static void describe_cell(int mx, int my)
 #endif
         if (Options.tutorial_left && tutorial_monster_interesting(&menv[i]))
         {
-            std::string msg = "(Press <w>v<lightgray> for more information.)";
+            std::string msg;
+#ifdef USE_TILE
+            msg = "(Right-click for more information.)";
+#else
+            msg = "(Press <w>v<lightgray> for more information.)";
+#endif
             print_formatted_paragraph(msg, get_number_of_cols());
         }
     }
@@ -2397,8 +2402,11 @@ static void describe_cell(int mx, int my)
 #else
     if (Options.tutorial_left && tutorial_pos_interesting(mx, my))
     {
+#ifdef USE_TILE
+        feature_desc += " (Right-click for more information.)";
+#else
         feature_desc += " (Press <w>v<lightgray> for more information.)";
-
+#endif
         print_formatted_paragraph(feature_desc, get_number_of_cols());
     }
     else
@@ -2406,7 +2414,13 @@ static void describe_cell(int mx, int my)
         const dungeon_feature_type feat = grd[mx][my];
 
         if (interesting_feature(feat))
+        {
+#ifdef USE_TILE
+            feature_desc += " (Right-click for more information.)";
+#else
             feature_desc += " (Press 'v' for more information.)";
+#endif
+        }
 
         // Suppress "Floor." if there's something on that square that we've
         // already described.

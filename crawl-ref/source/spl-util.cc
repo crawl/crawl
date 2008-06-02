@@ -764,7 +764,7 @@ bool spell_direction( dist &spelld, bolt &pbolt,
 
     if (!spelld.isValid)
     {
-        // check for user cancel
+        // Check for user cancel.
         canned_msg(MSG_OK);
         return (false);
     }

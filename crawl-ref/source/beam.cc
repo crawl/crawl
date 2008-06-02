@@ -233,7 +233,6 @@ static void _beam_set_default_values(bolt &beam, int power)
 // If needs_tracer is true, we need to check the beam path for friendly
 // monsters for *player beams* only! If allies are found, the player is
 // prompted to stop or continue.
-// NOTE: Doesn't check for the player being hit by a rebounding lightning bolt.
 bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
              std::string msg)
 {
@@ -661,17 +660,12 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
 
 // Returns true if the path is considered "safe", and false if there are
 // monsters in the way the player doesn't want to hit.
+// NOTE: Doesn't check for the player being hit by a rebounding lightning bolt.
 bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 {
     // Non-controlleable during confusion.
     // (We'll shoot in a different direction anyway.)
     if (you.duration[DUR_CONF])
-        return (true);
-
-    // If you target yourself, that's always deliberate.
-    // This is basically pbolt.aimed_at_feet except that that hasn't been
-    // initialized yet.
-    if (pbolt.target_x == you.x_pos && pbolt.target_y == you.y_pos);
         return (true);
 
     _beam_set_default_values(pbolt, power);
@@ -2053,9 +2047,9 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                            int hurted, bool doFlavouredEffects )
 {
-    // if we're not doing flavored effects, must be preliminary
-    // damage check only;  do not print messages or apply any side
-    // effects!
+    // If we're not doing flavored effects, must be preliminary
+    // damage check only.
+    // Do not print messages or apply any side effects!
     int resist = 0;
     int original = hurted;
 
@@ -2355,7 +2349,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
                                               enchant_type wh_enchant,
                                               int pow)
 {
-    // assuming that the only mass charm is control undead:
+    // Assuming that the only mass charm is control undead.
     if (wh_enchant == ENCH_CHARM)
     {
         if (mons_friendly(monster))
@@ -4428,17 +4422,17 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (beam.thrower == KILL_YOU_MISSILE)
         {
-                if (!_beam_is_harmless(beam, mon))
-                {
-                    const bool target = (beam.target_x == mon->x
-                                         && beam.target_y == mon->y);
+            if (!_beam_is_harmless(beam, mon))
+            {
+                const bool target = (beam.target_x == mon->x
+                                     && beam.target_y == mon->y);
 
-                    if (stop_attack_prompt(mon, true, target))
-                    {
-                        beam.fr_count = 1;
-                        return (BEAM_STOP);
-                    }
+                if (stop_attack_prompt(mon, true, target))
+                {
+                    beam.fr_count = 1;
+                    return (BEAM_STOP);
                 }
+            }
         }
         // Check only if actual damage.
         else if (hurt_final > 0)
@@ -4486,7 +4480,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         {
             const bool okay =
                 (beam.aux_source == "reading a scroll of immolation"
-                && !beam.effect_known);
+                 && !beam.effect_known);
 
             if (is_sanctuary(mon->x, mon->y)
                 || is_sanctuary(you.x_pos, you.y_pos))
@@ -4504,14 +4498,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         {
             hit_woke_orc = true;
         }
-
-        // Don't annoy friendlies or good neutrals if the player's beam
-        // did no damage.  Hostiles will still take umbrage.
-        if (hurt_final > 0 || !mons_wont_attack(mon) || !YOU_KILL(beam.thrower))
-            behaviour_event(mon, ME_ANNOY, _beam_source(beam));
     }
 
-    // explosions always 'hit'
+    // Explosions always 'hit'.
     const bool engulfs = (beam.is_explosion || beam.is_big_cloud);
 
     int beam_hit = beam.hit;
@@ -4603,7 +4592,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         bleed_onto_floor(mon->x, mon->y, mon->type, blood, true);
     }
 
-    // now hurt monster
+    // Now hurt monster.
     hurt_monster( mon, hurt_final );
 
     if (mon->hit_points < 1)
@@ -4618,6 +4607,11 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             print_wounds(mons);
         }
 
+        // Don't annoy friendlies or good neutrals if the player's beam
+        // did no damage.  Hostiles will still take umbrage.
+        if (hurt_final > 0 || !mons_wont_attack(mon) || !YOU_KILL(beam.thrower))
+            behaviour_event(mon, ME_ANNOY, _beam_source(beam));
+
         // sticky flame
         if (beam.name == "sticky flame")
         {
@@ -4628,7 +4622,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             _sticky_flame_monster( tid, _whose_kill(beam), levels );
         }
 
-        /* Look for missiles which aren't poison but are poison*ed*. */
+        // Handle missile effects.
         if (item)
         {
             if (item->base_type == OBJ_MISSILES
@@ -4647,7 +4641,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 }
 
                 int num_success = 0;
-                if ( YOU_KILL(beam.thrower) )
+                if (YOU_KILL(beam.thrower))
                 {
                     const int skill_level = _name_to_skill_level(beam.name);
                     if ( skill_level + 25 > random2(50) )
@@ -4841,13 +4835,13 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
 
         simple_monster_message(mon, " is enslaved.");
 
-        // wow, permanent enslaving
+        // Wow, permanent enslaving!
         if (one_chance_in(2 + mon->hit_dice / 4))
             mon->attitude = ATT_FRIENDLY;
         else
             mon->add_ench(ENCH_CHARM);
 
-        // break fleeing and suchlike
+        // Break fleeing and suchlike.
         mon->behaviour = BEH_SEEK;
         return (MON_AFFECTED);
     }

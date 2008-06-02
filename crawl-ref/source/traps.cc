@@ -44,9 +44,9 @@
 
 static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison);
 
-// returns the number of a net on a given square
-// if trapped only stationary ones are counted
-// otherwise the first net found is returned
+// Returns the number of a net on a given square.
+// If trapped only stationary ones are counted
+// otherwise the first net found is returned.
 int get_trapping_net(int x, int y, bool trapped)
 {
     int net, next;
@@ -65,7 +65,7 @@ int get_trapping_net(int x, int y, bool trapped)
     return (NON_ITEM);
 }
 
-// if there are more than one net on this square
+// If there are more than one net on this square
 // split off one of them for checking/setting values.
 static void maybe_split_nets(item_def &item, int x, int y)
 {
@@ -554,12 +554,12 @@ void disarm_trap( struct dist &disa )
     if (env.trap[i].type == TRAP_NET)
         trap_item( OBJ_MISSILES, MI_THROWING_NET, beam.target_x, beam.target_y );
     else if (env.trap[i].type != TRAP_BLADE
-        && trap_category(env.trap[i].type) == DNGN_TRAP_MECHANICAL)
+             && trap_category(env.trap[i].type) == DNGN_TRAP_MECHANICAL)
     {
         const int num_to_make = 10 + random2(you.skills[SK_TRAPS_DOORS]);
         for (j = 0; j < num_to_make; j++)
         {
-            // places items (eg darts), which will automatically stack
+            // Places items (eg darts), which will automatically stack.
             itrap(beam, i);
         }
     }
@@ -568,11 +568,12 @@ void disarm_trap( struct dist &disa )
     env.trap[i].type = TRAP_UNASSIGNED;
     you.turn_is_over = true;
 
-    // reduced from 5 + random2(5)
+    // Reduced from 5 + random2(5).
     exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.your_level / 5));
-}                               // end disarm_trap()
+}
 
-// attempts to take a net off a given monster
+// Attempts to take a net off a given monster.
+// This doesn't actually have any effect (yet).
 // Do not expect gratitude for this!
 // ----------------------------------
 void remove_net_from(monsters *mon)
@@ -639,10 +640,10 @@ void remove_net_from(monsters *mon)
 
 }
 
-// decides whether you will try to tear the net (result <= 0)
-// or try to slip out of it (result > 0)
-// both damage and escape could be 9 (more likely for damage)
-// but are capped at 5 (damage) and 4 (escape)
+// Decides whether you will try to tear the net (result <= 0)
+// or try to slip out of it (result > 0).
+// Both damage and escape could be 9 (more likely for damage)
+// but are capped at 5 (damage) and 4 (escape).
 static int damage_or_escape_net(int hold)
 {
     // Spriggan: little (+2)
@@ -945,7 +946,7 @@ int trap_at_xy(int which_x, int which_y)
 trap_type trap_type_at_xy(int x, int y)
 {
     const int idx = trap_at_xy(x, y);
-    return (idx == -1? NUM_TRAPS : env.trap[idx].type);
+    return (idx == -1 ? NUM_TRAPS : env.trap[idx].type);
 }
 
 bool is_valid_shaft_level(const level_id &place)

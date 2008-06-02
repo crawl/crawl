@@ -2125,7 +2125,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         && you.duration[DUR_CONF]
         && !grid_is_escape_hatch(stair_find)
         && force_stair != DNGN_ENTER_ABYSS
-        /*&& random2(100) > you.dex*/)
+        && random2(100) > you.dex)
     {
         std::string fall_where = "down the stairs";
 

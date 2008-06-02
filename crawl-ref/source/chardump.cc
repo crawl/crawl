@@ -1240,13 +1240,15 @@ void display_notes()
         if (spaceleft <= 0)
             return;
 
-        linebreak_string(suffix, spaceleft - 4, spaceleft);
+        // Use smarter linebreak function.
+        // was:  linebreak_string(suffix, spaceleft - 4, spaceleft);
+        linebreak_string2(suffix, spaceleft);
         std::vector<std::string> parts = split_string("\n", suffix);
-        if (parts.empty()) // disregard pure-whitespace notes
+        if (parts.empty()) // Disregard pure-whitespace notes.
             continue;
 
         scr.add_entry(new MenuEntry(prefix + parts[0]));
-        for ( unsigned int j = 1; j < parts.size(); ++j )
+        for (unsigned int j = 1; j < parts.size(); ++j)
         {
             scr.add_entry(new MenuEntry(std::string(prefix.length()-2, ' ') +
                                         std::string("| ") + parts[j]));
