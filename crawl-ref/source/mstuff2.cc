@@ -956,7 +956,6 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
     }
 }                               // end setup_mons_cast()
 
-
 void monster_teleport(struct monsters *monster, bool instan, bool silent)
 {
     if (!instan)

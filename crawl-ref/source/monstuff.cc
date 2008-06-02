@@ -3475,10 +3475,10 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         break;
 
     case MONS_MANTICORE:
-        if (!mons_player_visible( monster ))
+        if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (monster->has_ench(ENCH_CONFUSION))
+        if (!mons_player_visible( monster ))
             break;
 
         if (is_sanctuary(you.x_pos, you.y_pos)
@@ -3486,9 +3486,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         {
             break;
         }
-
-        if (!mons_near(monster))
-            break;
 
         // The fewer spikes the manticore has left, the less
         // likely it will use them.
@@ -3550,10 +3547,10 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     case MONS_XTAHUA:
     case MONS_WHITE_DRACONIAN:
     case MONS_RED_DRACONIAN:
-        if (!mons_player_visible( monster ))
+        if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (monster->has_ench(ENCH_CONFUSION))
+        if (!mons_player_visible( monster ))
             break;
 
         if (is_sanctuary(you.x_pos, you.y_pos)
@@ -3632,7 +3629,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             {
                 simple_monster_message(monster,
                     make_stringf(" chants %s song.",
-                    already_beheld? "her luring" : "a haunting").c_str(),
+                    already_beheld ? "her luring" : "a haunting").c_str(),
                     spl);
             }
             else
