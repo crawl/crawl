@@ -1930,8 +1930,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_CLEAR_MAP:
-        if (you.level_type != LEVEL_LABYRINTH
-            && you.level_type != LEVEL_ABYSS)
+        if (player_in_mappable_area())
         {
             mpr("Clearing level map.");
             clear_map();
@@ -1939,11 +1938,11 @@ void process_command( command_type cmd )
         }
         break;
 
-    case CMD_GO_UPSTAIRS:   _go_upstairs(); break;
-    case CMD_GO_DOWNSTAIRS: _go_downstairs(); break;
     case CMD_DISPLAY_OVERMAP: display_overmap(); break;
-    case CMD_OPEN_DOOR:  _open_door(0, 0); break;
-    case CMD_CLOSE_DOOR: _close_door(0, 0); break;
+    case CMD_GO_UPSTAIRS:     _go_upstairs(); break;
+    case CMD_GO_DOWNSTAIRS:   _go_downstairs(); break;
+    case CMD_OPEN_DOOR:       _open_door(0, 0); break;
+    case CMD_CLOSE_DOOR:      _close_door(0, 0); break;
 
     case CMD_DROP:
         drop();
@@ -2200,6 +2199,8 @@ void process_command( command_type cmd )
         {
             coord_def pos;
 #ifdef USE_TILE
+            // Since they're no actual overview map, but the functionality
+            // exists, give a message to explain what's going on.
             std::string str = "Move the cursor to view the level map, or "
                               "type <w>?</w> for a list of commands.";
             print_formatted_paragraph(str, get_number_of_cols());

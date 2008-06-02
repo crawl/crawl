@@ -882,12 +882,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         case KILL_YOU_MISSILE:  // You kill by missile or beam.
         case KILL_YOU_CONF:     // You kill by confusion.
         {
-            const bool bad_kill =
-                god_hates_killing(you.religion, monster);
+            const bool bad_kill    = god_hates_killing(you.religion, monster);
+            const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
             const bool created_friendly =
                 testbits(monster->flags, MF_CREATED_FRIENDLY);
-            const bool was_neutral =
-                testbits(monster->flags, MF_WAS_NEUTRAL);
 
             if (death_message)
             {
@@ -1600,11 +1598,11 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     monster->base_monster = MONS_PROGRAM_BUG;
     monster->number       = 0;
 
-    mon_enchant abj            = monster->get_ench(ENCH_ABJ);
-    mon_enchant charm          = monster->get_ench(ENCH_CHARM);
-    mon_enchant neutral        = monster->get_ench(ENCH_NEUTRAL);
-    mon_enchant shifter        = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                                   ENCH_SHAPESHIFTER);
+    mon_enchant abj       = monster->get_ench(ENCH_ABJ);
+    mon_enchant charm     = monster->get_ench(ENCH_CHARM);
+    mon_enchant neutral   = monster->get_ench(ENCH_NEUTRAL);
+    mon_enchant shifter   = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
+                                              ENCH_SHAPESHIFTER);
 
     // Note: define_monster() will clear out all enchantments! -- bwr
     define_monster( monster_index(monster) );
@@ -2061,7 +2059,7 @@ void behaviour_event( monsters *mon, int event, int src,
             || ((wontAttack != sourceWontAttack || isSmart)
                 && mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC))
         {
-            // (plain) plants and fungi cannot flee or fight back
+            // (Plain) plants and fungi cannot flee or fight back.
             if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT)
                 return;
 

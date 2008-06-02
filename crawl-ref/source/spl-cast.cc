@@ -1695,10 +1695,18 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_DETECT_CREATURES:
-        mprf("You detect %s", (detect_creatures(powc) > 0) ? "creatures!"
-                                                           : "nothing.");
-        break;
+    {
+        int known_plants  = count_detected_plants();
+        int num_creatures = detect_creatures(powc);
 
+        if (!num_creatures)
+            mpr("You detect nothing.");
+        else if (num_creatures == known_plants)
+            mpr("You detect no further creatures.");
+        else
+            mpr("You detect creatures!");
+        break;
+    }
     case SPELL_CURE_POISON_II:  // poison magic version of cure poison
         cast_cure_poison(powc);
         break;

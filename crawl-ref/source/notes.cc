@@ -87,7 +87,7 @@ static bool _is_noteworthy_dlevel( unsigned short place )
         static_cast<unsigned char>((place >> 8) & 0xFF);
     const int lev = (place & 0xFF);
 
-    /* Special levels (Abyss, etc.) are always interesting */
+    // Special levels (Abyss, etc.) are always interesting.
     if (lev == 0xFF)
         return true;
 
@@ -106,7 +106,7 @@ static bool _is_noteworthy_dlevel( unsigned short place )
 // the note was taken, e.g. you.* is valid.
 static bool _is_noteworthy( const Note& note )
 {
-    /* always noteworthy */
+    // Always noteworthy.
     if (note.type == NOTE_XP_LEVEL_CHANGE
         || note.type == NOTE_GET_GOD
         || note.type == NOTE_GOD_GIFT
@@ -127,7 +127,7 @@ static bool _is_noteworthy( const Note& note )
         return true;
     }
 
-    /* never noteworthy, hooked up for fun or future use */
+    // Never noteworthy, hooked up for fun or future use.
     if (note.type == NOTE_MP_CHANGE
         || note.type == NOTE_MAXHP_CHANGE
         || note.type == NOTE_MAXMP_CHANGE)
@@ -135,22 +135,22 @@ static bool _is_noteworthy( const Note& note )
         return false;
     }
 
-    /* god powers might be noteworthy if it's an actual power */
+    // God powers might be noteworthy if it's an actual power.
     if (note.type == NOTE_GOD_POWER
         && _real_god_power(note.first, note.second) == -1)
     {
         return false;
     }
 
-    /* hp noteworthiness is handled in its own function */
+    // HP noteworthiness is handled in its own function.
     if (note.type == NOTE_HP_CHANGE
         && !_is_noteworthy_hp(note.first, note.second))
     {
         return false;
     }
 
-    /* skills are noteworthy if in the skill value list or if
-       it's a new maximal skill (depending on options) */
+    // Skills are noteworthy if in the skill value list or if
+    // it's a new maximal skill (depending on options).
     if (note.type == NOTE_GAIN_SKILL)
     {
         if (Options.note_all_skill_levels
@@ -167,7 +167,7 @@ static bool _is_noteworthy( const Note& note )
         if (!_is_noteworthy_dlevel(note.packed_place))
             return false;
 
-        // labyrinths are always interesting
+        // Labyrinths are always interesting.
         if ((note.packed_place & 0xFF) == 0xFF
             && (note.packed_place >> 8) == LEVEL_LABYRINTH)
         {
@@ -175,7 +175,7 @@ static bool _is_noteworthy( const Note& note )
         }
     }
 
-    /* Learning a spell is always noteworthy if note_all_spells is set */
+    // Learning a spell is always noteworthy if note_all_spells is set.
     if (note.type == NOTE_LEARN_SPELL && Options.note_all_spells)
         return true;
 

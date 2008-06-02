@@ -5235,7 +5235,7 @@ static dungeon_feature_type _pick_an_altar()
         || player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
         || you.level_type == LEVEL_LABYRINTH)
     {
-        // No extra altars in temple, none at all in slime pits or labyrinth.
+        // No extra altars in Temple, none at all in Slime Pits or Labyrinth.
         altar_type = DNGN_FLOOR;
     }
     else if (you.level_type == LEVEL_DUNGEON && !one_chance_in(5))
@@ -6397,7 +6397,7 @@ static bool _has_vault_in_radius(const coord_def &pos, int radius,
 // * At least 4 squares away from the nearest vault.
 // * Floor (well, obviously).
 static coord_def _labyrinth_find_entry_point(const dgn_region &reg,
-                                            const coord_def &end)
+                                             const coord_def &end)
 {
     const int min_distance = 20 * 20;
     // Try many times.

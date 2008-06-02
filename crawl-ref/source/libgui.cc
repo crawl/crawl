@@ -341,13 +341,14 @@ int tile_idx_unseen_terrain(int x, int y, int what)
 
 void GmapUpdate(int x, int y, int what, bool upd_tile)
 {
-    if ((you.level_type == LEVEL_LABYRINTH) || (you.level_type == LEVEL_ABYSS))
+    // If you can't map the area, the minimap won't show.
+    if (!player_in_mappable_area())
         return;
 
     int c;
 
     if (x == you.x_pos && y == you.y_pos)
-        c = Options.tile_player_col; // player position always highlighted
+        c = Options.tile_player_col; // Player position always highlighted.
     else
     {
         const coord_def gc(x,y);
@@ -417,7 +418,7 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
     }
     else if (c == 0)
     {
-        // forget map
+        // Forget map.
         env.tile_bk_fg[x][y] = 0;
         env.tile_bk_bg[x][y] = t;
         return;
@@ -436,6 +437,10 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
 
 void GmapInit(bool upd_tile)
 {
+    // If you can't map the area, the minimap won't show.
+    if (!player_in_mappable_area())
+        return;
+
     int x, y;
     gmap_min_x = gmap_max_x = you.x_pos - 1;
     gmap_min_y = gmap_max_y = you.y_pos - 1;
@@ -454,6 +459,14 @@ void GmapDisplay(int linex, int liney)
     for (int x = 0; x < GXM*GYM; x++)
         buf2[x] = 0;
 
+    if (!player_in_mappable_area())
+    {
+        // Don't bother in the Abyss or Labyrinth.
+        region_map->flag = true;
+        region_map->draw_data(buf2, false, 0, 0);
+        return;
+    }
+
     ox = ( gmap_min_x + (GXM - 1 - gmap_max_x) ) / 2;
     oy = ( gmap_min_y + (GYM - 1 - gmap_max_y) ) / 2;
     int count = ox + oy * GXM;
@@ -463,33 +476,23 @@ void GmapDisplay(int linex, int liney)
     for (int y = gmap_min_y; y <= gmap_max_y; y++)
     {
         for (int x = gmap_min_x; x <= gmap_max_x; x++, count++)
-        {
             if (count >= 0 && count < GXM*GYM)
                 buf2[count] = gmap_data[x][y];
-        }
+
         count += GXM - (gmap_max_x - gmap_min_x + 1);
     }
 
-    bool show_mark = false;
-    int mark_x = 0;
-    int mark_y = 0;
-    // Unmappables...
-    if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS)
-    {
-        ox += linex - gmap_min_x;
-        oy += liney - gmap_min_y;
+    // Highlight centre of the map (ox, oy).
+    ox += linex - gmap_min_x;
+    oy += liney - gmap_min_y;
 
-        mark_x = ox;
-        mark_y = oy;
-        show_mark = true;
-
-        // Highlight centre of the map.
-        // [enne] Maybe we need another colour for the highlight?
-        buf2[ox + oy * GXM] = Options.tile_player_col;
-    }
+    // [enne] Maybe we need another colour for the highlight?
+    // [jpeg] I think reusing the player colour is okay, because that's
+    //        usually where the centre will be.
+    buf2[ox + oy * GXM] = Options.tile_player_col;
 
     region_map->flag = true;
-    region_map->draw_data(buf2, show_mark, mark_x, mark_y);
+    region_map->draw_data(buf2, true, ox, oy);
 }
 
 // Initialize routines.

@@ -1082,7 +1082,7 @@ static bool _do_ability(const ability_def& abil)
         if (abil.ability == ABIL_MAPPING
             && player_mutation_level(MUT_MAPPING) < 3
             && (you.level_type == LEVEL_PANDEMONIUM
-                || you.level_type == LEVEL_LABYRINTH))
+                || !player_in_mappable_area()))
         {
             mpr("You feel momentarily disoriented.");
             return (false);
@@ -2168,7 +2168,7 @@ std::vector<talent> your_talents( bool check_confused )
         || scan_randarts( RAP_LEVITATE ))
     {
         // Has no effect on permanently flying Kenku.
-        if (!you.permanent_levitation() && you.flight_mode() != FL_FLY)
+        if (!you.permanent_flight() && you.flight_mode() != FL_FLY)
         {
             // Now you can only turn levitation off if you have an
             // activatable item.  Potions and miscast effects will
@@ -2186,20 +2186,20 @@ std::vector<talent> your_talents( bool check_confused )
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused );
     }
 
-    // find hotkeys for the non-hotkeyed talents
+    // Find hotkeys for the non-hotkeyed talents.
     for (unsigned int i = 0; i < talents.size(); ++i)
     {
-        // skip preassigned hotkeys
+        // Skip preassigned hotkeys.
         if ( talents[i].hotkey != 0 )
             continue;
 
-        // try to find a free hotkey for i, starting from Z
+        // Try to find a free hotkey for i, starting from Z.
         for ( int k = 51; k >= 0; ++k )
         {
             const int kkey = index_to_letter(k);
             bool good_key = true;
 
-            // check that it doesn't conflict with other hotkeys
+            // Check that it doesn't conflict with other hotkeys.
             for ( unsigned int j = 0; j < talents.size(); ++j )
             {
                 if ( talents[j].hotkey == kkey )
@@ -2209,7 +2209,7 @@ std::vector<talent> your_talents( bool check_confused )
                 }
             }
 
-            if ( good_key )
+            if (good_key)
             {
                 talents[i].hotkey = k;
                 you.ability_letter_table[k] = talents[i].which;
@@ -2217,7 +2217,7 @@ std::vector<talent> your_talents( bool check_confused )
             }
         }
         // In theory, we could be left with an unreachable ability
-        // here (if you have 53 or more abilities simultaneously.)
+        // here (if you have 53 or more abilities simultaneously).
     }
 
     return talents;

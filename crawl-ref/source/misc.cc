@@ -2236,8 +2236,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             break;
 
         case LEVEL_LABYRINTH:
-            // Finding the way out of a labyrinth interests Xom.
-            xom_is_stimulated(98);
+            // Finding the way out of a labyrinth interests Xom,
+            // but less so for Minotaurs.
+            if (you.species == SP_MINOTAUR)
+                xom_is_stimulated(49);
+            else
+                xom_is_stimulated(98);
             break;
 
         case LEVEL_ABYSS:

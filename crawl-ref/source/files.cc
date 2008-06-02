@@ -107,42 +107,42 @@
 #endif
 #endif
 
-static void save_level(int level_saved, level_area_type lt,
-                       branch_type where_were_you);
+static void _save_level( int level_saved, level_area_type lt,
+                         branch_type where_were_you);
 
-static bool _get_and_validate_version(FILE *restoreFile, char& major, char& minor,
-                                      std::string* reason=0);
+static bool _get_and_validate_version( FILE *restoreFile, char& major,
+                                       char& minor, std::string* reason=0);
 
 
-static bool determine_ghost_version( FILE *ghostFile,
-                                     char &majorVersion, char &minorVersion );
+static bool _determine_ghost_version( FILE *ghostFile,
+                                      char &majorVersion, char &minorVersion );
 
-static void restore_ghost_version( FILE *ghostFile, char major, char minor );
+static void _restore_ghost_version( FILE *ghostFile, char major, char minor );
 
-static void restore_tagged_file( FILE *restoreFile, int fileType,
-                                 char minorVersion );
+static void _restore_tagged_file( FILE *restoreFile, int fileType,
+                                  char minorVersion );
 
-static void load_ghost();
+static void _load_ghost();
 
 const short GHOST_SIGNATURE = short( 0xDC55 );
 
-static void redraw_all(void)
+static void _redraw_all(void)
 {
-    you.redraw_hit_points = 1;
-    you.redraw_magic_points = 1;
-    you.redraw_strength = 1;
-    you.redraw_intelligence = 1;
-    you.redraw_dexterity = 1;
-    you.redraw_armour_class = 1;
-    you.redraw_evasion = 1;
-    you.redraw_experience = 1;
-    you.redraw_gold = 1;
+    you.redraw_hit_points   = true;
+    you.redraw_magic_points = true;
+    you.redraw_strength     = true;
+    you.redraw_intelligence = true;
+    you.redraw_dexterity    = true;
+    you.redraw_armour_class = true;
+    you.redraw_evasion      = true;
+    you.redraw_experience   = true;
+    you.redraw_gold         = true;
 
     you.redraw_status_flags =
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
 }
 
-static std::string uid_as_string()
+static std::string _uid_as_string()
 {
 #ifdef MULTIUSER
     char struid[20];
@@ -153,7 +153,7 @@ static std::string uid_as_string()
 #endif
 }
 
-static bool is_uid_file(const std::string &name, const std::string &ext)
+static bool _is_uid_file(const std::string &name, const std::string &ext)
 {
     std::string save_suffix = get_savedir_filename("", "", "");
     save_suffix += ext;
@@ -172,17 +172,17 @@ static bool is_uid_file(const std::string &name, const std::string &ext)
 
 bool is_save_file_name(const std::string &name)
 {
-    return is_uid_file(name, ".sav");
+    return _is_uid_file(name, ".sav");
 }
 
 #ifdef LOAD_UNPACKAGE_CMD
 bool is_packed_save(const std::string &name)
 {
-    return is_uid_file(name, PACKAGE_SUFFIX);
+    return _is_uid_file(name, PACKAGE_SUFFIX);
 }
 #endif
 
-// Return the save_info from the save.
+// Returns the save_info from the save.
 player_save_info read_character_info(const std::string &savefile)
 {
     player_save_info fromfile;
@@ -195,10 +195,10 @@ player_save_info read_character_info(const std::string &savefile)
 
     if (_get_and_validate_version(charf, majorVersion, minorVersion))
     {
-        // backup before we clobber "you"
+        // Backup before we clobber "you".
         const player backup(you);
 
-        restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
+        _restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
 
         fromfile = you;
         you.copy_from(backup);
@@ -386,7 +386,7 @@ bool dir_exists(const std::string &dir)
 #endif
 }
 
-static int create_directory(const char *dir)
+static int _create_directory(const char *dir)
 {
 #if defined(MULTIUSER)
     return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
@@ -399,7 +399,7 @@ static int create_directory(const char *dir)
 #endif
 }
 
-static bool create_dirs(const std::string &dir)
+static bool _create_dirs(const std::string &dir)
 {
     std::string sep = " ";
     sep[0] = FILE_SEPARATOR;
@@ -419,7 +419,7 @@ static bool create_dirs(const std::string &dir)
         if (i == 0 && dir.size() && dir[0] == FILE_SEPARATOR)
             path = FILE_SEPARATOR + path;
 
-        if (!dir_exists(path) && create_directory(path.c_str()))
+        if (!dir_exists(path) && _create_directory(path.c_str()))
             return (false);
 
         path += FILE_SEPARATOR;
@@ -558,7 +558,7 @@ bool check_dir(const std::string &whatdir, std::string &dir, bool silent)
     if (dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;
 
-    if (!dir_exists(dir) && !create_dirs(dir))
+    if (!dir_exists(dir) && !_create_dirs(dir))
     {
         if (!silent)
             fprintf(stderr, "%s \"%s\" does not exist "
@@ -664,7 +664,7 @@ std::string get_savedir_filename(const std::string &prefix,
     // MULTIUSER is set we'll have long filenames anyway. Caveat
     // emptor.
     if ( !suppress_uid )
-        result += uid_as_string();
+        result += _uid_as_string();
 
     result += suffix;
 
@@ -690,8 +690,8 @@ std::string get_prefs_filename()
 #endif
 }
 
-static std::string get_level_suffix(int level, branch_type where,
-                                    level_area_type lt)
+static std::string _get_level_suffix(int level, branch_type where,
+                                     level_area_type lt)
 {
     switch (lt)
     {
@@ -714,7 +714,7 @@ std::string make_filename( const char *prefix, int level, branch_type where,
                            level_area_type ltype, bool isGhost )
 {
     return get_savedir_filename( prefix, "",
-                                 get_level_suffix(level, where, ltype),
+                                 _get_level_suffix(level, where, ltype),
                                  isGhost );
 }
 
@@ -786,7 +786,7 @@ bool travel_load_map( branch_type branch, int absdepth )
     return true;
 }
 
-static void sanity_test_monster_inventory()
+static void _sanity_test_monster_inventory()
 {
     // Sanity forcing of monster inventory items (required?)
     for (int i = 0; i < MAX_MONSTERS; i++)
@@ -806,17 +806,17 @@ static void sanity_test_monster_inventory()
     }
 }
 
-static void place_player_on_stair(branch_type old_branch,
-                                  int stair_taken)
+static void _place_player_on_stair(branch_type old_branch,
+                                   int stair_taken)
 {
     bool find_first = true;
 
-    // Order is important here:
+    // Order is important here.
     if (you.level_type == LEVEL_DUNGEON
         && old_branch == BRANCH_VESTIBULE_OF_HELL
         && stair_taken == DNGN_STONE_STAIRS_UP_I)
     {
-        // leaving hell - look for entry portal first
+        // Leaving hell - look for entry portal first.
         stair_taken = DNGN_ENTER_HELL;
         find_first = false;
     }
@@ -832,39 +832,39 @@ static void place_player_on_stair(branch_type old_branch,
     }
     else if (stair_taken == DNGN_ENTER_HELL)
     {
-        // the vestibule and labyrith always start from this stair
+        // The vestibule and labyrinth always start from this stair.
         stair_taken = DNGN_STONE_STAIRS_UP_I;
     }
     else if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
              && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
     {
-        // look for coresponding up stair
+        // Look for corresponding up stair.
         stair_taken += (DNGN_STONE_STAIRS_UP_I - DNGN_STONE_STAIRS_DOWN_I);
     }
     else if (stair_taken >= DNGN_STONE_STAIRS_UP_I
              && stair_taken <= DNGN_ESCAPE_HATCH_UP)
     {
-        // look for coresponding down stair
+        // Look for coresponding down stair.
         stair_taken += (DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I);
     }
     else if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
              && stair_taken < 150) // 20 slots reserved
     {
-        // find entry point to subdungeon when leaving
+        // Find entry point to subdungeon when leaving.
         stair_taken += (DNGN_ENTER_FIRST_BRANCH
                         - DNGN_RETURN_FROM_FIRST_BRANCH);
     }
     else if (stair_taken >= DNGN_ENTER_FIRST_BRANCH
              && stair_taken < DNGN_RETURN_FROM_FIRST_BRANCH)
     {
-        // find exit staircase from subdungeon when entering
+        // Find exit staircase from subdungeon when entering.
         stair_taken += (DNGN_RETURN_FROM_FIRST_BRANCH
                         - DNGN_ENTER_FIRST_BRANCH);
     }
     else if (stair_taken >= DNGN_ENTER_DIS
              && stair_taken <= DNGN_TRANSIT_PANDEMONIUM)
     {
-        // when entering a hell or pandemonium
+        // When entering a hell or pandemonium.
         stair_taken = DNGN_STONE_STAIRS_UP_I;
     }
     else if (stair_taken == DNGN_ENTER_PORTAL_VAULT)
@@ -882,7 +882,7 @@ static void place_player_on_stair(branch_type old_branch,
     }
     else // Note: stair_taken can equal things like DNGN_FLOOR
     {
-        // just find a nice empty square
+        // Just find a nice empty square.
         stair_taken = DNGN_FLOOR;
         find_first = false;
     }
@@ -893,7 +893,7 @@ static void place_player_on_stair(branch_type old_branch,
     you.moveto(where_to_go);
 }
 
-static void close_level_gates()
+static void _close_level_gates()
 {
     for ( int i = 0; i < GXM; ++i )
         for ( int j = 0; j < GYM; ++j )
@@ -910,19 +910,19 @@ static void close_level_gates()
         }
 }
 
-static void clear_env_map()
+static void _clear_env_map()
 {
     env.map.init(map_cell());
 }
 
-static void clear_clouds()
+static void _clear_clouds()
 {
     for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
         delete_cloud( clouty );
     env.cgrid.init(EMPTY_CLOUD);
 }
 
-static bool grab_follower_at(const coord_def &pos)
+static bool _grab_follower_at(const coord_def &pos)
 {
     if (pos == you.pos())
         return (false);
@@ -946,7 +946,7 @@ static bool grab_follower_at(const coord_def &pos)
     return (true);
 }
 
-static void grab_followers()
+static void _grab_followers()
 {
     const bool can_follow = level_type_allows_followers(you.level_type);
     for (int i = you.x_pos - 1; i < you.x_pos + 2; i++)
@@ -987,7 +987,7 @@ static void grab_followers()
                         if (!in_bounds(fp) || travel_point_distance[fp.x][fp.y])
                             continue;
                         travel_point_distance[fp.x][fp.y] = 1;
-                        if (grab_follower_at(fp))
+                        if (_grab_follower_at(fp))
                             places[!place_set].push_back(fp);
                     }
             }
@@ -1006,9 +1006,9 @@ static void grab_followers()
     }
 }
 
-// Should be called after grab_followers(), so that items carried by
+// Should be called after _grab_followers(), so that items carried by
 // followers won't be considered lost.
-static void do_lost_items(level_area_type old_level_type)
+static void _do_lost_items(level_area_type old_level_type)
 {
     if (old_level_type == LEVEL_DUNGEON)
         return;
@@ -1069,7 +1069,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     // We clear twice - on save and on load.
     // Once would be enough...
     if (make_changes)
-        clear_clouds();
+        _clear_clouds();
 
     // Lose all listeners.
     dungeon_events.clear();
@@ -1077,14 +1077,14 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     // This block is to grab followers and save the old level to disk.
     if (load_mode == LOAD_ENTER_LEVEL && old_level != -1)
     {
-        grab_followers();
+        _grab_followers();
 
         if (old_level_type == LEVEL_DUNGEON)
-            save_level( old_level, LEVEL_DUNGEON, old_branch );
+            _save_level( old_level, LEVEL_DUNGEON, old_branch );
     }
 
-    if ( make_changes )
-        do_lost_items(old_level_type);
+    if (make_changes)
+        _do_lost_items(old_level_type);
 
     // Try to open level savefile.
     FILE *levelFile = fopen(cha_fil.c_str(), "rb");
@@ -1100,7 +1100,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         if ((you.your_level > 1 || you.level_type != LEVEL_DUNGEON)
             && one_chance_in(3))
         {
-            load_ghost();
+            _load_ghost();
         }
         env.turns_on_level = 0;
         // sanctuary
@@ -1122,9 +1122,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
                 reason.c_str());
         }
 
-        restore_tagged_file(levelFile, TAGTYPE_LEVEL, minorVersion);
+        _restore_tagged_file(levelFile, TAGTYPE_LEVEL, minorVersion);
 
-        // sanity check - EOF
+        // Sanity check - EOF
         if (!feof( levelFile ))
         {
             end(-1, false, "\nIncomplete read of \"%s\" - aborting.\n",
@@ -1135,28 +1135,28 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         // POST-LOAD tasks :
         link_items();
-        redraw_all();
+        _redraw_all();
     }
 
     if (load_mode == LOAD_START_GAME)
         just_created_level = true;
 
-    // closes all the gates if you're on the way out
+    // Closes all the gates if you're on the way out.
     if (you.char_direction == GDT_ASCENDING
         && you.level_type != LEVEL_PANDEMONIUM)
     {
-        close_level_gates();
+        _close_level_gates();
     }
 
     if (just_created_level)
-        clear_env_map();
+        _clear_env_map();
 
-    // Here's the second cloud clearing, on load (see above)
-    if ( make_changes )
+    // Here's the second cloud clearing, on load (see above).
+    if (make_changes)
     {
-        clear_clouds();
+        _clear_clouds();
         if (you.level_type != LEVEL_ABYSS)
-            place_player_on_stair(old_branch, stair_taken);
+            _place_player_on_stair(old_branch, stair_taken);
         else
             you.moveto(45, 35);
     }
@@ -1166,7 +1166,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes && mgrd[you.x_pos][you.y_pos] != NON_MONSTER)
         monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true, true);
 
-    // actually "move" the followers if applicable
+    // Actually "move" the followers if applicable.
     if (level_type_allows_followers(you.level_type)
         && load_mode == LOAD_ENTER_LEVEL)
     {
@@ -1180,9 +1180,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         place_transiting_items();
     }
 
-    redraw_all();
+    _redraw_all();
 
-    sanity_test_monster_inventory();
+    _sanity_test_monster_inventory();
 
     if (load_mode != LOAD_VISITOR)
         dungeon_events.fire_event(DET_ENTERING_LEVEL);
@@ -1228,8 +1228,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 
     // Save the created/updated level out to disk:
-    if ( make_changes )
-        save_level( you.your_level, you.level_type, you.where_are_you );
+    if (make_changes)
+        _save_level( you.your_level, you.level_type, you.where_are_you );
 
     setup_environment_effects();
 
@@ -1278,8 +1278,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     return just_created_level;
 }                               // end load()
 
-void save_level(int level_saved, level_area_type old_ltype,
-                branch_type where_were_you)
+void _save_level(int level_saved, level_area_type old_ltype,
+                 branch_type where_were_you)
 {
     std::string cha_fil = make_filename( you.your_name, level_saved,
                                          where_were_you, old_ltype,
@@ -1296,7 +1296,7 @@ void save_level(int level_saved, level_area_type old_ltype,
                  cha_fil.c_str());
     }
 
-    // nail all items to the ground
+    // Nail all items to the ground.
     fix_item_coordinates();
 
     _write_tagged_file( saveFile, TAGTYPE_LEVEL );
@@ -1304,7 +1304,7 @@ void save_level(int level_saved, level_area_type old_ltype,
     fclose(saveFile);
 
     DO_CHMOD_PRIVATE(cha_fil.c_str());
-}                               // end save_level()
+}
 
 
 void save_game(bool leave_game, const char *farewellmsg)
@@ -1385,13 +1385,13 @@ void save_game(bool leave_game, const char *farewellmsg)
     fclose(charf);
     DO_CHMOD_PRIVATE(charFile.c_str());
 
-    // if just save, early out
+    // If just save, early out.
     if (!leave_game)
         return;
 
-    // must be exiting -- save level & goodbye!
+    // Must be exiting -- save level & goodbye!
     if (!you.entering_level)
-        save_level(you.your_level, you.level_type, you.where_are_you);
+        _save_level(you.your_level, you.level_type, you.where_are_you);
 
     clrscr();
 
@@ -1425,7 +1425,7 @@ void save_game_state()
         save_game(true);
 }
 
-void load_ghost(void)
+void _load_ghost(void)
 {
     char majorVersion;
     char minorVersion;
@@ -1440,7 +1440,7 @@ void load_ghost(void)
     if (gfile == NULL)
         return;                 // no such ghost.
 
-    if (!determine_ghost_version(gfile, majorVersion, minorVersion))
+    if (!_determine_ghost_version(gfile, majorVersion, minorVersion))
     {
         fclose(gfile);
 #if DEBUG_DIAGNOSTICS
@@ -1460,7 +1460,7 @@ void load_ghost(void)
     }
 
     ghosts.clear();
-    restore_ghost_version(gfile, majorVersion, minorVersion);
+    _restore_ghost_version(gfile, majorVersion, minorVersion);
 
     // sanity check - EOF
     if (!feof(gfile))
@@ -1509,9 +1509,9 @@ void restore_game(void)
     if (!_get_and_validate_version(charf, majorVersion, minorVersion, &reason))
         end(-1, false, "\nSave file is invalid.  %s\n", reason.c_str());
 
-    restore_tagged_file(charf, TAGTYPE_PLAYER, minorVersion);
+    _restore_tagged_file(charf, TAGTYPE_PLAYER, minorVersion);
 
-    // sanity check - EOF
+    // Sanity check - EOF
     if (!feof(charf))
         end(-1, false, "\nIncomplete read of \"%s\" - aborting.\n",
             charFile.c_str());
@@ -1607,7 +1607,7 @@ bool apply_to_level(const level_id &level, bool preserve_current,
     if (level != original)
     {
         if (preserve_current)
-            save_level(you.your_level, you.level_type, you.where_are_you);
+            _save_level(you.your_level, you.level_type, you.where_are_you);
 
         you.where_are_you = level.branch;
         you.your_level = level.absdepth();
@@ -1625,7 +1625,7 @@ bool apply_to_level(const level_id &level, bool preserve_current,
     if (level != original)
     {
         // And save it back.
-        save_level(you.your_level, you.level_type, you.where_are_you);
+        _save_level(you.your_level, you.level_type, you.where_are_you);
 
         if (preserve_current)
             _restore_level(original);
@@ -1640,7 +1640,7 @@ bool apply_to_all_dungeons(bool (*applicator)())
 
     // Apply to current level, then save it out.
     bool success = applicator();
-    save_level(original.absdepth(), original.level_type, original.branch);
+    _save_level(original.absdepth(), original.level_type, original.branch);
 
     for ( int i = 0; i < MAX_LEVELS; ++i )
         for ( int j = 0; j < NUM_BRANCHES; ++j )
@@ -1670,13 +1670,14 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major, char &mino
     std::string dummy;
     if (reason == 0) reason = &dummy;
 
-    // read first two bytes.
+    // Read first two bytes.
     char buf[2];
     if (read2(restoreFile, buf, 2) != 2)
     {
+        // Empty file?
         major = minor = -1;
         *reason = "File is corrupt.";
-        return false;               // empty file?
+        return (false);
     }
 
     major = buf[0];
@@ -1686,21 +1687,21 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major, char &mino
     {
         *reason = make_stringf("Major version mismatch: %d (want %d).",
                                major, TAG_MAJOR_VERSION);
-        return false;
+        return (false);
     }
 
     if (minor >  TAG_MINOR_VERSION)
     {
         *reason = make_stringf("Minor version mismatch: %d (want <= %d).",
                                minor, TAG_MINOR_VERSION);
-        return false;
+        return (false);
     }
 
-    return true;
+    return (true);
 }
 
-static void restore_tagged_file( FILE *restoreFile, int fileType,
-                                 char minorVersion )
+static void _restore_tagged_file( FILE *restoreFile, int fileType,
+                                  char minorVersion )
 {
     char tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
@@ -1716,26 +1717,26 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
             break;
     }
 
-    // go through and init missing tags
+    // Go through and init missing tags.
     for (int i = 0; i < NUM_TAGS; i++)
         if (tags[i] == 1)           // expected but never read
             tag_missing(i, minorVersion);
 }
 
-static bool determine_ghost_version( FILE *ghostFile,
-                                     char &majorVersion, char &minorVersion )
+static bool _determine_ghost_version( FILE *ghostFile,
+                                      char &majorVersion, char &minorVersion )
 {
-    // read first two bytes.
+    // Read first two bytes.
     char buf[2];
     if (read2(ghostFile, buf, 2) != 2)
         return false;               // empty file?
 
-    // otherwise, read version and validate.
+    // Otherwise, read version and validate.
     majorVersion = buf[0];
     minorVersion = buf[1];
 
     reader inf(ghostFile);
-    // check for the DCSS ghost signature.
+    // Check for the DCSS ghost signature.
     if (unmarshallShort(inf) != GHOST_SIGNATURE)
         return (false);
 
@@ -1747,16 +1748,17 @@ static bool determine_ghost_version( FILE *ghostFile,
         return !feof(ghostFile);
     }
 
-    return false;   // if its not TAG_MAJOR_VERSION, no idea!
+    // If its not TAG_MAJOR_VERSION, no idea!
+    return (false);
 }
 
-static void restore_ghost_version( FILE *ghostFile,
-                                   char majorVersion, char minorVersion )
+static void _restore_ghost_version( FILE *ghostFile,
+                                    char majorVersion, char minorVersion )
 {
     switch(majorVersion)
     {
     case TAG_MAJOR_VERSION:
-        restore_tagged_file(ghostFile, TAGTYPE_GHOST, minorVersion);
+        _restore_tagged_file(ghostFile, TAGTYPE_GHOST, minorVersion);
         break;
     default:
         break;
@@ -1775,7 +1777,7 @@ void save_ghost( bool force )
 
     FILE *gfile = fopen(cha_fil.c_str(), "rb");
 
-    // don't overwrite existing bones!
+    // Don't overwrite existing bones!
     if (gfile != NULL)
     {
         fclose(gfile);
@@ -1802,7 +1804,7 @@ void save_ghost( bool force )
 #endif
 
     DO_CHMOD_PRIVATE(cha_fil.c_str());
-}                               // end save_ghost()
+}
 
 ////////////////////////////////////////////////////////////////////////////
 // Locking for multiuser systems

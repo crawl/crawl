@@ -668,6 +668,30 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     return real_colour(tc);
 }
 
+int count_detected_plants()
+{
+    int count = 0;
+    for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+        for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+        {
+            // Don't expose new dug out areas:
+            // Note: assumptions are being made here about how
+            // terrain can change (eg it used to be solid, and
+            // thus monster/item free).
+            if (is_terrain_changed(x, y))
+                continue;
+
+            unsigned envc = get_envmap_char(x, y);
+            if (!envc)
+                continue;
+
+            if (envc == 'P' || envc == 'f')
+                count++;
+        }
+
+    return (count);
+}
+
 void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 {
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
@@ -936,7 +960,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         default_msg_key = "__DEMON_TAUNT";
         break;
     default:
-        default_msg_key = "__BUGGY";
+        default_msg_key = "__BUGGY"; // S_LOUD, S_VERY_SOFT, etc. (loudness)
     }
 
     // Now that we have the message key, get a random verb and noise level
@@ -999,7 +1023,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     {
         ; // No "visual shout" defined for silent monster, do nothing.
     }
-    else if (msg == "")
+    else if (msg == "") // S_SILENT handled above
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "No shout entry for default shout type '"
@@ -4657,7 +4681,7 @@ void viewwindow(bool draw_it, bool do_updates)
     env.show_col.init(LIGHTGREY);
     Show_Backup.init(0);
 
-    item_grid();                // must be done before cloud and monster
+    item_grid();                // Must be done before cloud and monster.
     cloud_grid();
     monster_grid( do_updates );
 
@@ -4689,6 +4713,7 @@ void viewwindow(bool draw_it, bool do_updates)
                 const coord_def gc(view2grid(coord_def(count_x, count_y)));
                 const coord_def ep = view2show(grid2view(gc));
 
+                // Print tutorial messages for features in LOS.
                 if (Options.tutorial_left && in_bounds(gc)
                     && crawl_view.in_grid_los(gc))
                 {
@@ -4723,21 +4748,21 @@ void viewwindow(bool draw_it, bool do_updates)
                     }
                 }
 
-                // order is important here
+                // Order is important here.
                 if (!map_bounds(gc))
                 {
                     // off the map
-                    buffy[bufcount] = 0;
+                    buffy[bufcount]     = 0;
                     buffy[bufcount + 1] = DARKGREY;
 #ifdef USE_TILE
-                    tileb[bufcount] = 0;
-                    tileb[bufcount+1] = tileidx_unseen(' ', gc);
+                    tileb[bufcount]     = 0;
+                    tileb[bufcount + 1] = tileidx_unseen(' ', gc);
 #endif
                 }
                 else if (!crawl_view.in_grid_los(gc))
                 {
-                    // outside the env.show area
-                    buffy[bufcount] = get_envmap_char( gc.x, gc.y );
+                    // Outside the env.show area.
+                    buffy[bufcount]     = get_envmap_char( gc.x, gc.y );
                     buffy[bufcount + 1] = DARKGREY;
 
                     if (Options.colour_map)
@@ -4754,8 +4779,8 @@ void viewwindow(bool draw_it, bool do_updates)
                         bg = tileidx_unseen(get_envmap_char(gc.x,gc.y), gc);
                         env.tile_bk_bg[gc.x][gc.y] = bg;
                     }
-                    tileb[bufcount] = fg;
-                    tileb[bufcount+1] = bg | tile_unseen_flag(gc);
+                    tileb[bufcount]     = fg;
+                    tileb[bufcount + 1] = bg | tile_unseen_flag(gc);
 #endif
                 }
                 else if (gc == you.pos())
@@ -4784,8 +4809,8 @@ void viewwindow(bool draw_it, bool do_updates)
                     tileb[bufcount+1] = env.tile_bg[ep.x-1][ep.y-1];
 #endif
 
-                    // player overrides everything in cell
-                    buffy[bufcount] = you.symbol;
+                    // Player overrides everything in cell.
+                    buffy[bufcount]     = you.symbol;
                     buffy[bufcount + 1] = you.colour;
 
                     if (player_is_swimming())
@@ -4807,7 +4832,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
                     _get_symbol( gc.x, gc.y, object, &ch, &colour );
 
-                    buffy[bufcount] = ch;
+                    buffy[bufcount]     = ch;
                     buffy[bufcount + 1] = colour;
 #ifdef USE_TILE
                     tileb[bufcount]   = env.tile_fg[ep.x-1][ep.y-1];
@@ -4819,7 +4844,7 @@ void viewwindow(bool draw_it, bool do_updates)
                         // This section is very tricky because it
                         // duplicates the old code (which was horrid).
 
-                        // if the grid is in LoS env.show was set and
+                        // If the grid is in LoS env.show was set and
                         // we set the buffer already, so...
                         if (buffy[bufcount] != 0)
                         {
@@ -4881,8 +4906,8 @@ void viewwindow(bool draw_it, bool do_updates)
                         // to do for when we move away from the area!)
                         if (buffy[bufcount] == 0)
                         {
-                            // show map
-                            buffy[bufcount] = get_envmap_char( gc.x, gc.y );
+                            // Show map.
+                            buffy[bufcount]     = get_envmap_char( gc.x, gc.y );
                             buffy[bufcount + 1] = DARKGREY;
 
                             if (Options.colour_map)
@@ -4914,7 +4939,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     }
                 }
 
-                // alter colour if flashing the characters vision
+                // Alter colour if flashing the characters vision.
                 if (flash_colour && buffy[bufcount])
                 {
                     buffy[bufcount + 1] =
@@ -4930,7 +4955,7 @@ void viewwindow(bool draw_it, bool do_updates)
         // and this simply works without requiring a stack.
         you.flash_colour = BLACK;
 
-        // avoiding unneeded draws when running
+        // Avoiding unneeded draws when running.
         if (draw)
         {
 #ifdef USE_TILE

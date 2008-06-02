@@ -578,7 +578,6 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
     case LEVEL_LABYRINTH:
         if (down)
         {
-            // Can't go down in the Labyrinth
             mpr("Can't go down in the Labyrinth.");
             return DNGN_UNSEEN;
         }

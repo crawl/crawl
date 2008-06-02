@@ -290,8 +290,9 @@ inline bool is_stash(const LevelStashes *ls, int x, int y)
 void clear_excludes()
 {
     // Sanity checks
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+    if (!player_in_mappable_area())
         return;
+
 #ifdef USE_TILE
     for (int i = curr_excludes.size()-1; i >= 0; i--)
          toggle_exclude(curr_excludes[i].pos);
@@ -346,7 +347,7 @@ void set_exclude(const coord_def &p, int radius)
 {
     // Sanity checks; excludes can be set in Pan and regular dungeon
     // levels only.
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+    if (!player_in_mappable_area())
         return;
 
     if (!in_bounds(p))

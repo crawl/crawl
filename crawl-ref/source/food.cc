@@ -331,10 +331,11 @@ static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
 
 static bool _have_corpses_in_pack(bool remind)
 {
-    const bool can_bottle = (you.species == SP_VAMPIRE
-                             && you.experience_level > 5
-                             && (!you.duration[DUR_PRAYER]
-                                 || !god_likes_butchery(you.religion)));
+    const bool sacrifice  = (you.duration[DUR_PRAYER]
+                             && god_likes_butchery(you.religion));
+
+    const bool can_bottle = (!sacrifice && you.species == SP_VAMPIRE
+                             && you.experience_level > 5);
 
     int num        = 0;
     int num_bottle = 0;
@@ -351,8 +352,12 @@ static bool _have_corpses_in_pack(bool remind)
             continue;
 
         // Only saprovorous characters care about rotten food.
-        if (food_is_rotten(obj) && !player_mutation_level(MUT_SAPROVOROUS))
+        // Also, rotten corpses can't be sacrificed.
+        if (food_is_rotten(obj) && (sacrifice
+                                    || !player_mutation_level(MUT_SAPROVOROUS)))
+        {
             continue;
+        }
 
         num++;
         if (can_bottle && mons_has_blood(obj.plus))
@@ -1106,7 +1111,7 @@ void eat_floor_item(int item_link)
     dec_mitm_item_quantity( item_link, 1 );
 }
 
-// return -1 for cancel, 1 for eaten, 0 for not eaten
+// Returns -1 for cancel, 1 for eaten, 0 for not eaten.
 int eat_from_floor()
 {
     if (you.flight_mode() == FL_LEVITATE)
@@ -1196,6 +1201,7 @@ int eat_from_floor()
             }
             else
                 _player_can_eat_rotten_meat(true);
+            need_more = true;
         }
         else if (inedible_food)
         {
@@ -1211,8 +1217,8 @@ int eat_from_floor()
             }
             else // Several different food items.
                 mpr("You refuse to eat these food items.");
+            need_more = true;
         }
-        need_more = true;
     }
 
     if (need_more && Options.auto_list)
@@ -1231,9 +1237,8 @@ static const char *_chunk_flavour_phrase(bool likes_chunks)
         const int gourmand = you.duration[DUR_GOURMAND];
         if (gourmand >= GOURMAND_MAX)
         {
-            phrase =
-                one_chance_in(1000)? "tastes like chicken!"
-                                   : "tastes great.";
+            phrase = one_chance_in(1000) ? "tastes like chicken!"
+                                         : "tastes great.";
         }
         else if (gourmand > GOURMAND_MAX * 75 / 100)
             phrase = "tastes very good.";
@@ -2041,6 +2046,8 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
 
                     if (!item_type_known(you.inv[amulet]))
                     {
+                        // For artefact amulets, this will tell you its name
+                        // and subtype. Other properties may still be hidden.
                         set_ident_flags( you.inv[ amulet], ISFLAG_KNOW_TYPE);
                         set_ident_type( OBJ_JEWELLERY, AMU_THE_GOURMAND,
                                         ID_KNOWN_TYPE );
