@@ -124,14 +124,14 @@ void formatted_string::parse_string_to_multiple(
     }
 }
 
-// Helper for the other parse_ methods
+// Helper for the other parse_ methods.
 void formatted_string::parse_string1(
         const std::string &s,
         formatted_string &fs,
         std::vector<int> &colour_stack,
         bool (*process)(const std::string &tag))
 {
-    // FIXME This is a lame mess, just good enough for the task on hand
+    // FIXME: This is a lame mess, just good enough for the task on hand
     // (keyboard help).
     std::string::size_type tag    = std::string::npos;
     std::string::size_type length = s.length();
