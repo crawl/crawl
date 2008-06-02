@@ -2487,7 +2487,7 @@ std::string describe_favour(god_type which_god)
                                : "You should show more discipline.";
     }
 
-    return (which_god == GOD_XOM)?
+    return (which_god == GOD_XOM) ?
             describe_xom_favour() : describe_favour_generic(which_god);
 }
 
@@ -2566,7 +2566,7 @@ static std::string religion_help( god_type god )
 
 void describe_god( god_type which_god, bool give_title )
 {
-    int         colour;      // mv: colour used for some messages
+    int colour;              // mv: colour used for some messages
 
     clrscr();
 
