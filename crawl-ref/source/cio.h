@@ -1,6 +1,6 @@
 /*
  *  File:       cio.h
- *  Summary:    System independent console IO functions 
+ *  Summary:    System independent console IO functions
  *  Created by: dshaligram on Wed Jun 20 19:00:52 2007 UTC
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
@@ -24,14 +24,14 @@ public:
 
     void new_input(const std::string &s);
     void clear();
-    
+
     const std::string *prev();
     const std::string *next();
 
     void go_end();
 private:
     typedef std::list<std::string> string_list;
-    
+
     string_list             history;
     string_list::iterator   pos;
     size_t maxsize;
@@ -58,14 +58,14 @@ void get_input_line( char *const buff, int len );
 // In view.cc, declared here for default argument to cancelable_get_line()
 int get_number_of_cols(void);
 
-// Returns zero if user entered text and pressed Enter, otherwise returns the 
+// Returns zero if user entered text and pressed Enter, otherwise returns the
 // key pressed that caused the exit, usually Escape.
 //
 // If keyproc is provided, it must return 1 for normal processing, 0 to exit
 // normally (pretend the user pressed Enter), or -1 to exit as if the user
 // pressed Escape
-int cancelable_get_line( char *buf, 
-                         int len, 
+int cancelable_get_line( char *buf,
+                         int len,
                          int wrapcol = get_number_of_cols(),
                          input_history *mh = NULL,
                          int (*keyproc)(int &c) = NULL );
@@ -199,7 +199,7 @@ enum KEYS
 class cursor_control
 {
 public:
-    cursor_control(bool cursor_enabled) 
+    cursor_control(bool cursor_enabled)
         : cstate(is_cursor_enabled()), smartcstate(is_smart_cursor_enabled())
     {
         enable_smart_cursor(false);
@@ -218,7 +218,7 @@ private:
 class line_reader
 {
 public:
-    line_reader(char *buffer, size_t bufsz, 
+    line_reader(char *buffer, size_t bufsz,
                 int wrap_col = get_number_of_cols());
     virtual ~line_reader();
 
