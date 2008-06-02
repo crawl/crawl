@@ -113,4 +113,12 @@ void set_unrandart_exist(int whun, bool is_exist);
 int find_unrandart_index(const item_def& artefact);
 int find_unrandart_index(const item_def &item);
 
+/* ***********************************************************************
+ * called from: debug
+ * *********************************************************************** */
+void randart_set_properties( item_def             &item,
+                             randart_properties_t &proprt );
+void randart_set_property( item_def          &item,
+                           randart_prop_type  prop,
+                           int                val );
 #endif

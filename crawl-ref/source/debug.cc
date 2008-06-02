@@ -1308,6 +1308,159 @@ void create_spec_object()
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
+
+const char* _prop_name[RAP_NUM_PROPERTIES] = {
+    "Brand",
+    "AC",
+    "EV",
+    "Str",
+    "Int",
+    "Dex",
+    "Fire",
+    "Cold",
+    "Elec",
+    "Pois",
+    "Neg",
+    "Mag",
+    "SInv",
+    "Inv",
+    "Lev",
+    "Blnk",
+    "Tele",
+    "Bers",
+    "Map",
+    "Nois",
+    "NoSpl",
+    "RndTl",
+    "NoTel",
+    "Anger",
+    "Metab",
+    "Mut",
+    "Acc",
+    "Dam",
+    "Curse",
+    "Stlth",
+    "MP"
+};
+
+#define RAP_VAL_BOOL 0
+#define RAP_VAL_POS  1
+#define RAP_VAL_ANY  2
+
+char _prop_type[RAP_NUM_PROPERTIES] = {
+    RAP_VAL_POS,  //BRAND
+    RAP_VAL_ANY,  //AC
+    RAP_VAL_ANY,  //EVASION
+    RAP_VAL_ANY,  //STRENGTH
+    RAP_VAL_ANY,  //INTELLIGENCE
+    RAP_VAL_ANY,  //DEXTERITY
+    RAP_VAL_ANY,  //FIRE
+    RAP_VAL_ANY,  //COLD
+    RAP_VAL_BOOL, //ELECTRICITY
+    RAP_VAL_BOOL, //POISON
+    RAP_VAL_BOOL, //NEGATIVE_ENERGY
+    RAP_VAL_POS,  //MAGIC
+    RAP_VAL_BOOL, //EYESIGHT
+    RAP_VAL_BOOL, //INVISIBLE
+    RAP_VAL_BOOL, //LEVITATE
+    RAP_VAL_BOOL, //BLINK
+    RAP_VAL_BOOL, //CAN_TELEPORT
+    RAP_VAL_BOOL, //BERSERK
+    RAP_VAL_BOOL, //MAPPING
+    RAP_VAL_POS,  //NOISES
+    RAP_VAL_BOOL, //PREVENT_SPELLCASTING
+    RAP_VAL_BOOL, //CAUSE_TELEPORTATION
+    RAP_VAL_BOOL, //PREVENT_TELEPORTATION
+    RAP_VAL_POS,  //ANGRY
+    RAP_VAL_POS,  //METABOLISM
+    RAP_VAL_POS,  //MUTAGENIC
+    RAP_VAL_ANY,  //ACCURACY
+    RAP_VAL_ANY,  //DAMAGE
+    RAP_VAL_POS,  //CURSED
+    RAP_VAL_ANY,  //STEALTH
+    RAP_VAL_ANY   //MAGICAL_POWER
+};
+
+static void _tweak_randart(item_def &item)
+{
+    if (item_is_equipped(item))
+    {
+        mpr("You can't tweak the randart properties of an equipped item.",
+            MSGCH_PROMPT);
+        return;
+    }
+
+    randart_properties_t props;
+    randart_wpn_properties(item, props);
+
+    std::string prompt = "";
+
+    for (int i = 0; i < RAP_NUM_PROPERTIES; i++)
+    {
+        if (i % 8 == 0 && i != 0)
+            prompt += "\n";
+
+        char choice;
+        char buf[80];
+
+        if (i < 26)
+            choice = 'A' + i;
+        else
+            choice = '1' + i - 26;
+
+        if (props[i])
+            sprintf(buf, "%c) <w>%-5s</w> ", choice, _prop_name[i]);
+        else
+            sprintf(buf, "%c) %-5s ", choice, _prop_name[i]);
+
+        prompt += buf;
+    }
+    formatted_message_history(prompt, MSGCH_PROMPT, 0, 80);
+
+    mpr( "Change which field? ", MSGCH_PROMPT );
+
+    char keyin = tolower( get_ch() );
+    int  choice;
+
+    if (isalpha(keyin))
+        choice = keyin - 'a';
+    else if (isdigit(keyin) && keyin != '0')
+        choice = keyin - '1' + 26;
+    else
+        return;
+
+    int val;
+    switch(_prop_type[choice])
+    {
+    case RAP_VAL_BOOL:
+        mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[choice],
+             props[choice] ? "off" : "on");
+        randart_set_property(item, static_cast<randart_prop_type>(choice),
+                             !props[choice]);
+        break;
+
+    case RAP_VAL_POS:
+        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[choice], props[choice]);
+        val = _debug_prompt_for_int("New value? ", true);
+
+        if (val < 0)
+        {
+            mprf(MSGCH_PROMPT, "Value for %s must be non-negative",
+                 _prop_name[choice]);
+            return;
+        }
+        randart_set_property(item, static_cast<randart_prop_type>(choice),
+                             val);
+        break;
+    case RAP_VAL_ANY:
+        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[choice], props[choice]);
+        val = _debug_prompt_for_int("New value? ", false);
+        randart_set_property(item, static_cast<randart_prop_type>(choice),
+                             val);
+        break;
+    }
+}
+
 void tweak_object(void)
 {
     char specs[50];
@@ -1323,6 +1476,9 @@ void tweak_object(void)
     if (item == you.equip[EQ_WEAPON])
         you.wield_change = true;
 
+    const bool is_art = is_artefact(you.inv[item])
+        && !is_unrandom_artefact(you.inv[item]);
+
     while (true)
     {
         void *field_ptr = NULL;
@@ -1331,8 +1487,13 @@ void tweak_object(void)
         {
             mpr( you.inv[item].name(DESC_INVENTORY_EQUIP).c_str() );
 
-            mpr( "a - plus  b - plus2  c - special  d - quantity  e - flags  ESC - exit",
-                 MSGCH_PROMPT );
+            if (is_art)
+                mpr( "a - plus  b - plus2  c - art props  d - quantity  "
+                     "e - flags  ESC - exit", MSGCH_PROMPT );
+            else
+                mpr( "a - plus  b - plus2  c - special  d - quantity  "
+                     "e - flags  ESC - exit", MSGCH_PROMPT );
+
             mpr( "Which field? ", MSGCH_PROMPT );
 
             keyin = tolower( get_ch() );
@@ -1356,6 +1517,12 @@ void tweak_object(void)
 
             if (keyin >= 'a' && keyin <= 'e')
                 break;
+        }
+
+        if (is_art && keyin == 'c')
+        {
+            _tweak_randart(you.inv[item]);
+            continue;
         }
 
         if (keyin != 'c' && keyin != 'e')

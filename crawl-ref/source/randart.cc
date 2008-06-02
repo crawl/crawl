@@ -1929,3 +1929,35 @@ const char *unrandart_descrip( int which_descrip, const item_def &item )
             (which_descrip == 2) ? unrand->spec_descrip3
                                  : "Unknown.");
 }
+
+void randart_set_properties( item_def             &item,
+                             randart_properties_t &proprt )
+{
+    ASSERT( is_random_artefact( item ) );
+    ASSERT( !is_unrandom_artefact ( item ) );
+    ASSERT( item.props.exists( RANDART_PROPS_KEY ) );
+
+    CrawlVector &rap_vec = item.props[RANDART_PROPS_KEY].get_vector();
+    ASSERT( rap_vec.get_type()     == SV_SHORT );
+    ASSERT( rap_vec.size()         == RA_PROPERTIES);
+    ASSERT( rap_vec.get_max_size() == RA_PROPERTIES);
+
+    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        rap_vec[i].get_short() = proprt[i];
+}
+
+void randart_set_property( item_def         &item,
+                           randart_prop_type prop,
+                           int               val )
+{
+    ASSERT( is_random_artefact( item ) );
+    ASSERT( !is_unrandom_artefact ( item ) );
+    ASSERT( item.props.exists( RANDART_PROPS_KEY ) );
+
+    CrawlVector &rap_vec = item.props[RANDART_PROPS_KEY].get_vector();
+    ASSERT( rap_vec.get_type()     == SV_SHORT );
+    ASSERT( rap_vec.size()         == RA_PROPERTIES);
+    ASSERT( rap_vec.get_max_size() == RA_PROPERTIES);
+
+    rap_vec[prop].get_short() = val;
+}
