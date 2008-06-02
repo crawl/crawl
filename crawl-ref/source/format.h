@@ -57,11 +57,11 @@ public:
             const std::string &s,
             bool  eot_ends_format = true,
             bool (*process_tag)(const std::string &tag) = NULL );
-    
+
     static void parse_string_to_multiple(
             const std::string &s,
             std::vector<formatted_string> &out);
-            
+
     static formatted_string parse_block(
             const std::string &s,
             bool  eot_ends_format = true,
@@ -85,17 +85,17 @@ public:
         int x, y;
         bool relative;
         std::string text;
-        
+
         fs_op(int color)
             : type(FSOP_COLOUR), x(color), y(-1), relative(false), text()
         {
         }
-        
+
         fs_op(int cx, int cy, bool rel = false)
             : type(FSOP_CURSOR), x(cx), y(cy), relative(rel), text()
         {
         }
-        
+
         fs_op(const std::string &s)
             : type(FSOP_TEXT), x(-1), y(-1), relative(false), text(s)
         {
