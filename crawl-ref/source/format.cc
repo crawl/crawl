@@ -153,11 +153,11 @@ void formatted_string::parse_string1(
             if (bound != endpos)
                 bound += strlen(EOL);
             else
-                bound = 999;
+                bound = 998;
 
-            fs.cprintf(currs.substr(0, bound));
-            if (currs.size() > bound)
-                currs = currs.substr(bound);
+            fs.cprintf(currs.substr(0, bound + 1));
+            if (currs.size() > bound + 1)
+                currs = currs.substr(bound + 1);
             else
                 currs.clear();
             tag--;
