@@ -387,13 +387,13 @@ static bool _have_corpses_in_pack(bool remind)
 
     if (remind)
     {
-        text << "You might want to also " << verb << " the " << noun
-             << " in your pack.";
+        mprf("You might want to also %s the %s in your pack.", verb.c_str(),
+             noun.c_str());
     }
     else
     {
-        text << "If you dropped the " << noun << " in your pack "
-             << "then you could " << verb << " " << pronoun  << ".";
+        mprf("If you dropped the %s in your pack you could %s %s.",
+             verb.c_str(), noun.c_str(), pronoun.c_str());
     }
 
     mpr(text.str().c_str());
@@ -550,24 +550,11 @@ bool butchery(int which_corpse)
             // * Mummies can't eat
             // * Ghouls relish the bad things
             // * Vampires won't bottle bad corpses
+            // Also, don't bother colouring if it's only for sacrificing.
             if (!sacrifice && !you.is_undead)
             {
-                // Don't bother colouring if it's only for sacrificing.
-                std::string cprf       = menu_colour_item_prefix(mitm[o]);
-                std::string colour     = "";
-                std::string colour_off = "";
-                int col = menu_colour(corpse_name, cprf, "pickup");
-
-                if (col != LIGHTGRAY)
-                    colour = colour_to_str( col );
-
-                if (!colour.empty())
-                {
-                    // Order is important here.
-                    colour_off  = "</" + colour + ">";
-                    colour      = "<" + colour + ">";
-                    corpse_name = colour + corpse_name + colour_off;
-                }
+                corpse_name = get_menu_colour_prefix_tags(mitm[o],
+                                                          DESC_NOCAP_A);
             }
 
             // Shall we butcher this corpse?

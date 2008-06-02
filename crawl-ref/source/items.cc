@@ -768,8 +768,9 @@ void item_check(bool verbose)
 
     if (items.size() == 1 )
     {
-        strm << "You see here " << items[0]->name(DESC_NOCAP_A)
-             << '.' << std::endl;
+        item_def it(*items[0]);
+        std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
+        strm << "You see here " << name << '.' << std::endl;
         return;
     }
 
@@ -805,26 +806,32 @@ void item_check(bool verbose)
             }
 
             out_string += static_cast<unsigned char>(item_chars[i] / 0x100);
-            if (i + 1 < item_chars.size() &&
-                (item_chars[i] / 0x100) != (item_chars[i+1] / 0x100))
+            if (i + 1 < item_chars.size()
+                && (item_chars[i] / 0x100) != (item_chars[i+1] / 0x100))
+            {
                 out_string += ' ';
+            }
         }
         formatted_mpr(formatted_string::parse_string(out_string),
                       MSGCH_FLOOR_ITEMS);
         done_init_line = true;
     }
 
-    if ( verbose || static_cast<int>(items.size() + 1) < crawl_view.msgsz.y )
+    if (verbose || static_cast<int>(items.size() + 1) < crawl_view.msgsz.y)
     {
-        if ( !done_init_line )
+        if (!done_init_line)
             strm << "Things that are here:" << std::endl;
-        for ( unsigned int i = 0; i < items.size(); ++i )
-            strm << items[i]->name(DESC_NOCAP_A) << std::endl;
+        for (unsigned int i = 0; i < items.size(); ++i)
+        {
+            item_def it(*items[i]);
+            std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
+            strm << name << std::endl;
+        }
     }
-    else if ( !done_init_line )
+    else if (!done_init_line)
         strm << "There are many items here." << std::endl;
 
-    if ( items.size() > 5 )
+    if (items.size() > 5)
         learned_something_new(TUT_MULTI_PICKUP);
 }
 
@@ -1219,7 +1226,8 @@ void pickup()
             if (keyin != 'a')
             {
                 mprf(MSGCH_PROMPT, "Pick up %s? (y/n/a/*?g,/q)",
-                     mitm[o].name(DESC_NOCAP_A).c_str() );
+                     get_menu_colour_prefix_tags(mitm[o],
+                                                 DESC_NOCAP_A).c_str());
 #ifndef USE_TILE
                 keyin = get_ch();
 #else
@@ -1905,9 +1913,9 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     const dungeon_feature_type my_grid = grd[you.x_pos][you.y_pos];
 
-    if ( !grid_destroys_items(my_grid)
-         && !copy_item_to_grid( you.inv[item_dropped],
-                                you.x_pos, you.y_pos, quant_drop, true ))
+    if (!grid_destroys_items(my_grid)
+        && !copy_item_to_grid( you.inv[item_dropped],
+                               you.x_pos, you.y_pos, quant_drop, true ))
     {
         mpr( "Too many items on this level, not dropping the item." );
         return (false);
@@ -2155,10 +2163,8 @@ static void _autoinscribe_floor_items()
 static void _autoinscribe_inventory()
 {
     for (int i = 0; i < ENDOFPACK; i++)
-    {
         if (is_valid_item(you.inv[i]))
             _autoinscribe_item( you.inv[i] );
-    }
 }
 
 bool need_to_autoinscribe()

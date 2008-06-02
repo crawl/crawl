@@ -40,7 +40,7 @@ enum item_type_id_state_type  // used for values in id[4][50]
     ID_KNOWN_TYPE
 };
 
-// [dshaligram] If you edit potion colours/descriptions, also update 
+// [dshaligram] If you edit potion colours/descriptions, also update
 // itemname.cc.
 enum potion_description_colour_type
 {
@@ -61,7 +61,7 @@ enum potion_description_colour_type
     PDC_NCOLOURS
 };
 
-// [dshaligram] If you edit potion colours/descriptions, also update 
+// [dshaligram] If you edit potion colours/descriptions, also update
 // itemname.cc.
 enum potion_description_qualifier_type
 {
@@ -131,6 +131,8 @@ void set_ident_type( object_class_type basetype, int subtype,
  * called from: command - itemname - invent.h
  * *********************************************************************** */
 const std::string menu_colour_item_prefix(const item_def &item);
+const std::string get_menu_colour_prefix_tags(item_def &item,
+                                              description_level_type desc);
 
 void            init_item_name_cache();
 item_types_pair item_types_by_name(std::string name);

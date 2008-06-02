@@ -89,7 +89,7 @@ bool cast_selective_amnesia(bool force)
                 break;
         }
 
-        // actual handling begins here {dlb}:
+        // Actual handling begins here {dlb}:
         const spell_type spell = get_spell_by_letter( keyin );
         const int slot  = get_spell_slot_by_letter( keyin );
 
@@ -129,15 +129,15 @@ bool remove_curse(bool suppress_msg)
     bool success = false;       // whether or not curse(s) removed {dlb}
 
     // Special "wield slot" case - see if you can figure out why {dlb}:
-    // ... because only cursed weapons in hand count as cursed -- bwr
+    // ... because only cursed *weapons* in hand count as cursed -- bwr
     if (you.equip[EQ_WEAPON] != -1
         && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS)
     {
         if (item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
         {
+            // Also sets wield_change.
             do_uncurse_item( you.inv[you.equip[EQ_WEAPON]] );
             success = true;
-            you.wield_change = true;
         }
     }
 

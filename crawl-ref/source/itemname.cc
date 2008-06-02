@@ -29,6 +29,7 @@
 
 #include "decks.h"
 #include "food.h"
+#include "initfile.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "itemprop.h"
@@ -2243,6 +2244,30 @@ const std::string menu_colour_item_prefix(const item_def &item)
 
     return result;
 }
+
+const std::string get_menu_colour_prefix_tags(item_def &item,
+                                              description_level_type desc)
+{
+    std::string cprf       = menu_colour_item_prefix(item);
+    std::string colour     = "";
+    std::string colour_off = "";
+    std::string item_name  = item.name(desc);
+    int col = menu_colour(item_name, cprf, "pickup");
+
+    if (col != LIGHTGRAY)
+        colour = colour_to_str( col );
+
+    if (!colour.empty())
+    {
+        // Order is important here.
+        colour_off  = "</" + colour + ">";
+        colour      = "<" + colour + ">";
+        item_name = colour + item_name + colour_off;
+    }
+
+    return (item_name);
+}
+
 
 typedef std::map<std::string, item_types_pair> item_names_map;
 static item_names_map item_names_cache;

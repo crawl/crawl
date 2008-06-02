@@ -1363,7 +1363,9 @@ static void _input()
 
     Options.tut_just_triggered = false;
 
-    if ( i_feel_safe() )
+    // He, we don't want those "Whew, it's safe to rest now" messages when
+    // you were just cast into the abyss. Right?
+    if (i_feel_safe() && you.level_type != LEVEL_ABYSS)
     {
         if (Options.tutorial_left)
         {
@@ -2199,7 +2201,7 @@ void process_command( command_type cmd )
         {
             coord_def pos;
 #ifdef USE_TILE
-            // Since they're no actual overview map, but the functionality
+            // Since there's no actual overview map, but the functionality
             // exists, give a message to explain what's going on.
             std::string str = "Move the cursor to view the level map, or "
                               "type <w>?</w> for a list of commands.";

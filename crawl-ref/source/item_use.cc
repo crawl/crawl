@@ -3410,44 +3410,47 @@ void zap_wand( int slot )
         zap_wand.ty = you.y_pos + random2(13) - 6;
     }
 
-    zap_type type_zapped = static_cast<zap_type>(wand.zap());
-    bool random = false;
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
-    {
         beam.effect_known = false;
-        random = true;
-        if (dangerous)
-        {
-            // Xom loves it when you use a Wand of Random Effects and
-            // there is a dangerous monster nearby...
-            xom_is_stimulated(255);
-        }
-    }
 
+    zap_type type_zapped = static_cast<zap_type>(wand.zap());
     beam.source_x = you.x_pos;
     beam.source_y = you.y_pos;
     beam.set_target(zap_wand);
 
+    beam.aimed_at_feet =
+        (beam.target_x == you.x_pos && beam.target_y == you.y_pos);
+
     // Check whether we may hit friends, use "safe" values for random effects
-    // (highest possible range, and unresistable beam flavour).
-    if (!player_tracer(random ? ZAP_DEBUGGING_RAY : type_zapped,
-                       2 * (you.skills[SK_EVOCATIONS] - 1), beam,
-                       random ? 17 : 0))
+    // and unknown wands (highest possible range, and unresistable beam
+    // flavour). Don't use the tracer if firing at self.
+    if (!beam.aimed_at_feet
+        && !player_tracer(!beam.effect_known ? ZAP_DEBUGGING_RAY
+                                             : type_zapped,
+                          2 * (you.skills[SK_EVOCATIONS] - 1),
+                          beam, !beam.effect_known ? 17 : 0))
     {
         return;
     }
 
-    // zapping() updates beam
+    if (dangerous && alreadyknown && wand.sub_type == WAND_RANDOM_EFFECTS)
+    {
+        // Xom loves it when you use a Wand of Random Effects and
+        // there is a dangerous monster nearby...
+        xom_is_stimulated(255);
+    }
+
+    // zapping() updates beam.
     zapping( type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
-    // take off a charge
+    // Take off a charge.
     wand.plus--;
 
-    // increment zap count
+    // Increment zap count.
     if (wand.plus2 >= 0)
         wand.plus2++;
 
-    // identify if necessary
+    // Identify if necessary.
     if (!alreadyknown && (beam.obvious_effect || type_zapped == ZAP_FIREBALL))
     {
         set_ident_type( wand.base_type, wand.sub_type, ID_KNOWN_TYPE );
@@ -3963,7 +3966,6 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
                 mprf("%s glows silver for a moment.",
                      arm.name(DESC_CAP_YOUR).c_str());
             }
-
             do_uncurse_item( arm );
             return (true);
         }
@@ -4349,8 +4351,8 @@ void read_scroll( int slot )
         }
         else
         {
+            // Also sets wield_change.
             do_curse_item( you.inv[nthing], false );
-            you.wield_change = true;
         }
         break;
 
@@ -4465,7 +4467,7 @@ void read_scroll( int slot )
         }
         else
         {
-            // make the name before we curse it
+            // Make the name before we curse it.
             do_curse_item( you.inv[you.equip[affected]], false );
         }
         break;
@@ -4638,8 +4640,8 @@ void use_randart(item_def &item)
         randart_wpn_learn_prop(item, RAP_BERSERK);
     }
 
-    if ( !item_cursed(item) && proprt[RAP_CURSED] > 0
-         && one_chance_in(proprt[RAP_CURSED]) )
+    if (!item_cursed(item) && proprt[RAP_CURSED] > 0
+         && one_chance_in(proprt[RAP_CURSED]))
     {
         do_curse_item( item, false );
         randart_wpn_learn_prop(item, RAP_CURSED);

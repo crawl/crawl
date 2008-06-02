@@ -233,6 +233,7 @@ static void _beam_set_default_values(bolt &beam, int power)
 // If needs_tracer is true, we need to check the beam path for friendly
 // monsters for *player beams* only! If allies are found, the player is
 // prompted to stop or continue.
+// NOTE: Doesn't check for the player being hit by a rebounding lightning bolt.
 bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
              std::string msg)
 {
@@ -249,9 +250,9 @@ bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
     _beam_set_default_values(pbolt, power);
 
     // For player bolts, check whether tracer goes through friendlies.
-    // NOTE: Whenever zapping() is called with a randomized value for power,
-    // player_tracer should be called directly with the highest power possible
-    // respecting current skill, experience level etc.
+    // NOTE: Whenever zapping() is called with a randomized value for power
+    // (or effect), player_tracer should be called directly with the highest
+    // power possible respecting current skill, experience level etc.
 
     if (needs_tracer && pbolt.thrower == KILL_YOU_MISSILE
         && !player_tracer(ztype, power, pbolt))
@@ -259,7 +260,7 @@ bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
         return (false);
     }
 
-    // fill in the bolt structure
+    // Fill in the bolt structure.
     _zappy( ztype, power, pbolt );
 
     if (!msg.empty())
@@ -267,14 +268,14 @@ bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
 
     if (ztype == ZAP_LIGHTNING)
     {
-        // XXX: needs to check silenced at other location, too {dlb}
+        // XXX: Needs to check silenced at other location, too. {dlb}
         noisy(25, you.x_pos, you.y_pos, "You hear a mighty clap of thunder!");
     }
 
     fire_beam(pbolt);
 
     return (true);
-}                               // end zapping()
+}
 
 // pbolt needs to be initialized for tracing: with the the maximum range,
 // and the flavour to allow for completely resistant monsters.
@@ -660,8 +661,6 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
 
 // Returns true if the path is considered "safe", and false if there are
 // monsters in the way the player doesn't want to hit.
-// FIXME: Also needs to check for fleeing monster with TSO and neutrals for
-//        all good gods.
 bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 {
     // Non-controlleable during confusion.
@@ -669,11 +668,17 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     if (you.duration[DUR_CONF])
         return (true);
 
+    // If you target yourself, that's always deliberate.
+    // This is basically pbolt.aimed_at_feet except that that hasn't been
+    // initialized yet.
+    if (pbolt.target_x == you.x_pos && pbolt.target_y == you.y_pos);
+        return (true);
+
     _beam_set_default_values(pbolt, power);
     pbolt.name = "unimportant";
     _get_max_range(ztype, power, pbolt);
 
-    // override range if necessary
+    // Override range if necessary.
     if (range > 0)
         pbolt.rangeMax = range;
 
@@ -684,7 +689,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.smart_monster = true;
     pbolt.attitude      = ATT_FRIENDLY;
 
-    // init tracer variables
+    // Init tracer variables.
     pbolt.foe_count     = pbolt.fr_count = 0;
     pbolt.foe_power     = pbolt.fr_power = 0;
     pbolt.fr_helped     = pbolt.fr_hurt  = 0;
@@ -1733,7 +1738,7 @@ static bool _affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
 
 void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 {
-    bool beamTerminate;     // has beam been 'stopped' by something?
+    bool beamTerminate;     // Has beam been 'stopped' by something?
     int &tx(pbolt.pos.x), &ty(pbolt.pos.y);     // test(new) x,y - integer
     int rangeRemaining;
     bool did_bounce = false;
@@ -1792,7 +1797,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
     // Give chance for beam to affect one cell even if aimed_at_feet.
     beamTerminate = false;
 
-    // setup range
+    // Setup range.
     rangeRemaining = pbolt.range;
     if (pbolt.rangeMax > pbolt.range)
     {
@@ -1892,7 +1897,9 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         // monsters have no chance to dodge or block such
         // a beam, and we want to avoid silly messages.
         if (tx == pbolt.target_x && ty == pbolt.target_y)
+        {
             beamTerminate = _beam_term_on_target(pbolt, tx, ty);
+        }
 
         // Affect the cell, except in the special case noted
         // above -- affect() will early out if something gets
@@ -1909,7 +1916,9 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             }
 
             if (!pbolt.affects_nothing)
+            {
                 rangeRemaining -= affect(pbolt, tx, ty, item);
+            }
 
             if (random_beam)
             {
@@ -1962,15 +1971,15 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
                     pbolt.colour == BLACK ? random_colour() : pbolt.colour,
                     pbolt.type );
 
-                // get curses to update the screen so we can see the beam
+                // Get curses to update the screen so we can see the beam.
                 update_screen();
 
                 delay(15);
 
 #ifdef MISSILE_TRAILS_OFF
+                // mv: It's not optimal but is usually enough.
                 if (!pbolt.is_beam || pbolt.name[0] == '0')
-                    viewwindow(1,false); // mv: added. It's not optimal but
-                                         // is usually enough
+                    viewwindow(1,false);
 #endif
             }
 
@@ -1982,9 +1991,9 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             ray.advance(true);
     } // end- while !beamTerminate
 
-    // the beam has finished, and terminated at tx, ty
+    // The beam has finished, and terminated at tx, ty.
 
-    // leave an object, if applicable
+    // Leave an object, if applicable.
     if (drop_item && item)
         beam_drop_object( pbolt, item, tx, ty );
 
@@ -2022,7 +2031,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         else if (pbolt.foe_helped > 0 && pbolt.fr_helped == 0)
             xom_is_stimulated(128);
 
-        // allow friendlies to react to projectiles.
+        // Allow friendlies to react to projectiles.
         const monsters *mon = &menv[pbolt.beam_source];
         if (pbolt.foe_hurt > 0 && !mons_wont_attack(mon)
             && you.pet_target == MHITNOT)
@@ -2031,7 +2040,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         }
     }
 
-    // that's it!
+    // That's it!
 #ifdef WIN32CONSOLE
     if (!pbolt.is_tracer)
         set_buffering(oldValue);
@@ -3093,8 +3102,8 @@ int affect(bolt &beam, int x, int y, item_def *item)
             return (BEAM_STOP);
     }
 
-    // if there is a monster at this location, affect it
-    // submerged monsters aren't really there -- bwr
+    // If there is a monster at this location, affect it.
+    // Submerged monsters aren't really there. -- bwr
     int mid = mgrd[x][y];
     if (mid != NON_MONSTER)
     {
@@ -3545,11 +3554,11 @@ static std::string _beam_zapper(const bolt &beam)
 // Returns amount of extra range used up by affectation of the player.
 static int _affect_player( bolt &beam, item_def *item )
 {
-    // digging -- don't care.
+    // Digging -- don't care.
     if (beam.flavour == BEAM_DIGGING)
         return (0);
 
-    // check for tracer
+    // Check for tracer.
     if (beam.is_tracer)
     {
         // Check whether thrower can see player, unless thrower == player.
@@ -3686,7 +3695,7 @@ static int _affect_player( bolt &beam, item_def *item )
             && you_resist_magic( beam.ench_power ))
         {
             bool need_msg = true;
-            if (beam.beam_source != -1)
+            if (beam.thrower != KILL_YOU_MISSILE && beam.beam_source != -1)
             {
                 monsters *mon = &menv[beam.beam_source];
                 if (!player_monster_visible(mon))
@@ -4649,9 +4658,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 else
                     num_success = 1;
 
-                if ( num_success )
+                if (num_success)
                 {
-                    if ( num_success == 2 )
+                    if (num_success == 2)
                         num_levels++;
                     poison_monster( mon, _whose_kill(beam), num_levels );
                 }
@@ -4687,7 +4696,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
         if (check_mons_resist_magic( mon, beam.ench_power )
             && !beam.aimed_at_feet)
         {
-            return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
+            return (mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST);
         }
 
         if (mons_near(mon) && player_monster_visible(mon))
@@ -5549,7 +5558,7 @@ void bolt::set_target(const dist &d)
     target_y = d.ty;
 
     chose_ray = d.choseRay;
-    if ( d.choseRay )
+    if (d.choseRay)
         ray = d.ray;
 
     if (d.isEndpoint)

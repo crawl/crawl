@@ -304,16 +304,20 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
 {
 #ifdef DGL_MILESTONES
     if (gate_type == DNGN_ENTER_ABYSS)
+    {
         mark_milestone("abyss.enter",
                        "is cast into the Abyss!" + who_banished(who));
+    }
     else if (gate_type == DNGN_EXIT_ABYSS)
+    {
         mark_milestone("abyss.exit",
                        "escaped from the Abyss!" + who_banished(who));
+    }
 #endif
 
     std::string cast_into = "";
 
-    switch(gate_type)
+    switch (gate_type)
     {
     case DNGN_ENTER_ABYSS:
         if (you.level_type == LEVEL_ABYSS)
@@ -430,7 +434,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
     }
 
-    // no longer held in net
+    // No longer held in net.
     clear_trapping_net();
 
     down_stairs(you.your_level, gate_type, you.entry_cause);  // heh heh
@@ -1407,7 +1411,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
                         type_wanted = random_rod_subtype();
                     break;
 
-                default: // invocations and leftover spell schools
+                default: // Invocations and leftover spell schools.
                     switch (random2(5))
                     {
                     case 0:
@@ -1499,7 +1503,7 @@ bool acquirement(object_class_type class_wanted, int agent,
 
     if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
     {
-        // how sad (and stupid)
+        // How sad (and stupid).
         if (!silenced(you.pos()) && !quiet)
         {
             mprf(MSGCH_SOUND,
@@ -1515,7 +1519,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         {
             int type_wanted = find_acquirement_subtype(class_wanted, quant);
 
-            // clobber class_wanted for vampires
+            // Clobber class_wanted for vampires.
             if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
                 class_wanted = OBJ_POTIONS;
 
@@ -1569,13 +1573,13 @@ bool acquirement(object_class_type class_wanted, int agent,
                 randart_properties_t  proprt;
                 randart_wpn_properties( doodad, proprt );
 
-                // check vs stats. positive stats will automatically fall
+                // Check vs stats. positive stats will automatically fall
                 // through.  As will negative stats that won't kill you.
                 if (-proprt[RAP_STRENGTH] >= you.strength
                     || -proprt[RAP_INTELLIGENCE] >= you.intel
                     || -proprt[RAP_DEXTERITY] >= you.dex)
                 {
-                    // try again
+                    // Try again.
                     destroy_item(thing_created);
                     thing_created = NON_ITEM;
                     continue;
@@ -1592,10 +1596,10 @@ bool acquirement(object_class_type class_wanted, int agent,
             return (false);
         }
 
-        // easier to read this way
+        // Easier to read this way.
         item_def& thing(mitm[thing_created]);
 
-        // give some more gold
+        // Give some more gold.
         if ( class_wanted == OBJ_GOLD )
             thing.quantity += 150;
         else if (quant > 1)
@@ -1604,7 +1608,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         if (is_blood_potion(thing))
             init_stack_blood_potions(thing);
 
-        // remove curse flag from item
+        // Remove curse flag from item.
         do_uncurse_item( thing );
 
         if (thing.base_type == OBJ_BOOKS)
@@ -1616,7 +1620,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             switch (thing.sub_type)
             {
             case RING_SLAYING:
-                // make sure plus to damage is >= 1
+                // Make sure plus to damage is >= 1.
                 thing.plus2 = abs( thing.plus2 );
                 if (thing.plus2 == 0)
                     thing.plus2 = 1;

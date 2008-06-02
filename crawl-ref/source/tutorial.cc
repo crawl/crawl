@@ -921,7 +921,7 @@ void tutorial_healing_reminder()
             std::string text;
             text =  "Remember to rest between fights and to enter unexplored "
                     "terrain with full hitpoints and magic. Ideally you "
-                    "should retreat back areas you've already explored and "
+                    "should retreat into areas you've already explored and "
                     "cleared of monsters; resting on the edge of the explored "
                     "terrain increases the chances of your rest being "
                     "interrupted by wandering monsters. For resting, press "

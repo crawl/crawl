@@ -126,7 +126,7 @@ const char* colour_to_str(unsigned char colour)
         return cols[colour].c_str();
 }
 
-// returns -1 if unmatched else returns 0-15
+// Returns -1 if unmatched else returns 0-15.
 int str_to_colour( const std::string &str, int default_colour,
                    bool accept_number )
 {

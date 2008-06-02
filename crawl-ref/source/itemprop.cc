@@ -499,6 +499,11 @@ void do_curse_item( item_def &item, bool quiet )
             {
                 amusement *= 2;
             }
+            else if (you.equip[EQ_WEAPON] == item.link)
+            {
+                // Redraw the weapon.
+                you.wield_change = true;
+            }
         }
         xom_is_stimulated(amusement);
     }
@@ -514,6 +519,11 @@ void do_curse_item( item_def &item, bool quiet )
 
 void do_uncurse_item( item_def &item )
 {
+    if (item.x == -1 && item.y == -1 && you.equip[EQ_WEAPON] == item.link)
+    {
+        // Redraw the weapon.
+        you.wield_change = true;
+    }
     item.flags &= (~ISFLAG_CURSED);
 }
 
@@ -1333,10 +1343,6 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
 {
     if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES)
         return (false);
-
-    // only equipped items should be affected
-//    if (!item_is_equipped(wpn))
-//        return (false);
 
     // Artefacts cannot be enchanted (missiles can't be artefacts).
     if (wpn.base_type == OBJ_WEAPONS

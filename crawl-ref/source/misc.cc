@@ -2124,9 +2124,21 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (!player_is_airborne()
         && you.duration[DUR_CONF]
         && !grid_is_escape_hatch(stair_find)
-        && random2(100) > you.dex)
+        && force_stair != DNGN_ENTER_ABYSS
+        /*&& random2(100) > you.dex*/)
     {
-        mpr("In your confused state, you trip and fall down the stairs.");
+        std::string fall_where = "down the stairs";
+
+        if (stair_find == DNGN_ENTER_ABYSS
+            || stair_find == DNGN_ENTER_PANDEMONIUM
+            || stair_find == DNGN_TRANSIT_PANDEMONIUM
+            || stair_find == DNGN_ENTER_PORTAL_VAULT)
+        {
+            fall_where = "through the gate";
+        }
+
+        mprf("In your confused state, you trip and fall %s.",
+             fall_where.c_str());
 
         // Nastier than when climbing stairs, but you'll aways get to
         // your destination. -- bwr
