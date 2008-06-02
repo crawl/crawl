@@ -2116,7 +2116,7 @@ bool mons_should_fire(struct bolt &beam)
     mprf(MSGCH_DIAGNOSTICS,
          "tracer: foes %d, friends %d, foe_ratio: %d, smart: %s",
          beam.foe_count, beam.fr_count, beam.foe_ratio,
-         beam.smart_monster? "yes" : "no");
+         beam.smart_monster ? "yes" : "no");
 #endif
     // use of foeRatio:
     // The higher this number, the more monsters will _avoid_
