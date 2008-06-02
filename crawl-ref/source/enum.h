@@ -511,7 +511,7 @@ enum command_type
 
     CMD_ANNOTATE_LEVEL,
 
-    /* overmap commands */
+    // overmap commands
     CMD_MAP_CLEAR_MAP,
     CMD_MAP_ADD_WAYPOINT,
     CMD_MAP_EXCLUDE_AREA,
@@ -555,7 +555,7 @@ enum command_type
 
     CMD_MAP_EXIT_MAP,
 
-    /* targeting commands */
+    // targeting commands
     CMD_TARGET_DOWN_LEFT,
     CMD_TARGET_DOWN,
     CMD_TARGET_DOWN_RIGHT,
