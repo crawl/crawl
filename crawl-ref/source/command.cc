@@ -660,6 +660,7 @@ static const char *targeting_help_1 =
     "<w>s</w>: force monster to shout or speak\n"
     "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
     "<w>P</w>: apply divine blessing to monster\n"
+    "<w>m</w>: move monster or player\n"
 #endif
 ;
 

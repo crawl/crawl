@@ -900,6 +900,16 @@ void direction(dist& moves, targeting_type restricts,
 
             wizard_give_monster_item(&menv[mid]);
             break;
+
+        case CMD_TARGET_WIZARD_MOVE:
+            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+                break;
+            wizard_move_player_or_monster(moves.tx, moves.ty);
+
+            loop_done = true;
+            skip_iter = true;
+
+            break;
 #endif
 
         case CMD_TARGET_DESCRIBE:
@@ -2464,6 +2474,7 @@ command_type targeting_behaviour::get_command(int key)
     case 'P':  return CMD_TARGET_WIZARD_BLESS_MONSTER;
     case 's':  return CMD_TARGET_WIZARD_MAKE_SHOUT;
     case 'g':  return CMD_TARGET_WIZARD_GIVE_ITEM;
+    case 'm':  return CMD_TARGET_WIZARD_MOVE;
 #endif
     case 'v':  return CMD_TARGET_DESCRIBE;
     case '?':  return CMD_TARGET_HELP;

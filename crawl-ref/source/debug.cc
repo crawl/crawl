@@ -75,6 +75,7 @@
 #include "monspeak.h"
 #include "monstuff.h"
 #include "mon-util.h"
+#include "mstuff2.h"
 #include "mutation.h"
 #include "newgame.h"
 #include "ouch.h"
@@ -3793,6 +3794,84 @@ void wizard_give_monster_item(monsters *mon)
         mpr("Fetching monster's old item.");
         move_item_to_player(old_eq, mitm[old_eq].quantity);
     }
+}
+#endif
+
+#ifdef WIZARD
+
+static void _move_player(int x, int y)
+{
+    // no longer held in net
+    clear_trapping_net();
+
+    if (!you.can_pass_through_feat(grd[x][y]))
+        grd[x][y] = DNGN_FLOOR;
+    move_player_to_grid(x, y, false, true, true);
+}
+
+static void _move_monster(int x, int y, int mid1)
+{
+    dist moves;
+    direction(moves, DIR_NONE, TARG_ANY, -1, true, false,
+              "Move monster to where?");
+
+    if (!moves.isValid || !in_bounds(moves.tx, moves.ty))
+        return;
+
+    struct monsters* mon1 = &menv[mid1];
+    if (mons_is_caught(mon1))
+        mons_clear_trapping_net(mon1);
+
+    int              mid2 = mgrd[moves.tx][moves.ty];
+    struct monsters* mon2 = NULL;
+
+    if (mid2 != NON_MONSTER)
+    {
+        mon2 = &menv[mid2];
+
+        if (mons_is_caught(mon2))
+            mons_clear_trapping_net(mon2);
+    }
+
+    mon1->x = moves.tx;
+    mon1->y = moves.ty;
+    mgrd[moves.tx][moves.ty] = mid1;
+    mon1->check_redraw(moves.target());
+
+    mgrd[x][y] = mid2;
+
+    if (mon2 != NULL)
+    {
+        mon2->x = x;
+        mon2->y = y;
+
+        mon1->check_redraw(coord_def(x, y));
+    }
+}
+
+void wizard_move_player_or_monster(int x, int y)
+{
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+
+    static bool already_moving = false;
+
+    if (already_moving)
+    {
+        mpr("Already doing a move command.");
+        return;
+    }
+
+    already_moving = true;
+
+    int mid = mgrd[x][y];
+
+    if (mid == NON_MONSTER)
+        _move_player(x, y);
+    else
+        _move_monster(x, y, mid);
+
+    already_moving = false;
 }
 #endif
 
