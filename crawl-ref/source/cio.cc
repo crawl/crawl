@@ -138,15 +138,15 @@ void get_input_line( char *const buff, int len )
     fgets( buff, len, stdin );  // much safer than gets()
 #endif
 
-    buff[ len - 1 ] = 0;  // just in case 
+    buff[ len - 1 ] = 0;  // just in case
 
     // Removing white space from the end in order to get rid of any
-    // newlines or carriage returns that any of the above might have 
+    // newlines or carriage returns that any of the above might have
     // left there (ie fgets especially).  -- bwr
-    const int end = strlen( buff ); 
-    int i; 
+    const int end = strlen( buff );
+    int i;
 
-    for (i = end - 1; i >= 0; i++) 
+    for (i = end - 1; i >= 0; i++)
     {
         if (isspace( buff[i] ))
             buff[i] = 0;
@@ -203,7 +203,7 @@ int wrapcprintf( int wrapcol, const char *s, ... )
 
         if (x > wrapcol) // Somebody messed up!
             return 0;
-        
+
         int avail = wrapcol - x + 1;
         int c = 0;
         if (len > avail)
@@ -212,7 +212,7 @@ int wrapcprintf( int wrapcol, const char *s, ... )
             run[avail] = 0;
         }
         cprintf("%s", run);
-        
+
         if (len > avail)
             run[avail] = c;
 
@@ -374,7 +374,7 @@ int line_reader::read_line(bool clear_previous)
             }
             else if (whattodo == -1)
             {
-                buffer[length] = 0;                
+                buffer[length] = 0;
                 return (ch);
             }
         }
@@ -457,8 +457,8 @@ int line_reader::process_key(int ch)
         if (!history)
             break;
 
-        const std::string *text = 
-                    ch == CK_UP? history->prev() : history->next();
+        const std::string *text =
+                    ch == CK_UP ? history->prev() : history->next();
 
         if (text)
         {
@@ -470,7 +470,7 @@ int line_reader::process_key(int ch)
             buffer[length] = 0;
             cursorto(0);
 
-            int clear = length < olen? olen - length : 0;
+            int clear = length < olen ? olen - length : 0;
             wrapcprintf(wrapcol, "%s%*s", buffer, clear, "");
 
             pos = length;
@@ -487,7 +487,7 @@ int line_reader::process_key(int ch)
 
     case CONTROL('K'):
     {
-        // Kill to end of line
+        // Kill to end of line.
         int erase = length - pos;
         if (erase)
         {
