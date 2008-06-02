@@ -13,6 +13,7 @@ Interface
 * Overhauled (f)iring interface: abolish (t)hrowing, output quiver in status.
 * Allow selection of equipment slots from '%' overview screen.
 * Improved butchering interface.
+* Greatly improved the tutorial.
 * Allow searching item/monster/spell descriptions ('?\' command).
 * Allow swapping (' command) to non-weapons that need to be wielded for spells.
 * Fixed weapon swap ignoring {!w}.
@@ -121,6 +122,7 @@ Levels
 * Several new vaults.
 * Fixed some levels having the wrong amount of stairs.
 * Treat adjacent doors as one (large) gate, opening/closing together.
+* Minotaurs may map labyrinths.
 * Removed amnesia traps.
 * Introduced shafts.
 * Added blood spattering.
@@ -131,7 +133,7 @@ Tiles
 * Save files between tile and non-tile games are compatible.
 * Added lots of new tiles, and corrected misdisplayed ones.
 * wininit.txt is now autocreated, if missing.
-* Tutorial improvement for tiles.
+* Adapted tutorial for tiles.
 * Improved mouse-click inventory/dungeon interaction.
 * Show travel exclusion in tile map and mini-map.
 * Fixed ghosts changing icons between saves.

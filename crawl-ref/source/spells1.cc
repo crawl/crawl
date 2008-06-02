@@ -1515,7 +1515,7 @@ void cast_swiftness(int power)
         you.duration[DUR_SWIFTNESS] = 100;
     else
         you.duration[DUR_SWIFTNESS] += dur_incr;
-}                               // end cast_swiftness()
+}
 
 void cast_fly(int power)
 {

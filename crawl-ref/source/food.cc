@@ -1114,6 +1114,8 @@ int eat_from_floor()
 
     bool need_more = false;
     int unusable_corpse = 0;
+    int inedible_food = 0;
+    item_def wonteat;
     bool found_valid = false;
     for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
     {
@@ -1138,6 +1140,25 @@ int eat_from_floor()
             unusable_corpse++;
             continue;
         }
+        else if (!can_ingest(item.base_type, item.sub_type, true))
+        {
+            if (!inedible_food)
+            {
+                wonteat = item;
+                inedible_food++;
+            }
+            else
+            {
+                // Increase only if we're dealing with different subtypes.
+                // FIXME: Use a common check for herbivorous/carnivorous
+                //        dislikes, for e.g. "Blech! You need blood!"
+                ASSERT(is_valid_item(wonteat));
+                if (wonteat.sub_type != item.sub_type)
+                    inedible_food++;
+            }
+
+            continue;
+        }
 
         found_valid = true;
         std::ostringstream prompt;
@@ -1148,9 +1169,9 @@ int eat_from_floor()
         const int ans = yesnoquit( prompt.str().c_str(), true, 0, false, false,
                                    'E' );
 
-        if ( ans == -1 )        // quit
+        if (ans == -1)        // quit
             return -1;
-        else if ( ans == 1 )    // yes
+        else if (ans == 1)    // yes
         {
             if (can_ingest(item.base_type, item.sub_type, false))
             {
@@ -1162,17 +1183,35 @@ int eat_from_floor()
         // else no: try next one
     }
 
-    if (!found_valid && unusable_corpse)
+    if (!found_valid)
     {
-        if (you.species == SP_VAMPIRE)
+        // Give a message about why these food items can not actually be eaten.
+        if (unusable_corpse)
         {
-            mprf("%s devoid of blood.",
-                 (unusable_corpse == 1) ? "This corpse is"
-                                        : "These corpses are");
+            if (you.species == SP_VAMPIRE)
+            {
+                mprf("%s devoid of blood.",
+                     (unusable_corpse == 1) ? "This corpse is"
+                                            : "These corpses are");
+            }
+            else
+                _player_can_eat_rotten_meat(true);
         }
-        else
-            _player_can_eat_rotten_meat(true);
-
+        else if (inedible_food)
+        {
+            if (inedible_food == 1)
+            {
+                ASSERT(is_valid_item(wonteat));
+                // Use the normal cannot ingest message.
+                if (can_ingest(wonteat.base_type, wonteat.sub_type, false))
+                {
+                    mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
+                         wonteat.name(DESC_PLAIN).c_str() );
+                }
+            }
+            else // Several different food items.
+                mpr("You refuse to eat these food items.");
+        }
         need_more = true;
     }
 

@@ -873,6 +873,8 @@ void handle_monster_shouts(monsters* monster, bool force)
 
     // Get it once, since monster might be S_RANDOM, in which case
     // mons_shouts() will return a different value every time.
+    // Demon lords will insult you as a greeting, but later we'll
+    // choose a random verb and loudness for them.
     shout_type  s_type = mons_shouts(monster->type, false);
 
     // Silent monsters can give noiseless "visual shouts" if the
@@ -995,7 +997,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     }
     else if (s_type == S_SILENT && (msg == "" || msg == "__NONE"))
     {
-        ; // No "visual shout" defined for silent monster, do nothing
+        ; // No "visual shout" defined for silent monster, do nothing.
     }
     else if (msg == "")
     {

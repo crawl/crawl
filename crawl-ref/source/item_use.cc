@@ -2722,7 +2722,10 @@ void jewellery_wear_effects(item_def &item)
     case RING_LEVITATION:
         if (!scan_randarts( RAP_LEVITATE ))
         {
-            mpr("You feel buoyant.");
+            if (player_is_airborne())
+                mpr("You feel vaguely more buoyant than before.");
+            else
+                mpr("You feel buoyant.");
             if (artefact)
                 fake_rap = RAP_LEVITATE;
             else
@@ -3781,7 +3784,7 @@ static bool affix_weapon_enchantment()
         torment_monsters(you.x_pos, you.y_pos, 0, TORMENT_GENERIC);
         success = false;
 
-        // is only naughty if you know you're doing it
+        // Is only naughty if you know you're doing it.
         did_god_conduct(DID_UNHOLY, 10,
             get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III) == ID_KNOWN_TYPE);
 
@@ -3811,7 +3814,7 @@ static bool affix_weapon_enchantment()
 
 bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn )
 {
-    // cannot be enchanted nor uncursed
+    // Cannot be enchanted nor uncursed.
     if (!is_enchantable_weapon(wpn, true))
     {
         if (!quiet)
@@ -3822,7 +3825,7 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn )
 
     const bool is_cursed = item_cursed(wpn);
 
-    // missiles only have one stat
+    // Missiles only have one stat.
     if (wpn.base_type == OBJ_MISSILES)
         which_stat = ENCHANT_TO_HIT;
 
@@ -3916,7 +3919,7 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
 {
     ac_change = 0;
 
-    // cannot be enchanted nor uncursed
+    // Cannot be enchanted nor uncursed.
     if (!is_enchantable_armour(arm, true))
     {
         if (!quiet)
@@ -4608,7 +4611,10 @@ void use_randart(item_def &item)
     if (unknown_proprt(RAP_LEVITATE)
         && !items_give_ability(item.link, RAP_LEVITATE))
     {
-        mpr("You feel buoyant.");
+        if (player_is_airborne())
+            mpr("You feel vaguely more buoyant than before.");
+        else
+            mpr("You feel buoyant.");
         randart_wpn_learn_prop(item, RAP_LEVITATE);
     }
 
@@ -4692,7 +4698,8 @@ void tile_use_item(int idx, InvAction act)
             || mitm[idx].base_type == OBJ_FOOD
                 && you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE)
         {
-            eat_floor_item(idx);
+            if (can_ingest(mitm[idx].base_type, mitm[idx].sub_type, false))
+                eat_floor_item(idx);
         }
         return;
     }

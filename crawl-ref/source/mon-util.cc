@@ -584,17 +584,18 @@ int get_shout_noise_level(const shout_type shout)
 }
 
 // Only the beast uses S_RANDOM for noise type.
-// Pandemonium lords can also get here but they can use almost anything.
+// Pandemonium lords can also get here but this mostly used for the
+// "says" verb used for insults.
 static bool _shout_fits_monster(int type, int shout)
 {
     if (shout == NUM_SHOUTS || shout >= NUM_LOUDNESS)
         return (false);
 
     // For demon lords almost everything is fair game.
-    // It's only used for the shouting verb ("say", "whine", "roar", ...)
+    // It's only used for the shouting verb ("say", "bellow", "roar", ...)
     // anyway.
     if (type != MONS_BEAST)
-        return (shout != S_BUZZ && shout != S_WHINE);
+        return (shout != S_BUZZ && shout != S_WHINE && shout != S_CROAK);
 
     switch (shout)
     {
@@ -612,8 +613,8 @@ static bool _shout_fits_monster(int type, int shout)
     }
 }
 
-// If demon_shout is true, we're trying to find a random loudness for
-// a pandemonium lord trying to shout.
+// If demon_shout is true, we're trying to find a random verb and loudness
+// for a pandemonium lord trying to shout.
 shout_type mons_shouts(int mc, bool demon_shout)
 {
     shout_type u = smc->shouts;

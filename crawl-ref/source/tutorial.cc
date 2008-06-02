@@ -103,7 +103,7 @@ void init_tutorial_options()
     //        missing item types at the end of it, NetHack like.
     //        Unfortunately I can't think of a remotely non-hacky way
     //        to do this.
-    strncpy(Options.tile_show_items, "!?/%=([)x}+\\_", 18);
+    strncpy(Options.tile_show_items, "!?/%=([)x}+\\_.", 18);
 #endif
 }
 
