@@ -87,6 +87,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
@@ -957,6 +958,24 @@ static void _rune_or_deck_from_specs(const char* specs, item_def &item)
         _deck_from_specs(specs, item);
 }
 
+static bool _book_from_spell(const char* specs, item_def &item)
+{
+    spell_type type = spell_by_name(specs, true);
+
+    if (type == SPELL_NO_SPELL)
+        return false;
+
+    for (int i = 0; i < NUM_BOOKS; i++)
+        for (int j = 0; j < 8; j++)
+            if (which_spell_in_book(i, j) == type)
+            {
+                item.sub_type = i;
+                return true;
+            }
+
+    return false;
+}
+
 //---------------------------------------------------------------
 //
 // create_spec_object
@@ -1158,6 +1177,12 @@ void create_spec_object()
                         best_index = ptr - obj_name;
                     }
                 }
+            }
+
+            if (type_wanted == -1 && class_wanted == OBJ_BOOKS)
+            {
+                if (_book_from_spell(specs, mitm[thing_created]))
+                    type_wanted = mitm[thing_created].sub_type;
             }
 
             if (type_wanted == -1)
