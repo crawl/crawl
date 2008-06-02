@@ -5202,7 +5202,6 @@ static void _place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
 
 static void _many_pools(dungeon_feature_type pool_type)
 {
-
     if (player_in_branch( BRANCH_COCYTUS ))
         pool_type = DNGN_DEEP_WATER;
     else if (player_in_branch( BRANCH_GEHENNA ))
@@ -5266,8 +5265,8 @@ static dungeon_feature_type _pick_an_altar()
                           (temp_rand == 1) ? DNGN_ALTAR_SIF_MUNA :
                           (temp_rand == 2) ? DNGN_ALTAR_SHINING_ONE :
                           (temp_rand == 3
-                           || temp_rand == 4) ? DNGN_ALTAR_OKAWARU
-                                              : DNGN_ALTAR_ZIN);
+                              || temp_rand == 4) ? DNGN_ALTAR_OKAWARU
+                                                 : DNGN_ALTAR_ZIN);
             break;
 
         case BRANCH_HALL_OF_BLADES:
