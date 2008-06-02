@@ -149,7 +149,7 @@ void formatted_string::parse_string1(
         {
             // Break the string at the end of a line, if possible, so
             // that none of the broken string ends up overwritten.
-            std::string::size_type bound = currs.rfind(EOL, 999);
+            std::string::size_type bound = currs.rfind(EOL, 998);
             if (bound != endpos)
                 bound += strlen(EOL);
             else
