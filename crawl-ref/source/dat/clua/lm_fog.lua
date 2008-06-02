@@ -34,9 +34,14 @@
 -- size, size_min and size_max: The number of grids each cloud will cover.
 --     Either size or size_max and size_min must be provided.  Providing
 --     just "size" is equivalent to size_min and size_max being equal.
+-- size_buildup_amnt, size_buildup_time: Increase the cloud size over time.
+--     Adds (size_buildup_amnt / size_buildup_time * turns_since_made)
+--     to size_min and size_max, maxing out at size_buildup_amnt.
 -- spread_rate: The rate at which a cloud spreads.  Must either be
 --     -1 (default spread rate that varies by cloud type) or between
 --     0 and 100 inclusive.
+-- spread_rate_amnt, spread_rate_buildup: Similar to size_buildup_amnt
+--     and size_buildup_time
 -- start_clouds: The number of clouds to lay when the level containing
 --     the cloud machine is entered.  This is necessary since clouds
 --     are cleared when the player leaves a level.
@@ -82,7 +87,14 @@ function FogMachine:new(pars)
   m.size_max     = pars.size_max     or pars.size
   m.spread_rate  = pars.spread_rate  or -1
   m.start_clouds = pars.start_clouds or 1
-  m.countdown    = 0
+
+  m.size_buildup_amnt   = pars.size_buildup_amnt   or 0
+  m.size_buildup_time   = pars.size_buildup_time   or 1
+  m.spread_buildup_amnt = pars.spread_buildup_amnt or 0
+  m.spread_buildup_time = pars.spread_buildup_time or 1
+
+  m.buildup_turns = 0
+  m.countdown          = 0
 
   return m
 end
@@ -93,9 +105,36 @@ function FogMachine:do_fog(marker)
     x, y = dgn.random_walk(x, y, self.walk_dist)
   end
 
+  local buildup_turns = self.buildup_turns
+
+  -- Size buildup
+  if buildup_turns > self.size_buildup_time then
+    buildup_turns = self.size_buildup_time
+  end
+
+  local size_buildup = self.size_buildup_amnt * buildup_turns /
+    self.size_buildup_time
+
+  local size_min = self.size_min + size_buildup
+  local size_max = self.size_max + size_buildup
+
+  if (size_min < 0) then
+    size_min = 0
+  end
+
+  -- Spread buildup
+  buildup_turns = self.buildup_turns
+
+  if buildup_turns > self.spread_buildup_time then
+    buildup_turns = self.spread_buildup_time
+  end
+
+  local spread = self.spread_rate + (self.spread_buildup_amnt * buildup_turns /
+                                     self.spread_buildup_time)
+
   dgn.apply_area_cloud(x, y, self.pow_min, self.pow_max, self.pow_rolls,
-                       crawl.random_range(self.size_min, self.size_max, 1),
-                       self.cloud_type, self.kill_cat, self.spread_rate)
+                       crawl.random_range(size_min, size_max, 1),
+                       self.cloud_type, self.kill_cat, spread)
 end
 
 function FogMachine:activate(marker, verbose)
@@ -109,6 +148,12 @@ function FogMachine:event(marker, ev)
   if ev:type() == dgn.dgn_event_type('turn') then
     self.countdown = self.countdown - ev:ticks()
 
+    self.buildup_turns = self.buildup_turns + ev:ticks()
+
+    if (self.buildup_turns > self.size_buildup_time) then
+      self.buildup_turns = self.size_buildup_time
+    end
+
     while self.countdown <= 0 do
       self:do_fog(marker)
       self.countdown = self.countdown +
@@ -118,6 +163,7 @@ function FogMachine:event(marker, ev)
     for i = 1, self.start_clouds do
       self:do_fog(marker)
       self.countdown = crawl.random_range(self.delay_min, self.delay_max, 1)
+      self.buildup_turns = 0
     end
   end
 end
@@ -135,23 +181,33 @@ function FogMachine:write(marker, th)
   file.marshall(th, self.size_max)
   file.marshall(th, self.spread_rate)
   file.marshall(th, self.start_clouds)
+  file.marshall(th, self.size_buildup_amnt)
+  file.marshall(th, self.size_buildup_time)
+  file.marshall(th, self.spread_buildup_amnt)
+  file.marshall(th, self.spread_buildup_time)
+  file.marshall(th, self.buildup_turns)
   file.marshall(th, self.countdown)
 end
 
 function FogMachine:read(marker, th)
-  self.cloud_type   = file.unmarshall_string(th)
-  self.walk_dist    = file.unmarshall_number(th)
-  self.pow_min      = file.unmarshall_number(th)
-  self.pow_max      = file.unmarshall_number(th)
-  self.pow_rolls    = file.unmarshall_number(th)
-  self.delay_min    = file.unmarshall_number(th)
-  self.delay_max    = file.unmarshall_number(th)
-  self.kill_cat     = file.unmarshall_string(th)
-  self.size_min     = file.unmarshall_number(th)
-  self.size_max     = file.unmarshall_number(th)
-  self.spread_rate  = file.unmarshall_number(th)
-  self.start_clouds = file.unmarshall_number(th)
-  self.countdown    = file.unmarshall_number(th)
+  self.cloud_type          = file.unmarshall_string(th)
+  self.walk_dist           = file.unmarshall_number(th)
+  self.pow_min             = file.unmarshall_number(th)
+  self.pow_max             = file.unmarshall_number(th)
+  self.pow_rolls           = file.unmarshall_number(th)
+  self.delay_min           = file.unmarshall_number(th)
+  self.delay_max           = file.unmarshall_number(th)
+  self.kill_cat            = file.unmarshall_string(th)
+  self.size_min            = file.unmarshall_number(th)
+  self.size_max            = file.unmarshall_number(th)
+  self.spread_rate         = file.unmarshall_number(th)
+  self.start_clouds        = file.unmarshall_number(th)
+  self.size_buildup_amnt   = file.unmarshall_number(th)
+  self.size_buildup_time   = file.unmarshall_number(th)
+  self.spread_buildup_amnt = file.unmarshall_number(th)
+  self.spread_buildup_time = file.unmarshall_number(th)
+  self.buildup_turns       = file.unmarshall_number(th)
+  self.countdown           = file.unmarshall_number(th)
 
   setmetatable(self, FogMachine)
 
@@ -162,17 +218,23 @@ function fog_machine(pars)
   return FogMachine:new(pars)
 end
 
-function fog_machine_geyser(cloud_type, size, power)
+function fog_machine_geyser(cloud_type, size, power, buildup_amnt,
+                            buildup_time)
   return FogMachine:new {
     cloud_type = cloud_type, pow_max = power, size = size,
-    delay_min = power , delay_max = power * 2
+    delay_min = power , delay_max = power * 2,
+    size_buildup_amnt = buildup_amnt or 0,
+    size_buildup_time = buildup_time or 1
   }
 end
 
-function fog_machine_spread(cloud_type, size, power)
+function fog_machine_spread(cloud_type, size, power, buildup_amnt,
+                            buildup_time)
   return FogMachine:new {
     cloud_type = cloud_type, pow_max = power, spread_rate = size,
-    size = 1, delay_min = 5, delay_max = 15
+    size = 1, delay_min = 5, delay_max = 15,
+    spread_buildup_amnt = buildup_amnt or 0,
+    spread_buildup_time = buildup_time or 1
   }
 end
 
