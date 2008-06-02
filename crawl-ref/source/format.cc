@@ -147,9 +147,17 @@ void formatted_string::parse_string1(
         // Break string up if it gets too big.
         if (currs.size() >= 999)
         {
-            fs.cprintf(currs.substr(0, 999));
-            if (currs.size() > 999)
-                currs = currs.substr(999);
+            // Break the string at the end of a line, if possible, so
+            // that none of the broken string ends up overwritten.
+            std::string::size_type bound = currs.rfind(EOL, 999);
+            if (bound != endpos)
+                bound += strlen(EOL);
+            else
+                bound = 999;
+
+            fs.cprintf(currs.substr(0, bound));
+            if (currs.size() > bound)
+                currs = currs.substr(bound);
             else
                 currs.clear();
             tag--;
