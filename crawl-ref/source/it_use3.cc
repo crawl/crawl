@@ -688,7 +688,7 @@ bool evoke_wielded()
 static bool efreet_flask(void)
 {
     beh_type beha = BEH_HOSTILE;
-    int hitting = MHITYOU;
+    unsigned int hitting = MHITYOU;
 
     if (you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20))
     {
@@ -975,7 +975,7 @@ static bool box_of_beasts()
                                    : MONS_GIANT_LIZARD);
 
         beh_type beha = BEH_FRIENDLY;
-        int hitting = you.pet_target;
+        unsigned int hitting = you.pet_target;
 
         if (one_chance_in(you.skills[SK_EVOCATIONS] + 5))
         {

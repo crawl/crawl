@@ -471,13 +471,13 @@ void simulacrum(int power)
 bool dancing_weapon(int pow, bool force_hostile, bool silent)
 {
     int numsc = std::min(2 + (random2(pow) / 5), 6);
-
     int summs = 0;
-    beh_type beha = BEH_FRIENDLY;
-    int hitting = you.pet_target;
-    bool failed = false;
 
+    bool failed = false;
     const int wpn = you.equip[EQ_WEAPON];
+
+    beh_type beha = BEH_FRIENDLY;
+    unsigned int hitting = you.pet_target;
 
     // See if wielded item is appropriate:
     if (wpn == -1
@@ -495,7 +495,6 @@ bool dancing_weapon(int pow, bool force_hostile, bool silent)
 
     if (!failed)
     {
-
         // cursed weapons become hostile
         if (item_cursed( you.inv[wpn] ) || force_hostile)
         {

@@ -606,7 +606,7 @@ static bool xom_is_good(int sever)
 
         // Mark non-demons hostile as appropriate.
         beh_type beha = BEH_GOD_GIFT;
-        int hitting = you.pet_target;
+        unsigned int hitting = you.pet_target;
 
         if (different && hostiletype)
         {
@@ -701,7 +701,7 @@ static bool xom_is_good(int sever)
 
         // Mark non-demons hostile as appropriate.
         beh_type beha = BEH_GOD_GIFT;
-        int hitting = you.pet_target;
+        unsigned int hitting = you.pet_target;
 
         if (different && hostiletype)
         {
