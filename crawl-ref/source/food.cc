@@ -161,7 +161,7 @@ void weapon_switch( int targ )
     if (targ != -1)
         wield_effects( targ, false );
 
-    if (Options.chunks_autopickup)
+    if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
         autopickup();
 }
 
