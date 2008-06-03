@@ -780,6 +780,9 @@ static int _place_monster_aux( const mgen_data &mg,
             fpos = mg.pos + coord_def( random_range(-3, 3),
                                        random_range(-3, 3) );
 
+            if (!in_bounds(fpos))
+                continue;
+
             // Occupied?
             if (mgrd(fpos) != NON_MONSTER || fpos == you.pos())
                 continue;
