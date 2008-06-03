@@ -311,7 +311,7 @@ protected:
     void select_index( int index, int qty = -1 );
 
     bool is_hotkey(int index, int key );
-    bool is_selectable(int index) const;
+    virtual bool is_selectable(int index) const;
 
     virtual int item_colour(int index, const MenuEntry *me) const;
 

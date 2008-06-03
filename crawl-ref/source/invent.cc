@@ -389,6 +389,27 @@ void InvMenu::draw_stock_item(int index, const MenuEntry *me) const
     Menu::draw_stock_item(index, me);
 }
 
+bool InvMenu::is_selectable(int index) const
+{
+
+    if (type == MT_DROP)
+    {
+        InvEntry *item = dynamic_cast<InvEntry*>(items[index]);
+        if (item->is_item_cursed() && item->is_item_equipped())
+            return false;
+
+        std::string text = item->get_text();
+
+        if (text.find("!*") != std::string::npos
+            || text.find("!d") != std::string::npos)
+        {
+            return false;
+        }
+    }
+
+    return Menu::is_selectable(index);
+}
+
 template <std::string (*proc)(const InvEntry *a)>
 int compare_item_str(const InvEntry *a, const InvEntry *b)
 {

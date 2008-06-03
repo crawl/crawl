@@ -158,6 +158,7 @@ protected:
                    const menu_sort_condition *cond);
     const menu_sort_condition *find_menu_sort_condition() const;
     virtual void draw_stock_item(int index, const MenuEntry *me) const;
+    virtual bool is_selectable(int index) const;
 
 protected:
     menu_type type;
