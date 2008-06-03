@@ -4624,7 +4624,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                     }
                     else if (monster->type == MONS_DAEVA)
                     {
-                        monsters *mon = &menv[monster->foe];
+                        const monsters *mon = &menv[monster->foe];
 
                         // Don't allow daevas to make unchivalric magic
                         // attacks, except against appropriate monsters.
