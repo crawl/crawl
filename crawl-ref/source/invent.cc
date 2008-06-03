@@ -391,7 +391,6 @@ void InvMenu::draw_stock_item(int index, const MenuEntry *me) const
 
 bool InvMenu::is_selectable(int index) const
 {
-
     if (type == MT_DROP)
     {
         InvEntry *item = dynamic_cast<InvEntry*>(items[index]);
