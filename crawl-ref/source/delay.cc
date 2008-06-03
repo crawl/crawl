@@ -919,10 +919,6 @@ static void finish_delay(const delay_queue_item &delay)
     {
     case DELAY_WEAPON_SWAP:
         weapon_switch( delay.parm1 );
-        // In case we just butchered some corpses or bottled some blood,
-        // call autopickup.
-        if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
-            autopickup();
         break;
 
     case DELAY_JEWELLERY_ON:
