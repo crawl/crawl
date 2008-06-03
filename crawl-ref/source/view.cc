@@ -3612,7 +3612,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
 // realize that this is simply a repackaged version of
 // stuff::see_grid() -- make certain they correlate {dlb}:
-bool mons_near(const monsters *monster, unsigned int foe)
+bool mons_near(const monsters *monster, unsigned short foe)
 {
     // early out -- no foe!
     if (foe == MHITNOT)

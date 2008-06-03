@@ -1539,7 +1539,7 @@ void summon_ice_beast_etc(int pow, monster_type ibc, bool divine_gift)
 {
     int numsc = std::min(2 + (random2(pow) / 4), 6);
     beh_type beha = divine_gift ? BEH_GOD_GIFT : BEH_FRIENDLY;
-    int hitting = you.pet_target;
+    unsigned short hitting = you.pet_target;
 
     switch (ibc)
     {

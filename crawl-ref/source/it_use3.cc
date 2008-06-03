@@ -688,7 +688,7 @@ bool evoke_wielded()
 static bool efreet_flask(void)
 {
     beh_type beha = BEH_HOSTILE;
-    int hitting = MHITYOU;
+    unsigned short hitting = MHITYOU;
 
     if (you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20))
     {

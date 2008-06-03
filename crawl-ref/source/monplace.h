@@ -105,52 +105,52 @@ enum mgen_flag_type
 struct mgen_data
 {
     // Monster type.
-    monster_type cls;
+    monster_type    cls;
 
     // If the monster is zombie-like, or a specialised draconian, this
     // is the base monster that the monster is based on - should be
     // set to MONS_PROGRAM_BUG when not used.
-    monster_type base_type;
+    monster_type    base_type;
 
     // Determines the behaviour of the monster after it is generated. This
     // behaviour is an unholy combination of monster attitude
     // (friendly, hostile) and monster initial state (asleep, wandering).
     // XXX: Could use splitting up these aspects.
-    beh_type     behaviour;
+    beh_type        behaviour;
 
     // For summoned monsters, this is a measure of how long the summon will
     // hang around, on a scale of 1-6, 6 being longest. Use 0 for monsters
     // that aren't summoned.
-    int          abjuration_duration;
+    int             abjuration_duration;
 
     // Where the monster will be created.
-    coord_def    pos;
+    coord_def       pos;
 
     // The monster's foe, i.e. which monster it will want to attack. foe
     // may be an index into the monster array (0 - (MAX_MONSTERS-1)), or
     // it may be MHITYOU to indicate that the monster wants to attack the
     // player, or MHITNOT, to indicate that the monster has no foe and is
     // just wandering around.
-    int          foe;
+    unsigned short  foe;
 
     // Generation flags from mgen_flag_type.
-    unsigned     flags;
+    unsigned        flags;
 
     // The number of hydra heads or manticore attack volleys. Note:
     // in older version this field was used for both this and for base_type.
-    int          number;
+    int             number;
 
     // The colour of the monster
-    int          colour;
+    int             colour;
 
     // A measure of how powerful the generated monster should be (for
     // randomly chosen monsters), usually equal to the absolute depth
     // that the player is in the dungeon.
-    int          power;
+    int             power;
 
     // How close to or far from the player the monster should be created.
     // Is usually used only when the initial position (pos) is unspecified.
-    proximity_type proximity;
+    proximity_type  proximity;
 
     // What place we're in, or pretending to be in, usually the place
     // the player is actually in.
@@ -169,7 +169,7 @@ struct mgen_data
               beh_type beh = BEH_HOSTILE,
               int abj = 0,
               const coord_def &p = coord_def(-1, -1),
-              int mfoe = MHITNOT,
+              unsigned short mfoe = MHITNOT,
               unsigned monflags = 0,
               monster_type base = MONS_PROGRAM_BUG,
               int monnumber = 0,

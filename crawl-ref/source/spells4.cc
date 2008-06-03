@@ -482,9 +482,10 @@ void cast_sticks_to_snakes(int pow)
         return;
     }
 
-    const beh_type beha = item_cursed( you.inv[ weapon ] ) ? BEH_HOSTILE
-                                                           : BEH_FRIENDLY;
-    const int hitting = (beha == BEH_HOSTILE) ? MHITYOU : you.pet_target;
+    const beh_type beha = item_cursed(you.inv[ weapon ]) ? BEH_HOSTILE
+                                                         : BEH_FRIENDLY;
+    const unsigned short hitting = (beha == BEH_HOSTILE) ? MHITYOU
+                                                         : you.pet_target;
 
     if ((you.inv[ weapon ].base_type == OBJ_MISSILES
          && (you.inv[ weapon ].sub_type == MI_ARROW)))
