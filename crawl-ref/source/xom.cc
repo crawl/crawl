@@ -174,7 +174,7 @@ void xom_is_stimulated(int maxinterestingness, const std::string& message,
 {
     const char* message_array[6];
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
         message_array[i] = message.c_str();
 
     _xom_is_stimulated(maxinterestingness, message_array, force_message);
@@ -392,12 +392,12 @@ bool there_are_monsters_nearby()
     if (yend >= GYM) yend = GYM;
 
     // Monster check.
-    for ( int y = ystart; y < yend; ++y )
+    for (int y = ystart; y < yend; ++y)
     {
-        for ( int x = xstart; x < xend; ++x )
+        for (int x = xstart; x < xend; ++x)
         {
             // If you can see a monster, then it's nearby.
-            if ( see_grid(x,y) )
+            if (see_grid(x, y))
             {
                 const int targ_monst = mgrd[x][y];
                 if ( targ_monst != NON_MONSTER )
@@ -514,7 +514,7 @@ static bool xom_is_good(int sever)
 
         bool success = false;
 
-        for (int i = 0; i < numdemons; i++)
+        for (int i = 0; i < numdemons; ++i)
         {
             monster_type mon = xom_random_demon(sever);
             const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
@@ -882,7 +882,7 @@ static bool xom_is_bad(int sever)
                 const int numdemons =
                     std::min(random2(random2(random2(sever+1)+1)+1)+1, 14);
 
-                for (int i = 0; i < numdemons; i++)
+                for (int i = 0; i < numdemons; ++i)
                 {
                     if (create_monster(
                             mgen_data(xom_random_punishment_demon(sever),
