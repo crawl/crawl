@@ -205,8 +205,8 @@ include = travel_stoppers.txt
 # easy_confirm = (none | safe)
 # easy_butcher = false
 # always_confirm_butcher = true
-# chunks_autopickup      = true
-# swap_when_safe         = true
+# chunks_autopickup      = false
+# swap_when_safe         = false
 # easy_quit_item_prompts = false
 # easy_exit_menu         = false
 # sort_menus = pickup: true : basename, qualname, curse, qty
@@ -222,7 +222,7 @@ include = travel_stoppers.txt
 # delay_message_clear    = true
 # show_inventory_weights = true
 # show_gold_turns = true
-# show_beam  = true
+# show_beam   = false
 # item_stack_summary_minimum = 5
 # list_rotten = false
 # mlist_min_height = 5
@@ -238,10 +238,9 @@ menu_colour_prefix_class = true
 # Food is colour coded as follows:
 #
 #   yellow     = preferred food
-#   lightgrey  = normal food
 #   darkgrey   = cannot be eaten at all
-#   lightred   = extremely dangerous
-#   magenta    = mutagenic
+#   lightred   = extremely dangerous (causes rot)
+#   magenta    = mutagenic, or eating frowned upon by the good gods
 #   lightgreen = poisonous
 #   brown      = contaminated (may cause sickening)
 #

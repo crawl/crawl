@@ -132,15 +132,27 @@ void set_hunger( int new_hunger_level, bool suppress_msg )
 // More of a "weapon_switch back from butchering" function, switching
 // to a weapon is done using the wield_weapon code.
 // special cases like staves of power or other special weps are taken
-// care of by calling wield_effects()    {gdl}
+// care of by calling wield_effects().    {gdl}
 void weapon_switch( int targ )
 {
-    if (targ == -1)
+    if (targ == -1) // Unarmed Combat.
     {
+        // Already unarmed?
+        if (you.equip[EQ_WEAPON] == -1)
+            return;
+
         mpr( "You switch back to your bare hands." );
     }
     else
     {
+        // Possibly not valid anymore (dropped etc.)
+        if (!is_valid_item(you.inv[targ]))
+            return;
+
+        // Already wielding this weapon?
+        if (you.equip[EQ_WEAPON] == you.inv[targ].link)
+            return;
+
         mprf("Switching back to %s.",
              you.inv[targ].name(DESC_INVENTORY).c_str());
     }

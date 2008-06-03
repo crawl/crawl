@@ -383,7 +383,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
 bool unwield_item(bool showMsgs)
 {
     const int unw = you.equip[EQ_WEAPON];
-    if ( unw == -1 )
+    if (unw == -1)
         return (false);
 
     if (you.duration[DUR_BERSERKER])
@@ -396,20 +396,19 @@ bool unwield_item(bool showMsgs)
         return (false);
 
     you.equip[EQ_WEAPON] = -1;
-    you.special_wield = SPWLD_NONE;
-    you.wield_change  = true;
+    you.special_wield    = SPWLD_NONE;
+    you.wield_change     = true;
     you.m_quiver->on_weapon_changed();
 
     item_def &item(you.inv[unw]);
 
-    if ( item.base_type == OBJ_MISCELLANY &&
-         item.sub_type == MISC_LANTERN_OF_SHADOWS )
+    if (item.base_type == OBJ_MISCELLANY
+        && item.sub_type == MISC_LANTERN_OF_SHADOWS )
     {
         you.current_vision += 2;
         setLOSRadius(you.current_vision);
     }
-
-    if (item.base_type == OBJ_WEAPONS)
+    else if (item.base_type == OBJ_WEAPONS)
     {
         if (is_fixed_artefact( item ))
         {
@@ -485,9 +484,6 @@ bool unwield_item(bool showMsgs)
                     mpr("You feel the strange hunger wane.");
                 break;
 
-                /* case 8: draining
-                   case 9: speed, 10 slicing etc */
-
             case SPWPN_DISTORTION:
                 // Removing the translocations skill reduction of effect,
                 // it might seem sensible, but this brand is supposed
@@ -503,18 +499,19 @@ bool unwield_item(bool showMsgs)
                                 "distortion unwield" );
                 break;
 
-                // when more are added here, *must* duplicate unwielding
-                // effect in vorpalise weapon scroll effect in read_scoll
-            }                   // end switch
+                // NOTE: When more are added here, *must* duplicate unwielding
+                // effect in vorpalise weapon scroll effect in read_scoll.
+            }
 
             if (you.duration[DUR_WEAPON_BRAND])
             {
                 you.duration[DUR_WEAPON_BRAND] = 0;
                 set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
-                // we're letting this through even if hiding messages
+
+                // We're letting this through even if hiding messages.
                 mpr("Your branding evaporates.");
             }
-        }                       // end if
+        }
     }
 
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)

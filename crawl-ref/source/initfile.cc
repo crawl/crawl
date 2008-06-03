@@ -630,23 +630,23 @@ void game_options::reset_options()
     show_more_prompt = true;
 
     show_gold_turns = false;
-    show_beam       = false;
+    show_beam       = true;
 
     use_old_selection_order = false;
-    prev_race   = 0;
-    prev_cls    = 0;
-    prev_ck     = GOD_NO_GOD;
-    prev_dk     = DK_NO_SELECTION;
-    prev_pr     = GOD_NO_GOD;
-    prev_weapon = WPN_UNKNOWN;
-    prev_book   = SBT_NO_SELECTION;
+    prev_race     = 0;
+    prev_cls      = 0;
+    prev_ck       = GOD_NO_GOD;
+    prev_dk       = DK_NO_SELECTION;
+    prev_pr       = GOD_NO_GOD;
+    prev_weapon   = WPN_UNKNOWN;
+    prev_book     = SBT_NO_SELECTION;
     prev_randpick = false;
     remember_name = true;
 
 #ifdef USE_ASCII_CHARACTERS
-    char_set               = CSET_ASCII;
+    char_set      = CSET_ASCII;
 #else
-    char_set               = CSET_IBM;
+    char_set      = CSET_IBM;
 #endif
 
     // set it to the .crawlrc default
@@ -668,8 +668,8 @@ void game_options::reset_options()
     easy_unequip           = true;
     easy_butcher           = true;
     always_confirm_butcher = false;
-    chunks_autopickup      = false;
-    swap_when_safe         = false;
+    chunks_autopickup      = true;
+    swap_when_safe         = true;
     list_rotten            = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;

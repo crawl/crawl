@@ -1153,10 +1153,10 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
                          continue;
 
                      // Spattering onto walls etc. less likely.
-                     if (grd[x+i][y+j] < DNGN_MINMOVE && one_chance_in(3))
+                     if (grd[x+i][y+j] < DNGN_MINMOVE && !one_chance_in(3))
                          continue;
 
-                     maybe_bloodify_square(x+i, y+j, amount/10);
+                     maybe_bloodify_square(x+i, y+j, amount/15);
                 }
         }
     }

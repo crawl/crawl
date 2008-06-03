@@ -377,7 +377,7 @@ void stop_delay( bool stop_stair_travel )
                  delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
                                                   : "sacrificing");
 
-        // Corpse keeps track of work in plus2 field, see handle_delay() -- bwr
+        // Corpse keeps track of work in plus2 field, see handle_delay(). -- bwr
         if (butcher_swap_warn)
         {
             std::string weapon;
@@ -393,12 +393,19 @@ void stop_delay( bool stop_stair_travel )
                              (multiple_corpses ? "s" : ""), weapon.c_str());
 
             if (Options.swap_when_safe)
+            {
+                // XXX: This is a hack!
+                // (Necessary because attributes are unsigned chars.)
                 you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-                    = butcher_swap_weapon;
+                    = (butcher_swap_weapon == -1 ? ENDOFPACK
+                                                 : butcher_swap_weapon);
+            }
         }
         else
+        {
             mprf("You stop %s the corpse%s.", butcher_verb.c_str(),
                  multiple_corpses ? "s" : "");
+        }
 
         pop_delay();
         break;

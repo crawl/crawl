@@ -914,17 +914,19 @@ always_confirm_butcher = false
         one corpse on the square. If there are multiple corpses on a 
         square, you will always be prompted, regardless of this option.
 
-chunks_autopickup = false
-        If true then butchered flesh will be autopickup'd right after
-        they're generated (and after switching back from the
-        butchering weapon to usual weapon, if necessary).  Respects
-        all of the autopickup options.  Requires '%' to be in the
-        autopickup line.
+chunks_autopickup = true
+        If true then butchered flesh will be automatically picked up
+        right after they're generated (and after switching back from
+        the butchering weapon to the usual weapon, if necessary).
+        Respects all of the autopickup options.  Requires '%' to be
+        in the autopickup line.
+        Does not apply to Vampires who will pick up bottled potions
+        of blood regardless of this option, and not pick up chunks.
 
-swap_when_safe = false
+swap_when_safe = true
         If both this and easy_butcher are true, then if an auto-switch
-        butchery is interupted, then the auto-switch will be reversed
-        as soon as your safe again.
+        butchery is interupted, the auto-switch will be reversed as
+        soon as you are safe again.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing 
@@ -1095,7 +1097,7 @@ show_gold_turns = false
         If set to true, this option adds an extra line to the stat area
         to display the current gold and turn counters.
 
-show_beam = false
+show_beam = true
         When performing actions such as throwing or zapping, you can 
         toggle whether to show the beam path or not. This option 
         controls the initial status of this toggle. When set to true, 
@@ -1165,6 +1167,8 @@ menu_colour = <match>:<colour>:<regex>
            rot-inducing  (chunks/corpses that cause rotting)
            equipped      (equipped items)
            artefact      (item is an artefact, whether identified or not)
+           evil_item     (item is hated by the good gods)
+           evil_eating   (eating this item is punished by the good gods)
 
         To colour worn stuff and highlight cursed items, take
           menu_colour = inventory:lightred:equipped.* cursed

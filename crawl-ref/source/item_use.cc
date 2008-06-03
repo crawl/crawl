@@ -473,10 +473,9 @@ int item_special_wield_effect(const item_def &item)
     }
 }
 
-// provide a function for handling initial wielding of 'special'
+// Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
-// other places *cough* auto-butchering *cough*    {gdl}
-
+// other places *cough* auto-butchering *cough*.    {gdl}
 void wield_effects(int item_wield_2, bool showMsgs)
 {
     unsigned char i_dam = 0;
@@ -484,7 +483,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
     const bool known_cursed = item_known_cursed(you.inv[item_wield_2]);
     item_def &item = you.inv[item_wield_2];
 
-    // and here we finally get to the special effects of wielding {dlb}
+    // And here we finally get to the special effects of wielding. {dlb}
     switch (item.base_type)
     {
     case OBJ_MISCELLANY:
@@ -511,9 +510,9 @@ void wield_effects(int item_wield_2, bool showMsgs)
         }
         else if (!maybe_identify_staff(item))
         {
-                // Give curse status when wielded.
-                // Right now that's always "uncursed". -- bwr
-                set_ident_flags( item, ISFLAG_KNOW_CURSE );
+            // Give curse status when wielded.
+            // Right now that's always "uncursed". -- bwr
+            set_ident_flags( item, ISFLAG_KNOW_CURSE );
         }
         break;
     }
@@ -528,7 +527,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
         const bool was_known = item_type_known(item);
 
-        // only used for Singing Sword introducing itself
+        // Only used for Singing Sword introducing itself
         // (could be extended to other talking weapons...)
         const char *old_desc = item.name(DESC_CAP_THE).c_str();
 
