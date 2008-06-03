@@ -4582,9 +4582,10 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     // If the beam is an actual missile or of the MMISSILE type (Earth magic)
     // might bleed on the floor.
     if (!engulfs
-        && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE))
+        && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE)
+        && !mons_is_summoned(mon) && !mons_is_submerged(mon))
     {
-        // using raw_damage instead of the flavoured one!
+        // Using raw_damage instead of the flavoured one!
         int blood = raw_damage/2; // assumes DVORP_PIERCING, factor: 0.5
         if (blood > mon->hit_points)
             blood = mon->hit_points;

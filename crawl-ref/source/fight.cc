@@ -782,10 +782,11 @@ bool melee_attack::player_attack()
             hit_woke_orc = true;
         }
 
-        // always upset monster regardless of damage
+        // Always upset monster regardless of damage.
         behaviour_event(def, ME_WHACK, MHITYOU);
 
-        if (damage_done > 0)
+        if (damage_done > 0 && !mons_is_summoned(def)
+            && !mons_is_submerged(def))
         {
             int blood = _modify_blood_amount(damage_done,
                                              attacker->damage_type());
@@ -2385,8 +2386,11 @@ bool melee_attack::chop_hydra_head( int dam,
             def->number--;
 
             coord_def pos = defender->pos();
-            bleed_onto_floor(pos.x, pos.y, defender->id(),
-                             def->hit_points, true);
+            if (!mons_is_summoned(def))
+            {
+                bleed_onto_floor(pos.x, pos.y, defender->id(),
+                                 def->hit_points, true);
+            }
 
             defender->hurt(attacker, def->hit_points);
         }
@@ -3842,13 +3846,16 @@ void melee_attack::mons_perform_attack_rounds()
             if (defender->atype() == ACT_MONSTER)
                 type = defender->id();
 
-            int blood = _modify_blood_amount(damage_done,
-                                             attacker->damage_type());
-            if (blood > defender->stat_hp())
-                blood = defender->stat_hp();
+            if (type == -1 || !mons_is_summoned(def) && !mons_is_submerged(def))
+            {
+                int blood = _modify_blood_amount(damage_done,
+                                                 attacker->damage_type());
 
-            bleed_onto_floor(pos.x, pos.y, type, blood, true);
+                if (blood > defender->stat_hp())
+                    blood = defender->stat_hp();
 
+                bleed_onto_floor(pos.x, pos.y, type, blood, true);
+            }
             if (decapitate_hydra(damage_done,
                                  attacker->damage_type(attack_number)))
             {

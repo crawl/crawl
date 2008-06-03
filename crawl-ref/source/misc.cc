@@ -1167,6 +1167,7 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
 // or, for sacrifices, on the number of chunks possible to get out of a corpse.
 void bleed_onto_floor(int x, int y, int montype, int damage, bool spatter)
 {
+    ASSERT(in_bounds(x,y));
     if (!victim_can_bleed(montype))
         return;
 

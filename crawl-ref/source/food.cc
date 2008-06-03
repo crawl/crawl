@@ -129,11 +129,10 @@ void set_hunger( int new_hunger_level, bool suppress_msg )
         lessen_hunger( hunger_difference, suppress_msg );
 }                               // end set_hunger()
 
-// more of a "weapon_switch back from butchering" function, switching
+// More of a "weapon_switch back from butchering" function, switching
 // to a weapon is done using the wield_weapon code.
 // special cases like staves of power or other special weps are taken
 // care of by calling wield_effects()    {gdl}
-
 void weapon_switch( int targ )
 {
     if (targ == -1)
@@ -146,7 +145,7 @@ void weapon_switch( int targ )
              you.inv[targ].name(DESC_INVENTORY).c_str());
     }
 
-    // unwield the old weapon and wield the new.
+    // Unwield the old weapon and wield the new.
     // XXX This is a pretty dangerous hack;  I don't like it.--GDL
     //
     // Well yeah, but that's because interacting with the wielding
@@ -157,7 +156,7 @@ void weapon_switch( int targ )
 
     you.equip[EQ_WEAPON] = targ;
 
-    // special checks: staves of power, etc
+    // Special checks: staves of power, etc.
     if (targ != -1)
         wield_effects( targ, false );
 

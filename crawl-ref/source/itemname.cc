@@ -2194,8 +2194,11 @@ const std::string menu_colour_item_prefix(const item_def &item)
         }
     }
 
-    if (is_good_god(you.religion) && is_evil_item(item))
+    if (is_good_god(you.religion) && is_evil_item(item)
+        && item_type_known(item))
+    {
         prefixes.push_back("evil_item");
+    }
 
     switch (item.base_type)
     {
