@@ -3454,7 +3454,7 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
 
 static int _beam_ouch_agent(const bolt &beam)
 {
-    return YOU_KILL(beam.thrower)? 0 : beam.beam_source;
+    return YOU_KILL(beam.thrower) ? 0 : beam.beam_source;
 }
 
 // A little helper function to handle the calling of ouch()...
@@ -3689,7 +3689,8 @@ static int _affect_player( bolt &beam, item_def *item )
             && you_resist_magic( beam.ench_power ))
         {
             bool need_msg = true;
-            if (beam.thrower != KILL_YOU_MISSILE && beam.beam_source != -1)
+            if (beam.thrower != KILL_YOU_MISSILE
+                && !invalid_monster_index(beam.beam_source))
             {
                 monsters *mon = &menv[beam.beam_source];
                 if (!player_monster_visible(mon))
