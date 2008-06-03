@@ -477,7 +477,7 @@ bool dancing_weapon(int pow, bool force_hostile, bool silent)
     const int wpn = you.equip[EQ_WEAPON];
 
     beh_type beha = BEH_FRIENDLY;
-    unsigned int hitting = you.pet_target;
+    int hitting = you.pet_target;
 
     // See if wielded item is appropriate:
     if (wpn == -1
