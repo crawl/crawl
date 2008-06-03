@@ -291,11 +291,14 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
 
     // no unchivalric attacks on monsters that cannot fight (e.g.
     // plants) or invisible monsters
-    if (!defender->cannot_fight() && player_monster_visible(def))
+    if (!defender->cannot_fight() && defender->visible_to(attacker))
     {
-        // distracted (but not batty)
-        if (def->foe != MHITYOU && !testbits(def->flags, MF_BATTY))
+        // distracted (but not batty); this only applies to players
+        if (attacker->atype() == ACT_PLAYER && def->foe != MHITYOU
+            && !testbits(def->flags, MF_BATTY))
+        {
             unchivalric = UCAT_DISTRACTED;
+        }
 
         // confused (but not perma-confused)
         if (def->has_ench(ENCH_CONFUSION)
@@ -309,7 +312,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
             unchivalric = UCAT_FLEEING;
 
         // invisible
-        if (attacker->invisible() && !defender->can_see_invisible())
+        if (!attacker->visible_to(defender))
             unchivalric = UCAT_INVISIBLE;
 
         // held in a net
@@ -1198,7 +1201,7 @@ bool melee_attack::player_apply_aux_unarmed()
         mprf("You %s %s%s.",
              unarmed_attack.c_str(),
              defender->name(DESC_NOCAP_THE).c_str(),
-             player_monster_visible(def)?
+             player_monster_visible(def) ?
              ", but do no damage" : "");
     }
 
@@ -1243,7 +1246,7 @@ std::string melee_attack::attack_strength_punctuation()
     }
     else
     {
-        return (damage_done < HIT_WEAK? "." : "!");
+        return (damage_done < HIT_WEAK ? "." : "!");
     }
 }
 

@@ -4622,6 +4622,18 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                     {
                         spellOK = false;
                     }
+                    else if (monster->type == MONS_DAEVA)
+                    {
+                        monsters *mon = &menv[monster->foe];
+
+                        // Don't allow daevas to make unchivalric magic
+                        // attacks, except against appropriate monsters.
+                        if (is_unchivalric_attack(monster, mon, mon)
+                            && !tso_unchivalric_attack_safe_monster(mon))
+                        {
+                            spellOK = false;
+                        }
+                    }
                 }
 
                 // If not okay, then maybe we'll cast a defensive spell.
