@@ -644,6 +644,7 @@ static const char *targeting_help_1 =
     "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
     "<w>Tab</w> : cycle through shops and portals\n"
     "<w>Ctrl-F</w> : change monster targeting mode\n"
+    "<w>Ctrl-P</w> : repeat prompt\n"
     " \n"
     "<h>Targeting (zapping wands, casting spells, etc.):\n"
     "The keys from examine surroundings also work here.\n"

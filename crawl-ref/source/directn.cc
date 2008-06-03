@@ -484,10 +484,10 @@ void direction(dist& moves, targeting_type restricts,
     bool found_autotarget = false;
     bool target_unshifted = Options.target_unshifted_dirs;
 
-    // Find a default target
+    // Find a default target.
     if (Options.default_target && mode == TARG_ENEMY)
     {
-        skip_iter = true;   // skip first iteration...XXX mega-hack
+        skip_iter = true;   // Skip first iteration...XXX mega-hack
         if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
         {
             const monsters *montarget = &menv[you.prev_targ];
@@ -534,12 +534,12 @@ void direction(dist& moves, targeting_type restricts,
 
         command_type key_command;
 
-        if ( skip_iter )
+        if (skip_iter)
         {
-            if ( found_autotarget )
+            if (found_autotarget)
                 key_command = CMD_NO_CMD;
             else
-                key_command = CMD_TARGET_CYCLE_FORWARD; // find closest enemy
+                key_command = CMD_TARGET_CYCLE_FORWARD; // Find closest target.
         }
         else
         {
@@ -550,9 +550,9 @@ void direction(dist& moves, targeting_type restricts,
         }
 
 #ifdef USE_TILE
-        // if a mouse command, update location to mouse position...
-        if ( key_command == CMD_TARGET_MOUSE_MOVE
-             || key_command == CMD_TARGET_MOUSE_SELECT )
+        // If a mouse command, update location to mouse position.
+        if (key_command == CMD_TARGET_MOUSE_MOVE
+            || key_command == CMD_TARGET_MOUSE_SELECT)
         {
             coord_def gc;
             if (gui_get_mouse_grid_pos(gc))
@@ -585,9 +585,10 @@ void direction(dist& moves, targeting_type restricts,
             target_unshifted = false;
         }
 
-        if ( key_command == CMD_TARGET_MAYBE_PREV_TARGET )
+
+        if (key_command == CMD_TARGET_MAYBE_PREV_TARGET)
         {
-            if ( moves.tx == you.x_pos && moves.ty == you.y_pos )
+            if (moves.tx == you.x_pos && moves.ty == you.y_pos)
                 key_command = CMD_TARGET_PREV_TARGET;
             else
                 key_command = CMD_TARGET_SELECT;
@@ -602,7 +603,7 @@ void direction(dist& moves, targeting_type restricts,
 
         int i, mid;
 
-        switch ( key_command )
+        switch (key_command)
         {
             // standard movement
         case CMD_TARGET_DOWN_LEFT:
@@ -631,16 +632,16 @@ void direction(dist& moves, targeting_type restricts,
             if (restricts != DIR_TARGET)
             {
                 // A direction is allowed, and we've selected it.
-                moves.dx = Compass[i].x;
-                moves.dy = Compass[i].y;
+                moves.dx       = Compass[i].x;
+                moves.dy       = Compass[i].y;
                 // Needed for now...eventually shouldn't be necessary
-                moves.tx = you.x_pos + moves.dx;
-                moves.ty = you.y_pos + moves.dy;
-                moves.isValid = true;
+                moves.tx       = you.x_pos + moves.dx;
+                moves.ty       = you.y_pos + moves.dy;
+                moves.isValid  = true;
                 moves.isTarget = false;
-                show_beam = false;
+                show_beam      = false;
                 moves.choseRay = false;
-                loop_done = true;
+                loop_done      = true;
             }
             else
             {
@@ -657,6 +658,11 @@ void direction(dist& moves, targeting_type restricts,
                     moves.ty += Compass[i].y;
                 }
             }
+            break;
+
+        case CMD_TARGET_SHOW_PROMPT:
+            mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
+                 target_mode_help_text(restricts));
             break;
 
 #ifdef WIZARD
@@ -734,7 +740,7 @@ void direction(dist& moves, targeting_type restricts,
                 break;
             }
 
-            // we have a valid previous target (maybe)
+            // We have a valid previous target (maybe).
             {
                 const monsters *montarget = &menv[you.prev_targ];
 
@@ -746,12 +752,12 @@ void direction(dist& moves, targeting_type restricts,
                 }
                 else
                 {
-                    // We have all the information we need
-                    moves.isValid = true;
+                    // We have all the information we need.
+                    moves.isValid  = true;
                     moves.isTarget = true;
-                    moves.tx = montarget->x;
-                    moves.ty = montarget->y;
-                    if ( !just_looking )
+                    moves.tx       = montarget->x;
+                    moves.ty       = montarget->y;
+                    if (!just_looking)
                     {
                         // We have to turn off show_beam, because
                         // when jumping to a previous target we don't
@@ -778,14 +784,14 @@ void direction(dist& moves, targeting_type restricts,
             }
             moves.isValid  = true;
             moves.isTarget = true;
-            loop_done = true;
+            loop_done      = true;
 
             you.prev_grd_targ = coord_def(0, 0);
 
-            // maybe we should except just_looking here?
+            // Maybe we should except just_looking here?
             mid = mgrd[moves.tx][moves.ty];
 
-            if ( mid != NON_MONSTER )
+            if (mid != NON_MONSTER)
                 you.prev_targ = mid;
             else if (moves.tx == you.x_pos && moves.ty == you.y_pos)
                 you.prev_targ = MHITYOU;
@@ -822,7 +828,6 @@ void direction(dist& moves, targeting_type restricts,
             }
             else if (!skip_iter)
                 flush_input_buffer(FLUSH_ON_FAILURE);
-
             break;
 
         case CMD_TARGET_CANCEL:
@@ -929,12 +934,12 @@ void direction(dist& moves, targeting_type restricts,
             break;
         }
 
-        if ( loop_done == true )
+        if (loop_done == true)
         {
             // This is where we either finalize everything, or else
             // decide that we're not really done and continue looping.
 
-            if ( just_looking ) // easy out
+            if (just_looking) // easy out
                 break;
 
             // A bunch of confirmation tests; if we survive them all,
@@ -955,12 +960,12 @@ void direction(dist& moves, targeting_type restricts,
                 mpr("Sorry, you can't target what you can't see.",
                     MSGCH_EXAMINE_FILTER);
             }
-            // Ask for confirmation if we're quitting for some odd reason
+            // Ask for confirmation if we're quitting for some odd reason.
             else if ( moves.isValid || moves.isCancel
                       || yesno("Are you sure you want to fizzle?", false, 'n') )
             {
                 // Finalize whatever is inside the loop
-                // (moves-internal finalizations can be done later)
+                // (moves-internal finalizations can be done later).
                 moves.choseRay = show_beam;
                 moves.ray = ray;
                 break;
@@ -2493,6 +2498,7 @@ command_type targeting_behaviour::get_command(int key)
     case 'v':  return CMD_TARGET_DESCRIBE;
     case '?':  return CMD_TARGET_HELP;
     case ' ':  return just_looking? CMD_TARGET_CANCEL : CMD_TARGET_SELECT;
+    case CONTROL('P'): return CMD_TARGET_SHOW_PROMPT;
 #ifdef WIZARD
     case CONTROL('C'): return CMD_TARGET_CYCLE_BEAM;
 #endif

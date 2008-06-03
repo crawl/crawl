@@ -2740,11 +2740,11 @@ bool ely_destroy_weapons()
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {
-        const int next = mitm[i].link;  // in case we can't get it later.
+        const int next = mitm[i].link;  // In case we can't get it later.
 
         if (mitm[i].base_type != OBJ_WEAPONS
                 && mitm[i].base_type != OBJ_MISSILES
-            || item_is_stationary(mitm[i])) // held in a net
+            || item_is_stationary(mitm[i])) // Held in a net?
         {
             i = next;
             continue;

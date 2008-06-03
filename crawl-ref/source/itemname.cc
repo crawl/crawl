@@ -40,6 +40,7 @@
 #include "player.h"
 #include "quiver.h"
 #include "randart.h"
+#include "religion.h"
 #include "skills2.h"
 #include "state.h"
 #include "stuff.h"
@@ -2193,6 +2194,9 @@ const std::string menu_colour_item_prefix(const item_def &item)
         }
     }
 
+    if (is_good_god(you.religion) && is_evil_item(item))
+        prefixes.push_back("evil_item");
+
     switch (item.base_type)
     {
     case OBJ_CORPSES:
@@ -2204,6 +2208,14 @@ const std::string menu_colour_item_prefix(const item_def &item)
         }
         // intentional fall-through
     case OBJ_FOOD:
+        if ((item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
+            && (is_good_god(you.religion) && is_player_same_species(item.plus)
+                || you.religion == GOD_ZIN
+                   && mons_intel(item.plus) >= I_NORMAL))
+        {
+            prefixes.push_back("evil_eating");
+        }
+
         if (item.base_type != OBJ_CORPSES
                && !can_ingest(item.base_type, item.sub_type, true, true, false)
             || you.species == SP_VAMPIRE && !mons_has_blood(item.plus)
@@ -2254,7 +2266,7 @@ const std::string get_menu_colour_prefix_tags(item_def &item,
     std::string item_name  = item.name(desc);
     int col = menu_colour(item_name, cprf, "pickup");
 
-    if (col != LIGHTGRAY)
+    if (col != -1)
         colour = colour_to_str( col );
 
     if (!colour.empty())

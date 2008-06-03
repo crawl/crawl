@@ -8,6 +8,9 @@ inv := menu_colour
 msg = darkgrey:.*inedible.*
 inv = darkgrey:.*inedible.*
 
+inv = magenta:.*evil_item.*
+inv = magenta:.*evil_eating.*
+
 msg = yellow:.*preferred.*
 inv = yellow:.*preferred.*
 

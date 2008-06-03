@@ -1583,7 +1583,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
                                      ZAP_ORB_OF_ELECTRICITY };
     const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_NEGATIVE_ENERGY };
 
-    switch ( card )
+    switch (card)
     {
     case CARD_VITRIOL:
         ztype = (one_chance_in(3) ? ZAP_DEGENERATION : ZAP_BREATHE_ACID);
@@ -1612,8 +1612,9 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     case CARD_PAIN:
         if (power_level == 2)
         {
+            mprf("You have drawn %s.", card_name(card));
             _mass_drain(power);
-            return true;
+            return (true);
         }
         else
             ztype = painzaps[power_level];
@@ -1623,12 +1624,18 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
         break;
     }
 
-    if (spell_direction(target, beam) && player_tracer(ztype, power/4, beam))
+    snprintf(info, INFO_SIZE, "You have drawn %s.  Aim where? ",
+                              card_name(card));
+
+    if (spell_direction(target, beam, DIR_NONE, TARG_ENEMY, true, info)
+        && player_tracer(ztype, power/4, beam))
+    {
         zapping(ztype, random2(power/4), beam);
+    }
     else
         rc = false;
 
-    return rc;
+    return (rc);
 }
 
 static void _elixir_card(int power, deck_rarity_type rarity)
@@ -2712,8 +2719,15 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
 
     if (tell_card)
     {
-        msg::stream << "You have drawn " << card_name( which_card )
-                    << '.' << std::endl;
+        // These card types will usually give this message in the targetting
+        // prompt, and the cases where they don't are handled specially.
+        if (which_card != CARD_VITRIOL && which_card != CARD_FLAME
+            && which_card != CARD_FROST && which_card != CARD_HAMMER
+            && which_card != CARD_SPARK && which_card != CARD_PAIN
+            && which_card != CARD_VENOM)
+        {
+           mprf("You have drawn %s.", card_name(which_card));
+        }
     }
 
     if (which_card == CARD_XOM && !crawl_state.is_god_acting())
@@ -2776,7 +2790,10 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
 
     case CARD_VENOM:
         if ( coinflip() )
+        {
+            mprf("You have drawn %s.", card_name(which_card));
             your_spells(SPELL_OLGREBS_TOXIC_RADIANCE,random2(power/4), false);
+        }
         else
             rc = _damaging_card(which_card, power, rarity);
         break;
@@ -2800,7 +2817,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_WILD_MAGIC:
-        // yes, high power is bad here
+        // Yes, high power is bad here.
         miscast_effect( SPTYP_RANDOM, random2(power/15) + 5,
                         random2(power), 0, "a card of wild magic" );
         break;
