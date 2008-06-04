@@ -931,7 +931,7 @@ chunks_autopickup = true
 
 swap_when_safe = true
         If both this and easy_butcher are true, then if an auto-switch
-        butchery is interupted, the auto-switch will be reversed as
+        butchery is interrupted, the auto-switch will be reversed as
         soon as you are safe again.
 
 easy_quit_item_prompts = true

@@ -2180,6 +2180,7 @@ enum operation_types
     OPER_FIRE     = 'f',
     OPER_PRAY     = 'p',
     OPER_EVOKE    = 'E',
+    OPER_DESTROY  = 'D',
     OPER_ANY      = 0
 };
 

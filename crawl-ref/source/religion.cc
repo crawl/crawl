@@ -2756,6 +2756,13 @@ bool ely_destroy_weapons()
             continue;
         }
 
+        if (!check_warning_inscriptions(mitm[i], OPER_DESTROY))
+        {
+            mpr("Won't destroy {!D} inscribed item.");
+            i = next;
+            continue;
+        }
+
         const int value = item_value( mitm[i], true );
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
@@ -2775,6 +2782,7 @@ bool ely_destroy_weapons()
         _print_sacrifice_message(GOD_ELYVILON, mitm[i], pgain);
         if (is_evil_weapon)
         {
+            // Print this is addition to the above!
             simple_god_message(" welcomes the destruction of this evil weapon.",
                                GOD_ELYVILON);
         }
@@ -2817,41 +2825,48 @@ bool trog_burn_books()
     for (int xpos = you.x_pos - 8; xpos < you.x_pos + 8; xpos++)
         for (int ypos = you.y_pos - 8; ypos < you.y_pos + 8; ypos++)
         {
-             // checked above
-             if (xpos == you.x_pos && ypos == you.y_pos)
-                 continue;
+            // Checked above.
+            if (xpos == you.x_pos && ypos == you.y_pos)
+                continue;
 
-             // burn only squares in sight
-             if (!see_grid(xpos, ypos))
-                 continue;
+            // Burn only squares in sight.
+            if (!see_grid(xpos, ypos))
+                continue;
 
-             // if a grid is blocked, books lying there will be ignored
-             // allow bombing of monsters
-             const int cloud = env.cgrid[xpos][ypos];
-             if (grid_is_solid(grd[ xpos ][ ypos ]) ||
-//                 mgrd[ xpos ][ ypos ] != NON_MONSTER ||
-                 (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE))
-             {
-                 continue;
-             }
+            // If a grid is blocked, books lying there will be ignored.
+            // Allow bombing of monsters.
+            const int cloud = env.cgrid[xpos][ypos];
+            if (grid_is_solid(grd[ xpos ][ ypos ])
+                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+            {
+                continue;
+            }
 
-             int count = 0;
-             int rarity = 0;
-             i = igrd[xpos][ypos];
-             while (i != NON_ITEM)
-             {
-                 const int next = mitm[i].link; // in case we can't get it later.
+            int count = 0;
+            int rarity = 0;
+            i = igrd[xpos][ypos];
+            while (i != NON_ITEM)
+            {
+                const int next = mitm[i].link; // in case we can't get it later
 
-                 if (mitm[i].base_type != OBJ_BOOKS
-                     || mitm[i].sub_type == BOOK_MANUAL
-                     || mitm[i].sub_type == BOOK_DESTRUCTION)
-                 {
-                     i = next;
-                     continue;
-                 }
+                if (mitm[i].base_type != OBJ_BOOKS
+                    || mitm[i].sub_type == BOOK_MANUAL
+                    || mitm[i].sub_type == BOOK_DESTRUCTION)
+                {
+                    i = next;
+                    continue;
+                }
+
+                // Ignore {!D} inscribed books.
+                if (!check_warning_inscriptions(mitm[i], OPER_DESTROY))
+                {
+                    mpr("Won't ignite {!D} inscribed book.");
+                    i = next;
+                    continue;
+                }
 
                  rarity += book_rarity(mitm[i].sub_type);
-                 // piety increases by 2 for books never picked up, else by 1
+                 // Piety increases by 2 for books never picked up, else by 1.
                  if (mitm[i].flags & ISFLAG_DROPPED
                      || mitm[i].flags & ISFLAG_THROWN)
                  {
@@ -4854,8 +4869,16 @@ void offer_items()
             continue;
         }
 
-        if ( _is_risky_sacrifice(item)
-             || item.inscription.find("=p") != std::string::npos)
+        // Ignore {!D} inscribed items.
+        if (!check_warning_inscriptions(item, OPER_DESTROY))
+        {
+            mpr("Won't sacrifice {!D} inscribed item.");
+            i = next;
+            continue;
+        }
+
+        if (_is_risky_sacrifice(item)
+            || item.inscription.find("=p") != std::string::npos)
         {
             const std::string msg =
                   "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
@@ -4884,8 +4907,8 @@ void offer_items()
                      you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
             }
-            if ((item.base_type == OBJ_CORPSES &&
-                 one_chance_in(2+you.piety/50))
+            if (item.base_type == OBJ_CORPSES
+                    && one_chance_in(2+you.piety/50)
                 // Nemelex piety gain is fairly fast...at least
                 // when you have low piety.
                 || value/2 >= random2(30 + you.piety/2))

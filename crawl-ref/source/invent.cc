@@ -1066,7 +1066,7 @@ static int _digit_to_index( char digit, operation_types oper )
         if (is_valid_item(you.inv[i]))
         {
             const std::string& r(you.inv[i].inscription);
-            /* note that r.size() is unsigned */
+            // Note that r.size() is unsigned.
             for ( unsigned int j = 0; j + 2 < r.size(); ++j )
             {
                 if ( r[j] == '@'
@@ -1092,13 +1092,13 @@ bool has_warning_inscription(const item_def& item,
         if (r[i] == '!')
         {
             if (r[i+1] == iletter || r[i+1] == '*')
-                return true;
+                return (true);
             else if (oper == OPER_ZAP && r[i+1] == 'z') // for the 0.3.4. keys
-                return true;
+                return (true);
         }
     }
 
-    return false;
+    return (false);
 }
 
 // checks if current item (to be removed) has a warning inscription
@@ -1183,24 +1183,31 @@ static std::string _operation_verb(operation_types oper)
     case OPER_FIRE:           return "fire";
     case OPER_PRAY:           return "sacrifice";
     case OPER_EVOKE:          return "evoke";
+    case OPER_DESTROY:        return "destroy";
     case OPER_ANY:
     default:
         return "choose";
     }
 }
 
-/* return true if user OK'd it (or no warning), false otherwise */
+// Return true if user OK'd it (or no warning), false otherwise.
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
     if (is_valid_item( item ) && has_warning_inscription(item, oper) )
     {
+        // When it's about destroying an item, don't even ask.
+        // If the player really wants to do that, they'll have
+        // to remove the inscription.
+        if (oper == OPER_DESTROY)
+            return (false);
+
         if (oper == OPER_WEAR)
         {
             if (item.base_type != OBJ_ARMOUR)
                 return (true);
 
-            // don't ask if item already worn
+            // Don't ask if item already worn.
             int equip = you.equip[get_armour_slot(item)];
             if (equip != -1 && item.link == equip)
                 return (_check_old_item_warning(item, oper));
@@ -1210,7 +1217,7 @@ bool check_warning_inscriptions( const item_def& item,
             if (item.base_type != OBJ_JEWELLERY)
                 return (true);
 
-            // don't ask if item already worn
+            // Don't ask if item already worn.
             int equip = -1;
             if (jewellery_is_amulet(item))
                 equip = you.equip[EQ_AMULET];

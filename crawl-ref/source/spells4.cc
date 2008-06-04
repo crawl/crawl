@@ -482,6 +482,15 @@ void cast_sticks_to_snakes(int pow)
         return;
     }
 
+    // Don't enchant sticks marked with {!D}.
+    if (!check_warning_inscriptions(you.inv[ weapon ], OPER_DESTROY))
+    {
+        mprf("%s feel%s slithery for a moment!",
+             you.inv[weapon].name(DESC_CAP_YOUR).c_str(),
+             you.inv[weapon].quantity > 1 ? "s" : "");
+        return;
+    }
+
     const beh_type beha = item_cursed(you.inv[ weapon ]) ? BEH_HOSTILE
                                                          : BEH_FRIENDLY;
     const unsigned short hitting = (beha == BEH_HOSTILE) ? MHITYOU

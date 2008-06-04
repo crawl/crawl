@@ -1023,7 +1023,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     {
         ; // No "visual shout" defined for silent monster, do nothing.
     }
-    else if (msg == "") // S_SILENT handled above
+    else if (msg == "") // Still nothing found?
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "No shout entry for default shout type '"

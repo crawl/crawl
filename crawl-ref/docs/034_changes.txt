@@ -40,8 +40,8 @@ them:
 We are content that all of these changes are genuine improvements. Should
 your brain be hardwired to the old settings, you can effectively enforce
 the 0.3.4 state by using the following options:
-   : crawl.read_options('docs/034_monster_glyphs.txt')
-   additional_macro_file   = docs/034_command_keys.txt
+   include                 = 034_monster_glyphs.txt
+   additional_macro_file   = 034_command_keys.txt
    always_confirm_butcher  = true
 
 Note that the header of init.txt contains these lines. (It contains some 
@@ -52,5 +52,5 @@ the old keyset, be aware that D is also a synonym for 'yes' in the
 butcher interface.
 
 If you choose to go with the new keyset or the new butcher interface and
-you intend to use your old macros, you need to look through your macro.txt
-file.
+you intend to use your old macros, you'll need to look through your 
+macro.txt file.

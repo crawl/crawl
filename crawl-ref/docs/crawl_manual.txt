@@ -2680,6 +2680,13 @@ some commands:
        cause a stash to automatically be marked.
   =f   item is excluded when cycling ammunition
   +f   item is included when cycling ammunition
+  !D   prompt before performing an action that might destroy this item
+       If you're attempting to destroy an item thus inscribed by
+       sacrificing it, destroying a weapon, or burning a book in the 
+       name of various deities, the game won't even ask you for 
+       confirmation but silently ignore this item. It also protects
+       against accidentally casting Sticks to Snakes on your favourite
+       weapon. Won't protect against lava accidents or hungry jellies.
 
 You can use the autoinscribe option to have some items automatically 
 inscribed. See options_guide.txt for details. Some examples are

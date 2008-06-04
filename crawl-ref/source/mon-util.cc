@@ -1209,7 +1209,9 @@ flight_type mons_flies(const monsters *mon)
         return (mon->ghost->fly);
     }
 
-    const int type = mons_is_zombified(mon)? mons_zombie_base(mon) : mon->type;
+    const int type = mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                            : mon->type;
+
     const flight_type ret = mons_class_flies( type );
     return (ret ? ret
                 : (_scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? FL_LEVITATE
