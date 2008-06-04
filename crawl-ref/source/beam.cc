@@ -2580,8 +2580,9 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
             // A casting of invisibility erases backlight.
             monster->del_ench(ENCH_BACKLIGHT);
 
-            // Can't use simple_monster_message here, since it checks
-            // for visibility of the monster (and its now invisible) -- bwr
+            // Can't use simple_monster_message() here, since it checks
+            // for visibility of the monster (and it's now invisible).
+            // -- bwr
             if (mons_near( monster ))
             {
                 mprf("%s flickers %s",
