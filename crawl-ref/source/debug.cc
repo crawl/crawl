@@ -3989,7 +3989,6 @@ void wizard_give_monster_item(monsters *mon)
 #endif
 
 #ifdef WIZARD
-
 static void _move_player(int x, int y)
 {
     // no longer held in net
@@ -4063,6 +4062,39 @@ void wizard_move_player_or_monster(int x, int y)
         _move_monster(x, y, mid);
 
     already_moving = false;
+}
+
+void debug_pathfind(int mid)
+{
+    if (mid == NON_MONSTER)
+        return;
+
+    mpr("Choose a destination!");
+#ifdef USE_TILE
+    more();
+#endif
+    coord_def dest;
+    show_map(dest, true);
+    redraw_screen();
+
+    monsters &mon = menv[mid];
+     mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
+          mon.x, mon.y, dest.x, dest.y);
+    monster_pathfind mp;
+    bool success = mp.start_pathfind(&mon, dest, true);
+    if (success)
+    {
+        std::vector<coord_def> path = mp.backtrack();
+        std::string path_str = "";
+        mpr("Here's the shortest path: ");
+        for (unsigned int i = 0; i < path.size(); i++)
+        {
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", path[i].x, path[i].y);
+            path_str += info;
+        }
+
+        mpr(path_str.c_str());
+    }
 }
 #endif
 

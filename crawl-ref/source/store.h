@@ -352,7 +352,7 @@ public:
     void           set_max_size(vec_size size);
     vec_size       get_max_size() const;
 
-    // NOTE: If the const versions of get_value() or [] are given a
+    // NOTE: If the const versions of get_value() or [] are given an
     // index which doesn't exist, they will assert.
     const CrawlStoreValue& get_value(const vec_size &index) const;
     const CrawlStoreValue& operator[] (const vec_size &index) const;

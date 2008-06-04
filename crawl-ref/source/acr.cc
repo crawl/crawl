@@ -537,7 +537,7 @@ static void _handle_wizard_command( void )
         break;
 
     case 'v':
-        // this command isn't very exciting... feel free to replace
+        // This command isn't very exciting... feel free to replace.
         i = prompt_invent_item( "Value of which item?", MT_INVLIST, -1 );
         if (i == PROMPT_ABORT || !is_random_artefact( you.inv[i] ))
         {
@@ -551,8 +551,8 @@ static void _handle_wizard_command( void )
         break;
 
     case '+':
-        i = prompt_invent_item(
-                "Make an artefact out of which item?", MT_INVLIST, -1 );
+        i = prompt_invent_item( "Make an artefact out of which item?",
+                                MT_INVLIST, -1 );
         if (i == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );
@@ -565,7 +565,7 @@ static void _handle_wizard_command( void )
             break;
         }
 
-        // set j == equipment slot of chosen item, remove old randart benefits
+        // Set j == equipment slot of chosen item, remove old randart benefits.
         for (j = 0; j < NUM_EQUIP; j++)
         {
             if (you.equip[j] == i)
@@ -590,7 +590,7 @@ static void _handle_wizard_command( void )
         break;
 
     case '|':
-        // create all unrandarts
+        // Create all unrandarts.
         for (tmp = 1; tmp < NO_UNRANDARTS; tmp++)
         {
             int islot = get_item_slot();
@@ -609,7 +609,7 @@ static void _handle_wizard_command( void )
             move_item_to_grid( &islot, you.x_pos, you.y_pos );
         }
 
-        // create all fixed artefacts
+        // Create all fixed artefacts.
         for (tmp = SPWPN_START_FIXEDARTS;
              tmp < SPWPN_START_NOGEN_FIXEDARTS; tmp++)
         {

@@ -915,8 +915,17 @@ void direction(dist& moves, targeting_type restricts,
             skip_iter = true;
 
             break;
-#endif
 
+        case CMD_TARGET_WIZARD_PATHFIND:
+            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+                break;
+            mid = mgrd[moves.tx][moves.ty];
+            if (mid == NON_MONSTER)
+                break;
+
+            debug_pathfind(mid);
+            break;
+#endif
         case CMD_TARGET_DESCRIBE:
             full_describe_square(moves.target());
             force_redraw = true;
@@ -947,10 +956,10 @@ void direction(dist& moves, targeting_type restricts,
 
             // Confirm self-targeting on TARG_ENEMY.
             // Conceivably we might want to confirm on TARG_ANY too.
-            if ( moves.isTarget
-                 && moves.tx == you.x_pos && moves.ty == you.y_pos
-                 && mode == TARG_ENEMY
-                 && !yesno("Really target yourself?", false, 'n'))
+            if (moves.isTarget
+                && moves.tx == you.x_pos && moves.ty == you.y_pos
+                && mode == TARG_ENEMY
+                && !yesno("Really target yourself?", false, 'n'))
             {
                 mesclr();
                 show_prompt = true;
@@ -983,18 +992,17 @@ void direction(dist& moves, targeting_type restricts,
 
         bool have_moved = false;
 
-        if ( old_tx != moves.tx || old_ty != moves.ty )
+        if (old_tx != moves.tx || old_ty != moves.ty)
         {
             have_moved = true;
-            show_beam = show_beam &&
-                find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray,
-                         0, true);
+            show_beam = show_beam && find_ray(you.x_pos, you.y_pos, moves.tx,
+                                              moves.ty, true, ray, 0, true);
         }
 
-        if ( force_redraw )
+        if (force_redraw)
             have_moved = true;
 
-        if ( have_moved )
+        if (have_moved)
         {
             // If the target x,y has changed, the beam must have changed.
             if ( show_beam )
@@ -1017,9 +1025,9 @@ void direction(dist& moves, targeting_type restricts,
         {
             viewwindow(true, false);
 #endif
-            if ( show_beam
-                 && in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty))
-                 && moves.target() != you.pos() )
+            if (show_beam
+                && in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty))
+                && moves.target() != you.pos() )
             {
                 // Draw the new ray with magenta '*'s, not including
                 // your square or the target square.
@@ -2494,6 +2502,7 @@ command_type targeting_behaviour::get_command(int key)
     case 's':  return CMD_TARGET_WIZARD_MAKE_SHOUT;
     case 'g':  return CMD_TARGET_WIZARD_GIVE_ITEM;
     case 'm':  return CMD_TARGET_WIZARD_MOVE;
+    case 'w':  return CMD_TARGET_WIZARD_PATHFIND;
 #endif
     case 'v':  return CMD_TARGET_DESCRIBE;
     case '?':  return CMD_TARGET_HELP;

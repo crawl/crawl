@@ -305,10 +305,10 @@ static void _adjust_spells(void)
         return;
     }
 
-    // print out targeted spell:
+    // Print targeted spell.
     mprf( "%c - %s", keyin, spell_title( spell ) );
 
-    // Select target slot
+    // Select target slot.
     keyin = 0;
     while ( !isalpha(keyin) )
     {
@@ -662,6 +662,7 @@ static const char *targeting_help_1 =
     "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
     "<w>P</w>: apply divine blessing to monster\n"
     "<w>m</w>: move monster or player\n"
+    "<w>w</w>: calculate shortest path to any point on the map\n"
 #endif
 ;
 

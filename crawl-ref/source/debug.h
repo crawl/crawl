@@ -165,6 +165,7 @@ void debug_make_monster_shout(monsters* mon);
 void debug_apply_monster_blessing(monsters* mon);
 void wizard_give_monster_item(monsters* mon);
 void wizard_move_player_or_monster(int x, int y);
+void debug_pathfind(int mid);
 
 #ifdef DEBUG_DIAGNOSTICS
 void generate_map_stats();

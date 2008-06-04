@@ -925,23 +925,23 @@ dungeon_feature_type trap_category(trap_type type)
     }
 }                               // end trap_category()
 
-// returns index of the trap for a given (x,y) coordinate pair {dlb}
+// Returns index of the trap for a given (x,y) coordinate pair {dlb}
 int trap_at_xy(int which_x, int which_y)
 {
 
     for (int which_trap = 0; which_trap < MAX_TRAPS; which_trap++)
     {
-        if (env.trap[which_trap].x == which_x &&
-            env.trap[which_trap].y == which_y &&
-            env.trap[which_trap].type != TRAP_UNASSIGNED)
+        if (env.trap[which_trap].x == which_x
+            && env.trap[which_trap].y == which_y
+            && env.trap[which_trap].type != TRAP_UNASSIGNED)
         {
             return (which_trap);
         }
     }
 
-    // no idea how well this will be handled elsewhere: {dlb}
+    // No idea how well this will be handled elsewhere. {dlb}
     return (-1);
-}                               // end trap_at_xy()
+}
 
 trap_type trap_type_at_xy(int x, int y)
 {

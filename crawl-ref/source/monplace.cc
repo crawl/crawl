@@ -17,6 +17,7 @@
 #include "monplace.h"
 
 #include "branch.h"
+#include "directn.h" // for the Compass
 #include "externs.h"
 #include "ghost.h"
 #include "lev-pand.h"
@@ -76,7 +77,7 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
                 && actual_grid <= DNGN_CLEAR_PERMAROCK_WALL);
     }
 
-    // Restricted fountains during generation, so we don't monsters
+    // Restricted fountains during generation, so we don't get monsters
     // "trapped" in fountains for easy killing.
     return (grid_wanted == actual_grid
             || (grid_wanted == DNGN_DEEP_WATER
@@ -2221,4 +2222,247 @@ monster_type rand_dragon( dragon_class_type type )
     }
 
     return (summoned);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// monster_pathfind
+
+monster_pathfind::monster_pathfind()
+    : mons(), target(), min_length(0), dist(), prev()
+{
+}
+
+monster_pathfind::~monster_pathfind()
+{
+}
+
+// Returns true if a path was found, else false.
+bool monster_pathfind::start_pathfind(monsters *mon, coord_def dest, bool msg)
+{
+    mons   = mon;
+
+    // We're doing a reverse search from target to monster.
+    start  = dest;
+    target = coord_def(mon->x, mon->y);
+    pos    = start;
+
+    // Easy enough. :P
+    if (start == target)
+    {
+        if (msg)
+            mpr("The monster is already there!");
+
+        return (true);
+    }
+
+    max_length = min_length = grid_distance(pos.x, pos.y, target.x, target.y);
+//    memset(dist, INFINITE_DISTANCE, sizeof(dist));
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
+            dist[i][j] = INFINITE_DISTANCE;
+
+    dist[pos.x][pos.y] = 0;
+
+    bool success = false;
+    do
+    {
+        success = calc_path_to_neighbours();
+        if (success)
+            return (true);
+
+        success = get_best_position();
+
+        if (!success)
+        {
+            if (msg)
+            {
+                mprf("Couldn't find a path from (%d,%d) to (%d,%d).",
+                     target.x, target.y, start.x, start.y);
+            }
+            return (false);
+        }
+    }
+    while (true);
+}
+
+// Returns true as soon as we encounter the target.
+bool monster_pathfind::calc_path_to_neighbours()
+{
+//    mprf("in calc_path_to_neighbours() for (%d,%d)", pos.x, pos.y);
+    coord_def npos;
+    int distance, old_dist, total;
+    for (int dir = 0; dir < 8; dir++)
+    {
+        npos = pos + Compass[dir];
+
+//        mprf("Looking at neighbour (%d,%d)", npos.x, npos.y);
+        if (!in_bounds(npos))
+            continue;
+
+        if (!traversable(npos))
+            continue;
+
+        distance = dist[pos.x][pos.y] + travel_cost(npos);
+        old_dist = dist[npos.x][npos.y];
+//        mprf("old dist: %d, new dist: %d, infinite: %d", old_dist, distance,
+//             INFINITE_DISTANCE);
+        if (distance < old_dist)
+        {
+            // Calculate new total path length.
+            total = distance + estimated_cost(npos);
+            if (old_dist == INFINITE_DISTANCE)
+            {
+                mprf("Adding (%d,%d) to hash (total dist = %d)",
+                     npos.x, npos.y, total);
+
+                add_new_pos(npos, total);
+                if (total > max_length)
+                    max_length = total;
+            }
+            else
+            {
+                mprf("Improving (%d,%d) to total dist %d",
+                     npos.x, npos.y, total);
+
+                update_pos(npos, total);
+            }
+
+            // Update distance start->pos.
+            dist[npos.x][npos.y] = distance;
+
+            // Set backtracking information.
+            // Converts the Compass direction to their counterpart.
+            //      7  0  1
+            //      6  .  2
+            //      5  4  3
+
+            prev[npos.x][npos.y] = (dir + 4) % 8;
+
+            // Are we finished?
+            if (npos == target)
+            {
+                mpr("Arrived at target.");
+                return (true);
+            }
+        }
+    }
+    return (false);
+}
+
+bool monster_pathfind::get_best_position()
+{
+//    mprf("minlength: %d, maxlength: %d", min_length, max_length);
+    for (int i = min_length; i <= max_length; i++)
+    {
+        if (!hash[i].empty())
+        {
+            if (i > min_length)
+                min_length = i;
+            std::vector<coord_def> &vec = hash[i];
+            pos = vec[vec.size()-1];
+            vec.pop_back();
+            mprf("Returning (%d, %d) as best pos with total dist %d.",
+                 pos.x, pos.y, min_length);
+
+            return (true);
+        }
+//        mprf("No positions for path length %d.", i);
+    }
+
+    // Nothing found? Then there's no path! :(
+    return (false);
+}
+
+std::vector<coord_def> monster_pathfind::backtrack()
+{
+    mpr("Backtracking...");
+    std::vector<coord_def> path;
+    pos = target;
+    path.push_back(pos);
+
+    if (pos == start)
+        return path;
+
+    int dir;
+    do
+    {
+        dir = prev[pos.x][pos.y];
+        pos = pos + Compass[dir];
+        ASSERT(in_bounds(pos));
+        mprf("prev: (%d, %d), pos: (%d, %d)", Compass[dir].x, Compass[dir].y,
+                                              pos.x, pos.y);
+        path.push_back(pos);
+
+        if (pos.x == 0 && pos.y == 0)
+            break;
+    }
+    while (pos != start);
+    ASSERT(pos == start);
+
+    return path;
+}
+
+bool monster_pathfind::traversable(coord_def p)
+{
+    const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
+                                                : mons->type;
+
+    if (!monster_habitable_grid(montype, grd(p)))
+    {
+//        mprf("Feature %d is not a habitable grid.", grd(p));
+        return (false);
+    }
+
+    // Don't generate monsters on top of teleport traps.
+    const int trap = trap_at_xy(p.x, p.y);
+    if (trap >= 0)
+    {
+//        mpr("There's a trap here!");
+        if (!_can_place_on_trap(montype, env.trap[trap].type))
+        {
+//            mpr("Monster can't be placed on trap.");
+            return (false);
+        }
+    }
+//    mprf("Grid (%d, %d) is traversable.", p.x, p.y);
+    return (true);
+}
+
+int monster_pathfind::travel_cost(coord_def npos)
+{
+    ASSERT(grid_distance(pos.x, pos.y, npos.x, npos.y) <= 1);
+
+    // TODO: Make traps/shallow water more expensive, etc.
+    return 1;
+}
+
+int monster_pathfind::estimated_cost(coord_def p)
+{
+    return (grid_distance(p.x, p.y, target.x, target.y));
+}
+
+void monster_pathfind::add_new_pos(coord_def npos, int total)
+{
+    hash[total].push_back(npos);
+}
+
+void monster_pathfind::update_pos(coord_def npos, int total)
+{
+    // Find hash position of old distance and delete it,
+    // then call_add_new_pos.
+    int old_total = dist[npos.x][npos.y] + estimated_cost(npos);
+
+    std::vector<coord_def> &vec = hash[old_total];
+    for (unsigned int i = 0; i < vec.size(); i++)
+    {
+        if (vec[i] == npos)
+        {
+//            mpr("Attempting to erase entry.");
+            vec.erase(vec.begin() + i);
+            break;
+        }
+    }
+
+    add_new_pos(npos, total);
 }

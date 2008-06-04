@@ -260,7 +260,7 @@ bool dec_inv_item_quantity( int obj, int amount )
         }
 
         you.inv[obj].base_type = OBJ_UNASSIGNED;
-        you.inv[obj].quantity = 0;
+        you.inv[obj].quantity  = 0;
         you.inv[obj].props.clear();
 
         ret = true;

@@ -2772,8 +2772,8 @@ bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)
     if (mons_is_wall_shielded(mclass))
     {
         // Permanent walls can't be passed through.
-        return (!grid_is_solid(grid) ||
-                   (grid_is_rock(grid) && !grid_is_permarock(grid)));
+        return (!grid_is_solid(grid)
+                || grid_is_rock(grid) && !grid_is_permarock(grid));
     }
 
     return !grid_is_solid(grid);

@@ -294,4 +294,43 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
 
 void spawn_random_monsters();
 
+class monster_pathfind
+{
+public:
+    monster_pathfind();
+    virtual ~monster_pathfind();
+
+    // public methods
+    bool start_pathfind(monsters *mon, coord_def dest, bool msg = false);
+    std::vector<coord_def> backtrack(void);
+
+protected:
+    // protected methods
+    bool calc_path_to_neighbours(void);
+    bool traversable(coord_def p);
+    int  travel_cost(coord_def npos);
+    int  estimated_cost(coord_def npos);
+    void add_new_pos(coord_def pos, int total);
+    void update_pos(coord_def pos, int total);
+    bool get_best_position(void);
+
+
+    // The monster trying to find a path.
+    monsters *mons;
+
+    // Our destination, and the current position we're looking at.
+    coord_def start, target, pos;
+
+    // Currently shortest and longest possible total length of the path.
+    int min_length;
+    int max_length;
+
+    // The array of distances from start to any already tried point.
+    int dist[GXM][GYM];
+    // An array to store where we came from on a given shortest path.
+    int prev[GXM][GYM];
+
+    FixedVector<std::vector<coord_def>, GXM * GYM> hash;
+};
+
 #endif  // MONPLACE_H
