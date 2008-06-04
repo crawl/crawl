@@ -4166,21 +4166,29 @@ static bool _beam_is_harmless(bolt &beam, monsters *mon)
         return (mons_is_holy(mon)
                 || is_good_god(you.religion)
                    && ( is_follower(mon) || mons_neutral(mon) ));
+
     case BEAM_STEAM:
         return (mons_res_steam(mon) >= 3);
+
     case BEAM_FIRE:
         return (mons_res_fire(mon) >= 3);
+
     case BEAM_COLD:
         return (mons_res_cold(mon) >= 3);
+
     case BEAM_MIASMA:
     case BEAM_NEG:
         return (mons_res_negative_energy(mon) == 3);
+
     case BEAM_ELECTRICITY:
         return (mons_res_elec(mon) >= 3);
+
     case BEAM_POISON:
         return (mons_res_poison(mon) >= 3);
+
     case BEAM_ACID:
         return (mons_res_acid(mon) >= 3);
+
     default:
         return (false);
     }
