@@ -449,8 +449,7 @@ static monster_type _pick_random_wraith()
 {
     static monster_type wraiths[] =
     {
-        MONS_WRAITH, MONS_FREEZING_WRAITH, MONS_SPECTRAL_WARRIOR,
-        MONS_SHADOW_WRAITH
+        MONS_WRAITH, MONS_FREEZING_WRAITH, MONS_SPECTRAL_WARRIOR
     };
 
     return wraiths[ random2(sizeof(wraiths) / sizeof(*wraiths)) ];
