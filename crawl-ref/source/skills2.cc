@@ -1811,20 +1811,6 @@ static void _display_skill_table(bool show_aptitudes)
                 else
                 {
                     textcolor(RED);
-
-                    // Modify Spellcasting, Evocations, Invocations for
-                    // aptitude display.
-                    if (x == SK_SPELLCASTING)
-                    {
-                        spec_abil *= 10;
-                        spec_abil /= 13;
-                    }
-                    else if (x == SK_INVOCATIONS || x == SK_EVOCATIONS)
-                    {
-                        spec_abil *= 4;
-                        spec_abil /= 3;
-                    }
-
                     cprintf(" %3d  ", spec_abil);
                 }
             }
