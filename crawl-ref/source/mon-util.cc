@@ -4762,6 +4762,15 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_BERSERK:
         // Inflate hp.
         scale_hp(3, 2);
+
+        if (has_ench(ENCH_SUBMERGED))
+            del_ench(ENCH_SUBMERGED);
+
+        if (behaviour == BEH_LURK)
+        {
+            behaviour = BEH_WANDER;
+            behaviour_event(this, ME_EVAL);
+        }
         break;
 
     case ENCH_HASTE:
@@ -4781,10 +4790,30 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_SUBMERGED:
-        if (type == MONS_AIR_ELEMENTAL && mons_near(this) && !quiet)
+        // XXX: What if the monster was invisible before submerging?
+        if (mons_near(this) && !quiet)
         {
-            mprf("%s merges itself into the air.",
-                 name(DESC_CAP_A, true).c_str() );
+            if (type == MONS_AIR_ELEMENTAL)
+            {
+                mprf("%s merges itself into the air.",
+                     name(DESC_CAP_A, true).c_str() );
+            }
+            else if (type == MONS_TRAPDOOR_SPIDER)
+            {
+                mprf("%s hides itself under the floor.",
+                     name(DESC_CAP_A, true).c_str() );
+            }
+        }
+        break;
+
+    case ENCH_CONFUSION:
+        if (type == MONS_TRAPDOOR_SPIDER && has_ench(ENCH_SUBMERGED))
+            del_ench(ENCH_SUBMERGED);
+
+        if (behaviour == BEH_LURK)
+        {
+            behaviour = BEH_WANDER;
+            behaviour_event(this, ME_EVAL);
         }
         break;
 
@@ -4973,6 +5002,8 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
                 if (type == MONS_AIR_ELEMENTAL)
                     seen_context = "thin air";
+                else if (type == MONS_TRAPDOOR_SPIDER)
+                    seen_context = "leaps out";
                 else if (monster_habitable_grid(this, DNGN_FLOOR))
                     seen_context = "bursts forth";
                 else
@@ -4985,12 +5016,23 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     mprf("%s forms itself from the air!",
                          name(DESC_CAP_A, true).c_str() );
                 }
+                else if (type == MONS_TRAPDOOR_SPIDER)
+                {
+                    mprf("%s leaps out from its hiding place under the floor!",
+                         name(DESC_CAP_A, true).c_str() );
+                }
             }
         }
         else if (mons_near(this) && monster_habitable_grid(this, DNGN_FLOOR))
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity( AI_FORCE_INTERRUPT );
+        }
+
+        if (behaviour == BEH_WANDER)
+        {
+            behaviour = BEH_SEEK;
+            behaviour_event(this, ME_EVAL);
         }
 
         break;
@@ -5376,6 +5418,13 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // and are more likely to surface.  -- bwr
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
+        else if (type == MONS_TRAPDOOR_SPIDER)
+        {
+            // This should probably never happen.
+            if (behaviour != BEH_LURK)
+                del_ench(ENCH_SUBMERGED);
+            break;
+        }
         else if (hit_points <= max_hit_points / 2)
             break;
         else if (((type == MONS_ELECTRICAL_EEL || type == MONS_LAVA_SNAKE)
@@ -5801,9 +5850,13 @@ void monsters::apply_location_effects()
         mons_check_pool(this);
 
     if (alive() && has_ench(ENCH_SUBMERGED)
-        && !monster_can_submerge(this, grd[x][y]))
+        && (!monster_can_submerge(this, grd[x][y])
+            || type == MONS_TRAPDOOR_SPIDER))
     {
         del_ench(ENCH_SUBMERGED);
+
+        if (type == MONS_TRAPDOOR_SPIDER)
+            behaviour_event(this, ME_EVAL);
     }
 }
 

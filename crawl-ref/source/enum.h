@@ -1794,7 +1794,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BALL_LIGHTNING, // replacing the dorgi -- bwr  380
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
     MONS_QUOKKA,         // Quokka are a type of wallaby, returned -- bwr 382
-    // 383
+    MONS_TRAPDOOR_SPIDER,
     // 384
     MONS_EYE_OF_DEVASTATION = 385,     //  385
     MONS_MOTH_OF_WRATH,
@@ -1867,6 +1867,8 @@ enum beh_type
     BEH_CORNERED,
     BEH_PANIC,                         //  like flee but without running away
     BEH_INVESTIGATE,                   //  investigating an ME_DISTURB
+    BEH_LURK,                          //  stay still until discovered or
+                                       //  enemy closeby
     NUM_BEHAVIOURS,                    //  max # of legal states
     BEH_CHARMED,                       //  hostile-but-charmed; create only
     BEH_FRIENDLY,                      //  used during creation only

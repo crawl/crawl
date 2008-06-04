@@ -158,6 +158,9 @@ bool monster_habitable_grid(int monster_class,
 // Returns true if the monster can submerge in the given grid.
 bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
 {
+    if (mons->type == MONS_TRAPDOOR_SPIDER && grid == DNGN_FLOOR)
+        return true;
+
     // Zombies of watery critters can not submerge.
     switch (mons_habitat(mons))
     {

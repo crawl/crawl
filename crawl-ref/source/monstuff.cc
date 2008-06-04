@@ -1465,6 +1465,10 @@ static bool _valid_morph( monsters *monster, int new_mclass )
         || new_mclass == MONS_PLAYER_GHOST
         || new_mclass == MONS_PANDEMONIUM_DEMON
 
+        // Monsters still under development
+        || new_mclass == MONS_ROCK_WORM
+        || new_mclass == MONS_TRAPDOOR_SPIDER
+
         // Other poly-unsuitable things.
         || new_mclass == MONS_ROYAL_JELLY
         || new_mclass == MONS_ORB_GUARDIAN
@@ -2016,6 +2020,8 @@ static bool _wounded_damaged(int monster_type)
 void behaviour_event( monsters *mon, int event, int src,
                       int src_x, int src_y )
 {
+    beh_type old_behaviour = mon->behaviour;
+
     bool isSmart          = (mons_intel(mon->type) > I_ANIMAL);
     bool wontAttack       = mons_wont_attack(mon);
     bool sourceWontAttack = false;
@@ -2160,6 +2166,25 @@ void behaviour_event( monsters *mon, int event, int src,
 
     // Do any resultant foe or state changes.
     _handle_behaviour( mon );
+
+    if (old_behaviour == BEH_LURK && mon->behaviour != BEH_LURK)
+    {
+        switch(event)
+        {
+        case ME_EVAL:
+        case ME_DISTURB:
+        case ME_ALERT:
+            // Lurking monsters won't stop lurking just because they
+            // noticed something.
+            mon->behaviour = BEH_LURK;
+            break;
+            
+        default:
+            if (mon->has_ench(ENCH_SUBMERGED))
+                mon->del_ench(ENCH_SUBMERGED);
+            break;
+        }
+    }
 }
 
 static bool _choose_random_patrol_target_grid(monsters *mon)
@@ -2476,6 +2501,7 @@ static void _handle_behaviour(monsters *mon)
             new_foe = MHITNOT;
             break;
 
+        case BEH_LURK:
         case BEH_SEEK:
             // No foe? Then wander or seek the player.
             if (mon->foe == MHITNOT)
@@ -3121,6 +3147,7 @@ static void _handle_nearby_ability(monsters *monster)
 
     if (monster_can_submerge(monster, grd[monster->x][monster->y])
         && !player_beheld_by(monster) // No submerging if player entranced.
+        && monster->behaviour != BEH_LURK // Handled elsewhere
         && (one_chance_in(5)
             || grid_distance( monster->x, monster->y,
                               you.x_pos, you.y_pos ) > 1
@@ -5176,6 +5203,38 @@ static void _handle_monster_move(int i, monsters *monster)
             }
         }
 
+        if (monster->behaviour == BEH_LURK)
+        {
+            // Lurking monsters only stop lurking if their target is right
+            // next tp them, otherwise they just sit there.
+            if (monster->foe != MHITNOT
+                && abs(monster->target_x - monster->x) <= 1
+                && abs(monster->target_y - monster->y) <= 1)
+            {
+                if (monster->has_ench(ENCH_SUBMERGED))
+                {
+                    // Don't unsubmerge if the player is right on top,
+                    // if the monster is too damaged or if the monster
+                    // is afraid.
+                    if (monster->pos() == you.pos()
+                        || monster->hit_points <= monster->max_hit_points / 2
+                        || monster->has_ench(ENCH_FEAR))
+                    {
+                        monster->speed_increment -= non_move_energy;
+                        continue;
+                    }
+
+                    monster->del_ench(ENCH_SUBMERGED);
+                }
+                monster->behaviour = BEH_SEEK;
+            }
+            else
+            {
+                monster->speed_increment -= non_move_energy;
+                continue;
+            }
+        }
+
         if (mons_is_caught(monster))
         {
             // Struggling against the net takes time.
@@ -6311,6 +6370,31 @@ static bool _monster_move(monsters *monster)
 
     const habitat_type habitat = mons_habitat(monster);
     bool deep_water_available = false;
+
+    if (monster->type == MONS_TRAPDOOR_SPIDER)
+    {
+        if(monster->has_ench(ENCH_SUBMERGED))
+           return false;
+
+        // Trapdoor spiders hide if they can't see their target.
+        bool can_see;
+        
+        if (monster->foe == MHITNOT)
+            can_see = false;
+        else if (monster->foe == MHITYOU)
+            can_see = monster->can_see(&you);
+        else
+            can_see = monster->can_see(&menv[monster->foe]);
+
+        if (monster_can_submerge(monster, grd[monster->x][monster->y])
+            && !can_see && !mons_is_confused(monster)
+            && !monster->has_ench(ENCH_BERSERK))
+        {
+            monster->add_ench(ENCH_SUBMERGED);
+            monster->behaviour = BEH_LURK;
+            return false;
+        }
+    }
 
     // Berserking monsters make a lot of racket.
     if (monster->has_ench(ENCH_BERSERK))
