@@ -377,7 +377,7 @@ static bool _beogh_followers_abandon_you();
 static void _altar_prayer();
 static void _dock_piety(int piety_loss, int penance);
 static bool _make_god_gifts_disappear(bool level_only = true);
-static bool _make_god_gifts_good_neutral(bool level_only = true);
+static bool _make_holy_god_gifts_good_neutral(bool level_only = true);
 static bool _make_god_gifts_hostile(bool level_only = true);
 static void _print_sacrifice_message(god_type, const item_def &,
                                      piety_gain_t, bool = false);
@@ -1061,6 +1061,8 @@ static bool _tso_blessing_friendliness(monsters* mon)
     // The monster is not really *created* friendly, but should it
     // become hostile later on, it won't count as a good kill.
     mon->flags |= MF_CREATED_FRIENDLY;
+
+    mon->flags |= MF_GOD_GIFT;
 
     // If the monster is charmed, make it permanently friendly.  Note
     // that we have to delete the enchantment without removing the
@@ -3988,13 +3990,14 @@ static bool _make_god_gifts_disappear(bool level_only)
 // When abandoning the god in question, turn friendly god gifts good
 // neutral.  If seen, only count monsters where the player can see the
 // change, and output a message.
-static bool _make_god_gifts_on_level_good_neutral(bool seen = false)
+static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
 {
     int count = 0;
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
         if (monster->type != -1
+            && mons_is_holy(monster)
             && monster->attitude == ATT_FRIENDLY
             && (monster->flags & MF_GOD_GIFT))
         {
@@ -4008,21 +4011,21 @@ static bool _make_god_gifts_on_level_good_neutral(bool seen = false)
     return (count);
 }
 
-static bool _god_gifts_good_neutral_wrapper()
+static bool _holy_god_gifts_good_neutral_wrapper()
 {
-    return (_make_god_gifts_on_level_good_neutral());
+    return (_make_holy_god_gifts_on_level_good_neutral());
 }
 
-// Make friendly god gifts turn good neutral on all levels, or on only
-// the current one.
-static bool _make_god_gifts_good_neutral(bool level_only)
+// Make friendly holy god gifts turn good neutral on all levels, or on
+// only the current one.
+static bool _make_holy_god_gifts_good_neutral(bool level_only)
 {
-    bool success = _make_god_gifts_on_level_good_neutral(true);
+    bool success = _make_holy_god_gifts_on_level_good_neutral(true);
 
     if (level_only)
         return (success);
 
-    return (apply_to_all_dungeons(_god_gifts_good_neutral_wrapper) || success);
+    return (apply_to_all_dungeons(_holy_god_gifts_good_neutral_wrapper) || success);
 }
 
 // When abandoning the god in question, turn friendly god gifts hostile.
@@ -4448,13 +4451,18 @@ void excommunication(god_type new_god)
         if (you.duration[DUR_DIVINE_SHIELD])
             remove_divine_shield();
 
+        // Leaving TSO for a non-good god will make all your followers
+        // abandon you.  Leaving him for a good god will make your holy
+        // followers (his daeva servants) indifferent, while leaving
+        // your other followers (blessed with friendliness by his power,
+        // but not his servants) alone.
         if (!is_good_god(new_god))
         {
             _inc_penance( old_god, 50 );
             _make_god_gifts_hostile(false);
         }
         else
-            _make_god_gifts_good_neutral(false);
+            _make_holy_god_gifts_good_neutral(false);
 
         break;
 
@@ -4474,13 +4482,23 @@ void excommunication(god_type new_god)
         if (env.sanctuary_time)
             remove_sanctuary();
 
+        // Leaving Zin for a non-good god will make all your followers
+        // (originally from TSO) abandon you.
         if (!is_good_god(new_god))
+        {
             _inc_penance( old_god, 25 );
+            _make_god_gifts_hostile(false);
+        }
         break;
 
     case GOD_ELYVILON:
+        // Leaving Elyvilon for a non-good god will make all your
+        // followers (originally from TSO) abandon you.
         if (!is_good_god(new_god))
+        {
             _inc_penance( old_god, 30 );
+            _make_god_gifts_hostile(false);
+        }
         break;
 
     default:
