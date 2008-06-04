@@ -1471,7 +1471,7 @@ void CrawlVector::assert_validity() const
 void CrawlVector::set_max_size(vec_size _size)
 {
     ASSERT(_size > 0);
-    ASSERT(max_size == VEC_MAX_SIZE);
+    ASSERT(max_size == VEC_MAX_SIZE || max_size == _size);
     max_size = _size;
 
     vector.reserve(max_size);
