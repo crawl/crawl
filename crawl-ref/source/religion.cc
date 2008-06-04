@@ -1058,6 +1058,10 @@ static bool _tso_blessing_friendliness(monsters* mon)
 
     mon->attitude = ATT_FRIENDLY;
 
+    // The monster is not really *created* friendly, but should it
+    // become hostile later on, it won't count as a good kill.
+    mon->flags |= MF_CREATED_FRIENDLY;
+
     // If the monster is charmed, make it permanently friendly.  Note
     // that we have to delete the enchantment without removing the
     // enchantment effect, in order to keep the monster from turning
@@ -4264,11 +4268,11 @@ void good_god_holy_attitude_change(monsters *holy)
 
     holy->attitude  = ATT_GOOD_NEUTRAL;
 
-    // not really *created* neutral, but should it become hostile later
-    // on, it won't count as a good kill
+    // The monster is not really *created* neutral, but should it become
+    // hostile later on, it won't count as a good kill.
     holy->flags |= MF_WAS_NEUTRAL;
 
-    // to avoid immobile "followers"
+    // Avoid immobile "followers".
     behaviour_event(holy, ME_ALERT, MHITNOT);
 }
 
@@ -4318,10 +4322,10 @@ void beogh_convert_orc(monsters *orc, bool emergency,
         }
     }
 
-    orc->attitude  = ATT_FRIENDLY;
+    orc->attitude = ATT_FRIENDLY;
 
-    // not really "created" friendly, but should it become hostile later
-    // on, it won't count as a good kill
+    // The monster is not really *created* friendly, but should it
+    // become hostile later on, it won't count as a good kill.
     orc->flags |= MF_CREATED_FRIENDLY;
 
     orc->flags |= MF_GOD_GIFT;
@@ -4329,7 +4333,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     if (!orc->alive())
         orc->hit_points = std::min(random_range(1, 4), orc->max_hit_points);
 
-    // to avoid immobile "followers"
+    // Avoid immobile "followers".
     behaviour_event(orc, ME_ALERT, MHITNOT);
 }
 
