@@ -4300,11 +4300,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                     remove_sanctuary(true);
                 }
 
-                if (beam.flavour != BEAM_CHARM)
-                    set_attack_conducts(mon, conduct);
-                // No charming holy beings!
-                else if (mons_is_holy(mon))
-                    conduct.set(DID_ATTACK_HOLY, mon->hit_dice, true, mon);
+                set_attack_conducts(mon, conduct);
 
                 if (you.religion == GOD_BEOGH
                     && mons_species(mon->type) == MONS_ORC
@@ -5455,6 +5451,10 @@ static bool _nasty_beam(monsters *mon, bolt &beam)
         return (true);
 
     // now for some non-hurtful enchantments
+
+    // No charming holy beings!
+    if (beam.flavour == BEAM_CHARM)
+        return (mons_is_holy(mon));
 
     // degeneration / sleep
     if (beam.flavour == BEAM_DEGENERATE || beam.flavour == BEAM_SLEEP)
