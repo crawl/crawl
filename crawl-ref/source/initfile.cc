@@ -1535,7 +1535,7 @@ std::string game_options::unalias(const std::string &key) const
     return (i == aliases.end()? key : i->second);
 }
 
-#define IS_VAR_CHAR(c) (isalpha(c) || c == '_')
+#define IS_VAR_CHAR(c) (isalpha(c) || c == '_' || c == '-')
 
 std::string game_options::expand_vars(const std::string &field) const
 {
@@ -1571,7 +1571,7 @@ std::string game_options::expand_vars(const std::string &field) const
 
         string_map::const_iterator x = variables.find(var_name);
 
-        if (x == aliases.end())
+        if (x == variables.end())
         {
             curr_pos = end_pos + 1;
             continue;
