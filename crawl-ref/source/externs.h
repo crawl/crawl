@@ -1890,6 +1890,7 @@ public:
 private:
     typedef std::map<std::string, std::string> string_map;
     string_map               aliases;
+    string_map               variables;
     std::set<std::string>    included; // Files we've included already.
 
 public:
@@ -1905,6 +1906,7 @@ public:
 
 private:
     std::string unalias(const std::string &key) const;
+    std::string expand_vars(const std::string &field) const;
     void add_alias(const std::string &alias, const std::string &name);
 
     void clear_feature_overrides();

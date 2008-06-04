@@ -1523,13 +1523,70 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
 
 void game_options::add_alias(const std::string &key, const std::string &val)
 {
-    aliases[key] = val;
+    if (key[0] == '$')
+        variables[key.substr(1)] = val;
+    else
+        aliases[key] = val;
 }
 
 std::string game_options::unalias(const std::string &key) const
 {
-    std::map<std::string, std::string>::const_iterator i = aliases.find(key);
+    string_map::const_iterator i = aliases.find(key);
     return (i == aliases.end()? key : i->second);
+}
+
+#define IS_VAR_CHAR(c) (isalpha(c) || c == '_')
+
+std::string game_options::expand_vars(const std::string &field) const
+{
+    std::string field_out = field;
+
+    std::string::size_type curr_pos = 0;
+
+    // Only try 100 times, so as to not get stuck in infinite recursion.
+    for (int i = 0; i < 100; i++)
+    {
+        std::string::size_type dollar_pos = field_out.find("$", curr_pos);
+
+        if (dollar_pos == std::string::npos
+            || field_out.size() == (dollar_pos + 1))
+        {
+            break;
+        }
+
+        std::string::size_type start_pos = dollar_pos + 1;
+
+        if (!IS_VAR_CHAR(field_out[start_pos]))
+            continue;
+
+        std::string::size_type end_pos;
+        for (end_pos = start_pos; end_pos < field_out.size(); end_pos++)
+        {
+            if (!IS_VAR_CHAR(field_out[end_pos + 1]))
+                break;
+        }
+
+        std::string var_name = field_out.substr(start_pos,
+                                                end_pos - start_pos + 1);
+
+        string_map::const_iterator x = variables.find(var_name);
+
+        if (x == aliases.end())
+        {
+            curr_pos = end_pos + 1;
+            continue;
+        }
+
+        std::string dollar_plus_name = "$";
+        dollar_plus_name += var_name;
+
+        field_out = replace_all(field_out, dollar_plus_name, x->second);
+
+        // Start over at begining
+        curr_pos = 0;
+    }
+
+    return field_out;
 }
 
 void game_options::add_message_colour_mappings(const std::string &field)
@@ -1688,7 +1745,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (first_equals < 0)
         return;
 
-    field  = str.substr( first_equals + 1 );
+    field = str.substr( first_equals + 1 );
+    field = expand_vars(field);
 
     std::string prequal = trimmed_string( str.substr(0, first_equals) );
 
