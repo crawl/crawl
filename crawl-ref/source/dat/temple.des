@@ -89,10 +89,9 @@ ENDMAP
 NAME: temple_green
 TAGS: temple_entry
 ORIENT: float
-SUBST: ? = @=+b
-SUBST: ! = =+@
+SUBST: ? = =+b
 MAP
-bbbb!bbbb
+bbbb+bbbb
 b.......b
 b.......b
 ?...O...?
