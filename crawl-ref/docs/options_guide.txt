@@ -50,7 +50,8 @@ The contents of this text are:
                 runrest_ignore_monster, trapwalk_safe_hp, 
                 trap_prompt, rest_wait_both
 4-h     Stashes.
-                stash_tracking, stash_filter, annotate_item_class
+                stash_tracking, stash_filter, annotate_item_class,
+                annoate_item_dropped
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, easy_confirm, 
                 easy_butcher, always_confirm_butcher, chunks_autopickup,
@@ -875,6 +876,11 @@ annotate_item_class = false
         This only works if stash.lua has already been sourced in 
         init.txt. Automatically annotates items with their object class, 
         e.g. weapon or wand, for stash searching.
+
+annotate_item_dropped = false
+        This only works if stash.lua has already been sourced in 
+        init.txt. Annotates dropped items with {dropped} for stash
+        searching.
 
 4-i     Command Enhancements.
 -----------------------------

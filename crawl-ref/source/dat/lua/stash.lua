@@ -22,10 +22,20 @@
 -- {artefact} the Staff of Wucad Mu
 ---------------------------------------------------------------------------
 
-local ch_annotate_item_class = nil
+local ch_annotate_item_class   = nil
+local ch_annotate_item_dropped = nil
+
 -- Annotate items for searches
 function ch_stash_search_annotate_item(it)
   local annot = ""
+
+  if ch_annotate_item_dropped == nil then
+    ch_annotate_item_dropped = opt_boolean("annotate_item_dropped", false)
+  end
+  
+  if ch_annotate_item_dropped and item.dropped(it) then
+    annot = annot .. "{dropped} "
+  end
   
   if item.artefact(it) then
     annot = annot .. "{artefact} "

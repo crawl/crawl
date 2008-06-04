@@ -1438,6 +1438,17 @@ static int l_item_weap_skill(lua_State *ls)
     return (2);
 }
 
+static int l_item_dropped(lua_State *ls)
+{
+    LUA_ITEM(item, 1);
+    if (!item || !is_valid_item(*item))
+        return (0);
+
+    lua_pushboolean(ls, item->flags & ISFLAG_DROPPED);
+
+    return (1);
+}
+
 static int l_item_artefact(lua_State *ls)
 {
     LUA_ITEM(item, 1);
@@ -1501,6 +1512,7 @@ static const struct luaL_reg item_lib[] =
     { "equipped_at",       l_item_equipped },
     { "equip_type",        l_item_equip_type },
     { "weap_skill",        l_item_weap_skill },
+    { "dropped",           l_item_dropped },
 
     { NULL, NULL },
 };
