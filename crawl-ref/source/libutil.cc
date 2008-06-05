@@ -284,7 +284,7 @@ const char *standard_plural_qualifiers[] =
     " of ", " labeled ", NULL
 };
 
-// Pluralises a monster or item name. This'll need to be updated for
+// Pluralises a monster or item name.  This'll need to be updated for
 // correctness whenever new monsters/items are added.
 std::string pluralise(const std::string &name,
                       const char *qualifiers[],
@@ -346,8 +346,8 @@ std::string pluralise(const std::string &name,
         // mage -> magi
         return name.substr(0, name.length() - 1) + "i";
     }
-    else if ( ends_with(name, "sheep") || ends_with(name, "manes")
-              || ends_with(name, "fish") )
+    else if (ends_with(name, "sheep") || ends_with(name, "manes")
+              || ends_with(name, "fish"))
     {
         // Maybe we should generalise 'manes' to ends_with("es")?
         return name;
