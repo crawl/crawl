@@ -812,6 +812,8 @@ Giant
 Beetle
 
 Jelly
+
+@player_genus@
 %%%%
 monster_name
 

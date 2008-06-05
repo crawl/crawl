@@ -2295,7 +2295,13 @@ bool monster_pathfind::calc_path_to_neighbours()
 //    mprf("in calc_path_to_neighbours() for (%d,%d)", pos.x, pos.y);
     coord_def npos;
     int distance, old_dist, total;
-    for (int dir = 0; dir < 8; dir++)
+
+    // For each point, we look at all neighbour points. Check the orthogonals
+    // last, so that, should an orthogonal and a diagonal direction have the
+    // same total travel cost, the orthogonal will be picked first, and thus
+    // zigzagging should be avoided. This means directions are looked at, in
+    // order: 1, 3, 5, 7, 0, 2, 4, 6. (dir = 0) is an intentional assignment.
+    for (int dir = 1; dir < 8; (dir += 2) == 9 && (dir = 0))
     {
         npos = pos + Compass[dir];
 

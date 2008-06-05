@@ -4070,16 +4070,21 @@ void debug_pathfind(int mid)
         return;
 
     mpr("Choose a destination!");
-#ifdef USE_TILE
+#ifndef USE_TILE
     more();
 #endif
     coord_def dest;
     show_map(dest, true);
     redraw_screen();
+    if (!dest.x)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
 
     monsters &mon = menv[mid];
-     mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
-          mon.x, mon.y, dest.x, dest.y);
+    mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
+         mon.x, mon.y, dest.x, dest.y);
     monster_pathfind mp;
     bool success = mp.start_pathfind(&mon, dest, true);
     if (success)

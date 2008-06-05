@@ -2807,6 +2807,9 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty )
 // monster_teleport() in mstuff2.cc.
 void mimic_alert(monsters *mimic)
 {
+    if (!mimic->alive())
+        return;
+
     bool should_id = !testbits(mimic->flags, MF_KNOWN_MIMIC)
                      && player_monster_visible(mimic) && mons_near(mimic);
 
@@ -2823,10 +2826,10 @@ void mimic_alert(monsters *mimic)
     const bool instant_tele = !one_chance_in(3);
     monster_teleport( mimic, instant_tele );
 
-    // at least for this short while, we know it's a mimic
+    // At least for this short while, we know it's a mimic.
     if (!instant_tele && should_id)
         mimic->flags |= MF_KNOWN_MIMIC;
-}                               // end mimic_alert()
+}
 
 static bool _isBouncy(bolt &beam, unsigned char gridtype)
 {
@@ -2854,7 +2857,7 @@ static void _beam_explodes(bolt &beam, int x, int y)
     beam.target_x = x;
     beam.target_y = y;
 
-    // generic explosion
+    // Generic explosion.
     if (beam.is_explosion) // beam.flavour == BEAM_EXPLOSION || beam.flavour == BEAM_HOLY)
     {
         _explosion1(beam);

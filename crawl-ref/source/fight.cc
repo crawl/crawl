@@ -3994,7 +3994,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     // We're trying to hit a monster, break out of travel/explore now.
     interrupt_activity(AI_HIT_MONSTER, defender);
 
-    // check if the player is fighting with something unsuitable
+    // Check if the player is fighting with something unsuitable.
     wielded_weapon_check(attk.weapon);
 
     bool attack = attk.attack();

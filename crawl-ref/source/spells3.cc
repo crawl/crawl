@@ -261,7 +261,9 @@ int airstrike(int power, dist &beam)
                  monster->name(DESC_NOCAP_THE).c_str());
 
             behaviour_event(monster, ME_ANNOY, MHITYOU);
-        }
+            if (mons_is_mimic( monster->type ))
+                mimic_alert(monster);
+       }
 
         conduct.enabled = true;
 
@@ -291,7 +293,7 @@ int airstrike(int power, dist &beam)
     }
 
     return (success);
-}                               // end airstrike()
+}
 
 bool cast_bone_shards(int power, bolt &beam)
 {
@@ -323,7 +325,7 @@ bool cast_bone_shards(int power, bolt &beam)
     }
 
     return (success);
-}                               // end cast_bone_shards()
+}
 
 void sublimation(int power)
 {

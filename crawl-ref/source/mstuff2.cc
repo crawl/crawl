@@ -971,6 +971,7 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
         {
             if (!silent)
                 simple_monster_message(monster, " looks slightly unstable.");
+
             monster->add_ench( mon_enchant(ENCH_TP, 0, KC_OTHER,
                                            random_range(20, 30)) );
         }
@@ -1013,11 +1014,18 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
 
     mgrd[monster->x][monster->y] = monster_index(monster);
 
-    /* Mimics change form/colour when t'ported */
+    // Mimics change form/colour when teleported.
     if (mons_is_mimic( monster->type ))
     {
+        int old_type    = monster->type;
         monster->type   = MONS_GOLD_MIMIC + random2(5);
         monster->colour = get_mimic_colour( monster );
+
+        // If it's changed form, you won't recognize it.
+        // This assumes that a non-gold mimic turning into another item of
+        // the same description is really, really unlikely.
+        if (old_type != MONS_GOLD_MIMIC || monster->type != MONS_GOLD_MIMIC)
+            was_seen = false;
     }
 
     const bool now_visible = mons_near(monster);
