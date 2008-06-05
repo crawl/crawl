@@ -1,32 +1,32 @@
 ### Colouring of corpses, depending on whether you can eat them, and
-### whether it's safe to eat them. Contains spoilers!
+### whether it's safe to eat them. 
 ### Colours both on the ground and in inventory!
 
 msg := message_colour
 inv := menu_colour
 
-msg = darkgrey:.*inedible.*
-inv = darkgrey:.*inedible.*
+msg = $inedible:.*inedible.*
+inv = $inedible:.*inedible.*
 
-inv = magenta:.*evil_item.*
-inv = magenta:.*evil_eating.*
+inv = $evil:.*evil_item.*
+inv = $evil:.*evil_eating.*
 
-msg = yellow:.*preferred.*
-inv = yellow:.*preferred.*
+msg = $preferred:.*preferred.*
+inv = $preferred:.*preferred.*
 
 # Corpses of undead (necrophages etc.)
-msg = lightred:.*rot-inducing.*
-inv = lightred:.*rot-inducing.*
+msg = $rot-inducing:.*rot-inducing.*
+inv = $rot-inducing:.*rot-inducing.*
 
 # Mutagenic corpses/chunks
-msg = magenta:.*mutagenic.*
-inv = magenta:.*mutagenic.*
+msg = $mutagenic:.*mutagenic.*
+inv = $mutagenic:.*mutagenic.*
 
 # Poisonous corpses/chunks
-msg = lightgreen:.*poisonous.*
-inv = lightgreen:.*poisonous.*
+msg = $poisonous:.*poisonous.*
+inv = $poisonous:.*poisonous.*
 
 # Contaminated corpses/chunks
-msg = brown:.*contaminated.*
-inv = brown:.*contaminated.*
+msg = $contaminated:.*contaminated.*
+inv = $contaminated:.*contaminated.*
 

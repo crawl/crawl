@@ -238,15 +238,19 @@ include = travel_stoppers.txt
 # menu_colour_prefix_id    = true
 menu_colour_prefix_class = true
 
-# Food is colour coded as follows:
+# Food is colour coded in standard_colours.txt as follows:
+include = standard_colours.txt
 #
-#   yellow     = preferred food
-#   darkgrey   = cannot be eaten at all
-#   lightred   = extremely dangerous (causes rot)
-#   magenta    = mutagenic, or eating frowned upon by the good gods
-#   lightgreen = poisonous
-#   brown      = contaminated (may cause sickening)
+#   yellow     = preferred food                    ($preferred)
+#   darkgrey   = cannot be eaten at all            ($inedible)
+#   lightred   = extremely dangerous, causes rot   ($rot-inducing)
+#   magenta    = mutagenic, or evil                ($mutagenic, $evil)
+#   lightgreen = poisonous                         ($poisonous)
+#   brown      = contaminated, may cause sickness  ($contaminated)
 #
+# You can change colours by using something like
+# $contaminated := magenta
+
 include = food_colouring.txt
 
 # There is elaborate colouring of items in the inventory (and other menus)
