@@ -2116,6 +2116,7 @@ Armour:
 Body armours come in two types: heavy and light. Heavy armours give
 some reliable protection from damage (in contrast to light armours) 
 but have several disadvantages. 
+
 Having a high Armour skill means that you are used to wearing heavy 
 armour, allowing you to move more freely and gain more protection. When
 you look at an armour's description (from within the inventory), you can
@@ -2123,6 +2124,7 @@ see in particular show you how cumbersome it is. This is measured by the
 Evasion modifier. All armours with Ev penalty of 0 or -1 are considered 
 light, and all others are considered heavy -- except for Elven armour 
 (which is light). 
+
 Walking and fighting in heavy armour will train the Armour skill. If the
 Armour skill is high enough to offset the EV penalty, even a heavy 
 armour will train Dodging. Also, Armour skill helps mitigate the bad 
