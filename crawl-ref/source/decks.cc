@@ -2145,13 +2145,16 @@ static void _create_pond(const coord_def& center, int radius, bool allow_deep)
         const coord_def p = *ri;
         if ( p != you.pos() && coinflip() )
         {
-            destroy_trap(p);
             if ( grd(p) == DNGN_FLOOR )
             {
+                dungeon_feature_type feat;
+
                 if ( allow_deep )
-                    grd(p) = coinflip() ? DNGN_SHALLOW_WATER : DNGN_DEEP_WATER;
+                    feat = coinflip() ? DNGN_SHALLOW_WATER : DNGN_DEEP_WATER;
                 else
-                    grd(p) = DNGN_SHALLOW_WATER;
+                    feat = DNGN_SHALLOW_WATER;
+
+                dungeon_terrain_changed(p, feat);
             }
         }
     }
@@ -2170,31 +2173,15 @@ static void _deepen_water(const coord_def& center, int radius)
              p != you.pos() &&
              random2(8) < 1 + count_neighbours(p.x, p.y, DNGN_DEEP_WATER) )
         {
-            grd(p) = DNGN_DEEP_WATER;
+            dungeon_terrain_changed(p, DNGN_DEEP_WATER);
         }
         if (grd(p) == DNGN_FLOOR &&
             random2(3) < random2(count_neighbours(p.x,p.y,DNGN_DEEP_WATER) +
                                  count_neighbours(p.x,p.y,DNGN_SHALLOW_WATER)))
         {
-            grd(p) = DNGN_SHALLOW_WATER;
+            dungeon_terrain_changed(p, DNGN_SHALLOW_WATER);
         }
     }
-}
-
-static void _pond_creature_effect( const coord_def& center, int radius )
-{
-    radius_iterator ri(center, radius, false);
-    bool you_affected = false;
-    for ( ; ri; ++ri )
-    {
-        const coord_def p = *ri;
-        if ( p == you.pos() )
-            you_affected = true;
-        else if ( mgrd(p) != NON_MONSTER )
-            mons_check_pool( &menv[mgrd(p)], KILL_YOU );
-    }
-    if ( you_affected )
-        move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
 }
 
 static void _water_card(int power, deck_rarity_type rarity)
@@ -2204,7 +2191,6 @@ static void _water_card(int power, deck_rarity_type rarity)
     {
         mpr("You create a pond!");
         _create_pond(you.pos(), 4, false);
-        _pond_creature_effect(you.pos(), 4);
     }
     else if ( power_level == 1 )
     {
@@ -2212,7 +2198,6 @@ static void _water_card(int power, deck_rarity_type rarity)
         _create_pond(you.pos(), 6, true);
         for ( int i = 0; i < 2; ++i )
             _deepen_water(you.pos(), 6);
-        _pond_creature_effect(you.pos(), 5);
     }
     else
     {
@@ -2228,14 +2213,9 @@ static void _water_card(int power, deck_rarity_type rarity)
                 dungeon_feature_type new_feature = DNGN_SHALLOW_WATER;
                 if ( p != you.pos() && coinflip() )
                     new_feature = DNGN_DEEP_WATER;
-                grd(p) = new_feature;
-                // In the future we might want to place all the water first,
-                // if monsters can scramble out.
-                if ( mgrd(p) != NON_MONSTER )
-                    mons_check_pool( &menv[mgrd(p)], KILL_YOU );
+                dungeon_terrain_changed(p, new_feature);
             }
         }
-        move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
     }
 }
 

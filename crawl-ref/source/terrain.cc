@@ -32,6 +32,7 @@
 #include "spells3.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "traps.h"
 #include "view.h"
 
 bool grid_is_wall(dungeon_feature_type grid)
@@ -429,13 +430,45 @@ static void _dgn_check_terrain_monsters(const coord_def &pos)
     if (mindex != NON_MONSTER)
     {
         monsters *mons = &menv[mindex];
+
+        if (mons->has_ench(ENCH_SUBMERGED)
+            && !monster_can_submerge(mons, grd(pos))
+            && pos != you.pos())
+        {
+            mons->del_ench(ENCH_SUBMERGED);
+        }
+
         if (grid_is_solid(grd(pos)))
             monster_teleport(mons, true, false);
         else
             mons_check_pool(mons, KILL_MISC, -1);
     }
 
-    set_terrain_changed(pos.x, pos.y);
+}
+
+static void _dgn_check_terrain_blood(const coord_def &pos,
+                                     dungeon_feature_type old_feat,
+                                     dungeon_feature_type new_feat)
+{
+    if (env.map(pos).property != FPROP_BLOODY)
+        return;
+
+    if (new_feat == DNGN_UNSEEN)
+    {
+        // Caller has already changed the grid, and old_feat is actually
+        // the new feat.
+        if (old_feat != DNGN_FLOOR && !grid_is_solid(old_feat))
+            env.map(pos).property = FPROP_NONE;
+    }
+    else
+    {
+        if (grid_is_solid(old_feat) != grid_is_solid(new_feat)
+            || grid_is_water(new_feat) || grid_destroys_items(new_feat)
+            || is_critical_feature(new_feat))
+        {
+            env.map(pos).property = FPROP_NONE;
+        }
+    }
 }
 
 void dungeon_terrain_changed(const coord_def &pos,
@@ -444,6 +477,11 @@ void dungeon_terrain_changed(const coord_def &pos,
                              bool preserve_features,
                              bool preserve_items)
 {
+    if (grd(pos) == nfeat)
+        return;
+
+    _dgn_check_terrain_blood(pos, grd(pos), nfeat);
+
     if (nfeat != DNGN_UNSEEN)
     {
         if (preserve_features)
@@ -454,9 +492,13 @@ void dungeon_terrain_changed(const coord_def &pos,
         env.grid_colours(pos) = BLACK;
         if (is_notable_terrain(nfeat) && see_grid(pos))
             seen_notable_thing(nfeat, pos.x, pos.y);
+
+        destroy_trap(pos);
     }
 
     _dgn_check_terrain_items(pos, preserve_items);
+    _dgn_check_terrain_monsters(pos);
+
     if (affect_player && pos == you.pos())
     {
         if (!grid_is_solid(grd(pos)))
@@ -467,7 +509,8 @@ void dungeon_terrain_changed(const coord_def &pos,
         else
             you_teleport_now(true, false);
     }
-    _dgn_check_terrain_monsters(pos);
+
+    set_terrain_changed(pos.x, pos.y);
 }
 
 // returns true if we manage to scramble free.
