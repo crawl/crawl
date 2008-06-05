@@ -25,6 +25,7 @@
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "overmap.h"
 #include "place.h"
@@ -49,7 +50,7 @@
 StashTracker StashTrack;
 
 #define ST_MAJOR_VER ((unsigned char) 4)
-#define ST_MINOR_VER ((unsigned char) 7)
+#define ST_MINOR_VER ((unsigned char) 8)
 
 void stash_init_new_level()
 {
@@ -279,7 +280,7 @@ void Stash::update()
         while (objl != NON_ITEM)
         {
             if (!is_filtered(mitm[objl]))
-                items.push_back(mitm[objl]);
+                add_item(mitm[objl]);
             objl = mitm[objl].link;
         }
 
@@ -310,7 +311,7 @@ void Stash::update()
         if (items.size() == 0)
         {
             if (!is_filtered(item))
-                items.push_back(item);
+                add_item(item);
             verified = (item.link == NON_ITEM);
             return ;
         }
@@ -354,17 +355,61 @@ void Stash::update()
 
             // Items are different. We'll put this item in the front of our
             // vector, and mark this as unverified
-            items.insert(items.begin(), item);
+            add_item(item, true);
             verified = false;
         }
     }
+}
+
+static bool _is_rottable(const item_def &item)
+{
+    return (item.base_type == OBJ_CORPSES
+            || (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK));
+}
+
+static short _min_rot(const item_def &item)
+{
+    if (item.base_type == OBJ_FOOD)
+        return 0;
+
+    if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_SKELETON)
+        return 0;
+
+    if (!mons_skeleton(item.plus))
+        return 0;
+    else
+        return -200;
 }
 
 // Returns the item name for a given item, with any appropriate
 // stash-tracking pre/suffixes.
 std::string Stash::stash_item_name(const item_def &item)
 {
-    return item.name(DESC_NOCAP_A);
+    std::string name = item.name(DESC_NOCAP_A);
+
+    if (!Options.stash_track_decay || !_is_rottable(item))
+        return name;
+
+    if (item.plus2 <= _min_rot(item))
+    {
+        name += " (gone by now)";
+        return name;
+    }
+
+    // Skeletons show no signs of rotting before they're gone
+    if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_SKELETON)
+        return name;
+
+    // Item was already seen to be rotten
+    if (item.special < 100)
+        return name;
+
+    if (item.plus2 <= 0)
+        name += " (skeletalised by now)";
+    else if (item.plus2 < 100)
+        name += " (rotten by now)";
+
+    return name;
 }
 
 class StashMenu : public InvMenu
@@ -542,6 +587,54 @@ bool Stash::matches_search(const std::string &prefix,
     }
 
     return !!res.matches;
+}
+
+void Stash::_update_corpses(long rot_time)
+{
+    for (int i = items.size() - 1; i >= 0; i--)
+    {
+        item_def &item = items[i];
+
+        if (!_is_rottable(item))
+            continue;
+
+        long new_rot = static_cast<long>(item.plus2) - rot_time;
+
+        if (new_rot <= _min_rot(item))
+        {
+            if (Options.stash_remove_decay)
+            {
+                items.erase(items.begin() + i);
+                continue;
+            }
+            new_rot = _min_rot(item);
+        }
+        item.plus2 = static_cast<short>(new_rot);
+    }
+}
+
+void Stash::add_item(const item_def &item, bool add_to_front)
+{
+    if (add_to_front)
+        items.insert(items.begin(), item);
+    else
+        items.push_back(item);
+
+    if (!_is_rottable(item))
+        return;
+
+    // item.special remains unchanged in the stash, to show how fresh it
+    // was when last seen.  It's plus2 that's decayed over time.
+    if (add_to_front)
+    {
+        item_def &it = items.front();
+        it.plus2     = it.special;
+    }
+    else
+    {
+        item_def &it = items.back();
+        it.plus2     = it.special;
+    }
 }
 
 void Stash::write(std::ostream &os, int refx, int refy,
@@ -1128,6 +1221,15 @@ void LevelStashes::get_matching_stashes(
     }
 }
 
+void LevelStashes::_update_corpses(long rot_time)
+{
+    for (stashes_t::iterator iter = m_stashes.begin();
+            iter != m_stashes.end(); iter++)
+    {
+        iter->second._update_corpses(rot_time);
+    }
+}
+
 void LevelStashes::write(std::ostream &os, bool identify) const
 {
     if (visible_stash_count() == 0)
@@ -1299,6 +1401,9 @@ void StashTracker::save(writer& outf) const
     marshallByte(outf, ST_MAJOR_VER);
     marshallByte(outf, ST_MINOR_VER);
 
+    // Time of last corpse update.
+    marshallFloat(outf, (float) last_corpse_update);
+
     // How many levels have we?
     marshallShort(outf, (short) levels.size());
 
@@ -1315,6 +1420,9 @@ void StashTracker::load(reader& inf)
     unsigned char major = unmarshallByte(inf),
                   minor = unmarshallByte(inf);
     if (major != ST_MAJOR_VER || minor != ST_MINOR_VER) return ;
+
+    // Time of last corpse update.
+    last_corpse_update = (double) unmarshallFloat(inf);
 
     int count = unmarshallShort(inf);
 
@@ -1741,4 +1849,24 @@ bool StashTracker::display_search_results(
         return false;
     }
     return false;
+}
+
+void StashTracker::update_corpses()
+{
+    if (!Options.stash_track_decay)
+        return;
+
+    if (you.elapsed_time - last_corpse_update < 20.0)
+        return;
+
+    const long rot_time = static_cast<long>((you.elapsed_time -
+                                             last_corpse_update) / 20.0);
+
+    last_corpse_update = you.elapsed_time;
+
+    for (stash_levels_t::iterator iter = levels.begin();
+            iter != levels.end(); iter++)
+    {
+        iter->second._update_corpses(rot_time);
+    }
 }

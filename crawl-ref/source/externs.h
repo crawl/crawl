@@ -1714,6 +1714,10 @@ public:
 
     int         stash_tracking; // How stashes are tracked
 
+    bool        stash_track_decay;  // Keep track of how decayed corpses are
+    bool        stash_remove_decay; // Remove corpses that have most probably
+                                    // completely rotted away
+
     int         tc_reachable;   // Colour for squares that are reachable
     int         tc_excluded;    // Colour for excluded squares.
     int         tc_exclude_circle; // Colour for squares in the exclusion radius

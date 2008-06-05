@@ -197,6 +197,8 @@ include = travel_stoppers.txt
 # stash_filter = 14, 4:21
 # annotate_item_class = true
 # annotate_item_dropped = true
+# stash_track_decay = true
+# stash_remove_decay = true
 
 ##### 4-i	Command Enhancements ##################
 #

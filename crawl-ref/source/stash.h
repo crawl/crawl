@@ -90,6 +90,10 @@ public:
                         // also never removed from the level's map of
                         // stashes.
 private:
+    void _update_corpses(long rot_time);
+    void add_item(const item_def &item, bool add_to_front = false);
+
+private:
     bool verified;      // Is this correct to the best of our knowledge?
     unsigned char x, y;
     int  abspos;
@@ -109,6 +113,8 @@ private:
 
     static bool are_items_same(const item_def &, const item_def &);
     static bool is_filtered(const item_def &item);
+
+    friend class LevelStashes;
 };
 
 class ShopInfo
@@ -247,6 +253,7 @@ public:
 
  private:
     int _num_enabled_stashes() const;
+    void _update_corpses(long rot_time);
 
  private:
     typedef std::map<int, Stash>  stashes_t;
@@ -256,6 +263,8 @@ public:
     level_id m_place;
     stashes_t m_stashes;
     shops_t m_shops;
+
+    friend class StashTracker;
 };
 
 extern std::ostream &operator << (std::ostream &, const LevelStashes &);
@@ -269,7 +278,7 @@ public:
             || you.level_type == LEVEL_ABYSS;
     }
 
-    StashTracker() : levels()
+    StashTracker() : levels(), last_corpse_update(0.0)
     {
     }
 
@@ -293,6 +302,8 @@ public:
                                 // objects, even if those squares were not 
                                 // previously marked as stashes.
     };
+
+    void update_corpses();
 
     void update_visible_stashes(StashTracker::stash_update_mode = ST_PASSIVE);
 
@@ -326,6 +337,8 @@ private:
 private:
     typedef std::map<level_id, LevelStashes> stash_levels_t;
     stash_levels_t levels;
+
+    double last_corpse_update;
 };
 
 extern StashTracker StashTrack;
