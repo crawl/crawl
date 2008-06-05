@@ -791,6 +791,8 @@ the Spinneret
 
 Grontol
 
+With Two Names
+
 # akrasiac patch
 Irrepressible Laughter
 %%%%
@@ -917,6 +919,8 @@ Hell-Harrower
 joke_weapon_name
 
 Secret Weapon
+
+with two names
 
 Thing
 
