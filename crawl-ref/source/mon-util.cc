@@ -446,6 +446,52 @@ bool mons_behaviour_perceptible(const monsters *mon)
             && mon->type != MONS_OKLOB_PLANT);
 }
 
+// Returns true for monsters that obviously (to the player) feel
+// "thematically at home" in a branch.  Currently used for native
+// monsters recognizing traps and patrolling branch entrances.
+bool mons_is_native_in_branch(const monsters *monster,
+                              const branch_type branch)
+{
+    switch (branch)
+    {
+    case BRANCH_ELVEN_HALLS:
+        return (mons_species(monster->type) == MONS_ELF);
+
+    case BRANCH_ORCISH_MINES:
+        return (mons_species(monster->type) == MONS_ORC);
+
+    case BRANCH_SHOALS:
+        return (mons_species(monster->type) == MONS_CYCLOPS
+                || mons_species(monster->type) == MONS_MERFOLK
+                || mons_species(monster->type) == MONS_MERMAID);
+
+    case BRANCH_SLIME_PITS:
+        return (mons_species(monster->type) == MONS_JELLY);
+
+    case BRANCH_SNAKE_PIT:
+        return (mons_species(monster->type) == MONS_NAGA
+                || mons_species(monster->type) == MONS_SNAKE);
+
+    case BRANCH_HALL_OF_ZOT:
+        return (mons_species(monster->type) == MONS_DRACONIAN);
+
+    case BRANCH_TOMB:
+        return (mons_species(monster->type) == MONS_MUMMY);
+
+    case BRANCH_HIVE:
+        return (monster->type == MONS_KILLER_BEE_LARVA
+                || monster->type == MONS_KILLER_BEE
+                || monster->type == MONS_QUEEN_BEE);
+
+    case BRANCH_HALL_OF_BLADES:
+        return (monster->type == MONS_DANCING_WEAPON);
+
+    default:
+        return (false);
+    }
+}
+
+
 bool mons_is_icy(const monsters *mon)
 {
     return (mons_is_icy(mon->type));

@@ -82,8 +82,6 @@ static void _mons_in_cloud(monsters *monster);
 static bool _monster_move(monsters *monster);
 static bool _plant_spit(monsters *monster, bolt &pbolt);
 static spell_type _map_wand_to_mspell(int wand_type);
-static bool _is_native_in_branch(const monsters *monster,
-                                 const branch_type branch);
 
 // [dshaligram] Doesn't need to be extern.
 static int mmov_x, mmov_y;
@@ -2178,7 +2176,7 @@ void behaviour_event( monsters *mon, int event, int src,
             // noticed something.
             mon->behaviour = BEH_LURK;
             break;
-            
+
         default:
             if (mon->has_ench(ENCH_SUBMERGED))
                 mon->del_ench(ENCH_SUBMERGED);
@@ -2959,16 +2957,16 @@ static bool _mon_on_interesting_grid(monsters *mon)
     case DNGN_ALTAR_BEOGH:
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-        return (_is_native_in_branch(mon, BRANCH_ORCISH_MINES));
+        return (mons_is_native_in_branch(mon, BRANCH_ORCISH_MINES));
 
     // Same for elves and the Elven Halls.
     case DNGN_ENTER_ELVEN_HALLS:
     case DNGN_RETURN_FROM_ELVEN_HALLS:
-        return (_is_native_in_branch(mon, BRANCH_ELVEN_HALLS));
+        return (mons_is_native_in_branch(mon, BRANCH_ELVEN_HALLS));
 
     // Killer bees always return to their hive.
     case DNGN_ENTER_HIVE:
-        return (_is_native_in_branch(mon, BRANCH_HIVE));
+        return (mons_is_native_in_branch(mon, BRANCH_HIVE));
 
     default:
         return (false);
@@ -5911,52 +5909,7 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
     }
 }
 
-// Returns true for monsters that obviously (to the player) feel
-// "thematically at home" in a branch.  Currently used for native
-// monsters recognizing traps and patrolling branch entrances.
-static bool _is_native_in_branch(const monsters *monster,
-                                 const branch_type branch)
-{
-    switch (branch)
-    {
-    case BRANCH_ELVEN_HALLS:
-        return (mons_species(monster->type) == MONS_ELF);
-
-    case BRANCH_ORCISH_MINES:
-        return (mons_species(monster->type) == MONS_ORC);
-
-    case BRANCH_SHOALS:
-        return (mons_species(monster->type) == MONS_CYCLOPS
-                || mons_species(monster->type) == MONS_MERFOLK
-                || mons_species(monster->type) == MONS_MERMAID);
-
-    case BRANCH_SLIME_PITS:
-        return (mons_species(monster->type) == MONS_JELLY);
-
-    case BRANCH_SNAKE_PIT:
-        return (mons_species(monster->type) == MONS_NAGA
-                || mons_species(monster->type) == MONS_SNAKE);
-
-    case BRANCH_HALL_OF_ZOT:
-        return (mons_species(monster->type) == MONS_DRACONIAN);
-
-    case BRANCH_TOMB:
-        return (mons_species(monster->type) == MONS_MUMMY);
-
-    case BRANCH_HIVE:
-        return (monster->type == MONS_KILLER_BEE_LARVA
-                || monster->type == MONS_KILLER_BEE
-                || monster->type == MONS_QUEEN_BEE);
-
-    case BRANCH_HALL_OF_BLADES:
-        return (monster->type == MONS_DANCING_WEAPON);
-
-    default:
-        return false;
-    }
-}
-
-// randomize potential damage
+// Randomize potential damage.
 static int _estimated_trap_damage(trap_type trap)
 {
     switch (trap)
@@ -6017,16 +5970,16 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
     // * very intelligent monsters can be assumed to have a high T&D skill
     //   (or have memorised part of the dungeon layout ;) )
     if (intel >= I_NORMAL && mechanical
-        && (_is_native_in_branch(monster, you.where_are_you)
+        && (mons_is_native_in_branch(monster, you.where_are_you)
             || monster->attitude == ATT_FRIENDLY
                && player_knows_trap
             || intel >= I_HIGH && one_chance_in(3)))
     {
         if (just_check)
-            return false; // square is blocked
+            return (false); // Square is blocked.
         else
         {
-            // test for corridor-like environment
+            // Test for corridor-like environment.
             const int x = trap_x - monster->x;
             const int y = trap_y - monster->y;
 
@@ -6378,7 +6331,7 @@ static bool _monster_move(monsters *monster)
 
         // Trapdoor spiders hide if they can't see their target.
         bool can_see;
-        
+
         if (monster->foe == MHITNOT)
             can_see = false;
         else if (monster->foe == MHITYOU)

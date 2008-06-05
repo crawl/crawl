@@ -2980,6 +2980,7 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
     for (int i = 0; i < mon_wanted; i++)
     {
         mgen_data mg;
+        mg.behaviour = BEH_SLEEP;
         mg.power     = level_number;
         mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
@@ -2989,7 +2990,7 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
 
     _place_uniques(level_number, level_type);
 
-    if ( !player_in_branch(BRANCH_CRYPT) ) // no water creatures in the Crypt
+    if ( !player_in_branch(BRANCH_CRYPT) ) // No water creatures in the Crypt.
         _place_aquatic_monsters(level_number, level_type);
     else
     {
@@ -4748,7 +4749,7 @@ static int _vault_grid( vault_placement &place,
             mgen_data::hostile_at( _random_evil_statue(), coord_def(vx, vy) ));
     }
 
-    // first, set base tile for grids {dlb}:
+    // First, set base tile for grids {dlb}:
     grd[vx][vy] = ((vgrid == -1)  ? grd[vx][vy] :
                    (vgrid == 'x') ? DNGN_ROCK_WALL :
                    (vgrid == 'X') ? DNGN_PERMAROCK_WALL :

@@ -159,7 +159,7 @@ bool monster_habitable_grid(int monster_class,
 bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
 {
     if (mons->type == MONS_TRAPDOOR_SPIDER && grid == DNGN_FLOOR)
-        return true;
+        return (true);
 
     // Zombies of watery critters can not submerge.
     switch (mons_habitat(mons))
@@ -894,7 +894,7 @@ static int _place_monster_aux( const mgen_data &mg,
         menv[id].number = 8 + random2(9);
 
     // Set attitude, behaviour and target.
-    menv[id].attitude = ATT_HOSTILE;
+    menv[id].attitude  = ATT_HOSTILE;
     menv[id].behaviour = mg.behaviour;
 
     if (mons_is_statue(mg.cls))
@@ -2418,31 +2418,102 @@ bool monster_pathfind::traversable(coord_def p)
                                                 : mons->type;
 
     if (!monster_habitable_grid(montype, grd(p)))
+        return (false);
+
+    // Monsters that can't open doors, won't be able to pass them.
+    if ((grd(p) == DNGN_CLOSED_DOOR || grd(p) == DNGN_SECRET_DOOR)
+        && mons_itemuse(montype) < MONUSE_OPEN_DOORS)
     {
-//        mprf("Feature %d is not a habitable grid.", grd(p));
         return (false);
     }
 
-    // Don't generate monsters on top of teleport traps.
+    // Your friends only know about doors you know about, unless they feel
+    // at home in this branch.
+    if (grd(p) == DNGN_SECRET_DOOR && mons_friendly(mons)
+        && (mons_intel(mons->type) < I_NORMAL
+            || !mons_is_native_in_branch(mons, you.where_are_you)))
+    {
+        return (false);
+    }
+
     const int trap = trap_at_xy(p.x, p.y);
     if (trap >= 0)
     {
-//        mpr("There's a trap here!");
-        if (!_can_place_on_trap(montype, env.trap[trap].type))
+        trap_type tt = env.trap[trap].type;
+        if (tt == TRAP_ZOT && grd(p) != DNGN_UNDISCOVERED_TRAP
+            && mons_friendly(mons))
         {
-//            mpr("Monster can't be placed on trap.");
             return (false);
         }
+
+        // Monsters cannot travel over teleport traps.
+        if (!_can_place_on_trap(montype, tt))
+            return (false);
     }
-//    mprf("Grid (%d, %d) is traversable.", p.x, p.y);
+
     return (true);
 }
 
+// Assumes that grids that really cannot be entered don't even get here.
+// (Checked by traversable().)
 int monster_pathfind::travel_cost(coord_def npos)
 {
     ASSERT(grid_distance(pos.x, pos.y, npos.x, npos.y) <= 1);
 
-    // TODO: Make traps/shallow water more expensive, etc.
+    // Doors need to be opened.
+    if (grd(npos) == DNGN_CLOSED_DOOR || grd(npos) == DNGN_SECRET_DOOR)
+        return 2;
+
+    // Moving from floor to water (or vice versa) is a bit more expensive.
+    // The deep water checks are only done in case of amphibious monsters.
+    if ((grd(pos) == DNGN_SHALLOW_WATER || grd(pos) == DNGN_DEEP_WATER)
+           && grid_compatible(grd(npos), DNGN_FLOOR)
+        || (grd(npos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_DEEP_WATER)
+           && grid_compatible(grd(pos), DNGN_FLOOR))
+    {
+        return 2;
+    }
+
+    // Try to avoid (known) traps.
+    //
+    const int trap = trap_at_xy(npos.x, npos.y);
+    if (trap >= 0)
+    {
+        // A monster can be considered to know a trap if
+        // a) they're hostile
+        // b) they're friendly and *you* know about the trap (and told them)
+        // c) they're friendly and know the terrain
+        bool knows_trap = (!mons_friendly(mons)
+                           || grd(npos) != DNGN_UNDISCOVERED_TRAP
+                           || mons_intel(mons->type) >= I_NORMAL
+                              && mons_is_native_in_branch(mons,
+                                                          you.where_are_you));
+
+        trap_type tt = env.trap[trap].type;
+        if (tt == TRAP_ALARM || tt == TRAP_ZOT)
+        {
+            // Your allies take extra precautions to avoid known alarm traps.
+            if (knows_trap && mons_friendly(mons))
+                return (3);
+
+            // To hostile monsters, these traps are completely harmless.
+            return 1;
+        }
+
+        if (knows_trap)
+        {
+            const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
+                                                        : mons->type;
+
+            // Mechanical traps can be avoided by flying, as can shafts, and
+            // tele traps are never traversable anyway.
+            if (!_mons_airborne(montype, -1, false))
+                return 2;
+        }
+
+        return 1;
+    }
+
     return 1;
 }
 

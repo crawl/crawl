@@ -635,6 +635,8 @@ bool mons_att_wont_attack(mon_attitude_type fr);
 mon_attitude_type mons_attitude(const monsters *m);
 
 bool mons_behaviour_perceptible(const monsters *mon);
+bool mons_is_native_in_branch(const monsters *monster,
+                              const branch_type branch);
 bool mons_is_confused(const monsters *m);
 bool mons_is_caught(const monsters *m);
 bool mons_is_fleeing(const monsters *m);
