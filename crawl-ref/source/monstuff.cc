@@ -4826,6 +4826,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
     }
 
+    // Zombies are always to stupid to do this.
     if (mons_itemuse(monster->type) < MONUSE_OPEN_DOORS)
         return (false);
 
@@ -6045,13 +6046,13 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
     if (grid == DNGN_SECRET_DOOR)
     {
         grid = grid_secret_door_appearance(pos.x, pos.y);
-        grd(pos) = DNGN_OPEN_DOOR; // just a simple door, no gates etc.
+        grd(pos) = DNGN_OPEN_DOOR; // Just a simple door, no gates etc.
 
         was_secret = true;
         if (!see_grid(pos))
             set_terrain_changed(pos);
     }
-    else // maybe several connected doors -> gate
+    else // Maybe several connected doors -> gate.
     {
         std::set<coord_def> all_door;
         find_connected_identical(pos, grd(pos), all_door);
@@ -6441,7 +6442,7 @@ static bool _monster_move(monsters *monster)
                 return true;
             }
         }
-        else if (mons_itemuse(monster->base_monster) >= MONUSE_OPEN_DOORS)
+        else if (mons_itemuse(monster->type) >= MONUSE_OPEN_DOORS)
         {
             _mons_open_door(monster, newpos);
             return true;

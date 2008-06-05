@@ -1058,9 +1058,9 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             break;
         }
 
-        // mutation specific problems (horns allow caps)
-        if ((type_wanted == ARM_BOOTS && !player_has_feet())
-            || (you.has_claws(false) >= 3 && type_wanted == ARM_GLOVES))
+        // Mutation specific problems (horns allow caps).
+        if (type_wanted == ARM_BOOTS && !player_has_feet()
+            || type_wanted == ARM_GLOVES && you.has_claws(false) >= 3)
         {
             type_wanted = OBJ_RANDOM;
         }
@@ -1153,7 +1153,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
                 mprf(MSGCH_DIAGNOSTICS,
                      "acquirement: iteration = %d, best_spell = %d",
                      iteration, best_spell );
-#endif //jmf: debugging
+#endif
 
                 switch (best_spell)
                 {
@@ -1725,17 +1725,17 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
 
             int plusmod = random2(4);
-            // more damage, less accuracy
             if (agent == GOD_TROG)
             {
+                // More damage, less accuracy.
                 thing.plus  -= plusmod;
                 thing.plus2 += plusmod;
                 if (!is_random_artefact(thing))
                     thing.plus = std::max(static_cast<int>(thing.plus), 0);
             }
-            // more accuracy, less damage
             else if (agent == GOD_OKAWARU)
             {
+                // More accuracy, less damage.
                 thing.plus  += plusmod;
                 thing.plus2 -= plusmod;
                 if (!is_random_artefact(thing))
@@ -1743,7 +1743,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
         }
 
-        if (agent == you.religion)
+        if (agent > AQ_SCROLL && agent == you.religion)
         {
             thing.inscription = "god gift";
             if (is_random_artefact(thing))
