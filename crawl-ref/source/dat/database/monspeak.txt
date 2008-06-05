@@ -257,7 +257,7 @@ VISUAL:@The_monster@ blows smoke rings.
 
 @The_monster@ says, "Just tell me who NOT to kill."
 
-@The_monster@ says, "OK boss!"
+@The_monster@ says, "OK, boss!"
 
 @The_monster@ says, "The Orb is all yours."
 
@@ -396,7 +396,7 @@ default friendly confused humanoid
 
 @The_monster@ screams, "Help!"
 
-@The_monster@ shouts, "I'm loosing control!"
+@The_monster@ shouts, "I'm losing control!"
 
 @The_monster@ shouts, "What's happening?!"
 
