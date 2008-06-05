@@ -920,7 +920,7 @@ joke_weapon_name
 
 Secret Weapon
 
-with two names
+With Two Names
 
 Thing
 
