@@ -863,21 +863,21 @@ enum dungeon_feature_type
     DNGN_CLEAR_STONE_WALL,             //   10 - Transparent
     DNGN_CLEAR_PERMAROCK_WALL,         //   11 - Transparent
 
-    // lowest/highest grid value which is a wall
+    // Lowest/highest grid value which is a wall.
     DNGN_MINWALL = DNGN_WAX_WALL,
     DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
 
-    // Random wall types for big rooms
+    // Random wall types for big rooms.
     DNGN_RNDWALL_MIN = DNGN_METAL_WALL,
     DNGN_RNDWALL_MAX = DNGN_STONE_WALL,
 
-    // highest grid value which is opaque
+    // Highest grid value which is opaque.
     DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
 
-    // lowest grid value which can be seen through
+    // Lowest grid value which can be seen through.
     DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
 
-    // highest grid value which can't be reached through
+    // Highest grid value which can't be reached through.
     DNGN_MAX_NONREACH = DNGN_CLEAR_PERMAROCK_WALL,
 
     // Can be seen through and reached past.
@@ -885,7 +885,7 @@ enum dungeon_feature_type
     DNGN_GRANITE_STATUE = 21,          //   21
     DNGN_STATUE_RESERVED,
 
-    // lowest grid value which can be passed by walking etc.
+    // Lowest grid value which can be passed by walking etc.
     DNGN_MINMOVE = 31,
 
     DNGN_LAVA = 61,                    //   61

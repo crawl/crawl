@@ -1269,7 +1269,7 @@ bool mons_amphibious(int mc)
     return mons_class_flag(mc, M_AMPHIBIOUS);
 }
 
-// this nice routine we keep in exactly the way it was
+// This nice routine we keep in exactly the way it was-
 int hit_points(int hit_dice, int min_hp, int rand_hp)
 {
     int hrolled = 0;
@@ -1281,11 +1281,11 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
     }
 
     return (hrolled);
-}                               // end hit_points()
+}
 
 // This function returns the standard number of hit dice for a type
 // of monster, not a pacticular monsters current hit dice. -- bwr
-// XXX: rename to mons_class_* to be like the rest
+// XXX: Rename to mons_class_* to be like the rest.
 int mons_type_hit_dice( int type )
 {
     struct monsterentry *mon_class = get_monster_data( type );
@@ -6079,8 +6079,8 @@ void monsters::react_to_damage(int damage)
             }
         }
 
-        const bool needs_message =
-            spawned && mons_near(this) && player_monster_visible(this);
+        const bool needs_message = spawned && mons_near(this)
+                                   && player_monster_visible(this);
 
         if (needs_message)
         {
@@ -6089,6 +6089,7 @@ void monsters::react_to_damage(int damage)
                  spawned >= 5 ? " alarmingly" :
                  spawned >= 3 ? " violently" :
                  spawned > 1 ? " vigorously" : "");
+
             if (spawned == 1)
                 mprf("%s spits out another jelly.", monnam.c_str());
             else

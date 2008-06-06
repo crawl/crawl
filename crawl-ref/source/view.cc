@@ -1100,17 +1100,17 @@ inline static bool _update_monster_grid(const monsters *monster)
             && env.cgrid(monster->pos()) == EMPTY_CLOUD)
         {
             _set_show_backup(ex, ey);
-            env.show[ex][ey] = DNGN_INVIS_EXPOSED;
+            env.show[ex][ey]     = DNGN_INVIS_EXPOSED;
             env.show_col[ex][ey] = BLUE;
         }
         return (false);
     }
 
-    // mimics are always left on map
+    // Mimics are always left on map.
     if (!mons_is_mimic( monster->type ))
         _set_show_backup(ex, ey);
 
-    env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
+    env.show[ex][ey]     = monster->type + DNGN_START_OF_MONSTERS;
     env.show_col[ex][ey] = get_mons_colour( monster );
 
     return (true);
@@ -1456,7 +1456,7 @@ inline static void _update_cloud_grid(int cloudno)
     }
 
     _set_show_backup(ex, ey);
-    env.show[ex][ey] = DNGN_CLOUD;
+    env.show[ex][ey]     = DNGN_CLOUD;
     env.show_col[ex][ey] = which_colour;
 
 #ifdef USE_TILE
@@ -2330,15 +2330,15 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     {
         const int fullray = _cyclic_offset( fray, cycle_dir, ray.fullray_idx,
                                             fullrays.size() );
-        // yeah, yeah, this is O(n^2). I know.
+        // Yeah, yeah, this is O(n^2). I know.
         cur_offset = 0;
-        for ( int i = 0; i < fullray; ++i )
+        for (int i = 0; i < fullray; ++i)
             cur_offset += raylengths[i];
 
-        for ( cellray = 0; cellray < raylengths[fullray]; ++cellray )
+        for (cellray = 0; cellray < raylengths[fullray]; ++cellray)
         {
-            if ( ray_coord_x[cellray + cur_offset] == absx &&
-                 ray_coord_y[cellray + cur_offset] == absy )
+            if (ray_coord_x[cellray + cur_offset] == absx
+                && ray_coord_y[cellray + cur_offset] == absy)
             {
                 if (find_shortest)
                 {
@@ -2346,11 +2346,11 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                     unaliased_ray.push_back(coord_def(0, 0));
                 }
 
-                // check if we're blocked so far
+                // Check if we're blocked so far.
                 bool blocked = false;
                 coord_def c1, c3;
                 int real_length = 0;
-                for ( inray = 0; inray <= cellray; ++inray )
+                for (inray = 0; inray <= cellray; ++inray)
                 {
                     const int xi = signx * ray_coord_x[inray + cur_offset];
                     const int yi = signy * ray_coord_y[inray + cur_offset];
@@ -2419,13 +2419,13 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                 const double ray_slope_diff = find_shortest ?
                     fabs(_slope_factor(fullrays[fullray]) - want_slope) : 0.0;
 
-                if ( !blocked
-                     &&  (!find_shortest
-                          || _superior_ray(shortest, imbalance,
-                                           real_length, cimbalance,
-                                           slope_diff, ray_slope_diff)))
+                if (!blocked
+                    &&  (!find_shortest
+                         || _superior_ray(shortest, imbalance,
+                                          real_length, cimbalance,
+                                          slope_diff, ray_slope_diff)))
                 {
-                    // success!
+                    // Success!
                     ray        = fullrays[fullray];
                     ray.fullray_idx = fullray;
 
@@ -2437,11 +2437,13 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                         ray.accx = 1.0 - ray.accx;
                     if ( sourcey > targety )
                         ray.accy = 1.0 - ray.accy;
+
                     ray.accx += sourcex;
                     ray.accy += sourcey;
+
                     _set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
                     if (!find_shortest)
-                        return true;
+                        return (true);
                 }
             }
         }
@@ -2450,24 +2452,24 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     if (find_shortest && shortest != INFINITE_DISTANCE)
         return (true);
 
-    if ( allow_fallback )
+    if (allow_fallback)
     {
         ray.accx = sourcex + 0.5;
         ray.accy = sourcey + 0.5;
-        if ( targetx == sourcex )
+        if (targetx == sourcex)
             ray.slope = VERTICAL_SLOPE;
         else
         {
-            ray.slope = targety - sourcey;
+            ray.slope  = targety - sourcey;
             ray.slope /= targetx - sourcex;
-            if ( ray.slope < 0 )
+            if (ray.slope < 0)
                 ray.slope = -ray.slope;
         }
         _set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
         ray.fullray_idx = -1;
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 // Count the number of matching features between two points along
@@ -2485,7 +2487,9 @@ int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
     int     max_dist = grid_distance(sourcex, sourcey, targetx, targety);
 
     ray.fullray_idx = -1; // to quiet valgrind
-    find_ray( sourcex, sourcey, targetx, targety, true, ray, 0, true, true );
+
+    // We don't need to find the shortest beam, any beam will suffice.
+    find_ray( sourcex, sourcey, targetx, targety, true, ray, 0, false, true );
 
     if (exclude_endpoints && ray.x() == sourcex && ray.y() == sourcey)
     {
@@ -3497,7 +3501,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
 }                               // end show_map()
 
 
-// Returns true if succeeded
+// Returns true if succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force)
 {
@@ -3610,11 +3614,11 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     return true;
 }                               // end magic_mapping()
 
-// realize that this is simply a repackaged version of
+// Realize that this is simply a repackaged version of
 // stuff::see_grid() -- make certain they correlate {dlb}:
 bool mons_near(const monsters *monster, unsigned short foe)
 {
-    // early out -- no foe!
+    // Early out -- no foe!
     if (foe == MHITNOT)
         return (false);
 
@@ -3629,7 +3633,7 @@ bool mons_near(const monsters *monster, unsigned short foe)
         return (false);
     }
 
-    // must be a monster
+    // Must be a monster.
     const monsters *myFoe = &menv[foe];
     if (myFoe->type >= 0)
     {
@@ -3641,7 +3645,7 @@ bool mons_near(const monsters *monster, unsigned short foe)
     }
 
     return (false);
-}                               // end mons_near()
+}
 
 bool mon_enemies_around(const monsters *monster)
 {
@@ -3679,7 +3683,7 @@ bool see_grid( const env_show_grid &show,
     return (false);
 }
 
-// answers the question: "Is a grid within character's line of sight?"
+// Answers the question: "Is a grid within character's line of sight?"
 bool see_grid( const coord_def &p )
 {
     return see_grid(env.show, you.pos(), p);
@@ -3702,6 +3706,8 @@ bool trans_wall_blocking( const coord_def &p )
 // Depending on the viewer's habitat, 'allowed' can be set to DNGN_FLOOR,
 // DNGN_SHALLOW_WATER or DNGN_DEEP_WATER.
 // Yes, this ignores lava-loving monsters.
+// XXX: It turns out the beams are not symmetrical, i.e. switching
+// pos1 and pos2 may result in small variations.
 bool grid_see_grid(int posx_1, int posy_1, int posx_2, int posy_2,
                    dungeon_feature_type allowed)
 {

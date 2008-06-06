@@ -303,6 +303,7 @@ public:
     // public methods
     bool start_pathfind(monsters *mon, coord_def dest, bool msg = false);
     std::vector<coord_def> backtrack(void);
+    std::vector<coord_def> calc_waypoints(void);
 
 protected:
     // protected methods

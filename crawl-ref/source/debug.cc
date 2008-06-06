@@ -4101,8 +4101,21 @@ void debug_pathfind(int mid)
             snprintf(info, INFO_SIZE, "(%d, %d)  ", path[i].x, path[i].y);
             path_str += info;
         }
-
         mpr(path_str.c_str());
+        mprf("-> path length: %d", path.size());
+
+        mpr(EOL);
+        path = mp.calc_waypoints();
+        path_str = "";
+        mpr(EOL);
+        mpr("And here are the needed waypoints: ");
+        for (unsigned int i = 0; i < path.size(); i++)
+        {
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", path[i].x, path[i].y);
+            path_str += info;
+        }
+        mpr(path_str.c_str());
+        mprf("-> #waypoints: %d", path.size());
     }
 }
 #endif

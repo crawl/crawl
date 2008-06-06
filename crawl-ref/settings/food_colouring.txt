@@ -8,8 +8,8 @@ inv := menu_colour
 msg = $inedible:.*inedible.*
 inv = $inedible:.*inedible.*
 
-inv = $evil:.*evil_item.*
 inv = $evil:.*evil_eating.*
+inv = $evil:.*evil_item.*
 
 msg = $preferred:.*preferred.*
 inv = $preferred:.*preferred.*

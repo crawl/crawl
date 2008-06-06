@@ -2329,8 +2329,8 @@ bool monster_pathfind::calc_path_to_neighbours()
             total = distance + estimated_cost(npos);
             if (old_dist == INFINITE_DISTANCE)
             {
-                mprf("Adding (%d,%d) to hash (total dist = %d)",
-                     npos.x, npos.y, total);
+//                mprf("Adding (%d,%d) to hash (total dist = %d)",
+//                     npos.x, npos.y, total);
 
                 add_new_pos(npos, total);
                 if (total > max_length)
@@ -2338,8 +2338,8 @@ bool monster_pathfind::calc_path_to_neighbours()
             }
             else
             {
-                mprf("Improving (%d,%d) to total dist %d",
-                     npos.x, npos.y, total);
+//                mprf("Improving (%d,%d) to total dist %d",
+//                     npos.x, npos.y, total);
 
                 update_pos(npos, total);
             }
@@ -2368,7 +2368,6 @@ bool monster_pathfind::calc_path_to_neighbours()
 
 bool monster_pathfind::get_best_position()
 {
-//    mprf("minlength: %d, maxlength: %d", min_length, max_length);
     for (int i = min_length; i <= max_length; i++)
     {
         if (!hash[i].empty())
@@ -2378,8 +2377,8 @@ bool monster_pathfind::get_best_position()
             std::vector<coord_def> &vec = hash[i];
             pos = vec[vec.size()-1];
             vec.pop_back();
-            mprf("Returning (%d, %d) as best pos with total dist %d.",
-                 pos.x, pos.y, min_length);
+//            mprf("Returning (%d, %d) as best pos with total dist %d.",
+//                 pos.x, pos.y, min_length);
 
             return (true);
         }
@@ -2406,8 +2405,8 @@ std::vector<coord_def> monster_pathfind::backtrack()
         dir = prev[pos.x][pos.y];
         pos = pos + Compass[dir];
         ASSERT(in_bounds(pos));
-        mprf("prev: (%d, %d), pos: (%d, %d)", Compass[dir].x, Compass[dir].y,
-                                              pos.x, pos.y);
+//        mprf("prev: (%d, %d), pos: (%d, %d)", Compass[dir].x, Compass[dir].y,
+//                                              pos.x, pos.y);
         path.push_back(pos);
 
         if (pos.x == 0 && pos.y == 0)
@@ -2417,6 +2416,41 @@ std::vector<coord_def> monster_pathfind::backtrack()
     ASSERT(pos == start);
 
     return path;
+}
+
+// Reduces the path coordinates to only a couple of key waypoints needed
+// to reach the target.
+std::vector<coord_def> monster_pathfind::calc_waypoints()
+{
+    std::vector<coord_def> path = backtrack();
+    // If no path found, nothing to be done.
+    if (path.empty())
+        return path;
+
+    dungeon_feature_type can_move;
+    if (mons_amphibious(mons_is_zombified(mons) ? mons->base_monster
+                                                : mons->type))
+    {
+        can_move = DNGN_DEEP_WATER;
+    }
+    else
+        can_move = DNGN_SHALLOW_WATER;
+
+    std::vector<coord_def> waypoints;
+    pos = path[0];
+
+    for (unsigned int i = 1; i < path.size(); i++)
+    {
+        if (grid_see_grid(pos.x, pos.y, path[i].x, path[i].y, can_move))
+            continue;
+        else
+        {
+            pos = path[i-1];
+            waypoints.push_back(pos);
+        }
+    }
+
+    return waypoints;
 }
 
 bool monster_pathfind::traversable(coord_def p)

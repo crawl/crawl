@@ -1636,6 +1636,10 @@ std::string get_item_description( const item_def &item, bool verbose,
         description << "$";
         break;
 
+    case OBJ_CORPSES:
+        if (item.sub_type == CORPSE_SKELETON)
+            break;
+        // intentional fall-through
     case OBJ_FOOD:
         if (item.sub_type == FOOD_CHUNK)
         {
@@ -1684,6 +1688,13 @@ std::string get_item_description( const item_def &item, bool verbose,
                 break;
             default:
                 break;
+            }
+            if (is_good_god(you.religion) && is_player_same_species(item.plus)
+                || you.religion == GOD_ZIN
+                   && mons_intel(item.plus) >= I_NORMAL)
+            {
+                description << "$$" << god_name(you.religion) << " disapproves "
+                               "of eating such meat.";
             }
             description << "$";
 
@@ -1747,7 +1758,6 @@ std::string get_item_description( const item_def &item, bool verbose,
 
     case OBJ_SCROLLS:
     case OBJ_ORBS:
-    case OBJ_CORPSES:
     case OBJ_GOLD:
         // No extra processing needed for these item types.
         break;
@@ -1788,6 +1798,13 @@ std::string get_item_description( const item_def &item, bool verbose,
         }
     }
 
+    if (is_good_god(you.religion) && is_evil_item(item)
+        && item_type_known(item))
+    {
+        description << "$$" << god_name(you.religion) << " disapproves of the "
+                    << "use of such an item.";
+    }
+
     return description.str();
 }                               // end get_item_description()
 
@@ -1823,7 +1840,7 @@ void describe_feature_wide(int x, int y)
         getch();
 }
 
-// Return true if spells can be shown to player
+// Returns true if spells can be shown to player.
 static bool show_item_description(const item_def &item)
 {
     clrscr();

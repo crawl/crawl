@@ -1015,10 +1015,10 @@ void direction(dist& moves, targeting_type restricts,
         }
 
 #ifdef USE_TILE
-        // tiles always need a beam redraw if show_beam is true (and if valid...)
-        if ( need_beam_redraw
-             || show_beam && find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
-                                      true, ray, 0, true) )
+        // Tiles always need a beam redraw if show_beam is true (and valid...)
+        if (need_beam_redraw
+            || show_beam && find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
+                                     true, ray, 0, true) )
         {
 #else
         if ( need_beam_redraw )
