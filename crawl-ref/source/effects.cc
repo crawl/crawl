@@ -2029,7 +2029,6 @@ void yell(bool force)
         if (targ_prev)
         {
             mons_targd = you.prev_targ;
-            mpr("Attack!");
             break;
         }
 
@@ -2058,7 +2057,6 @@ void yell(bool force)
         }
 
         mons_targd = mgrd[targ.tx][targ.ty];
-        mpr("Attack!");
         break;
 
     default:
