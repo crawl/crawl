@@ -1039,7 +1039,7 @@
 },
 
 {
-    SPELL_GUARDIAN, "Guardian",
+    SPELL_SUMMON_GUARDIAN, "Summon Guardian",
      SPTYP_HOLY,
      SPFLAG_NONE,
      7,

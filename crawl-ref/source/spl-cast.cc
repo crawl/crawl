@@ -1518,7 +1518,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             return (SPRET_ABORT);
         break;
 
-    case SPELL_GUARDIAN:
+    case SPELL_SUMMON_GUARDIAN:
         summon_ice_beast_etc(powc, MONS_ANGEL, BEH_FRIENDLY, false);
         break;
 
