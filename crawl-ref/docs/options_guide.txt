@@ -2,13 +2,16 @@ Guide to Crawl's options
 ========================
 
 This document explains all of the options in the latest version of 
-Dungeon Crawl Stone Soup. These options are set in the init.txt file 
-located in the Crawl directory (the directory containing crawl.exe 
-on Windows and DOS). On Unix systems, you can also set options in the 
-~/.crawlrc file (a file named .crawlrc in your home directory).
-
+Dungeon Crawl Stone Soup. If you get stuck or some things won't seem to
+work properly, ask for help on the newsgroup rec.games.roguelike.misc. 
+Please flag queries with '-crawl-', as other roguelikes are discussed 
+there as well.
 The contents of this text are:
 
+0-  Generalities.
+0-a     Standard and additional option files.
+0-b     Options and how to set them.
+0-c     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, use_old_selection_order,
                 weapon, book, chaos_knight, death_knight, priest, 
@@ -114,6 +117,42 @@ The contents of this text are:
 
 ------------------------------------------------------------------------
 
+0-  Generalities on options.
+============================
+
+0-a     Standard and additional option files.
+---------------------------------------------
+
+Crawl uses the first file of the following list as its option file:
+* settings/init.txt 
+* init.txt (in the Crawl directory)
+* .crawlrc (in the Unix home directory)
+
+Alternatively, you can use the command line option
+    -rc <file>
+which tells Crawl to use precisely that file.
+
+On the starting screen, Crawl tells you which init file it uses, if any.
+
+It is possible to include additional files within the options file via
+    include = <file>
+Note that these are treated as if their content was entered verbatim 
+in the options file. By default, Crawl searches for all these included
+files in the settings/ directory but you can specify a special folder 
+using the command line option
+    -rcdir <dir>
+
+External option files have several uses: They allow quick customisation 
+of Crawl's general appearance (colouring/suppression of messages, and 
+the inventory style). More elaborate option magic (usually containing
+lua) can also be conveniently hidden this way. Finally, there are some
+additional option files coming with this release; these allow to set
+many options to old defaults, i.e. those of Crawl 0.3.4 and before. 
+See the header of the default init.txt for more details.
+
+0-b     Options and how to set them.
+------------------------------------
+
 There are three broad types of Crawl options: true/false values
 (booleans), arbitrary values, and lists of values. In this document,
 options are usually described with their default values (if there is a
@@ -146,13 +185,6 @@ expressions (regexes): here you can simply use ordinary strings, adapt
 the suggested regexes to your needs or search the internet for regex
 syntax.
 
-For long option names, you can define option aliases by doing:
-    alias := long_option_name
-For instance, you can use:
-    ae := autopickup_exceptions
-and thereafter use "ae" instead of "autopickup_exceptions":
-    ae = >uselessness, >inaccuracy
-
 Note that, in the tutorial, some of your options settings may get 
 overwritten to facilitate the explanations. This concerns the 
 following options, and their enforced setting for tutorial games
@@ -164,11 +196,23 @@ are as follows:
 and, for Tiles,
    tile_show_items     = !?/%=([)x}+\_.
 
+0-c     Aliases and variables.
+------------------------------
 
-If you get stuck or some things just won't seem to work properly, 
-please ask for help on the newsgroup rec.games.roguelike.misc. Please 
-flag queries with '-crawl-', as other roguelikes are also discussed 
-there.
+For long option names, you can define option aliases by doing:
+    alias := long_option_name
+For instance, you can use:
+    ae := autopickup_exceptions
+and thereafter use "ae" instead of "autopickup_exceptions":
+    ae = >uselessness, >inaccuracy
+
+You can define shortcuts for option values (variables). For example, 
+    $useless := darkgrey
+could be used in conjunction with
+    menu_colour = $useless:random uselessness
+
+See settings/standard_colours.txt and settings/food_colouring.txt
+for usage of aliases and variables.
 
 
 1-  Starting Screen.
@@ -1419,30 +1463,30 @@ tile_lava_col        = grey
 tile_excluded_col    = darkcyan
 tile_excl_centre_col = darkblue
 
-        These options allow configuring the colours used for the minimap of
-        the dungeon level. 
-           tile_player_col       - colour of player position, as well as of
-                                   map centre during level map mode ('X') 
-           tile_monster_col      - colour of hostile monsters
-           tile_neutral_col      - colour of neutral monsters
-           tile_friendly_col     - colour of friendly monsters
-           tile_plant_col        - colour of zero xp monsters (plant and fungus)
-           tile_item_col         - colour of known or detected items
-           tile_unseen_col       - colour of unseen areas (usually stone)
-           tile_wall_col         - colour of any wall type
-           tile_mapped_wall_col  - colour of walls detected via magic mapping
-           tile_door_col         - colour of known doors, open or closed
-           tile_downstairs_col   - colour of downstairs, including branch stairs
-           tile_upstairs_col     - colour of upstairs, including branch stairs
-           tile_feature_col      - colour of any non-stair feature
-                                   (altar, shop, portal, fountain, ...)
-           tile_trap_col         - colour of known traps of any type
-           tile_water_col        - colour of both shallow and deep water
-           tile_lava_col         - colour of lava
-           tile_excluded_col     - colour of squares excluded for autotravel
-                                   (will only override tile_floor_col colour)
-           tile_excl_centre_col  - colour of exclusion centre (overrides
-                                   tile_floor_col and tile_item_col, only)
+These options allow configuring the colours used for the minimap of
+the dungeon level. 
+   tile_player_col       - colour of player position, as well as of
+                           map centre during level map mode ('X') 
+   tile_monster_col      - colour of hostile monsters
+   tile_neutral_col      - colour of neutral monsters
+   tile_friendly_col     - colour of friendly monsters
+   tile_plant_col        - colour of zero xp monsters (plant and fungus)
+   tile_item_col         - colour of known or detected items
+   tile_unseen_col       - colour of unseen areas (usually stone)
+   tile_wall_col         - colour of any wall type
+   tile_mapped_wall_col  - colour of walls detected via magic mapping
+   tile_door_col         - colour of known doors, open or closed
+   tile_downstairs_col   - colour of downstairs, including branch stairs
+   tile_upstairs_col     - colour of upstairs, including branch stairs
+   tile_feature_col      - colour of any non-stair feature
+                           (altar, shop, portal, fountain, ...)
+   tile_trap_col         - colour of known traps of any type
+   tile_water_col        - colour of both shallow and deep water
+   tile_lava_col         - colour of lava
+   tile_excluded_col     - colour of squares excluded for autotravel
+                           (will only override tile_floor_col colour)
+   tile_excl_centre_col  - colour of exclusion centre (overrides
+                           tile_floor_col and tile_item_col, only)
 
 
 5-  Character Dump.
@@ -1848,20 +1892,3 @@ priest = Beogh
 : else
 priest = Yredelemnul
 : end
-
-7-c     Including external files.
----------------------------------
-
-You can use Lua to include options from other files. This is actually
-just a particularly useful way to use the previously discussed features.
-
-You can also use include.
-
-Example:
-
-# Set the monster glyphs back to the way they were in 0.3.4
-: crawl.read_options('settings/034_monster_glyphs.txt')
-
-or
-
-include = /settings/034_monster_glyphs.txt
