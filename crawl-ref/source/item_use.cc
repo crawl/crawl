@@ -1747,8 +1747,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     int exHitBonus   = 0, exDamBonus = 0;    // 'extra' bonus from skill/dex/str
     int effSkill     = 0;        // effective launcher skill
     int dice_mult    = 100;
-    bool returning   = false;    // item can return to pack
-    bool did_return  = false;    // returning item actually does return to pack
+    bool returning   = false;    // Item can return to pack.
+    bool did_return  = false;    // Returning item actually does return to pack.
     int slayDam      = 0;
 
     if (!teleport)
@@ -2538,7 +2538,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Player saw the item return.
         if (!is_artefact(you.inv[throw_2]))
-            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
+        {
+            // Since this only happens for non-artefacts, also mark properties
+            // as known.
+            set_ident_flags(you.inv[throw_2],
+                            ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
+        }
     }
     else
     {

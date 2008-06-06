@@ -674,7 +674,7 @@ static bool _vamp_wants_blood_from_monster(const monsters *mon)
 
     const int chunk_type = mons_corpse_effect( mon->type );
 
-    // don't drink poisonous or mutagenic blood
+    // Don't drink poisonous or mutagenic blood.
     return (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
             || chunk_type == CE_POISONOUS && player_res_poison());
 }
@@ -2187,10 +2187,12 @@ bool melee_attack::apply_damage_brand()
     case SPWPN_STAFF_OF_OLGREB:
         if (!one_chance_in(4))
         {
-            int old_poison = 0;
+            int old_poison;
 
             if (defender->atype() == ACT_PLAYER)
                 old_poison = you.duration[DUR_POISONING];
+            else
+                old_poison = (def->get_ench(ENCH_POISON)).degree;
 
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();
@@ -2200,7 +2202,9 @@ bool melee_attack::apply_damage_brand()
             defender->poison( attacker, 2 );
 
             if (defender->atype() == ACT_PLAYER
-                && old_poison < you.duration[DUR_POISONING])
+                   && old_poison < you.duration[DUR_POISONING]
+                || defender->atype() != ACT_PLAYER
+                   && old_poison < (def->get_ench(ENCH_POISON)).degree)
             {
                 obvious_effect = true;
             }
@@ -2212,16 +2216,14 @@ bool melee_attack::apply_damage_brand()
         drain_defender();
         break;
 
-        // 9 = speed - done before
     case SPWPN_VORPAL:
         special_damage = 1 + random2(damage_done) / 2;
-        // note: leaving special_damage_message empty because there
-        // isn't one.
+        // Note: Leaving special_damage_message empty because there isn't one.
         break;
 
     case SPWPN_VAMPIRICISM:
     {
-        // vampire bat form, why the special handling?
+        // Vampire bat form -- why the special handling?
         if (attacker->atype() == ACT_PLAYER && you.species == SP_VAMPIRE
             && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
@@ -2239,7 +2241,7 @@ bool melee_attack::apply_damage_brand()
 
         obvious_effect = true;
 
-        // handle weapon effects
+        // Handle weapon effects.
         // We only get here if we've done base damage, so no
         // worries on that score.
 
@@ -2261,7 +2263,7 @@ bool melee_attack::apply_damage_brand()
 
         int hp_boost = 0;
 
-        // thus is probably more valuable on larger weapons?
+        // Thus is probably more valuable on larger weapons?
         if (weapon && is_fixed_artefact( *weapon )
             && weapon->special == SPWPN_VAMPIRES_TOOTH)
         {

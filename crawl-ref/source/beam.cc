@@ -2685,7 +2685,7 @@ bool curare_hits_monster( const bolt &beam,
     return (mondied);
 }
 
-// actually poisons a monster (w/ message)
+// Actually poisons a monster (w/ message).
 bool poison_monster( monsters *monster,
                      kill_category from_whom,
                      int levels,
@@ -2702,8 +2702,8 @@ bool poison_monster( monsters *monster,
     monster->add_ench( mon_enchant(ENCH_POISON, levels, from_whom) );
     const mon_enchant new_pois = monster->get_ench(ENCH_POISON);
 
-    // actually do the poisoning
-    // note: order important here
+    // Actually do the poisoning.
+    // Note: order important here.
     if (verbose && new_pois.degree > old_pois.degree)
     {
         simple_monster_message( monster,
@@ -2711,14 +2711,14 @@ bool poison_monster( monsters *monster,
                                                 : " looks even sicker." );
     }
 
-    // finally, take care of deity preferences
+    // Finally, take care of deity preferences.
     if (from_whom == KC_YOU)
         did_god_conduct( DID_POISON, 5 + random2(3) );
 
     return (new_pois.degree > old_pois.degree);
 }
 
-// actually napalms a monster (w/ message)
+// Actually napalms a monster (w/ message).
 void _sticky_flame_monster( int mn, kill_category who, int levels )
 {
     monsters *monster = &menv[mn];

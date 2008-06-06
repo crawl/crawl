@@ -5892,6 +5892,11 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
                     simple_monster_message( mons, " falls apart.",
                                             MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
+                else if (mons_is_zombified(mons))
+                {
+                    simple_monster_message( mons, " sinks like a rock.",
+                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                }
                 else
                 {
                     simple_monster_message( mons, " drowns.",

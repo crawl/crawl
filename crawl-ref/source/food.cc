@@ -1510,12 +1510,6 @@ static void _eating(unsigned char item_class, int item_type)
             break;
         }                    // end carnivore/herbivore modifier listing {dlb}
 
-        // Next, let's take care of messaging {dlb}:
-        if (how_carnivorous > 0 && carnivore_modifier < 0)
-            mpr("Blech - you need meat!");
-        else if (how_herbivorous > 0 && herbivore_modifier < 0)
-            mpr("Blech - you need greens!");
-
         // Finally, modify player's hunger level {dlb}:
         if (carnivore_modifier && how_carnivorous > 0)
             food_value += (carnivore_modifier * how_carnivorous);

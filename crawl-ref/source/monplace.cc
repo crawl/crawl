@@ -2258,9 +2258,16 @@ bool monster_pathfind::start_pathfind(monsters *mon, coord_def dest, bool msg)
 
         return (true);
     }
+    // NOTE: We never do any traversable() check for the starting square
+    //       (target). This means that even if the target cannot be reached
+    //       we may still find a path leading adjacent to this position, which
+    //       is desirable if e.g. the player is hovering over deep water
+    //       surrounded by shallow water or floor, or if a foe is hiding in
+    //       a wall.
+    //       If the surrounding squares also are not traversable, we return
+    //       early that no path could be found.
 
     max_length = min_length = grid_distance(pos.x, pos.y, target.x, target.y);
-//    memset(dist, INFINITE_DISTANCE, sizeof(dist));
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
             dist[i][j] = INFINITE_DISTANCE;
@@ -2443,6 +2450,7 @@ bool monster_pathfind::traversable(coord_def p)
         if (tt == TRAP_ZOT && grd(p) != DNGN_UNDISCOVERED_TRAP
             && mons_friendly(mons))
         {
+            // Don't allow allies to pass over known Zot traps.
             return (false);
         }
 
@@ -2464,12 +2472,16 @@ int monster_pathfind::travel_cost(coord_def npos)
     if (grd(npos) == DNGN_CLOSED_DOOR || grd(npos) == DNGN_SECRET_DOOR)
         return 2;
 
-    // Moving from floor to water (or vice versa) is a bit more expensive.
-    // The deep water checks are only done in case of amphibious monsters.
-    if ((grd(pos) == DNGN_SHALLOW_WATER || grd(pos) == DNGN_DEEP_WATER)
-           && grid_compatible(grd(npos), DNGN_FLOOR)
-        || (grd(npos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_DEEP_WATER)
-           && grid_compatible(grd(pos), DNGN_FLOOR))
+    const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
+                                                : mons->type;
+
+    const bool airborne = _mons_airborne(montype, -1, false);
+
+    // Travelling through water, entering or leaving water is more expensive
+    // for non-amphibious monsters, so they'll avoid it where possible.
+    // Only tested for shallow water since they can't enter deep water anywa.
+    if (!airborne && !mons_amphibious(montype)
+        && (grd(pos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_SHALLOW_WATER))
     {
         return 2;
     }
@@ -2500,16 +2512,10 @@ int monster_pathfind::travel_cost(coord_def npos)
             return 1;
         }
 
-        if (knows_trap)
-        {
-            const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
-                                                        : mons->type;
-
-            // Mechanical traps can be avoided by flying, as can shafts, and
-            // tele traps are never traversable anyway.
-            if (!_mons_airborne(montype, -1, false))
-                return 2;
-        }
+        // Mechanical traps can be avoided by flying, as can shafts, and
+        // tele traps are never traversable anyway.
+        if (knows_trap && !airborne)
+            return 2;
 
         return 1;
     }
@@ -2538,7 +2544,6 @@ void monster_pathfind::update_pos(coord_def npos, int total)
     {
         if (vec[i] == npos)
         {
-//            mpr("Attempting to erase entry.");
             vec.erase(vec.begin() + i);
             break;
         }

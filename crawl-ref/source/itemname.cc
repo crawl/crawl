@@ -1187,8 +1187,8 @@ std::string item_def::name_aux( description_level_type desc,
                     break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
-                    || (get_armour_slot( *this ) == EQ_HELMET &&
-                        !is_hard_helmet( *this )))
+                    || get_armour_slot( *this ) == EQ_HELMET
+                       && !is_hard_helmet( *this ))
                 {
                     buff << "embroidered ";
                 }

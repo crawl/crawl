@@ -1163,7 +1163,7 @@ void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
 
 bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 {
-    // XXX: ugly hack, but avoids adding dynamic allocation to this code
+    // XXX: Ugly hack, but avoids adding dynamic allocation to this code.
     char throw_buff[ ITEMNAME_SIZE ];
 
     bool returning = (get_weapon_brand(mitm[hand_used]) == SPWPN_RETURNING
@@ -1179,7 +1179,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     int damMult  = 0;
     int diceMult = 100;
 
-    // some initial convenience & initializations
+    // Some initial convenience & initializations.
     int wepClass = mitm[hand_used].base_type;
     int wepType  = mitm[hand_used].sub_type;
 
@@ -1499,7 +1499,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     // decrease inventory
     bool really_returns;
-    if ( returning && !one_chance_in(mons_power(monster->type) + 3) )
+    if (returning && !one_chance_in(mons_power(monster->type) + 3))
         really_returns = true;
     else
         really_returns = false;
@@ -1514,20 +1514,26 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         really_returns = false;
     }
 
-    if ( really_returns )
+    if (really_returns)
     {
-        // Fire beam in reverse
+        // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow(true, false);
         fire_beam(pbolt, &item, false);
-        msg::stream << "The weapon returns to "
+        msg::stream << "The weapon returns "
                     << (player_monster_visible(monster)?
-                        monster->name(DESC_NOCAP_THE) : "where it came from")
+                          ("to " + monster->name(DESC_NOCAP_THE))
+                        : "whence it came from")
                     << "!" << std::endl;
 
-        // Player saw the item return
+        // Player saw the item return.
         if (!is_artefact(item))
-            set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
+        {
+            // Since this only happens for non-artefacts, also mark properties
+            // as known.
+            set_ident_flags(mitm[hand_used],
+                            ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
+        }
     }
     else if (dec_mitm_item_quantity( hand_used, 1 ))
         monster->inv[returning ? MSLOT_WEAPON : MSLOT_MISSILE] = NON_ITEM;

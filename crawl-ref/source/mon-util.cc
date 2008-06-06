@@ -2838,6 +2838,7 @@ bool monsters::can_drown() const
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
             || mons_genus(type) == MONS_VAMPIRE
+            || mons_is_zombified(this)
             || holiness() == MH_DEMONIC);
 }
 
@@ -5502,7 +5503,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             hurt_monster( this, dam );
 
 #if DEBUG_DIAGNOSTICS
-            // for debugging, we don't have this silent.
+            // For debugging, we don't have this silent.
             simple_monster_message( this, " takes poison damage.",
                                     MSGCH_DIAGNOSTICS );
             mprf(MSGCH_DIAGNOSTICS, "poison damage: %d", dam );

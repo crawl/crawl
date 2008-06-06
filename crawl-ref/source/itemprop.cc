@@ -145,7 +145,7 @@ static armour_def Armour_prop[NUM_ARMOURS] =
     { ARM_NAGA_BARDING,         "naga barding",           4, -2,  100,
         true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
 
-    // Note: shields use ac-value as sh-value, EV pen is used for heavy_shield
+    // Note: shields use ac-value as sh-value, EV pen is used for heavy_shield.
     { ARM_BUCKLER,              "buckler",                3,  0,   90,
         true,  EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM },
     { ARM_SHIELD,               "shield",                 5, -1,  150,
@@ -639,7 +639,7 @@ unsigned long full_ident_mask( const item_def& item )
         break;
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
-        // all flags necessary for full identification
+        // All flags necessary for full identification.
     default:
         break;
     }
