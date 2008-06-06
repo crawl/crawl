@@ -6,7 +6,7 @@
 --
 -- 1) Repeatedly lay down medium to large clouds on top of the marker
 --    and let them pile up on one another.  (One of the cloud grids in
---    the gfirst laid cloud has to decay away before this is this really
+--    the first laid cloud has to decay away before this is this really
 --    starts working.
 --
 -- 2) Perform random walks from the marker and place a single-grid cloud
@@ -14,19 +14,22 @@
 --
 -- 3) Place a single-grid cloud on the marker and let it spread out.
 --
--- Comibining these different methods, along with varying the differrent
+-- Combining these different methods, along with varying the different
 -- parameters, can be used to achieve different effects.
 --
 -- Marker parameters:
 --
--- cloud_type: The name of the cloud type to use.  Defaults to "thin mist".
+-- cloud_type: The name of the cloud type to use.  Possible cloud types are:
+--     flame, noxious fumes, freezing vapour, poison gases,
+--     grey smoke, blue smoke, purple smoke, steam, 
+--     foul pestilence, black smoke, thin mist (the default).
 -- walk_dist: The distance to move over the course of one random walk.
 --     defaults to 0.
 -- pow_min: The minimum "power" (lifetime) of each cloud; defaults to 1.
 -- pow_max: The maximum power of each cloud; must be provided.
 -- pow_rolls: The number of rolls of [pow_min, pow_max], with the average
 --     value uses; increasing the values makes the average value more likely
---     and exterme values less likely.  Defaults to 1.
+--     and extreme values less likely.  Defaults to 1.
 -- delay, delay_min and delay_max: The delay between laying down one cloud
 --     and the next.  10 is equal to normal-speed player turn.  Either
 --     delay or delay_max and delay_min must be provided.  Providing just
