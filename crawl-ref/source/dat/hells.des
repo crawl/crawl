@@ -320,7 +320,7 @@ TAGS:   dis
 ORIENT: north
 LFLAGS: no_tele_control
 MARKER: O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="iron rune" \
+            level_flags="!no_tele_control", item="iron rune of Zot" \
         }
 MONS:   Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle
 MONS:   iron dragon
@@ -375,7 +375,7 @@ PLACE:  Geh:7
 ORIENT: encompass
 LFLAGS: no_tele_control
 MARKER: O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="obsidian rune" \
+            level_flags="!no_tele_control", item="obsidian rune of Zot" \
         }
 MONS:   Asmodeus, Fiend, Balrug, molten gargoyle
 MONS:   Serpent of Hell, random, random
@@ -464,7 +464,7 @@ PLACE:   Coc:7
 ORIENT:  encompass
 LFLAGS:  no_tele_control
 MARKER:  O = lua:item_pickup_change_flags { \
-             level_flags="!no_tele_control", item="icy rune" \
+             level_flags="!no_tele_control", item="icy rune of Zot" \
          }
 MONS:    Antaeus, Ice Fiend, ice dragon / nothing
 ITEM:    any, any misc, any misc, any misc
@@ -557,7 +557,7 @@ SUBST:   X=., 3=3.
 MONS:    Antaeus, Ice Fiend, ice dragon, Ice Fiend
 LFLAGS:  no_tele_control
 MARKER:  O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="icy rune" \
+            level_flags="!no_tele_control", item="icy rune of Zot" \
          }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -642,7 +642,7 @@ PLACE:  Tar:7
 ORIENT: encompass
 LFLAGS: no_tele_control
 MARKER: O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="bone rune" \
+            level_flags="!no_tele_control", item="bone rune of Zot" \
         }
 MONS:   Ereshkigal, necrophage, wraith, shadow, small zombie
 MONS:   small skeleton, Shadow Fiend

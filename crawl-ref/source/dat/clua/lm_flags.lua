@@ -51,8 +51,8 @@
 -- * item_pickup_change_flags(): Creates a marker which acts when
 --        an item on its grid gets picked up.  Accepts the parameter
 --        "item", which is the plain name of the item its watching
---        (i.e., "Orb of Zot" and "golden rune" rather than "the Orb of Zot"
---        or "a golden rune").
+--        (i.e., "Orb of Zot" and "golden rune of Zot" rather than
+--         "the Orb of Zot" or "a golden rune of Zot").
 --------------------------------------------------------------------------
  
 ChangeFlags = { }
