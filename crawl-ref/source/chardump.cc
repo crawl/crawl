@@ -1197,6 +1197,8 @@ static bool write_dump( const std::string &fname, dump_params &par)
 
     file_name += strip_filename_unsafe_chars(fname);
 
+    StashTrack.update_corpses();
+
     std::string stash_file_name;
     stash_file_name = file_name;
     stash_file_name += ".lst";

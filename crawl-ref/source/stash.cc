@@ -615,6 +615,9 @@ void Stash::_update_corpses(long rot_time)
 
 void Stash::add_item(const item_def &item, bool add_to_front)
 {
+    if (_is_rottable(item))
+        StashTrack.update_corpses();
+
     if (add_to_front)
         items.insert(items.begin(), item);
     else
@@ -1568,6 +1571,8 @@ struct compare_by_name
 void StashTracker::search_stashes()
 {
     char buf[400];
+
+    this->update_corpses();
 
     stash_search_reader reader(buf, sizeof buf);
 

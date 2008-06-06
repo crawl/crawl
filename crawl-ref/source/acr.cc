@@ -1441,12 +1441,6 @@ static void _input()
         _world_reacts();
         return;
     }
-    else
-    {
-        // Don't do this while delayed, so as to not slow down resting
-        // and travel by iterating over all stahses once per player turn.
-        StashTrack.update_corpses();
-    }
 
     if ( you.turn_is_over )
     {
