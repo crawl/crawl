@@ -2443,15 +2443,17 @@ std::string _status_mut_abilities()
     const int ustealth = check_stealth();
 
     snprintf( info, INFO_SIZE, "%sstealthy",
-          (ustealth <  10) ? "extremely un" :
-          (ustealth <  20) ? "very un" :
-          (ustealth <  30) ? "un" :
-          (ustealth <  50) ? "fairly " :
-          (ustealth <  80) ? "" :
-          (ustealth < 120) ? "quite " :
-          (ustealth < 160) ? "very " :
-          (ustealth < 200) ? "extremely "
-          : "incredibly " );
+         (ustealth <  10) ? "extremely un" :
+         (ustealth <  30) ? "very un" :
+         (ustealth <  60) ? "un" :
+         (ustealth <  90) ? "fairly " :
+         (ustealth < 120) ? "" :
+         (ustealth < 160) ? "quite " :
+         (ustealth < 220) ? "very " :
+         (ustealth < 300) ? "extremely " :
+         (ustealth < 400) ? "extraordinarily " :
+         (ustealth < 520) ? "incredibly "
+                          : "uncannily ");
 
     text += info;
 
