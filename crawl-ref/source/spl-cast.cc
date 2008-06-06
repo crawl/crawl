@@ -3739,8 +3739,7 @@ void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
     }
 
     xom_is_stimulated(sever);
-    return;
-}                               // end miscast_effect()
+}
 
 const char* failure_rate_to_string( int fail )
 {
