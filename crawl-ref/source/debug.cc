@@ -1105,14 +1105,15 @@ void create_spec_object()
             return;
         }
 
-        mitm[thing_created].base_type = OBJ_CORPSES;
-        mitm[thing_created].sub_type  = CORPSE_BODY;
-        mitm[thing_created].plus      = mon;
-        mitm[thing_created].plus2     = 0;
-        mitm[thing_created].special   = 210;
-        mitm[thing_created].colour    = mons_class_colour(mon);;
-        mitm[thing_created].quantity  = 1;
-        mitm[thing_created].flags     = 0;
+        mitm[thing_created].base_type   = OBJ_CORPSES;
+        mitm[thing_created].sub_type    = CORPSE_BODY;
+        mitm[thing_created].plus        = mon;
+        mitm[thing_created].plus2       = 0;
+        mitm[thing_created].special     = 210;
+        mitm[thing_created].colour      = mons_class_colour(mon);;
+        mitm[thing_created].quantity    = 1;
+        mitm[thing_created].flags       = 0;
+        mitm[thing_created].orig_monnum = mon + 1;
     }
     else
     {
@@ -1294,7 +1295,10 @@ void create_spec_object()
 
     if (thing_created != NON_ITEM)
     {
-        origin_acquired( mitm[thing_created], AQ_WIZMODE );
+        // orig_monnum is used in corpses for things like the Animate
+        // Dead spell, so leave it alone.
+        if (class_wanted != OBJ_CORPSES)
+            origin_acquired( mitm[thing_created], AQ_WIZMODE );
         canned_msg( MSG_SOMETHING_APPEARS );
     }
 }
