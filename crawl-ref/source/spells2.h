@@ -132,7 +132,8 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-void summon_ice_beast_etc(int pow, monster_type ibc, bool divine_gift = false);
+bool summon_ice_beast_etc(int pow, monster_type mon, beh_type beha,
+                          bool god_gift);
 
 
 // last updated 24may2000 {dlb}
@@ -152,13 +153,13 @@ void summon_animals(int pow);
  * *********************************************************************** */
 void summon_small_mammals(int pow);
 
-bool summon_berserker(int pow, bool god_gift);
+bool summon_berserker(int pow, beh_type beha, bool god_gift);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - religion - spell
  * *********************************************************************** */
-bool summon_swarm( int pow, bool unfriendly, bool god_gift );
+bool summon_swarm(int pow, beh_type beha, bool god_gift);
 
 
 // last updated 24may2000 {dlb}

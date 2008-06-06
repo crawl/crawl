@@ -1868,13 +1868,13 @@ enum beh_type
     BEH_PANIC,                         //  like flee but without running away
     BEH_INVESTIGATE,                   //  investigating an ME_DISTURB
     BEH_LURK,                          //  stay still until discovered or
-                                       //  enemy closeby
+                                       //  enemy close by
     NUM_BEHAVIOURS,                    //  max # of legal states
-    BEH_CHARMED,                       //  hostile-but-charmed; create only
+    BEH_CHARMED,                       //  hostile-but-charmed; creation only
     BEH_FRIENDLY,                      //  used during creation only
+    BEH_GOOD_NEUTRAL,                  //  creation only
     BEH_NEUTRAL,                       //  creation only
     BEH_HOSTILE,                       //  creation only
-    BEH_GOD_GIFT,                      //  creation only
     BEH_GUARD                          //  creation only - monster is guard
 };
 

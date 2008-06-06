@@ -5028,10 +5028,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     }
     case ENCH_ABJ:
     case ENCH_SHORT_LIVED:
-        add_ench( mon_enchant(ENCH_ABJ) );
+        add_ench(mon_enchant(ENCH_ABJ));
 
         // just for flavour
-        if ((this->flags & MF_GOD_GIFT) && this->has_ench(ENCH_BERSERK))
+        if (testbits(this->flags, MF_GOD_GIFT) && this->has_ench(ENCH_BERSERK))
             simple_monster_message(this, " is no longer berserk.");
 
         monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );

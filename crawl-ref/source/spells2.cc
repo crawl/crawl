@@ -570,7 +570,7 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
     else
     {
         // This was probably intended, but it's really boring. (jpeg)
-        // Use menv[mon].number instead (set in create_monster)
+        // Use menv[mon].number instead (set in create_monster()).
 //        menv[mon].colour = colour;
         mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
         if (type_resurr == MONS_ABOMINATION_LARGE)
@@ -1266,7 +1266,7 @@ char burn_freeze(int pow, beam_type flavour)
 bool summon_elemental(int pow, int restricted_type,
                       unsigned char unfriendly)
 {
-    monster_type type_summoned = MONS_PROGRAM_BUG;
+    monster_type mon = MONS_PROGRAM_BUG;
     struct dist smove;
 
     int dir_x;
@@ -1295,7 +1295,7 @@ bool summon_elemental(int pow, int restricted_type,
 
         if (mgrd[ targ_x ][ targ_y ] != NON_MONSTER)
         {
-            if ( player_monster_visible(&menv[mgrd[targ_x][targ_y]]) )
+            if (player_monster_visible(&menv[mgrd[targ_x][targ_y]]))
                 mpr("There's something there already!");
             else
             {
@@ -1313,7 +1313,7 @@ bool summon_elemental(int pow, int restricted_type,
             || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL)
         && (restricted_type == 0 || restricted_type == MONS_EARTH_ELEMENTAL))
     {
-        type_summoned = MONS_EARTH_ELEMENTAL;
+        mon = MONS_EARTH_ELEMENTAL;
 
         if (targ_x > 6 && targ_x < 74 && targ_y > 6 && targ_y < 64)
             grd[ targ_x ][ targ_y ] = DNGN_FLOOR;
@@ -1322,30 +1322,30 @@ bool summon_elemental(int pow, int restricted_type,
             && env.cloud[env.cgrid[ targ_x ][ targ_y ]].type == CLOUD_FIRE)
             && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
     {
-        type_summoned = MONS_FIRE_ELEMENTAL;
+        mon = MONS_FIRE_ELEMENTAL;
         delete_cloud( env.cgrid[ targ_x ][ targ_y ] );
     }
     else if ((grd[ targ_x ][ targ_y ] == DNGN_LAVA)
             && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
     {
-        type_summoned = MONS_FIRE_ELEMENTAL;
+        mon = MONS_FIRE_ELEMENTAL;
     }
     else if ((grd[ targ_x ][ targ_y ] == DNGN_DEEP_WATER
                 || grd[ targ_x ][ targ_y ] == DNGN_SHALLOW_WATER
                 || grd[ targ_x ][ targ_y ] == DNGN_FOUNTAIN_BLUE)
            && (restricted_type == 0 || restricted_type == MONS_WATER_ELEMENTAL))
     {
-        type_summoned = MONS_WATER_ELEMENTAL;
+        mon = MONS_WATER_ELEMENTAL;
     }
     else if ((grd[ targ_x ][ targ_y ] >= DNGN_FLOOR
              && env.cgrid[ targ_x ][ targ_y ] == EMPTY_CLOUD)
              && (restricted_type == 0 || restricted_type == MONS_AIR_ELEMENTAL))
     {
-        type_summoned = MONS_AIR_ELEMENTAL;
+        mon = MONS_AIR_ELEMENTAL;
     }
 
     // found something to summon
-    if (type_summoned == MONS_PROGRAM_BUG)
+    if (mon == MONS_PROGRAM_BUG)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
@@ -1358,27 +1358,26 @@ bool summon_elemental(int pow, int restricted_type,
     // - Air elementals are harder because they're more dynamic/dangerous
     // - Earth elementals are more static and easy to tame (as before)
     // - Fire elementals fall in between the two (10 is still fairly easy)
-    bool friendly = ((type_summoned != MONS_FIRE_ELEMENTAL
+    bool friendly = ((mon != MONS_FIRE_ELEMENTAL
                         || random2(10) < you.skills[SK_FIRE_MAGIC])
 
-                     && (type_summoned != MONS_WATER_ELEMENTAL
+                     && (mon != MONS_WATER_ELEMENTAL
                          || random2((you.species == SP_MERFOLK) ? 5 : 15)
                                < you.skills[SK_ICE_MAGIC])
 
-                     && (type_summoned != MONS_AIR_ELEMENTAL
+                     && (mon != MONS_AIR_ELEMENTAL
                          || random2(15) < you.skills[SK_AIR_MAGIC])
 
-                     && (type_summoned != MONS_EARTH_ELEMENTAL
+                     && (mon != MONS_EARTH_ELEMENTAL
                          || random2(5)  < you.skills[SK_EARTH_MAGIC])
 
                      && random2(100) >= unfriendly);
 
     if (create_monster(
-            mgen_data( type_summoned,
-                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                       numsc,
-                       coord_def(targ_x, targ_y),
-                       friendly ? you.pet_target : MHITYOU )) != -1)
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      numsc, coord_def(targ_x, targ_y),
+                      friendly ? you.pet_target : MHITYOU )) != -1)
     {
         return (false);
     }
@@ -1392,7 +1391,7 @@ bool summon_elemental(int pow, int restricted_type,
 //jmf: beefed up higher-level casting of this (formerly lame) spell
 void summon_small_mammals(int pow)
 {
-    monster_type thing_called = MONS_PROGRAM_BUG; // error trapping{dlb}
+    monster_type mon = MONS_PROGRAM_BUG; // error trapping{dlb}
 
     int pow_spent = 0;
     int pow_left = pow + 1;
@@ -1419,27 +1418,27 @@ void summon_small_mammals(int pow)
             // player_angers_monster().
             if (!is_good_god(you.religion))
             {
-                thing_called = MONS_ORANGE_RAT;
+                mon = MONS_ORANGE_RAT;
                 break;
             }
 
         case 65: case 64: case 63: case 27: case 26: case 25:
-            thing_called = MONS_GREEN_RAT;
+            mon = MONS_GREEN_RAT;
             break;
 
         case 57: case 56: case 55: case 54: case 53: case 52:
         case 20: case 18: case 16: case 14: case 12: case 10:
-            thing_called = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
+            mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
             break;
 
         default:
-            thing_called = coinflip() ? MONS_GIANT_BAT : MONS_RAT;
+            mon = coinflip() ? MONS_GIANT_BAT : MONS_RAT;
             break;
         }
 
         create_monster(
-            mgen_data( thing_called, BEH_FRIENDLY, 3,
-                       you.pos(), you.pet_target ));
+            mgen_data(mon, BEH_FRIENDLY, 3,
+                      you.pos(), you.pet_target));
     }
 }
 
@@ -1459,19 +1458,19 @@ void summon_animals(int pow)
     int power_left = pow + 1;
 
     const bool varied = coinflip();
-    monster_type mon_chosen = MONS_PROGRAM_BUG;
+    monster_type mon = MONS_PROGRAM_BUG;
 
-    while ( power_left >= 0 && num_so_far < 8 )
+    while (power_left >= 0 && num_so_far < 8)
     {
-        // pick a random monster and subtract its cost
-        if ( varied || num_so_far == 0 )
-            mon_chosen = RANDOM_ELEMENT(animals);
+        // Pick a random monster and subtract its cost.
+        if (varied || num_so_far == 0)
+            mon = RANDOM_ELEMENT(animals);
 
-        const int power_cost = mons_power(mon_chosen) * 3;
+        const int power_cost = mons_power(mon) * 3;
 
         // Allow a certain degree of overuse, but not too much.
         // Guarantee at least two summons.
-        if ( power_cost >= power_left * 2 && num_so_far >= 2 )
+        if (power_cost >= power_left * 2 && num_so_far >= 2)
             break;
 
         power_left -= power_cost;
@@ -1480,10 +1479,10 @@ void summon_animals(int pow)
         bool friendly = (random2(pow) > 4);
 
         create_monster(
-            mgen_data( mon_chosen,
-                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, 4,
-                       you.pos(),
-                       friendly ? you.pet_target : MHITYOU ));
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      4, you.pos(),
+                      friendly ? you.pet_target : MHITYOU));
     }
 }
 
@@ -1493,15 +1492,14 @@ void summon_scorpions(int pow)
 
     numsc = stepdown_value(numsc, 2, 2, 6, 8);  //see stuff.cc - 12jan2000 {dlb}
 
-    for (int scount = 0; scount < numsc; scount++)
+    for (int scount = 0; scount < numsc; ++scount)
     {
         bool friendly = (random2(pow) > 3);
 
         if (create_monster(
                 mgen_data(MONS_SCORPION,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                          3,
-                          you.pos(),
+                          3, you.pos(),
                           friendly ? you.pet_target : MHITYOU)) != -1)
         {
             mprf("A scorpion appears.%s",
@@ -1524,8 +1522,7 @@ void summon_ugly_thing(int pow)
     if (create_monster(
             mgen_data(ugly,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      numsc,
-                      you.pos(),
+                      numsc, you.pos(),
                       friendly ? you.pet_target : MHITYOU)) != -1)
     {
         const char *prefix = (ugly == MONS_VERY_UGLY_THING) ? " very" : "n";
@@ -1535,13 +1532,14 @@ void summon_ugly_thing(int pow)
     }
 }                               // end summon_ugly_thing()
 
-void summon_ice_beast_etc(int pow, monster_type ibc, bool divine_gift)
+bool summon_ice_beast_etc(int pow, monster_type mon, beh_type beha,
+                          bool god_gift)
 {
     int numsc = std::min(2 + (random2(pow) / 4), 6);
-    beh_type beha = divine_gift ? BEH_GOD_GIFT : BEH_FRIENDLY;
-    unsigned short hitting = you.pet_target;
+    unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
+    bool success = false;
 
-    switch (ibc)
+    switch (mon)
     {
     case MONS_ICE_BEAST:
         mpr("A chill wind blows around you.");
@@ -1585,28 +1583,31 @@ void summon_ice_beast_etc(int pow, monster_type ibc, bool divine_gift)
 
     int monster =
         create_monster(
-            mgen_data(ibc, beha, numsc,
-                      you.pos(), hitting));
+            mgen_data(mon, beha, numsc,
+                      you.pos(), hitting,
+                      god_gift ? MF_GOD_GIFT : 0));
+
     if (monster != -1)
     {
-        if (ibc == MONS_DAEVA)
-        {
-            monsters *mon = &menv[monster];
+        success = true;
 
-            mon->flags |= MF_ATT_CHANGE_ATTEMPT;
-        }
+        monsters *summon = &menv[monster];
+
+        if (mon == MONS_DAEVA)
+            summon->flags |= MF_ATT_CHANGE_ATTEMPT;
     }
-}                               // end summon_ice_beast_etc()
 
-// Trog sends some fighting buddies for his followers (or enemies if
-// god_gift is false).
-bool summon_berserker(int pow, bool god_gift)
+    return (success);
+}
+
+// Trog sends some fighting buddies (or enemies) for his followers.
+bool summon_berserker(int pow, beh_type beha, bool god_gift)
 {
-    beh_type beha = (god_gift) ? BEH_GOD_GIFT : BEH_HOSTILE;
-    int numsc = std::min(2 + (random2(pow) / 4), 6);
-    bool success = false;
+    monster_type mon = MONS_PROGRAM_BUG;
 
-    monster_type mon = MONS_TROLL;
+    int numsc = std::min(2 + (random2(pow) / 4), 6);
+    unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
+    bool success = false;
 
     if (pow <= 100)
     {
@@ -1654,17 +1655,18 @@ bool summon_berserker(int pow, bool god_gift)
             mon = MONS_STONE_GIANT;
     }
 
-    int mons =
+    int monster =
         create_monster(
-            mgen_data( mon, beha, numsc,
-                       you.pos(),
-                       god_gift ? you.pet_target : MHITYOU ));
+            mgen_data(mon, beha, numsc,
+                      you.pos(), hitting,
+                      god_gift ? MF_GOD_GIFT : 0));
 
-    if (mons != -1)
+    if (monster != -1)
     {
         success = true;
 
-        monsters *summon = &menv[mons];
+        monsters *summon = &menv[monster];
+
         summon->go_berserk(false);
         mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
         mon_enchant abj = summon->get_ench(ENCH_ABJ);
@@ -1678,110 +1680,111 @@ bool summon_berserker(int pow, bool god_gift)
         summon->update_ench(abj);
     }
 
-    return success;
+    return (success);
 }   // end summon_berserker()
 
-bool summon_swarm( int pow, bool unfriendly, bool god_gift )
+bool summon_swarm(int pow, beh_type beha, bool god_gift)
 {
-    monster_type thing_called = MONS_PROGRAM_BUG;
+    monster_type mon = MONS_PROGRAM_BUG;
+
     int numsc = 2 + random2(pow) / 10 + random2(pow) / 25;
-    bool summoned = false;
+    unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
+    bool success = false;
 
     // see stuff.cc - 12jan2000 {dlb}
-    numsc = stepdown_value( numsc, 2, 2, 6, 8 );
+    numsc = stepdown_value(numsc, 2, 2, 6, 8);
 
-    for (int scount = 0; scount < numsc; scount++)
+    for (int scount = 0; scount < numsc; ++scount)
     {
         switch (random2(14))
         {
         case 0:
         case 1:         // prototypical swarming creature {dlb}
-            thing_called = MONS_KILLER_BEE;
+            mon = MONS_KILLER_BEE;
             break;
 
         case 2:         // comment said "larva", code read scorpion {dlb}
-            thing_called = MONS_SCORPION;
+            mon = MONS_SCORPION;
             break;              // think: "The Arrival" {dlb}
 
         case 3:         //jmf: technically not insects but still cool
-            thing_called = MONS_WORM;
+            mon = MONS_WORM;
             break;              // but worms kinda "swarm" so s'ok {dlb}
 
         case 4:         // comment read "larva", code was for scorpion
-            thing_called = MONS_GIANT_MOSQUITO;
+            mon = MONS_GIANT_MOSQUITO;
             break;              // changed into giant mosquito 12jan2000 {dlb}
 
         case 5:         // think: scarabs in "The Mummy" {dlb}
-            thing_called = MONS_GIANT_BEETLE;
+            mon = MONS_GIANT_BEETLE;
             break;
 
         case 6:         //jmf: blowfly instead of queen bee
-            thing_called = MONS_GIANT_BLOWFLY;
+            mon = MONS_GIANT_BLOWFLY;
             break;
 
             // queen bee added if more than x bees in swarm? {dlb}
             // the above would require code rewrite - worth it? {dlb}
 
         case 8:         //jmf: changed to red wasp; was wolf spider
-            thing_called = MONS_WOLF_SPIDER;    //jmf: spiders aren't insects
+            mon = MONS_WOLF_SPIDER;    //jmf: spiders aren't insects
             break;              // think: "Kingdom of the Spiders" {dlb}
             // not just insects!!! - changed back {dlb}
 
         case 9:
-            thing_called = MONS_BUTTERFLY;      // comic relief? {dlb}
+            mon = MONS_BUTTERFLY;      // comic relief? {dlb}
             break;
 
         case 10:                // change into some kind of snake -- {dlb}
-            thing_called = MONS_YELLOW_WASP;    // do wasps swarm? {dlb}
+            mon = MONS_YELLOW_WASP;    // do wasps swarm? {dlb}
             break;              // think: "Indiana Jones" and snakepit? {dlb}
 
         default:                // 3 in 14 chance, 12jan2000 {dlb}
-            thing_called = MONS_GIANT_ANT;
+            mon = MONS_GIANT_ANT;
             break;
         }                       // end switch
 
-        beh_type behaviour = BEH_HOSTILE;  // default to unfriendly
-
-        // Note: friendly, non-god_gift means spell.
-        if (god_gift)
-            behaviour = BEH_GOD_GIFT;
-        else if (!unfriendly && random2(pow) > 7)
-            behaviour = BEH_FRIENDLY;
+        // If it's not a god gift, it's from a spell.
+        if (!god_gift && random2(pow) > 7)
+        {
+            beha = BEH_FRIENDLY;
+            hitting = you.pet_target;
+        }
 
         if (create_monster(
-                mgen_data( thing_called, behaviour, 3,
-                           you.pos(),
-                           !unfriendly ? you.pet_target : MHITYOU )) != -1)
+                mgen_data(mon, beha, numsc,
+                          you.pos(), hitting,
+                          god_gift ? MF_GOD_GIFT : 0)) != -1)
         {
-            summoned = true;
+            success = true;
         }
     }
 
-    return (summoned);
-}                               // end summon_swarm()
+    return (success);
+}
 
 void summon_undead(int pow)
 {
     int temp_rand = 0;
-    monster_type thing_called = MONS_PROGRAM_BUG;
+    monster_type mon = MONS_PROGRAM_BUG;
 
     int numsc = 1 + random2(pow) / 30 + random2(pow) / 30;
     numsc = stepdown_value(numsc, 2, 2, 6, 8);  //see stuff.cc {dlb}
 
     mpr("You call on the undead to aid you!");
 
-    for (int scount = 0; scount < numsc; scount++)
+    for (int scount = 0; scount < numsc; ++scount)
     {
         temp_rand = random2(25);
 
-        thing_called = ((temp_rand > 8) ? MONS_WRAITH :           // 64%
-                        (temp_rand > 3) ? MONS_FREEZING_WRAITH    // 20%
-                                        : MONS_SPECTRAL_WARRIOR); // 16%
+        mon = ((temp_rand > 8) ? MONS_WRAITH :           // 64%
+               (temp_rand > 3) ? MONS_FREEZING_WRAITH    // 20%
+                               : MONS_SPECTRAL_WARRIOR); // 16%
 
         bool friendly = (random2(pow) > 5);
 
         if (create_monster(
-                mgen_data(thing_called,
+                mgen_data(mon,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE, 5,
                           you.pos(),
                           friendly ? you.pet_target : MHITYOU)) != -1)
@@ -1791,7 +1794,7 @@ void summon_undead(int pow)
             else
                 mpr("You sense a hostile presence.");
         }
-    }                           // end for loop
+    }
 
     //jmf: Kiku sometimes deflects this
     if (!you.is_undead
@@ -1845,11 +1848,11 @@ void summon_things( int pow )
         {
             create_monster(
                 mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, 6,
-                          you.pos(), you.pet_target ));
+                          you.pos(), you.pet_target));
             numsc--;
         }
 
         mprf("Some Thing%s answered your call!",
-             (numsc + big_things > 1) ? "s" : "" );
+             (numsc + big_things > 1) ? "s" : "");
     }
 }

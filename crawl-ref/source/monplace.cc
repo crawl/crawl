@@ -907,8 +907,11 @@ static int _place_monster_aux( const mgen_data &mg,
     // attitude is hostile.
     if (mg.behaviour > NUM_BEHAVIOURS)
     {
-        if (mg.behaviour == BEH_FRIENDLY || mg.behaviour == BEH_GOD_GIFT)
+        if (mg.behaviour == BEH_FRIENDLY)
             menv[id].attitude = ATT_FRIENDLY;
+
+        if (mg.behaviour == BEH_GOOD_NEUTRAL)
+            menv[id].attitude = ATT_GOOD_NEUTRAL;
 
         if (mg.behaviour == BEH_NEUTRAL)
             menv[id].attitude = ATT_NEUTRAL;
@@ -1754,7 +1757,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
     if ( mons_is_unique(monster->type) )
         interesting = true;
     // If it's never going to attack us, then not interesting
-    else if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
+    else if (behaviour == BEH_FRIENDLY)
         interesting = false;
     // Don't waste time on moname() if user isn't using this option
     else if (Options.note_monsters.size() > 0)
@@ -1861,15 +1864,15 @@ int mons_place( mgen_data mg )
 
     monsters *creation = &menv[mid];
 
-    // Look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT.
-    // Alert summoned being to player's presence.
+    // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
+    // HOSTILE.
     if (mg.behaviour > NUM_BEHAVIOURS)
     {
-        if (mg.behaviour == BEH_FRIENDLY || mg.behaviour == BEH_GOD_GIFT)
+        if (mg.behaviour == BEH_FRIENDLY)
             creation->flags |= MF_CREATED_FRIENDLY;
 
-        if (mg.behaviour == BEH_GOD_GIFT)
-            creation->flags |= MF_GOD_GIFT;
+        if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL)
+            creation->flags |= MF_WAS_NEUTRAL;
 
         if (mg.behaviour == BEH_CHARMED)
         {

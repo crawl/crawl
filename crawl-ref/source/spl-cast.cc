@@ -1393,7 +1393,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SUMMON_SWARM:
-        summon_swarm( powc, false, false );
+        summon_swarm(powc, BEH_FRIENDLY, false);
         break;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
@@ -1488,7 +1488,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SUMMON_ICE_BEAST:
-        summon_ice_beast_etc(powc, MONS_ICE_BEAST);
+        summon_ice_beast_etc(powc, MONS_ICE_BEAST, BEH_FRIENDLY, false);
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
@@ -1496,13 +1496,14 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_CALL_IMP:
-        if (one_chance_in(3))
-            summon_ice_beast_etc(powc, MONS_WHITE_IMP);
-        else if (one_chance_in(7))
-            summon_ice_beast_etc(powc, MONS_SHADOW_IMP);
-        else
-            summon_ice_beast_etc(powc, MONS_IMP);
+    {
+        monster_type mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
+                           (one_chance_in(7)) ? MONS_SHADOW_IMP
+                                              : MONS_IMP;
+
+        summon_ice_beast_etc(powc, mon, BEH_FRIENDLY, false);
         break;
+    }
 
     case SPELL_REPEL_MISSILES:
         missile_prot(powc);
@@ -1518,7 +1519,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_GUARDIAN:
-        summon_ice_beast_etc(powc, MONS_ANGEL);
+        summon_ice_beast_etc(powc, MONS_ANGEL, BEH_FRIENDLY, false);
         break;
 
     case SPELL_THUNDERBOLT:
@@ -1532,7 +1533,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SUMMON_DAEVA:
-        summon_ice_beast_etc(powc, MONS_DAEVA);
+        summon_ice_beast_etc(powc, MONS_DAEVA, BEH_FRIENDLY, false);
         break;
 
     // Remember that most holy spells above don't yet use powc!
@@ -1588,7 +1589,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     case SPELL_SUMMON_DEMON:
         mpr("You open a gate to Pandemonium!");
-        summon_ice_beast_etc(powc, summon_any_demon(DEMON_COMMON));
+        summon_ice_beast_etc(powc, summon_any_demon(DEMON_COMMON),
+                             BEH_FRIENDLY, false);
         break;
 
     case SPELL_DEMONIC_HORDE:
@@ -1596,7 +1598,10 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         {
             const int num = 7 + random2(5);
             for (int i = 0; i < num; ++i)
-                summon_ice_beast_etc(powc, summon_any_demon(DEMON_LESSER));
+            {
+                summon_ice_beast_etc(powc, summon_any_demon(DEMON_LESSER),
+                                     BEH_FRIENDLY, false);
+            }
         }
         break;
 
@@ -1604,15 +1609,15 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         mpr("You open a gate to Pandemonium!");
 
         {
-            const beh_type dem_beh = ((random2(powc) > 5) ? BEH_CHARMED :
-                                                            BEH_HOSTILE);
+            const beh_type beha = ((random2(powc) > 5) ? BEH_CHARMED :
+                                                         BEH_HOSTILE);
 
-            if (dem_beh == BEH_CHARMED)
+            if (beha == BEH_CHARMED)
                 mpr("You don't feel so good about this...");
 
             create_monster(
-                mgen_data( summon_any_demon(DEMON_GREATER), dem_beh, 5,
-                           you.pos(), MHITYOU ));
+                mgen_data(summon_any_demon(DEMON_GREATER), beha, 5,
+                          you.pos(), MHITYOU));
         }
         break;
 

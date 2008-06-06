@@ -526,8 +526,8 @@ static bool xom_is_good(int sever)
 
             summons[i] =
                 create_monster(
-                    mgen_data(mon, BEH_GOD_GIFT, 3,
-                              you.pos(), you.pet_target));
+                    mgen_data(mon, BEH_FRIENDLY, 3,
+                              you.pos(), you.pet_target, MF_GOD_GIFT));
 
             if (summons[i] != -1)
                 success = true;
@@ -605,7 +605,7 @@ static bool xom_is_good(int sever)
             different = true;
 
         // Mark non-demons hostile as appropriate.
-        beh_type beha = BEH_GOD_GIFT;
+        beh_type beha = BEH_FRIENDLY;
         unsigned short hitting = you.pet_target;
 
         if (different && hostiletype)
@@ -616,7 +616,7 @@ static bool xom_is_good(int sever)
 
         if (create_monster(
                 mgen_data(mon, beha, 6,
-                          you.pos(), hitting)) != -1)
+                          you.pos(), hitting, MF_GOD_GIFT)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single holy summon"));
@@ -700,7 +700,7 @@ static bool xom_is_good(int sever)
             different = true;
 
         // Mark non-demons hostile as appropriate.
-        beh_type beha = BEH_GOD_GIFT;
+        beh_type beha = BEH_FRIENDLY;
         unsigned short hitting = you.pet_target;
 
         if (different && hostiletype)
@@ -710,8 +710,9 @@ static bool xom_is_good(int sever)
         }
 
         if (create_monster(
-                mgen_data(xom_random_demon(sever, one_chance_in(8)), beha, 0,
-                          you.pos(), hitting)) != -1)
+                mgen_data(xom_random_demon(sever, one_chance_in(8)),
+                          beha, 0,
+                          you.pos(), hitting, MF_GOD_GIFT)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
@@ -886,7 +887,8 @@ static bool xom_is_bad(int sever)
                 {
                     if (create_monster(
                             mgen_data(xom_random_punishment_demon(sever),
-                                      BEH_HOSTILE, 4, you.pos())) != -1)
+                                      BEH_HOSTILE, 4,
+                                      you.pos(), MHITYOU, MF_GOD_GIFT)) != -1)
                     {
                         success = true;
                     }
