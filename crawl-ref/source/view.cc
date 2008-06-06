@@ -987,7 +987,7 @@ void handle_monster_shouts(monsters* monster, bool force)
 
     // Tries to find an entry for "name seen" or "name unseen",
     // and if no such entry exists then looks simply for "name".
-    if (player_monster_visible(monster))
+    if (you.can_see(monster))
         suffix = " seen";
      else
         suffix = " unseen";
