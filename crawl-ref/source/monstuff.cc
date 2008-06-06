@@ -1730,13 +1730,12 @@ bool monster_blink(monsters *monster)
 bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
                        bool restrict_LOS)
 {
-
     // This might involve ray tracing (via num_feats_between()), so
     // cache results to avoid duplicating ray traces.
     FixedArray<bool, 14, 14> tried;
     tried.init(false);
 
-    // Is the monster on the other side of a tranparent wall?
+    // Is the monster on the other side of a transparent wall?
     bool trans_wall_block  = trans_wall_blocking(ox, oy);
     bool origin_is_player  = (you.pos() == coord_def(ox, oy));
     int  min_walls_between = 0;
@@ -1748,7 +1747,8 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
                                               DNGN_CLEAR_ROCK_WALL,
                                               DNGN_CLEAR_PERMAROCK_WALL);
     }
-    int  tries = 0;
+
+    int tries = 0;
     while (tries++ < 150)
     {
         int dx = random2(14);
@@ -1757,7 +1757,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
         tx = ox - 6 + dx;
         ty = oy - 6 + dy;
 
-        // origin is not 'near'
+        // Origin is not 'near'.
         if (tx == ox && ty == oy)
             continue;
 
@@ -1786,7 +1786,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
         // as many translucent walls between the player and the end
         // point as between the player and the start point.  However,
         // monsters can still blink through translucent walls to get
-        // away from the player, since in the absence of tranlucent
+        // away from the player, since in the absence of translucent
         // walls monsters can blink to places which are not in either
         // the monster's nor the player's LOS.
         if (!origin_is_player && !see_grid(tx, ty))

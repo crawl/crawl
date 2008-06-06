@@ -352,6 +352,7 @@ int animate_dead( actor *caster, int power, beh_type corps_beh,
     env_show_grid &los(caster == &you? env.no_trans_show : losgrid);
 
     coord_def a;
+    bool was_butchered = false;
     for (a.x = minx; a.x != maxx; a.x += xinc)
         for (a.y = miny; a.y != maxy; a.y += yinc)
         {
@@ -364,13 +365,18 @@ int animate_dead( actor *caster, int power, beh_type corps_beh,
                 int hrg = 0;
 
                 // This searches all the items on the ground for a corpse.
+                // Only one of a stack will be raised.
                 while (objl != NON_ITEM)
                 {
                     if (is_animatable_corpse(mitm[objl])
                         && !is_being_butchered(mitm[objl]))
                     {
+                        if (is_being_butchered(mitm[objl], false))
+                            was_butchered = true;
+
                         int num = raise_corpse(objl, a.x, a.y, corps_beh,
                                                corps_hit, actual);
+
                         number_raised += num;
                         if (see_grid(env.show, you.pos(), a))
                             number_seen += num;
@@ -388,11 +394,14 @@ int animate_dead( actor *caster, int power, beh_type corps_beh,
     if (actual == 0)
         return (number_raised);
 
+    if (was_butchered)
+        mpr("The corpse you are butchering rises to attack!");
+
     if (number_seen > 0)
         mpr("The dead are walking!");
 
     return (number_raised);
-}                               // end animate_dead()
+}
 
 int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
                       int class_allowed )
@@ -412,6 +421,9 @@ int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
             rc = raise_corpse(objl, axps, ayps, corps_beh, corps_hit, 1);
             if (rc)
             {
+                if (was_butchering)
+                    mpr("The corpse you are butchering rises to attack!");
+
                 if (is_terrain_seen(axps, ayps))
                     mpr("The dead are walking!");
 
@@ -424,7 +436,7 @@ int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
     }
 
     return rc;
-}                               // end animate_a_corpse()
+}
 
 static int raise_corpse( int corps, int corx, int cory,
                          beh_type corps_beh, int corps_hit, int actual )
@@ -1275,6 +1287,7 @@ bool summon_elemental(int pow, int restricted_type,
     int targ_y;
 
     int numsc = std::min(2 + (random2(pow) / 5), 6);
+    bool any_elemental = (restricted_type == 0);
 
     while (true)
     {
@@ -1305,46 +1318,56 @@ bool summon_elemental(int pow, int restricted_type,
         }
         else if (dir_x == 0 && dir_y == 0)
             mpr("You can't summon an elemental from yourself!");
+        else if ((any_elemental || restricted_type == MONS_EARTH_ELEMENTAL)
+                 && (grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
+                     || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL))
+        {
+            if (targ_x <= 6 || targ_x >= 74 || targ_y <= 6 || targ_y >= 64)
+            {
+                mpr("That wall won't yield to your beckoning.");
+                // XXX: Should this cost a turn?
+            }
+            else
+            {
+                mon = MONS_EARTH_ELEMENTAL;
+                break;
+            }
+        }
         else
             break;
     }
 
-    if ((grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
-            || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL)
-        && (restricted_type == 0 || restricted_type == MONS_EARTH_ELEMENTAL))
+    if (mon == MONS_EARTH_ELEMENTAL)
     {
-        mon = MONS_EARTH_ELEMENTAL;
-
-        if (targ_x > 6 && targ_x < 74 && targ_y > 6 && targ_y < 64)
-            grd[ targ_x ][ targ_y ] = DNGN_FLOOR;
+        grd[ targ_x ][ targ_y ] = DNGN_FLOOR;
     }
-    else if ((env.cgrid[ targ_x ][ targ_y ] != EMPTY_CLOUD
-            && env.cloud[env.cgrid[ targ_x ][ targ_y ]].type == CLOUD_FIRE)
-            && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
+    else if (env.cgrid[ targ_x ][ targ_y ] != EMPTY_CLOUD
+             && env.cloud[env.cgrid[ targ_x ][ targ_y ]].type == CLOUD_FIRE
+             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
     {
         mon = MONS_FIRE_ELEMENTAL;
         delete_cloud( env.cgrid[ targ_x ][ targ_y ] );
     }
-    else if ((grd[ targ_x ][ targ_y ] == DNGN_LAVA)
-            && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
+    else if (grd[ targ_x ][ targ_y ] == DNGN_LAVA
+             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
     {
         mon = MONS_FIRE_ELEMENTAL;
     }
     else if ((grd[ targ_x ][ targ_y ] == DNGN_DEEP_WATER
                 || grd[ targ_x ][ targ_y ] == DNGN_SHALLOW_WATER
                 || grd[ targ_x ][ targ_y ] == DNGN_FOUNTAIN_BLUE)
-           && (restricted_type == 0 || restricted_type == MONS_WATER_ELEMENTAL))
+             && (any_elemental || restricted_type == MONS_WATER_ELEMENTAL))
     {
         mon = MONS_WATER_ELEMENTAL;
     }
-    else if ((grd[ targ_x ][ targ_y ] >= DNGN_FLOOR
-             && env.cgrid[ targ_x ][ targ_y ] == EMPTY_CLOUD)
-             && (restricted_type == 0 || restricted_type == MONS_AIR_ELEMENTAL))
+    else if (grd[ targ_x ][ targ_y ] >= DNGN_FLOOR
+             && env.cgrid[ targ_x ][ targ_y ] == EMPTY_CLOUD
+             && (any_elemental || restricted_type == MONS_AIR_ELEMENTAL))
     {
         mon = MONS_AIR_ELEMENTAL;
     }
 
-    // found something to summon
+    // Found something to summon?
     if (mon == MONS_PROGRAM_BUG)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1354,10 +1377,10 @@ bool summon_elemental(int pow, int restricted_type,
     // silly - ice for water? 15jan2000 {dlb}
     // little change here to help with the above... and differentiate
     // elements a bit... {bwr}
-    // - Water elementals are now harder to be made reliably friendly
-    // - Air elementals are harder because they're more dynamic/dangerous
-    // - Earth elementals are more static and easy to tame (as before)
-    // - Fire elementals fall in between the two (10 is still fairly easy)
+    // - Water elementals are now harder to be made reliably friendly.
+    // - Air elementals are harder because they're more dynamic/dangerous.
+    // - Earth elementals are more static and easy to tame (as before).
+    // - Fire elementals fall in between the two (10 is still fairly easy).
     bool friendly = ((mon != MONS_FIRE_ELEMENTAL
                         || random2(10) < you.skills[SK_FIRE_MAGIC])
 

@@ -78,7 +78,7 @@ int check_recital_audience( void );
 void handle_delay( void );
 
 bool is_run_delay(int delay);
-bool is_being_butchered(const item_def &item);
+bool is_being_butchered(const item_def &item, bool just_first = true);
 bool is_vampire_feeding( void );
 void stop_butcher_delay();
 

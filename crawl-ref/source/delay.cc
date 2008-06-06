@@ -542,13 +542,11 @@ void stop_butcher_delay()
 }
 
 bool you_are_delayed( void )
-/**************************/
 {
     return (!you.delay_queue.empty());
 }
 
 delay_type current_delay_action( void )
-/******************************/
 {
     return (you_are_delayed() ? you.delay_queue.front().type
                               : DELAY_NOT_DELAYED);
@@ -559,16 +557,26 @@ bool is_run_delay(int delay)
     return (delay == DELAY_RUN || delay == DELAY_REST || delay == DELAY_TRAVEL);
 }
 
-bool is_being_butchered(const item_def &item)
+bool is_being_butchered(const item_def &item, bool just_first)
 {
     if (!you_are_delayed())
         return (false);
 
-    const delay_queue_item &delay = you.delay_queue.front();
-    if (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD)
+    for (unsigned int i = 0; i < you.delay_queue.size(); i++)
     {
-        const item_def &corpse = mitm[ delay.parm1 ];
-        return (&corpse == &item);
+        if (you.delay_queue[i].type == DELAY_BUTCHER
+            || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD
+            || you.delay_queue[i].type == DELAY_OFFER_CORPSE)
+        {
+            const item_def &corpse = mitm[ you.delay_queue[i].parm1 ];
+            if (&corpse == &item)
+                return (true);
+
+            if (just_first)
+                break;
+        }
+        else
+            break;
     }
 
     return (false);
@@ -583,10 +591,10 @@ bool is_vampire_feeding()
     return (delay.type == DELAY_FEED_VAMPIRE);
 }
 
-// check whether there are monsters who might be influenced by Recite
-// return 0, if no monsters found
-// return 1, if eligible audience found
-// return -1, if entire audience already affected or too dumb to understand
+// Check whether there are monsters who might be influenced by Recite
+// returns 0, if no monsters found
+// returns 1, if eligible audience found
+// returns -1, if entire audience already affected or too dumb to understand.
 int check_recital_audience()
 {
     int mid;
@@ -607,7 +615,7 @@ int check_recital_audience()
             if (!found_monsters)
                 found_monsters = true;
 
-            // can not be affected in these states
+            // Can not be affected in these states.
             if (recite_mons_useless(mons))
                 continue;
 
@@ -621,7 +629,7 @@ int check_recital_audience()
           mprf(MSGCH_DIAGNOSTICS, "No sensible audience found!");
 #endif
 
-   // no use preaching to the choir, nor to common animals
+   // No use preaching to the choir, nor to common animals.
    if (found_monsters)
        return (-1);
 
@@ -795,8 +803,10 @@ void handle_delay( void )
         }
         else if (delay.type == DELAY_OFFER_CORPSE)
         {
+#ifdef DEBUG_DIAGNOSTICS
             mprf("Corpse %d no longer valid!", delay.parm1);
-            // don't attempt to offer an invalid item
+#endif
+            // Don't attempt to offer an invalid item.
             pop_delay();
 
             // Chain onto the next delay.
@@ -805,7 +815,7 @@ void handle_delay( void )
         }
         else
         {
-            // corpse is no longer valid!  End the butchering normally
+            // Corpse is no longer valid!  End the butchering normally
             // instead of using stop_delay(), so that the player
             // switches back to their main weapon if necessary.
             delay.duration = 0;
