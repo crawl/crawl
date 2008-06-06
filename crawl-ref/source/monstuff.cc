@@ -2086,7 +2086,7 @@ void behaviour_event( monsters *mon, int event, int src,
         break;
 
     case ME_ALERT:
-        if (mon->is_patrolling())
+        if (mons_friendly(mon) && mon->is_patrolling())
             break;
 
         // Will alert monster to <src> and turn them
@@ -3864,7 +3864,7 @@ static bool _handle_reaching(monsters *monster)
                 if (dx == 2 && dy <= 2 || dy == 2 && dx <= 2)
                 {
                     ret = true;
-                    monster_attack( monster_index(monster) );
+                    monster_attack( monster_index(monster), false );
                 }
             }
         }
@@ -3882,7 +3882,7 @@ static bool _handle_reaching(monsters *monster)
                 if (dx == 2 && dy <= 2 || dy == 2 && dx <= 2)
                 {
                     ret = true;
-                    monsters_fight( monster_index(monster), monster->foe );
+                    monsters_fight(monster_index(monster), monster->foe, false);
                 }
             }
         }

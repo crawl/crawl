@@ -41,7 +41,7 @@ enum gender_type
 enum mon_attack_type
 {
     AT_NONE,
-    AT_HIT,         // including weapon attacks
+    AT_HIT,         // Including weapon attacks.
     AT_BITE,
     AT_STING,
     AT_SPORE,
@@ -51,7 +51,7 @@ enum mon_attack_type
     AT_TAIL_SLAP,
     AT_BUTT,
 
-    AT_SHOOT        // attack representing missile damage for M_ARCHER
+    AT_SHOOT        // Attack representing missile damage for M_ARCHER.
 };
 
 enum mon_attack_flavour

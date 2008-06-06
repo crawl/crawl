@@ -69,14 +69,15 @@ bool you_attack(int monster_attacked, bool unarmed_attacks);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-bool monster_attack(int monster_attacking);
+bool monster_attack(int monster_attacking, bool allow_unarmed = true);
 
 
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-bool monsters_fight(int monster_attacking, int monster_attacked);
+bool monsters_fight(int monster_attacking, int monster_attacked,
+                    bool allow_unarmed = true);
 
 int calc_your_to_hit( bool random_factor );
 

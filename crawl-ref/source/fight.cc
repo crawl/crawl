@@ -581,13 +581,17 @@ bool melee_attack::attack()
             if (!mons_near(def))
                 simple_monster_message(atk, " hits something");
             else if (!you.can_see(atk))
+            {
                 mprf("%s hits the %s.", def->name(DESC_CAP_THE).c_str(),
                      feat_name.c_str());
+            }
             else
+            {
                 mprf("%s tries to hit the %s, but is blocked by the %s.",
                      atk->name(DESC_CAP_THE).c_str(),
                      def->name(DESC_NOCAP_THE).c_str(),
                      feat_name.c_str());
+            }
         }
         return (true);
     }
@@ -3757,7 +3761,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
 void melee_attack::mons_perform_attack_rounds()
 {
-    const int nrounds = atk->has_hydra_multi_attack()? atk->number : 4;
+    const int nrounds   = atk->has_hydra_multi_attack()? atk->number : 4;
     const coord_def pos = defender->pos();
 
     // Melee combat, tell attacker to wield its melee weapon.
@@ -3783,6 +3787,9 @@ void melee_attack::mons_perform_attack_rounds()
 
             break;
         }
+
+        if (attk.type != AT_HIT && !unarmed_ok)
+            continue;
 
         if (attk.type == AT_SHOOT)
             continue;
@@ -4045,7 +4052,8 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
     }
 }
 
-bool monster_attack(int monster_attacking)
+// A monster attacking the player.
+bool monster_attack(int monster_attacking, bool allow_unarmed)
 {
     monsters *attacker = &menv[monster_attacking];
 
@@ -4056,20 +4064,22 @@ bool monster_attack(int monster_attacking)
     // In case the monster hasn't noticed you, bumping into it will
     // change that.
     behaviour_event( attacker, ME_ALERT, MHITYOU );
-    melee_attack attk(attacker, &you);
+    melee_attack attk(attacker, &you, allow_unarmed);
     attk.attack();
 
     return (true);
-}                               // end monster_attack()
+}
 
-bool monsters_fight(int monster_attacking, int monster_attacked)
+// Two monsters fighting each other.
+bool monsters_fight(int monster_attacking, int monster_attacked,
+                    bool allow_unarmed)
 {
     monsters *attacker = &menv[monster_attacking];
     monsters *defender = &menv[monster_attacked];
 
-    melee_attack attk(attacker, defender);
+    melee_attack attk(attacker, defender, allow_unarmed);
     return attk.attack();
-}                               // end monsters_fight()
+}
 
 
 /*

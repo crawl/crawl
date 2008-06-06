@@ -251,7 +251,7 @@ void special_wielded()
     return;
 }                               // end special_wielded()
 
-static bool reaching_weapon_attack(const item_def& wpn)
+static bool _reaching_weapon_attack(const item_def& wpn)
 {
     dist beam;
 
@@ -340,7 +340,7 @@ static bool reaching_weapon_attack(const item_def& wpn)
         you_attack(mgrd[beam.tx][beam.ty], false);
 
     return (true);
-}                               // end reaching_weapon_attack()
+}
 
 static bool evoke_horn_of_geryon()
 {
@@ -460,13 +460,13 @@ bool evoke_wielded()
     case OBJ_WEAPONS:
         if (get_weapon_brand(wpn) == SPWPN_REACHING)
         {
-            if ( reaching_weapon_attack(wpn) )
+            if (_reaching_weapon_attack(wpn))
             {
                 pract = 0;
                 did_work = true;
             }
             else
-                return false;
+                return (false);
         }
         else if (is_fixed_artefact( wpn ))
         {
