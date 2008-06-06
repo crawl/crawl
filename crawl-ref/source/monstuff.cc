@@ -4826,7 +4826,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
     }
 
-    // Zombies are always to stupid to do this.
+    // Zombies are always too stupid to do this.
     if (mons_itemuse(monster->type) < MONUSE_OPEN_DOORS)
         return (false);
 
