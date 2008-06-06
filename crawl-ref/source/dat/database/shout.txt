@@ -22,55 +22,109 @@ __SHOUT
 
 SOUND:You hear a shout!
 %%%%
-__BARK
+__SHOUT seen
+
+SOUND:@The_monster@ shouts!
+%%%%
+__BARK unseen
 
 SOUND:You hear a bark!
 %%%%
-__TWO_SHOUTS
+__BARK seen
+
+SOUND:@The_monster@ barks!
+%%%%
+__TWO_SHOUTS unseen
 
 SOUND:You hear two shouts!
 %%%%
-__ROAR
+__TWO_SHOUTS seen
+
+SOUND:@The_monster@ shouts in stereo!
+%%%%
+__ROAR unseen
 
 SOUND:You hear a roar!
 %%%%
-__SCREAM
+__ROAR seen
+
+SOUND:@The_monster@ roars!
+%%%%
+__SCREAM unseen
 
 SOUND:You hear a hideous shriek!
 %%%%
-__BELLOW
+__SCREAM seen
+
+SOUND:@The_monster@ gives a hideous shriek!
+%%%%
+__BELLOW unseen
 
 SOUND:You hear a bellow!
 %%%%
-__SCREECH
+__BELLOW seen
+
+SOUND:@The_monster@ bellows!
+%%%%
+__SCREECH unseen
 
 SOUND:You hear a screech!
 %%%%
-__BUZZ
+__SCREECH seen
+
+SOUND:@The_monster@ screeches!
+%%%%
+__BUZZ unseen
 
 SOUND:You hear an angry buzzing noise.
 %%%%
-__MOAN
+__BUZZ seen
+
+SOUND:@The_monster@ buzzes angrily.
+%%%%
+__MOAN unseen
 
 SOUND:You hear a chilling moan.
 %%%%
-__WHINE
+__MOAN seen
+
+SOUND:@The_monster@ gives a chilling moan.
+%%%%
+__WHINE unseen
 
 SOUND:You hear an irritating high-pitched whine.
 %%%%
-__CROAK
+__WHINE seen
+
+SOUND:@The_monster@ gives an irritating high-pitched whine.
+%%%%
+__CROAK unseen
 
 SOUND:You hear a loud, deep croak!
 
 SOUND:You hear a croak.
 %%%%
-__GROWL
+__CROAK seen
+
+SOUND:@The_monster@ gives a loud, deep croak!
+
+SOUND:@The_monster@ croaks.
+%%%%
+__GROWL unseen
 
 SOUND:You hear an angry growl.
 %%%%
-__HISS
+__GROWL seen
+
+SOUND:@The_monster@ growls angrily.
+%%%%
+__HISS unseen
 
 SOUND:You hear an angry hiss.
+%%%%
+__HISS seen
+
+SOUND:@The_monster@ hisses angrily.
 %%%%
 __DEMON_TAUNT
 
