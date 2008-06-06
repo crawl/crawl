@@ -1531,32 +1531,8 @@ void summon_scorpions(int pow)
     }
 }                               // end summon_scorpions()
 
-void summon_ugly_thing(int pow)
-{
-    int chance = std::max(6 - (pow / 12), 1);
-
-    monster_type ugly = (one_chance_in(chance)) ?
-        MONS_VERY_UGLY_THING : MONS_UGLY_THING;
-
-    int numsc = std::min(2 + (random2(pow) / 4), 6);
-
-    bool friendly = (random2(pow) > 3);
-
-    if (create_monster(
-            mgen_data(ugly,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      numsc, you.pos(),
-                      friendly ? you.pet_target : MHITYOU)) != -1)
-    {
-        const char *prefix = (ugly == MONS_VERY_UGLY_THING) ? " very" : "n";
-
-        mprf("A%s ugly thing appears.%s", prefix,
-            friendly ? "" : " It doesn't look very happy.");
-    }
-}                               // end summon_ugly_thing()
-
-bool summon_ice_beast_etc(int pow, monster_type mon, beh_type beha,
-                          bool god_gift)
+bool summon_general_creature(int pow, monster_type mon, beh_type beha,
+                             bool god_gift)
 {
     int numsc = std::min(2 + (random2(pow) / 4), 6);
     unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
@@ -1579,6 +1555,23 @@ bool summon_ice_beast_etc(int pow, monster_type mon, beh_type beha,
     case MONS_SHADOW_IMP:
         mpr("A shadowy apparition takes form in the air.");
         break;
+
+    case MONS_UGLY_THING:
+    case MONS_VERY_UGLY_THING:
+    {
+        bool friendly = (random2(pow) > 3);
+        const char *prefix = (mon == MONS_VERY_UGLY_THING) ? " very" : "n";
+
+        mprf("A%s ugly thing appears.%s", prefix,
+            friendly ? "" : " It doesn't look very happy.");
+
+        if (!friendly)
+        {
+            beha = BEH_HOSTILE;
+            hitting = MHITYOU;
+        }
+        break;
+    }
 
     case MONS_ANGEL:
         mpr("You open a gate to Zin's realm!");

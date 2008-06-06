@@ -1277,15 +1277,15 @@ static bool _do_ability(const ability_def& abil)
 
     // DEMONIC POWERS:
     case ABIL_SUMMON_MINOR_DEMON:
-        summon_ice_beast_etc(you.experience_level * 4,
-                             summon_any_demon(DEMON_LESSER),
-                             BEH_FRIENDLY, false);
+        summon_general_creature(you.experience_level * 4,
+                                summon_any_demon(DEMON_LESSER),
+                                BEH_FRIENDLY, false);
         break;
 
     case ABIL_SUMMON_DEMONS:
-        summon_ice_beast_etc(you.experience_level * 4,
-                             summon_any_demon(DEMON_COMMON),
-                             BEH_FRIENDLY, false);
+        summon_general_creature(you.experience_level * 4,
+                                summon_any_demon(DEMON_COMMON),
+                                BEH_FRIENDLY, false);
         break;
 
     case ABIL_HELLFIRE:
@@ -1438,8 +1438,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_SUMMON_DAEVA:
-        summon_ice_beast_etc(you.skills[SK_INVOCATIONS] * 4, MONS_DAEVA,
-                             BEH_FRIENDLY, true);
+        summon_general_creature(you.skills[SK_INVOCATIONS] * 4,
+                                MONS_DAEVA, BEH_FRIENDLY, true);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 
@@ -1461,9 +1461,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_INVOKE_DEATH:
-        summon_ice_beast_etc(
-                20 + you.skills[SK_INVOCATIONS] * 3, MONS_REAPER,
-                BEH_FRIENDLY, true);
+        summon_general_creature(20 + you.skills[SK_INVOCATIONS] * 3,
+                                MONS_REAPER, BEH_FRIENDLY, true);
         exercise(SK_INVOCATIONS, 10 + random2(14));
         break;
 
@@ -1543,11 +1542,10 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-        summon_ice_beast_etc(20 + you.skills[SK_INVOCATIONS] * 3,
-                             static_cast<monster_type>(
-                                 MONS_NEQOXEC + random2(5)),
-                             BEH_FRIENDLY, true);
-
+        summon_general_creature(20 + you.skills[SK_INVOCATIONS] * 3,
+                                static_cast<monster_type>(
+                                    MONS_NEQOXEC + random2(5)),
+                                BEH_FRIENDLY, true);
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -1605,11 +1603,10 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        summon_ice_beast_etc(20 + you.skills[SK_INVOCATIONS] * 3,
-                             static_cast<monster_type>(
-                                 MONS_EXECUTIONER + random2(5)),
-                             BEH_FRIENDLY, true);
-
+        summon_general_creature(20 + you.skills[SK_INVOCATIONS] * 3,
+                                static_cast<monster_type>(
+                                    MONS_EXECUTIONER + random2(5)),
+                                BEH_FRIENDLY, true);
         exercise(SK_INVOCATIONS, 6 + random2(6));
         break;
 

@@ -1487,23 +1487,54 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             return (SPRET_ABORT);
         break;
 
+    // Remember that most holy spells don't yet use powc!
+    case SPELL_CALL_IMP:
     case SPELL_SUMMON_ICE_BEAST:
-        summon_ice_beast_etc(powc, MONS_ICE_BEAST, BEH_FRIENDLY, false);
+    case SPELL_SUMMON_UGLY_THING:
+    case SPELL_SUMMON_GUARDIAN:
+    case SPELL_SUMMON_DAEVA:
+    {
+        monster_type mon = MONS_PROGRAM_BUG;
+
+        switch (spell)
+        {
+            case SPELL_CALL_IMP:
+                mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
+                      (one_chance_in(7)) ? MONS_SHADOW_IMP
+                                         : MONS_IMP;
+                break;
+
+            case SPELL_SUMMON_ICE_BEAST:
+                mon = MONS_ICE_BEAST;
+                break;
+
+            case SPELL_SUMMON_UGLY_THING:
+            {
+                const int chance = std::max(6 - (powc / 12), 1);
+                mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
+                                              : MONS_UGLY_THING;
+                break;
+            }
+
+            case SPELL_SUMMON_GUARDIAN:
+                mon = MONS_ANGEL;
+                break;
+
+            case SPELL_SUMMON_DAEVA:
+                mon = MONS_DAEVA;
+                break;
+
+            default:
+                break;
+        }
+
+        summon_general_creature(powc, mon, BEH_FRIENDLY, false);
         break;
+    }
 
     case SPELL_OZOCUBUS_ARMOUR:
         ice_armour(powc, false);
         break;
-
-    case SPELL_CALL_IMP:
-    {
-        monster_type mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
-                           (one_chance_in(7)) ? MONS_SHADOW_IMP
-                                              : MONS_IMP;
-
-        summon_ice_beast_etc(powc, mon, BEH_FRIENDLY, false);
-        break;
-    }
 
     case SPELL_REPEL_MISSILES:
         missile_prot(powc);
@@ -1518,10 +1549,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             return (SPRET_ABORT);
         break;
 
-    case SPELL_SUMMON_GUARDIAN:
-        summon_ice_beast_etc(powc, MONS_ANGEL, BEH_FRIENDLY, false);
-        break;
-
     case SPELL_THUNDERBOLT:
         if (!zapping(ZAP_LIGHTNING, powc, beam, true))
             return (SPRET_ABORT);
@@ -1531,12 +1558,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         if (!zapping(ZAP_CLEANSING_FLAME, powc, beam, true))
             return (SPRET_ABORT);
         break;
-
-    case SPELL_SUMMON_DAEVA:
-        summon_ice_beast_etc(powc, MONS_DAEVA, BEH_FRIENDLY, false);
-        break;
-
-    // Remember that most holy spells above don't yet use powc!
 
     case SPELL_TWISTED_RESURRECTION:
         cast_twisted(powc, BEH_FRIENDLY, you.pet_target);
@@ -1589,8 +1610,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     case SPELL_SUMMON_DEMON:
         mpr("You open a gate to Pandemonium!");
-        summon_ice_beast_etc(powc, summon_any_demon(DEMON_COMMON),
-                             BEH_FRIENDLY, false);
+        summon_general_creature(powc, summon_any_demon(DEMON_COMMON),
+                                BEH_FRIENDLY, false);
         break;
 
     case SPELL_DEMONIC_HORDE:
@@ -1599,8 +1620,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             const int num = 7 + random2(5);
             for (int i = 0; i < num; ++i)
             {
-                summon_ice_beast_etc(powc, summon_any_demon(DEMON_LESSER),
-                                     BEH_FRIENDLY, false);
+                summon_general_creature(powc, summon_any_demon(DEMON_LESSER),
+                                        BEH_FRIENDLY, false);
             }
         }
         break;
@@ -1841,10 +1862,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     case SPELL_ICE_STORM:
         if (!zapping(ZAP_ICE_STORM, powc, beam, true))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_SUMMON_UGLY_THING:
-        summon_ugly_thing(powc);
         break;
 
     case SPELL_SHADOW_CREATURES:

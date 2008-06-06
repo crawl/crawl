@@ -132,8 +132,8 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool summon_ice_beast_etc(int pow, monster_type mon, beh_type beha,
-                          bool god_gift);
+bool summon_general_creature(int pow, monster_type mon, beh_type beha,
+                             bool god_gift);
 
 
 // last updated 24may2000 {dlb}
@@ -141,8 +141,6 @@ bool summon_ice_beast_etc(int pow, monster_type mon, beh_type beha,
  * called from: spell
  * *********************************************************************** */
 void summon_scorpions(int pow);
-
-void summon_ugly_thing(int pow);
 
 void summon_animals(int pow);
 
