@@ -1581,7 +1581,7 @@ bool summon_ice_beast_etc(int pow, monster_type mon, beh_type beha,
         break;
 
     case MONS_ANGEL:
-        mpr("You open a gate to the realm of Zin!");
+        mpr("You open a gate to Zin's realm!");
         break;
 
     case MONS_DAEVA:
