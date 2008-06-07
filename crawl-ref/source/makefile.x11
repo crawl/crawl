@@ -18,6 +18,14 @@ COPY = cp
 OS_TYPE = UNIX
 EXTRA_INCLUDES = -DUSE_X11 -DUSE_TILE
 
+ifeq ($(strip $(OSX)),y)
+PNG_INCLUDE := -I/sw/include
+PNG_LIB := -L/sw/lib
+else
+PNG_INCLUDE :=
+PNG_LIB :=
+endif
+
 # If you have lex and yacc, set DOYACC to y (lowercase y).
 DOYACC := y
 
@@ -77,9 +85,9 @@ EXTRA_INCLUDES += -I$(SQLSRC)
 EXTRA_DEPENDS  += $(FSQLLIBA)
 endif
 
-LIB = -L$(LUASRC) -l$(LUALIB) $(LIBDBM) -L/usr/X11R6/lib -lX11 -lpng
+LIB = -L$(LUASRC) -l$(LUALIB) $(LIBDBM) -L/usr/X11R6/lib -lX11 -lpng $(PNG_LIB)
 
-INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
+INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES) $(PNG_INCLUDE)
 
 CFWARN := -Wall -Wwrite-strings -Wshadow -pedantic
 
@@ -208,7 +216,7 @@ ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)%)
 $(ORIGTILEHEADERS): makerltiles
 
 makerltiles:
-	cd $(RLTILES) && make -f makefile.unix all && cd ..
+	cd $(RLTILES) && make -f makefile.unix all CFLAGS="$(PNG_INCLUDE)" LDFLAGS="$(PNG_LIB)" && cd ..
 
 $(TILEHEADERS): $(ORIGTILEHEADERS)
 	cp $(RLTILES)$@ .
