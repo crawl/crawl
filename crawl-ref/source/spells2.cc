@@ -1830,6 +1830,62 @@ bool cast_call_imp(int pow, bool god_gift)
     return (success);
 }
 
+static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
+                                  int dur, bool friendly)
+{
+    bool success = false;
+
+    monster_type mon = summon_any_demon(dct);
+
+    if (create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mprf("A demon appears!%s",
+             friendly ? "" : " It doesn't look very happy.");
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
+bool cast_summon_demon(int pow, bool god_gift)
+{
+    mpr("You open a gate to Pandemonium!");
+
+    return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
+                                 std::min(2 + (random2(pow) / 4), 6),
+                                 random2(pow) > 3);
+}
+
+bool cast_demonic_horde(int pow, bool god_gift)
+{
+    bool success = false;
+
+    const int how_many = 7 + random2(5);
+
+    mpr("You open a gate to Pandemonium!");
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        if (_summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
+                                  std::min(2 + (random2(pow) / 4), 6),
+                                  random2(pow) > 3))
+        {
+            success = true;
+        }
+    }
+
+    return (success);
+}
+
 bool cast_call_canine_familiar(int pow, bool god_gift)
 {
     bool success = false;
@@ -1902,9 +1958,7 @@ bool summon_general_creature_spell(spell_type spell, int pow,
     beh_type beha = (spell == SPELL_SUMMON_GREATER_DEMON) ? BEH_CHARMED
                                                           : BEH_FRIENDLY;
 
-    int hostile = (spell == SPELL_SUMMON_DEMON
-                    || spell == SPELL_DEMONIC_HORDE
-                    || spell == SPELL_SUMMON_UGLY_THING) ? 3 :
+    int hostile = (spell == SPELL_SUMMON_UGLY_THING) ? 3 :
                   (spell == SPELL_SUMMON_GREATER_DEMON
                     || spell == SPELL_SUMMON_WRAITHS
                     || spell == SPELL_SUMMON_DRAGON)     ? 5
@@ -1914,9 +1968,7 @@ bool summon_general_creature_spell(spell_type spell, int pow,
                 || spell == SPELL_SUMMON_WRAITHS)   ? 5
                                                     : -1;
 
-    int how_many = (spell == SPELL_DEMONIC_HORDE)      ?
-                       7 + random2(5) :
-                   (spell == SPELL_SUMMON_WRAITHS)     ?
+    int how_many = (spell == SPELL_SUMMON_WRAITHS)     ?
                        stepdown_value(1 + random2(pow) / 30 + random2(pow) / 30,
                                       2, 2, 6, 8)
                                                        : 1;
@@ -1925,15 +1977,6 @@ bool summon_general_creature_spell(spell_type spell, int pow,
     {
         switch (spell)
         {
-            case SPELL_SUMMON_DEMON:
-            case SPELL_DEMONIC_HORDE:
-            case SPELL_SUMMON_GREATER_DEMON:
-                mon = summon_any_demon(
-                        (spell == SPELL_SUMMON_GREATER_DEMON) ? DEMON_GREATER :
-                        (spell == SPELL_SUMMON_DEMON)         ? DEMON_COMMON
-                                                              : DEMON_LESSER);
-                break;
-
             case SPELL_SUMMON_ICE_BEAST:
                 mon = MONS_ICE_BEAST;
                 break;
@@ -1945,6 +1988,10 @@ bool summon_general_creature_spell(spell_type spell, int pow,
                                               : MONS_UGLY_THING;
                 break;
             }
+
+            case SPELL_SUMMON_GREATER_DEMON:
+                mon = summon_any_demon(DEMON_GREATER);
+                break;
 
             case SPELL_SUMMON_WRAITHS:
             {
@@ -1971,12 +2018,8 @@ bool summon_general_creature_spell(spell_type spell, int pow,
                 break;
         }
 
-        if (i == 0 && (spell == SPELL_SUMMON_DEMON
-            || spell == SPELL_DEMONIC_HORDE
-            || spell == SPELL_SUMMON_GREATER_DEMON))
-        {
+        if (i == 0 && spell == SPELL_SUMMON_GREATER_DEMON)
             mpr("You open a gate to Pandemonium!");
-        }
 
         if (summon_general_creature(pow, false, mon, beha,
                                     hostile, dur, false))

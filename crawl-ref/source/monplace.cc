@@ -2129,112 +2129,114 @@ bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,
     return (good_count > 0);
 }
 
-monster_type summon_any_demon(demon_class_type demon_class)
+monster_type summon_any_demon(demon_class_type dct)
 {
-    monster_type summoned = MONS_PROGRAM_BUG;
+    monster_type mon = MONS_PROGRAM_BUG;
+
     int temp_rand;          // probability determination {dlb}
 
-    switch (demon_class)
+    switch (dct)
     {
     case DEMON_LESSER:
         temp_rand = random2(60);
-        summoned = ((temp_rand > 49) ? MONS_IMP :        // 10 in 60
-                    (temp_rand > 40) ? MONS_WHITE_IMP :  //  9 in 60
-                    (temp_rand > 31) ? MONS_LEMURE :     //  9 in 60
-                    (temp_rand > 22) ? MONS_UFETUBUS :   //  9 in 60
-                    (temp_rand > 13) ? MONS_MANES :      //  9 in 60
-                    (temp_rand > 4)  ? MONS_MIDGE        //  9 in 60
-                                     : MONS_SHADOW_IMP); //  5 in 60
+        mon = ((temp_rand > 49) ? MONS_IMP :        // 10 in 60
+               (temp_rand > 40) ? MONS_WHITE_IMP :  //  9 in 60
+               (temp_rand > 31) ? MONS_LEMURE :     //  9 in 60
+               (temp_rand > 22) ? MONS_UFETUBUS :   //  9 in 60
+               (temp_rand > 13) ? MONS_MANES :      //  9 in 60
+               (temp_rand > 4)  ? MONS_MIDGE        //  9 in 60
+                                : MONS_SHADOW_IMP); //  5 in 60
         break;
 
     case DEMON_COMMON:
         temp_rand = random2(3948);
-        summoned = ((temp_rand > 3367) ? MONS_NEQOXEC :         // 14.69%
-                    (temp_rand > 2787) ? MONS_ORANGE_DEMON :    // 14.69%
-                    (temp_rand > 2207) ? MONS_HELLWING :        // 14.69%
-                    (temp_rand > 1627) ? MONS_SMOKE_DEMON :     // 14.69%
-                    (temp_rand > 1047) ? MONS_YNOXINUL :        // 14.69%
-                    (temp_rand > 889)  ? MONS_RED_DEVIL :       //  4.00%
-                    (temp_rand > 810)  ? MONS_HELLION :         //  2.00%
-                    (temp_rand > 731)  ? MONS_ROTTING_DEVIL :   //  2.00%
-                    (temp_rand > 652)  ? MONS_TORMENTOR :       //  2.00%
-                    (temp_rand > 573)  ? MONS_REAPER :          //  2.00%
-                    (temp_rand > 494)  ? MONS_SOUL_EATER :      //  2.00%
-                    (temp_rand > 415)  ? MONS_HAIRY_DEVIL :     //  2.00%
-                    (temp_rand > 336)  ? MONS_ICE_DEVIL :       //  2.00%
-                    (temp_rand > 257)  ? MONS_BLUE_DEVIL :      //  2.00%
-                    (temp_rand > 178)  ? MONS_BEAST :           //  2.00%
-                    (temp_rand > 99)   ? MONS_IRON_DEVIL :      //  2.00%
-                    (temp_rand > 49)   ? MONS_SUN_DEMON         //  1.26%
-                                       : MONS_SHADOW_IMP);      //  1.26%
+        mon = ((temp_rand > 3367) ? MONS_NEQOXEC :         // 14.69%
+               (temp_rand > 2787) ? MONS_ORANGE_DEMON :    // 14.69%
+               (temp_rand > 2207) ? MONS_HELLWING :        // 14.69%
+               (temp_rand > 1627) ? MONS_SMOKE_DEMON :     // 14.69%
+               (temp_rand > 1047) ? MONS_YNOXINUL :        // 14.69%
+               (temp_rand > 889)  ? MONS_RED_DEVIL :       //  4.00%
+               (temp_rand > 810)  ? MONS_HELLION :         //  2.00%
+               (temp_rand > 731)  ? MONS_ROTTING_DEVIL :   //  2.00%
+               (temp_rand > 652)  ? MONS_TORMENTOR :       //  2.00%
+               (temp_rand > 573)  ? MONS_REAPER :          //  2.00%
+               (temp_rand > 494)  ? MONS_SOUL_EATER :      //  2.00%
+               (temp_rand > 415)  ? MONS_HAIRY_DEVIL :     //  2.00%
+               (temp_rand > 336)  ? MONS_ICE_DEVIL :       //  2.00%
+               (temp_rand > 257)  ? MONS_BLUE_DEVIL :      //  2.00%
+               (temp_rand > 178)  ? MONS_BEAST :           //  2.00%
+               (temp_rand > 99)   ? MONS_IRON_DEVIL :      //  2.00%
+               (temp_rand > 49)   ? MONS_SUN_DEMON         //  1.26%
+                                  : MONS_SHADOW_IMP);      //  1.26%
         break;
 
     case DEMON_GREATER:
         temp_rand = random2(1000);
-        summoned = ((temp_rand > 868) ? MONS_CACODEMON :        // 13.1%
-                    (temp_rand > 737) ? MONS_BALRUG :           // 13.1%
-                    (temp_rand > 606) ? MONS_BLUE_DEATH :       // 13.1%
-                    (temp_rand > 475) ? MONS_GREEN_DEATH :      // 13.1%
-                    (temp_rand > 344) ? MONS_EXECUTIONER :      // 13.1%
-                    (temp_rand > 244) ? MONS_FIEND :            // 10.0%
-                    (temp_rand > 154) ? MONS_ICE_FIEND :        //  9.0%
-                    (temp_rand > 73)  ? MONS_SHADOW_FIEND       //  8.1%
-                                      : MONS_PIT_FIEND);        //  7.4%
+        mon = ((temp_rand > 868) ? MONS_CACODEMON :        // 13.1%
+               (temp_rand > 737) ? MONS_BALRUG :           // 13.1%
+               (temp_rand > 606) ? MONS_BLUE_DEATH :       // 13.1%
+               (temp_rand > 475) ? MONS_GREEN_DEATH :      // 13.1%
+               (temp_rand > 344) ? MONS_EXECUTIONER :      // 13.1%
+               (temp_rand > 244) ? MONS_FIEND :            // 10.0%
+               (temp_rand > 154) ? MONS_ICE_FIEND :        //  9.0%
+               (temp_rand > 73)  ? MONS_SHADOW_FIEND       //  8.1%
+                                 : MONS_PIT_FIEND);        //  7.4%
         break;
 
     default:
-        summoned = MONS_GIANT_ANT;      // this was the original behaviour {dlb}
+        mon = MONS_GIANT_ANT;     // this was the original behaviour {dlb}
         break;
     }
 
-    return summoned;
-}                               // end summon_any_demon()
+    return (mon);
+}
 
-monster_type rand_dragon( dragon_class_type type )
+monster_type summon_any_dragon(dragon_class_type dct)
 {
-    monster_type  summoned = MONS_PROGRAM_BUG;
+    monster_type mon = MONS_PROGRAM_BUG;
+
     int temp_rand;
 
-    switch (type)
+    switch (dct)
     {
     case DRAGON_LIZARD:
         temp_rand = random2(100);
-        summoned = ((temp_rand > 80) ? MONS_SWAMP_DRAKE :
-                    (temp_rand > 59) ? MONS_KOMODO_DRAGON :
-                    (temp_rand > 34) ? MONS_FIREDRAKE :
-                    (temp_rand > 11) ? MONS_DEATH_DRAKE :
-                                       MONS_DRAGON);
+        mon = ((temp_rand > 80) ? MONS_SWAMP_DRAKE :
+               (temp_rand > 59) ? MONS_KOMODO_DRAGON :
+               (temp_rand > 34) ? MONS_FIREDRAKE :
+               (temp_rand > 11) ? MONS_DEATH_DRAKE :
+                                  MONS_DRAGON);
         break;
 
     case DRAGON_DRACONIAN:
         temp_rand = random2(70);
-        summoned = ((temp_rand > 60) ? MONS_YELLOW_DRACONIAN :
-                    (temp_rand > 50) ? MONS_BLACK_DRACONIAN :
-                    (temp_rand > 40) ? MONS_PALE_DRACONIAN :
-                    (temp_rand > 30) ? MONS_GREEN_DRACONIAN :
-                    (temp_rand > 20) ? MONS_PURPLE_DRACONIAN :
-                    (temp_rand > 10) ? MONS_RED_DRACONIAN
-                                     : MONS_WHITE_DRACONIAN);
+        mon = ((temp_rand > 60) ? MONS_YELLOW_DRACONIAN :
+               (temp_rand > 50) ? MONS_BLACK_DRACONIAN :
+               (temp_rand > 40) ? MONS_PALE_DRACONIAN :
+               (temp_rand > 30) ? MONS_GREEN_DRACONIAN :
+               (temp_rand > 20) ? MONS_PURPLE_DRACONIAN :
+               (temp_rand > 10) ? MONS_RED_DRACONIAN
+                                : MONS_WHITE_DRACONIAN);
         break;
 
     case DRAGON_DRAGON:
         temp_rand = random2(90);
-        summoned = ((temp_rand > 80) ? MONS_MOTTLED_DRAGON :
-                    (temp_rand > 70) ? MONS_LINDWURM :
-                    (temp_rand > 60) ? MONS_STORM_DRAGON :
-                    (temp_rand > 50) ? MONS_MOTTLED_DRAGON :
-                    (temp_rand > 40) ? MONS_STEAM_DRAGON :
-                    (temp_rand > 30) ? MONS_DRAGON :
-                    (temp_rand > 20) ? MONS_ICE_DRAGON :
-                    (temp_rand > 10) ? MONS_SWAMP_DRAGON
-                                     : MONS_SHADOW_DRAGON);
+        mon = ((temp_rand > 80) ? MONS_MOTTLED_DRAGON :
+               (temp_rand > 70) ? MONS_LINDWURM :
+               (temp_rand > 60) ? MONS_STORM_DRAGON :
+               (temp_rand > 50) ? MONS_MOTTLED_DRAGON :
+               (temp_rand > 40) ? MONS_STEAM_DRAGON :
+               (temp_rand > 30) ? MONS_DRAGON :
+               (temp_rand > 20) ? MONS_ICE_DRAGON :
+               (temp_rand > 10) ? MONS_SWAMP_DRAGON
+                                : MONS_SHADOW_DRAGON);
         break;
 
     default:
         break;
     }
 
-    return (summoned);
+    return (mon);
 }
 
 

@@ -266,9 +266,10 @@ bool empty_surrounds( int emx, int emy, dungeon_feature_type spc_wanted,
 /* ***********************************************************************
  * called from: ability - acr - items - maps - mstuff2 - spell - spells
  * *********************************************************************** */
-monster_type summon_any_demon( demon_class_type demon_class );
+monster_type summon_any_demon(demon_class_type dct);
 
-monster_type rand_dragon( dragon_class_type type );
+monster_type summon_any_dragon(dragon_class_type dct);
+
 bool drac_colour_incompatible(int drac, int colour);
 
 /* ***********************************************************************

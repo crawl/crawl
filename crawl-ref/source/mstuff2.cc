@@ -752,11 +752,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
             for (sumcount = 0; sumcount < sumcount2; sumcount++)
             {
-                const monster_type mons = rand_dragon( DRAGON_LIZARD );
+                const monster_type mons = summon_any_dragon(DRAGON_LIZARD);
                 if (mons == MONS_DRAGON)
                 {
                     monsters.clear();
-                    monsters.push_back( rand_dragon(DRAGON_DRAGON) );
+                    monsters.push_back(summon_any_dragon(DRAGON_DRAGON));
                     break;
                 }
                 monsters.push_back( mons );
