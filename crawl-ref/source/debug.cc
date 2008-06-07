@@ -700,11 +700,6 @@ void wizard_interlevel_travel()
 
 static bool _sort_monster_list(int a, int b)
 {
-    if (a >= MAX_MONSTERS || b >= MAX_MONSTERS)
-    {
-        mprf("a = %d, b = %d", a, b);
-    }
-
     const monsters* m1 = &menv[a];
     const monsters* m2 = &menv[b];
 
