@@ -1866,12 +1866,6 @@ bool summon_general_creature_spell(spell_type spell, int pow,
     {
         switch (spell)
         {
-            case SPELL_CALL_IMP:
-                mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
-                      (one_chance_in(7)) ? MONS_SHADOW_IMP
-                                         : MONS_IMP;
-                break;
-
             case SPELL_SUMMON_DEMON:
             case SPELL_DEMONIC_HORDE:
             case SPELL_SUMMON_GREATER_DEMON:

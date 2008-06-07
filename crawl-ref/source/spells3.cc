@@ -473,7 +473,7 @@ void simulacrum(int power)
 }
 
 bool dancing_weapon(int pow, bool force_hostile,
-                    bool quiet_fail)
+                    bool quiet_failure)
 {
     bool success = true;
 
@@ -517,7 +517,7 @@ bool dancing_weapon(int pow, bool force_hostile,
     {
         destroy_item(i);
 
-        if (!quiet_fail)
+        if (!quiet_failure)
         {
             if (wpn != -1)
                 mpr("Your weapon vibrates crazily for a second.");
