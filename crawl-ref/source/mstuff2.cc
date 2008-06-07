@@ -835,14 +835,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     }
 
     fire_beam( pbolt );
-}                               // end mons_cast()
+}
 
-
-/*
- * setup bolt structure for monster spell casting.
- *
- */
-
+// Set up bolt structure for monster spell casting.
 void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast)
 {
     // always set these -- used by things other than fire_beam()
