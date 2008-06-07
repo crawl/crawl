@@ -2026,6 +2026,46 @@ bool cast_summon_greater_demon(int pow, bool god_gift)
     return (success);
 }
 
+bool cast_summon_wraiths(int pow, bool god_gift)
+{
+    bool success = false;
+
+    const int chance = random2(25);
+    monster_type mon = ((chance > 8) ? MONS_WRAITH :           // 64%
+                        (chance > 3) ? MONS_FREEZING_WRAITH    // 20%
+                                     : MONS_SPECTRAL_WARRIOR); // 16%
+
+    bool friendly = (random2(pow) > 5);
+
+    if (create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      5, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mprf("%s",
+             friendly ? "An insubstantial figure forms in the air."
+                      : "You sense a hostile presence.");
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    //jmf: Kiku sometimes deflects this
+    if (!(you.religion == GOD_KIKUBAAQUDGHA
+           && (!player_under_penance()
+               && you.piety >= piety_breakpoint(3)
+               && you.piety > random2(MAX_PIETY))))
+    {
+        disease_player(25 + random2(50));
+    }
+
+    return (success);
+}
+
 bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift)
 {
@@ -2033,64 +2073,31 @@ bool summon_general_creature_spell(spell_type spell, int pow,
 
     monster_type mon = MONS_PROGRAM_BUG;
 
-    int hostile = (spell == SPELL_SUMMON_WRAITHS
-                    || spell == SPELL_SUMMON_DRAGON) ? 5
-                                                     : -1;
+    int hostile = (spell == SPELL_SUMMON_DRAGON) ? 5
+                                                 : -1;
 
-    int dur = (spell == SPELL_SUMMON_WRAITHS) ? 5
-                                              : -1;
-
-    int how_many = (spell == SPELL_SUMMON_WRAITHS)     ?
-                       stepdown_value(1 + random2(pow) / 30 + random2(pow) / 30,
-                                      2, 2, 6, 8)
-                                                       : 1;
-
-    for (int i = 0; i < how_many; ++i)
+    switch (spell)
     {
-        switch (spell)
-        {
-            case SPELL_SUMMON_WRAITHS:
-            {
-                const int chance = random2(25);
-                mon = ((chance > 8) ? MONS_WRAITH :
-                       (chance > 3) ? MONS_FREEZING_WRAITH
-                                    : MONS_SPECTRAL_WARRIOR);
-                break;
-            }
+        case SPELL_SUMMON_GUARDIAN:
+            mon = MONS_ANGEL;
+            break;
 
-            case SPELL_SUMMON_GUARDIAN:
-                mon = MONS_ANGEL;
-                break;
+        case SPELL_SUMMON_DAEVA:
+            mon = MONS_DAEVA;
+            break;
 
-            case SPELL_SUMMON_DAEVA:
-                mon = MONS_DAEVA;
-                break;
+        case SPELL_SUMMON_DRAGON:
+            mon = MONS_DRAGON;
+            break;
 
-            case SPELL_SUMMON_DRAGON:
-                mon = MONS_DRAGON;
-                break;
-
-            default:
-                break;
-        }
-
-        if (summon_general_creature(pow, false, mon, BEH_FRIENDLY,
-                                    hostile, dur, false))
-        {
-            success = true;
-        }
+        default:
+            break;
     }
 
-    if (success && spell == SPELL_SUMMON_WRAITHS)
+    if (summon_general_creature(pow, false, mon, BEH_FRIENDLY,
+                                hostile, -1, false))
     {
-        if (!you.is_undead
-            && !(you.religion == GOD_KIKUBAAQUDGHA
-                && (!player_under_penance()
-                    && you.piety >= piety_breakpoint(3)
-                    && you.piety > random2(MAX_PIETY))))
-        {
-            disease_player(25 + random2(50));
-        }
+        success = true;
     }
 
     return (success);
@@ -2114,12 +2121,6 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
     switch (mon)
     {
-    case MONS_WRAITH:
-    case MONS_FREEZING_WRAITH:
-    case MONS_SPECTRAL_WARRIOR:
-        msg = "An insubstantial figure forms in the air.";
-        break;
-
     case MONS_ANGEL:
         msg = "You open a gate to Zin's realm!";
         break;
@@ -2139,17 +2140,8 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
     }
     }
 
-    if (beha == BEH_CHARMED)
-    {
-        msg += " You don't feel so good about this...";
-    }
-    else if (beha == BEH_HOSTILE)
-    {
-        if (mons_class_holiness(mon) == MH_UNDEAD)
-            msg = "You sense a hostile presence.";
-        else
-            msg += " It doesn't look very happy.";
-    }
+    if (beha == BEH_HOSTILE)
+        msg += " It doesn't look very happy.";
 
     int monster =
         create_monster(
@@ -2166,7 +2158,7 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
         monsters *summon = &menv[monster];
 
-        if (mon == MONS_DAEVA)
+        if (mon == MONS_ANGEL || mon == MONS_DAEVA)
             summon->flags |= MF_ATT_CHANGE_ATTEMPT;
     }
     else

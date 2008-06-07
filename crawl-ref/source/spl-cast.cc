@@ -1515,8 +1515,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_greater_demon(powc);
         break;
 
-    // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_WRAITHS:
+        cast_summon_wraiths(powc);
+        break;
+
+    // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_GUARDIAN:
     case SPELL_SUMMON_DAEVA:
     case SPELL_SUMMON_DRAGON:
@@ -2782,10 +2785,10 @@ static void _miscast_necromancy(int severity, const char* cause)
             mpr("You sense a malignant aura.");
             break;
         case 8:
-            canned_msg(MSG_NOTHING_HAPPENS);
+            mpr("You feel very uncomfortable.");
             break;
         case 9:
-            mpr("You feel very uncomfortable.");
+            canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
         break;
