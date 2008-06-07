@@ -1811,6 +1811,18 @@ bool summon_general_creature_spell(spell_type spell, int pow,
         }
     }
 
+    if (success && spell == SPELL_SUMMON_WRAITHS)
+    {
+        if (!you.is_undead
+            && !(you.religion == GOD_KIKUBAAQUDGHA
+                && (!player_under_penance()
+                    && you.piety >= piety_breakpoint(3)
+                    && you.piety > random2(MAX_PIETY))))
+        {
+            disease_player(25 + random2(50));
+        }
+    }
+
     return (success);
 }
 
@@ -1924,18 +1936,7 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
         monsters *summon = &menv[monster];
 
-        if (mons_class_holiness(mon) == MH_UNDEAD)
-        {
-            if (!you.is_undead
-                && !(you.religion == GOD_KIKUBAAQUDGHA
-                    && (!player_under_penance()
-                        && you.piety >= piety_breakpoint(3)
-                        && you.piety > random2(MAX_PIETY))))
-            {
-                disease_player(25 + random2(50));
-            }
-        }
-        else if (mon == MONS_DAEVA)
+        if (mon == MONS_DAEVA)
             summon->flags |= MF_ATT_CHANGE_ATTEMPT;
     }
     else
