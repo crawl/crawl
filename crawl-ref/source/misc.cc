@@ -1203,12 +1203,35 @@ void generate_random_blood_spatter_on_level()
 {
     int cx, cy;
     int startprob;
-    int max_cluster = 7 + random2(9);
+
+    // startprob is used to initialize the chance for neighbours being
+    // spattered, which will be decreased by 1 per recursion round.
+    // We then use one_chance_in(chance) to determine whether to spatter a
+    // given grid or not. Thus, startprob = 1 means that initially all
+    // surrounding grids will be spattered (3x3), and the _higher_ startprob
+    // the _lower_ the overall chance for spattering and the _smaller_ the
+    // bloodshed area.
+
+    const int max_cluster = 7 + random2(9);
+
+    // Lower chances for large bloodshed areas if we have many clusters,
+    // but increase chances if we have few.
+    // Chances for startprob are [1..3] for 7-9 clusters,
+    //                       ... [1..4] for 10-12 clusters, and
+    //                       ... [2..5] for 13-15 clusters.
+
+    int min_prob = 1;
+    int max_prob = 4;
+    if (max_cluster < 10)
+        max_prob--;
+    else if (max_cluster > 12)
+        min_prob++;
+
     for (int i = 0; i < max_cluster; i++)
     {
         cx = 10 + random2(GXM - 10);
         cy = 10 + random2(GYM - 10);
-        startprob = 1 + random2(4);
+        startprob = min_prob + random2(max_prob);
 
         if (allow_bleeding_on_square(cx, cy))
             env.map[cx][cy].property = FPROP_BLOODY;

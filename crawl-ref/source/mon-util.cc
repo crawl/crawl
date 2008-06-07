@@ -2690,12 +2690,13 @@ bool monster_senior(const monsters *m1, const monsters *m2)
 monsters::monsters()
     : type(-1), hit_points(0), max_hit_points(0), hit_dice(0),
       ac(0), ev(0), speed(0), speed_increment(0), x(0), y(0),
-      target_x(0), target_y(0), patrol_point(0, 0), inv(NON_ITEM), spells(),
-      attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
-      enchantments(), flags(0L), experience(0), number(0), colour(BLACK),
-      foe_memory(0), shield_blocks(0), god(GOD_NO_GOD), ghost(),
+      target_x(0), target_y(0), patrol_point(0, 0),
+      inv(NON_ITEM), spells(), attitude(ATT_HOSTILE), behaviour(BEH_WANDER),
+      foe(MHITYOU), enchantments(), flags(0L), experience(0), number(0),
+      colour(BLACK), foe_memory(0), shield_blocks(0), god(GOD_NO_GOD), ghost(),
       seen_context("")
 {
+    travel_path.clear();
 }
 
 // Empty destructor to keep auto_ptr happy with incomplete ghost_demon type.
@@ -2742,6 +2743,7 @@ void monsters::reset()
 
     x = y = 0;
     patrol_point = coord_def(0, 0);
+    travel_path.clear();
     ghost.reset(NULL);
 }
 
@@ -2762,6 +2764,7 @@ void monsters::init_with(const monsters &mon)
     target_x          = mon.target_x;
     target_y          = mon.target_y;
     patrol_point      = mon.patrol_point;
+    travel_path       = mon.travel_path;
     inv               = mon.inv;
     spells            = mon.spells;
     attitude          = mon.attitude;
@@ -4660,6 +4663,11 @@ void monsters::destroy_inventory()
             inv[j] = NON_ITEM;
         }
     }
+}
+
+bool monsters::is_travelling() const
+{
+    return (!travel_path.empty());
 }
 
 bool monsters::is_patrolling() const

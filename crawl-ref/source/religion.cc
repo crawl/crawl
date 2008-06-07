@@ -57,6 +57,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-util.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mutation.h"
@@ -4360,8 +4361,14 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     // The monster is not really *created* friendly, but should it
     // become hostile later on, it won't count as a good kill.
     orc->flags |= MF_CREATED_FRIENDLY;
-
     orc->flags |= MF_GOD_GIFT;
+
+    if (orc->is_patrolling())
+    {
+        // Make orcs stop patrolling and forget their patrol point,
+        // they're supposed to follow you now.
+        orc->patrol_point = coord_def(0, 0);
+    }
 
     if (!orc->alive())
         orc->hit_points = std::min(random_range(1, 4), orc->max_hit_points);

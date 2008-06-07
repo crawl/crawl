@@ -1024,6 +1024,7 @@ public:
     unsigned char target_x;
     unsigned char target_y;
     coord_def patrol_point;
+    std::vector<coord_def> travel_path;
     FixedVector<short, NUM_MONSTER_SLOTS> inv;
     monster_spells spells;
     mon_attitude_type attitude;
@@ -1100,6 +1101,7 @@ public:
 
     void timeout_enchantments(int levels);
 
+    bool is_travelling() const;
     bool is_patrolling() const;
     bool needs_transit() const;
     void set_transit(const level_id &destination);

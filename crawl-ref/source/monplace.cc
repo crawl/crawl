@@ -691,6 +691,16 @@ int place_monster(mgen_data mg, bool force_pos)
     if (id == -1)
         return (id);
 
+    monsters *mon = &menv[id];
+    if (mg.needs_patrol_point())
+    {
+        mon->patrol_point = coord_def(mon->x, mon->y);
+#ifdef DEBUG_PATHFIND
+        mprf("Monster %s is patrolling around (%d, %d).",
+             mon->name(DESC_PLAIN).c_str(), mon->x, mon->y);
+#endif
+    }
+
     // Message to player from stairwell/gate appearance.
     if (see_grid(mg.pos) && mg.proximity == PROX_NEAR_STAIRS)
     {
@@ -1890,9 +1900,6 @@ int mons_place( mgen_data mg )
             creation->add_ench(ENCH_INVIS);
     }
 
-    if (mg.needs_patrol_point())
-        creation->patrol_point = coord_def(creation->x, creation->y);
-
     return (mid);
 }
 
@@ -2302,7 +2309,6 @@ bool monster_pathfind::start_pathfind(monsters *mon, coord_def dest, bool msg)
 // Returns true as soon as we encounter the target.
 bool monster_pathfind::calc_path_to_neighbours()
 {
-//    mprf("in calc_path_to_neighbours() for (%d,%d)", pos.x, pos.y);
     coord_def npos;
     int distance, old_dist, total;
 
@@ -2315,7 +2321,9 @@ bool monster_pathfind::calc_path_to_neighbours()
     {
         npos = pos + Compass[dir];
 
-//        mprf("Looking at neighbour (%d,%d)", npos.x, npos.y);
+#ifdef DEBUG_PATHFIND
+        mprf("Looking at neighbour (%d,%d)", npos.x, npos.y);
+#endif
         if (!in_bounds(npos))
             continue;
 
@@ -2324,16 +2332,20 @@ bool monster_pathfind::calc_path_to_neighbours()
 
         distance = dist[pos.x][pos.y] + travel_cost(npos);
         old_dist = dist[npos.x][npos.y];
-//        mprf("old dist: %d, new dist: %d, infinite: %d", old_dist, distance,
-//             INFINITE_DISTANCE);
+#ifdef DEBUG_PATHFIND
+        mprf("old dist: %d, new dist: %d, infinite: %d", old_dist, distance,
+             INFINITE_DISTANCE);
+#endif
         if (distance < old_dist)
         {
             // Calculate new total path length.
             total = distance + estimated_cost(npos);
             if (old_dist == INFINITE_DISTANCE)
             {
-//                mprf("Adding (%d,%d) to hash (total dist = %d)",
-//                     npos.x, npos.y, total);
+#ifdef DEBUG_PATHFIND
+                mprf("Adding (%d,%d) to hash (total dist = %d)",
+                     npos.x, npos.y, total);
+#endif
 
                 add_new_pos(npos, total);
                 if (total > max_length)
@@ -2341,8 +2353,10 @@ bool monster_pathfind::calc_path_to_neighbours()
             }
             else
             {
-//                mprf("Improving (%d,%d) to total dist %d",
-//                     npos.x, npos.y, total);
+#ifdef DEBUG_PATHFIND
+                mprf("Improving (%d,%d) to total dist %d",
+                     npos.x, npos.y, total);
+#endif
 
                 update_pos(npos, total);
             }
@@ -2361,7 +2375,9 @@ bool monster_pathfind::calc_path_to_neighbours()
             // Are we finished?
             if (npos == target)
             {
+#ifdef DEBUG_PATHFIND
                 mpr("Arrived at target.");
+#endif
                 return (true);
             }
         }
@@ -2380,12 +2396,16 @@ bool monster_pathfind::get_best_position()
             std::vector<coord_def> &vec = hash[i];
             pos = vec[vec.size()-1];
             vec.pop_back();
-//            mprf("Returning (%d, %d) as best pos with total dist %d.",
-//                 pos.x, pos.y, min_length);
+#ifdef DEBUG_PATHFIND
+            mprf("Returning (%d, %d) as best pos with total dist %d.",
+                 pos.x, pos.y, min_length);
+#endif
 
             return (true);
         }
-//        mprf("No positions for path length %d.", i);
+#ifdef DEBUG_PATHFIND
+        mprf("No positions for path length %d.", i);
+#endif
     }
 
     // Nothing found? Then there's no path! :(
@@ -2394,7 +2414,9 @@ bool monster_pathfind::get_best_position()
 
 std::vector<coord_def> monster_pathfind::backtrack()
 {
+#ifdef DEBUG_PATHFIND
     mpr("Backtracking...");
+#endif
     std::vector<coord_def> path;
     pos = target;
     path.push_back(pos);
@@ -2408,8 +2430,10 @@ std::vector<coord_def> monster_pathfind::backtrack()
         dir = prev[pos.x][pos.y];
         pos = pos + Compass[dir];
         ASSERT(in_bounds(pos));
-//        mprf("prev: (%d, %d), pos: (%d, %d)", Compass[dir].x, Compass[dir].y,
-//                                              pos.x, pos.y);
+#ifdef DEBUG_PATHFIND
+        mprf("prev: (%d, %d), pos: (%d, %d)", Compass[dir].x, Compass[dir].y,
+                                              pos.x, pos.y);
+#endif
         path.push_back(pos);
 
         if (pos.x == 0 && pos.y == 0)
@@ -2426,6 +2450,7 @@ std::vector<coord_def> monster_pathfind::backtrack()
 std::vector<coord_def> monster_pathfind::calc_waypoints()
 {
     std::vector<coord_def> path = backtrack();
+
     // If no path found, nothing to be done.
     if (path.empty())
         return path;
@@ -2442,6 +2467,9 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     std::vector<coord_def> waypoints;
     pos = path[0];
 
+#ifdef DEBUG_PATHFIND
+    mpr(EOL "Waypoints:");
+#endif
     for (unsigned int i = 1; i < path.size(); i++)
     {
         if (grid_see_grid(pos.x, pos.y, path[i].x, path[i].y, can_move))
@@ -2450,6 +2478,9 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
         {
             pos = path[i-1];
             waypoints.push_back(pos);
+#ifdef DEBUG_PATHFIND
+            mprf("waypoint: (%d, %d)", pos.x, pos.y);
+#endif
         }
     }
 

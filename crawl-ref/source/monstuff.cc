@@ -2351,9 +2351,10 @@ static void _handle_behaviour(monsters *mon)
     bool isSmart    = (mons_intel(mon->type) > I_ANIMAL);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isMobile   = !mons_is_stationary(mon);
+    bool travelling = mon->is_travelling();
     bool patrolling = mon->is_patrolling();
 
-    // check for confusion -- early out.
+    // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
         mon->target_x = 10 + random2(GXM - 10);
@@ -2515,7 +2516,7 @@ static void _handle_behaviour(monsters *mon)
                 break;
             }
 
-            // foe gone out of LOS?
+            // Foe gone out of LOS?
             if (!proxFoe)
             {
                 if (patrolling)
@@ -2575,8 +2576,7 @@ static void _handle_behaviour(monsters *mon)
                     break;
                 }
 
-                // hack: smarter monsters will
-                // tend to pursue the player longer.
+                // Hack: smarter monsters will tend to pursue the player longer.
                 int memory = 0;
                 switch (mons_intel(monster_index(mon)))
                 {
@@ -2648,10 +2648,102 @@ static void _handle_behaviour(monsters *mon)
             // wandering monsters at least appear to have some sort of
             // attention span.  -- bwr
             if (mon->x == mon->target_x && mon->y == mon->target_y
-                || one_chance_in(20)
-                || testbits( mon->flags, MF_BATTY ))
+                || !travelling && (one_chance_in(20)
+                                   || testbits( mon->flags, MF_BATTY )))
             {
-                if (patrolling)
+                bool need_target = true;
+                if (travelling)
+                {
+#ifdef DEBUG_PATHFIND
+                    mprf("Monster %s reached target (%d, %d)",
+                         mon->name(DESC_PLAIN).c_str(),
+                         mon->target_x, mon->target_y);
+#endif
+                    need_target = false;
+                    if (mon->x == mon->travel_path[0].x
+                        && mon->y == mon->travel_path[0].y)
+                    {
+                        // Hey, we reached our first waypoint!
+                        mon->travel_path.erase( mon->travel_path.begin() );
+                        if (mon->travel_path.empty())
+                            need_target = true;
+
+                        mon->target_x = mon->travel_path[0].x;
+                        mon->target_y = mon->travel_path[0].y;
+#ifdef DEBUG_PATHFIND
+                        mprf("Next waypoint: (%d, %d)",
+                             mon->target_x, mon->target_y);
+#endif
+                    }
+                    else
+                    {
+                        // Apparently we got sidetracked a bit.
+                        // Check the waypoints vector backwards and pick the
+                        // first waypoint we can see.
+
+                        // XXX: Note that this might still not be the best
+                        // thing to do since another path might be even
+                        // *closer* to our actual target now.
+
+                        dungeon_feature_type can_move;
+                        if (mons_amphibious(mons_is_zombified(mon) ?
+                            mon->base_monster : mon->type))
+                        {
+                            can_move = DNGN_DEEP_WATER;
+                        }
+                        else
+                            can_move = DNGN_SHALLOW_WATER;
+
+
+                        int erase = -1;  // Erase how many waypoints?
+                        for (unsigned int i = mon->travel_path.size() - 1;
+                             i >= 0; i--)
+                        {
+                            if (grid_see_grid(mon->x, mon->y,
+                                              mon->travel_path[i].x,
+                                              mon->travel_path[i].y, can_move))
+                            {
+                                mon->target_x = mon->travel_path[i].x;
+                                mon->target_y = mon->travel_path[i].y;
+                                erase = i;
+                                break;
+                            }
+                        }
+
+                        if (erase != -1)
+                        {
+                            // Erase all waypoints that came earlier:
+                            // we don't need them anymore.
+                            while (0 < erase--)
+                            {
+                                mon->travel_path.erase(
+                                    mon->travel_path.begin() );
+                            }
+                        }
+                        else
+                        {
+                            // We can't reach our old path from our current
+                            // position, so calculate a new path instead.
+                            monster_pathfind mp;
+                            if (mp.start_pathfind(mon, mon->patrol_point, true))
+                            {
+                                mon->travel_path = mp.calc_waypoints();
+                                if (!mon->travel_path.empty())
+                                {
+                                    mon->target_x = mon->travel_path[0].x;
+                                    mon->target_y = mon->travel_path[0].y;
+                                }
+                            }
+                            else
+                            {
+                                mon->travel_path.clear();
+                                need_target = true;
+                            }
+                        }
+                    }
+                }
+
+                if (need_target && patrolling)
                 {
                     if (!_choose_random_patrol_target_grid(mon))
                     {
@@ -2685,14 +2777,39 @@ static void _handle_behaviour(monsters *mon)
                             // pathfinding to find the way back, and animals
                             // could decide to stop patrolling if the path
                             // was too long.
-
-                            mon->target_x = mon->patrol_point.x;
-                            mon->target_y = mon->patrol_point.y;
+                            monster_pathfind mp;
+                            if (mp.start_pathfind(mon, mon->patrol_point, true))
+                            {
+                                mon->travel_path = mp.calc_waypoints();
+                                if (!mon->travel_path.empty())
+                                {
+                                    mon->target_x = mon->travel_path[0].x;
+                                    mon->target_y = mon->travel_path[0].y;
+                                }
+                            }
+                            else
+                            {
+                                // Stop patrolling.
+                                mon->patrol_point = coord_def(0, 0);
+                            }
                         }
                     }
+                    else
+                    {
+#ifdef DEBUG_PATHFIND
+                        mprf("Monster %s (pp: %d, %d) is now patrolling to (%d, %d)",
+                             mon->name(DESC_PLAIN).c_str(),
+                             mon->patrol_point.x, mon->patrol_point.y,
+                             mon->target_x, mon->target_y);
+#endif
+                    }
                 }
-                else
+                else if (need_target)
                 {
+#ifdef DEBUG_PATHFIND
+                    if (!testbits( mon->flags, MF_BATTY ))
+                        mprf("Monster is wandering randomly.");
+#endif
                     mon->target_x = 10 + random2(GXM - 10);
                     mon->target_y = 10 + random2(GYM - 10);
                 }
@@ -2742,7 +2859,7 @@ static void _handle_behaviour(monsters *mon)
             if (isHealthy)
                 new_beh = BEH_SEEK;
 
-            // foe gone out of LOS?
+            // Foe gone out of LOS?
             if (!proxFoe)
             {
                 if ((isFriendly || proxPlayer) && !isNeutral && !patrolling)

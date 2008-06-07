@@ -51,7 +51,7 @@ ENDMAP
 # Watery exit 
 NAME: labyrinth_watery
 TAGS: minotaur generate_loot no_pool_fixup allow_dup
-MONS: minotaur
+MONS: patrolling minotaur
 SHUFFLE: def
 SUBST: d=~, e=~, f=., c:vvc
 MAP
@@ -70,7 +70,7 @@ ENDMAP
 # Green exit
 NAME: labyrinth_green
 TAGS: minotaur generate_loot allow_dup
-MONS: minotaur
+MONS: patrolling minotaur
 MAP
 ........
 .bbbbbb.
@@ -83,7 +83,7 @@ ENDMAP
 # Spiral exit
 NAME: labyrinth_spiral
 TAGS: minotaur generate_loot allow_dup
-MONS: minotaur
+MONS: patrolling minotaur
 SUBST: c : cvz, z = vc
 MAP
 ............
@@ -103,7 +103,7 @@ ENDMAP
 # Hidden exit, and trapped loot
 NAME: labyrinth_hidden_loot
 TAGS: minotaur generate_loot allow_dup
-MONS: minotaur
+MONS: patrolling minotaur
 NSUBST: d = 1 / %
 SUBST: c : cvv
 MAP
@@ -129,7 +129,7 @@ SHUFFLE: def, ghi, klm
 SUBST: d : c, e : ., f : c
 SUBST: g : c, h : ., i : c
 SUBST: k = <, l = ., m = .
-KMONS: < = minotaur
+KMONS: < = patrolling minotaur
 KFEAT: < = <
 SUBST: c : vvc
 
@@ -158,7 +158,7 @@ ENDMAP
 # Trapped exits - this is evil!
 NAME:    labyrinth_trapped
 TAGS:    minotaur generate_loot allow_dup
-MONS:    minotaur
+MONS:    patrolling minotaur
 NSUBST:  g = 1:. / *:c
 NSUBST:  D = 1:. / *:D
 KFEAT:   d = axe trap / dart trap / needle trap / blade trap
@@ -192,7 +192,7 @@ SUBST: g=., h=., i=., j=., k=., l=., m=.
 SUBST: G=., H=., I=., J=., K=., L=., M=.
 SUBST: Y=*, Z=*
 KFEAT: X = <
-KMONS: X = minotaur
+KMONS: X = patrolling minotaur
 KFEAT: S = granite_statue
 CHANCE: 2
 MAP

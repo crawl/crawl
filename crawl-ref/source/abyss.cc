@@ -68,7 +68,7 @@ static bool place_feature_near( const coord_def &centre,
 }
 
 // Public for abyss generation.
-void generate_abyss(bool spatter)
+void generate_abyss()
 {
     int i, j;                   // loop variables
     int temp_rand;              // probability determination {dlb}
