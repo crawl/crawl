@@ -1490,53 +1490,63 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     // Remember that most holy spells don't yet use powc!
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_DEMON:
+    case SPELL_DEMONIC_HORDE:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_GUARDIAN:
     case SPELL_SUMMON_DAEVA:
     case SPELL_SUMMON_UGLY_THING:
     {
         monster_type mon = MONS_PROGRAM_BUG;
+        int how_many = (spell == SPELL_DEMONIC_HORDE) ? 7 + random2(5)
+                                                      : 1;
 
-        switch (spell)
+        for (int i = 0; i < how_many; ++i)
         {
-            case SPELL_CALL_IMP:
-                mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
-                      (one_chance_in(7)) ? MONS_SHADOW_IMP
-                                         : MONS_IMP;
-                break;
-
-            case SPELL_SUMMON_DEMON:
-                mpr("You open a gate to Pandemonium!");
-                mon = summon_any_demon(DEMON_COMMON);
-                break;
-
-            case SPELL_SUMMON_ICE_BEAST:
-                mon = MONS_ICE_BEAST;
-                break;
-
-            case SPELL_SUMMON_GUARDIAN:
-                mon = MONS_ANGEL;
-                break;
-
-            case SPELL_SUMMON_DAEVA:
-                mon = MONS_DAEVA;
-                break;
-
-            // Starting here, there's a chance of monsters' being
-            // unfriendly.
-            case SPELL_SUMMON_UGLY_THING:
+            switch (spell)
             {
-                const int chance = std::max(6 - (powc / 12), 1);
-                mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
-                                              : MONS_UGLY_THING;
-                break;
+                case SPELL_CALL_IMP:
+                    mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
+                          (one_chance_in(7)) ? MONS_SHADOW_IMP
+                                             : MONS_IMP;
+                    break;
+
+                case SPELL_SUMMON_DEMON:
+                case SPELL_DEMONIC_HORDE:
+                    if (i == 0)
+                        mpr("You open a gate to Pandemonium!");
+                    mon = summon_any_demon(
+                        (spell == DEMONIC_HORDE) ? DEMON_LESSER
+                                                 : DEMON_COMMON);
+                    break;
+
+                case SPELL_SUMMON_ICE_BEAST:
+                    mon = MONS_ICE_BEAST;
+                    break;
+
+                case SPELL_SUMMON_GUARDIAN:
+                    mon = MONS_ANGEL;
+                    break;
+
+                case SPELL_SUMMON_DAEVA:
+                    mon = MONS_DAEVA;
+                    break;
+
+                // Starting here, there's a chance of monsters' being
+                // unfriendly.
+                case SPELL_SUMMON_UGLY_THING:
+                {
+                    const int chance = std::max(6 - (powc / 12), 1);
+                    mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
+                                                  : MONS_UGLY_THING;
+                    break;
+                }
+
+                default:
+                    break;
             }
 
-            default:
-                break;
+            summon_general_creature(powc, mon, BEH_FRIENDLY, false);
         }
-
-        summon_general_creature(powc, mon, BEH_FRIENDLY, false);
         break;
     }
 
@@ -1614,18 +1624,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         // staff of Dispater & Sceptre of Asmodeus
         if (!zapping(ZAP_HELLFIRE, powc, beam, true))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_DEMONIC_HORDE:
-        mpr("You open a gate to Pandemonium!");
-        {
-            const int num = 7 + random2(5);
-            for (int i = 0; i < num; ++i)
-            {
-                summon_general_creature(powc, summon_any_demon(DEMON_LESSER),
-                                        BEH_FRIENDLY, false);
-            }
-        }
         break;
 
     case SPELL_SUMMON_GREATER_DEMON:
