@@ -1567,8 +1567,10 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
         msg = "A very ugly thing appears.";
         break;
 
-    case MONS_DRAGON:
-        msg = "A dragon appears.";
+    case MONS_WRAITH:
+    case MONS_FREEZING_WRAITH:
+    case MONS_SPECTRAL_WARRIOR:
+        msg = "An insubstantial figure forms in the air.";
         break;
 
     case MONS_ANGEL:
@@ -1579,6 +1581,10 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
         msg = "You are momentarily dazzled by a brilliant golden light.";
         break;
 
+    case MONS_DRAGON:
+        msg = "A dragon appears.";
+        break;
+
     default:
     {
         msg = "A demon appears!";
@@ -1587,7 +1593,12 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
     }
 
     if (beha == BEH_HOSTILE)
-        msg += " It doesn't look very happy.";
+    {
+        if (mons_class_holiness(mon) == MH_UNDEAD)
+            msg = "You sense a hostile presence.";
+        else
+            msg += " It doesn't look very happy.";
+    }
 
     int monster =
         create_monster(
@@ -1604,7 +1615,19 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
         monsters *summon = &menv[monster];
 
-        if (mon == MONS_DAEVA)
+        if (mons_class_holiness(mon) == MH_UNDEAD)
+        {
+            //jmf: Kiku sometimes deflects this
+            if (!you.is_undead
+                && !(you.religion == GOD_KIKUBAAQUDGHA
+                    && (!player_under_penance()
+                        && you.piety >= piety_breakpoint(3)
+                        && you.piety > random2(MAX_PIETY))))
+            {
+                disease_player(25 + random2(50));
+            }
+        }
+        else if (mon == MONS_DAEVA)
             summon->flags |= MF_ATT_CHANGE_ATTEMPT;
     }
     else
@@ -1775,50 +1798,6 @@ bool summon_swarm(int pow, beh_type beha, bool god_gift)
 
     return (success);
 }
-
-void summon_undead(int pow)
-{
-    int temp_rand = 0;
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    int numsc = 1 + random2(pow) / 30 + random2(pow) / 30;
-    numsc = stepdown_value(numsc, 2, 2, 6, 8);  //see stuff.cc {dlb}
-
-    mpr("You call on the undead to aid you!");
-
-    for (int scount = 0; scount < numsc; ++scount)
-    {
-        temp_rand = random2(25);
-
-        mon = ((temp_rand > 8) ? MONS_WRAITH :           // 64%
-               (temp_rand > 3) ? MONS_FREEZING_WRAITH    // 20%
-                               : MONS_SPECTRAL_WARRIOR); // 16%
-
-        bool friendly = (random2(pow) > 5);
-
-        if (create_monster(
-                mgen_data(mon,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, 5,
-                          you.pos(),
-                          friendly ? you.pet_target : MHITYOU)) != -1)
-        {
-            if (friendly)
-                mpr("An insubstantial figure forms in the air.");
-            else
-                mpr("You sense a hostile presence.");
-        }
-    }
-
-    //jmf: Kiku sometimes deflects this
-    if (!you.is_undead
-        && !(you.religion == GOD_KIKUBAAQUDGHA
-             && (!player_under_penance()
-                 && you.piety >= piety_breakpoint(3)
-                 && you.piety > random2(MAX_PIETY))))
-    {
-        disease_player( 25 + random2(50) );
-    }
-}                               // end summon_undead()
 
 void summon_things( int pow )
 {

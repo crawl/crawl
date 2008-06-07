@@ -1446,10 +1446,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         vampiric_drain(powc, spd);
         break;
 
-    case SPELL_SUMMON_WRAITHS:
-        summon_undead(powc);
-        break;
-
     case SPELL_DETECT_ITEMS:
         mprf("You detect %s", (detect_items(powc) > 0) ? "items!"
                                                        : "nothing.");
@@ -1492,8 +1488,10 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_UGLY_THING:
+    case SPELL_SUMMON_WRAITHS:
     case SPELL_SUMMON_GUARDIAN:
     case SPELL_SUMMON_DAEVA:
+    case SPELL_SUMMON_DRAGON:
     {
         bool quiet =
             (spell == SPELL_SUMMON_BUTTERFLIES
@@ -1507,18 +1505,21 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                 || spell == SPELL_DEMONIC_HORDE
                 || spell == SPELL_CALL_CANINE_FAMILIAR
                 || spell == SPELL_SUMMON_UGLY_THING)   ? 3 :
-            (spell == SPELL_SUMMON_DRAGON)             ? 5
+            (spell == SPELL_SUMMON_WRAITHS
+                || spell == SPELL_SUMMON_DRAGON)       ? 5
                                                        : -1;
 
         int numsc =
             (spell == SPELL_SUMMON_BUTTERFLIES
-                || spell == SPELL_SUMMON_SCORPIONS) ? 3
+                || spell == SPELL_SUMMON_SCORPIONS) ? 3 :
+            (spell == SPELL_SUMMON_WRAITHS)         ? 5
                                                     : -1;
 
         int how_many =
             (spell == SPELL_SUMMON_BUTTERFLIES) ? std::max(15, 4 + random2(3) + random2(powc) / 10) :
             (spell == SPELL_SUMMON_SCORPIONS)   ? stepdown_value(1 + random2(powc) / 10 + random2(powc) / 10, 2, 2, 6, 8) :
-            (spell == SPELL_DEMONIC_HORDE)      ? 7 + random2(5)
+            (spell == SPELL_DEMONIC_HORDE)      ? 7 + random2(5) :
+            (spell == SPELL_SUMMON_WRAITHS)     ? stepdown_value(1 + random2(powc) / 30 + random2(powc) / 30, 2, 2, 6, 8)
                                                 : 1;
 
         for (int i = 0; i < how_many; ++i)
@@ -1541,8 +1542,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
                 case SPELL_SUMMON_DEMON:
                 case SPELL_DEMONIC_HORDE:
-                    if (i == 0)
-                        mpr("You open a gate to Pandemonium!");
                     mon = summon_any_demon(
                             (spell == SPELL_DEMONIC_HORDE) ? DEMON_LESSER
                                                            : DEMON_COMMON);
@@ -1592,9 +1591,14 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                     break;
                 }
 
-                case SPELL_SUMMON_DRAGON:
-                    mon = MONS_DRAGON;
+                case SPELL_SUMMON_WRAITHS:
+                {
+                    const int chance = random2(25);
+                    mon = ((chance > 8) ? MONS_WRAITH :           // 64%
+                           (chance > 3) ? MONS_FREEZING_WRAITH    // 20%
+                                        : MONS_SPECTRAL_WARRIOR); // 16%
                     break;
+                }
 
                 case SPELL_SUMMON_GUARDIAN:
                     mon = MONS_ANGEL;
@@ -1604,8 +1608,18 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                     mon = MONS_DAEVA;
                     break;
 
+                case SPELL_SUMMON_DRAGON:
+                    mon = MONS_DRAGON;
+                    break;
+
                 default:
                     break;
+            }
+
+            if (i == 0 && (spell == SPELL_SUMMON_DEMON ||
+                spell == SPELL_DEMONIC_HORDE))
+            {
+                mpr("You open a gate to Pandemonium!");
             }
 
             summon_general_creature(powc, quiet, mon, BEH_FRIENDLY,

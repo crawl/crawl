@@ -168,13 +168,6 @@ void summon_things(int pow);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
-void summon_undead(int pow);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
 void turn_undead(int pow);      // what should I use for pow?
