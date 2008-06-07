@@ -50,7 +50,7 @@ enum ability_type
     ABIL_BREATHE_STEAM,
     ABIL_FLY,                          //   15
     ABIL_SUMMON_MINOR_DEMON,
-    ABIL_SUMMON_DEMONS,
+    ABIL_SUMMON_DEMON,
     ABIL_HELLFIRE,
     ABIL_TORMENT,
     ABIL_RAISE_DEAD,                   //   20

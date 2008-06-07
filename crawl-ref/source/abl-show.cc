@@ -193,7 +193,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
     { ABIL_SUMMON_MINOR_DEMON, "Summon Minor Demon", 3, 3, 75, 0, ABFLAG_NONE },
-    { ABIL_SUMMON_DEMONS, "Summon Demons", 5, 5, 150, 0, ABFLAG_NONE },
+    { ABIL_SUMMON_DEMON, "Summon Demon", 5, 5, 150, 0, ABFLAG_NONE },
     { ABIL_HELLFIRE, "Hellfire", 8, 8, 200, 0, ABFLAG_NONE },
     { ABIL_TORMENT, "Torment", 9, 0, 250, 0, ABFLAG_PAIN },
     { ABIL_RAISE_DEAD, "Raise Dead", 5, 5, 150, 0, ABFLAG_NONE },
@@ -557,7 +557,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 35 - you.experience_level;
         break;
 
-    case ABIL_SUMMON_DEMONS:
+    case ABIL_SUMMON_DEMON:
         failure = 40 - you.experience_level;
         break;
 
@@ -1282,7 +1282,7 @@ static bool _do_ability(const ability_def& abil)
                                 BEH_FRIENDLY);
         break;
 
-    case ABIL_SUMMON_DEMONS:
+    case ABIL_SUMMON_DEMON:
         summon_general_creature(you.experience_level * 4, false,
                                 summon_any_demon(DEMON_COMMON),
                                 BEH_FRIENDLY);
@@ -2062,7 +2062,7 @@ std::vector<talent> your_talents( bool check_confused )
         _add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused );
 
     if (player_mutation_level(MUT_SUMMON_DEMONS))
-        _add_talent(talents, ABIL_SUMMON_DEMONS, check_confused );
+        _add_talent(talents, ABIL_SUMMON_DEMON, check_confused );
 
     if (player_mutation_level(MUT_HURL_HELLFIRE))
         _add_talent(talents, ABIL_HELLFIRE, check_confused );
