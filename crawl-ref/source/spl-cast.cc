@@ -1004,6 +1004,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         _surge_power(spell);
 
     // Added this so that the passed in powc can have meaning -- bwr
+    // Remember that most holy spells don't yet use powc!
     if (powc == 0)
         powc = calc_spell_power( spell, true );
 
@@ -1519,11 +1520,16 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_wraiths(powc);
         break;
 
-    // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_GUARDIAN:
+        cast_summon_guardian(powc);
+        break;
+
     case SPELL_SUMMON_DAEVA:
+        cast_summon_daeva(powc);
+        break;
+
     case SPELL_SUMMON_DRAGON:
-        summon_general_creature_spell(spell, powc);
+        cast_summon_dragon(powc);
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:

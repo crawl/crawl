@@ -1890,24 +1890,32 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
 }
 
 static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
-                                  int dur, bool friendly, bool charmed)
+                                  int dur, bool friendly, bool charmed,
+                                  int how_many)
 {
     bool success = false;
 
-    monster_type mon = summon_any_demon(dct);
+    mpr("You open a gate to Pandemonium!");
 
-    if (create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY :
-                          charmed ? BEH_CHARMED : BEH_HOSTILE,
-                      dur, you.pos(),
-                      friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    for (int i = 0; i < how_many; ++i)
     {
-        success = true;
+        monster_type mon = summon_any_demon(dct);
 
-        mprf("A demon appears!%s",
-             friendly ? "" : " It doesn't look very happy.");
+        if (create_monster(
+                mgen_data(mon,
+                          friendly ? BEH_FRIENDLY :
+                              charmed ? BEH_CHARMED : BEH_HOSTILE,
+                          dur, you.pos(),
+                          friendly ? you.pet_target : MHITYOU,
+                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            success = true;
+
+            mprf("A demon appears!%s",
+                 friendly ? "" :
+                     charmed ? " You don't feel so good about this..."
+                             : " It doesn't look very happy.");
+        }
     }
 
     if (!success)
@@ -1920,30 +1928,18 @@ bool cast_summon_demon(int pow, bool god_gift)
 {
     mpr("You open a gate to Pandemonium!");
 
-    return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
-                                 std::min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false);
+    return summon_demon(pow, god_gift);
 }
 
 bool cast_demonic_horde(int pow, bool god_gift)
 {
-    bool success = false;
-
     const int how_many = 7 + random2(5);
 
     mpr("You open a gate to Pandemonium!");
 
-    for (int i = 0; i < how_many; ++i)
-    {
-        if (_summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
-                                  std::min(2 + (random2(pow) / 4), 6),
-                                  random2(pow) > 3, false))
-        {
-            success = true;
-        }
-    }
-
-    return (success);
+    return _summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
+                                 std::min(2 + (random2(pow) / 4), 6),
+                                 random2(pow) > 3, false, how_many);
 }
 
 bool cast_summon_ice_beast(int pow, bool god_gift)
@@ -2002,24 +1998,12 @@ bool cast_summon_ugly_thing(int pow, bool god_gift)
 
 bool cast_summon_greater_demon(int pow, bool god_gift)
 {
-    bool success = false;
+    bool charmed = (random2(pow) > 5);
 
     mpr("You open a gate to Pandemonium!");
 
-    bool charmed = (random2(pow) > 5);
-
-    if (_summon_demon_wrapper(pow, god_gift, DEMON_GREATER,
-                              5, false, charmed))
-    {
-        success = true;
-
-        mpr("A demon appears!");
-
-        if (charmed)
-            mpr("You don't feel so good about this...");
-    }
-
-    return (success);
+    return _summon_demon_wrapper(pow, god_gift, DEMON_GREATER,
+                                 5, false, charmed, 1);
 }
 
 bool cast_summon_wraiths(int pow, bool god_gift)
@@ -2061,100 +2045,111 @@ bool cast_summon_wraiths(int pow, bool god_gift)
     return (success);
 }
 
-bool summon_general_creature_spell(spell_type spell, int pow,
-                                   bool god_gift)
+static bool _summon_holy_being_wrapper(int pow, bool god_gift,
+                                       holy_being_class_type hbct)
 {
     bool success = false;
 
-    monster_type mon = MONS_PROGRAM_BUG;
+    monster_type mon = summon_any_holy_being(hbct);
 
-    int hostile = (spell == SPELL_SUMMON_DRAGON) ? 5
-                                                 : -1;
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    switch (spell)
-    {
-        case SPELL_SUMMON_GUARDIAN:
-            mon = MONS_ANGEL;
-            break;
+    mprf("You open a gate to %s's realm!",
+         (mon == MONS_DAEVA) ? god_name(GOD_SHINING_ONE).c_str()
+                             : god_name(GOD_ZIN).c_str());
 
-        case SPELL_SUMMON_DAEVA:
-            mon = MONS_DAEVA;
-            break;
-
-        case SPELL_SUMMON_DRAGON:
-            mon = MONS_DRAGON;
-            break;
-
-        default:
-            break;
-    }
-
-    if (summon_general_creature(pow, false, mon, BEH_FRIENDLY,
-                                hostile, -1, false))
+    int monster = create_monster(
+                      mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
+                                you.pet_target,
+                                god_gift ? MF_GOD_GIFT : 0));
+    if (monster != -1)
     {
         success = true;
+
+        monsters *summon = &menv[monster];
+        summon->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+        mprf("You are momentarily dazzled by a brilliant %s light.",
+             (mon == MONS_DAEVA) ? "golden"
+                                 : "white");
     }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
 }
 
-bool summon_general_creature(int pow, bool quiet, monster_type mon,
-                             beh_type beha, int hostile, int dur,
-                             bool god_gift)
+bool cast_summon_guardian(int pow, bool god_gift)
 {
-    if (beha != BEH_HOSTILE && random2(pow) > hostile)
-        beha = BEH_HOSTILE;
+    return _summon_holy_being_wrapper(pow, god_gift, HOLY_BEING_ANGEL);
+}
 
-    if (dur == -1)
-        dur = std::min(2 + (random2(pow) / 4), 6);
+bool cast_summon_daeva(int pow, bool god_gift)
+{
+    return _summon_holy_being_wrapper(pow, god_gift, HOLY_BEING_DAEVA);
+}
 
-    unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
-
+bool cast_summon_dragon(int pow, bool god_gift)
+{
+    // Removed the chance of multiple dragons... one should be more
+    // than enough, and if it isn't, the player can cast again...
+    // especially since these aren't on the Abjuration plan... they'll
+    // last until they die (maybe that should be changed, but this is
+    // a very high level spell so it might be okay).  -- bwr
     bool success = false;
 
-    std::string msg = "";
+    const bool friendly = (random2(pow) > 5);
 
-    switch (mon)
+    if (create_monster(
+            mgen_data(MONS_DRAGON,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, 3,
+                      you.pos(),
+                      friendly ? you.pet_target : MHITYOU)) != -1)
     {
-    case MONS_ANGEL:
-        msg = "You open a gate to Zin's realm!";
-        break;
-
-    case MONS_DAEVA:
-        msg = "You are momentarily dazzled by a brilliant golden light.";
-        break;
-
-    case MONS_DRAGON:
-        msg = "A dragon appears.";
-        break;
-
-    default:
-    {
-        msg = "A demon appears!";
-        break;
-    }
-    }
-
-    if (beha == BEH_HOSTILE)
-        msg += " It doesn't look very happy.";
-
-    int monster =
-        create_monster(
-            mgen_data(mon, beha, dur,
-                      you.pos(), hitting,
-                      god_gift ? MF_GOD_GIFT : 0));
-
-    if (monster != -1)
-    {
-        if (!quiet)
-            mprf("%s", msg.c_str());
-
         success = true;
 
-        monsters *summon = &menv[monster];
+        mprf("A dragon appears.%s",
+            friendly ? "" : " It doesn't look very happy.");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-        if (mon == MONS_ANGEL || mon == MONS_DAEVA)
-            summon->flags |= MF_ATT_CHANGE_ATTEMPT;
+    return (success);
+}
+
+bool summon_minor_demon(int pow, bool god_gift)
+{
+    return _summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
+                                 std::min(2 + (random2(pow) / 4), 6),
+                                 random2(pow) > 3, false, 1);
+}
+
+bool summon_demon(int pow, bool god_gift)
+{
+    return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
+                                 std::min(2 + (random2(pow) / 4), 6),
+                                 random2(pow) > 3, false, 1);
+}
+
+bool summon_specific_demon(monster_type mon, int pow, bool god_gift)
+{
+    bool success = false;
+
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
+
+    const bool friendly = (random2(pow) > 3);
+
+    if (create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mprf("A demon appears!%s",
+             friendly ? "" : " It doesn't look very happy.");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

@@ -163,12 +163,17 @@ bool cast_summon_greater_demon(int pow, bool god_gift = false);
 
 bool cast_summon_wraiths(int pow, bool god_gift = false);
 
-bool summon_general_creature_spell(spell_type spell, int pow,
-                                   bool god_gift = false);
+bool cast_summon_guardian(int pow, bool god_gift = false);
 
-bool summon_general_creature(int pow, bool quiet, monster_type mon,
-                             beh_type beha, int hostile = -1, int dur = -1,
-                             bool god_gift = false);
+bool cast_summon_daeva(int pow, bool god_gift = false);
+
+bool cast_summon_dragon(int pow, bool god_gift = false);
+
+bool summon_minor_demon(int pow, bool god_gift = false);
+
+bool summon_demon(int pow, bool god_gift = false);
+
+bool summon_specific_demon(monster_type mon, int pow, bool god_gift = false);
 
 
 // last updated 24may2000 {dlb}
