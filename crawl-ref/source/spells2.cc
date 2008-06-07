@@ -1532,52 +1532,56 @@ void summon_scorpions(int pow)
 }                               // end summon_scorpions()
 
 bool summon_general_creature(int pow, monster_type mon, beh_type beha,
-                             bool god_gift)
+                             int numsc, bool god_gift)
 {
-    int numsc = std::min(2 + (random2(pow) / 4), 6);
     unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
     bool success = false;
 
+    std::string msg = "";
+
     switch (mon)
     {
-    case MONS_IMP:
-    case MONS_WHITE_IMP:
-    case MONS_SHADOW_IMP:
-    {
-        const char *where = (mon == MONS_SHADOW_IMP) ? "the shadows" :
-                            (mon == MONS_WHITE_IMP)  ? "a puff of frigid air"
-                                                     : "a puff of flame";
-
-        mprf("A beastly little devil appears in %s.", where);
+    case MONS_BUTTERFLY:
         break;
-    }
+
+    case MONS_IMP:
+        msg = "A beastly little devil appears in a puff of flame.";
+        break;
+
+    case MONS_WHITE_IMP:
+        msg = "A beastly little devil appears in a puff of frigid air.";
+        break;
+
+    case MONS_SHADOW_IMP:
+        msg = "A shadowy apparition takes form in the air.";
+        break;
 
     case MONS_ICE_BEAST:
-        mpr("A chill wind blows around you.");
+        msg = "A chill wind blows around you.";
         break;
 
     case MONS_ANGEL:
-        mpr("You open a gate to Zin's realm!");
+        msg = "You open a gate to Zin's realm!";
         break;
 
     case MONS_DAEVA:
-        mpr("You are momentarily dazzled by a brilliant golden light.");
+        msg = "You are momentarily dazzled by a brilliant golden light.";
         break;
 
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
     default:
     {
-        bool friendly = (random2(pow) > 3);
-        const char *what = (mon == MONS_VERY_UGLY_THING) ? " very ugly thing" :
-                           (mon == MONS_UGLY_THING)      ? "n ugly thing"
-                                                         : " demon";
+        msg = (mon == MONS_VERY_UGLY_THING) ? "A very ugly thing appears." :
+              (mon == MONS_UGLY_THING)      ? "An ugly thing appears."
+                                            : "A demon appears!";
 
-        mprf("A%s appears.%s", what,
-            friendly ? "" : " It doesn't look very happy.");
+        bool friendly = (random2(pow) > 3);
 
         if (!friendly)
         {
+            msg += " It doesn't look very happy.";
+
             beha = BEH_HOSTILE;
             hitting = MHITYOU;
         }
@@ -1594,6 +1598,9 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
     if (monster != -1)
     {
         success = true;
+
+        if (msg != "")
+            mprf("%s", msg.c_str());
 
         monsters *summon = &menv[monster];
 
@@ -1685,7 +1692,7 @@ bool summon_berserker(int pow, beh_type beha, bool god_gift)
     }
 
     return (success);
-}   // end summon_berserker()
+}
 
 bool summon_swarm(int pow, beh_type beha, bool god_gift)
 {

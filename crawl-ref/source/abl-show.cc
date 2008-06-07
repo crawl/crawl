@@ -1279,13 +1279,13 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_SUMMON_MINOR_DEMON:
         summon_general_creature(you.experience_level * 4,
                                 summon_any_demon(DEMON_LESSER),
-                                BEH_FRIENDLY, false);
+                                BEH_FRIENDLY);
         break;
 
     case ABIL_SUMMON_DEMONS:
         summon_general_creature(you.experience_level * 4,
                                 summon_any_demon(DEMON_COMMON),
-                                BEH_FRIENDLY, false);
+                                BEH_FRIENDLY);
         break;
 
     case ABIL_HELLFIRE:

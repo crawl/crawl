@@ -1488,22 +1488,32 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     // Remember that most holy spells don't yet use powc!
+    case SPELL_SUMMON_BUTTERFLIES:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_DEMON:
     case SPELL_DEMONIC_HORDE:
     case SPELL_SUMMON_ICE_BEAST:
+    case SPELL_SUMMON_UGLY_THING:
     case SPELL_SUMMON_GUARDIAN:
     case SPELL_SUMMON_DAEVA:
-    case SPELL_SUMMON_UGLY_THING:
     {
         monster_type mon = MONS_PROGRAM_BUG;
-        int how_many = (spell == SPELL_DEMONIC_HORDE) ? 7 + random2(5)
-                                                      : 1;
+        int numsc =
+            (spell == SPELL_SUMMON_BUTTERFLIES)  ? 3
+                                                 : std::min(2 + (random2(powc) / 4), 6);
+        int how_many =
+            (spell == SPELL_SUMMON_BUTTERFLIES)  ? std::max(15, 4 + random2(3) + random2(powc) / 10) :
+            (spell == SPELL_DEMONIC_HORDE)       ? 7 + random2(5)
+                                                 : 1;
 
         for (int i = 0; i < how_many; ++i)
         {
             switch (spell)
             {
+                case SPELL_SUMMON_BUTTERFLIES:
+                    mon = MONS_BUTTERFLY;
+                    break;
+
                 case SPELL_CALL_IMP:
                     mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
                           (one_chance_in(7)) ? MONS_SHADOW_IMP
@@ -1515,13 +1525,21 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                     if (i == 0)
                         mpr("You open a gate to Pandemonium!");
                     mon = summon_any_demon(
-                        (spell == SPELL_DEMONIC_HORDE) ? DEMON_LESSER
-                                                       : DEMON_COMMON);
+                            (spell == SPELL_DEMONIC_HORDE) ? DEMON_LESSER
+                                                           : DEMON_COMMON);
                     break;
 
                 case SPELL_SUMMON_ICE_BEAST:
                     mon = MONS_ICE_BEAST;
                     break;
+
+                case SPELL_SUMMON_UGLY_THING:
+                {
+                    const int chance = std::max(6 - (powc / 12), 1);
+                    mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
+                                                  : MONS_UGLY_THING;
+                    break;
+                }
 
                 case SPELL_SUMMON_GUARDIAN:
                     mon = MONS_ANGEL;
@@ -1531,21 +1549,11 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                     mon = MONS_DAEVA;
                     break;
 
-                // Starting here, there's a chance of monsters' being
-                // unfriendly.
-                case SPELL_SUMMON_UGLY_THING:
-                {
-                    const int chance = std::max(6 - (powc / 12), 1);
-                    mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
-                                                  : MONS_UGLY_THING;
-                    break;
-                }
-
                 default:
                     break;
             }
 
-            summon_general_creature(powc, mon, BEH_FRIENDLY, false);
+            summon_general_creature(powc, mon, BEH_FRIENDLY, numsc, false);
         }
         break;
     }
@@ -1934,10 +1942,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     case SPELL_FORESCRY:
         cast_forescry(powc);
-        break;
-
-    case SPELL_SUMMON_BUTTERFLIES:
-        cast_summon_butterflies(powc);
         break;
 
     case SPELL_EXCRUCIATING_WOUNDS:

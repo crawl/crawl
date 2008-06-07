@@ -789,7 +789,7 @@ void random_uselessness(int scroll_slot)
 
     case 6:
         mpr("You hear the tinkle of a tiny bell.", MSGCH_SOUND);
-        cast_summon_butterflies( 100 );
+        your_spells(SPELL_SUMMON_BUTTERFLIES, 100, false);
         break;
 
     case 7:

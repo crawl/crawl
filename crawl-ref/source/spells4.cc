@@ -414,21 +414,6 @@ void cast_detect_secret_doors(int pow)
     mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
 }                               // end cast_detect_secret_doors()
 
-void cast_summon_butterflies(int pow)
-{
-    // explicitly limiting the number
-    int num = 4 + random2(3) + random2( pow ) / 10;
-    if (num > 16)
-        num = 16;
-
-    for (int scount = 1; scount < num; scount++)
-    {
-        create_monster(
-            mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, 3,
-                      you.pos(), you.pet_target));
-    }
-}
-
 void cast_summon_large_mammal(int pow)
 {
     monster_type mon;
