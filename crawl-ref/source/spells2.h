@@ -141,8 +141,6 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-void summon_scorpions(int pow);
-
 void summon_animals(int pow);
 
 

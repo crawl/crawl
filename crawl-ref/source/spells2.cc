@@ -1509,28 +1509,6 @@ void summon_animals(int pow)
     }
 }
 
-void summon_scorpions(int pow)
-{
-    int numsc = 1 + random2(pow) / 10 + random2(pow) / 10;
-
-    numsc = stepdown_value(numsc, 2, 2, 6, 8);  //see stuff.cc - 12jan2000 {dlb}
-
-    for (int scount = 0; scount < numsc; ++scount)
-    {
-        bool friendly = (random2(pow) > 3);
-
-        if (create_monster(
-                mgen_data(MONS_SCORPION,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                          3, you.pos(),
-                          friendly ? you.pet_target : MHITYOU)) != -1)
-        {
-            mprf("A scorpion appears.%s",
-                friendly ? "" : " It doesn't look very happy.");
-        }
-    }
-}                               // end summon_scorpions()
-
 bool summon_general_creature(int pow, bool quiet, monster_type mon,
                              beh_type beha, int unfriendly,
                              int numsc, bool god_gift)
@@ -1551,6 +1529,10 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
     {
     case MONS_BUTTERFLY:
         msg = "A butterfly appears.";
+        break;
+
+    case MONS_SCORPION:
+        msg = "A scorpion appears.";
         break;
 
     case MONS_IMP:
@@ -1625,7 +1607,7 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
         if (mon == MONS_DAEVA)
             summon->flags |= MF_ATT_CHANGE_ATTEMPT;
     }
-    else if (!quiet)
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
