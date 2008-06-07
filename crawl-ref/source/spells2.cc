@@ -1823,8 +1823,7 @@ bool cast_call_imp(int pow, bool god_gift)
             (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air."
                                      : "A beastly little devil appears in a puff of flame.");
     }
-
-    if (!success)
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
@@ -1884,8 +1883,7 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
         mprf("A canine appears!%s",
              friendly ? "" : " It doesn't look very happy.");
     }
-
-    if (!success)
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
@@ -1965,8 +1963,7 @@ bool cast_summon_ice_beast(int pow, bool god_gift)
 
         mpr("A chill wind blows around you.");
     }
-
-    if (!success)
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
@@ -1997,8 +1994,7 @@ bool cast_summon_ugly_thing(int pow, bool god_gift)
                                            : "An ugly thing appears.%s",
              friendly ? "" : " It doesn't look very happy.");
     }
-
-    if (!success)
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
