@@ -1805,7 +1805,7 @@ void summon_undead(int pow)
         && !(you.religion == GOD_KIKUBAAQUDGHA
              && (!player_under_penance()
                  && you.piety >= piety_breakpoint(3)
-                 && random2(200) <= you.piety)))
+                 && you.piety > random2(MAX_PIETY))))
     {
         disease_player( 25 + random2(50) );
     }
