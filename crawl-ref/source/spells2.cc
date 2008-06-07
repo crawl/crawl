@@ -1660,6 +1660,159 @@ void summon_animals(int pow)
     }
 }
 
+bool summon_general_creature_spell(spell_type spell, int pow,
+                                   bool god_gift)
+{
+    bool success = false;
+
+    bool quiet = (spell == SPELL_SUMMON_BUTTERFLIES
+                    || spell == SPELL_CALL_CANINE_FAMILIAR);
+
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    beh_type beha =
+        (spell == SPELL_SUMMON_GREATER_DEMON) ? BEH_CHARMED
+                                              : BEH_FRIENDLY;
+
+    int hostile = (spell == SPELL_SUMMON_SCORPIONS
+                    || spell == SPELL_SUMMON_DEMON
+                    || spell == SPELL_DEMONIC_HORDE
+                    || spell == SPELL_CALL_CANINE_FAMILIAR
+                    || spell == SPELL_SUMMON_UGLY_THING) ? 3 :
+                  (spell == SPELL_SUMMON_GREATER_DEMON
+                    || spell == SPELL_SUMMON_WRAITHS
+                    || spell == SPELL_SUMMON_DRAGON)     ? 5
+                                                         : -1;
+
+    int numsc = (spell == SPELL_SUMMON_BUTTERFLIES
+                    || spell == SPELL_SUMMON_SCORPIONS) ? 3 :
+                (spell == SPELL_SUMMON_GREATER_DEMON
+                    || spell == SPELL_SUMMON_WRAITHS)   ? 5
+                                                        : -1;
+
+    int how_many = (spell == SPELL_SUMMON_BUTTERFLIES) ?
+                       std::max(15, 4 + random2(3) + random2(pow) / 10) :
+                   (spell == SPELL_SUMMON_SCORPIONS)   ?
+                       stepdown_value(1 + random2(pow) / 10 + random2(pow) / 10, 2, 2, 6, 8) :
+                   (spell == SPELL_DEMONIC_HORDE)      ?
+                       7 + random2(5) :
+                   (spell == SPELL_SUMMON_WRAITHS)     ?
+                       stepdown_value(1 + random2(pow) / 30 + random2(pow) / 30, 2, 2, 6, 8)
+                                                       : 1;
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        switch (spell)
+        {
+            case SPELL_SUMMON_BUTTERFLIES:
+                mon = MONS_BUTTERFLY;
+                break;
+
+            case SPELL_SUMMON_SCORPIONS:
+                mon = MONS_SCORPION;
+                break;
+
+            case SPELL_CALL_IMP:
+                mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
+                      (one_chance_in(7)) ? MONS_SHADOW_IMP
+                                         : MONS_IMP;
+                break;
+
+            case SPELL_SUMMON_DEMON:
+            case SPELL_DEMONIC_HORDE:
+            case SPELL_SUMMON_GREATER_DEMON:
+                mon = summon_any_demon(
+                        (spell == SPELL_SUMMON_GREATER_DEMON) ? DEMON_GREATER :
+                        (spell == SPELL_SUMMON_DEMON)         ? DEMON_COMMON
+                                                              : DEMON_LESSER);
+                break;
+
+            case SPELL_CALL_CANINE_FAMILIAR:
+            {
+                const int chance = random2(pow);
+                if (chance < 10)
+                    mon = MONS_JACKAL;
+                else if (chance < 15)
+                    mon = MONS_HOUND;
+                else
+                {
+                    switch (chance % 7)
+                    {
+                    case 0:
+                        if (one_chance_in(you.species == SP_HILL_ORC ? 3 : 6))
+                            mon = MONS_WARG;
+                        else
+                            mon = MONS_WOLF;
+                        break;
+                    case 1:
+                    case 2:
+                        mon = MONS_WAR_DOG;
+                        break;
+                    case 3:
+                    case 4:
+                        mon = MONS_HOUND;
+                        break;
+                    default:
+                        mon = MONS_JACKAL;
+                        break;
+                    }
+                }
+            }
+
+            case SPELL_SUMMON_ICE_BEAST:
+                mon = MONS_ICE_BEAST;
+                break;
+
+            case SPELL_SUMMON_UGLY_THING:
+            {
+                const int chance = std::max(6 - (pow / 12), 1);
+                mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
+                                              : MONS_UGLY_THING;
+                break;
+            }
+
+            case SPELL_SUMMON_WRAITHS:
+            {
+                const int chance = random2(25);
+                mon = ((chance > 8) ? MONS_WRAITH :           // 64%
+                       (chance > 3) ? MONS_FREEZING_WRAITH    // 20%
+                                    : MONS_SPECTRAL_WARRIOR); // 16%
+                break;
+            }
+
+            case SPELL_SUMMON_GUARDIAN:
+                mon = MONS_ANGEL;
+                break;
+
+            case SPELL_SUMMON_DAEVA:
+                mon = MONS_DAEVA;
+                break;
+
+            case SPELL_SUMMON_DRAGON:
+                mon = MONS_DRAGON;
+                break;
+
+            default:
+                break;
+        }
+
+        if (i == 0 && (spell == SPELL_SUMMON_DEMON
+            || spell == SPELL_DEMONIC_HORDE
+            || spell == SPELL_SUMMON_GREATER_DEMON))
+        {
+            mpr("You open a gate to Pandemonium!");
+        }
+
+        if (summon_general_creature(pow, quiet, mon, beha,
+                                    hostile, numsc, false))
+        {
+            success = true;
+        }
+    }
+
+    return success;
+}
+
 bool summon_general_creature(int pow, bool quiet, monster_type mon,
                              beh_type beha, int hostile,
                              int numsc, bool god_gift)
