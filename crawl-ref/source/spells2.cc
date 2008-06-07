@@ -2111,7 +2111,7 @@ bool summon_swarm(int pow, beh_type beha, bool god_gift)
     return (success);
 }
 
-void summon_things( int pow )
+void summon_things(int pow)
 {
     int big_things = 0;
 

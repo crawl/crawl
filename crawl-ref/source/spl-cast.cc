@@ -913,7 +913,7 @@ static bool _spell_is_uncastable(spell_type spell)
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
-spret_type your_spells( spell_type spell, int powc, bool allow_fail )
+spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 {
     struct dist spd;
     struct bolt beam;

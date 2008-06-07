@@ -65,8 +65,7 @@ void inspect_spells();
 /* ***********************************************************************
  * called from: ability - debug - it_use3 - spell
  * *********************************************************************** */
-spret_type your_spells( spell_type spell, int powc = 0,
-                        bool allow_fail = true );
+spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
