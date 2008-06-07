@@ -438,6 +438,156 @@ int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
     return rc;
 }
 
+// Try to equip the zombie/skeleton with the objects it died with.
+// This excludes items which were dropped by the player onto the corpse,
+// and corpses which were picked up and moved by the player, so the player
+// can't equip their undead slaves with items of their choice.
+//
+// The item selection logic has one problem: if a first monster without
+// any items dies and leaves a corpse, and then a second monster with
+// items dies on the same spot but doesn't leave a corpse, then the
+// undead can be equipped with the second monster's items if the second
+// monster is either of the same type as the first, or if the second
+// monster wasn't killed by the player or a player's pet.
+static void _equip_undead( int x, int y, int corps, int monster, int monnum)
+{
+// Delay this until after 0.4
+#if 0
+    monsters* mon = &menv[monster];
+
+    monster_type type = static_cast<monster_type>(monnum);
+
+    if (mons_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
+        return;
+
+    // If the player picked up and dropped the corpse then all its
+    // original equipment fell off.
+    if (mitm[corps].flags & ISFLAG_DROPPED)
+        return;
+
+    // A monster's corpse is last in the linked list after its items,
+    // so (for example) the first item after the second-to-last corpse
+    // is the first item belonging to the last corpse.
+    int objl      = igrd[x][y];
+    int first_obj = NON_ITEM;
+
+    while (objl != NON_ITEM && objl != corps)
+    {
+        item_def item(mitm[objl]);
+
+        if (item.base_type == OBJ_CORPSES)
+        {
+            first_obj = NON_ITEM;
+            continue;
+        }
+
+        if (first_obj == NON_ITEM)
+            first_obj = objl;
+
+        objl = item.link;
+    }
+
+    ASSERT(objl == corps);
+
+    if (first_obj == NON_ITEM)
+        return;
+
+    // Iterate backwards over the list, since the items earlier in the
+    // linked list were dropped most recently and hence more likely to
+    // be items the monster didn't die with.
+    std::vector<int> item_list;
+    objl = first_obj;
+    while (objl != NON_ITEM && objl != corps)
+    {
+        item_list.push_back(objl);
+        objl = mitm[objl].link;
+    }
+
+    for (int i = item_list.size() - 1; i >= 0; i--)
+    {
+        objl = item_list[i];
+        item_def &item(mitm[objl]);
+
+        // Stop equipping monster if the item probably didn't originally
+        // belong to the monster.
+        if ( (origin_known(item) && (item.orig_monnum - 1) != monnum)
+            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
+            || item.base_type == OBJ_CORPSES)
+        {
+            return;
+        }
+
+        mon_inv_type mslot;
+
+        switch(item.base_type)
+        {
+        case OBJ_WEAPONS:
+            if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
+            {
+                if (mons_wields_two_weapons(type))
+                    mslot = MSLOT_ALT_WEAPON;
+                else
+                {
+                    if (is_range_weapon(mitm[mon->inv[MSLOT_WEAPON]])
+                        == is_range_weapon(item))
+                    {
+                        // Two different items going into the same
+                        // slot indicate that this and further items
+                        // weren't equipment the monster died with.
+                        return;
+                    }
+                    else
+                        // The undead are too stupid to switch between weapons.
+                        continue;
+                }
+            }
+            else
+                mslot = MSLOT_WEAPON;
+            break;
+        case OBJ_ARMOUR:
+            mslot = equip_slot_to_mslot(get_armour_slot(item));
+
+            // A piece of armour which can't be worn indicates that this
+            // and further items weren't the equipment the monster died
+            // with.
+            if (mslot == NUM_MONSTER_SLOTS)
+                return;
+            break;
+
+        case OBJ_MISSILES:
+            mslot = MSLOT_MISSILE;
+            break;
+
+        case OBJ_GOLD:
+            mslot = MSLOT_GOLD;
+            break;
+
+        // The undead are too stupid to use these.
+        case OBJ_WANDS:
+        case OBJ_SCROLLS:
+        case OBJ_POTIONS:
+        case OBJ_MISCELLANY:
+            continue;
+
+        default:
+            continue;
+        } // switch
+
+        // Two different items going into the same slot indicate that
+        // this and further items weren't equipment the monster died
+        // with.
+        if (mon->inv[mslot] != NON_ITEM)
+            return;
+
+        unlink_item(objl);
+        mon->inv[mslot] = objl;
+
+        if (mslot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(mon))
+            mon->equip(item, mslot, 0);
+    } // while
+#endif
+}
+
 static int raise_corpse( int corps, int corx, int cory,
                          beh_type corps_beh, int corps_hit, int actual )
 {
@@ -492,6 +642,7 @@ static int raise_corpse( int corps, int corx, int cory,
                 if (monnum == MONS_BLORK_THE_ORC)
                     menv[monster].mname = "Blork";
             }
+            _equip_undead(corx, cory, corps, monster, monnum);
         }
 
         destroy_item(corps);
