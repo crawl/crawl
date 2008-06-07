@@ -1540,20 +1540,29 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
 
     switch (mon)
     {
+    case MONS_IMP:
+    case MONS_WHITE_IMP:
+    {
+        const char *suffix = (mon == MONS_WHITE_IMP) ? "frigid air" : "flame";
+
+        mprf("A beastly little devil appears in a puff of %s.", suffix);
+        break;
+    }
+
+    case MONS_SHADOW_IMP:
+        mpr("A shadowy apparition takes form in the air.");
+        break;
+
     case MONS_ICE_BEAST:
         mpr("A chill wind blows around you.");
         break;
 
-    case MONS_IMP:
-        mpr("A beastly little devil appears in a puff of flame.");
+    case MONS_ANGEL:
+        mpr("You open a gate to Zin's realm!");
         break;
 
-    case MONS_WHITE_IMP:
-        mpr("A beastly little devil appears in a puff of frigid air.");
-        break;
-
-    case MONS_SHADOW_IMP:
-        mpr("A shadowy apparition takes form in the air.");
+    case MONS_DAEVA:
+        mpr("You are momentarily dazzled by a brilliant golden light.");
         break;
 
     case MONS_UGLY_THING:
@@ -1572,14 +1581,6 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
         }
         break;
     }
-
-    case MONS_ANGEL:
-        mpr("You open a gate to Zin's realm!");
-        break;
-
-    case MONS_DAEVA:
-        mpr("You are momentarily dazzled by a brilliant golden light.");
-        break;
 
     default:
     {

@@ -1508,14 +1508,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                 mon = MONS_ICE_BEAST;
                 break;
 
-            case SPELL_SUMMON_UGLY_THING:
-            {
-                const int chance = std::max(6 - (powc / 12), 1);
-                mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
-                                              : MONS_UGLY_THING;
-                break;
-            }
-
             case SPELL_SUMMON_GUARDIAN:
                 mon = MONS_ANGEL;
                 break;
@@ -1523,6 +1515,16 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             case SPELL_SUMMON_DAEVA:
                 mon = MONS_DAEVA;
                 break;
+
+            // Starting here, there's a chance of monsters' being
+            // unfriendly.
+            case SPELL_SUMMON_UGLY_THING:
+            {
+                const int chance = std::max(6 - (powc / 12), 1);
+                mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
+                                              : MONS_UGLY_THING;
+                break;
+            }
 
             default:
                 break;
