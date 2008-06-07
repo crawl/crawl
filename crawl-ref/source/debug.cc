@@ -698,20 +698,76 @@ void wizard_interlevel_travel()
     _wizard_go_to_level(pos);
 }
 
+static bool _sort_monster_list(int a, int b)
+{
+    if (a >= MAX_MONSTERS || b >= MAX_MONSTERS)
+    {
+        mprf("a = %d, b = %d", a, b);
+    }
+
+    const monsters* m1 = &menv[a];
+    const monsters* m2 = &menv[b];
+
+    if (m1->type == m2->type)
+    {
+        if (!m1->alive() || !m2->alive())
+            return false;
+
+        return ( m1->name(DESC_PLAIN, true) < m2->name(DESC_PLAIN, true) );
+    }
+
+    if (mons_char(m1->type) < mons_char(m2->type))
+        return true;
+
+    return (m1->type < m2->type);
+}
+
 void debug_list_monsters()
 {
     std::vector<std::string> mons;
     int nfound = 0;
 
+    int mon_nums[MAX_MONSTERS];
+
+    for (int i = 0; i < MAX_MONSTERS; i++)
+        mon_nums[i] = i;
+
+    std::sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
+
+    std::string prev_name = "";
+    int         count     = 0;
+
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
-        const monsters *m = &menv[i];
+        const monsters *m = &menv[mon_nums[i]];
         if (!m->alive())
             continue;
 
-        mons.push_back(m->name(DESC_PLAIN, true));
+        std::string name = m->name(DESC_PLAIN, true);
+
+        if (prev_name != name && count > 0)
+        {
+            char buf[80];
+            if (count > 1)
+                sprintf(buf, "%d %s", count, pluralise(prev_name).c_str());
+            else
+                sprintf(buf, "%s", prev_name.c_str());
+            mons.push_back(buf);
+
+            count = 0;
+        }
         nfound++;
+        count++;
+        prev_name = name;
     }
+
+    char buf[80];
+    if (count > 1)
+        sprintf(buf, "%d %s", count, pluralise(prev_name).c_str());
+    else
+        sprintf(buf, "%s", prev_name.c_str());
+    mons.push_back(buf);
+
     mpr_comma_separated_list("Monsters: ", mons);
     mprf("%d monsters", nfound);
 }
