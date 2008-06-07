@@ -2133,6 +2133,9 @@ monster_type summon_any_demon(demon_class_type dct)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
+    if (dct == DEMON_RANDOM)
+        dct = static_cast<demon_class_type>(random2(DEMON_RANDOM));
+
     int temp_rand;          // probability determination {dlb}
 
     switch (dct)
@@ -2184,16 +2187,34 @@ monster_type summon_any_demon(demon_class_type dct)
         break;
 
     default:
-        mon = MONS_GIANT_ANT;     // this was the original behaviour {dlb}
         break;
     }
 
     return (mon);
 }
 
-monster_type summon_any_holy_being()
+monster_type summon_any_holy_being(holy_being_class_type hbct)
 {
-    return (coinflip()) ? MONS_ANGEL : MONS_DAEVA;
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    if (hbct == HOLY_BEING_RANDOM)
+        hbct = static_cast<holy_being_class_type>(random2(HOLY_BEING_RANDOM));
+
+    switch (hbct)
+    {
+    case HOLY_BEING_ANGEL:
+        mon = MONS_ANGEL;
+        break;
+
+    case HOLY_BEING_DAEVA:
+        mon = MONS_DAEVA;
+        break;
+
+    default:
+        break;
+    }
+
+    return (mon);
 }
 
 monster_type summon_any_dragon(dragon_class_type dct)

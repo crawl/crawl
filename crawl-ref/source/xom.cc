@@ -435,7 +435,7 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
 
     // Sometimes, send a holy being instead.
     if (dct == DEMON_GREATER && coinflip())
-        demon = summon_any_holy_being();
+        demon = summon_any_holy_being(HOLY_BEING_RANDOM);
     else
         demon = summon_any_demon(
             use_greater_demons || dct != DEMON_GREATER ? dct : DEMON_COMMON);

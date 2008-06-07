@@ -77,6 +77,13 @@ enum demon_class_type
     DEMON_RANDOM                       //    any of the above
 };
 
+enum holy_being_class_type
+{
+    HOLY_BEING_ANGEL,                  //    0: Angel
+    HOLY_BEING_DAEVA,                  //    1: Daeva
+    HOLY_BEING_RANDOM                  //    any of the above
+};
+
 enum dragon_class_type
 {
     DRAGON_LIZARD,
@@ -268,7 +275,7 @@ bool empty_surrounds( int emx, int emy, dungeon_feature_type spc_wanted,
  * *********************************************************************** */
 monster_type summon_any_demon(demon_class_type dct);
 
-monster_type summon_any_holy_being();
+monster_type summon_any_holy_being(holy_being_class_type hbct);
 
 monster_type summon_any_dragon(dragon_class_type dct);
 

@@ -1822,8 +1822,7 @@ int mons_list::fix_demon(int demon) const
         return (demon);
 
     demon = -100 - demon;
-    if (demon == DEMON_RANDOM)
-        demon = random2(DEMON_RANDOM);
+
     return (summon_any_demon( static_cast<demon_class_type>(demon) ));
 }
 
