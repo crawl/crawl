@@ -1532,20 +1532,20 @@ bool summon_elemental(int pow, int restricted_type,
     // - Air elementals are harder because they're more dynamic/dangerous.
     // - Earth elementals are more static and easy to tame (as before).
     // - Fire elementals fall in between the two (10 is still fairly easy).
-    bool friendly = ((mon != MONS_FIRE_ELEMENTAL
-                        || random2(10) < you.skills[SK_FIRE_MAGIC])
+    const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
+                            || random2(10) < you.skills[SK_FIRE_MAGIC])
 
-                     && (mon != MONS_WATER_ELEMENTAL
-                         || random2((you.species == SP_MERFOLK) ? 5 : 15)
-                               < you.skills[SK_ICE_MAGIC])
+                        && (mon != MONS_WATER_ELEMENTAL
+                            || random2((you.species == SP_MERFOLK) ? 5 : 15)
+                                  < you.skills[SK_ICE_MAGIC])
 
-                     && (mon != MONS_AIR_ELEMENTAL
-                         || random2(15) < you.skills[SK_AIR_MAGIC])
+                        && (mon != MONS_AIR_ELEMENTAL
+                            || random2(15) < you.skills[SK_AIR_MAGIC])
 
-                     && (mon != MONS_EARTH_ELEMENTAL
-                         || random2(5)  < you.skills[SK_EARTH_MAGIC])
+                        && (mon != MONS_EARTH_ELEMENTAL
+                            || random2(5)  < you.skills[SK_EARTH_MAGIC])
 
-                     && random2(100) >= unfriendly);
+                        && random2(100) >= unfriendly);
 
     if (create_monster(
             mgen_data(mon,
@@ -1870,7 +1870,7 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    bool friendly = (random2(pow) > 3);
+    const bool friendly = (random2(pow) > 3);
 
     if (create_monster(
             mgen_data(mon,
@@ -1982,7 +1982,7 @@ bool cast_summon_ugly_thing(int pow, bool god_gift)
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    bool friendly = (random2(pow) > 3);
+    const bool friendly = (random2(pow) > 3);
 
     if (create_monster(
             mgen_data(mon,
@@ -2035,7 +2035,7 @@ bool cast_summon_wraiths(int pow, bool god_gift)
                         (chance > 3) ? MONS_FREEZING_WRAITH    // 20%
                                      : MONS_SPECTRAL_WARRIOR); // 16%
 
-    bool friendly = (random2(pow) > 5);
+    const bool friendly = (random2(pow) > 5);
 
     if (create_monster(
             mgen_data(mon,
