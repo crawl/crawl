@@ -1670,9 +1670,8 @@ bool summon_general_creature_spell(spell_type spell, int pow,
 
     monster_type mon = MONS_PROGRAM_BUG;
 
-    beh_type beha =
-        (spell == SPELL_SUMMON_GREATER_DEMON) ? BEH_CHARMED
-                                              : BEH_FRIENDLY;
+    beh_type beha = (spell == SPELL_SUMMON_GREATER_DEMON) ? BEH_CHARMED
+                                                          : BEH_FRIENDLY;
 
     int hostile = (spell == SPELL_SUMMON_SCORPIONS
                     || spell == SPELL_SUMMON_DEMON
@@ -1693,11 +1692,13 @@ bool summon_general_creature_spell(spell_type spell, int pow,
     int how_many = (spell == SPELL_SUMMON_BUTTERFLIES) ?
                        std::max(15, 4 + random2(3) + random2(pow) / 10) :
                    (spell == SPELL_SUMMON_SCORPIONS)   ?
-                       stepdown_value(1 + random2(pow) / 10 + random2(pow) / 10, 2, 2, 6, 8) :
+                       stepdown_value(1 + random2(pow) / 10 + random2(pow) / 10,
+                                      2, 2, 6, 8) :
                    (spell == SPELL_DEMONIC_HORDE)      ?
                        7 + random2(5) :
                    (spell == SPELL_SUMMON_WRAITHS)     ?
-                       stepdown_value(1 + random2(pow) / 30 + random2(pow) / 30, 2, 2, 6, 8)
+                       stepdown_value(1 + random2(pow) / 30 + random2(pow) / 30,
+                                      2, 2, 6, 8)
                                                        : 1;
 
     for (int i = 0; i < how_many; ++i)
@@ -1774,9 +1775,9 @@ bool summon_general_creature_spell(spell_type spell, int pow,
             case SPELL_SUMMON_WRAITHS:
             {
                 const int chance = random2(25);
-                mon = ((chance > 8) ? MONS_WRAITH :           // 64%
-                       (chance > 3) ? MONS_FREEZING_WRAITH    // 20%
-                                    : MONS_SPECTRAL_WARRIOR); // 16%
+                mon = ((chance > 8) ? MONS_WRAITH :
+                       (chance > 3) ? MONS_FREEZING_WRAITH
+                                    : MONS_SPECTRAL_WARRIOR);
                 break;
             }
 
@@ -1810,7 +1811,7 @@ bool summon_general_creature_spell(spell_type spell, int pow,
         }
     }
 
-    return success;
+    return (success);
 }
 
 bool summon_general_creature(int pow, bool quiet, monster_type mon,
@@ -1946,11 +1947,13 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 // Trog sends some fighting buddies (or enemies) for his followers.
 bool summon_berserker(int pow, beh_type beha, bool god_gift)
 {
+    bool success = false;
+
     monster_type mon = MONS_PROGRAM_BUG;
 
-    int numsc = std::min(2 + (random2(pow) / 4), 6);
+    int dur = std::min(2 + (random2(pow) / 4), 6);
+
     unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
-    bool success = false;
 
     if (pow <= 100)
     {
@@ -2000,7 +2003,7 @@ bool summon_berserker(int pow, beh_type beha, bool god_gift)
 
     int monster =
         create_monster(
-            mgen_data(mon, beha, numsc,
+            mgen_data(mon, beha, dur,
                       you.pos(), hitting,
                       god_gift ? MF_GOD_GIFT : 0));
 
@@ -2028,16 +2031,18 @@ bool summon_berserker(int pow, beh_type beha, bool god_gift)
 
 bool summon_swarm(int pow, beh_type beha, bool god_gift)
 {
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    int numsc = 2 + random2(pow) / 10 + random2(pow) / 25;
-    unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
     bool success = false;
 
-    // see stuff.cc - 12jan2000 {dlb}
-    numsc = stepdown_value(numsc, 2, 2, 6, 8);
+    monster_type mon = MONS_PROGRAM_BUG;
 
-    for (int scount = 0; scount < numsc; ++scount)
+    int dur = std::min(2 + (random2(pow) / 4), 6);
+
+    unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
+
+    int how_many = stepdown_value(2 + random2(pow) / 10 + random2(pow) / 25,
+                                  2, 2, 6, 8);
+
+    for (int scount = 0; scount < how_many; ++scount)
     {
         switch (random2(14))
         {
@@ -2095,7 +2100,7 @@ bool summon_swarm(int pow, beh_type beha, bool god_gift)
         }
 
         if (create_monster(
-                mgen_data(mon, beha, numsc,
+                mgen_data(mon, beha, dur,
                           you.pos(), hitting,
                           god_gift ? MF_GOD_GIFT : 0)) != -1)
         {
