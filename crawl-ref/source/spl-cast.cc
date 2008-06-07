@@ -1342,10 +1342,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         abjuration(powc);
         break;
 
-    case SPELL_SUMMON_SCORPIONS:
-        summon_scorpions(powc);
-        break;
-
     case SPELL_LEVITATION:
         potion_effect( POT_LEVITATION, powc );
         break;
@@ -1489,6 +1485,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_BUTTERFLIES:
+    case SPELL_SUMMON_SCORPIONS:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_DEMON:
     case SPELL_DEMONIC_HORDE:
