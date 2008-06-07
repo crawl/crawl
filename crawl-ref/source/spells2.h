@@ -136,8 +136,8 @@ bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift = false);
 
 bool summon_general_creature(int pow, bool quiet, monster_type mon,
-                             beh_type beha, int hostile = -1,
-                             int numsc = -1, bool god_gift = false);
+                             beh_type beha, int hostile = -1, int dur = -1,
+                             bool god_gift = false);
 
 
 // last updated 24may2000 {dlb}

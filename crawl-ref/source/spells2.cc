@@ -1684,11 +1684,11 @@ bool summon_general_creature_spell(spell_type spell, int pow,
                     || spell == SPELL_SUMMON_DRAGON)     ? 5
                                                          : -1;
 
-    int numsc = (spell == SPELL_SUMMON_BUTTERFLIES
-                    || spell == SPELL_SUMMON_SCORPIONS) ? 3 :
-                (spell == SPELL_SUMMON_GREATER_DEMON
-                    || spell == SPELL_SUMMON_WRAITHS)   ? 5
-                                                        : -1;
+    int dur = (spell == SPELL_SUMMON_BUTTERFLIES
+                || spell == SPELL_SUMMON_SCORPIONS) ? 3 :
+              (spell == SPELL_SUMMON_GREATER_DEMON
+                || spell == SPELL_SUMMON_WRAITHS)   ? 5
+                                                    : -1;
 
     int how_many = (spell == SPELL_SUMMON_BUTTERFLIES) ?
                        std::max(15, 4 + random2(3) + random2(pow) / 10) :
@@ -1804,7 +1804,7 @@ bool summon_general_creature_spell(spell_type spell, int pow,
         }
 
         if (summon_general_creature(pow, quiet, mon, beha,
-                                    hostile, numsc, false))
+                                    hostile, dur, false))
         {
             success = true;
         }
@@ -1814,14 +1814,14 @@ bool summon_general_creature_spell(spell_type spell, int pow,
 }
 
 bool summon_general_creature(int pow, bool quiet, monster_type mon,
-                             beh_type beha, int hostile,
-                             int numsc, bool god_gift)
+                             beh_type beha, int hostile, int dur,
+                             bool god_gift)
 {
     if (beha != BEH_HOSTILE && random2(pow) > hostile)
         beha = BEH_HOSTILE;
 
-    if (numsc == -1)
-        numsc = std::min(2 + (random2(pow) / 4), 6);
+    if (dur == -1)
+        dur = std::min(2 + (random2(pow) / 4), 6);
 
     unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
 
@@ -1910,7 +1910,7 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
     int monster =
         create_monster(
-            mgen_data(mon, beha, numsc,
+            mgen_data(mon, beha, dur,
                       you.pos(), hitting,
                       god_gift ? MF_GOD_GIFT : 0));
 
