@@ -1532,8 +1532,14 @@ void summon_scorpions(int pow)
 }                               // end summon_scorpions()
 
 bool summon_general_creature(int pow, monster_type mon, beh_type beha,
-                             int numsc, bool god_gift)
+                             int unfriendly, int numsc, bool god_gift)
 {
+    if (beha == BEH_FRIENDLY && random2(pow) > unfriendly)
+        beha = BEH_HOSTILE;
+
+    if (numsc == -1)
+        numsc = std::min(2 + (random2(pow) / 4), 6);
+
     unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
     bool success = false;
 
@@ -1576,15 +1582,8 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
               (mon == MONS_UGLY_THING)      ? "An ugly thing appears."
                                             : "A demon appears!";
 
-        bool friendly = (random2(pow) > 3);
-
-        if (!friendly)
-        {
+        if (beha == BEH_HOSTILE)
             msg += " It doesn't look very happy.";
-
-            beha = BEH_HOSTILE;
-            hitting = MHITYOU;
-        }
         break;
     }
     }
@@ -1607,6 +1606,8 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
         if (mon == MONS_DAEVA)
             summon->flags |= MF_ATT_CHANGE_ATTEMPT;
     }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
 }

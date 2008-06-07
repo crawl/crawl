@@ -1498,13 +1498,18 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     case SPELL_SUMMON_DAEVA:
     {
         monster_type mon = MONS_PROGRAM_BUG;
+
+        int unfriendly =
+            (spell == SPELL_SUMMON_DEMON || spell == SPELL_DEMONIC_HORDE
+                || spell == SPELL_SUMMON_UGLY_THING) ? 3
+                                                     : -1;
         int numsc =
-            (spell == SPELL_SUMMON_BUTTERFLIES)  ? 3
-                                                 : std::min(2 + (random2(powc) / 4), 6);
+            (spell == SPELL_SUMMON_BUTTERFLIES)      ? 3
+                                                     : std::min(2 + (random2(powc) / 4), 6);
         int how_many =
-            (spell == SPELL_SUMMON_BUTTERFLIES)  ? std::max(15, 4 + random2(3) + random2(powc) / 10) :
-            (spell == SPELL_DEMONIC_HORDE)       ? 7 + random2(5)
-                                                 : 1;
+            (spell == SPELL_SUMMON_BUTTERFLIES)      ? std::max(15, 4 + random2(3) + random2(powc) / 10) :
+            (spell == SPELL_DEMONIC_HORDE)           ? 7 + random2(5)
+                                                     : 1;
 
         for (int i = 0; i < how_many; ++i)
         {
@@ -1553,7 +1558,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                     break;
             }
 
-            summon_general_creature(powc, mon, BEH_FRIENDLY, numsc, false);
+            summon_general_creature(powc, mon, BEH_FRIENDLY, unfriendly,
+                                    numsc, false);
         }
         break;
     }
