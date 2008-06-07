@@ -1488,6 +1488,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_UGLY_THING:
+    case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_SUMMON_WRAITHS:
     case SPELL_SUMMON_GUARDIAN:
     case SPELL_SUMMON_DAEVA:
@@ -1499,20 +1500,26 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
         monster_type mon = MONS_PROGRAM_BUG;
 
-        int unfriendly =
+        beh_type beha =
+            (spell == SPELL_SUMMON_GREATER_DEMON) ? BEH_CHARMED
+                                                  : BEH_FRIENDLY;
+
+        int hostile =
             (spell == SPELL_SUMMON_SCORPIONS
                 || spell == SPELL_SUMMON_DEMON
                 || spell == SPELL_DEMONIC_HORDE
                 || spell == SPELL_CALL_CANINE_FAMILIAR
                 || spell == SPELL_SUMMON_UGLY_THING)   ? 3 :
-            (spell == SPELL_SUMMON_WRAITHS
+            (spell == SPELL_SUMMON_GREATER_DEMON
+                || spell == SPELL_SUMMON_WRAITHS
                 || spell == SPELL_SUMMON_DRAGON)       ? 5
                                                        : -1;
 
         int numsc =
             (spell == SPELL_SUMMON_BUTTERFLIES
                 || spell == SPELL_SUMMON_SCORPIONS) ? 3 :
-            (spell == SPELL_SUMMON_WRAITHS)         ? 5
+            (spell == SPELL_SUMMON_GREATER_DEMON
+                || spell == SPELL_SUMMON_WRAITHS)   ? 5
                                                     : -1;
 
         int how_many =
@@ -1542,9 +1549,11 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
                 case SPELL_SUMMON_DEMON:
                 case SPELL_DEMONIC_HORDE:
+                case SPELL_SUMMON_GREATER_DEMON:
                     mon = summon_any_demon(
-                            (spell == SPELL_DEMONIC_HORDE) ? DEMON_LESSER
-                                                           : DEMON_COMMON);
+                            (spell == SPELL_SUMMON_GREATER_DEMON) ? DEMON_GREATER :
+                            (spell == SPELL_SUMMON_DEMON)         ? DEMON_COMMON
+                                                                  : DEMON_LESSER);
                     break;
 
                 case SPELL_CALL_CANINE_FAMILIAR:
@@ -1616,14 +1625,15 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                     break;
             }
 
-            if (i == 0 && (spell == SPELL_SUMMON_DEMON ||
-                spell == SPELL_DEMONIC_HORDE))
+            if (i == 0 && (spell == SPELL_SUMMON_DEMON
+                || spell == SPELL_DEMONIC_HORDE
+                || spell == SPELL_SUMMON_GREATER_DEMON))
             {
                 mpr("You open a gate to Pandemonium!");
             }
 
-            summon_general_creature(powc, quiet, mon, BEH_FRIENDLY,
-                                    unfriendly, numsc, false);
+            summon_general_creature(powc, quiet, mon, beha,
+                                    hostile, numsc, false);
         }
         break;
     }
@@ -1702,22 +1712,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         // staff of Dispater & Sceptre of Asmodeus
         if (!zapping(ZAP_HELLFIRE, powc, beam, true))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_SUMMON_GREATER_DEMON:
-        mpr("You open a gate to Pandemonium!");
-
-        {
-            const beh_type beha = ((random2(powc) > 5) ? BEH_CHARMED :
-                                                         BEH_HOSTILE);
-
-            if (beha == BEH_CHARMED)
-                mpr("You don't feel so good about this...");
-
-            create_monster(
-                mgen_data(summon_any_demon(DEMON_GREATER), beha, 5,
-                          you.pos(), MHITYOU));
-        }
         break;
 
     case SPELL_CORPSE_ROT:

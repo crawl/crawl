@@ -133,7 +133,7 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
  * called from: ability - spell
  * *********************************************************************** */
 bool summon_general_creature(int pow, bool quiet, monster_type mon,
-                             beh_type beha, int unfriendly = -1,
+                             beh_type beha, int hostile = -1,
                              int numsc = -1, bool god_gift = false);
 
 

@@ -1661,10 +1661,10 @@ void summon_animals(int pow)
 }
 
 bool summon_general_creature(int pow, bool quiet, monster_type mon,
-                             beh_type beha, int unfriendly,
+                             beh_type beha, int hostile,
                              int numsc, bool god_gift)
 {
-    if (beha == BEH_FRIENDLY && random2(pow) > unfriendly)
+    if (beha != BEH_HOSTILE && random2(pow) > hostile)
         beha = BEH_HOSTILE;
 
     if (numsc == -1)
@@ -1743,7 +1743,11 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
     }
     }
 
-    if (beha == BEH_HOSTILE)
+    if (beha == BEH_CHARMED)
+    {
+        msg += " You don't feel so good about this...";
+    }
+    else if (beha == BEH_HOSTILE)
     {
         if (mons_class_holiness(mon) == MH_UNDEAD)
             msg = "You sense a hostile presence.";
@@ -1768,7 +1772,6 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
         if (mons_class_holiness(mon) == MH_UNDEAD)
         {
-            //jmf: Kiku sometimes deflects this
             if (!you.is_undead
                 && !(you.religion == GOD_KIKUBAAQUDGHA
                     && (!player_under_penance()
