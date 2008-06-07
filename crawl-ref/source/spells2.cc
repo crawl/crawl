@@ -1875,7 +1875,7 @@ bool cast_demonic_horde(int pow, bool god_gift)
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (_summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
+        if (_summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
                                   std::min(2 + (random2(pow) / 4), 6),
                                   random2(pow) > 3))
         {
