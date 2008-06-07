@@ -2702,7 +2702,8 @@ bool is_evil_item(const item_def& item)
                   || item.sub_type == STAFF_DEMONOLOGY);
         break;
     case OBJ_MISCELLANY:
-        retval = (item.sub_type == MISC_LANTERN_OF_SHADOWS);
+        retval = (item.sub_type == MISC_BOTTLED_EFREET
+                  || item.sub_type == MISC_LANTERN_OF_SHADOWS);
         break;
     default:
         break;
