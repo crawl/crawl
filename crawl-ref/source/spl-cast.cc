@@ -1503,8 +1503,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_demonic_horde(powc);
         break;
 
-    // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_ICE_BEAST:
+        cast_summon_ice_beast(powc);
+        break;
+
+    // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_UGLY_THING:
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_SUMMON_WRAITHS:

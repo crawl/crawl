@@ -1830,62 +1830,6 @@ bool cast_call_imp(int pow, bool god_gift)
     return (success);
 }
 
-static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
-                                  int dur, bool friendly)
-{
-    bool success = false;
-
-    monster_type mon = summon_any_demon(dct);
-
-    if (create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, you.pos(),
-                      friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
-    {
-        success = true;
-
-        mprf("A demon appears!%s",
-             friendly ? "" : " It doesn't look very happy.");
-    }
-
-    if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
-bool cast_summon_demon(int pow, bool god_gift)
-{
-    mpr("You open a gate to Pandemonium!");
-
-    return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
-                                 std::min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3);
-}
-
-bool cast_demonic_horde(int pow, bool god_gift)
-{
-    bool success = false;
-
-    const int how_many = 7 + random2(5);
-
-    mpr("You open a gate to Pandemonium!");
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        if (_summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
-                                  std::min(2 + (random2(pow) / 4), 6),
-                                  random2(pow) > 3))
-        {
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
 bool cast_call_canine_familiar(int pow, bool god_gift)
 {
     bool success = false;
@@ -1948,6 +1892,86 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
     return (success);
 }
 
+static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
+                                  int dur, bool friendly)
+{
+    bool success = false;
+
+    monster_type mon = summon_any_demon(dct);
+
+    if (create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mprf("A demon appears!%s",
+             friendly ? "" : " It doesn't look very happy.");
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
+bool cast_summon_demon(int pow, bool god_gift)
+{
+    mpr("You open a gate to Pandemonium!");
+
+    return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
+                                 std::min(2 + (random2(pow) / 4), 6),
+                                 random2(pow) > 3);
+}
+
+bool cast_demonic_horde(int pow, bool god_gift)
+{
+    bool success = false;
+
+    const int how_many = 7 + random2(5);
+
+    mpr("You open a gate to Pandemonium!");
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        if (_summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
+                                  std::min(2 + (random2(pow) / 4), 6),
+                                  random2(pow) > 3))
+        {
+            success = true;
+        }
+    }
+
+    return (success);
+}
+
+bool cast_summon_ice_beast(int pow, bool god_gift)
+{
+    bool success = false;
+
+    monster_type mon = MONS_ICE_BEAST;
+
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
+
+    if (create_monster(
+            mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
+                      you.pet_target,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mpr("A chill wind blows around you.");
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
 bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift)
 {
@@ -1977,10 +2001,6 @@ bool summon_general_creature_spell(spell_type spell, int pow,
     {
         switch (spell)
         {
-            case SPELL_SUMMON_ICE_BEAST:
-                mon = MONS_ICE_BEAST;
-                break;
-
             case SPELL_SUMMON_UGLY_THING:
             {
                 const int chance = std::max(6 - (pow / 12), 1);
@@ -2061,10 +2081,6 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
     switch (mon)
     {
-    case MONS_ICE_BEAST:
-        msg = "A chill wind blows around you.";
-        break;
-
     case MONS_UGLY_THING:
         msg = "An ugly thing appears.";
         break;

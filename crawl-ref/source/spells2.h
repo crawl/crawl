@@ -149,11 +149,13 @@ bool cast_summon_swarm(int pow, bool god_gift = false,
  * *********************************************************************** */
 bool cast_call_imp(int pow, bool god_gift = false);
 
+bool cast_call_canine_familiar(int pow, bool god_gift = false);
+
 bool cast_summon_demon(int pow, bool god_gift = false);
 
 bool cast_demonic_horde(int pow, bool god_gift = false);
 
-bool cast_call_canine_familiar(int pow, bool god_gift = false);
+bool cast_summon_ice_beast(int pow, bool god_gift = false);
 
 bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift = false);
