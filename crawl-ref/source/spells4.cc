@@ -414,44 +414,6 @@ void cast_detect_secret_doors(int pow)
     mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
 }                               // end cast_detect_secret_doors()
 
-void cast_summon_large_mammal(int pow)
-{
-    monster_type mon;
-    const int temp_rand = random2(pow);
-
-    if (temp_rand < 10)
-        mon = MONS_JACKAL;
-    else if (temp_rand < 15)
-        mon = MONS_HOUND;
-    else
-    {
-        switch (temp_rand % 7)
-        {
-        case 0:
-            if (one_chance_in(you.species == SP_HILL_ORC ? 3 : 6))
-                mon = MONS_WARG;
-            else
-                mon = MONS_WOLF;
-            break;
-        case 1:
-        case 2:
-            mon = MONS_WAR_DOG;
-            break;
-        case 3:
-        case 4:
-            mon = MONS_HOUND;
-            break;
-        default:
-            mon = MONS_JACKAL;
-            break;
-        }
-    }
-
-    create_monster(
-        mgen_data( mon, BEH_FRIENDLY, 3,
-                   you.pos(), you.pet_target ));
-}
-
 void cast_sticks_to_snakes(int pow)
 {
     monster_type mon = MONS_PROGRAM_BUG;

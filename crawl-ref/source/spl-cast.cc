@@ -1492,29 +1492,32 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_DEMON:
     case SPELL_DEMONIC_HORDE:
+    case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_UGLY_THING:
     case SPELL_SUMMON_GUARDIAN:
     case SPELL_SUMMON_DAEVA:
     {
-        bool quiet = (spell == SPELL_SUMMON_BUTTERFLIES);
+        bool quiet = (spell == SPELL_SUMMON_BUTTERFLIES
+                || spell == SPELL_CALL_CANINE_FAMILIAR);
 
         monster_type mon = MONS_PROGRAM_BUG;
 
-        int unfriendly =
-            (spell == SPELL_SUMMON_DEMON || spell == SPELL_DEMONIC_HORDE
-                || spell == SPELL_SUMMON_UGLY_THING) ? 3 :
-            (spell == SPELL_SUMMON_DRAGON)           ? 5
-                                                     : -1;
+        int unfriendly = (spell == SPELL_SUMMON_DEMON
+                || spell == SPELL_DEMONIC_HORDE
+                || spell == SPELL_CALL_CANINE_FAMILIAR
+                || spell == SPELL_SUMMON_UGLY_THING)   ? 3 :
+            (spell == SPELL_SUMMON_DRAGON)             ? 5
+                                                       : -1;
 
         int numsc =
-            (spell == SPELL_SUMMON_BUTTERFLIES)      ? 3
-                                                     : -1;
+            (spell == SPELL_SUMMON_BUTTERFLIES)        ? 3
+                                                       : -1;
 
         int how_many =
-            (spell == SPELL_SUMMON_BUTTERFLIES)      ? std::max(15, 4 + random2(3) + random2(powc) / 10) :
-            (spell == SPELL_DEMONIC_HORDE)           ? 7 + random2(5)
-                                                     : 1;
+            (spell == SPELL_SUMMON_BUTTERFLIES)        ? std::max(15, 4 + random2(3) + random2(powc) / 10) :
+            (spell == SPELL_DEMONIC_HORDE)             ? 7 + random2(5)
+                                                       : 1;
 
         for (int i = 0; i < how_many; ++i)
         {
@@ -1538,6 +1541,38 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                             (spell == SPELL_DEMONIC_HORDE) ? DEMON_LESSER
                                                            : DEMON_COMMON);
                     break;
+
+                case SPELL_CALL_CANINE_FAMILIAR:
+                {
+                    const int chance = random2(powc);
+                    if (chance < 10)
+                        mon = MONS_JACKAL;
+                    else if (chance < 15)
+                        mon = MONS_HOUND;
+                    else
+                    {
+                        switch (chance % 7)
+                        {
+                        case 0:
+                            if (one_chance_in(you.species == SP_HILL_ORC ? 3 : 6))
+                                mon = MONS_WARG;
+                            else
+                                mon = MONS_WOLF;
+                            break;
+                        case 1:
+                        case 2:
+                            mon = MONS_WAR_DOG;
+                            break;
+                        case 3:
+                        case 4:
+                            mon = MONS_HOUND;
+                            break;
+                        default:
+                            mon = MONS_JACKAL;
+                            break;
+                        }
+                    }
+                }
 
                 case SPELL_SUMMON_ICE_BEAST:
                     mon = MONS_ICE_BEAST;
@@ -1912,10 +1947,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     case SPELL_STICKS_TO_SNAKES:
         cast_sticks_to_snakes(powc);
-        break;
-
-    case SPELL_CALL_CANINE_FAMILIAR:
-        cast_summon_large_mammal(powc);
         break;
 
     case SPELL_TAME_BEASTS:

@@ -1565,6 +1565,14 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
         msg = "A shadowy apparition takes form in the air.";
         break;
 
+    case MONS_JACKAL:
+    case MONS_HOUND:
+    case MONS_WARG:
+    case MONS_WOLF:
+    case MONS_WAR_DOG:
+        msg = "A canine appears!";
+        break;
+
     case MONS_ICE_BEAST:
         msg = "A chill wind blows around you.";
         break;
