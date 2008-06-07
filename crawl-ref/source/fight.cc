@@ -289,11 +289,11 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
 {
     unchivalric_attack_type unchivalric = UCAT_NO_ATTACK;
 
-    // no unchivalric attacks on monsters that cannot fight (e.g.
-    // plants) or invisible monsters
+    // No unchivalric attacks on monsters that cannot fight (e.g.
+    // plants) or invisible monsters.
     if (!defender->cannot_fight() && defender->visible_to(attacker))
     {
-        // distracted (but not batty); this only applies to players
+        // Distracted (but not batty); this only applies to players.
         if (attacker->atype() == ACT_PLAYER && def->foe != MHITYOU
             && !testbits(def->flags, MF_BATTY))
         {
@@ -699,7 +699,7 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
 
     const int chunk_type = mons_corpse_effect( mon->type );
 
-    // now print message, need biting unless already done (never for bat form!)
+    // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
     {
         mprf( "You bite %s, and draw %s blood!",
@@ -709,7 +709,7 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
     else
         mprf( "You draw %s's blood!", mon->name(DESC_NOCAP_THE, true).c_str() );
 
-    // regain hp
+    // Regain hp.
     if (you.hp < you.hp_max)
     {
         int heal = 1 + random2(damage);
@@ -723,7 +723,7 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
         mprf("You feel %sbetter.", (you.hp == you.hp_max) ? "much " : "");
     }
 
-    // gain nutrition
+    // Gain nutrition.
     if (you.hunger_state != HS_ENGORGED)
     {
         int food_value = 0;
@@ -735,7 +735,7 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
             food_value = 15 + random2avg(29, 2);
         }
 
-        // bats get a little less nutrition out of it
+        // Bats get a little less nutrition out of it
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
             food_value -= 5 + random2(16);
 
@@ -1037,7 +1037,7 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
 
-            // no punching with a shield or 2-handed wpn, except staves
+            // No punching with a shield or 2-handed wpn, except staves.
             if (shield || coinflip()
                 || (weapon
                     && hands == HANDS_TWO
@@ -1168,7 +1168,7 @@ bool melee_attack::player_apply_aux_unarmed()
 
     aux_damage  = random2(aux_damage);
 
-    // Clobber wpn_skill
+    // Clobber wpn_skill.
     wpn_skill   = SK_UNARMED_COMBAT;
     aux_damage  = player_apply_weapon_skill(aux_damage);
     aux_damage  = player_apply_fighting_skill(aux_damage, true);
@@ -1577,7 +1577,7 @@ int melee_attack::player_weapon_type_modify(int damage)
         return (damage);
     }
 
-    // take transformations into account, if no weapon is wielded
+    // Take transformations into account, if no weapon is wielded.
     if (weap_type == WPN_UNARMED
         && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
     {
@@ -1770,12 +1770,12 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
 {
     player_check_weapon_effects();
 
-    // thirsty vampires will try to use a stabbing situation to draw blood
+    // Thirsty vampires will try to use a stabbing situation to draw blood.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
         && mondied && stab_attempt && stab_bonus > 0
         && _player_vampire_draws_blood(monster_index(def), damage_done, true))
     {
-        // no further effects
+        // No further effects.
     }
     // Vampiric *weapon* effects for the killing blow.
     else if (mondied && damage_brand == SPWPN_VAMPIRICISM
@@ -2966,7 +2966,7 @@ int melee_attack::player_unarmed_speed()
 
     min_delay = 5;
 
-    // Unarmed speed
+    // Unarmed speed.
     if (you.burden_state == BS_UNENCUMBERED
         && one_chance_in(heavy_armour_penalty + 1))
     {
@@ -2975,7 +2975,7 @@ int melee_attack::player_unarmed_speed()
         else
             unarmed_delay = 10 - you.skills[SK_UNARMED_COMBAT] / 5;
 
-        // this shouldn't happen anyway... sanity
+        // This shouldn't happen anyway... sanity.
         if (unarmed_delay < min_delay)
             unarmed_delay = min_delay;
     }
@@ -3010,7 +3010,7 @@ int melee_attack::player_calc_base_unarmed_damage()
 
     if (you.duration[DUR_CONFUSING_TOUCH])
     {
-        // no base hand damage while using this spell
+        // No base hand damage while using this spell.
         damage = 0;
     }
 
@@ -3047,7 +3047,7 @@ int melee_attack::player_calc_base_unarmed_damage()
     }
     else if (you.equip[ EQ_GLOVES ] == -1)
     {
-        // claw damage only applies for bare hands
+        // Claw damage only applies for bare hands.
         if (you.species == SP_TROLL)
             damage += 5;
         else if (you.species == SP_GHOUL)
@@ -3057,7 +3057,10 @@ int melee_attack::player_calc_base_unarmed_damage()
     }
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        damage += you.skills[SK_UNARMED_COMBAT]/3;
+    {
+        // Bats really don't do a lot of damage.
+        damage += random2(you.skills[SK_UNARMED_COMBAT]/5 + 1);
+    }
     else
         damage += you.skills[SK_UNARMED_COMBAT];
 

@@ -2283,6 +2283,43 @@ const std::string get_menu_colour_prefix_tags(item_def &item,
     return (item_name);
 }
 
+const std::string get_message_colour_tags(item_def &item,
+                                          description_level_type desc,
+                                          msg_channel_type channel)
+{
+    std::string cprf       = menu_colour_item_prefix(item);
+    std::string colour     = "";
+    std::string colour_off = "";
+    std::string item_name  = item.name(desc);
+    cprf += " " + item_name;
+
+    int col = -1;
+    const std::vector<message_colour_mapping>& mcm
+               = Options.message_colour_mappings;
+    typedef std::vector<message_colour_mapping>::const_iterator mcmci;
+
+    for (mcmci ci = mcm.begin(); ci != mcm.end(); ++ci)
+    {
+        if (ci->message.is_filtered(channel, cprf))
+        {
+            col = ci->colour;
+            break;
+        }
+    }
+
+    if (col != -1)
+        colour = colour_to_str( col );
+
+    if (!colour.empty())
+    {
+        // Order is important here.
+        colour_off  = "</" + colour + ">";
+        colour      = "<" + colour + ">";
+        item_name = colour + item_name + colour_off;
+    }
+
+    return (item_name);
+}
 
 typedef std::map<std::string, item_types_pair> item_names_map;
 static item_names_map item_names_cache;

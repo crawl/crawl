@@ -564,8 +564,8 @@ bool butchery(int which_corpse)
             // Also, don't bother colouring if it's only for sacrificing.
             if (!sacrifice && !you.is_undead)
             {
-                corpse_name = get_menu_colour_prefix_tags(mitm[o],
-                                                          DESC_NOCAP_A);
+                corpse_name = get_message_colour_tags(mitm[o], DESC_NOCAP_A,
+                                                      MSGCH_PROMPT);
             }
 
             // Shall we butcher this corpse?

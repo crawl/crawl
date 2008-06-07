@@ -769,7 +769,8 @@ void item_check(bool verbose)
     if (items.size() == 1 )
     {
         item_def it(*items[0]);
-        std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
+        std::string name = get_message_colour_tags(it, DESC_NOCAP_A,
+                                                   MSGCH_FLOOR_ITEMS);
         strm << "You see here " << name << '.' << std::endl;
         return;
     }
@@ -824,7 +825,8 @@ void item_check(bool verbose)
         for (unsigned int i = 0; i < items.size(); ++i)
         {
             item_def it(*items[i]);
-            std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
+            std::string name = get_message_colour_tags(it, DESC_NOCAP_A,
+                                                       MSGCH_FLOOR_ITEMS);
             strm << name << std::endl;
         }
     }
@@ -1214,7 +1216,7 @@ void pickup()
         mpr("There are several objects here.");
         while ( o != NON_ITEM )
         {
-            // must save this because pickup can destroy the item
+            // Must save this because pickup can destroy the item.
             next = mitm[o].link;
 
             if ( num_nonsquelched && _invisible_to_player(mitm[o]) )
@@ -1226,8 +1228,8 @@ void pickup()
             if (keyin != 'a')
             {
                 mprf(MSGCH_PROMPT, "Pick up %s? (y/n/a/*?g,/q)",
-                     get_menu_colour_prefix_tags(mitm[o],
-                                                 DESC_NOCAP_A).c_str());
+                     get_message_colour_tags(mitm[o], DESC_NOCAP_A,
+                                             MSGCH_PROMPT).c_str());
 #ifndef USE_TILE
                 keyin = get_ch();
 #else

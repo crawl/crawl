@@ -1166,14 +1166,14 @@ bool in_los(int x, int y)
 static bool find_monster( int x, int y, int mode, bool need_path,
                           int range = -1)
 {
-    // target the player for friendly and general spells
+    // Target the player for friendly and general spells.
     if ((mode == TARG_FRIEND || mode == TARG_ANY)
          && x == you.x_pos && y == you.y_pos)
     {
         return (true);
     }
 
-    // don't target out of range
+    // Don't target out of range.
     if (!_is_target_in_range(x, y, range))
         return (false);
 

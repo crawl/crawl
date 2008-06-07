@@ -1,6 +1,9 @@
 ### Colouring of corpses, depending on whether you can eat them, and
 ### whether it's safe to eat them. 
-### Colours both on the ground and in inventory!
+### Use menu_colour (inv) to colour items in your inventory or the
+### pickup menu.
+### Use message_colour (msg) to highlight items in prompts and when
+### listed on the ground.
 
 msg := message_colour
 inv := menu_colour

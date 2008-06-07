@@ -133,6 +133,9 @@ void set_ident_type( object_class_type basetype, int subtype,
 const std::string menu_colour_item_prefix(const item_def &item);
 const std::string get_menu_colour_prefix_tags(item_def &item,
                                               description_level_type desc);
+const std::string get_message_colour_tags(item_def &item,
+                                          description_level_type desc,
+                                          msg_channel_type channel = MSGCH_PLAIN);
 
 void            init_item_name_cache();
 item_types_pair item_types_by_name(std::string name);
