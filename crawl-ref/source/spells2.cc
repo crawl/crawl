@@ -1892,7 +1892,7 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
 }
 
 static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
-                                  int dur, bool friendly)
+                                  int dur, bool friendly, bool charmed)
 {
     bool success = false;
 
@@ -1900,7 +1900,8 @@ static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
 
     if (create_monster(
             mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      friendly ? BEH_FRIENDLY :
+                          charmed ? BEH_CHARMED : BEH_HOSTILE,
                       dur, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
                       god_gift ? MF_GOD_GIFT : 0)) != -1)
@@ -1923,7 +1924,7 @@ bool cast_summon_demon(int pow, bool god_gift)
 
     return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
                                  std::min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3);
+                                 random2(pow) > 3, false);
 }
 
 bool cast_demonic_horde(int pow, bool god_gift)
@@ -1938,7 +1939,7 @@ bool cast_demonic_horde(int pow, bool god_gift)
     {
         if (_summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
                                   std::min(2 + (random2(pow) / 4), 6),
-                                  random2(pow) > 3))
+                                  random2(pow) > 3, false))
         {
             success = true;
         }
@@ -2003,6 +2004,28 @@ bool cast_summon_ugly_thing(int pow, bool god_gift)
     return (success);
 }
 
+bool cast_summon_greater_demon(int pow, bool god_gift)
+{
+    bool success = false;
+
+    mpr("You open a gate to Pandemonium!");
+
+    bool charmed = (random2(pow) > 5);
+
+    if (_summon_demon_wrapper(pow, god_gift, DEMON_GREATER,
+                              5, false, charmed))
+    {
+        success = true;
+
+        mpr("A demon appears!");
+
+        if (charmed)
+            mpr("You don't feel so good about this...");
+    }
+
+    return (success);
+}
+
 bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift)
 {
@@ -2010,17 +2033,12 @@ bool summon_general_creature_spell(spell_type spell, int pow,
 
     monster_type mon = MONS_PROGRAM_BUG;
 
-    beh_type beha = (spell == SPELL_SUMMON_GREATER_DEMON) ? BEH_CHARMED
-                                                          : BEH_FRIENDLY;
+    int hostile = (spell == SPELL_SUMMON_WRAITHS
+                    || spell == SPELL_SUMMON_DRAGON) ? 5
+                                                     : -1;
 
-    int hostile = (spell == SPELL_SUMMON_GREATER_DEMON
-                    || spell == SPELL_SUMMON_WRAITHS
-                    || spell == SPELL_SUMMON_DRAGON)     ? 5
-                                                         : -1;
-
-    int dur = (spell == SPELL_SUMMON_GREATER_DEMON
-                || spell == SPELL_SUMMON_WRAITHS)   ? 5
-                                                    : -1;
+    int dur = (spell == SPELL_SUMMON_WRAITHS) ? 5
+                                              : -1;
 
     int how_many = (spell == SPELL_SUMMON_WRAITHS)     ?
                        stepdown_value(1 + random2(pow) / 30 + random2(pow) / 30,
@@ -2031,10 +2049,6 @@ bool summon_general_creature_spell(spell_type spell, int pow,
     {
         switch (spell)
         {
-            case SPELL_SUMMON_GREATER_DEMON:
-                mon = summon_any_demon(DEMON_GREATER);
-                break;
-
             case SPELL_SUMMON_WRAITHS:
             {
                 const int chance = random2(25);
@@ -2060,10 +2074,7 @@ bool summon_general_creature_spell(spell_type spell, int pow,
                 break;
         }
 
-        if (i == 0 && spell == SPELL_SUMMON_GREATER_DEMON)
-            mpr("You open a gate to Pandemonium!");
-
-        if (summon_general_creature(pow, false, mon, beha,
+        if (summon_general_creature(pow, false, mon, BEH_FRIENDLY,
                                     hostile, dur, false))
         {
             success = true;

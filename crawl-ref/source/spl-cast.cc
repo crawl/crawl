@@ -1511,8 +1511,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_ugly_thing(powc);
         break;
 
-    // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_GREATER_DEMON:
+        cast_summon_greater_demon(powc);
+        break;
+
+    // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_WRAITHS:
     case SPELL_SUMMON_GUARDIAN:
     case SPELL_SUMMON_DAEVA:

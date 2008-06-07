@@ -159,6 +159,8 @@ bool cast_summon_ice_beast(int pow, bool god_gift = false);
 
 bool cast_summon_ugly_thing(int pow, bool god_gift = false);
 
+bool cast_summon_greater_demon(int pow, bool god_gift = false);
+
 bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift = false);
 
