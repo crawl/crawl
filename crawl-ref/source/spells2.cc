@@ -1830,12 +1830,72 @@ bool cast_call_imp(int pow, bool god_gift)
     return (success);
 }
 
+bool cast_call_canine_familiar(int pow, bool god_gift)
+{
+    bool success = false;
+
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
+
+    const int chance = random2(pow);
+
+    if (chance < 10)
+        mon = MONS_JACKAL;
+    else if (chance < 15)
+        mon = MONS_HOUND;
+    else
+    {
+        switch (chance % 7)
+        {
+        case 0:
+            if (one_chance_in(you.species == SP_HILL_ORC ? 3 : 6))
+                mon = MONS_WARG;
+            else
+                mon = MONS_WOLF;
+            break;
+
+        case 1:
+        case 2:
+            mon = MONS_WAR_DOG;
+            break;
+
+        case 3:
+        case 4:
+            mon = MONS_HOUND;
+            break;
+
+        default:
+            mon = MONS_JACKAL;
+            break;
+        }
+    }
+
+    bool friendly = (random2(pow) > 3);
+
+    if (create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mprf("A canine appears!%s",
+             friendly ? "" : " It doesn't look very happy.");
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
 bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift)
 {
     bool success = false;
-
-    bool quiet = (spell == SPELL_CALL_CANINE_FAMILIAR);
 
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -1844,7 +1904,6 @@ bool summon_general_creature_spell(spell_type spell, int pow,
 
     int hostile = (spell == SPELL_SUMMON_DEMON
                     || spell == SPELL_DEMONIC_HORDE
-                    || spell == SPELL_CALL_CANINE_FAMILIAR
                     || spell == SPELL_SUMMON_UGLY_THING) ? 3 :
                   (spell == SPELL_SUMMON_GREATER_DEMON
                     || spell == SPELL_SUMMON_WRAITHS
@@ -1874,38 +1933,6 @@ bool summon_general_creature_spell(spell_type spell, int pow,
                         (spell == SPELL_SUMMON_DEMON)         ? DEMON_COMMON
                                                               : DEMON_LESSER);
                 break;
-
-            case SPELL_CALL_CANINE_FAMILIAR:
-            {
-                const int chance = random2(pow);
-                if (chance < 10)
-                    mon = MONS_JACKAL;
-                else if (chance < 15)
-                    mon = MONS_HOUND;
-                else
-                {
-                    switch (chance % 7)
-                    {
-                    case 0:
-                        if (one_chance_in(you.species == SP_HILL_ORC ? 3 : 6))
-                            mon = MONS_WARG;
-                        else
-                            mon = MONS_WOLF;
-                        break;
-                    case 1:
-                    case 2:
-                        mon = MONS_WAR_DOG;
-                        break;
-                    case 3:
-                    case 4:
-                        mon = MONS_HOUND;
-                        break;
-                    default:
-                        mon = MONS_JACKAL;
-                        break;
-                    }
-                }
-            }
 
             case SPELL_SUMMON_ICE_BEAST:
                 mon = MONS_ICE_BEAST;
@@ -1951,7 +1978,7 @@ bool summon_general_creature_spell(spell_type spell, int pow,
             mpr("You open a gate to Pandemonium!");
         }
 
-        if (summon_general_creature(pow, quiet, mon, beha,
+        if (summon_general_creature(pow, false, mon, beha,
                                     hostile, dur, false))
         {
             success = true;
@@ -1991,14 +2018,6 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
     switch (mon)
     {
-    case MONS_JACKAL:
-    case MONS_HOUND:
-    case MONS_WARG:
-    case MONS_WOLF:
-    case MONS_WAR_DOG:
-        msg = "A canine appears!";
-        break;
-
     case MONS_ICE_BEAST:
         msg = "A chill wind blows around you.";
         break;

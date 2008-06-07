@@ -1491,10 +1491,13 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_call_imp(powc);
         break;
 
+    case SPELL_CALL_CANINE_FAMILIAR:
+        cast_call_canine_familiar(powc);
+        break;
+
     // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_DEMON:
     case SPELL_DEMONIC_HORDE:
-    case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_UGLY_THING:
     case SPELL_SUMMON_GREATER_DEMON:
