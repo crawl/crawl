@@ -2046,8 +2046,7 @@ bool cast_summon_wraiths(int pow, bool god_gift)
              friendly ? "An insubstantial figure forms in the air."
                       : "You sense a hostile presence.");
     }
-
-    if (!success)
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     //jmf: Kiku sometimes deflects this
