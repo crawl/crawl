@@ -304,9 +304,8 @@ menu_colour = notes:white:Reached XP level
 
 ##### 4-t	Tile related Options ##################
 
-tile_show_items = !?/%=([)X}+\_.
-# tile_title_screen = false
-# include = tile_minimap_colours.txt
+# All tiles specific options are in the external file
+include = tiles_options.txt
 
 
 ##### 5-  Dump File #################################################
