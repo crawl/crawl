@@ -2551,7 +2551,7 @@ enum spell_type
     SPELL_PASSWALL,
     SPELL_IGNITE_POISON,               //  170
     SPELL_STICKS_TO_SNAKES,
-    SPELL_SUMMON_LARGE_MAMMAL,         // e.g. hound
+    SPELL_CALL_CANINE_FAMILIAR,        // e.g. hound
     SPELL_SUMMON_DRAGON,
     SPELL_TAME_BEASTS,                 // charm/enslave but only animals
     SPELL_SLEEP,                       //  175

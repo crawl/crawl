@@ -1914,7 +1914,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         cast_sticks_to_snakes(powc);
         break;
 
-    case SPELL_SUMMON_LARGE_MAMMAL:
+    case SPELL_CALL_CANINE_FAMILIAR:
         cast_summon_large_mammal(powc);
         break;
 

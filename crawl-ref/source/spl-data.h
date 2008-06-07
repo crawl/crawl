@@ -1806,7 +1806,7 @@
 },
 
 {
-    SPELL_SUMMON_LARGE_MAMMAL, "Call Canine Familiar",
+    SPELL_CALL_CANINE_FAMILIAR, "Call Canine Familiar",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      3,
