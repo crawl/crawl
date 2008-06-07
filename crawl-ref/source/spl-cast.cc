@@ -1490,9 +1490,9 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     // Remember that most holy spells don't yet use powc!
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_ICE_BEAST:
-    case SPELL_SUMMON_UGLY_THING:
     case SPELL_SUMMON_GUARDIAN:
     case SPELL_SUMMON_DAEVA:
+    case SPELL_SUMMON_UGLY_THING:
     {
         monster_type mon = MONS_PROGRAM_BUG;
 
