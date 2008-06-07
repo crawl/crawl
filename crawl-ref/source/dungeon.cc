@@ -4414,6 +4414,12 @@ static void _dgn_place_item_explicit(const item_spec &spec,
         if (is_stackable_item(mitm[item_made]) && spec.qty > 0)
             mitm[item_made].quantity = spec.qty;
     }
+
+    // Modify dungeon to ensure that the item is not on an invalid feature.
+    if (grd[x][y] == DNGN_DEEP_WATER)
+        grd[x][y] = DNGN_SHALLOW_WATER;
+    else if (grd[x][y] <= DNGN_MINMOVE || grd[x][y] == DNGN_LAVA)
+        grd[x][y] = DNGN_FLOOR;
 }
 
 static void _dgn_place_multiple_items(item_list &list,
