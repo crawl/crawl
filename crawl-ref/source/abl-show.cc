@@ -1277,13 +1277,13 @@ static bool _do_ability(const ability_def& abil)
 
     // DEMONIC POWERS:
     case ABIL_SUMMON_MINOR_DEMON:
-        summon_general_creature(you.experience_level * 4,
+        summon_general_creature(you.experience_level * 4, false,
                                 summon_any_demon(DEMON_LESSER),
                                 BEH_FRIENDLY);
         break;
 
     case ABIL_SUMMON_DEMONS:
-        summon_general_creature(you.experience_level * 4,
+        summon_general_creature(you.experience_level * 4, false,
                                 summon_any_demon(DEMON_COMMON),
                                 BEH_FRIENDLY);
         break;
@@ -1438,7 +1438,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_SUMMON_DAEVA:
-        summon_general_creature(you.skills[SK_INVOCATIONS] * 4,
+        summon_general_creature(you.skills[SK_INVOCATIONS] * 4, false,
                                 MONS_DAEVA, BEH_FRIENDLY, true);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
@@ -1461,7 +1461,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_INVOKE_DEATH:
-        summon_general_creature(20 + you.skills[SK_INVOCATIONS] * 3,
+        summon_general_creature(20 + you.skills[SK_INVOCATIONS] * 3, false,
                                 MONS_REAPER, BEH_FRIENDLY, true);
         exercise(SK_INVOCATIONS, 10 + random2(14));
         break;
@@ -1542,7 +1542,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-        summon_general_creature(20 + you.skills[SK_INVOCATIONS] * 3,
+        summon_general_creature(20 + you.skills[SK_INVOCATIONS] * 3, false,
                                 static_cast<monster_type>(
                                     MONS_NEQOXEC + random2(5)),
                                 BEH_FRIENDLY, true);
@@ -1603,7 +1603,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        summon_general_creature(20 + you.skills[SK_INVOCATIONS] * 3,
+        summon_general_creature(20 + you.skills[SK_INVOCATIONS] * 3, false,
                                 static_cast<monster_type>(
                                     MONS_EXECUTIONER + random2(5)),
                                 BEH_FRIENDLY, true);

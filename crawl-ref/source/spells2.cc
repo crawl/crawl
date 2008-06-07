@@ -1531,8 +1531,9 @@ void summon_scorpions(int pow)
     }
 }                               // end summon_scorpions()
 
-bool summon_general_creature(int pow, monster_type mon, beh_type beha,
-                             int unfriendly, int numsc, bool god_gift)
+bool summon_general_creature(int pow, bool quiet, monster_type mon,
+                             beh_type beha, int unfriendly,
+                             int numsc, bool god_gift)
 {
     if (beha == BEH_FRIENDLY && random2(pow) > unfriendly)
         beha = BEH_HOSTILE;
@@ -1541,6 +1542,7 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
         numsc = std::min(2 + (random2(pow) / 4), 6);
 
     unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
+
     bool success = false;
 
     std::string msg = "";
@@ -1548,6 +1550,7 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
     switch (mon)
     {
     case MONS_BUTTERFLY:
+        msg = "A butterfly appears.";
         break;
 
     case MONS_IMP:
@@ -1566,6 +1569,18 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
         msg = "A chill wind blows around you.";
         break;
 
+    case MONS_UGLY_THING:
+        msg = "An ugly thing appears.";
+        break;
+
+    case MONS_VERY_UGLY_THING:
+        msg = "A very ugly thing appears.";
+        break;
+
+    case MONS_DRAGON:
+        msg = "A dragon appears.";
+        break;
+
     case MONS_ANGEL:
         msg = "You open a gate to Zin's realm!";
         break;
@@ -1574,19 +1589,15 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
         msg = "You are momentarily dazzled by a brilliant golden light.";
         break;
 
-    case MONS_UGLY_THING:
-    case MONS_VERY_UGLY_THING:
     default:
     {
-        msg = (mon == MONS_VERY_UGLY_THING) ? "A very ugly thing appears." :
-              (mon == MONS_UGLY_THING)      ? "An ugly thing appears."
-                                            : "A demon appears!";
-
-        if (beha == BEH_HOSTILE)
-            msg += " It doesn't look very happy.";
+        msg = "A demon appears!";
         break;
     }
     }
+
+    if (beha == BEH_HOSTILE)
+        msg += " It doesn't look very happy.";
 
     int monster =
         create_monster(
@@ -1596,17 +1607,17 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
 
     if (monster != -1)
     {
-        success = true;
-
-        if (msg != "")
+        if (!quiet)
             mprf("%s", msg.c_str());
+
+        success = true;
 
         monsters *summon = &menv[monster];
 
         if (mon == MONS_DAEVA)
             summon->flags |= MF_ATT_CHANGE_ATTEMPT;
     }
-    else
+    else if (!quiet)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);

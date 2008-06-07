@@ -570,28 +570,6 @@ void cast_sticks_to_snakes(int pow)
 
 }                               // end cast_sticks_to_snakes()
 
-void cast_summon_dragon(int pow)
-{
-    // Removed the chance of multiple dragons... one should be more
-    // than enough, and if it isn't, the player can cast again...
-    // especially since these aren't on the Abjuration plan... they'll
-    // last until they die (maybe that should be changed, but this is
-    // a very high level spell so it might be okay).  -- bwr
-    const bool friendly = (random2(pow) > 5);
-
-    if (create_monster(
-            mgen_data( MONS_DRAGON,
-                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, 3,
-                       you.pos(),
-                       friendly ? you.pet_target : MHITYOU )) != -1)
-    {
-        mprf("A dragon appears.%s",
-            friendly ? "" : " It doesn't look very happy.");
-    }
-    else
-        canned_msg( MSG_NOTHING_HAPPENS );
-}                               // end cast_summon_dragon()
-
 void cast_conjure_ball_lightning( int pow )
 {
     int num = 3 + random2( 2 + pow / 50 );
