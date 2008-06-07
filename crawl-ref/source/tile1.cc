@@ -51,6 +51,16 @@ void TileNewLevel(bool first_time)
     if (first_time)
         tile_init_flavor();
 
+    if (!player_in_mappable_area())
+    {
+        for (unsigned int x = 0; x < GXM; x++)
+            for (unsigned int y = 0; y < GYM; y++)
+            {
+                env.tile_bk_fg[x][y] = 0;
+                env.tile_bk_bg[x][y] = TILE_DNGN_UNSEEN;
+            }
+    }
+
     // Fix up stair markers.  The travel information isn't hooked up
     // until after we change levels.  So, look through all of the stairs
     // on this level and check if they still need the stair flag.
