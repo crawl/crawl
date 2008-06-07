@@ -1824,7 +1824,7 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
 
     if (level_type == LEVEL_ABYSS)
     {
-        generate_abyss();
+        generate_abyss(true);
         return (BUILD_SKIP);
     }
 

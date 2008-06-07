@@ -23,6 +23,7 @@
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
+#include "misc.h"
 #include "monplace.h"
 #include "mtransit.h"
 #include "player.h"
@@ -66,8 +67,8 @@ static bool place_feature_near( const coord_def &centre,
     return (false);
 }
 
-// public for abyss generation
-void generate_abyss(void)
+// Public for abyss generation.
+void generate_abyss(bool spatter)
 {
     int i, j;                   // loop variables
     int temp_rand;              // probability determination {dlb}
@@ -129,7 +130,8 @@ static int _abyssal_rune_roll()
     return (odds);
 }
 
-static void generate_area(int gx1, int gy1, int gx2, int gy2)
+static void generate_area(int gx1, int gy1, int gx2, int gy2,
+                          bool spatter = false)
 {
     // Any rune on the floor prevents the abyssal rune from being generated.
     bool placed_abyssal_rune =
@@ -148,10 +150,10 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
 
     FixedVector<dungeon_feature_type, 5> replaced;
 
-    // nuke map
+    // Nuke map.
     env.map.init(map_cell());
 
-    // generate level composition vector
+    // Generate level composition vector.
     for (int i = 0; i < 5; i++)
     {
         const int temp_rand = random2(10000);
@@ -169,7 +171,7 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
     {
         int rooms_to_do = 1 + random2(10);
 
-        for ( int rooms_done = 0; rooms_done < rooms_to_do; ++rooms_done )
+        for (int rooms_done = 0; rooms_done < rooms_to_do; ++rooms_done)
         {
             const int x1 = 10 + random2(GXM - 20);
             const int y1 = 10 + random2(GYM - 20);
@@ -242,7 +244,7 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
             if (one_chance_in(7500)) // place an exit
                 exits_wanted++;
 
-            // Don't place exit under items
+            // Don't place exit under items.
             if (exits_wanted > 0 && igrd[i][j] == NON_ITEM)
             {
                 grd[i][j] = DNGN_EXIT_ABYSS;
@@ -252,7 +254,7 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
 #endif
             }
 
-            if (one_chance_in(10000)) // place an altar
+            if (one_chance_in(10000)) // Place an altar.
                 altars_wanted++;
 
             // Don't place altars under items.
@@ -267,7 +269,7 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
                        || grd[i][j] == DNGN_ALTAR_SHINING_ONE
                        || grd[i][j] == DNGN_ALTAR_ELYVILON);
 
-                // Lugonu has a flat 50% chance of corrupting the altar
+                // Lugonu has a flat 50% chance of corrupting the altar.
                 if (coinflip())
                     grd[i][j] = DNGN_ALTAR_LUGONU;
 
@@ -277,6 +279,8 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
 #endif
             }
         }
+
+    generate_random_blood_spatter_on_level();
 }
 
 static int abyss_exit_nearness()
@@ -398,7 +402,7 @@ void area_shift(void)
         if (!m.alive())
             continue;
 
-        // remove non-nearby monsters
+        // Remove non-nearby monsters.
         if (grid_distance(m.x, m.y, you.x_pos, you.y_pos) > 10)
             abyss_lose_monster(m);
     }
@@ -406,21 +410,21 @@ void area_shift(void)
     for (int i = 5; i < (GXM - 5); i++)
         for (int j = 5; j < (GYM - 5); j++)
         {
-            // don't modify terrain by player
+            // Don't modify terrain by player.
             if (grid_distance(i, j, you.x_pos, you.y_pos) <= 10)
                 continue;
 
-            // nuke terrain otherwise
+            // Nuke terrain otherwise.
             grd[i][j] = DNGN_UNSEEN;
 
-            // nuke items
+            // Nuke items.
             lose_item_stack( i, j );
 
             if (mgrd[i][j] != NON_MONSTER)
                 abyss_lose_monster( menv[ mgrd[i][j] ] );
         }
 
-    // shift all monsters & items to new area
+    // Shift all monsters & items to new area.
     for (int i = you.x_pos - 10; i < you.x_pos + 11; i++)
     {
         if (i < 0 || i >= GXM)
@@ -434,13 +438,13 @@ void area_shift(void)
             const int ipos = 45 + i - you.x_pos;
             const int jpos = 35 + j - you.y_pos;
 
-            // move terrain
+            // Move terrain.
             grd[ipos][jpos] = grd[i][j];
 
-            // move item
+            // Move item.
             move_item_stack_to_grid( i, j, ipos, jpos );
 
-            // move monster
+            // Move monster.
             mgrd[ipos][jpos] = mgrd[i][j];
             if (mgrd[i][j] != NON_MONSTER)
             {
@@ -449,7 +453,7 @@ void area_shift(void)
                 mgrd[i][j] = NON_MONSTER;
             }
 
-            // move cloud
+            // Move cloud,
             if (env.cgrid[i][j] != EMPTY_CLOUD)
                 move_cloud( env.cgrid[i][j], ipos, jpos );
         }
@@ -471,7 +475,7 @@ void area_shift(void)
     you.moveto(45, 35);
 
     generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
-                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER);
+                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
 
     xom_check_nearness();
 
@@ -506,7 +510,7 @@ void abyss_teleport( bool new_area )
 
     if (!new_area)
     {
-        // try to find a good spot within the shift zone:
+        // Try to find a good spot within the shift zone.
         for (i = 0; i < 100; i++)
         {
             x = 16 + random2( GXM - 32 );
@@ -536,10 +540,10 @@ void abyss_teleport( bool new_area )
     mpr("New area Abyss teleport.", MSGCH_DIAGNOSTICS);
 #endif
 
-    // teleport to a new area of the abyss:
+    // Teleport to a new area of the abyss.
 
-    init_pandemonium();          // get new monsters
-    dgn_set_colours_from_monsters(); // and new colours
+    init_pandemonium();              // Get new monsters
+    dgn_set_colours_from_monsters(); // ...and new colours.
 
     for (i = 0; i < MAX_MONSTERS; i++)
     {
@@ -547,7 +551,7 @@ void abyss_teleport( bool new_area )
             abyss_lose_monster(menv[i]);
     }
 
-    // Orbs and fixed artefacts are marked as "lost in the abyss"
+    // Orbs and fixed artefacts are marked as "lost in the abyss".
     for (k = 0; k < MAX_ITEMS; k++)
     {
         if (is_valid_item( mitm[k] ))
@@ -563,7 +567,7 @@ void abyss_teleport( bool new_area )
     for (i = 10; i < (GXM - 9); i++)
         for (j = 10; j < (GYM - 9); j++)
         {
-            grd[i][j]       = DNGN_UNSEEN;  // so generate_area will pick it up
+            grd[i][j]       = DNGN_UNSEEN;  // So generate_area will pick it up.
             igrd[i][j]      = NON_ITEM;
             mgrd[i][j]      = NON_MONSTER;
             env.cgrid[i][j] = EMPTY_CLOUD;
@@ -574,7 +578,7 @@ void abyss_teleport( bool new_area )
     you.moveto(45, 35);
 
     generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
-                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER);
+                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
 
     xom_check_nearness();
 
@@ -900,7 +904,7 @@ bool lugonu_corrupt_level(int power)
     std::auto_ptr<crawl_environment> backup(new crawl_environment(env));
     generate_abyss();
     generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
-                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER);
+                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, false);
 
     corrupt_choose_colours();
 

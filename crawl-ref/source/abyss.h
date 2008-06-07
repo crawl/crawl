@@ -19,7 +19,7 @@
 /* ***********************************************************************
  * called from: dungeon
  * *********************************************************************** */
-void generate_abyss(void);
+void generate_abyss(bool spatter = false);
 
 
 // last updated 12may2000 {dlb}

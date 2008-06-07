@@ -1149,14 +1149,14 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
             for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++)
                 {
-                     if (i == 0 && j == 0) // current square
-                         continue;
+                    if (i == 0 && j == 0) // current square
+                        continue;
 
-                     // Spattering onto walls etc. less likely.
-                     if (grd[x+i][y+j] < DNGN_MINMOVE && !one_chance_in(3))
-                         continue;
+                    // Spattering onto walls etc. less likely.
+                    if (grd[x+i][y+j] < DNGN_MINMOVE && !one_chance_in(3))
+                        continue;
 
-                     maybe_bloodify_square(x+i, y+j, amount/15);
+                    maybe_bloodify_square(x+i, y+j, amount/15);
                 }
         }
     }
@@ -1172,6 +1172,48 @@ void bleed_onto_floor(int x, int y, int montype, int damage, bool spatter)
         return;
 
     maybe_bloodify_square(x, y, damage, spatter);
+}
+
+static void _spatter_neighbours(int cx, int cy, int chance)
+{
+    int posx, posy;
+    for (int x = -1; x <= 1; x++)
+        for (int y = -1; y <= 1; y++)
+        {
+            posx = cx + x;
+            posy = cy + y;
+            if (!in_bounds(posx, posy))
+                continue;
+
+            if (!allow_bleeding_on_square(posx, posy))
+                continue;
+
+            if (grd[posx][posy] < DNGN_MINMOVE && !one_chance_in(3))
+                continue;
+
+            if (one_chance_in(chance))
+            {
+                env.map[posx][posy].property = FPROP_BLOODY;
+                _spatter_neighbours(posx, posy, chance+1);
+            }
+        }
+}
+
+void generate_random_blood_spatter_on_level()
+{
+    int cx, cy;
+    int startprob;
+    int max_cluster = 7 + random2(9);
+    for (int i = 0; i < max_cluster; i++)
+    {
+        cx = 10 + random2(GXM - 10);
+        cy = 10 + random2(GYM - 10);
+        startprob = 1 + random2(4);
+
+        if (allow_bleeding_on_square(cx, cy))
+            env.map[cx][cy].property = FPROP_BLOODY;
+        _spatter_neighbours(cx, cy, startprob);
+    }
 }
 
 void search_around( bool only_adjacent )
@@ -2265,6 +2307,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
                 break;
 
             PlaceInfo &place_info = you.get_place_info();
+            generate_random_blood_spatter_on_level();
 
             // Entering voluntarily only stimulates Xom if you've never
             // been there before

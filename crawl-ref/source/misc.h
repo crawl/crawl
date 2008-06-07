@@ -85,6 +85,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg = true );
 
 bool victim_can_bleed(int montype);
 void bleed_onto_floor(int x, int y, int mon, int damage, bool spatter = false);
+void generate_random_blood_spatter_on_level();
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

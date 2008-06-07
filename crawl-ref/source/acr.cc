@@ -211,11 +211,11 @@ int old_main( int argc, char *argv[] )
 int main( int argc, char *argv[] )
 #endif
 {
-    _compile_time_asserts();     // just to quiet "unused static function" warning
+    _compile_time_asserts();  // just to quiet "unused static function" warning
     // Load in the system environment variables
     get_system_environment();
 
-    // parse command line args -- look only for initfile & crawl_dir entries
+    // Parse command line args -- look only for initfile & crawl_dir entries.
     if (!parse_args(argc, argv, true))
     {
         _show_commandline_options_help();
@@ -228,7 +228,7 @@ int main( int argc, char *argv[] )
     // Read the init file.
     init_file_error = read_init_file();
 
-    // now parse the args again, looking for everything else.
+    // Now parse the args again, looking for everything else.
     parse_args( argc, argv, false );
 
     if (Options.sc_entries != 0 || !SysEnv.scorefile.empty())
@@ -1745,8 +1745,8 @@ static void _print_friendly_pickup_setting(bool was_changed)
     }
 }
 
-// note that in some actions, you don't want to clear afterwards.
-//  e.g. list_jewellery, etc.
+// Note that in some actions, you don't want to clear afterwards.
+// e.g. list_jewellery, etc.
 void process_command( command_type cmd )
 {
     apply_berserk_penalty = true;
@@ -3855,11 +3855,11 @@ static bool _initialise(void)
 
     msg::initialise_mpr_streams();
 
-    // init item array:
+    // Init item array.
     for (int i = 0; i < MAX_ITEMS; i++)
         init_item(i);
 
-    // empty messaging string
+    // Empty messaging string.
     info[0] = 0;
 
     for (int i = 0; i < MAX_MONSTERS; i++)
@@ -3887,7 +3887,7 @@ static bool _initialise(void)
 
     cio_init();
 
-    // system initialisation stuff:
+    // System initialisation stuff.
     textbackground(0);
 
     clrscr();
@@ -3901,7 +3901,7 @@ static bool _initialise(void)
     }
 #endif
 
-    // sets up a new game:
+    // Sets up a new game.
     const bool newc = new_game();
     if (!newc)
         restore_game();
@@ -3925,7 +3925,7 @@ static bool _initialise(void)
           NUM_LEVEL_AREA_TYPES, -1, you.where_are_you );
 
 #if DEBUG_DIAGNOSTICS
-    // Debug compiles display a lot of "hidden" information, so we auto-wiz
+    // Debug compiles display a lot of "hidden" information, so we auto-wiz.
     you.wizard = true;
 #endif
 
