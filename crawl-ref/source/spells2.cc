@@ -1714,8 +1714,8 @@ bool cast_summon_scorpions(int pow, bool god_gift)
     return (success);
 }
 
-bool summon_swarm(int pow, bool god_gift, bool force_hostile,
-                  bool quiet)
+bool cast_summon_swarm(int pow, bool god_gift, bool force_hostile,
+                       bool quiet)
 {
     bool success = false;
 
@@ -1788,7 +1788,7 @@ bool summon_swarm(int pow, bool god_gift, bool force_hostile,
         {
             success = true;
 
-            if (!god_gift && !quiet)
+            if (!quiet)
             {
                 mprf("A swarming creature appears!%s",
                      friendly ? "" : " It doesn't look very happy.");
@@ -1796,7 +1796,35 @@ bool summon_swarm(int pow, bool god_gift, bool force_hostile,
         }
     }
 
-    if (!god_gift && !quiet && !success)
+    if (!quiet && !success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
+bool cast_call_imp(int pow, bool god_gift)
+{
+    bool success = false;
+
+    monster_type mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
+                       (one_chance_in(7)) ? MONS_SHADOW_IMP
+                                          : MONS_IMP;
+
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
+
+    if (create_monster(
+            mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
+                      you.pet_target,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
+            (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air."
+                                     : "A beastly little devil appears in a puff of flame.");
+    }
+
+    if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
@@ -1969,26 +1997,6 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
     switch (mon)
     {
-    case MONS_BUTTERFLY:
-        msg = "A butterfly appears.";
-        break;
-
-    case MONS_SCORPION:
-        msg = "A scorpion appears.";
-        break;
-
-    case MONS_IMP:
-        msg = "A beastly little devil appears in a puff of flame.";
-        break;
-
-    case MONS_WHITE_IMP:
-        msg = "A beastly little devil appears in a puff of frigid air.";
-        break;
-
-    case MONS_SHADOW_IMP:
-        msg = "A shadowy apparition takes form in the air.";
-        break;
-
     case MONS_JACKAL:
     case MONS_HOUND:
     case MONS_WARG:

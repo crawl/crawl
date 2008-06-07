@@ -1484,11 +1484,14 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_SUMMON_SWARM:
-        summon_swarm(powc);
+        cast_summon_swarm(powc);
+        break;
+
+    case SPELL_CALL_IMP:
+        cast_call_imp(powc);
         break;
 
     // Remember that most holy spells don't yet use powc!
-    case SPELL_CALL_IMP:
     case SPELL_SUMMON_DEMON:
     case SPELL_DEMONIC_HORDE:
     case SPELL_CALL_CANINE_FAMILIAR:

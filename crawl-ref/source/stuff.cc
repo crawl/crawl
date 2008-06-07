@@ -688,7 +688,7 @@ void redraw_screen(void)
 
 // STEPDOWN FUNCTION to replace conditional chains in spells2.cc 12jan2000 {dlb}
 // it is a bit more extensible and optimizes the logical structure, as well
-// usage: summon_swarm() summon_undead() summon_scorpions() summon_things()
+// usage: cast_summon_swarm() summon_undead() summon_scorpions() summon_things()
 // ex(1): stepdown_value (foo, 2, 2, 6, 8) replaces the following block:
 //
 
