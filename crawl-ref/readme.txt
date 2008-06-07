@@ -39,14 +39,10 @@ The following files in the Crawl's main folder are essential:
 * crawl           These start the game. (The actual name depends on your
 * crawl.exe       operating system.)
 
-* init.txt        These contain the options for the game. The defaults
-* .crawlrc        play well, so don't bother with this in the beginning.
-                  Permanent death is not an option, but a feature!
-
 * macro.txt       Playing Crawl can be made even more convenient by
                   redefining keys and assigning macros. Ignore early on.
 
-The /docs folder contains the following helpful texts (all of which can be 
+The docs/ folder contains the following helpful texts (all of which can be 
 read in-game by bringing up the help menu with '?'):
 
 * crawl_manual.txt   The complete manual; describing all aspects in detail.
@@ -61,6 +57,12 @@ read in-game by bringing up the help menu with '?'):
                      to work. For Windows only.
 * keys.pdf           A printable document, listing all commands and it also
                      contains a very short guide for new players.
+
+The settings/ folder contains, among others, the following files:
+
+* init.txt        These contain the options for the game. The defaults
+* .crawlrc        play well, so don't bother with this in the beginning.
+                  Permanent death is not an option, but a feature!
 
 
 3. Contact and reporting bugs
@@ -102,11 +104,12 @@ compile and run on any reasonably modern Unix.
 Stone Soup features both ASCII and graphical (Tiles) display.
 
 Crawl gladly and gratiously uses the following open-source packages:
-* The Lua script language, see /docs/lualicense.txt.
-* The PCRE library for regular expressions, see /docs/pcre_license.txt.
-* The Mersenne Twister for random number generation, /docs/mt19937.txt.
+* The Lua script language, see docs/lualicense.txt.
+* The PCRE library for regular expressions, see docs/pcre_license.txt.
+* The Mersenne Twister for random number generation, docs/mt19937.txt.
 * The SQLite library as database engine; it is properly public domain.
 * The ReST light markup language for the documentation.
+
 
 5. How you can help
 -------------------
@@ -122,8 +125,8 @@ improve interface or gameplay are welcome as well.
 * Vault making.
 Crawl uses many hand-drawn (but often randomised) maps. Making them is fun and 
 easy. It's best to start with simple entry vaults (glance through 
-/dat/entry.des for a first impression). Later, you may want to read 
-/docs/level_design.txt for the full power. If you're ambitious, new maps for 
+dat/entry.des for a first impression). Later, you may want to read 
+docs/level_design.txt for the full power. If you're ambitious, new maps for 
 branch ends are possible, as well.
 If you've made some maps, you can test them on your system (no compiling 
 needed) and then just mail them to the mailing list.
@@ -132,13 +135,13 @@ needed) and then just mail them to the mailing list.
 Monster talking provides a lot of flavour. Just like vaults, speech depends 
 upon a large set of entries. Since most of the speech has been outsourced, you 
 can add new prose. The syntax is effective, but slightly strange, so you may
-want to read /docs/monster_speech.txt.
+want to read docs/monster_speech.txt.
 Again, changing or adding speech is possible on your local game. If you 
 have added something, send the files to the list.
 
 * Monster descriptions.
 You can look up the current monster descriptions in-game with '?/' or just read
-them in /dat/descript/monsters.txt. The following conventions should be more or
+them in dat/descript/monsters.txt. The following conventions should be more or
 less obeyed: descriptions ought to contain flavour text, ideally pointing out
 major weaknesses/strenghts. No numbers, please. Citations are okay, but try to
 stay away from the most generic ones.
@@ -154,7 +157,6 @@ contact us via the mailing list.
 If you like to, you can download the source code and apply patches. Both 
 patches for bug fixes as well as implementation of new features are very much
 welcome. 
-Please be sure to read /docs/coding_conventions.txt first.
+Please be sure to read docs/coding_conventions.txt first.
 
 Thank you, and have fun crawling!
-
