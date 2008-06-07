@@ -1489,6 +1489,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     // Remember that most holy spells don't yet use powc!
     case SPELL_CALL_IMP:
+    case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_GUARDIAN:
     case SPELL_SUMMON_DAEVA:
@@ -1502,6 +1503,11 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                 mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
                       (one_chance_in(7)) ? MONS_SHADOW_IMP
                                          : MONS_IMP;
+                break;
+
+            case SPELL_SUMMON_DEMON:
+                mpr("You open a gate to Pandemonium!");
+                mon = summon_any_demon(DEMON_COMMON);
                 break;
 
             case SPELL_SUMMON_ICE_BEAST:
@@ -1608,12 +1614,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         // staff of Dispater & Sceptre of Asmodeus
         if (!zapping(ZAP_HELLFIRE, powc, beam, true))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_SUMMON_DEMON:
-        mpr("You open a gate to Pandemonium!");
-        summon_general_creature(powc, summon_any_demon(DEMON_COMMON),
-                                BEH_FRIENDLY, false);
         break;
 
     case SPELL_DEMONIC_HORDE:

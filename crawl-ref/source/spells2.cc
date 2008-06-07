@@ -1827,7 +1827,7 @@ void summon_things( int pow )
     {
         numsc = stepdown_value( numsc, 2, 2, 6, -1 );
 
-        // No more than 2 tentacled monstrosities
+        // No more than 2 tentacled monstrosities.
         while (numsc > 2 && big_things < 2 && one_chance_in(3))
         {
             numsc -= 2;
