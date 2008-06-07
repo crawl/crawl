@@ -1836,10 +1836,7 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
 
     monster_type mon = MONS_PROGRAM_BUG;
 
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
-
     const int chance = random2(pow);
-
     if (chance < 10)
         mon = MONS_JACKAL;
     else if (chance < 15)
@@ -1870,6 +1867,8 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
             break;
         }
     }
+
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
 
     bool friendly = (random2(pow) > 3);
 
@@ -1972,6 +1971,38 @@ bool cast_summon_ice_beast(int pow, bool god_gift)
     return (success);
 }
 
+bool cast_summon_ugly_thing(int pow, bool god_gift)
+{
+    bool success = false;
+
+    const int chance = std::max(6 - (pow / 12), 1);
+    monster_type mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
+                                               : MONS_UGLY_THING;
+
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
+
+    bool friendly = (random2(pow) > 3);
+
+    if (create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mprf((mon == MONS_VERY_UGLY_THING) ? "A very ugly thing appears.%s"
+                                           : "An ugly thing appears.%s",
+             friendly ? "" : " It doesn't look very happy.");
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
 bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift)
 {
@@ -1982,8 +2013,7 @@ bool summon_general_creature_spell(spell_type spell, int pow,
     beh_type beha = (spell == SPELL_SUMMON_GREATER_DEMON) ? BEH_CHARMED
                                                           : BEH_FRIENDLY;
 
-    int hostile = (spell == SPELL_SUMMON_UGLY_THING) ? 3 :
-                  (spell == SPELL_SUMMON_GREATER_DEMON
+    int hostile = (spell == SPELL_SUMMON_GREATER_DEMON
                     || spell == SPELL_SUMMON_WRAITHS
                     || spell == SPELL_SUMMON_DRAGON)     ? 5
                                                          : -1;
@@ -2001,14 +2031,6 @@ bool summon_general_creature_spell(spell_type spell, int pow,
     {
         switch (spell)
         {
-            case SPELL_SUMMON_UGLY_THING:
-            {
-                const int chance = std::max(6 - (pow / 12), 1);
-                mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
-                                              : MONS_UGLY_THING;
-                break;
-            }
-
             case SPELL_SUMMON_GREATER_DEMON:
                 mon = summon_any_demon(DEMON_GREATER);
                 break;
@@ -2081,14 +2103,6 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 
     switch (mon)
     {
-    case MONS_UGLY_THING:
-        msg = "An ugly thing appears.";
-        break;
-
-    case MONS_VERY_UGLY_THING:
-        msg = "A very ugly thing appears.";
-        break;
-
     case MONS_WRAITH:
     case MONS_FREEZING_WRAITH:
     case MONS_SPECTRAL_WARRIOR:
