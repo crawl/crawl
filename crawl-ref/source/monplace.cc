@@ -2191,6 +2191,11 @@ monster_type summon_any_demon(demon_class_type dct)
     return (mon);
 }
 
+monster_type summon_any_holy_being()
+{
+    return (coinflip()) ? MONS_ANGEL : MONS_DAEVA;
+}
+
 monster_type summon_any_dragon(dragon_class_type dct)
 {
     monster_type mon = MONS_PROGRAM_BUG;

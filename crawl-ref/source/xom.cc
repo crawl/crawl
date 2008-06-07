@@ -431,15 +431,16 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
         roll >= 340 ? DEMON_COMMON
                     : DEMON_LESSER;
 
-    // Sometimes, send an angel or daeva instead.
-    if (dct == DEMON_GREATER && coinflip())
-        return (coinflip() ? MONS_ANGEL : MONS_DAEVA);
+    monster_type demon = MONS_PROGRAM_BUG;
 
-    const monster_type demontype =
-        summon_any_demon(
+    // Sometimes, send a holy being instead.
+    if (dct == DEMON_GREATER && coinflip())
+        demon = summon_any_holy_being();
+    else
+        demon = summon_any_demon(
             use_greater_demons || dct != DEMON_GREATER ? dct : DEMON_COMMON);
 
-    return (demontype);
+    return (demon);
 }
 
 // Returns a demon suitable for use in Xom's punishments, filtering out
