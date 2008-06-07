@@ -132,6 +132,10 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
+bool cast_summon_butterflies(int pow, bool god_gift = false);
+
+bool cast_summon_scorpions(int pow, bool god_gift = false);
+
 bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift = false);
 
@@ -153,13 +157,14 @@ void summon_animals(int pow);
  * *********************************************************************** */
 void summon_small_mammals(int pow);
 
-bool summon_berserker(int pow, beh_type beha, bool god_gift);
+bool summon_berserker(int pow, bool force_hostile = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - religion - spell
  * *********************************************************************** */
-bool summon_swarm(int pow, beh_type beha, bool god_gift);
+bool summon_swarm(int pow, bool god_gift = false, bool force_hostile = false,
+                  bool quiet = false);
 
 
 // last updated 24may2000 {dlb}

@@ -1388,10 +1388,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_SUMMON_SWARM:
-        summon_swarm(powc, BEH_FRIENDLY, false);
-        break;
-
     case SPELL_SUMMON_HORRIBLE_THINGS:
         summon_things(powc);
         break;
@@ -1479,9 +1475,19 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    // Remember that most holy spells don't yet use powc!
     case SPELL_SUMMON_BUTTERFLIES:
+        cast_summon_butterflies(powc);
+        break;
+
     case SPELL_SUMMON_SCORPIONS:
+        cast_summon_scorpions(powc);
+        break;
+
+    case SPELL_SUMMON_SWARM:
+        summon_swarm(powc);
+        break;
+
+    // Remember that most holy spells don't yet use powc!
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_DEMON:
     case SPELL_DEMONIC_HORDE:
@@ -1562,7 +1568,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_TUKIMAS_DANCE:
         crawl_state.cant_cmd_repeat("You can't repeat dancing weapon.");
-        dancing_weapon(powc, false);
+        dancing_weapon(powc);
         break;
 
     case SPELL_HELLFIRE:

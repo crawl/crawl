@@ -472,16 +472,15 @@ void simulacrum(int power)
     }
 }
 
-bool dancing_weapon(int pow, bool force_hostile, bool silent)
+bool dancing_weapon(int pow, bool force_hostile, bool quiet)
 {
-    int numsc = std::min(2 + (random2(pow) / 5), 6);
-    int summs = 0;
+    bool success = true;
 
-    bool failed = false;
+    int monster;
+
+    const int dur = std::min(2 + (random2(pow) / 5), 6);
+
     const int wpn = you.equip[EQ_WEAPON];
-
-    beh_type beha = BEH_FRIENDLY;
-    unsigned short hitting = you.pet_target;
 
     // See if wielded item is appropriate:
     if (wpn == -1
@@ -489,36 +488,35 @@ bool dancing_weapon(int pow, bool force_hostile, bool silent)
         || is_range_weapon(you.inv[wpn])
         || is_fixed_artefact( you.inv[wpn]))
     {
-        failed = true;
+        success = false;
     }
 
     // See if we can get an mitm for the dancing weapon:
     int i = get_item_slot();
     if (i == NON_ITEM)
-        failed = true;
+        success = false;
 
-    if (!failed)
+    if (success)
     {
-        // cursed weapons become hostile
-        if (item_cursed( you.inv[wpn] ) || force_hostile)
-        {
-            beha = BEH_HOSTILE;
-            hitting = MHITYOU;
-        }
+        // Cursed weapons become hostile.
+        bool friendly = (!force_hostile && !item_cursed(you.inv[wpn]));
 
-        summs =
+        monster =
             create_monster(
-                mgen_data(MONS_DANCING_WEAPON, beha, numsc,
-                          you.pos(), hitting));
-        if (summs == -1)
-            failed = true;
+                mgen_data(MONS_DANCING_WEAPON,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                          dur, you.pos(),
+                          friendly ? you.pet_target : MHITYOU));
+
+        if (monster == -1)
+            success = false;
     }
 
-    if (failed)
+    if (!success)
     {
         destroy_item(i);
 
-        if (!silent)
+        if (!quiet)
         {
             if (wpn != -1)
                 mpr("Your weapon vibrates crazily for a second.");
@@ -527,32 +525,33 @@ bool dancing_weapon(int pow, bool force_hostile, bool silent)
                             << std::endl;
         }
 
-        return false;
+        return (false);
     }
 
-    // We are successful:
-    unwield_item(); // unwield the weapon (including removing wield effects)
+    // We are successful.  Unwield the weapon, removing any wield effects.
+    unwield_item();
 
-    // copy item (done here after any wield effects are removed)
+    // Copy the unwielded item.
     mitm[i] = you.inv[wpn];
     mitm[i].quantity = 1;
     mitm[i].x = 0;
     mitm[i].y = 0;
     mitm[i].link = NON_ITEM;
 
-    // Mark the weapon as thrown so we'll autograb it when the tango's done.
+    // Mark the weapon as thrown, so that we'll autograb it when the
+    // tango's done.
     mitm[i].flags |= ISFLAG_THROWN;
 
     mprf("%s dances into the air!", you.inv[wpn].name(DESC_CAP_YOUR).c_str());
 
     you.inv[wpn].quantity = 0;
 
-    menv[summs].inv[MSLOT_WEAPON] = i;
-    menv[summs].colour = mitm[i].colour;
+    menv[monster].inv[MSLOT_WEAPON] = i;
+    menv[monster].colour = mitm[i].colour;
     burden_change();
 
-    return true;
-}                               // end dancing_weapon()
+    return (true);
+}
 
 //
 // This function returns true if the player can use controlled

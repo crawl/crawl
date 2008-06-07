@@ -1634,8 +1634,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_TROG_BROTHERS_IN_ARMS:
         // Trog abilities don't use or train invocations.
         summon_berserker(you.piety +
-                         random2(you.piety/4) - random2(you.piety/4),
-                         BEH_FRIENDLY, true);
+                         random2(you.piety/4) - random2(you.piety/4));
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:

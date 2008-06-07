@@ -1660,21 +1660,161 @@ void summon_animals(int pow)
     }
 }
 
+bool cast_summon_butterflies(int pow, bool god_gift)
+{
+    bool success = false;
+
+    const int how_many = std::max(15, 4 + random2(3) + random2(pow) / 10);
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        if (create_monster(
+                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, 3,
+                          you.pos(), you.pet_target,
+                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            success = true;
+        }
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
+bool cast_summon_scorpions(int pow, bool god_gift)
+{
+    bool success = false;
+
+    const int how_many = stepdown_value(1 + random2(pow)/10 + random2(pow)/10,
+                                        2, 2, 6, 8);
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        bool friendly = (random2(pow) > 3);
+
+        if (create_monster(
+                mgen_data(MONS_SCORPION,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                          3, you.pos(),
+                          friendly ? you.pet_target : MHITYOU,
+                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            success = true;
+
+            mprf("A scorpion appears.%s",
+                 friendly ? "" : " It doesn't look very happy.");
+        }
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
+bool summon_swarm(int pow, bool god_gift, bool force_hostile,
+                  bool quiet)
+{
+    bool success = false;
+
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
+
+    const int how_many = stepdown_value(2 + random2(pow)/10 + random2(pow)/25,
+                                        2, 2, 6, 8);
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        switch (random2(14))
+        {
+        case 0:
+        case 1:         // prototypical swarming creature {dlb}
+            mon = MONS_KILLER_BEE;
+            break;
+
+        case 2:         // comment said "larva", code read scorpion {dlb}
+            mon = MONS_SCORPION;
+            break;              // think: "The Arrival" {dlb}
+
+        case 3:         //jmf: technically not insects but still cool
+            mon = MONS_WORM;
+            break;              // but worms kinda "swarm" so s'ok {dlb}
+
+        case 4:         // comment read "larva", code was for scorpion
+            mon = MONS_GIANT_MOSQUITO;
+            break;              // changed into giant mosquito 12jan2000 {dlb}
+
+        case 5:         // think: scarabs in "The Mummy" {dlb}
+            mon = MONS_GIANT_BEETLE;
+            break;
+
+        case 6:         //jmf: blowfly instead of queen bee
+            mon = MONS_GIANT_BLOWFLY;
+            break;
+
+            // queen bee added if more than x bees in swarm? {dlb}
+            // the above would require code rewrite - worth it? {dlb}
+
+        case 8:         //jmf: changed to red wasp; was wolf spider
+            mon = MONS_WOLF_SPIDER;    //jmf: spiders aren't insects
+            break;              // think: "Kingdom of the Spiders" {dlb}
+            // not just insects!!! - changed back {dlb}
+
+        case 9:
+            mon = MONS_BUTTERFLY;      // comic relief? {dlb}
+            break;
+
+        case 10:                // change into some kind of snake -- {dlb}
+            mon = MONS_YELLOW_WASP;    // do wasps swarm? {dlb}
+            break;              // think: "Indiana Jones" and snakepit? {dlb}
+
+        default:                // 3 in 14 chance, 12jan2000 {dlb}
+            mon = MONS_GIANT_ANT;
+            break;
+        }                       // end switch
+
+        bool friendly = (god_gift) ? !force_hostile
+                                   : (random2(pow) > 7);
+
+        if (create_monster(
+                mgen_data(mon,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                          dur, you.pos(),
+                          friendly ? you.pet_target : MHITYOU,
+                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            success = true;
+
+            if (!god_gift && !quiet)
+            {
+                mprf("A swarming creature appears!%s",
+                     friendly ? "" : " It doesn't look very happy.");
+            }
+        }
+    }
+
+    if (!god_gift && !quiet && !success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
 bool summon_general_creature_spell(spell_type spell, int pow,
                                    bool god_gift)
 {
     bool success = false;
 
-    bool quiet = (spell == SPELL_SUMMON_BUTTERFLIES
-                    || spell == SPELL_CALL_CANINE_FAMILIAR);
+    bool quiet = (spell == SPELL_CALL_CANINE_FAMILIAR);
 
     monster_type mon = MONS_PROGRAM_BUG;
 
     beh_type beha = (spell == SPELL_SUMMON_GREATER_DEMON) ? BEH_CHARMED
                                                           : BEH_FRIENDLY;
 
-    int hostile = (spell == SPELL_SUMMON_SCORPIONS
-                    || spell == SPELL_SUMMON_DEMON
+    int hostile = (spell == SPELL_SUMMON_DEMON
                     || spell == SPELL_DEMONIC_HORDE
                     || spell == SPELL_CALL_CANINE_FAMILIAR
                     || spell == SPELL_SUMMON_UGLY_THING) ? 3 :
@@ -1683,18 +1823,11 @@ bool summon_general_creature_spell(spell_type spell, int pow,
                     || spell == SPELL_SUMMON_DRAGON)     ? 5
                                                          : -1;
 
-    int dur = (spell == SPELL_SUMMON_BUTTERFLIES
-                || spell == SPELL_SUMMON_SCORPIONS) ? 3 :
-              (spell == SPELL_SUMMON_GREATER_DEMON
+    int dur = (spell == SPELL_SUMMON_GREATER_DEMON
                 || spell == SPELL_SUMMON_WRAITHS)   ? 5
                                                     : -1;
 
-    int how_many = (spell == SPELL_SUMMON_BUTTERFLIES) ?
-                       std::max(15, 4 + random2(3) + random2(pow) / 10) :
-                   (spell == SPELL_SUMMON_SCORPIONS)   ?
-                       stepdown_value(1 + random2(pow) / 10 + random2(pow) / 10,
-                                      2, 2, 6, 8) :
-                   (spell == SPELL_DEMONIC_HORDE)      ?
+    int how_many = (spell == SPELL_DEMONIC_HORDE)      ?
                        7 + random2(5) :
                    (spell == SPELL_SUMMON_WRAITHS)     ?
                        stepdown_value(1 + random2(pow) / 30 + random2(pow) / 30,
@@ -1705,14 +1838,6 @@ bool summon_general_creature_spell(spell_type spell, int pow,
     {
         switch (spell)
         {
-            case SPELL_SUMMON_BUTTERFLIES:
-                mon = MONS_BUTTERFLY;
-                break;
-
-            case SPELL_SUMMON_SCORPIONS:
-                mon = MONS_SCORPION;
-                break;
-
             case SPELL_CALL_IMP:
                 mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
                       (one_chance_in(7)) ? MONS_SHADOW_IMP
@@ -1946,7 +2071,7 @@ bool summon_general_creature(int pow, bool quiet, monster_type mon,
 }
 
 // Trog sends some fighting buddies (or enemies) for his followers.
-bool summon_berserker(int pow, beh_type beha, bool god_gift)
+bool summon_berserker(int pow, bool force_hostile)
 {
     bool success = false;
 
@@ -1954,15 +2079,10 @@ bool summon_berserker(int pow, beh_type beha, bool god_gift)
 
     int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
-
     if (pow <= 100)
     {
         // bears
-        if (coinflip())
-            mon = MONS_BLACK_BEAR;
-        else
-            mon = MONS_GRIZZLY_BEAR;
+        mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_GRIZZLY_BEAR;
     }
     else if (pow <= 140)
     {
@@ -1996,17 +2116,16 @@ bool summon_berserker(int pow, beh_type beha, bool god_gift)
     else
     {
         // giants
-        if (coinflip())
-            mon = MONS_HILL_GIANT;
-        else
-            mon = MONS_STONE_GIANT;
+        mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
     }
 
     int monster =
         create_monster(
-            mgen_data(mon, beha, dur,
-                      you.pos(), hitting,
-                      god_gift ? MF_GOD_GIFT : 0));
+            mgen_data(mon,
+                      !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, you.pos(),
+                      !force_hostile ? you.pet_target : MHITYOU,
+                      MF_GOD_GIFT));
 
     if (monster != -1)
     {
@@ -2018,95 +2137,13 @@ bool summon_berserker(int pow, beh_type beha, bool god_gift)
         mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
         mon_enchant abj = summon->get_ench(ENCH_ABJ);
 
-        // Let Trog gifts berserk longer, and set abj timeout ==
-        // berserk timeout.
+        // Let Trog's gifts berserk longer, and set the abjuration
+        // timeout to the berserk timeout.
         berserk.duration = berserk.duration * 3 / 2;
         berserk.maxduration = berserk.duration;
         abj.duration = abj.maxduration = berserk.duration;
         summon->update_ench(berserk);
         summon->update_ench(abj);
-    }
-
-    return (success);
-}
-
-bool summon_swarm(int pow, beh_type beha, bool god_gift)
-{
-    bool success = false;
-
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    int dur = std::min(2 + (random2(pow) / 4), 6);
-
-    unsigned short hitting = (beha == BEH_FRIENDLY) ? you.pet_target : MHITYOU;
-
-    int how_many = stepdown_value(2 + random2(pow) / 10 + random2(pow) / 25,
-                                  2, 2, 6, 8);
-
-    for (int scount = 0; scount < how_many; ++scount)
-    {
-        switch (random2(14))
-        {
-        case 0:
-        case 1:         // prototypical swarming creature {dlb}
-            mon = MONS_KILLER_BEE;
-            break;
-
-        case 2:         // comment said "larva", code read scorpion {dlb}
-            mon = MONS_SCORPION;
-            break;              // think: "The Arrival" {dlb}
-
-        case 3:         //jmf: technically not insects but still cool
-            mon = MONS_WORM;
-            break;              // but worms kinda "swarm" so s'ok {dlb}
-
-        case 4:         // comment read "larva", code was for scorpion
-            mon = MONS_GIANT_MOSQUITO;
-            break;              // changed into giant mosquito 12jan2000 {dlb}
-
-        case 5:         // think: scarabs in "The Mummy" {dlb}
-            mon = MONS_GIANT_BEETLE;
-            break;
-
-        case 6:         //jmf: blowfly instead of queen bee
-            mon = MONS_GIANT_BLOWFLY;
-            break;
-
-            // queen bee added if more than x bees in swarm? {dlb}
-            // the above would require code rewrite - worth it? {dlb}
-
-        case 8:         //jmf: changed to red wasp; was wolf spider
-            mon = MONS_WOLF_SPIDER;    //jmf: spiders aren't insects
-            break;              // think: "Kingdom of the Spiders" {dlb}
-            // not just insects!!! - changed back {dlb}
-
-        case 9:
-            mon = MONS_BUTTERFLY;      // comic relief? {dlb}
-            break;
-
-        case 10:                // change into some kind of snake -- {dlb}
-            mon = MONS_YELLOW_WASP;    // do wasps swarm? {dlb}
-            break;              // think: "Indiana Jones" and snakepit? {dlb}
-
-        default:                // 3 in 14 chance, 12jan2000 {dlb}
-            mon = MONS_GIANT_ANT;
-            break;
-        }                       // end switch
-
-        // If it's not a god gift, it's from a spell.
-        if (!god_gift && random2(pow) > 7)
-        {
-            beha = BEH_FRIENDLY;
-            hitting = you.pet_target;
-        }
-
-        if (create_monster(
-                mgen_data(mon, beha, dur,
-                          you.pos(), hitting,
-                          god_gift ? MF_GOD_GIFT : 0)) != -1)
-        {
-            success = true;
-        }
     }
 
     return (success);

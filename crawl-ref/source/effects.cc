@@ -52,7 +52,6 @@
 #include "skills2.h"
 #include "spells2.h"
 #include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -789,7 +788,7 @@ void random_uselessness(int scroll_slot)
 
     case 6:
         mpr("You hear the tinkle of a tiny bell.", MSGCH_SOUND);
-        your_spells(SPELL_SUMMON_BUTTERFLIES, 100, false);
+        cast_summon_butterflies(100);
         break;
 
     case 7:

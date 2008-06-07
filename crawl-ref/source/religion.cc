@@ -3133,7 +3133,7 @@ static bool _zin_retribution()
         else
         {
             bool success = summon_swarm(you.experience_level * 20,
-                                        BEH_HOSTILE, true);
+                                        true, true, true);
             simple_god_message(success ?
                                " sends a plague down upon you!" :
                                "'s plague fails to arrive.",
@@ -3421,7 +3421,7 @@ static bool _trog_retribution()
 
                 points -= cost;
 
-                if (summon_berserker(cost * 20, BEH_HOSTILE, true))
+                if (summon_berserker(cost * 20, true))
                     count++;
             }
         }
