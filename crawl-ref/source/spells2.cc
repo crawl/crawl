@@ -1542,16 +1542,15 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
     {
     case MONS_IMP:
     case MONS_WHITE_IMP:
+    case MONS_SHADOW_IMP:
     {
-        const char *suffix = (mon == MONS_WHITE_IMP) ? "frigid air" : "flame";
+        const char *where = (mon == MONS_SHADOW_IMP) ? "the shadows" :
+                            (mon == MONS_WHITE_IMP)  ? "a puff of frigid air"
+                                                     : "a puff of flame";
 
-        mprf("A beastly little devil appears in a puff of %s.", suffix);
+        mprf("A beastly little devil appears in %s.", where);
         break;
     }
-
-    case MONS_SHADOW_IMP:
-        mpr("A shadowy apparition takes form in the air.");
-        break;
 
     case MONS_ICE_BEAST:
         mpr("A chill wind blows around you.");
@@ -1567,26 +1566,14 @@ bool summon_general_creature(int pow, monster_type mon, beh_type beha,
 
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
-    {
-        bool friendly = (random2(pow) > 3);
-        const char *prefix = (mon == MONS_VERY_UGLY_THING) ? " very" : "n";
-
-        mprf("A%s ugly thing appears.%s", prefix,
-            friendly ? "" : " It doesn't look very happy.");
-
-        if (!friendly)
-        {
-            beha = BEH_HOSTILE;
-            hitting = MHITYOU;
-        }
-        break;
-    }
-
     default:
     {
         bool friendly = (random2(pow) > 3);
+        const char *what = (mon == MONS_VERY_UGLY_THING) ? " very ugly thing" :
+                           (mon == MONS_UGLY_THING)      ? "n ugly thing"
+                                                         : " demon";
 
-        mprf("A demon appears!%s",
+        mprf("A%s appears.%s", what,
             friendly ? "" : " It doesn't look very happy.");
 
         if (!friendly)
