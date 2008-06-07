@@ -1515,8 +1515,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                     if (i == 0)
                         mpr("You open a gate to Pandemonium!");
                     mon = summon_any_demon(
-                        (spell == DEMONIC_HORDE) ? DEMON_LESSER
-                                                 : DEMON_COMMON);
+                        (spell == SPELL_DEMONIC_HORDE) ? DEMON_LESSER
+                                                       : DEMON_COMMON);
                     break;
 
                 case SPELL_SUMMON_ICE_BEAST:
