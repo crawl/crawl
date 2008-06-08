@@ -577,6 +577,25 @@ static void mpr_store_messages(const std::string& message,
 {
     const int num_lines = crawl_view.msgsz.y;
 
+    bool was_repeat = false;
+
+    if (Options.msg_condense_repeats)
+    {
+        int prev_message_num = Next_Message - 1;
+
+        if (prev_message_num < 0)
+            prev_message_num = NUM_STORED_MESSAGES - 1;
+
+        message_item &prev_message = Store_Message[prev_message_num];
+
+        if (prev_message.repeats > 0 && prev_message.channel == channel
+            && prev_message.param == param && prev_message.text == message)
+        {
+            prev_message.repeats++;
+            was_repeat = true;
+        }
+    }
+
     // Prompt lines are presumably shown to / seen by the player accompanied
     // by a request for input, which should do the equivalent of a more(); to
     // save annoyance, don't bump New_Message_Count for prompts.
@@ -590,12 +609,13 @@ static void mpr_store_messages(const std::string& message,
     textcolor(LIGHTGREY);
 
     // Equipment lists just waste space in the message recall.
-    if (channel_message_history(channel))
+    if (!was_repeat && channel_message_history(channel))
     {
         // Put the message into Store_Message, and move the '---' line forward
         Store_Message[ Next_Message ].text    = message;
         Store_Message[ Next_Message ].channel = channel;
         Store_Message[ Next_Message ].param   = param;
+        Store_Message[ Next_Message ].repeats = 1;
         Next_Message++;
 
         if (Next_Message >= NUM_STORED_MESSAGES)
@@ -989,8 +1009,10 @@ void replay_messages(void)
                     break;
                 }
             }
-            cprintf(EOL);
             textcolor(LIGHTGREY);
+            if (Store_Message[ line ].repeats > 1)
+                cprintf(" (x%d)", Store_Message[ line ].repeats);
+            cprintf(EOL);
         }
 
         // print a footer -- note: relative co-ordinates start at 1

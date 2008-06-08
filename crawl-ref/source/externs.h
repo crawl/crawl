@@ -1602,6 +1602,7 @@ public:
     int         msg_max_height;
     bool        mlist_allow_alternate_layout;
     bool        classic_hud;
+    bool        msg_condense_repeats;
 
     // The view lock variables force centering the viewport around the PC @
     // at all times (the default). If view locking is not enabled, the viewport

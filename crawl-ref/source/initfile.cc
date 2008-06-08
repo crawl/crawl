@@ -616,6 +616,7 @@ void game_options::reset_options()
     msg_max_height   = 10;
     mlist_allow_alternate_layout = false;
     classic_hud = false;
+    msg_condense_repeats = true;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -2200,6 +2201,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(msg_max_height, 6, INT_MAX);
     else BOOL_OPTION(mlist_allow_alternate_layout);
     else BOOL_OPTION(classic_hud);
+    else BOOL_OPTION(msg_condense_repeats);
     else BOOL_OPTION(view_lock_x);
     else BOOL_OPTION(view_lock_y);
     else if (key == "view_lock")
