@@ -2134,6 +2134,7 @@ bool summon_horrible_things(int pow, bool god_gift)
         return (true);
     }
 
+    mpr("Your call goes unanswered.");
     return (false);
 }
 
