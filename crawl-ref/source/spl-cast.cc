@@ -1334,10 +1334,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         detect_curse(false);
         break;
 
-    case SPELL_SUMMON_SMALL_MAMMALS:
-        summon_small_mammals(powc); //jmf: hmm, that's definitely *plural* ;-)
-        break;
-
     case SPELL_ABJURATION_I:
     case SPELL_ABJURATION_II:
         abjuration(powc);
@@ -1474,6 +1470,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_SUMMON_BUTTERFLIES:
         cast_summon_butterflies(powc);
+        break;
+
+    case SPELL_SUMMON_SMALL_MAMMALS:
+        cast_summon_small_mammals(powc);
         break;
 
     case SPELL_SUMMON_SCORPIONS:

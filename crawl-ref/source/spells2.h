@@ -134,6 +134,8 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
  * *********************************************************************** */
 bool cast_summon_butterflies(int pow, bool god_gift = false);
 
+bool cast_summon_small_mammals(int pow, bool god_gift = false);
+
 bool cast_summon_scorpions(int pow, bool god_gift = false);
 
 // last updated 24may2000 {dlb}
@@ -193,7 +195,7 @@ void summon_animals(int pow);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-void summon_small_mammals(int pow);
+bool summon_small_mammals(int pow, bool god_gift = false);
 
 
 // last updated 24may2000 {dlb}

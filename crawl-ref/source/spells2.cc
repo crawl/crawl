@@ -1562,60 +1562,6 @@ bool summon_elemental(int pow, int restricted_type,
     return (true);
 }                               // end summon_elemental()
 
-//jmf: beefed up higher-level casting of this (formerly lame) spell
-void summon_small_mammals(int pow)
-{
-    monster_type mon = MONS_PROGRAM_BUG; // error trapping{dlb}
-
-    int pow_spent = 0;
-    int pow_left = pow + 1;
-    int summoned = 0;
-    int summoned_max = pow / 16;
-
-    if (summoned_max > 5)
-        summoned_max = 5;
-    if (summoned_max < 1)
-        summoned_max = 1;
-
-    while (pow_left > 0 && summoned < summoned_max)
-    {
-        summoned++;
-        pow_spent = 1 + random2(pow_left);
-        pow_left -= pow_spent;
-
-        switch (pow_spent)
-        {
-        case 75: case 74: case 38:
-            // If you worship a good god, don't summon an evil small
-            // mammal.
-            // XXX: There should be a better way to do this, using
-            // player_angers_monster().
-            if (!is_good_god(you.religion))
-            {
-                mon = MONS_ORANGE_RAT;
-                break;
-            }
-
-        case 65: case 64: case 63: case 27: case 26: case 25:
-            mon = MONS_GREEN_RAT;
-            break;
-
-        case 57: case 56: case 55: case 54: case 53: case 52:
-        case 20: case 18: case 16: case 14: case 12: case 10:
-            mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
-            break;
-
-        default:
-            mon = coinflip() ? MONS_GIANT_BAT : MONS_RAT;
-            break;
-        }
-
-        create_monster(
-            mgen_data(mon, BEH_FRIENDLY, 3,
-                      you.pos(), you.pet_target));
-    }
-}
-
 void summon_animals(int pow)
 {
     // maybe we should just generate a Lair monster instead? (and
@@ -1658,6 +1604,66 @@ void summon_animals(int pow)
                       4, you.pos(),
                       friendly ? you.pet_target : MHITYOU));
     }
+}
+
+//jmf: beefed up higher-level casting of this (formerly lame) spell
+bool cast_summon_small_mammals(int pow, bool god_gift)
+{
+    bool success = false;
+
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    int pow_spent = 0;
+    int pow_left = pow + 1;
+    int count = 0;
+    int count_max = std::max(1, std::min(5, pow / 16));
+
+    while (pow_left > 0 && count < count_max)
+    {
+        count++;
+        pow_spent = random2(pow_left) + 1;
+        pow_left -= pow_spent;
+
+        switch (pow_spent)
+        {
+        case 75: case 74: case 38:
+            // If you worship a good god, don't summon an evil small
+            // mammal.
+            // XXX: There should be a better way to do this, using
+            // player_angers_monster().
+            if (!is_good_god(you.religion))
+            {
+                mon = MONS_ORANGE_RAT;
+                break;
+            }
+
+        case 65: case 64: case 63: case 27: case 26: case 25:
+            mon = MONS_GREEN_RAT;
+            break;
+
+        case 57: case 56: case 55: case 54: case 53: case 52:
+        case 20: case 18: case 16: case 14: case 12: case 10:
+            mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
+            break;
+
+        default:
+            mon = coinflip() ? MONS_GIANT_BAT : MONS_RAT;
+            break;
+        }
+
+        if (create_monster(
+                mgen_data(mon, BEH_FRIENDLY, 3,
+                          you.pos(), you.pet_target,
+                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            success = true;
+
+            if (success)
+                mpr("A small mammal appears!");
+        }
+    }
+
+    return (success);
 }
 
 bool cast_summon_butterflies(int pow, bool god_gift)
@@ -2166,7 +2172,8 @@ bool cast_summon_dragon(int pow, bool god_gift)
     return (success);
 }
 
-// A demon-associated god sends a demonic buddy (or enemy) for a follower.
+// Makhleb or Kikubaaqudgha sends a demonic buddy (or enemy) for a
+// follower.
 bool summon_demon_type(monster_type mon, int pow, bool god_gift)
 {
     bool success = false;
