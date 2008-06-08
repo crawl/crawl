@@ -121,7 +121,12 @@ spell_type spell_by_name(std::string name, bool partial_match)
         const std::string spell_name = lowercase_string(sptitle);
 
         if (spell_name.find(name) != std::string::npos)
+        {
+            if (spell_name == name)
+                return static_cast<spell_type>(i);
+
             spellmatch = i;
+        }
     }
 
     return (spellmatch != -1? static_cast<spell_type>(spellmatch)
