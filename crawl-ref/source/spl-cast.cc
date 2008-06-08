@@ -1516,10 +1516,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_greater_demon(powc);
         break;
 
-    case SPELL_SUMMON_WRAITHS:
-        cast_summon_wraiths(powc);
-        break;
-
     case SPELL_SUMMON_GUARDIAN:
         summon_guardian(powc);
         break;
@@ -1541,16 +1537,16 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         dancing_weapon(powc);
         break;
 
-    case SPELL_SUBLIMATION_OF_BLOOD:
-        cast_sublimation_of_blood(powc);
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+        cast_summon_horrible_things(powc);
         break;
 
     case SPELL_SIMULACRUM:
-        simulacrum(powc);
+        cast_simulacrum(powc);
         break;
 
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-        summon_horrible_things(powc);
+    case SPELL_SUMMON_WRAITHS:
+        cast_summon_wraiths(powc);
         break;
 
     case SPELL_DEATH_CHANNEL:
@@ -1615,6 +1611,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_STING:
         if (!zapping(ZAP_STING, powc, beam, true))
             return (SPRET_ABORT);
+        break;
+
+    case SPELL_SUBLIMATION_OF_BLOOD:
+        cast_sublimation_of_blood(powc);
         break;
 
     case SPELL_HELLFIRE:

@@ -412,73 +412,7 @@ bool cast_sublimation_of_blood(int pow)
     return (success);
 }
 
-// Simulacrum
-//
-// This spell extends creating undead to Ice mages, as such it's high
-// level, requires wielding of the material component, and the undead
-// aren't overly powerful (they're also vulnerable to fire).  I've put
-// back the abjuration level in order to keep down the army sizes again.
-//
-// As for what it offers necromancers considering all the downsides
-// above... it allows the turning of a single corpse into an army of
-// monsters (one per food chunk)... which is also a good reason for
-// why it's high level.
-//
-// Hides and other "animal part" items are intentionally left out, it's
-// unrequired complexity, and fresh flesh makes more "sense" for a spell
-// reforming the original monster out of ice anyways.
-bool simulacrum(int pow, bool god_gift)
-{
-    int how_many_max = std::min(8, 4 + random2(pow) / 20);
-
-    const int chunk = you.equip[EQ_WEAPON];
-
-    if (chunk != -1
-        && is_valid_item(you.inv[chunk])
-        && (you.inv[chunk].base_type == OBJ_CORPSES
-            || (you.inv[chunk].base_type == OBJ_FOOD
-                && you.inv[chunk].sub_type == FOOD_CHUNK)))
-    {
-        const monster_type mon =
-            static_cast<monster_type>(you.inv[chunk].plus);
-
-        // Can't create more than the available chunks.
-        if (you.inv[chunk].quantity < how_many_max)
-            how_many_max = you.inv[chunk].quantity;
-
-        dec_inv_item_quantity(chunk, how_many_max);
-
-        int count = 0;
-
-        for (int i = 0; i < how_many_max; ++i)
-        {
-            if (create_monster(
-                    mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
-                              6, you.pos(), you.pet_target,
-                              god_gift ? MF_GOD_GIFT : 0,
-                              mon)) != -1)
-            {
-                count++;
-            }
-        }
-
-        if (count > 0)
-        {
-            mprf("%s icy figure form%s before you!",
-                count > 1 ? "Some" : "An", count > 1 ? "s" : "");
-            return (true);
-        }
-
-        mpr("You feel cold for a second.");
-        return (false);
-    }
-
-    mpr("You need to wield a piece of raw flesh for this spell to be "
-        "effective!");
-    return (false);
-}
-
-bool summon_horrible_things(int pow, bool god_gift)
+bool cast_summon_horrible_things(int pow, bool god_gift)
 {
     if (one_chance_in(3)
         && !lose_stat(STAT_INTELLIGENCE, 1, true, "summoning horrible things"))
@@ -540,6 +474,111 @@ bool summon_horrible_things(int pow, bool god_gift)
 
     mpr("Your call goes unanswered.");
     return (false);
+}
+
+// Simulacrum
+//
+// This spell extends creating undead to Ice mages, as such it's high
+// level, requires wielding of the material component, and the undead
+// aren't overly powerful (they're also vulnerable to fire).  I've put
+// back the abjuration level in order to keep down the army sizes again.
+//
+// As for what it offers necromancers considering all the downsides
+// above... it allows the turning of a single corpse into an army of
+// monsters (one per food chunk)... which is also a good reason for
+// why it's high level.
+//
+// Hides and other "animal part" items are intentionally left out, it's
+// unrequired complexity, and fresh flesh makes more "sense" for a spell
+// reforming the original monster out of ice anyways.
+bool cast_simulacrum(int pow, bool god_gift)
+{
+    int how_many_max = std::min(8, 4 + random2(pow) / 20);
+
+    const int chunk = you.equip[EQ_WEAPON];
+
+    if (chunk != -1
+        && is_valid_item(you.inv[chunk])
+        && (you.inv[chunk].base_type == OBJ_CORPSES
+            || (you.inv[chunk].base_type == OBJ_FOOD
+                && you.inv[chunk].sub_type == FOOD_CHUNK)))
+    {
+        const monster_type mon =
+            static_cast<monster_type>(you.inv[chunk].plus);
+
+        // Can't create more than the available chunks.
+        if (you.inv[chunk].quantity < how_many_max)
+            how_many_max = you.inv[chunk].quantity;
+
+        dec_inv_item_quantity(chunk, how_many_max);
+
+        int count = 0;
+
+        for (int i = 0; i < how_many_max; ++i)
+        {
+            if (create_monster(
+                    mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
+                              6, you.pos(), you.pet_target,
+                              god_gift ? MF_GOD_GIFT : 0,
+                              mon)) != -1)
+            {
+                count++;
+            }
+        }
+
+        if (count > 0)
+        {
+            mprf("%s icy figure form%s before you!",
+                count > 1 ? "Some" : "An", count > 1 ? "s" : "");
+            return (true);
+        }
+
+        mpr("You feel cold for a second.");
+        return (false);
+    }
+
+    mpr("You need to wield a piece of raw flesh for this spell to be "
+        "effective!");
+    return (false);
+}
+
+bool cast_summon_wraiths(int pow, bool god_gift)
+{
+    bool success = false;
+
+    const int chance = random2(25);
+    monster_type mon = ((chance > 8) ? MONS_WRAITH :           // 64%
+                        (chance > 3) ? MONS_FREEZING_WRAITH    // 20%
+                                     : MONS_SPECTRAL_WARRIOR); // 16%
+
+    const bool friendly = (random2(pow) > 5);
+
+    if (create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      5, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mprf("%s",
+             friendly ? "An insubstantial figure forms in the air."
+                      : "You sense a hostile presence.");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    //jmf: Kiku sometimes deflects this
+    if (!(you.religion == GOD_KIKUBAAQUDGHA
+           && (!player_under_penance()
+               && you.piety >= piety_breakpoint(3)
+               && you.piety > random2(MAX_PIETY))))
+    {
+        disease_player(25 + random2(50));
+    }
+
+    return (success);
 }
 
 bool cast_death_channel(int pow, bool god_gift)

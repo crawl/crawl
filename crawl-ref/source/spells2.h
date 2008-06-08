@@ -162,7 +162,6 @@ bool cast_demonic_horde(int pow, bool god_gift = false);
 bool cast_summon_ice_beast(int pow, bool god_gift = false);
 bool cast_summon_ugly_thing(int pow, bool god_gift = false);
 bool cast_summon_greater_demon(int pow, bool god_gift = false);
-bool cast_summon_wraiths(int pow, bool god_gift = false);
 bool cast_summon_dragon(int pow, bool god_gift = false);
 bool cast_conjure_ball_lightning(int pow, bool god_gift = false);
 

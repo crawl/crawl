@@ -2163,45 +2163,6 @@ bool cast_summon_greater_demon(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_summon_wraiths(int pow, bool god_gift)
-{
-    bool success = false;
-
-    const int chance = random2(25);
-    monster_type mon = ((chance > 8) ? MONS_WRAITH :           // 64%
-                        (chance > 3) ? MONS_FREEZING_WRAITH    // 20%
-                                     : MONS_SPECTRAL_WARRIOR); // 16%
-
-    const bool friendly = (random2(pow) > 5);
-
-    if (create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      5, you.pos(),
-                      friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
-    {
-        success = true;
-
-        mprf("%s",
-             friendly ? "An insubstantial figure forms in the air."
-                      : "You sense a hostile presence.");
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    //jmf: Kiku sometimes deflects this
-    if (!(you.religion == GOD_KIKUBAAQUDGHA
-           && (!player_under_penance()
-               && you.piety >= piety_breakpoint(3)
-               && you.piety > random2(MAX_PIETY))))
-    {
-        disease_player(25 + random2(50));
-    }
-
-    return (success);
-}
-
 bool cast_summon_dragon(int pow, bool god_gift)
 {
     // Removed the chance of multiple dragons... one should be more
