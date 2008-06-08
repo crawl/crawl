@@ -482,7 +482,7 @@ bool allow_control_teleport(bool quiet)
     if (!quiet && !retval && player_control_teleport())
         mpr("A powerful magic prevents control of your teleportation.");
 
-    return retval;
+    return (retval);
 }
 
 void you_teleport(void)
