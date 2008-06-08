@@ -1521,11 +1521,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_SUMMON_GUARDIAN:
-        cast_summon_guardian(powc);
+        summon_guardian(powc);
         break;
 
     case SPELL_SUMMON_DAEVA:
-        cast_summon_daeva(powc);
+        summon_daeva(powc);
         break;
 
     case SPELL_SUMMON_DRAGON:

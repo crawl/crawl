@@ -3016,9 +3016,7 @@ static bool _tso_retribution()
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (create_monster(
-                    mgen_data::alert_hostile_at(MONS_DAEVA,
-                        you.pos(), MF_GOD_GIFT)) != -1)
+            if (summon_daeva(0, true, true, true))
             {
                 success = true;
             }
@@ -3117,9 +3115,7 @@ static bool _zin_retribution()
 
             for (int i = 0; i < how_many; ++i)
             {
-                if (create_monster(
-                        mgen_data::alert_hostile_at(MONS_ANGEL,
-                            you.pos(), MF_GOD_GIFT)) != -1)
+                if (summon_guardian(0, true, true, true))
                 {
                     success = true;
                 }

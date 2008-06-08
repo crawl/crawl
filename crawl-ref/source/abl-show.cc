@@ -1434,7 +1434,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_SUMMON_DAEVA:
-        cast_summon_daeva(you.skills[SK_INVOCATIONS] * 4, true);
+        summon_daeva(you.skills[SK_INVOCATIONS] * 4);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 

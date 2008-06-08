@@ -163,10 +163,6 @@ bool cast_summon_greater_demon(int pow, bool god_gift = false);
 
 bool cast_summon_wraiths(int pow, bool god_gift = false);
 
-bool cast_summon_guardian(int pow, bool god_gift = false);
-
-bool cast_summon_daeva(int pow, bool god_gift = false);
-
 bool cast_summon_dragon(int pow, bool god_gift = false);
 
 bool summon_minor_demon(int pow, bool god_gift = false);
@@ -191,6 +187,11 @@ void summon_small_mammals(int pow);
 
 bool summon_berserker(int pow, bool force_hostile = false);
 
+bool summon_guardian(int pow, bool force_hostile = false, bool quiet = false,
+                     bool permanent = false);
+
+bool summon_daeva(int pow, bool force_hostile = false, bool quiet = false,
+                  bool permanent = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
