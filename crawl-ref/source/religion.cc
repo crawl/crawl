@@ -3417,7 +3417,7 @@ static bool _trog_retribution()
 
                 points -= cost;
 
-                if (summon_berserker(cost * 20, true))
+                if (summon_berserker(cost * 20, true, true))
                     count++;
             }
         }
