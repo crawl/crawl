@@ -2691,10 +2691,13 @@ static void _decrement_durations()
                           6, coinflip(),
                           "You start to feel a little uncertain.");
 
-    _decrement_a_duration(DUR_DEATH_CHANNEL,
-                          "Your unholy channel expires.",
-                          6, coinflip(),
-                          "Your unholy channel is weakening.");
+    if (_decrement_a_duration(DUR_DEATH_CHANNEL,
+                              "Your unholy channel expires.",
+                              6, coinflip(),
+                              "Your unholy channel is weakening."))
+    {
+        you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
+    }
 
     _decrement_a_duration(DUR_SAGE, "You feel less studious.");
     _decrement_a_duration(DUR_STEALTH, "You feel less stealthy.");

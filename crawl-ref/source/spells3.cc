@@ -542,12 +542,14 @@ bool summon_horrible_things(int pow, bool god_gift)
     return (false);
 }
 
-bool cast_death_channel(int pow)
+bool cast_death_channel(int pow, bool god_gift)
 {
     bool success = false;
 
     if (you.duration[DUR_DEATH_CHANNEL] < 30)
     {
+        success = true;
+
         mpr("Malign forces permeate your being, awaiting release.");
 
         you.duration[DUR_DEATH_CHANNEL] += 15 + random2(1 + (pow / 3));
@@ -555,7 +557,8 @@ bool cast_death_channel(int pow)
         if (you.duration[DUR_DEATH_CHANNEL] > 100)
             you.duration[DUR_DEATH_CHANNEL] = 100;
 
-        success = true;
+        if (god_gift)
+            you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 1;
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

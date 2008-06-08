@@ -113,7 +113,7 @@ bool remove_curse(bool suppress_msg);
 bool cast_sublimation_of_blood(int pow);
 bool simulacrum(int pow, bool god_gift = false);
 bool summon_horrible_things(int pow, bool god_gift = false);
-bool cast_death_channel(int pow);
+bool cast_death_channel(int pow, bool god_gift = false);
 
 
 // updated 24may2000 {dlb}

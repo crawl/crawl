@@ -1003,13 +1003,15 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 && mons_weight(mons_species(monster->type)))
             {
                 const monster_type spectre = mons_species(monster->type);
+                const bool god_gift = you.attribute[ATTR_DIVINE_DEATH_CHANNEL];
+
                 // Don't allow 0-headed hydras to become spectral hydras.
                 if ((spectre != MONS_HYDRA || monster->number)
                     && create_monster(
                         mgen_data( MONS_SPECTRAL_THING, BEH_FRIENDLY,
                                    0, monster->pos(), you.pet_target,
-                                   0, spectre,
-                                   monster->number )) != -1)
+                                   god_gift ? MF_GOD_GIFT : 0,
+                                   spectre, monster->number )) != -1)
                 {
                     if (death_message)
                         mpr("A glowing mist starts to gather...");
