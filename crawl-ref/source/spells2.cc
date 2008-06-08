@@ -653,8 +653,7 @@ static int raise_corpse( int corps, int corx, int cory,
     return returnVal;
 }                               // end raise_corpse()
 
-void cast_twisted_resurrection(int pow, beh_type corps_beh,
-                               unsigned short corps_hit)
+void cast_twisted_resurrection(int pow, bool god_gift)
 {
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
     {
@@ -723,9 +722,10 @@ void cast_twisted_resurrection(int pow, beh_type corps_beh,
                                                    : LIGHTRED;
 
     int monster = create_monster(
-                      mgen_data(mon, corps_beh, 0,
-                      you.pos(), corps_hit, 0, MONS_PROGRAM_BUG, 0,
-                      colour));
+                      mgen_data(mon, BEH_FRIENDLY, 0,
+                      you.pos(), you.pet_target,
+                      god_gift ? MF_GOD_GIFT : 0,
+                      MONS_PROGRAM_BUG, 0, colour));
 
     if (monster == -1)
     {
