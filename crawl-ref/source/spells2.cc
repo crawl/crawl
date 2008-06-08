@@ -1546,9 +1546,11 @@ bool cast_summon_small_mammals(int pow, bool god_gift)
 bool cast_sticks_to_snakes(int pow, bool god_gift)
 {
     monster_type mon = MONS_PROGRAM_BUG;
-    int count = 0;
-    int max = 1 + random2(1 + you.skills[SK_TRANSMIGRATION]) / 4;
-    int dur = std::min(3 + random2(pow) / 20, 5);
+
+    const int dur = std::min(3 + random2(pow) / 20, 5);
+
+    int how_many_max = 1 + random2(1 + you.skills[SK_TRANSMIGRATION]) / 4;
+
     const int weapon = you.equip[EQ_WEAPON];
 
     if (weapon == -1)
@@ -1572,13 +1574,15 @@ bool cast_sticks_to_snakes(int pow, bool god_gift)
     const unsigned short hitting = (beha == BEH_HOSTILE) ? MHITYOU
                                                          : you.pet_target;
 
+    int count = 0;
+
     if ((you.inv[weapon].base_type == OBJ_MISSILES
          && (you.inv[weapon].sub_type == MI_ARROW)))
     {
-        if (you.inv[weapon].quantity < max)
-            max = you.inv[weapon].quantity;
+        if (you.inv[weapon].quantity < how_many_max)
+            how_many_max = you.inv[weapon].quantity;
 
-        for (int i = 0; i <= max; i++)
+        for (int i = 0; i <= how_many_max; i++)
         {
             if (one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25)))
                 || get_ammo_brand(you.inv[weapon]) == SPMSL_POISONED)
