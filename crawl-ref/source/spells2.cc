@@ -2086,6 +2086,7 @@ bool summon_common_demon(int pow, bool god_gift)
                                  random2(pow) > 3, false, 1);
 }
 
+// One of the demon-associated gods sends a demon for a follower.
 bool summon_demon(monster_type mon, int pow, bool force_hostile,
                   bool quiet, bool permanent)
 {
