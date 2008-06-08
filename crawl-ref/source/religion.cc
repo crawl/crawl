@@ -3698,14 +3698,10 @@ static bool _lugonu_retribution()
 
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
-        bool success = false;
-        if (create_monster(
-                mgen_data::alert_hostile_at(
-                    static_cast<monster_type>(MONS_GREEN_DEATH + random2(3)),
-                    you.pos(), MF_GOD_GIFT)) != -1)
-        {
-            success = true;
-        }
+        bool success =
+            summon_demon(
+                static_cast<monster_type>(MONS_GREEN_DEATH + random2(3)),
+                0, true, true, true);
 
         simple_god_message(success ?
                            " sends a demon after you!" :
@@ -3719,10 +3715,9 @@ static bool _lugonu_retribution()
 
         for (int loopy = 0; loopy < how_many; loopy++)
         {
-            if (create_monster(
-                    mgen_data::alert_hostile_at(
-                        static_cast<monster_type>(MONS_NEQOXEC + random2(5)),
-                        you.pos(), MF_GOD_GIFT)) != -1)
+            if (summon_demon(
+                    static_cast<monster_type>(MONS_NEQOXEC + random2(5)),
+                    0, true, true, true))
             {
                 success = true;
             }
