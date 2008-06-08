@@ -241,7 +241,7 @@ int mons_place( mgen_data mg );
 /* ***********************************************************************
  * This isn't really meant to be a public function.  It is a low level
  * monster placement function used by dungeon building routines and
- * mons_place().  If you need to put a monster somewhere,  use mons_place().
+ * mons_place().  If you need to put a monster somewhere, use mons_place().
  * Summoned creatures can be created with create_monster().
  * *********************************************************************** */
 int place_monster( mgen_data mg, bool force_pos = false );
