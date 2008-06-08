@@ -1888,34 +1888,60 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
     return (success);
 }
 
-static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
-                                  int dur, bool friendly, bool charmed,
-                                  int how_many)
+static bool _summon_demon_class_wrapper(int pow, bool god_gift,
+                                        demon_class_type dct, int dur,
+                                        bool friendly, bool charmed)
 {
     bool success = false;
 
     mpr("You open a gate to Pandemonium!");
 
-    for (int i = 0; i < how_many; ++i)
+    monster_type mon = summon_any_demon(dct);
+
+    if (create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY :
+                          charmed ? BEH_CHARMED : BEH_HOSTILE,
+                      dur, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
     {
-        monster_type mon = summon_any_demon(dct);
+        success = true;
 
-        if (create_monster(
-                mgen_data(mon,
-                          friendly ? BEH_FRIENDLY :
-                              charmed ? BEH_CHARMED : BEH_HOSTILE,
-                          dur, you.pos(),
-                          friendly ? you.pet_target : MHITYOU,
-                          god_gift ? MF_GOD_GIFT : 0)) != -1)
-        {
-            success = true;
-
-            mprf("A demon appears!%s",
-                 friendly ? "" :
-                     charmed ? " You don't feel so good about this..."
-                             : " It doesn't look very happy.");
-        }
+        mprf("A demon appears!%s",
+             friendly ? "" :
+                 charmed ? " You don't feel so good about this..."
+                         : " It doesn't look very happy.");
     }
+
+    return (success);
+}
+
+bool summon_lesser_demon(int pow, bool god_gift)
+{
+    return _summon_demon_class_wrapper(pow, god_gift, DEMON_LESSER,
+                                       std::min(2 + (random2(pow) / 4), 6),
+                                       random2(pow) > 3, false);
+}
+
+bool summon_common_demon(int pow, bool god_gift)
+{
+    return _summon_demon_class_wrapper(pow, god_gift, DEMON_COMMON,
+                                       std::min(2 + (random2(pow) / 4), 6),
+                                       random2(pow) > 3, false);
+}
+
+bool summon_greater_demon(int pow, bool god_gift)
+{
+    return _summon_demon_class_wrapper(pow, god_gift, DEMON_GREATER,
+                                       5, false, random2(pow) > 5);
+}
+
+bool cast_summon_demon(int pow, bool god_gift)
+{
+    mpr("You open a gate to Pandemonium!");
+
+    bool success = summon_common_demon(pow, god_gift);
 
     if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1923,22 +1949,24 @@ static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
     return (success);
 }
 
-bool cast_summon_demon(int pow, bool god_gift)
-{
-    mpr("You open a gate to Pandemonium!");
-
-    return summon_common_demon(pow, god_gift);
-}
-
 bool cast_demonic_horde(int pow, bool god_gift)
 {
+    bool success = false;
+
     const int how_many = 7 + random2(5);
 
     mpr("You open a gate to Pandemonium!");
 
-    return _summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
-                                 std::min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false, how_many);
+    for (int i = 0; i < how_many; ++i)
+    {
+        if (summon_lesser_demon(pow, god_gift))
+            success = true;
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
 }
 
 bool cast_summon_ice_beast(int pow, bool god_gift)
@@ -2001,8 +2029,13 @@ bool cast_summon_greater_demon(int pow, bool god_gift)
 
     mpr("You open a gate to Pandemonium!");
 
-    return _summon_demon_wrapper(pow, god_gift, DEMON_GREATER,
-                                 5, false, charmed, 1);
+    bool success = _summon_demon_class_wrapper(pow, god_gift, DEMON_GREATER,
+                                               5, false, charmed);
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
 }
 
 bool cast_summon_wraiths(int pow, bool god_gift)
@@ -2072,22 +2105,8 @@ bool cast_summon_dragon(int pow, bool god_gift)
     return (success);
 }
 
-bool summon_minor_demon(int pow, bool god_gift)
-{
-    return _summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
-                                 std::min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false, 1);
-}
-
-bool summon_common_demon(int pow, bool god_gift)
-{
-    return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
-                                 std::min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false, 1);
-}
-
-// One of the demon-associated gods sends a demon for a follower.
-bool summon_demon(monster_type mon, int pow, bool god_gift)
+// A demon-associated god sends a demonic buddy (or enemy) for a follower.
+bool summon_demon_type(monster_type mon, int pow, bool god_gift)
 {
     bool success = false;
 
