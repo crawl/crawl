@@ -477,8 +477,6 @@ bool dancing_weapon(int pow, bool force_hostile,
 {
     bool success = true;
 
-    int monster;
-
     const int dur = std::min(2 + (random2(pow) / 5), 6);
 
     const int wpn = you.equip[EQ_WEAPON];
@@ -494,8 +492,11 @@ bool dancing_weapon(int pow, bool force_hostile,
 
     // See if we can get an mitm for the dancing weapon:
     int i = get_item_slot();
+
     if (i == NON_ITEM)
         success = false;
+
+    int monster;
 
     if (success)
     {
@@ -554,10 +555,8 @@ bool dancing_weapon(int pow, bool force_hostile,
     return (true);
 }
 
-//
-// This function returns true if the player can use controlled
-// teleport here.
-//
+// This function returns true if the player can use controlled teleport
+// here.
 bool allow_control_teleport( bool silent )
 {
     bool ret = true;
