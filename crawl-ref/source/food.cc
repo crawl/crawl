@@ -726,7 +726,7 @@ bool prompt_eat_from_inventory(int slot)
         return (false);
     }
 
-    // this conditional can later be merged into food::can_ingest() when
+    // This conditional can later be merged into food::can_ingest() when
     // expanded to handle more than just OBJ_FOOD 16mar200 {dlb}
     if (you.species != SP_VAMPIRE)
     {
@@ -760,7 +760,7 @@ bool prompt_eat_from_inventory(int slot)
     return (true);
 }
 
-// [ds] Returns true if something was eaten
+// [ds] Returns true if something was eaten.
 bool eat_food(bool run_hook, int slot)
 {
     if (you.is_undead == US_UNDEAD)

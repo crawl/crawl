@@ -719,8 +719,15 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
         if (chunk_type == CE_CLEAN)
             heal += 1 + random2(damage);
 
-        inc_hp(heal, false);
-        mprf("You feel %sbetter.", (you.hp == you.hp_max) ? "much " : "");
+        // Decrease healing when done in bat form.
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+            heal /= 2;
+
+        if (heal > 0)
+        {
+            inc_hp(heal, false);
+            mprf("You feel %sbetter.", (you.hp == you.hp_max) ? "much " : "");
+        }
     }
 
     // Gain nutrition.
@@ -735,9 +742,9 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
             food_value = 15 + random2avg(29, 2);
         }
 
-        // Bats get a little less nutrition out of it
+        // Bats get a rather less nutrition out of it.
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-            food_value -= 5 + random2(16);
+            food_value /= 2;
 
         lessen_hunger(food_value, false);
     }
@@ -819,7 +826,7 @@ bool melee_attack::player_attack()
 
         player_sustain_passive_damage();
 
-        // thirsty stabbing vampires get to draw blood
+        // Thirsty stabbing vampires get to draw blood.
         if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
             && stab_attempt && stab_bonus > 0)
         {
@@ -832,8 +839,8 @@ bool melee_attack::player_attack()
 
         if (hit_woke_orc)
         {
-            // call function of orcs first noticing you but with
-            // beaten-up conversion messages (if applicable)
+            // Call function of orcs first noticing you, but with
+            // beaten-up conversion messages (if applicable).
             beogh_follower_convert(def, true);
         }
     }
@@ -1194,7 +1201,7 @@ bool melee_attack::player_apply_aux_unarmed()
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster( def, KC_YOU );
 
-        // normal vampiric biting attack, not if already got stabbing special
+        // Normal vampiric biting attack, not if already got stabbing special.
         if (damage_brand == SPWPN_VAMPIRICISM && you.species == SP_VAMPIRE
             && (!stab_attempt || stab_bonus <= 0))
         {
@@ -1788,7 +1795,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         {
             mpr("You feel better.");
 
-            // more than if not killed
+            // More than if not killed.
             const int heal = 1 + random2(damage_done);
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -3022,7 +3029,7 @@ int melee_attack::player_calc_base_unarmed_damage()
             damage = 5;
             break;
         case TRAN_BAT:
-            damage = (you.species == SP_VAMPIRE ? 2 : 1);
+            damage = (you.species == SP_VAMPIRE ? 1 : coinflip());
             break;
         case TRAN_ICE_BEAST:
             damage = 12;

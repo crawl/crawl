@@ -464,7 +464,7 @@ bool player_genus(genus_type which_genus, species_type species)
     }
 
     return (false);
-}                               // end player_genus()
+}
 
 // If transform is true, compare with current transformation instead
 // of (or in addition to) underlying species.
@@ -477,23 +477,23 @@ bool is_player_same_species(const int mon, bool transform)
         {
         case TRAN_AIR:
             return (false);
-        // unique monsters
+        // Unique monsters.
         case TRAN_BAT:
             return (mon == MONS_GIANT_BAT);
         case TRAN_ICE_BEAST:
             return (mon == MONS_ICE_BEAST);
         case TRAN_SERPENT_OF_HELL:
             return (mon == MONS_SERPENT_OF_HELL);
-        // compare with monster *species*
+        // Compare with monster *species*.
         case TRAN_LICH:
             return (mons_species(mon) == MONS_LICH);
-        // compare with monster *genus*
+        // Compare with monster *genus*.
         case TRAN_SPIDER:
             return (mons_genus(mon) == MONS_WOLF_SPIDER);
         case TRAN_DRAGON:
-            return (mons_genus(mon) == MONS_DRAGON); // includes all drakes
+            return (mons_genus(mon) == MONS_DRAGON); // Includes all drakes.
         default:
-            break; // check real (non-transformed) form
+            break; // Check real (non-transformed) form.
         }
     }
 
@@ -520,7 +520,7 @@ bool is_player_same_species(const int mon, bool transform)
             if (mons_genus(mon) == MONS_MUMMY)
                 return (true);
             return (false);
-        case SP_GHOUL: // genus would include necrophage and rotting hulk
+        case SP_GHOUL: // Genus would include necrophage and rotting hulk.
             if (mons_species(mon) == MONS_GHOUL)
                 return (true);
             return (false);
@@ -639,66 +639,64 @@ bool player_has_feet()
 
 bool you_tran_can_wear(int eq, bool check_mutation)
 {
-   // not a transformation, but also temporary -> check first
-   if (check_mutation)
-   {
-       if (eq == EQ_GLOVES && you.has_claws(false) >= 3)
-           return false;
+    // Not a transformation, but also temporary -> check first.
+    if (check_mutation)
+    {
+        if (eq == EQ_GLOVES && you.has_claws(false) >= 3)
+            return (false);
 
-       if (eq == EQ_BOOTS
-           && ( player_is_swimming() && you.species == SP_MERFOLK
+        if (eq == EQ_BOOTS
+            && (player_is_swimming() && you.species == SP_MERFOLK
                 || player_mutation_level(MUT_HOOVES)
-                || player_mutation_level(MUT_TALONS) ))
-       {
-           return false;
-       }
-   }
+                || player_mutation_level(MUT_TALONS)))
+        {
+            return (false);
+        }
+    }
 
-   int transform = you.attribute[ATTR_TRANSFORMATION];
+    int transform = you.attribute[ATTR_TRANSFORMATION];
 
-   // no further restrictions
-   if (transform == TRAN_NONE || transform == TRAN_LICH)
-       return true;
+    // No further restrictions.
+    if (transform == TRAN_NONE || transform == TRAN_LICH)
+        return (true);
 
-   // bats cannot use anything, clouds obviously so
-   if (transform == TRAN_BAT || transform == TRAN_AIR)
-       return false;
+    // Bats cannot use anything, clouds obviously so.
+    if (transform == TRAN_BAT || transform == TRAN_AIR)
+        return (false);
 
-   // everyone else can wear jewellery, at least
-   if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
-       return true;
+    // Everyone else can wear jewellery, at least.
+    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
+        return (true);
 
-   // these cannot use anything but jewellery
-   if (transform == TRAN_SPIDER || transform == TRAN_DRAGON
-       || transform == TRAN_SERPENT_OF_HELL)
-   {
-       return false;
-   }
+    // These cannot use anything but jewellery.
+    if (transform == TRAN_SPIDER || transform == TRAN_DRAGON
+        || transform == TRAN_SERPENT_OF_HELL)
+    {
+        return (false);
+    }
 
-   if (transform == TRAN_BLADE_HANDS)
-   {
-       if (eq == EQ_WEAPON || eq == EQ_GLOVES || eq == EQ_SHIELD)
-           return false;
-       return true;
-   }
+    if (transform == TRAN_BLADE_HANDS)
+    {
+        if (eq == EQ_WEAPON || eq == EQ_GLOVES || eq == EQ_SHIELD)
+            return (false);
+        return (true);
+    }
 
-   if (transform == TRAN_ICE_BEAST)
-   {
-       if (eq != EQ_CLOAK)
-       {
-           return false;
-       }
-       return true;
-   }
+    if (transform == TRAN_ICE_BEAST)
+    {
+        if (eq != EQ_CLOAK)
+            return (false);
+        return (true);
+    }
 
-   if (transform == TRAN_STATUE)
-   {
-       if (eq == EQ_BODY_ARMOUR || eq == EQ_GLOVES || eq == EQ_SHIELD)
-           return false;
-       return true;
-   }
+    if (transform == TRAN_STATUE)
+    {
+        if (eq == EQ_BODY_ARMOUR || eq == EQ_GLOVES || eq == EQ_SHIELD)
+            return (false);
+        return (true);
+    }
 
-   return true;
+    return (true);
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.
@@ -920,13 +918,13 @@ int player_teleport(bool calc_unid)
 {
     int tp = 0;
 
-    /* rings */
+    // rings
     tp += 8 * player_equip( EQ_RINGS, RING_TELEPORTATION, calc_unid );
 
-    /* mutations */
+    // mutations
     tp += player_mutation_level(MUT_TELEPORT) * 3;
 
-    /* randart weapons only */
+    // randart weapons only
     if (you.equip[EQ_WEAPON] != -1
         && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
         && is_random_artefact( you.inv[you.equip[EQ_WEAPON]] ))
@@ -935,7 +933,7 @@ int player_teleport(bool calc_unid)
     }
 
     return tp;
-}                               // end player_teleport()
+}
 
 int player_regen(void)
 {
@@ -959,9 +957,9 @@ int player_regen(void)
     // fast heal mutation
     rr += player_mutation_level(MUT_REGENERATION) * 20;
 
-    // ghouls heal slowly
-    // dematerialised people heal slowly
-    // dematerialised ghouls shouldn't heal any more slowly -- bwr
+    // Ghouls heal slowly.
+    // Dematerialised people heal slowly.
+    // Dematerialised ghouls shouldn't heal any more slowly. -- bwr
     if ((you.species == SP_GHOUL
             && (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS))
@@ -970,14 +968,14 @@ int player_regen(void)
         rr /= 2;
     }
 
-    // healing depending on satiation
+    // Healing depending on satiation.
     if (you.species == SP_VAMPIRE)
     {
         switch (you.hunger_state)
         {
          case HS_STARVING:
             if (you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
-                return (0); // no regeneration for starving vampires!
+                return (0); // No regeneration for starving vampires!
             // intentional fall-through for bat form
          case HS_NEAR_STARVING:
          case HS_VERY_HUNGRY:
@@ -1017,13 +1015,13 @@ int player_hunger_rate(void)
     if (you.duration[DUR_REGENERATION] > 0)
         hunger += 4;
 
-    // moved here from acr.cc... maintaining the >= 40 behaviour
+    // Moved here from acr.cc... maintaining the >= 40 behaviour.
     if (you.hunger >= 40)
     {
         if (you.duration[DUR_INVIS] > 0)
             hunger += 5;
 
-        // berserk has its own food penalty -- excluding berserk haste
+        // Berserk has its own food penalty -- excluding berserk haste.
         if (you.duration[DUR_HASTE] > 0 && !you.duration[DUR_BERSERKER])
             hunger += 5;
     }
@@ -1808,20 +1806,20 @@ int player_movement_speed(void)
     }
     else
     {
-        /* transformations */
+        // transformations
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
             mv = 8;
         else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
             mv = 5; // but allowed minimum is six
 
-        /* armour */
+        // armour
         if (player_equip_ego_type( EQ_BOOTS, SPARM_RUNNING ))
             mv -= 2;
 
         if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_PONDEROUSNESS ))
             mv += 2;
 
-        // in the air, can fly fast (should be lightly burdened).
+        // In the air, can fly fast (should be lightly burdened).
         if (you.light_flight())
             mv--;
 
@@ -4183,30 +4181,30 @@ bool wearing_amulet(char amulet, bool calc_unid)
             || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
             || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT))
     {
-        return true;
+        return (true);
     }
 
     if (amulet == AMU_CLARITY && player_mutation_level(MUT_CLARITY))
-        return true;
+        return (true);
 
     if (amulet == AMU_RESIST_CORROSION || amulet == AMU_CONSERVATION)
     {
-        // this is hackish {dlb}
+        // XXX: this is hackish {dlb}
         if (player_equip_ego_type( EQ_CLOAK, SPARM_PRESERVATION ))
-            return true;
+            return (true);
     }
 
     if (you.equip[EQ_AMULET] == -1)
-        return false;
+        return (false);
 
     if (you.inv[you.equip[EQ_AMULET]].sub_type == amulet
         && ( calc_unid || item_type_known(you.inv[you.equip[EQ_AMULET]]) ))
     {
-        return true;
+        return (true);
     }
 
-    return false;
-}                               // end wearing_amulet()
+    return (false);
+}
 
 bool player_is_airborne(void)
 {
@@ -5839,7 +5837,7 @@ int player::damage_brand(int)
             break;
 
         case TRAN_BAT:
-            if (you.species == SP_VAMPIRE && one_chance_in(5))
+            if (you.species == SP_VAMPIRE && one_chance_in(8))
                 ret = SPWPN_VAMPIRICISM;
             break;
 
@@ -6244,8 +6242,8 @@ bool player::omnivorous() const
 
 flight_type player::flight_mode() const
 {
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
-        attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+        || attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
     {
         return FL_FLY;
     }
