@@ -198,13 +198,6 @@ void summon_animals(int pow);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
-bool summon_small_mammals(int pow, bool god_gift = false);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
 void turn_undead(int pow);      // what should I use for pow?

@@ -2274,9 +2274,10 @@ bool cast_summon_dragon(int pow, bool god_gift)
 
     if (create_monster(
             mgen_data(MONS_DRAGON,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, 3,
-                      you.pos(),
-                      friendly ? you.pet_target : MHITYOU)) != -1)
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      3, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
