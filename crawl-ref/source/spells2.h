@@ -169,8 +169,8 @@ bool cast_conjure_ball_lightning(int pow, bool god_gift = false);
 /* ***********************************************************************
  * called from: ability - religion - spell
  * *********************************************************************** */
-bool dancing_weapon(int pow, bool god_gift = false, bool force_hostile = false,
-                    bool quiet_failure = false);
+bool cast_tukimas_dance(int pow, bool god_gift = false,
+                        bool force_hostile = false, bool quiet_failure = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

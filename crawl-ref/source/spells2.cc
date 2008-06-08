@@ -2242,8 +2242,8 @@ bool cast_conjure_ball_lightning(int pow, bool god_gift)
     return (success);
 }
 
-bool dancing_weapon(int pow, bool god_gift, bool force_hostile,
-                    bool quiet_failure)
+bool cast_tukimas_dance(int pow, bool god_gift,
+                        bool force_hostile, bool quiet_failure)
 {
     bool success = true;
 

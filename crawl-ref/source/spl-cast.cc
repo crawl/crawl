@@ -1533,8 +1533,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_TUKIMAS_DANCE:
-        crawl_state.cant_cmd_repeat("You can't repeat dancing weapon.");
-        dancing_weapon(powc);
+        crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
+        cast_tukimas_dance(powc);
         break;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
