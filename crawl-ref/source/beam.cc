@@ -5363,7 +5363,7 @@ static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly)
 
     if (!drawOnly)
     {
-        // random beams: randomize before affect
+        // Random beams: randomize before affect.
         if (beam.flavour == BEAM_RANDOM)
         {
             random_beam = true;

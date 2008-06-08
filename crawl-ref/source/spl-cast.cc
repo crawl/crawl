@@ -932,7 +932,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     // there are others that do their own that will be missed by this
     // (and thus will not properly ESC without cost because of it).
     // Hopefully, those will eventually be fixed. -- bwr
-    if (flags & SPFLAG_TARGETING_MASK)
+    if ((flags & SPFLAG_TARGETING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
@@ -943,25 +943,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
              testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);
-        if (spell == SPELL_PORTAL_PROJECTILE)
-        {
-            const item_def* item;
-            int idx;
-            you.m_quiver->get_desired_item(&item, &idx);
-            if ( item == NULL )
-            {
-                mpr("No suitable missiles.");
-                return (SPRET_ABORT);
-            }
-            else if ( idx == -1 )
-            {
-                mpr("No missiles left.");
-                return SPRET_ABORT;
-            }
-            mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
-                               you.inv[idx].name(DESC_NOCAP_YOUR).c_str());
-        }
-        else if (spell == SPELL_EVAPORATE)
+        if (spell == SPELL_EVAPORATE)
         {
             potion = prompt_invent_item( "Throw which potion?",
                                          MT_INVLIST, OBJ_POTIONS );
@@ -1999,7 +1981,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_PORTAL_PROJECTILE:
-        if ( !cast_portal_projectile(powc, beam) )
+        if (!cast_portal_projectile(powc))
             return SPRET_ABORT;
         break;
 

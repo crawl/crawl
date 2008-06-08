@@ -30,6 +30,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "invent.h"
 #include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
@@ -2099,45 +2100,40 @@ void cast_twist(int pow)
     // distribution is much more uniform). -- bwr
     int damage = 1 + random2( 3 + pow / 5 );
 
-    // Inflict the damage
+    // Inflict the damage.
     player_hurt_monster( mons, damage );
-    return;
-}                               // end cast_twist()
+}
 
-bool cast_portal_projectile(int pow, bolt& beam)
+bool cast_portal_projectile(int pow)
 {
     if (pow > 50)
         pow = 50;
 
-    if (grid_is_solid(beam.target_x, beam.target_y))
+    dist target;
+    int item = get_ammo_to_shoot(-1, target, true);
+    if (item == -1)
+        return (false);
+
+    if (grid_is_solid(target.tx, target.ty))
     {
         mpr("You can't shoot at gazebos.");
-        return false;
+        return (false);
     }
 
-    if (trans_wall_blocking( beam.target_x, beam.target_y ))
+    // Can't use portal through walls. (That'd be just too cheap!)
+    if (trans_wall_blocking( target.tx, target.ty ))
     {
         mpr("A translucent wall is in the way.");
-        return 0;
+        return (false);
     }
 
-    int idx;
-    const item_def* item;
-    you.m_quiver->get_desired_item(&item, &idx);
-    if (item == NULL)
-    {
-        mpr("No suitable missiles.");
-        return false;
-    }
-    else if (idx == -1)
-    {
-        mpr("No missiles left.");
-        return false;
-    }
+    if (!check_warning_inscriptions(you.inv[item], OPER_FIRE))
+        return (false);
 
-    throw_it(beam, idx, true, random2(pow/4));
+    bolt beam;
+    throw_it( beam, item, true, random2(pow/4), &target );
 
-    return true;
+    return (true);
 }
 
 //

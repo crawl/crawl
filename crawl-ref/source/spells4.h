@@ -54,6 +54,6 @@ void cast_snake_charm(int pow);
 void cast_stoneskin(int pow);
 
 int cast_semi_controlled_blink(int pow);
-bool cast_portal_projectile(int pow, bolt& beam);
+bool cast_portal_projectile(int pow);
 
 #endif

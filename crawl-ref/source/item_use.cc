@@ -341,11 +341,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 
     mpr(you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
-    // warn player about low str/dex or throwing skill
+    // Warn player about low str/dex or throwing skill.
     if (show_weff_messages)
         wield_warning();
 
-    // time calculations
+    // Time calculations.
     you.time_taken /= 2;
 
     you.wield_change  = true;
@@ -1408,7 +1408,8 @@ command_type fire_target_behaviour::get_command(int key)
     return targeting_behaviour::get_command(key);
 }
 
-static bool _fire_choose_item_and_target(int& slot, dist& target)
+static bool _fire_choose_item_and_target(int& slot, dist& target,
+                                         bool teleport = false)
 {
     fire_target_behaviour beh;
     const bool was_chosen = (slot != -1);
@@ -1421,12 +1422,12 @@ static bool _fire_choose_item_and_target(int& slot, dist& target)
             mpr(warn.c_str());
             return false;
         }
-        beh.m_slot = slot; // force item to be the prechosen one
+        beh.m_slot = slot; // Force item to be the prechosen one.
     }
 
     beh.message_ammo_prompt();
-    message_current_target();  // XXX: this stuff should be done by direction()
-    direction( target, DIR_NONE, TARG_ENEMY, -1, false, true, NULL, &beh );
+    message_current_target();  // XXX: This stuff should be done by direction()!
+    direction( target, DIR_NONE, TARG_ENEMY, -1, false, !teleport, NULL, &beh );
 
     if (beh.m_slot == -1)
     {
@@ -1532,29 +1533,41 @@ static bool _fire_warn_if_impossible()
     return false;
 }
 
-// if item == -1, prompt the user.
-// if item passed, it will be put into the quiver.
-void fire_thing(int item)
+int get_ammo_to_shoot(int item, dist &target, bool teleport)
 {
+    mpr("in get_ammo_to_shoot()");
     if (_fire_warn_if_impossible())
     {
         flush_input_buffer( FLUSH_ON_FAILURE );
-        return;
+        return (-1);
     }
 
-    if (Options.tutorial_left)
-        Options.tut_throw_counter++;
-
-    dist target;
-    if (!_fire_choose_item_and_target(item, target))
-        return;
+    if (!_fire_choose_item_and_target(item, target, teleport))
+        return (-1);
 
     std::string warn;
     if (!_fire_validate_item(item, warn))
     {
         mpr(warn.c_str());
-        return;
+        return (-1);
     }
+    return (item);
+}
+
+
+// If item == -1, prompt the user.
+// If item passed, it will be put into the quiver.
+void fire_thing(int item)
+{
+    mpr("in fire_thing()");
+    dist target;
+    item = get_ammo_to_shoot(item, target);
+    mpr("back in fire_thing()");
+    if (item == -1)
+        return;
+
+    if (Options.tutorial_left)
+        Options.tut_throw_counter++;
 
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
     {
@@ -1751,27 +1764,24 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool did_return  = false;    // Returning item actually does return to pack.
     int slayDam      = 0;
 
-    if (!teleport)
+    if (target)
+        thr = *target;
+    else
     {
-        if (target)
-            thr = *target;
-        else
+        message_current_target();
+        direction( thr, DIR_NONE, TARG_ENEMY );
+
+        if (!thr.isValid)
         {
-            message_current_target();
-            direction( thr, DIR_NONE, TARG_ENEMY );
+            if (thr.isCancel)
+                canned_msg(MSG_OK);
 
-            if (!thr.isValid)
-            {
-                if (thr.isCancel)
-                    canned_msg(MSG_OK);
-
-                return (false);
-            }
+            return (false);
         }
     }
     pbolt.set_target(thr);
 
-    // Making a copy of the item: changed only for venom launchers
+    // Making a copy of the item: changed only for venom launchers.
     item_def item = you.inv[throw_2];
     item.quantity = 1;
     item.slot     = index_to_letter(item.link);
@@ -1780,7 +1790,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     const object_class_type wepClass = item.base_type;
     const int               wepType  = item.sub_type;
 
-    // figure out if we're thrown or launched
+    // Figure out if we're thrown or launched.
     const launch_retval projected = is_launched(&you, you.weapon(), item);
 
     pbolt.name     = item.name(DESC_PLAIN, false, false, false);
@@ -1839,24 +1849,26 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.attitude      = ATT_FRIENDLY;
     pbolt.is_tracer     = true;
 
-    // init tracer variables
-    pbolt.foe_count     = pbolt.fr_count = 0;
-    pbolt.foe_power     = pbolt.fr_power = 0;
-    pbolt.fr_helped     = pbolt.fr_hurt  = 0;
-    pbolt.foe_helped    = pbolt.foe_hurt = 0;
-    pbolt.foe_ratio     = 100;
+    // Don't do the tracing when using Portaled Projectile, or when confused.
+    if (!teleport && !you.duration[DUR_CONF])
+    {
+        // Init tracer variables.
+        pbolt.foe_count     = pbolt.fr_count = 0;
+        pbolt.foe_power     = pbolt.fr_power = 0;
+        pbolt.fr_helped     = pbolt.fr_hurt  = 0;
+        pbolt.foe_helped    = pbolt.foe_hurt = 0;
+        pbolt.foe_ratio     = 100;
 
-    // Don't do the tracing when confused.
-    if (!you.duration[DUR_CONF])
         fire_beam(pbolt);
 
-    // Should only happen if the player answered 'n' to one of those
-    // "Fire through friendly?" prompts.
-    if (pbolt.fr_count > 0)
-    {
-        canned_msg(MSG_OK);
-        you.turn_is_over = false;
-        return (false);
+        // Should only happen if the player answered 'n' to one of those
+        // "Fire through friendly?" prompts.
+        if (pbolt.fr_count > 0)
+        {
+            canned_msg(MSG_OK);
+            you.turn_is_over = false;
+            return (false);
+        }
     }
 
     // Now start real firing!
@@ -1886,7 +1898,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         thr.ty = you.y_pos + random2(13) - 6;
     }
 
-    // even though direction is allowed, we're throwing so we
+    // Even though direction is allowed, we're throwing so we
     // want to use tx, ty to make the missile fly to map edge.
     if (!teleport)
         pbolt.set_target(thr);
@@ -2025,7 +2037,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // i.e. not launched ones. (Sep 10, 2007)
 
         shoot_skill = you.skills[launcher_skill];
-        effSkill = shoot_skill;
+        effSkill    = shoot_skill;
 
         const int speed = launcher_final_speed(launcher, player_shield());
 #ifdef DEBUG_DIAGNOSTICS
@@ -2209,12 +2221,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             dice_mult = (dice_mult * 150) / 100;
 
             pbolt.flavour = BEAM_COLD;
-            pbolt.name = "bolt of ";
+            pbolt.name    = "bolt of ";
 
             if (poisoned)
                 pbolt.name += "poison ";
 
-            pbolt.name += "frost";
+            pbolt.name   += "frost";
             pbolt.colour  = WHITE;
             pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
             pbolt.thrower = KILL_YOU_MISSILE;
@@ -2349,9 +2361,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                     baseHit = 1;
                 break;
             case MI_DART:
-                exHitBonus = you.skills[SK_DARTS] * 2;
+                exHitBonus  = you.skills[SK_DARTS] * 2;
                 exHitBonus += (you.skills[SK_THROWING] * 2) / 3;
-                exDamBonus = you.skills[SK_DARTS] / 3;
+                exDamBonus  = you.skills[SK_DARTS] / 3;
                 exDamBonus += you.skills[SK_THROWING] / 5;
 
                 // exercise skills
@@ -2491,8 +2503,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 #endif
 
     // Create message.
-    mprf( "You %s%s %s.",
-          projected? "" : "awkwardly ",
+    mprf( "%s %s%s %s.",
+          teleport  ? "Magically, you" : "You",
+          projected ? "" : "awkwardly ",
           projected == LRET_LAUNCHED ? "shoot" : "throw",
           item.name(DESC_NOCAP_A).c_str() );
 
@@ -2566,7 +2579,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     you.turn_is_over = true;
 
     return (hit);
-}                               // end throw_it()
+}
 
 bool thrown_object_destroyed( item_def *item, int x, int y, bool returning )
 {
@@ -2586,12 +2599,12 @@ bool thrown_object_destroyed( item_def *item, int x, int y, bool returning )
             chance = (get_ammo_brand(*item) == SPMSL_CURARE ? 3 : 6);
             break;
         case MI_SLING_BULLET:
-        case MI_STONE:  chance = 4; break;
-        case MI_DART:   chance = 3; break;
-        case MI_ARROW:  chance = 4; break;
-        case MI_BOLT:   chance = 4; break;
+        case MI_STONE:   chance =  4; break;
+        case MI_DART:    chance =  3; break;
+        case MI_ARROW:   chance =  4; break;
+        case MI_BOLT:    chance =  4; break;
         case MI_JAVELIN: chance = 10; break;
-        case MI_THROWING_NET: break; // doesn't get destroyed by throwing
+        case MI_THROWING_NET: break; // Doesn't get destroyed by throwing.
 
         case MI_LARGE_ROCK:
         default:

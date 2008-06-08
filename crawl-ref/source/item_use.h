@@ -105,7 +105,8 @@ bool remove_ring(int slot = -1, bool announce = false);
  * called from: acr
  * *********************************************************************** */
 int get_next_fire_item(int current, int offset);
-void fire_thing(int item=-1);
+int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
+void fire_thing(int item = -1);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
