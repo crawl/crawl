@@ -1528,10 +1528,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         summon_daeva(powc);
         break;
 
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-        summon_horrible_things(powc);
-        break;
-
     case SPELL_SUMMON_DRAGON:
         cast_summon_dragon(powc);
         break;
@@ -1551,6 +1547,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_SIMULACRUM:
         simulacrum(powc);
+        break;
+
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+        summon_horrible_things(powc);
         break;
 
     case SPELL_DEATH_CHANNEL:
