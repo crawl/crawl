@@ -542,6 +542,25 @@ bool cast_simulacrum(int pow, bool god_gift)
     return (false);
 }
 
+bool cast_shadow_creatures(bool god_gift)
+{
+    bool success = false;
+
+    if (create_monster(
+           mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2,
+                     you.pos(), you.pet_target,
+                     god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mpr("Wisps of shadow whirl around you...");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
 bool cast_summon_wraiths(int pow, bool god_gift)
 {
     bool success = false;

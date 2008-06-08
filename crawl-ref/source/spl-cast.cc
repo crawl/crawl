@@ -1545,6 +1545,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_simulacrum(powc);
         break;
 
+    case SPELL_SHADOW_CREATURES:
+        cast_shadow_creatures();
+        break;
+
     case SPELL_SUMMON_WRAITHS:
         cast_summon_wraiths(powc);
         break;
@@ -1841,15 +1845,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         if (!zapping(ZAP_ICE_STORM, powc, beam, true))
             return (SPRET_ABORT);
         break;
-
-    case SPELL_SHADOW_CREATURES:
-    {
-        mpr( "Wisps of shadow whirl around you..." );
-        create_monster(
-            mgen_data( RANDOM_MONSTER, BEH_FRIENDLY, 2,
-                       you.pos(), you.pet_target ));
-        break;
-    }
 
     //jmf: new spells 19mar2000
     case SPELL_FLAME_TONGUE:
