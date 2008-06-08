@@ -473,22 +473,17 @@ void simulacrum(int power)
 
 // This function returns true if the player can use controlled teleport
 // here.
-bool allow_control_teleport( bool silent )
+bool allow_control_teleport(bool quiet)
 {
-    bool ret = true;
-
-    if (testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
-        || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL))
-    {
-        ret = false;
-    }
+    bool retval = !(testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
+                      || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL));
 
     // Tell the player why if they have teleport control.
-    if (!ret && player_control_teleport() && !silent)
+    if (!quiet && !retval && player_control_teleport())
         mpr("A powerful magic prevents control of your teleportation.");
 
-    return ret;
-}                               // end allow_control_teleport()
+    return retval;
+}
 
 void you_teleport(void)
 {
@@ -511,9 +506,7 @@ void you_teleport(void)
             you.duration[DUR_TELEPORT] += 5 + random2(10);
         }
     }
-
-    return;
-}                               // end you_teleport()
+}
 
 static bool _teleport_player( bool allow_control, bool new_abyss_area )
 {

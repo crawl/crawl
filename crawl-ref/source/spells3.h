@@ -22,7 +22,7 @@ struct bolt;
 /* ***********************************************************************
  * called from: spells1 - spells3
  * *********************************************************************** */
-bool allow_control_teleport( bool silent = false );
+bool allow_control_teleport(bool quiet = false);
 
 
 // updated 24may2000 {dlb}
