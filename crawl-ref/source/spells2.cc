@@ -1680,33 +1680,6 @@ bool cast_summon_swarm(int pow, bool god_gift, bool force_hostile,
     return (success);
 }
 
-bool cast_call_imp(int pow, bool god_gift)
-{
-    bool success = false;
-
-    monster_type mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
-                       (one_chance_in(7)) ? MONS_SHADOW_IMP
-                                          : MONS_IMP;
-
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
-
-    if (create_monster(
-            mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
-                      you.pet_target,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
-    {
-        success = true;
-
-        mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
-            (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air."
-                                     : "A beastly little devil appears in a puff of flame.");
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
 bool cast_call_canine_familiar(int pow, bool god_gift)
 {
     bool success = false;
@@ -1912,87 +1885,6 @@ bool summon_elemental(int pow, bool god_gift,
     return (true);
 }
 
-static bool _summon_demon_class_wrapper(int pow, bool god_gift,
-                                        demon_class_type dct, int dur,
-                                        bool friendly, bool charmed)
-{
-    bool success = false;
-
-    mpr("You open a gate to Pandemonium!");
-
-    monster_type mon = summon_any_demon(dct);
-
-    if (create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY :
-                          charmed ? BEH_CHARMED : BEH_HOSTILE,
-                      dur, you.pos(),
-                      friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
-    {
-        success = true;
-
-        mprf("A demon appears!%s",
-             friendly ? "" :
-                 charmed ? " You don't feel so good about this..."
-                         : " It doesn't look very happy.");
-    }
-
-    return (success);
-}
-
-bool summon_lesser_demon(int pow, bool god_gift)
-{
-    return _summon_demon_class_wrapper(pow, god_gift, DEMON_LESSER,
-                                       std::min(2 + (random2(pow) / 4), 6),
-                                       random2(pow) > 3, false);
-}
-
-bool summon_common_demon(int pow, bool god_gift)
-{
-    return _summon_demon_class_wrapper(pow, god_gift, DEMON_COMMON,
-                                       std::min(2 + (random2(pow) / 4), 6),
-                                       random2(pow) > 3, false);
-}
-
-bool summon_greater_demon(int pow, bool god_gift)
-{
-    return _summon_demon_class_wrapper(pow, god_gift, DEMON_GREATER,
-                                       5, false, random2(pow) > 5);
-}
-
-bool cast_summon_demon(int pow, bool god_gift)
-{
-    mpr("You open a gate to Pandemonium!");
-
-    bool success = summon_common_demon(pow, god_gift);
-
-    if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
-bool cast_demonic_horde(int pow, bool god_gift)
-{
-    bool success = false;
-
-    const int how_many = 7 + random2(5);
-
-    mpr("You open a gate to Pandemonium!");
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        if (summon_lesser_demon(pow, god_gift))
-            success = true;
-    }
-
-    if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
 bool cast_summon_ice_beast(int pow, bool god_gift)
 {
     bool success = false;
@@ -2042,18 +1934,6 @@ bool cast_summon_ugly_thing(int pow, bool god_gift)
              friendly ? "" : " It doesn't look very happy.");
     }
     else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
-bool cast_summon_greater_demon(int pow, bool god_gift)
-{
-    mpr("You open a gate to Pandemonium!");
-
-    bool success = summon_greater_demon(pow, god_gift);
-
-    if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);

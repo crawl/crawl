@@ -1483,10 +1483,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_swarm(powc);
         break;
 
-    case SPELL_CALL_IMP:
-        cast_call_imp(powc);
-        break;
-
     case SPELL_CALL_CANINE_FAMILIAR:
         cast_call_canine_familiar(powc);
         break;
@@ -1496,24 +1492,12 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_SUMMON_DEMON:
-        cast_summon_demon(powc);
-        break;
-
-    case SPELL_DEMONIC_HORDE:
-        cast_demonic_horde(powc);
-        break;
-
     case SPELL_SUMMON_ICE_BEAST:
         cast_summon_ice_beast(powc);
         break;
 
     case SPELL_SUMMON_UGLY_THING:
         cast_summon_ugly_thing(powc);
-        break;
-
-    case SPELL_SUMMON_GREATER_DEMON:
-        cast_summon_greater_demon(powc);
         break;
 
     case SPELL_SUMMON_GUARDIAN:
@@ -1535,6 +1519,22 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_TUKIMAS_DANCE:
         crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
         cast_tukimas_dance(powc);
+        break;
+
+    case SPELL_CALL_IMP:
+        cast_call_imp(powc);
+        break;
+
+    case SPELL_SUMMON_DEMON:
+        cast_summon_demon(powc);
+        break;
+
+    case SPELL_DEMONIC_HORDE:
+        cast_demonic_horde(powc);
+        break;
+
+    case SPELL_SUMMON_GREATER_DEMON:
+        cast_summon_greater_demon(powc);
         break;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
