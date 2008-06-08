@@ -1423,7 +1423,7 @@ int player_res_electricity(bool calc_unid)
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
         re += 2;  // multiple levels currently meaningless
 
-    if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] > 0)
+    if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
         re = 3;
     else if (re > 1)
         re = 1;

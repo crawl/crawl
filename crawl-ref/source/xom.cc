@@ -725,8 +725,7 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 11)
     {
-        if (player_in_a_dangerous_place())
-        if (you.hp <= random2(201))
+        if (you.hp <= random2(201) && player_in_a_dangerous_place())
             you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
 
         mpr("The area is suffused with divine lightning!");
