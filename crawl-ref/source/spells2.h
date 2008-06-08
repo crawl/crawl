@@ -68,7 +68,7 @@ struct dist;
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-int vampiric_drain(int pow, const dist &);
+bool vampiric_drain(int pow, const dist &vmove);
 
 
 // last updated 24may2000 {dlb}

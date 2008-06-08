@@ -1256,39 +1256,35 @@ void drain_life(int pow)
         mpr( "You feel life flooding into your body." );
         inc_hp( hp_gain, false );
     }
-}                               // end drain_life()
+}
 
-int vampiric_drain(int pow, const dist &vmove)
+bool vampiric_drain(int pow, const dist &vmove)
 {
-    int inflicted = 0;
-    int mgr = 0;
-    struct monsters *monster = 0;       // NULL
-
-    mgr = mgrd[you.x_pos + vmove.dx][you.y_pos + vmove.dy];
+    int mgr = mgrd[you.x_pos + vmove.dx][you.y_pos + vmove.dy];
 
     if (mgr == NON_MONSTER)
     {
         mpr("There isn't anything there!");
-        return -1;
+        return (false);
     }
 
-    monster = &menv[mgr];
+    monsters *monster = &menv[mgr];
 
     if (mons_is_unholy(monster))
     {
         mpr("Aaaarggghhhhh!");
         dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
-        return -1;
+        return (false);
     }
 
     if (mons_res_negative_energy(monster))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return -1;
+        return (false);
     }
 
     // The practical maximum of this is about 25 (pow @ 100).  -- bwr
-    inflicted = 3 + random2avg( 9, 2 ) + random2(pow) / 7;
+    int inflicted = 3 + random2avg( 9, 2 ) + random2(pow) / 7;
 
     if (inflicted >= monster->hit_points)
         inflicted = monster->hit_points;
@@ -1299,7 +1295,7 @@ int vampiric_drain(int pow, const dist &vmove)
     if (inflicted == 0)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return -1;
+        return (false);
     }
 
     hurt_monster(monster, inflicted);
@@ -1314,8 +1310,8 @@ int vampiric_drain(int pow, const dist &vmove)
 
     inc_hp(inflicted / 2, false);
 
-    return 1;
-}                               // end vampiric_drain()
+    return (true);
+}
 
 // Note: this function is currently only used for Freeze. -- bwr
 char burn_freeze(int pow, beam_type flavour)
@@ -1420,7 +1416,7 @@ char burn_freeze(int pow, beam_type flavour)
     }
 
     return 1;
-}                               // end burn_freeze()
+}
 
 void summon_animals(int pow)
 {
