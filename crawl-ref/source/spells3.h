@@ -116,6 +116,7 @@ bool cast_call_imp(int pow, bool god_gift = false);
 bool summon_lesser_demon(int pow, bool god_gift = false);
 bool summon_common_demon(int pow, bool god_gift = false);
 bool summon_greater_demon(int pow, bool god_gift = false);
+bool summon_demon_type(monster_type mon, int pow, bool god_gift = false);
 bool cast_summon_demon(int pow, bool god_gift = false);
 bool cast_demonic_horde(int pow, bool god_gift = false);
 bool cast_summon_greater_demon(int pow, bool god_gift = false);

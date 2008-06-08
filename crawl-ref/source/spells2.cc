@@ -2102,34 +2102,6 @@ bool cast_tukimas_dance(int pow, bool god_gift,
     return (true);
 }
 
-// Makhleb or Kikubaaqudgha sends a demonic buddy (or enemy) for a
-// follower.
-bool summon_demon_type(monster_type mon, int pow, bool god_gift)
-{
-    bool success = false;
-
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
-
-    const bool friendly = (random2(pow) > 3);
-
-    if (create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, you.pos(),
-                      friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
-    {
-        success = true;
-
-        mprf("A demon appears!%s",
-             friendly ? "" : " It doesn't look very happy.");
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
 // Trog sends a fighting buddy (or enemy) for a follower.
 bool summon_berserker(int pow, bool god_gift, bool force_hostile)
 {

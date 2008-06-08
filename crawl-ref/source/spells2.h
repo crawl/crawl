@@ -159,7 +159,6 @@ bool cast_tukimas_dance(int pow, bool god_gift = false,
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool summon_demon_type(monster_type mon, int pow, bool god_gift = false);
 bool summon_berserker(int pow, bool god_gift = false,
                       bool force_hostile = false);
 bool summon_guardian(int pow, bool god_gift = false);
