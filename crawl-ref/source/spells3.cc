@@ -418,57 +418,55 @@ void sublimation(int power)
 // Hides and other "animal part" items are intentionally left out, it's
 // unrequired complexity, and fresh flesh makes more "sense" for a spell
 // reforming the original monster out of ice anyways.
-void simulacrum(int power)
+bool simulacrum(int pow, bool god_gift)
 {
-    int max_num = 4 + random2(power) / 20;
-    if (max_num > 8)
-        max_num = 8;
+    int how_many_max = std::min(8, 4 + random2(pow) / 20);
 
     const int chunk = you.equip[EQ_WEAPON];
 
     if (chunk != -1
-        && is_valid_item( you.inv[ chunk ] )
-        && (you.inv[ chunk ].base_type == OBJ_CORPSES
-            || (you.inv[ chunk ].base_type == OBJ_FOOD
-                && you.inv[ chunk ].sub_type == FOOD_CHUNK)))
+        && is_valid_item(you.inv[chunk])
+        && (you.inv[chunk].base_type == OBJ_CORPSES
+            || (you.inv[chunk].base_type == OBJ_FOOD
+                && you.inv[chunk].sub_type == FOOD_CHUNK)))
     {
-        const monster_type mons_type =
-            static_cast<monster_type>(you.inv[ chunk ].plus);
+        const monster_type mon =
+            static_cast<monster_type>(you.inv[chunk].plus);
 
-        // Can't create more than the available chunks
-        if (you.inv[ chunk ].quantity < max_num)
-            max_num = you.inv[ chunk ].quantity;
+        // Can't create more than the available chunks.
+        if (you.inv[chunk].quantity < how_many_max)
+            how_many_max = you.inv[chunk].quantity;
 
-        dec_inv_item_quantity( chunk, max_num );
+        dec_inv_item_quantity(chunk, how_many_max);
 
-        int summoned = 0;
+        int count = 0;
 
-        for (int i = 0; i < max_num; i++)
+        for (int i = 0; i < how_many_max; ++i)
         {
             if (create_monster(
-                    mgen_data(MONS_SIMULACRUM_SMALL,
-                              BEH_FRIENDLY, 6,
-                              you.pos(), you.pet_target,
-                              0, mons_type)) != -1)
+                    mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
+                              6, you.pos(), you.pet_target,
+                              god_gift ? MF_GOD_GIFT : 0,
+                              mon)) != -1)
             {
-                summoned++;
+                count++;
             }
         }
 
-        if (summoned)
+        if (count > 0)
         {
-            mprf("%s before you!",
-                 (summoned == 1) ? "An icy figure forms "
-                                 : "Some icy figures form ");
+            mprf("%s icy figure form%s before you!",
+                count > 1 ? "Some" : "An", count > 1 ? "s" : "");
+            return (true);
         }
-        else
-            mpr( "You feel cold for a second." );
+
+        mpr("You feel cold for a second.");
+        return (false);
     }
-    else
-    {
-        mpr( "You need to wield a piece of raw flesh for this spell "
-             "to be effective!" );
-    }
+
+    mpr("You need to wield a piece of raw flesh for this spell to be "
+        "effective!");
+    return (false);
 }
 
 // This function returns true if the player can use controlled teleport

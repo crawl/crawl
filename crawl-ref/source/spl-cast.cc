@@ -1540,6 +1540,15 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_conjure_ball_lightning(powc);
         break;
 
+    case SPELL_TUKIMAS_DANCE:
+        crawl_state.cant_cmd_repeat("You can't repeat dancing weapon.");
+        dancing_weapon(powc);
+        break;
+
+    case SPELL_SIMULACRUM:
+        simulacrum(powc);
+        break;
+
     case SPELL_OZOCUBUS_ARMOUR:
         ice_armour(powc, false);
         break;
@@ -1602,11 +1611,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_SUBLIMATION_OF_BLOOD:
         sublimation(powc);
-        break;
-
-    case SPELL_TUKIMAS_DANCE:
-        crawl_state.cant_cmd_repeat("You can't repeat dancing weapon.");
-        dancing_weapon(powc);
         break;
 
     case SPELL_HELLFIRE:
@@ -1975,10 +1979,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_STONESKIN:
         cast_stoneskin(powc);
-        break;
-
-    case SPELL_SIMULACRUM:
-        simulacrum(powc);
         break;
 
     case SPELL_CHAIN_LIGHTNING:

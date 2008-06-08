@@ -124,7 +124,7 @@ void sublimation(int power);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-void simulacrum(int power);
+bool simulacrum(int pow, bool god_gift = false);
 
 
 // updated 24may2000 {dlb}
