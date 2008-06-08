@@ -2025,12 +2025,9 @@ bool cast_summon_ugly_thing(int pow, bool god_gift)
 
 bool cast_summon_greater_demon(int pow, bool god_gift)
 {
-    bool charmed = (random2(pow) > 5);
-
     mpr("You open a gate to Pandemonium!");
 
-    bool success = _summon_demon_class_wrapper(pow, god_gift, DEMON_GREATER,
-                                               5, false, charmed);
+    bool success = summon_greater_demon(pow, god_gift);
 
     if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
