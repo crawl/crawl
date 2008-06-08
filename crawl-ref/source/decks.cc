@@ -2426,7 +2426,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                 || mons_holiness(monster) != MH_NATURAL
                 || mons_is_unique(monster->type)
                 || mons_immune_magic(monster)
-                || player_angers_monster(monster, false))
+                || player_will_anger_monster(monster))
             {
                 continue;
             }

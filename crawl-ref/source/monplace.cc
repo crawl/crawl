@@ -2006,20 +2006,40 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
     return (pos);
 }
 
-bool player_angers_monster(monsters *mon, bool actual)
+bool player_will_anger_monster(monster_type type, bool *holy,
+                               bool *unholy, bool *antimagical)
 {
-    const bool holy =
-        (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
-    const bool unholy =
-        (is_evil_god(you.religion) && mons_is_holy(mon));
-    const bool antimagical =
-        (you.religion == GOD_TROG && mons_is_magic_user(mon));
+    monsters dummy;
+    dummy.type = type;
+
+    return (player_will_anger_monster(&dummy, holy, unholy, antimagical));
+}
+
+bool player_will_anger_monster(monsters *mon, bool *holy,
+                               bool *unholy, bool *antimagical)
+{
+    if (holy)
+        *holy = (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
+
+    if (unholy)
+        *unholy = (is_evil_god(you.religion) && mons_is_holy(mon));
+
+    if (antimagical)
+        *antimagical = (you.religion == GOD_TROG && mons_is_magic_user(mon));
+
+    return (holy || unholy || antimagical);
+}
+
+bool player_angers_monster(monsters *mon)
+{
+    bool holy;
+    bool unholy;
+    bool antimagical;
 
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
-    if (holy || unholy || antimagical)
+    if (player_will_anger_monster(mon, &holy, &unholy, &antimagical))
     {
-        if (actual
-            && (mon->attitude != ATT_HOSTILE || mon->has_ench(ENCH_CHARM)))
+        if (mon->attitude != ATT_HOSTILE || mon->has_ench(ENCH_CHARM))
         {
             mon->attitude = ATT_HOSTILE;
             mon->del_ench(ENCH_CHARM);

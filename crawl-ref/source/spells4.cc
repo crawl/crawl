@@ -648,7 +648,7 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
     monsters *monster = &menv[which_mons];
 
     if (!is_domesticated_animal(monster->type) || mons_friendly(monster)
-        || player_angers_monster(monster, false))
+        || player_will_anger_monster(monster))
     {
         return 0;
     }

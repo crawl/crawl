@@ -2603,7 +2603,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         return (MON_AFFECTED);
     }
     case BEAM_CHARM:             /* 9 = charm */
-        if (player_angers_monster(monster, false))
+        if (player_will_anger_monster(monster))
         {
             simple_monster_message(monster, " is repulsed!");
             return (MON_OTHER);
@@ -4805,7 +4805,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
         beam.obvious_effect = true;
-        if (player_angers_monster(mon, false))
+        if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");
             return (MON_OTHER);
@@ -4837,7 +4837,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
             return (MON_UNAFFECTED);
 
         beam.obvious_effect = true;
-        if (player_angers_monster(mon, false))
+        if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");
             return (MON_OTHER);
