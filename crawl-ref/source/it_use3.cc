@@ -985,7 +985,7 @@ static bool box_of_beasts()
                                    : MONS_GIANT_LIZARD);
 
         beh_type beha = BEH_FRIENDLY;
-        unsigned int hitting = you.pet_target;
+        unsigned short hitting = you.pet_target;
 
         if (one_chance_in(you.skills[SK_EVOCATIONS] + 5))
         {
