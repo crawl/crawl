@@ -180,6 +180,17 @@ bool cast_summon_dragon(int pow, bool god_gift = false);
 
 bool cast_conjure_ball_lightning(int pow, bool god_gift = false);
 
+// last updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: ability - religion - spell
+ * *********************************************************************** */
+bool dancing_weapon(int pow, bool god_gift = false, bool force_hostile = false,
+                    bool quiet_failure = false);
+
+// last updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: ability - spell
+ * *********************************************************************** */
 bool summon_demon_type(monster_type mon, int pow, bool god_gift = false);
 
 bool summon_berserker(int pow, bool god_gift = false,

@@ -27,7 +27,7 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
-#include "spells3.h"
+#include "spells2.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
@@ -877,8 +877,9 @@ static bool xom_is_bad(int sever)
         {
             bool success = false;
 
+            // Nasty, but fun.
             if (one_chance_in(4))
-                success = dancing_weapon(100, true, true); // Nasty, but fun.
+                success = dancing_weapon(100, true, true, true);
             else
             {
                 const int numdemons =

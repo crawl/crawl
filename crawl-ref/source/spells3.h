@@ -80,14 +80,6 @@ bool project_noise(void);
 
 // updated 24may2000 {dlb}
 /* ***********************************************************************
- * called from: religion - spell
- * *********************************************************************** */
-bool dancing_weapon(int pow, bool force_hostile = false,
-                    bool quiet_failure = false);
-
-
-// updated 24may2000 {dlb}
-/* ***********************************************************************
  * called from: item_use - spell
  * *********************************************************************** */
 bool detect_curse(bool suppress_msg);
