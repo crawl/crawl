@@ -1551,7 +1551,7 @@ bool summon_elemental(int pow, int restricted_type,
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       numsc, coord_def(targ_x, targ_y),
-                      friendly ? you.pet_target : MHITYOU )) != -1)
+                      friendly ? you.pet_target : MHITYOU)) != -1)
     {
         return (false);
     }
@@ -2087,21 +2087,20 @@ bool summon_common_demon(int pow, bool god_gift)
 }
 
 // One of the demon-associated gods sends a demon for a follower.
-bool summon_demon(monster_type mon, int pow, bool force_hostile,
-                  bool quiet, bool permanent)
+bool summon_demon(monster_type mon, int pow, bool god_gift)
 {
     bool success = false;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    const bool friendly = (force_hostile) ? false : (random2(pow) > 3);
+    const bool friendly = (random2(pow) > 3);
 
     if (create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      MF_GOD_GIFT)) != -1)
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
@@ -2115,7 +2114,7 @@ bool summon_demon(monster_type mon, int pow, bool force_hostile,
 }
 
 // Trog sends a fighting buddy (or enemy) for a follower.
-bool summon_berserker(int pow, bool force_hostile)
+bool summon_berserker(int pow, bool god_gift, bool force_hostile)
 {
     bool success = false;
 
@@ -2169,7 +2168,7 @@ bool summon_berserker(int pow, bool force_hostile)
                       !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, you.pos(),
                       !force_hostile ? you.pet_target : MHITYOU,
-                      MF_GOD_GIFT));
+                      god_gift ? MF_GOD_GIFT : 0));
 
     if (monster != -1)
     {
@@ -2193,29 +2192,23 @@ bool summon_berserker(int pow, bool force_hostile)
     return (success);
 }
 
-static bool _summon_holy_being_wrapper(int pow, holy_being_class_type hbct,
-                                       bool force_hostile, bool quiet,
-                                       bool permanent)
+static bool _summon_holy_being_wrapper(int pow, bool god_gift,
+                                       holy_being_class_type hbct)
 {
     bool success = false;
 
     monster_type mon = summon_any_holy_being(hbct);
 
-    const int dur = (permanent) ? 0 : std::min(2 + (random2(pow) / 4), 6);
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    if (!quiet)
-    {
-        mprf("You open a gate to %s's realm!",
-             (mon == MONS_DAEVA) ? god_name(GOD_SHINING_ONE).c_str()
-                                 : god_name(GOD_ZIN).c_str());
-    }
+    mprf("You open a gate to %s's realm!",
+         (mon == MONS_DAEVA) ? god_name(GOD_SHINING_ONE).c_str()
+                             : god_name(GOD_ZIN).c_str());
 
     int monster = create_monster(
-                      mgen_data(mon,
-                                !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                                dur, you.pos(),
-                                !force_hostile ? you.pet_target : MHITYOU,
-                                MF_GOD_GIFT));
+                      mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
+                                you.pet_target,
+                                god_gift ? MF_GOD_GIFT : 0));
     if (monster != -1)
     {
         success = true;
@@ -2223,31 +2216,24 @@ static bool _summon_holy_being_wrapper(int pow, holy_being_class_type hbct,
         monsters *summon = &menv[monster];
         summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-        if (!quiet)
-        {
-            mprf("You are momentarily dazzled by a brilliant %s light.",
-                 (mon == MONS_DAEVA) ? "golden"
-                                     : "white");
-        }
+        mprf("You are momentarily dazzled by a brilliant %s light.",
+             (mon == MONS_DAEVA) ? "golden"
+                                 : "white");
     }
 
     return (success);
 }
 
 // Zin sends an angel for a follower.
-bool summon_guardian(int pow, bool force_hostile, bool quiet,
-                     bool permanent)
+bool summon_guardian(int pow, bool god_gift)
 {
-    return _summon_holy_being_wrapper(pow, HOLY_BEING_ANGEL, force_hostile,
-                                      quiet, permanent);
+    return _summon_holy_being_wrapper(pow, god_gift, HOLY_BEING_ANGEL);
 }
 
 // TSO sends a daeva for a follower.
-bool summon_daeva(int pow, bool force_hostile, bool quiet,
-                  bool permanent)
+bool summon_daeva(int pow, bool god_gift)
 {
-    return _summon_holy_being_wrapper(pow, HOLY_BEING_DAEVA, force_hostile,
-                                      quiet, permanent);
+    return _summon_holy_being_wrapper(pow, god_gift, HOLY_BEING_DAEVA);
 }
 
 void summon_things(int pow)

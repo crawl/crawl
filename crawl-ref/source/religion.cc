@@ -3016,7 +3016,9 @@ static bool _tso_retribution()
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (summon_daeva(0, true, true, true))
+            if (create_monster(
+                    mgen_data::alert_hostile_at(MONS_DAEVA,
+                        you.pos(), MF_GOD_GIFT)) != -1)
             {
                 success = true;
             }
@@ -3115,7 +3117,9 @@ static bool _zin_retribution()
 
             for (int i = 0; i < how_many; ++i)
             {
-                if (summon_guardian(0, true, true, true))
+                if (create_monster(
+                        mgen_data::alert_hostile_at(MONS_ANGEL,
+                            you.pos(), MF_GOD_GIFT)) != -1)
                 {
                     success = true;
                 }
@@ -3275,10 +3279,11 @@ static bool _makhleb_retribution()
 
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
-        bool success =
-            summon_demon(
-                static_cast<monster_type>(MONS_EXECUTIONER + random2(5)),
-                0, true, true, true);
+        bool success = (create_monster(
+                           mgen_data::alert_hostile_at(
+                               static_cast<monster_type>(
+                                   MONS_EXECUTIONER + random2(5)),
+                               you.pos(), MF_GOD_GIFT)) != -1);
 
         simple_god_message(success ?
                            " sends a greater servant after you!" :
@@ -3292,9 +3297,11 @@ static bool _makhleb_retribution()
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (summon_demon(
-                    static_cast<monster_type>(MONS_NEQOXEC + random2(5)),
-                    0, true, true, true))
+            if (create_monster(
+                   mgen_data::alert_hostile_at(
+                       static_cast<monster_type>(
+                           MONS_NEQOXEC + random2(5)),
+                       you.pos(), MF_GOD_GIFT)) != -1)
             {
                 count++;
             }
@@ -3320,7 +3327,9 @@ static bool _kikubaaqudgha_retribution()
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (summon_demon(MONS_REAPER, 0, true, true, true))
+            if (create_monster(
+                    mgen_data::alert_hostile_at(MONS_REAPER,
+                        you.pos(), MF_GOD_GIFT)) != -1)
             {
                 success = true;
             }
@@ -3698,10 +3707,11 @@ static bool _lugonu_retribution()
 
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
-        bool success =
-            summon_demon(
-                static_cast<monster_type>(MONS_GREEN_DEATH + random2(3)),
-                0, true, true, true);
+        bool success = (create_monster(
+                           mgen_data::alert_hostile_at(
+                               static_cast<monster_type>(
+                                   MONS_GREEN_DEATH + random2(3)),
+                               you.pos(), MF_GOD_GIFT)) != -1);
 
         simple_god_message(success ?
                            " sends a demon after you!" :
@@ -3715,9 +3725,11 @@ static bool _lugonu_retribution()
 
         for (int loopy = 0; loopy < how_many; loopy++)
         {
-            if (summon_demon(
-                    static_cast<monster_type>(MONS_NEQOXEC + random2(5)),
-                    0, true, true, true))
+            if (create_monster(
+                   mgen_data::alert_hostile_at(
+                       static_cast<monster_type>(
+                           MONS_NEQOXEC + random2(5)),
+                       you.pos(), MF_GOD_GIFT)) != -1)
             {
                 success = true;
             }
