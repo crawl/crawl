@@ -386,12 +386,24 @@ static void abyss_lose_monster(monsters &mons)
     mons.reset();
 }
 
+#define LOS_DIAMETER (LOS_RADIUS * 2 + 1)
+
 void area_shift(void)
 /*******************/
 {
 #if DEBUG_ABYSS
     mpr("area_shift().", MSGCH_DIAGNOSTICS);
 #endif
+
+    // Preserve floor props around the player, primarily so that
+    // blood-splatter doesn't appear out of nowhere when doing an
+    // area shift.
+    FixedArray<unsigned short, LOS_DIAMETER, LOS_DIAMETER> fprops;
+    const coord_def los_delta(LOS_RADIUS, LOS_RADIUS);
+    radius_iterator ri(you.pos(), LOS_RADIUS);
+
+    for ( ; ri; ++ri )
+        fprops(you.pos() - *ri + los_delta) = env.map(*ri).property;
 
     xom_check_nearness_setup();
 
@@ -478,6 +490,10 @@ void area_shift(void)
                   GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
 
     xom_check_nearness();
+
+    radius_iterator ri2(you.pos(), LOS_RADIUS);
+    for ( ; ri2; ++ri2 )
+        env.map(*ri2).property = fprops(you.pos() - *ri2 + los_delta);
 
     mgen_data mons;
     mons.level_type = LEVEL_ABYSS;
