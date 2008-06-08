@@ -653,15 +653,9 @@ static int raise_corpse( int corps, int corx, int cory,
     return returnVal;
 }                               // end raise_corpse()
 
-void cast_twisted(int power, beh_type corps_beh, int corps_hit)
+void cast_twisted_resurrection(int pow, beh_type corps_beh,
+                               unsigned short corps_hit)
 {
-    int total_mass = 0;
-    int num_corpses = 0;
-    monster_type type_resurr = MONS_ABOMINATION_SMALL;
-    char colour;
-
-    unsigned char rotted = 0;
-
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
     {
         mpr("There's nothing here!");
@@ -671,6 +665,10 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
     int objl = igrd[you.x_pos][you.y_pos];
     int next;
 
+    int total_mass = 0;
+    int num_corpses = 0;
+    int rotted = 0;
+
     while (objl != NON_ITEM)
     {
         next = mitm[objl].link;
@@ -678,13 +676,14 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
         if (mitm[objl].base_type == OBJ_CORPSES
                 && mitm[objl].sub_type == CORPSE_BODY)
         {
-            total_mass += mons_weight( mitm[objl].plus );
+            total_mass += mons_weight(mitm[objl].plus);
 
             num_corpses++;
+
             if (food_is_rotten(mitm[objl]))
                 rotted++;
 
-            destroy_item( objl );
+            destroy_item(objl);
         }
 
         objl = next;
@@ -695,67 +694,67 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
 #endif
 
     // This is what the old statement pretty much boils down to,
-    // the average will be approximately 10 * power (or about 1000
+    // the average will be approximately 10 * pow (or about 1000
     // at the practical maximum).  That's the same as the mass
     // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
     // material components are far more important to this spell. -- bwr
-    total_mass += roll_dice( 20, power );
+    total_mass += roll_dice(20, pow);
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Mass including power bonus: %d", total_mass);
 #endif
 
-    if (total_mass < 400 + roll_dice( 2, 500 )
+    if (total_mass < 400 + roll_dice(2, 500)
         || num_corpses < (coinflip() ? 3 : 2))
     {
         mpr("The spell fails.");
+
         mprf("The corpse%s collapse%s into a pulpy mess.",
              num_corpses > 1 ? "s": "", num_corpses > 1 ? "": "s");
         return;
     }
 
-    if (total_mass > 500 + roll_dice( 3, 1000 ))
-        type_resurr = MONS_ABOMINATION_LARGE;
+    monster_type mon =
+        (total_mass > 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
+                                                : MONS_ABOMINATION_SMALL;
 
-    if (rotted == num_corpses)
-        colour = BROWN;
-    else if (rotted >= random2( num_corpses ))
-        colour = RED;
-    else
-        colour = LIGHTRED;
+    char colour = (rotted == num_corpses)          ? BROWN :
+                  (rotted >= random2(num_corpses)) ? RED
+                                                   : LIGHTRED;
 
-    mgen_data mg( type_resurr, corps_beh, 0,
-                  you.pos(), corps_hit, 0, MONS_PROGRAM_BUG, 0,
-                  colour );
+    int monster = create_monster(
+                      mgen_data(mon, corps_beh, 0,
+                      you.pos(), corps_hit, 0, MONS_PROGRAM_BUG, 0,
+                      colour));
 
-    int mon = create_monster(mg);
-
-    if (mon == -1)
-        mpr("The corpses collapse into a pulpy mess.");
-    else
+    if (monster == -1)
     {
-        // This was probably intended, but it's really boring. (jpeg)
-        // Use menv[mon].number instead (set in create_monster()).
-//        menv[mon].colour = colour;
-        mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
-        if (type_resurr == MONS_ABOMINATION_LARGE)
-        {
-            menv[mon].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
+        mpr("The corpses collapse into a pulpy mess.");
+        return;
+    }
+
+    // This was probably intended, but it's really boring. (jpeg)
+    // Use menv[mon].number instead (set in create_monster()).
+//    menv[mon].colour = colour;
+    mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
+
+    if (mon == MONS_ABOMINATION_LARGE)
+    {
+        menv[monster].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
                                                    (colour == RED)      ? 1000
                                                                         : 2500);
 
-            if (menv[mon].hit_dice > 30)
-                menv[mon].hit_dice = 30;
+        if (menv[monster].hit_dice > 30)
+            menv[monster].hit_dice = 30;
 
-            // XXX: No convenient way to get the hit dice size right now.
-            menv[mon].hit_points = hit_points( menv[mon].hit_dice, 2, 5 );
-            menv[mon].max_hit_points = menv[mon].hit_points;
+        // XXX: No convenient way to get the hit dice size right now.
+        menv[monster].hit_points = hit_points(menv[monster].hit_dice, 2, 5);
+        menv[monster].max_hit_points = menv[monster].hit_points;
 
-            if (colour == LIGHTRED)
-                menv[mon].ac += total_mass / 1000;
-        }
+        if (colour == LIGHTRED)
+            menv[monster].ac += total_mass / 1000;
     }
-}                               // end cast_twisted()
+}
 
 bool brand_weapon(brand_type which_brand, int power)
 {

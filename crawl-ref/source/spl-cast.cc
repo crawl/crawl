@@ -1585,7 +1585,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_TWISTED_RESURRECTION:
-        cast_twisted(powc, BEH_FRIENDLY, you.pet_target);
+        cast_twisted_resurrection(powc, BEH_FRIENDLY, you.pet_target);
         break;
 
     case SPELL_REGENERATION:

@@ -110,7 +110,8 @@ void cast_toxic_radiance(void);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-void cast_twisted(int power, beh_type corps_beh, int corps_hit);
+void cast_twisted_resurrection(int pow, beh_type corps_beh,
+                               unsigned short corps_hit);
 
 
 // last updated 24may2000 {dlb}
