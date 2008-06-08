@@ -47,7 +47,6 @@ void cast_see_invisible(int pow);
 
 void cast_shatter(int pow);
 void cast_silence(int pow);
-void cast_sticks_to_snakes(int pow);
 void cast_chain_lightning( int pow );
 void cast_conjure_ball_lightning(int pow);
 void cast_tame_beasts(int pow);

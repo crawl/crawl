@@ -35,7 +35,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "invent.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -413,124 +412,6 @@ void cast_detect_secret_doors(int pow)
 
     mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
 }                               // end cast_detect_secret_doors()
-
-void cast_sticks_to_snakes(int pow)
-{
-    monster_type mon = MONS_PROGRAM_BUG;
-    int how_many = 0;
-    int max = 1 + random2( 1 + you.skills[SK_TRANSMIGRATION] ) / 4;
-    int dur = std::min(3 + random2(pow) / 20, 5);
-    const int weapon = you.equip[EQ_WEAPON];
-
-    if (weapon == -1)
-    {
-        msg::stream << "Your " << your_hand(true) << " feel slithery!"
-                    << std::endl;
-        return;
-    }
-
-    // Don't enchant sticks marked with {!D}.
-    if (!check_warning_inscriptions(you.inv[ weapon ], OPER_DESTROY))
-    {
-        mprf("%s feel%s slithery for a moment!",
-             you.inv[weapon].name(DESC_CAP_YOUR).c_str(),
-             you.inv[weapon].quantity > 1 ? "s" : "");
-        return;
-    }
-
-    const beh_type beha = item_cursed(you.inv[ weapon ]) ? BEH_HOSTILE
-                                                         : BEH_FRIENDLY;
-    const unsigned short hitting = (beha == BEH_HOSTILE) ? MHITYOU
-                                                         : you.pet_target;
-
-    if ((you.inv[ weapon ].base_type == OBJ_MISSILES
-         && (you.inv[ weapon ].sub_type == MI_ARROW)))
-    {
-        if (you.inv[ weapon ].quantity < max)
-            max = you.inv[ weapon ].quantity;
-
-        for (int i = 0; i <= max; i++)
-        {
-            if (one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25)))
-                || get_ammo_brand(you.inv[weapon]) == SPMSL_POISONED)
-            {
-                mon = random2(100) < pow / 3? MONS_BROWN_SNAKE : MONS_SNAKE;
-            }
-            else
-            {
-                mon = MONS_SMALL_SNAKE;
-            }
-
-            if (create_monster(
-                    mgen_data( mon, beha, dur,
-                               you.pos(), hitting )) != -1)
-            {
-                how_many++;
-            }
-        }
-    }
-
-    if (you.inv[ weapon ].base_type == OBJ_WEAPONS
-        && (you.inv[ weapon ].sub_type == WPN_CLUB
-            || you.inv[ weapon ].sub_type == WPN_SPEAR
-            || you.inv[ weapon ].sub_type == WPN_QUARTERSTAFF
-            || you.inv[ weapon ].sub_type == WPN_SCYTHE
-            || you.inv[ weapon ].sub_type == WPN_GIANT_CLUB
-            || you.inv[ weapon ].sub_type == WPN_GIANT_SPIKED_CLUB
-            || you.inv[ weapon ].sub_type == WPN_BOW
-            || you.inv[ weapon ].sub_type == WPN_LONGBOW
-            || you.inv[ weapon ].sub_type == WPN_ANKUS
-            || you.inv[ weapon ].sub_type == WPN_HALBERD
-            || you.inv[ weapon ].sub_type == WPN_GLAIVE
-            || you.inv[ weapon ].sub_type == WPN_BLOWGUN))
-    {
-        // Upsizing Snakes to Brown Snakes as the base class for using
-        // the really big sticks (so bonus applies really only to trolls,
-        // ogres, and most importantly ogre magi).  Still it's unlikely
-        // any character is strong enough to bother lugging a few of
-        // these around.  -- bwr
-        if (item_mass( you.inv[ weapon ] ) < 300)
-            mon = MONS_SNAKE;
-        else
-            mon = MONS_BROWN_SNAKE;
-
-        if (pow > 20 && one_chance_in(3))
-            mon = MONS_BROWN_SNAKE;
-
-        if (pow > 40 && one_chance_in(3))
-            mon = MONS_YELLOW_SNAKE;
-
-        if (pow > 70 && one_chance_in(3))
-            mon = MONS_BLACK_SNAKE;
-
-        if (pow > 90 && one_chance_in(3))
-            mon = MONS_GREY_SNAKE;
-
-        if (create_monster(
-                mgen_data( mon, beha, dur,
-                           you.pos(), hitting )) != -1)
-        {
-            how_many++;
-        }
-    }
-
-    if (how_many > you.inv[you.equip[EQ_WEAPON]].quantity)
-        how_many = you.inv[you.equip[EQ_WEAPON]].quantity;
-
-    if (how_many)
-    {
-        dec_inv_item_quantity( you.equip[EQ_WEAPON], how_many );
-
-        mprf("You create %s snake%s!",
-             how_many > 1 ? "some" : "a", how_many > 1 ? "s" : "");
-    }
-    else
-    {
-        msg::stream << "Your " << your_hand(true) << " feel slithery!"
-                    << std::endl;
-    }
-
-}                               // end cast_sticks_to_snakes()
 
 void cast_conjure_ball_lightning( int pow )
 {

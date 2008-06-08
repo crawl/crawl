@@ -1471,6 +1471,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_small_mammals(powc);
         break;
 
+    case SPELL_STICKS_TO_SNAKES:
+        cast_sticks_to_snakes(powc);
+        break;
+
     case SPELL_SUMMON_SCORPIONS:
         cast_summon_scorpions(powc);
         break;
@@ -1851,10 +1855,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_IGNITE_POISON:
         cast_ignite_poison(powc);
-        break;
-
-    case SPELL_STICKS_TO_SNAKES:
-        cast_sticks_to_snakes(powc);
         break;
 
     case SPELL_TAME_BEASTS:
