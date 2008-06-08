@@ -169,6 +169,8 @@ bool cast_summon_greater_demon(int pow, bool god_gift = false);
 
 bool cast_summon_wraiths(int pow, bool god_gift = false);
 
+bool summon_horrible_things(int pow, bool god_gift = false);
+
 bool cast_summon_dragon(int pow, bool god_gift = false);
 
 bool summon_demon_type(monster_type mon, int pow, bool god_gift = false);
@@ -192,13 +194,6 @@ void summon_animals(int pow);
  * called from: spell
  * *********************************************************************** */
 void summon_small_mammals(int pow);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
-void summon_things(int pow);
 
 
 // last updated 24may2000 {dlb}

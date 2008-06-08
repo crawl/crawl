@@ -1389,10 +1389,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-        summon_things(powc);
-        break;
-
     case SPELL_ENSLAVEMENT:
         if (!zapping(ZAP_ENSLAVEMENT, powc, beam, true))
             return (SPRET_ABORT);
@@ -1526,6 +1522,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_SUMMON_DAEVA:
         summon_daeva(powc);
+        break;
+
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+        summon_horrible_things(powc);
         break;
 
     case SPELL_SUMMON_DRAGON:

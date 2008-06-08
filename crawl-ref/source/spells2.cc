@@ -2074,6 +2074,69 @@ bool cast_summon_wraiths(int pow, bool god_gift)
     return (success);
 }
 
+bool summon_horrible_things(int pow, bool god_gift)
+{
+    if (one_chance_in(3)
+        && !lose_stat(STAT_INTELLIGENCE, 1, true, "summoning horrible things"))
+    {
+        mpr("Your call goes unanswered.");
+        return (false);
+    }
+
+    int how_many_small =
+        stepdown_value(2 + (random2(pow) / 10) + (random2(pow) / 10),
+                       2, 2, 6, -1);
+    int how_many_big = 0;
+
+    // No more than 2 tentacled monstrosities.
+    while (how_many_small > 2 && how_many_big < 2 && one_chance_in(3))
+    {
+        how_many_small -= 2;
+        how_many_big++;
+    }
+
+    // No more than 8 summons.
+    how_many_small = std::min(8, how_many_small);
+    how_many_big = std::min(8, how_many_big);
+
+    int count = 0;
+
+    while (how_many_big > 0)
+    {
+        if (create_monster(
+               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, 6,
+                         you.pos(), you.pet_target,
+                         god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            count++;
+        }
+
+        how_many_big--;
+    }
+
+    while (how_many_small > 0)
+    {
+        if (create_monster(
+               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, 6,
+                         you.pos(), you.pet_target,
+                         god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            count++;
+        }
+
+        how_many_small--;
+    }
+
+    if (count > 0)
+    {
+        mprf("Some Thing%s answered your call!",
+             (count > 1) ? "s" : "");
+        return (true);
+    }
+
+    return (false);
+}
+
 bool cast_summon_dragon(int pow, bool god_gift)
 {
     // Removed the chance of multiple dragons... one should be more
@@ -2250,54 +2313,4 @@ bool summon_guardian(int pow, bool god_gift)
 bool summon_daeva(int pow, bool god_gift)
 {
     return _summon_holy_being_wrapper(pow, god_gift, HOLY_BEING_DAEVA);
-}
-
-void summon_things(int pow)
-{
-    int big_things = 0;
-
-    int numsc = 2 + (random2(pow) / 10) + (random2(pow) / 10);
-
-    if (one_chance_in(3)
-        && !lose_stat( STAT_INTELLIGENCE, 1, true,
-                       "summoning horrible things" ))
-    {
-        mpr("Your call goes unanswered.");
-    }
-    else
-    {
-        numsc = stepdown_value( numsc, 2, 2, 6, -1 );
-
-        // No more than 2 tentacled monstrosities.
-        while (numsc > 2 && big_things < 2 && one_chance_in(3))
-        {
-            numsc -= 2;
-            ++big_things;
-        }
-
-        if (numsc > 8)
-            numsc = 8;
-
-        if (big_things > 8)
-            big_things = 8;
-
-        while (big_things > 0)
-        {
-            create_monster(
-                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, 6,
-                          you.pos(), you.pet_target));
-            big_things--;
-        }
-
-        while (numsc > 0)
-        {
-            create_monster(
-                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, 6,
-                          you.pos(), you.pet_target));
-            numsc--;
-        }
-
-        mprf("Some Thing%s answered your call!",
-             (numsc + big_things > 1) ? "s" : "");
-    }
 }
