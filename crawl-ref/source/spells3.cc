@@ -328,33 +328,38 @@ bool cast_bone_shards(int power, bolt &beam)
     return (success);
 }
 
-void sublimation(int power)
+bool cast_sublimation_of_blood(int pow)
 {
+    bool success = false;
+
     int wielded = you.equip[EQ_WEAPON];
+
     if (wielded != -1)
     {
         if (you.inv[wielded].base_type == OBJ_FOOD
             && you.inv[wielded].sub_type == FOOD_CHUNK)
         {
             mpr("The chunk of flesh you are holding crumbles to dust.");
+
             mpr("A flood of magical energy pours into your mind!");
 
-            inc_mp( 7 + random2(7), false );
+            inc_mp(7 + random2(7), false);
 
-            dec_inv_item_quantity( wielded, 1 );
+            dec_inv_item_quantity(wielded, 1);
         }
         else if (is_blood_potion(you.inv[wielded]))
         {
             mprf("The blood within %s frothes and boils.",
-                 you.inv[wielded].quantity == 1 ? "the flask you are holding"
-                                                : "one of your flasks");
-
-            split_potions_into_decay( wielded, 1, false );
+                 you.inv[wielded].quantity > 1 ? "one of your flasks"
+                                               : "the flask you are holding");
 
             mpr("A flood of magical energy pours into your mind!");
-            inc_mp( 7 + random2(7), false );
+
+            inc_mp(7 + random2(7), false);
+
+            split_potions_into_decay(wielded, 1, false);
         }
-        else // no appropriate item wielded
+        else
             wielded = -1;
     }
 
@@ -370,38 +375,42 @@ void sublimation(int power)
             mpr("You don't have enough blood to draw power from your "
                 "own body.");
         }
-        else if (!enough_hp( 2, true ))
-        {
+        else if (!enough_hp(2, true))
              mpr("Your attempt to draw power from your own body fails.");
-        }
         else
         {
+            // For vampires.
+            int food = 0;
+
             mpr("You draw magical energy from your own body!");
 
-            unsigned char loopy = 0;    // general purpose loop variable {dlb}
-            int food = 0; // for Vampires
             while (you.magic_points < you.max_magic_points && you.hp > 1
                    && (you.species != SP_VAMPIRE || you.hunger - food >= 7000))
             {
+                success = true;
+
                 inc_mp(1, false);
                 dec_hp(1, false);
 
                 if (you.species == SP_VAMPIRE)
                     food += 15;
 
-                for (loopy = 0; loopy < (you.hp > 1 ? 3 : 0); loopy++)
-                    if (random2(power) < 6)
+                for (int loopy = 0; loopy < (you.hp > 1 ? 3 : 0); ++loopy)
+                {
+                    if (random2(pow) < 6)
                         dec_hp(1, false);
+                }
 
-                if (random2(power) < 6)
+                if (random2(pow) < 6)
                     break;
             }
+
             make_hungry(food, false);
         }
     }
 
-    return;
-}                               // end sublimation()
+    return (success);
+}
 
 // Simulacrum
 //
@@ -467,6 +476,27 @@ bool simulacrum(int pow, bool god_gift)
     mpr("You need to wield a piece of raw flesh for this spell to be "
         "effective!");
     return (false);
+}
+
+bool cast_death_channel(int pow)
+{
+    bool success = false;
+
+    if (you.duration[DUR_DEATH_CHANNEL] < 30)
+    {
+        mpr("Malign forces permeate your being, awaiting release.");
+
+        you.duration[DUR_DEATH_CHANNEL] += 15 + random2(1 + (pow / 3));
+
+        if (you.duration[DUR_DEATH_CHANNEL] > 100)
+            you.duration[DUR_DEATH_CHANNEL] = 100;
+
+        success = true;
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
 }
 
 // This function returns true if the player can use controlled teleport
@@ -1203,26 +1233,3 @@ int portal()
 
     return (1);
 }
-
-bool cast_death_channel(int power)
-{
-    bool success = false;
-
-    if (you.duration[DUR_DEATH_CHANNEL] < 30)
-    {
-        mpr("Malign forces permeate your being, awaiting release.");
-
-        you.duration[DUR_DEATH_CHANNEL] += 15 + random2(1 + (power / 3));
-
-        if (you.duration[DUR_DEATH_CHANNEL] > 100)
-            you.duration[DUR_DEATH_CHANNEL] = 100;
-
-        success = true;
-    }
-    else
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-    }
-
-    return (success);
-}                               // end cast_death_channel()

@@ -1545,8 +1545,16 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         dancing_weapon(powc);
         break;
 
+    case SPELL_SUBLIMATION_OF_BLOOD:
+        cast_sublimation_of_blood(powc);
+        break;
+
     case SPELL_SIMULACRUM:
         simulacrum(powc);
+        break;
+
+    case SPELL_DEATH_CHANNEL:
+        cast_death_channel(powc);
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
@@ -1607,10 +1615,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_STING:
         if (!zapping(ZAP_STING, powc, beam, true))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_SUBLIMATION_OF_BLOOD:
-        sublimation(powc);
         break;
 
     case SPELL_HELLFIRE:
@@ -1804,10 +1808,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_NECROMUTATION:
         transform(powc, TRAN_LICH);
-        break;
-
-    case SPELL_DEATH_CHANNEL:
-        cast_death_channel(powc);
         break;
 
     case SPELL_SYMBOL_OF_TORMENT:

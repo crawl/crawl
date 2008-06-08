@@ -41,13 +41,6 @@ bool cast_bone_shards(int power, bolt &);
 
 // updated 24may2000 {dlb}
 /* ***********************************************************************
- * called from: spell - spells1
- * *********************************************************************** */
-bool cast_death_channel(int power);
-
-
-// updated 24may2000 {dlb}
-/* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
 void cast_poison_ammo(void);
@@ -117,7 +110,7 @@ bool remove_curse(bool suppress_msg);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-void sublimation(int power);
+bool cast_sublimation_of_blood(int pow);
 
 
 // updated Oct 2 -- bwr
@@ -125,6 +118,13 @@ void sublimation(int power);
  * called from: spell
  * *********************************************************************** */
 bool simulacrum(int pow, bool god_gift = false);
+
+
+// updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: spell - spells1
+ * *********************************************************************** */
+bool cast_death_channel(int pow);
 
 
 // updated 24may2000 {dlb}
