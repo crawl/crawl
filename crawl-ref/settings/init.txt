@@ -213,6 +213,7 @@ include = travel_stoppers.txt
 # easy_quit_item_prompts = false
 # easy_exit_menu         = false
 # sort_menus = pickup: true : basename, qualname, curse, qty
+# msg_condense_repeats = false
 
 ##### 4-j	Messages and Display Enhancements #####
 #
