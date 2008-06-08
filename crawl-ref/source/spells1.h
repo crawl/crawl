@@ -83,7 +83,7 @@ int blink(int pow, bool high_level_controlled_blink,
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam);
 void cast_confusing_touch(int power);
 void cast_cure_poison(int mabil);
-int  allowed_deaths_door_hp(void);
+int allowed_deaths_door_hp(void);
 void cast_deaths_door(int pow);
 int cast_fire_storm(int powc, bolt &beam);
 bool cast_revivification(int pow);
