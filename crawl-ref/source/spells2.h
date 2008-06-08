@@ -167,9 +167,10 @@ bool cast_summon_dragon(int pow, bool god_gift = false);
 
 bool summon_minor_demon(int pow, bool god_gift = false);
 
-bool summon_demon(int pow, bool god_gift = false);
+bool summon_common_demon(int pow, bool god_gift = false);
 
-bool summon_specific_demon(monster_type mon, int pow, bool god_gift = false);
+bool summon_demon(monster_type mon, int pow, bool force_hostile = false,
+                  bool quiet = false, bool permanent = false);
 
 
 // last updated 24may2000 {dlb}

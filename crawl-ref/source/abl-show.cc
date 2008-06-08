@@ -1281,7 +1281,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_SUMMON_DEMON:
-        summon_demon(you.experience_level * 4);
+        summon_common_demon(you.experience_level * 4);
         break;
 
     case ABIL_HELLFIRE:
@@ -1456,8 +1456,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_INVOKE_DEATH:
-        summon_specific_demon(MONS_REAPER,
-                              20 + you.skills[SK_INVOCATIONS] * 3, true);
+        summon_demon(MONS_REAPER, 20 + you.skills[SK_INVOCATIONS] * 3);
         exercise(SK_INVOCATIONS, 10 + random2(14));
         break;
 
@@ -1537,9 +1536,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-        summon_specific_demon(static_cast<monster_type>(
-                                  MONS_NEQOXEC + random2(5)),
-                              20 + you.skills[SK_INVOCATIONS] * 3, true);
+        summon_demon(static_cast<monster_type>(MONS_NEQOXEC + random2(5)),
+                              20 + you.skills[SK_INVOCATIONS] * 3);
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -1597,9 +1595,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        summon_specific_demon(static_cast<monster_type>(
-                                  MONS_EXECUTIONER + random2(5)),
-                              20 + you.skills[SK_INVOCATIONS] * 3, true);
+        summon_demon(static_cast<monster_type>(MONS_EXECUTIONER + random2(5)),
+                              20 + you.skills[SK_INVOCATIONS] * 3);
         exercise(SK_INVOCATIONS, 6 + random2(6));
         break;
 

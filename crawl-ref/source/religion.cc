@@ -3275,21 +3275,15 @@ static bool _makhleb_retribution()
 
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
-        bool success = false;
+        bool success =
+            summon_demon(
+                static_cast<monster_type>(MONS_EXECUTIONER + random2(5)),
+                0, true, true, true);
 
-        if (create_monster(
-                mgen_data::alert_hostile_at(
-                    static_cast<monster_type>(
-                        MONS_EXECUTIONER + random2(5)),
-                    you.pos(), MF_GOD_GIFT)) != -1)
-        {
-            success = true;
-
-            simple_god_message(success ?
-                               " sends a greater servant after you!" :
-                               "'s greater servant is unavoidably detained.",
-                               god);
-        }
+        simple_god_message(success ?
+                           " sends a greater servant after you!" :
+                           "'s greater servant is unavoidably detained.",
+                           god);
     }
     else
     {
@@ -3298,11 +3292,9 @@ static bool _makhleb_retribution()
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (create_monster(
-                    mgen_data::alert_hostile_at(
-                        static_cast<monster_type>(
-                            MONS_NEQOXEC + random2(5)),
-                        you.pos(), MF_GOD_GIFT)) != -1)
+            if (summon_demon(
+                    static_cast<monster_type>(MONS_NEQOXEC + random2(5)),
+                    0, true, true, true))
             {
                 count++;
             }
@@ -3328,9 +3320,7 @@ static bool _kikubaaqudgha_retribution()
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (create_monster(
-                    mgen_data::alert_hostile_at(MONS_REAPER,
-                        you.pos(), MF_GOD_GIFT)) != -1)
+            if (summon_demon(MONS_REAPER, 0, true, true, true))
             {
                 success = true;
             }

@@ -1776,8 +1776,7 @@ bool cast_summon_swarm(int pow, bool god_gift, bool force_hostile,
             break;
         }                       // end switch
 
-        bool friendly = (god_gift) ? !force_hostile
-                                   : (random2(pow) > 7);
+        bool friendly = (force_hostile) ? false : (random2(pow) > 7);
 
         if (create_monster(
                 mgen_data(mon,
@@ -1928,7 +1927,7 @@ bool cast_summon_demon(int pow, bool god_gift)
 {
     mpr("You open a gate to Pandemonium!");
 
-    return summon_demon(pow, god_gift);
+    return summon_common_demon(pow, god_gift);
 }
 
 bool cast_demonic_horde(int pow, bool god_gift)
@@ -2080,27 +2079,28 @@ bool summon_minor_demon(int pow, bool god_gift)
                                  random2(pow) > 3, false, 1);
 }
 
-bool summon_demon(int pow, bool god_gift)
+bool summon_common_demon(int pow, bool god_gift)
 {
     return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, 1);
 }
 
-bool summon_specific_demon(monster_type mon, int pow, bool god_gift)
+bool summon_demon(monster_type mon, int pow, bool force_hostile,
+                  bool quiet, bool permanent)
 {
     bool success = false;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    const bool friendly = (random2(pow) > 3);
+    const bool friendly = (force_hostile) ? false : (random2(pow) > 3);
 
     if (create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      MF_GOD_GIFT)) != -1)
     {
         success = true;
 
