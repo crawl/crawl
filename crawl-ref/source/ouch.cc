@@ -638,7 +638,7 @@ void lose_level()
     // must die straightaway.
     if (you.experience_level == 1)
     {
-        ouch( -9999, 0, KILLED_BY_DRAINING );
+        ouch(INSTANT_DEATH, 0, KILLED_BY_DRAINING);
         // Return in case death was canceled via wizard mode
         return;
     }
@@ -682,7 +682,7 @@ void drain_exp(bool announce_full)
 
     if (you.experience == 0)
     {
-        ouch(-9999, 0, KILLED_BY_DRAINING);
+        ouch(INSTANT_DEATH, 0, KILLED_BY_DRAINING);
         // Return in case death was escaped via wizard mode.
         return;
     }
