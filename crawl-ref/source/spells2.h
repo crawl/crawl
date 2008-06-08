@@ -108,13 +108,6 @@ void cast_toxic_radiance(void);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
-void cast_twisted_resurrection(int pow, bool god_gift = false);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
  * called from: ability
  * *********************************************************************** */
 void drain_life(int pow);

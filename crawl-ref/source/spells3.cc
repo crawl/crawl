@@ -561,6 +561,111 @@ bool cast_shadow_creatures(bool god_gift)
     return (success);
 }
 
+bool cast_twisted_resurrection(int pow, bool god_gift)
+{
+    if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
+    {
+        mpr("There's nothing here!");
+        return (false);
+    }
+
+    int objl = igrd[you.x_pos][you.y_pos];
+    int next;
+
+    int how_many_corpses = 0;
+    int total_mass = 0;
+    int rotted = 0;
+
+    while (objl != NON_ITEM)
+    {
+        next = mitm[objl].link;
+
+        if (mitm[objl].base_type == OBJ_CORPSES
+                && mitm[objl].sub_type == CORPSE_BODY)
+        {
+            total_mass += mons_weight(mitm[objl].plus);
+
+            how_many_corpses++;
+
+            if (food_is_rotten(mitm[objl]))
+                rotted++;
+
+            destroy_item(objl);
+        }
+
+        objl = next;
+    }
+
+#if DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Mass for abomination: %d", total_mass);
+#endif
+
+    // This is what the old statement pretty much boils down to,
+    // the average will be approximately 10 * pow (or about 1000
+    // at the practical maximum).  That's the same as the mass
+    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
+    // material components are far more important to this spell. -- bwr
+    total_mass += roll_dice(20, pow);
+
+#if DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Mass including power bonus: %d", total_mass);
+#endif
+
+    if (total_mass < 400 + roll_dice(2, 500)
+        || how_many_corpses < (coinflip() ? 3 : 2))
+    {
+        mpr("The spell fails.");
+
+        mprf("The corpse%s collapse%s into a pulpy mess.",
+             how_many_corpses > 1 ? "s": "", how_many_corpses > 1 ? "": "s");
+        return (false);
+    }
+
+    monster_type mon =
+        (total_mass > 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
+                                                : MONS_ABOMINATION_SMALL;
+
+    char colour = (rotted == how_many_corpses)          ? BROWN :
+                  (rotted >= random2(how_many_corpses)) ? RED
+                                                        : LIGHTRED;
+
+    int monster = create_monster(
+                      mgen_data(mon, BEH_FRIENDLY, 0,
+                      you.pos(), you.pet_target,
+                      god_gift ? MF_GOD_GIFT : 0,
+                      MONS_PROGRAM_BUG, 0, colour));
+
+    if (monster == -1)
+    {
+        mpr("The corpses collapse into a pulpy mess.");
+        return (false);
+    }
+
+    // This was probably intended, but it's really boring. (jpeg)
+    // Use menv[mon].number instead (set in create_monster()).
+//    menv[mon].colour = colour;
+    mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
+
+    if (mon == MONS_ABOMINATION_LARGE)
+    {
+        menv[monster].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
+                                                   (colour == RED)      ? 1000
+                                                                        : 2500);
+
+        if (menv[monster].hit_dice > 30)
+            menv[monster].hit_dice = 30;
+
+        // XXX: No convenient way to get the hit dice size right now.
+        menv[monster].hit_points = hit_points(menv[monster].hit_dice, 2, 5);
+        menv[monster].max_hit_points = menv[monster].hit_points;
+
+        if (colour == LIGHTRED)
+            menv[monster].ac += total_mass / 1000;
+    }
+
+    return (true);
+}
+
 bool cast_summon_wraiths(int pow, bool god_gift)
 {
     bool success = false;

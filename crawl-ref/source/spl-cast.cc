@@ -1549,6 +1549,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_shadow_creatures();
         break;
 
+    case SPELL_TWISTED_RESURRECTION:
+        cast_twisted_resurrection(powc);
+        break;
+
     case SPELL_SUMMON_WRAITHS:
         cast_summon_wraiths(powc);
         break;
@@ -1582,10 +1586,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_FLAME_OF_CLEANSING:
         if (!zapping(ZAP_CLEANSING_FLAME, powc, beam, true))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_TWISTED_RESURRECTION:
-        cast_twisted_resurrection(powc);
         break;
 
     case SPELL_REGENERATION:
