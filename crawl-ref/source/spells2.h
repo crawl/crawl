@@ -88,7 +88,7 @@ unsigned char detect_items( int pow );
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-unsigned char detect_traps( int pow ); 
+unsigned char detect_traps( int pow );
 
 
 // last updated 24may2000 {dlb}
