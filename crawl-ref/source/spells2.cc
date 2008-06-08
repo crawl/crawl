@@ -1422,146 +1422,6 @@ char burn_freeze(int pow, beam_type flavour)
     return 1;
 }                               // end burn_freeze()
 
-// 'unfriendly' is percentage chance summoned elemental goes
-//              postal on the caster (after taking into account
-//              chance of that happening to unskilled casters
-//              anyway)
-bool summon_elemental(int pow, int restricted_type,
-                      unsigned char unfriendly)
-{
-    monster_type mon = MONS_PROGRAM_BUG;
-    struct dist smove;
-
-    int dir_x;
-    int dir_y;
-    int targ_x;
-    int targ_y;
-
-    int numsc = std::min(2 + (random2(pow) / 5), 6);
-    bool any_elemental = (restricted_type == 0);
-
-    while (true)
-    {
-        mpr("Summon from material in which direction?", MSGCH_PROMPT);
-
-        direction( smove, DIR_DIR, TARG_ANY );
-
-        if (!smove.isValid)
-        {
-            canned_msg(MSG_OK);
-            return (false);
-        }
-
-        dir_x  = smove.dx;
-        dir_y  = smove.dy;
-        targ_x = you.x_pos + dir_x;
-        targ_y = you.y_pos + dir_y;
-
-        if (mgrd[ targ_x ][ targ_y ] != NON_MONSTER)
-        {
-            if (player_monster_visible(&menv[mgrd[targ_x][targ_y]]))
-                mpr("There's something there already!");
-            else
-            {
-                mpr("Something seems to disrupt your summoning.");
-                return 0;
-            }
-        }
-        else if (dir_x == 0 && dir_y == 0)
-            mpr("You can't summon an elemental from yourself!");
-        else if ((any_elemental || restricted_type == MONS_EARTH_ELEMENTAL)
-                 && (grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
-                     || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL))
-        {
-            if (targ_x <= 6 || targ_x >= 74 || targ_y <= 6 || targ_y >= 64)
-            {
-                mpr("That wall won't yield to your beckoning.");
-                // XXX: Should this cost a turn?
-            }
-            else
-            {
-                mon = MONS_EARTH_ELEMENTAL;
-                break;
-            }
-        }
-        else
-            break;
-    }
-
-    if (mon == MONS_EARTH_ELEMENTAL)
-    {
-        grd[ targ_x ][ targ_y ] = DNGN_FLOOR;
-    }
-    else if (env.cgrid[ targ_x ][ targ_y ] != EMPTY_CLOUD
-             && env.cloud[env.cgrid[ targ_x ][ targ_y ]].type == CLOUD_FIRE
-             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
-    {
-        mon = MONS_FIRE_ELEMENTAL;
-        delete_cloud( env.cgrid[ targ_x ][ targ_y ] );
-    }
-    else if (grd[ targ_x ][ targ_y ] == DNGN_LAVA
-             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
-    {
-        mon = MONS_FIRE_ELEMENTAL;
-    }
-    else if ((grd[ targ_x ][ targ_y ] == DNGN_DEEP_WATER
-                || grd[ targ_x ][ targ_y ] == DNGN_SHALLOW_WATER
-                || grd[ targ_x ][ targ_y ] == DNGN_FOUNTAIN_BLUE)
-             && (any_elemental || restricted_type == MONS_WATER_ELEMENTAL))
-    {
-        mon = MONS_WATER_ELEMENTAL;
-    }
-    else if (grd[ targ_x ][ targ_y ] >= DNGN_FLOOR
-             && env.cgrid[ targ_x ][ targ_y ] == EMPTY_CLOUD
-             && (any_elemental || restricted_type == MONS_AIR_ELEMENTAL))
-    {
-        mon = MONS_AIR_ELEMENTAL;
-    }
-
-    // Found something to summon?
-    if (mon == MONS_PROGRAM_BUG)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return (false);
-    }
-
-    // silly - ice for water? 15jan2000 {dlb}
-    // little change here to help with the above... and differentiate
-    // elements a bit... {bwr}
-    // - Water elementals are now harder to be made reliably friendly.
-    // - Air elementals are harder because they're more dynamic/dangerous.
-    // - Earth elementals are more static and easy to tame (as before).
-    // - Fire elementals fall in between the two (10 is still fairly easy).
-    const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
-                            || random2(10) < you.skills[SK_FIRE_MAGIC])
-
-                        && (mon != MONS_WATER_ELEMENTAL
-                            || random2((you.species == SP_MERFOLK) ? 5 : 15)
-                                  < you.skills[SK_ICE_MAGIC])
-
-                        && (mon != MONS_AIR_ELEMENTAL
-                            || random2(15) < you.skills[SK_AIR_MAGIC])
-
-                        && (mon != MONS_EARTH_ELEMENTAL
-                            || random2(5)  < you.skills[SK_EARTH_MAGIC])
-
-                        && random2(100) >= unfriendly);
-
-    if (create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      numsc, coord_def(targ_x, targ_y),
-                      friendly ? you.pet_target : MHITYOU)) != -1)
-    {
-        return (false);
-    }
-
-    if (!friendly)
-        mpr( "The elemental doesn't seem to appreciate being summoned." );
-
-    return (true);
-}                               // end summon_elemental()
-
 void summon_animals(int pow)
 {
     // maybe we should just generate a Lair monster instead? (and
@@ -1888,6 +1748,151 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
+}
+
+// 'unfriendly' is percentage chance summoned elemental goes
+//              postal on the caster (after taking into account
+//              chance of that happening to unskilled casters
+//              anyway).
+bool summon_elemental(int pow, bool god_gift,
+                      monster_type restricted_type,
+                      int unfriendly)
+{
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    struct dist smove;
+
+    int dir_x;
+    int dir_y;
+    int targ_x;
+    int targ_y;
+
+    const int dur = std::min(2 + (random2(pow) / 5), 6);
+    const bool any_elemental = (restricted_type == MONS_PROGRAM_BUG);
+
+    while (true)
+    {
+        mpr("Summon from material in which direction?", MSGCH_PROMPT);
+
+        direction(smove, DIR_DIR, TARG_ANY);
+
+        if (!smove.isValid)
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+
+        dir_x  = smove.dx;
+        dir_y  = smove.dy;
+        targ_x = you.x_pos + dir_x;
+        targ_y = you.y_pos + dir_y;
+
+        if (mgrd[targ_x][targ_y] != NON_MONSTER)
+        {
+            if (player_monster_visible(&menv[mgrd[targ_x][targ_y]]))
+                mpr("There's something there already!");
+            else
+            {
+                mpr("Something seems to disrupt your summoning.");
+                return (false);
+            }
+        }
+        else if (dir_x == 0 && dir_y == 0)
+            mpr("You can't summon an elemental from yourself!");
+        else if ((any_elemental || restricted_type == MONS_EARTH_ELEMENTAL)
+                 && (grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
+                     || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL))
+        {
+            if (targ_x <= 6 || targ_x >= 74 || targ_y <= 6 || targ_y >= 64)
+            {
+                mpr("That wall won't yield to your beckoning.");
+                // XXX: Should this cost a turn?
+            }
+            else
+            {
+                mon = MONS_EARTH_ELEMENTAL;
+                break;
+            }
+        }
+        else
+            break;
+    }
+
+    if (mon == MONS_EARTH_ELEMENTAL)
+    {
+        grd[targ_x][targ_y] = DNGN_FLOOR;
+    }
+    else if (env.cgrid[targ_x][targ_y] != EMPTY_CLOUD
+             && env.cloud[env.cgrid[targ_x][targ_y]].type == CLOUD_FIRE
+             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
+    {
+        mon = MONS_FIRE_ELEMENTAL;
+        delete_cloud(env.cgrid[targ_x][targ_y]);
+    }
+    else if (grd[targ_x][targ_y] == DNGN_LAVA
+             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
+    {
+        mon = MONS_FIRE_ELEMENTAL;
+    }
+    else if ((grd[targ_x][targ_y] == DNGN_DEEP_WATER
+                || grd[targ_x][targ_y] == DNGN_SHALLOW_WATER
+                || grd[targ_x][targ_y] == DNGN_FOUNTAIN_BLUE)
+             && (any_elemental || restricted_type == MONS_WATER_ELEMENTAL))
+    {
+        mon = MONS_WATER_ELEMENTAL;
+    }
+    else if (grd[targ_x][targ_y] >= DNGN_FLOOR
+             && env.cgrid[targ_x][targ_y] == EMPTY_CLOUD
+             && (any_elemental || restricted_type == MONS_AIR_ELEMENTAL))
+    {
+        mon = MONS_AIR_ELEMENTAL;
+    }
+
+    // Found something to summon?
+    if (mon == MONS_PROGRAM_BUG)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return (false);
+    }
+
+    // silly - ice for water? 15jan2000 {dlb}
+    // little change here to help with the above... and differentiate
+    // elements a bit... {bwr}
+    // - Water elementals are now harder to be made reliably friendly.
+    // - Air elementals are harder because they're more dynamic/dangerous.
+    // - Earth elementals are more static and easy to tame (as before).
+    // - Fire elementals fall in between the two (10 is still fairly easy).
+    const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
+                            || random2(10) < you.skills[SK_FIRE_MAGIC])
+
+                        && (mon != MONS_WATER_ELEMENTAL
+                            || random2((you.species == SP_MERFOLK) ? 5 : 15)
+                                  < you.skills[SK_ICE_MAGIC])
+
+                        && (mon != MONS_AIR_ELEMENTAL
+                            || random2(15) < you.skills[SK_AIR_MAGIC])
+
+                        && (mon != MONS_EARTH_ELEMENTAL
+                            || random2(5)  < you.skills[SK_EARTH_MAGIC])
+
+                        && random2(100) >= unfriendly);
+
+    if (create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, coord_def(targ_x, targ_y),
+                      friendly ? you.pet_target : MHITYOU)) != -1)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return (false);
+    }
+
+    mpr("An elemental appears!");
+
+    if (!friendly)
+        mpr("It doesn't seem to appreciate being summoned.");
+
+    return (true);
 }
 
 static bool _summon_demon_class_wrapper(int pow, bool god_gift,

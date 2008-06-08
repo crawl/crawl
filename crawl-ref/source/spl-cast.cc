@@ -1454,11 +1454,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_SUMMON_ELEMENTAL:
-        if (!summon_elemental(powc, 0, 2))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_OZOCUBUS_REFRIGERATION:
         cast_refrigeration(powc);
         break;
@@ -1490,6 +1485,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_CALL_CANINE_FAMILIAR:
         cast_call_canine_familiar(powc);
+        break;
+
+    case SPELL_SUMMON_ELEMENTAL:
+        if (!summon_elemental(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_SUMMON_DEMON:
