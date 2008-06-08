@@ -1536,6 +1536,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_dragon(powc);
         break;
 
+    case SPELL_CONJURE_BALL_LIGHTNING:
+        cast_conjure_ball_lightning(powc);
+        break;
+
     case SPELL_OZOCUBUS_ARMOUR:
         ice_armour(powc, false);
         break;
@@ -1975,10 +1979,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_SIMULACRUM:
         simulacrum(powc);
-        break;
-
-    case SPELL_CONJURE_BALL_LIGHTNING:
-        cast_conjure_ball_lightning(powc);
         break;
 
     case SPELL_CHAIN_LIGHTNING:

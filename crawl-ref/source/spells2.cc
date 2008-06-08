@@ -2289,6 +2289,56 @@ bool cast_summon_dragon(int pow, bool god_gift)
     return (success);
 }
 
+bool cast_conjure_ball_lightning(int pow, bool god_gift)
+{
+    bool success = false;
+
+    // Restricted so that the situation doesn't get too gross.  Each of
+    // these will explode for 3d20 damage. -- bwr
+    const int how_many = std::min(8, 3 + random2(2 + pow / 50));
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        int tx = -1, ty = -1;
+
+        for (int j = 0; j < 10; ++j)
+        {
+            if (!random_near_space(you.x_pos, you.y_pos, tx, ty, true, true)
+                && distance(you.x_pos, you.y_pos, tx, ty) <= 5)
+            {
+                break;
+            }
+        }
+
+        // If we fail, we'll try the ol' summon next to player trick.
+        if (tx == -1 || ty == -1)
+        {
+            tx = you.x_pos;
+            ty = you.y_pos;
+        }
+
+        int monster =
+            mons_place(
+                mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, 0,
+                          coord_def(tx, ty), MHITNOT,
+                          god_gift ? MF_GOD_GIFT : 0));
+
+        if (monster != -1)
+        {
+            success = true;
+
+            menv[monster].add_ench(ENCH_SHORT_LIVED);
+        }
+    }
+
+    if (success)
+        mpr("You create some ball lightning!");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
 // Makhleb or Kikubaaqudgha sends a demonic buddy (or enemy) for a
 // follower.
 bool summon_demon_type(monster_type mon, int pow, bool god_gift)

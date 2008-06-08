@@ -178,6 +178,8 @@ bool summon_horrible_things(int pow, bool god_gift = false);
 
 bool cast_summon_dragon(int pow, bool god_gift = false);
 
+bool cast_conjure_ball_lightning(int pow, bool god_gift = false);
+
 bool summon_demon_type(monster_type mon, int pow, bool god_gift = false);
 
 bool summon_berserker(int pow, bool god_gift = false,

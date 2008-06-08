@@ -413,55 +413,6 @@ void cast_detect_secret_doors(int pow)
     mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
 }                               // end cast_detect_secret_doors()
 
-void cast_conjure_ball_lightning( int pow )
-{
-    int num = 3 + random2( 2 + pow / 50 );
-
-    // but restricted so that the situation doesn't get too gross.
-    // Each of these will explode for 3d20 damage. -- bwr
-    if (num > 8)
-        num = 8;
-
-    bool summoned = false;
-
-    for (int i = 0; i < num; i++)
-    {
-        int tx = -1, ty = -1;
-
-        for (int j = 0; j < 10; j++)
-        {
-            if (!random_near_space( you.x_pos, you.y_pos, tx, ty, true, true)
-                && distance( you.x_pos, you.y_pos, tx, ty ) <= 5)
-            {
-                break;
-            }
-        }
-
-        // if we fail, we'll try the ol' summon next to player trick.
-        if (tx == -1 || ty == -1)
-        {
-            tx = you.x_pos;
-            ty = you.y_pos;
-        }
-
-        int mon =
-            mons_place(
-                mgen_data( MONS_BALL_LIGHTNING, BEH_FRIENDLY, 0,
-                           coord_def(tx, ty) ));
-
-        if (mon != -1)
-        {
-            menv[mon].add_ench(ENCH_SHORT_LIVED);
-            summoned = true;
-        }
-    }
-
-    if (summoned)
-        mpr( "You create some ball lightning!" );
-    else
-        canned_msg( MSG_NOTHING_HAPPENS );
-}
-
 static int sleep_monsters(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
