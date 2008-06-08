@@ -1466,6 +1466,29 @@ void summon_animals(int pow)
     }
 }
 
+bool cast_summon_butterflies(int pow, bool god_gift)
+{
+    bool success = false;
+
+    const int how_many = std::max(15, 4 + random2(3) + random2(pow) / 10);
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        if (create_monster(
+                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, 3,
+                          you.pos(), you.pet_target,
+                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            success = true;
+        }
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
 //jmf: beefed up higher-level casting of this (formerly lame) spell
 bool cast_summon_small_mammals(int pow, bool god_gift)
 {
@@ -1518,29 +1541,6 @@ bool cast_summon_small_mammals(int pow, bool god_gift)
                 mpr("A small mammal appears!");
         }
     }
-
-    return (success);
-}
-
-bool cast_summon_butterflies(int pow, bool god_gift)
-{
-    bool success = false;
-
-    const int how_many = std::max(15, 4 + random2(3) + random2(pow) / 10);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        if (create_monster(
-                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, 3,
-                          you.pos(), you.pet_target,
-                          god_gift ? MF_GOD_GIFT : 0)) != -1)
-        {
-            success = true;
-        }
-    }
-
-    if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
 }
