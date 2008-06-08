@@ -970,19 +970,25 @@ static bool box_of_beasts()
 
     if (random2(100) < 60 + you.skills[SK_EVOCATIONS])
     {
-        temp_rand = random2(11);
+        // If you worship a good god, don't summon an evil beast (in
+        // this case, the hell hound).
+        do
+        {
+            temp_rand = random2(11);
 
-        beasty = ((temp_rand == 0) ? MONS_GIANT_BAT :
-                  (temp_rand == 1) ? MONS_HOUND :
-                  (temp_rand == 2) ? MONS_JACKAL :
-                  (temp_rand == 3) ? MONS_RAT :
-                  (temp_rand == 4) ? MONS_ICE_BEAST :
-                  (temp_rand == 5) ? MONS_SNAKE :
-                  (temp_rand == 6) ? MONS_YAK :
-                  (temp_rand == 7) ? MONS_BUTTERFLY :
-                  (temp_rand == 8) ? MONS_HELL_HOUND :
-                  (temp_rand == 9) ? MONS_BROWN_SNAKE
-                                   : MONS_GIANT_LIZARD);
+            beasty = ((temp_rand == 0) ? MONS_GIANT_BAT :
+                      (temp_rand == 1) ? MONS_HOUND :
+                      (temp_rand == 2) ? MONS_JACKAL :
+                      (temp_rand == 3) ? MONS_RAT :
+                      (temp_rand == 4) ? MONS_ICE_BEAST :
+                      (temp_rand == 5) ? MONS_SNAKE :
+                      (temp_rand == 6) ? MONS_YAK :
+                      (temp_rand == 7) ? MONS_BUTTERFLY :
+                      (temp_rand == 8) ? MONS_BROWN_SNAKE :
+                      (temp_rand == 9) ? MONS_GIANT_LIZARD
+                                       : MONS_HELL_HOUND);
+        }
+        while (player_will_anger_monster(beasty));
 
         beh_type beha = BEH_FRIENDLY;
         unsigned short hitting = you.pet_target;
@@ -994,8 +1000,8 @@ static bool box_of_beasts()
         }
 
         if (create_monster(
-                mgen_data( beasty, beha, 2 + random2(4),
-                           you.pos(), hitting ) ) != -1)
+                mgen_data(beasty, beha, 2 + random2(4),
+                          you.pos(), hitting)) != -1)
         {
             mpr("...and something leaps out!");
             xom_is_stimulated(14);
