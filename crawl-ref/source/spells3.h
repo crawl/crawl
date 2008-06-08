@@ -111,19 +111,8 @@ bool remove_curse(bool suppress_msg);
  * called from: spell
  * *********************************************************************** */
 bool cast_sublimation_of_blood(int pow);
-
-
-// updated Oct 2 -- bwr
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
 bool simulacrum(int pow, bool god_gift = false);
-
-
-// updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell - spells1
- * *********************************************************************** */
+bool summon_horrible_things(int pow, bool god_gift = false);
 bool cast_death_channel(int pow);
 
 

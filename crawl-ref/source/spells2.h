@@ -153,31 +153,17 @@ bool cast_summon_swarm(int pow, bool god_gift = false,
  * called from: ability - spell
  * *********************************************************************** */
 bool cast_call_imp(int pow, bool god_gift = false);
-
 bool cast_call_canine_familiar(int pow, bool god_gift = false);
-
 bool summon_lesser_demon(int pow, bool god_gift = false);
-
 bool summon_common_demon(int pow, bool god_gift = false);
-
 bool summon_greater_demon(int pow, bool god_gift = false);
-
 bool cast_summon_demon(int pow, bool god_gift = false);
-
 bool cast_demonic_horde(int pow, bool god_gift = false);
-
 bool cast_summon_ice_beast(int pow, bool god_gift = false);
-
 bool cast_summon_ugly_thing(int pow, bool god_gift = false);
-
 bool cast_summon_greater_demon(int pow, bool god_gift = false);
-
 bool cast_summon_wraiths(int pow, bool god_gift = false);
-
-bool summon_horrible_things(int pow, bool god_gift = false);
-
 bool cast_summon_dragon(int pow, bool god_gift = false);
-
 bool cast_conjure_ball_lightning(int pow, bool god_gift = false);
 
 // last updated 24may2000 {dlb}
@@ -192,12 +178,9 @@ bool dancing_weapon(int pow, bool god_gift = false, bool force_hostile = false,
  * called from: ability - spell
  * *********************************************************************** */
 bool summon_demon_type(monster_type mon, int pow, bool god_gift = false);
-
 bool summon_berserker(int pow, bool god_gift = false,
                       bool force_hostile = false);
-
 bool summon_guardian(int pow, bool god_gift = false);
-
 bool summon_daeva(int pow, bool god_gift = false);
 
 // last updated 24may2000 {dlb}

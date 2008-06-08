@@ -478,6 +478,70 @@ bool simulacrum(int pow, bool god_gift)
     return (false);
 }
 
+bool summon_horrible_things(int pow, bool god_gift)
+{
+    if (one_chance_in(3)
+        && !lose_stat(STAT_INTELLIGENCE, 1, true, "summoning horrible things"))
+    {
+        mpr("Your call goes unanswered.");
+        return (false);
+    }
+
+    int how_many_small =
+        stepdown_value(2 + (random2(pow) / 10) + (random2(pow) / 10),
+                       2, 2, 6, -1);
+    int how_many_big = 0;
+
+    // No more than 2 tentacled monstrosities.
+    while (how_many_small > 2 && how_many_big < 2 && one_chance_in(3))
+    {
+        how_many_small -= 2;
+        how_many_big++;
+    }
+
+    // No more than 8 summons.
+    how_many_small = std::min(8, how_many_small);
+    how_many_big = std::min(8, how_many_big);
+
+    int count = 0;
+
+    while (how_many_big > 0)
+    {
+        if (create_monster(
+               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, 6,
+                         you.pos(), you.pet_target,
+                         god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            count++;
+        }
+
+        how_many_big--;
+    }
+
+    while (how_many_small > 0)
+    {
+        if (create_monster(
+               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, 6,
+                         you.pos(), you.pet_target,
+                         god_gift ? MF_GOD_GIFT : 0)) != -1)
+        {
+            count++;
+        }
+
+        how_many_small--;
+    }
+
+    if (count > 0)
+    {
+        mprf("Some Thing%s answered your call!",
+             (count > 1) ? "s" : "");
+        return (true);
+    }
+
+    mpr("Your call goes unanswered.");
+    return (false);
+}
+
 bool cast_death_channel(int pow)
 {
     bool success = false;
