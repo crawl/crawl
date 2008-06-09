@@ -192,8 +192,8 @@ void special_wielded()
     case SPWLD_TORMENT:
         if (one_chance_in(200))
         {
-            torment( TORMENT_SPWLD, you.x_pos, you.y_pos );
-            did_god_conduct( DID_UNHOLY, 1 );
+            torment(TORMENT_SPWLD, you.x_pos, you.y_pos);
+            did_god_conduct(DID_UNHOLY, 1);
         }
         break;
 
@@ -201,7 +201,7 @@ void special_wielded()
         if (one_chance_in(5))
         {
             animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU);
-            did_god_conduct( DID_NECROMANCY, 1 );
+            did_god_conduct(DID_NECROMANCY, 1);
         }
         break;
 
@@ -225,10 +225,8 @@ void special_wielded()
     case SPWLD_SHADOW:
         if (random2(8) <= player_spec_death())
         {
-            did_god_conduct( DID_NECROMANCY, 1 );
-            create_monster(
-                mgen_data(MONS_SHADOW, BEH_FRIENDLY,
-                          2, you.pos(), you.pet_target));
+            summon_shadow();
+            did_god_conduct(DID_NECROMANCY, 1);
         }
 
         show_green = DARKGREY;

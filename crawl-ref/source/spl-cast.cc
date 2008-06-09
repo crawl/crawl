@@ -2819,21 +2819,9 @@ static void _miscast_necromancy(int severity, const char* cause)
         case 0:
             mpr("Flickering shadows surround you.");
 
-            create_monster(
-                mgen_data::alert_hostile_at(MONS_SHADOW,
-                    you.pos(), 2));
+            for (int i = random2(3); i >= 0; --i)
+                summon_shadow(false, true);
 
-            if (coinflip())
-                create_monster(
-                    mgen_data::alert_hostile_at(MONS_SHADOW,
-                        you.pos(), 2));
-
-            if (coinflip())
-            {
-                create_monster(
-                    mgen_data::alert_hostile_at(MONS_SHADOW,
-                        you.pos(), 2));
-            }
             break;
 
         case 1:
