@@ -2973,8 +2973,10 @@ monsters *choose_random_monster_on_level(int weight,
     monsters *chosen = NULL;
     int mons_count = weight;
 
-    int ystart = 0, yend = GXM - 1;
-    int xstart = 0, xend = GYM - 1;
+    int ystart = 0;
+    int xstart = 0;
+    int yend = GXM - 1;
+    int xend = GYM - 1;
 
     if (near_by)
     {
