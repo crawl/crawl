@@ -1206,14 +1206,17 @@ class monster_pane_info
         if (mons_looks_stabbable(m))   m_brands |= 1;
         if (mons_looks_distracted(m))  m_brands |= 2;
         if (m->has_ench(ENCH_BERSERK)) m_brands |= 4;
+
+        m_fullname = true;
     }
 
     void to_string(int count, std::string& desc, int& desc_color) const;
 
-    const monsters* m_mon;
+    const monsters*   m_mon;
     mon_attitude_type m_attitude;
-    int m_difficulty;
-    int m_brands;
+    int               m_difficulty;
+    int               m_brands;
+    bool              m_fullname;
 };
 
 // Sort monsters by:
@@ -1241,6 +1244,9 @@ monster_pane_info::less_than(const monster_pane_info& m1,
     else if (m1.m_mon->type > m2.m_mon->type)
         return false;
 
+    if (m1.m_fullname && m2.m_fullname)
+        return (m1.m_mon->name(DESC_PLAIN) < m1.m_mon->name(DESC_PLAIN));
+
 #if 0 // for now, sort brands together.
     // By descending brands, so no brands sorts to the end
     if (m1.m_brands > m2.m_brands)
@@ -1259,12 +1265,19 @@ void monster_pane_info::to_string( int count, std::string& desc,
 
     if (count == 1)
     {
-        out << mons_type_name(m_mon->type, DESC_PLAIN);
+        if (m_fullname)
+            out << m_mon->name(DESC_PLAIN);
+        else
+            out << mons_type_name(m_mon->type, DESC_PLAIN);
     }
     else
     {
-        out << count << " "
-            << pluralise(mons_type_name(m_mon->type, DESC_PLAIN));
+        if (m_fullname)
+            out << count << " "
+                << pluralise(m_mon->name(DESC_PLAIN));
+        else
+            out << count << " "
+                << pluralise(mons_type_name(m_mon->type, DESC_PLAIN));
     }
 
 #if DEBUG_DIAGNOSTICS
@@ -1426,12 +1439,27 @@ void update_monster_pane()
 
     std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
 
-#if BOTTOM_JUSTIFY_MONSTER_LIST
     // Count how many groups of monsters there are
     unsigned int lines_needed = mons.size();
     for (unsigned int i=1; i < mons.size(); i++)
         if (! monster_pane_info::less_than(mons[i-1], mons[i]))
             -- lines_needed;
+
+    if (lines_needed > (unsigned int) max_print)
+    {
+        // Use type names rather than full names ("small zombie" vs
+        // "rat zobmie") in order to take up less lines.
+        for (unsigned int i=1; i < mons.size(); i++)
+            mons[i].m_fullname = false;
+        std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
+
+        lines_needed = mons.size();
+        for (unsigned int i=1; i < mons.size(); i++)
+            if (! monster_pane_info::less_than(mons[i-1], mons[i]))
+                -- lines_needed;
+    }        
+
+#if BOTTOM_JUSTIFY_MONSTER_LIST
     const int skip_lines = std::max<int>(0, crawl_view.mlistsz.y-lines_needed);
 #else
     const int skip_lines = 0;
