@@ -3418,7 +3418,10 @@ void show_map( coord_def &spec_place, bool travel_mode )
         {
             if (!you.wizard)
                 break;
-            you.moveto(start_x + curs_x - 1, start_y + curs_y - 1);
+            const coord_def pos(start_x + curs_x - 1, start_y + curs_y - 1);
+            if (!in_bounds(pos))
+                break;
+            you.moveto(pos);
             map_alive = false;
             break;
         }
