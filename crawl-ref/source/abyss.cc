@@ -281,6 +281,8 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2,
         }
 
     generate_random_blood_spatter_on_level();
+
+    setup_environment_effects();
 }
 
 static int abyss_exit_nearness()
@@ -491,6 +493,7 @@ void area_shift(void)
 
     xom_check_nearness();
 
+    // Can't re-use ri since you.pos() has changed.
     radius_iterator ri2(you.pos(), LOS_RADIUS);
     for ( ; ri2; ++ri2 )
         env.map(*ri2).property = fprops(you.pos() - *ri2 + los_delta);
