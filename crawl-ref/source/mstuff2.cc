@@ -577,8 +577,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 }
             }
 
-            create_monster( mgen_data( mons, SAME_ATTITUDE(monster), 5,
-                                       monster->pos(), monster->foe ) );
+            create_monster(
+                mgen_data( mons, SAME_ATTITUDE(monster), 5,
+                           monster->pos(), monster->foe ) );
         }
         return;
 
@@ -607,6 +608,21 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_SUMMON_DEMON: // class 2-4 demons
+        if (_mons_abjured(monster, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 10 + 1 );
+
+        duration  = std::min(2 + monster->hit_dice / 10, 6);
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            create_monster(
+                mgen_data( summon_any_demon(DEMON_COMMON),
+                           SAME_ATTITUDE(monster), duration,
+                           monster->pos(), monster->foe ) );
+        }
+        return;
+
     case SPELL_SUMMON_UGLY_THING:
         if (_mons_abjured(monster, monsterNearby))
             return;
@@ -616,16 +632,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         duration  = std::min(2 + monster->hit_dice / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            monster_type mons;
-
-            if (spell_cast == SPELL_SUMMON_DEMON)
-                mons = summon_any_demon(DEMON_COMMON);
-            else
-            {
-                const int chance = std::max(6 - (monster->hit_dice / 6), 1);
-                mons = (one_chance_in(chance) ? MONS_VERY_UGLY_THING
-                                              : MONS_UGLY_THING);
-            }
+            const int chance = std::max(6 - (monster->hit_dice / 6), 1);
+            monster_type mons = (one_chance_in(chance) ? MONS_VERY_UGLY_THING
+                                                       : MONS_UGLY_THING);
 
             create_monster(
                 mgen_data( mons, SAME_ATTITUDE(monster), duration,
@@ -647,9 +656,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster(
                 mgen_data( summon_any_demon(DEMON_LESSER),
-                           SAME_ATTITUDE(monster),
-                           duration, monster->pos(),
-                           monster->foe ));
+                           SAME_ATTITUDE(monster), duration,
+                           monster->pos(), monster->foe ));
         }
         return;
 
@@ -687,11 +695,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (int i = 0; i < sumcount2; ++i)
         {
             create_monster(
-                mgen_data(MONS_WANDERING_MUSHROOM,
-                          SAME_ATTITUDE(monster),
-                          duration,
-                          monster->pos(),
-                          monster->foe));
+                mgen_data(MONS_WANDERING_MUSHROOM, SAME_ATTITUDE(monster),
+                          duration, monster->pos(), monster->foe));
         }
         return;
 
@@ -708,7 +713,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_SUMMON_UNDEAD:      // summon undead around player
         _do_high_level_summon(monster, monsterNearby, _pick_undead_summon,
                               2 + random2(2)
-                              + random2( monster->hit_dice / 4 + 1 ));
+                                + random2( monster->hit_dice / 4 + 1 ));
         return;
 
     case SPELL_SYMBOL_OF_TORMENT:
@@ -731,10 +736,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster(
                 mgen_data(summon_any_demon(DEMON_GREATER),
-                          SAME_ATTITUDE(monster),
-                          duration,
-                          monster->pos(),
-                          monster->foe));
+                          SAME_ATTITUDE(monster), duration,
+                          monster->pos(), monster->foe));
         }
         return;
 
@@ -752,13 +755,15 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
             for (sumcount = 0; sumcount < sumcount2; sumcount++)
             {
-                const monster_type mons = summon_any_dragon(DRAGON_LIZARD);
+                monster_type mons = summon_any_dragon(DRAGON_LIZARD);
+
                 if (mons == MONS_DRAGON)
                 {
                     monsters.clear();
                     monsters.push_back(summon_any_dragon(DRAGON_DRAGON));
                     break;
                 }
+
                 monsters.push_back( mons );
             }
 
