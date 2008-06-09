@@ -1285,6 +1285,11 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     // delays.
     interrupt_activity( AI_TELEPORT );
 
+    // Update what we can see at the current location in case something
+    // hapened in the exact turn that we teleported (like picking up
+    // and item).
+    viewwindow(true, false);
+
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
     {
         you.duration[DUR_CONDENSATION_SHIELD] = 0;
