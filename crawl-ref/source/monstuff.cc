@@ -1010,7 +1010,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && create_monster(
                         mgen_data( MONS_SPECTRAL_THING, BEH_FRIENDLY,
                                    0, monster->pos(), you.pet_target,
-                                   god_gift ? MF_GOD_GIFT : 0,
+                                   god_gift ? MG_GOD_GIFT : 0,
                                    spectre, monster->number )) != -1)
                 {
                     if (death_message)

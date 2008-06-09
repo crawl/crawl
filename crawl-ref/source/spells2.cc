@@ -1026,7 +1026,7 @@ bool cast_summon_butterflies(int pow, bool god_gift)
         if (create_monster(
                 mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, 3,
                           you.pos(), you.pet_target,
-                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+                          god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             success = true;
         }
@@ -1082,7 +1082,7 @@ bool cast_summon_small_mammals(int pow, bool god_gift)
         if (create_monster(
                 mgen_data(mon, BEH_FRIENDLY, 3,
                           you.pos(), you.pet_target,
-                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+                          god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             success = true;
 
@@ -1148,7 +1148,7 @@ bool cast_sticks_to_snakes(int pow, bool god_gift)
             if (create_monster(
                     mgen_data(mon, beha, dur,
                               you.pos(), hitting,
-                              god_gift ? MF_GOD_GIFT : 0)) != -1)
+                              god_gift ? MG_GOD_GIFT : 0)) != -1)
             {
                 count++;
             }
@@ -1194,7 +1194,7 @@ bool cast_sticks_to_snakes(int pow, bool god_gift)
         if (create_monster(
                 mgen_data(mon, beha, dur,
                           you.pos(), hitting,
-                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+                          god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             count++;
         }
@@ -1233,7 +1233,7 @@ bool cast_summon_scorpions(int pow, bool god_gift)
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                           3, you.pos(),
                           friendly ? you.pet_target : MHITYOU,
-                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+                          god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             success = true;
 
@@ -1317,7 +1317,7 @@ bool cast_summon_swarm(int pow, bool god_gift, bool force_hostile,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                           dur, you.pos(),
                           friendly ? you.pet_target : MHITYOU,
-                          god_gift ? MF_GOD_GIFT : 0)) != -1)
+                          god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             success = true;
 
@@ -1382,7 +1382,7 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
@@ -1527,7 +1527,7 @@ bool summon_elemental(int pow, bool god_gift,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, coord_def(targ_x, targ_y),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
@@ -1552,7 +1552,7 @@ bool cast_summon_ice_beast(int pow, bool god_gift)
     if (create_monster(
             mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
                       you.pet_target,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
@@ -1581,7 +1581,7 @@ bool cast_summon_ugly_thing(int pow, bool god_gift)
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
@@ -1611,7 +1611,7 @@ bool cast_summon_dragon(int pow, bool god_gift)
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       3, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
@@ -1656,7 +1656,7 @@ bool cast_conjure_ball_lightning(int pow, bool god_gift)
             mons_place(
                 mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, 0,
                           coord_def(tx, ty), MHITNOT,
-                          god_gift ? MF_GOD_GIFT : 0));
+                          god_gift ? MG_GOD_GIFT : 0));
 
         if (monster != -1)
         {
@@ -1711,7 +1711,7 @@ bool cast_tukimas_dance(int pow, bool god_gift,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                           dur, you.pos(),
                           friendly ? you.pet_target : MHITYOU,
-                          god_gift ? MF_GOD_GIFT : 0));
+                          god_gift ? MG_GOD_GIFT : 0));
 
         if (monster == -1)
             success = false;
@@ -1813,7 +1813,7 @@ bool summon_berserker(int pow, bool god_gift, bool force_hostile)
                       !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, you.pos(),
                       !force_hostile ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0));
+                      god_gift ? MG_GOD_GIFT : 0));
 
     if (monster != -1)
     {
@@ -1853,7 +1853,7 @@ static bool _summon_holy_being_wrapper(int pow, bool god_gift,
     int monster = create_monster(
                       mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
                                 you.pet_target,
-                                god_gift ? MF_GOD_GIFT : 0));
+                                god_gift ? MG_GOD_GIFT : 0));
     if (monster != -1)
     {
         success = true;

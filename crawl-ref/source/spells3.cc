@@ -425,7 +425,7 @@ bool cast_call_imp(int pow, bool god_gift)
     if (create_monster(
             mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
                       you.pet_target,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
@@ -455,7 +455,7 @@ static bool _summon_demon_class_wrapper(int pow, bool god_gift,
                           charmed ? BEH_CHARMED : BEH_HOSTILE,
                       dur, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
@@ -547,7 +547,7 @@ bool summon_demon_type(monster_type mon, int pow, bool god_gift)
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
@@ -567,7 +567,7 @@ bool cast_shadow_creatures(bool god_gift)
     if (create_monster(
            mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2,
                      you.pos(), you.pet_target,
-                     god_gift ? MF_GOD_GIFT : 0)) != -1)
+                     god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         success = true;
 
@@ -611,7 +611,7 @@ bool cast_summon_horrible_things(int pow, bool god_gift)
         if (create_monster(
                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, 6,
                          you.pos(), you.pet_target,
-                         god_gift ? MF_GOD_GIFT : 0)) != -1)
+                         god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             count++;
         }
@@ -624,7 +624,7 @@ bool cast_summon_horrible_things(int pow, bool god_gift)
         if (create_monster(
                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, 6,
                          you.pos(), you.pet_target,
-                         god_gift ? MF_GOD_GIFT : 0)) != -1)
+                         god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             count++;
         }
@@ -836,7 +836,7 @@ static bool _raise_corpse(int x, int y, int corps, beh_type beha,
     int monster = create_monster(
                     mgen_data(mon, beha, 0,
                         coord_def(x, y), hitting,
-                        god_gift ? MF_GOD_GIFT : 0,
+                        god_gift ? MG_GOD_GIFT : 0,
                         zombie_type, number));
 
     if (monster != -1)
@@ -1041,7 +1041,7 @@ bool cast_simulacrum(int pow, bool god_gift)
             if (create_monster(
                     mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
                               6, you.pos(), you.pet_target,
-                              god_gift ? MF_GOD_GIFT : 0,
+                              god_gift ? MG_GOD_GIFT : 0,
                               mon)) != -1)
             {
                 count++;
@@ -1135,7 +1135,7 @@ bool cast_twisted_resurrection(int pow, bool god_gift)
     int monster = create_monster(
                       mgen_data(mon, BEH_FRIENDLY, 0,
                       you.pos(), you.pet_target,
-                      god_gift ? MF_GOD_GIFT : 0,
+                      god_gift ? MG_GOD_GIFT : 0,
                       MONS_PROGRAM_BUG, 0, colour));
 
     if (monster == -1)
@@ -1185,7 +1185,7 @@ bool cast_summon_wraiths(int pow, bool god_gift)
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       5, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MF_GOD_GIFT : 0)) != -1)
+                      god_gift ? MG_GOD_GIFT : 0)) != -1)
     {
         success = true;
 

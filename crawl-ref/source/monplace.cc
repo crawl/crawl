@@ -1874,6 +1874,9 @@ int mons_place( mgen_data mg )
 
     monsters *creation = &menv[mid];
 
+    if (mg.flags & MG_GOD_GIFT)
+        creation->flags |= MF_GOD_GIFT;
+
     // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
     // HOSTILE.
     if (mg.behaviour > NUM_BEHAVIOURS)

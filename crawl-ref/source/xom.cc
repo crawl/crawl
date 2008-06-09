@@ -499,7 +499,7 @@ static bool xom_is_good(int sever)
             summons[i] =
                 create_monster(
                     mgen_data(mon, BEH_FRIENDLY, 3,
-                              you.pos(), you.pet_target, MF_GOD_GIFT));
+                              you.pos(), you.pet_target, MG_GOD_GIFT));
 
             if (summons[i] != -1)
                 success = true;
@@ -588,7 +588,7 @@ static bool xom_is_good(int sever)
 
         if (create_monster(
                 mgen_data(mon, beha, 6,
-                          you.pos(), hitting, MF_GOD_GIFT)) != -1)
+                          you.pos(), hitting, MG_GOD_GIFT)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single holy summon"));
@@ -684,7 +684,7 @@ static bool xom_is_good(int sever)
         if (create_monster(
                 mgen_data(xom_random_demon(sever, one_chance_in(8)),
                           beha, 0,
-                          you.pos(), hitting, MF_GOD_GIFT)) != -1)
+                          you.pos(), hitting, MG_GOD_GIFT)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
@@ -861,7 +861,7 @@ static bool xom_is_bad(int sever)
                     if (create_monster(
                             mgen_data(xom_random_punishment_demon(sever),
                                       BEH_HOSTILE, 4,
-                                      you.pos(), MHITYOU, MF_GOD_GIFT)) != -1)
+                                      you.pos(), MHITYOU, MG_GOD_GIFT)) != -1)
                     {
                         success = true;
                     }
