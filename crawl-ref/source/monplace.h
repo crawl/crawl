@@ -79,8 +79,8 @@ enum demon_class_type
 
 enum holy_being_class_type
 {
-    HOLY_BEING_ANGEL,                  //    0: Angel
-    HOLY_BEING_DAEVA,                  //    1: Daeva
+    HOLY_BEING_ZIN,                    //    0: Angel
+    HOLY_BEING_TSO,                    //    1: Daeva
     HOLY_BEING_RANDOM                  //    any of the above
 };
 

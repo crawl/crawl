@@ -1849,22 +1849,18 @@ bool summon_berserker(int pow, bool god_gift, bool force_hostile)
 }
 
 static bool _summon_holy_being_wrapper(int pow, bool god_gift,
-                                       holy_being_class_type hbct)
+                                       monster_type mon)
 {
     bool success = false;
 
-    monster_type mon = summon_any_holy_being(hbct);
-
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    mprf("You open a gate to %s's realm!",
-         (mon == MONS_DAEVA) ? god_name(GOD_SHINING_ONE).c_str()
-                             : god_name(GOD_ZIN).c_str());
+    const int monster =
+        create_monster(
+            mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
+                      you.pet_target,
+                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
 
-    int monster = create_monster(
-                      mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
-                                you.pet_target,
-                                god_gift ? MG_GOD_GIFT : 0));
     if (monster != -1)
     {
         success = true;
@@ -1875,19 +1871,29 @@ static bool _summon_holy_being_wrapper(int pow, bool god_gift,
         mprf("You are momentarily dazzled by a brilliant %s light.",
              (mon == MONS_DAEVA) ? "golden"
                                  : "white");
+
+        player_angers_monster(&menv[monster]);
     }
 
     return (success);
 }
 
+static bool _summon_holy_being_wrapper(int pow, bool god_gift,
+                                       holy_being_class_type hbct)
+{
+    monster_type mon = summon_any_holy_being(hbct);
+
+    return _summon_holy_being_wrapper(pow, god_gift, mon);
+}
+
 // Zin sends an angel for a follower.
 bool summon_guardian(int pow, bool god_gift)
 {
-    return _summon_holy_being_wrapper(pow, god_gift, HOLY_BEING_ANGEL);
+    return _summon_holy_being_wrapper(pow, god_gift, MONS_ANGEL);
 }
 
 // TSO sends a daeva for a follower.
 bool summon_daeva(int pow, bool god_gift)
 {
-    return _summon_holy_being_wrapper(pow, god_gift, HOLY_BEING_DAEVA);
+    return _summon_holy_being_wrapper(pow, god_gift, MONS_DAEVA);
 }
