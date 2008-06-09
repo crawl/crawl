@@ -2494,6 +2494,8 @@ static void _miscast_summoning(int severity, const char* cause)
             {
                 mpr("Something appears in a flash of light!");
             }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
         break;
@@ -2514,6 +2516,8 @@ static void _miscast_summoning(int severity, const char* cause)
             {
                 mpr("Something forms out of thin air!");
             }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case 3:
@@ -2555,6 +2559,8 @@ static void _miscast_summoning(int severity, const char* cause)
             {
                 mpr("Something forms out of thin air.");
             }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case 1:
@@ -2564,6 +2570,8 @@ static void _miscast_summoning(int severity, const char* cause)
             {
                 mpr("You sense a hostile presence.");
             }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case 2:
@@ -2852,6 +2860,8 @@ static void _miscast_necromancy(int severity, const char* cause)
             {
                 mpr("Something reaches out for you...");
             }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case 5:
@@ -2861,6 +2871,8 @@ static void _miscast_necromancy(int severity, const char* cause)
             {
                 mpr("Death has come for you...");
             }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
         break;
