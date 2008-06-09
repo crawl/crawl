@@ -879,7 +879,7 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
             && (class_allowed == CORPSE_BODY
                 || item.sub_type == CORPSE_SKELETON))
         {
-            bool was_butchering = is_being_butchered(item);
+            const bool was_butchering = is_being_butchered(item);
 
             success = _raise_corpse(x, y, corps, beha, hitting, god_gift,
                                     actual);
@@ -945,6 +945,8 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 
     env_show_grid &los(caster == &you? env.no_trans_show : losgrid);
 
+    bool was_butchering = false;
+
     coord_def a;
 
     for (a.x = minx; a.x != maxx; a.x += xinc)
@@ -962,19 +964,35 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                 // corpse.  Only one of a stack will be raised.
                 while (corps != NON_ITEM)
                 {
+                    const item_def& item = mitm[corps];
+
                     if (animate_a_corpse(a.x, a.y, CORPSE_BODY, beha,
                                          hitting, god_gift, actual, true))
                     {
                         number_raised++;
+
                         if (see_grid(env.show, you.pos(), a))
                             number_seen++;
+
+                        if (is_being_butchered(item, false))
+                            was_butchering = true;
+
                         break;
                     }
 
-                    corps = mitm[corps].link;
+                    corps = item.link;
                 }
             }
         }
+    }
+
+    if (actual)
+    {
+        if (was_butchering)
+            mpr("The corpse you are butchering rises to attack!");
+
+        if (number_seen > 0)
+            mpr("The dead are walking!");
     }
 
     return (number_raised);
