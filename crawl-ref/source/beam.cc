@@ -3343,7 +3343,7 @@ static int _affect_place_clouds(bolt &beam, int x, int y)
 
     // FIRE/COLD over water/lava
     if (grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD
-        || grid_is_watery(grd[x][y]) && beam.flavour == BEAM_FIRE)
+        || grid_is_watery(grd[x][y]) && _is_fiery(beam))
     {
         place_cloud( CLOUD_STEAM, x, y, 2 + random2(5), _whose_kill(beam) );
     }
@@ -3376,9 +3376,8 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
     int duration;
 
     // first check: FIRE/COLD over water/lava
-    if ( grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD
-         || (grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == DNGN_SHALLOW_WATER)
-             && beam.flavour == BEAM_FIRE )
+    if (grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD
+         || grid_is_watery(grd[x][y]) && _is_fiery(beam))
     {
         place_cloud( CLOUD_STEAM, x, y, 2 + random2(5), _whose_kill(beam) );
         return;
