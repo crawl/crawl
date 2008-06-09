@@ -698,24 +698,24 @@ bool evoke_wielded()
 
 static bool efreet_flask(void)
 {
-    monster_type mon = MONS_EFREET;
-
-    const bool friendly =
-        (!player_will_anger_monster(mon)
-            && you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20));
+    bool friendly = (you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20));
 
     mpr("You open the flask...");
 
-    const int efreet =
+    const int monster =
         create_monster(
-            mgen_data(mon,
+            mgen_data(MONS_EFREET,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       0, you.pos(),
-                      friendly ? you.pet_target : MHITYOU));
+                      friendly ? you.pet_target : MHITYOU,
+                      MG_FORCE_BEH));
 
-    if (efreet != -1)
+    if (monster != -1)
     {
         mpr("...and a huge efreet comes out.");
+
+        if (player_angers_monster(&menv[monster]))
+            friendly = false;
 
         mpr(friendly ? "\"Thank you for releasing me!\""
                      : "It howls insanely!");
@@ -726,7 +726,7 @@ static bool efreet_flask(void)
     dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
     return (true);
-}                               // end efreet_flask()
+}
 
 static bool ball_of_seeing(void)
 {
@@ -959,20 +959,19 @@ void skill_manual(int slot)
 
 static bool box_of_beasts()
 {
-    monster_type beasty = MONS_PROGRAM_BUG;
-    int temp_rand = 0;          // probability determination {dlb}
-
-    int ret = false;
+    bool success = false;
 
     mpr("You open the lid...");
 
     if (random2(100) < 60 + you.skills[SK_EVOCATIONS])
     {
+        monster_type beasty = MONS_PROGRAM_BUG;
+
         // If you worship a good god, don't summon an evil beast (in
         // this case, the hell hound).
         do
         {
-            temp_rand = random2(11);
+            int temp_rand = random2(11);
 
             beasty = ((temp_rand == 0) ? MONS_GIANT_BAT :
                       (temp_rand == 1) ? MONS_HOUND :
@@ -1001,9 +1000,10 @@ static bool box_of_beasts()
                 mgen_data(beasty, beha, 2 + random2(4),
                           you.pos(), hitting)) != -1)
         {
+            success = true;
+
             mpr("...and something leaps out!");
             xom_is_stimulated(14);
-            ret = true;
         }
     }
     else
@@ -1017,8 +1017,8 @@ static bool box_of_beasts()
         }
     }
 
-    return (ret);
-}                               // end box_of_beasts()
+    return (success);
+}
 
 static bool ball_of_energy(void)
 {

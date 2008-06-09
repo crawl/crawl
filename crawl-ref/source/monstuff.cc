@@ -474,7 +474,7 @@ static bool _is_pet_kill(killer_type killer, int i)
     if (i == ANON_FRIENDLY_MONSTER)
         return (true);
 
-    if (i < 0 || i >= MAX_MONSTERS)
+    if (invalid_monster_index(i))
         return (false);
 
     const monsters *m = &menv[i];

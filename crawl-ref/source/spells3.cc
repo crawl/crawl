@@ -1189,9 +1189,8 @@ bool cast_summon_wraiths(int pow, bool god_gift)
     {
         success = true;
 
-        mprf("%s",
-             friendly ? "An insubstantial figure forms in the air."
-                      : "You sense a hostile presence.");
+        mpr(friendly ? "An insubstantial figure forms in the air."
+                     : "You sense a hostile presence.");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
