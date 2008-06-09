@@ -423,16 +423,21 @@ bool cast_call_imp(int pow, bool god_gift)
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    if (create_monster(
+    const int monster =
+        create_monster(
             mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
                       you.pet_target,
-                      god_gift ? MG_GOD_GIFT : 0)) != -1)
+                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
+
+    if (monster != -1)
     {
         success = true;
 
         mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
             (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air."
                                      : "A beastly little devil appears in a puff of flame.");
+
+        player_angers_monster(&menv[monster]);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -440,53 +445,71 @@ bool cast_call_imp(int pow, bool god_gift)
     return (success);
 }
 
-static bool _summon_demon_class_wrapper(int pow, bool god_gift,
-                                        demon_class_type dct, int dur,
-                                        bool friendly, bool charmed)
+static bool _summon_demon_wrapper(int pow, bool god_gift, monster_type mon,
+                                  int dur, bool friendly, bool charmed)
 {
     bool success = false;
 
-    mpr("You open a gate to Pandemonium!");
-
-    monster_type mon = summon_any_demon(dct);
-
-    if (create_monster(
+    const int monster =
+        create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY :
                           charmed ? BEH_CHARMED : BEH_HOSTILE,
                       dur, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MG_GOD_GIFT : 0)) != -1)
+                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
+
+    if (monster != -1)
     {
         success = true;
 
-        mprf("A demon appears!%s",
-             friendly ? "" :
-                 charmed ? " You don't feel so good about this..."
-                         : " It doesn't look very happy.");
+        mprf("A demon appears!");
+
+        if (!player_angers_monster(&menv[monster]) && !friendly)
+        {
+            mpr(charmed ? "You don't feel so good about this..."
+                        : "It doesn't look very happy.");
+        }
     }
 
     return (success);
 }
 
+static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
+                                  int dur, bool friendly, bool charmed)
+{
+    monster_type mon = summon_any_demon(dct);
+
+    return _summon_demon_wrapper(pow, god_gift, mon, dur, friendly, charmed);
+}
+
 bool summon_lesser_demon(int pow, bool god_gift)
 {
-    return _summon_demon_class_wrapper(pow, god_gift, DEMON_LESSER,
-                                       std::min(2 + (random2(pow) / 4), 6),
-                                       random2(pow) > 3, false);
+    return _summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
+                                 std::min(2 + (random2(pow) / 4), 6),
+                                 random2(pow) > 3, false);
 }
 
 bool summon_common_demon(int pow, bool god_gift)
 {
-    return _summon_demon_class_wrapper(pow, god_gift, DEMON_COMMON,
-                                       std::min(2 + (random2(pow) / 4), 6),
-                                       random2(pow) > 3, false);
+    return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
+                                 std::min(2 + (random2(pow) / 4), 6),
+                                 random2(pow) > 3, false);
 }
 
 bool summon_greater_demon(int pow, bool god_gift)
 {
-    return _summon_demon_class_wrapper(pow, god_gift, DEMON_GREATER,
-                                       5, false, random2(pow) > 5);
+    return _summon_demon_wrapper(pow, god_gift, DEMON_GREATER,
+                                 5, false, random2(pow) > 5);
+}
+
+// Makhleb or Kikubaaqudgha sends a demonic buddy (or enemy) for a
+// follower.
+bool summon_demon_type(monster_type mon, int pow, bool god_gift)
+{
+    return _summon_demon_wrapper(pow, god_gift, mon,
+                                 std::min(2 + (random2(pow) / 4), 6),
+                                 false, random2(pow) > 3);
 }
 
 bool cast_summon_demon(int pow, bool god_gift)
@@ -533,46 +556,23 @@ bool cast_summon_greater_demon(int pow, bool god_gift)
     return (success);
 }
 
-// Makhleb or Kikubaaqudgha sends a demonic buddy (or enemy) for a
-// follower.
-bool summon_demon_type(monster_type mon, int pow, bool god_gift)
-{
-    bool success = false;
-
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
-
-    const bool friendly = (random2(pow) > 3);
-
-    if (create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, you.pos(),
-                      friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MG_GOD_GIFT : 0)) != -1)
-    {
-        success = true;
-
-        mprf("A demon appears!%s",
-             friendly ? "" : " It doesn't look very happy.");
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
 bool cast_shadow_creatures(bool god_gift)
 {
     bool success = false;
 
-    if (create_monster(
-           mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2,
-                     you.pos(), you.pet_target,
-                     god_gift ? MG_GOD_GIFT : 0)) != -1)
+    const int monster =
+        create_monster(
+            mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2,
+                      you.pos(), you.pet_target,
+                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
+
+    if (monster != -1)
     {
         success = true;
 
         mpr("Wisps of shadow whirl around you...");
+
+        player_angers_monster(&menv[monster]);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -834,11 +834,11 @@ static bool _raise_corpse(int x, int y, int corps, beh_type beha,
                 MONS_SKELETON_SMALL : MONS_SKELETON_LARGE;
     }
 
-    int monster = create_monster(
-                    mgen_data(mon, beha, 0,
-                        coord_def(x, y), hitting,
-                        god_gift ? MG_GOD_GIFT : 0,
-                        zombie_type, number));
+    const int monster = create_monster(
+                            mgen_data(mon, beha, 0,
+                                      coord_def(x, y), hitting,
+                                      god_gift ? MG_GOD_GIFT : 0,
+                                      zombie_type, number));
 
     if (monster != -1)
     {
@@ -1133,11 +1133,11 @@ bool cast_twisted_resurrection(int pow, bool god_gift)
                   (rotted >= random2(how_many_corpses)) ? RED
                                                         : LIGHTRED;
 
-    int monster = create_monster(
-                      mgen_data(mon, BEH_FRIENDLY, 0,
-                      you.pos(), you.pet_target,
-                      god_gift ? MG_GOD_GIFT : 0,
-                      MONS_PROGRAM_BUG, 0, colour));
+    const int monster = create_monster(
+                            mgen_data(mon, BEH_FRIENDLY, 0,
+                                      you.pos(), you.pet_target,
+                                      god_gift ? MG_GOD_GIFT : 0,
+                                      MONS_PROGRAM_BUG, 0, colour));
 
     if (monster == -1)
     {

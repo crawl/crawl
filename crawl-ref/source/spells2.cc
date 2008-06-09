@@ -1238,8 +1238,10 @@ bool cast_summon_scorpions(int pow, bool god_gift)
         {
             success = true;
 
-            mprf("A scorpion appears.%s",
-                 friendly ? "" : " It doesn't look very happy.");
+            mpr("A scorpion appears.");
+
+            if (!friendly)
+                mpr("It doesn't look very happy.");
         }
     }
 
@@ -1324,8 +1326,10 @@ bool cast_summon_swarm(int pow, bool god_gift, bool force_hostile,
 
             if (!quiet)
             {
-                mprf("A swarming creature appears!%s",
-                     friendly ? "" : " It doesn't look very happy.");
+                mpr("A swarming creature appears!");
+
+                if (!friendly)
+                    mpr("It doesn't look very happy.");
             }
         }
     }
@@ -1387,8 +1391,10 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
     {
         success = true;
 
-        mprf("A canine appears!%s",
-             friendly ? "" : " It doesn't look very happy.");
+        mpr("A canine appears!");
+
+        if (!friendly)
+            mpr("It doesn't look very happy.");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1586,9 +1592,11 @@ bool cast_summon_ugly_thing(int pow, bool god_gift)
     {
         success = true;
 
-        mprf((mon == MONS_VERY_UGLY_THING) ? "A very ugly thing appears.%s"
-                                           : "An ugly thing appears.%s",
-             friendly ? "" : " It doesn't look very happy.");
+        mpr((mon == MONS_VERY_UGLY_THING) ? "A very ugly thing appears."
+                                          : "An ugly thing appears.");
+
+        if (!friendly)
+            mpr("It doesn't look very happy.");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1616,8 +1624,10 @@ bool cast_summon_dragon(int pow, bool god_gift)
     {
         success = true;
 
-        mprf("A dragon appears.%s",
-            friendly ? "" : " It doesn't look very happy.");
+        mpr("A dragon appears.");
+
+        if (!friendly)
+            mpr("It doesn't look very happy.");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
