@@ -463,7 +463,7 @@ static bool _summon_demon_wrapper(int pow, bool god_gift, monster_type mon,
     {
         success = true;
 
-        mprf("A demon appears!");
+        mpr("A demon appears!");
 
         if (!player_angers_monster(&menv[monster]) && !friendly)
         {
