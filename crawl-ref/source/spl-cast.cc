@@ -2790,7 +2790,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         switch (random2(3))
         {
         case 0:
-            summon_shadows(random2(3) + 1, true);
+            summon_shadows(random2(3) + 1, false, true);
             break;
 
         case 1:
