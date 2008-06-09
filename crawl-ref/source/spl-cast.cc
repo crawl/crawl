@@ -1388,11 +1388,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         zapping(ZAP_HEALING, powc, beam);
         break;
 
-    case SPELL_ANIMATE_DEAD:
-        mpr("You call on the dead to walk for you.");
-        animate_dead(&you, powc + 1, BEH_FRIENDLY, you.pet_target);
-        break;
-
     case SPELL_PAIN:
         if (!zapping(ZAP_PAIN, powc, beam, true))
             return (SPRET_ABORT);
@@ -1405,12 +1400,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_CONTROL_UNDEAD:
         mass_enchantment(ENCH_CHARM, powc, MHITYOU);
-        break;
-
-    case SPELL_ANIMATE_SKELETON:
-        mpr("You attempt to give life to the dead...");
-        animate_a_corpse(you.x_pos, you.y_pos, CORPSE_SKELETON, BEH_FRIENDLY,
-                         you.pet_target);
         break;
 
     case SPELL_VAMPIRIC_DRAINING:
@@ -1445,103 +1434,118 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
+    // Summoning spells.  If a god is making you cast one of these
+    // spells, any creature(s) produced will be counted as god gifts.
     case SPELL_SUMMON_BUTTERFLIES:
-        cast_summon_butterflies(powc);
+        cast_summon_butterflies(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_SMALL_MAMMALS:
-        cast_summon_small_mammals(powc);
+        cast_summon_small_mammals(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_STICKS_TO_SNAKES:
-        cast_sticks_to_snakes(powc);
+        cast_sticks_to_snakes(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_SCORPIONS:
-        cast_summon_scorpions(powc);
+        cast_summon_scorpions(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_SWARM:
-        cast_summon_swarm(powc);
+        cast_summon_swarm(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_CALL_CANINE_FAMILIAR:
-        cast_call_canine_familiar(powc);
+        cast_call_canine_familiar(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_ELEMENTAL:
-        if (!summon_elemental(powc))
+        if (!summon_elemental(powc, crawl_state.is_god_acting()))
             return (SPRET_ABORT);
         break;
 
     case SPELL_SUMMON_ICE_BEAST:
-        cast_summon_ice_beast(powc);
+        cast_summon_ice_beast(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_UGLY_THING:
-        cast_summon_ugly_thing(powc);
+        cast_summon_ugly_thing(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_GUARDIAN:
-        summon_guardian(powc);
+        summon_guardian(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_DAEVA:
-        summon_daeva(powc);
+        summon_daeva(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_DRAGON:
-        cast_summon_dragon(powc);
+        cast_summon_dragon(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_CONJURE_BALL_LIGHTNING:
-        cast_conjure_ball_lightning(powc);
+        cast_conjure_ball_lightning(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_TUKIMAS_DANCE:
         crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
-        cast_tukimas_dance(powc);
+        cast_tukimas_dance(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_CALL_IMP:
-        cast_call_imp(powc);
+        cast_call_imp(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_DEMON:
-        cast_summon_demon(powc);
+        cast_summon_demon(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_DEMONIC_HORDE:
-        cast_demonic_horde(powc);
+        cast_demonic_horde(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_GREATER_DEMON:
-        cast_summon_greater_demon(powc);
+        cast_summon_greater_demon(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SHADOW_CREATURES:
-        cast_shadow_creatures();
+        cast_shadow_creatures(crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
-        cast_summon_horrible_things(powc);
+        cast_summon_horrible_things(powc, crawl_state.is_god_acting());
+        break;
+
+    case SPELL_ANIMATE_SKELETON:
+        mpr("You attempt to give life to the dead...");
+        animate_a_corpse(you.x_pos, you.y_pos, CORPSE_SKELETON, BEH_FRIENDLY,
+                         you.pet_target, crawl_state.is_god_acting());
+        break;
+
+    case SPELL_ANIMATE_DEAD:
+        mpr("You call on the dead to walk for you.");
+        animate_dead(&you, powc + 1, BEH_FRIENDLY, you.pet_target,
+                     crawl_state.is_god_acting());
         break;
 
     case SPELL_SIMULACRUM:
-        cast_simulacrum(powc);
+        cast_simulacrum(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_TWISTED_RESURRECTION:
-        cast_twisted_resurrection(powc);
+        cast_twisted_resurrection(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_SUMMON_WRAITHS:
-        cast_summon_wraiths(powc);
+        cast_summon_wraiths(powc, crawl_state.is_god_acting());
         break;
 
     case SPELL_DEATH_CHANNEL:
-        cast_death_channel(powc);
+        cast_death_channel(powc, crawl_state.is_god_acting());
         break;
+    // End of summoning spells.
 
     case SPELL_OZOCUBUS_ARMOUR:
         ice_armour(powc, false);
