@@ -50,6 +50,7 @@
 #include "spells1.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "stuff.h"
 #include "traps.h"
 #include "view.h"
@@ -120,7 +121,7 @@ bool cast_selective_amnesia(bool force)
     }
 
     return (true);
-}                               // end cast_selective_amnesia()
+}
 
 bool remove_curse(bool suppress_msg)
 {
@@ -161,7 +162,7 @@ bool remove_curse(bool suppress_msg)
     }
 
     return (success);
-}                               // end remove_curse()
+}
 
 bool detect_curse(bool suppress_msg)
 {
@@ -192,7 +193,7 @@ bool detect_curse(bool suppress_msg)
     }
 
     return (success);
-}                               // end detect_curse()
+}
 
 int cast_smiting(int power, dist &beam)
 {
@@ -309,8 +310,8 @@ bool cast_bone_shards(int power, bolt &beam)
         mpr("The corpse collapses into a mass of pulpy flesh.");
     else
     {
-        // practical max of 100 * 15 + 3000 = 4500
-        // actual max of    200 * 15 + 3000 = 6000
+        // Practical max of 100 * 15 + 3000 = 4500.
+        // Actual max of    200 * 15 + 3000 = 6000.
         power *= 15;
         power += mons_weight( you.inv[you.equip[EQ_WEAPON]].plus );
 
@@ -1280,14 +1281,15 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
         return (false);
     }
 
-    // after this point, we're guaranteed to teleport. Kill the appropriate
+    // After this point, we're guaranteed to teleport. Kill the appropriate
     // delays.
     interrupt_activity( AI_TELEPORT );
 
-    // Update what we can see at the current location in case something
-    // hapened in the exact turn that we teleported (like picking up
-    // and item).
+    // Update what we can see at the current location as well as its stash,
+    // in case something happened in the exact turn that we teleported
+    // (like picking up/dropping an item).
     viewwindow(true, false);
+    StashTrack.update_stash();
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
     {

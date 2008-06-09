@@ -3926,7 +3926,7 @@ void tile_clear_buf()
         }
 }
 
-/* called from view.cc */
+// Called from view.cc.
 void tile_draw_floor()
 {
     int cx, cy;

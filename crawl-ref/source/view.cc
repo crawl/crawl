@@ -4676,7 +4676,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
     int count_x, count_y;
 
-    losight( env.show, grd, you.x_pos, you.y_pos ); // must be done first
+    losight( env.show, grd, you.x_pos, you.y_pos ); // Must be done first.
 
     // What would be visible, if all of the translucent walls were
     // made opaque.
