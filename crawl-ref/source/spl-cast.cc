@@ -1390,7 +1390,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_ANIMATE_DEAD:
         mpr("You call on the dead to walk for you.");
-        animate_dead(&you, powc + 1, BEH_FRIENDLY, you.pet_target, 1);
+        animate_dead(&you, powc + 1, BEH_FRIENDLY, you.pet_target);
         break;
 
     case SPELL_PAIN:
@@ -1409,8 +1409,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_ANIMATE_SKELETON:
         mpr("You attempt to give life to the dead...");
-        animate_a_corpse(you.x_pos, you.y_pos, BEH_FRIENDLY, you.pet_target,
-                         CORPSE_SKELETON);
+        animate_a_corpse(you.x_pos, you.y_pos, CORPSE_SKELETON, BEH_FRIENDLY,
+                         you.pet_target);
         break;
 
     case SPELL_VAMPIRIC_DRAINING:

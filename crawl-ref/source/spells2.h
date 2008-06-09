@@ -27,22 +27,6 @@ bool brand_weapon(brand_type which_brand, int power);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
-int animate_a_corpse(int axps, int ayps, beh_type corps_beh,
-                     int corps_hit, int class_allowed);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - it_use3 - monstuff - mstuff2 - spell
- * *********************************************************************** */
-int animate_dead(actor *caster, int power, beh_type corps_beh,
-                 int corps_hit, int actual);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
 char burn_freeze(int pow, beam_type b_f);

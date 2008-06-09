@@ -14,6 +14,7 @@
 #ifndef SPELLS3_H
 #define SPELLS3_H
 
+#include "itemprop.h"  // from _raise_corpse()
 
 struct dist;
 struct bolt;
@@ -123,6 +124,26 @@ bool cast_summon_greater_demon(int pow, bool god_gift = false);
 bool cast_shadow_creatures(bool god_gift = false);
 bool cast_summon_horrible_things(int pow, bool god_gift = false);
 
+// last updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: ability - spell
+ * *********************************************************************** */
+bool animate_a_corpse(int x, int y, corpse_type class_allowed,
+                      beh_type beha, unsigned short hitting,
+                      bool god_gift = false, bool actual = true,
+                      bool silent = false);
+
+// last updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: ability - it_use3 - monstuff - mstuff2 - spell
+ * *********************************************************************** */
+int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
+                 bool god_gift = false, bool actual = true);
+
+// updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: spell
+ * *********************************************************************** */
 bool cast_simulacrum(int pow, bool god_gift = false);
 bool cast_twisted_resurrection(int pow, bool god_gift = false);
 bool cast_summon_wraiths(int pow, bool god_gift = false);

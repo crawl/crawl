@@ -62,7 +62,7 @@
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "spells2.h"
+#include "spells3.h"
 #include "spells4.h"
 #include "state.h"
 #include "stuff.h"
@@ -4819,8 +4819,8 @@ static bool _handle_spell( monsters *monster, bolt & beem )
 
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         if (spell_cast == SPELL_ANIMATE_DEAD
-            && !animate_dead( monster, 100, SAME_ATTITUDE(monster),
-                              monster->foe, 0 ))
+            && !animate_dead(monster, 100, SAME_ATTITUDE(monster),
+                             monster->foe, false, false))
         {
             return (false);
         }

@@ -1463,10 +1463,8 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_YRED_ANIMATE_CORPSE:
         mpr("You call on the dead to walk for you...");
-
-        animate_a_corpse( you.x_pos, you.y_pos, BEH_FRIENDLY,
-                          you.pet_target, CORPSE_BODY );
-
+        animate_a_corpse(you.x_pos, you.y_pos, CORPSE_BODY, BEH_FRIENDLY,
+                         you.pet_target, true);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
@@ -1477,10 +1475,8 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_YRED_ANIMATE_DEAD:
         mpr("You call on the dead to walk for you...");
-
-        animate_dead( &you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
-                      you.pet_target, 1 );
-
+        animate_dead(&you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
+                     you.pet_target, true);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 

@@ -40,7 +40,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
-#include "spells2.h"
+#include "spells3.h"
 #include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -634,9 +634,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_ANIMATE_DEAD:
-        // see special handling in monstuff::handle_spell {dlb}
-        animate_dead( monster, 5 + random2(5), SAME_ATTITUDE(monster),
-                      monster->foe, 1 );
+        // see special handling in monstuff::handle_spell() {dlb}
+        animate_dead(monster, 5 + random2(5), SAME_ATTITUDE(monster),
+                     monster->foe);
         return;
 
     case SPELL_CALL_IMP: // class 5 demons

@@ -643,6 +643,343 @@ bool cast_summon_horrible_things(int pow, bool god_gift)
     return (false);
 }
 
+static bool _is_animatable_corpse(const item_def& item)
+{
+    return (item.base_type == OBJ_CORPSES
+        && mons_zombie_size(item.plus) != Z_NOZOMBIE);
+}
+
+// Try to equip the zombie/skeleton with the objects it died with.
+// This excludes items which were dropped by the player onto the corpse,
+// and corpses which were picked up and moved by the player, so the player
+// can't equip their undead slaves with items of their choice.
+//
+// The item selection logic has one problem: if a first monster without
+// any items dies and leaves a corpse, and then a second monster with
+// items dies on the same spot but doesn't leave a corpse, then the
+// undead can be equipped with the second monster's items if the second
+// monster is either of the same type as the first, or if the second
+// monster wasn't killed by the player or a player's pet.
+static void _equip_undead(int x, int y, int corps, int monster, int monnum)
+{
+// Delay this until after 0.4
+#if 0
+    monsters* mon = &menv[monster];
+
+    monster_type type = static_cast<monster_type>(monnum);
+
+    if (mons_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
+        return;
+
+    // If the player picked up and dropped the corpse then all its
+    // original equipment fell off.
+    if (mitm[corps].flags & ISFLAG_DROPPED)
+        return;
+
+    // A monster's corpse is last in the linked list after its items,
+    // so (for example) the first item after the second-to-last corpse
+    // is the first item belonging to the last corpse.
+    int objl      = igrd[x][y];
+    int first_obj = NON_ITEM;
+
+    while (objl != NON_ITEM && objl != corps)
+    {
+        item_def item(mitm[objl]);
+
+        if (item.base_type == OBJ_CORPSES)
+        {
+            first_obj = NON_ITEM;
+            continue;
+        }
+
+        if (first_obj == NON_ITEM)
+            first_obj = objl;
+
+        objl = item.link;
+    }
+
+    ASSERT(objl == corps);
+
+    if (first_obj == NON_ITEM)
+        return;
+
+    // Iterate backwards over the list, since the items earlier in the
+    // linked list were dropped most recently and hence more likely to
+    // be items the monster didn't die with.
+    std::vector<int> item_list;
+    objl = first_obj;
+    while (objl != NON_ITEM && objl != corps)
+    {
+        item_list.push_back(objl);
+        objl = mitm[objl].link;
+    }
+
+    for (int i = item_list.size() - 1; i >= 0; i--)
+    {
+        objl = item_list[i];
+        item_def &item(mitm[objl]);
+
+        // Stop equipping monster if the item probably didn't originally
+        // belong to the monster.
+        if ( (origin_known(item) && (item.orig_monnum - 1) != monnum)
+            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
+            || item.base_type == OBJ_CORPSES)
+        {
+            return;
+        }
+
+        mon_inv_type mslot;
+
+        switch(item.base_type)
+        {
+        case OBJ_WEAPONS:
+            if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
+            {
+                if (mons_wields_two_weapons(type))
+                    mslot = MSLOT_ALT_WEAPON;
+                else
+                {
+                    if (is_range_weapon(mitm[mon->inv[MSLOT_WEAPON]])
+                        == is_range_weapon(item))
+                    {
+                        // Two different items going into the same
+                        // slot indicate that this and further items
+                        // weren't equipment the monster died with.
+                        return;
+                    }
+                    else
+                        // The undead are too stupid to switch between weapons.
+                        continue;
+                }
+            }
+            else
+                mslot = MSLOT_WEAPON;
+            break;
+        case OBJ_ARMOUR:
+            mslot = equip_slot_to_mslot(get_armour_slot(item));
+
+            // A piece of armour which can't be worn indicates that this
+            // and further items weren't the equipment the monster died
+            // with.
+            if (mslot == NUM_MONSTER_SLOTS)
+                return;
+            break;
+
+        case OBJ_MISSILES:
+            mslot = MSLOT_MISSILE;
+            break;
+
+        case OBJ_GOLD:
+            mslot = MSLOT_GOLD;
+            break;
+
+        // The undead are too stupid to use these.
+        case OBJ_WANDS:
+        case OBJ_SCROLLS:
+        case OBJ_POTIONS:
+        case OBJ_MISCELLANY:
+            continue;
+
+        default:
+            continue;
+        } // switch
+
+        // Two different items going into the same slot indicate that
+        // this and further items weren't equipment the monster died
+        // with.
+        if (mon->inv[mslot] != NON_ITEM)
+            return;
+
+        unlink_item(objl);
+        mon->inv[mslot] = objl;
+
+        if (mslot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(mon))
+            mon->equip(item, mslot, 0);
+    } // while
+#endif
+}
+
+static bool _raise_corpse(int x, int y, int corps, beh_type beha,
+                          unsigned short hitting, bool god_gift, bool actual)
+{
+    const item_def& item = mitm[corps];
+
+    if (!_is_animatable_corpse(item))
+        return (false);
+
+    if (!actual)
+        return (true);
+
+    const monster_type zombie_type =
+        static_cast<monster_type>(item.plus);
+
+    const int number = (item.props.exists(MONSTER_NUMBER)) ?
+                            item.props[MONSTER_NUMBER].get_short() : 0;
+
+    // Headless hydras cannot be raised, sorry.
+    if (zombie_type == MONS_HYDRA && number == 0)
+        return (false);
+
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    if (item.sub_type == CORPSE_BODY)
+    {
+        mon = (mons_zombie_size(item.plus) == Z_SMALL) ?
+                MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE;
+    }
+    else
+    {
+        mon = (mons_zombie_size(item.plus) == Z_SMALL) ?
+                MONS_SKELETON_SMALL : MONS_SKELETON_LARGE;
+    }
+
+    int monster = create_monster(
+                    mgen_data(mon, beha, 0,
+                        coord_def(x, y), hitting,
+                        god_gift ? MF_GOD_GIFT : 0,
+                        zombie_type, number));
+
+    if (monster != -1)
+    {
+        const int monnum = item.orig_monnum - 1;
+
+        if (mons_is_unique(monnum))
+        {
+            menv[monster].mname = origin_monster_name(item);
+
+            // Special case for Blork the orc: shorten his name to "Blork"
+            // to avoid mentions of "Blork the orc the orc skeleton".
+            if (monnum == MONS_BLORK_THE_ORC)
+                menv[monster].mname = "Blork";
+        }
+
+        _equip_undead(x, y, corps, monster, monnum);
+    }
+
+    destroy_item(corps);
+
+    return (true);
+}
+
+bool animate_a_corpse(int x, int y, corpse_type class_allowed,
+                      beh_type beha, unsigned short hitting,
+                      bool god_gift, bool actual,
+                      bool silent)
+{
+    bool success = false;
+
+    int corps = igrd[x][y];
+
+    // This searches all the items on the ground for a corpse.
+    while (corps != NON_ITEM)
+    {
+        const item_def& item = mitm[corps];
+
+        if (_is_animatable_corpse(item)
+            && (class_allowed == CORPSE_BODY
+                || item.sub_type == CORPSE_SKELETON))
+        {
+            bool was_butchering = is_being_butchered(item);
+
+            success = _raise_corpse(x, y, corps, beha, hitting, god_gift,
+                                    actual);
+
+            if (actual && success)
+            {
+                if (!silent)
+                {
+                    if (was_butchering)
+                        mpr("The corpse you are butchering rises to attack!");
+
+                    if (is_terrain_seen(x, y))
+                        mpr("The dead are walking!");
+                }
+
+                if (was_butchering)
+                    xom_is_stimulated(255);
+            }
+            break;
+        }
+
+        corps = item.link;
+    }
+
+    return (success);
+}
+
+int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
+                 bool god_gift, bool actual)
+{
+    UNUSED(pow);
+
+    static env_show_grid losgrid;
+
+    const coord_def c(caster->pos());
+
+    int minx = c.x - 6;
+    int maxx = c.x + 7;
+    int miny = c.y - 6;
+    int maxy = c.y + 7;
+    int xinc = 1;
+    int yinc = 1;
+
+    int number_raised = 0;
+    int number_seen   = 0;
+
+    if (coinflip())
+    {
+        minx = c.x + 6;
+        maxx = c.x - 7;
+        xinc = -1;
+    }
+
+    if (coinflip())
+    {
+        miny = c.y + 6;
+        maxy = c.y - 7;
+        yinc = -1;
+    }
+
+    if (caster != &you)
+        losight(losgrid, grd, c.x, c.y, true);
+
+    env_show_grid &los(caster == &you? env.no_trans_show : losgrid);
+
+    coord_def a;
+
+    for (a.x = minx; a.x != maxx; a.x += xinc)
+    {
+        for (a.y = miny; a.y != maxy; a.y += yinc)
+        {
+            if (!in_bounds(a) || !see_grid(los, c, a))
+                continue;
+
+            int corps = igrd(a);
+
+            if (corps != NON_ITEM)
+            {
+                // This searches all the items on the ground for a
+                // corpse.  Only one of a stack will be raised.
+                while (corps != NON_ITEM)
+                {
+                    if (animate_a_corpse(a.x, a.y, CORPSE_BODY, beha,
+                                         hitting, god_gift, actual, true))
+                    {
+                        number_raised++;
+                        if (see_grid(env.show, you.pos(), a))
+                            number_seen++;
+                        break;
+                    }
+
+                    corps = mitm[corps].link;
+                }
+            }
+        }
+    }
+
+    return (number_raised);
+}
+
 // Simulacrum
 //
 // This spell extends creating undead to Ice mages, as such it's high
