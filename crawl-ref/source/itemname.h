@@ -113,7 +113,7 @@ bool is_emergency_item( const item_def& item );
 bool is_good_item(const item_def &item);
 bool is_bad_item(const item_def &item);
 bool is_dangerous_item( const item_def& item );
-bool is_useless_item(const item_def &item);
+bool is_useless_item(const item_def &item, bool temp = false);
 
 std::string make_name( unsigned long seed, bool all_caps );
 
@@ -135,7 +135,8 @@ void set_ident_type( object_class_type basetype, int subtype,
 /* ***********************************************************************
  * called from: command - itemname - invent.h
  * *********************************************************************** */
-const std::string menu_colour_item_prefix(const item_def &item);
+const std::string menu_colour_item_prefix(const item_def &item,
+                                          bool temp = true);
 const std::string get_menu_colour_prefix_tags(item_def &item,
                                               description_level_type desc);
 const std::string get_message_colour_tags(item_def &item,

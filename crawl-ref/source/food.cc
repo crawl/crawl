@@ -282,7 +282,8 @@ static bool _prepare_butchery(bool can_butcher, bool barehand_butcher,
     }
 
     you.turn_is_over = true;
-    // switched to a good butchering tool
+
+    // Switched to a good butchering tool.
     return (true);
 }
 
@@ -1946,6 +1947,9 @@ bool is_preferred_food(const item_def &food)
     // like blood potions.
     if (you.species == SP_VAMPIRE)
         return (is_blood_potion(food));
+
+    if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE)
+        return (!player_mutation_level(MUT_CARNIVOROUS));
 
     if (food.base_type != OBJ_FOOD)
         return (false);

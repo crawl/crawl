@@ -80,7 +80,6 @@ lua_file = lua/runrest.lua
 lua_file = lua/gearset.lua
 lua_file = lua/eat.lua
 lua_file = lua/trapwalk.lua
-lua_file = lua/pickup.lua
 
 # kills.lua yields more information at the cost of huge dumps.
 # lua_file = lua/kills.lua
@@ -215,28 +214,30 @@ include = travel_stoppers.txt
 # sort_menus = pickup: true : basename, qualname, curse, qty
 # msg_condense_repeats = false
 
+
 ##### 4-j	Messages and Display Enhancements #####
 #
 # hp_warning = 10
 # mp_warning = 0
-
 # hp_colour = 50:yellow, 25:red
 # mp_colour = 50:yellow, 25:red
-# status_caption_colour = yellow
-# delay_message_clear    = true
-# show_inventory_weights = true
-# show_gold_turns = true
-# show_beam   = false
-# item_stack_summary_minimum = 5
-# list_rotten = false
-# mlist_min_height = 5
-# msg_max_height = 10
+
+# status_caption_colour        = yellow
+# classic_hud                  = true
+# mlist_min_height             = 5
+# msg_max_height               = 10
 # mlist_allow_alternate_layout = true
-# classic_hud = true
+# show_gold_turns              = true
+
+# delay_message_clear        = true
+# show_inventory_weights     = true
+# item_stack_summary_minimum = 5
+# list_rotten                = false
+
+# show_beam                  = false
 
 #####          Colours (messages and menus) #####
 #
-# menu_colour_prefix_id    = true
 menu_colour_prefix_class = true
 
 # Food is colour coded in standard_colours.txt as follows:

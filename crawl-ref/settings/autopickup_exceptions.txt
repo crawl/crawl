@@ -5,7 +5,6 @@ ae := autopickup_exceptions
 # curare is always dangerous on the floor
 ae = <curare-tipped
 
-
 ### exclusions ###
 
 # Don't autopickup in the Abyss
@@ -16,17 +15,15 @@ function ch_autopickup(it)
 end
 end >
 
-# Excluding amulets as you only need one of each. Also for some rings.
-# There is some (intended) overlap with pickup.lua, which also excludes
-# the ring of hunger, for example.
+# Exclude potentially useful items of high risk, like ?torment.
+ae = dangerous_item
+
+# Excluding amulets as you only need one of each. (If you know the
+# subtype that means you already have one of it.) Also for some rings.
+# Some items may already be excluded as bad_item, e.g. inaccuracy.
 ae = amulet of (inaccuracy|gourmand|controlled flight|warding)
 ae = amulet of (resist mutation|resist slow|clarity|rage)
 ae = ring of (see invisible|levitation|poison resistance|hunger)
 ae = ring of (fire|ice|sustenance|invisibility)
 ae = ring of (magical power|regeneration)
-
-: if you.god() == "Trog" then
-ae = wizardry
-ae = staff
-: end
 

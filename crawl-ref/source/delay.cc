@@ -492,6 +492,7 @@ void stop_delay( bool stop_stair_travel )
             turn_corpse_into_skeleton(corpse, 90);
         }
         did_god_conduct(DID_DRINK_BLOOD, 8);
+        delay.duration = 0;
         pop_delay();
         break;
     }
@@ -746,7 +747,7 @@ void handle_delay( void )
             {
                 mpr("The corpse rots away into a skeleton!");
                 if (delay.type == DELAY_BUTCHER
-                    || delay.type == DELAY_BOTTLE_BLOOD)
+                    || delay.type == DELAY_BOTTLE_BLOOD) // Shouldn't happen.
                 {
                     if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                         xom_check_corpse_waste();

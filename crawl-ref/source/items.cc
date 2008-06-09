@@ -2190,7 +2190,8 @@ void autoinscribe()
 static inline std::string _autopickup_item_name(const item_def &item)
 {
     return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
-        + item.name(DESC_PLAIN);
+           + menu_colour_item_prefix(item, false)
+           + item.name(DESC_PLAIN);
 }
 
 static bool _is_denied_autopickup(const item_def &item, std::string &iname)
@@ -2230,12 +2231,8 @@ bool item_needs_autopickup(const item_def &item)
 
     std::string itemname;
     return ((Options.autopickups & (1L << item.base_type)
-                && !is_useless_item(item) && !is_inedible(item)
-                && !is_dangerous_item(item)
-#ifdef CLUA_BINDINGS
-                && clua.callbooleanfn(true, "ch_autopickup", "u", &item)
-#endif
-              || _is_forced_autopickup(item, itemname))
+                    && !is_useless_item(item) && !is_inedible(item)
+                || _is_forced_autopickup(item, itemname))
             && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
             && !_is_denied_autopickup(item, itemname));
 }

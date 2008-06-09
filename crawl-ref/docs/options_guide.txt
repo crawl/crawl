@@ -1251,8 +1251,11 @@ menu_colour = <match>:<colour>:<regex>
            identified, evil_item wand of draining (4)
            unidentified, equipped, artefact sparkling ring
 
+        The same prefixes can also be used for highlighting prompts pertaining
+        to items matching the description, or to define autopickup_exceptions.
+
         If you want to colour all items that contain a certain prefix, use
-          menu_colour = lightgreen:.*poisonous.*
+          menu_colour = lightgreen:poisonous
 
         To colour worn stuff and highlight cursed items, take
           menu_colour = inventory:lightred:equipped.* cursed
@@ -1261,12 +1264,12 @@ menu_colour = <match>:<colour>:<regex>
 
         To colour identified artefacts, try
           menu_colour = inventory:white:( [-+] the)
-        or, if menu_colour_prefix_id is true,
+        or
           menu_colour = inventory:white:identified.*artefact
 
         If you frequently die because you forget to use emergency items, 
         try
-          menu_colour = inventory:cyan:(potions? of heal wounds|blinking)
+          menu_colour = inventory:cyan:emergency_item
           menu_colour = inventory:lightcyan:wand of (fire|cold|draining)
 
         To quickly check what potions were trashed by a mummy curse, use
@@ -1280,27 +1283,10 @@ menu_colour = <match>:<colour>:<regex>
         white:
           menu_colour = notes:white:Reached XP level
 
-menu_colour_prefix_id = false
-        Setting this option to true will prefix the string against which
-        menu_colour regexes are matched (not the string
-        displayed) with the item's identification state: "unidentified"
-        for unidentified, "known" for wands for which you know the type
-        but don't know the number of charges, and for rings with plusses
-        for which you know the type but don't know the plus value, and
-        "identified" for other identified items.
-
-        Note that the prefix is put before the the *entire* string which
-        is displayed, so if you're wielding an uncursed dagger which has
-        the 'a' slot, the string the regexes will match against is
-        "identified  a - an uncursed dagger (weapon)".
-
 menu_colour_prefix_class = false
         Setting this option to true will prefix the string against which
         menu_colour regexes are matched (not the string displayed) with
-        the item's object type: armour, weapon, wand, etc.  If both this
-        option and menu_colour_prefix_id are set to true, then the 
-        identification string comes before the object type string (i.e., 
-        "identified weapon", "known wand", etc).
+        the item's object type: armour, weapon, wand, etc.
 
         Note that the prefix is put before the the *entire* string which
         is displayed, so if you're wielding a uncursed dagger which has

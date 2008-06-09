@@ -2255,15 +2255,20 @@ bool is_bad_item(const item_def &item)
             return (false);
         }
     case OBJ_POTIONS:
+        // Can't be bad if you can't use them.
+        if (you.species == SP_MUMMY)
+            return (false);
+
         switch (item.sub_type)
         {
         case POT_CONFUSION:
         case POT_SLOWING:
         case POT_DEGENERATION:
         case POT_DECAY:
+        case POT_PARALYSIS:
+        // Well, strictly poison is not that bad if you're poison resistant...
         case POT_POISON:
         case POT_STRONG_POISON:
-        case POT_PARALYSIS:
             return (true);
         case POT_MUTATION:
             return (you.is_undead
@@ -2334,7 +2339,7 @@ bool is_dangerous_item(const item_def &item)
     }
 }
 
-bool is_useless_item(const item_def &item)
+bool is_useless_item(const item_def &item, bool temp)
 {
     if (!item_type_known(item))
         return (false);
@@ -2345,6 +2350,7 @@ bool is_useless_item(const item_def &item)
         return (!can_wear_armour(item, false, true));
 
     case OBJ_SCROLLS:
+        // A bad item is always useless.
         if (is_bad_item(item))
             return (true);
 
@@ -2362,31 +2368,39 @@ bool is_useless_item(const item_def &item)
 
     case OBJ_POTIONS:
     {
-        // Certainly not useless if it can be used for attacking.
-        if (is_bad_item(item))
+        switch (item.sub_type)
+        {
+        case POT_CONFUSION:
+        case POT_SLOWING:
+        case POT_DEGENERATION:
+        case POT_DECAY:
+        case POT_PARALYSIS:
+        case POT_POISON:
+        case POT_STRONG_POISON:
+        case POT_MUTATION:
+            // Certainly not useless if it can be used for attacking.
             return (!player_knows_spell(SPELL_EVAPORATE));
-
+        }
         if (you.species == SP_MUMMY)
             return (true);
 
-        if (you.species == SP_GHOUL
-            || you.species == SP_VAMPIRE && you.hunger_state >= HS_SATIATED)
-        {
-            switch (item.sub_type)
-            {
-            case POT_BERSERK_RAGE:
-            case POT_CURE_MUTATION:
-            case POT_GAIN_STRENGTH:
-            case POT_GAIN_INTELLIGENCE:
-            case POT_GAIN_DEXTERITY:
-                return (true);
-            }
-        }
+        // Do a second switch for the other potions.
         switch (item.sub_type)
         {
+        case POT_BERSERK_RAGE:
+        case POT_CURE_MUTATION:
+        case POT_GAIN_STRENGTH:
+        case POT_GAIN_INTELLIGENCE:
+        case POT_GAIN_DEXTERITY:
+            return (you.species == SP_GHOUL
+                    || temp && you.species == SP_VAMPIRE
+                       && you.hunger_state >= HS_SATIATED);
+
         case POT_LEVITATION:
             return (you.permanent_levitation() || you.permanent_flight());
+
         case POT_PORRIDGE:
+        case POT_WATER:
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
             return (!can_ingest(item.base_type, item.sub_type, true, true,
@@ -2429,12 +2443,16 @@ bool is_useless_item(const item_def &item)
             return (item.sub_type == RING_WIZARDRY
                     || item.sub_type == AMU_RAGE);
         }
+        return (false);
+    case OBJ_STAVES:
+        if (you.religion == GOD_TROG && !item_is_rod(item))
+            return (true);
     default:
         return (false);
     }
 }
 
-const std::string menu_colour_item_prefix(const item_def &item)
+const std::string menu_colour_item_prefix(const item_def &item, bool temp)
 {
     std::vector<std::string> prefixes;
 
@@ -2480,7 +2498,7 @@ const std::string menu_colour_item_prefix(const item_def &item)
         prefixes.push_back("dangerous_item");
     if (is_bad_item(item))
         prefixes.push_back("bad_item");
-    if (is_useless_item(item))
+    if (is_useless_item(item, temp))
         prefixes.push_back("useless_item");
 
     switch (item.base_type)
@@ -2515,6 +2533,13 @@ const std::string menu_colour_item_prefix(const item_def &item)
             prefixes.push_back("contaminated");
         else if (causes_rot(item))
             prefixes.push_back("rot-inducing");
+        break;
+
+    case OBJ_POTIONS:
+        if (is_good_god(you.religion) && is_blood_potion(item))
+            prefixes.push_back("evil_eating");
+        if (is_preferred_food(item))
+            prefixes.push_back("preferred");
         break;
 
     case OBJ_WEAPONS:
