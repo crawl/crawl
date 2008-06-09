@@ -40,15 +40,6 @@ void down_stairs(int old_level,
                  dungeon_feature_type force_stair = DNGN_UNSEEN,
                  entry_cause_type entry_cause = EC_UNKNOWN);
 
-cloud_type beam2cloud(beam_type flavour);
-beam_type cloud2beam(cloud_type flavour);
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void in_a_cloud(void);
-
 // Created Sept 1, 2000 -- bwr
 /* ***********************************************************************
  * called from: acr misc
@@ -109,10 +100,6 @@ std::string weird_writing();
 std::string weird_smell();
 
 std::string weird_sound();
-
-std::string cloud_name(cloud_type type);
-
-bool is_damaging_cloud(cloud_type type, bool temp = false);
 
 void curare_hits_player(int agent, int degree);
 

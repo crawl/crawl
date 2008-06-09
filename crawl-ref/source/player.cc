@@ -35,6 +35,7 @@
 
 #include "branch.h"
 #include "cio.h"
+#include "cloud.h"
 #include "clua.h"
 #include "delay.h"
 #include "dgnevent.h"

@@ -50,6 +50,15 @@ void manage_clouds(void);
 bool is_opaque_cloud(unsigned char cloud_idx);
 int steam_cloud_damage(const cloud_struct &cloud);
 
+cloud_type beam2cloud(beam_type flavour);
+beam_type cloud2beam(cloud_type flavour);
+
+void in_a_cloud(void);
+
+std::string cloud_name(cloud_type type);
+
+bool is_damaging_cloud(cloud_type type, bool temp = false);
+
 void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
                        int x, int y, int size, int power);
 

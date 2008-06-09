@@ -20,10 +20,11 @@
 
 #include "branch.h"
 #include "cloud.h"
+#include "it_use2.h"
 #include "mapmark.h"
-#include "misc.h"
 #include "ouch.h"
 #include "place.h"
+#include "player.h"
 #include "stuff.h"
 #include "terrain.h"
 
@@ -322,6 +323,308 @@ cloud_type random_smoke_type()
     return CLOUD_DEBUGGING;
 }
 
+cloud_type beam2cloud(beam_type flavour)
+{
+    switch (flavour)
+    {
+    default:
+    case BEAM_NONE:
+        return CLOUD_NONE;
+    case BEAM_FIRE:
+    case BEAM_POTION_FIRE:
+        return CLOUD_FIRE;
+    case BEAM_POTION_STINKING_CLOUD:
+        return CLOUD_STINK;
+    case BEAM_COLD:
+    case BEAM_POTION_COLD:
+        return CLOUD_COLD;
+    case BEAM_POISON:
+    case BEAM_POTION_POISON:
+        return CLOUD_POISON;
+    case BEAM_POTION_BLACK_SMOKE:
+        return CLOUD_BLACK_SMOKE;
+    case BEAM_POTION_GREY_SMOKE:
+        return CLOUD_GREY_SMOKE;
+    case BEAM_POTION_BLUE_SMOKE:
+        return CLOUD_BLUE_SMOKE;
+    case BEAM_POTION_PURP_SMOKE:
+        return CLOUD_PURP_SMOKE;
+    case BEAM_STEAM:
+    case BEAM_POTION_STEAM:
+        return CLOUD_STEAM;
+    case BEAM_MIASMA:
+    case BEAM_POTION_MIASMA:
+        return CLOUD_MIASMA;
+    case BEAM_RANDOM:
+        return CLOUD_RANDOM;
+    }
+}
+
+beam_type cloud2beam(cloud_type flavour)
+{
+    switch (flavour)
+    {
+    default:
+    case CLOUD_NONE:
+        return BEAM_NONE;
+    case CLOUD_FIRE:
+        return BEAM_FIRE;
+    case CLOUD_STINK:
+        return BEAM_POTION_STINKING_CLOUD;
+    case CLOUD_COLD:
+        return BEAM_COLD;
+    case CLOUD_POISON:
+        return BEAM_POISON;
+    case CLOUD_BLACK_SMOKE:
+        return BEAM_POTION_BLACK_SMOKE;
+    case CLOUD_GREY_SMOKE:
+        return BEAM_POTION_GREY_SMOKE;
+    case CLOUD_BLUE_SMOKE:
+        return BEAM_POTION_BLUE_SMOKE;
+    case CLOUD_PURP_SMOKE:
+        return BEAM_POTION_PURP_SMOKE;
+    case CLOUD_STEAM:
+        return BEAM_STEAM;
+    case CLOUD_MIASMA:
+        return BEAM_MIASMA;
+    case CLOUD_RANDOM:
+        return BEAM_RANDOM;
+    }
+}
+
+void in_a_cloud()
+{
+    int cl = env.cgrid[you.x_pos][you.y_pos];
+    int hurted = 0;
+    int resist;
+
+    if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+    {
+        mpr("Your icy shield dissipates!", MSGCH_DURATION);
+        you.duration[DUR_CONDENSATION_SHIELD] = 0;
+        you.redraw_armour_class = 1;
+    }
+
+    switch (env.cloud[cl].type)
+    {
+    case CLOUD_FIRE:
+        if (you.duration[DUR_FIRE_SHIELD])
+            return;
+
+        mpr("You are engulfed in roaring flames!");
+
+        resist = player_res_fire();
+
+        if (resist <= 0)
+        {
+            hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
+
+            if (resist < 0)
+                hurted += ((random2avg(14, 2) + 3) * you.time_taken) / 10;
+
+            hurted -= random2(player_AC());
+
+            if (hurted < 1)
+                hurted = 0;
+            else
+                ouch( hurted, cl, KILLED_BY_CLOUD, "flame" );
+        }
+        else
+        {
+            canned_msg(MSG_YOU_RESIST);
+            hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
+            hurted /= (1 + resist * resist);
+            ouch( hurted, cl, KILLED_BY_CLOUD, "flame" );
+        }
+        expose_player_to_element(BEAM_FIRE, 7);
+        break;
+
+    case CLOUD_STINK:
+        // If you don't have to breathe, unaffected
+        mpr("You are engulfed in noxious fumes!");
+        if (player_res_poison())
+            break;
+
+        hurted += (random2(3) * you.time_taken) / 10;
+        if (hurted < 1)
+            hurted = 0;
+        else
+            ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
+                    "noxious fumes" );
+
+        if (1 + random2(27) >= you.experience_level)
+        {
+            mpr("You choke on the stench!");
+            confuse_player( (coinflip() ? 3 : 2) );
+        }
+        break;
+
+    case CLOUD_COLD:
+        mpr("You are engulfed in freezing vapours!");
+
+        resist = player_res_cold();
+
+        if (resist <= 0)
+        {
+            hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
+
+            if (resist < 0)
+                hurted += ((random2avg(14, 2) + 3) * you.time_taken) / 10;
+
+            hurted -= random2(player_AC());
+            if (hurted < 0)
+                hurted = 0;
+
+            ouch( hurted, cl, KILLED_BY_CLOUD, "freezing vapour" );
+        }
+        else
+        {
+            canned_msg(MSG_YOU_RESIST);
+            hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
+            hurted /= (1 + resist * resist);
+            ouch( hurted, cl, KILLED_BY_CLOUD, "freezing vapour" );
+        }
+        expose_player_to_element(BEAM_COLD, 7);
+        break;
+
+    case CLOUD_POISON:
+        // If you don't have to breathe, unaffected
+        mpr("You are engulfed in poison gas!");
+        if (!player_res_poison())
+        {
+            ouch( (random2(10) * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
+                  "poison gas" );
+            poison_player(1);
+        }
+        break;
+
+    case CLOUD_GREY_SMOKE:
+    case CLOUD_BLUE_SMOKE:
+    case CLOUD_PURP_SMOKE:
+    case CLOUD_BLACK_SMOKE:
+        mpr("You are engulfed in a cloud of smoke!");
+        break;
+
+    case CLOUD_STEAM:
+    {
+        mpr("You are engulfed in a cloud of scalding steam!");
+        if (player_res_steam() > 0)
+        {
+            mpr("It doesn't seem to affect you.");
+            return;
+        }
+
+        const int base_dam = steam_cloud_damage(env.cloud[cl]);
+        hurted += (random2avg(base_dam, 2) * you.time_taken) / 10;
+
+        const int res_fire = player_res_fire();
+        if (res_fire < 0)
+            hurted += (random2(base_dam / 2 + 1) * you.time_taken) / 10;
+        else if (res_fire)
+            hurted /= 1 + (res_fire / 2);
+
+        if (hurted < 0)
+            hurted = 0;
+
+        ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
+              "steam" );
+        break;
+    }
+
+    case CLOUD_MIASMA:
+        mpr("You are engulfed in a dark miasma.");
+
+        if (player_prot_life() > random2(3))
+            return;
+
+        poison_player(1);
+
+        hurted += (random2avg(12, 3) * you.time_taken) / 10;    // 3
+
+        if (hurted < 0)
+            hurted = 0;
+
+        ouch( hurted, cl, KILLED_BY_CLOUD, "foul pestilence" );
+        potion_effect(POT_SLOWING, 5);
+
+        if (you.hp_max > 4 && coinflip())
+            rot_hp(1);
+
+        break;
+    default:
+        break;
+    }
+
+    return;
+}                               // end in_a_cloud()
+
+bool is_damaging_cloud(cloud_type type, bool temp)
+{
+    switch (type)
+    {
+    // always harmful
+    case CLOUD_FIRE:
+    case CLOUD_COLD:
+        return (true);
+
+    // Only harmful if the player doesn't have the necessary resistances.
+    // Takes into account what the player can *know* and what s/he can
+    // also expect to be the case a few turns later (ignores spells).
+    case CLOUD_STINK:
+    case CLOUD_POISON:
+        return (!player_res_poison(false, temp));
+    case CLOUD_STEAM:
+        return (player_res_steam(false, temp) <= 0);
+    case CLOUD_MIASMA:
+        return (player_prot_life(false, temp) <= 2);
+
+    default:
+        // Smoke, never harmful.
+        return (false);
+    }
+}
+
+std::string cloud_name(cloud_type type)
+{
+    switch (type)
+    {
+    case CLOUD_FIRE:
+        return "flame";
+    case CLOUD_STINK:
+        return "noxious fumes";
+    case CLOUD_COLD:
+        return "freezing vapour";
+    case CLOUD_POISON:
+        return "poison gases";
+    case CLOUD_GREY_SMOKE:
+        return "grey smoke";
+    case CLOUD_BLUE_SMOKE:
+        return "blue smoke";
+    case CLOUD_PURP_SMOKE:
+        return "purple smoke";
+    case CLOUD_STEAM:
+        return "steam";
+    case CLOUD_MIASMA:
+        return "foul pestilence";
+    case CLOUD_BLACK_SMOKE:
+        return "black smoke";
+    case CLOUD_MIST:
+        return "thin mist";
+    default:
+        return "buggy goodness";
+    }
+}
+
+////////////////////////////////////////////////////////////////////////
+// cloud_struct
+
+killer_type cloud_struct::beam_thrower() const
+{
+    return (whose == KC_YOU ? KILL_YOU_MISSILE : KILL_MON_MISSILE);
+}
+//////////////////////////////////////////////////////////////////////////
+// Fog machine stuff
+
 void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
                        int x, int y, int size, int power)
 {
@@ -515,10 +818,3 @@ fog_machine_data fogs_lab_type(int level_number)
     return data;
 }
 
-////////////////////////////////////////////////////////////////////////
-// cloud_struct
-
-killer_type cloud_struct::beam_thrower() const
-{
-    return (whose == KC_YOU ? KILL_YOU_MISSILE : KILL_MON_MISSILE);
-}

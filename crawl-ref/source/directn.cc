@@ -34,6 +34,7 @@
 #include "externs.h"
 
 #include "cio.h"
+#include "cloud.h"
 #include "command.h"
 #include "debug.h"
 #include "describe.h"
@@ -41,8 +42,8 @@
 #include "itemname.h"
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h"
 #include "menu.h"
+#include "misc.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"
