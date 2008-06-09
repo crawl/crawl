@@ -511,8 +511,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     // XXX: Mark summoned creatures from priestly monsters as god gifts.
     // Once monsters can worship gods (and, presumably, get invocation
     // lists), this should no longer be needed.
-    const unsigned flags =
-        (mons_class_flag(monster->type, M_PRIEST)) ? MG_GOD_GIFT : 0;
+    const bool is_priest = (mons_class_flag(monster->type, M_PRIEST));
+    const unsigned flags = (is_priest) ? MG_GOD_GIFT : 0;
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",
@@ -653,7 +653,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_ANIMATE_DEAD:
         // see special handling in monstuff::handle_spell() {dlb}
         animate_dead(monster, 5 + random2(5), SAME_ATTITUDE(monster),
-                     monster->foe);
+                     monster->foe, is_priest);
         return;
 
     case SPELL_CALL_IMP: // class 5 demons
