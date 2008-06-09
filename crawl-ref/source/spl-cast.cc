@@ -1434,8 +1434,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    // Summoning spells.  If a god is making you cast one of these
-    // spells, any creature(s) produced will be counted as god gifts.
+    // Spells that create new monsters.  If a god is making you cast one
+    // of these spells, any monsters produced will count as god gifts.
     case SPELL_SUMMON_BUTTERFLIES:
         cast_summon_butterflies(powc, crawl_state.is_god_acting());
         break;
@@ -1545,7 +1545,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_DEATH_CHANNEL:
         cast_death_channel(powc, crawl_state.is_god_acting());
         break;
-    // End of summoning spells.
+    // End of spells that create new monsters.
 
     case SPELL_OZOCUBUS_ARMOUR:
         ice_armour(powc, false);
