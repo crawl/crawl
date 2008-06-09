@@ -1526,7 +1526,8 @@ bool summon_elemental(int pow, bool god_gift,
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, coord_def(targ_x, targ_y),
-                      friendly ? you.pet_target : MHITYOU)) != -1)
+                      friendly ? you.pet_target : MHITYOU,
+                      god_gift ? MF_GOD_GIFT : 0)) != -1)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);

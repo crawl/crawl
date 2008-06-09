@@ -2321,7 +2321,7 @@ bool silver_statue_effects(monsters *mons)
         create_monster(
             mgen_data(
                 summon_any_demon((coinflip() ? DEMON_COMMON
-                                  : DEMON_LESSER)),
+                                             : DEMON_LESSER)),
                 BEH_HOSTILE, 5, you.pos(), MHITYOU ));
         return (true);
     }

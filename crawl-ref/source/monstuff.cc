@@ -1006,7 +1006,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 const bool god_gift = you.attribute[ATTR_DIVINE_DEATH_CHANNEL];
 
                 // Don't allow 0-headed hydras to become spectral hydras.
-                if ((spectre != MONS_HYDRA || monster->number)
+                if ((spectre != MONS_HYDRA || monster->number != 0)
                     && create_monster(
                         mgen_data( MONS_SPECTRAL_THING, BEH_FRIENDLY,
                                    0, monster->pos(), you.pet_target,
