@@ -560,6 +560,25 @@ bool summon_demon_type(monster_type mon, int pow, bool god_gift)
     return (success);
 }
 
+bool cast_shadow_creatures(bool god_gift)
+{
+    bool success = false;
+
+    if (create_monster(
+           mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2,
+                     you.pos(), you.pet_target,
+                     god_gift ? MF_GOD_GIFT : 0)) != -1)
+    {
+        success = true;
+
+        mpr("Wisps of shadow whirl around you...");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
 bool cast_summon_horrible_things(int pow, bool god_gift)
 {
     if (one_chance_in(3)
@@ -616,7 +635,7 @@ bool cast_summon_horrible_things(int pow, bool god_gift)
     if (count > 0)
     {
         mprf("Some Thing%s answered your call!",
-             (count > 1) ? "s" : "");
+             count > 1 ? "s" : "");
         return (true);
     }
 
@@ -688,25 +707,6 @@ bool cast_simulacrum(int pow, bool god_gift)
     mpr("You need to wield a piece of raw flesh for this spell to be "
         "effective!");
     return (false);
-}
-
-bool cast_shadow_creatures(bool god_gift)
-{
-    bool success = false;
-
-    if (create_monster(
-           mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2,
-                     you.pos(), you.pet_target,
-                     god_gift ? MF_GOD_GIFT : 0)) != -1)
-    {
-        success = true;
-
-        mpr("Wisps of shadow whirl around you...");
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
 }
 
 bool cast_twisted_resurrection(int pow, bool god_gift)

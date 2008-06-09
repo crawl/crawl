@@ -120,10 +120,10 @@ bool summon_demon_type(monster_type mon, int pow, bool god_gift = false);
 bool cast_summon_demon(int pow, bool god_gift = false);
 bool cast_demonic_horde(int pow, bool god_gift = false);
 bool cast_summon_greater_demon(int pow, bool god_gift = false);
+bool cast_shadow_creatures(bool god_gift = false);
 bool cast_summon_horrible_things(int pow, bool god_gift = false);
 
 bool cast_simulacrum(int pow, bool god_gift = false);
-bool cast_shadow_creatures(bool god_gift = false);
 bool cast_twisted_resurrection(int pow, bool god_gift = false);
 bool cast_summon_wraiths(int pow, bool god_gift = false);
 bool cast_death_channel(int pow, bool god_gift = false);

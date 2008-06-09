@@ -1519,16 +1519,16 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_greater_demon(powc);
         break;
 
+    case SPELL_SHADOW_CREATURES:
+        cast_shadow_creatures();
+        break;
+
     case SPELL_SUMMON_HORRIBLE_THINGS:
         cast_summon_horrible_things(powc);
         break;
 
     case SPELL_SIMULACRUM:
         cast_simulacrum(powc);
-        break;
-
-    case SPELL_SHADOW_CREATURES:
-        cast_shadow_creatures();
         break;
 
     case SPELL_TWISTED_RESURRECTION:
