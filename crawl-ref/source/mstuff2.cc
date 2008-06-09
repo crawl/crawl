@@ -88,12 +88,10 @@ void mons_trap(struct monsters *monster)
         }
     }
 
-    //
     // Trap damage to monsters is not a function of level, because they
     // are fairly stupid and tend to have fewer hp than players -- this
     // choice prevents traps from easily killing large monsters fairly
     // deep within the dungeon.
-    //
     switch (env.trap[which_trap].type)
     {
     case TRAP_DART:
