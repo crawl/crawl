@@ -1051,8 +1051,9 @@ bool cast_simulacrum(int pow, bool god_gift)
 
         if (count > 0)
         {
-            mprf("%s icy figure form%s before you!",
-                count > 1 ? "Some" : "An", count > 1 ? "s" : "");
+            mprf("%s icy figure%s form%s before you!",
+                count > 1 ? "Some" : "An", count > 1 ? "s" : "",
+                count > 1 ? "" : "s");
             return (true);
         }
 
