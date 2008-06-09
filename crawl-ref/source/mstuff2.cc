@@ -511,7 +511,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     // XXX: Mark summoned creatures from priestly monsters as god gifts.
     // Once monsters can worship gods (and, presumably, get invocation
     // lists), this should no longer be needed.
-    const unsigned flags = mons_is_priest(monster) ? MG_GOD_GIFT : 0;
+    const unsigned flags =
+        (mons_class_flag(monster->type, M_PRIEST)) ? MG_GOD_GIFT : 0;
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",

@@ -940,7 +940,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
 
                 // Beogh hates priests of other gods.
-                if (mons_is_priest(monster))
+                if (mons_class_flag(monster->type, M_PRIEST))
                 {
                     did_god_conduct(DID_KILL_PRIEST,
                                     monster->hit_dice, true, monster);
@@ -4412,7 +4412,7 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
                 if (silenced(monster->x, monster->y))
                     return (false);
 
-                if (mons_is_priest(monster))
+                if (mons_class_flag(monster->type, M_PRIEST))
                 {
                     switch (random2(3))
                     {
@@ -4552,7 +4552,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
     }
 
     if ((mons_class_flag(monster->type, M_ACTUAL_SPELLS)
-            || mons_is_priest(monster))
+            || mons_class_flag(monster->type, M_PRIEST))
         && monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
     {
         return (false);           //jmf: shapeshifters don't get spells, just
