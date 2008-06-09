@@ -24,6 +24,7 @@
 #ifdef DOS
 #include <conio.h>
 #endif
+#include "clua.h"
 
 #include "externs.h"
 
@@ -32,6 +33,7 @@
 #include "initfile.h"
 #include "invent.h"
 #include "it_use2.h"
+#include "item_use.h"
 #include "itemprop.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -2151,54 +2153,335 @@ bool is_interesting_item( const item_def& item )
     return (false);
 }
 
+// Returns true if an item is a potential life saver in an emergency situation.
+bool is_emergency_item(const item_def &item)
+{
+    if (!item_type_known(item))
+        return (false);
+
+    switch (item.base_type)
+    {
+    case OBJ_WANDS:
+        switch (item.sub_type)
+        {
+        case WAND_HASTING:
+        case WAND_HEALING:
+        case WAND_TELEPORTATION:
+            return (true);
+        default:
+            return (false);
+        }
+    case OBJ_SCROLLS:
+        switch (item.sub_type)
+        {
+        case SCR_TELEPORTATION:
+        case SCR_BLINKING:
+        case SCR_FEAR:
+            return (true);
+        default:
+            return (false);
+        }
+    case OBJ_POTIONS:
+        if (you.species == SP_MUMMY)
+            return (false);
+
+        switch (item.sub_type)
+        {
+        case POT_SPEED:
+        case POT_HEALING:
+        case POT_HEAL_WOUNDS:
+        case POT_RESISTANCE:
+            return (true);
+        default:
+            return (false);
+        }
+    default:
+        return (false);
+    }
+}
+
+// Returns true if an item can be considered particularly good.
+bool is_good_item(const item_def &item)
+{
+    if (!item_type_known(item))
+        return (false);
+
+    if (is_emergency_item(item))
+        return (true);
+
+    if (is_useless_item(item) || is_dangerous_item(item))
+        return (false);
+
+    switch (item.base_type)
+    {
+    case OBJ_SCROLLS:
+        return (item.sub_type == SCR_ACQUIREMENT);
+    case OBJ_POTIONS:
+        switch (item.sub_type)
+        {
+        case POT_CURE_MUTATION:
+        case POT_GAIN_STRENGTH:
+        case POT_GAIN_INTELLIGENCE:
+        case POT_GAIN_DEXTERITY:
+        case POT_EXPERIENCE:
+        case POT_MAGIC:
+        case POT_BERSERK_RAGE:
+        case POT_MIGHT:
+        case POT_RESTORE_ABILITIES:
+            return (true);
+        default:
+            return (false);
+        }
+    default:
+        return (false);
+    }
+}
+
+// Returns true if using an item only has harmful effects.
+bool is_bad_item(const item_def &item)
+{
+    if (!item_type_known(item))
+        return (false);
+
+    switch (item.base_type)
+    {
+    case OBJ_SCROLLS:
+        switch (item.sub_type)
+        {
+        case SCR_CURSE_ARMOUR:
+        case SCR_CURSE_WEAPON:
+            return (true);
+        default:
+            return (false);
+        }
+    case OBJ_POTIONS:
+        switch (item.sub_type)
+        {
+        case POT_CONFUSION:
+        case POT_SLOWING:
+        case POT_DEGENERATION:
+        case POT_DECAY:
+        case POT_POISON:
+        case POT_STRONG_POISON:
+        case POT_PARALYSIS:
+            return (true);
+        case POT_MUTATION:
+            return (you.is_undead
+                    && (you.species != SP_VAMPIRE
+                        || you.hunger_state < HS_SATIATED));
+        default:
+            return (false);
+        }
+    case OBJ_JEWELLERY:
+        switch (item.sub_type)
+        {
+        case AMU_INACCURACY:
+            return (true);
+        case RING_HUNGER:
+            // Even Vampires can use this ring.
+            return (!you.is_undead);
+        default:
+            return (false);
+        }
+    case OBJ_MISCELLANY:
+        return (item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION);
+
+    default:
+        return (false);
+    }
+}
+
+// Returns true if using an item is risky but may occasionally be worthwhile.
+bool is_dangerous_item(const item_def &item)
+{
+    if (!item_type_known(item))
+    {
+        // Use-IDing these is extremely dangerous!
+        if (item.base_type == OBJ_MISCELLANY
+            && (item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING
+                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
+                || item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION))
+        {
+            return (true);
+        }
+        return (false);
+    }
+
+    switch (item.base_type)
+    {
+    case OBJ_SCROLLS:
+        switch (item.sub_type)
+        {
+        case SCR_IMMOLATION:
+        case SCR_TORMENT:
+            return (true);
+        default:
+            return (false);
+        }
+    case OBJ_POTIONS:
+        switch (item.sub_type)
+        {
+        case POT_MUTATION:
+            // Only living characters can mutate.
+            return (!you.is_undead
+                    || you.species == SP_VAMPIRE
+                       && you.hunger_state >= HS_SATIATED);
+        default:
+            return (false);
+        }
+    default:
+        return (false);
+    }
+}
+
+bool is_useless_item(const item_def &item)
+{
+    if (!item_type_known(item))
+        return (false);
+
+    switch (item.base_type)
+    {
+    case OBJ_ARMOUR:
+        return (!can_wear_armour(item, false, true));
+
+    case OBJ_SCROLLS:
+        if (is_bad_item(item))
+            return (true);
+
+        switch (item.sub_type)
+        {
+        case SCR_PAPER:
+        case SCR_RANDOM_USELESSNESS:
+        case SCR_NOISE:
+            return (true);
+        default:
+            return (false);
+        }
+    case OBJ_WANDS:
+        return (item.plus2 == ZAPCOUNT_EMPTY);
+
+    case OBJ_POTIONS:
+    {
+        // Certainly not useless if it can be used for attacking.
+        if (is_bad_item(item))
+            return (!player_knows_spell(SPELL_EVAPORATE));
+
+        if (you.species == SP_MUMMY)
+            return (true);
+
+        if (you.species == SP_GHOUL
+            || you.species == SP_VAMPIRE && you.hunger_state >= HS_SATIATED)
+        {
+            switch (item.sub_type)
+            {
+            case POT_BERSERK_RAGE:
+            case POT_CURE_MUTATION:
+            case POT_GAIN_STRENGTH:
+            case POT_GAIN_INTELLIGENCE:
+            case POT_GAIN_DEXTERITY:
+                return (true);
+            }
+        }
+        switch (item.sub_type)
+        {
+        case POT_LEVITATION:
+            return (you.permanent_levitation() || you.permanent_flight());
+        case POT_PORRIDGE:
+        case POT_BLOOD:
+        case POT_BLOOD_COAGULATED:
+            return (!can_ingest(item.base_type, item.sub_type, true, true,
+                                                               false));
+        }
+
+        return (false);
+    }
+    case OBJ_JEWELLERY:
+        if (is_bad_item(item))
+            return (true);
+
+        if (you.species == SP_MUMMY || you.species == SP_GHOUL)
+        {
+            switch (item.sub_type)
+            {
+            case AMU_RAGE:
+            case RING_REGENERATION:
+            case RING_SUSTENANCE:
+            case RING_HUNGER:
+            case RING_LIFE_PROTECTION:
+                return (true);
+            }
+        }
+
+        if (item.sub_type == RING_SEE_INVISIBLE)
+            return (player_mutation_level(MUT_ACUTE_VISION));
+
+        if (item.sub_type == RING_POISON_RESISTANCE)
+        {
+            return (you.species != SP_VAMPIRE
+                    && player_mutation_level(MUT_POISON_RESISTANCE));
+        }
+
+        if (item.sub_type == AMU_CONTROLLED_FLIGHT)
+            return (player_genus(GENPC_DRACONIAN) || you.permanent_flight());
+
+        if (you.religion == GOD_TROG)
+        {
+            return (item.sub_type == RING_WIZARDRY
+                    || item.sub_type == AMU_RAGE);
+        }
+    default:
+        return (false);
+    }
+}
+
 const std::string menu_colour_item_prefix(const item_def &item)
 {
     std::vector<std::string> prefixes;
 
-    if (Options.menu_colour_prefix_id)
+    if (item_ident(item, ISFLAG_KNOW_TYPE))
+        prefixes.push_back("identified");
+    else
     {
-        if (item_ident(item, ISFLAG_KNOW_TYPE)
-            || item.base_type == OBJ_FOOD
-            || item.base_type == OBJ_CORPSES)
+        if (get_ident_type(item.base_type, item.sub_type) == ID_KNOWN_TYPE)
         {
-            prefixes.push_back("identified");
+            // Wands are only fully identified if we know the
+            // number of charges.
+            if (item.base_type == OBJ_WANDS)
+                prefixes.push_back("known");
+
+            // Rings are fully identified simply by knowing their
+            // type, unless the ring has plusses, like a ring of
+            // dexterity.
+            else if (item.base_type == OBJ_JEWELLERY
+                     && !jewellery_is_amulet(item))
+            {
+                if (item.plus == 0 && item.plus2 == 0)
+                    prefixes.push_back("identified");
+                else
+                    prefixes.push_back("known");
+            }
+            // All other types of magical items are fully identified
+            // simply by knowing the type
+            else
+                prefixes.push_back("identified");
         }
         else
-        {
-            if (get_ident_type(item.base_type,
-                               item.sub_type) == ID_KNOWN_TYPE)
-            {
-                // Wands are only fully identified if we know the
-                // number of charges.
-                if (item.base_type == OBJ_WANDS)
-                    prefixes.push_back("known");
-
-                // Rings are fully identified simply by knowing their
-                // type, unless the ring has plusses, like a ring of
-                // dexterity.
-                else if (item.base_type == OBJ_JEWELLERY
-                         && !jewellery_is_amulet(item))
-                {
-                    if (item.plus == 0 && item.plus2 == 0)
-                        prefixes.push_back("identified");
-                    else
-                        prefixes.push_back("known");
-                }
-                // All other types of magical items are fully identified
-                // simply by knowing the type
-                else
-                    prefixes.push_back("identified");
-            }
-            else
-                prefixes.push_back("unidentified");
-        }
+            prefixes.push_back("unidentified");
     }
 
-    if (is_good_god(you.religion) && is_evil_item(item)
-        && item_type_known(item))
-    {
+    if (god_dislikes_item_handling(item))
         prefixes.push_back("evil_item");
-    }
+
+    if (is_emergency_item(item))
+        prefixes.push_back("emergency_item");
+    if (is_good_item(item))
+        prefixes.push_back("good_item");
+    if (is_dangerous_item(item))
+        prefixes.push_back("dangerous_item");
+    if (is_bad_item(item))
+        prefixes.push_back("bad_item");
+    if (is_useless_item(item))
+        prefixes.push_back("useless_item");
 
     switch (item.base_type)
     {
@@ -2219,14 +2502,8 @@ const std::string menu_colour_item_prefix(const item_def &item)
             prefixes.push_back("evil_eating");
         }
 
-        if (item.base_type != OBJ_CORPSES
-               && !can_ingest(item.base_type, item.sub_type, true, true, false)
-            || you.species == SP_VAMPIRE && !mons_has_blood(item.plus)
-            || food_is_rotten(item)
-               && !player_mutation_level(MUT_SAPROVOROUS))
-        {
+        if (is_inedible(item))
             prefixes.push_back("inedible");
-        }
         else if (is_preferred_food(item))
             prefixes.push_back("preferred");
 

@@ -580,51 +580,51 @@ bool is_player_same_species(const int mon, bool transform)
     }
 }
 
-// checks whether the player's current species can
-// use (usually wear) a given piece of equipment
+// Checks whether the player's current species can
+// use (usually wear) a given piece of equipment.
 // Note that EQ_BODY_ARMOUR and EQ_HELMET only check
-// the ill-fitting variant (i.e. not caps and robes)
+// the ill-fitting variant (i.e. not caps and robes).
 // If special_armour is set to true, special cases
 // such as bardings, light armour and caps are
 // considered. Otherwise these simply return false.
 // -------------------------------------------------
 bool you_can_wear(int eq, bool special_armour)
 {
-   // these can be used by all
-   if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET
-       || eq == EQ_WEAPON || eq == EQ_CLOAK)
-   {
-       return true;
-   }
+    // These can be used by all.
+    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET
+        || eq == EQ_WEAPON || eq == EQ_CLOAK)
+    {
+        return (true);
+    }
 
-   // anyone can wear caps/hats and robes and at least one of buckler/shield
-   if (special_armour
-       && (eq == EQ_HELMET || eq == EQ_BODY_ARMOUR || eq == EQ_SHIELD))
-   {
-       return true;
-   }
+    // Anyone can wear caps/hats and robes and at least one of buckler/shield.
+    if (special_armour
+        && (eq == EQ_HELMET || eq == EQ_BODY_ARMOUR || eq == EQ_SHIELD))
+    {
+        return (true);
+    }
 
-   if (eq == EQ_BOOTS && (you.species == SP_NAGA || you.species == SP_CENTAUR))
-       return (special_armour);
+    if (eq == EQ_BOOTS && (you.species == SP_NAGA || you.species == SP_CENTAUR))
+        return (special_armour);
 
-   // of the remaining items, these races can't wear anything
-   if (you.species == SP_TROLL || you.species == SP_SPRIGGAN
-       || player_genus(GENPC_OGRE) || player_genus(GENPC_DRACONIAN))
-   {
-       return false;
-   }
+    // Of the remaining items, these races can't wear anything.
+    if (you.species == SP_TROLL || you.species == SP_SPRIGGAN
+        || player_genus(GENPC_OGRE) || player_genus(GENPC_DRACONIAN))
+    {
+        return (false);
+    }
 
-   if (you.species == SP_KENKU && (eq == EQ_HELMET || eq == EQ_BOOTS))
-       return false;
+    if (you.species == SP_KENKU && (eq == EQ_HELMET || eq == EQ_BOOTS))
+        return (false);
 
-   if (player_mutation_level(MUT_HORNS) && eq == EQ_HELMET)
-       return (special_armour);
+    if (player_mutation_level(MUT_HORNS) && eq == EQ_HELMET)
+        return (special_armour);
 
-   if (you.species == SP_GHOUL && eq == EQ_GLOVES)
-       return false;
+    if (you.species == SP_GHOUL && eq == EQ_GLOVES)
+        return (false);
 
-   // else no problems
-   return true;
+    // Else, no problems.
+    return (true);
 }
 
 bool player_has_feet()
@@ -826,7 +826,7 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
         break;
 
     case EQ_ALL_ARMOUR:
-        // doesn't make much sense here... be specific. -- bwr
+        // Doesn't make much sense here... be specific. -- bwr
         break;
 
     default:
@@ -1003,7 +1003,7 @@ int player_hunger_rate(void)
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         return 1;
 
-    // jmf: hunger isn't fair while you can't eat
+    // jmf: Hunger isn't fair while you can't eat.
     // Actually, it is since you can detransform any time you like -- bwr
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
         return 0;
@@ -1167,22 +1167,22 @@ int player_res_magic(void)
         break;
     }
 
-    /* randarts */
+    // randarts
     rm += scan_randarts(RAP_MAGIC);
 
-    /* armour  */
+    // armour
     rm += 30 * player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE );
 
-    /* rings of magic resistance */
+    // rings of magic resistance
     rm += 40 * player_equip( EQ_RINGS, RING_PROTECTION_FROM_MAGIC );
 
-    /* Enchantment skill */
+    // Enchantment skill
     rm += 2 * you.skills[SK_ENCHANTMENTS];
 
-    /* Mutations */
+    // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
 
-    /* transformations */
+    // transformations
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
         rm += 50;
 
@@ -1289,14 +1289,14 @@ int player_res_cold(bool calc_unid)
             rc++;
     }
 
-    /* rings of fire resistance/fire */
+    // rings of fire resistance/fire
     rc += player_equip( EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid );
     rc += player_equip( EQ_RINGS, RING_ICE, calc_unid );
 
-    /* rings of ice */
+    // rings of ice
     rc -= player_equip( EQ_RINGS, RING_FIRE, calc_unid );
 
-    /* Staves */
+    // Staves
     rc += player_equip( EQ_STAFF, STAFF_COLD, calc_unid );
 
     // body armour:
@@ -2760,8 +2760,8 @@ int burden_change(void)
 
     if (is_flying_light != was_flying_light)
     {
-        mpr(is_flying_light? "You feel quicker in the air."
-            : "You feel heavier in the air.");
+        mpr(is_flying_light ? "You feel quicker in the air."
+                            : "You feel heavier in the air.");
     }
 
     return you.burden;
@@ -6257,15 +6257,13 @@ bool player::permanent_levitation() const
     // all times. This is so that you can evoke stop-levitation
     // in order to actually cancel levitation (by setting
     // DUR_LEVITATION to 1.) Note that antimagic() won't do this.
-    return (airborne()
-            && (permanent_flight()
-                || player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION )
-                   && you.duration[DUR_LEVITATION] > 1));
+    return (airborne() && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
+               && you.duration[DUR_LEVITATION] > 1);
 }
 
 bool player::permanent_flight() const
 {
-    return (airborne()
+    return (airborne() && wearing_amulet( AMU_CONTROLLED_FLIGHT )
             && you.species == SP_KENKU && you.experience_level >= 15);
 }
 

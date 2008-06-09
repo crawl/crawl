@@ -16,14 +16,8 @@ function ch_autopickup(it)
 end
 end >
 
-# universally bad options and scrolls
-ae = potions? of (confusion|degeneration|poison|strong poison)
-ae = potions? of (slowing|paralysis|decay|water)
-ae = scrolls? of (paper|torment|immolation|curse weapon)
-ae = scrolls? of (curse armour|random uselessness|noise)
-
 # Excluding amulets as you only need one of each. Also for some rings.
-# There is some (intended) overlap with pickup.lua, which also exludes
+# There is some (intended) overlap with pickup.lua, which also excludes
 # the ring of hunger, for example.
 ae = amulet of (inaccuracy|gourmand|controlled flight|warding)
 ae = amulet of (resist mutation|resist slow|clarity|rage)
@@ -31,61 +25,8 @@ ae = ring of (see invisible|levitation|poison resistance|hunger)
 ae = ring of (fire|ice|sustenance|invisibility)
 ae = ring of (magical power|regeneration)
 
-: if you.race() == "Mummy" or you.race() == "Ghoul" then
-ae = ring of life protection
-: end
-
-: if you.race() == "Mummy" then
-ae = potion
-ae = food
-: end
-
-: if you.race() ~= "Vampire" then
-ae = potion.*blood
-: end
-
-: if you.race() == "Kenku" then
-ae = potions? of levitation
-: end
-
 : if you.god() == "Trog" then
 ae = wizardry
 ae = staff
 : end
 
-### armour exclusions ###
-
-: if you.race() == "Centaur" then
-ae = boots
-: else
-ae = centaur barding
-: end
-
-: if you.race() == "Naga" then
-ae = boots
-: else
-ae = naga barding
-: end
-
-: if you.race() == "Ogre" or you.race() == "Ogre-Mage"
-:    or you.race() == "Troll" or you.race() == "Spriggan"
-:    or you.race() == "Draconian"
-: then
-ae = boots
-ae = gloves
-ae = helmet
-ae = armour .* (mail|leather)
-: end
-
-: if you.race() == "Spriggan" then
-ae = shield
-: end
-
-: if you.race() == "Ghoul" then
-ae = gloves
-: end
-
-: if you.race() == "Kenku" then
-ae = boots
-ae = helmet
-: end

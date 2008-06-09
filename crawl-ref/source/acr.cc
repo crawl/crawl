@@ -2831,7 +2831,7 @@ static void _decrement_durations()
     }
 
 
-    if (!you.permanent_levitation())
+    if (!you.permanent_levitation() && !you.permanent_flight())
     {
         if ( _decrement_a_duration(DUR_LEVITATION,
                                    "You float gracefully downwards.",
@@ -2841,7 +2841,7 @@ static void _decrement_durations()
             burden_change();
             // Landing kills controlled flight.
             you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-            // re-enter the terrain:
+            // Re-enter the terrain.
             move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
         }
     }

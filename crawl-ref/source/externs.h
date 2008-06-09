@@ -1769,7 +1769,6 @@ public:
     std::vector<message_colour_mapping> message_colour_mappings;
 
     bool       menu_colour_prefix_class; // Prefix item class to string
-    bool       menu_colour_prefix_id;    // Prefix id-status to string
 
     std::vector<menu_sort_condition> sort_menus;
 

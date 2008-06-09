@@ -109,6 +109,11 @@ bool item_type_known( const object_class_type base_type, const int sub_type );
 bool item_type_tried( const item_def &item );
 
 bool is_interesting_item( const item_def& item );
+bool is_emergency_item( const item_def& item );
+bool is_good_item(const item_def &item);
+bool is_bad_item(const item_def &item);
+bool is_dangerous_item( const item_def& item );
+bool is_useless_item(const item_def &item);
 
 std::string make_name( unsigned long seed, bool all_caps );
 

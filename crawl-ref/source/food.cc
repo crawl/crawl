@@ -1914,6 +1914,29 @@ static int _player_likes_food_type(int food_type)
     return 0;
 }
 
+// Returns true if an item of basetype FOOD or CORPSES cannot currently
+// be eaten (respecting species and mutations set).
+bool is_inedible(const item_def &item)
+{
+    if (food_is_rotten(item)
+        && !player_mutation_level(MUT_SAPROVOROUS))
+    {
+        return (true);
+    }
+
+    if (item.base_type == OBJ_FOOD
+        && !can_ingest(item.base_type, item.sub_type, true, true, false))
+    {
+        return (true);
+    }
+    if (item.base_type == OBJ_CORPSES
+        && (item.sub_type == CORPSE_SKELETON
+            || you.species == SP_VAMPIRE && !mons_has_blood(item.plus)))
+    {
+        return (true);
+    }
+    return (false);
+}
 // As we want to avoid autocolouring the entire food selection, this should
 // be restricted to the absolute highlights, even though other stuff may
 // still be edible or even delicious.

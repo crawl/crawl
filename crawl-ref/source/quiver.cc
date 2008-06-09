@@ -20,9 +20,6 @@
 
 #include <algorithm>
 
-// checks base_type for OBJ_UNASSIGNED, and quantity
-// bool is_valid_item( const item_def &item )
-
 static int _get_pack_slot(const item_def&);
 static ammo_t _get_weapon_ammo_type(const item_def*);
 static bool _item_matches(const item_def &item, fire_type types, const item_def* launcher);
@@ -55,14 +52,18 @@ void player_quiver::get_desired_item(const item_def** item_out, int* slot_out) c
     if (slot == -1)
     {
         // Not in inv, but caller can at least get the type of the item.
-        if (item_out) *item_out = &m_last_used_of_type[m_last_used_type];
+        if (item_out)
+            *item_out = &m_last_used_of_type[m_last_used_type];
     }
     else
     {
         // Return the item in inv, since it will have an accurate count
-        if (item_out) *item_out = &you.inv[slot];
+        if (item_out)
+            *item_out = &you.inv[slot];
     }
-    if (slot_out) *slot_out = slot;
+
+    if (slot_out)
+        *slot_out = slot;
 }
 
 // Return inv slot of item that should be fired by default.
@@ -76,7 +77,7 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
 
     get_desired_item(&desired_item, &slot);
 
-    // If not in inv, try the head of the fire order
+    // If not in inv, try the head of the fire order.
     if (slot == -1)
     {
         std::vector<int> order;
@@ -85,7 +86,7 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
             slot = order[0];
     }
 
-    // If we can't find anything, tell caller why
+    // If we can't find anything, tell caller why.
     if (slot == -1)
     {
         std::vector<int> full_fire_order;
@@ -119,7 +120,7 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
     return slot;
 }
 
-// Notification that ltem was fired with 'f'
+// Notification that item was fired with 'f'.
 void player_quiver::on_item_fired(const item_def& item)
 {
     // If item matches the launcher, put it in that launcher's last-used item.
@@ -144,10 +145,10 @@ void player_quiver::on_item_fired(const item_def& item)
     you.redraw_quiver = true;
 }
 
-// Notification that ltem was fired with 'f' 'i'
+// Notification that item was fired with 'f' 'i'
 void player_quiver::on_item_fired_fi(const item_def& item)
 {
-    // currently no difference
+    // Currently no difference.
     on_item_fired(item);
 }
 
@@ -246,7 +247,7 @@ void player_quiver::_get_fire_order(
 {
     const int inv_start = (ignore_inscription_etc ? 0 : Options.fire_items_start);
 
-    // If in a net, cannot throw anything, and can only launch from blowgun
+    // If in a net, cannot throw anything, and can only launch from blowgun.
     if (you.attribute[ATTR_HELD])
     {
         if (launcher && launcher->sub_type == WPN_BLOWGUN)
@@ -264,7 +265,7 @@ void player_quiver::_get_fire_order(
         if (you.equip[EQ_WEAPON] == i_inv)
             continue;
 
-        // =f prevents item from being in fire order
+        // =f prevents item from being in fire order.
         if (!ignore_inscription_etc &&
             strstr(item.inscription.c_str(), "=f"))
         {
@@ -358,9 +359,10 @@ preserve_quiver_slots::~preserve_quiver_slots()
 // Helpers
 // ----------------------------------------------------------------------
 
-// Helper for _get_fire_order
-// types may actually contain more than one fire_type
-static bool _item_matches(const item_def &item, fire_type types, const item_def* launcher)
+// Helper for _get_fire_order.
+// Types may actually contain more than one fire_type.
+static bool _item_matches(const item_def &item, fire_type types,
+                          const item_def* launcher)
 {
     ASSERT(is_valid_item(item));
 
@@ -390,9 +392,9 @@ static bool _item_matches(const item_def &item, fire_type types, const item_def*
     else if (item.base_type == OBJ_WEAPONS
              && is_throwable(item, you.body_size()))
     {
-        if (  (types & FIRE_RETURNING)
-           && item.special == SPWPN_RETURNING
-           && item_ident(item, ISFLAG_KNOW_TYPE))
+        if ((types & FIRE_RETURNING)
+            && item.special == SPWPN_RETURNING
+            && item_ident(item, ISFLAG_KNOW_TYPE))
         {
             return (true);
         }
@@ -408,7 +410,7 @@ static bool _item_matches(const item_def &item, fire_type types, const item_def*
     return (false);
 }
 
-// Return inv slot that contains an item that looks like item,
+// Returns inv slot that contains an item that looks like item,
 // or -1 if not in inv.
 static int _get_pack_slot(const item_def& item)
 {
@@ -426,7 +428,7 @@ static int _get_pack_slot(const item_def& item)
 }
 
 
-// Return the type of ammo used by the player's equipped weapon,
+// Returns the type of ammo used by the player's equipped weapon,
 // or AMMO_THROW if it's not a launcher.
 static ammo_t _get_weapon_ammo_type(const item_def* weapon)
 {
@@ -455,6 +457,6 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
 
 static bool _items_similar(const item_def& a, const item_def& b)
 {
-    // this is a reasonable implementation for now
+    // This is a reasonable implementation for now.
     return items_stack(a, b, true);
 }

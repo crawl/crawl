@@ -1221,17 +1221,38 @@ menu_colour = <match>:<colour>:<regex>
            stash         (the results from Ctrl-F)
 
         Crawl has a couple of prefixes defined to make inventory colouring
-        easier. These are:
-           inedible      (you cannot eat this or get no nutrition from it)
-           poisonous     (chunks/corpses that are poisonous)
-           mutagenic     (chunks/corpses that are mutagenic)
-           contaminated  (chunks/corpses that may cause sickness, but
-                          ignored for Kobolds, Ogres, Trolls, and Ghouls)
-           rot-inducing  (chunks/corpses that cause rotting)
-           equipped      (equipped items)
-           artefact      (item is an artefact, whether identified or not)
-           evil_item     (item is hated by the good gods)
-           evil_eating   (eating this item is punished by the good gods)
+        easier. These are, in order of definition:
+           identified      (The item is fully identified.)
+           known           (You recognize the item's subtype.)
+           unidentified    (You don't recognize the item's subtype.)
+
+        The following only apply to items whose subtype is known.
+           evil_item       (Your god would hate it if you used this item.)
+
+           emergency_item  (This item is invaluable in emergencies.)
+           good_item       (This item is generally a good item.)
+           dangerous_item  (Using this item can be dangerous.)
+           bad_item        (This item is generally a bad item.)
+           useless_item    (This item is of no use to you.)
+
+           evil_eating     (Eating this item is punished by the good gods.)
+           inedible        (You cannot eat this or get no nutrition from it.)
+           poisonous       (Chunks/corpses that are poisonous)
+           mutagenic       (Chunks/corpses that are mutagenic)
+           contaminated    (Chunks/corpses that may cause sickness, but
+                            ignored for Kobolds, Ogres, Trolls, and Ghouls.)
+           rot-inducing    (Chunks/corpses that cause rotting.)
+
+           equipped        (Equipped items.)
+           artefact        (For artefacts, whether identified or not.)
+
+        When looking for menu_colour matches, these prefixes are prepended to 
+        the actual item name, e.g. in the form of
+           identified, evil_item wand of draining (4)
+           unidentified, equipped, artefact sparkling ring
+
+        If you want to colour all items that contain a certain prefix, use
+          menu_colour = lightgreen:.*poisonous.*
 
         To colour worn stuff and highlight cursed items, take
           menu_colour = inventory:lightred:equipped.* cursed

@@ -1684,7 +1684,7 @@ bool move_item_to_grid( int *const obj, int x, int y )
         // Look for similar item to stack:
         for (int i = igrd[x][y]; i != NON_ITEM; i = mitm[i].link)
         {
-            // check if item already linked here -- don't want to unlink it
+            // Check if item already linked here -- don't want to unlink it.
             if (*obj == i)
                 return (false);
 
@@ -1939,7 +1939,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     if (is_blood_potion(you.inv[item_dropped])
         && you.inv[item_dropped].quantity != quant_drop)
     {
-        // oldest potions have been dropped
+        // Oldest potions have been dropped.
         for (int i = 0; i < quant_drop; i++)
             remove_oldest_blood_potion(you.inv[item_dropped]);
     }
@@ -2202,7 +2202,7 @@ static bool _is_denied_autopickup(const item_def &item, std::string &iname)
         if (Options.never_pickup[i].matches(iname))
             return (true);
 
-    return false;
+    return (false);
 }
 
 static bool _is_forced_autopickup(const item_def &item, std::string &iname)
@@ -2213,7 +2213,8 @@ static bool _is_forced_autopickup(const item_def &item, std::string &iname)
     for (unsigned i = 0, size = Options.always_pickup.size(); i < size; ++i)
         if (Options.always_pickup[i].matches(iname))
             return (true);
-    return false;
+
+    return (false);
 }
 
 bool item_needs_autopickup(const item_def &item)
@@ -2228,11 +2229,13 @@ bool item_needs_autopickup(const item_def &item)
         return (true);
 
     std::string itemname;
-    return (((Options.autopickups & (1L << item.base_type))
+    return ((Options.autopickups & (1L << item.base_type)
+                && !is_useless_item(item) && !is_inedible(item)
+                && !is_dangerous_item(item)
 #ifdef CLUA_BINDINGS
-             && clua.callbooleanfn(true, "ch_autopickup", "u", &item)
+                && clua.callbooleanfn(true, "ch_autopickup", "u", &item)
 #endif
-             || _is_forced_autopickup(item, itemname))
+              || _is_forced_autopickup(item, itemname))
             && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
             && !_is_denied_autopickup(item, itemname));
 }

@@ -650,12 +650,14 @@ static void _get_status_lights(std::vector<status_light>& out)
         if (wearing_amulet( AMU_CONTROLLED_FLIGHT ))
         {
             int color = _dur_colour( you.light_flight()? BLUE : MAGENTA,
-                        (you.duration[DUR_LEVITATION] <= 10 && !perm) );
+                                     (you.duration[DUR_LEVITATION] <= 10
+                                      && !perm) );
             out.push_back(status_light(color, "Fly"));
         }
         else
         {
-            int color = _dur_colour(BLUE, (you.duration[DUR_LEVITATION] <= 10 && !perm));
+            int color = _dur_colour(BLUE, (you.duration[DUR_LEVITATION] <= 10
+                                           && !perm));
             out.push_back(status_light(color, "Lev"));
         }
     }
@@ -1457,7 +1459,7 @@ void update_monster_pane()
         for (unsigned int i=1; i < mons.size(); i++)
             if (! monster_pane_info::less_than(mons[i-1], mons[i]))
                 -- lines_needed;
-    }        
+    }
 
 #if BOTTOM_JUSTIFY_MONSTER_LIST
     const int skip_lines = std::max<int>(0, crawl_view.mlistsz.y-lines_needed);

@@ -2712,6 +2712,15 @@ bool is_evil_item(const item_def& item)
     return retval;
 }
 
+bool god_dislikes_item_handling(const item_def &item)
+{
+    return (item_type_known(item)
+            && (is_good_god(you.religion) && is_evil_item(item)
+                || you.religion == GOD_TROG && item.base_type == OBJ_BOOKS
+                   && item.sub_type != BOOK_MANUAL
+                   && item.sub_type != BOOK_DESTRUCTION));
+}
+
 // Is the destroyed weapon valuable enough to gain piety by doing so?
 // Evil weapons are handled specially.
 static bool _destroyed_valuable_weapon(int value, int type)

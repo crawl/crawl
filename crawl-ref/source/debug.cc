@@ -1220,7 +1220,7 @@ void create_spec_object()
                 ptr = strstr( strlwr(obj_name), specs );
                 if (ptr != NULL)
                 {
-                    // earliest match is the winner
+                    // Earliest match is the winner.
                     if (ptr - obj_name < best_index)
                     {
                         mpr( obj_name );
@@ -1238,7 +1238,7 @@ void create_spec_object()
 
             if (type_wanted == -1)
             {
-                // ds -- if specs is a valid int, try using that.
+                // ds -- If specs is a valid int, try using that.
                 //       Since zero is atoi's copout, the wizard
                 //       must enter (subtype + 1).
                 if (!(type_wanted = atoi(specs)))

@@ -1693,28 +1693,24 @@ bool acquirement(object_class_type class_wanted, int agent,
 
                 case WPN_GREAT_SWORD:
                 case WPN_TRIPLE_SWORD:
-                    thing.sub_type =
-                            (coinflip() ? WPN_FALCHION : WPN_LONG_SWORD);
+                    thing.sub_type = (coinflip() ? WPN_FALCHION : WPN_LONG_SWORD);
                     break;
 
                 case WPN_GREAT_MACE:
                 case WPN_DIRE_FLAIL:
-                    thing.sub_type =
-                            (coinflip() ? WPN_MACE : WPN_FLAIL);
+                    thing.sub_type = (coinflip() ? WPN_MACE : WPN_FLAIL);
                     break;
 
                 case WPN_BATTLEAXE:
                 case WPN_EXECUTIONERS_AXE:
-                    thing.sub_type =
-                            (coinflip() ? WPN_HAND_AXE : WPN_WAR_AXE);
+                    thing.sub_type = (coinflip() ? WPN_HAND_AXE : WPN_WAR_AXE);
                     break;
 
                 case WPN_HALBERD:
                 case WPN_GLAIVE:
                 case WPN_SCYTHE:
                 case WPN_BARDICHE:
-                    thing.sub_type =
-                            (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
+                    thing.sub_type = (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
                     break;
                 }
                 break;
@@ -2537,13 +2533,13 @@ void handle_time( long time_delta )
             mpr("Your body shudders with the violent release "
                 "of wild energies!", MSGCH_WARN);
 
-            // for particularly violent releases, make a little boom
+            // For particularly violent releases, make a little boom.
             if (you.magic_contamination >= 10 && coinflip())
             {
                 struct bolt boom;
-                boom.type = dchar_glyph(DCHAR_FIRED_BURST);
-                boom.colour = BLACK;
-                boom.flavour = BEAM_RANDOM;
+                boom.type     = dchar_glyph(DCHAR_FIRED_BURST);
+                boom.colour   = BLACK;
+                boom.flavour  = BEAM_RANDOM;
                 boom.target_x = you.x_pos;
                 boom.target_y = you.y_pos;
                 // Undead enjoy extra contamination explosion damage because
@@ -2554,11 +2550,11 @@ void handle_time( long time_delta )
                               you.magic_contamination
                               * (you.is_undead? 4 : 2)
                               / 4 );
-                boom.thrower = KILL_MISC;
-                boom.aux_source = "a magical explosion";
-                boom.beam_source = NON_MONSTER;
-                boom.is_beam = false;
-                boom.is_tracer = false;
+                boom.thrower      = KILL_MISC;
+                boom.aux_source   = "a magical explosion";
+                boom.beam_source  = NON_MONSTER;
+                boom.is_beam      = false;
+                boom.is_tracer    = false;
                 boom.is_explosion = true;
                 boom.name = "magical storm";
 

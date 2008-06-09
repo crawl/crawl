@@ -735,7 +735,7 @@ LUARET1(you_exp, number, you.experience_level)
 LUARET1(you_exp_points, number, you.experience)
 LUARET1(you_skill, number,
         lua_isstring(ls, 1) ? you.skills[str_to_skill(lua_tostring(ls, 1))]
-        : 0)
+                            : 0)
 LUARET1(you_res_poison, number, player_res_poison(false))
 LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
@@ -752,6 +752,7 @@ LUARET1(you_transform, string, transform_name())
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
 LUARET1(you_subdepth, number, level_id::current().depth)
+// Increase by 1 because check happens on old level.
 LUARET1(you_absdepth, number, you.your_level + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 LUARET1(you_turns, number, you.num_turns)
@@ -761,7 +762,6 @@ LUARET1(you_see_grid_no_trans, boolean,
         see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 LUARET1(you_can_smell, boolean, player_can_smell())
 
-// increase by 1 because check happens on old level
 
 void lua_push_floor_items(lua_State *ls);
 static int you_floor_items(lua_State *ls)
@@ -1181,7 +1181,7 @@ static const char *ring_types[] =
     "protection from magic",
     "fire",
     "ice",
-    "teleport control",
+    "teleport control"
 };
 
 static const char *amulet_types[] =
@@ -1250,6 +1250,11 @@ static int l_item_subtype(lua_State *ls)
     return (2);
 }
 
+// Used to divide a given potion into one of four categories:
+//   0 : unknown potion
+//   1 : always beneficial
+//   2 : always bad
+//   3 : depends on species etc.
 static int l_item_potion_type(lua_State *ls)
 {
     LUA_ITEM(item, 1);
@@ -1291,7 +1296,7 @@ static int l_item_potion_type(lua_State *ls)
                  val = 2;
                  break;
 
-            // need more refined handling:
+            // Need more refined handling:
             // for eating habits
             case POT_BLOOD:
             case POT_BLOOD_COAGULATED:
@@ -1316,7 +1321,7 @@ static int l_item_cursed(lua_State *ls)
 {
     LUA_ITEM(item, 1);
     bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
-                    && item_cursed(*item);
+                       && item_cursed(*item);
     lua_pushboolean(ls, cursed);
     return (1);
 }
@@ -2191,8 +2196,6 @@ static option_handler handlers[] =
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                     option_hboolean },
     { "menu_colour_prefix_class", &Options.menu_colour_prefix_class,
-                    option_hboolean },
-    { "menu_colour_prefix_id", &Options.menu_colour_prefix_id,
                     option_hboolean },
 };
 

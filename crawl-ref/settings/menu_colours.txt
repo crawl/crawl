@@ -9,16 +9,15 @@ menu = lightmagenta:.*misc.*rune( of Zot)?
 menu = lightmagenta:.*orb.*Zot
 
 # Artefacts
+#
 menu = white:.*artefact.*
 
-# If Options.menu_colour_prefix_id is set to true, you can 
-# differentiate further.
 #menu = white:.*identified.*artefact.*
-#menu = magenta:.*unidentified.*artefact.*
+#menu = lightblue:.*unidentified.*artefact.*
 
 # Ego items 
 #
-: if options.menu_colour_prefix_class and options.menu_colour_prefix_id then
+: if options.menu_colour_prefix_class then
 menu = lightblue:(^identified armour .* pair of .* of )
 menu = lightgrey:(^identified armour .* pair of )
 menu = lightblue:(^identified (weapon|armour) .* of )
@@ -33,88 +32,30 @@ menu = lightblue:.*weapon.*(runed|glowing)
 menu = lightblue:.*armour.*(runed|glowing|embroidered|shiny|dyed)
 :end
 
-# Mummies' potions
-#
-: if you.race() == "Mummy" then
-menu_colour = darkgrey:.*potion.*
-: end
-
-# Emergency items 
-#
-menu = cyan:.*scroll.*(blinking|teleport|fear)
-menu = cyan:.*wand.*(teleport|healing|hasting)
-menu = cyan:.*potion.*(heal|berserk|speed|resistance)
-menu = cyan:.*misc.*[lL]antern
+# Emergency items
+menu = yellow:.*emergency_item.*
 
 # Good items
-#
-menu = magenta:.*scroll.*(acquirement)
-menu = magenta:.*potion.*(gain (strength|dexterity|intelligence))
-menu = magenta:.*potion.*(experience|magic)
-: if not you_real_undead() then
-menu = magenta:.*potion.*(of mutation)
-: else
-menu = lightred:.*potion.*(of mutation)
-: end
+menu = cyan:.*good_item.*
+menu = cyan:.*misc.*[lL]antern
 
-# Dangerous items
-#
-menu = lightred:.*scroll.*(forgetfulness|torment|curse armour)
-menu = lightred:.*scroll.*(immolation|curse weapon)
-menu = lightred:.*potion.*(slowing|degeneration|poison|confusion)
-menu = lightred:.*potion.*(paralysis|decay)
-menu = lightred:.*jewellery.*(inaccuracy|hunger)
+# Bad items
+menu = lightred:.*bad_item.*
+
+# Dangerous (but still useful) items
+menu = magenta:.*dangerous_item.*
 
 # Useless items
-#
-menu = darkgrey:.*scroll.*(random uselessness|paper|noise)
-menu = darkgrey:.*potion.*water
-
-: if you.race() == "Mummy" then
-menu = darkgrey:.*jewellery.*(sustenance)
-: end
-
-: if you_real_undead() then
-menu = darkgrey:.*jewellery.*(regeneration|rage)
-: end
-
-: if string.find(you.race(), "Draconian", 0, true) then
-menu = darkgrey:.*jewellery.*(controlled flight)
-ae   = >amulet.*(controlled flight)
-: end
-
-: if you.race() == "Green Draconian" or you.race() == "Naga" then
-menu = darkgrey:.*jewellery.*(poison resistance)
-ae   = >ring.*(poison resistance)
-: end
-
-< if you.race() == "Naga" or
-     you.race() == "Spriggan" or
-     you.race() == "Vampire" then >
-menu = darkgrey:.*jewellery.*(see invis)
-ae   = >ring.*(see invis)
-:end
+menu = darkgrey:.*useless_item.*
 
 : if you.race() == "Spriggan" then
 menu = darkgrey:.*jewellery.*(sustenance)
 ae   = >ring.*(sustenance)
 :end
 
-# need to save and restore after temple if you get trog later
-: if you.god() == "Trog" then
-menu = darkgrey:.*jewellery.*(rage|wizardry)
-ae   = >amulet.*(rage)
-ae   = >ring.*(wizardry)
-: end
-
-# Exceptions
-#
-menu = yellow:.*potion.*(porridge|gluggy white)
-
 # Defaults for normal items
 #
-menu = lightred:.* equipped.* cursed
+menu = lightred:.*equipped.* cursed
 menu = green:.*equipped.*
 menu = green:uncursed
 menu = red:cursed
-menu = lightgrey:^(scroll|potion|ring|amulet)

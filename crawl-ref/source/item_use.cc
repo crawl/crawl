@@ -870,6 +870,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
             mpr("You can't wear that!");
+
         return (false);
     }
 
@@ -932,7 +933,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
     else if (slot == EQ_HELMET)
     {
-        // soft helmets (caps and wizard hats) always fit
+        // Soft helmets (caps and wizard hats) always fit.
         if (!is_hard_helmet( item ))
             return (true);
 
@@ -1535,7 +1536,6 @@ static bool _fire_warn_if_impossible()
 
 int get_ammo_to_shoot(int item, dist &target, bool teleport)
 {
-    mpr("in get_ammo_to_shoot()");
     if (_fire_warn_if_impossible())
     {
         flush_input_buffer( FLUSH_ON_FAILURE );
@@ -1559,10 +1559,8 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
 // If item passed, it will be put into the quiver.
 void fire_thing(int item)
 {
-    mpr("in fire_thing()");
     dist target;
     item = get_ammo_to_shoot(item, target);
-    mpr("back in fire_thing()");
     if (item == -1)
         return;
 

@@ -1267,8 +1267,11 @@ void antimagic()
         DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE
     };
 
-    if (!you.permanent_levitation() && you.duration[DUR_LEVITATION] > 2)
+    if (!you.permanent_levitation() && !you.permanent_flight()
+        && you.duration[DUR_LEVITATION] > 2)
+    {
         you.duration[DUR_LEVITATION] = 2;
+    }
 
     if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 1)
         you.duration[DUR_CONTROLLED_FLIGHT] = 1;
