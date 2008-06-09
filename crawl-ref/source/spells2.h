@@ -120,7 +120,7 @@ bool cast_summon_scorpions(int pow, bool god_gift = false);
  * called from: ability - religion - spell
  * *********************************************************************** */
 bool cast_summon_swarm(int pow, bool god_gift = false,
-                       bool force_hostile = false, bool quiet = false);
+                       bool force_hostile = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

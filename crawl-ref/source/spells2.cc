@@ -1119,9 +1119,6 @@ bool cast_summon_small_mammals(int pow, bool god_gift)
                           god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             success = true;
-
-            if (success)
-                mpr("A small mammal appears!");
         }
     }
 
@@ -1285,8 +1282,8 @@ bool cast_summon_scorpions(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_summon_swarm(int pow, bool god_gift, bool force_hostile,
-                       bool quiet)
+bool cast_summon_swarm(int pow, bool god_gift,
+                       bool force_hostile)
 {
     bool success = false;
 
@@ -1357,18 +1354,10 @@ bool cast_summon_swarm(int pow, bool god_gift, bool force_hostile,
                           god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             success = true;
-
-            if (!quiet)
-            {
-                mpr("A swarming creature appears!");
-
-                if (!friendly)
-                    mpr("It doesn't look very happy.");
-            }
         }
     }
 
-    if (!quiet && !success)
+    if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
