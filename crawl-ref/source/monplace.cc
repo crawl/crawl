@@ -2027,7 +2027,7 @@ bool player_will_anger_monster(monsters *mon, bool *holy,
     if (antimagical)
         *antimagical = (you.religion == GOD_TROG && mons_is_magic_user(mon));
 
-    return (holy || unholy || antimagical);
+    return (*holy || *unholy || *antimagical);
 }
 
 bool player_angers_monster(monsters *mon)
