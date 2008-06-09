@@ -382,35 +382,6 @@ bool xom_gives_item(int power)
     return (true);
 }
 
-bool there_are_monsters_nearby()
-{
-    const int ystart = MAX(0,       you.y_pos - 9);
-    const int yend   = MIN(GYM - 1, you.y_pos + 9);
-    const int xstart = MAX(0,       you.x_pos - 9);
-    const int xend   = MIN(GXM - 1, you.x_pos + 9);
-
-    // Monster check.
-    for (int y = ystart; y <= yend; ++y)
-    {
-        for (int x = xstart; x <= xend; ++x)
-        {
-            // If you can see a monster, then it's nearby.
-            if (see_grid(x, y))
-            {
-                const int targ_monst = mgrd[x][y];
-                if (targ_monst != NON_MONSTER)
-                {
-                    const monsters *mon = &menv[targ_monst];
-                    if (!mons_is_submerged(mon))
-                        return (true);
-                }
-            }
-        }
-    }
-
-    return (false);
-}
-
 static bool choose_mutatable_monster(const monsters* mon)
 {
     return (mon->alive() && mon->can_safely_mutate()

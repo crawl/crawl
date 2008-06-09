@@ -2759,6 +2759,15 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
     return (false);
 }
 
+bool there_are_monsters_nearby()
+{
+    // Monster check.
+    std::vector<monsters*> visible;
+    get_playervisible_monsters(visible, false, true);
+
+    return (!visible.empty());
+}
+
 static const char *shop_types[] = {
     "weapon",
     "armour",
