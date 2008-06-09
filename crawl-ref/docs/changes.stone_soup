@@ -29,6 +29,7 @@ Interface
 * Arriving via stairs calls autopickup and lists items on square.
 * Refuse to eat rotten meat for non-saprovorous characters.
 * Evaporate can now be cancelled during potion/direction choice.
+* Portaled Projectile now allows choice of ammunition.
 * greedy_explore now defaults to true.
 
 Gods
@@ -121,6 +122,7 @@ Levels
 * Modified Slime Pits end, guarantee rune.
 * Several new vaults.
 * Fixed some levels having the wrong amount of stairs.
+* Fixed wonky vaults on lava etc.
 * Treat adjacent doors as one (large) gate, opening/closing together.
 * Minotaurs may map labyrinths.
 * Removed amnesia traps.

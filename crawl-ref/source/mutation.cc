@@ -1408,33 +1408,37 @@ static void _display_vampire_attributes()
 
     std::string result;
 
-    std::string column[12][7] =
+    const int lines = 13;
+    std::string column[lines][7] =
     {
        {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
         "Satiated  ", "<yellow>Thirsty</yellow>  ", "<yellow>Near...</yellow>  ",
         "<lightred>Bloodless</lightred>"},
                                 //Alive          Full       Satiated       Thirsty   Near...      Bloodless
-       {"Metabolism           ", "very fast  ", "fast    ", "fast      ",  "normal   ", "slow     ", "none"},
+       {"Metabolism           ", "very fast  ", "fast    ", "fast      ",  "normal   ", "slow     ", "none  "},
 
-       {"Regeneration         ", "very fast  ", "fast    ", "normal    ",  "normal   ", "slow     ", "none"},
+       {"Regeneration         ", "very fast  ", "fast    ", "normal    ",  "normal   ", "slow     ", "none  "},
 
-       {"Poison resistance    ", "           ", "        ", "          ",  " +       ", " +       ", " +   "},
+       {"Poison resistance    ", "           ", "        ", "          ",  " +       ", " +       ", " +    "},
 
-       {"Cold resistance      ", "           ", "        ", "          ",  " +       ", " +       ", " ++  "},
+       {"Cold resistance      ", "           ", "        ", "          ",  " +       ", " +       ", " ++   "},
 
-       {"Negative resistance  ", "           ", "        ", "          ",  " +       ", " ++      ", " +++ "},
+       {"Negative resistance  ", "           ", "        ", "          ",  " +       ", " ++      ", " +++  "},
 
-       {"Torment resistance   ", "           ", "        ", "          ",  "         ", "         ", " +   "},
+       {"Torment resistance   ", "           ", "        ", "          ",  "         ", "         ", " +    "},
 
-       {"Mutation chance      ", "always     ", "often   ", "sometimes ",  "never    ", "never    ", "never"},
+       {"Mutation chance      ", "always     ", "often   ", "sometimes ",  "never    ", "never    ", "never "},
 
-       {"Mutation effects     ", "full       ", "capped  ", "capped    ",  "none     ", "none     ", "none "},
+       {"Non-physical " EOL
+        "mutation effects     ", "full       ", "capped  ", "capped    ",  "none     ", "none     ", "none  "},
 
-       {"Stealth boost        ", "none       ", "none    ", "none      ",  "minor    ", "major    ", "large"},
+       {"Potion effects       ", "full       ", "full    ", "full      ",  "halved   ", "halved   ", "halved"},
 
-       {"Bat Form             ", "no         ", "no      ", "yes       ",  "yes      ", "yes      ", "yes  "},
+       {"Bat Form             ", "no         ", "no      ", "yes       ",  "yes      ", "yes      ", "yes   "},
 
-       {"Spell hunger         ", "full       ", "full    ", "full      ",  "halved   ", "none     ", "none "}
+       {"Stealth boost        ", "none       ", "none    ", "none      ",  "minor    ", "major    ", "large "},
+
+       {"Spell hunger         ", "full       ", "full    ", "full      ",  "halved   ", "none     ", "none  "}
     };
 
     int current = 0;
@@ -1461,7 +1465,7 @@ static void _display_vampire_attributes()
         current = 6;
     }
 
-    for (int y = 0; y < 12; y++)     // lines   (properties)
+    for (int y = 0; y < lines; y++)  // lines   (properties)
     {
         for (int x = 0; x < 7; x++)  // columns (hunger states)
         {

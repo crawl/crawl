@@ -2308,8 +2308,7 @@ std::string _status_mut_abilities()
         text += "praying, ";
 
     if (you.disease && !you.duration[DUR_REGENERATION]
-        || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
-            && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+        || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
     {
        text += "non-regenerating, ";
     }

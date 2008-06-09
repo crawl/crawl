@@ -1786,15 +1786,15 @@ Ghouls
   and death magic without too many difficulties.
 
 Vampires
-  Vampires are another form of undead, but with a peculiarity: by 
+  Vampires are another form of undead, but with a peculiarity: by
   consuming fresh blood, they may become alive. A bloodless Vampire has
   all the traits of an undead, yet possesses no innate healing power at
   all -- in particular, magical items or spells which increase the rate
   of regeneration will not work. On the other hand, a Vampire full with
   blood will regenerate very quickly, but lose all undead powers.
   Vampires can never starve. Upon growing, they learn to transform into
-  quick bats (in which form they can heal even when bloodless), and,
-  later, how to draw potions of blood from fresh corpses.
+  quick bats, and, later, how to draw potions of blood from fresh
+  corpses.
 
 
 Note: Use 'A' to check for which particular peculiarities a species

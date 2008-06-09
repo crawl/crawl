@@ -975,9 +975,7 @@ int player_regen(void)
         switch (you.hunger_state)
         {
          case HS_STARVING:
-            if (you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
-                return (0); // No regeneration for starving vampires!
-            // intentional fall-through for bat form
+            return (0); // No regeneration for starving vampires!
          case HS_NEAR_STARVING:
          case HS_VERY_HUNGRY:
          case HS_HUNGRY:
@@ -3690,11 +3688,7 @@ void display_char_status()
                 attrib.push_back("resist torment");
                 if (you.experience_level >= 13)
                     attrib.push_back("are in touch with the powers of death");
-
-                if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-                    attrib.push_back("heal slowly (as a bat)!");
-                else
-                    attrib.push_back("do not heal!");
+                attrib.push_back("do not heal!");
                 break;
             case HS_NEAR_STARVING:
                 attrib.push_back("resist poison");
@@ -3805,8 +3799,7 @@ void display_char_status()
         mpr( "You are praying." );
 
     if (you.disease && !you.duration[DUR_REGENERATION]
-        && (you.species != SP_VAMPIRE || you.hunger_state != HS_STARVING
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT))
+        && (you.species != SP_VAMPIRE || you.hunger_state != HS_STARVING))
     {
         mpr("You do not heal.");
     }
