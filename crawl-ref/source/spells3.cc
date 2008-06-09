@@ -715,7 +715,7 @@ static void _equip_undead(int x, int y, int corps, int monster, int monnum)
         objl = mitm[objl].link;
     }
 
-    for (int i = item_list.size() - 1; i >= 0; i--)
+    for (int i = item_list.size() - 1; i >= 0; --i)
     {
         objl = item_list[i];
         item_def &item(mitm[objl]);
