@@ -2489,8 +2489,8 @@ static void _miscast_summoning(int severity, const char* cause)
         case 4:
         case 5:
             if (create_monster(
-                    mgen_data(summon_any_demon(DEMON_LESSER),
-                              BEH_HOSTILE, 5, you.pos(), MHITYOU)) != -1)
+                    mgen_data::alert_hostile_at(summon_any_demon(DEMON_LESSER),
+                        you.pos(), 5)) != -1)
             {
                 mpr("Something appears in a flash of light!");
             }
@@ -2511,8 +2511,8 @@ static void _miscast_summoning(int severity, const char* cause)
         case 1:
         case 2:
             if (create_monster(
-                    mgen_data(summon_any_demon(DEMON_COMMON),
-                              BEH_HOSTILE, 5, you.pos(), MHITYOU)) != -1)
+                    mgen_data::alert_hostile_at(summon_any_demon(DEMON_COMMON),
+                        you.pos(), 5)) != -1)
             {
                 mpr("Something forms out of thin air!");
             }
@@ -2523,29 +2523,25 @@ static void _miscast_summoning(int severity, const char* cause)
         case 3:
         case 4:
         case 5:
-            mpr("A chorus of chattering voices calls out to you!");
-            create_monster(
-                mgen_data(summon_any_demon(DEMON_LESSER),
-                          BEH_HOSTILE, 5, you.pos(), MHITYOU));
+        {
+            bool success = false;
 
-            create_monster(
-                mgen_data(summon_any_demon(DEMON_LESSER),
-                          BEH_HOSTILE, 5, you.pos(), MHITYOU));
-
-            if (coinflip())
+            for (int i = 1 + random2(2); i >= 0; --i)
             {
-                create_monster(
-                    mgen_data(summon_any_demon(DEMON_LESSER),
-                              BEH_HOSTILE, 5, you.pos(), MHITYOU));
+                if (create_monster(
+                    mgen_data::alert_hostile_at(summon_any_demon(DEMON_LESSER),
+                        you.pos(), 5)) != -1)
+                {
+                    success = true;
+                }
             }
 
-            if (coinflip())
-            {
-                create_monster(
-                    mgen_data(summon_any_demon(DEMON_LESSER),
-                              BEH_HOSTILE, 5, you.pos(), MHITYOU));
-            }
+            if (success)
+                mpr("A chorus of chattering voices calls out to you!");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
+        }
         }
         break;
 
@@ -2575,23 +2571,25 @@ static void _miscast_summoning(int severity, const char* cause)
             break;
 
         case 2:
-            mpr("Something turns its malign attention towards you...");
+        {
+            bool success = false;
 
-            create_monster(
-                mgen_data::alert_hostile_at(summon_any_demon(DEMON_COMMON),
-                    you.pos(), 3));
-
-            create_monster(
-                mgen_data::alert_hostile_at(summon_any_demon(DEMON_COMMON),
-                    you.pos(), 3));
-
-            if (coinflip())
+            for (int i = 1 + random2(2); i >= 0; --i)
             {
-                create_monster(
+                if (create_monster(
                     mgen_data::alert_hostile_at(summon_any_demon(DEMON_COMMON),
-                        you.pos(), 3));
+                        you.pos(), 3)) != -1)
+                {
+                    success = true;
+                }
             }
+
+            if (success)
+                mpr("Something turns its malign attention towards you...");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
+        }
 
         case 3:
             _send_abyss(cause);
