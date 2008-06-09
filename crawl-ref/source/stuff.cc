@@ -83,6 +83,13 @@ radius_iterator::radius_iterator( const coord_def& _center, int _radius,
       require_los(_require_los), exclude_center(_exclude_center),
       iter_done(false)
 {
+    reset();
+}
+
+void radius_iterator::reset()
+{
+    iter_done = false;
+
     location.x = center.x - radius;
     location.y = center.y - radius;
 

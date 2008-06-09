@@ -57,6 +57,7 @@ public:
                      bool require_los = true,
                      bool exclude_center = false );
     bool done() const;
+    void reset();
     operator bool() const { return !done(); }
     coord_def operator *() const;
 
