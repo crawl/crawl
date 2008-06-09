@@ -370,6 +370,7 @@ bool xom_gives_item(int power)
                        OBJ_GOLD;
 
         god_acting gdact(GOD_XOM);
+
         acquirement(objtype, GOD_XOM);
     }
     else
@@ -431,6 +432,7 @@ static monster_type xom_random_punishment_demon(int sever)
 static bool xom_is_good(int sever)
 {
     bool done = false;
+
     god_acting gdact(GOD_XOM);
 
     // This series of random calls produces a poisson-looking
@@ -731,6 +733,7 @@ try_again:
 static bool xom_is_bad(int sever)
 {
     bool done = false;
+
     god_acting gdact(GOD_XOM);
 
     while (!done)
