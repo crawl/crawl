@@ -709,9 +709,9 @@ static bool efreet_flask(void)
     const int efreet =
         create_monster(
             mgen_data(mon,
-                friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                0, you.pos(),
-                friendly ? you.pet_target : MHITYOU));
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      0, you.pos(),
+                      friendly ? you.pet_target : MHITYOU));
 
     if (efreet != -1)
     {
