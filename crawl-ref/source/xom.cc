@@ -388,13 +388,13 @@ bool there_are_monsters_nearby()
     int yend = you.y_pos + 9, xend = you.x_pos + 9;
     if (xstart < 0) xstart = 0;
     if (ystart < 0) ystart = 0;
-    if (xend >= GXM) xend = GXM;
-    if (yend >= GYM) yend = GYM;
+    if (xend >= GXM) xend = GXM - 1;
+    if (yend >= GYM) yend = GYM - 1;
 
     // Monster check.
-    for (int y = ystart; y < yend; ++y)
+    for (int y = ystart; y <= yend; ++y)
     {
-        for (int x = xstart; x < xend; ++x)
+        for (int x = xstart; x <= xend; ++x)
         {
             // If you can see a monster, then it's nearby.
             if (see_grid(x, y))

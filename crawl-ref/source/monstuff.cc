@@ -2985,13 +2985,13 @@ monsters *choose_random_monster_on_level(int weight,
 
         if ( xstart < 0 ) xstart = 0;
         if ( ystart < 0 ) ystart = 0;
-        if ( xend >= GXM )  xend = GXM;
-        if ( yend >= GYM )  yend = GYM;
+        if ( xend >= GXM )  xend = GXM - 1;
+        if ( yend >= GYM )  yend = GYM - 1;
     }
 
     // monster check
-    for ( int y = ystart; y < yend; ++y )
-        for ( int x = xstart; x < xend; ++x )
+    for ( int y = ystart; y <= yend; ++y )
+        for ( int x = xstart; x <= xend; ++x )
             if ( mgrd[x][y] != NON_MONSTER && (!in_sight || see_grid(x,y)) )
             {
                 monsters *mon = &menv[mgrd[x][y]];
