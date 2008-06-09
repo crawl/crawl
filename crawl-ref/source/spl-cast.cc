@@ -2369,7 +2369,7 @@ static void _miscast_translocation(int severity, const char* cause)
             ouch(4 + random2avg(7, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 5:
-            summon_spatial_vortex();
+            summon_spatial_vortices(1);
             break;
         }
         break;
@@ -2396,16 +2396,7 @@ static void _miscast_translocation(int severity, const char* cause)
             potion_effect(POT_CONFUSION, 40);
             break;
         case 5:
-            mpr("Space twists in upon itself!");
-            {
-                const int count = 2 + random2(3);
-                for (int i = 0; i < count; ++i)
-                {
-                    create_monster(
-                        mgen_data(MONS_SPATIAL_VORTEX, BEH_HOSTILE, 3,
-                                  you.pos(), MHITYOU));
-                }
-            }
+            summon_spatial_vortices(2 + random2(3));
             break;
         case 6:
             _send_abyss(cause);
@@ -2414,7 +2405,6 @@ static void _miscast_translocation(int severity, const char* cause)
         break;
 
     case 3:         // much less harmless
-
         switch (random2(4))
         {
         case 0:
@@ -2492,11 +2482,9 @@ static void _miscast_summoning(int severity, const char* cause)
             mpr("You are caught in a localised spatial distortion.");
             ouch(5 + random2avg(9, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
-
         case 3:
-            summon_spatial_vortex();
+            summon_spatial_vortices(1);
             break;
-
         case 4:
         case 5:
             if (create_monster(
@@ -2513,16 +2501,7 @@ static void _miscast_summoning(int severity, const char* cause)
         switch (random2(6))
         {
         case 0:
-            mpr("Space twists in upon itself!");
-            {
-                const int count = 2 + random2(3);
-                for (int i = 0; i < count; ++i)
-                {
-                    create_monster(
-                        mgen_data(MONS_SPATIAL_VORTEX,
-                                  BEH_HOSTILE, 3, you.pos(), MHITYOU));
-                }
-            }
+            summon_spatial_vortices(2 + random2(3));
             break;
 
         case 1:
@@ -2811,11 +2790,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         switch (random2(3))
         {
         case 0:
-            mpr("Flickering shadows surround you.");
-
-            for (int i = random2(3); i >= 0; --i)
-                summon_shadow(false, true);
-
+            summon_shadows(random2(3) + 1, true);
             break;
 
         case 1:
