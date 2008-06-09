@@ -477,7 +477,8 @@ bool cast_call_imp(int pow, bool god_gift)
 }
 
 static bool _summon_demon_wrapper(int pow, bool god_gift, monster_type mon,
-                                  int dur, bool friendly, bool charmed)
+                                  int dur, bool friendly, bool charmed,
+                                  bool quiet)
 {
     bool success = false;
 
@@ -507,31 +508,33 @@ static bool _summon_demon_wrapper(int pow, bool god_gift, monster_type mon,
 }
 
 static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
-                                  int dur, bool friendly, bool charmed)
+                                  int dur, bool friendly, bool charmed,
+                                  bool quiet)
 {
     monster_type mon = summon_any_demon(dct);
 
-    return _summon_demon_wrapper(pow, god_gift, mon, dur, friendly, charmed);
+    return _summon_demon_wrapper(pow, god_gift, mon, dur, friendly, charmed,
+                                 quiet);
 }
 
-bool summon_lesser_demon(int pow, bool god_gift)
+bool summon_lesser_demon(int pow, bool god_gift, bool quiet)
 {
     return _summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
                                  std::min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false);
+                                 random2(pow) > 3, false, quiet);
 }
 
-bool summon_common_demon(int pow, bool god_gift)
+bool summon_common_demon(int pow, bool god_gift, bool quiet)
 {
     return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
                                  std::min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false);
+                                 random2(pow) > 3, false, quiet);
 }
 
-bool summon_greater_demon(int pow, bool god_gift)
+bool summon_greater_demon(int pow, bool god_gift, bool quiet)
 {
     return _summon_demon_wrapper(pow, god_gift, DEMON_GREATER,
-                                 5, false, random2(pow) > 5);
+                                 5, false, random2(pow) > 5, quiet);
 }
 
 // Makhleb or Kikubaaqudgha sends a demonic buddy (or enemy) for a
@@ -540,7 +543,7 @@ bool summon_demon_type(monster_type mon, int pow, bool god_gift)
 {
     return _summon_demon_wrapper(pow, god_gift, mon,
                                  std::min(2 + (random2(pow) / 4), 6),
-                                 false, random2(pow) > 3);
+                                 false, random2(pow) > 3, false);
 }
 
 bool cast_summon_demon(int pow, bool god_gift)
@@ -565,7 +568,7 @@ bool cast_demonic_horde(int pow, bool god_gift)
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (summon_lesser_demon(pow, god_gift))
+        if (summon_lesser_demon(pow, god_gift, true))
             success = true;
     }
 
@@ -896,7 +899,7 @@ static bool _raise_corpse(int x, int y, int corps, beh_type beha,
 bool animate_a_corpse(int x, int y, corpse_type class_allowed,
                       beh_type beha, unsigned short hitting,
                       bool god_gift, bool actual,
-                      bool silent)
+                      bool quiet)
 {
     bool success = false;
 
@@ -918,7 +921,7 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
 
             if (actual && success)
             {
-                if (!silent)
+                if (!quiet)
                 {
                     if (was_butchering)
                         mpr("The corpse you are butchering rises to attack!");

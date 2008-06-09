@@ -1268,11 +1268,6 @@ bool cast_summon_scorpions(int pow, bool god_gift)
                           god_gift ? MG_GOD_GIFT : 0)) != -1)
         {
             success = true;
-
-            mpr("A scorpion appears.");
-
-            if (!friendly)
-                mpr("It doesn't look very happy.");
         }
     }
 
@@ -1872,7 +1867,7 @@ bool summon_berserker(int pow, bool god_gift, bool force_hostile)
 }
 
 static bool _summon_holy_being_wrapper(int pow, bool god_gift,
-                                       monster_type mon)
+                                       monster_type mon, bool quiet)
 {
     bool success = false;
 
@@ -1891,9 +1886,12 @@ static bool _summon_holy_being_wrapper(int pow, bool god_gift,
         monsters *summon = &menv[monster];
         summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-        mprf("You are momentarily dazzled by a brilliant %s light.",
-             (mon == MONS_DAEVA) ? "golden"
-                                 : "white");
+        if (!quiet)
+        {
+            mprf("You are momentarily dazzled by a brilliant %s light.",
+                 (mon == MONS_DAEVA) ? "golden"
+                                     : "white");
+        }
 
         player_angers_monster(&menv[monster]);
     }
@@ -1902,13 +1900,13 @@ static bool _summon_holy_being_wrapper(int pow, bool god_gift,
 }
 
 // Zin sends an angel for a follower.
-bool summon_guardian(int pow, bool god_gift)
+bool summon_guardian(int pow, bool god_gift, bool quiet)
 {
-    return _summon_holy_being_wrapper(pow, god_gift, MONS_ANGEL);
+    return _summon_holy_being_wrapper(pow, god_gift, MONS_ANGEL, quiet);
 }
 
 // TSO sends a daeva for a follower.
-bool summon_daeva(int pow, bool god_gift)
+bool summon_daeva(int pow, bool god_gift, bool quiet)
 {
-    return _summon_holy_being_wrapper(pow, god_gift, MONS_DAEVA);
+    return _summon_holy_being_wrapper(pow, god_gift, MONS_DAEVA, quiet);
 }

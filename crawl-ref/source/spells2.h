@@ -145,8 +145,8 @@ bool cast_tukimas_dance(int pow, bool god_gift = false,
  * *********************************************************************** */
 bool summon_berserker(int pow, bool god_gift = false,
                       bool force_hostile = false);
-bool summon_guardian(int pow, bool god_gift = false);
-bool summon_daeva(int pow, bool god_gift = false);
+bool summon_guardian(int pow, bool god_gift = false, bool quiet = false);
+bool summon_daeva(int pow, bool god_gift = false, bool quiet = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
