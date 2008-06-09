@@ -977,7 +977,7 @@ bool summon_spatial_vortices(int pow, bool god_gift)
 
     mpr("Space twists in upon itself!");
 
-    // Maximum power is 300.
+    // Maximum power is 300 (5 vortices).
     const int how_many = (pow / 75 + 1);
 
     for (int i = 0; i < how_many; ++i)

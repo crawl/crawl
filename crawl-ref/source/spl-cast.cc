@@ -2396,7 +2396,7 @@ static void _miscast_translocation(int severity, const char* cause)
             potion_effect(POT_CONFUSION, 40);
             break;
         case 5:
-            // Summon 2-5 spatial vortices.
+            // Summon 2-4 spatial vortices.
             summon_spatial_vortices(75 + random2(151));
             break;
         case 6:
@@ -2502,7 +2502,7 @@ static void _miscast_summoning(int severity, const char* cause)
         switch (random2(6))
         {
         case 0:
-            // Summon 2-5 spatial vortices.
+            // Summon 2-4 spatial vortices.
             summon_spatial_vortices(75 + random2(151));
             break;
 
@@ -2793,7 +2793,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         {
         case 0:
             // Summon 1-3 shadows.
-            summon_shadows(random2(151), false, true);
+            summon_shadows(random2(61), false, true);
             break;
 
         case 1:
