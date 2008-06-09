@@ -2018,16 +2018,21 @@ bool player_will_anger_monster(monster_type type, bool *holy,
 bool player_will_anger_monster(monsters *mon, bool *holy,
                                bool *unholy, bool *antimagical)
 {
+    const bool is_holy =
+        (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
+    const bool is_unholy =
+        (is_evil_god(you.religion) && mons_is_holy(mon));
+    const bool is_antimagical =
+        (you.religion == GOD_TROG && mons_is_magic_user(mon));
+
     if (holy)
-        *holy = (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
-
+        *holy = is_holy;
     if (unholy)
-        *unholy = (is_evil_god(you.religion) && mons_is_holy(mon));
-
+        *unholy = is_unholy;
     if (antimagical)
-        *antimagical = (you.religion == GOD_TROG && mons_is_magic_user(mon));
+        *antimagical = is_antimagical;
 
-    return (*holy || *unholy || *antimagical);
+    return (is_holy || is_unholy || is_antimagical);
 }
 
 bool player_angers_monster(monsters *mon)
@@ -2039,8 +2044,6 @@ bool player_angers_monster(monsters *mon)
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
     if (player_will_anger_monster(mon, &holy, &unholy, &antimagical))
     {
-        ASSERT (holy || unholy || antimagical);
-
         if (mon->attitude != ATT_HOSTILE || mon->has_ench(ENCH_CHARM))
         {
             mon->attitude = ATT_HOSTILE;
