@@ -1089,14 +1089,14 @@ static void _get_visible_monsters(std::vector<std::string>& describe)
     int yend = you.y_pos + 9, xend = you.x_pos + 9;
     if ( xstart < 0 ) xstart = 0;
     if ( ystart < 0 ) ystart = 0;
-    if ( xend >= GXM ) xend = GXM;
-    if ( yend >= GYM ) yend = GYM;
+    if ( xend >= GXM ) xend = GXM - 1;
+    if ( yend >= GYM ) yend = GYM - 1;
 
     std::vector<const monsters*> mons;
 
     // monster check
-    for (int y = ystart; y < yend; ++y)
-        for (int x = xstart; x < xend; ++x)
+    for (int y = ystart; y <= yend; ++y)
+        for (int x = xstart; x <= xend; ++x)
             if (see_grid(x,y))
             {
                 const unsigned short targ_monst = mgrd[x][y];

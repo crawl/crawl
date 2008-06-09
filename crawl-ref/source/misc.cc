@@ -2666,14 +2666,14 @@ void get_playervisible_monsters(std::vector<monsters*> &mons,
     if (range == -1)
         range = LOS_RADIUS;
 
-    const int ystart = MAX(0,   you.y_pos - range);
-    const int yend   = MIN(GYM, you.y_pos + range);
-    const int xstart = MAX(0,   you.x_pos - range);
-    const int xend   = MIN(GXM, you.x_pos + range);
+    const int ystart = MAX(0,       you.y_pos - range);
+    const int yend   = MIN(GYM - 1, you.y_pos + range);
+    const int xstart = MAX(0,       you.x_pos - range);
+    const int xend   = MIN(GXM - 1, you.x_pos + range);
 
     // Monster check.
-    for (int y = ystart; y < yend; ++y)
-        for (int x = xstart; x < xend; ++x)
+    for (int y = ystart; y <= yend; y++)
+        for (int x = xstart; x <= xend; x++)
         {
             const unsigned short targ_monst = env.mgrid[x][y];
             if (targ_monst != NON_MONSTER)
