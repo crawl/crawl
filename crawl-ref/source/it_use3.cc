@@ -698,35 +698,32 @@ bool evoke_wielded()
 
 static bool efreet_flask(void)
 {
-    beh_type beha = BEH_HOSTILE;
-    unsigned short hitting = MHITYOU;
+    monster_type mon = MONS_EFREET;
 
-    if (you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20))
-    {
-        beha = BEH_FRIENDLY;
-        hitting = you.pet_target;
-    }
+    const bool friendly =
+        (!player_will_anger_monster(mon)
+            && you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20));
 
     mpr("You open the flask...");
 
     const int efreet =
         create_monster(
-            mgen_data( MONS_EFREET, beha, 0, you.pos(), hitting ) );
+            mgen_data(mon,
+                friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                0, you.pos(),
+                friendly ? you.pet_target : MHITYOU));
 
     if (efreet != -1)
     {
-        monsters *mon = &menv[efreet];
+        mpr("...and a huge efreet comes out.");
 
-        mpr( "...and a huge efreet comes out." );
-
-        mpr( (mon->attitude == ATT_FRIENDLY) ?
-             "\"Thank you for releasing me!\""
-             : "It howls insanely!" );
+        mpr(friendly ? "\"Thank you for releasing me!\""
+                     : "It howls insanely!");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
+    dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
     return (true);
 }                               // end efreet_flask()
