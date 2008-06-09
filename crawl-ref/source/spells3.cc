@@ -1207,9 +1207,8 @@ bool cast_summon_wraiths(int pow, bool god_gift)
 
     //jmf: Kiku sometimes deflects this
     if (!(you.religion == GOD_KIKUBAAQUDGHA
-           && (!player_under_penance()
-               && you.piety >= piety_breakpoint(3)
-               && you.piety > random2(MAX_PIETY))))
+           && (!player_under_penance() && you.piety >= piety_breakpoint(3)
+           && you.piety > random2(MAX_PIETY))))
     {
         disease_player(25 + random2(50));
     }

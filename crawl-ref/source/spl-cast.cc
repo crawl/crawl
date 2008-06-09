@@ -2728,7 +2728,7 @@ static void _miscast_necromancy(int severity, const char* cause)
 {
     if (you.religion == GOD_KIKUBAAQUDGHA
         && (!player_under_penance() && you.piety >= piety_breakpoint(1)
-            && random2(150) <= you.piety))
+            && you.piety > random2(150)))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return;
@@ -2772,10 +2772,10 @@ static void _miscast_necromancy(int severity, const char* cause)
             mpr("You sense a malignant aura.");
             break;
         case 8:
-            mpr("You feel very uncomfortable.");
+            canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 9:
-            canned_msg(MSG_NOTHING_HAPPENS);
+            mpr("You feel very uncomfortable.");
             break;
         }
         break;
