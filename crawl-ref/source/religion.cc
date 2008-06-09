@@ -3027,7 +3027,7 @@ static bool _tso_retribution()
         {
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_DAEVA,
-                        you.pos(), MG_GOD_GIFT)) != -1)
+                        you.pos(), 0, MG_GOD_GIFT)) != -1)
             {
                 success = true;
             }
@@ -3128,7 +3128,7 @@ static bool _zin_retribution()
             {
                 if (create_monster(
                         mgen_data::alert_hostile_at(MONS_ANGEL,
-                            you.pos(), MG_GOD_GIFT)) != -1)
+                            you.pos(), 0, MG_GOD_GIFT)) != -1)
                 {
                     success = true;
                 }
@@ -3292,7 +3292,7 @@ static bool _makhleb_retribution()
                            mgen_data::alert_hostile_at(
                                static_cast<monster_type>(
                                    MONS_EXECUTIONER + random2(5)),
-                               you.pos(), MG_GOD_GIFT)) != -1);
+                               you.pos(), 0, MG_GOD_GIFT)) != -1);
 
         simple_god_message(success ?
                            " sends a greater servant after you!" :
@@ -3310,7 +3310,7 @@ static bool _makhleb_retribution()
                    mgen_data::alert_hostile_at(
                        static_cast<monster_type>(
                            MONS_NEQOXEC + random2(5)),
-                       you.pos(), MG_GOD_GIFT)) != -1)
+                       you.pos(), 0, MG_GOD_GIFT)) != -1)
             {
                 count++;
             }
@@ -3338,7 +3338,7 @@ static bool _kikubaaqudgha_retribution()
         {
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_REAPER,
-                        you.pos(), MG_GOD_GIFT)) != -1)
+                        you.pos(), 0, MG_GOD_GIFT)) != -1)
             {
                 success = true;
             }
@@ -3377,7 +3377,7 @@ static bool _yredelemnul_retribution()
 
             if (create_monster(
                     mgen_data::alert_hostile_at(punisher,
-                        you.pos(), MG_GOD_GIFT)) != -1)
+                        you.pos(), 0, MG_GOD_GIFT)) != -1)
             {
                 count++;
             }
@@ -3542,7 +3542,7 @@ static bool _beogh_retribution()
             int mons =
                 create_monster(
                     mgen_data::alert_hostile_at(MONS_DANCING_WEAPON,
-                        you.pos(), MG_GOD_GIFT));
+                        you.pos(), 0, MG_GOD_GIFT));
 
             // Hand item information over to monster.
             if (mons != -1)
@@ -3597,7 +3597,7 @@ static bool _beogh_retribution()
 
         int mons = create_monster(
                        mgen_data::alert_hostile_at(punisher,
-                           you.pos(), MG_GOD_GIFT | MG_PERMIT_BANDS));
+                           you.pos(), 0, MG_GOD_GIFT | MG_PERMIT_BANDS));
 
         // sometimes name band leader
         if (mons != -1 && one_chance_in(3))
@@ -3627,7 +3627,7 @@ static bool _okawaru_retribution()
 
         if (create_monster(
                 mgen_data::alert_hostile_at(punisher,
-                    you.pos(), MG_GOD_GIFT)) != -1)
+                    you.pos(), 0, MG_GOD_GIFT)) != -1)
         {
             success = true;
         }
@@ -3720,7 +3720,7 @@ static bool _lugonu_retribution()
                            mgen_data::alert_hostile_at(
                                static_cast<monster_type>(
                                    MONS_GREEN_DEATH + random2(3)),
-                               you.pos(), MG_GOD_GIFT)) != -1);
+                               you.pos(), 0, MG_GOD_GIFT)) != -1);
 
         simple_god_message(success ?
                            " sends a demon after you!" :
@@ -3738,7 +3738,7 @@ static bool _lugonu_retribution()
                    mgen_data::alert_hostile_at(
                        static_cast<monster_type>(
                            MONS_NEQOXEC + random2(5)),
-                       you.pos(), MG_GOD_GIFT)) != -1)
+                       you.pos(), 0, MG_GOD_GIFT)) != -1)
             {
                 success = true;
             }
