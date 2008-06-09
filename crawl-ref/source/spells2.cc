@@ -973,8 +973,8 @@ char burn_freeze(int pow, beam_type flavour)
 
 void summon_animals(int pow)
 {
-    // maybe we should just generate a Lair monster instead? (and
-    // guarantee that it is mobile)
+    // Maybe we should just generate a Lair monster instead (and
+    // guarantee that it is mobile)?
     const monster_type animals[] = {
         MONS_BUMBLEBEE, MONS_WAR_DOG, MONS_SHEEP, MONS_YAK,
         MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
@@ -983,29 +983,32 @@ void summon_animals(int pow)
         MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND
     };
 
-    int num_so_far = 0;
-    int power_left = pow + 1;
+    int count = 0;
+    const int count_max = 8;
+
+    int pow_left = pow + 1;
 
     const bool varied = coinflip();
+
     monster_type mon = MONS_PROGRAM_BUG;
 
-    while (power_left >= 0 && num_so_far < 8)
+    while (pow_left >= 0 && count < count_max)
     {
         // Pick a random monster and subtract its cost.
-        if (varied || num_so_far == 0)
+        if (varied || count == 0)
             mon = RANDOM_ELEMENT(animals);
 
-        const int power_cost = mons_power(mon) * 3;
+        const int pow_spent = mons_power(mon) * 3;
 
         // Allow a certain degree of overuse, but not too much.
         // Guarantee at least two summons.
-        if (power_cost >= power_left * 2 && num_so_far >= 2)
+        if (pow_spent >= pow_left * 2 && count >= 2)
             break;
 
-        power_left -= power_cost;
-        num_so_far++;
+        pow_left -= pow_spent;
+        count++;
 
-        bool friendly = (random2(pow) > 4);
+        const bool friendly = (random2(pow) > 4);
 
         create_monster(
             mgen_data(mon,
@@ -1045,16 +1048,14 @@ bool cast_summon_small_mammals(int pow, bool god_gift)
 
     monster_type mon = MONS_PROGRAM_BUG;
 
-    int pow_spent = 0;
-    int pow_left = pow + 1;
     int count = 0;
-    int count_max = std::max(1, std::min(5, pow / 16));
+    const int count_max = std::max(1, std::min(5, pow / 16));
+
+    int pow_left = pow + 1;
 
     while (pow_left > 0 && count < count_max)
     {
-        count++;
-        pow_spent = random2(pow_left) + 1;
-        pow_left -= pow_spent;
+        const int pow_spent = random2(pow_left) + 1;
 
         switch (pow_spent)
         {
@@ -1078,6 +1079,9 @@ bool cast_summon_small_mammals(int pow, bool god_gift)
             mon = (coinflip()) ? MONS_GIANT_BAT : MONS_RAT;
             break;
         }
+
+        pow_left -= pow_spent;
+        count++;
 
         if (create_monster(
                 mgen_data(mon, BEH_FRIENDLY, 3,
@@ -1876,14 +1880,6 @@ static bool _summon_holy_being_wrapper(int pow, bool god_gift,
     }
 
     return (success);
-}
-
-static bool _summon_holy_being_wrapper(int pow, bool god_gift,
-                                       holy_being_class_type hbct)
-{
-    monster_type mon = summon_any_holy_being(hbct);
-
-    return _summon_holy_being_wrapper(pow, god_gift, mon);
 }
 
 // Zin sends an angel for a follower.
