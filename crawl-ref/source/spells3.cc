@@ -1133,11 +1133,12 @@ bool cast_twisted_resurrection(int pow, bool god_gift)
                   (rotted >= random2(how_many_corpses)) ? RED
                                                         : LIGHTRED;
 
-    const int monster = create_monster(
-                            mgen_data(mon, BEH_FRIENDLY, 0,
-                                      you.pos(), you.pet_target,
-                                      god_gift ? MG_GOD_GIFT : 0,
-                                      MONS_PROGRAM_BUG, 0, colour));
+    const int monster =
+        create_monster(
+            mgen_data(mon, BEH_FRIENDLY, 0,
+                      you.pos(), you.pet_target,
+                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH,
+                      MONS_PROGRAM_BUG, 0, colour));
 
     if (monster == -1)
     {
@@ -1166,6 +1167,8 @@ bool cast_twisted_resurrection(int pow, bool god_gift)
             menv[monster].ac += total_mass / 1000;
     }
 
+    player_angers_monster(&menv[monster]);
+
     return (true);
 }
 
@@ -1178,16 +1181,22 @@ bool cast_summon_wraiths(int pow, bool god_gift)
                         (chance > 3) ? MONS_FREEZING_WRAITH    // 20%
                                      : MONS_SPECTRAL_WARRIOR); // 16%
 
-    const bool friendly = (random2(pow) > 5);
+    bool friendly = (random2(pow) > 5);
 
-    if (create_monster(
+    const int monster =
+        create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       5, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      god_gift ? MG_GOD_GIFT : 0)) != -1)
+                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
+
+    if (monster != -1)
     {
         success = true;
+
+        if (player_angers_monster(&menv[monster]))
+            friendly = false;
 
         mpr(friendly ? "An insubstantial figure forms in the air."
                      : "You sense a hostile presence.");

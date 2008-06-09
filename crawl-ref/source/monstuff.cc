@@ -1689,8 +1689,9 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     }
 
     player_angers_monster(monster);
+
     return (player_messaged);
-}                                        // end monster_polymorph()
+}
 
 bool monster_blink(monsters *monster)
 {
