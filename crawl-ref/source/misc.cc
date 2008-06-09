@@ -2672,15 +2672,17 @@ void get_playervisible_monsters(std::vector<monsters*> &mons,
     const int xend   = MIN(GXM - 1, you.x_pos + range);
 
     // Monster check.
-    for (int y = ystart; y <= yend; y++)
-        for (int x = xstart; x <= xend; x++)
+    for (int y = ystart; y <= yend; ++y)
+    {
+        for (int x = xstart; x <= xend; ++x)
         {
             const unsigned short targ_monst = env.mgrid[x][y];
             if (targ_monst != NON_MONSTER)
             {
-                if (see_grid(x,y))
+                if (see_grid(x, y))
                 {
                     monsters *mon = &env.mons[targ_monst];
+
                     if (player_monster_visible(mon)
                         && !mons_is_submerged(mon)
                         && (!mons_is_mimic(mon->type)
@@ -2697,6 +2699,7 @@ void get_playervisible_monsters(std::vector<monsters*> &mons,
                 }
             }
         }
+    }
 }
 
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)

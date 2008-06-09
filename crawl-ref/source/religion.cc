@@ -4139,12 +4139,10 @@ static bool _beogh_followers_abandon_you()
     }
     else
     {
-        int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
-        int yend = you.y_pos + 9, xend = you.x_pos + 9;
-        if ( xstart < 0 ) xstart = 0;
-        if ( ystart < 0 ) ystart = 0;
-        if ( xend >= GXM ) xend = GXM - 1;
-        if ( yend >= GYM ) yend = GYM - 1;
+        const int ystart = MAX(0,       you.y_pos - 9);
+        const int yend   = MIN(GYM - 1, you.y_pos + 9);
+        const int xstart = MAX(0,       you.x_pos - 9);
+        const int xend   = MIN(GXM - 1, you.x_pos + 9);
 
         // monster check
         for ( int y = ystart; y <= yend; ++y )

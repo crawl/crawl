@@ -2973,25 +2973,22 @@ monsters *choose_random_monster_on_level(int weight,
     monsters *chosen = NULL;
     int mons_count = weight;
 
-    int xstart = 0, ystart = 0;
-    int xend = GXM, yend = GYM;
+    int ystart = 0, yend = GXM - 1;
+    int xstart = 0, xend = GYM - 1;
 
     if (near_by)
     {
-        xstart = you.x_pos - 9;
-        ystart = you.y_pos - 9;
-          xend = you.x_pos + 9;
-          yend = you.y_pos + 9;
-
-        if ( xstart < 0 ) xstart = 0;
-        if ( ystart < 0 ) ystart = 0;
-        if ( xend >= GXM )  xend = GXM - 1;
-        if ( yend >= GYM )  yend = GYM - 1;
+        ystart = MAX(0,       you.y_pos - 9);
+        xstart = MAX(0,       you.x_pos - 9);
+          yend = MIN(GYM - 1, you.y_pos + 9);
+          xend = MIN(GXM - 1, you.x_pos + 9);
     }
 
-    // monster check
+    // Monster check.
     for ( int y = ystart; y <= yend; ++y )
+    {
         for ( int x = xstart; x <= xend; ++x )
+        {
             if ( mgrd[x][y] != NON_MONSTER && (!in_sight || see_grid(x,y)) )
             {
                 monsters *mon = &menv[mgrd[x][y]];
@@ -3018,6 +3015,8 @@ monsters *choose_random_monster_on_level(int weight,
                         chosen = mon;
                 }
             }
+        }
+    }
 
     return chosen;
 }

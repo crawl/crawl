@@ -119,8 +119,8 @@ void curare_hits_player(int agent, int degree);
 bool mons_is_safe(const monsters *mon, bool want_move = false);
 
 void get_playervisible_monsters(std::vector<monsters*>& mons,
-                                bool just_check = false, bool want_move = false,
-                                bool dangerous = false, int range = -1);
+                                bool want_move = false, bool just_check = false,
+                                bool dangerous_only = false, int range = -1);
 
 bool i_feel_safe(bool announce = false, bool want_move = false,
                  bool just_monsters = false, int range = -1);
