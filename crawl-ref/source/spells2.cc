@@ -971,8 +971,20 @@ char burn_freeze(int pow, beam_type flavour)
     return 1;
 }
 
-void summon_animals(int pow)
+bool summon_spatial_vortex(bool god_gift)
 {
+    mpr("Space twists in upon itself!");
+
+    return (create_monster(
+               mgen_data(MONS_SPATIAL_VORTEX, BEH_HOSTILE,
+                         3, you.pos(),
+                         MHITYOU, (god_gift ? MG_GOD_GIFT : 0))) != -1);
+}
+
+bool summon_animals(int pow)
+{
+    bool success = false;
+
     // Maybe we should just generate a Lair monster instead (and
     // guarantee that it is mobile)?
     const monster_type animals[] = {
@@ -1010,12 +1022,17 @@ void summon_animals(int pow)
 
         const bool friendly = (random2(pow) > 4);
 
-        create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      4, you.pos(),
-                      friendly ? you.pet_target : MHITYOU));
+        if (create_monster(
+                mgen_data(mon,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                          4, you.pos(),
+                          friendly ? you.pet_target : MHITYOU)) != -1)
+        {
+            success = true;
+        }
     }
+
+    return (success);
 }
 
 bool cast_summon_butterflies(int pow, bool god_gift)

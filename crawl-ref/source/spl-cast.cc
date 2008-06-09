@@ -2369,10 +2369,7 @@ static void _miscast_translocation(int severity, const char* cause)
             ouch(4 + random2avg(7, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 5:
-            mpr("Space twists in upon itself!");
-            create_monster(
-                mgen_data(MONS_SPATIAL_VORTEX, BEH_HOSTILE, 3,
-                          you.pos(), MHITYOU));
+            summon_spatial_vortex();
             break;
         }
         break;
@@ -2497,10 +2494,7 @@ static void _miscast_summoning(int severity, const char* cause)
             break;
 
         case 3:
-            mpr("Space twists in upon itself!");
-            create_monster(
-                mgen_data(MONS_SPATIAL_VORTEX, BEH_HOSTILE, 3,
-                          you.pos(), MHITYOU));
+            summon_spatial_vortex();
             break;
 
         case 4:

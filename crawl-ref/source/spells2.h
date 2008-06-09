@@ -152,7 +152,8 @@ bool summon_daeva(int pow, bool god_gift = false);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-void summon_animals(int pow);
+bool summon_spatial_vortex(bool god_gift = false);
+bool summon_animals(int pow);
 
 
 // last updated 24may2000 {dlb}
