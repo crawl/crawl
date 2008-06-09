@@ -2369,7 +2369,7 @@ static void _miscast_translocation(int severity, const char* cause)
             ouch(4 + random2avg(7, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 5:
-            summon_spatial_vortices(1);
+            summon_spatial_vortices(0);
             break;
         }
         break;
@@ -2396,7 +2396,8 @@ static void _miscast_translocation(int severity, const char* cause)
             potion_effect(POT_CONFUSION, 40);
             break;
         case 5:
-            summon_spatial_vortices(2 + random2(3));
+            // Summon 2-5 spatial vortices.
+            summon_spatial_vortices(75 + random2(151));
             break;
         case 6:
             _send_abyss(cause);
@@ -2483,7 +2484,7 @@ static void _miscast_summoning(int severity, const char* cause)
             ouch(5 + random2avg(9, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 3:
-            summon_spatial_vortices(1);
+            summon_spatial_vortices(0);
             break;
         case 4:
         case 5:
@@ -2501,7 +2502,8 @@ static void _miscast_summoning(int severity, const char* cause)
         switch (random2(6))
         {
         case 0:
-            summon_spatial_vortices(2 + random2(3));
+            // Summon 2-5 spatial vortices.
+            summon_spatial_vortices(75 + random2(151));
             break;
 
         case 1:
@@ -2790,7 +2792,8 @@ static void _miscast_necromancy(int severity, const char* cause)
         switch (random2(3))
         {
         case 0:
-            summon_shadows(random2(3) + 1, false, true);
+            // Summon 1-3 shadows.
+            summon_shadows(random2(151), false, true);
             break;
 
         case 1:

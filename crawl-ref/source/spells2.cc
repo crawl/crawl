@@ -971,11 +971,14 @@ char burn_freeze(int pow, beam_type flavour)
     return 1;
 }
 
-bool summon_spatial_vortices(int how_many, bool god_gift)
+bool summon_spatial_vortices(int pow, bool god_gift)
 {
     bool success = false;
 
     mpr("Space twists in upon itself!");
+
+    // Maximum power is 300.
+    const int how_many = (pow / 75 + 1);
 
     for (int i = 0; i < how_many; ++i)
     {

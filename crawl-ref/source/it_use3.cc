@@ -225,7 +225,7 @@ void special_wielded()
     case SPWLD_SHADOW:
         if (random2(8) <= player_spec_death())
         {
-            summon_shadows(1);
+            summon_shadows(0);
             did_god_conduct(DID_NECROMANCY, 1);
         }
 
