@@ -1067,6 +1067,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     mprf(MSGCH_DIAGNOSTICS, "Spell #%d, power=%d", spell, powc );
 #endif
 
+    const bool god_gift = crawl_state.is_god_acting();
+
     switch (spell)
     {
     case SPELL_IDENTIFY:
@@ -1437,113 +1439,112 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     // Spells that create new monsters.  If a god is making you cast one
     // of these spells, any monsters produced will count as god gifts.
     case SPELL_SUMMON_BUTTERFLIES:
-        cast_summon_butterflies(powc, crawl_state.is_god_acting());
+        cast_summon_butterflies(powc, god_gift);
         break;
 
     case SPELL_SUMMON_SMALL_MAMMALS:
-        cast_summon_small_mammals(powc, crawl_state.is_god_acting());
+        cast_summon_small_mammals(powc, god_gift);
         break;
 
     case SPELL_STICKS_TO_SNAKES:
-        cast_sticks_to_snakes(powc, crawl_state.is_god_acting());
+        cast_sticks_to_snakes(powc, god_gift);
         break;
 
     case SPELL_SUMMON_SCORPIONS:
-        cast_summon_scorpions(powc, crawl_state.is_god_acting());
+        cast_summon_scorpions(powc, god_gift);
         break;
 
     case SPELL_SUMMON_SWARM:
-        cast_summon_swarm(powc, crawl_state.is_god_acting());
+        cast_summon_swarm(powc, god_gift);
         break;
 
     case SPELL_CALL_CANINE_FAMILIAR:
-        cast_call_canine_familiar(powc, crawl_state.is_god_acting());
+        cast_call_canine_familiar(powc, god_gift);
         break;
 
     case SPELL_SUMMON_ELEMENTAL:
-        if (!summon_elemental(powc, crawl_state.is_god_acting()))
+        if (!summon_elemental(powc, god_gift))
             return (SPRET_ABORT);
         break;
 
     case SPELL_SUMMON_ICE_BEAST:
-        cast_summon_ice_beast(powc, crawl_state.is_god_acting());
+        cast_summon_ice_beast(powc, god_gift);
         break;
 
     case SPELL_SUMMON_UGLY_THING:
-        cast_summon_ugly_thing(powc, crawl_state.is_god_acting());
+        cast_summon_ugly_thing(powc, god_gift);
         break;
 
     case SPELL_SUMMON_GUARDIAN:
-        summon_guardian(powc, crawl_state.is_god_acting());
+        summon_guardian(powc, god_gift);
         break;
 
     case SPELL_SUMMON_DAEVA:
-        summon_daeva(powc, crawl_state.is_god_acting());
+        summon_daeva(powc, god_gift);
         break;
 
     case SPELL_SUMMON_DRAGON:
-        cast_summon_dragon(powc, crawl_state.is_god_acting());
+        cast_summon_dragon(powc, god_gift);
         break;
 
     case SPELL_CONJURE_BALL_LIGHTNING:
-        cast_conjure_ball_lightning(powc, crawl_state.is_god_acting());
+        cast_conjure_ball_lightning(powc, god_gift);
         break;
 
     case SPELL_TUKIMAS_DANCE:
         crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
-        cast_tukimas_dance(powc, crawl_state.is_god_acting());
+        cast_tukimas_dance(powc, god_gift);
         break;
 
     case SPELL_CALL_IMP:
-        cast_call_imp(powc, crawl_state.is_god_acting());
+        cast_call_imp(powc, god_gift);
         break;
 
     case SPELL_SUMMON_DEMON:
-        cast_summon_demon(powc, crawl_state.is_god_acting());
+        cast_summon_demon(powc, god_gift);
         break;
 
     case SPELL_DEMONIC_HORDE:
-        cast_demonic_horde(powc, crawl_state.is_god_acting());
+        cast_demonic_horde(powc, god_gift);
         break;
 
     case SPELL_SUMMON_GREATER_DEMON:
-        cast_summon_greater_demon(powc, crawl_state.is_god_acting());
+        cast_summon_greater_demon(powc, god_gift);
         break;
 
     case SPELL_SHADOW_CREATURES:
-        cast_shadow_creatures(crawl_state.is_god_acting());
+        cast_shadow_creatures(god_gift);
         break;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
-        cast_summon_horrible_things(powc, crawl_state.is_god_acting());
+        cast_summon_horrible_things(powc, god_gift);
         break;
 
     case SPELL_ANIMATE_SKELETON:
         mpr("You attempt to give life to the dead...");
         animate_a_corpse(you.x_pos, you.y_pos, CORPSE_SKELETON, BEH_FRIENDLY,
-                         you.pet_target, crawl_state.is_god_acting());
+                         you.pet_target, god_gift);
         break;
 
     case SPELL_ANIMATE_DEAD:
         mpr("You call on the dead to walk for you.");
-        animate_dead(&you, powc + 1, BEH_FRIENDLY, you.pet_target,
-                     crawl_state.is_god_acting());
+        animate_dead(&you, powc + 1, BEH_FRIENDLY, you.pet_target, god_gift);
         break;
 
     case SPELL_SIMULACRUM:
-        cast_simulacrum(powc, crawl_state.is_god_acting());
+        cast_simulacrum(powc, god_gift);
         break;
 
     case SPELL_TWISTED_RESURRECTION:
-        cast_twisted_resurrection(powc, crawl_state.is_god_acting());
+        cast_twisted_resurrection(powc, god_gift);
         break;
 
     case SPELL_SUMMON_WRAITHS:
-        cast_summon_wraiths(powc, crawl_state.is_god_acting());
+        cast_summon_wraiths(powc, god_gift);
         break;
 
     case SPELL_DEATH_CHANNEL:
-        cast_death_channel(powc, crawl_state.is_god_acting());
+        cast_death_channel(powc, god_gift);
         break;
     // End of spells that create new monsters.
 
@@ -2315,6 +2316,8 @@ static void _miscast_enchantment(int severity, const char* cause)
 
 static void _miscast_translocation(int severity, const char* cause)
 {
+    const bool god_gift = crawl_state.is_god_acting();
+
     switch (severity)
     {
     case 0:         // harmless messages only
@@ -2369,7 +2372,7 @@ static void _miscast_translocation(int severity, const char* cause)
             ouch(4 + random2avg(7, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 5:
-            summon_spatial_vortices(0);
+            summon_spatial_vortices(0, god_gift);
             break;
         }
         break;
@@ -2397,7 +2400,7 @@ static void _miscast_translocation(int severity, const char* cause)
             break;
         case 5:
             // Summon 2-4 spatial vortices.
-            summon_spatial_vortices(75 + random2(151));
+            summon_spatial_vortices(75 + random2(151), god_gift);
             break;
         case 6:
             _send_abyss(cause);
@@ -2433,6 +2436,9 @@ static void _miscast_translocation(int severity, const char* cause)
 
 static void _miscast_summoning(int severity, const char* cause)
 {
+    const bool god_gift = crawl_state.is_god_acting();
+    const unsigned flags = (god_gift) ? MG_GOD_GIFT : 0;
+
     switch (severity)
     {
     case 0:         // harmless messages only
@@ -2484,13 +2490,13 @@ static void _miscast_summoning(int severity, const char* cause)
             ouch(5 + random2avg(9, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 3:
-            summon_spatial_vortices(0);
+            summon_spatial_vortices(0, god_gift);
             break;
         case 4:
         case 5:
             if (create_monster(
                     mgen_data::alert_hostile_at(summon_any_demon(DEMON_LESSER),
-                        you.pos(), 5)) != -1)
+                        you.pos(), 5, flags)) != -1)
             {
                 mpr("Something appears in a flash of light!");
             }
@@ -2505,14 +2511,14 @@ static void _miscast_summoning(int severity, const char* cause)
         {
         case 0:
             // Summon 2-4 spatial vortices.
-            summon_spatial_vortices(75 + random2(151));
+            summon_spatial_vortices(75 + random2(151), god_gift);
             break;
 
         case 1:
         case 2:
             if (create_monster(
                     mgen_data::alert_hostile_at(summon_any_demon(DEMON_COMMON),
-                        you.pos(), 5)) != -1)
+                        you.pos(), 5, flags)) != -1)
             {
                 mpr("Something forms out of thin air!");
             }
@@ -2530,7 +2536,7 @@ static void _miscast_summoning(int severity, const char* cause)
             {
                 if (create_monster(
                     mgen_data::alert_hostile_at(summon_any_demon(DEMON_LESSER),
-                        you.pos(), 5)) != -1)
+                        you.pos(), 5, flags)) != -1)
                 {
                     success = true;
                 }
@@ -2551,7 +2557,7 @@ static void _miscast_summoning(int severity, const char* cause)
         case 0:
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_ABOMINATION_SMALL,
-                        you.pos())) != -1)
+                        you.pos(), 0, flags)) != -1)
             {
                 mpr("Something forms out of thin air.");
             }
@@ -2562,7 +2568,7 @@ static void _miscast_summoning(int severity, const char* cause)
         case 1:
             if (create_monster(
                     mgen_data::alert_hostile_at(summon_any_demon(DEMON_GREATER),
-                        you.pos())) != -1)
+                        you.pos(), 0, flags)) != -1)
             {
                 mpr("You sense a hostile presence.");
             }
@@ -2578,7 +2584,7 @@ static void _miscast_summoning(int severity, const char* cause)
             {
                 if (create_monster(
                     mgen_data::alert_hostile_at(summon_any_demon(DEMON_COMMON),
-                        you.pos(), 3)) != -1)
+                        you.pos(), 3, flags)) != -1)
                 {
                     success = true;
                 }
@@ -2717,6 +2723,9 @@ static void _miscast_necromancy(int severity, const char* cause)
         return;
     }
 
+    const bool god_gift = crawl_state.is_god_acting();
+    const unsigned flags = (god_gift) ? MG_GOD_GIFT : 0;
+
     switch (severity)
     {
     case 0:
@@ -2799,7 +2808,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         {
         case 0:
             // Summon 1-3 shadows.
-            summon_shadows(random2(61), false, true);
+            summon_shadows(random2(61), god_gift, true);
             break;
 
         case 1:
@@ -2854,7 +2863,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         case 4:
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_SOUL_EATER,
-                        you.pos(), 4)) != -1)
+                        you.pos(), 4, flags)) != -1)
             {
                 mpr("Something reaches out for you...");
             }
@@ -2865,7 +2874,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         case 5:
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_REAPER,
-                        you.pos(), 4)) != -1)
+                        you.pos(), 4, flags)) != -1)
             {
                 mpr("Death has come for you...");
             }
