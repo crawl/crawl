@@ -644,6 +644,7 @@ bool mons_is_sleeping(const monsters *m);
 bool mons_is_batty(const monsters *m);
 bool mons_was_seen(const monsters *m);
 bool mons_is_known_mimic(const monsters *m);
+bool mons_is_priest( const monsters *mon );
 bool mons_is_holy( const monsters *mon );
 bool mons_is_evil( const monsters *mon );
 bool mons_is_unholy( const monsters *mon );

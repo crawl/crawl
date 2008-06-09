@@ -1194,6 +1194,11 @@ int mons_res_negative_energy( const monsters *mon )
     return (u);
 }                               // end mons_res_negative_energy()
 
+bool mons_is_priest( const monsters *mon )
+{
+    return (mons_class_flag( mon->type, M_PRIEST ));
+}
+
 bool mons_is_holy( const monsters *mon )
 {
     return (mons_holiness( mon ) == MH_HOLY);
