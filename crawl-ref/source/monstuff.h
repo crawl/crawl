@@ -39,8 +39,10 @@ enum mon_desc_type   // things that cross categorical lines {dlb}
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
 
 // useful macro
-#define SAME_ATTITUDE(x) (mons_friendly(x)? BEH_FRIENDLY:    \
-                          mons_neutral(x)?  BEH_NEUTRAL : BEH_HOSTILE)
+#define SAME_ATTITUDE(x) (mons_friendly(x)     ? BEH_FRIENDLY : \
+                          mons_good_neutral(x) ? BEH_GOOD_NEUTRAL : \
+                          mons_neutral(x)      ? BEH_NEUTRAL \
+                                               : BEH_HOSTILE)
 
 #define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
 
