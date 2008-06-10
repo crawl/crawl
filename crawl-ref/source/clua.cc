@@ -930,10 +930,12 @@ static int l_item_swap_slots(lua_State *ls)
     int slot1 = luaL_checkint(ls, 1),
         slot2 = luaL_checkint(ls, 2);
     bool verbose = lua_toboolean(ls, 3);
-    if (slot1 < 0 || slot1 >= ENDOFPACK ||
-            slot2 < 0 || slot2 >= ENDOFPACK ||
-            slot1 == slot2 || !is_valid_item(you.inv[slot1]))
+    if (slot1 < 0 || slot1 >= ENDOFPACK
+        || slot2 < 0 || slot2 >= ENDOFPACK
+        || slot1 == slot2 || !is_valid_item(you.inv[slot1]))
+    {
         return (0);
+    }
 
     swap_inv_slots(slot1, slot2, verbose);
 
@@ -1399,8 +1401,8 @@ static int l_item_slot(lua_State *ls)
     LUA_ITEM(item, 1);
     if (item)
     {
-        int slot = in_inventory(*item)? item->link :
-                        letter_to_index(item->slot);
+        int slot = in_inventory(*item) ? item->link
+                                       : letter_to_index(item->slot);
         lua_pushnumber(ls, slot);
     }
     else
@@ -1686,13 +1688,13 @@ static int food_ischunk(lua_State *ls)
 
 static const struct luaL_reg food_lib[] =
 {
-    { "do_eat",         food_do_eat },
-    { "prompt_floor",   food_prompt_floor },
+    { "do_eat",           food_do_eat },
+    { "prompt_floor",     food_prompt_floor },
     { "prompt_inventory", food_prompt_inventory },
-    { "can_eat",        food_can_eat },
-    { "eat",            food_eat },
-    { "rotting",        food_rotting },
-    { "ischunk",        food_ischunk },
+    { "can_eat",          food_can_eat },
+    { "eat",              food_eat },
+    { "rotting",          food_rotting },
+    { "ischunk",          food_ischunk },
     { NULL, NULL },
 };
 
@@ -2200,32 +2202,32 @@ static int option_hboolean(lua_State *ls, const char *name, void *data,
 static option_handler handlers[] =
 {
     // Boolean options come first
-    { "easy_open", &Options.easy_open, option_hboolean },
-    { "colour_map", &Options.colour_map, option_hboolean },
-    { "clean_map", &Options.clean_map, option_hboolean },
+    { "easy_open",     &Options.easy_open, option_hboolean },
+    { "colour_map",    &Options.colour_map, option_hboolean },
+    { "clean_map",     &Options.clean_map, option_hboolean },
     { "show_uncursed", &Options.show_uncursed, option_hboolean },
-    { "easy_open", &Options.easy_open, option_hboolean },
-    { "easy_armour", &Options.easy_unequip, option_hboolean },
-    { "easy_unequip", &Options.easy_unequip, option_hboolean },
-    { "easy_butcher", &Options.easy_butcher, option_hboolean },
+    { "easy_open",     &Options.easy_open, option_hboolean },
+    { "easy_armour",   &Options.easy_unequip, option_hboolean },
+    { "easy_unequip",  &Options.easy_unequip, option_hboolean },
+    { "easy_butcher",  &Options.easy_butcher, option_hboolean },
     { "always_confirm_butcher", &Options.always_confirm_butcher, option_hboolean },
-    { "default_target", &Options.default_target, option_hboolean },
+    { "default_target",       &Options.default_target, option_hboolean },
     { "autopickup_no_burden", &Options.autopickup_no_burden, option_hboolean },
-    { "note_skill_max", &Options.note_skill_max, option_hboolean },
-    { "delay_message_clear", &Options.delay_message_clear, option_hboolean },
-    { "no_dark_brand", &Options.no_dark_brand, option_hboolean },
-    { "auto_list", &Options.auto_list, option_hboolean },
-    { "pickup_thrown", &Options.pickup_thrown, option_hboolean },
-    { "pickup_dropped", &Options.pickup_dropped, option_hboolean },
-    { "show_waypoints", &Options.show_waypoints, option_hboolean },
-    { "item_colour", &Options.item_colour, option_hboolean },
+    { "note_skill_max",       &Options.note_skill_max, option_hboolean },
+    { "delay_message_clear",  &Options.delay_message_clear, option_hboolean },
+    { "no_dark_brand",   &Options.no_dark_brand, option_hboolean },
+    { "auto_list",       &Options.auto_list, option_hboolean },
+    { "pickup_thrown",   &Options.pickup_thrown, option_hboolean },
+    { "pickup_dropped",  &Options.pickup_dropped, option_hboolean },
+    { "show_waypoints",  &Options.show_waypoints, option_hboolean },
+    { "item_colour",     &Options.item_colour, option_hboolean },
     { "target_zero_exp", &Options.target_zero_exp, option_hboolean },
-    { "target_wrap", &Options.target_wrap, option_hboolean },
-    { "easy_exit_menu", &Options.easy_exit_menu, option_hboolean },
+    { "target_wrap",     &Options.target_wrap, option_hboolean },
+    { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
-                    option_hboolean },
+                                      option_hboolean },
     { "menu_colour_prefix_class", &Options.menu_colour_prefix_class,
-                    option_hboolean },
+                                  option_hboolean },
 };
 
 static const option_handler *get_handler(const char *optname)

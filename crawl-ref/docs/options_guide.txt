@@ -319,16 +319,17 @@ The available stock Lua scripts are
   wield.lua     -- shows more intelligent options when using 'w?'
   kills.lua     -- improves the Vanquished Creatures list in dump files; 
                    currently gives three lists (Vanquished, Friendly, 
-                   Others)
+                   Others).
   runrest.lua   -- allows overriding certain stop conditions when 
-                   running
+                   running.
                    New options: runrest_ignore_poison, 
                    runrest_ignore_message, runrest_ignore_monster
   gearset.lua   -- provides commands for switching of complete sets via 
-                   macro
+                   macro.
                    New macroable functions: rememberkit, swapkit
   eat.lua       -- prompts to eat chunks in inventory.
-  pickup.lua    -- smarter autopickup.
+  pickup.lua    -- allows autopickup of a butchering tool if you don't
+                   already have one.
   trapwalk.lua  -- allows travel to cross certain traps if you have 
                    enough HP.
 

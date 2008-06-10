@@ -862,8 +862,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_NAGA_BARDING)
         can_wear = (you.species == SP_NAGA);
-
-    if (sub_type == ARM_CENTAUR_BARDING)
+    else if (sub_type == ARM_CENTAUR_BARDING)
         can_wear = (you.species == SP_CENTAUR);
 
     if (!can_wear)
@@ -921,14 +920,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
         && (ignore_temporary || !player_is_shapechanged()))
     {
-        // it fits
+        // It fits.
         return (true);
     }
     else if (you.species == SP_CENTAUR
              && sub_type == ARM_CENTAUR_BARDING
              && (ignore_temporary || !player_is_shapechanged()))
     {
-        // it fits
+        // It fits.
         return (true);
     }
     else if (slot == EQ_HELMET)
@@ -976,13 +975,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     // Giant races
-    if ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
+    if (you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE
         || player_genus(GENPC_DRACONIAN))
     {
-        if ((sub_type >= ARM_LEATHER_ARMOUR
-                && sub_type <= ARM_PLATE_MAIL)
-            || (sub_type >= ARM_GLOVES
-                && sub_type <= ARM_BUCKLER)
+        if (sub_type >= ARM_LEATHER_ARMOUR
+               && sub_type <= ARM_PLATE_MAIL
+            || sub_type >= ARM_GLOVES
+               && sub_type <= ARM_BUCKLER
             || sub_type == ARM_CRYSTAL_PLATE_MAIL
             || is_hard_helmet(item))
         {

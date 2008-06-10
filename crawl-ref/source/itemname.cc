@@ -2341,15 +2341,19 @@ bool is_dangerous_item(const item_def &item)
 
 bool is_useless_item(const item_def &item, bool temp)
 {
-    if (!item_type_known(item))
-        return (false);
-
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
         return (!can_wear_armour(item, false, true));
 
+    case OBJ_BOOKS:
+        return (item.sub_type != BOOK_DESTRUCTION
+                && item.sub_type != BOOK_MANUAL && you.religion == GOD_TROG);
+
     case OBJ_SCROLLS:
+        if (!item_type_known(item))
+            return (false);
+
         // A bad item is always useless.
         if (is_bad_item(item))
             return (true);
@@ -2368,6 +2372,9 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_POTIONS:
     {
+        if (!item_type_known(item))
+            return (false);
+
         switch (item.sub_type)
         {
         case POT_CONFUSION:
@@ -2410,6 +2417,9 @@ bool is_useless_item(const item_def &item, bool temp)
         return (false);
     }
     case OBJ_JEWELLERY:
+        if (!item_type_known(item))
+            return (false);
+
         if (is_bad_item(item))
             return (true);
 

@@ -2771,6 +2771,14 @@ enum friendly_pickup_type
     FRIENDLY_PICKUP_ALL
 };
 
+enum montravel_target_type
+{
+    MTRAV_NONE = 0,
+    MTRAV_PLAYER,       // Travelling to reach the player.
+    MTRAV_PATROL,       // Travelling to reach the patrol point.
+    MTRAV_UNREACHABLE   // Not travelling because player is unreachable.
+};
+
 #ifdef WIZARD
 
 enum wizard_option_type

@@ -80,6 +80,7 @@ lua_file = lua/runrest.lua
 lua_file = lua/gearset.lua
 lua_file = lua/eat.lua
 lua_file = lua/trapwalk.lua
+lua_file = lua/pickup.lua
 
 # kills.lua yields more information at the cost of huge dumps.
 # lua_file = lua/kills.lua
@@ -90,9 +91,9 @@ lua_file = lua/trapwalk.lua
 #	
 autopickup = $?!+"/%)
 
-# lua routines for automatically picking up one butchering tool
-# This require ) in autopickup and no further weapons are picked up.
-include = pickup_butcher_tool.txt
+# Note that ")" have to be in the above list for pickup.lua
+# (autopickup a butchering tool if you don't already have one)
+# to work.
 
 # There is a long list of autopickup exceptions in
 include = autopickup_exceptions.txt

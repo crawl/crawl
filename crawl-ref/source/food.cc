@@ -185,6 +185,10 @@ static bool _find_butchering_implement( bool fallback )
     // automatically.
     if (const item_def *wpn = you.weapon())
     {
+        // No switching necessary.
+        if (can_cut_meat( *wpn ))
+            return (false);
+
         if (wpn->base_type == OBJ_WEAPONS
             && item_type_known(*wpn)
             && get_weapon_brand(*wpn) == SPWPN_DISTORTION)
@@ -195,9 +199,6 @@ static bool _find_butchering_implement( bool fallback )
 
             return (false);
         }
-        // No switching necessary.
-        if (can_cut_meat( *wpn ))
-            return (false);
     }
 
     int old_weapon = you.equip[EQ_WEAPON];

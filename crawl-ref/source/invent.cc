@@ -819,8 +819,8 @@ static bool _item_class_selected(const item_def &i, int selector)
 static bool _userdef_item_selected(const item_def &i, int selector)
 {
 #if defined(CLUA_BINDINGS)
-    const char *luafn = selector == OSEL_WIELD ? "ch_item_wieldable" :
-                                                NULL;
+    const char *luafn = selector == OSEL_WIELD ? "ch_item_wieldable"
+                                               : NULL;
     return (luafn && clua.callbooleanfn(false, luafn, "u", &i));
 #else
     return (false);
@@ -829,16 +829,19 @@ static bool _userdef_item_selected(const item_def &i, int selector)
 
 static bool _is_item_selected(const item_def &i, int selector)
 {
-    return _item_class_selected(i, selector)
-        || _userdef_item_selected(i, selector);
+    return (_item_class_selected(i, selector)
+            || _userdef_item_selected(i, selector));
 }
 
 static void _get_inv_items_to_show(std::vector<const item_def*> &v, int selector)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (is_valid_item(you.inv[i]) && _is_item_selected(you.inv[i], selector))
+        if (is_valid_item(you.inv[i])
+            && _is_item_selected(you.inv[i], selector))
+        {
             v.push_back( &you.inv[i] );
+        }
     }
 }
 

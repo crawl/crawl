@@ -2247,6 +2247,9 @@ bool item_needs_autopickup(const item_def &item)
 
     std::string itemname;
     return ((Options.autopickups & (1L << item.base_type)
+#ifdef CLUA_BINDINGS
+                    && clua.callbooleanfn(true, "ch_autopickup", "u", &item)
+#endif
                     && !is_useless_item(item) && !is_inedible(item)
                 || _is_forced_autopickup(item, itemname))
             && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
