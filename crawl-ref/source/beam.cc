@@ -3442,8 +3442,6 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
 
         place_cloud( CLOUD_FIRE, x, y, duration, _whose_kill(beam) );
 
-        // God gift exception: A fire vortex is a natural phenomenon
-        // treated as a monster, so don't mark it as a god gift.
         if (grd[x][y] == DNGN_FLOOR && mgrd[x][y] == NON_MONSTER
             && one_chance_in(4))
         {

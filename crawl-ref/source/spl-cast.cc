@@ -1419,7 +1419,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters
-    // produced (with a few exceptions) will count as god gifts.
+    // produced will count as god gifts.
     case SPELL_SUMMON_BUTTERFLIES:
         cast_summon_butterflies(powc, god_gift);
         break;
@@ -3709,8 +3709,8 @@ static void _miscast_poison(int severity, const char* cause)
 // force_effect: This forces a certain severity of effect to occur.  It
 //               can be disabled by being set to 100.
 //
-// If a god is making you miscast, any monsters produced (with a few
-// exceptions) will count as god gifts.
+// If a god is making you miscast, any monsters produced will count as
+// god gifts.
 void miscast_effect(unsigned int sp_type, int mag_pow, int mag_fail,
                     int force_effect, const char *cause)
 {
