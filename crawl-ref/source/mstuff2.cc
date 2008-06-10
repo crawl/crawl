@@ -456,7 +456,7 @@ static monster_type _pick_random_wraith()
 
 static monster_type _pick_horrible_thing()
 {
-    return (one_chance_in(4)? MONS_TENTACLED_MONSTROSITY
+    return (one_chance_in(4) ? MONS_TENTACLED_MONSTROSITY
             : MONS_ABOMINATION_LARGE);
 }
 
