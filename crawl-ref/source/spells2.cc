@@ -607,9 +607,9 @@ static std::string describe_monsters(const counted_monster_list &list)
     return (out.str());
 }
 
-// poisonous light passes right through invisible players
+// Poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
-// assumes only you can cast this spell (or would want to)
+// assumes only you can cast this spell (or would want to).
 void cast_toxic_radiance(void)
 {
     struct monsters *monster;
@@ -621,7 +621,7 @@ void cast_toxic_radiance(void)
     more();
     mesclr();
 
-    // determine whether the player is hit by the radiance: {dlb}
+    // Determine whether the player is hit by the radiance. {dlb}
     if (you.duration[DUR_INVIS])
     {
         mpr("The light passes straight through your body.");
@@ -866,7 +866,6 @@ bool vampiric_drain(int pow, const dist &vmove)
     return (true);
 }
 
-// Note: this function is currently only used for Freeze. -- bwr
 char burn_freeze(int pow, beam_type flavour)
 {
     int mgr = NON_MONSTER;
@@ -895,6 +894,7 @@ char burn_freeze(int pow, beam_type flavour)
         mgr = mgrd[you.x_pos + bmove.dx][you.y_pos + bmove.dy];
 
         // Yes, this is strange, but it does maintain the original behaviour.
+        // Possibly to avoid giving information about invisible monsters?
         if (mgr == NON_MONSTER)
         {
             mpr("There isn't anything close enough!");
@@ -1151,9 +1151,7 @@ bool cast_sticks_to_snakes(int pow, bool god_gift)
                 mon = random2(100) < pow / 3 ? MONS_BROWN_SNAKE : MONS_SNAKE;
             }
             else
-            {
                 mon = MONS_SMALL_SNAKE;
-            }
 
             if (create_monster(
                     mgen_data(mon, beha, dur,
@@ -1184,6 +1182,7 @@ bool cast_sticks_to_snakes(int pow, bool god_gift)
         // ogres, and most importantly ogre magi).  Still it's unlikely
         // any character is strong enough to bother lugging a few of
         // these around.  -- bwr
+
         if (item_mass(you.inv[wpn]) < 300)
             mon = MONS_SNAKE;
         else
@@ -1217,7 +1216,9 @@ bool cast_sticks_to_snakes(int pow, bool god_gift)
         dec_inv_item_quantity(you.equip[EQ_WEAPON], count);
 
         mprf("You create %s snake%s!",
-             count > 1 ? "some" : "a", count > 1 ? "s" : "");
+             count > 1 ? "some" : "a",
+             count > 1 ? "s" : "");
+
         return (true);
     }
 
@@ -1254,8 +1255,9 @@ bool cast_summon_scorpions(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_summon_swarm(int pow, bool god_gift,
-                       bool force_hostile)
+// Creates a mixed swarm of typical swarming animals.
+// Number, duration and friendlinesss depend on spell power.
+bool cast_summon_swarm(int pow, bool god_gift, bool force_hostile)
 {
     bool success = false;
 
@@ -1271,37 +1273,37 @@ bool cast_summon_swarm(int pow, bool god_gift,
         switch (random2(14))
         {
         case 0:
-        case 1:         // prototypical swarming creature {dlb}
+        case 1:
+        case 2:         // prototypical swarming creature {dlb}
             mon = MONS_KILLER_BEE;
             break;
 
-        case 2:         // comment said "larva", code read scorpion {dlb}
-            mon = MONS_SCORPION;
-            break;              // think: "The Arrival" {dlb}
+        case 3:
+            mon = MONS_SCORPION; // think: "The Arrival" {dlb}
+            break;
 
-        case 3:         //jmf: technically not insects but still cool
+        case 4:         //jmf: technically not insects but still cool
             mon = MONS_WORM;
             break;              // but worms kinda "swarm" so s'ok {dlb}
 
-        case 4:         // comment read "larva", code was for scorpion
+        case 5:
             mon = MONS_GIANT_MOSQUITO;
             break;              // changed into giant mosquito 12jan2000 {dlb}
 
-        case 5:         // think: scarabs in "The Mummy" {dlb}
-            mon = MONS_GIANT_BEETLE;
+        case 6:
+            mon = MONS_GIANT_BEETLE;   // think: scarabs in "The Mummy" {dlb}
             break;
 
-        case 6:         //jmf: blowfly instead of queen bee
+        case 7:         //jmf: blowfly instead of queen bee
             mon = MONS_GIANT_BLOWFLY;
             break;
 
-            // queen bee added if more than x bees in swarm? {dlb}
-            // the above would require code rewrite - worth it? {dlb}
+            // Queen bee added if more than x bees in swarm? {dlb}
+            // The above would require code rewrite - worth it? {dlb}
 
-        case 8:         //jmf: changed to red wasp; was wolf spider
-            mon = MONS_WOLF_SPIDER;    //jmf: spiders aren't insects
-            break;              // think: "Kingdom of the Spiders" {dlb}
-            // not just insects!!! - changed back {dlb}
+        case 8:
+            mon = MONS_WOLF_SPIDER;  // think: "Kingdom of the Spiders" {dlb}
+            break;
 
         case 9:
             mon = MONS_BUTTERFLY;      // comic relief? {dlb}
@@ -1314,7 +1316,7 @@ bool cast_summon_swarm(int pow, bool god_gift,
         default:                // 3 in 14 chance, 12jan2000 {dlb}
             mon = MONS_GIANT_ANT;
             break;
-        }                       // end switch
+        }
 
         bool friendly = (force_hostile) ? false : (random2(pow) > 7);
 

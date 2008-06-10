@@ -913,6 +913,9 @@ static bool _spell_is_uncastable(spell_type spell)
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
+// Not all of these are actually real spells; invocations, decks, rods or misc.
+// effects might also land us here.
+// Others are currently unused or unimplemented.
 spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 {
     struct dist spd;
@@ -938,10 +941,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
 
         targeting_type dir  =
-            (testbits( flags, SPFLAG_TARGET )        ? DIR_TARGET :
-             testbits( flags, SPFLAG_GRID )          ? DIR_TARGET :
-             testbits( flags, SPFLAG_DIR )           ? DIR_DIR
-                                                     : DIR_NONE);
+            (testbits( flags, SPFLAG_TARGET ) ? DIR_TARGET :
+             testbits( flags, SPFLAG_GRID )   ? DIR_TARGET :
+             testbits( flags, SPFLAG_DIR )    ? DIR_DIR
+                                              : DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);
         if (spell == SPELL_EVAPORATE)
@@ -1072,28 +1075,239 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     switch (spell)
     {
-    case SPELL_IDENTIFY:
-        identify(powc);
+    // Attack spells.
+    // using burn_freeze()
+    case SPELL_BURN:
+        if (burn_freeze(powc, BEAM_FIRE) == -1)
+            return (SPRET_ABORT);
         break;
 
-    case SPELL_TELEPORT_SELF:
-        you_teleport();
+    case SPELL_FREEZE:
+        if (burn_freeze(powc, BEAM_COLD) == -1)
+            return (SPRET_ABORT);
         break;
 
-    case SPELL_CAUSE_FEAR:
-        mass_enchantment(ENCH_FEAR, powc, MHITYOU);
+    case SPELL_CRUSH:
+        if (burn_freeze(powc, BEAM_MISSILE) == -1)
+            return (SPRET_ABORT);
         break;
 
-    case SPELL_CREATE_NOISE:  // unused, the player can shout to do this - bwr
-        noisy(25, you.x_pos, you.y_pos, "You hear a voice calling your name!");
+    case SPELL_ARC:
+        if (burn_freeze(powc, BEAM_ELECTRICITY) == -1)
+            return (SPRET_ABORT);
         break;
 
-    case SPELL_REMOVE_CURSE:
-        remove_curse(false);
-        break;
-
+    // direct beams/bolts
     case SPELL_MAGIC_DART:
         if (!zapping(ZAP_MAGIC_DARTS, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_STRIKING:
+        if (!zapping(ZAP_STRIKING, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_THROW_FLAME:
+        if (!zapping(ZAP_FLAME, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_THROW_FROST:
+        if (!zapping(ZAP_FROST, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_PAIN:
+        if (!zapping(ZAP_PAIN, powc, beam, true))
+            return (SPRET_ABORT);
+        dec_hp(1, false);
+        break;
+
+    case SPELL_FLAME_TONGUE:
+        if (!zapping(ZAP_FLAME_TONGUE, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_SANDBLAST:
+        if (!cast_sandblast(powc, beam))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_BONE_SHARDS:
+        if (!cast_bone_shards(powc, beam))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_SHOCK:
+        if (!zapping(ZAP_ELECTRICITY, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_STING:
+        if (!zapping(ZAP_STING, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_VAMPIRIC_DRAINING:
+        vampiric_drain(powc, spd);
+        break;
+
+    case SPELL_BOLT_OF_FIRE:
+        if (!zapping(ZAP_FIRE, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_BOLT_OF_COLD:
+        if (!zapping(ZAP_COLD, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_STONE_ARROW:
+        if (!zapping(ZAP_STONE_ARROW, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_POISON_ARROW:
+        if (!zapping(ZAP_POISON_ARROW, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_BOLT_OF_IRON:
+        if (!zapping(ZAP_IRON_BOLT, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_LIGHTNING_BOLT:
+        if (!zapping(ZAP_LIGHTNING, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_BOLT_OF_MAGMA:
+        if (!zapping(ZAP_MAGMA, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_VENOM_BOLT:
+        if (!zapping(ZAP_VENOM_BOLT, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_BOLT_OF_DRAINING:
+        if (!zapping(ZAP_NEGATIVE_ENERGY, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+        if (!zapping(ZAP_CRYSTAL_SPEAR, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_BOLT_OF_INACCURACY:
+        if (!zapping(ZAP_BEAM_OF_ENERGY, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_STICKY_FLAME:
+        if (!zapping(ZAP_STICKY_FLAME, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_DISPEL_UNDEAD:
+        if (!zapping(ZAP_DISPEL_UNDEAD, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+        if (!zapping(ZAP_MYSTIC_BLAST, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_THUNDERBOLT:
+        if (!zapping(ZAP_LIGHTNING, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_AGONY:
+        if (!zapping(ZAP_AGONY, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_DISRUPT:
+        if (!zapping(ZAP_DISRUPTION, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_DISINTEGRATE:
+        if (!zapping(ZAP_DISINTEGRATION, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_ICE_BOLT:
+        if (!zapping(ZAP_ICE_BOLT, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_ORB_OF_FRAGMENTATION:
+        if (!zapping(ZAP_ORB_OF_FRAGMENTATION, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_CIGOTUVIS_DEGENERATION:
+        if (!zapping(ZAP_DEGENERATION, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_ORB_OF_ELECTROCUTION:
+        if (!zapping(ZAP_ORB_OF_ELECTRICITY, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_FLAME_OF_CLEANSING:
+        if (!zapping(ZAP_CLEANSING_FLAME, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_HOLY_WORD:
+        holy_word(50, HOLY_WORD_SPELL, you.x_pos, you.y_pos, true);
+        break;
+
+    case SPELL_REPEL_UNDEAD:
+        turn_undead(50);
+        break;
+
+    case SPELL_HELLFIRE:
+        // Should only be available from
+        // staff of Dispater & Sceptre of Asmodeus
+        if (!zapping(ZAP_HELLFIRE, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    // Clouds and explosions.
+    case SPELL_MEPHITIC_CLOUD:
+        if (!stinking_cloud(powc, beam))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_EVAPORATE:
+        if (!cast_evaporate(powc, beam, potion))
+            return SPRET_ABORT;
+        break;
+
+    case SPELL_POISONOUS_CLOUD:
+        cast_big_c(powc, CLOUD_POISON, KC_YOU, beam);
+        break;
+
+    case SPELL_FREEZING_CLOUD:
+        cast_big_c(powc, CLOUD_COLD, KC_YOU, beam);
+        break;
+
+    case SPELL_FIRE_STORM:
+        cast_fire_storm(powc, beam);
+        break;
+
+    case SPELL_ICE_STORM:
+        if (!zapping(ZAP_ICE_STORM, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1140,306 +1354,72 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             canned_msg( MSG_NOTHING_HAPPENS );
         break;
 
-    case SPELL_STRIKING:
-        if (!zapping(ZAP_STRIKING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_CONJURE_FLAME:
-        if (!conjure_flame(powc))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_DIG:
-        if (!zapping(ZAP_DIGGING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_BOLT_OF_FIRE:
-        if (!zapping(ZAP_FIRE, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_BOLT_OF_COLD:
-        if (!zapping(ZAP_COLD, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_LIGHTNING_BOLT:
-        if (!zapping(ZAP_LIGHTNING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_BOLT_OF_MAGMA:
-        if (!zapping(ZAP_MAGMA, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_POLYMORPH_OTHER:
-        // Trying is already enough, even if it fails.
-        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-
-        if (!zapping(ZAP_POLYMORPH_OTHER, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_SLOW:
-        if (!zapping(ZAP_SLOWING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_HASTE:
-        if (!zapping(ZAP_HASTING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_PARALYSE:
-        if (!zapping(ZAP_PARALYSIS, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_CONFUSE:
-        if (!zapping(ZAP_CONFUSION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_CONFUSING_TOUCH:
-        cast_confusing_touch(powc);
-        break;
-
-    case SPELL_SURE_BLADE:
-        cast_sure_blade(powc);
-        break;
-
-    case SPELL_INVISIBILITY:
-        if (!zapping(ZAP_INVISIBILITY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_THROW_FLAME:
-        if (!zapping(ZAP_FLAME, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_THROW_FROST:
-        if (!zapping(ZAP_FROST, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_CONTROLLED_BLINK:
-        if (blink(powc, true) == -1)
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_FREEZING_CLOUD:
-        cast_big_c(powc, CLOUD_COLD, KC_YOU, beam);
-        break;
-
-    case SPELL_MEPHITIC_CLOUD:
-        if (!stinking_cloud(powc, beam))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_RING_OF_FLAMES:
-        cast_ring_of_flames(powc);
-        break;
-
-    case SPELL_RESTORE_STRENGTH:
-        restore_stat(STAT_STRENGTH, 0, false);
-        break;
-
-    case SPELL_RESTORE_INTELLIGENCE:
-        restore_stat(STAT_INTELLIGENCE, 0, false);
-        break;
-
-    case SPELL_RESTORE_DEXTERITY:
-        restore_stat(STAT_DEXTERITY, 0, false);
-        break;
-
-    case SPELL_VENOM_BOLT:
-        if (!zapping(ZAP_VENOM_BOLT, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
-        cast_toxic_radiance();
-        break;
-
-    case SPELL_TELEPORT_OTHER:
-        // teleport creature (I think)
-        if (!zapping(ZAP_TELEPORTATION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_LESSER_HEALING:
-        if (!cast_healing(5))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_GREATER_HEALING:
-        if (!cast_healing(25))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_CURE_POISON_I:   //jmf: `healing' version? group w/ S_C_P_II?
-        cast_cure_poison(powc);
-        break;
-
-    case SPELL_PURIFICATION:
-        purification();
-        break;
-
-    case SPELL_DEATHS_DOOR:
-        cast_deaths_door(powc);
-        break;
-
-    case SPELL_SELECTIVE_AMNESIA:
-        crawl_state.cant_cmd_repeat("You can't repeat selective amnesia.");
-
-        if (!cast_selective_amnesia(false))
-            return (SPRET_ABORT);
-        break;                  //     Sif Muna power calls with true
-
-    case SPELL_MASS_CONFUSION:
-        mass_enchantment(ENCH_CONFUSION, powc, MHITYOU);
-        break;
-
+    // LOS spells
     case SPELL_SMITING:
         cast_smiting(powc, spd);
         break;
 
-    case SPELL_REPEL_UNDEAD:
-        turn_undead(50);
+    case SPELL_TWIST:
+        cast_twist(powc);
         break;
 
-    case SPELL_HOLY_WORD:
-        holy_word(50, HOLY_WORD_SPELL, you.x_pos, you.y_pos, true);
+    case SPELL_AIRSTRIKE:
+        airstrike(powc, spd);
         break;
 
-    case SPELL_DETECT_CURSE:
-        detect_curse(false);
+    case SPELL_FRAGMENTATION:
+        cast_fragmentation(powc);
         break;
 
-    case SPELL_ABJURATION_I:
-    case SPELL_ABJURATION_II:
-        abjuration(powc);
+    case SPELL_FAR_STRIKE:
+        cast_far_strike(powc);
         break;
 
-    case SPELL_LEVITATION:
-        potion_effect( POT_LEVITATION, powc );
+    case SPELL_PORTAL_PROJECTILE:
+        if (!cast_portal_projectile(powc))
+            return SPRET_ABORT;
         break;
 
-    case SPELL_BOLT_OF_DRAINING:
-        if (!zapping(ZAP_NEGATIVE_ENERGY, powc, beam, true))
-            return (SPRET_ABORT);
+    // other effects
+    case SPELL_DISCHARGE:
+        cast_discharge(powc);
         break;
 
-    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-        if (!zapping(ZAP_CRYSTAL_SPEAR, powc, beam, true))
-            return (SPRET_ABORT);
+    case SPELL_CHAIN_LIGHTNING:
+        cast_chain_lightning(powc);
         break;
 
-    case SPELL_BOLT_OF_INACCURACY:
-        if (!zapping(ZAP_BEAM_OF_ENERGY, powc, beam, true))
-            return (SPRET_ABORT);
+    case SPELL_DISPERSAL:
+        cast_dispersal(powc);
         break;
 
-    case SPELL_POISONOUS_CLOUD:
-        cast_big_c(powc, CLOUD_POISON, KC_YOU, beam);
+    case SPELL_SHATTER:
+        cast_shatter(powc);
         break;
 
-    case SPELL_POISON_ARROW:
-        if (!zapping(ZAP_POISON_ARROW, powc, beam, true))
-            return (SPRET_ABORT);
+    case SPELL_BEND:
+        cast_bend(powc);
         break;
 
-    case SPELL_FIRE_STORM:
-        cast_fire_storm(powc, beam);
-        break;
-
-    case SPELL_DETECT_TRAPS:
-        mprf("You detect %s", (detect_traps(powc) > 0) ? "traps!"
-                                                       : "nothing.");
-        break;
-
-    case SPELL_BLINK:
-        random_blink(true);
-        break;
-
-    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        if (!zapping(ZAP_MYSTIC_BLAST, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_ENSLAVEMENT:
-        if (!zapping(ZAP_ENSLAVEMENT, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_MAGIC_MAPPING:
-        if (you.level_type == LEVEL_PANDEMONIUM)
-        {
-            mpr("Your Earth magic cannot map Pandemonium.");
-        }
-        else
-        {
-            powc = stepdown_value( powc, 10, 10, 40, 45 );
-            magic_mapping( 5 + powc, 50 + random2avg( powc * 2, 2 ), false );
-        }
-        break;
-
-    case SPELL_HEAL_OTHER:
-        zapping(ZAP_HEALING, powc, beam);
-        break;
-
-    case SPELL_PAIN:
-        if (!zapping(ZAP_PAIN, powc, beam, true))
-            return (SPRET_ABORT);
-        dec_hp(1, false);
-        break;
-
-    case SPELL_EXTENSION:
-        extension(powc);
-        break;
-
-    case SPELL_CONTROL_UNDEAD:
-        mass_enchantment(ENCH_CHARM, powc, MHITYOU);
-        break;
-
-    case SPELL_VAMPIRIC_DRAINING:
-        vampiric_drain(powc, spd);
-        break;
-
-    case SPELL_DETECT_ITEMS:
-        mprf("You detect %s", (detect_items(powc) > 0) ? "items!"
-                                                       : "nothing.");
-        break;
-
-    case SPELL_BORGNJORS_REVIVIFICATION:
-        cast_revivification(powc);
-        break;
-
-    case SPELL_BURN:
-        if (burn_freeze(powc, BEAM_FIRE) == -1)
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_FREEZE:
-        if (burn_freeze(powc, BEAM_COLD) == -1)
-            return (SPRET_ABORT);
+    case SPELL_SYMBOL_OF_TORMENT:
+        torment(TORMENT_SPELL, you.x_pos, you.y_pos);
         break;
 
     case SPELL_OZOCUBUS_REFRIGERATION:
         cast_refrigeration(powc);
         break;
 
-    case SPELL_STICKY_FLAME:
-        if (!zapping(ZAP_STICKY_FLAME, powc, beam, true))
-            return (SPRET_ABORT);
+    case SPELL_IGNITE_POISON:
+        cast_ignite_poison(powc);
         break;
 
-    // Spells that create new monsters.  If a god is making you cast one
-    // of these spells, any monsters produced will count as god gifts.
+    case SPELL_ROTTING:
+        cast_rotting(powc);
+        break;
+
+    // Summoning spells, and other spells that create new monsters.
+    // If a god is making you cast one of these spells, any monsters produced
+    // will count as god gifts.
     case SPELL_SUMMON_BUTTERFLIES:
         cast_summon_butterflies(powc, god_gift);
         break;
@@ -1494,6 +1474,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_TUKIMAS_DANCE:
+        // Temporarily turns a wielded weapon into a dancing weapon.
         crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
         cast_tukimas_dance(powc, god_gift);
         break;
@@ -1548,305 +1529,34 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_DEATH_CHANNEL:
         cast_death_channel(powc, god_gift);
         break;
-    // End of spells that create new monsters.
 
-    case SPELL_OZOCUBUS_ARMOUR:
-        ice_armour(powc, false);
+    // Enchantments.
+    case SPELL_CONFUSING_TOUCH:
+        cast_confusing_touch(powc);
         break;
 
-    case SPELL_REPEL_MISSILES:
-        missile_prot(powc);
-        break;
-
-    case SPELL_BERSERKER_RAGE:
-        cast_berserk();
-        break;
-
-    case SPELL_DISPEL_UNDEAD:
-        if (!zapping(ZAP_DISPEL_UNDEAD, powc, beam, true))
+    case SPELL_BACKLIGHT:
+        if (!zapping(ZAP_BACKLIGHT, powc + 10, beam, true))
             return (SPRET_ABORT);
         break;
 
-    case SPELL_THUNDERBOLT:
-        if (!zapping(ZAP_LIGHTNING, powc, beam, true))
+    case SPELL_CAUSE_FEAR:
+        mass_enchantment(ENCH_FEAR, powc, MHITYOU);
+        break;
+
+    case SPELL_SLOW:
+        if (!zapping(ZAP_SLOWING, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
-    case SPELL_FLAME_OF_CLEANSING:
-        if (!zapping(ZAP_CLEANSING_FLAME, powc, beam, true))
+    case SPELL_CONFUSE:
+        if (!zapping(ZAP_CONFUSION, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
-    case SPELL_REGENERATION:
-        cast_regen(powc);
-        break;
-
-    case SPELL_BONE_SHARDS:
-        if (!cast_bone_shards(powc, beam))
+    case SPELL_ENSLAVEMENT:
+        if (!zapping(ZAP_ENSLAVEMENT, powc, beam, true))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_BANISHMENT:
-        if (beam.target_x == you.x_pos && beam.target_y == you.y_pos)
-        {
-            mpr("You cannot banish yourself!");
-            break;
-        }
-        if (!zapping(ZAP_BANISHMENT, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_CIGOTUVIS_DEGENERATION:
-        if (!zapping(ZAP_DEGENERATION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_STING:
-        if (!zapping(ZAP_STING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_SUBLIMATION_OF_BLOOD:
-        cast_sublimation_of_blood(powc);
-        break;
-
-    case SPELL_HELLFIRE:
-        // Should only be available from:
-        // staff of Dispater & Sceptre of Asmodeus
-        if (!zapping(ZAP_HELLFIRE, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_CORPSE_ROT:
-        corpse_rot(0);
-        break;
-
-    case SPELL_TUKIMAS_VORPAL_BLADE:
-        if (!brand_weapon(SPWPN_VORPAL, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_FIRE_BRAND:
-        if (!brand_weapon(SPWPN_FLAMING, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_FREEZING_AURA:
-        if (!brand_weapon(SPWPN_FREEZING, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_LETHAL_INFUSION:
-        if (!brand_weapon(SPWPN_DRAINING, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_MAXWELLS_SILVER_HAMMER:
-        if (!brand_weapon(SPWPN_DUMMY_CRUSHING, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_POISON_WEAPON:
-        if (!brand_weapon(SPWPN_VENOM, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_CRUSH:
-        burn_freeze(powc, BEAM_MISSILE);
-        break;
-
-    case SPELL_BOLT_OF_IRON:
-        if (!zapping(ZAP_IRON_BOLT, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_STONE_ARROW:
-        if (!zapping(ZAP_STONE_ARROW, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_TOMB_OF_DOROKLOHE:
-        entomb(powc);
-        break;
-
-    case SPELL_STONEMAIL:
-        stone_scales(powc);
-        break;
-
-    case SPELL_SHOCK:
-        if (!zapping(ZAP_ELECTRICITY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_SWIFTNESS:
-        cast_swiftness(powc);
-        break;
-
-    case SPELL_FLY:
-        cast_fly(powc);
-        break;
-
-    case SPELL_INSULATION:
-        cast_insulation(powc);
-        break;
-
-    case SPELL_ORB_OF_ELECTROCUTION:
-        if (!zapping(ZAP_ORB_OF_ELECTRICITY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_DETECT_CREATURES:
-    {
-        int known_plants  = count_detected_plants();
-        int num_creatures = detect_creatures(powc);
-
-        if (!num_creatures)
-            mpr("You detect nothing.");
-        else if (num_creatures == known_plants)
-            mpr("You detect no further creatures.");
-        else
-            mpr("You detect creatures!");
-        break;
-    }
-    case SPELL_CURE_POISON_II:  // poison magic version of cure poison
-        cast_cure_poison(powc);
-        break;
-
-    case SPELL_CONTROL_TELEPORT:
-        cast_teleport_control(powc);
-        break;
-
-    case SPELL_POISON_AMMUNITION:
-        cast_poison_ammo();
-        break;
-
-    case SPELL_RESIST_POISON:
-        cast_resist_poison(powc);
-        break;
-
-    case SPELL_PROJECTED_NOISE:
-        project_noise();
-        break;
-
-    case SPELL_ALTER_SELF:
-        // trying is already enough, even if it fails
-        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-
-        crawl_state.cant_cmd_repeat("You can't repeat Alter Self.");
-        if (!enough_hp( you.hp_max / 2, true ))
-        {
-            mpr( "Your body is in too poor a condition "
-                 "for this spell to function." );
-
-            return (SPRET_FAIL);
-        }
-
-        mpr("Your body is suffused with transfigurative energy!");
-
-        set_hp( 1 + random2(you.hp), false );
-
-        if (!mutate(RANDOM_MUTATION, false))
-            mpr("Odd... you don't feel any different.");
-        break;
-
-    case SPELL_DEBUGGING_RAY:
-        if (!zapping(ZAP_DEBUGGING_RAY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_RECALL:
-        recall(0);
-        break;
-
-    case SPELL_PORTAL:
-        crawl_state.cant_cmd_repeat("You can't repeat create portal.");
-        if (portal() == -1)
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_AGONY:
-        if (!zapping(ZAP_AGONY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_SPIDER_FORM:
-        transform(powc, TRAN_SPIDER);
-        break;
-
-    case SPELL_DISRUPT:
-        if (!zapping(ZAP_DISRUPTION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_DISINTEGRATE:
-        if (!zapping(ZAP_DISINTEGRATION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_BLADE_HANDS:
-        transform(powc, TRAN_BLADE_HANDS);
-        break;
-
-    case SPELL_STATUE_FORM:
-        transform(powc, TRAN_STATUE);
-        break;
-
-    case SPELL_ICE_FORM:
-        transform(powc, TRAN_ICE_BEAST);
-        break;
-
-    case SPELL_DRAGON_FORM:
-        transform(powc, TRAN_DRAGON);
-        break;
-
-    case SPELL_NECROMUTATION:
-        transform(powc, TRAN_LICH);
-        break;
-
-    case SPELL_SYMBOL_OF_TORMENT:
-        torment(TORMENT_SPELL, you.x_pos, you.y_pos);
-        break;
-
-    case SPELL_DEFLECT_MISSILES:
-        deflection(powc);
-        break;
-
-    case SPELL_ORB_OF_FRAGMENTATION:
-        if (!zapping(ZAP_ORB_OF_FRAGMENTATION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_ICE_BOLT:
-        if (!zapping(ZAP_ICE_BOLT, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_ARC:
-        if (burn_freeze(powc, BEAM_ELECTRICITY) == -1)
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_AIRSTRIKE:
-        airstrike(powc, spd);
-        break;
-
-    case SPELL_ICE_STORM:
-        if (!zapping(ZAP_ICE_STORM, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    //jmf: new spells 19mar2000
-    case SPELL_FLAME_TONGUE:
-        if (!zapping(ZAP_FLAME_TONGUE, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_PASSWALL:
-        cast_passwall(powc);
-        break;
-
-    case SPELL_IGNITE_POISON:
-        cast_ignite_poison(powc);
         break;
 
     case SPELL_TAME_BEASTS:
@@ -1866,28 +1576,162 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
     }
 
+    case SPELL_PARALYSE:
+        if (!zapping(ZAP_PARALYSIS, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_POLYMORPH_OTHER:
+        // Trying is already enough, even if it fails.
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
+
+        if (!zapping(ZAP_POLYMORPH_OTHER, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_TELEPORT_OTHER:
+        if (!zapping(ZAP_TELEPORTATION, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_INTOXICATE:
+        cast_intoxicate(powc);
+        break;
+
+    case SPELL_MASS_CONFUSION:
+        mass_enchantment(ENCH_CONFUSION, powc, MHITYOU);
+        break;
+
     case SPELL_MASS_SLEEP:
         cast_mass_sleep(powc);
         break;
 
-    case SPELL_DETECT_MAGIC:
-        mpr("FIXME: implement!");
+    case SPELL_CONTROL_UNDEAD:
+        mass_enchantment(ENCH_CHARM, powc, MHITYOU);
         break;
 
-    case SPELL_DETECT_SECRET_DOORS:
-        cast_detect_secret_doors(powc);
+    case SPELL_ABJURATION_I:
+    case SPELL_ABJURATION_II:
+        abjuration(powc);
+        break;
+
+    case SPELL_BANISHMENT:
+        if (beam.target_x == you.x_pos && beam.target_y == you.y_pos)
+        {
+            mpr("You cannot banish yourself!");
+            break;
+        }
+        if (!zapping(ZAP_BANISHMENT, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        cast_toxic_radiance();
+        break;
+
+    // beneficial enchantments
+    case SPELL_HASTE:
+        if (!zapping(ZAP_HASTING, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_INVISIBILITY:
+        if (!zapping(ZAP_INVISIBILITY, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_LESSER_HEALING:
+        if (!cast_healing(5))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_GREATER_HEALING:
+        if (!cast_healing(25))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_HEAL_OTHER:
+        zapping(ZAP_HEALING, powc, beam);
+        break;
+
+    // Self-enchantments. (Spells that can only affect the player.)
+    // Resistances.
+    case SPELL_INSULATION:
+        cast_insulation(powc);
+        break;
+
+    case SPELL_RESIST_POISON:
+        cast_resist_poison(powc);
         break;
 
     case SPELL_SEE_INVISIBLE:
         cast_see_invisible(powc);
         break;
 
-    case SPELL_FORESCRY:
-        cast_forescry(powc);
+    case SPELL_CONTROL_TELEPORT:
+        cast_teleport_control(powc);
+        break;
+
+    // Healing.
+    case SPELL_CURE_POISON_I:   // Ely version
+    case SPELL_CURE_POISON_II:  // Poison magic version
+        // both use same function
+        cast_cure_poison(powc);
+        break;
+
+    case SPELL_PURIFICATION:
+        purification();
+        break;
+
+    case SPELL_RESTORE_STRENGTH:
+        restore_stat(STAT_STRENGTH, 0, false);
+        break;
+
+    case SPELL_RESTORE_INTELLIGENCE:
+        restore_stat(STAT_INTELLIGENCE, 0, false);
+        break;
+
+    case SPELL_RESTORE_DEXTERITY:
+        restore_stat(STAT_DEXTERITY, 0, false);
+        break;
+
+    // Weapon brands.
+    case SPELL_SURE_BLADE:
+        cast_sure_blade(powc);
+        break;
+
+    case SPELL_TUKIMAS_VORPAL_BLADE:
+        if (!brand_weapon(SPWPN_VORPAL, powc))
+            canned_msg(MSG_SPELL_FIZZLES);
+        break;
+
+    case SPELL_FIRE_BRAND:
+        if (!brand_weapon(SPWPN_FLAMING, powc))
+            canned_msg(MSG_SPELL_FIZZLES);
+        break;
+
+    case SPELL_FREEZING_AURA:
+        if (!brand_weapon(SPWPN_FREEZING, powc))
+            canned_msg(MSG_SPELL_FIZZLES);
+        break;
+
+    case SPELL_MAXWELLS_SILVER_HAMMER:
+        if (!brand_weapon(SPWPN_DUMMY_CRUSHING, powc))
+            canned_msg(MSG_SPELL_FIZZLES);
+        break;
+
+    case SPELL_POISON_WEAPON:
+        if (!brand_weapon(SPWPN_VENOM, powc))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_EXCRUCIATING_WOUNDS:
         if (!brand_weapon(SPWPN_PAIN, powc))
+            canned_msg(MSG_SPELL_FIZZLES);
+        break;
+
+    case SPELL_LETHAL_INFUSION:
+        if (!brand_weapon(SPWPN_DRAINING, powc))
             canned_msg(MSG_SPELL_FIZZLES);
         break;
 
@@ -1896,63 +1740,149 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             canned_msg(MSG_SPELL_FIZZLES);
         break;
 
-    case SPELL_SILENCE:
-        cast_silence(powc);
+    case SPELL_POISON_AMMUNITION:
+        cast_poison_ammo();
         break;
 
-    case SPELL_SHATTER:
-        cast_shatter(powc);
+    // Transformations.
+    case SPELL_BLADE_HANDS:
+        transform(powc, TRAN_BLADE_HANDS);
         break;
 
-    case SPELL_DISPERSAL:
-        cast_dispersal(powc);
+    case SPELL_SPIDER_FORM:
+        transform(powc, TRAN_SPIDER);
         break;
 
-    case SPELL_DISCHARGE:
-        cast_discharge(powc);
+    case SPELL_STATUE_FORM:
+        transform(powc, TRAN_STATUE);
         break;
 
-    case SPELL_BEND:
-        cast_bend(powc);
+    case SPELL_ICE_FORM:
+        transform(powc, TRAN_ICE_BEAST);
         break;
 
-    case SPELL_BACKLIGHT:
-        if (!zapping(ZAP_BACKLIGHT, powc + 10, beam, true))
-            return (SPRET_ABORT);
+    case SPELL_DRAGON_FORM:
+        transform(powc, TRAN_DRAGON);
         break;
 
-    case SPELL_INTOXICATE:
-        cast_intoxicate(powc);
-        break;
-
-    case SPELL_EVAPORATE:
-        if ( !cast_evaporate(powc, beam, potion) )
-            return SPRET_ABORT;
-        break;
-
-    case SPELL_FULSOME_DISTILLATION:
-        cast_fulsome_distillation(powc);
-        break;
-
-    case SPELL_FRAGMENTATION:
-        cast_fragmentation(powc);
+    case SPELL_NECROMUTATION:
+        transform(powc, TRAN_LICH);
         break;
 
     case SPELL_AIR_WALK:
         transform(powc, TRAN_AIR);
         break;
 
-    case SPELL_SANDBLAST:
-        if (!cast_sandblast(powc, beam))
-            return (SPRET_ABORT);
+    case SPELL_ALTER_SELF:
+        // Trying is already enough, even if it fails.
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
+
+        crawl_state.cant_cmd_repeat("You can't repeat Alter Self.");
+        if (!enough_hp( you.hp_max / 2, true ))
+        {
+            mpr( "Your body is in too poor a condition "
+                 "for this spell to function." );
+
+            return (SPRET_FAIL);
+        }
+
+        mpr("Your body is suffused with transfigurative energy!");
+
+        set_hp( 1 + random2(you.hp), false );
+
+        if (!mutate(RANDOM_MUTATION, false))
+            mpr("Odd... you don't feel any different.");
         break;
 
-    case SPELL_ROTTING:
-        cast_rotting(powc);
+    // General enhancement.
+    case SPELL_BERSERKER_RAGE:
+        cast_berserk();
+        break;
+
+    case SPELL_REGENERATION:
+        cast_regen(powc);
+        break;
+
+    case SPELL_REPEL_MISSILES:
+        missile_prot(powc);
+        break;
+
+    case SPELL_DEFLECT_MISSILES:
+        deflection(powc);
+        break;
+
+    case SPELL_SWIFTNESS:
+        cast_swiftness(powc);
+        break;
+
+    case SPELL_LEVITATION:
+        potion_effect( POT_LEVITATION, powc );
+        break;
+
+    case SPELL_FLY:
+        cast_fly(powc);
+        break;
+
+    case SPELL_STONESKIN:
+        cast_stoneskin(powc);
+        break;
+
+    case SPELL_STONEMAIL:
+        stone_scales(powc);
         break;
 
     case SPELL_CONDENSATION_SHIELD:
         cast_condensation_shield(powc);
+        break;
+
+    case SPELL_OZOCUBUS_ARMOUR:
+        ice_armour(powc, false);
+        break;
+
+    case SPELL_FORESCRY:
+        cast_forescry(powc);
+        break;
+
+    case SPELL_SILENCE:
+        cast_silence(powc);
+        break;
+
+    // other
+    case SPELL_SELECTIVE_AMNESIA:
+        crawl_state.cant_cmd_repeat("You can't repeat selective amnesia.");
+
+        // Sif Muna power calls with true
+        if (!cast_selective_amnesia(false))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_EXTENSION:
+        extension(powc);
+        break;
+
+    case SPELL_BORGNJORS_REVIVIFICATION:
+        cast_revivification(powc);
+        break;
+
+    case SPELL_SUBLIMATION_OF_BLOOD:
+        cast_sublimation_of_blood(powc);
+        break;
+
+    case SPELL_DEATHS_DOOR:
+        cast_deaths_door(powc);
+        break;
+
+    case SPELL_RING_OF_FLAMES:
+        cast_ring_of_flames(powc);
+        break;
+
+    // Escape spells.
+    case SPELL_BLINK:
+        random_blink(true);
+        break;
+
+    case SPELL_TELEPORT_SELF:
+        you_teleport();
         break;
 
     case SPELL_SEMI_CONTROLLED_BLINK:
@@ -1961,25 +1891,88 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_STONESKIN:
-        cast_stoneskin(powc);
+    case SPELL_CONTROLLED_BLINK:
+        if (blink(powc, true) == -1)
+            return (SPRET_ABORT);
         break;
 
-    case SPELL_CHAIN_LIGHTNING:
-        cast_chain_lightning(powc);
+    // Utility spells.
+    case SPELL_DETECT_CURSE:
+        detect_curse(false);
         break;
 
-    case SPELL_TWIST:
-        cast_twist(powc);
+    case SPELL_REMOVE_CURSE:
+        remove_curse(false);
         break;
 
-    case SPELL_FAR_STRIKE:
-        cast_far_strike(powc);
+    case SPELL_IDENTIFY:
+        identify(powc);
         break;
 
-    case SPELL_SWAP:
-        crawl_state.cant_cmd_repeat("You can't swap.");
-        cast_swap(powc);
+    case SPELL_DETECT_SECRET_DOORS:
+        cast_detect_secret_doors(powc);
+        break;
+
+    case SPELL_DETECT_TRAPS:
+        mprf("You detect %s", (detect_traps(powc) > 0) ? "traps!"
+                                                       : "nothing.");
+        break;
+
+    case SPELL_DETECT_ITEMS:
+        mprf("You detect %s", (detect_items(powc) > 0) ? "items!"
+                                                       : "nothing.");
+        break;
+
+    case SPELL_DETECT_CREATURES:
+    {
+        int known_plants  = count_detected_plants();
+        int num_creatures = detect_creatures(powc);
+
+        if (!num_creatures)
+            mpr("You detect nothing.");
+        else if (num_creatures == known_plants)
+            mpr("You detect no further creatures.");
+        else
+            mpr("You detect creatures!");
+        break;
+    }
+
+    case SPELL_MAGIC_MAPPING:
+        if (you.level_type == LEVEL_PANDEMONIUM)
+        {
+            mpr("Your Earth magic cannot map Pandemonium.");
+        }
+        else
+        {
+            powc = stepdown_value( powc, 10, 10, 40, 45 );
+            magic_mapping( 5 + powc, 50 + random2avg( powc * 2, 2 ), false );
+        }
+        break;
+
+    case SPELL_CREATE_NOISE:  // Unused, the player can shout to do this. - bwr
+        noisy(25, you.x_pos, you.y_pos, "You hear a voice calling your name!");
+        break;
+
+    case SPELL_PROJECTED_NOISE:
+        project_noise();
+        break;
+
+    case SPELL_CONJURE_FLAME:
+        if (!conjure_flame(powc))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_DIG:
+        if (!zapping(ZAP_DIGGING, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_PASSWALL:
+        cast_passwall(powc);
+        break;
+
+    case SPELL_TOMB_OF_DOROKLOHE:
+        entomb(powc);
         break;
 
     case SPELL_APPORTATION:
@@ -1987,9 +1980,36 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_PORTAL_PROJECTILE:
-        if (!cast_portal_projectile(powc))
-            return SPRET_ABORT;
+    case SPELL_SWAP:
+        crawl_state.cant_cmd_repeat("You can't swap.");
+        cast_swap(powc);
+        break;
+
+    case SPELL_RECALL:
+        recall(0);
+        break;
+
+    case SPELL_PORTAL:
+        crawl_state.cant_cmd_repeat("You can't repeat create portal.");
+        if (portal() == -1)
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_CORPSE_ROT:
+        corpse_rot(0);
+        break;
+
+    case SPELL_FULSOME_DISTILLATION:
+        cast_fulsome_distillation(powc);
+        break;
+
+    case SPELL_DETECT_MAGIC:
+        mpr("FIXME: implement!");
+        break;
+
+    case SPELL_DEBUGGING_RAY:
+        if (!zapping(ZAP_DEBUGGING_RAY, powc, beam, true))
+            return (SPRET_ABORT);
         break;
 
     default:

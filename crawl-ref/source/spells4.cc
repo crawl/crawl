@@ -74,8 +74,8 @@ static int quadrant_blink(int x, int y, int pow, int garbage);
 
 void do_monster_rot(int mon);
 
-// just to avoid typing this over and over
-// now returns true if monster died -- bwr
+// Just to avoid typing this over and over.
+// Returns true if monster died. -- bwr
 inline bool player_hurt_monster(int monster, int damage)
 {
     ASSERT( monster != NON_MONSTER );
@@ -97,7 +97,7 @@ inline bool player_hurt_monster(int monster, int damage)
     }
 
     return (false);
-}                               // end player_hurt_monster()
+}
 
 // Here begin the actual spells:
 static int shatter_monsters(int x, int y, int pow, int garbage)
@@ -193,7 +193,7 @@ static int shatter_monsters(int x, int y, int pow, int garbage)
         damage = 0;
 
     return (damage);
-}                               // end shatter_monsters()
+}
 
 static int shatter_items(int x, int y, int pow, int garbage)
 {
@@ -235,7 +235,7 @@ static int shatter_items(int x, int y, int pow, int garbage)
     }
 
     return 0;
-}                               // end shatter_items()
+}
 
 static int shatter_walls(int x, int y, int pow, int garbage)
 {
@@ -300,17 +300,20 @@ static int shatter_walls(int x, int y, int pow, int garbage)
     }
 
     return (0);
-}                               // end shatter_walls()
+}
 
 void cast_shatter(int pow)
 {
     int damage = 0;
-    const bool sil = silenced(you.x_pos, you.y_pos);
+    const bool silence = silenced(you.x_pos, you.y_pos);
 
-    noisy(30, you.x_pos, you.y_pos);
-
-    mprf((sil ? MSGCH_PLAIN : MSGCH_SOUND),
-         "The dungeon %s!", (sil ? "shakes" : "rumbles"));
+    if (silence)
+        mpr("The dungeon shakes!");
+    else
+    {
+        noisy(30, you.x_pos, you.y_pos);
+        mpr("The dungeon rumbles!", MSGCH_SOUND);
+    }
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -350,11 +353,11 @@ void cast_shatter(int pow)
     int dest = apply_area_within_radius( shatter_walls, you.x_pos, you.y_pos,
                                          pow, rad, 0 );
 
-    if (dest && !sil)
+    if (dest && !silence)
         mpr("Ka-crash!", MSGCH_SOUND);
-}                               // end cast_shatter()
+}
 
-// cast_forescry: raises evasion (by 8 currently) via divination
+// Cast_forescry: raises evasion (by 8 currently) via Divinations.
 void cast_forescry(int pow)
 {
     if (!you.duration[DUR_FORESCRY])
@@ -377,7 +380,7 @@ void cast_see_invisible(int pow)
     else
         mpr("Your vision seems to sharpen.");
 
-    // no message if you already are under the spell
+    // No message if you already are under the spell.
     you.duration[DUR_SEE_INVISIBLE] += 10 + random2(2 + (pow / 2));
 
     if (you.duration[DUR_SEE_INVISIBLE] > 100)
@@ -429,9 +432,9 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
     if (check_mons_resist_magic( &mon, pow ))
         return 0;
 
-    // works on friendlies too, so no check for that
+    // Works on friendlies too, so no check for that.
 
-    //jmf: now that sleep == hibernation:
+    //jmf: Now that sleep == hibernation:
     if (mons_res_cold( &mon ) > 0 && coinflip())
         return 0;
     if (mon.has_ench(ENCH_SLEEP_WARY))
@@ -443,12 +446,12 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
         mon.add_ench(ENCH_SLOW);
 
     return 1;
-}                               // end sleep_monsters()
+}
 
 void cast_mass_sleep(int pow)
 {
     apply_area_visible(sleep_monsters, pow);
-}                               // end cast_mass_sleep()
+}
 
 // This is a hack until we set an is_beast flag in the monster data
 // (which we might never do, this is sort of minor.)
@@ -464,10 +467,12 @@ static bool is_domesticated_animal(int type)
         MONS_SPINY_FROG, MONS_BLINK_FROG, MONS_WOLF, MONS_WARG,
         MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR
     };
-    for ( unsigned int i = 0; i < ARRAYSZ(types); ++i )
-        if ( types[i] == type )
-            return true;
-    return false;
+
+    for (unsigned int i = 0; i < ARRAYSZ(types); ++i)
+        if (types[i] == type)
+            return (true);
+
+    return (false);
 }
 
 static int tame_beast_monsters(int x, int y, int pow, int garbage)
@@ -499,12 +504,12 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
     simple_monster_message(monster, " is tamed!");
 
     if (random2(100) < random2(pow / 10))
-        monster->attitude = ATT_FRIENDLY;       // permanent
+        monster->attitude = ATT_FRIENDLY;  // permanent
     else
-        monster->add_ench(ENCH_CHARM);          // temporary
+        monster->add_ench(ENCH_CHARM);     // temporary
 
     return 1;
-}                               // end tame_beast_monsters()
+}
 
 void cast_tame_beasts(int pow)
 {
@@ -550,11 +555,13 @@ static int ignite_poison_objects(int x, int y, int pow, int garbage)
     }
 
     if (strength > 0)
+    {
         place_cloud(CLOUD_FIRE, x, y, strength + roll_dice(3, strength / 4),
                     KC_YOU);
+    }
 
     return (strength);
-}                               // end ignite_poison_objects()
+}
 
 static int ignite_poison_clouds( int x, int y, int pow, int garbage )
 {
@@ -585,7 +592,7 @@ static int ignite_poison_clouds( int x, int y, int pow, int garbage )
     }
 
     return did_anything;
-}                               // end ignite_poison_clouds()
+}
 
 static int ignite_poison_monsters(int x, int y, int pow, int garbage)
 {
@@ -980,7 +987,7 @@ static int distortion_monsters(int x, int y, int pow, int message)
 void cast_bend(int pow)
 {
     apply_one_neighbouring_square( distortion_monsters, pow );
-}                               // end cast_bend()
+}
 
 // Really this is just applying the best of Band/Warp weapon/Warp field
 // into a spell that gives the "make monsters go away" benefit without
@@ -1028,7 +1035,7 @@ void cast_dispersal(int pow)
     if (apply_area_around_square( disperse_monsters,
                                   you.x_pos, you.y_pos, pow ) == 0)
     {
-        mpr( "There is a brief shimmering in the air around you." );
+        mpr( "The air shimmers briefly around you." );
     }
 }
 
@@ -1223,7 +1230,7 @@ static int intoxicate_monsters(int x, int y, int pow, int garbage)
 
     menv[mon].add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
     return 1;
-}                               // end intoxicate_monsters()
+}
 
 void cast_intoxicate(int pow)
 {
@@ -1237,7 +1244,7 @@ void cast_intoxicate(int pow)
     }
 
     apply_area_visible(intoxicate_monsters, pow);
-}                               // end cast_intoxicate()
+}
 
 bool backlight_monsters(int x, int y, int pow, int garbage)
 {
@@ -1636,13 +1643,13 @@ static int rot_undead(int x, int y, int pow, int garbage)
     if (check_mons_resist_magic(&menv[mon], pow))
         return 0;
 
-    // this does not make sense -- player mummies are
+    // This does not make sense -- player mummies are
     // immune to rotting (or have been) -- so what is
     // the schema in use here to determine rotting??? {dlb}
 
-    //jmf: up for discussion. it is clearly unfair to
+    //jmf: Up for discussion. it is clearly unfair to
     //     rot player mummies.
-    //     the `shcema' here is: corporeal non-player undead
+    //     the `schema' here is: corporeal non-player undead
     //     rot, discorporeal undead don't rot. if you wanna
     //     insist that monsters get the same treatment as
     //     players, I demand my player mummies get to worship
@@ -1676,14 +1683,14 @@ static int rot_undead(int x, int y, int pow, int garbage)
     menv[mon].add_ench( mon_enchant(ENCH_ROT, ench, KC_YOU) );
 
     return 1;
-}                               // end rot_undead()
+}
 
 static int rot_corpses(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
     return make_a_rot_cloud(x, y, pow, CLOUD_MIASMA);
-}                               // end rot_corpses()
+}
 
 void cast_rotting(int pow)
 {
@@ -1691,7 +1698,7 @@ void cast_rotting(int pow)
     apply_area_visible(rot_undead, pow);
     apply_area_visible(rot_corpses, pow);
     return;
-}                               // end cast_rotting()
+}
 
 void do_monster_rot(int mon)
 {
@@ -1705,7 +1712,7 @@ void do_monster_rot(int mon)
 
     player_hurt_monster( mon, damage );
     return;
-}                               // end do_monster_rot()
+}
 
 static int snake_charm_monsters(int x, int y, int pow, int message)
 {
@@ -1713,11 +1720,14 @@ static int snake_charm_monsters(int x, int y, int pow, int message)
 
     int mon = mgrd[x][y];
 
-    if (mon == NON_MONSTER)                             return 0;
-    if (mons_friendly(&menv[mon]))                      return 0;
-    if (one_chance_in(4))                               return 0;
-    if (mons_char(menv[mon].type) != 'S')               return 0;
-    if (check_mons_resist_magic(&menv[mon], pow))       return 0;
+    if (mon == NON_MONSTER
+        || one_chance_in(4)
+        || mons_friendly(&menv[mon])
+        || mons_char(menv[mon].type) != 'S'
+        || check_mons_resist_magic(&menv[mon], pow))
+    {
+        return 0;
+    }
 
     menv[mon].attitude = ATT_FRIENDLY;
     mprf("%s sways back and forth.", menv[mon].name(DESC_CAP_THE).c_str());
@@ -1753,16 +1763,16 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     //FIXME: if (player typed '>' to attack floor) goto do_terrain;
     blast.beam_source = MHITYOU;
     blast.thrower     = KILL_YOU;
-    blast.aux_source.clear();
     blast.ex_size     = 1;              // default
     blast.type        = '#';
     blast.colour      = 0;
-    blast.set_target(beam);
     blast.source_x    = you.x_pos;
     blast.source_y    = you.y_pos;
-    blast.is_tracer   = false;
     blast.flavour     = BEAM_FRAG;
     blast.hit         = AUTOMATIC_HIT;
+    blast.is_tracer   = false;
+    blast.set_target(beam);
+    blast.aux_source.clear();
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
     blast.damage = dice_def( 0, 5 + pow / 10 );
@@ -2078,7 +2088,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     }
     else if (blast.damage.num == 0)
     {
-        // if damage dice are zero we assume that nothing happened at all.
+        // If damage dice are zero we assume that nothing happened at all.
         canned_msg(MSG_SPELL_FIZZLES);
     }
 }                               // end cast_fragmentation()
@@ -2099,7 +2109,7 @@ void cast_twist(int pow)
 
     const int mons = mgrd[ targ.tx ][ targ.ty ];
 
-    // anything there?
+    // Anything there?
     if (mons == NON_MONSTER || targ.isMe)
     {
         mpr("There is no monster there!");
