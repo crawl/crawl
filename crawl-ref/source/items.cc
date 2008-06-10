@@ -2203,6 +2203,14 @@ static bool _is_denied_autopickup(const item_def &item, std::string &iname)
         if (Options.never_pickup[i].matches(iname))
             return (true);
 
+#ifdef CLUA_BINDINGS
+    if (clua.callbooleanfn(false, "ch_deny_autopickup", "us",
+                           &item, iname.c_str()))
+    {
+        return (true);
+    }
+#endif
+
     return (false);
 }
 
@@ -2214,6 +2222,14 @@ static bool _is_forced_autopickup(const item_def &item, std::string &iname)
     for (unsigned i = 0, size = Options.always_pickup.size(); i < size; ++i)
         if (Options.always_pickup[i].matches(iname))
             return (true);
+
+#ifdef CLUA_BINDINGS
+    if (clua.callbooleanfn(false, "ch_force_autopickup", "us",
+                           &item, iname.c_str()))
+    {
+        return (true);
+    }
+#endif
 
     return (false);
 }

@@ -1,8 +1,6 @@
 # Pick up a butchering weapon if we don't already have one 
-# This requires ) to be in the autopickup option line
 
 < do
-local old_ch_autopickup = ch_autopickup or function() return true end
 local function can_butcher(it)
     if item.name(it):find("distort", 0, true) then
         return false
@@ -21,7 +19,7 @@ local function can_butcher(it)
         return skill:find("Blades", 0, true) or skill == "Axes"
     end
 end
-function ch_autopickup(it)
+function pickup_butcher(it)
     if item.class(it, true) == "weapon" then
         local need_blade = true
         -- Trolls and Ghouls don't need weapons to butcher things, and Mummies
@@ -42,7 +40,8 @@ function ch_autopickup(it)
         end
         return need_blade and not item.cursed(it) and can_butcher(it)
     else
-        return old_ch_autopickup(it)
+        return false
     end
 end
+add_autopickup_func(pickup_butcher)
 end >
