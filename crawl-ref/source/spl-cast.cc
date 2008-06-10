@@ -2316,8 +2316,6 @@ static void _miscast_enchantment(int severity, const char* cause)
 
 static void _miscast_translocation(int severity, const char* cause)
 {
-    const bool god_gift = crawl_state.is_god_acting();
-
     switch (severity)
     {
     case 0:         // harmless messages only
@@ -2372,7 +2370,14 @@ static void _miscast_translocation(int severity, const char* cause)
             ouch(4 + random2avg(7, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 5:
-            summon_spatial_vortices(0, god_gift);
+            if (create_monster(
+                    mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
+                        you.pos(), 3)) != -1)
+            {
+                mpr("Space twists in upon itself!");
+            }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
         break;
@@ -2399,9 +2404,25 @@ static void _miscast_translocation(int severity, const char* cause)
             potion_effect(POT_CONFUSION, 40);
             break;
         case 5:
-            // Summon 2-4 spatial vortices.
-            summon_spatial_vortices(75 + random2(151), god_gift);
+        {
+            bool success = false;
+
+            for (int i = 1 + random2(3); i >= 0; --i)
+            {
+                if (create_monster(
+                    mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
+                        you.pos(), 3)) != -1)
+                {
+                    success = true;
+                }
+            }
+
+            if (success)
+                mpr("Space twists in upon itself!");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
+        }
         case 6:
             _send_abyss(cause);
             break;
@@ -2490,7 +2511,14 @@ static void _miscast_summoning(int severity, const char* cause)
             ouch(5 + random2avg(9, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 3:
-            summon_spatial_vortices(0, god_gift);
+            if (create_monster(
+                    mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
+                        you.pos(), 3)) != -1)
+            {
+                mpr("Space twists in upon itself!");
+            }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 4:
         case 5:
@@ -2510,9 +2538,25 @@ static void _miscast_summoning(int severity, const char* cause)
         switch (random2(6))
         {
         case 0:
-            // Summon 2-4 spatial vortices.
-            summon_spatial_vortices(75 + random2(151), god_gift);
+        {
+            bool success = false;
+
+            for (int i = 1 + random2(3); i >= 0; --i)
+            {
+                if (create_monster(
+                    mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
+                        you.pos(), 3)) != -1)
+                {
+                    success = true;
+                }
+            }
+
+            if (success)
+                mpr("Space twists in upon itself!");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
+        }
 
         case 1:
         case 2:

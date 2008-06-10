@@ -971,29 +971,6 @@ char burn_freeze(int pow, beam_type flavour)
     return 1;
 }
 
-bool summon_spatial_vortices(int pow, bool god_gift)
-{
-    bool success = false;
-
-    mpr("Space twists in upon itself!");
-
-    // Maximum power is 300 (5 vortices).
-    const int how_many = (pow / 75 + 1);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        if (create_monster(
-               mgen_data(MONS_SPATIAL_VORTEX, BEH_HOSTILE,
-                         3, you.pos(), MHITYOU,
-                         (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH)) != -1)
-        {
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
 bool summon_animals(int pow)
 {
     bool success = false;
