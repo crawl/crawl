@@ -413,15 +413,19 @@ bool cast_sublimation_of_blood(int pow)
     return (success);
 }
 
-bool summon_shadows(int pow, bool god_gift, bool force_hostile)
+bool summon_shadows(int pow, bool god_gift, bool force_hostile,
+                    bool quiet)
 {
     bool success = false;
 
     // Maximum power is 300 (11 shadows).
     const int how_many = (pow / 30 + 1);
 
-    mpr(how_many > 1 ? "Flickering shadows surround you."
-                     : "A nearby shadow flickers.");
+    if (!quiet)
+    {
+        mpr(how_many > 1 ? "Flickering shadows surround you."
+                         : "A nearby shadow flickers.");
+    }
 
     for (int i = 0; i < how_many; ++i)
     {

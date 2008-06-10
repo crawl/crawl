@@ -113,7 +113,8 @@ bool remove_curse(bool suppress_msg);
  * *********************************************************************** */
 bool cast_sublimation_of_blood(int pow);
 
-bool summon_shadows(int pow, bool god_gift = false, bool force_hostile = false);
+bool summon_shadows(int pow, bool god_gift = false, bool force_hostile = false,
+                    bool quiet = false);
 bool cast_call_imp(int pow, bool god_gift = false);
 bool summon_lesser_demon(int pow, bool god_gift = false, bool quiet = false);
 bool summon_common_demon(int pow, bool god_gift = false, bool quiet = false);
