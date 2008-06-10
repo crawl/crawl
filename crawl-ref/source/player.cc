@@ -1008,7 +1008,7 @@ int player_hunger_rate(void)
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
         return 0;
 
-    if ( you.species == SP_TROLL )
+    if (you.species == SP_TROLL)
         hunger += 3;            // in addition to the +3 for fast metabolism
 
     if (you.duration[DUR_REGENERATION] > 0)
@@ -2326,7 +2326,7 @@ int player_evasion()
         break;
 
     case SP_KENKU:
-        // Flying kenku get an evasion bonus.
+        // Flying Kenku get an evasion bonus.
         if (you.flight_mode() == FL_FLY)
         {
             const int ev_bonus = std::min(9, std::max(1, ev / 5));

@@ -2584,9 +2584,87 @@ static std::string _religion_help( god_type god )
     return result;
 }
 
+// The various titles granted by the god of your choice.
+// Note that Xom doesn't actually use piety, so it's completely useless.
+const char *divine_title[NUM_GODS][8] =
+{
+    // No god
+    {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger",
+     "Bugbear",            "Bugged One",            "Giant Bug",                "Lord of the Bugs"},
+
+    //  Zin
+    {"Sinner",             "Anchorite",             "Apologist",                "Pious",
+     "Devout",             "Orthodox",              "Immaculate",               "Bringer of Law"},
+
+    //  the Shining One
+    {"Sinner",             "Acolyte",               "Righteous",                "Unflinching",
+     "Holy Warrior",       "Exorcist",              "Demon Slayer",             "Bringer of Light"},
+
+    //  Kikubaaqudgha -- scholarly death
+    {"Sinner",             "Purveyor of Pain",      "Death's Scholar",          "Merchant of Misery",
+     "Death's Artisan",    "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
+
+    //  Yredelemnul -- zombie death
+    {"Sinner",             "Zealot",                "Exhumer",                  "Fey %s",
+     "Soul Tainter",       "Sculptor of Flesh",     "Harbinger of Death",       "Grim Reaper"},
+
+    //  Xom
+    {"Toy",                "Toy",                   "Toy",                      "Toy",
+     "Toy",                "Toy",                   "Toy",                      "Teddy Bear"},
+
+    //  Vehumet
+    {"Meek",               "Sorceror's Apprentice", "Scholar of Destruction",   "Caster of Ruination",
+     "Battle Magician",    "Warlock",               "Annihilator",              "Luminary of Lethal Lore"},
+
+    //  Okawaru
+    {"Coward",             "Struggler",             "Combattant",               "Warrior",
+     "Knight",             "Warmonger",             "Commander",                "Victor of a Thousand Battles"},
+
+    //  Makhleb
+    {"Sinner",             "Spawn of Chaos",        "Disciple of Annihilation", "Fanfare of Bloodshed",
+     "Fiendish",           "Demolition %s",         "Demon Caller",             "Champion of Chaos"},
+
+    //  Sif Muna
+    {"Ignorant",           "Disciple",              "Student",                  "Adept",
+     "Scribe",             "Scholar",               "Sage",                     "Genius of the Arcane"},
+
+    //  Trog
+    {"Faithless",          "Troglodyte",            "Angry Troglodyte",         "Frenzied",
+     "%s of Prey",         "Rampant",               "Wild %s",                  "Bane of Scribes"},
+
+    //  Nemelex Xobeh -- alluding to Tarot and cards
+    {"Unlucky %s",         "The Pannier",           "The Charlatan",            "The Dreamer",
+     "The Fortune-Teller", "The Soothsayer",        "The Magus",                "%s in Luck"},
+
+    //  Elyvilon
+    {"Sinner",             "Comforter",             "Caregiver",                "Practitioner",
+     "Pacifier",           "Purifying %s",          "Faith Healer",             "Bringer of Life"},
+
+    //  Lugonu
+    {"Faithless",          "Abyss-Baptised",        "Unweaver",                 "Distorting %s",
+     "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
+
+    //  Beogh
+    {"Apostate",           "Messenger",             "Proselytizer",             "Priest",
+     "Missionary",         "Evangelist",            "Apostle",                  "Messiah"}
+};
+
+static int _piety_level()
+{
+    return ((you.piety >  160) ? 7 :
+            (you.piety >= 120) ? 6 :
+            (you.piety >= 100) ? 5 :
+            (you.piety >=  75) ? 4 :
+            (you.piety >=  50) ? 3 :
+            (you.piety >=  30) ? 2 :
+            (you.piety >    5) ? 1
+                               : 0 );
+
+}
+
 void describe_god( god_type which_god, bool give_title )
 {
-    int colour;              // mv: colour used for some messages
+    int colour;              // Colour used for some messages.
 
     clrscr();
 
@@ -2597,7 +2675,7 @@ void describe_god( god_type which_god, bool give_title )
         textcolor( LIGHTGREY );
     }
 
-    if (which_god == GOD_NO_GOD) //mv:no god -> say it and go away
+    if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
     {
         cprintf( EOL "You are not religious." );
         get_ch();
@@ -2606,13 +2684,12 @@ void describe_god( god_type which_god, bool give_title )
 
     colour = god_colour(which_god);
 
-    //mv: print god's name and title - if you can think up better titles
-    //I have nothing against
+    // Print long god's name.
     textcolor(colour);
-    cprintf( "%s", god_name(which_god, true).c_str()); // Print long god's name.
+    cprintf( "%s", god_name(which_god, true).c_str());
     cprintf (EOL EOL);
 
-    //mv: Print god's description.
+    // Print god's description.
     textcolor(LIGHTGRAY);
 
     std::string god_desc = getLongDescription(god_name(which_god, false));
@@ -2622,105 +2699,33 @@ void describe_god( god_type which_god, bool give_title )
     // Title only shown for our own god.
     if (you.religion == which_god)
     {
-        //mv: print title based on piety
+        // Print title based on piety.
         cprintf( EOL "Title - " );
         textcolor(colour);
+        std::string title = divine_title[which_god][_piety_level()];
+        title = replace_all(title, "%s",
+                            species_name(you.species, 1, true, false));
 
-        // mv: if your piety is high enough you get title
-        // based on your god
-        if (you.piety > 160)
-        {
-            cprintf("%s",
-                (which_god == GOD_ZIN)           ? "Champion of Law" :
-                (which_god == GOD_SHINING_ONE)   ? "Divine Warrior" :
-                (which_god == GOD_ELYVILON)      ? "Champion of Light" :
-                (which_god == GOD_OKAWARU)       ? "Master of a Thousand Battles" :
-                (which_god == GOD_YREDELEMNUL)   ? "Master of Eternal Death" :
-                (which_god == GOD_KIKUBAAQUDGHA) ? "Lord of Darkness" :
-                (which_god == GOD_MAKHLEB)       ? "Champion of Chaos" :
-                (which_god == GOD_VEHUMET)       ? "Lord of Destruction" :
-                (which_god == GOD_TROG)          ? "Great Slayer" :
-                (which_god == GOD_NEMELEX_XOBEH) ? "Great Trickster" :
-                (which_god == GOD_SIF_MUNA)      ? "Master of the Arcane" :
-                (which_god == GOD_LUGONU)        ? "Agent of Entropy" :
-                (which_god == GOD_BEOGH)         ? "Messiah" :
-                (which_god == GOD_XOM)           ? "Teddy Bear"
-                                                 : "Bogy the Lord of the Bugs");
-        }
-        else
-        {
-            //mv: most titles are still universal - if any one wants to
-            //he might write specific titles for all gods or rewrite current
-            //ones (I know they are not perfect)
-            //btw. titles are divided according to piety levels on which you get
-            //new abilities.In the main it means - new ability = new title
-            switch (which_god)
-            {
-            case GOD_ZIN:
-            case GOD_SHINING_ONE:
-            case GOD_KIKUBAAQUDGHA:
-            case GOD_YREDELEMNUL:
-            case GOD_VEHUMET:
-            case GOD_OKAWARU:
-            case GOD_MAKHLEB:
-            case GOD_TROG:
-            case GOD_NEMELEX_XOBEH:
-            case GOD_ELYVILON:
-            case GOD_LUGONU:
-                cprintf ( (you.piety >= 120) ? "High Priest" :
-                          (you.piety >= 100) ? "Elder" :
-                          (you.piety >=  75) ? "Priest" :
-                          (you.piety >=  50) ? "Deacon" :
-                          (you.piety >=  30) ? "Novice" :
-                          (you.piety >    5) ? "Believer"
-                                             : "Sinner" );
-                break;
-            case GOD_SIF_MUNA:
-                cprintf ( (you.piety >= 120) ? "Oracle" :
-                          (you.piety >= 100) ? "Scholar" :
-                          (you.piety >=  75) ? "Adept" :
-                          (you.piety >=  50) ? "Disciple" :
-                          (you.piety >=  30) ? "Apprentice" :
-                          (you.piety >    5) ? "Believer"
-                                             : "Sinner" );
-                break;
-            case GOD_BEOGH:
-                cprintf ( (you.piety >= 120) ? "Saint" :
-                          (you.piety >= 100) ? "High Priest" :
-                          (you.piety >=  75) ? "Missionary" :
-                          (you.piety >=  50) ? "Priest" :
-                          (you.piety >=  30) ? "Disciple" :
-                          (you.piety >    5) ? "Believer"
-                                             : "Sinner" );
-                 break;
-            case GOD_XOM:
-                cprintf("Toy");
-            break;
-
-            default:
-                cprintf ("Bug");
-            }
-        }
+        cprintf("%s", title.c_str());
     }
-    // end of print title
 
-    // mv: now let's print favor as Brent suggested
-    // I know these messages aren't perfect so if you can
-    // think up something better, do it
+    // mv: Now let's print favour as Brent suggested.
+    // I know these messages aren't perfect so if you can think up
+    // something better, do it.
 
     textcolor(LIGHTGRAY);
     cprintf(EOL EOL "Favour - ");
     textcolor(colour);
 
-    //mv: player is praying at altar without appropriate religion
-    //it means player isn't checking his own religion and so we only
-    //display favour and will go out
+    //mv: Player is praying at altar without appropriate religion.
+    // It means player isn't checking his own religion and so we only
+    // display favour and go out.
     if (you.religion != which_god)
     {
         textcolor(colour);
         int which_god_penance = you.penance[which_god];
 
-        // give more appropriate for the good gods
+        // Give more appropriate message for the good gods.
         if (which_god_penance > 0 && is_good_god(which_god))
         {
             if (is_good_god(you.religion))
@@ -2741,12 +2746,13 @@ void describe_god( god_type which_god, bool give_title )
     {
         cprintf(describe_favour(which_god).c_str());
 
-        //mv: following code shows abilities given from god (if any)
+        //mv: The following code shows abilities given by your god (if any).
+
         textcolor(LIGHTGRAY);
         cprintf(EOL EOL "Granted powers:                                                          (Cost)" EOL);
         textcolor(colour);
 
-        // mv: some gods can protect you from harm
+        // mv: Some gods can protect you from harm.
         // I'm not sure how to explain such divine protection because
         // god isn't really protecting player - he only sometimes saves
         // his life (probably it shouldn't be displayed at all).
