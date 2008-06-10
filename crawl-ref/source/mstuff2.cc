@@ -491,8 +491,8 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
             continue;
 
         create_monster(
-            mgen_data( which_mons, SAME_ATTITUDE(monster), duration,
-                       monster->pos(), monster->foe, flags ));
+            mgen_data(which_mons, SAME_ATTITUDE(monster), duration,
+                      monster->pos(), monster->foe, flags));
     }
 }
 
@@ -526,11 +526,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (monster->foe == MHITYOU || monster->foe == MHITNOT)
         {
             if (monsterNearby)
-                direct_effect( pbolt );
+                direct_effect(pbolt);
             return;
         }
 
-        mons_direct_effect( pbolt, monster_index(monster) );
+        mons_direct_effect(pbolt, monster_index(monster));
         return;
     }
 
@@ -558,9 +558,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         else
             sumcount2 = 3 + random2(3) + monster->hit_dice / 5;
 
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
-            monster_type mons = MONS_GIANT_BAT;
+            monster_type mon = MONS_GIANT_BAT;
 
             if (!one_chance_in(3))
             {
@@ -586,8 +586,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             }
 
             create_monster(
-                mgen_data( mons, SAME_ATTITUDE(monster), 5,
-                           monster->pos(), monster->foe, flags ) );
+                mgen_data(mon, SAME_ATTITUDE(monster), 5,
+                          monster->pos(), monster->foe, flags));
         }
         return;
 
@@ -595,13 +595,13 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (_mons_abjured(monster, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(4) + random2( monster->hit_dice / 7 + 1 );
+        sumcount2 = 1 + random2(4) + random2(monster->hit_dice / 7 + 1);
 
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
-                mgen_data( RANDOM_MONSTER, SAME_ATTITUDE(monster), 5,
-                           monster->pos(), monster->foe, flags ) );
+                mgen_data(RANDOM_MONSTER, SAME_ATTITUDE(monster), 5,
+                          monster->pos(), monster->foe, flags));
         }
         return;
 
@@ -611,8 +611,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
-                mgen_data( MONS_RAKSHASA_FAKE, SAME_ATTITUDE(monster), 3,
-                           monster->pos(), monster->foe, flags ) );
+                mgen_data(MONS_RAKSHASA_FAKE, SAME_ATTITUDE(monster), 3,
+                          monster->pos(), monster->foe, flags));
         }
         return;
 
@@ -620,15 +620,15 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (_mons_abjured(monster, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 10 + 1 );
+        sumcount2 = 1 + random2(2) + random2(monster->hit_dice / 10 + 1);
 
         duration  = std::min(2 + monster->hit_dice / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
-                mgen_data( summon_any_demon(DEMON_COMMON),
-                           SAME_ATTITUDE(monster), duration,
-                           monster->pos(), monster->foe, flags ) );
+                mgen_data(summon_any_demon(DEMON_COMMON),
+                          SAME_ATTITUDE(monster), duration,
+                          monster->pos(), monster->foe, flags));
         }
         return;
 
@@ -636,18 +636,18 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (_mons_abjured(monster, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 10 + 1 );
+        sumcount2 = 1 + random2(2) + random2(monster->hit_dice / 10 + 1);
 
         duration  = std::min(2 + monster->hit_dice / 10, 6);
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             const int chance = std::max(6 - (monster->hit_dice / 6), 1);
-            monster_type mons = (one_chance_in(chance) ? MONS_VERY_UGLY_THING
-                                                       : MONS_UGLY_THING);
+            monster_type mon = (one_chance_in(chance) ? MONS_VERY_UGLY_THING
+                                                      : MONS_UGLY_THING);
 
             create_monster(
-                mgen_data( mons, SAME_ATTITUDE(monster), duration,
-                           monster->pos(), monster->foe, flags ) );
+                mgen_data(mon, SAME_ATTITUDE(monster), duration,
+                          monster->pos(), monster->foe, flags));
         }
         return;
 
@@ -658,15 +658,15 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
 
     case SPELL_CALL_IMP: // class 5 demons
-        sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
+        sumcount2 = 1 + random2(3) + random2(monster->hit_dice / 5 + 1);
 
         duration  = std::min(2 + monster->hit_dice / 5, 6);
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
-                mgen_data( summon_any_demon(DEMON_LESSER),
-                           SAME_ATTITUDE(monster), duration,
-                           monster->pos(), monster->foe, flags ));
+                mgen_data(summon_any_demon(DEMON_LESSER),
+                          SAME_ATTITUDE(monster), duration,
+                          monster->pos(), monster->foe, flags));
         }
         return;
 
@@ -674,23 +674,23 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (_mons_abjured(monster, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
+        sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1);
 
         duration  = std::min(2 + monster->hit_dice / 5, 6);
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
-                mgen_data( MONS_SCORPION, SAME_ATTITUDE(monster), duration,
-                           monster->pos(), monster->foe, flags ));
+                mgen_data(MONS_SCORPION, SAME_ATTITUDE(monster), duration,
+                          monster->pos(), monster->foe, flags));
         }
         return;
 
     case SPELL_SUMMON_UFETUBUS:
-        sumcount2 = 2 + random2(2) + random2( monster->hit_dice / 5 + 1 );
+        sumcount2 = 2 + random2(2) + random2(monster->hit_dice / 5 + 1);
 
         duration  = std::min(2 + monster->hit_dice / 5, 6);
 
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
                 mgen_data(MONS_UFETUBUS, SAME_ATTITUDE(monster), duration,
@@ -714,7 +714,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (_mons_abjured(monster, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 4 + 1 );
+        sumcount2 = 1 + random2(2) + random2(monster->hit_dice / 4 + 1);
 
         duration  = std::min(2 + monster->hit_dice / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
@@ -754,10 +754,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (_mons_abjured(monster, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2( monster->hit_dice / 10 + 1 );
+        sumcount2 = 1 + random2(monster->hit_dice / 10 + 1);
 
         duration  = std::min(2 + monster->hit_dice / 10, 6);
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
                 mgen_data(summon_any_demon(DEMON_GREATER),
@@ -771,7 +771,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (_mons_abjured(monster, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
+        sumcount2 = 1 + random2(3) + random2(monster->hit_dice / 5 + 1);
 
         duration  = std::min(2 + monster->hit_dice / 10, 6);
 
@@ -805,8 +805,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     {
         const bool friendly      = mons_friendly(monster);
         bool need_friendly_stub  = false;
-        const msg_channel_type channel = (friendly ? MSGCH_FRIEND_ENCHANT
-                                                   : MSGCH_MONSTER_ENCHANT);
+        const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
+                                                    : MSGCH_MONSTER_ENCHANT;
 
         // Monster spell of uselessness, just prints a message.
         // This spell exists so that some monsters with really strong
@@ -816,41 +816,41 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         switch (random2(7))
         {
         case 0:
-            simple_monster_message( monster, " glows brightly for a moment.",
-                                    channel );
+            simple_monster_message(monster, " glows brightly for a moment.",
+                                   channel);
             break;
         case 1:
             if (friendly)
                 need_friendly_stub = true;
             else
-                mpr( "You feel troubled." );
+                mpr("You feel troubled.");
             break;
         case 2:
             if (friendly)
                 need_friendly_stub = true;
             else
-                mpr( "You feel a wave of unholy energy pass over you." );
+                mpr("You feel a wave of unholy energy pass over you.");
             break;
         case 3:
-            simple_monster_message( monster, " looks stronger.",
-                                    channel );
+            simple_monster_message(monster, " looks stronger.",
+                                   channel);
             break;
         case 4:
-            simple_monster_message( monster, " becomes somewhat translucent.",
-                                    channel );
+            simple_monster_message(monster, " becomes somewhat translucent.",
+                                   channel);
             break;
         case 5:
-            simple_monster_message( monster, "'s eyes start to glow.",
-                                    channel );
+            simple_monster_message(monster, "'s eyes start to glow.",
+                                   channel);
             break;
         case 6:
         default:
             if (friendly)
                 need_friendly_stub = true;
             else if (one_chance_in(20))
-                mpr( "You resist (whatever that was supposed to do)." );
+                mpr("You resist (whatever that was supposed to do).");
             else
-                mpr( "You resist." );
+                mpr("You resist.");
             break;
         }
 
