@@ -1301,7 +1301,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_RAISE_DEAD:
-        your_spells(SPELL_ANIMATE_DEAD, you.experience_level * 5, false);
+        animate_dead(&you, you.experience_level * 5, BEH_FRIENDLY,
+                     you.pet_target);
         break;
 
     case ABIL_CONTROL_DEMON:
