@@ -2612,39 +2612,39 @@ const char *divine_title[NUM_GODS][8] =
     {"Toy",                "Toy",                   "Toy",                      "Toy",
      "Toy",                "Toy",                   "Toy",                      "Teddy Bear"},
 
-    //  Vehumet
+    //  Vehumet -- battle mage theme
     {"Meek",               "Sorceror's Apprentice", "Scholar of Destruction",   "Caster of Ruination",
      "Battle Magician",    "Warlock",               "Annihilator",              "Luminary of Lethal Lore"},
 
-    //  Okawaru
+    //  Okawaru -- battle theme
     {"Coward",             "Struggler",             "Combattant",               "Warrior",
      "Knight",             "Warmonger",             "Commander",                "Victor of a Thousand Battles"},
 
-    //  Makhleb
-    {"Sinner",             "Spawn of Chaos",        "Disciple of Annihilation", "Fanfare of Bloodshed",
-     "Fiendish",           "Demolition %s",         "Demon Caller",             "Champion of Chaos"},
+    //  Makhleb -- chaos theme
+    {"Orderly",            "Spawn of Chaos",        "Disciple of Annihilation", "Fanfare of Bloodshed",
+     "Fiendish",           "Demolition %s",         "Pandemonic",               "Champion of Chaos"},
 
-    //  Sif Muna
+    //  Sif Muna -- scholarly theme
     {"Ignorant",           "Disciple",              "Student",                  "Adept",
      "Scribe",             "Scholar",               "Sage",                     "Genius of the Arcane"},
 
-    //  Trog
+    //  Trog -- anger theme
     {"Faithless",          "Troglodyte",            "Angry Troglodyte",         "Frenzied",
      "%s of Prey",         "Rampant",               "Wild %s",                  "Bane of Scribes"},
 
     //  Nemelex Xobeh -- alluding to Tarot and cards
     {"Unlucky %s",         "The Pannier",           "The Charlatan",            "The Dreamer",
-     "The Fortune-Teller", "The Soothsayer",        "The Magus",                "%s in Luck"},
+     "The Fortune-Teller", "The Soothsayer",        "The Magus",                "Hand of Fortune"},
 
     //  Elyvilon
     {"Sinner",             "Comforter",             "Caregiver",                "Practitioner",
      "Pacifier",           "Purifying %s",          "Faith Healer",             "Bringer of Life"},
 
-    //  Lugonu
+    //  Lugonu -- distortion theme
     {"Faithless",          "Abyss-Baptised",        "Unweaver",                 "Distorting %s",
      "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
 
-    //  Beogh
+    //  Beogh -- messiah theme
     {"Apostate",           "Messenger",             "Proselytizer",             "Priest",
      "Missionary",         "Evangelist",            "Apostle",                  "Messiah"}
 };
