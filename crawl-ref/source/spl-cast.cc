@@ -1476,9 +1476,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_CONJURE_BALL_LIGHTNING:
-        // God gift exception: Ball lightning is a natural phenomenon
-        // treated as a monster, so don't mark it as a god gift.
-        cast_conjure_ball_lightning(powc);
+        cast_conjure_ball_lightning(powc, god_gift);
         break;
 
     case SPELL_CALL_IMP:
@@ -2340,6 +2338,9 @@ static void _miscast_enchantment(int severity, const char* cause)
 
 static void _miscast_translocation(int severity, const char* cause)
 {
+    const bool god_gift = crawl_state.is_god_acting();
+    const unsigned flags = (god_gift) ? MG_GOD_GIFT : 0;
+
     switch (severity)
     {
     case 0:         // harmless messages only
@@ -2394,12 +2395,9 @@ static void _miscast_translocation(int severity, const char* cause)
             ouch(4 + random2avg(7, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 5:
-            // God gift exception: A spatial vortex is a natural
-            // phenomenon treated as a monster, so don't mark it as a
-            // god gift.
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                        you.pos(), 3)) != -1)
+                        you.pos(), 3, flags)) != -1)
             {
                 mpr("Space twists in upon itself!");
             }
@@ -2434,14 +2432,11 @@ static void _miscast_translocation(int severity, const char* cause)
         {
             bool success = false;
 
-            // God gift exception: A spatial vortex is a natural
-            // phenomenon treated as a monster, so don't mark it as a
-            // god gift.
             for (int i = 1 + random2(3); i >= 0; --i)
             {
                 if (create_monster(
                         mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                            you.pos(), 3)) != -1)
+                            you.pos(), 3, flags)) != -1)
                 {
                     success = true;
                 }
@@ -2541,12 +2536,9 @@ static void _miscast_summoning(int severity, const char* cause)
             ouch(5 + random2avg(9, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 3:
-            // God gift exception: A spatial vortex is a natural
-            // phenomenon treated as a monster, so don't mark it as a
-            // god gift.
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                        you.pos(), 3)) != -1)
+                        you.pos(), 3, flags)) != -1)
             {
                 mpr("Space twists in upon itself!");
             }
@@ -2575,14 +2567,11 @@ static void _miscast_summoning(int severity, const char* cause)
         {
             bool success = false;
 
-            // God gift exception: A spatial vortex is a natural
-            // phenomenon treated as a monster, so don't mark it as a
-            // god gift.
             for (int i = 1 + random2(3); i >= 0; --i)
             {
                 if (create_monster(
                         mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                            you.pos(), 3)) != -1)
+                            you.pos(), 3, flags)) != -1)
                 {
                     success = true;
                 }

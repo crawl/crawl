@@ -157,7 +157,7 @@ bool cast_tukimas_dance(int pow, bool god_gift = false,
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool cast_conjure_ball_lightning(int pow);
+bool cast_conjure_ball_lightning(int pow, bool god_gift = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

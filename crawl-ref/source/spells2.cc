@@ -1842,9 +1842,7 @@ bool cast_tukimas_dance(int pow, bool god_gift,
     return (true);
 }
 
-// God gift exception: Ball lightning is a natural phenomenon treated as
-// a monster, so don't mark it as a god gift.
-bool cast_conjure_ball_lightning(int pow)
+bool cast_conjure_ball_lightning(int pow, bool god_gift)
 {
     bool success = false;
 
@@ -1875,7 +1873,8 @@ bool cast_conjure_ball_lightning(int pow)
         int monster =
             mons_place(
                 mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, 0,
-                          coord_def(tx, ty), MHITNOT));
+                          coord_def(tx, ty), MHITNOT,
+                          god_gift ? MG_GOD_GIFT : 0));
 
         if (monster != -1)
         {
