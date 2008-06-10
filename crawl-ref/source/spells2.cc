@@ -1842,6 +1842,8 @@ bool cast_tukimas_dance(int pow, bool god_gift,
     return (true);
 }
 
+// God gift exception: Ball lightning is a natural phenomenon treated as
+// a monster, so don't mark it as a god gift.
 bool cast_conjure_ball_lightning(int pow)
 {
     bool success = false;

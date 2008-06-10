@@ -72,8 +72,8 @@ spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true);
  * called from: acr - decks - fight - it_use2 - it_use3 - item_use - items -
  *              misc - mstuff2 - religion - spell - spl-book - spells4
  * *********************************************************************** */
-void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
-                     int force_effect, const char *cause = NULL );
+void miscast_effect(unsigned int sp_type, int mag_pow, int mag_fail,
+                    int force_effect, const char *cause = NULL);
 
 const char* failure_rate_to_string( int fail );
 

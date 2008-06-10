@@ -1418,8 +1418,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     // Summoning spells, and other spells that create new monsters.
-    // If a god is making you cast one of these spells, any monsters produced
-    // will count as god gifts.
+    // If a god is making you cast one of these spells, any monsters
+    // produced (with a few exceptions) will count as god gifts.
     case SPELL_SUMMON_BUTTERFLIES:
         cast_summon_butterflies(powc, god_gift);
         break;
@@ -1476,6 +1476,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_CONJURE_BALL_LIGHTNING:
+        // God gift exception: Ball lightning is a natural phenomenon
+        // treated as a monster, so don't mark it as a god gift.
         cast_conjure_ball_lightning(powc);
         break;
 
@@ -2392,6 +2394,9 @@ static void _miscast_translocation(int severity, const char* cause)
             ouch(4 + random2avg(7, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 5:
+            // God gift exception: A spatial vortex is a natural
+            // phenomenon treated as a monster, so don't mark it as a
+            // god gift.
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
                         you.pos(), 3)) != -1)
@@ -2429,6 +2434,9 @@ static void _miscast_translocation(int severity, const char* cause)
         {
             bool success = false;
 
+            // God gift exception: A spatial vortex is a natural
+            // phenomenon treated as a monster, so don't mark it as a
+            // god gift.
             for (int i = 1 + random2(3); i >= 0; --i)
             {
                 if (create_monster(
@@ -2533,6 +2541,9 @@ static void _miscast_summoning(int severity, const char* cause)
             ouch(5 + random2avg(9, 2), 0, KILLED_BY_WILD_MAGIC, cause);
             break;
         case 3:
+            // God gift exception: A spatial vortex is a natural
+            // phenomenon treated as a monster, so don't mark it as a
+            // god gift.
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
                         you.pos(), 3)) != -1)
@@ -2564,6 +2575,9 @@ static void _miscast_summoning(int severity, const char* cause)
         {
             bool success = false;
 
+            // God gift exception: A spatial vortex is a natural
+            // phenomenon treated as a monster, so don't mark it as a
+            // god gift.
             for (int i = 1 + random2(3); i >= 0; --i)
             {
                 if (create_monster(
@@ -3700,14 +3714,16 @@ static void _miscast_poison(int severity, const char* cause)
     }
 }
 
-/*  sp_type is the type of the spell
- *  mag_pow is overall power of the spell or effect (i.e. its level)
- *  mag_fail is the degree to which you failed
- *  force_effect forces a certain severity of effect to occur
- *  (set to 100 to avoid forcing.)
- */
-void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
-                     int force_effect, const char *cause )
+// sp_type:      The type of the spell.
+// mag_pow:      The overall power of the spell or effect (i.e. its level).
+// mag_fail:     The degree to which you failed.
+// force_effect: This forces a certain severity of effect to occur.  It
+//               can be disabled by being set to 100.
+//
+// If a god is making you miscast, any monsters produced (with a few
+// exceptions) will count as god gifts.
+void miscast_effect(unsigned int sp_type, int mag_pow, int mag_fail,
+                    int force_effect, const char *cause)
 {
     if (sp_type == SPTYP_RANDOM)
         sp_type = 1 << (random2(SPTYP_LAST_EXPONENT));
