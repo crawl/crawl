@@ -85,13 +85,14 @@ void cast_confusing_touch(int power);
 void cast_cure_poison(int mabil);
 int allowed_deaths_door_hp(void);
 void cast_deaths_door(int pow);
-int cast_fire_storm(int powc, bolt &beam);
+void cast_fire_storm(int pow, bolt &beam);
+void cast_chain_lightning(int pow);
 bool cast_revivification(int pow);
 void cast_berserk(void);
 void cast_ring_of_flames(int power);
 bool conjure_flame(int pow);
 void extension(int pow);
-bool fireball(int power, bolt &beam);
+bool fireball(int pow, bolt &beam);
 bool stinking_cloud(int pow, bolt &beam);
 void abjuration(int pow);
 

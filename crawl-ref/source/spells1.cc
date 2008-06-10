@@ -170,7 +170,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && !wizard_blink)
         {
             you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = 1;
+            you.redraw_armour_class = true;
         }
     }
 
@@ -232,24 +232,21 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     if (succ && you.duration[DUR_CONDENSATION_SHIELD] > 0)
     {
         you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
     }
 
     return;
-}                               // end random_blink()
+}
 
-bool fireball(int power, bolt &beam)
+bool fireball(int pow, bolt &beam)
 {
-    if (!zapping(ZAP_FIREBALL, power, beam, true))
-        return (false);
+    return (zapping(ZAP_FIREBALL, pow, beam, true));
+}
 
-    return (true);
-}                               // end fireball()
-
-int cast_fire_storm(int powc, bolt &beam)
+void cast_fire_storm(int pow, bolt &beam)
 {
     beam.name         = "great blast of fire";
-    beam.ex_size      = 2 + (random2(powc) > 75);
+    beam.ex_size      = 2 + (random2(pow) > 75);
     beam.flavour      = BEAM_LAVA;
     beam.type         = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour       = RED;
@@ -260,22 +257,19 @@ int cast_fire_storm(int powc, bolt &beam)
     beam.is_beam      = false;
     beam.is_tracer    = false;
     beam.is_explosion = true;
-    beam.ench_power   = powc;     // used for radius
-    beam.hit          = 20 + powc / 10;
-    beam.damage       = calc_dice( 9, 20 + powc );
+    beam.ench_power   = pow;      // used for radius
+    beam.hit          = 20 + pow / 10;
+    beam.damage       = calc_dice(9, 20 + pow);
 
-    explosion( beam, false, false, true, true, false );
+    explosion(beam, false, false, true, true, false);
     mpr("A raging storm of fire appears!");
 
     viewwindow(1, false);
+}
 
-    return (1);
-}                               // end cast_fire_storm()
-
-
-void cast_chain_lightning( int powc )
+void cast_chain_lightning(int pow)
 {
-    struct bolt beam;
+    bolt beam;
 
     // initialize beam structure
     beam.name           = "lightning arc";
@@ -297,8 +291,8 @@ void cast_chain_lightning( int powc )
     int i;
 
     for (sx = you.x_pos, sy = you.y_pos;
-         powc > 0;
-         powc -= 8 + random2(13), sx = tx, sy = ty)
+         pow > 0;
+         pow -= 8 + random2(13), sx = tx, sy = ty)
     {
         // infinity as far as this spell is concerned
         // (Range - 1) is used because the distance is randomized and
@@ -347,20 +341,19 @@ void cast_chain_lightning( int powc )
                     count = 0;
                 }
             }
-            else if (tx == -1 || one_chance_in( count ))
+            else if (tx == -1 || one_chance_in(count))
             {
                 // either first target, or new selected target at min_dist
                 tx = monster->x;
                 ty = monster->y;
 
                 // need to set min_dist for first target case
-                if (dist < min_dist)
-                    min_dist = dist;
+                dist = std::max(dist, min_dist);
             }
         }
 
         // now check if the player is a target
-        dist = grid_distance( sx, sy, you.x_pos, you.y_pos );
+        dist = grid_distance(sx, sy, you.x_pos, you.y_pos);
 
         if (dist)       // i.e., player was not the source
         {
@@ -370,8 +363,8 @@ void cast_chain_lightning( int powc )
             // select player if only, closest, or randomly selected
             if ((tx == -1
                     || dist < min_dist
-                    || (dist == min_dist && one_chance_in( count + 1 )))
-                && check_line_of_sight( sx, sy, you.x_pos, you.y_pos ))
+                    || (dist == min_dist && one_chance_in(count + 1)))
+                && check_line_of_sight(sx, sy, you.x_pos, you.y_pos))
             {
                 tx = you.x_pos;
                 ty = you.y_pos;
@@ -384,7 +377,7 @@ void cast_chain_lightning( int powc )
         if (tx == -1)
         {
             if (see_source)
-                mpr( "The lightning grounds out." );
+                mpr("The lightning grounds out.");
 
             break;
         }
@@ -395,14 +388,14 @@ void cast_chain_lightning( int powc )
             noisy(25, sx, sy, "You hear a mighty clap of thunder!");
 
         if (see_source && !see_targ)
-            mpr( "The lightning arcs out of your line of sight!" );
+            mpr("The lightning arcs out of your line of sight!");
         else if (!see_source && see_targ)
-            mpr( "The lightning arc suddenly appears!" );
+            mpr("The lightning arc suddenly appears!");
 
         if (!see_grid_no_trans( tx, ty ))
         {
             // It's no longer in the caster's LOS and influence.
-            powc = powc / 2 + 1;
+            pow = pow / 2 + 1;
         }
 
         beam.source_x = sx;
@@ -410,7 +403,7 @@ void cast_chain_lightning( int powc )
         beam.target_x = tx;
         beam.target_y = ty;
         beam.colour = LIGHTBLUE;
-        beam.damage = calc_dice( 5, 12 + powc * 2 / 3 );
+        beam.damage = calc_dice(5, 12 + pow * 2 / 3);
 
         // Be kinder to the player.
         if (tx == you.x_pos && ty == you.y_pos)
@@ -1430,7 +1423,7 @@ void ice_armour(int pow, bool extending)
         else
             mpr( "A film of ice covers your body!" );
 
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
     }
 
     you.duration[DUR_ICY_ARMOUR] += 20 + random2(pow) + random2(pow);
@@ -1458,8 +1451,8 @@ void stone_scales(int pow)
         else
             mpr( "A set of stone scales covers your body!" );
 
-        you.redraw_evasion = 1;
-        you.redraw_armour_class = 1;
+        you.redraw_evasion = true;
+        you.redraw_armour_class = true;
     }
 
     dur_change = 20 + random2(pow) + random2(pow);
