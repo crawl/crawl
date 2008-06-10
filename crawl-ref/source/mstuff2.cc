@@ -720,7 +720,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                               random_range(3, 5), flags);
         return;
 
-    case SPELL_SUMMON_UNDEAD:      // summon undead around player
+    case SPELL_SUMMON_UNDEAD:      // Summon undead around player.
         _do_high_level_summon(monster, monsterNearby, _pick_undead_summon,
                               2 + random2(2) + random2(monster->hit_dice/4 + 1),
                               flags);
