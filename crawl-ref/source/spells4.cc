@@ -2599,7 +2599,7 @@ void cast_stoneskin(int pow)
         else
             mpr( "Your skin hardens." );
 
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
     }
 
     you.duration[DUR_STONESKIN] += 10 + random2(pow) + random2(pow);

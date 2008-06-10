@@ -1342,7 +1342,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
     {
         you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
     }
 
     if (you.level_type == LEVEL_ABYSS)
