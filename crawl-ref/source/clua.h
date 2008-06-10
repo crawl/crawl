@@ -49,7 +49,7 @@ public:
     ~lua_call_throttle();
 
     static CLua *find_clua(lua_State *ls);
-    
+
 private:
     CLua *lua;
 
@@ -139,7 +139,7 @@ private:
 
     bool proc_returns(const char *par) const;
 
-    bool calltopfn(lua_State *ls, const char *format, va_list args, 
+    bool calltopfn(lua_State *ls, const char *format, va_list args,
                    int retc = -1, va_list *fnr = NULL);
 
     int push_args(lua_State *ls, const char *format, va_list args,
