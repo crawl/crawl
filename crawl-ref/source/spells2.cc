@@ -1634,140 +1634,6 @@ bool cast_summon_dragon(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_conjure_ball_lightning(int pow, bool god_gift)
-{
-    bool success = false;
-
-    // Restricted so that the situation doesn't get too gross.  Each of
-    // these will explode for 3d20 damage. -- bwr
-    const int how_many = std::min(8, 3 + random2(2 + pow / 50));
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        int tx = -1, ty = -1;
-
-        for (int j = 0; j < 10; ++j)
-        {
-            if (!random_near_space(you.x_pos, you.y_pos, tx, ty, true, true)
-                && distance(you.x_pos, you.y_pos, tx, ty) <= 5)
-            {
-                break;
-            }
-        }
-
-        // If we fail, we'll try the ol' summon next to player trick.
-        if (tx == -1 || ty == -1)
-        {
-            tx = you.x_pos;
-            ty = you.y_pos;
-        }
-
-        int monster =
-            mons_place(
-                mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, 0,
-                          coord_def(tx, ty), MHITNOT,
-                          god_gift ? MG_GOD_GIFT : 0));
-
-        if (monster != -1)
-        {
-            success = true;
-
-            menv[monster].add_ench(ENCH_SHORT_LIVED);
-        }
-    }
-
-    if (success)
-        mpr("You create some ball lightning!");
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
-bool cast_tukimas_dance(int pow, bool god_gift,
-                        bool force_hostile, bool quiet_failure)
-{
-    bool success = true;
-
-    const int dur = std::min(2 + (random2(pow) / 5), 6);
-
-    const int wpn = you.equip[EQ_WEAPON];
-
-    // See if wielded item is appropriate.
-    if (wpn == -1
-        || you.inv[wpn].base_type != OBJ_WEAPONS
-        || is_range_weapon(you.inv[wpn])
-        || is_fixed_artefact(you.inv[wpn]))
-    {
-        success = false;
-    }
-
-    // See if we can get an mitm for the dancing weapon.
-    const int i = get_item_slot();
-
-    if (i == NON_ITEM)
-        success = false;
-
-    int monster;
-
-    if (success)
-    {
-        // Cursed weapons become hostile.
-        const bool friendly = (!force_hostile && !item_cursed(you.inv[wpn]));
-
-        monster =
-            create_monster(
-                mgen_data(MONS_DANCING_WEAPON,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                          dur, you.pos(),
-                          friendly ? you.pet_target : MHITYOU,
-                          god_gift ? MG_GOD_GIFT : 0));
-
-        if (monster == -1)
-            success = false;
-    }
-
-    if (!success)
-    {
-        destroy_item(i);
-
-        if (!quiet_failure)
-        {
-            if (wpn != -1)
-                mpr("Your weapon vibrates crazily for a second.");
-            else
-                msg::stream << "Your " << your_hand(true) << " twitch."
-                            << std::endl;
-        }
-
-        return (false);
-    }
-
-    // We are successful.  Unwield the weapon, removing any wield effects.
-    unwield_item();
-
-    // Copy the unwielded item.
-    mitm[i] = you.inv[wpn];
-    mitm[i].quantity = 1;
-    mitm[i].x = 0;
-    mitm[i].y = 0;
-    mitm[i].link = NON_ITEM;
-
-    // Mark the weapon as thrown, so that we'll autograb it when the
-    // tango's done.
-    mitm[i].flags |= ISFLAG_THROWN;
-
-    mprf("%s dances into the air!", you.inv[wpn].name(DESC_CAP_YOUR).c_str());
-
-    you.inv[wpn].quantity = 0;
-
-    menv[monster].inv[MSLOT_WEAPON] = i;
-    menv[monster].colour = mitm[i].colour;
-    burden_change();
-
-    return (true);
-}
-
 // Trog sends a fighting buddy (or enemy) for a follower.
 bool summon_berserker(int pow, bool god_gift, bool force_hostile)
 {
@@ -1890,4 +1756,137 @@ bool summon_guardian(int pow, bool god_gift, bool quiet)
 bool summon_daeva(int pow, bool god_gift, bool quiet)
 {
     return _summon_holy_being_wrapper(pow, god_gift, MONS_DAEVA, quiet);
+}
+
+bool cast_tukimas_dance(int pow, bool god_gift,
+                        bool force_hostile, bool quiet_failure)
+{
+    bool success = true;
+
+    const int dur = std::min(2 + (random2(pow) / 5), 6);
+
+    const int wpn = you.equip[EQ_WEAPON];
+
+    // See if wielded item is appropriate.
+    if (wpn == -1
+        || you.inv[wpn].base_type != OBJ_WEAPONS
+        || is_range_weapon(you.inv[wpn])
+        || is_fixed_artefact(you.inv[wpn]))
+    {
+        success = false;
+    }
+
+    // See if we can get an mitm for the dancing weapon.
+    const int i = get_item_slot();
+
+    if (i == NON_ITEM)
+        success = false;
+
+    int monster;
+
+    if (success)
+    {
+        // Cursed weapons become hostile.
+        const bool friendly = (!force_hostile && !item_cursed(you.inv[wpn]));
+
+        monster =
+            create_monster(
+                mgen_data(MONS_DANCING_WEAPON,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                          dur, you.pos(),
+                          friendly ? you.pet_target : MHITYOU,
+                          god_gift ? MG_GOD_GIFT : 0));
+
+        if (monster == -1)
+            success = false;
+    }
+
+    if (!success)
+    {
+        destroy_item(i);
+
+        if (!quiet_failure)
+        {
+            if (wpn != -1)
+                mpr("Your weapon vibrates crazily for a second.");
+            else
+                msg::stream << "Your " << your_hand(true) << " twitch."
+                            << std::endl;
+        }
+
+        return (false);
+    }
+
+    // We are successful.  Unwield the weapon, removing any wield effects.
+    unwield_item();
+
+    // Copy the unwielded item.
+    mitm[i] = you.inv[wpn];
+    mitm[i].quantity = 1;
+    mitm[i].x = 0;
+    mitm[i].y = 0;
+    mitm[i].link = NON_ITEM;
+
+    // Mark the weapon as thrown, so that we'll autograb it when the
+    // tango's done.
+    mitm[i].flags |= ISFLAG_THROWN;
+
+    mprf("%s dances into the air!", you.inv[wpn].name(DESC_CAP_YOUR).c_str());
+
+    you.inv[wpn].quantity = 0;
+
+    menv[monster].inv[MSLOT_WEAPON] = i;
+    menv[monster].colour = mitm[i].colour;
+    burden_change();
+
+    return (true);
+}
+
+bool cast_conjure_ball_lightning(int pow)
+{
+    bool success = false;
+
+    // Restricted so that the situation doesn't get too gross.  Each of
+    // these will explode for 3d20 damage. -- bwr
+    const int how_many = std::min(8, 3 + random2(2 + pow / 50));
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        int tx = -1, ty = -1;
+
+        for (int j = 0; j < 10; ++j)
+        {
+            if (!random_near_space(you.x_pos, you.y_pos, tx, ty, true, true)
+                && distance(you.x_pos, you.y_pos, tx, ty) <= 5)
+            {
+                break;
+            }
+        }
+
+        // If we fail, we'll try the ol' summon next to player trick.
+        if (tx == -1 || ty == -1)
+        {
+            tx = you.x_pos;
+            ty = you.y_pos;
+        }
+
+        int monster =
+            mons_place(
+                mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, 0,
+                          coord_def(tx, ty), MHITNOT));
+
+        if (monster != -1)
+        {
+            success = true;
+
+            menv[monster].add_ench(ENCH_SHORT_LIVED);
+        }
+    }
+
+    if (success)
+        mpr("You create some ball lightning!");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
 }

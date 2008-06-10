@@ -1457,6 +1457,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_ugly_thing(powc, god_gift);
         break;
 
+    case SPELL_SUMMON_DRAGON:
+        cast_summon_dragon(powc, god_gift);
+        break;
+
     case SPELL_SUMMON_GUARDIAN:
         summon_guardian(powc, god_gift);
         break;
@@ -1465,18 +1469,14 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         summon_daeva(powc, god_gift);
         break;
 
-    case SPELL_SUMMON_DRAGON:
-        cast_summon_dragon(powc, god_gift);
+    case SPELL_TUKIMAS_DANCE:
+        // Temporarily turn a wielded weapon into a dancing weapon.
+        crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
+        cast_tukimas_dance(powc, god_gift);
         break;
 
     case SPELL_CONJURE_BALL_LIGHTNING:
-        cast_conjure_ball_lightning(powc, god_gift);
-        break;
-
-    case SPELL_TUKIMAS_DANCE:
-        // Temporarily turns a wielded weapon into a dancing weapon.
-        crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
-        cast_tukimas_dance(powc, god_gift);
+        cast_conjure_ball_lightning(powc);
         break;
 
     case SPELL_CALL_IMP:

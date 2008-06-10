@@ -108,6 +108,12 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
+ * called from: spell
+ * *********************************************************************** */
+bool summon_animals(int pow);
+
+// last updated 24may2000 {dlb}
+/* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
 bool cast_summon_butterflies(int pow, bool god_gift = false);
@@ -130,14 +136,6 @@ bool cast_call_canine_familiar(int pow, bool god_gift = false);
 bool cast_summon_ice_beast(int pow, bool god_gift = false);
 bool cast_summon_ugly_thing(int pow, bool god_gift = false);
 bool cast_summon_dragon(int pow, bool god_gift = false);
-bool cast_conjure_ball_lightning(int pow, bool god_gift = false);
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - religion - spell
- * *********************************************************************** */
-bool cast_tukimas_dance(int pow, bool god_gift = false,
-                        bool force_hostile = false, bool quiet_failure = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
@@ -150,10 +148,16 @@ bool summon_daeva(int pow, bool god_gift = false, bool quiet = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
- * called from: spell
+ * called from: ability - religion - spell
  * *********************************************************************** */
-bool summon_animals(int pow);
+bool cast_tukimas_dance(int pow, bool god_gift = false,
+                        bool force_hostile = false, bool quiet_failure = false);
 
+// last updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: ability - spell
+ * *********************************************************************** */
+bool cast_conjure_ball_lightning(int pow);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
