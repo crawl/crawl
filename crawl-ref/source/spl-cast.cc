@@ -2410,8 +2410,8 @@ static void _miscast_translocation(int severity, const char* cause)
             for (int i = 1 + random2(3); i >= 0; --i)
             {
                 if (create_monster(
-                    mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                        you.pos(), 3)) != -1)
+                        mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
+                            you.pos(), 3)) != -1)
                 {
                     success = true;
                 }
@@ -2523,7 +2523,8 @@ static void _miscast_summoning(int severity, const char* cause)
         case 4:
         case 5:
             if (create_monster(
-                    mgen_data::alert_hostile_at(summon_any_demon(DEMON_LESSER),
+                    mgen_data::alert_hostile_at(
+                        summon_any_demon(DEMON_LESSER),
                         you.pos(), 5, flags)) != -1)
             {
                 mpr("Something appears in a flash of light!");
@@ -2544,8 +2545,8 @@ static void _miscast_summoning(int severity, const char* cause)
             for (int i = 1 + random2(3); i >= 0; --i)
             {
                 if (create_monster(
-                    mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                        you.pos(), 3)) != -1)
+                        mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
+                            you.pos(), 3)) != -1)
                 {
                     success = true;
                 }
@@ -2561,7 +2562,8 @@ static void _miscast_summoning(int severity, const char* cause)
         case 1:
         case 2:
             if (create_monster(
-                    mgen_data::alert_hostile_at(summon_any_demon(DEMON_COMMON),
+                    mgen_data::alert_hostile_at(
+                        summon_any_demon(DEMON_COMMON),
                         you.pos(), 5, flags)) != -1)
             {
                 mpr("Something forms out of thin air!");
@@ -2579,8 +2581,9 @@ static void _miscast_summoning(int severity, const char* cause)
             for (int i = 1 + random2(2); i >= 0; --i)
             {
                 if (create_monster(
-                    mgen_data::alert_hostile_at(summon_any_demon(DEMON_LESSER),
-                        you.pos(), 5, flags)) != -1)
+                        mgen_data::alert_hostile_at(
+                            summon_any_demon(DEMON_LESSER),
+                            you.pos(), 5, flags)) != -1)
                 {
                     success = true;
                 }
@@ -2611,7 +2614,8 @@ static void _miscast_summoning(int severity, const char* cause)
 
         case 1:
             if (create_monster(
-                    mgen_data::alert_hostile_at(summon_any_demon(DEMON_GREATER),
+                    mgen_data::alert_hostile_at(
+                        summon_any_demon(DEMON_GREATER),
                         you.pos(), 0, flags)) != -1)
             {
                 mpr("You sense a hostile presence.");
@@ -2627,8 +2631,9 @@ static void _miscast_summoning(int severity, const char* cause)
             for (int i = 1 + random2(2); i >= 0; --i)
             {
                 if (create_monster(
-                    mgen_data::alert_hostile_at(summon_any_demon(DEMON_COMMON),
-                        you.pos(), 3, flags)) != -1)
+                        mgen_data::alert_hostile_at(
+                            summon_any_demon(DEMON_COMMON),
+                            you.pos(), 3, flags)) != -1)
                 {
                     success = true;
                 }

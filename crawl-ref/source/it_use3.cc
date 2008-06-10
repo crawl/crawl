@@ -382,8 +382,8 @@ static bool evoke_horn_of_geryon()
     {
         mpr("You produce a hideous howling noise!", MSGCH_SOUND);
         create_monster(
-            mgen_data( MONS_BEAST, BEH_HOSTILE,
-                       4, you.pos(), MHITYOU ));
+            mgen_data(MONS_BEAST, BEH_HOSTILE,
+                       4, you.pos(), MHITYOU));
     }
     return rc;
 }
