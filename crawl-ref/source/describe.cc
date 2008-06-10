@@ -2613,7 +2613,7 @@ const char *divine_title[NUM_GODS][8] =
      "Toy",                "Toy",                   "Toy",                      "Teddy Bear"},
 
     //  Vehumet -- battle mage theme
-    {"Meek",               "Sorceror's Apprentice", "Scholar of Destruction",   "Caster of Ruination",
+    {"Meek",               "Sorcerer's Apprentice", "Scholar of Destruction",   "Caster of Ruination",
      "Battle Magician",    "Warlock",               "Annihilator",              "Luminary of Lethal Lore"},
 
     //  Okawaru -- battle theme
