@@ -160,11 +160,11 @@ void init_pandemonium(void)
     env.floor_colour = BLACK;
     env.rock_colour  = BLACK;
     dgn_set_colours_from_monsters();
-}                               // end init_pandemonium()
+}
 
 void pandemonium_mons(void)
 {
-    // must leave allowance for monsters rare on pandemonium (eg wizards etc)
+    // must leave allowance for monsters rare on pandemonium (wizards, etc.)
     int pan_mons = env.mons_alloc[random2(10)];
 
     if (one_chance_in(40))
@@ -177,6 +177,6 @@ void pandemonium_mons(void)
     }
     mgen_data mg(static_cast<monster_type>(pan_mons));
     mg.level_type = LEVEL_PANDEMONIUM;
-    
+
     mons_place(mg);
-}                               // end pandemonium_mons()
+}

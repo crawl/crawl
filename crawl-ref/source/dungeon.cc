@@ -3232,7 +3232,7 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
             if (roll >= rare_sum)
                 continue;
 
-            // Run throught the cumulative chances and place a monster.
+            // Run through the cumulative chances and place a monster.
             for (i = 0; i < num_types; i++)
                 if (roll < pit_list[i].rare)
                 {
