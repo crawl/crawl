@@ -893,11 +893,13 @@ static bool _raise_corpse(int x, int y, int corps, beh_type beha,
         }
 
         _equip_undead(x, y, corps, monster, monnum);
+
+        destroy_item(corps);
+
+        return (true);
     }
 
-    destroy_item(corps);
-
-    return (true);
+    return (false);
 }
 
 bool animate_a_corpse(int x, int y, corpse_type class_allowed,
