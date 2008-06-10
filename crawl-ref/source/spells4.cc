@@ -1305,8 +1305,6 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
 
 bool cast_evaporate(int pow, bolt& beem, int potion)
 {
-    struct dist spelld;
-
     if (potion == -1)
         return (false);
     else if (you.inv[potion].base_type != OBJ_POTIONS)
@@ -1316,22 +1314,21 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
         return (false);
     }
 
-    beem.name = "potion";
-    beem.colour = you.inv[potion].colour;
-    beem.range = 9;
-    beem.rangeMax = 9;
-    beem.type = dchar_glyph(DCHAR_FIRED_FLASK);
+    beem.name        = "potion";
+    beem.colour      = you.inv[potion].colour;
+    beem.range       = 9;
+    beem.rangeMax    = 9;
+    beem.type        = dchar_glyph(DCHAR_FIRED_FLASK);
     beem.beam_source = MHITYOU;
-    beem.thrower = KILL_YOU_MISSILE;
+    beem.thrower     = KILL_YOU_MISSILE;
+    beem.is_beam     = false;
     beem.aux_source.clear();
-    beem.is_beam = false;
-    beem.is_tracer = false;
 
-    beem.hit = you.dex / 2 + roll_dice( 2, you.skills[SK_THROWING] / 2 + 1 );
-    beem.damage = dice_def( 1, 0 );  // no damage, just producing clouds
-    beem.ench_power = pow;           // used for duration only?
+    beem.hit        = you.dex / 2 + roll_dice( 2, you.skills[SK_THROWING] / 2 + 1 );
+    beem.damage     = dice_def( 1, 0 );  // no damage, just producing clouds
+    beem.ench_power = pow;               // used for duration only?
 
-    beem.flavour = BEAM_POTION_STINKING_CLOUD;
+    beem.flavour    = BEAM_POTION_STINKING_CLOUD;
 
     switch (you.inv[potion].sub_type)
     {
@@ -1341,6 +1338,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
         break;
 
     case POT_DEGENERATION:
+        beem.effect_known = false;
         beem.flavour = (coinflip() ? BEAM_POTION_POISON : BEAM_POTION_MIASMA);
         beem.ench_power *= 2;
         break;
@@ -1373,6 +1371,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
             break; // stinking cloud
         // deliberate fall through
     case POT_BERSERK_RAGE:
+        beem.effect_known = false;
         beem.flavour = (coinflip() ? BEAM_POTION_FIRE : BEAM_POTION_STEAM);
         break;
 
@@ -1382,17 +1381,19 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     case POT_GAIN_INTELLIGENCE:
     case POT_EXPERIENCE:
     case POT_MAGIC:
+        beem.effect_known = false;
         switch (random2(5))
         {
-        case 0:   beem.flavour = BEAM_POTION_FIRE;            break;
-        case 1:   beem.flavour = BEAM_POTION_COLD;            break;
-        case 2:   beem.flavour = BEAM_POTION_POISON;          break;
-        case 3:   beem.flavour = BEAM_POTION_MIASMA;          break;
-        default:  beem.flavour = BEAM_POTION_RANDOM;          break;
+        case 0:   beem.flavour = BEAM_POTION_FIRE;   break;
+        case 1:   beem.flavour = BEAM_POTION_COLD;   break;
+        case 2:   beem.flavour = BEAM_POTION_POISON; break;
+        case 3:   beem.flavour = BEAM_POTION_MIASMA; break;
+        default:  beem.flavour = BEAM_POTION_RANDOM; break;
         }
         break;
 
     default:
+        beem.effect_known = false;
         switch (random2(12))
         {
         case 0:   beem.flavour = BEAM_POTION_FIRE;            break;
@@ -1408,12 +1409,31 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
         break;
     }
 
+    // Fire tracer.
+    beem.source_x      = you.x_pos;
+    beem.source_y      = you.y_pos;
+    beem.can_see_invis = player_see_invis();
+    beem.smart_monster = true;
+    beem.attitude      = ATT_FRIENDLY;
+    beem.fr_count      = 0;
+    beem.is_tracer     = true;
+    fire_beam(beem);
+
+    if (beem.fr_count > 0)
+    {
+        // We don't want to fire through friendlies.
+        canned_msg(MSG_OK);
+        return (false);
+    }
+
     if (coinflip())
         exercise( SK_THROWING, 1 );
 
+    // Really fire.
+    beem.is_tracer = false;
     fire_beam(beem);
 
-    // both old and new code use up a potion:
+    // Use up a potion.
     if (is_blood_potion(you.inv[potion]))
         remove_oldest_blood_potion(you.inv[potion]);
 
@@ -1464,9 +1484,9 @@ void cast_fulsome_distillation( int powc )
         return;
     }
 
-    const bool rotten = food_is_rotten(mitm[corpse]);
+    const bool rotten      = food_is_rotten(mitm[corpse]);
     const bool big_monster = (mons_type_hit_dice( mitm[corpse].plus ) >= 5);
-    const bool power_up = (rotten && big_monster);
+    const bool power_up    = (rotten && big_monster);
 
     potion_type pot_type = POT_WATER;
 

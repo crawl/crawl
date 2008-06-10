@@ -2721,6 +2721,9 @@ std::string your_hand(bool plural)
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                         bool beam_target)
 {
+    if (you.confused())
+        return (false);
+
     bool retval = false;
     bool prompt = false;
 
@@ -2734,7 +2737,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
 
     if (isFriendly)
     {
-        // listed in the form: "your rat", "Blork the orc"
+        // Listed in the form: "your rat", "Blork the orc".
         snprintf(info, INFO_SIZE, "Really %s %s%s?",
                  (beam_attack) ? (beam_target) ? "fire at"
                                                : "fire through"
@@ -2769,7 +2772,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
         prompt = true;
     }
 
-    if (!you.confused() && prompt)
+    if (prompt)
         retval = !yesno(info, false, 'n');
 
     return (retval);

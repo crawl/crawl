@@ -938,9 +938,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
 
         targeting_type dir  =
-            (testbits( flags, SPFLAG_TARGET ) ? DIR_TARGET :
-             testbits( flags, SPFLAG_GRID )   ? DIR_TARGET :
-             testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
+            (testbits( flags, SPFLAG_TARGET )        ? DIR_TARGET :
+             testbits( flags, SPFLAG_GRID )          ? DIR_TARGET :
+             testbits( flags, SPFLAG_DIR )           ? DIR_DIR
+                                                     : DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);
         if (spell == SPELL_EVAPORATE)
@@ -1235,7 +1236,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_MEPHITIC_CLOUD:
-        stinking_cloud(powc, beam);
+        if (!stinking_cloud(powc, beam))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_RING_OF_FLAMES:

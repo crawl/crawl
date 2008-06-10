@@ -2209,9 +2209,6 @@ bool is_good_item(const item_def &item)
     if (is_emergency_item(item))
         return (true);
 
-    if (is_useless_item(item) || is_dangerous_item(item))
-        return (false);
-
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
@@ -2238,7 +2235,7 @@ bool is_good_item(const item_def &item)
 }
 
 // Returns true if using an item only has harmful effects.
-bool is_bad_item(const item_def &item)
+bool is_bad_item(const item_def &item, bool temp)
 {
     if (!item_type_known(item))
         return (false);
@@ -2251,6 +2248,11 @@ bool is_bad_item(const item_def &item)
         case SCR_CURSE_ARMOUR:
         case SCR_CURSE_WEAPON:
             return (true);
+        case SCR_SUMMONING:
+            // Summoning will always produce hostile monsters if you worship
+            // a good god. (Use temp to allow autopickup to prevent monsters
+            // from reading it.)
+            return (temp && is_good_god(you.religion));
         default:
             return (false);
         }
@@ -2266,13 +2268,15 @@ bool is_bad_item(const item_def &item)
         case POT_DEGENERATION:
         case POT_DECAY:
         case POT_PARALYSIS:
-        // Well, strictly poison is not that bad if you're poison resistant...
+            return (true);
         case POT_POISON:
         case POT_STRONG_POISON:
-            return (true);
+            // Poison is not that bad if you're poison resistant.
+            return (!player_res_poison()
+                    || !temp && you.species == SP_VAMPIRE);
         case POT_MUTATION:
             return (you.is_undead
-                    && (you.species != SP_VAMPIRE
+                    && (temp || you.species != SP_VAMPIRE
                         || you.hunger_state < HS_SATIATED));
         default:
             return (false);
@@ -2297,7 +2301,7 @@ bool is_bad_item(const item_def &item)
 }
 
 // Returns true if using an item is risky but may occasionally be worthwhile.
-bool is_dangerous_item(const item_def &item)
+bool is_dangerous_item(const item_def &item, bool temp)
 {
     if (!item_type_known(item))
     {
@@ -2318,8 +2322,10 @@ bool is_dangerous_item(const item_def &item)
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
-        case SCR_TORMENT:
             return (true);
+        case SCR_TORMENT:
+            return (!player_mutation_level(MUT_TORMENT_RESISTANCE)
+                    || !temp && you.species == SP_VAMPIRE);
         default:
             return (false);
         }
@@ -2329,11 +2335,14 @@ bool is_dangerous_item(const item_def &item)
         case POT_MUTATION:
             // Only living characters can mutate.
             return (!you.is_undead
-                    || you.species == SP_VAMPIRE
+                    || temp && you.species == SP_VAMPIRE
                        && you.hunger_state >= HS_SATIATED);
         default:
             return (false);
         }
+    case OBJ_BOOKS:
+        // The Tome of Destruction is certainly risky.
+        return (item.sub_type == BOOK_DESTRUCTION);
     default:
         return (false);
     }
@@ -2355,7 +2364,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return (false);
 
         // A bad item is always useless.
-        if (is_bad_item(item))
+        if (is_bad_item(item, temp))
             return (true);
 
         switch (item.sub_type)
@@ -2364,6 +2373,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RANDOM_USELESSNESS:
         case SCR_NOISE:
             return (true);
+        case SCR_TORMENT:
+            return (player_mutation_level(MUT_TORMENT_RESISTANCE)
+                    || !temp && you.species == SP_VAMPIRE);
         default:
             return (false);
         }
@@ -2375,23 +2387,14 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return (false);
 
-        switch (item.sub_type)
-        {
-        case POT_CONFUSION:
-        case POT_SLOWING:
-        case POT_DEGENERATION:
-        case POT_DECAY:
-        case POT_PARALYSIS:
-        case POT_POISON:
-        case POT_STRONG_POISON:
-        case POT_MUTATION:
-            // Certainly not useless if it can be used for attacking.
-            return (!player_knows_spell(SPELL_EVAPORATE));
-        }
+        // No potion is useless if it can be used for Evaporate.
+        if (player_knows_spell(SPELL_EVAPORATE))
+            return (false);
+
+        // Apart from Evaporate, mummies can't use potions.
         if (you.species == SP_MUMMY)
             return (true);
 
-        // Do a second switch for the other potions.
         switch (item.sub_type)
         {
         case POT_BERSERK_RAGE:
@@ -2401,7 +2404,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_GAIN_DEXTERITY:
             return (you.species == SP_GHOUL
                     || temp && you.species == SP_VAMPIRE
-                       && you.hunger_state >= HS_SATIATED);
+                            && you.hunger_state < HS_SATIATED);
 
         case POT_LEVITATION:
             return (you.permanent_levitation() || you.permanent_flight());
@@ -2412,6 +2415,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_BLOOD_COAGULATED:
             return (!can_ingest(item.base_type, item.sub_type, true, true,
                                                                false));
+        case POT_POISON:
+        case POT_STRONG_POISON:
+            // If you're poison resistant, poison is only useless.
+            return player_res_poison();
         }
 
         return (false);
@@ -2420,43 +2427,45 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return (false);
 
-        if (is_bad_item(item))
+        if (is_bad_item(item, temp))
             return (true);
 
-        if (you.species == SP_MUMMY || you.species == SP_GHOUL)
+        switch (item.sub_type)
         {
-            switch (item.sub_type)
-            {
-            case AMU_RAGE:
-            case RING_REGENERATION:
-            case RING_SUSTENANCE:
-            case RING_HUNGER:
-            case RING_LIFE_PROTECTION:
-                return (true);
-            }
-        }
+        case AMU_RAGE:
+            return (you.is_undead
+                        && (!temp || you.species == SP_VAMPIRE
+                                     && you.hunger_state <= HS_SATIATED)
+                    || you.religion == GOD_TROG);
 
-        if (item.sub_type == RING_SEE_INVISIBLE)
+        case RING_LIFE_PROTECTION:
+        case RING_HUNGER:
+        case RING_REGENERATION:
+        case RING_SUSTENANCE:
+            return (you.is_undead
+                    && (!temp || you.species == SP_VAMPIRE
+                                 && you.hunger_state == HS_STARVING));
+
+        case RING_SEE_INVISIBLE:
             return (player_mutation_level(MUT_ACUTE_VISION));
 
-        if (item.sub_type == RING_POISON_RESISTANCE)
-        {
-            return (you.species != SP_VAMPIRE
-                    && player_mutation_level(MUT_POISON_RESISTANCE));
-        }
+        case RING_POISON_RESISTANCE:
+            return (player_res_poison()
+                    && (temp || you.species != SP_VAMPIRE));
 
-        if (item.sub_type == AMU_CONTROLLED_FLIGHT)
+        case AMU_CONTROLLED_FLIGHT:
             return (player_genus(GENPC_DRACONIAN) || you.permanent_flight());
 
-        if (you.religion == GOD_TROG)
-        {
-            return (item.sub_type == RING_WIZARDRY
-                    || item.sub_type == AMU_RAGE);
+        case RING_WIZARDRY:
+            return (you.religion == GOD_TROG);
+
+        default:
+            return (false);
         }
-        return (false);
     case OBJ_STAVES:
         if (you.religion == GOD_TROG && !item_is_rod(item))
             return (true);
+
     default:
         return (false);
     }
@@ -2504,9 +2513,9 @@ const std::string menu_colour_item_prefix(const item_def &item, bool temp)
         prefixes.push_back("emergency_item");
     if (is_good_item(item))
         prefixes.push_back("good_item");
-    if (is_dangerous_item(item))
+    if (is_dangerous_item(item, temp))
         prefixes.push_back("dangerous_item");
-    if (is_bad_item(item))
+    if (is_bad_item(item, temp))
         prefixes.push_back("bad_item");
     if (is_useless_item(item, temp))
         prefixes.push_back("useless_item");

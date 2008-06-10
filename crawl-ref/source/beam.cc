@@ -200,7 +200,7 @@ void zap_animation( int colour, const monsters *mon, bool force )
     }
 }
 
-// special front function for zap_animation to interpret enchantment flavours
+// Special front function for zap_animation to interpret enchantment flavours.
 static void _ench_animation( int flavour, const monsters *mon, bool force )
 {
     const int elem = (flavour == BEAM_HEALING)       ? EC_HEAL :
@@ -1675,7 +1675,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
  *  Now handles all beamed/thrown items and spells, tracers, and their effects.
  *  item is used for items actually thrown/launched
  *
- *  if item is NULL, there is no physical object being thrown that could
+ *  If item is NULL, there is no physical object being thrown that could
  *  land on the ground.
  */
 
@@ -1891,9 +1891,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         // monsters have no chance to dodge or block such
         // a beam, and we want to avoid silly messages.
         if (tx == pbolt.target_x && ty == pbolt.target_y)
-        {
             beamTerminate = _beam_term_on_target(pbolt, tx, ty);
-        }
 
         // Affect the cell, except in the special case noted
         // above -- affect() will early out if something gets
@@ -1910,9 +1908,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
             }
 
             if (!pbolt.affects_nothing)
-            {
                 rangeRemaining -= affect(pbolt, tx, ty, item);
-            }
 
             if (random_beam)
             {
@@ -2186,7 +2182,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         }
         else
         {
-            // early out for tracer/no side effects
+            // Early out for tracer/no side effects.
             if (!doFlavouredEffects)
                 return (hurted);
 
@@ -2360,8 +2356,9 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
 
         if (check_mons_resist_magic( monster, pow ))
         {
-            simple_monster_message(monster, mons_immune_magic(monster) ?
-                                   " is unaffected." : " resists.");
+            simple_monster_message(monster,
+                                   mons_immune_magic(monster)? " is unaffected."
+                                                             : " resists.");
             return (true);
         }
     }
@@ -2376,8 +2373,9 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
 
         if (check_mons_resist_magic( monster, pow ))
         {
-            simple_monster_message(monster, mons_immune_magic(monster) ?
-                                   " is unaffected." : " resists.");
+            simple_monster_message(monster,
+                                   mons_immune_magic(monster)? " is unaffected."
+                                                             : " resists.");
             return (true);
         }
     }
@@ -2476,9 +2474,9 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
 // * Returns MON_AFFECTED in all other cases (already enchanted, etc).
 int mons_ench_f2(monsters *monster, bolt &pbolt)
 {
-    switch (pbolt.flavour)      /* put in magic resistance */
+    switch (pbolt.flavour)      // put in magic resistance
     {
-    case BEAM_SLOW:         /* 0 = slow monster */
+    case BEAM_SLOW:
         // try to remove haste, if monster is hasted
         if (monster->del_ench(ENCH_HASTE))
         {
@@ -2504,7 +2502,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         }
         return (MON_AFFECTED);
 
-    case BEAM_HASTE:                  // 1 = haste
+    case BEAM_HASTE:
         if (monster->del_ench(ENCH_SLOW))
         {
             if (simple_monster_message(monster, " is no longer moving slowly."))
@@ -2513,7 +2511,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
             return (MON_AFFECTED);
         }
 
-        // not slowed, haste it
+        // Not slowed, haste it.
         if (!monster->has_ench(ENCH_HASTE)
             && !mons_is_stationary(monster)
             && monster->add_ench(ENCH_HASTE))
@@ -2526,7 +2524,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         }
         return (MON_AFFECTED);
 
-    case BEAM_HEALING:         /* 2 = healing */
+    case BEAM_HEALING:
         if (YOU_KILL(pbolt.thrower))
         {
             if (cast_healing(5 + roll_dice( pbolt.damage ),
@@ -2551,11 +2549,11 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         }
         return (MON_AFFECTED);
 
-    case BEAM_PARALYSIS:                  /* 3 = paralysis */
+    case BEAM_PARALYSIS:
         _beam_paralyses_monster(pbolt, monster);
         return (MON_AFFECTED);
 
-    case BEAM_CONFUSION:                   /* 4 = confusion */
+    case BEAM_CONFUSION:
         if (!mons_class_is_confusable(monster->type))
             return (MON_UNAFFECTED);
 
@@ -2569,7 +2567,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         }
         return (MON_AFFECTED);
 
-    case BEAM_INVISIBILITY:               /* 5 = invisibility */
+    case BEAM_INVISIBILITY:
     {
         // Store the monster name before it becomes an "it" -- bwr
         const std::string monster_name = monster->name(DESC_CAP_THE);
@@ -2602,7 +2600,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         }
         return (MON_AFFECTED);
     }
-    case BEAM_CHARM:             /* 9 = charm */
+    case BEAM_CHARM:
         if (player_will_anger_monster(monster))
         {
             simple_monster_message(monster, " is repulsed!");
@@ -2620,7 +2618,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
 
     default:
         break;
-    }                           /* end of switch (beam_colour) */
+    }
 
     return (MON_AFFECTED);
 }                               // end mons_ench_f2()
@@ -2736,20 +2734,19 @@ void _sticky_flame_monster( int mn, kill_category who, int levels )
     }
 }
 
-/*
- * Used by monsters in "planning" which spell to cast. Fires off a "tracer"
- * which tells the monster what it'll hit if it breathes/casts etc.
- *
- * The output from this tracer function is four variables in the beam struct:
- * fr_count, foe_count: a count of how many friends and foes will (probably)
- * be hit by this beam
- * fr_power, foe_power: a measure of how many 'friendly' hit dice it will
- * affect, and how many 'unfriendly' hit dice.
- *
- * Note that beam properties must be set, as the tracer will take them
- * into account, as well as the monster's intelligence.
- *
- */
+//
+//  Used by monsters in "planning" which spell to cast. Fires off a "tracer"
+//  which tells the monster what it'll hit if it breathes/casts etc.
+//
+//  The output from this tracer function is four variables in the beam struct:
+//  fr_count, foe_count: a count of how many friends and foes will (probably)
+//  be hit by this beam
+//  fr_power, foe_power: a measure of how many 'friendly' hit dice it will
+//  affect, and how many 'unfriendly' hit dice.
+//
+//  Note that beam properties must be set, as the tracer will take them
+//  into account, as well as the monster's intelligence.
+//
 void fire_tracer(const monsters *monster, bolt &pbolt)
 {
     // Don't fiddle with any input parameters other than tracer stuff!
@@ -3044,13 +3041,13 @@ int affect(bolt &beam, int x, int y, item_def *item)
 
     if (grid_is_solid(grd[x][y]))
     {
-        if (beam.is_tracer)          // tracers always stop on walls.
+        if (beam.is_tracer)          // Tracers always stop on walls.
             return (BEAM_STOP);
 
         if (_affects_wall(beam, grd[x][y]))
             rangeUsed += _affect_wall(beam, x, y);
 
-        // if it's still a wall, quit - we can't do anything else to a
+        // If it's still a wall, quit - we can't do anything else to a
         // wall (but we still might be able to do something to any
         // monster inside the wall).  Otherwise effects (like clouds,
         // etc.) are still possible.
@@ -3375,7 +3372,7 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
     cloud_type cl_type;
     int duration;
 
-    // first check: FIRE/COLD over water/lava
+    // First check: FIRE/COLD over water/lava.
     if (grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD
          || grid_is_watery(grd[x][y]) && _is_fiery(beam))
     {
@@ -4041,7 +4038,7 @@ static int _affect_player( bolt &beam, item_def *item )
         }
     }
 
-    // sticky flame
+    // Sticky flame.
     if (beam.name == "sticky flame"
         && (you.species != SP_MOTTLED_DRACONIAN
             || you.experience_level < 6))
@@ -4053,22 +4050,22 @@ static int _affect_player( bolt &beam, item_def *item )
         }
     }
 
-    // simple cases for scroll burns
+    // Simple cases for scroll burns.
     if (beam.flavour == BEAM_LAVA || beam.name == "hellfire")
         expose_player_to_element(BEAM_LAVA, burn_power);
 
-    // more complex (geez..)
+    // More complex (geez..)
     if (beam.flavour == BEAM_FIRE && beam.name != "ball of steam")
         expose_player_to_element(BEAM_FIRE, burn_power);
 
-    // potions exploding
+    // Potions exploding.
     if (beam.flavour == BEAM_COLD)
         expose_player_to_element(BEAM_COLD, burn_power);
 
     if (beam.flavour == BEAM_ACID)
         splash_with_acid(5);
 
-    // spore pops
+    // Spore pops.
     if (beam.in_explosion_phase && beam.flavour == BEAM_SPORE)
         expose_player_to_element(BEAM_SPORE, burn_power);
 
@@ -4197,7 +4194,7 @@ static bool _beam_is_harmless(bolt &beam, monsters *mon)
     }
 }
 
-// return amount of range used up by affectation of this monster
+// Returns amount of range used up by affectation of this monster.
 static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 {
     const int tid = mgrd[mon->x][mon->y];
@@ -4261,15 +4258,16 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (beam.is_tracer)
         {
-            if (beam.thrower == KILL_YOU_MISSILE)
+            if (beam.thrower == KILL_YOU_MISSILE || beam.thrower == KILL_YOU)
             {
-                if (!_beam_is_harmless(beam, mon))
+                if (!beam.fr_count && !_beam_is_harmless(beam, mon))
                 {
                     const bool target = (beam.target_x == mon->x
                                          && beam.target_y == mon->y);
 
                     if (stop_attack_prompt(mon, true, target))
                     {
+                        mpr("Test2");
                         beam.fr_count = 1;
                         return (BEAM_STOP);
                     }
@@ -4428,9 +4426,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     // hurt by this beam.
     if (beam.is_tracer)
     {
-        if (beam.thrower == KILL_YOU_MISSILE)
+        if (beam.thrower == KILL_YOU_MISSILE || beam.thrower == KILL_YOU)
         {
-            if (!_beam_is_harmless(beam, mon))
+            if (!beam.fr_count && !_beam_is_harmless(beam, mon))
             {
                 const bool target = (beam.target_x == mon->x
                                      && beam.target_y == mon->y);
@@ -4812,7 +4810,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
 
         simple_monster_message(mon, " is enslaved.");
 
-        // wow, permanent enslaving
+        // Wow, permanent enslaving!
         mon->attitude = ATT_FRIENDLY;
         return (MON_AFFECTED);
     }
@@ -4831,7 +4829,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
             return (MON_RESIST);
         }
 
-        // already friendly
+        // Already friendly.
         if (mons_friendly(mon))
             return (MON_UNAFFECTED);
 
@@ -4940,7 +4938,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
         return (MON_UNAFFECTED);
     }
 
-    // everything else?
+    // Everything else?
     if (!death_check)
         return (mons_ench_f2(mon, beam));
 
@@ -4958,7 +4956,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
 }
 
 
-// extra range used on hit
+// Extra range used on hit.
 static int _range_used_on_hit(bolt &beam)
 {
     // Non-beams can only affect one thing (player/monster).
@@ -5000,11 +4998,11 @@ static int _range_used_on_hit(bolt &beam)
     if (beam.name == "hellfire")
         return (0);
 
-    // generic explosion
+    // Generic explosion.
     if (beam.is_explosion || beam.is_big_cloud)
         return (BEAM_STOP);
 
-    // plant spit
+    // Plant spit.
     if (beam.flavour == BEAM_ACID)
         return (BEAM_STOP);
 
@@ -5376,7 +5374,7 @@ static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly)
             beam.flavour = BEAM_RANDOM;
     }
 
-    // early out for tracer
+    // Early out for tracer.
     if (beam.is_tracer)
         return;
 
@@ -5457,11 +5455,11 @@ static void _explosion_map( bolt &beam, int x, int y,
 // straightforward.
 static bool _nasty_beam(monsters *mon, bolt &beam)
 {
-    // take care of non-enchantments
+    // Take care of non-enchantments.
     if (beam.name[0] != '0')
         return (true);
 
-    // now for some non-hurtful enchantments
+    // Now for some non-hurtful enchantments.
 
     // No charming holy beings!
     if (beam.flavour == BEAM_CHARM)

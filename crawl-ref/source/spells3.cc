@@ -265,7 +265,7 @@ int airstrike(int power, dist &beam)
             behaviour_event(monster, ME_ANNOY, MHITYOU);
             if (mons_is_mimic( monster->type ))
                 mimic_alert(monster);
-       }
+        }
 
         conduct.enabled = true;
 

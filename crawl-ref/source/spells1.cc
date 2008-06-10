@@ -552,27 +552,45 @@ bool conjure_flame(int pow)
     return true;
 }
 
-int stinking_cloud( int pow, bolt &beem )
+bool stinking_cloud( int pow, bolt &beem )
 {
-    beem.name = "ball of vapour";
-    beem.colour = GREEN;
-    beem.range = 6;
-    beem.rangeMax = 6;
-    beem.damage = dice_def( 1, 0 );
-    beem.hit = 20;
-    beem.type = dchar_glyph(DCHAR_FIRED_ZAP);
-    beem.flavour = BEAM_MMISSILE;
-    beem.ench_power = pow;
+    beem.name        = "ball of vapour";
+    beem.colour      = GREEN;
+    beem.range       = 6;
+    beem.rangeMax    = 6;
+    beem.damage      = dice_def( 1, 0 );
+    beem.hit         = 20;
+    beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+    beem.flavour     = BEAM_MMISSILE;
+    beem.ench_power  = pow;
     beem.beam_source = MHITYOU;
-    beem.thrower = KILL_YOU;
+    beem.thrower     = KILL_YOU;
+    beem.is_beam     = false;
     beem.aux_source.clear();
-    beem.is_beam = false;
-    beem.is_tracer = false;
 
+    // Fire tracer.
+    beem.source_x      = you.x_pos;
+    beem.source_y      = you.y_pos;
+    beem.can_see_invis = player_see_invis();
+    beem.smart_monster = true;
+    beem.attitude      = ATT_FRIENDLY;
+    beem.fr_count      = 0;
+    beem.is_tracer     = true;
     fire_beam(beem);
 
-    return (1);
-}                               // end stinking_cloud()
+    if (beem.fr_count > 0)
+    {
+        // We don't want to fire through friendlies.
+        canned_msg(MSG_OK);
+        return (false);
+    }
+
+    // Really fire.
+    beem.is_tracer = false;
+    fire_beam(beem);
+
+    return (true);
+}
 
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 {
@@ -590,7 +608,7 @@ void big_cloud(cloud_type cl_type, kill_category whose,
 
 static bool _mons_hostile(const monsters *mon)
 {
-    // needs to be done this way because of friendly/neutral enchantments
+    // Needs to be done this way because of friendly/neutral enchantments.
     return (!mons_friendly(mon) && !mons_neutral(mon));
 }
 

@@ -92,7 +92,7 @@ void cast_ring_of_flames(int power);
 bool conjure_flame(int pow);
 void extension(int pow);
 bool fireball(int power, bolt &beam);
-int stinking_cloud(int pow, bolt &beam);
+bool stinking_cloud(int pow, bolt &beam);
 void abjuration(int pow);
 
 // last updated 24may2000 {dlb}
