@@ -2851,9 +2851,25 @@ static void _miscast_necromancy(int severity, const char* cause)
         switch (random2(3))
         {
         case 0:
-            // Summon 1-3 shadows.
-            summon_shadows(random2(61), god_gift, true);
+        {
+            bool success = false;
+
+            for (int i = random2(3); i >= 0; --i)
+            {
+                if (create_monster(
+                        mgen_data::alert_hostile_at(MONS_SHADOW,
+                            you.pos(), 2, flags)) != -1)
+                {
+                    success = true;
+                }
+            }
+
+            if (success)
+                mpr("Flickering shadows surround you.");
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
+        }
 
         case 1:
             if (!player_prot_life() && one_chance_in(3))

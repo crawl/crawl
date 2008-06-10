@@ -225,7 +225,9 @@ void special_wielded()
     case SPWLD_SHADOW:
         if (random2(8) <= player_spec_death())
         {
-            summon_shadows(0, false, false, true);
+            create_monster(
+                mgen_data(MONS_SHADOW, BEH_FRIENDLY,
+                          2, you.pos(), you.pet_target));
             did_god_conduct(DID_NECROMANCY, 1);
         }
 
