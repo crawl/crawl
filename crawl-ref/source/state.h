@@ -32,11 +32,11 @@ public:
 struct game_state
 {
     bool mouse_enabled;     // True if mouse input is currently relevant.
-    
+
     bool waiting_for_command; // True when the game is waiting for a command.
     bool terminal_resized;   // True if the term was resized and we need to
                              // take action to handle it.
-    
+
     bool io_inited;         // Is curses or the equivalent initialised?
     bool need_save;         // Set to true when game has started.
     bool saving_game;       // Set to true while in save_game.
@@ -45,7 +45,7 @@ struct game_state
     int  seen_hups;         // Set to true if SIGHUP received.
 
     bool map_stat_gen;      // Set if we're generating stats on maps.
-    
+
     bool unicode_ok;        // Is unicode support available?
 
     std::string (*glyph2strfn)(unsigned glyph);
@@ -67,7 +67,7 @@ struct game_state
     bool            cmd_repeat_started_unsafe;
 
     std::vector<std::string> startup_errors;
-    
+
     std::vector<std::string> input_line_strs;
     unsigned int             input_line_curr;
 
@@ -85,7 +85,7 @@ public:
 
     void add_startup_error(const std::string &error);
     void show_startup_errors();
-    
+
     bool is_replaying_keys() const;
 
     bool is_repeating_cmd() const;
