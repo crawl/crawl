@@ -191,7 +191,7 @@ const int LABYRINTH_BORDER = 4;
 #define SL_BUZZ                         6
 #define SL_GROWL                        8
 #define SL_MOAN                         8
-#define SL_SPLASH                       8 
+#define SL_SPLASH                       8
 #define SL_CREAK                        8
 #define SL_CROAK                        8
 #define SL_BARK                         10
@@ -277,7 +277,7 @@ const int LABYRINTH_BORDER = 4;
         CHATTR_REVERSE,         /* 5 */
         CHATTR_DIM,
         CHATTR_HILITE,
-        
+
         CHATTR_ATTRMASK = 0xF,  /* 15 (well, obviously) */
 
         CHATTR_COLMASK = 0xF00 // Mask with this to get extra colour info.
@@ -294,8 +294,8 @@ const int LABYRINTH_BORDER = 4;
 #define MINIMUM( xxx, yyy )     (((xxx) < (yyy)) ? (xxx) : (yyy))
 #define MAXIMUM( xxx, yyy )     (((xxx) > (yyy)) ? (xxx) : (yyy))
 
-// Convert capital letters into mystic numbers representing 
-// CTRL sequences.  This is a macro because a lot of the type 
+// Convert capital letters into mystic numbers representing
+// CTRL sequences.  This is a macro because a lot of the type
 // it wants to be used in case labels.
 #define CONTROL( xxx )          ((xxx) - 'A' + 1)
 
