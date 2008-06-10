@@ -1066,12 +1066,9 @@ bool cast_summon_small_mammals(int pow, bool god_gift)
 
         switch (pow_spent)
         {
-        // If you worship a good god, don't summon an evil small mammal
-        // (in this case, the orange rat).
         case 75: case 74: case 38:
             mon = MONS_ORANGE_RAT;
-            if (!player_will_anger_monster(mon))
-                break;
+            break;
 
         case 65: case 64: case 63: case 27: case 26: case 25:
             mon = MONS_GREEN_RAT;
@@ -1086,6 +1083,11 @@ bool cast_summon_small_mammals(int pow, bool god_gift)
             mon = (coinflip()) ? MONS_GIANT_BAT : MONS_RAT;
             break;
         }
+
+        // If you worship a good god, don't summon an evil small mammal
+        // (in this case, the orange rat).
+        if (player_will_anger_monster(mon))
+            continue;
 
         pow_left -= pow_spent;
         count++;
