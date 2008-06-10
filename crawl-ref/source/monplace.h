@@ -318,6 +318,7 @@ public:
     virtual ~monster_pathfind();
 
     // public methods
+    void set_range(int r);
     bool start_pathfind(monsters *mon, coord_def dest, bool msg = false);
     std::vector<coord_def> backtrack(void);
     std::vector<coord_def> calc_waypoints(void);
@@ -338,6 +339,9 @@ protected:
 
     // Our destination, and the current position we're looking at.
     coord_def start, target, pos;
+
+    // Maximum range to search between start and target. None, if zero.
+    int range;
 
     // Currently shortest and longest possible total length of the path.
     int min_length;

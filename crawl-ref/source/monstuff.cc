@@ -2321,7 +2321,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     return (count_grids);
 }
 
-
+//#define DEBUG_PATHFIND
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -2342,6 +2342,8 @@ static void _handle_behaviour(monsters *mon)
     bool isNeutral  = mons_neutral(mon);
     bool wontAttack = mons_wont_attack(mon);
     bool proxPlayer = mons_near(mon);
+    bool trans_wall_block = trans_wall_blocking(mon->x, mon->y);
+
 #ifdef WIZARD
     // If stealth is greater than actually possible (wizmode level)
     // pretend the player isn't there, but only for hostile monsters.
@@ -2364,6 +2366,15 @@ static void _handle_behaviour(monsters *mon)
         mon->target_y = 10 + random2(GYM - 10);
         return;
     }
+
+    dungeon_feature_type can_move;
+    if (mons_amphibious(mons_is_zombified(mon) ?
+        mon->base_monster : mon->type))
+    {
+        can_move = DNGN_DEEP_WATER;
+    }
+    else
+        can_move = DNGN_SHALLOW_WATER;
 
     // Validate current target exists.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
@@ -2454,7 +2465,7 @@ static void _handle_behaviour(monsters *mon)
         mon->foe = MHITYOU;
     }
 
-    // validate target again
+    // Validate target again.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
         && menv[mon->foe].type == -1)
     {
@@ -2473,8 +2484,8 @@ static void _handle_behaviour(monsters *mon)
         {
             if (mon->foe == MHITYOU)
             {
-                foe_x = you.x_pos;
-                foe_y = you.y_pos;
+                foe_x   = you.x_pos;
+                foe_y   = you.y_pos;
                 proxFoe = proxPlayer;   // take invis into account
             }
             else
@@ -2493,7 +2504,7 @@ static void _handle_behaviour(monsters *mon)
         beh_type new_beh       = mon->behaviour;
         unsigned short new_foe = mon->foe;
 
-        // take care of monster state changes
+        // Take care of monster state changes.
         switch (mon->behaviour)
         {
         case BEH_SLEEP:
@@ -2522,6 +2533,17 @@ static void _handle_behaviour(monsters *mon)
             // Foe gone out of LOS?
             if (!proxFoe)
             {
+                if (mon->foe == MHITYOU && travelling
+                    && mon->travel_target == MTRAV_PLAYER)
+                {
+#ifdef DEBUG_PATHFIND
+                    mpr("Player out of LoS... start wandering.");
+#endif
+                    new_beh = BEH_WANDER;
+                    // We've got a target, so we'll continue on our way.
+                    break;
+                }
+
                 if (patrolling)
                 {
                     new_foe = MHITNOT;
@@ -2550,7 +2572,7 @@ static void _handle_behaviour(monsters *mon)
                     {
                         if (mon->foe == MHITYOU)
                         {
-                            if (check_awaken(mon))
+                            if (random2(you.skills[SK_STEALTH]/3))
                             {
                                 mon->target_x = you.x_pos;
                                 mon->target_y = you.y_pos;
@@ -2606,6 +2628,147 @@ static void _handle_behaviour(monsters *mon)
             // by updating target x,y.
             if (mon->foe == MHITYOU)
             {
+                if (proxPlayer && !trans_wall_block)
+                {
+                    if (travelling && mon->travel_target != MTRAV_PATROL)
+                    {
+                        mon->travel_path.clear();
+                        mon->travel_target = MTRAV_NONE;
+                    }
+                }
+                else if (proxPlayer && trans_wall_block
+                         && (mon->travel_target != MTRAV_UNREACHABLE
+                             || one_chance_in(8)))
+                {
+#ifdef DEBUG_PATHFIND
+                    mprf("%s: Player out of reach! What now?",
+                         mon->name(DESC_PLAIN).c_str());
+#endif
+                    // If we're already on our way, do nothing.
+                    if (travelling && mon->travel_target == MTRAV_PLAYER)
+                    {
+#ifdef DEBUG_PATHFIND
+                        mpr("Already travelling...");
+#endif
+                        int len = mon->travel_path.size();
+                        coord_def targ = mon->travel_path[len - 1];
+                        if (grid_see_grid(targ.x, targ.y, you.x_pos, you.y_pos)
+                            && !trans_wall_blocking(targ.x, targ.y))
+                        {
+#ifdef DEBUG_PATHFIND
+                            mpr("Target still valid...");
+#endif
+                            // Current target still valid?
+                            if (mon->x == mon->travel_path[0].x
+                                && mon->y == mon->travel_path[0].y)
+                            {
+                                // Get next waypoint.
+                                mon->travel_path.erase(
+                                    mon->travel_path.begin() );
+
+                                if (!mon->travel_path.empty())
+                                {
+                                    mon->target_x = mon->travel_path[0].x;
+                                    mon->target_y = mon->travel_path[0].y;
+                                    break;
+                                }
+                            }
+                            else if (grid_see_grid(mon->x, mon->y,
+                                                   mon->travel_path[0].x,
+                                                   mon->travel_path[0].y,
+                                                   can_move))
+                            {
+                                mon->target_x = mon->travel_path[0].x;
+                                mon->target_y = mon->travel_path[0].y;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Use pathfinding to find a (new) path to the player.
+                    const int dist = grid_distance(mon->x, mon->y,
+                                                   you.x_pos, you.y_pos);
+
+#ifdef DEBUG_PATHFIND
+                    mprf("Need to calculate a path... (dist = %d)", dist);
+#endif
+                    const bool native =
+                        mons_is_native_in_branch(mon, you.where_are_you);
+
+                    int range = 0;
+                    switch (mons_intel(mon->type))
+                    {
+                    case I_PLANT:
+                        range = 2;
+                        break;
+                    case I_INSECT:
+                        range = 3;
+                        break;
+                    case I_ANIMAL:
+                        range = 5;
+                        break;
+                    case I_NORMAL:
+                        range = 10;
+                        break;
+                    default:
+                        // Highly intelligent monsters can find their way
+                        // anywhere.
+                        range = 0;
+                        break;
+                    }
+
+                    if (range && native)
+                        range += 3;
+
+                    if (range > 0 && dist > range)
+                    {
+                        mon->travel_target = MTRAV_UNREACHABLE;
+#ifdef DEBUG_PATHFIND
+                        mprf("Distance too great, don't attempt pathfinding! (%s)",
+                             mon->name(DESC_PLAIN).c_str());
+#endif
+                    }
+                    else
+                    {
+#ifdef DEBUG_PATHFIND
+                        mprf("Need a path for %s from (%d, %d) to (%d, %d), "
+                             "max. dist = %d",
+                             mon->name(DESC_PLAIN).c_str(), mon->x, mon->y,
+                             you.x_pos, you.y_pos, range);
+#endif
+                        monster_pathfind mp;
+                        if (range > 0)
+                            mp.set_range(range);
+                        if (mp.start_pathfind(mon, coord_def(you.x_pos,
+                                                             you.y_pos)))
+                        {
+                            mon->travel_path = mp.calc_waypoints();
+                            if (!mon->travel_path.empty())
+                            {
+                                // Okay then, we found a path. Let's use it!
+                                mon->target_x = mon->travel_path[0].x;
+                                mon->target_y = mon->travel_path[0].y;
+                                mon->travel_target = MTRAV_PLAYER;
+                                break;
+                            }
+                            else
+                            {
+#ifdef DEBUG_PATHFIND
+                                mpr("No path found!");
+#endif
+                                mon->travel_target = MTRAV_UNREACHABLE;
+                            }
+                        }
+                        else
+                        {
+#ifdef DEBUG_PATHFIND
+                            mpr("No path found!");
+#endif
+                            mon->travel_target = MTRAV_UNREACHABLE;
+                        }
+                    }
+                }
+
                 // Sometimes, your friends will wander a bit.
                 if (isFriendly && one_chance_in(8))
                 {
@@ -2651,8 +2814,8 @@ static void _handle_behaviour(monsters *mon)
             // wandering monsters at least appear to have some sort of
             // attention span.  -- bwr
             if (mon->x == mon->target_x && mon->y == mon->target_y
-                || !travelling && (one_chance_in(20)
-                                   || testbits( mon->flags, MF_BATTY )))
+                || one_chance_in(20)
+                || testbits( mon->flags, MF_BATTY ))
             {
                 bool need_target = true;
                 if (travelling)
@@ -2666,20 +2829,37 @@ static void _handle_behaviour(monsters *mon)
                     if (mon->x == mon->travel_path[0].x
                         && mon->y == mon->travel_path[0].y)
                     {
+#ifdef DEBUG_PATHFIND
+                        mpr("Arrived at first waypoint.");
+#endif
                         // Hey, we reached our first waypoint!
                         mon->travel_path.erase( mon->travel_path.begin() );
                         if (mon->travel_path.empty())
-                            need_target = true;
-
-                        mon->target_x = mon->travel_path[0].x;
-                        mon->target_y = mon->travel_path[0].y;
+                        {
 #ifdef DEBUG_PATHFIND
-                        mprf("Next waypoint: (%d, %d)",
-                             mon->target_x, mon->target_y);
+                            mpr("We reached the end of our path: stop "
+                                "travelling.");
 #endif
+                            mon->travel_target = MTRAV_NONE;
+                            need_target = true;
+                        }
+                        else
+                        {
+                            mon->target_x = mon->travel_path[0].x;
+                            mon->target_y = mon->travel_path[0].y;
+#ifdef DEBUG_PATHFIND
+                            mprf("Next waypoint: (%d, %d)",
+                                 mon->target_x, mon->target_y);
+#endif
+                        }
                     }
-                    else
+                    else if (!grid_see_grid(mon->x, mon->y,
+                                            mon->travel_path[0].x,
+                                            mon->travel_path[0].y, can_move))
                     {
+#ifdef DEBUG_PATHFIND
+                        mpr("Can't see waypoint grid.");
+#endif
                         // Apparently we got sidetracked a bit.
                         // Check the waypoints vector backwards and pick the
                         // first waypoint we can see.
@@ -2687,16 +2867,6 @@ static void _handle_behaviour(monsters *mon)
                         // XXX: Note that this might still not be the best
                         // thing to do since another path might be even
                         // *closer* to our actual target now.
-
-                        dungeon_feature_type can_move;
-                        if (mons_amphibious(mons_is_zombified(mon) ?
-                            mon->base_monster : mon->type))
-                        {
-                            can_move = DNGN_DEEP_WATER;
-                        }
-                        else
-                            can_move = DNGN_SHALLOW_WATER;
-
 
                         int erase = -1;  // Erase how many waypoints?
                         for (unsigned int i = mon->travel_path.size() - 1;
@@ -2713,8 +2883,12 @@ static void _handle_behaviour(monsters *mon)
                             }
                         }
 
-                        if (erase != -1)
+                        if (erase > 0)
                         {
+#ifdef DEBUG_PATHFIND
+                            mprf("Need to erase %d of %d waypoints.",
+                                 erase, mon->travel_path.size());
+#endif
                             // Erase all waypoints that came earlier:
                             // we don't need them anymore.
                             while (0 < erase--)
@@ -2727,8 +2901,10 @@ static void _handle_behaviour(monsters *mon)
                         {
                             // We can't reach our old path from our current
                             // position, so calculate a new path instead.
+/*
                             monster_pathfind mp;
-                            if (mp.start_pathfind(mon, mon->patrol_point, true))
+                            int len = mon->travel_path.size();
+                            if (mp.start_pathfind(mon, mon->travel_path[len-1]))
                             {
                                 mon->travel_path = mp.calc_waypoints();
                                 if (!mon->travel_path.empty())
@@ -2736,18 +2912,33 @@ static void _handle_behaviour(monsters *mon)
                                     mon->target_x = mon->travel_path[0].x;
                                     mon->target_y = mon->travel_path[0].y;
                                 }
+                                else
+                                {
+                                    mon->travel_target = MTRAV_NONE;
+                                    need_target = true;
+                                }
                             }
                             else
                             {
+*/
+                                // Or just forget about the whole thing.
                                 mon->travel_path.clear();
+                                mon->travel_target = MTRAV_NONE;
                                 need_target = true;
-                            }
+//                            }
                         }
+                    }
+                    else
+                    {
+#ifdef DEBUG_PATHFIND
+                        mpr("All clear. Continue travelling.");
+#endif
                     }
                 }
 
                 if (need_target && patrolling)
                 {
+                    need_target = false;
                     if (!_choose_random_patrol_target_grid(mon))
                     {
                         // If we couldn't find a target that is within easy
@@ -2771,6 +2962,8 @@ static void _handle_behaviour(monsters *mon)
                             {
                                 // Stop patrolling.
                                 mon->patrol_point = coord_def(0, 0);
+                                mon->travel_target = MTRAV_NONE;
+                                need_target = true;
                             }
                         }
                         else
@@ -2781,19 +2974,27 @@ static void _handle_behaviour(monsters *mon)
                             // could decide to stop patrolling if the path
                             // was too long.
                             monster_pathfind mp;
-                            if (mp.start_pathfind(mon, mon->patrol_point, true))
+                            if (mp.start_pathfind(mon, mon->patrol_point))
                             {
                                 mon->travel_path = mp.calc_waypoints();
                                 if (!mon->travel_path.empty())
                                 {
                                     mon->target_x = mon->travel_path[0].x;
                                     mon->target_y = mon->travel_path[0].y;
+                                    mon->travel_target = MTRAV_PATROL;
+                                }
+                                else
+                                {
+                                    mon->target_x = mon->patrol_point.x;
+                                    mon->target_y = mon->patrol_point.y;
                                 }
                             }
                             else
                             {
                                 // Stop patrolling.
-                                mon->patrol_point = coord_def(0, 0);
+                                mon->patrol_point  = coord_def(0, 0);
+                                mon->travel_target = MTRAV_NONE;
+                                need_target = true;
                             }
                         }
                     }
@@ -2807,7 +3008,8 @@ static void _handle_behaviour(monsters *mon)
 #endif
                     }
                 }
-                else if (need_target)
+
+                if (need_target)
                 {
 #ifdef DEBUG_PATHFIND
                     if (!testbits( mon->flags, MF_BATTY ))
@@ -2825,11 +3027,19 @@ static void _handle_behaviour(monsters *mon)
                 && one_chance_in( isSmart ? 60 : 20 ))
             {
                 new_foe = MHITNOT;
+                if (travelling && mon->travel_target != MTRAV_PATROL)
+                {
+#ifdef DEBUG_PATHFIND
+                    mpr("It's been too long! Stop travelling.");
+#endif
+                    mon->travel_path.clear();
+                    mon->travel_target = MTRAV_NONE;
+                }
             }
             break;
 
         case BEH_FLEE:
-            // check for healed
+            // Check for healed.
             if (isHealthy && !isScared)
                 new_beh = BEH_SEEK;
 

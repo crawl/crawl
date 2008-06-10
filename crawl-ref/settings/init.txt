@@ -89,11 +89,7 @@ lua_file = lua/pickup.lua
 #
 ##### 4-a	Picking up and Dropping ###############
 #	
-autopickup = $?!+"/%)
-
-# Note that ")" have to be in the above list for pickup.lua
-# (autopickup a butchering tool if you don't already have one)
-# to work.
+autopickup = $?!+"/%
 
 # There is a long list of autopickup exceptions in
 include = autopickup_exceptions.txt

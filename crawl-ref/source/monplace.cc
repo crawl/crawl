@@ -2297,13 +2297,20 @@ monster_type summon_any_dragon(dragon_class_type dct)
 /////////////////////////////////////////////////////////////////////////////
 // monster_pathfind
 
+//#define DEBUG_PATHFIND
 monster_pathfind::monster_pathfind()
-    : mons(), target(), min_length(0), dist(), prev()
+    : mons(), target(), range(0), min_length(0), max_length(0), dist(), prev()
 {
 }
 
 monster_pathfind::~monster_pathfind()
 {
+}
+
+void monster_pathfind::set_range(int r)
+{
+    if (r >= 0)
+        range = r;
 }
 
 // Returns true if a path was found, else false.
@@ -2384,6 +2391,10 @@ bool monster_pathfind::calc_path_to_neighbours()
             continue;
 
         if (!traversable(npos))
+            continue;
+
+        // Ignore this grid if it takes us above the allowed distance.
+        if (range && estimated_cost(npos) > range)
             continue;
 
         distance = dist[pos.x][pos.y] + travel_cost(npos);

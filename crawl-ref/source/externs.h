@@ -1024,6 +1024,7 @@ public:
     unsigned char target_x;
     unsigned char target_y;
     coord_def patrol_point;
+    montravel_target_type travel_target;
     std::vector<coord_def> travel_path;
     FixedVector<short, NUM_MONSTER_SLOTS> inv;
     monster_spells spells;

@@ -1769,6 +1769,8 @@ static void marshall_monster(writer &th, const monsters &m)
     marshallByte(th, m.target_x);
     marshallByte(th, m.target_y);
     marshallCoord(th, m.patrol_point);
+    int help = m.travel_target;
+    marshallByte(th, help);
 
     // monster pathfinding (TAG_MINOR_PATHFIND)
     marshallShort(th, m.travel_path.size());
@@ -2039,6 +2041,12 @@ static void unmarshall_monster(reader &th, monsters &m)
 
     if (_tag_minor_version >= TAG_MINOR_MPATROL)
         unmarshallCoord(th, m.patrol_point);
+
+    if (_tag_minor_version >= TAG_MINOR_TRTARGET)
+    {
+        int help = unmarshallByte(th);
+        m.travel_target = static_cast<montravel_target_type>(help);
+    }
 
     if (_tag_minor_version >= TAG_MINOR_PATHFIND)
     {

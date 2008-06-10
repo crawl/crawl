@@ -50,15 +50,16 @@ enum tag_major_version
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
 {
-    TAG_MINOR_PIETY    = 2,     // Added piety_hysteresis
-    TAG_MINOR_QUIVER   = 3,     // Added quiver
-    TAG_MINOR_MAPMARK  = 4,     // Added sizes to map markers
-    TAG_MINOR_MONNAM   = 5,     // Monsters get individual names
-    TAG_MINOR_MONBASE  = 6,     // Zombie base monster gets its own field.
-    TAG_MINOR_FPICKUP  = 7,     // Added pickup option for allied monsters.
-    TAG_MINOR_MPATROL  = 8,     // Added monster patrol points.
-    TAG_MINOR_PATHFIND = 9,     // Added monster pathfinding.
-    TAG_MINOR_VERSION  = 9      // Current version
+    TAG_MINOR_PIETY    =  2,     // Added piety_hysteresis
+    TAG_MINOR_QUIVER   =  3,     // Added quiver
+    TAG_MINOR_MAPMARK  =  4,     // Added sizes to map markers
+    TAG_MINOR_MONNAM   =  5,     // Monsters get individual names
+    TAG_MINOR_MONBASE  =  6,     // Zombie base monster gets its own field.
+    TAG_MINOR_FPICKUP  =  7,     // Added pickup option for allied monsters.
+    TAG_MINOR_MPATROL  =  8,     // Added monster patrol points.
+    TAG_MINOR_PATHFIND =  9,     // Added monster pathfinding.
+    TAG_MINOR_TRTARGET = 10,     // Added travel target.
+    TAG_MINOR_VERSION  = 10      // Current version
 };
 
 
