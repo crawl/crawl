@@ -725,6 +725,10 @@ LUARET1(you_good_god, boolean,
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
+LUARET1(you_god_likes_butchery, boolean,
+        lua_isstring(ls, 1) ?
+        god_likes_butchery(str_to_god(lua_tostring(ls, 1))) :
+        god_likes_butchery(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_hunger, string, hunger_level())
@@ -761,7 +765,7 @@ LUARET1(you_see_grid, boolean,
 LUARET1(you_see_grid_no_trans, boolean,
         see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 LUARET1(you_can_smell, boolean, player_can_smell())
-
+LUARET1(you_has_claws, number, you.has_claws(false))
 
 void lua_push_floor_items(lua_State *ls);
 static int you_floor_items(lua_State *ls)
@@ -796,6 +800,15 @@ static int l_you_abils(lua_State *ls)
         lua_pushstring(ls, abils[i]);
         lua_rawseti(ls, -2, i + 1);
     }
+    return (1);
+}
+
+static int you_can_consume_corpses(lua_State *ls)
+{
+    lua_pushboolean(ls,
+                    can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false, false)
+                    || can_ingest(OBJ_CORPSES, CORPSE_BODY, true, false, false)
+                    );
     return (1);
 }
 
@@ -834,6 +847,9 @@ static const struct luaL_reg you_lib[] =
     { "flying",       you_flying },
     { "transform",    you_transform },
 
+    { "god_likes_butchery",  you_god_likes_butchery  },
+    { "can_consume_corpses", you_can_consume_corpses },
+
     { "stop_activity", you_stop_activity },
 
     { "floor_items",  you_floor_items },
@@ -846,6 +862,7 @@ static const struct luaL_reg you_lib[] =
     { "see_grid",          you_see_grid },
     { "see_grid_no_trans", you_see_grid_no_trans },
     { "can_smell",         you_can_smell },
+    { "has_claws",         you_has_claws },
 
     { NULL, NULL },
 };
@@ -1454,6 +1471,17 @@ static int l_item_dropped(lua_State *ls)
     return (1);
 }
 
+static int l_item_can_cut_meat(lua_State *ls)
+{
+    LUA_ITEM(item, 1);
+    if (!item || !is_valid_item(*item))
+        return (0);
+
+    lua_pushboolean(ls, can_cut_meat(*item));
+
+    return (1);
+}
+
 static int l_item_artefact(lua_State *ls)
 {
     LUA_ITEM(item, 1);
@@ -1518,6 +1546,7 @@ static const struct luaL_reg item_lib[] =
     { "equip_type",        l_item_equip_type },
     { "weap_skill",        l_item_weap_skill },
     { "dropped",           l_item_dropped },
+    { "can_cut_meat",      l_item_can_cut_meat },
 
     { NULL, NULL },
 };
