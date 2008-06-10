@@ -591,21 +591,6 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         }
         return;
 
-    case SPELL_SUMMON_SCORPIONS:
-        if (_mons_abjured(monster, monsterNearby))
-            return;
-
-        sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
-
-        duration  = std::min(2 + monster->hit_dice / 5, 6);
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-        {
-            create_monster(
-                mgen_data( MONS_SCORPION, SAME_ATTITUDE(monster), duration,
-                           monster->pos(), monster->foe, flags ));
-        }
-        return;
-
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
         if (_mons_abjured(monster, monsterNearby))
             return;
@@ -681,6 +666,21 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             create_monster(
                 mgen_data( summon_any_demon(DEMON_LESSER),
                            SAME_ATTITUDE(monster), duration,
+                           monster->pos(), monster->foe, flags ));
+        }
+        return;
+
+    case SPELL_SUMMON_SCORPIONS:
+        if (_mons_abjured(monster, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
+
+        duration  = std::min(2 + monster->hit_dice / 5, 6);
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            create_monster(
+                mgen_data( MONS_SCORPION, SAME_ATTITUDE(monster), duration,
                            monster->pos(), monster->foe, flags ));
         }
         return;
