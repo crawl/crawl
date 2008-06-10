@@ -567,20 +567,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 switch (random2(4))
                 {
                 case 0:
-                    mons = MONS_ORANGE_RAT;
+                    mon = MONS_ORANGE_RAT;
                     break;
 
                 case 1:
-                    mons = MONS_GREEN_RAT;
+                    mon = MONS_GREEN_RAT;
                     break;
 
                 case 2:
-                    mons = MONS_GREY_RAT;
+                    mon = MONS_GREY_RAT;
                     break;
 
                 case 3:
                 default:
-                    mons = MONS_RAT;
+                    mon = MONS_RAT;
                     break;
                 }
             }
@@ -780,16 +780,16 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
             for (sumcount = 0; sumcount < sumcount2; sumcount++)
             {
-                monster_type mons = summon_any_dragon(DRAGON_LIZARD);
+                monster_type mon = summon_any_dragon(DRAGON_LIZARD);
 
-                if (mons == MONS_DRAGON)
+                if (mon == MONS_DRAGON)
                 {
                     monsters.clear();
                     monsters.push_back(summon_any_dragon(DRAGON_DRAGON));
                     break;
                 }
 
-                monsters.push_back( mons );
+                monsters.push_back(mon);
             }
 
             for (int i = 0, size = monsters.size(); i < size; ++i)
@@ -2389,43 +2389,43 @@ bool orc_battle_cry(monsters *chief)
         std::vector<monsters*> seen_affected;
         for (int i = 0; i < MAX_MONSTERS; ++i)
         {
-            monsters *mons = &menv[i];
-            if (mons != chief
-                && mons->alive()
-                && mons_species(mons->type) == MONS_ORC
+            monsters *mon = &menv[i];
+            if (mon != chief
+                && mon->alive()
+                && mons_species(mon->type) == MONS_ORC
                 && mons_aligned(boss_index, i)
-                && mons->hit_dice < chief->hit_dice
-                && !mons->has_ench(ENCH_BERSERK)
-                && !mons->paralysed()
-                && !mons->confused()
-                && chief->can_see(mons))
+                && mon->hit_dice < chief->hit_dice
+                && !mon->has_ench(ENCH_BERSERK)
+                && !mon->paralysed()
+                && !mon->confused()
+                && chief->can_see(mon))
             {
-                mon_enchant ench = mons->get_ench(ENCH_BATTLE_FRENZY);
+                mon_enchant ench = mon->get_ench(ENCH_BATTLE_FRENZY);
                 if (ench.ench == ENCH_NONE || ench.degree < level)
                 {
                     const int dur =
-                        random_range(12, 20) * speed_to_duration(mons->speed);
+                        random_range(12, 20) * speed_to_duration(mon->speed);
 
                     if (ench.ench != ENCH_NONE)
                     {
                         ench.degree   = level;
                         ench.duration = std::max(ench.duration, dur);
-                        mons->update_ench(ench);
+                        mon->update_ench(ench);
                     }
                     else
                     {
-                        mons->add_ench( mon_enchant(ENCH_BATTLE_FRENZY, level,
-                                                    KC_OTHER, dur) );
+                        mon->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, level,
+                                                  KC_OTHER, dur));
                     }
 
                     affected++;
-                    if (you.can_see(mons))
-                        seen_affected.push_back(mons);
+                    if (you.can_see(mon))
+                        seen_affected.push_back(mon);
 
-                    if (mons->asleep())
+                    if (mon->asleep())
                     {
-                        behaviour_event( mons, ME_DISTURB, MHITNOT,
-                                         chief->x, chief->y );
+                        behaviour_event(mon, ME_DISTURB, MHITNOT,
+                                        chief->x, chief->y);
                     }
                 }
             }
