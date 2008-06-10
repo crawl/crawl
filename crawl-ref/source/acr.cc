@@ -1087,21 +1087,20 @@ static void _handle_wizard_command( void )
         break;
 
     case '\'':
+        mpr("Item stacks (by location and top item):");
         for (i = 0; i < MAX_ITEMS; i++)
         {
-            if (mitm[i].link == NON_ITEM)
+            item_def &item(mitm[i]);
+            if (!is_valid_item(item) || item.x == 0 || item.y == 0)
                 continue;
 
-            mprf("item:%3d link:%3d cl:%3d ty:%3d pl:%3d pl2:%3d "
-                 "sp:%3ld q:%3d",
-                 i, mitm[i].link,
-                 mitm[i].base_type, mitm[i].sub_type,
-                 mitm[i].plus, mitm[i].plus2, mitm[i].special,
-                 mitm[i].quantity );
+            if (item.link != NON_ITEM)
+                mprf("(%2d,%2d): %s", item.x, item.y,
+                 item.name(DESC_PLAIN, false, false, false).c_str() );
         }
 
-        mpr("igrid:");
-
+        mpr("");
+        mpr("Floor items (stacks only show top item):");
 
         for (i = 0; i < GXM; i++)
             for (j = 0; j < GYM; j++)
@@ -1109,15 +1108,12 @@ static void _handle_wizard_command( void )
                 int item = igrd[i][j];
                 if (item != NON_ITEM)
                 {
-                    mprf("%3d at (%2d,%2d), cl:%3d ty:%3d pl:%3d pl2:%3d "
-                         "sp:%3ld q:%3d",
+                    mprf("%3d at (%2d,%2d): %s",
                          item, i, j,
-                         mitm[item].base_type, mitm[item].sub_type,
-                         mitm[item].plus, mitm[item].plus2, mitm[item].special,
-                         mitm[item].quantity );
+                         mitm[item].name(DESC_PLAIN, false, false,
+                                         false).c_str() );
                 }
             }
-
         break;
 
     default:
