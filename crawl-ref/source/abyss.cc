@@ -38,11 +38,11 @@
 #include "view.h"
 #include "xom.h"
 
-static bool place_feature_near( const coord_def &centre,
-                                int radius,
-                                dungeon_feature_type candidate,
-                                dungeon_feature_type replacement,
-                                int tries )
+static bool _place_feature_near( const coord_def &centre,
+                                 int radius,
+                                 dungeon_feature_type candidate,
+                                 dungeon_feature_type replacement,
+                                 int tries )
 {
     const int radius2 = radius * radius + 1;
     for (int i = 0; i < tries; ++i)
@@ -93,8 +93,8 @@ void generate_abyss()
     grd[45][35] = DNGN_FLOOR;
     if (one_chance_in(5))
     {
-        place_feature_near( coord_def(45, 35), LOS_RADIUS,
-                            DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
+        _place_feature_near( coord_def(45, 35), LOS_RADIUS,
+                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
     }
 }
 
@@ -130,8 +130,8 @@ static int _abyssal_rune_roll()
     return (odds);
 }
 
-static void generate_area(int gx1, int gy1, int gx2, int gy2,
-                          bool spatter = false)
+static void _generate_area(int gx1, int gy1, int gx2, int gy2,
+                           bool spatter = false)
 {
     // Any rune on the floor prevents the abyssal rune from being generated.
     bool placed_abyssal_rune =
@@ -139,7 +139,7 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2,
 
 #if DEBUG_ABYSS
     mprf(MSGCH_DIAGNOSTICS,
-         "generate_area(). turns_on_level: %d, rune_on_floor: %s",
+         "_generate_area(). turns_on_level: %d, rune_on_floor: %s",
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");
 #endif
 
@@ -285,7 +285,7 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2,
     setup_environment_effects();
 }
 
-static int abyss_exit_nearness()
+static int _abyss_exit_nearness()
 {
     int nearness = INFINITE_DISTANCE;
 
@@ -307,7 +307,7 @@ static int abyss_exit_nearness()
     return (nearness);
 }
 
-static int abyss_rune_nearness()
+static int _abyss_rune_nearness()
 {
     int nearness = INFINITE_DISTANCE;
 
@@ -343,23 +343,23 @@ static int abyss_rune_nearness()
 static int exit_was_near;
 static int rune_was_near;
 
-static void xom_check_nearness_setup()
+static void _xom_check_nearness_setup()
 {
-    exit_was_near = abyss_exit_nearness();
-    rune_was_near = abyss_rune_nearness();
+    exit_was_near = _abyss_exit_nearness();
+    rune_was_near = _abyss_rune_nearness();
 }
 
 // If the player was almost to the exit when it disppeared, Xom is
 // extremely amused.  He's also extremely amused if the player winds
 // up right next to an exit when there wasn't one there before.  The
 // same applies to Abyssal runes.
-static void xom_check_nearness()
+static void _xom_check_nearness()
 {
     // Update known terrain
     viewwindow(true, false);
 
-    int exit_is_near = abyss_exit_nearness();
-    int rune_is_near = abyss_rune_nearness();
+    int exit_is_near = _abyss_exit_nearness();
+    int rune_is_near = _abyss_rune_nearness();
 
     if (exit_was_near < INFINITE_DISTANCE
             && exit_is_near == INFINITE_DISTANCE
@@ -380,7 +380,7 @@ static void xom_check_nearness()
     }
 }
 
-static void abyss_lose_monster(monsters &mons)
+static void _abyss_lose_monster(monsters &mons)
 {
     if (mons.needs_transit())
         mons.set_transit( level_id(LEVEL_ABYSS) );
@@ -407,7 +407,7 @@ void area_shift(void)
     for ( ; ri; ++ri )
         fprops(you.pos() - *ri + los_delta) = env.map(*ri).property;
 
-    xom_check_nearness_setup();
+    _xom_check_nearness_setup();
 
     for (unsigned int i = 0; i < MAX_MONSTERS; i++)
     {
@@ -418,7 +418,7 @@ void area_shift(void)
 
         // Remove non-nearby monsters.
         if (grid_distance(m.x, m.y, you.x_pos, you.y_pos) > 10)
-            abyss_lose_monster(m);
+            _abyss_lose_monster(m);
     }
 
     for (int i = 5; i < (GXM - 5); i++)
@@ -435,7 +435,7 @@ void area_shift(void)
             lose_item_stack( i, j );
 
             if (mgrd[i][j] != NON_MONSTER)
-                abyss_lose_monster( menv[ mgrd[i][j] ] );
+                _abyss_lose_monster( menv[ mgrd[i][j] ] );
         }
 
     // Shift all monsters & items to new area.
@@ -488,10 +488,10 @@ void area_shift(void)
 
     you.moveto(45, 35);
 
-    generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
-                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
+    _generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
+                   GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
 
-    xom_check_nearness();
+    _xom_check_nearness();
 
     // Can't re-use ri since you.pos() has changed.
     radius_iterator ri2(you.pos(), LOS_RADIUS);
@@ -523,7 +523,7 @@ void save_abyss_uniques()
 void abyss_teleport( bool new_area )
 /**********************************/
 {
-    xom_check_nearness_setup();
+    _xom_check_nearness_setup();
 
     int x, y, i, j, k;
 
@@ -550,7 +550,7 @@ void abyss_teleport( bool new_area )
             mpr("Non-new area Abyss teleport.", MSGCH_DIAGNOSTICS);
 #endif
             you.moveto(x, y);
-            xom_check_nearness();
+            _xom_check_nearness();
             return;
         }
     }
@@ -567,7 +567,7 @@ void abyss_teleport( bool new_area )
     for (i = 0; i < MAX_MONSTERS; i++)
     {
         if (menv[i].alive())
-            abyss_lose_monster(menv[i]);
+            _abyss_lose_monster(menv[i]);
     }
 
     // Orbs and fixed artefacts are marked as "lost in the abyss".
@@ -596,16 +596,16 @@ void abyss_teleport( bool new_area )
 
     you.moveto(45, 35);
 
-    generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
-                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
+    _generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
+                   GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
 
-    xom_check_nearness();
+    _xom_check_nearness();
 
     grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
     if (one_chance_in(5))
     {
-        place_feature_near( you.pos(), LOS_RADIUS,
-                            DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
+        _place_feature_near( you.pos(), LOS_RADIUS,
+                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
     }
 
     place_transiting_monsters();
@@ -615,12 +615,12 @@ void abyss_teleport( bool new_area )
 //////////////////////////////////////////////////////////////////////////////
 // Abyss effects in other levels, courtesy Lugonu.
 
-static void place_corruption_seed(const coord_def &pos, int duration)
+static void _place_corruption_seed(const coord_def &pos, int duration)
 {
     env.markers.add(new map_corruption_marker(pos, duration));
 }
 
-static void initialise_level_corrupt_seeds(int power)
+static void _initialise_level_corrupt_seeds(int power)
 {
     const int low = power / 2, high = power * 3 / 2;
     int nseeds = random_range(1, std::min(2 + power / 110, 4));
@@ -630,7 +630,7 @@ static void initialise_level_corrupt_seeds(int power)
 #endif
 
     // The corruption centered on the player is free.
-    place_corruption_seed(you.pos(), high + 300);
+    _place_corruption_seed(you.pos(), high + 300);
 
     for (int i = 0; i < nseeds; ++i)
     {
@@ -642,11 +642,11 @@ static void initialise_level_corrupt_seeds(int power)
         while (!in_bounds(where) || grd(where) != DNGN_FLOOR
                || env.markers.find(where, MAT_ANY));
 
-        place_corruption_seed(where, random_range(low, high, 2) + 300);
+        _place_corruption_seed(where, random_range(low, high, 2) + 300);
     }
 }
 
-static bool spawn_corrupted_servant_near(const coord_def &pos)
+static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
     // Thirty tries for a place
     for (int i = 0; i < 30; ++i)
@@ -676,8 +676,7 @@ static bool spawn_corrupted_servant_near(const coord_def &pos)
     return (false);
 }
 
-static void apply_corruption_effect(
-    map_marker *marker, int duration)
+static void _apply_corruption_effect( map_marker *marker, int duration)
 {
     if (!duration)
         return;
@@ -689,7 +688,7 @@ static void apply_corruption_effect(
     for (int i = 0; i < neffects; ++i)
     {
         if (random2(4000) < cmark->duration
-            && !spawn_corrupted_servant_near(cmark->pos))
+            && !_spawn_corrupted_servant_near(cmark->pos))
         {
             break;
         }
@@ -710,11 +709,11 @@ void run_corruption_effects(int duration)
         if (mark->get_type() != MAT_CORRUPTION_NEXUS)
             continue;
 
-        apply_corruption_effect(mark, duration);
+        _apply_corruption_effect(mark, duration);
     }
 }
 
-static bool is_grid_corruptible(const coord_def &c)
+static bool _is_grid_corruptible(const coord_def &c)
 {
     if (c == you.pos())
         return (false);
@@ -746,7 +745,7 @@ static bool is_grid_corruptible(const coord_def &c)
 }
 
 // Returns true if the square has <= 4 traversable neighbours.
-static bool is_crowded_square(const coord_def &c)
+static bool _is_crowded_square(const coord_def &c)
 {
     int neighbours = 0;
     for (int xi = -1; xi <= 1; ++xi)
@@ -767,7 +766,7 @@ static bool is_crowded_square(const coord_def &c)
 }
 
 // Returns true if the square has all opaque neighbours.
-static bool is_sealed_square(const coord_def &c)
+static bool _is_sealed_square(const coord_def &c)
 {
     for (int xi = -1; xi <= 1; ++xi)
         for (int yi = -1; yi <= 1; ++yi)
@@ -786,7 +785,7 @@ static bool is_sealed_square(const coord_def &c)
     return (true);
 }
 
-static void corrupt_square(const crawl_environment &oenv, const coord_def &c)
+static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
 {
     // To prevent the destruction of, say, branch entries.
     bool preserve_feat = true;
@@ -804,10 +803,13 @@ static void corrupt_square(const crawl_environment &oenv, const coord_def &c)
     if (is_trap_square(feat) || feat == DNGN_SECRET_DOOR || feat == DNGN_UNSEEN)
         return;
 
-    if (is_traversable(grd(c)) && !is_traversable(feat) && is_crowded_square(c))
+    if (is_traversable(grd(c)) && !is_traversable(feat)
+        && _is_crowded_square(c))
+    {
         return;
+    }
 
-    if (!is_traversable(grd(c)) && is_traversable(feat) && is_sealed_square(c))
+    if (!is_traversable(grd(c)) && is_traversable(feat) && _is_sealed_square(c))
         return;
 
     // What's this supposed to achieve? (jpeg)
@@ -836,7 +838,7 @@ static void corrupt_square(const crawl_environment &oenv, const coord_def &c)
 #endif
 }
 
-static void corrupt_level_features(const crawl_environment &oenv)
+static void _corrupt_level_features(const crawl_environment &oenv)
 {
     std::vector<coord_def> corrupt_seeds;
     std::vector<map_marker*> corrupt_markers =
@@ -858,14 +860,14 @@ static void corrupt_level_features(const crawl_environment &oenv)
             }
 
             if ((distance < 6 || one_chance_in(1 + distance - 6))
-                && is_grid_corruptible(c))
+                && _is_grid_corruptible(c))
             {
-                corrupt_square(oenv, c);
+                _corrupt_square(oenv, c);
             }
         }
 }
 
-static bool is_level_corrupted()
+static bool _is_level_corrupted()
 {
     if (you.level_type == LEVEL_ABYSS
         || you.level_type == LEVEL_PANDEMONIUM
@@ -878,9 +880,9 @@ static bool is_level_corrupted()
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
 }
 
-static bool is_level_incorruptible()
+static bool _is_level_incorruptible()
 {
-    if (is_level_corrupted())
+    if (_is_level_corrupted())
     {
         mpr("This place is already infused with evil and corruption.");
         return (true);
@@ -889,7 +891,7 @@ static bool is_level_incorruptible()
     return (false);
 }
 
-static void corrupt_choose_colours()
+static void _corrupt_choose_colours()
 {
     int colour = BLACK;
     do
@@ -910,7 +912,7 @@ static void corrupt_choose_colours()
 
 bool lugonu_corrupt_level(int power)
 {
-    if (is_level_incorruptible())
+    if (_is_level_incorruptible())
         return (false);
 
     mprf(MSGCH_GOD, "Lugonu's Hand of Corruption reaches out!");
@@ -918,14 +920,14 @@ bool lugonu_corrupt_level(int power)
     you.flash_colour = EC_MUTAGENIC;
     viewwindow(true, false);
 
-    initialise_level_corrupt_seeds(power);
+    _initialise_level_corrupt_seeds(power);
 
     std::auto_ptr<crawl_environment> backup(new crawl_environment(env));
     generate_abyss();
-    generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
-                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, false);
+    _generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
+                   GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, false);
 
-    corrupt_choose_colours();
+    _corrupt_choose_colours();
 
     std::auto_ptr<crawl_environment> abyssal(new crawl_environment(env));
     env = *backup;
@@ -933,7 +935,7 @@ bool lugonu_corrupt_level(int power)
     dungeon_events.clear();
     env.markers.activate_all(false);
 
-    corrupt_level_features(*abyssal);
+    _corrupt_level_features(*abyssal);
     run_corruption_effects(300);
 
     you.flash_colour = EC_MUTAGENIC;

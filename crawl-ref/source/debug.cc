@@ -646,7 +646,7 @@ void level_travel( bool down )
         down_stairs(you.your_level, stairs);
     else
         up_stairs(stairs);
-}                               // end level_travel()
+}
 
 static void _wizard_go_to_level(const level_pos &pos)
 {
@@ -2768,7 +2768,7 @@ void debug_get_religion(void)
 
         pray();
     }
-}                               // end debug_add_skills()
+}
 #endif
 
 
@@ -2777,7 +2777,7 @@ void error_message_to_player(void)
     mpr("Oh dear. There appears to be a bug in the program.");
     mpr("I suggest you leave this level then save as soon as possible.");
 
-}                               // end error_message_to_player()
+}
 
 #ifdef WIZARD
 
@@ -3345,10 +3345,9 @@ void debug_fight_statistics(bool use_defaults, bool defence)
 static int find_trap_slot()
 {
     for (int i = 0; i < MAX_TRAPS; ++i)
-    {
         if (env.trap[i].type == TRAP_UNASSIGNED)
             return (i);
-    }
+
     return (-1);
 }
 
@@ -4433,7 +4432,7 @@ void mapgen_report_error(const map_def &map, const std::string &err)
     mapgen_last_error = err;
 }
 
-static void mapgen_report_avaiable_random_vaults(FILE *outf)
+static void _mapgen_report_available_random_vaults(FILE *outf)
 {
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
@@ -4450,13 +4449,13 @@ static void mapgen_report_avaiable_random_vaults(FILE *outf)
     }
 }
 
-static void check_mapless(const level_id &lid, std::vector<level_id> &mapless)
+static void _check_mapless(const level_id &lid, std::vector<level_id> &mapless)
 {
     if (mapgen_level_mapsused.find(lid) == mapgen_level_mapsused.end())
         mapless.push_back(lid);
 }
 
-static void write_mapgen_stats()
+static void _write_mapgen_stats()
 {
     FILE *outf = fopen("mapgen.log", "w");
     fprintf(outf, "Map Generation Stats\n\n");
@@ -4485,14 +4484,14 @@ static void write_mapgen_stats()
         for (int dep = 1; dep <= branches[i].depth; ++dep)
         {
             const level_id lid(br, dep);
-            check_mapless(lid, mapless);
+            _check_mapless(lid, mapless);
         }
     }
 
-    check_mapless(level_id(LEVEL_ABYSS), mapless);
-    check_mapless(level_id(LEVEL_PANDEMONIUM), mapless);
-    check_mapless(level_id(LEVEL_LABYRINTH), mapless);
-    check_mapless(level_id(LEVEL_PORTAL_VAULT), mapless);
+    _check_mapless(level_id(LEVEL_ABYSS), mapless);
+    _check_mapless(level_id(LEVEL_PANDEMONIUM), mapless);
+    _check_mapless(level_id(LEVEL_LABYRINTH), mapless);
+    _check_mapless(level_id(LEVEL_PORTAL_VAULT), mapless);
 
     if (!mapless.empty())
     {
@@ -4501,7 +4500,7 @@ static void write_mapgen_stats()
             fprintf(outf, "%3d) %s\n", i + 1, mapless[i].describe().c_str());
     }
 
-    mapgen_report_avaiable_random_vaults(outf);
+    _mapgen_report_available_random_vaults(outf);
 
     std::vector<std::string> unused_maps;
     for (int i = 0, size = map_count(); i < size; ++i)
@@ -4628,7 +4627,7 @@ void generate_map_stats()
     // We have to run map preludes ourselves.
     run_map_preludes();
     mg_build_levels(SysEnv.map_gen_iters);
-    write_mapgen_stats();
+    _write_mapgen_stats();
 }
 
 #endif // DEBUG_DIAGNOSTICS

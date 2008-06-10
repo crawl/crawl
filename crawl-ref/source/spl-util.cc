@@ -53,16 +53,16 @@ static int spell_list[NUM_SPELLS];
 #define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
 
 static struct spell_desc *_seekspell(spell_type spellid);
-static bool cloud_helper(int (*func)(int, int, int, int, cloud_type,
-                                     kill_category),
-                         int x, int y, int pow, int spread_rate,
-                         cloud_type ctype, kill_category );
+static bool _cloud_helper(int (*func)(int, int, int, int, cloud_type,
+                                      kill_category),
+                          int x, int y, int pow, int spread_rate,
+                          cloud_type ctype, kill_category );
 
-/*
- *             BEGIN PUBLIC FUNCTIONS
- */
+//
+//             BEGIN PUBLIC FUNCTIONS
+//
 
-// all this does is merely refresh the internal spell list {dlb}:
+// All this does is merely refresh the internal spell list {dlb}:
 void init_spell_descs(void)
 {
     for (int i = 0; i < NUM_SPELLS; i++)
@@ -590,8 +590,8 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
     int dx = 1, dy = 1;
     bool x_first;
 
-    if (clouds_left && cloud_helper(func, x, y, pow, spread_rate,
-                                    ctype, whose))
+    if (clouds_left && _cloud_helper(func, x, y, pow, spread_rate,
+                                     ctype, whose))
         clouds_left--;
 
     if (!clouds_left)
@@ -606,32 +606,32 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
 
     if (x_first)
     {
-        if (clouds_left && cloud_helper(func, x + dx, y, pow, spread_rate,
-                                        ctype, whose))
+        if (clouds_left && _cloud_helper(func, x + dx, y, pow, spread_rate,
+                                         ctype, whose))
         {
             clouds_left--;
             good_squares++;
             neighbours[0]++;
         }
 
-        if (clouds_left && cloud_helper(func, x - dx, y, pow, spread_rate,
-                                        ctype, whose))
+        if (clouds_left && _cloud_helper(func, x - dx, y, pow, spread_rate,
+                                         ctype, whose))
         {
             clouds_left--;
             good_squares++;
             neighbours[1]++;
         }
 
-        if (clouds_left && cloud_helper(func, x, y + dy, pow, spread_rate,
-                                        ctype, whose))
+        if (clouds_left && _cloud_helper(func, x, y + dy, pow, spread_rate,
+                                         ctype, whose))
         {
             clouds_left--;
             good_squares++;
             neighbours[2]++;
         }
 
-        if (clouds_left && cloud_helper(func, x, y - dy, pow, spread_rate,
-                                        ctype, whose))
+        if (clouds_left && _cloud_helper(func, x, y - dy, pow, spread_rate,
+                                         ctype, whose))
         {
             clouds_left--;
             good_squares++;
@@ -640,32 +640,32 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
     }
     else
     {
-        if (clouds_left && cloud_helper(func, x, y + dy, pow, spread_rate,
-                                        ctype, whose))
+        if (clouds_left && _cloud_helper(func, x, y + dy, pow, spread_rate,
+                                         ctype, whose))
         {
             clouds_left--;
             good_squares++;
             neighbours[2]++;
         }
 
-        if (clouds_left && cloud_helper(func, x, y - dy, pow, spread_rate,
-                                        ctype, whose))
+        if (clouds_left && _cloud_helper(func, x, y - dy, pow, spread_rate,
+                                         ctype, whose))
         {
             clouds_left--;
             good_squares++;
             neighbours[3]++;
         }
 
-        if (clouds_left && cloud_helper(func, x + dx, y, pow, spread_rate,
-                                        ctype, whose))
+        if (clouds_left && _cloud_helper(func, x + dx, y, pow, spread_rate,
+                                         ctype, whose))
         {
             clouds_left--;
             good_squares++;
             neighbours[0]++;
         }
 
-        if (clouds_left && cloud_helper(func, x - dx, y, pow, spread_rate,
-                                        ctype, whose))
+        if (clouds_left && _cloud_helper(func, x - dx, y, pow, spread_rate,
+                                         ctype, whose))
         {
             clouds_left--;
             good_squares++;
@@ -673,40 +673,40 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
         }
     }
 
-    // now diagonals; we could randomize dx & dy again here
-    if (clouds_left && cloud_helper(func, x + dx, y + dy, pow, spread_rate,
-                                    ctype, whose))
+    // Mow diagonals; we could randomize dx & dy again here.
+    if (clouds_left && _cloud_helper(func, x + dx, y + dy, pow, spread_rate,
+                                     ctype, whose))
     {
         clouds_left--;
         good_squares++;
         neighbours[4]++;
     }
 
-    if (clouds_left && cloud_helper(func, x - dx, y + dy, pow, spread_rate,
-                                    ctype, whose))
+    if (clouds_left && _cloud_helper(func, x - dx, y + dy, pow, spread_rate,
+                                     ctype, whose))
     {
         clouds_left--;
         good_squares++;
         neighbours[5]++;
     }
 
-    if (clouds_left && cloud_helper(func, x + dx, y - dy, pow, spread_rate,
-                                    ctype, whose))
+    if (clouds_left && _cloud_helper(func, x + dx, y - dy, pow, spread_rate,
+                                     ctype, whose))
     {
         clouds_left--;
         good_squares++;
         neighbours[6]++;
     }
 
-    if (clouds_left && cloud_helper(func, x - dx, y - dy, pow, spread_rate,
-                                    ctype, whose))
+    if (clouds_left && _cloud_helper(func, x - dx, y - dy, pow, spread_rate,
+                                     ctype, whose))
     {
         clouds_left--;
         good_squares++;
         neighbours[7]++;
     }
 
-    if (!(clouds_left && good_squares))
+    if (!clouds_left || !good_squares)
         return;
 
     for (int i = 0; i < 8 && clouds_left; i++)
@@ -899,10 +899,10 @@ bool is_valid_spell(spell_type spell)
     return (spell < NUM_SPELLS && spell_list[spell] != -1);
 }
 
-static bool cloud_helper(int (*func)(int, int, int, int, cloud_type,
-                                     kill_category),
-                         int x, int y, int pow, int spread_rate,
-                         cloud_type ctype, kill_category whose )
+static bool _cloud_helper(int (*func)(int, int, int, int, cloud_type,
+                                      kill_category),
+                          int x, int y, int pow, int spread_rate,
+                          cloud_type ctype, kill_category whose )
 {
     if (!grid_is_solid(grd[x][y]) && env.cgrid[x][y] == EMPTY_CLOUD)
     {

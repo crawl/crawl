@@ -954,7 +954,7 @@ bool is_valid_spell_in_book( int splbook, int spell )
     return which_spell_in_book(splbook, spell) != SPELL_NO_SPELL;
 }
 
-static int which_spellbook( void )
+static int _which_spellbook( void )
 {
     int book = -1;
     const int avail_levels = player_spell_levels();
@@ -996,7 +996,7 @@ static int which_spellbook( void )
     }
 
     return (book);
-}                               // end which_spellbook()
+}
 
 // Returns false if the player cannot read/memorise from the book,
 // and true otherwise. -- bwr
@@ -1222,7 +1222,7 @@ bool learn_spell(int book)
     }
 
     if (book < 0)
-        book = which_spellbook();
+        book = _which_spellbook();
 
     if (book < 0) // still -1?
         return (false);

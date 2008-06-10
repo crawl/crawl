@@ -90,7 +90,7 @@ unsigned char detect_traps( int pow )
     }
 
     return (traps_found);
-}                               // end detect_traps()
+}
 
 unsigned char detect_items( int pow )
 {
@@ -124,9 +124,9 @@ unsigned char detect_items( int pow )
     }
 
     return (items_found);
-}                               // end detect_items()
+}
 
-static void fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
+static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "dc_fuzz: Power is %d", pow);
@@ -144,8 +144,8 @@ static void fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static bool mark_detected_creature(int gridx, int gridy, const monsters *mon,
-                                   int fuzz_chance, int fuzz_radius)
+static bool _mark_detected_creature(int gridx, int gridy, const monsters *mon,
+                                    int fuzz_chance, int fuzz_radius)
 {
 #ifdef USE_TILE
     // Get monster index pre-fuzz
@@ -193,7 +193,7 @@ int detect_creatures( int pow, bool telepathic )
 {
     int fuzz_radius = 0, fuzz_chance = 0;
     if (!telepathic)
-        fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
+        _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
     if (pow > 50)
         pow = 50;
@@ -220,7 +220,7 @@ int detect_creatures( int pow, bool telepathic )
                 // This only returns whether a valid "fuzzy" place has been
                 // found for the monster. In any case, the monster gets
                 // printed on the screen.
-                mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
+                _mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
 
                 // Assuming that highly intelligent spellcasters can
                 // detect scrying. -- bwr
@@ -556,8 +556,8 @@ void turn_undead(int pow)
 
 typedef std::pair<const monsters*,int> counted_monster;
 typedef std::vector<counted_monster> counted_monster_list;
-static void record_monster_by_name(counted_monster_list &list,
-                                   const monsters *mons)
+static void _record_monster_by_name(counted_monster_list &list,
+                                    const monsters *mons)
 {
     const std::string name = mons->name(DESC_PLAIN);
     for (counted_monster_list::iterator i = list.begin(); i != list.end(); ++i)
@@ -571,7 +571,7 @@ static void record_monster_by_name(counted_monster_list &list,
     list.push_back( counted_monster(mons, 1) );
 }
 
-static int monster_count(const counted_monster_list &list)
+static int _monster_count(const counted_monster_list &list)
 {
     int nmons = 0;
     for (counted_monster_list::const_iterator i = list.begin();
@@ -582,7 +582,7 @@ static int monster_count(const counted_monster_list &list)
     return (nmons);
 }
 
-static std::string describe_monsters(const counted_monster_list &list)
+static std::string _describe_monsters(const counted_monster_list &list)
 {
     std::ostringstream out;
 
@@ -653,7 +653,7 @@ void cast_toxic_radiance(void)
                     affected = true;
 
                 if (affected)
-                    record_monster_by_name(affected_monsters, monster);
+                    _record_monster_by_name(affected_monsters, monster);
             }
             else if (player_see_invis())
             {
@@ -668,8 +668,8 @@ void cast_toxic_radiance(void)
     {
         const std::string message =
             make_stringf("%s %s poisoned.",
-                         describe_monsters(affected_monsters).c_str(),
-                         monster_count(affected_monsters) == 1? "is" : "are");
+                         _describe_monsters(affected_monsters).c_str(),
+                         _monster_count(affected_monsters) == 1? "is" : "are");
         if (static_cast<int>(message.length()) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else

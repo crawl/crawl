@@ -16,7 +16,7 @@
 #include <queue>
 
 #ifdef UNIX
-static keycode_type numpad2vi(keycode_type key)
+static keycode_type _numpad2vi(keycode_type key)
 {
     if (key >= '1' && key <= '9')
     {
@@ -42,13 +42,13 @@ int unmangle_direction_keys(int keyin, int km, bool fake_ctrl, bool fake_shift)
     {
         keyin = getchm(keymap);
         // return control-key
-        keyin = CONTROL(toupper(numpad2vi(keyin)));
+        keyin = CONTROL(toupper(_numpad2vi(keyin)));
     }
     else if (fake_shift && keyin == '/')
     {
         keyin = getchm(keymap);
         // return shift-key
-        keyin = toupper(numpad2vi(keyin));
+        keyin = toupper(_numpad2vi(keyin));
     }
 #else
     // Old DOS keypad support

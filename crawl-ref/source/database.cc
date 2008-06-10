@@ -469,7 +469,7 @@ static std::string _getWeightedString(DBM *database, const std::string &key,
 
     if (result.dsize <= 0)
     {
-        // Try ignoring the suffix
+        // Try ignoring the suffix.
         canonical_key = key;
         lowercase(canonical_key);
 
@@ -529,7 +529,7 @@ static std::string _getRandomizedStr(DBM *database, const std::string &key,
 }
 
 // Replace any "@foo@" markers that can be found in this database.
-// Those that can't be found are left alone for the caller to deal with
+// Those that can't be found are left alone for the caller to deal with.
 static void _call_recursive_replacement(std::string &str, DBM *database,
                                         const std::string &suffix,
                                         int &num_replacements,

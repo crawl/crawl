@@ -69,8 +69,8 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
     NUM_DEBRIS
 };          // jmf: ...and I'll actually implement the items Real Soon Now...
 
-static int make_a_rot_cloud(int x, int y, int pow, cloud_type ctype);
-static int quadrant_blink(int x, int y, int pow, int garbage);
+static int _make_a_rot_cloud(int x, int y, int pow, cloud_type ctype);
+static int _quadrant_blink(int x, int y, int pow, int garbage);
 
 void do_monster_rot(int mon);
 
@@ -100,7 +100,7 @@ inline bool player_hurt_monster(int monster, int damage)
 }
 
 // Here begin the actual spells:
-static int shatter_monsters(int x, int y, int pow, int garbage)
+static int _shatter_monsters(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
@@ -195,7 +195,7 @@ static int shatter_monsters(int x, int y, int pow, int garbage)
     return (damage);
 }
 
-static int shatter_items(int x, int y, int pow, int garbage)
+static int _shatter_items(int x, int y, int pow, int garbage)
 {
     UNUSED( pow );
     UNUSED( garbage );
@@ -237,7 +237,7 @@ static int shatter_items(int x, int y, int pow, int garbage)
     return 0;
 }
 
-static int shatter_walls(int x, int y, int pow, int garbage)
+static int _shatter_walls(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
@@ -348,9 +348,11 @@ void cast_shatter(int pow)
 
     int rad = 3 + (you.skills[SK_EARTH_MAGIC] / 5);
 
-    apply_area_within_radius(shatter_items, you.x_pos, you.y_pos, pow, rad, 0);
-    apply_area_within_radius(shatter_monsters, you.x_pos, you.y_pos, pow, rad, 0);
-    int dest = apply_area_within_radius( shatter_walls, you.x_pos, you.y_pos,
+    apply_area_within_radius(_shatter_items, you.x_pos, you.y_pos,
+                             pow, rad, 0);
+    apply_area_within_radius(_shatter_monsters, you.x_pos, you.y_pos,
+                             pow, rad, 0);
+    int dest = apply_area_within_radius( _shatter_walls, you.x_pos, you.y_pos,
                                          pow, rad, 0 );
 
     if (dest && !silence)
@@ -415,9 +417,9 @@ void cast_detect_secret_doors(int pow)
         redraw_screen();
 
     mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
-}                               // end cast_detect_secret_doors()
+}
 
-static int sleep_monsters(int x, int y, int pow, int garbage)
+static int _sleep_monsters(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
     const int mnstr = mgrd[x][y];
@@ -450,13 +452,13 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
 
 void cast_mass_sleep(int pow)
 {
-    apply_area_visible(sleep_monsters, pow);
+    apply_area_visible(_sleep_monsters, pow);
 }
 
 // This is a hack until we set an is_beast flag in the monster data
 // (which we might never do, this is sort of minor.)
 // It's a list of monster types which can be affected by beast taming.
-static bool is_domesticated_animal(int type)
+static bool _is_domesticated_animal(int type)
 {
     const monster_type types[] = {
         MONS_GIANT_BAT, MONS_HOUND, MONS_JACKAL, MONS_RAT,
@@ -475,7 +477,7 @@ static bool is_domesticated_animal(int type)
     return (false);
 }
 
-static int tame_beast_monsters(int x, int y, int pow, int garbage)
+static int _tame_beast_monsters(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
     const int which_mons = mgrd[x][y];
@@ -485,7 +487,7 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
 
     monsters *monster = &menv[which_mons];
 
-    if (!is_domesticated_animal(monster->type) || mons_friendly(monster)
+    if (!_is_domesticated_animal(monster->type) || mons_friendly(monster)
         || player_will_anger_monster(monster))
     {
         return 0;
@@ -513,10 +515,10 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
 
 void cast_tame_beasts(int pow)
 {
-    apply_area_visible(tame_beast_monsters, pow);
-}                               // end cast_tame_beasts()
+    apply_area_visible(_tame_beast_monsters, pow);
+}
 
-static int ignite_poison_objects(int x, int y, int pow, int garbage)
+static int _ignite_poison_objects(int x, int y, int pow, int garbage)
 {
     UNUSED( pow );
     UNUSED( garbage );
@@ -563,7 +565,7 @@ static int ignite_poison_objects(int x, int y, int pow, int garbage)
     return (strength);
 }
 
-static int ignite_poison_clouds( int x, int y, int pow, int garbage )
+static int _ignite_poison_clouds( int x, int y, int pow, int garbage )
 {
     UNUSED( pow );
     UNUSED( garbage );
@@ -594,14 +596,14 @@ static int ignite_poison_clouds( int x, int y, int pow, int garbage )
     return did_anything;
 }
 
-static int ignite_poison_monsters(int x, int y, int pow, int garbage)
+static int _ignite_poison_monsters(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
     struct bolt beam;
-    beam.flavour = BEAM_FIRE;   // this is dumb, only used for adjust!
+    beam.flavour = BEAM_FIRE;   // This is dumb, only used for adjust!
 
-    dice_def  dam_dice( 0, 5 + pow / 7 );  // dice added below if applicable
+    dice_def  dam_dice( 0, 5 + pow / 7 );  // Dice added below if applicable.
 
     const int mon_index = mgrd[x][y];
     if (mon_index == NON_MONSTER)
@@ -609,20 +611,20 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
 
     struct monsters *const mon = &menv[ mon_index ];
 
-    // Monsters which have poison corpses or poisonous attacks:
+    // Monsters which have poison corpses or poisonous attacks.
     if (is_mons_poisoner(mon))
         dam_dice.num = 3;
 
     // Monsters which are poisoned:
     int strength = 0;
 
-    // first check for player poison:
+    // First check for player poison.
     mon_enchant ench = mon->get_ench(ENCH_POISON);
     if (ench.ench != ENCH_NONE)
         strength += ench.degree;
 
-    // strength is now the sum of both poison types (although only
-    // one should actually be present at a given time):
+    // Strength is now the sum of both poison types
+    // (although only one should actually be present at a given time).
     dam_dice.num += strength;
 
     int damage = roll_dice( dam_dice );
@@ -654,7 +656,7 @@ void cast_ignite_poison(int pow)
     char item;
     bool wasWielding = false;
 
-    // temp weapon of venom => temp fire brand
+    // Temp weapon of venom => temp fire brand.
     const int wpn = you.equip[EQ_WEAPON];
 
     if (wpn != -1
@@ -685,9 +687,10 @@ void cast_ignite_poison(int pow)
         if (you.inv[item].base_type == OBJ_MISSILES)
         {
             if (you.inv[item].special == 3)
-            {                   // burn poison ammo
+            {
+                // Burn poison ammo.
                 strength = you.inv[item].quantity;
-                acount += you.inv[item].quantity;
+                acount  += you.inv[item].quantity;
             }
         }
 
@@ -746,7 +749,7 @@ void cast_ignite_poison(int pow)
             KC_YOU);
     }
 
-    // player is poisonous
+    // Player is poisonous.
     if (player_mutation_level(MUT_SPIT_POISON)
         || player_mutation_level(MUT_STINGER)
         || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER // poison attack
@@ -758,7 +761,7 @@ void cast_ignite_poison(int pow)
         damage = roll_dice( 3, 5 + pow / 7 );
     }
 
-    // player is poisoned
+    // Player is poisoned.
     damage += roll_dice( you.duration[DUR_POISONING], 6 );
 
     if (damage)
@@ -789,9 +792,9 @@ void cast_ignite_poison(int pow)
         }
     }
 
-    apply_area_visible(ignite_poison_clouds, pow);
-    apply_area_visible(ignite_poison_objects, pow);
-    apply_area_visible(ignite_poison_monsters, pow);
+    apply_area_visible(_ignite_poison_clouds, pow);
+    apply_area_visible(_ignite_poison_objects, pow);
+    apply_area_visible(_ignite_poison_monsters, pow);
 }                               // end cast_ignite_poison()
 
 void cast_silence(int pow)
@@ -812,9 +815,9 @@ void cast_silence(int pow)
         you.duration[DUR_BEHELD] = 0;
         you.beheld_by.clear();
     }
-}                               // end cast_silence()
+}
 
-static int discharge_monsters( int x, int y, int pow, int garbage )
+static int _discharge_monsters( int x, int y, int pow, int garbage )
 {
     UNUSED( garbage );
 
@@ -856,7 +859,7 @@ static int discharge_monsters( int x, int y, int pow, int garbage )
     {
         mpr( "The lightning arcs!" );
         pow /= (coinflip() ? 2 : 3);
-        damage += apply_random_around_square( discharge_monsters, x, y,
+        damage += apply_random_around_square( _discharge_monsters, x, y,
                                               true, pow, 1 );
     }
     else if (damage > 0)
@@ -867,14 +870,14 @@ static int discharge_monsters( int x, int y, int pow, int garbage )
     }
 
     return (damage);
-}                               // end discharge_monsters()
+}
 
 void cast_discharge( int pow )
 {
     int num_targs = 1 + random2( 1 + pow / 25 );
     int dam;
 
-    dam = apply_random_around_square( discharge_monsters, you.x_pos, you.y_pos,
+    dam = apply_random_around_square( _discharge_monsters, you.x_pos, you.y_pos,
                                       true, pow, num_targs );
 
 #if DEBUG_DIAGNOSTICS
@@ -896,12 +899,12 @@ void cast_discharge( int pow )
                                       coinflip() ? "behind" : "before"));
         }
     }
-}                               // end cast_discharge()
+}
 
 // NB: this must be checked against the same effects
 // in fight.cc for all forms of attack !!! {dlb}
-// This function should be currently unused (the effect is too powerful)
-static int distortion_monsters(int x, int y, int pow, int message)
+// This function should be currently unused (the effect is too powerful).
+static int _distortion_monsters(int x, int y, int pow, int message)
 {
     int specdam = 0;
     int monster_attacked = mgrd[x][y];
@@ -982,11 +985,11 @@ static int distortion_monsters(int x, int y, int pow, int message)
     player_hurt_monster(monster_attacked, specdam);
 
     return (specdam);
-}                               // end distortion_monsters()
+}
 
 void cast_bend(int pow)
 {
-    apply_one_neighbouring_square( distortion_monsters, pow );
+    apply_one_neighbouring_square( _distortion_monsters, pow );
 }
 
 // Really this is just applying the best of Band/Warp weapon/Warp field
@@ -1039,7 +1042,7 @@ void cast_dispersal(int pow)
     }
 }
 
-static int spell_swap_func(int x, int y, int pow, int message)
+static int _spell_swap_func(int x, int y, int pow, int message)
 {
     UNUSED( message );
 
@@ -1077,10 +1080,10 @@ static int spell_swap_func(int x, int y, int pow, int message)
 
 void cast_swap(int pow)
 {
-    apply_one_neighbouring_square( spell_swap_func, pow );
+    apply_one_neighbouring_square( _spell_swap_func, pow );
 }
 
-static int make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
+static int _make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
 {
     int next = 0, obj = mgrd[x][y];
 
@@ -1110,7 +1113,7 @@ static int make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
     }
 
     return 0;
-}                               // end make_a_rot_cloud()
+}
 
 int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
                         cloud_type ctype, kill_category whose)
@@ -1120,9 +1123,9 @@ int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
                  whose, spread_rate );
 
     return 1;
-}                               // end make_a_normal_cloud()
+}
 
-static int passwall(int x, int y, int pow, int garbage)
+static int _passwall(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
@@ -1132,12 +1135,12 @@ static int passwall(int x, int y, int pow, int garbage)
     int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
     bool non_rock_barriers = false;
 
-    // allow statues as entry points?
+    // Irony: you can start on a secret door but not a door.
+    // Worked stone walls are out, they're not diggable and
+    // are used for impassable walls... I'm not sure we should
+    // even allow statues (should be contiguous rock). -- bwr
+    // XXX: Allow statues as entry points?
     if (grd[x][y] != DNGN_ROCK_WALL && grd[x][y] != DNGN_CLEAR_ROCK_WALL)
-        // Irony: you can start on a secret door but not a door.
-        // Worked stone walls are out, they're not diggable and
-        // are used for impassable walls... I'm not sure we should
-        // even allow statues (should be contiguous rock) -- bwr
     {
         mpr("That's not a passable wall.");
         return 0;
@@ -1209,24 +1212,23 @@ static int passwall(int x, int y, int pow, int garbage)
 
 void cast_passwall(int pow)
 {
-    apply_one_neighbouring_square(passwall, pow);
-}                               // end cast_passwall()
+    apply_one_neighbouring_square(_passwall, pow);
+}
 
-static int intoxicate_monsters(int x, int y, int pow, int garbage)
+static int _intoxicate_monsters(int x, int y, int pow, int garbage)
 {
     UNUSED( pow );
     UNUSED( garbage );
 
     int mon = mgrd[x][y];
 
-    if (mon == NON_MONSTER)
+    if (mon == NON_MONSTER
+        || mons_intel(menv[mon].type) < I_NORMAL
+        || mons_holiness(&menv[mon]) != MH_NATURAL
+        || mons_res_poison(&menv[mon]) > 0)
+    {
         return 0;
-    if (mons_intel(menv[mon].type) < I_NORMAL)
-        return 0;
-    if (mons_holiness(&menv[mon]) != MH_NATURAL)
-        return 0;
-    if (mons_res_poison(&menv[mon]) > 0)
-        return 0;
+    }
 
     menv[mon].add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
     return 1;
@@ -1243,7 +1245,7 @@ void cast_intoxicate(int pow)
         mpr("Your head spins!");
     }
 
-    apply_area_visible(intoxicate_monsters, pow);
+    apply_area_visible(_intoxicate_monsters, pow);
 }
 
 bool backlight_monsters(int x, int y, int pow, int garbage)
@@ -1278,7 +1280,7 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
     case MONS_SPECTRAL_THING:
     case MONS_ORB_OF_FIRE:
     case MONS_EYE_OF_DEVASTATION:
-        return (false);               // already glowing or invisible
+        return (false);               // Already glowing or invisible.
     default:
         break;
     }
@@ -1286,14 +1288,14 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
     mon_enchant bklt = menv[mon].get_ench(ENCH_BACKLIGHT);
     const int lvl = bklt.degree;
 
-    // this enchantment overrides invisibility (neat)
+    // This enchantment overrides invisibility (neat).
     if (menv[mon].has_ench(ENCH_INVIS))
     {
         if (!menv[mon].has_ench(ENCH_BACKLIGHT))
         {
             menv[mon].add_ench(
                 mon_enchant(ENCH_BACKLIGHT, 1, KC_OTHER, random_range(30, 50)));
-            simple_monster_message( &menv[mon], " is limned in light." );
+            simple_monster_message( &menv[mon], " is lined in light." );
         }
         return (true);
     }
@@ -1308,7 +1310,7 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
         simple_monster_message( &menv[mon], " glows brighter." );
 
     return (true);
-}                               // end backlight_monsters()
+}
 
 bool cast_evaporate(int pow, bolt& beem, int potion)
 {
@@ -1603,7 +1605,7 @@ void cast_fulsome_distillation( int powc )
         mpr( "Unfortunately, you can't carry it right now!" );
 }
 
-static int rot_living(int x, int y, int pow, int message)
+static int _rot_living(int x, int y, int pow, int message)
 {
     UNUSED( message );
 
@@ -1625,9 +1627,9 @@ static int rot_living(int x, int y, int pow, int message)
     menv[mon].add_ench( mon_enchant(ENCH_ROT, ench, KC_YOU) );
 
     return 1;
-}                               // end rot_living()
+}
 
-static int rot_undead(int x, int y, int pow, int garbage)
+static int _rot_undead(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
@@ -1674,7 +1676,7 @@ static int rot_undead(int x, int y, int pow, int garbage)
         break;
     case MONS_ROTTING_HULK:
     default:
-        return 0;               // immune (no flesh) or already rotting
+        return 0;               // Immune (no flesh) or already rotting.
     }
 
     ench = ((random2(pow) + random2(pow) + random2(pow) + random2(pow)) / 4);
@@ -1685,18 +1687,18 @@ static int rot_undead(int x, int y, int pow, int garbage)
     return 1;
 }
 
-static int rot_corpses(int x, int y, int pow, int garbage)
+static int _rot_corpses(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    return make_a_rot_cloud(x, y, pow, CLOUD_MIASMA);
+    return _make_a_rot_cloud(x, y, pow, CLOUD_MIASMA);
 }
 
 void cast_rotting(int pow)
 {
-    apply_area_visible(rot_living, pow);
-    apply_area_visible(rot_undead, pow);
-    apply_area_visible(rot_corpses, pow);
+    apply_area_visible(_rot_living, pow);
+    apply_area_visible(_rot_undead, pow);
+    apply_area_visible(_rot_corpses, pow);
     return;
 }
 
@@ -1714,7 +1716,7 @@ void do_monster_rot(int mon)
     return;
 }
 
-static int snake_charm_monsters(int x, int y, int pow, int message)
+static int _snake_charm_monsters(int x, int y, int pow, int message)
 {
     UNUSED( message );
 
@@ -1738,7 +1740,7 @@ static int snake_charm_monsters(int x, int y, int pow, int message)
 void cast_snake_charm(int pow)
 {
     // powc = (you.experience_level * 2) + (you.skills[SK_INVOCATIONS] * 3);
-    apply_one_neighbouring_square(snake_charm_monsters, pow);
+    apply_one_neighbouring_square(_snake_charm_monsters, pow);
 }
 
 void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
@@ -1760,7 +1762,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         return;
     }
 
-    //FIXME: if (player typed '>' to attack floor) goto do_terrain;
+    //FIXME: If (player typed '>' to attack floor) goto do_terrain;
     blast.beam_source = MHITYOU;
     blast.thrower     = KILL_YOU;
     blast.ex_size     = 1;              // default
@@ -1854,7 +1856,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
                 blast.damage.num += 2;
             break;
 
-        case MONS_CLAY_GOLEM:   // assume baked clay and not wet loam
+        case MONS_CLAY_GOLEM:   // Assume baked clay and not wet loam.
         case MONS_STONE_GOLEM:
         case MONS_EARTH_ELEMENTAL:
         case MONS_GARGOYLE:
@@ -2046,12 +2048,12 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
     case DNGN_OPEN_DOOR:
     case DNGN_CLOSED_DOOR:
-        // Doors always blow up, stone arches never do (would cause problems)
+        // Doors always blow up, stone arches never do (would cause problems).
         if (okay_to_dest)
             grd[beam.tx][beam.ty] = DNGN_FLOOR;
 
         // fall-through
-    case DNGN_STONE_ARCH:       // floor -- small explosion
+    case DNGN_STONE_ARCH:          // Floor -- small explosion.
         explode          = true;
         hole             = false;  // to hit monsters standing on doors
         blast.name       = "blast of rock fragments";
@@ -2180,7 +2182,6 @@ bool cast_portal_projectile(int pow)
 // to have a proper way to do a single weapon strike here (you_attack
 // does far more than we need or want here)). --bwr
 //
-
 void cast_far_strike(int pow)
 {
     dist targ;
@@ -2212,11 +2213,11 @@ void cast_far_strike(int pow)
     if (you.weapon())   // if not unarmed
     {
         const item_def& wpn(*you.weapon());
-        // look up the damage base
+        // Look up the base damage.
         if (wpn.base_type == OBJ_WEAPONS)
         {
             damage = property( wpn, PWPN_DAMAGE );
-            speed = property( wpn, PWPN_SPEED );
+            speed  = property( wpn, PWPN_SPEED );
 
             if (get_weapon_brand(wpn) == SPWPN_SPEED)
                 speed /= 2;
@@ -2267,7 +2268,7 @@ void cast_far_strike(int pow)
 
     monsters *monster = &menv[ mgrd[targ.tx][targ.ty] ];
 
-    // apply monster's AC
+    // Apply monster's AC.
     if (monster->ac > 0)
         damage -= random2( 1 + monster->ac );
 
@@ -2283,7 +2284,7 @@ void cast_far_strike(int pow)
         return;
     }
 
-    // Inflict the damage
+    // Inflict the damage.
     hurt_monster( monster, damage );
     if (monster->hit_points < 1)
         monster_die( monster, KILL_YOU, 0 );
@@ -2291,7 +2292,7 @@ void cast_far_strike(int pow)
         print_wounds( monster );
 
     return;
-}                               // end cast_far_strike()
+}
 
 int cast_apportation(int pow)
 {
@@ -2363,17 +2364,17 @@ int cast_apportation(int pow)
         return (0);
     }
 
-    // mass of one unit
+    // Mass of one unit.
     const int unit_mass = item_mass( mitm[ item ] );
-    // assume we can pull everything
+    // Assume we can pull everything.
     int max_units = mitm[ item ].quantity;
 
-    // item has mass: might not move all of them
+    // Item has mass: might not move all of them.
     if (unit_mass > 0)
     {
         const int max_mass = pow * 30 + random2( pow * 20 );
 
-        // most units our power level will allow
+        // Most units our power level will allow.
         max_units = max_mass / unit_mass;
     }
 
@@ -2402,7 +2403,7 @@ int cast_apportation(int pow)
         }
         done = 1;
 
-        // if we apport a net, free the monster under it
+        // If we apport a net, free the monster under it.
         if (mitm[item].base_type == OBJ_MISSILES
             && mitm[item].sub_type == MI_THROWING_NET
             && item_is_stationary(mitm[item]))
@@ -2464,7 +2465,7 @@ void cast_condensation_shield(int pow)
     }
 
     return;
-}                               // end cast_condensation_shield()
+}
 
 void remove_divine_shield()
 {
@@ -2503,7 +2504,7 @@ void cast_divine_shield()
     return;
 }
 
-static int quadrant_blink(int x, int y, int pow, int garbage)
+static int _quadrant_blink(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
@@ -2531,17 +2532,21 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
     bool found = false;
     for ( int i = 0; i < (pow*pow) / 500 + 1; ++i )
     {
-        // find a space near our target...  First try to find a random
-        // square not adjacent to the player, then one adjacent if
-        // that fails.
-        if ( !random_near_space(ox, oy, tx, ty) &&
-             !random_near_space(ox, oy, tx, ty, true))
+        // Find a space near our target...
+        // First try to find a random square not adjacent to the player,
+        // then one adjacent if that fails.
+        if (!random_near_space(ox, oy, tx, ty)
+            && !random_near_space(ox, oy, tx, ty, true))
+        {
             return 0;
+        }
 
-        // which is close enough, and also far enough from us
-        if ( distance(ox, oy, tx, ty) > 10 &&
-             distance(you.x_pos, you.y_pos, tx, ty) < 8 )
+        // ... which is close enough, and also far enough from us.
+        if (distance(ox, oy, tx, ty) > 10
+            && distance(you.x_pos, you.y_pos, tx, ty) < 8)
+        {
             continue;
+        }
 
         if (!see_grid_no_trans(tx, ty))
             continue;
@@ -2559,12 +2564,13 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
 
 int cast_semi_controlled_blink(int pow)
 {
-    return apply_one_neighbouring_square(quadrant_blink, pow);
+    return apply_one_neighbouring_square(_quadrant_blink, pow);
 }
 
 void cast_stoneskin(int pow)
 {
-    if (you.is_undead)
+    if (you.is_undead
+        && (you.species != SP_VAMPIRE || you.hunger_state < HS_SATIATED))
     {
         mpr("This spell does not affect your undead flesh.");
         return;

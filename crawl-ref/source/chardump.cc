@@ -66,32 +66,32 @@
 
 struct dump_params;
 
-static void sdump_header(dump_params &);
-static void sdump_stats(dump_params &);
-static void sdump_location(dump_params &);
-static void sdump_religion(dump_params &);
-static void sdump_burden(dump_params &);
-static void sdump_hunger(dump_params &);
-static void sdump_transform(dump_params &);
-static void sdump_visits(dump_params &);
-static void sdump_misc(dump_params &);
-static void sdump_turns_by_place(dump_params &);
-static void sdump_notes(dump_params &);
-static void sdump_inventory(dump_params &);
-static void sdump_skills(dump_params &);
-static void sdump_spells(dump_params &);
-static void sdump_mutations(dump_params &);
-static void sdump_messages(dump_params &);
-static void sdump_screenshot(dump_params &);
-static void sdump_kills_by_place(dump_params &);
-static void sdump_kills(dump_params &);
-static void sdump_newline(dump_params &);
-static void sdump_overview(dump_params &);
-static void sdump_hiscore(dump_params &);
-static void sdump_monster_list(dump_params &);
-static void sdump_separator(dump_params &);
+static void _sdump_header(dump_params &);
+static void _sdump_stats(dump_params &);
+static void _sdump_location(dump_params &);
+static void _sdump_religion(dump_params &);
+static void _sdump_burden(dump_params &);
+static void _sdump_hunger(dump_params &);
+static void _sdump_transform(dump_params &);
+static void _sdump_visits(dump_params &);
+static void _sdump_misc(dump_params &);
+static void _sdump_turns_by_place(dump_params &);
+static void _sdump_notes(dump_params &);
+static void _sdump_inventory(dump_params &);
+static void _sdump_skills(dump_params &);
+static void _sdump_spells(dump_params &);
+static void _sdump_mutations(dump_params &);
+static void _sdump_messages(dump_params &);
+static void _sdump_screenshot(dump_params &);
+static void _sdump_kills_by_place(dump_params &);
+static void _sdump_kills(dump_params &);
+static void _sdump_newline(dump_params &);
+static void _sdump_overview(dump_params &);
+static void _sdump_hiscore(dump_params &);
+static void _sdump_monster_list(dump_params &);
+static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
-static void sdump_lua(dump_params &);
+static void _sdump_lua(dump_params &);
 #endif
 static bool write_dump(const std::string &fname, dump_params &);
 
@@ -119,35 +119,35 @@ struct dump_params
 };
 
 static dump_section_handler dump_handlers[] = {
-    { "header",         sdump_header        },
-    { "stats",          sdump_stats         },
-    { "location",       sdump_location      },
-    { "religion",       sdump_religion      },
-    { "burden",         sdump_burden        },
-    { "hunger",         sdump_hunger        },
-    { "transform",      sdump_transform     },
-    { "visits",         sdump_visits        },
-    { "misc",           sdump_misc          },
-    { "turns_by_place", sdump_turns_by_place},
-    { "notes",          sdump_notes         },
-    { "inventory",      sdump_inventory     },
-    { "skills",         sdump_skills        },
-    { "spells",         sdump_spells        },
-    { "mutations",      sdump_mutations     },
-    { "messages",       sdump_messages      },
-    { "screenshot",     sdump_screenshot    },
-    { "kills_by_place", sdump_kills_by_place},
-    { "kills",          sdump_kills         },
-    { "overview",       sdump_overview      },
-    { "hiscore",        sdump_hiscore       },
-    { "monlist",        sdump_monster_list  },
+    { "header",         _sdump_header        },
+    { "stats",          _sdump_stats         },
+    { "location",       _sdump_location      },
+    { "religion",       _sdump_religion      },
+    { "burden",         _sdump_burden        },
+    { "hunger",         _sdump_hunger        },
+    { "transform",      _sdump_transform     },
+    { "visits",         _sdump_visits        },
+    { "misc",           _sdump_misc          },
+    { "turns_by_place", _sdump_turns_by_place},
+    { "notes",          _sdump_notes         },
+    { "inventory",      _sdump_inventory     },
+    { "skills",         _sdump_skills        },
+    { "spells",         _sdump_spells        },
+    { "mutations",      _sdump_mutations     },
+    { "messages",       _sdump_messages      },
+    { "screenshot",     _sdump_screenshot    },
+    { "kills_by_place", _sdump_kills_by_place},
+    { "kills",          _sdump_kills         },
+    { "overview",       _sdump_overview      },
+    { "hiscore",        _sdump_hiscore       },
+    { "monlist",        _sdump_monster_list  },
 
     // Conveniences for the .crawlrc artist.
-    { "",               sdump_newline       },
-    { "-",              sdump_separator     },
+    { "",               _sdump_newline       },
+    { "-",              _sdump_separator     },
 
 #ifdef CLUA_BINDINGS
-    { NULL,             sdump_lua           }
+    { NULL,             _sdump_lua           }
 #else
     { NULL,             NULL                }
 #endif
@@ -184,14 +184,16 @@ bool dump_char(const std::string &fname, bool show_prices, bool full_id,
     return write_dump(fname, par);
 }
 
-static void sdump_header(dump_params &par)
+static void _sdump_header(dump_params &par)
 {
     par.text += " " CRAWL " version " VERSION " character file.\n\n";
 }
 
-static void sdump_stats(dump_params &par)
+static void _sdump_stats(dump_params &par)
 {
 /*
+    // This is the old dump screen and can be removed if no one wants to
+    // go back.
     std::vector<formatted_string> vfs =
         get_full_detail(par.full_id, par.se? par.se->points : -1);
 
@@ -205,7 +207,7 @@ static void sdump_stats(dump_params &par)
     par.text += "\n\n";
 }
 
-static void sdump_burden(dump_params &par)
+static void _sdump_burden(dump_params &par)
 {
     std::string verb = par.se? "were" : "are";
 
@@ -222,7 +224,7 @@ static void sdump_burden(dump_params &par)
     }
 }
 
-static void sdump_hunger(dump_params &par)
+static void _sdump_hunger(dump_params &par)
 {
     if (par.se)
         par.text += "You were ";
@@ -233,7 +235,7 @@ static void sdump_hunger(dump_params &par)
     par.text += ".\n\n";
 }
 
-static void sdump_transform(dump_params &par)
+static void _sdump_transform(dump_params &par)
 {
     std::string &text(par.text);
     if (you.attribute[ATTR_TRANSFORMATION])
@@ -278,7 +280,7 @@ static void sdump_transform(dump_params &par)
     }
 }
 
-static void sdump_visits(dump_params &par)
+static void _sdump_visits(dump_params &par)
 {
     std::string &text(par.text);
 
@@ -348,19 +350,19 @@ static void sdump_visits(dump_params &par)
     text += "\n";
 }
 
-static void sdump_misc(dump_params &par)
+static void _sdump_misc(dump_params &par)
 {
-    sdump_location(par);
-    sdump_religion(par);
-    sdump_burden(par);
-    sdump_hunger(par);
-    sdump_transform(par);
-    sdump_visits(par);
+    _sdump_location(par);
+    _sdump_religion(par);
+    _sdump_burden(par);
+    _sdump_hunger(par);
+    _sdump_transform(par);
+    _sdump_visits(par);
 }
 
 #define TO_PERCENT(x, y) (100.0f * ((float) (x)) / ((float) (y)))
 
-static std::string sdump_turns_place_info(PlaceInfo place_info,
+static std::string _sdump_turns_place_info(PlaceInfo place_info,
                                           std::string name = "")
 {
     PlaceInfo   gi = you.global_info;
@@ -392,7 +394,7 @@ static std::string sdump_turns_place_info(PlaceInfo place_info,
     return out;
 }
 
-static void sdump_turns_by_place(dump_params &par)
+static void _sdump_turns_by_place(dump_params &par)
 {
     std::string &text(par.text);
 
@@ -419,12 +421,12 @@ static void sdump_turns_by_place(dump_params &par)
     text += "               ";
     text += "+-------+-------+-------+-------+-------+----------------------\n";
 
-    text += sdump_turns_place_info(you.global_info, "Total");
+    text += _sdump_turns_place_info(you.global_info, "Total");
 
     for (unsigned int i = 0; i < all_visited.size(); i++)
     {
         PlaceInfo pi = all_visited[i];
-        text += sdump_turns_place_info(pi);
+        text += _sdump_turns_place_info(pi);
     }
 
     text += "               ";
@@ -433,12 +435,12 @@ static void sdump_turns_by_place(dump_params &par)
     text += "\n";
 }
 
-static void sdump_newline(dump_params &par)
+static void _sdump_newline(dump_params &par)
 {
     par.text += "\n";
 }
 
-static void sdump_separator(dump_params &par)
+static void _sdump_separator(dump_params &par)
 {
     par.text += std::string(79, '-') + "\n";
 }
@@ -446,7 +448,7 @@ static void sdump_separator(dump_params &par)
 #ifdef CLUA_BINDINGS
 // Assume this is an arbitrary Lua function name, call the function and
 // dump whatever it returns.
-static void sdump_lua(dump_params &par)
+static void _sdump_lua(dump_params &par)
 {
     std::string luatext;
     if (!clua.callfn(par.section.c_str(), ">s", &luatext)
@@ -542,7 +544,7 @@ std::string munge_description(const std::string & inStr)
     return (outStr);
 }                               // end munge_description()
 
-static void sdump_messages(dump_params &par)
+static void _sdump_messages(dump_params &par)
 {
     // A little message history:
     if (Options.dump_message_count > 0)
@@ -552,13 +554,13 @@ static void sdump_messages(dump_params &par)
     }
 }
 
-static void sdump_screenshot(dump_params &par)
+static void _sdump_screenshot(dump_params &par)
 {
     par.text += screenshot();
     par.text += "\n\n";
 }
 
-static void sdump_notes(dump_params &par)
+static void _sdump_notes(dump_params &par)
 {
     std::string &text(par.text);
     if ( note_list.empty() )
@@ -579,7 +581,7 @@ static void sdump_notes(dump_params &par)
  // dump_location
  //
  //---------------------------------------------------------------
-static void sdump_location(dump_params &par)
+static void _sdump_location(dump_params &par)
 {
     if (you.your_level == -1
         && you.where_are_you == BRANCH_MAIN_DUNGEON
@@ -596,7 +598,7 @@ static void sdump_location(dump_params &par)
     par.text += "\n";
 }                               // end dump_location()
 
-static void sdump_religion(dump_params &par)
+static void _sdump_religion(dump_params &par)
 {
     std::string &text(par.text);
     if (you.religion != GOD_NO_GOD)
@@ -683,7 +685,7 @@ static bool dump_item_origin(const item_def &item, int value)
  // dump_inventory
  //
  //---------------------------------------------------------------
-static void sdump_inventory(dump_params &par)
+static void _sdump_inventory(dump_params &par)
 {
     int i, j;
 
@@ -793,7 +795,7 @@ static void sdump_inventory(dump_params &par)
 // dump_skills
 //
 //---------------------------------------------------------------
-static void sdump_skills(dump_params &par)
+static void _sdump_skills(dump_params &par)
 {
     std::string &text(par.text);
     char tmp_quant[20];
@@ -855,7 +857,7 @@ static std::string spell_type_shortname(int spell_class, bool slash)
 // dump_spells
 //
 //---------------------------------------------------------------
-static void sdump_spells(dump_params &par)
+static void _sdump_spells(dump_params &par)
 {
     std::string &text(par.text);
     char tmp_quant[20];
@@ -975,12 +977,12 @@ static void sdump_spells(dump_params &par)
 }                               // end dump_spells()
 
 
-static void sdump_kills(dump_params &par)
+static void _sdump_kills(dump_params &par)
 {
     par.text += you.kills->kill_info();
 }
 
-static std::string sdump_kills_place_info(PlaceInfo place_info,
+static std::string _sdump_kills_place_info(PlaceInfo place_info,
                                           std::string name = "")
 {
     PlaceInfo   gi = you.global_info;
@@ -1029,7 +1031,7 @@ static std::string sdump_kills_place_info(PlaceInfo place_info,
     return out;
 }
 
-static void sdump_kills_by_place(dump_params &par)
+static void _sdump_kills_by_place(dump_params &par)
 {
     std::string &text(par.text);
 
@@ -1062,19 +1064,19 @@ static void sdump_kills_by_place(dump_params &par)
     std::string footer = "               ";
     footer += "+-------+-------+-------+-------+-------+-------+--------------\n";
 
-    result += sdump_kills_place_info(you.global_info, "Total");
+    result += _sdump_kills_place_info(you.global_info, "Total");
 
     for (unsigned int i = 0; i < all_visited.size(); i++)
     {
         PlaceInfo pi = all_visited[i];
-        result += sdump_kills_place_info(pi);
+        result += _sdump_kills_place_info(pi);
     }
 
     if (result.length() > 0)
         text += header + result + footer + "\n";
 }
 
-static void sdump_overview(dump_params &par)
+static void _sdump_overview(dump_params &par)
 {
     std::string overview =
         formatted_string::parse_string(overview_description_string());
@@ -1083,7 +1085,7 @@ static void sdump_overview(dump_params &par)
     par.text += "\n\n";
 }
 
-static void sdump_hiscore(dump_params &par)
+static void _sdump_hiscore(dump_params &par)
 {
     if (!par.se)
         return;
@@ -1094,7 +1096,7 @@ static void sdump_hiscore(dump_params &par)
     par.text += "\n\n";
 }
 
-static void sdump_monster_list(dump_params &par)
+static void _sdump_monster_list(dump_params &par)
 {
     std::string monlist = mpr_monster_list(par.se);
     trim_string(monlist);
@@ -1102,7 +1104,7 @@ static void sdump_monster_list(dump_params &par)
     par.text += "\n\n";
 }
 
-static void sdump_mutations(dump_params &par)
+static void _sdump_mutations(dump_params &par)
 {
     std::string &text(par.text);
 

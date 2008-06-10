@@ -84,29 +84,29 @@ enum LOSSelect
     LOS_NONE     = 0xFFFF
 };
 
-static void describe_feature(int mx, int my, bool oos);
-static void describe_cell(int mx, int my);
+static void _describe_feature(int mx, int my, bool oos);
+static void _describe_cell(int mx, int my);
 
-static bool find_object(  int x, int y, int mode, bool need_path, int range );
-static bool find_monster( int x, int y, int mode, bool need_path, int range );
-static bool find_feature( int x, int y, int mode, bool need_path, int range );
+static bool _find_object(  int x, int y, int mode, bool need_path, int range );
+static bool _find_monster( int x, int y, int mode, bool need_path, int range );
+static bool _find_feature( int x, int y, int mode, bool need_path, int range );
 
-static char find_square_wrapper( int tx, int ty,
-                                 FixedVector<char, 2> &mfp, char direction,
-                                 bool (*targ)(int, int, int, bool, int),
-                                 bool need_path = false, int mode = TARG_ANY,
-                                 int range = -1, bool wrap = false,
-                                 int los = LOS_ANY);
+static char _find_square_wrapper( int tx, int ty,
+                                  FixedVector<char, 2> &mfp, char direction,
+                                  bool (*targ)(int, int, int, bool, int),
+                                  bool need_path = false, int mode = TARG_ANY,
+                                  int range = -1, bool wrap = false,
+                                  int los = LOS_ANY);
 
-static char find_square( int xps, int yps,
-                         FixedVector<char, 2> &mfp, int direction,
-                         bool (*targ)(int, int, int, bool, int),
-                         bool need_path, int mode = TARG_ANY, int range = -1,
-                         bool wrap = false, int los = LOS_ANY);
+static char _find_square( int xps, int yps,
+                          FixedVector<char, 2> &mfp, int direction,
+                          bool (*targ)(int, int, int, bool, int),
+                          bool need_path, int mode = TARG_ANY, int range = -1,
+                          bool wrap = false, int los = LOS_ANY);
 
-static int targeting_cmd_to_compass( command_type command );
-static void describe_oos_square(int x, int y);
-static void extend_move_to_edge(dist &moves);
+static int  _targeting_cmd_to_compass( command_type command );
+static void _describe_oos_square(int x, int y);
+static void _extend_move_to_edge(dist &moves);
 
 void direction_choose_compass( dist& moves, targeting_behaviour *beh)
 {
@@ -133,7 +133,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
             break;
         }
 
-        const int i = targeting_cmd_to_compass(key_command);
+        const int i = _targeting_cmd_to_compass(key_command);
         if ( i != -1 )
         {
             moves.dx = Compass[i].x;
@@ -150,7 +150,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
     return;
 }
 
-static int targeting_cmd_to_compass( command_type command )
+static int _targeting_cmd_to_compass( command_type command )
 {
     switch ( command )
     {
@@ -175,7 +175,7 @@ static int targeting_cmd_to_compass( command_type command )
     }
 }
 
-static int targeting_cmd_to_feature( command_type command )
+static int _targeting_cmd_to_feature( command_type command )
 {
     switch ( command )
     {
@@ -615,7 +615,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_UP_LEFT:
         case CMD_TARGET_UP:
         case CMD_TARGET_UP_RIGHT:
-            i = targeting_cmd_to_compass(key_command);
+            i = _targeting_cmd_to_compass(key_command);
             moves.tx += Compass[i].x;
             moves.ty += Compass[i].y;
             break;
@@ -628,7 +628,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_DIR_UP_LEFT:
         case CMD_TARGET_DIR_UP:
         case CMD_TARGET_DIR_UP_RIGHT:
-            i = targeting_cmd_to_compass(key_command);
+            i = _targeting_cmd_to_compass(key_command);
 
             if (restricts != DIR_TARGET)
             {
@@ -708,10 +708,10 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_FIND_UPSTAIR:
         case CMD_TARGET_FIND_DOWNSTAIR:
         {
-            const int thing_to_find = targeting_cmd_to_feature(key_command);
-            if (find_square_wrapper(moves.tx, moves.ty, objfind_pos, 1,
-                                    find_feature, needs_path, thing_to_find,
-                                    range, true, Options.target_los_first ?
+            const int thing_to_find = _targeting_cmd_to_feature(key_command);
+            if (_find_square_wrapper(moves.tx, moves.ty, objfind_pos, 1,
+                                     _find_feature, needs_path, thing_to_find,
+                                     range, true, Options.target_los_first ?
                                         LOS_FLIPVH : LOS_ANY))
             {
                 moves.tx = objfind_pos[0];
@@ -803,11 +803,11 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_OBJ_CYCLE_BACK:
         case CMD_TARGET_OBJ_CYCLE_FORWARD:
             dir = (key_command == CMD_TARGET_OBJ_CYCLE_BACK) ? -1 : 1;
-            if (find_square_wrapper( moves.tx, moves.ty, objfind_pos, dir,
-                                     find_object, needs_path, TARG_ANY, range,
-                                     true, Options.target_los_first ?
-                                         (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
-                                          : LOS_ANY))
+            if (_find_square_wrapper( moves.tx, moves.ty, objfind_pos, dir,
+                                      _find_object, needs_path, TARG_ANY, range,
+                                      true, Options.target_los_first ?
+                                          (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
+                                           : LOS_ANY))
             {
                 moves.tx = objfind_pos[0];
                 moves.ty = objfind_pos[1];
@@ -820,9 +820,9 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_CYCLE_FORWARD:
         case CMD_TARGET_CYCLE_BACK:
             dir = (key_command == CMD_TARGET_CYCLE_BACK) ? -1 : 1;
-            if (find_square_wrapper( moves.tx, moves.ty, monsfind_pos, dir,
-                                     find_monster, needs_path, mode, range,
-                                     Options.target_wrap))
+            if (_find_square_wrapper( moves.tx, moves.ty, monsfind_pos, dir,
+                                      _find_monster, needs_path, mode, range,
+                                      Options.target_wrap))
             {
                 moves.tx = monsfind_pos[0];
                 moves.ty = monsfind_pos[1];
@@ -1056,22 +1056,22 @@ void direction(dist& moves, targeting_type restricts,
 #endif
 
         }
-        skip_iter = false;      // only skip one iteration at most
+        skip_iter = false;      // Only skip one iteration at most.
     }
     moves.isMe = (moves.tx == you.x_pos && moves.ty == you.y_pos);
     mesclr();
 
     // We need this for directional explosions, otherwise they'll explode one
     // square away from the player.
-    extend_move_to_edge(moves);
+    _extend_move_to_edge(moves);
 }
 
 void terse_describe_square(const coord_def &c)
 {
     if (!see_grid(c.x, c.y))
-        describe_oos_square(c.x, c.y);
+        _describe_oos_square(c.x, c.y);
     else if (in_bounds(c) )
-        describe_cell(c.x, c.y);
+        _describe_cell(c.x, c.y);
 }
 
 void full_describe_square(const coord_def &c)
@@ -1085,17 +1085,17 @@ void full_describe_square(const coord_def &c)
 
     if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
     {
-        // First priority: monsters
+        // First priority: monsters.
         describe_monsters(menv[mid]);
     }
     else if (oid != NON_ITEM)
     {
-        // Second priority: objects
+        // Second priority: objects.
         describe_item( mitm[oid] );
     }
     else
     {
-        // Third priority: features
+        // Third priority: features.
         describe_feature_wide(c.x, c.y);
     }
 
@@ -1103,12 +1103,12 @@ void full_describe_square(const coord_def &c)
     mesclr(true);
 }
 
-static void extend_move_to_edge(dist &moves)
+static void _extend_move_to_edge(dist &moves)
 {
     if (!moves.dx && !moves.dy)
         return;
 
-    // now the tricky bit - extend the target x,y out to map edge.
+    // Now the tricky bit - extend the target x,y out to map edge.
     int mx = 0, my = 0;
 
     if (moves.dx > 0)
@@ -1136,7 +1136,7 @@ static void extend_move_to_edge(dist &moves)
 // there's a stash on the square, announces the top item and number
 // of items, otherwise, if there's a stair that's in the travel
 // cache and noted in the Dungeon (O)verview, names the stair.
-static void describe_oos_square(int x, int y)
+static void _describe_oos_square(int x, int y)
 {
     mpr("You can't see that place.", MSGCH_EXAMINE_FILTER);
 
@@ -1144,7 +1144,7 @@ static void describe_oos_square(int x, int y)
         return;
 
     describe_stash(x, y);
-    describe_feature(x, y, true);
+    _describe_feature(x, y, true);
 }
 
 bool in_vlos(int x, int y)
@@ -1164,8 +1164,8 @@ bool in_los(int x, int y)
     return (in_vlos(grid2view(coord_def(x, y))));
 }
 
-static bool find_monster( int x, int y, int mode, bool need_path,
-                          int range = -1)
+static bool _find_monster( int x, int y, int mode, bool need_path,
+                           int range = -1)
 {
     // Target the player for friendly and general spells.
     if ((mode == TARG_FRIEND || mode == TARG_ANY)
@@ -1225,8 +1225,8 @@ static bool find_monster( int x, int y, int mode, bool need_path,
             || !mons_class_flag( menv[targ_mon].type, M_NO_EXP_GAIN ));
 }
 
-static bool find_feature( int x, int y, int mode,
-                          bool /* need_path */, int /* range */)
+static bool _find_feature( int x, int y, int mode,
+                           bool /* need_path */, int /* range */)
 {
     // The stair need not be in LOS if the square is mapped.
     if (!in_los(x, y) && (!Options.target_oos || !is_terrain_seen(x, y)))
@@ -1235,8 +1235,8 @@ static bool find_feature( int x, int y, int mode,
     return is_feature(mode, x, y);
 }
 
-static bool find_object(int x, int y, int mode,
-                        bool /* need_path */, int /* range */)
+static bool _find_object(int x, int y, int mode,
+                         bool /* need_path */, int /* range */)
 {
     // First, check for mimics.
     bool is_mimic = false;
@@ -1257,7 +1257,7 @@ static bool find_object(int x, int y, int mode,
                             && (is_stash(x, y) || is_mimic));
 }
 
-static int next_los(int dir, int los, bool wrap)
+static int _next_los(int dir, int los, bool wrap)
 {
     if (los == LOS_ANY)
         return (wrap? los : LOS_NONE);
@@ -1327,12 +1327,12 @@ bool in_los_bounds(int x, int y)
 // monsters will be targeted.
 //
 //---------------------------------------------------------------
-static char find_square( int xps, int yps,
-                         FixedVector<char, 2> &mfp, int direction,
-                         bool (*find_targ)( int x, int y, int mode,
-                                            bool need_path, int range ),
-                         bool need_path, int mode, int range, bool wrap,
-                         int los )
+static char _find_square( int xps, int yps,
+                          FixedVector<char, 2> &mfp, int direction,
+                          bool (*find_targ)( int x, int y, int mode,
+                                             bool need_path, int range ),
+                          bool need_path, int mode, int range, bool wrap,
+                          int los )
 {
     // the day will come when [unsigned] chars will be consigned to
     // the fires of Gehenna. Not quite yet, though.
@@ -1402,15 +1402,15 @@ static char find_square( int xps, int yps,
                 mfp[1] = ctry;
                 return (1);
             }
-            return find_square(ctrx, ctry, mfp, direction, find_targ,
-                               need_path, mode, range, false,
-                               next_los(direction, los, wrap));
+            return _find_square(ctrx, ctry, mfp, direction, find_targ,
+                                need_path, mode, range, false,
+                                _next_los(direction, los, wrap));
         }
         if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
         {
-            return find_square(minx, maxy, mfp, direction, find_targ,
-                               need_path, mode, range, false,
-                               next_los(direction, los, wrap));
+            return _find_square(minx, maxy, mfp, direction, find_targ,
+                                need_path, mode, range, false,
+                                _next_los(direction, los, wrap));
         }
 
         if (direction == 1)
@@ -1543,31 +1543,31 @@ static char find_square( int xps, int yps,
     }
 
     return (direction == 1?
-        find_square(ctrx, ctry, mfp, direction, find_targ, need_path, mode,
-                    range, false, next_los(direction, los, wrap))
-      : find_square(minx, maxy, mfp, direction, find_targ, need_path, mode,
-                    range, false, next_los(direction, los, wrap)));
+        _find_square(ctrx, ctry, mfp, direction, find_targ, need_path, mode,
+                     range, false, _next_los(direction, los, wrap))
+      : _find_square(minx, maxy, mfp, direction, find_targ, need_path, mode,
+                     range, false, _next_los(direction, los, wrap)));
 }
 
 // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
 // Identical to find_square, except that input (tx, ty) and output
 // (mfp) are in grid coordinates rather than view coordinates.
-static char find_square_wrapper( int tx, int ty,
-                                 FixedVector<char, 2> &mfp, char direction,
-                                 bool (*find_targ)( int x, int y, int mode,
-                                                    bool need_path, int range ),
-                                 bool need_path, int mode, int range, bool wrap,
-                                 int los )
+static char _find_square_wrapper( int tx, int ty,
+                                  FixedVector<char, 2> &mfp, char direction,
+                                  bool (*find_targ)(int x, int y, int mode,
+                                                    bool need_path, int range),
+                                  bool need_path, int mode, int range, bool wrap,
+                                  int los )
 {
-    const char r =  find_square(grid2viewX(tx), grid2viewY(ty), mfp,
-                                direction, find_targ, need_path, mode, range,
-                                wrap, los);
+    const char r =  _find_square(grid2viewX(tx), grid2viewY(ty), mfp,
+                                 direction, find_targ, need_path, mode, range,
+                                 wrap, los);
     mfp[0] = view2gridX(mfp[0]);
     mfp[1] = view2gridY(mfp[1]);
     return r;
 }
 
-static void describe_feature(int mx, int my, bool oos)
+static void _describe_feature(int mx, int my, bool oos)
 {
     if (oos && !is_terrain_seen(mx, my))
         return;
@@ -1640,7 +1640,7 @@ void describe_floor()
 
     msg_channel_type channel = MSGCH_EXAMINE;
 
-    // water is not terribly important if you don't mind it
+    // Water is not terribly important if you don't mind it-
     if ((grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER
             || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER)
         && player_likes_water())
@@ -1652,10 +1652,10 @@ void describe_floor()
         mpr("Beware, for starvation awaits!", MSGCH_EXAMINE);
 }
 
-static std::string feature_do_grammar(description_level_type dtype,
-                                      bool add_stop,
-                                      bool force_article,
-                                      std::string desc)
+static std::string _feature_do_grammar(description_level_type dtype,
+                                       bool add_stop,
+                                       bool force_article,
+                                       std::string desc)
 {
     if (add_stop)
         desc += ".";
@@ -1701,7 +1701,7 @@ std::string feature_description(dungeon_feature_type grid,
     if (bloody)
         desc += ", spattered with blood";
 
-    return feature_do_grammar(dtype, add_stop, grid_is_trap(grid), desc);
+    return _feature_do_grammar(dtype, add_stop, grid_is_trap(grid), desc);
 }
 
 std::string raw_feature_description(dungeon_feature_type grid,
@@ -1926,7 +1926,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
     }
 }
 
-static std::string marker_feature_description(const coord_def &p)
+static std::string _marker_feature_description(const coord_def &p)
 {
     std::vector<map_marker*> markers = env.markers.get_markers_at(p);
     for (int i = 0, size = markers.size(); i < size; ++i)
@@ -1941,9 +1941,8 @@ static std::string marker_feature_description(const coord_def &p)
 #ifndef DEBUG_DIAGNOSTICS
 // Is a feature interesting enough to 'v'iew it, even if a player normally
 // doesn't care about descriptions, i.e. does the description hold important
-// information? (Yes, this is entirely subjective. JPEG)
-
-static bool interesting_feature(dungeon_feature_type feat)
+// information? (Yes, this is entirely subjective. --jpeg)
+static bool _interesting_feature(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).flags & FFT_EXAMINE_HINT);
 }
@@ -1970,7 +1969,7 @@ std::string feature_description(int mx, int my, bool bloody,
         if (bloody)
             desc += ", spattered with blood";
 
-        return feature_do_grammar(dtype, add_stop, false, desc);
+        return _feature_do_grammar(dtype, add_stop, false, desc);
     }
 
     switch (grid)
@@ -1984,17 +1983,17 @@ std::string feature_description(int mx, int my, bool bloody,
         return (shop_name(mx, my, add_stop));
 
     case DNGN_ENTER_PORTAL_VAULT:
-        return (feature_do_grammar(
+        return (_feature_do_grammar(
                     dtype, add_stop, false,
-                    marker_feature_description(coord_def(mx, my))));
+                    _marker_feature_description(coord_def(mx, my))));
     default:
         return (feature_description(grid, NUM_TRAPS, bloody, dtype, add_stop));
     }
 }
 
-static std::string describe_mons_enchantment(const monsters &mons,
-                                             const mon_enchant &ench,
-                                             bool paralysed)
+static std::string _describe_mons_enchantment(const monsters &mons,
+                                              const mon_enchant &ench,
+                                              bool paralysed)
 {
     // Suppress silly-looking combinations, even if they're
     // internally valid.
@@ -2037,10 +2036,10 @@ static std::string describe_mons_enchantment(const monsters &mons,
         return "entangled in a net";
     default:
         return "";
-    } // end switch
+    }
 }
 
-static std::string describe_monster_weapon(const monsters *mons)
+static std::string _describe_monster_weapon(const monsters *mons)
 {
     std::string desc = "";
     std::string name1, name2;
@@ -2086,7 +2085,7 @@ static std::string describe_monster_weapon(const monsters *mons)
 }
 
 #ifdef DEBUG_DIAGNOSTICS
-static std::string stair_destination_description(const coord_def &pos)
+static std::string _stair_destination_description(const coord_def &pos)
 {
     if (LevelInfo *linf = travel_cache.find_level_info(level_id::current()))
     {
@@ -2100,7 +2099,7 @@ static std::string stair_destination_description(const coord_def &pos)
 }
 #endif
 
-static void describe_monster(const monsters *mon)
+static void _describe_monster(const monsters *mon)
 {
     // first print type and equipment
     std::string text = get_monster_desc(mon);
@@ -2166,7 +2165,7 @@ static void describe_monster(const monsters *mon)
     for (mon_enchant_list::const_iterator e = mon->enchantments.begin();
          e != mon->enchantments.end(); ++e)
     {
-         tmp = describe_mons_enchantment(*mon, e->second, paralysed);
+         tmp = _describe_mons_enchantment(*mon, e->second, paralysed);
          if (!tmp.empty())
          {
              if (!desc.empty())
@@ -2214,7 +2213,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     std::string weap = "";
 
     if (mon->type != MONS_DANCING_WEAPON)
-        weap = describe_monster_weapon(mon);
+        weap = _describe_monster_weapon(mon);
 
     if (!weap.empty())
     {
@@ -2291,7 +2290,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     return desc;
 }
 
-static void describe_cell(int mx, int my)
+static void _describe_cell(int mx, int my)
 {
     bool mimic_item = false;
     bool monster_described = false;
@@ -2319,7 +2318,7 @@ static void describe_cell(int mx, int my)
             goto look_clouds;
 #endif
 
-        describe_monster(&menv[i]);
+        _describe_monster(&menv[i]);
 
         if (mons_is_mimic( menv[i].type ))
         {
@@ -2404,7 +2403,7 @@ static void describe_cell(int mx, int my)
         marker = " (" + desc + ")";
     }
     const std::string traveldest =
-        stair_destination_description(coord_def(mx, my));
+        _stair_destination_description(coord_def(mx, my));
     const dungeon_feature_type feat = grd[mx][my];
     mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s", mx, my,
          stringize_glyph(get_screen_glyph(mx, my)).c_str(),
@@ -2427,7 +2426,7 @@ static void describe_cell(int mx, int my)
     {
         const dungeon_feature_type feat = grd[mx][my];
 
-        if (interesting_feature(feat))
+        if (_interesting_feature(feat))
         {
 #ifdef USE_TILE
             feature_desc += " (Right-click for more information.)";

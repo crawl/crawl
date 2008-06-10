@@ -369,9 +369,9 @@ static void _adjust_ability(void)
             canned_msg( MSG_OK );
             return;
         }
-        else if ( isalpha(keyin) )
+        else if (isalpha(keyin))
         {
-            // try to find the hotkey
+            // Try to find the hotkey.
             for (unsigned int i = 0; i < talents.size(); ++i)
             {
                 if ( talents[i].hotkey == keyin )
@@ -381,7 +381,7 @@ static void _adjust_ability(void)
                 }
             }
 
-            // if we can't, cancel out
+            // If we can't, cancel out.
             if ( selected < 0 )
             {
                 mpr("No such ability.");
@@ -414,7 +414,7 @@ static void _adjust_ability(void)
         return;
     }
 
-    // see if we moved something out
+    // See if we moved something out.
     bool printed_message = false;
     for ( unsigned int i = 0; i < talents.size(); ++i )
     {
@@ -435,7 +435,7 @@ static void _adjust_ability(void)
                     << ability_name(talents[selected].which)
                     << std::endl;
 
-    // swap references in the letter table
+    // Swap references in the letter table.
     ability_type tmp = you.ability_letter_table[index2];
     you.ability_letter_table[index2] = you.ability_letter_table[index1];
     you.ability_letter_table[index1] = tmp;
@@ -485,7 +485,7 @@ void list_armour()
 
         mpr( estr.str().c_str(), MSGCH_EQUIPMENT, colour);
     }
-}                               // end list_armour()
+}
 
 void list_jewellery(void)
 {
@@ -555,7 +555,7 @@ void list_weapons(void)
 
     mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
 
-    // Print out the swap slots
+    // Print out the swap slots.
     for (int i = 0; i <= 1; i++)
     {
         // We'll avoid repeating the current weapon for these slots,
@@ -588,7 +588,7 @@ void list_weapons(void)
         mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
     }
 
-    // Now we print out the current default fire weapon
+    // Now we print out the current default fire weapon.
     wstring = "Firing    : ";
 
     const item_def* item;

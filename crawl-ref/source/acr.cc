@@ -201,17 +201,19 @@ static void _read_messages();
 
 static void _compile_time_asserts();
 
-/*
-   It all starts here. Some initialisations are run first, then straight to
-   new_game and then input.
-*/
+//
+//  It all starts here. Some initialisations are run first, then straight
+//  to new_game and then input.
+//
+
 #ifdef WIN32TILES
 int old_main( int argc, char *argv[] )
 #else
 int main( int argc, char *argv[] )
 #endif
 {
-    _compile_time_asserts();  // just to quiet "unused static function" warning
+    _compile_time_asserts();  // Just to quiet "unused static function" warning.
+
     // Load in the system environment variables
     get_system_environment();
 
@@ -390,16 +392,17 @@ static void _take_starting_note()
 
     notestr << "HP: " << you.hp << "/" << you.hp_max
             << " MP: " << you.magic_points << "/" << you.max_magic_points;
+
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
                    notestr.str().c_str()));
 }
 
 static void _startup_tutorial()
 {
-    // don't allow triggering at game start
+    // Don't allow triggering at game start.
     Options.tut_just_triggered = true;
 
-    // print stats and everything
+    // Print stats and everything.
     _prep_input();
 
 #ifdef USE_TILE
@@ -416,7 +419,7 @@ static void _startup_tutorial()
 }
 
 #ifdef WIZARD
-// returns whether an item of this type can be an artefact, or cursed
+// Returns whether an item of this type can be an artefact, or cursed.
 static bool _item_type_can_be_artefact( int type)
 {
     return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY);
@@ -1329,14 +1332,13 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     return false;
 }
 
-/* used to determine whether to apply the berserk penalty at end
-   of round */
+// Used to determine whether to apply the berserk penalty at end of round.
 bool apply_berserk_penalty = false;
 
-/*
- * This function handles the player's input. It's called from main(),
- * from inside an endless loop.
- */
+//
+//  This function handles the player's input. It's called from main(),
+//  from inside an endless loop.
+//
 static void _input()
 {
     crawl_state.clear_god_acting();
@@ -1737,7 +1739,7 @@ static void _print_friendly_pickup_setting(bool was_changed)
     }
     else
     {
-        mprf("Your allies are %scollecting bugs!", now.c_str());
+        mprf("Your allies%s are collecting bugs!", now.c_str());
     }
 }
 
@@ -2443,6 +2445,10 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
     return rc;
 }
 
+//  Perhaps we should write functions like: update_repel_undead(),
+//  update_liquid_flames(), and so on. Even better, we could have a
+//  vector of callback functions (or objects) which get installed
+//  at some point.
 static void _decrement_durations()
 {
     if (wearing_amulet(AMU_THE_GOURMAND))
@@ -2737,11 +2743,9 @@ static void _decrement_durations()
         //jmf: guilty for berserking /after/ berserk
         did_god_conduct( DID_STIMULANTS, 6 + random2(6) );
 
+        // Sometimes berserk leaves us physically drained.
         //
-        // Sometimes berserk leaves us physically drained
-        //
-
-        // chance of passing out:
+        // Chance of passing out:
         //     - mutation gives a large plus in order to try and
         //       avoid the mutation being a "death sentence" to
         //       certain characters.
@@ -2751,6 +2755,7 @@ static void _decrement_durations()
         //       this should make it a bit more interesting for
         //       Crusaders again.
         //     - similarly for the amulet
+
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
         {
             const int chance =
@@ -2958,12 +2963,6 @@ static void _check_banished()
         you.banished_by.clear();
     }
 }
-
-/* Perhaps we should write functions like: update_repel_undead(),
-   update_liquid_flames(), and so on. Even better, we could have a
-   vector of callback functions (or objects) which get installed
-   at some point.
-*/
 
 static void _check_shafts()
 {
@@ -3291,8 +3290,8 @@ static command_type _get_next_cmd()
 #endif
 
 #if DEBUG_DIAGNOSTICS
-    // save hunger at start of round
-    // for use with hunger "delta-meter" in  output.cc
+    // Save hunger at start of round for use with hunger "delta-meter"
+    // in output.cc.
     you.old_hunger = you.hunger;
 #endif
 
@@ -3321,7 +3320,7 @@ static command_type _get_next_cmd()
     return _keycode_to_command(keyin);
 }
 
-/* for now, this is an extremely yucky hack */
+// For now, this is an extremely yucky hack.
 static command_type _keycode_to_command( keycode_type key )
 {
     switch ( key )
@@ -3830,13 +3829,13 @@ static void _close_door(int door_x, int door_y)
     }
 }
 
-// initialise whole lot of stuff...
-// returns true if a new character
+// Initialise whole lot of stuff...
+// Returns true if a new character.
 static bool _initialise(void)
 {
     Options.fixup_options();
 
-    // read the options the player used last time they created a new
+    // Read the options the player used last time they created a new
     // character.
     read_startup_prefs();
 

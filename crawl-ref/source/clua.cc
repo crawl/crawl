@@ -63,12 +63,12 @@
     } \
     while (false)
 
-static int clua_panic(lua_State *);
-static void clua_throttle_hook(lua_State *, lua_Debug *);
-static void *clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize);
-static int clua_guarded_pcall(lua_State *);
-static int clua_dofile(lua_State *);
-static int clua_loadfile(lua_State *);
+static int  _clua_panic(lua_State *);
+static void _clua_throttle_hook(lua_State *, lua_Debug *);
+static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize);
+static int  _clua_guarded_pcall(lua_State *);
+static int  _clua_dofile(lua_State *);
+static int  _clua_loadfile(lua_State *);
 
 CLua::CLua(bool managed)
     : error(), managed_vm(managed), shutting_down(false),
@@ -204,7 +204,7 @@ void CLua::init_throttle()
 
     if (!mixed_call_depth)
     {
-        lua_sethook(_state, clua_throttle_hook,
+        lua_sethook(_state, _clua_throttle_hook,
                     LUA_MASKCOUNT, throttle_unit_lines);
         throttle_sleep_ms = 0;
         n_throttle_sleeps = 0;
@@ -594,13 +594,13 @@ void CLua::init_lua()
     if (_state)
         return;
 
-    _state = managed_vm? lua_newstate(clua_allocator, this) : luaL_newstate();
+    _state = managed_vm? lua_newstate(_clua_allocator, this) : luaL_newstate();
     if (!_state)
         return;
 
     lua_stack_cleaner clean(_state);
 
-    lua_atpanic(_state, clua_panic);
+    lua_atpanic(_state, _clua_panic);
 
     luaopen_base(_state);
     luaopen_string(_state);
@@ -622,12 +622,12 @@ void CLua::init_lua()
     load_cmacro();
     load_chooks();
 
-    lua_register(_state, "loadfile", clua_loadfile);
-    lua_register(_state, "dofile", clua_dofile);
+    lua_register(_state, "loadfile", _clua_loadfile);
+    lua_register(_state, "dofile", _clua_dofile);
 
     if (managed_vm)
     {
-        lua_register(_state, "pcall", clua_guarded_pcall);
+        lua_register(_state, "pcall", _clua_guarded_pcall);
         execfile("clua/userbase.lua", true, true);
     }
 
@@ -659,9 +659,9 @@ void CLua::load_cmacro()
 
 /////////////////////////////////////////////////////////////////////
 
-static void clua_register_metatable(lua_State *ls, const char *tn,
-                                   const luaL_reg *lr,
-                                   int (*gcfn)(lua_State *ls) = NULL)
+static void _clua_register_metatable(lua_State *ls, const char *tn,
+                                     const luaL_reg *lr,
+                                     int (*gcfn)(lua_State *ls) = NULL)
 {
     int top = lua_gettop(ls);
 
@@ -2149,10 +2149,10 @@ static const struct luaL_reg crawl_lib[] =
 
 void luaopen_crawl(lua_State *ls)
 {
-    clua_register_metatable(ls, REGEX_METATABLE, crawl_regex_ops,
-                            crawl_regex_gc);
-    clua_register_metatable(ls, MESSF_METATABLE, crawl_messf_ops,
-                            crawl_messf_gc);
+    _clua_register_metatable(ls, REGEX_METATABLE, crawl_regex_ops,
+                             crawl_regex_gc);
+    _clua_register_metatable(ls, MESSF_METATABLE, crawl_messf_ops,
+                             crawl_messf_gc);
 
     luaL_openlib(ls, "crawl", crawl_lib, 0);
 }
@@ -2671,7 +2671,7 @@ lua_call_throttle::lua_clua_map lua_call_throttle::lua_map;
 // cases the Lua interpreter will throw an exception instead of
 // panicking.
 //
-static int clua_panic(lua_State *ls)
+static int _clua_panic(lua_State *ls)
 {
     if (crawl_state.need_save && !crawl_state.saving_game
         && !crawl_state.updating_scores)
@@ -2681,14 +2681,16 @@ static int clua_panic(lua_State *ls)
     return (0);
 }
 
-static void *clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
+static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 {
     CLua *cl = static_cast<CLua *>( ud );
     cl->memory_used += nsize - osize;
 
     if (nsize > osize && cl->memory_used >= CLUA_MAX_MEMORY_USE * 1024
-           && cl->mixed_call_depth)
+        && cl->mixed_call_depth)
+    {
         return (NULL);
+    }
 
     if (!nsize)
     {
@@ -2699,7 +2701,7 @@ static void *clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
         return (realloc(ptr, nsize));
 }
 
-static void clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
+static void _clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
 {
     CLua *lua = lua_call_throttle::find_clua(ls);
 
@@ -2766,7 +2768,7 @@ CLua *lua_call_throttle::find_clua(lua_State *ls)
 // levels of nesting would just increase the chance of the script
 // beating our throttling).
 //
-static int clua_guarded_pcall(lua_State *ls)
+static int _clua_guarded_pcall(lua_State *ls)
 {
     const int nargs = lua_gettop(ls);
     const int err = lua_pcall(ls, nargs - 1, LUA_MULTRET, 0);
@@ -2784,7 +2786,7 @@ static int clua_guarded_pcall(lua_State *ls)
     return (lua_gettop(ls));
 }
 
-static int clua_loadfile(lua_State *ls)
+static int _clua_loadfile(lua_State *ls)
 {
     const char *file = luaL_checkstring(ls, 1);
     if (!file)
@@ -2801,7 +2803,7 @@ static int clua_loadfile(lua_State *ls)
     return (1);
 }
 
-static int clua_dofile(lua_State *ls)
+static int _clua_dofile(lua_State *ls)
 {
     const char *file = luaL_checkstring(ls, 1);
     if (!file)

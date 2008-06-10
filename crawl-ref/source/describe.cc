@@ -1380,7 +1380,7 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
     return (description);
 }                               // end describe_jewellery()
 
-static bool compare_card_names(card_type a, card_type b)
+static bool _compare_card_names(card_type a, card_type b)
 {
     return std::string(card_name(a)) < std::string(card_name(b));
 }
@@ -1390,7 +1390,7 @@ static bool compare_card_names(card_type a, card_type b)
 // describe_misc_item
 //
 //---------------------------------------------------------------
-static std::string describe_deck( const item_def &item )
+static std::string _describe_deck( const item_def &item )
 {
     std::string description;
 
@@ -1445,7 +1445,7 @@ static std::string describe_deck( const item_def &item )
     if ( !marked_cards.empty() )
     {
         std::sort(marked_cards.begin(), marked_cards.end(),
-                  compare_card_names);
+                  _compare_card_names);
         description += "Marked card(s): ";
         for ( unsigned int i = 0; i < marked_cards.size(); ++i )
         {
@@ -1469,7 +1469,7 @@ static std::string describe_deck( const item_def &item )
     if ( !seen_cards.empty() )
     {
         std::sort(seen_cards.begin(), seen_cards.end(),
-                  compare_card_names);
+                  _compare_card_names);
         description += "Seen card(s): ";
         for ( unsigned int i = 0; i < seen_cards.size(); ++i )
         {
@@ -1728,7 +1728,7 @@ std::string get_item_description( const item_def &item, bool verbose,
 
     case OBJ_MISCELLANY:
         if (is_deck(item))
-            description << describe_deck( item );
+            description << _describe_deck( item );
         break;
 
     case OBJ_BOOKS:
@@ -1807,7 +1807,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     return description.str();
 }                               // end get_item_description()
 
-static std::string get_feature_description_wide(int feat)
+static std::string _get_feature_description_wide(int feat)
 {
     return std::string();
 }
@@ -1823,7 +1823,7 @@ void describe_feature_wide(int x, int y)
                            : desc.substr(0, desc.length() - 3));
 
     // For things which require logic
-    desc += get_feature_description_wide(grd[x][y]);
+    desc += _get_feature_description_wide(grd[x][y]);
 
     clrscr();
     print_description(desc);
@@ -1840,7 +1840,7 @@ void describe_feature_wide(int x, int y)
 }
 
 // Returns true if spells can be shown to player.
-static bool show_item_description(const item_def &item)
+static bool _show_item_description(const item_def &item)
 {
     clrscr();
 
@@ -1867,7 +1867,7 @@ static bool show_item_description(const item_def &item)
     return false;
 }
 
-static bool describe_spells(const item_def &item)
+static bool _describe_spells(const item_def &item)
 {
     int c = getch();
     if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
@@ -1898,14 +1898,14 @@ void describe_item( item_def &item, bool allow_inscribe )
 {
     while (true)
     {
-        const bool spells_shown = show_item_description(item);
+        const bool spells_shown = _show_item_description(item);
 
         if (spells_shown)
         {
             cgotoxy(1, wherey());
             textcolor(LIGHTGREY);
             cprintf("Select a spell to read its description.");
-            if (describe_spells(item))
+            if (_describe_spells(item))
                 continue;
             return;
         }
@@ -2043,17 +2043,17 @@ void describe_spell(spell_type spelled)
     description += spell_title( spelled );
     description += "$$";
     const std::string long_descrip = getLongDescription(spell_title(spelled));
-    if ( !long_descrip.empty() )
+    if (!long_descrip.empty())
         description += long_descrip;
     else
     {
         description += "This spell has no description. "
-            "Casting it may therefore be unwise. "
+                       "Casting it may therefore be unwise. "
 #if DEBUG
-            "Instead, go fix it. ";
+                       "Instead, go fix it. ";
 #else
-        "Please file a bug report.";
-#endif // DEBUG
+                       "Please file a bug report.";
+#endif
     }
 
     clrscr();
@@ -2065,9 +2065,9 @@ void describe_spell(spell_type spelled)
 
     if (getch() == 0)
         getch();
-}                               // end describe_spell()
+}
 
-static std::string describe_draconian_role(const monsters *mon)
+static std::string _describe_draconian_role(const monsters *mon)
 {
     switch (mon->type)
     {
@@ -2092,7 +2092,7 @@ static std::string describe_draconian_role(const monsters *mon)
     }
 }
 
-static std::string describe_draconian_colour(int species)
+static std::string _describe_draconian_colour(int species)
 {
     switch (species)
     {
@@ -2116,7 +2116,7 @@ static std::string describe_draconian_colour(int species)
     return ("");
 }
 
-static std::string describe_draconian(const monsters *mon)
+static std::string _describe_draconian(const monsters *mon)
 {
     std::string description;
     const int subsp = draco_subspecies( mon );
@@ -2145,14 +2145,16 @@ static std::string describe_draconian(const monsters *mon)
 
     if (subsp != MONS_DRACONIAN)
     {
-        if (describe_draconian_colour(subsp) != "")
-            description += "  " + describe_draconian_colour(subsp);
+        const std::string drac_col = _describe_draconian_colour(subsp);
+        if (!drac_col.empty())
+            description += "  " + drac_col;
     }
 
     if (subsp != mon->type)
     {
-        if (describe_draconian_role(mon) != "")
-            description += "  " + describe_draconian_role(mon);
+        const std::string drac_role = _describe_draconian_role(mon);
+        if (!drac_role.empty())
+            description += "  " + drac_role;
     }
 
     return (description);
@@ -2277,7 +2279,7 @@ void describe_monsters(monsters& mons)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        description << describe_draconian( &mons );
+        description << _describe_draconian( &mons );
         break;
     }
     case MONS_PLAYER_GHOST:
@@ -2443,25 +2445,25 @@ std::string ghost_description(const monsters &mons, bool concise)
 
 extern ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES];
 
-static bool print_god_abil_desc( int god, int numpower )
+static bool _print_god_abil_desc( int god, int numpower )
 {
     const char* pmsg = god_gain_power_messages[god][numpower];
 
-    // if no message then no power
+    // If no message then no power.
     if ( !pmsg[0] )
         return false;
 
     std::ostringstream buf;
 
     if ( isupper(pmsg[0]) )
-        buf << pmsg;            // complete sentence given
+        buf << pmsg;            // Complete sentence given.
     else
         buf << "You can " << pmsg << ".";
 
-    // this might be ABIL_NON_ABILITY for passive abilities
+    // This might be ABIL_NON_ABILITY for passive abilities.
     const ability_type abil = god_abilities[god][numpower];
 
-    if ( abil != ABIL_NON_ABILITY )
+    if (abil != ABIL_NON_ABILITY)
     {
         const int spacesleft = 79 - buf.str().length();
         const std::string cost = "(" + make_cost_description(abil) + ")";
@@ -2472,7 +2474,7 @@ static bool print_god_abil_desc( int god, int numpower )
     return true;
 }
 
-static std::string describe_favour_generic(god_type which_god)
+static std::string _describe_favour_generic(god_type which_god)
 {
     const std::string godname = god_name(which_god);
     return (you.piety > 130) ? "A prized avatar of " + godname + ".":
@@ -2503,11 +2505,11 @@ std::string describe_favour(god_type which_god)
                                : "You should show more discipline.";
     }
 
-    return (which_god == GOD_XOM) ?
-            describe_xom_favour() : describe_favour_generic(which_god);
+    return (which_god == GOD_XOM) ? describe_xom_favour()
+                                  : _describe_favour_generic(which_god);
 }
 
-static std::string religion_help( god_type god )
+static std::string _religion_help( god_type god )
 {
     std::string result = "";
 
@@ -2561,8 +2563,10 @@ static std::string religion_help( god_type god )
 
     case GOD_VEHUMET:
         if (you.piety >= 50)
+        {
             result += "Vehumet assists you in casting Conjurations"
                       " and Summonings.";
+        }
         break;
 
     default:
@@ -2605,17 +2609,17 @@ void describe_god( god_type which_god, bool give_title )
     //mv: print god's name and title - if you can think up better titles
     //I have nothing against
     textcolor(colour);
-    cprintf( "%s", god_name(which_god, true).c_str()); //print long god's name
+    cprintf( "%s", god_name(which_god, true).c_str()); // Print long god's name.
     cprintf (EOL EOL);
 
-    //mv: print god's description
+    //mv: Print god's description.
     textcolor(LIGHTGRAY);
 
     std::string god_desc = getLongDescription(god_name(which_god, false));
     const int numcols = get_number_of_cols();
     cprintf("%s", get_linebreak_string(god_desc.c_str(), numcols).c_str());
 
-    // title only shown for our own god
+    // Title only shown for our own god.
     if (you.religion == which_god)
     {
         //mv: print title based on piety
@@ -2814,17 +2818,19 @@ void describe_god( god_type which_god, bool give_title )
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
         {
-            for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
-                if ( you.piety >= piety_breakpoint(i) )
-                    if (print_god_abil_desc(which_god, i))
-                        have_any = true;
+            for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
+                if (you.piety >= piety_breakpoint(i)
+                    && _print_god_abil_desc(which_god, i))
+                {
+                    have_any = true;
+                }
         }
-        if ( !have_any )
+        if (!have_any)
             cprintf( "None." EOL );
     }
 
-    // only give this additional information for worshippers
-    if ( which_god == you.religion )
+    // Only give this additional information for worshippers.
+    if (which_god == you.religion)
     {
         if (you.religion == GOD_ZIN
             || you.religion == GOD_SHINING_ONE
@@ -2836,7 +2842,7 @@ void describe_god( god_type which_god, bool give_title )
             cgotoxy(1, get_number_of_lines() - 2, GOTO_CRT);
 
         textcolor(LIGHTGRAY);
-        cprintf(get_linebreak_string(religion_help(which_god),
+        cprintf(get_linebreak_string(_religion_help(which_god),
                                      numcols).c_str());
     }
 

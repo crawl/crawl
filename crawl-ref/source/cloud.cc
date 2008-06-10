@@ -29,7 +29,7 @@
 #include "terrain.h"
 
 // Returns true if this cloud spreads out as it dissipates.
-static unsigned char actual_spread_rate(cloud_type type, int spread_rate)
+static unsigned char _actual_spread_rate(cloud_type type, int spread_rate)
 {
     if (spread_rate >= 0)
         return (unsigned char) spread_rate;
@@ -45,39 +45,39 @@ static unsigned char actual_spread_rate(cloud_type type, int spread_rate)
     }
 }
 
-static void new_cloud( int cloud, cloud_type type, int x, int y, int decay,
-                       kill_category whose, unsigned char spread_rate )
+static void _new_cloud( int cloud, cloud_type type, int x, int y, int decay,
+                        kill_category whose, unsigned char spread_rate )
 {
     ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
 
-    env.cloud[ cloud ].type = type;
-    env.cloud[ cloud ].decay = decay;
-    env.cloud[ cloud ].x = x;
-    env.cloud[ cloud ].y = y;
-    env.cloud[ cloud ].whose = whose;
+    env.cloud[ cloud ].type        = type;
+    env.cloud[ cloud ].decay       = decay;
+    env.cloud[ cloud ].x           = x;
+    env.cloud[ cloud ].y           = y;
+    env.cloud[ cloud ].whose       = whose;
     env.cloud[ cloud ].spread_rate = spread_rate;
-    env.cgrid[ x ][ y ] = cloud;
+    env.cgrid[ x ][ y ]            = cloud;
     env.cloud_no++;
 }
 
-static void place_new_cloud(cloud_type cltype, int x, int y, int decay,
-                            kill_category whose, int spread_rate)
+static void _place_new_cloud(cloud_type cltype, int x, int y, int decay,
+                             kill_category whose, int spread_rate)
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
 
-    // find slot for cloud
+    // Find slot for cloud.
     for (int ci = 0; ci < MAX_CLOUDS; ci++)
     {
         if (env.cloud[ci].type == CLOUD_NONE)   // i.e., is empty
         {
-            new_cloud( ci, cltype, x, y, decay, whose, spread_rate );
+            _new_cloud( ci, cltype, x, y, decay, whose, spread_rate );
             break;
         }
     }
 }
 
-static int spread_cloud(const cloud_struct &cloud)
+static int _spread_cloud(const cloud_struct &cloud)
 {
     const int spreadch = cloud.decay > 30? 80 :
                          cloud.decay > 20? 50 :
@@ -103,8 +103,8 @@ static int spread_cloud(const cloud_struct &cloud)
             if (newdecay >= cloud.decay)
                 newdecay = cloud.decay - 1;
 
-            place_new_cloud( cloud.type, x, y, newdecay, cloud.whose,
-                             cloud.spread_rate );
+            _place_new_cloud( cloud.type, x, y, newdecay, cloud.whose,
+                              cloud.spread_rate );
 
             extra_decay += 8;
         }
@@ -113,30 +113,30 @@ static int spread_cloud(const cloud_struct &cloud)
     return (extra_decay);
 }
 
-static void dissipate_cloud(int cc, cloud_struct &cloud, int dissipate)
+static void _dissipate_cloud(int cc, cloud_struct &cloud, int dissipate)
 {
-    // apply calculated rate to the actual cloud:
+    // Apply calculated rate to the actual cloud.
     cloud.decay -= dissipate;
 
     if (random2(100) < cloud.spread_rate)
     {
         cloud.spread_rate -= div_rand_round(cloud.spread_rate, 10);
-        cloud.decay -= spread_cloud(cloud);
+        cloud.decay       -= _spread_cloud(cloud);
     }
 
-    // check for total dissipation and handle accordingly:
+    // Check for total dissipation and handle accordingly.
     if (cloud.decay < 1)
         delete_cloud( cc );
 }
 
 void manage_clouds(void)
 {
-    // amount which cloud dissipates - must be unsigned! {dlb}
+    // Amount which cloud dissipates - must be unsigned! {dlb}
     unsigned int dissipate = 0;
 
     for (unsigned char cc = 0; cc < MAX_CLOUDS; cc++)
     {
-        if (env.cloud[cc].type == CLOUD_NONE)   // no cloud -> next iteration
+        if (env.cloud[cc].type == CLOUD_NONE)   // No cloud -> next iteration.
             continue;
 
         dissipate = you.time_taken;
@@ -157,11 +157,9 @@ void manage_clouds(void)
         expose_items_to_element(cloud2beam(env.cloud[cc].type),
                                 env.cloud[cc].x, env.cloud[cc].y);
 
-        dissipate_cloud(cc, env.cloud[cc], dissipate);
+        _dissipate_cloud(cc, env.cloud[cc], dissipate);
     }
-
-    return;
-}                               // end manage_clouds()
+}
 
 void delete_cloud( int cloud )
 {
@@ -170,12 +168,12 @@ void delete_cloud( int cloud )
         const int cloud_x = env.cloud[ cloud ].x;
         const int cloud_y = env.cloud[ cloud ].y;
 
-        env.cloud[ cloud ].type = CLOUD_NONE;
-        env.cloud[ cloud ].decay = 0;
-        env.cloud[ cloud ].x = 0;
-        env.cloud[ cloud ].y = 0;
-        env.cloud[ cloud ].whose = KC_OTHER;
-        env.cloud[ cloud ].spread_rate = 0;
+        env.cloud[ cloud ].type         = CLOUD_NONE;
+        env.cloud[ cloud ].decay        = 0;
+        env.cloud[ cloud ].x            = 0;
+        env.cloud[ cloud ].y            = 0;
+        env.cloud[ cloud ].whose        = KC_OTHER;
+        env.cloud[ cloud ].spread_rate  = 0;
         env.cgrid[ cloud_x ][ cloud_y ] = EMPTY_CLOUD;
         env.cloud_no--;
     }
@@ -191,8 +189,8 @@ void move_cloud( int cloud, int new_x, int new_y )
         const int old_y = env.cloud[ cloud ].y;
 
         env.cgrid[ new_x ][ new_y ] = cloud;
-        env.cloud[ cloud ].x = new_x;
-        env.cloud[ cloud ].y = new_y;
+        env.cloud[ cloud ].x        = new_x;
+        env.cloud[ cloud ].y        = new_y;
         env.cgrid[ old_x ][ old_y ] = EMPTY_CLOUD;
     }
 }
@@ -235,8 +233,8 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
     // that is, another cloud already there {dlb}
     if (target_cgrid != EMPTY_CLOUD)
     {
-        if ((env.cloud[ target_cgrid ].type >= CLOUD_GREY_SMOKE
-                && env.cloud[ target_cgrid ].type <= CLOUD_STEAM)
+        if (env.cloud[ target_cgrid ].type >= CLOUD_GREY_SMOKE
+                && env.cloud[ target_cgrid ].type <= CLOUD_STEAM
             || env.cloud[ target_cgrid ].type == CLOUD_STINK
             || env.cloud[ target_cgrid ].type == CLOUD_BLACK_SMOKE
             || env.cloud[ target_cgrid ].type == CLOUD_MIST
@@ -251,18 +249,18 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
         }
     }
 
-    unsigned char spread_rate = actual_spread_rate( cl_type, _spread_rate );
+    unsigned char spread_rate = _actual_spread_rate( cl_type, _spread_rate );
 
-    // too many clouds
+    // Too many clouds.
     if (env.cloud_no >= MAX_CLOUDS)
     {
-        // default to random in case there's no low quality clouds
+        // Default to random in case there's no low quality clouds.
         int cl_del = random2( MAX_CLOUDS );
 
         for (int ci = 0; ci < MAX_CLOUDS; ci++)
         {
-            if ((env.cloud[ ci ].type >= CLOUD_GREY_SMOKE
-                    && env.cloud[ ci ].type <= CLOUD_STEAM)
+            if (env.cloud[ ci ].type >= CLOUD_GREY_SMOKE
+                    && env.cloud[ ci ].type <= CLOUD_STEAM
                 || env.cloud[ ci ].type == CLOUD_STINK
                 || env.cloud[ ci ].type == CLOUD_BLACK_SMOKE
                 || env.cloud[ ci ].type == CLOUD_MIST
@@ -277,24 +275,26 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
         cl_new = cl_del;
     }
 
-    // create new cloud
+    // Create new cloud.
     if (cl_new != -1)
-        new_cloud( cl_new, cl_type, ctarget_x, ctarget_y, cl_range * 10,
-                   whose, spread_rate );
+    {
+        _new_cloud( cl_new, cl_type, ctarget_x, ctarget_y, cl_range * 10,
+                    whose, spread_rate );
+    }
     else
     {
-        // find slot for cloud
+        // Find slot for cloud.
         for (int ci = 0; ci < MAX_CLOUDS; ci++)
         {
             if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
             {
-                new_cloud( ci, cl_type, ctarget_x, ctarget_y, cl_range * 10,
-                           whose, spread_rate );
+                _new_cloud( ci, cl_type, ctarget_x, ctarget_y, cl_range * 10,
+                            whose, spread_rate );
                 break;
             }
         }
     }
-}                               // end place_cloud();
+}
 
 bool is_opaque_cloud(unsigned char cloud_idx)
 {

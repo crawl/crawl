@@ -81,7 +81,7 @@ static int spready[] = { -1, 1, 0, 0 };
 static int opdir[]   = { 2, 1, 4, 3 };
 static FixedArray < bool, 19, 19 > explode_map;
 
-// helper functions (some of these should probably be public):
+// Helper functions (some of these should probably be public).
 static void _sticky_flame_monster(int mn, kill_category who, int hurt_final);
 static bool _affects_wall(const bolt &beam, int wall_feature);
 static bool _isBouncy(bolt &beam, unsigned char gridtype);

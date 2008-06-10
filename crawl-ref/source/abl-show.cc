@@ -90,7 +90,7 @@ enum ability_flag_type
 };
 
 static void _lugonu_bends_space();
-static int _find_ability_slot( ability_type which_ability );
+static int  _find_ability_slot( ability_type which_ability );
 static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil);
@@ -1980,10 +1980,8 @@ static void _add_talent(std::vector<talent>& vec, const ability_type ability,
                         bool check_confused)
 {
     const talent t = _get_talent(ability, check_confused);
-    if ( t.which != ABIL_NON_ABILITY )
-    {
+    if (t.which != ABIL_NON_ABILITY)
         vec.push_back(t);
-    }
 }
 
 std::vector<talent> your_talents( bool check_confused )
@@ -2042,7 +2040,7 @@ std::vector<talent> your_talents( bool check_confused )
         }
     }
 
-    // Mutations
+    // Mutations.
     if (player_mutation_level(MUT_MAPPING))
         _add_talent(talents, ABIL_MAPPING, check_confused );
 
@@ -2088,13 +2086,13 @@ std::vector<talent> your_talents( bool check_confused )
     if (player_mutation_level(MUT_TELEPORT_AT_WILL))
         _add_talent(talents, ABIL_TELEPORTATION, check_confused );
 
-    // Religious abilities
+    // Religious abilities.
     if (you.religion == GOD_ELYVILON)
         _add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused );
     else if (you.religion == GOD_TROG)
         _add_talent(talents, ABIL_TROG_BURN_BOOKS, check_confused );
 
-    // gods take abilities away until penance completed -- bwr
+    // Gods take abilities away until penance completed. -- bwr
     if (!player_under_penance() && !silenced( you.x_pos, you.y_pos ))
     {
         for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
@@ -2108,12 +2106,12 @@ std::vector<talent> your_talents( bool check_confused )
         }
     }
 
-    // and finally, the ability to opt-out of your faith {dlb}:
+    // And finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced( you.x_pos, you.y_pos ))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused );
 
-    //jmf: check for breath weapons -- they're exclusive of each other I hope!
-    //     better make better ones first.
+    //jmf: Check for breath weapons -- they're exclusive of each other, I hope!
+    //     Make better come ones first.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
         _add_talent(talents, ABIL_BREATHE_HELLFIRE, check_confused );
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
@@ -2122,11 +2120,11 @@ std::vector<talent> your_talents( bool check_confused )
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused );
     }
 
-    // checking for unreleased delayed fireball
+    // Checking for unreleased delayed Fireball.
     if (you.attribute[ ATTR_DELAYED_FIREBALL ])
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused );
 
-    // evocations from items:
+    // Evocations from items.
     if (scan_randarts(RAP_BLINK))
         _add_talent(talents, ABIL_EVOKE_BLINK, check_confused );
 
@@ -2223,29 +2221,31 @@ static void _set_god_ability_helper( ability_type abil, char letter )
     const int index = letter_to_index( letter );
 
     for (i = 0; i < 52; i++)
-    {
         if (you.ability_letter_table[i] == abil)
             break;
-    }
 
-    if (i == 52)        // ability is not already assigned
+    if (i == 52)    // Ability is not already assigned.
     {
-        // if slot is unoccupied, move in
+        // If slot is unoccupied, move in.
         if (you.ability_letter_table[index] == ABIL_NON_ABILITY)
             you.ability_letter_table[index] = abil;
     }
 }
 
-// return GOD_NO_GOD if it isn't a god ability, otherwise return
-// the index of the god.
+// Return GOD_NO_GOD if it isn't a god ability, otherwise return
+// the index of the god..
 static int _is_god_ability(int abil)
 {
-    if ( abil == ABIL_NON_ABILITY )
+    if (abil == ABIL_NON_ABILITY)
         return GOD_NO_GOD;
-    for ( int i = 0; i < MAX_NUM_GODS; ++i )
-        for ( int j = 0; j < MAX_GOD_ABILITIES; ++j )
-            if ( god_abilities[i][j] == abil )
+
+    for (int i = 0; i < MAX_NUM_GODS; ++i)
+        for (int j = 0; j < MAX_GOD_ABILITIES; ++j)
+        {
+            if (god_abilities[i][j] == abil)
                 return i;
+        }
+
     return GOD_NO_GOD;
 }
 
@@ -2257,19 +2257,19 @@ void set_god_ability_slots( void )
 
     _set_god_ability_helper( ABIL_RENOUNCE_RELIGION, 'X' );
 
-    // clear out other god invocations
+    // Clear out other god invocations.
     for (i = 0; i < 52; i++)
     {
         const int god = _is_god_ability(you.ability_letter_table[i]);
-        if ( god != GOD_NO_GOD && god != you.religion )
+        if (god != GOD_NO_GOD && god != you.religion)
             you.ability_letter_table[i] = ABIL_NON_ABILITY;
     }
 
-    // finally, add in current god's invocations in traditional slots:
+    // Finally, add in current god's invocations in traditional slots.
     int num = 0;
-    for ( i = 0; i < MAX_GOD_ABILITIES; ++i )
+    for (i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
-        if ( god_abilities[you.religion][i] != ABIL_NON_ABILITY )
+        if (god_abilities[you.religion][i] != ABIL_NON_ABILITY)
         {
             _set_god_ability_helper(god_abilities[you.religion][i], 'a' + num);
             ++num;
@@ -2278,19 +2278,17 @@ void set_god_ability_slots( void )
 }
 
 
-// returns an index (0-51) if successful, -1 if you should
-// just use the next one
+// Returns an index (0-51) if successful, -1 if you should
+// just use the next one.
 static int _find_ability_slot( ability_type which_ability )
 {
     for (int slot = 0; slot < 52; slot++)
-    {
         if (you.ability_letter_table[slot] == which_ability)
             return slot;
-    }
 
-    // no requested slot, find new one and make it preferred.
+    // No requested slot, find new one and make it preferred.
 
-    // skip over a-e (invocations)
+    // Skip over a-e (invocations)
     for (int slot = 5; slot < 52; slot++)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
@@ -2300,7 +2298,7 @@ static int _find_ability_slot( ability_type which_ability )
         }
     }
 
-    // if we can't find anything else, try a-e
+    // If we can't find anything else, try a-e.
     for (int slot = 4; slot >= 0; slot--)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
@@ -2374,5 +2372,5 @@ static void _lugonu_bends_space()
 
 int generic_cost::cost() const
 {
-    return base + (add > 0? random2avg(add, rolls) : 0);
+    return base + (add > 0 ? random2avg(add, rolls) : 0);
 }

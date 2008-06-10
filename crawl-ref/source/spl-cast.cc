@@ -3815,16 +3815,16 @@ int spell_power_colour(spell_type spell)
 
 static int _power_to_barcount( int power )
 {
-    if ( power == -1 )
+    if (power == -1)
         return -1;
 
     const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
     int result = 0;
-    for ( unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i )
-        if ( power > breakpoints[i] )
+    for (unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i)
+        if (power > breakpoints[i])
             ++result;
 
-    return result + 1;
+    return (result + 1);
 }
 
 int spell_power_bars( spell_type spell )
