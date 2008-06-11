@@ -201,7 +201,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     }
 
 #ifdef USE_SEMI_CONTROLLED_BLINK
-    //jmf: add back control, but effect is cast_semi_controlled_blink(pow)
+    //jmf: Add back control, but effect is cast_semi_controlled_blink(pow).
     else if (player_control_teleport() && !you.duration[DUR_CONF]
              && allow_partial_control && allow_control_teleport())
     {
@@ -215,7 +215,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     {
         mpr("You blink.");
 
-        // no longer held in net
+        // No longer held in net.
         clear_trapping_net();
 
         succ = true;

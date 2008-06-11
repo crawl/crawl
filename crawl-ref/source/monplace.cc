@@ -2551,6 +2551,12 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
         }
     }
 
+    // Add the actual target to the list of waypoints, so we can later check
+    // whether a tracked enemy has moved too much, and we have to update the
+    // path.
+    if (pos != path[path.size() - 1])
+        waypoints.push_back(pos);
+
     return waypoints;
 }
 

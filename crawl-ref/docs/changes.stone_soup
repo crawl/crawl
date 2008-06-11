@@ -5,6 +5,16 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
 Breaks saves and bones compatibility.
 
+
+Highlights
+----------
+* Many interface improvements.
+* Greatly improved Tiles.
+* Added Vampire species.
+* Overhaul of the good gods.
+* Smarter monsters.
+
+
 Interface
 ---------
 * Overhauled key settings of a number of commands. 
@@ -45,7 +55,6 @@ Characters
 ----------
 * Added Vampire species.
 * Removed Glamour.
-* New order of species and classes on the character selection screen.
 * Red/White Draconians gain heat/cold resistance at xl 14 (rather than 18).
 * Mutations: Removed forgetfulness; introduced fur, shouting, +mp/-mp.
 * Added +1 damage bonus for orcs and dwarves throwing racial gear.
@@ -100,6 +109,7 @@ Monsters
 * Improved trap handling for intelligent monsters.
 * Improved control over friendly monsters.
 * Smarter pickup handling.
+* Implemented patrolling and monster pathfinding.
 * Fixed friendlies accidentally shooting the player.
 * Fixed monsters firing/reaching through walls.
 * Fixed summoned monsters sharing a square with the player.

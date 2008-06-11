@@ -54,3 +54,7 @@ butcher interface.
 If you choose to go with the new keyset or the new butcher interface and
 you intend to use your old macros, you'll need to look through your 
 macro.txt file.
+
+There are a number of new options, some of them outsourced into various
+files in the /settings folder, so if you intend to use your old init file,
+you may still want to at least look through the new one.

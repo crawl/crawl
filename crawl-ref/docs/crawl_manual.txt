@@ -216,10 +216,10 @@ The next numbers provide additional information about your character.
 Armour Class: Abbreviated to "AC". When something injures you, your AC 
               reduces the amount of damage you suffer.
 
-Shield:       Abbreviated to "Sh". This number is a measure of how good
+Shield:       Abbreviated to "SH". This number is a measure of how good
               your shield (if any) is at blocking attacks.
 
-Evasion:      Abbreviated to "Ev". This helps you to avoid being hit by 
+Evasion:      Abbreviated to "EV". This helps you to avoid being hit by 
               unpleasant things (but will not reduce the amount of 
               damage you suffer if you do get hit).
               For Armour Class, Shield and Evasion, more is better.

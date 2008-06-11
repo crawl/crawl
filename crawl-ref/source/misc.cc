@@ -1744,15 +1744,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     level_id shaft_dest;
     int      shaft_level = -1;
 
-#ifdef SHUT_LABYRINTH
-    if (stair_find == DNGN_ENTER_LABYRINTH)
-    {
-        mpr("Sorry, this section of the dungeon is closed for fumigation.");
-        mpr("Try again next release.");
-        return;
-    }
-#endif
-
     // Probably still need this check here (teleportation) -- bwr
     if (grid_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
     {
@@ -1767,9 +1758,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         && stair_find <= DNGN_ESCAPE_HATCH_DOWN
         && player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
+        // Down stairs in vestibule are one-way!
         mpr("A mysterious force prevents you from descending the staircase.");
         return;
-    }  // Down stairs in vestibule are one-way!
+    }
 
     if (stair_find == DNGN_STONE_ARCH)
     {

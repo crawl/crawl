@@ -12,7 +12,7 @@
  *      that we shouldn't run into any problems on systems without precompiled
  *      headers.
  *
- *  Copyright © 1999 Jesse Jones.
+ *  Copyright ï¿½ 1999 Jesse Jones.
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
  *
@@ -55,18 +55,18 @@
 // not be available on all platforms. In most cases you want to set
 // this option from your makefile, not directly in AppHdr.h (See
 // INSTALL for more details.)
-// 
+//
 // #define UNICODE_GLYPHS
 
 // Uncomment to prevent Crawl from looking for a list of saves when
 // asking the player to enter a name. This can speed up startup
 // considerably if you have a lot of saves lying around (even more so
 // if the saves are zipped).
-// 
+//
 // #define DISABLE_SAVEGAME_LISTS
 
 // Uncomment to prevent Crawl from remembering startup preferences.
-// 
+//
 // #define DISABLE_STICKY_STARTUP_OPTIONS
 
 // OS X's Terminal.app has color handling problems; dark grey is
@@ -111,9 +111,9 @@
     #define EOL "\n"
 
     // Unix builds use curses/ncurses, which supports colour.
-    // 
+    //
     // This will allow using the standout attribute in curses to
-    // mark friendly monsters... results depend on the type of 
+    // mark friendly monsters... results depend on the type of
     // term used... under X Windows try "rxvt".
     #define USE_COLOUR_OPTS
 
@@ -125,11 +125,11 @@
     // curses implementations.
     #define CURSES_SET_ESCDELAY 20
 
-    // Use this to seed the PRNG with a bit more than just time()... turning 
-    // this off is perfectly okay, the game just becomes more exploitable 
+    // Use this to seed the PRNG with a bit more than just time()... turning
+    // this off is perfectly okay, the game just becomes more exploitable
     // with a bit of hacking (ie only by people who know how).
     //
-    // For now, we'll make it default to on for Linux (who should have 
+    // For now, we'll make it default to on for Linux (who should have
     // no problems with compiling this).
     #define USE_MORE_SECURE_SEED
 
@@ -152,12 +152,12 @@
     // curses "bold == lighter" 16 colour mode. -- bwr
     //
     // Darkgrey is a particular problem in the 8 colour mode.  Popular values
-    // for replacing it around here are: WHITE, BLUE, and MAGENTA.  THis 
+    // for replacing it around here are: WHITE, BLUE, and MAGENTA.  This
     // option has no affect in 16 colour mode. -- bwr
     //
     // #define USE_8_COLOUR_TERM_MAP
     // #define COL_TO_REPLACE_DARKGREY     MAGENTA
-    
+
     #include "libunix.h"
 
 #elif defined(DOS)
@@ -290,12 +290,12 @@
     // Scan for bad items before every input (may be slow)
     //
     // This function might slow things down quite a bit
-    // on slow machines because it's going to go through 
-    // every item on the level and do string comparisons 
+    // on slow machines because it's going to go through
+    // every item on the level and do string comparisons
     // against the name.  Still, it is nice to know the
     // turn in which "bad" items appear.
     #define DEBUG_ITEM_SCAN     1
-#endif 
+#endif
 
 #ifdef _DEBUG       // this is how MSVC signals a debug build
     #define DEBUG       1
@@ -316,7 +316,7 @@
 // =========================================================================
 //  Lua user scripts (NOTE: this may also be enabled in your makefile!)
 // =========================================================================
-// 
+//
 // Enables Crawl's Lua bindings for user scripts. See the section on
 // Lua in INSTALL for more information. NOTE: CLUA_BINDINGS is enabled
 // by default in all standard makefiles. Commenting it out here may
@@ -335,10 +335,6 @@
 // clamp time between command inputs at 5 minutes when reporting play time.
 #define IDLE_TIME_CLAMP  (5 * 60)
 
-// Uncomment this if you find the labyrinth to be buggy and want to
-// remove it from the game.
-// #define SHUT_LABYRINTH
-
 // Set this to the number of runes that will be required to enter Zot's
 // domain.  You shouldn't set this really high unless you want to
 // make players spend far too much time in Pandemonium/The Abyss.
@@ -351,8 +347,8 @@
 #define SCORE_FILE_ENTRIES      100
 #endif
 
-// Option to allow scoring of wizard characters.  Note that even if 
-// you define this option, wizard characters are still tagged as such 
+// Option to allow scoring of wizard characters.  Note that even if
+// you define this option, wizard characters are still tagged as such
 // in the score file.
 // #define SCORE_WIZARD_CHARACTERS
 
@@ -375,7 +371,7 @@
 // mv: (new 9 Aug 01) turns off missile trails, might be slow on some computers
 // #define MISSILE_TRAILS_OFF
 
-// bwr: set this to non-zero if you want to know the pluses, "runed" status 
+// bwr: set this to non-zero if you want to know the pluses, "runed" status
 // of the monster's weapons in the hiscore file.
 // #define HISCORE_WEAPON_DETAIL   1
 

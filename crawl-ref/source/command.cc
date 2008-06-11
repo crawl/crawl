@@ -109,7 +109,7 @@ static std::string _get_version_information(void)
 
 static std::string _get_version_features(void)
 {
-    std::string result  = "FEATURES" EOL;
+    std::string result  = "<w>FEATURES</w>" EOL;
                 result += "--------" EOL;
 
     for (unsigned int i = 0; i < ARRAYSZ(features); i++)
@@ -118,7 +118,7 @@ static std::string _get_version_features(void)
         result += features[i];
         result += EOL;
     }
-    result += "\n\n";
+    result += "\n";
 
     return (result);
 }
@@ -126,6 +126,89 @@ static std::string _get_version_features(void)
 static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
                                   int first_hotkey  = 0,
                                   bool auto_hotkeys = false);
+
+static std::string _get_version_changes(void)
+{
+    std::string result = "";
+
+    bool start = false;
+    // Attempts to print "Highlights" of the latest version.
+    FILE* fp = fopen(datafile_path("changes.stone_soup", true).c_str(), "r");
+    if (fp)
+    {
+        char buf[200];
+        std::string help;
+        bool skip_lines = true;
+        while (fgets(buf, sizeof buf, fp))
+        {
+            // Remove trailing spaces.
+            for (int i = strlen(buf) - 1; i >= 0; i++)
+            {
+                if (isspace( buf[i] ))
+                    buf[i] = 0;
+                else
+                    break;
+            }
+            help = buf;
+            // Give up if you encountered the second set of underliners
+            // and still haven't found Highlights.
+            if (help.find("---") != std::string::npos)
+            {
+                if (skip_lines)
+                {
+                    skip_lines = false;
+                    continue;
+                }
+                else if (!start)
+                    break;
+            }
+
+            if (help.find("Highlights") != std::string::npos)
+            {
+                // Highlight the Highlights, so to speak.
+                std::string text  = "<w>";
+                            text += buf;
+                            text += "</w>";
+                            text += EOL;
+                result += text;
+                // And start printing from now on.
+                start = true;
+            }
+            else if (!start)
+                continue;
+            else if (buf[0] == 0)
+            {
+                // Stop reading and copying text with the first empty line
+                // following the Highlights section.
+                break;
+            }
+            else
+            {
+                result += buf;
+                result += EOL;
+            }
+        }
+    }
+    fclose(fp);
+
+    // Did we ever get to print the Highlights?
+    if (start)
+    {
+        result += EOL;
+        result += "For a more complete list of changes, see changes.stone_soup "
+                  "in the /docs " EOL
+                  "folder.";
+    }
+    else
+    {
+        result += "For a list of changes, see changes.stone_soup in the /docs "
+                  "folder.";
+    }
+
+    result += "\n\n";
+
+    return (result);
+}
 
 void print_version(void)
 {
@@ -144,6 +227,7 @@ void print_version(void)
 
     cmd_version.add_text(_get_version_information());
     cmd_version.add_text(_get_version_features());
+    cmd_version.add_text(_get_version_changes());
 
     // Read in information about changed in comparison to the latest version.
     FILE* fp = fopen(datafile_path("034_changes.txt", true).c_str(), "r");
