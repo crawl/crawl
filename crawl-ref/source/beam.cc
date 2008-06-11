@@ -161,14 +161,15 @@ static kill_category _whose_kill(const bolt &beam)
     return (KC_OTHER);
 }
 
-// simple animated flash from Rupert Smith (and expanded to be more generic):
-void zap_animation( int colour, const monsters *mon, bool force )
+// A simple animated flash from Rupert Smith (expanded to be more
+// generic).
+void zap_animation(int colour, const monsters *mon, bool force)
 {
     int x = you.x_pos, y = you.y_pos;
 
-    // default to whatever colour magic is today
+    // Default to whatever colour magic is today.
     if (colour == -1)
-        colour = element_colour( EC_MAGIC );
+        colour = element_colour(EC_MAGIC);
 
     if (mon)
     {
@@ -191,8 +192,8 @@ void zap_animation( int colour, const monsters *mon, bool force )
         TileDrawBolt(drawx-1, drawy-1, tileidx_zap(colour));
 #else
         view_update();
-        cgotoxy( drawx, drawy , GOTO_DNGN );
-        put_colour_ch( colour, dchar_glyph( DCHAR_FIRED_ZAP ) );
+        cgotoxy(drawx, drawy, GOTO_DNGN);
+        put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
 #endif
 
         update_screen();
