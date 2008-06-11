@@ -1462,7 +1462,7 @@
     SPELL_POISON_AMMUNITION, "Poison Ammunition",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
      SPFLAG_NONE,
-     4, // jmf: SPTYP_TRANSMIGRATION vs SPTYP_ENCHANTMENT?
+     4,
      0,
      NULL,
      false,

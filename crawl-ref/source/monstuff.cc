@@ -2325,20 +2325,21 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
 
 // If a monster can see but not directly reach the player, and then fails to
 // find a path to get him, mark all surrounding (in a radius of 2) monsters
-// of the same species as also being unable to find a path, so we won't need
-// to calculate again.
+// of the same (or greater) movement restrictions as also being unable to
+// find a path, so we won't need to calculate again.
 // Should there be a direct path to the player for a monster thus marked, it
-// will still be able to come nearer (and the mark will be cleared).
-static void _mark_species_members_player_unreachable(monsters *mon)
+// will still be able to come nearer (and the mark will then be cleared).
+static void _mark_neighbours_player_unreachable(monsters *mon)
 {
-    // Highly intelligent monsters are capable of pathfinding and don't
-    // need their neighbour's advice.
-    if (mons_intel(mon->type) > I_NORMAL)
+    // Highly intelligent monsters are perfectly capable of pathfinding
+    // and don't need their neighbour's advice.
+    const int intel = mons_intel(mon->type);
+    if (intel > I_NORMAL)
         return;
 
-    // We won't be able to find pack members of human unique monsters.
-    if (mons_is_unique(mon->type) && mons_species(mon->type) == MONS_HUMAN)
-        return;
+    bool flies         = mons_flies(mon);
+    bool amphibious    = mons_amphibious(mon);
+    habitat_type habit = mons_habitat(mon);
 
     int x, y;
     monsters *m;
@@ -2364,15 +2365,22 @@ static void _mark_species_members_player_unreachable(monsters *mon)
 
             m = &menv[mgrd[x][y]];
 
-            // Only mark target for monsters of same species.
-            // Restrict to same _type_ for humans (by far the most
-            // versatile species).
-            if (mon->type != m->type
-                && (mon->type == MONS_HUMAN
-                    || mons_species(mon->type) != mons_species(m->type)))
-            {
+            // Don't restrict smarter monsters as they might find a path
+            // a dumber monster wouldn't.
+            if (mons_intel(m->type) > intel)
                 continue;
-            }
+
+            // Monsters of differing habitats might prefer different routes.
+            if (mons_habitat(m) != habit)
+                continue;
+
+            // A flying monster has an advantage over a non-flying one.
+            if (!flies && mons_flies(m))
+                continue;
+
+            // Same for a swimming one, around water.
+            if (you.water_in_sight && !amphibious && mons_amphibious(m))
+                continue;
 
             if (m->travel_target == MTRAV_NONE)
                 m->travel_target = MTRAV_UNREACHABLE;
@@ -2424,14 +2432,8 @@ static void _handle_behaviour(monsters *mon)
         return;
     }
 
-    dungeon_feature_type can_move;
-    if (mons_amphibious(mons_is_zombified(mon) ?
-        mon->base_monster : mon->type))
-    {
-        can_move = DNGN_DEEP_WATER;
-    }
-    else
-        can_move = DNGN_SHALLOW_WATER;
+    const dungeon_feature_type can_move =
+        (mons_amphibious(mon)) ? DNGN_DEEP_WATER : DNGN_SHALLOW_WATER;
 
     // Validate current target exists.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
@@ -2543,7 +2545,7 @@ static void _handle_behaviour(monsters *mon)
             {
                 foe_x   = you.x_pos;
                 foe_y   = you.y_pos;
-                proxFoe = proxPlayer;   // take invis into account
+                proxFoe = proxPlayer;   // Take invis into account.
             }
             else
             {
@@ -2683,9 +2685,41 @@ static void _handle_behaviour(monsters *mon)
 
             // Monster can see foe: continue 'tracking'
             // by updating target x,y.
-            if (mon->foe == MHITYOU)
+            if (mon->foe == MHITYOU && proxPlayer)
             {
-                if (proxPlayer && !trans_wall_block)
+                bool potentially_blocking = trans_wall_block;
+
+                // Smart monsters that can fire through walls won't use
+                // pathfinding.
+                if (potentially_blocking && mons_intel(mon->type) >= I_NORMAL
+                    && mons_has_los_ability(mon->type))
+                {
+                    potentially_blocking = false;
+                }
+                else
+                {
+                    // Flying monsters don't see water/lava as obstacle.
+                    // Also don't use pathfinding if the monster can shoot
+                    // across the blocking terrain, and is smart enough to
+                    // realize that.
+                    if (!potentially_blocking && !mons_flies(mon)
+                        && (mons_intel(mon->type) < I_NORMAL
+                            || !mons_has_ranged_spell(mon)
+                               && !mons_has_ranged_attack(mon)))
+                    {
+                        const habitat_type habit = mons_habitat(mon);
+                        if (you.lava_in_sight && habit != HT_LAVA
+                            || you.water_in_sight && habit != HT_WATER
+                               && !mons_amphibious(mon))
+                        {
+                            potentially_blocking = true;
+                        }
+                    }
+                }
+
+                if (!potentially_blocking
+                    || grid_see_grid(mon->x, mon->y, you.x_pos, you.y_pos,
+                                     can_move))
                 {
                     if (mon->travel_target != MTRAV_PATROL
                         && mon->travel_target != MTRAV_NONE)
@@ -2695,9 +2729,8 @@ static void _handle_behaviour(monsters *mon)
                         mon->travel_target = MTRAV_NONE;
                     }
                 }
-                else if (proxPlayer && trans_wall_block
-                         && (mon->travel_target != MTRAV_UNREACHABLE
-                             || one_chance_in(12)))
+                else if (mon->travel_target != MTRAV_UNREACHABLE
+                         || one_chance_in(12))
                 {
 #ifdef DEBUG_PATHFIND
                     mprf("%s: Player out of reach! What now?",
@@ -2711,8 +2744,8 @@ static void _handle_behaviour(monsters *mon)
 #endif
                         int len = mon->travel_path.size();
                         coord_def targ = mon->travel_path[len - 1];
-                        if (grid_see_grid(targ.x, targ.y, you.x_pos, you.y_pos)
-                            && !trans_wall_blocking(targ.x, targ.y))
+                        if (grid_see_grid(targ.x, targ.y, you.x_pos, you.y_pos,
+                                          can_move))
                         {
 #ifdef DEBUG_PATHFIND
                             mpr("Target still valid?");
@@ -2817,7 +2850,8 @@ static void _handle_behaviour(monsters *mon)
                                 mpr("No path found!");
 #endif
                                 mon->travel_target = MTRAV_UNREACHABLE;
-                                _mark_species_members_player_unreachable(mon);
+                                // Pass information on to nearby monsters.
+                                _mark_neighbours_player_unreachable(mon);
                             }
                         }
                         else
@@ -2826,6 +2860,7 @@ static void _handle_behaviour(monsters *mon)
                             mpr("No path found!");
 #endif
                             mon->travel_target = MTRAV_UNREACHABLE;
+                            _mark_neighbours_player_unreachable(mon);
                         }
                     }
                 }
@@ -6496,7 +6531,7 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
 
     // Bounds check - don't consider moving out of grid!
     if (!inside_level_bounds(targ_x, targ_y))
-        return false;
+        return (false);
 
     // Non-friendly and non-good neutral monsters won't enter sanctuaries.
     if (!mons_wont_attack(monster)
@@ -6542,26 +6577,26 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         if (targ_x <= 7 || targ_x >= (GXM - 8)
             || targ_y <= 7 || targ_y >= (GYM - 8))
         {
-            return false;
+            return (false);
         }
 
         // Don't burrow at an angle (legacy behaviour).
         if (count_x != 0 && count_y != 0)
-            return false;
+            return (false);
     }
     else if (!monster->can_pass_through_feat(target_grid)
              || (no_water && target_grid >= DNGN_DEEP_WATER
                  && target_grid <= DNGN_WATER_STUCK))
     {
-        return false;
+        return (false);
     }
     else if (!_habitat_okay( monster, target_grid ))
     {
-        return false;
+        return (false);
     }
 
     if (monster->type == MONS_WANDERING_MUSHROOM && see_grid(targ_x, targ_y))
-        return false;
+        return (false);
 
     // Water elementals avoid fire and heat.
     if (monster->type == MONS_WATER_ELEMENTAL
@@ -6569,7 +6604,7 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
             || targ_cloud_type == CLOUD_FIRE
             || targ_cloud_type == CLOUD_STEAM))
     {
-        return false;
+        return (false);
     }
 
     // Fire elementals avoid water and cold
@@ -6577,7 +6612,7 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         && (grid_is_watery(target_grid)
             || targ_cloud_type == CLOUD_COLD))
     {
-        return false;
+        return (false);
     }
 
     // Submerged water creatures avoid the shallows where
@@ -6591,7 +6626,7 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         && grd[monster->x][monster->y] == DNGN_DEEP_WATER
         && monster->hit_points < (monster->max_hit_points * 3) / 4)
     {
-        return false;
+        return (false);
     }
 
     // Smacking the player is always a good move if we're
@@ -6606,9 +6641,9 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         if (just_check)
         {
             if (targ_x == monster->x && targ_y == monster->y)
-                return true;
+                return (true);
 
-            return false; // blocks square
+            return (false); // blocks square
         }
 
         const int thismonster = monster_index(monster),
@@ -6619,7 +6654,7 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
             && targmonster != MHITYOU
             && !_mons_can_displace(monster, &menv[targmonster]))
         {
-            return false;
+            return (false);
         }
     }
 
@@ -6631,21 +6666,21 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         && targ_x == you.x_pos
         && targ_y == you.y_pos)
     {
-        return false;
+        return (false);
     }
 
     // Wandering through a trap is OK if we're pretty healthy,
     // really stupid, or immune to the trap.
     const int which_trap = trap_at_xy(targ_x,targ_y);
     if (which_trap >= 0 && !_is_trap_safe(monster, targ_x, targ_y, just_check))
-        return false;
+        return (false);
 
     if (targ_cloud_num != EMPTY_CLOUD)
     {
         if (curr_cloud_num != EMPTY_CLOUD
             && targ_cloud_type == curr_cloud_type)
         {
-            return true;
+            return (true);
         }
 
         switch (targ_cloud_type)
@@ -6656,61 +6691,61 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
 
         case CLOUD_FIRE:
             if (mons_res_fire(monster) > 1)
-                return true;
+                return (true);
 
             if (monster->hit_points >= 15 + random2avg(46, 5))
-                return true;
+                return (true);
             break;
 
         case CLOUD_STINK:
             if (mons_res_poison(monster) > 0)
-                return true;
+                return (true);
             if (1 + random2(5) < monster->hit_dice)
-                return true;
+                return (true);
             if (monster->hit_points >= random2avg(19, 2))
-                return true;
+                return (true);
             break;
 
         case CLOUD_COLD:
             if (mons_res_cold(monster) > 1)
-                return true;
+                return (true);
 
             if (monster->hit_points >= 15 + random2avg(46, 5))
-                return true;
+                return (true);
             break;
 
         case CLOUD_POISON:
             if (mons_res_poison(monster) > 0)
-                return true;
+                return (true);
 
             if (monster->hit_points >= random2avg(37, 4))
-                return true;
+                return (true);
             break;
 
         case CLOUD_GREY_SMOKE:
             // This isn't harmful, but dumb critters might think so.
             if (mons_intel(monster->type) > I_ANIMAL || coinflip())
-                return true;
+                return (true);
 
             if (mons_res_fire(monster) > 0)
-                return true;
+                return (true);
 
             if (monster->hit_points >= random2avg(19, 2))
-                return true;
+                return (true);
             break;
 
         default:
-            return true;   // harmless clouds
+            return (true);   // harmless clouds
         }
 
         // If we get here, the cloud is potentially harmful.
         // Exceedingly dumb creatures will still wander in.
         if (mons_intel(monster->type) != I_PLANT)
-            return false;
+            return (false);
     }
 
     // If we end up here the monster can safely move.
-    return true;
+    return (true);
 }
 
 static bool _monster_move(monsters *monster)
@@ -6725,7 +6760,7 @@ static bool _monster_move(monsters *monster)
     if (monster->type == MONS_TRAPDOOR_SPIDER)
     {
         if(monster->has_ench(ENCH_SUBMERGED))
-           return false;
+           return (false);
 
         // Trapdoor spiders hide if they can't see their target.
         bool can_see;
@@ -6743,7 +6778,7 @@ static bool _monster_move(monsters *monster)
         {
             monster->add_ench(ENCH_SUBMERGED);
             monster->behaviour = BEH_LURK;
-            return false;
+            return (false);
         }
     }
 
@@ -6784,16 +6819,16 @@ static bool _monster_move(monsters *monster)
                 return _do_move_monster(monster, mmov_x, mmov_y);
             }
         }
-        return false;
+        return (false);
     }
 
     // Let's not even bother with this if mmov_x and mmov_y are zero.
     if (mmov_x == 0 && mmov_y == 0)
-        return false;
+        return (false);
 
     if (mons_flies(monster) != FL_NONE
         || habitat != HT_LAND
-        || mons_amphibious(monster->type))
+        || mons_amphibious(monster))
     {
         okmove = DNGN_MINMOVE;
     }
@@ -6836,13 +6871,13 @@ static bool _monster_move(monsters *monster)
             if (mons_itemuse(monster->base_monster) >= MONUSE_OPEN_DOORS)
             {
                 _mons_open_door(monster, newpos);
-                return true;
+                return (true);
             }
         }
         else if (mons_itemuse(monster->type) >= MONUSE_OPEN_DOORS)
         {
             _mons_open_door(monster, newpos);
-            return true;
+            return (true);
         }
     } // endif - secret/closed doors
 

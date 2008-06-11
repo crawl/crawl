@@ -397,7 +397,8 @@ bool give_monster_proper_name(monsters *mon, bool orcs_only = true);
 flight_type mons_class_flies(int mc);
 flight_type mons_flies(const monsters *mon);
 
-bool mons_amphibious(int mc);
+bool mons_class_amphibious(int mc);
+bool mons_amphibious(const monsters *mon);
 
 // last updated XXmay2000 {dlb}
 /* ***********************************************************************

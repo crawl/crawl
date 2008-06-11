@@ -2279,7 +2279,7 @@ bool can_autopickup()
 static void _do_autopickup()
 {
     //David Loewenstern 6/99
-    int n_did_pickup = 0;
+    int n_did_pickup   = 0;
     int n_tried_pickup = 0;
 
     will_autopickup = false;
@@ -2300,22 +2300,24 @@ static void _do_autopickup()
         if (item_needs_autopickup(mitm[o]))
         {
             int num_to_take = mitm[o].quantity;
-            if ( Options.autopickup_no_burden && item_mass(mitm[o]) != 0)
+            if (Options.autopickup_no_burden && item_mass(mitm[o]) != 0)
             {
                 int num_can_take =
                     (carrying_capacity(you.burden_state) - you.burden) /
-                    item_mass(mitm[o]);
+                        item_mass(mitm[o]);
 
-                if ( num_can_take < num_to_take )
+                if (num_can_take < num_to_take)
                 {
                     if (!n_tried_pickup)
+                    {
                         mpr("You can't pick everything up without burdening "
                             "yourself.");
+                    }
                     n_tried_pickup++;
                     num_to_take = num_can_take;
                 }
 
-                if ( num_can_take == 0 )
+                if (num_can_take == 0)
                 {
                     o = next;
                     continue;

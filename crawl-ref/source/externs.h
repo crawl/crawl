@@ -674,8 +674,8 @@ public:
   FixedVector<unsigned int, 50>   skill_points;
   FixedVector<unsigned char, 50>  skill_order;
 
-  skill_type sage_bonus_skill;  // if Sage is in effect, which skill it affects
-  int sage_bonus_degree;        // how much bonus XP to give in that skill
+  skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
+  int sage_bonus_degree;        // How much bonus XP to give in that skill.
 
   int  skill_cost_level;
   int  total_skill_points;
@@ -743,6 +743,8 @@ public:
   // failures
   dungeon_feature_type transit_stair;
   bool entering_level;
+  bool lava_in_sight;       // Is there lava in LoS?
+  bool water_in_sight;      // Is there deep water in LoS?
 
   // Warning: these two are quite different.
   //

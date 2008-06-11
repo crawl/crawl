@@ -5421,6 +5421,8 @@ void player::init()
     banished_by.clear();
 
     entering_level = false;
+    lava_in_sight  = false;
+    water_in_sight = false;
     transit_stair  = DNGN_UNSEEN;
 
     berserk_penalty = 0;

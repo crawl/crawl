@@ -262,10 +262,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         && (!auto_wield || !is_valid_item(you.inv[item_slot]) || !good_swap))
     {
         if (!auto_wield)
+        {
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
                             MT_INVLIST, OSEL_WIELD,
                             true, true, true, '-', NULL, OPER_WIELD);
+        }
         else
             item_slot = PROMPT_GOT_SPECIAL;
     }
@@ -281,7 +283,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         return (true);
     }
 
-    // now we really change weapons (most likely, at least)
+    // Now we really change weapons! (Most likely, at least...)
     if (you.duration[DUR_SURE_BLADE])
     {
         mpr("The bond with your blade fades away.");
@@ -294,7 +296,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     {
         if (you.equip[EQ_WEAPON] != -1)
         {
-            // can we safely unwield this item?
+            // Can we safely unwield this item?
             if (has_warning_inscription(you.inv[you.equip[EQ_WEAPON]], OPER_WIELD))
             {
                 std::string prompt = "Really unwield ";

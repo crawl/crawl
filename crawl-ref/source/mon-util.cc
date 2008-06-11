@@ -1261,12 +1261,20 @@ flight_type mons_flies(const monsters *mon)
                                                                   : FL_NONE);
 }
 
-bool mons_amphibious(int mc)
+bool mons_class_amphibious(int mc)
 {
     return mons_class_flag(mc, M_AMPHIBIOUS);
 }
 
-// This nice routine we keep in exactly the way it was-
+bool mons_amphibious(const monsters *mon)
+{
+    const int type = mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                            : mon->type;
+
+    return (mons_class_amphibious(type));
+}
+
+// This nice routine we keep in exactly the way it was.
 int hit_points(int hit_dice, int min_hp, int rand_hp)
 {
     int hrolled = 0;
@@ -2816,7 +2824,7 @@ bool monsters::floundering() const
             // Can't use monster_habitable_grid because that'll return true
             // for non-water monsters in shallow water.
             && mons_habitat(this) != HT_WATER
-            && !mons_amphibious(type)
+            && !mons_amphibious(this)
             && !mons_flies(this));
 }
 
@@ -2841,6 +2849,7 @@ bool monsters::can_drown() const
 {
     // Mummies can fall apart in water; ghouls, vampires, and demons can
     // drown in water/lava.
+    // Other undead just "sink like a rock", to be never seen again.
     return (!mons_res_asphyx(this)
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL

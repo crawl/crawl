@@ -135,7 +135,7 @@ bool monster_habitable_grid(int monster_class,
     }
 
     // Amphibious critters are happy in water or on land.
-    if (mons_amphibious(monster_class)
+    if (mons_class_amphibious(monster_class)
         && (preferred_habitat == DNGN_FLOOR
                 && grid_compatible(DNGN_DEEP_WATER, actual_grid)
             || preferred_habitat == DNGN_DEEP_WATER
@@ -2523,11 +2523,8 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
         return path;
 
     dungeon_feature_type can_move;
-    if (mons_amphibious(mons_is_zombified(mons) ? mons->base_monster
-                                                : mons->type))
-    {
+    if (mons_amphibious(mons))
         can_move = DNGN_DEEP_WATER;
-    }
     else
         can_move = DNGN_SHALLOW_WATER;
 
@@ -2621,7 +2618,7 @@ int monster_pathfind::travel_cost(coord_def npos)
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.
     // Only tested for shallow water since they can't enter deep water anywa.
-    if (!airborne && !mons_amphibious(montype)
+    if (!airborne && !mons_class_amphibious(montype)
         && (grd(pos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_SHALLOW_WATER))
     {
         return 2;

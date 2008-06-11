@@ -1332,6 +1332,34 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     return false;
 }
 
+static void _check_lava_water_in_sight()
+{
+    // Check the player's vision for lava or deep water,
+    // to avoid unnecessary pathfinding later.
+    you.lava_in_sight = you.water_in_sight = false;
+    coord_def gp;
+    for (gp.y = (you.y_pos - 8); (gp.y <= you.y_pos + 8); gp.y++)
+        for (gp.x = (you.x_pos - 8); (gp.x <= you.x_pos + 8); gp.x++)
+        {
+            if (!in_bounds(gp))
+                continue;
+
+            const coord_def ep = gp - you.pos() + coord_def(9, 9);
+            if (env.show(ep))
+            {
+                dungeon_feature_type feat = grd[gp.x][gp.y];
+                if (feat == DNGN_LAVA)
+                    you.lava_in_sight = true;
+                else if (feat == DNGN_DEEP_WATER)
+                    you.water_in_sight = true;
+
+                if (you.lava_in_sight && you.water_in_sight)
+                    break;
+            }
+        }
+}
+
+
 // Used to determine whether to apply the berserk penalty at end of round.
 bool apply_berserk_penalty = false;
 
@@ -1361,9 +1389,11 @@ static void _input()
 
     Options.tut_just_triggered = false;
 
+    bool player_feels_safe = i_feel_safe();
+
     // He, we don't want those "Whew, it's safe to rest now" messages when
     // you were just cast into the Abyss. Right?
-    if (i_feel_safe() && you.level_type != LEVEL_ABYSS)
+    if (player_feels_safe && you.level_type != LEVEL_ABYSS)
     {
         if (Options.tutorial_left)
         {
@@ -1416,7 +1446,8 @@ static void _input()
 
     // XXX: Is there some smart way to avoid autoswitching back if we're
     //      just about to continue butchering?
-    if (i_feel_safe() && you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
+    if (!you.turn_is_over && player_feels_safe
+        && you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {
         int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED];
         if (weap == ENDOFPACK)
@@ -1429,18 +1460,21 @@ static void _input()
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
     }
 
+    if (!you.turn_is_over)
+        _check_lava_water_in_sight();
+
     handle_delay();
 
     const coord_def cwhere = grid2view(you.pos());
     cgotoxy(cwhere.x, cwhere.y);
 
-    if ( you_are_delayed() )
+    if (you_are_delayed())
     {
         _world_reacts();
         return;
     }
 
-    if ( you.turn_is_over )
+    if (you.turn_is_over)
     {
         _world_reacts();
         return;

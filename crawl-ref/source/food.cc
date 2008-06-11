@@ -174,6 +174,8 @@ void weapon_switch( int targ )
 
     if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
         autopickup();
+
+    you.turn_is_over = true;
 }
 
 // Look for a butchering implement. If fallback is true,
