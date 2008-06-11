@@ -247,10 +247,9 @@ static object_class_type get_unrelated_wield_class(object_class_type ref)
     else
     {
         const int temp_rand = random2(3);
-        objtype =
-            (temp_rand == 0) ? OBJ_WEAPONS :
-            (temp_rand == 1) ? OBJ_STAVES :
-            OBJ_MISCELLANY;
+        objtype = (temp_rand == 0) ? OBJ_WEAPONS :
+                  (temp_rand == 1) ? OBJ_STAVES
+                                   : OBJ_MISCELLANY;
     }
 
     return (objtype);
@@ -361,13 +360,13 @@ bool xom_gives_item(int power)
         // Random-type acquirement.
         const int r = random2(7);
         const object_class_type objtype = (r == 0) ? OBJ_WEAPONS :
-            (r == 1) ? OBJ_ARMOUR :
-            (r == 2) ? OBJ_JEWELLERY :
-            (r == 3) ? OBJ_BOOKS :
-            (r == 4) ? OBJ_STAVES :
-            (r == 5) ? OBJ_FOOD :
-            (r == 6) ? OBJ_MISCELLANY :
-                       OBJ_GOLD;
+                                          (r == 1) ? OBJ_ARMOUR :
+                                          (r == 2) ? OBJ_JEWELLERY :
+                                          (r == 3) ? OBJ_BOOKS :
+                                          (r == 4) ? OBJ_STAVES :
+                                          (r == 5) ? OBJ_FOOD :
+                                          (r == 6) ? OBJ_MISCELLANY
+                                                   : OBJ_GOLD;
 
         god_acting gdact(GOD_XOM);
 
