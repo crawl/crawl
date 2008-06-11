@@ -612,7 +612,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     if (healed < 1)
         return false;
 
-    if (mons_friendly(mon) || mons_neutral(mon))
+    if (!_mons_hostile(mon))
         return false;
 
     if (mons_intel(mon->type) <= I_PLANT) // no self-awareness
