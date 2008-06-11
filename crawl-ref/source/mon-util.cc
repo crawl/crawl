@@ -490,7 +490,6 @@ bool mons_is_native_in_branch(const monsters *monster,
     }
 }
 
-
 bool mons_is_icy(const monsters *mon)
 {
     return (mons_is_icy(mon->type));
