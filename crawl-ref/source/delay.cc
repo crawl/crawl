@@ -1656,7 +1656,7 @@ inline static void _monster_warning(activity_interrupt_type ai,
                 if (mon->type == MONS_AIR_ELEMENTAL)
                     text += " forms itself from the air.";
                 else
-                    text += " appears from thin air.";
+                    text += " appears from thin air!";
             }
             else if (at.context == "surfaces")
                 text += " surfaces.";
