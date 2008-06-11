@@ -793,8 +793,8 @@ static void _good_god_follower_attitude_change(monsters *monster)
     if (you.is_undead || you.species == SP_DEMONSPAWN)
         return;
 
-    // for followers of good gods, decide whether holy beings will be
-    // good neutral towards you
+    // For followers of good gods, decide whether holy beings will be
+    // good neutral towards you.
     if (is_good_god(you.religion)
         && monster->foe == MHITYOU
         && mons_is_holy(monster)
@@ -830,7 +830,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     if (you.species != SP_HILL_ORC)
         return;
 
-    // for followers of Beogh, decide whether orcs will join you
+    // For followers of Beogh, decide whether orcs will join you.
     if (you.religion == GOD_BEOGH
         && monster->foe == MHITYOU
         && mons_species(monster->type) == MONS_ORC

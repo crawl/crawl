@@ -767,14 +767,16 @@ void handle_delay( void )
             }
             else
             {
-                // Only give the rotting message if the corpse wasn't
-                // previously rotten. (special < 100 is the rottenness check)
-                if (food_is_rotten(mitm[delay.parm1]) && delay.parm2 >= 100)
+                if (food_is_rotten(mitm[delay.parm1]))
                 {
-                    mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
+                    // Only give the rotting message if the corpse wasn't
+                    // previously rotten. (special < 100 is the rottenness check).
+                    if (delay.parm2 >= 100)
+                        mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
+
                     if (delay.type == DELAY_OFFER_CORPSE)
                     {
-                        // don't attempt to offer a rotten corpse
+                        // Don't attempt to offer a rotten corpse.
                         _pop_delay();
 
                         // Chain onto the next delay.
@@ -782,7 +784,7 @@ void handle_delay( void )
                         return;
                     }
 
-                    delay.parm2 = 99; // don't give the message twice
+                    delay.parm2 = 99; // Don't give the message twice.
 
                     if (you.is_undead != US_UNDEAD
                         && player_mutation_level(MUT_SAPROVOROUS) < 3)
@@ -798,7 +800,7 @@ void handle_delay( void )
                     }
                 }
 
-                // mark work done on the corpse in case we stop -- bwr
+                // Mark work done on the corpse in case we stop. -- bwr
                 mitm[ delay.parm1 ].plus2++;
             }
         }
@@ -1176,8 +1178,21 @@ static void _finish_delay(const delay_queue_item &delay)
             return;
         }
 
-        offer_corpse(delay.parm1);
-        StashTrack.update_stash(); // Don't stash-track this corpse anymore.
+        if (food_is_rotten(mitm[delay.parm1]))
+        {
+            simple_god_message(coinflip() ? " refuses to accept that"
+                                            " mouldy sacrifice!"
+                                          : " demands fresh blood!",
+                               you.religion);
+            _pop_delay();
+            // Chain onto the next delay.
+            handle_delay();
+        }
+        else
+        {
+            offer_corpse(delay.parm1);
+            StashTrack.update_stash(); // Don't stash-track this corpse anymore.
+        }
         break;
     }
     case DELAY_DROP_ITEM:

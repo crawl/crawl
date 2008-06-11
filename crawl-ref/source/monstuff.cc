@@ -2322,6 +2322,63 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
 }
 
 //#define DEBUG_PATHFIND
+
+// If a monster can see but not directly reach the player, and then fails to
+// find a path to get him, mark all surrounding (in a radius of 2) monsters
+// of the same species as also being unable to find a path, so we won't need
+// to calculate again.
+// Should there be a direct path to the player for a monster thus marked, it
+// will still be able to come nearer (and the mark will be cleared).
+static void _mark_species_members_player_unreachable(monsters *mon)
+{
+    // Highly intelligent monsters are capable of pathfinding and don't
+    // need their neighbour's advice.
+    if (mons_intel(mon->type) > I_NORMAL)
+        return;
+
+    // We won't be able to find pack members of human unique monsters.
+    if (mons_is_unique(mon->type) && mons_species(mon->type) == MONS_HUMAN)
+        return;
+
+    int x, y;
+    monsters *m;
+    for (int i = -2; i <= 2; i++)
+        for (int j = -2; j <= 2; j++)
+        {
+            if (i == 0 && j == 0)
+                continue;
+
+            x = mon->x + i;
+            y = mon->y + j;
+
+            if (!in_bounds(x,y))
+                continue;
+
+            if (mgrd[x][y] == NON_MONSTER)
+                continue;
+
+            // Don't alert monsters out of sight (e.g. on the other side of
+            // a wall).
+            if (!mon->mon_see_grid(x, y))
+                continue;
+
+            m = &menv[mgrd[x][y]];
+
+            // Only mark target for monsters of same species.
+            // Restrict to same _type_ for humans (by far the most
+            // versatile species).
+            if (mon->type != m->type
+                && (mon->type == MONS_HUMAN
+                    || mons_species(mon->type) != mons_species(m->type)))
+            {
+                continue;
+            }
+
+            if (m->travel_target == MTRAV_NONE)
+                m->travel_target = MTRAV_UNREACHABLE;
+        }
+}
+
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -2630,15 +2687,17 @@ static void _handle_behaviour(monsters *mon)
             {
                 if (proxPlayer && !trans_wall_block)
                 {
-                    if (travelling && mon->travel_target != MTRAV_PATROL)
+                    if (mon->travel_target != MTRAV_PATROL
+                        && mon->travel_target != MTRAV_NONE)
                     {
-                        mon->travel_path.clear();
+                        if (travelling)
+                            mon->travel_path.clear();
                         mon->travel_target = MTRAV_NONE;
                     }
                 }
                 else if (proxPlayer && trans_wall_block
                          && (mon->travel_target != MTRAV_UNREACHABLE
-                             || one_chance_in(8)))
+                             || one_chance_in(12)))
                 {
 #ifdef DEBUG_PATHFIND
                     mprf("%s: Player out of reach! What now?",
@@ -2656,7 +2715,7 @@ static void _handle_behaviour(monsters *mon)
                             && !trans_wall_blocking(targ.x, targ.y))
                         {
 #ifdef DEBUG_PATHFIND
-                            mpr("Target still valid...");
+                            mpr("Target still valid?");
 #endif
                             // Current target still valid?
                             if (mon->x == mon->travel_path[0].x
@@ -2739,6 +2798,7 @@ static void _handle_behaviour(monsters *mon)
                         monster_pathfind mp;
                         if (range > 0)
                             mp.set_range(range);
+
                         if (mp.start_pathfind(mon, coord_def(you.x_pos,
                                                              you.y_pos)))
                         {
@@ -2757,6 +2817,7 @@ static void _handle_behaviour(monsters *mon)
                                 mpr("No path found!");
 #endif
                                 mon->travel_target = MTRAV_UNREACHABLE;
+                                _mark_species_members_player_unreachable(mon);
                             }
                         }
                         else

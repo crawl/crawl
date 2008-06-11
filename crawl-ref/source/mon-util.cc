@@ -703,7 +703,7 @@ bool mons_see_invis(const monsters *mon)
 bool mon_can_see_monster( const monsters *mon, const monsters *targ )
 {
     if (!mon->mon_see_grid(targ->x, targ->y))
-        return false;
+        return (false);
 
     return (mons_monster_visible(mon, targ));
 }

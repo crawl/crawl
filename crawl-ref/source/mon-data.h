@@ -3060,7 +3060,7 @@
 
 // mimics
 {
-    // gold mimics are the only mimics that actually use their name -- bwr
+    // Gold mimics are the only mimics that actually use their name. -- bwr
     MONS_GOLD_MIMIC, '$', YELLOW, "pile of gold coins",
     M_NO_SKELETON | M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
