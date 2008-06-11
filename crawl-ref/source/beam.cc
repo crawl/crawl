@@ -135,7 +135,7 @@ static void _beam_mpr(msg_channel_type channel, const char *s, ...)
     if (beam_message_cache.find(message) == beam_message_cache.end())
         mpr(message.c_str(), channel);
 
-    beam_message_cache.insert( message );
+    beam_message_cache.insert(message);
 }
 
 static void _monster_die(monsters *mons, const bolt &beam)
