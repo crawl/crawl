@@ -354,9 +354,6 @@ void set_exclude(const coord_def &p, int radius)
     if (!in_bounds(p))
         return;
 
-    if (!is_terrain_known(p))
-        return;
-
     if (is_exclude_root(p))
     {
         for (int i = 0, count = curr_excludes.size(); i < count; ++i)
