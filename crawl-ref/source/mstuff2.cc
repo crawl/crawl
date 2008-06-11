@@ -476,7 +476,7 @@ static monster_type _pick_undead_summon()
 
 static void _do_high_level_summon(monsters *monster, bool monsterNearby,
                                   monster_type (*mpicker)(),
-                                  int nsummons, unsigned flags)
+                                  int nsummons)
 {
     if (_mons_abjured(monster, monsterNearby))
         return;
@@ -492,7 +492,7 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
 
         create_monster(
             mgen_data(which_mons, SAME_ATTITUDE(monster), duration,
-                      monster->pos(), monster->foe, flags));
+                      monster->pos(), monster->foe));
     }
 }
 
@@ -508,12 +508,6 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     int sumcount = 0;
     int sumcount2;
     int duration = 0;
-
-    // XXX: Mark summoned creatures from priestly monsters as god gifts.
-    // Once monsters can worship gods (and, presumably, get invocation
-    // lists), this should no longer be needed.
-    const bool is_priest = (mons_class_flag(monster->type, M_PRIEST));
-    const unsigned flags = (is_priest) ? MG_GOD_GIFT : 0;
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",
@@ -587,7 +581,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(monster), 5,
-                          monster->pos(), monster->foe, flags));
+                          monster->pos(), monster->foe));
         }
         return;
 
@@ -601,7 +595,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster(
                 mgen_data(RANDOM_MONSTER, SAME_ATTITUDE(monster), 5,
-                          monster->pos(), monster->foe, flags));
+                          monster->pos(), monster->foe));
         }
         return;
 
@@ -612,7 +606,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster(
                 mgen_data(MONS_RAKSHASA_FAKE, SAME_ATTITUDE(monster), 3,
-                          monster->pos(), monster->foe, flags));
+                          monster->pos(), monster->foe));
         }
         return;
 
@@ -628,7 +622,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             create_monster(
                 mgen_data(summon_any_demon(DEMON_COMMON),
                           SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe, flags));
+                          monster->pos(), monster->foe));
         }
         return;
 
@@ -647,14 +641,14 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe, flags));
+                          monster->pos(), monster->foe));
         }
         return;
 
     case SPELL_ANIMATE_DEAD:
         // see special handling in monstuff::handle_spell() {dlb}
         animate_dead(monster, 5 + random2(5), SAME_ATTITUDE(monster),
-                     monster->foe, is_priest);
+                     monster->foe);
         return;
 
     case SPELL_CALL_IMP: // class 5 demons
@@ -666,7 +660,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             create_monster(
                 mgen_data(summon_any_demon(DEMON_LESSER),
                           SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe, flags));
+                          monster->pos(), monster->foe));
         }
         return;
 
@@ -681,7 +675,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster(
                 mgen_data(MONS_SCORPION, SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe, flags));
+                          monster->pos(), monster->foe));
         }
         return;
 
@@ -694,20 +688,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster(
                 mgen_data(MONS_UFETUBUS, SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe, flags));
+                          monster->pos(), monster->foe));
         }
         return;
 
     case SPELL_SUMMON_BEAST:       // Geryon
         create_monster(
             mgen_data(MONS_BEAST, SAME_ATTITUDE(monster), 4,
-                      monster->pos(), monster->foe, flags));
+                      monster->pos(), monster->foe));
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
         create_monster(
             mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(monster), 5,
-                      monster->pos(), monster->foe, flags));
+                      monster->pos(), monster->foe));
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.
@@ -721,24 +715,24 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster(
                 mgen_data(MONS_WANDERING_MUSHROOM, SAME_ATTITUDE(monster),
-                          duration, monster->pos(), monster->foe, flags));
+                          duration, monster->pos(), monster->foe));
         }
         return;
 
     case SPELL_SUMMON_WRAITHS:
         _do_high_level_summon(monster, monsterNearby, _pick_random_wraith,
-                              random_range(3, 6), flags);
+                              random_range(3, 6));
         return;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
         _do_high_level_summon(monster, monsterNearby, _pick_horrible_thing,
-                              random_range(3, 5), flags);
+                              random_range(3, 5));
         return;
 
     case SPELL_SUMMON_UNDEAD:      // Summon undead around player.
         _do_high_level_summon(monster, monsterNearby, _pick_undead_summon,
-                              2 + random2(2) + random2(monster->hit_dice/4 + 1),
-                              flags);
+                              2 + random2(2)
+                                + random2(monster->hit_dice / 4 + 1));
         return;
 
     case SPELL_SYMBOL_OF_TORMENT:
@@ -762,7 +756,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             create_monster(
                 mgen_data(summon_any_demon(DEMON_GREATER),
                           SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe, flags));
+                          monster->pos(), monster->foe));
         }
         return;
 
@@ -796,7 +790,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             {
                 create_monster(
                     mgen_data(monsters[i], SAME_ATTITUDE(monster), duration,
-                              monster->pos(), monster->foe, flags));
+                              monster->pos(), monster->foe));
             }
         }
         return;
@@ -864,7 +858,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     }
     }
 
-    fire_beam( pbolt );
+    fire_beam(pbolt);
 }
 
 // Set up bolt structure for monster spell casting.
