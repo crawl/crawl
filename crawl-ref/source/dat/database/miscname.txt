@@ -8,8 +8,9 @@
 # smells, and sounds.
 ######################################################
 %%%%
-glowing_adj
 # Any word other than "glowing" itself will work here.
+glowing_adj
+
 bright
 
 brilliant
@@ -172,9 +173,10 @@ tea
 
 wet wool
 %%%%
-roaring_animal_name
 # This doesn't necessarily have to make sense.  For example, a name of a
 # fruit or an insect will work here.
+roaring_animal_name
+
 albino dragon
 
 dragon
