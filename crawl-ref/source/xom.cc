@@ -158,8 +158,8 @@ static void _xom_is_stimulated(int maxinterestingness,
                     (interestingness > 100) ? message_array[4] :
                     (interestingness >  75) ? message_array[3] :
                     (interestingness >  50) ? message_array[2] :
-                    (interestingness >  25) ? message_array[1] :
-                    message_array[0]));
+                    (interestingness >  25) ? message_array[1]
+                                            : message_array[0]));
 }
 
 void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
@@ -396,9 +396,9 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
          sever, roll);
 #endif
     const demon_class_type dct =
-        roll >= 850 ? DEMON_GREATER :
-        roll >= 340 ? DEMON_COMMON
-                    : DEMON_LESSER;
+        (roll >= 850) ? DEMON_GREATER :
+        (roll >= 340) ? DEMON_COMMON
+                      : DEMON_LESSER;
 
     monster_type demon = MONS_PROGRAM_BUG;
 
@@ -407,7 +407,7 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
         demon = summon_any_holy_being(HOLY_BEING_RANDOM);
     else
         demon = summon_any_demon(
-            use_greater_demons || dct != DEMON_GREATER ? dct : DEMON_COMMON);
+            (use_greater_demons || dct != DEMON_GREATER) ? dct : DEMON_COMMON);
 
     return (demon);
 }
@@ -1042,8 +1042,8 @@ void xom_check_destroyed_item(const item_def& item, int cause)
     }
 
     xom_is_stimulated(amusement,
-                      amusement > 128 ? "Xom snickers loudly." :
-                      amusement > 64  ? "Xom snickers." :
-                      "Xom snickers softly.",
+                      (amusement > 128) ? "Xom snickers loudly." :
+                      (amusement > 64)  ? "Xom snickers."
+                                        : "Xom snickers softly.",
                       true);
 }
