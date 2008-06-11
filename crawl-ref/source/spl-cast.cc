@@ -2338,8 +2338,7 @@ static void _miscast_enchantment(int severity, const char* cause)
 
 static void _miscast_translocation(int severity, const char* cause)
 {
-    const bool god_gift = crawl_state.is_god_acting();
-    const unsigned flags = (god_gift) ? MG_GOD_GIFT : 0;
+    const unsigned flags = (crawl_state.is_god_acting()) ? MG_GOD_GIFT : 0;
 
     switch (severity)
     {
@@ -2482,8 +2481,7 @@ static void _miscast_translocation(int severity, const char* cause)
 
 static void _miscast_summoning(int severity, const char* cause)
 {
-    const bool god_gift = crawl_state.is_god_acting();
-    const unsigned flags = (god_gift) ? MG_GOD_GIFT : 0;
+    const unsigned flags = (crawl_state.is_god_acting()) ? MG_GOD_GIFT : 0;
 
     switch (severity)
     {
@@ -2797,8 +2795,7 @@ static void _miscast_necromancy(int severity, const char* cause)
         return;
     }
 
-    const bool god_gift = crawl_state.is_god_acting();
-    const unsigned flags = (god_gift) ? MG_GOD_GIFT : 0;
+    const unsigned flags = (crawl_state.is_god_acting()) ? MG_GOD_GIFT : 0;
 
     switch (severity)
     {
