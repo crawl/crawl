@@ -2427,6 +2427,9 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return (false);
 
+        if (is_artefact(item))
+            return false;
+
         if (is_bad_item(item, temp))
             return (true);
 
@@ -2450,7 +2453,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_mutation_level(MUT_ACUTE_VISION));
 
         case RING_POISON_RESISTANCE:
-            return (player_res_poison()
+            return (player_res_poison(true, temp, false)
                     && (temp || you.species != SP_VAMPIRE));
 
         case AMU_CONTROLLED_FLIGHT:
@@ -2458,6 +2461,9 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_WIZARDRY:
             return (you.religion == GOD_TROG);
+
+        case RING_TELEPORT_CONTROL:
+            return (player_control_teleport(true, temp, false));
 
         default:
             return (false);

@@ -1190,17 +1190,17 @@ int player_res_magic(void)
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
-int player_res_steam(bool calc_unid, bool temp)
+int player_res_steam(bool calc_unid, bool temp, bool items)
 {
     int res = 0;
 
     if (you.species == SP_PALE_DRACONIAN && you.experience_level > 5)
         res += 2;
 
-    if (player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
+    if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
         res += 2;
 
-    return (res + player_res_fire(calc_unid, temp) / 2);
+    return (res + player_res_fire(calc_unid, temp, items) / 2);
 }
 
 bool player_can_smell()
@@ -1209,31 +1209,34 @@ bool player_can_smell()
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
-int player_res_fire(bool calc_unid, bool temp)
+int player_res_fire(bool calc_unid, bool temp, bool items)
 {
     int rf = 0;
 
-    /* rings of fire resistance/fire */
-    rf += player_equip( EQ_RINGS, RING_PROTECTION_FROM_FIRE, calc_unid );
-    rf += player_equip( EQ_RINGS, RING_FIRE, calc_unid );
+    if (items)
+    {
+        /* rings of fire resistance/fire */
+        rf += player_equip( EQ_RINGS, RING_PROTECTION_FROM_FIRE, calc_unid );
+        rf += player_equip( EQ_RINGS, RING_FIRE, calc_unid );
 
-    /* rings of ice */
-    rf -= player_equip( EQ_RINGS, RING_ICE, calc_unid );
+        /* rings of ice */
+        rf -= player_equip( EQ_RINGS, RING_ICE, calc_unid );
 
-    /* Staves */
-    rf += player_equip( EQ_STAFF, STAFF_FIRE, calc_unid );
+        /* Staves */
+        rf += player_equip( EQ_STAFF, STAFF_FIRE, calc_unid );
 
-    // body armour:
-    rf += 2 * player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR );
-    rf += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
-    rf -= player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR );
+        // body armour:
+        rf += 2 * player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR );
+        rf += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
+        rf -= player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR );
 
-    // ego armours
-    rf += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_FIRE_RESISTANCE );
-    rf += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
+        // ego armours
+        rf += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_FIRE_RESISTANCE );
+        rf += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
 
-    // randart weapons:
-    rf += scan_randarts(RAP_FIRE, calc_unid);
+        // randart weapons:
+        rf += scan_randarts(RAP_FIRE, calc_unid);
+    }
 
     // species:
     if (you.species == SP_MUMMY)
@@ -1277,69 +1280,76 @@ int player_res_fire(bool calc_unid, bool temp)
     return (rf);
 }
 
-int player_res_cold(bool calc_unid)
+int player_res_cold(bool calc_unid, bool temp, bool items)
 {
     int rc = 0;
 
-    if (you.species == SP_VAMPIRE)
+    if (temp)
     {
-        if (you.hunger_state <= HS_NEAR_STARVING)
-            rc += 2;
-        else if (you.hunger_state < HS_SATIATED)
+        // spells:
+        if (you.duration[DUR_RESIST_COLD] > 0)
             rc++;
+
+        if (you.duration[DUR_FIRE_SHIELD])
+            rc -= 2;
+
+        // transformations:
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_ICE_BEAST:
+            rc += 3;
+            break;
+        case TRAN_DRAGON:
+            rc--;
+            break;
+        case TRAN_LICH:
+            rc++;
+            break;
+        case TRAN_AIR:
+            rc -= 2;
+            break;
+        }
+
+
+        if (you.species == SP_VAMPIRE)
+        {
+            if (you.hunger_state <= HS_NEAR_STARVING)
+                rc += 2;
+            else if (you.hunger_state < HS_SATIATED)
+                rc++;
+        }
     }
 
-    // rings of fire resistance/fire
-    rc += player_equip( EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid );
-    rc += player_equip( EQ_RINGS, RING_ICE, calc_unid );
+    if (items)
+    {
+        // rings of fire resistance/fire
+        rc += player_equip( EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid );
+        rc += player_equip( EQ_RINGS, RING_ICE, calc_unid );
 
-    // rings of ice
-    rc -= player_equip( EQ_RINGS, RING_FIRE, calc_unid );
+        // rings of ice
+        rc -= player_equip( EQ_RINGS, RING_FIRE, calc_unid );
 
-    // Staves
-    rc += player_equip( EQ_STAFF, STAFF_COLD, calc_unid );
+        // Staves
+        rc += player_equip( EQ_STAFF, STAFF_COLD, calc_unid );
 
-    // body armour:
-    rc += 2 * player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR );
-    rc += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
-    rc -= player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR );
+        // body armour:
+        rc += 2 * player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR );
+        rc += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
+        rc -= player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR );
 
-    // ego armours
-    rc += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE );
-    rc += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
+        // ego armours
+        rc += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE );
+        rc += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
 
-    // randart weapons:
-    rc += scan_randarts(RAP_COLD, calc_unid);
-
-    // spells:
-    if (you.duration[DUR_RESIST_COLD] > 0)
-        rc++;
+        // randart weapons:
+        rc += scan_randarts(RAP_COLD, calc_unid);
+    }
 
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE);
 
     if (player_mutation_level(MUT_SHAGGY_FUR) == 3)
         rc++;
-
-    if (you.duration[DUR_FIRE_SHIELD])
-        rc -= 2;
-
-    // transformations:
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_ICE_BEAST:
-        rc += 3;
-        break;
-    case TRAN_DRAGON:
-        rc--;
-        break;
-    case TRAN_LICH:
-        rc++;
-        break;
-    case TRAN_AIR:
-        rc -= 2;
-        break;
-    }
 
     if (rc < -3)
         rc = -3;
@@ -1349,7 +1359,7 @@ int player_res_cold(bool calc_unid)
     return (rc);
 }
 
-int player_res_acid(bool consider_unidentified_gear)
+int player_res_acid(bool calc_unid, bool items)
 {
     int res = 0;
     if (!transform_changed_physiology())
@@ -1361,7 +1371,7 @@ int player_res_acid(bool consider_unidentified_gear)
         res += player_mutation_level(MUT_YELLOW_SCALES) * 2 / 3;
     }
 
-    if (wearing_amulet(AMU_RESIST_CORROSION, consider_unidentified_gear))
+    if (items && wearing_amulet(AMU_RESIST_CORROSION, calc_unid))
         res++;
 
     return (res);
@@ -1389,21 +1399,39 @@ int player_acid_resist_factor()
     return (factor);
 }
 
-int player_res_electricity(bool calc_unid)
+int player_res_electricity(bool calc_unid, bool temp, bool items)
 {
     int re = 0;
 
-    if (you.duration[DUR_INSULATION])
-        re++;
+    if (temp)
+    {
+        if (you.duration[DUR_INSULATION])
+            re++;
 
-    // staff
-    re += player_equip( EQ_STAFF, STAFF_AIR, calc_unid );
+        // transformations:
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+            re += 1;
 
-    // body armour:
-    re += player_equip( EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR );
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
+            re += 2;  // multiple levels currently meaningless
 
-    // randart weapons:
-    re += scan_randarts(RAP_ELECTRICITY, calc_unid);
+        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
+            re = 3;
+        else if (re > 1)
+            re = 1;
+    }
+
+    if (items)
+    {
+        // staff
+        re += player_equip( EQ_STAFF, STAFF_AIR, calc_unid );
+
+        // body armour:
+        re += player_equip( EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR );
+
+        // randart weapons:
+        re += scan_randarts(RAP_ELECTRICITY, calc_unid);
+    }
 
     // species:
     if (you.species == SP_BLACK_DRACONIAN && you.experience_level > 17)
@@ -1412,18 +1440,6 @@ int player_res_electricity(bool calc_unid)
     // mutations:
     if (player_mutation_level(MUT_SHOCK_RESISTANCE))
         re++;
-
-    // transformations:
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
-        re += 1;
-
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-        re += 2;  // multiple levels currently meaningless
-
-    if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
-        re = 3;
-    else if (re > 1)
-        re = 1;
 
     return (re);
 }                               // end player_res_electricity()
@@ -1446,10 +1462,11 @@ bool player_res_asphyx()
     return (false);
 }
 
-bool player_control_teleport(bool calc_unid)
+bool player_control_teleport(bool calc_unid, bool temp, bool items)
 {
-    return ( you.duration[DUR_CONTROL_TELEPORT]
-             || player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid)
+    return ( (you.duration[DUR_CONTROL_TELEPORT] && temp)
+             || (player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid)
+                 && items)
              || player_mutation_level(MUT_TELEPORT_CONTROL) );
 }
 
@@ -1462,43 +1479,46 @@ int player_res_torment(bool)
 
 // Funny that no races are susceptible to poisons. {dlb}
 // If temp is set to false, temporary sources or resistance won't be counted.
-int player_res_poison(bool calc_unid, bool temp)
+int player_res_poison(bool calc_unid, bool temp, bool items)
 {
     int rp = 0;
 
-    // Only thirsty vampires are naturally poison resistant.
-    if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
-        rp++;
-
-    // rings of poison resistance
-    rp += player_equip( EQ_RINGS, RING_POISON_RESISTANCE, calc_unid );
-
-    // Staves
-    rp += player_equip( EQ_STAFF, STAFF_POISON, calc_unid );
-
-    // the staff of Olgreb:
-    if (you.equip[EQ_WEAPON] != -1
-        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
-        && you.inv[you.equip[EQ_WEAPON]].special == SPWPN_STAFF_OF_OLGREB)
+    if (items)
     {
-        rp++;
+        // rings of poison resistance
+        rp += player_equip( EQ_RINGS, RING_POISON_RESISTANCE, calc_unid );
+
+        // Staves
+        rp += player_equip( EQ_STAFF, STAFF_POISON, calc_unid );
+
+        // the staff of Olgreb:
+        if (you.equip[EQ_WEAPON] != -1
+            && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
+            && you.inv[you.equip[EQ_WEAPON]].special == SPWPN_STAFF_OF_OLGREB)
+        {
+            rp++;
+        }
+
+        // ego armour:
+        rp += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE );
+
+        // body armour:
+        rp += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
+        rp += player_equip( EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR );
+
+        // randart weapons:
+        rp += scan_randarts(RAP_POISON, calc_unid);
     }
-
-    // ego armour:
-    rp += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE );
-
-    // body armour:
-    rp += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
-    rp += player_equip( EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR );
-
-    // randart weapons:
-    rp += scan_randarts(RAP_POISON, calc_unid);
 
     // mutations:
     rp += player_mutation_level(MUT_POISON_RESISTANCE);
 
     if (temp)
     {
+        // Only thirsty vampires are naturally poison resistant.
+        if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
+            rp++;
+
         // spells:
         if (you.duration[DUR_RESIST_POISON] > 0)
             rp++;
@@ -4159,9 +4179,10 @@ bool player_item_conserve(bool calc_unid)
             || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION));
 }
 
-int player_mental_clarity(bool calc_unid)
+int player_mental_clarity(bool calc_unid, bool items)
 {
-    const int ret = 3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid)
+    const int ret = (3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid)
+                       * items)
                         + player_mutation_level(MUT_CLARITY);
 
     return ((ret > 3) ? 3 : ret);

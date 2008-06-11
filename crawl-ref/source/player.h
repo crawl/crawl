@@ -161,15 +161,16 @@ int player_regen(void);
 /* ***********************************************************************
  * called from: fight - files - it_use2 - misc - ouch - spells - spells2
  * *********************************************************************** */
-int player_res_cold(bool calc_unid = true);
-int player_res_acid(bool consider_unidentified_gear = true);
+int player_res_cold(bool calc_unid = true, bool temp = true,
+                    bool items = true);
+int player_res_acid(bool calc_unid = true, bool items = true);
 int player_acid_resist_factor();
 
 int player_res_torment(bool calc_unid = true);
 
 bool player_res_corrosion(bool calc_unid = true);
 bool player_item_conserve(bool calc_unid = true);
-int player_mental_clarity(bool calc_unid = true);
+int player_mental_clarity(bool calc_unid = true, bool items = true);
 
 bool player_can_smell();
 bool player_can_swim();
@@ -180,23 +181,28 @@ int player_mutation_level(mutation_type mut);
 /* ***********************************************************************
  * called from: fight - files - ouch
  * *********************************************************************** */
-int player_res_electricity(bool calc_unid = true);
+int player_res_electricity(bool calc_unid = true, bool temp = true,
+                           bool items = true);
 
 
 /* ***********************************************************************
  * called from: acr - fight - misc - ouch - spells
  * *********************************************************************** */
-int player_res_fire(bool calc_unid = true, bool temp = true);
-int player_res_steam(bool calc_unid = true, bool temp = true);
+int player_res_fire(bool calc_unid = true, bool temp = true,
+                    bool items = true);
+int player_res_steam(bool calc_unid = true, bool temp = true,
+                     bool items = true);
 
 
 /* ***********************************************************************
  * called from: beam - decks - fight - fod - it_use2 - misc - ouch -
  *              spells - spells2
  * *********************************************************************** */
-int player_res_poison(bool calc_unid = true, bool temp = true);
+int player_res_poison(bool calc_unid = true, bool temp = true,
+                      bool items = true);
 
-bool player_control_teleport(bool calc_unid = true);
+bool player_control_teleport(bool calc_unid = true, bool temp = true,
+                             bool items = true);
 
 int player_res_magic(void);
 
