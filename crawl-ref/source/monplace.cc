@@ -519,7 +519,7 @@ static int _is_near_stairs(coord_def &p)
                 // Should there be several stairs, don't overwrite the
                 // player on stairs info.
                 if (result < 2)
-                    result = (p == you.pos()? 2 : 1);
+                    result = (p == you.pos() ? 2 : 1);
             }
         }
 
