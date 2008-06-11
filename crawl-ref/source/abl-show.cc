@@ -2093,15 +2093,18 @@ std::vector<talent> your_talents( bool check_confused )
         _add_talent(talents, ABIL_TROG_BURN_BOOKS, check_confused );
 
     // Gods take abilities away until penance completed. -- bwr
-    if (!player_under_penance() && !silenced( you.x_pos, you.y_pos ))
+    // God abilities generally don't work while silenced (they require
+    // invoking the god), but Nemelex is an exception.
+    if (!player_under_penance() && (!silenced(you.x_pos, you.y_pos)
+                                    || you.religion == GOD_NEMELEX_XOBEH))
     {
         for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
         {
             if ( you.piety >= piety_breakpoint(i) )
             {
-                ability_type abil = god_abilities[you.religion][i];
+                const ability_type abil = god_abilities[you.religion][i];
                 if ( abil != ABIL_NON_ABILITY )
-                    _add_talent(talents,abil, check_confused);
+                    _add_talent(talents, abil, check_confused);
             }
         }
     }
