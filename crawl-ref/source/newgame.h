@@ -46,4 +46,9 @@ int give_first_conjuration_book();
 bool choose_race(void);
 bool choose_class(void);
 
+/* ***********************************************************************
+ * called from: debug newgame
+ * *********************************************************************** */
+void give_basic_mutations(species_type speci);
+
 #endif

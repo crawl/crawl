@@ -273,20 +273,106 @@ void debug_change_species( void )
     }
 
     if (sp == SP_UNKNOWN)
-        mpr( "That species isn't available." );
-    else
     {
-        for (i = 0; i < NUM_SKILLS; i++)
-        {
-            you.skill_points[i] *= species_skills( i, sp );
-            you.skill_points[i] /= species_skills( i, you.species );
-        }
-
-        you.species = sp;
-        you.is_undead = get_undead_state(sp);
-
-        redraw_screen();
+        mpr( "That species isn't available." );
+        return;
     }
+
+    // Re-scale skill-points.
+    for (i = 0; i < NUM_SKILLS; i++)
+    {
+        you.skill_points[i] *= species_skills( i, sp );
+        you.skill_points[i] /= species_skills( i, you.species );
+    }
+
+    you.species = sp;
+    you.is_undead = get_undead_state(sp);
+
+    // Change permanent mutations, but preserve non-permanent ones.
+    unsigned char prev_muts[NUM_MUTATIONS];
+    you.attribute[ATTR_NUM_DEMONIC_POWERS] = 0;
+    for (i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (you.demon_pow[i] > 0)
+        {
+            if (you.demon_pow[i] > you.mutation[i])
+                you.mutation[i] = 0;
+            else
+                you.mutation[i] -= you.demon_pow[i];
+
+            you.demon_pow[i] = 0;
+        }
+        prev_muts[i] = you.mutation[i];
+    }
+    give_basic_mutations(sp);
+    for (i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (prev_muts[i] > you.demon_pow[i])
+            you.demon_pow[i] = 0;
+        else
+            you.demon_pow[i] -= prev_muts[i];
+    }
+
+    switch(sp)
+    {
+    case SP_GREEN_DRACONIAN:
+        if (you.experience_level >= 7)
+            perma_mutate(MUT_POISON_RESISTANCE, 1);
+        break;
+
+    case SP_RED_DRACONIAN:
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_HEAT_RESISTANCE, 1);
+        break;
+
+    case SP_WHITE_DRACONIAN:
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_COLD_RESISTANCE, 1);
+        break;
+
+
+    case SP_BLACK_DRACONIAN:
+        if (you.experience_level >= 18)
+            perma_mutate(MUT_SHOCK_RESISTANCE, 1);
+        break;
+
+    case SP_DEMONSPAWN:
+    {
+        int powers;
+
+        if (you.experience_level < 4)
+            powers = 0;
+        else if (you.experience_level < 9)
+            powers = 1;
+        else if (you.experience_level < 14)
+            powers = 2;
+        else if (you.experience_level < 19)
+            powers = 3;
+        else if (you.experience_level < 24)
+            powers = 4;
+        else if (you.experience_level == 27)
+            powers = 5;
+
+        int levels[] = {4, 9, 14, 19, 27};
+        int real_level = you.experience_level;
+
+        for (i = 0; i < powers; i++)
+        {
+            // The types of demonspawn mutations you get depends on your
+            // experience level at the time of gaining it.
+            you.experience_level = levels[i];
+            demonspawn();
+        }
+        you.experience_level = real_level;
+
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    redraw_screen();
 }
 #endif
 //---------------------------------------------------------------

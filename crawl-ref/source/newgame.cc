@@ -112,7 +112,6 @@ static bool _choose_weapon(void);
 static void _enter_player_name(bool blankOK);
 static void _give_basic_knowledge(job_type which_job);
 static void _give_basic_spells(job_type which_job);
-static void _give_basic_mutations(species_type speci);
 static void _give_last_paycheck(job_type which_job);
 static void _init_player(void);
 static void _jobs_stat_init(job_type which_job);
@@ -1303,7 +1302,7 @@ game_start:
     // tmpfile purging removed in favour of marking
     tmp_file_pairs.init(false);
 
-    _give_basic_mutations(you.species);
+    give_basic_mutations(you.species);
     _initialise_branch_depths();
 
     _save_newgame_options();
@@ -2272,7 +2271,7 @@ static void _jobs_stat_init(job_type which_job)
     set_mp( mp, true );
 }
 
-static void _give_basic_mutations(species_type speci)
+void give_basic_mutations(species_type speci)
 {
     // We should switch over to a size-based system
     // for the fast/slow metabolism when we get around to it.
