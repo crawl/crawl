@@ -3967,6 +3967,10 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
         if (is_cursed)
             do_uncurse_item( arm );
 
+#ifdef USE_TILE
+        TilePlayerRefresh();
+#endif
+
         // no additional enchantment
         return (true);
     }
