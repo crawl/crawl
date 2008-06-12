@@ -748,7 +748,7 @@ ivory
 
 bone
 
-plastic
+graven
 
 silver
 
