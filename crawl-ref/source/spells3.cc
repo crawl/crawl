@@ -559,7 +559,7 @@ bool cast_summon_greater_demon(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_shadow_creatures(god_type god)
+bool cast_shadow_creatures(bool god_gift)
 {
     bool success = false;
 
