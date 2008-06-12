@@ -55,8 +55,6 @@ std::string mpr_monster_list(bool past = false);
 void redraw_skill(const std::string &your_name, const std::string &class_name);
 void update_monster_pane(void);
 
-std::vector<formatted_string> get_full_detail(bool calc_unid, long score = -1);
-
 const char *equip_slot_to_name(int equip);
 
 int equip_name_to_slot(const char *s);

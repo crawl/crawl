@@ -43,7 +43,7 @@ struct Branch
     const char* entry_message;
     bool has_shops;
     bool has_uniques;
-    char floor_colour;          // Zot needs special handling
+    char floor_colour;          // Zot needs special handling.
     char rock_colour;
     int       (*mons_rarity_function)(int);
     int       (*mons_level_function)(int);
@@ -51,16 +51,21 @@ struct Branch
     trap_type (*rand_trap_function)(int);
     int       (*num_fogs_function)(int);
     void      (*rand_fog_function)(int,fog_machine_data&);
-    int altar_chance;           // in percent
-    int travel_shortcut;        // which key to press for travel
-    bool any_upstair_exits;     // any upstair exits the branch (Hell branches)
+    int altar_chance;            // in percent
+    int travel_shortcut;         // Which key to press for travel.
+    bool any_upstair_exits;      // any upstair exits the branch (Hell branches)
     bool dangerous_bottom_level; // bottom level is more dangerous than normal
 };
 
 extern Branch branches[];
 
 Branch& your_branch();
+
+/* ***********************************************************************
+ * called from: dungeon
+ * *********************************************************************** */
 bool at_branch_bottom();
+
 branch_type str_to_branch(const std::string &branch,
                           branch_type err = NUM_BRANCHES);
 

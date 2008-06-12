@@ -111,7 +111,7 @@ class targeting_behaviour
 public:
     targeting_behaviour(bool just_looking = false);
     virtual ~targeting_behaviour();
-    
+
     // Returns a keystroke for the prompt.
     virtual int get_key();
     virtual command_type get_command(int key = -1);
@@ -171,7 +171,7 @@ std::string feature_description(int mx, int my, bool bloody = false,
                                 bool add_stop = true);
 std::string raw_feature_description(dungeon_feature_type grid,
                                     trap_type tr = NUM_TRAPS);
-std::string feature_description(dungeon_feature_type grid, 
+std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap = NUM_TRAPS, bool bloody = false,
                                 description_level_type dtype = DESC_CAP_A,
                                 bool add_stop = true);

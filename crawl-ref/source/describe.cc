@@ -2283,7 +2283,8 @@ void describe_monsters(monsters& mons)
         break;
     }
     case MONS_PLAYER_GHOST:
-        description << "The apparition of " << ghost_description(mons) << ".$";
+        description << "The apparition of " << get_ghost_description(mons)
+                    << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
@@ -2366,16 +2367,10 @@ void describe_monsters(monsters& mons)
         getch();
 }                               // end describe_monsters
 
-//---------------------------------------------------------------
-//
-// ghost_description
-//
 // Describes the current ghost's previous owner. The caller must
 // prepend "The apparition of" or whatever and append any trailing
 // punctuation that's wanted.
-//
-//---------------------------------------------------------------
-std::string ghost_description(const monsters &mons, bool concise)
+std::string get_ghost_description(const monsters &mons, bool concise)
 {
     ASSERT(mons.ghost.get());
     std::ostringstream gstr;

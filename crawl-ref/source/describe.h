@@ -45,12 +45,16 @@ bool is_dumpable_artefact( const item_def &item, bool verbose );
 std::string get_item_description( const item_def &item, bool verbose,
                                   bool dump = false );
 
-// last updated 12may2000 {dlb}
+// last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************
  * called from: acr - religion
  * *********************************************************************** */
 void describe_god( god_type which_god, bool give_title );
 
+// last updated 12 Jun 2008 {jpeg}
+/* ***********************************************************************
+ * called from: directn
+ * *********************************************************************** */
 void describe_feature_wide(int x, int y);
 
 /* ***********************************************************************
@@ -59,22 +63,23 @@ void describe_feature_wide(int x, int y);
 void describe_item( item_def &item, bool allow_inscribe = false );
 void inscribe_item( item_def &item );
 
+// last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************
- * called from: direct
+ * called from: command - direct
  * *********************************************************************** */
 void describe_monsters(monsters &mons);
 
-// last updated 12may2000 {dlb}
+// last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************
- * called from: item_use
+ * called from: item_use - spl-cast
  * *********************************************************************** */
 void describe_spell(spell_type spelled);
 
 // last updated 13oct2003 {darshan}
 /* ***********************************************************************
- * called from: describe_monsters - describe, kill_ghost - Kills
+ * called from: Kills - monstuff
  * *********************************************************************** */
-std::string ghost_description(const monsters &mons, bool concise = false);
+std::string get_ghost_description(const monsters &mons, bool concise = false);
 
 void print_description( const std::string &d );
 

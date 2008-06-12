@@ -883,7 +883,7 @@ void direction(dist& moves, targeting_type restricts,
             if (mid == NON_MONSTER) // can put in terrain description here
                 break;
 
-            debug_apply_monster_blessing(&menv[mid]);
+            wizard_apply_monster_blessing(&menv[mid]);
             break;
 
         case CMD_TARGET_WIZARD_MAKE_SHOUT:
@@ -2329,7 +2329,7 @@ static void _describe_cell(int mx, int my)
             monster_described = true;
 
 #if DEBUG_DIAGNOSTICS
-        stethoscope(i);
+        debug_stethoscope(i);
 #endif
         if (Options.tutorial_left && tutorial_monster_interesting(&menv[i]))
         {

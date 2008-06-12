@@ -88,10 +88,7 @@ activity_interrupt_type get_activity_interrupt(const std::string &);
 const char *delay_name(int delay);
 delay_type get_delay(const std::string &);
 
-void perform_activity();
 bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &a
                             = activity_interrupt_data() );
-
-void block_interruptions(bool block);
 #endif

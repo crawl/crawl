@@ -508,7 +508,7 @@ static void _handle_wizard_command( void )
         break;
 
     case CONTROL('X'):
-        debug_set_xl();
+        wizard_set_xl();
         break;
 
     case 'O':
@@ -521,11 +521,11 @@ static void _handle_wizard_command( void )
         break;
 
     case 'S':
-        debug_set_skills();
+        wizard_set_skill_level();
         break;
 
     case 'A':
-        debug_set_all_skills();
+        wizard_set_all_skills();
         break;
 
     case '$':
@@ -694,16 +694,15 @@ static void _handle_wizard_command( void )
         break;
 
     case 'g':
-        debug_add_skills();
+        wizard_exercise_skill();
         break;
 
     case 'G':
-        debug_dismiss_all_monsters();
+        wizard_dismiss_all_monsters();
         break;
 
     case 'c':
-        // draw a card
-        debug_card();
+        wizard_draw_card();
         break;
 
     case 'h':
@@ -746,21 +745,21 @@ static void _handle_wizard_command( void )
 
     case 'd':
     case 'D':
-        level_travel(true);
+        wizard_level_travel(true);
         break;
 
     case 'u':
     case 'U':
-        level_travel(false);
+        wizard_level_travel(false);
         break;
 
     case '%':
     case 'o':
-        create_spec_object();
+        wizard_create_spec_object();
         break;
 
     case 't':
-        tweak_object();
+        wizard_tweak_object();
         break;
 
     case 'T':
@@ -784,15 +783,15 @@ static void _handle_wizard_command( void )
         break;
 
     case 'm':
-        create_spec_monster();
+        wizard_create_spec_monster();
         break;
 
     case 'M':
-        create_spec_monster_name();
+        wizard_create_spec_monster_name();
         break;
 
     case 'r':
-        debug_change_species();
+        wizard_change_species();
         break;
 
     case '>':
@@ -920,12 +919,12 @@ static void _handle_wizard_command( void )
         break;
 
     case 'z':
-        cast_spec_spell();
-        break;              /* cast spell by number */
+        wizard_cast_spec_spell();      // Cast spell by number.
+        break;
 
     case 'Z':
-        cast_spec_spell_name();
-        break;              /* cast spell by name */
+        wizard_cast_spec_spell_name(); // Cast spell by name.
+        break;
 
     case '(':
         mpr( "Create which feature (by number)? ", MSGCH_PROMPT );
@@ -988,7 +987,7 @@ static void _handle_wizard_command( void )
         break;
 
     case ']':
-        if (!debug_add_mutation())
+        if (!wizard_add_mutation())
             mpr( "Failure to give mutation." );
         break;
 
@@ -1032,7 +1031,7 @@ static void _handle_wizard_command( void )
         break;
 
     case '@':
-        debug_set_stats();
+        wizard_set_stats();
         break;
 
     case '^':
@@ -1086,7 +1085,7 @@ static void _handle_wizard_command( void )
         break;
 
     case '_':
-        debug_get_religion();
+        wizard_get_religion();
         break;
 
     case '\'':

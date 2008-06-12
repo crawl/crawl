@@ -28,10 +28,9 @@ bool at_branch_bottom()
 branch_type str_to_branch(const std::string &branch, branch_type err)
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
-    {
         if (branches[i].abbrevname && branches[i].abbrevname == branch)
             return (static_cast<branch_type>(i));
-    }
+
     return (err);
 }
 

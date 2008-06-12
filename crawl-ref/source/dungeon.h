@@ -312,7 +312,7 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
                    const coord_def &pos = coord_def(-1, -1));
 void level_clear_vault_memory();
 void level_welcome_messages();
-bool is_wall(int feature);
+
 bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);
 void place_spec_shop(int level_number, int shop_x, int shop_y,
                      int force_s_type, bool representative = false);
@@ -321,7 +321,6 @@ void replace_area_wrapper(dungeon_feature_type old_feat,
 bool unforbidden(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest);
-int count_neighbours(int x, int y, dungeon_feature_type feat);
 
 class mons_spec;
 bool dgn_place_monster(mons_spec &mspec,

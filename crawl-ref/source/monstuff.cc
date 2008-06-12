@@ -379,7 +379,7 @@ static void _check_kill_milestone(const monsters *mons,
     if (mons->type == MONS_PLAYER_GHOST)
     {
         std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
-        milestone += ghost_description(*mons, true);
+        milestone += get_ghost_description(*mons, true);
         milestone += ".";
         mark_milestone("ghost", milestone);
     }

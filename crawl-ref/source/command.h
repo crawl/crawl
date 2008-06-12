@@ -16,40 +16,17 @@
 
 #include "enum.h"
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void print_version(void);
-
-
-// last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
 void adjust(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void list_weapons(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void list_armour(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void list_jewellery(void);
 
+/* ***********************************************************************
+ * called from: clua
+ * *********************************************************************** */
 void swap_inv_slots(int slot1, int slot2, bool verbose);
 
 void show_levelmap_help();
@@ -60,7 +37,7 @@ void show_stash_search_help();
 void list_commands(bool wizard, int hotkey = 0,
                    bool do_redraw_screen = false);
 
-// Actually defined in acr.cc; we may want to move this to command.cc
+// XXX: Actually defined in acr.cc; we may want to move this to command.cc.
 void process_command(command_type cmd);
 
 #endif

@@ -1583,6 +1583,14 @@ static int _userdef_interrupt_activity( const delay_queue_item &idelay,
     return (false);
 }
 
+static void _block_interruptions(bool block)
+{
+    if (block)
+        _interrupts_blocked++;
+    else
+        _interrupts_blocked--;
+}
+
 // Returns true if the activity should be interrupted, false otherwise.
 static bool _should_stop_activity(const delay_queue_item &item,
                                   activity_interrupt_type ai,
@@ -1606,12 +1614,12 @@ static bool _should_stop_activity(const delay_queue_item &item,
     if (ai == AI_FULL_HP || ai == AI_FULL_MP)
     {
         // No recursive interruptions from messages (AI_MESSAGE)
-        block_interruptions(true);
+        _block_interruptions(true);
         if (ai == AI_FULL_HP)
             mpr("HP restored.");
         else
             mpr("Magic restored.");
-        block_interruptions(false);
+        _block_interruptions(false);
 
         if (Options.rest_wait_both && curr == DELAY_REST
             && (you.magic_points < you.max_magic_points
@@ -1871,12 +1879,4 @@ const char *delay_name(int delay)
         return ("");
 
     return delay_names[delay];
-}
-
-void block_interruptions(bool block)
-{
-    if (block)
-        _interrupts_blocked++;
-    else
-        _interrupts_blocked--;
 }

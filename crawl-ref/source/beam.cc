@@ -2766,7 +2766,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     pbolt.foe_helped    = pbolt.foe_hurt = 0;
     pbolt.foe_ratio     = 80;        // default - see mons_should_fire()
 
-    // Foe ratio for summoning gtr. demons & undead -- they may be
+    // Foe ratio for summoning greater demons & undead -- they may be
     // summoned, but they're hostile and would love nothing better
     // than to nuke the player and his minions.
     if (mons_att_wont_attack(pbolt.attitude)
@@ -2775,22 +2775,22 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
         pbolt.foe_ratio = 25;
     }
 
-    // fire!
+    // Fire!
     fire_beam(pbolt);
 
     // Unset tracer flag (convenience).
     pbolt.is_tracer     = false;
-}                               // end tracer_f()
+}
 
 bool check_line_of_sight( int sx, int sy, int tx, int ty )
 {
     const int dist = grid_distance( sx, sy, tx, ty );
 
-    // can always see one square away
+    // Can always see one square away.
     if (dist <= 1)
         return (true);
 
-    // currently we limit the range to 8
+    // Currently we limit the range to 8.
     if (dist > MONSTER_LOS_RANGE)
         return (false);
 

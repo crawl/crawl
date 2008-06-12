@@ -210,7 +210,7 @@ static std::string _get_version_changes(void)
     return (result);
 }
 
-void print_version(void)
+static void _print_version(void)
 {
     formatted_scroller cmd_version;
 
@@ -1441,7 +1441,7 @@ static int _keyhelp_keyfilter(int ch)
       case 'v':
       case 'V':
       {
-        print_version();
+        _print_version();
         return -1;
       }
     }

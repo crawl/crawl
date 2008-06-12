@@ -1262,26 +1262,6 @@ void display_notes()
     redraw_screen();
 }
 
-void resists_screen()
-{
-#ifdef USE_TILE
-    mouse_control mc(MOUSE_MODE_MORE);
-#endif
-
-    std::vector<formatted_string> vfs = get_full_detail(false);
-    clrscr();
-    cgotoxy(1,1);
-    textcolor(LIGHTGREY);
-
-    formatted_scroller scr;
-    scr.set_tag("resists");
-    for ( unsigned i = 0; i < vfs.size(); ++i )
-        scr.add_item_formatted_string(vfs[i]);
-
-    scr.show();
-    redraw_screen();
-}
-
 #ifdef DGL_WHEREIS
 ///////////////////////////////////////////////////////////////////////////
 // whereis player

@@ -31,9 +31,9 @@ static void kill_lua_filltable(std::vector<kill_exp> &v);
 
 ///////////////////////////////////////////////////////////////////////////
 // KillMaster
-// 
+//
 
-const char *kill_category_names[] = 
+const char *kill_category_names[] =
 {
     "you",
     "collateral kills",
@@ -82,7 +82,7 @@ void KillMaster::load(reader& inf)
 {
     unsigned char major = unmarshallByte(inf),
                   minor = unmarshallByte(inf);
-    if (major != KILLS_MAJOR_VERSION || 
+    if (major != KILLS_MAJOR_VERSION ||
         (minor != KILLS_MINOR_VERSION && minor > 0))
     {
         return;
@@ -98,7 +98,7 @@ void KillMaster::load(reader& inf)
 
 void KillMaster::record_kill(const monsters *mon, int killer, bool ispet)
 {
-    const kill_category kc = 
+    const kill_category kc =
         YOU_KILL(killer)? KC_YOU :
         ispet?            KC_FRIENDLY :
                           KC_OTHER;
@@ -111,7 +111,7 @@ std::string KillMaster::kill_info() const
         return ("");
 
     std::string killtext;
-    
+
     bool needseparator = false;
     int categories = 0;
     long grandtotal = 0L;
@@ -122,7 +122,7 @@ std::string KillMaster::kill_info() const
         int targ = Options.kill_map[i];
         catkills[targ].merge( categorized_kills[i] );
     }
-    
+
     for (int i = KC_YOU; i < KC_NCATEGORIES; ++i)
     {
         if (catkills[i].empty())
@@ -133,8 +133,8 @@ std::string KillMaster::kill_info() const
         long count = catkills[i].get_kills(kills);
         grandtotal += count;
 
-        add_kill_info( killtext, 
-                       kills, 
+        add_kill_info( killtext,
+                       kills,
                        count,
                        i == KC_YOU? NULL :
                                     category_name((kill_category) i),
@@ -192,7 +192,7 @@ void KillMaster::add_kill_info(std::string &killtext,
 
     lua_pushboolean(clua, separator);
 
-    unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);    
+    unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
     if (!clua.callfn("c_kill_list", 3, 0))
 #endif
     {
@@ -219,7 +219,7 @@ void KillMaster::add_kill_info(std::string &killtext,
         }
         {
             char numbuf[100];
-            snprintf(numbuf, sizeof numbuf, 
+            snprintf(numbuf, sizeof numbuf,
                     "%ld creature%s vanquished." "\n", count,
                     count > 1? "s" : "");
             killtext += numbuf;
@@ -307,7 +307,7 @@ void Kills::save(writer& outf) const
 
     // How many ghosts do we have?
     marshallShort(outf, ghosts.size());
-    for (ghost_vec::const_iterator iter = ghosts.begin(); 
+    for (ghost_vec::const_iterator iter = ghosts.begin();
          iter != ghosts.end(); ++iter)
     {
         iter->save(outf);
@@ -359,10 +359,10 @@ std::string apostrophise(const std::string &name)
 
 // For monster names ending with these suffixes, we pluralise directly without
 // attempting to use the "of" rule. For instance:
-// 
+//
 //      moth of wrath           => moths of wrath but
 //      moth of wrath zombie    => moth of wrath zombies.
-//      
+//
 // This is not necessary right now, since there are currently no monsters that
 // require this special treatment (no monster with 'of' in its name is eligible
 // for zombies or skeletons).
@@ -462,7 +462,7 @@ std::string kill_def::base_name(const kill_monster_desc &md) const
         name = "spectral " + name;
         break;
       default:
-        // Silence compiler warning about not handling M_NORMAL and 
+        // Silence compiler warning about not handling M_NORMAL and
         // M_SHAPESHIFTER
         break;
     }
@@ -509,14 +509,14 @@ std::string kill_def::info(const kill_monster_desc &md) const
     return append_places(md, name);
 }
 
-std::string kill_def::append_places(const kill_monster_desc &md, 
+std::string kill_def::append_places(const kill_monster_desc &md,
                                 const std::string &name) const
 {
     if (Options.dump_kill_places == KDO_NO_PLACES) return name;
 
     int nplaces = places.size();
     if ( nplaces == 1 || mons_is_unique(md.monnum)
-            || Options.dump_kill_places == KDO_ALL_PLACES ) 
+            || Options.dump_kill_places == KDO_ALL_PLACES )
     {
         std::string augmented = name;
         augmented += " (";
@@ -554,9 +554,7 @@ void kill_def::load(reader& inf)
     places.clear();
     short place_count = unmarshallShort(inf);
     for (short i = 0; i < place_count; ++i)
-    {
         places.push_back((unsigned short) unmarshallShort(inf));
-    }
 }
 
 kill_ghost::kill_ghost(const monsters *mon)
@@ -568,14 +566,14 @@ kill_ghost::kill_ghost(const monsters *mon)
     // Check whether this is really a ghost, since we also have to handle
     // the Pandemonic demons.
     if (mon->type == MONS_PLAYER_GHOST)
-        ghost_name = "The ghost of " + ghost_description(*mon, true);
+        ghost_name = "The ghost of " + get_ghost_description(*mon, true);
 }
 
 std::string kill_ghost::info() const
 {
-    return ghost_name + 
-        (Options.dump_kill_places != KDO_NO_PLACES?  
-            " (" + short_place_name(place) + ")" : std::string(""));
+    return ghost_name
+           + (Options.dump_kill_places != KDO_NO_PLACES?
+                " (" + short_place_name(place) + ")" : std::string(""));
 }
 
 void kill_ghost::save(writer& outf) const
@@ -664,10 +662,10 @@ KILLEXP_ACCESS(base_name, string, base_name.c_str())
 KILLEXP_ACCESS(desc, string, desc.c_str())
 KILLEXP_ACCESS(monnum, number, monnum)
 KILLEXP_ACCESS(isghost, boolean,
-               monnum == -1 && 
+               monnum == -1 &&
                ke->desc.find("The ghost of") != std::string::npos)
 KILLEXP_ACCESS(ispandemon, boolean,
-               monnum == -1 && 
+               monnum == -1 &&
                ke->desc.find("The ghost of") == std::string::npos)
 KILLEXP_ACCESS(isunique, boolean,
                monnum != -1 && mons_is_unique(ke->monnum))
@@ -744,7 +742,7 @@ static int kill_lualc_place_name(lua_State *ls)
 
 static bool is_ghost(const kill_exp *ke)
 {
-    return ke->monnum == -1 
+    return ke->monnum == -1
         && ke->desc.find("The ghost of") != std::string::npos;
 }
 
@@ -796,7 +794,7 @@ static int kill_lualc_symbol(lua_State *ls)
     kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, 1) );
     if (ke)
     {
-        unsigned char ch = ke->monnum != -1? 
+        unsigned char ch = ke->monnum != -1?
                     mons_char(ke->monnum) :
               is_ghost(ke)? 'p' : '&';
 
@@ -868,7 +866,7 @@ static int kill_lualc_write(lua_State *ls)
             return 0;
         }
 
-        std::string *skill = static_cast<std::string *>( 
+        std::string *skill = static_cast<std::string *>(
                                     lua_touserdata(ls, -1) );
         // Pop the userdata off the stack.
         lua_settop(ls, -2);

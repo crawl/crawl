@@ -232,13 +232,8 @@ static int _debug_prompt_for_skill( const char *prompt )
 }
 #endif
 
-//---------------------------------------------------------------
-//
-// debug_change_species
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
-void debug_change_species( void )
+void wizard_change_species( void )
 {
     char specs[80];
     int i;
@@ -406,13 +401,9 @@ static int _debug_prompt_for_int( const char *prompt, bool nonneg )
 
 // Some debugging functions, accessible in wizard mode.
 
-//---------------------------------------------------------------
-//
-// cast_spec_spell
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
-void cast_spec_spell(void)
+// Casts a specific spell by number.
+void wizard_cast_spec_spell(void)
 {
     int spell = _debug_prompt_for_int( "Cast which spell by number? ", true );
 
@@ -427,13 +418,9 @@ void cast_spec_spell(void)
 #endif
 
 
-//---------------------------------------------------------------
-//
-// cast_spec_spell_name
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
-void cast_spec_spell_name(void)
+// Casts a specific spell by name.
+void wizard_cast_spec_spell_name(void)
 {
     char specs[80];
 
@@ -464,7 +451,7 @@ void cast_spec_spell_name(void)
 
 #ifdef WIZARD
 // Creates a specific monster by mon type number.
-void create_spec_monster(void)
+void wizard_create_spec_monster(void)
 {
     int mon = _debug_prompt_for_int( "Create which monster by number? ", true );
 
@@ -484,7 +471,7 @@ void create_spec_monster(void)
 #ifdef WIZARD
 // Creates a specific monster by name. Uses the same patterns as
 // map definitions.
-void create_spec_monster_name()
+void wizard_create_spec_monster_name()
 {
     char specs[100];
     mpr( "Which monster by name? ", MSGCH_PROMPT );
@@ -708,13 +695,8 @@ void wizard_place_stairs( bool down )
 }
 #endif
 
-//---------------------------------------------------------------
-//
-// level_travel
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
-void level_travel( bool down )
+void wizard_level_travel( bool down )
 {
     dungeon_feature_type stairs = _find_appropriate_stairs(down);
 
@@ -1117,7 +1099,7 @@ static bool _book_from_spell(const char* specs, item_def &item)
 // create_spec_object
 //
 //---------------------------------------------------------------
-void create_spec_object()
+void wizard_create_spec_object()
 {
     static int max_subtype[] =
     {
@@ -1601,7 +1583,7 @@ static void _tweak_randart(item_def &item)
     }
 }
 
-void tweak_object(void)
+void wizard_tweak_object(void)
 {
     char specs[50];
     char keyin;
@@ -1703,21 +1685,16 @@ void tweak_object(void)
 #endif
 
 
-//---------------------------------------------------------------
-//
-// stethoscope
-//
-//---------------------------------------------------------------
-#if DEBUG_DIAGNOSTICS
-
-void stethoscope(int mwh)
+#ifdef DEBUG_DIAGNOSTICS
+// Prints a number of useful (for debugging, that is) stats on monsters.
+void debug_stethoscope(int mon)
 {
     struct dist stth;
     int steth_x, steth_y;
     int i;
 
-    if (mwh != RANDOM_MONSTER)
-        i = mwh;
+    if (mon != RANDOM_MONSTER)
+        i = mon;
     else
     {
         mpr( "Which monster?", MSGCH_PROMPT );
@@ -1754,7 +1731,7 @@ void stethoscope(int mwh)
         i = mgrd[steth_x][steth_y];
     }
 
-    // print type of monster
+    // Print type of monster.
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
          menv[i].name(DESC_CAP_THE, true).c_str(),
          i, menv[i].type, menv[i].x, menv[i].y,
@@ -1764,7 +1741,7 @@ void stethoscope(int mwh)
           (menv[i].attitude == ATT_GOOD_NEUTRAL)  ? "good neutral"
                                                   : "unknown alignment") );
 
-    // print stats and other info
+    // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
          "HD=%d (%lu) HP=%d/%d AC=%d EV=%d MR=%d SP=%d "
          "energy=%d%s%s num=%d flags=%04lx",
@@ -1779,8 +1756,7 @@ void stethoscope(int mwh)
          get_monster_data(menv[i].base_monster)->name : "",
          menv[i].number, menv[i].flags );
 
-    // print behaviour information
-
+    // Print habitat and behaviour information.
     const habitat_type hab = mons_habitat( &menv[i] );
 
     mprf(MSGCH_DIAGNOSTICS,
@@ -1806,7 +1782,7 @@ void stethoscope(int mwh)
          menv[i].target_x, menv[i].target_y,
          god_name(menv[i].god).c_str() );
 
-    // print resistances
+    // Print resistances.
     mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d",
          mons_res_fire( &menv[i] ),
          mons_res_cold( &menv[i] ),
@@ -1826,15 +1802,10 @@ void stethoscope(int mwh)
               "Ghost damage: %d; brand: %d",
               ghost.damage, ghost.brand );
     }
-}                               // end stethoscope()
+}
 #endif
 
 #if DEBUG_ITEM_SCAN
-//---------------------------------------------------------------
-//
-// dump_item
-//
-//---------------------------------------------------------------
 static void _dump_item( const char *name, int num, const item_def &item )
 {
     mpr( name, MSGCH_ERROR );
@@ -2414,7 +2385,7 @@ void debug_item_statistics( void )
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
-void debug_add_skills(void)
+void wizard_exercise_skill(void)
 {
     int skill = _debug_prompt_for_skill( "Which skill (by name)? " );
 
@@ -2425,16 +2396,11 @@ void debug_add_skills(void)
         mpr("Exercising...");
         exercise(skill, 100);
     }
-}                               // end debug_add_skills()
+}
 #endif
 
-//---------------------------------------------------------------
-//
-// debug_set_skills
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
-void debug_set_skills(void)
+void wizard_set_skill_level(void)
 {
     int skill = _debug_prompt_for_skill( "Which skill (by name)? " );
 
@@ -2498,17 +2464,12 @@ void debug_set_skills(void)
             }
         }
     }
-}                               // end debug_add_skills()
+}
 #endif
 
 
-//---------------------------------------------------------------
-//
-// debug_set_all_skills
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
-void debug_set_all_skills(void)
+void wizard_set_all_skills(void)
 {
     int i;
     int amount =
@@ -2546,7 +2507,7 @@ void debug_set_all_skills(void)
         you.redraw_armour_class = 1;
         you.redraw_evasion = 1;
     }
-}                               // end debug_add_skills()
+}
 #endif
 
 
@@ -2654,7 +2615,7 @@ static const char *mutation_type_names[] =
     "patterned scales"
 };
 
-bool debug_add_mutation(void)
+bool wizard_add_mutation(void)
 {
     bool success = false;
     char specs[80];
@@ -2812,17 +2773,12 @@ bool debug_add_mutation(void)
     }
 
     return (success);
-}                               // end debug_add_mutation()
+}
 #endif
 
 
-//---------------------------------------------------------------
-//
-// debug_get_religion
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
-void debug_get_religion(void)
+void wizard_get_religion(void)
 {
     char specs[80];
 
@@ -3558,7 +3514,7 @@ void debug_make_shop()
     mprf("Done.");
 }
 
-void debug_set_stats()
+void wizard_set_stats()
 {
     char buf[80];
     mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
@@ -3568,19 +3524,20 @@ void debug_set_stats()
     int sstr = you.strength,
         sdex = you.dex,
         sint = you.intel;
+
     sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
 
     you.max_strength = you.strength = cap_stat(sstr);
     you.max_dex      = you.dex      = cap_stat(sdex);
     you.max_intel    = you.intel    = cap_stat(sint);
 
-    you.redraw_strength = true;
-    you.redraw_dexterity = true;
+    you.redraw_strength     = true;
+    you.redraw_dexterity    = true;
     you.redraw_intelligence = true;
-    you.redraw_evasion = true;
+    you.redraw_evasion      = true;
 }
 
-void debug_card()
+void wizard_draw_card()
 {
     msg::streams(MSGCH_PROMPT) << "Which card? " << std::endl;
     char buf[80];
@@ -3626,7 +3583,7 @@ static void debug_downtick_xl(int newxl)
         lose_level();
 }
 
-void debug_set_xl()
+void wizard_set_xl()
 {
     mprf(MSGCH_PROMPT, "Enter new experience level: ");
     char buf[30];
@@ -3721,7 +3678,9 @@ void debug_place_map()
     debug_load_map_by_name(what);
 }
 
-void debug_dismiss_all_monsters(bool force_all)
+// Dismisses all monsters on the level or all monsters that match a user
+// specified regex.
+void wizard_dismiss_all_monsters(bool force_all)
 {
     char buf[80];
     if (!force_all)
@@ -3761,7 +3720,7 @@ void debug_dismiss_all_monsters(bool force_all)
     }
 }
 
-void debug_kill_traps()
+static void _debug_kill_traps()
 {
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
@@ -3771,7 +3730,7 @@ void debug_kill_traps()
         }
 }
 
-static int debug_time_explore()
+static int _debug_time_explore()
 {
     viewwindow(true, false);
     start_explore(false);
@@ -3801,17 +3760,15 @@ static int debug_time_explore()
     return (you.num_turns - start);
 }
 
-static void debug_destroy_doors()
+static void _debug_destroy_doors()
 {
     for (int y = 0; y < GYM; ++y)
-    {
         for (int x = 0; x < GXM; ++x)
         {
             const dungeon_feature_type feat = grd[x][y];
             if (feat == DNGN_CLOSED_DOOR || feat == DNGN_SECRET_DOOR)
                 grd[x][y] = DNGN_FLOOR;
         }
-    }
 }
 
 // Turns off greedy explore, then:
@@ -3823,16 +3780,16 @@ static void debug_destroy_doors()
 // f) Counts number of turns needed to explore the level.
 void debug_test_explore()
 {
-    debug_dismiss_all_monsters(true);
-    debug_kill_traps();
-    forget_map(100);
+    wizard_dismiss_all_monsters(true);
+    _debug_kill_traps();
+    _debug_destroy_doors();
 
-    debug_destroy_doors();
+    forget_map(100);
 
     // Remember where we are now.
     const coord_def where = you.pos();
 
-    const int explore_turns = debug_time_explore();
+    const int explore_turns = _debug_time_explore();
 
     // Return to starting point.
     you.moveto(where);
@@ -3908,7 +3865,7 @@ static bool _force_suitable(const monsters *mon)
     return (mon->alive());
 }
 
-void debug_apply_monster_blessing(monsters* mon)
+void wizard_apply_monster_blessing(monsters* mon)
 {
     mpr("Apply blessing of (B)eogh, The (S)hining One, or (R)andomly?",
         MSGCH_PROMPT);

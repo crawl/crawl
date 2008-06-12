@@ -902,23 +902,9 @@ static void _fixup_branch_stairs()
                 }
     }
 
-    // Bottom level of branch - replaces down stairs with up ladders:
-    if (player_branch_depth() == your_branch().depth
-        && you.level_type == LEVEL_DUNGEON
-        && you.where_are_you != BRANCH_VESTIBULE_OF_HELL )
-    {
-        for (int x = 1; x < GXM; x++)
-            for (int y = 1; y < GYM; y++)
-                if (grd[x][y] >= DNGN_STONE_STAIRS_DOWN_I
-                    && grd[x][y] <= DNGN_ESCAPE_HATCH_DOWN)
-                {
-                    grd[x][y] = DNGN_ESCAPE_HATCH_UP;
-                }
-    }
-
-    // Hall of blades (1 level deal) - no down staircases, thanks!
-    // XXX XXX why the special-casing?
-    if (player_in_branch( BRANCH_HALL_OF_BLADES ))
+    // Branches that consist of only 1 level (Hall of Blades).
+    // No down staircases, thanks!
+    if (player_branch_depth() == 1)
     {
         for (int x = 1; x < GXM; x++)
             for (int y = 1; y < GYM; y++)
@@ -928,6 +914,19 @@ static void _fixup_branch_stairs()
                     grd[x][y] = DNGN_FLOOR;
                 }
     }
+    else if (at_branch_bottom()
+             && you.level_type == LEVEL_DUNGEON)
+    {
+        // Bottom level of branch - replaces down stairs with up ladders.
+        for (int x = 1; x < GXM; x++)
+            for (int y = 1; y < GYM; y++)
+                if (grd[x][y] >= DNGN_STONE_STAIRS_DOWN_I
+                    && grd[x][y] <= DNGN_ESCAPE_HATCH_DOWN)
+                {
+                    grd[x][y] = DNGN_ESCAPE_HATCH_UP;
+                }
+    }
+
 }
 
 static bool _fixup_stone_stairs(bool preserve_vault_stairs)
@@ -1529,11 +1528,9 @@ static void _prepare_shoals(int level_number)
     // water, but this is much cooler. Right?
     const int margin = 6;
 
-    const bool at_bottom = (your_branch().depth == player_branch_depth());
-
     int num_islands = player_branch_depth() + 1;
 
-    if ( at_bottom )
+    if (at_branch_bottom())
         num_islands += random2(3);
 
     const int estradius = 50 / num_islands - (num_islands == 2 ? 5 : 0);
@@ -1617,9 +1614,9 @@ static void _prepare_shoals(int level_number)
     _replace_in_grid(margin, margin, GXM-margin, GYM-margin,
                      DNGN_WATER_STUCK, DNGN_SHALLOW_WATER);
 
-    if ( at_bottom )
+    if (at_branch_bottom())
     {
-        // Put all the stairs on one island
+        // Put all the stairs on one island.
         grd[centres[0].x  ][centres[0].y] = DNGN_STONE_STAIRS_UP_I;
         grd[centres[0].x+1][centres[0].y] = DNGN_STONE_STAIRS_UP_II;
         grd[centres[0].x-1][centres[0].y] = DNGN_STONE_STAIRS_UP_III;
@@ -6499,24 +6496,8 @@ static void _labyrinth_level(int level_number)
 
 static bool _is_wall(int x, int y)
 {
-    unsigned char feat = grd[x][y];
-
-    switch (feat)
-    {
-        case DNGN_ROCK_WALL:
-        case DNGN_STONE_WALL:
-        case DNGN_METAL_WALL:
-        case DNGN_GREEN_CRYSTAL_WALL:
-        case DNGN_WAX_WALL:
-        case DNGN_CLEAR_ROCK_WALL:
-        case DNGN_CLEAR_STONE_WALL:
-        case DNGN_CLEAR_PERMAROCK_WALL:
-            return (true);
-        default:
-            return (false);
-    }
+    return grid_is_wall(grd[x][y]);
 }
-
 
 static int _box_room_door_spot(int x, int y)
 {

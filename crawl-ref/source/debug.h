@@ -67,108 +67,63 @@ inline void __DUMMY_TRACE__(...)
 #endif
 
 
-// last updated 12may2000 {dlb}
+// last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void cast_spec_spell(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void cast_spec_spell_name(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void create_spec_monster(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void create_spec_monster_name(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: ( this does not seem to be used at all ... {dlb} )
- * *********************************************************************** */
-void create_spec_object(void);
-void tweak_object(void);
-
-// last updated 12say2001 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void debug_add_skills(void);
-void debug_set_skills(void);
-void debug_set_all_skills(void);
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void debug_add_skills(void);
-
-// last updated 17sep2001 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-bool debug_add_mutation(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: direct - food - items
- * *********************************************************************** */
-void error_message_to_player(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
+void wizard_cast_spec_spell(void);
+void wizard_cast_spec_spell_name(void);
+void wizard_create_spec_monster(void);
+void wizard_create_spec_monster_name(void);
+void wizard_create_spec_object(void);
+void wizard_tweak_object(void);
+void wizard_exercise_skill(void);
+void wizard_set_skill_level(void);
+void wizard_set_all_skills(void);
+bool wizard_add_mutation(void);
+void wizard_change_species( void );
+void wizard_set_xl();
+void wizard_get_religion( void );
+void wizard_set_stats( void );
+void wizard_draw_card();
+void wizard_dismiss_all_monsters(bool force_all = false);
 void wizard_place_stairs( bool down );
-void level_travel( bool down );
+void wizard_level_travel( bool down );
 void wizard_interlevel_travel();
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - direct
- * *********************************************************************** */
-void stethoscope(int mwh);
-
-void debug_item_scan( void );
-void debug_item_statistics( void );
-void debug_get_religion( void );
-void debug_change_species( void );
-void debug_fight_statistics( bool use_init_defaults, bool defence = false );
 void debug_make_trap( void );
 void debug_make_shop( void );
-void debug_set_stats( void );
-void debug_list_monsters();
-
-void debug_card();
-void debug_set_xl();
 void debug_place_map();
+// Honest debugging functions.
+void debug_item_scan( void );
+void debug_item_statistics( void );
+void debug_fight_statistics( bool use_init_defaults, bool defence = false );
+void debug_list_monsters();
 void debug_test_explore();
-void debug_dismiss_all_monsters(bool force_all = false);
+
+
+// last updated 12 Jun 2008 {jpeg}
+/* ***********************************************************************
+ * called from: directn
+ * *********************************************************************** */
+void error_message_to_player(void);
+#if DEBUG_DIAGNOSTICS
+void debug_stethoscope(int mon);
+#endif
 
 class monsters;
-void debug_make_monster_shout(monsters* mon);
-void debug_apply_monster_blessing(monsters* mon);
+void wizard_apply_monster_blessing(monsters* mon);
 void wizard_give_monster_item(monsters* mon);
 void wizard_move_player_or_monster(int x, int y);
+void debug_make_monster_shout(monsters* mon);
 void debug_pathfind(int mid);
 
+
 #ifdef DEBUG_DIAGNOSTICS
+/* ***********************************************************************
+ * called from: acr
+ * *********************************************************************** */
 void generate_map_stats();
+
 class map_def;
 void mapgen_report_map_try(const map_def &map);
 void mapgen_report_map_use(const map_def &map);

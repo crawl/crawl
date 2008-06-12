@@ -39,7 +39,6 @@ bool dump_char(const std::string &fname,
                const scorefile_entry *se = NULL);
 void dump_map(const char* fname);
 void dump_map(FILE *fp);
-void resists_screen();
 void display_notes();
 std::string munge_description(const std::string &inStr);
 const char *hunger_level(void);
