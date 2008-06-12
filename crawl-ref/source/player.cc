@@ -2571,7 +2571,7 @@ int player_see_invis(bool calc_unid)
 bool player_monster_visible( const monsters *mon )
 {
     if (mon->has_ench(ENCH_SUBMERGED)
-        || (mon->invisible() && !player_see_invis()))
+        || mon->invisible() && !player_see_invis())
     {
         return (false);
     }
@@ -2579,13 +2579,13 @@ bool player_monster_visible( const monsters *mon )
     return (true);
 }
 
-// returns true if player is beheld by a given monster
+// Returns true if player is beheld by a given monster.
 bool player_beheld_by( const monsters *mon )
 {
     if (!you.duration[DUR_BEHELD])
         return false;
 
-    // can this monster even behold you?
+    // Can this monster even behold you?
     if (mon->type != MONS_MERMAID)
         return false;
 

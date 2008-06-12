@@ -2306,6 +2306,20 @@ monster_type summon_any_dragon(dragon_class_type dct)
 /////////////////////////////////////////////////////////////////////////////
 // monster_pathfind
 
+// The pathfinding is an implementation of the A* algorithm. Beginning at the
+// destination square we check all neighbours of a given grid, estimate the
+// distance needed for any shortest path including this grid and push the
+// result into a hash. We can then easily access all points with the shortest
+// distance estimates and then check _their_ neighbours and so on.
+// The algorithm terminates once we reach the monster position since - because
+// of the sorting of grids by shortest distance in the hash - there can be no
+// path between start and target that is shorter than the current one. There
+// could be other paths that have the same length but that has no real impact.
+// If the hash has been cleared and the start grid has not been encountered,
+// then there's no path that matches the requirements fed into monster_pathfind.
+// (These requirements are usually preference of habitat of a specific monster
+// or a limit of the distance between start and any grid on the path.)
+
 //#define DEBUG_PATHFIND
 monster_pathfind::monster_pathfind()
     : mons(), target(), range(0), min_length(0), max_length(0), dist(), prev()
@@ -2322,6 +2336,7 @@ void monster_pathfind::set_range(int r)
         range = r;
 }
 
+// The main method in the monster_pathfind class.
 // Returns true if a path was found, else false.
 bool monster_pathfind::start_pathfind(monsters *mon, coord_def dest, bool msg)
 {
@@ -2359,10 +2374,13 @@ bool monster_pathfind::start_pathfind(monsters *mon, coord_def dest, bool msg)
     bool success = false;
     do
     {
+        // Calculate the distance to all neighbours of the current position,
+        // and add them to the hash, if they haven't already been looked at.
         success = calc_path_to_neighbours();
         if (success)
             return (true);
 
+        // Pull the position with shortest distance estimate to our target grid.
         success = get_best_position();
 
         if (!success)
@@ -2387,8 +2405,14 @@ bool monster_pathfind::calc_path_to_neighbours()
     // For each point, we look at all neighbour points. Check the orthogonals
     // last, so that, should an orthogonal and a diagonal direction have the
     // same total travel cost, the orthogonal will be picked first, and thus
-    // zigzagging should be avoided. This means directions are looked at, in
-    // order: 1, 3, 5, 7, 0, 2, 4, 6. (dir = 0) is an intentional assignment.
+    // zigzagging can be significantly reduced.
+    //
+    //      1  0  2       This means directions are looked at, in order,
+    //       \ | /        1, 3, 5, 7 (diagonals) followed by 0, 2, 4, 6
+    //      7--.--3       (orthogonals). This is achieved by the assignment
+    //       / | \        of (dir = 0) once dir has passed 7.
+    //      6  5  4
+    //
     for (int dir = 1; dir < 8; (dir += 2) == 9 && (dir = 0))
     {
         npos = pos + Compass[dir];
@@ -2412,6 +2436,8 @@ bool monster_pathfind::calc_path_to_neighbours()
         mprf("old dist: %d, new dist: %d, infinite: %d", old_dist, distance,
              INFINITE_DISTANCE);
 #endif
+        // If the new distance is better than the old one (initialized with
+        // INFINITE), update the position.
         if (distance < old_dist)
         {
             // Calculate new total path length.
@@ -2422,7 +2448,6 @@ bool monster_pathfind::calc_path_to_neighbours()
                 mprf("Adding (%d,%d) to hash (total dist = %d)",
                      npos.x, npos.y, total);
 #endif
-
                 add_new_pos(npos, total);
                 if (total > max_length)
                     max_length = total;
@@ -2442,9 +2467,9 @@ bool monster_pathfind::calc_path_to_neighbours()
 
             // Set backtracking information.
             // Converts the Compass direction to their counterpart.
-            //      7  0  1
-            //      6  .  2
-            //      5  4  3
+            //      0  1  2         4  5  6
+            //      7  .  3   ==>   3  .  7       e.g. (3 + 4) % 8          = 7
+            //      6  5  4         2  1  0            (7 + 4) % 8 = 11 % 8 = 3
 
             prev[npos.x][npos.y] = (dir + 4) % 8;
 
@@ -2461,6 +2486,9 @@ bool monster_pathfind::calc_path_to_neighbours()
     return (false);
 }
 
+// Starting at known min_length (minimum total estimated path distance), check
+// the hash for existing vectors, then pick the last entry of the first vector
+// that matches. Update min_length, if necessary.
 bool monster_pathfind::get_best_position()
 {
     for (int i = min_length; i <= max_length; i++)
@@ -2469,9 +2497,13 @@ bool monster_pathfind::get_best_position()
         {
             if (i > min_length)
                 min_length = i;
+
             std::vector<coord_def> &vec = hash[i];
+            // Pick the last position pushed into the vector as it's most
+            // likely to be close to the target.
             pos = vec[vec.size()-1];
             vec.pop_back();
+
 #ifdef DEBUG_PATHFIND
             mprf("Returning (%d, %d) as best pos with total dist %d.",
                  pos.x, pos.y, min_length);
@@ -2488,6 +2520,8 @@ bool monster_pathfind::get_best_position()
     return (false);
 }
 
+// Using the prev vector backtrack from start to target to find all steps to
+// take along the shortest path.
 std::vector<coord_def> monster_pathfind::backtrack()
 {
 #ifdef DEBUG_PATHFIND
@@ -2522,7 +2556,13 @@ std::vector<coord_def> monster_pathfind::backtrack()
 }
 
 // Reduces the path coordinates to only a couple of key waypoints needed
-// to reach the target.
+// to reach the target. Waypoints are chosen such that from one waypoint you
+// can only just see the next one. Note that grid_see_grid() is probably
+// rather too conservative in these estimates.
+// This is done because Crawl's path finding once a target can be seen is
+// very robust and because it allows for more natural traversing if there are
+// other monsters in the way.
+
 std::vector<coord_def> monster_pathfind::calc_waypoints()
 {
     std::vector<coord_def> path = backtrack();
@@ -2558,14 +2598,16 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     }
 
     // Add the actual target to the list of waypoints, so we can later check
-    // whether a tracked enemy has moved too much, and we have to update the
-    // path.
+    // whether a tracked enemy has moved too much, in case we have to update
+    // the path.
     if (pos != path[path.size() - 1])
         waypoints.push_back(pos);
 
     return waypoints;
 }
 
+// Checks whether a given monster can pass over a certain position, respecting
+// its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::traversable(coord_def p)
 {
     const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
@@ -2626,7 +2668,9 @@ int monster_pathfind::travel_cost(coord_def npos)
 
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.
-    // Only tested for shallow water since they can't enter deep water anywa.
+    // (The resulting path might not be optimal but it will lead to a path
+    // a monster of such habits is likely to prefer.)
+    // Only tested for shallow water since they can't enter deep water anyway.
     if (!airborne && !mons_class_amphibious(montype)
         && (grd(pos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_SHALLOW_WATER))
     {
@@ -2634,7 +2678,6 @@ int monster_pathfind::travel_cost(coord_def npos)
     }
 
     // Try to avoid (known) traps.
-    //
     const int trap = trap_at_xy(npos.x, npos.y);
     if (trap >= 0)
     {
@@ -2652,6 +2695,7 @@ int monster_pathfind::travel_cost(coord_def npos)
         if (tt == TRAP_ALARM || tt == TRAP_ZOT)
         {
             // Your allies take extra precautions to avoid known alarm traps.
+            // Zot traps are considered intraversable.
             if (knows_trap && mons_friendly(mons))
                 return (3);
 
@@ -2663,13 +2707,12 @@ int monster_pathfind::travel_cost(coord_def npos)
         // tele traps are never traversable anyway.
         if (knows_trap && !airborne)
             return 2;
-
-        return 1;
     }
 
     return 1;
 }
 
+// The estimated cost to reach a grid is simply max(dx, dy).
 int monster_pathfind::estimated_cost(coord_def p)
 {
     return (grid_distance(p.x, p.y, target.x, target.y));

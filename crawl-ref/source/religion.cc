@@ -495,7 +495,7 @@ void dec_penance(int val)
 bool beogh_water_walk()
 {
     return (you.religion == GOD_BEOGH && !player_under_penance()
-        && you.piety >= piety_breakpoint(4));
+            && you.piety >= piety_breakpoint(4));
 }
 
 static bool _need_water_walking()
@@ -743,11 +743,10 @@ static void _give_nemelex_gift()
         return;
 
     // Nemelex will give at least one gift early.
-    if ((you.num_gifts[GOD_NEMELEX_XOBEH] == 0
-         && random2(piety_breakpoint(1)) < you.piety) ||
-        (random2(MAX_PIETY) <= you.piety
-         && one_chance_in(3)
-         && !you.attribute[ATTR_CARD_COUNTDOWN]))
+    if (you.num_gifts[GOD_NEMELEX_XOBEH] == 0
+           && random2(piety_breakpoint(1)) < you.piety
+        || random2(MAX_PIETY) <= you.piety && one_chance_in(3)
+           && !you.attribute[ATTR_CARD_COUNTDOWN])
     {
         misc_item_type gift_type;
 
@@ -2580,17 +2579,19 @@ void gain_piety(int pgn)
         }
     }
 
-    // Apply hysteresis
+    // Apply hysteresis.
     {
         // piety_hysteresis is the amount of _loss_ stored up, so this
         // may look backwards.
         const int old_hysteresis = you.piety_hysteresis;
-        you.piety_hysteresis = (unsigned char)std::max<int>(
-            0, you.piety_hysteresis - pgn);
+        you.piety_hysteresis =
+            (unsigned char) std::max<int>( 0, you.piety_hysteresis - pgn );
         const int pgn_borrowed = (old_hysteresis - you.piety_hysteresis);
         pgn -= pgn_borrowed;
+
 #if DEBUG_PIETY
-mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)", pgn, pgn_borrowed);
+        mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from "
+                                "hysteresis)", pgn, pgn_borrowed);
 #endif
     }
 
@@ -2602,8 +2603,8 @@ mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from hysteresis)",
 
     for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
     {
-        if ( you.piety >= piety_breakpoint(i) &&
-             old_piety < piety_breakpoint(i) )
+        if (you.piety >= piety_breakpoint(i)
+            && old_piety < piety_breakpoint(i))
         {
             take_note(Note(NOTE_GOD_POWER, you.religion, i));
             const char* pmsg = god_gain_power_messages[you.religion][i];
@@ -2971,8 +2972,8 @@ void lose_piety(int pgn)
 
         for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
         {
-            if ( you.piety < piety_breakpoint(i) &&
-                 old_piety >= piety_breakpoint(i) )
+            if (you.piety < piety_breakpoint(i)
+                && old_piety >= piety_breakpoint(i))
             {
                 const char* pmsg = god_lose_power_messages[you.religion][i];
                 const char first = pmsg[0];
@@ -5574,22 +5575,24 @@ int god_colour( god_type god ) //mv - added
     return(YELLOW);
 }
 
-int piety_rank( int piety )
+int piety_rank(int piety)
 {
     const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 6 };
     const int numbreakpoints = sizeof(breakpoints) / sizeof(int);
-    if ( piety < 0 )
+    if (piety < 0)
         piety = you.piety;
-    for ( int i = 0; i < numbreakpoints; ++i )
-        if ( piety >= breakpoints[i] )
+
+    for (int i = 0; i < numbreakpoints; ++i)
+        if (piety >= breakpoints[i])
             return numbreakpoints - i;
+
     return 0;
 }
 
 int piety_breakpoint(int i)
 {
     int breakpoints[MAX_GOD_ABILITIES] = { 30, 50, 75, 100, 120 };
-    if ( i >= MAX_GOD_ABILITIES || i < 0 )
+    if (i >= MAX_GOD_ABILITIES || i < 0)
         return 255;
     else
         return breakpoints[i];

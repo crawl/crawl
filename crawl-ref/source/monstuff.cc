@@ -2609,11 +2609,11 @@ static void _handle_behaviour(monsters *mon)
                 if (mon->foe == MHITYOU && travelling
                     && mon->travel_target == MTRAV_PLAYER)
                 {
+                    // We've got a target, so we'll continue on our way.
 #ifdef DEBUG_PATHFIND
                     mpr("Player out of LoS... start wandering.");
 #endif
                     new_beh = BEH_WANDER;
-                    // We've got a target, so we'll continue on our way.
                     break;
                 }
 
@@ -2699,8 +2699,29 @@ static void _handle_behaviour(monsters *mon)
 
             // Monster can see foe: continue 'tracking'
             // by updating target x,y.
-            if (mon->foe == MHITYOU && proxPlayer)
+            if (mon->foe == MHITYOU)
             {
+                // Just because we can *see* the player, that doesn't mean
+                // we can actually get there. To find about that, we first
+                // check for transparent walls. If there are transparent
+                // walls in the way we'll need pathfinding, no matter what.
+                // (Though monsters with a los attack don't need to get any
+                // closer to hurt the player.)
+                // If no walls are detected, there could still be a river
+                // or a pool of lava in the way. So we check whether there
+                // is water or lava in LoS (boolean) and if so, try to find
+                // a way around it. It's possible that the player can see
+                // lava but it actually has no influence on the monster's
+                // movement (because it's lying in the opposite direction)
+                // but if so, we'll find that out during path finding.
+                // In another attempt of optimization, don't bother with
+                // path finding if the monster in question has no trouble
+                // travelling through water or flying across lava.
+                // Also, if no path is found (too far away, perhaps) set a
+                // flag, so we don't directly calculate the whole thing again
+                // next turn, and even extend that flag to neighbouring
+                // monsters of similar movement restrictions.
+
                 bool potentially_blocking = trans_wall_block;
 
                 // Smart monsters that can fire through walls won't use
@@ -2760,17 +2781,11 @@ static void _handle_behaviour(monsters *mon)
                     // If we're already on our way, do nothing.
                     if (travelling && mon->travel_target == MTRAV_PLAYER)
                     {
-#ifdef DEBUG_PATHFIND
-                        mpr("Already travelling...");
-#endif
                         int len = mon->travel_path.size();
                         coord_def targ = mon->travel_path[len - 1];
                         if (grid_see_grid(targ.x, targ.y, you.x_pos, you.y_pos,
                                           can_move))
                         {
-#ifdef DEBUG_PATHFIND
-                            mpr("Target still valid?");
-#endif
                             // Current target still valid?
                             if (mon->x == mon->travel_path[0].x
                                 && mon->y == mon->travel_path[0].y)
@@ -2885,6 +2900,9 @@ static void _handle_behaviour(monsters *mon)
                         }
                     }
                 }
+                // Whew. If we arrived here, path finding didn't yield anything
+                // (or wasn't even attempted) and we need to set our target
+                // the traditional way.
 
                 // Sometimes, your friends will wander a bit.
                 if (isFriendly && one_chance_in(8))
@@ -2902,6 +2920,7 @@ static void _handle_behaviour(monsters *mon)
             }
             else
             {
+                // We have a foe but it's not the player.
                 mon->target_x = menv[mon->foe].x;
                 mon->target_y = menv[mon->foe].y;
             }
@@ -2984,6 +3003,9 @@ static void _handle_behaviour(monsters *mon)
                         // XXX: Note that this might still not be the best
                         // thing to do since another path might be even
                         // *closer* to our actual target now.
+                        // Not by much, though, since the original path was
+                        // optimal (A*) and the distance between the waypoints
+                        // is rather small.
 
                         int erase = -1;  // Erase how many waypoints?
                         for (unsigned int i = mon->travel_path.size() - 1;
@@ -3018,8 +3040,10 @@ static void _handle_behaviour(monsters *mon)
                         {
                             // We can't reach our old path from our current
                             // position, so calculate a new path instead.
-/*
+
                             monster_pathfind mp;
+                            // The last coordinate in the path vector is our
+                            // destination.
                             int len = mon->travel_path.size();
                             if (mp.start_pathfind(mon, mon->travel_path[len-1]))
                             {
@@ -3028,6 +3052,10 @@ static void _handle_behaviour(monsters *mon)
                                 {
                                     mon->target_x = mon->travel_path[0].x;
                                     mon->target_y = mon->travel_path[0].y;
+#ifdef DEBUG_PATHFIND
+                                mprf("Next waypoint: (%d, %d)",
+                                     mon->target_x, mon->target_y);
+#endif
                                 }
                                 else
                                 {
@@ -3037,22 +3065,20 @@ static void _handle_behaviour(monsters *mon)
                             }
                             else
                             {
-*/
                                 // Or just forget about the whole thing.
                                 mon->travel_path.clear();
                                 mon->travel_target = MTRAV_NONE;
                                 need_target = true;
-//                            }
+                            }
                         }
                     }
-                    else
-                    {
-#ifdef DEBUG_PATHFIND
-                        mpr("All clear. Continue travelling.");
-#endif
-                    }
+
+                    // Else, we can see the next waypoint and are making good
+                    // progress. Carry on, then!
                 }
 
+                // If we still need a target because we're not travelling
+                // (any more), check for patrol routes instead.
                 if (need_target && patrolling)
                 {
                     need_target = false;
@@ -3086,10 +3112,20 @@ static void _handle_behaviour(monsters *mon)
                         else
                         {
                             // It's time to head back!
-                            // Ideally, smart monsters should be able to use
-                            // pathfinding to find the way back, and animals
-                            // could decide to stop patrolling if the path
-                            // was too long.
+                            // Other than for tracking the player, there's
+                            // currently no distinction between smart and
+                            // stupid monsters when it comes to travelling
+                            // back to the patrol point. This is in part due
+                            // to the flavourness of bees finding their way
+                            // back to the Hive (patrolling should really be
+                            // restricted to cases like this), and for the
+                            // other part it's not that important because
+                            // we calculate the path once and then follow it
+                            // home, and the player won't ever see the
+                            // orderly fashion the bees will trudge along.
+                            // What he will see is them swarming back to the
+                            // Hive entrance after some time, and that is what
+                            // matters.
                             monster_pathfind mp;
                             if (mp.start_pathfind(mon, mon->patrol_point))
                             {
@@ -3102,6 +3138,9 @@ static void _handle_behaviour(monsters *mon)
                                 }
                                 else
                                 {
+                                    // We're so close we don't even need
+                                    // a path. (Shouldn't happen as that
+                                    // should have been found above.)
                                     mon->target_x = mon->patrol_point.x;
                                     mon->target_y = mon->patrol_point.y;
                                 }
@@ -3128,10 +3167,7 @@ static void _handle_behaviour(monsters *mon)
 
                 if (need_target)
                 {
-#ifdef DEBUG_PATHFIND
-                    if (!testbits( mon->flags, MF_BATTY ))
-                        mprf("Monster is wandering randomly.");
-#endif
+                    // The monster is travelling randomly.
                     mon->target_x = 10 + random2(GXM - 10);
                     mon->target_y = 10 + random2(GYM - 10);
                 }

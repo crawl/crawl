@@ -2664,11 +2664,20 @@ static void _beam_paralyses_monster(bolt &pbolt, monsters *monster)
     }
 }
 
+
+// Petrification works in two stages. First the monster is slowed down in
+// all of its actions and cannot move away (petrifying), and when that times
+// out it remains properly petrified (no movement or actions). The second
+// part is similar to paralysis, except that insubstantial monsters can't be
+// affected and that stabbing damage is drastically reduced.
 static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
 {
     int petrifying = monster->has_ench(ENCH_PETRIFYING);
     if (monster->has_ench(ENCH_PETRIFIED))
     {
+        // If the petrifying is not yet finished, we can force it to happen
+        // right away by casting again. Otherwise, the spell has no further
+        // effect.
         if (petrifying > 0)
         {
             monster->del_ench(ENCH_PETRIFYING, true);
@@ -2682,6 +2691,8 @@ static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
     else if (monster->add_ench(ENCH_PETRIFIED)
              && !monster->has_ench(ENCH_PARALYSIS))
     {
+        // Add both the petrifying and the petrified enchantment. The former
+        // will run out sooner and result in plain petrification behaviour.
         monster->add_ench(ENCH_PETRIFYING);
         if (simple_monster_message(monster, " is moving more slowly."))
             pbolt.obvious_effect = true;
@@ -2691,10 +2702,8 @@ static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
 }
 
 // Returns true if the curare killed the monster.
-bool curare_hits_monster( const bolt &beam,
-                          monsters *monster,
-                          kill_category who,
-                          int levels )
+bool curare_hits_monster( const bolt &beam,  monsters *monster,
+                          kill_category who, int levels )
 {
     const bool res_poison = mons_res_poison(monster) > 0;
     bool mondied = false;
@@ -3802,15 +3811,14 @@ static int _affect_player( bolt &beam, item_def *item )
                 mpr("This is polymorph other only!");
             }
             else
-            {
                 canned_msg( MSG_NOTHING_HAPPENS );
-            }
+
             break;
 
         case BEAM_SLOW:
             potion_effect( POT_SLOWING, beam.ench_power );
             beam.obvious_effect = true;
-            break;     // slow
+            break;
 
         case BEAM_HASTE:
             potion_effect( POT_SPEED, beam.ench_power );
@@ -3818,19 +3826,19 @@ static int _affect_player( bolt &beam, item_def *item )
             beam.obvious_effect = true;
             nasty = false;
             nice  = true;
-            break;     // haste
+            break;
 
         case BEAM_HEALING:
             potion_effect( POT_HEAL_WOUNDS, beam.ench_power );
             beam.obvious_effect = true;
             nasty = false;
             nice  = true;
-            break;     // heal (heal wounds potion eff)
+            break;
 
         case BEAM_PARALYSIS:
             potion_effect( POT_PARALYSIS, beam.ench_power );
             beam.obvious_effect = true;
-            break;     // paralysis
+            break;
 
         case BEAM_PETRIFY:
             you.petrify( beam.ench_power );
@@ -3840,7 +3848,7 @@ static int _affect_player( bolt &beam, item_def *item )
         case BEAM_CONFUSION:
             potion_effect( POT_CONFUSION, beam.ench_power );
             beam.obvious_effect = true;
-            break;     // confusion
+            break;
 
         case BEAM_INVISIBILITY:
             potion_effect( POT_INVISIBILITY, beam.ench_power );
@@ -3848,9 +3856,7 @@ static int _affect_player( bolt &beam, item_def *item )
             beam.obvious_effect = true;
             nasty = false;
             nice  = true;
-            break;     // invisibility
-
-            // 6 is used by digging
+            break;
 
         case BEAM_TELEPORT:
             you_teleport();
@@ -3887,12 +3893,12 @@ static int _affect_player( bolt &beam, item_def *item )
                 mpr("You feel trapped.");
                 break;
             }
-            you.banished = true;
-            you.banished_by = _beam_zapper(beam);
+            you.banished        = true;
+            you.banished_by     = _beam_zapper(beam);
             beam.obvious_effect = true;
-            break;     // banishment to the abyss
+            break;
 
-        case BEAM_PAIN:      // pain
+        case BEAM_PAIN:
             if (player_res_torment())
             {
                 mpr("You are unaffected.");
@@ -3945,10 +3951,10 @@ static int _affect_player( bolt &beam, item_def *item )
             break;
 
         default:
-            // _all_ enchantments should be enumerated here!
+            // _All_ enchantments should be enumerated here!
             mpr("Software bugs nibble your toes!");
             break;
-        }               // end of switch (beam.colour)
+        }
 
         if (nasty)
         {
@@ -3956,11 +3962,15 @@ static int _affect_player( bolt &beam, item_def *item )
             {
                 beam.fr_hurt++;
                 if (beam.beam_source == NON_MONSTER)
+                {
                     // Beam from player rebounded and hit player.
                     xom_is_stimulated(255);
+                }
                 else
+                {
                     // Beam from an ally or neutral.
                     xom_is_stimulated(128);
+                }
             }
             else
                 beam.foe_hurt++;

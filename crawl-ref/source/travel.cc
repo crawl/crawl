@@ -1437,10 +1437,22 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
 
     ignore_hostile = false;
 
-    // Set the seed point
+    // Set the seed point.
+    // For each round, circumference will store all points that were discovered
+    // in the previous round of a given distance. We use an array of size 2,
+    // so we can comfortably switch between the list of points to be
+    // investigated this round and the slowly growing list of points to be
+    // inspected next round. Once we've finished with the current round, i.e.
+    // there are no more points to be looked at in the current array, we switch
+    // circ_index over to !circ_index (between 0 and 1), so the "next round"
+    // becomes the current one, and the old points can be overwritten with
+    // newer ones. Since we count the number of points for next round in
+    // next_iter_points, we don't even need to reset the array.
     circumference[circ_index][0] = start;
 
     // Zap out previous distances array
+    // point_distance will hold the distance of all points from the starting
+    // point, i.e. the distance travelled to get there.
     memset(point_distance, 0, sizeof(travel_distance_grid_t));
 
     for ( ; points > 0; ++traveled_distance, circ_index = !circ_index,
@@ -1448,6 +1460,9 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     {
         for (int i = 0; i < points; ++i)
         {
+            // Look at all neighbours of the current grid.
+            // path_examine_point() returns true if the target is reached
+            // and marked as such.
             if (path_examine_point(circumference[circ_index][i]))
             {
                 return (runmode == RMODE_TRAVEL ? travel_move()
@@ -1455,6 +1470,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
             }
         }
 
+        // If there are no more points to look at, we're done, but we did
+        // not find a path to our target.
         if (next_iter_points == 0)
         {
             // Don't reseed unless we've found no target for explore, OR
@@ -1671,8 +1688,7 @@ void travel_pathfind::good_square(const coord_def &c)
 {
     if (!point_distance[c.x][c.y])
     {
-        // This point is going to be on the agenda for the next
-        // iteration
+        // This point is going to be on the agenda for the next iteration.
         circumference[!circ_index][next_iter_points++] = c;
         point_distance[c.x][c.y] = traveled_distance;
     }
@@ -1691,6 +1707,9 @@ bool travel_pathfind::point_traverse_delay(const coord_def &c)
     return (false);
 }
 
+// Checks all neighbours of c, adds them to next round's list of points
+// - happens in path_flood() - and returns true if one of them turns out
+// to be the target; otherwise, false.
 bool travel_pathfind::path_examine_point(const coord_def &c)
 {
     if (point_traverse_delay(c))
