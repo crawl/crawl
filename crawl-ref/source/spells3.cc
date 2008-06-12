@@ -559,9 +559,11 @@ bool cast_summon_greater_demon(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_shadow_creatures(bool god_gift)
+bool cast_shadow_creatures(god_type god)
 {
     bool success = false;
+
+    mpr("Wisps of shadow whirl around you...");
 
     const int monster =
         create_monster(
@@ -572,8 +574,6 @@ bool cast_shadow_creatures(bool god_gift)
     if (monster != -1)
     {
         success = true;
-
-        mpr("Wisps of shadow whirl around you...");
 
         player_angers_monster(&menv[monster]);
     }
@@ -972,6 +972,9 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                 {
                     const item_def& item = mitm[corps];
 
+                    if (is_being_butchered(item, false))
+                        was_butchering = true;
+
                     if (animate_a_corpse(a.x, a.y, CORPSE_BODY, beha,
                                          hitting, god_gift, actual, true))
                     {
@@ -979,9 +982,6 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 
                         if (see_grid(env.show, you.pos(), a))
                             number_seen++;
-
-                        if (is_being_butchered(item, false))
-                            was_butchering = true;
 
                         break;
                     }
@@ -1141,8 +1141,8 @@ bool cast_twisted_resurrection(int pow, bool god_gift)
 
     const int monster =
         create_monster(
-            mgen_data(mon, BEH_FRIENDLY, 0,
-                      you.pos(), you.pet_target,
+            mgen_data(mon, BEH_FRIENDLY,
+                      0, you.pos(), you.pet_target,
                       (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH,
                       MONS_PROGRAM_BUG, 0, colour));
 
