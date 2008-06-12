@@ -5157,9 +5157,9 @@ void god_pitch(god_type which_god)
     // hostile.
     if (is_good_god(you.religion) && _evil_beings_attitude_change())
         mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
-    else if (is_lawful_god(you.religion) && _chaotic_beings_attitude_change())
+    if (is_lawful_god(you.religion) && _chaotic_beings_attitude_change())
         mpr("Your chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
-    else if (you.religion == GOD_TROG && _magic_users_attitude_change())
+    if (you.religion == GOD_TROG && _magic_users_attitude_change())
         mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
 
     if (you.religion == GOD_ELYVILON)
