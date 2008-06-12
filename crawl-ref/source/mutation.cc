@@ -1281,6 +1281,8 @@ formatted_string describe_mutations()
         // mutation is actually a demonic power
         if (you.mutation[i] != 0 && you.demon_pow[i])
         {
+            mutation_type mut_type = static_cast<mutation_type>(i);
+
             have_any = true;
 
             // these are already handled above:
@@ -1296,10 +1298,10 @@ formatted_string describe_mutations()
                 continue;
 
             const bool fully_active
-                        = mutation_is_fully_active((mutation_type) i);
+                        = mutation_is_fully_active(mut_type);
             bool fully_inactive = false;
             if (!fully_active)
-                fully_inactive = _mutation_is_fully_inactive((mutation_type) i);
+                fully_inactive = _mutation_is_fully_inactive(mut_type);
 
             const char* colourname = "";
             if ( you.species == SP_DEMONSPAWN )
@@ -1331,7 +1333,23 @@ formatted_string describe_mutations()
             if (fully_inactive)
                 result += "(";
 
-            result += mutation_name(static_cast<mutation_type>(i));
+            std::string name = mutation_name(mut_type);
+
+            if (name == "")
+            {
+                int level;
+                if (!fully_active)
+                    level = player_mutation_level(mut_type);
+                else // give description of fully active mutation
+                    level = you.mutation[mut_type];
+
+                char buf[80];
+                sprintf(buf, "ERROR: no name for mutation #%d, level %d", i,
+                        level);
+                name = buf;
+            }
+
+            result += name;
 
             if (fully_inactive)
                 result += ")";
@@ -1351,6 +1369,8 @@ formatted_string describe_mutations()
     {
         if (you.mutation[i] != 0 && !you.demon_pow[i])
         {
+            mutation_type mut_type = static_cast<mutation_type>(i);
+
             // this is already handled above:
             if (you.species == SP_NAGA
                 && (i == MUT_BREATHE_POISON || i == MUT_FAST))
@@ -1363,19 +1383,35 @@ formatted_string describe_mutations()
             have_any = true;
 
             // not currently active?
-            const bool need_grey = !mutation_is_fully_active((mutation_type) i);
+            const bool need_grey = !mutation_is_fully_active(mut_type);
             bool inactive = false;
             if (need_grey)
             {
                 result += "<darkgrey>";
-                if (_mutation_is_fully_inactive((mutation_type) i))
+                if (_mutation_is_fully_inactive(mut_type))
                 {
                     inactive = true;
                     result += "(";
                 }
             }
 
-            result += mutation_name(static_cast<mutation_type>(i));
+            std::string name = mutation_name(mut_type);
+
+            if (name == "")
+            {
+                int level;
+                if (!mutation_is_fully_active(mut_type))
+                    level = player_mutation_level(mut_type);
+                else // give description of fully active mutation
+                    level = you.mutation[mut_type];
+
+                char buf[80];
+                sprintf(buf, "ERROR: no name for mutation #%d, level %d", i,
+                        level);
+                name = buf;
+            }
+
+            result += name;
 
             if (need_grey)
             {
@@ -1579,6 +1615,12 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
 
 static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false)
 {
+    if (mutat == RANDOM_MUTATION
+        || mutation_defs[mutat].mutation == RANDOM_MUTATION)
+    {
+        return (false);
+    }
+
     if (you.mutation[mutat] >= mutation_defs[mutat].levels)
         return (false);
 
