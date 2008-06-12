@@ -2041,7 +2041,7 @@ bool player_will_anger_monster(monsters *mon, bool *holy,
     if (antimagical)
         *antimagical = is_antimagical;
 
-    return (is_holy || is_unholy || is_antimagical);
+    return (is_holy || is_unholy || is_lawful || is_antimagical);
 }
 
 bool player_angers_monster(monsters *mon)
