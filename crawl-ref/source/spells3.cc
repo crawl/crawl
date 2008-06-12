@@ -413,41 +413,6 @@ bool cast_sublimation_of_blood(int pow)
     return (success);
 }
 
-bool summon_shadows(int pow, bool god_gift, bool force_hostile,
-                    bool quiet)
-{
-    bool success = false;
-
-    // Maximum power is 300 (11 shadows).
-    const int how_many = (pow / 30 + 1);
-
-    if (!quiet)
-    {
-        mpr(how_many > 1 ? "Flickering shadows surround you."
-                         : "A nearby shadow flickers.");
-    }
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        int monster =
-            create_monster(
-                mgen_data(MONS_SHADOW,
-                          !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                          2, you.pos(),
-                          !force_hostile ? you.pet_target : MHITYOU,
-                          (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
-
-        if (monster != -1)
-        {
-            success = true;
-
-            player_angers_monster(&menv[monster]);
-        }
-    }
-
-    return (success);
-}
-
 bool cast_call_imp(int pow, bool god_gift)
 {
     bool success = false;
