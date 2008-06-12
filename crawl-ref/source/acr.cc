@@ -1090,6 +1090,37 @@ static void _handle_wizard_command( void )
         break;
 
     case '\'':
+    {
+        bool has_shops = false;
+
+        for (i = 0; i < MAX_SHOPS; i++)
+            if (env.shop[i].type != SHOP_UNASSIGNED)
+            {
+                has_shops = true;
+                break;
+            }
+
+        if (has_shops)
+        {
+            mpr("Shop items:");
+
+            for (i = 0; i < MAX_SHOPS; i++)
+                if (env.shop[i].type != SHOP_UNASSIGNED)
+                {
+                    int objl = igrd[0][i + 5];
+
+                    while (objl != NON_ITEM)
+                    {
+                        item_def &item(mitm[objl]);
+                        std::string name = item.name(DESC_PLAIN, false,
+                                                     false, false);
+                        mpr(name.c_str());
+                        objl = item.link;
+                    }
+                }
+            mpr("");
+        } // if (has_shops)
+
         mpr("Item stacks (by location and top item):");
         for (i = 0; i < MAX_ITEMS; i++)
         {
@@ -1105,8 +1136,8 @@ static void _handle_wizard_command( void )
         mpr("");
         mpr("Floor items (stacks only show top item):");
 
-        for (i = 0; i < GXM; i++)
-            for (j = 0; j < GYM; j++)
+        for (i = 1; i < GXM; i++)
+            for (j = 1; j < GYM; j++)
             {
                 int item = igrd[i][j];
                 if (item != NON_ITEM)
@@ -1118,6 +1149,7 @@ static void _handle_wizard_command( void )
                 }
             }
         break;
+    }
 
     default:
         formatted_mpr(formatted_string::parse_string("Not a <magenta>Wizard</magenta> Command."));
