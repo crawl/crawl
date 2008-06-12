@@ -494,10 +494,8 @@ void dec_penance(int val)
 
 bool beogh_water_walk()
 {
-    return
-        you.religion == GOD_BEOGH &&
-        !player_under_penance() &&
-        you.piety >= piety_breakpoint(4);
+    return (you.religion == GOD_BEOGH && !player_under_penance()
+        && you.piety >= piety_breakpoint(4));
 }
 
 static bool _need_water_walking()
