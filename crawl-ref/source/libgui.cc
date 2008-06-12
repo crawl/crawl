@@ -373,14 +373,11 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
         if (c == Options.tile_monster_col && mgrd[x][y] != NON_MONSTER)
         {
             const int grid = mgrd[x][y];
-            if (mons_friendly(&menv[grid]) && upd_tile)
+            if (mons_friendly(&menv[grid]))
                 c = Options.tile_friendly_col; // colour friendly monsters
-            else if (mons_neutral(&menv[grid]) && upd_tile
-                     && Options.tile_neutral_col != Options.tile_monster_col)
-            {
+            else if (mons_neutral(&menv[grid]))
                 c = Options.tile_neutral_col;  // colour neutral monsters
-            }
-            else if (mons_class_flag( menv[grid].type, M_NO_EXP_GAIN ))
+            else if (mons_class_flag(menv[grid].type, M_NO_EXP_GAIN))
                 c = Options.tile_plant_col;    // colour zero xp monsters
         }
 
