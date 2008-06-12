@@ -86,6 +86,8 @@ static void _autoinscribe_item( item_def& item );
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
 
+static inline std::string _autopickup_item_name(const item_def &item);
+
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
 
@@ -2120,11 +2122,11 @@ void drop(void)
 
 static void _autoinscribe_item( item_def& item )
 {
-    std::string iname = item.name(DESC_INVENTORY);
-
     /* if there's an inscription already, do nothing */
     if ( item.inscription.size() > 0 )
         return;
+
+    std::string iname = _autopickup_item_name(item);
 
     for ( unsigned i = 0; i < Options.autoinscriptions.size(); ++i )
     {
