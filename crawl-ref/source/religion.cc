@@ -829,8 +829,7 @@ bool is_good_follower(const monsters* mon)
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
-            && mon->attitude == ATT_FRIENDLY
-            && testbits(mon->flags, MF_GOD_GIFT));
+            && mon->attitude == ATT_FRIENDLY && mons_is_god_gift(mon));
 }
 
 bool is_follower(const monsters* mon)
@@ -1063,7 +1062,7 @@ static bool _tso_blessing_friendliness(monsters* mon)
     // become hostile later on, it won't count as a good kill.
     mon->flags |= MF_CREATED_FRIENDLY;
 
-    mon->flags |= MF_GOD_GIFT;
+    mon->god = GOD_SHINING_ONE;
 
     // If the monster is charmed, make it permanently friendly.  Note
     // that we have to delete the enchantment without removing the
@@ -1108,7 +1107,7 @@ static bool _beogh_blessing_reinforcement()
         int monster =
             create_monster(
                 mgen_data(follower_type, BEH_FRIENDLY, 0,
-                          you.pos(), you.pet_target, MG_GOD_GIFT));
+                          you.pos(), you.pet_target, 0, GOD_BEOGH));
 
         if (monster != -1)
         {
@@ -1543,7 +1542,7 @@ static void _do_god_gift(bool prayed_for)
                 if (create_monster(
                         mgen_data(mon, BEH_FRIENDLY, 0,
                                   you.pos(), you.pet_target,
-                                  MG_GOD_GIFT)) != -1)
+                                  0, GOD_YREDELEMNUL)) != -1)
                 {
                     simple_god_message(" grants you an undead servant!");
                     more();
@@ -3027,7 +3026,7 @@ static bool _tso_retribution()
         {
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_DAEVA,
-                        you.pos(), 0, MG_GOD_GIFT)) != -1)
+                        you.pos(), 0, 0, GOD_SHINING_ONE)) != -1)
             {
                 success = true;
             }
@@ -3128,7 +3127,7 @@ static bool _zin_retribution()
             {
                 if (create_monster(
                         mgen_data::alert_hostile_at(MONS_ANGEL,
-                            you.pos(), 0, MG_GOD_GIFT)) != -1)
+                            you.pos(), 0, 0, GOD_ZIN)) != -1)
                 {
                     success = true;
                 }
@@ -3143,7 +3142,7 @@ static bool _zin_retribution()
         else
         {
             bool success = cast_summon_swarm(you.experience_level * 20,
-                                             true, true);
+                                             GOD_ZIN, true);
             simple_god_message(success ?
                                " sends a plague down upon you!" :
                                "'s plague fails to arrive.",
@@ -3292,7 +3291,7 @@ static bool _makhleb_retribution()
                            mgen_data::alert_hostile_at(
                                static_cast<monster_type>(
                                    MONS_EXECUTIONER + random2(5)),
-                               you.pos(), 0, MG_GOD_GIFT)) != -1);
+                               you.pos(), 0, 0, GOD_MAKHLEB)) != -1);
 
         simple_god_message(success ?
                            " sends a greater servant after you!" :
@@ -3310,7 +3309,7 @@ static bool _makhleb_retribution()
                    mgen_data::alert_hostile_at(
                        static_cast<monster_type>(
                            MONS_NEQOXEC + random2(5)),
-                       you.pos(), 0, MG_GOD_GIFT)) != -1)
+                       you.pos(), 0, 0, GOD_MAKHLEB)) != -1)
             {
                 count++;
             }
@@ -3338,7 +3337,7 @@ static bool _kikubaaqudgha_retribution()
         {
             if (create_monster(
                     mgen_data::alert_hostile_at(MONS_REAPER,
-                        you.pos(), 0, MG_GOD_GIFT)) != -1)
+                        you.pos(), 0, 0, GOD_KIKUBAAQUDGHA)) != -1)
             {
                 success = true;
             }
@@ -3377,7 +3376,7 @@ static bool _yredelemnul_retribution()
 
             if (create_monster(
                     mgen_data::alert_hostile_at(punisher,
-                        you.pos(), 0, MG_GOD_GIFT)) != -1)
+                        you.pos(), 0, 0, GOD_YREDELEMNUL)) != -1)
             {
                 count++;
             }
@@ -3426,7 +3425,7 @@ static bool _trog_retribution()
 
                 points -= cost;
 
-                if (summon_berserker(cost * 20, true, true))
+                if (summon_berserker(cost * 20, GOD_TROG, true))
                     count++;
             }
         }
@@ -3542,7 +3541,7 @@ static bool _beogh_retribution()
             int mons =
                 create_monster(
                     mgen_data::alert_hostile_at(MONS_DANCING_WEAPON,
-                        you.pos(), 0, MG_GOD_GIFT));
+                        you.pos(), 0, 0, GOD_BEOGH));
 
             // Hand item information over to monster.
             if (mons != -1)
@@ -3597,7 +3596,7 @@ static bool _beogh_retribution()
 
         int mons = create_monster(
                        mgen_data::alert_hostile_at(punisher,
-                           you.pos(), 0, MG_GOD_GIFT | MG_PERMIT_BANDS));
+                           you.pos(), 0, MG_PERMIT_BANDS, GOD_BEOGH));
 
         // sometimes name band leader
         if (mons != -1 && one_chance_in(3))
@@ -3627,7 +3626,7 @@ static bool _okawaru_retribution()
 
         if (create_monster(
                 mgen_data::alert_hostile_at(punisher,
-                    you.pos(), 0, MG_GOD_GIFT)) != -1)
+                    you.pos(), 0, 0, GOD_OKAWARU)) != -1)
         {
             success = true;
         }
@@ -3720,7 +3719,7 @@ static bool _lugonu_retribution()
                            mgen_data::alert_hostile_at(
                                static_cast<monster_type>(
                                    MONS_GREEN_DEATH + random2(3)),
-                               you.pos(), 0, MG_GOD_GIFT)) != -1);
+                               you.pos(), 0, 0, GOD_LUGONU)) != -1);
 
         simple_god_message(success ?
                            " sends a demon after you!" :
@@ -3738,7 +3737,7 @@ static bool _lugonu_retribution()
                    mgen_data::alert_hostile_at(
                        static_cast<monster_type>(
                            MONS_NEQOXEC + random2(5)),
-                       you.pos(), 0, MG_GOD_GIFT)) != -1)
+                       you.pos(), 0, 0, GOD_LUGONU)) != -1)
             {
                 success = true;
             }
@@ -3993,7 +3992,7 @@ static bool _make_god_gifts_on_level_disappear(bool seen = false)
         if (monster->type != -1
             && monster->attitude == ATT_FRIENDLY
             && monster->has_ench(ENCH_ABJ)
-            && testbits(monster->flags, MF_GOD_GIFT))
+            && mons_is_god_gift(monster))
         {
             if (!seen || simple_monster_message(monster, " abandons you!"))
                 count++;
@@ -4034,7 +4033,7 @@ static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
         if (monster->type != -1
             && mons_is_holy(monster)
             && monster->attitude == ATT_FRIENDLY
-            && testbits(monster->flags, MF_GOD_GIFT))
+            && mons_is_god_gift(monster))
         {
             // monster changes attitude
             monster->attitude = ATT_GOOD_NEUTRAL;
@@ -4074,7 +4073,7 @@ static bool _make_god_gifts_on_level_hostile(bool seen = false)
         monsters *monster = &menv[i];
         if (monster->type != -1
             && monster->attitude == ATT_FRIENDLY
-            && testbits(monster->flags, MF_GOD_GIFT))
+            && mons_is_god_gift(monster))
         {
             // monster changes attitude and behaviour
             monster->attitude = ATT_HOSTILE;
@@ -4363,7 +4362,8 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     // The monster is not really *created* friendly, but should it
     // become hostile later on, it won't count as a good kill.
     orc->flags |= MF_CREATED_FRIENDLY;
-    orc->flags |= MF_GOD_GIFT;
+
+    orc->god = GOD_BEOGH;
 
     if (orc->is_patrolling())
     {

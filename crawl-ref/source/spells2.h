@@ -108,29 +108,29 @@ bool summon_animals(int pow);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool cast_summon_butterflies(int pow, bool god_gift = false);
-bool cast_summon_small_mammals(int pow, bool god_gift = false);
-bool cast_sticks_to_snakes(int pow, bool god_gift = false);
-bool cast_summon_scorpions(int pow, bool god_gift = false);
+bool cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_small_mammals(int pow, god_type god = GOD_NO_GOD);
+bool cast_sticks_to_snakes(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_scorpions(int pow, god_type god = GOD_NO_GOD);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - religion - spell
  * *********************************************************************** */
-bool cast_summon_swarm(int pow, bool god_gift = false,
+bool cast_summon_swarm(int pow, god_type god = GOD_NO_GOD,
                        bool force_hostile = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool cast_call_canine_familiar(int pow, bool god_gift = false);
+bool cast_call_canine_familiar(int pow, god_type god = GOD_NO_GOD);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: it_use3 - spell
  * *********************************************************************** */
-bool cast_summon_elemental(int pow, bool god_gift = false,
+bool cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,
                            monster_type restricted_type = MONS_PROGRAM_BUG,
                            int unfriendly = 2);
 
@@ -138,31 +138,31 @@ bool cast_summon_elemental(int pow, bool god_gift = false,
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool cast_summon_ice_beast(int pow, bool god_gift = false);
-bool cast_summon_ugly_thing(int pow, bool god_gift = false);
-bool cast_summon_dragon(int pow, bool god_gift = false);
+bool cast_summon_ice_beast(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_ugly_thing(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_dragon(int pow, god_type god = GOD_NO_GOD);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool summon_berserker(int pow, bool god_gift = false,
+bool summon_berserker(int pow, god_type god = GOD_NO_GOD,
                       bool force_hostile = false);
-bool summon_guardian(int pow, bool god_gift = false, bool quiet = false);
-bool summon_daeva(int pow, bool god_gift = false, bool quiet = false);
+bool summon_guardian(int pow, god_type god = GOD_NO_GOD, bool quiet = false);
+bool summon_daeva(int pow, god_type god = GOD_NO_GOD, bool quiet = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - religion - spell
  * *********************************************************************** */
-bool cast_tukimas_dance(int pow, bool god_gift = false,
+bool cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
                         bool force_hostile = false, bool quiet_failure = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool cast_conjure_ball_lightning(int pow, bool god_gift = false);
+bool cast_conjure_ball_lightning(int pow, god_type god = GOD_NO_GOD);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

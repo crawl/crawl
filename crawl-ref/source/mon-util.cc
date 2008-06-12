@@ -490,6 +490,11 @@ bool mons_is_native_in_branch(const monsters *monster,
     }
 }
 
+bool mons_is_god_gift(const monsters *mon)
+{
+    return (mon->god != GOD_NO_GOD);
+}
+
 bool mons_is_icy(const monsters *mon)
 {
     return (mons_is_icy(mon->type));
@@ -5133,10 +5138,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         add_ench(mon_enchant(ENCH_ABJ));
 
         // Just for flavour.
-        if (testbits(this->flags, MF_GOD_GIFT) && this->has_ench(ENCH_BERSERK))
+        if (mons_is_god_gift(this) && this->has_ench(ENCH_BERSERK))
             simple_monster_message(this, " is no longer berserk.");
 
-        monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );
+        monster_die( this, quiet ? KILL_DISMISSED : KILL_RESET, 0 );
         break;
 
     case ENCH_SUBMERGED:

@@ -101,12 +101,11 @@ enum proximity_type   // proximity to player to create monster
 
 enum mgen_flag_type
 {
-    MG_GOD_GIFT     = 0x01,
-    MG_PERMIT_BANDS = 0x02,
-    MG_FORCE_PLACE  = 0x04,
-    MG_FORCE_BEH    = 0x08,
-    MG_PLAYER_MADE  = 0x10,
-    MG_PATROLLING   = 0x20
+    MG_PERMIT_BANDS = 0x01,
+    MG_FORCE_PLACE  = 0x02,
+    MG_FORCE_BEH    = 0x04,
+    MG_PLAYER_MADE  = 0x08,
+    MG_PATROLLING   = 0x10
 };
 
 // A structure with all the data needed to whip up a new monster.
@@ -144,11 +143,16 @@ struct mgen_data
     // Generation flags from mgen_flag_type.
     unsigned        flags;
 
+    // What god the monster worships, if any.  This is currently only
+    // used for monsters that are god gifts, to indicate which god sent
+    // them.
+    god_type        god;
+
     // The number of hydra heads or manticore attack volleys. Note:
     // in older version this field was used for both this and for base_type.
     int             number;
 
-    // The colour of the monster
+    // The colour of the monster.
     int             colour;
 
     // A measure of how powerful the generated monster should be (for
@@ -179,6 +183,7 @@ struct mgen_data
               const coord_def &p = coord_def(-1, -1),
               unsigned short mfoe = MHITNOT,
               unsigned monflags = 0,
+              god_type which_god = GOD_NO_GOD,
               monster_type base = MONS_PROGRAM_BUG,
               int monnumber = 0,
               int moncolour = BLACK,
@@ -188,8 +193,8 @@ struct mgen_data
 
         : cls(mt), base_type(base), behaviour(beh),
           abjuration_duration(abj), pos(p), foe(mfoe), flags(monflags),
-          number(monnumber), colour(moncolour), power(monpower),
-          proximity(prox), level_type(ltype), map_mask(0)
+          god(which_god), number(monnumber), colour(moncolour),
+          power(monpower), proximity(prox), level_type(ltype), map_mask(0)
     {
     }
 
@@ -219,9 +224,11 @@ struct mgen_data
     static mgen_data alert_hostile_at(monster_type what,
                                       const coord_def &where,
                                       int abj_deg = 0,
-                                      unsigned flags = 0)
+                                      unsigned flags = 0,
+                                      god_type god = GOD_NO_GOD)
     {
-        return mgen_data(what, BEH_HOSTILE, abj_deg, where, MHITYOU, flags);
+        return mgen_data(what, BEH_HOSTILE, abj_deg, where, MHITYOU, flags,
+                         god);
     }
 };
 

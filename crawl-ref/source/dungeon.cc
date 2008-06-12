@@ -2870,7 +2870,7 @@ static int _place_uniques(int level_number, char level_type)
 
         mgen_data mg( which_unique, BEH_SLEEP, 0,
                       coord_def(), MHITNOT, MG_PERMIT_BANDS,
-                      MONS_PROGRAM_BUG, 0, BLACK,
+                      GOD_NO_GOD, MONS_PROGRAM_BUG, 0, BLACK,
                       level_number, PROX_ANYWHERE );
         mg.map_mask = MMT_NO_MONS;
 

@@ -1898,27 +1898,26 @@ enum mon_flight_type
 enum monster_flag_type
 {
     MF_CREATED_FRIENDLY   = 0x01,   // no benefit from killing
-    MF_GOD_GIFT           = 0x02,   // player not penalized by its death
-    MF_BATTY              = 0x04,   // flutters like a bat
-    MF_JUST_SUMMONED      = 0x08,   // monster skips next available action
-    MF_TAKING_STAIRS      = 0x10,   // is following player through stairs
+    MF_BATTY              = 0x02,   // flutters like a bat
+    MF_JUST_SUMMONED      = 0x04,   // monster skips next available action
+    MF_TAKING_STAIRS      = 0x08,   // is following player through stairs
 
-    MF_INTERESTING        = 0x20,   // Player finds monster interesting
-    MF_SEEN               = 0x40,   // Player already seen monster
-    MF_DIVINE_PROTECTION  = 0x80,   // Monster has divine protection.
+    MF_INTERESTING        = 0x10,   // Player finds monster interesting
+    MF_SEEN               = 0x20,   // Player already seen monster
+    MF_DIVINE_PROTECTION  = 0x40,   // Monster has divine protection.
 
-    MF_KNOWN_MIMIC        = 0x100,  // Mimic that has taken a swing at the PC,
+    MF_KNOWN_MIMIC        = 0x80,   // Mimic that has taken a swing at the PC,
                                     // or that the player has inspected with ?
-    MF_BANISHED           = 0x200,  // Monster that has been banished.
-    MF_HARD_RESET         = 0x400,  // Summoned, should not drop gear on reset
-    MF_WAS_NEUTRAL        = 0x800,  // mirror to CREATED_FRIENDLY for neutrals
-    MF_ATT_CHANGE_ATTEMPT = 0x1000, // Saw player and attitude changed (or
+    MF_BANISHED           = 0x100,  // Monster that has been banished.
+    MF_HARD_RESET         = 0x200,  // Summoned, should not drop gear on reset
+    MF_WAS_NEUTRAL        = 0x400,  // mirror to CREATED_FRIENDLY for neutrals
+    MF_ATT_CHANGE_ATTEMPT = 0x800,  // Saw player and attitude changed (or
                                     // not); currently used for holy beings
                                     // (good god worshippers -> neutral)
                                     // and orcs (Beogh worshippers -> friendly)
-    MF_WAS_IN_VIEW        = 0x2000, // Was in view during previous turn
-    MF_BAND_MEMBER        = 0x4000, // Created as a member of a band
-    MF_GOT_HALF_XP        = 0x8000  // Player already got half xp value earlier
+    MF_WAS_IN_VIEW        = 0x1000, // Was in view during previous turn
+    MF_BAND_MEMBER        = 0x2000, // Created as a member of a band
+    MF_GOT_HALF_XP        = 0x4000  // Player already got half xp value earlier
 };
 
 // Adding slots breaks saves. YHBW.

@@ -498,7 +498,7 @@ static bool xom_is_good(int sever)
             summons[i] =
                 create_monster(
                     mgen_data(mon, BEH_FRIENDLY, 3,
-                              you.pos(), you.pet_target, MG_GOD_GIFT));
+                              you.pos(), you.pet_target, 0, GOD_XOM));
 
             if (summons[i] != -1)
                 success = true;
@@ -587,7 +587,7 @@ static bool xom_is_good(int sever)
 
         if (create_monster(
                 mgen_data(mon, beha, 6,
-                          you.pos(), hitting, MG_GOD_GIFT)) != -1)
+                          you.pos(), hitting, 0, GOD_XOM)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single holy summon"));
@@ -683,7 +683,7 @@ static bool xom_is_good(int sever)
         if (create_monster(
                 mgen_data(xom_random_demon(sever, one_chance_in(8)),
                           beha, 0,
-                          you.pos(), hitting, MG_GOD_GIFT)) != -1)
+                          you.pos(), hitting, 0, GOD_XOM)) != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
@@ -849,7 +849,7 @@ static bool xom_is_bad(int sever)
 
             // Nasty, but fun.
             if (one_chance_in(4))
-                success = cast_tukimas_dance(100, true, true, true);
+                success = cast_tukimas_dance(100, GOD_XOM, true, true);
             else
             {
                 const int numdemons =
@@ -860,7 +860,7 @@ static bool xom_is_bad(int sever)
                     if (create_monster(
                             mgen_data::alert_hostile_at(
                                 xom_random_punishment_demon(sever),
-                                you.pos(), 4, MG_GOD_GIFT)) != -1)
+                                you.pos(), 4, 0, GOD_XOM)) != -1)
                     {
                         success = true;
                     }

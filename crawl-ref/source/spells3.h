@@ -113,16 +113,19 @@ bool remove_curse(bool suppress_msg);
  * *********************************************************************** */
 bool cast_sublimation_of_blood(int pow);
 
-bool cast_call_imp(int pow, bool god_gift = false);
-bool summon_lesser_demon(int pow, bool god_gift = false, bool quiet = false);
-bool summon_common_demon(int pow, bool god_gift = false, bool quiet = false);
-bool summon_greater_demon(int pow, bool god_gift = false, bool quiet = false);
-bool summon_demon_type(monster_type mon, int pow, bool god_gift = false);
-bool cast_summon_demon(int pow, bool god_gift = false);
-bool cast_demonic_horde(int pow, bool god_gift = false);
-bool cast_summon_greater_demon(int pow, bool god_gift = false);
-bool cast_shadow_creatures(bool god_gift = false);
-bool cast_summon_horrible_things(int pow, bool god_gift = false);
+bool cast_call_imp(int pow, god_type god = GOD_NO_GOD);
+bool summon_lesser_demon(int pow, god_type god = GOD_NO_GOD,
+                         bool quiet = false);
+bool summon_common_demon(int pow, god_type god = GOD_NO_GOD,
+                         bool quiet = false);
+bool summon_greater_demon(int pow, god_type god = GOD_NO_GOD,
+                          bool quiet = false);
+bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_demon(int pow, god_type god = GOD_NO_GOD);
+bool cast_demonic_horde(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_greater_demon(int pow, god_type god = GOD_NO_GOD);
+bool cast_shadow_creatures(god_type god = GOD_NO_GOD);
+bool cast_summon_horrible_things(int pow, god_type god = GOD_NO_GOD);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
@@ -130,7 +133,7 @@ bool cast_summon_horrible_things(int pow, bool god_gift = false);
  * *********************************************************************** */
 bool animate_a_corpse(int x, int y, corpse_type class_allowed,
                       beh_type beha, unsigned short hitting,
-                      bool god_gift = false, bool actual = true,
+                      god_type god = GOD_NO_GOD, bool actual = true,
                       bool quiet = false);
 
 // last updated 24may2000 {dlb}
@@ -138,16 +141,16 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
  * called from: ability - it_use3 - monstuff - mstuff2 - spell
  * *********************************************************************** */
 int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
-                 bool god_gift = false, bool actual = true);
+                 god_type god = GOD_NO_GOD, bool actual = true);
 
 // updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-bool cast_simulacrum(int pow, bool god_gift = false);
-bool cast_twisted_resurrection(int pow, bool god_gift = false);
-bool cast_summon_wraiths(int pow, bool god_gift = false);
-bool cast_death_channel(int pow, bool god_gift = false);
+bool cast_simulacrum(int pow, god_type god = GOD_NO_GOD);
+bool cast_twisted_resurrection(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_wraiths(int pow, god_type god = GOD_NO_GOD);
+bool cast_death_channel(int pow, god_type god = GOD_NO_GOD);
 
 
 // updated 24may2000 {dlb}

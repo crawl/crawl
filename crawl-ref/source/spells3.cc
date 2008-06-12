@@ -413,7 +413,7 @@ bool cast_sublimation_of_blood(int pow)
     return (success);
 }
 
-bool cast_call_imp(int pow, bool god_gift)
+bool cast_call_imp(int pow, god_type god)
 {
     bool success = false;
 
@@ -427,7 +427,7 @@ bool cast_call_imp(int pow, bool god_gift)
         create_monster(
             mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
                       you.pet_target,
-                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
+                      MG_FORCE_BEH, god));
 
     if (monster != -1)
     {
@@ -445,7 +445,7 @@ bool cast_call_imp(int pow, bool god_gift)
     return (success);
 }
 
-static bool _summon_demon_wrapper(int pow, bool god_gift, monster_type mon,
+static bool _summon_demon_wrapper(int pow, god_type god, monster_type mon,
                                   int dur, bool friendly, bool charmed,
                                   bool quiet)
 {
@@ -458,7 +458,7 @@ static bool _summon_demon_wrapper(int pow, bool god_gift, monster_type mon,
                           charmed ? BEH_CHARMED : BEH_HOSTILE,
                       dur, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
+                      MG_FORCE_BEH, god));
 
     if (monster != -1)
     {
@@ -476,50 +476,52 @@ static bool _summon_demon_wrapper(int pow, bool god_gift, monster_type mon,
     return (success);
 }
 
-static bool _summon_demon_wrapper(int pow, bool god_gift, demon_class_type dct,
+static bool _summon_demon_wrapper(int pow, god_type god, demon_class_type dct,
                                   int dur, bool friendly, bool charmed,
                                   bool quiet)
 {
     monster_type mon = summon_any_demon(dct);
 
-    return _summon_demon_wrapper(pow, god_gift, mon, dur, friendly, charmed,
-                                 quiet);
+    return _summon_demon_wrapper(pow, god, mon, dur, friendly, charmed, quiet);
 }
 
-bool summon_lesser_demon(int pow, bool god_gift, bool quiet)
+bool summon_lesser_demon(int pow, god_type god,
+                         bool quiet)
 {
-    return _summon_demon_wrapper(pow, god_gift, DEMON_LESSER,
+    return _summon_demon_wrapper(pow, god, DEMON_LESSER,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
-bool summon_common_demon(int pow, bool god_gift, bool quiet)
+bool summon_common_demon(int pow, god_type god,
+                         bool quiet)
 {
-    return _summon_demon_wrapper(pow, god_gift, DEMON_COMMON,
+    return _summon_demon_wrapper(pow, god, DEMON_COMMON,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
-bool summon_greater_demon(int pow, bool god_gift, bool quiet)
+bool summon_greater_demon(int pow, god_type god,
+                          bool quiet)
 {
-    return _summon_demon_wrapper(pow, god_gift, DEMON_GREATER,
+    return _summon_demon_wrapper(pow, god, DEMON_GREATER,
                                  5, false, random2(pow) > 5, quiet);
 }
 
 // Makhleb or Kikubaaqudgha sends a demonic buddy (or enemy) for a
 // follower.
-bool summon_demon_type(monster_type mon, int pow, bool god_gift)
+bool summon_demon_type(monster_type mon, int pow, god_type god)
 {
-    return _summon_demon_wrapper(pow, god_gift, mon,
+    return _summon_demon_wrapper(pow, god, mon,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  false, random2(pow) > 3, false);
 }
 
-bool cast_summon_demon(int pow, bool god_gift)
+bool cast_summon_demon(int pow, god_type god)
 {
     mpr("You open a gate to Pandemonium!");
 
-    bool success = summon_common_demon(pow, god_gift);
+    bool success = summon_common_demon(pow, god);
 
     if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -527,7 +529,7 @@ bool cast_summon_demon(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_demonic_horde(int pow, bool god_gift)
+bool cast_demonic_horde(int pow, god_type god)
 {
     bool success = false;
 
@@ -537,7 +539,7 @@ bool cast_demonic_horde(int pow, bool god_gift)
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (summon_lesser_demon(pow, god_gift, true))
+        if (summon_lesser_demon(pow, god, true))
             success = true;
     }
 
@@ -547,11 +549,11 @@ bool cast_demonic_horde(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_summon_greater_demon(int pow, bool god_gift)
+bool cast_summon_greater_demon(int pow, god_type god)
 {
     mpr("You open a gate to Pandemonium!");
 
-    bool success = summon_greater_demon(pow, god_gift);
+    bool success = summon_greater_demon(pow, god);
 
     if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -559,7 +561,7 @@ bool cast_summon_greater_demon(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_shadow_creatures(bool god_gift)
+bool cast_shadow_creatures(god_type god)
 {
     bool success = false;
 
@@ -569,7 +571,7 @@ bool cast_shadow_creatures(bool god_gift)
         create_monster(
             mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2,
                       you.pos(), you.pet_target,
-                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
+                      MG_FORCE_BEH, god));
 
     if (monster != -1)
     {
@@ -583,7 +585,7 @@ bool cast_shadow_creatures(bool god_gift)
     return (success);
 }
 
-bool cast_summon_horrible_things(int pow, bool god_gift)
+bool cast_summon_horrible_things(int pow, god_type god)
 {
     if (one_chance_in(3)
         && !lose_stat(STAT_INTELLIGENCE, 1, true, "summoning horrible things"))
@@ -615,7 +617,7 @@ bool cast_summon_horrible_things(int pow, bool god_gift)
         if (create_monster(
                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, 6,
                          you.pos(), you.pet_target,
-                         god_gift ? MG_GOD_GIFT : 0)) != -1)
+                         0, god)) != -1)
         {
             count++;
         }
@@ -628,7 +630,7 @@ bool cast_summon_horrible_things(int pow, bool god_gift)
         if (create_monster(
                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, 6,
                          you.pos(), you.pet_target,
-                         god_gift ? MG_GOD_GIFT : 0)) != -1)
+                         0, god)) != -1)
         {
             count++;
         }
@@ -804,7 +806,7 @@ static void _equip_undead(int x, int y, int corps, int monster, int monnum)
 }
 
 static bool _raise_corpse(int x, int y, int corps, beh_type beha,
-                          unsigned short hitting, bool god_gift, bool actual)
+                          unsigned short hitting, god_type god, bool actual)
 {
     const item_def& item = mitm[corps];
 
@@ -840,7 +842,7 @@ static bool _raise_corpse(int x, int y, int corps, beh_type beha,
     const int monster = create_monster(
                             mgen_data(mon, beha, 0,
                                       coord_def(x, y), hitting,
-                                      god_gift ? MG_GOD_GIFT : 0,
+                                      0, god,
                                       zombie_type, number));
 
     if (monster != -1)
@@ -869,7 +871,7 @@ static bool _raise_corpse(int x, int y, int corps, beh_type beha,
 
 bool animate_a_corpse(int x, int y, corpse_type class_allowed,
                       beh_type beha, unsigned short hitting,
-                      bool god_gift, bool actual,
+                      god_type god, bool actual,
                       bool quiet)
 {
     bool success = false;
@@ -887,8 +889,7 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
         {
             const bool was_butchering = is_being_butchered(item);
 
-            success = _raise_corpse(x, y, corps, beha, hitting, god_gift,
-                                    actual);
+            success = _raise_corpse(x, y, corps, beha, hitting, god, actual);
 
             if (actual && success)
             {
@@ -914,7 +915,7 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
 }
 
 int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
-                 bool god_gift, bool actual)
+                 god_type god, bool actual)
 {
     UNUSED(pow);
 
@@ -976,7 +977,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                         was_butchering = true;
 
                     if (animate_a_corpse(a.x, a.y, CORPSE_BODY, beha,
-                                         hitting, god_gift, actual, true))
+                                         hitting, god, actual, true))
                     {
                         number_raised++;
 
@@ -1019,7 +1020,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 // Hides and other "animal part" items are intentionally left out, it's
 // unrequired complexity, and fresh flesh makes more "sense" for a spell
 // reforming the original monster out of ice anyways.
-bool cast_simulacrum(int pow, bool god_gift)
+bool cast_simulacrum(int pow, god_type god)
 {
     int how_many_max = std::min(8, 4 + random2(pow) / 20);
 
@@ -1047,8 +1048,7 @@ bool cast_simulacrum(int pow, bool god_gift)
             if (create_monster(
                     mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
                               6, you.pos(), you.pet_target,
-                              god_gift ? MG_GOD_GIFT : 0,
-                              mon)) != -1)
+                              0, god, mon)) != -1)
             {
                 count++;
             }
@@ -1071,7 +1071,7 @@ bool cast_simulacrum(int pow, bool god_gift)
     return (false);
 }
 
-bool cast_twisted_resurrection(int pow, bool god_gift)
+bool cast_twisted_resurrection(int pow, god_type god)
 {
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
     {
@@ -1143,7 +1143,7 @@ bool cast_twisted_resurrection(int pow, bool god_gift)
         create_monster(
             mgen_data(mon, BEH_FRIENDLY,
                       0, you.pos(), you.pet_target,
-                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH,
+                      MG_FORCE_BEH, god,
                       MONS_PROGRAM_BUG, 0, colour));
 
     if (monster == -1)
@@ -1178,7 +1178,7 @@ bool cast_twisted_resurrection(int pow, bool god_gift)
     return (true);
 }
 
-bool cast_summon_wraiths(int pow, bool god_gift)
+bool cast_summon_wraiths(int pow, god_type god)
 {
     bool success = false;
 
@@ -1195,7 +1195,7 @@ bool cast_summon_wraiths(int pow, bool god_gift)
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       5, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
-                      (god_gift ? MG_GOD_GIFT : 0) | MG_FORCE_BEH));
+                      MG_FORCE_BEH, god));
 
     if (monster != -1)
     {
@@ -1221,7 +1221,7 @@ bool cast_summon_wraiths(int pow, bool god_gift)
     return (success);
 }
 
-bool cast_death_channel(int pow, bool god_gift)
+bool cast_death_channel(int pow, god_type god)
 {
     bool success = false;
 
@@ -1236,8 +1236,8 @@ bool cast_death_channel(int pow, bool god_gift)
         if (you.duration[DUR_DEATH_CHANNEL] > 100)
             you.duration[DUR_DEATH_CHANNEL] = 100;
 
-        if (god_gift)
-            you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 1;
+        if (god != GOD_NO_GOD)
+            you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = static_cast<int>(god);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

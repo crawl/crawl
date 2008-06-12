@@ -1698,7 +1698,7 @@ void stethoscope(int mwh)
     const habitat_type hab = mons_habitat( &menv[i] );
 
     mprf(MSGCH_DIAGNOSTICS,
-         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d)",
+         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) god=%s",
          ((hab == HT_WATER)                   ? "water" :
           (hab == HT_LAVA)                    ? "lava" :
           (hab == HT_ROCK)                    ? "rock" :
@@ -1717,7 +1717,8 @@ void stethoscope(int mwh)
           : menv[menv[i].foe].name(DESC_PLAIN, true).c_str()),
          menv[i].foe,
          menv[i].foe_memory,
-         menv[i].target_x, menv[i].target_y );
+         menv[i].target_x, menv[i].target_y,
+         god_name(menv[i].god).c_str() );
 
     // print resistances
     mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d",

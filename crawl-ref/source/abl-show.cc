@@ -1458,14 +1458,15 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_KIKU_INVOKE_DEATH:
         summon_demon_type(MONS_REAPER,
-                          20 + you.skills[SK_INVOCATIONS] * 3, true);
+                          20 + you.skills[SK_INVOCATIONS] * 3,
+                          GOD_KIKUBAAQUDGHA);
         exercise(SK_INVOCATIONS, 10 + random2(14));
         break;
 
     case ABIL_YRED_ANIMATE_CORPSE:
         mpr("You call on the dead to walk for you...");
         animate_a_corpse(you.x_pos, you.y_pos, CORPSE_BODY, BEH_FRIENDLY,
-                         you.pet_target, true);
+                         you.pet_target, GOD_YREDELEMNUL);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
@@ -1477,7 +1478,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_YRED_ANIMATE_DEAD:
         mpr("You call on the dead to walk for you...");
         animate_dead(&you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
-                     you.pet_target, true);
+                     you.pet_target, GOD_YREDELEMNUL);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
@@ -1535,7 +1536,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
         summon_demon_type(static_cast<monster_type>(MONS_NEQOXEC + random2(5)),
-                          20 + you.skills[SK_INVOCATIONS] * 3, true);
+                          20 + you.skills[SK_INVOCATIONS] * 3, GOD_MAKHLEB);
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -1594,7 +1595,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         summon_demon_type(static_cast<monster_type>(MONS_EXECUTIONER + random2(5)),
-                          20 + you.skills[SK_INVOCATIONS] * 3, true);
+                          20 + you.skills[SK_INVOCATIONS] * 3, GOD_MAKHLEB);
         exercise(SK_INVOCATIONS, 6 + random2(6));
         break;
 

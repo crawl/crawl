@@ -1003,14 +1003,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 && mons_weight(mons_species(monster->type)))
             {
                 const monster_type spectre = mons_species(monster->type);
-                const bool god_gift = you.attribute[ATTR_DIVINE_DEATH_CHANNEL];
 
                 // Don't allow 0-headed hydras to become spectral hydras.
                 if ((spectre != MONS_HYDRA || monster->number != 0)
                     && create_monster(
                         mgen_data( MONS_SPECTRAL_THING, BEH_FRIENDLY,
                                    0, monster->pos(), you.pet_target,
-                                   god_gift ? MG_GOD_GIFT : 0,
+                                   0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
                                    spectre, monster->number )) != -1)
                 {
                     if (death_message)
@@ -1032,7 +1031,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             }
 
             // No piety loss if god gifts killed by other monsters.
-            if (mons_friendly(monster) && !testbits(monster->flags, MF_GOD_GIFT))
+            if (mons_friendly(monster) && !mons_is_god_gift(monster))
             {
                 did_god_conduct(DID_FRIEND_DIED, 1 + (monster->hit_dice / 2),
                                 true, monster);
@@ -1076,7 +1075,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 else if (you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
                          || you.religion == GOD_SHINING_ONE
-                         || !anon && testbits(menv[i].flags, MF_GOD_GIFT))
+                         || !anon && mons_is_god_gift(&menv[i]))
                 {
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necromancy vs Summoning (ignoring
@@ -5130,7 +5129,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         if (spell_cast == SPELL_ANIMATE_DEAD
             && !animate_dead(monster, 100, SAME_ATTITUDE(monster),
-                             monster->foe, false, false))
+                             monster->foe, GOD_NO_GOD, false))
         {
             return (false);
         }
