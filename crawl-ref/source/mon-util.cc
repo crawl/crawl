@@ -4907,6 +4907,81 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     }
 }
 
+static bool _prepare_del_ench(monsters* mons, const mon_enchant &me)
+{
+    if (me.ench != ENCH_SUBMERGED)
+        return true;
+
+    if (mons->pos() != you.pos())
+        return true;
+
+    // Monster un-submerging while under player.  Try to move to an
+    // adjacent square in which the monster could have been submerged
+    // and have it unusbmerge from there.
+    coord_def pos, target_square;
+    int       okay_squares = 0;
+
+    for (pos.x = you.x_pos - 1; pos.x <= you.x_pos + 1; pos.x++)
+        for (pos.y = you.y_pos - 1; pos.y <= you.y_pos + 1; pos.y++)
+        {
+            if (pos == you.pos())
+                continue;
+
+            if (in_bounds(pos) && mgrd(pos) == NON_MONSTER
+                && monster_can_submerge(mons, grd(pos)))
+            {
+                if (one_chance_in(++okay_squares))
+                    target_square = pos;
+            }
+        }
+
+    if (okay_squares > 0)
+    {
+        int mnum = mgrd(mons->pos());
+        mgrd(mons->pos()) = NON_MONSTER;
+
+        mgrd(target_square) = mnum;
+        mons->x = target_square.x;
+        mons->y = target_square.y;
+
+        return true;
+    }
+
+    // No available adjacent squares from which the monster could also
+    // have unsubmerged.  Can it just stay submerged where it is?
+    if ( monster_can_submerge(mons, grd( mons->pos() )) )
+        return false;
+
+    // The terrain changed and the monster can't remain submerged.
+    // Try to move to an adjacent square where it would be happy.
+    for (pos.x = you.x_pos - 1; pos.x <= you.x_pos + 1; pos.x++)
+        for (pos.y = you.y_pos - 1; pos.y <= you.y_pos + 1; pos.y++)
+        {
+            if (pos == you.pos())
+                continue;
+
+            if (in_bounds(pos) && mgrd(pos) == NON_MONSTER
+                && monster_habitable_grid(mons, grd(pos))
+                && trap_type_at_xy(pos.x, pos.y) == NUM_TRAPS)
+            {
+                if (one_chance_in(++okay_squares))
+                    target_square = pos;
+            }
+        }
+
+    if (okay_squares > 0)
+    {
+        int mnum = mgrd(mons->pos());
+        mgrd(mons->pos()) = NON_MONSTER;
+
+        mgrd(target_square) = mnum;
+        mons->x = target_square.x;
+        mons->y = target_square.y;
+    }
+
+    return ( true );
+}
+
 bool monsters::del_ench(enchant_type ench, bool quiet, bool effect)
 {
     mon_enchant_list::iterator i = enchantments.find(ench);
@@ -4915,6 +4990,10 @@ bool monsters::del_ench(enchant_type ench, bool quiet, bool effect)
 
     const mon_enchant me = i->second;
     const enchant_type et = i->first;
+
+    if (!_prepare_del_ench(this, me))
+        return false;
+
     enchantments.erase(et);
     if (effect)
         remove_enchantment_effect(me, quiet);
@@ -5061,6 +5140,16 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SUBMERGED:
+        if (behaviour == BEH_WANDER)
+        {
+            behaviour = BEH_SEEK;
+            behaviour_event(this, ME_EVAL);
+        }
+
+        if (you.pos() == this->pos())
+            mprf(MSGCH_ERROR, "%s is on the same square as you!",
+                 name(DESC_CAP_A).c_str());
+
         if (you.can_see(this))
         {
             if (!mons_is_safe( static_cast<const monsters*>(this))
@@ -5097,12 +5186,6 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity( AI_FORCE_INTERRUPT );
-        }
-
-        if (behaviour == BEH_WANDER)
-        {
-            behaviour = BEH_SEEK;
-            behaviour_event(this, ME_EVAL);
         }
 
         break;

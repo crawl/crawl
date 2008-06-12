@@ -432,8 +432,7 @@ static void _dgn_check_terrain_monsters(const coord_def &pos)
         monsters *mons = &menv[mindex];
 
         if (mons->has_ench(ENCH_SUBMERGED)
-            && !monster_can_submerge(mons, grd(pos))
-            && pos != you.pos())
+            && !monster_can_submerge(mons, grd(pos)))
         {
             mons->del_ench(ENCH_SUBMERGED);
         }
@@ -504,7 +503,17 @@ void dungeon_terrain_changed(const coord_def &pos,
         if (!grid_is_solid(grd(pos)))
         {
             if (!you.airborne())
+            {
+                // If the monster can't stay submerged in the new terrain
+                // and there aren't any adjacent squares where it can
+                // stay submerged then move it.
+                if (mgrd(you.pos()) != NON_MONSTER
+                    && !mons_is_submerged( &menv[ mgrd(you.pos()) ] ))
+                {
+                    monster_teleport( &menv[ mgrd(you.pos()) ], true, false);
+                }
                 move_player_to_grid(pos.x, pos.y, false, true, false);
+            }
         }
         else
             you_teleport_now(true, false);

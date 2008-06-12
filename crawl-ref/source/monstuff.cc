@@ -2182,7 +2182,9 @@ void behaviour_event( monsters *mon, int event, int src,
 
         default:
             if (mon->has_ench(ENCH_SUBMERGED))
-                mon->del_ench(ENCH_SUBMERGED);
+                if(!mon->del_ench(ENCH_SUBMERGED))
+                    // Couldn't unsubmerge.
+                    mon->behaviour = BEH_LURK;
             break;
         }
     }
@@ -5639,18 +5641,21 @@ static void _handle_monster_move(int i, monsters *monster)
             {
                 if (monster->has_ench(ENCH_SUBMERGED))
                 {
-                    // Don't unsubmerge if the player is right on top,
-                    // if the monster is too damaged or if the monster
-                    // is afraid.
-                    if (monster->pos() == you.pos()
-                        || monster->hit_points <= monster->max_hit_points / 2
+                    // Don't unsubmerge if the monster is too damaged or
+                    // if the monster is afraid.
+                    if (monster->hit_points <= monster->max_hit_points / 2
                         || monster->has_ench(ENCH_FEAR))
                     {
                         monster->speed_increment -= non_move_energy;
                         continue;
                     }
 
-                    monster->del_ench(ENCH_SUBMERGED);
+                    if (!monster->del_ench(ENCH_SUBMERGED))
+                    {
+                        // Couldn't unsubmerge.
+                        monster->speed_increment -= non_move_energy;
+                        continue;
+                    }
                 }
                 monster->behaviour = BEH_SEEK;
             }

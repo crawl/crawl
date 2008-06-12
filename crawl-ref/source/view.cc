@@ -1063,7 +1063,10 @@ void handle_monster_shouts(monsters* monster, bool force)
         // shout.
         if (mons_is_submerged(monster))
         {
-            monster->del_ench(ENCH_SUBMERGED);
+            if (!monster->del_ench(ENCH_SUBMERGED))
+                // Couldn't unsubmerge.
+                return;
+
             if (you.can_see(monster))
             {
                 monster->seen_context = "bursts forth shouting";
