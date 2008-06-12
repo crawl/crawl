@@ -4228,6 +4228,17 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             // Can't see this monster, ignore it.
             return 0;
         }
+
+        if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+        {
+            beam.foe_count += 1;
+            beam.foe_power += mons_power(mons_type);
+        }
+        else
+        {
+            beam.fr_count += 1;
+            beam.fr_power += mons_power(mons_type);
+        }
     }
     else if ((beam.flavour == BEAM_DISINTEGRATION || beam.flavour == BEAM_NUKE)
              && mons_is_statue(mons_type) && !mons_is_icy(mons_type))
