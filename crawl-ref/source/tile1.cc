@@ -391,7 +391,7 @@ static int _tileidx_monster_base(int mon_idx, bool detected)
     {
         // Use item tile
         item_def item = mitm[menv[mon_idx].inv[MSLOT_WEAPON]];
-        return tileidx_item(item);
+        return tileidx_item(item) | TILE_FLAG_ANIM_WEP; 
     }
 
     case MONS_TITAN:

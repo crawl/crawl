@@ -726,6 +726,11 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
         status_shift += 5;
     }
 
+    if (fg0 & TILE_FLAG_ANIM_WEP)
+    {
+        _tcache_overlay(tcache_image, ix, TILE_ANIMATED_WEAPON, &c, NULL);
+    }
+
     if (bg0 & TILE_FLAG_UNSEEN)
     {
         _tcache_overlay(tcache_image, ix, TILE_MESH, &c, NULL);

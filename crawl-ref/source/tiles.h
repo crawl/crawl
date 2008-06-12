@@ -148,6 +148,7 @@ enum tile_flags
     TILE_FLAG_MAY_STAB  = 0x0000C000,
     TILE_FLAG_NET       = 0x00010000,
     TILE_FLAG_POISON    = 0x00020000,
+    TILE_FLAG_ANIM_WEP  = 0x00040000,
 
     // Background flags
     TILE_FLAG_RAY       = 0x00000800,
