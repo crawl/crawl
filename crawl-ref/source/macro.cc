@@ -641,8 +641,10 @@ int getchm(KeymapContext mc, int (*rgetch)())
 
     // Read some keys...
     keyseq keys = getch_mul(rgetch);
-    // ... and add them into the buffer
-    macro_buf_add_long( keys, Keymaps[mc] );
+    if (mc == KC_NONE)
+        macro_buf_add(keys);
+    else
+        macro_buf_add_long(keys, Keymaps[mc]);
 
     return (macro_buf_get());
 }

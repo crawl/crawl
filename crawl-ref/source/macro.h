@@ -29,7 +29,8 @@ enum KeymapContext {
     KC_TARGETING,       // Only during 'x' and other targeting modes
     KC_CONFIRM,         // When being asked y/n/q questions
 
-    KC_CONTEXT_COUNT    // Must always be the last
+    KC_CONTEXT_COUNT,   // Must always be the last real context
+    KC_NONE             // Don't apply any keymaps (for menus)
 };
 
 class key_recorder;
