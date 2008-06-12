@@ -244,6 +244,21 @@ void find_connected_identical(coord_def d, dungeon_feature_type ft,
     }
 }
 
+// Find all connected cells containing ft_min to ft_max, starting at d.
+void find_connected_range(coord_def d, dungeon_feature_type ft_min,
+                          dungeon_feature_type ft_max,
+                          std::set<coord_def>& out)
+{
+    if (grd[d.x][d.y] < ft_min || grd[d.x][d.y] > ft_max) return;
+    if (out.insert(d).second)
+    {
+        find_connected_range(coord_def(d.x+1, d.y), ft_min, ft_max, out);
+        find_connected_range(coord_def(d.x-1, d.y), ft_min, ft_max, out);
+        find_connected_range(coord_def(d.x, d.y+1), ft_min, ft_max, out);
+        find_connected_range(coord_def(d.x, d.y-1), ft_min, ft_max, out);
+    }
+}
+
 void get_door_description(int door_size, const char** adjective, const char** noun)
 {
     const char* descriptions[] = {

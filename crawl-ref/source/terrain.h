@@ -46,6 +46,9 @@ dungeon_feature_type altar_for_god( god_type god );
 bool grid_is_branch_stairs( dungeon_feature_type grid );
 void find_connected_identical(coord_def d, dungeon_feature_type ft,
                                std::set<coord_def>& out);
+void find_connected_range(coord_def d, dungeon_feature_type ft_min,
+                          dungeon_feature_type ft_max,
+                          std::set<coord_def>& out);
 void get_door_description(int door_size, const char** adjective, const char** noun);
 dungeon_feature_type grid_secret_door_appearance( int gx, int gy );
 bool grid_destroys_items( dungeon_feature_type grid );

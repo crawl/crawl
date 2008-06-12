@@ -3684,7 +3684,8 @@ static void _open_door(int move_x, int move_y, bool check_confused)
     if (grd[dx][dy] == DNGN_CLOSED_DOOR)
     {
         std::set<coord_def> all_door;
-        find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
+        find_connected_range(coord_def(dx,dy), DNGN_CLOSED_DOOR,
+                             DNGN_SECRET_DOOR, all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
 
@@ -3714,11 +3715,11 @@ static void _open_door(int move_x, int move_y, bool check_confused)
             mprf( "You %s the %s%s.", verb, adj, noun );
         }
 
+        bool seen_secret = false;
         for (std::set<coord_def>::iterator i = all_door.begin();
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
-            grd[dc.x][dc.y] = DNGN_OPEN_DOOR;
             // Even if some of the door is out of LOS, we want the entire
             // door to be updated.  Hitting this case requires a really big
             // door!
@@ -3728,7 +3729,17 @@ static void _open_door(int move_x, int move_y, bool check_confused)
 #ifdef USE_TILE
                 tile_place_tile_bk(dc.x, dc.y, TILE_DNGN_OPEN_DOOR);
 #endif
+                if (!seen_secret && grd[dc.x][dc.y] == DNGN_SECRET_DOOR)
+                {
+                    seen_secret = true;
+                    dungeon_feature_type secret
+                        = grid_secret_door_appearance(dc.x, dc.y);
+                    mprf("That %s was a secret door!",
+                         feature_description(secret, NUM_TRAPS, false,
+                                             DESC_PLAIN, false).c_str());
+                }
             }
+            grd[dc.x][dc.y] = DNGN_OPEN_DOOR;
         }
         you.turn_is_over = true;
     }
