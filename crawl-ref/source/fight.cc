@@ -3911,6 +3911,13 @@ void melee_attack::mons_perform_attack_rounds()
             if (special_damage > 0)
                 defender->hurt(attacker, special_damage);
         }
+
+        item_def *weap = atk->mslot_item(MSLOT_WEAPON);
+        if (weap && weap->cursed() && is_range_weapon(*weap)
+            && !(weap->flags & ISFLAG_KNOW_CURSE))
+        {
+            set_ident_flags( *weap, ISFLAG_KNOW_CURSE );
+        }
     }
 }
 

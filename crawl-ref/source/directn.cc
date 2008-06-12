@@ -2062,7 +2062,7 @@ static std::string _describe_monster_weapon(const monsters *mons)
         name1 = weap->name(DESC_NOCAP_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
-    if (alt && (!weap || mons_wields_two_weapons(mons)))
+    if (alt && mons_wields_two_weapons(mons))
     {
         name2 = alt->name(DESC_NOCAP_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
