@@ -645,19 +645,18 @@ distressingly furry
 w:160
 @general appearance@
 %%%%
+######################################################
+# Jewellry appearance
+######################################################
+#
+# While for the appearance of randart weapons and armour you can
+# just stick an adjective in front of the object type name ("bloodstained
+# dagger"), unidentified non-artefact jewellry is described with both an
+# adjective and material ("runed wooden ring"), making a description
+# like "runed ring" a bit weird.  So give randart jewellery an adjective
+# that no non-artefact jewellery would have, plus a material that a
+# non-artefact might or might not have.
 jewellery appearance
-
-#specific jewels
-ruby
-
-crystal
-
-diamond
-
-emerald
-
-#other descriptions
-runed
 
 scintillating
 
@@ -667,6 +666,137 @@ flickering
 
 glittering
 
-w:160
-@general appearance@
+smoking
+
+shimmering
+
+wavering
+
+warped
+
+transparent
+
+pitted
+
+slimy
+
+fine
+
+crude
+
+ancient
+
+brightly glowing
+
+faintly glowing
+
+steaming
+
+heavily runed
+
+vibrating
+
+twitching
+%%%%
+ring material
+
+wooden
+
+ivory
+
+bone
+
+amber
+
+silver
+
+golden
+
+platinum
+
+iron
+
+steel
+
+bronze
+
+brass
+
+copper
+
+tin
+
+lead
+
+pewter
+
+granite
+
+marble
+
+jade
+
+turquoise
+
+lapis lazuli
+
+glass
+%%%%
+amulet material
+
+ivory
+
+bone
+
+plastic
+
+silver
+
+golden
+
+platinum
+
+iron
+
+steel
+
+bronze
+
+brass
+
+copper
+
+tin
+
+lead
+
+pewter
+
+zirconium
+
+sapphire
+
+emerald
+
+garnet
+
+ruby
+
+jade
+
+ruby
+
+crystal
+
+diamond
+
+amethyst
+%%%%
+ring appearance
+
+@jewellery appearance@ @ring material@
+%%%%
+amulet appearance
+
+@jewellery appearance@ @amulet material@
 %%%%

@@ -1252,16 +1252,19 @@ bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop )
     return known;
 }
 
-static std::string _get_artefact_type(const int type)
+static std::string _get_artefact_type(const item_def &item)
 {
-    switch (type)
+    switch (item.base_type)
     {
      case OBJ_WEAPONS:
          return "weapon";
      case OBJ_ARMOUR:
          return "armour";
      case OBJ_JEWELLERY:
-         return "jewellery";
+         if (jewellery_is_amulet(item))
+             return "amulet";
+         else
+             return "ring";
      default:
          return "artefact";
     }
@@ -1319,7 +1322,7 @@ std::string randart_name(const item_def &item, bool appearance)
     }
 
     // get base type
-    lookup += _get_artefact_type(item.base_type);
+    lookup += _get_artefact_type(item);
 
     rng_save_excursion rng_state;
     seed_rng( seed );
@@ -1365,7 +1368,7 @@ std::string randart_name(const item_def &item, bool appearance)
                 {
                     // if still nothing found, try base type alone
                     name = getRandNameString(
-                               _get_artefact_type(item.base_type).c_str());
+                               _get_artefact_type(item).c_str());
                 }
             }
 
