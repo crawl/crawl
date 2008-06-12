@@ -142,8 +142,7 @@ static void _xom_is_stimulated(int maxinterestingness,
          maxinterestingness, interestingness);
 #endif
 
-    if (interestingness > 255)
-        interestingness = 255;
+    interestingness = std::min(255, interestingness);
 
     bool was_stimulated = false;
     if (interestingness > you.gift_timeout && interestingness >= 12)
@@ -187,8 +186,7 @@ void xom_makes_you_cast_random_spell(int sever)
     god_acting gdact(GOD_XOM);
 
     const int nxomspells = ARRAYSZ(xom_spells);
-    if (spellenum > nxomspells)
-        spellenum = nxomspells;
+    spellenum = std::min(nxomspells, spellenum);
 
     const spell_type spell = xom_spells[random2(spellenum)];
 
@@ -906,8 +904,7 @@ void xom_acts(bool niceness, int sever)
 
     entry_cause_type old_entry_cause = you.entry_cause;
 
-    if (sever < 1)
-        sever = 1;
+    sever = std::max(1, sever);
 
     // Drawing the Xom card from Nemelex's decks of oddities or punishment.
     if (crawl_state.is_god_acting()
