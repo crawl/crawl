@@ -4814,6 +4814,8 @@ void viewwindow(bool draw_it, bool do_updates)
                     {
                         env.tile_bk_bg[gc.x][gc.y] =
                             env.tile_bg[ep.x-1][ep.y-1];
+                        env.tile_bk_fg[gc.x][gc.y] =
+                            env.tile_fg[ep.x-1][ep.y-1];
                     }
 
                     tileb[bufcount] = env.tile_fg[ep.x-1][ep.y-1] =
