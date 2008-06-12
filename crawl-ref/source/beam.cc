@@ -4229,7 +4229,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             return 0;
         }
 
-        if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+        if (thrower == KILL_YOU_MISSILE)
+            ;
+        else if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
         {
             beam.foe_count += 1;
             beam.foe_power += mons_power(mons_type);
