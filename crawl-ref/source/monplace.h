@@ -267,10 +267,12 @@ monster_type pick_random_monster(const level_id &place,
                                  int &lev_mons);
 
 bool player_will_anger_monster(monster_type type, bool *holy = NULL,
-                               bool *unholy = NULL, bool *antimagical = NULL);
+                               bool *unholy = NULL, bool *lawful = NULL,
+                               bool *antimagical = NULL);
 
 bool player_will_anger_monster(monsters *mon, bool *holy = NULL,
-                               bool *unholy = NULL, bool *antimagical = NULL);
+                               bool *unholy = NULL, bool *lawful = NULL,
+                               bool *antimagical = NULL);
 
 bool player_angers_monster(monsters *mon);
 

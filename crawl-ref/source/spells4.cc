@@ -612,7 +612,7 @@ static int _ignite_poison_monsters(int x, int y, int pow, int garbage)
     struct monsters *const mon = &menv[ mon_index ];
 
     // Monsters which have poison corpses or poisonous attacks.
-    if (is_mons_poisoner(mon))
+    if (mons_is_poisoner(mon))
         dam_dice.num = 3;
 
     // Monsters which are poisoned:

@@ -495,6 +495,31 @@ bool mons_is_god_gift(const monsters *mon)
     return (mon->god != GOD_NO_GOD);
 }
 
+bool mons_is_chaotic(const monsters *mon)
+{
+    if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
+        return true;
+
+    if (mon->has_spell(SPELL_POLYMORPH_OTHER))
+        return true;
+
+    const int attk_flavour = mons_attack_spec(mon, 0).flavour;
+    return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT);
+}
+
+bool mons_is_poisoner(const monsters *mon)
+{
+    if (mons_corpse_effect(mon->type) == CE_POISONOUS)
+        return true;
+
+    const int attk_flavour = mons_attack_spec(mon, 0).flavour;
+    return (attk_flavour == AF_POISON
+            || attk_flavour == AF_POISON_NASTY
+            || attk_flavour == AF_POISON_MEDIUM
+            || attk_flavour == AF_POISON_STRONG
+            || attk_flavour == AF_POISON_STR);
+}
+
 bool mons_is_icy(const monsters *mon)
 {
     return (mons_is_icy(mon->type));

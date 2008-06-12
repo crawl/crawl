@@ -649,7 +649,7 @@ enum conduct_type
     DID_KILL_UNDEAD,
     DID_KILL_DEMON,
     DID_KILL_NATURAL_EVIL,    // TSO
-    DID_KILL_MUTATOR_OR_ROTTER, // Zin
+    DID_KILL_CHAOTIC,         // Zin
     DID_KILL_WIZARD,
     DID_KILL_PRIEST,
     DID_KILL_HOLY,

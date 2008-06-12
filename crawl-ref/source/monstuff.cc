@@ -626,31 +626,6 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
     return (false);
 }
 
-static bool _is_mons_mutator_or_rotter(monsters *mons)
-{
-    if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
-        return true;
-
-    if (mons->has_spell(SPELL_POLYMORPH_OTHER))
-        return true;
-
-    const int attk_flavour = mons_attack_spec(mons, 0).flavour;
-    return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT);
-}
-
-bool is_mons_poisoner(monsters *mons)
-{
-    if (mons_corpse_effect(mons->type) == CE_POISONOUS)
-        return true;
-
-    const int attk_flavour = mons_attack_spec(mons, 0).flavour;
-    return (attk_flavour == AF_POISON
-            || attk_flavour == AF_POISON_NASTY
-            || attk_flavour == AF_POISON_MEDIUM
-            || attk_flavour == AF_POISON_STRONG
-            || attk_flavour == AF_POISON_STR);
-}
-
 static bool _slime_pit_unlock(bool silent)
 {
     unset_level_flags(LFLAG_NO_TELE_CONTROL, silent);
@@ -926,9 +901,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                     monster->hit_dice, true, monster);
                 }
 
-                if (_is_mons_mutator_or_rotter(monster))
+                if (mons_is_chaotic(monster))
                 {
-                    did_god_conduct(DID_KILL_MUTATOR_OR_ROTTER,
+                    did_god_conduct(DID_KILL_CHAOTIC,
                                     monster->hit_dice, true, monster);
                 }
 

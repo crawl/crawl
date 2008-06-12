@@ -374,6 +374,8 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
 
 static bool _holy_beings_attitude_change();
 static bool _evil_beings_attitude_change();
+static bool _chaotic_beings_attitude_change();
+static bool _magic_users_attitude_change();
 static bool _beogh_followers_abandon_you();
 static void _altar_prayer();
 static void _dock_piety(int piety_loss, int penance);
@@ -2154,7 +2156,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    case DID_KILL_MUTATOR_OR_ROTTER:
+    case DID_KILL_CHAOTIC:
         if (you.religion == GOD_ZIN)
         {
             if (god_hates_attacking_friend(you.religion, victim))
@@ -2450,7 +2452,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
           "Necromancy", "Unholy", "Attack Holy", "Attack Neutral",
           "Attack Friend", "Friend Died", "Stab", "Unchivalric Attack",
           "Poison", "Field Sacrifice", "Kill Living", "Kill Undead",
-          "Kill Demon", "Kill Natural Evil", "Kill Mutator Or Rotter",
+          "Kill Demon", "Kill Natural Evil", "Kill Chaotic",
           "Kill Wizard", "Kill Priest", "Kill Holy",
           "Undead Slave Kill Living", "Servant Kill Living",
           "Servant Kill Undead", "Servant Kill Demon",
@@ -3937,6 +3939,49 @@ static bool _evil_beings_attitude_change()
     return apply_to_all_dungeons(_evil_beings_on_level_attitude_change);
 }
 
+static bool _chaotic_beings_on_level_attitude_change()
+{
+    bool success = false;
+
+    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    {
+        monsters *monster = &menv[i];
+        if (monster->type != -1
+            && mons_is_chaotic(monster))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Chaotic attitude changing: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+
+            // If you worship Zin, you make all non-hostile chaotic
+            // beings hostile.
+            if (is_lawful_god(you.religion))
+            {
+                if (monster->attitude != ATT_HOSTILE
+                    || monster->has_ench(ENCH_CHARM))
+                {
+                    monster->attitude = ATT_HOSTILE;
+                    monster->del_ench(ENCH_CHARM, true);
+                    behaviour_event(monster, ME_ALERT, MHITYOU);
+                    // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+
+                    success = true;
+                }
+            }
+        }
+    }
+
+    return success;
+}
+
+static bool _chaotic_beings_attitude_change()
+{
+    return apply_to_all_dungeons(_chaotic_beings_on_level_attitude_change);
+}
+
 static bool _magic_users_on_level_attitude_change()
 {
     bool success = false;
@@ -5106,10 +5151,14 @@ void god_pitch(god_type which_god)
     more();
 
     // When you start worshipping a good god, you make all non-hostile
-    // evil and unholy beings hostile, and when you start worshipping
-    // Trog, you make all non-hostile magic users hostile.
+    // evil and unholy beings hostile; when you start worshipping Zin,
+    // you make all non-hostile chaotic beings hostile; and when you
+    // start worshipping Trog, you make all non-hostile magic users
+    // hostile.
     if (is_good_god(you.religion) && _evil_beings_attitude_change())
         mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
+    else if (is_lawful_god(you.religion) && _chaotic_beings_attitude_change())
+        mpr("Your chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
     else if (you.religion == GOD_TROG && _magic_users_attitude_change())
         mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
 
